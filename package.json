@@ -1,0 +1,92 @@
+{
+  "name": "hassu",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@aws-amplify/ui-react": "1.2.8",
+    "@aws-cdk/aws-appsync": "1.118.0",
+    "@aws-cdk/aws-lambda": "1.118.0",
+    "@aws-cdk/aws-lambda-nodejs": "1.118.0",
+    "@aws-cdk/core": "1.118.0",
+    "@aws-sdk/lib-dynamodb": "3.26.0",
+    "@hookform/resolvers": "2.7.1",
+    "aws-amplify": "4.2.2",
+    "esbuild": "0.12.19",
+    "loglevel": "1.7.1",
+    "next": "11.1.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-hook-form": "7.12.2",
+    "react-scripts": "4.0.3",
+    "source-map-support": "0.5.19",
+    "swr": "0.5.6",
+    "web-vitals": "2.1.0",
+    "yup": "0.32.9"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "5.14.1",
+    "@testing-library/react": "11.1.0",
+    "@testing-library/user-event": "13.2.1",
+    "@types/aws-lambda": "8.10.82",
+    "@types/chai": "4.2.21",
+    "@types/mocha": "9.0.0",
+    "@types/node": "13.13.52",
+    "@types/react": "17.0.17",
+    "@types/sinon": "10.0.2",
+    "aws-cdk": "1.118.0",
+    "aws-sdk": "2.967.0",
+    "chai": "4.3.4",
+    "copyfiles": "2.4.1",
+    "mocha": "9.0.3",
+    "npm-run-all": "4.1.5",
+    "prettier": "2.3.2",
+    "sinon": "11.1.2",
+    "ts-node": "10.2.0",
+    "tslint": "6.1.3",
+    "tslint-config-prettier": "1.18.0",
+    "typescript": "4.3.5"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build && next export",
+    "start": "next start",
+    "export": "next export",
+    "lint:app": "next lint",
+    "old_start": "react-scripts start",
+    "old_build": "react-scripts build",
+    "old_test:app": "react-scripts test",
+    "old_eject": "react-scripts eject",
+    "generate": "amplify codegen && copyfiles -f src/API.ts backend/api/",
+    "lint:prettier": "prettier --check 'backend/**/*.ts' 'src/**/*.ts'",
+    "lint:tslint": "tslint --project tsconfig.json",
+    "lint": "npm-run-all lint:*",
+    "test:service": "TS_NODE_PROJECT='./tsconfig.backend.json' mocha -r ts-node/register backend/**/*.test.ts",
+    "watch:test:service": "TS_NODE_PROJECT='./tsconfig.backend.json' mocha $NODE_DEBUG_OPTION --require ts-node/register --watch --watch-extensions ts --watch-files backend 'backend/**/*.test.ts'",
+    "test": "npm-run-all test:*",
+    "deploy": "cdk --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-backend' deploy '*' --require-approval never --outputs-file .cdk-outputs.json",
+    "postdeploy": "cat .cdk-outputs.json | jq -rc '.HassuStack | \"REACT_APP_API_URL=\" + .AppSyncAPIURL + \"\\n\" + \"REACT_APP_API_KEY=\" + .AppSyncAPIKey' >.env.local",
+    "destroy": "cdk --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-backend' destroy '*' --require-approval never"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "engines": {
+    "node": "13.13.0",
+    "npm": "6.14.4"
+  }
+}

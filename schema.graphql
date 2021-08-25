@@ -1,0 +1,47 @@
+enum Status {
+  EI_JULKAISTU
+  ALOITUSKUULUTUS
+  SUUNNITTELU
+  NAHTAVILLAOLO
+  HYVAKSYMISPAATOS
+  LAINVOIMA
+  ARKISTOITU
+}
+
+type Suunnitelma {
+  id: String!
+  name: String!
+  location: String
+  type: String
+  contact: String
+  status: Status
+  description: String
+  longDescription: String
+}
+
+input CreateSuunnitelmaInput {
+  name: String!
+  location: String
+  type: String
+  contact: String
+}
+
+input UpdateSuunnitelmaInput {
+  id: String!
+  name: String!
+  location: String
+  type: String
+  contact: String
+  description: String
+  longDescription: String
+}
+
+type Query {
+  listSuunnitelmat: [Suunnitelma]
+  getSuunnitelmaById(suunnitelmaId: String!): Suunnitelma
+}
+
+type Mutation {
+  createSuunnitelma(suunnitelma: CreateSuunnitelmaInput!): Suunnitelma
+  updateSuunnitelma(suunnitelma: UpdateSuunnitelmaInput!): Suunnitelma
+}

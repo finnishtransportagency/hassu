@@ -1,0 +1,13 @@
+{
+  "extends": [
+    "tslint:recommended",
+    "tslint-config-prettier"
+  ],
+  "rules": {
+    "no-var-requires": false,
+    "object-literal-sort-keys": false,
+    "interface-name": false,
+    "curly": true
+  },
+  "jsRules": true
+}

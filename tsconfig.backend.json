@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2017",
+    "typeRoots": ["node_modules/@types"],
+    "sourceMap": true,
+    "inlineSources": true,
+    "sourceRoot": "/",
+    "noUnusedLocals": true,
+    "plugins": [
+      {
+        "name": "typescript-tslint-plugin",
+        "alwaysShowRuleFailuresAsWarnings": false
+      }
+    ]
+  },
+  "exclude": ["node_modules", "tools", "test"]
+}
