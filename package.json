@@ -4,10 +4,6 @@
   "private": true,
   "dependencies": {
     "@aws-amplify/ui-react": "1.2.8",
-    "@aws-cdk/aws-appsync": "1.118.0",
-    "@aws-cdk/aws-lambda": "1.118.0",
-    "@aws-cdk/aws-lambda-nodejs": "1.118.0",
-    "@aws-cdk/core": "1.118.0",
     "@aws-sdk/lib-dynamodb": "3.26.0",
     "@hookform/resolvers": "2.7.1",
     "aws-amplify": "4.2.2",
@@ -24,6 +20,15 @@
     "yup": "0.32.9"
   },
   "devDependencies": {
+    "@aws-cdk/aws-appsync": "1.120.0",
+    "@aws-cdk/aws-cloudfront": "1.120.0",
+    "@aws-cdk/aws-cloudfront-origins": "1.120.0",
+    "@aws-cdk/aws-iam": "1.120.0",
+    "@aws-cdk/aws-lambda": "1.120.0",
+    "@aws-cdk/aws-lambda-nodejs": "1.120.0",
+    "@aws-cdk/aws-s3": "1.120.0",
+    "@aws-cdk/aws-s3-deployment": "1.120.0",
+    "@aws-cdk/core": "1.120.0",
     "@testing-library/jest-dom": "5.14.1",
     "@testing-library/react": "11.1.0",
     "@testing-library/user-event": "13.2.1",
@@ -33,11 +38,12 @@
     "@types/node": "13.13.52",
     "@types/react": "17.0.17",
     "@types/sinon": "10.0.2",
-    "aws-cdk": "1.118.0",
+    "aws-cdk": "1.120.0",
     "aws-sdk": "2.967.0",
     "chai": "4.3.4",
     "copyfiles": "2.4.1",
     "mocha": "9.0.3",
+    "node-jq": "2.0.0",
     "npm-run-all": "4.1.5",
     "prettier": "2.3.2",
     "sinon": "11.1.2",
@@ -63,9 +69,10 @@
     "test:service": "TS_NODE_PROJECT='./tsconfig.backend.json' mocha -r ts-node/register backend/**/*.test.ts",
     "watch:test:service": "TS_NODE_PROJECT='./tsconfig.backend.json' mocha $NODE_DEBUG_OPTION --require ts-node/register --watch --watch-extensions ts --watch-files backend 'backend/**/*.test.ts'",
     "test": "npm-run-all test:*",
-    "deploy": "cdk --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-backend' deploy '*' --require-approval never --outputs-file .cdk-outputs.json",
-    "postdeploy": "cat .cdk-outputs.json | jq -rc '.HassuStack | \"REACT_APP_API_URL=\" + .AppSyncAPIURL + \"\\n\" + \"REACT_APP_API_KEY=\" + .AppSyncAPIKey' >.env.local",
-    "destroy": "cdk --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-backend' destroy '*' --require-approval never"
+    "deploy:backend": "cdk --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu' deploy backend --require-approval never --outputs-file .cdk-backend-outputs.json",
+    "deploy:frontend": "cdk --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu' deploy frontend --require-approval never --outputs-file .cdk-frontend-outputs.json && ts-node --project=tsconfig.cdk.json deployment/bin/parse-frontend-outputs.ts",
+    "deploy:app": "npm run build && npm run build && cdk --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu' deploy app --require-approval never",
+    "destroy": "cdk --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu' destroy '*' --require-approval never"
   },
   "eslintConfig": {
     "extends": [
@@ -86,7 +93,7 @@
     ]
   },
   "engines": {
-    "node": "13.13.0",
-    "npm": "6.14.4"
+    "node": "14.17.0",
+    "npm": "6.14.14"
   }
 }
