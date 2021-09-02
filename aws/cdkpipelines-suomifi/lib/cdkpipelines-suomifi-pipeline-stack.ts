@@ -15,7 +15,7 @@ export class CdkpipelinesSuomifiPipelineStack extends Stack {
        // How it will be built and synthesized
        synth: new ShellStep('Synth', {
          // Where the source can be found
-         input: CodePipelineSource.gitHub('finnishtransportagency/hassu', 'suomifi-deployment'),
+         input: CodePipelineSource.gitHub('finnishtransportagency/hassu', 'feature/suomifi-deployment'),
          
          // Install dependencies, build and run cdk synth
          commands: [
