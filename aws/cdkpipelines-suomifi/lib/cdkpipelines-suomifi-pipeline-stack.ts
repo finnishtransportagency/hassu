@@ -25,7 +25,7 @@ export class CdkpipelinesSuomifiPipelineStack extends Stack {
             'npm run build',
             'npx cdk synth'
          ],
-         primaryOutputDirectory: '/aws/cdkpipelines-suomifi/cdk.out'
+         primaryOutputDirectory: './aws/cdkpipelines-suomifi/cdk.out'
        }),
     });
 
