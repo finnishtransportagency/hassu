@@ -35,7 +35,7 @@ export class CdkpipelinesSuomifiStack extends Stack {
       parameterName: 'HassuSgId'
     }).stringValue;
 
-    const securityGroup = ec2.SecurityGroup.fromLookup(this, 'HassuSG', sgId);
+    const securityGroup = ec2.SecurityGroup.fromLookup(this, 'HassuSG', 'sg-0b57a0a831ff31953');
 
     const alb = new loadbalance.ApplicationLoadBalancer(this, 'LoadBalancer', {
       vpc,
