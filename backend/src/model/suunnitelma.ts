@@ -9,11 +9,11 @@ export enum Status {
 }
 
 export type Suunnitelma = {
-  __typename: "Suunnitelma",
-  id: string,
-  name: string,
-  location?: string | null,
-  type?: string | null,
-  contact?: string | null,
-  status?: Status | null,
+  __typename: "Suunnitelma";
+  id: string;
+  name: string;
+  location?: string | null;
+  type?: string | null;
+  contact?: string | null;
+  status?: Status | null;
 };
