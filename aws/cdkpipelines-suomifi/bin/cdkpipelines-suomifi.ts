@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
-import { CdkpipelinesSuomifiStack } from '../lib/cdkpipelines-suomifi-stack';
+import { CdkpipelinesSuomifiPipelineStack } from '../lib/cdkpipelines-suomifi-pipeline-stack';
 
 const app = new cdk.App();
-new CdkpipelinesSuomifiStack(app, 'CdkpipelinesSuomfiStack', {
+new CdkpipelinesSuomifiPipelineStack(app, 'CdkpipelinesSuomifiPipelineStack', {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
    * but a single synthesized template can be deployed anywhere. */
