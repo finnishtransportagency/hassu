@@ -1,5 +1,6 @@
 import { Construct, SecretValue, Stack, StackProps } from '@aws-cdk/core';
 import { CodePipeline, CodePipelineSource, ShellStep } from "@aws-cdk/pipelines";
+import { CdkpipelinesSuomifiStage } from './cdkpipelines-suomifi-stage';
 
 /**
  * The stack that defines the application pipeline
@@ -31,5 +32,8 @@ export class CdkpipelinesSuomifiPipelineStack extends Stack {
 
     // This is where we add the application stages
     // ...
+    pipeline.addStage(new CdkpipelinesSuomifiStage(this, 'Dev', {
+      env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION }
+    }));
   }
 }
