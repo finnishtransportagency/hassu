@@ -22,3 +22,6 @@ yarn-error.log*
 out
 /.cdk-backend-outputs.json
 /.cdk-frontend-outputs.json
+/backend/api/API.ts
+/backend/src/api/API.ts
+/src/API.ts

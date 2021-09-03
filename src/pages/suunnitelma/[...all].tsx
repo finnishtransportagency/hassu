@@ -5,6 +5,7 @@ import React from "react";
 import Link from "next/link";
 import useSWR from "swr";
 import { useRouter } from "next/router";
+import log from "loglevel";
 
 function SuunnitelmaPage() {
   const router = useRouter();
@@ -14,10 +15,10 @@ function SuunnitelmaPage() {
     return <></>;
   }
   if (!data) {
-    console.log("loading");
+    log.info("loading");
     return <></>;
   }
-  console.log("loaded", data);
+  log.info("loaded", data);
   const suunnitelma = data;
   return (
     <>
