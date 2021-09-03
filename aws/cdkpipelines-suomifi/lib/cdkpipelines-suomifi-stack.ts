@@ -27,7 +27,7 @@ export class CdkpipelinesSuomifiStack extends Stack {
     }).stringValue
     
     const vpc = ec2.Vpc.fromLookup(this, 'Vpc', {
-      vpcId: vpcId
+      vpcId: 'vpc-0689ac0f1efc74993'
     });
 
     // 2. ALB
