@@ -15,15 +15,6 @@ export class HassuPipelineStack extends Stack {
 
   async process() {
     const branch = await config.currentBranch();
-    const envToBranch = {
-      dev: "main",
-    } as { [env: string]: string };
-
-    const defaultBranch = envToBranch[config.env];
-    if (defaultBranch && branch !== defaultBranch) {
-      throw Error(`You cannot deploy from branch ${branch} to environment ${config.env}`);
-    }
-
     console.log("Deploying pipeline from branch " + branch + " to enviroment " + config.env);
 
     // tslint:disable-next-line:no-unused-expression

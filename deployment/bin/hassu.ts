@@ -7,6 +7,6 @@ import { HassuFrontendStack } from "../lib/hassu-frontend";
 import { HassuAppStack } from "../lib/hassu-app";
 
 const app = new cdk.App();
-const backend = new HassuBackendStack(app);
-const frontend = new HassuFrontendStack(app, backend.api);
+new HassuBackendStack(app);
+const frontend = new HassuFrontendStack(app);
 new HassuAppStack(app, frontend.bucket);

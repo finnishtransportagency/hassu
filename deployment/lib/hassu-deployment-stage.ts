@@ -9,7 +9,7 @@ export class DeploymentStage extends Stage {
 
     const backend = new HassuBackendStack(this);
     // tslint:disable-next-line:no-unused-expression
-    const frontend = new HassuFrontendStack(this, backend.api);
+    const frontend = new HassuFrontendStack(this);
     // tslint:disable-next-line:no-unused-expression
     new HassuAppStack(this, frontend.bucket);
   }

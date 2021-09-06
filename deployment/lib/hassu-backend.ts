@@ -8,12 +8,10 @@ import * as ddb from "@aws-cdk/aws-dynamodb";
 import { config } from "./config";
 
 export class HassuBackendStack extends cdk.Stack {
-  public readonly api: appsync.GraphqlApi;
-
   constructor(scope: cdk.Construct) {
     super(scope, "backend", { stackName: "hassu-backend-" + config.env });
     // Create the AppSync API
-    this.api = new appsync.GraphqlApi(this, "Api", {
+    const api = new appsync.GraphqlApi(this, "Api", {
       name: "hassu-api",
       schema: appsync.Schema.fromAsset("schema.graphql"),
       logConfig: {
@@ -43,7 +41,7 @@ export class HassuBackendStack extends cdk.Stack {
       // }
     });
 
-    const lambdaDs = this.api.addLambdaDataSource("lambdaDatasource", backendFn);
+    const lambdaDs = api.addLambdaDataSource("lambdaDatasource", backendFn);
 
     // Map the resolvers to the Lambda function
     lambdaDs.createResolver({
@@ -75,5 +73,9 @@ export class HassuBackendStack extends cdk.Stack {
     suunnitelmatTable.grantFullAccess(backendFn);
 
     backendFn.addEnvironment("TABLE_SUUNNITELMAT", suunnitelmatTable.tableName);
+
+    new cdk.CfnOutput(this, "AppSyncAPIKey", {
+      value: api.apiKey || "",
+    });
   }
 }
