@@ -23,7 +23,7 @@ export class HassuFrontendStack extends cdk.Stack {
     const env = config.env;
     super(scope, "frontend", { stackName: "hassu-frontend-" + env });
 
-    const bucket = new Bucket(this, "app-bucket", { bucketName: "hassu-app-" + env });
+    const bucket = new Bucket(this, "app-bucket", { bucketName: config.appBucketName });
 
     const oai = new OriginAccessIdentity(this, "oai");
     bucket.addToResourcePolicy(

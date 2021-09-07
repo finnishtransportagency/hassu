@@ -70,7 +70,6 @@
     "test": "npm-run-all test:*",
     "deploy:backend": "mkdirp out && cdk --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu' deploy backend --require-approval never --outputs-file .cdk-backend-outputs.json",
     "deploy:frontend": "mkdirp out && cdk --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu' deploy frontend --require-approval never --outputs-file .cdk-frontend-outputs.json && ts-node --project=tsconfig.cdk.json deployment/bin/parse-cdk-outputs.ts",
-    "deploy:app": "npm run build && cdk --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu' deploy app --require-approval never",
     "synth": "npm run build && cdk --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu' synth",
     "destroy": "cdk --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu' destroy '*' --require-approval never",
     "pipeline:bootstrap": "ACCOUNT_ARN=$(ts-node --project=tsconfig.cdk.json deployment/bin/get-account-arn.ts) && cdk bootstrap --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-pipeline' --cloudformation-execution-policies $ACCOUNT_ARN",

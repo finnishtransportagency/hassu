@@ -5,13 +5,13 @@ import * as frontendOutputs from "../../.cdk-frontend-outputs.json";
 import * as backendOutputs from "../../.cdk-backend-outputs.json";
 import * as fs from "fs";
 
-// @ts-ignore
-const frontendOutputObject = frontendOutputs.default;
-const frontEndvariables =
-  frontendOutputObject[Object.keys(frontendOutputObject).filter((value) => value.includes("frontend"))[0]];
-const backendOutputObject = backendOutputs.default;
-const backEndvariables =
-  frontendOutputObject[Object.keys(backendOutputObject).filter((value) => value.includes("backend"))[0]];
+function findVariables(outputs: any, stackName: string) {
+  const frontendOutputObject = outputs.default;
+  return frontendOutputObject[Object.keys(frontendOutputObject).filter((value) => value.includes(stackName))[0]];
+}
+
+const frontEndvariables = findVariables(frontendOutputs, "frontend");
+const backEndvariables = findVariables(backendOutputs, "backend");
 
 const properties = `REACT_APP_API_URL=https://${frontEndvariables.CloudfrontDomainName}/graphql
 REACT_APP_API_KEY=${backEndvariables.AppSyncAPIKey}

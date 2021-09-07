@@ -28,4 +28,5 @@ const currentBranch = async () => execShellCommand("git rev-parse --abbrev-ref H
 export const config = {
   env,
   currentBranch,
+  appBucketName: "hassu-app-" + env,
 };
