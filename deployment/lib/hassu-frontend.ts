@@ -1,6 +1,6 @@
 /* tslint:disable:no-unused-expression */
 import * as cdk from "@aws-cdk/core";
-import { Construct, Duration } from "@aws-cdk/core";
+import { CfnOutput, Construct, Duration } from "@aws-cdk/core";
 import {
   CloudFrontAllowedMethods,
   CloudFrontWebDistribution,
@@ -18,6 +18,7 @@ import * as ssm from "@aws-cdk/aws-ssm";
 
 export class HassuFrontendStack extends cdk.Stack {
   public readonly bucket: Bucket;
+  public readonly cloudfrontDomainNameOutput: CfnOutput;
 
   constructor(scope: Construct) {
     const env = config.env;
@@ -99,7 +100,7 @@ export class HassuFrontendStack extends cdk.Stack {
 
     this.bucket = bucket;
 
-    new cdk.CfnOutput(this, "CloudfrontDomainName", {
+    this.cloudfrontDomainNameOutput = new cdk.CfnOutput(this, "CloudfrontDomainName", {
       value: frontendDmainName,
     });
     new cdk.CfnOutput(this, "CloudfrontPrivateDNSName", {

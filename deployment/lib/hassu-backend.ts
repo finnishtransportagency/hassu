@@ -1,5 +1,6 @@
 /* tslint:disable:no-unused-expression */
 import * as cdk from "@aws-cdk/core";
+import { CfnOutput } from "@aws-cdk/core";
 import * as lambda from "@aws-cdk/aws-lambda";
 import * as appsync from "@aws-cdk/aws-appsync";
 import { FieldLogLevel } from "@aws-cdk/aws-appsync";
@@ -8,6 +9,8 @@ import * as ddb from "@aws-cdk/aws-dynamodb";
 import { config } from "./config";
 
 export class HassuBackendStack extends cdk.Stack {
+  public readonly appSyncAPIKeyOutput: CfnOutput;
+
   constructor(scope: cdk.Construct) {
     super(scope, "backend", { stackName: "hassu-backend-" + config.env });
     // Create the AppSync API
@@ -74,7 +77,7 @@ export class HassuBackendStack extends cdk.Stack {
 
     backendFn.addEnvironment("TABLE_SUUNNITELMAT", suunnitelmatTable.tableName);
 
-    new cdk.CfnOutput(this, "AppSyncAPIKey", {
+    this.appSyncAPIKeyOutput = new cdk.CfnOutput(this, "AppSyncAPIKey", {
       value: api.apiKey || "",
     });
   }
