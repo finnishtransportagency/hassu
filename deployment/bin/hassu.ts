@@ -1,10 +1,16 @@
 #!/usr/bin/env node
-/* tslint:disable:no-unused-expression */
-import "source-map-support/register";
 import * as cdk from "@aws-cdk/core";
-import { HassuBackendStack } from "../lib/hassu-backend";
-import { HassuFrontendStack } from "../lib/hassu-frontend";
+import { HassuPipelineStack } from "../lib/hassu-pipeline";
 
-const app = new cdk.App();
-new HassuBackendStack(app);
-new HassuFrontendStack(app);
+async function main() {
+  const app = new cdk.App();
+  // tslint:disable-next-line:no-unused-expression
+  const branch = process.env.GIT_BRANCH;
+  if (!branch) {
+    throw new Error("GIT_BRANCH environemnt variable must be defined.");
+  }
+  await new HassuPipelineStack(app, branch).process();
+  app.synth();
+}
+
+main();

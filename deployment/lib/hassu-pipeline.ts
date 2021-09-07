@@ -4,18 +4,21 @@ import { CodePipeline, CodePipelineSource, ShellStep } from "@aws-cdk/pipelines"
 import * as cb from "@aws-cdk/aws-codebuild";
 import { config } from "./config";
 import { Effect, PolicyStatement } from "@aws-cdk/aws-iam";
+import { DeploymentStage } from "./hassu-deployment-stage";
 
 /**
  * The stack that defines the application pipeline
  */
 export class HassuPipelineStack extends Stack {
-  constructor(scope: Construct) {
+  private readonly branch: string;
+
+  constructor(scope: Construct, branch: string) {
     super(scope, "hassu-pipeline", { stackName: "hassu-pipeline-" + config.env });
+    this.branch = branch;
   }
 
   async process() {
-    const branch = await config.currentBranch();
-    console.log("Deploying pipeline from branch " + branch + " to enviroment " + config.env);
+    console.log("Deploying pipeline from branch " + this.branch + " to enviroment " + config.env);
 
     // tslint:disable-next-line:no-unused-expression
     new CodePipeline(this, "pipeline", {
@@ -24,9 +27,9 @@ export class HassuPipelineStack extends Stack {
 
       // How it will be built and synthesized
       synth: new ShellStep("Synth", {
-        env: { ENVIRONMENT: config.env },
+        env: { ENVIRONMENT: config.env, GIT_BRANCH: this.branch },
         // Where the source can be found
-        input: CodePipelineSource.gitHub("finnishtransportagency/hassu", branch),
+        input: CodePipelineSource.gitHub("finnishtransportagency/hassu", this.branch),
 
         installCommands: ["npm install -g @aws-amplify/cli", "npm ci"],
         // Install dependencies, build and run cdk synth
@@ -34,13 +37,16 @@ export class HassuPipelineStack extends Stack {
           "npm run generate",
           "npm run lint",
           "npm run test",
-          "npm run deploy:backend",
-          "npm run deploy:frontend",
-          "npm run build",
-          "aws s3 sync out s3://" + config.appBucketName + "/",
+          "npm run synth",
+          // "npm run build",
+          // "aws s3 sync out s3://" + config.appBucketName + "/",
         ],
       }),
-      selfMutation: false,
+      selfMutationCodeBuildDefaults: {
+        buildEnvironment: {
+          environmentVariables: { ENVIRONMENT: { value: config.env }, GIT_BRANCH: { value: this.branch } },
+        },
+      },
       codeBuildDefaults: {
         partialBuildSpec: cb.BuildSpec.fromObject({
           cache: {
@@ -55,6 +61,6 @@ export class HassuPipelineStack extends Stack {
           }),
         ],
       },
-    });
+    }).addStage(new DeploymentStage(this));
   }
 }
