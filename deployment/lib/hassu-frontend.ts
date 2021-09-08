@@ -78,6 +78,12 @@ export class HassuFrontendStack extends cdk.Stack {
               compress: true,
               isDefaultBehavior: false,
               allowedMethods: CloudFrontAllowedMethods.ALL,
+              pathPattern: "/oauth2/*",
+            },
+            {
+              compress: true,
+              isDefaultBehavior: false,
+              allowedMethods: CloudFrontAllowedMethods.ALL,
               pathPattern: "/graphql",
             },
             {
