@@ -1,20 +1,24 @@
 /* tslint:disable:no-unused-expression */
 import * as cdk from "@aws-cdk/core";
-import { Construct, Duration } from "@aws-cdk/core";
+import { Construct } from "@aws-cdk/core";
+import * as acm from "@aws-cdk/aws-certificatemanager";
 import {
-  CloudFrontAllowedMethods,
-  CloudFrontWebDistribution,
+  AllowedMethods,
+  CachePolicy,
+  Distribution,
+  DistributionProps,
   OriginAccessIdentity,
+  OriginRequestPolicy,
+  OriginSslPolicy,
   PriceClass,
-  SecurityPolicyProtocol,
   ViewerProtocolPolicy,
 } from "@aws-cdk/aws-cloudfront";
 import { Bucket } from "@aws-cdk/aws-s3";
 import { config } from "./config";
-import { Effect, PolicyStatement } from "@aws-cdk/aws-iam";
-import { CanonicalUserPrincipal } from "@aws-cdk/aws-iam/lib/principals";
-import { ViewerCertificate } from "@aws-cdk/aws-cloudfront/lib/web-distribution";
 import * as ssm from "@aws-cdk/aws-ssm";
+import { S3Origin } from "@aws-cdk/aws-cloudfront-origins";
+import { HttpOrigin } from "@aws-cdk/aws-cloudfront-origins/lib/http-origin";
+import { BehaviorOptions } from "@aws-cdk/aws-cloudfront/lib/distribution";
 
 export class HassuFrontendStack extends cdk.Stack {
   public readonly bucket: Bucket;
@@ -23,85 +27,58 @@ export class HassuFrontendStack extends cdk.Stack {
     const env = config.env;
     super(scope, "frontend", { stackName: "hassu-frontend-" + env });
 
-    const bucket = new Bucket(this, "app-bucket", { bucketName: config.appBucketName });
+    const oai = new OriginAccessIdentity(this, "OriginAccessIdentity", { comment: "Allow cloudfront to access S3" });
 
-    const oai = new OriginAccessIdentity(this, "oai");
-    bucket.addToResourcePolicy(
-      new PolicyStatement({
-        effect: Effect.ALLOW,
-        actions: ["s3:GetObject"],
-        resources: [bucket.arnForObjects("*")],
-        principals: [new CanonicalUserPrincipal(oai.cloudFrontOriginAccessIdentityS3CanonicalUserId)],
-      })
-    );
+    const bucket = new Bucket(this, "app-bucket", { bucketName: config.appBucketName });
+    bucket.grantRead(oai);
 
     const dmzAlb = ssm.StringParameter.valueForStringParameter(this, "DmzAlb");
 
-    let viewerCertificate;
+    const dmzBehavior: BehaviorOptions = {
+      compress: true,
+      origin: new HttpOrigin(dmzAlb, {
+        originSslProtocols: [
+          OriginSslPolicy.TLS_V1_2,
+          OriginSslPolicy.TLS_V1_2,
+          OriginSslPolicy.TLS_V1,
+          OriginSslPolicy.SSL_V3,
+        ],
+      }),
+      cachePolicy: CachePolicy.CACHING_DISABLED,
+      originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
+      allowedMethods: AllowedMethods.ALLOW_ALL,
+      viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+    };
+
     const frontendDmainName = "hassudev.testivaylapilvi.fi";
+
+    const distributionProps: DistributionProps = {
+      priceClass: PriceClass.PRICE_CLASS_100,
+      domainNames: [frontendDmainName],
+      defaultRootObject: "index.html",
+      defaultBehavior: {
+        allowedMethods: AllowedMethods.ALLOW_GET_HEAD,
+        viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        cachePolicy: CachePolicy.CACHING_DISABLED,
+        originRequestPolicy: OriginRequestPolicy.CORS_S3_ORIGIN,
+        origin: new S3Origin(bucket, {
+          originAccessIdentity: oai,
+        }),
+      },
+      additionalBehaviors: {
+        "/oauth2/*": dmzBehavior,
+        "/graphql": dmzBehavior,
+        "/yllapito/graphql": dmzBehavior,
+        "/yllapito/kirjaudu": dmzBehavior,
+      },
+    };
+
     if (env === "dev") {
-      const certificateId = ssm.StringParameter.valueForStringParameter(this, "/CloudfrontCertificateId/dev");
-      viewerCertificate = ViewerCertificate.fromIamCertificate(certificateId, {
-        securityPolicy: SecurityPolicyProtocol.TLS_V1_2_2021,
-        aliases: [frontendDmainName],
-      });
+      const certificateArn = ssm.StringParameter.valueForStringParameter(this, "CloudfrontCertificateArnDev");
+      (distributionProps as any).certificate = acm.Certificate.fromCertificateArn(this, "certificate", certificateArn);
     }
 
-    new CloudFrontWebDistribution(this, "distribution", {
-      priceClass: PriceClass.PRICE_CLASS_100,
-      viewerCertificate,
-      viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-      originConfigs: [
-        // /*
-        {
-          s3OriginSource: {
-            s3BucketSource: bucket,
-            originAccessIdentity: oai,
-          },
-          behaviors: [
-            {
-              compress: true,
-              isDefaultBehavior: true,
-              allowedMethods: CloudFrontAllowedMethods.GET_HEAD,
-              defaultTtl: Duration.seconds(10),
-            },
-          ],
-        },
-
-        // /graphql
-        {
-          customOriginSource: {
-            domainName: dmzAlb,
-          },
-          behaviors: [
-            {
-              compress: true,
-              isDefaultBehavior: false,
-              allowedMethods: CloudFrontAllowedMethods.ALL,
-              pathPattern: "/oauth2/*",
-            },
-            {
-              compress: true,
-              isDefaultBehavior: false,
-              allowedMethods: CloudFrontAllowedMethods.ALL,
-              pathPattern: "/graphql",
-            },
-            {
-              compress: true,
-              isDefaultBehavior: false,
-              allowedMethods: CloudFrontAllowedMethods.ALL,
-              pathPattern: "/yllapito/graphql",
-            },
-            {
-              compress: true,
-              isDefaultBehavior: false,
-              allowedMethods: CloudFrontAllowedMethods.ALL,
-              pathPattern: "/yllapito/kirjaudu",
-            },
-          ],
-        },
-      ],
-    });
+    new Distribution(this, "distribution", distributionProps);
 
     this.bucket = bucket;
 
