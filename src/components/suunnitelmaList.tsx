@@ -20,11 +20,23 @@ export class SuunnitelmaList extends React.Component<SuunnitelmaListProps, Suunn
   }
 
   async fetchSuunnitelmat() {
-    const result = await API.graphql(graphqlOperation(listSuunnitelmat));
-    log.info("listSuunnitelmat:", result);
+    try {
+      const result = await API.graphql(graphqlOperation(listSuunnitelmat));
+      log.info("listSuunnitelmat:", result);
 
-    // @ts-ignore
-    return result.data.listSuunnitelmat as Suunnitelma[];
+      // @ts-ignore
+      return result.data.listSuunnitelmat as Suunnitelma[];
+    } catch (e) {
+      log.error("Error listing suunnitelmat", e);
+      if (e.errors) {
+        e.errors.map((err: any) => {
+          const response = err.originalError?.response;
+          const httpStatus = response?.status;
+          log.error("HTTP Status: " + httpStatus + "\n" + err.stack);
+        });
+      }
+      return [];
+    }
   }
 
   async componentDidMount() {
@@ -38,10 +50,10 @@ export class SuunnitelmaList extends React.Component<SuunnitelmaListProps, Suunn
     return (
       <table className="table table-striped">
         <thead>
-        <tr>
-          <th style={{ width: '50%' }}>Nimi</th>
-          <th style={{ width: '50%' }}>Sijainti</th>
-        </tr>
+          <tr>
+            <th style={{ width: "50%" }}>Nimi</th>
+            <th style={{ width: "50%" }}>Sijainti</th>
+          </tr>
         </thead>
         <tbody>
           {this.state.suunnitelmat.map((suunnitelma, index) => (
