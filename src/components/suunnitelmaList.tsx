@@ -1,9 +1,10 @@
 import React from "react";
 import { Suunnitelma } from "../API";
-import { API, graphqlOperation } from "aws-amplify";
 import { listSuunnitelmat } from "../graphql/queries";
 import log from "loglevel";
 import Link from "next/link";
+import { callAPI } from "../graphql/apiEndpoint";
+import { graphqlOperation } from "aws-amplify";
 
 type SuunnitelmaListState = {
   suunnitelmat: Suunnitelma[];
@@ -21,7 +22,7 @@ export class SuunnitelmaList extends React.Component<SuunnitelmaListProps, Suunn
 
   async fetchSuunnitelmat() {
     try {
-      const result = await API.graphql(graphqlOperation(listSuunnitelmat));
+      const result = await callAPI(graphqlOperation(listSuunnitelmat));
       log.info("listSuunnitelmat:", result);
 
       // @ts-ignore
@@ -56,7 +57,7 @@ export class SuunnitelmaList extends React.Component<SuunnitelmaListProps, Suunn
           </tr>
         </thead>
         <tbody>
-          {this.state.suunnitelmat.map((suunnitelma, index) => (
+          {this.state.suunnitelmat.map((suunnitelma) => (
             <tr key={suunnitelma.id}>
               <td>
                 <Link

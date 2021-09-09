@@ -11,6 +11,8 @@ export class HassuBackendStack extends cdk.Stack {
   constructor(scope: cdk.Construct) {
     super(scope, "backend", { stackName: "hassu-backend-" + config.env });
     // Create the AppSync API
+    const apiKeyExpiration = new Date(0);
+    apiKeyExpiration.setUTCFullYear(new Date().getFullYear() + 10);
     const api = new appsync.GraphqlApi(this, "Api", {
       name: "hassu-api",
       schema: appsync.Schema.fromAsset("schema.graphql"),
@@ -22,7 +24,7 @@ export class HassuBackendStack extends cdk.Stack {
         defaultAuthorization: {
           authorizationType: appsync.AuthorizationType.API_KEY,
           apiKeyConfig: {
-            expires: cdk.Expiration.after(cdk.Duration.days(365)),
+            expires: cdk.Expiration.atDate(apiKeyExpiration),
           },
         },
       },

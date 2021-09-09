@@ -1,9 +1,10 @@
 import { AddEditSuunnitelma } from "../../../components/addEditSuunnitelma";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { API, graphqlOperation } from "aws-amplify";
 import { getSuunnitelmaById } from "../../../graphql/queries";
 import { Suunnitelma } from "../../../API";
+import { callAPI } from "../../../graphql/apiEndpoint";
+import { graphqlOperation } from "aws-amplify";
 
 export default function EditSuunnitelmaPage() {
   const router = useRouter();
@@ -13,14 +14,14 @@ export default function EditSuunnitelmaPage() {
   useEffect(() => {
     async function loadSuunnitelma() {
       if (id) {
-        const result = (await API.graphql(graphqlOperation(getSuunnitelmaById, { suunnitelmaId: id }))) as Suunnitelma;
+        const result = (await callAPI(graphqlOperation(getSuunnitelmaById, { suunnitelmaId: id }))) as Suunnitelma;
         // @ts-ignore
         const loaded = result.data.getSuunnitelmaById;
         setSuunnitelma(loaded);
       }
     }
 
-    loadSuunnitelma();
+    loadSuunnitelma().then();
   }, [id]);
 
   if (!suunnitelma) {
