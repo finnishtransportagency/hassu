@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@aws-amplify/ui-react": "1.2.8",
+    "@aws-amplify/api-graphql": "2.2.3",
     "@aws-sdk/lib-dynamodb": "3.26.0",
     "@hookform/resolvers": "2.7.1",
     "aws-amplify": "4.2.2",
@@ -13,7 +14,6 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-hook-form": "7.12.2",
-    "react-scripts": "4.0.3",
     "source-map-support": "0.5.19",
     "swr": "0.5.6",
     "web-vitals": "2.1.0",
@@ -43,9 +43,11 @@
     "aws-sdk": "2.967.0",
     "chai": "4.3.4",
     "copyfiles": "2.4.1",
+    "husky": "7.0.2",
     "mocha": "9.0.3",
     "node-jq": "2.0.0",
     "npm-run-all": "4.1.5",
+    "postcss": "8.3.6",
     "prettier": "2.3.2",
     "sinon": "11.1.2",
     "ts-node": "10.2.0",
@@ -54,6 +56,7 @@
     "typescript": "4.3.5"
   },
   "scripts": {
+    "prepare": "husky install",
     "dev": "next dev",
     "build": "next build && next export",
     "start": "next start",
@@ -66,19 +69,13 @@
     "test:service": "TS_NODE_PROJECT='./tsconfig.backend.json' mocha -r ts-node/register backend/**/*.test.ts",
     "watch:test:service": "TS_NODE_PROJECT='./tsconfig.backend.json' mocha $NODE_DEBUG_OPTION --require ts-node/register --watch --watch-extensions ts --watch-files backend 'backend/**/*.test.ts'",
     "test": "npm-run-all test:*",
-    "deploy:backend": "mkdirp out && cdk --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu' deploy backend --require-approval never --outputs-file .cdk-backend-outputs.json",
-    "deploy:frontend": "mkdirp out && cdk --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu' deploy frontend --require-approval never --outputs-file .cdk-frontend-outputs.json && ts-node --project=tsconfig.cdk.json deployment/bin/parse-frontend-outputs.ts",
-    "deploy:app": "npm run build && cdk --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu' deploy app --require-approval never",
-    "synth": "npm run build && cdk --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu' synth",
+    "deploy:backend": "cdk --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu' deploy backend --require-approval never --outputs-file .cdk-backend-outputs.json",
+    "deploy:frontend": "cdk --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu' deploy frontend --require-approval never --outputs-file .cdk-frontend-outputs.json && ts-node --project=tsconfig.cdk.json deployment/bin/parse-cdk-outputs.ts",
+    "deploy:app": "REACT_APP_API_URL= && npm run build && aws s3 sync out s3://hassu-app-$ENVIRONMENT",
+    "synth": "cdk --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu' synth",
     "destroy": "cdk --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu' destroy '*' --require-approval never",
     "pipeline:bootstrap": "ACCOUNT_ARN=$(ts-node --project=tsconfig.cdk.json deployment/bin/get-account-arn.ts) && cdk bootstrap --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-pipeline' --cloudformation-execution-policies $ACCOUNT_ARN",
     "deploy:pipeline": "cdk --app 'ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-pipeline' deploy hassu-pipeline --require-approval never"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [

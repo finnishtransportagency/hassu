@@ -2,7 +2,7 @@
 import { Construct, Stack } from "@aws-cdk/core";
 import { CodePipeline, CodePipelineSource, ShellStep } from "@aws-cdk/pipelines";
 import * as cb from "@aws-cdk/aws-codebuild";
-import { config } from "./config";
+import { Config } from "./config";
 import { Effect, PolicyStatement } from "@aws-cdk/aws-iam";
 
 /**
@@ -10,30 +10,29 @@ import { Effect, PolicyStatement } from "@aws-cdk/aws-iam";
  */
 export class HassuPipelineStack extends Stack {
   constructor(scope: Construct) {
-    super(scope, "hassu-pipeline", { stackName: "hassu-pipeline-" + config.env });
+    super(scope, "hassu-pipeline", {
+      stackName: "hassu-pipeline-" + Config.env,
+      env: {
+        region: "eu-west-1",
+      },
+    });
   }
 
   async process() {
+    const config = new Config(this);
     const branch = await config.currentBranch();
-    const envToBranch = {
-      dev: "main",
-    } as { [env: string]: string };
-
-    const defaultBranch = envToBranch[config.env];
-    if (defaultBranch && branch !== defaultBranch) {
-      throw Error(`You cannot deploy from branch ${branch} to environment ${config.env}`);
-    }
-
-    console.log("Deploying pipeline from branch " + branch + " to enviroment " + config.env);
+    const env = Config.env;
+    const appBucketName = config.appBucketName;
+    console.log("Deploying pipeline from branch " + branch + " to enviroment " + env);
 
     // tslint:disable-next-line:no-unused-expression
     new CodePipeline(this, "pipeline", {
       // The pipeline name
-      pipelineName: "HassuPipeline-" + config.env,
+      pipelineName: "HassuPipeline-" + env,
 
       // How it will be built and synthesized
       synth: new ShellStep("Synth", {
-        env: { ENVIRONMENT: config.env },
+        env: { ENVIRONMENT: env },
         // Where the source can be found
         input: CodePipelineSource.gitHub("finnishtransportagency/hassu", branch),
 
@@ -45,7 +44,8 @@ export class HassuPipelineStack extends Stack {
           "npm run test",
           "npm run deploy:backend",
           "npm run deploy:frontend",
-          "npm run deploy:app",
+          "npm run build",
+          "aws s3 sync out s3://" + appBucketName + "/",
         ],
       }),
       selfMutation: false,

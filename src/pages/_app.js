@@ -1,11 +1,9 @@
 import Amplify from "aws-amplify";
-import awsExports from "../aws-exports";
 import "../styles/globals.css";
 import Head from "next/head";
 
 import log from "loglevel";
 
-Amplify.configure(awsExports);
 
 log.setDefaultLevel("DEBUG");
 

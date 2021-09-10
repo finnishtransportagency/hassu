@@ -1,115 +1,124 @@
 /* tslint:disable:no-unused-expression */
 import * as cdk from "@aws-cdk/core";
-import { Construct, CustomResource, Duration, Fn } from "@aws-cdk/core";
+import {Construct} from "@aws-cdk/core";
+import * as acm from "@aws-cdk/aws-certificatemanager";
 import {
-  CloudFrontAllowedMethods,
-  CloudFrontWebDistribution,
+  AllowedMethods,
+  CachePolicy,
+  Distribution,
+  DistributionProps,
   OriginAccessIdentity,
+  OriginRequestPolicy,
+  OriginSslPolicy,
   PriceClass,
-  SecurityPolicyProtocol,
+  ViewerProtocolPolicy,
 } from "@aws-cdk/aws-cloudfront";
-import { GraphqlApi } from "@aws-cdk/aws-appsync";
-import { Bucket } from "@aws-cdk/aws-s3";
-import { config } from "./config";
-import { Effect, PolicyStatement } from "@aws-cdk/aws-iam";
-import { CanonicalUserPrincipal } from "@aws-cdk/aws-iam/lib/principals";
-import { ViewerCertificate } from "@aws-cdk/aws-cloudfront/lib/web-distribution";
-import * as ssm from "@aws-cdk/aws-ssm";
+import {Bucket} from "@aws-cdk/aws-s3";
+import {Config} from "./config";
+import {S3Origin} from "@aws-cdk/aws-cloudfront-origins";
+import {HttpOrigin} from "@aws-cdk/aws-cloudfront-origins/lib/http-origin";
+import {BehaviorOptions} from "@aws-cdk/aws-cloudfront/lib/distribution";
 
 export class HassuFrontendStack extends cdk.Stack {
-  public readonly bucket: Bucket;
+  constructor(scope: Construct) {
+    const env = Config.env;
+    super(scope, "frontend", {
+      stackName: "hassu-frontend-" + env,
+      env: {
+        region: "eu-west-1",
+      },
+    });
 
-  constructor(scope: Construct, api: GraphqlApi) {
-    super(scope, "frontend", { stackName: "hassu-frontend-" + config.env });
-
-    const bucket = new Bucket(this, "app-bucket", { bucketName: "hassu-app-" + config.env });
-
-    const oai = new OriginAccessIdentity(this, "oai");
-    bucket.addToResourcePolicy(
-      new PolicyStatement({
-        effect: Effect.ALLOW,
-        actions: ["s3:GetObject"],
-        resources: [bucket.arnForObjects("*")],
-        principals: [new CanonicalUserPrincipal(oai.cloudFrontOriginAccessIdentityS3CanonicalUserId)],
-      })
+    const config = new Config(this);
+    const dmzProxyBehavior = HassuFrontendStack.createDmzProxyBehavior(config.dmzProxyEndpoint);
+    const s3ApplicationOrigin = this.createS3ApplicationOrigin(config.appBucketName);
+    const distributionProperties = HassuFrontendStack.createDistributionProperties(
+      s3ApplicationOrigin,
+      dmzProxyBehavior
     );
-
-    const certificateId = ssm.StringParameter.valueForStringParameter(this, "/CloudfrontCertificateId/dev");
-
-    const distribution = new CloudFrontWebDistribution(this, "distribution", {
-      priceClass: PriceClass.PRICE_CLASS_100,
-      viewerCertificate: ViewerCertificate.fromIamCertificate(certificateId, {
-        securityPolicy: SecurityPolicyProtocol.TLS_V1_2_2021,
-      }),
-      originConfigs: [
-        {
-          s3OriginSource: {
-            s3BucketSource: bucket,
-            originAccessIdentity: oai,
-          },
-          behaviors: [
-            {
-              compress: true,
-              isDefaultBehavior: true,
-              allowedMethods: CloudFrontAllowedMethods.GET_HEAD,
-              defaultTtl: Duration.seconds(10),
-            },
-          ],
-        },
-        {
-          customOriginSource: {
-            domainName: Fn.select(2, Fn.split("/", api.graphqlUrl)),
-          },
-          behaviors: [
-            {
-              compress: true,
-              isDefaultBehavior: false,
-              allowedMethods: CloudFrontAllowedMethods.ALL,
-              pathPattern: "/graphql",
-            },
-          ],
-        },
-      ],
-    });
-
-    this.bucket = bucket;
-
-    const serviceToken = ssm.StringParameter.valueForStringParameter(this, "VaylapilviRoute53RecordServiceToken");
-    const appHostName = "app-" + config.env;
-    new CustomResource(this, "apprecord", {
-      serviceToken,
-      resourceType: "Custom::VaylapilviRoute53Record",
-      properties: {
-        Type: "CNAME",
-        Name: appHostName,
-        Records: [distribution.distributionDomainName],
-        Comment: "Hassu " + config.env + " cloudfront",
-      },
-    });
-
-    const apiHostName = "api-" + config.env;
-    new CustomResource(this, "apirecord", {
-      serviceToken,
-      resourceType: "Custom::VaylapilviRoute53Record",
-      properties: {
-        Type: "CNAME",
-        Name: apiHostName,
-        Records: [Fn.select(2, Fn.split("/", api.graphqlUrl))],
-        Comment: "Hassu " + config.env + " Appsync",
-      },
-    });
+    this.addSSLCertificateToCloudfront(config, distributionProperties);
+    this.createDistribution(distributionProperties);
 
     new cdk.CfnOutput(this, "CloudfrontDomainName", {
-      value: distribution.distributionDomainName || "",
+      value: config.frontendDomainName,
     });
     new cdk.CfnOutput(this, "CloudfrontPrivateDNSName", {
-      value: appHostName + ".hassu-dev.vaylapilvi.aws",
+      value: "",
     });
     new cdk.CfnOutput(this, "AppSyncPrivateDNSName", {
-      value: apiHostName + ".hassu-dev.vaylapilvi.aws",
+      value: "",
     });
-    new cdk.CfnOutput(this, "AppSyncAPIKey", {
-      value: api.apiKey || "",
+  }
+
+  private static createDistributionProperties(s3ApplicationOrigin: S3Origin, dmzProxyBehavior: BehaviorOptions) {
+    const distributionProps: DistributionProps = {
+      priceClass: PriceClass.PRICE_CLASS_100,
+      defaultRootObject: "index.html",
+      defaultBehavior: {
+        allowedMethods: AllowedMethods.ALLOW_GET_HEAD,
+        viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        cachePolicy: CachePolicy.CACHING_DISABLED,
+        originRequestPolicy: OriginRequestPolicy.CORS_S3_ORIGIN,
+        origin: s3ApplicationOrigin,
+      },
+      additionalBehaviors: {
+        "/oauth2/*": dmzProxyBehavior,
+        "/graphql": dmzProxyBehavior,
+        "/yllapito/graphql": dmzProxyBehavior,
+        "/yllapito/kirjaudu": dmzProxyBehavior,
+      },
+    };
+    return distributionProps;
+  }
+
+  private addSSLCertificateToCloudfront(config: Config, distributionProps: DistributionProps) {
+    if (Config.env === "dev") {
+      const modifiableProps = distributionProps as any;
+      modifiableProps.certificate = acm.Certificate.fromCertificateArn(
+        this,
+        "certificate",
+        config.cloudfrontCertificateArn
+      );
+      modifiableProps.domainNames = [config.frontendDomainName];
+    }
+  }
+
+  private createDistribution(distributionProperties: DistributionProps) {
+    new Distribution(this, "distribution", distributionProperties);
+  }
+
+  private createS3ApplicationOrigin(applicationBucketName: string) {
+    const identityForS3Access = new OriginAccessIdentity(this, "OriginAccessIdentity", {
+      comment: "Allow cloudfront to access S3",
     });
+    const bucketForApplication = this.createBucketForApplication(applicationBucketName, identityForS3Access);
+    return new S3Origin(bucketForApplication, {
+      originAccessIdentity: identityForS3Access,
+    });
+  }
+
+  private static createDmzProxyBehavior(dmzProxyEndpoint: string) {
+    const dmzBehavior: BehaviorOptions = {
+      compress: true,
+      origin: new HttpOrigin(dmzProxyEndpoint, {
+        originSslProtocols: [
+          OriginSslPolicy.TLS_V1_2,
+          OriginSslPolicy.TLS_V1_2,
+          OriginSslPolicy.TLS_V1,
+          OriginSslPolicy.SSL_V3,
+        ],
+      }),
+      cachePolicy: CachePolicy.CACHING_DISABLED,
+      originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
+      allowedMethods: AllowedMethods.ALLOW_ALL,
+      viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+    };
+    return dmzBehavior;
+  }
+
+  private createBucketForApplication(applicationBucketName: string, identityForS3Access: OriginAccessIdentity) {
+    const bucket = new Bucket(this, "app-bucket", { bucketName: applicationBucketName });
+    bucket.grantRead(identityForS3Access);
+    return bucket;
   }
 }
