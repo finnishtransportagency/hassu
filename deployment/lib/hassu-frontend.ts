@@ -1,23 +1,27 @@
 /* tslint:disable:no-unused-expression */
 import * as cdk from "@aws-cdk/core";
-import {Construct} from "@aws-cdk/core";
+import { Construct, Fn } from "@aws-cdk/core";
 import * as acm from "@aws-cdk/aws-certificatemanager";
+import * as cloudfront from "@aws-cdk/aws-cloudfront";
 import {
   AllowedMethods,
   CachePolicy,
   Distribution,
   DistributionProps,
+  FunctionCode,
+  FunctionEventType,
   OriginAccessIdentity,
   OriginRequestPolicy,
   OriginSslPolicy,
   PriceClass,
   ViewerProtocolPolicy,
 } from "@aws-cdk/aws-cloudfront";
-import {Bucket} from "@aws-cdk/aws-s3";
-import {Config} from "./config";
-import {S3Origin} from "@aws-cdk/aws-cloudfront-origins";
-import {HttpOrigin} from "@aws-cdk/aws-cloudfront-origins/lib/http-origin";
-import {BehaviorOptions} from "@aws-cdk/aws-cloudfront/lib/distribution";
+import { Bucket } from "@aws-cdk/aws-s3";
+import { Config } from "./config";
+import { S3Origin } from "@aws-cdk/aws-cloudfront-origins";
+import { HttpOrigin } from "@aws-cdk/aws-cloudfront-origins/lib/http-origin";
+import { BehaviorOptions } from "@aws-cdk/aws-cloudfront/lib/distribution";
+import * as fs from "fs";
 
 export class HassuFrontendStack extends cdk.Stack {
   constructor(scope: Construct) {
@@ -30,11 +34,19 @@ export class HassuFrontendStack extends cdk.Stack {
     });
 
     const config = new Config(this);
-    const dmzProxyBehavior = HassuFrontendStack.createDmzProxyBehavior(config.dmzProxyEndpoint);
+    const frontendRequestFunction = this.createFrontendRequestFunction(
+      config.basicAuthenticationUsername,
+      config.basicAuthenticationPassword
+    );
+    const dmzProxyBehavior = HassuFrontendStack.createDmzProxyBehavior(
+      config.dmzProxyEndpoint,
+      frontendRequestFunction
+    );
     const s3ApplicationOrigin = this.createS3ApplicationOrigin(config.appBucketName);
     const distributionProperties = HassuFrontendStack.createDistributionProperties(
       s3ApplicationOrigin,
-      dmzProxyBehavior
+      dmzProxyBehavior,
+      frontendRequestFunction
     );
     this.addSSLCertificateToCloudfront(config, distributionProperties);
     this.createDistribution(distributionProperties);
@@ -50,7 +62,23 @@ export class HassuFrontendStack extends cdk.Stack {
     });
   }
 
-  private static createDistributionProperties(s3ApplicationOrigin: S3Origin, dmzProxyBehavior: BehaviorOptions) {
+  private createFrontendRequestFunction(basicAuthenticationUsername: string, basicAuthenticationPassword: string) {
+    const sourceCode = fs.readFileSync(`${__dirname}/lambda/frontendRequest.js`).toString("UTF-8");
+    const functionCode = Fn.sub(sourceCode, {
+      BASIC_USERNAME: basicAuthenticationUsername,
+      BASIC_PASSWORD: basicAuthenticationPassword,
+    });
+    return new cloudfront.Function(this, "frontendRequestFunction", {
+      functionName: "frontendRequestFunction",
+      code: FunctionCode.fromInline(functionCode),
+    });
+  }
+
+  private static createDistributionProperties(
+    s3ApplicationOrigin: S3Origin,
+    dmzProxyBehavior: BehaviorOptions,
+    frontendRequestFunction: cloudfront.Function
+  ) {
     const distributionProps: DistributionProps = {
       priceClass: PriceClass.PRICE_CLASS_100,
       defaultRootObject: "index.html",
@@ -60,6 +88,12 @@ export class HassuFrontendStack extends cdk.Stack {
         cachePolicy: CachePolicy.CACHING_DISABLED,
         originRequestPolicy: OriginRequestPolicy.CORS_S3_ORIGIN,
         origin: s3ApplicationOrigin,
+        functionAssociations: [
+          {
+            function: frontendRequestFunction,
+            eventType: FunctionEventType.VIEWER_REQUEST,
+          },
+        ],
       },
       additionalBehaviors: {
         "/oauth2/*": dmzProxyBehavior,
@@ -72,7 +106,7 @@ export class HassuFrontendStack extends cdk.Stack {
   }
 
   private addSSLCertificateToCloudfront(config: Config, distributionProps: DistributionProps) {
-    if (Config.env === "dev") {
+    if (config.cloudfrontCertificateArn) {
       const modifiableProps = distributionProps as any;
       modifiableProps.certificate = acm.Certificate.fromCertificateArn(
         this,
@@ -97,7 +131,7 @@ export class HassuFrontendStack extends cdk.Stack {
     });
   }
 
-  private static createDmzProxyBehavior(dmzProxyEndpoint: string) {
+  private static createDmzProxyBehavior(dmzProxyEndpoint: string, frontendRequestFunction: cloudfront.Function) {
     const dmzBehavior: BehaviorOptions = {
       compress: true,
       origin: new HttpOrigin(dmzProxyEndpoint, {
@@ -112,6 +146,12 @@ export class HassuFrontendStack extends cdk.Stack {
       originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
       allowedMethods: AllowedMethods.ALLOW_ALL,
       viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+      functionAssociations: [
+        {
+          function: frontendRequestFunction,
+          eventType: FunctionEventType.VIEWER_REQUEST,
+        },
+      ],
     };
     return dmzBehavior;
   }

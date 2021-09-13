@@ -28,16 +28,23 @@ export class Config extends Resource {
   public readonly appBucketName: string;
   public readonly dmzProxyEndpoint: string;
   public readonly frontendDomainName: string;
-  public cloudfrontCertificateArn: string;
+  public cloudfrontCertificateArn?: string;
   public static readonly env = getEnv("ENVIRONMENT");
+  public basicAuthenticationUsername: string;
+  public basicAuthenticationPassword: string;
 
   constructor(scope: Construct) {
     super(scope, "config");
     const env = Config.env;
     this.appBucketName = `hassu-app-${env}`;
-    this.dmzProxyEndpoint = this.getParameter(`/${env}/DMZProxyEndpoint`);
-    this.cloudfrontCertificateArn = this.getParameter(`/${env}/CloudfrontCertificateArn`);
-    this.frontendDomainName = this.getParameter(`/${env}/FrontendDomainName`);
+    if (Config.isPermanentEnvironment()) {
+      this.cloudfrontCertificateArn = this.getParameter(`/${env}/CloudfrontCertificateArn`);
+    }
+    const infraEnvironment = Config.isPermanentEnvironment() ? env : "dev";
+    this.dmzProxyEndpoint = this.getParameter(`/${infraEnvironment}/DMZProxyEndpoint`);
+    this.frontendDomainName = this.getParameter(`/${infraEnvironment}/FrontendDomainName`);
+    this.basicAuthenticationUsername = this.getParameter(`/${infraEnvironment}/basicAuthenticationUsername`);
+    this.basicAuthenticationPassword = this.getParameter(`/${infraEnvironment}/basicAuthenticationPassword`);
   }
 
   private getParameter(parameterName: string) {
@@ -45,4 +52,8 @@ export class Config extends Resource {
   }
 
   currentBranch = async () => execShellCommand("git rev-parse --abbrev-ref HEAD");
+
+  private static isPermanentEnvironment(): boolean {
+    return ["dev", "prod"].indexOf(Config.env) >= 0;
+  }
 }
