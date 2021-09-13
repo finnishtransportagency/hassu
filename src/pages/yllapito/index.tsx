@@ -28,13 +28,15 @@ const styles = {
   } as CSS.Properties,
 };
 
-export default () => {
+export default listingPage;
+
+function listingPage() {
   return (
     <div style={styles.container}>
       <Link href="/yllapito/suunnitelma">
         <a className="btn btn-sm btn-success mb-2">Uusi suunnitelma</a>
       </Link>
-      <SuunnitelmaList admin={true}/>
+      <SuunnitelmaList admin={true} />
     </div>
   );
-};
+}

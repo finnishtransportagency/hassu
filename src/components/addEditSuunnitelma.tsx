@@ -6,11 +6,12 @@ import * as Yup from "yup";
 import Link from "next/link";
 import { Suunnitelma } from "../API";
 import log from "loglevel";
-import { API, graphqlOperation } from "aws-amplify";
 import { createSuunnitelma, updateSuunnitelma } from "../graphql/mutations";
 import React, { FormEventHandler, useState } from "react";
 import Autocomplete from "../components/Autocomplete";
 import { filterSuunnitelmaByName, filterSuunnitelmaIncludesName } from "../mockAPI";
+import { callAPI } from "../graphql/apiEndpoint";
+import { graphqlOperation } from "aws-amplify";
 
 export { AddEditSuunnitelma };
 
@@ -44,9 +45,9 @@ function AddEditSuunnitelma(props: { suunnitelma: Suunnitelma }) {
   async function doCreateSuunnitelma(data: any) {
     try {
       log.info("Luodaan:", data);
-      const result = await API.graphql(graphqlOperation(createSuunnitelma, { suunnitelma: data }));
+      const result = await callAPI(graphqlOperation(createSuunnitelma, { suunnitelma: data }));
       log.info("Luonnin tulos:", result);
-      router.push(".");
+      await router.push(".");
     } catch (err) {
       log.error("error creating suunnitelma:", err);
     }
@@ -57,9 +58,9 @@ function AddEditSuunnitelma(props: { suunnitelma: Suunnitelma }) {
       const dataToUpdate = { ...data };
       delete dataToUpdate.status;
       log.info("Päivitetään:", dataToUpdate);
-      const result = await API.graphql(graphqlOperation(updateSuunnitelma, { suunnitelma: dataToUpdate }));
+      const result = await callAPI(graphqlOperation(updateSuunnitelma, { suunnitelma: dataToUpdate }));
       log.info("Päivityksen tulos:", result);
-      router.push("/yllapito");
+      await router.push("/yllapito");
     } catch (err) {
       log.error("error updating suunnitelma:", err);
       throw err;
@@ -149,7 +150,7 @@ function AddEditSuunnitelma(props: { suunnitelma: Suunnitelma }) {
         <div className="form-row">
           <div className="form-group col-5">
             <button type="submit" disabled={formState.isSubmitting} className="btn btn-primary mr-2">
-              {formState.isSubmitting && <span className="spinner-border spinner-border-sm mr-1"></span>}
+              {formState.isSubmitting && <span className="spinner-border spinner-border-sm mr-1" />}
               Save
             </button>
             <Link href="/yllapito">
