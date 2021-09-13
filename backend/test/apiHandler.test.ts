@@ -34,7 +34,7 @@ describe("apiHandler", () => {
         const result = (await handleEvent({
           info: { fieldName: "createSuunnitelma" },
           arguments: { suunnitelma: fixture.createSuunnitelmaInput },
-        })) as Suunnitelma;
+        } as any)) as Suunnitelma;
         result.id = fixture.SUUNNITELMA_ID_1;
         expect(result).to.deep.equal(fixture.suunnitelma1);
         sinon.assert.calledOnce(createSuunnitelmaStub);
