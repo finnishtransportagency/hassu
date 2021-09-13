@@ -35,6 +35,7 @@ export class HassuFrontendStack extends cdk.Stack {
 
     const config = new Config(this);
     const frontendRequestFunction = this.createFrontendRequestFunction(
+      env,
       config.basicAuthenticationUsername,
       config.basicAuthenticationPassword
     );
@@ -62,14 +63,18 @@ export class HassuFrontendStack extends cdk.Stack {
     });
   }
 
-  private createFrontendRequestFunction(basicAuthenticationUsername: string, basicAuthenticationPassword: string) {
+  private createFrontendRequestFunction(
+    env: string,
+    basicAuthenticationUsername: string,
+    basicAuthenticationPassword: string
+  ) {
     const sourceCode = fs.readFileSync(`${__dirname}/lambda/frontendRequest.js`).toString("UTF-8");
     const functionCode = Fn.sub(sourceCode, {
       BASIC_USERNAME: basicAuthenticationUsername,
       BASIC_PASSWORD: basicAuthenticationPassword,
     });
     return new cloudfront.Function(this, "frontendRequestFunction", {
-      functionName: "frontendRequestFunction",
+      functionName: "frontendRequestFunction" + env,
       code: FunctionCode.fromInline(functionCode),
     });
   }
