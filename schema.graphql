@@ -39,6 +39,8 @@ input UpdateSuunnitelmaInput {
 type Query {
   listSuunnitelmat: [Suunnitelma]
   getSuunnitelmaById(suunnitelmaId: String!): Suunnitelma
+  getVelhoSuunnitelmaSuggestionsByName(suunnitelmaName: String!): [Suunnitelma]
+  getVelhoSuunnitelmasByName(suunnitelmaName: String!): [Suunnitelma]
 }
 
 type Mutation {

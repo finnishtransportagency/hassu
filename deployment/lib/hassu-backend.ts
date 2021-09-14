@@ -91,6 +91,14 @@ export class HassuBackendStack extends cdk.Stack {
       typeName: "Mutation",
       fieldName: "updateSuunnitelma",
     });
+    lambdaDataSource.createResolver({
+      typeName: "Query",
+      fieldName: "getVelhoSuunnitelmaSuggestionsByName",
+    });
+    lambdaDataSource.createResolver({
+      typeName: "Query",
+      fieldName: "getVelhoSuunnitelmasByName",
+    });
   }
 
   private createDatabase() {

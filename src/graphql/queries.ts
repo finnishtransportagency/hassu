@@ -30,3 +30,31 @@ export const getSuunnitelmaById = /* GraphQL */ `
     }
   }
 `;
+export const getVelhoSuunnitelmaSuggestionsByName = /* GraphQL */ `
+  query GetVelhoSuunnitelmaSuggestionsByName($suunnitelmaName: String!) {
+    getVelhoSuunnitelmaSuggestionsByName(suunnitelmaName: $suunnitelmaName) {
+      id
+      name
+      location
+      type
+      contact
+      status
+      description
+      longDescription
+    }
+  }
+`;
+export const getVelhoSuunnitelmasByName = /* GraphQL */ `
+  query GetVelhoSuunnitelmasByName($suunnitelmaName: String!) {
+    getVelhoSuunnitelmasByName(suunnitelmaName: $suunnitelmaName) {
+      id
+      name
+      location
+      type
+      contact
+      status
+      description
+      longDescription
+    }
+  }
+`;

@@ -9,11 +9,19 @@ import log from "loglevel";
 import { createSuunnitelma, updateSuunnitelma } from "../graphql/mutations";
 import React, { FormEventHandler, useState } from "react";
 import Autocomplete from "../components/Autocomplete";
-import { filterSuunnitelmaByName, filterSuunnitelmaIncludesName } from "../mockAPI";
 import { callAPI } from "../graphql/apiEndpoint";
 import { graphqlOperation } from "aws-amplify";
+import { getVelhoSuunnitelmasByName, getVelhoSuunnitelmaSuggestionsByName } from "../graphql/queries";
 
 export { AddEditSuunnitelma };
+
+interface SuunnitelmaSuggestionResponse {
+  data: { getVelhoSuunnitelmaSuggestionsByName: Suunnitelma[] };
+}
+
+interface SuunnitelmaListResponse {
+  data: { getVelhoSuunnitelmaListByName: Suunnitelma[] };
+}
 
 function AddEditSuunnitelma(props: { suunnitelma: Suunnitelma }) {
   const suunnitelma = props?.suunnitelma;
@@ -67,11 +75,14 @@ function AddEditSuunnitelma(props: { suunnitelma: Suunnitelma }) {
     }
   }
 
-  const updateFormWithSuunnitelmaData: FormEventHandler<HTMLFormElement> = (event) => {
+  const updateFormWithSuunnitelmaData: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
     setValue("name", "");
     setValue("location", "");
-    const suunnitelmaList = filterSuunnitelmaByName(searchInput);
+    const response: SuunnitelmaListResponse = (await callAPI(
+      graphqlOperation(getVelhoSuunnitelmasByName, { suunnitelmaName: searchInput })
+    )) as SuunnitelmaListResponse;
+    const suunnitelmaList = response.data.getVelhoSuunnitelmaListByName;
     if (suunnitelmaList.length > 1) {
       setSearchInvalid(true);
       setSearchErrorMessage("Haulla löytyi enemmän kuin yksi suunnitelma");
@@ -86,9 +97,12 @@ function AddEditSuunnitelma(props: { suunnitelma: Suunnitelma }) {
     }
   };
 
-  const suunnitelmaSearchHandle = (textInput: string) => {
+  const suunnitelmaSearchHandle = async (textInput: string) => {
     setSearchInput(textInput);
-    const suunnitelmaSuggestions = filterSuunnitelmaIncludesName(textInput);
+    const response: SuunnitelmaSuggestionResponse = (await callAPI(
+      graphqlOperation(getVelhoSuunnitelmaSuggestionsByName, { suunnitelmaName: searchInput })
+    )) as SuunnitelmaSuggestionResponse;
+    const suunnitelmaSuggestions = response.data.getVelhoSuunnitelmaSuggestionsByName;
     return suunnitelmaSuggestions;
   };
 

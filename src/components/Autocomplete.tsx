@@ -6,7 +6,7 @@ interface Props {
   setValue: (value: string) => void;
   invalid?: boolean;
   errorMessage?: string;
-  suggestionHandler: (textInput: string) => any[];
+  suggestionHandler: (textInput: string) => Promise<any[]>;
   itemText: (item: any[]) => string[];
 }
 
@@ -23,12 +23,12 @@ export default function AutoComplete({
   const [suggestionList, setSuggestionList] = useState<string[]>([]);
   const [ignoreBlur, setIgnoreBlur] = useState(false);
 
-  const onChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+  const onChange: ChangeEventHandler<HTMLInputElement> = async (event) => {
     const currentValue = event.target.value;
     setSuggestionsVisible(true);
     setActiveIndex(-1);
     setValue(currentValue);
-    setSuggestionList(itemText(suggestionHandler(currentValue)).slice(0, 5));
+    setSuggestionList(itemText(await suggestionHandler(currentValue)).slice(0, 5));
   };
 
   const onKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
