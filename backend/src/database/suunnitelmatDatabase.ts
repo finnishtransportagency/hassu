@@ -1,10 +1,12 @@
+import log from "loglevel";
 import { Suunnitelma } from "../model/suunnitelma";
 
 import { DynamoDB } from "aws-sdk";
+import { config } from "../config";
 
 const docClient = new DynamoDB.DocumentClient({ apiVersion: "2012-08-10" });
 
-const suunnitelmatTableName = process.env.TABLE_SUUNNITELMAT;
+const suunnitelmatTableName = config.suunnitelmatTableName;
 
 async function createSuunnitelma(suunnitelma: Suunnitelma) {
   const params = {
@@ -29,10 +31,10 @@ async function getSuunnitelmaById(suunnitelmaId: string): Promise<Suunnitelma> {
   };
   try {
     const data = await docClient.get(params).promise();
-    console.log(data);
+    log.info(data);
     return data.Item as Suunnitelma;
   } catch (e) {
-    console.log(e);
+    log.error(e);
     throw e;
   }
 }
@@ -52,7 +54,7 @@ async function updateSuunnitelma(suunnitelma: Suunnitelma) {
     }
   }
 
-  console.log(ExpressionAttributeNames);
+  log.info(ExpressionAttributeNames);
 
   updateExpression = updateExpression.slice(0, -1);
 

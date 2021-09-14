@@ -17,7 +17,8 @@ export class HassuBackendStack extends cdk.Stack {
     });
 
     const api = this.createAPI();
-    const backendLambda = this.createBackendLambda();
+    const config = new Config(this);
+    const backendLambda = this.createBackendLambda(config);
     HassuBackendStack.mapApiResolversToLambda(api, backendLambda);
     const suunnitelmatTable = this.createDatabase();
     HassuBackendStack.attachDatabaseToBackend(suunnitelmatTable, backendLambda);
@@ -61,13 +62,15 @@ export class HassuBackendStack extends cdk.Stack {
     return apiKeyExpiration;
   }
 
-  private createBackendLambda() {
+  private createBackendLambda(config: Config) {
     return new NodejsFunction(this, "API", {
       runtime: lambda.Runtime.NODEJS_14_X,
       entry: `${__dirname}/../../backend/src/apiHandler.ts`,
       handler: "handleEvent",
       memorySize: 128,
-      environment: {},
+      environment: {
+        COGNITO_URL: config.cognitoURL,
+      },
     });
   }
 
@@ -82,6 +85,10 @@ export class HassuBackendStack extends cdk.Stack {
     lambdaDataSource.createResolver({
       typeName: "Query",
       fieldName: "getSuunnitelmaById",
+    });
+    lambdaDataSource.createResolver({
+      typeName: "Query",
+      fieldName: "getCurrentUser",
     });
     lambdaDataSource.createResolver({
       typeName: "Mutation",

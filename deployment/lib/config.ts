@@ -28,10 +28,11 @@ export class Config extends Resource {
   public readonly appBucketName: string;
   public readonly dmzProxyEndpoint: string;
   public readonly frontendDomainName: string;
-  public cloudfrontCertificateArn?: string;
+  public readonly cloudfrontCertificateArn?: string;
   public static readonly env = getEnv("ENVIRONMENT");
-  public basicAuthenticationUsername: string;
-  public basicAuthenticationPassword: string;
+  public readonly basicAuthenticationUsername: string;
+  public readonly basicAuthenticationPassword: string;
+  public readonly cognitoURL: string;
 
   constructor(scope: Construct) {
     super(scope, "config");
@@ -45,6 +46,7 @@ export class Config extends Resource {
     this.frontendDomainName = this.getParameter(`/${infraEnvironment}/FrontendDomainName`);
     this.basicAuthenticationUsername = this.getParameter(`/${infraEnvironment}/basicAuthenticationUsername`);
     this.basicAuthenticationPassword = this.getParameter(`/${infraEnvironment}/basicAuthenticationPassword`);
+    this.cognitoURL = this.getParameter(`/${infraEnvironment}/CognitoURL`);
   }
 
   private getParameter(parameterName: string) {

@@ -25,3 +25,5 @@ out
 /backend/api/API.ts
 /backend/src/api/API.ts
 /src/API.ts
+/src/graphql/mutations.ts
+/src/graphql/queries.ts
