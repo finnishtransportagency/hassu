@@ -1,6 +1,6 @@
 import log from "loglevel";
 import { createSuunnitelma } from "./handler/createSuunnitelma";
-import { CreateSuunnitelmaInput, UpdateSuunnitelmaInput } from "./api/API";
+import { CreateSuunnitelmaInput, UpdateSuunnitelmaInput } from "./api/apiModel";
 import { listSuunnitelmat } from "./handler/listSuunnitelmat";
 import { getSuunnitelmaById } from "./handler/getSuunnitelmaById";
 import { updateSuunnitelma } from "./handler/updateSuunnitelma";

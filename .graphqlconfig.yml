@@ -8,9 +8,9 @@ projects:
     extensions:
       amplify:
         codeGenTarget: typescript
-        generatedFileName:  src/API.ts
+        generatedFileName:  src/graphql/apiModel.ts
         docsFilePath: src/graphql
-        region: us-east-1
+        region: eu-west-1
         frontend: javascript
         framework: react
         maxDepth: 2

@@ -4,7 +4,7 @@ import * as sinon from "sinon";
 import { handleEvent } from "../src/apiHandler";
 import suunnitelmatDatabase from "../src/database/suunnitelmatDatabase";
 import { SuunnitelmaFixture } from "./fixture/suunnitelmaFixture";
-import { Suunnitelma } from "../src/api/API";
+import { Suunnitelma } from "../src/api/apiModel";
 
 describe("apiHandler", () => {
   afterEach(() => {

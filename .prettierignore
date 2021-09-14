@@ -1,3 +1,3 @@
 # Generated sources
-src/API.ts
-backend/src/api/API.ts
+src/graphql/apiModel.ts
+backend/src/api/apiModel.ts

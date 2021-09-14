@@ -1,10 +1,8 @@
 import React from "react";
-import { Suunnitelma } from "../API";
-import { listSuunnitelmat } from "../graphql/queries";
+import { Suunnitelma } from "../graphql/apiModel";
 import log from "loglevel";
 import Link from "next/link";
-import { callAPI } from "../graphql/apiEndpoint";
-import { graphqlOperation } from "aws-amplify";
+import { listSuunnitelmat } from "../graphql/api";
 
 type SuunnitelmaListState = {
   suunnitelmat: Suunnitelma[];
@@ -22,11 +20,9 @@ export class SuunnitelmaList extends React.Component<SuunnitelmaListProps, Suunn
 
   async fetchSuunnitelmat() {
     try {
-      const result = await callAPI(graphqlOperation(listSuunnitelmat));
+      const result = await listSuunnitelmat();
       log.info("listSuunnitelmat:", result);
-
-      // @ts-ignore
-      return result.data.listSuunnitelmat as Suunnitelma[];
+      return result;
     } catch (e) {
       log.error("Error listing suunnitelmat", e);
       if (e.errors) {

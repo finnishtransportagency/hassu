@@ -1,4 +1,4 @@
-import { UpdateSuunnitelmaInput } from "../api/API";
+import { UpdateSuunnitelmaInput } from "../api/apiModel";
 import { Suunnitelma } from "../model/suunnitelma";
 import suunnitelmatDatabase from "../database/suunnitelmatDatabase";
 

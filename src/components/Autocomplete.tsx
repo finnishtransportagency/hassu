@@ -1,5 +1,4 @@
-import React, { ChangeEventHandler, KeyboardEventHandler } from "react";
-import { useState } from "react";
+import React, { ChangeEventHandler, KeyboardEventHandler, useState } from "react";
 
 interface Props {
   value: string;
@@ -35,7 +34,9 @@ export default function AutoComplete({
     const key = event.key;
 
     // Only handle these keydown events
-    if (!["ArrowDown", "ArrowUp", "Enter", "Escape"].includes(key)) return;
+    if (!["ArrowDown", "ArrowUp", "Enter", "Escape"].includes(key)) {
+      return;
+    }
 
     // Prevent default functionality from ["ArrowDown", "ArrowUp", "Enter", "Escape"] so that enter won't move to next field in the form
     event.preventDefault();
@@ -68,7 +69,9 @@ export default function AutoComplete({
   };
 
   const handleBlur = () => {
-    if (ignoreBlur) return;
+    if (ignoreBlur) {
+      return;
+    }
     setSuggestionsVisible(false);
   };
 

@@ -4,24 +4,18 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
 import Link from "next/link";
-import { Suunnitelma } from "../API";
+import { Suunnitelma } from "../graphql/apiModel";
 import log from "loglevel";
-import { createSuunnitelma, updateSuunnitelma } from "../graphql/mutations";
 import React, { FormEventHandler, useState } from "react";
 import Autocomplete from "../components/Autocomplete";
-import { callAPI } from "../graphql/apiEndpoint";
-import { graphqlOperation } from "aws-amplify";
-import { getVelhoSuunnitelmasByName, getVelhoSuunnitelmaSuggestionsByName } from "../graphql/queries";
+import {
+  createSuunnitelma,
+  getVelhoSuunnitelmasByName,
+  getVelhoSuunnitelmaSuggestionsByName,
+  updateSuunnitelma,
+} from "../graphql/api";
 
 export { AddEditSuunnitelma };
-
-interface SuunnitelmaSuggestionResponse {
-  data: { getVelhoSuunnitelmaSuggestionsByName: Suunnitelma[] };
-}
-
-interface SuunnitelmaListResponse {
-  data: { getVelhoSuunnitelmaListByName: Suunnitelma[] };
-}
 
 function AddEditSuunnitelma(props: { suunnitelma: Suunnitelma }) {
   const suunnitelma = props?.suunnitelma;
@@ -53,7 +47,7 @@ function AddEditSuunnitelma(props: { suunnitelma: Suunnitelma }) {
   async function doCreateSuunnitelma(data: any) {
     try {
       log.info("Luodaan:", data);
-      const result = await callAPI(graphqlOperation(createSuunnitelma, { suunnitelma: data }));
+      const result = await createSuunnitelma(data);
       log.info("Luonnin tulos:", result);
       await router.push(".");
     } catch (err) {
@@ -66,7 +60,7 @@ function AddEditSuunnitelma(props: { suunnitelma: Suunnitelma }) {
       const dataToUpdate = { ...data };
       delete dataToUpdate.status;
       log.info("Päivitetään:", dataToUpdate);
-      const result = await callAPI(graphqlOperation(updateSuunnitelma, { suunnitelma: dataToUpdate }));
+      const result = await updateSuunnitelma(dataToUpdate);
       log.info("Päivityksen tulos:", result);
       await router.push("/yllapito");
     } catch (err) {
@@ -79,10 +73,7 @@ function AddEditSuunnitelma(props: { suunnitelma: Suunnitelma }) {
     event.preventDefault();
     setValue("name", "");
     setValue("location", "");
-    const response: SuunnitelmaListResponse = (await callAPI(
-      graphqlOperation(getVelhoSuunnitelmasByName, { suunnitelmaName: searchInput })
-    )) as SuunnitelmaListResponse;
-    const suunnitelmaList = response.data.getVelhoSuunnitelmaListByName;
+    const suunnitelmaList = await getVelhoSuunnitelmasByName(searchInput);
     if (suunnitelmaList.length > 1) {
       setSearchInvalid(true);
       setSearchErrorMessage("Haulla löytyi enemmän kuin yksi suunnitelma");
@@ -99,11 +90,7 @@ function AddEditSuunnitelma(props: { suunnitelma: Suunnitelma }) {
 
   const suunnitelmaSearchHandle = async (textInput: string) => {
     setSearchInput(textInput);
-    const response: SuunnitelmaSuggestionResponse = (await callAPI(
-      graphqlOperation(getVelhoSuunnitelmaSuggestionsByName, { suunnitelmaName: searchInput })
-    )) as SuunnitelmaSuggestionResponse;
-    const suunnitelmaSuggestions = response.data.getVelhoSuunnitelmaSuggestionsByName;
-    return suunnitelmaSuggestions;
+    return await getVelhoSuunnitelmaSuggestionsByName(searchInput);
   };
 
   return (
@@ -121,7 +108,7 @@ function AddEditSuunnitelma(props: { suunnitelma: Suunnitelma }) {
                   setSearchInput(value);
                 }}
                 suggestionHandler={suunnitelmaSearchHandle}
-                itemText={(suunnitelmat: Suunnitelma[]) => suunnitelmat.map((suunnitelma) => suunnitelma.name)}
+                itemText={(suunnitelmat: Suunnitelma[]) => suunnitelmat.map((s) => s.name)}
                 invalid={searchInvalid}
                 errorMessage={searchErrorMessage}
               />
