@@ -1,3 +1,4 @@
+import log from "loglevel";
 import { createSuunnitelma } from "./handler/createSuunnitelma";
 import { CreateSuunnitelmaInput, UpdateSuunnitelmaInput } from "./api/API";
 import { listSuunnitelmat } from "./handler/listSuunnitelmat";
@@ -6,6 +7,11 @@ import { updateSuunnitelma } from "./handler/updateSuunnitelma";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { getVelhoSuunnitelmaSuggestionsByName } from "./handler/getVelhoSuunnitelmaSuggestionsByName";
 import { getVelhoSuunnitelmasByName } from "./handler/getVelhoSuunnitelmasByName";
+import { identifyUser } from "./service/userService";
+import { getCurrentUser } from "./handler/getCurrentUser";
+
+const logLevel = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : "info";
+log.setLevel(logLevel as any);
 
 type AppSyncEventArguments = {
   suunnitelma?: CreateSuunnitelmaInput | UpdateSuunnitelmaInput;
@@ -14,8 +20,8 @@ type AppSyncEventArguments = {
 };
 
 export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArguments>) {
-  // tslint:disable-next-line:no-console
-  console.log(JSON.stringify(event));
+  log.info(JSON.stringify(event.info));
+  await identifyUser(event.request?.headers);
   switch (event.info.fieldName) {
     case "createSuunnitelma":
       return await createSuunnitelma(event.arguments.suunnitelma as CreateSuunnitelmaInput);
@@ -29,6 +35,8 @@ export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArgume
       return await getVelhoSuunnitelmaSuggestionsByName(event.arguments.suunnitelmaName);
     case "getVelhoSuunnitelmasByName":
       return await getVelhoSuunnitelmasByName(event.arguments.suunnitelmaName);
+    case "getCurrentUser":
+      return await getCurrentUser();
     default:
       return null;
   }

@@ -19,6 +19,14 @@ type Suunnitelma {
   longDescription: String
 }
 
+type User {
+  uid: String
+  vaylaUser: Boolean
+  suomiFiUser: Boolean
+  firstName: String!
+  lastName: String!
+}
+
 input CreateSuunnitelmaInput {
   name: String!
   location: String
@@ -37,6 +45,7 @@ input UpdateSuunnitelmaInput {
 }
 
 type Query {
+  getCurrentUser: User
   listSuunnitelmat: [Suunnitelma]
   getSuunnitelmaById(suunnitelmaId: String!): Suunnitelma
   getVelhoSuunnitelmaSuggestionsByName(suunnitelmaName: String!): [Suunnitelma]
