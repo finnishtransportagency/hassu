@@ -3,11 +3,11 @@ import * as sinon from "sinon";
 import suunnitelmatDatabase from "../../src/database/suunnitelmatDatabase";
 import { SuunnitelmaFixture } from "../fixture/suunnitelmaFixture";
 import { DynamoDB } from "aws-sdk";
-import { toMatchSnapshot } from "../util/expect-mocha-snapshot";
+import * as chai from "chai";
 
-import * as expect from "expect";
-
-expect.extend({ toMatchSnapshot });
+const { jestSnapshotPlugin } = require("mocha-chai-jest-snapshot");
+chai.use(jestSnapshotPlugin());
+const { expect } = require("chai");
 
 describe("apiHandler", () => {
   afterEach(() => {
@@ -30,7 +30,7 @@ describe("apiHandler", () => {
     });
 
     describe("updateSuunnitelma", () => {
-      it("should pass expected parameters to DynamoDB", async function () {
+      it("should pass expected parameters to DynamoDB", async () => {
         updateStub.returns({
           promise() {
             return Promise.resolve({});
@@ -41,7 +41,7 @@ describe("apiHandler", () => {
 
         sinon.assert.calledOnce(updateStub);
         const call = updateStub.getCall(0);
-        expect(call.firstArg).toMatchSnapshot(this as any);
+        expect(call.firstArg).toMatchSnapshot();
       });
     });
   });
