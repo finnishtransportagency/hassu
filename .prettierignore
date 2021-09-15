@@ -1,3 +1,6 @@
 # Generated sources
 src/graphql/apiModel.ts
 backend/src/api/apiModel.ts
+src/API.ts
+src/graphql/queries.ts
+src/graphql/mutations.ts
