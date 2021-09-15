@@ -1,6 +1,6 @@
 import * as userService from "../service/userService";
 import { VaylaUser } from "../service/userService";
-import { User } from "../api/API";
+import { User } from "../api/apiModel";
 
 function adaptVaylaUser(vaylaUser: VaylaUser): User {
   return {

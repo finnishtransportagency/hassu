@@ -2,8 +2,8 @@ import { AddEditSuunnitelma } from "../../../components/addEditSuunnitelma";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { getSuunnitelmaById } from "../../../graphql/queries";
-import { Suunnitelma } from "../../../API";
-import { callAPI } from "../../../graphql/apiEndpoint";
+import { Suunnitelma } from "../../../graphql/apiModel";
+import { callAPI } from "../../../graphql/api";
 import { graphqlOperation } from "aws-amplify";
 
 export default function EditSuunnitelmaPage() {

@@ -1,4 +1,4 @@
-import { CreateSuunnitelmaInput } from "../api/API";
+import { CreateSuunnitelmaInput } from "../api/apiModel";
 import { Status, Suunnitelma } from "../model/suunnitelma";
 import suunnitelmatDatabase from "../database/suunnitelmatDatabase";
 

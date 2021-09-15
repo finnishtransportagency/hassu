@@ -1,11 +1,11 @@
 import { getSuunnitelmaById } from "../../graphql/queries";
-import { Suunnitelma } from "../../API";
+import { Suunnitelma } from "../../graphql/apiModel";
 import React from "react";
 import Link from "next/link";
 import useSWR from "swr";
 import { useRouter } from "next/router";
 import log from "loglevel";
-import { callAPI } from "../../graphql/apiEndpoint";
+import { callAPI } from "../../graphql/api";
 import { graphqlOperation } from "aws-amplify";
 
 function SuunnitelmaPage() {

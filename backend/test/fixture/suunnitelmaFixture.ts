@@ -1,4 +1,4 @@
-import { CreateSuunnitelmaInput, Status, Suunnitelma } from "../../src/api/API";
+import { CreateSuunnitelmaInput, Status, Suunnitelma } from "../../src/api/apiModel";
 
 export class SuunnitelmaFixture {
   public SUUNNITELMA_NAME_1 = "Test Suunnitelma 1";

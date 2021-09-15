@@ -1,10 +1,11 @@
 import log from "loglevel";
 import { createSuunnitelma } from "./handler/createSuunnitelma";
-import { CreateSuunnitelmaInput, UpdateSuunnitelmaInput } from "./api/API";
+import { CreateSuunnitelmaInput, UpdateSuunnitelmaInput } from "./api/apiModel";
 import { listSuunnitelmat } from "./handler/listSuunnitelmat";
 import { getSuunnitelmaById } from "./handler/getSuunnitelmaById";
 import { updateSuunnitelma } from "./handler/updateSuunnitelma";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
+import { getVelhoSuunnitelmasByName } from "./handler/getVelhoSuunnitelmasByName";
 import { identifyUser } from "./service/userService";
 import { getCurrentUser } from "./handler/getCurrentUser";
 
@@ -14,6 +15,8 @@ log.setLevel(logLevel as any);
 type AppSyncEventArguments = {
   suunnitelma?: CreateSuunnitelmaInput | UpdateSuunnitelmaInput;
   suunnitelmaId?: string;
+  suunnitelmaName?: string;
+  requireExactMatch?: boolean;
 };
 
 export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArguments>) {
@@ -28,6 +31,8 @@ export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArgume
       return await getSuunnitelmaById(event.arguments.suunnitelmaId);
     case "updateSuunnitelma":
       return await updateSuunnitelma(event.arguments.suunnitelma as UpdateSuunnitelmaInput);
+    case "getVelhoSuunnitelmasByName":
+      return await getVelhoSuunnitelmasByName(event.arguments.suunnitelmaName, event.arguments.requireExactMatch);
     case "getCurrentUser":
       return await getCurrentUser();
     default:
