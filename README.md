@@ -43,6 +43,11 @@ npm run deploy:app
 
 ### AWS Systems Manager Parameter Store
 
-| Parametrin nimi              | Kuvaus                                                     |
-| ---------------------------- | ---------------------------------------------------------- |
-| /CloudfrontCertificateId/dev | Cloudfront distribuution sertifikaatin ID Dev-ympäristössä |
+| Parametrin nimi                    | Kuvaus                                                   |
+| ---------------------------------- | -------------------------------------------------------- |
+| /<env>/CloudfrontCertificateArn    | Cloudfront distribuution sertifikaatin arn               |
+| /<env>/DMZProxyEndpoint            | Proxyn julkinen URL                                      |
+| /<env>/FrontendDomainName          | Palvelun julkinen URL                                    |
+| /<env>/basicAuthenticationUsername | Testiversion autentikaation käyttäjätunnus               |
+| /<env>/basicAuthenticationPassword | Testiversion autentikaation salasana                     |
+| /<env>/CognitoURL                  | Virkamiestunnistautumisen JWT-tokenien sallittu "issuer" |
