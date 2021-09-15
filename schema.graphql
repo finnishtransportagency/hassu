@@ -48,7 +48,6 @@ type Query {
   getCurrentUser: User
   listSuunnitelmat: [Suunnitelma]
   getSuunnitelmaById(suunnitelmaId: String!): Suunnitelma
-  getVelhoSuunnitelmaSuggestionsByName(suunnitelmaName: String!): [Suunnitelma]
   getVelhoSuunnitelmasByName(suunnitelmaName: String!, requireExactMatch: Boolean): [Suunnitelma]
 }
 

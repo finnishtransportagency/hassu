@@ -100,10 +100,6 @@ export class HassuBackendStack extends cdk.Stack {
     });
     lambdaDataSource.createResolver({
       typeName: "Query",
-      fieldName: "getVelhoSuunnitelmaSuggestionsByName",
-    });
-    lambdaDataSource.createResolver({
-      typeName: "Query",
       fieldName: "getVelhoSuunnitelmasByName",
     });
   }
