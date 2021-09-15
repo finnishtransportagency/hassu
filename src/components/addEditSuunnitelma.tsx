@@ -8,12 +8,7 @@ import { Suunnitelma } from "../graphql/apiModel";
 import log from "loglevel";
 import React, { FormEventHandler, useState } from "react";
 import Autocomplete from "../components/Autocomplete";
-import {
-  createSuunnitelma,
-  getVelhoSuunnitelmasByName,
-  getVelhoSuunnitelmaSuggestionsByName,
-  updateSuunnitelma,
-} from "../graphql/api";
+import { createSuunnitelma, getVelhoSuunnitelmasByName, updateSuunnitelma } from "../graphql/api";
 
 export { AddEditSuunnitelma };
 
@@ -73,7 +68,7 @@ function AddEditSuunnitelma(props: { suunnitelma: Suunnitelma }) {
     event.preventDefault();
     setValue("name", "");
     setValue("location", "");
-    const suunnitelmaList = await getVelhoSuunnitelmasByName(searchInput);
+    const suunnitelmaList = await getVelhoSuunnitelmasByName(searchInput, true);
     if (suunnitelmaList.length > 1) {
       setSearchInvalid(true);
       setSearchErrorMessage("Haulla löytyi enemmän kuin yksi suunnitelma");
@@ -90,7 +85,7 @@ function AddEditSuunnitelma(props: { suunnitelma: Suunnitelma }) {
 
   const suunnitelmaSearchHandle = async (textInput: string) => {
     setSearchInput(textInput);
-    return await getVelhoSuunnitelmaSuggestionsByName(searchInput);
+    return await getVelhoSuunnitelmasByName(searchInput);
   };
 
   return (

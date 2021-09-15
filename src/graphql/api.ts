@@ -33,18 +33,14 @@ export async function updateSuunnitelma(suunnitelma: model.UpdateSuunnitelmaInpu
   return await callAPI(graphqlOperation(mutations.updateSuunnitelma, { suunnitelma }));
 }
 
-export async function getVelhoSuunnitelmasByName(suunnitelmaName: string): Promise<model.Suunnitelma[]> {
+export async function getVelhoSuunnitelmasByName(
+  suunnitelmaName: string,
+  requireExactMatch?: boolean
+): Promise<model.Suunnitelma[]> {
   const response = (await callAPI(
-    graphqlOperation(queries.getVelhoSuunnitelmasByName, { suunnitelmaName })
+    graphqlOperation(queries.getVelhoSuunnitelmasByName, { suunnitelmaName, requireExactMatch })
   )) as GraphQLResult<model.GetVelhoSuunnitelmasByNameQuery>;
   return response.data?.getVelhoSuunnitelmasByName as model.Suunnitelma[];
-}
-
-export async function getVelhoSuunnitelmaSuggestionsByName(suunnitelmaName: string): Promise<model.Suunnitelma[]> {
-  const response = (await callAPI(
-    graphqlOperation(queries.getVelhoSuunnitelmaSuggestionsByName, { suunnitelmaName })
-  )) as GraphQLResult<model.GetVelhoSuunnitelmaSuggestionsByNameQuery>;
-  return response.data?.getVelhoSuunnitelmaSuggestionsByName as model.Suunnitelma[];
 }
 
 export async function listSuunnitelmat() {
