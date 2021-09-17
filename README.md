@@ -51,3 +51,7 @@ npm run deploy:app
 | /<env>/basicAuthenticationUsername | Testiversion autentikaation käyttäjätunnus               |
 | /<env>/basicAuthenticationPassword | Testiversion autentikaation salasana                     |
 | /<env>/CognitoURL                  | Virkamiestunnistautumisen JWT-tokenien sallittu "issuer" |
+| /<env>/VelhoAuthenticationUrl | Velhon tunnistautumisen osoite                             |
+| /<env>/VelhoApiUrl            | Velho-rajapinnan osoite                                    |
+| /<env>/VelhoUsername          | Käyttäjätunnus Velho-integraatioon                         |
+| /<env>/VelhoPassword          | Salasana Velho-integraatioon                               |
