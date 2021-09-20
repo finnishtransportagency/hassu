@@ -4,7 +4,6 @@ import Link from "next/link";
 
 const styles = {
   container: {
-    width: "400px",
     margin: "0 auto",
     display: "flex",
     flexDirection: "column",

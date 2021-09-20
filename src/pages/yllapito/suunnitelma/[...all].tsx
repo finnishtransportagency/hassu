@@ -1,10 +1,8 @@
 import { AddEditSuunnitelma } from "../../../components/addEditSuunnitelma";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { getSuunnitelmaById } from "../../../graphql/queries";
 import { Suunnitelma } from "../../../graphql/apiModel";
-import { callAPI } from "../../../graphql/api";
-import { graphqlOperation } from "aws-amplify";
+import { getSuunnitelmaById } from "../../../graphql/api";
 
 export default function EditSuunnitelmaPage() {
   const router = useRouter();
@@ -14,10 +12,7 @@ export default function EditSuunnitelmaPage() {
   useEffect(() => {
     async function loadSuunnitelma() {
       if (id) {
-        const result = (await callAPI(graphqlOperation(getSuunnitelmaById, { suunnitelmaId: id }))) as Suunnitelma;
-        // @ts-ignore
-        const loaded = result.data.getSuunnitelmaById;
-        setSuunnitelma(loaded);
+        setSuunnitelma(await getSuunnitelmaById(id));
       }
     }
 

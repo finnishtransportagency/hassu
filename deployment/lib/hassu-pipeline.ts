@@ -1,4 +1,4 @@
-/* tslint:disable:no-console */
+/* tslint:disable:no-console no-unused-expression */
 import { Construct, Stack } from "@aws-cdk/core";
 import { CodePipeline, CodePipelineSource, ShellStep } from "@aws-cdk/pipelines";
 import * as cb from "@aws-cdk/aws-codebuild";
@@ -25,7 +25,33 @@ export class HassuPipelineStack extends Stack {
     const appBucketName = config.appBucketName;
     console.log("Deploying pipeline from branch " + branch + " to enviroment " + env);
 
-    // tslint:disable-next-line:no-unused-expression
+    if (Config.isFeatureBranch(branch)) {
+      if (Config.isPermanentEnvironment()) {
+        throw new Error(
+          "You cannot deploy feature branch with name '" + env + "'. Please specify a different value for ENVIRONMENT"
+        );
+      }
+      this.createPipeline(env, branch, [
+        "npm run generate",
+        "npm run lint",
+        "npm run test",
+        "npm run build",
+        "npm run synth",
+      ]);
+    } else {
+      this.createPipeline(env, branch, [
+        "npm run generate",
+        "npm run lint",
+        "npm run test",
+        "npm run deploy:backend",
+        "npm run deploy:frontend",
+        "npm run build",
+        "aws s3 sync out s3://" + appBucketName + "/",
+      ]);
+    }
+  }
+
+  private createPipeline(env: string, branch: string, commands: string[]) {
     new CodePipeline(this, "pipeline", {
       // The pipeline name
       pipelineName: "HassuPipeline-" + env,
@@ -38,15 +64,7 @@ export class HassuPipelineStack extends Stack {
 
         installCommands: ["npm install -g @aws-amplify/cli", "npm ci"],
         // Install dependencies, build and run cdk synth
-        commands: [
-          "npm run generate",
-          "npm run lint",
-          "npm run test",
-          "npm run deploy:backend",
-          "npm run deploy:frontend",
-          "npm run build",
-          "aws s3 sync out s3://" + appBucketName + "/",
-        ],
+        commands,
       }),
       selfMutation: false,
       codeBuildDefaults: {

@@ -3,10 +3,10 @@ import { Amplify } from "@aws-amplify/core";
 import awsExports from "../aws-exports";
 import { API, graphqlOperation } from "aws-amplify";
 import { GraphQLAPIClass } from "@aws-amplify/api-graphql";
-import { isVaylaAuthenticated } from "../services/userService";
 import * as model from "./apiModel";
 import * as queries from "./queries";
 import * as mutations from "./mutations";
+import log from "loglevel";
 
 import { GraphQLResult } from "@aws-amplify/api-graphql/src/types/index";
 
@@ -17,35 +17,54 @@ export const yllapitoAPI = new GraphQLAPIClass({ ...awsExports, aws_appsync_grap
 Amplify.register(yllapitoAPI);
 yllapitoAPI.configure({ aws_appsync_graphqlEndpoint: yllapitoEndpoint });
 
-export const callAPI = async (operation: any) => {
-  if (isVaylaAuthenticated()) {
+const callYllapitoAPI = async (operation: any) => {
+  try {
     return yllapitoAPI.graphql(operation);
-  } else {
-    return API.graphql(operation);
+  } catch (e) {
+    log.error(e);
+    window.location.pathname = "/yllapito/kirjaudu";
   }
 };
 
+export async function getSuunnitelmaById(suunnitelmaId: string) {
+  const response = (await callYllapitoAPI(
+    graphqlOperation(queries.getSuunnitelmaById, { suunnitelmaId })
+  )) as GraphQLResult<model.GetSuunnitelmaByIdQuery>;
+  return response.data?.getSuunnitelmaById as model.Suunnitelma;
+}
+
 export async function createSuunnitelma(suunnitelma: model.CreateSuunnitelmaInput) {
-  return await callAPI(graphqlOperation(mutations.createSuunnitelma, { suunnitelma }));
+  return await callYllapitoAPI(graphqlOperation(mutations.createSuunnitelma, { suunnitelma }));
 }
 
 export async function updateSuunnitelma(suunnitelma: model.UpdateSuunnitelmaInput) {
-  return await callAPI(graphqlOperation(mutations.updateSuunnitelma, { suunnitelma }));
+  return await callYllapitoAPI(graphqlOperation(mutations.updateSuunnitelma, { suunnitelma }));
 }
 
 export async function getVelhoSuunnitelmasByName(
   suunnitelmaName: string,
   requireExactMatch?: boolean
 ): Promise<model.Suunnitelma[]> {
-  const response = (await callAPI(
+  const response = (await callYllapitoAPI(
     graphqlOperation(queries.getVelhoSuunnitelmasByName, { suunnitelmaName, requireExactMatch })
   )) as GraphQLResult<model.GetVelhoSuunnitelmasByNameQuery>;
   return response.data?.getVelhoSuunnitelmasByName as model.Suunnitelma[];
 }
 
 export async function listSuunnitelmat() {
-  const response = (await callAPI(
+  const response = (await API.graphql(
     graphqlOperation(queries.listSuunnitelmat)
   )) as GraphQLResult<model.ListSuunnitelmatQuery>;
   return response.data?.listSuunnitelmat as model.Suunnitelma[];
+}
+
+export async function getCurrentUser(): Promise<model.User | undefined> {
+  try {
+    const response = (await callYllapitoAPI(
+      graphqlOperation(queries.getCurrentUser)
+    )) as GraphQLResult<model.GetCurrentUserQuery>;
+    return response.data?.getCurrentUser as model.User;
+  } catch (e) {
+    log.debug(e);
+  }
 }

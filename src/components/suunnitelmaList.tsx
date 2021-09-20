@@ -45,28 +45,34 @@ export class SuunnitelmaList extends React.Component<SuunnitelmaListProps, Suunn
 
   render() {
     return (
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th style={{ width: "50%" }}>Nimi</th>
-            <th style={{ width: "50%" }}>Sijainti</th>
-          </tr>
-        </thead>
-        <tbody>
-          {this.state.suunnitelmat.map((suunnitelma) => (
-            <tr key={suunnitelma.id}>
-              <td>
-                <Link
-                  href={(this.props.admin ? "/yllapito" : "") + `/suunnitelma/${encodeURIComponent(suunnitelma.id)}`}
-                >
-                  <a>{suunnitelma.name}</a>
-                </Link>
-              </td>
-              <td>{suunnitelma.location}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className={"row"}>
+        <div className={"col"}>
+          <table className="table table-striped">
+            <thead>
+              <tr>
+                <th style={{ width: "50%" }}>Nimi</th>
+                <th style={{ width: "50%" }}>Sijainti</th>
+              </tr>
+            </thead>
+            <tbody>
+              {this.state.suunnitelmat.map((suunnitelma) => (
+                <tr key={suunnitelma.id}>
+                  <td>
+                    <Link
+                      href={
+                        (this.props.admin ? "/yllapito" : "") + `/suunnitelma/${encodeURIComponent(suunnitelma.id)}`
+                      }
+                    >
+                      <a>{suunnitelma.name}</a>
+                    </Link>
+                  </td>
+                  <td>{suunnitelma.location}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     );
   }
 }
