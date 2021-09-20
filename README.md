@@ -43,15 +43,15 @@ npm run deploy:app
 
 ### AWS Systems Manager Parameter Store
 
-| Parametrin nimi                    | Kuvaus                                                   |
-| ---------------------------------- | -------------------------------------------------------- |
-| /<env>/CloudfrontCertificateArn    | Cloudfront distribuution sertifikaatin arn               |
-| /<env>/DMZProxyEndpoint            | Proxyn julkinen URL                                      |
-| /<env>/FrontendDomainName          | Palvelun julkinen URL                                    |
-| /<env>/basicAuthenticationUsername | Testiversion autentikaation käyttäjätunnus               |
-| /<env>/basicAuthenticationPassword | Testiversion autentikaation salasana                     |
-| /<env>/CognitoURL                  | Virkamiestunnistautumisen JWT-tokenien sallittu "issuer" |
-| /<env>/VelhoAuthenticationUrl | Velhon tunnistautumisen osoite                             |
-| /<env>/VelhoApiUrl            | Velho-rajapinnan osoite                                    |
-| /<env>/VelhoUsername          | Käyttäjätunnus Velho-integraatioon                         |
-| /<env>/VelhoPassword          | Salasana Velho-integraatioon                               |
+| Parametrin nimi                     | Kuvaus                                                   |
+| ----------------------------------- | -------------------------------------------------------- |
+| /\<env>/CloudfrontCertificateArn    | Cloudfront distribuution sertifikaatin arn               |
+| /\<env>/DMZProxyEndpoint            | Proxyn julkinen URL                                      |
+| /\<env>/FrontendDomainName          | Palvelun julkinen URL                                    |
+| /\<env>/basicAuthenticationUsername | Testiversion autentikaation käyttäjätunnus               |
+| /\<env>/basicAuthenticationPassword | Testiversion autentikaation salasana                     |
+| /\<env>/CognitoURL                  | Virkamiestunnistautumisen JWT-tokenien sallittu "issuer" |
+| /\<env>/VelhoAuthenticationUrl      | Velhon tunnistautumisen osoite                           |
+| /\<env>/VelhoApiUrl                 | Velho-rajapinnan osoite                                  |
+| /\<env>/VelhoUsername               | Käyttäjätunnus Velho-integraatioon                       |
+| /\<env>/VelhoPassword               | Salasana Velho-integraatioon                             |
