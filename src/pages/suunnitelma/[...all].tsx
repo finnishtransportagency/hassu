@@ -1,12 +1,9 @@
-import { getSuunnitelmaById } from "../../graphql/queries";
-import { Suunnitelma } from "../../graphql/apiModel";
 import React from "react";
 import Link from "next/link";
 import useSWR from "swr";
 import { useRouter } from "next/router";
 import log from "loglevel";
-import { callAPI } from "../../graphql/api";
-import { graphqlOperation } from "aws-amplify";
+import { getSuunnitelmaById } from "../../graphql/api";
 
 function SuunnitelmaPage() {
   const router = useRouter();
@@ -42,7 +39,5 @@ export async function suunnitelmaFetcher(params: string) {
   if (!id) {
     return null;
   }
-  const result = (await callAPI(graphqlOperation(getSuunnitelmaById, { suunnitelmaId: id }))) as Suunnitelma;
-  // @ts-ignore
-  return result.data.getSuunnitelmaById;
+  return await getSuunnitelmaById(id);
 }

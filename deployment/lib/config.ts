@@ -55,7 +55,11 @@ export class Config extends Resource {
 
   currentBranch = async () => execShellCommand("git rev-parse --abbrev-ref HEAD");
 
-  private static isPermanentEnvironment(): boolean {
+  public static isPermanentEnvironment(): boolean {
     return ["dev", "prod"].indexOf(Config.env) >= 0;
+  }
+
+  public static isFeatureBranch(branch: string): boolean {
+    return branch !== "main";
   }
 }
