@@ -33,6 +33,7 @@
     "@aws-cdk/aws-s3-deployment": "1.120.0",
     "@aws-cdk/core": "1.120.0",
     "@aws-cdk/pipelines": "1.120.0",
+    "@aws-sdk/client-ssm": "3.33.0",
     "@testing-library/jest-dom": "5.14.1",
     "@testing-library/react": "11.1.0",
     "@testing-library/user-event": "13.2.1",

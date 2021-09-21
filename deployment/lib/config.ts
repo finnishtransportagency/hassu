@@ -2,6 +2,9 @@ import { ExecException } from "child_process";
 import { Construct } from "constructs";
 import * as ssm from "@aws-cdk/aws-ssm";
 import { Resource } from "@aws-cdk/core";
+import { SSM } from "aws-sdk";
+
+const ssmProvider = new SSM({ apiVersion: "2014-11-06" });
 
 function getEnv(name: string): string {
   const value = process.env[name];
@@ -52,13 +55,21 @@ export class Config extends Resource {
     return ssm.StringParameter.valueForStringParameter(this, parameterName);
   }
 
-  public getInfraParameter(parameterName: string, isSecureString?: boolean) {
-    if (isSecureString) {
-      return ssm.StringParameter.valueForStringParameter(this, `/${this.infraEnvironment}/` + parameterName);
-      // ssm.StringParameter.valueForSecureStringParameter(this, `/${this.infraEnvironment}/` + parameterName);
-    } else {
-      return ssm.StringParameter.valueForStringParameter(this, `/${this.infraEnvironment}/` + parameterName);
+  public getInfraParameter(parameterName: string) {
+    return ssm.StringParameter.valueForStringParameter(this, `/${this.infraEnvironment}/` + parameterName);
+  }
+
+  public async getSecureInfraParameter(parameterName: string, isSecureString?: boolean) {
+    const name = `/${this.infraEnvironment}/` + parameterName;
+    const params = {
+      Name: name,
+      WithDecryption: true,
+    };
+    const value = (await ssmProvider.getParameter(params).promise()).Parameter?.Value;
+    if (!value) {
+      throw new Error("Parameter " + name + " not found");
     }
+    return value;
   }
 
   currentBranch = async () => execShellCommand("git rev-parse --abbrev-ref HEAD");
