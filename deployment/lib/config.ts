@@ -32,7 +32,7 @@ export class Config extends Resource {
   public static readonly env = getEnv("ENVIRONMENT");
   public readonly basicAuthenticationUsername: string;
   public readonly basicAuthenticationPassword: string;
-  public readonly cognitoURL: string;
+  private infraEnvironment: string;
 
   constructor(scope: Construct) {
     super(scope, "config");
@@ -41,16 +41,19 @@ export class Config extends Resource {
     if (Config.isPermanentEnvironment()) {
       this.cloudfrontCertificateArn = this.getParameter(`/${env}/CloudfrontCertificateArn`);
     }
-    const infraEnvironment = Config.isPermanentEnvironment() ? env : "dev";
-    this.dmzProxyEndpoint = this.getParameter(`/${infraEnvironment}/DMZProxyEndpoint`);
-    this.frontendDomainName = this.getParameter(`/${infraEnvironment}/FrontendDomainName`);
-    this.basicAuthenticationUsername = this.getParameter(`/${infraEnvironment}/basicAuthenticationUsername`);
-    this.basicAuthenticationPassword = this.getParameter(`/${infraEnvironment}/basicAuthenticationPassword`);
-    this.cognitoURL = this.getParameter(`/${infraEnvironment}/CognitoURL`);
+    this.infraEnvironment = Config.isPermanentEnvironment() ? env : "dev";
+    this.dmzProxyEndpoint = this.getInfraParameter("DMZProxyEndpoint");
+    this.frontendDomainName = this.getInfraParameter("FrontendDomainName");
+    this.basicAuthenticationUsername = this.getInfraParameter("basicAuthenticationUsername");
+    this.basicAuthenticationPassword = this.getInfraParameter("basicAuthenticationPassword");
   }
 
   private getParameter(parameterName: string) {
     return ssm.StringParameter.valueForStringParameter(this, parameterName);
+  }
+
+  public getInfraParameter(parameterName: string) {
+    return ssm.StringParameter.valueForStringParameter(this, "/${infraEnvironment}/" + parameterName);
   }
 
   currentBranch = async () => execShellCommand("git rev-parse --abbrev-ref HEAD");
