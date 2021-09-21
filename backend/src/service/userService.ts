@@ -2,6 +2,7 @@ import { AppSyncResolverEventHeaders } from "aws-lambda/trigger/appsync-resolver
 import { validateJwtToken } from "../util/validatejwttoken";
 import { config } from "../config";
 import log from "loglevel";
+import { IllegalAccessError } from "../error/IllegalAccessError";
 
 let vaylaUser: VaylaUser;
 
@@ -23,7 +24,6 @@ export class VaylaUser {
   }
 }
 
-////
 async function identifyUser(headers: AppSyncResolverEventHeaders) {
   vaylaUser = undefined;
   if (headers) {
@@ -39,16 +39,26 @@ async function identifyUser(headers: AppSyncResolverEventHeaders) {
   }
 }
 
-function isVaylaUser() {
-  return !!vaylaUser;
+function mockUser(user: VaylaUser) {
+  vaylaUser = user;
 }
 
 function getVaylaUser() {
   return vaylaUser;
 }
 
+function isVaylaUser() {
+  return !!getVaylaUser();
+}
+
 function isSuomiFiUser() {
   return false;
 }
 
-export { identifyUser, isVaylaUser, isSuomiFiUser, getVaylaUser };
+function requireVaylaUser() {
+  if (!isVaylaUser()) {
+    throw new IllegalAccessError("Väylä-kirjautuminen puuttuu");
+  }
+}
+
+export { identifyUser, isVaylaUser, isSuomiFiUser, getVaylaUser, requireVaylaUser, mockUser };

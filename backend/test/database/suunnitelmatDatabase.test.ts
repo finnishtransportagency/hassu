@@ -3,10 +3,7 @@ import * as sinon from "sinon";
 import suunnitelmatDatabase from "../../src/database/suunnitelmatDatabase";
 import { SuunnitelmaFixture } from "../fixture/suunnitelmaFixture";
 import { DynamoDB } from "aws-sdk";
-import * as chai from "chai";
 
-const { jestSnapshotPlugin } = require("mocha-chai-jest-snapshot");
-chai.use(jestSnapshotPlugin());
 const { expect } = require("chai");
 
 describe("apiHandler", () => {

@@ -35,3 +35,7 @@ backend/src/velho
 tools/velho/.gradle
 tools/velho/build
 !tools/velho/gradle/wrapper/gradle-wrapper.jar
+
+.report
+.nyc_output
+
