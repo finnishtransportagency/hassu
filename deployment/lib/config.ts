@@ -32,7 +32,7 @@ export class Config extends Resource {
   public static readonly env = getEnv("ENVIRONMENT");
   public readonly basicAuthenticationUsername: string;
   public readonly basicAuthenticationPassword: string;
-  private infraEnvironment: string;
+  public readonly infraEnvironment: string;
 
   constructor(scope: Construct) {
     super(scope, "config");
@@ -52,8 +52,13 @@ export class Config extends Resource {
     return ssm.StringParameter.valueForStringParameter(this, parameterName);
   }
 
-  public getInfraParameter(parameterName: string) {
-    return ssm.StringParameter.valueForStringParameter(this, "/${infraEnvironment}/" + parameterName);
+  public getInfraParameter(parameterName: string, isSecureString?: boolean) {
+    if (isSecureString) {
+      return ssm.StringParameter.valueForStringParameter(this, `/${this.infraEnvironment}/` + parameterName);
+      // ssm.StringParameter.valueForSecureStringParameter(this, `/${this.infraEnvironment}/` + parameterName);
+    } else {
+      return ssm.StringParameter.valueForStringParameter(this, `/${this.infraEnvironment}/` + parameterName);
+    }
   }
 
   currentBranch = async () => execShellCommand("git rev-parse --abbrev-ref HEAD");

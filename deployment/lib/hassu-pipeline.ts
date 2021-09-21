@@ -31,7 +31,7 @@ export class HassuPipelineStack extends Stack {
           "You cannot deploy feature branch with name '" + env + "'. Please specify a different value for ENVIRONMENT"
         );
       }
-      this.createPipeline(env, branch, [
+      this.createPipeline(env, config, branch, [
         "npm run generate",
         "npm run lint",
         "npm run test",
@@ -39,7 +39,7 @@ export class HassuPipelineStack extends Stack {
         "npm run synth",
       ]);
     } else {
-      this.createPipeline(env, branch, [
+      this.createPipeline(env, config, branch, [
         "npm run generate",
         "npm run lint",
         "npm run test",
@@ -51,14 +51,20 @@ export class HassuPipelineStack extends Stack {
     }
   }
 
-  private createPipeline(env: string, branch: string, commands: string[]) {
+  private createPipeline(env: string, config: Config, branch: string, commands: string[]) {
     new CodePipeline(this, "pipeline", {
       // The pipeline name
       pipelineName: "HassuPipeline-" + env,
 
       // How it will be built and synthesized
       synth: new ShellStep("Synth", {
-        env: { ENVIRONMENT: env },
+        env: {
+          ENVIRONMENT: env,
+          VELHO_AUTH_URL: config.getInfraParameter("VelhoAuthenticationUrl"),
+          VELHO_API_URL: config.getInfraParameter("VelhoApiUrl"),
+          VELHO_USERNAME: config.getInfraParameter("VelhoUsername"),
+          VELHO_PASSWORD: config.getInfraParameter("VelhoPassword"),
+        },
         // Where the source can be found
         input: CodePipelineSource.gitHub("finnishtransportagency/hassu", branch),
 
