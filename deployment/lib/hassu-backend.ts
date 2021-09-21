@@ -2,10 +2,10 @@
 import * as cdk from "@aws-cdk/core";
 import * as lambda from "@aws-cdk/aws-lambda";
 import * as appsync from "@aws-cdk/aws-appsync";
-import { FieldLogLevel, GraphqlApi } from "@aws-cdk/aws-appsync";
-import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
+import {FieldLogLevel, GraphqlApi} from "@aws-cdk/aws-appsync";
+import {NodejsFunction} from "@aws-cdk/aws-lambda-nodejs";
 import * as ddb from "@aws-cdk/aws-dynamodb";
-import { Config } from "./config";
+import {Config} from "./config";
 
 export class HassuBackendStack extends cdk.Stack {
   constructor(scope: cdk.Construct) {
@@ -69,7 +69,11 @@ export class HassuBackendStack extends cdk.Stack {
       handler: "handleEvent",
       memorySize: 128,
       environment: {
-        COGNITO_URL: config.cognitoURL,
+        COGNITO_URL: config.getInfraParameter("CognitoURL"),
+        VELHO_AUTH_URL: config.getInfraParameter("VelhoAuthenticationUrl"),
+        VELHO_API_URL: config.getInfraParameter("VelhoApiUrl"),
+        VELHO_USERNAME: config.getInfraParameter("VelhoUsername"),
+        VELHO_PASSWORD: config.getInfraParameter("VelhoPassword"),
       },
     });
   }
