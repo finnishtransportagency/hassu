@@ -83,7 +83,9 @@
     "synth": "cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" synth",
     "destroy": "cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" destroy \"*\" --require-approval never",
     "pipeline:bootstrap": "ACCOUNT_ARN=$(ts-node --project=tsconfig.cdk.json deployment/bin/get-account-arn.ts) && cdk bootstrap --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-pipeline\" --cloudformation-execution-policies $ACCOUNT_ARN",
-    "deploy:pipeline": "cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-pipeline\" deploy hassu-pipeline --require-approval never"
+    "deploy:pipeline": "cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-pipeline\" deploy hassu-pipeline --require-approval never",
+    "swagger:codegen": "cross-env VELHO_ACCESS_TOKEN=$(ts-node --project=tsconfig.cdk.json ./tools/velho/authenticate.ts) npm run swagger:codegen:generate",
+    "swagger:codegen:generate": "cross-env-shell ./tools/velho/gradlew -p ./tools/velho"
   },
   "browserslist": {
     "production": [

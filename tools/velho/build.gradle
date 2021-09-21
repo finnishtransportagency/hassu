@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+}
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation 'io.swagger:swagger-codegen-cli:2.4.21'
+}
+
+defaultTasks 'generateApis'
+
+def apiNames = ['projektirekisteri', 'aineistopalvelu', 'hakupalvelu']
+def authorizationHeader = "Authorization:Bearer ${System.env.VELHO_ACCESS_TOKEN}"
+
+task generateApis
+
+apiNames.each { name -> 
+  def javaExecTask = tasks.register("generate${name.capitalize()}", JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'io.swagger.codegen.SwaggerCodegen'
+    def inputUrl = "${System.env.VELHO_API_URL}/${name}/doc/v1/swagger.json"
+    def outputDir = "../../backend/src/velho/${name}"
+    args 'generate', '-i', inputUrl, '-l', 'typescript-node', '-o', outputDir, '-a', authorizationHeader
+  }
+  generateApis.dependsOn javaExecTask
+}
