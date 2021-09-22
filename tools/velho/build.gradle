@@ -1,28 +1,61 @@
 plugins {
-    id 'java'
+  id 'java'
+  id "org.openapi.generator" version "5.1.1"
+  id "de.undercouch.download" version "4.1.2"
 }
 repositories {
   mavenCentral()
 }
 
-dependencies {
-  implementation 'io.swagger:swagger-codegen-cli:2.4.21'
-}
-
 defaultTasks 'generateApis'
 
 def apiNames = ['projektirekisteri', 'aineistopalvelu', 'hakupalvelu']
-def authorizationHeader = "Authorization:Bearer ${System.env.VELHO_ACCESS_TOKEN}"
+def authorizationHeader = "Bearer ${System.env.VELHO_ACCESS_TOKEN}"
 
 task generateApis
 
-apiNames.each { name -> 
-  def javaExecTask = tasks.register("generate${name.capitalize()}", JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'io.swagger.codegen.SwaggerCodegen'
-    def inputUrl = "${System.env.VELHO_API_URL}/${name}/doc/v1/swagger.json"
-    def outputDir = "../../backend/src/velho/${name}"
-    args 'generate', '-i', inputUrl, '-l', 'typescript-node', '-o', outputDir, '-a', authorizationHeader
+task downloadSwaggers {
+  doLast {
+    for (apiName in apiNames) {
+      download {
+        src "${System.env.VELHO_API_URL}/${apiName}/doc/v1/swagger.json".toString()
+        dest "${buildDir}/${apiName}.json".toString()
+        headers = ["Authorization": authorizationHeader.toString()]
+      }
+    }
   }
-  generateApis.dependsOn javaExecTask
 }
+
+task fixSwagger(type: Copy) {
+  from ("${buildDir}") {
+    include "*.json"
+    filter { line -> line.replaceAll('"tieosuushaku","kohdeluokkahaku","kohdeluokkahaku","tieosuushaku"', '"tieosuushaku","kohdeluokkahaku"') }
+  }
+  into "${buildDir}/fixed".toString()
+}
+
+tasks.withType(org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+  outputs.upToDateWhen { false }
+  outputs.cacheIf { false }
+}
+
+apiNames.each { name ->
+
+  def generateApiTask = tasks.register("generate${name.capitalize()}", org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+    generatorName = "typescript-axios"
+    inputSpec = "${buildDir}/fixed/${name}.json".toString()
+    outputDir = "${buildDir}/../../../backend/src/velho/${name}"
+    validateSpec = false
+    skipOverwrite = false
+    globalProperties = [
+      withInterfaces: "true",
+      supportsES6: "true",
+    ]
+  }
+
+  generateApis.dependsOn generateApiTask
+}
+
+
+generateApis.dependsOn fixSwagger
+fixSwagger.dependsOn downloadSwaggers
