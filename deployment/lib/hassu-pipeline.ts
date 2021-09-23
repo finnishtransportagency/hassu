@@ -60,7 +60,7 @@ export class HassuPipelineStack extends Stack {
       synth: new ShellStep("Synth", {
         env: {
           ENVIRONMENT: env,
-          VELHO_AUTH_URL:  config.getInfraParameter("VelhoAuthenticationUrl"),
+          VELHO_AUTH_URL: config.getInfraParameter("VelhoAuthenticationUrl"),
           VELHO_API_URL: config.getInfraParameter("VelhoApiUrl"),
           VELHO_USERNAME: await config.getSecureInfraParameter("VelhoUsername"),
           VELHO_PASSWORD: await config.getSecureInfraParameter("VelhoPassword"),

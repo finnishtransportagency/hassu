@@ -15,10 +15,12 @@ export class HassuBackendStack extends cdk.Stack {
         region: "eu-west-1",
       },
     });
+  }
 
+  async process() {
     const api = this.createAPI();
     const config = new Config(this);
-    const backendLambda = this.createBackendLambda(config);
+    const backendLambda = await this.createBackendLambda(config);
     HassuBackendStack.mapApiResolversToLambda(api, backendLambda);
     const suunnitelmatTable = this.createDatabase();
     HassuBackendStack.attachDatabaseToBackend(suunnitelmatTable, backendLambda);
@@ -62,7 +64,7 @@ export class HassuBackendStack extends cdk.Stack {
     return apiKeyExpiration;
   }
 
-  private createBackendLambda(config: Config) {
+  private async createBackendLambda(config: Config) {
     return new NodejsFunction(this, "API", {
       runtime: lambda.Runtime.NODEJS_14_X,
       entry: `${__dirname}/../../backend/src/apiHandler.ts`,
@@ -72,8 +74,8 @@ export class HassuBackendStack extends cdk.Stack {
         COGNITO_URL: config.getInfraParameter("CognitoURL"),
         VELHO_AUTH_URL: config.getInfraParameter("VelhoAuthenticationUrl"),
         VELHO_API_URL: config.getInfraParameter("VelhoApiUrl"),
-        VELHO_USERNAME: config.getInfraParameter("VelhoUsername"),
-        VELHO_PASSWORD: config.getInfraParameter("VelhoPassword"),
+        VELHO_USERNAME: await config.getSecureInfraParameter("VelhoUsername"),
+        VELHO_PASSWORD: await config.getSecureInfraParameter("VelhoPassword"),
       },
     });
   }
