@@ -29,7 +29,9 @@ out
 /src/graphql/queries.ts
 /backend/src/api/apiModel.ts
 /src/graphql/apiModel.ts
-backend/src/velho
+backend/src/velho/aineistopalvelu
+backend/src/velho/hakupalvelu
+backend/src/velho/projektirekisteri
 
 # Gradle
 tools/velho/.gradle

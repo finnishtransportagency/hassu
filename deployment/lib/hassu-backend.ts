@@ -1,5 +1,6 @@
 /* tslint:disable:no-unused-expression */
 import * as cdk from "@aws-cdk/core";
+import { Duration } from "@aws-cdk/core";
 import * as lambda from "@aws-cdk/aws-lambda";
 import * as appsync from "@aws-cdk/aws-appsync";
 import { FieldLogLevel, GraphqlApi } from "@aws-cdk/aws-appsync";
@@ -70,6 +71,7 @@ export class HassuBackendStack extends cdk.Stack {
       entry: `${__dirname}/../../backend/src/apiHandler.ts`,
       handler: "handleEvent",
       memorySize: 128,
+      timeout: Duration.seconds(29),
       environment: {
         COGNITO_URL: config.getInfraParameter("CognitoURL"),
         VELHO_AUTH_URL: config.getInfraParameter("VelhoAuthenticationUrl"),

@@ -19,6 +19,13 @@ type Suunnitelma {
   longDescription: String
 }
 
+type VelhoHakuTulos {
+  oid: String!
+  caseNumber: String
+  name: String
+  type: String
+}
+
 type User {
   uid: String
   vaylaUser: Boolean
@@ -48,7 +55,7 @@ type Query {
   getCurrentUser: User
   listSuunnitelmat: [Suunnitelma]
   getSuunnitelmaById(suunnitelmaId: String!): Suunnitelma
-  getVelhoSuunnitelmasByName(suunnitelmaName: String!, requireExactMatch: Boolean): [Suunnitelma]
+  getVelhoSuunnitelmasByName(suunnitelmaName: String!, requireExactMatch: Boolean): [VelhoHakuTulos]
 }
 
 type Mutation {

@@ -25,20 +25,7 @@ export class HassuPipelineStack extends Stack {
     const appBucketName = config.appBucketName;
     console.log("Deploying pipeline from branch " + branch + " to enviroment " + env);
 
-    if (Config.isFeatureBranch(branch)) {
-      if (Config.isPermanentEnvironment()) {
-        throw new Error(
-          "You cannot deploy feature branch with name '" + env + "'. Please specify a different value for ENVIRONMENT"
-        );
-      }
-      await this.createPipeline(env, config, branch, [
-        "npm run generate",
-        "npm run lint",
-        "npm run test",
-        "npm run build",
-        "npm run synth",
-      ]);
-    } else {
+    if (Config.isPermanentEnvironment()) {
       await this.createPipeline(env, config, branch, [
         "npm run generate",
         "npm run lint",
@@ -47,6 +34,14 @@ export class HassuPipelineStack extends Stack {
         "npm run deploy:frontend",
         "npm run build",
         "aws s3 sync out s3://" + appBucketName + "/",
+      ]);
+    } else {
+      await this.createPipeline(env, config, branch, [
+        "npm run generate",
+        "npm run lint",
+        "npm run test",
+        "npm run build",
+        "npm run synth",
       ]);
     }
   }
