@@ -21,6 +21,7 @@ task downloadSwaggers {
         src "${System.env.VELHO_API_URL}/${apiName}/doc/v1/swagger.json".toString()
         dest "${buildDir}/${apiName}.json".toString()
         headers = ["Authorization": authorizationHeader.toString()]
+        retries = 5
       }
     }
   }
