@@ -29,6 +29,13 @@ out
 /src/graphql/queries.ts
 /backend/src/api/apiModel.ts
 /src/graphql/apiModel.ts
+backend/src/velho
+
+# Gradle
+tools/velho/.gradle
+tools/velho/build
+!tools/velho/gradle/wrapper/gradle-wrapper.jar
+
 .report
 .nyc_output
 

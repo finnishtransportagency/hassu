@@ -33,6 +33,7 @@
     "@aws-cdk/aws-s3-deployment": "1.120.0",
     "@aws-cdk/core": "1.120.0",
     "@aws-cdk/pipelines": "1.120.0",
+    "@aws-sdk/client-ssm": "3.33.0",
     "@testing-library/jest-dom": "5.14.1",
     "@testing-library/react": "11.1.0",
     "@testing-library/user-event": "13.2.1",
@@ -74,10 +75,12 @@
     "build": "next build && next export",
     "start": "next start",
     "export": "next export",
-    "lint:app": "next lint",
-    "generate": "amplify codegen && copyfiles -f src/graphql/apiModel.ts backend/src/api/",
+    "generate:velhoapi": "cross-env VELHO_ACCESS_TOKEN=$(ts-node --project=tsconfig.cdk.json ./tools/velho/authenticate.ts) ./tools/velho/gradlew -p ./tools/velho",
+    "generate:api": "amplify codegen && copyfiles -f src/graphql/apiModel.ts backend/src/api/",
+    "generate": "npm-run-all generate:*",
     "lint:prettier": "prettier --check \"backend/**/*.ts\" \"src/**/*.ts\"",
     "lint:tslint": "tslint --project tsconfig.json",
+    "lint:app": "next lint",
     "lint": "npm-run-all lint:*",
     "test": "cross-env TS_NODE_PROJECT=\"./tsconfig.backend.json\" mocha -r ts-node/register \"backend/test/**/*.test.ts\"",
     "test:coverage": "nyc --report-dir .report/coverage --reporter text-summary --reporter lcov --reporter json --reporter clover npm test",
@@ -86,10 +89,10 @@
     "deploy:backend": "cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy backend --require-approval never --outputs-file .cdk-backend-outputs.json",
     "deploy:frontend": "cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy frontend --require-approval never --outputs-file .cdk-frontend-outputs.json && ts-node --project=tsconfig.cdk.json deployment/bin/parse-cdk-outputs.ts",
     "deploy:app": "REACT_APP_API_URL= && npm run build && aws s3 sync out s3://hassu-app-$ENVIRONMENT",
-    "synth": "cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" synth",
-    "destroy": "cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" destroy \"*\" --require-approval never",
+    "deploy:pipeline": "cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-pipeline\" deploy hassu-pipeline --require-approval never",
     "pipeline:bootstrap": "ACCOUNT_ARN=$(ts-node --project=tsconfig.cdk.json deployment/bin/get-account-arn.ts) && cdk bootstrap --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-pipeline\" --cloudformation-execution-policies $ACCOUNT_ARN",
-    "deploy:pipeline": "cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-pipeline\" deploy hassu-pipeline --require-approval never"
+    "synth": "cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" synth",
+    "destroy": "cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" destroy \"*\" --require-approval never"
   },
   "browserslist": {
     "production": [
