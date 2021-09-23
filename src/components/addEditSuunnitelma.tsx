@@ -74,9 +74,8 @@ function AddEditSuunnitelma(props: { suunnitelma: Suunnitelma }) {
       setSearchErrorMessage("Haulla löytyi enemmän kuin yksi suunnitelma");
     } else if (suunnitelmaList.length === 1) {
       setSearchInvalid(false);
-      const { name, location } = suunnitelmaList[0];
+      const { name } = suunnitelmaList[0];
       setValue("name", name);
-      setValue("location", location);
     } else {
       setSearchInvalid(true);
       setSearchErrorMessage("Haulla ei löytynyt suunnitelmia");

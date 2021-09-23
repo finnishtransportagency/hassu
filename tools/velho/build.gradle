@@ -27,8 +27,9 @@ task downloadSwaggers {
   }
 }
 
+// This is a workaround for duplicate enum values in hakupalvelu. Remove this code after Velho has been fixed.
 task fixSwagger(type: Copy) {
-  from ("${buildDir}") {
+  from("${buildDir}") {
     include "*.json"
     filter { line -> line.replaceAll('"tieosuushaku","kohdeluokkahaku","kohdeluokkahaku","tieosuushaku"', '"tieosuushaku","kohdeluokkahaku"') }
   }
@@ -49,7 +50,6 @@ apiNames.each { name ->
     validateSpec = false
     skipOverwrite = false
     globalProperties = [
-      withInterfaces: "true",
       supportsES6: "true",
     ]
   }

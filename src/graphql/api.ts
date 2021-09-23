@@ -44,11 +44,11 @@ export async function updateSuunnitelma(suunnitelma: model.UpdateSuunnitelmaInpu
 export async function getVelhoSuunnitelmasByName(
   suunnitelmaName: string,
   requireExactMatch?: boolean
-): Promise<model.Suunnitelma[]> {
+): Promise<model.VelhoHakuTulos[]> {
   const response = (await callYllapitoAPI(
     graphqlOperation(queries.getVelhoSuunnitelmasByName, { suunnitelmaName, requireExactMatch })
   )) as GraphQLResult<model.GetVelhoSuunnitelmasByNameQuery>;
-  return response.data?.getVelhoSuunnitelmasByName as model.Suunnitelma[];
+  return response.data?.getVelhoSuunnitelmasByName as model.VelhoHakuTulos[];
 }
 
 export async function listSuunnitelmat() {

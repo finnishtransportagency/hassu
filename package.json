@@ -86,6 +86,7 @@
     "test:coverage": "nyc --report-dir .report/coverage --reporter text-summary --reporter lcov --reporter json --reporter clover npm test",
     "test:integration": "cross-env TS_NODE_PROJECT=\"./tsconfig.backend.json\" mocha -r ts-node/register \"backend/integrationtest/**/*.test.ts\"",
     "watch:test": "cross-env TS_NODE_PROJECT=\"./tsconfig.backend.json\" mocha $NODE_DEBUG_OPTION --require ts-node/register --watch --watch-extensions ts --watch-files backend \"backend/test/**/*.test.ts\"",
+    "watch:test:integration": "cross-env TS_NODE_PROJECT=\"./tsconfig.backend.json\" mocha $NODE_DEBUG_OPTION --require ts-node/register --watch --watch-extensions ts --watch-files backend \"backend/integrationtest/**/*.test.ts\"",
     "deploy:backend": "cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy backend --require-approval never --outputs-file .cdk-backend-outputs.json",
     "deploy:frontend": "cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy frontend --require-approval never --outputs-file .cdk-frontend-outputs.json && ts-node --project=tsconfig.cdk.json deployment/bin/parse-cdk-outputs.ts",
     "deploy:app": "REACT_APP_API_URL= && npm run build && aws s3 sync out s3://hassu-app-$ENVIRONMENT",

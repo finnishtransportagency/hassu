@@ -9,5 +9,12 @@
     "interface-name": false,
     "curly": true
   },
-  "jsRules": true
+  "jsRules": true,
+  "linterOptions": {
+    "exclude": [
+      "backend/src/velho/aineistopalvelu/**",
+      "backend/src/velho/hakupalvelu/**",
+      "backend/src/velho/projektirekisteri/**"
+    ]
+  }
 }

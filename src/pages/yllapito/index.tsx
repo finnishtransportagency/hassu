@@ -32,8 +32,8 @@ export default listingPage;
 function listingPage() {
   return (
     <div style={styles.container}>
-      <Link href="/yllapito/suunnitelma">
-        <a className="btn btn-sm btn-success mb-2">Uusi suunnitelma</a>
+      <Link href="/yllapito/perusta">
+        <a className="btn btn-sm btn-success mb-2">Perusta uusi projekti</a>
       </Link>
       <SuunnitelmaList admin={true} />
     </div>
