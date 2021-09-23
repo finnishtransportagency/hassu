@@ -8,7 +8,11 @@ import { HassuFrontendStack } from "../lib/hassu-frontend";
 async function main() {
   const app = new cdk.App();
   const hassuBackendStack = new HassuBackendStack(app);
-  await hassuBackendStack.process();
+  await hassuBackendStack.process().catch((e) => {
+    // tslint:disable-next-line:no-console
+    console.log(e);
+    process.exit(1);
+  });
   new HassuFrontendStack(app);
 }
 
