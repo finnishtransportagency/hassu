@@ -1,11 +1,22 @@
 import * as log from "loglevel";
 import { config } from "../config";
-import * as HakuPalvelu from "./hakupalvelu/api";
+import * as HakuPalvelu from "./hakupalvelu";
+import * as ProjektiRekisteri from "./projektirekisteri";
 import { VelhoHakuTulos } from "../api/apiModel";
-import { adaptSearchResults } from "./velhoAdapter";
-import { Configuration } from "./hakupalvelu";
+import { adaptProjecti, adaptSearchResults } from "./velhoAdapter";
+import { VelhoError } from "../error/velhoError";
 
 const axios = require("axios");
+
+axios.interceptors.request.use((request) => {
+  log.debug("Request", JSON.stringify(request.headers) + "\n" + request.data);
+  return request;
+});
+
+axios.interceptors.response.use((response) => {
+  log.debug("Response", response.status + " " + response.statusText + "\n" + response.data);
+  return response;
+});
 
 const velhoApiURL = config.velhoApiURL;
 
@@ -48,25 +59,42 @@ export class VelhoClient {
         lauseke: searchClause,
         kohdeluokat: ["projekti/projekti"],
       });
+      const resultCount = result.data?.osumia || 0;
       if (requireExactMatch) {
-        log.info(result.data.osumia + " search results for exact term: " + name);
+        log.info(resultCount + " search results for exact term: " + name);
       } else {
-        log.info(result.data.osumia + " search results for term: " + name);
+        log.info(resultCount + " search results for term: " + name);
       }
       return adaptSearchResults(result.data.osumat);
     } catch (e) {
-      log.error(e);
-      throw new Error(e);
+      throw new VelhoError(e);
     }
   }
 
+  public async loadProject(oid: string) {
+    const projektiApi = await this.createProjektiRekisteriApi();
+    const result = await projektiApi.projektirekisteriApiV1ProjektiProjektiOidGet(oid);
+    if (result.status === 200) {
+      return adaptProjecti(result.data);
+    }
+    throw new VelhoError("Could not load project with oid '" + oid + "'. Result:" + result.statusText);
+  }
+
   private async createHakuApi() {
-    return new HakuPalvelu.HakuApi(
-      new Configuration({
-        basePath: velhoApiURL,
-        baseOptions: { headers: { Authorization: "Bearer " + (await this.authenticate()) } },
-      })
+    return new HakuPalvelu.HakuApi(new HakuPalvelu.Configuration(await this.getVelhoApiConfiguration()));
+  }
+
+  private async createProjektiRekisteriApi() {
+    return new ProjektiRekisteri.ProjektiApi(
+      new ProjektiRekisteri.Configuration(await this.getVelhoApiConfiguration())
     );
+  }
+
+  private async getVelhoApiConfiguration() {
+    return {
+      basePath: velhoApiURL,
+      baseOptions: { headers: { Authorization: "Bearer " + (await this.authenticate()) } },
+    };
   }
 }
 

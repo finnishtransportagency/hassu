@@ -49,6 +49,7 @@
     "@types/sinon-chai": "3.2.5",
     "aws-cdk": "1.124.0",
     "aws-sdk": "2.967.0",
+    "axios-logger": "2.5.0",
     "chai": "4.3.4",
     "chai-as-promised": "7.1.1",
     "copyfiles": "2.4.1",
