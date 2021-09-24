@@ -26,12 +26,13 @@ type VelhoHakuTulos {
   type: String
 }
 
-type User {
+type Kayttaja {
   uid: String
-  vaylaUser: Boolean
-  suomiFiUser: Boolean
-  firstName: String!
-  lastName: String!
+  vaylaKayttaja: Boolean
+  suomiFiKayttaja: Boolean
+  etuNimi: String!
+  sukuNimi: String!
+  roolit: [String]
 }
 
 input CreateSuunnitelmaInput {
@@ -52,7 +53,8 @@ input UpdateSuunnitelmaInput {
 }
 
 type Query {
-  getCurrentUser: User
+  getCurrentUser: Kayttaja
+  listAllUsers: [Kayttaja]
   listSuunnitelmat: [Suunnitelma]
   getSuunnitelmaById(suunnitelmaId: String!): Suunnitelma
   getVelhoSuunnitelmasByName(suunnitelmaName: String!, requireExactMatch: Boolean): [VelhoHakuTulos]

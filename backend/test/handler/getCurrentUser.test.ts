@@ -27,11 +27,12 @@ describe("getCurrentUser", () => {
     getVaylaUserStub.returns(userFixture.vaylaMatti);
     const user = await getCurrentUser();
     expect(user).to.deep.equal({
-      __typename: "User",
-      firstName: "Matti",
-      lastName: "Meikalainen",
+      __typename: "Kayttaja",
+      etuNimi: "Matti",
+      sukuNimi: "Meikalainen",
       uid: "AB0000001",
-      vaylaUser: true,
+      vaylaKayttaja: true,
+      roolit: ["role1", "role2"],
     });
   });
 });

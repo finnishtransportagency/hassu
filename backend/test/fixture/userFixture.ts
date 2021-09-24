@@ -1,15 +1,18 @@
 import * as userService from "../../src/service/userService";
 import * as sinon from "sinon";
+import { Kayttaja } from "../../src/api/apiModel";
 
 export class UserFixture {
-  public vaylaMatti: userService.VaylaUser = {
-    firstName: "Matti",
-    lastName: "Meikalainen",
+  public vaylaMatti: Kayttaja = {
+    __typename: "Kayttaja",
+    etuNimi: "Matti",
+    sukuNimi: "Meikalainen",
     uid: "AB0000001",
-    roles: ["role1", "role2"],
+    roolit: ["role1", "role2"],
+    vaylaKayttaja: true,
   };
 
-  public loginAs(vaylaUser: userService.VaylaUser) {
+  public loginAs(vaylaUser: Kayttaja) {
     userService.mockUser(vaylaUser);
     sinon.stub(userService, "identifyUser").resolves();
   }
