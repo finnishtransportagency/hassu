@@ -3,25 +3,13 @@ import { validateJwtToken } from "../util/validatejwttoken";
 import { config } from "../config";
 import log from "loglevel";
 import { IllegalAccessError } from "../error/IllegalAccessError";
+import { Kayttaja } from "../api/apiModel";
+import { personSearch } from "../personSearch/personSearchClient";
 
-let vaylaUser: VaylaUser;
+let vaylaUser: Kayttaja;
 
-export class VaylaUser {
-  readonly roles: string[];
-  readonly lastName: string;
-  readonly firstName: string;
-  readonly uid: string;
-
-  constructor(jwt: any) {
-    this.roles = VaylaUser.parseRoles(jwt["custom:rooli"]);
-    this.lastName = jwt["custom:sukunimi"];
-    this.firstName = jwt["custom:etunimi"];
-    this.uid = jwt["custom:uid"];
-  }
-
-  private static parseRoles(roles: string) {
-    return roles ? roles.split("\\,").map((arn) => arn.split("/").pop()) : undefined;
-  }
+function parseRoles(roles: string) {
+  return roles ? roles.split("\\,").map((arn) => arn.split("/").pop()) : undefined;
 }
 
 async function identifyUser(headers: AppSyncResolverEventHeaders) {
@@ -29,7 +17,14 @@ async function identifyUser(headers: AppSyncResolverEventHeaders) {
   if (headers) {
     const jwt = await validateJwtToken(headers["x-iam-accesstoken"], headers["x-iam-data"], config.cognitoURL);
     if (jwt) {
-      vaylaUser = new VaylaUser(jwt);
+      vaylaUser = {
+        __typename: "Kayttaja",
+        etuNimi: jwt["custom:etunimi"],
+        sukuNimi: jwt["custom:sukunimi"],
+        uid: jwt["custom:uid"],
+        vaylaKayttaja: true,
+        roolit: parseRoles(jwt["custom:rooli"]),
+      } as Kayttaja;
     }
   }
   if (vaylaUser) {
@@ -39,7 +34,11 @@ async function identifyUser(headers: AppSyncResolverEventHeaders) {
   }
 }
 
-function mockUser(user: VaylaUser) {
+export function listAllUsers() {
+  return personSearch.listAccounts();
+}
+
+function mockUser(user: Kayttaja) {
   vaylaUser = user;
 }
 

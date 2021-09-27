@@ -58,13 +58,13 @@ export async function listSuunnitelmat() {
   return response.data?.listSuunnitelmat as model.Suunnitelma[];
 }
 
-export async function getCurrentUser(): Promise<model.User | undefined> {
+export async function getCurrentUser(): Promise<model.Kayttaja | undefined> {
   try {
     const response = (await callYllapitoAPI(
       graphqlOperation(queries.getCurrentUser)
     )) as GraphQLResult<model.GetCurrentUserQuery>;
-    return response.data?.getCurrentUser as model.User;
+    return response.data?.getCurrentUser as model.Kayttaja;
   } catch (e) {
-    log.debug(e);
+    log.error(e);
   }
 }

@@ -8,6 +8,7 @@ import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { getVelhoSuunnitelmasByName } from "./handler/getVelhoSuunnitelmasByName";
 import { identifyUser } from "./service/userService";
 import { getCurrentUser } from "./handler/getCurrentUser";
+import { listAllUsers } from "./handler/listAllUsers";
 
 const logLevel = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : "info";
 log.setLevel(logLevel as any);
@@ -35,6 +36,8 @@ export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArgume
       return await getVelhoSuunnitelmasByName(event.arguments.suunnitelmaName, event.arguments.requireExactMatch);
     case "getCurrentUser":
       return await getCurrentUser();
+    case "listAllUsers":
+      return await listAllUsers();
     default:
       return null;
   }

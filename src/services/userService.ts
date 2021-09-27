@@ -2,7 +2,7 @@ import { getCurrentUser } from "../graphql/api";
 import * as model from "../graphql/apiModel";
 
 let authenticated = false;
-let currentUser: model.User | undefined;
+let currentUser: model.Kayttaja | undefined;
 
 async function getVaylaUser() {
   if (!authenticated) {

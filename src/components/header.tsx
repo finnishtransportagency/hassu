@@ -1,16 +1,16 @@
 import React from "react";
-import { User } from "../graphql/apiModel";
+import { Kayttaja } from "../graphql/apiModel";
 import { getVaylaUser } from "../services/userService";
 
-type SuunnitelmaListState = {
-  user?: User;
+type HeaderState = {
+  user?: Kayttaja;
 };
 
 function isYllapito() {
   return window.location.href.includes("/yllapito");
 }
 
-export class Header extends React.Component<{}, SuunnitelmaListState> {
+export class Header extends React.Component<{}, HeaderState> {
   constructor(props: any) {
     super(props);
   }
@@ -37,14 +37,16 @@ export class Header extends React.Component<{}, SuunnitelmaListState> {
       if (this.state?.user) {
         loginState = (
           <span>
-            {this.state.user?.firstName} {this.state.user?.lastName}
+            {this.state.user?.sukuNimi}, {this.state.user?.etuNimi}
           </span>
         );
       }
+    } else {
+      loginState = <span/>;
     }
     return (
       <div className={"row"}>
-        <div className={"col"}></div>
+        <div className={"col"}/>
         <div className={"col col-md-auto justify-content-md-right"}>{loginState}</div>
       </div>
     );
