@@ -5,6 +5,7 @@ import * as ProjektiRekisteri from "./projektirekisteri";
 import { VelhoHakuTulos } from "../api/apiModel";
 import { adaptProjecti, adaptSearchResults } from "./velhoAdapter";
 import { VelhoError } from "../error/velhoError";
+import { AxiosResponse } from "axios";
 
 const axios = require("axios");
 
@@ -18,7 +19,15 @@ axios.interceptors.response.use((response) => {
   return response;
 });
 
+axios.defaults.timeout = 28000;
+
 const velhoApiURL = config.velhoApiURL;
+
+function checkResponseIsOK(response: AxiosResponse, message: string) {
+  if (response.status !== 200) {
+    throw new VelhoError("Error while communicating with Velho: " + message + " Status:" + response?.statusText);
+  }
+}
 
 export class VelhoClient {
   private accessTokenExpires;
@@ -37,16 +46,17 @@ export class VelhoClient {
     return this.accessToken;
   }
 
-  public async searchProjects(name: string, requireExactMatch?: boolean): Promise<VelhoHakuTulos[]> {
+  public async searchProjects(term: string, requireExactMatch?: boolean): Promise<VelhoHakuTulos[]> {
     try {
       const hakuApi = await this.createHakuApi();
       let searchClause;
       if (requireExactMatch) {
-        searchClause = ["tekstikysely", ["projekti/projekti", "ominaisuudet", "nimi"], name];
+        searchClause = ["yhtasuuri", ["projekti/projekti", "ominaisuudet", "nimi"], term];
       } else {
-        searchClause = ["sisaltaa-tekstin", ["projekti/projekti", "ominaisuudet", "nimi"], name];
+        // TODO: add kunta field into target field as well
+        searchClause = ["sisaltaa-tekstin", ["projekti/projekti", "ominaisuudet", "nimi"], term];
       }
-      const result = await hakuApi.hakupalveluApiV1HakuKohdeluokatPost({
+      const response = await hakuApi.hakupalveluApiV1HakuKohdeluokatPost({
         asetukset: {
           palautettavat_kentat: [
             ["projekti/projekti", "oid"],
@@ -56,28 +66,41 @@ export class VelhoClient {
           tyyppi: HakuPalvelu.HakulausekeAsetuksetTyyppiEnum.Kohdeluokkahaku,
           jarjesta: [[["projekti/projekti", "ominaisuudet", "nimi"], "nouseva" as any]],
         },
-        lauseke: searchClause,
+        lauseke: [
+          "ja",
+          [
+            "joukossa",
+            ["projekti/projekti", "ominaisuudet", "vaihe"],
+            ["vaihe/vaihe04", "vaihe/vaihe10", "vaihe/vaihe12"],
+          ],
+          searchClause,
+        ],
         kohdeluokat: ["projekti/projekti"],
       });
-      const resultCount = result.data?.osumia || 0;
+      checkResponseIsOK(response, "searchProjects");
+      const data = response.data;
+      const resultCount = data?.osumia || 0;
       if (requireExactMatch) {
-        log.info(resultCount + " search results for exact term: " + name);
+        log.info(resultCount + " search results for exact term: " + term);
       } else {
-        log.info(resultCount + " search results for term: " + name);
+        log.info(resultCount + " search results for term: " + term);
       }
-      return adaptSearchResults(result.data.osumat);
+      return adaptSearchResults(data.osumat);
     } catch (e) {
-      throw new VelhoError(e);
+      throw new VelhoError(e.message, e);
     }
   }
 
   public async loadProject(oid: string) {
     const projektiApi = await this.createProjektiRekisteriApi();
-    const result = await projektiApi.projektirekisteriApiV1ProjektiProjektiOidGet(oid);
-    if (result.status === 200) {
-      return adaptProjecti(result.data);
+    let response;
+    try {
+      response = await projektiApi.projektirekisteriApiV1ProjektiProjektiOidGet(oid);
+    } catch (e) {
+      throw new VelhoError(e.message, e);
     }
-    throw new VelhoError("Could not load project with oid '" + oid + "'. Result:" + result.statusText);
+    checkResponseIsOK(response, "loadProject with oid '" + oid + "'");
+    return adaptProjecti(response.data);
   }
 
   private async createHakuApi() {

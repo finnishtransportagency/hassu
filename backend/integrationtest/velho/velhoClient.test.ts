@@ -17,9 +17,10 @@ describe("VelhoClient", () => {
     expect(searchResult).not.null;
     expect(searchResult).not.be.empty;
     const firstSearchResult = searchResult[0];
-    log.info(firstSearchResult);
+    log.debug(firstSearchResult);
     name = firstSearchResult.name;
     oid = firstSearchResult.oid;
+    log.debug("nimi", name);
   });
 
   it("should list one exact project from Velho", async () => {
@@ -27,6 +28,7 @@ describe("VelhoClient", () => {
     expect(name).to.not.be.null;
     const exactSearchResult = await velho.searchProjects(name, true);
     expect(exactSearchResult).not.be.empty;
+    log.debug(exactSearchResult);
     expect(exactSearchResult[0].oid).to.be.equal(oid);
   });
 
@@ -34,6 +36,6 @@ describe("VelhoClient", () => {
     expect(oid).to.not.be.null;
     const searchResult = await velho.loadProject(oid);
     expect(searchResult).not.null;
-    log.info(JSON.stringify(searchResult, null, 2));
+    log.debug(JSON.stringify(searchResult, null, 2));
   });
 });

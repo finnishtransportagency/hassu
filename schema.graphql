@@ -8,6 +8,7 @@ enum Status {
   ARKISTOITU
 }
 
+# Deprecated: remove when not in use anymore
 type Suunnitelma {
   id: String!
   name: String!
@@ -17,6 +18,20 @@ type Suunnitelma {
   status: Status
   description: String
   longDescription: String
+}
+
+type Projekti {
+  oid: String!
+  nimi: String
+  vaylamuoto: [String]
+  vaihe: String
+  tila: String
+  asianumero: String
+  tyyppi: String
+  status: Status
+  organisaatio: String
+  toteutusAjankohta: String
+  vastuuhenkilo: String
 }
 
 type VelhoHakuTulos {
@@ -58,6 +73,8 @@ type Query {
   listSuunnitelmat: [Suunnitelma]
   getSuunnitelmaById(suunnitelmaId: String!): Suunnitelma
   getVelhoSuunnitelmasByName(suunnitelmaName: String!, requireExactMatch: Boolean): [VelhoHakuTulos]
+
+  lataaProjekti(oid: String!): Projekti
 }
 
 type Mutation {

@@ -32,11 +32,14 @@ out
 backend/src/velho/aineistopalvelu
 backend/src/velho/hakupalvelu
 backend/src/velho/projektirekisteri
+backend/src/velho/metadata.json
 
 # Gradle
 tools/velho/.gradle
 tools/velho/build
 !tools/velho/gradle/wrapper/gradle-wrapper.jar
+tools/velho/buildSrc/.gradle
+tools/velho/buildSrc/build
 
 .report
 .nyc_output
