@@ -34,7 +34,7 @@ describe("VelhoClient", () => {
 
   it("should load project from Velho", async () => {
     expect(oid).to.not.be.null;
-    const searchResult = await velho.loadProject(oid);
+    const searchResult = await velho.loadProjekti(oid);
     expect(searchResult).not.null;
     log.debug(JSON.stringify(searchResult, null, 2));
   });

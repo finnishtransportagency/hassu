@@ -91,7 +91,7 @@ export class VelhoClient {
     }
   }
 
-  public async loadProject(oid: string) {
+  public async loadProjekti(oid: string) {
     const projektiApi = await this.createProjektiRekisteriApi();
     let response;
     try {
@@ -99,7 +99,7 @@ export class VelhoClient {
     } catch (e) {
       throw new VelhoError(e.message, e);
     }
-    checkResponseIsOK(response, "loadProject with oid '" + oid + "'");
+    checkResponseIsOK(response, "loadProjekti with oid '" + oid + "'");
     return adaptProjecti(response.data);
   }
 
