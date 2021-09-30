@@ -1,10 +1,20 @@
+import vayla.DownloadMetaDataTask
+
 plugins {
   id 'java'
+  id 'groovy'
   id "org.openapi.generator" version "5.1.1"
   id "de.undercouch.download" version "4.1.2"
 }
 repositories {
   mavenCentral()
+}
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
+task downloadMetaData(type: DownloadMetaDataTask) {
+  fileName = "${projectDir}/../../backend/src/velho/metadata.json".toString()
 }
 
 defaultTasks 'generateApis'
@@ -58,5 +68,6 @@ apiNames.each { name ->
 }
 
 
+generateApis.dependsOn downloadMetaData
 generateApis.dependsOn fixSwagger
 fixSwagger.dependsOn downloadSwaggers

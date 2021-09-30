@@ -70,8 +70,13 @@ export class HassuPipelineStack extends Stack {
       selfMutation: false,
       codeBuildDefaults: {
         partialBuildSpec: cb.BuildSpec.fromObject({
+          phases: {
+            install: {
+              "runtime-versions": { java: "corretto11" },
+            },
+          },
           cache: {
-            paths: ["/root/.cache/**/*", "/root/.npm/**/*"],
+            paths: ["/root/.cache/**/*", "/root/.npm/**/*", "/root/.gradle/**/*"],
           },
         }),
         rolePolicy: [

@@ -9,6 +9,7 @@ import { getVelhoSuunnitelmasByName } from "./handler/getVelhoSuunnitelmasByName
 import { identifyUser } from "./service/userService";
 import { getCurrentUser } from "./handler/getCurrentUser";
 import { listAllUsers } from "./handler/listAllUsers";
+import { loadProjekti } from "./handler/projectHandler";
 
 const logLevel = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : "info";
 log.setLevel(logLevel as any);
@@ -18,6 +19,7 @@ type AppSyncEventArguments = {
   suunnitelmaId?: string;
   suunnitelmaName?: string;
   requireExactMatch?: boolean;
+  oid?: string;
 };
 
 export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArguments>) {
@@ -38,6 +40,8 @@ export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArgume
       return await getCurrentUser();
     case "listAllUsers":
       return await listAllUsers();
+    case "lataaProjekti":
+      return await loadProjekti(event.arguments.oid);
     default:
       return null;
   }
