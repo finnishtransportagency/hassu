@@ -39,7 +39,7 @@ export function adaptSearchResults(searchResults: any): VelhoHakuTulos[] {
   }
 }
 
-export function adaptProjecti(data: ProjektiProjekti): Projekti {
+export function adaptProjecti(data: ProjektiProjekti, isInDatabase?: boolean): Projekti {
   return {
     __typename: "Projekti",
     oid: "" + data.oid,
@@ -49,5 +49,6 @@ export function adaptProjecti(data: ProjektiProjekti): Projekti {
     vaylamuoto: adaptVaylamuoto(data.ominaisuudet.vaylamuoto),
     organisaatio: metadata.organisaatiot[`${data.ominaisuudet.tilaajaorganisaatio}`],
     toteutusAjankohta: metadata.toteutusAjankohdat[`${data.ominaisuudet["arvioitu-toteutusajankohta"]}`],
+    tallennettu: !!isInDatabase,
   };
 }

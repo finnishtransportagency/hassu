@@ -100,7 +100,7 @@ export class VelhoClient {
       throw new VelhoError(e.message, e);
     }
     checkResponseIsOK(response, "loadProjekti with oid '" + oid + "'");
-    return adaptProjecti(response.data);
+    return adaptProjecti(response.data, false);
   }
 
   private async createHakuApi() {
