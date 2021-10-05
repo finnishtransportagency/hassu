@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProjektiTaulu renders 'Perusta' page unchanged 1`] = `
+Array [
+  <section>
+    <h1>
+      Perusta uusi projekti
+    </h1>
+    <p>
+      Hae projekti-VELHOon viety suunnitelma, jonka haluat tuoda Valtion väylien suunnittelu -palveluun. Voit hakea suunnitelman joko asiatunnuksella tai suunnitelman / projektin nimellä tai sen osalla.
+    </p>
+    <form
+      onSubmit={[Function]}
+    >
+      <div
+        className="grid grid-cols-1 md:grid-cols-12 gap-2 mb-3"
+      >
+        <div
+          className="md:col-span-4 xl:col-span-3 md:col-start-1 xl:col-start-1 my-auto"
+        >
+          <label
+            className="font-bold text-gray"
+          >
+            Asiatunnus
+          </label>
+        </div>
+        <div
+          className="md:col-span-4 xl:col-span-3"
+        >
+          <input
+            className="border rounded w-full py-1 px-2 focus:outline-none focus:shadow-outline disabled:opacity-50"
+            disabled={true}
+            type="text"
+          />
+        </div>
+        <div
+          className="md:col-span-4 xl:col-span-3 md:col-start-1 xl:col-start-1 my-auto"
+        >
+          <label
+            className="font-bold"
+          >
+            Suunnitelman / projektin nimi
+          </label>
+        </div>
+        <div
+          className="md:col-span-4 xl:col-span-3"
+        >
+          <input
+            className="border rounded w-full py-1 px-2 focus:outline-none focus:shadow-outline"
+            name="name"
+            onBlur={[Function]}
+            onChange={[Function]}
+            type="text"
+          />
+        </div>
+        <div
+          className="md:col-span-2"
+        >
+          <button
+            className="px-3 py-1 rounded-3xl border-transparent rounded text-base font-normal bg-primary-dark text-white uppercase disabled:opacity-50 disabled:cursor-default"
+            disabled={false}
+          >
+            Haku
+          </button>
+        </div>
+      </div>
+    </form>
+  </section>,
+  <hr />,
+]
+`;
