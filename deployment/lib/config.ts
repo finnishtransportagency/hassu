@@ -36,8 +36,9 @@ export class Config extends Resource {
   public readonly basicAuthenticationUsername: string;
   public readonly basicAuthenticationPassword: string;
   public readonly infraEnvironment: string;
+  public branch?: string;
 
-  constructor(scope: Construct) {
+  private constructor(scope: Construct) {
     super(scope, "config");
     const env = Config.env;
     this.appBucketName = `hassu-app-${env}`;
@@ -51,12 +52,22 @@ export class Config extends Resource {
     this.basicAuthenticationPassword = this.getInfraParameter("basicAuthenticationPassword");
   }
 
+  public static async instance(scope: Construct) {
+    const config = new Config(scope);
+    await config.init();
+    return config;
+  }
+
   private getParameter(parameterName: string) {
     return ssm.StringParameter.valueForStringParameter(this, parameterName);
   }
 
   public getInfraParameter(parameterName: string) {
-    return ssm.StringParameter.valueForStringParameter(this, `/${this.infraEnvironment}/` + parameterName);
+    return ssm.StringParameter.valueForStringParameter(this, this.getInfraParameterPath(parameterName));
+  }
+
+  public getInfraParameterPath(parameterName: string) {
+    return `/${this.infraEnvironment}/` + parameterName;
   }
 
   public async getSecureInfraParameter(parameterName: string, isSecureString?: boolean) {
@@ -72,13 +83,30 @@ export class Config extends Resource {
     return value;
   }
 
-  currentBranch = async () => execShellCommand("git rev-parse --abbrev-ref HEAD");
+  private init = async () => {
+    this.branch = process.env.BUILD_BRANCH ? process.env.BUILD_BRANCH : await execShellCommand("git rev-parse --abbrev-ref HEAD");
+  };
 
   public static isPermanentEnvironment(): boolean {
     return ["dev", "prod"].indexOf(Config.env) >= 0;
   }
 
-  public static isFeatureBranch(branch: string): boolean {
-    return branch !== "main";
+  public isFeatureBranch(): boolean {
+    return this.getBranch().startsWith("feature");
+  }
+
+  private getBranch() {
+    if (!this.branch) {
+      throw new Error("branch is not set.");
+    }
+    return this.branch;
+  }
+
+  public isPermanentBranch(): boolean {
+    return this.getBranch() === "main";
+  }
+
+  public isDeveloperEnvironment() {
+    return !Config.isPermanentEnvironment();
   }
 }

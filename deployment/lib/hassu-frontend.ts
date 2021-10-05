@@ -32,8 +32,11 @@ export class HassuFrontendStack extends cdk.Stack {
         region: "eu-west-1",
       },
     });
+  }
 
-    const config = new Config(this);
+  public async process() {
+    const env = Config.env;
+    const config = await Config.instance(this);
     const frontendRequestFunction = this.createFrontendRequestFunction(
       env,
       config.basicAuthenticationUsername,

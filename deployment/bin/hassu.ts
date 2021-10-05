@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-/* tslint:disable:no-unused-expression */
 import "source-map-support/register";
 import * as cdk from "@aws-cdk/core";
 import { HassuBackendStack } from "../lib/hassu-backend";
@@ -13,7 +12,12 @@ async function main() {
     console.log(e);
     process.exit(1);
   });
-  new HassuFrontendStack(app);
+  const hassuFrontendStack = new HassuFrontendStack(app);
+  await hassuFrontendStack.process().catch((e) => {
+    // tslint:disable-next-line:no-console
+    console.log(e);
+    process.exit(1);
+  });
 }
 
 main();

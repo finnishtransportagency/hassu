@@ -19,8 +19,8 @@ export class HassuBackendStack extends cdk.Stack {
   }
 
   async process() {
+    const config = await Config.instance(this);
     const api = this.createAPI();
-    const config = new Config(this);
     const backendLambda = await this.createBackendLambda(config);
     HassuBackendStack.mapApiResolversToLambda(api, backendLambda);
     const suunnitelmatTable = this.createDatabase();
