@@ -39,7 +39,7 @@ Array [
           <label
             className="font-bold"
           >
-            Suunnitelman / projektin nimi
+            Projektin nimi
           </label>
         </div>
         <div
