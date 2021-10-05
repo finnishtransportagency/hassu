@@ -22,7 +22,9 @@ export default function Perusta() {
   const [isLoading, setIsLoading] = useState(false);
 
   const validationSchema: SchemaOf<SearchInput> = Yup.object().shape({
-    name: Yup.string().required("Nimi on pakollinen kenttä."),
+    name: Yup.string()
+      .required("Nimi on pakollinen kenttä.")
+      .min(3, "Nimikenttään on kirjoitettava vähintään 3 merkkiä."),
   });
 
   const formOptions: UseFormProps<SearchInput> = {
@@ -104,7 +106,7 @@ export default function Perusta() {
               />
             </div>
             <div className="md:col-span-4 xl:col-span-3 md:col-start-1 xl:col-start-1 my-auto">
-              <label className="font-bold">Suunnitelman / projektin nimi</label>
+              <label className="font-bold">Projektin nimi</label>
             </div>
             <div className="md:col-span-4 xl:col-span-3">
               <input
