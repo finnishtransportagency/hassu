@@ -37,5 +37,5 @@
     "jsx": "preserve"
   },
   "exclude": ["node_modules", "backend", "deployment"],
-  "include": ["src"]
+  "include": ["src", "declarations.d.ts"]
 }

@@ -1,8 +1,7 @@
-import log from "loglevel";
 import React from "react";
 import { Kayttaja } from "@graphql/apiModel";
 import { getVaylaUser } from "@services/userService";
-import Image from "next/image";
+// import Image from "next/image";
 
 type SuunnitelmaListState = {
   kayttaja?: Kayttaja;
@@ -55,8 +54,8 @@ export class Header extends React.Component<Props, SuunnitelmaListState> {
       >
         <div>
           <div className="sticky flex justify-between items-center border-b-4 border-warmWhite py-4 md:justify-start md:space-x-1">
-            <Image src="/vayla-600px.jpg" alt="Väylä" width="150" height="150" />
-            <Image src="/ely-400px.png" alt="ELY" width="150" height="150" />
+            {/* <Image src="/vayla-600px.jpg" alt="Väylä" width="150" height="150" /> */}
+            {/* <Image src="/ely-400px.png" alt="ELY" width="150" height="150" /> */}
             <div className="mr-2 my-2 md:hidden">
               <button
                 type="button"
