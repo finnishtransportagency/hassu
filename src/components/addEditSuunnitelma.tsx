@@ -1,22 +1,20 @@
-import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
 import Link from "next/link";
-import { Suunnitelma } from "../graphql/apiModel";
-import log from "loglevel";
+import * as model from "@graphql/apiModel";
+import { Projekti } from "@graphql/apiModel";
 import React, { FormEventHandler, useState } from "react";
 import Autocomplete from "../components/Autocomplete";
-import { createSuunnitelma, getVelhoSuunnitelmasByName, updateSuunnitelma } from "../graphql/api";
+import { getVelhoSuunnitelmasByName, tallennaProjekti } from "@graphql/api";
 
 export { AddEditSuunnitelma };
 
-function AddEditSuunnitelma(props: { suunnitelma: Suunnitelma }) {
+function AddEditSuunnitelma(props: { suunnitelma: Projekti }) {
   const suunnitelma = props?.suunnitelma;
 
   const isAddMode = !suunnitelma;
-  const router = useRouter();
   const [searchInput, setSearchInput] = useState("");
   const [searchInvalid, setSearchInvalid] = useState(false);
   const [searchErrorMessage, setSearchErrorMessage] = useState("");
@@ -35,33 +33,8 @@ function AddEditSuunnitelma(props: { suunnitelma: Suunnitelma }) {
   const { register, handleSubmit, formState, setValue } = useForm(formOptions);
   const { errors } = formState;
 
-  function onSubmit(data: Suunnitelma) {
-    return isAddMode ? doCreateSuunnitelma(data) : doUpdateSuunnitelma(data);
-  }
-
-  async function doCreateSuunnitelma(data: any) {
-    try {
-      log.info("Luodaan:", data);
-      const result = await createSuunnitelma(data);
-      log.info("Luonnin tulos:", result);
-      await router.push(".");
-    } catch (err) {
-      log.error("error creating suunnitelma:", err);
-    }
-  }
-
-  async function doUpdateSuunnitelma(data: any) {
-    try {
-      const dataToUpdate = { ...data };
-      delete dataToUpdate.status;
-      log.info("Päivitetään:", dataToUpdate);
-      const result = await updateSuunnitelma(dataToUpdate);
-      log.info("Päivityksen tulos:", result);
-      await router.push("/yllapito");
-    } catch (err) {
-      log.error("error updating suunnitelma:", err);
-      throw err;
-    }
+  function onSubmit(projekti: Projekti) {
+    return tallennaProjekti(projekti);
   }
 
   const updateFormWithSuunnitelmaData: FormEventHandler<HTMLFormElement> = async (event) => {
@@ -74,15 +47,15 @@ function AddEditSuunnitelma(props: { suunnitelma: Suunnitelma }) {
       setSearchErrorMessage("Haulla löytyi enemmän kuin yksi suunnitelma");
     } else if (suunnitelmaList.length === 1) {
       setSearchInvalid(false);
-      const { name } = suunnitelmaList[0];
-      setValue("name", name);
+      const { nimi } = suunnitelmaList[0];
+      setValue("name", nimi);
     } else {
       setSearchInvalid(true);
       setSearchErrorMessage("Haulla ei löytynyt suunnitelmia");
     }
   };
 
-  const suunnitelmaSearchHandle = async (textInput: string) => {
+  const suunnitelmaSearchHandle = async (textInput: string): Promise<model.VelhoHakuTulos[]> => {
     setSearchInput(textInput);
     return await getVelhoSuunnitelmasByName(searchInput);
   };
@@ -102,7 +75,7 @@ function AddEditSuunnitelma(props: { suunnitelma: Suunnitelma }) {
                   setSearchInput(value);
                 }}
                 suggestionHandler={suunnitelmaSearchHandle}
-                itemText={(suunnitelmat: Suunnitelma[]) => suunnitelmat.map((s) => s.name)}
+                itemText={(projektit: model.VelhoHakuTulos[]) => projektit.map((s) => s.nimi)}
                 invalid={searchInvalid}
                 errorMessage={searchErrorMessage}
               />

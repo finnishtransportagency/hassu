@@ -1,5 +1,5 @@
 import CSS from "csstype";
-import { SuunnitelmaList } from "../../components/suunnitelmaList";
+import { ProjektiListaus } from "@components/projektiListaus";
 import Link from "next/link";
 
 const styles = {
@@ -35,7 +35,7 @@ function listingPage() {
       <Link href="/yllapito/perusta">
         <a className="btn btn-sm btn-success mb-2">Perusta uusi projekti</a>
       </Link>
-      <SuunnitelmaList admin={true} />
+      <ProjektiListaus admin={true} />
     </div>
   );
 }

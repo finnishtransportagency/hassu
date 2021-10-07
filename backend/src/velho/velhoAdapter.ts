@@ -32,8 +32,8 @@ export function adaptSearchResults(searchResults: any): VelhoHakuTulos[] {
     return searchResults.map((result) => {
       return {
         oid: result.oid,
-        name: result.ominaisuudet.nimi,
-        type: result.ominaisuudet.vaylamuoto,
+        nimi: result.ominaisuudet.nimi,
+        tyyppi: result.ominaisuudet.vaylamuoto,
       } as VelhoHakuTulos;
     });
   }

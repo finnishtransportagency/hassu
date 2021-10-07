@@ -14,7 +14,7 @@ export class ProjektiFixture {
   projekti1 = {
     __typename: "Projekti",
     oid: this.PROJEKTI1_OID,
-    name: this.PROJEKTI1_NIMI,
+    nimi: this.PROJEKTI1_NIMI,
     kuvaus: this.PROJEKTI1_KUVAUS_1,
     status: Status.EI_JULKAISTU,
     tallennettu: false,

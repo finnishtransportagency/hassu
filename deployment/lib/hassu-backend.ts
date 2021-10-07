@@ -1,13 +1,13 @@
 /* tslint:disable:no-unused-expression */
 import * as cdk from "@aws-cdk/core";
-import { Duration, RemovalPolicy } from "@aws-cdk/core";
+import { Duration } from "@aws-cdk/core";
 import * as lambda from "@aws-cdk/aws-lambda";
 import * as appsync from "@aws-cdk/aws-appsync";
 import { FieldLogLevel, GraphqlApi } from "@aws-cdk/aws-appsync";
 import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
 import * as ddb from "@aws-cdk/aws-dynamodb";
 import { Config } from "./config";
-import {createDatabase} from "./hassu-database";
+import { createDatabase } from "./hassu-database";
 
 export class HassuBackendStack extends cdk.Stack {
   constructor(scope: cdk.Construct) {
@@ -24,7 +24,7 @@ export class HassuBackendStack extends cdk.Stack {
     const api = this.createAPI();
     const backendLambda = await this.createBackendLambda(config);
     HassuBackendStack.mapApiResolversToLambda(api, backendLambda);
-    const projektiTable = createDatabase(this, Config.env);
+    const projektiTable = createDatabase(this);
     HassuBackendStack.attachDatabaseToBackend(projektiTable, backendLambda);
 
     new cdk.CfnOutput(this, "AppSyncAPIKey", {

@@ -3,7 +3,7 @@
 exports[`apiHandler handleEvent tallennaProjekti should create a new project 1`] = `
 Object {
   "kuvaus": "Testiprojekti 1:n kuvaus",
-  "name": "Testiprojekti 1",
+  "nimi": "Testiprojekti 1",
   "oid": "1",
   "status": "EI_JULKAISTU",
 }

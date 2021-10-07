@@ -115,9 +115,10 @@ export class HassuPipelineStack extends Stack {
       projectName: "Hassu-" + env,
       buildSpec: BuildSpec.fromObject(buildSpec),
       source: gitHubSource,
-      cache: codebuild.Cache.local(LocalCacheMode.CUSTOM, LocalCacheMode.SOURCE),
+      cache: codebuild.Cache.local(LocalCacheMode.CUSTOM, LocalCacheMode.SOURCE, LocalCacheMode.DOCKER_LAYER),
       environment: {
         buildImage: LinuxBuildImage.STANDARD_5_0,
+        privileged: true,
         environmentVariables: {
           ENVIRONMENT: { value: env },
           VELHO_AUTH_URL: {

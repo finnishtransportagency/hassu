@@ -10,7 +10,7 @@ enum Status {
 
 type Projekti {
   oid: String!
-  nimi: String
+  nimi: String!
   kuvaus: String
   vaylamuoto: [String]
   vaihe: String
@@ -34,9 +34,9 @@ input TallennaProjektiInput {
 
 type VelhoHakuTulos {
   oid: String!
-  caseNumber: String
-  name: String
-  type: String
+  nimi: String!
+  asianumero: String
+  tyyppi: String
 }
 
 type Kayttaja {
