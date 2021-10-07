@@ -1,5 +1,5 @@
 const config = {
-  suunnitelmatTableName: process.env.TABLE_SUUNNITELMAT,
+  projektiTableName: process.env.TABLE_PROJEKTI,
   cognitoURL: process.env.COGNITO_URL,
   velhoAuthURL: process.env.VELHO_AUTH_URL,
   velhoApiURL: process.env.VELHO_API_URL,

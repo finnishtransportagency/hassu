@@ -5,6 +5,7 @@
   "dependencies": {
     "@aws-amplify/api-graphql": "2.2.3",
     "@aws-amplify/ui-react": "1.2.8",
+    "@aws-sdk/client-dynamodb": "3.34.0",
     "@aws-sdk/lib-dynamodb": "3.26.0",
     "@hookform/resolvers": "2.7.1",
     "aws-amplify": "4.2.2",
@@ -94,7 +95,10 @@
     "lint:tslint": "tslint --project tsconfig.json",
     "lint:app": "next lint",
     "lint": "npm-run-all lint:*",
+    "localstack": "docker-compose -f deployment/localstack/docker-compose.yml up -d",
+    "localstack:stop": "docker-compose -f deployment/localstack/docker-compose.yml down",
     "test": "npm-run-all \"test:!(backend)\"",
+    "husky:test": "npm-run-all \"test:!(backend|integration)\"",
     "test:frontend": "jest --config \"./jest.frontend.config.js\"",
     "test:backend": "cross-env TS_NODE_PROJECT=\"./tsconfig.backend.json\" mocha -r ts-node/register \"backend/test/**/*.test.ts\" --reporter mocha-junit-reporter --reporter-options mochaFile=./.report/unit/test-results.xml",
     "test:coverage": "nyc --report-dir .report/coverage --reporter text-summary --reporter lcov --reporter json --reporter clover npm run test:backend",

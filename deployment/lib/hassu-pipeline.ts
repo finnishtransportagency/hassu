@@ -32,7 +32,9 @@ export class HassuPipelineStack extends Stack {
       await this.createPipeline(env, config, [
         "npm run generate",
         "npm run lint",
-        "npm run test:coverage",
+        "npm run localstack",
+        "npm run test",
+        "npm run localstack:stop",
         "npm run deploy:backend",
         "npm run deploy:frontend",
         "npm run build",
@@ -42,7 +44,9 @@ export class HassuPipelineStack extends Stack {
       await this.createPipeline(env, config, [
         "npm run generate",
         "npm run lint",
-        "npm run test:coverage",
+        "npm run localstack",
+        "npm run test",
+        "npm run localstack:stop",
         "npm run build",
         "npm run synth",
       ]);

@@ -34,7 +34,20 @@ async function identifyUser(headers: AppSyncResolverEventHeaders) {
   }
 }
 
-export function listAllUsers() {
+/**
+ * For test use only
+ * @param kayttaja
+ */
+function identifyMockUser(kayttaja?: Kayttaja) {
+  vaylaUser = kayttaja;
+  if (vaylaUser) {
+    log.info("Current user:", vaylaUser);
+  } else {
+    log.info("Anonymous user");
+  }
+}
+
+function listAllUsers() {
   return personSearch.listAccounts();
 }
 
@@ -60,4 +73,13 @@ function requireVaylaUser() {
   }
 }
 
-export { identifyUser, isVaylaUser, isSuomiFiUser, getVaylaUser, requireVaylaUser, mockUser };
+export {
+  identifyUser,
+  isVaylaUser,
+  isSuomiFiUser,
+  getVaylaUser,
+  requireVaylaUser,
+  mockUser,
+  identifyMockUser,
+  listAllUsers,
+};

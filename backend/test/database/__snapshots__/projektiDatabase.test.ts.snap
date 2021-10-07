@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`apiHandler updateSuunnitelma saveProjekti should pass expected parameters to DynamoDB 1`] = `
+Object {
+  "ExpressionAttributeNames": Object {
+    "#kuvaus": "kuvaus",
+    "#name": "name",
+    "#status": "status",
+  },
+  "ExpressionAttributeValues": Object {
+    ":kuvaus": "Testiprojekti 1:n kuvaus",
+    ":name": "Testiprojekti 1",
+    ":status": "EI_JULKAISTU",
+  },
+  "Key": Object {
+    "oid": "1",
+  },
+  "TableName": "LocalProjekti",
+  "UpdateExpression": "set #name = :name , #kuvaus = :kuvaus , #status = :status ",
+}
+`;

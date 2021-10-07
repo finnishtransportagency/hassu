@@ -1,12 +1,13 @@
 /* tslint:disable:no-unused-expression */
 import * as cdk from "@aws-cdk/core";
-import { Duration } from "@aws-cdk/core";
+import { Duration, RemovalPolicy } from "@aws-cdk/core";
 import * as lambda from "@aws-cdk/aws-lambda";
 import * as appsync from "@aws-cdk/aws-appsync";
 import { FieldLogLevel, GraphqlApi } from "@aws-cdk/aws-appsync";
 import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
 import * as ddb from "@aws-cdk/aws-dynamodb";
 import { Config } from "./config";
+import {createDatabase} from "./hassu-database";
 
 export class HassuBackendStack extends cdk.Stack {
   constructor(scope: cdk.Construct) {
@@ -23,8 +24,8 @@ export class HassuBackendStack extends cdk.Stack {
     const api = this.createAPI();
     const backendLambda = await this.createBackendLambda(config);
     HassuBackendStack.mapApiResolversToLambda(api, backendLambda);
-    const suunnitelmatTable = this.createDatabase();
-    HassuBackendStack.attachDatabaseToBackend(suunnitelmatTable, backendLambda);
+    const projektiTable = createDatabase(this, Config.env);
+    HassuBackendStack.attachDatabaseToBackend(projektiTable, backendLambda);
 
     new cdk.CfnOutput(this, "AppSyncAPIKey", {
       value: api.apiKey || "",
@@ -120,18 +121,8 @@ export class HassuBackendStack extends cdk.Stack {
     });
   }
 
-  private createDatabase() {
-    return new ddb.Table(this, "HassuSuunnitelmat", {
-      billingMode: ddb.BillingMode.PAY_PER_REQUEST,
-      partitionKey: {
-        name: "id",
-        type: ddb.AttributeType.STRING,
-      },
-    });
-  }
-
-  private static attachDatabaseToBackend(suunnitelmatTable: ddb.Table, backendFn: NodejsFunction) {
-    suunnitelmatTable.grantFullAccess(backendFn);
-    backendFn.addEnvironment("TABLE_SUUNNITELMAT", suunnitelmatTable.tableName);
+  private static attachDatabaseToBackend(projektiTable: ddb.Table, backendFn: NodejsFunction) {
+    projektiTable.grantFullAccess(backendFn);
+    backendFn.addEnvironment("TABLE_PROJEKTI", projektiTable.tableName);
   }
 }

@@ -1,0 +1,16 @@
+version: '2.1'
+services:
+  localstack:
+    image: localstack/localstack
+    ports:
+      - "4566-4584:4566-4584"
+      - "${PORT_WEB_UI-8080}:${PORT_WEB_UI-8080}"
+    environment:
+      - SERVICES=dynamodb
+      - DEFAULT_REGION=eu-west-1
+      - DEBUG=1
+      - DATA_DIR=${DATA_DIR- }
+      - PORT_WEB_UI=${PORT_WEB_UI- }
+      - DOCKER_HOST="unix:///var/run/docker.sock"
+#    volumes:
+#      - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"

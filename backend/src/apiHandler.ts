@@ -1,47 +1,49 @@
 import log from "loglevel";
-import { createSuunnitelma } from "./handler/createSuunnitelma";
-import { CreateSuunnitelmaInput, UpdateSuunnitelmaInput } from "./api/apiModel";
-import { listSuunnitelmat } from "./handler/listSuunnitelmat";
-import { getSuunnitelmaById } from "./handler/getSuunnitelmaById";
-import { updateSuunnitelma } from "./handler/updateSuunnitelma";
+import { LataaProjektiQueryVariables, ListaaVelhoProjektitQueryVariables, TallennaProjektiInput } from "./api/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
-import { getVelhoSuunnitelmasByName } from "./handler/getVelhoSuunnitelmasByName";
+import { listaaVelhoProjektit } from "./handler/listaaVelhoProjektit";
 import { identifyUser } from "./service/userService";
 import { getCurrentUser } from "./handler/getCurrentUser";
 import { listAllUsers } from "./handler/listAllUsers";
-import { loadProjekti } from "./handler/projectHandler";
+import { listProjektit, loadProjekti, saveProjekti } from "./handler/projektiHandler";
 
 const logLevel = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : "info";
 log.setLevel(logLevel as any);
 
-type AppSyncEventArguments = {
-  suunnitelma?: CreateSuunnitelmaInput | UpdateSuunnitelmaInput;
-  suunnitelmaId?: string;
-  suunnitelmaName?: string;
-  requireExactMatch?: boolean;
-  oid?: string;
-};
+type AppSyncEventArguments =
+  | {}
+  | LataaProjektiQueryVariables
+  | ListaaVelhoProjektitQueryVariables
+  | TallennaProjektiInput;
+
+export enum Operation {
+  "LISTAA_PROJEKTIT" = "LISTAA_PROJEKTIT",
+  "LISTAA_VELHO_PROJEKTIT" = "LISTAA_VELHO_PROJEKTIT",
+  "NYKYINEN_KAYTTAJA" = "NYKYINEN_KAYTTAJA",
+  "LISTAA_KAYTTAJAT" = "LISTAA_KAYTTAJAT",
+  "LATAA_PROJEKTI" = "LATAA_PROJEKTI",
+  "TALLENNA_PROJEKTI" = "TALLENNA_PROJEKTI",
+}
 
 export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArguments>) {
   log.info(JSON.stringify(event.info));
+
   await identifyUser(event.request?.headers);
-  switch (event.info.fieldName) {
-    case "createSuunnitelma":
-      return await createSuunnitelma(event.arguments.suunnitelma as CreateSuunnitelmaInput);
-    case "listSuunnitelmat":
-      return await listSuunnitelmat();
-    case "getSuunnitelmaById":
-      return await getSuunnitelmaById(event.arguments.suunnitelmaId);
-    case "updateSuunnitelma":
-      return await updateSuunnitelma(event.arguments.suunnitelma as UpdateSuunnitelmaInput);
-    case "getVelhoSuunnitelmasByName":
-      return await getVelhoSuunnitelmasByName(event.arguments.suunnitelmaName, event.arguments.requireExactMatch);
-    case "getCurrentUser":
+
+  const operation: Operation = event.info.fieldName as any;
+  switch (operation) {
+    case Operation.LISTAA_PROJEKTIT:
+      return await listProjektit();
+    case Operation.LISTAA_VELHO_PROJEKTIT:
+      return await listaaVelhoProjektit(event.arguments as ListaaVelhoProjektitQueryVariables);
+    case Operation.NYKYINEN_KAYTTAJA:
       return await getCurrentUser();
-    case "listAllUsers":
+    case Operation.LISTAA_KAYTTAJAT:
       return await listAllUsers();
-    case "lataaProjekti":
-      return await loadProjekti(event.arguments.oid);
+    case Operation.LATAA_PROJEKTI:
+      return await loadProjekti((event.arguments as LataaProjektiQueryVariables).oid);
+    case Operation.TALLENNA_PROJEKTI:
+      return await saveProjekti(event.arguments as TallennaProjektiInput);
     default:
       return null;
   }
