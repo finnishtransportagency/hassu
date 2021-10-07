@@ -1,75 +1,166 @@
-import { useForm } from "react-hook-form";
+import { useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
+import { SchemaOf } from "yup";
 
-import { VelhoHakuTulos } from "../../graphql/apiModel";
-import React, { FormEventHandler, useState } from "react";
-import Autocomplete from "../../components/Autocomplete";
-import { getVelhoSuunnitelmasByName } from "../../graphql/api";
+import { VelhoHakuTulos } from "@graphql/apiModel";
+import { getVelhoSuunnitelmasByName } from "@graphql/api";
+import React, { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/router";
+import ProjektiTaulu from "@components/projekti/ProjektiTaulu";
 
-export default function PerustaProjekti() {
-  const [searchInput, setSearchInput] = useState("");
-  const [searchInvalid, setSearchInvalid] = useState(false);
-  const [searchErrorMessage, setSearchErrorMessage] = useState("");
+interface SearchInput {
+  name: string;
+}
 
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().required("Nimi on pakollinen kenttä"),
+const PROJEKTI_NIMI_PARAM = "projektinimi";
+
+export default function Perusta() {
+  const router = useRouter();
+  const [hakuTulos, setHakuTulos] = useState<VelhoHakuTulos[] | null>([]);
+  const [resultSectionVisible, setResultSectionVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const validationSchema: SchemaOf<SearchInput> = Yup.object().shape({
+    name: Yup.string()
+      .required("Nimi on pakollinen kenttä.")
+      .min(3, "Nimikenttään on kirjoitettava vähintään 3 merkkiä."),
   });
-  const formOptions = { resolver: yupResolver(validationSchema), defaultValues: {} };
 
-  // get functions to build form with useForm() hook
-  const { setValue } = useForm(formOptions);
+  const formOptions: UseFormProps<SearchInput> = {
+    resolver: yupResolver(validationSchema),
+    defaultValues: { name: "" },
+    mode: "onSubmit",
+    reValidateMode: "onSubmit",
+  };
 
-  const updateFormWithSearchResults: FormEventHandler<HTMLFormElement> = async (event) => {
-    event.preventDefault();
-    setValue("name", "");
-    const suunnitelmaList = await getVelhoSuunnitelmasByName(searchInput, true);
-    if (suunnitelmaList.length > 1) {
-      setSearchInvalid(true);
-      setSearchErrorMessage("Haulla löytyi enemmän kuin yksi suunnitelma");
-    } else if (suunnitelmaList.length === 1) {
-      setSearchInvalid(false);
-      const { name } = suunnitelmaList[0];
-      setValue("name", name);
-    } else {
-      setSearchInvalid(true);
-      setSearchErrorMessage("Haulla ei löytynyt suunnitelmia");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+    clearErrors,
+    reset,
+  } = useForm<SearchInput>(formOptions);
+
+  const onSubmit = useCallback(
+    async (data: SearchInput) => {
+      try {
+        setIsLoading(true);
+        setResultSectionVisible(true);
+        if (router.query[PROJEKTI_NIMI_PARAM] !== data.name) {
+          router.push({ query: { [PROJEKTI_NIMI_PARAM]: data.name } });
+        }
+        const tulos = await getVelhoSuunnitelmasByName(data.name);
+        setHakuTulos(tulos);
+        if (tulos.length === 0) {
+          setError("name", {
+            type: "manual",
+            message: "Haulla ei löytynyt yhtään projektia.",
+          });
+        } else {
+          clearErrors();
+        }
+      } catch (e) {
+        setError("name", {
+          type: "manual",
+          message: "Haku epäonnistui. Mikäli ongelma jatkuu, ota yhteys järjestelmän ylläpitäjään.",
+        });
+      }
+      setIsLoading(false);
+    },
+    [clearErrors, setError, router]
+  );
+
+  useEffect(() => {
+    const FillFormAndSubmit = async (data: SearchInput) => {
+      await reset(data);
+      handleSubmit(onSubmit)();
+    };
+    if (router.isReady) {
+      const name = router.query[PROJEKTI_NIMI_PARAM];
+      if (typeof name === "string") {
+        FillFormAndSubmit({ name });
+      }
     }
-  };
-
-  const projectSearchHandle = async (textInput: string) => {
-    setSearchInput(textInput);
-    return await getVelhoSuunnitelmasByName(searchInput);
-  };
+  }, [router.isReady, router.query, reset, handleSubmit, onSubmit]);
 
   return (
     <>
-      <h1>Perusta uusi projekti</h1>
-      <form onSubmit={updateFormWithSearchResults}>
-        <div className="form-row">
-          <div className="form-group col-12 form-row">
-            <div className="col-3">
-              <label>Suunnitelman / projektin nimi</label>
+      <section>
+        <h1>Perusta uusi projekti</h1>
+        <p>
+          Hae projekti-VELHOon viety suunnitelma, jonka haluat tuoda Valtion väylien suunnittelu -palveluun. Voit hakea
+          suunnitelman joko asiatunnuksella tai suunnitelman / projektin nimellä tai sen osalla.
+        </p>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-2 mb-3">
+            <div className="md:col-span-4 xl:col-span-3 md:col-start-1 xl:col-start-1 my-auto">
+              <label className="font-bold text-gray">Asiatunnus</label>
             </div>
-            <div className="col-4">
-              <Autocomplete
-                value={searchInput}
-                setValue={(value: string) => {
-                  setSearchInvalid(false);
-                  setSearchInput(value);
-                }}
-                suggestionHandler={projectSearchHandle}
-                itemText={(searchResults: VelhoHakuTulos[]) => searchResults.map((item) => item.name || "")}
-                invalid={searchInvalid}
-                errorMessage={searchErrorMessage}
+            <div className="md:col-span-4 xl:col-span-3">
+              <input
+                type="text"
+                className="border rounded w-full py-1 px-2 focus:outline-none focus:shadow-outline disabled:opacity-50"
+                disabled
               />
             </div>
-              <div className="col-4">
-                <button className="btn btn-primary mb-2">Hae Velhosta</button>
-              </div>
+            <div className="md:col-span-4 xl:col-span-3 md:col-start-1 xl:col-start-1 my-auto">
+              <label className="font-bold">Projektin nimi</label>
+            </div>
+            <div className="md:col-span-4 xl:col-span-3">
+              <input
+                type="text"
+                className="border rounded w-full py-1 px-2 focus:outline-none focus:shadow-outline"
+                {...register("name")}
+              />
+            </div>
+            <div className="md:col-span-2">
+              <button
+                className="px-3 py-1 rounded-3xl border-transparent rounded text-base font-normal bg-primary-dark text-white uppercase disabled:opacity-50 disabled:cursor-default"
+                disabled={isLoading}
+              >
+                Haku
+              </button>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+        {errors.name?.message && (
+          <div className="bg-warmWhite border border-secondary-red py-2 px-3 w-full">{errors.name?.message}</div>
+        )}
+      </section>
+      <hr />
+      {resultSectionVisible && (
+        <section className="pt-3">
+          <h2>Hakutulokset</h2>
+          <div className="bg-secondary-turquoise bg-opacity-25 border border-primary py-2 px-3 w-full mb-4">
+            Ohjeet
+            <div>
+              <ul className="list-disc list-inside">
+                <li>
+                  Valitse listasta se suunnitelma, jonka haluat tallentaa Valtion väylien suunnittelu -palveluun uudeksi
+                  projektiksi.
+                </li>
+                <li>
+                  Huomioi, että hakutuloksissa näytetään ainoastaan ne suunnitelmat / projektit joitaa ei ole vielä
+                  perustettu palveluun. Käytä etusivun projektihakua etsiäksesi jo perustettuja projekteja.
+                </li>
+              </ul>
+            </div>
+          </div>
+          {(Array.isArray(hakuTulos) && hakuTulos.length > 0) || isLoading ? (
+            <ProjektiTaulu projektit={hakuTulos || []} isLoading={isLoading} />
+          ) : (
+            !isLoading && (
+              <div>
+                {"Hakusi '"}
+                <span className="font-bold">{router.query[PROJEKTI_NIMI_PARAM]}</span>
+                {"' ei vastaa yhtään projektia."}
+              </div>
+            )
+          )}
+        </section>
+      )}
     </>
   );
 }

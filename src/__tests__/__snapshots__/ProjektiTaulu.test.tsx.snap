@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProjektiTaulu renders ProjektiTaulu unchanged 1`] = `
+<table
+  className="project-table"
+>
+  <thead>
+    <tr>
+      <th>
+        Asiatunnus
+      </th>
+      <th>
+        Nimi
+      </th>
+      <th>
+        Tyyppi
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      className="project-row"
+    >
+      <td
+        className="sm:w-1/4"
+        data-label="Asiatunnus"
+      >
+        1234
+      </td>
+      <td
+        className="sm:w-1/2"
+        data-label="Nimi"
+      >
+        Tampereen Tie Projekti
+      </td>
+      <td
+        className="sm:w-1/4"
+        data-label="Tyyppi"
+      >
+        Tie
+      </td>
+    </tr>
+  </tbody>
+</table>
+`;

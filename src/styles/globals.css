@@ -1,3 +1,34 @@
-.app-container {
-  min-height: 350px;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  @font-face {
+    font-family: "Exo 2";
+    src: url("/fonts/Exo2-VariableFont_wght.ttf") format("truetype");
+  }
+  body :is(h1, h2, h3, h4, h5, h6) {
+    @apply font-bold;
+  }
+  body :is(h1, h2, h3, h4, h5, h6, p) {
+    @apply mb-3;
+  }
+  body h1 {
+    @apply text-4xl;
+  }
+  body h2 {
+    @apply text-2xl;
+  }
+  body h3 {
+    @apply text-xl;
+  }
+  body section {
+    @apply mb-2;
+  }
+  body a {
+    @apply text-primary;
+  }
 }
