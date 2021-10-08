@@ -48,7 +48,7 @@ export default function Breadcrumbs({ routeLabels }: Props): ReactElement {
         routes = pathNameSplitted.reduce<RouteMapping>((reducer, pathname, index) => {
           const pathNameJoined = "/" + pathNameSplitted.slice(0, index + 1).join("/");
           const labels = { ...defaultLabels, ...routeLabels };
-          if (!labels[pathNameJoined].hideWhenNotCurrentRoute || isCurrentRoute(pathNameJoined)) {
+          if (!labels[pathNameJoined]?.hideWhenNotCurrentRoute || isCurrentRoute(pathNameJoined)) {
             const href = "/" + pathSplitted.slice(0, index + 1).join("/");
             const label = labels[pathNameJoined]?.label || pathname;
             reducer[pathNameJoined] = { href, label };

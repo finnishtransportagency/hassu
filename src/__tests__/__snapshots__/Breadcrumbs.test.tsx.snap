@@ -147,15 +147,6 @@ exports[`Breadcrumbs renders correctly on 'known' /yllapito/perusta path 1`] = `
         </a>
       </li>
       <li>
-        <a
-          href="/yllapito"
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-        >
-          Etusivu
-        </a>
-      </li>
-      <li>
         Projektin perustaminen
       </li>
     </ol>
