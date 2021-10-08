@@ -94,31 +94,27 @@ export class HassuBackendStack extends cdk.Stack {
     // Map the resolvers to the Lambda function
     lambdaDataSource.createResolver({
       typeName: "Query",
-      fieldName: "listSuunnitelmat",
+      fieldName: "listaaProjektit",
     });
     lambdaDataSource.createResolver({
       typeName: "Query",
-      fieldName: "getSuunnitelmaById",
+      fieldName: "listaaVelhoProjektit",
     });
     lambdaDataSource.createResolver({
       typeName: "Query",
-      fieldName: "getCurrentUser",
+      fieldName: "nykyinenKayttaja",
+    });
+    lambdaDataSource.createResolver({
+      typeName: "Query",
+      fieldName: "listaaKayttajat",
+    });
+    lambdaDataSource.createResolver({
+      typeName: "Query",
+      fieldName: "lataaProjekti",
     });
     lambdaDataSource.createResolver({
       typeName: "Mutation",
-      fieldName: "createSuunnitelma",
-    });
-    lambdaDataSource.createResolver({
-      typeName: "Mutation",
-      fieldName: "updateSuunnitelma",
-    });
-    lambdaDataSource.createResolver({
-      typeName: "Query",
-      fieldName: "getVelhoSuunnitelmasByName",
-    });
-    lambdaDataSource.createResolver({
-      typeName: "Query",
-      fieldName: "listAllUsers",
+      fieldName: "tallennaProjekti",
     });
   }
 
