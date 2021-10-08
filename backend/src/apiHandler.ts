@@ -17,12 +17,12 @@ type AppSyncEventArguments =
   | TallennaProjektiInput;
 
 export enum Operation {
-  "LISTAA_PROJEKTIT" = "LISTAA_PROJEKTIT",
-  "LISTAA_VELHO_PROJEKTIT" = "LISTAA_VELHO_PROJEKTIT",
-  "NYKYINEN_KAYTTAJA" = "NYKYINEN_KAYTTAJA",
-  "LISTAA_KAYTTAJAT" = "LISTAA_KAYTTAJAT",
-  "LATAA_PROJEKTI" = "LATAA_PROJEKTI",
-  "TALLENNA_PROJEKTI" = "TALLENNA_PROJEKTI",
+  "LISTAA_PROJEKTIT" = "listaaProjektit",
+  "LISTAA_VELHO_PROJEKTIT" = "listaaVelhoProjektit",
+  "NYKYINEN_KAYTTAJA" = "nykyinenKayttaja",
+  "LISTAA_KAYTTAJAT" = "listaaKayttajat",
+  "LATAA_PROJEKTI" = "lataaProjekti",
+  "TALLENNA_PROJEKTI" = "tallennaProjekti",
 }
 
 export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArguments>) {

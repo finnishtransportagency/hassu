@@ -9,14 +9,7 @@ async function createProjekti(projekti: DBProjekti) {
     TableName: config.projektiTableName,
     Item: projekti as DBProjekti,
   };
-  try {
-    return await getDynamoDBDocumentClient().put(params).promise();
-  } catch (e) {
-    log.error(params);
-    log.error(JSON.stringify(e, null, 2));
-    log.error(e);
-    throw e;
-  }
+  return await getDynamoDBDocumentClient().put(params).promise();
 }
 
 async function listProjektit(): Promise<DBProjekti[]> {

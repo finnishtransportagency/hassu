@@ -35,6 +35,7 @@ export class HassuPipelineStack extends Stack {
         "npm run localstack",
         "npm run test",
         "npm run localstack:stop",
+        "npm run deploy:database",
         "npm run deploy:backend",
         "npm run deploy:frontend",
         "npm run build",
@@ -48,7 +49,6 @@ export class HassuPipelineStack extends Stack {
         "npm run test",
         "npm run localstack:stop",
         "npm run build",
-        "npm run synth",
       ]);
     }
   }

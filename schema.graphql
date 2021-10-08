@@ -56,8 +56,6 @@ type Query {
   listaaVelhoProjektit(nimi: String!, requireExactMatch: Boolean): [VelhoHakuTulos]
 }
 
-scalar Nullable
-
 type Mutation {
-  tallennaProjekti(projekti: TallennaProjektiInput!): Nullable
+  tallennaProjekti(projekti: TallennaProjektiInput!): Boolean
 }

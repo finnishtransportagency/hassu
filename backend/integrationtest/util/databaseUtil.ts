@@ -1,6 +1,3 @@
-import { createDatabase } from "../../../deployment/lib/hassu-database";
-import * as cdk from "@aws-cdk/core";
-import { Stack } from "@aws-cdk/core";
 import * as log from "loglevel";
 
 import * as sinon from "sinon";
@@ -8,7 +5,6 @@ import { SinonStub } from "sinon";
 import * as dynamoDB from "../../src/database/dynamoDB";
 
 import { DynamoDB } from "aws-sdk";
-import { config } from "../../src/config";
 
 const localDynamoDBParams = {
   endpoint: "http://localhost:4566",
@@ -17,50 +13,40 @@ const localDynamoDBParams = {
   region: "eu-west-1",
 };
 const localDynamoDB = new DynamoDB(localDynamoDBParams);
+const localDocumentClient = new DynamoDB.DocumentClient({
+  service: localDynamoDB,
+  apiVersion: "2012-08-10",
+  params: localDynamoDBParams,
+});
 
-const tableFromDeployment = createDatabase(new Stack(new cdk.App()));
+// Try to use the database configuration from deployment in
 let localDynamoDBDocumentClientStub: SinonStub;
 
-async function setupLocalDatabase() {
+function replaceAWSDynamoDBWithLocalstack() {
+  localDynamoDBDocumentClientStub = sinon.stub(dynamoDB, "getDynamoDBDocumentClient");
+  localDynamoDBDocumentClientStub.returns(localDocumentClient);
+}
+
+export async function setupLocalDatabase() {
   try {
-    log.info("Cleaning up local database");
-    await cleanupLocalDatabase();
+    await deleteAllItemsFromDatabase();
   } catch (e) {
     // Ignore
   }
-
-  localDynamoDBDocumentClientStub = sinon.stub(dynamoDB, "getDynamoDBDocumentClient");
-  localDynamoDBDocumentClientStub.returns(
-    new DynamoDB.DocumentClient({ service: localDynamoDB, apiVersion: "2012-08-10", params: localDynamoDBParams })
-  );
-
-  try {
-    await localDynamoDB
-      .createTable({
-        TableName: config.projektiTableName,
-        KeySchema: [{ KeyType: "HASH", AttributeName: tableFromDeployment.schema().partitionKey.name }],
-        AttributeDefinitions: [
-          {
-            AttributeName: tableFromDeployment.schema().partitionKey.name,
-            AttributeType: tableFromDeployment.schema().partitionKey.type,
-          },
-        ],
-        ProvisionedThroughput: { ReadCapacityUnits: 1000, WriteCapacityUnits: 1000 },
-      })
-      .promise();
-  } catch (e) {
-    log.error(e);
-    throw e;
-  }
+  replaceAWSDynamoDBWithLocalstack();
 }
 
-async function cleanupLocalDatabase() {
-  await localDynamoDB
-    .deleteTable({
-      TableName: config.projektiTableName,
+async function deleteAllItemsFromDatabase() {
+  // Hard-code table name to prevent accidental deletion from AWS
+  log.info("Cleaning up database");
+  await Promise.all(
+    (
+      await localDocumentClient.scan({ TableName: "Projekti-localstack" }).promise()
+    ).Items.map(async (item) => {
+      log.info("Deleting ", item);
+      await localDocumentClient.delete({ TableName: "Projekti-localstack", Key: { oid: item.oid } }).promise();
     })
-    .promise();
-  localDynamoDBDocumentClientStub.restore();
+  );
 }
 
-export { setupLocalDatabase, cleanupLocalDatabase };
+afterEach("Reset database stub", async () => localDynamoDBDocumentClientStub.restore());
