@@ -8,21 +8,10 @@ enum Status {
   ARKISTOITU
 }
 
-# Deprecated: remove when not in use anymore
-type Suunnitelma {
-  id: String!
-  name: String!
-  location: String
-  type: String
-  contact: String
-  status: Status
-  description: String
-  longDescription: String
-}
-
 type Projekti {
   oid: String!
-  nimi: String
+  nimi: String!
+  kuvaus: String
   vaylamuoto: [String]
   vaihe: String
   tila: String
@@ -38,11 +27,16 @@ type Projekti {
   tallennettu: Boolean!
 }
 
+input TallennaProjektiInput {
+  oid: String!
+  kuvaus: String
+}
+
 type VelhoHakuTulos {
   oid: String!
-  caseNumber: String
-  name: String
-  type: String
+  nimi: String!
+  asianumero: String
+  tyyppi: String
 }
 
 type Kayttaja {
@@ -54,34 +48,14 @@ type Kayttaja {
   roolit: [String]
 }
 
-input CreateSuunnitelmaInput {
-  name: String!
-  location: String
-  type: String
-  contact: String
-}
-
-input UpdateSuunnitelmaInput {
-  id: String!
-  name: String!
-  location: String
-  type: String
-  contact: String
-  description: String
-  longDescription: String
-}
-
 type Query {
-  getCurrentUser: Kayttaja
-  listAllUsers: [Kayttaja]
-  listSuunnitelmat: [Suunnitelma]
-  getSuunnitelmaById(suunnitelmaId: String!): Suunnitelma
-  getVelhoSuunnitelmasByName(suunnitelmaName: String!, requireExactMatch: Boolean): [VelhoHakuTulos]
-
+  nykyinenKayttaja: Kayttaja
+  listaaKayttajat: [Kayttaja]
+  listaaProjektit: [Projekti]
   lataaProjekti(oid: String!): Projekti
+  listaaVelhoProjektit(nimi: String!, requireExactMatch: Boolean): [VelhoHakuTulos]
 }
 
 type Mutation {
-  createSuunnitelma(suunnitelma: CreateSuunnitelmaInput!): Suunnitelma
-  updateSuunnitelma(suunnitelma: UpdateSuunnitelmaInput!): Suunnitelma
+  tallennaProjekti(projekti: TallennaProjektiInput!): Boolean
 }

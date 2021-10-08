@@ -3,25 +3,24 @@ import Link from "next/link";
 import useSWR from "swr";
 import { useRouter } from "next/router";
 import log from "loglevel";
-import { getSuunnitelmaById } from "../../graphql/api";
+import { lataaProjekti } from "@graphql/api";
 
-function SuunnitelmaPage() {
+function ProjektiPage() {
   const router = useRouter();
-  const id = router.query.all?.[0];
-  const { data, error } = useSWR(JSON.stringify({ id }), suunnitelmaFetcher);
+  const oid = router.query.all?.[0];
+  const { data: projekti, error } = useSWR(JSON.stringify({ oid }), projektiLoader);
   if (error) {
     return <></>;
   }
-  if (!data) {
+  if (!projekti) {
     log.info("loading");
     return <></>;
   }
-  log.info("loaded", data);
-  const suunnitelma = data;
+  log.info("loaded", projekti);
   return (
     <>
-      <p>Nimi: {suunnitelma.name}</p>
-      <p>Sijainti: {suunnitelma.location}</p>
+      <p>Nimi: {projekti.nimi}</p>
+      <p></p>
       <p />
       <p>
         <Link href="..">
@@ -32,12 +31,12 @@ function SuunnitelmaPage() {
   );
 }
 
-export default SuunnitelmaPage;
+export default ProjektiPage;
 
-export async function suunnitelmaFetcher(params: string) {
-  const id = JSON.parse(params).id;
-  if (!id) {
+export async function projektiLoader(params: string) {
+  const oid = JSON.parse(params).oid;
+  if (!oid) {
     return null;
   }
-  return await getSuunnitelmaById(id);
+  return await lataaProjekti(oid);
 }

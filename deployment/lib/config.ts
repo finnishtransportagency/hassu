@@ -33,6 +33,7 @@ export class Config extends Resource {
   public readonly frontendDomainName: string;
   public readonly cloudfrontCertificateArn?: string;
   public static readonly env = getEnv("ENVIRONMENT");
+  public static readonly projektiTableName = "Projekti-" + getEnv("ENVIRONMENT");
   public readonly basicAuthenticationUsername: string;
   public readonly basicAuthenticationPassword: string;
   public readonly infraEnvironment: string;
@@ -71,6 +72,10 @@ export class Config extends Resource {
   }
 
   public async getSecureInfraParameter(parameterName: string, isSecureString?: boolean) {
+    // Skip AWS API calls if running locally with localstack and cdklocal
+    if (Config.env === "localstack") {
+      return "dummy";
+    }
     const name = `/${this.infraEnvironment}/` + parameterName;
     const params = {
       Name: name,
@@ -84,7 +89,9 @@ export class Config extends Resource {
   }
 
   private init = async () => {
-    this.branch = process.env.BUILD_BRANCH ? process.env.BUILD_BRANCH : await execShellCommand("git rev-parse --abbrev-ref HEAD");
+    this.branch = process.env.BUILD_BRANCH
+      ? process.env.BUILD_BRANCH
+      : await execShellCommand("git rev-parse --abbrev-ref HEAD");
   };
 
   public static isPermanentEnvironment(): boolean {

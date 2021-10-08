@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`apiHandler handleEvent tallennaProjekti should create a new project 1`] = `
+Object {
+  "kuvaus": "Testiprojekti 1:n kuvaus",
+  "nimi": "Testiprojekti 1",
+  "oid": "1",
+  "status": "EI_JULKAISTU",
+}
+`;
+
+exports[`apiHandler handleEvent tallennaProjekti should update an existing project 1`] = `
+Object {
+  "kuvaus": "Testiprojekti 1:n kuvaus 2",
+  "oid": "1",
+}
+`;

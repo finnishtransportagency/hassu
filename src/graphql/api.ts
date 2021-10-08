@@ -4,6 +4,11 @@ import awsExports from "../aws-exports";
 import { API, graphqlOperation } from "aws-amplify";
 import { GraphQLAPIClass } from "@aws-amplify/api-graphql";
 import * as model from "./apiModel";
+import {
+  LataaProjektiQueryVariables,
+  ListaaVelhoProjektitQueryVariables,
+  TallennaProjektiMutationVariables,
+} from "./apiModel";
 import * as queries from "./queries";
 import * as mutations from "./mutations";
 import log from "loglevel";
@@ -26,44 +31,45 @@ const callYllapitoAPI = async (operation: any) => {
   }
 };
 
-export async function getSuunnitelmaById(suunnitelmaId: string) {
+export async function lataaProjekti(oid: string): Promise<model.Projekti> {
   const response = (await callYllapitoAPI(
-    graphqlOperation(queries.getSuunnitelmaById, { suunnitelmaId })
-  )) as GraphQLResult<model.GetSuunnitelmaByIdQuery>;
-  return response.data?.getSuunnitelmaById as model.Suunnitelma;
+    graphqlOperation(queries.lataaProjekti, { oid } as LataaProjektiQueryVariables)
+  )) as GraphQLResult<model.LataaProjektiQuery>;
+  return response.data?.lataaProjekti as model.Projekti;
 }
 
-export async function createSuunnitelma(suunnitelma: model.CreateSuunnitelmaInput) {
-  return await callYllapitoAPI(graphqlOperation(mutations.createSuunnitelma, { suunnitelma }));
-}
-
-export async function updateSuunnitelma(suunnitelma: model.UpdateSuunnitelmaInput) {
-  return await callYllapitoAPI(graphqlOperation(mutations.updateSuunnitelma, { suunnitelma }));
+export async function tallennaProjekti(projekti: model.TallennaProjektiInput) {
+  return await callYllapitoAPI(
+    graphqlOperation(mutations.tallennaProjekti, { projekti } as TallennaProjektiMutationVariables)
+  );
 }
 
 export async function getVelhoSuunnitelmasByName(
-  suunnitelmaName: string,
+  nimi: string,
   requireExactMatch?: boolean
 ): Promise<model.VelhoHakuTulos[]> {
   const response = (await callYllapitoAPI(
-    graphqlOperation(queries.getVelhoSuunnitelmasByName, { suunnitelmaName, requireExactMatch })
-  )) as GraphQLResult<model.GetVelhoSuunnitelmasByNameQuery>;
-  return response.data?.getVelhoSuunnitelmasByName as model.VelhoHakuTulos[];
+    graphqlOperation(queries.listaaVelhoProjektit, {
+      nimi,
+      requireExactMatch,
+    } as ListaaVelhoProjektitQueryVariables)
+  )) as GraphQLResult<model.ListaaVelhoProjektitQuery>;
+  return response.data?.listaaVelhoProjektit as model.VelhoHakuTulos[];
 }
 
-export async function listSuunnitelmat() {
+export async function listProjektit() {
   const response = (await API.graphql(
-    graphqlOperation(queries.listSuunnitelmat)
-  )) as GraphQLResult<model.ListSuunnitelmatQuery>;
-  return response.data?.listSuunnitelmat as model.Suunnitelma[];
+    graphqlOperation(queries.listaaProjektit)
+  )) as GraphQLResult<model.ListaaProjektitQuery>;
+  return response.data?.listaaProjektit as model.Projekti[];
 }
 
 export async function getCurrentUser(): Promise<model.Kayttaja | undefined> {
   try {
     const response = (await callYllapitoAPI(
-      graphqlOperation(queries.getCurrentUser)
-    )) as GraphQLResult<model.GetCurrentUserQuery>;
-    return response.data?.getCurrentUser as model.Kayttaja;
+      graphqlOperation(queries.nykyinenKayttaja)
+    )) as GraphQLResult<model.NykyinenKayttajaQuery>;
+    return response.data?.nykyinenKayttaja as model.Kayttaja;
   } catch (e) {
     log.error(e);
   }

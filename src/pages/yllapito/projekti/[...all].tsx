@@ -1,18 +1,18 @@
 import { AddEditSuunnitelma } from "../../../components/addEditSuunnitelma";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { Suunnitelma } from "../../../graphql/apiModel";
-import { getSuunnitelmaById } from "../../../graphql/api";
+import { Projekti } from "../../../graphql/apiModel";
+import { lataaProjekti } from "../../../graphql/api";
 
 export default function EditSuunnitelmaPage() {
   const router = useRouter();
   const id = router.query.all?.[0];
-  const [suunnitelma, setSuunnitelma] = useState<Suunnitelma>();
+  const [suunnitelma, setSuunnitelma] = useState<Projekti>();
 
   useEffect(() => {
     async function loadSuunnitelma() {
       if (id) {
-        setSuunnitelma(await getSuunnitelmaById(id));
+        setSuunnitelma(await lataaProjekti(id));
       }
     }
 

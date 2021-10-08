@@ -1,12 +1,15 @@
-import { assert, expect } from "chai";
+import { assert } from "chai";
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
-import { handleEvent } from "../src/apiHandler";
-import suunnitelmatDatabase from "../src/database/suunnitelmatDatabase";
-import { SuunnitelmaFixture } from "./fixture/suunnitelmaFixture";
-import { Suunnitelma } from "../src/api/apiModel";
+import * as apiHandler from "../src/apiHandler";
+import { projektiDatabase } from "../src/database/projektiDatabase";
+import { ProjektiFixture } from "./fixture/projektiFixture";
 import { UserFixture } from "./fixture/userFixture";
 import { IllegalAccessError } from "../src/error/IllegalAccessError";
+import { velho } from "../src/velho/velhoClient";
+import { TallennaProjektiInput } from "../src/api/apiModel";
+
+const { expect } = require("chai");
 
 describe("apiHandler", () => {
   const userFixture = new UserFixture();
@@ -18,39 +21,68 @@ describe("apiHandler", () => {
   });
 
   describe("handleEvent", () => {
-    let fixture: SuunnitelmaFixture;
+    let fixture: ProjektiFixture;
 
-    let createSuunnitelmaStub: sinon.SinonStub;
+    let createProjektiStub: sinon.SinonStub;
+    let saveProjektiStub: sinon.SinonStub;
+    let loadProjektiByOidStub: sinon.SinonStub;
+    let loadVelhoProjektiByOidStub: sinon.SinonStub;
 
     beforeEach(() => {
-      createSuunnitelmaStub = sinon.stub(suunnitelmatDatabase, "createSuunnitelma");
-      fixture = new SuunnitelmaFixture();
+      createProjektiStub = sinon.stub(projektiDatabase, "createProjekti");
+      saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
+      loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
+      loadVelhoProjektiByOidStub = sinon.stub(velho, "loadProjekti");
+
+      fixture = new ProjektiFixture();
     });
 
-    describe("createSuunnitelma", () => {
-      it("should return the expected response", async () => {
+    describe("tallennaProjekti", () => {
+      it("should create a new project", async () => {
         userFixture.loginAs(userFixture.vaylaMatti);
 
-        createSuunnitelmaStub.resolves();
+        loadProjektiByOidStub.resolves();
+        loadVelhoProjektiByOidStub.resolves(fixture.projekti1);
+        createProjektiStub.resolves();
 
-        const result = (await handleEvent({
-          info: { fieldName: "createSuunnitelma" },
-          arguments: { suunnitelma: fixture.createSuunnitelmaInput },
-        } as any)) as Suunnitelma;
-        result.id = fixture.SUUNNITELMA_ID_1;
-        expect(result).to.deep.equal(fixture.suunnitelma1);
-        sinon.assert.calledOnce(createSuunnitelmaStub);
+        await apiHandler.handleEvent({
+          info: { fieldName: apiHandler.Operation.TALLENNA_PROJEKTI },
+          arguments: { projekti: fixture.tallennaProjektiInput },
+        } as any);
+        sinon.assert.calledOnce(loadProjektiByOidStub);
+        sinon.assert.calledOnce(loadVelhoProjektiByOidStub);
+        sinon.assert.calledOnce(createProjektiStub);
+        expect(createProjektiStub.getCall(0).firstArg).toMatchSnapshot();
+      });
+
+      it("should update an existing project", async () => {
+        userFixture.loginAs(userFixture.vaylaMatti);
+
+        loadProjektiByOidStub.resolves(fixture.dbProjekti1);
+        saveProjektiStub.resolves();
+
+        const input: TallennaProjektiInput = {
+          kuvaus: fixture.PROJEKTI1_KUVAUS_2,
+          ...fixture.tallennaProjektiInput,
+        };
+        await apiHandler.handleEvent({
+          info: { fieldName: apiHandler.Operation.TALLENNA_PROJEKTI },
+          arguments: input,
+        } as any);
+        sinon.assert.calledOnce(loadProjektiByOidStub);
+        sinon.assert.calledOnce(saveProjektiStub);
+        expect(saveProjektiStub.getCall(0).firstArg).toMatchSnapshot();
       });
 
       it("should return error if user has no permissions", async () => {
         userFixture.logout();
 
-        createSuunnitelmaStub.resolves();
+        createProjektiStub.resolves();
 
         await assert.isRejected(
-          handleEvent({
-            info: { fieldName: "createSuunnitelma" },
-            arguments: { suunnitelma: fixture.createSuunnitelmaInput },
+          apiHandler.handleEvent({
+            info: { fieldName: apiHandler.Operation.TALLENNA_PROJEKTI },
+            arguments: { projekti: fixture.tallennaProjektiInput },
           } as any),
           IllegalAccessError
         );

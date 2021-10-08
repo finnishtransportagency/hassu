@@ -32,16 +32,16 @@ export default function ProjektiTaulu({ projektit, isLoading }: Props): ReactEle
                 </td>
               </tr>
             ))
-          : projektit.map(({ oid, name, type }) => (
+          : projektit.map(({ oid, nimi, tyyppi }) => (
               <tr key={oid} className={styles["project-row"]}>
                 <td className="sm:w-1/4" data-label="Asiatunnus">
                   {oid}
                 </td>
                 <td className="sm:w-1/2" data-label="Nimi">
-                  {name}
+                  {nimi}
                 </td>
                 <td className="sm:w-1/4" data-label="Tyyppi">
-                  {type}
+                  {tyyppi}
                 </td>
               </tr>
             ))}

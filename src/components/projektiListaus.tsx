@@ -1,30 +1,30 @@
 import React from "react";
-import { Suunnitelma } from "../graphql/apiModel";
+import { Projekti } from "@graphql/apiModel";
 import log from "loglevel";
 import Link from "next/link";
-import { listSuunnitelmat } from "../graphql/api";
+import { listProjektit } from "@graphql/api";
 
-type SuunnitelmaListState = {
-  suunnitelmat: Suunnitelma[];
+type ProjektiListausState = {
+  projektit: Projekti[];
 };
 
-type SuunnitelmaListProps = {
+type ProjektiListausProps = {
   admin?: boolean;
 };
 
-export class SuunnitelmaList extends React.Component<SuunnitelmaListProps, SuunnitelmaListState> {
-  constructor(props: SuunnitelmaListProps) {
+export class ProjektiListaus extends React.Component<ProjektiListausProps, ProjektiListausState> {
+  constructor(props: ProjektiListausProps) {
     super(props);
-    this.state = { suunnitelmat: [] };
+    this.state = { projektit: [] };
   }
 
-  async fetchSuunnitelmat() {
+  async fetchProjektit() {
     try {
-      const result = await listSuunnitelmat();
-      log.info("listSuunnitelmat:", result);
+      const result = await listProjektit();
+      log.info("listProjektit:", result);
       return result;
     } catch (e) {
-      log.error("Error listing suunnitelmat", e);
+      log.error("Error listing projektit", e);
       if (e.errors) {
         e.errors.map((err: any) => {
           const response = err.originalError?.response;
@@ -37,9 +37,9 @@ export class SuunnitelmaList extends React.Component<SuunnitelmaListProps, Suunn
   }
 
   async componentDidMount() {
-    const suunnitelmat = await this.fetchSuunnitelmat();
+    const projektit = await this.fetchProjektit();
     this.setState({
-      suunnitelmat,
+      projektit,
     });
   }
 
@@ -55,18 +55,16 @@ export class SuunnitelmaList extends React.Component<SuunnitelmaListProps, Suunn
               </tr>
             </thead>
             <tbody>
-              {this.state.suunnitelmat.map((suunnitelma) => (
-                <tr key={suunnitelma.id}>
+              {this.state.projektit.map((projekti) => (
+                <tr key={projekti.oid}>
                   <td>
                     <Link
-                      href={
-                        (this.props.admin ? "/yllapito" : "") + `/suunnitelma/${encodeURIComponent(suunnitelma.id)}`
-                      }
+                      href={(this.props.admin ? "/yllapito" : "") + `/suunnitelma/${encodeURIComponent(projekti.oid)}`}
                     >
-                      <a>{suunnitelma.name}</a>
+                      <a>{projekti.nimi}</a>
                     </Link>
                   </td>
-                  <td>{suunnitelma.location}</td>
+                  <td/>
                 </tr>
               ))}
             </tbody>

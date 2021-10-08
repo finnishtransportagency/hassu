@@ -18,7 +18,7 @@ describe("VelhoClient", () => {
     expect(searchResult).not.be.empty;
     const firstSearchResult = searchResult[0];
     log.debug(firstSearchResult);
-    name = firstSearchResult.name;
+    name = firstSearchResult.nimi;
     oid = firstSearchResult.oid;
     log.debug("nimi", name);
   });
