@@ -1,28 +1,16 @@
 .breadcrumb {
-  display: flex;
-  float: left;
+  @apply flex float-left flex-wrap;
 }
+
 .breadcrumb > li {
-  float: left;
-  margin-right: 0.5em;
-  position: relative;
+  @apply float-left mr-2 relative;
 }
 
 .breadcrumb li + li::before {
-  float: left;
-  background-image: url("/breadcrumb-arrow.svg");
-  background-repeat: no-repeat;
-  background-size: 100%;
-  content: "";
-  display: block;
-  height: 0.75em;
-  left: 0;
-  margin-top: -0.375em;
-  padding: 0;
-  position: absolute;
-  top: 50%;
-  width: 0.75em;
+  @apply float-left bg-breadcrumb-arrow bg-no-repeat bg-cover 
+  content-[''] block h-3 left-0 -mt-1.5 absolute w-3 top-1/2;
 }
+
 .breadcrumb > li + li {
-  padding-left: 1em;
+  @apply pl-4;
 }

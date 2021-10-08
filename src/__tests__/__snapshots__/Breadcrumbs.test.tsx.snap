@@ -1,0 +1,164 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Breadcrumbs renders breadcrumbs correctly on error page 1`] = `
+<div
+  className="container mb-4"
+>
+  <nav>
+    <ol
+      className="breadcrumb"
+    >
+      <li>
+        <a
+          href="/"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+        >
+          Valtion väylien suunnittelu
+        </a>
+      </li>
+      <li>
+        Virhe
+      </li>
+    </ol>
+  </nav>
+</div>
+`;
+
+exports[`Breadcrumbs renders breadcrumbs correctly on mapped /tuntematon/polku/123/123 path 1`] = `
+<div
+  className="container mb-4"
+>
+  <nav>
+    <ol
+      className="breadcrumb"
+    >
+      <li>
+        <a
+          href="/"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+        >
+          Valtion väylien suunnittelu
+        </a>
+      </li>
+      <li>
+        <a
+          href="/tuntematon"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+        >
+          tuntematon
+        </a>
+      </li>
+      <li>
+        <a
+          href="/tuntematon/polku"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+        >
+          polku
+        </a>
+      </li>
+      <li>
+        <a
+          href="/tuntematon/polku/123"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+        >
+          Testi nimi
+        </a>
+      </li>
+      <li>
+        Projektin muokkaaminen
+      </li>
+    </ol>
+  </nav>
+</div>
+`;
+
+exports[`Breadcrumbs renders breadcrumbs correctly on non-mapped /tuntematon/polku/123/123 path 1`] = `
+<div
+  className="container mb-4"
+>
+  <nav>
+    <ol
+      className="breadcrumb"
+    >
+      <li>
+        <a
+          href="/"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+        >
+          Valtion väylien suunnittelu
+        </a>
+      </li>
+      <li>
+        <a
+          href="/tuntematon"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+        >
+          tuntematon
+        </a>
+      </li>
+      <li>
+        <a
+          href="/tuntematon/polku"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+        >
+          polku
+        </a>
+      </li>
+      <li>
+        <a
+          href="/tuntematon/polku/123"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+        >
+          [sid]
+        </a>
+      </li>
+      <li>
+        [pid]
+      </li>
+    </ol>
+  </nav>
+</div>
+`;
+
+exports[`Breadcrumbs renders correctly on 'known' /yllapito/perusta path 1`] = `
+<div
+  className="container mb-4"
+>
+  <nav>
+    <ol
+      className="breadcrumb"
+    >
+      <li>
+        <a
+          href="/yllapito"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+        >
+          Valtion väylien suunnittelu
+        </a>
+      </li>
+      <li>
+        <a
+          href="/yllapito"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+        >
+          Etusivu
+        </a>
+      </li>
+      <li>
+        Projektin perustaminen
+      </li>
+    </ol>
+  </nav>
+</div>
+`;
