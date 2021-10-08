@@ -67,5 +67,70 @@ Array [
     </form>
   </section>,
   <hr />,
+  <section
+    className="pt-3"
+  >
+    <h2>
+      Hakutulokset
+    </h2>
+    <div
+      className="bg-secondary-turquoise bg-opacity-25 border border-primary py-2 px-3 w-full mb-4"
+    >
+      Ohjeet
+      <div>
+        <ul
+          className="list-disc list-inside"
+        >
+          <li>
+            Valitse listasta se suunnitelma, jonka haluat tallentaa Valtion väylien suunnittelu -palveluun uudeksi projektiksi.
+          </li>
+          <li>
+            Huomioi, että hakutuloksissa näytetään ainoastaan ne suunnitelmat / projektit joitaa ei ole vielä perustettu palveluun. Käytä etusivun projektihakua etsiäksesi jo perustettuja projekteja.
+          </li>
+        </ul>
+      </div>
+    </div>
+    <table
+      className="project-table"
+    >
+      <thead>
+        <tr>
+          <th>
+            Asiatunnus
+          </th>
+          <th>
+            Nimi
+          </th>
+          <th>
+            Tyyppi
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          className="project-row"
+        >
+          <td
+            className="sm:w-1/4"
+            data-label="Asiatunnus"
+          >
+            1234
+          </td>
+          <td
+            className="sm:w-1/2"
+            data-label="Nimi"
+          >
+            Tampereen tie Hanke
+          </td>
+          <td
+            className="sm:w-1/4"
+            data-label="Tyyppi"
+          >
+            Tie
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>,
 ]
 `;
