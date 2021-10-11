@@ -38,5 +38,3 @@ export class PersonSearchClient {
 }
 
 export const personSearch = new PersonSearchClient();
-
-// curl -v "https://oag.vayla.fi/FIMGET/SimpleREST4FIM/1/Person.svc/getsimplesql?accounttype=L-Tunnus&disabled=false" -u "svc_hassu:7FkxRf3CUGkSQd"
