@@ -1,3 +1,3 @@
-import {AddEditSuunnitelma} from "../../components/addEditSuunnitelma";
+import {AddEditSuunnitelma} from "@components/addEditSuunnitelma";
 
 export default AddEditSuunnitelma;

@@ -1,13 +1,13 @@
 import { assert } from "chai";
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
-import * as apiHandler from "../src/apiHandler";
 import { projektiDatabase } from "../src/database/projektiDatabase";
 import { ProjektiFixture } from "./fixture/projektiFixture";
 import { UserFixture } from "./fixture/userFixture";
 import { IllegalAccessError } from "../src/error/IllegalAccessError";
 import { velho } from "../src/velho/velhoClient";
-import { TallennaProjektiInput } from "../src/api/apiModel";
+import { TallennaProjektiInput } from "../../common/graphql/apiModel";
+import { api } from "../integrationtest/api/apiClient";
 
 const { expect } = require("chai");
 
@@ -45,10 +45,7 @@ describe("apiHandler", () => {
         loadVelhoProjektiByOidStub.resolves(fixture.projekti1);
         createProjektiStub.resolves();
 
-        await apiHandler.handleEvent({
-          info: { fieldName: apiHandler.Operation.TALLENNA_PROJEKTI },
-          arguments: { projekti: fixture.tallennaProjektiInput },
-        } as any);
+        await api.tallennaProjekti(fixture.tallennaProjektiInput);
         sinon.assert.calledOnce(loadProjektiByOidStub);
         sinon.assert.calledOnce(loadVelhoProjektiByOidStub);
         sinon.assert.calledOnce(createProjektiStub);
@@ -65,10 +62,7 @@ describe("apiHandler", () => {
           kuvaus: fixture.PROJEKTI1_KUVAUS_2,
           ...fixture.tallennaProjektiInput,
         };
-        await apiHandler.handleEvent({
-          info: { fieldName: apiHandler.Operation.TALLENNA_PROJEKTI },
-          arguments: input,
-        } as any);
+        await api.tallennaProjekti(input);
         sinon.assert.calledOnce(loadProjektiByOidStub);
         sinon.assert.calledOnce(saveProjektiStub);
         expect(saveProjektiStub.getCall(0).firstArg).toMatchSnapshot();
@@ -79,13 +73,7 @@ describe("apiHandler", () => {
 
         createProjektiStub.resolves();
 
-        await assert.isRejected(
-          apiHandler.handleEvent({
-            info: { fieldName: apiHandler.Operation.TALLENNA_PROJEKTI },
-            arguments: { projekti: fixture.tallennaProjektiInput },
-          } as any),
-          IllegalAccessError
-        );
+        await assert.isRejected(api.tallennaProjekti(fixture.tallennaProjektiInput), IllegalAccessError);
       });
     });
   });

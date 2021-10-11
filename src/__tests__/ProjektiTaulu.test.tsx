@@ -4,7 +4,7 @@
 
  import React from "react";
  import ProjektiTaulu from "@components/projekti/ProjektiTaulu";
- import { VelhoHakuTulos } from "@graphql/apiModel";
+ import { VelhoHakuTulos } from "@common/apiModel";
  import renderer from "react-test-renderer";
 
  describe("ProjektiTaulu", () => {

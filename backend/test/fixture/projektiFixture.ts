@@ -1,4 +1,4 @@
-import { Projekti, Status, TallennaProjektiInput } from "../../src/api/apiModel";
+import { Projekti, Status, TallennaProjektiInput } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../../src/database/model/projekti";
 
 export class ProjektiFixture {

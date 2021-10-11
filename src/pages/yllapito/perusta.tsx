@@ -3,8 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { SchemaOf } from "yup";
 
-import { VelhoHakuTulos } from "@graphql/apiModel";
-import { getVelhoSuunnitelmasByName } from "@graphql/api";
+import {api, VelhoHakuTulos} from "@graphql/api";
 import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/router";
 import ProjektiTaulu from "@components/projekti/ProjektiTaulu";
@@ -51,7 +50,7 @@ export default function Perusta() {
         if (router.query[PROJEKTI_NIMI_PARAM] !== data.name) {
           router.push({ query: { [PROJEKTI_NIMI_PARAM]: data.name } });
         }
-        const tulos = await getVelhoSuunnitelmasByName(data.name);
+        const tulos = await api.getVelhoSuunnitelmasByName(data.name);
         setHakuTulos(tulos);
         if (tulos.length === 0) {
           setError("name", {

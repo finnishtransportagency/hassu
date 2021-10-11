@@ -1,11 +1,17 @@
 import log from "loglevel";
-import { LataaProjektiQueryVariables, ListaaVelhoProjektitQueryVariables, TallennaProjektiInput } from "./api/apiModel";
+import {
+  LataaProjektiQueryVariables,
+  ListaaVelhoProjektitQueryVariables,
+  TallennaProjektiInput,
+  TallennaProjektiMutationVariables,
+} from "../../common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "./handler/listaaVelhoProjektit";
 import { identifyUser } from "./service/userService";
 import { getCurrentUser } from "./handler/getCurrentUser";
 import { listAllUsers } from "./handler/listAllUsers";
 import { listProjektit, loadProjekti, saveProjekti } from "./handler/projektiHandler";
+import { apiConfig } from "../../common/abstractApi";
 
 const logLevel = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : "info";
 log.setLevel(logLevel as any);
@@ -16,34 +22,24 @@ type AppSyncEventArguments =
   | ListaaVelhoProjektitQueryVariables
   | TallennaProjektiInput;
 
-export enum Operation {
-  "LISTAA_PROJEKTIT" = "listaaProjektit",
-  "LISTAA_VELHO_PROJEKTIT" = "listaaVelhoProjektit",
-  "NYKYINEN_KAYTTAJA" = "nykyinenKayttaja",
-  "LISTAA_KAYTTAJAT" = "listaaKayttajat",
-  "LATAA_PROJEKTI" = "lataaProjekti",
-  "TALLENNA_PROJEKTI" = "tallennaProjekti",
-}
-
 export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArguments>) {
   log.info(JSON.stringify(event.info));
 
   await identifyUser(event.request?.headers);
 
-  const operation: Operation = event.info.fieldName as any;
-  switch (operation) {
-    case Operation.LISTAA_PROJEKTIT:
+  switch (event.info.fieldName as any) {
+    case apiConfig.listaaProjektit.name:
       return await listProjektit();
-    case Operation.LISTAA_VELHO_PROJEKTIT:
+    case apiConfig.listaaVelhoProjektit.name:
       return await listaaVelhoProjektit(event.arguments as ListaaVelhoProjektitQueryVariables);
-    case Operation.NYKYINEN_KAYTTAJA:
+    case apiConfig.nykyinenKayttaja.name:
       return await getCurrentUser();
-    case Operation.LISTAA_KAYTTAJAT:
+    case apiConfig.listaaKayttajat.name:
       return await listAllUsers();
-    case Operation.LATAA_PROJEKTI:
+    case apiConfig.lataaProjekti.name:
       return await loadProjekti((event.arguments as LataaProjektiQueryVariables).oid);
-    case Operation.TALLENNA_PROJEKTI:
-      return await saveProjekti(event.arguments as TallennaProjektiInput);
+    case apiConfig.tallennaProjekti.name:
+      return await saveProjekti((event.arguments as TallennaProjektiMutationVariables).projekti);
     default:
       return null;
   }

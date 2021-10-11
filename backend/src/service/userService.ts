@@ -3,7 +3,7 @@ import { validateJwtToken } from "../util/validatejwttoken";
 import { config } from "../config";
 import log from "loglevel";
 import { IllegalAccessError } from "../error/IllegalAccessError";
-import { Kayttaja } from "../api/apiModel";
+import { Kayttaja } from "../../../common/graphql/apiModel";
 import { personSearch } from "../personSearch/personSearchClient";
 
 let vaylaUser: Kayttaja;

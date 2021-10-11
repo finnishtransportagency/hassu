@@ -1,8 +1,7 @@
-import { AddEditSuunnitelma } from "../../../components/addEditSuunnitelma";
+import { AddEditSuunnitelma } from "@components/addEditSuunnitelma";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { Projekti } from "../../../graphql/apiModel";
-import { lataaProjekti } from "../../../graphql/api";
+import { api, Projekti } from "@graphql/api";
 
 export default function EditSuunnitelmaPage() {
   const router = useRouter();
@@ -12,7 +11,7 @@ export default function EditSuunnitelmaPage() {
   useEffect(() => {
     async function loadSuunnitelma() {
       if (id) {
-        setSuunnitelma(await lataaProjekti(id));
+        setSuunnitelma(await api.lataaProjekti(id));
       }
     }
 

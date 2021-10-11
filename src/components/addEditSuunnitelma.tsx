@@ -3,11 +3,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
 import Link from "next/link";
-import * as model from "@graphql/apiModel";
-import { Projekti } from "@graphql/apiModel";
 import React, { FormEventHandler, useState } from "react";
 import Autocomplete from "../components/Autocomplete";
-import { getVelhoSuunnitelmasByName, tallennaProjekti } from "@graphql/api";
+import {api, Projekti, VelhoHakuTulos} from "@graphql/api";
 
 export { AddEditSuunnitelma };
 
@@ -34,14 +32,14 @@ function AddEditSuunnitelma(props: { suunnitelma: Projekti }) {
   const { errors } = formState;
 
   function onSubmit(projekti: Projekti) {
-    return tallennaProjekti(projekti);
+    return api.tallennaProjekti(projekti);
   }
 
   const updateFormWithSuunnitelmaData: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
     setValue("name", "");
     setValue("location", "");
-    const suunnitelmaList = await getVelhoSuunnitelmasByName(searchInput, true);
+    const suunnitelmaList = await api.getVelhoSuunnitelmasByName(searchInput, true);
     if (suunnitelmaList.length > 1) {
       setSearchInvalid(true);
       setSearchErrorMessage("Haulla löytyi enemmän kuin yksi suunnitelma");
@@ -55,9 +53,9 @@ function AddEditSuunnitelma(props: { suunnitelma: Projekti }) {
     }
   };
 
-  const suunnitelmaSearchHandle = async (textInput: string): Promise<model.VelhoHakuTulos[]> => {
+  const suunnitelmaSearchHandle = async (textInput: string): Promise<VelhoHakuTulos[]> => {
     setSearchInput(textInput);
-    return await getVelhoSuunnitelmasByName(searchInput);
+    return await api.getVelhoSuunnitelmasByName(searchInput);
   };
 
   return (
@@ -75,7 +73,7 @@ function AddEditSuunnitelma(props: { suunnitelma: Projekti }) {
                   setSearchInput(value);
                 }}
                 suggestionHandler={suunnitelmaSearchHandle}
-                itemText={(projektit: model.VelhoHakuTulos[]) => projektit.map((s) => s.nimi)}
+                itemText={(projektit: VelhoHakuTulos[]) => projektit.map((s) => s.nimi)}
                 invalid={searchInvalid}
                 errorMessage={searchErrorMessage}
               />

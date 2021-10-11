@@ -24,12 +24,10 @@ out
 /.cdk-backend-outputs.json
 /.cdk-frontend-outputs.json
 /backend/api/API.ts
-/backend/src/api/API.ts
 /src/API.ts
-/src/graphql/mutations.ts
-/src/graphql/queries.ts
-/backend/src/api/apiModel.ts
-/src/graphql/apiModel.ts
+/common/graphql/mutations.ts
+/common/graphql/queries.ts
+/common/graphql/apiModel.ts
 backend/src/velho/aineistopalvelu
 backend/src/velho/hakupalvelu
 backend/src/velho/projektirekisteri

@@ -3,7 +3,7 @@ import Link from "next/link";
 import useSWR from "swr";
 import { useRouter } from "next/router";
 import log from "loglevel";
-import { lataaProjekti } from "@graphql/api";
+import { api } from "@graphql/api";
 
 function ProjektiPage() {
   const router = useRouter();
@@ -20,7 +20,7 @@ function ProjektiPage() {
   return (
     <>
       <p>Nimi: {projekti.nimi}</p>
-      <p></p>
+      <p/>
       <p />
       <p>
         <Link href="..">
@@ -38,5 +38,5 @@ export async function projektiLoader(params: string) {
   if (!oid) {
     return null;
   }
-  return await lataaProjekti(oid);
+  return await api.lataaProjekti(oid);
 }

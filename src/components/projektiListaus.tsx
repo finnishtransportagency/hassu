@@ -1,8 +1,8 @@
 import React from "react";
-import { Projekti } from "@graphql/apiModel";
+import { Projekti } from "@common/graphql/apiModel";
 import log from "loglevel";
 import Link from "next/link";
-import { listProjektit } from "@graphql/api";
+import { api } from "@graphql/api";
 
 type ProjektiListausState = {
   projektit: Projekti[];
@@ -20,7 +20,7 @@ export class ProjektiListaus extends React.Component<ProjektiListausProps, Proje
 
   async fetchProjektit() {
     try {
-      const result = await listProjektit();
+      const result = await api.listProjektit();
       log.info("listProjektit:", result);
       return result;
     } catch (e) {

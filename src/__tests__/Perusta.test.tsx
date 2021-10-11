@@ -4,7 +4,7 @@
 
  import React from "react";
  import Perusta from "@pages/yllapito/perusta";
- import { VelhoHakuTulos } from "@graphql/apiModel";
+ import { VelhoHakuTulos } from "@common/graphql/apiModel";
  import renderer from "react-test-renderer";
 
  jest.mock("next/router", () => ({

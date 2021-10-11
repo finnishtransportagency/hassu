@@ -1,12 +1,11 @@
-import { getCurrentUser } from "../graphql/api";
-import * as model from "../graphql/apiModel";
+import { api, Kayttaja } from "@graphql/api";
 
 let authenticated = false;
-let currentUser: model.Kayttaja | undefined;
+let currentUser: Kayttaja | undefined;
 
 async function getVaylaUser() {
   if (!authenticated) {
-    currentUser = await getCurrentUser();
+    currentUser = await api.getCurrentUser();
   }
   return currentUser;
 }

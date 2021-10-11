@@ -6,6 +6,7 @@
       "@services/*": ["src/services/*"],
       "@styles/*": ["src/styles/*"],
       "@graphql/*": ["src/graphql/*"],
+      "@common/*": ["common/*"],
       "@pages/*": ["src/pages/*"]
     },
     "module": "esnext",
@@ -37,5 +38,5 @@
     "jsx": "preserve"
   },
   "exclude": ["node_modules", "backend", "deployment"],
-  "include": ["src", "declarations.d.ts"]
+  "include": ["src", "declarations.d.ts", "common"]
 }

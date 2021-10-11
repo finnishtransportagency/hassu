@@ -1,5 +1,5 @@
 import { config } from "../config";
-import { Kayttaja } from "../api/apiModel";
+import { Kayttaja } from "../../../common/graphql/apiModel";
 
 const parseString = require("xml2js").parseStringPromise;
 

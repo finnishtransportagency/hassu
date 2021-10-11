@@ -1,6 +1,6 @@
 import * as userService from "../../src/service/userService";
 import * as sinon from "sinon";
-import { Kayttaja } from "../../src/api/apiModel";
+import { Kayttaja } from "../../../common/graphql/apiModel";
 
 export class UserFixture {
   public vaylaMatti: Kayttaja = {
