@@ -5,10 +5,10 @@ import { Footer } from "./footer";
 
 interface Props {
   children: JSX.Element;
-  routeMapping: RouteLabels;
+  routeLabels: RouteLabels;
 }
 
-export default function Layout({ children, routeMapping }: Props): ReactElement {
+export default function Layout({ children, routeLabels }: Props): ReactElement {
   const headerOffset = 184;
   const [toTopEnabled, setToTopEnabled] = useState(false);
 
@@ -25,7 +25,7 @@ export default function Layout({ children, routeMapping }: Props): ReactElement 
   return (
     <div className="min-h-screen relative flex flex-col">
       <Header top={toTopEnabled ? -headerOffset : 0} />
-      <Breadcrumbs routeLabels={routeMapping} />
+      <Breadcrumbs routeLabels={routeLabels} />
       <main className="container mb-6">{children}</main>
       <Footer />
       <button

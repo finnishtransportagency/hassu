@@ -31,7 +31,7 @@ function App({ Component, pageProps }: AppProps<PageProps>) {
       <Head>
         <title>Hassu</title>
       </Head>
-      <Layout routeMapping={routeLabels}>
+      <Layout routeLabels={routeLabels}>
         <Component {...pageProps} />
       </Layout>
     </>
