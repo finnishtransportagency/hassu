@@ -1,5 +1,5 @@
 import React, { ReactElement, useCallback, useEffect, useState } from "react";
-import { breadcrumb } from "@styles/BreadCrumbs.module.css";
+import { breadcrumb } from "@styles/Breadcrumbs.module.css";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import log from "loglevel";
