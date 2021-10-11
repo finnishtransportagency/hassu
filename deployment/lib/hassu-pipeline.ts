@@ -32,6 +32,7 @@ export class HassuPipelineStack extends Stack {
       await this.createPipeline(env, config, [
         "npm run generate",
         "npm run lint",
+        "aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 283563576583.dkr.ecr.eu-west-1.amazonaws.com",
         "npm run localstack",
         "npm run test",
         "npm run localstack:stop",
@@ -45,6 +46,7 @@ export class HassuPipelineStack extends Stack {
       await this.createPipeline(env, config, [
         "npm run generate",
         "npm run lint",
+        "aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 283563576583.dkr.ecr.eu-west-1.amazonaws.com",
         "npm run localstack",
         "npm run test",
         "npm run localstack:stop",
@@ -151,7 +153,7 @@ export class HassuPipelineStack extends Stack {
     }).addToRolePolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
-        actions: ["s3:*", "cloudformation:*", "sts:*", "ssm:GetParameter"],
+        actions: ["s3:*", "cloudformation:*", "sts:*", "ssm:GetParameter", "ecr:*"],
         resources: ["*"],
       })
     );
