@@ -47,28 +47,37 @@ exports[`Breadcrumbs renders breadcrumbs correctly on mapped /tuntematon/polku/1
         </a>
       </li>
       <li>
-        <span
+        <a
+          href="/tuntematon"
           onClick={[Function]}
           onMouseEnter={[Function]}
         >
-          tuntematon
-        </span>
+          <span>
+            tuntematon
+          </span>
+        </a>
       </li>
       <li>
-        <span
+        <a
+          href="/tuntematon/polku"
           onClick={[Function]}
           onMouseEnter={[Function]}
         >
-          polku
-        </span>
+          <span>
+            polku
+          </span>
+        </a>
       </li>
       <li>
-        <span
+        <a
+          href="/tuntematon/polku/123"
           onClick={[Function]}
           onMouseEnter={[Function]}
         >
-          Testi nimi
-        </span>
+          <span>
+            Testi nimi
+          </span>
+        </a>
       </li>
       <li>
         <span
@@ -100,28 +109,37 @@ exports[`Breadcrumbs renders breadcrumbs correctly on non-mapped /tuntematon/pol
         </a>
       </li>
       <li>
-        <span
+        <a
+          href="/tuntematon"
           onClick={[Function]}
           onMouseEnter={[Function]}
         >
-          tuntematon
-        </span>
+          <span>
+            tuntematon
+          </span>
+        </a>
       </li>
       <li>
-        <span
+        <a
+          href="/tuntematon/polku"
           onClick={[Function]}
           onMouseEnter={[Function]}
         >
-          polku
-        </span>
+          <span>
+            polku
+          </span>
+        </a>
       </li>
       <li>
-        <span
+        <a
+          href="/tuntematon/polku/123"
           onClick={[Function]}
           onMouseEnter={[Function]}
         >
-          [sid]
-        </span>
+          <span>
+            [sid]
+          </span>
+        </a>
       </li>
       <li>
         <span
