@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useMemo, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { breadcrumb } from "@styles/Breadcrumbs.module.css";
 import { NextRouter, useRouter } from "next/router";
 import Link from "next/link";
