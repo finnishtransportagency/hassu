@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { SchemaOf } from "yup";
 
-import {api, VelhoHakuTulos} from "@graphql/api";
+import {api, VelhoHakuTulos} from "@services/api";
 import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/router";
 import ProjektiTaulu from "@components/projekti/ProjektiTaulu";

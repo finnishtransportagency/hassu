@@ -1,8 +1,7 @@
 import React from "react";
-import { Projekti } from "@common/graphql/apiModel";
+import { api, Projekti } from "@services/api";
 import log from "loglevel";
 import Link from "next/link";
-import { api } from "@graphql/api";
 
 type ProjektiListausState = {
   projektit: Projekti[];

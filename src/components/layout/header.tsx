@@ -1,5 +1,5 @@
 import React from "react";
-import { Kayttaja } from "@common/graphql/apiModel";
+import { Kayttaja } from "@services/api";
 import { getVaylaUser } from "@services/userService";
 // import Image from "next/image";
 

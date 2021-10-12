@@ -1,4 +1,4 @@
-import { api, Kayttaja } from "@graphql/api";
+import { api, Kayttaja } from "@services/api";
 
 let authenticated = false;
 let currentUser: Kayttaja | undefined;

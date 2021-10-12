@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import Link from "next/link";
 import React, { FormEventHandler, useState } from "react";
 import Autocomplete from "../components/Autocomplete";
-import {api, Projekti, VelhoHakuTulos} from "@graphql/api";
+import {api, Projekti, VelhoHakuTulos} from "@services/api";
 
 export { AddEditSuunnitelma };
 

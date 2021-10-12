@@ -1,4 +1,4 @@
-import { VelhoHakuTulos } from "@common/graphql/apiModel";
+import { VelhoHakuTulos } from "@services/api";
 import React, { ReactElement } from "react";
 import styles from "@styles/ProjektiTaulu.module.css";
 

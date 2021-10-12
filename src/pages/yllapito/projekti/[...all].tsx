@@ -1,7 +1,7 @@
 import { AddEditSuunnitelma } from "@components/addEditSuunnitelma";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { api, Projekti } from "@graphql/api";
+import { api, Projekti } from "@services/api";
 
 export default function EditSuunnitelmaPage() {
   const router = useRouter();

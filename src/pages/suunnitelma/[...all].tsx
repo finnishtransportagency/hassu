@@ -3,7 +3,7 @@ import Link from "next/link";
 import useSWR from "swr";
 import { useRouter } from "next/router";
 import log from "loglevel";
-import { api } from "@graphql/api";
+import { api } from "@services/api";
 
 function ProjektiPage() {
   const router = useRouter();

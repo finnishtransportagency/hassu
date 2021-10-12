@@ -6,7 +6,7 @@ import { GraphQLAPIClass } from "@aws-amplify/api-graphql";
 import log from "loglevel";
 
 import { GraphQLResult } from "@aws-amplify/api-graphql/src/types/index";
-import { AbstractApi, OperationConfig } from "@common/abstractApi";
+import { AbstractApi, OperationConfig } from "../../common/abstractApi";
 
 Amplify.configure(awsExports);
 
@@ -37,4 +37,4 @@ class API extends AbstractApi {
 }
 
 export const api = new API();
-export * from "@common/graphql/apiModel";
+export * from "../../common/graphql/apiModel";
