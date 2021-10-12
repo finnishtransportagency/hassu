@@ -1,9 +1,8 @@
 # Generated sources
-src/graphql/apiModel.ts
-backend/src/api/apiModel.ts
+common/graphql/apiModel.ts
 backend/src/velho/aineistopalvelu
 backend/src/velho/hakupalvelu
 backend/src/velho/projektirekisteri
 src/API.ts
-src/graphql/queries.ts
-src/graphql/mutations.ts
+common/graphql/queries.ts
+common/graphql/mutations.ts

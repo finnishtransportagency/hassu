@@ -1,7 +1,7 @@
 import { projektiDatabase } from "../database/projektiDatabase";
 import { requireVaylaUser } from "../service/userService";
 import { velho } from "../velho/velhoClient";
-import { TallennaProjektiInput } from "../api/apiModel";
+import { TallennaProjektiInput } from "../../../common/graphql/apiModel";
 import { ProjektiAdapter } from "./projektiAdapter";
 import * as log from "loglevel";
 

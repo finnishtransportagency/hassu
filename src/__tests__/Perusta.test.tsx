@@ -4,7 +4,7 @@
 
  import React from "react";
  import Perusta from "@pages/yllapito/perusta";
- import { VelhoHakuTulos } from "@graphql/apiModel";
+ import { VelhoHakuTulos } from "@services/api";
  import renderer from "react-test-renderer";
 
  jest.mock("next/router", () => ({
@@ -17,7 +17,7 @@
    },
  }));
 
- jest.mock("@graphql/api", () => ({
+ jest.mock("@services/api", () => ({
    getVelhoSuunnitelmasByName: () => {
      const hakuTulos: VelhoHakuTulos[] = [
        { __typename: "VelhoHakuTulos", oid: "1234", nimi: "Tampereen tie Hanke", tyyppi: "Tie" },

@@ -7,6 +7,7 @@ import { FieldLogLevel, GraphqlApi } from "@aws-cdk/aws-appsync";
 import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
 import * as ddb from "@aws-cdk/aws-dynamodb";
 import { Config } from "./config";
+import { apiConfig, OperationType } from "../../common/abstractApi";
 
 export class HassuBackendStack extends cdk.Stack {
   private projektiTable: ddb.Table;
@@ -91,31 +92,15 @@ export class HassuBackendStack extends cdk.Stack {
   private static mapApiResolversToLambda(api: GraphqlApi, backendFn: NodejsFunction) {
     const lambdaDataSource = api.addLambdaDataSource("lambdaDatasource", backendFn);
 
-    // Map the resolvers to the Lambda function
-    lambdaDataSource.createResolver({
-      typeName: "Query",
-      fieldName: "listaaProjektit",
-    });
-    lambdaDataSource.createResolver({
-      typeName: "Query",
-      fieldName: "listaaVelhoProjektit",
-    });
-    lambdaDataSource.createResolver({
-      typeName: "Query",
-      fieldName: "nykyinenKayttaja",
-    });
-    lambdaDataSource.createResolver({
-      typeName: "Query",
-      fieldName: "listaaKayttajat",
-    });
-    lambdaDataSource.createResolver({
-      typeName: "Query",
-      fieldName: "lataaProjekti",
-    });
-    lambdaDataSource.createResolver({
-      typeName: "Mutation",
-      fieldName: "tallennaProjekti",
-    });
+    for (const operationName in apiConfig) {
+      if (apiConfig.hasOwnProperty(operationName)) {
+        const operation = (apiConfig as any)[operationName];
+        lambdaDataSource.createResolver({
+          typeName: operation.operationType === OperationType.Query ? "Query" : "Mutation",
+          fieldName: operation.name,
+        });
+      }
+    }
   }
 
   private attachDatabaseToBackend(backendFn: NodejsFunction) {

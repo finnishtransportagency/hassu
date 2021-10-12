@@ -13,6 +13,7 @@ module.exports = {
     "^.+\\.(jpg|jpeg|png|gif|webp|svg)$": "<rootDir>/src/__mocks__/fileMock.js",
     "^@components/(.*)$": "<rootDir>/src/components/$1",
     "^@graphql/(.*)$": "<rootDir>/src/graphql/$1",
+    "^@common/(.*)$": "<rootDir>/common/$1",
     "^@services/(.*)$": "<rootDir>/src/services/$1",
     "^@pages/(.*)$": "<rootDir>/src/pages/$1",
   },

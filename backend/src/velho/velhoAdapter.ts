@@ -1,4 +1,4 @@
-import { Projekti, VelhoHakuTulos } from "../api/apiModel";
+import { Projekti, VelhoHakuTulos } from "../../../common/graphql/apiModel";
 import { ProjektiProjekti, ProjektiProjektiOminaisuudetVaylamuotoEnum } from "./projektirekisteri";
 // @ts-ignore
 import { default as metadataJson } from "./metadata.json";

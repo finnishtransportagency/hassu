@@ -2,7 +2,7 @@ import * as log from "loglevel";
 import { config } from "../config";
 import * as HakuPalvelu from "./hakupalvelu";
 import * as ProjektiRekisteri from "./projektirekisteri";
-import { VelhoHakuTulos } from "../api/apiModel";
+import { VelhoHakuTulos } from "../../../common/graphql/apiModel";
 import { adaptProjecti, adaptSearchResults } from "./velhoAdapter";
 import { VelhoError } from "../error/velhoError";
 import { AxiosResponse } from "axios";
