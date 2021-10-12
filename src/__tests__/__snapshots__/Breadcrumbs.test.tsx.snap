@@ -1,0 +1,81 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Breadcrumbs generates breadcrumbs correctly for /tuntematon/polku/123/123 path 1`] = `
+Object {
+  "/tuntematon": Object {
+    "href": "/tuntematon",
+    "label": "tuntematon",
+  },
+  "/tuntematon/polku": Object {
+    "href": "/tuntematon/polku",
+    "label": "polku",
+  },
+  "/tuntematon/polku/[sid]": Object {
+    "href": "/tuntematon/polku/123",
+    "label": "Testi nimi",
+  },
+  "/tuntematon/polku/[sid]/[pid]": Object {
+    "href": "/tuntematon/polku/123/456",
+    "label": "Projektin muokkaaminen",
+  },
+}
+`;
+
+exports[`Breadcrumbs generates breadcrumbs correctly for error page 1`] = `
+Object {
+  "/_error": Object {
+    "href": "/_error",
+    "label": "Virhe",
+  },
+}
+`;
+
+exports[`Breadcrumbs generates breadcrumbs correctly for non-mapped /tuntematon/polku/123/123 path 1`] = `
+Object {
+  "/tuntematon": Object {
+    "href": "/tuntematon",
+    "label": "tuntematon",
+  },
+  "/tuntematon/polku": Object {
+    "href": "/tuntematon/polku",
+    "label": "polku",
+  },
+  "/tuntematon/polku/[sid]": Object {
+    "href": "/tuntematon/polku/123",
+    "label": "[sid]",
+  },
+  "/tuntematon/polku/[sid]/[pid]": Object {
+    "href": "/tuntematon/polku/123/456",
+    "label": "[pid]",
+  },
+}
+`;
+
+exports[`Breadcrumbs renders correctly on 'known' /yllapito/perusta path 1`] = `
+<div
+  className="container mb-4"
+>
+  <nav>
+    <ol
+      className="breadcrumb"
+    >
+      <li>
+        <a
+          href="/yllapito"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+        >
+          Valtion väylien suunnittelu
+        </a>
+      </li>
+      <li>
+        <span
+          className="font-bold"
+        >
+          Projektin perustaminen
+        </span>
+      </li>
+    </ol>
+  </nav>
+</div>
+`;

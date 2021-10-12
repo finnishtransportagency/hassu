@@ -1,13 +1,14 @@
 import React, { useState, useEffect, ReactElement } from "react";
-import BreadCrumbs from "./BreadCrumbs";
+import Breadcrumbs, { RouteLabels } from "./Breadcrumbs";
 import { Header } from "./header";
 import { Footer } from "./footer";
 
 interface Props {
-  children?: React.ReactNode;
+  children: JSX.Element;
+  routeLabels: RouteLabels;
 }
 
-export default function Layout({ children }: Props): ReactElement {
+export default function Layout({ children, routeLabels }: Props): ReactElement {
   const headerOffset = 184;
   const [toTopEnabled, setToTopEnabled] = useState(false);
 
@@ -20,10 +21,11 @@ export default function Layout({ children }: Props): ReactElement {
       }
     });
   }, []);
+
   return (
     <div className="min-h-screen relative flex flex-col">
       <Header top={toTopEnabled ? -headerOffset : 0} />
-      <BreadCrumbs />
+      <Breadcrumbs routeLabels={routeLabels} />
       <main className="container mb-6">{children}</main>
       <Footer />
       <button
