@@ -1,8 +1,7 @@
-import React, { ReactElement, useCallback, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useMemo, useState } from "react";
 import { breadcrumb } from "@styles/Breadcrumbs.module.css";
-import { useRouter } from "next/router";
+import { NextRouter, useRouter } from "next/router";
 import Link from "next/link";
-import log from "loglevel";
 
 export interface RouteLabels {
   [key: string]: { label: string; hideWhenNotCurrentRoute?: boolean };
@@ -25,41 +24,58 @@ const defaultLabels: RouteLabels = {
   "/_error": { label: "Virhe" },
 };
 
+const ERROR_ROUTE = "/_error";
+const ERROR_MAPPING: RouteMapping = { [ERROR_ROUTE]: { ...defaultLabels[ERROR_ROUTE], href: ERROR_ROUTE } };
+
+const isCurrentRoute = (pathname: string, router: NextRouter) => pathname === router.pathname;
+
+const splitPath = (path: string, pop?: boolean) => {
+  const pathSplitted = path.split("/");
+  pathSplitted.shift();
+  if (pop) {
+    pathSplitted.pop();
+  }
+  return pathSplitted;
+};
+
+const joinPath = (pathArray: string[], sliceIndex: number) => "/" + pathArray.slice(0, sliceIndex + 1).join("/");
+
+export const generateRoutes = (nextRouter: NextRouter, routeLabels: RouteLabels): RouteMapping => {
+  if (nextRouter.pathname === ERROR_ROUTE) {
+    return ERROR_MAPPING;
+  }
+  const labels = { ...defaultLabels, ...routeLabels };
+  // Some breadcrumb require to be hidden when it is not current route
+  const isRouteVisible = (pathname: string) =>
+    !labels[pathname]?.hideWhenNotCurrentRoute || isCurrentRoute(pathname, nextRouter);
+
+  const pathSplitted = splitPath(nextRouter.asPath, true);
+  const pathnameSplitted = splitPath(nextRouter.pathname);
+
+  const routes: RouteMapping = pathnameSplitted.reduce<RouteMapping>((reducer, pathname, index) => {
+    const jointPathname = joinPath(pathnameSplitted, index);
+    if (isRouteVisible(jointPathname)) {
+      const href = joinPath(pathSplitted, index);
+      const label = labels[jointPathname]?.label || pathname;
+      reducer[jointPathname] = { href, label };
+    }
+    return reducer;
+  }, {});
+  return routes;
+};
+
 export default function Breadcrumbs({ routeLabels }: Props): ReactElement {
   const router = useRouter();
   const [routeMapping, setRouteMapping] = useState<RouteMapping>({});
-  const isYllapito = () => typeof router?.pathname === "string" && router.pathname.startsWith("/yllapito");
 
-  const isCurrentRoute = useCallback((route: string) => router?.pathname === route, [router.pathname]);
+  const isYllapito = () => typeof router?.pathname === "string" && router.pathname.startsWith("/yllapito");
 
   useEffect(() => {
     if (router.isReady) {
-      const errorRoute = "/_error";
-      const isOnErrorRoute = router.pathname === "/_error";
-      const pathSplitted = router.asPath.split("/");
-      pathSplitted.shift();
-      pathSplitted.pop();
-      const pathNameSplitted = router.pathname.split("/");
-      pathNameSplitted.shift();
-      let routes: RouteMapping = {};
-      if (isOnErrorRoute) {
-        routes[errorRoute] = { ...defaultLabels[errorRoute], href: "/_error" };
-      } else {
-        routes = pathNameSplitted.reduce<RouteMapping>((reducer, pathname, index) => {
-          const pathNameJoined = "/" + pathNameSplitted.slice(0, index + 1).join("/");
-          const labels = { ...defaultLabels, ...routeLabels };
-          if (!labels[pathNameJoined]?.hideWhenNotCurrentRoute || isCurrentRoute(pathNameJoined)) {
-            const href = "/" + pathSplitted.slice(0, index + 1).join("/");
-            const label = labels[pathNameJoined]?.label || pathname;
-            reducer[pathNameJoined] = { href, label };
-          }
-          return reducer;
-        }, {});
-      }
-      log.log("routes", routes);
+      const routes = generateRoutes(router, routeLabels);
       setRouteMapping(routes);
     }
-  }, [router.isReady, router.pathname, isCurrentRoute, routeLabels, router.asPath]);
+  }, [router, routeLabels]);
 
   return (
     <div className="container mb-4">
@@ -70,7 +86,7 @@ export default function Breadcrumbs({ routeLabels }: Props): ReactElement {
           </li>
           {Object.entries(routeMapping).map(([route, { href, label }]) => (
             <li key={route}>
-              {!isCurrentRoute(route) ? (
+              {!isCurrentRoute(route, router) ? (
                 <Link href={href}>
                   <a>
                     <span>{label}</span>

@@ -1,156 +1,54 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Breadcrumbs renders breadcrumbs correctly on error page 1`] = `
-<div
-  className="container mb-4"
->
-  <nav>
-    <ol
-      className="breadcrumb"
-    >
-      <li>
-        <a
-          href="/"
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-        >
-          Valtion väylien suunnittelu
-        </a>
-      </li>
-      <li>
-        <span
-          className="font-bold"
-        >
-          Virhe
-        </span>
-      </li>
-    </ol>
-  </nav>
-</div>
+exports[`Breadcrumbs generates breadcrumbs correctly for /tuntematon/polku/123/123 path 1`] = `
+Object {
+  "/tuntematon": Object {
+    "href": "/tuntematon",
+    "label": "tuntematon",
+  },
+  "/tuntematon/polku": Object {
+    "href": "/tuntematon/polku",
+    "label": "polku",
+  },
+  "/tuntematon/polku/[sid]": Object {
+    "href": "/tuntematon/polku/123",
+    "label": "Testi nimi",
+  },
+  "/tuntematon/polku/[sid]/[pid]": Object {
+    "href": "/tuntematon/polku/123/456",
+    "label": "Projektin muokkaaminen",
+  },
+}
 `;
 
-exports[`Breadcrumbs renders breadcrumbs correctly on mapped /tuntematon/polku/123/123 path 1`] = `
-<div
-  className="container mb-4"
->
-  <nav>
-    <ol
-      className="breadcrumb"
-    >
-      <li>
-        <a
-          href="/"
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-        >
-          Valtion väylien suunnittelu
-        </a>
-      </li>
-      <li>
-        <a
-          href="/tuntematon"
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-        >
-          <span>
-            tuntematon
-          </span>
-        </a>
-      </li>
-      <li>
-        <a
-          href="/tuntematon/polku"
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-        >
-          <span>
-            polku
-          </span>
-        </a>
-      </li>
-      <li>
-        <a
-          href="/tuntematon/polku/123"
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-        >
-          <span>
-            Testi nimi
-          </span>
-        </a>
-      </li>
-      <li>
-        <span
-          className="font-bold"
-        >
-          Projektin muokkaaminen
-        </span>
-      </li>
-    </ol>
-  </nav>
-</div>
+exports[`Breadcrumbs generates breadcrumbs correctly for error page 1`] = `
+Object {
+  "/_error": Object {
+    "href": "/_error",
+    "label": "Virhe",
+  },
+}
 `;
 
-exports[`Breadcrumbs renders breadcrumbs correctly on non-mapped /tuntematon/polku/123/123 path 1`] = `
-<div
-  className="container mb-4"
->
-  <nav>
-    <ol
-      className="breadcrumb"
-    >
-      <li>
-        <a
-          href="/"
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-        >
-          Valtion väylien suunnittelu
-        </a>
-      </li>
-      <li>
-        <a
-          href="/tuntematon"
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-        >
-          <span>
-            tuntematon
-          </span>
-        </a>
-      </li>
-      <li>
-        <a
-          href="/tuntematon/polku"
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-        >
-          <span>
-            polku
-          </span>
-        </a>
-      </li>
-      <li>
-        <a
-          href="/tuntematon/polku/123"
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-        >
-          <span>
-            [sid]
-          </span>
-        </a>
-      </li>
-      <li>
-        <span
-          className="font-bold"
-        >
-          [pid]
-        </span>
-      </li>
-    </ol>
-  </nav>
-</div>
+exports[`Breadcrumbs generates breadcrumbs correctly for non-mapped /tuntematon/polku/123/123 path 1`] = `
+Object {
+  "/tuntematon": Object {
+    "href": "/tuntematon",
+    "label": "tuntematon",
+  },
+  "/tuntematon/polku": Object {
+    "href": "/tuntematon/polku",
+    "label": "polku",
+  },
+  "/tuntematon/polku/[sid]": Object {
+    "href": "/tuntematon/polku/123",
+    "label": "[sid]",
+  },
+  "/tuntematon/polku/[sid]/[pid]": Object {
+    "href": "/tuntematon/polku/123/456",
+    "label": "[pid]",
+  },
+}
 `;
 
 exports[`Breadcrumbs renders correctly on 'known' /yllapito/perusta path 1`] = `
