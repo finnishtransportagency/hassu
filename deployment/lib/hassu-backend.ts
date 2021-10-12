@@ -2,6 +2,7 @@
 import * as cdk from "@aws-cdk/core";
 import { Construct, Duration } from "@aws-cdk/core";
 import * as lambda from "@aws-cdk/aws-lambda";
+import { Tracing } from "@aws-cdk/aws-lambda";
 import * as appsync from "@aws-cdk/aws-appsync";
 import { FieldLogLevel, GraphqlApi } from "@aws-cdk/aws-appsync";
 import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
@@ -18,6 +19,7 @@ export class HassuBackendStack extends cdk.Stack {
       env: {
         region: "eu-west-1",
       },
+      tags: Config.tags,
     });
     this.projektiTable = projektiTable;
   }
@@ -37,7 +39,7 @@ export class HassuBackendStack extends cdk.Stack {
   private createAPI() {
     const apiKeyExpiration = HassuBackendStack.createApiKeyExpiration();
     return new appsync.GraphqlApi(this, "Api", {
-      name: "hassu-api",
+      name: "hassu-api-" + Config.env,
       schema: appsync.Schema.fromAsset("schema.graphql"),
       logConfig: {
         fieldLogLevel: FieldLogLevel.ALL,
@@ -51,6 +53,7 @@ export class HassuBackendStack extends cdk.Stack {
           },
         },
       },
+      xrayEnabled: true,
     });
   }
 
@@ -86,6 +89,7 @@ export class HassuBackendStack extends cdk.Stack {
         PERSON_SEARCH_API_USERNAME: config.getInfraParameter("PersonSearchApiUsername"),
         PERSON_SEARCH_API_PASSWORD: config.getInfraParameter("PersonSearchApiPassword"),
       },
+      tracing: Tracing.ACTIVE,
     });
   }
 

@@ -12,6 +12,7 @@ export class HassuDatabaseStack extends cdk.Stack {
       env: {
         region: "eu-west-1",
       },
+      tags: Config.tags,
     });
     const table = new ddb.Table(this, "ProjektiTable", {
       billingMode: ddb.BillingMode.PAY_PER_REQUEST,
