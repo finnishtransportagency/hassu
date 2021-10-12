@@ -70,7 +70,15 @@ export default function Breadcrumbs({ routeLabels }: Props): ReactElement {
           </li>
           {Object.entries(routeMapping).map(([route, { href, label }]) => (
             <li key={route}>
-              {!isCurrentRoute(route) ? <Link href={href || route}>{label || ""}</Link> : label || ""}
+              {!isCurrentRoute(route) ? (
+                <Link href={href}>
+                  <a>
+                    <span>{label}</span>
+                  </a>
+                </Link>
+              ) : (
+                <span className="font-bold">{label}</span>
+              )}
             </li>
           ))}
         </ol>

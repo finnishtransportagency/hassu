@@ -18,7 +18,11 @@ exports[`Breadcrumbs renders breadcrumbs correctly on error page 1`] = `
         </a>
       </li>
       <li>
-        Virhe
+        <span
+          className="font-bold"
+        >
+          Virhe
+        </span>
       </li>
     </ol>
   </nav>
@@ -43,34 +47,35 @@ exports[`Breadcrumbs renders breadcrumbs correctly on mapped /tuntematon/polku/1
         </a>
       </li>
       <li>
-        <a
-          href="/tuntematon"
+        <span
           onClick={[Function]}
           onMouseEnter={[Function]}
         >
           tuntematon
-        </a>
+        </span>
       </li>
       <li>
-        <a
-          href="/tuntematon/polku"
+        <span
           onClick={[Function]}
           onMouseEnter={[Function]}
         >
           polku
-        </a>
+        </span>
       </li>
       <li>
-        <a
-          href="/tuntematon/polku/123"
+        <span
           onClick={[Function]}
           onMouseEnter={[Function]}
         >
           Testi nimi
-        </a>
+        </span>
       </li>
       <li>
-        Projektin muokkaaminen
+        <span
+          className="font-bold"
+        >
+          Projektin muokkaaminen
+        </span>
       </li>
     </ol>
   </nav>
@@ -95,34 +100,35 @@ exports[`Breadcrumbs renders breadcrumbs correctly on non-mapped /tuntematon/pol
         </a>
       </li>
       <li>
-        <a
-          href="/tuntematon"
+        <span
           onClick={[Function]}
           onMouseEnter={[Function]}
         >
           tuntematon
-        </a>
+        </span>
       </li>
       <li>
-        <a
-          href="/tuntematon/polku"
+        <span
           onClick={[Function]}
           onMouseEnter={[Function]}
         >
           polku
-        </a>
+        </span>
       </li>
       <li>
-        <a
-          href="/tuntematon/polku/123"
+        <span
           onClick={[Function]}
           onMouseEnter={[Function]}
         >
           [sid]
-        </a>
+        </span>
       </li>
       <li>
-        [pid]
+        <span
+          className="font-bold"
+        >
+          [pid]
+        </span>
       </li>
     </ol>
   </nav>
@@ -147,7 +153,11 @@ exports[`Breadcrumbs renders correctly on 'known' /yllapito/perusta path 1`] = `
         </a>
       </li>
       <li>
-        Projektin perustaminen
+        <span
+          className="font-bold"
+        >
+          Projektin perustaminen
+        </span>
       </li>
     </ol>
   </nav>

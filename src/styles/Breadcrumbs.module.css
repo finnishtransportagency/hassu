@@ -14,3 +14,7 @@
 .breadcrumb > li + li {
   @apply pl-4;
 }
+
+.breadcrumb > li > a {
+  @apply text-black;
+}
