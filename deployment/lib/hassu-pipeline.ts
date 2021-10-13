@@ -18,6 +18,7 @@ export class HassuPipelineStack extends Stack {
       env: {
         region: "eu-west-1",
       },
+      tags: Config.tags,
     });
   }
 
@@ -89,7 +90,7 @@ export class HassuPipelineStack extends Stack {
             java: "corretto11",
             nodejs: 14,
           },
-          commands: ["env", "npm install -g @aws-amplify/cli", "npm ci"],
+          commands: ["npm install -g @aws-amplify/cli", "npm ci"],
         },
         build: {
           commands,

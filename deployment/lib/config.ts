@@ -38,6 +38,7 @@ export class Config extends Resource {
   public readonly basicAuthenticationPassword: string;
   public readonly infraEnvironment: string;
   public branch?: string;
+  public static readonly tags = { Environment: Config.env, Project: "Hassu" };
 
   private constructor(scope: Construct) {
     super(scope, "config");

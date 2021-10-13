@@ -21,6 +21,9 @@ function handler (event) {
     };
   }
 
+  // Replace trailing slash with /index.html
+  request.uri = request.uri.replace(/\/$/, "/index.html");
+
   // Continue request processing if authentication passed
   return request;
 }

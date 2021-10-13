@@ -1,6 +1,6 @@
 /* tslint:disable:no-unused-expression */
 import * as cdk from "@aws-cdk/core";
-import {Construct, Fn} from "@aws-cdk/core";
+import { Construct, Fn } from "@aws-cdk/core";
 import * as acm from "@aws-cdk/aws-certificatemanager";
 import * as cloudfront from "@aws-cdk/aws-cloudfront";
 import {
@@ -14,13 +14,13 @@ import {
   OriginRequestPolicy,
   OriginSslPolicy,
   PriceClass,
-  ViewerProtocolPolicy
+  ViewerProtocolPolicy,
 } from "@aws-cdk/aws-cloudfront";
-import {Bucket} from "@aws-cdk/aws-s3";
-import {Config} from "./config";
-import {S3Origin} from "@aws-cdk/aws-cloudfront-origins";
-import {HttpOrigin} from "@aws-cdk/aws-cloudfront-origins/lib/http-origin";
-import {BehaviorOptions} from "@aws-cdk/aws-cloudfront/lib/distribution";
+import { Bucket } from "@aws-cdk/aws-s3";
+import { Config } from "./config";
+import { S3Origin } from "@aws-cdk/aws-cloudfront-origins";
+import { HttpOrigin } from "@aws-cdk/aws-cloudfront-origins/lib/http-origin";
+import { BehaviorOptions } from "@aws-cdk/aws-cloudfront/lib/distribution";
 import * as fs from "fs";
 
 export class HassuFrontendStack extends cdk.Stack {
@@ -31,6 +31,7 @@ export class HassuFrontendStack extends cdk.Stack {
       env: {
         region: "eu-west-1",
       },
+      tags: Config.tags,
     });
   }
 
