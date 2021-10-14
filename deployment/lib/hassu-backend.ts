@@ -1,6 +1,6 @@
 /* tslint:disable:no-unused-expression */
 import * as cdk from "@aws-cdk/core";
-import { Construct, Duration } from "@aws-cdk/core";
+import { Construct, Duration, Fn } from "@aws-cdk/core";
 import * as lambda from "@aws-cdk/aws-lambda";
 import { Tracing } from "@aws-cdk/aws-lambda";
 import * as appsync from "@aws-cdk/aws-appsync";
@@ -9,6 +9,7 @@ import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
 import * as ddb from "@aws-cdk/aws-dynamodb";
 import { Config } from "./config";
 import { apiConfig, OperationType } from "../../common/abstractApi";
+import { WafConfig } from "./wafConfig";
 
 export class HassuBackendStack extends cdk.Stack {
   private projektiTable: ddb.Table;
@@ -26,7 +27,7 @@ export class HassuBackendStack extends cdk.Stack {
 
   async process() {
     const config = await Config.instance(this);
-    const api = this.createAPI();
+    const api = this.createAPI(config);
     const backendLambda = await this.createBackendLambda(config);
     this.attachDatabaseToBackend(backendLambda);
     HassuBackendStack.mapApiResolversToLambda(api, backendLambda);
@@ -36,9 +37,9 @@ export class HassuBackendStack extends cdk.Stack {
     });
   }
 
-  private createAPI() {
+  private createAPI(config: Config) {
     const apiKeyExpiration = HassuBackendStack.createApiKeyExpiration();
-    return new appsync.GraphqlApi(this, "Api", {
+    const api = new appsync.GraphqlApi(this, "Api", {
       name: "hassu-api-" + Config.env,
       schema: appsync.Schema.fromAsset("schema.graphql"),
       logConfig: {
@@ -55,6 +56,11 @@ export class HassuBackendStack extends cdk.Stack {
       },
       xrayEnabled: true,
     });
+    new WafConfig(this, "Hassu-WAF", {
+      api,
+      allowedAddresses: Fn.split("\n", config.getInfraParameter("WAFAllowedAddresses")),
+    });
+    return api;
   }
 
   /**
