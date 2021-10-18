@@ -94,6 +94,7 @@ export class HassuBackendStack extends cdk.Stack {
         PERSON_SEARCH_API_URL: config.getInfraParameter("PersonSearchApiURL"),
         PERSON_SEARCH_API_USERNAME: config.getInfraParameter("PersonSearchApiUsername"),
         PERSON_SEARCH_API_PASSWORD: config.getInfraParameter("PersonSearchApiPassword"),
+        PERSON_SEARCH_API_ACCOUNT_TYPES: config.getInfraParameter("PersonSearchApiAccountTypes"),
       },
       tracing: Tracing.ACTIVE,
     });

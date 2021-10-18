@@ -1,8 +1,19 @@
-import { Status } from "../../api/apiModel";
+import { ProjektiRooli, Status } from "../../../../common/graphql/apiModel";
+
+export type DBVaylaUser = {
+  rooli: ProjektiRooli;
+  email: string;
+  kayttajatunnus: string;
+
+  puhelinnumero: string;
+  organisaatio: string;
+  nimi: string;
+};
 
 export type DBProjekti = {
   oid: string;
-  nimi?: string | null;
+  nimi: string;
+  kuvaus?: string | null;
   vaylamuoto?: string[];
   vaihe?: string | null;
   tila?: string | null;
@@ -14,4 +25,5 @@ export type DBProjekti = {
   vastuuhenkilo?: string | null;
   // false, jos projekti ladattiin Velhosta, mutta ei ole vielä tallennettu tietokantaan
   tallennettu?: boolean;
+  kayttoOikeudet: DBVaylaUser[];
 };

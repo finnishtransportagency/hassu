@@ -1,7 +1,223 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`apiHandler handleEvent tallennaProjekti should create a new project 1`] = `
+exports[`apiHandler handleEvent lataaProjekti should load a new project from Velho 1`] = `
 Object {
+  "__typename": "Projekti",
+  "kayttoOikeudet": Array [
+    Object {
+      "__typename": "ProjektiKayttaja",
+      "email": "pekka.projari@vayla.fi",
+      "kayttajatunnus": "A123",
+      "nimi": "Projari, Pekka",
+      "organisaatio": "Väylävirasto",
+      "puhelinnumero": "123456789",
+      "rooli": "PROJEKTIPAALLIKKO",
+    },
+    Object {
+      "__typename": "ProjektiKayttaja",
+      "kayttajatunnus": "AB0000001",
+      "nimi": "Meikäläinen, Matti",
+      "organisaatio": "Väylävirasto",
+      "puhelinnumero": "123456789",
+      "rooli": "OMISTAJA",
+    },
+  ],
+  "kuvaus": "Testiprojekti 1:n kuvaus",
+  "nimi": "Testiprojekti 1",
+  "oid": "1",
+  "status": "EI_JULKAISTU",
+  "tallennettu": false,
+}
+`;
+
+exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 1`] = `
+Array [
+  "Initial state with projektipaallikko and omistaja",
+  Array [
+    Object {
+      "__typename": "ProjektiKayttaja",
+      "email": "pekka.projari@vayla.fi",
+      "kayttajatunnus": "A123",
+      "nimi": "Projari, Pekka",
+      "organisaatio": "Väylävirasto",
+      "puhelinnumero": "123456789",
+      "rooli": "PROJEKTIPAALLIKKO",
+    },
+    Object {
+      "__typename": "ProjektiKayttaja",
+      "kayttajatunnus": "AB0000001",
+      "nimi": "Meikäläinen, Matti",
+      "organisaatio": "Väylävirasto",
+      "puhelinnumero": "123456789",
+      "rooli": "OMISTAJA",
+    },
+  ],
+]
+`;
+
+exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 2`] = `
+Array [
+  "Create projekti having having both projektipaallikko and omistaja",
+  Object {
+    "kayttoOikeudet": Array [
+      Object {
+        "email": "pekka.projari@vayla.fi",
+        "kayttajatunnus": "A123",
+        "nimi": "Projari, Pekka",
+        "organisaatio": "Väylävirasto",
+        "puhelinnumero": "123456789",
+        "rooli": "PROJEKTIPAALLIKKO",
+      },
+      Object {
+        "kayttajatunnus": "AB0000001",
+        "nimi": "Meikäläinen, Matti",
+        "organisaatio": "Väylävirasto",
+        "puhelinnumero": "123456789",
+        "rooli": "OMISTAJA",
+      },
+    ],
+    "kuvaus": "Testiprojekti 1:n kuvaus",
+    "nimi": "Testiprojekti 1",
+    "oid": "1",
+    "status": "EI_JULKAISTU",
+    "tallennettu": true,
+  },
+]
+`;
+
+exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 3`] = `
+Array [
+  "Loaded projekti having having both projektipaallikko and omistaja",
+  Array [
+    Object {
+      "__typename": "ProjektiKayttaja",
+      "email": "pekka.projari@vayla.fi",
+      "kayttajatunnus": "A123",
+      "nimi": "Projari, Pekka",
+      "organisaatio": "Väylävirasto",
+      "puhelinnumero": "123456789",
+      "rooli": "PROJEKTIPAALLIKKO",
+    },
+    Object {
+      "__typename": "ProjektiKayttaja",
+      "kayttajatunnus": "AB0000001",
+      "nimi": "Meikäläinen, Matti",
+      "organisaatio": "Väylävirasto",
+      "puhelinnumero": "123456789",
+      "rooli": "OMISTAJA",
+    },
+  ],
+]
+`;
+
+exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 4`] = `
+Array [
+  "Save projekti having having only projektipaallikko",
+  Object {
+    "kayttoOikeudet": Array [
+      Object {
+        "email": "pekka.projari@vayla.fi",
+        "kayttajatunnus": "A123",
+        "nimi": "Projari, Pekka",
+        "organisaatio": "Väylävirasto",
+        "puhelinnumero": "123456789",
+        "rooli": "PROJEKTIPAALLIKKO",
+      },
+    ],
+    "oid": "1",
+  },
+]
+`;
+
+exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 5`] = `
+Array [
+  "Loaded projekti having having only projektipaallikko",
+  Array [
+    Object {
+      "__typename": "ProjektiKayttaja",
+      "email": "pekka.projari@vayla.fi",
+      "kayttajatunnus": "A123",
+      "nimi": "Projari, Pekka",
+      "organisaatio": "Väylävirasto",
+      "puhelinnumero": "123456789",
+      "rooli": "PROJEKTIPAALLIKKO",
+    },
+  ],
+]
+`;
+
+exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 6`] = `
+Array [
+  "Save projekti having both projektipaallikko and omistaja",
+  Object {
+    "kayttoOikeudet": Array [
+      Object {
+        "email": "pekka.projari@vayla.fi",
+        "kayttajatunnus": "A123",
+        "nimi": "Projari, Pekka",
+        "organisaatio": "Väylävirasto",
+        "puhelinnumero": "123456789",
+        "rooli": "PROJEKTIPAALLIKKO",
+      },
+      Object {
+        "email": "matti.meikalainen@vayla.fi",
+        "kayttajatunnus": "AB0000001",
+        "nimi": "Meikäläinen, Matti",
+        "organisaatio": "Väylävirasto",
+        "puhelinnumero": "123456789",
+        "rooli": "OMISTAJA",
+      },
+    ],
+    "oid": "1",
+  },
+]
+`;
+
+exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 7`] = `
+Array [
+  "Loaded projekti having both projektipaallikko and omistaja",
+  Array [
+    Object {
+      "__typename": "ProjektiKayttaja",
+      "email": "pekka.projari@vayla.fi",
+      "kayttajatunnus": "A123",
+      "nimi": "Projari, Pekka",
+      "organisaatio": "Väylävirasto",
+      "puhelinnumero": "123456789",
+      "rooli": "PROJEKTIPAALLIKKO",
+    },
+    Object {
+      "__typename": "ProjektiKayttaja",
+      "email": "matti.meikalainen@vayla.fi",
+      "kayttajatunnus": "AB0000001",
+      "nimi": "Meikäläinen, Matti",
+      "organisaatio": "Väylävirasto",
+      "puhelinnumero": "123456789",
+      "rooli": "OMISTAJA",
+    },
+  ],
+]
+`;
+
+exports[`apiHandler handleEvent tallennaProjekti should save a new project 1`] = `
+Object {
+  "kayttoOikeudet": Array [
+    Object {
+      "email": "pekka.projari@vayla.fi",
+      "kayttajatunnus": "A123",
+      "nimi": "Projari, Pekka",
+      "organisaatio": "Väylävirasto",
+      "puhelinnumero": "123456789",
+      "rooli": "PROJEKTIPAALLIKKO",
+    },
+    Object {
+      "kayttajatunnus": "AB0000001",
+      "nimi": "Meikäläinen, Matti",
+      "organisaatio": "Väylävirasto",
+      "puhelinnumero": "123456789",
+      "rooli": "OMISTAJA",
+    },
+  ],
   "kuvaus": "Testiprojekti 1:n kuvaus",
   "nimi": "Testiprojekti 1",
   "oid": "1",
@@ -11,6 +227,16 @@ Object {
 
 exports[`apiHandler handleEvent tallennaProjekti should update an existing project 1`] = `
 Object {
+  "kayttoOikeudet": Array [
+    Object {
+      "email": "pekka.projari@vayla.fi",
+      "kayttajatunnus": "A123",
+      "nimi": "Projari, Pekka",
+      "organisaatio": "Väylävirasto",
+      "puhelinnumero": "123456789",
+      "rooli": "PROJEKTIPAALLIKKO",
+    },
+  ],
   "kuvaus": "Testiprojekti 1:n kuvaus 2",
   "oid": "1",
 }

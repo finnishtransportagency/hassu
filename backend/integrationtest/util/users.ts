@@ -1,12 +1,10 @@
 import * as userService from "../../src/service/userService";
-import { UserFixture } from "../../test/fixture/userFixture";
 import * as sinon from "sinon";
-
-const userFixture = new UserFixture();
+import { vaylaMatti } from "../../test/fixture/users";
 
 export function runAsVaylaUser() {
   sinon.stub(userService, "identifyUser").resolves();
-  userService.identifyMockUser(userFixture.vaylaMatti);
+  userService.identifyMockUser(vaylaMatti);
 }
 
 export function runAsAnonymous() {

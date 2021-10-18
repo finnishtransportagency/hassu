@@ -147,6 +147,10 @@ export class HassuPipelineStack extends Stack {
             value: config.getInfraParameterPath("PersonSearchApiPassword"),
             type: BuildEnvironmentVariableType.PARAMETER_STORE,
           },
+          PERSON_SEARCH_API_ACCOUNT_TYPES: {
+            value: config.getInfraParameter("PersonSearchApiAccountTypes"),
+            type: BuildEnvironmentVariableType.PARAMETER_STORE,
+          },
         },
       },
       grantReportGroupPermissions: true,

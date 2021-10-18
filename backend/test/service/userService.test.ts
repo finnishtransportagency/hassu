@@ -3,13 +3,12 @@ import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { getVaylaUser, identifyUser } from "../../src/service/userService";
 import * as tokenvalidator from "../../src/util/validatejwttoken";
-import { UserFixture } from "../fixture/userFixture";
+import { vaylaMatti } from "../fixture/users";
 
 const { expect } = require("chai");
 
 describe("userService", () => {
   let validateTokenStub: sinon.SinonStub;
-  const userFixture = new UserFixture();
 
   afterEach(() => {
     sinon.reset();
@@ -30,6 +29,6 @@ describe("userService", () => {
     });
     await identifyUser({ "x-iam-accesstoken": "abc.123", "x-iam-data": "" });
     const user = getVaylaUser();
-    expect(user).to.deep.equal(userFixture.vaylaMatti);
+    expect(user).to.deep.equal(vaylaMatti);
   });
 });
