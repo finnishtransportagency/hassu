@@ -22,7 +22,6 @@ export type DBProjekti = {
   status?: Status | null;
   organisaatio?: string | null;
   toteutusAjankohta?: string | null;
-  vastuuhenkilo?: string | null;
   // false, jos projekti ladattiin Velhosta, mutta ei ole vielä tallennettu tietokantaan
   tallennettu?: boolean;
   kayttoOikeudet: DBVaylaUser[];
