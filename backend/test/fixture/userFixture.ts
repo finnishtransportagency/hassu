@@ -3,15 +3,6 @@ import * as sinon from "sinon";
 import { Kayttaja } from "../../../common/graphql/apiModel";
 
 export class UserFixture {
-  public vaylaMatti: Kayttaja = {
-    __typename: "Kayttaja",
-    etuNimi: "Matti",
-    sukuNimi: "Meikalainen",
-    uid: "AB0000001",
-    roolit: ["role1", "role2"],
-    vaylaKayttaja: true,
-  };
-
   public loginAs(vaylaUser: Kayttaja) {
     userService.mockUser(vaylaUser);
     sinon.stub(userService, "identifyUser").resolves();

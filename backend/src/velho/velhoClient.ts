@@ -3,19 +3,24 @@ import { config } from "../config";
 import * as HakuPalvelu from "./hakupalvelu";
 import * as ProjektiRekisteri from "./projektirekisteri";
 import { VelhoHakuTulos } from "../../../common/graphql/apiModel";
-import { adaptProjecti, adaptSearchResults } from "./velhoAdapter";
+import { adaptProjekti, adaptSearchResults } from "./velhoAdapter";
 import { VelhoError } from "../error/velhoError";
-import { AxiosResponse } from "axios";
+import { AxiosRequestConfig, AxiosResponse } from "axios";
+import { DBProjekti } from "../database/model/projekti";
 
 const axios = require("axios");
 
-axios.interceptors.request.use((request) => {
+axios.interceptors.request.use((request: AxiosRequestConfig) => {
   log.debug("Request", JSON.stringify(request.headers) + "\n" + request.data);
   return request;
 });
 
-axios.interceptors.response.use((response) => {
-  log.debug("Response", response.status + " " + response.statusText + "\n" + response.data);
+axios.interceptors.response.use((response: AxiosResponse) => {
+  if (response.status === 200) {
+    log.debug("Response", response.status + " " + response.statusText + "\n" + response.data);
+  } else {
+    log.warn("Response", response.status + " " + response.statusText + "\n" + response.data);
+  }
   return response;
 });
 
@@ -30,11 +35,11 @@ function checkResponseIsOK(response: AxiosResponse, message: string) {
 }
 
 export class VelhoClient {
-  private accessTokenExpires;
-  private accessToken;
+  private accessTokenExpires: number = 0;
+  private accessToken: any;
 
   public async authenticate() {
-    if (!this.accessTokenExpires || this.accessTokenExpires < Date.now()) {
+    if (this.accessTokenExpires < Date.now()) {
       const response = await axios.post(config.velhoAuthURL, "grant_type=client_credentials", {
         auth: { username: config.velhoUsername, password: config.velhoPassword },
       });
@@ -91,7 +96,7 @@ export class VelhoClient {
     }
   }
 
-  public async loadProjekti(oid: string) {
+  public async loadProjekti(oid: string): Promise<{ projekti: DBProjekti; vastuuhenkilo: string }> {
     const projektiApi = await this.createProjektiRekisteriApi();
     let response;
     try {
@@ -100,7 +105,7 @@ export class VelhoClient {
       throw new VelhoError(e.message, e);
     }
     checkResponseIsOK(response, "loadProjekti with oid '" + oid + "'");
-    return adaptProjecti(response.data, false);
+    return adaptProjekti(response.data);
   }
 
   private async createHakuApi() {

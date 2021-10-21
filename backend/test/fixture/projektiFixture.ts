@@ -1,5 +1,6 @@
-import { Projekti, Status, TallennaProjektiInput } from "../../../common/graphql/apiModel";
+import { Projekti, ProjektiRooli, Status, TallennaProjektiInput } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../../src/database/model/projekti";
+import { pekkaProjariProjektiKayttaja } from "./users";
 
 export class ProjektiFixture {
   public PROJEKTI1_NIMI = "Testiprojekti 1";
@@ -11,19 +12,37 @@ export class ProjektiFixture {
     oid: this.PROJEKTI1_OID,
   };
 
-  projekti1 = {
+  projekti1: Projekti = {
     __typename: "Projekti",
     oid: this.PROJEKTI1_OID,
     nimi: this.PROJEKTI1_NIMI,
     kuvaus: this.PROJEKTI1_KUVAUS_1,
     status: Status.EI_JULKAISTU,
     tallennettu: false,
-  } as Projekti;
+    kayttoOikeudet: [pekkaProjariProjektiKayttaja],
+  };
 
-  dbProjekti1 = {
+  velhoprojekti1: DBProjekti = {
     oid: this.PROJEKTI1_OID,
-    name: this.PROJEKTI1_NIMI,
+    nimi: this.PROJEKTI1_NIMI,
+    kuvaus: this.PROJEKTI1_KUVAUS_1,
+    kayttoOikeudet: [],
+  };
+
+  dbProjekti1: DBProjekti = {
+    kayttoOikeudet: [
+      {
+        rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
+        email: pekkaProjariProjektiKayttaja.email,
+        kayttajatunnus: pekkaProjariProjektiKayttaja.kayttajatunnus,
+        nimi: pekkaProjariProjektiKayttaja.nimi,
+        puhelinnumero: pekkaProjariProjektiKayttaja.puhelinnumero,
+        organisaatio: pekkaProjariProjektiKayttaja.organisaatio,
+      },
+    ],
+    oid: this.PROJEKTI1_OID,
+    nimi: this.PROJEKTI1_NIMI,
     kuvaus: this.PROJEKTI1_KUVAUS_1,
     status: Status.EI_JULKAISTU,
-  } as DBProjekti;
+  };
 }

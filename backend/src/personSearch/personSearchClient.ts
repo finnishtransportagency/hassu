@@ -1,5 +1,12 @@
 import { config } from "../config";
 import { Kayttaja } from "../../../common/graphql/apiModel";
+import { DBVaylaUser } from "../database/model/projekti";
+import { mergeKayttaja } from "./personAdapter";
+import * as log from "loglevel";
+
+const NodeCache = require("node-cache");
+
+export const cache = new NodeCache({ stdTTL: 600 });
 
 const parseString = require("xml2js").parseStringPromise;
 
@@ -10,30 +17,95 @@ function getFirstElementFromArrayOrEmpty(strings: string[]) {
 }
 
 function adaptPersonSearchResult(responseJson: any): Kayttaja[] {
+  if (!responseJson.person?.person) {
+    return [];
+  }
   return responseJson.person.person.map(
-    (person) =>
-      ({
+    (person: {
+      FirstName: string[];
+      LastName: string[];
+      AccountName: string[];
+      Company: string[];
+      Email: string[];
+      MobilePhone: string[];
+    }) => {
+      return {
         __typename: "Kayttaja",
         vaylaKayttaja: true,
         etuNimi: getFirstElementFromArrayOrEmpty(person.FirstName),
         sukuNimi: getFirstElementFromArrayOrEmpty(person.LastName),
         uid: getFirstElementFromArrayOrEmpty(person.AccountName),
-      } as Kayttaja)
+        organisaatio: getFirstElementFromArrayOrEmpty(person.Company),
+        email: getFirstElementFromArrayOrEmpty(person.Email),
+        puhelinnumero: getFirstElementFromArrayOrEmpty(person.MobilePhone),
+      };
+    }
   );
+}
+
+function mergeListOfListsAsOneList(personLists: Kayttaja[][]) {
+  return personLists.reduce((allPersons, listOfPersons) => {
+    return allPersons.concat(listOfPersons);
+  }, []);
+}
+
+export enum SearchMode {
+  EMAIL,
+  UID,
 }
 
 export class PersonSearchClient {
   public async listAccounts(): Promise<Kayttaja[]> {
+    if (!config.personSearchAccountTypes) {
+      throw new Error("Environment variable PERSON_SEARCH_API_ACCOUNT_TYPES missing");
+    }
+    const personListsPerAccountType = await Promise.all(
+      config.personSearchAccountTypes.map((accountType) => this.listAccountsOfType(accountType))
+    );
+    return mergeListOfListsAsOneList(personListsPerAccountType);
+  }
+
+  public async listAccountsOfType(accounttype: string): Promise<Kayttaja[]> {
+    const cacheKey = "PersonSearchClient-" + accounttype;
+    const cachedPersons = cache.get(cacheKey) as Kayttaja[];
+    if (cachedPersons) {
+      return cachedPersons;
+    }
+
     const response = await axios.request({
       baseURL: config.personSearchApiURL,
+      params: { accounttype },
       method: "GET",
       auth: { username: config.personSearchUsername, password: config.personSearchPassword },
     });
     if (response.status === 200) {
       const responseJson = await parseString(response.data);
-      return adaptPersonSearchResult(responseJson);
+      const persons = adaptPersonSearchResult(responseJson);
+      cache.set(cacheKey, persons);
+      return persons;
+    } else {
+      log.error(response.status + " " + response.statusText);
     }
-    return;
+    return [];
+  }
+
+  public async fillInUserInfoFromUserManagement({
+    user: user,
+    searchMode,
+  }: {
+    user: DBVaylaUser;
+    searchMode: SearchMode;
+  }) {
+    const kayttajas = await this.listAccounts();
+    const accounts = kayttajas.filter((account) =>
+      searchMode === SearchMode.EMAIL ? account.email === user.email : account.uid === user.kayttajatunnus
+    );
+    if (accounts.length > 0) {
+      const account = accounts[0];
+      mergeKayttaja(user, account);
+      return true;
+    }
+    return false;
   }
 }
 

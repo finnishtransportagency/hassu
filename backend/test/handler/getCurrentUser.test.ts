@@ -3,12 +3,11 @@ import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { getCurrentUser } from "../../src/handler/getCurrentUser";
 import * as userService from "../../src/service/userService";
-import { UserFixture } from "../fixture/userFixture";
+import { vaylaMatti } from "../fixture/users";
 
 const { expect } = require("chai");
 
 describe("getCurrentUser", () => {
-  const userFixture = new UserFixture();
   let getVaylaUserStub: sinon.SinonStub;
   let isVaylaUserStub: sinon.SinonStub;
 
@@ -24,7 +23,7 @@ describe("getCurrentUser", () => {
 
   it("should parse token succesfully", async function () {
     isVaylaUserStub.returns(true);
-    getVaylaUserStub.returns(userFixture.vaylaMatti);
+    getVaylaUserStub.returns(vaylaMatti);
     const user = await getCurrentUser();
     expect(user).to.deep.equal({
       __typename: "Kayttaja",

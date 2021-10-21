@@ -6,7 +6,7 @@ import { IllegalAccessError } from "../error/IllegalAccessError";
 import { Kayttaja } from "../../../common/graphql/apiModel";
 import { personSearch } from "../personSearch/personSearchClient";
 
-let vaylaUser: Kayttaja;
+let vaylaUser: Kayttaja | undefined;
 
 function parseRoles(roles: string) {
   return roles ? roles.split("\\,").map((arn) => arn.split("/").pop()) : undefined;
@@ -55,12 +55,15 @@ function mockUser(user: Kayttaja) {
   vaylaUser = user;
 }
 
-function getVaylaUser() {
+function getVaylaUser(): Kayttaja {
+  if (!vaylaUser) {
+    throw new IllegalAccessError("Väylä-kirjautuminen puuttuu");
+  }
   return vaylaUser;
 }
 
 function isVaylaUser() {
-  return !!getVaylaUser();
+  return !!vaylaUser;
 }
 
 function isSuomiFiUser() {

@@ -3,19 +3,30 @@
 exports[`apiHandler updateSuunnitelma saveProjekti should pass expected parameters to DynamoDB 1`] = `
 Object {
   "ExpressionAttributeNames": Object {
+    "#kayttoOikeudet": "kayttoOikeudet",
     "#kuvaus": "kuvaus",
-    "#name": "name",
+    "#nimi": "nimi",
     "#status": "status",
   },
   "ExpressionAttributeValues": Object {
+    ":kayttoOikeudet": Array [
+      Object {
+        "email": "pekka.projari@vayla.fi",
+        "kayttajatunnus": "A123",
+        "nimi": "Projari, Pekka",
+        "organisaatio": "Väylävirasto",
+        "puhelinnumero": "123456789",
+        "rooli": "PROJEKTIPAALLIKKO",
+      },
+    ],
     ":kuvaus": "Testiprojekti 1:n kuvaus",
-    ":name": "Testiprojekti 1",
+    ":nimi": "Testiprojekti 1",
     ":status": "EI_JULKAISTU",
   },
   "Key": Object {
     "oid": "1",
   },
   "TableName": "Projekti-localstack",
-  "UpdateExpression": "set #name = :name , #kuvaus = :kuvaus , #status = :status ",
+  "UpdateExpression": "set #kayttoOikeudet = :kayttoOikeudet , #nimi = :nimi , #kuvaus = :kuvaus , #status = :status ",
 }
 `;

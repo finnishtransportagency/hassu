@@ -1,3 +1,18 @@
+enum ProjektiRooli {
+  PROJEKTIPAALLIKKO
+  OMISTAJA
+  MUOKKAAJA
+}
+
+type ProjektiKayttaja {
+  rooli: ProjektiRooli!
+  email: String!
+  kayttajatunnus: String!
+  puhelinnumero: String!
+  organisaatio: String!
+  nimi: String!
+}
+
 enum Status {
   EI_JULKAISTU
   ALOITUSKUULUTUS
@@ -12,7 +27,7 @@ type Projekti {
   oid: String!
   nimi: String!
   kuvaus: String
-  vaylamuoto: [String]
+  vaylamuoto: [String!]
   vaihe: String
   tila: String
   asianumero: String
@@ -20,16 +35,26 @@ type Projekti {
   status: Status
   organisaatio: String
   toteutusAjankohta: String
-  vastuuhenkilo: String
   """
   false, jos projekti ladattiin Velhosta, mutta ei ole vielä tallennettu tietokantaan
   """
   tallennettu: Boolean!
+  kayttoOikeudet: [ProjektiKayttaja!]
+}
+
+input ProjektiKayttajaInput {
+  rooli: ProjektiRooli!
+  email: String!
+  kayttajatunnus: String!
+  puhelinnumero: String!
+  organisaatio: String!
+  nimi: String!
 }
 
 input TallennaProjektiInput {
   oid: String!
   kuvaus: String
+  kayttoOikeudet: [ProjektiKayttajaInput!]
 }
 
 type VelhoHakuTulos {
@@ -45,15 +70,18 @@ type Kayttaja {
   suomiFiKayttaja: Boolean
   etuNimi: String!
   sukuNimi: String!
-  roolit: [String]
+  organisaatio: String
+  email: String
+  puhelinnumero: String
+  roolit: [String!]
 }
 
 type Query {
   nykyinenKayttaja: Kayttaja
-  listaaKayttajat: [Kayttaja]
-  listaaProjektit: [Projekti]
+  listaaKayttajat: [Kayttaja!]
+  listaaProjektit: [Projekti!]
   lataaProjekti(oid: String!): Projekti
-  listaaVelhoProjektit(nimi: String!, requireExactMatch: Boolean): [VelhoHakuTulos]
+  listaaVelhoProjektit(nimi: String!, requireExactMatch: Boolean): [VelhoHakuTulos!]
 }
 
 type Mutation {

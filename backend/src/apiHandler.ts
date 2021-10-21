@@ -10,7 +10,7 @@ import { listaaVelhoProjektit } from "./handler/listaaVelhoProjektit";
 import { identifyUser } from "./service/userService";
 import { getCurrentUser } from "./handler/getCurrentUser";
 import { listAllUsers } from "./handler/listAllUsers";
-import { listProjektit, loadProjekti, saveProjekti } from "./handler/projektiHandler";
+import { listProjektit, loadProjekti, createOrUpdateProjekti } from "./handler/projektiHandler";
 import { apiConfig } from "../../common/abstractApi";
 
 const logLevel = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : "info";
@@ -39,7 +39,7 @@ export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArgume
     case apiConfig.lataaProjekti.name:
       return await loadProjekti((event.arguments as LataaProjektiQueryVariables).oid);
     case apiConfig.tallennaProjekti.name:
-      return await saveProjekti((event.arguments as TallennaProjektiMutationVariables).projekti);
+      return await createOrUpdateProjekti((event.arguments as TallennaProjektiMutationVariables).projekti);
     default:
       return null;
   }

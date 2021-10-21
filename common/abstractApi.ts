@@ -71,8 +71,8 @@ export abstract class AbstractApi {
     } as LataaProjektiQueryVariables);
   }
 
-  async tallennaProjekti(projekti: TallennaProjektiInput) {
-    return await this.callYllapitoAPI(apiConfig.tallennaProjekti, { projekti } as TallennaProjektiMutationVariables);
+  async tallennaProjekti(input: TallennaProjektiInput) {
+    return await this.callYllapitoAPI(apiConfig.tallennaProjekti, { projekti: input } as TallennaProjektiMutationVariables);
   }
 
   async getVelhoSuunnitelmasByName(nimi: string, requireExactMatch?: boolean): Promise<VelhoHakuTulos[]> {
