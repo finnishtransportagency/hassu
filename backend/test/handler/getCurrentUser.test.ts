@@ -9,7 +9,6 @@ const { expect } = require("chai");
 
 describe("getCurrentUser", () => {
   let getVaylaUserStub: sinon.SinonStub;
-  let isVaylaUserStub: sinon.SinonStub;
 
   afterEach(() => {
     sinon.reset();
@@ -18,11 +17,9 @@ describe("getCurrentUser", () => {
 
   before(() => {
     getVaylaUserStub = sinon.stub(userService, "getVaylaUser");
-    isVaylaUserStub = sinon.stub(userService, "isVaylaUser");
   });
 
   it("should parse token succesfully", async function () {
-    isVaylaUserStub.returns(true);
     getVaylaUserStub.returns(vaylaMatti);
     const user = await getCurrentUser();
     expect(user).to.deep.equal({
@@ -31,7 +28,7 @@ describe("getCurrentUser", () => {
       sukuNimi: "Meikalainen",
       uid: "A000111",
       vaylaKayttaja: true,
-      roolit: ["role1", "role2"],
+      roolit: ["hassu_kayttaja", "Atunnukset"],
     });
   });
 });

@@ -4,9 +4,11 @@ import { config } from "../config";
 import { getDynamoDBDocumentClient } from "./dynamoDB";
 import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
 
+const tableName: string = config.projektiTableName as any;
+
 async function createProjekti(projekti: DBProjekti) {
   const params: DocumentClient.PutItemInput = {
-    TableName: config.projektiTableName,
+    TableName: tableName,
     Item: projekti as DBProjekti,
   };
   return await getDynamoDBDocumentClient().put(params).promise();
@@ -14,15 +16,15 @@ async function createProjekti(projekti: DBProjekti) {
 
 async function listProjektit(): Promise<DBProjekti[]> {
   const params = {
-    TableName: config.projektiTableName,
+    TableName: tableName,
   };
   const data = await getDynamoDBDocumentClient().scan(params).promise();
   return data.Items as DBProjekti[];
 }
 
-async function loadProjektiByOid(oid: string): Promise<DBProjekti> {
+async function loadProjektiByOid(oid: string): Promise<DBProjekti | undefined> {
   const params: DocumentClient.GetItemInput = {
-    TableName: config.projektiTableName,
+    TableName: tableName,
     Key: { oid },
     ConsistentRead: true,
   };
@@ -40,14 +42,14 @@ const readOnlyFields = ["oid", "tallennettu"];
 async function saveProjekti(dbProjekti: DBProjekti) {
   log.info("Updating projekti to Hassu ", dbProjekti);
   let updateExpression = "set";
-  const ExpressionAttributeNames = {};
-  const ExpressionAttributeValues = {};
+  const ExpressionAttributeNames = {} as any;
+  const ExpressionAttributeValues = {} as any;
   for (const property in dbProjekti) {
     if (dbProjekti.hasOwnProperty(property)) {
       if (readOnlyFields.indexOf(property) >= 0) {
         continue;
       }
-      const value = dbProjekti[property];
+      const value = (dbProjekti as any)[property];
       if (!value) {
         continue;
       }
@@ -60,7 +62,7 @@ async function saveProjekti(dbProjekti: DBProjekti) {
   updateExpression = updateExpression.slice(0, -1);
 
   const params = {
-    TableName: config.projektiTableName,
+    TableName: tableName,
     Key: {
       oid: dbProjekti.oid,
     },

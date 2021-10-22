@@ -1,5 +1,10 @@
 import { projektiDatabase } from "../database/projektiDatabase";
-import { getVaylaUser, requireVaylaUser } from "../service/userService";
+import {
+  getVaylaUser,
+  requirePermissionLuku,
+  requirePermissionLuonti,
+  requirePermissionMuokkaa,
+} from "../service/userService";
 import { velho } from "../velho/velhoClient";
 import { Kayttaja, ProjektiRooli, Status, TallennaProjektiInput } from "../../../common/graphql/apiModel";
 import { ProjektiAdapter } from "./projektiAdapter";
@@ -9,8 +14,8 @@ import mergeWith from "lodash/mergeWith";
 
 const projektiAdapter = new ProjektiAdapter();
 
-async function loadProjekti(oid: string) {
-  const vaylaUser = getVaylaUser();
+export async function loadProjekti(oid: string) {
+  const vaylaUser = requirePermissionLuku();
   if (vaylaUser) {
     log.info("Loading projekti ", oid);
     const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -18,6 +23,7 @@ async function loadProjekti(oid: string) {
       projektiFromDB.tallennettu = true;
       return projektiAdapter.adaptProjekti(projektiFromDB);
     } else {
+      requirePermissionLuonti();
       const projekti = await createProjektiFromVelho(oid, vaylaUser);
       return projektiAdapter.adaptProjekti(projekti);
     }
@@ -26,15 +32,17 @@ async function loadProjekti(oid: string) {
   }
 }
 
-async function createOrUpdateProjekti(input: TallennaProjektiInput) {
-  requireVaylaUser();
+export async function createOrUpdateProjekti(input: TallennaProjektiInput) {
+  requirePermissionLuku();
   const oid = input.oid;
   const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
   if (projektiInDB) {
     // Save over existing one
+    requirePermissionMuokkaa(projektiInDB);
     log.info("Saving projekti ", input.oid);
     await projektiDatabase.saveProjekti(await projektiAdapter.adaptProjektiToSave(projektiInDB, input));
   } else {
+    requirePermissionLuonti();
     const projekti = await createProjektiFromVelho(input.oid, getVaylaUser(), input);
     log.info("Creating projekti to Hassu ", projekti);
     await projektiDatabase.createProjekti(projekti);
@@ -78,9 +86,7 @@ async function createProjektiFromVelho(oid: string, vaylaUser: Kayttaja, input?:
 }
 
 export async function listProjektit() {
-  // TODO list only public projects as public user
+  requirePermissionLuku();
   const dbProjects = await projektiDatabase.listProjektit();
   return dbProjects.map(projektiAdapter.adaptProjekti);
 }
-
-export { loadProjekti, createOrUpdateProjekti };

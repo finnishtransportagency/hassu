@@ -1,8 +1,9 @@
 import { config } from "../config";
-import { Kayttaja } from "../../../common/graphql/apiModel";
+import { Kayttaja, ProjektiRooli } from "../../../common/graphql/apiModel";
 import { DBVaylaUser } from "../database/model/projekti";
 import { mergeKayttaja } from "./personAdapter";
 import * as log from "loglevel";
+import { isAorL } from "../service/userService";
 
 const NodeCache = require("node-cache");
 
@@ -28,6 +29,7 @@ function adaptPersonSearchResult(responseJson: any): Kayttaja[] {
       Company: string[];
       Email: string[];
       MobilePhone: string[];
+      Accounttype: string[];
     }) => {
       return {
         __typename: "Kayttaja",
@@ -102,6 +104,10 @@ export class PersonSearchClient {
     );
     if (accounts.length > 0) {
       const account = accounts[0];
+      // Projektipaallikko must be either L or A account
+      if (user.rooli === ProjektiRooli.PROJEKTIPAALLIKKO && !isAorL(account)) {
+        return;
+      }
       mergeKayttaja(user, account);
       return user;
     }

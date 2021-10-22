@@ -16,11 +16,21 @@ axios.interceptors.request.use((request: AxiosRequestConfig) => {
   return request;
 });
 
+function stripTooLongLogs(response: AxiosResponse<any>) {
+  let data: string = `${response.data}`;
+  if (data?.length > 1000) {
+    data = data.slice(0, 1000) + "...";
+  }
+  return data;
+}
+
 axios.interceptors.response.use((response: AxiosResponse) => {
   if (response.status === 200) {
-    log.debug("Response", response.status + " " + response.statusText + "\n" + response.data);
+    if (log.getLevel() <= log.levels.DEBUG) {
+      log.debug("Response", response.status + " " + response.statusText + "\n" + stripTooLongLogs(response));
+    }
   } else {
-    log.warn("Response", response.status + " " + response.statusText + "\n" + response.data);
+    log.warn("Response", response.status + " " + response.statusText + "\n" + stripTooLongLogs(response));
   }
   return response;
 });

@@ -21,7 +21,7 @@ describe("userService", () => {
 
   it("should identify user succesfully", async function () {
     validateTokenStub.returns({
-      "custom:rooli": "arn:aws:iam::123:role/role1\\,arn:aws:iam::123:saml-provider/role2",
+      "custom:rooli": "arn:aws:iam::123:role/hassu_kayttaja\\,arn:aws:iam::123:saml-provider/Atunnukset",
       "custom:sukunimi": "Meikalainen",
       "custom:etunimi": "Matti",
       "custom:puhelin": "12345678",

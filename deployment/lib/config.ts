@@ -115,6 +115,6 @@ export class Config extends Resource {
   }
 
   public isDeveloperEnvironment() {
-    return !Config.isPermanentEnvironment();
+    return !Config.isPermanentEnvironment() && "feature" !== Config.env;
   }
 }
