@@ -37,10 +37,14 @@ describe("Api", () => {
   });
 });
 
-async function searchProjectsFromVelhoAndPickFirst() {
+async function searchProjectsFromVelhoAndPickFirst(): Promise<string> {
   const searchResult = await api.getVelhoSuunnitelmasByName("tampere");
   // tslint:disable-next-line:no-unused-expression
   expect(searchResult).not.to.be.empty;
 
-  return searchResult.pop().oid;
+  const oid = searchResult.pop()?.oid;
+  if (!oid) {
+    fail("No suitable projekti found from Velho");
+  }
+  return oid;
 }

@@ -12,5 +12,8 @@ describe("PersonSearchClient", () => {
     expect(kayttaja.etuNimi).to.not.be.empty;
     expect(kayttaja.sukuNimi).to.not.be.empty;
     expect(kayttaja.uid).to.not.be.empty;
+    expect(kayttaja.organisaatio).to.not.be.empty;
+    expect(kayttaja.email).to.not.be.empty;
+    expect(kayttaja.puhelinnumero).to.not.be.empty;
   });
 });

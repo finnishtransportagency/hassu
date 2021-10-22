@@ -15,7 +15,7 @@ import {
   vaylaMattiFromPersonSearch,
   vaylaMattiProjektiKayttaja,
 } from "./fixture/users";
-import { Projekti, ProjektiKayttaja, ProjektiRooli } from "../../common/graphql/apiModel";
+import { Projekti, ProjektiKayttajaInput, ProjektiRooli } from "../../common/graphql/apiModel";
 import { DBProjekti } from "../src/database/model/projekti";
 import * as _ from "lodash";
 import * as log from "loglevel";
@@ -104,7 +104,7 @@ describe("apiHandler", () => {
       it("should modify permissions from a project successfully", async () => {
         let mockedDatabaseProjekti: DBProjekti | undefined;
 
-        async function saveAndLoadProjekti(p: Projekti, description: string, kayttoOikeudet?: ProjektiKayttaja[]) {
+        async function saveAndLoadProjekti(p: Projekti, description: string, kayttoOikeudet?: ProjektiKayttajaInput[]) {
           await api.tallennaProjekti({
             oid: fixture.PROJEKTI1_OID,
             kayttoOikeudet,
@@ -156,7 +156,7 @@ describe("apiHandler", () => {
 
         // Create stubs to keep state of the "database" so that it can be modified in the following steps
         mockDatabase();
-        // Remove vaylaMatti and save
+        // Save projekti with the defaults. It should have both projektipaallikko and the current user as omistaja
         projekti = await saveAndLoadProjekti(projekti, "having both projektipaallikko and omistaja");
 
         // Remove vaylaMatti and save
@@ -166,11 +166,14 @@ describe("apiHandler", () => {
         // Add omistaja back and examine the results
         await saveAndLoadProjekti(
           projekti,
-          "both projektipaallikko and omistaja",
-          projekti.kayttoOikeudet?.concat({
-            ...vaylaMattiProjektiKayttaja,
-            rooli: ProjektiRooli.OMISTAJA,
-          })
+          "while adding omistaja back. There should be projektipaallikko and omistaja in the projekti now",
+          [
+            {
+              kayttajatunnus: vaylaMattiProjektiKayttaja.kayttajatunnus,
+              puhelinnumero: vaylaMattiProjektiKayttaja.puhelinnumero,
+              rooli: ProjektiRooli.OMISTAJA,
+            },
+          ]
         );
       });
 

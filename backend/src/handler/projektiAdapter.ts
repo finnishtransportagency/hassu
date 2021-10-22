@@ -18,11 +18,11 @@ export class ProjektiAdapter {
     };
   }
 
-  adaptProjektiToSave(projekti: DBProjekti, changes: API.TallennaProjektiInput): DBProjekti {
+  async adaptProjektiToSave(projekti: DBProjekti, changes: API.TallennaProjektiInput): Promise<DBProjekti> {
     // Pick only fields that are relevant to DB
     const { oid, kuvaus, kayttoOikeudet } = changes;
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet);
-    kayttoOikeudetManager.applyChanges(kayttoOikeudet);
+    await kayttoOikeudetManager.applyChanges(kayttoOikeudet);
     return removeUndefinedFields(
       _.mergeWith(
         {},

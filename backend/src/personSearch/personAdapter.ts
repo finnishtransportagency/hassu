@@ -6,6 +6,7 @@ export function mergeKayttaja(user: DBVaylaUser, account: Kayttaja) {
   user.nimi = account.sukuNimi + ", " + account.etuNimi;
   user.organisaatio = account.organisaatio;
   user.kayttajatunnus = account.uid;
+  user.email = account.email;
 }
 
 export function adaptKayttaja(account: Kayttaja) {

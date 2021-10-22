@@ -44,11 +44,8 @@ type Projekti {
 
 input ProjektiKayttajaInput {
   rooli: ProjektiRooli!
-  email: String!
   kayttajatunnus: String!
   puhelinnumero: String!
-  organisaatio: String!
-  nimi: String!
 }
 
 input TallennaProjektiInput {

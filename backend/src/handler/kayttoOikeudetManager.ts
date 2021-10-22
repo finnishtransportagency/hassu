@@ -1,5 +1,7 @@
 import { DBVaylaUser } from "../database/model/projekti";
 import { ProjektiKayttaja, ProjektiKayttajaInput, ProjektiRooli } from "../../../common/graphql/apiModel";
+import { personSearch, SearchMode } from "../personSearch/personSearchClient";
+import * as log from "loglevel";
 
 export class KayttoOikeudetManager {
   private users: DBVaylaUser[];
@@ -8,7 +10,7 @@ export class KayttoOikeudetManager {
     this.users = users;
   }
 
-  applyChanges(changes: ProjektiKayttajaInput[] | undefined | null) {
+  async applyChanges(changes: ProjektiKayttajaInput[] | undefined | null) {
     if (!changes) {
       return;
     }
@@ -31,24 +33,37 @@ export class KayttoOikeudetManager {
           });
         }
       } else {
-        // Remove user because it doesn't exist in input
+        // Remove user because it doesn't exist in input, except projektipaallikko which cannot be removed
+        if (currentUser.rooli === ProjektiRooli.PROJEKTIPAALLIKKO) {
+          resultingUsers.push(currentUser);
+        }
       }
       return resultingUsers;
     }, []);
 
     // Add new users
-    changes
-      .filter((inputUser) => resultUsers.find((user) => user.kayttajatunnus !== inputUser.kayttajatunnus))
-      .forEach((newUser) => {
-        resultUsers.push({
-          puhelinnumero: newUser.puhelinnumero,
-          kayttajatunnus: newUser.kayttajatunnus,
-          rooli: newUser.rooli,
-          organisaatio: newUser.organisaatio,
-          nimi: newUser.nimi,
-          email: newUser.email,
-        });
-      });
+    await Promise.all(
+      changes
+        .filter((inputUser) => resultUsers.find((user) => user.kayttajatunnus !== inputUser.kayttajatunnus))
+        .map(async (newUser) => {
+          const userToAdd = {
+            puhelinnumero: newUser.puhelinnumero,
+            kayttajatunnus: newUser.kayttajatunnus,
+            rooli: newUser.rooli,
+          } as any;
+          try {
+            const userWithAllInfo = await personSearch.fillInUserInfoFromUserManagement({
+              user: userToAdd,
+              searchMode: SearchMode.UID,
+            });
+            if (userWithAllInfo) {
+              resultUsers.push(userWithAllInfo);
+            }
+          } catch (e) {
+            log.error(e);
+          }
+        })
+    );
     this.users = resultUsers;
   }
 
@@ -61,5 +76,37 @@ export class KayttoOikeudetManager {
       __typename: "ProjektiKayttaja",
       ...user,
     }));
+  }
+
+  async addProjektiPaallikkoFromEmail(vastuuhenkiloEmail: string) {
+    return await this.resolveProjektiPaallikkoFromVelhoVastuuhenkilo(vastuuhenkiloEmail);
+  }
+
+  async resolveProjektiPaallikkoFromVelhoVastuuhenkilo(vastuuhenkiloEmail: string) {
+    // Replace or create new projektipaallikko
+    this.removeProjektiPaallikko();
+    const projektiPaallikko = await personSearch.fillInUserInfoFromUserManagement({
+      user: { rooli: ProjektiRooli.PROJEKTIPAALLIKKO, email: vastuuhenkiloEmail } as any,
+      searchMode: SearchMode.EMAIL,
+    });
+    if (projektiPaallikko) {
+      this.users.push(projektiPaallikko);
+      return projektiPaallikko;
+    }
+  }
+
+  async addUserByKayttajatunnus(kayttajatunnus: string, rooli: ProjektiRooli) {
+    const user = await personSearch.fillInUserInfoFromUserManagement({
+      user: { kayttajatunnus, rooli } as any,
+      searchMode: SearchMode.UID,
+    });
+    if (user) {
+      this.users.push(user);
+      return user;
+    }
+  }
+
+  private removeProjektiPaallikko() {
+    this.users = this.users.filter((user) => user.rooli === ProjektiRooli.PROJEKTIPAALLIKKO);
   }
 }

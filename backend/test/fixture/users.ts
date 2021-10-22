@@ -4,7 +4,7 @@ export const vaylaMatti: Kayttaja = {
   __typename: "Kayttaja",
   etuNimi: "Matti",
   sukuNimi: "Meikalainen",
-  uid: "AB0000001",
+  uid: "A000111",
   roolit: ["role1", "role2"],
   vaylaKayttaja: true,
 };
