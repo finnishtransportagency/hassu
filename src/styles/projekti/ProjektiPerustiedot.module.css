@@ -1,0 +1,14 @@
+.base-data-grid {
+}
+
+.base-data-grid > .data-row {
+  @apply lg:grid lg:grid-cols-12;
+}
+
+.base-data-grid > .data-row > .cell {
+  @apply lg:col-span-8 xl:col-span-9;
+}
+
+.base-data-grid > .data-row > .cell:first-child {
+  @apply lg:col-span-4 xl:col-span-3 font-semibold lg:font-normal;
+}

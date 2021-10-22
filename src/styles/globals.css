@@ -6,8 +6,23 @@
   body hr {
     @apply border-gray;
   }
-  body :is(input[type="text"], input[type="password"], input[type="number"], textarea) {
-    @apply border rounded w-full py-1 px-2 disabled:opacity-50 focus:outline-none focus:ring-2 focus:border-primary-light;
+  body :is(input[type="text"], input[type="password"], input[type="number"], textarea, select) {
+    @apply border rounded w-full py-1 px-2 disabled:bg-gray focus:outline-none;
+  }
+  body :is(input[type="text"], input[type="password"], input[type="number"], textarea, select):not(.read-only) {
+    @apply focus:outline-none focus:ring-2;
+  }
+  body :is(input[type="text"], input[type="password"], input[type="number"], textarea, select).read-only {
+    @apply bg-gray cursor-default;
+  }
+  body :is(input[type="text"], input[type="password"], input[type="number"], textarea, select):not(.error, .read-only) {
+    @apply focus:ring-primary-light focus:border-primary-light;
+  }
+  body :is(input[type="text"], input[type="password"], input[type="number"], textarea, select).error {
+    @apply border-secondary-red focus:ring-secondary-red focus:border-secondary-red;
+  }
+  body select {
+    @apply appearance-none cursor-pointer disabled:cursor-default disabled:opacity-100;
   }
   html {
     scroll-behavior: smooth;
@@ -93,6 +108,12 @@
 }
 
 @layer components {
+  .select-wrapper {
+    @apply relative;
+  }
+  .select-wrapper::after {
+    @apply absolute content-["V"] inset-y-0 right-0 flex items-center px-2 text-primary-dark pointer-events-none;
+  }
   .btn {
     @apply uppercase py-1 px-4 shadow-lg rounded-full text-primary-dark border border-primary-dark hover:bg-primary-dark hover:text-white transition disabled:opacity-50 disabled:cursor-default;
   }
