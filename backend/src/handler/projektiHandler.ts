@@ -4,9 +4,7 @@ import { velho } from "../velho/velhoClient";
 import { Kayttaja, ProjektiRooli, Status, TallennaProjektiInput } from "../../../common/graphql/apiModel";
 import { ProjektiAdapter } from "./projektiAdapter";
 import * as log from "loglevel";
-import { DBProjekti } from "../database/model/projekti";
-import { personSearch, SearchMode } from "../personSearch/personSearchClient";
-import { adaptKayttaja } from "../personSearch/personAdapter";
+import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 
 const projektiAdapter = new ProjektiAdapter();
 
@@ -34,7 +32,7 @@ async function createOrUpdateProjekti(input: TallennaProjektiInput) {
   if (projektiInDB) {
     // Save over existing one
     log.info("Saving projekti ", input.oid);
-    await projektiDatabase.saveProjekti(projektiAdapter.adaptProjektiToSave(projektiInDB, input));
+    await projektiDatabase.saveProjekti(await projektiAdapter.adaptProjektiToSave(projektiInDB, input));
   } else {
     const projekti = await createProjektiFromVelho(input.oid, getVaylaUser());
     projektiAdapter.mergeProjektiInput(projekti, input);
@@ -45,35 +43,6 @@ async function createOrUpdateProjekti(input: TallennaProjektiInput) {
   return true;
 }
 
-async function resolveProjektiPaallikkoFromVelhoVastuuhenkilo(projekti: DBProjekti) {
-  // Fill in project manager details from user directory
-  const projektiPaallikko = projekti.kayttoOikeudet?.filter(
-    (user) => user.rooli === ProjektiRooli.PROJEKTIPAALLIKKO
-  )[0];
-  if (projektiPaallikko) {
-    const succeeded = await personSearch.fillInUserInfoFromUserManagement({
-      user: projektiPaallikko,
-      searchMode: SearchMode.EMAIL,
-    });
-    if (!succeeded) {
-      projekti.kayttoOikeudet = projekti.kayttoOikeudet.filter((user) => user.email !== projektiPaallikko.email);
-    }
-  }
-  return projektiPaallikko;
-}
-
-async function addCurrentUserAsOmistaja(vaylaUser: Kayttaja, projekti: DBProjekti) {
-  const omistaja = adaptKayttaja(vaylaUser);
-  const succeeded = await personSearch.fillInUserInfoFromUserManagement({
-    user: omistaja,
-    searchMode: SearchMode.UID,
-  });
-  if (succeeded) {
-    omistaja.rooli = ProjektiRooli.OMISTAJA;
-    projekti.kayttoOikeudet.push(omistaja);
-  }
-}
-
 async function createProjektiFromVelho(oid: string, vaylaUser: Kayttaja) {
   try {
     log.info("Loading projekti from Velho ", oid);
@@ -82,13 +51,14 @@ async function createProjektiFromVelho(oid: string, vaylaUser: Kayttaja) {
     // Set default state
     projekti.status = Status.EI_JULKAISTU;
 
-    projekti.kayttoOikeudet.push({ rooli: ProjektiRooli.PROJEKTIPAALLIKKO, email: vastuuhenkilo } as any);
-    const projektiPaallikko = await resolveProjektiPaallikkoFromVelhoVastuuhenkilo(projekti);
+    const kayttoOikeudet = new KayttoOikeudetManager(projekti.kayttoOikeudet);
+    const projektiPaallikko = await kayttoOikeudet.addProjektiPaallikkoFromEmail(vastuuhenkilo);
 
     // Prefill current user as sihteeri if it is different from project manager
-    if (!projektiPaallikko || projektiPaallikko.kayttajatunnus !== vaylaUser.uid) {
-      await addCurrentUserAsOmistaja(vaylaUser, projekti);
+    if ((!projektiPaallikko || projektiPaallikko.kayttajatunnus !== vaylaUser.uid) && vaylaUser.uid) {
+      await kayttoOikeudet.addUserByKayttajatunnus(vaylaUser.uid, ProjektiRooli.OMISTAJA);
     }
+    projekti.kayttoOikeudet = kayttoOikeudet.getKayttoOikeudet();
     return projekti;
   } catch (e) {
     log.error(e);

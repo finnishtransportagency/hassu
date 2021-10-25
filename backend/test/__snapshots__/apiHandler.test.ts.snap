@@ -15,7 +15,8 @@ Object {
     },
     Object {
       "__typename": "ProjektiKayttaja",
-      "kayttajatunnus": "AB0000001",
+      "email": "matti.meikalainen@vayla.fi",
+      "kayttajatunnus": "A000111",
       "nimi": "Meikäläinen, Matti",
       "organisaatio": "Väylävirasto",
       "puhelinnumero": "123456789",
@@ -45,7 +46,8 @@ Array [
     },
     Object {
       "__typename": "ProjektiKayttaja",
-      "kayttajatunnus": "AB0000001",
+      "email": "matti.meikalainen@vayla.fi",
+      "kayttajatunnus": "A000111",
       "nimi": "Meikäläinen, Matti",
       "organisaatio": "Väylävirasto",
       "puhelinnumero": "123456789",
@@ -69,7 +71,8 @@ Array [
         "rooli": "PROJEKTIPAALLIKKO",
       },
       Object {
-        "kayttajatunnus": "AB0000001",
+        "email": "matti.meikalainen@vayla.fi",
+        "kayttajatunnus": "A000111",
         "nimi": "Meikäläinen, Matti",
         "organisaatio": "Väylävirasto",
         "puhelinnumero": "123456789",
@@ -100,7 +103,8 @@ Array [
     },
     Object {
       "__typename": "ProjektiKayttaja",
-      "kayttajatunnus": "AB0000001",
+      "email": "matti.meikalainen@vayla.fi",
+      "kayttajatunnus": "A000111",
       "nimi": "Meikäläinen, Matti",
       "organisaatio": "Väylävirasto",
       "puhelinnumero": "123456789",
@@ -148,7 +152,7 @@ Array [
 
 exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 6`] = `
 Array [
-  "Save projekti having both projektipaallikko and omistaja",
+  "Save projekti having while adding omistaja back. There should be projektipaallikko and omistaja in the projekti now",
   Object {
     "kayttoOikeudet": Array [
       Object {
@@ -161,7 +165,7 @@ Array [
       },
       Object {
         "email": "matti.meikalainen@vayla.fi",
-        "kayttajatunnus": "AB0000001",
+        "kayttajatunnus": "A000111",
         "nimi": "Meikäläinen, Matti",
         "organisaatio": "Väylävirasto",
         "puhelinnumero": "123456789",
@@ -175,7 +179,7 @@ Array [
 
 exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 7`] = `
 Array [
-  "Loaded projekti having both projektipaallikko and omistaja",
+  "Loaded projekti having while adding omistaja back. There should be projektipaallikko and omistaja in the projekti now",
   Array [
     Object {
       "__typename": "ProjektiKayttaja",
@@ -189,7 +193,7 @@ Array [
     Object {
       "__typename": "ProjektiKayttaja",
       "email": "matti.meikalainen@vayla.fi",
-      "kayttajatunnus": "AB0000001",
+      "kayttajatunnus": "A000111",
       "nimi": "Meikäläinen, Matti",
       "organisaatio": "Väylävirasto",
       "puhelinnumero": "123456789",
@@ -211,7 +215,8 @@ Object {
       "rooli": "PROJEKTIPAALLIKKO",
     },
     Object {
-      "kayttajatunnus": "AB0000001",
+      "email": "matti.meikalainen@vayla.fi",
+      "kayttajatunnus": "A000111",
       "nimi": "Meikäläinen, Matti",
       "organisaatio": "Väylävirasto",
       "puhelinnumero": "123456789",

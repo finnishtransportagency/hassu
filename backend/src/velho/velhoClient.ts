@@ -11,7 +11,7 @@ import { DBProjekti } from "../database/model/projekti";
 const axios = require("axios");
 
 axios.interceptors.request.use((request: AxiosRequestConfig) => {
-  log.debug("Request", JSON.stringify(request.headers) + "\n" + request.data);
+  log.debug("Request", request.url + "\n" + JSON.stringify(request.headers) + "\n" + request.data);
   return request;
 });
 

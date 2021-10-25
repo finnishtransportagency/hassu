@@ -95,7 +95,7 @@ export class PersonSearchClient {
   }: {
     user: DBVaylaUser;
     searchMode: SearchMode;
-  }) {
+  }): Promise<DBVaylaUser | undefined> {
     const kayttajas = await this.listAccounts();
     const accounts = kayttajas.filter((account) =>
       searchMode === SearchMode.EMAIL ? account.email === user.email : account.uid === user.kayttajatunnus
@@ -103,9 +103,9 @@ export class PersonSearchClient {
     if (accounts.length > 0) {
       const account = accounts[0];
       mergeKayttaja(user, account);
-      return true;
+      return user;
     }
-    return false;
+    return;
   }
 }
 

@@ -6,7 +6,6 @@ const AWS = require("aws-sdk");
 chai.use(require("chai-as-promised"));
 chai.use(jestSnapshotPlugin());
 
-log.setLevel("INFO");
 process.env.TABLE_PROJEKTI = "Projekti-localstack";
 process.env.AWS_REGION = "eu-west-1";
 

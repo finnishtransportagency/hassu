@@ -29,7 +29,7 @@ describe("getCurrentUser", () => {
       __typename: "Kayttaja",
       etuNimi: "Matti",
       sukuNimi: "Meikalainen",
-      uid: "AB0000001",
+      uid: "A000111",
       vaylaKayttaja: true,
       roolit: ["role1", "role2"],
     });

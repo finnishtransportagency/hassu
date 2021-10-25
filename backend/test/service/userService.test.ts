@@ -25,7 +25,7 @@ describe("userService", () => {
       "custom:sukunimi": "Meikalainen",
       "custom:etunimi": "Matti",
       "custom:puhelin": "12345678",
-      "custom:uid": "AB0000001",
+      "custom:uid": "A000111",
     });
     await identifyUser({ "x-iam-accesstoken": "abc.123", "x-iam-data": "" });
     const user = getVaylaUser();
