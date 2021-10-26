@@ -48,8 +48,6 @@ export default function Tallenna({ setRouteLabels }: PageProps): ReactElement {
   const { data: projekti, error: projektiLoadError } = useSWR([apiConfig.lataaProjekti.graphql, oid], projektiLoader);
   const { data: kayttajat, error: kayttajatLoadError } = useSWR(apiConfig.listaaKayttajat.graphql, kayttajatLoader);
 
-  projektiLoadError && log.log(projektiLoadError);
-
   const projektiHasPaallikko = projekti?.kayttoOikeudet?.some(({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO);
   const isLoadingProjekti = !projekti && !projektiLoadError;
   const projektiError = (!!projektiLoadError || !projektiHasPaallikko || projekti?.tallennettu) && !isLoadingProjekti;
@@ -86,19 +84,19 @@ export default function Tallenna({ setRouteLabels }: PageProps): ReactElement {
             }
           )
       )
-      .test("must-contain-projektipaallikko", "Projektille täytyy määrittää projektipäällikkö", function (list) {
+      .test("must-contain-projektipaallikko", "Projektille täytyy määrittää projektipäällikkö", (list) => {
         const listContainsProjektiPaallikko =
           !!list && (list as PartialProjektiKayttaja[]).some(({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO);
         return listContainsProjektiPaallikko;
       })
-      .test("singular-projektipaallikko", "Projektilla voi olla vain yksi projektipäällikkö", function (list) {
+      .test("singular-projektipaallikko", "Projektilla voi olla vain yksi projektipäällikkö", (list) => {
         const listContainsProjektiPaallikko =
           !!list &&
           (list as PartialProjektiKayttaja[]).filter(({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO).length <
             2;
         return listContainsProjektiPaallikko;
       })
-      .test("must-contain-omistaja", "Projektille täytyy määrittää omistaja", function (list) {
+      .test("must-contain-omistaja", "Projektille täytyy määrittää omistaja", (list) => {
         const listContainsOmistaja =
           !!list && (list as PartialProjektiKayttaja[]).some(({ rooli }) => rooli === ProjektiRooli.OMISTAJA);
         return listContainsOmistaja;
@@ -202,7 +200,7 @@ export default function Tallenna({ setRouteLabels }: PageProps): ReactElement {
                       uudelleen.
                     </>
                   ) : projekti?.tallennettu ? (
-                    <>Tunnukselle '{oid}' on jo perustettu projekti HASSUun.</>
+                    <>Tunnukselle {`'${oid}'`} on jo perustettu projekti HASSUun.</>
                   ) : !projektiHasPaallikko ? (
                     <>
                       Projektilta puuttuu projektipäällikkö- / vastuuhenkilötieto projektiVELHOsta. Lisää
