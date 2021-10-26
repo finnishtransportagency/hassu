@@ -56,3 +56,19 @@ export const pekkaProjariProjektiKayttaja: ProjektiKayttaja = {
   nimi: "Projari, Pekka",
   ...fieldsFromPersonSearch(pekkaProjariFromPersonSearch),
 };
+
+export const manuMuokkaaja: Kayttaja = {
+  __typename: "Kayttaja",
+  etuNimi: "Manu",
+  sukuNimi: "Muokkaaja",
+  uid: "A2",
+  roolit: ["role1", "role2"],
+  vaylaKayttaja: true,
+};
+
+export const manuMuokkaajaFromPersonSearch: Kayttaja = {
+  ...manuMuokkaaja,
+  email: "manu.muokkaaja@vayla.fi",
+  organisaatio: "Väylävirasto",
+  puhelinnumero: "123456789",
+};

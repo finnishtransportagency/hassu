@@ -2,6 +2,7 @@ import { DBVaylaUser } from "../database/model/projekti";
 import { ProjektiKayttaja, ProjektiKayttajaInput, ProjektiRooli } from "../../../common/graphql/apiModel";
 import { personSearch, SearchMode } from "../personSearch/personSearchClient";
 import * as log from "loglevel";
+import * as _ from "lodash";
 
 export class KayttoOikeudetManager {
   private users: DBVaylaUser[];
@@ -42,27 +43,26 @@ export class KayttoOikeudetManager {
     }, []);
 
     // Add new users
+    const newUsers = _.differenceWith(changes, resultUsers, (u1, u2) => u1.kayttajatunnus === u2.kayttajatunnus);
     await Promise.all(
-      changes
-        .filter((inputUser) => resultUsers.find((user) => user.kayttajatunnus !== inputUser.kayttajatunnus))
-        .map(async (newUser) => {
-          const userToAdd = {
-            puhelinnumero: newUser.puhelinnumero,
-            kayttajatunnus: newUser.kayttajatunnus,
-            rooli: newUser.rooli,
-          } as any;
-          try {
-            const userWithAllInfo = await personSearch.fillInUserInfoFromUserManagement({
-              user: userToAdd,
-              searchMode: SearchMode.UID,
-            });
-            if (userWithAllInfo) {
-              resultUsers.push(userWithAllInfo);
-            }
-          } catch (e) {
-            log.error(e);
+      newUsers.map(async (newUser) => {
+        const userToAdd = {
+          puhelinnumero: newUser.puhelinnumero,
+          kayttajatunnus: newUser.kayttajatunnus,
+          rooli: newUser.rooli,
+        } as any;
+        try {
+          const userWithAllInfo = await personSearch.fillInUserInfoFromUserManagement({
+            user: userToAdd,
+            searchMode: SearchMode.UID,
+          });
+          if (userWithAllInfo) {
+            resultUsers.push(userWithAllInfo);
           }
-        })
+        } catch (e) {
+          log.error(e);
+        }
+      })
     );
     this.users = resultUsers;
   }
