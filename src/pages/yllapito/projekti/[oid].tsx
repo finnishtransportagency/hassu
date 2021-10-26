@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 import { api, apiConfig } from "@services/api";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 import PerustaProjekti from "@components/projekti/PerustaProjekti";
 import log from "loglevel";
 

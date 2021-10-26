@@ -128,7 +128,7 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
     name: "kayttoOikeudet",
   });
 
-  const onSubmit = useCallback(async (formData: FormValues) => {
+  const onSubmit = async (formData: FormValues) => {
     setFormIsSubmitting(true);
     try {
       await api.tallennaProjekti(formData);
@@ -137,7 +137,7 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
       log.log("OnSubmit Error", e);
     }
     setFormIsSubmitting(false);
-  }, []);
+  };
 
   useEffect(() => {
     const tallentamisTiedot: FormValues = {
