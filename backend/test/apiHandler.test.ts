@@ -9,13 +9,14 @@ import { velho } from "../src/velho/velhoClient";
 import { api } from "../integrationtest/api/apiClient";
 import { personSearch } from "../src/personSearch/personSearchClient";
 import {
+  manuMuokkaajaFromPersonSearch,
   pekkaProjariFromPersonSearch,
   pekkaProjariProjektiKayttaja,
   vaylaMatti,
   vaylaMattiFromPersonSearch,
   vaylaMattiProjektiKayttaja,
 } from "./fixture/users";
-import { Projekti, ProjektiKayttajaInput, ProjektiRooli } from "../../common/graphql/apiModel";
+import { Projekti, ProjektiKayttaja, ProjektiKayttajaInput, ProjektiRooli } from "../../common/graphql/apiModel";
 import { DBProjekti } from "../src/database/model/projekti";
 import * as _ from "lodash";
 import * as log from "loglevel";
@@ -48,7 +49,11 @@ describe("apiHandler", () => {
       loadVelhoProjektiByOidStub = sinon.stub(velho, "loadProjekti");
 
       fixture = new ProjektiFixture();
-      listAccountsStub.resolves([vaylaMattiFromPersonSearch, pekkaProjariFromPersonSearch]);
+      listAccountsStub.resolves([
+        vaylaMattiFromPersonSearch,
+        pekkaProjariFromPersonSearch,
+        manuMuokkaajaFromPersonSearch,
+      ]);
     });
 
     function mockLataaProjektiFromVelho() {
@@ -164,7 +169,7 @@ describe("apiHandler", () => {
         projekti = await saveAndLoadProjekti(projekti, "having only projektipaallikko", onlyProjektiPaallikko);
 
         // Add omistaja back and examine the results
-        await saveAndLoadProjekti(
+        projekti = await saveAndLoadProjekti(
           projekti,
           "while adding omistaja back. There should be projektipaallikko and omistaja in the projekti now",
           [
@@ -175,15 +180,41 @@ describe("apiHandler", () => {
             },
           ]
         );
+
+        // Add one muokkaaja more and examine the results
+        const kayttoOikeudetWithThreeUsers = adaptExistingKayttoOikeudet(projekti.kayttoOikeudet).concat({
+          kayttajatunnus: manuMuokkaajaFromPersonSearch.uid || "",
+          puhelinnumero: manuMuokkaajaFromPersonSearch.puhelinnumero || "",
+          rooli: ProjektiRooli.OMISTAJA,
+        });
+        await saveAndLoadProjekti(
+          projekti,
+          "while adding one muokkaaja more. There should be three persons in the projekti now",
+          kayttoOikeudetWithThreeUsers
+        );
       });
+    });
 
-      it("should return error if user has no permissions", async () => {
-        userFixture.logout();
+    it("should return error if user has no permissions", async () => {
+      userFixture.logout();
 
-        createProjektiStub.resolves();
+      createProjektiStub.resolves();
 
-        await assert.isRejected(api.tallennaProjekti(fixture.tallennaProjektiInput), IllegalAccessError);
-      });
+      await assert.isRejected(api.tallennaProjekti(fixture.tallennaProjektiInput), IllegalAccessError);
     });
   });
 });
+
+/**
+ * This function basically emulates the user interface which echoes back the set of users while saving
+ */
+function adaptExistingKayttoOikeudet(kayttoOikeudet?: ProjektiKayttaja[] | null): ProjektiKayttajaInput[] {
+  if (!kayttoOikeudet) {
+    return [];
+  }
+  return kayttoOikeudet.map((value) => ({
+    rooli: value.rooli,
+    kayttajatunnus: value.kayttajatunnus,
+    puhelinnumero: value.puhelinnumero,
+  }));
+}

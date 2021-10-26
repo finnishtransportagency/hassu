@@ -203,6 +203,76 @@ Array [
 ]
 `;
 
+exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 8`] = `
+Array [
+  "Save projekti having while adding one muokkaaja more. There should be three persons in the projekti now",
+  Object {
+    "kayttoOikeudet": Array [
+      Object {
+        "email": "pekka.projari@vayla.fi",
+        "kayttajatunnus": "A123",
+        "nimi": "Projari, Pekka",
+        "organisaatio": "Väylävirasto",
+        "puhelinnumero": "123456789",
+        "rooli": "PROJEKTIPAALLIKKO",
+      },
+      Object {
+        "email": "matti.meikalainen@vayla.fi",
+        "kayttajatunnus": "A000111",
+        "nimi": "Meikäläinen, Matti",
+        "organisaatio": "Väylävirasto",
+        "puhelinnumero": "123456789",
+        "rooli": "OMISTAJA",
+      },
+      Object {
+        "email": "manu.muokkaaja@vayla.fi",
+        "kayttajatunnus": "A2",
+        "nimi": "Muokkaaja, Manu",
+        "organisaatio": "Väylävirasto",
+        "puhelinnumero": "123456789",
+        "rooli": "OMISTAJA",
+      },
+    ],
+    "oid": "1",
+  },
+]
+`;
+
+exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 9`] = `
+Array [
+  "Loaded projekti having while adding one muokkaaja more. There should be three persons in the projekti now",
+  Array [
+    Object {
+      "__typename": "ProjektiKayttaja",
+      "email": "pekka.projari@vayla.fi",
+      "kayttajatunnus": "A123",
+      "nimi": "Projari, Pekka",
+      "organisaatio": "Väylävirasto",
+      "puhelinnumero": "123456789",
+      "rooli": "PROJEKTIPAALLIKKO",
+    },
+    Object {
+      "__typename": "ProjektiKayttaja",
+      "email": "matti.meikalainen@vayla.fi",
+      "kayttajatunnus": "A000111",
+      "nimi": "Meikäläinen, Matti",
+      "organisaatio": "Väylävirasto",
+      "puhelinnumero": "123456789",
+      "rooli": "OMISTAJA",
+    },
+    Object {
+      "__typename": "ProjektiKayttaja",
+      "email": "manu.muokkaaja@vayla.fi",
+      "kayttajatunnus": "A2",
+      "nimi": "Muokkaaja, Manu",
+      "organisaatio": "Väylävirasto",
+      "puhelinnumero": "123456789",
+      "rooli": "OMISTAJA",
+    },
+  ],
+]
+`;
+
 exports[`apiHandler handleEvent tallennaProjekti should save a new project 1`] = `
 Object {
   "kayttoOikeudet": Array [
