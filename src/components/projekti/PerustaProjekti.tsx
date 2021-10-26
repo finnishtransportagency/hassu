@@ -1,5 +1,5 @@
 import ProjektiPerustiedot from "@components/projekti/ProjektiPerustiedot";
-import React, { ReactElement, useCallback, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { FieldArrayWithId, useFieldArray, useForm, UseFormProps } from "react-hook-form";
 import { SchemaOf } from "yup";
 import * as Yup from "yup";
