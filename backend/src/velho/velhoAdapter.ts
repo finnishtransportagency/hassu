@@ -1,12 +1,19 @@
-import { VelhoHakuTulos } from "../../../common/graphql/apiModel";
+import { Status, VelhoHakuTulos } from "../../../common/graphql/apiModel";
 import { ProjektiProjekti, ProjektiProjektiOminaisuudetVaylamuotoEnum } from "./projektirekisteri";
-// @ts-ignore
-import { default as metadataJson } from "./metadata.json";
 import { DBProjekti } from "../database/model/projekti";
+
+let metaDataJSON: any;
+
+function getMetadataJSON() {
+  if (!metaDataJSON) {
+    metaDataJSON = require("./metadata.json");
+  }
+  return metaDataJSON;
+}
 
 function extractValuesIntoMap(field: string) {
   const values: any = {};
-  const definition: any = (metadataJson.info["x-velho-nimikkeistot"] as any)[field];
+  const definition: any = (getMetadataJSON().info["x-velho-nimikkeistot"] as any)[field];
   const keyTitleMap = definition.nimikkeistoversiot[definition["uusin-nimikkeistoversio"]];
   Object.keys(keyTitleMap).forEach((key) => {
     return (values[key] = keyTitleMap[key].otsikko);
@@ -47,6 +54,7 @@ export function adaptProjekti(data: ProjektiProjekti): { projekti: DBProjekti; v
     tila: metadata.tilat[`${data.ominaisuudet.tila}`],
     tyyppi: metadata.vaiheet[`${data.ominaisuudet.vaihe}`],
     nimi: data.ominaisuudet.nimi,
+    status: Status.EI_JULKAISTU,
     vaylamuoto: adaptVaylamuoto(data.ominaisuudet.vaylamuoto),
     organisaatio: metadata.organisaatiot[`${data.ominaisuudet.tilaajaorganisaatio}`],
     kayttoOikeudet: [],

@@ -82,7 +82,7 @@ export class HassuBackendStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_14_X,
       entry: `${__dirname}/../../backend/src/apiHandler.ts`,
       handler: "handleEvent",
-      memorySize: 128,
+      memorySize: 256,
       timeout: Duration.seconds(29),
       environment: {
         COGNITO_URL: config.getInfraParameter("CognitoURL"),

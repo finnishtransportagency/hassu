@@ -34,8 +34,4 @@ export class ProjektiAdapter {
       )
     ) as DBProjekti;
   }
-
-  mergeProjektiInput(projekti: DBProjekti, input: API.TallennaProjektiInput) {
-    return _.mergeWith(projekti, input);
-  }
 }

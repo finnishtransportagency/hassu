@@ -10,7 +10,6 @@ Object {
       "kayttajatunnus": "A123",
       "nimi": "Projari, Pekka",
       "organisaatio": "Väylävirasto",
-      "puhelinnumero": "123456789",
       "rooli": "PROJEKTIPAALLIKKO",
     },
     Object {
@@ -19,7 +18,6 @@ Object {
       "kayttajatunnus": "A000111",
       "nimi": "Meikäläinen, Matti",
       "organisaatio": "Väylävirasto",
-      "puhelinnumero": "123456789",
       "rooli": "OMISTAJA",
     },
   ],
@@ -41,7 +39,6 @@ Array [
       "kayttajatunnus": "A123",
       "nimi": "Projari, Pekka",
       "organisaatio": "Väylävirasto",
-      "puhelinnumero": "123456789",
       "rooli": "PROJEKTIPAALLIKKO",
     },
     Object {
@@ -50,7 +47,6 @@ Array [
       "kayttajatunnus": "A000111",
       "nimi": "Meikäläinen, Matti",
       "organisaatio": "Väylävirasto",
-      "puhelinnumero": "123456789",
       "rooli": "OMISTAJA",
     },
   ],
@@ -67,7 +63,7 @@ Array [
         "kayttajatunnus": "A123",
         "nimi": "Projari, Pekka",
         "organisaatio": "Väylävirasto",
-        "puhelinnumero": "123456789",
+        "puhelinnumero": "11",
         "rooli": "PROJEKTIPAALLIKKO",
       },
       Object {
@@ -75,7 +71,7 @@ Array [
         "kayttajatunnus": "A000111",
         "nimi": "Meikäläinen, Matti",
         "organisaatio": "Väylävirasto",
-        "puhelinnumero": "123456789",
+        "puhelinnumero": "22",
         "rooli": "OMISTAJA",
       },
     ],
@@ -98,7 +94,7 @@ Array [
       "kayttajatunnus": "A123",
       "nimi": "Projari, Pekka",
       "organisaatio": "Väylävirasto",
-      "puhelinnumero": "123456789",
+      "puhelinnumero": "11",
       "rooli": "PROJEKTIPAALLIKKO",
     },
     Object {
@@ -107,7 +103,7 @@ Array [
       "kayttajatunnus": "A000111",
       "nimi": "Meikäläinen, Matti",
       "organisaatio": "Väylävirasto",
-      "puhelinnumero": "123456789",
+      "puhelinnumero": "22",
       "rooli": "OMISTAJA",
     },
   ],
@@ -124,7 +120,7 @@ Array [
         "kayttajatunnus": "A123",
         "nimi": "Projari, Pekka",
         "organisaatio": "Väylävirasto",
-        "puhelinnumero": "123456789",
+        "puhelinnumero": "11",
         "rooli": "PROJEKTIPAALLIKKO",
       },
     ],
@@ -143,7 +139,7 @@ Array [
       "kayttajatunnus": "A123",
       "nimi": "Projari, Pekka",
       "organisaatio": "Väylävirasto",
-      "puhelinnumero": "123456789",
+      "puhelinnumero": "11",
       "rooli": "PROJEKTIPAALLIKKO",
     },
   ],
@@ -152,7 +148,7 @@ Array [
 
 exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 6`] = `
 Array [
-  "Save projekti having while adding omistaja back. There should be projektipaallikko and omistaja in the projekti now",
+  "Save projekti having while adding omistaja back. There should be projektipaallikko and omistaja in the projekti now. Projektipaallikko cannot be removed, so it always stays there.",
   Object {
     "kayttoOikeudet": Array [
       Object {
@@ -160,7 +156,7 @@ Array [
         "kayttajatunnus": "A123",
         "nimi": "Projari, Pekka",
         "organisaatio": "Väylävirasto",
-        "puhelinnumero": "123456789",
+        "puhelinnumero": "11",
         "rooli": "PROJEKTIPAALLIKKO",
       },
       Object {
@@ -179,7 +175,7 @@ Array [
 
 exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 7`] = `
 Array [
-  "Loaded projekti having while adding omistaja back. There should be projektipaallikko and omistaja in the projekti now",
+  "Loaded projekti having while adding omistaja back. There should be projektipaallikko and omistaja in the projekti now. Projektipaallikko cannot be removed, so it always stays there.",
   Array [
     Object {
       "__typename": "ProjektiKayttaja",
@@ -187,7 +183,7 @@ Array [
       "kayttajatunnus": "A123",
       "nimi": "Projari, Pekka",
       "organisaatio": "Väylävirasto",
-      "puhelinnumero": "123456789",
+      "puhelinnumero": "11",
       "rooli": "PROJEKTIPAALLIKKO",
     },
     Object {
@@ -213,7 +209,7 @@ Array [
         "kayttajatunnus": "A123",
         "nimi": "Projari, Pekka",
         "organisaatio": "Väylävirasto",
-        "puhelinnumero": "123456789",
+        "puhelinnumero": "11",
         "rooli": "PROJEKTIPAALLIKKO",
       },
       Object {
@@ -248,7 +244,7 @@ Array [
       "kayttajatunnus": "A123",
       "nimi": "Projari, Pekka",
       "organisaatio": "Väylävirasto",
-      "puhelinnumero": "123456789",
+      "puhelinnumero": "11",
       "rooli": "PROJEKTIPAALLIKKO",
     },
     Object {
@@ -271,48 +267,4 @@ Array [
     },
   ],
 ]
-`;
-
-exports[`apiHandler handleEvent tallennaProjekti should save a new project 1`] = `
-Object {
-  "kayttoOikeudet": Array [
-    Object {
-      "email": "pekka.projari@vayla.fi",
-      "kayttajatunnus": "A123",
-      "nimi": "Projari, Pekka",
-      "organisaatio": "Väylävirasto",
-      "puhelinnumero": "123456789",
-      "rooli": "PROJEKTIPAALLIKKO",
-    },
-    Object {
-      "email": "matti.meikalainen@vayla.fi",
-      "kayttajatunnus": "A000111",
-      "nimi": "Meikäläinen, Matti",
-      "organisaatio": "Väylävirasto",
-      "puhelinnumero": "123456789",
-      "rooli": "OMISTAJA",
-    },
-  ],
-  "kuvaus": "Testiprojekti 1:n kuvaus",
-  "nimi": "Testiprojekti 1",
-  "oid": "1",
-  "status": "EI_JULKAISTU",
-}
-`;
-
-exports[`apiHandler handleEvent tallennaProjekti should update an existing project 1`] = `
-Object {
-  "kayttoOikeudet": Array [
-    Object {
-      "email": "pekka.projari@vayla.fi",
-      "kayttajatunnus": "A123",
-      "nimi": "Projari, Pekka",
-      "organisaatio": "Väylävirasto",
-      "puhelinnumero": "123456789",
-      "rooli": "PROJEKTIPAALLIKKO",
-    },
-  ],
-  "kuvaus": "Testiprojekti 1:n kuvaus 2",
-  "oid": "1",
-}
 `;

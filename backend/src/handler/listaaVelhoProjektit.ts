@@ -5,5 +5,5 @@ import { ListaaVelhoProjektitQueryVariables, VelhoHakuTulos } from "../../../com
 export async function listaaVelhoProjektit(params: ListaaVelhoProjektitQueryVariables): Promise<VelhoHakuTulos[]> {
   requireVaylaUser();
 
-  return velho.searchProjects(params.nimi, params.requireExactMatch);
+  return velho.searchProjects(params.nimi, !!params.requireExactMatch);
 }

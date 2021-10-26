@@ -2,7 +2,7 @@ import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { ProjektiFixture } from "../fixture/projektiFixture";
-import { DynamoDB } from "aws-sdk";
+import DynamoDB from "aws-sdk/clients/dynamodb";
 
 const { expect } = require("chai");
 

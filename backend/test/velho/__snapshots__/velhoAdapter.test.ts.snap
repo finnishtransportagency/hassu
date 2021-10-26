@@ -7,6 +7,7 @@ Object {
     "nimi": "Kaupungin sisääntulotien (mt 123) parantaminen välillä valtatien 1 eritasoliittymä - Päätie, Helsinki",
     "oid": "100",
     "organisaatio": "Pirkanmaan ELY-keskus",
+    "status": "EI_JULKAISTU",
     "tila": "Vastaanotettu",
     "toteutusAjankohta": "Toteutettavissa arviolta noin 1 vuoden päästä nykyhetkestä",
     "tyyppi": "Tiesuunnitelma/Tie- ja rakennussuunnitelma",
