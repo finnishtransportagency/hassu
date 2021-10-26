@@ -13,7 +13,7 @@ interface Props {
   label?: string;
   disabled?: boolean;
   hideErrorMessage?: boolean;
-  options: { label: string; value: string }[];
+  options: { label: string; value: string; disabled?: boolean }[];
 }
 
 export default function Textarea({
@@ -29,7 +29,7 @@ export default function Textarea({
       <div className="select-wrapper">
         <select disabled={disabled} className={error && "error"} {...registrationValues}>
           {options.map((option) => (
-            <option key={option.value} value={option.value}>
+            <option key={option.value} value={option.value} disabled={option.disabled}>
               {option.label}
             </option>
           ))}

@@ -15,6 +15,7 @@ interface Props<T> {
   onTextChange?: (query: string) => void;
   onTextChangeDelay?: number;
   loading?: boolean;
+  maxResults?: number;
 }
 
 const Autocomplete = <T extends unknown>({
@@ -29,6 +30,7 @@ const Autocomplete = <T extends unknown>({
   onTextChange,
   onTextChangeDelay = 800,
   loading,
+  maxResults = 60,
 }: Props<T>) => {
   const [textValue, setTextValue] = useState("");
   const [isOnFocus, setIsOnFocus] = useState(false);
@@ -181,7 +183,7 @@ const Autocomplete = <T extends unknown>({
               "LOADING..."
             ) : opts.length > 0 ? (
               <ul>
-                {opts.map((option, index) => (
+                {opts.slice(0, maxResults).map((option, index) => (
                   <li
                     key={index}
                     ref={(el) => (optionsRef.current[index] = el)}

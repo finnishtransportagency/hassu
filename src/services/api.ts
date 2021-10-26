@@ -36,5 +36,6 @@ class API extends AbstractApi {
   }
 }
 
+export { apiConfig } from "../../common/abstractApi";
 export const api = new API();
 export * from "../../common/graphql/apiModel";
