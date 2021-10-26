@@ -12,8 +12,7 @@ import Textarea from "@components/form/Textarea";
 import TextInput from "@components/form/TextInput";
 import Select from "@components/form/Select";
 import Autocomplete from "@components/form/Autocomplete";
-import { api, Kayttaja, ProjektiRooli, ProjektiKayttaja, apiConfig } from "@services/api";
-import { PageProps } from "@pages/_app";
+import { api, Kayttaja, ProjektiRooli, ProjektiKayttaja, apiConfig, Projekti } from "@services/api";
 import log from "loglevel";
 
 type PartialProjektiKayttaja = Pick<ProjektiKayttaja, "kayttajatunnus" | "puhelinnumero" | "rooli">;
@@ -40,18 +39,21 @@ const rooliOptions = [
 
 const maxKuvausLength = 2000;
 
-export default function Tallenna({ setRouteLabels }: PageProps): ReactElement {
+interface Props {
+  projekti: Projekti;
+  reloadProject: () => void;
+}
+
+export default function PerustaProjekti({ projekti, reloadProject }: Props): ReactElement {
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
 
   const router = useRouter();
   const oid = router.query.oid;
-  const { data: projekti, error: projektiLoadError } = useSWR([apiConfig.lataaProjekti.graphql, oid], projektiLoader);
   const { data: kayttajat, error: kayttajatLoadError } = useSWR(apiConfig.listaaKayttajat.graphql, kayttajatLoader);
 
   const projektiHasPaallikko = projekti?.kayttoOikeudet?.some(({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO);
-  const isLoadingProjekti = !projekti && !projektiLoadError;
-  const projektiError = (!!projektiLoadError || !projektiHasPaallikko || projekti?.tallennettu) && !isLoadingProjekti;
-  const disableFormEdit = projektiError || isLoadingProjekti;
+  const projektiError = !projektiHasPaallikko || projekti?.tallennettu;
+  const disableFormEdit = projektiError;
 
   const isLoadingKayttajat = !kayttajat && !kayttajatLoadError;
 
@@ -128,7 +130,13 @@ export default function Tallenna({ setRouteLabels }: PageProps): ReactElement {
 
   const onSubmit = useCallback(async (formData: FormValues) => {
     setFormIsSubmitting(true);
-    await api.tallennaProjekti(formData);
+    try {
+      await api.tallennaProjekti(formData);
+      reloadProject();
+    } catch (e) {
+      log.log("OnSubmit Error", e);
+    }
+    setFormIsSubmitting(false);
   }, []);
 
   useEffect(() => {
@@ -191,15 +199,10 @@ export default function Tallenna({ setRouteLabels }: PageProps): ReactElement {
           </div>
           <div className="md:col-span-6 lg:col-span-8 xl:col-span-9">
             <form onSubmit={handleSubmit(onSubmit)}>
-              <h2>{isLoadingProjekti ? oid : projekti?.nimi || "-"}</h2>
+              <h2>{projekti?.nimi || "-"}</h2>
               {projektiError && (
                 <div className="alert-error">
-                  {projektiLoadError ? (
-                    <>
-                      Projektin tietoja hakiessa tapahtui virhe. Tarkista tiedot projekti-VELHOsta ja yritä myöhemmin
-                      uudelleen.
-                    </>
-                  ) : projekti?.tallennettu ? (
+                  {projekti?.tallennettu ? (
                     <>Tunnukselle {`'${oid}'`} on jo perustettu projekti HASSUun.</>
                   ) : !projektiHasPaallikko ? (
                     <>
@@ -426,13 +429,6 @@ export default function Tallenna({ setRouteLabels }: PageProps): ReactElement {
       </section>
     </>
   );
-}
-
-async function projektiLoader(_: string, oid: string) {
-  if (!oid) {
-    return null;
-  }
-  return await api.lataaProjekti(oid);
 }
 
 async function kayttajatLoader(_: string) {
