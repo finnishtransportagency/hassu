@@ -14,9 +14,8 @@ import {
   pekkaProjariProjektiKayttaja,
   vaylaMatti,
   vaylaMattiFromPersonSearch,
-  vaylaMattiProjektiKayttaja,
 } from "./fixture/users";
-import { Projekti, ProjektiKayttaja, ProjektiKayttajaInput, ProjektiRooli } from "../../common/graphql/apiModel";
+import { Projekti, ProjektiKayttajaInput, ProjektiRooli } from "../../common/graphql/apiModel";
 import { DBProjekti } from "../src/database/model/projekti";
 import * as _ from "lodash";
 import * as log from "loglevel";
@@ -82,30 +81,6 @@ describe("apiHandler", () => {
     });
 
     describe("tallennaProjekti", () => {
-      it("should save a new project", async () => {
-        userFixture.loginAs(vaylaMatti);
-        mockLataaProjektiFromVelho();
-
-        await api.tallennaProjekti(fixture.tallennaProjektiInput);
-        sinon.assert.calledOnce(loadProjektiByOidStub); // To check if the projekti already exists in the database
-        sinon.assert.calledOnce(loadVelhoProjektiByOidStub); // To load the projekti from Velho
-        sinon.assert.calledOnce(createProjektiStub); // To create the projekti in our database
-        expect(createProjektiStub.getCall(0).firstArg).toMatchSnapshot();
-      });
-
-      it("should update an existing project", async () => {
-        userFixture.loginAs(vaylaMatti);
-        loadProjektiByOidStub.resolves(fixture.dbProjekti1);
-        saveProjektiStub.resolves();
-
-        await api.tallennaProjekti({
-          ...fixture.tallennaProjektiInput,
-          kuvaus: fixture.PROJEKTI1_KUVAUS_2,
-        });
-        expect(saveProjektiStub.calledOnce);
-        expect(saveProjektiStub.getCall(0).firstArg).toMatchSnapshot();
-      });
-
       it("should modify permissions from a project successfully", async () => {
         let mockedDatabaseProjekti: DBProjekti | undefined;
 
@@ -162,7 +137,18 @@ describe("apiHandler", () => {
         // Create stubs to keep state of the "database" so that it can be modified in the following steps
         mockDatabase();
         // Save projekti with the defaults. It should have both projektipaallikko and the current user as omistaja
-        projekti = await saveAndLoadProjekti(projekti, "having both projektipaallikko and omistaja");
+        projekti = await saveAndLoadProjekti(projekti, "having both projektipaallikko and omistaja", [
+          {
+            rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
+            kayttajatunnus: "A123",
+            puhelinnumero: "11",
+          },
+          {
+            kayttajatunnus: "A000111",
+            rooli: ProjektiRooli.OMISTAJA,
+            puhelinnumero: "22",
+          },
+        ]);
 
         // Remove vaylaMatti and save
         const onlyProjektiPaallikko = projekti.kayttoOikeudet?.filter((user) => user.kayttajatunnus !== vaylaMatti.uid);
@@ -171,26 +157,37 @@ describe("apiHandler", () => {
         // Add omistaja back and examine the results
         projekti = await saveAndLoadProjekti(
           projekti,
-          "while adding omistaja back. There should be projektipaallikko and omistaja in the projekti now",
+          "while adding omistaja back. There should be projektipaallikko and omistaja in the projekti now. Projektipaallikko cannot be removed, so it always stays there.",
           [
             {
-              kayttajatunnus: vaylaMattiProjektiKayttaja.kayttajatunnus,
-              puhelinnumero: vaylaMattiProjektiKayttaja.puhelinnumero,
+              kayttajatunnus: "A000111",
+              puhelinnumero: "123456789",
               rooli: ProjektiRooli.OMISTAJA,
             },
           ]
         );
 
         // Add one muokkaaja more and examine the results
-        const kayttoOikeudetWithThreeUsers = adaptExistingKayttoOikeudet(projekti.kayttoOikeudet).concat({
-          kayttajatunnus: manuMuokkaajaFromPersonSearch.uid || "",
-          puhelinnumero: manuMuokkaajaFromPersonSearch.puhelinnumero || "",
-          rooli: ProjektiRooli.OMISTAJA,
-        });
         await saveAndLoadProjekti(
           projekti,
           "while adding one muokkaaja more. There should be three persons in the projekti now",
-          kayttoOikeudetWithThreeUsers
+          [
+            {
+              rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
+              kayttajatunnus: "A123",
+              puhelinnumero: "11",
+            },
+            {
+              rooli: ProjektiRooli.OMISTAJA,
+              kayttajatunnus: "A000111",
+              puhelinnumero: "123456789",
+            },
+            {
+              kayttajatunnus: "A2",
+              puhelinnumero: "123456789",
+              rooli: ProjektiRooli.OMISTAJA,
+            },
+          ]
         );
       });
     });
@@ -204,17 +201,3 @@ describe("apiHandler", () => {
     });
   });
 });
-
-/**
- * This function basically emulates the user interface which echoes back the set of users while saving
- */
-function adaptExistingKayttoOikeudet(kayttoOikeudet?: ProjektiKayttaja[] | null): ProjektiKayttajaInput[] {
-  if (!kayttoOikeudet) {
-    return [];
-  }
-  return kayttoOikeudet.map((value) => ({
-    rooli: value.rooli,
-    kayttajatunnus: value.kayttajatunnus,
-    puhelinnumero: value.puhelinnumero,
-  }));
-}

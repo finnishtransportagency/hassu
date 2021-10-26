@@ -4,7 +4,8 @@ import * as sinon from "sinon";
 import { SinonStub } from "sinon";
 import * as dynamoDB from "../../src/database/dynamoDB";
 
-import { DynamoDB } from "aws-sdk";
+import DynamoDB from "aws-sdk/clients/dynamodb";
+import { HookFunction } from "mocha";
 
 const localDynamoDBParams = {
   endpoint: "http://localhost:4566",
@@ -39,14 +40,17 @@ export async function setupLocalDatabase() {
 async function deleteAllItemsFromDatabase() {
   // Hard-code table name to prevent accidental deletion from AWS
   log.info("Cleaning up database");
-  await Promise.all(
-    (
-      await localDocumentClient.scan({ TableName: "Projekti-localstack" }).promise()
-    ).Items.map(async (item) => {
-      log.info("Deleting ", item);
-      await localDocumentClient.delete({ TableName: "Projekti-localstack", Key: { oid: item.oid } }).promise();
-    })
-  );
+  const items = (await localDocumentClient.scan({ TableName: "Projekti-localstack" }).promise()).Items;
+  if (items) {
+    await Promise.all(
+      items.map(async (item) => {
+        log.info("Deleting ", item);
+        await localDocumentClient.delete({ TableName: "Projekti-localstack", Key: { oid: item.oid } }).promise();
+      })
+    );
+  }
 }
 
-afterEach("Reset database stub", async () => localDynamoDBDocumentClientStub.restore());
+afterEach("Reset database stub", (() => {
+  return localDynamoDBDocumentClientStub.restore();
+}) as HookFunction);
