@@ -8,7 +8,7 @@ type ProjektiKayttaja {
   rooli: ProjektiRooli!
   email: String!
   kayttajatunnus: String!
-  puhelinnumero: String!
+  puhelinnumero: String
   organisaatio: String!
   nimi: String!
 }

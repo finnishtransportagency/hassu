@@ -43,3 +43,4 @@ tools/velho/buildSrc/build
 .report
 .nyc_output
 
+next-env.d.ts
