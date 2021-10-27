@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { SchemaOf } from "yup";
 
-import {api, VelhoHakuTulos} from "@services/api";
+import { api, VelhoHakuTulos } from "@services/api";
 import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/router";
 import ProjektiTaulu from "@components/projekti/ProjektiTaulu";
@@ -44,12 +44,15 @@ export default function Perusta() {
 
   const onSubmit = useCallback(
     async (data: SearchInput) => {
+      if (router.query[PROJEKTI_NIMI_PARAM] !== data.name) {
+        await router.push({ query: { [PROJEKTI_NIMI_PARAM]: data.name } });
+        // Route change will trigger onSubmit (this function) another time
+        // Return so that requests are not duplicated.
+        return;
+      }
       try {
         setIsLoading(true);
         setResultSectionVisible(true);
-        if (router.query[PROJEKTI_NIMI_PARAM] !== data.name) {
-          router.push({ query: { [PROJEKTI_NIMI_PARAM]: data.name } });
-        }
         const tulos = await api.getVelhoSuunnitelmasByName(data.name);
         setHakuTulos(tulos);
         if (tulos.length === 0) {
