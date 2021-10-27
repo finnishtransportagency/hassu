@@ -94,6 +94,7 @@
     "start": "next start",
     "export": "next export",
     "generate:velhoapi": "cross-env VELHO_ACCESS_TOKEN=\"$(ts-node --project=tsconfig.cdk.json ./tools/velho/authenticate.ts)\" \"./tools/velho/gradlew\" -p \"./tools/velho\" --info",
+    "postgenerate:velhoapi": "ts-node --project=tsconfig.cdk.json ./tools/velho/processMetaData.ts ./backend/src/velho/metadata.json",
     "generate:api": "amplify codegen",
     "generate": "npm-run-all generate:*",
     "lint:prettier": "prettier --check \"backend/**/*.ts\" \"src/**/*.ts\"",

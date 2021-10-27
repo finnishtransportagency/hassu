@@ -14,7 +14,10 @@ sourceCompatibility = 11
 targetCompatibility = 11
 
 task downloadMetaData(type: DownloadMetaDataTask) {
-  fileName = "${projectDir}/../../backend/src/velho/metadata.json".toString()
+  doFirst {
+    mkdir "$buildDir"
+  }
+  fileName = "${buildDir}/metadata.json".toString()
 }
 
 defaultTasks 'generateApis'

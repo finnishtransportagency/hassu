@@ -5,7 +5,7 @@ import { Kayttaja, ProjektiRooli, Status, TallennaProjektiInput } from "../../..
 import { ProjektiAdapter } from "./projektiAdapter";
 import * as log from "loglevel";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
-import * as _ from "lodash";
+import mergeWith from "lodash/mergeWith";
 
 const projektiAdapter = new ProjektiAdapter();
 
@@ -56,7 +56,7 @@ async function createProjektiFromVelho(oid: string, vaylaUser: Kayttaja, input?:
     if (input) {
       // Saving a new projekti, so adjusting data based on the input
       const { kuvaus } = input;
-      _.mergeWith(projekti, { kuvaus });
+      mergeWith(projekti, { kuvaus });
       // Add new users given as inputs
       await kayttoOikeudet.applyChanges(input.kayttoOikeudet);
     } else {
