@@ -150,9 +150,14 @@ describe("apiHandler", () => {
           },
         ]);
 
-        // Remove vaylaMatti and save
-        const onlyProjektiPaallikko = projekti.kayttoOikeudet?.filter((user) => user.kayttajatunnus !== vaylaMatti.uid);
-        projekti = await saveAndLoadProjekti(projekti, "having only projektipaallikko", onlyProjektiPaallikko);
+        // Remove omistaja and save
+        projekti = await saveAndLoadProjekti(projekti, "having only projektipaallikko", [
+          {
+            rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
+            kayttajatunnus: "A123",
+            puhelinnumero: "11",
+          },
+        ]);
 
         // Add omistaja back and examine the results
         projekti = await saveAndLoadProjekti(
