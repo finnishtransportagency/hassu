@@ -154,7 +154,7 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
   }, [projekti, reset]);
 
   const kayttajaNimi = (kayttaja: Kayttaja | null | undefined) =>
-    (kayttaja && `${kayttaja.sukuNimi}, ${kayttaja.etuNimi}`) || "-";
+    (kayttaja && `${kayttaja.sukuNimi}, ${kayttaja.etuNimi}`) || "";
 
   const { projektiPaallikot, muutHenkilot } = fields?.reduce<{
     projektiPaallikot: FieldArrayWithId<FormValues, "kayttoOikeudet", "id">[];
@@ -318,27 +318,23 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
               )}
               <div>
                 <h5>Muut henkilöt</h5>
-                {muutHenkilot.map((field, i) => {
+                {muutHenkilot.map((user, i) => {
                   const index = i + projektiPaallikot.length;
                   return (
-                    <div key={field.id} className="flex">
+                    <div key={user.id} className="flex">
                       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-3 even:bg-gray-light">
                         <div className="lg:col-span-4">
                           <Autocomplete
                             label="Nimi"
                             loading={isLoadingKayttajat}
-                            options={
-                              kayttajat?.filter(
-                                ({ uid }) => !kayttoOikeudet.some(({ kayttajatunnus }) => kayttajatunnus === uid)
-                              ) || []
-                            }
+                            options={kayttajat || []}
+                            selectedOption={kayttajat?.find(({ uid }) => uid === user.kayttajatunnus)}
                             getOptionLabel={kayttajaNimi}
                             error={errors.kayttoOikeudet?.[index]?.kayttajatunnus}
                             onSelect={(henkilo) => {
                               setValue(`kayttoOikeudet.${index}.kayttajatunnus`, henkilo?.uid || "", {
                                 shouldValidate: true,
                               });
-                              setValue(`kayttoOikeudet.${index}.puhelinnumero`, henkilo?.puhelinnumero || "");
                             }}
                             disabled={disableFormEdit || formIsSubmitting}
                           />

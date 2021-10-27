@@ -1,5 +1,5 @@
 import FormGroup from "@components/form/FormGroup";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FieldError } from "react-hook-form";
 import useOutsideClickDetection from "../../hooks/useOutsideClickDetection";
 
@@ -16,6 +16,7 @@ interface Props<T> {
   onTextChangeDelay?: number;
   loading?: boolean;
   maxResults?: number;
+  selectedOption?: T;
 }
 
 const Autocomplete = <T extends unknown>({
@@ -23,7 +24,7 @@ const Autocomplete = <T extends unknown>({
   label,
   disabled,
   hideErrorMessage,
-  options,
+  options: propOptions,
   getOptionLabel,
   onSelect,
   clearOnBlur,
@@ -31,60 +32,74 @@ const Autocomplete = <T extends unknown>({
   onTextChangeDelay = 800,
   loading,
   maxResults = 60,
+  selectedOption: value,
 }: Props<T>) => {
   const [textValue, setTextValue] = useState("");
   const [isOnFocus, setIsOnFocus] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<T | null>(null);
+  const [selectedOption, setSelectedOption] = useState<T | null | undefined>(null);
   const [pointedOptionIndex, setPointedOptionIndex] = useState(-1);
   const focus = () => setIsOnFocus(true);
   const blur = () => setIsOnFocus(false);
   const [showOptions, setShowOptions] = useState(false);
   const show = () => setShowOptions(true);
-  const hide = () => {
+  const hide = useCallback(() => {
     setShowOptions(false);
     setPointedOptionIndex(-1);
-  };
+  }, []);
   const wrapperRef = useRef<HTMLDivElement>(null);
   useOutsideClickDetection(wrapperRef, hide);
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
-  const [filteredOptions, setFilteredOptions] = useState<T[]>(options);
+  const [filteredOptions, setFilteredOptions] = useState<T[]>(propOptions);
   const optionsRef = useRef<(HTMLLIElement | null)[]>([]);
   const listRef = useRef<HTMLDivElement>(null);
 
-  const opts = onTextChange ? options : filteredOptions;
+  const options = onTextChange ? propOptions.slice(0, maxResults) : filteredOptions.slice(0, maxResults);
 
   useEffect(() => {
-    optionsRef.current = optionsRef.current.slice(0, opts.length);
-  }, [opts]);
+    optionsRef.current = optionsRef.current.slice(0, options.length);
+  }, [options]);
 
   const inputChanged: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-    const value = event.target.value;
-    setTextValue(value);
+    const inputValue = event.target.value;
+    setTextValue(inputValue);
     if (onTextChange) {
       if (timer) {
         clearTimeout(timer);
       }
       const newTimer = setTimeout(() => {
-        onTextChange(value);
+        onTextChange(inputValue);
       }, onTextChangeDelay);
       setTimer(newTimer);
-    } else {
-      setFilteredOptions(
-        options.filter((option) => getOptionLabel(option).toLowerCase().includes(value.toLowerCase()))
-      );
     }
     show();
     focus();
   };
 
+  useEffect(() => {
+    setFilteredOptions(
+      propOptions.filter((option) => getOptionLabel(option).toLowerCase().includes(textValue.toLowerCase()))
+    );
+  }, [textValue, getOptionLabel, propOptions]);
+
+  const setOptionValue = useCallback(
+    (optionValue: T | null | undefined) => {
+      if (optionValue) {
+        setTextValue(getOptionLabel(optionValue));
+      }
+      setSelectedOption(optionValue);
+      hide();
+    },
+    [hide, getOptionLabel]
+  );
+
   const updateOption = (option: T | null) => {
-    if (option) {
-      setTextValue(getOptionLabel(option));
-    }
-    setSelectedOption(option);
+    setOptionValue(option);
     onSelect?.(option);
-    hide();
   };
+
+  useEffect(() => {
+    setOptionValue(value);
+  }, [value, setOptionValue]);
 
   function scrollIntoViewIfNeeded(child: HTMLElement, parent: HTMLElement) {
     // Where is the parent on page
@@ -143,7 +158,7 @@ const Autocomplete = <T extends unknown>({
                 break;
               case "ArrowDown":
                 event.preventDefault();
-                if (pointedOptionIndex < opts.length - 1) {
+                if (pointedOptionIndex < options.length - 1) {
                   const newIndex = pointedOptionIndex + 1;
                   const child = optionsRef.current[newIndex];
                   const parent = listRef.current;
@@ -155,7 +170,7 @@ const Autocomplete = <T extends unknown>({
                 break;
               case "Enter":
                 event.preventDefault();
-                updateOption(opts[pointedOptionIndex]);
+                updateOption(options[pointedOptionIndex]);
                 break;
             }
           }}
@@ -181,9 +196,9 @@ const Autocomplete = <T extends unknown>({
           <div ref={listRef} className="max-h-96 bg-white absolute overflow-y-auto w-full border shadow-lg z-10">
             {loading ? (
               "LOADING..."
-            ) : opts.length > 0 ? (
+            ) : options.length > 0 ? (
               <ul>
-                {opts.slice(0, maxResults).map((option, index) => (
+                {options.map((option, index) => (
                   <li
                     key={index}
                     ref={(el) => (optionsRef.current[index] = el)}
