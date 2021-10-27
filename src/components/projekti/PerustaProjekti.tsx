@@ -328,7 +328,7 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
                             label="Nimi"
                             loading={isLoadingKayttajat}
                             options={kayttajat || []}
-                            selectedOption={kayttajat?.find(({ uid }) => uid === user.kayttajatunnus)}
+                            selectedOption={kayttajat?.find(({ uid }) => uid === kayttoOikeudet[index].kayttajatunnus)}
                             getOptionLabel={kayttajaNimi}
                             error={errors.kayttoOikeudet?.[index]?.kayttajatunnus}
                             onSelect={(henkilo) => {
