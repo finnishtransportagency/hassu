@@ -147,7 +147,7 @@ export class HassuFrontendStack extends cdk.Stack {
   }
 
   private static createDmzProxyBehavior(dmzProxyEndpoint: string, frontendRequestFunction?: cloudfront.Function) {
-    let dmzBehavior: BehaviorOptions = {
+    const dmzBehavior: BehaviorOptions = {
       compress: true,
       origin: new HttpOrigin(dmzProxyEndpoint, {
         originSslProtocols: [
