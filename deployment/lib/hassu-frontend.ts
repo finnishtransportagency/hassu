@@ -47,11 +47,15 @@ export class HassuFrontendStack extends cdk.Stack {
       config.dmzProxyEndpoint,
       frontendRequestFunction
     );
+    const dmzProxyBehaviorWithoutLambda = HassuFrontendStack.createDmzProxyBehavior(
+      config.dmzProxyEndpoint
+    );
     const s3ApplicationOrigin = this.createS3ApplicationOrigin(config.appBucketName);
     const distributionProperties = HassuFrontendStack.createDistributionProperties(
       s3ApplicationOrigin,
       dmzProxyBehavior,
-      frontendRequestFunction
+      dmzProxyBehaviorWithoutLambda,
+      frontendRequestFunction,
     );
     this.addSSLCertificateToCloudfront(config, distributionProperties);
     this.createDistribution(distributionProperties);
@@ -86,6 +90,7 @@ export class HassuFrontendStack extends cdk.Stack {
   private static createDistributionProperties(
     s3ApplicationOrigin: S3Origin,
     dmzProxyBehavior: BehaviorOptions,
+    dmzProxyBehaviorWithoutLambda: BehaviorOptions,
     frontendRequestFunction: cloudfront.Function
   ) {
     const distributionProps: DistributionProps = {
@@ -109,6 +114,7 @@ export class HassuFrontendStack extends cdk.Stack {
         "/graphql": dmzProxyBehavior,
         "/yllapito/graphql": dmzProxyBehavior,
         "/yllapito/kirjaudu": dmzProxyBehavior,
+        "/keycloak/*": dmzProxyBehaviorWithoutLambda
       },
     };
     return distributionProps;
@@ -140,8 +146,8 @@ export class HassuFrontendStack extends cdk.Stack {
     });
   }
 
-  private static createDmzProxyBehavior(dmzProxyEndpoint: string, frontendRequestFunction: cloudfront.Function) {
-    const dmzBehavior: BehaviorOptions = {
+  private static createDmzProxyBehavior(dmzProxyEndpoint: string, frontendRequestFunction?: cloudfront.Function) {
+    let dmzBehavior: BehaviorOptions = {
       compress: true,
       origin: new HttpOrigin(dmzProxyEndpoint, {
         originSslProtocols: [
@@ -155,13 +161,9 @@ export class HassuFrontendStack extends cdk.Stack {
       originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
       allowedMethods: AllowedMethods.ALLOW_ALL,
       viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-      functionAssociations: [
-        {
-          function: frontendRequestFunction,
-          eventType: FunctionEventType.VIEWER_REQUEST,
-        },
-      ],
+      functionAssociations: frontendRequestFunction ? [{ function: frontendRequestFunction, eventType: FunctionEventType.VIEWER_REQUEST}] : [],
     };
+
     return dmzBehavior;
   }
 
