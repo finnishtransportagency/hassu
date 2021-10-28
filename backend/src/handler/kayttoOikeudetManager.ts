@@ -2,7 +2,7 @@ import { DBVaylaUser } from "../database/model/projekti";
 import { ProjektiKayttaja, ProjektiKayttajaInput, ProjektiRooli } from "../../../common/graphql/apiModel";
 import { personSearch, SearchMode } from "../personSearch/personSearchClient";
 import * as log from "loglevel";
-import * as _ from "lodash";
+import differenceWith from "lodash/differenceWith";
 
 export class KayttoOikeudetManager {
   private users: DBVaylaUser[];
@@ -43,7 +43,7 @@ export class KayttoOikeudetManager {
     }, []);
 
     // Add new users
-    const newUsers = _.differenceWith(changes, resultUsers, (u1, u2) => u1.kayttajatunnus === u2.kayttajatunnus);
+    const newUsers = differenceWith(changes, resultUsers, (u1, u2) => u1.kayttajatunnus === u2.kayttajatunnus);
     await Promise.all(
       newUsers.map(async (newUser) => {
         const userToAdd = {

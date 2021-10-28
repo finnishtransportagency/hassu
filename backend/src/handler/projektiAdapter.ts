@@ -1,10 +1,12 @@
 import { DBProjekti } from "../database/model/projekti";
 import * as API from "../../../common/graphql/apiModel";
-import * as _ from "lodash";
+import pickBy from "lodash/pickBy";
+import identity from "lodash/identity";
+import mergeWith from "lodash/mergeWith";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 
 function removeUndefinedFields(object: any) {
-  return _.pickBy(object, _.identity);
+  return pickBy(object, identity);
 }
 
 export class ProjektiAdapter {
@@ -24,7 +26,7 @@ export class ProjektiAdapter {
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet);
     await kayttoOikeudetManager.applyChanges(kayttoOikeudet);
     return removeUndefinedFields(
-      _.mergeWith(
+      mergeWith(
         {},
         {
           oid,

@@ -17,8 +17,9 @@ import {
 } from "./fixture/users";
 import { Projekti, ProjektiKayttajaInput, ProjektiRooli } from "../../common/graphql/apiModel";
 import { DBProjekti } from "../src/database/model/projekti";
-import * as _ from "lodash";
 import * as log from "loglevel";
+import cloneDeep from "lodash/cloneDeep";
+import mergeWith from "lodash/mergeWith";
 
 const { expect } = require("chai");
 
@@ -60,7 +61,7 @@ describe("apiHandler", () => {
       loadVelhoProjektiByOidStub.callsFake(
         () =>
           ({
-            projekti: _.cloneDeep(fixture.velhoprojekti1),
+            projekti: cloneDeep(fixture.velhoprojekti1),
             vastuuhenkilo: pekkaProjariProjektiKayttaja.email,
             kayttoOikeudet: [],
           } as { projekti: DBProjekti; vastuuhenkilo: string })
@@ -114,7 +115,7 @@ describe("apiHandler", () => {
           });
           saveProjektiStub.callsFake(async (dbProjekti: DBProjekti) => {
             log.info(mockedDatabaseProjekti);
-            mockedDatabaseProjekti = _.mergeWith(mockedDatabaseProjekti, dbProjekti);
+            mockedDatabaseProjekti = mergeWith(mockedDatabaseProjekti, dbProjekti);
             if (dbProjekti.kayttoOikeudet) {
               // @ts-ignore
               mockedDatabaseProjekti.kayttoOikeudet = dbProjekti.kayttoOikeudet;
