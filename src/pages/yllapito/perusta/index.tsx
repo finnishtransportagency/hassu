@@ -101,41 +101,28 @@ export default function Perusta() {
               <label className="font-bold text-gray">Asiatunnus</label>
             </div>
             <div className="md:col-span-4 xl:col-span-3">
-              <input
-                type="text"
-                className="border rounded w-full py-1 px-2 focus:outline-none focus:shadow-outline disabled:opacity-50"
-                disabled
-              />
+              <input type="text" disabled />
             </div>
             <div className="md:col-span-4 xl:col-span-3 md:col-start-1 xl:col-start-1 my-auto">
               <label className="font-bold">Projektin nimi</label>
             </div>
             <div className="md:col-span-4 xl:col-span-3">
-              <input
-                type="text"
-                className="border rounded w-full py-1 px-2 focus:outline-none focus:shadow-outline"
-                {...register("name")}
-              />
+              <input type="text" {...register("name")} />
             </div>
             <div className="md:col-span-2">
-              <button
-                className="px-3 py-1 rounded-3xl border-transparent rounded text-base font-normal bg-primary-dark text-white uppercase disabled:opacity-50 disabled:cursor-default"
-                disabled={isLoading}
-              >
+              <button className="btn-primary" disabled={isLoading}>
                 Haku
               </button>
             </div>
           </div>
         </form>
-        {errors.name?.message && (
-          <div className="bg-warmWhite border border-secondary-red py-2 px-3 w-full">{errors.name?.message}</div>
-        )}
+        {errors.name?.message && <div className="alert-error">{errors.name?.message}</div>}
       </section>
       <hr />
       {resultSectionVisible && (
         <section className="pt-3">
           <h2>Hakutulokset</h2>
-          <div className="bg-secondary-turquoise bg-opacity-25 border border-primary py-2 px-3 w-full mb-4">
+          <div className="alert-info mb-4">
             Ohjeet
             <div>
               <ul className="list-disc list-inside">
@@ -151,7 +138,11 @@ export default function Perusta() {
             </div>
           </div>
           {(Array.isArray(hakuTulos) && hakuTulos.length > 0) || isLoading ? (
-            <ProjektiTaulu projektit={hakuTulos || []} isLoading={isLoading} />
+            <ProjektiTaulu
+              projektit={hakuTulos || []}
+              isLoading={isLoading}
+              projektiLinkki={(pid) => `/yllapito/projekti/${pid}`}
+            />
           ) : (
             !isLoading && (
               <div>

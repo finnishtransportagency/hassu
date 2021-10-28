@@ -53,13 +53,13 @@ export class Header extends React.Component<Props, SuunnitelmaListState> {
         style={{ top: `${this.props.top}px` }}
       >
         <div>
-          <div className="sticky flex justify-between items-center border-b-4 border-warmWhite py-4 md:justify-start md:space-x-1">
+          <div className="sticky flex justify-between items-center border-b-4 border-gray-light py-4 md:justify-start md:space-x-1">
             {/* <Image src="/vayla-600px.jpg" alt="Väylä" width="150" height="150" /> */}
             {/* <Image src="/ely-400px.png" alt="ELY" width="150" height="150" /> */}
             <div className="mr-2 my-2 md:hidden">
               <button
                 type="button"
-                className="bg-white rounded-md p-4 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset"
+                className="bg-white rounded-md p-4 inline-flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-inset"
                 aria-expanded="false"
               >
                 <span className="sr-only">Open menu</span>
@@ -76,12 +76,9 @@ export class Header extends React.Component<Props, SuunnitelmaListState> {
               </button>
             </div>
 
-            <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0 font-semibold">
-              {loginState || "ETUNIMI_SUKUNIMI"}
-              <a
-                href="#"
-                className="ml-8 items-center px-6 py-2 rounded-3xl border-transparent rounded text-base font-normal bg-primary-dark text-white uppercase"
-              >
+            <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
+              <span>{loginState || ""}</span>
+              <a href="#" className="ml-8 btn-primary">
                 Poistu Palvelusta
               </a>
             </div>

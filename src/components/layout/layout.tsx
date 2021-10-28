@@ -1,15 +1,15 @@
-import React, { useState, useEffect, ReactElement } from "react";
+import React, { useState, useEffect, ReactElement, ReactNode } from "react";
 import Breadcrumbs, { RouteLabels } from "./Breadcrumbs";
 import { Header } from "./header";
 import { Footer } from "./footer";
 
 interface Props {
-  children: JSX.Element;
+  children: ReactNode;
   routeLabels: RouteLabels;
 }
 
 export default function Layout({ children, routeLabels }: Props): ReactElement {
-  const headerOffset = 184;
+  const headerOffset = 70;
   const [toTopEnabled, setToTopEnabled] = useState(false);
 
   useEffect(() => {

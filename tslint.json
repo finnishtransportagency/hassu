@@ -1,13 +1,12 @@
 {
-  "extends": [
-    "tslint:recommended",
-    "tslint-config-prettier"
-  ],
+  "extends": ["tslint:recommended", "tslint-config-prettier"],
   "rules": {
     "no-var-requires": false,
     "object-literal-sort-keys": false,
     "interface-name": false,
-    "curly": true
+    "curly": true,
+    "no-unused-variable": true,
+    "no-unused-imports": true
   },
   "jsRules": true,
   "linterOptions": {

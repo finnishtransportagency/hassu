@@ -28,7 +28,6 @@ Array [
           className="md:col-span-4 xl:col-span-3"
         >
           <input
-            className="border rounded w-full py-1 px-2 focus:outline-none focus:shadow-outline disabled:opacity-50"
             disabled={true}
             type="text"
           />
@@ -46,7 +45,6 @@ Array [
           className="md:col-span-4 xl:col-span-3"
         >
           <input
-            className="border rounded w-full py-1 px-2 focus:outline-none focus:shadow-outline"
             name="name"
             onBlur={[Function]}
             onChange={[Function]}
@@ -57,7 +55,7 @@ Array [
           className="md:col-span-2"
         >
           <button
-            className="px-3 py-1 rounded-3xl border-transparent rounded text-base font-normal bg-primary-dark text-white uppercase disabled:opacity-50 disabled:cursor-default"
+            className="btn-primary"
             disabled={false}
           >
             Haku
@@ -74,7 +72,7 @@ Array [
       Hakutulokset
     </h2>
     <div
-      className="bg-secondary-turquoise bg-opacity-25 border border-primary py-2 px-3 w-full mb-4"
+      className="alert-info mb-4"
     >
       Ohjeet
       <div>
@@ -109,6 +107,9 @@ Array [
       <tbody>
         <tr
           className="project-row"
+          href="/yllapito/projekti/1234"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
         >
           <td
             className="sm:w-1/4"

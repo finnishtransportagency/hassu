@@ -1,3 +1,5 @@
+const defaultTheme = require("tailwindcss/defaultTheme");
+
 module.exports = {
   purge: ["./src/pages/**/*.{js,ts,jsx,tsx}", "./src/components/**/*.{js,ts,jsx,tsx}"],
   darkMode: false, // or 'media' or 'class'
@@ -5,7 +7,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["'Exo 2'"],
+        sans: ["'Exo 2'", ...defaultTheme.fontFamily.sans],
       },
       backgroundImage: {
         "breadcrumb-arrow": "url('/breadcrumb-arrow.svg')",
@@ -39,10 +41,13 @@ module.exports = {
         magenta: "#e50083",
       },
       black: "#000000",
-      darkGray: "#333333",
-      gray: "#999999",
-      warmWhite: "#F8F8F8",
+      gray: {
+        dark: "#333333",
+        DEFAULT: "#999999",
+        light: "#F8F8F8",
+      },
       white: "#FFFFFF",
+      transparent: "transparent",
     },
   },
   variants: {

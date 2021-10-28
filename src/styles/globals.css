@@ -3,12 +3,29 @@
 @tailwind utilities;
 
 @layer base {
+  body hr {
+    @apply border-gray;
+  }
+  body :is(input[type="text"], input[type="password"], input[type="number"], textarea, select) {
+    @apply border rounded w-full py-1 px-2 disabled:bg-gray focus:outline-none;
+  }
+  body :is(input[type="text"], input[type="password"], input[type="number"], textarea, select):not(.read-only) {
+    @apply focus:outline-none focus:ring-2;
+  }
+  body :is(input[type="text"], input[type="password"], input[type="number"], textarea, select).read-only {
+    @apply bg-gray cursor-default;
+  }
+  body :is(input[type="text"], input[type="password"], input[type="number"], textarea, select):not(.error, .read-only) {
+    @apply focus:ring-primary-light focus:border-primary-light;
+  }
+  body :is(input[type="text"], input[type="password"], input[type="number"], textarea, select).error {
+    @apply border-secondary-red focus:ring-secondary-red focus:border-secondary-red;
+  }
+  body select {
+    @apply appearance-none cursor-pointer disabled:cursor-default disabled:opacity-100;
+  }
   html {
     scroll-behavior: smooth;
-  }
-  @font-face {
-    font-family: "Exo 2";
-    src: url("/fonts/Exo2-VariableFont_wght.ttf") format("truetype");
   }
   body :is(h1, h2, h3, h4, h5, h6) {
     @apply font-bold;
@@ -17,7 +34,7 @@
     @apply mb-3;
   }
   body h1 {
-    @apply text-4xl;
+    @apply text-3xl;
   }
   body h2 {
     @apply text-2xl;
@@ -25,10 +42,91 @@
   body h3 {
     @apply text-xl;
   }
+  body h4 {
+    @apply text-lg;
+  }
   body section {
     @apply mb-2;
   }
   body a {
     @apply text-primary;
+  }
+  @font-face {
+    font-family: "Exo 2";
+    src: url("/fonts/Exo2/Exo2-Thin.ttf") format("truetype");
+    font-weight: 100;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "Exo 2";
+    src: url("/fonts/Exo2/Exo2-ExtraLight.ttf") format("truetype");
+    font-weight: 200;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "Exo 2";
+    src: url("/fonts/Exo2/Exo2-Light.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "Exo 2";
+    src: url("/fonts/Exo2/Exo2-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "Exo 2";
+    src: url("/fonts/Exo2/Exo2-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "Exo 2";
+    src: url("/fonts/Exo2/Exo2-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "Exo 2";
+    src: url("/fonts/Exo2/Exo2-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "Exo 2";
+    src: url("/fonts/Exo2/Exo2-ExtraBold.ttf") format("truetype");
+    font-weight: 800;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "Exo 2";
+    src: url("/fonts/Exo2/Exo2-Black.ttf") format("truetype");
+    font-weight: 900;
+    font-style: normal;
+  }
+}
+
+@layer components {
+  .select-wrapper {
+    @apply relative;
+  }
+  .select-wrapper::after {
+    @apply absolute content-["V"] inset-y-0 right-0 flex items-center px-2 text-primary-dark pointer-events-none;
+  }
+  .btn {
+    @apply uppercase py-1 px-4 shadow-lg rounded-full text-primary-dark border border-primary-dark hover:bg-primary-dark hover:text-white transition disabled:opacity-50 disabled:cursor-default;
+  }
+  .btn-primary {
+    @apply btn bg-primary-dark text-white hover:bg-white hover:text-primary-dark;
+  }
+  .alert {
+    @apply border py-2 px-3 bg-gray-light border-gray;
+  }
+  .alert-error {
+    @apply alert bg-white border-secondary-magenta;
+  }
+  .alert-info {
+    @apply alert bg-white border-primary-light;
   }
 }

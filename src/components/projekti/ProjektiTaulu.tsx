@@ -1,13 +1,15 @@
 import { VelhoHakuTulos } from "@services/api";
 import React, { ReactElement } from "react";
-import styles from "@styles/ProjektiTaulu.module.css";
+import styles from "@styles/projekti/ProjektiTaulu.module.css";
+import Link from "next/link";
 
 interface Props {
   projektit: VelhoHakuTulos[];
   isLoading?: boolean;
+  projektiLinkki?: (pid: string) => string;
 }
 
-export default function ProjektiTaulu({ projektit, isLoading }: Props): ReactElement {
+export default function ProjektiTaulu({ projektit, isLoading, projektiLinkki }: Props): ReactElement {
   return (
     <table className={styles["project-table"]}>
       <thead>
@@ -32,19 +34,35 @@ export default function ProjektiTaulu({ projektit, isLoading }: Props): ReactEle
                 </td>
               </tr>
             ))
-          : projektit.map(({ oid, nimi, tyyppi }) => (
-              <tr key={oid} className={styles["project-row"]}>
-                <td className="sm:w-1/4" data-label="Asiatunnus">
-                  {oid}
-                </td>
-                <td className="sm:w-1/2" data-label="Nimi">
-                  {nimi}
-                </td>
-                <td className="sm:w-1/4" data-label="Tyyppi">
-                  {tyyppi}
-                </td>
-              </tr>
-            ))}
+          : projektit.map(({ oid, nimi, tyyppi }) =>
+              projektiLinkki ? (
+                <Link key={oid} passHref href={projektiLinkki(oid)}>
+                  <tr className={styles["project-row"]}>
+                    <td className="sm:w-1/4" data-label="Asiatunnus">
+                      {oid}
+                    </td>
+                    <td className="sm:w-1/2" data-label="Nimi">
+                      {nimi}
+                    </td>
+                    <td className="sm:w-1/4" data-label="Tyyppi">
+                      {tyyppi}
+                    </td>
+                  </tr>
+                </Link>
+              ) : (
+                <tr key={oid} className={styles["project-row"]}>
+                  <td className="sm:w-1/4" data-label="Asiatunnus">
+                    {oid}
+                  </td>
+                  <td className="sm:w-1/2" data-label="Nimi">
+                    {nimi}
+                  </td>
+                  <td className="sm:w-1/4" data-label="Tyyppi">
+                    {tyyppi}
+                  </td>
+                </tr>
+              )
+            )}
       </tbody>
     </table>
   );
