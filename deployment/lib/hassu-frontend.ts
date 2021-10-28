@@ -43,18 +43,18 @@ export class HassuFrontendStack extends cdk.Stack {
       config.basicAuthenticationUsername,
       config.basicAuthenticationPassword
     );
-    const dmzProxyBehavior = HassuFrontendStack.createDmzProxyBehavior(
+    const dmzProxyBehaviorWithLambda = HassuFrontendStack.createDmzProxyBehavior(
       config.dmzProxyEndpoint,
       frontendRequestFunction
     );
-    const dmzProxyBehaviorWithoutLambda = HassuFrontendStack.createDmzProxyBehavior(
+    const dmzProxyBehavior = HassuFrontendStack.createDmzProxyBehavior(
       config.dmzProxyEndpoint
     );
     const s3ApplicationOrigin = this.createS3ApplicationOrigin(config.appBucketName);
     const distributionProperties = HassuFrontendStack.createDistributionProperties(
       s3ApplicationOrigin,
+      dmzProxyBehaviorWithLambda,
       dmzProxyBehavior,
-      dmzProxyBehaviorWithoutLambda,
       frontendRequestFunction,
     );
     this.addSSLCertificateToCloudfront(config, distributionProperties);
@@ -89,8 +89,8 @@ export class HassuFrontendStack extends cdk.Stack {
 
   private static createDistributionProperties(
     s3ApplicationOrigin: S3Origin,
+    dmzProxyBehaviorWithLambda: BehaviorOptions,
     dmzProxyBehavior: BehaviorOptions,
-    dmzProxyBehaviorWithoutLambda: BehaviorOptions,
     frontendRequestFunction: cloudfront.Function
   ) {
     const distributionProps: DistributionProps = {
@@ -110,11 +110,11 @@ export class HassuFrontendStack extends cdk.Stack {
         ],
       },
       additionalBehaviors: {
-        "/oauth2/*": dmzProxyBehavior,
-        "/graphql": dmzProxyBehavior,
-        "/yllapito/graphql": dmzProxyBehavior,
-        "/yllapito/kirjaudu": dmzProxyBehavior,
-        "/keycloak/*": dmzProxyBehaviorWithoutLambda
+        "/oauth2/*": dmzProxyBehaviorWithLambda,
+        "/graphql": dmzProxyBehaviorWithLambda,
+        "/yllapito/graphql": dmzProxyBehaviorWithLambda,
+        "/yllapito/kirjaudu": dmzProxyBehaviorWithLambda,
+        "/keycloak/*": dmzProxyBehavior
       },
     };
     return distributionProps;
@@ -161,7 +161,7 @@ export class HassuFrontendStack extends cdk.Stack {
       originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
       allowedMethods: AllowedMethods.ALLOW_ALL,
       viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-      functionAssociations: frontendRequestFunction ? [{ function: frontendRequestFunction, eventType: FunctionEventType.VIEWER_REQUEST}] : [],
+      functionAssociations: frontendRequestFunction ? [{ function: frontendRequestFunction, eventType: FunctionEventType.VIEWER_REQUEST}] : undefined,
     };
 
     return dmzBehavior;
