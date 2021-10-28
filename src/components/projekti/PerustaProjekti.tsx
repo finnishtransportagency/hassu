@@ -12,18 +12,25 @@ import Textarea from "@components/form/Textarea";
 import TextInput from "@components/form/TextInput";
 import Select from "@components/form/Select";
 import Autocomplete from "@components/form/Autocomplete";
-import { api, Kayttaja, ProjektiRooli, ProjektiKayttaja, apiConfig, Projekti } from "@services/api";
+import {
+  api,
+  Kayttaja,
+  TallennaProjektiInput,
+  ProjektiRooli,
+  apiConfig,
+  Projekti,
+  ProjektiKayttajaInput,
+} from "@services/api";
 import log from "loglevel";
 
-type PartialProjektiKayttaja = Pick<ProjektiKayttaja, "kayttajatunnus" | "puhelinnumero" | "rooli">;
+// Extend TallennaProjektiInput by making all fields nonnullable and required
+type FormValues = Required<
+  {
+    [K in keyof TallennaProjektiInput]: NonNullable<TallennaProjektiInput[K]>;
+  }
+>;
 
-interface FormValues {
-  oid: string;
-  kuvaus: string;
-  kayttoOikeudet: PartialProjektiKayttaja[];
-}
-
-const defaultKayttaja: PartialProjektiKayttaja = {
+const defaultKayttaja: ProjektiKayttajaInput = {
   // @ts-ignore By default rooli should be 'undefined'
   rooli: "",
   puhelinnumero: "",
@@ -75,8 +82,8 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
             "uniikki-kayttajatunnus",
             "Käyttäjä voi olla vain yhteen kertaan käyttöoikeuslistalla",
             function (current) {
-              const currentKayttaja = current as PartialProjektiKayttaja;
-              const kayttajaList = this.parent as PartialProjektiKayttaja[];
+              const currentKayttaja = current as ProjektiKayttajaInput;
+              const kayttajaList = this.parent as ProjektiKayttajaInput[];
               const muutKayttajat = kayttajaList.filter((kayttaja) => kayttaja !== currentKayttaja);
 
               const isDuplicate = muutKayttajat.some(
@@ -88,19 +95,18 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
       )
       .test("must-contain-projektipaallikko", "Projektille täytyy määrittää projektipäällikkö", (list) => {
         const listContainsProjektiPaallikko =
-          !!list && (list as PartialProjektiKayttaja[]).some(({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO);
+          !!list && (list as ProjektiKayttajaInput[]).some(({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO);
         return listContainsProjektiPaallikko;
       })
       .test("singular-projektipaallikko", "Projektilla voi olla vain yksi projektipäällikkö", (list) => {
         const listContainsProjektiPaallikko =
           !!list &&
-          (list as PartialProjektiKayttaja[]).filter(({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO).length <
-            2;
+          (list as ProjektiKayttajaInput[]).filter(({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO).length < 2;
         return listContainsProjektiPaallikko;
       })
       .test("must-contain-omistaja", "Projektille täytyy määrittää omistaja", (list) => {
         const listContainsOmistaja =
-          !!list && (list as PartialProjektiKayttaja[]).some(({ rooli }) => rooli === ProjektiRooli.OMISTAJA);
+          !!list && (list as ProjektiKayttajaInput[]).some(({ rooli }) => rooli === ProjektiRooli.OMISTAJA);
         return listContainsOmistaja;
       }),
   });
@@ -146,7 +152,7 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
       kayttoOikeudet:
         projekti?.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, rooli }) => ({
           kayttajatunnus,
-          puhelinnumero,
+          puhelinnumero: puhelinnumero || "",
           rooli,
         })) || [],
     };
