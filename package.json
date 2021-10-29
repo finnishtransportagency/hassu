@@ -104,6 +104,7 @@
     "lint:prettier": "prettier --check \"backend/**/*.ts\" \"src/**/*.ts\"",
     "lint:tslint": "tslint --project tsconfig.json",
     "lint:app": "next lint",
+    "lint:tsc": "tsc --project tsconfig.json",
     "lint": "npm-run-all lint:*",
     "localstack": "docker-compose -f deployment/localstack/docker-compose.yml up -d && cross-env ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" cdklocal bootstrap && cross-env ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" cdklocal deploy database",
     "localstack:stop": "docker-compose -f deployment/localstack/docker-compose.yml down",

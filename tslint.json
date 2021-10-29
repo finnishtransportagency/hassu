@@ -4,9 +4,7 @@
     "no-var-requires": false,
     "object-literal-sort-keys": false,
     "interface-name": false,
-    "curly": true,
-    "no-unused-variable": true,
-    "no-unused-imports": true
+    "curly": true
   },
   "jsRules": true,
   "linterOptions": {
