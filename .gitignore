@@ -44,3 +44,4 @@ tools/velho/buildSrc/build
 .nyc_output
 
 next-env.d.ts
+storybook-static
