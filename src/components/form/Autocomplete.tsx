@@ -1,22 +1,22 @@
-import FormGroup from "@components/form/FormGroup";
+import FormGroup from "./FormGroup";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FieldError } from "react-hook-form";
 import useOutsideClickDetection from "../../hooks/useOutsideClickDetection";
+import usePrevious from "../../hooks/usePrevious";
 
-interface Props<T> {
+export interface Props<T> {
   error?: FieldError;
   label?: string;
   disabled?: boolean;
   hideErrorMessage?: boolean;
-  options: T[];
+  options: T[] | ((query: string) => Promise<T[]> | T[]);
   getOptionLabel: (option: T) => string;
   onSelect?: (option: T | null) => void;
   clearOnBlur?: boolean;
-  onTextChange?: (query: string) => void;
-  onTextChangeDelay?: number;
+  optionFetchDelay?: number;
   loading?: boolean;
   maxResults?: number;
-  selectedOption?: T;
+  initialOption?: T;
 }
 
 const Autocomplete = <T extends unknown>({
@@ -28,58 +28,71 @@ const Autocomplete = <T extends unknown>({
   getOptionLabel,
   onSelect,
   clearOnBlur,
-  onTextChange,
-  onTextChangeDelay = 800,
+  optionFetchDelay: onTextChangeDelay = 800,
   loading,
   maxResults = 60,
-  selectedOption: value,
+  initialOption,
 }: Props<T>) => {
   const [textValue, setTextValue] = useState("");
   const [isOnFocus, setIsOnFocus] = useState(false);
   const [selectedOption, setSelectedOption] = useState<T | null | undefined>(null);
-  const [pointedOptionIndex, setPointedOptionIndex] = useState(-1);
+  const [currentIndex, setCurrentIndex] = useState(-1);
+
   const focus = () => setIsOnFocus(true);
   const blur = () => setIsOnFocus(false);
   const [showOptions, setShowOptions] = useState(false);
   const show = () => setShowOptions(true);
   const hide = useCallback(() => {
     setShowOptions(false);
-    setPointedOptionIndex(-1);
+    setCurrentIndex(-1);
   }, []);
   const wrapperRef = useRef<HTMLDivElement>(null);
   useOutsideClickDetection(wrapperRef, hide);
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
-  const [filteredOptions, setFilteredOptions] = useState<T[]>(propOptions);
+  const prevTimer = usePrevious(timer);
+  const [filteredOptions, setFilteredOptions] = useState<T[]>(Array.isArray(propOptions) ? propOptions : []);
   const optionsRef = useRef<(HTMLLIElement | null)[]>([]);
   const listRef = useRef<HTMLDivElement>(null);
 
-  const options = onTextChange ? propOptions.slice(0, maxResults) : filteredOptions.slice(0, maxResults);
+  const slicedOptions = filteredOptions.slice(0, maxResults);
+
+  const getNextIndex = () => (currentIndex < slicedOptions.length - 1 ? currentIndex + 1 : 0);
+  const getPrevIndex = () => (currentIndex > 0 ? currentIndex - 1 : slicedOptions.length - 1);
 
   useEffect(() => {
-    optionsRef.current = optionsRef.current.slice(0, options.length);
-  }, [options]);
+    optionsRef.current = optionsRef.current.slice(0, slicedOptions.length);
+  }, [slicedOptions]);
 
   const inputChanged: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     const inputValue = event.target.value;
     setTextValue(inputValue);
-    if (onTextChange) {
-      if (timer) {
-        clearTimeout(timer);
-      }
-      const newTimer = setTimeout(() => {
-        onTextChange(inputValue);
-      }, onTextChangeDelay);
-      setTimer(newTimer);
-    }
     show();
     focus();
   };
 
   useEffect(() => {
-    setFilteredOptions(
-      propOptions.filter((option) => getOptionLabel(option).toLowerCase().includes(textValue.toLowerCase()))
-    );
-  }, [textValue, getOptionLabel, propOptions]);
+    // Whenever new timer is set as timer
+    // clear the older timer to prevent it from triggering
+    if (prevTimer && prevTimer !== timer) {
+      clearTimeout(prevTimer);
+    }
+  }, [prevTimer, timer]);
+
+  useEffect(() => {
+    const fetchOptions = async (text: string, fetcher: (text: string) => Promise<T[]> | T[]) => {
+      const newTimer = setTimeout(async () => {
+        setFilteredOptions(await fetcher(text));
+      }, onTextChangeDelay);
+      setTimer(newTimer);
+    };
+    if (Array.isArray(propOptions)) {
+      setFilteredOptions(
+        propOptions.filter((option) => getOptionLabel(option).toLowerCase().includes(textValue.toLowerCase()))
+      );
+    } else {
+      fetchOptions(textValue, propOptions);
+    }
+  }, [textValue, getOptionLabel, propOptions, onTextChangeDelay]);
 
   const setOptionValue = useCallback(
     (optionValue: T | null | undefined) => {
@@ -93,13 +106,24 @@ const Autocomplete = <T extends unknown>({
   );
 
   const updateOption = (option: T | null) => {
+    if (selectedOption !== option) {
+      onSelect?.(option);
+    }
     setOptionValue(option);
-    onSelect?.(option);
   };
 
   useEffect(() => {
-    setOptionValue(value);
-  }, [value, setOptionValue]);
+    setOptionValue(initialOption);
+  }, [initialOption, setOptionValue]);
+
+  const changeIndex = (index: number) => {
+    const child = optionsRef.current[index];
+    const parent = listRef.current;
+    if (child && parent) {
+      scrollIntoViewIfNeeded(child, parent);
+    }
+    setCurrentIndex(index);
+  };
 
   function scrollIntoViewIfNeeded(child: HTMLElement, parent: HTMLElement) {
     // Where is the parent on page
@@ -113,15 +137,18 @@ const Autocomplete = <T extends unknown>({
     // Where is the child
     const childRect = child.getBoundingClientRect();
     // Is the child viewable?
-    const isViewable = childRect.top >= parentRect.top && childRect.top <= parentRect.top + parentViewableArea.height;
+    const isViewable =
+      childRect.top >= parentRect.top && childRect.bottom <= parentRect.top + parentViewableArea.height;
 
     // if you can't see the child try to scroll parent
     if (!isViewable) {
+      const scrollTop = childRect.top - parentRect.top;
+      const scrollBottom = childRect.bottom - parentRect.bottom;
       // scroll by offset relative to parent
-      if (childRect.top >= parentRect.top) {
-        parent.scrollTop = parent.scrollTop + childRect.height;
+      if (Math.abs(scrollTop) < Math.abs(scrollBottom)) {
+        parent.scrollTop += scrollTop;
       } else {
-        parent.scrollTop = parent.scrollTop + childRect.top - parentRect.top;
+        parent.scrollTop += scrollBottom;
       }
     }
   }
@@ -146,31 +173,15 @@ const Autocomplete = <T extends unknown>({
                 break;
               case "ArrowUp":
                 event.preventDefault();
-                if (pointedOptionIndex > 0) {
-                  const newIndex = pointedOptionIndex - 1;
-                  const child = optionsRef.current[newIndex];
-                  const parent = listRef.current;
-                  if (child && parent) {
-                    scrollIntoViewIfNeeded(child, parent);
-                  }
-                  setPointedOptionIndex(newIndex);
-                }
+                changeIndex(getPrevIndex());
                 break;
               case "ArrowDown":
                 event.preventDefault();
-                if (pointedOptionIndex < options.length - 1) {
-                  const newIndex = pointedOptionIndex + 1;
-                  const child = optionsRef.current[newIndex];
-                  const parent = listRef.current;
-                  if (child && parent) {
-                    scrollIntoViewIfNeeded(child, parent);
-                  }
-                  setPointedOptionIndex(newIndex);
-                }
+                changeIndex(getNextIndex());
                 break;
               case "Enter":
                 event.preventDefault();
-                updateOption(options[pointedOptionIndex]);
+                updateOption(slicedOptions[currentIndex]);
                 break;
             }
           }}
@@ -196,13 +207,15 @@ const Autocomplete = <T extends unknown>({
           <div ref={listRef} className="max-h-96 bg-white absolute overflow-y-auto w-full border shadow-lg z-10">
             {loading ? (
               "LOADING..."
-            ) : options.length > 0 ? (
+            ) : slicedOptions.length > 0 ? (
               <ul>
-                {options.map((option, index) => (
+                {slicedOptions.map((option, index) => (
                   <li
                     key={index}
                     ref={(el) => (optionsRef.current[index] = el)}
-                    className={`cursor-default px-2 ${index === pointedOptionIndex ? "bg-primary text-white" : ""}`}
+                    className={`cursor-default px-2 whitespace-nowrap overflow-hidden overflow-ellipsis ${
+                      index === currentIndex ? "bg-primary text-white" : ""
+                    }`}
                     onMouseDown={(event) => {
                       event.preventDefault();
                     }}
@@ -210,7 +223,7 @@ const Autocomplete = <T extends unknown>({
                       updateOption(option);
                     }}
                     onMouseEnter={() => {
-                      setPointedOptionIndex(index);
+                      setCurrentIndex(index);
                     }}
                   >
                     {getOptionLabel(option)}
