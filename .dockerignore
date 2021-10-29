@@ -1,0 +1,4 @@
+tools/velho/buildSrc/build
+tools/velho/buildSrc/.gradle
+tools/velho/build
+tools/velho/.gradle

@@ -37,7 +37,7 @@ export class Config extends Resource {
   public readonly basicAuthenticationUsername: string;
   public readonly basicAuthenticationPassword: string;
   public readonly infraEnvironment: string;
-  public branch?: string;
+  private branch?: string;
   public static readonly tags = { Environment: Config.env, Project: "Hassu" };
 
   private constructor(scope: Construct) {
@@ -103,7 +103,7 @@ export class Config extends Resource {
     return this.getBranch().startsWith("feature");
   }
 
-  private getBranch() {
+  public getBranch() {
     if (!this.branch) {
       throw new Error("branch is not set.");
     }

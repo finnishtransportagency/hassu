@@ -24,16 +24,14 @@ export class HassuPipelineStack extends Stack {
 
   async process() {
     const config = await Config.instance(this);
-    const branch = config.branch;
+    const branch = config.getBranch();
     const env = Config.env;
     const appBucketName = config.appBucketName;
     console.log("Deploying pipeline from branch " + branch + " to enviroment " + env);
 
     if (Config.isPermanentEnvironment()) {
       await this.createPipeline(env, config, [
-        "npm run generate",
         "npm run lint",
-        "aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 283563576583.dkr.ecr.eu-west-1.amazonaws.com",
         "npm run localstack",
         "npm run test",
         "npm run localstack:stop",
@@ -45,9 +43,7 @@ export class HassuPipelineStack extends Stack {
       ]);
     } else {
       await this.createPipeline(env, config, [
-        "npm run generate",
         "npm run lint",
-        "aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 283563576583.dkr.ecr.eu-west-1.amazonaws.com",
         "npm run localstack",
         "npm run test",
         "npm run localstack:stop",
@@ -60,7 +56,8 @@ export class HassuPipelineStack extends Stack {
     let branchOrRef;
     let webhookFilters;
     let reportBuildStatus: boolean;
-    if (config.branch === "main") {
+    const branch = config.getBranch();
+    if (branch === "main") {
       // Github creds only once per account
       new codebuild.GitHubSourceCredentials(this, "CodeBuildGitHubCreds", {
         accessToken: SecretValue.secretsManager("github-token"),
@@ -68,9 +65,13 @@ export class HassuPipelineStack extends Stack {
       branchOrRef = "main";
       reportBuildStatus = false;
       webhookFilters = [codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs("main")];
-    } else {
+    } else if (config.isFeatureBranch() && !config.isDeveloperEnvironment()) {
       webhookFilters = [codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs("feature/*")];
       reportBuildStatus = true;
+    } else {
+      webhookFilters = [codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs(branch)];
+      branchOrRef = branch;
+      reportBuildStatus = false;
     }
     const sourceProps: GitHubSourceProps = {
       owner: "finnishtransportagency",
@@ -90,7 +91,11 @@ export class HassuPipelineStack extends Stack {
             java: "corretto11",
             nodejs: 14,
           },
-          commands: ["npm install -g @aws-amplify/cli", "npm ci"],
+          commands: [
+            "aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 283563576583.dkr.ecr.eu-west-1.amazonaws.com",
+            "npm ci",
+            "npm run dockerized:generate",
+          ],
         },
         build: {
           commands,
