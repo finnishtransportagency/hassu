@@ -1,7 +1,6 @@
 import "@styles/globals.css";
 import Head from "next/head";
 import Layout from "@components/layout/layout";
-import "tailwindcss/tailwind.css";
 
 import log from "loglevel";
 import { AppProps as NextAppProps } from "next/app";
