@@ -31,24 +31,10 @@ export class WafConfig extends cdk.Construct {
           action: { block: {} },
           priority: 1,
           statement: {
-            andStatement: {
-              statements: [
-                {
-                  byteMatchStatement: {
-                    fieldToMatch: { singleHeader: { name: "x-api-key" } },
-                    positionalConstraint: "EXACTLY",
-                    searchString: api.apiKey,
-                    textTransformations: [{ priority: 1, type: "LOWERCASE" }],
-                  },
-                },
-                {
-                  notStatement: {
-                    statement: {
-                      ipSetReferenceStatement: { arn: allowedIPSet.attrArn },
-                    },
-                  },
-                },
-              ],
+            notStatement: {
+              statement: {
+                ipSetReferenceStatement: { arn: allowedIPSet.attrArn },
+              },
             },
           },
           visibilityConfig: {

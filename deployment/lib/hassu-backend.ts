@@ -10,6 +10,7 @@ import * as ddb from "@aws-cdk/aws-dynamodb";
 import { Config } from "./config";
 import { apiConfig, OperationType } from "../../common/abstractApi";
 import { WafConfig } from "./wafConfig";
+import { AuthorizationMode } from "@aws-cdk/aws-appsync/lib/graphqlapi";
 
 export class HassuBackendStack extends cdk.Stack {
   private projektiTable: ddb.Table;
@@ -35,10 +36,29 @@ export class HassuBackendStack extends cdk.Stack {
     new cdk.CfnOutput(this, "AppSyncAPIKey", {
       value: api.apiKey || "",
     });
+    if (config.isDeveloperEnvironment()) {
+      new cdk.CfnOutput(this, "AppSyncAPIURL", {
+        value: api.graphqlUrl || "",
+      });
+    }
   }
 
   private createAPI(config: Config) {
-    const apiKeyExpiration = HassuBackendStack.createApiKeyExpiration();
+    let defaultAuthorization: AuthorizationMode;
+    if (config.isDeveloperEnvironment()) {
+      defaultAuthorization = {
+        authorizationType: appsync.AuthorizationType.IAM,
+      };
+    } else {
+      const apiKeyExpiration = HassuBackendStack.createApiKeyExpiration();
+      defaultAuthorization = {
+        authorizationType: appsync.AuthorizationType.API_KEY,
+        apiKeyConfig: {
+          expires: cdk.Expiration.atDate(apiKeyExpiration),
+        },
+      };
+    }
+
     const api = new appsync.GraphqlApi(this, "Api", {
       name: "hassu-api-" + Config.env,
       schema: appsync.Schema.fromAsset("schema.graphql"),
@@ -46,20 +66,15 @@ export class HassuBackendStack extends cdk.Stack {
         fieldLogLevel: FieldLogLevel.ALL,
         excludeVerboseContent: true,
       },
-      authorizationConfig: {
-        defaultAuthorization: {
-          authorizationType: appsync.AuthorizationType.API_KEY,
-          apiKeyConfig: {
-            expires: cdk.Expiration.atDate(apiKeyExpiration),
-          },
-        },
-      },
+      authorizationConfig: { defaultAuthorization },
       xrayEnabled: true,
     });
-    new WafConfig(this, "Hassu-WAF", {
-      api,
-      allowedAddresses: Fn.split("\n", config.getInfraParameter("WAFAllowedAddresses")),
-    });
+    if (!config.isDeveloperEnvironment()) {
+      new WafConfig(this, "Hassu-WAF", {
+        api,
+        allowedAddresses: Fn.split("\n", config.getInfraParameter("WAFAllowedAddresses")),
+      });
+    }
     return api;
   }
 
@@ -69,7 +84,7 @@ export class HassuBackendStack extends cdk.Stack {
    */
   private static createApiKeyExpiration() {
     const apiKeyExpiration = new Date();
-    // Add 365 days
+    //   Add 365 days
     apiKeyExpiration.setDate(apiKeyExpiration.getDate() + 365);
     // Round down to the first day of month to keep it static in deployments for a month
     apiKeyExpiration.setDate(1);
@@ -78,12 +93,22 @@ export class HassuBackendStack extends cdk.Stack {
   }
 
   private async createBackendLambda(config: Config) {
+    let define;
+    if (config.isDeveloperEnvironment()) {
+      define = {
+        // Replace strings during build time
+        "process.env.USER_IDENTIFIER_FUNCTIONS": JSON.stringify("../../developer/identifyIAMUser"),
+      };
+    }
     return new NodejsFunction(this, "API", {
       runtime: lambda.Runtime.NODEJS_14_X,
       entry: `${__dirname}/../../backend/src/apiHandler.ts`,
       handler: "handleEvent",
       memorySize: 256,
       timeout: Duration.seconds(29),
+      bundling: {
+        define,
+      },
       environment: {
         COGNITO_URL: config.getInfraParameter("CognitoURL"),
         VELHO_AUTH_URL: config.getInfraParameter("VelhoAuthenticationUrl"),

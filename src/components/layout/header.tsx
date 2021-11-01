@@ -24,7 +24,8 @@ export class Header extends React.Component<Props, SuunnitelmaListState> {
     const vaylaUser = await getVaylaUser();
     if (isYllapito()) {
       if (!vaylaUser) {
-        window.location.pathname = "/yllapito/kirjaudu";
+        throw new Error("Unauthorized!");
+        // window.location.pathname = "/yllapito/kirjaudu";
       }
       this.setState({
         kayttaja: vaylaUser,
