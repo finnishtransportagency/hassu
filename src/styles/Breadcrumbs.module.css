@@ -3,7 +3,7 @@
 }
 
 .breadcrumb > li {
-  @apply float-left mr-2 relative;
+  @apply float-left mr-2 relative truncate-ellipsis max-w-xs;
 }
 
 .breadcrumb li + li::before {
