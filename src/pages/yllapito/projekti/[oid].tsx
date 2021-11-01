@@ -1,11 +1,12 @@
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import { api, apiConfig } from "@services/api";
 import useSWR from "swr";
 import PerustaProjekti from "@components/projekti/PerustaProjekti";
 import log from "loglevel";
+import { PageProps } from "@pages/_app";
 
-export default function ProjektiSivu() {
+export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   const router = useRouter();
   const oid = router.query.oid;
   const {
@@ -18,6 +19,20 @@ export default function ProjektiSivu() {
   const reloadProject = () => {
     mutate();
   };
+
+  useEffect(() => {
+    if (router.isReady) {
+      let routeLabel = "";
+      if (projekti?.nimi) {
+        routeLabel = projekti.nimi;
+      } else if (typeof oid === "string") {
+        routeLabel = oid;
+      }
+      if (routeLabel) {
+        setRouteLabels({ "/yllapito/projekti/[oid]": { label: routeLabel } });
+      }
+    }
+  }, [router.isReady, oid, projekti]);
 
   if (isLoadingProjekti) {
     return <p>Ladataan projektia...</p>;
