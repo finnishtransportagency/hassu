@@ -27,7 +27,7 @@ describe("userService", () => {
       "custom:puhelin": "12345678",
       "custom:uid": "A000111",
     });
-    await identifyUser({ "x-iam-accesstoken": "abc.123", "x-iam-data": "" });
+    await identifyUser({ request: { headers: { "x-iam-accesstoken": "abc.123", "x-iam-data": "" } } } as any);
     const user = getVaylaUser();
     expect(user).to.deep.equal(vaylaMatti);
   });

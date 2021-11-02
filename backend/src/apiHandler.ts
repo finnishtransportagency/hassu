@@ -10,7 +10,7 @@ import { listaaVelhoProjektit } from "./handler/listaaVelhoProjektit";
 import { identifyUser } from "./service/userService";
 import { getCurrentUser } from "./handler/getCurrentUser";
 import { listAllUsers } from "./handler/listAllUsers";
-import { listProjektit, loadProjekti, createOrUpdateProjekti } from "./handler/projektiHandler";
+import { createOrUpdateProjekti, listProjektit, loadProjekti } from "./handler/projektiHandler";
 import { apiConfig } from "../../common/abstractApi";
 
 const logLevel = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : "info";
@@ -25,7 +25,7 @@ type AppSyncEventArguments =
 export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArguments>) {
   log.info(JSON.stringify(event.info));
 
-  await identifyUser(event.request?.headers);
+  await identifyUser(event);
 
   switch (event.info.fieldName as any) {
     case apiConfig.listaaProjektit.name:

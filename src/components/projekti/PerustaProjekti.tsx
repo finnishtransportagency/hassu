@@ -177,7 +177,7 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
     { projektiPaallikot: [], muutHenkilot: [] }
   ) || { projektiPaallikot: [], muutHenkilot: [] };
 
-  const haeKayttaja = (uid: string) => kayttajat?.find((kayttaja) => kayttaja.uid === uid);
+  const haeKayttaja = (uid: string) => kayttajat?.find((kayttaja:Kayttaja) => kayttaja.uid === uid);
 
   return (
     <>
@@ -433,6 +433,6 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
   );
 }
 
-async function kayttajatLoader(_: string) {
+async function kayttajatLoader(_: string):Promise<Kayttaja[]> {
   return await api.listUsers();
 }
