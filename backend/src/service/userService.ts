@@ -42,6 +42,7 @@ const identifyUser = async (event: AppSyncResolverEvent<any>) => {
       return;
     }
   }
+  vaylaUser = undefined;
   log.info("Anonymous user");
 };
 

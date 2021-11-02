@@ -17,28 +17,34 @@ const defaultOptions: DefaultOptions = {
 };
 
 export class API extends AbstractApi {
-  private client: ApolloClient<any>;
+  private publicClient: ApolloClient<any>;
+  private authenticatedClient: ApolloClient<any>;
 
-  constructor(link: ApolloLink) {
+  constructor(publicLink: ApolloLink, authenticatedLink: ApolloLink) {
     super();
-    this.client = new ApolloClient({
-      link,
+    this.publicClient = new ApolloClient({
+      link: publicLink,
+      cache: new InMemoryCache(),
+      defaultOptions,
+    });
+    this.authenticatedClient = new ApolloClient({
+      link: authenticatedLink,
       cache: new InMemoryCache(),
       defaultOptions,
     });
   }
 
-  async callGraphQL(operation: OperationConfig, variables: any) {
+  async callGraphQL(client: ApolloClient<any>, operation: OperationConfig, variables: any) {
     switch (operation.operationType) {
       case OperationType.Query:
-        const queryResponse: ApolloQueryResult<any> = await this.client.query({
+        const queryResponse: ApolloQueryResult<any> = await client.query({
           query: gql(operation.graphql),
           variables,
           fetchPolicy: "network-only",
         });
         return queryResponse.data?.[operation.name];
       case OperationType.Mutation:
-        const fetchResponse: FetchResult<any> = await this.client.mutate({
+        const fetchResponse: FetchResult<any> = await client.mutate({
           mutation: gql(operation.graphql),
           variables,
         });
@@ -48,10 +54,10 @@ export class API extends AbstractApi {
   }
 
   async callAPI(operation: OperationConfig, variables?: any): Promise<any> {
-    return await this.callGraphQL(operation, variables);
+    return await this.callGraphQL(this.publicClient, operation, variables);
   }
 
   async callYllapitoAPI(operation: OperationConfig, variables?: any): Promise<any> {
-    return await this.callGraphQL(operation, variables);
+    return await this.callGraphQL(this.authenticatedClient, operation, variables);
   }
 }

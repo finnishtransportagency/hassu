@@ -30,4 +30,4 @@ const link = ApolloLink.from([
   }),
 ]);
 
-export const api = new API(link);
+export const api = new API(link, link);
