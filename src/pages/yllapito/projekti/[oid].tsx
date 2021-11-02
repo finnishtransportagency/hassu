@@ -32,7 +32,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
         setRouteLabels({ "/yllapito/projekti/[oid]": { label: routeLabel } });
       }
     }
-  }, [router.isReady, oid, projekti]);
+  }, [router.isReady, oid, projekti, setRouteLabels]);
 
   if (isLoadingProjekti) {
     return <p>Ladataan projektia...</p>;
