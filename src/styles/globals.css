@@ -129,4 +129,7 @@
   .alert-info {
     @apply alert bg-white border-primary-light;
   }
+  .truncate-ellipsis {
+    @apply overflow-ellipsis whitespace-nowrap overflow-hidden;
+  }
 }

@@ -213,7 +213,7 @@ const Autocomplete = <T extends unknown>({
                   <li
                     key={index}
                     ref={(el) => (optionsRef.current[index] = el)}
-                    className={`cursor-default px-2 whitespace-nowrap overflow-hidden overflow-ellipsis ${
+                    className={`cursor-default px-2 truncate-ellipsis ${
                       index === currentIndex ? "bg-primary text-white" : ""
                     }`}
                     onMouseDown={(event) => {

@@ -19,6 +19,7 @@ const defaultLabels: RouteLabels = {
   "/": { label: "Etusivu" },
   "/yllapito": { label: "Etusivu", hideWhenNotCurrentRoute: true },
   "/yllapito/perusta": { label: "Projektin perustaminen" },
+  "/yllapito/projekti": { label: "Projektit" },
   "/suunnitelma": { label: "Suunnitelmat" },
   "/suunnitelma/[...all]": { label: "Tutki suunnitelmaa" },
   "/_error": { label: "Virhe" },
