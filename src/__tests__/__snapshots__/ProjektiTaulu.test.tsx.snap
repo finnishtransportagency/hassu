@@ -15,6 +15,9 @@ exports[`ProjektiTaulu renders ProjektiTaulu unchanged 1`] = `
       <th>
         Tyyppi
       </th>
+      <th>
+        Projektipäällikkö
+      </th>
     </tr>
   </thead>
   <tbody>
@@ -22,22 +25,28 @@ exports[`ProjektiTaulu renders ProjektiTaulu unchanged 1`] = `
       className="project-row"
     >
       <td
-        className="sm:w-1/4"
+        className="sm:w-2/12"
         data-label="Asiatunnus"
       >
         1234
       </td>
       <td
-        className="sm:w-1/2"
+        className="sm:w-6/12"
         data-label="Nimi"
       >
         Tampereen Tie Projekti
       </td>
       <td
-        className="sm:w-1/4"
+        className="sm:w-2/12"
         data-label="Tyyppi"
       >
         Tie
+      </td>
+      <td
+        className="sm:w-2/12"
+        data-label="Projektipäällikkö"
+      >
+        -
       </td>
     </tr>
   </tbody>

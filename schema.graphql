@@ -59,6 +59,7 @@ type VelhoHakuTulos {
   nimi: String!
   asianumero: String
   tyyppi: String
+  projektiPaallikko: String
 }
 
 type Kayttaja {

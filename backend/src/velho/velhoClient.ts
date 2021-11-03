@@ -67,6 +67,7 @@ export class VelhoClient {
             ["projekti/projekti", "oid"],
             ["projekti/projekti", "ominaisuudet", "nimi"],
             ["projekti/projekti", "ominaisuudet", "vaylamuoto"],
+            ["projekti/projekti", "ominaisuudet", "vastuuhenkilo"],
           ],
           tyyppi: HakuPalvelu.HakulausekeAsetuksetTyyppiEnum.Kohdeluokkahaku,
           jarjesta: [[["projekti/projekti", "ominaisuudet", "nimi"], "nouseva" as any]],
