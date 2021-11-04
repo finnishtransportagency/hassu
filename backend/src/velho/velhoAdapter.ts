@@ -1,7 +1,6 @@
-import { Status, VelhoHakuTulos } from "../../../common/graphql/apiModel";
+import { Kayttaja, Status, VelhoHakuTulos } from "../../../common/graphql/apiModel";
 import { ProjektiProjekti, ProjektiProjektiOminaisuudetVaylamuotoEnum } from "./projektirekisteri";
 import { DBProjekti } from "../database/model/projekti";
-import { personSearch } from "../personSearch/personSearchClient";
 import { adaptKayttaja } from "../personSearch/personAdapter";
 
 let metaDataJSON: any;
@@ -37,9 +36,7 @@ function adaptVaylamuoto(vaylamuodot: Set<ProjektiProjektiOminaisuudetVaylamuoto
   return values;
 }
 
-export async function adaptSearchResults(searchResults: any): Promise<VelhoHakuTulos[]> {
-  const kayttajat = await personSearch.listAccounts();
-
+export function adaptSearchResults(searchResults: any, kayttajat: Kayttaja[]): VelhoHakuTulos[] {
   if (searchResults) {
     return searchResults.map((result: any) => {
       const projektiPaallikko = kayttajat.find((kayttaja) => kayttaja.email === result.ominaisuudet.vastuuhenkilo);
