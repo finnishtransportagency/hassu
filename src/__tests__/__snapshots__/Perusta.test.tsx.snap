@@ -102,6 +102,9 @@ Array [
           <th>
             Tyyppi
           </th>
+          <th>
+            Projektipäällikkö
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -112,22 +115,28 @@ Array [
           onMouseEnter={[Function]}
         >
           <td
-            className="sm:w-1/4"
+            className="sm:w-2/12"
             data-label="Asiatunnus"
           >
             1234
           </td>
           <td
-            className="sm:w-1/2"
+            className="sm:w-6/12"
             data-label="Nimi"
           >
             Tampereen tie Hanke
           </td>
           <td
-            className="sm:w-1/4"
+            className="sm:w-2/12"
             data-label="Tyyppi"
           >
             Tie
+          </td>
+          <td
+            className="sm:w-2/12"
+            data-label="Projektipäällikkö"
+          >
+            -
           </td>
         </tr>
       </tbody>

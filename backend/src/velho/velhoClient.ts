@@ -7,6 +7,7 @@ import { adaptProjekti, adaptSearchResults } from "./velhoAdapter";
 import { VelhoError } from "../error/velhoError";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { DBProjekti } from "../database/model/projekti";
+import { personSearch } from "../personSearch/personSearchClient";
 
 const axios = require("axios");
 
@@ -67,6 +68,7 @@ export class VelhoClient {
             ["projekti/projekti", "oid"],
             ["projekti/projekti", "ominaisuudet", "nimi"],
             ["projekti/projekti", "ominaisuudet", "vaylamuoto"],
+            ["projekti/projekti", "ominaisuudet", "vastuuhenkilo"],
           ],
           tyyppi: HakuPalvelu.HakulausekeAsetuksetTyyppiEnum.Kohdeluokkahaku,
           jarjesta: [[["projekti/projekti", "ominaisuudet", "nimi"], "nouseva" as any]],
@@ -90,7 +92,7 @@ export class VelhoClient {
       } else {
         log.info(resultCount + " search results for term: " + term);
       }
-      return adaptSearchResults(data.osumat);
+      return adaptSearchResults(data.osumat, await personSearch.listAccounts());
     } catch (e) {
       throw new VelhoError(e.message, e);
     }
