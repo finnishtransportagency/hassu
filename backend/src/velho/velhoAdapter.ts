@@ -47,21 +47,17 @@ export type ProjektiSearchResult = Pick<ProjektiProjekti, "oid"> & {
 type ProjektiVaihe = "vaihe/vaihe04" | "vaihe/vaihe10" | "vaihe/vaihe12";
 
 type ProjektiVaiheToTyyppi = {
-  readonly [PV in ProjektiVaihe]: {
-    tyyppi: string;
-  };
+  readonly [PV in ProjektiVaihe]: string;
 };
 
 const projektiVaiheToTyyppi: ProjektiVaiheToTyyppi = {
-  "vaihe/vaihe04": { tyyppi: "Yleissuunnitelma" },
-  "vaihe/vaihe10": { tyyppi: "Tiesuunnitelma" },
-  "vaihe/vaihe12": {
-    tyyppi: "Ratasuunnitelma",
-  },
+  "vaihe/vaihe04": "Yleissuunnitelma",
+  "vaihe/vaihe10": "Tiesuunnitelma",
+  "vaihe/vaihe12": "Ratasuunnitelma",
 } as const;
 
 export function getProjektiTyyppi(vaihe: ProjektiVaihe) {
-  return projektiVaiheToTyyppi[vaihe]?.tyyppi;
+  return projektiVaiheToTyyppi[vaihe];
 }
 
 export function adaptSearchResults(searchResults: ProjektiSearchResult[], kayttajat: Kayttaja[]): VelhoHakuTulos[] {
