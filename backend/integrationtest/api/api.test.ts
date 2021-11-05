@@ -3,13 +3,9 @@ import { describe, it } from "mocha";
 import { runAsVaylaUser } from "../util/users";
 import { api } from "./apiClient";
 import { setupLocalDatabase } from "../util/databaseUtil";
+import * as log from "loglevel";
 
 const { expect } = require("chai");
-
-async function loadProjektiFromVelho(oid: string) {
-  const projekti = await api.lataaProjekti(oid);
-  expect(projekti.tallennettu).to.be.false;
-}
 
 async function loadProjektiFromDatabase(oid: string) {
   const savedProjekti = await api.lataaProjekti(oid);
@@ -24,13 +20,24 @@ describe("Api", () => {
     runAsVaylaUser();
 
     const oid = await searchProjectsFromVelhoAndPickFirst();
-    await loadProjektiFromVelho(oid);
-
-    await api.tallennaProjekti({ oid });
+    const projekti = await api.lataaProjekti(oid);
+    await expect(projekti.tallennettu).to.be.false;
+    log.info(JSON.stringify(projekti, null, 2));
+    await api.tallennaProjekti({
+      oid,
+      kayttoOikeudet: projekti.kayttoOikeudet?.map((value) => ({
+        rooli: value.rooli,
+        kayttajatunnus: value.kayttajatunnus,
+        puhelinnumero: "123",
+      })),
+    });
     await loadProjektiFromDatabase(oid);
 
     const newDescription = "uusi kuvaus";
-    await api.tallennaProjekti({ oid, kuvaus: newDescription });
+    await api.tallennaProjekti({
+      oid,
+      kuvaus: newDescription,
+    });
 
     const updatedProjekti = await loadProjektiFromDatabase(oid);
     expect(updatedProjekti.kuvaus).to.be.equal(newDescription);

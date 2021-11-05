@@ -1,7 +1,7 @@
-import * as userService from "../service/userService";
-import { requireVaylaUser } from "../service/userService";
+import { requirePermissionLuonti } from "../service/userService";
+import { personSearch } from "../personSearch/personSearchClient";
 
 export async function listAllUsers() {
-  requireVaylaUser();
-  return userService.listAllUsers();
+  requirePermissionLuonti();
+  return personSearch.listAccounts();
 }

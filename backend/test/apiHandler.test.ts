@@ -8,8 +8,10 @@ import { IllegalAccessError } from "../src/error/IllegalAccessError";
 import { velho } from "../src/velho/velhoClient";
 import { api } from "../integrationtest/api/apiClient";
 import { personSearch } from "../src/personSearch/personSearchClient";
+import * as userService from "../src/service/userService";
 import {
   manuMuokkaajaFromPersonSearch,
+  pekkaProjari,
   pekkaProjariFromPersonSearch,
   pekkaProjariProjektiKayttaja,
   vaylaMatti,
@@ -24,12 +26,15 @@ import mergeWith from "lodash/mergeWith";
 const { expect } = require("chai");
 
 describe("apiHandler", () => {
-  const userFixture = new UserFixture();
-
+  let userFixture: UserFixture;
   afterEach(() => {
     sinon.reset();
     sinon.restore();
     userFixture.logout();
+  });
+
+  beforeEach(() => {
+    userFixture = new UserFixture(userService);
   });
 
   describe("handleEvent", () => {
@@ -161,6 +166,7 @@ describe("apiHandler", () => {
         ]);
 
         // Add omistaja back and examine the results
+        userFixture.loginAs(pekkaProjari);
         projekti = await saveAndLoadProjekti(
           projekti,
           "while adding omistaja back. There should be projektipaallikko and omistaja in the projekti now. Projektipaallikko cannot be removed, so it always stays there.",

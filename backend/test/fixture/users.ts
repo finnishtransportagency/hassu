@@ -5,7 +5,7 @@ export const vaylaMatti: Kayttaja = {
   etuNimi: "Matti",
   sukuNimi: "Meikalainen",
   uid: "A000111",
-  roolit: ["role1", "role2"],
+  roolit: ["hassu_kayttaja", "Atunnukset"],
   vaylaKayttaja: true,
 };
 
@@ -39,7 +39,7 @@ export const pekkaProjari: Kayttaja = {
   etuNimi: "Pekka",
   sukuNimi: "Projari",
   uid: "A123",
-  roolit: ["role1", "role2"],
+  roolit: ["Ltunnukset", "role2"],
   vaylaKayttaja: true,
 };
 
