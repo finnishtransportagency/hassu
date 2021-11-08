@@ -86,7 +86,6 @@ async function createProjektiFromVelho(oid: string, vaylaUser: Kayttaja, input?:
 }
 
 export async function listProjektit() {
-  requirePermissionLuku();
   const dbProjects = await projektiDatabase.listProjektit();
   return dbProjects.map(projektiAdapter.adaptProjekti);
 }

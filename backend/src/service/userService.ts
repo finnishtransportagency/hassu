@@ -9,7 +9,13 @@ import { DBProjekti } from "../database/model/projekti";
 let vaylaUser: Kayttaja | undefined;
 
 function parseRoles(roles: string) {
-  return roles ? roles.split("\\,").map((arn) => arn.split("/").pop()) : undefined;
+  const strings = roles
+    ? roles
+        .replace("\\", "")
+        .split(",")
+        .map((s) => s.split("/").pop())
+    : undefined;
+  return strings;
 }
 
 export type IdentifyUserFunc = (event: AppSyncResolverEvent<any>) => Promise<Kayttaja | undefined>;
@@ -28,7 +34,7 @@ const identifyLoggedInVaylaUser: IdentifyUserFunc = async (event: AppSyncResolve
         roolit: parseRoles(jwt["custom:rooli"]),
       } as Kayttaja;
       if (!isHassuKayttaja(user)) {
-        throw new IllegalAccessError("Ei käyttöoikeutta palveluun");
+        throw new IllegalAccessError("Ei käyttöoikeutta palveluun " + JSON.stringify(user));
       }
       return user;
     }

@@ -15,7 +15,7 @@ describe("userService", () => {
     sinon.restore();
   });
 
-  before(() => {
+  beforeEach(() => {
     validateTokenStub = sinon.stub(tokenvalidator, "validateJwtToken");
   });
 
@@ -29,6 +29,19 @@ describe("userService", () => {
     });
     await identifyUser({ request: { headers: { "x-iam-accesstoken": "abc.123", "x-iam-data": "" } } } as any);
     const user = getVaylaUser();
-    expect(user).to.deep.equal(vaylaMatti);
+    expect(user).to.deep.eql(vaylaMatti);
+  });
+
+  it("should parse roles succesfully", async function () {
+    validateTokenStub.returns({
+      "custom:rooli": "abc,def,arn:aws:iam::123:role/HassuAdmin,hassu_admin,hassu_kayttaja",
+      "custom:sukunimi": "Meikalainen",
+      "custom:etunimi": "Matti",
+      "custom:puhelin": "12345678",
+      "custom:uid": "A000111",
+    });
+    await identifyUser({ request: { headers: { "x-iam-accesstoken": "abc.123", "x-iam-data": "" } } } as any);
+    const user = getVaylaUser();
+    expect(user.roolit).to.eql(["abc", "def", "HassuAdmin", "hassu_admin", "hassu_kayttaja"]);
   });
 });
