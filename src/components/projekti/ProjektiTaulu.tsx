@@ -2,6 +2,7 @@ import { VelhoHakuTulos } from "@services/api";
 import React, { ReactElement } from "react";
 import styles from "@styles/projekti/ProjektiTaulu.module.css";
 import Link from "next/link";
+import { projektiTyyppiToLabel } from "@services/projektityyppiToLabel";
 
 interface Props {
   projektit: VelhoHakuTulos[];
@@ -14,7 +15,7 @@ export default function ProjektiTaulu({ projektit, isLoading, projektiLinkki }: 
     <table className={styles["project-table"]}>
       <thead>
         <tr>
-          <th>Asiatunnus</th>
+          <th>Tunnus</th>
           <th>Nimi</th>
           <th>Tyyppi</th>
           <th>Projektipäällikkö</th>
@@ -24,7 +25,7 @@ export default function ProjektiTaulu({ projektit, isLoading, projektiLinkki }: 
         {isLoading
           ? Array.from({ length: 3 }, (_, index) => (
               <tr key={index} className="animate-pulse">
-                <td className="sm:w-2/12" data-label="Asiatunnus">
+                <td className="sm:w-2/12" data-label="Tunnus">
                   <div className="bg-gray h-4 w-1/2 md:w-full rounded-md ml-auto mr-0 my-1 align-middle" />
                 </td>
                 <td className="sm:w-6/12" data-label="Nimi">
@@ -42,14 +43,14 @@ export default function ProjektiTaulu({ projektit, isLoading, projektiLinkki }: 
               projektiLinkki ? (
                 <Link key={oid} passHref href={projektiLinkki(oid)}>
                   <tr className={styles["project-row"]}>
-                    <td className="sm:w-2/12" data-label="Asiatunnus">
+                    <td className="sm:w-2/12" data-label="Tunnus">
                       {oid}
                     </td>
                     <td className="sm:w-6/12" data-label="Nimi">
                       {nimi}
                     </td>
                     <td className="sm:w-2/12" data-label="Tyyppi">
-                      {tyyppi}
+                      {tyyppi ? projektiTyyppiToLabel[tyyppi] : "-"}
                     </td>
                     <td className="sm:w-2/12" data-label="Projektipäällikkö">
                       {projektiPaallikko || "-"}
@@ -58,14 +59,14 @@ export default function ProjektiTaulu({ projektit, isLoading, projektiLinkki }: 
                 </Link>
               ) : (
                 <tr key={oid} className={styles["project-row"]}>
-                  <td className="sm:w-2/12" data-label="Asiatunnus">
+                  <td className="sm:w-2/12" data-label="Tunnus">
                     {oid}
                   </td>
                   <td className="sm:w-6/12" data-label="Nimi">
                     {nimi}
                   </td>
                   <td className="sm:w-2/12" data-label="Tyyppi">
-                    {tyyppi}
+                    {tyyppi ? projektiTyyppiToLabel[tyyppi] : "-"}
                   </td>
                   <td className="sm:w-2/12" data-label="Projektipäällikkö">
                     {projektiPaallikko || "-"}

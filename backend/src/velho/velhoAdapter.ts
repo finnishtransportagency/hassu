@@ -1,5 +1,9 @@
-import { Kayttaja, Status, VelhoHakuTulos } from "../../../common/graphql/apiModel";
-import { ProjektiProjekti, ProjektiProjektiOminaisuudetVaylamuotoEnum } from "./projektirekisteri";
+import { Kayttaja, ProjektiTyyppi, Status, VelhoHakuTulos } from "../../../common/graphql/apiModel";
+import {
+  ProjektiProjekti,
+  ProjektiProjektiOminaisuudet,
+  ProjektiProjektiOminaisuudetVaylamuotoEnum,
+} from "./projektirekisteri";
 import { DBProjekti } from "../database/model/projekti";
 import { adaptKayttaja } from "../personSearch/personAdapter";
 
@@ -36,15 +40,36 @@ function adaptVaylamuoto(vaylamuodot: Set<ProjektiProjektiOminaisuudetVaylamuoto
   return values;
 }
 
-export function adaptSearchResults(searchResults: any, kayttajat: Kayttaja[]): VelhoHakuTulos[] {
+export type ProjektiSearchResult = Pick<ProjektiProjekti, "oid"> & {
+  ominaisuudet: Pick<ProjektiProjektiOminaisuudet, "nimi" | "vastuuhenkilo"> & { vaihe: ProjektiVaihe };
+};
+
+type ProjektiVaihe = "vaihe/vaihe04" | "vaihe/vaihe10" | "vaihe/vaihe12";
+
+type ProjektiVaiheToTyyppi = {
+  readonly [PV in ProjektiVaihe]: ProjektiTyyppi;
+};
+
+const projektiVaiheToTyyppi: ProjektiVaiheToTyyppi = {
+  "vaihe/vaihe04": ProjektiTyyppi.YLEINEN,
+  "vaihe/vaihe10": ProjektiTyyppi.TIE,
+  "vaihe/vaihe12": ProjektiTyyppi.RATA,
+} as const;
+
+export function getProjektiTyyppi(vaihe: ProjektiVaihe) {
+  return projektiVaiheToTyyppi[vaihe];
+}
+
+export function adaptSearchResults(searchResults: ProjektiSearchResult[], kayttajat: Kayttaja[]): VelhoHakuTulos[] {
   if (searchResults) {
-    return searchResults.map((result: any) => {
+    return searchResults.map((result) => {
       const projektiPaallikko = kayttajat.find((kayttaja) => kayttaja.email === result.ominaisuudet.vastuuhenkilo);
       const projektiPaallikkoNimi = projektiPaallikko ? adaptKayttaja(projektiPaallikko).nimi : undefined;
+      const tyyppi = getProjektiTyyppi(result.ominaisuudet.vaihe);
       return {
         oid: result.oid,
         nimi: result.ominaisuudet.nimi,
-        tyyppi: result.ominaisuudet.vaylamuoto,
+        tyyppi,
         projektiPaallikko: projektiPaallikkoNimi,
       } as VelhoHakuTulos;
     });
@@ -56,7 +81,7 @@ export function adaptProjekti(data: ProjektiProjekti): { projekti: DBProjekti; v
   const projekti: DBProjekti = {
     oid: "" + data.oid,
     tila: metadata.tilat[`${data.ominaisuudet.tila}`],
-    tyyppi: metadata.vaiheet[`${data.ominaisuudet.vaihe}`],
+    tyyppi: getProjektiTyyppi(data.ominaisuudet.vaihe as any),
     nimi: data.ominaisuudet.nimi,
     status: Status.EI_JULKAISTU,
     vaylamuoto: adaptVaylamuoto(data.ominaisuudet.vaylamuoto),

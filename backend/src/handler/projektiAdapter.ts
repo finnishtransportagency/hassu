@@ -11,11 +11,12 @@ function removeUndefinedFields(object: any) {
 
 export class ProjektiAdapter {
   public adaptProjekti(dbProjekti: DBProjekti): API.Projekti {
-    const { kayttoOikeudet, ...fieldsToCopyAsIs } = dbProjekti;
+    const { kayttoOikeudet, tyyppi, ...fieldsToCopyAsIs } = dbProjekti;
     return {
       __typename: "Projekti",
       tallennettu: !!dbProjekti.tallennettu,
       kayttoOikeudet: new KayttoOikeudetManager(dbProjekti.kayttoOikeudet).getAPIKayttoOikeudet(),
+      tyyppi: tyyppi as API.ProjektiTyyppi,
       ...fieldsToCopyAsIs,
     };
   }

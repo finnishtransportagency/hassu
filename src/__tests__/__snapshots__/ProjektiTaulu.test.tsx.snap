@@ -7,7 +7,7 @@ exports[`ProjektiTaulu renders ProjektiTaulu unchanged 1`] = `
   <thead>
     <tr>
       <th>
-        Asiatunnus
+        Tunnus
       </th>
       <th>
         Nimi
@@ -26,7 +26,7 @@ exports[`ProjektiTaulu renders ProjektiTaulu unchanged 1`] = `
     >
       <td
         className="sm:w-2/12"
-        data-label="Asiatunnus"
+        data-label="Tunnus"
       >
         1234
       </td>
@@ -40,7 +40,7 @@ exports[`ProjektiTaulu renders ProjektiTaulu unchanged 1`] = `
         className="sm:w-2/12"
         data-label="Tyyppi"
       >
-        Tie
+        Tiesuunnitelma
       </td>
       <td
         className="sm:w-2/12"

@@ -63,14 +63,11 @@ describe("apiHandler", () => {
 
     function mockLataaProjektiFromVelho() {
       loadProjektiByOidStub.resolves();
-      loadVelhoProjektiByOidStub.callsFake(
-        () =>
-          ({
-            projekti: cloneDeep(fixture.velhoprojekti1),
-            vastuuhenkilo: pekkaProjariProjektiKayttaja.email,
-            kayttoOikeudet: [],
-          } as { projekti: DBProjekti; vastuuhenkilo: string })
-      );
+      loadVelhoProjektiByOidStub.callsFake(() => ({
+        projekti: cloneDeep(fixture.velhoprojekti1),
+        vastuuhenkilo: pekkaProjariProjektiKayttaja.email,
+        kayttoOikeudet: [],
+      }));
       createProjektiStub.resolves();
     }
 

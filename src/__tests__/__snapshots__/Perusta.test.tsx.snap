@@ -94,7 +94,7 @@ Array [
       <thead>
         <tr>
           <th>
-            Asiatunnus
+            Tunnus
           </th>
           <th>
             Nimi
@@ -116,7 +116,7 @@ Array [
         >
           <td
             className="sm:w-2/12"
-            data-label="Asiatunnus"
+            data-label="Tunnus"
           >
             1234
           </td>
@@ -130,7 +130,7 @@ Array [
             className="sm:w-2/12"
             data-label="Tyyppi"
           >
-            Tie
+            Tiesuunnitelma
           </td>
           <td
             className="sm:w-2/12"

@@ -3,7 +3,7 @@ import { config } from "../config";
 import * as HakuPalvelu from "./hakupalvelu";
 import * as ProjektiRekisteri from "./projektirekisteri";
 import { VelhoHakuTulos } from "../../../common/graphql/apiModel";
-import { adaptProjekti, adaptSearchResults } from "./velhoAdapter";
+import { adaptProjekti, adaptSearchResults, ProjektiSearchResult } from "./velhoAdapter";
 import { VelhoError } from "../error/velhoError";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { DBProjekti } from "../database/model/projekti";
@@ -77,7 +77,7 @@ export class VelhoClient {
           palautettavat_kentat: [
             ["projekti/projekti", "oid"],
             ["projekti/projekti", "ominaisuudet", "nimi"],
-            ["projekti/projekti", "ominaisuudet", "vaylamuoto"],
+            ["projekti/projekti", "ominaisuudet", "vaihe"],
             ["projekti/projekti", "ominaisuudet", "vastuuhenkilo"],
           ],
           tyyppi: HakuPalvelu.HakulausekeAsetuksetTyyppiEnum.Kohdeluokkahaku,
@@ -102,7 +102,7 @@ export class VelhoClient {
       } else {
         log.info(resultCount + " search results for term: " + term);
       }
-      return adaptSearchResults(data.osumat, await personSearch.listAccounts());
+      return adaptSearchResults(data.osumat as ProjektiSearchResult[], await personSearch.listAccounts());
     } catch (e) {
       throw new VelhoError(e.message, e);
     }

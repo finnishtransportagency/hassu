@@ -10,7 +10,7 @@ Object {
     "status": "EI_JULKAISTU",
     "tila": "Vastaanotettu",
     "toteutusAjankohta": "Toteutettavissa arviolta noin 1 vuoden päästä nykyhetkestä",
-    "tyyppi": "Tiesuunnitelma/Tie- ja rakennussuunnitelma",
+    "tyyppi": "TIE",
     "vaylamuoto": Array [
       "tie",
     ],

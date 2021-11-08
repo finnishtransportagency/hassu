@@ -6,6 +6,7 @@ import log from "loglevel";
 import { AppProps as NextAppProps } from "next/app";
 import { useState } from "react";
 import { RouteLabels } from "@components/layout/Breadcrumbs";
+import { useCallback } from "react";
 
 log.setDefaultLevel("DEBUG");
 
@@ -21,9 +22,12 @@ export interface PageProps {
 function App({ Component, pageProps }: AppProps<PageProps>) {
   const [routeLabels, setRouteLabels] = useState<RouteLabels>({});
 
-  pageProps.setRouteLabels = (labels: RouteLabels) => {
-    setRouteLabels(labels);
-  };
+  pageProps.setRouteLabels = useCallback(
+    (labels: RouteLabels) => {
+      setRouteLabels(labels);
+    },
+    [setRouteLabels]
+  );
 
   return (
     <>
