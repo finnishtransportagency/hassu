@@ -26,6 +26,7 @@ Object {
   "oid": "1",
   "status": "EI_JULKAISTU",
   "tallennettu": false,
+  "tyyppi": "TIE",
 }
 `;
 
@@ -80,6 +81,7 @@ Array [
     "oid": "1",
     "status": "EI_JULKAISTU",
     "tallennettu": true,
+    "tyyppi": "TIE",
   },
 ]
 `;

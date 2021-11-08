@@ -4,7 +4,7 @@
 
 import React from "react";
 import Perusta from "@pages/yllapito/perusta";
-import { VelhoHakuTulos } from "@services/api";
+import { ProjektiTyyppi, VelhoHakuTulos } from "@services/api";
 import { create, act } from "react-test-renderer";
 import { useRouter } from "next/router";
 
@@ -16,7 +16,7 @@ jest.mock("@services/api", () => ({
   api: {
     getVelhoSuunnitelmasByName: () => {
       const hakuTulos: VelhoHakuTulos[] = [
-        { __typename: "VelhoHakuTulos", oid: "1234", nimi: "Tampereen tie Hanke", tyyppi: "Tie" },
+        { __typename: "VelhoHakuTulos", oid: "1234", nimi: "Tampereen tie Hanke", tyyppi: "TIE" as ProjektiTyyppi.TIE },
       ];
       const promise = new Promise<VelhoHakuTulos[]>((resolve) => {
         resolve(hakuTulos);

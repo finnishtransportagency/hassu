@@ -31,7 +31,7 @@ type Projekti {
   vaihe: String
   tila: String
   asianumero: String
-  tyyppi: String
+  tyyppi: ProjektiTyyppi
   status: Status
   organisaatio: String
   toteutusAjankohta: String
@@ -54,11 +54,17 @@ input TallennaProjektiInput {
   kayttoOikeudet: [ProjektiKayttajaInput!]
 }
 
+enum ProjektiTyyppi {
+  YLEINEN
+  TIE
+  RATA
+}
+
 type VelhoHakuTulos {
   oid: String!
   nimi: String!
   asianumero: String
-  tyyppi: String
+  tyyppi: ProjektiTyyppi
   projektiPaallikko: String
 }
 

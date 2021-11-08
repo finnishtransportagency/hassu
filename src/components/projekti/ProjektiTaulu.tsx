@@ -2,6 +2,7 @@ import { VelhoHakuTulos } from "@services/api";
 import React, { ReactElement } from "react";
 import styles from "@styles/projekti/ProjektiTaulu.module.css";
 import Link from "next/link";
+import { projektiTyyppiToLabel } from "@services/projektityyppiToLabel";
 
 interface Props {
   projektit: VelhoHakuTulos[];
@@ -49,7 +50,7 @@ export default function ProjektiTaulu({ projektit, isLoading, projektiLinkki }: 
                       {nimi}
                     </td>
                     <td className="sm:w-2/12" data-label="Tyyppi">
-                      {tyyppi}
+                      {tyyppi ? projektiTyyppiToLabel[tyyppi] : "-"}
                     </td>
                     <td className="sm:w-2/12" data-label="Projektipäällikkö">
                       {projektiPaallikko || "-"}
@@ -65,7 +66,7 @@ export default function ProjektiTaulu({ projektit, isLoading, projektiLinkki }: 
                     {nimi}
                   </td>
                   <td className="sm:w-2/12" data-label="Tyyppi">
-                    {tyyppi}
+                    {tyyppi ? projektiTyyppiToLabel[tyyppi] : "-"}
                   </td>
                   <td className="sm:w-2/12" data-label="Projektipäällikkö">
                     {projektiPaallikko || "-"}

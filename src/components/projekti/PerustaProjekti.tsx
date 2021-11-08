@@ -20,7 +20,10 @@ import {
   apiConfig,
   Projekti,
   ProjektiKayttajaInput,
+  ProjektiTyyppi,
 } from "@services/api";
+import { projektiTyyppiToLabel } from "@services/projektityyppiToLabel";
+
 import log from "loglevel";
 
 // Extend TallennaProjektiInput by making all fields nonnullable and required
@@ -177,7 +180,7 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
     { projektiPaallikot: [], muutHenkilot: [] }
   ) || { projektiPaallikot: [], muutHenkilot: [] };
 
-  const haeKayttaja = (uid: string) => kayttajat?.find((kayttaja:Kayttaja) => kayttaja.uid === uid);
+  const haeKayttaja = (uid: string) => kayttajat?.find((kayttaja: Kayttaja) => kayttaja.uid === uid);
 
   return (
     <>
@@ -231,7 +234,10 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
                     // @ts-ignore
                     { header: "Suunnitelman laatija", data: projekti?.laatija },
                     { header: "Hallinnollinen asiatunnus", data: projekti?.asianumero },
-                    { header: "Suunnitelman tyyppi", data: projekti?.tyyppi },
+                    {
+                      header: "Suunnitelman tyyppi",
+                      data: projekti?.tyyppi ? projektiTyyppiToLabel[projekti.tyyppi as ProjektiTyyppi] : "-",
+                    },
                     // @ts-ignore
                     { header: "Kohteen osoite", data: projekti?.osoite },
                   ]}
@@ -433,6 +439,6 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
   );
 }
 
-async function kayttajatLoader(_: string):Promise<Kayttaja[]> {
+async function kayttajatLoader(_: string): Promise<Kayttaja[]> {
   return await api.listUsers();
 }

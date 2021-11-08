@@ -1,4 +1,4 @@
-import { Kayttaja, Status, VelhoHakuTulos } from "../../../common/graphql/apiModel";
+import { Kayttaja, ProjektiTyyppi, Status, VelhoHakuTulos } from "../../../common/graphql/apiModel";
 import {
   ProjektiProjekti,
   ProjektiProjektiOminaisuudet,
@@ -47,13 +47,13 @@ export type ProjektiSearchResult = Pick<ProjektiProjekti, "oid"> & {
 type ProjektiVaihe = "vaihe/vaihe04" | "vaihe/vaihe10" | "vaihe/vaihe12";
 
 type ProjektiVaiheToTyyppi = {
-  readonly [PV in ProjektiVaihe]: string;
+  readonly [PV in ProjektiVaihe]: ProjektiTyyppi;
 };
 
 const projektiVaiheToTyyppi: ProjektiVaiheToTyyppi = {
-  "vaihe/vaihe04": "Yleissuunnitelma",
-  "vaihe/vaihe10": "Tiesuunnitelma",
-  "vaihe/vaihe12": "Ratasuunnitelma",
+  "vaihe/vaihe04": ProjektiTyyppi.YLEINEN,
+  "vaihe/vaihe10": ProjektiTyyppi.TIE,
+  "vaihe/vaihe12": ProjektiTyyppi.RATA,
 } as const;
 
 export function getProjektiTyyppi(vaihe: ProjektiVaihe) {
@@ -81,7 +81,7 @@ export function adaptProjekti(data: ProjektiProjekti): { projekti: DBProjekti; v
   const projekti: DBProjekti = {
     oid: "" + data.oid,
     tila: metadata.tilat[`${data.ominaisuudet.tila}`],
-    tyyppi: metadata.vaiheet[`${data.ominaisuudet.vaihe}`],
+    tyyppi: getProjektiTyyppi(data.ominaisuudet.vaihe as any),
     nimi: data.ominaisuudet.nimi,
     status: Status.EI_JULKAISTU,
     vaylamuoto: adaptVaylamuoto(data.ominaisuudet.vaylamuoto),

@@ -1,4 +1,10 @@
-import { Projekti, ProjektiRooli, Status, TallennaProjektiInput } from "../../../common/graphql/apiModel";
+import {
+  Projekti,
+  ProjektiRooli,
+  ProjektiTyyppi,
+  Status,
+  TallennaProjektiInput,
+} from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../../src/database/model/projekti";
 import { pekkaProjariProjektiKayttaja } from "./users";
 
@@ -20,6 +26,7 @@ export class ProjektiFixture {
     status: Status.EI_JULKAISTU,
     tallennettu: false,
     kayttoOikeudet: [pekkaProjariProjektiKayttaja],
+    tyyppi: ProjektiTyyppi.TIE,
   };
 
   velhoprojekti1: DBProjekti = {
@@ -27,6 +34,7 @@ export class ProjektiFixture {
     nimi: this.PROJEKTI1_NIMI,
     kuvaus: this.PROJEKTI1_KUVAUS_1,
     kayttoOikeudet: [],
+    tyyppi: ProjektiTyyppi.TIE,
   };
 
   dbProjekti1: DBProjekti = {
