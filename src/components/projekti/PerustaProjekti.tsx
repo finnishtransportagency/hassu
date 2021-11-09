@@ -19,10 +19,9 @@ import {
   Projekti,
   ProjektiKayttajaInput,
   ProjektiRooli,
-  ProjektiTyyppi,
   TallennaProjektiInput,
 } from "@services/api";
-import { projektiTyyppiToLabel } from "@services/projektityyppiToLabel";
+import useTranslation from "next-translate/useTranslation";
 
 import log from "loglevel";
 
@@ -62,6 +61,7 @@ interface Props {
 }
 
 export default function PerustaProjekti({ projekti, reloadProject }: Props): ReactElement {
+  const { t } = useTranslation("projekti");
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
 
   const router = useRouter();
@@ -239,13 +239,13 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
                     { header: "Asiatunnus", data: projekti?.asianumero },
                     {
                       header: "Suunnitelman tyyppi",
-                      data: projekti?.tyyppi && projektiTyyppiToLabel[projekti.tyyppi as ProjektiTyyppi],
+                      data: projekti?.tyyppi && t(`projekti-tyyppi.${projekti?.tyyppi}`),
                     },
                     {
                       header: "Väylämuoto",
                       data:
                         projekti?.vaylamuoto &&
-                        projekti?.vaylamuoto.map((muoto) => muoto.charAt(0).toUpperCase() + muoto.slice(1)).join(", "),
+                        projekti?.vaylamuoto.map((muoto) => t(`projekti-vayla-muoto.${muoto}`)).join(", "),
                     },
                   ]}
                 />

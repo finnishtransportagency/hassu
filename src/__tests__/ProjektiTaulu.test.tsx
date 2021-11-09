@@ -6,6 +6,7 @@ import React from "react";
 import ProjektiTaulu from "@components/projekti/ProjektiTaulu";
 import { ProjektiTyyppi, VelhoHakuTulos } from "@services/api";
 import renderer from "react-test-renderer";
+import { componentWithTranslation } from "../test-utils";
 
 describe("ProjektiTaulu", () => {
   const props = {
@@ -20,8 +21,8 @@ describe("ProjektiTaulu", () => {
     ] as VelhoHakuTulos[],
   };
 
-  it("renders ProjektiTaulu unchanged", () => {
-    const tree = renderer.create(<ProjektiTaulu {...props} />).toJSON();
+  it("renders ProjektiTaulu unchanged", async () => {
+    const tree = renderer.create(await componentWithTranslation(<ProjektiTaulu {...props} />)).toJSON();
     expect(tree).toMatchSnapshot();
   });
 });

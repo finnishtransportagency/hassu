@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ProjektiTaulu renders 'Perusta' page unchanged 1`] = `
+exports[`Perusta renders 'Perusta' page unchanged 1`] = `
 Array [
   <section>
     <h1>
