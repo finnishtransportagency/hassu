@@ -13,7 +13,7 @@ export type DBVaylaUser = {
 export type DBProjekti = {
   oid: string;
   nimi: string;
-  kuvaus?: string | null;
+  muistiinpano?: string | null;
   vaylamuoto?: string[];
   vaihe?: string | null;
   tila?: string | null;

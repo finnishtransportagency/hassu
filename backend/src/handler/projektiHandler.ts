@@ -63,8 +63,8 @@ async function createProjektiFromVelho(oid: string, vaylaUser: Kayttaja, input?:
 
     if (input) {
       // Saving a new projekti, so adjusting data based on the input
-      const { kuvaus } = input;
-      mergeWith(projekti, { kuvaus });
+      const { muistiinpano } = input;
+      mergeWith(projekti, { muistiinpano });
       // Add new users given as inputs
       await kayttoOikeudet.applyChanges(input.kayttoOikeudet);
     } else {

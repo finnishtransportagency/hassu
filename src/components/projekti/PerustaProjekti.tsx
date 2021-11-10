@@ -47,7 +47,7 @@ const rooliOptions = [
   { label: "Muokkaaja", value: "MUOKKAAJA" },
 ];
 
-const maxKuvausLength = 2000;
+const maxNoteLength = 2000;
 
 interface Props {
   projekti: Projekti;
@@ -69,10 +69,10 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
 
   const validationSchema: SchemaOf<FormValues> = Yup.object().shape({
     oid: Yup.string().required(),
-    kuvaus: Yup.string()
-      .required("Kuvaus on pakollinen kenttä.")
-      .min(3, "Kuvaukseen on kirjoitettava vähintään 3 merkkiä.")
-      .max(maxKuvausLength, `Kuvaukseen voidaan kirjoittaa maksimissaan ${maxKuvausLength} merkkiä.`),
+    muistiinpano: Yup.string()
+      .required("Muistiinpano on pakollinen kenttä.")
+      .min(3, "Muistiinpanoon on kirjoitettava vähintään 3 merkkiä.")
+      .max(maxNoteLength, `Muistiinpanoon voidaan kirjoittaa maksimissaan ${maxNoteLength} merkkiä.`),
     kayttoOikeudet: Yup.array()
       .of(
         Yup.object()
@@ -116,7 +116,7 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
 
   const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(validationSchema, { abortEarly: false, recursive: true }),
-    defaultValues: { kuvaus: "", kayttoOikeudet: [defaultKayttaja] },
+    defaultValues: { muistiinpano: "", kayttoOikeudet: [defaultKayttaja] },
     mode: "onChange",
     reValidateMode: "onChange",
   };
@@ -151,7 +151,7 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
   useEffect(() => {
     const tallentamisTiedot: FormValues = {
       oid: projekti?.oid || "",
-      kuvaus: projekti?.kuvaus || "",
+      muistiinpano: projekti?.muistiinpano || "",
       kayttoOikeudet:
         projekti?.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, rooli }) => ({
           kayttajatunnus,
@@ -241,20 +241,6 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
                     // @ts-ignore
                     { header: "Kohteen osoite", data: projekti?.osoite },
                   ]}
-                />
-              </div>
-              <h4>Suunnitteluhankkeen kuvaus</h4>
-              <p>
-                Suunnitteluhankkeen kuvaus esitetään aloituskuulutuksesta eteenpäin julkisesti palvelussa. Kuvauksen
-                tulee olla tiivis, selkeä sekä kaikkien ymmärrettävissä.
-              </p>
-              <div className="flex flex-col">
-                <Textarea
-                  label="Kuvaus"
-                  disabled={disableFormEdit || formIsSubmitting}
-                  registrationValues={register("kuvaus")}
-                  error={errors.kuvaus}
-                  maxLength={maxKuvausLength}
                 />
               </div>
               <hr />
@@ -421,6 +407,22 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
               {(errors.kayttoOikeudet as any)?.message && (
                 <p className="text-secondary-red">{(errors.kayttoOikeudet as any)?.message}</p>
               )}
+              <hr />
+              <h4>Muistiinpanot</h4>
+              <p>
+                Voit kirjoittaa alla olevaan kenttään sisäisiä muistiinpanoja, jotka näkyvät kaikille projektiin
+                lisätyille henkilöille. Muistiinpanoa voi muokata ainoastaan henkilöt, joilla on projektiin
+                muokkausoikeudet. Vain viimeisimpänä tallennettu muistiinpano jää näkyviin.
+              </p>
+              <div className="flex flex-col">
+                <Textarea
+                  label="Muistiinpano"
+                  disabled={disableFormEdit || formIsSubmitting}
+                  registrationValues={register("muistiinpano")}
+                  error={errors.muistiinpano}
+                  maxLength={maxNoteLength}
+                />
+              </div>
               <hr />
               <div className="alert">Tallennus ei vielä julkaise tietoja.</div>
               <div className="flex justify-between flex-wrap">

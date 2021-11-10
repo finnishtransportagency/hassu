@@ -26,7 +26,7 @@ enum Status {
 type Projekti {
   oid: String!
   nimi: String!
-  kuvaus: String
+  muistiinpano: String
   vaylamuoto: [String!]
   vaihe: String
   tila: String
@@ -50,7 +50,7 @@ input ProjektiKayttajaInput {
 
 input TallennaProjektiInput {
   oid: String!
-  kuvaus: String
+  muistiinpano: String
   kayttoOikeudet: [ProjektiKayttajaInput!]
 }
 

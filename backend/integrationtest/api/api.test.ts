@@ -33,14 +33,14 @@ describe("Api", () => {
     });
     await loadProjektiFromDatabase(oid);
 
-    const newDescription = "uusi kuvaus";
+    const newNote = "uusi muistiinpano";
     await api.tallennaProjekti({
       oid,
-      kuvaus: newDescription,
+      muistiinpano: newNote,
     });
 
     const updatedProjekti = await loadProjektiFromDatabase(oid);
-    expect(updatedProjekti.kuvaus).to.be.equal(newDescription);
+    expect(updatedProjekti.muistiinpano).to.be.equal(newNote);
   });
 });
 

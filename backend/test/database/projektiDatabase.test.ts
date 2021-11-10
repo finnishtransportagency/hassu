@@ -46,8 +46,8 @@ describe("apiHandler", () => {
           promise() {
             return Promise.resolve({
               Items: [
-                { oid: 1, kuvaus: "description 1" },
-                { oid: 2, kuvaus: "description 2" },
+                { oid: 1, muistiinpano: "note 1" },
+                { oid: 2, muistiinpano: "note 2" },
               ],
             });
           },
