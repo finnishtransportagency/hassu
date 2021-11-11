@@ -4,7 +4,7 @@ exports[`apiHandler updateSuunnitelma saveProjekti should pass expected paramete
 Object {
   "ExpressionAttributeNames": Object {
     "#kayttoOikeudet": "kayttoOikeudet",
-    "#kuvaus": "kuvaus",
+    "#muistiinpano": "muistiinpano",
     "#nimi": "nimi",
     "#status": "status",
   },
@@ -19,7 +19,7 @@ Object {
         "rooli": "PROJEKTIPAALLIKKO",
       },
     ],
-    ":kuvaus": "Testiprojekti 1:n kuvaus",
+    ":muistiinpano": "Testiprojekti 1:n muistiinpano",
     ":nimi": "Testiprojekti 1",
     ":status": "EI_JULKAISTU",
   },
@@ -27,6 +27,6 @@ Object {
     "oid": "1",
   },
   "TableName": "Projekti-localstack",
-  "UpdateExpression": "set #kayttoOikeudet = :kayttoOikeudet , #nimi = :nimi , #kuvaus = :kuvaus , #status = :status ",
+  "UpdateExpression": "set #kayttoOikeudet = :kayttoOikeudet , #nimi = :nimi , #muistiinpano = :muistiinpano , #status = :status ",
 }
 `;

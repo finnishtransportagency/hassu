@@ -10,8 +10,8 @@ import { pekkaProjariProjektiKayttaja } from "./users";
 
 export class ProjektiFixture {
   public PROJEKTI1_NIMI = "Testiprojekti 1";
-  public PROJEKTI1_KUVAUS_1 = "Testiprojekti 1:n kuvaus";
-  public PROJEKTI1_KUVAUS_2 = "Testiprojekti 1:n kuvaus 2";
+  public PROJEKTI1_MUISTIINPANO_1 = "Testiprojekti 1:n muistiinpano";
+  public PROJEKTI1_MUISTIINPANO_2 = "Testiprojekti 1:n muistiinpano 2";
   public PROJEKTI1_OID = "1";
 
   tallennaProjektiInput: TallennaProjektiInput = {
@@ -22,7 +22,7 @@ export class ProjektiFixture {
     __typename: "Projekti",
     oid: this.PROJEKTI1_OID,
     nimi: this.PROJEKTI1_NIMI,
-    kuvaus: this.PROJEKTI1_KUVAUS_1,
+    muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
     status: Status.EI_JULKAISTU,
     tallennettu: false,
     kayttoOikeudet: [pekkaProjariProjektiKayttaja],
@@ -32,7 +32,7 @@ export class ProjektiFixture {
   velhoprojekti1: DBProjekti = {
     oid: this.PROJEKTI1_OID,
     nimi: this.PROJEKTI1_NIMI,
-    kuvaus: this.PROJEKTI1_KUVAUS_1,
+    muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
     kayttoOikeudet: [],
     tyyppi: ProjektiTyyppi.TIE,
   };
@@ -50,7 +50,7 @@ export class ProjektiFixture {
     ],
     oid: this.PROJEKTI1_OID,
     nimi: this.PROJEKTI1_NIMI,
-    kuvaus: this.PROJEKTI1_KUVAUS_1,
+    muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
     status: Status.EI_JULKAISTU,
   };
 }
