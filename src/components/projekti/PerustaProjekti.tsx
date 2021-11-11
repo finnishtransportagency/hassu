@@ -26,12 +26,16 @@ import { projektiTyyppiToLabel } from "@services/projektityyppiToLabel";
 
 import log from "loglevel";
 
-// Extend TallennaProjektiInput by making all fields nonnullable and required
-type FormValues = Required<
+// Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
+type RequiredFields = Omit<TallennaProjektiInput, "muistiinpano">;
+type RequiredInputValues = Required<
   {
-    [K in keyof TallennaProjektiInput]: NonNullable<TallennaProjektiInput[K]>;
+    [K in keyof RequiredFields]: NonNullable<RequiredFields[K]>;
   }
 >;
+
+type OptionalInputValues = Partial<Pick<TallennaProjektiInput, "muistiinpano">>;
+type FormValues = RequiredInputValues & OptionalInputValues;
 
 const defaultKayttaja: ProjektiKayttajaInput = {
   // @ts-ignore By default rooli should be 'undefined'
@@ -69,10 +73,10 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
 
   const validationSchema: SchemaOf<FormValues> = Yup.object().shape({
     oid: Yup.string().required(),
-    muistiinpano: Yup.string()
-      .required("Muistiinpano on pakollinen kenttä.")
-      .min(3, "Muistiinpanoon on kirjoitettava vähintään 3 merkkiä.")
-      .max(maxNoteLength, `Muistiinpanoon voidaan kirjoittaa maksimissaan ${maxNoteLength} merkkiä.`),
+    muistiinpano: Yup.string().max(
+      maxNoteLength,
+      `Muistiinpanoon voidaan kirjoittaa maksimissaan ${maxNoteLength} merkkiä.`
+    ),
     kayttoOikeudet: Yup.array()
       .of(
         Yup.object()
