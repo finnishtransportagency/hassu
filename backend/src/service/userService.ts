@@ -124,10 +124,13 @@ export function requirePermissionLuku(): Kayttaja {
 }
 
 export function requirePermissionLuonti() {
-  const kayttaja = requireVaylaUser();
-  if (!isAorL(kayttaja)) {
+  if (!hasPermissionLuonti()) {
     throw new IllegalAccessError("Vain L ja A tunnuksella voi luoda uusia projekteja");
   }
+}
+
+export function hasPermissionLuonti(kayttaja: Kayttaja = requireVaylaUser()) {
+  return isAorL(kayttaja);
 }
 
 export function requirePermissionMuokkaa(projekti: DBProjekti) {
