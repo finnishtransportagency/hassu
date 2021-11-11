@@ -3,36 +3,51 @@ import { validateJwtToken } from "../util/validatejwttoken";
 import { config } from "../config";
 import log from "loglevel";
 import { IllegalAccessError } from "../error/IllegalAccessError";
-import { Kayttaja } from "../../../common/graphql/apiModel";
+import { Kayttaja, VaylaKayttajaTyyppi } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../database/model/projekti";
 
 let vaylaUser: Kayttaja | undefined;
 
 function parseRoles(roles: string) {
-  const strings = roles
+  return roles
     ? roles
         .replace("\\", "")
         .split(",")
         .map((s) => s.split("/").pop())
     : undefined;
-  return strings;
+}
+
+function adaptKayttajaTyyppi(roolit: string[]) {
+  const roleToTypeMap = {
+    Atunnukset: VaylaKayttajaTyyppi.A_TUNNUS,
+    Ltunnukset: VaylaKayttajaTyyppi.L_TUNNUS,
+    LXtunnukset: VaylaKayttajaTyyppi.LX_TUNNUS,
+  };
+  for (const role of roolit) {
+    const type = roleToTypeMap[role];
+    if (type) {
+      return type;
+    }
+  }
+  return;
 }
 
 export type IdentifyUserFunc = (event: AppSyncResolverEvent<any>) => Promise<Kayttaja | undefined>;
 
 const identifyLoggedInVaylaUser: IdentifyUserFunc = async (event: AppSyncResolverEvent<any>) => {
   const headers = event.request?.headers;
+
   if (headers) {
     const jwt = await validateJwtToken(headers["x-iam-accesstoken"], headers["x-iam-data"], config.cognitoURL);
     if (jwt) {
-      const user = {
+      const roolit = parseRoles(jwt["custom:rooli"]);
+      const user: Kayttaja = {
         __typename: "Kayttaja",
         etuNimi: jwt["custom:etunimi"],
         sukuNimi: jwt["custom:sukunimi"],
         uid: jwt["custom:uid"],
-        vaylaKayttaja: true,
-        roolit: parseRoles(jwt["custom:rooli"]),
-      } as Kayttaja;
+        roolit,
+      };
       if (!isHassuKayttaja(user)) {
         throw new IllegalAccessError("Ei käyttöoikeutta palveluun " + JSON.stringify(user));
       }
@@ -47,6 +62,7 @@ export const identifyUser = async (event: AppSyncResolverEvent<any>) => {
   for (const identifyUserFunction of identifyUserFunctions) {
     const user = await identifyUserFunction(event);
     if (user) {
+      user.vaylaKayttajaTyyppi = adaptKayttajaTyyppi(user.roolit);
       vaylaUser = user;
       log.info("Current user:", vaylaUser);
       return;
@@ -127,9 +143,9 @@ export function requirePermissionMuokkaa(projekti: DBProjekti) {
 }
 
 function isATunnus(account: Kayttaja) {
-  return account?.roolit?.includes("Atunnukset");
+  return account?.vaylaKayttajaTyyppi === VaylaKayttajaTyyppi.A_TUNNUS;
 }
 
 function isLTunnus(account: Kayttaja) {
-  return account?.roolit?.includes("Ltunnukset");
+  return account?.vaylaKayttajaTyyppi === VaylaKayttajaTyyppi.L_TUNNUS;
 }

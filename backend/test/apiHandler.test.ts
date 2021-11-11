@@ -9,19 +9,12 @@ import { velho } from "../src/velho/velhoClient";
 import { api } from "../integrationtest/api/apiClient";
 import { personSearch } from "../src/personSearch/personSearchClient";
 import * as userService from "../src/service/userService";
-import {
-  manuMuokkaajaFromPersonSearch,
-  pekkaProjari,
-  pekkaProjariFromPersonSearch,
-  pekkaProjariProjektiKayttaja,
-  vaylaMatti,
-  vaylaMattiFromPersonSearch,
-} from "./fixture/users";
 import { Projekti, ProjektiKayttajaInput, ProjektiRooli } from "../../common/graphql/apiModel";
 import { DBProjekti } from "../src/database/model/projekti";
 import * as log from "loglevel";
 import cloneDeep from "lodash/cloneDeep";
 import mergeWith from "lodash/mergeWith";
+import { PersonSearchFixture } from "./personSearch/personSearchFixture";
 
 const { expect } = require("chai");
 
@@ -39,6 +32,7 @@ describe("apiHandler", () => {
 
   describe("handleEvent", () => {
     let fixture: ProjektiFixture;
+    let personSearchFixture: PersonSearchFixture;
 
     let createProjektiStub: sinon.SinonStub;
     let saveProjektiStub: sinon.SinonStub;
@@ -54,10 +48,11 @@ describe("apiHandler", () => {
       loadVelhoProjektiByOidStub = sinon.stub(velho, "loadProjekti");
 
       fixture = new ProjektiFixture();
+      personSearchFixture = new PersonSearchFixture();
       listAccountsStub.resolves([
-        vaylaMattiFromPersonSearch,
-        pekkaProjariFromPersonSearch,
-        manuMuokkaajaFromPersonSearch,
+        personSearchFixture.pekkaProjari,
+        personSearchFixture.mattiMeikalainen,
+        personSearchFixture.manuMuokkaaja,
       ]);
     });
 
@@ -65,7 +60,7 @@ describe("apiHandler", () => {
       loadProjektiByOidStub.resolves();
       loadVelhoProjektiByOidStub.callsFake(() => ({
         projekti: cloneDeep(fixture.velhoprojekti1),
-        vastuuhenkilo: pekkaProjariProjektiKayttaja.email,
+        vastuuhenkilo: personSearchFixture.pekkaProjari.email,
         kayttoOikeudet: [],
       }));
       createProjektiStub.resolves();
@@ -73,7 +68,7 @@ describe("apiHandler", () => {
 
     describe("lataaProjekti", () => {
       it("should load a new project from Velho", async () => {
-        userFixture.loginAs(vaylaMatti);
+        userFixture.loginAs(UserFixture.mattiMeikalainen);
         mockLataaProjektiFromVelho();
 
         const projekti = await api.lataaProjekti(fixture.projekti1.oid);
@@ -130,7 +125,7 @@ describe("apiHandler", () => {
           });
         }
 
-        userFixture.loginAs(vaylaMatti);
+        userFixture.loginAs(personSearchFixture.mattiMeikalainen);
 
         // Load projekti and examine its permissions
         mockLataaProjektiFromVelho();
@@ -163,7 +158,7 @@ describe("apiHandler", () => {
         ]);
 
         // Add omistaja back and examine the results
-        userFixture.loginAs(pekkaProjari);
+        userFixture.loginAs(UserFixture.pekkaProjari);
         projekti = await saveAndLoadProjekti(
           projekti,
           "while adding omistaja back. There should be projektipaallikko and omistaja in the projekti now. Projektipaallikko cannot be removed, so it always stays there.",

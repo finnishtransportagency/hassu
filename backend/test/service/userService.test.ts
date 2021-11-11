@@ -1,9 +1,9 @@
 /* tslint:disable:only-arrow-functions */
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
-import { getVaylaUser, identifyUser } from "../../src/service/userService";
+import * as userService from "../../src/service/userService";
 import * as tokenvalidator from "../../src/util/validatejwttoken";
-import { vaylaMatti } from "../fixture/users";
+import { UserFixture } from "../fixture/userFixture";
 
 const { expect } = require("chai");
 
@@ -27,9 +27,11 @@ describe("userService", () => {
       "custom:puhelin": "12345678",
       "custom:uid": "A000111",
     });
-    await identifyUser({ request: { headers: { "x-iam-accesstoken": "abc.123", "x-iam-data": "" } } } as any);
-    const user = getVaylaUser();
-    expect(user).to.deep.eql(vaylaMatti);
+    await userService.identifyUser({
+      request: { headers: { "x-iam-accesstoken": "abc.123", "x-iam-data": "" } },
+    } as any);
+    const user = userService.getVaylaUser();
+    expect(user).to.deep.eql(UserFixture.mattiMeikalainen);
   });
 
   it("should parse roles succesfully", async function () {
@@ -40,8 +42,10 @@ describe("userService", () => {
       "custom:puhelin": "12345678",
       "custom:uid": "A000111",
     });
-    await identifyUser({ request: { headers: { "x-iam-accesstoken": "abc.123", "x-iam-data": "" } } } as any);
-    const user = getVaylaUser();
+    await userService.identifyUser({
+      request: { headers: { "x-iam-accesstoken": "abc.123", "x-iam-data": "" } },
+    } as any);
+    const user = userService.getVaylaUser();
     expect(user.roolit).to.eql(["abc", "def", "HassuAdmin", "hassu_admin", "hassu_kayttaja"]);
   });
 });
