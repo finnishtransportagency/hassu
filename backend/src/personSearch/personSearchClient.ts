@@ -1,7 +1,7 @@
 import { config } from "../config";
 import { Kayttaja, ProjektiRooli } from "../../../common/graphql/apiModel";
 import { DBVaylaUser } from "../database/model/projekti";
-import { mergeKayttaja } from "./personAdapter";
+import { adaptPersonSearchResult, mergeKayttaja } from "./personAdapter";
 import * as log from "loglevel";
 import { isAorL } from "../service/userService";
 
@@ -12,38 +12,6 @@ export const cache = new NodeCache({ stdTTL: 600 });
 const parseString = require("xml2js").parseStringPromise;
 
 const axios = require("axios");
-
-function getFirstElementFromArrayOrEmpty(strings: string[]) {
-  return strings?.[0] || "";
-}
-
-function adaptPersonSearchResult(responseJson: any): Kayttaja[] {
-  if (!responseJson.person?.person) {
-    return [];
-  }
-  return responseJson.person.person.map(
-    (person: {
-      FirstName: string[];
-      LastName: string[];
-      AccountName: string[];
-      Company: string[];
-      Email: string[];
-      MobilePhone: string[];
-      Accounttype: string[];
-    }) => {
-      return {
-        __typename: "Kayttaja",
-        vaylaKayttaja: true,
-        etuNimi: getFirstElementFromArrayOrEmpty(person.FirstName),
-        sukuNimi: getFirstElementFromArrayOrEmpty(person.LastName),
-        uid: getFirstElementFromArrayOrEmpty(person.AccountName),
-        organisaatio: getFirstElementFromArrayOrEmpty(person.Company),
-        email: getFirstElementFromArrayOrEmpty(person.Email),
-        puhelinnumero: getFirstElementFromArrayOrEmpty(person.MobilePhone),
-      };
-    }
-  );
-}
 
 function mergeListOfListsAsOneList(personLists: Kayttaja[][]) {
   return personLists.reduce((allPersons, listOfPersons) => {

@@ -70,7 +70,7 @@ type VelhoHakuTulos {
 
 type Kayttaja {
   uid: String
-  vaylaKayttaja: Boolean
+  vaylaKayttajaTyyppi: VaylaKayttajaTyyppi
   suomiFiKayttaja: Boolean
   etuNimi: String!
   sukuNimi: String!
@@ -78,6 +78,12 @@ type Kayttaja {
   email: String
   puhelinnumero: String
   roolit: [String!]
+}
+
+enum VaylaKayttajaTyyppi {
+  A_TUNNUS,
+  L_TUNNUS,
+  LX_TUNNUS
 }
 
 type Query {

@@ -3,7 +3,8 @@ import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { getCurrentUser } from "../../src/handler/getCurrentUser";
 import * as userService from "../../src/service/userService";
-import { vaylaMatti } from "../fixture/users";
+import { UserFixture } from "../fixture/userFixture";
+import { Kayttaja, VaylaKayttajaTyyppi } from "../../../common/graphql/apiModel";
 
 const { expect } = require("chai");
 
@@ -20,15 +21,15 @@ describe("getCurrentUser", () => {
   });
 
   it("should parse token succesfully", async function () {
-    getVaylaUserStub.returns(vaylaMatti);
+    getVaylaUserStub.returns(UserFixture.mattiMeikalainen);
     const user = await getCurrentUser();
     expect(user).to.deep.equal({
       __typename: "Kayttaja",
       etuNimi: "Matti",
       sukuNimi: "Meikalainen",
       uid: "A000111",
-      vaylaKayttaja: true,
+      vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.A_TUNNUS,
       roolit: ["hassu_kayttaja", "Atunnukset"],
-    });
+    } as Kayttaja);
   });
 });

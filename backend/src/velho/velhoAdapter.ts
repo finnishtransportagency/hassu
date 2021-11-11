@@ -6,6 +6,7 @@ import {
 } from "./projektirekisteri";
 import { DBProjekti } from "../database/model/projekti";
 import { adaptKayttaja } from "../personSearch/personAdapter";
+import { hasPermissionLuonti } from "../service/userService";
 
 let metaDataJSON: any;
 
@@ -56,7 +57,7 @@ const projektiVaiheToTyyppi: ProjektiVaiheToTyyppi = {
   "vaihe/vaihe12": ProjektiTyyppi.RATA,
 } as const;
 
-export function getProjektiTyyppi(vaihe: ProjektiVaihe) {
+function getProjektiTyyppi(vaihe: ProjektiVaihe) {
   return projektiVaiheToTyyppi[vaihe];
 }
 
@@ -64,7 +65,8 @@ export function adaptSearchResults(searchResults: ProjektiSearchResult[], kaytta
   if (searchResults) {
     return searchResults.map((result) => {
       const projektiPaallikko = kayttajat.find((kayttaja) => kayttaja.email === result.ominaisuudet.vastuuhenkilo);
-      const projektiPaallikkoNimi = projektiPaallikko ? adaptKayttaja(projektiPaallikko).nimi : undefined;
+      const projektiPaallikkoNimi =
+        projektiPaallikko && hasPermissionLuonti(projektiPaallikko) ? adaptKayttaja(projektiPaallikko).nimi : undefined;
       const tyyppi = getProjektiTyyppi(result.ominaisuudet.vaihe);
       return {
         oid: result.oid,
