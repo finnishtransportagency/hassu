@@ -8,6 +8,6 @@ sts.getCallerIdentity({}, (err: AWSError, data) => {
   if (err) {
     console.log("Error", err);
   } else {
-    console.log(`${data.Account}/${AWS.config.region}`);
+    console.log(`${data.Account}/${AWS.config.region} ${data.Account}/us-east-1`);
   }
 });

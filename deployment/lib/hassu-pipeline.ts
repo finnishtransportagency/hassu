@@ -26,33 +26,16 @@ export class HassuPipelineStack extends Stack {
     const config = await Config.instance(this);
     const branch = config.getBranch();
     const env = Config.env;
-    const appBucketName = config.appBucketName;
     console.log("Deploying pipeline from branch " + branch + " to enviroment " + env);
 
     if (Config.isPermanentEnvironment()) {
-      await this.createPipeline(env, config, [
-        "npm run lint",
-        "npm run localstack",
-        "npm run test",
-        "npm run localstack:stop",
-        "npm run deploy:database",
-        "npm run deploy:backend",
-        "npm run deploy:frontend",
-        "npm run build",
-        "aws s3 sync out s3://" + appBucketName + "/",
-      ]);
+      await this.createPipeline(env, config, "./deployment/lib/buildspec/buildspec.yml");
     } else {
-      await this.createPipeline(env, config, [
-        "npm run lint",
-        "npm run localstack",
-        "npm run test",
-        "npm run localstack:stop",
-        "npm run build",
-      ]);
+      await this.createPipeline(env, config, "./deployment/lib/buildspec/buildspec-feature.yml");
     }
   }
 
-  private async createPipeline(env: string, config: Config, commands: string[]) {
+  private async createPipeline(env: string, config: Config, buildspecFileName: string) {
     let branchOrRef;
     let webhookFilters;
     let reportBuildStatus: boolean;
@@ -62,10 +45,8 @@ export class HassuPipelineStack extends Stack {
       new codebuild.GitHubSourceCredentials(this, "CodeBuildGitHubCreds", {
         accessToken: SecretValue.secretsManager("github-token"),
       });
-      branchOrRef = "main";
-      reportBuildStatus = false;
-      webhookFilters = [codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs("main")];
-    } else if (config.isFeatureBranch() && !config.isDeveloperEnvironment()) {
+    }
+    if (config.isFeatureBranch() && !config.isDeveloperEnvironment()) {
       webhookFilters = [codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs("feature/*")];
       reportBuildStatus = true;
     } else {
@@ -83,45 +64,10 @@ export class HassuPipelineStack extends Stack {
       webhookFilters,
     };
     const gitHubSource = codebuild.Source.gitHub(sourceProps);
-    const buildSpec = {
-      version: "0.2",
-      phases: {
-        install: {
-          "runtime-versions": {
-            java: "corretto11",
-            nodejs: 14,
-          },
-          commands: [
-            "aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 283563576583.dkr.ecr.eu-west-1.amazonaws.com",
-            "npm ci",
-            "npm run dockerized:generate",
-          ],
-        },
-        build: {
-          commands,
-        },
-      },
-      cache: {
-        paths: ["/root/.cache/**/*", "/root/.npm/**/*", "/root/.gradle/**/*"],
-      },
-    } as any;
-    if (!config.isDeveloperEnvironment()) {
-      buildSpec.reports = {
-        "unit-tests": {
-          files: "**/*",
-          "base-directory": ".report/unit",
-          "discard-paths": true,
-        },
-        "unit-test-coverage": {
-          files: ".report/coverage/clover.xml",
-          "file-format": "CLOVERXML",
-          "discard-paths": true,
-        },
-      };
-    }
     new codebuild.Project(this, "HassuProject", {
       projectName: "Hassu-" + env,
-      buildSpec: BuildSpec.fromObject(buildSpec),
+      concurrentBuildLimit: 1,
+      buildSpec: BuildSpec.fromSourceFilename(buildspecFileName),
       source: gitHubSource,
       cache: codebuild.Cache.local(LocalCacheMode.CUSTOM, LocalCacheMode.SOURCE, LocalCacheMode.DOCKER_LAYER),
       environment: {

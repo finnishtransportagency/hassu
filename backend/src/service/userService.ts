@@ -130,11 +130,14 @@ export function requirePermissionLuonti() {
 }
 
 export function hasPermissionLuonti(kayttaja: Kayttaja = requireVaylaUser()) {
-  return isAorL(kayttaja);
+  return isHassuAdmin(kayttaja) || isAorL(kayttaja);
 }
 
 export function requirePermissionMuokkaa(projekti: DBProjekti) {
   const kayttaja = requireVaylaUser();
+  if (isHassuAdmin(kayttaja)) {
+    return;
+  }
   if (!isAorL(kayttaja)) {
     throw new IllegalAccessError("Vain L ja A tunnuksella voi muokata projekteja");
   }

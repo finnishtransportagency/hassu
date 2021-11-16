@@ -4,25 +4,30 @@ import { createAuthLink } from "aws-appsync-auth-link";
 import { createHttpLink } from "apollo-link-http";
 import { API } from "@services/api/commonApi";
 
+let host: string = "";
+if (typeof window !== "undefined") {
+  host = "https://" + window.location.hostname;
+}
+
 const publicLink = ApolloLink.from([
   createAuthLink({
-    url: "/graphql",
+    url: host + "/graphql",
     region: awsExports.aws_appsync_region,
     auth: { type: "API_KEY", apiKey: awsExports.aws_appsync_apiKey || "" },
   }),
   createHttpLink({
-    uri: "/graphql",
+    uri: host + "/graphql",
   }),
 ]);
 
 const authenticatedLink = ApolloLink.from([
   createAuthLink({
-    url: "/yllapito/graphql",
+    url: host + "/yllapito/graphql",
     region: awsExports.aws_appsync_region,
     auth: { type: "API_KEY", apiKey: awsExports.aws_appsync_apiKey || "" },
   }),
   createHttpLink({
-    uri: "/yllapito/graphql",
+    uri: host + "/yllapito/graphql",
   }),
 ]);
 

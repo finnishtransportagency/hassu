@@ -33,7 +33,7 @@ function setupLocalDevelopmentMode(config, env) {
   return config;
 }
 
-module.exports = (phase, { defaultConfig }) => {
+module.exports = (phase) => {
   let env = {
     REACT_APP_API_URL: process.env.REACT_APP_API_URL,
     REACT_APP_API_KEY: process.env.REACT_APP_API_KEY,

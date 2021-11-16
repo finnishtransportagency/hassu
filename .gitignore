@@ -45,3 +45,6 @@ tools/velho/buildSrc/build
 
 next-env.d.ts
 storybook-static
+build
+.serverless
+.serverless_nextjs

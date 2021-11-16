@@ -72,7 +72,7 @@ export class Config extends Resource {
     return `/${this.infraEnvironment}/` + parameterName;
   }
 
-  public async getSecureInfraParameter(parameterName: string, isSecureString?: boolean) {
+  public async getSecureInfraParameter(parameterName: string) {
     // Skip AWS API calls if running locally with localstack and cdklocal
     if (Config.env === "localstack") {
       return "dummy";
@@ -96,7 +96,7 @@ export class Config extends Resource {
   };
 
   public static isPermanentEnvironment(): boolean {
-    return ["dev", "prod"].indexOf(Config.env) >= 0;
+    return ["dev", "test", "prod"].indexOf(Config.env) >= 0;
   }
 
   public isFeatureBranch(): boolean {
@@ -111,7 +111,7 @@ export class Config extends Resource {
   }
 
   public isPermanentBranch(): boolean {
-    return this.getBranch() === "main";
+    return ["main", "test"].includes(this.getBranch());
   }
 
   public isDeveloperEnvironment() {

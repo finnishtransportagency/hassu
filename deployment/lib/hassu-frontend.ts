@@ -6,22 +6,29 @@ import * as cloudfront from "@aws-cdk/aws-cloudfront";
 import {
   AllowedMethods,
   CachePolicy,
-  Distribution,
-  DistributionProps,
-  FunctionCode,
-  FunctionEventType,
-  OriginAccessIdentity,
+  LambdaEdgeEventType,
   OriginRequestPolicy,
   OriginSslPolicy,
   PriceClass,
   ViewerProtocolPolicy,
 } from "@aws-cdk/aws-cloudfront";
-import { Bucket } from "@aws-cdk/aws-s3";
 import { Config } from "./config";
-import { S3Origin } from "@aws-cdk/aws-cloudfront-origins";
 import { HttpOrigin } from "@aws-cdk/aws-cloudfront-origins/lib/http-origin";
 import { BehaviorOptions } from "@aws-cdk/aws-cloudfront/lib/distribution";
+import { Builder } from "@sls-next/lambda-at-edge";
+import { NextJSLambdaEdge } from "@sls-next/cdk-construct";
+import { Code, Runtime } from "@aws-cdk/aws-lambda";
+import {
+  CompositePrincipal,
+  Effect,
+  ManagedPolicy,
+  PolicyDocument,
+  PolicyStatement,
+  Role,
+  ServicePrincipal,
+} from "@aws-cdk/aws-iam";
 import * as fs from "fs";
+import { EdgeFunction } from "@aws-cdk/aws-cloudfront/lib/experimental";
 
 export class HassuFrontendStack extends cdk.Stack {
   constructor(scope: Construct) {
@@ -29,7 +36,7 @@ export class HassuFrontendStack extends cdk.Stack {
     super(scope, "frontend", {
       stackName: "hassu-frontend-" + env,
       env: {
-        region: "eu-west-1",
+        region: "us-east-1",
       },
       tags: Config.tags,
     });
@@ -38,6 +45,9 @@ export class HassuFrontendStack extends cdk.Stack {
   public async process() {
     const env = Config.env;
     const config = await Config.instance(this);
+
+    await new Builder(".", "./build", { args: ["build"] }).build();
+
     const frontendRequestFunction = this.createFrontendRequestFunction(
       env,
       config.basicAuthenticationUsername,
@@ -47,22 +57,49 @@ export class HassuFrontendStack extends cdk.Stack {
       config.dmzProxyEndpoint,
       frontendRequestFunction
     );
-    const dmzProxyBehavior = HassuFrontendStack.createDmzProxyBehavior(
-      config.dmzProxyEndpoint
-    );
-    const s3ApplicationOrigin = this.createS3ApplicationOrigin(config.appBucketName);
-    const distributionProperties = HassuFrontendStack.createDistributionProperties(
-      s3ApplicationOrigin,
+    const dmzProxyBehavior = HassuFrontendStack.createDmzProxyBehavior(config.dmzProxyEndpoint);
+    const behaviours: Record<string, BehaviorOptions> = HassuFrontendStack.createDistributionProperties(
       dmzProxyBehaviorWithLambda,
-      dmzProxyBehavior,
-      frontendRequestFunction,
+      dmzProxyBehavior
     );
-    this.addSSLCertificateToCloudfront(config, distributionProperties);
-    this.createDistribution(distributionProperties);
 
-    new cdk.CfnOutput(this, "CloudfrontDomainName", {
-      value: config.frontendDomainName,
+    let domain: any;
+    if (config.cloudfrontCertificateArn) {
+      domain = {
+        certificate: acm.Certificate.fromCertificateArn(this, "certificate", config.cloudfrontCertificateArn),
+        domainNames: [config.frontendDomainName],
+      };
+    }
+
+    const id = `NextJsApp-${env}`;
+    const nextJSLambdaEdge = new NextJSLambdaEdge(this, id, {
+      serverlessBuildOutDir: "./build",
+      runtime: Runtime.NODEJS_14_X,
+      env: { region: "us-east-1" },
+      withLogging: true,
+      name: {
+        apiLambda: `${id}Api`,
+        defaultLambda: `Fn${id}`,
+        imageLambda: `${id}Image`,
+      },
+      behaviours,
+      domain,
+      defaultBehavior: {
+        edgeLambdas: frontendRequestFunction
+          ? [{ functionVersion: frontendRequestFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }]
+          : [],
+      },
+      cloudfrontProps: { priceClass: PriceClass.PRICE_CLASS_100 },
     });
+    nextJSLambdaEdge.edgeLambdaRole.addToPolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["logs:*", "xray:*"],
+        resources: ["*"],
+      })
+    );
+    nextJSLambdaEdge.edgeLambdaRole.grantPassRole(new ServicePrincipal("logger.cloudfront.amazonaws.com"));
+
     new cdk.CfnOutput(this, "CloudfrontPrivateDNSName", {
       value: "",
     });
@@ -75,78 +112,64 @@ export class HassuFrontendStack extends cdk.Stack {
     env: string,
     basicAuthenticationUsername: string,
     basicAuthenticationPassword: string
-  ) {
+  ): EdgeFunction {
     const sourceCode = fs.readFileSync(`${__dirname}/lambda/frontendRequest.js`).toString("UTF-8");
     const functionCode = Fn.sub(sourceCode, {
       BASIC_USERNAME: basicAuthenticationUsername,
       BASIC_PASSWORD: basicAuthenticationPassword,
     });
-    return new cloudfront.Function(this, "frontendRequestFunction", {
+
+    const role = new Role(this, "frontendRequestFunctionRole", {
+      assumedBy: new CompositePrincipal(
+        new ServicePrincipal("lambda.amazonaws.com"),
+        new ServicePrincipal("edgelambda.amazonaws.com"),
+        new ServicePrincipal("logger.cloudfront.amazonaws.com")
+      ),
+      managedPolicies: [
+        ManagedPolicy.fromManagedPolicyArn(
+          this,
+          "NextApiLambdaPolicy",
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+        ),
+      ],
+      inlinePolicies: {
+        xray: new PolicyDocument({
+          statements: [
+            new PolicyStatement({
+              effect: Effect.ALLOW,
+              actions: ["xray:*"],
+              resources: ["*"],
+            }),
+          ],
+        }),
+      },
+    });
+    return new cloudfront.experimental.EdgeFunction(this, "frontendRequestFunction", {
+      runtime: Runtime.NODEJS_14_X,
       functionName: "frontendRequestFunction" + env,
-      code: FunctionCode.fromInline(functionCode),
+      code: Code.fromInline(functionCode),
+      handler: "index.handler",
+      role,
     });
   }
 
   private static createDistributionProperties(
-    s3ApplicationOrigin: S3Origin,
     dmzProxyBehaviorWithLambda: BehaviorOptions,
-    dmzProxyBehavior: BehaviorOptions,
-    frontendRequestFunction: cloudfront.Function
-  ) {
-    const distributionProps: DistributionProps = {
-      priceClass: PriceClass.PRICE_CLASS_100,
-      defaultRootObject: "index.html",
-      defaultBehavior: {
-        allowedMethods: AllowedMethods.ALLOW_GET_HEAD,
-        viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-        cachePolicy: CachePolicy.CACHING_DISABLED,
-        originRequestPolicy: OriginRequestPolicy.CORS_S3_ORIGIN,
-        origin: s3ApplicationOrigin,
-        functionAssociations: [
-          {
-            function: frontendRequestFunction,
-            eventType: FunctionEventType.VIEWER_REQUEST,
-          },
-        ],
-      },
-      additionalBehaviors: {
-        "/oauth2/*": dmzProxyBehaviorWithLambda,
-        "/graphql": dmzProxyBehaviorWithLambda,
-        "/yllapito/graphql": dmzProxyBehaviorWithLambda,
-        "/yllapito/kirjaudu": dmzProxyBehaviorWithLambda,
-        "/keycloak/*": dmzProxyBehavior
-      },
+    dmzProxyBehavior: BehaviorOptions
+  ): Record<string, BehaviorOptions> {
+    return {
+      "/oauth2/*": dmzProxyBehaviorWithLambda,
+      "/graphql": dmzProxyBehaviorWithLambda,
+      "/yllapito/graphql": dmzProxyBehaviorWithLambda,
+      "/yllapito/kirjaudu": dmzProxyBehaviorWithLambda,
+      "/keycloak/*": dmzProxyBehavior,
     };
-    return distributionProps;
   }
 
-  private addSSLCertificateToCloudfront(config: Config, distributionProps: DistributionProps) {
-    if (config.cloudfrontCertificateArn) {
-      const modifiableProps = distributionProps as any;
-      modifiableProps.certificate = acm.Certificate.fromCertificateArn(
-        this,
-        "certificate",
-        config.cloudfrontCertificateArn
-      );
-      modifiableProps.domainNames = [config.frontendDomainName];
-    }
-  }
-
-  private createDistribution(distributionProperties: DistributionProps) {
-    new Distribution(this, "distribution", distributionProperties);
-  }
-
-  private createS3ApplicationOrigin(applicationBucketName: string) {
-    const identityForS3Access = new OriginAccessIdentity(this, "OriginAccessIdentity", {
-      comment: "Allow cloudfront to access S3",
-    });
-    const bucketForApplication = this.createBucketForApplication(applicationBucketName, identityForS3Access);
-    return new S3Origin(bucketForApplication, {
-      originAccessIdentity: identityForS3Access,
-    });
-  }
-
-  private static createDmzProxyBehavior(dmzProxyEndpoint: string, frontendRequestFunction?: cloudfront.Function) {
+  private static createDmzProxyBehavior(
+    dmzProxyEndpoint: string,
+    frontendRequestFunction?: cloudfront.experimental.EdgeFunction
+  ) {
     const dmzBehavior: BehaviorOptions = {
       compress: true,
       origin: new HttpOrigin(dmzProxyEndpoint, {
@@ -161,15 +184,11 @@ export class HassuFrontendStack extends cdk.Stack {
       originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
       allowedMethods: AllowedMethods.ALLOW_ALL,
       viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-      functionAssociations: frontendRequestFunction ? [{ function: frontendRequestFunction, eventType: FunctionEventType.VIEWER_REQUEST}] : undefined,
+      edgeLambdas: frontendRequestFunction
+        ? [{ functionVersion: frontendRequestFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }]
+        : [],
     };
 
     return dmzBehavior;
-  }
-
-  private createBucketForApplication(applicationBucketName: string, identityForS3Access: OriginAccessIdentity) {
-    const bucket = new Bucket(this, "app-bucket", { bucketName: applicationBucketName });
-    bucket.grantRead(identityForS3Access);
-    return bucket;
   }
 }
