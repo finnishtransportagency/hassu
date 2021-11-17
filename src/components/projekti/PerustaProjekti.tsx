@@ -263,7 +263,7 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
                   </p>
                   {projektiPaallikot.map((paallikko, index) => (
                     <div key={index} className="flex">
-                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-3 even:bg-gray-light">
+                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-3 even:bg-gray-lightest">
                         <div className="lg:col-span-4">
                           <TextInput
                             label="Nimi"
@@ -324,7 +324,7 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
                   const index = i + projektiPaallikot.length;
                   return (
                     <div key={user.id} className="flex">
-                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-3 even:bg-gray-light">
+                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-3 even:bg-gray-lightest">
                         <div className="lg:col-span-4">
                           <Autocomplete
                             label="Nimi"

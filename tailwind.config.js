@@ -42,9 +42,11 @@ module.exports = {
       },
       black: "#000000",
       gray: {
-        dark: "#333333",
+        darkest: "#333333",
+        dark: "#5C5C5C",
         DEFAULT: "#999999",
-        light: "#F8F8F8",
+        light: "#EBEBEB",
+        lightest: "#F8F8F8",
       },
       white: "#FFFFFF",
       transparent: "transparent",

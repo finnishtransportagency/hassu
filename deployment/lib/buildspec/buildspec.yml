@@ -6,6 +6,7 @@ phases:
       nodejs: 14
     commands:
       - aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 283563576583.dkr.ecr.eu-west-1.amazonaws.com
+      - npm install -g npm@8.1.3
       - npm ci
       - npm run dockerized:generate
   build:
