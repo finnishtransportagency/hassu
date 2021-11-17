@@ -4,13 +4,18 @@ enum ProjektiRooli {
   MUOKKAAJA
 }
 
-type ProjektiKayttaja {
-  rooli: ProjektiRooli!
-  email: String!
-  kayttajatunnus: String!
-  puhelinnumero: String
-  organisaatio: String!
-  nimi: String!
+enum Viranomainen {
+  ETELA_POHJANMAAN_ELY
+  UUDENMAAN_ELY
+  MUU
+  LAPIN_ELY
+  POHJOIS_SAVON_ELY
+  VAYLAVIRASTO
+  KESKI_SUOMEN_ELY
+  KAAKKOIS_SUOMEN_ELY
+  POHJOIS_POHJANMAAN_ELY
+  PIRKANMAAN_ELY
+  VARSINAIS_SUOMEN_ELY
 }
 
 enum Status {
@@ -21,6 +26,10 @@ enum Status {
   HYVAKSYMISPAATOS
   LAINVOIMA
   ARKISTOITU
+}
+
+enum KuulutusTyyppi {
+  ALOITUSKUULUTUS
 }
 
 type Projekti {
@@ -35,24 +44,46 @@ type Projekti {
   status: Status
   organisaatio: String
   toteutusAjankohta: String
+  suunnittelustaVastaavaViranomainen: Viranomainen
+  aloitusKuulutus: AloitusKuulutus
+  kunnat: [String!]
+  maakunnat: [String!]
+  EURahoitus: Boolean
+  suunnitteluSopimus: SuunnitteluSopimus
+  kayttoOikeudet: [ProjektiKayttaja!]
   """
   false, jos projekti ladattiin Velhosta, mutta ei ole vielä tallennettu tietokantaan
   """
-  tallennettu: Boolean!
-  kayttoOikeudet: [ProjektiKayttaja!]
+  tallennettu: Boolean
 }
 
-input ProjektiKayttajaInput {
+type AloitusKuulutus {
+  kuulutusPaiva: String
+  siirtyySuunnitteluVaiheeseen: String
+  hankkeenKuvaus: String
+  hankkeenKuvausRuotsi: String
+  hankkeenKuvausSaame: String
+  elyKeskus: String
+  yhteystiedot: [String]
+}
+
+type SuunnitteluSopimus {
+  kunta: String!
+  etunimi: String!
+  sukunimi: String!
+  puhelinnumero: String!
+  email: String!
+}
+
+type ProjektiKayttaja {
   rooli: ProjektiRooli!
   kayttajatunnus: String!
-  puhelinnumero: String!
+  puhelinnumero: String
+  email: String!
+  organisaatio: String!
+  nimi: String!
 }
 
-input TallennaProjektiInput {
-  oid: String!
-  muistiinpano: String
-  kayttoOikeudet: [ProjektiKayttajaInput!]
-}
 
 enum ProjektiTyyppi {
   YLEINEN
@@ -81,19 +112,12 @@ type Kayttaja {
 }
 
 enum VaylaKayttajaTyyppi {
-  A_TUNNUS,
-  L_TUNNUS,
+  A_TUNNUS
+  L_TUNNUS
   LX_TUNNUS
 }
 
-type Query {
-  nykyinenKayttaja: Kayttaja
-  listaaKayttajat: [Kayttaja!]
-  listaaProjektit: [Projekti!]
-  lataaProjekti(oid: String!): Projekti
-  listaaVelhoProjektit(nimi: String!, requireExactMatch: Boolean): [VelhoHakuTulos!]
-}
-
-type Mutation {
-  tallennaProjekti(projekti: TallennaProjektiInput!): Boolean
+type PDF {
+  nimi: String!
+  sisalto: String!
 }

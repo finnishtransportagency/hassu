@@ -25,7 +25,6 @@ Object {
   "nimi": "Testiprojekti 1",
   "oid": "1",
   "status": "EI_JULKAISTU",
-  "tallennettu": false,
   "tyyppi": "TIE",
 }
 `;

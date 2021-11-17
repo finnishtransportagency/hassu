@@ -24,7 +24,7 @@ phases:
       - npm run lint
       - npm run localstack
       - npm run test
-      - npm run localstack:stop
+      - npm run localstack:stop&
       - npm run build
 cache:
   paths:

@@ -1,8 +1,8 @@
 import ProjektiPerustiedot from "@components/projekti/ProjektiPerustiedot";
 import React, { ReactElement, useEffect, useState } from "react";
 import { FieldArrayWithId, useFieldArray, useForm, UseFormProps } from "react-hook-form";
-import { SchemaOf } from "yup";
 import * as Yup from "yup";
+import { SchemaOf } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InfoBox from "@components/InfoBox";
 import Link from "next/link";
@@ -14,20 +14,23 @@ import Select from "@components/form/Select";
 import Autocomplete from "@components/form/Autocomplete";
 import {
   api,
-  Kayttaja,
-  TallennaProjektiInput,
-  ProjektiRooli,
   apiConfig,
+  Kayttaja,
   Projekti,
   ProjektiKayttajaInput,
+  ProjektiRooli,
   ProjektiTyyppi,
+  TallennaProjektiInput,
 } from "@services/api";
 import { projektiTyyppiToLabel } from "@services/projektityyppiToLabel";
 
 import log from "loglevel";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
-type RequiredFields = Omit<TallennaProjektiInput, "muistiinpano">;
+type RequiredFields = Omit<
+  TallennaProjektiInput,
+  "muistiinpano" | "suunnittelustaVastaavaViranomainen" | "aloitusKuulutus" | "suunnitteluSopimus"
+>;
 type RequiredInputValues = Required<
   {
     [K in keyof RequiredFields]: NonNullable<RequiredFields[K]>;

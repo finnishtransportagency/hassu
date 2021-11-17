@@ -1,0 +1,12 @@
+type Query {
+  nykyinenKayttaja: Kayttaja
+  listaaKayttajat: [Kayttaja!]
+  listaaProjektit: [Projekti!]
+  lataaProjekti(oid: String!): Projekti
+  listaaVelhoProjektit(nimi: String!, requireExactMatch: Boolean): [VelhoHakuTulos!]
+  lataaKuulutusPDF(oid: String!, kuulutusTyyppi: KuulutusTyyppi!): PDF
+}
+
+type Mutation {
+  tallennaProjekti(projekti: TallennaProjektiInput!): Boolean
+}

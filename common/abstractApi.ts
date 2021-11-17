@@ -1,7 +1,10 @@
 import {
   Kayttaja,
+  KuulutusTyyppi,
+  LataaKuulutusPDFQueryVariables,
   LataaProjektiQueryVariables,
   ListaaVelhoProjektitQueryVariables,
+  PDF,
   Projekti,
   TallennaProjektiInput,
   TallennaProjektiMutationVariables,
@@ -29,6 +32,7 @@ type ApiConfig = {
   listaaVelhoProjektit: OperationConfig;
   nykyinenKayttaja: OperationConfig;
   listaaKayttajat: OperationConfig;
+  lataaKuulutusPDF: OperationConfig;
 };
 
 export const apiConfig: ApiConfig = {
@@ -62,6 +66,11 @@ export const apiConfig: ApiConfig = {
     operationType: OperationType.Query,
     graphql: queries.listaaKayttajat,
   },
+  lataaKuulutusPDF: {
+    name: "lataaKuulutusPDF",
+    operationType: OperationType.Query,
+    graphql: queries.lataaKuulutusPDF,
+  },
 };
 
 export abstract class AbstractApi {
@@ -72,7 +81,9 @@ export abstract class AbstractApi {
   }
 
   async tallennaProjekti(input: TallennaProjektiInput) {
-    return await this.callYllapitoAPI(apiConfig.tallennaProjekti, { projekti: input } as TallennaProjektiMutationVariables);
+    return await this.callYllapitoAPI(apiConfig.tallennaProjekti, {
+      projekti: input,
+    } as TallennaProjektiMutationVariables);
   }
 
   async getVelhoSuunnitelmasByName(nimi: string, requireExactMatch?: boolean): Promise<VelhoHakuTulos[]> {
@@ -96,6 +107,13 @@ export abstract class AbstractApi {
 
   async listUsers(): Promise<Kayttaja[]> {
     return await this.callYllapitoAPI(apiConfig.listaaKayttajat);
+  }
+
+  async lataaKuulutusPDF(oid: string, kuulutusTyyppi: KuulutusTyyppi): Promise<PDF> {
+    return await this.callYllapitoAPI(apiConfig.lataaKuulutusPDF, {
+      oid,
+      kuulutusTyyppi,
+    } as LataaKuulutusPDFQueryVariables);
   }
 
   abstract callYllapitoAPI(operation: OperationConfig, variables?: any): Promise<any>;

@@ -1,0 +1,33 @@
+input TallennaProjektiInput {
+  oid: String!
+  muistiinpano: String
+  suunnittelustaVastaavaViranomainen: Viranomainen
+  aloitusKuulutus: AloitusKuulutusInput
+  suunnitteluSopimus: SuunnitteluSopimusInput
+  kayttoOikeudet: [ProjektiKayttajaInput!]
+}
+
+input AloitusKuulutusInput {
+  kuulutusPaiva: String
+  siirtyySuunnitteluVaiheeseen: String
+  hankkeenKuvaus: String
+  hankkeenKuvausRuotsi: String
+  hankkeenKuvausSaame: String
+  elyKeskus: String
+  yhteystiedot: [String]
+}
+
+input SuunnitteluSopimusInput {
+  kunta: String!
+  etunimi: String!
+  sukunimi: String!
+  puhelinnumero: String!
+  email: String!
+}
+
+input ProjektiKayttajaInput {
+  rooli: ProjektiRooli!
+  kayttajatunnus: String!
+  puhelinnumero: String!
+}
+

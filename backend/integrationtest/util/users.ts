@@ -4,7 +4,9 @@ import { UserFixture } from "../../test/fixture/userFixture";
 
 export function runAsVaylaUser() {
   sinon.stub(userService, "identifyUser").resolves();
-  userService.identifyMockUser(UserFixture.mattiMeikalainen);
+  const user = UserFixture.mattiMeikalainen;
+  userService.identifyMockUser(user);
+  return user;
 }
 
 export function runAsAnonymous() {

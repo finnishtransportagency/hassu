@@ -44,7 +44,7 @@ module.exports = (phase) => {
    */
   let config = {
     reactStrictMode: true,
-    trailingSlash: true,
+    // trailingSlash: true,
   };
   if (phase === PHASE_DEVELOPMENT_SERVER) {
     config = setupLocalDevelopmentMode(config, env);

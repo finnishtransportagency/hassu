@@ -3,12 +3,26 @@
 exports[`apiHandler updateSuunnitelma saveProjekti should pass expected parameters to DynamoDB 1`] = `
 Object {
   "ExpressionAttributeNames": Object {
+    "#aloitusKuulutus": "aloitusKuulutus",
     "#kayttoOikeudet": "kayttoOikeudet",
+    "#kunnat": "kunnat",
     "#muistiinpano": "muistiinpano",
     "#nimi": "nimi",
     "#status": "status",
+    "#suunnitteluSopimus": "suunnitteluSopimus",
   },
   "ExpressionAttributeValues": Object {
+    ":aloitusKuulutus": Object {
+      "elyKeskus": "Pirkanmaa",
+      "hankkeenKuvaus": "Lorem Ipsum",
+      "hankkeenKuvausRuotsi": "På Svenska",
+      "hankkeenKuvausSaame": "Saameksi",
+      "kuulutusPaiva": "2022-01-02",
+      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "yhteystiedot": Array [
+        "A123",
+      ],
+    },
     ":kayttoOikeudet": Array [
       Object {
         "email": "pekka.projari@vayla.fi",
@@ -19,14 +33,25 @@ Object {
         "rooli": "PROJEKTIPAALLIKKO",
       },
     ],
+    ":kunnat": Array [
+      "Tampere",
+      "Nokia",
+    ],
     ":muistiinpano": "Testiprojekti 1:n muistiinpano",
     ":nimi": "Testiprojekti 1",
     ":status": "EI_JULKAISTU",
+    ":suunnitteluSopimus": Object {
+      "email": "Joku.Jossain@vayla.fi",
+      "etunimi": "Joku",
+      "kunta": "Nokia",
+      "puhelinnumero": "123",
+      "sukunimi": "Jossain",
+    },
   },
   "Key": Object {
     "oid": "1",
   },
   "TableName": "Projekti-localstack",
-  "UpdateExpression": "set #kayttoOikeudet = :kayttoOikeudet , #nimi = :nimi , #muistiinpano = :muistiinpano , #status = :status ",
+  "UpdateExpression": "set #kayttoOikeudet = :kayttoOikeudet , #nimi = :nimi , #muistiinpano = :muistiinpano , #status = :status , #kunnat = :kunnat , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus ",
 }
 `;
