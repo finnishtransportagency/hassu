@@ -115,13 +115,13 @@
     @apply absolute content-["V"] inset-y-0 right-0 flex items-center px-2 text-primary-dark pointer-events-none;
   }
   .btn {
-    @apply uppercase py-1 px-4 shadow-lg rounded-full text-primary-dark border border-primary-dark hover:bg-primary-dark hover:text-white transition disabled:opacity-50 disabled:cursor-default;
+    @apply uppercase inline-block py-1 px-6 shadow hover:shadow-lg active:shadow-none rounded-full bg-white text-primary-dark border border-primary-dark transition disabled:opacity-50 disabled:cursor-default;
   }
   .btn-primary {
-    @apply btn bg-primary-dark text-white hover:bg-white hover:text-primary-dark;
+    @apply btn bg-primary-dark text-white;
   }
   .alert {
-    @apply border py-2 px-3 bg-gray-light border-gray;
+    @apply border py-2 px-3 bg-gray-lightest border-gray;
   }
   .alert-error {
     @apply alert bg-white border-secondary-magenta;

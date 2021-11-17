@@ -15,7 +15,7 @@
 }
 
 .project-table > tbody > tr {
-  @apply block sm:table-row odd:bg-gray-light cursor-pointer border-b-2 border-primary-light;
+  @apply block sm:table-row odd:bg-gray-lightest cursor-pointer border-b-2 border-primary-light;
 }
 
 .project-table > tbody > tr.project-row {

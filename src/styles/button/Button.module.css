@@ -1,0 +1,19 @@
+.wrapper {
+  @apply relative inline-block;
+}
+
+.overlay::before {
+  @apply absolute content-[''] inset-0 rounded-full;
+}
+
+.overlay:active::before {
+  @apply bg-black opacity-10;
+}
+
+.overlay:hover:not(:active)::before {
+  @apply bg-gradient-to-b from-transparent to-black opacity-30;
+}
+
+.content {
+  @apply relative;
+}

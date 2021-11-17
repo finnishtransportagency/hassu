@@ -7,6 +7,7 @@ import { AppProps as NextAppProps } from "next/app";
 import { useState } from "react";
 import { RouteLabels } from "@components/layout/Breadcrumbs";
 import { useCallback } from "react";
+import "../font-awesome-init";
 
 log.setDefaultLevel("DEBUG");
 
