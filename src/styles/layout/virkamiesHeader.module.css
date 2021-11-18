@@ -11,7 +11,7 @@
 }
 
 .header .user {
-  @apply flex items-end ml-auto space-x-4;
+  @apply flex items-end ml-auto space-x-5;
 }
 
 .header > nav {
