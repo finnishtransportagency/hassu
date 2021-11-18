@@ -25,6 +25,11 @@ module.exports = {
       },
     },
     colors: {
+      font: {
+        primary: "#242222",
+        secondary: "#333333",
+        link: "#0064AF",
+      },
       primary: {
         dark: "#0064af",
         DEFAULT: "#0099ff",

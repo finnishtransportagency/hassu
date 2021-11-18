@@ -52,30 +52,26 @@ Object {
 `;
 
 exports[`Breadcrumbs renders correctly on 'known' /yllapito/perusta path 1`] = `
-<div
-  className="container mb-4"
+<nav
+  className="breadcrumbs"
 >
-  <nav>
-    <ol
-      className="breadcrumb"
-    >
-      <li>
-        <a
-          href="/yllapito"
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-        >
-          Valtion väylien suunnittelu
-        </a>
-      </li>
-      <li>
-        <span
-          className="font-bold"
-        >
-          Projektin perustaminen
-        </span>
-      </li>
-    </ol>
-  </nav>
-</div>
+  <ol>
+    <li>
+      <a
+        href="/yllapito"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
+      >
+        Valtion väylien suunnittelu
+      </a>
+    </li>
+    <li>
+      <span
+        className="font-bold"
+      >
+        Projektin perustaminen
+      </span>
+    </li>
+  </ol>
+</nav>
 `;

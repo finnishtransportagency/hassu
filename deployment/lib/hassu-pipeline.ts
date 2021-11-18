@@ -102,6 +102,10 @@ export class HassuPipelineStack extends Stack {
             value: config.getInfraParameterPath("PersonSearchApiAccountTypes"),
             type: BuildEnvironmentVariableType.PARAMETER_STORE,
           },
+          NEXT_PUBLIC_VAYLA_EXTRANET_URL: {
+            value: config.getInfraParameterPath("ExtranetHomePageUrl"),
+            type: BuildEnvironmentVariableType.PARAMETER_STORE,
+          },
         },
       },
       grantReportGroupPermissions: true,
