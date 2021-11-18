@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import { breadcrumb } from "@styles/Breadcrumbs.module.css";
+import { breadcrumbs } from "@styles/Breadcrumbs.module.css";
 import { NextRouter, useRouter } from "next/router";
 import Link from "next/link";
 
@@ -20,6 +20,7 @@ const defaultLabels: RouteLabels = {
   "/yllapito": { label: "Etusivu", hideWhenNotCurrentRoute: true },
   "/yllapito/perusta": { label: "Projektin perustaminen" },
   "/yllapito/projekti": { label: "Projektit" },
+  "/yllapito/ohjeet": { label: "Ohjeet" },
   "/suunnitelma": { label: "Suunnitelmat" },
   "/suunnitelma/[...all]": { label: "Tutki suunnitelmaa" },
   "/_error": { label: "Virhe" },
@@ -79,27 +80,25 @@ export default function Breadcrumbs({ routeLabels }: Props): ReactElement {
   }, [router, routeLabels]);
 
   return (
-    <div className="container mb-4">
-      <nav>
-        <ol className={`${breadcrumb}`}>
-          <li>
-            <Link href={isYllapito() ? "/yllapito" : "/"}>Valtion väylien suunnittelu</Link>
+    <nav className={breadcrumbs}>
+      <ol>
+        <li>
+          <Link href={isYllapito() ? "/yllapito" : "/"}>Valtion väylien suunnittelu</Link>
+        </li>
+        {Object.entries(routeMapping).map(([route, { href, label }]) => (
+          <li key={route}>
+            {!isCurrentRoute(route, router) ? (
+              <Link href={href}>
+                <a>
+                  <span>{label}</span>
+                </a>
+              </Link>
+            ) : (
+              <span className="font-bold">{label}</span>
+            )}
           </li>
-          {Object.entries(routeMapping).map(([route, { href, label }]) => (
-            <li key={route}>
-              {!isCurrentRoute(route, router) ? (
-                <Link href={href}>
-                  <a>
-                    <span>{label}</span>
-                  </a>
-                </Link>
-              ) : (
-                <span className="font-bold">{label}</span>
-              )}
-            </li>
-          ))}
-        </ol>
-      </nav>
-    </div>
+        ))}
+      </ol>
+    </nav>
   );
 }

@@ -48,9 +48,6 @@
   body section {
     @apply mb-2;
   }
-  body a {
-    @apply text-primary;
-  }
   @font-face {
     font-family: "Exo 2";
     src: url("/fonts/Exo2/Exo2-Thin.ttf") format("truetype");
@@ -105,9 +102,141 @@
     font-weight: 900;
     font-style: normal;
   }
+
+  @font-face {
+    font-family: "Exo 2";
+    src: url("/fonts/Exo2/Exo2-ThinItalic.ttf") format("truetype");
+    font-weight: 100;
+    font-style: italic;
+  }
+  @font-face {
+    font-family: "Exo 2";
+    src: url("/fonts/Exo2/Exo2-ExtraLightItalic.ttf") format("truetype");
+    font-weight: 200;
+    font-style: italic;
+  }
+  @font-face {
+    font-family: "Exo 2";
+    src: url("/fonts/Exo2/Exo2-LightItalic.ttf") format("truetype");
+    font-weight: 300;
+    font-style: italic;
+  }
+  @font-face {
+    font-family: "Exo 2";
+    src: url("/fonts/Exo2/Exo2-RegularItalic.ttf") format("truetype");
+    font-weight: 400;
+    font-style: italic;
+  }
+  @font-face {
+    font-family: "Exo 2";
+    src: url("/fonts/Exo2/Exo2-MediumItalic.ttf") format("truetype");
+    font-weight: 500;
+    font-style: italic;
+  }
+  @font-face {
+    font-family: "Exo 2";
+    src: url("/fonts/Exo2/Exo2-SemiBoldItalic.ttf") format("truetype");
+    font-weight: 600;
+    font-style: italic;
+  }
+  @font-face {
+    font-family: "Exo 2";
+    src: url("/fonts/Exo2/Exo2-BoldItalic.ttf") format("truetype");
+    font-weight: 700;
+    font-style: italic;
+  }
+  @font-face {
+    font-family: "Exo 2";
+    src: url("/fonts/Exo2/Exo2-ExtraBoldItalic.ttf") format("truetype");
+    font-weight: 800;
+    font-style: italic;
+  }
+  @font-face {
+    font-family: "Exo 2";
+    src: url("/fonts/Exo2/Exo2-BlackItalic.ttf") format("truetype");
+    font-weight: 900;
+    font-style: italic;
+  }
 }
 
 @layer components {
+  .vayla-hero {
+    font-weight: 700;
+    font-size: 39px;
+    line-height: 48px;
+    color: #242222;
+  }
+
+  .vayla-title {
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 32px;
+    color: #242222;
+  }
+
+  .vayla-lead {
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 32px;
+    color: #242222;
+  }
+
+  .vayla-subtitle {
+    font-weight: 700;
+    font-size: 23px;
+    line-height: 27px;
+    color: #242222;
+  }
+
+  .vayla-paragraph {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 24px;
+    color: #242222;
+  }
+
+  .vayla-small-title {
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 22px;
+    color: #242222;
+  }
+
+  .vayla-body-text {
+    font-weight: 400;
+    font-size: 16px;
+    color: #242222;
+    line-height: 16px;
+  }
+
+  .vayla-label {
+    font-weight: 400;
+    font-size: 16px;
+    color: #333333;
+  }
+
+  .vayla-link {
+    font-weight: 400;
+    font-size: 18px;
+    color: #0064af;
+    line-height: 22px;
+  }
+
+  .vayla-blockquote {
+    font-weight: 300;
+    font-style: italic;
+    font-size: 20px;
+    color: #242222;
+    text-align: center;
+    line-height: 32px;
+  }
+
+  .vayla-navigation {
+    font-weight: 400;
+    font-size: 16px;
+    color: #242222;
+  }
+
   .select-wrapper {
     @apply relative;
   }
@@ -115,7 +244,7 @@
     @apply absolute content-["V"] inset-y-0 right-0 flex items-center px-2 text-primary-dark pointer-events-none;
   }
   .btn {
-    @apply uppercase inline-block py-1 px-6 shadow hover:shadow-lg active:shadow-none rounded-full bg-white text-primary-dark border border-primary-dark transition disabled:opacity-50 disabled:cursor-default;
+    @apply text-xl leading-relaxed uppercase inline-block py-1 px-6 shadow hover:shadow-lg active:shadow-none rounded-full bg-white text-primary-dark border border-primary-dark transition disabled:opacity-50 disabled:cursor-default;
   }
   .btn-primary {
     @apply btn bg-primary-dark text-white;

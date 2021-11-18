@@ -37,6 +37,7 @@ module.exports = (phase) => {
   let env = {
     REACT_APP_API_URL: process.env.REACT_APP_API_URL,
     REACT_APP_API_KEY: process.env.REACT_APP_API_KEY,
+    NEXT_PUBLIC_VAYLA_EXTRANET_URL: process.env.NEXT_PUBLIC_VAYLA_EXTRANET_URL,
   };
   /**
    * @type {import('next').NextConfig}

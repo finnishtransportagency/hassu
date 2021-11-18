@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ReactElement, ReactNode } from "react";
 import Breadcrumbs, { RouteLabels } from "./Breadcrumbs";
-import { Header } from "./header";
+import Header from "./header/header";
 import { Footer } from "./footer";
 
 interface Props {
@@ -9,12 +9,12 @@ interface Props {
 }
 
 export default function Layout({ children, routeLabels }: Props): ReactElement {
-  const headerOffset = 70;
+  const toTopEnableOffset = 100;
   const [toTopEnabled, setToTopEnabled] = useState(false);
 
   useEffect(() => {
     window.addEventListener("scroll", () => {
-      if (window.pageYOffset > headerOffset) {
+      if (window.pageYOffset > toTopEnableOffset) {
         setToTopEnabled(true);
       } else {
         setToTopEnabled(false);
@@ -24,7 +24,7 @@ export default function Layout({ children, routeLabels }: Props): ReactElement {
 
   return (
     <div className="min-h-screen relative flex flex-col">
-      <Header top={toTopEnabled ? -headerOffset : 0} />
+      <Header scrolledPastOffset={toTopEnabled} />
       <Breadcrumbs routeLabels={routeLabels} />
       <main className="container mb-6">{children}</main>
       <Footer />

@@ -1,0 +1,23 @@
+.header {
+  @apply sticky bg-white z-20 w-full container transition-all;
+}
+
+.header .topbar {
+  @apply flex border-b border-gray-light py-5;
+}
+
+.header .title {
+  @apply flex flex-col uppercase vayla-small-title;
+}
+
+.header .user {
+  @apply flex items-end ml-auto space-x-5;
+}
+
+.header > nav {
+  @apply flex border-b-8 border-primary py-6 vayla-navigation uppercase;
+}
+
+.header > nav > ul {
+  @apply flex float-left flex-wrap space-x-6;
+}

@@ -18,9 +18,9 @@ export default function Button({ children, link, startIcon, endIcon, primary, on
   const childrenWithIcons = (
     <div className={primary ? overlay : ""}>
       <div className={content}>
-        {startIcon && <FontAwesomeIcon icon={startIcon} className="mr-2" />}
+        {startIcon && <FontAwesomeIcon icon={startIcon} className="mr-2 mb-px" />}
         {children}
-        {endIcon && <FontAwesomeIcon icon={endIcon} className="ml-2" />}
+        {endIcon && <FontAwesomeIcon icon={endIcon} className="ml-2 mb-px" />}
       </div>
     </div>
   );
