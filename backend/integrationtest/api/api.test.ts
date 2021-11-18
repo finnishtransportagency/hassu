@@ -16,7 +16,10 @@ async function loadProjektiFromDatabase(oid: string) {
 describe("Api", () => {
   beforeEach("Initialize test database", async () => await setupLocalDatabase());
 
-  it("should search, load and save a project", async () => {
+  it("should search, load and save a project", async function () {
+    if (process.env.SKIP_VELHO_TESTS) {
+      this.skip();
+    }
     runAsVaylaUser();
 
     const oid = await searchProjectsFromVelhoAndPickFirst();
