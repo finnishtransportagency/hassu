@@ -8,11 +8,17 @@ describe("VelhoClient", () => {
   let oid: string;
   let name: string;
 
-  it("should authenticate to Velho", async () => {
+  it("should authenticate to Velho", async function () {
+    if (process.env.SKIP_VELHO_TESTS) {
+      this.skip();
+    }
     expect(await velho.authenticate()).not.be.null;
   });
 
-  it("should list projects from Velho", async () => {
+  it("should list projects from Velho", async function () {
+    if (process.env.SKIP_VELHO_TESTS) {
+      this.skip();
+    }
     const searchResult = await velho.searchProjects("tampere");
     expect(searchResult).not.null;
     expect(searchResult).not.be.empty;
@@ -23,7 +29,10 @@ describe("VelhoClient", () => {
     log.debug("nimi", name);
   });
 
-  it("should list one exact project from Velho", async () => {
+  it("should list one exact project from Velho", async function () {
+    if (process.env.SKIP_VELHO_TESTS) {
+      this.skip();
+    }
     expect(oid).to.not.be.null;
     expect(name).to.not.be.null;
     const exactSearchResult = await velho.searchProjects(name, true);
@@ -32,7 +41,10 @@ describe("VelhoClient", () => {
     expect(exactSearchResult[0].oid).to.be.equal(oid);
   });
 
-  it("should load project from Velho", async () => {
+  it("should load project from Velho", async function () {
+    if (process.env.SKIP_VELHO_TESTS) {
+      this.skip();
+    }
     expect(oid).to.not.be.null;
     const searchResult = await velho.loadProjekti(oid);
     expect(searchResult).not.null;
