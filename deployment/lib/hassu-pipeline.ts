@@ -1,7 +1,7 @@
 /* tslint:disable:no-console no-unused-expression */
 import { Construct, SecretValue, Stack } from "@aws-cdk/core";
 import * as codebuild from "@aws-cdk/aws-codebuild";
-import { BuildEnvironmentVariableType, LocalCacheMode } from "@aws-cdk/aws-codebuild";
+import { BuildEnvironmentVariableType, ComputeType, LocalCacheMode } from "@aws-cdk/aws-codebuild";
 import { Config } from "./config";
 import { BuildSpec } from "@aws-cdk/aws-codebuild/lib/build-spec";
 import { LinuxBuildImage } from "@aws-cdk/aws-codebuild/lib/project";
@@ -64,15 +64,17 @@ export class HassuPipelineStack extends Stack {
       webhookFilters,
     };
     const gitHubSource = codebuild.Source.gitHub(sourceProps);
+    const concurrentBuildLimit = config.isFeatureBranch() ? 1 : undefined;
     new codebuild.Project(this, "HassuProject", {
       projectName: "Hassu-" + env,
-      concurrentBuildLimit: 1,
+      concurrentBuildLimit,
       buildSpec: BuildSpec.fromSourceFilename(buildspecFileName),
       source: gitHubSource,
       cache: codebuild.Cache.local(LocalCacheMode.CUSTOM, LocalCacheMode.SOURCE, LocalCacheMode.DOCKER_LAYER),
       environment: {
         buildImage: LinuxBuildImage.STANDARD_5_0,
         privileged: true,
+        computeType: ComputeType.MEDIUM,
         environmentVariables: {
           ENVIRONMENT: { value: env },
           VELHO_AUTH_URL: {
