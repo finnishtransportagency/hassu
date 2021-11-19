@@ -1,4 +1,9 @@
 version: 0.2
+
+env:
+  parameter-store:
+    NEXT_PUBLIC_VAYLA_EXTRANET_URL: /$ENVIRONMENT/ExtranetHomePageUrl
+
 phases:
   install:
     runtime-versions:
