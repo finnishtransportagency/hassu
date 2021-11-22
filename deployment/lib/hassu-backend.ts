@@ -125,10 +125,10 @@ export class HassuBackendStack extends cdk.Stack {
       },
       environment: {
         COGNITO_URL: config.getInfraParameter("CognitoURL"),
-        VELHO_AUTH_URL: config.getInfraParameter("VelhoAuthenticationUrl"),
-        VELHO_API_URL: config.getInfraParameter("VelhoApiUrl"),
-        VELHO_USERNAME: await config.getSecureInfraParameter("VelhoUsername"),
-        VELHO_PASSWORD: await config.getSecureInfraParameter("VelhoPassword"),
+        VELHO_AUTH_URL: config.getInfraParameter("VelhoAuthenticationUrl", config.velhoEnv),
+        VELHO_API_URL: config.getInfraParameter("VelhoApiUrl", config.velhoEnv),
+        VELHO_USERNAME: await config.getSecureInfraParameter("VelhoUsername", config.velhoEnv),
+        VELHO_PASSWORD: await config.getSecureInfraParameter("VelhoPassword", config.velhoEnv),
 
         PERSON_SEARCH_API_URL: config.getInfraParameter("PersonSearchApiURL"),
         PERSON_SEARCH_API_USERNAME: config.getInfraParameter("PersonSearchApiUsername"),

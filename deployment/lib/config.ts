@@ -34,6 +34,7 @@ export class Config extends Resource {
   public readonly cloudfrontCertificateArn?: string;
   public static readonly env = getEnv("ENVIRONMENT");
   public static readonly projektiTableName = "Projekti-" + getEnv("ENVIRONMENT");
+  public readonly velhoEnv;
   public readonly basicAuthenticationUsername: string;
   public readonly basicAuthenticationPassword: string;
   public readonly infraEnvironment: string;
@@ -52,6 +53,9 @@ export class Config extends Resource {
     this.frontendDomainName = this.getInfraParameter("FrontendDomainName");
     this.basicAuthenticationUsername = this.getInfraParameter("basicAuthenticationUsername");
     this.basicAuthenticationPassword = this.getInfraParameter("basicAuthenticationPassword");
+
+    // For temporary switch to production Velho
+    this.velhoEnv = process.env.VELHO_ENVIRONMENT || this.infraEnvironment;
   }
 
   public static async instance(scope: Construct) {
@@ -64,20 +68,23 @@ export class Config extends Resource {
     return ssm.StringParameter.valueForStringParameter(this, parameterName);
   }
 
-  public getInfraParameter(parameterName: string) {
-    return ssm.StringParameter.valueForStringParameter(this, this.getInfraParameterPath(parameterName));
+  public getInfraParameter(parameterName: string, infraEnvironment?: string) {
+    return ssm.StringParameter.valueForStringParameter(
+      this,
+      this.getInfraParameterPath(parameterName, infraEnvironment)
+    );
   }
 
-  public getInfraParameterPath(parameterName: string) {
-    return `/${this.infraEnvironment}/` + parameterName;
+  public getInfraParameterPath(parameterName: string, infraEnvironment?: string) {
+    return `/${infraEnvironment || this.infraEnvironment}/` + parameterName;
   }
 
-  public async getSecureInfraParameter(parameterName: string) {
+  public async getSecureInfraParameter(parameterName: string, infraEnvironment: string) {
     // Skip AWS API calls if running locally with localstack and cdklocal
     if (Config.env === "localstack") {
       return "dummy";
     }
-    const name = `/${this.infraEnvironment}/` + parameterName;
+    const name = `/${infraEnvironment}/` + parameterName;
     const params = {
       Name: name,
       WithDecryption: true,

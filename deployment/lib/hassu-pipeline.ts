@@ -78,15 +78,15 @@ export class HassuPipelineStack extends Stack {
         environmentVariables: {
           ENVIRONMENT: { value: env },
           VELHO_AUTH_URL: {
-            value: config.getInfraParameterPath("VelhoAuthenticationUrl"),
+            value: config.getInfraParameterPath("VelhoAuthenticationUrl", config.velhoEnv),
             type: BuildEnvironmentVariableType.PARAMETER_STORE,
           },
           VELHO_API_URL: {
-            value: config.getInfraParameterPath("VelhoApiUrl"),
+            value: config.getInfraParameterPath("VelhoApiUrl", config.velhoEnv),
             type: BuildEnvironmentVariableType.PARAMETER_STORE,
           },
-          VELHO_USERNAME: { value: await config.getSecureInfraParameter("VelhoUsername") },
-          VELHO_PASSWORD: { value: await config.getSecureInfraParameter("VelhoPassword") },
+          VELHO_USERNAME: { value: await config.getSecureInfraParameter("VelhoUsername", config.velhoEnv) },
+          VELHO_PASSWORD: { value: await config.getSecureInfraParameter("VelhoPassword", config.velhoEnv) },
 
           PERSON_SEARCH_API_URL: {
             value: config.getInfraParameterPath("PersonSearchApiURL"),
