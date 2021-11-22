@@ -59,7 +59,7 @@ export class ProjektiListaus extends React.Component<ProjektiListausProps, Proje
                     (this.props.admin ? "/yllapito/projekti" : "/suunnitelma") + `/${encodeURIComponent(projekti.oid)}`
                   }
                 >
-                  <a>{projekti.nimi}</a>
+                  <a>{projekti.velho?.nimi}</a>
                 </Link>
               </td>
             </tr>

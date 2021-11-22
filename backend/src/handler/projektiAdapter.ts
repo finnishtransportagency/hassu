@@ -25,14 +25,7 @@ export class ProjektiAdapter {
 
   async adaptProjektiToSave(projekti: DBProjekti, changes: API.TallennaProjektiInput): Promise<DBProjekti> {
     // Pick only fields that are relevant to DB
-    const {
-      oid,
-      muistiinpano,
-      kayttoOikeudet,
-      aloitusKuulutus,
-      suunnitteluSopimus,
-      suunnittelustaVastaavaViranomainen,
-    } = changes;
+    const { oid, muistiinpano, kayttoOikeudet, aloitusKuulutus, suunnitteluSopimus } = changes;
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet);
     await kayttoOikeudetManager.applyChanges(kayttoOikeudet);
     return removeUndefinedFields(
@@ -43,7 +36,6 @@ export class ProjektiAdapter {
           muistiinpano,
           aloitusKuulutus,
           suunnitteluSopimus,
-          suunnittelustaVastaavaViranomainen,
           kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet(),
         }
       )

@@ -84,7 +84,7 @@ describe("Api", () => {
 });
 
 async function searchProjectsFromVelhoAndPickFirst(): Promise<string> {
-  const searchResult = await api.getVelhoSuunnitelmasByName("tampere");
+  const searchResult = await api.getVelhoSuunnitelmasByName("kantatie");
   // tslint:disable-next-line:no-unused-expression
   expect(searchResult).not.to.be.empty;
 

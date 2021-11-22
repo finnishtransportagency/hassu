@@ -4,16 +4,16 @@ exports[`VelhoAdapter should adapt project from Velho successfully 1`] = `
 Object {
   "projekti": Object {
     "kayttoOikeudet": Array [],
-    "nimi": "Kaupungin sisääntulotien (mt 123) parantaminen välillä valtatien 1 eritasoliittymä - Päätie, Helsinki",
     "oid": "100",
-    "organisaatio": "Pirkanmaan ELY-keskus",
     "status": "EI_JULKAISTU",
-    "tila": "Vastaanotettu",
-    "toteutusAjankohta": "Toteutettavissa arviolta noin 1 vuoden päästä nykyhetkestä",
     "tyyppi": "TIE",
-    "vaylamuoto": Array [
-      "tie",
-    ],
+    "velho": Object {
+      "nimi": "Kaupungin sisääntulotien (mt 123) parantaminen välillä valtatien 1 eritasoliittymä - Päätie, Helsinki",
+      "tilaajaOrganisaatio": "Pirkanmaan ELY-keskus",
+      "vaylamuoto": Array [
+        "tie",
+      ],
+    },
   },
   "vastuuhenkilo": "test@ely-keskus.fi",
 }

@@ -22,10 +22,12 @@ Object {
     },
   ],
   "muistiinpano": "Testiprojekti 1:n muistiinpano",
-  "nimi": "Testiprojekti 1",
   "oid": "1",
   "status": "EI_JULKAISTU",
   "tyyppi": "TIE",
+  "velho": Object {
+    "nimi": "Testiprojekti 1",
+  },
 }
 `;
 
@@ -76,11 +78,13 @@ Array [
       },
     ],
     "muistiinpano": "Testiprojekti 1:n muistiinpano",
-    "nimi": "Testiprojekti 1",
     "oid": "1",
     "status": "EI_JULKAISTU",
     "tallennettu": true,
     "tyyppi": "TIE",
+    "velho": Object {
+      "nimi": "Testiprojekti 1",
+    },
   },
 ]
 `;

@@ -10,9 +10,11 @@ describe("kuulutusService", async () => {
   it("should generate pdf succesfully", async () => {
     const pdf = await new KuulutusService().createPDF(
       {
-        nimi: "Valtatie 11 parantaminen välillä Murhasaari–Mustikkakangas",
+        velho: {
+          nimi: "Valtatie 11 parantaminen välillä Murhasaari–Mustikkakangas",
+          kunnat: ["Nokia"],
+        },
         oid: "123",
-        kunnat: ["Nokia"],
         aloitusKuulutus: {
           elyKeskus: "Pirkanmaan",
           kuulutusPaiva: "2022-01-01",
@@ -25,6 +27,7 @@ describe("kuulutusService", async () => {
       KuulutusTyyppi.ALOITUSKUULUTUS
     );
     expect(pdf.sisalto.length).to.be.greaterThan(50000);
+    // tslint:disable-next-line:no-unused-expression
     expect(pdf.nimi).not.to.be.empty;
     fs.mkdirSync(".report", { recursive: true });
     fs.writeFileSync(".report/unittest_" + pdf.nimi, Buffer.from(pdf.sisalto, "base64"));

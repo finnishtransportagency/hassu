@@ -31,7 +31,10 @@ export class ProjektiFixture {
   projekti1: Projekti = {
     __typename: "Projekti",
     oid: this.PROJEKTI1_OID,
-    nimi: this.PROJEKTI1_NIMI,
+    velho: {
+      __typename: "Velho",
+      nimi: this.PROJEKTI1_NIMI,
+    },
     muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
     status: Status.EI_JULKAISTU,
     tallennettu: false,
@@ -41,7 +44,9 @@ export class ProjektiFixture {
 
   velhoprojekti1: DBProjekti = {
     oid: this.PROJEKTI1_OID,
-    nimi: this.PROJEKTI1_NIMI,
+    velho: {
+      nimi: this.PROJEKTI1_NIMI,
+    },
     muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
     kayttoOikeudet: [],
     tyyppi: ProjektiTyyppi.TIE,
@@ -59,10 +64,12 @@ export class ProjektiFixture {
       },
     ],
     oid: this.PROJEKTI1_OID,
-    nimi: this.PROJEKTI1_NIMI,
+    velho: {
+      nimi: this.PROJEKTI1_NIMI,
+      kunnat: ["Tampere", "Nokia"],
+    },
     muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
     status: Status.EI_JULKAISTU,
-    kunnat: ["Tampere", "Nokia"],
     suunnitteluSopimus: {
       email: "Joku.Jossain@vayla.fi",
       puhelinnumero: "123",

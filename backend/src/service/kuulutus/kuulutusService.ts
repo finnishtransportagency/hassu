@@ -49,9 +49,9 @@ export class KuulutusService {
           doc.moveDown(1).font("ArialMTBold").fontSize(10).text("KUULUTUS SUUNNITTELUN ALOITTAMISESTA").moveDown(1);
         }),
         () => {
-          const parts = [projekti.nimi];
-          if (projekti.kunnat) {
-            parts.push(...projekti.kunnat);
+          const parts = [projekti.velho?.nimi];
+          if (projekti.velho?.kunnat) {
+            parts.push(...projekti.velho.kunnat);
           }
           // switch (kuulutus.projektiTyyppi) {
           //   case ProjektiTyyppi.TIE:

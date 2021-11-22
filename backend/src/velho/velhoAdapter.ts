@@ -82,16 +82,15 @@ export function adaptSearchResults(searchResults: ProjektiSearchResult[], kaytta
 export function adaptProjekti(data: ProjektiProjekti): { projekti: DBProjekti; vastuuhenkilo: string } {
   const projekti: DBProjekti = {
     oid: "" + data.oid,
-    tila: metadata.tilat[`${data.ominaisuudet.tila}`], // TODO: lisää hakuehtoihin vain Aktiivinen
     tyyppi: getProjektiTyyppi(data.ominaisuudet.vaihe as any),
-    nimi: data.ominaisuudet.nimi,
+    velho: {
+      nimi: data.ominaisuudet.nimi,
+      vaylamuoto: adaptVaylamuoto(data.ominaisuudet.vaylamuoto),
+      tilaajaOrganisaatio: metadata.organisaatiot[`${data.ominaisuudet.tilaajaorganisaatio}`],
+    },
     status: Status.EI_JULKAISTU,
-    vaylamuoto: adaptVaylamuoto(data.ominaisuudet.vaylamuoto),
-    organisaatio: metadata.organisaatiot[`${data.ominaisuudet.tilaajaorganisaatio}`],
     kayttoOikeudet: [],
   };
-  // @ts-ignore
-  projekti.toteutusAjankohta = metadata.toteutusAjankohdat[data.ominaisuudet["arvioitu-toteutusajankohta"]];
 
   return {
     projekti,
