@@ -1,4 +1,4 @@
-import { DBProjekti } from "../database/model/projekti";
+import { DBProjekti, SuunnitteluSopimus } from "../database/model/projekti";
 import * as API from "../../../common/graphql/apiModel";
 import pickBy from "lodash/pickBy";
 import identity from "lodash/identity";
@@ -11,19 +11,28 @@ function removeUndefinedFields(object: any) {
 
 export class ProjektiAdapter {
   public adaptProjekti(dbProjekti: DBProjekti): API.Projekti {
-    const { kayttoOikeudet, tyyppi, ...fieldsToCopyAsIs } = dbProjekti;
-    return {
+    const { kayttoOikeudet, tyyppi, aloitusKuulutus, suunnitteluSopimus, ...fieldsToCopyAsIs } = dbProjekti;
+    return removeUndefinedFields({
       __typename: "Projekti",
       tallennettu: !!dbProjekti.tallennettu,
       kayttoOikeudet: new KayttoOikeudetManager(dbProjekti.kayttoOikeudet).getAPIKayttoOikeudet(),
       tyyppi: tyyppi as API.ProjektiTyyppi,
+      aloitusKuulutus: adaptAloitusKuulutus(aloitusKuulutus),
+      suunnitteluSopimus: adaptSuunnitteluSopimus(suunnitteluSopimus),
       ...fieldsToCopyAsIs,
-    };
+    }) as API.Projekti;
   }
 
   async adaptProjektiToSave(projekti: DBProjekti, changes: API.TallennaProjektiInput): Promise<DBProjekti> {
     // Pick only fields that are relevant to DB
-    const { oid, muistiinpano, kayttoOikeudet } = changes;
+    const {
+      oid,
+      muistiinpano,
+      kayttoOikeudet,
+      aloitusKuulutus,
+      suunnitteluSopimus,
+      suunnittelustaVastaavaViranomainen,
+    } = changes;
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet);
     await kayttoOikeudetManager.applyChanges(kayttoOikeudet);
     return removeUndefinedFields(
@@ -32,9 +41,26 @@ export class ProjektiAdapter {
         {
           oid,
           muistiinpano,
+          aloitusKuulutus,
+          suunnitteluSopimus,
+          suunnittelustaVastaavaViranomainen,
           kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet(),
         }
       )
     ) as DBProjekti;
   }
+}
+
+function adaptAloitusKuulutus(kuulutus?: Partial<API.AloitusKuulutus>): API.AloitusKuulutus | undefined {
+  if (kuulutus) {
+    return { __typename: "AloitusKuulutus", ...kuulutus };
+  }
+  return undefined;
+}
+
+function adaptSuunnitteluSopimus(suunnitteluSopimus?: SuunnitteluSopimus): API.SuunnitteluSopimus | undefined {
+  if (suunnitteluSopimus) {
+    return { __typename: "SuunnitteluSopimus", ...suunnitteluSopimus };
+  }
+  return undefined;
 }

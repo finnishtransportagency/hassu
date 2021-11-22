@@ -108,6 +108,20 @@ export class HassuBackendStack extends cdk.Stack {
       timeout: Duration.seconds(29),
       bundling: {
         define,
+        nodeModules: ["pdfkit"],
+        commandHooks: {
+          beforeBundling(inputDir: string, outputDir: string): string[] {
+            return [
+              `./node_modules/.bin/copyfiles -f -u 1 ${inputDir}/backend/src/service/kuulutus/files/* ${outputDir}/files`,
+            ];
+          },
+          afterBundling(): string[] {
+            return [];
+          },
+          beforeInstall() {
+            return [];
+          },
+        },
       },
       environment: {
         COGNITO_URL: config.getInfraParameter("CognitoURL"),

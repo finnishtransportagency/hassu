@@ -5,10 +5,11 @@ projects:
       - common/graphql/**/*.ts
     excludes:
       - ./amplify/**
+      - ./graphql/**
     extensions:
       amplify:
         codeGenTarget: typescript
-        generatedFileName:  common/graphql/apiModel.ts
+        generatedFileName: common/graphql/apiModel.ts
         docsFilePath: common/graphql
         region: eu-west-1
         frontend: javascript

@@ -1,5 +1,6 @@
 import log from "loglevel";
 import {
+  LataaKuulutusPDFQueryVariables,
   LataaProjektiQueryVariables,
   ListaaVelhoProjektitQueryVariables,
   TallennaProjektiInput,
@@ -12,6 +13,7 @@ import { getCurrentUser } from "./handler/getCurrentUser";
 import { listAllUsers } from "./handler/listAllUsers";
 import { createOrUpdateProjekti, listProjektit, loadProjekti } from "./handler/projektiHandler";
 import { apiConfig } from "../../common/abstractApi";
+import { lataaKuulutus } from "./handler/kuulutusHandler";
 
 const logLevel = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : "info";
 log.setLevel(logLevel as any);
@@ -40,6 +42,8 @@ export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArgume
       return await loadProjekti((event.arguments as LataaProjektiQueryVariables).oid);
     case apiConfig.tallennaProjekti.name:
       return await createOrUpdateProjekti((event.arguments as TallennaProjektiMutationVariables).projekti);
+    case apiConfig.lataaKuulutusPDF.name:
+      return await lataaKuulutus(event.arguments as LataaKuulutusPDFQueryVariables);
     default:
       return null;
   }

@@ -82,7 +82,7 @@ export function adaptSearchResults(searchResults: ProjektiSearchResult[], kaytta
 export function adaptProjekti(data: ProjektiProjekti): { projekti: DBProjekti; vastuuhenkilo: string } {
   const projekti: DBProjekti = {
     oid: "" + data.oid,
-    tila: metadata.tilat[`${data.ominaisuudet.tila}`],
+    tila: metadata.tilat[`${data.ominaisuudet.tila}`], // TODO: lisää hakuehtoihin vain Aktiivinen
     tyyppi: getProjektiTyyppi(data.ominaisuudet.vaihe as any),
     nimi: data.ominaisuudet.nimi,
     status: Status.EI_JULKAISTU,

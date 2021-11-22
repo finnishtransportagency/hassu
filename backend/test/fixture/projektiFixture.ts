@@ -54,7 +54,7 @@ export class ProjektiFixture {
         email: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
         kayttajatunnus: ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
         nimi: ProjektiFixture.pekkaProjariProjektiKayttaja.nimi,
-        puhelinnumero: ProjektiFixture.pekkaProjariProjektiKayttaja.puhelinnumero,
+        puhelinnumero: ProjektiFixture.pekkaProjariProjektiKayttaja.puhelinnumero || "",
         organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio,
       },
     ],
@@ -62,5 +62,22 @@ export class ProjektiFixture {
     nimi: this.PROJEKTI1_NIMI,
     muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
     status: Status.EI_JULKAISTU,
+    kunnat: ["Tampere", "Nokia"],
+    suunnitteluSopimus: {
+      email: "Joku.Jossain@vayla.fi",
+      puhelinnumero: "123",
+      etunimi: "Joku",
+      sukunimi: "Jossain",
+      kunta: "Nokia",
+    },
+    aloitusKuulutus: {
+      kuulutusPaiva: "2022-01-02",
+      hankkeenKuvaus: "Lorem Ipsum",
+      hankkeenKuvausRuotsi: "På Svenska",
+      hankkeenKuvausSaame: "Saameksi",
+      siirtyySuunnitteluVaiheeseen: "2022-01-01",
+      elyKeskus: "Pirkanmaa",
+      yhteystiedot: [ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus],
+    },
   };
 }
