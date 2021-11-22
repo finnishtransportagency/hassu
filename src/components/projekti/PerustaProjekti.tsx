@@ -19,10 +19,9 @@ import {
   Projekti,
   ProjektiKayttajaInput,
   ProjektiRooli,
-  ProjektiTyyppi,
   TallennaProjektiInput,
 } from "@services/api";
-import { projektiTyyppiToLabel } from "@services/projektityyppiToLabel";
+import useTranslation from "next-translate/useTranslation";
 
 import log from "loglevel";
 
@@ -62,6 +61,7 @@ interface Props {
 }
 
 export default function PerustaProjekti({ projekti, reloadProject }: Props): ReactElement {
+  const { t } = useTranslation("projekti");
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
 
   const router = useRouter();
@@ -236,17 +236,17 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
                 <h4>Suunnitteluhankkeen perustiedot</h4>
                 <ProjektiPerustiedot
                   perustiedot={[
-                    // TODO map ignored, not existing fields to real fields when possible
-                    { header: "Vastuuorganisaatio (tilaaja)", data: projekti?.organisaatio },
-                    // @ts-ignore
-                    { header: "Suunnitelman laatija", data: projekti?.laatija },
-                    { header: "Hallinnollinen asiatunnus", data: projekti?.asianumero },
+                    { header: "Asiatunnus", data: projekti?.asianumero },
                     {
                       header: "Suunnitelman tyyppi",
-                      data: projekti?.tyyppi ? projektiTyyppiToLabel[projekti.tyyppi as ProjektiTyyppi] : "-",
+                      data: projekti?.tyyppi && t(`projekti-tyyppi.${projekti?.tyyppi}`),
                     },
-                    // @ts-ignore
-                    { header: "Kohteen osoite", data: projekti?.osoite },
+                    {
+                      header: "Väylämuoto",
+                      data:
+                        projekti?.vaylamuoto &&
+                        projekti?.vaylamuoto.map((muoto) => t(`projekti-vayla-muoto.${muoto}`)).join(", "),
+                    },
                   ]}
                 />
               </div>

@@ -1,4 +1,5 @@
 const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
+const nextTranslate = require("next-translate");
 const AWS = require("aws-sdk");
 const fs = require("fs");
 
@@ -48,10 +49,9 @@ module.exports = (phase) => {
   };
   if (phase === PHASE_DEVELOPMENT_SERVER) {
     config = setupLocalDevelopmentMode(config, env);
-    return config;
   } else {
     config.publicRuntimeConfig = { apiImpl: "permanentApi" };
     config.env = env;
-    return config;
   }
+  return nextTranslate(config);
 };

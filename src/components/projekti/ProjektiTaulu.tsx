@@ -2,7 +2,7 @@ import { VelhoHakuTulos } from "@services/api";
 import React, { ReactElement } from "react";
 import styles from "@styles/projekti/ProjektiTaulu.module.css";
 import Link from "next/link";
-import { projektiTyyppiToLabel } from "@services/projektityyppiToLabel";
+import useTranslation from "next-translate/useTranslation";
 
 interface Props {
   projektit: VelhoHakuTulos[];
@@ -11,6 +11,8 @@ interface Props {
 }
 
 export default function ProjektiTaulu({ projektit, isLoading, projektiLinkki }: Props): ReactElement {
+  const { t } = useTranslation("projekti");
+
   return (
     <table className={styles["project-table"]}>
       <thead>
@@ -50,7 +52,7 @@ export default function ProjektiTaulu({ projektit, isLoading, projektiLinkki }: 
                       {nimi}
                     </td>
                     <td className="sm:w-2/12" data-label="Tyyppi">
-                      {tyyppi ? projektiTyyppiToLabel[tyyppi] : "-"}
+                      {t(`projekti-tyyppi.${tyyppi}`)}
                     </td>
                     <td className="sm:w-2/12" data-label="Projektipäällikkö">
                       {projektiPaallikko || "-"}
@@ -66,7 +68,7 @@ export default function ProjektiTaulu({ projektit, isLoading, projektiLinkki }: 
                     {nimi}
                   </td>
                   <td className="sm:w-2/12" data-label="Tyyppi">
-                    {tyyppi ? projektiTyyppiToLabel[tyyppi] : "-"}
+                    {t(`projekti-tyyppi.${tyyppi}`)}
                   </td>
                   <td className="sm:w-2/12" data-label="Projektipäällikkö">
                     {projektiPaallikko || "-"}

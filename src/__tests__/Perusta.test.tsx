@@ -7,6 +7,7 @@ import Perusta from "@pages/yllapito/perusta";
 import { ProjektiTyyppi, VelhoHakuTulos } from "@services/api";
 import { create, act } from "react-test-renderer";
 import { useRouter } from "next/router";
+import { componentWithTranslation } from "../test-utils";
 
 jest.mock("next/router", () => ({
   useRouter: jest.fn(),
@@ -26,7 +27,7 @@ jest.mock("@services/api", () => ({
   },
 }));
 
-describe("ProjektiTaulu", () => {
+describe("Perusta", () => {
   it("renders 'Perusta' page unchanged", async () => {
     const router = {
       isReady: true,
@@ -35,10 +36,11 @@ describe("ProjektiTaulu", () => {
       },
     };
     (useRouter as jest.Mock).mockReturnValue(router);
-    const tree = create(<Perusta />);
+    const component = await componentWithTranslation(<Perusta />);
+    const tree = create(component);
 
     await act(async () => {
-      await tree.update(<Perusta />);
+      await tree.update(component);
     });
     expect(tree.toJSON()).toMatchSnapshot();
   });

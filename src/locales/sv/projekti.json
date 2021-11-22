@@ -1,0 +1,12 @@
+{
+  "projekti-tyyppi": {
+    "RATA": "Vägplan",
+    "TIE": "Spårplan",
+    "YLEINEN": "Översiktsplan"
+  },
+  "projekti-vayla-muoto": {
+    "tie": "Väg",
+    "rata": "Spår",
+    "vesi": "Vatten"
+  }
+}

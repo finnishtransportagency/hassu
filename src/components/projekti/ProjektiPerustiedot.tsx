@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import styles from "@styles/projekti/ProjektiPerustiedot.module.css";
 
 interface Props {
-  perustiedot: { header: string; data: string | undefined }[];
+  perustiedot: { header: string; data: string | null | undefined }[];
 }
 
 export default function ProjektiPerustiedot({ perustiedot }: Props): ReactElement {
