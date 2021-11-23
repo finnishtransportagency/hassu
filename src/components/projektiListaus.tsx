@@ -44,32 +44,28 @@ export class ProjektiListaus extends React.Component<ProjektiListausProps, Proje
 
   render() {
     return (
-      <div className={"row"}>
-        <div className={"col"}>
-          <table className="table table-striped">
-            <thead>
-              <tr>
-                <th style={{ width: "50%" }}>Nimi</th>
-                <th style={{ width: "50%" }}>Sijainti</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.projektit.map((projekti) => (
-                <tr key={projekti.oid}>
-                  <td>
-                    <Link
-                      href={(this.props.admin ? "/yllapito" : "") + `/suunnitelma/${encodeURIComponent(projekti.oid)}`}
-                    >
-                      <a>{projekti.nimi}</a>
-                    </Link>
-                  </td>
-                  <td/>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <table>
+        <thead>
+          <tr>
+            <th className="text-left">Nimi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {this.state.projektit.map((projekti) => (
+            <tr key={projekti.oid}>
+              <td>
+                <Link
+                  href={
+                    (this.props.admin ? "/yllapito/projekti" : "/suunnitelma") + `/${encodeURIComponent(projekti.oid)}`
+                  }
+                >
+                  <a>{projekti.nimi}</a>
+                </Link>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     );
   }
 }

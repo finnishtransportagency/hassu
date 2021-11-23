@@ -10,10 +10,17 @@ interface Props {
   startIcon?: IconProp;
   endIcon?: IconProp;
   link?: { href: string; external?: boolean };
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-export default function Button({ children, link, startIcon, endIcon, primary, onClick }: Props): ReactElement {
+export default function Button({
+  children,
+  link,
+  startIcon,
+  endIcon,
+  primary,
+  className,
+  ...buttonProps
+}: Props & React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>): ReactElement {
   const buttonClass = primary ? "btn-primary" : "btn";
   const childrenWithIcons = (
     <div className={primary ? overlay : ""}>
@@ -26,8 +33,8 @@ export default function Button({ children, link, startIcon, endIcon, primary, on
   );
 
   return !link ? (
-    <div className={wrapper}>
-      <button className={buttonClass} onClick={onClick}>
+    <div className={wrapper + " " + className}>
+      <button className={buttonClass} {...buttonProps}>
         {childrenWithIcons}
       </button>
     </div>
