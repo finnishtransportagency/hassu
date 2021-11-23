@@ -1,41 +1,16 @@
-import CSS from "csstype";
 import { ProjektiListaus } from "@components/projektiListaus";
-import Link from "next/link";
-
-const styles = {
-  container: {
-    margin: "0 auto",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    padding: "20px",
-  } as CSS.Properties,
-  suunnitelma: { marginBottom: "15px" } as CSS.Properties,
-  input: {
-    border: "none",
-    backgroundColor: "#ddd",
-    marginBottom: "10px",
-    padding: "8px",
-    fontSize: "18px",
-  } as CSS.Properties,
-  button: {
-    backgroundColor: "black",
-    color: "white",
-    outline: "none",
-    fontSize: "18px",
-    padding: "12px 0px",
-  } as CSS.Properties,
-};
-
-export default listingPage;
+import Button from "@components/button/Button";
 
 function listingPage() {
   return (
-    <div style={styles.container}>
-      <Link href="/yllapito/perusta">
-        <a className="btn btn-sm btn-success mb-2">Perusta uusi projekti</a>
-      </Link>
+    <section>
+      <Button primary={true} link={{ href: "/yllapito/perusta" }}>
+        Perusta uusi projekti
+      </Button>
+      <h2 className="mt-4">Projektit</h2>
       <ProjektiListaus admin={true} />
-    </div>
+    </section>
   );
 }
+
+export default listingPage;
