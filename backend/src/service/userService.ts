@@ -6,8 +6,6 @@ import { IllegalAccessError } from "../error/IllegalAccessError";
 import { Kayttaja, VaylaKayttajaTyyppi } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../database/model/projekti";
 
-let vaylaUser: Kayttaja | undefined;
-
 function parseRoles(roles: string) {
   return roles
     ? roles
@@ -59,16 +57,16 @@ const identifyLoggedInVaylaUser: IdentifyUserFunc = async (event: AppSyncResolve
 const identifyUserFunctions = [identifyLoggedInVaylaUser];
 
 export const identifyUser = async (event: AppSyncResolverEvent<any>) => {
+  globalThis.currentUser = undefined;
   for (const identifyUserFunction of identifyUserFunctions) {
     const user = await identifyUserFunction(event);
     if (user) {
       user.vaylaKayttajaTyyppi = adaptKayttajaTyyppi(user.roolit);
-      vaylaUser = user;
-      log.info("Current user:", vaylaUser);
+      globalThis.currentUser = user;
+      log.info("Current user:", globalThis.currentUser);
       return;
     }
   }
-  vaylaUser = undefined;
   log.info("Anonymous user");
 };
 
@@ -83,26 +81,26 @@ if (process.env.USER_IDENTIFIER_FUNCTIONS) {
  * @param kayttaja
  */
 export function identifyMockUser(kayttaja?: Kayttaja) {
-  vaylaUser = kayttaja;
-  if (vaylaUser) {
-    log.info("Current user:", vaylaUser);
+  globalThis.currentUser = kayttaja;
+  if (globalThis.currentUser) {
+    log.info("Current user:", globalThis.currentUser);
   } else {
     log.info("Anonymous user");
   }
 }
 
 export function getVaylaUser(): Kayttaja {
-  if (!vaylaUser) {
+  if (!globalThis.currentUser) {
     throw new IllegalAccessError("Väylä-kirjautuminen puuttuu");
   }
-  return vaylaUser;
+  return globalThis.currentUser;
 }
 
 function requireVaylaUser(): Kayttaja {
-  if (!vaylaUser) {
+  if (!globalThis.currentUser) {
     throw new IllegalAccessError("Väylä-kirjautuminen puuttuu");
   }
-  return vaylaUser;
+  return globalThis.currentUser;
 }
 
 // Role: admin
