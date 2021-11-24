@@ -52,5 +52,7 @@ async function deleteAllItemsFromDatabase() {
 }
 
 afterEach("Reset database stub", (() => {
-  return localDynamoDBDocumentClientStub.restore();
+  if (localDynamoDBDocumentClientStub) {
+    return localDynamoDBDocumentClientStub.restore();
+  }
 }) as HookFunction);

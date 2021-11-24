@@ -38,6 +38,7 @@ export class Config extends Resource {
   public readonly basicAuthenticationUsername: string;
   public readonly basicAuthenticationPassword: string;
   public readonly infraEnvironment: string;
+  public static readonly searchIndex: string = "projekti";
   private branch?: string;
   public static readonly tags = { Environment: Config.env, Project: "Hassu" };
 

@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`dynamoDBStreamHandler should index new projektis successfully 1`] = `
+Object {
+  "muistiinpano": "Testiprojekti 1:n muistiinpano",
+  "status": "EI_JULKAISTU",
+  "velho": Object {
+    "kunnat": Array [
+      "Tampere",
+      "Nokia",
+    ],
+    "nimi": "Testiprojekti 1",
+  },
+}
+`;
+
+exports[`dynamoDBStreamHandler should index projekti updates successfully 1`] = `
+Object {
+  "muistiinpano": "moro",
+  "status": "EI_JULKAISTU",
+  "velho": Object {
+    "kunnat": Array [
+      "Tampere",
+      "Nokia",
+    ],
+    "nimi": "Testiprojekti 1",
+  },
+}
+`;
