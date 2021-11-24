@@ -23,6 +23,7 @@ import {
   faCheckCircle,
   faInfo,
   faInfoCircle,
+  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 library.add(
   faAngleDown,
@@ -47,7 +48,8 @@ library.add(
   faCheckSquare,
   faCheckCircle,
   faInfo,
-  faInfoCircle
+  faInfoCircle,
+  faSearch
 );
 
 import {

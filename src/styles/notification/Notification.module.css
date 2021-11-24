@@ -1,0 +1,39 @@
+.notification {
+  @apply border p-5 flex flex-row vayla-paragraph mb-8 mt-6 bg-gray-lightest border-gray;
+}
+
+.notification .start-icon {
+  @apply mr-5 mt-0.5;
+}
+
+.notification .start-icon.default {
+  @apply text-font-primary;
+}
+
+.notification .start-icon.info {
+  @apply text-primary-light;
+}
+
+.notification .start-icon.warn {
+  @apply text-orange-dark;
+}
+
+.notification .start-icon.error {
+  @apply text-fuchsia;
+}
+
+.notification.default {
+  @apply bg-gray-lightest border-gray;
+}
+
+.notification.info {
+  @apply bg-primary-lightest border-primary-light;
+}
+
+.notification.warn {
+  @apply bg-orange-light border-orange-dark;
+}
+
+.notification.error {
+  @apply bg-fuchsia-light border-fuchsia;
+}

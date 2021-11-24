@@ -8,6 +8,7 @@ import { ProjektiTyyppi, VelhoHakuTulos } from "@services/api";
 import { create, act } from "react-test-renderer";
 import { useRouter } from "next/router";
 import { componentWithTranslation } from "../test-utils";
+import "../font-awesome-init";
 
 jest.mock("next/router", () => ({
   useRouter: jest.fn(),

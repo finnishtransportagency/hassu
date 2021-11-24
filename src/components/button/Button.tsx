@@ -3,6 +3,7 @@ import Link from "next/link";
 import React, { ReactElement } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { content, overlay, wrapper } from "@styles/button/Button.module.css";
+import classNames from "classnames";
 
 interface Props {
   primary?: boolean;
@@ -33,7 +34,7 @@ export default function Button({
   );
 
   return !link ? (
-    <div className={wrapper + " " + className}>
+    <div className={classNames(wrapper, className)}>
       <button className={buttonClass} {...buttonProps}>
         {childrenWithIcons}
       </button>
