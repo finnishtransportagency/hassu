@@ -1,7 +1,6 @@
 input TallennaProjektiInput {
   oid: String!
   muistiinpano: String
-  suunnittelustaVastaavaViranomainen: Viranomainen
   aloitusKuulutus: AloitusKuulutusInput
   suunnitteluSopimus: SuunnitteluSopimusInput
   kayttoOikeudet: [ProjektiKayttajaInput!]

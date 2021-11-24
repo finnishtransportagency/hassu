@@ -19,7 +19,7 @@ describe("VelhoClient", () => {
     if (process.env.SKIP_VELHO_TESTS) {
       this.skip();
     }
-    const searchResult = await velho.searchProjects("tampere");
+    const searchResult = await velho.searchProjects("kantatie");
     expect(searchResult).not.null;
     expect(searchResult).not.be.empty;
     const firstSearchResult = searchResult[0];

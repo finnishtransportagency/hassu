@@ -19,7 +19,7 @@ function ProjektiPage() {
   log.info("loaded", projekti);
   return (
     <>
-      <p>Nimi: {projekti.nimi}</p>
+      <p>Nimi: {projekti.velho?.nimi}</p>
       <p/>
       <p />
       <p>

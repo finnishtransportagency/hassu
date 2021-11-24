@@ -5,11 +5,10 @@ Object {
   "ExpressionAttributeNames": Object {
     "#aloitusKuulutus": "aloitusKuulutus",
     "#kayttoOikeudet": "kayttoOikeudet",
-    "#kunnat": "kunnat",
     "#muistiinpano": "muistiinpano",
-    "#nimi": "nimi",
     "#status": "status",
     "#suunnitteluSopimus": "suunnitteluSopimus",
+    "#velho": "velho",
   },
   "ExpressionAttributeValues": Object {
     ":aloitusKuulutus": Object {
@@ -33,12 +32,7 @@ Object {
         "rooli": "PROJEKTIPAALLIKKO",
       },
     ],
-    ":kunnat": Array [
-      "Tampere",
-      "Nokia",
-    ],
     ":muistiinpano": "Testiprojekti 1:n muistiinpano",
-    ":nimi": "Testiprojekti 1",
     ":status": "EI_JULKAISTU",
     ":suunnitteluSopimus": Object {
       "email": "Joku.Jossain@vayla.fi",
@@ -47,11 +41,18 @@ Object {
       "puhelinnumero": "123",
       "sukunimi": "Jossain",
     },
+    ":velho": Object {
+      "kunnat": Array [
+        "Tampere",
+        "Nokia",
+      ],
+      "nimi": "Testiprojekti 1",
+    },
   },
   "Key": Object {
     "oid": "1",
   },
   "TableName": "Projekti-localstack",
-  "UpdateExpression": "set #kayttoOikeudet = :kayttoOikeudet , #nimi = :nimi , #muistiinpano = :muistiinpano , #status = :status , #kunnat = :kunnat , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus ",
+  "UpdateExpression": "set #kayttoOikeudet = :kayttoOikeudet , #velho = :velho , #muistiinpano = :muistiinpano , #status = :status , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus ",
 }
 `;

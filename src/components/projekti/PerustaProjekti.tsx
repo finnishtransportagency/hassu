@@ -215,7 +215,7 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
           </div>
           <div className="md:col-span-6 lg:col-span-8 xl:col-span-9">
             <form onSubmit={handleSubmit(onSubmit)}>
-              <h2>{projekti?.nimi || "-"}</h2>
+              <h2>{projekti?.velho?.nimi || "-"}</h2>
               {projektiError && (
                 <div className="alert-error">
                   {projekti?.tallennettu ? (
@@ -236,7 +236,7 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
                 <h4>Suunnitteluhankkeen perustiedot</h4>
                 <ProjektiPerustiedot
                   perustiedot={[
-                    { header: "Asiatunnus", data: projekti?.asianumero },
+                    { header: "Asiatunnus", data: projekti?.velho?.asiatunnusELY },
                     {
                       header: "Suunnitelman tyyppi",
                       data: projekti?.tyyppi && t(`projekti-tyyppi.${projekti?.tyyppi}`),
@@ -244,8 +244,8 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
                     {
                       header: "Väylämuoto",
                       data:
-                        projekti?.vaylamuoto &&
-                        projekti?.vaylamuoto.map((muoto) => t(`projekti-vayla-muoto.${muoto}`)).join(", "),
+                        projekti?.velho?.vaylamuoto &&
+                        projekti?.velho?.vaylamuoto.map((muoto) => t(`projekti-vayla-muoto.${muoto}`)).join(", "),
                     },
                   ]}
                 />

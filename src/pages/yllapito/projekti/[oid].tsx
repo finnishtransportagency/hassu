@@ -23,8 +23,8 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   useEffect(() => {
     if (router.isReady) {
       let routeLabel = "";
-      if (projekti?.nimi) {
-        routeLabel = projekti.nimi;
+      if (projekti?.velho?.nimi) {
+        routeLabel = projekti.velho?.nimi;
       } else if (typeof oid === "string") {
         routeLabel = oid;
       }
@@ -43,7 +43,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
     return (
       <>
         <p>PROJEKTIN MUOKKAUS SIVU - TBD</p>
-        <p>{projekti.nimi}</p>
+        <p>{projekti.velho?.nimi}</p>
       </>
     );
   } else {

@@ -90,6 +90,7 @@ export class VelhoClient {
             ["projekti/projekti", "ominaisuudet", "vaihe"],
             ["vaihe/vaihe04", "vaihe/vaihe10", "vaihe/vaihe12"],
           ],
+          ["yhtasuuri", ["projekti/projekti", "ominaisuudet", "tila"], "tila/tila15"],
           searchClause,
         ],
         kohdeluokat: ["projekti/projekti"],
