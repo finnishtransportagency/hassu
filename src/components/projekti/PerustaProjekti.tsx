@@ -270,14 +270,14 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
                         <div className="lg:col-span-4">
                           <TextInput
                             label="Nimi"
-                            registrationValues={{ value: kayttajaNimi(haeKayttaja(paallikko.kayttajatunnus)) || "" }}
+                            value={kayttajaNimi(haeKayttaja(paallikko.kayttajatunnus)) || ""}
                             disabled
                           />
                         </div>
                         <div className="lg:col-span-4">
                           <TextInput
                             label="Organisaatio"
-                            registrationValues={{ value: haeKayttaja(paallikko.kayttajatunnus)?.organisaatio || "" }}
+                            value={haeKayttaja(paallikko.kayttajatunnus)?.organisaatio || ""}
                             disabled
                           />
                         </div>
@@ -292,7 +292,7 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
                         <div className="lg:col-span-4">
                           <TextInput
                             label="Puhelinnumero"
-                            registrationValues={register(`kayttoOikeudet.${index}.puhelinnumero`)}
+                            {...register(`kayttoOikeudet.${index}.puhelinnumero`)}
                             error={errors.kayttoOikeudet?.[index]?.puhelinnumero}
                             hideErrorMessage
                             disabled={disableFormEdit || formIsSubmitting}
@@ -301,7 +301,7 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
                         <div className="lg:col-span-4">
                           <TextInput
                             label="Sähköposti"
-                            registrationValues={{ value: haeKayttaja(paallikko.kayttajatunnus)?.email || "" }}
+                            value={haeKayttaja(paallikko.kayttajatunnus)?.email || ""}
                             disabled
                           />
                         </div>
@@ -347,11 +347,10 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
                         <div className="lg:col-span-4">
                           <TextInput
                             label="Organisaatio"
-                            registrationValues={{
-                              value:
-                                kayttajat?.find(({ uid }) => uid === kayttoOikeudet[index].kayttajatunnus)
-                                  ?.organisaatio || "",
-                            }}
+                            value={
+                              kayttajat?.find(({ uid }) => uid === kayttoOikeudet[index].kayttajatunnus)
+                                ?.organisaatio || ""
+                            }
                             disabled
                           />
                         </div>
@@ -368,7 +367,7 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
                         <div className="lg:col-span-4">
                           <TextInput
                             label="Puhelinnumero"
-                            registrationValues={register(`kayttoOikeudet.${index}.puhelinnumero`)}
+                            {...register(`kayttoOikeudet.${index}.puhelinnumero`)}
                             error={errors.kayttoOikeudet?.[index]?.puhelinnumero}
                             hideErrorMessage
                             disabled={disableFormEdit || formIsSubmitting}
@@ -377,10 +376,9 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
                         <div className="lg:col-span-4">
                           <TextInput
                             label="Sähköposti"
-                            registrationValues={{
-                              value:
-                                kayttajat?.find(({ uid }) => uid === kayttoOikeudet[index].kayttajatunnus)?.email || "",
-                            }}
+                            value={
+                              kayttajat?.find(({ uid }) => uid === kayttoOikeudet[index].kayttajatunnus)?.email || ""
+                            }
                             disabled
                           />
                         </div>

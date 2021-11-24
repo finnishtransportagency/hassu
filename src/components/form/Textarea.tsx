@@ -38,7 +38,7 @@ export default function Textarea({
       errorMessage={hideErrorMessage ? undefined : error?.message}
       bottomInfo={
         typeof maxLength === "number" && (
-          <span className={`ml-auto whitespace-nowrap ${length > maxLength ? "text-secondary-red" : "text-gray"}`}>
+          <span className={`ml-auto whitespace-nowrap ${length > maxLength ? "text-red" : "text-gray"}`}>
             {length} / {maxLength}
           </span>
         )

@@ -26,7 +26,7 @@ export default function Layout({ children, routeLabels }: Props): ReactElement {
     <div className="min-h-screen relative flex flex-col">
       <Header scrolledPastOffset={toTopEnabled} />
       <Breadcrumbs routeLabels={routeLabels} />
-      <main className="container mb-6">{children}</main>
+      <main className="container mb-10">{children}</main>
       <Footer />
       <button
         onClick={() => {

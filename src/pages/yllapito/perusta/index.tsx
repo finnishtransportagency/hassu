@@ -7,6 +7,9 @@ import { api, VelhoHakuTulos } from "@services/api";
 import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/router";
 import ProjektiTaulu from "@components/projekti/ProjektiTaulu";
+import TextInput from "@components/form/TextInput";
+import Button from "@components/button/Button";
+import Notification, { NotificationType } from "@components/notification/Notification";
 
 interface SearchInput {
   name: string;
@@ -91,41 +94,34 @@ export default function Perusta() {
     <>
       <section>
         <h1>Perusta uusi projekti</h1>
-        <p>
-          Hae projekti-VELHOon viety suunnitelma, jonka haluat tuoda Valtion väylien suunnittelu -palveluun. Voit hakea
-          suunnitelman joko asiatunnuksella tai suunnitelman / projektin nimellä tai sen osalla.
+        <p className="ingress">
+          Hae projekti-VELHOon viety suunnitelma, jonka haluat tuoda Valtion väylien suunnittelu -palveluun. Voit
+          käyttää hakuehtona projekti-VELHOon tallennettua asiatunnusta tai suunnitelman / projektin nimeä, tai näiden
+          osaa.
         </p>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-2 mb-3">
-            <div className="md:col-span-4 xl:col-span-3 md:col-start-1 xl:col-start-1 my-auto">
-              <label className="font-bold text-gray">Asiatunnus</label>
-            </div>
-            <div className="md:col-span-4 xl:col-span-3">
-              <input type="text" disabled />
-            </div>
-            <div className="md:col-span-4 xl:col-span-3 md:col-start-1 xl:col-start-1 my-auto">
-              <label className="font-bold">Projektin nimi</label>
-            </div>
-            <div className="md:col-span-4 xl:col-span-3">
-              <input type="text" {...register("name")} />
-            </div>
-            <div className="md:col-span-2">
-              <button className="btn-primary" disabled={isLoading}>
-                Haku
-              </button>
-            </div>
-          </div>
-        </form>
-        {errors.name?.message && <div className="alert-error">{errors.name?.message}</div>}
+        <div className="w-64 content">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <TextInput label="Asiatunnus" disabled />
+            <TextInput label="Projektin nimi" {...register("name")} />
+            <Button primary endIcon="search" disabled={isLoading}>
+              Hae
+            </Button>
+          </form>
+        </div>
+        {errors.name?.message && (
+          <Notification type={NotificationType.ERROR} className="content">
+            {errors.name?.message}
+          </Notification>
+        )}
       </section>
       <hr />
       {resultSectionVisible && (
-        <section className="pt-3">
+        <section>
           <h2>Hakutulokset</h2>
-          <div className="alert-info mb-4">
-            Ohjeet
+          <Notification type={NotificationType.INFO} hideIcon>
             <div>
-              <ul className="list-disc list-inside">
+              <h3 className="vayla-small-title">Ohjeet</h3>
+              <ul className="list-disc list-inside block">
                 <li>
                   Valitse listasta se suunnitelma, jonka haluat tallentaa Valtion väylien suunnittelu -palveluun uudeksi
                   projektiksi.
@@ -136,7 +132,7 @@ export default function Perusta() {
                 </li>
               </ul>
             </div>
-          </div>
+          </Notification>
           {(Array.isArray(hakuTulos) && hakuTulos.length > 0) || isLoading ? (
             <ProjektiTaulu
               projektit={hakuTulos || []}

@@ -4,10 +4,13 @@
 
 @layer base {
   body hr {
-    @apply border-gray;
+    @apply border-gray mt-6 mb-10;
+  }
+  body {
+    @apply vayla-paragraph;
   }
   body :is(input[type="text"], input[type="password"], input[type="number"], textarea, select) {
-    @apply border rounded w-full py-1 px-2 disabled:bg-gray focus:outline-none;
+    @apply border rounded w-full py-1 px-2 disabled:bg-gray-light focus:outline-none;
   }
   body :is(input[type="text"], input[type="password"], input[type="number"], textarea, select):not(.read-only) {
     @apply focus:outline-none focus:ring-2;
@@ -19,7 +22,7 @@
     @apply focus:ring-primary-light focus:border-primary-light;
   }
   body :is(input[type="text"], input[type="password"], input[type="number"], textarea, select).error {
-    @apply border-secondary-red focus:ring-secondary-red focus:border-secondary-red;
+    @apply border-red focus:ring-red focus:border-red;
   }
   body select {
     @apply appearance-none cursor-pointer disabled:cursor-default disabled:opacity-100;
@@ -27,27 +30,22 @@
   html {
     scroll-behavior: smooth;
   }
-  body :is(h1, h2, h3, h4, h5, h6) {
-    @apply font-bold;
-  }
-  body :is(h1, h2, h3, h4, h5, h6, p) {
-    @apply mb-3;
-  }
   body h1 {
-    @apply text-3xl;
+    @apply vayla-hero;
+  }
+  body :is(h1, h2, h3, h4, h5, p) {
+    @apply mb-4;
   }
   body h2 {
-    @apply text-2xl;
+    @apply vayla-title;
   }
   body h3 {
-    @apply text-xl;
-  }
-  body h4 {
-    @apply text-lg;
+    @apply vayla-lead;
   }
   body section {
-    @apply mb-2;
+    @apply mb-4;
   }
+
   @font-face {
     font-family: "Exo 2";
     src: url("/fonts/Exo2/Exo2-Thin.ttf") format("truetype");
@@ -253,12 +251,18 @@
     @apply border py-2 px-3 bg-gray-lightest border-gray;
   }
   .alert-error {
-    @apply alert bg-white border-secondary-magenta;
+    @apply alert bg-white border-fuchsia;
   }
   .alert-info {
     @apply alert bg-white border-primary-light;
   }
   .truncate-ellipsis {
     @apply overflow-ellipsis whitespace-nowrap overflow-hidden;
+  }
+  section .content {
+    @apply mb-8 mt-6;
+  }
+  section .ingress {
+    @apply mb-8;
   }
 }

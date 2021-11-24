@@ -37,7 +37,7 @@ export default function Textarea({
       </div>
       {error && !hideErrorMessage && (
         <div className="flex">
-          <span className="text-secondary-red">{error.message}</span>
+          <span className="text-red">{error.message}</span>
         </div>
       )}
     </FormGroup>
