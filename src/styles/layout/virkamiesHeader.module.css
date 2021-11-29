@@ -15,7 +15,12 @@
 }
 
 .header > nav {
-  @apply flex border-b-8 border-primary py-6 vayla-navigation uppercase;
+  @apply flex py-6 vayla-navigation uppercase;
+}
+
+.bottom-border {
+  @apply pb-2;
+  background: linear-gradient(117deg, #009ae0, #49c2f1);
 }
 
 .header > nav > ul {

@@ -1,6 +1,7 @@
 import React, { ReactElement, useState } from "react";
 import { FieldError } from "react-hook-form";
 import FormGroup from "./FormGroup";
+import classNames from "classnames";
 
 type RegistrationValues = Pick<
   React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>,
@@ -20,8 +21,6 @@ interface Props {
 }
 
 export default function Textarea({
-  cols = 30,
-  rows = 10,
   maxLength,
   error,
   registrationValues: fieldAttributes,
@@ -45,14 +44,12 @@ export default function Textarea({
       }
     >
       <textarea
-        cols={cols}
-        rows={rows}
         {...fieldAttributes}
         onChange={(event) => {
           fieldAttributes?.onChange?.(event);
           setLength(event.target.value.length);
         }}
-        className={error && "error"}
+        className={classNames(error && "error")}
         disabled={disabled}
         readOnly={readOnly}
       />

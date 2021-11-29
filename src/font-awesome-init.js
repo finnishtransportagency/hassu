@@ -24,12 +24,21 @@ import {
   faInfo,
   faInfoCircle,
   faSearch,
+  faTrash,
+  faChevronRight,
+  faChevronUp,
+  faChevronLeft,
+  faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
 library.add(
   faAngleDown,
   faAngleLeft,
   faAngleUp,
   faAngleRight,
+  faChevronDown,
+  faChevronLeft,
+  faChevronUp,
+  faChevronRight,
   faArrowDown,
   faArrowUp,
   faArrowLeft,
@@ -49,7 +58,8 @@ library.add(
   faCheckCircle,
   faInfo,
   faInfoCircle,
-  faSearch
+  faSearch,
+  faTrash
 );
 
 import {

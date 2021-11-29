@@ -7,22 +7,35 @@
     @apply border-gray mt-6 mb-10;
   }
   body {
-    @apply vayla-paragraph;
+    @apply vayla-body-text;
   }
-  body :is(input[type="text"], input[type="password"], input[type="number"], textarea, select) {
-    @apply border rounded w-full py-1 px-2 disabled:bg-gray-light focus:outline-none;
+  body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select) {
+    @apply border w-full py-2.5 px-3 outline-none vayla-body-text;
+    box-shadow: inset rgb(0 0 0 / 10%) 0px 0px 2px 0px, inset rgb(0 0 0 / 10%) 0px 2px 4px 0px;
   }
-  body :is(input[type="text"], input[type="password"], input[type="number"], textarea, select):not(.read-only) {
-    @apply focus:outline-none focus:ring-2;
+  body
+    :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):not(:disabled):not(.error) {
+    @apply border-primary;
   }
-  body :is(input[type="text"], input[type="password"], input[type="number"], textarea, select).read-only {
-    @apply bg-gray cursor-default;
+  body
+    :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):disabled {
+    @apply border-gray-dark bg-gray-light;
   }
-  body :is(input[type="text"], input[type="password"], input[type="number"], textarea, select):not(.error, .read-only) {
-    @apply focus:ring-primary-light focus:border-primary-light;
+  body
+    :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select).error {
+    @apply border-red;
   }
-  body :is(input[type="text"], input[type="password"], input[type="number"], textarea, select).error {
-    @apply border-red focus:ring-red focus:border-red;
+  body
+    :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):focus {
+    @apply ring-1;
+  }
+  body
+    :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):focus:not(.error) {
+    @apply ring-1 ring-primary;
+  }
+  body
+    :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select).error:focus {
+    @apply ring-red;
   }
   body select {
     @apply appearance-none cursor-pointer disabled:cursor-default disabled:opacity-100;
@@ -160,89 +173,94 @@
 @layer components {
   .vayla-hero {
     font-weight: 700;
-    font-size: 39px;
-    line-height: 48px;
+    font-size: 2.4375rem;
+    line-height: 1.231;
     color: #242222;
   }
 
   .vayla-title {
     font-weight: 700;
-    font-size: 28px;
-    line-height: 32px;
+    font-size: 1.75rem;
+    line-height: 1.143;
     color: #242222;
   }
 
   .vayla-lead {
     font-weight: 400;
-    font-size: 24px;
-    line-height: 32px;
+    font-size: 1.5rem;
+    line-height: 1.333;
     color: #242222;
   }
 
   .vayla-subtitle {
     font-weight: 700;
-    font-size: 23px;
-    line-height: 27px;
+    font-size: 1.4375rem;
+    line-height: 1.174;
     color: #242222;
   }
 
   .vayla-paragraph {
     font-weight: 400;
-    font-size: 18px;
-    line-height: 24px;
+    font-size: 1.125rem;
+    line-height: 1.333;
     color: #242222;
   }
 
   .vayla-small-title {
     font-weight: 700;
-    font-size: 20px;
-    line-height: 22px;
+    font-size: 1.25rem;
+    line-height: 1.1;
     color: #242222;
   }
 
   .vayla-body-text {
     font-weight: 400;
-    font-size: 16px;
+    font-size: 1rem;
     color: #242222;
-    line-height: 16px;
+    line-height: 1.5;
   }
 
   .vayla-label {
     font-weight: 400;
-    font-size: 16px;
+    font-size: 1rem;
     color: #333333;
+    line-height: normal;
   }
 
   .vayla-link {
     font-weight: 400;
-    font-size: 18px;
+    font-size: 1.125rem;
     color: #0064af;
-    line-height: 22px;
+    line-height: 1.222;
   }
 
   .vayla-blockquote {
     font-weight: 300;
     font-style: italic;
-    font-size: 20px;
+    font-size: 1.25rem;
     color: #242222;
     text-align: center;
-    line-height: 32px;
+    line-height: 1.6;
   }
 
   .vayla-navigation {
     font-weight: 400;
-    font-size: 16px;
+    font-size: 1rem;
     color: #242222;
+    line-height: normal;
   }
 
   .select-wrapper {
     @apply relative;
   }
-  .select-wrapper::after {
-    @apply absolute content-["V"] inset-y-0 right-0 flex items-center px-2 text-primary-dark pointer-events-none;
-  }
   .btn {
-    @apply text-xl leading-relaxed uppercase inline-block py-1 px-6 shadow hover:shadow-lg active:shadow-none rounded-full bg-white text-primary-dark border border-primary-dark transition disabled:opacity-50 disabled:cursor-default;
+    @apply leading-relaxed uppercase inline-block py-1 px-6 shadow rounded-full bg-white text-primary-dark border border-primary-dark transition disabled:opacity-50 disabled:cursor-default;
+  }
+  .btn:not(:disabled):not(:active):hover {
+    @apply shadow-lg;
+  }
+  .btn:active {
+    @apply shadow-none;
   }
   .btn-primary {
     @apply btn bg-primary-dark text-white;

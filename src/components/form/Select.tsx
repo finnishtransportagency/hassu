@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { ReactElement } from "react";
 import { FieldError } from "react-hook-form";
 import FormGroup from "./FormGroup";
@@ -34,6 +35,11 @@ export default function Textarea({
             </option>
           ))}
         </select>
+        <FontAwesomeIcon
+          icon="chevron-down"
+          className="absolute right-3 text-primary-dark pointer-events-none"
+          style={{ top: `calc(50% - 0.5rem)` }}
+        />
       </div>
       {error && !hideErrorMessage && (
         <div className="flex">

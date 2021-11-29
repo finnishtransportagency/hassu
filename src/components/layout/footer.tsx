@@ -16,7 +16,7 @@ export const Footer = ({}) => {
               perferendis totam?
             </p>
             <a href="#">Hankesuunnittelusivu</a>
-            <h3 className="font-light mt-3">Oikopolut</h3>
+            <h3 className="mt-3">Oikopolut</h3>
             <a href="#">Etäkäyttö (Extranet-palvelut, VPN-etäyhteys, intra)</a>
           </div>
           <div className="col-span-8 flex md:items-end md:space-x-4 place-content-end flex-col md:flex-row">

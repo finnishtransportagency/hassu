@@ -5,7 +5,6 @@ import * as Yup from "yup";
 import { SchemaOf } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InfoBox from "@components/InfoBox";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import Textarea from "@components/form/Textarea";
@@ -22,8 +21,11 @@ import {
   TallennaProjektiInput,
 } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
+import Notification, { NotificationType } from "@components/notification/Notification";
 
 import log from "loglevel";
+import Button from "@components/button/Button";
+import IconButton from "@components/button/IconButton";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Omit<
@@ -193,7 +195,7 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
     <>
       <section>
         <h1>Projektin tallennus</h1>
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mb-3">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-3">
           <div className="md:col-span-6 lg:col-span-4 xl:col-span-3">
             <InfoBox title="Suunnitteluhankkeen hallinnollinen vastuu">
               {projektiPaallikot.length > 0 ? (
@@ -217,7 +219,7 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
             <form onSubmit={handleSubmit(onSubmit)}>
               <h2>{projekti?.velho?.nimi || "-"}</h2>
               {projektiError && (
-                <div className="alert-error">
+                <Notification type={NotificationType.ERROR}>
                   {projekti?.tallennettu ? (
                     <>Tunnukselle {`'${oid}'`} on jo perustettu projekti HASSUun.</>
                   ) : !projektiHasPaallikko ? (
@@ -230,10 +232,10 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
                       Projektin tietoja hakiessa tapahtui virhe. Tarkista tiedot velhosta ja yritä myöhemmin uudelleen.
                     </>
                   )}
-                </div>
+                </Notification>
               )}
-              <div>
-                <h4>Suunnitteluhankkeen perustiedot</h4>
+              <div className="content">
+                <h4 className="vayla-small-title">Suunnitteluhankkeen perustiedot</h4>
                 <ProjektiPerustiedot
                   perustiedot={[
                     { header: "Asiatunnus", data: projekti?.velho?.asiatunnusELY },
@@ -251,83 +253,88 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
                 />
               </div>
               <hr />
-              <h4>Henkilöiden hallinta</h4>
-              <p>
-                Lisää projektin hallinnolliseen käsittelyyn kuuluvat henkilöt lisäämällä uusia henkilörivejä.
-                Henkilöiden oikeudet projektin tietoihin ja toimintoihin määräytyvät valitun roolin mukaan. Voit tehdä
-                muutoksia henkilöihin ja heidän oikeuksiin hallinnollisen käsittelyn eri vaiheissa.
-              </p>
-              {projektiPaallikot.length > 0 && (
-                <div>
-                  <h5>Projektipäällikkö (hallinnollisen käsittelyn vastuuhenkilö)</h5>
-                  <p>
-                    Projektipäällikön lähtötietona on projekti-VELHOon tallennettu projektipäällikkö. Jos haluat vaihtaa
-                    projektipäällikön, tulee tieto vaihtaa projekti-VELHOssa.
-                  </p>
-                  {projektiPaallikot.map((paallikko, index) => (
-                    <div key={index} className="flex">
-                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-3 even:bg-gray-lightest">
-                        <div className="lg:col-span-4">
-                          <TextInput
-                            label="Nimi"
-                            value={kayttajaNimi(haeKayttaja(paallikko.kayttajatunnus)) || ""}
-                            disabled
-                          />
+              <div className="content">
+                <h4 className="vayla-small-title">Henkilöiden hallinta</h4>
+                <p>
+                  Lisää projektin hallinnolliseen käsittelyyn kuuluvat henkilöt lisäämällä uusia henkilörivejä.
+                  Henkilöiden oikeudet projektin tietoihin ja toimintoihin määräytyvät valitun roolin mukaan. Voit tehdä
+                  muutoksia henkilöihin ja heidän oikeuksiin hallinnollisen käsittelyn eri vaiheissa.
+                </p>
+                {projektiPaallikot.length > 0 && (
+                  <div>
+                    <h5 className="font-semibold">Projektipäällikkö (hallinnollisen käsittelyn vastuuhenkilö)</h5>
+                    <p>
+                      Projektipäällikön lähtötietona on projekti-VELHOon tallennettu projektipäällikkö. Jos haluat
+                      vaihtaa projektipäällikön, tulee tieto vaihtaa projekti-VELHOssa.
+                    </p>
+                    {projektiPaallikot.map((paallikko, index) => (
+                      <div key={index} className="flex">
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-6 mb-3">
+                          <div className="lg:col-span-4">
+                            <TextInput
+                              label="Nimi"
+                              value={kayttajaNimi(haeKayttaja(paallikko.kayttajatunnus)) || ""}
+                              disabled
+                            />
+                          </div>
+                          <div className="lg:col-span-4">
+                            <TextInput
+                              label="Organisaatio"
+                              value={haeKayttaja(paallikko.kayttajatunnus)?.organisaatio || ""}
+                              disabled
+                            />
+                          </div>
+                          <div className="lg:col-span-4">
+                            <Select
+                              label="Rooli"
+                              registrationValues={{ value: paallikko.rooli || "" }}
+                              options={rooliOptions}
+                              disabled
+                            />
+                          </div>
+                          <div className="lg:col-span-4">
+                            <TextInput
+                              label="Puhelinnumero"
+                              {...register(`kayttoOikeudet.${index}.puhelinnumero`)}
+                              error={errors.kayttoOikeudet?.[index]?.puhelinnumero}
+                              hideErrorMessage
+                              disabled={disableFormEdit || formIsSubmitting}
+                            />
+                          </div>
+                          <div className="lg:col-span-4 flex flex-row items-end">
+                            <TextInput
+                              label="Sähköposti"
+                              value={haeKayttaja(paallikko.kayttajatunnus)?.email?.split("@")[0] || ""}
+                              disabled
+                            />
+                            <span className="py-2.5 my-4 mr-2 ml-3">@</span>
+                            <TextInput
+                              value={haeKayttaja(paallikko.kayttajatunnus)?.email?.split("@")[1] || ""}
+                              disabled
+                            />
+                          </div>
                         </div>
-                        <div className="lg:col-span-4">
-                          <TextInput
-                            label="Organisaatio"
-                            value={haeKayttaja(paallikko.kayttajatunnus)?.organisaatio || ""}
-                            disabled
-                          />
-                        </div>
-                        <div className="lg:col-span-4">
-                          <Select
-                            label="Rooli"
-                            registrationValues={{ value: paallikko.rooli || "" }}
-                            options={rooliOptions}
-                            disabled
-                          />
-                        </div>
-                        <div className="lg:col-span-4">
-                          <TextInput
-                            label="Puhelinnumero"
-                            {...register(`kayttoOikeudet.${index}.puhelinnumero`)}
-                            error={errors.kayttoOikeudet?.[index]?.puhelinnumero}
-                            hideErrorMessage
-                            disabled={disableFormEdit || formIsSubmitting}
-                          />
-                        </div>
-                        <div className="lg:col-span-4">
-                          <TextInput
-                            label="Sähköposti"
-                            value={haeKayttaja(paallikko.kayttajatunnus)?.email || ""}
-                            disabled
-                          />
+                        <div className="lg:mt-6">
+                          <div className="hidden lg:block invisible">
+                            <IconButton
+                              icon="trash"
+                              onClick={(event) => {
+                                event.preventDefault();
+                              }}
+                              disabled
+                            />
+                          </div>
                         </div>
                       </div>
-                      <div className="mt-6">
-                        <button
-                          className="btn"
-                          onClick={(event) => {
-                            event.preventDefault();
-                          }}
-                          disabled
-                        >
-                          X
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-              <div>
-                <h5>Muut henkilöt</h5>
+                    ))}
+                  </div>
+                )}
+                <h5 className="font-semibold">Muut henkilöt</h5>
                 {muutHenkilot.map((user, i) => {
                   const index = i + projektiPaallikot.length;
                   return (
-                    <div key={user.id} className="flex">
-                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-3 even:bg-gray-lightest">
+                    <div key={user.id} className="flex flex-col lg:flex-row mb-10 lg:mb-3">
+                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-6 lg:pr-1 relative even:bg-gray-lightest">
                         <div className="lg:col-span-4">
                           <Autocomplete
                             label="Nimi"
@@ -373,47 +380,69 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
                             disabled={disableFormEdit || formIsSubmitting}
                           />
                         </div>
-                        <div className="lg:col-span-4">
+                        <div className="lg:col-span-4 flex flex-row items-end">
                           <TextInput
                             label="Sähköposti"
                             value={
-                              kayttajat?.find(({ uid }) => uid === kayttoOikeudet[index].kayttajatunnus)?.email || ""
+                              kayttajat
+                                ?.find(({ uid }) => uid === kayttoOikeudet[index].kayttajatunnus)
+                                ?.email?.split("@")[0] || ""
+                            }
+                            disabled
+                          />
+                          <span className="py-2.5 my-4 mr-2 ml-3">@</span>
+                          <TextInput
+                            value={
+                              kayttajat
+                                ?.find(({ uid }) => uid === kayttoOikeudet[index].kayttajatunnus)
+                                ?.email?.split("@")[1] || ""
                             }
                             disabled
                           />
                         </div>
                       </div>
-                      <div className="mt-6">
-                        <button
-                          className="btn"
-                          onClick={(event) => {
-                            event.preventDefault();
-                            remove(index);
-                          }}
-                          disabled={disableFormEdit || formIsSubmitting}
-                        >
-                          X
-                        </button>
+                      <div className="lg:mt-6">
+                        <div className="hidden lg:block">
+                          <IconButton
+                            icon="trash"
+                            onClick={(event) => {
+                              event.preventDefault();
+                              remove(index);
+                            }}
+                            disabled={disableFormEdit || formIsSubmitting}
+                          />
+                        </div>
+                        <div className="block lg:hidden">
+                          <Button
+                            onClick={(event) => {
+                              event.preventDefault();
+                              remove(index);
+                            }}
+                            disabled={disableFormEdit || formIsSubmitting}
+                            endIcon="trash"
+                          >
+                            Poista
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   );
                 })}
+                <Button
+                  disabled={disableFormEdit || formIsSubmitting}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    append(defaultKayttaja);
+                  }}
+                >
+                  Lisää Henkilö
+                </Button>
+                {(errors.kayttoOikeudet as any)?.message && (
+                  <p className="text-secondary-red">{(errors.kayttoOikeudet as any)?.message}</p>
+                )}
+                <hr />
               </div>
-              <button
-                className="btn"
-                disabled={disableFormEdit || formIsSubmitting}
-                onClick={(event) => {
-                  event.preventDefault();
-                  append(defaultKayttaja);
-                }}
-              >
-                Lisää Henkilö
-              </button>
-              {(errors.kayttoOikeudet as any)?.message && (
-                <p className="text-secondary-red">{(errors.kayttoOikeudet as any)?.message}</p>
-              )}
-              <hr />
-              <h4>Muistiinpanot</h4>
+              <h4 className="vayla-small-title">Muistiinpanot</h4>
               <p>
                 Voit kirjoittaa alla olevaan kenttään sisäisiä muistiinpanoja, jotka näkyvät kaikille projektiin
                 lisätyille henkilöille. Muistiinpanoa voi muokata ainoastaan henkilöt, joilla on projektiin
@@ -429,14 +458,16 @@ export default function PerustaProjekti({ projekti, reloadProject }: Props): Rea
                 />
               </div>
               <hr />
-              <div className="alert">Tallennus ei vielä julkaise tietoja.</div>
-              <div className="flex justify-between flex-wrap">
-                <Link href={"/yllapito/perusta"}>
-                  <a className="btn mr-auto">Takaisin suunnitelman hakuun</a>
-                </Link>
-                <button className="btn-primary" disabled={disableFormEdit || formIsSubmitting}>
-                  Tallenna projekti
-                </button>
+              <Notification>Tallennus ei vielä julkaise tietoja.</Notification>
+              <div className="flex justify-end flex-wrap gap-4">
+                <div>
+                  <Button link={{ href: "/yllapito/perusta" }}>Takaisin suunnitelman hakuun</Button>
+                </div>
+                <div className="ml-auto">
+                  <Button primary disabled={disableFormEdit || formIsSubmitting}>
+                    Tallenna projekti
+                  </Button>
+                </div>
               </div>
             </form>
           </div>
