@@ -55,6 +55,7 @@
     "@aws-cdk/pipelines": "1.132.0",
     "@aws-sdk/client-ssm": "3.42.0",
     "@babel/core": "7.15.8",
+    "@semantic-release/exec": "6.0.2",
     "@sls-next/cdk-construct": "3.6.0",
     "@sls-next/serverless-component": "3.6.0",
     "@storybook/addon-actions": "6.3.12",
@@ -84,6 +85,7 @@
     "babel-loader": "8.2.3",
     "chai": "4.3.4",
     "chai-as-promised": "7.1.1",
+    "conventional-changelog-conventionalcommits": "4.6.1",
     "copyfiles": "2.4.1",
     "cross-env": "7.0.3",
     "dotenv": "10.0.0",
@@ -104,6 +106,7 @@
     "prettier": "2.4.1",
     "react-test-renderer": "17.0.2",
     "rimraf": "3.0.2",
+    "semantic-release": "18.0.1",
     "sinon": "11.1.2",
     "sinon-chai": "3.7.0",
     "tailwindcss": "2.2.16",
@@ -158,7 +161,9 @@
     "synth": "cdk $NODE_DEBUG_OPTION --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" synth",
     "destroy": "cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" destroy \"*\" --require-approval never",
     "storybook": "start-storybook -p 6006 -s ./public",
-    "build-storybook": "build-storybook -s ./public"
+    "build-storybook": "build-storybook -s ./public",
+    "get-next-version": "npx semantic-release --no-ci --dryRun",
+    "release": "npx semantic-release --no-ci"
   },
   "browserslist": {
     "production": [

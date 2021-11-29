@@ -50,6 +50,11 @@ module.exports = (phase) => {
   if (phase === PHASE_DEVELOPMENT_SERVER) {
     config = setupLocalDevelopmentMode(config, env);
   } else {
+    let buffer = fs.readFileSync(__dirname + "/.version");
+    if (buffer) {
+      env.VERSION = buffer.toString("UTF-8");
+    }
+
     config.publicRuntimeConfig = { apiImpl: "permanentApi" };
     config.env = env;
   }

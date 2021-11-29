@@ -3,6 +3,8 @@ version: 0.2
 env:
   parameter-store:
     SKIP_VELHO_TESTS: /SkipVelhoTests
+  secrets-manager:
+    GITHUB_TOKEN: github-token
 
 phases:
   install:
@@ -21,6 +23,7 @@ phases:
       - npm run dockerized:generate
   build:
     commands:
+      - npm run get-next-version
       - npm run lint
       - npm run localstack
       - npm run test
@@ -28,6 +31,7 @@ phases:
       - npm run deploy:database
       - npm run deploy:backend
       - npm run deploy:frontend
+      - npm run release
 cache:
   paths:
     - "/root/.cache/**/*"

@@ -50,3 +50,4 @@ schema.graphql
 build
 .serverless
 .serverless_nextjs
+.version

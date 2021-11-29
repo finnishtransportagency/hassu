@@ -115,7 +115,7 @@ export class HassuPipelineStack extends Stack {
     }).addToRolePolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
-        actions: ["s3:*", "cloudformation:*", "sts:*", "ecr:*", "ssm:*"],
+        actions: ["s3:*", "cloudformation:*", "sts:*", "ecr:*", "ssm:*", "secretsmanager:GetSecretValue"],
         resources: ["*"],
       })
     );
