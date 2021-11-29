@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import classNames from "classnames";
 import React, { ReactElement } from "react";
 import { FieldError } from "react-hook-form";
 import FormGroup from "./FormGroup";
@@ -37,7 +38,10 @@ export default function Textarea({
         </select>
         <FontAwesomeIcon
           icon="chevron-down"
-          className="absolute right-3 text-primary-dark pointer-events-none"
+          className={classNames(
+            "absolute right-3 pointer-events-none",
+            disabled ? "text-font-primary" : "text-primary-dark"
+          )}
           style={{ top: `calc(50% - 0.5rem)` }}
         />
       </div>
