@@ -1,4 +1,5 @@
 import * as ddb from "@aws-cdk/aws-dynamodb";
+import { StreamViewType } from "@aws-cdk/aws-dynamodb";
 import * as cdk from "@aws-cdk/core";
 import { RemovalPolicy } from "@aws-cdk/core";
 import { Config } from "./config";
@@ -21,6 +22,7 @@ export class HassuDatabaseStack extends cdk.Stack {
         name: "oid",
         type: ddb.AttributeType.STRING,
       },
+      stream: StreamViewType.NEW_IMAGE,
     });
     if (Config.isPermanentEnvironment()) {
       table.applyRemovalPolicy(RemovalPolicy.RETAIN);

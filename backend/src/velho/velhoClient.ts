@@ -99,9 +99,9 @@ export class VelhoClient {
       const data = response.data;
       const resultCount = data?.osumia || 0;
       if (requireExactMatch) {
-        log.info(resultCount + " search results for exact term: " + term);
+        log.info(resultCount + " Velho search results for exact term: " + term);
       } else {
-        log.info(resultCount + " search results for term: " + term);
+        log.info(resultCount + " Velho search results for term: " + term);
       }
       return adaptSearchResults(data.osumat as ProjektiSearchResult[], await personSearch.listAccounts());
     } catch (e) {

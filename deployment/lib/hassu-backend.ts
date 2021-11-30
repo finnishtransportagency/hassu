@@ -2,20 +2,25 @@
 import * as cdk from "@aws-cdk/core";
 import { Construct, Duration, Fn } from "@aws-cdk/core";
 import * as lambda from "@aws-cdk/aws-lambda";
-import { Tracing } from "@aws-cdk/aws-lambda";
+import { StartingPosition, Tracing } from "@aws-cdk/aws-lambda";
 import * as appsync from "@aws-cdk/aws-appsync";
 import { FieldLogLevel, GraphqlApi } from "@aws-cdk/aws-appsync";
 import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
-import * as ddb from "@aws-cdk/aws-dynamodb";
+import { Table } from "@aws-cdk/aws-dynamodb";
 import { Config } from "./config";
 import { apiConfig, OperationType } from "../../common/abstractApi";
 import { WafConfig } from "./wafConfig";
 import { AuthorizationMode } from "@aws-cdk/aws-appsync/lib/graphqlapi";
+import { DynamoEventSource } from "@aws-cdk/aws-lambda-event-sources";
+import { Domain } from "@aws-cdk/aws-opensearchservice";
+import { OpenSearchAccessPolicy } from "@aws-cdk/aws-opensearchservice/lib/opensearch-access-policy";
+import { Effect, PolicyStatement } from "@aws-cdk/aws-iam";
 
 export class HassuBackendStack extends cdk.Stack {
-  private projektiTable: ddb.Table;
+  private readonly projektiTable: Table;
+  private searchDomain: Domain;
 
-  constructor(scope: Construct, projektiTable: ddb.Table) {
+  constructor(scope: Construct, { projektiTable, searchDomain }: { searchDomain: Domain; projektiTable: Table }) {
     super(scope, "backend", {
       stackName: "hassu-backend-" + Config.env,
       env: {
@@ -24,14 +29,19 @@ export class HassuBackendStack extends cdk.Stack {
       tags: Config.tags,
     });
     this.projektiTable = projektiTable;
+    this.searchDomain = searchDomain;
   }
 
   async process() {
     const config = await Config.instance(this);
+
+    const projektiSearchIndexer = this.createProjektiSearchIndexer();
+
     const api = this.createAPI(config);
     const backendLambda = await this.createBackendLambda(config);
     this.attachDatabaseToBackend(backendLambda);
     HassuBackendStack.mapApiResolversToLambda(api, backendLambda);
+    this.configureOpenSearchAccess(projektiSearchIndexer, backendLambda);
 
     new cdk.CfnOutput(this, "AppSyncAPIKey", {
       value: api.apiKey || "",
@@ -41,6 +51,25 @@ export class HassuBackendStack extends cdk.Stack {
         value: api.graphqlUrl || "",
       });
     }
+  }
+
+  private configureOpenSearchAccess(projektiSearchIndexer: NodejsFunction, backendLambda: NodejsFunction) {
+    // Grant write access to the app-search index
+    this.searchDomain.grantIndexWrite(Config.searchIndex, projektiSearchIndexer);
+    this.searchDomain.grantIndexReadWrite(Config.searchIndex, backendLambda);
+
+    new OpenSearchAccessPolicy(this, "OpenSearchAccessPolicy", {
+      domainName: this.searchDomain.domainName,
+      domainArn: this.searchDomain.domainArn,
+      accessPolicies: [
+        new PolicyStatement({
+          effect: Effect.ALLOW,
+          actions: ["es:ESHttpGet", "es:ESHttpPut", "es:ESHttpPost"],
+          principals: [projektiSearchIndexer.grantPrincipal, backendLambda.grantPrincipal],
+          resources: [this.searchDomain.domainArn],
+        }),
+      ],
+    });
   }
 
   private createAPI(config: Config) {
@@ -92,6 +121,32 @@ export class HassuBackendStack extends cdk.Stack {
     return apiKeyExpiration;
   }
 
+  private createProjektiSearchIndexer() {
+    const streamHandler = new NodejsFunction(this, "DynamoDBStreamHandler", {
+      functionName: "hassu-dynamodb-stream-handler-" + Config.env,
+      runtime: lambda.Runtime.NODEJS_14_X,
+      entry: `${__dirname}/../../backend/src/projektiSearch/dynamoDBStreamHandler.ts`,
+      handler: "handleDynamoDBEvents",
+      memorySize: 256,
+      environment: {
+        SEARCH_DOMAIN: this.searchDomain.domainEndpoint,
+      },
+      timeout: Duration.seconds(29),
+      tracing: Tracing.ACTIVE,
+    });
+
+    streamHandler.addEventSource(
+      new DynamoEventSource(this.projektiTable, {
+        startingPosition: StartingPosition.LATEST,
+        batchSize: 5,
+        bisectBatchOnError: true,
+        retryAttempts: 5,
+        maxBatchingWindow: Duration.seconds(1),
+      })
+    );
+    return streamHandler;
+  }
+
   private async createBackendLambda(config: Config) {
     let define;
     if (config.isDeveloperEnvironment()) {
@@ -101,6 +156,7 @@ export class HassuBackendStack extends cdk.Stack {
       };
     }
     return new NodejsFunction(this, "API", {
+      functionName: "hassu-backend-" + Config.env,
       runtime: lambda.Runtime.NODEJS_14_X,
       entry: `${__dirname}/../../backend/src/apiHandler.ts`,
       handler: "handleEvent",
@@ -108,6 +164,7 @@ export class HassuBackendStack extends cdk.Stack {
       timeout: Duration.seconds(29),
       bundling: {
         define,
+        minify: true,
         nodeModules: ["pdfkit"],
         commandHooks: {
           beforeBundling(inputDir: string, outputDir: string): string[] {
@@ -134,8 +191,12 @@ export class HassuBackendStack extends cdk.Stack {
         PERSON_SEARCH_API_USERNAME: config.getInfraParameter("PersonSearchApiUsername"),
         PERSON_SEARCH_API_PASSWORD: config.getInfraParameter("PersonSearchApiPassword"),
         PERSON_SEARCH_API_ACCOUNT_TYPES: config.getInfraParameter("PersonSearchApiAccountTypes"),
+
+        SEARCH_DOMAIN: this.searchDomain.domainEndpoint,
+
+        ENVIRONMENT: Config.env,
       },
-      tracing: Tracing.ACTIVE,
+      tracing: Tracing.PASS_THROUGH,
     });
   }
 

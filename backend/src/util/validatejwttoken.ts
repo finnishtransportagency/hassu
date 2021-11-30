@@ -22,7 +22,7 @@ const getPublicKeys = async (issuerUrl) => {
 
 const validateJwtToken = async (token, dataToken, issuer) => {
   if (!token) {
-    log.error("Token missing");
+    log.debug("IAM JWT Token missing");
     return false;
   }
   // Split token into parts

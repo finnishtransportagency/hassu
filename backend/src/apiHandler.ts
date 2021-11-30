@@ -15,9 +15,6 @@ import { createOrUpdateProjekti, listProjektit, loadProjekti } from "./handler/p
 import { apiConfig } from "../../common/abstractApi";
 import { lataaKuulutus } from "./handler/kuulutusHandler";
 
-const logLevel = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : "info";
-log.setLevel(logLevel as any);
-
 type AppSyncEventArguments =
   | {}
   | LataaProjektiQueryVariables
