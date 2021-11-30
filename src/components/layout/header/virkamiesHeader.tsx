@@ -79,6 +79,7 @@ export function VirkamiesHeader({ scrolledPastOffset }: HeaderProps): ReactEleme
           ))}
         </ul>
       </nav>
+      <div className={style["bottom-border"]}></div>
     </header>
   );
 }

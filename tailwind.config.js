@@ -1,6 +1,9 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
+  corePlugins: {
+    fontSize: false,
+  },
   purge: ["./src/pages/**/*.{js,ts,jsx,tsx}", "./src/components/**/*.{js,ts,jsx,tsx}"],
   darkMode: false, // or 'media' or 'class'
   mode: "jit",
@@ -21,7 +24,7 @@ module.exports = {
         md: "100%",
         lg: "1024px",
         xl: "1280px",
-        "2xl": "1440px",
+        "2xl": "1472px",
       },
     },
     colors: {
@@ -63,7 +66,7 @@ module.exports = {
     },
   },
   variants: {
-    backgroundColor: ["responsive", "odd", "even", "hover", "focus"],
+    backgroundColor: ["odd", "even", "responsive", "dark", "group-hover", "focus-within", "hover", "focus"],
     extend: {
       opacity: ["disabled"],
       cursor: ["disabled"],

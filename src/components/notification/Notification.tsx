@@ -27,7 +27,7 @@ interface Props {
 
 export default function Notification({
   children,
-  type,
+  type = NotificationType.DEFAULT,
   icon,
   hideIcon,
   className,
