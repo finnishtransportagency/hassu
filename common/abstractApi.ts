@@ -3,11 +3,13 @@ import {
   KuulutusTyyppi,
   LataaKuulutusPDFQueryVariables,
   LataaProjektiQueryVariables,
+  LatausTiedot,
   ListaaVelhoProjektitQueryVariables,
   PDF,
   Projekti,
   TallennaProjektiInput,
   TallennaProjektiMutationVariables,
+  ValmisteleTiedostonLatausQueryVariables,
   VelhoHakuTulos,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
@@ -33,6 +35,7 @@ type ApiConfig = {
   nykyinenKayttaja: OperationConfig;
   listaaKayttajat: OperationConfig;
   lataaKuulutusPDF: OperationConfig;
+  valmisteleTiedostonLataus: OperationConfig;
 };
 
 export const apiConfig: ApiConfig = {
@@ -71,6 +74,11 @@ export const apiConfig: ApiConfig = {
     operationType: OperationType.Query,
     graphql: queries.lataaKuulutusPDF,
   },
+  valmisteleTiedostonLataus: {
+    name: "valmisteleTiedostonLataus",
+    operationType: OperationType.Query,
+    graphql: queries.valmisteleTiedostonLataus,
+  },
 };
 
 export abstract class AbstractApi {
@@ -91,6 +99,12 @@ export abstract class AbstractApi {
       nimi,
       requireExactMatch,
     } as ListaaVelhoProjektitQueryVariables);
+  }
+
+  async valmisteleTiedostonLataus(tiedostoNimi: string): Promise<LatausTiedot> {
+    return await this.callYllapitoAPI(apiConfig.valmisteleTiedostonLataus, {
+      tiedostoNimi,
+    } as ValmisteleTiedostonLatausQueryVariables);
   }
 
   async listProjektit(): Promise<Projekti[]> {

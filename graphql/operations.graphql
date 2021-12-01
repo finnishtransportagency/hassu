@@ -5,6 +5,7 @@ type Query {
   lataaProjekti(oid: String!): Projekti
   listaaVelhoProjektit(nimi: String!, requireExactMatch: Boolean): [VelhoHakuTulos!]
   lataaKuulutusPDF(oid: String!, kuulutusTyyppi: KuulutusTyyppi!): PDF
+  valmisteleTiedostonLataus(tiedostoNimi:String!): LatausTiedot
 }
 
 type Mutation {

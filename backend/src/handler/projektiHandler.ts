@@ -11,6 +11,7 @@ import { ProjektiAdapter } from "./projektiAdapter";
 import * as log from "loglevel";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import mergeWith from "lodash/mergeWith";
+import { fileService } from "../files/fileService";
 
 const projektiAdapter = new ProjektiAdapter();
 
@@ -40,6 +41,7 @@ export async function createOrUpdateProjekti(input: TallennaProjektiInput) {
     // Save over existing one
     requirePermissionMuokkaa(projektiInDB);
     log.info("Saving projekti ", input.oid);
+    await handleFiles(input);
     await projektiDatabase.saveProjekti(await projektiAdapter.adaptProjektiToSave(projektiInDB, input));
   } else {
     requirePermissionLuonti();
@@ -82,6 +84,20 @@ async function createProjektiFromVelho(oid: string, vaylaUser: Kayttaja, input?:
   } catch (e) {
     log.error(e);
     throw e;
+  }
+}
+
+/**
+ * If there are uploaded files in the input, persist them into the project
+ */
+async function handleFiles(input: TallennaProjektiInput) {
+  const logo = input.suunnitteluSopimus?.logo;
+  if (logo) {
+    input.suunnitteluSopimus.logo = await fileService.persistFileToProjekti({
+      uploadedFileSource: logo,
+      oid: input.oid,
+      targetFilePathInProjekti: "suunnittelusopimus",
+    });
   }
 }
 

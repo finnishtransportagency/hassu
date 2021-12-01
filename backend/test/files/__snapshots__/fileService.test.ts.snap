@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UploadService should upload file successfully 1`] = `
+Object {
+  "Bucket": "hassu-localstack-upload",
+  "Key": "1-2-3-4/logo.png",
+}
+`;
+
+exports[`UploadService should upload file successfully 2`] = `
+Object {
+  "Bucket": "hassu-localstack-yllapito",
+  "ContentType": "image/png",
+  "CopySource": "hassu-localstack-upload/1-2-3-4/logo.png",
+  "Key": "projekti/1/suunnittelusopimus/logo.png",
+  "MetadataDirective": "REPLACE",
+}
+`;

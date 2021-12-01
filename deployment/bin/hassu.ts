@@ -10,10 +10,16 @@ import { HassuSearchStack } from "../lib/hassu-search";
 async function main() {
   const app = new cdk.App();
   const hassuDatabaseStack = new HassuDatabaseStack(app);
+  await hassuDatabaseStack.process().catch((e) => {
+    console.log("Deployment of hassuDatabaseStack failed:", e);
+    process.exit(1);
+  });
   const hassuSearchStack = new HassuSearchStack(app);
   const hassuBackendStack = new HassuBackendStack(app, {
     projektiTable: hassuDatabaseStack.projektiTable,
     searchDomain: hassuSearchStack.searchDomain,
+    uploadBucket: hassuDatabaseStack.uploadBucket,
+    yllapitoBucket: hassuDatabaseStack.yllapitoBucket,
   });
   await hassuBackendStack.process().catch((e) => {
     console.log("Deployment of HassuBackendStack failed:", e);

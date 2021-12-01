@@ -15,12 +15,19 @@ import { DynamoEventSource } from "@aws-cdk/aws-lambda-event-sources";
 import { Domain } from "@aws-cdk/aws-opensearchservice";
 import { OpenSearchAccessPolicy } from "@aws-cdk/aws-opensearchservice/lib/opensearch-access-policy";
 import { Effect, PolicyStatement } from "@aws-cdk/aws-iam";
+import { Bucket } from "@aws-cdk/aws-s3";
+
+export type HassuBackendStackProps = {
+  searchDomain: Domain;
+  projektiTable: Table;
+  uploadBucket: Bucket;
+  yllapitoBucket: Bucket;
+};
 
 export class HassuBackendStack extends cdk.Stack {
-  private readonly projektiTable: Table;
-  private searchDomain: Domain;
+  private readonly props: HassuBackendStackProps;
 
-  constructor(scope: Construct, { projektiTable, searchDomain }: { searchDomain: Domain; projektiTable: Table }) {
+  constructor(scope: Construct, props: HassuBackendStackProps) {
     super(scope, "backend", {
       stackName: "hassu-backend-" + Config.env,
       env: {
@@ -28,8 +35,7 @@ export class HassuBackendStack extends cdk.Stack {
       },
       tags: Config.tags,
     });
-    this.projektiTable = projektiTable;
-    this.searchDomain = searchDomain;
+    this.props = props;
   }
 
   async process() {
@@ -55,18 +61,19 @@ export class HassuBackendStack extends cdk.Stack {
 
   private configureOpenSearchAccess(projektiSearchIndexer: NodejsFunction, backendLambda: NodejsFunction) {
     // Grant write access to the app-search index
-    this.searchDomain.grantIndexWrite(Config.searchIndex, projektiSearchIndexer);
-    this.searchDomain.grantIndexReadWrite(Config.searchIndex, backendLambda);
+    const searchDomain = this.props.searchDomain;
+    searchDomain.grantIndexWrite(Config.searchIndex, projektiSearchIndexer);
+    searchDomain.grantIndexReadWrite(Config.searchIndex, backendLambda);
 
     new OpenSearchAccessPolicy(this, "OpenSearchAccessPolicy", {
-      domainName: this.searchDomain.domainName,
-      domainArn: this.searchDomain.domainArn,
+      domainName: searchDomain.domainName,
+      domainArn: searchDomain.domainArn,
       accessPolicies: [
         new PolicyStatement({
           effect: Effect.ALLOW,
           actions: ["es:ESHttpGet", "es:ESHttpPut", "es:ESHttpPost"],
           principals: [projektiSearchIndexer.grantPrincipal, backendLambda.grantPrincipal],
-          resources: [this.searchDomain.domainArn],
+          resources: [searchDomain.domainArn],
         }),
       ],
     });
@@ -129,14 +136,14 @@ export class HassuBackendStack extends cdk.Stack {
       handler: "handleDynamoDBEvents",
       memorySize: 256,
       environment: {
-        SEARCH_DOMAIN: this.searchDomain.domainEndpoint,
+        SEARCH_DOMAIN: this.props.searchDomain.domainEndpoint,
       },
       timeout: Duration.seconds(29),
       tracing: Tracing.ACTIVE,
     });
 
     streamHandler.addEventSource(
-      new DynamoEventSource(this.projektiTable, {
+      new DynamoEventSource(this.props.projektiTable, {
         startingPosition: StartingPosition.LATEST,
         batchSize: 5,
         bisectBatchOnError: true,
@@ -155,7 +162,7 @@ export class HassuBackendStack extends cdk.Stack {
         "process.env.USER_IDENTIFIER_FUNCTIONS": JSON.stringify("../../developer/identifyIAMUser"),
       };
     }
-    return new NodejsFunction(this, "API", {
+    const backendLambda = new NodejsFunction(this, "API", {
       functionName: "hassu-backend-" + Config.env,
       runtime: lambda.Runtime.NODEJS_14_X,
       entry: `${__dirname}/../../backend/src/apiHandler.ts`,
@@ -192,12 +199,21 @@ export class HassuBackendStack extends cdk.Stack {
         PERSON_SEARCH_API_PASSWORD: config.getInfraParameter("PersonSearchApiPassword"),
         PERSON_SEARCH_API_ACCOUNT_TYPES: config.getInfraParameter("PersonSearchApiAccountTypes"),
 
-        SEARCH_DOMAIN: this.searchDomain.domainEndpoint,
+        SEARCH_DOMAIN: this.props.searchDomain.domainEndpoint,
 
         ENVIRONMENT: Config.env,
+
+        FRONTEND_DOMAIN_NAME: config.frontendDomainName,
+
+        UPLOAD_BUCKET_NAME: this.props.uploadBucket.bucketName,
+        YLLAPITO_BUCKET_NAME: this.props.yllapitoBucket.bucketName,
       },
       tracing: Tracing.PASS_THROUGH,
     });
+    this.props.uploadBucket.grantPut(backendLambda);
+    this.props.uploadBucket.grantReadWrite(backendLambda);
+    this.props.yllapitoBucket.grantReadWrite(backendLambda);
+    return backendLambda;
   }
 
   private static mapApiResolversToLambda(api: GraphqlApi, backendFn: NodejsFunction) {
@@ -215,7 +231,8 @@ export class HassuBackendStack extends cdk.Stack {
   }
 
   private attachDatabaseToBackend(backendFn: NodejsFunction) {
-    this.projektiTable.grantFullAccess(backendFn);
-    backendFn.addEnvironment("TABLE_PROJEKTI", this.projektiTable.tableName);
+    const projektiTable = this.props.projektiTable;
+    projektiTable.grantFullAccess(backendFn);
+    backendFn.addEnvironment("TABLE_PROJEKTI", projektiTable.tableName);
   }
 }

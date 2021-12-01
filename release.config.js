@@ -67,17 +67,14 @@ module.exports = {
             {
               type: "feature",
               section: "Uusia ominaisuuksia",
-              // hidden: false,
             },
             {
               type: "feat",
               section: "Uusia ominaisuuksia",
-              // hidden: false,
             },
             {
               type: "fix",
               section: "Korjauksia",
-              // hidden: false,
             },
           ],
         },

@@ -16,6 +16,11 @@ const config = {
   searchDomain: process.env.SEARCH_DOMAIN,
 
   env: process.env.ENVIRONMENT,
+
+  frontendDomainName: process.env.FRONTEND_DOMAIN_NAME,
+
+  uploadBucketName: process.env.UPLOAD_BUCKET_NAME,
+  yllapitoBucketName: process.env.YLLAPITO_BUCKET_NAME,
 };
 
 const logLevel = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : "info";

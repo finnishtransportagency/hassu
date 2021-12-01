@@ -1,11 +1,15 @@
 import * as ddb from "@aws-cdk/aws-dynamodb";
 import { StreamViewType } from "@aws-cdk/aws-dynamodb";
 import * as cdk from "@aws-cdk/core";
-import { RemovalPolicy } from "@aws-cdk/core";
+import { Duration, RemovalPolicy } from "@aws-cdk/core";
 import { Config } from "./config";
+import { BlockPublicAccess, Bucket, HttpMethods } from "@aws-cdk/aws-s3";
 
 export class HassuDatabaseStack extends cdk.Stack {
   public projektiTable: ddb.Table;
+  public uploadBucket: Bucket;
+  public yllapitoBucket: Bucket;
+  private config: Config;
 
   constructor(scope: cdk.Construct) {
     super(scope, "database", {
@@ -15,6 +19,17 @@ export class HassuDatabaseStack extends cdk.Stack {
       },
       tags: Config.tags,
     });
+  }
+
+  async process() {
+    this.config = await Config.instance(this);
+    this.projektiTable = this.createProjektiTable();
+
+    this.uploadBucket = this.createUploadBucket();
+    this.yllapitoBucket = this.createYllapitoBucket();
+  }
+
+  private createProjektiTable() {
     const table = new ddb.Table(this, "ProjektiTable", {
       billingMode: ddb.BillingMode.PAY_PER_REQUEST,
       tableName: Config.projektiTableName,
@@ -27,6 +42,31 @@ export class HassuDatabaseStack extends cdk.Stack {
     if (Config.isPermanentEnvironment()) {
       table.applyRemovalPolicy(RemovalPolicy.RETAIN);
     }
-    this.projektiTable = table;
+    return table;
+  }
+
+  private createUploadBucket() {
+    return new Bucket(this, "UploadBucket", {
+      bucketName: Config.uploadBucketName,
+      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+      lifecycleRules: [{ id: this.stackName + "-upload-delete-after-24h", expiration: Duration.hours(24) }],
+      removalPolicy: RemovalPolicy.DESTROY,
+      cors: [
+        {
+          allowedMethods: [HttpMethods.PUT],
+          allowedOrigins: ["http://localhost:3000", "https://" + this.config.frontendDomainName],
+          allowedHeaders: ["*"],
+        },
+      ],
+    });
+  }
+
+  private createYllapitoBucket() {
+    return new Bucket(this, "YllapitoBucket", {
+      bucketName: Config.yllapitoBucketName,
+      versioned: true,
+      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+      removalPolicy: RemovalPolicy.RETAIN,
+    });
   }
 }
