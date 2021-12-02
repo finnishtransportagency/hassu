@@ -9,7 +9,7 @@ export interface HeaderProps {
 
 export default function Header({ scrolledPastOffset: scrollOffset }: HeaderProps): ReactElement {
   const router = useRouter();
-  const isYllapito = router.pathname.startsWith("/yllapito");
+  const isYllapito = router.asPath.startsWith("/yllapito");
 
   return isYllapito ? (
     <VirkamiesHeader scrolledPastOffset={scrollOffset} />

@@ -18,7 +18,7 @@ interface Props {
   options: { label: string; value: string; disabled?: boolean }[];
 }
 
-export default function Textarea({
+export default function Select({
   error,
   registrationValues,
   label,

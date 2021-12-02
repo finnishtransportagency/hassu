@@ -1,0 +1,19 @@
+.side-nav {
+  @apply bg-gray-lightest;
+}
+
+.side-nav > ul > li > a {
+  @apply block pr-12 p-4 border-l-4 border-transparent;
+}
+
+.side-nav > ul > li > a.selected {
+  @apply border-primary;
+}
+
+.side-nav > ul > li > a.disabled {
+  @apply text-gray;
+}
+
+.side-nav > ul > li > :is(a.selected, a:not(.disabled):hover) {
+  @apply bg-gray-light;
+}
