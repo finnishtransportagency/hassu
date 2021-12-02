@@ -4,9 +4,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import style from "@styles/layout/virkamiesHeader.module.css";
 import { HeaderProps } from "./header";
-import Button from "@components/button/Button";
 import { getVaylaUser } from "@services/userService";
 import useSWR from "swr";
+import ButtonLink from "@components/button/ButtonLink";
 
 interface NavigationRoute {
   label: string;
@@ -55,13 +55,14 @@ export function VirkamiesHeader({ scrolledPastOffset }: HeaderProps): ReactEleme
           </Link>
           <div className={style.user}>
             <span className="vayla-paragraph">{kayttajaNimi}</span>
-            <Button
-              primary={true}
-              link={logoutHref ? { href: logoutHref, external: true } : undefined}
+            <ButtonLink
+              primary
+              href={logoutHref ? logoutHref : undefined}
+              useNextLink={false}
               endIcon="external-link-alt"
             >
               Poistu Palvelusta
-            </Button>
+            </ButtonLink>
           </div>
         </div>
       </div>

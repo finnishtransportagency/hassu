@@ -11,7 +11,7 @@
 }
 
 .notification .start-icon.info {
-  @apply text-primary-light;
+  @apply text-primary-dark;
 }
 
 .notification .start-icon.warn {
@@ -36,4 +36,8 @@
 
 .notification.error {
   @apply bg-fuchsia-light border-fuchsia;
+}
+
+.notification p {
+  @apply mb-0;
 }

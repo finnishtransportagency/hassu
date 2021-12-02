@@ -257,10 +257,14 @@
     @apply relative;
   }
   .btn {
-    @apply leading-relaxed uppercase inline-block py-1 px-6 shadow rounded-full bg-white text-primary-dark border border-primary-dark transition disabled:opacity-50 disabled:cursor-default;
+    @apply leading-relaxed uppercase inline-block py-1 px-6 shadow rounded-full bg-white text-primary-dark border border-primary-dark transition;
     font-size: 1.25rem;
   }
-  .btn:not(:disabled):not(:active):hover {
+  .btn:disabled,
+  .btn.disabled {
+    @apply opacity-50 cursor-default;
+  }
+  .btn:not(:disabled):not(.disabled):not(:active):hover {
     @apply shadow-lg;
   }
   .btn:active {
