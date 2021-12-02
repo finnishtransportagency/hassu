@@ -7,7 +7,7 @@ const sandbox = require("sinon").createSandbox();
 
 // const { expect } = require("chai");
 
-describe.only("ProjektiSearchService", () => {
+describe("ProjektiSearchService", () => {
   let openSearchQueryStub: sinon.SinonStub;
   beforeEach(() => {
     openSearchQueryStub = sinon.stub(openSearchClient, "query");
