@@ -11,12 +11,12 @@ export function adaptProjektiToIndex(projekti: DBProjekti): any {
 }
 
 export function adaptSearchResults(results: any): DBProjekti[] {
-  if (results.status === 200) {
-    return results.hits.hits.map((hit) => {
-      const projekti = hit._source as DBProjekti;
-      projekti.oid = hit._id;
-      return projekti;
-    });
+  if ((results.status && results.status >= 400) || !results.hits?.hits) {
+    return [];
   }
-  return [];
+  return results.hits.hits.map((hit) => {
+    const projekti = hit._source as DBProjekti;
+    projekti.oid = hit._id;
+    return projekti;
+  });
 }
