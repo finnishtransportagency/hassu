@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProjektiSearchService should handle successful result 1`] = `
+Array [
+  Object {
+    "muistiinpano": "testi",
+    "oid": "1",
+    "status": "EI_JULKAISTU",
+    "tyyppi": "TIE",
+    "velho": Object {
+      "nimi": "Nimi1",
+      "tilaajaOrganisaatio": "Etelä-Pohjanmaan ELY-keskus",
+      "vaylamuoto": Array [
+        "tie",
+      ],
+    },
+  },
+  Object {
+    "muistiinpano": "",
+    "oid": "2",
+    "status": "EI_JULKAISTU",
+    "tyyppi": "TIE",
+    "velho": Object {
+      "nimi": "Nimi2",
+      "tilaajaOrganisaatio": "Uudenmaan ELY-keskus",
+      "vaylamuoto": Array [
+        "tie",
+      ],
+    },
+  },
+]
+`;
