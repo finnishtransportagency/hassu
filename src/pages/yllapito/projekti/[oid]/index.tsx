@@ -26,11 +26,9 @@ type RequiredFields = Omit<
   TallennaProjektiInput,
   "muistiinpano" | "suunnittelustaVastaavaViranomainen" | "aloitusKuulutus" | "suunnitteluSopimus"
 >;
-type RequiredInputValues = Required<
-  {
-    [K in keyof RequiredFields]: NonNullable<RequiredFields[K]>;
-  }
->;
+type RequiredInputValues = Required<{
+  [K in keyof RequiredFields]: NonNullable<RequiredFields[K]>;
+}>;
 
 type OptionalInputValues = Partial<Pick<TallennaProjektiInput, "muistiinpano">>;
 type FormValues = RequiredInputValues & OptionalInputValues;
@@ -50,6 +48,9 @@ const rooliOptions = [
 ];
 
 const maxNoteLength = 2000;
+const minPhoneLength = 10;
+const maxPhoneLength = 10;
+const agencyPhoneNumberRegex = `^029\\d*$`;
 
 export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   const router = useRouter();
@@ -78,8 +79,25 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
         Yup.object()
           .shape({
             rooli: Yup.mixed().oneOf(Object.values(ProjektiRooli)),
-            puhelinnumero: Yup.string().required("Käyttäjälle on määritettävä puhelinnumero."),
-            kayttajatunnus: Yup.string().required("Aseta käyttäjä."),
+            puhelinnumero: Yup.string()
+              .matches(
+                new RegExp(agencyPhoneNumberRegex),
+                "Puhelinnumeron on oltava 029-alkuinen ja sen tulee sisältää vain numeroita"
+              )
+              .required("Käyttäjälle on määritettävä puhelinnumero")
+              .min(
+                minPhoneLength,
+                `Puhelinnumeron on oltava ${minPhoneLength}${
+                  minPhoneLength === maxPhoneLength ? "" : "-" + maxPhoneLength
+                } merkkiä pitkä`
+              )
+              .max(
+                maxPhoneLength,
+                `Puhelinnumeron on oltava ${minPhoneLength}${
+                  minPhoneLength === maxPhoneLength ? "" : "-" + maxPhoneLength
+                } merkkiä pitkä`
+              ),
+            kayttajatunnus: Yup.string().required("Aseta käyttäjä"),
           })
           .test(
             "uniikki-kayttajatunnus",
@@ -264,19 +282,15 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
                       />
                     </div>
                     <div className="lg:col-span-4">
-                      <Select
-                        label="Rooli"
-                        registrationValues={{ value: paallikko.rooli || "" }}
-                        options={rooliOptions}
-                        disabled
-                      />
+                      <Select label="Rooli" value={paallikko.rooli || ""} options={rooliOptions} disabled />
                     </div>
                     <div className="lg:col-span-4">
                       <TextInput
                         label="Puhelinnumero"
                         {...register(`kayttoOikeudet.${index}.puhelinnumero`)}
                         error={errors.kayttoOikeudet?.[index]?.puhelinnumero}
-                        hideErrorMessage
+                        pattern={agencyPhoneNumberRegex}
+                        maxLength={maxPhoneLength}
                         disabled={disableFormEdit}
                       />
                     </div>
@@ -339,9 +353,8 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
                   <div className="lg:col-span-4">
                     <Select
                       label="Rooli"
-                      registrationValues={register(`kayttoOikeudet.${index}.rooli`)}
+                      {...register(`kayttoOikeudet.${index}.rooli`)}
                       error={errors.kayttoOikeudet?.[index]?.rooli}
-                      hideErrorMessage
                       options={rooliOptions.filter((rooli) => rooli.value !== ProjektiRooli.PROJEKTIPAALLIKKO)}
                       disabled={disableFormEdit}
                     />
@@ -351,29 +364,33 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
                       label="Puhelinnumero"
                       {...register(`kayttoOikeudet.${index}.puhelinnumero`)}
                       error={errors.kayttoOikeudet?.[index]?.puhelinnumero}
-                      hideErrorMessage
+                      pattern={agencyPhoneNumberRegex}
                       disabled={disableFormEdit}
                     />
                   </div>
-                  <div className="lg:col-span-4 flex flex-row items-end">
-                    <TextInput
-                      label="Sähköposti"
-                      value={
-                        kayttajat
-                          ?.find(({ uid }) => uid === kayttoOikeudet[index].kayttajatunnus)
-                          ?.email?.split("@")[0] || ""
-                      }
-                      disabled
-                    />
-                    <span className="py-2.5 my-4 mr-2 ml-3">@</span>
-                    <TextInput
-                      value={
-                        kayttajat
-                          ?.find(({ uid }) => uid === kayttoOikeudet[index].kayttajatunnus)
-                          ?.email?.split("@")[1] || ""
-                      }
-                      disabled
-                    />
+                  <div className="lg:col-span-4">
+                    <div className="flex flex-row items-start">
+                      <TextInput
+                        className="self-end"
+                        label="Sähköposti"
+                        value={
+                          kayttajat
+                            ?.find(({ uid }) => uid === kayttoOikeudet[index].kayttajatunnus)
+                            ?.email?.split("@")[0] || ""
+                        }
+                        disabled
+                      />
+                      <span className="py-2.5 my-4 mr-2 ml-3 self-end">@</span>
+                      <TextInput
+                        className="self-end"
+                        value={
+                          kayttajat
+                            ?.find(({ uid }) => uid === kayttoOikeudet[index].kayttajatunnus)
+                            ?.email?.split("@")[1] || ""
+                        }
+                        disabled
+                      />
+                    </div>
                   </div>
                 </div>
                 <div className="lg:mt-6">
@@ -413,7 +430,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
             Lisää Henkilö
           </Button>
           {(errors.kayttoOikeudet as any)?.message && (
-            <p className="text-secondary-red">{(errors.kayttoOikeudet as any)?.message}</p>
+            <p className="text-red pt-3">{(errors.kayttoOikeudet as any)?.message}</p>
           )}
           <hr />
         </div>
@@ -427,7 +444,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
           <Textarea
             label="Muistiinpano"
             disabled={disableFormEdit}
-            registrationValues={register("muistiinpano")}
+            {...register("muistiinpano")}
             error={errors.muistiinpano}
             maxLength={maxNoteLength}
           />

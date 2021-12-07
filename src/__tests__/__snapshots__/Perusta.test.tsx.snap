@@ -26,6 +26,7 @@ Array [
           <input
             className=""
             disabled={true}
+            maxLength={200}
             onChange={[Function]}
             type="text"
           />
@@ -38,6 +39,7 @@ Array [
           </label>
           <input
             className=""
+            maxLength={100}
             name="name"
             onBlur={[Function]}
             onChange={[Function]}

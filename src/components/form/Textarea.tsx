@@ -1,42 +1,38 @@
-import React, { ReactElement, useState } from "react";
+import React, { useState } from "react";
 import { FieldError } from "react-hook-form";
 import FormGroup from "./FormGroup";
 import classNames from "classnames";
 
-type RegistrationValues = Pick<
-  React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>,
-  "name" | "value" | "onBlur" | "onChange" | "ref"
->;
-
 interface Props {
-  cols?: number;
-  rows?: number;
   error?: FieldError;
-  maxLength?: number;
-  registrationValues?: RegistrationValues;
   label?: string;
-  disabled?: boolean;
   hideErrorMessage?: boolean;
-  readOnly?: boolean;
+  hideLengthCounter?: boolean;
 }
 
-export default function Textarea({
-  maxLength,
-  error,
-  registrationValues: fieldAttributes,
-  label,
-  disabled,
-  readOnly,
-  hideErrorMessage,
-}: Props): ReactElement {
+const Textarea = (
+  {
+    maxLength = 2000,
+    error,
+    label,
+    hideErrorMessage,
+    hideLengthCounter,
+    className,
+    ...props
+  }: Props &
+    Omit<React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>, "ref">,
+  ref: React.ForwardedRef<HTMLTextAreaElement>
+) => {
   const [length, setLength] = useState(0);
 
   return (
     <FormGroup
       label={label}
       errorMessage={hideErrorMessage ? undefined : error?.message}
+      className={className}
       bottomInfo={
-        typeof maxLength === "number" && (
+        typeof maxLength === "number" &&
+        !hideLengthCounter && (
           <span className={`ml-auto whitespace-nowrap ${length > maxLength ? "text-red" : "text-gray"}`}>
             {length} / {maxLength}
           </span>
@@ -44,15 +40,17 @@ export default function Textarea({
       }
     >
       <textarea
-        {...fieldAttributes}
+        {...props}
         onChange={(event) => {
-          fieldAttributes?.onChange?.(event);
+          props.onChange?.(event);
           setLength(event.target.value.length);
         }}
+        ref={ref}
+        maxLength={maxLength}
         className={classNames(error && "error")}
-        disabled={disabled}
-        readOnly={readOnly}
       />
     </FormGroup>
   );
-}
+};
+
+export default React.forwardRef(Textarea);

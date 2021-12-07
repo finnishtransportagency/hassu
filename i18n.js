@@ -3,6 +3,7 @@ module.exports = {
   defaultLocale: "fi",
   pages: {
     "*": ["common", "projekti"],
+    "/yllapito/perusta": ["velho-haku"],
   },
   loadLocaleFrom: (lang, ns) =>
     // You can use a dynamic import, fetch, whatever. You should
