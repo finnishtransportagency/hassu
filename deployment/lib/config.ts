@@ -28,11 +28,12 @@ function execShellCommand(cmd: string): Promise<string> {
 }
 
 export class Config extends Resource {
-  public readonly appBucketName: string;
+  public static readonly env = getEnv("ENVIRONMENT");
+  public static readonly uploadBucketName = `hassu-${Config.env}-upload`;
+  public static readonly yllapitoBucketName = `hassu-${Config.env}-yllapito`;
   public readonly dmzProxyEndpoint: string;
   public readonly frontendDomainName: string;
   public readonly cloudfrontCertificateArn?: string;
-  public static readonly env = getEnv("ENVIRONMENT");
   public static readonly projektiTableName = "Projekti-" + getEnv("ENVIRONMENT");
   public readonly velhoEnv;
   public readonly basicAuthenticationUsername: string;
@@ -45,7 +46,6 @@ export class Config extends Resource {
   private constructor(scope: Construct) {
     super(scope, "config");
     const env = Config.env;
-    this.appBucketName = `hassu-app-${env}`;
     if (Config.isPermanentEnvironment()) {
       this.cloudfrontCertificateArn = this.getParameter(`/${env}/CloudfrontCertificateArn`);
     }
@@ -66,10 +66,16 @@ export class Config extends Resource {
   }
 
   private getParameter(parameterName: string) {
+    if (Config.env === "localstack") {
+      return "";
+    }
     return ssm.StringParameter.valueForStringParameter(this, parameterName);
   }
 
   public getInfraParameter(parameterName: string, infraEnvironment?: string) {
+    if (Config.env === "localstack") {
+      return "";
+    }
     return ssm.StringParameter.valueForStringParameter(
       this,
       this.getInfraParameterPath(parameterName, infraEnvironment)

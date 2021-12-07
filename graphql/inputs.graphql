@@ -18,6 +18,7 @@ input AloitusKuulutusInput {
 
 input SuunnitteluSopimusInput {
   kunta: String!
+  logo: String
   etunimi: String!
   sukunimi: String!
   puhelinnumero: String!

@@ -32,6 +32,7 @@ export type AloitusKuulutus = {
 
 export type SuunnitteluSopimus = {
   kunta: string;
+  logo?: string;
   etunimi: string;
   sukunimi: string;
   puhelinnumero: string;
