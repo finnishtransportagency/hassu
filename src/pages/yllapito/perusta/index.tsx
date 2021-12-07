@@ -121,13 +121,14 @@ export default function Perusta() {
           <Notification type={NotificationType.INFO} hideIcon>
             <div>
               <h3 className="vayla-small-title">Ohjeet</h3>
-              <ul className="list-disc list-inside block">
+              <ul className="list-disc block pl-5">
                 <li>
                   Valitse listasta se suunnitelma, jonka haluat tallentaa Valtion väylien suunnittelu -palveluun uudeksi
-                  projektiksi.
+                  projektiksi. Jos etsimääsi suunnitelmaa ei näy listassa, varmista, että se on tallennettu
+                  projekti-VELHOon, ja hakuehdot ovat oikein. Ota tarvittaessa yhteys pääkäyttäjään.
                 </li>
                 <li>
-                  Huomioi, että hakutuloksissa näytetään ainoastaan ne suunnitelmat / projektit joitaa ei ole vielä
+                  Huomioi, että hakutuloksissa näytetään ainoastaan ne suunnitelmat / projektit joita ei ole vielä
                   perustettu palveluun. Käytä etusivun projektihakua etsiäksesi jo perustettuja projekteja.
                 </li>
               </ul>
