@@ -99,13 +99,13 @@ Array [
           Ohjeet
         </h3>
         <ul
-          className="list-disc list-inside block"
+          className="list-disc block pl-5"
         >
           <li>
-            Valitse listasta se suunnitelma, jonka haluat tallentaa Valtion väylien suunnittelu -palveluun uudeksi projektiksi.
+            Valitse listasta se suunnitelma, jonka haluat tallentaa Valtion väylien suunnittelu -palveluun uudeksi projektiksi. Jos etsimääsi suunnitelmaa ei näy listassa, varmista, että se on tallennettu projekti-VELHOon, ja hakuehdot ovat oikein. Ota tarvittaessa yhteys pääkäyttäjään.
           </li>
           <li>
-            Huomioi, että hakutuloksissa näytetään ainoastaan ne suunnitelmat / projektit joitaa ei ole vielä perustettu palveluun. Käytä etusivun projektihakua etsiäksesi jo perustettuja projekteja.
+            Huomioi, että hakutuloksissa näytetään ainoastaan ne suunnitelmat / projektit, joita ei ole vielä perustettu palveluun. Käytä etusivun projektihakua etsiäksesi jo perustettuja projekteja.
           </li>
         </ul>
       </div>
