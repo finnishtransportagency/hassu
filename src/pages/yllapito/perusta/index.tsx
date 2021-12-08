@@ -128,7 +128,7 @@ export default function Perusta() {
                   projekti-VELHOon, ja hakuehdot ovat oikein. Ota tarvittaessa yhteys pääkäyttäjään.
                 </li>
                 <li>
-                  Huomioi, että hakutuloksissa näytetään ainoastaan ne suunnitelmat / projektit joita ei ole vielä
+                  Huomioi, että hakutuloksissa näytetään ainoastaan ne suunnitelmat / projektit, joita ei ole vielä
                   perustettu palveluun. Käytä etusivun projektihakua etsiäksesi jo perustettuja projekteja.
                 </li>
               </ul>
