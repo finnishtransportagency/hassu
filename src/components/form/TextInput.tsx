@@ -1,21 +1,23 @@
+import classNames from "classnames";
 import React, { useState } from "react";
 import { FieldError } from "react-hook-form";
 import FormGroup from "./FormGroup";
 
 interface Props {
   error?: FieldError;
-  maxLength?: number;
   label?: string;
   hideErrorMessage?: boolean;
+  hideLengthCounter?: boolean;
 }
 
 const TextInput = (
   {
-    maxLength,
+    maxLength = 200,
     error,
     label,
     hideErrorMessage,
     className,
+    hideLengthCounter = true,
     ...props
   }: Props & Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "ref">,
   ref: React.ForwardedRef<HTMLInputElement>
@@ -28,8 +30,9 @@ const TextInput = (
       errorMessage={hideErrorMessage ? undefined : error?.message}
       className={className}
       bottomInfo={
-        typeof maxLength === "number" && (
-          <span className={`ml-auto whitespace-nowrap ${length > maxLength ? "text-red" : "text-gray"}`}>
+        typeof maxLength === "number" &&
+        !hideLengthCounter && (
+          <span className={classNames("ml-auto whitespace-nowrap", length > maxLength ? "text-red" : "text-gray")}>
             {length} / {maxLength}
           </span>
         )
@@ -37,13 +40,14 @@ const TextInput = (
     >
       <input
         type="text"
+        maxLength={maxLength}
         {...props}
         ref={ref}
         onChange={(event) => {
           props?.onChange?.(event);
           setLength(event.target.value.length);
         }}
-        className={error ? "error" : ""}
+        className={classNames(error && "error")}
       />
     </FormGroup>
   );

@@ -10,6 +10,7 @@ import ProjektiTaulu from "@components/projekti/ProjektiTaulu";
 import TextInput from "@components/form/TextInput";
 import Button from "@components/button/Button";
 import Notification, { NotificationType } from "@components/notification/Notification";
+import useTranslation from "next-translate/useTranslation";
 
 interface SearchInput {
   name: string;
@@ -17,16 +18,27 @@ interface SearchInput {
 
 const PROJEKTI_NIMI_PARAM = "projektinimi";
 
+const PROJEKTI_NIMI_MAX_LENGTH = 100;
+const PROJEKTI_NIMI_MIN_LENGTH = 3;
+
+enum SearchError {
+  NO_RESULTS = "NO_RESULTS",
+  SEARCH_UNSUCCESSFUL = "SEARCH_UNSUCCESSFUL",
+}
+
 export default function Perusta() {
+  const { t } = useTranslation("velho-haku");
   const router = useRouter();
   const [hakuTulos, setHakuTulos] = useState<VelhoHakuTulos[] | null>([]);
   const [resultSectionVisible, setResultSectionVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchError, setSearchError] = useState<SearchError | undefined>(undefined);
 
   const validationSchema: SchemaOf<SearchInput> = Yup.object().shape({
     name: Yup.string()
       .required("Nimi on pakollinen kenttä.")
-      .min(3, "Nimikenttään on kirjoitettava vähintään 3 merkkiä."),
+      .min(PROJEKTI_NIMI_MIN_LENGTH, `Nimikenttään on kirjoitettava vähintään ${PROJEKTI_NIMI_MIN_LENGTH} merkkiä.`)
+      .max(PROJEKTI_NIMI_MAX_LENGTH, `Nimikenttään voi kirjoittaa maksimissaan ${PROJEKTI_NIMI_MAX_LENGTH} merkkiä.`),
   });
 
   const formOptions: UseFormProps<SearchInput> = {
@@ -40,8 +52,6 @@ export default function Perusta() {
     register,
     handleSubmit,
     formState: { errors },
-    setError,
-    clearErrors,
     reset,
   } = useForm<SearchInput>(formOptions);
 
@@ -59,22 +69,16 @@ export default function Perusta() {
         const tulos = await api.getVelhoSuunnitelmasByName(data.name);
         setHakuTulos(tulos);
         if (tulos.length === 0) {
-          setError("name", {
-            type: "manual",
-            message: "Haulla ei löytynyt yhtään projektia.",
-          });
+          setSearchError(SearchError.NO_RESULTS);
         } else {
-          clearErrors();
+          setSearchError(undefined);
         }
       } catch (e) {
-        setError("name", {
-          type: "manual",
-          message: "Haku epäonnistui. Mikäli ongelma jatkuu, ota yhteys järjestelmän ylläpitäjään.",
-        });
+        setSearchError(SearchError.SEARCH_UNSUCCESSFUL);
       }
       setIsLoading(false);
     },
-    [clearErrors, setError, router]
+    [router]
   );
 
   useEffect(() => {
@@ -102,15 +106,20 @@ export default function Perusta() {
         <div className="w-64 content">
           <form onSubmit={handleSubmit(onSubmit)}>
             <TextInput label="Asiatunnus" disabled />
-            <TextInput label="Projektin nimi" {...register("name")} />
+            <TextInput
+              error={errors.name}
+              label="Projektin nimi"
+              maxLength={PROJEKTI_NIMI_MAX_LENGTH}
+              {...register("name")}
+            />
             <Button primary endIcon="search" disabled={isLoading}>
               Hae
             </Button>
           </form>
         </div>
-        {errors.name?.message && (
+        {searchError && (
           <Notification type={NotificationType.ERROR} className="content">
-            {errors.name?.message}
+            {t(`haku-virhe.${searchError}`)}
           </Notification>
         )}
       </section>
@@ -141,11 +150,11 @@ export default function Perusta() {
             />
           ) : (
             !isLoading && (
-              <div>
+              <p>
                 {"Hakusi '"}
                 <span className="font-bold">{router.query[PROJEKTI_NIMI_PARAM]}</span>
                 {"' ei vastaa yhtään projektia."}
-              </div>
+              </p>
             )
           )}
         </section>

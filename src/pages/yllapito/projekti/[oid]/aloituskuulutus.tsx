@@ -113,8 +113,9 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
         )}
         <Textarea
           label="Suunnitelman aloituskuulutus *"
-          registrationValues={register("aloitusKuulutus.hankkeenKuvaus")}
+          {...register("aloitusKuulutus.hankkeenKuvaus")}
           error={errors.aloitusKuulutus?.hankkeenKuvaus}
+          maxLength={maxAloituskuulutusLength}
           disabled={disableFormEdit}
         ></Textarea>
         <Notification type={NotificationType.INFO}>
