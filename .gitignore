@@ -21,6 +21,7 @@ yarn-error.log*
 
 .next
 out
+/.cdk-database-outputs.json
 /.cdk-backend-outputs.json
 /.cdk-frontend-outputs.json
 /backend/api/API.ts

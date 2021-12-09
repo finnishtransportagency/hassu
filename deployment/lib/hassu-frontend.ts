@@ -6,7 +6,9 @@ import * as cloudfront from "@aws-cdk/aws-cloudfront";
 import {
   AllowedMethods,
   CachePolicy,
+  KeyGroup,
   LambdaEdgeEventType,
+  OriginAccessIdentity,
   OriginRequestPolicy,
   OriginSslPolicy,
   PriceClass,
@@ -29,6 +31,10 @@ import {
 } from "@aws-cdk/aws-iam";
 import * as fs from "fs";
 import { EdgeFunction } from "@aws-cdk/aws-cloudfront/lib/experimental";
+import { S3Origin } from "@aws-cdk/aws-cloudfront-origins";
+import { Bucket } from "@aws-cdk/aws-s3";
+import * as ssm from "@aws-cdk/aws-ssm";
+import { readVariables } from "./util/cdkoutputs";
 
 export class HassuFrontendStack extends cdk.Stack {
   constructor(scope: Construct) {
@@ -58,7 +64,8 @@ export class HassuFrontendStack extends cdk.Stack {
       frontendRequestFunction
     );
     const dmzProxyBehavior = HassuFrontendStack.createDmzProxyBehavior(config.dmzProxyEndpoint);
-    const behaviours: Record<string, BehaviorOptions> = HassuFrontendStack.createDistributionProperties(
+    const behaviours: Record<string, BehaviorOptions> = await this.createDistributionProperties(
+      config,
       dmzProxyBehaviorWithLambda,
       dmzProxyBehavior
     );
@@ -153,13 +160,15 @@ export class HassuFrontendStack extends cdk.Stack {
     });
   }
 
-  private static createDistributionProperties(
+  private async createDistributionProperties(
+    config: Config,
     dmzProxyBehaviorWithLambda: BehaviorOptions,
     dmzProxyBehavior: BehaviorOptions
-  ): Record<string, BehaviorOptions> {
+  ): Promise<Record<string, BehaviorOptions>> {
     return {
       "/oauth2/*": dmzProxyBehaviorWithLambda,
       "/graphql": dmzProxyBehaviorWithLambda,
+      "/yllapito/tiedostot/*": await this.createYllapitoTiedostotBehavior(config),
       "/yllapito/graphql": dmzProxyBehaviorWithLambda,
       "/yllapito/kirjaudu": dmzProxyBehaviorWithLambda,
       "/keycloak/*": dmzProxyBehavior,
@@ -190,5 +199,51 @@ export class HassuFrontendStack extends cdk.Stack {
     };
 
     return dmzBehavior;
+  }
+
+  private async createYllapitoTiedostotBehavior(config: Config): Promise<BehaviorOptions> {
+    let keyGroups: KeyGroup[];
+    let originAccessIdentity;
+
+    if (Config.env === "localstack") {
+      keyGroups = [];
+      originAccessIdentity = undefined;
+    } else {
+      const publicKey = new cloudfront.PublicKey(this, "FrontendPublicKey", {
+        encodedKey: await config.getGlobalSecureInfraParameter("FrontendPublicKey"),
+      });
+      keyGroups = [
+        new cloudfront.KeyGroup(this, "FrontendKeyGroup", {
+          items: [publicKey],
+        }),
+      ];
+      new ssm.StringParameter(this, "FrontendPublicKeyId", {
+        description: "Generated FrontendPublicKeyId",
+        parameterName: "/" + config.infraEnvironment + "/FrontendPublicKeyId",
+        stringValue: publicKey.publicKeyId,
+      });
+
+      originAccessIdentity = OriginAccessIdentity.fromOriginAccessIdentityName(
+        this,
+        "CloudfrontOriginAccessIdentity" + Config.env,
+        readVariables("database").CloudFrontOriginAccessIdentity
+      );
+    }
+
+    return {
+      origin: new S3Origin(
+        Bucket.fromBucketAttributes(this, "yllapitoBucketOrigin", {
+          region: "eu-west-1",
+          bucketName: Config.yllapitoBucketName,
+        }),
+        {
+          originAccessIdentity,
+        }
+      ),
+      compress: true,
+      cachePolicy: CachePolicy.CACHING_DISABLED,
+      originRequestPolicy: OriginRequestPolicy.CORS_S3_ORIGIN,
+      trustedKeyGroups: keyGroups,
+    };
   }
 }

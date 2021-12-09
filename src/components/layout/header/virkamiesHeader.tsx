@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useRef, useState } from "react";
-import { apiConfig, Kayttaja } from "@services/api";
+import { apiConfig, NykyinenKayttaja } from "@services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import style from "@styles/layout/virkamiesHeader.module.css";
@@ -20,6 +20,12 @@ export function VirkamiesHeader({ scrolledPastOffset }: HeaderProps): ReactEleme
   const logoutHref = process.env.NEXT_PUBLIC_VAYLA_EXTRANET_URL;
 
   const { data: kayttaja } = useSWR(apiConfig.nykyinenKayttaja.graphql, vaylaUserLoader);
+
+  if (kayttaja?.keksit) {
+    kayttaja.keksit.forEach((cookie) => {
+      document.cookie = cookie;
+    });
+  }
 
   useEffect(() => {
     const offset = headerTopPortion.current?.clientHeight;
@@ -97,6 +103,6 @@ export function HeaderNavigationItem({ href, label }: NavigationRoute): ReactEle
 
 export default VirkamiesHeader;
 
-async function vaylaUserLoader(_: string): Promise<Kayttaja | undefined> {
+async function vaylaUserLoader(_: string): Promise<NykyinenKayttaja | undefined> {
   return await getVaylaUser();
 }

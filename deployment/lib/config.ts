@@ -3,8 +3,10 @@ import { Construct } from "constructs";
 import * as ssm from "@aws-cdk/aws-ssm";
 import { Resource } from "@aws-cdk/core";
 import { SSM } from "aws-sdk";
+import log from "loglevel";
 
 const ssmProvider = new SSM({ apiVersion: "2014-11-06" });
+const globalSsmProvider = new SSM({ apiVersion: "2014-11-06", region: "us-east-1" });
 
 function getEnv(name: string): string {
   const value = process.env[name];
@@ -51,7 +53,9 @@ export class Config extends Resource {
     }
     this.infraEnvironment = Config.isPermanentEnvironment() ? env : "dev";
     this.dmzProxyEndpoint = this.getInfraParameter("DMZProxyEndpoint");
-    this.frontendDomainName = this.getInfraParameter("FrontendDomainName");
+    this.frontendDomainName = Config.isPermanentEnvironment()
+      ? this.getInfraParameter("FrontendDomainName")
+      : process.env.FRONTEND_DOMAIN_NAME || ""; // To make it possible to use developer's own cloudfront for files
     this.basicAuthenticationUsername = this.getInfraParameter("basicAuthenticationUsername");
     this.basicAuthenticationPassword = this.getInfraParameter("basicAuthenticationPassword");
 
@@ -86,17 +90,34 @@ export class Config extends Resource {
     return `/${infraEnvironment || this.infraEnvironment}/` + parameterName;
   }
 
-  public async getSecureInfraParameter(parameterName: string, infraEnvironment: string) {
+  public async getSecureInfraParameter(parameterName: string, infraEnvironment: string = this.infraEnvironment) {
+    return this.getSecureInfraParameterInternal({ parameterName, infraEnvironment, ssm: ssmProvider });
+  }
+
+  public async getGlobalSecureInfraParameter(parameterName: string, infraEnvironment: string = this.infraEnvironment) {
+    return this.getSecureInfraParameterInternal({ parameterName, infraEnvironment, ssm: globalSsmProvider });
+  }
+
+  private async getSecureInfraParameterInternal(params: { parameterName: string; infraEnvironment: string; ssm: SSM }) {
     // Skip AWS API calls if running locally with localstack and cdklocal
     if (Config.env === "localstack") {
       return "dummy";
     }
-    const name = `/${infraEnvironment}/` + parameterName;
-    const params = {
-      Name: name,
-      WithDecryption: true,
-    };
-    const value = (await ssmProvider.getParameter(params).promise()).Parameter?.Value;
+    const name = `/${params.infraEnvironment}/` + params.parameterName;
+    let value: string | undefined;
+    try {
+      value = (
+        await params.ssm
+          .getParameter({
+            Name: name,
+            WithDecryption: true,
+          })
+          .promise()
+      ).Parameter?.Value;
+    } catch (e) {
+      log.error(e);
+      throw new Error("Parameter " + name + " not found");
+    }
     if (!value) {
       throw new Error("Parameter " + name + " not found");
     }

@@ -30,6 +30,14 @@ function setupLocalDevelopmentMode(config, env) {
   config = {
     ...config,
     env,
+    async rewrites() {
+      return [
+        {
+          source: "/yllapito/tiedostot/:path*",
+          destination: "https://" + process.env.FRONTEND_DOMAIN_NAME + "/yllapito/tiedostot/:path*",
+        },
+      ];
+    },
   };
   return config;
 }

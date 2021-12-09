@@ -1,7 +1,7 @@
-import { api, Kayttaja } from "@services/api";
+import { api, NykyinenKayttaja } from "@services/api";
 
 let authenticated = false;
-let currentUser: Kayttaja | undefined;
+let currentUser: NykyinenKayttaja | undefined;
 
 async function getVaylaUser() {
   if (!authenticated) {

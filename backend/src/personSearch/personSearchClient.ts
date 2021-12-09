@@ -3,7 +3,7 @@ import { Kayttaja, ProjektiRooli } from "../../../common/graphql/apiModel";
 import { DBVaylaUser } from "../database/model/projekti";
 import { adaptPersonSearchResult, mergeKayttaja } from "./personAdapter";
 import * as log from "loglevel";
-import { isAorL } from "../service/userService";
+import { isAorL } from "../user";
 
 const NodeCache = require("node-cache");
 

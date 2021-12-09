@@ -8,7 +8,7 @@ import { IllegalAccessError } from "../src/error/IllegalAccessError";
 import { velho } from "../src/velho/velhoClient";
 import { api } from "../integrationtest/api/apiClient";
 import { personSearch } from "../src/personSearch/personSearchClient";
-import * as userService from "../src/service/userService";
+import { userService } from "../src/user";
 import { Projekti, ProjektiKayttajaInput, ProjektiRooli } from "../../common/graphql/apiModel";
 import { DBProjekti } from "../src/database/model/projekti";
 import * as log from "loglevel";
@@ -125,7 +125,7 @@ describe("apiHandler", () => {
           });
         }
 
-        userFixture.loginAs(personSearchFixture.mattiMeikalainen);
+        userFixture.loginAs(UserFixture.mattiMeikalainen);
 
         // Load projekti and examine its permissions
         mockLataaProjektiFromVelho();

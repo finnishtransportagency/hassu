@@ -64,10 +64,8 @@ export class HassuPipelineStack extends Stack {
       webhookFilters,
     };
     const gitHubSource = codebuild.Source.gitHub(sourceProps);
-    const concurrentBuildLimit = config.isFeatureBranch() ? 1 : undefined;
     new codebuild.Project(this, "HassuProject", {
       projectName: "Hassu-" + env,
-      concurrentBuildLimit,
       buildSpec: BuildSpec.fromSourceFilename(buildspecFileName),
       source: gitHubSource,
       cache: codebuild.Cache.local(LocalCacheMode.CUSTOM, LocalCacheMode.SOURCE, LocalCacheMode.DOCKER_LAYER),

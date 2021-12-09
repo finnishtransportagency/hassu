@@ -1,7 +1,7 @@
 import { config } from "../config";
 import log from "loglevel";
 import { NotFoundError } from "../error/NotFoundError";
-import { s3Client } from "../aws/S3";
+import { getS3Client } from "../aws/clients";
 import { uuid } from "../util/uuid";
 import { CopyObjectCommand, HeadObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -23,7 +23,7 @@ export class FileService {
       Key: fileNameWithPath,
       Bucket: config.uploadBucketName,
     });
-    const uploadURL = await getSignedUrl(s3Client.get(), command, {
+    const uploadURL = await getSignedUrl(getS3Client(), command, {
       expiresIn: 600,
     });
     return { fileNameWithPath, uploadURL };
@@ -37,9 +37,9 @@ export class FileService {
     const sourceFileProperties = await this.getUploadedSourceFileInformation(filePath);
 
     const fileNameFromUpload = this.getFileNameFromPath(filePath);
-    const targetPath = `projekti/${param.oid}/${param.targetFilePathInProjekti}/${fileNameFromUpload}`;
+    const targetPath = `yllapito/tiedostot/projekti/${param.oid}/${param.targetFilePathInProjekti}/${fileNameFromUpload}`;
     try {
-      await s3Client.get().send(
+      await getS3Client().send(
         new CopyObjectCommand({
           ...sourceFileProperties,
           Bucket: config.yllapitoBucketName,
@@ -61,9 +61,9 @@ export class FileService {
     uploadedFileSource: string
   ): Promise<{ ContentType: string; CopySource: string }> {
     try {
-      const headObject = await s3Client
-        .get()
-        .send(new HeadObjectCommand({ Bucket: config.uploadBucketName, Key: uploadedFileSource }));
+      const headObject = await getS3Client().send(
+        new HeadObjectCommand({ Bucket: config.uploadBucketName, Key: uploadedFileSource })
+      );
       return { ContentType: headObject.ContentType, CopySource: config.uploadBucketName + "/" + uploadedFileSource };
     } catch (e) {
       log.error(e);

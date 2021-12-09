@@ -1,4 +1,4 @@
-import * as userService from "../../src/service/userService";
+import { userService } from "../../src/user";
 import * as sinon from "sinon";
 import { UserFixture } from "../../test/fixture/userFixture";
 

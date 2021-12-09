@@ -1,7 +1,7 @@
 import { AppSyncIdentityIAM, AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
-import { Context } from "aws-lambda";
 import log from "loglevel";
-import * as userService from "../src/service/userService";
+import { userService } from "../src/user";
+import { createSignedCookies } from "../src/user/signedCookie";
 
 const identifyIAMUser: userService.IdentifyUserFunc = async (event: AppSyncResolverEvent<any>) => {
   const identity: AppSyncIdentityIAM = event.identity as AppSyncIdentityIAM;
@@ -10,11 +10,12 @@ const identifyIAMUser: userService.IdentifyUserFunc = async (event: AppSyncResol
   if (devUserUid) {
     const devUserRoles = event.request?.headers?.["x-hassudev-roles"];
     return {
-      __typename: "Kayttaja",
+      __typename: "NykyinenKayttaja",
       etuNimi: devUserUid,
       sukuNimi: devUserUid,
       uid: devUserUid,
       roolit: devUserRoles?.split(","),
+      keksit: await createSignedCookies(),
     };
   }
 };

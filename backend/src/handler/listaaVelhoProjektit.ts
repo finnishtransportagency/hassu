@@ -1,4 +1,4 @@
-import { requirePermissionLuonti } from "../service/userService";
+import { requirePermissionLuonti } from "../user";
 import { velho } from "../velho/velhoClient";
 import { ListaaVelhoProjektitQueryVariables, VelhoHakuTulos } from "../../../common/graphql/apiModel";
 import { projektiSearchService } from "../projektiSearch/projektiSearchService";

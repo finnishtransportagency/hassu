@@ -1,9 +1,9 @@
 import { projektiDatabase } from "../database/projektiDatabase";
-import { requirePermissionLuku } from "../service/userService";
+import { requirePermissionLuku } from "../user";
 import { LataaKuulutusPDFQueryVariables } from "../../../common/graphql/apiModel";
 import * as log from "loglevel";
 import { NotFoundError } from "../error/NotFoundError";
-import { kuulutusService } from "../service/kuulutus/kuulutusService";
+import { kuulutusService } from "../kuulutus/kuulutusService";
 
 export async function lataaKuulutus({ oid, kuulutusTyyppi }: LataaKuulutusPDFQueryVariables) {
   const vaylaUser = requirePermissionLuku();

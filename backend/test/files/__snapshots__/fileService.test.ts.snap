@@ -12,7 +12,7 @@ Object {
   "Bucket": "hassu-localstack-yllapito",
   "ContentType": "image/png",
   "CopySource": "hassu-localstack-upload/1-2-3-4/logo.png",
-  "Key": "projekti/1/suunnittelusopimus/logo.png",
+  "Key": "yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.png",
   "MetadataDirective": "REPLACE",
 }
 `;

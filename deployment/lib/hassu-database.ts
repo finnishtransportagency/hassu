@@ -4,6 +4,7 @@ import * as cdk from "@aws-cdk/core";
 import { Duration, RemovalPolicy } from "@aws-cdk/core";
 import { Config } from "./config";
 import { BlockPublicAccess, Bucket, HttpMethods } from "@aws-cdk/aws-s3";
+import { OriginAccessIdentity } from "@aws-cdk/aws-cloudfront";
 
 export class HassuDatabaseStack extends cdk.Stack {
   public projektiTable: ddb.Table;
@@ -62,11 +63,24 @@ export class HassuDatabaseStack extends cdk.Stack {
   }
 
   private createYllapitoBucket() {
-    return new Bucket(this, "YllapitoBucket", {
+    const bucket = new Bucket(this, "YllapitoBucket", {
       bucketName: Config.yllapitoBucketName,
       versioned: true,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       removalPolicy: RemovalPolicy.RETAIN,
     });
+
+    if (Config.env !== "localstack") {
+      const oaiName = "CloudfrontOriginAccessIdentity" + Config.env;
+      const oai = new OriginAccessIdentity(this, oaiName, { comment: oaiName });
+
+      // tslint:disable-next-line:no-unused-expression
+      new cdk.CfnOutput(this, "CloudFrontOriginAccessIdentity", {
+        value: oai.originAccessIdentityName || "",
+      });
+
+      bucket.grantRead(oai);
+    }
+    return bucket;
   }
 }

@@ -1,6 +1,6 @@
 /* tslint:disable:only-arrow-functions */
 import { describe, it } from "mocha";
-import { KuulutusService } from "../../src/service/kuulutus/kuulutusService";
+import { KuulutusService } from "../../src/kuulutus/kuulutusService";
 import { KuulutusTyyppi } from "../../../common/graphql/apiModel";
 import fs from "fs";
 
