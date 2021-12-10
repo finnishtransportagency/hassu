@@ -27,9 +27,35 @@ const draftValidationSchema: SchemaOf<FormValues> = Yup.object().shape({
   aloitusKuulutus: Yup.object().shape({
     hankkeenKuvaus: Yup.string().max(
       maxAloituskuulutusLength,
-      `Aloituskuulutukseen voidaan kirjoittaa maksimissaan ${maxAloituskuulutusLength} merkkiä.`
+      `Aloituskuulutukseen voidaan kirjoittaa maksimissaan ${maxAloituskuulutusLength} merkkiä`
     ),
-    kuulutusPaiva: Yup.string(),
+    kuulutusPaiva: Yup.string()
+      .test("is-valid-date", "Virheellinen päivämäärä", (dateString) => {
+        // KuulutusPaiva is not required when saved as a draft.
+        // This test doesn't throw errors if date is not set.
+        if (!dateString) {
+          return true;
+        }
+        let validDate = false;
+        try {
+          const dateString2 = new Date(dateString!).toISOString().split("T")[0];
+          if (dateString2 === dateString) {
+            validDate = true;
+          }
+        } catch {
+          validDate = false;
+        }
+        return validDate;
+      })
+      .test("not-in-past", "Aloituskuulutusta ei voida asettaa menneisyyteen", (dateString) => {
+        // KuulutusPaiva is not required when saved as a draft.
+        // This test doesn't throw errors if date is not set.
+        if (!dateString) {
+          return true;
+        }
+        const todayISODate = new Date().toISOString().split("T")[0];
+        return dateString >= todayISODate;
+      }),
   }),
 });
 
@@ -125,7 +151,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
         )}
         <Notification type={NotificationType.WARN}>
           Aloituskuulutusta ei ole vielä julkaistu palvelun julkisella puolella.{" "}
-          {watchKuulutusPaiva
+          {watchKuulutusPaiva && !errors.aloitusKuulutus?.kuulutusPaiva
             ? `Kuulutuspäivä on ${new Date(watchKuulutusPaiva).toLocaleDateString("fi")}`
             : "Kuulutuspäivää ei ole asetettu"}
           . Voit edelleen tehdä muutoksia projektin tietoihin. Tallennetut muutokset huomioidaan kuulutuksessa.
