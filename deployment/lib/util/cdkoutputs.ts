@@ -9,7 +9,7 @@ export function readVariables(stackName: string) {
     );
     return outputObject[Object.keys(outputObject).filter((value) => value.includes(stackName))[0]];
   } catch (e) {
-    console.log(e);
-    console.warn(".cdk-" + stackName + "-outputs.json file not found");
+    // Ignore, because for example frontend stack depends on the database stack and it fails on compile already when deploying the database stack!
+    return {};
   }
 }
