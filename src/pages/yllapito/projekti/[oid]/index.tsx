@@ -364,6 +364,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
                       label="Puhelinnumero"
                       {...register(`kayttoOikeudet.${index}.puhelinnumero`)}
                       error={errors.kayttoOikeudet?.[index]?.puhelinnumero}
+                      maxLength={maxPhoneLength}
                       pattern={agencyPhoneNumberRegex}
                       disabled={disableFormEdit}
                     />
