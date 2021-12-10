@@ -6,6 +6,7 @@ import * as cloudfront from "@aws-cdk/aws-cloudfront";
 import {
   AllowedMethods,
   CachePolicy,
+  CfnPublicKey,
   KeyGroup,
   LambdaEdgeEventType,
   OriginAccessIdentity,
@@ -213,6 +214,10 @@ export class HassuFrontendStack extends cdk.Stack {
         publicKeyName: "FrontendPublicKey" + Config.env,
         encodedKey: await config.getGlobalSecureInfraParameter("FrontendPublicKey"),
       });
+      const cfnKey: CfnPublicKey = publicKey.node.defaultChild as CfnPublicKey;
+      type Writeable<T> = { -readonly [P in keyof T]: T[P] };
+      const cfnKeyConfig = cfnKey.publicKeyConfig as Writeable<CfnPublicKey.PublicKeyConfigProperty>;
+      cfnKeyConfig.callerReference = cfnKeyConfig.callerReference + Config.env;
       keyGroups = [
         new cloudfront.KeyGroup(this, "FrontendKeyGroup", {
           keyGroupName: "FrontendKeyGroup" + Config.env,
@@ -221,7 +226,7 @@ export class HassuFrontendStack extends cdk.Stack {
       ];
       new ssm.StringParameter(this, "FrontendPublicKeyId", {
         description: "Generated FrontendPublicKeyId",
-        parameterName: "/" + config.infraEnvironment + "/FrontendPublicKeyId",
+        parameterName: "/" + Config.env + "/FrontendPublicKeyId",
         stringValue: publicKey.publicKeyId,
       });
 
