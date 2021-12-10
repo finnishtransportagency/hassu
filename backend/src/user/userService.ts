@@ -1,10 +1,11 @@
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
-import { validateJwtToken } from "../util/validatejwttoken";
+import { validateJwtToken } from "./validatejwttoken";
 import { config } from "../config";
 import log from "loglevel";
 import { IllegalAccessError } from "../error/IllegalAccessError";
-import { Kayttaja, VaylaKayttajaTyyppi } from "../../../common/graphql/apiModel";
+import { NykyinenKayttaja, VaylaKayttajaTyyppi } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../database/model/projekti";
+import { createSignedCookies } from "./signedCookie";
 
 function parseRoles(roles: string) {
   return roles
@@ -30,7 +31,12 @@ function adaptKayttajaTyyppi(roolit: string[]) {
   return;
 }
 
-export type IdentifyUserFunc = (event: AppSyncResolverEvent<any>) => Promise<Kayttaja | undefined>;
+export type KayttajaPermissions = {
+  vaylaKayttajaTyyppi?: VaylaKayttajaTyyppi | null;
+  roolit?: string[] | null;
+};
+
+export type IdentifyUserFunc = (event: AppSyncResolverEvent<any>) => Promise<NykyinenKayttaja | undefined>;
 
 const identifyLoggedInVaylaUser: IdentifyUserFunc = async (event: AppSyncResolverEvent<any>) => {
   const headers = event.request?.headers;
@@ -39,8 +45,8 @@ const identifyLoggedInVaylaUser: IdentifyUserFunc = async (event: AppSyncResolve
     const jwt = await validateJwtToken(headers["x-iam-accesstoken"], headers["x-iam-data"], config.cognitoURL);
     if (jwt) {
       const roolit = parseRoles(jwt["custom:rooli"]);
-      const user: Kayttaja = {
-        __typename: "Kayttaja",
+      const user: NykyinenKayttaja = {
+        __typename: "NykyinenKayttaja",
         etuNimi: jwt["custom:etunimi"],
         sukuNimi: jwt["custom:sukunimi"],
         uid: jwt["custom:uid"],
@@ -49,6 +55,7 @@ const identifyLoggedInVaylaUser: IdentifyUserFunc = async (event: AppSyncResolve
       if (!isHassuKayttaja(user)) {
         throw new IllegalAccessError("Ei käyttöoikeutta palveluun " + JSON.stringify(user));
       }
+      user.keksit = await createSignedCookies();
       return user;
     }
   }
@@ -80,7 +87,7 @@ if (process.env.USER_IDENTIFIER_FUNCTIONS) {
  * For test use only
  * @param kayttaja
  */
-export function identifyMockUser(kayttaja?: Kayttaja) {
+export function identifyMockUser(kayttaja?: NykyinenKayttaja) {
   globalThis.currentUser = kayttaja;
   if (globalThis.currentUser) {
     log.info("Current user:", globalThis.currentUser);
@@ -89,14 +96,14 @@ export function identifyMockUser(kayttaja?: Kayttaja) {
   }
 }
 
-export function getVaylaUser(): Kayttaja {
+export function getVaylaUser(): NykyinenKayttaja {
   if (!globalThis.currentUser) {
     throw new IllegalAccessError("Väylä-kirjautuminen puuttuu");
   }
   return globalThis.currentUser;
 }
 
-function requireVaylaUser(): Kayttaja {
+function requireVaylaUser(): NykyinenKayttaja {
   if (!globalThis.currentUser) {
     throw new IllegalAccessError("Väylä-kirjautuminen puuttuu");
   }
@@ -104,20 +111,20 @@ function requireVaylaUser(): Kayttaja {
 }
 
 // Role: admin
-function isHassuAdmin(kayttaja: Kayttaja) {
+function isHassuAdmin(kayttaja: KayttajaPermissions) {
   return kayttaja.roolit?.includes("hassu_admin");
 }
 
 // Role: kayttaja
-function isHassuKayttaja(kayttaja: Kayttaja) {
+function isHassuKayttaja(kayttaja: KayttajaPermissions) {
   return kayttaja.roolit?.includes("hassu_kayttaja") || isHassuAdmin(kayttaja);
 }
 
-export function isAorL(account: Kayttaja) {
+export function isAorL(account: KayttajaPermissions) {
   return isATunnus(account) || isLTunnus(account);
 }
 
-export function requirePermissionLuku(): Kayttaja {
+export function requirePermissionLuku(): NykyinenKayttaja {
   return requireVaylaUser();
 }
 
@@ -127,7 +134,7 @@ export function requirePermissionLuonti() {
   }
 }
 
-export function hasPermissionLuonti(kayttaja: Kayttaja = requireVaylaUser()) {
+export function hasPermissionLuonti(kayttaja: KayttajaPermissions = requireVaylaUser()) {
   return isHassuAdmin(kayttaja) || isAorL(kayttaja);
 }
 
@@ -146,10 +153,10 @@ export function requirePermissionMuokkaa(projekti: DBProjekti) {
   }
 }
 
-function isATunnus(account: Kayttaja) {
+function isATunnus(account: KayttajaPermissions) {
   return account?.vaylaKayttajaTyyppi === VaylaKayttajaTyyppi.A_TUNNUS;
 }
 
-function isLTunnus(account: Kayttaja) {
+function isLTunnus(account: KayttajaPermissions) {
   return account?.vaylaKayttajaTyyppi === VaylaKayttajaTyyppi.L_TUNNUS;
 }

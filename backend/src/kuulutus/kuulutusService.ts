@@ -1,5 +1,5 @@
-import { KuulutusTyyppi, PDF } from "../../../../common/graphql/apiModel";
-import { DBProjekti } from "../../database/model/projekti";
+import { KuulutusTyyppi, PDF } from "../../../common/graphql/apiModel";
+import { DBProjekti } from "../database/model/projekti";
 import log from "loglevel";
 
 export class KuulutusService {

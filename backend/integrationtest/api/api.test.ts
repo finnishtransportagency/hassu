@@ -13,9 +13,8 @@ import {
 import fs from "fs";
 import { S3Client } from "@aws-sdk/client-s3";
 import axios from "axios";
-import { s3Client } from "../../src/aws/S3";
 import * as sinon from "sinon";
-import { SinonStub } from "sinon";
+import { produceAWSClient } from "../../src/aws/clientProducer";
 
 const { expect } = require("chai");
 
@@ -23,12 +22,13 @@ describe("Api", () => {
   beforeEach("Initialize test database", async () => await setupLocalDatabase());
 
   before(() => {
-    const stub: SinonStub = sinon.stub(s3Client, "get");
-    stub.returns(
-      new S3Client({
-        endpoint: "http://localhost:4566",
-        forcePathStyle: true,
-      })
+    produceAWSClient(
+      "s3",
+      () =>
+        new S3Client({
+          endpoint: "http://localhost:4566",
+          forcePathStyle: true,
+        })
     );
   });
 

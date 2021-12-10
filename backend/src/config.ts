@@ -19,6 +19,9 @@ const config = {
 
   frontendDomainName: process.env.FRONTEND_DOMAIN_NAME,
 
+  frontendPublicKeyIdPath: process.env.FRONTEND_PUBLICKEY_PATH,
+  frontendPrivateKey: process.env.FRONTEND_PRIVATEKEY,
+
   uploadBucketName: process.env.UPLOAD_BUCKET_NAME,
   yllapitoBucketName: process.env.YLLAPITO_BUCKET_NAME,
 };

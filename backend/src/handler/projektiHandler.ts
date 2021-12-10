@@ -1,12 +1,7 @@
 import { projektiDatabase } from "../database/projektiDatabase";
-import {
-  getVaylaUser,
-  requirePermissionLuku,
-  requirePermissionLuonti,
-  requirePermissionMuokkaa,
-} from "../service/userService";
+import { getVaylaUser, requirePermissionLuku, requirePermissionLuonti, requirePermissionMuokkaa } from "../user";
 import { velho } from "../velho/velhoClient";
-import { Kayttaja, ProjektiRooli, Status, TallennaProjektiInput } from "../../../common/graphql/apiModel";
+import { NykyinenKayttaja, ProjektiRooli, Status, TallennaProjektiInput } from "../../../common/graphql/apiModel";
 import { ProjektiAdapter } from "./projektiAdapter";
 import * as log from "loglevel";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
@@ -53,7 +48,7 @@ export async function createOrUpdateProjekti(input: TallennaProjektiInput) {
   return true;
 }
 
-async function createProjektiFromVelho(oid: string, vaylaUser: Kayttaja, input?: TallennaProjektiInput) {
+async function createProjektiFromVelho(oid: string, vaylaUser: NykyinenKayttaja, input?: TallennaProjektiInput) {
   try {
     log.info("Loading projekti from Velho ", oid);
     const { projekti, vastuuhenkilo } = await velho.loadProjekti(oid);

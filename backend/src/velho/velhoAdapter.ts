@@ -6,7 +6,7 @@ import {
 } from "./projektirekisteri";
 import { DBProjekti } from "../database/model/projekti";
 import { adaptKayttaja } from "../personSearch/personAdapter";
-import { hasPermissionLuonti } from "../service/userService";
+import { userService } from "../user";
 
 let metaDataJSON: any;
 
@@ -66,7 +66,9 @@ export function adaptSearchResults(searchResults: ProjektiSearchResult[], kaytta
     return searchResults.map((result) => {
       const projektiPaallikko = kayttajat.find((kayttaja) => kayttaja.email === result.ominaisuudet.vastuuhenkilo);
       const projektiPaallikkoNimi =
-        projektiPaallikko && hasPermissionLuonti(projektiPaallikko) ? adaptKayttaja(projektiPaallikko).nimi : undefined;
+        projektiPaallikko && userService.hasPermissionLuonti(projektiPaallikko)
+          ? adaptKayttaja(projektiPaallikko).nimi
+          : undefined;
       const tyyppi = getProjektiTyyppi(result.ominaisuudet.vaihe);
       return {
         oid: result.oid,

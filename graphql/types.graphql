@@ -108,6 +108,15 @@ type VelhoHakuTulos {
   projektiPaallikko: String
 }
 
+type NykyinenKayttaja {
+  uid: String
+  vaylaKayttajaTyyppi: VaylaKayttajaTyyppi
+  etuNimi: String!
+  sukuNimi: String!
+  roolit: [String!]
+  keksit: [String!]
+}
+
 type Kayttaja {
   uid: String
   vaylaKayttajaTyyppi: VaylaKayttajaTyyppi

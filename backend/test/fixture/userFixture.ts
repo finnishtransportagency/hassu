@@ -1,6 +1,6 @@
 import * as sinon from "sinon";
 import * as Sinon from "sinon";
-import { Kayttaja, VaylaKayttajaTyyppi } from "../../../common/graphql/apiModel";
+import { NykyinenKayttaja, VaylaKayttajaTyyppi } from "../../../common/graphql/apiModel";
 
 export class UserFixture {
   private sinonStub: Sinon.SinonStub;
@@ -12,7 +12,7 @@ export class UserFixture {
     this.sinonStub.resolves();
   }
 
-  public loginAs(vaylaUser: Kayttaja) {
+  public loginAs(vaylaUser: NykyinenKayttaja) {
     this.userService.identifyMockUser(vaylaUser);
   }
 
@@ -20,8 +20,8 @@ export class UserFixture {
     this.userService.identifyMockUser(undefined);
   }
 
-  static pekkaProjari: Kayttaja = {
-    __typename: "Kayttaja",
+  static pekkaProjari: NykyinenKayttaja = {
+    __typename: "NykyinenKayttaja",
     etuNimi: "Pekka",
     sukuNimi: "Projari",
     uid: "A123",
@@ -29,8 +29,8 @@ export class UserFixture {
     vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.A_TUNNUS,
   };
 
-  static mattiMeikalainen: Kayttaja = {
-    __typename: "Kayttaja",
+  static mattiMeikalainen: NykyinenKayttaja = {
+    __typename: "NykyinenKayttaja",
     etuNimi: "Matti",
     sukuNimi: "Meikalainen",
     uid: "A000111",
@@ -38,8 +38,8 @@ export class UserFixture {
     vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.A_TUNNUS,
   };
 
-  static manuMuokkaaja: Kayttaja = {
-    __typename: "Kayttaja",
+  static manuMuokkaaja: NykyinenKayttaja = {
+    __typename: "NykyinenKayttaja",
     etuNimi: "Manu",
     sukuNimi: "Muokkaaja",
     uid: "LX1",

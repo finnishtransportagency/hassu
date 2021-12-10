@@ -1,4 +1,4 @@
-import { requirePermissionLuonti } from "../service/userService";
+import { requirePermissionLuonti } from "../user";
 import { personSearch } from "../personSearch/personSearchClient";
 
 export async function listAllUsers() {

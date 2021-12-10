@@ -1,5 +1,5 @@
 type Query {
-  nykyinenKayttaja: Kayttaja
+  nykyinenKayttaja: NykyinenKayttaja
   listaaKayttajat: [Kayttaja!]
   listaaProjektit: [Projekti!]
   lataaProjekti(oid: String!): Projekti

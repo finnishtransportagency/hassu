@@ -6,19 +6,19 @@ import axios from "axios";
 import { S3Client } from "@aws-sdk/client-s3";
 import * as fs from "fs";
 import * as sinon from "sinon";
-import { SinonStub } from "sinon";
-import { s3Client } from "../../src/aws/S3";
+import { produceAWSClient } from "../../src/aws/clientProducer";
 
 const { expect } = require("chai");
 
 describe("UploadService", () => {
   before(() => {
-    const stub: SinonStub = sinon.stub(s3Client, "get");
-    stub.returns(
-      new S3Client({
-        endpoint: "http://localhost:4566",
-        forcePathStyle: true,
-      })
+    produceAWSClient(
+      "s3",
+      () =>
+        new S3Client({
+          endpoint: "http://localhost:4566",
+          forcePathStyle: true,
+        })
     );
   });
 
@@ -47,7 +47,10 @@ describe("UploadService", () => {
     });
 
     // Verify that the file is accessible
-    const url = "http://localhost:4566/" + process.env.YLLAPITO_BUCKET_NAME + "/projekti/1/suunnittelusopimus/logo.png";
+    const url =
+      "http://localhost:4566/" +
+      process.env.YLLAPITO_BUCKET_NAME +
+      "/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.png";
     log.info(url);
     const response = await axios.get(url);
     expect(response.status).to.be.eq(200);

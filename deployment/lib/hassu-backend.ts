@@ -16,6 +16,7 @@ import { Domain } from "@aws-cdk/aws-opensearchservice";
 import { OpenSearchAccessPolicy } from "@aws-cdk/aws-opensearchservice/lib/opensearch-access-policy";
 import { Effect, PolicyStatement } from "@aws-cdk/aws-iam";
 import { Bucket } from "@aws-cdk/aws-s3";
+import { KeyGroup } from "@aws-cdk/aws-cloudfront";
 
 export type HassuBackendStackProps = {
   searchDomain: Domain;
@@ -26,6 +27,7 @@ export type HassuBackendStackProps = {
 
 export class HassuBackendStack extends cdk.Stack {
   private readonly props: HassuBackendStackProps;
+  public keyGroup: KeyGroup;
 
   constructor(scope: Construct, props: HassuBackendStackProps) {
     super(scope, "backend", {
@@ -205,11 +207,17 @@ export class HassuBackendStack extends cdk.Stack {
 
         FRONTEND_DOMAIN_NAME: config.frontendDomainName,
 
+        FRONTEND_PUBLICKEY_PATH: config.getInfraParameterPath("FrontendPublicKeyId"),
+        FRONTEND_PRIVATEKEY: await config.getGlobalSecureInfraParameter("FrontendPrivateKey"),
+
         UPLOAD_BUCKET_NAME: this.props.uploadBucket.bucketName,
         YLLAPITO_BUCKET_NAME: this.props.yllapitoBucket.bucketName,
       },
       tracing: Tracing.PASS_THROUGH,
     });
+    backendLambda.addToRolePolicy(
+      new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] })
+    );
     this.props.uploadBucket.grantPut(backendLambda);
     this.props.uploadBucket.grantReadWrite(backendLambda);
     this.props.yllapitoBucket.grantReadWrite(backendLambda);

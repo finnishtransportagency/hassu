@@ -2,7 +2,7 @@
 import { describe, it } from "mocha";
 import { fileService } from "../../src/files/fileService";
 import * as sinon from "sinon";
-import { s3Client } from "../../src/aws/S3";
+import { getS3Client } from "../../src/aws/clients";
 import { uuid } from "../../src/util/uuid";
 import { mockClient } from "aws-sdk-client-mock";
 import { AwsStub } from "aws-sdk-client-mock/dist/types/awsClientStub";
@@ -33,7 +33,7 @@ describe("UploadService", () => {
     expect(uploadProperties.fileNameWithPath).to.not.be.empty;
 
     // Mocking has to be done after getting the signed URL
-    mockS3CLient = mockClient(s3Client.get());
+    mockS3CLient = mockClient(getS3Client());
 
     mockS3CLient.on(HeadObjectCommand).resolves({ ContentType: "image/png" });
     await fileService.persistFileToProjekti({

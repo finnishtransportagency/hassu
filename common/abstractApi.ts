@@ -5,6 +5,7 @@ import {
   LataaProjektiQueryVariables,
   LatausTiedot,
   ListaaVelhoProjektitQueryVariables,
+  NykyinenKayttaja,
   PDF,
   Projekti,
   TallennaProjektiInput,
@@ -111,7 +112,7 @@ export abstract class AbstractApi {
     return await this.callAPI(apiConfig.listaaProjektit);
   }
 
-  async getCurrentUser(): Promise<Kayttaja | undefined> {
+  async getCurrentUser(): Promise<NykyinenKayttaja | undefined> {
     try {
       return await this.callYllapitoAPI(apiConfig.nykyinenKayttaja);
     } catch (e) {

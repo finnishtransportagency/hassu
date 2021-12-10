@@ -9,7 +9,7 @@ import {
 } from "../../common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "./handler/listaaVelhoProjektit";
-import { identifyUser } from "./service/userService";
+import { identifyUser } from "./user";
 import { getCurrentUser } from "./handler/getCurrentUser";
 import { listAllUsers } from "./handler/listAllUsers";
 import { createOrUpdateProjekti, listProjektit, loadProjekti } from "./handler/projektiHandler";
