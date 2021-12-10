@@ -22,7 +22,7 @@ export async function createSignedCookies(): Promise<string[]> {
     policy: cloudFrontPolicy,
   });
 
-  const setCookieAttributes = `; Path=/; Secure; HttpOnly; SameSite=None`;
+  const setCookieAttributes = `; Path=/; Secure; SameSite=None`;
 
   return [
     `CloudFront-Key-Pair-Id=${cookie["CloudFront-Key-Pair-Id"]}${setCookieAttributes}`,

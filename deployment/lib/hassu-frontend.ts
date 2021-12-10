@@ -210,10 +210,12 @@ export class HassuFrontendStack extends cdk.Stack {
       originAccessIdentity = undefined;
     } else {
       const publicKey = new cloudfront.PublicKey(this, "FrontendPublicKey", {
+        publicKeyName: "FrontendPublicKey" + Config.env,
         encodedKey: await config.getGlobalSecureInfraParameter("FrontendPublicKey"),
       });
       keyGroups = [
         new cloudfront.KeyGroup(this, "FrontendKeyGroup", {
+          keyGroupName: "FrontendKeyGroup" + Config.env,
           items: [publicKey],
         }),
       ];
