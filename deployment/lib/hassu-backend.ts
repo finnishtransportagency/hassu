@@ -207,7 +207,6 @@ export class HassuBackendStack extends cdk.Stack {
 
         FRONTEND_DOMAIN_NAME: config.frontendDomainName,
 
-        FRONTEND_PUBLICKEY_PATH: config.getInfraParameterPath("FrontendPublicKeyId"),
         FRONTEND_PRIVATEKEY: await config.getGlobalSecureInfraParameter("FrontendPrivateKey"),
 
         UPLOAD_BUCKET_NAME: this.props.uploadBucket.bucketName,

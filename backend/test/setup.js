@@ -17,8 +17,6 @@ process.env.AWS_SDK_LOAD_CONFIG = false;
 process.env.AWS_ACCESS_KEY_ID = "test";
 process.env.AWS_SECRET_ACCESS_KEY = "test";
 
-process.env.FRONTEND_PUBLICKEY_PATH = "/localstack/FrontendPublicKeyId";
-
 process.env.FRONTEND_PRIVATEKEY =
   "-----BEGIN RSA PRIVATE KEY-----\n" +
   "MIIEpQIBAAKCAQEA6v5JuDdJiKI3rgXF16aURXx467a2vOi7jwHE2tU2CAIAlva2\n" +
