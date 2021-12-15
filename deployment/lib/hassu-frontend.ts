@@ -53,7 +53,12 @@ export class HassuFrontendStack extends cdk.Stack {
     const env = Config.env;
     const config = await Config.instance(this);
 
-    await new Builder(".", "./build", { args: ["build"] }).build();
+    await new Builder(".", "./build", {
+      enableHTTPCompression: true,
+      minifyHandlers: true,
+      args: ["build"],
+      env: { FRONTEND_DOMAIN_NAME: config.frontendDomainName },
+    }).build();
 
     const frontendRequestFunction = this.createFrontendRequestFunction(
       env,
@@ -86,7 +91,7 @@ export class HassuFrontendStack extends cdk.Stack {
       env: { region: "us-east-1" },
       withLogging: true,
       name: {
-        apiLambda: `${id}Api`,
+        apiLambda: `${id}ApiV2`,
         defaultLambda: `Fn${id}`,
         imageLambda: `${id}Image`,
       },
@@ -98,11 +103,13 @@ export class HassuFrontendStack extends cdk.Stack {
           : [],
       },
       cloudfrontProps: { priceClass: PriceClass.PRICE_CLASS_100 },
+      invalidationPaths: ["/*"],
     });
+
     nextJSLambdaEdge.edgeLambdaRole.addToPolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
-        actions: ["logs:*", "xray:*"],
+        actions: ["logs:*", "xray:*", "ssm:GetParameter"],
         resources: ["*"],
       })
     );

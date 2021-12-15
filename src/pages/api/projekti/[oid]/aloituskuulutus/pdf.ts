@@ -1,7 +1,37 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { api, KuulutusTyyppi } from "@services/api";
+import { GetParameterCommand, SSMClient } from "@aws-sdk/client-ssm";
+import AWS from "aws-sdk";
+import awsExports from "../../../../../aws-exports";
 
-export default async function userHandler(req: NextApiRequest, res: NextApiResponse) {
+const credentials = new AWS.Credentials({
+  accessKeyId: awsExports.AWS_ACCESS_KEY_ID || "",
+  secretAccessKey: awsExports.AWS_SECRET_ACCESS_KEY || "",
+  sessionToken: awsExports.AWS_SESSION_TOKEN || "",
+});
+AWS.config.update({
+  credentials,
+});
+
+const ssm = new SSMClient({ region: "eu-west-1", credentials });
+
+async function getParameter(name: string) {
+  return (await ssm.send(new GetParameterCommand({ Name: name }))).Parameter?.Value;
+}
+
+async function getParameterStore() {
+  const parameterStore = {} as any;
+
+  parameterStore.BASIC_USERNAME = await getParameter(
+    "/" + process.env.INFRA_ENVIRONMENT + "/basicAuthenticationUsername"
+  );
+  parameterStore.BASIC_PASSWORD = await getParameter(
+    "/" + process.env.INFRA_ENVIRONMENT + "/basicAuthenticationPassword"
+  );
+  return parameterStore;
+}
+
+export default async function render(req: NextApiRequest, res: NextApiResponse) {
   const {
     query: { oid },
   } = req;
@@ -10,14 +40,37 @@ export default async function userHandler(req: NextApiRequest, res: NextApiRespo
     throw new Error("Vain yksi oid-parametri sallitaan");
   }
 
-  const pdf = await api.lataaKuulutusPDF(oid, KuulutusTyyppi.ALOITUSKUULUTUS);
-  if (pdf) {
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-disposition", "inline; filename=" + pdf.nimi);
-    res.send(Buffer.from(pdf.sisalto, "base64"));
-  } else {
-    res.status(404);
-    res.setHeader("Content-Type", "text/plain;charset=UTF-8");
-    res.send("Projektia ei löydy");
+  try {
+    // Basic authentication header is added here because it is not present in NextApiRequest. The actual API call authenticates the user with cookies, so this is not a security issue
+    const parameterStore = await getParameterStore();
+    api.setOneTimeForwardHeaders({
+      ...req.headers,
+      authorization:
+        "Basic " +
+        Buffer.from(parameterStore.BASIC_USERNAME + ":" + parameterStore.BASIC_PASSWORD, "binary").toString("base64"),
+    });
+    const pdf = await api.lataaKuulutusPDF(oid, KuulutusTyyppi.ALOITUSKUULUTUS);
+    if (pdf) {
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-disposition", "inline; filename=" + pdf.nimi);
+      res.send(Buffer.from(pdf.sisalto, "base64"));
+    } else {
+      res.status(404);
+      res.setHeader("Content-Type", "text/plain;charset=UTF-8");
+      res.send("Projektia ei löydy");
+    }
+  } catch (e) {
+    // tslint:disable-next-line:no-console
+    console.error("Error generating pdf:", e, e.networkError?.result);
+
+    const networkError = e.networkError;
+    if (networkError && networkError.statusCode) {
+      res.status(networkError.statusCode);
+      res.send(networkError.bodyText);
+    } else {
+      res.status(500);
+      res.setHeader("Content-Type", "text/plain;charset=UTF-8");
+      res.send("");
+    }
   }
 }

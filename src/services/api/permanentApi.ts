@@ -1,34 +1,35 @@
 import awsExports from "../../aws-exports";
-import { ApolloLink } from "apollo-link";
 import { createAuthLink } from "aws-appsync-auth-link";
 import { createHttpLink } from "apollo-link-http";
 import { API } from "@services/api/commonApi";
 
-let host: string = "";
-if (typeof window !== "undefined") {
-  host = "https://" + window.location.hostname;
-}
+const AWS = require("aws-sdk");
+AWS.config.update({
+  region: awsExports.aws_appsync_region,
+});
 
-const publicLink = ApolloLink.from([
+const graphQLAPI = awsExports.aws_appsync_graphqlEndpoint;
+const yllapitoGraphQLAPI = graphQLAPI.replace("/graphql", "/yllapito/graphql");
+
+const publicLinks = [
   createAuthLink({
-    url: host + "/graphql",
+    url: graphQLAPI,
     region: awsExports.aws_appsync_region,
     auth: { type: "API_KEY", apiKey: awsExports.aws_appsync_apiKey || "" },
   }),
   createHttpLink({
-    uri: host + "/graphql",
+    uri: graphQLAPI,
   }),
-]);
+];
 
-const authenticatedLink = ApolloLink.from([
+const authenticatedLinks = [
   createAuthLink({
-    url: host + "/yllapito/graphql",
+    url: yllapitoGraphQLAPI,
     region: awsExports.aws_appsync_region,
     auth: { type: "API_KEY", apiKey: awsExports.aws_appsync_apiKey || "" },
   }),
   createHttpLink({
-    uri: host + "/yllapito/graphql",
+    uri: yllapitoGraphQLAPI,
   }),
-]);
-
-export const api = new API(publicLink, authenticatedLink);
+];
+export const api = new API(publicLinks, authenticatedLinks);
