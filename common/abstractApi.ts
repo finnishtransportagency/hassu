@@ -16,6 +16,7 @@ import {
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
 import log from "loglevel";
+import { IncomingHttpHeaders } from "http";
 
 export enum OperationType {
   Mutation,
@@ -83,6 +84,8 @@ export const apiConfig: ApiConfig = {
 };
 
 export abstract class AbstractApi {
+  oneTimeHeaders: IncomingHttpHeaders | undefined;
+
   async lataaProjekti(oid: string): Promise<Projekti> {
     return await this.callYllapitoAPI(apiConfig.lataaProjekti, {
       oid,
@@ -134,4 +137,8 @@ export abstract class AbstractApi {
   abstract callYllapitoAPI(operation: OperationConfig, variables?: any): Promise<any>;
 
   abstract callAPI(operation: OperationConfig, variables?: any): Promise<any>;
+
+  setOneTimeForwardHeaders(headers: IncomingHttpHeaders) {
+    this.oneTimeHeaders = { cookie: headers.cookie, authorization: headers.authorization };
+  }
 }

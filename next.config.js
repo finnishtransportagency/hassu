@@ -1,12 +1,12 @@
 const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
 const nextTranslate = require("next-translate");
-const AWS = require("aws-sdk");
-const fs = require("fs");
+const { BaseConfig } = require("./common/BaseConfig");
 
 function setupLocalDevelopmentMode(config, env) {
   config.publicRuntimeConfig = { apiImpl: "developerApi" };
   process.env.AWS_SDK_LOAD_CONFIG = true;
   const AWS = require("aws-sdk");
+  const fs = require("fs");
 
   const credentials = AWS.config.credentials;
   if (credentials) {
@@ -44,9 +44,9 @@ function setupLocalDevelopmentMode(config, env) {
 
 module.exports = (phase) => {
   let env = {
-    REACT_APP_API_URL: process.env.REACT_APP_API_URL,
     REACT_APP_API_KEY: process.env.REACT_APP_API_KEY,
     NEXT_PUBLIC_VAYLA_EXTRANET_URL: process.env.NEXT_PUBLIC_VAYLA_EXTRANET_URL,
+    INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
   };
   /**
    * @type {import('next').NextConfig}
@@ -66,6 +66,7 @@ module.exports = (phase) => {
     } catch (e) {
       // Ignore
     }
+    env.REACT_APP_API_URL = "https://" + process.env.FRONTEND_DOMAIN_NAME + "/graphql";
 
     config.publicRuntimeConfig = { apiImpl: "permanentApi" };
     config.env = env;

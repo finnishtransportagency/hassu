@@ -1,2 +1,5 @@
 hassuNextApplication:
-  component: "@sls-next/serverless-component@3.5.3"
+  component: "@sls-next/serverless-component@3.6.0"
+  inputs:
+    cloudfront:
+      waitBeforeInvalidate: true

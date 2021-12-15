@@ -178,7 +178,7 @@ export class HassuBackendStack extends cdk.Stack {
         commandHooks: {
           beforeBundling(inputDir: string, outputDir: string): string[] {
             return [
-              `./node_modules/.bin/copyfiles -f -u 1 ${inputDir}/backend/src/service/kuulutus/files/* ${outputDir}/files`,
+              `./node_modules/.bin/copyfiles -f -u 1 ${inputDir}/backend/src/kuulutus/files/* ${outputDir}/files`,
             ];
           },
           afterBundling(): string[] {
