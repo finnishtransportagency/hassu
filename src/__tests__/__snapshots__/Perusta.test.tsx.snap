@@ -132,7 +132,7 @@ Array [
       <tbody>
         <tr
           className="project-row"
-          href="/yllapito/projekti/1234"
+          href="/yllapito/perusta/1234"
           onClick={[Function]}
           onMouseEnter={[Function]}
         >

@@ -1,6 +1,7 @@
 import { AbstractApi, OperationConfig, OperationType } from "../../../common/abstractApi";
 import { ApolloQueryResult } from "apollo-client/core/types";
-import { ApolloLink, FetchResult } from "apollo-link";
+import { ApolloLink, FetchResult, GraphQLRequest } from "apollo-link";
+import { setContext } from "apollo-link-context";
 import gql from "graphql-tag";
 import ApolloClient, { DefaultOptions } from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
@@ -20,15 +21,29 @@ export class API extends AbstractApi {
   private publicClient: ApolloClient<any>;
   private authenticatedClient: ApolloClient<any>;
 
-  constructor(publicLink: ApolloLink, authenticatedLink: ApolloLink) {
+  constructor(publicLinks: ApolloLink[], authenticatedLinks: ApolloLink[], enableOneTimeHeaders: boolean = true) {
     super();
+
+    const headerForwarderLink = setContext((_operation: GraphQLRequest, prevContext: Record<string, any>) => {
+      if (this.oneTimeHeaders && enableOneTimeHeaders) {
+        // This code is required to pass both signed cookie and basic authentication from incoming request to API in src/pages/api/projekti/[oid]/aloituskuulutus/pdf.ts
+        const newHeaders = { headers: { ...prevContext.headers, ...this.oneTimeHeaders } };
+        // Delete the headers so that they are used only once
+        this.oneTimeHeaders = undefined;
+        return newHeaders;
+      }
+      return prevContext;
+    });
+    publicLinks.unshift(headerForwarderLink);
+    authenticatedLinks.unshift(headerForwarderLink);
+
     this.publicClient = new ApolloClient({
-      link: publicLink,
+      link: ApolloLink.from(publicLinks),
       cache: new InMemoryCache(),
       defaultOptions,
     });
     this.authenticatedClient = new ApolloClient({
-      link: authenticatedLink,
+      link: ApolloLink.from(authenticatedLinks),
       cache: new InMemoryCache(),
       defaultOptions,
     });
