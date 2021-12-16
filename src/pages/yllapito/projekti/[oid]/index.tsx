@@ -61,7 +61,10 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   const isLoadingKayttajat = !kayttajat && !kayttajatLoadError;
 
   const projektiHasPaallikko = projekti?.kayttoOikeudet?.some(({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO);
-  const projektiError = !projekti?.tallennettu || (!projektiHasPaallikko && !isLoadingProjekti) || projektiLoadError;
+  const projektiError =
+    (!projekti?.tallennettu && !isLoadingProjekti) ||
+    (!projektiHasPaallikko && !isLoadingProjekti) ||
+    !!projektiLoadError;
   const disableFormEdit = projektiError || isLoadingProjekti || formIsSubmitting || isLoadingKayttajat;
 
   const formOptions: UseFormProps<FormValues> = {

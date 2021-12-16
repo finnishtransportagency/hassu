@@ -37,7 +37,10 @@ export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactEle
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti(oid);
   const isLoadingProjekti = !projekti && !projektiLoadError;
   const projektiHasPaallikko = projekti?.kayttoOikeudet?.some(({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO);
-  const projektiError = projekti?.tallennettu || (!projektiHasPaallikko && !isLoadingProjekti);
+  const projektiError =
+    (projekti?.tallennettu && !isLoadingProjekti) ||
+    (!projektiHasPaallikko && !isLoadingProjekti) ||
+    !!projektiLoadError;
   const disableFormEdit = projektiError || isLoadingProjekti || formIsSubmitting;
   useProjektiBreadcrumbs(setRouteLabels);
 
