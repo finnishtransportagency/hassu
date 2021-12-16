@@ -106,6 +106,10 @@ export class HassuPipelineStack extends Stack {
             value: config.getInfraParameterPath("ExtranetHomePageUrl"),
             type: BuildEnvironmentVariableType.PARAMETER_STORE,
           },
+          NEXT_PUBLIC_VELHO_BASE_URL: {
+            value: config.getInfraParameterPath("VelhoBaseUrl", config.velhoEnv),
+            type: BuildEnvironmentVariableType.PARAMETER_STORE,
+          },
         },
       },
       grantReportGroupPermissions: true,

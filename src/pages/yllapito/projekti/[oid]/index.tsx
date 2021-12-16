@@ -50,6 +50,11 @@ const rooliOptions = [
   { label: "Muokkaaja", value: "MUOKKAAJA" },
 ];
 
+const kuntaOptions = [
+  { label: "", value: ""},
+  { label: "Helsinki", value: "HELSINKI"}
+]
+
 const maxNoteLength = 2000;
 const minPhoneLength = 10;
 const maxPhoneLength = 10;
@@ -59,8 +64,7 @@ const intendedStyle = {
 }
 
 export default function ProjektiSivu({ setRouteLabels }: PageProps) {
-  //TODO: projektin velhosivujen baseurl
-  const velhobaseurl = "https://stg.velho.vayla.fi/projektit/oid-";
+  const velhobaseurl = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-";
 
   const router = useRouter();
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
@@ -99,14 +103,12 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
               .required("Käyttäjälle on määritettävä puhelinnumero")
               .min(
                 minPhoneLength,
-                `Puhelinnumeron on oltava ${minPhoneLength}${
-                  minPhoneLength === maxPhoneLength ? "" : "-" + maxPhoneLength
+                `Puhelinnumeron on oltava ${minPhoneLength}${minPhoneLength === maxPhoneLength ? "" : "-" + maxPhoneLength
                 } merkkiä pitkä`
               )
               .max(
                 maxPhoneLength,
-                `Puhelinnumeron on oltava ${minPhoneLength}${
-                  minPhoneLength === maxPhoneLength ? "" : "-" + maxPhoneLength
+                `Puhelinnumeron on oltava ${minPhoneLength}${minPhoneLength === maxPhoneLength ? "" : "-" + maxPhoneLength
                 } merkkiä pitkä`
               ),
             kayttajatunnus: Yup.string().required("Aseta käyttäjä"),
@@ -254,7 +256,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
           <ProjektiPerustiedot
             perustiedot={[
               { header: "Asiatunnus", data: projekti?.velho?.asiatunnusELY },
-              { header: "Vastaava viranomainen", data: projekti?.velho?.tilaajaOrganisaatio},
+              { header: "Vastaava viranomainen", data: projekti?.velho?.tilaajaOrganisaatio },
               {
                 header: "Suunnitelman tyyppi",
                 data: projekti?.tyyppi && t(`projekti-tyyppi.${projekti?.tyyppi}`),
@@ -267,21 +269,21 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
               },
             ]}
           />
-          <br/>
-          { projekti?.velho?.linkki && <ExtLink href={projekti?.velho?.linkki ? projekti?.velho?.linkki : "https://vayla.fi/vuosaaren-merivayla"}>
-              Hankesivu
+          <br />
+          {projekti?.velho?.linkki && <ExtLink href={projekti?.velho?.linkki ? projekti?.velho?.linkki : "https://vayla.fi/vuosaaren-merivayla"}>
+            Hankesivu
           </ExtLink>}
           <ExtLink href={velhobaseurl + projekti?.oid}>
-              Projektin sivu Projektivelhossa
+            Projektin sivu Projektivelhossa
           </ExtLink>
         </div>
         <hr />
         <div className="content">
-        <h4 className="vayla-small-title">Projektiin liittyvät maakunnat ja kunnat</h4>
+          <h4 className="vayla-small-title">Projektiin liittyvät maakunnat ja kunnat</h4>
           <ProjektiPerustiedot
             perustiedot={[
               { header: "Maakunta", data: projekti?.velho?.maakunnat ? projekti?.velho?.maakunnat.toString() : "-" },
-              { header: "Kunta", data: projekti?.velho?.kunnat ? projekti?.velho?.kunnat.toString() : "-"},
+              { header: "Kunta", data: projekti?.velho?.kunnat ? projekti?.velho?.kunnat.toString() : "-" },
             ]}
           />
         </div>
@@ -289,8 +291,8 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
         <div className="content">
           <h4 className="vayla-small-title">Projetin kuulutusten kielet</h4>
           <Checkbox
-          label="Projekti kuulutetaan suomenkielen lisäksi myös muilla kielillä"
-          id="kuulutuskieli" onChange={() => setLanguageChoices(!selectLanguageDisabled)}></Checkbox>
+            label="Projekti kuulutetaan suomenkielen lisäksi myös muilla kielillä"
+            id="kuulutuskieli" onChange={() => setLanguageChoices(!selectLanguageDisabled)}></Checkbox>
           <div style={intendedStyle}>
             <RadioButton label="Suomen lisäksi ruotsi" name="kielet" value="ruotsi" id="ruotsi" disabled={selectLanguageDisabled}></RadioButton>
             <RadioButton label="Suomen lisäksi saame" name="kielet" value="saame" id="saame" disabled={selectLanguageDisabled}></RadioButton>
@@ -318,31 +320,76 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
                 value=""
                 disabled
               />
-            </div>       
+            </div>
           </div>
           <Button
             disabled={disableFormEdit}
             onClick={(event) => {
               event.preventDefault();
-              //append(defaultKayttaja);
             }}
           >
             Uusi rivi +
           </Button>
         </div>
-        <hr/>
+        <hr />
         <div className="content">
           <h4 className="vayla-small-title">Suunnittelusopimus</h4>
           <p>Onko kyseessä suunnittelusopimuksella toteutettava suunnitteluhanke</p>
           <div>
             <RadioButton label="Kyllä" name="suunnittelusopimushanke" value="true" id="suunnittelusopimushanke_kylla"></RadioButton>
-            <RadioButton label="Ei" name="suunnittelusopmishanke" value="false" id="suunnittelusopimushanke_ei"></RadioButton>
+            <RadioButton label="Ei" name="suunnittelusopimushanke" value="false" id="suunnittelusopimushanke_ei"></RadioButton>
           </div>
           <div style={intendedStyle}>
-              <p>Kunnan projektipäällikön tiedot</p>
+            <p>Kunnan projektipäällikön tiedot</p>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-6 lg:pr-1 relative even:bg-gray-lightest">
+              <div className="lg:col-span-4">
+                <Select
+                  label="Kunta"
+                  options={kuntaOptions}
+                  disabled={disableFormEdit}
+                />
+              </div>
+              <div className="lg:col-span-4">
+                <TextInput
+                  label="Etunimi"
+                  value={projekti?.suunnitteluSopimus?.etunimi || ""}
+                  disabled={disableFormEdit}
+                />
+              </div>
+              <div className="lg:col-span-4">
+                <TextInput
+                  label="Sukunimi"
+                  value={projekti?.suunnitteluSopimus?.sukunimi || ""}
+                  disabled={disableFormEdit}
+                />
+              </div>
+              <div className="lg:col-span-4">
+                <TextInput
+                  label="Puhelinnumero"
+                  maxLength={maxPhoneLength}
+                  disabled={disableFormEdit}
+                />
+              </div>
+              <div className="lg:col-span-4">
+                <TextInput
+                  label="Sähköposti"
+                  value={projekti?.suunnitteluSopimus?.email?.split("@")[0] || ""}
+                  disabled={disableFormEdit}
+                />
+              </div>
+              <div className="lg:col-span-4">
+                <TextInput
+                  label="&nbsp;"
+                  value={projekti?.suunnitteluSopimus?.email?.split("@")[1] || ""}
+                  disabled={disableFormEdit}
+                />
+              </div>
+            </div>
           </div>
+
         </div>
-        <hr/>
+        <hr />
         <div className="content">
           <h4 className="vayla-small-title">EU-rahoitus</h4>
           <p>Rahoittaako EU suunnitteluhanketta</p>
@@ -351,7 +398,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
             <RadioButton label="Ei" name="eu_rahoitus" value="false" id="eu_rahoitus_ei"></RadioButton>
           </div>
         </div>
-        <hr/>
+        <hr />
         <div className="content">
           <h4 className="vayla-small-title">Henkilöiden hallinta</h4>
           <p>
