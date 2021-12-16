@@ -42,11 +42,6 @@ const Select = (
           style={{ top: `calc(50% - 0.5rem)` }}
         />
       </div>
-      {error && !hideErrorMessage && (
-        <div className="flex">
-          <span className="text-red">{error.message}</span>
-        </div>
-      )}
     </FormGroup>
   );
 };

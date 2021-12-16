@@ -18,7 +18,7 @@ export default function ProjektiNavigationPanel(): ReactElement {
   const oid = projekti?.oid;
 
   const routes: Route[] = [
-    { title: "Projekti henkilöt", href: oid && `/yllapito/projekti/${oid}/henkilot`, disabled: true },
+    { title: "Projektin henkilöt", href: oid && `/yllapito/projekti/${oid}/henkilot`, disabled: true },
     { title: "Projektin perustiedot", href: oid && `/yllapito/projekti/${oid}` },
     {
       title: "Aloituskuulutus",
