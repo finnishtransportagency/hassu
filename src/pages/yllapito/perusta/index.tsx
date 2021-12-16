@@ -147,7 +147,7 @@ export default function Perusta() {
             <ProjektiTaulu
               projektit={hakuTulos || []}
               isLoading={isLoading}
-              projektiLinkki={(pid) => `/yllapito/projekti/${pid}`}
+              projektiLinkki={(pid) => `/yllapito/perusta/${pid}`}
             />
           ) : (
             !isLoading && (
