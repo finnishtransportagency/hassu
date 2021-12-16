@@ -26,8 +26,6 @@ const CheckBox = (
 
   return (
     <FormGroup
-      //TODO: label position in formgroup relative to children
-      //label={label}
       errorMessage={hideErrorMessage ? undefined : error?.message}
       className={className}
       bottomInfo={

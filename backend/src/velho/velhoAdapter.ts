@@ -90,8 +90,8 @@ export function adaptProjekti(data: ProjektiProjekti): { projekti: DBProjekti; v
       vaylamuoto: adaptVaylamuoto(data.ominaisuudet.vaylamuoto),
       tilaajaOrganisaatio: metadata.organisaatiot[`${data.ominaisuudet.tilaajaorganisaatio}`],
       linkki: data.ominaisuudet.linkki,
-      kunnat: data.ominaisuudet.kunta ? data.ominaisuudet.kunta.split(",") : undefined,
-      maakunnat: data.ominaisuudet.maakunta ? data.ominaisuudet.maakunta.split(",") : undefined 
+      kunnat: data.ominaisuudet.kunta?.split(","),
+      maakunnat: data.ominaisuudet.maakunta?.split(","),
     },
     status: Status.EI_JULKAISTU,
     kayttoOikeudet: [],
