@@ -13,6 +13,9 @@ Object {
       "vaylamuoto": Array [
         "tie",
       ],
+      "kunnat": undefined,
+      "maakunnat": undefined,
+      "linkki": null,
     },
   },
   "vastuuhenkilo": "test@ely-keskus.fi",
