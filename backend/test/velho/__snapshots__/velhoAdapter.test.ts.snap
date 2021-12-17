@@ -8,14 +8,14 @@ Object {
     "status": "EI_JULKAISTU",
     "tyyppi": "TIE",
     "velho": Object {
+      "kunnat": undefined,
+      "linkki": null,
+      "maakunnat": undefined,
       "nimi": "Kaupungin sisääntulotien (mt 123) parantaminen välillä valtatien 1 eritasoliittymä - Päätie, Helsinki",
       "tilaajaOrganisaatio": "Pirkanmaan ELY-keskus",
       "vaylamuoto": Array [
         "tie",
       ],
-      "kunnat": undefined,
-      "maakunnat": undefined,
-      "linkki": null,
     },
   },
   "vastuuhenkilo": "test@ely-keskus.fi",
