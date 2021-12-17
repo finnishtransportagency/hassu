@@ -53,6 +53,7 @@ export type Velho = {
   varahenkiloEmail?: string | null;
   maakunnat?: string[] | null;
   kunnat?: string[] | null;
+  linkki?: string | null;
 };
 
 export type DBProjekti = {
@@ -62,6 +63,8 @@ export type DBProjekti = {
   tyyppi?: ProjektiTyyppi | null;
   status?: Status | null;
   suunnittelustaVastaavaViranomainen?: Viranomainen | null;
+  kuulutuksetRuotsiksi?: Boolean | false;
+  kuulutuksetSaameksi?: Boolean | false;
   aloitusKuulutus?: AloitusKuulutus | null;
   EURahoitus?: boolean | null;
   suunnitteluSopimus?: SuunnitteluSopimus | null;
