@@ -6,6 +6,11 @@ import { Config } from "./config";
 import { BlockPublicAccess, Bucket, HttpMethods } from "@aws-cdk/aws-s3";
 import { OriginAccessIdentity } from "@aws-cdk/aws-cloudfront";
 
+// These should correspond to CfnOutputs produced by this stack
+export type DatabaseStackOutputs = {
+  CloudFrontOriginAccessIdentity:string
+}
+
 export class HassuDatabaseStack extends cdk.Stack {
   public projektiTable: ddb.Table;
   public uploadBucket: Bucket;

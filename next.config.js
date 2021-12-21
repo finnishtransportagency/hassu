@@ -1,12 +1,13 @@
+// noinspection JSUnusedGlobalSymbols,JSValidateTypes
+
 const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
 const nextTranslate = require("next-translate");
 const { BaseConfig } = require("./common/BaseConfig");
 
 function setupLocalDevelopmentMode(config, env) {
   config.publicRuntimeConfig = { apiImpl: "developerApi" };
-  process.env.AWS_SDK_LOAD_CONFIG = true;
+  process.env.AWS_SDK_LOAD_CONFIG = "true";
   const AWS = require("aws-sdk");
-  const fs = require("fs");
 
   const credentials = AWS.config.credentials;
   if (credentials) {
@@ -17,15 +18,7 @@ function setupLocalDevelopmentMode(config, env) {
   env["x-hassudev-uid"] = process.env.HASSUDEV_UID;
   env["x-hassudev-roles"] = process.env.HASSUDEV_ROLES;
 
-  let buffer = fs.readFileSync(__dirname + "/.cdk-backend-outputs.json");
-  if (buffer) {
-    let outputs = JSON.parse(buffer.toString("UTF-8"));
-    for (key in outputs) {
-      if (key.includes("backend")) {
-        env.REACT_APP_API_URL = outputs[key].AppSyncAPIURL;
-      }
-    }
-  }
+  env.REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
   config = {
     ...config,
@@ -44,7 +37,6 @@ function setupLocalDevelopmentMode(config, env) {
 
 module.exports = (phase) => {
   let env = {
-    REACT_APP_API_KEY: process.env.REACT_APP_API_KEY,
     NEXT_PUBLIC_VAYLA_EXTRANET_URL: process.env.NEXT_PUBLIC_VAYLA_EXTRANET_URL,
     NEXT_PUBLIC_VELHO_BASE_URL: process.env.NEXT_PUBLIC_VELHO_BASE_URL,
     INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
@@ -60,6 +52,7 @@ module.exports = (phase) => {
     config = setupLocalDevelopmentMode(config, env);
   } else {
     try {
+      const fs = require("fs");
       let buffer = fs.readFileSync(__dirname + "/.version");
       if (buffer) {
         env.VERSION = buffer.toString("UTF-8");
@@ -67,6 +60,7 @@ module.exports = (phase) => {
     } catch (e) {
       // Ignore
     }
+    env.REACT_APP_API_KEY= process.env.REACT_APP_API_KEY;
     env.REACT_APP_API_URL = "https://" + process.env.FRONTEND_DOMAIN_NAME + "/graphql";
 
     config.publicRuntimeConfig = { apiImpl: "permanentApi" };

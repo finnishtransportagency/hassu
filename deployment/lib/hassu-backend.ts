@@ -17,12 +17,19 @@ import { OpenSearchAccessPolicy } from "@aws-cdk/aws-opensearchservice/lib/opens
 import { Effect, PolicyStatement } from "@aws-cdk/aws-iam";
 import { Bucket } from "@aws-cdk/aws-s3";
 import { KeyGroup } from "@aws-cdk/aws-cloudfront";
+import { getEnvironmentVariablesFromSSM } from "../bin/setupEnvironment";
 
 export type HassuBackendStackProps = {
   searchDomain: Domain;
   projektiTable: Table;
   uploadBucket: Bucket;
   yllapitoBucket: Bucket;
+};
+
+// These should correspond to CfnOutputs produced by this stack
+export type BackendStackOutputs = {
+  AppSyncAPIKey?: string;
+  AppSyncAPIURL: string;
 };
 
 export class HassuBackendStack extends cdk.Stack {
@@ -190,20 +197,10 @@ export class HassuBackendStack extends cdk.Stack {
         },
       },
       environment: {
-        COGNITO_URL: config.getInfraParameter("CognitoURL"),
-        VELHO_AUTH_URL: config.getInfraParameter("VelhoAuthenticationUrl", config.velhoEnv),
-        VELHO_API_URL: config.getInfraParameter("VelhoApiUrl", config.velhoEnv),
-        VELHO_USERNAME: await config.getSecureInfraParameter("VelhoUsername", config.velhoEnv),
-        VELHO_PASSWORD: await config.getSecureInfraParameter("VelhoPassword", config.velhoEnv),
-
-        PERSON_SEARCH_API_URL: config.getInfraParameter("PersonSearchApiURL"),
-        PERSON_SEARCH_API_USERNAME: config.getInfraParameter("PersonSearchApiUsername"),
-        PERSON_SEARCH_API_PASSWORD: config.getInfraParameter("PersonSearchApiPassword"),
-        PERSON_SEARCH_API_ACCOUNT_TYPES: config.getInfraParameter("PersonSearchApiAccountTypes"),
+        ENVIRONMENT: Config.env,
+        ...(await getEnvironmentVariablesFromSSM()),
 
         SEARCH_DOMAIN: this.props.searchDomain.domainEndpoint,
-
-        ENVIRONMENT: Config.env,
 
         FRONTEND_DOMAIN_NAME: config.frontendDomainName,
 
