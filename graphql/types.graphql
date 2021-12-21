@@ -48,8 +48,7 @@ type Projekti {
   false, jos projekti ladattiin Velhosta, mutta ei ole vielä tallennettu tietokantaan
   """
   tallennettu: Boolean
-  kuulutuksetRuotsiksi: Boolean
-  kuulutuksetSaameksi: Boolean
+  lisakuulutuskieli: String
 }
 
 type Velho {

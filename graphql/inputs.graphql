@@ -1,8 +1,7 @@
 input TallennaProjektiInput {
   oid: String!
   muistiinpano: String
-  kuulutuksetRuotsiksi: Boolean
-  kuulutuksetSaameksi: Boolean
+  lisakuulutuskieli: String
   aloitusKuulutus: AloitusKuulutusInput
   suunnitteluSopimus: SuunnitteluSopimusInput
   kayttoOikeudet: [ProjektiKayttajaInput!]
