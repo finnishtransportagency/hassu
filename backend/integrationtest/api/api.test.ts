@@ -97,7 +97,7 @@ describe("Api", () => {
       muistiinpano: newNote,
       aloitusKuulutus,
       suunnitteluSopimus: suunnitteluSopimusInput,
-      lisakuulutuskieli
+      lisakuulutuskieli,
     });
 
     const updatedProjekti = await loadProjektiFromDatabase(oid);

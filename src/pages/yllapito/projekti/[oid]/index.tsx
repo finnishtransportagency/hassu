@@ -29,7 +29,7 @@ import ProjektiRahoitus from "@components/projekti/ProjektiRahoitus";
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Omit<
   TallennaProjektiInput,
-  "muistiinpano" | "suunnittelustaVastaavaViranomainen" | "aloitusKuulutus" | "suunnitteluSopimus"
+  "muistiinpano" | "suunnittelustaVastaavaViranomainen" | "aloitusKuulutus" | "suunnitteluSopimus" | "lisakuulutuskieli"
 >;
 type RequiredInputValues = Required<{
   [K in keyof RequiredFields]: NonNullable<RequiredFields[K]>;
@@ -49,7 +49,7 @@ const maxNoteLength = 2000;
 
 const validationSchema: SchemaOf<FormValues> = Yup.object().shape({
   oid: Yup.string().required(),
-  lisakuulutuskieli: Yup.string().required(),
+  lisakuulutuskieli: Yup.string().notRequired(),
   muistiinpano: Yup.string().max(
     maxNoteLength,
     `Muistiinpanoon voidaan kirjoittaa maksimissaan ${maxNoteLength} merkkiä.`
@@ -72,7 +72,6 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
 
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
   const [selectLanguageAvailable, setLanguageChoicesAvailable] = useState(false);
-  const [selectedKieli, onKieliValueChange] = useState("");
 
   const { data: kayttajat, error: kayttajatLoadError } = useSWR(apiConfig.listaaKayttajat.graphql, kayttajatLoader);
   const isLoadingKayttajat = !kayttajat && !kayttajatLoadError;
@@ -124,14 +123,12 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
           })) || [],
       };
       reset(tallentamisTiedot);
-      setLanguageChoicesAvailable( foo );
+      setLanguageChoicesAvailable( hasLanguageSelected );
     }
   }, [projekti, reset]);
 
-  const foo = function(){
-    console.log("projekti ladattu lisakuulutuskielella: ", projekti?.lisakuulutuskieli);
+  const hasLanguageSelected = function(){
     const retval = (projekti?.lisakuulutuskieli?.startsWith("ruotsi") || projekti?.lisakuulutuskieli?.startsWith("saame") || false);
-    console.log("asetetaan setlanguagechocieavailable: ", retval);
     return retval;
   }
 
@@ -148,17 +145,6 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
       }
     }
   }, [router.isReady, oid, projekti, setRouteLabels]);
-  
-/*   useEffect(() => {
-    console.log("valittu kieli: ", selectedKieli);
-    if(projekti) projekti.lisakuulutuskieli = selectedKieli;
-    console.log("projektin kieli: ", projekti?.lisakuulutuskieli);
-  }, [selectedKieli]) */
-
-  useEffect(() => {
-    console.log("kielivalintasäätimen uusi arvo: ", selectLanguageAvailable);
-    if(!selectLanguageAvailable) onKieliValueChange("-");
-  }, [selectLanguageAvailable])
 
   return (
     <ProjektiPageLayout title={"Projektin perustiedot"}>
@@ -212,9 +198,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
                 value="ruotsi" 
                 id="ruotsi" 
                 disabled={!selectLanguageAvailable}
-                //checked={selectedKieli === "ruotsi"}
-                {...register("lisakuulutuskieli")}
-                //onChange={() => onKieliValueChange("ruotsi")}
+                {...register("lisakuulutuskieli")}              
               >
               </RadioButton>
               <RadioButton 
@@ -222,9 +206,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
                 value="saame" 
                 id="saame" 
                 disabled={!selectLanguageAvailable}
-                //checked={selectedKieli === "saame"}
-                {...register("lisakuulutuskieli")}
-                //onChange={() => onKieliValueChange("saame")}
+                {...register("lisakuulutuskieli")}              
               >
               </RadioButton>
             </div>
@@ -277,6 +259,6 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
 }
 
 async function kayttajatLoader(_: string): Promise<Kayttaja[]> {
-  return [{__typename:"Kayttaja",etuNimi:"foo",sukuNimi:"bar"}];
+  //return [{__typename:"Kayttaja",etuNimi:"foo",sukuNimi:"bar"}];
   return await api.listUsers();
 }
