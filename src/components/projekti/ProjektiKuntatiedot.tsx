@@ -8,12 +8,10 @@ interface Props {
 
 export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
   const kuntatiedot = [
-    { header: "Maakunat", 
-      data: projekti?.velho?.maakunnat ? projekti?.velho?.maakunnat.toString() : "-" 
-    },
+    { header: "Maakunnat", data: projekti?.velho?.maakunnat?.toString() },
     {
       header: "Kunnat",
-      data: projekti?.velho?.kunnat ? projekti?.velho?.kunnat.toString() : "-"
+      data: projekti?.velho?.kunnat?.toString(),
     },
   ];
 

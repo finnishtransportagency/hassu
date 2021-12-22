@@ -5,18 +5,15 @@ import log from "loglevel";
 import { PageProps } from "@pages/_app";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import useProjekti from "src/hooks/useProjekti";
-import { api, apiConfig, Kayttaja, ProjektiKayttajaInput, ProjektiRooli, TallennaProjektiInput } from "@services/api";
-import useSWR from "swr";
+import { api, TallennaProjektiInput } from "@services/api";
 import { SchemaOf } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, UseFormProps } from "react-hook-form";
 import Button from "@components/button/Button";
 import Textarea from "@components/form/Textarea";
 import ButtonLink from "@components/button/ButtonLink";
-import Notification, { NotificationType } from "@components/notification/Notification";
+import Notification from "@components/notification/Notification";
 import ProjektiPerustiedot from "@components/projekti/ProjektiPerustiedot";
-import { kayttoOikeudetSchema } from "../../../../schemas/kayttoOikeudet";
-import HassuLink from "@components/HassuLink";
 import ExtLink from "@components/ExtLink";
 import Checkbox from "@components/form/CheckBox";
 import RadioButton from "@components/form/RadioButton";
@@ -24,26 +21,10 @@ import ProjektiKuntatiedot from "@components/projekti/ProjektiKuntatiedot";
 import ProjektiLiittyvatSuunnitelmat from "@components/projekti/ProjektiLiittyvatSuunnitelmat";
 import ProjektiSuunnitelusopimusTiedot from "@components/projekti/ProjektiSunnittelusopimusTiedot";
 import ProjektiRahoitus from "@components/projekti/ProjektiRahoitus";
+import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
+import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 
-
-// Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
-type RequiredFields = Omit<
-  TallennaProjektiInput,
-  "muistiinpano" | "suunnittelustaVastaavaViranomainen" | "aloitusKuulutus" | "suunnitteluSopimus" | "lisakuulutuskieli"
->;
-type RequiredInputValues = Required<{
-  [K in keyof RequiredFields]: NonNullable<RequiredFields[K]>;
-}>;
-
-type OptionalInputValues = Partial<Pick<TallennaProjektiInput, "muistiinpano" | "lisakuulutuskieli">>;
-type FormValues = RequiredInputValues & OptionalInputValues;
-
-const defaultKayttaja: ProjektiKayttajaInput = {
-  // @ts-ignore By default rooli should be 'undefined'
-  rooli: "",
-  puhelinnumero: "",
-  kayttajatunnus: "",
-};
+type FormValues = Pick<TallennaProjektiInput, "oid" | "muistiinpano" | "lisakuulutuskieli">;
 
 const maxNoteLength = 2000;
 
@@ -54,13 +35,17 @@ const validationSchema: SchemaOf<FormValues> = Yup.object().shape({
     maxNoteLength,
     `Muistiinpanoon voidaan kirjoittaa maksimissaan ${maxNoteLength} merkkiä.`
   ),
-  kayttoOikeudet: kayttoOikeudetSchema,
 });
 
 const indentedStyle = {
-  paddingLeft: "20px"
-}
+  paddingLeft: "20px",
+};
 
+const loadedProjektiValidationSchema = getProjektiValidationSchema([
+  ProjektiTestType.PROJEKTI_IS_LOADED,
+  ProjektiTestType.PROJEKTI_HAS_PAALLIKKO,
+  ProjektiTestType.PROJEKTI_IS_CREATED,
+]);
 
 export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   const velhobaseurl = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-";
@@ -73,19 +58,12 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
   const [selectLanguageAvailable, setLanguageChoicesAvailable] = useState(false);
 
-  const { data: kayttajat, error: kayttajatLoadError } = useSWR(apiConfig.listaaKayttajat.graphql, kayttajatLoader);
-  const isLoadingKayttajat = !kayttajat && !kayttajatLoadError;
-
-  const projektiHasPaallikko = projekti?.kayttoOikeudet?.some(({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO);
-  const projektiError =
-    (!projekti?.tallennettu && !isLoadingProjekti) ||
-    (!projektiHasPaallikko && !isLoadingProjekti) ||
-    !!projektiLoadError;
-  const disableFormEdit = projektiError || isLoadingProjekti || formIsSubmitting || isLoadingKayttajat;
+  const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
+  const disableFormEdit = projektiHasErrors || isLoadingProjekti || formIsSubmitting;
 
   const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(validationSchema, { abortEarly: false, recursive: true }),
-    defaultValues: { muistiinpano: "", kayttoOikeudet: [defaultKayttaja], lisakuulutuskieli: "" },
+    defaultValues: { muistiinpano: "", lisakuulutuskieli: "" },
     mode: "onChange",
     reValidateMode: "onChange",
   };
@@ -109,8 +87,8 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
     setFormIsSubmitting(false);
   };
 
-  const hasLanguageSelected = 
-    projekti?.lisakuulutuskieli?.startsWith("ruotsi") || projekti?.lisakuulutuskieli?.startsWith("saame") || false
+  const hasLanguageSelected =
+    projekti?.lisakuulutuskieli?.startsWith("ruotsi") || projekti?.lisakuulutuskieli?.startsWith("saame") || false;
 
   useEffect(() => {
     if (projekti && projekti.oid) {
@@ -118,19 +96,11 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
         oid: projekti.oid,
         muistiinpano: projekti.muistiinpano || "",
         lisakuulutuskieli: projekti.lisakuulutuskieli || "",
-        kayttoOikeudet:
-          projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, rooli }) => ({
-            kayttajatunnus,
-            puhelinnumero: puhelinnumero || "",
-            rooli,
-          })) || [],
       };
       reset(tallentamisTiedot);
-      setLanguageChoicesAvailable( hasLanguageSelected );
+      setLanguageChoicesAvailable(hasLanguageSelected);
     }
   }, [projekti, reset, hasLanguageSelected]);
-
-  ;
 
   useEffect(() => {
     if (router.isReady) {
@@ -150,34 +120,16 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
     <ProjektiPageLayout title={"Projektin perustiedot"}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <fieldset disabled={disableFormEdit}>
-          {projektiError && (
-            <Notification type={NotificationType.ERROR}>
-              {!projektiHasPaallikko ? (
-                <>
-                  Projektilta puuttuu projektipäällikkö- / vastuuhenkilötieto projektiVELHOsta. Lisää vastuuhenkilötieto
-                  projekti-VELHOssa ja yritä projektin perustamista uudelleen.
-                </>
-              ) : !projekti?.tallennettu ? (
-                <>
-                  {"Projektia ei ole tallennettu. "}
-                  <HassuLink className="text-primary" href={`/yllapito/perusta/${oid}`}>
-                    Siirry perustamaan projektia
-                  </HassuLink>
-                </>
-              ) : (
-                <>Projektin tietoja hakiessa tapahtui virhe. Tarkista tiedot velhosta ja yritä myöhemmin uudelleen.</>
-              )}
-            </Notification>
-          )}
+          <ProjektiErrorNotification
+            disableValidation={isLoadingProjekti}
+            projekti={projekti}
+            validationSchema={loadedProjektiValidationSchema}
+          />
           <div className="content">
             <ProjektiPerustiedot projekti={projekti} />
             <br />
-            {projekti?.velho?.linkki && <ExtLink href={projekti?.velho?.linkki ? projekti?.velho?.linkki : "https://vayla.fi/vuosaaren-merivayla"}>
-              Hankesivu
-            </ExtLink>}
-            <ExtLink href={velhobaseurl + projekti?.oid}>
-              Projektin sivu Projektivelhossa
-            </ExtLink>
+            {projekti?.velho?.linkki && <ExtLink href={projekti?.velho?.linkki}>Hankesivu</ExtLink>}
+            <ExtLink href={velhobaseurl + projekti?.oid}>Projektin sivu Projektivelhossa</ExtLink>
           </div>
           <hr />
           <div className="content">
@@ -188,27 +140,25 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
             <h4 className="vayla-small-title">Projetin kuulutusten kielet</h4>
             <Checkbox
               label="Projekti kuulutetaan suomenkielen lisäksi myös muilla kielillä"
-              id="kuulutuskieli" 
+              id="kuulutuskieli"
               onChange={() => setLanguageChoicesAvailable(!selectLanguageAvailable)}
               checked={selectLanguageAvailable}
             ></Checkbox>
             <div style={indentedStyle}>
-              <RadioButton 
-                label="Suomen lisäksi ruotsi" 
-                value="ruotsi" 
-                id="ruotsi" 
+              <RadioButton
+                label="Suomen lisäksi ruotsi"
+                value="ruotsi"
+                id="ruotsi"
                 disabled={!selectLanguageAvailable}
-                {...register("lisakuulutuskieli")}              
-              >
-              </RadioButton>
-              <RadioButton 
-                label="Suomen lisäksi saame" 
-                value="saame" 
-                id="saame" 
+                {...register("lisakuulutuskieli")}
+              ></RadioButton>
+              <RadioButton
+                label="Suomen lisäksi saame"
+                value="saame"
+                id="saame"
                 disabled={!selectLanguageAvailable}
-                {...register("lisakuulutuskieli")}              
-              >
-              </RadioButton>
+                {...register("lisakuulutuskieli")}
+              ></RadioButton>
             </div>
           </div>
           <hr />
@@ -217,7 +167,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
           </div>
           <hr />
           <div className="content">
-            <ProjektiSuunnitelusopimusTiedot projekti={projekti} kuntalista={["", "Helsinki", "Espoo", "Vantaa"]}/>
+            <ProjektiSuunnitelusopimusTiedot projekti={projekti} kuntalista={["", "Helsinki", "Espoo", "Vantaa"]} />
           </div>
           <hr />
           <div>
@@ -256,8 +206,4 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
       </form>
     </ProjektiPageLayout>
   );
-}
-
-async function kayttajatLoader(_: string): Promise<Kayttaja[]> {
-  return await api.listUsers();
 }
