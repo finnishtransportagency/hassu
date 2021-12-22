@@ -5,6 +5,9 @@ import { ProjektiSchema, ProjektiTestType } from "src/schemas/projekti";
 import { ValidationError } from "yup";
 import { useEffect } from "react";
 import HassuLink from "@components/HassuLink";
+import ExtLink from "@components/ExtLink";
+
+const velhobaseurl = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-";
 
 interface Props {
   validationSchema: ProjektiSchema;
@@ -22,8 +25,13 @@ const projektiErrorToNotificationMap = new Map<ProjektiTestType, ErrorNotificati
   ],
   [
     ProjektiTestType.PROJEKTI_HAS_PAALLIKKO,
-    () =>
-      "Projektilta puuttuu projektipäällikkö- / vastuuhenkilötieto projektiVELHOsta. Lisää vastuuhenkilötieto projekti-VELHOssa ja yritä projektin perustamista uudelleen.",
+    (projekti) => (
+      <p>
+        Projektilta puuttuu projektipäällikkö- / vastuuhenkilötieto projektiVELHOsta. Lisää vastuuhenkilötieto
+        projektiVELHOssa ja yritä projektin perustamista uudelleen.
+        <ExtLink href={velhobaseurl + projekti?.oid}>Projektin sivu Projektivelhossa</ExtLink>
+      </p>
+    ),
   ],
   [
     ProjektiTestType.PROJEKTI_IS_CREATED,

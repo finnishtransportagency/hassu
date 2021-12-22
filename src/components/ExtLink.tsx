@@ -12,13 +12,14 @@ const ExtLink = (
     href,
     children,
     className,
+    target = "_blank",
     ...props
   }: Props & Omit<React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "ref">,
   ref: React.ForwardedRef<HTMLAnchorElement>
 ) => {
   return (
     <div>
-      <a ref={ref} href={href} {...props} className={classNames(styles["ext-link"], className)}>
+      <a ref={ref} href={href} target={target} {...props} className={classNames(styles["ext-link"], className)}>
         {children}
         &nbsp;
         <FontAwesomeIcon icon="external-link-alt" size="lg"></FontAwesomeIcon>
