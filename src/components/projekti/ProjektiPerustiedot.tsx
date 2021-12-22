@@ -13,7 +13,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
     { header: "Asiatunnus", data: projekti?.velho?.asiatunnusELY },
     {
       header: "Vastaava viranomainen",
-      data: projekti?.velho.tilaajaOrganisaatio,
+      data: projekti?.velho?.tilaajaOrganisaatio,
     },
     {
       header: "Suunnitelman tyyppi",
@@ -21,9 +21,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
     },
     {
       header: "Väylämuoto",
-      data:
-        projekti?.velho?.vaylamuoto &&
-        projekti?.velho?.vaylamuoto.map((muoto) => t(`projekti-vayla-muoto.${muoto}`)).join(", "),
+      data: projekti?.velho?.vaylamuoto?.map((muoto) => t(`projekti-vayla-muoto.${muoto}`)).join(", "),
     },
   ];
 

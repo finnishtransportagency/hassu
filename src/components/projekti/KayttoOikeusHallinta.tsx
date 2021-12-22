@@ -74,7 +74,7 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
   const kayttoOikeudet = watch("kayttoOikeudet");
 
   return (
-    <div>
+    <>
       <h4 className="vayla-small-title">Projektin henkilöiden ja käyttöoikeuksien hallinta</h4>
       <p>
         Lisää projektin hallinnolliseen käsittelyyn kuuluvat henkilöt lisäämällä uusia henkilörivejä. Henkilöiden
@@ -139,7 +139,7 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
           ))}
         </div>
       )}
-      <h5 className="font-semibold">Muut henkilöt</h5>
+      <h5 className="vayla-paragraph">Muut henkilöt</h5>
       {muutHenkilot.map((user, i) => {
         const index = i + projektiPaallikot.length;
         return (
@@ -245,7 +245,7 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
       {(errors.kayttoOikeudet as any)?.message && (
         <p className="text-red pt-3">{(errors.kayttoOikeudet as any)?.message}</p>
       )}
-    </div>
+    </>
   );
 }
 

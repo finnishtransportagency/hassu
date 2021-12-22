@@ -11,7 +11,7 @@ interface Route {
   disabled?: boolean;
 }
 
-export default function ProjektiNavigationPanel(): ReactElement {
+export default function ProjektiSideNavigation(): ReactElement {
   const router = useRouter();
   const oidParam = router.query.oid;
   const { data: projekti } = useProjekti(oidParam as string);
