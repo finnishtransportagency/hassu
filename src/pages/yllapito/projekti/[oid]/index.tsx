@@ -109,6 +109,9 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
     setFormIsSubmitting(false);
   };
 
+  const hasLanguageSelected = 
+    projekti?.lisakuulutuskieli?.startsWith("ruotsi") || projekti?.lisakuulutuskieli?.startsWith("saame") || false
+
   useEffect(() => {
     if (projekti && projekti.oid) {
       const tallentamisTiedot: FormValues = {
@@ -125,12 +128,9 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
       reset(tallentamisTiedot);
       setLanguageChoicesAvailable( hasLanguageSelected );
     }
-  }, [projekti, reset]);
+  }, [projekti, reset, hasLanguageSelected]);
 
-  const hasLanguageSelected = () => {
-    const retval = (projekti?.lisakuulutuskieli?.startsWith("ruotsi") || projekti?.lisakuulutuskieli?.startsWith("saame") || false);
-    return retval;
-  }
+  ;
 
   useEffect(() => {
     if (router.isReady) {
