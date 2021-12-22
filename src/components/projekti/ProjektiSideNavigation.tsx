@@ -18,8 +18,12 @@ export default function ProjektiSideNavigation(): ReactElement {
   const oid = projekti?.oid;
 
   const routes: Route[] = [
-    { title: "Projektin henkilöt", href: oid && `/yllapito/projekti/${oid}/henkilot`, disabled: true },
-    { title: "Projektin perustiedot", href: oid && `/yllapito/projekti/${oid}` },
+    {
+      title: "Projektin henkilöt",
+      href: oid && `/yllapito/projekti/${oid}/henkilot`,
+      disabled: !projekti?.tallennettu,
+    },
+    { title: "Projektin perustiedot", href: oid && `/yllapito/projekti/${oid}`, disabled: !projekti?.tallennettu },
     {
       title: "Aloituskuulutus",
       href: oid && `/yllapito/projekti/${oid}/aloituskuulutus`,
