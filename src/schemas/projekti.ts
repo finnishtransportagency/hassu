@@ -12,7 +12,7 @@ const projektiSchema = yup
   .object()
   .nullable()
   .shape({
-    tallennettu: yup.boolean(),
+    tallennettu: yup.boolean().nullable(),
     kayttoOikeudet: yup.array().of(
       yup.object().shape({
         rooli: yup.mixed().oneOf(Object.values(ProjektiRooli)),
