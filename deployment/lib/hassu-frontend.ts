@@ -35,9 +35,17 @@ import { EdgeFunction } from "@aws-cdk/aws-cloudfront/lib/experimental";
 import { S3Origin } from "@aws-cdk/aws-cloudfront-origins";
 import { Bucket } from "@aws-cdk/aws-s3";
 import * as ssm from "@aws-cdk/aws-ssm";
-import { readVariables } from "./util/cdkoutputs";
+import { readBackendStackOutputs, readDatabaseStackOutputs } from "../bin/setupEnvironment";
+
+// These should correspond to CfnOutputs produced by this stack
+export type FrontendStackOutputs = {
+  CloudfrontPrivateDNSName: string;
+};
 
 export class HassuFrontendStack extends cdk.Stack {
+  private appSyncAPIKey?: string;
+  private cloudFrontOriginAccessIdentity: string;
+
   constructor(scope: Construct) {
     const env = Config.env;
     super(scope, "frontend", {
@@ -53,11 +61,17 @@ export class HassuFrontendStack extends cdk.Stack {
     const env = Config.env;
     const config = await Config.instance(this);
 
+    this.appSyncAPIKey = (await readBackendStackOutputs()).AppSyncAPIKey;
+    this.cloudFrontOriginAccessIdentity = (await readDatabaseStackOutputs()).CloudFrontOriginAccessIdentity || ""; // Empty default string for localstack deployment
+
     await new Builder(".", "./build", {
       enableHTTPCompression: true,
       minifyHandlers: true,
       args: ["build"],
-      env: { FRONTEND_DOMAIN_NAME: config.frontendDomainName },
+      env: {
+        FRONTEND_DOMAIN_NAME: config.frontendDomainName,
+        REACT_APP_API_KEY: this.appSyncAPIKey,
+      },
     }).build();
 
     const frontendRequestFunction = this.createFrontendRequestFunction(
@@ -116,10 +130,7 @@ export class HassuFrontendStack extends cdk.Stack {
     nextJSLambdaEdge.edgeLambdaRole.grantPassRole(new ServicePrincipal("logger.cloudfront.amazonaws.com"));
 
     new cdk.CfnOutput(this, "CloudfrontPrivateDNSName", {
-      value: "",
-    });
-    new cdk.CfnOutput(this, "AppSyncPrivateDNSName", {
-      value: "",
+      value: nextJSLambdaEdge.distribution.distributionDomainName || "",
     });
   }
 
@@ -233,14 +244,14 @@ export class HassuFrontendStack extends cdk.Stack {
       ];
       new ssm.StringParameter(this, "FrontendPublicKeyId", {
         description: "Generated FrontendPublicKeyId",
-        parameterName: "/" + Config.env + "/FrontendPublicKeyId",
+        parameterName: "/" + Config.env + "/outputs/FrontendPublicKeyId",
         stringValue: publicKey.publicKeyId,
       });
 
       originAccessIdentity = OriginAccessIdentity.fromOriginAccessIdentityName(
         this,
         "CloudfrontOriginAccessIdentity" + Config.env,
-        readVariables("database").CloudFrontOriginAccessIdentity
+        this.cloudFrontOriginAccessIdentity
       );
     }
 

@@ -10,13 +10,15 @@ class BaseConfig {
   static env = getEnv("ENVIRONMENT");
   static infraEnvironment = BaseConfig.isPermanentEnvironment() ? BaseConfig.env : "dev";
 
-  constructor() {
-    // tslint:disable-next-line:no-console
-    console.log({ env: BaseConfig.env, infraEnvironment: BaseConfig.infraEnvironment });
-  }
-
   static isPermanentEnvironment() {
     return ["dev", "test", "prod"].indexOf(BaseConfig.env) >= 0;
+  }
+
+  /**
+   * Utility function to determine if there are AWS resources for the given ENVIRONMENT expected.
+   */
+  static isActuallyDeployedEnvironment() {
+    return ["localstack", "feature"].indexOf(BaseConfig.env) < 0;
   }
 }
 

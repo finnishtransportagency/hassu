@@ -23,6 +23,7 @@ phases:
     commands:
       - npm run lint
       - npm run localstack
+      - npm run setupenvironment
       - npm run test
       - npm run localstack:stop&
       - npm run build

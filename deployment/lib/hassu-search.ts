@@ -4,6 +4,11 @@ import { Construct, RemovalPolicy } from "@aws-cdk/core";
 import { Config } from "./config";
 import { Domain, EngineVersion } from "@aws-cdk/aws-opensearchservice";
 
+// These should correspond to CfnOutputs produced by this stack
+export type SearchStackOutputs = {
+  SearchDomainOutput:string
+}
+
 export class HassuSearchStack extends cdk.Stack {
   public readonly searchDomain: Domain;
 
