@@ -127,7 +127,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
     }
   }, [projekti, reset]);
 
-  const hasLanguageSelected = function(){
+  const hasLanguageSelected = () => {
     const retval = (projekti?.lisakuulutuskieli?.startsWith("ruotsi") || projekti?.lisakuulutuskieli?.startsWith("saame") || false);
     return retval;
   }
@@ -259,6 +259,5 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
 }
 
 async function kayttajatLoader(_: string): Promise<Kayttaja[]> {
-  //return [{__typename:"Kayttaja",etuNimi:"foo",sukuNimi:"bar"}];
   return await api.listUsers();
 }
