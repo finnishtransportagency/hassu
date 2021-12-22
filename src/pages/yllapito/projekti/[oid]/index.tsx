@@ -5,8 +5,7 @@ import log from "loglevel";
 import { PageProps } from "@pages/_app";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import useProjekti from "src/hooks/useProjekti";
-import { api, apiConfig, Kayttaja, ProjektiKayttajaInput, TallennaProjektiInput } from "@services/api";
-import useSWR from "swr";
+import { api, TallennaProjektiInput } from "@services/api";
 import { SchemaOf } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, UseFormProps } from "react-hook-form";
@@ -15,7 +14,6 @@ import Textarea from "@components/form/Textarea";
 import ButtonLink from "@components/button/ButtonLink";
 import Notification from "@components/notification/Notification";
 import ProjektiPerustiedot from "@components/projekti/ProjektiPerustiedot";
-import { kayttoOikeudetSchema } from "../../../../schemas/kayttoOikeudet";
 import ExtLink from "@components/ExtLink";
 import Checkbox from "@components/form/CheckBox";
 import RadioButton from "@components/form/RadioButton";
@@ -26,24 +24,7 @@ import ProjektiRahoitus from "@components/projekti/ProjektiRahoitus";
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 
-// Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
-type RequiredFields = Omit<
-  TallennaProjektiInput,
-  "muistiinpano" | "suunnittelustaVastaavaViranomainen" | "aloitusKuulutus" | "suunnitteluSopimus" | "lisakuulutuskieli"
->;
-type RequiredInputValues = Required<{
-  [K in keyof RequiredFields]: NonNullable<RequiredFields[K]>;
-}>;
-
-type OptionalInputValues = Partial<Pick<TallennaProjektiInput, "muistiinpano" | "lisakuulutuskieli">>;
-type FormValues = RequiredInputValues & OptionalInputValues;
-
-const defaultKayttaja: ProjektiKayttajaInput = {
-  // @ts-ignore By default rooli should be 'undefined'
-  rooli: "",
-  puhelinnumero: "",
-  kayttajatunnus: "",
-};
+type FormValues = Pick<TallennaProjektiInput, "oid" | "muistiinpano" | "lisakuulutuskieli">;
 
 const maxNoteLength = 2000;
 
@@ -54,7 +35,6 @@ const validationSchema: SchemaOf<FormValues> = Yup.object().shape({
     maxNoteLength,
     `Muistiinpanoon voidaan kirjoittaa maksimissaan ${maxNoteLength} merkkiä.`
   ),
-  kayttoOikeudet: kayttoOikeudetSchema,
 });
 
 const indentedStyle = {
@@ -78,15 +58,12 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
   const [selectLanguageAvailable, setLanguageChoicesAvailable] = useState(false);
 
-  const { data: kayttajat, error: kayttajatLoadError } = useSWR(apiConfig.listaaKayttajat.graphql, kayttajatLoader);
-  const isLoadingKayttajat = !kayttajat && !kayttajatLoadError;
-
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
-  const disableFormEdit = projektiHasErrors || isLoadingProjekti || formIsSubmitting || isLoadingKayttajat;
+  const disableFormEdit = projektiHasErrors || isLoadingProjekti || formIsSubmitting;
 
   const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(validationSchema, { abortEarly: false, recursive: true }),
-    defaultValues: { muistiinpano: "", kayttoOikeudet: [defaultKayttaja], lisakuulutuskieli: "" },
+    defaultValues: { muistiinpano: "", lisakuulutuskieli: "" },
     mode: "onChange",
     reValidateMode: "onChange",
   };
@@ -119,12 +96,6 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
         oid: projekti.oid,
         muistiinpano: projekti.muistiinpano || "",
         lisakuulutuskieli: projekti.lisakuulutuskieli || "",
-        kayttoOikeudet:
-          projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, rooli }) => ({
-            kayttajatunnus,
-            puhelinnumero: puhelinnumero || "",
-            rooli,
-          })) || [],
       };
       reset(tallentamisTiedot);
       setLanguageChoicesAvailable(hasLanguageSelected);
@@ -235,8 +206,4 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
       </form>
     </ProjektiPageLayout>
   );
-}
-
-async function kayttajatLoader(_: string): Promise<Kayttaja[]> {
-  return await api.listUsers();
 }
