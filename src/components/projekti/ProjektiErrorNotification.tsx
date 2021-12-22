@@ -27,8 +27,8 @@ const projektiErrorToNotificationMap = new Map<ProjektiTestType, ErrorNotificati
     ProjektiTestType.PROJEKTI_HAS_PAALLIKKO,
     (projekti) => (
       <p>
-        Projektilta puuttuu projektipäällikkö- / vastuuhenkilötieto projektiVELHOsta. Lisää vastuuhenkilötieto
-        projektiVELHOssa ja yritä projektin perustamista uudelleen.
+        Projektilta puuttuu projektipäällikkö- / vastuuhenkilötieto projektivelhosta. Lisää vastuuhenkilötieto
+        projektivelhossa ja yritä projektin perustamista uudelleen.
         <ExtLink href={velhobaseurl + projekti?.oid}>Projektin sivu Projektivelhossa</ExtLink>
       </p>
     ),
