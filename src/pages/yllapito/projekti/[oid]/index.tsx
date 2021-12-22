@@ -29,13 +29,13 @@ import ProjektiRahoitus from "@components/projekti/ProjektiRahoitus";
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Omit<
   TallennaProjektiInput,
-  "muistiinpano" | "suunnittelustaVastaavaViranomainen" | "aloitusKuulutus" | "suunnitteluSopimus"
+  "muistiinpano" | "suunnittelustaVastaavaViranomainen" | "aloitusKuulutus" | "suunnitteluSopimus" | "lisakuulutuskieli"
 >;
 type RequiredInputValues = Required<{
   [K in keyof RequiredFields]: NonNullable<RequiredFields[K]>;
 }>;
 
-type OptionalInputValues = Partial<Pick<TallennaProjektiInput, "muistiinpano">>;
+type OptionalInputValues = Partial<Pick<TallennaProjektiInput, "muistiinpano" | "lisakuulutuskieli">>;
 type FormValues = RequiredInputValues & OptionalInputValues;
 
 const defaultKayttaja: ProjektiKayttajaInput = {
@@ -49,8 +49,7 @@ const maxNoteLength = 2000;
 
 const validationSchema: SchemaOf<FormValues> = Yup.object().shape({
   oid: Yup.string().required(),
-  kuulutuksetRuotsiksi: Yup.boolean().required(),
-  kuulutuksetSaameksi: Yup.boolean().required(),
+  lisakuulutuskieli: Yup.string().notRequired(),
   muistiinpano: Yup.string().max(
     maxNoteLength,
     `Muistiinpanoon voidaan kirjoittaa maksimissaan ${maxNoteLength} merkkiä.`
@@ -72,7 +71,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   const isLoadingProjekti = !projekti && !projektiLoadError;
 
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
-  const [selectLanguageDisabled, setLanguageChoices] = useState(true);
+  const [selectLanguageAvailable, setLanguageChoicesAvailable] = useState(false);
 
   const { data: kayttajat, error: kayttajatLoadError } = useSWR(apiConfig.listaaKayttajat.graphql, kayttajatLoader);
   const isLoadingKayttajat = !kayttajat && !kayttajatLoadError;
@@ -86,7 +85,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
 
   const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(validationSchema, { abortEarly: false, recursive: true }),
-    defaultValues: { muistiinpano: "", kayttoOikeudet: [defaultKayttaja] },
+    defaultValues: { muistiinpano: "", kayttoOikeudet: [defaultKayttaja], lisakuulutuskieli: "" },
     mode: "onChange",
     reValidateMode: "onChange",
   };
@@ -110,13 +109,15 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
     setFormIsSubmitting(false);
   };
 
+  const hasLanguageSelected = 
+    projekti?.lisakuulutuskieli?.startsWith("ruotsi") || projekti?.lisakuulutuskieli?.startsWith("saame") || false
+
   useEffect(() => {
     if (projekti && projekti.oid) {
       const tallentamisTiedot: FormValues = {
         oid: projekti.oid,
         muistiinpano: projekti.muistiinpano || "",
-        kuulutuksetRuotsiksi: projekti.kuulutuksetRuotsiksi || false,
-        kuulutuksetSaameksi: projekti.kuulutuksetSaameksi || false,
+        lisakuulutuskieli: projekti.lisakuulutuskieli || "",
         kayttoOikeudet:
           projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, rooli }) => ({
             kayttajatunnus,
@@ -125,8 +126,11 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
           })) || [],
       };
       reset(tallentamisTiedot);
+      setLanguageChoicesAvailable( hasLanguageSelected );
     }
-  }, [projekti, reset]);
+  }, [projekti, reset, hasLanguageSelected]);
+
+  ;
 
   useEffect(() => {
     if (router.isReady) {
@@ -184,10 +188,27 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
             <h4 className="vayla-small-title">Projetin kuulutusten kielet</h4>
             <Checkbox
               label="Projekti kuulutetaan suomenkielen lisäksi myös muilla kielillä"
-              id="kuulutuskieli" onChange={() => setLanguageChoices(!selectLanguageDisabled)}></Checkbox>
+              id="kuulutuskieli" 
+              onChange={() => setLanguageChoicesAvailable(!selectLanguageAvailable)}
+              checked={selectLanguageAvailable}
+            ></Checkbox>
             <div style={indentedStyle}>
-              <RadioButton label="Suomen lisäksi ruotsi" name="kielet" value="ruotsi" id="ruotsi" disabled={selectLanguageDisabled}></RadioButton>
-              <RadioButton label="Suomen lisäksi saame" name="kielet" value="saame" id="saame" disabled={selectLanguageDisabled}></RadioButton>
+              <RadioButton 
+                label="Suomen lisäksi ruotsi" 
+                value="ruotsi" 
+                id="ruotsi" 
+                disabled={!selectLanguageAvailable}
+                {...register("lisakuulutuskieli")}              
+              >
+              </RadioButton>
+              <RadioButton 
+                label="Suomen lisäksi saame" 
+                value="saame" 
+                id="saame" 
+                disabled={!selectLanguageAvailable}
+                {...register("lisakuulutuskieli")}              
+              >
+              </RadioButton>
             </div>
           </div>
           <hr />

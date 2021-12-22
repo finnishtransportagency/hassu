@@ -63,8 +63,7 @@ export type DBProjekti = {
   tyyppi?: ProjektiTyyppi | null;
   status?: Status | null;
   suunnittelustaVastaavaViranomainen?: Viranomainen | null;
-  kuulutuksetRuotsiksi?: Boolean | false;
-  kuulutuksetSaameksi?: Boolean | false;
+  lisakuulutuskieli?: string | null;
   aloitusKuulutus?: AloitusKuulutus | null;
   EURahoitus?: boolean | null;
   suunnitteluSopimus?: SuunnitteluSopimus | null;

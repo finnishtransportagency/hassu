@@ -90,11 +90,14 @@ describe("Api", () => {
       yhteystiedot: [user.uid as string],
     };
 
+    const lisakuulutuskieli = "ruotsi";
+
     await api.tallennaProjekti({
       oid,
       muistiinpano: newNote,
       aloitusKuulutus,
       suunnitteluSopimus: suunnitteluSopimusInput,
+      lisakuulutuskieli,
     });
 
     const updatedProjekti = await loadProjektiFromDatabase(oid);
@@ -102,6 +105,7 @@ describe("Api", () => {
     expect(updatedProjekti.aloitusKuulutus).eql(aloitusKuulutus);
     expect(updatedProjekti.suunnitteluSopimus).include(suunnitteluSopimus);
     expect(updatedProjekti.suunnitteluSopimus.logo).contain("/suunnittelusopimus/logo.png");
+    expect(updatedProjekti.lisakuulutuskieli).to.be.equal(lisakuulutuskieli);
 
     const pdf = await api.lataaKuulutusPDF(oid, KuulutusTyyppi.ALOITUSKUULUTUS);
     expect(pdf.nimi).to.be.equal("aloituskuulutus.pdf");

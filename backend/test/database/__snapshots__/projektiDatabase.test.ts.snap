@@ -5,6 +5,7 @@ Object {
   "ExpressionAttributeNames": Object {
     "#aloitusKuulutus": "aloitusKuulutus",
     "#kayttoOikeudet": "kayttoOikeudet",
+    "#lisakuulutuskieli": "lisakuulutuskieli",
     "#muistiinpano": "muistiinpano",
     "#status": "status",
     "#suunnitteluSopimus": "suunnitteluSopimus",
@@ -32,6 +33,7 @@ Object {
         "rooli": "PROJEKTIPAALLIKKO",
       },
     ],
+    ":lisakuulutuskieli": "ruotsi",
     ":muistiinpano": "Testiprojekti 1:n muistiinpano",
     ":status": "EI_JULKAISTU",
     ":suunnitteluSopimus": Object {
@@ -53,6 +55,6 @@ Object {
     "oid": "1",
   },
   "TableName": "Projekti-localstack",
-  "UpdateExpression": "set #kayttoOikeudet = :kayttoOikeudet , #velho = :velho , #muistiinpano = :muistiinpano , #status = :status , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus ",
+  "UpdateExpression": "set #kayttoOikeudet = :kayttoOikeudet , #velho = :velho , #muistiinpano = :muistiinpano , #status = :status , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus , #lisakuulutuskieli = :lisakuulutuskieli ",
 }
 `;

@@ -40,6 +40,7 @@ export class ProjektiFixture {
     tallennettu: false,
     kayttoOikeudet: [ProjektiFixture.pekkaProjariProjektiKayttaja],
     tyyppi: ProjektiTyyppi.TIE,
+    lisakuulutuskieli: "ruotsi",
   };
 
   velhoprojekti1: DBProjekti = {
@@ -86,5 +87,6 @@ export class ProjektiFixture {
       elyKeskus: "Pirkanmaa",
       yhteystiedot: [ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus],
     },
+    lisakuulutuskieli: "ruotsi",
   };
 }
