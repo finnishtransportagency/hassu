@@ -12,9 +12,10 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import { AloitusKuulutusInput, api, TallennaProjektiInput } from "@services/api";
 import log from "loglevel";
 import ButtonLink from "@components/button/ButtonLink";
-import HassuLink from "@components/HassuLink";
 import { PageProps } from "@pages/_app";
 import DatePicker from "@components/form/DatePicker";
+import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
+import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 
 type FormValues = Pick<TallennaProjektiInput, "oid"> & {
   aloitusKuulutus: Pick<AloitusKuulutusInput, "hankkeenKuvaus" | "kuulutusPaiva">;
@@ -59,14 +60,20 @@ const draftValidationSchema: SchemaOf<FormValues> = Yup.object().shape({
   }),
 });
 
+const loadedProjektiValidationSchema = getProjektiValidationSchema([
+  ProjektiTestType.PROJEKTI_IS_LOADED,
+  ProjektiTestType.PROJEKTI_HAS_PAALLIKKO,
+  ProjektiTestType.PROJEKTI_IS_CREATED,
+]);
+
 export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactElement {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const router = useRouter();
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti(oid);
-  const projektiError = projektiLoadError || !projekti?.tallennettu;
   const isLoadingProjekti = !projekti && !projektiLoadError;
-  const disableFormEdit = projektiError || isLoadingProjekti || isFormSubmitting;
+  const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
+  const disableFormEdit = projektiHasErrors || isLoadingProjekti || isFormSubmitting;
   const today = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
@@ -132,23 +139,11 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
   return (
     <ProjektiPageLayout title="Aloituskuulutus">
       <form>
-        {projektiError && (
-          <Notification type={NotificationType.ERROR}>
-            {projektiLoadError ? (
-              <p>Projektin tietoja hakiessa tapahtui virhe. Tarkista tiedot velhosta ja yritä myöhemmin uudelleen.</p>
-            ) : !projekti?.tallennettu ? (
-              <p>
-                <>Projektin ei ole vielä perustettu. Perusta projekti </>
-                <HassuLink className="text-primary" href={projekti?.oid && `/yllapito/projekti/${projekti.oid}`}>
-                  Projektin Perustamissivulla
-                </HassuLink>
-                .
-              </p>
-            ) : (
-              <>Tuntematon virhe.</>
-            )}
-          </Notification>
-        )}
+        <ProjektiErrorNotification
+          projekti={projekti}
+          validationSchema={loadedProjektiValidationSchema}
+          disableValidation={isLoadingProjekti}
+        />
         <Notification type={NotificationType.WARN}>
           Aloituskuulutusta ei ole vielä julkaistu palvelun julkisella puolella.{" "}
           {watchKuulutusPaiva && !errors.aloitusKuulutus?.kuulutusPaiva
