@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { FieldError } from "react-hook-form";
 import FormGroup from "./FormGroup";
 import classNames from "classnames";
+import TextareaAutosize from "@mui/base/TextareaAutosize";
+import { TextareaAutosizeProps } from "@mui/material";
 
 interface Props {
   error?: FieldError;
@@ -18,10 +20,10 @@ const Textarea = (
     hideErrorMessage,
     hideLengthCounter,
     className,
+    maxRows = 20,
     ...props
-  }: Props &
-    Omit<React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>, "ref">,
-  ref: React.ForwardedRef<HTMLTextAreaElement>
+  }: Props & Omit<TextareaAutosizeProps, "ref">,
+  ref: TextareaAutosizeProps["ref"]
 ) => {
   const [length, setLength] = useState(0);
 
@@ -39,7 +41,7 @@ const Textarea = (
         )
       }
     >
-      <textarea
+      <TextareaAutosize
         {...props}
         onChange={(event) => {
           props.onChange?.(event);
@@ -47,6 +49,7 @@ const Textarea = (
         }}
         ref={ref}
         maxLength={maxLength}
+        maxRows={maxRows}
         className={classNames(error && "error")}
       />
     </FormGroup>
