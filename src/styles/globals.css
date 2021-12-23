@@ -12,6 +12,9 @@
   body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select) {
     @apply border w-full py-2.5 px-3 outline-none vayla-body-text;
   }
+  body textarea {
+    @apply resize-none;
+  }
   body
     :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):not(:disabled) {
     box-shadow: inset rgb(0 0 0 / 10%) 0px 0px 2px 0px, inset rgb(0 0 0 / 10%) 0px 2px 4px 0px;
