@@ -183,7 +183,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
           <DatePicker disabled label="Siirtyy suunnitteluvaiheeseen" />
         </div>
         <Textarea
-          label="Suunnitelman aloituskuulutus *"
+          label="Hankkeen sisällönkuvaus *"
           {...register("aloitusKuulutus.hankkeenKuvaus")}
           error={errors.aloitusKuulutus?.hankkeenKuvaus}
           maxLength={maxAloituskuulutusLength}
@@ -192,24 +192,14 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
         <Notification type={NotificationType.INFO}>
           Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
         </Notification>
-        <div className="flex gap-6 flex-wrap">
-          <ButtonLink
-            type="button"
-            href={projekti?.oid && `/api/projekti/${projekti?.oid}/aloituskuulutus/pdf`}
-            disabled={!projekti?.aloitusKuulutus?.hankkeenKuvaus}
-            target="_blank"
-          >
-            Katsele tallennettua kuulutusta
-          </ButtonLink>
-          <ButtonLink
-            href={projekti?.oid && `/api/projekti/${projekti?.oid}/aloituskuulutus/pdf`}
-            useNextLink={false}
-            disabled={!projekti?.aloitusKuulutus?.hankkeenKuvaus}
-            download
-          >
-            Lataa tallennettu aloituskuulutus
-          </ButtonLink>
-        </div>
+        <ButtonLink
+          type="button"
+          href={projekti?.oid && `/api/projekti/${projekti?.oid}/aloituskuulutus/pdf`}
+          disabled={!projekti?.aloitusKuulutus?.hankkeenKuvaus}
+          target="_blank"
+        >
+          Katsele tallennettua kuulutusta
+        </ButtonLink>
       </form>
       <hr />
       <div className="flex gap-6 justify-between flex-wrap">
