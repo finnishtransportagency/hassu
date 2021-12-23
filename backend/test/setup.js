@@ -1,3 +1,6 @@
+const AWSXRay = require("aws-xray-sdk");
+const mocha = require("mocha");
+
 const chai = require("chai");
 
 const { jestSnapshotPlugin } = require("mocha-chai-jest-snapshot");
@@ -5,8 +8,8 @@ const AWS = require("aws-sdk");
 chai.use(require("chai-as-promised"));
 chai.use(jestSnapshotPlugin());
 
-const dotenv = require('dotenv')
-dotenv.config({ path: '.env.test' });
+const dotenv = require("dotenv");
+dotenv.config({ path: ".env.test" });
 
 process.env.TABLE_PROJEKTI = "Projekti-localstack";
 process.env.AWS_REGION = "eu-west-1";
@@ -51,4 +54,15 @@ process.env.FRONTEND_PRIVATEKEY =
 
 AWS.config.update({
   region: "eu-west-1",
+});
+const ns = AWSXRay.getNamespace();
+let context;
+mocha.beforeEach(() => {
+  context = ns.createContext();
+  ns.enter(context);
+  AWSXRay.setSegment(new AWSXRay.Segment("test"));
+});
+mocha.afterEach(() => {
+  AWSXRay.getSegment()?.close();
+  ns.exit(context);
 });

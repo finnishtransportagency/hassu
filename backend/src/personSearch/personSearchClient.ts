@@ -4,6 +4,7 @@ import { DBVaylaUser } from "../database/model/projekti";
 import { adaptPersonSearchResult, mergeKayttaja } from "./personAdapter";
 import * as log from "loglevel";
 import { isAorL } from "../user";
+import { wrapXrayAsync } from "../aws/xray";
 
 const NodeCache = require("node-cache");
 
@@ -49,7 +50,7 @@ export class PersonSearchClient {
       auth: { username: config.personSearchUsername, password: config.personSearchPassword },
     });
     if (response.status === 200) {
-      const responseJson = await parseString(response.data);
+      const responseJson: any = await wrapXrayAsync("xmlParse", () => parseString(response.data));
       const persons = adaptPersonSearchResult(responseJson);
       cache.set(cacheKey, persons);
       return persons;
