@@ -16,12 +16,17 @@ process.env.AWS_REGION = "eu-west-1";
 
 process.env.UPLOAD_BUCKET_NAME = "hassu-localstack-upload";
 process.env.YLLAPITO_BUCKET_NAME = "hassu-localstack-yllapito";
+process.env.INTERNAL_BUCKET_NAME = "hassu-localstack-internal";
 process.env.S3_ENDPOINT = "http://localhost:4566";
 
 // Credentials must be test/test in order to get localstack pre-signed urls to work
 process.env.AWS_SDK_LOAD_CONFIG = false;
 process.env.AWS_ACCESS_KEY_ID = "test";
 process.env.AWS_SECRET_ACCESS_KEY = "test";
+
+process.env.PERSON_SEARCH_UPDATER_LAMBDA_ARN = "not-supported-in-local-tests";
+process.env.SEARCH_DOMAIN = "search-not-supported-in-local-tests";
+process.env.FRONTEND_DOMAIN_NAME = "localhost";
 
 process.env.FRONTEND_PRIVATEKEY =
   "-----BEGIN RSA PRIVATE KEY-----\n" +
@@ -57,11 +62,13 @@ AWS.config.update({
 });
 const ns = AWSXRay.getNamespace();
 let context;
+
 mocha.beforeEach(() => {
   context = ns.createContext();
   ns.enter(context);
   AWSXRay.setSegment(new AWSXRay.Segment("test"));
 });
+
 mocha.afterEach(() => {
   AWSXRay.getSegment()?.close();
   ns.exit(context);

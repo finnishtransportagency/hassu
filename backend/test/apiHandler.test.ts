@@ -14,7 +14,7 @@ import { DBProjekti } from "../src/database/model/projekti";
 import * as log from "loglevel";
 import cloneDeep from "lodash/cloneDeep";
 import mergeWith from "lodash/mergeWith";
-import { PersonSearchFixture } from "./personSearch/personSearchFixture";
+import { PersonSearchFixture } from "./personSearch/lambda/personSearchFixture";
 
 const { expect } = require("chai");
 

@@ -1,8 +1,8 @@
 import { Kayttaja, ProjektiTyyppi, Status, VelhoHakuTulos } from "../../../common/graphql/apiModel";
 import {
-  ProjektiProjekti,
-  ProjektiProjektiOminaisuudet,
-  ProjektiProjektiOminaisuudetVaylamuotoEnum,
+  ProjektiProjekti5,
+  ProjektiProjekti5Ominaisuudet,
+  ProjektiProjekti5OminaisuudetVaylamuotoEnum,
 } from "./projektirekisteri";
 import { DBProjekti } from "../database/model/projekti";
 import { adaptKayttaja } from "../personSearch/personAdapter";
@@ -35,14 +35,14 @@ const metadata = (() => {
   return { tilat, vaiheet, organisaatiot, toteutusAjankohdat };
 })();
 
-function adaptVaylamuoto(vaylamuodot: Set<ProjektiProjektiOminaisuudetVaylamuotoEnum>) {
+function adaptVaylamuoto(vaylamuodot: Set<ProjektiProjekti5OminaisuudetVaylamuotoEnum>) {
   const values: string[] = [];
   vaylamuodot.forEach((value) => values.push(`${value}`));
   return values;
 }
 
-export type ProjektiSearchResult = Pick<ProjektiProjekti, "oid"> & {
-  ominaisuudet: Pick<ProjektiProjektiOminaisuudet, "nimi" | "vastuuhenkilo"> & { vaihe: ProjektiVaihe };
+export type ProjektiSearchResult = Pick<ProjektiProjekti5, "oid"> & {
+  ominaisuudet: Pick<ProjektiProjekti5Ominaisuudet, "nimi" | "vastuuhenkilo"> & { vaihe: ProjektiVaihe };
 };
 
 type ProjektiVaihe = "vaihe/vaihe04" | "vaihe/vaihe10" | "vaihe/vaihe12";
@@ -81,7 +81,7 @@ export function adaptSearchResults(searchResults: ProjektiSearchResult[], kaytta
   return [];
 }
 
-export function adaptProjekti(data: ProjektiProjekti): { projekti: DBProjekti; vastuuhenkilo: string } {
+export function adaptProjekti(data: ProjektiProjekti5): { projekti: DBProjekti; vastuuhenkilo: string } {
   const projekti: DBProjekti = {
     oid: "" + data.oid,
     tyyppi: getProjektiTyyppi(data.ominaisuudet.vaihe as any),

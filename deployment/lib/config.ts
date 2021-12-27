@@ -24,7 +24,9 @@ function execShellCommand(cmd: string): Promise<string> {
 export class Config extends BaseConfig {
   public static readonly uploadBucketName = `hassu-${BaseConfig.env}-upload`;
   public static readonly yllapitoBucketName = `hassu-${Config.env}-yllapito`;
+  public static readonly internalBucketName = `hassu-${Config.env}-internal`;
   public readonly dmzProxyEndpoint: string;
+  // @ts-ignore
   public frontendDomainName: string;
   public readonly cloudfrontCertificateArn?: string;
   public static readonly projektiTableName = "Projekti-" + getEnv("ENVIRONMENT");

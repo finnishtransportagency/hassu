@@ -2,8 +2,13 @@
 import { expect } from "chai";
 import { describe, it } from "mocha";
 import { personSearch } from "../../src/personSearch/personSearchClient";
+import { localstackS3Client } from "../util/s3Util";
 
 describe("PersonSearchClient", () => {
+  before(() => {
+    localstackS3Client();
+  });
+
   it("should list users", async () => {
     const result = await personSearch.listAccounts();
     expect(result).not.be.empty;

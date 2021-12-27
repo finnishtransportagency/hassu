@@ -11,29 +11,42 @@ import {
   SuunnitteluSopimusInput,
 } from "../../../common/graphql/apiModel";
 import fs from "fs";
-import { S3Client } from "@aws-sdk/client-s3";
 import axios from "axios";
 import * as sinon from "sinon";
-import { produceAWSClient } from "../../src/aws/clientProducer";
+import { personSearchUpdaterClient } from "../../src/personSearch/personSearchUpdaterClient";
+import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/personSearchUpdaterHandler";
+import { openSearchClient } from "../../src/projektiSearch/openSearchClient";
+import { localstackS3Client } from "../util/s3Util";
+import { s3Cache } from "../../src/cache/s3Cache";
+import { PERSON_SEARCH_CACHE_KEY } from "../../src/personSearch/personSearchClient";
 
 const { expect } = require("chai");
+const sandbox = sinon.createSandbox();
 
 describe("Api", () => {
-  beforeEach("Initialize test database", async () => await setupLocalDatabase());
+  let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
 
   before(() => {
-    produceAWSClient(
-      "s3",
-      () =>
-        new S3Client({
-          endpoint: "http://localhost:4566",
-          forcePathStyle: true,
-        })
-    );
+    localstackS3Client();
   });
 
-  after(() => {
-    sinon.restore();
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  beforeEach("Initialize test database", async () => await setupLocalDatabase());
+
+  beforeEach(async () => {
+    readUsersFromSearchUpdaterLambda = sandbox.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
+    readUsersFromSearchUpdaterLambda.callsFake(async () => {
+      return await personSearchUpdaterHandler.handleEvent();
+    });
+
+    sandbox.stub(openSearchClient, "query").resolves({ status: 200 });
+    sandbox.stub(openSearchClient, "deleteProjekti");
+    sandbox.stub(openSearchClient, "putProjekti");
+
+    await s3Cache.clear(PERSON_SEARCH_CACHE_KEY);
   });
 
   it("should search, load and save a project", async function () {
@@ -59,7 +72,7 @@ describe("Api", () => {
     });
     await loadProjektiFromDatabase(oid);
 
-    const uploadedFile = await tallennaLogo(oid);
+    const uploadedFile = await tallennaLogo();
 
     const newNote = "uusi muistiinpano";
     const suunnitteluSopimusInput: SuunnitteluSopimusInput = {
@@ -104,7 +117,7 @@ describe("Api", () => {
     expect(updatedProjekti.muistiinpano).to.be.equal(newNote);
     expect(updatedProjekti.aloitusKuulutus).eql(aloitusKuulutus);
     expect(updatedProjekti.suunnitteluSopimus).include(suunnitteluSopimus);
-    expect(updatedProjekti.suunnitteluSopimus.logo).contain("/suunnittelusopimus/logo.png");
+    expect(updatedProjekti.suunnitteluSopimus?.logo).contain("/suunnittelusopimus/logo.png");
     expect(updatedProjekti.lisakuulutuskieli).to.be.equal(lisakuulutuskieli);
 
     const pdf = await api.lataaKuulutusPDF(oid, KuulutusTyyppi.ALOITUSKUULUTUS);
@@ -133,7 +146,7 @@ describe("Api", () => {
     return oid;
   }
 
-  async function tallennaLogo(oid: string) {
+  async function tallennaLogo() {
     const uploadProperties = await api.valmisteleTiedostonLataus("logo.png");
     expect(uploadProperties).to.not.be.empty;
     expect(uploadProperties.latausLinkki).to.not.be.undefined;

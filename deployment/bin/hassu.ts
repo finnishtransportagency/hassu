@@ -20,6 +20,7 @@ async function main() {
     searchDomain: hassuSearchStack.searchDomain,
     uploadBucket: hassuDatabaseStack.uploadBucket,
     yllapitoBucket: hassuDatabaseStack.yllapitoBucket,
+    internalBucket: hassuDatabaseStack.internalBucket,
   });
   await hassuBackendStack.process().catch((e) => {
     console.log("Deployment of HassuBackendStack failed:", e);
