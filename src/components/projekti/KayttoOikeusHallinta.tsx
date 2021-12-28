@@ -48,11 +48,6 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
     name: "kayttoOikeudet",
   });
 
-  const { data: kayttajat, error: kayttajatLoadError } = useSWR(apiConfig.listaaKayttajat.graphql, kayttajatLoader);
-  const isLoadingKayttajat = !kayttajat && !kayttajatLoadError;
-
-  const haeKayttaja = (uid: string) => kayttajat?.find((kayttaja: Kayttaja) => kayttaja.uid === uid);
-
   const kayttajaNimi = (kayttaja: Kayttaja | null | undefined) =>
     (kayttaja && `${kayttaja.sukuNimi}, ${kayttaja.etuNimi}`) || "";
 
@@ -70,6 +65,18 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
     },
     { projektiPaallikot: [], muutHenkilot: [] }
   ) || { projektiPaallikot: [], muutHenkilot: [] };
+
+  const uidList = [...projektiPaallikot, ...muutHenkilot]
+    .map((kayttoOikeus) => kayttoOikeus.kayttajatunnus)
+    .filter((kayttajatunnus) => !!kayttajatunnus)
+    .sort();
+  const { data: kayttajat, error: kayttajatLoadError } = useSWR(
+    [apiConfig.listaaKayttajat.graphql, uidList],
+    kayttajatLoader
+  );
+  const isLoadingKayttajat = !kayttajat && !kayttajatLoadError;
+
+  const haeKayttaja = (uid: string) => kayttajat?.find((kayttaja: Kayttaja) => kayttaja.uid === uid);
 
   const kayttoOikeudet = watch("kayttoOikeudet");
 
@@ -249,8 +256,15 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
   );
 }
 
-async function kayttajatLoader(_: string): Promise<Kayttaja[]> {
-  return await api.listUsers();
+async function kayttajatLoader(_: string, kayttajat: any[]): Promise<Kayttaja[]> {
+  if (kayttajat.length === 0) {
+    return [];
+  }
+  // tslint:disable-next-line:no-console
+  console.log("kayttajat", kayttajat);
+  return await api.listUsers({
+    kayttajatunnus: kayttajat,
+  });
 }
 
 export default KayttoOikeusHallinta;

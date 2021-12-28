@@ -2,6 +2,7 @@ import log from "loglevel";
 import {
   LataaKuulutusPDFQueryVariables,
   LataaProjektiQueryVariables,
+  ListaaKayttajatQueryVariables,
   ListaaVelhoProjektitQueryVariables,
   TallennaProjektiInput,
   TallennaProjektiMutationVariables,
@@ -44,7 +45,7 @@ export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArgume
         case apiConfig.nykyinenKayttaja.name:
           return await getCurrentUser();
         case apiConfig.listaaKayttajat.name:
-          return await listAllUsers();
+          return await listAllUsers((event.arguments as ListaaKayttajatQueryVariables).hakuehto);
         case apiConfig.lataaProjekti.name:
           return await loadProjekti((event.arguments as LataaProjektiQueryVariables).oid);
         case apiConfig.tallennaProjekti.name:

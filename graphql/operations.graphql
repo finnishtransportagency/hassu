@@ -1,11 +1,11 @@
 type Query {
   nykyinenKayttaja: NykyinenKayttaja
-  listaaKayttajat: [Kayttaja!]
+  listaaKayttajat(hakuehto: ListaaKayttajatInput!): [Kayttaja!]
   listaaProjektit: [Projekti!]
   lataaProjekti(oid: String!): Projekti
   listaaVelhoProjektit(nimi: String!, requireExactMatch: Boolean): [VelhoHakuTulos!]
   lataaKuulutusPDF(oid: String!, kuulutusTyyppi: KuulutusTyyppi!): PDF
-  valmisteleTiedostonLataus(tiedostoNimi:String!): LatausTiedot
+  valmisteleTiedostonLataus(tiedostoNimi: String!): LatausTiedot
 }
 
 type Mutation {
