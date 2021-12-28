@@ -3,7 +3,7 @@ import { config } from "../config";
 import { Kayttaja } from "../../../common/graphql/apiModel";
 
 class PersonSearchUpdaterClient {
-  async readUsersFromSearchUpdaterLambda(): Promise<Kayttaja[]> {
+  async readUsersFromSearchUpdaterLambda(): Promise<Record<string, Kayttaja>> {
     const json = await invokeLambda(config.personSearchUpdaterLambdaArn, true);
     if (!json) {
       throw new Error("Could not read list of users");
@@ -15,8 +15,10 @@ class PersonSearchUpdaterClient {
     return users;
   }
 
-  async triggerUpdate() {
-    await invokeLambda(config.personSearchUpdaterLambdaArn, false);
+  triggerUpdate() {
+    // Fire-and-forget type of call to just trigger the update
+    // noinspection JSIgnoredPromiseFromCall
+    invokeLambda(config.personSearchUpdaterLambdaArn, false);
   }
 }
 

@@ -4,16 +4,17 @@ import * as sinon from "sinon";
 import { personSearchUpdater } from "../../../src/personSearch/lambda/personSearchUpdater";
 import { PersonSearchFixture } from "../../../test/personSearch/lambda/personSearchFixture";
 import { localstackS3Client } from "../../util/s3Util";
+import { Kayttajas } from "../../../src/personSearch/kayttajas";
 
 describe("PersonSearchUpdaterHandler", () => {
-  let listAccountsStub: sinon.SinonStub;
+  let getKayttajasStub: sinon.SinonStub;
 
   before(() => {
     localstackS3Client();
   });
 
   beforeEach(() => {
-    listAccountsStub = sinon.stub(personSearchUpdater, "listAccounts");
+    getKayttajasStub = sinon.stub(personSearchUpdater, "getKayttajas");
   });
 
   after(() => {
@@ -21,7 +22,7 @@ describe("PersonSearchUpdaterHandler", () => {
   });
 
   it("should run handler successfully", async () => {
-    listAccountsStub.resolves([new PersonSearchFixture().pekkaProjari]);
+    getKayttajasStub.resolves(Kayttajas.fromKayttajaList([new PersonSearchFixture().pekkaProjari]));
     await handleEvent();
   });
 });

@@ -10,9 +10,9 @@ describe("PersonSearchClient", () => {
   });
 
   it("should list users", async () => {
-    const result = await personSearch.listAccounts();
+    const result = await personSearch.getKayttajas();
     expect(result).not.be.empty;
-    const kayttaja = result[0];
+    const kayttaja = result.asList()[0];
     expect(kayttaja.vaylaKayttajaTyyppi).to.not.be.empty;
     expect(kayttaja.etuNimi).to.not.be.empty;
     expect(kayttaja.sukuNimi).to.not.be.empty;

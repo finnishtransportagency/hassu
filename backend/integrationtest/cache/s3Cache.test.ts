@@ -26,14 +26,14 @@ describe("S3Cache", () => {
       const data = await s3Cache.get(
         key,
         ttlMillis,
-        async () => {
+        () => {
           triggered = true;
         },
         async () => {
           populated = true;
           // On real AWS environment the lambda will populate the data to S3
           const populatedData = { foo: "bar" };
-          s3Cache.put(key, populatedData);
+          await s3Cache.put(key, populatedData);
           return populatedData;
         }
       );

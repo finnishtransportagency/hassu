@@ -1,4 +1,4 @@
-import { Kayttaja, ProjektiTyyppi, Status, VelhoHakuTulos } from "../../../common/graphql/apiModel";
+import { ProjektiTyyppi, Status, VelhoHakuTulos } from "../../../common/graphql/apiModel";
 import {
   ProjektiProjekti5,
   ProjektiProjekti5Ominaisuudet,
@@ -7,6 +7,7 @@ import {
 import { DBProjekti } from "../database/model/projekti";
 import { adaptKayttaja } from "../personSearch/personAdapter";
 import { userService } from "../user";
+import { Kayttajas } from "../personSearch/kayttajas";
 
 let metaDataJSON: any;
 
@@ -61,10 +62,10 @@ function getProjektiTyyppi(vaihe: ProjektiVaihe) {
   return projektiVaiheToTyyppi[vaihe];
 }
 
-export function adaptSearchResults(searchResults: ProjektiSearchResult[], kayttajat: Kayttaja[]): VelhoHakuTulos[] {
+export function adaptSearchResults(searchResults: ProjektiSearchResult[], kayttajas: Kayttajas): VelhoHakuTulos[] {
   if (searchResults) {
     return searchResults.map((result) => {
-      const projektiPaallikko = kayttajat.find((kayttaja) => kayttaja.email === result.ominaisuudet.vastuuhenkilo);
+      const projektiPaallikko = kayttajas.findByEmail(result.ominaisuudet.vastuuhenkilo);
       const projektiPaallikkoNimi =
         projektiPaallikko && userService.hasPermissionLuonti(projektiPaallikko)
           ? adaptKayttaja(projektiPaallikko).nimi

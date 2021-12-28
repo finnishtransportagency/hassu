@@ -15,6 +15,7 @@ import * as log from "loglevel";
 import cloneDeep from "lodash/cloneDeep";
 import mergeWith from "lodash/mergeWith";
 import { PersonSearchFixture } from "./personSearch/lambda/personSearchFixture";
+import { Kayttajas } from "../src/personSearch/kayttajas";
 
 const { expect } = require("chai");
 
@@ -37,23 +38,25 @@ describe("apiHandler", () => {
     let createProjektiStub: sinon.SinonStub;
     let saveProjektiStub: sinon.SinonStub;
     let loadProjektiByOidStub: sinon.SinonStub;
-    let listAccountsStub: sinon.SinonStub;
+    let getKayttajasStub: sinon.SinonStub;
     let loadVelhoProjektiByOidStub: sinon.SinonStub;
 
     beforeEach(() => {
       createProjektiStub = sinon.stub(projektiDatabase, "createProjekti");
-      listAccountsStub = sinon.stub(personSearch, "listAccounts");
+      getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
       saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
       loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
       loadVelhoProjektiByOidStub = sinon.stub(velho, "loadProjekti");
 
       fixture = new ProjektiFixture();
       personSearchFixture = new PersonSearchFixture();
-      listAccountsStub.resolves([
-        personSearchFixture.pekkaProjari,
-        personSearchFixture.mattiMeikalainen,
-        personSearchFixture.manuMuokkaaja,
-      ]);
+      getKayttajasStub.resolves(
+        Kayttajas.fromKayttajaList([
+          personSearchFixture.pekkaProjari,
+          personSearchFixture.mattiMeikalainen,
+          personSearchFixture.manuMuokkaaja,
+        ])
+      );
     });
 
     function mockLataaProjektiFromVelho() {

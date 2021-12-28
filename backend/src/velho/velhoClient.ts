@@ -16,7 +16,7 @@ axios.interceptors.request.use((request: AxiosRequestConfig) => {
   return request;
 });
 
-function stripTooLongLogs(response: AxiosResponse<any>) {
+function stripTooLongLogs(response: AxiosResponse) {
   let data: string = `${response.data}`;
   if (data?.length > 1000) {
     data = data.slice(0, 1000) + "...";
@@ -103,7 +103,7 @@ export class VelhoClient {
       } else {
         log.info(resultCount + " Velho search results for term: " + term);
       }
-      return adaptSearchResults(data.osumat as ProjektiSearchResult[], await personSearch.listAccounts());
+      return adaptSearchResults(data.osumat as ProjektiSearchResult[], await personSearch.getKayttajas());
     } catch (e) {
       throw new VelhoError(e.message, e);
     }

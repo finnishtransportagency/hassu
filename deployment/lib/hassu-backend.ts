@@ -181,7 +181,7 @@ export class HassuBackendStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_14_X,
       entry: `${__dirname}/../../backend/src/apiHandler.ts`,
       handler: "handleEvent",
-      memorySize: 256,
+      memorySize: 512,
       timeout: Duration.seconds(29),
       bundling: {
         define,
@@ -230,7 +230,8 @@ export class HassuBackendStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_14_X,
       entry: `${__dirname}/../../backend/src/personSearch/lambda/personSearchUpdaterHandler.ts`,
       handler: "handleEvent",
-      memorySize: 256,
+      memorySize: 512,
+      reservedConcurrentExecutions: 1,
       timeout: Duration.seconds(29),
       bundling: {
         minify: true,

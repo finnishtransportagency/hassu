@@ -5,7 +5,7 @@ import { personSearchUpdater } from "../../../src/personSearch/lambda/personSear
 
 describe("PersonSearchUpdater", () => {
   it("should update list of users", async () => {
-    const result = await personSearchUpdater.listAccounts();
+    const result = (await personSearchUpdater.getKayttajas()).asList();
     expect(result).not.be.empty;
     const kayttaja = result[0];
     expect(kayttaja.vaylaKayttajaTyyppi).to.not.be.empty;

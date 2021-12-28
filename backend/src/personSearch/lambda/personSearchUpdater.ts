@@ -3,15 +3,21 @@ import { Kayttaja } from "../../../../common/graphql/apiModel";
 import { adaptPersonSearchResult } from "./personSearchAdapter";
 import * as log from "loglevel";
 import { wrapXrayAsync } from "../../aws/xray";
+import { Kayttajas } from "../kayttajas";
 
 const parseString = require("xml2js").parseStringPromise;
 
 const axios = require("axios");
 
-function mergeListOfListsAsOneList(personLists: Kayttaja[][]) {
+function mergeListOfListsIntoMap(personLists: Kayttaja[][]): Record<string, Kayttaja> {
   return personLists.reduce((allPersons, listOfPersons) => {
-    return allPersons.concat(listOfPersons);
-  }, []);
+    listOfPersons.forEach((kayttaja) => {
+      if (kayttaja.uid) {
+        allPersons[kayttaja.uid] = kayttaja;
+      }
+    });
+    return allPersons;
+  }, {} as Record<string, Kayttaja>);
 }
 
 export class PersonSearchUpdater {
@@ -21,14 +27,14 @@ export class PersonSearchUpdater {
     this.personSearchAccountTypes = personSearchAccountTypes;
   }
 
-  public async listAccounts(): Promise<Kayttaja[]> {
+  public async getKayttajas(): Promise<Kayttajas> {
     if (!this.personSearchAccountTypes) {
       throw new Error("Environment variable PERSON_SEARCH_API_ACCOUNT_TYPES missing");
     }
     const personListsPerAccountType = await Promise.all(
       this.personSearchAccountTypes.map((accountType) => this.listAccountsOfType(accountType))
     );
-    return mergeListOfListsAsOneList(personListsPerAccountType);
+    return new Kayttajas(mergeListOfListsIntoMap(personListsPerAccountType));
   }
 
   private async listAccountsOfType(accounttype: string): Promise<Kayttaja[]> {
