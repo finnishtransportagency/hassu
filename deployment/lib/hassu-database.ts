@@ -8,13 +8,19 @@ import { OriginAccessIdentity } from "@aws-cdk/aws-cloudfront";
 
 // These should correspond to CfnOutputs produced by this stack
 export type DatabaseStackOutputs = {
-  CloudFrontOriginAccessIdentity:string
-}
+  CloudFrontOriginAccessIdentity: string;
+};
 
 export class HassuDatabaseStack extends cdk.Stack {
+  // @ts-ignore
   public projektiTable: ddb.Table;
+  // @ts-ignore
   public uploadBucket: Bucket;
+  // @ts-ignore
   public yllapitoBucket: Bucket;
+  // @ts-ignore
+  public internalBucket: Bucket;
+  // @ts-ignore
   private config: Config;
 
   constructor(scope: cdk.Construct) {
@@ -33,6 +39,7 @@ export class HassuDatabaseStack extends cdk.Stack {
 
     this.uploadBucket = this.createUploadBucket();
     this.yllapitoBucket = this.createYllapitoBucket();
+    this.internalBucket = this.createInternalBucket();
   }
 
   private createProjektiTable() {
@@ -64,6 +71,14 @@ export class HassuDatabaseStack extends cdk.Stack {
           allowedHeaders: ["*"],
         },
       ],
+    });
+  }
+
+  private createInternalBucket() {
+    return new Bucket(this, "InternalBucket", {
+      bucketName: Config.internalBucketName,
+      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+      removalPolicy: RemovalPolicy.DESTROY,
     });
   }
 

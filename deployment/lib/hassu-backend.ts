@@ -16,7 +16,6 @@ import { Domain } from "@aws-cdk/aws-opensearchservice";
 import { OpenSearchAccessPolicy } from "@aws-cdk/aws-opensearchservice/lib/opensearch-access-policy";
 import { Effect, PolicyStatement } from "@aws-cdk/aws-iam";
 import { Bucket } from "@aws-cdk/aws-s3";
-import { KeyGroup } from "@aws-cdk/aws-cloudfront";
 import { getEnvironmentVariablesFromSSM } from "../bin/setupEnvironment";
 
 export type HassuBackendStackProps = {
@@ -24,6 +23,7 @@ export type HassuBackendStackProps = {
   projektiTable: Table;
   uploadBucket: Bucket;
   yllapitoBucket: Bucket;
+  internalBucket: Bucket;
 };
 
 // These should correspond to CfnOutputs produced by this stack
@@ -34,7 +34,6 @@ export type BackendStackOutputs = {
 
 export class HassuBackendStack extends cdk.Stack {
   private readonly props: HassuBackendStackProps;
-  public keyGroup: KeyGroup;
 
   constructor(scope: Construct, props: HassuBackendStackProps) {
     super(scope, "backend", {
@@ -53,7 +52,9 @@ export class HassuBackendStack extends cdk.Stack {
     const projektiSearchIndexer = this.createProjektiSearchIndexer();
 
     const api = this.createAPI(config);
-    const backendLambda = await this.createBackendLambda(config);
+    const commonEnvironmentVariables = await this.getCommonEnvironmentVariables(config);
+    const personSearchUpdaterLambda = await this.createPersonSearchUpdaterLambda(commonEnvironmentVariables);
+    const backendLambda = await this.createBackendLambda(config, commonEnvironmentVariables, personSearchUpdaterLambda);
     this.attachDatabaseToBackend(backendLambda);
     HassuBackendStack.mapApiResolversToLambda(api, backendLambda);
     this.configureOpenSearchAccess(projektiSearchIndexer, backendLambda);
@@ -163,7 +164,11 @@ export class HassuBackendStack extends cdk.Stack {
     return streamHandler;
   }
 
-  private async createBackendLambda(config: Config) {
+  private async createBackendLambda(
+    config: Config,
+    commonEnvironmentVariables: Record<string, string>,
+    personSearchUpdaterLambda: NodejsFunction
+  ) {
     let define;
     if (config.isDeveloperEnvironment()) {
       define = {
@@ -176,7 +181,7 @@ export class HassuBackendStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_14_X,
       entry: `${__dirname}/../../backend/src/apiHandler.ts`,
       handler: "handleEvent",
-      memorySize: 256,
+      memorySize: 512,
       timeout: Duration.seconds(29),
       bundling: {
         define,
@@ -197,27 +202,47 @@ export class HassuBackendStack extends cdk.Stack {
         },
       },
       environment: {
-        ENVIRONMENT: Config.env,
-        ...(await getEnvironmentVariablesFromSSM()),
-
-        SEARCH_DOMAIN: this.props.searchDomain.domainEndpoint,
-
-        FRONTEND_DOMAIN_NAME: config.frontendDomainName,
-
-        FRONTEND_PRIVATEKEY: await config.getGlobalSecureInfraParameter("FrontendPrivateKey"),
-
-        UPLOAD_BUCKET_NAME: this.props.uploadBucket.bucketName,
-        YLLAPITO_BUCKET_NAME: this.props.yllapitoBucket.bucketName,
+        ...commonEnvironmentVariables,
+        PERSON_SEARCH_UPDATER_LAMBDA_ARN: personSearchUpdaterLambda.functionArn,
       },
       tracing: Tracing.PASS_THROUGH,
     });
     backendLambda.addToRolePolicy(
       new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] })
     );
+    backendLambda.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: [personSearchUpdaterLambda.functionArn],
+      })
+    );
     this.props.uploadBucket.grantPut(backendLambda);
     this.props.uploadBucket.grantReadWrite(backendLambda);
     this.props.yllapitoBucket.grantReadWrite(backendLambda);
+    this.props.internalBucket.grantRead(backendLambda);
     return backendLambda;
+  }
+
+  private async createPersonSearchUpdaterLambda(commonEnvironmentVariables: Record<string, string>) {
+    const personSearchLambda = new NodejsFunction(this, "PersonSearchUpdaterLambda", {
+      functionName: "hassu-personsearchupdater-" + Config.env,
+      runtime: lambda.Runtime.NODEJS_14_X,
+      entry: `${__dirname}/../../backend/src/personSearch/lambda/personSearchUpdaterHandler.ts`,
+      handler: "handleEvent",
+      memorySize: 512,
+      reservedConcurrentExecutions: 1,
+      timeout: Duration.seconds(29),
+      bundling: {
+        minify: true,
+      },
+      environment: {
+        ...commonEnvironmentVariables,
+      },
+      tracing: Tracing.PASS_THROUGH,
+    });
+    this.props.internalBucket.grantReadWrite(personSearchLambda);
+    return personSearchLambda;
   }
 
   private static mapApiResolversToLambda(api: GraphqlApi, backendFn: NodejsFunction) {
@@ -238,5 +263,22 @@ export class HassuBackendStack extends cdk.Stack {
     const projektiTable = this.props.projektiTable;
     projektiTable.grantFullAccess(backendFn);
     backendFn.addEnvironment("TABLE_PROJEKTI", projektiTable.tableName);
+  }
+
+  private async getCommonEnvironmentVariables(config: Config): Promise<Record<string, string>> {
+    return {
+      ENVIRONMENT: Config.env,
+      ...(await getEnvironmentVariablesFromSSM()),
+
+      SEARCH_DOMAIN: this.props.searchDomain.domainEndpoint,
+
+      FRONTEND_DOMAIN_NAME: config.frontendDomainName,
+
+      FRONTEND_PRIVATEKEY: await config.getGlobalSecureInfraParameter("FrontendPrivateKey"),
+
+      UPLOAD_BUCKET_NAME: this.props.uploadBucket.bucketName,
+      YLLAPITO_BUCKET_NAME: this.props.yllapitoBucket.bucketName,
+      INTERNAL_BUCKET_NAME: this.props.internalBucket.bucketName,
+    };
   }
 }

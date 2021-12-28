@@ -3,23 +3,15 @@ import { describe, it } from "mocha";
 import { fileService } from "../../src/files/fileService";
 import log from "loglevel";
 import axios from "axios";
-import { S3Client } from "@aws-sdk/client-s3";
 import * as fs from "fs";
 import * as sinon from "sinon";
-import { produceAWSClient } from "../../src/aws/clientProducer";
+import { localstackS3Client } from "../util/s3Util";
 
 const { expect } = require("chai");
 
 describe("UploadService", () => {
   before(() => {
-    produceAWSClient(
-      "s3",
-      () =>
-        new S3Client({
-          endpoint: "http://localhost:4566",
-          forcePathStyle: true,
-        })
-    );
+    localstackS3Client();
   });
 
   after(() => {

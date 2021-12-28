@@ -5,7 +5,7 @@ import { projektiSearchService } from "../../src/projektiSearch/projektiSearchSe
 
 const { expect } = require("chai");
 
-const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 describe("ProjektiSearchService", () => {
   const projekti = new ProjektiFixture().dbProjekti1;

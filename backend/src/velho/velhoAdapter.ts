@@ -1,12 +1,13 @@
-import { Kayttaja, ProjektiTyyppi, Status, VelhoHakuTulos } from "../../../common/graphql/apiModel";
+import { ProjektiTyyppi, Status, VelhoHakuTulos } from "../../../common/graphql/apiModel";
 import {
-  ProjektiProjekti,
-  ProjektiProjektiOminaisuudet,
-  ProjektiProjektiOminaisuudetVaylamuotoEnum,
+  ProjektiProjekti5,
+  ProjektiProjekti5Ominaisuudet,
+  ProjektiProjekti5OminaisuudetVaylamuotoEnum,
 } from "./projektirekisteri";
 import { DBProjekti } from "../database/model/projekti";
 import { adaptKayttaja } from "../personSearch/personAdapter";
 import { userService } from "../user";
+import { Kayttajas } from "../personSearch/kayttajas";
 
 let metaDataJSON: any;
 
@@ -35,14 +36,14 @@ const metadata = (() => {
   return { tilat, vaiheet, organisaatiot, toteutusAjankohdat };
 })();
 
-function adaptVaylamuoto(vaylamuodot: Set<ProjektiProjektiOminaisuudetVaylamuotoEnum>) {
+function adaptVaylamuoto(vaylamuodot: Set<ProjektiProjekti5OminaisuudetVaylamuotoEnum>) {
   const values: string[] = [];
   vaylamuodot.forEach((value) => values.push(`${value}`));
   return values;
 }
 
-export type ProjektiSearchResult = Pick<ProjektiProjekti, "oid"> & {
-  ominaisuudet: Pick<ProjektiProjektiOminaisuudet, "nimi" | "vastuuhenkilo"> & { vaihe: ProjektiVaihe };
+export type ProjektiSearchResult = Pick<ProjektiProjekti5, "oid"> & {
+  ominaisuudet: Pick<ProjektiProjekti5Ominaisuudet, "nimi" | "vastuuhenkilo"> & { vaihe: ProjektiVaihe };
 };
 
 type ProjektiVaihe = "vaihe/vaihe04" | "vaihe/vaihe10" | "vaihe/vaihe12";
@@ -61,10 +62,10 @@ function getProjektiTyyppi(vaihe: ProjektiVaihe) {
   return projektiVaiheToTyyppi[vaihe];
 }
 
-export function adaptSearchResults(searchResults: ProjektiSearchResult[], kayttajat: Kayttaja[]): VelhoHakuTulos[] {
+export function adaptSearchResults(searchResults: ProjektiSearchResult[], kayttajas: Kayttajas): VelhoHakuTulos[] {
   if (searchResults) {
     return searchResults.map((result) => {
-      const projektiPaallikko = kayttajat.find((kayttaja) => kayttaja.email === result.ominaisuudet.vastuuhenkilo);
+      const projektiPaallikko = kayttajas.findByEmail(result.ominaisuudet.vastuuhenkilo);
       const projektiPaallikkoNimi =
         projektiPaallikko && userService.hasPermissionLuonti(projektiPaallikko)
           ? adaptKayttaja(projektiPaallikko).nimi
@@ -81,7 +82,7 @@ export function adaptSearchResults(searchResults: ProjektiSearchResult[], kaytta
   return [];
 }
 
-export function adaptProjekti(data: ProjektiProjekti): { projekti: DBProjekti; vastuuhenkilo: string } {
+export function adaptProjekti(data: ProjektiProjekti5): { projekti: DBProjekti; vastuuhenkilo: string } {
   const projekti: DBProjekti = {
     oid: "" + data.oid,
     tyyppi: getProjektiTyyppi(data.ominaisuudet.vaihe as any),

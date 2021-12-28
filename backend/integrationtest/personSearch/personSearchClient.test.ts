@@ -2,12 +2,17 @@
 import { expect } from "chai";
 import { describe, it } from "mocha";
 import { personSearch } from "../../src/personSearch/personSearchClient";
+import { localstackS3Client } from "../util/s3Util";
 
 describe("PersonSearchClient", () => {
+  before(() => {
+    localstackS3Client();
+  });
+
   it("should list users", async () => {
-    const result = await personSearch.listAccounts();
+    const result = await personSearch.getKayttajas();
     expect(result).not.be.empty;
-    const kayttaja = result[0];
+    const kayttaja = result.asList()[0];
     expect(kayttaja.vaylaKayttajaTyyppi).to.not.be.empty;
     expect(kayttaja.etuNimi).to.not.be.empty;
     expect(kayttaja.sukuNimi).to.not.be.empty;

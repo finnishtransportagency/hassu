@@ -44,6 +44,7 @@ export type FrontendStackOutputs = {
 
 export class HassuFrontendStack extends cdk.Stack {
   private appSyncAPIKey?: string;
+  // @ts-ignore
   private cloudFrontOriginAccessIdentity: string;
 
   constructor(scope: Construct) {

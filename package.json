@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "3.42.0",
-    "@aws-sdk/lib-dynamodb": "3.42.0",
+    "@aws-sdk/client-dynamodb": "3.43.0",
+    "@aws-sdk/client-lambda": "3.43.0",
+    "@aws-sdk/lib-dynamodb": "3.43.0",
     "@emotion/react": "11.7.1",
     "@emotion/styled": "11.6.0",
     "@fortawesome/fontawesome-svg-core": "1.2.36",
