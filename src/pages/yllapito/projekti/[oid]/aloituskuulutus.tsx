@@ -67,13 +67,15 @@ const draftValidationSchema: SchemaOf<FormValues> = Yup.object().shape({
     esitettavatYhteystiedot: Yup.array()
       .notRequired()
       .of(
-        Yup.object().shape({
-          etunimi: Yup.string().required(),
-          sukunimi: Yup.string().required(),
-          puhelinnumero: Yup.string().required(),
-          sahkoposti: Yup.string().required(),
-          organisaatio: Yup.string().required(),
-        })
+        Yup.object()
+          .shape({
+            etunimi: Yup.string().required(),
+            sukunimi: Yup.string().required(),
+            puhelinnumero: Yup.string().required(),
+            sahkoposti: Yup.string().required(),
+            organisaatio: Yup.string().required(),
+          })
+          .nullable()
       ),
   }),
 });
