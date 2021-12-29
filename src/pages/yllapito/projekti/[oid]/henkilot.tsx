@@ -72,10 +72,11 @@ export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
       const tallentamisTiedot: FormValues = {
         oid: projekti.oid,
         kayttoOikeudet:
-          projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, rooli }) => ({
+          projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, rooli, esitetaanKuulutuksessa }) => ({
             kayttajatunnus,
             puhelinnumero: puhelinnumero || "",
             rooli,
+            esitetaanKuulutuksessa,
           })) || [],
       };
       reset(tallentamisTiedot);

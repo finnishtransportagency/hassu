@@ -15,15 +15,23 @@ import { PageProps } from "@pages/_app";
 import DatePicker from "@components/form/DatePicker";
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
+import KuulutuksenYhteystiedot from "@components/projekti/aloituskuulutus/KuulutuksenYhteystiedot";
+import { kayttoOikeudetSchema } from "src/schemas/kayttoOikeudet";
 
-type FormValues = Pick<TallennaProjektiInput, "oid"> & {
-  aloitusKuulutus: Pick<AloitusKuulutusInput, "hankkeenKuvaus" | "kuulutusPaiva">;
+type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
+type RequiredProjektiFields = Required<{
+  [K in keyof ProjektiFields]: NonNullable<ProjektiFields[K]>;
+}>;
+
+type FormValues = RequiredProjektiFields & {
+  aloitusKuulutus: Pick<AloitusKuulutusInput, "esitettavatYhteystiedot" | "kuulutusPaiva" | "hankkeenKuvaus">;
 };
 
 const maxAloituskuulutusLength = 2000;
 
 const draftValidationSchema: SchemaOf<FormValues> = Yup.object().shape({
   oid: Yup.string().required(),
+  kayttoOikeudet: kayttoOikeudetSchema,
   aloitusKuulutus: Yup.object().shape({
     hankkeenKuvaus: Yup.string().max(
       maxAloituskuulutusLength,
@@ -56,6 +64,17 @@ const draftValidationSchema: SchemaOf<FormValues> = Yup.object().shape({
         const todayISODate = new Date().toISOString().split("T")[0];
         return dateString >= todayISODate;
       }),
+    esitettavatYhteystiedot: Yup.array()
+      .notRequired()
+      .of(
+        Yup.object().shape({
+          etunimi: Yup.string().required(),
+          sukunimi: Yup.string().required(),
+          puhelinnumero: Yup.string().required(),
+          sahkoposti: Yup.string().required(),
+          organisaatio: Yup.string().required(),
+        })
+      ),
   }),
 });
 
@@ -98,13 +117,14 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
     reValidateMode: "onChange",
   };
 
+  const useFormReturn = useForm<FormValues>(formOptions);
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
     watch,
-  } = useForm<FormValues>(formOptions);
+  } = useFormReturn;
 
   const watchKuulutusPaiva = watch("aloitusKuulutus.kuulutusPaiva");
 
@@ -112,9 +132,20 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
     if (projekti && projekti.oid) {
       const tallentamisTiedot: FormValues = {
         oid: projekti.oid,
+        kayttoOikeudet:
+          projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, rooli, esitetaanKuulutuksessa }) => ({
+            kayttajatunnus,
+            puhelinnumero: puhelinnumero || "",
+            rooli,
+            esitetaanKuulutuksessa,
+          })) || [],
         aloitusKuulutus: {
           hankkeenKuvaus: projekti?.aloitusKuulutus?.hankkeenKuvaus,
           kuulutusPaiva: projekti?.aloitusKuulutus?.kuulutusPaiva,
+          esitettavatYhteystiedot:
+            projekti?.aloitusKuulutus?.esitettavatYhteystiedot?.map((yhteystieto) => {
+              return yhteystieto;
+            }) || [],
         },
       };
       reset(tallentamisTiedot);
@@ -188,6 +219,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
           />
           <DatePicker disabled label="Siirtyy suunnitteluvaiheeseen" />
         </div>
+        <KuulutuksenYhteystiedot projekti={projekti} useFormReturn={useFormReturn} />
         <Textarea
           label="Hankkeen sisällönkuvaus *"
           {...register("aloitusKuulutus.hankkeenKuvaus")}

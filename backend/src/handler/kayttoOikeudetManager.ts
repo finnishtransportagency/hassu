@@ -86,7 +86,7 @@ export class KayttoOikeudetManager {
     // Replace or create new projektipaallikko
     this.removeProjektiPaallikko();
     const projektiPaallikko = await personSearch.fillInUserInfoFromUserManagement({
-      user: { rooli: ProjektiRooli.PROJEKTIPAALLIKKO, email: vastuuhenkiloEmail } as any,
+      user: { rooli: ProjektiRooli.PROJEKTIPAALLIKKO, email: vastuuhenkiloEmail, esitetaanKuulutuksessa: true } as any,
       searchMode: SearchMode.EMAIL,
     });
     if (projektiPaallikko) {

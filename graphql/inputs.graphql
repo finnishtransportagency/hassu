@@ -7,6 +7,14 @@ input TallennaProjektiInput {
   kayttoOikeudet: [ProjektiKayttajaInput!]
 }
 
+input YhteystietoInput {
+  etunimi: String!
+  sukunimi: String!
+  organisaatio: String!
+  puhelinnumero: String!
+  sahkoposti: String!
+}
+
 input AloitusKuulutusInput {
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
@@ -14,7 +22,7 @@ input AloitusKuulutusInput {
   hankkeenKuvausRuotsi: String
   hankkeenKuvausSaame: String
   elyKeskus: String
-  yhteystiedot: [String]
+  esitettavatYhteystiedot: [YhteystietoInput]
 }
 
 input SuunnitteluSopimusInput {
@@ -30,6 +38,7 @@ input ProjektiKayttajaInput {
   rooli: ProjektiRooli!
   kayttajatunnus: String!
   puhelinnumero: String!
+  esitetaanKuulutuksessa: Boolean
 }
 
 input ListaaKayttajatInput {

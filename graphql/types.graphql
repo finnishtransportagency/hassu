@@ -68,6 +68,14 @@ type Velho {
   linkki: String
 }
 
+type Yhteystieto {
+  etunimi: String!
+  sukunimi: String!
+  organisaatio: String!
+  puhelinnumero: String!
+  sahkoposti: String!
+}
+
 type AloitusKuulutus {
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
@@ -75,7 +83,7 @@ type AloitusKuulutus {
   hankkeenKuvausRuotsi: String
   hankkeenKuvausSaame: String
   elyKeskus: String
-  yhteystiedot: [String]
+  esitettavatYhteystiedot: [Yhteystieto]
 }
 
 type SuunnitteluSopimus {
@@ -94,6 +102,7 @@ type ProjektiKayttaja {
   email: String!
   organisaatio: String!
   nimi: String!
+  esitetaanKuulutuksessa: Boolean
 }
 
 enum ProjektiTyyppi {

@@ -46,7 +46,16 @@ export class ProjektiAdapter {
 
 function adaptAloitusKuulutus(kuulutus?: Partial<API.AloitusKuulutus>): API.AloitusKuulutus | undefined {
   if (kuulutus) {
-    return { __typename: "AloitusKuulutus", ...kuulutus };
+    const { esitettavatYhteystiedot, ...otherKuulutusFields } = kuulutus;
+    const yhteystiedot: API.Yhteystieto[] = esitettavatYhteystiedot?.map((yhteystieto) => ({
+      __typename: "Yhteystieto",
+      ...yhteystieto,
+    }));
+    return {
+      __typename: "AloitusKuulutus",
+      esitettavatYhteystiedot: yhteystiedot,
+      ...otherKuulutusFields,
+    };
   }
   return undefined;
 }

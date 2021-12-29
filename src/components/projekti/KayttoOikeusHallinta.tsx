@@ -263,7 +263,7 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
         }}
         disabled={disableFields}
       >
-        Lisää Henkilö
+        Lisää uusi
       </Button>
       {(errors.kayttoOikeudet as any)?.message && (
         <p className="text-red pt-3">{(errors.kayttoOikeudet as any)?.message}</p>

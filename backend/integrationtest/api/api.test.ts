@@ -1,6 +1,5 @@
 /* tslint:disable:no-unused-expression */
 import { describe, it } from "mocha";
-import { runAsVaylaUser } from "../util/users";
 import { api } from "./apiClient";
 import { setupLocalDatabase } from "../util/databaseUtil";
 import * as log from "loglevel";
@@ -53,7 +52,6 @@ describe("Api", () => {
     if (process.env.SKIP_VELHO_TESTS) {
       this.skip();
     }
-    const user = runAsVaylaUser();
 
     const oid = await searchProjectsFromVelhoAndPickFirst();
     const projekti = await api.lataaProjekti(oid);
@@ -100,7 +98,16 @@ describe("Api", () => {
       hankkeenKuvausSaame: "Saameksi",
       siirtyySuunnitteluVaiheeseen: "2022-01-01",
       elyKeskus: "Pirkanmaa",
-      yhteystiedot: [user.uid as string],
+      esitettavatYhteystiedot: [
+        {
+          __typename: "Yhteystieto",
+          etunimi: "Marko",
+          sukunimi: "Koi",
+          sahkoposti: "markku.koi@koi.com",
+          organisaatio: "Kajaani",
+          puhelinnumero: "0293121213",
+        },
+      ],
     };
 
     const lisakuulutuskieli = "ruotsi";
