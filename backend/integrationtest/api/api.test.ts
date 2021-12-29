@@ -1,5 +1,6 @@
 /* tslint:disable:no-unused-expression */
 import { describe, it } from "mocha";
+import { runAsVaylaUser } from "../util/users";
 import { api } from "./apiClient";
 import { setupLocalDatabase } from "../util/databaseUtil";
 import * as log from "loglevel";
@@ -52,6 +53,7 @@ describe("Api", () => {
     if (process.env.SKIP_VELHO_TESTS) {
       this.skip();
     }
+    runAsVaylaUser();
 
     const oid = await searchProjectsFromVelhoAndPickFirst();
     const projekti = await api.lataaProjekti(oid);
