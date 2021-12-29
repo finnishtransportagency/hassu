@@ -128,7 +128,7 @@
     "typescript-plugin-css-modules": "3.4.0"
   },
   "scripts": {
-    "clean": "rimraf .cdk-* .next .nyc_output .report .serverless .serverless_nextjs build cdk.out out",
+    "clean": "rimraf .cdk-* .next .nyc_output .report .serverless .serverless_nextjs build cdk.out out schema.graphql",
     "prepare": "husky install",
     "dev": "next dev",
     "build": "next build",

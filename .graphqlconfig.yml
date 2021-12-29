@@ -14,7 +14,7 @@ projects:
         region: eu-west-1
         frontend: javascript
         framework: react
-        maxDepth: 2
+        maxDepth: 100
 extensions:
   amplify:
     version: 3

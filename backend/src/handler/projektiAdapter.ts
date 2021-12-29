@@ -1,5 +1,6 @@
-import { DBProjekti, SuunnitteluSopimus } from "../database/model/projekti";
+import { AloitusKuulutus, DBProjekti, SuunnitteluSopimus } from "../database/model/projekti";
 import * as API from "../../../common/graphql/apiModel";
+import { Yhteystieto } from "../../../common/graphql/apiModel";
 import pickBy from "lodash/pickBy";
 import identity from "lodash/identity";
 import mergeWith from "lodash/mergeWith";
@@ -44,13 +45,16 @@ export class ProjektiAdapter {
   }
 }
 
-function adaptAloitusKuulutus(kuulutus?: Partial<API.AloitusKuulutus>): API.AloitusKuulutus | undefined {
+function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus): API.AloitusKuulutus | undefined {
   if (kuulutus) {
     const { esitettavatYhteystiedot, ...otherKuulutusFields } = kuulutus;
-    const yhteystiedot: API.Yhteystieto[] = esitettavatYhteystiedot?.map((yhteystieto) => ({
-      __typename: "Yhteystieto",
-      ...yhteystieto,
-    }));
+    const yhteystiedot: API.Yhteystieto[] | undefined = esitettavatYhteystiedot?.map(
+      (yhteystieto) =>
+        ({
+          __typename: "Yhteystieto",
+          ...yhteystieto,
+        } as Yhteystieto)
+    );
     return {
       __typename: "AloitusKuulutus",
       esitettavatYhteystiedot: yhteystiedot,
