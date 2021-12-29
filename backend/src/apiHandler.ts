@@ -12,7 +12,7 @@ import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "./handler/listaaVelhoProjektit";
 import { identifyUser } from "./user";
 import { getCurrentUser } from "./handler/getCurrentUser";
-import { listAllUsers } from "./handler/listAllUsers";
+import { listUsers } from "./handler/listUsers";
 import { createOrUpdateProjekti, listProjektit, loadProjekti } from "./handler/projektiHandler";
 import { apiConfig } from "../../common/abstractApi";
 import { lataaKuulutus } from "./handler/kuulutusHandler";
@@ -45,7 +45,7 @@ export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArgume
         case apiConfig.nykyinenKayttaja.name:
           return await getCurrentUser();
         case apiConfig.listaaKayttajat.name:
-          return await listAllUsers((event.arguments as ListaaKayttajatQueryVariables).hakuehto);
+          return await listUsers((event.arguments as ListaaKayttajatQueryVariables).hakuehto);
         case apiConfig.lataaProjekti.name:
           return await loadProjekti((event.arguments as LataaProjektiQueryVariables).oid);
         case apiConfig.tallennaProjekti.name:

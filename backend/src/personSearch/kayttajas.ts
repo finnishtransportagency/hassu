@@ -14,12 +14,9 @@ export class Kayttajas {
   }
 
   findByEmail(email: string): Kayttaja | undefined {
-    for (const uid in this.kayttajaMap) {
-      if (this.kayttajaMap.hasOwnProperty(uid)) {
-        const kayttaja = this.kayttajaMap[uid];
-        if (kayttaja.email === email) {
-          return kayttaja;
-        }
+    for (const kayttaja of Object.values(this.kayttajaMap)) {
+      if (kayttaja.email === email) {
+        return kayttaja;
       }
     }
   }
@@ -47,5 +44,17 @@ export class Kayttajas {
 
   asMap() {
     return this.kayttajaMap;
+  }
+
+  findByText(hakusana: string): Kayttaja[] {
+    if (hakusana.length >= 3) {
+      return Object.values(this.kayttajaMap).reduce((list, kayttaja) => {
+        if (kayttaja.etuNimi.includes(hakusana) || kayttaja.sukuNimi.includes(hakusana)) {
+          list.push(kayttaja);
+        }
+        return list;
+      }, [] as Kayttaja[]);
+    }
+    return [];
   }
 }

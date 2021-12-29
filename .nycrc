@@ -1,0 +1,11 @@
+{
+  "extends": "@istanbuljs/nyc-config-typescript",
+  "include": [
+    "backend/src/**/*"
+  ],
+  "exclude": [
+    "backend/src/velho/hakupalvelu/**/*",
+    "backend/src/velho/aineistopalvelu/**/*",
+    "backend/src/velho/projektirekisteri/**/*"
+  ]
+}

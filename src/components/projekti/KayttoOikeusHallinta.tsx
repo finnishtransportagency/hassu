@@ -70,11 +70,19 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
     .map((kayttoOikeus) => kayttoOikeus.kayttajatunnus)
     .filter((kayttajatunnus) => !!kayttajatunnus)
     .sort();
+
   const { data: kayttajat, error: kayttajatLoadError } = useSWR(
     [apiConfig.listaaKayttajat.graphql, uidList],
     kayttajatLoader
   );
-  const isLoadingKayttajat = !kayttajat && !kayttajatLoadError;
+
+  // TODO: vaihda koko listaus nimellä hakuun
+  const { data: kaikkiKayttajat, error: kaikkiKayttajatLoadError } = useSWR(
+    apiConfig.listaaKayttajat.graphql,
+    kaikkiKayttajatLoader
+  );
+
+  const isLoadingKayttajat = !kayttajat && !kayttajatLoadError && !kaikkiKayttajatLoadError;
 
   const haeKayttaja = (uid: string) => kayttajat?.find((kayttaja: Kayttaja) => kayttaja.uid === uid);
 
@@ -156,7 +164,7 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
                 <Autocomplete
                   label="Nimi"
                   loading={isLoadingKayttajat}
-                  options={kayttajat || []}
+                  options={kaikkiKayttajat || []}
                   initialOption={kayttajat?.find(({ uid }) => uid === kayttoOikeudet[index].kayttajatunnus)}
                   getOptionLabel={kayttajaNimi}
                   error={errors.kayttoOikeudet?.[index]?.kayttajatunnus}
@@ -265,6 +273,10 @@ async function kayttajatLoader(_: string, kayttajat: any[]): Promise<Kayttaja[]>
   return await api.listUsers({
     kayttajatunnus: kayttajat,
   });
+}
+
+async function kaikkiKayttajatLoader(_: string): Promise<Kayttaja[]> {
+  return await api.listUsers({});
 }
 
 export default KayttoOikeusHallinta;

@@ -53,3 +53,4 @@ build
 .serverless_nextjs
 .version
 /.env.test
+/coverage
