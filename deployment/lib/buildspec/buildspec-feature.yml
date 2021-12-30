@@ -18,7 +18,8 @@ phases:
       - npm install -g npm@8.1.3
       - npm ci
 
-      - npm run dockerized:generate
+      - touch .env.test
+      - npm run generate
   build:
     commands:
       - npm run lint

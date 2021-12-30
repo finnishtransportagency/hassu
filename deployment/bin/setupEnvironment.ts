@@ -37,7 +37,7 @@ export async function readDatabaseStackOutputs(): Promise<DatabaseStackOutputs> 
   return (await readStackOutputs("database", Region.EU_WEST_1)) as DatabaseStackOutputs;
 }
 
-async function readFrontendStackOutputs(): Promise<FrontendStackOutputs> {
+export async function readFrontendStackOutputs(): Promise<FrontendStackOutputs> {
   return (await readStackOutputs("frontend", Region.US_EAST_1)) as FrontendStackOutputs;
 }
 
@@ -51,18 +51,23 @@ async function readStackOutputs(stackName: string, region: Region): Promise<Reco
   } else {
     cfClient = usEastCFClient;
   }
-  const output: DescribeStacksCommandOutput = await cfClient.send(
-    new DescribeStacksCommand({ StackName: `hassu-${stackName}-${BaseConfig.env}` })
-  );
-  return (
-    output.Stacks?.[0].Outputs?.reduce((params, param) => {
-      // Include only non-null values. Exclude automatically generated outputs by CDK
-      if (param.OutputKey && param.OutputValue && !param.OutputKey.startsWith("ExportsOutput")) {
-        params[param.OutputKey] = param.OutputValue;
-      }
-      return params;
-    }, {} as Record<string, string>) || {}
-  );
+  try {
+    const output: DescribeStacksCommandOutput = await cfClient.send(
+      new DescribeStacksCommand({ StackName: `hassu-${stackName}-${BaseConfig.env}` })
+    );
+    return (
+      output.Stacks?.[0].Outputs?.reduce((params, param) => {
+        // Include only non-null values. Exclude automatically generated outputs by CDK
+        if (param.OutputKey && param.OutputValue && !param.OutputKey.startsWith("ExportsOutput")) {
+          params[param.OutputKey] = param.OutputValue;
+        }
+        return params;
+      }, {} as Record<string, string>) || {}
+    );
+  } catch (e) {
+    console.warn("warn:" + e.message);
+    return {};
+  }
 }
 
 export type HassuSSMParameters = {

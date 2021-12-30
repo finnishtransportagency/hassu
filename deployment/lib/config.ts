@@ -4,6 +4,7 @@ import * as ssm from "@aws-cdk/aws-ssm";
 import { SSM } from "aws-sdk";
 import log from "loglevel";
 import { BaseConfig, getEnv } from "../../common/BaseConfig";
+import { readFrontendStackOutputs } from "../bin/setupEnvironment";
 
 const ssmProvider = new SSM({ apiVersion: "2014-11-06", region: "eu-west-1" });
 const globalSsmProvider = new SSM({ apiVersion: "2014-11-06", region: "us-east-1" });
@@ -127,9 +128,12 @@ export class Config extends BaseConfig {
       ? process.env.BUILD_BRANCH
       : await execShellCommand("git rev-parse --abbrev-ref HEAD");
 
-    this.frontendDomainName = Config.isPermanentEnvironment()
-      ? await this.getSecureInfraParameter("FrontendDomainName")
-      : process.env.FRONTEND_DOMAIN_NAME || ""; // To make it possible to use developer's own cloudfront for files
+    if (this.isDeveloperEnvironment()) {
+      this.frontendDomainName =
+        (await readFrontendStackOutputs()).CloudfrontPrivateDNSName || "please-re-run-backend-deployment";
+    } else {
+      this.frontendDomainName = await this.getSecureInfraParameter("FrontendDomainName");
+    }
     log.info("frontendDomainName", this.frontendDomainName);
   };
 
