@@ -44,7 +44,9 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
     setValue,
   } = useFormReturn as unknown as UseFormReturn<RequiredInputValues>;
 
-  const [initialUids, setInitialUids] = useState<string[]>([]);
+  // fallbackKayttajat is stored in state because
+  // SWR cache can return undefined if uidList is changed
+  const [fallbackKayttajat, setFallbackKayttajat] = useState<Kayttaja[]>([]);
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -74,18 +76,15 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
     .filter((kayttajatunnus) => !!kayttajatunnus)
     .sort();
 
-  useEffect(() => {
-    // Update initial Uid list if uidList has elements in it
-    if (initialUids.length === 0 && uidList.length > 0) {
-      setInitialUids(uidList);
-    }
-  }, [uidList, initialUids]);
-
   const {
     data: kayttajat,
     error: kayttajatLoadError,
     mutate,
-  } = useSWR([apiConfig.listaaKayttajat.graphql, initialUids], kayttajatLoader);
+  } = useSWR([apiConfig.listaaKayttajat.graphql, uidList], kayttajatLoader, { fallbackData: fallbackKayttajat });
+
+  useEffect(() => {
+    setFallbackKayttajat(kayttajat || []);
+  }, [kayttajat]);
 
   const isLoadingKayttajat = !kayttajat && !kayttajatLoadError;
 
@@ -176,7 +175,7 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
                   onSelect={(henkilo) => {
                     if (henkilo && kayttajat) {
                       kayttajat[index] = henkilo;
-                      mutate(kayttajat, false);
+                      mutate(kayttajat);
                     }
                     setValue(`kayttoOikeudet.${index}.kayttajatunnus`, henkilo?.uid || "", {
                       shouldValidate: true,
