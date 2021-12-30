@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FieldArrayWithId, useFieldArray, UseFormReturn } from "react-hook-form";
 import { api, apiConfig, Kayttaja, ProjektiKayttajaInput, ProjektiRooli, TallennaProjektiInput } from "@services/api";
 import Autocomplete from "@components/form/Autocomplete";
@@ -8,6 +8,7 @@ import IconButton from "@components/button/IconButton";
 import Button from "@components/button/Button";
 import useSWR from "swr";
 import { agencyPhoneNumberRegex, maxPhoneLength } from "src/schemas/puhelinNumero";
+import { useState } from "react";
 
 // Extend TallennaProjektiInput by making the field nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "kayttoOikeudet">;
@@ -43,6 +44,8 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
     setValue,
   } = useFormReturn as unknown as UseFormReturn<RequiredInputValues>;
 
+  const [initialUids, setInitialUids] = useState<string[]>([]);
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "kayttoOikeudet",
@@ -71,20 +74,22 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
     .filter((kayttajatunnus) => !!kayttajatunnus)
     .sort();
 
-  const { data: kayttajat, error: kayttajatLoadError } = useSWR(
-    [apiConfig.listaaKayttajat.graphql, uidList],
-    kayttajatLoader
-  );
+  useEffect(() => {
+    // Update initial Uid list if uidList has elements in it
+    if (initialUids.length === 0 && uidList.length > 0) {
+      setInitialUids(uidList);
+    }
+  }, [uidList, initialUids]);
 
-  // TODO: vaihda koko listaus nimellä hakuun
-  const { data: kaikkiKayttajat, error: kaikkiKayttajatLoadError } = useSWR(
-    apiConfig.listaaKayttajat.graphql,
-    kaikkiKayttajatLoader
-  );
+  const {
+    data: kayttajat,
+    error: kayttajatLoadError,
+    mutate,
+  } = useSWR([apiConfig.listaaKayttajat.graphql, initialUids], kayttajatLoader);
 
-  const isLoadingKayttajat = !kayttajat && !kayttajatLoadError && !kaikkiKayttajatLoadError;
+  const isLoadingKayttajat = !kayttajat && !kayttajatLoadError;
 
-  const haeKayttaja = (uid: string) => kayttajat?.find((kayttaja: Kayttaja) => kayttaja.uid === uid);
+  const haeKayttaja = (uid: string) => kayttajat?.find((kayttaja: Kayttaja) => kayttaja?.uid === uid);
 
   const kayttoOikeudet = watch("kayttoOikeudet");
 
@@ -164,11 +169,15 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
                 <Autocomplete
                   label="Nimi"
                   loading={isLoadingKayttajat}
-                  options={kaikkiKayttajat || []}
+                  options={async (hakusana) => await api.listUsers({ hakusana })}
                   initialOption={kayttajat?.find(({ uid }) => uid === kayttoOikeudet[index].kayttajatunnus)}
                   getOptionLabel={kayttajaNimi}
                   error={errors.kayttoOikeudet?.[index]?.kayttajatunnus}
                   onSelect={(henkilo) => {
+                    if (henkilo && kayttajat) {
+                      kayttajat[index] = henkilo;
+                      mutate(kayttajat, false);
+                    }
                     setValue(`kayttoOikeudet.${index}.kayttajatunnus`, henkilo?.uid || "", {
                       shouldValidate: true,
                     });
@@ -264,19 +273,13 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
   );
 }
 
-async function kayttajatLoader(_: string, kayttajat: any[]): Promise<Kayttaja[]> {
+async function kayttajatLoader(_: string, kayttajat: string[]): Promise<Kayttaja[]> {
   if (kayttajat.length === 0) {
     return [];
   }
-  // tslint:disable-next-line:no-console
-  console.log("kayttajat", kayttajat);
   return await api.listUsers({
     kayttajatunnus: kayttajat,
   });
-}
-
-async function kaikkiKayttajatLoader(_: string): Promise<Kayttaja[]> {
-  return await api.listUsers({});
 }
 
 export default KayttoOikeusHallinta;

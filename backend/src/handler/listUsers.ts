@@ -11,7 +11,7 @@ export async function listUsers(input: ListaaKayttajatInput): Promise<Kayttaja[]
       .filter((kayttaja) => !!kayttaja) as Kayttaja[];
   }
 
-  if (input.hakusana) {
+  if (typeof input.hakusana === "string") {
     return kayttajas.findByText(input.hakusana);
   }
 

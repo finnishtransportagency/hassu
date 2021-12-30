@@ -49,7 +49,10 @@ export class Kayttajas {
   findByText(hakusana: string): Kayttaja[] {
     if (hakusana.length >= 3) {
       return Object.values(this.kayttajaMap).reduce((list, kayttaja) => {
-        if (kayttaja.etuNimi.includes(hakusana) || kayttaja.sukuNimi.includes(hakusana)) {
+        if (
+          (kayttaja.sukuNimi.toLowerCase() + ", " + kayttaja.etuNimi.toLowerCase()).includes(hakusana.toLowerCase()) ||
+          (kayttaja.sukuNimi.toLowerCase() + " " + kayttaja.etuNimi.toLowerCase()).includes(hakusana.toLowerCase())
+        ) {
           list.push(kayttaja);
         }
         return list;

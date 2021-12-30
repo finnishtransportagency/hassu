@@ -28,7 +28,7 @@ const Autocomplete = <T extends unknown>({
   getOptionLabel,
   onSelect,
   clearOnBlur,
-  optionFetchDelay: onTextChangeDelay = 800,
+  optionFetchDelay: onTextChangeDelay = 300,
   loading,
   maxResults = 60,
   initialOption,
@@ -79,9 +79,13 @@ const Autocomplete = <T extends unknown>({
   }, [prevTimer, timer]);
 
   useEffect(() => {
+    let isMounted = true;
     const fetchOptions = async (text: string, fetcher: (text: string) => Promise<T[]> | T[]) => {
       const newTimer = setTimeout(async () => {
-        setFilteredOptions(await fetcher(text));
+        const result = await fetcher(text);
+        if (isMounted) {
+          setFilteredOptions(result);
+        }
       }, onTextChangeDelay);
       setTimer(newTimer);
     };
@@ -92,6 +96,9 @@ const Autocomplete = <T extends unknown>({
     } else {
       fetchOptions(textValue, propOptions);
     }
+    return () => {
+      isMounted = false;
+    };
   }, [textValue, getOptionLabel, propOptions, onTextChangeDelay]);
 
   const setOptionValue = useCallback(
@@ -206,7 +213,7 @@ const Autocomplete = <T extends unknown>({
         {showOptions && (
           <div ref={listRef} className="max-h-96 bg-white absolute overflow-y-auto w-full border shadow-lg z-10">
             {loading ? (
-              "LOADING..."
+              "Ladataan..."
             ) : slicedOptions.length > 0 ? (
               <ul>
                 {slicedOptions.map((option, index) => (
@@ -231,7 +238,7 @@ const Autocomplete = <T extends unknown>({
                 ))}
               </ul>
             ) : (
-              "No results"
+              "Ei hakutuloksia"
             )}
           </div>
         )}
