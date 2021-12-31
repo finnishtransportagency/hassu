@@ -5,6 +5,7 @@ import TextInput from "@components/form/TextInput";
 import { AloitusKuulutusInput, Projekti, ProjektiRooli, TallennaProjektiInput, YhteystietoInput } from "@services/api";
 import React, { ReactElement } from "react";
 import { useFieldArray, UseFormReturn } from "react-hook-form";
+import { maxPhoneLength } from "src/schemas/puhelinNumero";
 
 // Extend TallennaProjektiInput by making the field nonnullable and required
 type KayttoOikeudet = Pick<TallennaProjektiInput, "kayttoOikeudet">;
@@ -35,7 +36,11 @@ function KuulutuksenYhteystiedot<T extends FormValues>({
   useFormReturn,
   disableFields,
 }: Props<T>): ReactElement {
-  const { control, register } = useFormReturn as unknown as UseFormReturn<FormValues>;
+  const {
+    control,
+    register,
+    formState: { errors },
+  } = useFormReturn as unknown as UseFormReturn<FormValues>;
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -77,26 +82,32 @@ function KuulutuksenYhteystiedot<T extends FormValues>({
                 className="lg:col-span-4 max-w-md"
                 label="Etunimi *"
                 {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.etunimi`)}
+                error={errors?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.etunimi}
               />
               <TextInput
                 className="lg:col-span-4 max-w-md"
                 label="Sukunimi *"
                 {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.sukunimi`)}
+                error={errors?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.sukunimi}
               />
               <TextInput
                 className="lg:col-span-4 max-w-md"
                 label="Organisaatio / kunta *"
                 {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.organisaatio`)}
+                error={errors?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.organisaatio}
               />
               <TextInput
                 className="lg:col-span-4 max-w-md"
                 label="Puhelinnumero *"
                 {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.puhelinnumero`)}
+                error={errors?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.puhelinnumero}
+                maxLength={maxPhoneLength}
               />
               <TextInput
                 className="lg:col-span-4 max-w-md"
                 label="Sähköpostiosoite *"
                 {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.sahkoposti`)}
+                error={errors?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.sahkoposti}
               />
             </div>
             <div className="lg:mt-6">

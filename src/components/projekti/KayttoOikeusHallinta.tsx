@@ -108,7 +108,7 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
             projektipäällikön, tulee tieto vaihtaa projekti-VELHOssa.
           </p>
           {projektiPaallikot.map((paallikko, index) => (
-            <div key={index} className="flex flex-col lg:flex-row mb-10 lg:mb-3">
+            <div key={paallikko.id} className="flex flex-col lg:flex-row mb-10 lg:mb-3">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-6 lg:pr-1 relative even:bg-gray-lightest">
                 <div className="lg:col-span-4 max-w-md">
                   <TextInput label="Nimi" value={kayttajaNimi(haeKayttaja(paallikko.kayttajatunnus)) || ""} disabled />
