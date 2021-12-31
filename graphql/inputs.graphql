@@ -31,3 +31,8 @@ input ProjektiKayttajaInput {
   kayttajatunnus: String!
   puhelinnumero: String!
 }
+
+input ListaaKayttajatInput {
+  kayttajatunnus: [String!]
+  hakusana: String
+}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FieldArrayWithId, useFieldArray, UseFormReturn } from "react-hook-form";
 import { api, apiConfig, Kayttaja, ProjektiKayttajaInput, ProjektiRooli, TallennaProjektiInput } from "@services/api";
 import Autocomplete from "@components/form/Autocomplete";
@@ -8,6 +8,7 @@ import IconButton from "@components/button/IconButton";
 import Button from "@components/button/Button";
 import useSWR from "swr";
 import { agencyPhoneNumberRegex, maxPhoneLength } from "src/schemas/puhelinNumero";
+import { useState } from "react";
 
 // Extend TallennaProjektiInput by making the field nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "kayttoOikeudet">;
@@ -43,15 +44,14 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
     setValue,
   } = useFormReturn as unknown as UseFormReturn<RequiredInputValues>;
 
+  // fallbackKayttajat is stored in state because
+  // SWR cache can return undefined if uidList is changed
+  const [fallbackKayttajat, setFallbackKayttajat] = useState<Kayttaja[]>([]);
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "kayttoOikeudet",
   });
-
-  const { data: kayttajat, error: kayttajatLoadError } = useSWR(apiConfig.listaaKayttajat.graphql, kayttajatLoader);
-  const isLoadingKayttajat = !kayttajat && !kayttajatLoadError;
-
-  const haeKayttaja = (uid: string) => kayttajat?.find((kayttaja: Kayttaja) => kayttaja.uid === uid);
 
   const kayttajaNimi = (kayttaja: Kayttaja | null | undefined) =>
     (kayttaja && `${kayttaja.sukuNimi}, ${kayttaja.etuNimi}`) || "";
@@ -70,6 +70,25 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
     },
     { projektiPaallikot: [], muutHenkilot: [] }
   ) || { projektiPaallikot: [], muutHenkilot: [] };
+
+  const uidList = [...projektiPaallikot, ...muutHenkilot]
+    .map((kayttoOikeus) => kayttoOikeus.kayttajatunnus)
+    .filter((kayttajatunnus) => !!kayttajatunnus)
+    .sort();
+
+  const {
+    data: kayttajat,
+    error: kayttajatLoadError,
+    mutate,
+  } = useSWR([apiConfig.listaaKayttajat.graphql, uidList], kayttajatLoader, { fallbackData: fallbackKayttajat });
+
+  useEffect(() => {
+    setFallbackKayttajat(kayttajat || []);
+  }, [kayttajat]);
+
+  const isLoadingKayttajat = !kayttajat && !kayttajatLoadError;
+
+  const haeKayttaja = (uid: string) => kayttajat?.find((kayttaja: Kayttaja) => kayttaja?.uid === uid);
 
   const kayttoOikeudet = watch("kayttoOikeudet");
 
@@ -149,11 +168,15 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
                 <Autocomplete
                   label="Nimi"
                   loading={isLoadingKayttajat}
-                  options={kayttajat || []}
+                  options={async (hakusana) => await api.listUsers({ hakusana })}
                   initialOption={kayttajat?.find(({ uid }) => uid === kayttoOikeudet[index].kayttajatunnus)}
                   getOptionLabel={kayttajaNimi}
                   error={errors.kayttoOikeudet?.[index]?.kayttajatunnus}
                   onSelect={(henkilo) => {
+                    if (henkilo && kayttajat) {
+                      kayttajat[index] = henkilo;
+                      mutate(kayttajat);
+                    }
                     setValue(`kayttoOikeudet.${index}.kayttajatunnus`, henkilo?.uid || "", {
                       shouldValidate: true,
                     });
@@ -249,8 +272,13 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
   );
 }
 
-async function kayttajatLoader(_: string): Promise<Kayttaja[]> {
-  return await api.listUsers();
+async function kayttajatLoader(_: string, kayttajat: string[]): Promise<Kayttaja[]> {
+  if (kayttajat.length === 0) {
+    return [];
+  }
+  return await api.listUsers({
+    kayttajatunnus: kayttajat,
+  });
 }
 
 export default KayttoOikeusHallinta;

@@ -4,6 +4,8 @@ import {
   LataaKuulutusPDFQueryVariables,
   LataaProjektiQueryVariables,
   LatausTiedot,
+  ListaaKayttajatInput,
+  ListaaKayttajatQueryVariables,
   ListaaVelhoProjektitQueryVariables,
   NykyinenKayttaja,
   PDF,
@@ -123,8 +125,8 @@ export abstract class AbstractApi {
     }
   }
 
-  async listUsers(): Promise<Kayttaja[]> {
-    return await this.callYllapitoAPI(apiConfig.listaaKayttajat);
+  async listUsers(input: ListaaKayttajatInput): Promise<Kayttaja[]> {
+    return await this.callYllapitoAPI(apiConfig.listaaKayttajat, { hakuehto: input } as ListaaKayttajatQueryVariables);
   }
 
   async lataaKuulutusPDF(oid: string, kuulutusTyyppi: KuulutusTyyppi): Promise<PDF> {

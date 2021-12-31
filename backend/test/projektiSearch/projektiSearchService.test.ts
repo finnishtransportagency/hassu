@@ -10,7 +10,7 @@ const { expect } = require("chai");
 describe("ProjektiSearchService", () => {
   let openSearchQueryStub: sinon.SinonStub;
   before(() => {
-    openSearchQueryStub = sinon.stub(openSearchClient, "query");
+    openSearchQueryStub = sandbox.stub(openSearchClient, "query");
   });
   afterEach(() => {
     sandbox.reset();

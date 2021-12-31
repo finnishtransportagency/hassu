@@ -8,6 +8,7 @@ export function localstackS3Client() {
       new S3Client({
         endpoint: "http://localhost:4566",
         forcePathStyle: true,
-      })
+      }),
+    true
   );
 }
