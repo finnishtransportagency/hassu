@@ -35,7 +35,9 @@ export default async function render(req: NextApiRequest, res: NextApiResponse) 
   const {
     query: { oid },
   } = req;
-
+  const {
+    body: { tallennaProjektiInput },
+  } = req;
   if (Array.isArray(oid)) {
     throw new Error("Vain yksi oid-parametri sallitaan");
   }
@@ -49,7 +51,11 @@ export default async function render(req: NextApiRequest, res: NextApiResponse) 
         "Basic " +
         Buffer.from(parameterStore.BASIC_USERNAME + ":" + parameterStore.BASIC_PASSWORD, "binary").toString("base64"),
     });
-    const pdf = await api.lataaKuulutusPDF(oid, KuulutusTyyppi.ALOITUSKUULUTUS);
+    let changes = JSON.parse(tallennaProjektiInput);
+    if (!changes.oid) {
+      changes = undefined;
+    }
+    const pdf = await api.lataaKuulutusPDF(oid, KuulutusTyyppi.ALOITUSKUULUTUS, changes);
     if (pdf) {
       res.setHeader("Content-Type", "application/pdf");
       res.setHeader("Content-disposition", "inline; filename=" + pdf.nimi);
