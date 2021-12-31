@@ -1,6 +1,7 @@
 import { requirePermissionLuonti } from "../user";
 import { personSearch } from "../personSearch/personSearchClient";
 import { Kayttaja, ListaaKayttajatInput } from "../../../common/graphql/apiModel";
+import log from "loglevel";
 
 export async function listUsers(input: ListaaKayttajatInput): Promise<Kayttaja[]> {
   requirePermissionLuonti();
@@ -15,5 +16,6 @@ export async function listUsers(input: ListaaKayttajatInput): Promise<Kayttaja[]
     return kayttajas.findByText(input.hakusana);
   }
 
-  return kayttajas.asList();
+  log.warn("listUsers called without parameters, returning empty results.");
+  return [];
 }
