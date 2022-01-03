@@ -109,7 +109,7 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
           </p>
           {projektiPaallikot.map((paallikko, index) => (
             <div key={paallikko.id} className="flex flex-col lg:flex-row mb-10 lg:mb-3">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-6 lg:pr-1 relative even:bg-gray-lightest">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-6 lg:pr-1 relative">
                 <div className="lg:col-span-4 max-w-md">
                   <TextInput label="Nimi" value={kayttajaNimi(haeKayttaja(paallikko.kayttajatunnus)) || ""} disabled />
                 </div>
@@ -163,7 +163,7 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
         const index = i + projektiPaallikot.length;
         return (
           <div key={user.id} className="flex flex-col lg:flex-row mb-10 lg:mb-3">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-6 lg:pr-1 relative even:bg-gray-lightest">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-6 lg:pr-1 relative">
               <div className="lg:col-span-4 max-w-md">
                 <Autocomplete
                   label="Nimi"
@@ -263,7 +263,7 @@ function KayttoOikeusHallinta<T extends RequiredInputValues>({ useFormReturn, di
         }}
         disabled={disableFields}
       >
-        Lisää uusi
+        Lisää uusi +
       </Button>
       {(errors.kayttoOikeudet as any)?.message && (
         <p className="text-red pt-3">{(errors.kayttoOikeudet as any)?.message}</p>

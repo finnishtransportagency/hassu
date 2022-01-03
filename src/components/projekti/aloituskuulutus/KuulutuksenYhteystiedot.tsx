@@ -75,67 +75,74 @@ function KuulutuksenYhteystiedot<T extends FormValues>({
           Lisää uudelle yhteystiedolle rivi Lisää uusi-painikkeella. Huomioi, että uusi yhteystieto ei tallennu
           Projektin henkilöt -sivulle eikä henkilölle tule käyttöoikeuksia projektiin.{" "}
         </p>
-        {fields.map((field, index) => (
-          <div key={field.id} className="flex flex-col lg:flex-row mb-10 lg:mb-3">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-6 lg:pr-1 relative even:bg-gray-lightest">
-              <TextInput
-                className="lg:col-span-4 max-w-md"
-                label="Etunimi *"
-                {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.etunimi`)}
-                error={errors?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.etunimi}
-              />
-              <TextInput
-                className="lg:col-span-4 max-w-md"
-                label="Sukunimi *"
-                {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.sukunimi`)}
-                error={errors?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.sukunimi}
-              />
-              <TextInput
-                className="lg:col-span-4 max-w-md"
-                label="Organisaatio / kunta *"
-                {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.organisaatio`)}
-                error={errors?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.organisaatio}
-              />
-              <TextInput
-                className="lg:col-span-4 max-w-md"
-                label="Puhelinnumero *"
-                {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.puhelinnumero`)}
-                error={errors?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.puhelinnumero}
-                maxLength={maxPhoneLength}
-              />
-              <TextInput
-                className="lg:col-span-4 max-w-md"
-                label="Sähköpostiosoite *"
-                {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.sahkoposti`)}
-                error={errors?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.sahkoposti}
-              />
-            </div>
-            <div className="lg:mt-6">
-              <div className="hidden lg:block">
-                <IconButton
-                  icon="trash"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    remove(index);
-                  }}
-                  disabled={disableFields}
-                />
+        <div>
+          {fields.map((field, index) => (
+            <div key={field.id} className="flex flex-col lg:flex-row mb-10 lg:mb-3">
+              <div className="flex-auto grid grid-cols-1 lg:grid-cols-12 gap-x-6 lg:pr-1">
+                <div className="lg:col-span-4">
+                  <TextInput
+                    label="Etunimi *"
+                    {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.etunimi`)}
+                    error={errors?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.etunimi}
+                  />
+                </div>
+                <div className="lg:col-span-4">
+                  <TextInput
+                    label="Sukunimi *"
+                    {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.sukunimi`)}
+                    error={errors?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.sukunimi}
+                  />
+                </div>
+                <div className="lg:col-span-4">
+                  <TextInput
+                    label="Organisaatio / kunta *"
+                    {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.organisaatio`)}
+                    error={errors?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.organisaatio}
+                  />
+                </div>
+                <div className="lg:col-span-4">
+                  <TextInput
+                    label="Puhelinnumero *"
+                    {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.puhelinnumero`)}
+                    error={errors?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.puhelinnumero}
+                    maxLength={maxPhoneLength}
+                  />
+                </div>
+                <div className="lg:col-span-4">
+                  <TextInput
+                    label="Sähköpostiosoite *"
+                    {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.sahkoposti`)}
+                    error={errors?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.sahkoposti}
+                  />
+                </div>
               </div>
-              <div className="block lg:hidden">
-                <Button
-                  onClick={(event) => {
-                    event.preventDefault();
-                    remove(index);
-                  }}
-                  endIcon="trash"
-                  disabled={disableFields}
-                >
-                  Poista
-                </Button>
+              <div>
+                <div className="hidden lg:block lg:mt-6">
+                  <IconButton
+                    icon="trash"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      remove(index);
+                    }}
+                    disabled={disableFields}
+                  />
+                </div>
+                <div className="block lg:hidden">
+                  <Button
+                    onClick={(event) => {
+                      event.preventDefault();
+                      remove(index);
+                    }}
+                    endIcon="trash"
+                    disabled={disableFields}
+                  >
+                    Poista
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
 
         <Button
           onClick={(event) => {
@@ -144,7 +151,7 @@ function KuulutuksenYhteystiedot<T extends FormValues>({
           }}
           disabled={disableFields}
         >
-          Lisää uusi
+          Lisää uusi +
         </Button>
       </fieldset>
     </>

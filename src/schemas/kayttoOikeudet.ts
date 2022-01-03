@@ -10,6 +10,7 @@ export const kayttoOikeudetSchema = Yup.array()
         puhelinnumero: puhelinNumeroSchema,
         kayttajatunnus: Yup.string().required("Aseta käyttäjä"),
         esitetaanKuulutuksessa: Yup.boolean().nullable().notRequired(),
+        id: Yup.string().nullable().notRequired(),
       })
       .test("uniikki-kayttajatunnus", "Käyttäjä voi olla vain yhteen kertaan käyttöoikeuslistalla", function (current) {
         const currentKayttaja = current as ProjektiKayttajaInput;

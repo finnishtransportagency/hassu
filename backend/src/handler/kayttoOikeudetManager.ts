@@ -50,7 +50,9 @@ export class KayttoOikeudetManager {
           puhelinnumero: newUser.puhelinnumero,
           kayttajatunnus: newUser.kayttajatunnus,
           rooli: newUser.rooli,
-        } as any;
+          esitetaanKuulutuksessa:
+            newUser.rooli === ProjektiRooli.PROJEKTIPAALLIKKO ? true : newUser.esitetaanKuulutuksessa,
+        } as Partial<DBVaylaUser>;
         try {
           const userWithAllInfo = await personSearch.fillInUserInfoFromUserManagement({
             user: userToAdd,
@@ -86,7 +88,11 @@ export class KayttoOikeudetManager {
     // Replace or create new projektipaallikko
     this.removeProjektiPaallikko();
     const projektiPaallikko = await personSearch.fillInUserInfoFromUserManagement({
-      user: { rooli: ProjektiRooli.PROJEKTIPAALLIKKO, email: vastuuhenkiloEmail, esitetaanKuulutuksessa: true } as any,
+      user: {
+        rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
+        email: vastuuhenkiloEmail,
+        esitetaanKuulutuksessa: true,
+      },
       searchMode: SearchMode.EMAIL,
     });
     if (projektiPaallikko) {

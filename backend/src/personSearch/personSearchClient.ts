@@ -42,7 +42,7 @@ export class PersonSearchClient {
     user: user,
     searchMode,
   }: {
-    user: DBVaylaUser;
+    user: Partial<DBVaylaUser>;
     searchMode: SearchMode;
   }): Promise<DBVaylaUser | undefined> {
     const kayttajas = await this.getKayttajas();
@@ -59,7 +59,7 @@ export class PersonSearchClient {
         return;
       }
       mergeKayttaja(user, account);
-      return user;
+      return user as DBVaylaUser;
     }
     return;
   }

@@ -86,10 +86,11 @@ export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactEle
       const tallentamisTiedot: FormValues = {
         oid: projekti.oid,
         kayttoOikeudet:
-          projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, rooli }) => ({
+          projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, rooli, esitetaanKuulutuksessa }) => ({
             kayttajatunnus,
             puhelinnumero: puhelinnumero || "",
             rooli,
+            esitetaanKuulutuksessa,
           })) || [],
       };
       reset(tallentamisTiedot);

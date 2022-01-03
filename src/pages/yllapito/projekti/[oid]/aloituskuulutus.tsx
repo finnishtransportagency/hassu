@@ -9,7 +9,7 @@ import { useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@components/button/Button";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { AloitusKuulutusInput, api, TallennaProjektiInput } from "@services/api";
+import { AloitusKuulutusInput, api, Projekti, TallennaProjektiInput } from "@services/api";
 import log from "loglevel";
 import { PageProps } from "@pages/_app";
 import DatePicker from "@components/form/DatePicker";
@@ -72,9 +72,29 @@ const draftValidationSchema: SchemaOf<FormValues> = Yup.object().shape({
           .shape({
             etunimi: Yup.string().required("Etunimi on pakollinen"),
             sukunimi: Yup.string().required("Sukunimi on pakollinen"),
-            puhelinnumero: puhelinNumeroSchema,
-            sahkoposti: Yup.string().email("Virheellinen sähköposti").required("Sähköposti on pakollinen"),
+            puhelinnumero: puhelinNumeroSchema.test(
+              "puhelinnumero-not-in-kayttoOikeudet",
+              "Puhelinnumero on jo käyttöoikeuslistalla",
+              function (puhelinnumero) {
+                const projekti = this.options.context as Projekti;
+                return !projekti?.kayttoOikeudet?.some(
+                  (kayttaja) => kayttaja.puhelinnumero && kayttaja.puhelinnumero === puhelinnumero
+                );
+              }
+            ),
+            sahkoposti: Yup.string()
+              .required("Sähköposti on pakollinen")
+              .email("Virheellinen sähköposti")
+              .test(
+                "sahkoposti-not-in-kayttoOikeudet",
+                "Sähköpostiosoite on jo käyttöoikeuslistalla",
+                function (sahkoposti) {
+                  const projekti = this.options.context as Projekti;
+                  return !projekti?.kayttoOikeudet?.some((kayttaja) => kayttaja.email && kayttaja.email === sahkoposti);
+                }
+              ),
             organisaatio: Yup.string().required("Organisaatio on pakollinen"),
+            id: Yup.string().nullable().notRequired(),
           })
           .nullable()
       ),
@@ -98,6 +118,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
   const disableFormEdit = projektiHasErrors || isLoadingProjekti || isFormSubmitting;
   const today = new Date().toISOString().split("T")[0];
   const pdfFormRef = useRef<HTMLFormElement | null>(null);
+  const [formContext, setFormContext] = useState<Projekti | undefined>(undefined);
 
   useEffect(() => {
     if (router.isReady) {
@@ -118,6 +139,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
     defaultValues: { aloitusKuulutus: { hankkeenKuvaus: "" } },
     mode: "onChange",
     reValidateMode: "onChange",
+    context: formContext,
   };
 
   const useFormReturn = useForm<FormValues>(formOptions);
@@ -148,14 +170,14 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
           esitettavatYhteystiedot:
             projekti?.aloitusKuulutus?.esitettavatYhteystiedot?.map((yhteystieto) => {
               if (yhteystieto) {
-                const { __typename, ...yhteyst } = yhteystieto;
-                return yhteyst;
+                const { __typename, ...yhteystietoInput } = yhteystieto;
+                return yhteystietoInput;
               }
-
-              return yhteystieto;
+              return null;
             }) || [],
         },
       };
+      setFormContext(projekti);
       reset(tallentamisTiedot);
     }
   }, [projekti, reset]);
@@ -229,7 +251,9 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
             />
             <DatePicker disabled label="Siirtyy suunnitteluvaiheeseen" />
           </div>
-          <KuulutuksenYhteystiedot projekti={projekti} useFormReturn={useFormReturn} />
+          <div className="content">
+            <KuulutuksenYhteystiedot projekti={projekti} useFormReturn={useFormReturn} />
+          </div>
           <Textarea
             label="Hankkeen sisällönkuvaus *"
             {...register("aloitusKuulutus.hankkeenKuvaus")}
