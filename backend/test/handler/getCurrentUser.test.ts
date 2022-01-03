@@ -17,7 +17,7 @@ describe("getCurrentUser", () => {
   });
 
   before(() => {
-    getVaylaUserStub = sinon.stub(userService, "getVaylaUser");
+    getVaylaUserStub = sinon.stub(userService, "requireVaylaUser");
   });
 
   it("should parse token succesfully", async function () {

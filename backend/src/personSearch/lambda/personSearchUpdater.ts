@@ -1,9 +1,9 @@
 import { config } from "../../config";
 import { Kayttaja } from "../../../../common/graphql/apiModel";
 import { adaptPersonSearchResult } from "./personSearchAdapter";
-import * as log from "loglevel";
-import { wrapXrayAsync } from "../../aws/xray";
+import { log } from "../../logger";
 import { Kayttajas } from "../kayttajas";
+import { wrapXrayAsync } from "../../aws/monitoring";
 
 const parseString = require("xml2js").parseStringPromise;
 

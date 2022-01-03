@@ -1,7 +1,7 @@
 import { requirePermissionLuonti } from "../user";
 import { personSearch } from "../personSearch/personSearchClient";
 import { Kayttaja, ListaaKayttajatInput } from "../../../common/graphql/apiModel";
-import log from "loglevel";
+import { log } from "../logger";
 
 export async function listUsers(input: ListaaKayttajatInput): Promise<Kayttaja[]> {
   requirePermissionLuonti();

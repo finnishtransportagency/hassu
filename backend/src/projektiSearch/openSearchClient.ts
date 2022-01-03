@@ -1,5 +1,5 @@
 import { config } from "../config";
-import log from "loglevel";
+import { log } from "../logger";
 
 const { HttpRequest } = require("@aws-sdk/protocol-http");
 const { defaultProvider } = require("@aws-sdk/credential-provider-node");
@@ -31,7 +31,7 @@ async function sendRequest(request: typeof HttpRequest): Promise<any> {
       responseBody += chunk;
     });
     response.body.on("end", () => {
-      log.info("Response body: " + responseBody);
+      log.info("Response body", { responseBody });
       resolve(JSON.parse(responseBody));
     });
   });

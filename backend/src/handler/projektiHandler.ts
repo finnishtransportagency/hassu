@@ -1,9 +1,9 @@
 import { projektiDatabase } from "../database/projektiDatabase";
-import { getVaylaUser, requirePermissionLuku, requirePermissionLuonti, requirePermissionMuokkaa } from "../user";
+import { requirePermissionLuku, requirePermissionLuonti, requirePermissionMuokkaa, requireVaylaUser } from "../user";
 import { velho } from "../velho/velhoClient";
 import { NykyinenKayttaja, ProjektiRooli, Status, TallennaProjektiInput } from "../../../common/graphql/apiModel";
 import { projektiAdapter } from "./projektiAdapter";
-import * as log from "loglevel";
+import { auditLog, log } from "../logger";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import mergeWith from "lodash/mergeWith";
 import { fileService } from "../files/fileService";
@@ -11,7 +11,7 @@ import { fileService } from "../files/fileService";
 export async function loadProjekti(oid: string) {
   const vaylaUser = requirePermissionLuku();
   if (vaylaUser) {
-    log.info("Loading projekti ", oid);
+    log.info("Loading projekti", { oid });
     const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
     if (projektiFromDB) {
       projektiFromDB.tallennettu = true;
@@ -33,22 +33,23 @@ export async function createOrUpdateProjekti(input: TallennaProjektiInput) {
   if (projektiInDB) {
     // Save over existing one
     requirePermissionMuokkaa(projektiInDB);
-    log.info("Saving projekti ", input.oid);
+    auditLog.info("Tallenna projekti", { input });
     await handleFiles(input);
     await projektiDatabase.saveProjekti(await projektiAdapter.adaptProjektiToSave(projektiInDB, input));
   } else {
     requirePermissionLuonti();
-    const projekti = await createProjektiFromVelho(input.oid, getVaylaUser(), input);
-    log.info("Creating projekti to Hassu ", projekti);
+    const projekti = await createProjektiFromVelho(input.oid, requireVaylaUser(), input);
+    log.info("Creating projekti to Hassu", { oid });
     await projektiDatabase.createProjekti(projekti);
-    log.info("Created projekti to Hassu ", oid);
+    log.info("Created projekti to Hassu", { projekti });
+    auditLog.info("Luo projekti", { projekti });
   }
-  return true;
+  return {};
 }
 
 async function createProjektiFromVelho(oid: string, vaylaUser: NykyinenKayttaja, input?: TallennaProjektiInput) {
   try {
-    log.info("Loading projekti from Velho ", oid);
+    log.info("Loading projekti from Velho", { oid });
     const { projekti, vastuuhenkilo } = await velho.loadProjekti(oid);
 
     // Set default state

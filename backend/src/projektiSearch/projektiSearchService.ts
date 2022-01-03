@@ -1,7 +1,7 @@
 import { DBProjekti } from "../database/model/projekti";
 import { adaptProjektiToIndex, adaptSearchResults } from "./projektiSearchAdapter";
 import { openSearchClient } from "./openSearchClient";
-import log from "loglevel";
+import { log } from "../logger";
 
 type SearchParams = {
   oid?: string[];

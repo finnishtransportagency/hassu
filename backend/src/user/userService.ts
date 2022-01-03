@@ -1,31 +1,34 @@
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { validateJwtToken } from "./validatejwttoken";
 import { config } from "../config";
-import log from "loglevel";
+import { log } from "../logger";
 import { IllegalAccessError } from "../error/IllegalAccessError";
 import { NykyinenKayttaja, VaylaKayttajaTyyppi } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../database/model/projekti";
 import { createSignedCookies } from "./signedCookie";
+import { apiConfig } from "../../../common/abstractApi";
 
-function parseRoles(roles: string) {
+function parseRoles(roles: string): string[] | undefined {
   return roles
-    ? roles
+    ? (roles
         .replace("\\", "")
         .split(",")
-        .map((s) => s.split("/").pop())
+        .map((s) => s.split("/").pop()) as string[])
     : undefined;
 }
 
-function adaptKayttajaTyyppi(roolit: string[]) {
+function adaptKayttajaTyyppi(roolit: string[] | null | undefined): VaylaKayttajaTyyppi | undefined {
   const roleToTypeMap = {
     Atunnukset: VaylaKayttajaTyyppi.A_TUNNUS,
     Ltunnukset: VaylaKayttajaTyyppi.L_TUNNUS,
     LXtunnukset: VaylaKayttajaTyyppi.LX_TUNNUS,
-  };
-  for (const role of roolit) {
-    const type = roleToTypeMap[role];
-    if (type) {
-      return type;
+  } as Record<string, VaylaKayttajaTyyppi>;
+  if (roolit) {
+    for (const role of roolit) {
+      const type = roleToTypeMap[role];
+      if (type) {
+        return type;
+      }
     }
   }
   return;
@@ -55,7 +58,10 @@ const identifyLoggedInVaylaUser: IdentifyUserFunc = async (event: AppSyncResolve
       if (!isHassuKayttaja(user)) {
         throw new IllegalAccessError("Ei käyttöoikeutta palveluun " + JSON.stringify(user));
       }
-      user.keksit = await createSignedCookies();
+      // Create signed cookies only for nykyinenKayttaja operation
+      if (event.info?.fieldName === apiConfig.nykyinenKayttaja.name) {
+        user.keksit = await createSignedCookies();
+      }
       return user;
     }
   }
@@ -70,11 +76,9 @@ export const identifyUser = async (event: AppSyncResolverEvent<any>) => {
     if (user) {
       user.vaylaKayttajaTyyppi = adaptKayttajaTyyppi(user.roolit);
       globalThis.currentUser = user;
-      log.info("Current user:", globalThis.currentUser);
       return;
     }
   }
-  log.info("Anonymous user");
 };
 
 export const installIdentifyUserFunction = (func: IdentifyUserFunc) => identifyUserFunctions.push(func);
@@ -90,20 +94,17 @@ if (process.env.USER_IDENTIFIER_FUNCTIONS) {
 export function identifyMockUser(kayttaja?: NykyinenKayttaja) {
   globalThis.currentUser = kayttaja;
   if (globalThis.currentUser) {
-    log.info("Current user:", globalThis.currentUser);
+    log.info("Mock user", { user: globalThis.currentUser });
   } else {
     log.info("Anonymous user");
   }
 }
 
-export function getVaylaUser(): NykyinenKayttaja {
-  if (!globalThis.currentUser) {
-    throw new IllegalAccessError("Väylä-kirjautuminen puuttuu");
-  }
+export function getVaylaUser(): NykyinenKayttaja | undefined {
   return globalThis.currentUser;
 }
 
-function requireVaylaUser(): NykyinenKayttaja {
+export function requireVaylaUser(): NykyinenKayttaja {
   if (!globalThis.currentUser) {
     throw new IllegalAccessError("Väylä-kirjautuminen puuttuu");
   }

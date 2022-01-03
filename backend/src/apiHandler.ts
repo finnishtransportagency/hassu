@@ -1,4 +1,4 @@
-import log from "loglevel";
+import { log } from "./logger";
 import {
   LataaKuulutusPDFQueryVariables,
   LataaProjektiQueryVariables,
@@ -17,7 +17,8 @@ import { createOrUpdateProjekti, listProjektit, loadProjekti } from "./handler/p
 import { apiConfig } from "../../common/abstractApi";
 import { lataaKuulutus } from "./handler/kuulutusHandler";
 import { createUploadURLForFile } from "./handler/fileHandler";
-import { setupXRay, wrapXrayAsync } from "./aws/xray";
+import * as AWSXRay from "aws-xray-sdk";
+import { getCorrelationId, setupLambdaMonitoring, setupLambdaMonitoringMetaData } from "./aws/monitoring";
 
 type AppSyncEventArguments =
   | {}
@@ -25,43 +26,61 @@ type AppSyncEventArguments =
   | ListaaVelhoProjektitQueryVariables
   | TallennaProjektiInput;
 
-export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArguments>) {
-  if (log.getLevel() <= log.levels.DEBUG) {
-    log.debug(JSON.stringify(event));
+type LambdaResult = {
+  data: any;
+  correlationId: string;
+};
+
+async function executeOperation(event: AppSyncResolverEvent<AppSyncEventArguments>) {
+  log.info(event.info.fieldName);
+  switch (event.info.fieldName as any) {
+    case apiConfig.listaaProjektit.name:
+      return await listProjektit();
+    case apiConfig.listaaVelhoProjektit.name:
+      return await listaaVelhoProjektit(event.arguments as ListaaVelhoProjektitQueryVariables);
+    case apiConfig.nykyinenKayttaja.name:
+      return await getCurrentUser();
+    case apiConfig.listaaKayttajat.name:
+      return await listUsers((event.arguments as ListaaKayttajatQueryVariables).hakuehto);
+    case apiConfig.lataaProjekti.name:
+      return await loadProjekti((event.arguments as LataaProjektiQueryVariables).oid);
+    case apiConfig.tallennaProjekti.name:
+      return await createOrUpdateProjekti((event.arguments as TallennaProjektiMutationVariables).projekti);
+    case apiConfig.lataaKuulutusPDF.name:
+      return await lataaKuulutus(event.arguments as LataaKuulutusPDFQueryVariables);
+    case apiConfig.valmisteleTiedostonLataus.name:
+      return await createUploadURLForFile((event.arguments as ValmisteleTiedostonLatausQueryVariables).tiedostoNimi);
+    default:
+      return null;
   }
-  log.info(JSON.stringify(event.info));
+}
 
-  setupXRay();
+export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArguments>): Promise<LambdaResult> {
+  setupLambdaMonitoring();
+  if (log.isLevelEnabled("debug")) {
+    log.debug({ event });
+  }
 
-  return await wrapXrayAsync("handler", async () => {
+  return await AWSXRay.captureAsyncFunc("handler", async (subsegment) => {
     try {
-      await identifyUser(event);
+      setupLambdaMonitoringMetaData(subsegment);
 
-      switch (event.info.fieldName as any) {
-        case apiConfig.listaaProjektit.name:
-          return await listProjektit();
-        case apiConfig.listaaVelhoProjektit.name:
-          return await listaaVelhoProjektit(event.arguments as ListaaVelhoProjektitQueryVariables);
-        case apiConfig.nykyinenKayttaja.name:
-          return await getCurrentUser();
-        case apiConfig.listaaKayttajat.name:
-          return await listUsers((event.arguments as ListaaKayttajatQueryVariables).hakuehto);
-        case apiConfig.lataaProjekti.name:
-          return await loadProjekti((event.arguments as LataaProjektiQueryVariables).oid);
-        case apiConfig.tallennaProjekti.name:
-          return await createOrUpdateProjekti((event.arguments as TallennaProjektiMutationVariables).projekti);
-        case apiConfig.lataaKuulutusPDF.name:
-          return await lataaKuulutus(event.arguments as LataaKuulutusPDFQueryVariables);
-        case apiConfig.valmisteleTiedostonLataus.name:
-          return await createUploadURLForFile(
-            (event.arguments as ValmisteleTiedostonLatausQueryVariables).tiedostoNimi
-          );
-        default:
-          return null;
+      try {
+        await identifyUser(event);
+        const data = await executeOperation(event);
+        return { data, correlationId: getCorrelationId() } as LambdaResult;
+      } catch (e) {
+        log.error(e);
+        e.message = JSON.stringify({
+          message: e.message,
+          correlationId: getCorrelationId(),
+        });
+        throw e;
       }
-    } catch (e) {
-      log.error(e);
-      throw e;
+    } finally {
+      if (subsegment) {
+        subsegment.close();
+      }
     }
   });
 }

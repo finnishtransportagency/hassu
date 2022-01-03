@@ -254,6 +254,7 @@ export class HassuBackendStack extends cdk.Stack {
         lambdaDataSource.createResolver({
           typeName: operation.operationType === OperationType.Query ? "Query" : "Mutation",
           fieldName: operation.name,
+          responseMappingTemplate: appsync.MappingTemplate.fromFile(`${__dirname}/template/response.vtl`),
         });
       }
     }

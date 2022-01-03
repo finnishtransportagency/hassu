@@ -12,11 +12,12 @@ const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 describe("VelhoClient", () => {
   let stubPost: sinon.SinonStub;
-  let velho;
+  let velho: VelhoClient;
 
   beforeEach(() => {
     stubPost = sandbox.stub(axios, "post");
     velho = new VelhoClient();
+    velho.logout();
   });
   afterEach(() => {
     sandbox.restore();
