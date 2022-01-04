@@ -49,6 +49,7 @@ type Projekti {
   """
   tallennettu: Boolean
   lisakuulutuskieli: String
+  eurahoitus: String
 }
 
 type Velho {

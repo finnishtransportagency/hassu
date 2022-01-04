@@ -8,6 +8,7 @@ export function adaptProjektiToIndex(projekti: DBProjekti): any {
   delete doc.suunnitteluSopimus;
   delete doc.aloitusKuulutus;
   delete doc.lisakuulutuskieli;
+  delete doc.eurahoitus;
   return doc;
 }
 

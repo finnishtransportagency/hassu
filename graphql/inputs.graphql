@@ -2,6 +2,7 @@ input TallennaProjektiInput {
   oid: String!
   muistiinpano: String
   lisakuulutuskieli: String
+  eurahoitus: String
   aloitusKuulutus: AloitusKuulutusInput
   suunnitteluSopimus: SuunnitteluSopimusInput
   kayttoOikeudet: [ProjektiKayttajaInput!]
