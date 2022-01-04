@@ -74,7 +74,7 @@ const draftValidationSchema: SchemaOf<FormValues> = Yup.object().shape({
             sukunimi: Yup.string().required("Sukunimi on pakollinen"),
             puhelinnumero: puhelinNumeroSchema.test(
               "puhelinnumero-not-in-kayttoOikeudet",
-              "Puhelinnumero on jo käyttöoikeuslistalla",
+              "Tieto löytyy projektin henkilöistä. Valitse henkilö projektiin tallennettujen listasta",
               function (puhelinnumero) {
                 const projekti = this.options.context as Projekti;
                 return !projekti?.kayttoOikeudet?.some(
@@ -87,7 +87,7 @@ const draftValidationSchema: SchemaOf<FormValues> = Yup.object().shape({
               .email("Virheellinen sähköposti")
               .test(
                 "sahkoposti-not-in-kayttoOikeudet",
-                "Sähköpostiosoite on jo käyttöoikeuslistalla",
+                "Tieto löytyy projektin henkilöistä. Valitse henkilö projektiin tallennettujen listasta",
                 function (sahkoposti) {
                   const projekti = this.options.context as Projekti;
                   return !projekti?.kayttoOikeudet?.some((kayttaja) => kayttaja.email && kayttaja.email === sahkoposti);
