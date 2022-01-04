@@ -2,13 +2,11 @@ import { projektiDatabase } from "../database/projektiDatabase";
 import { getVaylaUser, requirePermissionLuku, requirePermissionLuonti, requirePermissionMuokkaa } from "../user";
 import { velho } from "../velho/velhoClient";
 import { NykyinenKayttaja, ProjektiRooli, Status, TallennaProjektiInput } from "../../../common/graphql/apiModel";
-import { ProjektiAdapter } from "./projektiAdapter";
+import { projektiAdapter } from "./projektiAdapter";
 import * as log from "loglevel";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import mergeWith from "lodash/mergeWith";
 import { fileService } from "../files/fileService";
-
-const projektiAdapter = new ProjektiAdapter();
 
 export async function loadProjekti(oid: string) {
   const vaylaUser = requirePermissionLuku();
@@ -87,7 +85,7 @@ async function createProjektiFromVelho(oid: string, vaylaUser: NykyinenKayttaja,
  */
 async function handleFiles(input: TallennaProjektiInput) {
   const logo = input.suunnitteluSopimus?.logo;
-  if (logo) {
+  if (logo && input.suunnitteluSopimus) {
     input.suunnitteluSopimus.logo = await fileService.persistFileToProjekti({
       uploadedFileSource: logo,
       oid: input.oid,

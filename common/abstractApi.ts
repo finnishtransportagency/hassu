@@ -129,10 +129,15 @@ export abstract class AbstractApi {
     return await this.callYllapitoAPI(apiConfig.listaaKayttajat, { hakuehto: input } as ListaaKayttajatQueryVariables);
   }
 
-  async lataaKuulutusPDF(oid: string, kuulutusTyyppi: KuulutusTyyppi): Promise<PDF> {
+  async lataaKuulutusPDF(
+    oid: string,
+    kuulutusTyyppi: KuulutusTyyppi,
+    muutokset?: TallennaProjektiInput
+  ): Promise<PDF> {
     return await this.callYllapitoAPI(apiConfig.lataaKuulutusPDF, {
       oid,
       kuulutusTyyppi,
+      muutokset,
     } as LataaKuulutusPDFQueryVariables);
   }
 

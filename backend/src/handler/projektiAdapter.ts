@@ -57,3 +57,5 @@ function adaptSuunnitteluSopimus(suunnitteluSopimus?: SuunnitteluSopimus): API.S
   }
   return undefined;
 }
+
+export const projektiAdapter = new ProjektiAdapter();
