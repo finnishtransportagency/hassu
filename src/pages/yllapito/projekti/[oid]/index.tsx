@@ -190,7 +190,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
           <hr />
           <h4 className="vayla-small-title">Muistiinpanot</h4>
           <p>
-            Voit!!! kirjoittaa alla olevaan kenttään sisäisiä muistiinpanoja, jotka näkyvät kaikille projektiin lisätyille
+            Voit kirjoittaa alla olevaan kenttään sisäisiä muistiinpanoja, jotka näkyvät kaikille projektiin lisätyille
             henkilöille. Muistiinpanoa voi muokata ainoastaan henkilöt, joilla on projektiin muokkausoikeudet. Vain
             viimeisimpänä tallennettu muistiinpano jää näkyviin.
           </p>

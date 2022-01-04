@@ -41,7 +41,7 @@ export class ProjektiFixture {
     kayttoOikeudet: [ProjektiFixture.pekkaProjariProjektiKayttaja],
     tyyppi: ProjektiTyyppi.TIE,
     lisakuulutuskieli: "ruotsi",
-    eurahoitus: "ei",
+    eurahoitus: "false",
   };
 
   velhoprojekti1: DBProjekti = {
@@ -89,6 +89,6 @@ export class ProjektiFixture {
       yhteystiedot: [ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus],
     },
     lisakuulutuskieli: "ruotsi",
-    eurahoitus: "ei",
+    eurahoitus: "false",
   };
 }
