@@ -16,6 +16,7 @@ import { kayttoOikeudetSchema } from "src/schemas/kayttoOikeudet";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 import { getProjektiValidationSchema, ProjektiTestType } from "../../../../schemas/projekti";
+import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
@@ -57,6 +58,7 @@ export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
   const { reset, handleSubmit } = useFormReturn;
 
   const onSubmit = async (formData: FormValues) => {
+    deleteFieldArrayIds(formData?.kayttoOikeudet);
     setFormIsSubmitting(true);
     try {
       await api.tallennaProjekti(formData);

@@ -18,6 +18,7 @@ import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotific
 import KuulutuksenYhteystiedot from "@components/projekti/aloituskuulutus/KuulutuksenYhteystiedot";
 import { kayttoOikeudetSchema } from "src/schemas/kayttoOikeudet";
 import { puhelinNumeroSchema } from "src/schemas/puhelinNumero";
+import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
 type RequiredProjektiFields = Required<{
@@ -183,6 +184,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
   }, [projekti, reset]);
 
   const saveDraft = async (formData: FormValues) => {
+    deleteFieldArrayIds(formData?.aloitusKuulutus?.esitettavatYhteystiedot);
     setIsFormSubmitting(true);
     log.log("formData", formData);
     try {

@@ -8,7 +8,6 @@ input TallennaProjektiInput {
 }
 
 input YhteystietoInput {
-  id: String
   etunimi: String!
   sukunimi: String!
   organisaatio: String!
@@ -36,7 +35,6 @@ input SuunnitteluSopimusInput {
 }
 
 input ProjektiKayttajaInput {
-  id: String
   rooli: ProjektiRooli!
   kayttajatunnus: String!
   puhelinnumero: String!
