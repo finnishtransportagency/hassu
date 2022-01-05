@@ -11,60 +11,52 @@ interface Props {
 }
 
 export default function ProjektiPerustiedot({ projekti, kuntalista }: Props): ReactElement {
-    const kuntaOptions = kuntalista?.map((kunta)=>{
-        return {label:kunta, value:kunta.toUpperCase()}
-    });
+  const kuntaOptions = kuntalista?.map((kunta) => {
+    return { label: kunta, value: kunta.toUpperCase() };
+  });
 
   return (
     <>
       <h4 className="vayla-small-title">Suunnittelusopimus</h4>
-          <p>Onko kyseessä suunnittelusopimuksella toteutettava suunnitteluhanke</p>
-          <div>
-            <RadioButton label="Kyllä" name="suunnittelusopimushanke" value="true" id="suunnittelusopimushanke_kylla"></RadioButton>
-            <RadioButton label="Ei" name="suunnittelusopimushanke" value="false" id="suunnittelusopimushanke_ei"></RadioButton>
-          </div>
-          <div className={styles.cell}>
-            <p>Kunnan projektipäällikön tiedot</p>
+      <p>Onko kyseessä suunnittelusopimuksella toteutettava suunnitteluhanke</p>
+      <div>
+        <RadioButton
+          label="Kyllä"
+          name="suunnittelusopimushanke"
+          value="true"
+          id="suunnittelusopimushanke_kylla"
+        ></RadioButton>
+        <RadioButton
+          label="Ei"
+          name="suunnittelusopimushanke"
+          value="false"
+          id="suunnittelusopimushanke_ei"
+        ></RadioButton>
+      </div>
+      <div className={styles.cell}>
+        <p>Kunnan projektipäällikön tiedot</p>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-6 lg:pr-1 relative even:bg-gray-lightest">
-              <div className="lg:col-span-4">
-                <Select
-                  label="Kunta"
-                  options={kuntaOptions ? kuntaOptions : [{label:"", value:""}]}
-                />
-              </div>
-              <div className="lg:col-span-4">
-                <TextInput
-                  label="Etunimi"
-                  value={projekti?.suunnitteluSopimus?.etunimi || ""}
-                />
-              </div>
-              <div className="lg:col-span-4">
-                <TextInput
-                  label="Sukunimi"
-                  value={projekti?.suunnitteluSopimus?.sukunimi || ""}
-                />
-              </div>
-              <div className="lg:col-span-4">
-                <TextInput
-                  label="Puhelinnumero"
-
-                />
-              </div>
-              <div className="lg:col-span-4">
-                <TextInput
-                  label="Sähköposti"
-                  value={projekti?.suunnitteluSopimus?.email?.split("@")[0] || ""}
-                />
-              </div>
-              <div className="lg:col-span-4">
-                <TextInput
-                  label="&nbsp;"
-                  value={projekti?.suunnitteluSopimus?.email?.split("@")[1] || ""}
-                />
-              </div>
-            </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-6 lg:pr-1 relative">
+          <div className="lg:col-span-4">
+            <Select label="Kunta" options={kuntaOptions ? kuntaOptions : [{ label: "", value: "" }]} />
           </div>
+          <div className="lg:col-span-4">
+            <TextInput label="Etunimi" value={projekti?.suunnitteluSopimus?.etunimi || ""} />
+          </div>
+          <div className="lg:col-span-4">
+            <TextInput label="Sukunimi" value={projekti?.suunnitteluSopimus?.sukunimi || ""} />
+          </div>
+          <div className="lg:col-span-4">
+            <TextInput label="Puhelinnumero" />
+          </div>
+          <div className="lg:col-span-4">
+            <TextInput label="Sähköposti" value={projekti?.suunnitteluSopimus?.email?.split("@")[0] || ""} />
+          </div>
+          <div className="lg:col-span-4">
+            <TextInput label="&nbsp;" value={projekti?.suunnitteluSopimus?.email?.split("@")[1] || ""} />
+          </div>
+        </div>
+      </div>
     </>
   );
 }

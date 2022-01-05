@@ -17,6 +17,7 @@ import ButtonLink from "@components/button/ButtonLink";
 import { kayttoOikeudetSchema } from "src/schemas/kayttoOikeudet";
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
+import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
@@ -58,6 +59,7 @@ export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactEle
   const { reset, handleSubmit } = useFormReturn as unknown as UseFormReturn<FormValues>;
 
   const submitCreateAnotherOne = async (formData: FormValues) => {
+    deleteFieldArrayIds(formData?.kayttoOikeudet);
     setFormIsSubmitting(true);
     try {
       await api.tallennaProjekti(formData);
@@ -70,6 +72,7 @@ export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactEle
   };
 
   const submitMoveToProject = async (formData: FormValues) => {
+    deleteFieldArrayIds(formData?.kayttoOikeudet);
     setFormIsSubmitting(true);
     try {
       await api.tallennaProjekti(formData);
@@ -86,10 +89,11 @@ export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactEle
       const tallentamisTiedot: FormValues = {
         oid: projekti.oid,
         kayttoOikeudet:
-          projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, rooli }) => ({
+          projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, rooli, esitetaanKuulutuksessa }) => ({
             kayttajatunnus,
             puhelinnumero: puhelinnumero || "",
             rooli,
+            esitetaanKuulutuksessa,
           })) || [],
       };
       reset(tallentamisTiedot);

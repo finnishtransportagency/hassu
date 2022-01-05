@@ -7,6 +7,7 @@ Object {
     Object {
       "__typename": "ProjektiKayttaja",
       "email": "pekka.projari@vayla.fi",
+      "esitetaanKuulutuksessa": true,
       "kayttajatunnus": "A123",
       "nimi": "Projari, Pekka",
       "organisaatio": "Väylävirasto",
@@ -38,6 +39,7 @@ Array [
     Object {
       "__typename": "ProjektiKayttaja",
       "email": "pekka.projari@vayla.fi",
+      "esitetaanKuulutuksessa": true,
       "kayttajatunnus": "A123",
       "nimi": "Projari, Pekka",
       "organisaatio": "Väylävirasto",
@@ -62,6 +64,7 @@ Array [
     "kayttoOikeudet": Array [
       Object {
         "email": "pekka.projari@vayla.fi",
+        "esitetaanKuulutuksessa": true,
         "kayttajatunnus": "A123",
         "nimi": "Projari, Pekka",
         "organisaatio": "Väylävirasto",
@@ -70,6 +73,7 @@ Array [
       },
       Object {
         "email": "matti.meikalainen@vayla.fi",
+        "esitetaanKuulutuksessa": undefined,
         "kayttajatunnus": "A000111",
         "nimi": "Meikäläinen, Matti",
         "organisaatio": "ELY",
@@ -96,6 +100,7 @@ Array [
     Object {
       "__typename": "ProjektiKayttaja",
       "email": "pekka.projari@vayla.fi",
+      "esitetaanKuulutuksessa": true,
       "kayttajatunnus": "A123",
       "nimi": "Projari, Pekka",
       "organisaatio": "Väylävirasto",
@@ -105,6 +110,7 @@ Array [
     Object {
       "__typename": "ProjektiKayttaja",
       "email": "matti.meikalainen@vayla.fi",
+      "esitetaanKuulutuksessa": undefined,
       "kayttajatunnus": "A000111",
       "nimi": "Meikäläinen, Matti",
       "organisaatio": "ELY",
@@ -122,6 +128,7 @@ Array [
     "kayttoOikeudet": Array [
       Object {
         "email": "pekka.projari@vayla.fi",
+        "esitetaanKuulutuksessa": true,
         "kayttajatunnus": "A123",
         "nimi": "Projari, Pekka",
         "organisaatio": "Väylävirasto",
@@ -141,6 +148,7 @@ Array [
     Object {
       "__typename": "ProjektiKayttaja",
       "email": "pekka.projari@vayla.fi",
+      "esitetaanKuulutuksessa": true,
       "kayttajatunnus": "A123",
       "nimi": "Projari, Pekka",
       "organisaatio": "Väylävirasto",
@@ -158,6 +166,7 @@ Array [
     "kayttoOikeudet": Array [
       Object {
         "email": "pekka.projari@vayla.fi",
+        "esitetaanKuulutuksessa": true,
         "kayttajatunnus": "A123",
         "nimi": "Projari, Pekka",
         "organisaatio": "Väylävirasto",
@@ -166,6 +175,7 @@ Array [
       },
       Object {
         "email": "matti.meikalainen@vayla.fi",
+        "esitetaanKuulutuksessa": undefined,
         "kayttajatunnus": "A000111",
         "nimi": "Meikäläinen, Matti",
         "organisaatio": "ELY",
@@ -185,6 +195,7 @@ Array [
     Object {
       "__typename": "ProjektiKayttaja",
       "email": "pekka.projari@vayla.fi",
+      "esitetaanKuulutuksessa": true,
       "kayttajatunnus": "A123",
       "nimi": "Projari, Pekka",
       "organisaatio": "Väylävirasto",
@@ -194,6 +205,7 @@ Array [
     Object {
       "__typename": "ProjektiKayttaja",
       "email": "matti.meikalainen@vayla.fi",
+      "esitetaanKuulutuksessa": undefined,
       "kayttajatunnus": "A000111",
       "nimi": "Meikäläinen, Matti",
       "organisaatio": "ELY",
@@ -211,6 +223,7 @@ Array [
     "kayttoOikeudet": Array [
       Object {
         "email": "pekka.projari@vayla.fi",
+        "esitetaanKuulutuksessa": true,
         "kayttajatunnus": "A123",
         "nimi": "Projari, Pekka",
         "organisaatio": "Väylävirasto",
@@ -219,6 +232,7 @@ Array [
       },
       Object {
         "email": "matti.meikalainen@vayla.fi",
+        "esitetaanKuulutuksessa": undefined,
         "kayttajatunnus": "A000111",
         "nimi": "Meikäläinen, Matti",
         "organisaatio": "ELY",
@@ -238,6 +252,7 @@ Array [
     Object {
       "__typename": "ProjektiKayttaja",
       "email": "pekka.projari@vayla.fi",
+      "esitetaanKuulutuksessa": true,
       "kayttajatunnus": "A123",
       "nimi": "Projari, Pekka",
       "organisaatio": "Väylävirasto",
@@ -247,6 +262,7 @@ Array [
     Object {
       "__typename": "ProjektiKayttaja",
       "email": "matti.meikalainen@vayla.fi",
+      "esitetaanKuulutuksessa": undefined,
       "kayttajatunnus": "A000111",
       "nimi": "Meikäläinen, Matti",
       "organisaatio": "ELY",

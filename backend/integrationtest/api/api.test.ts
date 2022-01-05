@@ -53,7 +53,7 @@ describe("Api", () => {
     if (process.env.SKIP_VELHO_TESTS) {
       this.skip();
     }
-    const user = runAsVaylaUser();
+    runAsVaylaUser();
 
     const oid = await searchProjectsFromVelhoAndPickFirst();
     const projekti = await api.lataaProjekti(oid);
@@ -100,7 +100,16 @@ describe("Api", () => {
       hankkeenKuvausSaame: "Saameksi",
       siirtyySuunnitteluVaiheeseen: "2022-01-01",
       elyKeskus: "Pirkanmaa",
-      yhteystiedot: [user.uid as string],
+      esitettavatYhteystiedot: [
+        {
+          __typename: "Yhteystieto",
+          etunimi: "Marko",
+          sukunimi: "Koi",
+          sahkoposti: "markku.koi@koi.com",
+          organisaatio: "Kajaani",
+          puhelinnumero: "0293121213",
+        },
+      ],
     };
 
     const lisakuulutuskieli = "ruotsi";

@@ -22,6 +22,7 @@ export class ProjektiFixture {
     email: "pekka.projari@vayla.fi",
     organisaatio: "Väylävirasto",
     puhelinnumero: "123456789",
+    esitetaanKuulutuksessa: null,
   };
 
   tallennaProjektiInput: TallennaProjektiInput = {
@@ -62,6 +63,7 @@ export class ProjektiFixture {
         nimi: ProjektiFixture.pekkaProjariProjektiKayttaja.nimi,
         puhelinnumero: ProjektiFixture.pekkaProjariProjektiKayttaja.puhelinnumero || "",
         organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio,
+        esitetaanKuulutuksessa: ProjektiFixture.pekkaProjariProjektiKayttaja.esitetaanKuulutuksessa,
       },
     ],
     oid: this.PROJEKTI1_OID,
@@ -85,7 +87,16 @@ export class ProjektiFixture {
       hankkeenKuvausSaame: "Saameksi",
       siirtyySuunnitteluVaiheeseen: "2022-01-01",
       elyKeskus: "Pirkanmaa",
-      yhteystiedot: [ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus],
+      esitettavatYhteystiedot: [
+        {
+          __typename: "Yhteystieto",
+          etunimi: "Marko",
+          sukunimi: "Koi",
+          sahkoposti: "markku.koi@koi.com",
+          organisaatio: "Kajaani",
+          puhelinnumero: "0293121213",
+        },
+      ],
     },
     lisakuulutuskieli: "ruotsi",
   };

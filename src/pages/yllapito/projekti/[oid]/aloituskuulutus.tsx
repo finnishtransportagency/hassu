@@ -9,21 +9,31 @@ import { useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@components/button/Button";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { AloitusKuulutusInput, api, TallennaProjektiInput } from "@services/api";
+import { AloitusKuulutusInput, api, Projekti, TallennaProjektiInput } from "@services/api";
 import log from "loglevel";
 import { PageProps } from "@pages/_app";
 import DatePicker from "@components/form/DatePicker";
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
+import KuulutuksenYhteystiedot from "@components/projekti/aloituskuulutus/KuulutuksenYhteystiedot";
+import { kayttoOikeudetSchema } from "src/schemas/kayttoOikeudet";
+import { puhelinNumeroSchema } from "src/schemas/puhelinNumero";
+import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 
-type FormValues = Pick<TallennaProjektiInput, "oid"> & {
-  aloitusKuulutus: Pick<AloitusKuulutusInput, "hankkeenKuvaus" | "kuulutusPaiva">;
+type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
+type RequiredProjektiFields = Required<{
+  [K in keyof ProjektiFields]: NonNullable<ProjektiFields[K]>;
+}>;
+
+type FormValues = RequiredProjektiFields & {
+  aloitusKuulutus: Pick<AloitusKuulutusInput, "esitettavatYhteystiedot" | "kuulutusPaiva" | "hankkeenKuvaus">;
 };
 
 const maxAloituskuulutusLength = 2000;
 
 const draftValidationSchema: SchemaOf<FormValues> = Yup.object().shape({
   oid: Yup.string().required(),
+  kayttoOikeudet: kayttoOikeudetSchema,
   aloitusKuulutus: Yup.object().shape({
     hankkeenKuvaus: Yup.string().max(
       maxAloituskuulutusLength,
@@ -56,6 +66,39 @@ const draftValidationSchema: SchemaOf<FormValues> = Yup.object().shape({
         const todayISODate = new Date().toISOString().split("T")[0];
         return dateString >= todayISODate;
       }),
+    esitettavatYhteystiedot: Yup.array()
+      .notRequired()
+      .of(
+        Yup.object()
+          .shape({
+            etunimi: Yup.string().required("Etunimi on pakollinen"),
+            sukunimi: Yup.string().required("Sukunimi on pakollinen"),
+            puhelinnumero: puhelinNumeroSchema.test(
+              "puhelinnumero-not-in-kayttoOikeudet",
+              "Tieto löytyy projektin henkilöistä. Valitse henkilö projektiin tallennettujen listasta",
+              function (puhelinnumero) {
+                const projekti = this.options.context as Projekti;
+                return !projekti?.kayttoOikeudet?.some(
+                  (kayttaja) => kayttaja.puhelinnumero && kayttaja.puhelinnumero === puhelinnumero
+                );
+              }
+            ),
+            sahkoposti: Yup.string()
+              .required("Sähköposti on pakollinen")
+              .email("Virheellinen sähköposti")
+              .test(
+                "sahkoposti-not-in-kayttoOikeudet",
+                "Tieto löytyy projektin henkilöistä. Valitse henkilö projektiin tallennettujen listasta",
+                function (sahkoposti) {
+                  const projekti = this.options.context as Projekti;
+                  return !projekti?.kayttoOikeudet?.some((kayttaja) => kayttaja.email && kayttaja.email === sahkoposti);
+                }
+              ),
+            organisaatio: Yup.string().required("Organisaatio on pakollinen"),
+            id: Yup.string().nullable().notRequired(),
+          })
+          .nullable()
+      ),
   }),
 });
 
@@ -76,6 +119,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
   const disableFormEdit = projektiHasErrors || isLoadingProjekti || isFormSubmitting;
   const today = new Date().toISOString().split("T")[0];
   const pdfFormRef = useRef<HTMLFormElement | null>(null);
+  const [formContext, setFormContext] = useState<Projekti | undefined>(undefined);
 
   useEffect(() => {
     if (router.isReady) {
@@ -96,15 +140,17 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
     defaultValues: { aloitusKuulutus: { hankkeenKuvaus: "" } },
     mode: "onChange",
     reValidateMode: "onChange",
+    context: formContext,
   };
 
+  const useFormReturn = useForm<FormValues>(formOptions);
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
     watch,
-  } = useForm<FormValues>(formOptions);
+  } = useFormReturn;
 
   const watchKuulutusPaiva = watch("aloitusKuulutus.kuulutusPaiva");
 
@@ -112,17 +158,35 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
     if (projekti && projekti.oid) {
       const tallentamisTiedot: FormValues = {
         oid: projekti.oid,
+        kayttoOikeudet:
+          projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, rooli, esitetaanKuulutuksessa }) => ({
+            kayttajatunnus,
+            puhelinnumero: puhelinnumero || "",
+            rooli,
+            esitetaanKuulutuksessa,
+          })) || [],
         aloitusKuulutus: {
           hankkeenKuvaus: projekti?.aloitusKuulutus?.hankkeenKuvaus,
           kuulutusPaiva: projekti?.aloitusKuulutus?.kuulutusPaiva,
+          esitettavatYhteystiedot:
+            projekti?.aloitusKuulutus?.esitettavatYhteystiedot?.map((yhteystieto) => {
+              if (yhteystieto) {
+                const { __typename, ...yhteystietoInput } = yhteystieto;
+                return yhteystietoInput;
+              }
+              return null;
+            }) || [],
         },
       };
+      setFormContext(projekti);
       reset(tallentamisTiedot);
     }
   }, [projekti, reset]);
 
   const saveDraft = async (formData: FormValues) => {
+    deleteFieldArrayIds(formData?.aloitusKuulutus?.esitettavatYhteystiedot);
     setIsFormSubmitting(true);
+    log.log("formData", formData);
     try {
       await api.tallennaProjekti(formData);
       await reloadProjekti();
@@ -145,66 +209,67 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
   return (
     <ProjektiPageLayout title="Aloituskuulutus">
       <form>
-        <ProjektiErrorNotification
-          projekti={projekti}
-          validationSchema={loadedProjektiValidationSchema}
-          disableValidation={isLoadingProjekti}
-        />
-        <Notification type={NotificationType.WARN}>
-          Aloituskuulutusta ei ole vielä julkaistu palvelun julkisella puolella.{" "}
-          {watchKuulutusPaiva && !errors.aloitusKuulutus?.kuulutusPaiva
-            ? `Kuulutuspäivä on ${new Date(watchKuulutusPaiva).toLocaleDateString("fi")}`
-            : "Kuulutuspäivää ei ole asetettu"}
-          . Voit edelleen tehdä muutoksia projektin tietoihin. Tallennetut muutokset huomioidaan kuulutuksessa.
-        </Notification>
-        <h3 className="vayla-title">Suunnittelun aloittamisesta kuuluttaminen</h3>
-        <p>
-          Kun suunnitelman aloittamisesta kuulutetaan, projektista julkaistaan aloituskuulutustiedot tämän palvelun
-          julkisella puolella. Aloituskuulutuksen näkyvilläoloaika määräytyy annetun kuulutuspäivän mukaan. Projekti
-          siirtyy määräajan jälkeen automaattisesti suunnitteluvaiheeseen.
-        </p>
-        <Notification type={NotificationType.INFO} hideIcon>
-          <div>
-            <h3 className="vayla-small-title">Ohjeet</h3>
-            <ul className="list-disc block pl-5">
-              <li>
-                Anna päivämäärä, jolloin suunnittelun aloittamisesta kuulutetaan tämän palvelun julkisella puolella.
-              </li>
-              <li>
-                Kuvaa aloituskuulutuksessa esitettävään sisällönkuvauskenttään lyhyesti suunnittelukohteen alueellinen
-                rajaus (maantiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet
-                pääpiirteittäin karkealla tasolla. Älä lisää tekstiin linkkejä.
-              </li>
-            </ul>
-          </div>
-        </Notification>
-        <div className="lg:flex md:gap-x-8">
-          <DatePicker
-            label="Kuuluuspäivä *"
-            {...register("aloitusKuulutus.kuulutusPaiva")}
-            disabled={disableFormEdit}
-            min={today}
-            error={errors.aloitusKuulutus?.kuulutusPaiva}
+        <fieldset disabled={disableFormEdit}>
+          <ProjektiErrorNotification
+            projekti={projekti}
+            validationSchema={loadedProjektiValidationSchema}
+            disableValidation={isLoadingProjekti}
           />
-          <DatePicker disabled label="Siirtyy suunnitteluvaiheeseen" />
-        </div>
-        <Textarea
-          label="Hankkeen sisällönkuvaus *"
-          {...register("aloitusKuulutus.hankkeenKuvaus")}
-          error={errors.aloitusKuulutus?.hankkeenKuvaus}
-          maxLength={maxAloituskuulutusLength}
-          disabled={disableFormEdit}
-        />
-        <Notification type={NotificationType.INFO}>
-          Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
-        </Notification>
-        <Button
-          type="submit"
-          onClick={handleSubmit(showPDFPreview)}
-          disabled={!projekti?.aloitusKuulutus?.hankkeenKuvaus}
-        >
-          Katsele kuulutusta
-        </Button>
+          <Notification type={NotificationType.WARN}>
+            Aloituskuulutusta ei ole vielä julkaistu palvelun julkisella puolella.{" "}
+            {watchKuulutusPaiva && !errors.aloitusKuulutus?.kuulutusPaiva
+              ? `Kuulutuspäivä on ${new Date(watchKuulutusPaiva).toLocaleDateString("fi")}`
+              : "Kuulutuspäivää ei ole asetettu"}
+            . Voit edelleen tehdä muutoksia projektin tietoihin. Tallennetut muutokset huomioidaan kuulutuksessa.
+          </Notification>
+          <h3 className="vayla-title">Suunnittelun aloittamisesta kuuluttaminen</h3>
+          <p>
+            Kun suunnitelman aloittamisesta kuulutetaan, projektista julkaistaan aloituskuulutustiedot tämän palvelun
+            julkisella puolella. Aloituskuulutuksen näkyvilläoloaika määräytyy annetun kuulutuspäivän mukaan. Projekti
+            siirtyy määräajan jälkeen automaattisesti suunnitteluvaiheeseen.
+          </p>
+          <Notification type={NotificationType.INFO} hideIcon>
+            <div>
+              <h3 className="vayla-small-title">Ohjeet</h3>
+              <ul className="list-disc block pl-5">
+                <li>
+                  Anna päivämäärä, jolloin suunnittelun aloittamisesta kuulutetaan tämän palvelun julkisella puolella.
+                </li>
+                <li>
+                  Kuvaa aloituskuulutuksessa esitettävään sisällönkuvauskenttään lyhyesti suunnittelukohteen alueellinen
+                  rajaus (maantiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet
+                  pääpiirteittäin karkealla tasolla. Älä lisää tekstiin linkkejä.
+                </li>
+              </ul>
+            </div>
+          </Notification>
+          <div className="lg:flex md:gap-x-8">
+            <DatePicker
+              label="Kuuluuspäivä *"
+              {...register("aloitusKuulutus.kuulutusPaiva")}
+              disabled={disableFormEdit}
+              min={today}
+              error={errors.aloitusKuulutus?.kuulutusPaiva}
+            />
+            <DatePicker disabled label="Siirtyy suunnitteluvaiheeseen" />
+          </div>
+          <div className="content">
+            <KuulutuksenYhteystiedot projekti={projekti} useFormReturn={useFormReturn} />
+          </div>
+          <Textarea
+            label="Hankkeen sisällönkuvaus *"
+            {...register("aloitusKuulutus.hankkeenKuvaus")}
+            error={errors.aloitusKuulutus?.hankkeenKuvaus}
+            maxLength={maxAloituskuulutusLength}
+            disabled={disableFormEdit}
+          />
+          <Notification type={NotificationType.INFO}>
+            Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
+          </Notification>
+          <Button type="submit" onClick={handleSubmit(showPDFPreview)}>
+            Katsele kuulutusta
+          </Button>
+        </fieldset>
       </form>
       <form
         ref={pdfFormRef}
