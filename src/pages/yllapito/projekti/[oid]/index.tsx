@@ -20,17 +20,17 @@ import RadioButton from "@components/form/RadioButton";
 import ProjektiKuntatiedot from "@components/projekti/ProjektiKuntatiedot";
 import ProjektiLiittyvatSuunnitelmat from "@components/projekti/ProjektiLiittyvatSuunnitelmat";
 import ProjektiSuunnitelusopimusTiedot from "@components/projekti/ProjektiSunnittelusopimusTiedot";
-import ProjektiRahoitus from "@components/projekti/ProjektiRahoitus";
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 
-type FormValues = Pick<TallennaProjektiInput, "oid" | "muistiinpano" | "lisakuulutuskieli">;
+type FormValues = Pick<TallennaProjektiInput, "oid" | "muistiinpano" | "lisakuulutuskieli" | "eurahoitus">;
 
 const maxNoteLength = 2000;
 
 const validationSchema: SchemaOf<FormValues> = Yup.object().shape({
   oid: Yup.string().required(),
   lisakuulutuskieli: Yup.string().notRequired(),
+  eurahoitus: Yup.string().notRequired(),
   muistiinpano: Yup.string().max(
     maxNoteLength,
     `Muistiinpanoon voidaan kirjoittaa maksimissaan ${maxNoteLength} merkkiä.`
@@ -63,7 +63,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
 
   const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(validationSchema, { abortEarly: false, recursive: true }),
-    defaultValues: { muistiinpano: "", lisakuulutuskieli: "" },
+    defaultValues: { muistiinpano: "", lisakuulutuskieli: "", eurahoitus: "" },
     mode: "onChange",
     reValidateMode: "onChange",
   };
@@ -96,6 +96,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
         oid: projekti.oid,
         muistiinpano: projekti.muistiinpano || "",
         lisakuulutuskieli: projekti.lisakuulutuskieli || "",
+        eurahoitus: projekti.eurahoitus || "",
       };
       reset(tallentamisTiedot);
       setLanguageChoicesAvailable(hasLanguageSelected);
@@ -170,8 +171,21 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
             <ProjektiSuunnitelusopimusTiedot projekti={projekti} kuntalista={["", "Helsinki", "Espoo", "Vantaa"]} />
           </div>
           <hr />
-          <div>
-            <ProjektiRahoitus />
+          <div className="content">
+          <h4 className="vayla-small-title">EU-rahoitus</h4>
+            <p>Rahoittaako EU suunnitteluhanketta</p>
+            <div>
+                <RadioButton 
+                    label="Kyllä" 
+                    value="true" 
+                    {...register("eurahoitus")}>
+                </RadioButton>
+                <RadioButton 
+                    label="Ei" 
+                    value="false" 
+                    {...register("eurahoitus")}>
+                </RadioButton>
+            </div>
           </div>
           <hr />
           <h4 className="vayla-small-title">Muistiinpanot</h4>

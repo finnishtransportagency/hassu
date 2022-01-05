@@ -4,6 +4,7 @@ exports[`apiHandler updateSuunnitelma saveProjekti should pass expected paramete
 Object {
   "ExpressionAttributeNames": Object {
     "#aloitusKuulutus": "aloitusKuulutus",
+    "#eurahoitus": "eurahoitus",
     "#kayttoOikeudet": "kayttoOikeudet",
     "#lisakuulutuskieli": "lisakuulutuskieli",
     "#muistiinpano": "muistiinpano",
@@ -30,6 +31,7 @@ Object {
       "kuulutusPaiva": "2022-01-02",
       "siirtyySuunnitteluVaiheeseen": "2022-01-01",
     },
+    ":eurahoitus": "false",
     ":kayttoOikeudet": Array [
       Object {
         "email": "pekka.projari@vayla.fi",
@@ -63,6 +65,6 @@ Object {
     "oid": "1",
   },
   "TableName": "Projekti-localstack",
-  "UpdateExpression": "set #kayttoOikeudet = :kayttoOikeudet , #velho = :velho , #muistiinpano = :muistiinpano , #status = :status , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus , #lisakuulutuskieli = :lisakuulutuskieli ",
+  "UpdateExpression": "set #kayttoOikeudet = :kayttoOikeudet , #velho = :velho , #muistiinpano = :muistiinpano , #status = :status , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus , #lisakuulutuskieli = :lisakuulutuskieli , #eurahoitus = :eurahoitus ",
 }
 `;
