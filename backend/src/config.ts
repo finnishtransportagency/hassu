@@ -1,39 +1,31 @@
 import log from "loglevel";
 import * as AWSXRay from "aws-xray-sdk";
 
-function getEnv(name) {
-  const value = process.env[name];
-  if (!value) {
-    throw new Error(name + "-ympäristömuuttujaa ei ole asetettu");
-  }
-  return value;
-}
-
 const config = {
-  projektiTableName: process.env.TABLE_PROJEKTI || "",
-  cognitoURL: getEnv("COGNITO_URL"),
-  velhoAuthURL: getEnv("VELHO_AUTH_URL"),
-  velhoApiURL: getEnv("VELHO_API_URL"),
-  velhoUsername: getEnv("VELHO_USERNAME"),
-  velhoPassword: getEnv("VELHO_PASSWORD"),
+  projektiTableName: process.env.TABLE_PROJEKTI,
+  cognitoURL: process.env.COGNITO_URL,
+  velhoAuthURL: process.env.VELHO_AUTH_URL,
+  velhoApiURL: process.env.VELHO_API_URL,
+  velhoUsername: process.env.VELHO_USERNAME,
+  velhoPassword: process.env.VELHO_PASSWORD,
 
-  personSearchApiURL: getEnv("PERSON_SEARCH_API_URL"),
-  personSearchUsername: getEnv("PERSON_SEARCH_API_USERNAME"),
-  personSearchPassword: getEnv("PERSON_SEARCH_API_PASSWORD"),
-  personSearchAccountTypes: getEnv("PERSON_SEARCH_API_ACCOUNT_TYPES").split(","),
+  personSearchApiURL: process.env.PERSON_SEARCH_API_URL,
+  personSearchUsername: process.env.PERSON_SEARCH_API_USERNAME,
+  personSearchPassword: process.env.PERSON_SEARCH_API_PASSWORD,
+  personSearchAccountTypes: process.env.PERSON_SEARCH_API_ACCOUNT_TYPES?.split(","),
   personSearchUpdaterLambdaArn: process.env.PERSON_SEARCH_UPDATER_LAMBDA_ARN || "",
 
-  searchDomain: getEnv("SEARCH_DOMAIN"),
+  searchDomain: process.env.SEARCH_DOMAIN,
 
-  env: getEnv("ENVIRONMENT"),
+  env: process.env.ENVIRONMENT,
 
-  frontendDomainName: getEnv("FRONTEND_DOMAIN_NAME"),
+  frontendDomainName: process.env.FRONTEND_DOMAIN_NAME,
 
-  frontendPrivateKey: getEnv("FRONTEND_PRIVATEKEY"),
+  frontendPrivateKey: process.env.FRONTEND_PRIVATEKEY,
 
-  uploadBucketName: getEnv("UPLOAD_BUCKET_NAME"),
-  yllapitoBucketName: getEnv("YLLAPITO_BUCKET_NAME"),
-  internalBucketName: getEnv("INTERNAL_BUCKET_NAME"),
+  uploadBucketName: process.env.UPLOAD_BUCKET_NAME,
+  yllapitoBucketName: process.env.YLLAPITO_BUCKET_NAME,
+  internalBucketName: process.env.INTERNAL_BUCKET_NAME,
 };
 
 const logLevel = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : "info";
