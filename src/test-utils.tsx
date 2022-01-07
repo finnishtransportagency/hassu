@@ -3,6 +3,8 @@ import I18nProvider from "next-translate/I18nProvider";
 import i18nConfig, { defaultLocale } from "../i18n";
 import loadNamespaces from "next-translate/loadNamespaces";
 import { I18nDictionary } from "next-translate";
+import commonFI from "./locales/fi/common.json";
+import commonSV from "./locales/sv/common.json";
 
 const getAllNamespaces = () =>
   Object.values(i18nConfig.pages).reduce((namespaces, pageNamespaces) => {
@@ -21,7 +23,10 @@ export async function componentWithTranslation(children: ReactNode) {
   };
   const { __namespaces } = await loadNamespaces(config);
   return (
-    <I18nProvider lang={defaultLocale} namespaces={__namespaces as Record<string, I18nDictionary>}>
+    <I18nProvider
+      lang={defaultLocale}
+      namespaces={{ ...__namespaces, commonFI, commonSV } as Record<string, I18nDictionary>}
+    >
       {children}
     </I18nProvider>
   );

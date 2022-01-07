@@ -99,7 +99,7 @@ export default function Perusta() {
       <section>
         <h1>Perusta uusi projekti</h1>
         <p className="ingress">
-          Hae projekti-VELHOon viety suunnitelma, jonka haluat tuoda Valtion väylien suunnittelu -palveluun. Voit
+          Hae projekti-VELHOon viety suunnitelma, jonka haluat tuoda {t("commonFI:sivustonimi")} -palveluun. Voit
           käyttää hakuehtona projekti-VELHOon tallennettua asiatunnusta tai suunnitelman / projektin nimeä, tai näiden
           osaa.
         </p>
@@ -132,7 +132,7 @@ export default function Perusta() {
               <h3 className="vayla-small-title">Ohjeet</h3>
               <ul className="list-disc block pl-5">
                 <li>
-                  Valitse listasta se suunnitelma, jonka haluat tallentaa Valtion väylien suunnittelu -palveluun uudeksi
+                  Valitse listasta se suunnitelma, jonka haluat tallentaa {t("commonFI:sivustonimi")} -palveluun uudeksi
                   projektiksi. Jos etsimääsi suunnitelmaa ei näy listassa, varmista, että se on tallennettu
                   projekti-VELHOon, ja hakuehdot ovat oikein. Ota tarvittaessa yhteys pääkäyttäjään.
                 </li>
