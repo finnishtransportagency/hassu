@@ -248,7 +248,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
           </Notification>
           <div className="lg:flex md:gap-x-8">
             <DatePicker
-              label="Kuuluuspäivä *"
+              label="Kuulutuspäivä *"
               {...register("aloitusKuulutus.kuulutusPaiva")}
               disabled={disableFormEdit}
               min={today}
@@ -260,7 +260,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
             <KuulutuksenYhteystiedot projekti={projekti} useFormReturn={useFormReturn} />
           </div>
           <Textarea
-            label="Hankkeen sisällönkuvaus *"
+            label="Tiivistetty hankkeen sisällönkuvaus *"
             {...register("aloitusKuulutus.hankkeenKuvaus")}
             error={errors.aloitusKuulutus?.hankkeenKuvaus}
             maxLength={maxAloituskuulutusLength}
@@ -269,8 +269,8 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
           <Notification type={NotificationType.INFO}>
             Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
           </Notification>
-          <Button type="submit" onClick={handleSubmit(showPDFPreview)}>
-            Katsele kuulutusta
+          <Button type="submit" onClick={handleSubmit(showPDFPreview)} disabled={disableFormEdit}>
+            Esikatsele kuulutusta
           </Button>
         </fieldset>
       </form>
