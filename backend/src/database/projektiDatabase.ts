@@ -1,4 +1,4 @@
-import log from "loglevel";
+import { log } from "../logger";
 import { DBProjekti } from "./model/projekti";
 import { config } from "../config";
 import { getDynamoDBDocumentClient } from "./dynamoDB";
@@ -40,7 +40,7 @@ async function loadProjektiByOid(oid: string): Promise<DBProjekti | undefined> {
 const readOnlyFields = ["oid", "tallennettu"];
 
 async function saveProjekti(dbProjekti: DBProjekti) {
-  log.info("Updating projekti to Hassu ", dbProjekti);
+  log.info("Updating projekti to Hassu ", { dbProjekti });
   let updateExpression = "set";
   const ExpressionAttributeNames = {} as any;
   const ExpressionAttributeValues = {} as any;
@@ -71,7 +71,7 @@ async function saveProjekti(dbProjekti: DBProjekti) {
     ExpressionAttributeValues,
   };
 
-  log.info("Updating projekti to Hassu", params);
+  log.info("Updating projekti to Hassu", { params });
   return await getDynamoDBDocumentClient().update(params).promise();
 }
 

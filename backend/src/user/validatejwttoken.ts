@@ -1,4 +1,4 @@
-import log from "loglevel";
+import { log } from "../logger";
 
 const JWT = require("jsonwebtoken");
 const jwkToPem = require("jwk-to-pem");

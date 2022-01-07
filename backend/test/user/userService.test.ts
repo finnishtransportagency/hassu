@@ -8,6 +8,7 @@ import { mockClient } from "aws-sdk-client-mock";
 import { getUSEast1ssmClient } from "../../src/aws/clients";
 import { GetParameterCommand } from "@aws-sdk/client-ssm";
 import { GetParameterCommandOutput } from "@aws-sdk/client-ssm/dist-types/commands/GetParameterCommand";
+import { apiConfig } from "../../../common/abstractApi";
 
 const { expect } = require("chai");
 
@@ -37,9 +38,10 @@ describe("userService", () => {
       "custom:uid": "A000111",
     });
     await userService.identifyUser({
+      info: { fieldName: apiConfig.nykyinenKayttaja.name },
       request: { headers: { "x-iam-accesstoken": "abc.123", "x-iam-data": "" } },
     } as any);
-    const user = userService.getVaylaUser();
+    const user = userService.requireVaylaUser();
     expect(user).to.deep.include(UserFixture.mattiMeikalainen);
     expect(user.keksit).to.have.length(3);
   });
@@ -55,7 +57,7 @@ describe("userService", () => {
     await userService.identifyUser({
       request: { headers: { "x-iam-accesstoken": "abc.123", "x-iam-data": "" } },
     } as any);
-    const user = userService.getVaylaUser();
+    const user = userService.requireVaylaUser();
     expect(user.roolit).to.eql(["abc", "def", "HassuAdmin", "hassu_admin", "hassu_kayttaja"]);
   });
 });

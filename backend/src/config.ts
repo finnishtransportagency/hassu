@@ -1,4 +1,4 @@
-import log from "loglevel";
+import { log } from "./logger";
 import * as AWSXRay from "aws-xray-sdk";
 
 const config = {
@@ -28,25 +28,22 @@ const config = {
   internalBucketName: process.env.INTERNAL_BUCKET_NAME,
 };
 
-const logLevel = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : "info";
-log.setLevel(logLevel as any);
-
 process.env.AWS_XRAY_CONTEXT_MISSING = "LOG_ERROR";
 AWSXRay.setContextMissingStrategy("IGNORE_ERROR");
 
 // Create your own logger, or instantiate one using a library.
 AWSXRay.setLogger({
   error: (message, meta) => {
-    log.error(message, meta);
+    log.error(message, { meta });
   },
   warn: (message, meta) => {
-    log.warn(message, meta);
+    log.warn(message, { meta });
   },
   info: (message, meta) => {
-    log.info(message, meta);
+    log.info(message, { meta });
   },
   debug: (message, meta) => {
-    log.debug(message, meta);
+    log.debug(message, { meta });
   },
 });
 

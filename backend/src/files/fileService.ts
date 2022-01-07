@@ -1,5 +1,5 @@
 import { config } from "../config";
-import log from "loglevel";
+import { log } from "../logger";
 import { NotFoundError } from "../error/NotFoundError";
 import { getS3Client } from "../aws/clients";
 import { uuid } from "../util/uuid";

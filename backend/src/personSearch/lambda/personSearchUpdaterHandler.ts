@@ -1,8 +1,9 @@
-import log from "loglevel";
-import { setupXRay, wrapXrayAsync } from "../../aws/xray";
+import { log } from "../../logger";
 import { personSearchUpdater } from "./personSearchUpdater";
 import { s3Cache } from "../../cache/s3Cache";
 import { PERSON_SEARCH_CACHE_KEY, S3CACHE_TTL_MILLIS } from "../personSearchClient";
+import * as AWSXRay from "aws-xray-sdk";
+import { setupLambdaMonitoring, setupLambdaMonitoringMetaData } from "../../aws/monitoring";
 
 /**
  * This is a Lambda which lists the users fron user directory and caches it to S3. The cached list is then used by the actual
@@ -10,9 +11,10 @@ import { PERSON_SEARCH_CACHE_KEY, S3CACHE_TTL_MILLIS } from "../personSearchClie
  * This Lambda is triggered by the Hassu backend if the cached list is considered outdated.
  */
 export async function handleEvent() {
-  setupXRay();
+  setupLambdaMonitoring();
 
-  return await wrapXrayAsync("personSearchUpdaterHandler", async () => {
+  return await AWSXRay.captureAsyncFunc("personSearchUpdaterHandler", async (subsegment) => {
+    setupLambdaMonitoringMetaData(subsegment);
     try {
       const s3Object = await s3Cache.getS3Object(PERSON_SEARCH_CACHE_KEY, S3CACHE_TTL_MILLIS);
       if (s3Object.expired || s3Object.missing) {
@@ -27,6 +29,10 @@ export async function handleEvent() {
     } catch (e) {
       log.error(e);
       throw e;
+    } finally {
+      if (subsegment) {
+        subsegment.close();
+      }
     }
   });
 }

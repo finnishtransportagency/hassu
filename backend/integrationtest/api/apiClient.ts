@@ -3,10 +3,12 @@ import { AbstractApi, OperationConfig } from "../../../common/abstractApi";
 
 class API extends AbstractApi {
   async callAPI(operation: OperationConfig, variables?: any): Promise<any> {
-    return await apiHandler.handleEvent({
-      info: { fieldName: operation.name },
-      arguments: variables,
-    } as any);
+    return (
+      await apiHandler.handleEvent({
+        info: { fieldName: operation.name },
+        arguments: variables,
+      } as any)
+    ).data;
   }
 
   async callYllapitoAPI(operation: OperationConfig, variables?: any): Promise<any> {
@@ -14,7 +16,7 @@ class API extends AbstractApi {
       info: { fieldName: operation.name },
       arguments: variables,
     } as any;
-    return await apiHandler.handleEvent(payload);
+    return (await apiHandler.handleEvent(payload)).data;
   }
 }
 

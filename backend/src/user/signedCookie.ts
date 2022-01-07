@@ -32,11 +32,16 @@ export async function createSignedCookies(): Promise<string[]> {
 }
 
 async function getCloudFrontSigner() {
-  if (!globalThis.cloudFrontSigner) {
-    const publicKeyId = await getUSEast1ssmClient().send(
-      new GetParameterCommand({ Name: "/" + config.env + "/outputs/FrontendPublicKeyId" })
+  if (!(globalThis as any).cloudFrontSigner) {
+    const parameterKey = "/" + config.env + "/outputs/FrontendPublicKeyId";
+    const publicKeyId = await getUSEast1ssmClient().send(new GetParameterCommand({ Name: parameterKey }));
+    if (!publicKeyId.Parameter?.Value) {
+      throw new Error("Configuration error: SSM parameter " + parameterKey + " not found");
+    }
+    (globalThis as any).cloudFrontSigner = new AWS.CloudFront.Signer(
+      publicKeyId.Parameter.Value,
+      config.frontendPrivateKey
     );
-    globalThis.cloudFrontSigner = new AWS.CloudFront.Signer(publicKeyId.Parameter.Value, config.frontendPrivateKey);
   }
-  return globalThis.cloudFrontSigner;
+  return (globalThis as any).cloudFrontSigner;
 }

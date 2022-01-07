@@ -9,7 +9,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { getS3Client } from "../aws/clients";
 import { config } from "../config";
-import log from "loglevel";
+import { log } from "../logger";
 import { Readable } from "stream";
 import { streamToString } from "../util/streamUtil";
 

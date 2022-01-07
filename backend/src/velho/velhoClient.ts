@@ -1,4 +1,4 @@
-import * as log from "loglevel";
+import { log } from "../logger";
 import { config } from "../config";
 import * as HakuPalvelu from "./hakupalvelu";
 import * as ProjektiRekisteri from "./projektirekisteri";
@@ -10,6 +10,11 @@ import { DBProjekti } from "../database/model/projekti";
 import { personSearch } from "../personSearch/personSearchClient";
 
 const axios = require("axios");
+const NodeCache = require("node-cache");
+const accessTokenCache = new NodeCache({
+  stdTTL: 1000, // Not really used, because the TTL is set based on the expiration time specified by Velho
+});
+const ACCESS_TOKEN_CACHE_KEY = "accessToken";
 
 axios.interceptors.request.use((request: AxiosRequestConfig) => {
   log.debug("Request", request.url + "\n" + JSON.stringify(request.headers) + "\n" + request.data);
@@ -26,11 +31,11 @@ function stripTooLongLogs(response: AxiosResponse) {
 
 axios.interceptors.response.use((response: AxiosResponse) => {
   if (response.status === 200) {
-    if (log.getLevel() <= log.levels.DEBUG) {
-      log.debug("Response", response.status + " " + response.statusText + "\n" + stripTooLongLogs(response));
+    if (log.isLevelEnabled("debug")) {
+      log.debug({ response: response.status + " " + response.statusText + "\n" + stripTooLongLogs(response) });
     }
   } else {
-    log.warn("Response", response.status + " " + response.statusText + "\n" + stripTooLongLogs(response));
+    log.warn({ response: response.status + " " + response.statusText + "\n" + stripTooLongLogs(response) });
   }
   return response;
 });
@@ -46,20 +51,25 @@ function checkResponseIsOK(response: AxiosResponse, message: string) {
 }
 
 export class VelhoClient {
-  private accessTokenExpires: number = 0;
-  private accessToken: any;
-
   public async authenticate() {
-    if (this.accessTokenExpires < Date.now()) {
-      const response = await axios.post(config.velhoAuthURL, "grant_type=client_credentials", {
-        auth: { username: config.velhoUsername, password: config.velhoPassword },
-      });
-      this.accessToken = response.data.access_token;
-      const expiresInSeconds = response.data.expires_in;
-      // Expire token 10 seconds earlier than it really expires for safety margin
-      this.accessTokenExpires = Date.now() + (expiresInSeconds - 10) * 1000;
+    let accessToken = accessTokenCache.get(ACCESS_TOKEN_CACHE_KEY);
+    if (accessToken) {
+      return accessToken;
     }
-    return this.accessToken;
+    const response = await axios.post(config.velhoAuthURL, "grant_type=client_credentials", {
+      auth: { username: config.velhoUsername, password: config.velhoPassword },
+    });
+    accessToken = response.data.access_token;
+    const expiresInSeconds = response.data.expires_in;
+    // Expire token 10 seconds earlier than it really expires for safety margin
+    accessTokenCache.set(ACCESS_TOKEN_CACHE_KEY, accessToken);
+    accessTokenCache.ttl(ACCESS_TOKEN_CACHE_KEY, expiresInSeconds - 10);
+    return accessToken;
+  }
+
+  /** Method to remove access token for testing purposes */
+  public logout() {
+    accessTokenCache.del(ACCESS_TOKEN_CACHE_KEY);
   }
 
   public async searchProjects(term: string, requireExactMatch?: boolean): Promise<VelhoHakuTulos[]> {

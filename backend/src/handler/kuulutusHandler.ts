@@ -1,7 +1,7 @@
 import { projektiDatabase } from "../database/projektiDatabase";
 import { requirePermissionLuku } from "../user";
 import { LataaKuulutusPDFQueryVariables } from "../../../common/graphql/apiModel";
-import * as log from "loglevel";
+import { log } from "../logger";
 import { NotFoundError } from "../error/NotFoundError";
 import { kuulutusService } from "../kuulutus/kuulutusService";
 import { projektiAdapter } from "./projektiAdapter";
@@ -9,7 +9,7 @@ import { projektiAdapter } from "./projektiAdapter";
 export async function lataaKuulutus({ oid, kuulutusTyyppi, muutokset }: LataaKuulutusPDFQueryVariables) {
   const vaylaUser = requirePermissionLuku();
   if (vaylaUser) {
-    log.info("Loading projekti ", oid);
+    log.info("Loading projekti", { oid });
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     if (projekti) {
       if (muutokset) {

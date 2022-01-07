@@ -1,0 +1,7 @@
+#if( $context.error)
+  #set ($details = $util.parseJson($context.error.message))
+  $util.error($details.message, $context.error.type, null, { "correlationId": $details.correlationId })
+#else
+  $util.toJson($context.result.data)
+  $util.appendError("HASSU_INFO", null, null, { "correlationId": $context.result.correlationId })
+#end

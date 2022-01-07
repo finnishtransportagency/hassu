@@ -1,6 +1,6 @@
 import { KuulutusTyyppi, PDF } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../database/model/projekti";
-import log from "loglevel";
+import { log } from "../logger";
 
 export class KuulutusService {
   async createPDF(projekti: DBProjekti, kuulutusTyyppi: KuulutusTyyppi): Promise<PDF> {

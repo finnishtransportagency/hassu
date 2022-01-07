@@ -1,7 +1,7 @@
 import { DBVaylaUser } from "../database/model/projekti";
 import { ProjektiKayttaja, ProjektiKayttajaInput, ProjektiRooli } from "../../../common/graphql/apiModel";
 import { personSearch, SearchMode } from "../personSearch/personSearchClient";
-import * as log from "loglevel";
+import { log } from "../logger";
 import differenceWith from "lodash/differenceWith";
 
 export class KayttoOikeudetManager {

@@ -4,9 +4,9 @@ import { isAorL } from "../user";
 import { mergeKayttaja } from "./personAdapter";
 import { personSearchUpdaterClient } from "./personSearchUpdaterClient";
 import { s3Cache } from "../cache/s3Cache";
-import log from "loglevel";
+import { log } from "../logger";
 import { Kayttajas } from "./kayttajas";
-import { wrapXrayAsync } from "../aws/xray";
+import { wrapXrayAsync } from "../aws/monitoring";
 
 export const S3CACHE_TTL_MILLIS = 15 * 60 * 1000; // 15 min
 export enum SearchMode {
@@ -33,7 +33,7 @@ export class PersonSearchClient {
         return new Kayttajas(kayttajaMap);
       });
     } catch (e) {
-      log.error("getKayttajas", e);
+      log.error("getKayttajas", { e });
       throw e;
     }
   }
