@@ -57,7 +57,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
             <TextInput label="Puhelinnumero" />
           </div>
           <div className="lg:col-span-4">
-            <TextInput label="Sähköposti" value={projekti?.suunnitteluSopimus?.email?.split("@")[0] || ""} />
+            <TextInput label="Sähköpostiosoite" value={projekti?.suunnitteluSopimus?.email?.split("@")[0] || ""} />
           </div>
           <div className="lg:col-span-4">
             <TextInput label="&nbsp;" value={projekti?.suunnitteluSopimus?.email?.split("@")[1] || ""} />

@@ -85,8 +85,8 @@ const draftValidationSchema: SchemaOf<FormValues> = Yup.object().shape({
               }
             ),
             sahkoposti: Yup.string()
-              .required("Sähköposti on pakollinen")
-              .email("Virheellinen sähköposti")
+              .required("Sähköpostiosoite on pakollinen")
+              .email("Virheellinen sähköpostiosoite")
               .test(
                 "sahkoposti-not-in-kayttoOikeudet",
                 "Tieto löytyy projektin henkilöistä. Valitse henkilö projektiin tallennettujen listasta",

@@ -231,7 +231,7 @@ const UserFields = ({
           />
         </div>
         <div className="lg:col-span-4">
-          <TextInput label="Sähköposti *" value={kayttaja?.email || ""} disabled />
+          <TextInput label="Sähköpostiosoite *" value={kayttaja?.email || ""} disabled />
         </div>
       </div>
       <div className="lg:mt-6">
