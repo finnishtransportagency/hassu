@@ -19,6 +19,7 @@ import KuulutuksenYhteystiedot from "@components/projekti/aloituskuulutus/Kuulut
 import { kayttoOikeudetSchema } from "src/schemas/kayttoOikeudet";
 import { puhelinNumeroSchema } from "src/schemas/puhelinNumero";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
+import cloneDeep from "lodash/cloneDeep";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
 type RequiredProjektiFields = Required<{
@@ -202,7 +203,9 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
   };
 
   const showPDFPreview = async (formData: FormValues) => {
-    setSerializedFormData(JSON.stringify(formData));
+    const formDataToSend = cloneDeep(formData);
+    deleteFieldArrayIds(formDataToSend?.aloitusKuulutus?.esitettavatYhteystiedot);
+    setSerializedFormData(JSON.stringify(formDataToSend));
     pdfFormRef.current?.submit();
   };
 

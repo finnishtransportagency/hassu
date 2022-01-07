@@ -42,12 +42,16 @@ export type FrontendStackOutputs = {
   CloudfrontPrivateDNSName: string;
 };
 
-export class HassuFrontendStack extends cdk.Stack {
-  private appSyncAPIKey?: string;
-  // @ts-ignore
-  private cloudFrontOriginAccessIdentity: string;
+interface HassuFrontendStackProps {
+  internalBucket: Bucket;
+}
 
-  constructor(scope: Construct) {
+export class HassuFrontendStack extends cdk.Stack {
+  private props: HassuFrontendStackProps;
+  private appSyncAPIKey?: string;
+  private cloudFrontOriginAccessIdentity!: string;
+
+  constructor(scope: Construct, props: HassuFrontendStackProps) {
     const env = Config.env;
     super(scope, "frontend", {
       stackName: "hassu-frontend-" + env,
@@ -56,6 +60,7 @@ export class HassuFrontendStack extends cdk.Stack {
       },
       tags: Config.tags,
     });
+    this.props = props;
   }
 
   public async process() {
@@ -120,7 +125,14 @@ export class HassuFrontendStack extends cdk.Stack {
       cloudfrontProps: { priceClass: PriceClass.PRICE_CLASS_100 },
       invalidationPaths: ["/*"],
     });
+    this.configureNextJSAWSPermissions(nextJSLambdaEdge);
 
+    new cdk.CfnOutput(this, "CloudfrontPrivateDNSName", {
+      value: nextJSLambdaEdge.distribution.distributionDomainName || "",
+    });
+  }
+
+  private configureNextJSAWSPermissions(nextJSLambdaEdge: NextJSLambdaEdge) {
     nextJSLambdaEdge.edgeLambdaRole.addToPolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
@@ -128,11 +140,10 @@ export class HassuFrontendStack extends cdk.Stack {
         resources: ["*"],
       })
     );
+
     nextJSLambdaEdge.edgeLambdaRole.grantPassRole(new ServicePrincipal("logger.cloudfront.amazonaws.com"));
 
-    new cdk.CfnOutput(this, "CloudfrontPrivateDNSName", {
-      value: nextJSLambdaEdge.distribution.distributionDomainName || "",
-    });
+    this.props.internalBucket.grantReadWrite(nextJSLambdaEdge.edgeLambdaRole);
   }
 
   private createFrontendRequestFunction(

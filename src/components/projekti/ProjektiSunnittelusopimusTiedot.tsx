@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { Projekti } from "@services/api";
 import styles from "@styles/projekti/ProjektiPerustiedot.module.css";
 import RadioButton from "@components/form/RadioButton";
@@ -10,10 +10,17 @@ interface Props {
   kuntalista?: string[];
 }
 
-export default function ProjektiPerustiedot({ projekti, kuntalista }: Props): ReactElement {
-  const kuntaOptions = kuntalista?.map((kunta) => {
-    return { label: kunta, value: kunta.toUpperCase() };
-  });
+export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
+  const [kuntaOptions, setKuntaOptions] = useState([]);
+
+  const getKuntaLista = async () => {
+    const list = await (await fetch("/api/kuntalista.json")).json();
+    setKuntaOptions(list);
+  };
+
+  useEffect(() => {
+    getKuntaLista();
+  }, []);
 
   return (
     <>

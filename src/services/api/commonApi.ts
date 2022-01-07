@@ -5,6 +5,7 @@ import { setContext } from "apollo-link-context";
 import gql from "graphql-tag";
 import ApolloClient, { DefaultOptions } from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
+import log from "loglevel";
 
 const defaultOptions: DefaultOptions = {
   watchQuery: {
@@ -57,6 +58,10 @@ export class API extends AbstractApi {
           variables,
           fetchPolicy: "network-only",
         });
+        if (queryResponse.errors && !queryResponse.data) {
+          log.warn(queryResponse.errors);
+          throw new Error("API palautti virheen.");
+        }
         return queryResponse.data?.[operation.name];
       case OperationType.Mutation:
         const fetchResponse: FetchResult<any> = await client.mutate({

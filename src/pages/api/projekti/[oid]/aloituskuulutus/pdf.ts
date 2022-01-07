@@ -1,19 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { api, KuulutusTyyppi } from "@services/api";
-import { GetParameterCommand, SSMClient } from "@aws-sdk/client-ssm";
-import AWS from "aws-sdk";
-import awsExports from "../../../../../aws-exports";
+import { GetParameterCommand } from "@aws-sdk/client-ssm";
+import { getSSMClient } from "../../../../../../backend/src/aws/clients";
+import { setupXRay } from "../../../../../../backend/src/aws/xray";
 
-const credentials = new AWS.Credentials({
-  accessKeyId: awsExports.AWS_ACCESS_KEY_ID || "",
-  secretAccessKey: awsExports.AWS_SECRET_ACCESS_KEY || "",
-  sessionToken: awsExports.AWS_SESSION_TOKEN || "",
-});
-AWS.config.update({
-  credentials,
-});
+setupXRay();
 
-const ssm = new SSMClient({ region: "eu-west-1", credentials });
+const ssm = getSSMClient();
 
 async function getParameter(name: string) {
   return (await ssm.send(new GetParameterCommand({ Name: name }))).Parameter?.Value;
