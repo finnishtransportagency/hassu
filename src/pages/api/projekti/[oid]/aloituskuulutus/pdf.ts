@@ -2,9 +2,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { api, KuulutusTyyppi } from "@services/api";
 import { GetParameterCommand } from "@aws-sdk/client-ssm";
 import { getSSMClient } from "../../../../../../backend/src/aws/clients";
-import { setupXRay } from "../../../../../../backend/src/aws/xray";
+import { setupLambdaMonitoring } from "../../../../../../backend/src/aws/monitoring";
 
-setupXRay();
+setupLambdaMonitoring();
 
 const ssm = getSSMClient();
 

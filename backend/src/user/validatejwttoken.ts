@@ -4,10 +4,10 @@ const JWT = require("jsonwebtoken");
 const jwkToPem = require("jwk-to-pem");
 const Axios = require("axios");
 
-let cachedKeys = null;
+let cachedKeys: any = null;
 
 // Fetch JWK's from Cognito or cache
-const getPublicKeys = async (issuerUrl) => {
+const getPublicKeys = async (issuerUrl: string) => {
   if (!cachedKeys) {
     cachedKeys = {};
     const publicKeys = await Axios.default.get(issuerUrl + "/.well-known/jwks.json");
@@ -20,7 +20,7 @@ const getPublicKeys = async (issuerUrl) => {
   }
 };
 
-const validateJwtToken = async (token, dataToken, issuer) => {
+const validateJwtToken = async (token: string | undefined, dataToken: string, issuer: string) => {
   if (!token) {
     log.debug("IAM JWT Token missing");
     return false;

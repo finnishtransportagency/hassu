@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { S3Cache } from "../../../backend/src/cache/s3Cache";
 import log from "loglevel";
-import { setupXRay, wrapXrayAsync } from "../../../backend/src/aws/xray";
+import { setupLambdaMonitoring, wrapXrayAsync } from "../../../backend/src/aws/monitoring";
 
 const KUNTALISTA_TTL_SECONDS = 24 * 3 * 60 * 60;
 
@@ -17,7 +17,7 @@ async function fetchKuntaLista() {
 }
 
 export default async function handler(_req: NextApiRequest, res: NextApiResponse) {
-  setupXRay();
+  setupLambdaMonitoring();
   return await wrapXrayAsync("handler", async () => {
     const s3Cache = new S3Cache(KUNTALISTA_TTL_SECONDS);
     const kuntaList: Record<string, string> = await s3Cache.get(
