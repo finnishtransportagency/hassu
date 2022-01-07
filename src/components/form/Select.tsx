@@ -33,14 +33,13 @@ const Select = (
             </option>
           ))}
         </select>
-        <FontAwesomeIcon
-          icon="chevron-down"
-          className={classNames(
-            "absolute right-3 pointer-events-none",
-            props.disabled ? "text-font-primary" : "text-primary-dark"
-          )}
-          style={{ top: `calc(50% - 0.5rem)` }}
-        />
+        {!props.disabled && (
+          <FontAwesomeIcon
+            icon="chevron-down"
+            className={classNames("absolute right-3 pointer-events-none text-primary-dark")}
+            style={{ top: `calc(50% - 0.5rem)` }}
+          />
+        )}
       </div>
     </FormGroup>
   );
