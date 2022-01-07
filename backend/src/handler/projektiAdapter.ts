@@ -5,6 +5,7 @@ import pickBy from "lodash/pickBy";
 import identity from "lodash/identity";
 import mergeWith from "lodash/mergeWith";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
+import { personSearch } from "../personSearch/personSearchClient";
 
 function removeUndefinedFields(object: any) {
   return pickBy(object, identity);
@@ -16,7 +17,7 @@ export class ProjektiAdapter {
     return removeUndefinedFields({
       __typename: "Projekti",
       tallennettu: !!dbProjekti.tallennettu,
-      kayttoOikeudet: new KayttoOikeudetManager(dbProjekti.kayttoOikeudet).getAPIKayttoOikeudet(),
+      kayttoOikeudet: KayttoOikeudetManager.adaptAPIKayttoOikeudet(dbProjekti.kayttoOikeudet),
       tyyppi: tyyppi as API.ProjektiTyyppi,
       aloitusKuulutus: adaptAloitusKuulutus(aloitusKuulutus),
       suunnitteluSopimus: adaptSuunnitteluSopimus(suunnitteluSopimus),
@@ -28,8 +29,8 @@ export class ProjektiAdapter {
     // Pick only fields that are relevant to DB
     const { oid, muistiinpano, kayttoOikeudet, aloitusKuulutus, suunnitteluSopimus, lisakuulutuskieli, eurahoitus } =
       changes;
-    const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet);
-    await kayttoOikeudetManager.applyChanges(kayttoOikeudet);
+    const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
+    kayttoOikeudetManager.applyChanges(kayttoOikeudet);
     return removeUndefinedFields(
       mergeWith(
         {},
@@ -47,7 +48,7 @@ export class ProjektiAdapter {
   }
 }
 
-function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus): API.AloitusKuulutus | undefined {
+function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.AloitusKuulutus | undefined {
   if (kuulutus) {
     const { esitettavatYhteystiedot, ...otherKuulutusFields } = kuulutus;
     const yhteystiedot: API.Yhteystieto[] | undefined = esitettavatYhteystiedot?.map(
@@ -66,7 +67,7 @@ function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus): API.AloitusKuulutus |
   return undefined;
 }
 
-function adaptSuunnitteluSopimus(suunnitteluSopimus?: SuunnitteluSopimus): API.SuunnitteluSopimus | undefined {
+function adaptSuunnitteluSopimus(suunnitteluSopimus?: SuunnitteluSopimus | null): API.SuunnitteluSopimus | undefined {
   if (suunnitteluSopimus) {
     return { __typename: "SuunnitteluSopimus", ...suunnitteluSopimus };
   }

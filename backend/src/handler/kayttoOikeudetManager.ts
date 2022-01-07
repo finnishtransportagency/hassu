@@ -1,17 +1,22 @@
 import { DBVaylaUser } from "../database/model/projekti";
-import { ProjektiKayttaja, ProjektiKayttajaInput, ProjektiRooli } from "../../../common/graphql/apiModel";
-import { personSearch, SearchMode } from "../personSearch/personSearchClient";
+import { Kayttaja, ProjektiKayttaja, ProjektiKayttajaInput, ProjektiRooli } from "../../../common/graphql/apiModel";
+import { SearchMode } from "../personSearch/personSearchClient";
 import { log } from "../logger";
 import differenceWith from "lodash/differenceWith";
+import { isAorL } from "../user";
+import { mergeKayttaja } from "../personSearch/personAdapter";
+import { Kayttajas } from "../personSearch/kayttajas";
 
 export class KayttoOikeudetManager {
   private users: DBVaylaUser[];
+  private kayttajas: Kayttajas;
 
-  constructor(users: DBVaylaUser[]) {
+  constructor(users: DBVaylaUser[], kayttajas: Kayttajas) {
     this.users = users;
+    this.kayttajas = kayttajas;
   }
 
-  async applyChanges(changes: ProjektiKayttajaInput[] | undefined | null) {
+  applyChanges(changes: ProjektiKayttajaInput[] | undefined | null) {
     if (!changes) {
       return;
     }
@@ -44,28 +49,26 @@ export class KayttoOikeudetManager {
 
     // Add new users
     const newUsers = differenceWith(changes, resultUsers, (u1, u2) => u1.kayttajatunnus === u2.kayttajatunnus);
-    await Promise.all(
-      newUsers.map(async (newUser) => {
-        const userToAdd = {
-          puhelinnumero: newUser.puhelinnumero,
-          kayttajatunnus: newUser.kayttajatunnus,
-          rooli: newUser.rooli,
-          esitetaanKuulutuksessa:
-            newUser.rooli === ProjektiRooli.PROJEKTIPAALLIKKO ? true : newUser.esitetaanKuulutuksessa,
-        } as Partial<DBVaylaUser>;
-        try {
-          const userWithAllInfo = await personSearch.fillInUserInfoFromUserManagement({
-            user: userToAdd,
-            searchMode: SearchMode.UID,
-          });
-          if (userWithAllInfo) {
-            resultUsers.push(userWithAllInfo);
-          }
-        } catch (e) {
-          log.error(e);
+    newUsers.map((newUser) => {
+      const userToAdd = {
+        puhelinnumero: newUser.puhelinnumero,
+        kayttajatunnus: newUser.kayttajatunnus,
+        rooli: newUser.rooli,
+        esitetaanKuulutuksessa:
+          newUser.rooli === ProjektiRooli.PROJEKTIPAALLIKKO ? true : newUser.esitetaanKuulutuksessa,
+      } as Partial<DBVaylaUser>;
+      try {
+        const userWithAllInfo = this.fillInUserInfoFromUserManagement({
+          user: userToAdd,
+          searchMode: SearchMode.UID,
+        });
+        if (userWithAllInfo) {
+          resultUsers.push(userWithAllInfo);
         }
-      })
-    );
+      } catch (e) {
+        log.error(e);
+      }
+    });
     this.users = resultUsers;
   }
 
@@ -73,21 +76,21 @@ export class KayttoOikeudetManager {
     return this.users;
   }
 
-  getAPIKayttoOikeudet(): ProjektiKayttaja[] {
-    return this.users.map((user) => ({
+  static adaptAPIKayttoOikeudet(users: DBVaylaUser[]): ProjektiKayttaja[] {
+    return users.map((user) => ({
       __typename: "ProjektiKayttaja",
       ...user,
     }));
   }
 
-  async addProjektiPaallikkoFromEmail(vastuuhenkiloEmail: string) {
-    return await this.resolveProjektiPaallikkoFromVelhoVastuuhenkilo(vastuuhenkiloEmail);
+  addProjektiPaallikkoFromEmail(vastuuhenkiloEmail: string) {
+    return this.resolveProjektiPaallikkoFromVelhoVastuuhenkilo(vastuuhenkiloEmail);
   }
 
-  async resolveProjektiPaallikkoFromVelhoVastuuhenkilo(vastuuhenkiloEmail: string) {
+  resolveProjektiPaallikkoFromVelhoVastuuhenkilo(vastuuhenkiloEmail: string) {
     // Replace or create new projektipaallikko
     this.removeProjektiPaallikko();
-    const projektiPaallikko = await personSearch.fillInUserInfoFromUserManagement({
+    const projektiPaallikko = this.fillInUserInfoFromUserManagement({
       user: {
         rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
         email: vastuuhenkiloEmail,
@@ -101,8 +104,8 @@ export class KayttoOikeudetManager {
     }
   }
 
-  async addUserByKayttajatunnus(kayttajatunnus: string, rooli: ProjektiRooli) {
-    const user = await personSearch.fillInUserInfoFromUserManagement({
+  addUserByKayttajatunnus(kayttajatunnus: string, rooli: ProjektiRooli) {
+    const user = this.fillInUserInfoFromUserManagement({
       user: { kayttajatunnus, rooli } as any,
       searchMode: SearchMode.UID,
     });
@@ -110,6 +113,32 @@ export class KayttoOikeudetManager {
       this.users.push(user);
       return user;
     }
+  }
+
+  private fillInUserInfoFromUserManagement({
+    user: user,
+    searchMode,
+  }: {
+    user: Partial<DBVaylaUser>;
+    searchMode: SearchMode;
+  }): DBVaylaUser | undefined {
+    const kayttajas = this.kayttajas;
+    let account: Kayttaja | undefined;
+
+    if (searchMode === SearchMode.UID) {
+      account = kayttajas.getKayttajaByUid(user.kayttajatunnus);
+    } else {
+      account = kayttajas.findByEmail(user.email!);
+    }
+    if (account) {
+      // Projektipaallikko must be either L or A account
+      if (user.rooli === ProjektiRooli.PROJEKTIPAALLIKKO && !isAorL(account)) {
+        return;
+      }
+      mergeKayttaja(user, account);
+      return user as DBVaylaUser;
+    }
+    return;
   }
 
   private removeProjektiPaallikko() {

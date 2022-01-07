@@ -7,6 +7,7 @@ import { auditLog, log } from "../logger";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import mergeWith from "lodash/mergeWith";
 import { fileService } from "../files/fileService";
+import { personSearch } from "../personSearch/personSearchClient";
 
 export async function loadProjekti(oid: string) {
   const vaylaUser = requirePermissionLuku();
@@ -55,21 +56,21 @@ async function createProjektiFromVelho(oid: string, vaylaUser: NykyinenKayttaja,
     // Set default state
     projekti.status = Status.EI_JULKAISTU;
 
-    const kayttoOikeudet = new KayttoOikeudetManager([]);
+    const kayttoOikeudet = new KayttoOikeudetManager([], await personSearch.getKayttajas());
 
     if (input) {
       // Saving a new projekti, so adjusting data based on the input
       const { muistiinpano } = input;
       mergeWith(projekti, { muistiinpano });
       // Add new users given as inputs
-      await kayttoOikeudet.applyChanges(input.kayttoOikeudet);
+      kayttoOikeudet.applyChanges(input.kayttoOikeudet);
     } else {
       // Loading a projekti from Velho for a first time
-      const projektiPaallikko = await kayttoOikeudet.addProjektiPaallikkoFromEmail(vastuuhenkilo);
+      const projektiPaallikko = kayttoOikeudet.addProjektiPaallikkoFromEmail(vastuuhenkilo);
 
       // Prefill current user as sihteeri if it is different from project manager
       if ((!projektiPaallikko || projektiPaallikko.kayttajatunnus !== vaylaUser.uid) && vaylaUser.uid) {
-        await kayttoOikeudet.addUserByKayttajatunnus(vaylaUser.uid, ProjektiRooli.OMISTAJA);
+        kayttoOikeudet.addUserByKayttajatunnus(vaylaUser.uid, ProjektiRooli.OMISTAJA);
       }
     }
 
