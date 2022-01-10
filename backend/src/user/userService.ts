@@ -44,8 +44,8 @@ export type IdentifyUserFunc = (event: AppSyncResolverEvent<any>) => Promise<Nyk
 const identifyLoggedInVaylaUser: IdentifyUserFunc = async (event: AppSyncResolverEvent<any>) => {
   const headers = event.request?.headers;
 
-  if (headers) {
-    const jwt = await validateJwtToken(headers["x-iam-accesstoken"], headers["x-iam-data"], config.cognitoURL);
+  if (headers && headers["x-iam-accesstoken"] && config.cognitoURL) {
+    const jwt = await validateJwtToken(headers["x-iam-accesstoken"], headers["x-iam-data"] || "", config.cognitoURL);
     if (jwt) {
       const roolit = parseRoles(jwt["custom:rooli"]);
       const user: NykyinenKayttaja = {
@@ -70,12 +70,12 @@ const identifyLoggedInVaylaUser: IdentifyUserFunc = async (event: AppSyncResolve
 const identifyUserFunctions = [identifyLoggedInVaylaUser];
 
 export const identifyUser = async (event: AppSyncResolverEvent<any>) => {
-  globalThis.currentUser = undefined;
+  (globalThis as any).currentUser = undefined;
   for (const identifyUserFunction of identifyUserFunctions) {
     const user = await identifyUserFunction(event);
     if (user) {
       user.vaylaKayttajaTyyppi = adaptKayttajaTyyppi(user.roolit);
-      globalThis.currentUser = user;
+      (globalThis as any).currentUser = user;
       return;
     }
   }
@@ -92,23 +92,23 @@ if (process.env.USER_IDENTIFIER_FUNCTIONS) {
  * @param kayttaja
  */
 export function identifyMockUser(kayttaja?: NykyinenKayttaja) {
-  globalThis.currentUser = kayttaja;
-  if (globalThis.currentUser) {
-    log.info("Mock user", { user: globalThis.currentUser });
+  (globalThis as any).currentUser = kayttaja;
+  if ((globalThis as any).currentUser) {
+    log.info("Mock user", { user: (globalThis as any).currentUser });
   } else {
     log.info("Anonymous user");
   }
 }
 
 export function getVaylaUser(): NykyinenKayttaja | undefined {
-  return globalThis.currentUser;
+  return (globalThis as any).currentUser;
 }
 
 export function requireVaylaUser(): NykyinenKayttaja {
-  if (!globalThis.currentUser) {
+  if (!(globalThis as any).currentUser) {
     throw new IllegalAccessError("Väylä-kirjautuminen puuttuu");
   }
-  return globalThis.currentUser;
+  return (globalThis as any).currentUser;
 }
 
 // Role: admin

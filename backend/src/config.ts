@@ -40,7 +40,10 @@ AWSXRay.setLogger({
     log.warn(message, { meta });
   },
   info: (message, meta) => {
-    log.info(message, { meta });
+    // Reduce unnecessary logging in local development
+    if (process.env.NODE_ENV !== "development") {
+      log.info(message, { meta });
+    }
   },
   debug: (message, meta) => {
     log.debug(message, { meta });

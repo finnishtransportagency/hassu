@@ -34,7 +34,7 @@ export function setupLambdaMonitoring() {
 
 export function setupLambdaMonitoringMetaData(subsegment: Subsegment | undefined) {
   const correlationId = getCorrelationId();
-  subsegment?.addAnnotation("env", config.env);
+  subsegment?.addAnnotation("env", config.env || "undefined");
   if (correlationId) {
     subsegment?.addAnnotation("correlationId", correlationId);
   }

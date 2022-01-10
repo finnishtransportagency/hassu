@@ -13,6 +13,7 @@ import { BackendStackOutputs } from "../lib/hassu-backend";
 import { DatabaseStackOutputs } from "../lib/hassu-database";
 import { SearchStackOutputs } from "../lib/hassu-search";
 import { FrontendStackOutputs } from "../lib/hassu-frontend";
+import { Config } from "../lib/config";
 
 const usEastCFClient = new CloudFormationClient({ region: "us-east-1" });
 const euWestCFClient = new CloudFormationClient({ region: "eu-west-1" });
@@ -159,6 +160,7 @@ async function main() {
 
   writeEnvFile(".env.local", {
     REACT_APP_API_URL: backendStackOutputs.AppSyncAPIURL,
+    INTERNAL_BUCKET_NAME: Config.internalBucketName,
   });
 }
 

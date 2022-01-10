@@ -168,7 +168,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
           </div>
           <hr />
           <div className="content">
-            <ProjektiSuunnitelusopimusTiedot projekti={projekti} kuntalista={["", "Helsinki", "Espoo", "Vantaa"]} />
+            <ProjektiSuunnitelusopimusTiedot projekti={projekti}/>
           </div>
           <hr />
           <div className="content">
