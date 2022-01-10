@@ -8,7 +8,7 @@ import useProjekti from "src/hooks/useProjekti";
 import { api, TallennaProjektiInput } from "@services/api";
 import { SchemaOf } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm, UseFormProps } from "react-hook-form";
+import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import Button from "@components/button/Button";
 import Textarea from "@components/form/Textarea";
 import ButtonLink from "@components/button/ButtonLink";
@@ -22,8 +22,12 @@ import ProjektiLiittyvatSuunnitelmat from "@components/projekti/ProjektiLiittyva
 import ProjektiSuunnitelusopimusTiedot from "@components/projekti/ProjektiSunnittelusopimusTiedot";
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
+import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 
-type FormValues = Pick<TallennaProjektiInput, "oid" | "muistiinpano" | "lisakuulutuskieli" | "eurahoitus">;
+type FormValues = Pick<
+  TallennaProjektiInput,
+  "oid" | "muistiinpano" | "lisakuulutuskieli" | "eurahoitus" | "liittyvatSuunnitelmat"
+>;
 
 const maxNoteLength = 2000;
 
@@ -31,6 +35,14 @@ const validationSchema: SchemaOf<FormValues> = Yup.object().shape({
   oid: Yup.string().required(),
   lisakuulutuskieli: Yup.string().notRequired(),
   eurahoitus: Yup.string().notRequired(),
+  liittyvatSuunnitelmat: Yup.array()
+    .of(
+      Yup.object().shape({
+        asiatunnus: Yup.string().required(),
+        nimi: Yup.string().required(),
+      })
+    )
+    .notRequired(),
   muistiinpano: Yup.string().max(
     maxNoteLength,
     `Muistiinpanoon voidaan kirjoittaa maksimissaan ${maxNoteLength} merkkiä.`
@@ -63,7 +75,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
 
   const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(validationSchema, { abortEarly: false, recursive: true }),
-    defaultValues: { muistiinpano: "", lisakuulutuskieli: "", eurahoitus: "" },
+    defaultValues: { muistiinpano: "", lisakuulutuskieli: "", eurahoitus: "", liittyvatSuunnitelmat: [] },
     mode: "onChange",
     reValidateMode: "onChange",
   };
@@ -77,6 +89,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   } = useFormReturn;
 
   const onSubmit = async (formData: FormValues) => {
+    deleteFieldArrayIds(formData.liittyvatSuunnitelmat);
     setFormIsSubmitting(true);
     try {
       await api.tallennaProjekti(formData);
@@ -97,6 +110,10 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
         muistiinpano: projekti.muistiinpano || "",
         lisakuulutuskieli: projekti.lisakuulutuskieli || "",
         eurahoitus: projekti.eurahoitus || "",
+        liittyvatSuunnitelmat: projekti?.liittyvatSuunnitelmat?.map((suunnitelma) => {
+          const { __typename, ...SuunnitelmaInput} = suunnitelma;
+          return SuunnitelmaInput;
+        }) || [],
       };
       reset(tallentamisTiedot);
       setLanguageChoicesAvailable(hasLanguageSelected);
@@ -118,106 +135,100 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   }, [router.isReady, oid, projekti, setRouteLabels]);
 
   return (
-    <ProjektiPageLayout title={"Projektin perustiedot"}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <fieldset disabled={disableFormEdit}>
-          <ProjektiErrorNotification
-            disableValidation={isLoadingProjekti}
-            projekti={projekti}
-            validationSchema={loadedProjektiValidationSchema}
-          />
-          <div className="content">
-            <ProjektiPerustiedot projekti={projekti} />
-            <br />
-            {projekti?.velho?.linkki && <ExtLink href={projekti?.velho?.linkki}>Hankesivu</ExtLink>}
-            <ExtLink href={velhobaseurl + projekti?.oid}>Projektin sivu Projektivelhossa</ExtLink>
-          </div>
-          <hr />
-          <div className="content">
-            <ProjektiKuntatiedot projekti={projekti} />
-          </div>
-          <hr />
-          <div className="content">
-            <h4 className="vayla-small-title">Projetin kuulutusten kielet</h4>
-            <Checkbox
-              label="Projekti kuulutetaan suomenkielen lisäksi myös muilla kielillä"
-              id="kuulutuskieli"
-              onChange={() => setLanguageChoicesAvailable(!selectLanguageAvailable)}
-              checked={selectLanguageAvailable}
-            ></Checkbox>
-            <div style={indentedStyle}>
-              <RadioButton
-                label="Suomen lisäksi ruotsi"
-                value="ruotsi"
-                id="ruotsi"
-                disabled={!selectLanguageAvailable}
-                {...register("lisakuulutuskieli")}
-              ></RadioButton>
-              <RadioButton
-                label="Suomen lisäksi saame"
-                value="saame"
-                id="saame"
-                disabled={!selectLanguageAvailable}
-                {...register("lisakuulutuskieli")}
-              ></RadioButton>
-            </div>
-          </div>
-          <hr />
-          <div className="content">
-            <ProjektiLiittyvatSuunnitelmat />
-          </div>
-          <hr />
-          <div className="content">
-            <ProjektiSuunnitelusopimusTiedot projekti={projekti}/>
-          </div>
-          <hr />
-          <div className="content">
-          <h4 className="vayla-small-title">EU-rahoitus</h4>
-            <p>Rahoittaako EU suunnitteluhanketta</p>
-            <div>
-                <RadioButton 
-                    label="Kyllä" 
-                    value="true" 
-                    {...register("eurahoitus")}>
-                </RadioButton>
-                <RadioButton 
-                    label="Ei" 
-                    value="false" 
-                    {...register("eurahoitus")}>
-                </RadioButton>
-            </div>
-          </div>
-          <hr />
-          <h4 className="vayla-small-title">Muistiinpanot</h4>
-          <p>
-            Voit kirjoittaa alla olevaan kenttään sisäisiä muistiinpanoja, jotka näkyvät kaikille projektiin lisätyille
-            henkilöille. Muistiinpanoa voi muokata ainoastaan henkilöt, joilla on projektiin muokkausoikeudet. Vain
-            viimeisimpänä tallennettu muistiinpano jää näkyviin.
-          </p>
-          <div className="flex flex-col">
-            <Textarea
-              label="Muistiinpano"
-              disabled={disableFormEdit}
-              {...register("muistiinpano")}
-              error={errors.muistiinpano}
-              maxLength={maxNoteLength}
+    <FormProvider {...useFormReturn}>
+      <ProjektiPageLayout title={"Projektin perustiedot"}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <fieldset disabled={disableFormEdit}>
+            <ProjektiErrorNotification
+              disableValidation={isLoadingProjekti}
+              projekti={projekti}
+              validationSchema={loadedProjektiValidationSchema}
             />
-          </div>
-          <hr />
-          <Notification>Tallennus ei vielä julkaise tietoja.</Notification>
-          <div className="flex justify-between flex-wrap gap-4">
-            <ButtonLink href={"/yllapito/perusta"}>Takaisin suunnitelman hakuun</ButtonLink>
-            <Button primary={!projekti?.tallennettu} disabled={disableFormEdit}>
-              Tallenna projekti
-            </Button>
-            {projekti?.tallennettu && projekti?.oid && (
-              <ButtonLink primary href={`/yllapito/projekti/${projekti?.oid}/aloituskuulutus`}>
-                Siirry Aloituskuulutukseen
-              </ButtonLink>
-            )}
-          </div>
-        </fieldset>
-      </form>
-    </ProjektiPageLayout>
+            <div className="content">
+              <ProjektiPerustiedot projekti={projekti} />
+              <br />
+              {projekti?.velho?.linkki && <ExtLink href={projekti?.velho?.linkki}>Hankesivu</ExtLink>}
+              <ExtLink href={velhobaseurl + projekti?.oid}>Projektin sivu Projektivelhossa</ExtLink>
+            </div>
+            <hr />
+            <div className="content">
+              <ProjektiKuntatiedot projekti={projekti} />
+            </div>
+            <hr />
+            <div className="content">
+              <h4 className="vayla-small-title">Projektin kuulutusten kielet</h4>
+              <Checkbox
+                label="Projekti kuulutetaan suomenkielen lisäksi myös muilla kielillä"
+                id="kuulutuskieli"
+                onChange={() => setLanguageChoicesAvailable(!selectLanguageAvailable)}
+                checked={selectLanguageAvailable}
+              ></Checkbox>
+              <div style={indentedStyle}>
+                <RadioButton
+                  label="Suomen lisäksi ruotsi"
+                  value="ruotsi"
+                  id="ruotsi"
+                  disabled={!selectLanguageAvailable}
+                  {...register("lisakuulutuskieli")}
+                ></RadioButton>
+                <RadioButton
+                  label="Suomen lisäksi saame"
+                  value="saame"
+                  id="saame"
+                  disabled={!selectLanguageAvailable}
+                  {...register("lisakuulutuskieli")}
+                ></RadioButton>
+              </div>
+            </div>
+            <hr />
+            <div className="content">
+              <ProjektiLiittyvatSuunnitelmat projekti={projekti} />
+            </div>
+            <hr />
+            <div className="content">
+              <ProjektiSuunnitelusopimusTiedot projekti={projekti} kuntalista={["", "Helsinki", "Espoo", "Vantaa"]} />
+            </div>
+            <hr />
+            <div className="content">
+              <h4 className="vayla-small-title">EU-rahoitus</h4>
+              <p>Rahoittaako EU suunnitteluhanketta</p>
+              <div>
+                <RadioButton label="Kyllä" value="true" {...register("eurahoitus")}></RadioButton>
+                <RadioButton label="Ei" value="false" {...register("eurahoitus")}></RadioButton>
+              </div>
+            </div>
+            <hr />
+            <h4 className="vayla-small-title">Muistiinpanot</h4>
+            <p>
+              Voit kirjoittaa alla olevaan kenttään sisäisiä muistiinpanoja, jotka näkyvät kaikille projektiin
+              lisätyille henkilöille. Muistiinpanoa voi muokata ainoastaan henkilöt, joilla on projektiin
+              muokkausoikeudet. Vain viimeisimpänä tallennettu muistiinpano jää näkyviin.
+            </p>
+            <div className="flex flex-col">
+              <Textarea
+                label="Muistiinpano"
+                disabled={disableFormEdit}
+                {...register("muistiinpano")}
+                error={errors.muistiinpano}
+                maxLength={maxNoteLength}
+              />
+            </div>
+            <hr />
+            <Notification>Tallennus ei vielä julkaise tietoja.</Notification>
+            <div className="flex justify-between flex-wrap gap-4">
+              <ButtonLink href={"/yllapito/perusta"}>Takaisin suunnitelman hakuun</ButtonLink>
+              <Button primary={!projekti?.tallennettu} disabled={disableFormEdit}>
+                Tallenna projekti
+              </Button>
+              {projekti?.tallennettu && projekti?.oid && (
+                <ButtonLink primary href={`/yllapito/projekti/${projekti?.oid}/aloituskuulutus`}>
+                  Siirry Aloituskuulutukseen
+                </ButtonLink>
+              )}
+            </div>
+          </fieldset>
+        </form>
+      </ProjektiPageLayout>
+    </FormProvider>
   );
 }

@@ -1,4 +1,4 @@
-import { AloitusKuulutus, DBProjekti, SuunnitteluSopimus } from "../database/model/projekti";
+import { AloitusKuulutus, DBProjekti, Suunnitelma, SuunnitteluSopimus } from "../database/model/projekti";
 import * as API from "../../../common/graphql/apiModel";
 import { Yhteystieto } from "../../../common/graphql/apiModel";
 import pickBy from "lodash/pickBy";
@@ -13,7 +13,9 @@ function removeUndefinedFields(object: any) {
 
 export class ProjektiAdapter {
   public adaptProjekti(dbProjekti: DBProjekti): API.Projekti {
-    const { kayttoOikeudet, tyyppi, aloitusKuulutus, suunnitteluSopimus, ...fieldsToCopyAsIs } = dbProjekti;
+    const { kayttoOikeudet, tyyppi, aloitusKuulutus, suunnitteluSopimus, liittyvatSuunnitelmat, ...fieldsToCopyAsIs } =
+      dbProjekti;
+    console.log("adapt projekti: ", liittyvatSuunnitelmat);
     return removeUndefinedFields({
       __typename: "Projekti",
       tallennettu: !!dbProjekti.tallennettu,
@@ -21,16 +23,25 @@ export class ProjektiAdapter {
       tyyppi: tyyppi as API.ProjektiTyyppi,
       aloitusKuulutus: adaptAloitusKuulutus(aloitusKuulutus),
       suunnitteluSopimus: adaptSuunnitteluSopimus(suunnitteluSopimus),
+      liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmat(liittyvatSuunnitelmat), //TODO: adapt and add __typename
       ...fieldsToCopyAsIs,
     }) as API.Projekti;
   }
 
   async adaptProjektiToSave(projekti: DBProjekti, changes: API.TallennaProjektiInput): Promise<DBProjekti> {
     // Pick only fields that are relevant to DB
-    const { oid, muistiinpano, kayttoOikeudet, aloitusKuulutus, suunnitteluSopimus, lisakuulutuskieli, eurahoitus } =
-      changes;
-    const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
-    kayttoOikeudetManager.applyChanges(kayttoOikeudet);
+    const {
+      oid,
+      muistiinpano,
+      kayttoOikeudet,
+      aloitusKuulutus,
+      suunnitteluSopimus,
+      lisakuulutuskieli,
+      eurahoitus,
+      liittyvatSuunnitelmat,
+    } = changes;
+    const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet);
+    await kayttoOikeudetManager.applyChanges(kayttoOikeudet);
     return removeUndefinedFields(
       mergeWith(
         {},
@@ -42,13 +53,28 @@ export class ProjektiAdapter {
           kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet(),
           lisakuulutuskieli,
           eurahoitus,
+          liittyvatSuunnitelmat,
         }
       )
     ) as DBProjekti;
   }
 }
 
-function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.AloitusKuulutus | undefined {
+function adaptLiittyvatSuunnitelmat(suunnitelmat?: Suunnitelma[]): API.Suunnitelma[] | undefined {
+  if (suunnitelmat) {
+    const liittyvatSuunnitelmat = suunnitelmat.map((suunnitelma) => 
+      ({
+        __typename: "Suunnitelma",
+        ...suunnitelma,
+      } as Suunnitelma)
+    );
+    console.log("adapt liittyvat suunnitelmat:", liittyvatSuunnitelmat);
+    return liittyvatSuunnitelmat as API.Suunnitelma[];
+  }
+  return undefined;
+}
+
+function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus): API.AloitusKuulutus | undefined {
   if (kuulutus) {
     const { esitettavatYhteystiedot, ...otherKuulutusFields } = kuulutus;
     const yhteystiedot: API.Yhteystieto[] | undefined = esitettavatYhteystiedot?.map(
