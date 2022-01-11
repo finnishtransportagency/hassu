@@ -15,7 +15,6 @@ export class ProjektiAdapter {
   public adaptProjekti(dbProjekti: DBProjekti): API.Projekti {
     const { kayttoOikeudet, tyyppi, aloitusKuulutus, suunnitteluSopimus, liittyvatSuunnitelmat, ...fieldsToCopyAsIs } =
       dbProjekti;
-    console.log("adapt projekti: ", liittyvatSuunnitelmat);
     return removeUndefinedFields({
       __typename: "Projekti",
       tallennettu: !!dbProjekti.tallennettu,
@@ -62,13 +61,13 @@ export class ProjektiAdapter {
 
 function adaptLiittyvatSuunnitelmat(suunnitelmat?: Suunnitelma[]): API.Suunnitelma[] | undefined {
   if (suunnitelmat) {
-    const liittyvatSuunnitelmat = suunnitelmat.map((suunnitelma) => 
-      ({
-        __typename: "Suunnitelma",
-        ...suunnitelma,
-      } as Suunnitelma)
+    const liittyvatSuunnitelmat = suunnitelmat.map(
+      (suunnitelma) =>
+        ({
+          __typename: "Suunnitelma",
+          ...suunnitelma,
+        } as Suunnitelma)
     );
-    console.log("adapt liittyvat suunnitelmat:", liittyvatSuunnitelmat);
     return liittyvatSuunnitelmat as API.Suunnitelma[];
   }
   return undefined;

@@ -50,7 +50,7 @@ type Projekti {
   tallennettu: Boolean
   lisakuulutuskieli: String
   eurahoitus: String
-  liityvatSuunnitelmat: [Suunnitelma]
+  liittyvatSuunnitelmat: [Suunnitelma!]
 }
 
 type Velho {

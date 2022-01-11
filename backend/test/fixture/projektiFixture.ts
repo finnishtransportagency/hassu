@@ -43,7 +43,7 @@ export class ProjektiFixture {
     tyyppi: ProjektiTyyppi.TIE,
     lisakuulutuskieli: "ruotsi",
     eurahoitus: "false",
-    liityvatSuunnitelmat: [
+    liittyvatSuunnitelmat: [
       {
         __typename: "Suunnitelma",
         asiatunnus: "atunnus123",

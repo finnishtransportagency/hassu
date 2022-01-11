@@ -43,7 +43,7 @@ export type SuunnitteluSopimus = {
 export type Suunnitelma = {
   asiatunnus: string;
   nimi: string;
-}
+};
 
 export type Velho = {
   nimi: string;
