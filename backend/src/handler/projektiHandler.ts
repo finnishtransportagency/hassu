@@ -44,7 +44,7 @@ export async function createOrUpdateProjekti(input: TallennaProjektiInput) {
     log.info("Created projekti to Hassu", { projekti });
     auditLog.info("Luo projekti", { projekti });
   }
-  return {};
+  return input.oid;
 }
 
 async function createProjektiFromVelho(oid: string, vaylaUser: NykyinenKayttaja, input?: TallennaProjektiInput) {

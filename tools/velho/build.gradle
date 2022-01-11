@@ -30,8 +30,13 @@ task generateApis
 task downloadSwaggers {
   doLast {
     for (apiName in apiNames) {
+      def apiVersion
+      if (apiName == "projektirekisteri")
+        apiVersion = "v2"
+      else
+        apiVersion = "v1"
       download {
-        src "${System.env.VELHO_API_URL}/${apiName}/doc/v1/swagger.json".toString()
+        src "${System.env.VELHO_API_URL}/${apiName}/doc/${apiVersion}/swagger.json".toString()
         dest "${buildDir}/${apiName}.json".toString()
         headers = ["Authorization": authorizationHeader.toString()]
         retries = 5
