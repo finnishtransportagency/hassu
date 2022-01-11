@@ -85,8 +85,8 @@ const draftValidationSchema: SchemaOf<FormValues> = Yup.object().shape({
               }
             ),
             sahkoposti: Yup.string()
-              .required("Sähköposti on pakollinen")
-              .email("Virheellinen sähköposti")
+              .required("Sähköpostiosoite on pakollinen")
+              .email("Virheellinen sähköpostiosoite")
               .test(
                 "sahkoposti-not-in-kayttoOikeudet",
                 "Tieto löytyy projektin henkilöistä. Valitse henkilö projektiin tallennettujen listasta",
@@ -248,7 +248,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
           </Notification>
           <div className="lg:flex md:gap-x-8">
             <DatePicker
-              label="Kuuluuspäivä *"
+              label="Kuulutuspäivä *"
               {...register("aloitusKuulutus.kuulutusPaiva")}
               disabled={disableFormEdit}
               min={today}
@@ -260,7 +260,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
             <KuulutuksenYhteystiedot projekti={projekti} useFormReturn={useFormReturn} />
           </div>
           <Textarea
-            label="Hankkeen sisällönkuvaus *"
+            label="Tiivistetty hankkeen sisällönkuvaus *"
             {...register("aloitusKuulutus.hankkeenKuvaus")}
             error={errors.aloitusKuulutus?.hankkeenKuvaus}
             maxLength={maxAloituskuulutusLength}
@@ -269,8 +269,8 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
           <Notification type={NotificationType.INFO}>
             Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
           </Notification>
-          <Button type="submit" onClick={handleSubmit(showPDFPreview)}>
-            Katsele kuulutusta
+          <Button type="submit" onClick={handleSubmit(showPDFPreview)} disabled={disableFormEdit}>
+            Esikatsele kuulutusta
           </Button>
         </fieldset>
       </form>

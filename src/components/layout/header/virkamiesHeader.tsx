@@ -8,6 +8,8 @@ import { getVaylaUser } from "@services/userService";
 import useSWR from "swr";
 import ButtonLink from "@components/button/ButtonLink";
 
+import useTranslation from "next-translate/useTranslation";
+
 interface NavigationRoute {
   label: string;
   href: string;
@@ -18,6 +20,7 @@ export function VirkamiesHeader({ scrolledPastOffset }: HeaderProps): ReactEleme
   const [headerTop, setHeaderTop] = useState<number>(0);
   const headerTopPortion = useRef<HTMLDivElement>(null);
   const logoutHref = process.env.NEXT_PUBLIC_VAYLA_EXTRANET_URL;
+  const { t } = useTranslation();
 
   const { data: kayttaja } = useSWR(apiConfig.nykyinenKayttaja.graphql, vaylaUserLoader);
 
@@ -36,7 +39,7 @@ export function VirkamiesHeader({ scrolledPastOffset }: HeaderProps): ReactEleme
 
   const navigationRoutes: NavigationRoute[] = [
     {
-      label: "Valtion väylien suunnittelu",
+      label: t("commonFI:sivustonimi"),
       href: "/yllapito",
       children: [{ label: "Projektin perustaminen", href: "/yllapito/perusta" }],
     },
@@ -55,8 +58,8 @@ export function VirkamiesHeader({ scrolledPastOffset }: HeaderProps): ReactEleme
         <div className={style.topbar}>
           <Link href="/yllapito">
             <a className={style.title}>
-              <span>Valtion väylien suunnittelu</span>
-              <span className="font-normal">Ruotsiksi palvelun nimi</span>
+              <span>{t("commonFI:sivustonimi")}</span>
+              <span className="font-normal">{t("commonSV:sivustonimi")}</span>
             </a>
           </Link>
           <div className={style.user}>
@@ -91,7 +94,7 @@ export function VirkamiesHeader({ scrolledPastOffset }: HeaderProps): ReactEleme
   );
 }
 
-export function HeaderNavigationItem({ href, label }: NavigationRoute): ReactElement {
+function HeaderNavigationItem({ href, label }: NavigationRoute): ReactElement {
   return (
     <li>
       <Link href={href}>

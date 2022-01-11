@@ -62,7 +62,7 @@ exports[`Breadcrumbs renders correctly on 'known' /yllapito/perusta path 1`] = `
         onClick={[Function]}
         onMouseEnter={[Function]}
       >
-        Valtion väylien suunnittelu
+        Valtion liikenneväylien suunnittelu
       </a>
     </li>
     <li>

@@ -9,6 +9,12 @@ import { RouteLabels } from "@components/layout/Breadcrumbs";
 import { useCallback } from "react";
 import "../font-awesome-init";
 
+import useTranslation from "next-translate/useTranslation";
+import I18nProvider from "next-translate/I18nProvider";
+
+import commonFI from "src/locales/fi/common.json";
+import commonSV from "src/locales/sv/common.json";
+
 log.setDefaultLevel("DEBUG");
 
 // modified version - allows for custom pageProps type, falling back to 'any'
@@ -21,6 +27,7 @@ export interface PageProps {
 }
 
 function App({ Component, pageProps }: AppProps<PageProps>) {
+  const { lang } = useTranslation();
   const [routeLabels, setRouteLabels] = useState<RouteLabels>({});
 
   pageProps.setRouteLabels = useCallback(
@@ -32,12 +39,15 @@ function App({ Component, pageProps }: AppProps<PageProps>) {
 
   return (
     <>
-      <Head>
-        <title>Hassu</title>
-      </Head>
-      <Layout routeLabels={routeLabels}>
-        <Component {...pageProps} />
-      </Layout>
+      <I18nProvider lang={lang} namespaces={{ commonFI, commonSV }}>
+        <Head>
+          <title>Hassu</title>
+        </Head>
+
+        <Layout routeLabels={routeLabels}>
+          <Component {...pageProps} />
+        </Layout>
+      </I18nProvider>
     </>
   );
 }

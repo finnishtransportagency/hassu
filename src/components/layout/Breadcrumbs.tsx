@@ -2,6 +2,7 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { breadcrumbs } from "@styles/Breadcrumbs.module.css";
 import { NextRouter, useRouter } from "next/router";
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 export interface RouteLabels {
   [key: string]: { label: string; hideWhenNotCurrentRoute?: boolean };
@@ -73,6 +74,7 @@ export const generateRoutes = (nextRouter: NextRouter, routeLabels: RouteLabels)
 export default function Breadcrumbs({ routeLabels }: Props): ReactElement {
   const router = useRouter();
   const [routeMapping, setRouteMapping] = useState<RouteMapping>({});
+  const { t } = useTranslation();
 
   const isYllapito = () => typeof router?.pathname === "string" && router.pathname.startsWith("/yllapito");
 
@@ -87,7 +89,7 @@ export default function Breadcrumbs({ routeLabels }: Props): ReactElement {
     <nav className={breadcrumbs}>
       <ol>
         <li>
-          <Link href={isYllapito() ? "/yllapito" : "/"}>Valtion väylien suunnittelu</Link>
+          <Link href={isYllapito() ? "/yllapito" : "/"}>{t("common:sivustonimi")}</Link>
         </li>
         {Object.entries(routeMapping).map(([route, { href, label }]) => (
           <li key={route}>

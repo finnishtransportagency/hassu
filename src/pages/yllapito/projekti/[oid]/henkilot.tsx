@@ -7,7 +7,7 @@ import KayttoOikeusHallinta, { defaultKayttaja } from "@components/projekti/Kayt
 import { api, TallennaProjektiInput } from "@services/api";
 import * as Yup from "yup";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import log from "loglevel";
@@ -87,24 +87,26 @@ export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
 
   return (
     <ProjektiPageLayout title="Projektin Henkilöt">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <fieldset disabled={disableFormEdit}>
-          <div className="content">
-            <ProjektiErrorNotification
-              projekti={projekti}
-              disableValidation={isLoadingProjekti}
-              validationSchema={loadedProjektiValidationSchema}
-            />
-            <KayttoOikeusHallinta useFormReturn={useFormReturn} disableFields={disableFormEdit} />
-          </div>
-          <hr />
-          <div className="flex gap-6 flex-col md:flex-row">
-            <Button className="ml-auto" primary disabled={disableFormEdit}>
-              Tallenna
-            </Button>
-          </div>
-        </fieldset>
-      </form>
+      <FormProvider {...useFormReturn}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <fieldset disabled={disableFormEdit}>
+            <div className="content">
+              <ProjektiErrorNotification
+                projekti={projekti}
+                disableValidation={isLoadingProjekti}
+                validationSchema={loadedProjektiValidationSchema}
+              />
+              <KayttoOikeusHallinta disableFields={disableFormEdit} />
+            </div>
+            <hr />
+            <div className="flex gap-6 flex-col md:flex-row">
+              <Button className="ml-auto" primary disabled={disableFormEdit}>
+                Tallenna
+              </Button>
+            </div>
+          </fieldset>
+        </form>
+      </FormProvider>
     </ProjektiPageLayout>
   );
 }

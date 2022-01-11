@@ -4,8 +4,9 @@
 
 import React from "react";
 import Breadcrumbs, { RouteLabels, generateRoutes } from "@components/layout/Breadcrumbs";
-import { create, act } from "react-test-renderer";
 import { NextRouter, useRouter } from "next/router";
+import { create, act } from "react-test-renderer";
+import { componentWithTranslation } from "../test-utils";
 
 jest.mock("next/router", () => ({
   useRouter: jest.fn(),
@@ -18,8 +19,8 @@ describe("Breadcrumbs", () => {
       pathname: "/_error",
       asPath: "/yllapito/projekti/1234/?locale=fi",
     } as NextRouter;
-    const tree = generateRoutes(router, {});
-    expect(tree).toMatchSnapshot();
+    const routes = generateRoutes(router, {});
+    expect(routes).toMatchSnapshot();
   });
 
   it("generates breadcrumbs correctly for non-mapped /tuntematon/polku/123/123 path", () => {
@@ -28,8 +29,8 @@ describe("Breadcrumbs", () => {
       pathname: "/tuntematon/polku/[sid]/[pid]",
       asPath: "/tuntematon/polku/123/456/?locale=fi",
     } as NextRouter;
-    const tree = generateRoutes(router, {});
-    expect(tree).toMatchSnapshot();
+    const routes = generateRoutes(router, {});
+    expect(routes).toMatchSnapshot();
   });
 
   it("generates breadcrumbs correctly for /tuntematon/polku/123/123 path", () => {
@@ -42,20 +43,22 @@ describe("Breadcrumbs", () => {
       pathname: "/tuntematon/polku/[sid]/[pid]",
       asPath: "/tuntematon/polku/123/456/?locale=fi",
     } as NextRouter;
-    const tree = generateRoutes(router, routeLabels);
-    expect(tree).toMatchSnapshot();
+    const routes = generateRoutes(router, routeLabels);
+    expect(routes).toMatchSnapshot();
   });
 
-  it("renders correctly on 'known' /yllapito/perusta path", () => {
+  it("renders correctly on 'known' /yllapito/perusta path", async () => {
     const router = {
       isReady: true,
       pathname: "/yllapito/perusta",
       asPath: "/yllapito/perusta/",
     };
     (useRouter as jest.Mock).mockReturnValue(router);
-    const tree = create(<Breadcrumbs routeLabels={{}} />);
-    act(() => {
-      tree.update(<Breadcrumbs routeLabels={{}} />);
+    const component = await componentWithTranslation(<Breadcrumbs routeLabels={{}} />);
+    const tree = create(component);
+
+    await act(async () => {
+      await tree.update(component);
     });
     expect(tree.toJSON()).toMatchSnapshot();
   });
