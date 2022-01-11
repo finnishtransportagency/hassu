@@ -43,8 +43,6 @@ axios.interceptors.response.use((response: AxiosResponse) => {
 
 axios.defaults.timeout = 28000;
 
-const velhoApiURL = config.velhoApiURL;
-
 function checkResponseIsOK(response: AxiosResponse, message: string) {
   if (response.status >= 400) {
     throw new VelhoError(
@@ -179,7 +177,7 @@ export class VelhoClient {
 
   private async getVelhoApiConfiguration() {
     return {
-      basePath: velhoApiURL,
+      basePath: config.velhoApiURL,
       baseOptions: { headers: { Authorization: "Bearer " + (await this.authenticate()) } },
     };
   }
