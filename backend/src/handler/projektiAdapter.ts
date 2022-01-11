@@ -22,7 +22,7 @@ export class ProjektiAdapter {
       tyyppi: tyyppi as API.ProjektiTyyppi,
       aloitusKuulutus: adaptAloitusKuulutus(aloitusKuulutus),
       suunnitteluSopimus: adaptSuunnitteluSopimus(suunnitteluSopimus),
-      liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmat(liittyvatSuunnitelmat), //TODO: adapt and add __typename
+      liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmat(liittyvatSuunnitelmat),
       ...fieldsToCopyAsIs,
     }) as API.Projekti;
   }
