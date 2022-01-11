@@ -9,5 +9,5 @@ type Query {
 }
 
 type Mutation {
-  tallennaProjekti(projekti: TallennaProjektiInput!): Boolean
+  tallennaProjekti(projekti: TallennaProjektiInput!): String
 }

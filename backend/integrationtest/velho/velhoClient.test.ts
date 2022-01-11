@@ -3,6 +3,7 @@ import { expect } from "chai";
 import { describe, it } from "mocha";
 import { velho } from "../../src/velho/velhoClient";
 import * as log from "loglevel";
+import { tieProjekti } from "./fixture/tieProjekti";
 
 describe("VelhoClient", () => {
   let oid: string;
@@ -49,5 +50,18 @@ describe("VelhoClient", () => {
     const searchResult = await velho.loadProjekti(oid);
     expect(searchResult).not.null;
     log.debug(JSON.stringify(searchResult, null, 2));
+  });
+
+  it.skip("should create project to Velho for testing and delete it", async function () {
+    if (process.env.SKIP_VELHO_TESTS) {
+      this.skip();
+    }
+    expect(await velho.authenticate()).not.be.null;
+    const result = await velho.createProjektiForTesting(tieProjekti("Automaattitesti " + new Date().toISOString()));
+    expect(result).not.null;
+    expect(result.oid).not.null;
+    // tslint:disable-next-line:no-console
+    console.log(result.oid);
+    await velho.deleteProjektiForTesting(result.oid);
   });
 });

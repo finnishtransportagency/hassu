@@ -6,6 +6,7 @@ import gql from "graphql-tag";
 import ApolloClient, { DefaultOptions } from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import log from "loglevel";
+import { onError } from "apollo-link-error";
 
 const defaultOptions: DefaultOptions = {
   watchQuery: {
@@ -35,8 +36,23 @@ export class API extends AbstractApi {
       }
       return prevContext;
     });
+
     publicLinks.unshift(headerForwarderLink);
     authenticatedLinks.unshift(headerForwarderLink);
+
+    // If the correlationId is the only "error", remove it from the response so that it won't be thrown
+    const errorLink = onError((errorResponse) => {
+      if (
+        errorResponse.graphQLErrors &&
+        errorResponse.graphQLErrors.length === 1 &&
+        errorResponse.graphQLErrors[0].message === "HASSU_INFO"
+      ) {
+        delete errorResponse.response?.errors;
+      }
+    });
+
+    publicLinks.unshift(errorLink);
+    authenticatedLinks.unshift(errorLink);
 
     this.publicClient = new ApolloClient({
       link: ApolloLink.from(publicLinks),
@@ -57,6 +73,8 @@ export class API extends AbstractApi {
           query: gql(operation.graphql),
           variables,
           fetchPolicy: "network-only",
+          errorPolicy: "all",
+          fetchResults: true,
         });
         if (queryResponse.errors && !queryResponse.data) {
           log.warn(queryResponse.errors);

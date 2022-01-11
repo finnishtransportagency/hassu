@@ -2,6 +2,7 @@ import { log } from "../logger";
 import { config } from "../config";
 import * as HakuPalvelu from "./hakupalvelu";
 import * as ProjektiRekisteri from "./projektirekisteri";
+import { ProjektiProjekti6Luonti } from "./projektirekisteri";
 import { VelhoHakuTulos } from "../../../common/graphql/apiModel";
 import { adaptProjekti, adaptSearchResults, ProjektiSearchResult } from "./velhoAdapter";
 import { VelhoError } from "../error/velhoError";
@@ -45,8 +46,15 @@ axios.defaults.timeout = 28000;
 const velhoApiURL = config.velhoApiURL;
 
 function checkResponseIsOK(response: AxiosResponse, message: string) {
-  if (response.status !== 200) {
-    throw new VelhoError("Error while communicating with Velho: " + message + " Status:" + response?.statusText);
+  if (response.status >= 400) {
+    throw new VelhoError(
+      "Error while communicating with Velho: " +
+        message +
+        " StatusCode:" +
+        response.status +
+        " Status:" +
+        response?.statusText
+    );
   }
 }
 
@@ -123,12 +131,40 @@ export class VelhoClient {
     const projektiApi = await this.createProjektiRekisteriApi();
     let response;
     try {
-      response = await projektiApi.projektirekisteriApiV1ProjektiProjektiOidGet(oid);
+      response = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidGet(oid);
     } catch (e) {
       throw new VelhoError(e.message, e);
     }
     checkResponseIsOK(response, "loadProjekti with oid '" + oid + "'");
     return adaptProjekti(response.data);
+  }
+
+  public async createProjektiForTesting(velhoProjekti: ProjektiProjekti6Luonti): Promise<any> {
+    const projektiApi = await this.createProjektiRekisteriApi();
+    let response;
+    try {
+      // tslint:disable-next-line:no-console
+      console.log("velhoProjekti", velhoProjekti);
+      response = await projektiApi.projektirekisteriApiV2ProjektiPost(velhoProjekti, true, {
+        query: { "raportoi-vkm-virheet": true },
+      });
+    } catch (e) {
+      throw new VelhoError(e.message, e);
+    }
+    checkResponseIsOK(response, "Create projekti for testing");
+    return response.data;
+  }
+
+  public async deleteProjektiForTesting(oid: string): Promise<any> {
+    const projektiApi = await this.createProjektiRekisteriApi();
+    let response;
+    try {
+      response = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidDelete(oid);
+    } catch (e) {
+      throw new VelhoError(e.message, e);
+    }
+    checkResponseIsOK(response, "Delete projekti for testing");
+    return response.data;
   }
 
   private async createHakuApi() {
