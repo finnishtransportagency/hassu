@@ -16,7 +16,7 @@ describe("S3Cache", () => {
   });
 
   it("should use cache successfully", async function () {
-    const s3Cache = new S3Cache(1);
+    const s3Cache = new S3Cache();
     // Unique key for the test data
     const key = "foo" + new Date().toISOString() + ".json";
 

@@ -18,8 +18,8 @@ const NodeCache = require("node-cache");
 export class S3Cache {
   cache: typeof NodeCache;
 
-  constructor(inMemoryCacheTTLSeconds: number) {
-    this.cache = new NodeCache({ stdTTL: inMemoryCacheTTLSeconds });
+  constructor() {
+    this.cache = new NodeCache();
   }
 
   async get<T>(
@@ -42,6 +42,9 @@ export class S3Cache {
     if (s3Object.data) {
       // Set only to in-memory cache. S3 cache is updated by the updater lambda.
       this.cache.set(key, s3Object.data);
+      if (s3Object.expiresTime) {
+        this.cache.ttl(key, (s3Object.expiresTime - Date.now()) / 1000);
+      }
       return s3Object.data;
     }
 
@@ -49,13 +52,17 @@ export class S3Cache {
       const data = await populateMissingData();
       // Set only to in-memory cache. S3 cache is updated by the updater lambda.
       this.cache.set(key, data);
+      this.cache.ttl(key, ttlMillis / 1000);
       return data;
     }
 
     throw new Error("Unknown issue with S3 cache");
   }
 
-  async getS3Object(key: string, ttlMillis: number): Promise<{ data?: any; expired?: boolean; missing?: boolean }> {
+  async getS3Object(
+    key: string,
+    ttlMillis: number
+  ): Promise<{ expired?: boolean; missing?: boolean; expiresTime?: number; data?: any }> {
     const s3Client: S3Client = getS3Client();
     try {
       const output: GetObjectCommandOutput = await s3Client.send(
@@ -69,9 +76,11 @@ export class S3Cache {
         const s3json = await streamToString(fileStream);
 
         const lastModified = output.LastModified;
+        const expiresTime = S3Cache.getExpiresTime(lastModified, ttlMillis);
         return {
           data: JSON.parse(s3json),
-          expired: S3Cache.hasExpired(lastModified, ttlMillis),
+          expiresTime,
+          expired: expiresTime <= new Date().getTime(),
         };
       }
     } catch (e) {
@@ -88,8 +97,11 @@ export class S3Cache {
     throw new Error("Problem with cached data: no contents in file");
   }
 
-  private static hasExpired(lastModified: Date | undefined, ttlMillis: number) {
-    return !lastModified || lastModified.getTime() + ttlMillis <= new Date().getTime();
+  private static getExpiresTime(lastModified: Date | undefined, ttlMillis: number) {
+    if (!lastModified) {
+      return 0;
+    }
+    return lastModified.getTime() + ttlMillis;
   }
 
   async put(key: string, data: any): Promise<void> {
@@ -138,4 +150,4 @@ export class S3Cache {
   }
 }
 
-export const s3Cache = new S3Cache(60); // One minute in-memory cache
+export const s3Cache = new S3Cache(); // One minute in-memory cache

@@ -18,7 +18,7 @@ export type DBVaylaUser = {
   puhelinnumero: string;
   organisaatio: string;
   nimi: string;
-  esitetaanKuulutuksessa: boolean;
+  esitetaanKuulutuksessa?: boolean | null;
 };
 
 export type AloitusKuulutus = {
