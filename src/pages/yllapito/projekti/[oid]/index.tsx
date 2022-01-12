@@ -111,8 +111,8 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
         lisakuulutuskieli: projekti.lisakuulutuskieli || "",
         eurahoitus: projekti.eurahoitus || "",
         liittyvatSuunnitelmat: projekti?.liittyvatSuunnitelmat?.map((suunnitelma) => {
-          const { __typename, ...SuunnitelmaInput} = suunnitelma;
-          return SuunnitelmaInput;
+          const { __typename, ...suunnitelmaInput} = suunnitelma;
+          return suunnitelmaInput;
         }) || [],
       };
       reset(tallentamisTiedot);
