@@ -19,7 +19,7 @@ async function fetchKuntaLista() {
 export default async function handler(_req: NextApiRequest, res: NextApiResponse) {
   setupLambdaMonitoring();
   return await wrapXrayAsync("handler", async () => {
-    const s3Cache = new S3Cache(KUNTALISTA_TTL_SECONDS);
+    const s3Cache = new S3Cache();
     const kuntaList: Record<string, string> = await s3Cache.get(
       "kuntalista",
       KUNTALISTA_TTL_SECONDS * 1000,
