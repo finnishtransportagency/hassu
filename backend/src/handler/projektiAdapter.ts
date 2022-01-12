@@ -39,8 +39,8 @@ export class ProjektiAdapter {
       eurahoitus,
       liittyvatSuunnitelmat,
     } = changes;
-    const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet);
-    await kayttoOikeudetManager.applyChanges(kayttoOikeudet);
+    const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
+    kayttoOikeudetManager.applyChanges(kayttoOikeudet);
     return removeUndefinedFields(
       mergeWith(
         {},
@@ -73,7 +73,7 @@ function adaptLiittyvatSuunnitelmat(suunnitelmat?: Suunnitelma[]): API.Suunnitel
   return undefined;
 }
 
-function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus): API.AloitusKuulutus | undefined {
+function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.AloitusKuulutus | undefined {
   if (kuulutus) {
     const { esitettavatYhteystiedot, ...otherKuulutusFields } = kuulutus;
     const yhteystiedot: API.Yhteystieto[] | undefined = esitettavatYhteystiedot?.map(
