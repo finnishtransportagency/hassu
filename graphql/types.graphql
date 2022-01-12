@@ -50,6 +50,7 @@ type Projekti {
   tallennettu: Boolean
   lisakuulutuskieli: String
   eurahoitus: String
+  liittyvatSuunnitelmat: [Suunnitelma!]
 }
 
 type Velho {
@@ -67,6 +68,11 @@ type Velho {
   maakunnat: [String!]
   kunnat: [String!]
   linkki: String
+}
+
+type Suunnitelma {
+  asiatunnus: String!
+  nimi: String!
 }
 
 type Yhteystieto {

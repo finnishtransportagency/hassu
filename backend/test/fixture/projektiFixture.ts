@@ -43,6 +43,13 @@ export class ProjektiFixture {
     tyyppi: ProjektiTyyppi.TIE,
     lisakuulutuskieli: "ruotsi",
     eurahoitus: "false",
+    liittyvatSuunnitelmat: [
+      {
+        __typename: "Suunnitelma",
+        asiatunnus: "atunnus123",
+        nimi: "Littyva suunnitelma 1 nimi",
+      },
+    ],
   };
 
   velhoprojekti1: DBProjekti = {
@@ -101,5 +108,11 @@ export class ProjektiFixture {
     },
     lisakuulutuskieli: "ruotsi",
     eurahoitus: "false",
+    liittyvatSuunnitelmat: [
+      {
+        asiatunnus: "atunnus123",
+        nimi: "Littyva suunnitelma 1 nimi",
+      },
+    ],
   };
 }

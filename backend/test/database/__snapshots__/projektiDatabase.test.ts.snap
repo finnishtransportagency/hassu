@@ -6,6 +6,7 @@ Object {
     "#aloitusKuulutus": "aloitusKuulutus",
     "#eurahoitus": "eurahoitus",
     "#kayttoOikeudet": "kayttoOikeudet",
+    "#liittyvatSuunnitelmat": "liittyvatSuunnitelmat",
     "#lisakuulutuskieli": "lisakuulutuskieli",
     "#muistiinpano": "muistiinpano",
     "#status": "status",
@@ -43,6 +44,12 @@ Object {
         "rooli": "PROJEKTIPAALLIKKO",
       },
     ],
+    ":liittyvatSuunnitelmat": Array [
+      Object {
+        "asiatunnus": "atunnus123",
+        "nimi": "Littyva suunnitelma 1 nimi",
+      },
+    ],
     ":lisakuulutuskieli": "ruotsi",
     ":muistiinpano": "Testiprojekti 1:n muistiinpano",
     ":status": "EI_JULKAISTU",
@@ -65,6 +72,6 @@ Object {
     "oid": "1",
   },
   "TableName": "Projekti-localstack",
-  "UpdateExpression": "set #kayttoOikeudet = :kayttoOikeudet , #velho = :velho , #muistiinpano = :muistiinpano , #status = :status , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus , #lisakuulutuskieli = :lisakuulutuskieli , #eurahoitus = :eurahoitus ",
+  "UpdateExpression": "set #kayttoOikeudet = :kayttoOikeudet , #velho = :velho , #muistiinpano = :muistiinpano , #status = :status , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus , #lisakuulutuskieli = :lisakuulutuskieli , #eurahoitus = :eurahoitus , #liittyvatSuunnitelmat = :liittyvatSuunnitelmat ",
 }
 `;

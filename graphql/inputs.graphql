@@ -3,9 +3,15 @@ input TallennaProjektiInput {
   muistiinpano: String
   lisakuulutuskieli: String
   eurahoitus: String
+  liittyvatSuunnitelmat: [SuunnitelmaInput]
   aloitusKuulutus: AloitusKuulutusInput
   suunnitteluSopimus: SuunnitteluSopimusInput
   kayttoOikeudet: [ProjektiKayttajaInput!]
+}
+
+input SuunnitelmaInput {
+  asiatunnus: String!
+  nimi: String!
 }
 
 input YhteystietoInput {

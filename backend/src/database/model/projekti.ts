@@ -40,6 +40,11 @@ export type SuunnitteluSopimus = {
   email: string;
 };
 
+export type Suunnitelma = {
+  asiatunnus: string;
+  nimi: string;
+};
+
 export type Velho = {
   nimi: string;
   kuvaus?: string | null;
@@ -69,6 +74,7 @@ export type DBProjekti = {
   aloitusKuulutus?: AloitusKuulutus | null;
   suunnitteluSopimus?: SuunnitteluSopimus | null;
   velho?: Velho | null;
+  liittyvatSuunnitelmat?: Suunnitelma[] | null;
 
   // false, jos projekti ladattiin Velhosta, mutta ei ole vielä tallennettu tietokantaan
   tallennettu?: boolean;
