@@ -1,9 +1,9 @@
 import { invokeLambda } from "../aws/lambda";
 import { config } from "../config";
-import { Kayttaja } from "../../../common/graphql/apiModel";
+import { Person } from "./kayttajas";
 
 class PersonSearchUpdaterClient {
-  async readUsersFromSearchUpdaterLambda(): Promise<Record<string, Kayttaja>> {
+  async readUsersFromSearchUpdaterLambda(): Promise<Record<string, Person>> {
     const json = await invokeLambda(config.personSearchUpdaterLambdaArn, true);
     if (!json) {
       throw new Error("Could not read list of users");

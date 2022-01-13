@@ -1,15 +1,10 @@
 import { AloitusKuulutus, DBProjekti, Suunnitelma, SuunnitteluSopimus } from "../database/model/projekti";
 import * as API from "../../../common/graphql/apiModel";
 import { Yhteystieto } from "../../../common/graphql/apiModel";
-import pickBy from "lodash/pickBy";
-import identity from "lodash/identity";
 import mergeWith from "lodash/mergeWith";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import { personSearch } from "../personSearch/personSearchClient";
-
-function removeUndefinedFields(object: any) {
-  return pickBy(object, identity);
-}
+import { removeUndefinedFields } from "../util/objectUtil";
 
 export class ProjektiAdapter {
   public adaptProjekti(dbProjekti: DBProjekti): API.Projekti {

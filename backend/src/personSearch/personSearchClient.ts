@@ -1,8 +1,7 @@
-import { Kayttaja } from "../../../common/graphql/apiModel";
 import { personSearchUpdaterClient } from "./personSearchUpdaterClient";
 import { s3Cache } from "../cache/s3Cache";
 import { log } from "../logger";
-import { Kayttajas } from "./kayttajas";
+import { Kayttajas, Person } from "./kayttajas";
 import { wrapXrayAsync } from "../aws/monitoring";
 
 export const S3CACHE_TTL_MILLIS = 15 * 60 * 1000; // 15 min
@@ -16,7 +15,7 @@ export const PERSON_SEARCH_CACHE_KEY = "users.json";
 async function getKayttajas(): Promise<Kayttajas> {
   try {
     return await wrapXrayAsync("getKayttajas", async () => {
-      const kayttajaMap: Record<string, Kayttaja> = await s3Cache.get(
+      const kayttajaMap: Record<string, Person> = await s3Cache.get(
         PERSON_SEARCH_CACHE_KEY,
         S3CACHE_TTL_MILLIS,
         async () => {

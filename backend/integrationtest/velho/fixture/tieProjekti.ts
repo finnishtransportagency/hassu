@@ -1,4 +1,4 @@
-import { ProjektiProjekti6Luonti } from "../../../src/velho/projektirekisteri";
+import { ProjektiProjektiLuonti } from "../../../src/velho/projektirekisteri";
 
 export const tieProjekti = (nimi: string) =>
   ({
@@ -31,4 +31,4 @@ export const tieProjekti = (nimi: string) =>
     schemaversio: 6,
     projektijoukko: null,
     alkaen: null,
-  } as any as ProjektiProjekti6Luonti);
+  } as any as ProjektiProjektiLuonti);

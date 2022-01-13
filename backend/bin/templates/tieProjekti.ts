@@ -1,4 +1,4 @@
-import { ProjektiProjekti6Luonti } from "../../src/velho/projektirekisteri";
+import { ProjektiProjektiLuonti } from "../../src/velho/projektirekisteri";
 
 const tieProjekti = {
   ominaisuudet: {
@@ -30,6 +30,6 @@ const tieProjekti = {
   schemaversio: 6,
   projektijoukko: null,
   alkaen: null,
-} as any as ProjektiProjekti6Luonti;
+} as any as ProjektiProjektiLuonti;
 
 export default tieProjekti;

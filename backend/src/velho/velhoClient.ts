@@ -2,7 +2,7 @@ import { log } from "../logger";
 import { config } from "../config";
 import * as HakuPalvelu from "./hakupalvelu";
 import * as ProjektiRekisteri from "./projektirekisteri";
-import { ProjektiProjekti6Luonti } from "./projektirekisteri";
+import { ProjektiProjektiLuonti } from "./projektirekisteri";
 import { VelhoHakuTulos } from "../../../common/graphql/apiModel";
 import { adaptProjekti, adaptSearchResults, ProjektiSearchResult } from "./velhoAdapter";
 import { VelhoError } from "../error/velhoError";
@@ -137,7 +137,7 @@ export class VelhoClient {
     return adaptProjekti(response.data);
   }
 
-  public async createProjektiForTesting(velhoProjekti: ProjektiProjekti6Luonti): Promise<any> {
+  public async createProjektiForTesting(velhoProjekti: ProjektiProjektiLuonti): Promise<any> {
     const projektiApi = await this.createProjektiRekisteriApi();
     let response;
     try {
