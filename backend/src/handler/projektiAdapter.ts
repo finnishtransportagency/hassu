@@ -47,7 +47,7 @@ export class ProjektiAdapter {
         oid,
         muistiinpano,
         aloitusKuulutus,
-        suunnitteluSopimus,
+        suunnitteluSopimus: adaptSuunnitteluSopimusToSave(projekti, suunnitteluSopimus),
         kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet(),
         lisakuulutuskieli,
         eurahoitus,
@@ -71,7 +71,19 @@ function adaptLiittyvatSuunnitelmat(suunnitelmat?: Suunnitelma[] | null): API.Su
   return suunnitelmat as undefined | null;
 }
 
-function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.AloitusKuulutus | undefined | null {
+function adaptSuunnitteluSopimusToSave(
+  projekti: DBProjekti,
+  suunnitteluSopimusInput?: API.SuunnitteluSopimusInput
+): API.SuunnitteluSopimusInput | undefined {
+  if (suunnitteluSopimusInput) {
+    const { logo, ...rest } = suunnitteluSopimusInput;
+    return { ...rest, logo: logo || projekti.suunnitteluSopimus?.logo };
+  }
+  // If no suunnitteluSopimusInput, return undefined so the property gets removed by removeUndefinedFields
+  return;
+}
+
+function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus): API.AloitusKuulutus | undefined {
   if (kuulutus) {
     const { esitettavatYhteystiedot, ...otherKuulutusFields } = kuulutus;
     const yhteystiedot: API.Yhteystieto[] | undefined = esitettavatYhteystiedot?.map(

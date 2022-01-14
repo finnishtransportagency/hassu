@@ -1,6 +1,7 @@
 import Button from "@components/button/Button";
 import IconButton from "@components/button/IconButton";
 import CheckBox from "@components/form/CheckBox";
+import FormGroup from "@components/form/FormGroup";
 import TextInput from "@components/form/TextInput";
 import { AloitusKuulutusInput, Projekti, ProjektiRooli, TallennaProjektiInput, YhteystietoInput } from "@services/api";
 import React, { ReactElement } from "react";
@@ -56,17 +57,18 @@ function KuulutuksenYhteystiedot<T extends FormValues>({
         haetaan Projektin henkilöt -sivulle tallennetuista tiedoista.{" "}
       </p>
       <fieldset>
-        <p>Projektiin tallennetut henkilöt</p>
         {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
-          projekti.kayttoOikeudet.map(({ nimi, rooli }, index) => (
-            <CheckBox
-              key={index}
-              label={nimi}
-              {...register(`kayttoOikeudet.${index}.esitetaanKuulutuksessa`)}
-              disabled={rooli === ProjektiRooli.PROJEKTIPAALLIKKO}
-              defaultChecked={rooli === ProjektiRooli.PROJEKTIPAALLIKKO}
-            />
-          ))
+          <FormGroup label="Projektiin tallennetut henkilöt">
+            {projekti.kayttoOikeudet.map(({ nimi, rooli }, index) => (
+              <CheckBox
+                key={index}
+                label={nimi}
+                {...register(`kayttoOikeudet.${index}.esitetaanKuulutuksessa`)}
+                disabled={rooli === ProjektiRooli.PROJEKTIPAALLIKKO}
+                defaultChecked={rooli === ProjektiRooli.PROJEKTIPAALLIKKO}
+              />
+            ))}
+          </FormGroup>
         ) : (
           <p>Projektilla ei ole tallennettuja henkilöitä</p>
         )}

@@ -1,58 +1,20 @@
-import classNames from "classnames";
-import React, { useState } from "react";
-import { FieldError } from "react-hook-form";
-import FormGroup from "./FormGroup";
+import React from "react";
 
 interface Props {
-  error?: FieldError;
   label?: string;
-  hideErrorMessage?: boolean;
-  hideLengthCounter?: boolean;
 }
 
-const CheckBox = (
+const RadioButton = (
   {
-    maxLength = 200,
-    error,
     label,
-    hideErrorMessage,
-    className,
-    hideLengthCounter = true,
     ...props
   }: Props & Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "ref">,
   ref: React.ForwardedRef<HTMLInputElement>
-) => {
-  const [length, setLength] = useState(0);
+) => (
+  <label>
+    <input type="radio" {...props} ref={ref} />
+    <span className="pl-3 pr-6">{label}</span>
+  </label>
+);
 
-  return (
-    <FormGroup
-      errorMessage={hideErrorMessage ? undefined : error?.message}
-      className={className}
-      bottomInfo={
-        typeof maxLength === "number" &&
-        !hideLengthCounter && (
-          <span className={classNames("ml-auto whitespace-nowrap", length > maxLength ? "text-red" : "text-gray")}>
-            {length} / {maxLength}
-          </span>
-        )
-      }
-    >
-      <label>
-        <input
-          type="radio"
-          maxLength={maxLength}
-          {...props}
-          ref={ref}
-          onChange={(event) => {
-            props?.onChange?.(event);
-            setLength(event.target.value.length);
-          }}
-          className={classNames(error && "error")}
-        />
-        &nbsp;{label}
-      </label>
-    </FormGroup>
-  );
-};
-
-export default React.forwardRef(CheckBox);
+export default React.forwardRef(RadioButton);

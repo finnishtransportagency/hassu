@@ -87,7 +87,7 @@ async function createProjektiFromVelho(oid: string, vaylaUser: NykyinenKayttaja,
  */
 async function handleFiles(input: TallennaProjektiInput) {
   const logo = input.suunnitteluSopimus?.logo;
-  if (logo && input.suunnitteluSopimus) {
+  if (logo) {
     input.suunnitteluSopimus.logo = await fileService.persistFileToProjekti({
       uploadedFileSource: logo,
       oid: input.oid,

@@ -8,6 +8,7 @@ interface Props {
   label?: string;
   hideErrorMessage?: boolean;
   hideLengthCounter?: boolean;
+  formGroupClassName?: string;
 }
 
 const DatePicker = (
@@ -17,19 +18,23 @@ const DatePicker = (
     label,
     hideErrorMessage,
     className,
-    hideLengthCounter = true,
+    formGroupClassName,
     ...props
   }: Props & Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "ref">,
   ref: React.ForwardedRef<HTMLInputElement>
 ) => {
   return (
-    <FormGroup label={label} errorMessage={hideErrorMessage ? undefined : error?.message} className={className}>
+    <FormGroup
+      label={label}
+      errorMessage={hideErrorMessage ? undefined : error?.message}
+      className={formGroupClassName}
+    >
       <input
         type="date"
         maxLength={maxLength}
         {...props}
         ref={ref}
-        className={classNames(error && "error", "md:max-w-min")}
+        className={classNames(className, error && "error")}
       />
     </FormGroup>
   );

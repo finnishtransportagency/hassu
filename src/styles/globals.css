@@ -177,6 +177,9 @@
 }
 
 @layer components {
+  .indent {
+    padding-left: 25px;
+  }
   .vayla-hero {
     font-weight: 700;
     font-size: 2.4375rem;

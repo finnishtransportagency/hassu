@@ -5,7 +5,7 @@ export const maxPhoneLength = 10;
 export const agencyPhoneNumberRegex = `^029\\d*$`;
 
 export const puhelinNumeroSchema = Yup.string()
-  .required("Käyttäjälle on määritettävä puhelinnumero")
+  .required("Puhelinnumero on pakollinen")
   .matches(
     new RegExp(agencyPhoneNumberRegex),
     "Puhelinnumeron on oltava 029-alkuinen ja sen tulee sisältää vain numeroita"
