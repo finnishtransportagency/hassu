@@ -41,25 +41,23 @@ export class ProjektiAdapter {
     } = changes;
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
     kayttoOikeudetManager.applyChanges(kayttoOikeudet);
-    return removeUndefinedFields(
-      mergeWith(
-        {},
-        {
-          oid,
-          muistiinpano,
-          aloitusKuulutus,
-          suunnitteluSopimus,
-          kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet(),
-          lisakuulutuskieli,
-          eurahoitus,
-          liittyvatSuunnitelmat,
-        }
-      )
+    return mergeWith(
+      {},
+      {
+        oid,
+        muistiinpano,
+        aloitusKuulutus,
+        suunnitteluSopimus,
+        kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet(),
+        lisakuulutuskieli,
+        eurahoitus,
+        liittyvatSuunnitelmat,
+      }
     ) as DBProjekti;
   }
 }
 
-function adaptLiittyvatSuunnitelmat(suunnitelmat?: Suunnitelma[]): API.Suunnitelma[] | undefined {
+function adaptLiittyvatSuunnitelmat(suunnitelmat?: Suunnitelma[] | null): API.Suunnitelma[] | undefined | null {
   if (suunnitelmat) {
     const liittyvatSuunnitelmat = suunnitelmat.map(
       (suunnitelma) =>
@@ -70,10 +68,10 @@ function adaptLiittyvatSuunnitelmat(suunnitelmat?: Suunnitelma[]): API.Suunnitel
     );
     return liittyvatSuunnitelmat as API.Suunnitelma[];
   }
-  return undefined;
+  return suunnitelmat as undefined | null;
 }
 
-function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.AloitusKuulutus | undefined {
+function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.AloitusKuulutus | undefined | null {
   if (kuulutus) {
     const { esitettavatYhteystiedot, ...otherKuulutusFields } = kuulutus;
     const yhteystiedot: API.Yhteystieto[] | undefined = esitettavatYhteystiedot?.map(
@@ -89,14 +87,16 @@ function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.AloitusKuu
       ...otherKuulutusFields,
     };
   }
-  return undefined;
+  return kuulutus as undefined | null;
 }
 
-function adaptSuunnitteluSopimus(suunnitteluSopimus?: SuunnitteluSopimus | null): API.SuunnitteluSopimus | undefined {
+function adaptSuunnitteluSopimus(
+  suunnitteluSopimus?: SuunnitteluSopimus | null
+): API.SuunnitteluSopimus | undefined | null {
   if (suunnitteluSopimus) {
     return { __typename: "SuunnitteluSopimus", ...suunnitteluSopimus };
   }
-  return undefined;
+  return suunnitteluSopimus as undefined | null;
 }
 
 export const projektiAdapter = new ProjektiAdapter();

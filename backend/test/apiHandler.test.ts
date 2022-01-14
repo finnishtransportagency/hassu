@@ -9,7 +9,7 @@ import { velho } from "../src/velho/velhoClient";
 import { api } from "../integrationtest/api/apiClient";
 import { personSearch } from "../src/personSearch/personSearchClient";
 import { userService } from "../src/user";
-import { Projekti, ProjektiKayttajaInput, ProjektiRooli } from "../../common/graphql/apiModel";
+import { Projekti, ProjektiRooli, TallennaProjektiInput } from "../../common/graphql/apiModel";
 import { DBProjekti } from "../src/database/model/projekti";
 import * as log from "loglevel";
 import cloneDeep from "lodash/cloneDeep";
@@ -85,10 +85,14 @@ describe("apiHandler", () => {
       it("should modify permissions from a project successfully", async () => {
         let mockedDatabaseProjekti: DBProjekti | undefined;
 
-        async function saveAndLoadProjekti(p: Projekti, description: string, kayttoOikeudet?: ProjektiKayttajaInput[]) {
+        async function saveAndLoadProjekti(
+          p: Projekti,
+          description: string,
+          updatedValues: Partial<TallennaProjektiInput>
+        ) {
           await api.tallennaProjekti({
             oid: fixture.PROJEKTI1_OID,
-            kayttoOikeudet,
+            ...updatedValues,
           });
           if (p.tallennettu) {
             expect(saveProjektiStub.calledOnce);
@@ -138,63 +142,72 @@ describe("apiHandler", () => {
         // Create stubs to keep state of the "database" so that it can be modified in the following steps
         mockDatabase();
         // Save projekti with the defaults. It should have both projektipaallikko and the current user as omistaja
-        projekti = await saveAndLoadProjekti(projekti, "having both projektipaallikko and omistaja", [
-          {
-            rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
-            kayttajatunnus: "A123",
-            puhelinnumero: "11",
-          },
-          {
-            kayttajatunnus: "A000111",
-            rooli: ProjektiRooli.OMISTAJA,
-            puhelinnumero: "22",
-          },
-        ]);
-
-        // Remove omistaja and save
-        projekti = await saveAndLoadProjekti(projekti, "having only projektipaallikko", [
-          {
-            rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
-            kayttajatunnus: "A123",
-            puhelinnumero: "11",
-          },
-        ]);
-
-        // Add omistaja back and examine the results
-        userFixture.loginAs(UserFixture.pekkaProjari);
-        projekti = await saveAndLoadProjekti(
-          projekti,
-          "while adding omistaja back. There should be projektipaallikko and omistaja in the projekti now. Projektipaallikko cannot be removed, so it always stays there.",
-          [
-            {
-              kayttajatunnus: "A000111",
-              puhelinnumero: "123456789",
-              rooli: ProjektiRooli.OMISTAJA,
-            },
-          ]
-        );
-
-        // Add one muokkaaja more and examine the results
-        await saveAndLoadProjekti(
-          projekti,
-          "while adding one muokkaaja more. There should be three persons in the projekti now",
-          [
+        projekti = await saveAndLoadProjekti(projekti, "having both projektipaallikko and omistaja", {
+          kayttoOikeudet: [
             {
               rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
               kayttajatunnus: "A123",
               puhelinnumero: "11",
             },
             {
-              rooli: ProjektiRooli.OMISTAJA,
               kayttajatunnus: "A000111",
-              puhelinnumero: "123456789",
-            },
-            {
-              kayttajatunnus: "A2",
-              puhelinnumero: "123456789",
               rooli: ProjektiRooli.OMISTAJA,
+              puhelinnumero: "22",
             },
-          ]
+          ],
+        });
+
+        // Remove omistaja and save
+        projekti = await saveAndLoadProjekti(projekti, "having only projektipaallikko", {
+          kayttoOikeudet: [
+            {
+              rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
+              kayttajatunnus: "A123",
+              puhelinnumero: "11",
+            },
+          ],
+        });
+
+        // Add omistaja back and examine the results
+        userFixture.loginAs(UserFixture.pekkaProjari);
+        projekti = await saveAndLoadProjekti(
+          projekti,
+          "while adding omistaja back. There should be projektipaallikko and omistaja in the projekti now. Projektipaallikko cannot be removed, so it always stays there.",
+          {
+            kayttoOikeudet: [
+              {
+                kayttajatunnus: "A000111",
+                puhelinnumero: "123456789",
+                rooli: ProjektiRooli.OMISTAJA,
+              },
+            ],
+          }
+        );
+
+        // Add one muokkaaja more and examine the results. Also test that fields can be removed from database
+        await saveAndLoadProjekti(
+          projekti,
+          "while adding one muokkaaja more. There should be three persons in the projekti now",
+          {
+            kayttoOikeudet: [
+              {
+                rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
+                kayttajatunnus: "A123",
+                puhelinnumero: "11",
+              },
+              {
+                rooli: ProjektiRooli.OMISTAJA,
+                kayttajatunnus: "A000111",
+                puhelinnumero: "123456789",
+              },
+              {
+                kayttajatunnus: "A2",
+                puhelinnumero: "123456789",
+                rooli: ProjektiRooli.OMISTAJA,
+              },
+            ],
+            suunnitteluSopimus: null,
+          }
         );
       });
     });
