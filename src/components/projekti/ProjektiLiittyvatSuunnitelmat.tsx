@@ -35,7 +35,6 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
   return (
     <>
       <h4 className="vayla-small-title">Projektiin liittyvät suunnitelmat</h4>
-      <p>Liittyykö projektiin muita voimassaolevia läkisääteisiä suunnitelmia</p>
       <fieldset>
         <FormGroup label="Liittyykö projektiin muita voimassaolevia läkisääteisiä suunnitelmia" flexDirection="row">
           <RadioButton
