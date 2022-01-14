@@ -249,12 +249,13 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
           <div className="lg:flex md:gap-x-8">
             <DatePicker
               label="Kuulutuspäivä *"
+              className="md:max-w-min"
               {...register("aloitusKuulutus.kuulutusPaiva")}
               disabled={disableFormEdit}
               min={today}
               error={errors.aloitusKuulutus?.kuulutusPaiva}
             />
-            <DatePicker disabled label="Siirtyy suunnitteluvaiheeseen" />
+            <DatePicker className="md:max-w-min" disabled label="Siirtyy suunnitteluvaiheeseen" />
           </div>
           <div className="content">
             <KuulutuksenYhteystiedot projekti={projekti} useFormReturn={useFormReturn} />

@@ -25,13 +25,17 @@ Array [
           <label>
             Asiatunnus
           </label>
-          <input
-            className=""
-            disabled={true}
-            maxLength={200}
-            onChange={[Function]}
-            type="text"
-          />
+          <div
+            className="flex flex-col"
+          >
+            <input
+              className=""
+              disabled={true}
+              maxLength={200}
+              onChange={[Function]}
+              type="text"
+            />
+          </div>
         </div>
         <div
           className="form-group"
@@ -39,14 +43,18 @@ Array [
           <label>
             Projektin nimi
           </label>
-          <input
-            className=""
-            maxLength={100}
-            name="name"
-            onBlur={[Function]}
-            onChange={[Function]}
-            type="text"
-          />
+          <div
+            className="flex flex-col"
+          >
+            <input
+              className=""
+              maxLength={100}
+              name="name"
+              onBlur={[Function]}
+              onChange={[Function]}
+              type="text"
+            />
+          </div>
         </div>
         <div
           className="wrapper"

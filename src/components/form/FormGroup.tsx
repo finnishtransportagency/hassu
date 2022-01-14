@@ -9,6 +9,7 @@ interface Props {
   maxLength?: number;
   length?: number;
   bottomInfo?: ReactNode;
+  flexDirection?: "row" | "col";
 }
 
 export default function FormGroup({
@@ -17,13 +18,13 @@ export default function FormGroup({
   errorMessage,
   bottomInfo,
   className,
+  flexDirection = "col",
   ...props
 }: Props & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>): ReactElement {
   return (
     <div className={classNames(style["form-group"], className)} {...props}>
       {label && <label>{label}</label>}
-      {children}
-
+      <div className={classNames("flex", `flex-${flexDirection}`)}>{children}</div>
       {(bottomInfo || errorMessage) && (
         <div className="flex">
           {errorMessage && <span className="text-red">{errorMessage}</span>}

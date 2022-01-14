@@ -5,6 +5,7 @@ import Button from "@components/button/Button";
 import { useFormContext, useFieldArray } from "react-hook-form";
 import { Projekti, SuunnitelmaInput } from "@services/api";
 import IconButton from "@components/button/IconButton";
+import FormGroup from "@components/form/FormGroup";
 
 const defaultSuunnitelma: SuunnitelmaInput = {
   asiatunnus: "",
@@ -12,10 +13,10 @@ const defaultSuunnitelma: SuunnitelmaInput = {
 };
 
 interface Props {
-  projekti?: Projekti | null,
+  projekti?: Projekti | null;
 }
 
-export default function ProjektiPerustiedot({projekti}: Props): ReactElement {
+export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
   const { register, control } = useFormContext(); // retrieve all hook methods
 
   const { fields, append, remove } = useFieldArray({
@@ -29,14 +30,13 @@ export default function ProjektiPerustiedot({projekti}: Props): ReactElement {
     if (projekti && projekti.oid) {
       setLiittyviaSuunnitelmia(projekti?.liittyvatSuunnitelmat?.length ? true : false);
     }
-  }, [projekti])
+  }, [projekti]);
 
   return (
     <>
       <h4 className="vayla-small-title">Projektiin liittyvät suunnitelmat</h4>
-      <p>Liittyykö projektiin muita voimassaolevia läkisääteisiä suunnitelmia</p>
       <fieldset>
-        <div>
+        <FormGroup label="Liittyykö projektiin muita voimassaolevia läkisääteisiä suunnitelmia" flexDirection="row">
           <RadioButton
             label="Kyllä"
             name="liittyvia_suunnitelmia"
@@ -44,7 +44,7 @@ export default function ProjektiPerustiedot({projekti}: Props): ReactElement {
             id="liittyvia_suunnitelmia_kylla"
             onChange={() => setLiittyviaSuunnitelmia(true)}
             checked={isLiittyviaSuunnitelmia}
-          ></RadioButton>
+          />
           <RadioButton
             label="Ei"
             name="liittyvia_suunnitelmia"
@@ -52,8 +52,8 @@ export default function ProjektiPerustiedot({projekti}: Props): ReactElement {
             id="liittyvia_suunnitelmia_ei"
             onChange={() => setLiittyviaSuunnitelmia(false)}
             checked={!isLiittyviaSuunnitelmia}
-          ></RadioButton>
-        </div>
+          />
+        </FormGroup>
         <div>
           {fields.map((field, index) => (
             <div key={field.id} className="grid grid-cols-1 md:grid-cols-12 gap-x-6 mb-3">
