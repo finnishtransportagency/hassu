@@ -39,10 +39,14 @@ async function loadProjektiByOid(oid: string): Promise<DBProjekti | undefined> {
 
 const readOnlyFields = ["oid", "tallennettu"];
 
+function createExpression(expression: string, properties: string[]) {
+  return properties.length > 0 ? expression + " " + properties.join(" , ") : "";
+}
+
 async function saveProjekti(dbProjekti: DBProjekti) {
   log.info("Updating projekti to Hassu ", { dbProjekti });
-  let updateExpression = "set";
-  const ExpressionAttributeNames = {} as any;
+  const setExpression: string[] = [];
+  const removeExpression: string[] = [];
   const ExpressionAttributeValues = {} as any;
   for (const property in dbProjekti) {
     if (dbProjekti.hasOwnProperty(property)) {
@@ -50,16 +54,19 @@ async function saveProjekti(dbProjekti: DBProjekti) {
         continue;
       }
       const value = (dbProjekti as any)[property];
-      if (!value) {
+      if (value === undefined) {
         continue;
       }
-      updateExpression += ` #${property} = :${property} ,`;
-      ExpressionAttributeNames["#" + property] = property;
-      ExpressionAttributeValues[":" + property] = value;
+      if (value === null) {
+        removeExpression.push(property);
+      } else {
+        setExpression.push(`${property} = :${property}`);
+        ExpressionAttributeValues[":" + property] = value;
+      }
     }
   }
 
-  updateExpression = updateExpression.slice(0, -1);
+  const updateExpression = createExpression("SET", setExpression) + " " + createExpression("REMOVE", removeExpression);
 
   const params = {
     TableName: tableName,
@@ -67,7 +74,6 @@ async function saveProjekti(dbProjekti: DBProjekti) {
       oid: dbProjekti.oid,
     },
     UpdateExpression: updateExpression,
-    ExpressionAttributeNames,
     ExpressionAttributeValues,
   };
 

@@ -135,6 +135,18 @@ describe("Api", () => {
     expect(pdf.sisalto.length).to.be.greaterThan(50000);
     fs.mkdirSync(".report", { recursive: true });
     fs.writeFileSync(".report/" + pdf.nimi, Buffer.from(pdf.sisalto, "base64"));
+
+    // Test that fields can be removed as well
+    await api.tallennaProjekti({
+      oid,
+      suunnitteluSopimus: null,
+    });
+
+    const updatedProjekti2 = await loadProjektiFromDatabase(oid);
+    expect(updatedProjekti2.muistiinpano).to.be.equal(newNote);
+    expect(updatedProjekti2.aloitusKuulutus).eql(aloitusKuulutus);
+    expect(updatedProjekti2.suunnitteluSopimus).to.be.undefined;
+    expect(updatedProjekti2.lisakuulutuskieli).to.be.equal(lisakuulutuskieli);
   });
 
   async function loadProjektiFromDatabase(oid: string) {

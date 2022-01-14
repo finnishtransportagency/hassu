@@ -41,7 +41,7 @@ describe("S3Cache", () => {
     }
 
     // First populate empty cache
-    expect(await doTestGet(1)).to.eql({
+    expect(await doTestGet(1000)).to.eql({
       populated: true,
       triggered: false,
       data: {

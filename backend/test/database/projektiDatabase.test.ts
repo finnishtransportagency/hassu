@@ -3,6 +3,7 @@ import * as sinon from "sinon";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import DynamoDB from "aws-sdk/clients/dynamodb";
+import { DBProjekti } from "../../src/database/model/projekti";
 
 const { expect } = require("chai");
 
@@ -36,6 +37,24 @@ describe("apiHandler", () => {
         });
 
         await projektiDatabase.saveProjekti(fixture.dbProjekti1);
+
+        sinon.assert.calledOnce(updateStub);
+        expect(updateStub.getCall(0).firstArg).toMatchSnapshot();
+      });
+
+      it("should remove null fields from DynamoDB", async () => {
+        updateStub.returns({
+          promise() {
+            return Promise.resolve({});
+          },
+        });
+
+        const projekti: DBProjekti = {
+          oid: fixture.dbProjekti1.oid,
+          muistiinpano: "foo",
+          suunnitteluSopimus: null,
+        } as DBProjekti;
+        await projektiDatabase.saveProjekti(projekti);
 
         sinon.assert.calledOnce(updateStub);
         expect(updateStub.getCall(0).firstArg).toMatchSnapshot();
