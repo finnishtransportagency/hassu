@@ -74,13 +74,15 @@ function adaptLiittyvatSuunnitelmat(suunnitelmat?: Suunnitelma[] | null): API.Su
 function adaptSuunnitteluSopimusToSave(
   projekti: DBProjekti,
   suunnitteluSopimusInput?: API.SuunnitteluSopimusInput
-): API.SuunnitteluSopimusInput | undefined {
+): API.SuunnitteluSopimusInput | null | undefined {
   if (suunnitteluSopimusInput) {
     const { logo, ...rest } = suunnitteluSopimusInput;
     return { ...rest, logo: logo || projekti.suunnitteluSopimus?.logo };
+  } else if (projekti.suunnitteluSopimus) {
+    // If no projekti.suunnitteluSopimus, return null so the data gets removed from database
+    return null;
   }
-  // If no suunnitteluSopimusInput, return undefined so the property gets removed by removeUndefinedFields
-  return;
+  return undefined;
 }
 
 function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus): API.AloitusKuulutus | undefined {
