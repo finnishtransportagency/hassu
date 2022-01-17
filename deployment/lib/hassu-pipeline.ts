@@ -1,12 +1,12 @@
 /* tslint:disable:no-console no-unused-expression */
-import { Construct, SecretValue, Stack } from "@aws-cdk/core";
+import {Construct, SecretValue, Stack} from "@aws-cdk/core";
 import * as codebuild from "@aws-cdk/aws-codebuild";
-import { BuildEnvironmentVariableType, ComputeType, LocalCacheMode } from "@aws-cdk/aws-codebuild";
-import { Config } from "./config";
-import { BuildSpec } from "@aws-cdk/aws-codebuild/lib/build-spec";
-import { LinuxBuildImage } from "@aws-cdk/aws-codebuild/lib/project";
-import { Effect, PolicyStatement } from "@aws-cdk/aws-iam";
-import { GitHubSourceProps } from "@aws-cdk/aws-codebuild/lib/source";
+import {BuildEnvironmentVariableType, ComputeType, LocalCacheMode} from "@aws-cdk/aws-codebuild";
+import {Config} from "./config";
+import {BuildSpec} from "@aws-cdk/aws-codebuild/lib/build-spec";
+import {LinuxBuildImage} from "@aws-cdk/aws-codebuild/lib/project";
+import {Effect, PolicyStatement} from "@aws-cdk/aws-iam";
+import {GitHubSourceProps} from "@aws-cdk/aws-codebuild/lib/source";
 
 /**
  * The stack that defines the application pipeline
@@ -88,6 +88,10 @@ export class HassuPipelineStack extends Stack {
 
           PERSON_SEARCH_API_URL: {
             value: config.getInfraParameterPath("PersonSearchApiURL"),
+            type: BuildEnvironmentVariableType.PARAMETER_STORE,
+          },
+          PERSON_SEARCH_API_URL_PROD: {
+            value: config.getInfraParameterPath("PersonSearchApiURLProd"),
             type: BuildEnvironmentVariableType.PARAMETER_STORE,
           },
           PERSON_SEARCH_API_USERNAME: {

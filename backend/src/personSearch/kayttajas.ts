@@ -1,59 +1,75 @@
-import { Kayttaja } from "../../../common/graphql/apiModel";
+import { Kayttaja, VaylaKayttajaTyyppi } from "../../../common/graphql/apiModel";
+import { adaptPerson } from "./personAdapter";
+
+export type Person = {
+  vaylaKayttajaTyyppi?: VaylaKayttajaTyyppi | null;
+  etuNimi: string;
+  sukuNimi: string;
+  organisaatio?: string;
+  email: string[];
+  puhelinnumero?: string;
+};
 
 export class Kayttajas {
-  kayttajaMap: Record<string, Kayttaja>;
+  personMap: Record<string, Person>;
 
-  constructor(kayttajaMap: Record<string, Kayttaja>) {
-    this.kayttajaMap = kayttajaMap;
+  constructor(personMap: Record<string, Person>) {
+    this.personMap = personMap;
   }
 
   getKayttajaByUid(uid: string | undefined): Kayttaja | undefined {
     if (uid) {
-      return this.kayttajaMap[uid];
+      return adaptPerson(uid, this.personMap[uid]);
     }
   }
 
   findByEmail(email: string): Kayttaja | undefined {
-    for (const kayttaja of Object.values(this.kayttajaMap)) {
-      if (kayttaja.email === email) {
-        return kayttaja;
+    for (const [uid, person] of Object.entries(this.personMap)) {
+      if (person.email.includes(email)) {
+        return adaptPerson(uid, person);
       }
     }
   }
 
+  /**
+   * For test usage
+   */
   static fromKayttajaList(kayttajas: Kayttaja[]) {
     return new Kayttajas(
       kayttajas.reduce((map, kayttaja) => {
         if (kayttaja.uid) {
-          map[kayttaja.uid] = kayttaja;
+          map[kayttaja.uid] = {
+            ...kayttaja,
+            email: [kayttaja.email],
+          } as Person;
         }
         return map;
-      }, {} as Record<string, Kayttaja>)
+      }, {} as Record<string, Person>)
     );
   }
 
-  asList() {
+  asList(): Kayttaja[] {
     const list = [];
-    for (const uid in this.kayttajaMap) {
-      if (this.kayttajaMap.hasOwnProperty(uid)) {
-        list.push(this.kayttajaMap[uid]);
+    for (const uid in this.personMap) {
+      if (this.personMap.hasOwnProperty(uid)) {
+        list.push(adaptPerson(uid, this.personMap[uid]));
       }
     }
     return list;
   }
 
   asMap() {
-    return this.kayttajaMap;
+    return this.personMap;
   }
 
   findByText(hakusana: string): Kayttaja[] {
     if (hakusana.length >= 3) {
-      return Object.values(this.kayttajaMap).reduce((list, kayttaja) => {
+      return Object.entries(this.personMap).reduce((list, [uid, person]) => {
         if (
-          (kayttaja.sukuNimi.toLowerCase() + ", " + kayttaja.etuNimi.toLowerCase()).includes(hakusana.toLowerCase()) ||
-          (kayttaja.sukuNimi.toLowerCase() + " " + kayttaja.etuNimi.toLowerCase()).includes(hakusana.toLowerCase())
+          (person.sukuNimi.toLowerCase() + ", " + person.etuNimi.toLowerCase()).includes(hakusana.toLowerCase()) ||
+          (person.sukuNimi.toLowerCase() + " " + person.etuNimi.toLowerCase()).includes(hakusana.toLowerCase())
         ) {
-          list.push(kayttaja);
+          list.push(adaptPerson(uid, person));
         }
         return list;
       }, [] as Kayttaja[]);

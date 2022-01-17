@@ -10,6 +10,7 @@ const config = {
   velhoPassword: process.env.VELHO_PASSWORD,
 
   personSearchApiURL: process.env.PERSON_SEARCH_API_URL,
+  personSearchApiURLProd: process.env.PERSON_SEARCH_API_URL_PROD,
   personSearchUsername: process.env.PERSON_SEARCH_API_USERNAME,
   personSearchPassword: process.env.PERSON_SEARCH_API_PASSWORD,
   personSearchAccountTypes: process.env.PERSON_SEARCH_API_ACCOUNT_TYPES?.split(","),

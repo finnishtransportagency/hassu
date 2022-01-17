@@ -1,4 +1,5 @@
-import { Kayttaja, VaylaKayttajaTyyppi } from "../../../../common/graphql/apiModel";
+import { VaylaKayttajaTyyppi } from "../../../../common/graphql/apiModel";
+import { Person } from "../kayttajas";
 
 function adaptAccounttype(accountType: string) {
   return {
@@ -8,11 +9,8 @@ function adaptAccounttype(accountType: string) {
   }[accountType];
 }
 
-export function adaptPersonSearchResult(responseJson: any): Kayttaja[] {
-  if (!responseJson.person?.person) {
-    return [];
-  }
-  return responseJson.person.person.map(
+export function adaptPersonSearchResult(responseJson: any, kayttajas: Record<string, Person>) {
+  responseJson.person?.person?.forEach(
     (person: {
       FirstName: string[];
       LastName: string[];
@@ -22,16 +20,25 @@ export function adaptPersonSearchResult(responseJson: any): Kayttaja[] {
       MobilePhone: string[];
       Accounttype: string[];
     }) => {
-      return {
-        __typename: "Kayttaja",
-        vaylaKayttajaTyyppi: adaptAccounttype(getFirstElementFromArrayOrEmpty(person.Accounttype)),
-        etuNimi: getFirstElementFromArrayOrEmpty(person.FirstName),
-        sukuNimi: getFirstElementFromArrayOrEmpty(person.LastName),
-        uid: getFirstElementFromArrayOrEmpty(person.AccountName),
-        organisaatio: getFirstElementFromArrayOrEmpty(person.Company),
-        email: getFirstElementFromArrayOrEmpty(person.Email),
-        puhelinnumero: getFirstElementFromArrayOrEmpty(person.MobilePhone),
-      };
+      const uid = getFirstElementFromArrayOrEmpty(person.AccountName);
+      if (uid) {
+        const email = getFirstElementFromArrayOrEmpty(person.Email);
+
+        if (kayttajas[uid]) {
+          if (email && !kayttajas[uid].email.includes(email)) {
+            kayttajas[uid].email.push(email);
+          }
+          return;
+        }
+        kayttajas[uid] = {
+          vaylaKayttajaTyyppi: adaptAccounttype(getFirstElementFromArrayOrEmpty(person.Accounttype)),
+          etuNimi: getFirstElementFromArrayOrEmpty(person.FirstName),
+          sukuNimi: getFirstElementFromArrayOrEmpty(person.LastName),
+          organisaatio: getFirstElementFromArrayOrEmpty(person.Company),
+          email: [email],
+          puhelinnumero: getFirstElementFromArrayOrEmpty(person.MobilePhone),
+        };
+      }
     }
   );
 }
