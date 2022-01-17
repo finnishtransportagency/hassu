@@ -33,6 +33,7 @@ export class ProjektiAdapter {
       lisakuulutuskieli,
       eurahoitus,
       liittyvatSuunnitelmat,
+      status,
     } = changes;
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
     kayttoOikeudetManager.applyChanges(kayttoOikeudet);
@@ -47,6 +48,7 @@ export class ProjektiAdapter {
         lisakuulutuskieli,
         eurahoitus,
         liittyvatSuunnitelmat,
+        status,
       }
     ) as DBProjekti;
   }

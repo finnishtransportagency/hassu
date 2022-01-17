@@ -5,7 +5,7 @@ import log from "loglevel";
 import { PageProps } from "@pages/_app";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import useProjekti from "src/hooks/useProjekti";
-import { api, Projekti, TallennaProjektiInput } from "@services/api";
+import { api, Projekti, Status, TallennaProjektiInput } from "@services/api";
 import { SchemaOf } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
@@ -30,7 +30,7 @@ import { Alert, Snackbar } from "@mui/material";
 
 export type FormValues = Pick<
   TallennaProjektiInput,
-  "oid" | "muistiinpano" | "lisakuulutuskieli" | "eurahoitus" | "suunnitteluSopimus" | "liittyvatSuunnitelmat"
+  "oid" | "muistiinpano" | "lisakuulutuskieli" | "eurahoitus" | "suunnitteluSopimus" | "liittyvatSuunnitelmat" | "status"
 >;
 
 const maxNoteLength = 2000;
@@ -73,6 +73,7 @@ const validationSchema: SchemaOf<FormValues> = Yup.object().shape({
     .notRequired()
     .nullable()
     .default(null),
+  status: Yup.mixed<Status>().oneOf(Object.values(Status)).notRequired().nullable().default(null),
 });
 
 const loadedProjektiValidationSchema = getProjektiValidationSchema([
@@ -102,7 +103,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
 
   const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(validationSchema, { abortEarly: false, recursive: true }),
-    defaultValues: { muistiinpano: "", lisakuulutuskieli: null, eurahoitus: "", liittyvatSuunnitelmat: null },
+    defaultValues: { muistiinpano: "", lisakuulutuskieli: null, eurahoitus: "", liittyvatSuunnitelmat: null, status: Status.ALOITUSKUULUTUS },
     mode: "onChange",
     reValidateMode: "onChange",
     context: {requireLisakuulutuskieli: selectLanguageAvailable, ...formContext},
@@ -142,6 +143,12 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
       await api.tallennaProjekti(formData);
       await reloadProjekti();
       setToastOpen(true);
+      if(projekti?.status === Status.EI_JULKAISTU){
+          const siirtymaTimer = setTimeout(()=> {
+          router.push(`/yllapito/projekti/${projekti?.oid}/aloituskuulutus`);
+        }, 1500);
+        return () => clearTimeout(siirtymaTimer);
+      }
     } catch (e) {
       log.log("OnSubmit Error", e);
     }
@@ -158,6 +165,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
         muistiinpano: projekti.muistiinpano || "",
         lisakuulutuskieli: projekti.lisakuulutuskieli || null,
         eurahoitus: projekti.eurahoitus || "",
+        status: projekti.status === Status.EI_JULKAISTU ? Status.ALOITUSKUULUTUS : projekti.status,
         liittyvatSuunnitelmat:
           projekti?.liittyvatSuunnitelmat?.map((suunnitelma) => {
             const { __typename, ...suunnitelmaInput } = suunnitelma;
@@ -281,9 +289,10 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
             <Notification>Tallennus ei vielä julkaise tietoja.</Notification>
             <div className="flex justify-between flex-wrap gap-4">
               <Button primary={true} disabled={disableFormEdit}>
-                Tallenna ja siirry aloituskuulutukseen
+                {projekti?.status !== Status.EI_JULKAISTU ? "Tallenna" : "Tallenna ja siirry aloituskuulutukseen" }
               </Button>
             </div>
+            <input type="hidden" {...register("status")} />
           </fieldset>
         </form>
         <Snackbar 

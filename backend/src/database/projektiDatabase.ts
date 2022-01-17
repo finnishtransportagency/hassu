@@ -47,6 +47,7 @@ async function saveProjekti(dbProjekti: DBProjekti) {
   log.info("Updating projekti to Hassu ", { dbProjekti });
   const setExpression: string[] = [];
   const removeExpression: string[] = [];
+  const ExpressionAttributeNames = {} as any;
   const ExpressionAttributeValues = {} as any;
   for (const property in dbProjekti) {
     if (dbProjekti.hasOwnProperty(property)) {
@@ -60,7 +61,8 @@ async function saveProjekti(dbProjekti: DBProjekti) {
       if (value === null) {
         removeExpression.push(property);
       } else {
-        setExpression.push(`${property} = :${property}`);
+        setExpression.push(`#${property} = :${property}`);
+        ExpressionAttributeNames["#" + property] = property;
         ExpressionAttributeValues[":" + property] = value;
       }
     }
@@ -74,6 +76,7 @@ async function saveProjekti(dbProjekti: DBProjekti) {
       oid: dbProjekti.oid,
     },
     UpdateExpression: updateExpression,
+    ExpressionAttributeNames,
     ExpressionAttributeValues,
   };
 

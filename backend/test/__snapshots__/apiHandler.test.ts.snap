@@ -142,6 +142,7 @@ Array [
     "lisakuulutuskieli": undefined,
     "muistiinpano": undefined,
     "oid": "1",
+    "status": undefined,
     "suunnitteluSopimus": undefined,
   },
 ]
@@ -195,6 +196,7 @@ Array [
     "lisakuulutuskieli": undefined,
     "muistiinpano": undefined,
     "oid": "1",
+    "status": undefined,
     "suunnitteluSopimus": undefined,
   },
 ]
@@ -258,6 +260,7 @@ Array [
     "lisakuulutuskieli": undefined,
     "muistiinpano": undefined,
     "oid": "1",
+    "status": undefined,
     "suunnitteluSopimus": null,
   },
 ]
