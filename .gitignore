@@ -54,3 +54,8 @@ build
 .version
 /.env.test
 /coverage
+
+/test/.report
+
+/robotenv.py
+__pycache__
