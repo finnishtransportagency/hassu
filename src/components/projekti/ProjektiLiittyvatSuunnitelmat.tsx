@@ -36,9 +36,10 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
     }
   }, [projekti]);
 
-  useEffect(()=> {
-    if(!isLiittyviaSuunnitelmia) remove()
-
+  useEffect(() => {
+    if (!isLiittyviaSuunnitelmia) {
+      remove();
+    }
   }, [isLiittyviaSuunnitelmia, remove]);
 
   return (
