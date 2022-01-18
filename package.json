@@ -182,7 +182,11 @@
     "get-next-version": "npx semantic-release --no-ci --dryRun",
     "release": "npx semantic-release --no-ci",
     "createVelhoProjekti": "ts-node --project=tsconfig.backend.json -r dotenv/config ./backend/bin/createVelhoProjekti dotenv_config_path=.env.test",
-    "deleteVelhoProjekti": "ts-node --project=tsconfig.backend.json -r dotenv/config ./backend/bin/deleteVelhoProjekti dotenv_config_path=.env.test"
+    "deleteVelhoProjekti": "ts-node --project=tsconfig.backend.json -r dotenv/config ./backend/bin/deleteVelhoProjekti dotenv_config_path=.env.test",
+    "robot:build": "./tools/robot/updateRobotImage.sh",
+    "robot:pull": "cross-env docker pull 283563576583.dkr.ecr.eu-west-1.amazonaws.com/hassu-robot:latest",
+    "robot": "cross-env docker run --rm --add-host=host.docker.internal:host-gateway -v $(pwd):/work 283563576583.dkr.ecr.eu-west-1.amazonaws.com/hassu-robot:latest",
+    "ecrLogin": "aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 283563576583.dkr.ecr.eu-west-1.amazonaws.com"
   },
   "browserslist": {
     "production": [
