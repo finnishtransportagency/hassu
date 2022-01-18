@@ -2,6 +2,17 @@
 
 exports[`apiHandler updateSuunnitelma saveProjekti should pass expected parameters to DynamoDB 1`] = `
 Object {
+  "ExpressionAttributeNames": Object {
+    "#aloitusKuulutus": "aloitusKuulutus",
+    "#eurahoitus": "eurahoitus",
+    "#kayttoOikeudet": "kayttoOikeudet",
+    "#liittyvatSuunnitelmat": "liittyvatSuunnitelmat",
+    "#lisakuulutuskieli": "lisakuulutuskieli",
+    "#muistiinpano": "muistiinpano",
+    "#status": "status",
+    "#suunnitteluSopimus": "suunnitteluSopimus",
+    "#velho": "velho",
+  },
   "ExpressionAttributeValues": Object {
     ":aloitusKuulutus": Object {
       "elyKeskus": "Pirkanmaa",
@@ -61,12 +72,15 @@ Object {
     "oid": "1",
   },
   "TableName": "Projekti-localstack",
-  "UpdateExpression": "SET kayttoOikeudet = :kayttoOikeudet , velho = :velho , muistiinpano = :muistiinpano , status = :status , suunnitteluSopimus = :suunnitteluSopimus , aloitusKuulutus = :aloitusKuulutus , lisakuulutuskieli = :lisakuulutuskieli , eurahoitus = :eurahoitus , liittyvatSuunnitelmat = :liittyvatSuunnitelmat ",
+  "UpdateExpression": "SET #kayttoOikeudet = :kayttoOikeudet , #velho = :velho , #muistiinpano = :muistiinpano , #status = :status , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus , #lisakuulutuskieli = :lisakuulutuskieli , #eurahoitus = :eurahoitus , #liittyvatSuunnitelmat = :liittyvatSuunnitelmat ",
 }
 `;
 
 exports[`apiHandler updateSuunnitelma saveProjekti should remove null fields from DynamoDB 1`] = `
 Object {
+  "ExpressionAttributeNames": Object {
+    "#muistiinpano": "muistiinpano",
+  },
   "ExpressionAttributeValues": Object {
     ":muistiinpano": "foo",
   },
@@ -74,6 +88,6 @@ Object {
     "oid": "1",
   },
   "TableName": "Projekti-localstack",
-  "UpdateExpression": "SET muistiinpano = :muistiinpano REMOVE suunnitteluSopimus",
+  "UpdateExpression": "SET #muistiinpano = :muistiinpano REMOVE suunnitteluSopimus",
 }
 `;
