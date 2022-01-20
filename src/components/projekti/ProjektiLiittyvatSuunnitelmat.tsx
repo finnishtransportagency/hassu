@@ -46,7 +46,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
     <>
       <h4 className="vayla-small-title">Projektiin liittyvät suunnitelmat</h4>
 
-      <FormGroup label="Liittyykö projektiin muita voimassaolevia läkisääteisiä suunnitelmia" flexDirection="row">
+      <FormGroup label="Liittyykö projektiin muita voimassaolevia lakisääteisiä suunnitelmia" flexDirection="row">
         <RadioButton
           label="Kyllä"
           name="liittyvia_suunnitelmia"
