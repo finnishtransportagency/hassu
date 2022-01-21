@@ -9,7 +9,6 @@ Object {
     },
   ],
   "muistiinpano": "Testiprojekti 1:n muistiinpano",
-  "status": "EI_JULKAISTU",
   "velho": Object {
     "kunnat": Array [
       "Tampere",
@@ -29,7 +28,6 @@ Object {
     },
   ],
   "muistiinpano": "moro",
-  "status": "EI_JULKAISTU",
   "velho": Object {
     "kunnat": Array [
       "Tampere",

@@ -28,7 +28,7 @@ export default function ProjektiSideNavigation(): ReactElement {
     {
       title: "Aloituskuulutus",
       href: oid && `/yllapito/projekti/${oid}/aloituskuulutus`,
-      disabled: projekti?.status === Status.EI_JULKAISTU, // TODO: muuta vertailemaan aloituskuulutuksen omaa tilaa myohemmassa vaiheessa
+      disabled: projekti?.status === Status.EI_JULKAISTU,
     },
     { title: "Suunnitteluvaihe", href: oid && `/yllapito/projekti/${oid}/suunnittelu`, disabled: true },
     { title: "Nähtävilläolovaihe", href: oid && `/yllapito/projekti/${oid}/nahtavillaolo`, disabled: true },

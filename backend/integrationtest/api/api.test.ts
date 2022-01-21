@@ -57,7 +57,7 @@ describe("Api", () => {
 
     const oid = await searchProjectsFromVelhoAndPickFirst();
     const projekti = await api.lataaProjekti(oid);
-    await expect(projekti.tallennettu).to.be.undefined;
+    await expect(projekti.tallennettu).to.be.false;
     log.info(JSON.stringify(projekti, null, 2));
 
     const kayttoOikeudet = projekti.kayttoOikeudet?.map((value) => ({
@@ -120,6 +120,7 @@ describe("Api", () => {
       aloitusKuulutus,
       suunnitteluSopimus: suunnitteluSopimusInput,
       lisakuulutuskieli,
+      euRahoitus: false,
     });
 
     const updatedProjekti = await loadProjektiFromDatabase(oid);
@@ -128,6 +129,7 @@ describe("Api", () => {
     expect(updatedProjekti.suunnitteluSopimus).include(suunnitteluSopimus);
     expect(updatedProjekti.suunnitteluSopimus?.logo).contain("/suunnittelusopimus/logo.png");
     expect(updatedProjekti.lisakuulutuskieli).to.be.equal(lisakuulutuskieli);
+    expect(updatedProjekti.euRahoitus).to.be.false;
 
     const pdf = await api.lataaKuulutusPDF(oid, KuulutusTyyppi.ALOITUSKUULUTUS);
     expect(pdf.nimi).to.be.equal("aloituskuulutus.pdf");

@@ -1,13 +1,60 @@
 import { projektiDatabase } from "../database/projektiDatabase";
 import { requirePermissionLuku, requirePermissionLuonti, requirePermissionMuokkaa, requireVaylaUser } from "../user";
 import { velho } from "../velho/velhoClient";
-import { NykyinenKayttaja, ProjektiRooli, Status, TallennaProjektiInput } from "../../../common/graphql/apiModel";
+import {
+  AloitusKuulutusTila,
+  NykyinenKayttaja,
+  Projekti,
+  ProjektiRooli,
+  Status,
+  TallennaProjektiInput,
+} from "../../../common/graphql/apiModel";
 import { projektiAdapter } from "./projektiAdapter";
 import { auditLog, log } from "../logger";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import mergeWith from "lodash/mergeWith";
 import { fileService } from "../files/fileService";
 import { personSearch } from "../personSearch/personSearchClient";
+import { perustiedotValidationSchema } from "../../../src/schemas/perustiedot";
+import { ValidationError } from "yup";
+
+/**
+ * Function to determine the status of the projekti
+ * @param projekti
+ * @param param
+ */
+function applyStatus(projekti: Projekti, param: { saved?: boolean }) {
+  function checkIfSaved() {
+    if (param?.saved) {
+      projekti.tallennettu = true;
+      projekti.status = Status.EI_JULKAISTU;
+    }
+  }
+
+  function checkPerustiedot() {
+    try {
+      perustiedotValidationSchema.validateSync(projekti);
+      if (!projekti.aloitusKuulutus) {
+        projekti.aloitusKuulutus = { __typename: "AloitusKuulutus", tila: AloitusKuulutusTila.MUOKATTAVISSA };
+      }
+      projekti.status = Status.ALOITUSKUULUTUS;
+    } catch (e) {
+      if (e instanceof ValidationError) {
+        log.info("Perustiedot puutteelliset", e.errors);
+      } else {
+        throw e;
+      }
+    }
+  }
+
+  // Perustiedot is available if the projekti has been saved
+  checkIfSaved();
+
+  // Aloituskuulutus is available, if projekti has all basic information set
+  checkPerustiedot();
+
+  return projekti;
+}
 
 export async function loadProjekti(oid: string) {
   const vaylaUser = requirePermissionLuku();
@@ -16,7 +63,7 @@ export async function loadProjekti(oid: string) {
     const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
     if (projektiFromDB) {
       projektiFromDB.tallennettu = true;
-      return projektiAdapter.adaptProjekti(projektiFromDB);
+      return applyStatus(projektiAdapter.adaptProjekti(projektiFromDB), { saved: true });
     } else {
       requirePermissionLuonti();
       const projekti = await createProjektiFromVelho(oid, vaylaUser);
@@ -52,9 +99,6 @@ async function createProjektiFromVelho(oid: string, vaylaUser: NykyinenKayttaja,
   try {
     log.info("Loading projekti from Velho", { oid });
     const { projekti, vastuuhenkilo } = await velho.loadProjekti(oid);
-
-    // Set default state
-    projekti.status = Status.EI_JULKAISTU;
 
     const kayttoOikeudet = new KayttoOikeudetManager([], await personSearch.getKayttajas());
 

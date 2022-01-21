@@ -5,7 +5,6 @@ Object {
   "projekti": Object {
     "kayttoOikeudet": Array [],
     "oid": "100",
-    "status": "EI_JULKAISTU",
     "tyyppi": "TIE",
     "velho": Object {
       "kunnat": Array [

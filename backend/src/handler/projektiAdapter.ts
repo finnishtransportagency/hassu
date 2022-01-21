@@ -31,9 +31,8 @@ export class ProjektiAdapter {
       aloitusKuulutus,
       suunnitteluSopimus,
       lisakuulutuskieli,
-      eurahoitus,
+      euRahoitus,
       liittyvatSuunnitelmat,
-      status,
     } = changes;
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
     kayttoOikeudetManager.applyChanges(kayttoOikeudet);
@@ -46,9 +45,8 @@ export class ProjektiAdapter {
         suunnitteluSopimus: adaptSuunnitteluSopimusToSave(projekti, suunnitteluSopimus),
         kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet(),
         lisakuulutuskieli,
-        eurahoitus,
+        euRahoitus,
         liittyvatSuunnitelmat,
-        status,
       }
     ) as DBProjekti;
   }

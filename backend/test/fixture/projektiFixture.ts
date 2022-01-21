@@ -42,7 +42,7 @@ export class ProjektiFixture {
     kayttoOikeudet: [ProjektiFixture.pekkaProjariProjektiKayttaja],
     tyyppi: ProjektiTyyppi.TIE,
     lisakuulutuskieli: "ruotsi",
-    eurahoitus: "false",
+    euRahoitus: false,
     liittyvatSuunnitelmat: [
       {
         __typename: "Suunnitelma",
@@ -80,7 +80,6 @@ export class ProjektiFixture {
       kunnat: ["Tampere", "Nokia"],
     },
     muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
-    status: Status.EI_JULKAISTU,
     suunnitteluSopimus: {
       email: "Joku.Jossain@vayla.fi",
       puhelinnumero: "123",
@@ -107,7 +106,7 @@ export class ProjektiFixture {
       ],
     },
     lisakuulutuskieli: "ruotsi",
-    eurahoitus: "false",
+    euRahoitus: false,
     liittyvatSuunnitelmat: [
       {
         asiatunnus: "atunnus123",

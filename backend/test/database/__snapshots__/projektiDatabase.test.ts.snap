@@ -4,12 +4,11 @@ exports[`apiHandler updateSuunnitelma saveProjekti should pass expected paramete
 Object {
   "ExpressionAttributeNames": Object {
     "#aloitusKuulutus": "aloitusKuulutus",
-    "#eurahoitus": "eurahoitus",
+    "#euRahoitus": "euRahoitus",
     "#kayttoOikeudet": "kayttoOikeudet",
     "#liittyvatSuunnitelmat": "liittyvatSuunnitelmat",
     "#lisakuulutuskieli": "lisakuulutuskieli",
     "#muistiinpano": "muistiinpano",
-    "#status": "status",
     "#suunnitteluSopimus": "suunnitteluSopimus",
     "#velho": "velho",
   },
@@ -32,7 +31,7 @@ Object {
       "kuulutusPaiva": "2022-01-02",
       "siirtyySuunnitteluVaiheeseen": "2022-01-01",
     },
-    ":eurahoitus": "false",
+    ":euRahoitus": false,
     ":kayttoOikeudet": Array [
       Object {
         "email": "pekka.projari@vayla.fi",
@@ -52,7 +51,6 @@ Object {
     ],
     ":lisakuulutuskieli": "ruotsi",
     ":muistiinpano": "Testiprojekti 1:n muistiinpano",
-    ":status": "EI_JULKAISTU",
     ":suunnitteluSopimus": Object {
       "email": "Joku.Jossain@vayla.fi",
       "etunimi": "Joku",
@@ -72,7 +70,7 @@ Object {
     "oid": "1",
   },
   "TableName": "Projekti-localstack",
-  "UpdateExpression": "SET #kayttoOikeudet = :kayttoOikeudet , #velho = :velho , #muistiinpano = :muistiinpano , #status = :status , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus , #lisakuulutuskieli = :lisakuulutuskieli , #eurahoitus = :eurahoitus , #liittyvatSuunnitelmat = :liittyvatSuunnitelmat ",
+  "UpdateExpression": "SET #kayttoOikeudet = :kayttoOikeudet , #velho = :velho , #muistiinpano = :muistiinpano , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus , #lisakuulutuskieli = :lisakuulutuskieli , #euRahoitus = :euRahoitus , #liittyvatSuunnitelmat = :liittyvatSuunnitelmat ",
 }
 `;
 

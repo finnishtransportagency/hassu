@@ -19,7 +19,6 @@ describe("ProjektiSearchService", () => {
     });
     expect(dbProjektis[0]).to.deep.equal({
       oid: projekti.oid,
-      status: projekti.status,
       muistiinpano: projekti.muistiinpano,
       velho: projekti.velho,
     });

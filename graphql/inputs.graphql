@@ -2,12 +2,11 @@ input TallennaProjektiInput {
   oid: String!
   muistiinpano: String
   lisakuulutuskieli: String
-  eurahoitus: String
+  euRahoitus: Boolean
   liittyvatSuunnitelmat: [SuunnitelmaInput]
   aloitusKuulutus: AloitusKuulutusInput
   suunnitteluSopimus: SuunnitteluSopimusInput
   kayttoOikeudet: [ProjektiKayttajaInput!]
-  status: Status
 }
 
 input SuunnitelmaInput {
