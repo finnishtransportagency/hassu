@@ -92,32 +92,39 @@ export type HassuSSMParameters = {
   basicAuthenticationPassword: string;
 
   FrontendDomainName: string;
+
+  SMTPKeyId: string;
+  SMTPSecret: string;
 };
 
 async function readParametersForEnv(environment: string, region: Region): Promise<HassuSSMParameters> {
-  let ssmClient;
+  let ssmClient: SSMClient;
   if (region === Region.EU_WEST_1) {
     ssmClient = euWestSSMClient;
   } else {
     ssmClient = usEastSSMClient;
   }
-  const path = "/" + environment + "/";
 
-  let nextToken;
   const results: Record<string, string> = {};
 
-  do {
-    // noinspection JSUnusedAssignment
-    const output: GetParametersByPathCommandOutput = await ssmClient.send(
-      new GetParametersByPathCommand({ Path: path, WithDecryption: true, NextToken: nextToken })
-    );
-    output.Parameters?.forEach((param) => {
-      if (param.Name && param.Value) {
-        results[param.Name.replace(path, "")] = param.Value;
-      }
-    });
-    nextToken = output.NextToken;
-  } while (nextToken);
+  async function readParametersByPath(path: string) {
+    let nextToken;
+    do {
+      // noinspection JSUnusedAssignment
+      const output: GetParametersByPathCommandOutput = await ssmClient.send(
+        new GetParametersByPathCommand({ Path: path, WithDecryption: true, NextToken: nextToken })
+      );
+      output.Parameters?.forEach((param) => {
+        if (param.Name && param.Value) {
+          results[param.Name.replace(path, "")] = param.Value;
+        }
+      });
+      nextToken = output.NextToken;
+    } while (nextToken);
+  }
+
+  await readParametersByPath("/"); // Read global parameters from root
+  await readParametersByPath("/" + environment + "/"); // Then override with environment specific ones if provided
 
   return results as HassuSSMParameters;
 }
@@ -164,6 +171,9 @@ export async function getEnvironmentVariablesFromSSM(variables?: HassuSSMParamet
 
     NEXT_PUBLIC_VAYLA_EXTRANET_URL: variables.ExtranetHomePageUrl,
     NEXT_PUBLIC_VELHO_BASE_URL: variables.VelhoBaseUrl,
+
+    SMTP_KEY_ID: variables.SMTPKeyId,
+    SMTP_SECRET: variables.SMTPSecret,
   };
 }
 
