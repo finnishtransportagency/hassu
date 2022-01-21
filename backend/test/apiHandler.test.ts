@@ -105,8 +105,7 @@ describe("apiHandler", () => {
           }
           // Load projekti and examine its permissions again
           p = await api.lataaProjekti(fixture.projekti1.oid);
-          const updatedKayttoOikeudet = p.kayttoOikeudet;
-          expect(["Loaded projekti having " + description, updatedKayttoOikeudet]).toMatchSnapshot();
+          expect(["Loaded projekti having " + description, p]).toMatchSnapshot();
           return p;
         }
 
@@ -207,6 +206,7 @@ describe("apiHandler", () => {
               },
             ],
             suunnitteluSopimus: null,
+            euRahoitus: false, // mandatory field for perustiedot
           }
         );
       });

@@ -24,7 +24,7 @@ Object {
   ],
   "muistiinpano": "Testiprojekti 1:n muistiinpano",
   "oid": "1",
-  "status": "EI_JULKAISTU",
+  "tallennettu": false,
   "tyyppi": "TIE",
   "velho": Object {
     "nimi": "Testiprojekti 1",
@@ -83,7 +83,6 @@ Array [
     ],
     "muistiinpano": "Testiprojekti 1:n muistiinpano",
     "oid": "1",
-    "status": "EI_JULKAISTU",
     "tallennettu": true,
     "tyyppi": "TIE",
     "velho": Object {
@@ -96,28 +95,39 @@ Array [
 exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 3`] = `
 Array [
   "Loaded projekti having having both projektipaallikko and omistaja",
-  Array [
-    Object {
-      "__typename": "ProjektiKayttaja",
-      "email": "pekka.projari@vayla.fi",
-      "esitetaanKuulutuksessa": true,
-      "kayttajatunnus": "A123",
-      "nimi": "Projari, Pekka",
-      "organisaatio": "Väylävirasto",
-      "puhelinnumero": "11",
-      "rooli": "PROJEKTIPAALLIKKO",
+  Object {
+    "__typename": "Projekti",
+    "kayttoOikeudet": Array [
+      Object {
+        "__typename": "ProjektiKayttaja",
+        "email": "pekka.projari@vayla.fi",
+        "esitetaanKuulutuksessa": true,
+        "kayttajatunnus": "A123",
+        "nimi": "Projari, Pekka",
+        "organisaatio": "Väylävirasto",
+        "puhelinnumero": "11",
+        "rooli": "PROJEKTIPAALLIKKO",
+      },
+      Object {
+        "__typename": "ProjektiKayttaja",
+        "email": "matti.meikalainen@vayla.fi",
+        "esitetaanKuulutuksessa": undefined,
+        "kayttajatunnus": "A000111",
+        "nimi": "Meikäläinen, Matti",
+        "organisaatio": "ELY",
+        "puhelinnumero": "22",
+        "rooli": "OMISTAJA",
+      },
+    ],
+    "muistiinpano": "Testiprojekti 1:n muistiinpano",
+    "oid": "1",
+    "status": "EI_JULKAISTU",
+    "tallennettu": true,
+    "tyyppi": "TIE",
+    "velho": Object {
+      "nimi": "Testiprojekti 1",
     },
-    Object {
-      "__typename": "ProjektiKayttaja",
-      "email": "matti.meikalainen@vayla.fi",
-      "esitetaanKuulutuksessa": undefined,
-      "kayttajatunnus": "A000111",
-      "nimi": "Meikäläinen, Matti",
-      "organisaatio": "ELY",
-      "puhelinnumero": "22",
-      "rooli": "OMISTAJA",
-    },
-  ],
+  },
 ]
 `;
 
@@ -126,7 +136,7 @@ Array [
   "Save projekti having having only projektipaallikko",
   Object {
     "aloitusKuulutus": undefined,
-    "eurahoitus": undefined,
+    "euRahoitus": undefined,
     "kayttoOikeudet": Array [
       Object {
         "email": "pekka.projari@vayla.fi",
@@ -142,7 +152,6 @@ Array [
     "lisakuulutuskieli": undefined,
     "muistiinpano": undefined,
     "oid": "1",
-    "status": undefined,
     "suunnitteluSopimus": undefined,
   },
 ]
@@ -151,18 +160,29 @@ Array [
 exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 5`] = `
 Array [
   "Loaded projekti having having only projektipaallikko",
-  Array [
-    Object {
-      "__typename": "ProjektiKayttaja",
-      "email": "pekka.projari@vayla.fi",
-      "esitetaanKuulutuksessa": true,
-      "kayttajatunnus": "A123",
-      "nimi": "Projari, Pekka",
-      "organisaatio": "Väylävirasto",
-      "puhelinnumero": "11",
-      "rooli": "PROJEKTIPAALLIKKO",
+  Object {
+    "__typename": "Projekti",
+    "kayttoOikeudet": Array [
+      Object {
+        "__typename": "ProjektiKayttaja",
+        "email": "pekka.projari@vayla.fi",
+        "esitetaanKuulutuksessa": true,
+        "kayttajatunnus": "A123",
+        "nimi": "Projari, Pekka",
+        "organisaatio": "Väylävirasto",
+        "puhelinnumero": "11",
+        "rooli": "PROJEKTIPAALLIKKO",
+      },
+    ],
+    "muistiinpano": "Testiprojekti 1:n muistiinpano",
+    "oid": "1",
+    "status": "EI_JULKAISTU",
+    "tallennettu": true,
+    "tyyppi": "TIE",
+    "velho": Object {
+      "nimi": "Testiprojekti 1",
     },
-  ],
+  },
 ]
 `;
 
@@ -171,7 +191,7 @@ Array [
   "Save projekti having while adding omistaja back. There should be projektipaallikko and omistaja in the projekti now. Projektipaallikko cannot be removed, so it always stays there.",
   Object {
     "aloitusKuulutus": undefined,
-    "eurahoitus": undefined,
+    "euRahoitus": undefined,
     "kayttoOikeudet": Array [
       Object {
         "email": "pekka.projari@vayla.fi",
@@ -196,7 +216,6 @@ Array [
     "lisakuulutuskieli": undefined,
     "muistiinpano": undefined,
     "oid": "1",
-    "status": undefined,
     "suunnitteluSopimus": undefined,
   },
 ]
@@ -205,28 +224,39 @@ Array [
 exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 7`] = `
 Array [
   "Loaded projekti having while adding omistaja back. There should be projektipaallikko and omistaja in the projekti now. Projektipaallikko cannot be removed, so it always stays there.",
-  Array [
-    Object {
-      "__typename": "ProjektiKayttaja",
-      "email": "pekka.projari@vayla.fi",
-      "esitetaanKuulutuksessa": true,
-      "kayttajatunnus": "A123",
-      "nimi": "Projari, Pekka",
-      "organisaatio": "Väylävirasto",
-      "puhelinnumero": "11",
-      "rooli": "PROJEKTIPAALLIKKO",
+  Object {
+    "__typename": "Projekti",
+    "kayttoOikeudet": Array [
+      Object {
+        "__typename": "ProjektiKayttaja",
+        "email": "pekka.projari@vayla.fi",
+        "esitetaanKuulutuksessa": true,
+        "kayttajatunnus": "A123",
+        "nimi": "Projari, Pekka",
+        "organisaatio": "Väylävirasto",
+        "puhelinnumero": "11",
+        "rooli": "PROJEKTIPAALLIKKO",
+      },
+      Object {
+        "__typename": "ProjektiKayttaja",
+        "email": "matti.meikalainen@vayla.fi",
+        "esitetaanKuulutuksessa": undefined,
+        "kayttajatunnus": "A000111",
+        "nimi": "Meikäläinen, Matti",
+        "organisaatio": "ELY",
+        "puhelinnumero": "123456789",
+        "rooli": "OMISTAJA",
+      },
+    ],
+    "muistiinpano": "Testiprojekti 1:n muistiinpano",
+    "oid": "1",
+    "status": "EI_JULKAISTU",
+    "tallennettu": true,
+    "tyyppi": "TIE",
+    "velho": Object {
+      "nimi": "Testiprojekti 1",
     },
-    Object {
-      "__typename": "ProjektiKayttaja",
-      "email": "matti.meikalainen@vayla.fi",
-      "esitetaanKuulutuksessa": undefined,
-      "kayttajatunnus": "A000111",
-      "nimi": "Meikäläinen, Matti",
-      "organisaatio": "ELY",
-      "puhelinnumero": "123456789",
-      "rooli": "OMISTAJA",
-    },
-  ],
+  },
 ]
 `;
 
@@ -235,7 +265,7 @@ Array [
   "Save projekti having while adding one muokkaaja more. There should be three persons in the projekti now",
   Object {
     "aloitusKuulutus": undefined,
-    "eurahoitus": undefined,
+    "euRahoitus": false,
     "kayttoOikeudet": Array [
       Object {
         "email": "pekka.projari@vayla.fi",
@@ -260,7 +290,6 @@ Array [
     "lisakuulutuskieli": undefined,
     "muistiinpano": undefined,
     "oid": "1",
-    "status": undefined,
     "suunnitteluSopimus": null,
   },
 ]
@@ -269,27 +298,44 @@ Array [
 exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 9`] = `
 Array [
   "Loaded projekti having while adding one muokkaaja more. There should be three persons in the projekti now",
-  Array [
-    Object {
-      "__typename": "ProjektiKayttaja",
-      "email": "pekka.projari@vayla.fi",
-      "esitetaanKuulutuksessa": true,
-      "kayttajatunnus": "A123",
-      "nimi": "Projari, Pekka",
-      "organisaatio": "Väylävirasto",
-      "puhelinnumero": "11",
-      "rooli": "PROJEKTIPAALLIKKO",
+  Object {
+    "__typename": "Projekti",
+    "aloitusKuulutus": Object {
+      "__typename": "AloitusKuulutus",
+      "tila": "MUOKATTAVISSA",
     },
-    Object {
-      "__typename": "ProjektiKayttaja",
-      "email": "matti.meikalainen@vayla.fi",
-      "esitetaanKuulutuksessa": undefined,
-      "kayttajatunnus": "A000111",
-      "nimi": "Meikäläinen, Matti",
-      "organisaatio": "ELY",
-      "puhelinnumero": "123456789",
-      "rooli": "OMISTAJA",
+    "euRahoitus": false,
+    "kayttoOikeudet": Array [
+      Object {
+        "__typename": "ProjektiKayttaja",
+        "email": "pekka.projari@vayla.fi",
+        "esitetaanKuulutuksessa": true,
+        "kayttajatunnus": "A123",
+        "nimi": "Projari, Pekka",
+        "organisaatio": "Väylävirasto",
+        "puhelinnumero": "11",
+        "rooli": "PROJEKTIPAALLIKKO",
+      },
+      Object {
+        "__typename": "ProjektiKayttaja",
+        "email": "matti.meikalainen@vayla.fi",
+        "esitetaanKuulutuksessa": undefined,
+        "kayttajatunnus": "A000111",
+        "nimi": "Meikäläinen, Matti",
+        "organisaatio": "ELY",
+        "puhelinnumero": "123456789",
+        "rooli": "OMISTAJA",
+      },
+    ],
+    "muistiinpano": "Testiprojekti 1:n muistiinpano",
+    "oid": "1",
+    "status": "ALOITUSKUULUTUS",
+    "suunnitteluSopimus": null,
+    "tallennettu": true,
+    "tyyppi": "TIE",
+    "velho": Object {
+      "nimi": "Testiprojekti 1",
     },
-  ],
+  },
 ]
 `;

@@ -40,7 +40,6 @@ type Projekti {
   status: Status
   suunnittelustaVastaavaViranomainen: Viranomainen
   aloitusKuulutus: AloitusKuulutus
-  EURahoitus: Boolean
   suunnitteluSopimus: SuunnitteluSopimus
   velho: Velho!
   kayttoOikeudet: [ProjektiKayttaja!]
@@ -49,7 +48,7 @@ type Projekti {
   """
   tallennettu: Boolean
   lisakuulutuskieli: String
-  eurahoitus: String
+  euRahoitus: Boolean
   liittyvatSuunnitelmat: [Suunnitelma!]
 }
 
@@ -83,6 +82,13 @@ type Yhteystieto {
   sahkoposti: String!
 }
 
+enum AloitusKuulutusTila {
+  MUOKATTAVISSA,
+  ODOTTAA_HYVAKSYNTAA,
+  KORJATTAVANA,
+  HYVAKSYTTY
+}
+
 type AloitusKuulutus {
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
@@ -91,6 +97,7 @@ type AloitusKuulutus {
   hankkeenKuvausSaame: String
   elyKeskus: String
   esitettavatYhteystiedot: [Yhteystieto]
+  tila: AloitusKuulutusTila
 }
 
 type SuunnitteluSopimus {

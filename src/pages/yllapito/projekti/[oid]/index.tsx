@@ -1,12 +1,10 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import * as Yup from "yup";
 import log from "loglevel";
 import { PageProps } from "@pages/_app";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import useProjekti from "src/hooks/useProjekti";
 import { api, Projekti, Status, TallennaProjektiInput } from "@services/api";
-import { SchemaOf } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import Button from "@components/button/Button";
@@ -25,56 +23,13 @@ import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import FormGroup from "@components/form/FormGroup";
 import axios from "axios";
 import { cloneDeep } from "lodash";
-import { puhelinNumeroSchema } from "src/schemas/puhelinNumero";
 import { Alert, Snackbar } from "@mui/material";
+import { maxNoteLength, perustiedotValidationSchema } from "src/schemas/perustiedot";
 
 export type FormValues = Pick<
   TallennaProjektiInput,
-  "oid" | "muistiinpano" | "lisakuulutuskieli" | "eurahoitus" | "suunnitteluSopimus" | "liittyvatSuunnitelmat" | "status"
+  "oid" | "muistiinpano" | "lisakuulutuskieli" | "euRahoitus" | "suunnitteluSopimus" | "liittyvatSuunnitelmat"
 >;
-
-const maxNoteLength = 2000;
-
-const validationSchema: SchemaOf<FormValues> = Yup.object().shape({
-  oid: Yup.string().required(),
-  lisakuulutuskieli: Yup.string().notRequired().nullable().test(
-    "not-null-when-lisakuulutus-selected-test",
-    "Valitse lisäkuulutuskieli",
-    function(kieli){
-      // if lisakuulutuskieli checkbox checked, select one language option
-      if(this.options?.context?.requireLisakuulutuskieli){
-        return kieli ? true : false;
-      }
-      return true;
-    }
-  ).default(null),
-  liittyvatSuunnitelmat: Yup.array()
-    .of(
-      Yup.object().shape({
-        asiatunnus: Yup.string().required("Asiatunnus puuttuu"),
-        nimi: Yup.string().required("Suunnitelman nimi puuttuu"),
-      })
-    )
-    .notRequired().nullable().default(null),
-  eurahoitus: Yup.string().nullable().required("EU-rahoitustieto on pakollinen"),
-  muistiinpano: Yup.string().max(
-    maxNoteLength,
-    `Muistiinpanoon voidaan kirjoittaa maksimissaan ${maxNoteLength} merkkiä.`
-  ),
-  suunnitteluSopimus: Yup.object()
-    .shape({
-      kunta: Yup.string().required("Kunta on pakollinen"),
-      etunimi: Yup.string().required("Kunta on pakollinen"),
-      sukunimi: Yup.string().required("Kunta on pakollinen"),
-      puhelinnumero: puhelinNumeroSchema,
-      email: Yup.string().email("Virheellinen sähköpostiosoite").required("Sähköpostiosoite on pakollinen"),
-      logo: Yup.mixed().required("Logo on pakollinen."),
-    })
-    .notRequired()
-    .nullable()
-    .default(null),
-  status: Yup.mixed<Status>().oneOf(Object.values(Status)).notRequired().nullable().default(null),
-});
 
 const loadedProjektiValidationSchema = getProjektiValidationSchema([
   ProjektiTestType.PROJEKTI_IS_LOADED,
@@ -88,6 +43,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   const router = useRouter();
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti(oid);
+  const [statusBeforeSave, setStatusBeforeSave] = useState<Status | null | undefined>();
   const isLoadingProjekti = !projekti && !projektiLoadError;
 
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
@@ -102,11 +58,16 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   const [formContext, setFormContext] = useState<Projekti | undefined>(undefined);
 
   const formOptions: UseFormProps<FormValues> = {
-    resolver: yupResolver(validationSchema, { abortEarly: false, recursive: true }),
-    defaultValues: { muistiinpano: "", lisakuulutuskieli: null, eurahoitus: "", liittyvatSuunnitelmat: null, status: Status.ALOITUSKUULUTUS },
+    resolver: yupResolver(perustiedotValidationSchema, { abortEarly: false, recursive: true }),
+    defaultValues: {
+      muistiinpano: "",
+      lisakuulutuskieli: null,
+      euRahoitus: null,
+      liittyvatSuunnitelmat: null,
+    },
     mode: "onChange",
     reValidateMode: "onChange",
-    context: {requireLisakuulutuskieli: selectLanguageAvailable, ...formContext},
+    context: { requireLisakuulutuskieli: selectLanguageAvailable, ...formContext },
   };
 
   const useFormReturn = useForm<FormValues>(formOptions);
@@ -140,32 +101,44 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
         // remove the logo property from formData so it won't get overwrited
         delete formData.suunnitteluSopimus.logo;
       }
+      setStatusBeforeSave(projekti?.status);
       await api.tallennaProjekti(formData);
       await reloadProjekti();
       setToastOpen(true);
-      if(projekti?.status === Status.EI_JULKAISTU){
-          const siirtymaTimer = setTimeout(()=> {
-          router.push(`/yllapito/projekti/${projekti?.oid}/aloituskuulutus`);
-        }, 1500);
-        return () => clearTimeout(siirtymaTimer);
-      }
     } catch (e) {
       log.log("OnSubmit Error", e);
     }
     setFormIsSubmitting(false);
   };
 
+  function booleanToString(value: any) {
+    if (typeof value === "boolean") {
+      return `${value}`;
+    }
+    return value;
+  }
+
   const hasLanguageSelected =
     projekti?.lisakuulutuskieli?.startsWith("ruotsi") || projekti?.lisakuulutuskieli?.startsWith("saame") || false;
 
   useEffect(() => {
     if (projekti && projekti.oid) {
+      // Detect status change
+      if (statusBeforeSave && projekti.status) {
+        log.info("previous state:" + statusBeforeSave + ", current state:" + projekti.status);
+        if (statusBeforeSave === Status.EI_JULKAISTU && projekti.status === Status.ALOITUSKUULUTUS) {
+          const siirtymaTimer = setTimeout(() => {
+            router.push(`/yllapito/projekti/${projekti?.oid}/aloituskuulutus`);
+          }, 1500);
+          return () => clearTimeout(siirtymaTimer);
+        }
+      }
+
       const tallentamisTiedot: FormValues = {
         oid: projekti.oid,
         muistiinpano: projekti.muistiinpano || "",
         lisakuulutuskieli: projekti.lisakuulutuskieli || null,
-        eurahoitus: projekti.eurahoitus || "",
-        status: projekti.status === Status.EI_JULKAISTU ? Status.ALOITUSKUULUTUS : projekti.status,
+        euRahoitus: projekti.euRahoitus,
         liittyvatSuunnitelmat:
           projekti?.liittyvatSuunnitelmat?.map((suunnitelma) => {
             const { __typename, ...suunnitelmaInput } = suunnitelma;
@@ -220,16 +193,12 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
             <hr />
             <div className="content">
               <h4 className="vayla-small-title">Projektin kuulutusten kielet</h4>
-              <FormGroup 
-                flexDirection="col"
-                errorMessage={errors.lisakuulutuskieli?.message}
-              >
+              <FormGroup flexDirection="col" errorMessage={errors.lisakuulutuskieli?.message}>
                 <Checkbox
                   label="Projekti kuulutetaan suomenkielen lisäksi myös muilla kielillä"
                   id="kuulutuskieli"
                   onChange={() => setLanguageChoicesAvailable(!selectLanguageAvailable)}
                   checked={selectLanguageAvailable}
-                  
                 ></Checkbox>
                 <div className="indent">
                   <RadioButton
@@ -262,11 +231,19 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
               <h4 className="vayla-small-title">EU-rahoitus</h4>
               <FormGroup
                 label="Rahoittaako EU suunnitteluhanketta? *"
-                errorMessage={errors?.eurahoitus?.message}
+                errorMessage={errors?.euRahoitus?.message}
                 flexDirection="row"
               >
-                <RadioButton label="Kyllä" value="true" {...register("eurahoitus")}></RadioButton>
-                <RadioButton label="Ei" value="false" {...register("eurahoitus")}></RadioButton>
+                <RadioButton
+                  label="Kyllä"
+                  value="true"
+                  {...register("euRahoitus", { setValueAs: booleanToString })}
+                ></RadioButton>
+                <RadioButton
+                  label="Ei"
+                  value="false"
+                  {...register("euRahoitus", { setValueAs: booleanToString })}
+                ></RadioButton>
               </FormGroup>
             </div>
             <hr />
@@ -289,25 +266,19 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
             <Notification>Tallennus ei vielä julkaise tietoja.</Notification>
             <div className="flex justify-between flex-wrap gap-4">
               <Button primary={true} disabled={disableFormEdit}>
-                {projekti?.status !== Status.EI_JULKAISTU ? "Tallenna" : "Tallenna ja siirry aloituskuulutukseen" }
+                {projekti?.status !== Status.EI_JULKAISTU ? "Tallenna" : "Tallenna ja siirry aloituskuulutukseen"}
               </Button>
             </div>
-            <input type="hidden" {...register("status")} />
           </fieldset>
         </form>
-        <Snackbar 
-          open={openToast} 
-          autoHideDuration={6000} 
+        <Snackbar
+          open={openToast}
+          autoHideDuration={6000}
           onClose={handleClose}
-          anchorOrigin={{vertical: 'top', horizontal:'right'}}
-          sx={{paddingTop:'10px'}}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          sx={{ paddingTop: "10px" }}
         >
-          <Alert 
-            onClose={handleClose} 
-            elevation={6} 
-            variant="filled" 
-            severity="success" 
-          >
+          <Alert onClose={handleClose} elevation={6} variant="filled" severity="success">
             Tietojen tallennus onnistui!
           </Alert>
         </Snackbar>

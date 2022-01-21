@@ -1,4 +1,4 @@
-import { ProjektiRooli, ProjektiTyyppi, Status, Viranomainen, Yhteystieto } from "../../../../common/graphql/apiModel";
+import { ProjektiRooli, ProjektiTyyppi, Viranomainen, Yhteystieto } from "../../../../common/graphql/apiModel";
 
 export type Kuulutus = {
   kuulutusPaiva?: string;
@@ -67,10 +67,9 @@ export type DBProjekti = {
   muistiinpano?: string | null;
   vaihe?: string | null;
   tyyppi?: ProjektiTyyppi | null;
-  status?: Status | null;
   suunnittelustaVastaavaViranomainen?: Viranomainen | null;
   lisakuulutuskieli?: string | null;
-  eurahoitus?: string | null;
+  euRahoitus?: boolean | null;
   aloitusKuulutus?: AloitusKuulutus | null;
   suunnitteluSopimus?: SuunnitteluSopimus | null;
   velho?: Velho | null;

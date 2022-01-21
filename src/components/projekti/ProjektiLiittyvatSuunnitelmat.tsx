@@ -1,8 +1,8 @@
-import React, { ReactElement, useState, useEffect } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import RadioButton from "@components/form/RadioButton";
 import TextInput from "@components/form/TextInput";
 import Button from "@components/button/Button";
-import { useFormContext, useFieldArray } from "react-hook-form";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import { Projekti, SuunnitelmaInput } from "@services/api";
 import IconButton from "@components/button/IconButton";
 import FormGroup from "@components/form/FormGroup";
@@ -31,16 +31,16 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
   const [isLiittyviaSuunnitelmia, setLiittyviaSuunnitelmia] = useState(false);
 
   useEffect(() => {
-    if (projekti && projekti.oid) {
-      setLiittyviaSuunnitelmia(projekti?.liittyvatSuunnitelmat?.length ? true : false);
+    if (projekti?.oid) {
+      setLiittyviaSuunnitelmia(!!projekti?.liittyvatSuunnitelmat?.length);
     }
   }, [projekti]);
 
   useEffect(() => {
-    if (!isLiittyviaSuunnitelmia) {
+    if (projekti?.oid && !isLiittyviaSuunnitelmia) {
       remove();
     }
-  }, [isLiittyviaSuunnitelmia, remove]);
+  }, [isLiittyviaSuunnitelmia, remove, projekti]);
 
   return (
     <>

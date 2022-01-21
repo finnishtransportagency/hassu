@@ -1,4 +1,4 @@
-import { ProjektiTyyppi, Status, VelhoHakuTulos } from "../../../common/graphql/apiModel";
+import { ProjektiTyyppi, VelhoHakuTulos } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../database/model/projekti";
 import { adaptKayttaja } from "../personSearch/personAdapter";
 import { userService } from "../user";
@@ -94,7 +94,6 @@ export function adaptProjekti(data: ProjektiProjekti): { projekti: DBProjekti; v
       kunnat: data.ominaisuudet.kunta?.split(","),
       maakunnat: data.ominaisuudet.maakunta?.split(","),
     },
-    status: Status.EI_JULKAISTU,
     kayttoOikeudet: [],
   };
 
