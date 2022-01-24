@@ -16,6 +16,7 @@ export async function lataaAsiakirja({ oid, asiakirjaTyyppi, muutokset }: LataaA
         const projektiWithChanges = await projektiAdapter.adaptProjektiToSave(projekti, muutokset);
         projektiWithChanges.velho = projekti.velho; // Restore read-only velho data which was removed by adaptProjektiToSave
         projektiWithChanges.tyyppi = projekti.tyyppi; // Restore tyyppi
+        projektiWithChanges.suunnitteluSopimus = projekti.suunnitteluSopimus;
         return asiakirjaService.createPdf({ projekti: projektiWithChanges, asiakirjaTyyppi });
       } else {
         return asiakirjaService.createPdf({ projekti, asiakirjaTyyppi });
