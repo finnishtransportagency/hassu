@@ -23,7 +23,6 @@ import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import FormGroup from "@components/form/FormGroup";
 import axios from "axios";
 import { cloneDeep } from "lodash";
-import { Alert, Snackbar } from "@mui/material";
 import { maxNoteLength, perustiedotValidationSchema } from "src/schemas/perustiedot";
 import useSnackbars from "src/hooks/useSnackbars";
 
