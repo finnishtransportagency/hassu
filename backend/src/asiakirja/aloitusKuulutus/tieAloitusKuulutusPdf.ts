@@ -130,7 +130,7 @@ export class TieAloitusKuulutusPdf extends AloitusKuulutusPdf {
       const organisaatiot = kunnat ? [tilaajaOrganisaatio, ...kunnat] : [tilaajaOrganisaatio];
       const viimeinenOrganisaatio = organisaatiot.slice(-1);
       const muut = organisaatiot.slice(0, -1);
-      const aloittaa = muut.length > 0 ? "aloittaa" : "aloittavat";
+      const aloittaa = muut.length > 0 ? "aloittavat" : "aloittaa";
       const organisaatiotText = (aloittaa ? muut.join(", ") + " ja " : "") + viimeinenOrganisaatio;
       phrase = `${organisaatiotText} ${aloittaa} ${this.projektiTyyppi}n laatimisen tarpeellisine tutkimuksineen. `;
     }
