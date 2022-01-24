@@ -64,12 +64,7 @@ export function VirkamiesHeader({ scrolledPastOffset }: HeaderProps): ReactEleme
           </Link>
           <div className={style.user}>
             <span className="vayla-paragraph">{kayttajaNimi}</span>
-            <ButtonLink
-              primary
-              href={logoutHref ? logoutHref : undefined}
-              useNextLink={false}
-              endIcon="external-link-alt"
-            >
+            <ButtonLink href={logoutHref ? logoutHref : undefined} useNextLink={false} endIcon="external-link-alt">
               Poistu Palvelusta
             </ButtonLink>
           </div>
