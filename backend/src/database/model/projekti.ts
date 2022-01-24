@@ -28,7 +28,7 @@ export type AloitusKuulutus = {
   hankkeenKuvausRuotsi?: string | null;
   hankkeenKuvausSaame?: string | null;
   elyKeskus?: string | null;
-  esitettavatYhteystiedot?: (Yhteystieto | null)[] | null;
+  esitettavatYhteystiedot?: Yhteystieto[] | null;
 };
 
 export type SuunnitteluSopimus = {

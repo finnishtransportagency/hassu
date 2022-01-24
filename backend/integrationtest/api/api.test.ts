@@ -6,7 +6,7 @@ import { setupLocalDatabase } from "../util/databaseUtil";
 import * as log from "loglevel";
 import {
   AloitusKuulutus,
-  KuulutusTyyppi,
+  AsiakirjaTyyppi,
   SuunnitteluSopimus,
   SuunnitteluSopimusInput,
 } from "../../../common/graphql/apiModel";
@@ -131,7 +131,7 @@ describe("Api", () => {
     expect(updatedProjekti.lisakuulutuskieli).to.be.equal(lisakuulutuskieli);
     expect(updatedProjekti.euRahoitus).to.be.false;
 
-    const pdf = await api.lataaKuulutusPDF(oid, KuulutusTyyppi.ALOITUSKUULUTUS);
+    const pdf = await api.lataaAsiakirjaPDF(oid, AsiakirjaTyyppi.ALOITUSKUULUTUS);
     expect(pdf.nimi).to.be.equal("aloituskuulutus.pdf");
     expect(pdf.sisalto).not.to.be.empty;
     expect(pdf.sisalto.length).to.be.greaterThan(50000);

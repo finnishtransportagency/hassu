@@ -1,12 +1,12 @@
 import { projektiDatabase } from "../database/projektiDatabase";
 import { requirePermissionLuku } from "../user";
-import { LataaKuulutusPDFQueryVariables } from "../../../common/graphql/apiModel";
+import { LataaAsiakirjaPDFQueryVariables } from "../../../common/graphql/apiModel";
 import { log } from "../logger";
 import { NotFoundError } from "../error/NotFoundError";
-import { kuulutusService } from "../kuulutus/kuulutusService";
+import { asiakirjaService } from "../asiakirja/asiakirjaService";
 import { projektiAdapter } from "./projektiAdapter";
 
-export async function lataaKuulutus({ oid, kuulutusTyyppi, muutokset }: LataaKuulutusPDFQueryVariables) {
+export async function lataaAsiakirja({ oid, asiakirjaTyyppi, muutokset }: LataaAsiakirjaPDFQueryVariables) {
   const vaylaUser = requirePermissionLuku();
   if (vaylaUser) {
     log.info("Loading projekti", { oid });
@@ -15,9 +15,11 @@ export async function lataaKuulutus({ oid, kuulutusTyyppi, muutokset }: LataaKuu
       if (muutokset) {
         const projektiWithChanges = await projektiAdapter.adaptProjektiToSave(projekti, muutokset);
         projektiWithChanges.velho = projekti.velho; // Restore read-only velho data which was removed by adaptProjektiToSave
-        return kuulutusService.createPDF(projektiWithChanges, kuulutusTyyppi);
+        projektiWithChanges.tyyppi = projekti.tyyppi; // Restore tyyppi
+        projektiWithChanges.suunnitteluSopimus = projekti.suunnitteluSopimus;
+        return asiakirjaService.createPdf({ projekti: projektiWithChanges, asiakirjaTyyppi });
       } else {
-        return kuulutusService.createPDF(projekti, kuulutusTyyppi);
+        return asiakirjaService.createPdf({ projekti, asiakirjaTyyppi });
       }
     } else {
       throw new NotFoundError(`Projektia ${oid} ei löydy`);

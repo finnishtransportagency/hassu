@@ -25,11 +25,12 @@ export class KayttoOikeudetManager {
     const resultUsers: DBVaylaUser[] = this.users.reduce((resultingUsers: DBVaylaUser[], currentUser) => {
       const inputUser = changes.find((user) => user.kayttajatunnus === currentUser.kayttajatunnus);
       if (inputUser) {
-        // Update only puhelinnumero if projektipaallikko
+        // Update only puhelinnumero and force esitetaanKuulutuksessa to be true if projektipaallikko
         if (inputUser.rooli === ProjektiRooli.PROJEKTIPAALLIKKO) {
           resultingUsers.push({
             ...currentUser,
             puhelinnumero: inputUser.puhelinnumero,
+            esitetaanKuulutuksessa: true,
           });
         } else {
           // Update rest of fields

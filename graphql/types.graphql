@@ -28,8 +28,9 @@ enum Status {
   ARKISTOITU
 }
 
-enum KuulutusTyyppi {
+enum AsiakirjaTyyppi {
   ALOITUSKUULUTUS
+  ILMOITUS_KUULUTUKSESTA
 }
 
 type Projekti {
