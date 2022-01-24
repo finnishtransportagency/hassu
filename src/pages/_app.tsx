@@ -14,6 +14,7 @@ import I18nProvider from "next-translate/I18nProvider";
 
 import commonFI from "src/locales/fi/common.json";
 import commonSV from "src/locales/sv/common.json";
+import { SnackbarProvider } from "@components/HassuSnackbarProvider";
 
 log.setDefaultLevel("DEBUG");
 
@@ -40,13 +41,15 @@ function App({ Component, pageProps }: AppProps<PageProps>) {
   return (
     <>
       <I18nProvider lang={lang} namespaces={{ commonFI, commonSV }}>
-        <Head>
-          <title>Hassu</title>
-        </Head>
+        <SnackbarProvider>
+          <Head>
+            <title>Hassu</title>
+          </Head>
 
-        <Layout routeLabels={routeLabels}>
-          <Component {...pageProps} />
-        </Layout>
+          <Layout routeLabels={routeLabels}>
+            <Component {...pageProps} />
+          </Layout>
+        </SnackbarProvider>
       </I18nProvider>
     </>
   );

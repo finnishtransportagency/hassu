@@ -20,6 +20,7 @@ import { kayttoOikeudetSchema } from "src/schemas/kayttoOikeudet";
 import { puhelinNumeroSchema } from "src/schemas/puhelinNumero";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import cloneDeep from "lodash/cloneDeep";
+import useSnackbars from "src/hooks/useSnackbars";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
 type RequiredProjektiFields = Required<{
@@ -191,15 +192,17 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
     try {
       await api.tallennaProjekti(formData);
       await reloadProjekti();
+      showSuccessMessage("Tallennus onnistui!");
     } catch (e) {
       log.log("OnSubmit Error", e);
+      showErrorMessage("Tallennuksessa tapahtui virhe");
     }
     setIsFormSubmitting(false);
   };
 
   const sendToManager = async (formData: FormValues) => {
     log.log(formData);
-    alert("Lähetetään projektipäällikölle...");
+    showInfoMessage("Lähetetään projektipäällikölle...");
   };
 
   const showPDFPreview = async (formData: FormValues) => {
@@ -208,6 +211,8 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
     setSerializedFormData(JSON.stringify(formDataToSend));
     pdfFormRef.current?.submit();
   };
+
+  const { showSuccessMessage, showErrorMessage, showInfoMessage } = useSnackbars();
 
   return (
     <ProjektiPageLayout title="Aloituskuulutus">
