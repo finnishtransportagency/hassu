@@ -59,15 +59,13 @@ function KuulutuksenYhteystiedot<T extends FormValues>({
       <fieldset>
         {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
           <FormGroup label="Projektiin tallennetut henkilöt">
-            {projekti.kayttoOikeudet.map(({ nimi, rooli }, index) => (
-              <CheckBox
-                key={index}
-                label={nimi}
-                {...register(`kayttoOikeudet.${index}.esitetaanKuulutuksessa`)}
-                disabled={rooli === ProjektiRooli.PROJEKTIPAALLIKKO}
-                defaultChecked={rooli === ProjektiRooli.PROJEKTIPAALLIKKO}
-              />
-            ))}
+            {projekti.kayttoOikeudet.map(({ nimi, rooli }, index) =>
+              rooli === ProjektiRooli.PROJEKTIPAALLIKKO ? (
+                <CheckBox key={index} label={nimi} disabled defaultChecked />
+              ) : (
+                <CheckBox key={index} label={nimi} {...register(`kayttoOikeudet.${index}.esitetaanKuulutuksessa`)} />
+              )
+            )}
           </FormGroup>
         ) : (
           <p>Projektilla ei ole tallennettuja henkilöitä</p>

@@ -1,6 +1,6 @@
 import { log } from "./logger";
 import {
-  LataaKuulutusPDFQueryVariables,
+  LataaAsiakirjaPDFQueryVariables,
   LataaProjektiQueryVariables,
   ListaaKayttajatQueryVariables,
   ListaaVelhoProjektitQueryVariables,
@@ -15,7 +15,7 @@ import { getCurrentUser } from "./handler/getCurrentUser";
 import { listUsers } from "./handler/listUsers";
 import { createOrUpdateProjekti, listProjektit, loadProjekti } from "./handler/projektiHandler";
 import { apiConfig } from "../../common/abstractApi";
-import { lataaKuulutus } from "./handler/kuulutusHandler";
+import { lataaAsiakirja } from "./handler/asiakirjaHandler";
 import { createUploadURLForFile } from "./handler/fileHandler";
 import * as AWSXRay from "aws-xray-sdk";
 import { getCorrelationId, setupLambdaMonitoring, setupLambdaMonitoringMetaData } from "./aws/monitoring";
@@ -46,8 +46,8 @@ async function executeOperation(event: AppSyncResolverEvent<AppSyncEventArgument
       return await loadProjekti((event.arguments as LataaProjektiQueryVariables).oid);
     case apiConfig.tallennaProjekti.name:
       return await createOrUpdateProjekti((event.arguments as TallennaProjektiMutationVariables).projekti);
-    case apiConfig.lataaKuulutusPDF.name:
-      return await lataaKuulutus(event.arguments as LataaKuulutusPDFQueryVariables);
+    case apiConfig.lataaAsiakirjaPDF.name:
+      return await lataaAsiakirja(event.arguments as LataaAsiakirjaPDFQueryVariables);
     case apiConfig.valmisteleTiedostonLataus.name:
       return await createUploadURLForFile((event.arguments as ValmisteleTiedostonLatausQueryVariables).tiedostoNimi);
     default:

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { api, KuulutusTyyppi } from "@services/api";
+import { api, AsiakirjaTyyppi } from "@services/api";
 import { GetParameterCommand } from "@aws-sdk/client-ssm";
 import { getSSMClient } from "../../../../../../backend/src/aws/clients";
 import { setupLambdaMonitoring } from "../../../../../../backend/src/aws/monitoring";
@@ -44,11 +44,12 @@ export default async function render(req: NextApiRequest, res: NextApiResponse) 
         "Basic " +
         Buffer.from(parameterStore.BASIC_USERNAME + ":" + parameterStore.BASIC_PASSWORD, "binary").toString("base64"),
     });
-    let changes = JSON.parse(tallennaProjektiInput);
-    if (!changes.oid) {
-      changes = undefined;
+    let changes;
+    if (tallennaProjektiInput) {
+      changes = JSON.parse(tallennaProjektiInput);
     }
-    const pdf = await api.lataaKuulutusPDF(oid, KuulutusTyyppi.ALOITUSKUULUTUS, changes);
+
+    const pdf = await api.lataaAsiakirjaPDF(oid, AsiakirjaTyyppi.ALOITUSKUULUTUS, changes);
     if (pdf) {
       res.setHeader("Content-Type", "application/pdf");
       res.setHeader("Content-disposition", "inline; filename=" + pdf.nimi);
@@ -56,7 +57,7 @@ export default async function render(req: NextApiRequest, res: NextApiResponse) 
     } else {
       res.status(404);
       res.setHeader("Content-Type", "text/plain;charset=UTF-8");
-      res.send("Projektia ei löydy");
+      res.send("Aloituskuulutuksen luonti epäonnistui");
     }
   } catch (e) {
     // tslint:disable-next-line:no-console

@@ -1,15 +1,16 @@
 /* tslint:disable:only-arrow-functions */
 import { describe, it } from "mocha";
-import { KuulutusService } from "../../src/kuulutus/kuulutusService";
-import { KuulutusTyyppi } from "../../../common/graphql/apiModel";
+import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
+import { AsiakirjaTyyppi, ProjektiTyyppi } from "../../../common/graphql/apiModel";
 import fs from "fs";
 
 const { expect } = require("chai");
 
-describe("kuulutusService", async () => {
+describe("asiakirjaService", async () => {
   it("should generate pdf succesfully", async () => {
-    const pdf = await new KuulutusService().createPDF(
-      {
+    const pdf = await new AsiakirjaService().createPdf({
+      projekti: {
+        tyyppi: ProjektiTyyppi.TIE,
         velho: {
           nimi: "Valtatie 11 parantaminen välillä Murhasaari–Mustikkakangas",
           kunnat: ["Nokia"],
@@ -24,8 +25,8 @@ describe("kuulutusService", async () => {
         },
         kayttoOikeudet: [],
       },
-      KuulutusTyyppi.ALOITUSKUULUTUS
-    );
+      asiakirjaTyyppi: AsiakirjaTyyppi.ALOITUSKUULUTUS,
+    });
     expect(pdf.sisalto.length).to.be.greaterThan(50000);
     // tslint:disable-next-line:no-unused-expression
     expect(pdf.nimi).not.to.be.empty;

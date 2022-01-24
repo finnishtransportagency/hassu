@@ -1,7 +1,7 @@
 import {
   Kayttaja,
-  KuulutusTyyppi,
-  LataaKuulutusPDFQueryVariables,
+  AsiakirjaTyyppi,
+  LataaAsiakirjaPDFQueryVariables,
   LataaProjektiQueryVariables,
   LatausTiedot,
   ListaaKayttajatInput,
@@ -38,7 +38,7 @@ type ApiConfig = {
   listaaVelhoProjektit: OperationConfig;
   nykyinenKayttaja: OperationConfig;
   listaaKayttajat: OperationConfig;
-  lataaKuulutusPDF: OperationConfig;
+  lataaAsiakirjaPDF: OperationConfig;
   valmisteleTiedostonLataus: OperationConfig;
 };
 
@@ -73,10 +73,10 @@ export const apiConfig: ApiConfig = {
     operationType: OperationType.Query,
     graphql: queries.listaaKayttajat,
   },
-  lataaKuulutusPDF: {
-    name: "lataaKuulutusPDF",
+  lataaAsiakirjaPDF: {
+    name: "lataaAsiakirjaPDF",
     operationType: OperationType.Query,
-    graphql: queries.lataaKuulutusPDF,
+    graphql: queries.lataaAsiakirjaPDF,
   },
   valmisteleTiedostonLataus: {
     name: "valmisteleTiedostonLataus",
@@ -129,16 +129,16 @@ export abstract class AbstractApi {
     return await this.callYllapitoAPI(apiConfig.listaaKayttajat, { hakuehto: input } as ListaaKayttajatQueryVariables);
   }
 
-  async lataaKuulutusPDF(
+  async lataaAsiakirjaPDF(
     oid: string,
-    kuulutusTyyppi: KuulutusTyyppi,
+    asiakirjaTyyppi: AsiakirjaTyyppi,
     muutokset?: TallennaProjektiInput
   ): Promise<PDF> {
-    return await this.callYllapitoAPI(apiConfig.lataaKuulutusPDF, {
+    return await this.callYllapitoAPI(apiConfig.lataaAsiakirjaPDF, {
       oid,
-      kuulutusTyyppi,
+      asiakirjaTyyppi,
       muutokset,
-    } as LataaKuulutusPDFQueryVariables);
+    } as LataaAsiakirjaPDFQueryVariables);
   }
 
   abstract callYllapitoAPI(operation: OperationConfig, variables?: any): Promise<any>;
