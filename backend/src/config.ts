@@ -27,6 +27,9 @@ const config = {
   uploadBucketName: process.env.UPLOAD_BUCKET_NAME,
   yllapitoBucketName: process.env.YLLAPITO_BUCKET_NAME,
   internalBucketName: process.env.INTERNAL_BUCKET_NAME,
+
+  smtpKeyId: process.env.SMTP_KEY_ID,
+  smtpSecret: process.env.SMTP_SECRET,
 };
 
 process.env.AWS_XRAY_CONTEXT_MISSING = "LOG_ERROR";
