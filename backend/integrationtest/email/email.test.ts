@@ -1,13 +1,13 @@
 /* tslint:disable:only-arrow-functions no-unused-expression */
 import { describe, it } from "mocha";
 import { sendEmail } from "../../src/email/email";
-import { KuulutusService } from "../../src/kuulutus/kuulutusService";
-import { KuulutusTyyppi } from "../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi } from "../../../common/graphql/apiModel";
+import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
 
 describe.skip("Email", () => {
   it("should send test email successfully", async function () {
-    const pdf = await new KuulutusService().createPDF(
-      {
+    const pdf = await new AsiakirjaService().createPdf({
+      projekti: {
         velho: {
           nimi: "Valtatie 11 parantaminen välillä Murhasaari–Mustikkakangas",
           kunnat: ["Nokia"],
@@ -22,8 +22,8 @@ describe.skip("Email", () => {
         },
         kayttoOikeudet: [],
       },
-      KuulutusTyyppi.ALOITUSKUULUTUS
-    );
+      asiakirjaTyyppi: AsiakirjaTyyppi.ALOITUSKUULUTUS,
+    });
 
     await sendEmail({
       to: "mikko.haapamaki@cgi.com",
