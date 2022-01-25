@@ -23,8 +23,8 @@ import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import FormGroup from "@components/form/FormGroup";
 import axios from "axios";
 import { cloneDeep } from "lodash";
-import { Alert, Snackbar } from "@mui/material";
 import { maxNoteLength, perustiedotValidationSchema } from "src/schemas/perustiedot";
+import useSnackbars from "src/hooks/useSnackbars";
 
 export type FormValues = Pick<
   TallennaProjektiInput,
@@ -48,14 +48,12 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
 
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
   const [selectLanguageAvailable, setLanguageChoicesAvailable] = useState(false);
-  const [openToast, setToastOpen] = React.useState(false);
-  const handleClose = () => {
-    setToastOpen(false);
-  };
 
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
   const disableFormEdit = projektiHasErrors || isLoadingProjekti || formIsSubmitting;
   const [formContext, setFormContext] = useState<Projekti | undefined>(undefined);
+
+  const { showSuccessMessage, showErrorMessage } = useSnackbars();
 
   const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(perustiedotValidationSchema, { abortEarly: false, recursive: true }),
@@ -104,9 +102,10 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
       setStatusBeforeSave(projekti?.status);
       await api.tallennaProjekti(formData);
       await reloadProjekti();
-      setToastOpen(true);
+      showSuccessMessage("Tallennus onnistui!");
     } catch (e) {
       log.log("OnSubmit Error", e);
+      showErrorMessage("Tallennuksessa tapahtui virhe!")
     }
     setFormIsSubmitting(false);
   };
@@ -271,17 +270,6 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
             </div>
           </fieldset>
         </form>
-        <Snackbar
-          open={openToast}
-          autoHideDuration={6000}
-          onClose={handleClose}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
-          sx={{ paddingTop: "10px" }}
-        >
-          <Alert onClose={handleClose} elevation={6} variant="filled" severity="success">
-            Tietojen tallennus onnistui!
-          </Alert>
-        </Snackbar>
       </FormProvider>
     </ProjektiPageLayout>
   );
