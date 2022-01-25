@@ -15,6 +15,7 @@ import I18nProvider from "next-translate/I18nProvider";
 import commonFI from "src/locales/fi/common.json";
 import commonSV from "src/locales/sv/common.json";
 import { SnackbarProvider } from "@components/HassuSnackbarProvider";
+import { SWRConfig } from "swr";
 
 log.setDefaultLevel("DEBUG");
 
@@ -39,7 +40,7 @@ function App({ Component, pageProps }: AppProps<PageProps>) {
   );
 
   return (
-    <>
+    <SWRConfig value={{ revalidateOnFocus: false }}>
       <I18nProvider lang={lang} namespaces={{ commonFI, commonSV }}>
         <SnackbarProvider>
           <Head>
@@ -51,7 +52,7 @@ function App({ Component, pageProps }: AppProps<PageProps>) {
           </Layout>
         </SnackbarProvider>
       </I18nProvider>
-    </>
+    </SWRConfig>
   );
 }
 

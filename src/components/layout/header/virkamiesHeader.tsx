@@ -1,14 +1,12 @@
 import React, { ReactElement, useEffect, useRef, useState } from "react";
-import { apiConfig, NykyinenKayttaja } from "@services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import style from "@styles/layout/virkamiesHeader.module.css";
 import { HeaderProps } from "./header";
-import { getVaylaUser } from "@services/userService";
-import useSWR from "swr";
 import ButtonLink from "@components/button/ButtonLink";
 
 import useTranslation from "next-translate/useTranslation";
+import useCurrentUser from "src/hooks/useCurrentUser";
 
 interface NavigationRoute {
   label: string;
@@ -22,13 +20,7 @@ export function VirkamiesHeader({ scrolledPastOffset }: HeaderProps): ReactEleme
   const logoutHref = process.env.NEXT_PUBLIC_VAYLA_EXTRANET_URL;
   const { t } = useTranslation();
 
-  const { data: kayttaja } = useSWR(apiConfig.nykyinenKayttaja.graphql, vaylaUserLoader);
-
-  if (kayttaja?.keksit) {
-    kayttaja.keksit.forEach((cookie) => {
-      document.cookie = cookie;
-    });
-  }
+  const { data: kayttaja } = useCurrentUser();
 
   useEffect(() => {
     const offset = headerTopPortion.current?.clientHeight;
@@ -100,7 +92,3 @@ function HeaderNavigationItem({ href, label }: NavigationRoute): ReactElement {
 }
 
 export default VirkamiesHeader;
-
-async function vaylaUserLoader(_: string): Promise<NykyinenKayttaja | undefined> {
-  return await getVaylaUser();
-}
