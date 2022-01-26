@@ -5,10 +5,10 @@ import { LaskuriTyyppi } from "../../../common/graphql/apiModel";
 
 const { expect } = require("chai");
 
-describe("Api", () => {
+describe("EndDateCalculator", () => {
   it("should calculate correct end date", async () => {
-    expect(await api.laskePaattymisPaiva("2100-12-24", LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA)).to.be.equal(
-      "2100-12-31"
+    expect(await api.laskePaattymisPaiva("2022-11-02", LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA)).to.be.equal(
+      "2022-12-05"
     );
   });
 });
