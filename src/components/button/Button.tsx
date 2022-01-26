@@ -18,6 +18,7 @@ const Button = (
     endIcon,
     primary,
     className,
+    onClick,
     ...props
   }: Props & React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>,
   ref: React.ForwardedRef<HTMLButtonElement>
@@ -26,7 +27,19 @@ const Button = (
 
   return (
     <div className={classNames(wrapper, className)}>
-      <button className={buttonClass} ref={ref} {...props}>
+      <button
+        className={buttonClass}
+        ref={ref}
+        // Work around for click events bubbling from children even if button is disabled
+        // See https://github.com/facebook/react/issues/7711
+        onClick={(event) => {
+          if (event.currentTarget.matches(":disabled")) {
+            return;
+          }
+          onClick?.(event);
+        }}
+        {...props}
+      >
         <ButtonContent primary={primary} startIcon={startIcon} endIcon={endIcon} disabled={props.disabled}>
           {children}
         </ButtonContent>

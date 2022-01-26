@@ -12,12 +12,25 @@ function IconButton(
   {
     icon,
     className,
+    onClick,
     ...buttonProps
   }: Props & Omit<React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>, "ref">,
   ref: React.ForwardedRef<HTMLButtonElement>
 ): ReactElement {
   return (
-    <button className={classNames(styles["icon-button"], className)} ref={ref} {...buttonProps}>
+    <button
+      className={classNames(styles["icon-button"], className)}
+      ref={ref}
+      // Work around for click events bubbling from children even if button is disabled
+      // See https://github.com/facebook/react/issues/7711
+      onClick={(event) => {
+        if (event.currentTarget.matches(":disabled")) {
+          return;
+        }
+        onClick?.(event);
+      }}
+      {...buttonProps}
+    >
       <FontAwesomeIcon icon={icon} size="lg" />
     </button>
   );
