@@ -3,10 +3,10 @@ import { DBProjekti } from "../database/model/projekti";
 import { EmailOptions } from "./email";
 
 function template(strs: TemplateStringsArray, ...exprs: string[]) {
-  return function (projekti: DBProjekti) {
+  return function (obj: any) {
     let result = [strs[0]];
     exprs.forEach(function (key, i) {
-      let value = get(projekti, key);
+      let value = get(obj, key);
       result.push(value, strs[i + 1]);
     });
     return result.join("");
