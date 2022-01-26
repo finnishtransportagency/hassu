@@ -17,6 +17,8 @@ import { fileService } from "../files/fileService";
 import { personSearch } from "../personSearch/personSearchClient";
 import { perustiedotValidationSchema } from "../../../src/schemas/perustiedot";
 import { ValidationError } from "yup";
+import { sendEmail } from "../email/email";
+import { createPerustamisEmail } from "../email/emailTemplates";
 
 /**
  * Function to determine the status of the projekti
@@ -91,6 +93,12 @@ export async function createOrUpdateProjekti(input: TallennaProjektiInput) {
     await projektiDatabase.createProjekti(projekti);
     log.info("Created projekti to Hassu", { projekti });
     auditLog.info("Luo projekti", { projekti });
+
+    const emailOptions = createPerustamisEmail(projekti);
+    if (emailOptions.to) {
+      await sendEmail({...emailOptions, to: "juhani.kettunen@cgi.com" }); // don't send mails anywhere else yet
+      log.info("Sent email to projektipaallikko", emailOptions.to);
+    }
   }
   return input.oid;
 }
