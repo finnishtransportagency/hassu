@@ -96,7 +96,7 @@ export async function createOrUpdateProjekti(input: TallennaProjektiInput) {
 
     const emailOptions = createPerustamisEmail(projekti);
     if (emailOptions.to) {
-      await sendEmail({...emailOptions, to: "juhani.kettunen@cgi.com" }); // don't send mails anywhere else yet
+      await sendEmail({ ...emailOptions, to: "juhani.kettunen@cgi.com" }); // don't send mails anywhere else yet
       log.info("Sent email to projektipaallikko", emailOptions.to);
     }
   }
