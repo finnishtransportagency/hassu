@@ -1,5 +1,6 @@
 import { log } from "./logger";
 import {
+  LaskePaattymisPaivaQueryVariables,
   LataaAsiakirjaPDFQueryVariables,
   LataaProjektiQueryVariables,
   ListaaKayttajatQueryVariables,
@@ -19,6 +20,7 @@ import { lataaAsiakirja } from "./handler/asiakirjaHandler";
 import { createUploadURLForFile } from "./handler/fileHandler";
 import * as AWSXRay from "aws-xray-sdk";
 import { getCorrelationId, setupLambdaMonitoring, setupLambdaMonitoringMetaData } from "./aws/monitoring";
+import { calculateEndDate } from "./endDateCalculator/endDateCalculatorHandler";
 
 type AppSyncEventArguments =
   | {}
@@ -50,6 +52,8 @@ async function executeOperation(event: AppSyncResolverEvent<AppSyncEventArgument
       return await lataaAsiakirja(event.arguments as LataaAsiakirjaPDFQueryVariables);
     case apiConfig.valmisteleTiedostonLataus.name:
       return await createUploadURLForFile((event.arguments as ValmisteleTiedostonLatausQueryVariables).tiedostoNimi);
+    case apiConfig.laskePaattymisPaiva.name:
+      return await calculateEndDate(event.arguments as LaskePaattymisPaivaQueryVariables);
     default:
       return null;
   }

@@ -6,6 +6,8 @@ type Query {
   listaaVelhoProjektit(nimi: String!, requireExactMatch: Boolean): [VelhoHakuTulos!]
   lataaAsiakirjaPDF(oid: String!, asiakirjaTyyppi: AsiakirjaTyyppi!, muutokset: TallennaProjektiInput): PDF
   valmisteleTiedostonLataus(tiedostoNimi: String!): LatausTiedot
+
+  laskePaattymisPaiva(alkupaiva: String!, tyyppi: LaskuriTyyppi!) : String
 }
 
 type Mutation {

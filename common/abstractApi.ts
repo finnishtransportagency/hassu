@@ -1,6 +1,8 @@
 import {
-  Kayttaja,
   AsiakirjaTyyppi,
+  Kayttaja,
+  LaskePaattymisPaivaQueryVariables,
+  LaskuriTyyppi,
   LataaAsiakirjaPDFQueryVariables,
   LataaProjektiQueryVariables,
   LatausTiedot,
@@ -40,6 +42,7 @@ type ApiConfig = {
   listaaKayttajat: OperationConfig;
   lataaAsiakirjaPDF: OperationConfig;
   valmisteleTiedostonLataus: OperationConfig;
+  laskePaattymisPaiva: OperationConfig;
 };
 
 export const apiConfig: ApiConfig = {
@@ -82,6 +85,11 @@ export const apiConfig: ApiConfig = {
     name: "valmisteleTiedostonLataus",
     operationType: OperationType.Query,
     graphql: queries.valmisteleTiedostonLataus,
+  },
+  laskePaattymisPaiva: {
+    name: "laskePaattymisPaiva",
+    operationType: OperationType.Query,
+    graphql: queries.laskePaattymisPaiva,
   },
 };
 
@@ -139,6 +147,13 @@ export abstract class AbstractApi {
       asiakirjaTyyppi,
       muutokset,
     } as LataaAsiakirjaPDFQueryVariables);
+  }
+
+  async laskePaattymisPaiva(alkupaiva: string, tyyppi: LaskuriTyyppi): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.laskePaattymisPaiva, {
+      alkupaiva,
+      tyyppi,
+    } as LaskePaattymisPaivaQueryVariables);
   }
 
   abstract callYllapitoAPI(operation: OperationConfig, variables?: any): Promise<any>;

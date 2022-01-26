@@ -27,6 +27,7 @@
     "aws-xray-sdk": "3.3.4",
     "axios": "0.21.4",
     "classnames": "2.3.1",
+    "dayjs": "1.10.7",
     "esbuild": "0.12.19",
     "graphql": "14.7.0",
     "graphql-tag": "2.12.5",

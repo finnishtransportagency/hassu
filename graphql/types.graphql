@@ -84,9 +84,9 @@ type Yhteystieto {
 }
 
 enum AloitusKuulutusTila {
-  MUOKATTAVISSA,
-  ODOTTAA_HYVAKSYNTAA,
-  KORJATTAVANA,
+  MUOKATTAVISSA
+  ODOTTAA_HYVAKSYNTAA
+  KORJATTAVANA
   HYVAKSYTTY
 }
 
@@ -169,4 +169,8 @@ type PDF {
 type LatausTiedot {
   latausLinkki: String!
   tiedostoPolku: String!
+}
+
+enum LaskuriTyyppi {
+  KUULUTUKSEN_PAATTYMISPAIVA
 }
