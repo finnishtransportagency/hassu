@@ -43,7 +43,8 @@ export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
   const { data: projekti, error: projektiLoadError, mutate: mutateProjekti } = useProjekti(oid);
   const isLoadingProjekti = !projekti && !projektiLoadError;
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
-  const disableFormEdit = projektiHasErrors || isLoadingProjekti || formIsSubmitting;
+  const disableFormEdit =
+    projektiHasErrors || isLoadingProjekti || formIsSubmitting || !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden;
 
   useProjektiBreadcrumbs(setRouteLabels);
 

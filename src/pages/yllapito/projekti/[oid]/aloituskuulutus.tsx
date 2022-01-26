@@ -9,7 +9,7 @@ import { useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@components/button/Button";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { AloitusKuulutusInput, api, Projekti, TallennaProjektiInput } from "@services/api";
+import { AloitusKuulutusInput, api, Projekti, Status, TallennaProjektiInput } from "@services/api";
 import log from "loglevel";
 import { PageProps } from "@pages/_app";
 import DatePicker from "@components/form/DatePicker";
@@ -118,7 +118,13 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti(oid);
   const isLoadingProjekti = !projekti && !projektiLoadError;
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
-  const disableFormEdit = projektiHasErrors || isLoadingProjekti || isFormSubmitting;
+  const isIncorrectProjektiStatus = !projekti?.status || projekti?.status === Status.EI_JULKAISTU;
+  const disableFormEdit =
+    projektiHasErrors ||
+    isLoadingProjekti ||
+    isFormSubmitting ||
+    isIncorrectProjektiStatus ||
+    !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden;
   const today = new Date().toISOString().split("T")[0];
   const pdfFormRef = useRef<HTMLFormElement | null>(null);
   const [formContext, setFormContext] = useState<Projekti | undefined>(undefined);

@@ -1,3 +1,4 @@
+import Notification, { NotificationType } from "@components/notification/Notification";
 import { useRouter } from "next/router";
 import React, { ReactElement, ReactNode } from "react";
 import useProjekti from "src/hooks/useProjekti";
@@ -22,6 +23,12 @@ export default function ProjektiPageLayout({ children, title }: Props): ReactEle
         </div>
         <div className="md:col-span-6 lg:col-span-8 xl:col-span-9">
           <h2>{projekti?.velho?.nimi || "-"}</h2>
+          {projekti && !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden && (
+            <Notification type={NotificationType.WARN}>
+              Sinulla on projektiin vain lukuoikeudet. Voit tarkastella projektin tietoja, mutta et voi tehdä siihen
+              muutoksia. Jos tarvitset oikeudet projektiin, ota yhteys projektin projektipäällikköön.
+            </Notification>
+          )}
           {children}
         </div>
       </div>

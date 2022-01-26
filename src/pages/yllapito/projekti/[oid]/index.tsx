@@ -50,7 +50,8 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   const [selectLanguageAvailable, setLanguageChoicesAvailable] = useState(false);
 
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
-  const disableFormEdit = projektiHasErrors || isLoadingProjekti || formIsSubmitting;
+  const disableFormEdit =
+    projektiHasErrors || isLoadingProjekti || formIsSubmitting || !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden;
   const [formContext, setFormContext] = useState<Projekti | undefined>(undefined);
 
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
