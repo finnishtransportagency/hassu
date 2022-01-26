@@ -25,6 +25,7 @@ function IconButton(
       // See https://github.com/facebook/react/issues/7711
       onClick={(event) => {
         if (event.currentTarget.matches(":disabled")) {
+          event.preventDefault();
           return;
         }
         onClick?.(event);
