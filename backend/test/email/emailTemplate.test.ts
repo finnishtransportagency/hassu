@@ -16,7 +16,7 @@ describe("EmailTemplating", () => {
     });
     expect(emailOptions.to).to.be.equal("veikko.vaylalainen@vayla.fi");
     expect(emailOptions.subject).to.be.equal(
-      "Väylien suunnittelu: Uusi projekti perustettu (VAYLA/8591/03.04.02.00/2014)"
+      "Väylien suunnittelu: Uusi projekti perustettu VAYLA/8591/03.04.02.00/2014"
     );
     expect(emailOptions.text).to.be.equal(
       "Väylien suunnittelu -järjestelmään on tuotu Velhosta projektisi:\n" +
