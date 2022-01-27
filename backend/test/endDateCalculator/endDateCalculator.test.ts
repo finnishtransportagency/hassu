@@ -5,7 +5,7 @@ import { calculateEndDate } from "../../src/endDateCalculator/endDateCalculatorH
 
 const { expect } = require("chai");
 
-describe.only("Api", () => {
+describe("Api", () => {
   it("should calculate correct end date", async () => {
     expect(
       await calculateEndDate({ alkupaiva: "2100-12-24", tyyppi: LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA })

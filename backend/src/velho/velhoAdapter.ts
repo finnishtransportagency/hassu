@@ -93,6 +93,7 @@ export function adaptProjekti(data: ProjektiProjekti): { projekti: DBProjekti; v
       linkki: data.ominaisuudet.linkki,
       kunnat: data.ominaisuudet.kunta?.split(","),
       maakunnat: data.ominaisuudet.maakunta?.split(","),
+      vastuuhenkilonEmail: data.ominaisuudet.vastuuhenkilo,
     },
     kayttoOikeudet: [],
   };
