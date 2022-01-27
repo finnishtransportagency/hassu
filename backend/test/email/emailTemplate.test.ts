@@ -1,7 +1,10 @@
 import { describe, it } from "mocha";
+import { config } from "../../src/config";
 import { createPerustamisEmail } from "../../src/email/emailTemplates";
 
 const { expect } = require("chai");
+
+const domain = config.frontendDomainName;
 
 describe("EmailTemplating", () => {
   it("should create valid emailoptions", async () => {
@@ -21,7 +24,9 @@ describe("EmailTemplating", () => {
     expect(emailOptions.text).to.be.equal(
       "Väylien suunnittelu -järjestelmään on tuotu Velhosta projektisi:\n" +
         "Maantien 16909 (Isoahontie) kevyen liikenteen väylä välillä valtatie 4 - Petäjätie, Viitasaari\n" +
-        "Voit tarkastella projektia osoitteessa https://hassudev.testivaylapilvi.fi/yllapito/projekti/1.2.246.578.5.1.165"
+        "Voit tarkastella projektia osoitteessa https://" +
+        domain +
+        "/yllapito/projekti/1.2.246.578.5.1.165"
     );
   });
 });
