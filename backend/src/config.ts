@@ -30,6 +30,9 @@ const config = {
 
   smtpKeyId: process.env.SMTP_KEY_ID,
   smtpSecret: process.env.SMTP_SECRET,
+
+  emailsOn: process.env.EMAILS_ON,
+  emailsTo: process.env.EMAILS_TO,
 };
 
 process.env.AWS_XRAY_CONTEXT_MISSING = "LOG_ERROR";
