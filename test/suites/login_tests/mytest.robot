@@ -5,7 +5,7 @@ Suite Setup       Avaa selain
 
 Test Teardown     Run Keyword If Test Failed    Capture Page Screenshot
 
-Suite Teardown    Close All Browsers
+Suite Teardown        Sulje selain
 
 *** Variables ***
 

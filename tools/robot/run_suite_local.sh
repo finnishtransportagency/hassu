@@ -6,8 +6,8 @@ if [ -z "$TEST_SUITE" ]; then
     TEST_SUITE=""
 fi
 
-export DOCKER=true
-CMD="robot --console verbose --outputdir /work/test/.report /work/test/suites/$TEST_SUITE"
+export DOCKER=false
+CMD="robot --console verbose --outputdir ./test/.report ./test/suites/$TEST_SUITE"
 
 echo ${CMD}
 
