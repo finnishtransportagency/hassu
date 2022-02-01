@@ -10,7 +10,13 @@ export abstract class AbstractPdf {
 
   constructor(title: string) {
     this.title = title;
-    this.fileName = title + ".pdf";
+    // Clean filename by joining allowed characters together
+    this.fileName =
+      title
+        .match(/[\wäöüÄÖÜåÅ(), -]/g)
+        .join("")
+        .slice(0, 100) + ".pdf";
+    // this.fileName = "aloituskuulutus.pdf";
     this.fileBasePath = __dirname;
     this.doc = this.setupAccessibleDocument();
   }

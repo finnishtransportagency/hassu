@@ -30,6 +30,6 @@ export class Ilmoitus10T extends SuunnittelunAloitusPdf {
   }
 
   private get kuulutusOsoite() {
-    return this.isVaylaTilaaja ? "www.vayla.fi/kuulutukset" : "https://www.ely-keskus.fi/kuulutukset";
+    return this.isVaylaTilaaja ? "https://www.vayla.fi/kuulutukset" : "https://www.ely-keskus.fi/kuulutukset";
   }
 }

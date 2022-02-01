@@ -20,7 +20,7 @@ export class Ilmoitus10R extends SuunnittelunAloitusPdf {
         ),
 
         this.paragraph(
-          `Kuulutus on julkaistu ${this.kuulutusPaiva}, Väyläviraston verkkosivuilla osoitteessa www.vayla.fi/kuulutukset. `
+          `Kuulutus on julkaistu ${this.kuulutusPaiva}, Väyläviraston verkkosivuilla osoitteessa https://www.vayla.fi/kuulutukset. `
         ),
 
         this.paragraph("Lisätietoja antavat "),

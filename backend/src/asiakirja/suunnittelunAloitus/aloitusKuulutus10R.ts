@@ -4,7 +4,7 @@ import { SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
 const header = "KUULUTUS SUUNNITTELUN ALOITTAMISESTA";
 
 export class AloitusKuulutus10R extends SuunnittelunAloitusPdf {
-  private tietosuojaUrl = "www.vayla.fi/tietosuoja";
+  private tietosuojaUrl = "https://www.vayla.fi/tietosuoja";
 
   constructor(projekti: DBProjekti) {
     super(projekti, header);

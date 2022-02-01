@@ -78,7 +78,7 @@ export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
   }
 
   private get tietosuojaUrl() {
-    return this.isVaylaTilaaja ? "https://vayla.fi/tietosuoja" : "http://www.ely-keskus.fi/tietosuoja";
+    return this.isVaylaTilaaja ? "https://vayla.fi/tietosuoja" : "https://www.ely-keskus.fi/tietosuoja";
   }
 
   private get startOfPlanningPhrase() {
