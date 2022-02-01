@@ -1,38 +1,21 @@
-import log from "loglevel";
-import { AloitusKuulutusPdf } from "./aloitusKuulutusPdf";
+import { DBProjekti } from "../../database/model/projekti";
+import { SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
 
-export class RataAloitusKuulutusPdf extends AloitusKuulutusPdf {
+const header = "KUULUTUS SUUNNITTELUN ALOITTAMISESTA";
+
+export class AloitusKuulutus10R extends SuunnittelunAloitusPdf {
   private tietosuojaUrl = "www.vayla.fi/tietosuoja";
 
-  protected addContent() {
-    super.addContent();
-    const logo = this.doc.struct(
-      "Figure",
-      {
-        alt: "Väylävirasto Trafikledsverket",
-      },
-      [
-        () => {
-          const elyFileName = this.fileBasePath + "/files/vayla.png";
-          log.info(elyFileName);
-          this.doc.image(elyFileName, undefined, undefined, { scale: 0.22 });
-        },
-      ]
-    );
+  constructor(projekti: DBProjekti) {
+    super(projekti, header);
+  }
 
+  protected addContent() {
     this.doc.addStructure(
       this.doc.struct("Document", {}, [
-        logo,
-        this.doc.struct("H1", {}, () => {
-          this.doc.moveDown().font("ArialMTBold").fontSize(10).text("KUULUTUS SUUNNITTELUN ALOITTAMISESTA").moveDown();
-        }),
-        this.doc.struct("H2", {}, () => {
-          this.doc
-            .text(this.projekti.velho?.nimi || "")
-            .font("ArialMT")
-            .moveDown();
-        }),
-
+        this.logo,
+        this.headerElement,
+        this.titleElement,
         this.paragraph(
           `Väylävirasto aloittaa otsikon mukaisen ${this.projektiTyyppi}n laatimisen tarpeellisine tutkimuksineen. `
         ),

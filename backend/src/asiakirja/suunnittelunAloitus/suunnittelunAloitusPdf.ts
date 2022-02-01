@@ -1,17 +1,20 @@
+import log from "loglevel";
 import { ProjektiTyyppi, Yhteystieto } from "../../../../common/graphql/apiModel";
 import { DBProjekti } from "../../database/model/projekti";
 import { AbstractPdf } from "../abstractPdf";
 
-export abstract class AloitusKuulutusPdf extends AbstractPdf {
-  constructor(projekti: DBProjekti) {
-    super(projekti, "KUULUTUS SUUNNITTELUN ALOITTAMISESTA", "aloituskuulutus.pdf");
+export abstract class SuunnittelunAloitusPdf extends AbstractPdf {
+  protected projekti: DBProjekti;
+  protected header: string;
+
+  constructor(projekti: DBProjekti, header: string) {
+    super(header + "; " + projekti?.velho.nimi);
+    this.header = header;
+    this.projekti = projekti;
   }
 
-  protected addContent() {
-    const kuulutus = this.projekti.aloitusKuulutus;
-    if (!kuulutus) {
-      throw new Error("Projektilla ei ole kuulutusta");
-    }
+  protected get isVaylaTilaaja() {
+    return this.projekti.velho.tilaajaOrganisaatio === "Väylävirasto";
   }
 
   protected get projektiTyyppi() {
@@ -76,5 +79,37 @@ export abstract class AloitusKuulutusPdf extends AbstractPdf {
       }
     );
     return structureElements;
+  }
+
+  protected get logo() {
+    const alt = this.isVaylaTilaaja ? "Väylävirasto — Trafikledsverket" : "Elinkeino-, liikenne- ja ympäristökeskus";
+    const filePath = this.isVaylaTilaaja ? "/files/vayla.png" : "/files/ely.png";
+    return this.doc.struct(
+      "Figure",
+      {
+        alt,
+      },
+      [
+        () => {
+          const fullFilePath = this.fileBasePath + filePath;
+          log.info(fullFilePath);
+          this.doc.image(fullFilePath, undefined, undefined, { height: 83 });
+        },
+      ]
+    );
+  }
+
+  protected get headerElement() {
+    return this.doc.struct("H1", {}, () => {
+      this.doc.moveDown(1).font("ArialMTBold").fontSize(10).text(this.header).moveDown(1);
+    });
+  }
+
+  protected get titleElement() {
+    return this.doc.struct("H2", {}, () => {
+      const parts = [this.projekti.velho?.nimi];
+      parts.push(this.projektiTyyppi);
+      this.doc.text(parts.join(", ")).font("ArialMT").moveDown();
+    });
   }
 }

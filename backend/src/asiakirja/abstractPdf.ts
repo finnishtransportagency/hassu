@@ -1,19 +1,16 @@
 import log from "loglevel";
 import { PDF } from "../../../common/graphql/apiModel";
-import { DBProjekti } from "../database/model/projekti";
 const PDFDocument = require("pdfkit");
 
 export abstract class AbstractPdf {
-  projekti: DBProjekti;
   title: string;
   fileName: string;
   fileBasePath: string;
   doc: PDFKit.PDFDocument;
 
-  constructor(projekti: DBProjekti, title: string, fileName: string) {
-    this.projekti = projekti;
+  constructor(title: string) {
     this.title = title;
-    this.fileName = fileName;
+    this.fileName = title + ".pdf";
     this.fileBasePath = __dirname;
     this.doc = this.setupAccessibleDocument();
   }

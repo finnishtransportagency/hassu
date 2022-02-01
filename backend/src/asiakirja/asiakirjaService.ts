@@ -1,7 +1,7 @@
 import { AsiakirjaTyyppi, PDF, ProjektiTyyppi } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../database/model/projekti";
-import { TieAloitusKuulutusPdf } from "./aloitusKuulutus/tieAloitusKuulutusPdf";
-import { RataAloitusKuulutusPdf } from "./aloitusKuulutus/rataAloitusKuulutusPdf";
+import { AloitusKuulutus10T } from "./suunnittelunAloitus/aloitusKuulutus10T";
+import { AloitusKuulutus10R } from "./suunnittelunAloitus/aloitusKuulutus10R";
 
 interface CreatePdfOptions {
   projekti: DBProjekti;
@@ -16,11 +16,11 @@ export class AsiakirjaService {
         switch (true) {
           case projekti.tyyppi === ProjektiTyyppi.TIE: // Falltrough
           case projekti.tyyppi === ProjektiTyyppi.YLEINEN && projekti.velho?.vaylamuoto?.includes("tie"):
-            pdf = new TieAloitusKuulutusPdf(projekti).pdf;
+            pdf = new AloitusKuulutus10T(projekti).pdf;
             break;
           case projekti.tyyppi === ProjektiTyyppi.RATA: // Falltrough
           case projekti.tyyppi === ProjektiTyyppi.YLEINEN && projekti.velho?.vaylamuoto?.includes("rata"):
-            pdf = new RataAloitusKuulutusPdf(projekti).pdf;
+            pdf = new AloitusKuulutus10R(projekti).pdf;
             break;
           default:
             throw new Error(

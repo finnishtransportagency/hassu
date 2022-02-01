@@ -1,40 +1,19 @@
-import log from "loglevel";
-import { AloitusKuulutusPdf } from "./aloitusKuulutusPdf";
+import { DBProjekti } from "../../database/model/projekti";
+import { SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
 
-export class TieAloitusKuulutusPdf extends AloitusKuulutusPdf {
+const header = "ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA";
+
+export class Ilmoitus10T extends SuunnittelunAloitusPdf {
+  constructor(projekti: DBProjekti) {
+    super(projekti, header);
+  }
+
   protected addContent() {
-    super.addContent();
-    const logo = this.doc.struct(
-      "Figure",
-      {
-        alt: "Elinkeino-, liikenne- ja ympäristökeskus",
-      },
-      [
-        () => {
-          const elyFileName = this.fileBasePath + "/files/ely.png";
-          log.info(elyFileName);
-          this.doc.image(elyFileName, undefined, undefined, { scale: 0.22 });
-        },
-      ]
-    );
-
     this.doc.addStructure(
       this.doc.struct("Document", {}, [
-        logo,
-        this.doc.struct("H1", {}, () => {
-          this.doc
-            .moveDown(1)
-            .font("ArialMTBold")
-            .fontSize(10)
-            .text("KUULUTUS SUUNNITTELUN ALOITTAMISESTA ")
-            .moveDown(1);
-        }),
-
-        this.doc.struct("H2", {}, () => {
-          const parts = [this.projekti.velho?.nimi];
-          parts.push(this.projektiTyyppi);
-          this.doc.text(parts.join(", ")).font("ArialMT").moveDown();
-        }),
+        this.logo,
+        this.headerElement,
+        this.titleElement,
 
         this.paragraph(this.startOfPlanningPhrase),
 
@@ -113,7 +92,7 @@ export class TieAloitusKuulutusPdf extends AloitusKuulutusPdf {
 
   private get tietosuojaUrl() {
     return this.projekti.velho?.tilaajaOrganisaatio && this.projekti.velho?.tilaajaOrganisaatio === "Väylävirasto"
-      ? "https://vayla.fi/tietoa-meista/yhteystiedot/tietosuoja"
+      ? "https://vayla.fi/tietosuoja"
       : "http://www.ely-keskus.fi/tietosuoja";
   }
 
