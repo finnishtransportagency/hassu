@@ -301,7 +301,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
               )}
               disabled={disableFormEdit}
             >
-              Esikatsele kuulutusta
+              Esikatsele ilmoitus
             </Button>
           </div>
         </fieldset>

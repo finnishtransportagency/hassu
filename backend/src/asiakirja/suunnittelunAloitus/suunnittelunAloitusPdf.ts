@@ -81,6 +81,12 @@ export abstract class SuunnittelunAloitusPdf extends AbstractPdf {
     return structureElements;
   }
 
+  protected get kuulutusPaiva() {
+    return this.projekti.aloitusKuulutus?.kuulutusPaiva
+      ? new Date(this.projekti.aloitusKuulutus?.kuulutusPaiva).toLocaleDateString("fi")
+      : "DD.MM.YYYY";
+  }
+
   protected get logo() {
     const alt = this.isVaylaTilaaja ? "Väylävirasto — Trafikledsverket" : "Elinkeino-, liikenne- ja ympäristökeskus";
     const filePath = this.isVaylaTilaaja ? "/files/vayla.png" : "/files/ely.png";
@@ -111,5 +117,13 @@ export abstract class SuunnittelunAloitusPdf extends AbstractPdf {
       parts.push(this.projektiTyyppi);
       this.doc.text(parts.join(", ")).font("ArialMT").moveDown();
     });
+  }
+
+  protected get tilaajaGenetiivi() {
+    return this.projekti.velho?.tilaajaOrganisaatio
+      ? this.projekti.velho?.tilaajaOrganisaatio === "Väylävirasto"
+        ? "Väyläviraston"
+        : this.projekti.velho?.tilaajaOrganisaatio?.slice(0, -1) + "ksen"
+      : "Tilaajaorganisaation";
   }
 }

@@ -19,11 +19,7 @@ export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
         this.paragraph(this.projekti.aloitusKuulutus?.hankkeenKuvaus || ""),
 
         this.paragraph(
-          `Kuulutus on julkaistu tietoverkossa ${this.tilaajaGenetiivi} verkkosivuilla${
-            this.projekti.aloitusKuulutus?.kuulutusPaiva
-              ? " " + new Date(this.projekti.aloitusKuulutus?.kuulutusPaiva).toLocaleDateString("fi")
-              : "."
-          } `
+          `Kuulutus on julkaistu tietoverkossa ${this.tilaajaGenetiivi} verkkosivuilla ${this.kuulutusPaiva}. `
         ),
 
         this.paragraph(
@@ -81,18 +77,8 @@ export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
     return this.projekti.velho?.tilaajaOrganisaatio || "Kuuluttaja";
   }
 
-  private get tilaajaGenetiivi() {
-    return this.projekti.velho?.tilaajaOrganisaatio
-      ? this.projekti.velho?.tilaajaOrganisaatio === "Väylävirasto"
-        ? "Väyläviraston"
-        : this.projekti.velho?.tilaajaOrganisaatio?.slice(0, -1) + "ksen"
-      : "Tilaajaorganisaation";
-  }
-
   private get tietosuojaUrl() {
-    return this.projekti.velho?.tilaajaOrganisaatio && this.projekti.velho?.tilaajaOrganisaatio === "Väylävirasto"
-      ? "https://vayla.fi/tietosuoja"
-      : "http://www.ely-keskus.fi/tietosuoja";
+    return this.isVaylaTilaaja ? "https://vayla.fi/tietosuoja" : "http://www.ely-keskus.fi/tietosuoja";
   }
 
   private get startOfPlanningPhrase() {
