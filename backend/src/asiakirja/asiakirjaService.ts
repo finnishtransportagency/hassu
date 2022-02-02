@@ -2,8 +2,8 @@ import { AsiakirjaTyyppi, PDF, ProjektiTyyppi } from "../../../common/graphql/ap
 import { DBProjekti } from "../database/model/projekti";
 import { AloitusKuulutus10T } from "./suunnittelunAloitus/aloitusKuulutus10T";
 import { AloitusKuulutus10R } from "./suunnittelunAloitus/aloitusKuulutus10R";
-import { Ilmoitus10T } from "./suunnittelunAloitus/ilmoitus12T";
-import { Ilmoitus10R } from "./suunnittelunAloitus/ilmoitus12R";
+import { Ilmoitus12T } from "./suunnittelunAloitus/ilmoitus12T";
+import { Ilmoitus12R } from "./suunnittelunAloitus/ilmoitus12R";
 
 interface CreatePdfOptions {
   projekti: DBProjekti;
@@ -53,10 +53,10 @@ export class AsiakirjaService {
       case AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA:
         switch (asiakirjanMuoto) {
           case AsiakirjanMuoto.TIE:
-            pdf = new Ilmoitus10T(projekti).pdf;
+            pdf = new Ilmoitus12T(projekti).pdf;
             break;
           case AsiakirjanMuoto.RATA:
-            pdf = new Ilmoitus10R(projekti).pdf;
+            pdf = new Ilmoitus12R(projekti).pdf;
             break;
           default:
             throw new Error(

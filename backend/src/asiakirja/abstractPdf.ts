@@ -16,7 +16,6 @@ export abstract class AbstractPdf {
         .match(/[\wäöüÄÖÜåÅ(), -]/g)
         .join("")
         .slice(0, 100) + ".pdf";
-    // this.fileName = "aloituskuulutus.pdf";
     this.fileBasePath = __dirname;
     this.doc = this.setupAccessibleDocument();
   }

@@ -17,6 +17,20 @@ export abstract class SuunnittelunAloitusPdf extends AbstractPdf {
     return this.projekti.velho.tilaajaOrganisaatio === "Väylävirasto";
   }
 
+  protected addContent() {
+    const elements: PDFKit.PDFStructureElementChild[] = [
+      this.logo,
+      this.headerElement,
+      this.titleElement,
+      ...this.addDocumentElements(),
+    ];
+    this.doc.addStructure(this.doc.struct("Document", {}, elements));
+  }
+
+  protected addDocumentElements(): PDFKit.PDFStructureElementChild[] {
+    throw new Error("Method 'addDocumentElements()' must be implemented.");
+  }
+
   protected get projektiTyyppi() {
     let tyyppi = "";
     switch (this.projekti.tyyppi) {
@@ -87,7 +101,7 @@ export abstract class SuunnittelunAloitusPdf extends AbstractPdf {
       : "DD.MM.YYYY";
   }
 
-  protected get logo() {
+  private get logo() {
     const alt = this.isVaylaTilaaja ? "Väylävirasto — Trafikledsverket" : "Elinkeino-, liikenne- ja ympäristökeskus";
     const filePath = this.isVaylaTilaaja ? "/files/vayla.png" : "/files/ely.png";
     return this.doc.struct(
@@ -105,13 +119,13 @@ export abstract class SuunnittelunAloitusPdf extends AbstractPdf {
     );
   }
 
-  protected get headerElement() {
+  private get headerElement() {
     return this.doc.struct("H1", {}, () => {
       this.doc.moveDown(1).font("ArialMTBold").fontSize(10).text(this.header).moveDown(1);
     });
   }
 
-  protected get titleElement() {
+  private get titleElement() {
     return this.doc.struct("H2", {}, () => {
       const parts = [this.projekti.velho?.nimi];
       parts.push(this.projektiTyyppi);
