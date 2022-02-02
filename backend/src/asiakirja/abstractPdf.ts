@@ -1,19 +1,20 @@
+import { deburr } from "lodash";
 import log from "loglevel";
 import { PDF } from "../../../common/graphql/apiModel";
 const PDFDocument = require("pdfkit");
 
 export abstract class AbstractPdf {
-  title: string;
-  fileName: string;
-  fileBasePath: string;
-  doc: PDFKit.PDFDocument;
+  private title: string;
+  private fileName: string;
+  protected fileBasePath: string;
+  protected doc: PDFKit.PDFDocument;
 
   constructor(title: string) {
     this.title = title;
     // Clean filename by joining allowed characters together
     this.fileName =
-      title
-        .match(/[\wäöüÄÖÜåÅ(), -]/g)
+      deburr(title)
+        .match(/[\w(), -]/g)
         .join("")
         .slice(0, 100) + ".pdf";
     this.fileBasePath = __dirname;
