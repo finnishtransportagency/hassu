@@ -18,10 +18,12 @@ const transporter = nodemailer.createTransport({
 export type EmailOptions = Pick<MailOptions, "to" | "subject" | "text" | "attachments">;
 
 export async function sendEmail(options: EmailOptions) {
+  if (!config.emailsOn) return;
   try {
     const messageInfo = await transporter.sendMail({
       from: "noreply.hassu@vaylapilvi.fi",
       ...options,
+      to: config.emailsTo || options.to,
     });
     console.log("Email lähetetty", messageInfo);
   } catch (e) {

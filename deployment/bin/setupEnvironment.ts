@@ -95,6 +95,9 @@ export type HassuSSMParameters = {
 
   SMTPKeyId: string;
   SMTPSecret: string;
+
+  EmailsOn: string;
+  EmailsTo: string;
 };
 
 export async function readParametersByPath(path: string, region: Region): Promise<Record<string, string>> {
@@ -166,6 +169,9 @@ export async function getEnvironmentVariablesFromSSM(variables?: HassuSSMParamet
 
     SMTP_KEY_ID: variables.SMTPKeyId,
     SMTP_SECRET: variables.SMTPSecret,
+
+    EMAILS_ON: variables.EmailsOn,
+    EMAILS_TO: variables.EmailsTo,
   };
 }
 
