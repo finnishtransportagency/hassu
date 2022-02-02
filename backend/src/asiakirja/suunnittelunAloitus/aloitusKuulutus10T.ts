@@ -87,8 +87,9 @@ export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
       const tilaajaOrganisaatio = this.projekti.velho?.tilaajaOrganisaatio || "Tilaajaorganisaatio";
       const kunnat = this.projekti.velho?.kunnat;
       const organisaatiot = kunnat ? [tilaajaOrganisaatio, ...kunnat] : [tilaajaOrganisaatio];
-      const viimeinenOrganisaatio = organisaatiot.slice(-1);
-      const muut = organisaatiot.slice(0, -1);
+      const trimmattutOrganisaatiot = organisaatiot.map((organisaatio) => this.capitalizeAllWords(organisaatio.trim()));
+      const viimeinenOrganisaatio = trimmattutOrganisaatiot.slice(-1);
+      const muut = trimmattutOrganisaatiot.slice(0, -1);
       const aloittaa = muut.length > 0 ? "aloittavat" : "aloittaa";
       const organisaatiotText = (muut.length > 0 ? muut.join(", ") + " ja " : "") + viimeinenOrganisaatio;
       phrase = `${organisaatiotText} ${aloittaa} ${this.projektiTyyppi}n laatimisen tarpeellisine tutkimuksineen. `;

@@ -3,6 +3,9 @@ import log from "loglevel";
 import { PDF } from "../../../common/graphql/apiModel";
 const PDFDocument = require("pdfkit");
 
+const firstCharactersInWords = /(?<=^|[^\p{L}])\p{L}/gu;
+const notFirstCharacterInWords = /(?<!^|[^\p{L}])\p{L}/gu;
+
 export abstract class AbstractPdf {
   private title: string;
   private fileName: string;
@@ -111,7 +114,13 @@ export abstract class AbstractPdf {
   }
 
   protected capitalize(text: string) {
-    return text.charAt(0).toUpperCase() + text.slice(1).toLocaleLowerCase();
+    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+  }
+
+  protected capitalizeAllWords(text: string) {
+    return text
+      .replace(firstCharactersInWords, (a) => a.toUpperCase())
+      .replace(notFirstCharacterInWords, (a) => a.toLowerCase());
   }
 
   public get pdf() {

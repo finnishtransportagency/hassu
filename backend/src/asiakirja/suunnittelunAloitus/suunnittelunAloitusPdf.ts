@@ -57,16 +57,17 @@ export abstract class SuunnittelunAloitusPdf extends AbstractPdf {
         sukunimi,
         puhelinnumero,
         sahkoposti: email,
-        organisaatio: this.capitalize(kunta),
+        organisaatio: kunta,
         __typename: "Yhteystieto",
       });
     }
     this.projekti.kayttoOikeudet
       .filter(({ esitetaanKuulutuksessa }) => !!esitetaanKuulutuksessa)
       .forEach((oikeus) => {
+        const [sukunimi, etunimi] = oikeus.nimi.split(/, /g);
         yt.push({
-          etunimi: oikeus.nimi.replace(/,/g, ""),
-          sukunimi: "",
+          etunimi,
+          sukunimi,
           puhelinnumero: oikeus.puhelinnumero,
           sahkoposti: oikeus.email,
           organisaatio: oikeus.organisaatio,
@@ -78,16 +79,22 @@ export abstract class SuunnittelunAloitusPdf extends AbstractPdf {
         yt.push(yhteystieto);
       });
     }
-    return yt;
+    return yt.map(({ sukunimi, etunimi, organisaatio, ...rest }) => ({
+      etunimi: this.capitalizeAllWords(etunimi),
+      sukunimi: this.capitalizeAllWords(sukunimi),
+      organisaatio: this.capitalizeAllWords(organisaatio),
+      ...rest,
+    }));
   }
 
   protected get moreInfoElements(): PDFKit.PDFStructureElementChild[] {
     const structureElements = this.yhteystiedot.map(
       ({ organisaatio, etunimi, sukunimi, puhelinnumero, sahkoposti }) => {
         const element: PDFKit.PDFStructureElementChild = () => {
-          const nimi = etunimi + (!!sukunimi ? " " + sukunimi : "");
           const noSpamSahkoposti = sahkoposti.replace(/@/g, "(at)");
-          this.doc.text(`${organisaatio}, ${nimi}, puh. ${puhelinnumero}, ${noSpamSahkoposti} `).moveDown();
+          this.doc
+            .text(`${organisaatio}, ${etunimi} ${sukunimi}, puh. ${puhelinnumero}, ${noSpamSahkoposti} `)
+            .moveDown();
         };
         return element;
       }
