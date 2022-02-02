@@ -19,14 +19,15 @@ describe("EmailTemplating", () => {
     });
     expect(emailOptions.to).to.be.equal("veikko.vaylalainen@vayla.fi");
     expect(emailOptions.subject).to.be.equal(
-      "Väylien suunnittelu: Uusi projekti perustettu VAYLA/8591/03.04.02.00/2014"
+      "Valtion liikenneväylien suunnittelu: Uusi projekti perustettu VAYLA/8591/03.04.02.00/2014"
     );
     expect(emailOptions.text).to.be.equal(
-      "Väylien suunnittelu -järjestelmään on tuotu Velhosta projektisi:\n" +
+      "Valtion liikenneväylien suunnittelu -järjestelmään on tuotu Projektivelhosta projektisi:\n" +
         "Maantien 16909 (Isoahontie) kevyen liikenteen väylä välillä valtatie 4 - Petäjätie, Viitasaari\n" +
         "Voit tarkastella projektia osoitteessa https://" +
         domain +
-        "/yllapito/projekti/1.2.246.578.5.1.165"
+        "/yllapito/projekti/1.2.246.578.5.1.165\n" +
+        "Saat tämän viestin, koska sinut on merkitty projektin vastuuhenkilöksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
     );
   });
 });

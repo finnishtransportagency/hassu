@@ -15,10 +15,11 @@ function template(strs: TemplateStringsArray, ...exprs: string[]) {
 }
 
 const domain = config.frontendDomainName || "vayliensuunnittelu.fi";
-const perustamisOtsikko = template`Väylien suunnittelu: Uusi projekti perustettu ${"velho.asiatunnusVayla"}`;
-const perustamisTeksti = template`Väylien suunnittelu -järjestelmään on tuotu Velhosta projektisi:
+const perustamisOtsikko = template`Valtion liikenneväylien suunnittelu: Uusi projekti perustettu ${"velho.asiatunnusVayla"}`;
+const perustamisTeksti = template`Valtion liikenneväylien suunnittelu -järjestelmään on tuotu Projektivelhosta projektisi:
 ${"velho.nimi"}
-Voit tarkastella projektia osoitteessa https://${"domain"}/yllapito/projekti/${"oid"}`;
+Voit tarkastella projektia osoitteessa https://${"domain"}/yllapito/projekti/${"oid"}
+Saat tämän viestin, koska sinut on merkitty projektin vastuuhenkilöksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 const perustamisVastaanottajat = template`${"velho.vastuuhenkilonEmail"}`;
 
 export function createPerustamisEmail(projekti: DBProjekti): EmailOptions {
