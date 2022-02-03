@@ -139,6 +139,7 @@
   },
   "scripts": {
     "clean": "rimraf .cdk-* .next .nyc_output .report .serverless .serverless_nextjs build cdk.out out schema.graphql common/graphql/*",
+    "cdk": "cdk",
     "prepare": "husky install",
     "dev": "next dev",
     "build": "next build",
@@ -153,7 +154,7 @@
     "lint:app": "next lint",
     "lint:tsc": "tsc --project tsconfig.json",
     "lint": "npm-run-all --aggregate-output --parallel lint:*",
-    "localstack": "docker-compose -f deployment/localstack/docker-compose.yml up -d && cross-env ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" cdklocal bootstrap && cross-env ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" cdklocal deploy database --require-approval never",
+    "localstack": "docker-compose -f deployment/localstack/docker-compose.yml up -d && cross-env ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" cdklocal bootstrap --template deployment/localstack/localstack-bootstrap.yml && cross-env ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" cdklocal deploy database --require-approval never",
     "localstack:stop": "docker-compose -f deployment/localstack/docker-compose.yml down",
     "setupenvironment": "ts-node --project=tsconfig.cdk.json deployment/bin/setupEnvironment.ts",
     "test": "npm-run-all --aggregate-output --parallel \"test:!(backend)\"",

@@ -1,8 +1,8 @@
 import { DBProjekti } from "../database/model/projekti";
-import { deepClone } from "aws-cdk/lib/util";
+import cloneDeep from "lodash/cloneDeep";
 
 export function adaptProjektiToIndex(projekti: DBProjekti): any {
-  const doc: Partial<DBProjekti> = deepClone(projekti);
+  const doc: Partial<DBProjekti> = cloneDeep(projekti);
   delete doc.kayttoOikeudet;
   delete doc.oid;
   delete doc.suunnitteluSopimus;
