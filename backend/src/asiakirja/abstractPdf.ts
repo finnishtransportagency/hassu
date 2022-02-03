@@ -1,19 +1,25 @@
+import { deburr } from "lodash";
 import log from "loglevel";
 import { PDF } from "../../../common/graphql/apiModel";
-import { DBProjekti } from "../database/model/projekti";
 const PDFDocument = require("pdfkit");
 
-export abstract class AbstractPdf {
-  projekti: DBProjekti;
-  title: string;
-  fileName: string;
-  fileBasePath: string;
-  doc: PDFKit.PDFDocument;
+const firstCharactersInWords = /(?<=^|[^\p{L}])\p{L}/gu;
+const notFirstCharacterInWords = /(?<!^|[^\p{L}])\p{L}/gu;
 
-  constructor(projekti: DBProjekti, title: string, fileName: string) {
-    this.projekti = projekti;
+export abstract class AbstractPdf {
+  private title: string;
+  private fileName: string;
+  protected fileBasePath: string;
+  protected doc: PDFKit.PDFDocument;
+
+  constructor(title: string) {
     this.title = title;
-    this.fileName = fileName;
+    // Clean filename by joining allowed characters together
+    this.fileName =
+      deburr(title)
+        .match(/[\w(), -]/g)
+        .join("")
+        .slice(0, 100) + ".pdf";
     this.fileBasePath = __dirname;
     this.doc = this.setupAccessibleDocument();
   }
@@ -108,7 +114,13 @@ export abstract class AbstractPdf {
   }
 
   protected capitalize(text: string) {
-    return text.charAt(0).toUpperCase() + text.slice(1).toLocaleLowerCase();
+    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+  }
+
+  protected capitalizeAllWords(text: string) {
+    return text
+      .replace(firstCharactersInWords, (a) => a.toUpperCase())
+      .replace(notFirstCharacterInWords, (a) => a.toLowerCase());
   }
 
   public get pdf() {

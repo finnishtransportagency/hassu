@@ -211,11 +211,14 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
     showInfoMessage("Lähetetään projektipäällikölle...");
   };
 
-  const showPDFPreview = async (formData: FormValues) => {
+  const showPDFPreview = (formData: FormValues, action: string) => {
     const formDataToSend = cloneDeep(formData);
     deleteFieldArrayIds(formDataToSend?.aloitusKuulutus?.esitettavatYhteystiedot);
     setSerializedFormData(JSON.stringify(formDataToSend));
-    pdfFormRef.current?.submit();
+    if (pdfFormRef.current) {
+      pdfFormRef.current.action = action;
+      pdfFormRef.current?.submit();
+    }
   };
 
   const { showSuccessMessage, showErrorMessage, showInfoMessage } = useSnackbars();
@@ -281,17 +284,29 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
           <Notification type={NotificationType.INFO}>
             Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
           </Notification>
-          <Button type="submit" onClick={handleSubmit(showPDFPreview)} disabled={disableFormEdit}>
-            Esikatsele kuulutusta
-          </Button>
+          <div className="flex flex-col lg:flex-row gap-6">
+            <Button
+              type="submit"
+              onClick={handleSubmit((formData) =>
+                showPDFPreview(formData, `/api/projekti/${projekti?.oid}/aloituskuulutus/pdf`)
+              )}
+              disabled={disableFormEdit}
+            >
+              Esikatsele kuulutusta
+            </Button>
+            <Button
+              type="submit"
+              onClick={handleSubmit((formData) =>
+                showPDFPreview(formData, `/api/projekti/${projekti?.oid}/aloituskuulutus/ilmoitus/pdf`)
+              )}
+              disabled={disableFormEdit}
+            >
+              Esikatsele ilmoitusta
+            </Button>
+          </div>
         </fieldset>
       </form>
-      <form
-        ref={pdfFormRef}
-        target="_blank"
-        action={`/api/projekti/${projekti?.oid}/aloituskuulutus/pdf`}
-        method="POST"
-      >
+      <form ref={pdfFormRef} target="_blank" method="POST">
         <input type="hidden" name="tallennaProjektiInput" value={serializedFormData} />
       </form>
       <hr />
