@@ -3,12 +3,21 @@ import { DBProjekti } from "./model/projekti";
 import { config } from "../config";
 import { getDynamoDBDocumentClient } from "./dynamoDB";
 import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
+import { GetItemOutput } from "@aws-sdk/client-dynamodb";
+import { AWSError } from "aws-sdk";
+import { Response } from "aws-sdk/lib/response";
 
-const tableName: string = config.projektiTableName as any;
+const projektiTableName: string = config.projektiTableName as any;
+const archiveTableName: string = config.projektiArchiveTableName as any;
+
+export type ArchivedProjektiKey = {
+  oid: string;
+  timestamp: string;
+};
 
 async function createProjekti(projekti: DBProjekti) {
   const params: DocumentClient.PutItemInput = {
-    TableName: tableName,
+    TableName: projektiTableName,
     Item: projekti as DBProjekti,
   };
   return await getDynamoDBDocumentClient().put(params).promise();
@@ -16,7 +25,7 @@ async function createProjekti(projekti: DBProjekti) {
 
 async function listProjektit(): Promise<DBProjekti[]> {
   const params = {
-    TableName: tableName,
+    TableName: projektiTableName,
   };
   const data = await getDynamoDBDocumentClient().scan(params).promise();
   return data.Items as DBProjekti[];
@@ -24,7 +33,7 @@ async function listProjektit(): Promise<DBProjekti[]> {
 
 async function loadProjektiByOid(oid: string): Promise<DBProjekti | undefined> {
   const params: DocumentClient.GetItemInput = {
-    TableName: tableName,
+    TableName: projektiTableName,
     Key: { oid },
     ConsistentRead: true,
   };
@@ -71,7 +80,7 @@ async function saveProjekti(dbProjekti: DBProjekti) {
   const updateExpression = createExpression("SET", setExpression) + " " + createExpression("REMOVE", removeExpression);
 
   const params = {
-    TableName: tableName,
+    TableName: projektiTableName,
     Key: {
       oid: dbProjekti.oid,
     },
@@ -84,9 +93,56 @@ async function saveProjekti(dbProjekti: DBProjekti) {
   return await getDynamoDBDocumentClient().update(params).promise();
 }
 
+async function archiveProjektiByOid({ oid, timestamp }: ArchivedProjektiKey): Promise<void> {
+  const client = getDynamoDBDocumentClient();
+
+  // Load projekti to be archived
+  const data: GetItemOutput = await client
+    .get({
+      TableName: projektiTableName,
+      Key: { oid },
+      ConsistentRead: true,
+    })
+    .promise();
+  const item: ArchivedProjektiKey | any = data.Item;
+  if (!item) {
+    throw new Error("Arkistointi ei onnistunut, koska arkistoitavaa projektia ei löytynyt tietokannasta.");
+  }
+
+  // Assign sort key
+  item.timestamp = timestamp;
+
+  // Write the copied projekti to archive table
+  const putParams: DocumentClient.PutItemInput = {
+    TableName: archiveTableName,
+    Item: item,
+  };
+  const putResult = await client.put(putParams).promise();
+  checkAndRaiseError(putResult.$response);
+
+  // Delete the archived projekti
+  const removeResult = await client
+    .delete({
+      TableName: projektiTableName,
+      Key: {
+        oid,
+      },
+    })
+    .promise();
+  checkAndRaiseError(removeResult.$response);
+}
+
+function checkAndRaiseError<T>(response: Response<T, AWSError>) {
+  if (response.error) {
+    log.error("Arkistointi ei onnistunut", { error: response.error });
+    throw new Error("Arkistointi ei onnistunut");
+  }
+}
+
 export const projektiDatabase = {
   createProjekti,
   saveProjekti,
   listProjektit,
   loadProjektiByOid,
+  archiveProjektiByOid,
 };

@@ -40,7 +40,6 @@ module.exports = (phase) => {
     NEXT_PUBLIC_VAYLA_EXTRANET_URL: process.env.NEXT_PUBLIC_VAYLA_EXTRANET_URL,
     NEXT_PUBLIC_VELHO_BASE_URL: process.env.NEXT_PUBLIC_VELHO_BASE_URL,
     INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
-    INTERNAL_BUCKET_NAME: process.env.INTERNAL_BUCKET_NAME
   };
   /**
    * @type {import('next').NextConfig}

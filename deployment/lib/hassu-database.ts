@@ -12,16 +12,13 @@ export type DatabaseStackOutputs = {
 };
 
 export class HassuDatabaseStack extends cdk.Stack {
-  // @ts-ignore
-  public projektiTable: ddb.Table;
-  // @ts-ignore
-  public uploadBucket: Bucket;
-  // @ts-ignore
-  public yllapitoBucket: Bucket;
-  // @ts-ignore
-  public internalBucket: Bucket;
-  // @ts-ignore
-  private config: Config;
+  public projektiTable!: ddb.Table;
+  public projektiArchiveTable!: ddb.Table;
+  public uploadBucket!: Bucket;
+  public yllapitoBucket!: Bucket;
+  public internalBucket!: Bucket;
+  public archiveBucket!: Bucket;
+  private config!: Config;
 
   constructor(scope: cdk.Construct) {
     super(scope, "database", {
@@ -36,10 +33,12 @@ export class HassuDatabaseStack extends cdk.Stack {
   async process() {
     this.config = await Config.instance(this);
     this.projektiTable = this.createProjektiTable();
+    this.projektiArchiveTable = this.createProjektiArchiveTable();
 
     this.uploadBucket = this.createUploadBucket();
     this.yllapitoBucket = this.createYllapitoBucket();
     this.internalBucket = this.createInternalBucket();
+    this.archiveBucket = this.createArchiveBucket();
   }
 
   private createProjektiTable() {
@@ -52,6 +51,30 @@ export class HassuDatabaseStack extends cdk.Stack {
       },
       stream: StreamViewType.NEW_IMAGE,
     });
+    if (Config.isPermanentEnvironment()) {
+      table.applyRemovalPolicy(RemovalPolicy.RETAIN);
+    }
+    return table;
+  }
+
+  private createProjektiArchiveTable() {
+    const table = new ddb.Table(this, "ProjektiArchiveTable", {
+      billingMode: ddb.BillingMode.PAY_PER_REQUEST,
+      tableName: Config.projektiArchiveTableName,
+      partitionKey: {
+        name: "oid",
+        type: ddb.AttributeType.STRING,
+      },
+      sortKey: {
+        name: "timestamp",
+        type: ddb.AttributeType.STRING,
+      },
+    });
+
+    // TODO: uncomment after cdk-construct+aws-cdk version upgrade
+    // const cfnTable = table.node.defaultChild as CfnTable;
+    // cfnTable.tableClass = "STANDARD_INFREQUENT_ACCESS";
+
     if (Config.isPermanentEnvironment()) {
       table.applyRemovalPolicy(RemovalPolicy.RETAIN);
     }
@@ -79,6 +102,15 @@ export class HassuDatabaseStack extends cdk.Stack {
       bucketName: Config.internalBucketName,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       removalPolicy: RemovalPolicy.DESTROY,
+    });
+  }
+
+  private createArchiveBucket() {
+    return new Bucket(this, "ArchiveBucket", {
+      bucketName: Config.archiveBucketName,
+      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+      removalPolicy: RemovalPolicy.RETAIN,
+      versioned: false,
     });
   }
 
