@@ -7,6 +7,7 @@ import * as log from "loglevel";
 import {
   AloitusKuulutus,
   AsiakirjaTyyppi,
+  ProjektiRooli,
   SuunnitteluSopimus,
   SuunnitteluSopimusInput,
 } from "../../../common/graphql/apiModel";
@@ -26,15 +27,16 @@ const sandbox = sinon.createSandbox();
 describe("Api", () => {
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
 
-  before(() => {
+  before(async () => {
     localstackS3Client();
+    await s3Cache.clear(PERSON_SEARCH_CACHE_KEY);
   });
 
   afterEach(() => {
     sandbox.restore();
   });
 
-  beforeEach("Initialize test database", async () => await setupLocalDatabase());
+  beforeEach("Initialize test database!", async () => await setupLocalDatabase());
 
   beforeEach(async () => {
     readUsersFromSearchUpdaterLambda = sandbox.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
@@ -45,8 +47,6 @@ describe("Api", () => {
     sandbox.stub(openSearchClient, "query").resolves({ status: 200 });
     sandbox.stub(openSearchClient, "deleteProjekti");
     sandbox.stub(openSearchClient, "putProjekti");
-
-    await s3Cache.clear(PERSON_SEARCH_CACHE_KEY);
   });
 
   it("should search, load and save a project", async function () {
@@ -59,6 +59,13 @@ describe("Api", () => {
     const projekti = await api.lataaProjekti(oid);
     await expect(projekti.tallennettu).to.be.false;
     log.info(JSON.stringify(projekti, null, 2));
+
+    // Expect that projektipaallikko is found
+    expect(
+      projekti.kayttoOikeudet?.filter(
+        (kayttaja) => kayttaja.rooli === ProjektiRooli.PROJEKTIPAALLIKKO && kayttaja.email
+      )
+    ).is.not.empty;
 
     const kayttoOikeudet = projekti.kayttoOikeudet?.map((value) => ({
       rooli: value.rooli,
@@ -158,7 +165,7 @@ describe("Api", () => {
   }
 
   async function searchProjectsFromVelhoAndPickFirst(): Promise<string> {
-    const searchResult = await api.getVelhoSuunnitelmasByName("valtatien");
+    const searchResult = await api.getVelhoSuunnitelmasByName("HASSUTESTIPROJEKTI");
     // tslint:disable-next-line:no-unused-expression
     expect(searchResult).not.to.be.empty;
 

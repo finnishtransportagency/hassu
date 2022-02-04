@@ -25,7 +25,7 @@ export class Kayttajas {
 
   findByEmail(email: string): Kayttaja | undefined {
     for (const [uid, person] of Object.entries(this.personMap)) {
-      if (person.email.includes(email)) {
+      if (person.email.includes(email.toLowerCase().trim())) {
         return adaptPerson(uid, person);
       }
     }
