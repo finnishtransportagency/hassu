@@ -9,7 +9,7 @@ import { useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@components/button/Button";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { AloitusKuulutusInput, api, Projekti, Status, TallennaProjektiInput } from "@services/api";
+import { AloitusKuulutusInput, api, LaskuriTyyppi, Projekti, Status, TallennaProjektiInput } from "@services/api";
 import log from "loglevel";
 import { PageProps } from "@pages/_app";
 import DatePicker from "@components/form/DatePicker";
@@ -28,7 +28,10 @@ type RequiredProjektiFields = Required<{
 }>;
 
 type FormValues = RequiredProjektiFields & {
-  aloitusKuulutus: Pick<AloitusKuulutusInput, "esitettavatYhteystiedot" | "kuulutusPaiva" | "hankkeenKuvaus">;
+  aloitusKuulutus: Pick<
+    AloitusKuulutusInput,
+    "esitettavatYhteystiedot" | "kuulutusPaiva" | "hankkeenKuvaus" | "siirtyySuunnitteluVaiheeseen"
+  >;
 };
 
 const maxAloituskuulutusLength = 2000;
@@ -68,6 +71,23 @@ const draftValidationSchema: SchemaOf<FormValues> = Yup.object().shape({
         const todayISODate = new Date().toISOString().split("T")[0];
         return dateString >= todayISODate;
       }),
+    siirtyySuunnitteluVaiheeseen: Yup.string().test("is-valid-date", "Virheellinen päivämäärä", (dateString) => {
+      // KuulutusPaiva is not required when saved as a draft.
+      // This test doesn't throw errors if date is not set.
+      if (!dateString) {
+        return true;
+      }
+      let validDate = false;
+      try {
+        const dateString2 = new Date(dateString!).toISOString().split("T")[0];
+        if (dateString2 === dateString) {
+          validDate = true;
+        }
+      } catch {
+        validDate = false;
+      }
+      return validDate;
+    }),
     esitettavatYhteystiedot: Yup.array()
       .notRequired()
       .of(
@@ -158,6 +178,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
     formState: { errors },
     reset,
     watch,
+    setValue,
   } = useFormReturn;
 
   const watchKuulutusPaiva = watch("aloitusKuulutus.kuulutusPaiva");
@@ -176,6 +197,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
         aloitusKuulutus: {
           hankkeenKuvaus: projekti?.aloitusKuulutus?.hankkeenKuvaus,
           kuulutusPaiva: projekti?.aloitusKuulutus?.kuulutusPaiva,
+          siirtyySuunnitteluVaiheeseen: projekti?.aloitusKuulutus?.siirtyySuunnitteluVaiheeseen,
           esitettavatYhteystiedot:
             projekti?.aloitusKuulutus?.esitettavatYhteystiedot?.map((yhteystieto) => {
               if (yhteystieto) {
@@ -223,6 +245,16 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
 
   const { showSuccessMessage, showErrorMessage, showInfoMessage } = useSnackbars();
 
+  const getPaattymispaiva = async (value: string) => {
+    try {
+      const paattymispaiva = await api.laskePaattymisPaiva(value, LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA);
+      setValue("aloitusKuulutus.siirtyySuunnitteluVaiheeseen", paattymispaiva);
+    } catch (error) {
+      showErrorMessage("Kuulutuksen päättymispäivän laskennassa tapahtui virhe");
+      log.error("Päättymispäivän laskennassa virhe", error);
+    }
+  };
+
   return (
     <ProjektiPageLayout title="Aloituskuulutus">
       <form>
@@ -268,8 +300,16 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
               disabled={disableFormEdit}
               min={today}
               error={errors.aloitusKuulutus?.kuulutusPaiva}
+              onChange={(event) => {
+                getPaattymispaiva(event.target.value);
+              }}
             />
-            <DatePicker className="md:max-w-min" disabled label="Siirtyy suunnitteluvaiheeseen" />
+            <DatePicker
+              className="md:max-w-min"
+              label="Kuulutusvaihe päättyy"
+              readOnly
+              {...register("aloitusKuulutus.siirtyySuunnitteluVaiheeseen")}
+            />
           </div>
           <div className="content">
             <KuulutuksenYhteystiedot projekti={projekti} useFormReturn={useFormReturn} />
