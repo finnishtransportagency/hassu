@@ -22,7 +22,7 @@ export function adaptPersonSearchResult(responseJson: any, kayttajas: Record<str
     }) => {
       const uid = getFirstElementFromArrayOrEmpty(person.AccountName);
       if (uid) {
-        const email = getFirstElementFromArrayOrEmpty(person.Email);
+        const email = getFirstElementFromArrayOrEmpty(person.Email).toLowerCase().trim();
 
         if (kayttajas[uid]) {
           if (email && !kayttajas[uid].email.includes(email)) {
