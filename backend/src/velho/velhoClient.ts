@@ -18,7 +18,14 @@ const accessTokenCache = new NodeCache({
 const ACCESS_TOKEN_CACHE_KEY = "accessToken";
 
 axios.interceptors.request.use((request: AxiosRequestConfig) => {
-  log.debug("Request", request.url + "\n" + JSON.stringify(request.headers) + "\n" + request.data);
+  const contentType = request.headers["content-type"];
+
+  if (contentType && contentType.includes("image")) {
+    log.debug("Request", request.url + "\n" + JSON.stringify(request.headers));
+  } else {
+    log.debug("Request", request.url + "\n" + JSON.stringify(request.headers) + "\n" + request.data);
+  }
+
   return request;
 });
 
@@ -30,13 +37,23 @@ function stripTooLongLogs(response: AxiosResponse) {
   return data;
 }
 
+function logResponse(level: string, response: AxiosResponse, contentType?: string) {
+  if (contentType && contentType.includes("image")) {
+    log[level]({ response: response.status + " " + response.statusText });
+  } else {
+    log[level]({ response: response.status + " " + response.statusText + "\n" + stripTooLongLogs(response) });
+  }
+}
+
 axios.interceptors.response.use((response: AxiosResponse) => {
+  const contentType: string | undefined = response.headers["content-type"];
+
   if (response.status === 200) {
     if (log.isLevelEnabled("debug")) {
-      log.debug({ response: response.status + " " + response.statusText + "\n" + stripTooLongLogs(response) });
+      logResponse("debug", response, contentType);
     }
   } else {
-    log.warn({ response: response.status + " " + response.statusText + "\n" + stripTooLongLogs(response) });
+    logResponse("warn", response, contentType);
   }
   return response;
 });

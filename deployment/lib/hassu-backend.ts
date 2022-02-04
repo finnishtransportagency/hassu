@@ -21,9 +21,11 @@ import { getEnvironmentVariablesFromSSM } from "../bin/setupEnvironment";
 export type HassuBackendStackProps = {
   searchDomain: Domain;
   projektiTable: Table;
+  projektiArchiveTable: Table;
   uploadBucket: Bucket;
   yllapitoBucket: Bucket;
   internalBucket: Bucket;
+  archiveBucket: Bucket;
 };
 
 // These should correspond to CfnOutputs produced by this stack
@@ -264,6 +266,10 @@ export class HassuBackendStack extends cdk.Stack {
     const projektiTable = this.props.projektiTable;
     projektiTable.grantFullAccess(backendFn);
     backendFn.addEnvironment("TABLE_PROJEKTI", projektiTable.tableName);
+
+    const archiveTable = this.props.projektiTable;
+    archiveTable.grantFullAccess(backendFn);
+    backendFn.addEnvironment("TABLE_PROJEKTI_ARCHIVE", archiveTable.tableName);
   }
 
   private async getCommonEnvironmentVariables(config: Config): Promise<Record<string, string>> {
@@ -280,6 +286,7 @@ export class HassuBackendStack extends cdk.Stack {
       UPLOAD_BUCKET_NAME: this.props.uploadBucket.bucketName,
       YLLAPITO_BUCKET_NAME: this.props.yllapitoBucket.bucketName,
       INTERNAL_BUCKET_NAME: this.props.internalBucket.bucketName,
+      ARCHIVE_BUCKET_NAME: this.props.archiveBucket.bucketName,
     };
   }
 }

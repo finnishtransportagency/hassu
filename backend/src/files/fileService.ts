@@ -3,8 +3,16 @@ import { log } from "../logger";
 import { NotFoundError } from "../error/NotFoundError";
 import { getS3Client } from "../aws/clients";
 import { uuid } from "../util/uuid";
-import { CopyObjectCommand, HeadObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  CopyObjectCommand,
+  DeleteObjectCommand,
+  HeadObjectCommand,
+  ListObjectsV2Command,
+  ListObjectsV2CommandOutput,
+  PutObjectCommand,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { ArchivedProjektiKey } from "../database/projektiDatabase";
 
 export type UploadFileProperties = {
   fileNameWithPath: string;
@@ -37,7 +45,8 @@ export class FileService {
     const sourceFileProperties = await this.getUploadedSourceFileInformation(filePath);
 
     const fileNameFromUpload = this.getFileNameFromPath(filePath);
-    const targetPath = `yllapito/tiedostot/projekti/${param.oid}/${param.targetFilePathInProjekti}/${fileNameFromUpload}`;
+    const targetPath =
+      this.getProjektiDirectory(param.oid) + `/${param.targetFilePathInProjekti}/${fileNameFromUpload}`;
     try {
       await getS3Client().send(
         new CopyObjectCommand({
@@ -55,6 +64,10 @@ export class FileService {
       log.error(e);
       throw new Error("Error copying file to permanent storage");
     }
+  }
+
+  private getProjektiDirectory(oid: string) {
+    return `yllapito/tiedostot/projekti/${oid}`;
   }
 
   async getUploadedSourceFileInformation(
@@ -77,6 +90,59 @@ export class FileService {
 
   removePrefixFromFile(uploadedFileSource: string) {
     return uploadedFileSource;
+  }
+
+  async archiveProjekti({ oid, timestamp }: ArchivedProjektiKey) {
+    const sourcePrefix = this.getProjektiDirectory(oid);
+    const targetPrefix = sourcePrefix + "/" + timestamp;
+    const sourceBucket = config.yllapitoBucketName;
+    const targetBucket = config.archiveBucketName;
+
+    let ContinuationToken;
+    const s3Client = getS3Client();
+    const copyFile = async (sourceKey: string) => {
+      const targetKey = sourceKey.replace(sourcePrefix, targetPrefix);
+
+      await s3Client.send(
+        new CopyObjectCommand({
+          Bucket: targetBucket,
+          Key: targetKey,
+          CopySource: `${sourceBucket}/${sourceKey}`,
+        })
+      );
+
+      await s3Client.send(
+        new DeleteObjectCommand({
+          Bucket: sourceBucket,
+          Key: sourceKey,
+        })
+      );
+    };
+
+    do {
+      const { Contents = [], NextContinuationToken }: ListObjectsV2CommandOutput = await s3Client.send(
+        new ListObjectsV2Command({
+          Bucket: sourceBucket,
+          Prefix: sourcePrefix,
+          ContinuationToken,
+        })
+      );
+
+      const sourceKeys = Contents.map(({ Key }) => Key);
+
+      await Promise.all(
+        new Array(10).fill(null).map(async () => {
+          while (sourceKeys.length) {
+            const key = sourceKeys.pop();
+            if (key) {
+              await copyFile(key);
+            }
+          }
+        })
+      );
+
+      ContinuationToken = NextContinuationToken;
+    } while (ContinuationToken);
   }
 }
 

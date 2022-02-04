@@ -191,6 +191,7 @@ async function main() {
   writeEnvFile(".env.local", {
     REACT_APP_API_URL: backendStackOutputs.AppSyncAPIURL,
     INTERNAL_BUCKET_NAME: Config.internalBucketName,
+    ARCHIVE_BUCKET_NAME: Config.archiveBucketName,
     FRONTEND_DOMAIN_NAME: frontendStackOutputs.CloudfrontPrivateDNSName,
   });
 }

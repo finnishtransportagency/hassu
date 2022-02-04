@@ -18,6 +18,7 @@ import { personSearchUpdaterClient } from "../../src/personSearch/personSearchUp
 import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/personSearchUpdaterHandler";
 import { openSearchClient } from "../../src/projektiSearch/openSearchClient";
 import { localstackS3Client } from "../util/s3Util";
+import { projektiArchive } from "../../src/archive/projektiArchiveService";
 import { s3Cache } from "../../src/cache/s3Cache";
 import { PERSON_SEARCH_CACHE_KEY } from "../../src/personSearch/personSearchClient";
 
@@ -55,10 +56,7 @@ describe("Api", () => {
     }
     runAsVaylaUser();
 
-    const oid = await searchProjectsFromVelhoAndPickFirst();
-    const projekti = await api.lataaProjekti(oid);
-    await expect(projekti.tallennettu).to.be.false;
-    log.info(JSON.stringify(projekti, null, 2));
+    const { oid, projekti } = await readProjektiFromVelho();
 
     // Expect that projektipaallikko is found
     expect(
@@ -73,14 +71,15 @@ describe("Api", () => {
       puhelinnumero: "123",
     }));
 
+    // Save and load projekti
     await api.tallennaProjekti({
       oid,
       kayttoOikeudet,
     });
     await loadProjektiFromDatabase(oid);
 
+    // Fill in information to projekti, including a file
     const uploadedFile = await tallennaLogo();
-
     const newNote = "uusi muistiinpano";
     const suunnitteluSopimusInput: SuunnitteluSopimusInput = {
       email: "Joku.Jossain@vayla.fi",
@@ -130,6 +129,7 @@ describe("Api", () => {
       euRahoitus: false,
     });
 
+    // Check that the saved projekti is what it is supposed to be
     const updatedProjekti = await loadProjektiFromDatabase(oid);
     expect(updatedProjekti.muistiinpano).to.be.equal(newNote);
     expect(updatedProjekti.aloitusKuulutus).eql(aloitusKuulutus);
@@ -138,6 +138,7 @@ describe("Api", () => {
     expect(updatedProjekti.lisakuulutuskieli).to.be.equal(lisakuulutuskieli);
     expect(updatedProjekti.euRahoitus).to.be.false;
 
+    // Generate Aloituskuulutus PDF
     const pdf = await api.lataaAsiakirjaPDF(oid, AsiakirjaTyyppi.ALOITUSKUULUTUS);
     expect(pdf.nimi).to.be.equal("aloituskuulutus.pdf");
     expect(pdf.sisalto).not.to.be.empty;
@@ -156,7 +157,20 @@ describe("Api", () => {
     expect(updatedProjekti2.aloitusKuulutus).eql(aloitusKuulutus);
     expect(updatedProjekti2.suunnitteluSopimus).to.be.undefined;
     expect(updatedProjekti2.lisakuulutuskieli).to.be.equal(lisakuulutuskieli);
+
+    // Finally delete the projekti
+    const archiveResult = await projektiArchive.archiveProjekti(oid);
+    expect(archiveResult.oid).to.be.equal(oid);
+    expect(archiveResult.timestamp).to.not.be.empty;
   });
+
+  async function readProjektiFromVelho() {
+    const oid = await searchProjectsFromVelhoAndPickFirst();
+    const projekti = await api.lataaProjekti(oid);
+    await expect(projekti.tallennettu).to.be.false;
+    log.info(JSON.stringify(projekti, null, 2));
+    return { oid, projekti };
+  }
 
   async function loadProjektiFromDatabase(oid: string) {
     const savedProjekti = await api.lataaProjekti(oid);

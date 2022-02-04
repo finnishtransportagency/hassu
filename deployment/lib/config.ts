@@ -1,10 +1,10 @@
 import { ExecException } from "child_process";
-import { Construct } from "constructs";
 import * as ssm from "@aws-cdk/aws-ssm";
 import { SSM } from "aws-sdk";
 import log from "loglevel";
 import { BaseConfig, getEnv } from "../../common/BaseConfig";
 import { readFrontendStackOutputs } from "../bin/setupEnvironment";
+import { Construct } from "@aws-cdk/core";
 
 const ssmProvider = new SSM({ apiVersion: "2014-11-06", region: "eu-west-1" });
 const globalSsmProvider = new SSM({ apiVersion: "2014-11-06", region: "us-east-1" });
@@ -26,11 +26,13 @@ export class Config extends BaseConfig {
   public static readonly uploadBucketName = `hassu-${BaseConfig.env}-upload`;
   public static readonly yllapitoBucketName = `hassu-${Config.env}-yllapito`;
   public static readonly internalBucketName = `hassu-${Config.env}-internal`;
+  public static readonly archiveBucketName = `hassu-${Config.env}-archive`;
   public readonly dmzProxyEndpoint: string;
   // @ts-ignore
   public frontendDomainName: string;
   public readonly cloudfrontCertificateArn?: string;
   public static readonly projektiTableName = "Projekti-" + getEnv("ENVIRONMENT");
+  public static readonly projektiArchiveTableName = "Projekti-arkisto-" + getEnv("ENVIRONMENT");
   public readonly velhoEnv;
   public readonly basicAuthenticationUsername: string;
   public readonly basicAuthenticationPassword: string;

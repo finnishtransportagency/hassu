@@ -17,10 +17,12 @@ async function main() {
   const hassuSearchStack = new HassuSearchStack(app);
   const hassuBackendStack = new HassuBackendStack(app, {
     projektiTable: hassuDatabaseStack.projektiTable,
+    projektiArchiveTable: hassuDatabaseStack.projektiArchiveTable,
     searchDomain: hassuSearchStack.searchDomain,
     uploadBucket: hassuDatabaseStack.uploadBucket,
     yllapitoBucket: hassuDatabaseStack.yllapitoBucket,
     internalBucket: hassuDatabaseStack.internalBucket,
+    archiveBucket: hassuDatabaseStack.archiveBucket,
   });
   await hassuBackendStack.process().catch((e) => {
     console.log("Deployment of HassuBackendStack failed:", e);

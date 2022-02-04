@@ -3,6 +3,7 @@ import * as AWSXRay from "aws-xray-sdk";
 
 const config = {
   projektiTableName: process.env.TABLE_PROJEKTI,
+  projektiArchiveTableName: process.env.TABLE_PROJEKTI_ARCHIVE,
   cognitoURL: process.env.COGNITO_URL,
   velhoAuthURL: process.env.VELHO_AUTH_URL,
   velhoApiURL: process.env.VELHO_API_URL,
@@ -27,6 +28,7 @@ const config = {
   uploadBucketName: process.env.UPLOAD_BUCKET_NAME,
   yllapitoBucketName: process.env.YLLAPITO_BUCKET_NAME,
   internalBucketName: process.env.INTERNAL_BUCKET_NAME,
+  archiveBucketName: process.env.ARCHIVE_BUCKET_NAME,
 
   smtpKeyId: process.env.SMTP_KEY_ID,
   smtpSecret: process.env.SMTP_SECRET,

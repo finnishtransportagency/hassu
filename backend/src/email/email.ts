@@ -1,4 +1,3 @@
-/* tslint:disable:no-console */
 import * as nodemailer from "nodemailer";
 import { config } from "../config";
 import { log } from "../logger";
@@ -27,7 +26,7 @@ export async function sendEmail(options: EmailOptions) {
       ...options,
       to: config.emailsTo || options.to,
     });
-    console.log("Email lähetetty", messageInfo);
+    log.info("Email lähetetty", messageInfo);
   } catch (e) {
     log.error("Email lähetys epäonnistui", e);
   }
