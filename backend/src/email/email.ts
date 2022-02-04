@@ -18,7 +18,9 @@ const transporter = nodemailer.createTransport({
 export type EmailOptions = Pick<MailOptions, "to" | "subject" | "text" | "attachments">;
 
 export async function sendEmail(options: EmailOptions) {
-  if (!config.emailsOn) return;
+  if (config.emailsOn !== "true") {
+    return;
+  }
   try {
     const messageInfo = await transporter.sendMail({
       from: "noreply.hassu@vaylapilvi.fi",
