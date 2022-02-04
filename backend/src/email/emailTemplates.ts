@@ -19,7 +19,7 @@ const perustamisOtsikko = template`Valtion liikenneväylien suunnittelu: Uusi pr
 const perustamisTeksti = template`Valtion liikenneväylien suunnittelu -järjestelmään on tuotu Projektivelhosta projektisi:
 ${"velho.nimi"}
 Voit tarkastella projektia osoitteessa https://${"domain"}/yllapito/projekti/${"oid"}
-Saat tämän viestin, koska sinut on merkitty projektin vastuuhenkilöksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 const perustamisVastaanottajat = template`${"velho.vastuuhenkilonEmail"}`;
 
 export function createPerustamisEmail(projekti: DBProjekti): EmailOptions {
