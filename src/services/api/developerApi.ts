@@ -19,15 +19,27 @@ if (typeof window !== "undefined") {
   });
 }
 
+function storeValue(name: string, value: string) {
+  if (typeof window !== "undefined") {
+    localStorage.setItem(name, value);
+  }
+}
+
+function getValue(name: string) {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem(name);
+  }
+}
+
 function getParamOrDefault(params: URLSearchParams | undefined, name: string, defaultValue: string | undefined) {
   if (params) {
     if (params.has(name)) {
       const value = params.get(name) || "";
-      localStorage.setItem(name, value);
+      storeValue(name, value);
       return value;
     }
   }
-  const valueFromStorage = localStorage.getItem(name);
+  const valueFromStorage = getValue(name);
   if (!!valueFromStorage) {
     return valueFromStorage;
   }
@@ -36,16 +48,17 @@ function getParamOrDefault(params: URLSearchParams | undefined, name: string, de
 
 const links = [
   setContext((_, { headers }) => {
+    let params: URLSearchParams | undefined;
     if (typeof window !== "undefined") {
-      const params = window.location?.search ? new URLSearchParams(window.location.search) : undefined;
-      return {
-        headers: {
-          ...headers,
-          "x-hassudev-uid": getParamOrDefault(params, "x-hassudev-uid", process.env["x-hassudev-uid"]),
-          "x-hassudev-roles": getParamOrDefault(params, "x-hassudev-roles", process.env["x-hassudev-roles"]),
-        },
-      };
+      params = window.location?.search ? new URLSearchParams(window.location.search) : undefined;
     }
+    return {
+      headers: {
+        ...headers,
+        "x-hassudev-uid": getParamOrDefault(params, "x-hassudev-uid", process.env["x-hassudev-uid"]),
+        "x-hassudev-roles": getParamOrDefault(params, "x-hassudev-roles", process.env["x-hassudev-roles"]),
+      },
+    };
   }),
   createAuthLink({
     url: awsExports.aws_appsync_graphqlEndpoint,
