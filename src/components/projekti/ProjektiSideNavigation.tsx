@@ -4,7 +4,7 @@ import styles from "@styles/projekti/ProjektiSideNavigation.module.css";
 import classNames from "classnames";
 import { useRouter } from "next/router";
 import useProjekti from "src/hooks/useProjekti";
-import { Status } from "@services/api";
+import { AloitusKuulutusTila, Status } from "@services/api";
 
 interface Route {
   title: string;
@@ -30,7 +30,14 @@ export default function ProjektiSideNavigation(): ReactElement {
       href: oid && `/yllapito/projekti/${oid}/aloituskuulutus`,
       disabled: !projekti?.status || projekti?.status === Status.EI_JULKAISTU,
     },
-    { title: "Suunnitteluvaihe", href: oid && `/yllapito/projekti/${oid}/suunnittelu`, disabled: true },
+    {
+      title: "Suunnitteluvaihe",
+      href: oid && `/yllapito/projekti/${oid}/suunnittelu`,
+      disabled:
+        !projekti?.status ||
+        !projekti?.aloitusKuulutus?.tila ||
+        projekti?.aloitusKuulutus.tila === AloitusKuulutusTila.MUOKATTAVISSA,
+    },
     { title: "Nähtävilläolovaihe", href: oid && `/yllapito/projekti/${oid}/nahtavillaolo`, disabled: true },
   ];
   return (

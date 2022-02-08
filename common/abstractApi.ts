@@ -1,4 +1,5 @@
 import {
+  AloitusKuulutusTila,
   AsiakirjaTyyppi,
   EsikatseleAsiakirjaPDFQueryVariables,
   Kayttaja,
@@ -105,6 +106,11 @@ export abstract class AbstractApi {
     return await this.callYllapitoAPI(apiConfig.tallennaProjekti, {
       projekti: input,
     } as TallennaProjektiMutationVariables);
+  }
+
+  async muutaTila(oid: string, tila: AloitusKuulutusTila){
+    log.info("Muuta projektin " + oid + " tilaa", tila);
+    return AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA;
   }
 
   async getVelhoSuunnitelmasByName(nimi: string, requireExactMatch?: boolean): Promise<VelhoHakuTulos[]> {
