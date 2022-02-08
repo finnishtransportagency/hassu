@@ -89,5 +89,4 @@ export default function AloituskuulutusRO({ projekti }: Props): ReactElement {
       </div>
     </>
   );
-}
-0;
+};

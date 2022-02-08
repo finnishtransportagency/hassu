@@ -3,8 +3,6 @@ import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { useRouter } from "next/router";
 import React, { ReactElement, useEffect, useRef, useState } from "react";
 import useProjekti from "src/hooks/useProjekti";
-import * as Yup from "yup";
-import { SchemaOf } from "yup";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@components/button/Button";
@@ -24,8 +22,6 @@ import DatePicker from "@components/form/DatePicker";
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 import KuulutuksenYhteystiedot from "@components/projekti/aloituskuulutus/KuulutuksenYhteystiedot";
-import { kayttoOikeudetSchema } from "src/schemas/kayttoOikeudet";
-import { puhelinNumeroSchema } from "src/schemas/puhelinNumero";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import cloneDeep from "lodash/cloneDeep";
 import useSnackbars from "src/hooks/useSnackbars";
@@ -180,7 +176,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
     }
   };
 
-  const { showSuccessMessage, showErrorMessage, showInfoMessage } = useSnackbars();
+  const { showSuccessMessage, showErrorMessage } = useSnackbars();
 
   const getPaattymispaiva = async (value: string) => {
     try {
