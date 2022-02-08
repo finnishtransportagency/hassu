@@ -15,6 +15,11 @@ Object {
       "Nokia",
     ],
     "nimi": "Testiprojekti 1",
+    "tilaajaOrganisaatio": "Uudenmaan ELY-keskus",
+    "tyyppi": "TIE",
+    "vaylamuoto": Array [
+      "tie",
+    ],
   },
 }
 `;
@@ -34,6 +39,11 @@ Object {
       "Nokia",
     ],
     "nimi": "Testiprojekti 1",
+    "tilaajaOrganisaatio": "Uudenmaan ELY-keskus",
+    "tyyppi": "TIE",
+    "vaylamuoto": Array [
+      "tie",
+    ],
   },
 }
 `;

@@ -222,7 +222,7 @@ export class HassuBackendStack extends cdk.Stack {
     this.props.uploadBucket.grantPut(backendLambda);
     this.props.uploadBucket.grantReadWrite(backendLambda);
     this.props.yllapitoBucket.grantReadWrite(backendLambda);
-    this.props.internalBucket.grantRead(backendLambda);
+    this.props.internalBucket.grantReadWrite(backendLambda);
     return backendLambda;
   }
 

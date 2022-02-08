@@ -41,6 +41,7 @@ type Projekti {
   status: Status
   suunnittelustaVastaavaViranomainen: Viranomainen
   aloitusKuulutus: AloitusKuulutus
+  aloitusKuulutusJulkaisut: [AloitusKuulutusJulkaisu!]
   suunnitteluSopimus: SuunnitteluSopimus
   velho: Velho!
   kayttoOikeudet: [ProjektiKayttaja!]
@@ -55,6 +56,7 @@ type Projekti {
 
 type Velho {
   nimi: String!
+  tyyppi: ProjektiTyyppi
   kuvaus: String
   vaylamuoto: [String!]
   asiatunnusVayla: String
@@ -84,9 +86,7 @@ type Yhteystieto {
 }
 
 enum AloitusKuulutusTila {
-  MUOKATTAVISSA
   ODOTTAA_HYVAKSYNTAA
-  KORJATTAVANA
   HYVAKSYTTY
 }
 
@@ -98,6 +98,19 @@ type AloitusKuulutus {
   hankkeenKuvausSaame: String
   elyKeskus: String
   esitettavatYhteystiedot: [Yhteystieto]
+  palautettu: Boolean
+}
+
+type AloitusKuulutusJulkaisu {
+  kuulutusPaiva: String
+  siirtyySuunnitteluVaiheeseen: String
+  hankkeenKuvaus: String
+  hankkeenKuvausRuotsi: String
+  hankkeenKuvausSaame: String
+  elyKeskus: String
+  yhteystiedot: [Yhteystieto!]!
+  velho: Velho!
+  suunnitteluSopimus: SuunnitteluSopimus
   tila: AloitusKuulutusTila
 }
 

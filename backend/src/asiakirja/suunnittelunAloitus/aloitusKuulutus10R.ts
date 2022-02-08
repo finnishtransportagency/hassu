@@ -1,13 +1,13 @@
-import { DBProjekti } from "../../database/model/projekti";
 import { SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
+import { AloitusKuulutusJulkaisu } from "../../database/model/projekti";
 
 const header = "KUULUTUS SUUNNITTELUN ALOITTAMISESTA";
 
 export class AloitusKuulutus10R extends SuunnittelunAloitusPdf {
   private tietosuojaUrl = "https://www.vayla.fi/tietosuoja";
 
-  constructor(projekti: DBProjekti) {
-    super(projekti, header);
+  constructor(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu) {
+    super(aloitusKuulutusJulkaisu, header);
   }
 
   protected addDocumentElements() {
@@ -16,7 +16,7 @@ export class AloitusKuulutus10R extends SuunnittelunAloitusPdf {
         `Väylävirasto aloittaa otsikon mukaisen ${this.projektiTyyppi}n laatimisen tarpeellisine tutkimuksineen. `
       ),
 
-      this.paragraph(this.projekti.aloitusKuulutus?.hankkeenKuvaus || ""),
+      this.paragraph(this.aloitusKuulutusJulkaisu?.hankkeenKuvaus || ""),
 
       this.paragraph(
         `Väylävirasto on julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista. Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisemisesta. (ratalaki 95 §, HL 62 a §) `

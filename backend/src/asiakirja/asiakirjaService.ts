@@ -1,12 +1,12 @@
 import { AsiakirjaTyyppi, PDF, ProjektiTyyppi } from "../../../common/graphql/apiModel";
-import { DBProjekti } from "../database/model/projekti";
+import { AloitusKuulutusJulkaisu } from "../database/model/projekti";
 import { AloitusKuulutus10T } from "./suunnittelunAloitus/aloitusKuulutus10T";
 import { AloitusKuulutus10R } from "./suunnittelunAloitus/aloitusKuulutus10R";
 import { Ilmoitus12T } from "./suunnittelunAloitus/ilmoitus12T";
 import { Ilmoitus12R } from "./suunnittelunAloitus/ilmoitus12R";
 
 interface CreatePdfOptions {
-  projekti: DBProjekti;
+  aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu;
   asiakirjaTyyppi: AsiakirjaTyyppi;
 }
 
@@ -15,52 +15,48 @@ enum AsiakirjanMuoto {
   RATA,
 }
 
-function determineAsiakirjaMuoto(projekti: DBProjekti): AsiakirjanMuoto {
-  if (
-    projekti.tyyppi === ProjektiTyyppi.TIE ||
-    (projekti.tyyppi === ProjektiTyyppi.YLEINEN && projekti.velho?.vaylamuoto?.includes("tie"))
-  ) {
+function determineAsiakirjaMuoto(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu): AsiakirjanMuoto | null {
+  const tyyppi = aloitusKuulutusJulkaisu.velho.tyyppi;
+  const vaylamuoto = aloitusKuulutusJulkaisu.velho?.vaylamuoto;
+  if (tyyppi === ProjektiTyyppi.TIE || (tyyppi === ProjektiTyyppi.YLEINEN && vaylamuoto?.includes("tie"))) {
     return AsiakirjanMuoto.TIE;
-  } else if (
-    projekti.tyyppi === ProjektiTyyppi.RATA ||
-    (projekti.tyyppi === ProjektiTyyppi.YLEINEN && projekti.velho?.vaylamuoto?.includes("rata"))
-  ) {
+  } else if (tyyppi === ProjektiTyyppi.RATA || (tyyppi === ProjektiTyyppi.YLEINEN && vaylamuoto?.includes("rata"))) {
     return AsiakirjanMuoto.RATA;
   }
   return null;
 }
 
 export class AsiakirjaService {
-  createPdf({ asiakirjaTyyppi, projekti }: CreatePdfOptions): Promise<PDF> {
+  createPdf({ asiakirjaTyyppi, aloitusKuulutusJulkaisu }: CreatePdfOptions): Promise<PDF> {
     let pdf: Promise<PDF>;
-    const asiakirjanMuoto = determineAsiakirjaMuoto(projekti);
+    const asiakirjanMuoto = determineAsiakirjaMuoto(aloitusKuulutusJulkaisu);
 
     switch (asiakirjaTyyppi) {
       case AsiakirjaTyyppi.ALOITUSKUULUTUS:
         switch (asiakirjanMuoto) {
           case AsiakirjanMuoto.TIE:
-            pdf = new AloitusKuulutus10T(projekti).pdf;
+            pdf = new AloitusKuulutus10T(aloitusKuulutusJulkaisu).pdf;
             break;
           case AsiakirjanMuoto.RATA:
-            pdf = new AloitusKuulutus10R(projekti).pdf;
+            pdf = new AloitusKuulutus10R(aloitusKuulutusJulkaisu).pdf;
             break;
           default:
             throw new Error(
-              `Aloituskuulutuspohjaa ei pystytä päättelemään. tyyppi: '${projekti.tyyppi}', vaylamuoto: '${projekti.velho?.vaylamuoto}'`
+              `Aloituskuulutuspohjaa ei pystytä päättelemään. tyyppi: '${aloitusKuulutusJulkaisu.velho.tyyppi}', vaylamuoto: '${aloitusKuulutusJulkaisu.velho?.vaylamuoto}'`
             );
         }
         break;
       case AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA:
         switch (asiakirjanMuoto) {
           case AsiakirjanMuoto.TIE:
-            pdf = new Ilmoitus12T(projekti).pdf;
+            pdf = new Ilmoitus12T(aloitusKuulutusJulkaisu).pdf;
             break;
           case AsiakirjanMuoto.RATA:
-            pdf = new Ilmoitus12R(projekti).pdf;
+            pdf = new Ilmoitus12R(aloitusKuulutusJulkaisu).pdf;
             break;
           default:
             throw new Error(
-              `Ilmoituspohjaa ei pystytä päättelemään. tyyppi: '${projekti.tyyppi}', vaylamuoto: '${projekti.velho?.vaylamuoto}'`
+              `Ilmoituspohjaa ei pystytä päättelemään. tyyppi: '${aloitusKuulutusJulkaisu.velho.tyyppi}', vaylamuoto: '${aloitusKuulutusJulkaisu.velho?.vaylamuoto}'`
             );
         }
         break;

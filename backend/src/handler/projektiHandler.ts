@@ -2,7 +2,6 @@ import { projektiDatabase } from "../database/projektiDatabase";
 import { requirePermissionLuku, requirePermissionLuonti, requirePermissionMuokkaa, requireVaylaUser } from "../user";
 import { velho } from "../velho/velhoClient";
 import {
-  AloitusKuulutusTila,
   NykyinenKayttaja,
   Projekti,
   ProjektiRooli,
@@ -37,7 +36,7 @@ function applyStatus(projekti: Projekti, param: { saved?: boolean }) {
     try {
       perustiedotValidationSchema.validateSync(projekti);
       if (!projekti.aloitusKuulutus) {
-        projekti.aloitusKuulutus = { __typename: "AloitusKuulutus", tila: AloitusKuulutusTila.MUOKATTAVISSA };
+        projekti.aloitusKuulutus = { __typename: "AloitusKuulutus" };
       }
       projekti.status = Status.ALOITUSKUULUTUS;
     } catch (e) {
@@ -139,7 +138,7 @@ async function createProjektiFromVelho(oid: string, vaylaUser: NykyinenKayttaja,
  */
 async function handleFiles(input: TallennaProjektiInput) {
   const logo = input.suunnitteluSopimus?.logo;
-  if (logo) {
+  if (logo && input.suunnitteluSopimus) {
     input.suunnitteluSopimus.logo = await fileService.persistFileToProjekti({
       uploadedFileSource: logo,
       oid: input.oid,

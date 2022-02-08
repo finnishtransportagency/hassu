@@ -1,18 +1,19 @@
-import { DBProjekti } from "../../database/model/projekti";
 import { SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
+import { capitalizeAllWords } from "../../handler/asiakirjaAdapter";
+import { AloitusKuulutusJulkaisu } from "../../database/model/projekti";
 
 const header = "KUULUTUS SUUNNITTELUN ALOITTAMISESTA";
 
 export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
-  constructor(projekti: DBProjekti) {
-    super(projekti, header);
+  constructor(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu) {
+    super(aloitusKuulutusJulkaisu, header);
   }
 
   protected addDocumentElements() {
     return [
       this.paragraph(this.startOfPlanningPhrase),
 
-      this.paragraph(this.projekti.aloitusKuulutus?.hankkeenKuvaus || ""),
+      this.paragraph(this.aloitusKuulutusJulkaisu?.hankkeenKuvaus || ""),
 
       this.paragraph(
         `Kuulutus on julkaistu tietoverkossa ${this.tilaajaGenetiivi} verkkosivuilla ${this.kuulutusPaiva}. `
@@ -39,7 +40,7 @@ export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
       this.doc.struct("P", {}, [
         () => {
           this.doc.text(
-            `${this.projekti.velho?.tilaajaOrganisaatio} käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa `,
+            `${this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio} käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa `,
             { continued: true }
           );
         },
@@ -65,11 +66,11 @@ export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
   }
 
   private get kuuluttaja() {
-    const suunnitteluSopimus = this.projekti.suunnitteluSopimus;
+    const suunnitteluSopimus = this.aloitusKuulutusJulkaisu.suunnitteluSopimus;
     if (suunnitteluSopimus?.kunta) {
       return this.capitalize(suunnitteluSopimus.kunta);
     }
-    return this.projekti.velho?.tilaajaOrganisaatio || "Kuuluttaja";
+    return this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio || "Kuuluttaja";
   }
 
   private get tietosuojaUrl() {
@@ -77,17 +78,19 @@ export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
   }
 
   private get startOfPlanningPhrase() {
-    let phrase = "";
-    const suunnitteluSopimus = this.projekti.suunnitteluSopimus;
+    let phrase: string;
+    const suunnitteluSopimus = this.aloitusKuulutusJulkaisu.suunnitteluSopimus;
     if (suunnitteluSopimus) {
-      phrase = `${this.capitalize(this.projekti.suunnitteluSopimus?.kunta || "Kunta")}, sovittuaan asiasta ${
-        this.tilaajaGenetiivi
-      } kanssa, käynnistää ${this.projektiTyyppi}n laatimisen tarpeellisine tutkimuksineen. `;
+      phrase = `${this.capitalize(
+        this.aloitusKuulutusJulkaisu.suunnitteluSopimus?.kunta || "Kunta"
+      )}, sovittuaan asiasta ${this.tilaajaGenetiivi} kanssa, käynnistää ${
+        this.projektiTyyppi
+      }n laatimisen tarpeellisine tutkimuksineen. `;
     } else {
-      const tilaajaOrganisaatio = this.projekti.velho?.tilaajaOrganisaatio || "Tilaajaorganisaatio";
-      const kunnat = this.projekti.velho?.kunnat;
+      const tilaajaOrganisaatio = this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio || "Tilaajaorganisaatio";
+      const kunnat = this.aloitusKuulutusJulkaisu.velho?.kunnat;
       const organisaatiot = kunnat ? [tilaajaOrganisaatio, ...kunnat] : [tilaajaOrganisaatio];
-      const trimmattutOrganisaatiot = organisaatiot.map((organisaatio) => this.capitalizeAllWords(organisaatio.trim()));
+      const trimmattutOrganisaatiot = organisaatiot.map((organisaatio) => capitalizeAllWords(organisaatio.trim()));
       const viimeinenOrganisaatio = trimmattutOrganisaatiot.slice(-1);
       const muut = trimmattutOrganisaatiot.slice(0, -1);
       const aloittaa = muut.length > 0 ? "aloittavat" : "aloittaa";

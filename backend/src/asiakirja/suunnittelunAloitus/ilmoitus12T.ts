@@ -1,17 +1,17 @@
-import { DBProjekti } from "../../database/model/projekti";
 import { SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
+import { AloitusKuulutusJulkaisu } from "../../database/model/projekti";
 
 const header = "ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA";
 
 export class Ilmoitus12T extends SuunnittelunAloitusPdf {
-  constructor(projekti: DBProjekti) {
-    super(projekti, header);
+  constructor(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu) {
+    super(aloitusKuulutusJulkaisu, header);
   }
 
   protected addDocumentElements() {
     return [
       this.paragraph(
-        `${this.projekti.velho.tilaajaOrganisaatio} julkaisee tietoverkossaan liikennejärjestelmästä ja maanteistä annetun lain (503/2005) sekä hallintolain 62 a §:n mukaisesti kuulutuksen, joka koskee otsikossa mainitun ${this.projektiTyyppi}n suunnittelun ja maastotöiden aloittamista. ${this.projekti.velho?.tilaajaOrganisaatio} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä. `
+        `${this.aloitusKuulutusJulkaisu.velho.tilaajaOrganisaatio} julkaisee tietoverkossaan liikennejärjestelmästä ja maanteistä annetun lain (503/2005) sekä hallintolain 62 a §:n mukaisesti kuulutuksen, joka koskee otsikossa mainitun ${this.projektiTyyppi}n suunnittelun ja maastotöiden aloittamista. ${this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä. `
       ),
 
       this.doc.struct("P", {}, [

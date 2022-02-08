@@ -9,19 +9,20 @@ interface Props {
 
 export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
   const { t } = useTranslation("projekti");
+  const velho = projekti?.velho;
   const perustiedot = [
-    { header: "Asiatunnus", data: projekti?.velho?.asiatunnusELY },
+    { header: "Asiatunnus", data: velho?.asiatunnusELY },
     {
       header: "Vastaava viranomainen",
-      data: projekti?.velho?.tilaajaOrganisaatio,
+      data: velho?.tilaajaOrganisaatio,
     },
     {
       header: "Suunnitelman tyyppi",
-      data: projekti?.tyyppi && t(`projekti-tyyppi.${projekti?.tyyppi}`),
+      data: velho?.tyyppi && t(`projekti-tyyppi.${velho?.tyyppi}`),
     },
     {
       header: "Väylämuoto",
-      data: projekti?.velho?.vaylamuoto?.map((muoto) => t(`projekti-vayla-muoto.${muoto}`)).join(", "),
+      data: velho?.vaylamuoto?.map((muoto) => t(`projekti-vayla-muoto.${muoto}`)).join(", "),
     },
   ];
 
