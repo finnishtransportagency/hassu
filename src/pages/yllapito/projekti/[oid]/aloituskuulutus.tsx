@@ -140,11 +140,11 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
   const isIncorrectProjektiStatus = !projekti?.status || projekti?.status === Status.EI_JULKAISTU;
   const disableFormEdit =
+    !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden ||
     projektiHasErrors ||
     isLoadingProjekti ||
     isFormSubmitting ||
-    isIncorrectProjektiStatus ||
-    !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden;
+    isIncorrectProjektiStatus;
   const today = new Date().toISOString().split("T")[0];
   const pdfFormRef = useRef<HTMLFormElement | null>(null);
   const [formContext, setFormContext] = useState<Projekti | undefined>(undefined);

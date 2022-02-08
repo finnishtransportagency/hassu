@@ -11,7 +11,7 @@ import * as API from "../../../common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import { personSearch } from "../personSearch/personSearchClient";
-import { removeUndefinedFields } from "../util/objectUtil";
+import pickBy from "lodash/pickBy";
 
 export class ProjektiAdapter {
   public adaptProjekti(dbProjekti: DBProjekti): API.Projekti {
@@ -27,13 +27,16 @@ export class ProjektiAdapter {
     return removeUndefinedFields({
       __typename: "Projekti",
       tallennettu: !!dbProjekti.tallennettu,
-      kayttoOikeudet: KayttoOikeudetManager.adaptAPIKayttoOikeudet(dbProjekti.kayttoOikeudet),
+      kayttoOikeudet: KayttoOikeudetManager.adaptAPIKayttoOikeudet(kayttoOikeudet),
       tyyppi: velho?.tyyppi || dbProjekti.tyyppi, // remove usage of projekti.tyyppi after all data has been migrated to new format
       aloitusKuulutus: adaptAloitusKuulutus(aloitusKuulutus),
       suunnitteluSopimus: adaptSuunnitteluSopimus(suunnitteluSopimus),
       liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmat(liittyvatSuunnitelmat),
       aloitusKuulutusJulkaisut: adaptAloitusKuulutusJulkaisut(aloitusKuulutusJulkaisut),
-      velho,
+      velho: {
+        __typename: "Velho",
+        ...velho,
+      },
       ...fieldsToCopyAsIs,
     }) as API.Projekti;
   }
@@ -121,6 +124,10 @@ function adaptSuunnitteluSopimus(
   return suunnitteluSopimus as undefined | null;
 }
 
+function removeUndefinedFields(object: API.Projekti): Partial<API.Projekti> {
+  return pickBy(object, (value) => value !== undefined);
+}
+
 function adaptYhteystiedot(yhteystiedot: Yhteystieto[]): API.Yhteystieto[] {
   if (yhteystiedot) {
     return yhteystiedot.map((yt) => ({ __typename: "Yhteystieto", ...yt }));
@@ -137,8 +144,8 @@ function adaptAloitusKuulutusJulkaisut(
 
       return {
         __typename: "AloitusKuulutusJulkaisu",
-        yhteystiedot: adaptYhteystiedot(julkaisu.yhteystiedot),
-        velho: adaptVelho(julkaisu.velho),
+        yhteystiedot: adaptYhteystiedot(yhteystiedot),
+        velho: adaptVelho(velho),
         suunnitteluSopimus: adaptSuunnitteluSopimus(suunnitteluSopimus),
         ...fieldsToCopyAsIs,
       };

@@ -1,4 +1,3 @@
-/* tslint:disable:no-unused-expression */
 import * as chai from "chai";
 import { expect } from "chai";
 import { describe, it } from "mocha";
@@ -26,14 +25,14 @@ describe("VelhoClient", () => {
   it("should make call to authenticate to Velho", async () => {
     stubPost.resolves({ data: { access_token: "ABC123", expires_in: 3600 } });
     expect(await velho.authenticate()).to.be.equal("ABC123");
-    expect(stubPost).calledOnce;
+    expect(stubPost.calledOnce);
   });
 
   it("should use existing token", async () => {
     stubPost.resolves({ data: { access_token: "ABC123", expires_in: 3600 } });
     expect(await velho.authenticate()).to.be.equal("ABC123");
     expect(await velho.authenticate()).to.be.equal("ABC123");
-    expect(stubPost).calledOnce;
+    expect(stubPost.calledOnce);
   });
 
   it("should detect expired token and re-authenticate to Velho", async () => {
@@ -41,6 +40,6 @@ describe("VelhoClient", () => {
     expect(await velho.authenticate()).to.be.equal("ABC123");
     stubPost.resolves({ data: { access_token: "ABC123", expires_in: 3600 } });
     expect(await velho.authenticate()).to.be.equal("ABC123");
-    expect(stubPost).calledTwice;
+    expect(stubPost.calledTwice);
   });
 });

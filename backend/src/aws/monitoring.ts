@@ -2,6 +2,10 @@ import * as AWSXRay from "aws-xray-sdk";
 import { Subsegment } from "aws-xray-sdk";
 import { config } from "../config";
 
+import http from "http";
+
+import https from "https";
+
 const XRAY_ENV_NAME = "_X_AMZN_TRACE_ID";
 const TRACE_ID_REGEX = /^Root=(.+);Parent=(.+);/;
 
@@ -20,8 +24,8 @@ export const reportError = (error: Error) => {
 };
 
 export function setupLambdaMonitoring() {
-  AWSXRay.captureHTTPsGlobal(require("http"), true);
-  AWSXRay.captureHTTPsGlobal(require("https"), true);
+  AWSXRay.captureHTTPsGlobal(http, true);
+  AWSXRay.captureHTTPsGlobal(https, true);
   AWSXRay.capturePromise();
 
   const correlationId = getCorrelationId();

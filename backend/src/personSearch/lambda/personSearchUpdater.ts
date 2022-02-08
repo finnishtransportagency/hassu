@@ -4,9 +4,9 @@ import { log } from "../../logger";
 import { Kayttajas, Person } from "../kayttajas";
 import { wrapXrayAsync } from "../../aws/monitoring";
 
-const parseString = require("xml2js").parseStringPromise;
+import { parseStringPromise as parseString } from "xml2js";
 
-const axios = require("axios");
+import axios from "axios";
 
 export class PersonSearchUpdater {
   private readonly personSearchAccountTypes: string[];

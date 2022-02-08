@@ -13,10 +13,10 @@ import { log } from "../logger";
 import { Readable } from "stream";
 import { streamToString } from "../util/streamUtil";
 
-const NodeCache = require("node-cache");
+import NodeCache from "node-cache";
 
 export class S3Cache {
-  cache: typeof NodeCache;
+  cache: NodeCache;
 
   constructor() {
     this.cache = new NodeCache();
@@ -83,7 +83,7 @@ export class S3Cache {
           expired: expiresTime <= new Date().getTime(),
         };
       }
-    } catch (e) {
+    } catch (e: any) {
       // If the cached file does not exist at all, load it synchronously. This is meant to happen only once in deployed environments.
       if (e.name === "NoSuchKey") {
         return {

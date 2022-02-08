@@ -65,7 +65,7 @@ async function readStackOutputs(stackName: string, region: Region): Promise<Reco
         return params;
       }, {} as Record<string, string>) || {}
     );
-  } catch (e) {
+  } catch (e: any) {
     console.warn("warn:" + e.message);
     return {};
   }

@@ -2,7 +2,7 @@ import { config } from "../config";
 import { GetParameterCommand } from "@aws-sdk/client-ssm";
 import { getUSEast1ssmClient } from "../aws/clients";
 
-const AWS = require("aws-sdk");
+import * as AWS from "aws-sdk";
 
 export async function createSignedCookies(): Promise<string[]> {
   const cloudFrontPolicy = JSON.stringify({
@@ -40,7 +40,7 @@ async function getCloudFrontSigner() {
     }
     (globalThis as any).cloudFrontSigner = new AWS.CloudFront.Signer(
       publicKeyId.Parameter.Value,
-      config.frontendPrivateKey
+      config.frontendPrivateKey || ""
     );
   }
   return (globalThis as any).cloudFrontSigner;

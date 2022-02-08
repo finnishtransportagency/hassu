@@ -64,7 +64,7 @@ export const handlePdfRequest = async ({ req, res, asiakirjaTyyppi, virheviesti 
       res.setHeader("Content-Type", "text/plain;charset=UTF-8");
       res.send(virheviesti || "Asiakirjan luonti epäonnistui");
     }
-  } catch (e) {
+  } catch (e: any) {
     // tslint:disable-next-line:no-console
     console.error("Error generating pdf:", e, e.networkError?.result);
 

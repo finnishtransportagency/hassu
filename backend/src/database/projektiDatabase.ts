@@ -59,21 +59,19 @@ async function saveProjekti(dbProjekti: DBProjekti) {
   const ExpressionAttributeNames = {} as any;
   const ExpressionAttributeValues = {} as any;
   for (const property in dbProjekti) {
-    if (dbProjekti.hasOwnProperty(property)) {
-      if (readOnlyFields.indexOf(property) >= 0) {
-        continue;
-      }
-      const value = (dbProjekti as any)[property];
-      if (value === undefined) {
-        continue;
-      }
-      if (value === null) {
-        removeExpression.push(property);
-      } else {
-        setExpression.push(`#${property} = :${property}`);
-        ExpressionAttributeNames["#" + property] = property;
-        ExpressionAttributeValues[":" + property] = value;
-      }
+    if (readOnlyFields.indexOf(property) >= 0) {
+      continue;
+    }
+    const value = (dbProjekti as any)[property];
+    if (value === undefined) {
+      continue;
+    }
+    if (value === null) {
+      removeExpression.push(property);
+    } else {
+      setExpression.push(`#${property} = :${property}`);
+      ExpressionAttributeNames["#" + property] = property;
+      ExpressionAttributeValues[":" + property] = value;
     }
   }
 

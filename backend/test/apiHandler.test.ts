@@ -1,4 +1,3 @@
-import { assert } from "chai";
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { projektiDatabase } from "../src/database/projektiDatabase";
@@ -17,7 +16,7 @@ import mergeWith from "lodash/mergeWith";
 import { PersonSearchFixture } from "./personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../src/personSearch/kayttajas";
 
-const { expect } = require("chai");
+const { expect, assert } = require("chai");
 
 describe("apiHandler", () => {
   let userFixture: UserFixture;
@@ -119,8 +118,7 @@ describe("apiHandler", () => {
           saveProjektiStub.callsFake(async (dbProjekti: DBProjekti) => {
             log.info(mockedDatabaseProjekti);
             mockedDatabaseProjekti = mergeWith(mockedDatabaseProjekti, dbProjekti);
-            if (dbProjekti.kayttoOikeudet) {
-              // @ts-ignore
+            if (mockedDatabaseProjekti && dbProjekti.kayttoOikeudet) {
               mockedDatabaseProjekti.kayttoOikeudet = dbProjekti.kayttoOikeudet;
             }
             log.info(mockedDatabaseProjekti);

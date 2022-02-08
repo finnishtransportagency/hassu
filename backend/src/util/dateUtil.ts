@@ -1,6 +1,8 @@
 import dayjs, { Dayjs } from "dayjs";
 
-dayjs.extend(require("dayjs/plugin/customParseFormat"));
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
 
 const dateFormat = "YYYY-MM-DD";
 
