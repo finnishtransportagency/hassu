@@ -3,13 +3,16 @@ import React, { ReactElement } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { capitalize, replace } from "lodash";
 import Button from "@components/button/Button";
+import log from "loglevel";
 
 interface Props {
   projekti?: Projekti | null;
 }
 
 const muotoilePvm = (pvm: string | null | undefined) => {
-  if (!pvm) return;
+  if (!pvm) {
+    return;
+  }
   return new Date(pvm).toLocaleDateString("fi");
 };
 
@@ -65,10 +68,10 @@ export default function AloituskuulutusRO({ projekti }: Props): ReactElement {
         <p className="vayla-label">Esikatseltavat tiedostot</p>
         <p>Kuulutus ja ilmoitus ensisijaisella kielellä (suomi)</p>
         <div className="flex flex-col lg:flex-row gap-6">
-          <Button type="submit" onClick={() => console.log("esikatsele kuulutus")}>
+          <Button type="submit" onClick={() => log.log("esikatsele kuulutus")}>
             Kuulutuksen esikatselu
           </Button>
-          <Button type="submit" onClick={() => console.log("esikatsele ilmoitus")}>
+          <Button type="submit" onClick={() => log.log("esikatsele ilmoitus")}>
             Ilmoituksen esikatselu
           </Button>
         </div>
@@ -76,10 +79,10 @@ export default function AloituskuulutusRO({ projekti }: Props): ReactElement {
       <div className="content">
         <p>Kuulutus ja ilmoitus toissijaisella kielellä ({projekti?.lisakuulutuskieli})</p>
         <div className="flex flex-col lg:flex-row gap-6">
-          <Button type="submit" onClick={() => console.log("esikatsele kuulutus toisella kielellä")}>
+          <Button type="submit" onClick={() => log.log("esikatsele kuulutus toisella kielellä")}>
             Kuulutukset esikatselu
           </Button>
-          <Button type="submit" onClick={() => console.log("esikatsele ilmoitus toisella kielellä")}>
+          <Button type="submit" onClick={() => log.log("esikatsele ilmoitus toisella kielellä")}>
             Ilmoituksen esikatselu
           </Button>
         </div>

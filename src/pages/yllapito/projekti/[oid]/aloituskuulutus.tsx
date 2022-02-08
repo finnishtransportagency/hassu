@@ -299,7 +299,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
       </div>
       </>
       )}
-      {projekti?.aloitusKuulutus?.tila == AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA && (
+      {projekti?.aloitusKuulutus?.tila === AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA && (
         <FormProvider {...useFormReturn}>
           <AloituskuulutusRO projekti={projekti}></AloituskuulutusRO>
         </FormProvider>
