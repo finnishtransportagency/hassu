@@ -22,7 +22,7 @@ export class ProjektiListaus extends React.Component<ProjektiListausProps, Proje
       const result = await api.listProjektit();
       log.info("listProjektit:", result);
       return result;
-    } catch (e) {
+    } catch (e: any) {
       log.error("Error listing projektit", e);
       if (e.errors) {
         e.errors.map((err: any) => {

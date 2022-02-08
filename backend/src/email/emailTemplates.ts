@@ -5,9 +5,9 @@ import { EmailOptions } from "./email";
 
 function template(strs: TemplateStringsArray, ...exprs: string[]) {
   return function (obj: any) {
-    let result = [strs[0]];
+    const result = [strs[0]];
     exprs.forEach(function (key, i) {
-      let value = get(obj, key);
+      const value = get(obj, key);
       result.push(value, strs[i + 1]);
     });
     return result.join("");
@@ -23,11 +23,9 @@ Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
 const perustamisVastaanottajat = template`${"velho.vastuuhenkilonEmail"}`;
 
 export function createPerustamisEmail(projekti: DBProjekti): EmailOptions {
-  const emailOptions: EmailOptions = {
+  return {
     subject: perustamisOtsikko(projekti),
     text: perustamisTeksti({ domain: domain, ...projekti }),
     to: perustamisVastaanottajat(projekti),
   };
-
-  return emailOptions;
 }

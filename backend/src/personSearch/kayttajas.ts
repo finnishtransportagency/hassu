@@ -51,9 +51,7 @@ export class Kayttajas {
   asList(): Kayttaja[] {
     const list = [];
     for (const uid in this.personMap) {
-      if (this.personMap.hasOwnProperty(uid)) {
-        list.push(adaptPerson(uid, this.personMap[uid]));
-      }
+      list.push(adaptPerson(uid, this.personMap[uid]));
     }
     return list;
   }

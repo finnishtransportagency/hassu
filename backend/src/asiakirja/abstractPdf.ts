@@ -2,7 +2,7 @@ import { deburr } from "lodash";
 import log from "loglevel";
 import { PDF } from "../../../common/graphql/apiModel";
 
-const PDFDocument = require("pdfkit");
+import PDFDocument from "pdfkit";
 
 export abstract class AbstractPdf {
   private title: string;
@@ -62,7 +62,7 @@ export abstract class AbstractPdf {
       N: 3,
     });
     refColorProfile.write(colorProfile);
-    refColorProfile.end();
+    refColorProfile.end(undefined);
 
     // noinspection JSPrimitiveTypeWrapperUsage
     const refOutputIntent = doc.ref({
@@ -74,7 +74,7 @@ export abstract class AbstractPdf {
       OutputConditionIdentifier: new String("sRGB IEC61966-2.1"),
       DestOutputProfile: refColorProfile,
     });
-    refOutputIntent.end();
+    refOutputIntent.end(undefined);
 
     // Metadata defines document type.
     const metadata = xmp.trim();
@@ -85,11 +85,11 @@ export abstract class AbstractPdf {
     });
     refMetadata.compress = false;
     refMetadata.write(Buffer.from(metadata, "utf-8"));
-    refMetadata.end();
+    refMetadata.end(undefined);
 
     // Add manually created objects to catalog.
-    doc._root.data.OutputIntents = [refOutputIntent];
-    doc._root.data.Metadata = refMetadata;
+    (doc as any)._root.data.OutputIntents = [refOutputIntent];
+    (doc as any)._root.data.Metadata = refMetadata;
 
     // PDF/A standard requires fonts to be embedded.
     const arialFontFile = __dirname + "/files/arialmt.ttf";

@@ -35,8 +35,7 @@ function getLogger(tag: string) {
           const arg2 = inputArgs.shift();
           return method.apply(this, [arg2, arg1, ...inputArgs]);
         }
-        // @ts-ignore
-        return method.apply(this, inputArgs);
+        return method.apply(this, [inputArgs[0]]);
       },
     },
   });

@@ -7,6 +7,7 @@ import { NykyinenKayttaja, VaylaKayttajaTyyppi } from "../../../common/graphql/a
 import { DBProjekti } from "../database/model/projekti";
 import { createSignedCookies } from "./signedCookie";
 import { apiConfig } from "../../../common/abstractApi";
+import { JwtPayload } from "jsonwebtoken";
 
 function parseRoles(roles: string): string[] | undefined {
   return roles
@@ -45,7 +46,11 @@ const identifyLoggedInVaylaUser: IdentifyUserFunc = async (event: AppSyncResolve
   const headers = event.request?.headers;
 
   if (headers && headers["x-iam-accesstoken"] && config.cognitoURL) {
-    const jwt = await validateJwtToken(headers["x-iam-accesstoken"], headers["x-iam-data"] || "", config.cognitoURL);
+    const jwt = (await validateJwtToken(
+      headers["x-iam-accesstoken"],
+      headers["x-iam-data"] || "",
+      config.cognitoURL
+    )) as JwtPayload;
     if (jwt) {
       const roolit = parseRoles(jwt["custom:rooli"]);
       const user: NykyinenKayttaja = {

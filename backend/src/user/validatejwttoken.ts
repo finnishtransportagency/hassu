@@ -1,16 +1,15 @@
 import { log } from "../logger";
+import JWT, { JwtPayload } from "jsonwebtoken";
+import jwkToPem from "jwk-to-pem";
+import axios from "axios";
 
-const JWT = require("jsonwebtoken");
-const jwkToPem = require("jwk-to-pem");
-const Axios = require("axios");
-
-let cachedKeys: any = null;
+let cachedKeys: Record<string, string>;
 
 // Fetch JWK's from Cognito or cache
 const getPublicKeys = async (issuerUrl: string) => {
   if (!cachedKeys) {
     cachedKeys = {};
-    const publicKeys = await Axios.default.get(issuerUrl + "/.well-known/jwks.json");
+    const publicKeys = await axios.get(issuerUrl + "/.well-known/jwks.json");
     for (const key of publicKeys.data.keys) {
       cachedKeys[key.kid] = jwkToPem(key);
     }
@@ -20,16 +19,20 @@ const getPublicKeys = async (issuerUrl: string) => {
   }
 };
 
-const validateJwtToken = async (token: string | undefined, dataToken: string, issuer: string) => {
+const validateJwtToken = async (
+  token: string | undefined,
+  dataToken: string,
+  issuer: string
+): Promise<JwtPayload | undefined> => {
   if (!token) {
     log.debug("IAM JWT Token missing");
-    return false;
+    return;
   }
   // Split token into parts
   const tokenParts = token.split(".");
   if (tokenParts.length < 2) {
     log.error("Invalid token");
-    return false;
+    return;
   }
 
   // Parse header & payload from token parts
@@ -41,24 +44,24 @@ const validateJwtToken = async (token: string | undefined, dataToken: string, is
   const publicKey = publicKeys[tokenHeader.kid];
   if (!publicKey) {
     log.log("Public key not found");
-    return false;
+    return;
   }
 
   // Verify token
-  const result = JWT.verify(token, publicKey, { issuer });
+  const result = JWT.verify(token, publicKey, { issuer }) as JwtPayload;
   if (!result) {
     log.error("Failed to verify JWT");
-    return false;
+    return;
   }
 
   // Check use access
   if (result.token_use !== "access") {
     log.error("Invalid token use");
-    return false;
+    return;
   }
 
   // Return decoded data token
-  return JWT.decode(dataToken.replace(/=/g, ""));
+  return JWT.decode(dataToken.replace(/=/g, "")) as JwtPayload;
 };
 
 export { validateJwtToken };

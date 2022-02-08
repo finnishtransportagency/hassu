@@ -2,7 +2,7 @@ import { DBVaylaUser } from "../database/model/projekti";
 import { Kayttaja } from "../../../common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
 import { Person } from "./kayttajas";
-import { removeUndefinedFields } from "../util/objectUtil";
+import pickBy from "lodash/pickBy";
 
 export function mergeKayttaja(user: Partial<DBVaylaUser>, account: Kayttaja) {
   const { organisaatio, email } = account;
@@ -28,4 +28,8 @@ export function adaptPerson(uid: string, person: Person): Kayttaja {
     uid,
     vaylaKayttajaTyyppi: person.vaylaKayttajaTyyppi,
   }) as Kayttaja;
+}
+
+function removeUndefinedFields(object: Kayttaja): Partial<Kayttaja> {
+  return pickBy(object, (value) => value !== undefined);
 }

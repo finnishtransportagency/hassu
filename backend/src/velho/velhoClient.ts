@@ -30,7 +30,7 @@ axios.interceptors.request.use((request: AxiosRequestConfig) => {
 });
 
 function stripTooLongLogs(response: AxiosResponse) {
-  let data: string = `${response.data}`;
+  let data = `${response.data}`;
   if (data?.length > 1000) {
     data = data.slice(0, 1000) + "...";
   }

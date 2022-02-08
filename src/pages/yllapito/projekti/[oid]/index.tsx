@@ -51,7 +51,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
 
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
   const disableFormEdit =
-    projektiHasErrors || isLoadingProjekti || formIsSubmitting || !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden;
+    !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden || projektiHasErrors || isLoadingProjekti || formIsSubmitting;
   const [formContext, setFormContext] = useState<Projekti | undefined>(undefined);
 
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
@@ -106,7 +106,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
       showSuccessMessage("Tallennus onnistui!");
     } catch (e) {
       log.log("OnSubmit Error", e);
-      showErrorMessage("Tallennuksessa tapahtui virhe!")
+      showErrorMessage("Tallennuksessa tapahtui virhe!");
     }
     setFormIsSubmitting(false);
   };

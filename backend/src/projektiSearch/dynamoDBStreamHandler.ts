@@ -1,5 +1,5 @@
 import { log } from "../logger";
-import { DynamoDBStreamEvent } from "aws-lambda/trigger/dynamodb-stream";
+import { DynamoDBRecord, DynamoDBStreamEvent } from "aws-lambda/trigger/dynamodb-stream";
 import DynamoDB from "aws-sdk/clients/dynamodb";
 import { DBProjekti } from "../database/model/projekti";
 import { projektiSearchService } from "./projektiSearchService";
@@ -7,6 +7,26 @@ import { setupLambdaMonitoring, setupLambdaMonitoringMetaData } from "../aws/mon
 import * as AWSXRay from "aws-xray-sdk";
 
 const parse = DynamoDB.Converter.unmarshall;
+
+async function handleUpdate(record: DynamoDBRecord) {
+  if (record.dynamodb?.NewImage) {
+    const projekti = parse(record.dynamodb.NewImage) as DBProjekti;
+    log.info(`${record.eventName}`, { projekti });
+    await projektiSearchService.indexProjekti(projekti);
+  } else {
+    log.error("No DynamoDB record to update");
+  }
+}
+
+async function handleRemove(record: DynamoDBRecord) {
+  if (record.dynamodb?.Keys?.oid.S) {
+    const oid: string = record.dynamodb.Keys.oid.S;
+    log.info("REMOVE", { oid });
+    await projektiSearchService.removeProjekti(oid);
+  } else {
+    log.error("No DynamoDB key to remove");
+  }
+}
 
 export const handleDynamoDBEvents = async (event: DynamoDBStreamEvent) => {
   setupLambdaMonitoring();
@@ -22,17 +42,10 @@ export const handleDynamoDBEvents = async (event: DynamoDBStreamEvent) => {
           switch (record.eventName) {
             case "INSERT":
             case "MODIFY":
-              // @ts-ignore
-              const projekti = parse(record.dynamodb.NewImage) as DBProjekti;
-              log.info(record.eventName, { projekti });
-              await projektiSearchService.indexProjekti(projekti);
+              await handleUpdate(record);
               break;
             case "REMOVE":
-              // @ts-ignore
-              const oid: string = record.dynamodb.Keys.oid.S;
-              log.info("REMOVE", { oid });
-              await projektiSearchService.removeProjekti(oid);
-              break;
+              await handleRemove(record);
           }
         }
       })();

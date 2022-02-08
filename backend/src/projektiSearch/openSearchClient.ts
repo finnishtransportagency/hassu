@@ -1,18 +1,19 @@
 import { config } from "../config";
 import { log } from "../logger";
 
-const { HttpRequest } = require("@aws-sdk/protocol-http");
-const { defaultProvider } = require("@aws-sdk/credential-provider-node");
-const { SignatureV4 } = require("@aws-sdk/signature-v4");
-const { NodeHttpHandler } = require("@aws-sdk/node-http-handler");
-const { Sha256 } = require("@aws-crypto/sha256-browser");
+import { defaultProvider } from "@aws-sdk/credential-provider-node";
+import { SignatureV4 } from "@aws-sdk/signature-v4";
+import { NodeHttpHandler } from "@aws-sdk/node-http-handler";
+import { Sha256 } from "@aws-crypto/sha256-browser";
+import { HttpRequest as IHttpRequest } from "@aws-sdk/types";
+import { HttpRequest } from "@aws-sdk/protocol-http";
 
 const region = process.env.AWS_REGION;
 const domain = config.searchDomain;
 const index = "projekti";
 const type = "_doc";
 
-async function sendRequest(request: typeof HttpRequest): Promise<any> {
+async function sendRequest(request: HttpRequest): Promise<any> {
   // Sign the request
   const signer = new SignatureV4({
     credentials: defaultProvider(),
@@ -20,11 +21,12 @@ async function sendRequest(request: typeof HttpRequest): Promise<any> {
     service: "es",
     sha256: Sha256,
   });
-  const signedRequest = await signer.sign(request);
+  const signedRequest: IHttpRequest = await signer.sign(request);
 
   // Send the request
   const client = new NodeHttpHandler();
-  const { response } = await client.handle(signedRequest);
+
+  const { response } = await client.handle(signedRequest as HttpRequest);
   let responseBody = "";
   return new Promise<any>((resolve) => {
     response.body.on("data", (chunk) => {

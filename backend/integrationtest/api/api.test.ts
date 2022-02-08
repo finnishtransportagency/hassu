@@ -1,4 +1,3 @@
-/* tslint:disable:no-unused-expression */
 import { describe, it } from "mocha";
 import { runAsVaylaUser } from "../util/users";
 import { api } from "./apiClient";
@@ -21,6 +20,7 @@ import { localstackS3Client } from "../util/s3Util";
 import { projektiArchive } from "../../src/archive/projektiArchiveService";
 import { s3Cache } from "../../src/cache/s3Cache";
 import { PERSON_SEARCH_CACHE_KEY } from "../../src/personSearch/personSearchClient";
+import { fail } from "assert";
 
 const { expect } = require("chai");
 const sandbox = sinon.createSandbox();

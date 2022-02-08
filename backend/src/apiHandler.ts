@@ -23,7 +23,7 @@ import { getCorrelationId, setupLambdaMonitoring, setupLambdaMonitoringMetaData 
 import { calculateEndDate } from "./endDateCalculator/endDateCalculatorHandler";
 
 type AppSyncEventArguments =
-  | {}
+  | unknown
   | LataaProjektiQueryVariables
   | ListaaVelhoProjektitQueryVariables
   | TallennaProjektiInput;
@@ -73,7 +73,7 @@ export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArgume
         await identifyUser(event);
         const data = await executeOperation(event);
         return { data, correlationId: getCorrelationId() } as LambdaResult;
-      } catch (e) {
+      } catch (e: any) {
         log.error(e);
         e.message = JSON.stringify({
           message: e.message,
