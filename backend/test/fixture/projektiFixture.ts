@@ -35,12 +35,12 @@ export class ProjektiFixture {
     velho: {
       __typename: "Velho",
       nimi: this.PROJEKTI1_NIMI,
+      tyyppi: ProjektiTyyppi.TIE,
     },
     muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
     status: Status.EI_JULKAISTU,
     tallennettu: false,
     kayttoOikeudet: [ProjektiFixture.pekkaProjariProjektiKayttaja],
-    tyyppi: ProjektiTyyppi.TIE,
     lisakuulutuskieli: "ruotsi",
     euRahoitus: false,
     liittyvatSuunnitelmat: [
@@ -56,10 +56,10 @@ export class ProjektiFixture {
     oid: this.PROJEKTI1_OID,
     velho: {
       nimi: this.PROJEKTI1_NIMI,
+      tyyppi: ProjektiTyyppi.TIE,
     },
     muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
     kayttoOikeudet: [],
-    tyyppi: ProjektiTyyppi.TIE,
   };
 
   dbProjekti1: DBProjekti = {
@@ -77,7 +77,10 @@ export class ProjektiFixture {
     oid: this.PROJEKTI1_OID,
     velho: {
       nimi: this.PROJEKTI1_NIMI,
+      tyyppi: ProjektiTyyppi.TIE,
+      tilaajaOrganisaatio: "Uudenmaan ELY-keskus",
       kunnat: ["Tampere", "Nokia"],
+      vaylamuoto: ["tie"],
     },
     muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
     suunnitteluSopimus: {
@@ -96,7 +99,6 @@ export class ProjektiFixture {
       elyKeskus: "Pirkanmaa",
       esitettavatYhteystiedot: [
         {
-          __typename: "Yhteystieto",
           etunimi: "Marko",
           sukunimi: "Koi",
           sahkoposti: "markku.koi@koi.com",

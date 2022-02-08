@@ -140,7 +140,7 @@ describe("Api", () => {
 
     // Generate Aloituskuulutus PDF
     const pdf = await api.lataaAsiakirjaPDF(oid, AsiakirjaTyyppi.ALOITUSKUULUTUS);
-    expect(pdf.nimi).to.be.equal("aloituskuulutus.pdf");
+    expect(pdf.nimi).to.include(".pdf");
     expect(pdf.sisalto).not.to.be.empty;
     expect(pdf.sisalto.length).to.be.greaterThan(50000);
     fs.mkdirSync(".report", { recursive: true });

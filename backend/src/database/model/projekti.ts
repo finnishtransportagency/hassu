@@ -1,4 +1,4 @@
-import { ProjektiRooli, ProjektiTyyppi, Viranomainen, Yhteystieto } from "../../../../common/graphql/apiModel";
+import { AloitusKuulutusTila, ProjektiRooli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
 
 export type Kuulutus = {
   kuulutusPaiva?: string;
@@ -31,6 +31,27 @@ export type AloitusKuulutus = {
   esitettavatYhteystiedot?: Yhteystieto[] | null;
 };
 
+export type AloitusKuulutusJulkaisu = {
+  kuulutusPaiva?: string | null;
+  siirtyySuunnitteluVaiheeseen?: string | null;
+  hankkeenKuvaus?: string | null;
+  hankkeenKuvausRuotsi?: string | null;
+  hankkeenKuvausSaame?: string | null;
+  elyKeskus?: string | null;
+  yhteystiedot: Yhteystieto[];
+  velho: Velho;
+  suunnitteluSopimus?: SuunnitteluSopimus | null;
+  tila?: AloitusKuulutusTila | null;
+};
+
+export type Yhteystieto = {
+  etunimi: string;
+  sukunimi: string;
+  organisaatio: string;
+  puhelinnumero: string;
+  sahkoposti: string;
+};
+
 export type SuunnitteluSopimus = {
   kunta: string;
   logo?: string;
@@ -47,6 +68,7 @@ export type Suunnitelma = {
 
 export type Velho = {
   nimi: string;
+  tyyppi?: ProjektiTyyppi | null;
   kuvaus?: string | null;
   vaylamuoto?: string[] | null;
   asiatunnusVayla?: string | null;
@@ -66,11 +88,15 @@ export type DBProjekti = {
   oid: string;
   muistiinpano?: string | null;
   vaihe?: string | null;
+  /**
+   * @deprecated velho.tyyppi is the correct one
+   */
   tyyppi?: ProjektiTyyppi | null;
   suunnittelustaVastaavaViranomainen?: Viranomainen | null;
   lisakuulutuskieli?: string | null;
   euRahoitus?: boolean | null;
   aloitusKuulutus?: AloitusKuulutus | null;
+  aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null;
   suunnitteluSopimus?: SuunnitteluSopimus | null;
   velho?: Velho | null;
   liittyvatSuunnitelmat?: Suunnitelma[] | null;

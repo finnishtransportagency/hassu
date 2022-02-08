@@ -28,6 +28,7 @@ Object {
   "tyyppi": "TIE",
   "velho": Object {
     "nimi": "Testiprojekti 1",
+    "tyyppi": "TIE",
   },
 }
 `;
@@ -84,9 +85,9 @@ Array [
     "muistiinpano": "Testiprojekti 1:n muistiinpano",
     "oid": "1",
     "tallennettu": true,
-    "tyyppi": "TIE",
     "velho": Object {
       "nimi": "Testiprojekti 1",
+      "tyyppi": "TIE",
     },
   },
 ]
@@ -126,6 +127,7 @@ Array [
     "tyyppi": "TIE",
     "velho": Object {
       "nimi": "Testiprojekti 1",
+      "tyyppi": "TIE",
     },
   },
 ]
@@ -181,6 +183,7 @@ Array [
     "tyyppi": "TIE",
     "velho": Object {
       "nimi": "Testiprojekti 1",
+      "tyyppi": "TIE",
     },
   },
 ]
@@ -255,6 +258,7 @@ Array [
     "tyyppi": "TIE",
     "velho": Object {
       "nimi": "Testiprojekti 1",
+      "tyyppi": "TIE",
     },
   },
 ]
@@ -302,7 +306,6 @@ Array [
     "__typename": "Projekti",
     "aloitusKuulutus": Object {
       "__typename": "AloitusKuulutus",
-      "tila": "MUOKATTAVISSA",
     },
     "euRahoitus": false,
     "kayttoOikeudet": Array [
@@ -335,6 +338,7 @@ Array [
     "tyyppi": "TIE",
     "velho": Object {
       "nimi": "Testiprojekti 1",
+      "tyyppi": "TIE",
     },
   },
 ]

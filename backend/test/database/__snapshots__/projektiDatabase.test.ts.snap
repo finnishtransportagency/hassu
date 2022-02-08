@@ -17,7 +17,6 @@ Object {
       "elyKeskus": "Pirkanmaa",
       "esitettavatYhteystiedot": Array [
         Object {
-          "__typename": "Yhteystieto",
           "etunimi": "Marko",
           "organisaatio": "Kajaani",
           "puhelinnumero": "0293121213",
@@ -64,6 +63,11 @@ Object {
         "Nokia",
       ],
       "nimi": "Testiprojekti 1",
+      "tilaajaOrganisaatio": "Uudenmaan ELY-keskus",
+      "tyyppi": "TIE",
+      "vaylamuoto": Array [
+        "tie",
+      ],
     },
   },
   "Key": Object {

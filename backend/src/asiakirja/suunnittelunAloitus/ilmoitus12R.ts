@@ -1,12 +1,13 @@
-import { DBProjekti } from "../../database/model/projekti";
 import { SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
+import { AloitusKuulutusJulkaisu } from "../../database/model/projekti";
 
 const header = "ILMOITUS VÄYLÄVIRASTON KUULUTUKSESTA";
 
 export class Ilmoitus12R extends SuunnittelunAloitusPdf {
   private kuulutusOsoite = "https://www.vayla.fi/kuulutukset";
-  constructor(projekti: DBProjekti) {
-    super(projekti, header);
+
+  constructor(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu) {
+    super(aloitusKuulutusJulkaisu, header);
   }
 
   protected addDocumentElements() {

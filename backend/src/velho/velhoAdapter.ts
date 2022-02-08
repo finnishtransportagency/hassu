@@ -83,11 +83,13 @@ export function adaptSearchResults(searchResults: ProjektiSearchResult[], kaytta
 }
 
 export function adaptProjekti(data: ProjektiProjekti): { projekti: DBProjekti; vastuuhenkilo: string } {
+  const projektiTyyppi = getProjektiTyyppi(data.ominaisuudet.vaihe as any);
   const projekti: DBProjekti = {
     oid: "" + data.oid,
-    tyyppi: getProjektiTyyppi(data.ominaisuudet.vaihe as any),
+    tyyppi: projektiTyyppi,
     velho: {
       nimi: data.ominaisuudet.nimi,
+      tyyppi: projektiTyyppi,
       vaylamuoto: adaptVaylamuoto(data.ominaisuudet.vaylamuoto),
       tilaajaOrganisaatio: metadata.organisaatiot[`${data.ominaisuudet.tilaajaorganisaatio}`],
       linkki: data.ominaisuudet.linkki,

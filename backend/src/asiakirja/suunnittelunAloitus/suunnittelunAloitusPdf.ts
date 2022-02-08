@@ -1,20 +1,21 @@
 import log from "loglevel";
-import { ProjektiTyyppi, Yhteystieto } from "../../../../common/graphql/apiModel";
-import { DBProjekti } from "../../database/model/projekti";
+import { ProjektiTyyppi } from "../../../../common/graphql/apiModel";
+import { AloitusKuulutusJulkaisu, Yhteystieto } from "../../database/model/projekti";
 import { AbstractPdf } from "../abstractPdf";
+import { capitalizeAllWords } from "../../handler/asiakirjaAdapter";
 
 export abstract class SuunnittelunAloitusPdf extends AbstractPdf {
-  protected projekti: DBProjekti;
   protected header: string;
+  protected aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu;
 
-  constructor(projekti: DBProjekti, header: string) {
-    super(header + "; " + projekti?.velho.nimi);
+  constructor(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu, header: string) {
+    super(header + "; " + aloitusKuulutusJulkaisu?.velho.nimi);
     this.header = header;
-    this.projekti = projekti;
+    this.aloitusKuulutusJulkaisu = aloitusKuulutusJulkaisu;
   }
 
   protected get isVaylaTilaaja() {
-    return this.projekti.velho.tilaajaOrganisaatio === "Väylävirasto";
+    return this.aloitusKuulutusJulkaisu.velho.tilaajaOrganisaatio === "Väylävirasto";
   }
 
   protected addContent() {
@@ -33,7 +34,7 @@ export abstract class SuunnittelunAloitusPdf extends AbstractPdf {
 
   protected get projektiTyyppi() {
     let tyyppi = "";
-    switch (this.projekti.tyyppi) {
+    switch (this.aloitusKuulutusJulkaisu.velho.tyyppi) {
       case ProjektiTyyppi.TIE:
         tyyppi = "tiesuunnitelma";
         break;
@@ -49,7 +50,7 @@ export abstract class SuunnittelunAloitusPdf extends AbstractPdf {
 
   protected get yhteystiedot() {
     const yt: Yhteystieto[] = [];
-    const suunnitteluSopimus = this.projekti.suunnitteluSopimus;
+    const suunnitteluSopimus = this.aloitusKuulutusJulkaisu.suunnitteluSopimus;
     if (suunnitteluSopimus) {
       const { email, puhelinnumero, sukunimi, etunimi, kunta } = suunnitteluSopimus;
       yt.push({
@@ -58,53 +59,31 @@ export abstract class SuunnittelunAloitusPdf extends AbstractPdf {
         puhelinnumero,
         sahkoposti: email,
         organisaatio: kunta,
-        __typename: "Yhteystieto",
       });
     }
-    this.projekti.kayttoOikeudet
-      .filter(({ esitetaanKuulutuksessa }) => !!esitetaanKuulutuksessa)
-      .forEach((oikeus) => {
-        const [sukunimi, etunimi] = oikeus.nimi.split(/, /g);
-        yt.push({
-          etunimi,
-          sukunimi,
-          puhelinnumero: oikeus.puhelinnumero,
-          sahkoposti: oikeus.email,
-          organisaatio: oikeus.organisaatio,
-          __typename: "Yhteystieto",
-        });
-      });
-    if (this.projekti.aloitusKuulutus?.esitettavatYhteystiedot) {
-      this.projekti.aloitusKuulutus?.esitettavatYhteystiedot.forEach((yhteystieto) => {
-        yt.push(yhteystieto);
-      });
-    }
-    return yt.map(({ sukunimi, etunimi, organisaatio, ...rest }) => ({
-      etunimi: this.capitalizeAllWords(etunimi),
-      sukunimi: this.capitalizeAllWords(sukunimi),
-      organisaatio: this.capitalizeAllWords(organisaatio),
+    return yt.concat(this.aloitusKuulutusJulkaisu.yhteystiedot).map(({ sukunimi, etunimi, organisaatio, ...rest }) => ({
+      etunimi: capitalizeAllWords(etunimi),
+      sukunimi: capitalizeAllWords(sukunimi),
+      organisaatio: capitalizeAllWords(organisaatio),
       ...rest,
     }));
   }
 
   protected get moreInfoElements(): PDFKit.PDFStructureElementChild[] {
-    const structureElements = this.yhteystiedot.map(
-      ({ organisaatio, etunimi, sukunimi, puhelinnumero, sahkoposti }) => {
-        const element: PDFKit.PDFStructureElementChild = () => {
-          const noSpamSahkoposti = sahkoposti.replace(/@/g, "(at)");
-          this.doc
-            .text(`${organisaatio}, ${etunimi} ${sukunimi}, puh. ${puhelinnumero}, ${noSpamSahkoposti} `)
-            .moveDown();
-        };
-        return element;
-      }
-    );
-    return structureElements;
+    return this.yhteystiedot.map(({ organisaatio, etunimi, sukunimi, puhelinnumero, sahkoposti }) => {
+      const element: PDFKit.PDFStructureElementChild = () => {
+        const noSpamSahkoposti = sahkoposti.replace(/@/g, "(at)");
+        this.doc
+          .text(`${organisaatio}, ${etunimi} ${sukunimi}, puh. ${puhelinnumero}, ${noSpamSahkoposti} `)
+          .moveDown();
+      };
+      return element;
+    });
   }
 
   protected get kuulutusPaiva() {
-    return this.projekti.aloitusKuulutus?.kuulutusPaiva
-      ? new Date(this.projekti.aloitusKuulutus?.kuulutusPaiva).toLocaleDateString("fi")
+    return this.aloitusKuulutusJulkaisu?.kuulutusPaiva
+      ? new Date(this.aloitusKuulutusJulkaisu?.kuulutusPaiva).toLocaleDateString("fi")
       : "DD.MM.YYYY";
   }
 
@@ -134,17 +113,18 @@ export abstract class SuunnittelunAloitusPdf extends AbstractPdf {
 
   private get titleElement() {
     return this.doc.struct("H2", {}, () => {
-      const parts = [this.projekti.velho?.nimi];
+      const parts = [this.aloitusKuulutusJulkaisu.velho?.nimi];
       parts.push(this.projektiTyyppi);
       this.doc.text(parts.join(", ")).font("ArialMT").moveDown();
     });
   }
 
   protected get tilaajaGenetiivi() {
-    return this.projekti.velho?.tilaajaOrganisaatio
-      ? this.projekti.velho?.tilaajaOrganisaatio === "Väylävirasto"
+    const tilaajaOrganisaatio = this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio;
+    return tilaajaOrganisaatio
+      ? tilaajaOrganisaatio === "Väylävirasto"
         ? "Väyläviraston"
-        : this.projekti.velho?.tilaajaOrganisaatio?.slice(0, -1) + "ksen"
+        : tilaajaOrganisaatio?.slice(0, -1) + "ksen"
       : "Tilaajaorganisaation";
   }
 }

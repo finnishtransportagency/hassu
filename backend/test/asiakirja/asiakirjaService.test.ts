@@ -1,30 +1,20 @@
 /* tslint:disable:only-arrow-functions */
 import { describe, it } from "mocha";
 import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
-import { AsiakirjaTyyppi, ProjektiTyyppi } from "../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi } from "../../../common/graphql/apiModel";
 import fs from "fs";
+import { asiakirjaAdapter } from "../../src/handler/asiakirjaAdapter";
+import { ProjektiFixture } from "../fixture/projektiFixture";
 
 const { expect } = require("chai");
 
 describe("asiakirjaService", async () => {
   it("should generate pdf succesfully", async () => {
+    const projekti = new ProjektiFixture().dbProjekti1;
+    const aloitusKuulutusJulkaisu = asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projekti);
+    expect(aloitusKuulutusJulkaisu).toMatchSnapshot();
     const pdf = await new AsiakirjaService().createPdf({
-      projekti: {
-        tyyppi: ProjektiTyyppi.TIE,
-        velho: {
-          nimi: "Valtatie 11 parantaminen välillä Murhasaari–Mustikkakangas",
-          kunnat: ["Nokia"],
-        },
-        oid: "123",
-        aloitusKuulutus: {
-          elyKeskus: "Pirkanmaan",
-          kuulutusPaiva: "2022-01-01",
-          hankkeenKuvaus:
-            "Tiesuunnitelmassa valtatieosuudelle suunnitellaan keskikaiteellinen ohituskaista ja eritasoliittymä. Niiden lisäksi suunnitelmaan sisältyy yksityistiejärjestelyitä. Ohituskaistaosuudelta tiealuetta levennetään, suljetaan liittymiä ja rakennetaan riista- aitaa. Suunnitteluratkaisut parantavat valtatieliikenteen sujuvuutta ja liikenneturvallisuutta.\n\n" +
-            "Kuulutus on julkaistu tietoverkossa ELY- keskuksen verkkosivuilla 21.10.2020 https://www.ely-keskus.fi/web/ely/kuulutukset.",
-        },
-        kayttoOikeudet: [],
-      },
+      aloitusKuulutusJulkaisu: aloitusKuulutusJulkaisu!,
       asiakirjaTyyppi: AsiakirjaTyyppi.ALOITUSKUULUTUS,
     });
     expect(pdf.sisalto.length).to.be.greaterThan(50000);
