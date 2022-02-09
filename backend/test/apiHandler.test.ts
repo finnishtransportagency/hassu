@@ -8,8 +8,15 @@ import { velho } from "../src/velho/velhoClient";
 import { api } from "../integrationtest/api/apiClient";
 import { personSearch } from "../src/personSearch/personSearchClient";
 import { userService } from "../src/user";
-import { Projekti, ProjektiRooli, TallennaProjektiInput } from "../../common/graphql/apiModel";
-import { DBProjekti } from "../src/database/model/projekti";
+import {
+  AloitusKuulutusTila,
+  Projekti,
+  ProjektiRooli,
+  TallennaProjektiInput,
+  TilasiirtymaToiminto,
+  TilasiirtymaTyyppi,
+} from "../../common/graphql/apiModel";
+import { AloitusKuulutusJulkaisu, DBProjekti } from "../src/database/model/projekti";
 import * as log from "loglevel";
 import cloneDeep from "lodash/cloneDeep";
 import mergeWith from "lodash/mergeWith";
@@ -20,6 +27,7 @@ const { expect, assert } = require("chai");
 
 describe("apiHandler", () => {
   let userFixture: UserFixture;
+
   afterEach(() => {
     sinon.reset();
     sinon.restore();
@@ -39,12 +47,18 @@ describe("apiHandler", () => {
     let loadProjektiByOidStub: sinon.SinonStub;
     let getKayttajasStub: sinon.SinonStub;
     let loadVelhoProjektiByOidStub: sinon.SinonStub;
+    let insertAloitusKuulutusJulkaisuStub: sinon.SinonStub;
+    let updateAloitusKuulutusJulkaisuStub: sinon.SinonStub;
+    let deleteAloitusKuulutusJulkaisuStub: sinon.SinonStub;
 
     beforeEach(() => {
       createProjektiStub = sinon.stub(projektiDatabase, "createProjekti");
       getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
       saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
       loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
+      insertAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "insertAloitusKuulutusJulkaisu");
+      updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "updateAloitusKuulutusJulkaisu");
+      deleteAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "deleteAloitusKuulutusJulkaisu");
       loadVelhoProjektiByOidStub = sinon.stub(velho, "loadProjekti");
 
       fixture = new ProjektiFixture();
@@ -54,6 +68,7 @@ describe("apiHandler", () => {
           personSearchFixture.pekkaProjari,
           personSearchFixture.mattiMeikalainen,
           personSearchFixture.manuMuokkaaja,
+          personSearchFixture.createKayttaja("A2"),
         ])
       );
     });
@@ -123,10 +138,60 @@ describe("apiHandler", () => {
             }
             log.info(mockedDatabaseProjekti);
           });
+
           createProjektiStub.callsFake((dbProjekti: DBProjekti) => {
             dbProjekti.tallennettu = true;
             mockedDatabaseProjekti = dbProjekti;
           });
+
+          insertAloitusKuulutusJulkaisuStub.callsFake((_oid: string, julkaisu: AloitusKuulutusJulkaisu) => {
+            if (mockedDatabaseProjekti) {
+              // Just a simple mock to support only one julkaisu
+              mockedDatabaseProjekti.aloitusKuulutusJulkaisut = [julkaisu];
+            }
+          });
+          updateAloitusKuulutusJulkaisuStub.callsFake((_oid: string, julkaisu: AloitusKuulutusJulkaisu) => {
+            if (mockedDatabaseProjekti) {
+              // Just a simple mock to support only one julkaisu
+              mockedDatabaseProjekti.aloitusKuulutusJulkaisut = [julkaisu];
+            }
+          });
+          deleteAloitusKuulutusJulkaisuStub.callsFake(() => {
+            if (mockedDatabaseProjekti) {
+              // Just a simple mock to support only one julkaisu
+              mockedDatabaseProjekti.aloitusKuulutusJulkaisut = [];
+            }
+          });
+        }
+
+        async function validateAloitusKuulutusState({
+          oid,
+          expectedState,
+          syy,
+        }: {
+          expectedState: AloitusKuulutusTila | undefined;
+          oid: string;
+          syy?: string;
+        }) {
+          const p = await api.lataaProjekti(oid);
+          if (expectedState == AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA) {
+            expect(p.aloitusKuulutusJulkaisut).not.be.empty;
+            const julkaisu = findAloitusKuulutusJulkaisuByState(p, AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA);
+            expect(julkaisu).to.not.be.empty;
+            expect(!!p.aloitusKuulutus?.palautusSyy); // null or undefined
+          } else if (expectedState == AloitusKuulutusTila.HYVAKSYTTY) {
+            expect(p.aloitusKuulutusJulkaisut).not.be.empty;
+            const julkaisu = findAloitusKuulutusJulkaisuByState(p, AloitusKuulutusTila.HYVAKSYTTY);
+            expect(julkaisu).to.not.be.empty;
+            expect(!!p.aloitusKuulutus?.palautusSyy); // null or undefined
+          } else {
+            // Either rejected or inital state
+            const julkaisu = findAloitusKuulutusJulkaisuByState(p, AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA);
+            expect(julkaisu).to.be.undefined;
+            if (syy) {
+              expect(p.aloitusKuulutus?.palautusSyy).to.eq(syy);
+            }
+          }
         }
 
         userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -205,8 +270,57 @@ describe("apiHandler", () => {
             ],
             suunnitteluSopimus: null,
             euRahoitus: false, // mandatory field for perustiedot
+            aloitusKuulutus: fixture.aloitusKuulutus,
           }
         );
+
+        // Send aloituskuulutus to be approved
+        await api.siirraTila({
+          oid: projekti.oid,
+          tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
+          toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+        });
+
+        // Check that the snapshot for aloituskuulutus is available
+        await validateAloitusKuulutusState({
+          oid: projekti.oid,
+          expectedState: AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA,
+        });
+
+        // Reject aloituskuulutus
+        const reason = "Tietoja puuttuu!";
+        await api.siirraTila({
+          oid: projekti.oid,
+          tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
+          toiminto: TilasiirtymaToiminto.HYLKAA,
+          syy: reason,
+        });
+
+        // Verify rejection status from API
+        await validateAloitusKuulutusState({ oid: projekti.oid, expectedState: undefined, syy: reason });
+
+        // Send aloituskuulutus to be approved again
+        await api.siirraTila({
+          oid: projekti.oid,
+          tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
+          toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+        });
+
+        // Check that the snapshot for aloituskuulutus is available
+        await validateAloitusKuulutusState({
+          oid: projekti.oid,
+          expectedState: AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA,
+        });
+
+        // Accept aloituskuulutus
+        await api.siirraTila({
+          oid: projekti.oid,
+          tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
+          toiminto: TilasiirtymaToiminto.HYVAKSY,
+        });
+
+        // Verify that the accepted aloituskuulutus is available
+        await validateAloitusKuulutusState({ oid: projekti.oid, expectedState: AloitusKuulutusTila.HYVAKSYTTY });
       });
     });
 
@@ -219,3 +333,7 @@ describe("apiHandler", () => {
     });
   });
 });
+
+function findAloitusKuulutusJulkaisuByState(p: Projekti, tila: AloitusKuulutusTila) {
+  return p.aloitusKuulutusJulkaisut?.filter((j) => j.tila == tila).pop();
+}

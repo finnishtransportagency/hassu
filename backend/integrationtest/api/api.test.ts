@@ -1,5 +1,4 @@
 import { describe, it } from "mocha";
-import { runAsVaylaUser } from "../util/users";
 import { api } from "./apiClient";
 import { setupLocalDatabase } from "../util/databaseUtil";
 import * as log from "loglevel";
@@ -24,12 +23,15 @@ import { projektiArchive } from "../../src/archive/projektiArchiveService";
 import { s3Cache } from "../../src/cache/s3Cache";
 import { PERSON_SEARCH_CACHE_KEY } from "../../src/personSearch/personSearchClient";
 import { fail } from "assert";
+import { UserFixture } from "../../test/fixture/userFixture";
+import { userService } from "../../src/user";
 
 const { expect } = require("chai");
 const sandbox = sinon.createSandbox();
 
 describe("Api", () => {
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
+  let userFixture: UserFixture;
 
   before(async () => {
     localstackS3Client();
@@ -37,12 +39,14 @@ describe("Api", () => {
   });
 
   afterEach(() => {
+    userFixture.logout();
     sandbox.restore();
   });
 
   beforeEach("Initialize test database!", async () => await setupLocalDatabase());
 
   beforeEach(async () => {
+    userFixture = new UserFixture(userService);
     readUsersFromSearchUpdaterLambda = sandbox.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
     readUsersFromSearchUpdaterLambda.callsFake(async () => {
       return await personSearchUpdaterHandler.handleEvent();
@@ -57,7 +61,7 @@ describe("Api", () => {
     if (process.env.SKIP_VELHO_TESTS) {
       this.skip();
     }
-    runAsVaylaUser();
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
 
     const { oid, projekti } = await readProjektiFromVelho();
 

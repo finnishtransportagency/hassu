@@ -272,7 +272,25 @@ exports[`apiHandler handleEvent tallennaProjekti should modify permissions from 
 Array [
   "Save projekti having while adding one muokkaaja more. There should be three persons in the projekti now",
   Object {
-    "aloitusKuulutus": undefined,
+    "aloitusKuulutus": Object {
+      "__typename": "AloitusKuulutus",
+      "elyKeskus": "Pirkanmaa",
+      "esitettavatYhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+      "hankkeenKuvaus": "Lorem Ipsum",
+      "hankkeenKuvausRuotsi": "På Svenska",
+      "hankkeenKuvausSaame": "Saameksi",
+      "kuulutusPaiva": "2022-01-02",
+      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+    },
     "euRahoitus": false,
     "kayttoOikeudet": Array [
       Object {
@@ -293,6 +311,15 @@ Array [
         "puhelinnumero": "123456789",
         "rooli": "OMISTAJA",
       },
+      Object {
+        "email": "A2@vayla.fi",
+        "esitetaanKuulutuksessa": undefined,
+        "kayttajatunnus": "A2",
+        "nimi": "SukunimiA2, EtunimiA2",
+        "organisaatio": "Väylävirasto",
+        "puhelinnumero": "123456789",
+        "rooli": "OMISTAJA",
+      },
     ],
     "kielitiedot": undefined,
     "liittyvatSuunnitelmat": undefined,
@@ -310,6 +337,22 @@ Array [
     "__typename": "Projekti",
     "aloitusKuulutus": Object {
       "__typename": "AloitusKuulutus",
+      "elyKeskus": "Pirkanmaa",
+      "esitettavatYhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+      "hankkeenKuvaus": "Lorem Ipsum",
+      "hankkeenKuvausRuotsi": "På Svenska",
+      "hankkeenKuvausSaame": "Saameksi",
+      "kuulutusPaiva": "2022-01-02",
+      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
     },
     "euRahoitus": false,
     "kayttoOikeudet": Array [
@@ -330,6 +373,16 @@ Array [
         "kayttajatunnus": "A000111",
         "nimi": "Meikäläinen, Matti",
         "organisaatio": "ELY",
+        "puhelinnumero": "123456789",
+        "rooli": "OMISTAJA",
+      },
+      Object {
+        "__typename": "ProjektiKayttaja",
+        "email": "A2@vayla.fi",
+        "esitetaanKuulutuksessa": undefined,
+        "kayttajatunnus": "A2",
+        "nimi": "SukunimiA2, EtunimiA2",
+        "organisaatio": "Väylävirasto",
         "puhelinnumero": "123456789",
         "rooli": "OMISTAJA",
       },

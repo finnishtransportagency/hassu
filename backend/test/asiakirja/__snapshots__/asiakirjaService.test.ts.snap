@@ -6,6 +6,7 @@ Object {
   "hankkeenKuvaus": "Lorem Ipsum",
   "hankkeenKuvausRuotsi": "På Svenska",
   "hankkeenKuvausSaame": "Saameksi",
+  "id": 1,
   "kuulutusPaiva": "2022-01-02",
   "siirtyySuunnitteluVaiheeseen": "2022-01-01",
   "suunnitteluSopimus": Object {

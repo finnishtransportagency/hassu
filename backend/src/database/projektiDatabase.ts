@@ -1,21 +1,20 @@
 import { log } from "../logger";
-import { DBProjekti } from "./model/projekti";
+import { AloitusKuulutusJulkaisu, DBProjekti } from "./model/projekti";
 import { config } from "../config";
 import { getDynamoDBDocumentClient } from "./dynamoDB";
 import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
-import { GetItemOutput } from "@aws-sdk/client-dynamodb";
 import { AWSError } from "aws-sdk";
 import { Response } from "aws-sdk/lib/response";
 
-const projektiTableName: string = config.projektiTableName as any;
-const archiveTableName: string = config.projektiArchiveTableName as any;
+const projektiTableName: string = config.projektiTableName;
+const archiveTableName: string = config.projektiArchiveTableName;
 
 export type ArchivedProjektiKey = {
   oid: string;
   timestamp: string;
 };
 
-async function createProjekti(projekti: DBProjekti) {
+async function createProjekti(projekti: DBProjekti): Promise<DocumentClient.PutItemOutput> {
   const params: DocumentClient.PutItemInput = {
     TableName: projektiTableName,
     Item: projekti as DBProjekti,
@@ -46,23 +45,23 @@ async function loadProjektiByOid(oid: string): Promise<DBProjekti | undefined> {
   return projekti;
 }
 
-const readOnlyFields = ["oid", "tallennettu"];
+const readOnlyFields = ["oid", "tallennettu", "aloitusKuulutusJulkaisut"] as (keyof DBProjekti)[] as string[];
 
 function createExpression(expression: string, properties: string[]) {
   return properties.length > 0 ? expression + " " + properties.join(" , ") : "";
 }
 
-async function saveProjekti(dbProjekti: DBProjekti) {
+async function saveProjekti(dbProjekti: Partial<DBProjekti>): Promise<DocumentClient.UpdateItemOutput> {
   log.info("Updating projekti to Hassu ", { dbProjekti });
   const setExpression: string[] = [];
   const removeExpression: string[] = [];
-  const ExpressionAttributeNames = {} as any;
-  const ExpressionAttributeValues = {} as any;
+  const ExpressionAttributeNames = {};
+  const ExpressionAttributeValues = {};
   for (const property in dbProjekti) {
     if (readOnlyFields.indexOf(property) >= 0) {
       continue;
     }
-    const value = (dbProjekti as any)[property];
+    const value = dbProjekti[property];
     if (value === undefined) {
       continue;
     }
@@ -95,14 +94,14 @@ async function archiveProjektiByOid({ oid, timestamp }: ArchivedProjektiKey): Pr
   const client = getDynamoDBDocumentClient();
 
   // Load projekti to be archived
-  const data: GetItemOutput = await client
+  const data: DocumentClient.GetItemOutput = await client
     .get({
       TableName: projektiTableName,
       Key: { oid },
       ConsistentRead: true,
     })
     .promise();
-  const item: ArchivedProjektiKey | any = data.Item;
+  const item = data.Item as ArchivedProjektiKey;
   if (!item) {
     throw new Error("Arkistointi ei onnistunut, koska arkistoitavaa projektia ei löytynyt tietokannasta.");
   }
@@ -116,7 +115,7 @@ async function archiveProjektiByOid({ oid, timestamp }: ArchivedProjektiKey): Pr
     Item: item,
   };
   const putResult = await client.put(putParams).promise();
-  checkAndRaiseError(putResult.$response);
+  checkAndRaiseError(putResult.$response, "Arkistointi ei onnistunut");
 
   // Delete the archived projekti
   const removeResult = await client
@@ -127,13 +126,91 @@ async function archiveProjektiByOid({ oid, timestamp }: ArchivedProjektiKey): Pr
       },
     })
     .promise();
-  checkAndRaiseError(removeResult.$response);
+  checkAndRaiseError(removeResult.$response, "Arkistointi ei onnistunut");
 }
 
-function checkAndRaiseError<T>(response: Response<T, AWSError>) {
+async function insertAloitusKuulutusJulkaisu(
+  oid: string,
+  julkaisu: AloitusKuulutusJulkaisu
+): Promise<DocumentClient.UpdateItemOutput> {
+  log.info("insertAloitusKuulutusJulkaisu", { oid, julkaisu });
+
+  const params = {
+    TableName: projektiTableName,
+    Key: {
+      oid,
+    },
+    UpdateExpression:
+      "SET #aloitusKuulutusJulkaisut = list_append(if_not_exists(#aloitusKuulutusJulkaisut, :empty_list), :julkaisu)",
+    ExpressionAttributeNames: {
+      "#aloitusKuulutusJulkaisut": "aloitusKuulutusJulkaisut",
+    },
+    ExpressionAttributeValues: {
+      ":julkaisu": [julkaisu],
+      ":empty_list": [],
+    },
+  };
+  log.info("Inserting aloitusKuulutusJulkaisu to projekti", { params });
+  return await getDynamoDBDocumentClient().update(params).promise();
+}
+
+async function deleteAloitusKuulutusJulkaisu(projekti: DBProjekti, julkaisu: AloitusKuulutusJulkaisu): Promise<void> {
+  const aloitusKuulutusJulkaisut = projekti.aloitusKuulutusJulkaisut;
+  if (!aloitusKuulutusJulkaisut) {
+    return;
+  }
+  for (let idx = 0; idx < aloitusKuulutusJulkaisut.length; idx++) {
+    if (aloitusKuulutusJulkaisut[idx].id == julkaisu.id) {
+      log.info("deleteAloitusKuulutusJulkaisu", { idx, julkaisu });
+
+      const params = {
+        TableName: projektiTableName,
+        Key: {
+          oid: projekti.oid,
+        },
+        UpdateExpression: "REMOVE #aloitusKuulutusJulkaisut[" + idx + "]",
+        ExpressionAttributeNames: {
+          "#aloitusKuulutusJulkaisut": "aloitusKuulutusJulkaisut",
+        },
+      };
+      await getDynamoDBDocumentClient().update(params).promise();
+      break;
+    }
+  }
+}
+
+async function updateAloitusKuulutusJulkaisu(projekti: DBProjekti, julkaisu: AloitusKuulutusJulkaisu): Promise<void> {
+  const aloitusKuulutusJulkaisut = projekti.aloitusKuulutusJulkaisut;
+  if (!aloitusKuulutusJulkaisut) {
+    return;
+  }
+  for (let idx = 0; idx < aloitusKuulutusJulkaisut.length; idx++) {
+    if (aloitusKuulutusJulkaisut[idx].id == julkaisu.id) {
+      log.info("deleteAloitusKuulutusJulkaisu", { idx, julkaisu });
+
+      const params = {
+        TableName: projektiTableName,
+        Key: {
+          oid: projekti.oid,
+        },
+        UpdateExpression: "SET #aloitusKuulutusJulkaisut[" + idx + "] = :julkaisu",
+        ExpressionAttributeNames: {
+          "#aloitusKuulutusJulkaisut": "aloitusKuulutusJulkaisut",
+        },
+        ExpressionAttributeValues: {
+          ":julkaisu": julkaisu,
+        },
+      };
+      await getDynamoDBDocumentClient().update(params).promise();
+      break;
+    }
+  }
+}
+
+function checkAndRaiseError<T>(response: Response<T, AWSError>, msg: string) {
   if (response.error) {
-    log.error("Arkistointi ei onnistunut", { error: response.error });
-    throw new Error("Arkistointi ei onnistunut");
+    log.error(msg, { error: response.error });
+    throw new Error(msg);
   }
 }
 
@@ -143,4 +220,7 @@ export const projektiDatabase = {
   listProjektit,
   loadProjektiByOid,
   archiveProjektiByOid,
+  insertAloitusKuulutusJulkaisu,
+  deleteAloitusKuulutusJulkaisu,
+  updateAloitusKuulutusJulkaisu,
 };

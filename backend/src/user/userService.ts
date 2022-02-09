@@ -3,7 +3,7 @@ import { validateJwtToken } from "./validatejwttoken";
 import { config } from "../config";
 import { log } from "../logger";
 import { IllegalAccessError } from "../error/IllegalAccessError";
-import { NykyinenKayttaja, VaylaKayttajaTyyppi } from "../../../common/graphql/apiModel";
+import { NykyinenKayttaja, ProjektiRooli, VaylaKayttajaTyyppi } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../database/model/projekti";
 import { createSignedCookies } from "./signedCookie";
 import { apiConfig } from "../../../common/abstractApi";
@@ -126,7 +126,7 @@ function isHassuKayttaja(kayttaja: KayttajaPermissions) {
   return kayttaja.roolit?.includes("hassu_kayttaja") || isHassuAdmin(kayttaja);
 }
 
-export function isAorL(account: KayttajaPermissions) {
+export function isAorL(account: KayttajaPermissions): boolean {
   return isATunnus(account) || isLTunnus(account);
 }
 
@@ -134,20 +134,20 @@ export function requirePermissionLuku(): NykyinenKayttaja {
   return requireVaylaUser();
 }
 
-export function requirePermissionLuonti() {
+export function requirePermissionLuonti(): void {
   if (!hasPermissionLuonti()) {
     throw new IllegalAccessError("Vain L ja A tunnuksella voi luoda uusia projekteja");
   }
 }
 
-export function hasPermissionLuonti(kayttaja: KayttajaPermissions = requireVaylaUser()) {
+export function hasPermissionLuonti(kayttaja: KayttajaPermissions = requireVaylaUser()): boolean {
   return isHassuAdmin(kayttaja) || isAorL(kayttaja);
 }
 
-export function requirePermissionMuokkaa(projekti: DBProjekti) {
+export function requirePermissionMuokkaa(projekti: DBProjekti): NykyinenKayttaja {
   const kayttaja = requireVaylaUser();
   if (isHassuAdmin(kayttaja)) {
-    return;
+    return kayttaja;
   }
   if (!isAorL(kayttaja)) {
     throw new IllegalAccessError("Vain L ja A tunnuksella voi muokata projekteja");
@@ -157,6 +157,24 @@ export function requirePermissionMuokkaa(projekti: DBProjekti) {
   if (!projektiUser) {
     throw new IllegalAccessError("Sinulla ei ole käyttöoikeutta muokata projektia");
   }
+  return kayttaja;
+}
+
+export function requireProjektiPaallikko(projekti: DBProjekti): NykyinenKayttaja {
+  const kayttaja = requireVaylaUser();
+  if (isHassuAdmin(kayttaja)) {
+    return kayttaja;
+  }
+  // Current user must be added into the projekti with projektipaallikko role
+  const projektiUser = projekti.kayttoOikeudet
+    .filter((user) => user.kayttajatunnus === kayttaja.uid && user.rooli == ProjektiRooli.PROJEKTIPAALLIKKO)
+    .pop();
+  if (!projektiUser) {
+    throw new IllegalAccessError(
+      "Sinulla ei ole käyttöoikeutta muokata projektia, koska et ole projektin projektipäällikkö."
+    );
+  }
+  return kayttaja;
 }
 
 function isATunnus(account: KayttajaPermissions) {

@@ -58,3 +58,20 @@ input ListaaKayttajatInput {
   kayttajatunnus: [String!]
   hakusana: String
 }
+
+enum TilasiirtymaToiminto {
+  LAHETA_HYVAKSYTTAVAKSI
+  HYVAKSY
+  HYLKAA
+}
+
+enum TilasiirtymaTyyppi {
+  ALOITUSKUULUTUS
+}
+
+input TilaSiirtymaInput {
+  oid: String!
+  tyyppi: TilasiirtymaTyyppi
+  toiminto: TilasiirtymaToiminto!
+  syy: String
+}

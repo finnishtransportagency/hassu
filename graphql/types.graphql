@@ -98,7 +98,7 @@ type AloitusKuulutus {
   hankkeenKuvausSaame: String
   elyKeskus: String
   esitettavatYhteystiedot: [Yhteystieto]
-  palautettu: Boolean
+  palautusSyy: String
 }
 
 type AloitusKuulutusJulkaisu {
@@ -112,6 +112,8 @@ type AloitusKuulutusJulkaisu {
   velho: Velho!
   suunnitteluSopimus: SuunnitteluSopimus
   tila: AloitusKuulutusTila
+  muokkaaja: String
+  hyvaksyja: String
 }
 
 type SuunnitteluSopimus {
