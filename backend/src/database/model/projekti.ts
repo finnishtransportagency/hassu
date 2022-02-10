@@ -66,6 +66,12 @@ export type Suunnitelma = {
   nimi: string;
 };
 
+export type Kielitiedot = {
+  ensisijainenKieli: string;
+  toissijainenKieli?: string;
+  projektinNimiVieraskielella?: string;
+};
+
 export type Velho = {
   nimi: string;
   tyyppi?: ProjektiTyyppi | null;
@@ -93,7 +99,7 @@ export type DBProjekti = {
    */
   tyyppi?: ProjektiTyyppi | null;
   suunnittelustaVastaavaViranomainen?: Viranomainen | null;
-  lisakuulutuskieli?: string | null;
+  kielitiedot?: Kielitiedot | null;
   euRahoitus?: boolean | null;
   aloitusKuulutus?: AloitusKuulutus | null;
   aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null;

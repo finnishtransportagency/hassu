@@ -1,4 +1,5 @@
 import {
+  Kieli,
   Projekti,
   ProjektiKayttaja,
   ProjektiRooli,
@@ -41,7 +42,12 @@ export class ProjektiFixture {
     status: Status.EI_JULKAISTU,
     tallennettu: false,
     kayttoOikeudet: [ProjektiFixture.pekkaProjariProjektiKayttaja],
-    lisakuulutuskieli: "ruotsi",
+    kielitiedot: {
+      __typename: "Kielitiedot",
+      ensisijainenKieli: Kieli.SUOMI,
+      toissijainenKieli: Kieli.RUOTSI,
+      projektinNimiVieraskielella: "Heja sverige",
+    },
     euRahoitus: false,
     liittyvatSuunnitelmat: [
       {
@@ -107,7 +113,11 @@ export class ProjektiFixture {
         },
       ],
     },
-    lisakuulutuskieli: "ruotsi",
+    kielitiedot: {
+      ensisijainenKieli: Kieli.SUOMI,
+      toissijainenKieli: Kieli.RUOTSI,
+      projektinNimiVieraskielella: "Heja sverige",
+    },
     euRahoitus: false,
     liittyvatSuunnitelmat: [
       {
