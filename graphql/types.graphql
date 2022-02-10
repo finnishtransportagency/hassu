@@ -49,7 +49,6 @@ type Projekti {
   false, jos projekti ladattiin Velhosta, mutta ei ole vielä tallennettu tietokantaan
   """
   tallennettu: Boolean
-  lisakuulutuskieli: String
   euRahoitus: Boolean
   liittyvatSuunnitelmat: [Suunnitelma!]
   kielitiedot: Kielitiedot

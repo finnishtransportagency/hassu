@@ -6,6 +6,7 @@ import * as log from "loglevel";
 import {
   AloitusKuulutus,
   AsiakirjaTyyppi,
+  Kieli,
   ProjektiRooli,
   SuunnitteluSopimus,
   SuunnitteluSopimusInput,
@@ -118,14 +119,16 @@ describe("Api", () => {
       ],
     };
 
-    const lisakuulutuskieli = "ruotsi";
+    const kielitiedot = {
+      ensisijainenKieli: Kieli.SUOMI
+    };
 
     await api.tallennaProjekti({
       oid,
       muistiinpano: newNote,
       aloitusKuulutus,
       suunnitteluSopimus: suunnitteluSopimusInput,
-      lisakuulutuskieli,
+      kielitiedot,
       euRahoitus: false,
     });
 
@@ -135,7 +138,7 @@ describe("Api", () => {
     expect(updatedProjekti.aloitusKuulutus).eql(aloitusKuulutus);
     expect(updatedProjekti.suunnitteluSopimus).include(suunnitteluSopimus);
     expect(updatedProjekti.suunnitteluSopimus?.logo).contain("/suunnittelusopimus/logo.png");
-    expect(updatedProjekti.lisakuulutuskieli).to.be.equal(lisakuulutuskieli);
+    expect(updatedProjekti.kielitiedot).to.be.equal(kielitiedot);
     expect(updatedProjekti.euRahoitus).to.be.false;
 
     // Generate Aloituskuulutus PDF
@@ -156,7 +159,7 @@ describe("Api", () => {
     expect(updatedProjekti2.muistiinpano).to.be.equal(newNote);
     expect(updatedProjekti2.aloitusKuulutus).eql(aloitusKuulutus);
     expect(updatedProjekti2.suunnitteluSopimus).to.be.undefined;
-    expect(updatedProjekti2.lisakuulutuskieli).to.be.equal(lisakuulutuskieli);
+    expect(updatedProjekti2.kielitiedot).to.be.equal(kielitiedot);
 
     // Finally delete the projekti
     const archiveResult = await projektiArchive.archiveProjekti(oid);
