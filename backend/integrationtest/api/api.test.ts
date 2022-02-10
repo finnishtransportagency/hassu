@@ -7,6 +7,8 @@ import {
   AloitusKuulutus,
   AsiakirjaTyyppi,
   Kieli,
+  Kielitiedot,
+  KielitiedotInput,
   ProjektiRooli,
   SuunnitteluSopimus,
   SuunnitteluSopimusInput,
@@ -119,8 +121,15 @@ describe("Api", () => {
       ],
     };
 
-    const kielitiedot = {
-      ensisijainenKieli: Kieli.SUOMI
+    const kielitiedotInput: KielitiedotInput = {
+      ensisijainenKieli: Kieli.SUOMI,
+    };
+
+    const kielitiedot: Kielitiedot = {
+      __typename: "Kielitiedot",
+      ensisijainenKieli: Kieli.SUOMI,
+      toissijainenKieli: undefined,
+      projektinNimiVieraskielella: undefined,
     };
 
     await api.tallennaProjekti({
@@ -128,7 +137,7 @@ describe("Api", () => {
       muistiinpano: newNote,
       aloitusKuulutus,
       suunnitteluSopimus: suunnitteluSopimusInput,
-      kielitiedot,
+      kielitiedot: kielitiedotInput,
       euRahoitus: false,
     });
 
@@ -138,7 +147,7 @@ describe("Api", () => {
     expect(updatedProjekti.aloitusKuulutus).eql(aloitusKuulutus);
     expect(updatedProjekti.suunnitteluSopimus).include(suunnitteluSopimus);
     expect(updatedProjekti.suunnitteluSopimus?.logo).contain("/suunnittelusopimus/logo.png");
-    expect(updatedProjekti.kielitiedot).to.be.equal(kielitiedot);
+    expect(updatedProjekti.kielitiedot).eql(kielitiedot);
     expect(updatedProjekti.euRahoitus).to.be.false;
 
     // Generate Aloituskuulutus PDF
@@ -159,7 +168,7 @@ describe("Api", () => {
     expect(updatedProjekti2.muistiinpano).to.be.equal(newNote);
     expect(updatedProjekti2.aloitusKuulutus).eql(aloitusKuulutus);
     expect(updatedProjekti2.suunnitteluSopimus).to.be.undefined;
-    expect(updatedProjekti2.kielitiedot).to.be.equal(kielitiedot);
+    expect(updatedProjekti2.kielitiedot).eql(kielitiedot);
 
     // Finally delete the projekti
     const archiveResult = await projektiArchive.archiveProjekti(oid);

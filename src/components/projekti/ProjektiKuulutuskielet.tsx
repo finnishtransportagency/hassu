@@ -53,7 +53,9 @@ export default function ProjektiKuulutuskielet(): ReactElement {
               label="Toissijainen kieli "
               options={kielioptions2}
               error={errors.kielitiedot?.toissijainenKieli}
-              {...register("kielitiedot.toissijainenKieli")}
+              {...register("kielitiedot.toissijainenKieli", {
+                  setValueAs: v => v ? v : null, // send unselected as null instead of empty string
+              })}
             />
           </div>
           {vieraskieliKaytossa && (

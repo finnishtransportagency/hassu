@@ -10,8 +10,8 @@ input TallennaProjektiInput {
 }
 
 input KielitiedotInput {
-  ensisijainenKieli: String!
-  toissijainenKieli: String
+  ensisijainenKieli: Kieli!
+  toissijainenKieli: Kieli
   projektinNimiVieraskielella: String
 }
 
