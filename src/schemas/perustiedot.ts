@@ -5,16 +5,14 @@ export const maxNoteLength = 2000;
 
 export const perustiedotValidationSchema = Yup.object().shape({
   oid: Yup.string().required(),
-  lisakuulutuskieli: Yup.string()
+  kielitiedot: Yup.object()
+    .shape({
+      ensisijainenKieli: Yup.string().required("Ensisijainen kieli puuttuu"),
+      toissijainenKieli: Yup.string().notRequired().nullable().default(null),
+      projektinNimiVieraskielella: Yup.string().notRequired().nullable().default(null),
+    })
     .notRequired()
     .nullable()
-    .test("not-null-when-lisakuulutus-selected-test", "Valitse lisäkuulutuskieli", function (kieli) {
-      // if lisakuulutuskieli checkbox checked, select one language option
-      if (this.options?.context?.requireLisakuulutuskieli) {
-        return !!kieli;
-      }
-      return true;
-    })
     .default(null),
   liittyvatSuunnitelmat: Yup.array()
     .of(

@@ -52,6 +52,7 @@ type Projekti {
   lisakuulutuskieli: String
   euRahoitus: Boolean
   liittyvatSuunnitelmat: [Suunnitelma!]
+  kielitiedot: Kielitiedot
 }
 
 type Velho {
@@ -186,4 +187,16 @@ type LatausTiedot {
 
 enum LaskuriTyyppi {
   KUULUTUKSEN_PAATTYMISPAIVA
+}
+
+enum Kieli {
+  SUOMI
+  RUOTSI
+  SAAME
+}
+
+type Kielitiedot {
+  ensisijainenKieli: Kieli!
+  toissijainenKieli: Kieli
+  projektinNimiVieraskielella: String
 }

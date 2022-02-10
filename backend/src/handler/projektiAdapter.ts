@@ -2,6 +2,7 @@ import {
   AloitusKuulutus,
   AloitusKuulutusJulkaisu,
   DBProjekti,
+  Kielitiedot,
   Suunnitelma,
   SuunnitteluSopimus,
   Velho,
@@ -22,6 +23,7 @@ export class ProjektiAdapter {
       liittyvatSuunnitelmat,
       aloitusKuulutusJulkaisut,
       velho,
+      kielitiedot,
       ...fieldsToCopyAsIs
     } = dbProjekti;
     return removeUndefinedFields({
@@ -37,6 +39,7 @@ export class ProjektiAdapter {
         __typename: "Velho",
         ...velho,
       },
+      kielitiedot: adaptKielitiedot(kielitiedot),
       ...fieldsToCopyAsIs,
     }) as API.Projekti;
   }
@@ -49,7 +52,7 @@ export class ProjektiAdapter {
       kayttoOikeudet,
       aloitusKuulutus,
       suunnitteluSopimus,
-      lisakuulutuskieli,
+      kielitiedot,
       euRahoitus,
       liittyvatSuunnitelmat,
     } = changes;
@@ -63,7 +66,7 @@ export class ProjektiAdapter {
         aloitusKuulutus,
         suunnitteluSopimus: adaptSuunnitteluSopimusToSave(projekti, suunnitteluSopimus),
         kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet(),
-        lisakuulutuskieli,
+        kielitiedot,
         euRahoitus,
         liittyvatSuunnitelmat,
       }
@@ -83,6 +86,18 @@ function adaptLiittyvatSuunnitelmat(suunnitelmat?: Suunnitelma[] | null): API.Su
     return liittyvatSuunnitelmat as API.Suunnitelma[];
   }
   return suunnitelmat as undefined | null;
+}
+
+function adaptKielitiedot(kielitiedot?: Kielitiedot | null): API.Kielitiedot | undefined | null {
+  if (kielitiedot) {
+    return {
+      ...kielitiedot,
+      __typename: "Kielitiedot",
+      ensisijainenKieli: kielitiedot.ensisijainenKieli as API.Kieli,
+      toissijainenKieli: kielitiedot.toissijainenKieli as API.Kieli,
+    };
+  }
+  return kielitiedot as undefined;
 }
 
 function adaptSuunnitteluSopimusToSave(

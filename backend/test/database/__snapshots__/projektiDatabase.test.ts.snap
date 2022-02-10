@@ -6,8 +6,8 @@ Object {
     "#aloitusKuulutus": "aloitusKuulutus",
     "#euRahoitus": "euRahoitus",
     "#kayttoOikeudet": "kayttoOikeudet",
+    "#kielitiedot": "kielitiedot",
     "#liittyvatSuunnitelmat": "liittyvatSuunnitelmat",
-    "#lisakuulutuskieli": "lisakuulutuskieli",
     "#muistiinpano": "muistiinpano",
     "#suunnitteluSopimus": "suunnitteluSopimus",
     "#velho": "velho",
@@ -42,13 +42,17 @@ Object {
         "rooli": "PROJEKTIPAALLIKKO",
       },
     ],
+    ":kielitiedot": Object {
+      "ensisijainenKieli": "SUOMI",
+      "projektinNimiVieraskielella": "Heja sverige",
+      "toissijainenKieli": "RUOTSI",
+    },
     ":liittyvatSuunnitelmat": Array [
       Object {
         "asiatunnus": "atunnus123",
         "nimi": "Littyva suunnitelma 1 nimi",
       },
     ],
-    ":lisakuulutuskieli": "ruotsi",
     ":muistiinpano": "Testiprojekti 1:n muistiinpano",
     ":suunnitteluSopimus": Object {
       "email": "Joku.Jossain@vayla.fi",
@@ -74,7 +78,7 @@ Object {
     "oid": "1",
   },
   "TableName": "Projekti-localstack",
-  "UpdateExpression": "SET #kayttoOikeudet = :kayttoOikeudet , #velho = :velho , #muistiinpano = :muistiinpano , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus , #lisakuulutuskieli = :lisakuulutuskieli , #euRahoitus = :euRahoitus , #liittyvatSuunnitelmat = :liittyvatSuunnitelmat ",
+  "UpdateExpression": "SET #kayttoOikeudet = :kayttoOikeudet , #velho = :velho , #muistiinpano = :muistiinpano , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus , #kielitiedot = :kielitiedot , #euRahoitus = :euRahoitus , #liittyvatSuunnitelmat = :liittyvatSuunnitelmat ",
 }
 `;
 

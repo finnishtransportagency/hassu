@@ -12,7 +12,6 @@ import Textarea from "@components/form/Textarea";
 import Notification from "@components/notification/Notification";
 import ProjektiPerustiedot from "@components/projekti/ProjektiPerustiedot";
 import ExtLink from "@components/ExtLink";
-import Checkbox from "@components/form/CheckBox";
 import RadioButton from "@components/form/RadioButton";
 import ProjektiKuntatiedot from "@components/projekti/ProjektiKuntatiedot";
 import ProjektiLiittyvatSuunnitelmat from "@components/projekti/ProjektiLiittyvatSuunnitelmat";
@@ -25,10 +24,11 @@ import axios from "axios";
 import { cloneDeep } from "lodash";
 import { maxNoteLength, perustiedotValidationSchema } from "src/schemas/perustiedot";
 import useSnackbars from "src/hooks/useSnackbars";
+import ProjektiKuulutuskielet from "@components/projekti/ProjektiKuulutuskielet";
 
 export type FormValues = Pick<
   TallennaProjektiInput,
-  "oid" | "muistiinpano" | "lisakuulutuskieli" | "euRahoitus" | "suunnitteluSopimus" | "liittyvatSuunnitelmat"
+  "oid" | "muistiinpano" | "euRahoitus" | "suunnitteluSopimus" | "liittyvatSuunnitelmat" | "kielitiedot"
 >;
 
 const loadedProjektiValidationSchema = getProjektiValidationSchema([
@@ -47,7 +47,6 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   const isLoadingProjekti = !projekti && !projektiLoadError;
 
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
-  const [selectLanguageAvailable, setLanguageChoicesAvailable] = useState(false);
 
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
   const disableFormEdit =
@@ -60,13 +59,13 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
     resolver: yupResolver(perustiedotValidationSchema, { abortEarly: false, recursive: true }),
     defaultValues: {
       muistiinpano: "",
-      lisakuulutuskieli: null,
       euRahoitus: null,
       liittyvatSuunnitelmat: null,
+      kielitiedot: null,
     },
     mode: "onChange",
     reValidateMode: "onChange",
-    context: { requireLisakuulutuskieli: selectLanguageAvailable, ...formContext },
+    context: { ...formContext },
   };
 
   const useFormReturn = useForm<FormValues>(formOptions);
@@ -118,9 +117,6 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
     return value;
   }
 
-  const hasLanguageSelected =
-    projekti?.lisakuulutuskieli?.startsWith("ruotsi") || projekti?.lisakuulutuskieli?.startsWith("saame") || false;
-
   useEffect(() => {
     if (projekti && projekti.oid) {
       // Detect status change
@@ -137,7 +133,6 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
       const tallentamisTiedot: FormValues = {
         oid: projekti.oid,
         muistiinpano: projekti.muistiinpano || "",
-        lisakuulutuskieli: projekti.lisakuulutuskieli || null,
         euRahoitus: projekti.euRahoitus,
         liittyvatSuunnitelmat:
           projekti?.liittyvatSuunnitelmat?.map((suunnitelma) => {
@@ -145,15 +140,18 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
             return suunnitelmaInput;
           }) || [],
       };
+      if (projekti.kielitiedot) {
+        const { __typename, ...kielitiedotInput } = projekti.kielitiedot;
+        tallentamisTiedot.kielitiedot = kielitiedotInput;
+      }
       if (projekti.suunnitteluSopimus) {
         const { __typename, ...suunnitteluSopimusInput } = projekti.suunnitteluSopimus;
         tallentamisTiedot.suunnitteluSopimus = suunnitteluSopimusInput;
       }
       reset(tallentamisTiedot);
       setFormContext(projekti);
-      setLanguageChoicesAvailable(hasLanguageSelected);
     }
-  }, [projekti, reset, hasLanguageSelected]);
+  }, [projekti, reset]);
 
   useEffect(() => {
     if (router.isReady) {
@@ -192,31 +190,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
             </div>
             <hr />
             <div className="content">
-              <h4 className="vayla-small-title">Projektin kuulutusten kielet</h4>
-              <FormGroup flexDirection="col" errorMessage={errors.lisakuulutuskieli?.message}>
-                <Checkbox
-                  label="Projekti kuulutetaan suomenkielen lisäksi myös muilla kielillä"
-                  id="kuulutuskieli"
-                  onChange={() => setLanguageChoicesAvailable(!selectLanguageAvailable)}
-                  checked={selectLanguageAvailable}
-                ></Checkbox>
-                <div className="indent">
-                  <RadioButton
-                    label="Suomen lisäksi ruotsi"
-                    value="ruotsi"
-                    id="ruotsi"
-                    disabled={!selectLanguageAvailable}
-                    {...register("lisakuulutuskieli")}
-                  ></RadioButton>
-                  <RadioButton
-                    label="Suomen lisäksi saame"
-                    value="saame"
-                    id="saame"
-                    disabled={!selectLanguageAvailable}
-                    {...register("lisakuulutuskieli")}
-                  ></RadioButton>
-                </div>
-              </FormGroup>
+              <ProjektiKuulutuskielet />
             </div>
             <hr />
             <div className="content">
