@@ -4,7 +4,7 @@ import { useFormContext } from "react-hook-form";
 import FormGroup from "@components/form/FormGroup";
 import Select from "@components/form/Select";
 import { Kieli } from "@services/api";
-import { capitalize } from "lodash";
+import { capitalize, lowerCase } from "lodash";
 
 export default function ProjektiKuulutuskielet(): ReactElement {
   const {
@@ -21,6 +21,7 @@ export default function ProjektiKuulutuskielet(): ReactElement {
   const [vieraskieliEnsisijainen, setVieraskieliEnsisijainen] = useState("");
   const kieli1 = watch("kielitiedot.ensisijainenKieli");
   const kieli2 = watch("kielitiedot.toissijainenKieli");
+  const vieraskieliKaytossa = vieraskieliEnsisijainen || kieli2;
 
   useEffect(() => {
     if (kieli1 && kieli1 !== Kieli.SUOMI) {
@@ -55,14 +56,18 @@ export default function ProjektiKuulutuskielet(): ReactElement {
               {...register("kielitiedot.toissijainenKieli")}
             />
           </div>
-          <div className="lg:col-span-12">
-            {`Projektin nimi ${vieraskieliEnsisijainen} ${kieli2}n kielellä`}
-            <TextInput
-              label=""
-              error={errors.kielitiedot?.projektinNimiVieraskielella}
-              {...register("kielitiedot.projektinNimiVieraskielella")}
-            />
-          </div>
+          {vieraskieliKaytossa && (
+            <div className="lg:col-span-12">
+              {`Projektin nimi ${
+                vieraskieliEnsisijainen ? lowerCase(vieraskieliEnsisijainen) : lowerCase(kieli2)
+              }n kielellä`}
+              <TextInput
+                label=""
+                error={errors.kielitiedot?.projektinNimiVieraskielella}
+                {...register("kielitiedot.projektinNimiVieraskielella", {shouldUnregister: true})}
+              />
+            </div>
+          )}
         </div>
       </FormGroup>
     </>
