@@ -23,6 +23,9 @@ import cloneDeep from "lodash/cloneDeep";
 import mergeWith from "lodash/mergeWith";
 import { PersonSearchFixture } from "./personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../src/personSearch/kayttajas";
+import { AwsClientStub, mockClient } from "aws-sdk-client-mock";
+import { getS3Client } from "../src/aws/clients";
+import { PutObjectCommand, PutObjectCommandInput, S3Client } from "@aws-sdk/client-s3";
 
 const { expect, assert } = require("chai");
 
@@ -51,6 +54,7 @@ describe("apiHandler", () => {
     let insertAloitusKuulutusJulkaisuStub: sinon.SinonStub;
     let updateAloitusKuulutusJulkaisuStub: sinon.SinonStub;
     let deleteAloitusKuulutusJulkaisuStub: sinon.SinonStub;
+    let mockS3CLient: AwsClientStub<S3Client>;
 
     beforeEach(() => {
       createProjektiStub = sinon.stub(projektiDatabase, "createProjekti");
@@ -61,6 +65,7 @@ describe("apiHandler", () => {
       updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "updateAloitusKuulutusJulkaisu");
       deleteAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "deleteAloitusKuulutusJulkaisu");
       loadVelhoProjektiByOidStub = sinon.stub(velho, "loadProjekti");
+      mockS3CLient = mockClient(getS3Client());
 
       fixture = new ProjektiFixture();
       personSearchFixture = new PersonSearchFixture();
@@ -82,6 +87,13 @@ describe("apiHandler", () => {
         kayttoOikeudet: [],
       }));
       createProjektiStub.resolves();
+    }
+
+    function validatePutObjectCommandInput(callNumber: number, yllapitoBucketName: string, filePath: string) {
+      const { Bucket: aloituskuulutusBucket, Key: aloituskuulutusKey } = mockS3CLient.call(callNumber).args[0]
+        .input as PutObjectCommandInput;
+      expect(aloituskuulutusBucket).to.eq(yllapitoBucketName);
+      expect(aloituskuulutusKey).to.eq(filePath);
     }
 
     describe("lataaProjekti", () => {
@@ -271,7 +283,7 @@ describe("apiHandler", () => {
             ],
             suunnitteluSopimus: null,
             euRahoitus: false, // mandatory field for perustiedot
-            aloitusKuulutus: fixture.aloitusKuulutus,
+            aloitusKuulutus: fixture.aloitusKuulutusInput,
             kielitiedot: {
               ensisijainenKieli: Kieli.SUOMI,
               toissijainenKieli: Kieli.SAAME,
@@ -320,11 +332,25 @@ describe("apiHandler", () => {
         });
 
         // Accept aloituskuulutus
+        mockS3CLient.on(PutObjectCommand).resolves({});
         await api.siirraTila({
           oid,
           tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
           toiminto: TilasiirtymaToiminto.HYVAKSY,
         });
+
+        const calls = mockS3CLient.calls();
+        expect(calls).to.have.length(2);
+        validatePutObjectCommandInput(
+          0,
+          "hassu-localstack-yllapito",
+          "yllapito/tiedostot/projekti/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA  Testiprojekti 1.pdf"
+        );
+        validatePutObjectCommandInput(
+          1,
+          "hassu-localstack-yllapito",
+          "yllapito/tiedostot/projekti/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA  Testiprojekti 1.pdf"
+        );
 
         // Verify that the accepted aloituskuulutus is available
         await validateAloitusKuulutusState({ oid, expectedState: AloitusKuulutusTila.HYVAKSYTTY });

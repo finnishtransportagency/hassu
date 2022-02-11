@@ -1,9 +1,16 @@
-import { AloitusKuulutusTila, TilaSiirtymaInput, TilasiirtymaToiminto } from "../../../common/graphql/apiModel";
+import {
+  AloitusKuulutusTila,
+  AsiakirjaTyyppi,
+  TilaSiirtymaInput,
+  TilasiirtymaToiminto,
+} from "../../../common/graphql/apiModel";
 import { requirePermissionLuku, requirePermissionMuokkaa } from "../user";
 import { requireProjektiPaallikko } from "../user/userService";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { asiakirjaAdapter } from "./asiakirjaAdapter";
 import { AloitusKuulutus, AloitusKuulutusJulkaisu, DBProjekti } from "../database/model/projekti";
+import { asiakirjaService } from "../asiakirja/asiakirjaService";
+import { fileService } from "../files/fileService";
 
 function findAloitusKuulutusWaitingForApproval(projekti: DBProjekti): AloitusKuulutusJulkaisu | undefined {
   if (projekti.aloitusKuulutusJulkaisut) {
@@ -39,6 +46,23 @@ async function reject(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus, sy
   await projektiDatabase.deleteAloitusKuulutusJulkaisu(projekti, julkaisuWaitingForApproval);
 }
 
+async function createAloituskuulutusPDF(
+  asiakirjaTyyppi: AsiakirjaTyyppi,
+  julkaisuWaitingForApproval: AloitusKuulutusJulkaisu,
+  projekti: DBProjekti
+) {
+  const pdf = await asiakirjaService.createPdf({
+    asiakirjaTyyppi,
+    aloitusKuulutusJulkaisu: julkaisuWaitingForApproval,
+  });
+  return await fileService.createFileToProjekti({
+    oid: projekti.oid,
+    filePathInProjekti: "aloituskuulutus",
+    fileName: pdf.nimi,
+    contents: Buffer.from(pdf.sisalto, "base64"),
+  });
+}
+
 async function approve(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus) {
   const projektiPaallikko = requireProjektiPaallikko(projekti);
   const julkaisuWaitingForApproval = findAloitusKuulutusWaitingForApproval(projekti);
@@ -48,7 +72,19 @@ async function approve(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus) {
   await removeRejectionReasonIfExists(projekti, aloitusKuulutus);
   julkaisuWaitingForApproval.tila = AloitusKuulutusTila.HYVAKSYTTY;
   julkaisuWaitingForApproval.hyvaksyja = projektiPaallikko.uid;
+
   await projektiDatabase.updateAloitusKuulutusJulkaisu(projekti, julkaisuWaitingForApproval);
+
+  julkaisuWaitingForApproval.aloituskuulutusPDFPath = await createAloituskuulutusPDF(
+    AsiakirjaTyyppi.ALOITUSKUULUTUS,
+    julkaisuWaitingForApproval,
+    projekti
+  );
+  julkaisuWaitingForApproval.aloituskuulutusIlmoitusPDFPath = await createAloituskuulutusPDF(
+    AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA,
+    julkaisuWaitingForApproval,
+    projekti
+  );
 }
 
 async function removeRejectionReasonIfExists(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus) {

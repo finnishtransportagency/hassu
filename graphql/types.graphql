@@ -112,6 +112,8 @@ type AloitusKuulutusJulkaisu {
   velho: Velho!
   suunnitteluSopimus: SuunnitteluSopimus
   kielitiedot: Kielitiedot
+  aloituskuulutusPDFPath: String
+  aloituskuulutusIlmoitusPDFPath: String
   tila: AloitusKuulutusTila
   muokkaaja: String
   hyvaksyja: String

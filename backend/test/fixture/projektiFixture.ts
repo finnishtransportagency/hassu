@@ -1,5 +1,6 @@
 import {
   AloitusKuulutus,
+  AloitusKuulutusInput,
   Kieli,
   Projekti,
   ProjektiKayttaja,
@@ -80,8 +81,7 @@ export class ProjektiFixture {
     kayttoOikeudet: [],
   };
 
-  aloitusKuulutus: AloitusKuulutus = {
-    __typename: "AloitusKuulutus",
+  aloitusKuulutusInput: AloitusKuulutusInput = {
     kuulutusPaiva: "2022-01-02",
     hankkeenKuvaus: "Lorem Ipsum",
     hankkeenKuvausRuotsi: "På Svenska",
@@ -90,7 +90,6 @@ export class ProjektiFixture {
     elyKeskus: "Pirkanmaa",
     esitettavatYhteystiedot: [
       {
-        __typename: "Yhteystieto",
         etunimi: "Marko",
         sukunimi: "Koi",
         sahkoposti: "markku.koi@koi.com",
@@ -98,6 +97,15 @@ export class ProjektiFixture {
         puhelinnumero: "0293121213",
       },
     ],
+  };
+
+  aloitusKuulutus: AloitusKuulutus = {
+    __typename: "AloitusKuulutus",
+    ...this.aloitusKuulutusInput,
+    esitettavatYhteystiedot: this.aloitusKuulutusInput.esitettavatYhteystiedot.map((yt) => ({
+      __typename: "Yhteystieto",
+      ...yt,
+    })),
   };
 
   dbProjekti1: DBProjekti = {

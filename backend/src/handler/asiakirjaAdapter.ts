@@ -16,8 +16,8 @@ export class AsiakirjaAdapter {
     if (dbProjekti.aloitusKuulutus) {
       const { esitettavatYhteystiedot, palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.aloitusKuulutus;
       return {
-        id: createNextID(dbProjekti),
         ...includedFields,
+        id: createNextID(dbProjekti),
         yhteystiedot: adaptYhteystiedot(dbProjekti, esitettavatYhteystiedot),
         velho: adaptVelho(dbProjekti),
         suunnitteluSopimus: cloneDeep(dbProjekti.suunnitteluSopimus),

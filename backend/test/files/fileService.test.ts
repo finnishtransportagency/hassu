@@ -4,16 +4,15 @@ import { fileService } from "../../src/files/fileService";
 import * as sinon from "sinon";
 import { getS3Client } from "../../src/aws/clients";
 import { uuid } from "../../src/util/uuid";
-import { mockClient } from "aws-sdk-client-mock";
-import { AwsStub } from "aws-sdk-client-mock/dist/types/awsClientStub";
-import { HeadObjectCommand } from "@aws-sdk/client-s3";
+import { AwsClientStub, mockClient } from "aws-sdk-client-mock";
+import { HeadObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 const { expect } = require("chai");
 
 const sandbox = sinon.createSandbox();
 
 describe("UploadService", () => {
-  let mockS3CLient: AwsStub<any, any>;
+  let mockS3CLient: AwsClientStub<S3Client>;
 
   afterEach(() => {
     sandbox.reset();

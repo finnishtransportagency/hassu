@@ -1,4 +1,10 @@
-import { AloitusKuulutusTila, Kieli, ProjektiRooli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
+import {
+  AloitusKuulutusTila,
+  Kieli,
+  ProjektiRooli,
+  ProjektiTyyppi,
+  Viranomainen,
+} from "../../../../common/graphql/apiModel";
 
 export type Kuulutus = {
   kuulutusPaiva?: string;
@@ -44,6 +50,8 @@ export type AloitusKuulutusJulkaisu = {
   velho: Velho;
   suunnitteluSopimus?: SuunnitteluSopimus | null;
   kielitiedot?: Kielitiedot | null;
+  aloituskuulutusPDFPath?: string | null;
+  aloituskuulutusIlmoitusPDFPath?: string | null;
   tila?: AloitusKuulutusTila | null;
   muokkaaja?: string | null;
   hyvaksyja?: string | null;

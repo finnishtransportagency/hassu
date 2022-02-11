@@ -186,7 +186,7 @@ async function updateAloitusKuulutusJulkaisu(projekti: DBProjekti, julkaisu: Alo
   }
   for (let idx = 0; idx < aloitusKuulutusJulkaisut.length; idx++) {
     if (aloitusKuulutusJulkaisut[idx].id == julkaisu.id) {
-      log.info("deleteAloitusKuulutusJulkaisu", { idx, julkaisu });
+      log.info("updateAloitusKuulutusJulkaisu", { idx, julkaisu });
 
       const params = {
         TableName: projektiTableName,
