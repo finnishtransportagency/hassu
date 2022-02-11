@@ -20,8 +20,6 @@ import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/perso
 import { openSearchClient } from "../../src/projektiSearch/openSearchClient";
 import { localstackS3Client } from "../util/s3Util";
 import { projektiArchive } from "../../src/archive/projektiArchiveService";
-import { s3Cache } from "../../src/cache/s3Cache";
-import { PERSON_SEARCH_CACHE_KEY } from "../../src/personSearch/personSearchClient";
 import { fail } from "assert";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
@@ -35,7 +33,6 @@ describe("Api", () => {
 
   before(async () => {
     localstackS3Client();
-    await s3Cache.clear(PERSON_SEARCH_CACHE_KEY);
   });
 
   afterEach(() => {
@@ -132,8 +129,6 @@ describe("Api", () => {
     const kielitiedot: Kielitiedot = {
       __typename: "Kielitiedot",
       ensisijainenKieli: Kieli.SUOMI,
-      toissijainenKieli: undefined,
-      projektinNimiVieraskielella: undefined,
     };
 
     await api.tallennaProjekti({
@@ -155,7 +150,7 @@ describe("Api", () => {
     expect(updatedProjekti.euRahoitus).to.be.false;
 
     // Generate Aloituskuulutus PDF
-    const pdf = await api.lataaAsiakirjaPDF(oid, AsiakirjaTyyppi.ALOITUSKUULUTUS);
+    const pdf = await api.esikatseleAsiakirjaPDF(oid, AsiakirjaTyyppi.ALOITUSKUULUTUS);
     expect(pdf.nimi).to.include(".pdf");
     expect(pdf.sisalto).not.to.be.empty;
     expect(pdf.sisalto.length).to.be.greaterThan(50000);

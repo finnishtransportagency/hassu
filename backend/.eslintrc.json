@@ -15,6 +15,14 @@
   ],
   "rules": {
     "@typescript-eslint/no-var-requires": "warn",
+    "object-shorthand": "warn",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "varsIgnorePattern": "^_",
+        "argsIgnorePattern": "^_"
+      }
+    ],
     "mocha-no-only/mocha-no-only": [
       "error"
     ]

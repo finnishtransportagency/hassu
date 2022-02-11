@@ -3,7 +3,7 @@ import { AsiakirjaTyyppi } from "@services/api";
 import { handlePdfRequest } from "src/util/handlePdfRequest";
 
 export default async function render(req: NextApiRequest, res: NextApiResponse) {
-  handlePdfRequest({
+  await handlePdfRequest({
     req,
     res,
     virheviesti: "Aloituskuulutuksen luonti epäonnistui",

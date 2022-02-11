@@ -7,6 +7,11 @@ Object {
   "hankkeenKuvausRuotsi": "På Svenska",
   "hankkeenKuvausSaame": "Saameksi",
   "id": 1,
+  "kielitiedot": Object {
+    "ensisijainenKieli": "SUOMI",
+    "projektinNimiVieraskielella": "Heja sverige",
+    "toissijainenKieli": "RUOTSI",
+  },
   "kuulutusPaiva": "2022-01-02",
   "siirtyySuunnitteluVaiheeseen": "2022-01-01",
   "suunnitteluSopimus": Object {

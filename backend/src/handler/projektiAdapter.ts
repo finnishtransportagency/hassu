@@ -153,13 +153,14 @@ function adaptAloitusKuulutusJulkaisut(
 ): API.AloitusKuulutusJulkaisu[] | undefined {
   if (aloitusKuulutusJulkaisut) {
     return aloitusKuulutusJulkaisut.map((julkaisu) => {
-      const { yhteystiedot, velho, suunnitteluSopimus, ...fieldsToCopyAsIs } = julkaisu;
+      const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, ...fieldsToCopyAsIs } = julkaisu;
 
       return {
         __typename: "AloitusKuulutusJulkaisu",
         yhteystiedot: adaptYhteystiedot(yhteystiedot),
         velho: adaptVelho(velho),
         suunnitteluSopimus: adaptSuunnitteluSopimus(suunnitteluSopimus),
+        kielitiedot: adaptKielitiedot(kielitiedot),
         ...fieldsToCopyAsIs,
       };
     });

@@ -43,6 +43,7 @@ export type AloitusKuulutusJulkaisu = {
   yhteystiedot: Yhteystieto[];
   velho: Velho;
   suunnitteluSopimus?: SuunnitteluSopimus | null;
+  kielitiedot?: Kielitiedot | null;
   tila?: AloitusKuulutusTila | null;
   muokkaaja?: string | null;
   hyvaksyja?: string | null;

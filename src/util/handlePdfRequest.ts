@@ -54,7 +54,7 @@ export const handlePdfRequest = async ({ req, res, asiakirjaTyyppi, virheviesti 
       changes = JSON.parse(tallennaProjektiInput);
     }
 
-    const pdf = await api.lataaAsiakirjaPDF(oid, asiakirjaTyyppi, changes);
+    const pdf = await api.esikatseleAsiakirjaPDF(oid, asiakirjaTyyppi, changes);
     if (pdf) {
       res.setHeader("Content-Type", "application/pdf");
       res.setHeader("Content-disposition", "inline; filename=" + pdf.nimi);
