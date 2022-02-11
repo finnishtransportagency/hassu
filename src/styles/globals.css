@@ -55,6 +55,9 @@
   body :is(h1, h2, h3, h4, h5, p) {
     @apply mb-4;
   }
+  body :is(h6) {
+    @apply mb-2;
+  }
   body h2 {
     @apply vayla-title;
   }

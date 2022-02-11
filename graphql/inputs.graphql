@@ -36,6 +36,22 @@ input AloitusKuulutusInput {
   hankkeenKuvausSaame: String
   elyKeskus: String
   esitettavatYhteystiedot: [YhteystietoInput]
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
+}
+
+input IlmoituksenVastaanottajatInput {
+  kunnat: [KuntaVastaanottajaInput!]
+  viranomaiset: [ViranomaisVastaanottajaInput!]
+}
+
+input ViranomaisVastaanottajaInput {
+  nimi: IlmoitettavaViranomainen!
+  sahkoposti: String!
+}
+
+input KuntaVastaanottajaInput {
+  nimi: String!
+  sahkoposti: String!
 }
 
 input SuunnitteluSopimusInput {

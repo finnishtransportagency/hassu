@@ -98,6 +98,8 @@ export type HassuSSMParameters = {
 
   EmailsOn: string;
   EmailsTo: string;
+
+  kirjaamoOsoitteet: string;
 };
 
 export async function readParametersByPath(path: string, region: Region): Promise<Record<string, string>> {
@@ -172,6 +174,7 @@ export async function getEnvironmentVariablesFromSSM(variables?: HassuSSMParamet
 
     EMAILS_ON: variables.EmailsOn,
     EMAILS_TO: variables.EmailsTo,
+    NEXT_PUBLIC_KIRJAAMO_OSOITTEET: variables.kirjaamoOsoitteet,
   };
 }
 

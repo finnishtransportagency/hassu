@@ -16,18 +16,7 @@ interface Props {
   projekti?: Projekti | null;
 }
 
-export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
-  const {
-    register,
-    control,
-    formState: { errors },
-  } = useFormContext(); // retrieve all hook methods
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "liittyvatSuunnitelmat",
-  });
-
+export default function ProjektiLiittyvatSuunnitelmat({ projekti }: Props): ReactElement {
   const [isLiittyviaSuunnitelmia, setLiittyviaSuunnitelmia] = useState(false);
 
   useEffect(() => {
@@ -36,16 +25,9 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
     }
   }, [projekti]);
 
-  useEffect(() => {
-    if (projekti?.oid && !isLiittyviaSuunnitelmia) {
-      remove();
-    }
-  }, [isLiittyviaSuunnitelmia, remove, projekti]);
-
   return (
     <>
       <h4 className="vayla-small-title">Projektiin liittyvät suunnitelmat</h4>
-
       <FormGroup label="Liittyykö projektiin muita voimassaolevia lakisääteisiä suunnitelmia" flexDirection="row">
         <RadioButton
           label="Kyllä"
@@ -65,62 +47,89 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
         />
       </FormGroup>
       {isLiittyviaSuunnitelmia && (
-        <fieldset>
-          <div>
-            {fields.map((field, index) => (
-              <div key={field.id} className="grid grid-cols-1 md:grid-cols-12 gap-x-6 mb-3">
-                <div className="md:col-span-4">
-                  <TextInput
-                    label="Asiatunnus"
-                    {...register(`liittyvatSuunnitelmat.${index}.asiatunnus`)}
-                    disabled={!isLiittyviaSuunnitelmia}
-                    error={errors?.liittyvatSuunnitelmat?.[index]?.asiatunnus}
-                  />
-                </div>
-                <div className="md:col-span-6">
-                  <TextInput
-                    label="Suunnitelman nimi"
-                    {...register(`liittyvatSuunnitelmat.${index}.nimi`)}
-                    disabled={!isLiittyviaSuunnitelmia}
-                    error={errors?.liittyvatSuunnitelmat?.[index]?.nimi}
-                  />
-                </div>
-                <div>
-                  <div className="hidden lg:block lg:mt-6">
-                    <IconButton
-                      icon="trash"
-                      onClick={(event) => {
-                        event.preventDefault();
-                        remove(index);
-                      }}
-                    />
-                  </div>
-                  <div className="block lg:hidden">
-                    <Button
-                      onClick={(event) => {
-                        event.preventDefault();
-                        remove(index);
-                      }}
-                      endIcon="trash"
-                    >
-                      Poista
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <Button
-            onClick={(event) => {
-              event.preventDefault();
-              append(defaultSuunnitelma);
-            }}
-            disabled={!isLiittyviaSuunnitelmia}
-          >
-            Uusi rivi +
-          </Button>
-        </fieldset>
+        <LiittyvatSuunnitelmat isLiittyviaSuunnitelmia={isLiittyviaSuunnitelmia} projekti={projekti} />
       )}
     </>
   );
 }
+
+interface LiittyvatSuunnitelmatProps {
+  isLiittyviaSuunnitelmia: boolean;
+  projekti?: Projekti | null;
+}
+
+const LiittyvatSuunnitelmat = ({ isLiittyviaSuunnitelmia, projekti }: LiittyvatSuunnitelmatProps) => {
+  const {
+    register,
+    control,
+    formState: { errors },
+  } = useFormContext(); // retrieve all hook methods
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "liittyvatSuunnitelmat",
+  });
+
+  useEffect(() => {
+    if (projekti?.oid && !isLiittyviaSuunnitelmia) {
+      remove();
+    }
+  }, [isLiittyviaSuunnitelmia, remove, projekti]);
+  return (
+    <fieldset>
+      <div>
+        {fields.map((field, index) => (
+          <div key={field.id} className="grid grid-cols-1 md:grid-cols-12 gap-x-6 mb-3">
+            <div className="md:col-span-4">
+              <TextInput
+                label="Asiatunnus"
+                {...register(`liittyvatSuunnitelmat.${index}.asiatunnus`)}
+                disabled={!isLiittyviaSuunnitelmia}
+                error={errors?.liittyvatSuunnitelmat?.[index]?.asiatunnus}
+              />
+            </div>
+            <div className="md:col-span-6">
+              <TextInput
+                label="Suunnitelman nimi"
+                {...register(`liittyvatSuunnitelmat.${index}.nimi`)}
+                disabled={!isLiittyviaSuunnitelmia}
+                error={errors?.liittyvatSuunnitelmat?.[index]?.nimi}
+              />
+            </div>
+            <div>
+              <div className="hidden lg:block lg:mt-6">
+                <IconButton
+                  icon="trash"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    remove(index);
+                  }}
+                />
+              </div>
+              <div className="block lg:hidden">
+                <Button
+                  onClick={(event) => {
+                    event.preventDefault();
+                    remove(index);
+                  }}
+                  endIcon="trash"
+                >
+                  Poista
+                </Button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <Button
+        onClick={(event) => {
+          event.preventDefault();
+          append(defaultSuunnitelma);
+        }}
+        disabled={!isLiittyviaSuunnitelmia}
+      >
+        Uusi rivi +
+      </Button>
+    </fieldset>
+  );
+};

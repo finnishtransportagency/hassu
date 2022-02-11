@@ -3,6 +3,8 @@ import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { useRouter } from "next/router";
 import React, { ReactElement, useEffect, useRef, useState } from "react";
 import useProjekti from "src/hooks/useProjekti";
+import * as Yup from "yup";
+import { SchemaOf } from "yup";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@components/button/Button";
@@ -17,6 +19,7 @@ import {
   TallennaProjektiInput,
   AloitusKuulutusJulkaisu,
   TilasiirtymaToiminto,
+  IlmoitettavaViranomainen,
 } from "@services/api";
 import log from "loglevel";
 import { PageProps } from "@pages/_app";
@@ -29,6 +32,7 @@ import { cloneDeep, find } from "lodash";
 import useSnackbars from "src/hooks/useSnackbars";
 import { aloituskuulutusSchema } from "src/schemas/aloituskuulutus";
 import AloituskuulutusRO from "@components/projekti/aloituskuulutus/AloituskuulutusRO";
+import IlmoituksenVastaanottajat from "@components/projekti/aloituskuulutus/IlmoituksenVastaanottajat";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
 type RequiredProjektiFields = Required<{
@@ -38,7 +42,11 @@ type RequiredProjektiFields = Required<{
 type FormValues = RequiredProjektiFields & {
   aloitusKuulutus: Pick<
     AloitusKuulutusInput,
-    "esitettavatYhteystiedot" | "kuulutusPaiva" | "hankkeenKuvaus" | "siirtyySuunnitteluVaiheeseen"
+    | "esitettavatYhteystiedot"
+    | "kuulutusPaiva"
+    | "hankkeenKuvaus"
+    | "siirtyySuunnitteluVaiheeseen"
+    | "ilmoituksenVastaanottajat"
   >;
 };
 
@@ -104,7 +112,14 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
   const watchKuulutusPaiva = watch("aloitusKuulutus.kuulutusPaiva");
 
   useEffect(() => {
-    if (projekti && projekti.oid) {
+    if (projekti?.oid) {
+      const kuntaNimet: string[] = [
+        ...new Set([
+          ...(projekti.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.map(({ nimi }) => nimi) || []),
+          ...(projekti.velho.kunnat || []),
+        ]),
+      ];
+
       const tallentamisTiedot: FormValues = {
         oid: projekti.oid,
         kayttoOikeudet:
@@ -115,6 +130,19 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
             esitetaanKuulutuksessa,
           })) || [],
         aloitusKuulutus: {
+          ilmoituksenVastaanottajat: {
+            kunnat: kuntaNimet.map((nimi) => ({
+              nimi,
+              sahkoposti:
+                projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.find((kunta) => kunta.nimi === nimi)
+                  ?.sahkoposti || "",
+            })),
+            viranomaiset:
+              projekti.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.map(({ nimi, sahkoposti }) => ({
+                nimi,
+                sahkoposti,
+              })) || [],
+          },
           hankkeenKuvaus: projekti?.aloitusKuulutus?.hankkeenKuvaus,
           kuulutusPaiva: projekti?.aloitusKuulutus?.kuulutusPaiva,
           siirtyySuunnitteluVaiheeseen: projekti?.aloitusKuulutus?.siirtyySuunnitteluVaiheeseen,
@@ -128,8 +156,9 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
             }) || [],
         },
       };
+
       setFormContext(projekti);
-      reset(tallentamisTiedot);
+      reset(tallentamisTiedot, { keepDirty: true, keepTouched: true });
     }
   }, [projekti, reset]);
 
@@ -142,6 +171,9 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
 
   const saveAloituskuulutus = async (formData: FormValues) => {
     deleteFieldArrayIds(formData?.aloitusKuulutus?.esitettavatYhteystiedot);
+    deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat);
+    deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset);
+    setIsFormSubmitting(true);
     log.log("formData", formData);
     await api.tallennaProjekti(formData);
     await reloadProjekti();
@@ -181,6 +213,8 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
   const showPDFPreview = (formData: FormValues, action: string) => {
     const formDataToSend = cloneDeep(formData);
     deleteFieldArrayIds(formDataToSend?.aloitusKuulutus?.esitettavatYhteystiedot);
+    deleteFieldArrayIds(formDataToSend?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat);
+    deleteFieldArrayIds(formDataToSend?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset);
     setSerializedFormData(JSON.stringify(formDataToSend));
     if (pdfFormRef.current) {
       pdfFormRef.current.action = action;
@@ -203,7 +237,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
   return (
     <ProjektiPageLayout title="Aloituskuulutus">
       {!projekti?.aloitusKuulutusJulkaisut && (
-        <>
+        <FormProvider {...useFormReturn}>
           <form>
             <fieldset disabled={disableFormEdit}>
               <ProjektiErrorNotification
@@ -272,6 +306,9 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
               <Notification type={NotificationType.INFO}>
                 Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
               </Notification>
+              <div className="content">
+                <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} />
+              </div>
               <div className="flex flex-col lg:flex-row gap-6">
                 <Button
                   type="submit"
@@ -306,7 +343,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
               Lähetä Hyväksyttäväksi
             </Button>
           </div>
-        </>
+        </FormProvider>
       )}
       {getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA) && (
         <FormProvider {...useFormReturn}>

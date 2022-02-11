@@ -18,6 +18,25 @@ enum Viranomainen {
   VARSINAIS_SUOMEN_ELY
 }
 
+enum IlmoitettavaViranomainen {
+  ETELA_POHJANMAAN_ELY
+  ETELA_SAVO_ELY
+  HAME_ELY
+  KAAKKOIS_SUOMEN_ELY
+  KAINUUN_ELY
+  KESKI_SUOMEN_ELY
+  LAPIN_ELY
+  PIRKANMAAN_ELY
+  POHJANMAAN_ELY
+  POHJOIS_KARJALAN_ELY
+  POHJOIS_POHJANMAAN_ELY
+  POHJOIS_SAVON_ELY
+  SATAKUNNAN_ELY
+  UUDENMAAN_ELY
+  VARSINAIS_SUOMEN_ELY
+  VAYLAVIRASTO
+}
+
 enum Status {
   EI_JULKAISTU
   ALOITUSKUULUTUS
@@ -115,6 +134,22 @@ type AloitusKuulutusJulkaisu {
   tila: AloitusKuulutusTila
   muokkaaja: String
   hyvaksyja: String
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+}
+
+type IlmoituksenVastaanottajat {
+  kunnat: [KuntaVastaanottaja!]
+  viranomaiset: [ViranomaisVastaanottaja!]
+}
+
+type ViranomaisVastaanottaja {
+  nimi: IlmoitettavaViranomainen!
+  sahkoposti: String!
+}
+
+type KuntaVastaanottaja {
+  nimi: String!
+  sahkoposti: String!
 }
 
 type SuunnitteluSopimus {

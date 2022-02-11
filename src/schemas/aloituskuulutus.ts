@@ -1,4 +1,4 @@
-import { Projekti } from "@services/api";
+import { IlmoitettavaViranomainen, Projekti } from "@services/api";
 import * as Yup from "yup";
 import { kayttoOikeudetSchema } from "./kayttoOikeudet";
 import { puhelinNumeroSchema } from "./puhelinNumero";
@@ -91,4 +91,32 @@ export const aloituskuulutusSchema = Yup.object().shape({
           .nullable()
       ),
   }),
+  ilmoituksenVastaanottajat: Yup.object()
+    .shape({
+      kunnat: Yup.array()
+        .of(
+          Yup.object()
+            .shape({
+              nimi: Yup.string().required(),
+              sahkoposti: Yup.string()
+                .email("Virheellinen sähköpostiosoite")
+                .required("Sähköpostiosoite on pakollinen"),
+            })
+            .required()
+        )
+        .notRequired(),
+      viranomaiset: Yup.array()
+        .of(
+          Yup.object()
+            .shape({
+              nimi: Yup.mixed().oneOf(Object.values(IlmoitettavaViranomainen), "Viranomaistieto on pakollinen"),
+              sahkoposti: Yup.string()
+                .email("Virheellinen sähköpostiosoite")
+                .required("Sähköpostiosoite on pakollinen"),
+            })
+            .required()
+        )
+        .notRequired(),
+    })
+    .required(),
 });

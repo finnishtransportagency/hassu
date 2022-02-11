@@ -1,6 +1,6 @@
 import { SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
-import { capitalizeAllWords } from "../../handler/asiakirjaAdapter";
 import { AloitusKuulutusJulkaisu } from "../../database/model/projekti";
+import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 
 const header = "KUULUTUS SUUNNITTELUN ALOITTAMISESTA";
 
@@ -68,7 +68,7 @@ export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
   private get kuuluttaja() {
     const suunnitteluSopimus = this.aloitusKuulutusJulkaisu.suunnitteluSopimus;
     if (suunnitteluSopimus?.kunta) {
-      return this.capitalize(suunnitteluSopimus.kunta);
+      return formatProperNoun(suunnitteluSopimus.kunta);
     }
     return this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio || "Kuuluttaja";
   }
@@ -81,16 +81,14 @@ export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
     let phrase: string;
     const suunnitteluSopimus = this.aloitusKuulutusJulkaisu.suunnitteluSopimus;
     if (suunnitteluSopimus) {
-      phrase = `${this.capitalize(
-        this.aloitusKuulutusJulkaisu.suunnitteluSopimus?.kunta || "Kunta"
-      )}, sovittuaan asiasta ${this.tilaajaGenetiivi} kanssa, käynnistää ${
-        this.projektiTyyppi
-      }n laatimisen tarpeellisine tutkimuksineen. `;
+      phrase = `${formatProperNoun(suunnitteluSopimus?.kunta || "Kunta")}, sovittuaan asiasta ${
+        this.tilaajaGenetiivi
+      } kanssa, käynnistää ${this.projektiTyyppi}n laatimisen tarpeellisine tutkimuksineen. `;
     } else {
       const tilaajaOrganisaatio = this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio || "Tilaajaorganisaatio";
       const kunnat = this.aloitusKuulutusJulkaisu.velho?.kunnat;
       const organisaatiot = kunnat ? [tilaajaOrganisaatio, ...kunnat] : [tilaajaOrganisaatio];
-      const trimmattutOrganisaatiot = organisaatiot.map((organisaatio) => capitalizeAllWords(organisaatio.trim()));
+      const trimmattutOrganisaatiot = organisaatiot.map((organisaatio) => formatProperNoun(organisaatio));
       const viimeinenOrganisaatio = trimmattutOrganisaatiot.slice(-1);
       const muut = trimmattutOrganisaatiot.slice(0, -1);
       const aloittaa = muut.length > 0 ? "aloittavat" : "aloittaa";

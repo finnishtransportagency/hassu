@@ -179,7 +179,7 @@ const UserFields = ({
 
   return (
     <div className="flex flex-col lg:flex-row mb-10 lg:mb-3">
-      <div className="grid w-full grid-cols-1 lg:grid-cols-12 gap-x-6 lg:pr-1">
+      <div className="grid w-full grid-cols-1 lg:grid-cols-12 gap-x-6 gap-y-3 lg:pr-1 mb-2">
         <div className="lg:col-span-4">
           {isProjektiPaallikko ? (
             <TextInput label="Nimi *" value={getKayttajaNimi(kayttaja) || ""} disabled />
