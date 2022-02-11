@@ -111,6 +111,7 @@ type AloitusKuulutusJulkaisu {
   yhteystiedot: [Yhteystieto!]!
   velho: Velho!
   suunnitteluSopimus: SuunnitteluSopimus
+  kielitiedot: Kielitiedot
   tila: AloitusKuulutusTila
   muokkaaja: String
   hyvaksyja: String

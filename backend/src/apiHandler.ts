@@ -1,7 +1,7 @@
 import { log } from "./logger";
 import {
   LaskePaattymisPaivaQueryVariables,
-  LataaAsiakirjaPDFQueryVariables,
+  EsikatseleAsiakirjaPDFQueryVariables,
   LataaProjektiQueryVariables,
   ListaaKayttajatQueryVariables,
   ListaaVelhoProjektitQueryVariables,
@@ -52,8 +52,8 @@ async function executeOperation(event: AppSyncResolverEvent<AppSyncEventArgument
       return await loadProjekti((event.arguments as LataaProjektiQueryVariables).oid);
     case apiConfig.tallennaProjekti.name:
       return await createOrUpdateProjekti((event.arguments as TallennaProjektiMutationVariables).projekti);
-    case apiConfig.lataaAsiakirjaPDF.name:
-      return await lataaAsiakirja(event.arguments as LataaAsiakirjaPDFQueryVariables);
+    case apiConfig.esikatseleAsiakirjaPDF.name:
+      return await lataaAsiakirja(event.arguments as EsikatseleAsiakirjaPDFQueryVariables);
     case apiConfig.valmisteleTiedostonLataus.name:
       return await createUploadURLForFile((event.arguments as ValmisteleTiedostonLatausQueryVariables).tiedostoNimi);
     case apiConfig.laskePaattymisPaiva.name:

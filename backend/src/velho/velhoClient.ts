@@ -138,6 +138,7 @@ export class VelhoClient {
       }
       return adaptSearchResults(data.osumat as ProjektiSearchResult[], await personSearch.getKayttajas());
     } catch (e) {
+      log.error(e.message, e);
       throw new VelhoError(e.message, e);
     }
   }

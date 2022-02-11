@@ -1,13 +1,13 @@
 import { projektiDatabase } from "../database/projektiDatabase";
 import { requirePermissionLuku } from "../user";
-import { LataaAsiakirjaPDFQueryVariables } from "../../../common/graphql/apiModel";
+import { EsikatseleAsiakirjaPDFQueryVariables } from "../../../common/graphql/apiModel";
 import { log } from "../logger";
 import { NotFoundError } from "../error/NotFoundError";
 import { asiakirjaService } from "../asiakirja/asiakirjaService";
 import { projektiAdapter } from "./projektiAdapter";
 import { asiakirjaAdapter } from "./asiakirjaAdapter";
 
-export async function lataaAsiakirja({ oid, asiakirjaTyyppi, muutokset }: LataaAsiakirjaPDFQueryVariables) {
+export async function lataaAsiakirja({ oid, asiakirjaTyyppi, muutokset }: EsikatseleAsiakirjaPDFQueryVariables) {
   const vaylaUser = requirePermissionLuku();
   if (vaylaUser) {
     log.info("Loading projekti", { oid });

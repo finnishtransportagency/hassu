@@ -21,6 +21,7 @@ export class AsiakirjaAdapter {
         yhteystiedot: adaptYhteystiedot(dbProjekti, esitettavatYhteystiedot),
         velho: adaptVelho(dbProjekti),
         suunnitteluSopimus: cloneDeep(dbProjekti.suunnitteluSopimus),
+        kielitiedot: cloneDeep(dbProjekti.kielitiedot),
       };
     }
     throw new Error("Aloituskuulutus puuttuu");

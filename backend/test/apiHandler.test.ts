@@ -10,6 +10,7 @@ import { personSearch } from "../src/personSearch/personSearchClient";
 import { userService } from "../src/user";
 import {
   AloitusKuulutusTila,
+  Kieli,
   Projekti,
   ProjektiRooli,
   TallennaProjektiInput,
@@ -271,56 +272,65 @@ describe("apiHandler", () => {
             suunnitteluSopimus: null,
             euRahoitus: false, // mandatory field for perustiedot
             aloitusKuulutus: fixture.aloitusKuulutus,
+            kielitiedot: {
+              ensisijainenKieli: Kieli.SUOMI,
+              toissijainenKieli: Kieli.SAAME,
+              projektinNimiVieraskielella: "Projektin nimi saameksi",
+            },
           }
         );
 
         // Send aloituskuulutus to be approved
+        const oid = projekti.oid;
         await api.siirraTila({
-          oid: projekti.oid,
+          oid,
           tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
           toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
         });
 
         // Check that the snapshot for aloituskuulutus is available
         await validateAloitusKuulutusState({
-          oid: projekti.oid,
+          oid,
           expectedState: AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA,
         });
 
         // Reject aloituskuulutus
         const reason = "Tietoja puuttuu!";
         await api.siirraTila({
-          oid: projekti.oid,
+          oid,
           tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
           toiminto: TilasiirtymaToiminto.HYLKAA,
           syy: reason,
         });
 
         // Verify rejection status from API
-        await validateAloitusKuulutusState({ oid: projekti.oid, expectedState: undefined, syy: reason });
+        await validateAloitusKuulutusState({ oid, expectedState: undefined, syy: reason });
 
         // Send aloituskuulutus to be approved again
         await api.siirraTila({
-          oid: projekti.oid,
+          oid,
           tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
           toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
         });
 
         // Check that the snapshot for aloituskuulutus is available
         await validateAloitusKuulutusState({
-          oid: projekti.oid,
+          oid,
           expectedState: AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA,
         });
 
         // Accept aloituskuulutus
         await api.siirraTila({
-          oid: projekti.oid,
+          oid,
           tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
           toiminto: TilasiirtymaToiminto.HYVAKSY,
         });
 
         // Verify that the accepted aloituskuulutus is available
-        await validateAloitusKuulutusState({ oid: projekti.oid, expectedState: AloitusKuulutusTila.HYVAKSYTTY });
+        await validateAloitusKuulutusState({ oid, expectedState: AloitusKuulutusTila.HYVAKSYTTY });
+
+        // Verify the end result using snapshot
+        expect(await api.lataaProjekti(oid)).toMatchSnapshot();
       });
     });
 
