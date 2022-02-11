@@ -1,4 +1,4 @@
-import { AloitusKuulutusTila, ProjektiRooli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
+import { AloitusKuulutusTila, Kieli, ProjektiRooli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
 
 export type Kuulutus = {
   kuulutusPaiva?: string;
@@ -67,8 +67,8 @@ export type Suunnitelma = {
 };
 
 export type Kielitiedot = {
-  ensisijainenKieli: string;
-  toissijainenKieli?: string;
+  ensisijainenKieli: Kieli;
+  toissijainenKieli?: Kieli;
   projektinNimiVieraskielella?: string;
 };
 

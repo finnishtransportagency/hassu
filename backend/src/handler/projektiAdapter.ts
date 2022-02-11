@@ -93,8 +93,6 @@ function adaptKielitiedot(kielitiedot?: Kielitiedot | null): API.Kielitiedot | u
     return {
       ...kielitiedot,
       __typename: "Kielitiedot",
-      ensisijainenKieli: kielitiedot.ensisijainenKieli as API.Kieli,
-      toissijainenKieli: kielitiedot.toissijainenKieli as API.Kieli,
     };
   }
   return kielitiedot as undefined;
