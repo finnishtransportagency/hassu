@@ -7,9 +7,10 @@ type Query {
   lataaAsiakirjaPDF(oid: String!, asiakirjaTyyppi: AsiakirjaTyyppi!, muutokset: TallennaProjektiInput): PDF
   valmisteleTiedostonLataus(tiedostoNimi: String!): LatausTiedot
 
-  laskePaattymisPaiva(alkupaiva: String!, tyyppi: LaskuriTyyppi!) : String
+  laskePaattymisPaiva(alkupaiva: String!, tyyppi: LaskuriTyyppi!): String
 }
 
 type Mutation {
   tallennaProjekti(projekti: TallennaProjektiInput!): String
+  siirraTila(tilasiirtyma: TilaSiirtymaInput): String
 }

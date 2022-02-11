@@ -1,6 +1,7 @@
 import { projektiDatabase } from "../database/projektiDatabase";
 import { requirePermissionLuku, requirePermissionLuonti, requirePermissionMuokkaa, requireVaylaUser } from "../user";
 import { velho } from "../velho/velhoClient";
+import * as API from "../../../common/graphql/apiModel";
 import {
   NykyinenKayttaja,
   Projekti,
@@ -57,7 +58,7 @@ function applyStatus(projekti: Projekti, param: { saved?: boolean }) {
   return projekti;
 }
 
-export async function loadProjekti(oid: string) {
+export async function loadProjekti(oid: string): Promise<API.Projekti> {
   const vaylaUser = requirePermissionLuku();
   if (vaylaUser) {
     log.info("Loading projekti", { oid });
@@ -75,7 +76,7 @@ export async function loadProjekti(oid: string) {
   }
 }
 
-export async function createOrUpdateProjekti(input: TallennaProjektiInput) {
+export async function createOrUpdateProjekti(input: TallennaProjektiInput): Promise<string> {
   requirePermissionLuku();
   const oid = input.oid;
   const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);

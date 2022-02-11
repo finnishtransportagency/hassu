@@ -1,0 +1,240 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AloitusKuulutus should create and manipulate projekti successfully 1`] = `
+Object {
+  "aloitusKuulutus": Object {
+    "elyKeskus": "Pirkanmaa",
+    "esitettavatYhteystiedot": Array [
+      Object {
+        "etunimi": "Marko",
+        "organisaatio": "Kajaani",
+        "puhelinnumero": "0293121213",
+        "sahkoposti": "markku.koi@koi.com",
+        "sukunimi": "Koi",
+      },
+    ],
+    "hankkeenKuvaus": "Lorem Ipsum",
+    "hankkeenKuvausRuotsi": "På Svenska",
+    "hankkeenKuvausSaame": "Saameksi",
+    "kuulutusPaiva": "2022-01-02",
+    "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+  },
+  "aloitusKuulutusJulkaisut": undefined,
+}
+`;
+
+exports[`AloitusKuulutus should create and manipulate projekti successfully 2`] = `
+Object {
+  "aloitusKuulutus": Object {
+    "elyKeskus": "Pirkanmaa",
+    "esitettavatYhteystiedot": Array [
+      Object {
+        "etunimi": "Marko",
+        "organisaatio": "Kajaani",
+        "puhelinnumero": "0293121213",
+        "sahkoposti": "markku.koi@koi.com",
+        "sukunimi": "Koi",
+      },
+    ],
+    "hankkeenKuvaus": "Lorem Ipsum",
+    "hankkeenKuvausRuotsi": "På Svenska",
+    "hankkeenKuvausSaame": "Saameksi",
+    "kuulutusPaiva": "2022-01-02",
+    "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+  },
+  "aloitusKuulutusJulkaisut": Array [
+    Object {
+      "elyKeskus": "Pirkanmaa",
+      "hankkeenKuvaus": "Lorem Ipsum",
+      "hankkeenKuvausRuotsi": "På Svenska",
+      "hankkeenKuvausSaame": "Saameksi",
+      "id": 1,
+      "kuulutusPaiva": "2022-01-02",
+      "muokkaaja": "A000111",
+      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "suunnitteluSopimus": Object {
+        "email": "Joku.Jossain@vayla.fi",
+        "etunimi": "Joku",
+        "kunta": "Nokia",
+        "puhelinnumero": "123",
+        "sukunimi": "Jossain",
+      },
+      "tila": "ODOTTAA_HYVAKSYNTAA",
+      "velho": Object {
+        "kunnat": Array [
+          "Tampere",
+          "Nokia",
+        ],
+        "nimi": "Testiprojekti 1",
+        "tilaajaOrganisaatio": "Uudenmaan ELY-keskus",
+        "tyyppi": "TIE",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`AloitusKuulutus should create and manipulate projekti successfully 3`] = `
+Object {
+  "aloitusKuulutus": Object {
+    "elyKeskus": "Pirkanmaa",
+    "esitettavatYhteystiedot": Array [
+      Object {
+        "etunimi": "Marko",
+        "organisaatio": "Kajaani",
+        "puhelinnumero": "0293121213",
+        "sahkoposti": "markku.koi@koi.com",
+        "sukunimi": "Koi",
+      },
+    ],
+    "hankkeenKuvaus": "Lorem Ipsum",
+    "hankkeenKuvausRuotsi": "På Svenska",
+    "hankkeenKuvausSaame": "Saameksi",
+    "kuulutusPaiva": "2022-01-02",
+    "palautusSyy": "Korjaa teksti",
+    "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+  },
+  "aloitusKuulutusJulkaisut": Array [],
+}
+`;
+
+exports[`AloitusKuulutus should create and manipulate projekti successfully 4`] = `
+Object {
+  "aloitusKuulutus": Object {
+    "elyKeskus": "Pirkanmaa",
+    "esitettavatYhteystiedot": Array [
+      Object {
+        "etunimi": "Marko",
+        "organisaatio": "Kajaani",
+        "puhelinnumero": "0293121213",
+        "sahkoposti": "markku.koi@koi.com",
+        "sukunimi": "Koi",
+      },
+    ],
+    "hankkeenKuvaus": "Lorem Ipsum",
+    "hankkeenKuvausRuotsi": "På Svenska",
+    "hankkeenKuvausSaame": "Saameksi",
+    "kuulutusPaiva": "2022-01-02",
+    "palautusSyy": null,
+    "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+  },
+  "aloitusKuulutusJulkaisut": Array [
+    Object {
+      "elyKeskus": "Pirkanmaa",
+      "hankkeenKuvaus": "Lorem Ipsum",
+      "hankkeenKuvausRuotsi": "På Svenska",
+      "hankkeenKuvausSaame": "Saameksi",
+      "id": 1,
+      "kuulutusPaiva": "2022-01-02",
+      "muokkaaja": "A000111",
+      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "suunnitteluSopimus": Object {
+        "email": "Joku.Jossain@vayla.fi",
+        "etunimi": "Joku",
+        "kunta": "Nokia",
+        "puhelinnumero": "123",
+        "sukunimi": "Jossain",
+      },
+      "tila": "ODOTTAA_HYVAKSYNTAA",
+      "velho": Object {
+        "kunnat": Array [
+          "Tampere",
+          "Nokia",
+        ],
+        "nimi": "Testiprojekti 1",
+        "tilaajaOrganisaatio": "Uudenmaan ELY-keskus",
+        "tyyppi": "TIE",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`AloitusKuulutus should create and manipulate projekti successfully 5`] = `
+Object {
+  "aloitusKuulutus": Object {
+    "elyKeskus": "Pirkanmaa",
+    "esitettavatYhteystiedot": Array [
+      Object {
+        "etunimi": "Marko",
+        "organisaatio": "Kajaani",
+        "puhelinnumero": "0293121213",
+        "sahkoposti": "markku.koi@koi.com",
+        "sukunimi": "Koi",
+      },
+    ],
+    "hankkeenKuvaus": "Lorem Ipsum",
+    "hankkeenKuvausRuotsi": "På Svenska",
+    "hankkeenKuvausSaame": "Saameksi",
+    "kuulutusPaiva": "2022-01-02",
+    "palautusSyy": null,
+    "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+  },
+  "aloitusKuulutusJulkaisut": Array [
+    Object {
+      "elyKeskus": "Pirkanmaa",
+      "hankkeenKuvaus": "Lorem Ipsum",
+      "hankkeenKuvausRuotsi": "På Svenska",
+      "hankkeenKuvausSaame": "Saameksi",
+      "hyvaksyja": "A123",
+      "id": 1,
+      "kuulutusPaiva": "2022-01-02",
+      "muokkaaja": "A000111",
+      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "suunnitteluSopimus": Object {
+        "email": "Joku.Jossain@vayla.fi",
+        "etunimi": "Joku",
+        "kunta": "Nokia",
+        "puhelinnumero": "123",
+        "sukunimi": "Jossain",
+      },
+      "tila": "HYVAKSYTTY",
+      "velho": Object {
+        "kunnat": Array [
+          "Tampere",
+          "Nokia",
+        ],
+        "nimi": "Testiprojekti 1",
+        "tilaajaOrganisaatio": "Uudenmaan ELY-keskus",
+        "tyyppi": "TIE",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
+  ],
+}
+`;

@@ -29,9 +29,11 @@ export type AloitusKuulutus = {
   hankkeenKuvausSaame?: string | null;
   elyKeskus?: string | null;
   esitettavatYhteystiedot?: Yhteystieto[] | null;
+  palautusSyy?: string | null;
 };
 
 export type AloitusKuulutusJulkaisu = {
+  id: number;
   kuulutusPaiva?: string | null;
   siirtyySuunnitteluVaiheeseen?: string | null;
   hankkeenKuvaus?: string | null;
@@ -42,6 +44,8 @@ export type AloitusKuulutusJulkaisu = {
   velho: Velho;
   suunnitteluSopimus?: SuunnitteluSopimus | null;
   tila?: AloitusKuulutusTila | null;
+  muokkaaja?: string | null;
+  hyvaksyja?: string | null;
 };
 
 export type Yhteystieto = {

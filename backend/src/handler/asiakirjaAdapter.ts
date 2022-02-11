@@ -4,13 +4,21 @@ import cloneDeep from "lodash/cloneDeep";
 const firstCharactersInWords = /(?<=^|[^\p{L}])\p{L}/gu;
 const notFirstCharacterInWords = /(?<!^|[^\p{L}])\p{L}/gu;
 
+function createNextID(dbProjekti: DBProjekti) {
+  if (!dbProjekti.aloitusKuulutusJulkaisut) {
+    return 1;
+  }
+  return dbProjekti.aloitusKuulutusJulkaisut.length + 1;
+}
+
 export class AsiakirjaAdapter {
   adaptAloitusKuulutusJulkaisu(dbProjekti: DBProjekti): AloitusKuulutusJulkaisu {
     if (dbProjekti.aloitusKuulutus) {
-      const { esitettavatYhteystiedot, ...includedFields } = dbProjekti.aloitusKuulutus;
+      const { esitettavatYhteystiedot, palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.aloitusKuulutus;
       return {
+        id: createNextID(dbProjekti),
         ...includedFields,
-        yhteystiedot: adaptYhteystiedot(dbProjekti),
+        yhteystiedot: adaptYhteystiedot(dbProjekti, esitettavatYhteystiedot),
         velho: adaptVelho(dbProjekti),
         suunnitteluSopimus: cloneDeep(dbProjekti.suunnitteluSopimus),
       };
@@ -19,7 +27,7 @@ export class AsiakirjaAdapter {
   }
 }
 
-function adaptYhteystiedot(dbProjekti: DBProjekti): Yhteystieto[] {
+function adaptYhteystiedot(dbProjekti: DBProjekti, esitettavatYhteystiedot: Yhteystieto[] | null): Yhteystieto[] {
   const yt: Yhteystieto[] = [];
   dbProjekti.kayttoOikeudet
     .filter(({ esitetaanKuulutuksessa }) => !!esitetaanKuulutuksessa)
@@ -33,8 +41,8 @@ function adaptYhteystiedot(dbProjekti: DBProjekti): Yhteystieto[] {
         organisaatio: oikeus.organisaatio,
       });
     });
-  if (dbProjekti.aloitusKuulutus?.esitettavatYhteystiedot) {
-    dbProjekti.aloitusKuulutus?.esitettavatYhteystiedot.forEach((yhteystieto) => {
+  if (esitettavatYhteystiedot) {
+    esitettavatYhteystiedot.forEach((yhteystieto) => {
       yt.push(yhteystieto);
     });
   }

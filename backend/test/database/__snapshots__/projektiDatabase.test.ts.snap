@@ -41,6 +41,15 @@ Object {
         "puhelinnumero": "123456789",
         "rooli": "PROJEKTIPAALLIKKO",
       },
+      Object {
+        "email": "Matti.Meikalainen@vayla.fi",
+        "esitetaanKuulutuksessa": null,
+        "kayttajatunnus": "A000111",
+        "nimi": "Meikalainen, Matti",
+        "organisaatio": "Väylävirasto",
+        "puhelinnumero": "123456789",
+        "rooli": "MUOKKAAJA",
+      },
     ],
     ":kielitiedot": Object {
       "ensisijainenKieli": "SUOMI",

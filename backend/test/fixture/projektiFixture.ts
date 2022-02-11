@@ -1,4 +1,5 @@
 import {
+  AloitusKuulutus,
   Kieli,
   Projekti,
   ProjektiKayttaja,
@@ -16,11 +17,22 @@ export class ProjektiFixture {
   public PROJEKTI1_OID = "1";
 
   static pekkaProjariProjektiKayttaja: ProjektiKayttaja = {
-    kayttajatunnus: "A123",
     __typename: "ProjektiKayttaja",
+    kayttajatunnus: "A123",
     rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
     nimi: "Projari, Pekka",
     email: "pekka.projari@vayla.fi",
+    organisaatio: "Väylävirasto",
+    puhelinnumero: "123456789",
+    esitetaanKuulutuksessa: null,
+  };
+
+  static mattiMeikalainenProjektiKayttaja: ProjektiKayttaja = {
+    __typename: "ProjektiKayttaja",
+    kayttajatunnus: "A000111",
+    rooli: ProjektiRooli.MUOKKAAJA,
+    nimi: "Meikalainen, Matti",
+    email: "Matti.Meikalainen@vayla.fi",
     organisaatio: "Väylävirasto",
     puhelinnumero: "123456789",
     esitetaanKuulutuksessa: null,
@@ -68,6 +80,26 @@ export class ProjektiFixture {
     kayttoOikeudet: [],
   };
 
+  aloitusKuulutus: AloitusKuulutus = {
+    __typename: "AloitusKuulutus",
+    kuulutusPaiva: "2022-01-02",
+    hankkeenKuvaus: "Lorem Ipsum",
+    hankkeenKuvausRuotsi: "På Svenska",
+    hankkeenKuvausSaame: "Saameksi",
+    siirtyySuunnitteluVaiheeseen: "2022-01-01",
+    elyKeskus: "Pirkanmaa",
+    esitettavatYhteystiedot: [
+      {
+        __typename: "Yhteystieto",
+        etunimi: "Marko",
+        sukunimi: "Koi",
+        sahkoposti: "markku.koi@koi.com",
+        organisaatio: "Kajaani",
+        puhelinnumero: "0293121213",
+      },
+    ],
+  };
+
   dbProjekti1: DBProjekti = {
     kayttoOikeudet: [
       {
@@ -78,6 +110,15 @@ export class ProjektiFixture {
         puhelinnumero: ProjektiFixture.pekkaProjariProjektiKayttaja.puhelinnumero || "",
         organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio,
         esitetaanKuulutuksessa: ProjektiFixture.pekkaProjariProjektiKayttaja.esitetaanKuulutuksessa,
+      },
+      {
+        rooli: ProjektiRooli.MUOKKAAJA,
+        email: ProjektiFixture.mattiMeikalainenProjektiKayttaja.email,
+        kayttajatunnus: ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
+        nimi: ProjektiFixture.mattiMeikalainenProjektiKayttaja.nimi,
+        puhelinnumero: ProjektiFixture.mattiMeikalainenProjektiKayttaja.puhelinnumero || "",
+        organisaatio: ProjektiFixture.mattiMeikalainenProjektiKayttaja.organisaatio,
+        esitetaanKuulutuksessa: ProjektiFixture.mattiMeikalainenProjektiKayttaja.esitetaanKuulutuksessa,
       },
     ],
     oid: this.PROJEKTI1_OID,

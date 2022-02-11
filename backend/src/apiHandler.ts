@@ -5,8 +5,10 @@ import {
   LataaProjektiQueryVariables,
   ListaaKayttajatQueryVariables,
   ListaaVelhoProjektitQueryVariables,
+  SiirraTilaMutationVariables,
   TallennaProjektiInput,
   TallennaProjektiMutationVariables,
+  TilaSiirtymaInput,
   ValmisteleTiedostonLatausQueryVariables,
 } from "../../common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
@@ -21,12 +23,14 @@ import { createUploadURLForFile } from "./handler/fileHandler";
 import * as AWSXRay from "aws-xray-sdk";
 import { getCorrelationId, setupLambdaMonitoring, setupLambdaMonitoringMetaData } from "./aws/monitoring";
 import { calculateEndDate } from "./endDateCalculator/endDateCalculatorHandler";
+import { aloitusKuulutusHandler } from "./handler/aloitusKuulutusHandler";
 
 type AppSyncEventArguments =
   | unknown
   | LataaProjektiQueryVariables
   | ListaaVelhoProjektitQueryVariables
-  | TallennaProjektiInput;
+  | TallennaProjektiInput
+  | TilaSiirtymaInput;
 
 type LambdaResult = {
   data: any;
@@ -54,6 +58,8 @@ async function executeOperation(event: AppSyncResolverEvent<AppSyncEventArgument
       return await createUploadURLForFile((event.arguments as ValmisteleTiedostonLatausQueryVariables).tiedostoNimi);
     case apiConfig.laskePaattymisPaiva.name:
       return await calculateEndDate(event.arguments as LaskePaattymisPaivaQueryVariables);
+    case apiConfig.siirraTila.name:
+      return await aloitusKuulutusHandler.siirraTila((event.arguments as SiirraTilaMutationVariables).tilasiirtyma);
     default:
       return null;
   }

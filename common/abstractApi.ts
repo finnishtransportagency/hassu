@@ -12,8 +12,10 @@ import {
   NykyinenKayttaja,
   PDF,
   Projekti,
+  SiirraTilaMutationVariables,
   TallennaProjektiInput,
   TallennaProjektiMutationVariables,
+  TilaSiirtymaInput,
   ValmisteleTiedostonLatausQueryVariables,
   VelhoHakuTulos,
 } from "./graphql/apiModel";
@@ -27,23 +29,15 @@ export enum OperationType {
   Query,
 }
 
+type OperationName = keyof typeof queries | keyof typeof mutations;
+
 export type OperationConfig = {
-  name: string;
+  name: OperationName;
   operationType: OperationType;
   graphql: string;
 };
 
-type ApiConfig = {
-  tallennaProjekti: OperationConfig;
-  lataaProjekti: OperationConfig;
-  listaaProjektit: OperationConfig;
-  listaaVelhoProjektit: OperationConfig;
-  nykyinenKayttaja: OperationConfig;
-  listaaKayttajat: OperationConfig;
-  lataaAsiakirjaPDF: OperationConfig;
-  valmisteleTiedostonLataus: OperationConfig;
-  laskePaattymisPaiva: OperationConfig;
-};
+type ApiConfig = { [operationName in OperationName]: OperationConfig };
 
 export const apiConfig: ApiConfig = {
   tallennaProjekti: {
@@ -90,6 +84,11 @@ export const apiConfig: ApiConfig = {
     name: "laskePaattymisPaiva",
     operationType: OperationType.Query,
     graphql: queries.laskePaattymisPaiva,
+  },
+  siirraTila: {
+    name: "siirraTila",
+    operationType: OperationType.Mutation,
+    graphql: mutations.siirraTila,
   },
 };
 
@@ -154,6 +153,12 @@ export abstract class AbstractApi {
       alkupaiva,
       tyyppi,
     } as LaskePaattymisPaivaQueryVariables);
+  }
+
+  async siirraTila(tilasiirtyma: TilaSiirtymaInput): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.siirraTila, {
+      tilasiirtyma,
+    } as SiirraTilaMutationVariables);
   }
 
   abstract callYllapitoAPI(operation: OperationConfig, variables?: any): Promise<any>;

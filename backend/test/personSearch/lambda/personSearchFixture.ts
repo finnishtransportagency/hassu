@@ -73,4 +73,17 @@ export class PersonSearchFixture {
     uid: "LX1",
     vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.LX_TUNNUS,
   };
+
+  createKayttaja(uid: string): Kayttaja {
+    return {
+      __typename: "Kayttaja",
+      email: uid + "@vayla.fi",
+      etuNimi: "Etunimi" + uid,
+      sukuNimi: "Sukunimi" + uid,
+      organisaatio: "Väylävirasto",
+      puhelinnumero: "123456789",
+      uid,
+      vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.L_TUNNUS,
+    };
+  }
 }
