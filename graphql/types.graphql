@@ -118,6 +118,7 @@ type AloitusKuulutus {
   elyKeskus: String
   esitettavatYhteystiedot: [Yhteystieto]
   palautusSyy: String
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
 }
 
 type AloitusKuulutusJulkaisu {
@@ -134,7 +135,6 @@ type AloitusKuulutusJulkaisu {
   tila: AloitusKuulutusTila
   muokkaaja: String
   hyvaksyja: String
-  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
 }
 
 type IlmoituksenVastaanottajat {
