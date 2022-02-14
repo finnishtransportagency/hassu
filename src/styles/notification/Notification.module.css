@@ -14,6 +14,10 @@
   @apply text-primary-dark;
 }
 
+.notification .start-icon.info_gray {
+  @apply text-turquoise;
+}
+
 .notification .start-icon.warn {
   @apply text-orange-dark;
 }
@@ -28,6 +32,10 @@
 
 .notification.info {
   @apply bg-primary-lightest border-primary-light;
+}
+
+.notification.info-gray {
+  @apply bg-gray-lightest border-gray;
 }
 
 .notification.warn {

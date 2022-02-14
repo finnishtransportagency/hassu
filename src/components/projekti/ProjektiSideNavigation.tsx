@@ -30,7 +30,11 @@ export default function ProjektiSideNavigation(): ReactElement {
       href: oid && `/yllapito/projekti/${oid}/aloituskuulutus`,
       disabled: !projekti?.status || projekti?.status === Status.EI_JULKAISTU,
     },
-    { title: "Suunnitteluvaihe", href: oid && `/yllapito/projekti/${oid}/suunnittelu`, disabled: true },
+    {
+      title: "Suunnitteluvaihe",
+      href: oid && `/yllapito/projekti/${oid}/suunnittelu`,
+      disabled: !projekti?.status || !projekti?.aloitusKuulutusJulkaisut,
+    },
     { title: "Nähtävilläolovaihe", href: oid && `/yllapito/projekti/${oid}/nahtavillaolo`, disabled: true },
   ];
   return (
