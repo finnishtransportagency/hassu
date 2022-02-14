@@ -13,11 +13,11 @@ Array [
       Valtion liikenneväylien suunnittelu
        -palveluun. Voit käyttää hakuehtona projekti-VELHOon tallennettua asiatunnusta tai suunnitelman / projektin nimeä, tai näiden osaa.
     </p>
-    <div
-      className="w-64 content"
+    <form
+      onSubmit={[Function]}
     >
-      <form
-        onSubmit={[Function]}
+      <div
+        className="w-64 content space-y-4"
       >
         <div
           className="form-group"
@@ -92,8 +92,8 @@ Array [
             </div>
           </button>
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
   </section>,
   <hr />,
   <section>
