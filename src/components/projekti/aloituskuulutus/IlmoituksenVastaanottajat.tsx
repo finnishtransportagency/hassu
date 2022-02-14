@@ -141,6 +141,7 @@ export default function IlmoituksenVastaanottajat({ isLoading }: Props): ReactEl
         className="mb-7"
         type="button"
         onClick={() => {
+          // @ts-ignore
           append({ nimi: "", sahkoposti: "" });
         }}
       >

@@ -73,21 +73,21 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
               <Select
                 label="Kunta *"
                 options={kuntaOptions ? kuntaOptions : [{ label: "", value: "" }]}
-                error={errors.suunnitteluSopimus?.kunta}
+                error={(errors as any).suunnitteluSopimus?.kunta}
                 {...register("suunnitteluSopimus.kunta", { shouldUnregister: true })}
               />
             </div>
             <div className="lg:col-span-4">
               <TextInput
                 label="Etunimi *"
-                error={errors.suunnitteluSopimus?.etunimi}
+                error={(errors as any).suunnitteluSopimus?.etunimi}
                 {...register("suunnitteluSopimus.etunimi", { shouldUnregister: true })}
               />
             </div>
             <div className="lg:col-span-4">
               <TextInput
                 label="Sukunimi *"
-                error={errors.suunnitteluSopimus?.sukunimi}
+                error={(errors as any).suunnitteluSopimus?.sukunimi}
                 {...register("suunnitteluSopimus.sukunimi", { shouldUnregister: true })}
               />
             </div>
@@ -95,14 +95,14 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
               <TextInput
                 label="Puhelinnumero *"
                 maxLength={maxPhoneLength}
-                error={errors.suunnitteluSopimus?.puhelinnumero}
+                error={(errors as any).suunnitteluSopimus?.puhelinnumero}
                 {...register("suunnitteluSopimus.puhelinnumero", { shouldUnregister: true })}
               />
             </div>
             <div className="lg:col-span-4">
               <TextInput
                 label="Sähköposti *"
-                error={errors.suunnitteluSopimus?.email}
+                error={(errors as any).suunnitteluSopimus?.email}
                 {...register("suunnitteluSopimus.email", { shouldUnregister: true })}
               />
             </div>
@@ -112,7 +112,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
               logoUrl ? (
                 <FormGroup
                   label="Virallinen, kunnalta saatu logo. *"
-                  errorMessage={errors.suunnitteluSopimus?.logo?.message}
+                  errorMessage={(errors as any).suunnitteluSopimus?.logo?.message}
                 >
                   <div className="flex flex-row">
                     <img
@@ -133,7 +133,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
               ) : (
                 <FileInput
                   label="Virallinen, kunnalta saatu logo. *"
-                  error={errors.suunnitteluSopimus?.logo}
+                  error={(errors as any).suunnitteluSopimus?.logo}
                   onDrop={(files) => {
                     const logoTiedosto = files[0];
                     if (logoTiedosto) {
