@@ -14,6 +14,7 @@ import { asiakirjaService } from "../asiakirja/asiakirjaService";
 import { fileService } from "../files/fileService";
 import { sendEmail } from "../email/email";
 import { createHyvaksyttavanaEmail } from "../email/emailTemplates";
+import { log } from "../logger";
 
 async function sendForApproval(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus) {
   const muokkaaja = requirePermissionMuokkaa(projekti);
@@ -32,6 +33,8 @@ async function sendForApproval(projekti: DBProjekti, aloitusKuulutus: AloitusKuu
   const emailOptions = createHyvaksyttavanaEmail(projekti);
   if (emailOptions.to) {
     await sendEmail(emailOptions);
+  } else {
+    log.error("Aloituskuulutukselle ei loytynyt projektipaallikon sahkopostiosoitetta");
   }
 }
 
