@@ -12,6 +12,8 @@ import { asiakirjaAdapter } from "./asiakirjaAdapter";
 import { AloitusKuulutus, AloitusKuulutusJulkaisu, DBProjekti } from "../database/model/projekti";
 import { asiakirjaService } from "../asiakirja/asiakirjaService";
 import { fileService } from "../files/fileService";
+import { sendEmail } from "../email/email";
+import { createHyvaksyttavanaEmail } from "../email/emailTemplates";
 
 async function sendForApproval(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus) {
   const muokkaaja = requirePermissionMuokkaa(projekti);
@@ -26,6 +28,11 @@ async function sendForApproval(projekti: DBProjekti, aloitusKuulutus: AloitusKuu
   aloitusKuulutusJulkaisu.tila = AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA;
   aloitusKuulutusJulkaisu.muokkaaja = muokkaaja.uid;
   await projektiDatabase.insertAloitusKuulutusJulkaisu(projekti.oid, aloitusKuulutusJulkaisu);
+
+  const emailOptions = createHyvaksyttavanaEmail(projekti);
+  if (emailOptions.to) {
+    await sendEmail(emailOptions);
+  }
 }
 
 async function reject(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus, syy: string) {
