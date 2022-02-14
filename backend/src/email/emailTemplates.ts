@@ -1,6 +1,6 @@
 import { get } from "lodash";
 import { config } from "../config";
-import { DBProjekti, AloitusKuulutusJulkaisu } from "../database/model/projekti";
+import { DBProjekti } from "../database/model/projekti";
 import { EmailOptions } from "./email";
 
 function template(strs: TemplateStringsArray, ...exprs: string[]) {
