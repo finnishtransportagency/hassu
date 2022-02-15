@@ -1,22 +1,16 @@
 import Button from "@components/button/Button";
 import Select from "@components/form/Select";
 import TextInput from "@components/form/TextInput";
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { formatProperNoun } from "common/util/formatProperNoun";
-import { useEffect } from "react";
-import log from "loglevel";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
-import { IlmoitettavaViranomainen } from "@services/api";
+import { IlmoitettavaViranomainen, ViranomaisVastaanottajaInput } from "@services/api";
 
 interface Props {
   isLoading: boolean;
-}
-
-interface KirjaamoOsoite {
-  nimi: string;
-  sahkoposti: string;
+  kirjaamoOsoitteet: ViranomaisVastaanottajaInput[];
 }
 
 type FormFields = {
@@ -28,20 +22,8 @@ type FormFields = {
   };
 };
 
-export default function IlmoituksenVastaanottajat({ isLoading }: Props): ReactElement {
+export default function IlmoituksenVastaanottajat({ isLoading, kirjaamoOsoitteet }: Props): ReactElement {
   const { t } = useTranslation("commonFI");
-  const kirjaamoOsoitteetEnv = process.env.NEXT_PUBLIC_KIRJAAMO_OSOITTEET;
-  const [kirjaamoOsoitteet, setKirjaamoOsoitteet] = useState<KirjaamoOsoite[]>([]);
-
-  useEffect(() => {
-    if (kirjaamoOsoitteetEnv) {
-      try {
-        setKirjaamoOsoitteet(JSON.parse(kirjaamoOsoitteetEnv));
-      } catch {
-        log.log(`Failed to parse NEXT_PUBLIC_KIRJAAMO_OSOITTEET: '${kirjaamoOsoitteetEnv}'`);
-      }
-    }
-  }, [kirjaamoOsoitteetEnv]);
 
   const {
     register,
@@ -100,6 +82,7 @@ export default function IlmoituksenVastaanottajat({ isLoading }: Props): ReactEl
                 );
               },
             })}
+            disabled
             error={errors.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.[index]?.nimi}
             addEmptyOption
           />
@@ -121,6 +104,7 @@ export default function IlmoituksenVastaanottajat({ isLoading }: Props): ReactEl
                   event.preventDefault();
                   remove(index);
                 }}
+                disabled
               />
             </div>
             <div className="block lg:hidden">
@@ -130,6 +114,7 @@ export default function IlmoituksenVastaanottajat({ isLoading }: Props): ReactEl
                   remove(index);
                 }}
                 endIcon="trash"
+                disabled
               >
                 Poista
               </Button>
@@ -144,6 +129,7 @@ export default function IlmoituksenVastaanottajat({ isLoading }: Props): ReactEl
           // @ts-ignore
           append({ nimi: "", sahkoposti: "" });
         }}
+        disabled
       >
         Lisää uusi +
       </Button>
