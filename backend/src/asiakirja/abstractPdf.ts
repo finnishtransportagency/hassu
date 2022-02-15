@@ -110,10 +110,6 @@ export abstract class AbstractPdf {
     throw new Error("Method 'addContent()' must be implemented.");
   }
 
-  protected capitalize(text: string) {
-    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
-  }
-
   public get pdf() {
     this.addContent();
     return this.finishPdfDocument();

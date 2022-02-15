@@ -151,7 +151,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
       reset(tallentamisTiedot);
       setFormContext(projekti);
     }
-  }, [projekti, reset]);
+  }, [projekti, reset, router, statusBeforeSave]);
 
   useEffect(() => {
     if (router.isReady) {

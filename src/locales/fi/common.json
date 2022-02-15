@@ -1,3 +1,21 @@
 {
-  "sivustonimi": "Valtion liikenneväylien suunnittelu"
+  "sivustonimi": "Valtion liikenneväylien suunnittelu",
+  "viranomainen": {
+    "ETELA_POHJANMAAN_ELY": "Etelä-Pohjanmaan ELY-keskus",
+    "ETELA_SAVO_ELY": "Etelä-Savon ELY-keskus",
+    "HAME_ELY": "Hämeen ELY-keskus",
+    "KAAKKOIS_SUOMEN_ELY": "Kaakkois-Suomi ELY-keskus",
+    "KAINUUN_ELY": "Kainuun ELY-keskus",
+    "KESKI_SUOMEN_ELY": "Keski-Suomen ELY-keskus",
+    "LAPIN_ELY": "Lapin ELY-keskus",
+    "PIRKANMAAN_ELY": "Pirkanmaan ELY-keskus",
+    "POHJANMAAN_ELY": "Pohjanmaan ELY-keskus",
+    "POHJOIS_KARJALAN_ELY": "Pohjois-Karjalan ELY-keskus",
+    "POHJOIS_POHJANMAAN_ELY": "Pohjois-Pohjanmaan ELY-keskus",
+    "POHJOIS_SAVON_ELY": "Pohjois-Savon ELY-keskus",
+    "SATAKUNNAN_ELY": "Satakunnan ELY-keskus",
+    "UUDENMAAN_ELY": "Uudenmaan ELY-keskus",
+    "VARSINAIS_SUOMEN_ELY": "Varsinais-Suomen ELY-keskus",
+    "VAYLAVIRASTO": "Väylävirasto"
+  }
 }

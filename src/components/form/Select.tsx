@@ -9,6 +9,7 @@ interface Props {
   label?: string;
   hideErrorMessage?: boolean;
   options: { label: string; value: string; disabled?: boolean }[];
+  addEmptyOption?: boolean;
 }
 
 const Select = (
@@ -17,6 +18,7 @@ const Select = (
     label,
     options,
     hideErrorMessage,
+    addEmptyOption,
     className,
     ...props
   }: Props &
@@ -27,6 +29,7 @@ const Select = (
     <FormGroup label={label} className={className} errorMessage={hideErrorMessage ? undefined : error?.message}>
       <div className="select-wrapper">
         <select className={error && "error"} {...props} ref={ref}>
+          {addEmptyOption && <option />}
           {options.map((option) => (
             <option key={option.value} value={option.value} disabled={option.disabled}>
               {option.label}

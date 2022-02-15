@@ -103,8 +103,8 @@ export default function Perusta() {
           käyttää hakuehtona projekti-VELHOon tallennettua asiatunnusta tai suunnitelman / projektin nimeä, tai näiden
           osaa.
         </p>
-        <div className="w-64 content">
-          <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="w-64 content space-y-4">
             <TextInput label="Asiatunnus" disabled />
             <TextInput
               error={errors.name}
@@ -115,8 +115,8 @@ export default function Perusta() {
             <Button primary endIcon="search" disabled={isLoading}>
               Hae
             </Button>
-          </form>
-        </div>
+          </div>
+        </form>
         {searchError && (
           <Notification type={NotificationType.ERROR} className="content">
             {t(`haku-virhe.${searchError}`)}

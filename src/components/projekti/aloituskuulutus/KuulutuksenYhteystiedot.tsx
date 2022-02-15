@@ -83,28 +83,28 @@ function KuulutuksenYhteystiedot<T extends FormValues>({
                   <TextInput
                     label="Etunimi *"
                     {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.etunimi`)}
-                    error={errors?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.etunimi}
+                    error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.etunimi}
                   />
                 </div>
                 <div className="lg:col-span-4">
                   <TextInput
                     label="Sukunimi *"
                     {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.sukunimi`)}
-                    error={errors?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.sukunimi}
+                    error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.sukunimi}
                   />
                 </div>
                 <div className="lg:col-span-4">
                   <TextInput
                     label="Organisaatio / kunta *"
                     {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.organisaatio`)}
-                    error={errors?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.organisaatio}
+                    error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.organisaatio}
                   />
                 </div>
                 <div className="lg:col-span-4">
                   <TextInput
                     label="Puhelinnumero *"
                     {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.puhelinnumero`)}
-                    error={errors?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.puhelinnumero}
+                    error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.puhelinnumero}
                     maxLength={maxPhoneLength}
                   />
                 </div>
@@ -112,7 +112,7 @@ function KuulutuksenYhteystiedot<T extends FormValues>({
                   <TextInput
                     label="Sähköpostiosoite *"
                     {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.sahkoposti`)}
-                    error={errors?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.sahkoposti}
+                    error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.sahkoposti}
                   />
                 </div>
               </div>

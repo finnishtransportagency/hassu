@@ -1,8 +1,8 @@
 import log from "loglevel";
 import { ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { AloitusKuulutusJulkaisu, Yhteystieto } from "../../database/model/projekti";
+import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import { AbstractPdf } from "../abstractPdf";
-import { capitalizeAllWords } from "../../handler/asiakirjaAdapter";
 
 export abstract class SuunnittelunAloitusPdf extends AbstractPdf {
   protected header: string;
@@ -62,9 +62,9 @@ export abstract class SuunnittelunAloitusPdf extends AbstractPdf {
       });
     }
     return yt.concat(this.aloitusKuulutusJulkaisu.yhteystiedot).map(({ sukunimi, etunimi, organisaatio, ...rest }) => ({
-      etunimi: capitalizeAllWords(etunimi),
-      sukunimi: capitalizeAllWords(sukunimi),
-      organisaatio: capitalizeAllWords(organisaatio),
+      etunimi: formatProperNoun(etunimi),
+      sukunimi: formatProperNoun(sukunimi),
+      organisaatio: formatProperNoun(organisaatio),
       ...rest,
     }));
   }
