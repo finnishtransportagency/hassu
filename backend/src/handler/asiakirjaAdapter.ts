@@ -1,9 +1,6 @@
 import { AloitusKuulutusJulkaisu, DBProjekti, Velho, Yhteystieto } from "../database/model/projekti";
 import cloneDeep from "lodash/cloneDeep";
 
-const firstCharactersInWords = /(?<=^|[^\p{L}])\p{L}/gu;
-const notFirstCharacterInWords = /(?<!^|[^\p{L}])\p{L}/gu;
-
 function createNextID(dbProjekti: DBProjekti) {
   if (!dbProjekti.aloitusKuulutusJulkaisut) {
     return 1;
@@ -59,12 +56,6 @@ function adaptVelho(dbProjekti: DBProjekti): Velho {
     kunnat,
     vaylamuoto,
   };
-}
-
-export function capitalizeAllWords(text: string) {
-  return text
-    .replace(firstCharactersInWords, (a) => a.toUpperCase())
-    .replace(notFirstCharacterInWords, (a) => a.toLowerCase());
 }
 
 export const asiakirjaAdapter = new AsiakirjaAdapter();
