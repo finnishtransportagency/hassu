@@ -18,12 +18,5 @@
         "alwaysShowRuleFailuresAsWarnings": false
       }
     ]
-  },
-  "exclude": [
-    "node_modules",
-    "tools",
-    "test",
-    "src",
-    "deployment"
-  ]
+  }
 }

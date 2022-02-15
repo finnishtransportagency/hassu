@@ -13,6 +13,7 @@ import mergeWith from "lodash/mergeWith";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import { personSearch } from "../personSearch/personSearchClient";
 import pickBy from "lodash/pickBy";
+import { fileService } from "../files/fileService";
 
 export class ProjektiAdapter {
   public adaptProjekti(dbProjekti: DBProjekti): API.Projekti {
@@ -34,7 +35,7 @@ export class ProjektiAdapter {
       aloitusKuulutus: adaptAloitusKuulutus(aloitusKuulutus),
       suunnitteluSopimus: adaptSuunnitteluSopimus(suunnitteluSopimus),
       liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmat(liittyvatSuunnitelmat),
-      aloitusKuulutusJulkaisut: adaptAloitusKuulutusJulkaisut(aloitusKuulutusJulkaisut),
+      aloitusKuulutusJulkaisut: adaptAloitusKuulutusJulkaisut(dbProjekti.oid, aloitusKuulutusJulkaisut),
       velho: {
         __typename: "Velho",
         ...velho,
@@ -149,6 +150,7 @@ function adaptYhteystiedot(yhteystiedot: Yhteystieto[]): API.Yhteystieto[] {
 }
 
 function adaptAloitusKuulutusJulkaisut(
+  oid: string,
   aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null
 ): API.AloitusKuulutusJulkaisu[] | undefined {
   if (aloitusKuulutusJulkaisut) {
@@ -156,12 +158,17 @@ function adaptAloitusKuulutusJulkaisut(
       const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, ...fieldsToCopyAsIs } = julkaisu;
 
       return {
+        ...fieldsToCopyAsIs,
         __typename: "AloitusKuulutusJulkaisu",
         yhteystiedot: adaptYhteystiedot(yhteystiedot),
         velho: adaptVelho(velho),
         suunnitteluSopimus: adaptSuunnitteluSopimus(suunnitteluSopimus),
         kielitiedot: adaptKielitiedot(kielitiedot),
-        ...fieldsToCopyAsIs,
+        aloituskuulutusPDFPath: fileService.getYllapitoPathForProjektiFile(oid, julkaisu.aloituskuulutusPDFPath),
+        aloituskuulutusIlmoitusPDFPath: fileService.getYllapitoPathForProjektiFile(
+          oid,
+          julkaisu.aloituskuulutusIlmoitusPDFPath
+        ),
       };
     });
   }

@@ -7,6 +7,7 @@ import { TilasiirtymaToiminto } from "../../../common/graphql/apiModel";
 import { aloitusKuulutusHandler } from "../../src/handler/aloitusKuulutusHandler";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
+import { localstackS3Client } from "../util/s3Util";
 
 const { expect } = require("chai");
 
@@ -20,6 +21,10 @@ async function takeSnapshot(oid: string) {
 
 describe("AloitusKuulutus", () => {
   let userFixture: UserFixture;
+
+  before(async () => {
+    localstackS3Client();
+  });
 
   afterEach(() => {
     userFixture.logout();

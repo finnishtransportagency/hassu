@@ -19,6 +19,13 @@ export type UploadFileProperties = {
   uploadURL: string;
 };
 
+export type CreateFileProperties = {
+  oid: string;
+  filePathInProjekti: string;
+  fileName: string;
+  contents: Buffer;
+};
+
 export type PersistFileProperties = { targetFilePathInProjekti: string; uploadedFileSource: string; oid: string };
 
 export class FileService {
@@ -40,13 +47,13 @@ export class FileService {
   /**
    * Moves a file from temporary upload location to a permanent location under a projekti
    */
-  async persistFileToProjekti(param: PersistFileProperties) {
-    const filePath = this.removePrefixFromFile(param.uploadedFileSource);
+  async persistFileToProjekti(param: PersistFileProperties): Promise<string> {
+    const filePath = FileService.removePrefixFromFile(param.uploadedFileSource);
     const sourceFileProperties = await this.getUploadedSourceFileInformation(filePath);
 
-    const fileNameFromUpload = this.getFileNameFromPath(filePath);
+    const fileNameFromUpload = FileService.getFileNameFromPath(filePath);
     const targetPath =
-      this.getProjektiDirectory(param.oid) + `/${param.targetFilePathInProjekti}/${fileNameFromUpload}`;
+      FileService.getProjektiDirectory(param.oid) + `/${param.targetFilePathInProjekti}/${fileNameFromUpload}`;
     try {
       await getS3Client().send(
         new CopyObjectCommand({
@@ -66,7 +73,29 @@ export class FileService {
     }
   }
 
-  private getProjektiDirectory(oid: string) {
+  /**
+   * Creates a file to projekti
+   */
+  async createFileToProjekti(param: CreateFileProperties): Promise<string> {
+    const pathWithinProjekti = `/${param.filePathInProjekti}/${param.fileName}`;
+    const targetPath = FileService.getProjektiDirectory(param.oid) + pathWithinProjekti;
+    try {
+      const commandOutput = await getS3Client().send(
+        new PutObjectCommand({
+          Body: param.contents,
+          Bucket: config.yllapitoBucketName,
+          Key: targetPath,
+        })
+      );
+      log.info(`Created file ${targetPath}`, commandOutput.$metadata);
+      return pathWithinProjekti;
+    } catch (e) {
+      log.error(e);
+      throw new Error("Error creating file to yllapito");
+    }
+  }
+
+  private static getProjektiDirectory(oid: string) {
     return `yllapito/tiedostot/projekti/${oid}`;
   }
 
@@ -84,16 +113,16 @@ export class FileService {
     }
   }
 
-  getFileNameFromPath(uploadedFilePath: string) {
+  private static getFileNameFromPath(uploadedFilePath: string): string {
     return uploadedFilePath.replace(/^[0-9a-z-]+\//, "");
   }
 
-  removePrefixFromFile(uploadedFileSource: string) {
+  private static removePrefixFromFile(uploadedFileSource: string) {
     return uploadedFileSource;
   }
 
-  async archiveProjekti({ oid, timestamp }: ArchivedProjektiKey) {
-    const sourcePrefix = this.getProjektiDirectory(oid);
+  async archiveProjekti({ oid, timestamp }: ArchivedProjektiKey): Promise<void> {
+    const sourcePrefix = FileService.getProjektiDirectory(oid);
     const targetPrefix = sourcePrefix + "/" + timestamp;
     const sourceBucket = config.yllapitoBucketName;
     const targetBucket = config.archiveBucketName;
@@ -143,6 +172,10 @@ export class FileService {
 
       ContinuationToken = NextContinuationToken;
     } while (ContinuationToken);
+  }
+
+  getYllapitoPathForProjektiFile(oid: string, path: string): string {
+    return `/${FileService.getProjektiDirectory(oid)}${path}`;
   }
 }
 
