@@ -3,8 +3,6 @@ import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { useRouter } from "next/router";
 import React, { ReactElement, useEffect, useRef, useState } from "react";
 import useProjekti from "src/hooks/useProjekti";
-import * as Yup from "yup";
-import { SchemaOf } from "yup";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@components/button/Button";
@@ -19,7 +17,6 @@ import {
   TallennaProjektiInput,
   AloitusKuulutusJulkaisu,
   TilasiirtymaToiminto,
-  IlmoitettavaViranomainen,
   ViranomaisVastaanottajaInput,
 } from "@services/api";
 import log from "loglevel";
