@@ -18,4 +18,6 @@ type Query {
 type Mutation {
   tallennaProjekti(projekti: TallennaProjektiInput!): String
   siirraTila(tilasiirtyma: TilaSiirtymaInput): String
+
+  arkistoiProjekti(oid: String!): ArkistointiTunnus
 }

@@ -5,7 +5,7 @@
 import React from "react";
 import Perusta from "@pages/yllapito/perusta";
 import { ProjektiTyyppi, VelhoHakuTulos } from "@services/api";
-import { create, act } from "react-test-renderer";
+import { act, create } from "react-test-renderer";
 import { useRouter } from "next/router";
 import { componentWithTranslation } from "../test-utils";
 import "../font-awesome-init";
@@ -20,10 +20,9 @@ jest.mock("@services/api", () => ({
       const hakuTulos: VelhoHakuTulos[] = [
         { __typename: "VelhoHakuTulos", oid: "1234", nimi: "Tampereen tie Hanke", tyyppi: "TIE" as ProjektiTyyppi.TIE },
       ];
-      const promise = new Promise<VelhoHakuTulos[]>((resolve) => {
+      return new Promise<VelhoHakuTulos[]>((resolve) => {
         resolve(hakuTulos);
       });
-      return promise;
     },
   },
 }));

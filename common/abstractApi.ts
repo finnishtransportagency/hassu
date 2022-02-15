@@ -1,4 +1,5 @@
 import {
+  ArkistoiProjektiMutationVariables,
   AsiakirjaTyyppi,
   EsikatseleAsiakirjaPDFQueryVariables,
   Kayttaja,
@@ -91,6 +92,11 @@ export const apiConfig: ApiConfig = {
     operationType: OperationType.Mutation,
     graphql: mutations.siirraTila,
   },
+  arkistoiProjekti: {
+    name: "arkistoiProjekti",
+    operationType: OperationType.Mutation,
+    graphql: mutations.arkistoiProjekti,
+  },
 };
 
 export abstract class AbstractApi {
@@ -106,6 +112,12 @@ export abstract class AbstractApi {
     return await this.callYllapitoAPI(apiConfig.tallennaProjekti, {
       projekti: input,
     } as TallennaProjektiMutationVariables);
+  }
+
+  async arkistoiProjekti(oid: string): Promise<Projekti> {
+    return await this.callYllapitoAPI(apiConfig.arkistoiProjekti, {
+      oid,
+    } as ArkistoiProjektiMutationVariables);
   }
 
   async getVelhoSuunnitelmasByName(nimi: string, requireExactMatch?: boolean): Promise<VelhoHakuTulos[]> {
