@@ -4,7 +4,12 @@ type Query {
   listaaProjektit: [Projekti!]
   lataaProjekti(oid: String!): Projekti
   listaaVelhoProjektit(nimi: String!, requireExactMatch: Boolean): [VelhoHakuTulos!]
-  esikatseleAsiakirjaPDF(oid: String!, asiakirjaTyyppi: AsiakirjaTyyppi!, muutokset: TallennaProjektiInput): PDF
+  esikatseleAsiakirjaPDF(
+    oid: String!
+    asiakirjaTyyppi: AsiakirjaTyyppi!
+    kieli: Kieli
+    muutokset: TallennaProjektiInput
+  ): PDF
   valmisteleTiedostonLataus(tiedostoNimi: String!): LatausTiedot
 
   laskePaattymisPaiva(alkupaiva: String!, tyyppi: LaskuriTyyppi!): String

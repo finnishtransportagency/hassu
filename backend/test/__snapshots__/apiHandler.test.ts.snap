@@ -436,8 +436,8 @@ Object {
   "aloitusKuulutusJulkaisut": Array [
     Object {
       "__typename": "AloitusKuulutusJulkaisu",
-      "aloituskuulutusIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA  Testiprojekti 1.pdf",
-      "aloituskuulutusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA  Testiprojekti 1.pdf",
+      "aloituskuulutusIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf",
+      "aloituskuulutusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf",
       "elyKeskus": "Pirkanmaa",
       "hankkeenKuvaus": "Lorem Ipsum",
       "hankkeenKuvausRuotsi": "På Svenska",

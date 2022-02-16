@@ -1,5 +1,6 @@
 import { Kayttaja, VaylaKayttajaTyyppi } from "../../../common/graphql/apiModel";
 import { adaptPerson } from "./personAdapter";
+import { log } from "../logger";
 
 export type Person = {
   vaylaKayttajaTyyppi?: VaylaKayttajaTyyppi | null;
@@ -18,8 +19,10 @@ export class Kayttajas {
   }
 
   getKayttajaByUid(uid: string | undefined): Kayttaja | undefined {
-    if (uid) {
+    if (uid && this.personMap[uid]) {
       return adaptPerson(uid, this.personMap[uid]);
+    } else {
+      log.error("person not found", uid);
     }
   }
 

@@ -2,6 +2,7 @@ import {
   AsiakirjaTyyppi,
   EsikatseleAsiakirjaPDFQueryVariables,
   Kayttaja,
+  Kieli,
   LaskePaattymisPaivaQueryVariables,
   LaskuriTyyppi,
   LataaProjektiQueryVariables,
@@ -139,11 +140,13 @@ export abstract class AbstractApi {
   async esikatseleAsiakirjaPDF(
     oid: string,
     asiakirjaTyyppi: AsiakirjaTyyppi,
+    kieli: Kieli,
     muutokset?: TallennaProjektiInput
   ): Promise<PDF> {
     return await this.callYllapitoAPI(apiConfig.esikatseleAsiakirjaPDF, {
       oid,
       asiakirjaTyyppi,
+      kieli,
       muutokset,
     } as EsikatseleAsiakirjaPDFQueryVariables);
   }

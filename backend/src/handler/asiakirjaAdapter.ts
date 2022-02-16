@@ -1,5 +1,6 @@
 import { AloitusKuulutusJulkaisu, DBProjekti, Velho, Yhteystieto } from "../database/model/projekti";
 import cloneDeep from "lodash/cloneDeep";
+import { AloitusKuulutusTila } from "../../../common/graphql/apiModel";
 
 function createNextID(dbProjekti: DBProjekti) {
   if (!dbProjekti.aloitusKuulutusJulkaisut) {
@@ -22,6 +23,14 @@ export class AsiakirjaAdapter {
       };
     }
     throw new Error("Aloituskuulutus puuttuu");
+  }
+
+  findAloitusKuulutusWaitingForApproval(projekti: DBProjekti): AloitusKuulutusJulkaisu | undefined {
+    if (projekti.aloitusKuulutusJulkaisut) {
+      return projekti.aloitusKuulutusJulkaisut
+        .filter((julkaisu) => julkaisu.tila == AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA)
+        .pop();
+    }
   }
 }
 

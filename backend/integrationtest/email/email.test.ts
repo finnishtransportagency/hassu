@@ -1,7 +1,7 @@
 /* tslint:disable:only-arrow-functions no-unused-expression */
 import { describe, it } from "mocha";
 import { sendEmail } from "../../src/email/email";
-import { AsiakirjaTyyppi } from "../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli } from "../../../common/graphql/apiModel";
 import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
 import { asiakirjaAdapter } from "../../src/handler/asiakirjaAdapter";
 
@@ -25,6 +25,7 @@ describe.skip("Email", () => {
     const pdf = await new AsiakirjaService().createPdf({
       aloitusKuulutusJulkaisu: asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projekti),
       asiakirjaTyyppi: AsiakirjaTyyppi.ALOITUSKUULUTUS,
+      kieli: Kieli.SUOMI,
     });
 
     await sendEmail({

@@ -10,11 +10,11 @@ export abstract class AbstractPdf {
   protected fileBasePath: string;
   protected doc: PDFKit.PDFDocument;
 
-  constructor(title: string) {
-    this.title = title;
+  constructor(header: string, nimi: string) {
+    this.title = header + "; " + nimi;
     // Clean filename by joining allowed characters together
     this.fileName =
-      deburr(title)
+      deburr(header + " " + nimi)
         .replace(/[^\w() -]/g, " ")
         .slice(0, 100) + ".pdf";
     this.fileBasePath = __dirname;

@@ -150,7 +150,7 @@ describe("Api", () => {
     expect(updatedProjekti.euRahoitus).to.be.false;
 
     // Generate Aloituskuulutus PDF
-    const pdf = await api.esikatseleAsiakirjaPDF(oid, AsiakirjaTyyppi.ALOITUSKUULUTUS);
+    const pdf = await api.esikatseleAsiakirjaPDF(oid, AsiakirjaTyyppi.ALOITUSKUULUTUS, Kieli.SUOMI);
     expect(pdf.nimi).to.include(".pdf");
     expect(pdf.sisalto).not.to.be.empty;
     expect(pdf.sisalto.length).to.be.greaterThan(50000);

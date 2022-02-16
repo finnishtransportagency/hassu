@@ -1,4 +1,4 @@
-import { AsiakirjaTyyppi, PDF, ProjektiTyyppi } from "../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, PDF, ProjektiTyyppi } from "../../../common/graphql/apiModel";
 import { AloitusKuulutusJulkaisu } from "../database/model/projekti";
 import { AloitusKuulutus10T } from "./suunnittelunAloitus/aloitusKuulutus10T";
 import { AloitusKuulutus10R } from "./suunnittelunAloitus/aloitusKuulutus10R";
@@ -8,6 +8,7 @@ import { Ilmoitus12R } from "./suunnittelunAloitus/ilmoitus12R";
 interface CreatePdfOptions {
   aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu;
   asiakirjaTyyppi: AsiakirjaTyyppi;
+  kieli: Kieli;
 }
 
 enum AsiakirjanMuoto {
@@ -27,7 +28,7 @@ function determineAsiakirjaMuoto(aloitusKuulutusJulkaisu: AloitusKuulutusJulkais
 }
 
 export class AsiakirjaService {
-  createPdf({ asiakirjaTyyppi, aloitusKuulutusJulkaisu }: CreatePdfOptions): Promise<PDF> {
+  createPdf({ asiakirjaTyyppi, aloitusKuulutusJulkaisu, kieli }: CreatePdfOptions): Promise<PDF> {
     let pdf: Promise<PDF>;
     const asiakirjanMuoto = determineAsiakirjaMuoto(aloitusKuulutusJulkaisu);
 
@@ -35,10 +36,10 @@ export class AsiakirjaService {
       case AsiakirjaTyyppi.ALOITUSKUULUTUS:
         switch (asiakirjanMuoto) {
           case AsiakirjanMuoto.TIE:
-            pdf = new AloitusKuulutus10T(aloitusKuulutusJulkaisu).pdf;
+            pdf = new AloitusKuulutus10T(aloitusKuulutusJulkaisu, kieli).pdf;
             break;
           case AsiakirjanMuoto.RATA:
-            pdf = new AloitusKuulutus10R(aloitusKuulutusJulkaisu).pdf;
+            pdf = new AloitusKuulutus10R(aloitusKuulutusJulkaisu, kieli).pdf;
             break;
           default:
             throw new Error(
@@ -49,10 +50,10 @@ export class AsiakirjaService {
       case AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA:
         switch (asiakirjanMuoto) {
           case AsiakirjanMuoto.TIE:
-            pdf = new Ilmoitus12T(aloitusKuulutusJulkaisu).pdf;
+            pdf = new Ilmoitus12T(aloitusKuulutusJulkaisu, kieli).pdf;
             break;
           case AsiakirjanMuoto.RATA:
-            pdf = new Ilmoitus12R(aloitusKuulutusJulkaisu).pdf;
+            pdf = new Ilmoitus12R(aloitusKuulutusJulkaisu, kieli).pdf;
             break;
           default:
             throw new Error(
