@@ -1,6 +1,7 @@
 import {
   AloitusKuulutusTila,
   AsiakirjaTyyppi,
+  Kieli,
   TilaSiirtymaInput,
   TilasiirtymaToiminto,
 } from "../../../common/graphql/apiModel";
@@ -12,17 +13,9 @@ import { AloitusKuulutus, AloitusKuulutusJulkaisu, DBProjekti } from "../databas
 import { asiakirjaService } from "../asiakirja/asiakirjaService";
 import { fileService } from "../files/fileService";
 
-function findAloitusKuulutusWaitingForApproval(projekti: DBProjekti): AloitusKuulutusJulkaisu | undefined {
-  if (projekti.aloitusKuulutusJulkaisut) {
-    return projekti.aloitusKuulutusJulkaisut
-      .filter((julkaisu) => julkaisu.tila == AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA)
-      .pop();
-  }
-}
-
 async function sendForApproval(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus) {
   const muokkaaja = requirePermissionMuokkaa(projekti);
-  const julkaisuWaitingForApproval = findAloitusKuulutusWaitingForApproval(projekti);
+  const julkaisuWaitingForApproval = asiakirjaAdapter.findAloitusKuulutusWaitingForApproval(projekti);
   if (julkaisuWaitingForApproval) {
     throw new Error("Aloituskuulutus on jo olemassa odottamassa hyväksyntää");
   }
@@ -37,7 +30,7 @@ async function sendForApproval(projekti: DBProjekti, aloitusKuulutus: AloitusKuu
 
 async function reject(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus, syy: string) {
   requireProjektiPaallikko(projekti);
-  const julkaisuWaitingForApproval = findAloitusKuulutusWaitingForApproval(projekti);
+  const julkaisuWaitingForApproval = asiakirjaAdapter.findAloitusKuulutusWaitingForApproval(projekti);
   if (!julkaisuWaitingForApproval) {
     throw new Error("Ei aloituskuulutusta odottamassa hyväksyntää");
   }
@@ -54,6 +47,7 @@ async function createAloituskuulutusPDF(
   const pdf = await asiakirjaService.createPdf({
     asiakirjaTyyppi,
     aloitusKuulutusJulkaisu: julkaisuWaitingForApproval,
+    kieli: Kieli.SUOMI, // TODO: generoi kaikki kielet
   });
   return await fileService.createFileToProjekti({
     oid: projekti.oid,
@@ -65,7 +59,7 @@ async function createAloituskuulutusPDF(
 
 async function approve(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus) {
   const projektiPaallikko = requireProjektiPaallikko(projekti);
-  const julkaisuWaitingForApproval = findAloitusKuulutusWaitingForApproval(projekti);
+  const julkaisuWaitingForApproval = asiakirjaAdapter.findAloitusKuulutusWaitingForApproval(projekti);
   if (!julkaisuWaitingForApproval) {
     throw new Error("Ei aloituskuulutusta odottamassa hyväksyntää");
   }

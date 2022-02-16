@@ -102,6 +102,17 @@ export class ProjektiFixture {
   aloitusKuulutus: AloitusKuulutus = {
     __typename: "AloitusKuulutus",
     ...this.aloitusKuulutusInput,
+    ilmoituksenVastaanottajat: {
+      __typename: "IlmoituksenVastaanottajat",
+      kunnat: this.aloitusKuulutusInput.ilmoituksenVastaanottajat?.kunnat?.map((k) => ({
+        __typename: "KuntaVastaanottaja",
+        ...k,
+      })),
+      viranomaiset: this.aloitusKuulutusInput.ilmoituksenVastaanottajat?.viranomaiset?.map((v) => ({
+        __typename: "ViranomaisVastaanottaja",
+        ...v,
+      })),
+    },
     esitettavatYhteystiedot: this.aloitusKuulutusInput.esitettavatYhteystiedot.map((yt) => ({
       __typename: "Yhteystieto",
       ...yt,
@@ -148,7 +159,7 @@ export class ProjektiFixture {
     aloitusKuulutus: {
       kuulutusPaiva: "2022-01-02",
       hankkeenKuvaus: "Lorem Ipsum",
-      hankkeenKuvausRuotsi: "På Svenska",
+      hankkeenKuvausRuotsi: "På svenska",
       hankkeenKuvausSaame: "Saameksi",
       siirtyySuunnitteluVaiheeseen: "2022-01-01",
       elyKeskus: "Pirkanmaa",
@@ -165,7 +176,7 @@ export class ProjektiFixture {
     kielitiedot: {
       ensisijainenKieli: Kieli.SUOMI,
       toissijainenKieli: Kieli.RUOTSI,
-      projektinNimiVieraskielella: "Heja sverige",
+      projektinNimiVieraskielella: "Namnet på svenska",
     },
     euRahoitus: false,
     liittyvatSuunnitelmat: [

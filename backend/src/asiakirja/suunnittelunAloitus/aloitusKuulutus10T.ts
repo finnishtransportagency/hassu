@@ -1,46 +1,59 @@
 import { SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
 import { AloitusKuulutusJulkaisu } from "../../database/model/projekti";
+import { Kieli } from "../../../../common/graphql/apiModel";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 
-const header = "KUULUTUS SUUNNITTELUN ALOITTAMISESTA";
+const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
+  SUOMI: "KUULUTUS SUUNNITTELUN ALOITTAMISESTA",
+  RUOTSI: "KUNGÖRELSE OM INLEDANDET AV PLANERINGEN",
+};
 
 export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
-  constructor(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu) {
-    super(aloitusKuulutusJulkaisu, header);
+  constructor(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu, kieli: Kieli) {
+    super(aloitusKuulutusJulkaisu, kieli, headers[kieli == Kieli.SAAME ? Kieli.SUOMI : kieli]); //TODO lisää tuki Saamen eri muodoille
   }
 
   protected addDocumentElements() {
     return [
       this.paragraph(this.startOfPlanningPhrase),
 
-      this.paragraph(this.aloitusKuulutusJulkaisu?.hankkeenKuvaus || ""),
+      this.hankkeenKuvaus(),
 
-      this.paragraph(
-        `Kuulutus on julkaistu tietoverkossa ${this.tilaajaGenetiivi} verkkosivuilla ${this.kuulutusPaiva}. `
-      ),
+      this.localizedParagraph([
+        `Kuulutus on julkaistu tietoverkossa ${this.tilaajaGenetiivi} verkkosivuilla ${this.kuulutusPaiva}. `,
+        `RUOTSIKSI Kuulutus on julkaistu tietoverkossa ${this.tilaajaGenetiivi} verkkosivuilla ${this.kuulutusPaiva}. `,
+      ]),
 
-      this.paragraph(
-        "Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §). "
-      ),
-      this.paragraph(
-        "Suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön edellyttämiä mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §). "
-      ),
+      this.localizedParagraph([
+        "Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §). ",
+        "RUOTSIKSI Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §). ",
+      ]),
+      this.localizedParagraph([
+        "Suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön edellyttämiä mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §). ",
+        "RUOTSIKSI Suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön edellyttämiä mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §). ",
+      ]),
 
-      this.paragraph(
-        "Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa on oikeus olla tutkimuksissa saapuvilla ja lausua mielipiteensä asiassa (LjMTL 16 § ja 27 §). "
-      ),
-      this.paragraph(
-        "Suunnittelun edetessä tullaan myöhemmin erikseen ilmoitettavalla tavalla varaamaan tilaisuus mielipiteen ilmaisemiseen suunnitelmasta ( LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). "
-      ),
+      this.localizedParagraph([
+        "Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa on oikeus olla tutkimuksissa saapuvilla ja lausua mielipiteensä asiassa (LjMTL 16 § ja 27 §). ",
+        "RUOTSIKSI Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa on oikeus olla tutkimuksissa saapuvilla ja lausua mielipiteensä asiassa (LjMTL 16 § ja 27 §). ",
+      ]),
+      this.localizedParagraph([
+        "Suunnittelun edetessä tullaan myöhemmin erikseen ilmoitettavalla tavalla varaamaan tilaisuus mielipiteen ilmaisemiseen suunnitelmasta ( LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). ",
+        "RUOTSIKSI Suunnittelun edetessä tullaan myöhemmin erikseen ilmoitettavalla tavalla varaamaan tilaisuus mielipiteen ilmaisemiseen suunnitelmasta ( LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). ",
+      ]),
 
-      this.paragraph(
-        "Valmistuttuaan suunnitelmat asetetaan yleisesti nähtäville, jolloin asianosaisilla on mahdollisuus tehdä kirjallinen muistutus suunnitelmasta (LjMTL 27 §). "
-      ),
+      this.localizedParagraph([
+        "Valmistuttuaan suunnitelmat asetetaan yleisesti nähtäville, jolloin asianosaisilla on mahdollisuus tehdä kirjallinen muistutus suunnitelmasta (LjMTL 27 §). ",
+        "RUOTSIKSI Valmistuttuaan suunnitelmat asetetaan yleisesti nähtäville, jolloin asianosaisilla on mahdollisuus tehdä kirjallinen muistutus suunnitelmasta (LjMTL 27 §). ",
+      ]),
 
       this.doc.struct("P", {}, [
         () => {
           this.doc.text(
-            `${this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio} käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa `,
+            this.selectText([
+              `${this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio} käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa `,
+              `RUOTSIKSI ${this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio} käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa `,
+            ]),
             { continued: true }
           );
         },
@@ -56,7 +69,7 @@ export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
         },
       ]),
 
-      this.paragraph("Lisätietoja antavat "),
+      this.localizedParagraph(["Lisätietoja antavat "]),
       this.doc.struct("P", {}, this.moreInfoElements),
       () => {
         this.doc.font("ArialMTBold");

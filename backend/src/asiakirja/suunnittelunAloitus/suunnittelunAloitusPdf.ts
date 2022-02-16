@@ -1,16 +1,33 @@
 import log from "loglevel";
-import { ProjektiTyyppi } from "../../../../common/graphql/apiModel";
-import { AloitusKuulutusJulkaisu, Yhteystieto } from "../../database/model/projekti";
+import { Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
+import { AloitusKuulutusJulkaisu, Kielitiedot, Yhteystieto } from "../../database/model/projekti";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import { AbstractPdf } from "../abstractPdf";
+
+function isKieliSupported(kieli: Kieli, kielitiedot: Kielitiedot) {
+  return kielitiedot.ensisijainenKieli == kieli || kielitiedot.toissijainenKieli == kieli;
+}
+
+function selectNimi(julkaisu: AloitusKuulutusJulkaisu, kieli: Kieli): string {
+  if (isKieliSupported(kieli, julkaisu.kielitiedot)) {
+    if (kieli == Kieli.SUOMI) {
+      return julkaisu?.velho.nimi;
+    } else {
+      return julkaisu.kielitiedot.projektinNimiVieraskielella;
+    }
+  }
+  throw new Error("Pyydettyä kieliversiota ei ole saatavilla");
+}
 
 export abstract class SuunnittelunAloitusPdf extends AbstractPdf {
   protected header: string;
   protected aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu;
+  private kieli: Kieli;
 
-  constructor(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu, header: string) {
-    super(header + "; " + aloitusKuulutusJulkaisu?.velho.nimi);
+  constructor(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu, kieli: Kieli, header: string) {
+    super(header, selectNimi(aloitusKuulutusJulkaisu, kieli));
     this.header = header;
+    this.kieli = kieli;
     this.aloitusKuulutusJulkaisu = aloitusKuulutusJulkaisu;
   }
 
@@ -113,7 +130,7 @@ export abstract class SuunnittelunAloitusPdf extends AbstractPdf {
 
   private get titleElement() {
     return this.doc.struct("H2", {}, () => {
-      const parts = [this.aloitusKuulutusJulkaisu.velho?.nimi];
+      const parts = [selectNimi(this.aloitusKuulutusJulkaisu, this.kieli)];
       parts.push(this.projektiTyyppi);
       this.doc.text(parts.join(", ")).font("ArialMT").moveDown();
     });
@@ -126,5 +143,31 @@ export abstract class SuunnittelunAloitusPdf extends AbstractPdf {
         ? "Väyläviraston"
         : tilaajaOrganisaatio?.slice(0, -1) + "ksen"
       : "Tilaajaorganisaation";
+  }
+
+  protected hankkeenKuvaus() {
+    return this.localizedParagraph([
+      this.aloitusKuulutusJulkaisu?.hankkeenKuvaus || "",
+      this.aloitusKuulutusJulkaisu?.hankkeenKuvausRuotsi || "",
+      this.aloitusKuulutusJulkaisu?.hankkeenKuvausSaame || "",
+    ]);
+  }
+
+  protected lisatietojaAntavatParagraph() {
+    return this.localizedParagraph(["Lisätietoja antavat ", "RUOTSIKSI Lisätietoja antavat "]);
+  }
+
+  protected localizedParagraph(suomiRuotsiSaameParagraphs: string[]) {
+    return this.paragraph(this.selectText(suomiRuotsiSaameParagraphs));
+  }
+
+  protected selectText(suomiRuotsiSaameParagraphs: string[]) {
+    if (this.kieli == Kieli.SUOMI && suomiRuotsiSaameParagraphs.length > 0) {
+      return suomiRuotsiSaameParagraphs[0];
+    } else if (this.kieli == Kieli.RUOTSI && suomiRuotsiSaameParagraphs.length > 1) {
+      return suomiRuotsiSaameParagraphs[1];
+    } else if (this.kieli == Kieli.SAAME && suomiRuotsiSaameParagraphs.length > 2) {
+      return suomiRuotsiSaameParagraphs[2];
+    }
   }
 }

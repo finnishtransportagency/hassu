@@ -22,10 +22,12 @@ export default function AloituskuulutusRO({ aloituskuulutusjulkaisu, oid }: Prop
 
   const naytaEsikatselu = async (action: string, kieli: Kieli | undefined | null) => {
     log.info("Näytä esikatselu ", kieli);
-    if (!action) return;
+    if (!action) {
+      return;
+    }
 
     if (pdfFormRef.current) {
-      pdfFormRef.current.action = action;
+      pdfFormRef.current.action = action + "?kieli=" + kieli;
       pdfFormRef.current?.submit();
     }
   };
@@ -120,33 +122,37 @@ export default function AloituskuulutusRO({ aloituskuulutusjulkaisu, oid }: Prop
           </Button>
         </div>
       </div>
-      <div className="content">
-        <p>Kuulutus ja ilmoitus toissijaisella kielellä ({aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli})</p>
-        <div className="flex flex-col lg:flex-row gap-6">
-          <Button
-            type="submit"
-            onClick={() =>
-              naytaEsikatselu(
-                `/api/projekti/${oid}/aloituskuulutus/pdf`,
-                aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli
-              )
-            }
-          >
-            Kuulutukset esikatselu
-          </Button>
-          <Button
-            type="submit"
-            onClick={() =>
-              naytaEsikatselu(
-                `/api/projekti/${oid}/aloituskuulutus/ilmoitus/pdf`,
-                aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli
-              )
-            }
-          >
-            Ilmoituksen esikatselu
-          </Button>
+      {aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli && (
+        <div className="content">
+          <p>
+            Kuulutus ja ilmoitus toissijaisella kielellä ({aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli})
+          </p>
+          <div className="flex flex-col lg:flex-row gap-6">
+            <Button
+              type="submit"
+              onClick={() =>
+                naytaEsikatselu(
+                  `/api/projekti/${oid}/aloituskuulutus/pdf`,
+                  aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli
+                )
+              }
+            >
+              Kuulutukset esikatselu
+            </Button>
+            <Button
+              type="submit"
+              onClick={() =>
+                naytaEsikatselu(
+                  `/api/projekti/${oid}/aloituskuulutus/ilmoitus/pdf`,
+                  aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli
+                )
+              }
+            >
+              Ilmoituksen esikatselu
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
       <form ref={pdfFormRef} target="_blank" method="POST">
         <input type="hidden" name="naytaEsikatselu" value="" />
       </form>

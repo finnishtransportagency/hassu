@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { api, AsiakirjaTyyppi } from "@services/api";
+import { api, AsiakirjaTyyppi, Kieli } from "@services/api";
 import { GetParameterCommand } from "@aws-sdk/client-ssm";
 import { getSSMClient } from "../../backend/src/aws/clients";
 import { setupLambdaMonitoring } from "../../backend/src/aws/monitoring";
@@ -33,11 +33,14 @@ interface PdfRequestProps {
 
 export const handlePdfRequest = async ({ req, res, asiakirjaTyyppi, virheviesti }: PdfRequestProps) => {
   const {
-    query: { oid },
+    query: { oid, kieli },
     body: { tallennaProjektiInput },
   } = req;
   if (Array.isArray(oid)) {
     throw new Error("Vain yksi oid-parametri sallitaan");
+  }
+  if (Array.isArray(kieli)) {
+    throw new Error("Vain yksi kieli-parametri sallitaan");
   }
 
   try {
@@ -54,7 +57,7 @@ export const handlePdfRequest = async ({ req, res, asiakirjaTyyppi, virheviesti 
       changes = JSON.parse(tallennaProjektiInput);
     }
 
-    const pdf = await api.esikatseleAsiakirjaPDF(oid, asiakirjaTyyppi, changes);
+    const pdf = await api.esikatseleAsiakirjaPDF(oid, asiakirjaTyyppi, kieli as Kieli, changes);
     if (pdf) {
       res.setHeader("Content-Type", "application/pdf");
       res.setHeader("Content-disposition", "inline; filename=" + pdf.nimi);

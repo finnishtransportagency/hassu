@@ -1,42 +1,60 @@
 import { SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
 import { AloitusKuulutusJulkaisu } from "../../database/model/projekti";
+import { Kieli } from "../../../../common/graphql/apiModel";
 
-const header = "KUULUTUS SUUNNITTELUN ALOITTAMISESTA";
+const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
+  SUOMI: "KUULUTUS SUUNNITTELUN ALOITTAMISESTA",
+  RUOTSI: "KUNGÖRELSE OM INLEDANDET AV PLANERINGEN",
+};
 
 export class AloitusKuulutus10R extends SuunnittelunAloitusPdf {
-  private tietosuojaUrl = "https://www.vayla.fi/tietosuoja";
+  private tietosuojaUrl;
 
-  constructor(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu) {
-    super(aloitusKuulutusJulkaisu, header);
+  constructor(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu, kieli: Kieli) {
+    super(aloitusKuulutusJulkaisu, kieli, headers[kieli == Kieli.SAAME ? Kieli.SUOMI : kieli]); //TODO lisää tuki Saamen eri muodoille
+    this.tietosuojaUrl = this.selectText([
+      "https://www.vayla.fi/tietosuoja",
+      "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy",
+      "https://www.vayla.fi/tietosuoja",
+    ]);
   }
 
   protected addDocumentElements() {
     return [
-      this.paragraph(
-        `Väylävirasto aloittaa otsikon mukaisen ${this.projektiTyyppi}n laatimisen tarpeellisine tutkimuksineen. `
-      ),
+      this.localizedParagraph([
+        `Väylävirasto aloittaa otsikon mukaisen ${this.projektiTyyppi}n laatimisen tarpeellisine tutkimuksineen. `,
+        `RUOTSIKSI Väylävirasto aloittaa otsikon mukaisen ${this.projektiTyyppi}n laatimisen tarpeellisine tutkimuksineen. `,
+      ]),
 
-      this.paragraph(this.aloitusKuulutusJulkaisu?.hankkeenKuvaus || ""),
+      this.hankkeenKuvaus(),
 
-      this.paragraph(
-        `Väylävirasto on julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista. Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisemisesta. (ratalaki 95 §, HL 62 a §) `
-      ),
+      this.localizedParagraph([
+        `Väylävirasto on julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista. Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisemisesta. (ratalaki 95 §, HL 62 a §) `,
+        `RUOTSIKSI Väylävirasto on julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista. Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisemisesta. (ratalaki 95 §, HL 62 a §) `,
+      ]),
 
-      this.paragraph(
-        "Rataverkon haltijalla on oikeus tehdä suunnittelualueeseen kuuluvalla kiinteistöllä suunnitteluun liittyviä mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä (ratalaki 9 §). "
-      ),
-      this.paragraph(
-        "Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa on oikeus olla tutkimuksissa saapuvilla ja lausua mielipiteensä asiassa (ratalaki 22 § ja 9 §). "
-      ),
+      this.localizedParagraph([
+        "Rataverkon haltijalla on oikeus tehdä suunnittelualueeseen kuuluvalla kiinteistöllä suunnitteluun liittyviä mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä (ratalaki 9 §). ",
+        "RUOTSIKSI Rataverkon haltijalla on oikeus tehdä suunnittelualueeseen kuuluvalla kiinteistöllä suunnitteluun liittyviä mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä (ratalaki 9 §). ",
+      ]),
 
-      this.paragraph(
-        "Suunnittelun edetessä tullaan myöhemmin erikseen ilmoitettavalla tavalla varaamaan tilaisuus mielipiteen ilmaisemiseen suunnitelmasta. Valmistuttuaan suunnitelma asetetaan yleisesti nähtäville, jolloin asianosaisilla on mahdollisuus tehdä kirjallinen muistutus suunnitelmasta. (ratalaki 22 §). "
-      ),
+      this.localizedParagraph([
+        "Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa on oikeus olla tutkimuksissa saapuvilla ja lausua mielipiteensä asiassa (ratalaki 22 § ja 9 §). ",
+        "RUOTSIKSI Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa on oikeus olla tutkimuksissa saapuvilla ja lausua mielipiteensä asiassa (ratalaki 22 § ja 9 §). ",
+      ]),
+
+      this.localizedParagraph([
+        "Suunnittelun edetessä tullaan myöhemmin erikseen ilmoitettavalla tavalla varaamaan tilaisuus mielipiteen ilmaisemiseen suunnitelmasta. Valmistuttuaan suunnitelma asetetaan yleisesti nähtäville, jolloin asianosaisilla on mahdollisuus tehdä kirjallinen muistutus suunnitelmasta. (ratalaki 22 §). ",
+        "RUOTSIKSI Suunnittelun edetessä tullaan myöhemmin erikseen ilmoitettavalla tavalla varaamaan tilaisuus mielipiteen ilmaisemiseen suunnitelmasta. Valmistuttuaan suunnitelma asetetaan yleisesti nähtäville, jolloin asianosaisilla on mahdollisuus tehdä kirjallinen muistutus suunnitelmasta. (ratalaki 22 §). ",
+      ]),
 
       this.doc.struct("P", {}, [
         () => {
           this.doc.text(
-            `Väylävirasto käsittelee suunnitelmaan laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa `,
+            this.selectText([
+              `Väylävirasto käsittelee suunnitelmaan laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa `,
+              `RUOTSIKSI Väylävirasto käsittelee suunnitelmaan laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa `,
+            ]),
             { continued: true }
           );
         },
@@ -51,7 +69,7 @@ export class AloitusKuulutus10R extends SuunnittelunAloitusPdf {
           this.doc.fillColor("black").text(".", { link: undefined, underline: false }).moveDown();
         },
       ]),
-      this.paragraph("Lisätietoja antavat "),
+      this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements),
     ];
   }

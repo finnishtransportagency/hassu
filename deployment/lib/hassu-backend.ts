@@ -14,9 +14,10 @@ import { AuthorizationMode } from "@aws-cdk/aws-appsync/lib/graphqlapi";
 import { DynamoEventSource } from "@aws-cdk/aws-lambda-event-sources";
 import { Domain } from "@aws-cdk/aws-opensearchservice";
 import { OpenSearchAccessPolicy } from "@aws-cdk/aws-opensearchservice/lib/opensearch-access-policy";
-import { Effect, PolicyStatement } from "@aws-cdk/aws-iam";
+import { Effect, ManagedPolicy, PolicyStatement } from "@aws-cdk/aws-iam";
 import { Bucket } from "@aws-cdk/aws-s3";
 import { getEnvironmentVariablesFromSSM } from "../bin/setupEnvironment";
+import { LambdaInsightsVersion } from "@aws-cdk/aws-lambda/lib/lambda-insights";
 
 export type HassuBackendStackProps = {
   searchDomain: Domain;
@@ -178,6 +179,7 @@ export class HassuBackendStack extends cdk.Stack {
         "process.env.USER_IDENTIFIER_FUNCTIONS": JSON.stringify("../../developer/identifyIAMUser"),
       };
     }
+
     const backendLambda = new NodejsFunction(this, "API", {
       functionName: "hassu-backend-" + Config.env,
       runtime: lambda.Runtime.NODEJS_14_X,
@@ -208,6 +210,7 @@ export class HassuBackendStack extends cdk.Stack {
         PERSON_SEARCH_UPDATER_LAMBDA_ARN: personSearchUpdaterLambda.functionArn,
       },
       tracing: Tracing.PASS_THROUGH,
+      insightsVersion: LambdaInsightsVersion.VERSION_1_0_98_0,
     });
     backendLambda.addToRolePolicy(
       new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] })
@@ -219,6 +222,10 @@ export class HassuBackendStack extends cdk.Stack {
         resources: [personSearchUpdaterLambda.functionArn],
       })
     );
+    backendLambda.role?.addManagedPolicy(
+      ManagedPolicy.fromAwsManagedPolicyName("CloudWatchLambdaInsightsExecutionRolePolicy")
+    );
+
     this.props.uploadBucket.grantPut(backendLambda);
     this.props.uploadBucket.grantReadWrite(backendLambda);
     this.props.yllapitoBucket.grantReadWrite(backendLambda);
@@ -234,7 +241,7 @@ export class HassuBackendStack extends cdk.Stack {
       handler: "handleEvent",
       memorySize: 512,
       reservedConcurrentExecutions: 1,
-      timeout: Duration.seconds(29),
+      timeout: Duration.seconds(60),
       bundling: {
         minify: true,
       },

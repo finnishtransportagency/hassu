@@ -45,6 +45,10 @@ export class ProjektiAdapter {
     }) as API.Projekti;
   }
 
+  async adaptProjektiToPreview(projekti: DBProjekti, changes: API.TallennaProjektiInput): Promise<DBProjekti> {
+    return mergeWith(projekti, await this.adaptProjektiToSave(projekti, changes));
+  }
+
   async adaptProjektiToSave(projekti: DBProjekti, changes: API.TallennaProjektiInput): Promise<DBProjekti> {
     // Pick only fields that are relevant to DB
     const {

@@ -344,12 +344,12 @@ describe("apiHandler", () => {
         validatePutObjectCommandInput(
           0,
           "hassu-localstack-yllapito",
-          "yllapito/tiedostot/projekti/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA  Testiprojekti 1.pdf"
+          "yllapito/tiedostot/projekti/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf"
         );
         validatePutObjectCommandInput(
           1,
           "hassu-localstack-yllapito",
-          "yllapito/tiedostot/projekti/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA  Testiprojekti 1.pdf"
+          "yllapito/tiedostot/projekti/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf"
         );
 
         // Verify that the accepted aloituskuulutus is available

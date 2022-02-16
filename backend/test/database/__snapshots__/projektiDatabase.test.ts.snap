@@ -25,7 +25,7 @@ Object {
         },
       ],
       "hankkeenKuvaus": "Lorem Ipsum",
-      "hankkeenKuvausRuotsi": "På Svenska",
+      "hankkeenKuvausRuotsi": "På svenska",
       "hankkeenKuvausSaame": "Saameksi",
       "kuulutusPaiva": "2022-01-02",
       "siirtyySuunnitteluVaiheeseen": "2022-01-01",
@@ -53,7 +53,7 @@ Object {
     ],
     ":kielitiedot": Object {
       "ensisijainenKieli": "SUOMI",
-      "projektinNimiVieraskielella": "Heja sverige",
+      "projektinNimiVieraskielella": "Namnet på svenska",
       "toissijainenKieli": "RUOTSI",
     },
     ":liittyvatSuunnitelmat": Array [
