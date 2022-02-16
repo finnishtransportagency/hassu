@@ -212,7 +212,7 @@ export default function Aloituskuulutus({
 
   const lahetaHyvaksyttavaksi = async () => {
     log.log("lähetä hyväksyttäväksi");
-    await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
+    //await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
   };
 
   const palautaMuokattavaksi = async (data: PalautusValues) => {
