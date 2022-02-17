@@ -34,6 +34,8 @@ import AloituskuulutusRO from "@components/projekti/aloituskuulutus/Aloituskuulu
 import IlmoituksenVastaanottajat from "@components/projekti/aloituskuulutus/IlmoituksenVastaanottajat";
 import { GetServerSideProps } from "next";
 import { setupLambdaMonitoring } from "backend/src/aws/monitoring";
+import { Dialog, DialogContent, DialogTitle } from "@mui/material";
+import TextInput from "@components/form/TextInput";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
 type RequiredProjektiFields = Required<{
@@ -49,6 +51,10 @@ type FormValues = RequiredProjektiFields & {
     | "siirtyySuunnitteluVaiheeseen"
     | "ilmoituksenVastaanottajat"
   >;
+};
+
+type PalautusValues = {
+  syy: string;
 };
 
 const maxAloituskuulutusLength = 2000;
@@ -80,6 +86,7 @@ export default function Aloituskuulutus({
   const today = new Date().toISOString().split("T")[0];
   const pdfFormRef = useRef<HTMLFormElement | null>(null);
   const [formContext, setFormContext] = useState<Projekti | undefined>(undefined);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (router.isReady) {
@@ -112,6 +119,12 @@ export default function Aloituskuulutus({
     watch,
     setValue,
   } = useFormReturn;
+
+  const {
+    register: register2,
+    handleSubmit: handleSubmit2,
+    formState: { errors: errors2 },
+  } = useForm<PalautusValues>({ defaultValues: { syy: "" } });
 
   const watchKuulutusPaiva = watch("aloitusKuulutus.kuulutusPaiva");
 
@@ -162,7 +175,7 @@ export default function Aloituskuulutus({
       };
 
       setFormContext(projekti);
-      reset(tallentamisTiedot, { keepDirty: true, keepTouched: true });
+      reset(tallentamisTiedot);
     }
   }, [projekti, reset]);
 
@@ -197,25 +210,42 @@ export default function Aloituskuulutus({
     setIsFormSubmitting(false);
   };
 
-  const sendToManager = async () => {
-    if (!projekti) {
-      return;
-    }
+  const lahetaHyvaksyttavaksi = async () => {
+    log.log("lähetä hyväksyttäväksi");
+    await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
+  };
+
+  const palautaMuokattavaksi = async (data: PalautusValues) => {
+    log.log("palauta muokattavaksi: ", data);
+    await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.HYLKAA, "Palautus", data.syy);
+  };
+
+  const hyvaksyKuulutus = async () => {
+    log.log("hyväksy kuulutus");
+    //await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
+  };
+
+  const vaihdaAloituskuulutuksenTila = async (toiminto: TilasiirtymaToiminto, viesti: string, syy?: string) => {
+    if (!projekti) return;
     setIsFormSubmitting(true);
     try {
-      if (isDirty) {
-        // should we even allow user to try sending to manager if form is dirty?
-        // await saveAloituskuulutus(formData);
-        // don't show succes toast we still want to send it to manager
-      }
-      await api.siirraTila({ oid: projekti.oid, toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI });
+      await api.siirraTila({ oid: projekti.oid, toiminto, syy });
       await reloadProjekti();
-      showSuccessMessage("Lähetys onnistui");
+      showSuccessMessage(`${viesti} onnistui`);
     } catch (error) {
-      log.error("", error);
-      showErrorMessage("Lähetyksessä tapahtui virhe");
+      log.error(error);
+      showErrorMessage("Toiminnossa tapahtui virhe");
     }
     setIsFormSubmitting(false);
+    setOpen(false);
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClickClose = () => {
+    setOpen(false);
   };
 
   const showPDFPreview = (formData: FormValues, action: string, kieli: Kieli) => {
@@ -246,127 +276,97 @@ export default function Aloituskuulutus({
     return <div />;
   }
   if (!projekti.kielitiedot) {
-    return <div />;
+    return <div>Kielitiedot puttuu</div>
   }
   const kielitiedot = projekti.kielitiedot;
   const toissijainenKieli = kielitiedot.toissijainenKieli;
+  const voiMuokata = !projekti?.aloitusKuulutusJulkaisut || projekti.aloitusKuulutusJulkaisut.length < 1;
+  const voiHyvaksya =
+    getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA) &&
+    projekti?.nykyinenKayttaja.onProjektipaallikko;
 
   return (
     <ProjektiPageLayout title="Aloituskuulutus">
-      {!projekti?.aloitusKuulutusJulkaisut && (
+      {voiMuokata && (
         <>
           <FormProvider {...useFormReturn}>
             <form>
-            <fieldset disabled={disableFormEdit}>
-              <ProjektiErrorNotification
-                projekti={projekti}
-                validationSchema={loadedProjektiValidationSchema}
-                disableValidation={isLoadingProjekti}
-              />
-              <Notification type={NotificationType.WARN}>
-                Aloituskuulutusta ei ole vielä julkaistu palvelun julkisella puolella.{" "}
-                {watchKuulutusPaiva && !errors.aloitusKuulutus?.kuulutusPaiva
-                  ? `Kuulutuspäivä on ${new Date(watchKuulutusPaiva).toLocaleDateString("fi")}`
-                  : "Kuulutuspäivää ei ole asetettu"}
-                . Voit edelleen tehdä muutoksia projektin tietoihin. Tallennetut muutokset huomioidaan kuulutuksessa.
-              </Notification>
-              <h3 className="vayla-title">Suunnittelun aloittamisesta kuuluttaminen</h3>
-              <p>
-                Kun suunnitelman aloittamisesta kuulutetaan, projektista julkaistaan aloituskuulutustiedot tämän
-                palvelun julkisella puolella. Aloituskuulutuksen näkyvilläoloaika määräytyy annetun kuulutuspäivän
-                mukaan. Projekti siirtyy määräajan jälkeen automaattisesti suunnitteluvaiheeseen.
-              </p>
-              <Notification type={NotificationType.INFO} hideIcon>
-                <div>
-                  <h3 className="vayla-small-title">Ohjeet</h3>
-                  <ul className="list-disc block pl-5">
-                    <li>
-                      Anna päivämäärä, jolloin suunnittelun aloittamisesta kuulutetaan tämän palvelun julkisella
-                      puolella.
-                    </li>
-                    <li>
-                      Kuvaa aloituskuulutuksessa esitettävään sisällönkuvauskenttään lyhyesti suunnittelukohteen
-                      alueellinen rajaus (maantiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja
-                      toimenpiteet pääpiirteittäin karkealla tasolla. Älä lisää tekstiin linkkejä.
-                    </li>
-                  </ul>
-                </div>
-              </Notification>
-              <div className="lg:flex md:gap-x-8">
-                <DatePicker
-                  label="Kuulutuspäivä *"
-                  className="md:max-w-min"
-                  {...register("aloitusKuulutus.kuulutusPaiva")}
-                  disabled={disableFormEdit}
-                  min={today}
-                  error={errors.aloitusKuulutus?.kuulutusPaiva}
-                  onChange={(event) => {
-                    getPaattymispaiva(event.target.value);
-                  }}
+              <fieldset disabled={disableFormEdit}>
+                <ProjektiErrorNotification
+                  projekti={projekti}
+                  validationSchema={loadedProjektiValidationSchema}
+                  disableValidation={isLoadingProjekti}
                 />
-                <DatePicker
-                  className="md:max-w-min"
-                  label="Kuulutusvaihe päättyy"
-                  readOnly
-                  {...register("aloitusKuulutus.siirtyySuunnitteluVaiheeseen")}
-                />
-              </div>
-              <div className="content">
-                <KuulutuksenYhteystiedot projekti={projekti} useFormReturn={useFormReturn} />
-              </div>
-              <Textarea
-                label="Tiivistetty hankkeen sisällönkuvaus *"
-                {...register("aloitusKuulutus.hankkeenKuvaus")}
-                error={errors.aloitusKuulutus?.hankkeenKuvaus}
-                maxLength={maxAloituskuulutusLength}
-                disabled={disableFormEdit}
-              />
-              <Notification type={NotificationType.INFO}>
-                Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
-              </Notification>
-
-              <div className="content">
-                <p className="vayla-label">Esikatseltavat tiedostot</p>
-                <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({kielitiedot.ensisijainenKieli})</p>
-                <div className="flex flex-col lg:flex-row gap-6">
-                  <Button
-                    type="submit"
-                    onClick={handleSubmit((formData) =>
-                      showPDFPreview(
-                        formData,
-                        `/api/projekti/${projekti?.oid}/aloituskuulutus/pdf`,
-                        kielitiedot.ensisijainenKieli
-                      )
-                    )}
+                {projekti.aloitusKuulutus?.palautusSyy && (
+                  <Notification type={NotificationType.WARN}>
+                    Aloituskuulutus on palautettu korjattavaksi. Palautuksen syy: {projekti.aloitusKuulutus.palautusSyy}
+                  </Notification>
+                )}
+                <Notification type={NotificationType.WARN}>
+                  Aloituskuulutusta ei ole vielä julkaistu palvelun julkisella puolella.{" "}
+                  {watchKuulutusPaiva && !errors.aloitusKuulutus?.kuulutusPaiva
+                    ? `Kuulutuspäivä on ${new Date(watchKuulutusPaiva).toLocaleDateString("fi")}`
+                    : "Kuulutuspäivää ei ole asetettu"}
+                  . Voit edelleen tehdä muutoksia projektin tietoihin. Tallennetut muutokset huomioidaan kuulutuksessa.
+                </Notification>
+                <h3 className="vayla-title">Suunnittelun aloittamisesta kuuluttaminen</h3>
+                <p>
+                  Kun suunnitelman aloittamisesta kuulutetaan, projektista julkaistaan aloituskuulutustiedot tämän
+                  palvelun julkisella puolella. Aloituskuulutuksen näkyvilläoloaika määräytyy annetun kuulutuspäivän
+                  mukaan. Projekti siirtyy määräajan jälkeen automaattisesti suunnitteluvaiheeseen.
+                </p>
+                <Notification type={NotificationType.INFO} hideIcon>
+                  <div>
+                    <h3 className="vayla-small-title">Ohjeet</h3>
+                    <ul className="list-disc block pl-5">
+                      <li>
+                        Anna päivämäärä, jolloin suunnittelun aloittamisesta kuulutetaan tämän palvelun julkisella
+                        puolella.
+                      </li>
+                      <li>
+                        Kuvaa aloituskuulutuksessa esitettävään sisällönkuvauskenttään lyhyesti suunnittelukohteen
+                        alueellinen rajaus (maantiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja
+                        toimenpiteet pääpiirteittäin karkealla tasolla. Älä lisää tekstiin linkkejä.
+                      </li>
+                    </ul>
+                  </div>
+                </Notification>
+                <div className="lg:flex md:gap-x-8">
+                  <DatePicker
+                    label="Kuulutuspäivä *"
+                    className="md:max-w-min"
+                    {...register("aloitusKuulutus.kuulutusPaiva")}
                     disabled={disableFormEdit}
-                  >
-                    Esikatsele kuulutusta
-                  </Button>
-                  <Button
-                    type="submit"
-                    onClick={handleSubmit((formData) =>
-                      showPDFPreview(
-                        formData,
-                        `/api/projekti/${projekti?.oid}/aloituskuulutus/ilmoitus/pdf`,
-                        kielitiedot.ensisijainenKieli
-                      )
-                    )}
-                    disabled={disableFormEdit}
-                  >
-                    Esikatsele ilmoitusta
-                  </Button>
-                </div>
-                <div className="content">
-                  <IlmoituksenVastaanottajat
-                    isLoading={isLoadingProjekti}
-                    kirjaamoOsoitteet={kirjaamoOsoitteet || []}
+                    min={today}
+                    error={errors.aloitusKuulutus?.kuulutusPaiva}
+                    onChange={(event) => {
+                      getPaattymispaiva(event.target.value);
+                    }}
+                  />
+                  <DatePicker
+                    className="md:max-w-min"
+                    label="Kuulutusvaihe päättyy"
+                    readOnly
+                    {...register("aloitusKuulutus.siirtyySuunnitteluVaiheeseen")}
                   />
                 </div>
-              </div>
-
-              {toissijainenKieli && (
                 <div className="content">
-                  <p>Kuulutus ja ilmoitus toissijaisella kielellä ({toissijainenKieli})</p>
+                  <KuulutuksenYhteystiedot projekti={projekti} useFormReturn={useFormReturn} />
+                </div>
+                <Textarea
+                  label="Tiivistetty hankkeen sisällönkuvaus *"
+                  {...register("aloitusKuulutus.hankkeenKuvaus")}
+                  error={errors.aloitusKuulutus?.hankkeenKuvaus}
+                  maxLength={maxAloituskuulutusLength}
+                  disabled={disableFormEdit}
+                />
+                <Notification type={NotificationType.INFO}>
+                  Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
+                </Notification>
+
+                <div className="content">
+                  <p className="vayla-label">Esikatseltavat tiedostot</p>
+                  <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({kielitiedot.ensisijainenKieli})</p>
                   <div className="flex flex-col lg:flex-row gap-6">
                     <Button
                       type="submit"
@@ -374,7 +374,7 @@ export default function Aloituskuulutus({
                         showPDFPreview(
                           formData,
                           `/api/projekti/${projekti?.oid}/aloituskuulutus/pdf`,
-                          toissijainenKieli
+                          kielitiedot.ensisijainenKieli
                         )
                       )}
                       disabled={disableFormEdit}
@@ -387,7 +387,7 @@ export default function Aloituskuulutus({
                         showPDFPreview(
                           formData,
                           `/api/projekti/${projekti?.oid}/aloituskuulutus/ilmoitus/pdf`,
-                          toissijainenKieli
+                          kielitiedot.ensisijainenKieli
                         )
                       )}
                       disabled={disableFormEdit}
@@ -396,10 +396,49 @@ export default function Aloituskuulutus({
                     </Button>
                   </div>
                 </div>
-              )}
-            </fieldset>
-          </form>
-</FormProvider>
+
+                {toissijainenKieli && (
+                  <div className="content">
+                    <p>Kuulutus ja ilmoitus toissijaisella kielellä ({toissijainenKieli})</p>
+                    <div className="flex flex-col lg:flex-row gap-6">
+                      <Button
+                        type="submit"
+                        onClick={handleSubmit((formData) =>
+                          showPDFPreview(
+                            formData,
+                            `/api/projekti/${projekti?.oid}/aloituskuulutus/pdf`,
+                            toissijainenKieli
+                          )
+                        )}
+                        disabled={disableFormEdit}
+                      >
+                        Esikatsele kuulutusta
+                      </Button>
+                      <Button
+                        type="submit"
+                        onClick={handleSubmit((formData) =>
+                          showPDFPreview(
+                            formData,
+                            `/api/projekti/${projekti?.oid}/aloituskuulutus/ilmoitus/pdf`,
+                            toissijainenKieli
+                          )
+                        )}
+                        disabled={disableFormEdit}
+                      >
+                        Esikatsele ilmoitusta
+                      </Button>
+                    </div>
+                  </div>
+                )}
+                <div className="content">
+                  <IlmoituksenVastaanottajat
+                    isLoading={isLoadingProjekti}
+                    kirjaamoOsoitteet={kirjaamoOsoitteet || []}
+                  />
+                </div>
+              </fieldset>
+            </form>
+          </FormProvider>
           <form ref={pdfFormRef} target="_blank" method="POST">
             <input type="hidden" name="tallennaProjektiInput" value={serializedFormData} />
           </form>
@@ -408,7 +447,7 @@ export default function Aloituskuulutus({
             <Button onClick={handleSubmit(saveDraft)} disabled={!isDirty || disableFormEdit}>
               Tallenna
             </Button>
-            <Button primary onClick={handleSubmit(sendToManager)} disabled={isDirty}>
+            <Button primary onClick={handleSubmit(lahetaHyvaksyttavaksi)} disabled={isDirty}>
               Lähetä Hyväksyttäväksi
             </Button>
           </div>
@@ -421,6 +460,61 @@ export default function Aloituskuulutus({
             aloituskuulutusjulkaisu={getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA)}
           ></AloituskuulutusRO>
         </FormProvider>
+      )}
+
+      {voiHyvaksya && (
+        <>
+          <div className="flex gap-6 justify-end">
+            <Button onClick={handleClickOpen}>Palauta</Button>
+            <Button primary onClick={handleSubmit(hyvaksyKuulutus)}>
+              Hyväksy ja lähetä
+            </Button>
+          </div>
+          <div>
+            <Dialog open={open} onClose={handleClickClose} fullWidth={true} maxWidth={"md"}>
+              <DialogTitle>
+                <b>Kuulutuksen palauttaminen</b>
+              </DialogTitle>
+              <DialogContent>
+                <form>
+                  <p>
+                    Olet palauttamassa kuulutuksen korjattavaksi. Kuulutuksen tekijä saa tiedon palautuksesta ja sen
+                    syystä. Saat ilmoituksen, kun kuulutus on taas valmis hyväksyttäväksi. Jos haluat itse muokata
+                    kuulutusta ja hyväksyä tehtyjen muutoksien jälkeen, valitse Palauta ja muokkaa.
+                  </p>
+                  <TextInput
+                    label="Syy palautukselle *"
+                    {...register2("syy", { required: "Palautuksen syy täytyy antaa" })}
+                    error={errors2.syy}
+                    maxLength={200}
+                    hideLengthCounter={false}
+                  ></TextInput>
+                  <div className="flex gap-6 justify-end">
+                    <Button primary onClick={handleSubmit2(palautaMuokattavaksi)}>
+                      Palauta ja poistu
+                    </Button>
+                    <Button
+                      onClick={(e) => {
+                        handleClickClose();
+                        e.preventDefault();
+                      }}
+                    >
+                      Palauta ja muokkaa
+                    </Button>
+                    <Button
+                      onClick={(e) => {
+                        handleClickClose();
+                        e.preventDefault();
+                      }}
+                    >
+                      Peruuta
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </>
       )}
     </ProjektiPageLayout>
   );
