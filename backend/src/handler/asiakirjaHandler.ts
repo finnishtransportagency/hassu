@@ -26,7 +26,7 @@ export async function lataaAsiakirja({
           asiakirjaTyyppi,
           kieli,
         });
-      } else if (projekti.aloitusKuulutus) {
+      } else {
         if (muutokset) {
           // Previewing projekti with unsaved changes. adaptProjektiToPreview combines database content with the user provided changes
           const projektiWithChanges = await projektiAdapter.adaptProjektiToPreview(projekti, muutokset);
@@ -47,11 +47,9 @@ export async function lataaAsiakirja({
             kieli,
           });
         }
-      } else {
-        throw new NotFoundError(`Projektia ${oid} ei löydy tai sillä ei ole aloituskuulutusta`);
       }
     } else {
-      throw new NotFoundError(`Projektia ${oid} ei löydy tai sillä ei ole aloituskuulutusta`);
+      throw new NotFoundError(`Projektia ${oid} ei löydy`);
     }
   } else {
     throw new Error("Public access not implemented yet");
