@@ -7,7 +7,7 @@ if [ -z "$TEST_SUITE" ]; then
 fi
 
 export DOCKER=true
-CMD="robot --console verbose --outputdir /work/test/.report /work/test/suites/$TEST_SUITE"
+CMD="robot --console verbose --outputdir /work/test/.report --xunit xunit.xml /work/test/suites/$TEST_SUITE"
 
 echo ${CMD}
 

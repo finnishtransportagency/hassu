@@ -196,8 +196,8 @@
     "robot:build": "./tools/robot/updateRobotImage.sh",
     "robot:pull": "cross-env docker pull 283563576583.dkr.ecr.eu-west-1.amazonaws.com/hassu-robot:latest",
     "robot:setup": "ts-node --project=tsconfig.cdk.json deployment/bin/setupRobotEnvironment.ts",
-    "robot": "cross-env docker run --rm --add-host=host.docker.internal:host-gateway -v $(pwd):/work -e TEST_SUITE 283563576583.dkr.ecr.eu-west-1.amazonaws.com/hassu-robot:latest",
-    "robot:browser": "cross-env ROBOT_OPEN_BROWSER=true ./tools/robot/run_suite_local.sh robot --console verbose --outputdir ./test/.report",
+    "robot": "cross-env docker run --rm --add-host=host.docker.internal:host-gateway -v $(pwd):/work -e TEST_SUITE 283563576583.dkr.ecr.eu-west-1.amazonaws.com/hassu-robot:latest /work/tools/robot/run_suite.sh",
+    "robot:browser": "cross-env ROBOT_OPEN_BROWSER=true ./tools/robot/run_suite_local.sh",
     "ecrLogin": "aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 283563576583.dkr.ecr.eu-west-1.amazonaws.com"
   },
   "browserslist": {
