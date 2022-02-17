@@ -220,6 +220,19 @@ export default function Aloituskuulutus({
     await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.HYLKAA, "Palautus", data.syy);
   };
 
+  const palautaMuokattavaksiJaPoistu = async (data: PalautusValues) => {
+    log.log("palauta muokattavaksi ja poistu: ", data);
+    await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.HYLKAA, "Palautus", data.syy);
+    const siirtymaTimer = setTimeout(() => {
+      setIsFormSubmitting(true);
+      router.push(`/yllapito/projekti/${projekti?.oid}`);
+    }, 1500);
+    return () => {
+      setIsFormSubmitting(false);
+      clearTimeout(siirtymaTimer);
+    };
+  };
+
   const hyvaksyKuulutus = async () => {
     log.log("hyväksy kuulutus");
     //await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
@@ -276,7 +289,7 @@ export default function Aloituskuulutus({
     return <div />;
   }
   if (!projekti.kielitiedot) {
-    return <div>Kielitiedot puttuu</div>
+    return <div>Kielitiedot puttuu</div>;
   }
   const kielitiedot = projekti.kielitiedot;
   const toissijainenKieli = kielitiedot.toissijainenKieli;
@@ -490,17 +503,10 @@ export default function Aloituskuulutus({
                     hideLengthCounter={false}
                   ></TextInput>
                   <div className="flex gap-6 justify-end">
-                    <Button primary onClick={handleSubmit2(palautaMuokattavaksi)}>
+                    <Button primary onClick={handleSubmit2(palautaMuokattavaksiJaPoistu)}>
                       Palauta ja poistu
                     </Button>
-                    <Button
-                      onClick={(e) => {
-                        handleClickClose();
-                        e.preventDefault();
-                      }}
-                    >
-                      Palauta ja muokkaa
-                    </Button>
+                    <Button onClick={handleSubmit2(palautaMuokattavaksi)}>Palauta ja muokkaa</Button>
                     <Button
                       onClick={(e) => {
                         handleClickClose();

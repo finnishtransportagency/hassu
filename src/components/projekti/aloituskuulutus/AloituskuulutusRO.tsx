@@ -1,7 +1,7 @@
 import { AloitusKuulutusJulkaisu, AloitusKuulutusTila, Kieli } from "@services/api";
 import React, { ReactElement, useRef } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { capitalize, replace } from "lodash";
+import { capitalize, replace, lowerCase } from "lodash";
 import Button from "@components/button/Button";
 import log from "loglevel";
 
@@ -72,7 +72,7 @@ export default function AloituskuulutusRO({ aloituskuulutusjulkaisu, oid }: Prop
       </div>
       <div className="content">
         <p className="vayla-label">
-          Tiivistetty hankkeen kuvaus ensisijaisella kielellä ({aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli}
+          Tiivistetty hankkeen kuvaus ensisijaisella kielellä ({lowerCase(aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli)}
           )
         </p>
         <p>
@@ -85,7 +85,7 @@ export default function AloituskuulutusRO({ aloituskuulutusjulkaisu, oid }: Prop
         <div className="content">
           <p className="vayla-label">
             Tiivistetty hankkeen kuvaus toissijaisella kielellä (
-            {aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli})
+            {lowerCase(aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli)})
           </p>
           <p>
             {aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli === Kieli.SUOMI
@@ -96,7 +96,7 @@ export default function AloituskuulutusRO({ aloituskuulutusjulkaisu, oid }: Prop
       )}
       <div className="content">
         <p className="vayla-label">Esikatseltavat tiedostot</p>
-        <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli})</p>
+        <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({lowerCase(aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli)})</p>
         <div className="flex flex-col lg:flex-row gap-6">
           <Button
             type="submit"
@@ -125,7 +125,7 @@ export default function AloituskuulutusRO({ aloituskuulutusjulkaisu, oid }: Prop
       {aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli && (
         <div className="content">
           <p>
-            Kuulutus ja ilmoitus toissijaisella kielellä ({aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli})
+            Kuulutus ja ilmoitus toissijaisella kielellä ({lowerCase(aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli)})
           </p>
           <div className="flex flex-col lg:flex-row gap-6">
             <Button
