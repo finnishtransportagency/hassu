@@ -175,7 +175,7 @@ export default function Aloituskuulutus({
       };
 
       setFormContext(projekti);
-      reset(tallentamisTiedot, { keepDirty: true, keepTouched: true });
+      reset(tallentamisTiedot);
     }
   }, [projekti, reset]);
 
@@ -212,7 +212,7 @@ export default function Aloituskuulutus({
 
   const lahetaHyvaksyttavaksi = async () => {
     log.log("lähetä hyväksyttäväksi");
-    //await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
+    await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
   };
 
   const palautaMuokattavaksi = async (data: PalautusValues) => {
@@ -222,7 +222,7 @@ export default function Aloituskuulutus({
 
   const hyvaksyKuulutus = async () => {
     log.log("hyväksy kuulutus");
-    await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
+    //await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
   };
 
   const vaihdaAloituskuulutuksenTila = async (toiminto: TilasiirtymaToiminto, viesti: string, syy?: string) => {
@@ -276,7 +276,7 @@ export default function Aloituskuulutus({
     return <div />;
   }
   if (!projekti.kielitiedot) {
-    return <div />;
+    return <div>Kielitiedot puttuu</div>
   }
   const kielitiedot = projekti.kielitiedot;
   const toissijainenKieli = kielitiedot.toissijainenKieli;
@@ -297,6 +297,11 @@ export default function Aloituskuulutus({
                   validationSchema={loadedProjektiValidationSchema}
                   disableValidation={isLoadingProjekti}
                 />
+                {projekti.aloitusKuulutus?.palautusSyy && (
+                  <Notification type={NotificationType.WARN}>
+                    Aloituskuulutus on palautettu korjattavaksi. Palautuksen syy: {projekti.aloitusKuulutus.palautusSyy}
+                  </Notification>
+                )}
                 <Notification type={NotificationType.WARN}>
                   Aloituskuulutusta ei ole vielä julkaistu palvelun julkisella puolella.{" "}
                   {watchKuulutusPaiva && !errors.aloitusKuulutus?.kuulutusPaiva
