@@ -3,6 +3,7 @@ import { requirePermissionLuku, requirePermissionLuonti, requirePermissionMuokka
 import { velho } from "../velho/velhoClient";
 import * as API from "../../../common/graphql/apiModel";
 import {
+  ArkistointiTunnus,
   NykyinenKayttaja,
   Projekti,
   ProjektiRooli,
@@ -19,6 +20,8 @@ import { perustiedotValidationSchema } from "../../../src/schemas/perustiedot";
 import { ValidationError } from "yup";
 import { sendEmail } from "../email/email";
 import { createPerustamisEmail } from "../email/emailTemplates";
+import { requireAdmin } from "../user/userService";
+import { projektiArchive } from "../archive/projektiArchiveService";
 
 /**
  * Function to determine the status of the projekti
@@ -74,6 +77,11 @@ export async function loadProjekti(oid: string): Promise<API.Projekti> {
   } else {
     throw new Error("Public access not implemented yet");
   }
+}
+
+export async function arkistoiProjekti(oid: string): Promise<ArkistointiTunnus> {
+  requireAdmin();
+  return { __typename: "ArkistointiTunnus", ...(await projektiArchive.archiveProjekti(oid)) };
 }
 
 export async function createOrUpdateProjekti(input: TallennaProjektiInput): Promise<string> {

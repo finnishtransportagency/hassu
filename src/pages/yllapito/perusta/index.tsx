@@ -112,7 +112,7 @@ export default function Perusta() {
               maxLength={PROJEKTI_NIMI_MAX_LENGTH}
               {...register("name")}
             />
-            <Button primary endIcon="search" disabled={isLoading}>
+            <Button primary endIcon="search" id="hae" disabled={isLoading}>
               Hae
             </Button>
           </div>

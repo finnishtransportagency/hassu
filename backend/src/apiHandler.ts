@@ -1,7 +1,8 @@
 import { log } from "./logger";
 import {
-  LaskePaattymisPaivaQueryVariables,
+  ArkistoiProjektiMutationVariables,
   EsikatseleAsiakirjaPDFQueryVariables,
+  LaskePaattymisPaivaQueryVariables,
   LataaProjektiQueryVariables,
   ListaaKayttajatQueryVariables,
   ListaaVelhoProjektitQueryVariables,
@@ -16,7 +17,7 @@ import { listaaVelhoProjektit } from "./handler/listaaVelhoProjektit";
 import { identifyUser } from "./user";
 import { getCurrentUser } from "./handler/getCurrentUser";
 import { listUsers } from "./handler/listUsers";
-import { createOrUpdateProjekti, listProjektit, loadProjekti } from "./handler/projektiHandler";
+import { arkistoiProjekti, createOrUpdateProjekti, listProjektit, loadProjekti } from "./handler/projektiHandler";
 import { apiConfig } from "../../common/abstractApi";
 import { lataaAsiakirja } from "./handler/asiakirjaHandler";
 import { createUploadURLForFile } from "./handler/fileHandler";
@@ -60,6 +61,8 @@ async function executeOperation(event: AppSyncResolverEvent<AppSyncEventArgument
       return await calculateEndDate(event.arguments as LaskePaattymisPaivaQueryVariables);
     case apiConfig.siirraTila.name:
       return await aloitusKuulutusHandler.siirraTila((event.arguments as SiirraTilaMutationVariables).tilasiirtyma);
+    case apiConfig.arkistoiProjekti.name:
+      return await arkistoiProjekti((event.arguments as ArkistoiProjektiMutationVariables).oid);
     default:
       return null;
   }

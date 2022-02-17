@@ -239,3 +239,8 @@ type Kielitiedot {
   toissijainenKieli: Kieli
   projektinNimiVieraskielella: String
 }
+
+type ArkistointiTunnus {
+  oid: String!
+  timestamp: String!
+}
