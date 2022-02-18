@@ -36,6 +36,7 @@ import { S3Origin } from "@aws-cdk/aws-cloudfront-origins";
 import { Bucket } from "@aws-cdk/aws-s3";
 import * as ssm from "@aws-cdk/aws-ssm";
 import { readBackendStackOutputs, readDatabaseStackOutputs } from "../bin/setupEnvironment";
+import { IOriginAccessIdentity } from "@aws-cdk/aws-cloudfront/lib/origin-access-identity";
 
 // These should correspond to CfnOutputs produced by this stack
 export type FrontendStackOutputs = {
@@ -196,14 +197,29 @@ export class HassuFrontendStack extends cdk.Stack {
     dmzProxyBehaviorWithLambda: BehaviorOptions,
     dmzProxyBehavior: BehaviorOptions
   ): Promise<Record<string, BehaviorOptions>> {
-    return {
+    let { keyGroups, originAccessIdentity } = await this.createTrustedKeyGroupsAndOAI(config);
+    let props: Record<string, any> = {
       "/oauth2/*": dmzProxyBehaviorWithLambda,
       "/graphql": dmzProxyBehaviorWithLambda,
-      "/yllapito/tiedostot/*": await this.createYllapitoTiedostotBehavior(config),
+      "/yllapito/tiedostot/*": await this.createPrivateBucketBehavior(
+        "yllapitoBucket",
+        Config.yllapitoBucketName,
+        keyGroups,
+        originAccessIdentity
+      ),
       "/yllapito/graphql": dmzProxyBehaviorWithLambda,
       "/yllapito/kirjaudu": dmzProxyBehaviorWithLambda,
       "/keycloak/*": dmzProxyBehavior,
     };
+    if (Config.env == "dev") {
+      props["/report/*"] = await this.createPrivateBucketBehavior(
+        "reportBucket",
+        Config.reportBucketName,
+        keyGroups,
+        originAccessIdentity
+      );
+    }
+    return props;
   }
 
   private static createDmzProxyBehavior(
@@ -232,9 +248,34 @@ export class HassuFrontendStack extends cdk.Stack {
     return dmzBehavior;
   }
 
-  private async createYllapitoTiedostotBehavior(config: Config): Promise<BehaviorOptions> {
+  private async createPrivateBucketBehavior(
+    name: string,
+    bucketName: string,
+    keyGroups: KeyGroup[],
+    originAccessIdentity?: IOriginAccessIdentity
+  ): Promise<BehaviorOptions> {
+    return {
+      origin: new S3Origin(
+        Bucket.fromBucketAttributes(this, name + "Origin", {
+          region: "eu-west-1",
+          bucketName,
+        }),
+        {
+          originAccessIdentity,
+        }
+      ),
+      compress: true,
+      cachePolicy: CachePolicy.CACHING_DISABLED,
+      originRequestPolicy: OriginRequestPolicy.CORS_S3_ORIGIN,
+      trustedKeyGroups: keyGroups,
+    };
+  }
+
+  private async createTrustedKeyGroupsAndOAI(
+    config: Config
+  ): Promise<{ originAccessIdentity: IOriginAccessIdentity | undefined; keyGroups: KeyGroup[] }> {
     let keyGroups: KeyGroup[];
-    let originAccessIdentity;
+    let originAccessIdentity: IOriginAccessIdentity | undefined;
 
     if (Config.env === "localstack") {
       keyGroups = [];
@@ -267,20 +308,6 @@ export class HassuFrontendStack extends cdk.Stack {
       );
     }
 
-    return {
-      origin: new S3Origin(
-        Bucket.fromBucketAttributes(this, "yllapitoBucketOrigin", {
-          region: "eu-west-1",
-          bucketName: Config.yllapitoBucketName,
-        }),
-        {
-          originAccessIdentity,
-        }
-      ),
-      compress: true,
-      cachePolicy: CachePolicy.CACHING_DISABLED,
-      originRequestPolicy: OriginRequestPolicy.CORS_S3_ORIGIN,
-      trustedKeyGroups: keyGroups,
-    };
+    return { keyGroups, originAccessIdentity };
   }
 }

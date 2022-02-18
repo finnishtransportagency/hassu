@@ -27,6 +27,7 @@ export class Config extends BaseConfig {
   public static readonly yllapitoBucketName = `hassu-${Config.env}-yllapito`;
   public static readonly internalBucketName = `hassu-${Config.env}-internal`;
   public static readonly archiveBucketName = `hassu-${Config.env}-archive`;
+  public static readonly reportBucketName = `hassu-report`;
   public readonly dmzProxyEndpoint: string;
   // @ts-ignore
   public frontendDomainName: string;

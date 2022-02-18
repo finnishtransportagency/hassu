@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - npm ci --no-audit
+      - npm run robot:setup
+  build:
+    commands:
+      - ./tools/robot/run_suite_local.sh
+      - echo Test report available at https://$FRONTEND_DOMAIN_NAME_DEV/report/robot-$ENVIRONMENT/$CODEBUILD_BUILD_NUMBER/report.html
+artifacts:
+  files:
+    - "test/.report/**/*"
+  discard-paths: yes
+  name: robot-$ENVIRONMENT/$CODEBUILD_BUILD_NUMBER
+
+cache:
+  paths:
+    - "/root/.npm/**/*"
+
+reports:
+  unit-tests:
+    files: "xunit.xml"
+    base-directory: test/.report
+    discard-paths: true

@@ -1,12 +1,14 @@
 /* tslint:disable:no-console no-unused-expression */
-import {Construct, SecretValue, Stack} from "@aws-cdk/core";
+import { Construct, SecretValue, Stack } from "@aws-cdk/core";
+import { Bucket } from "@aws-cdk/aws-s3";
 import * as codebuild from "@aws-cdk/aws-codebuild";
-import {BuildEnvironmentVariableType, ComputeType, LocalCacheMode} from "@aws-cdk/aws-codebuild";
-import {Config} from "./config";
-import {BuildSpec} from "@aws-cdk/aws-codebuild/lib/build-spec";
-import {LinuxBuildImage} from "@aws-cdk/aws-codebuild/lib/project";
-import {Effect, PolicyStatement} from "@aws-cdk/aws-iam";
-import {GitHubSourceProps} from "@aws-cdk/aws-codebuild/lib/source";
+import { BuildEnvironmentVariableType, ComputeType, LocalCacheMode } from "@aws-cdk/aws-codebuild";
+import { Config } from "./config";
+import { BuildSpec } from "@aws-cdk/aws-codebuild/lib/build-spec";
+import { LinuxBuildImage } from "@aws-cdk/aws-codebuild/lib/project";
+import { Effect, PolicyStatement } from "@aws-cdk/aws-iam";
+import { GitHubSourceProps } from "@aws-cdk/aws-codebuild/lib/source";
+import { Repository } from "@aws-cdk/aws-ecr/lib/repository";
 
 /**
  * The stack that defines the application pipeline
@@ -27,6 +29,10 @@ export class HassuPipelineStack extends Stack {
     const branch = config.getBranch();
     const env = Config.env;
     console.log("Deploying pipeline from branch " + branch + " to enviroment " + env);
+    
+    if (env == "dev" || env == "test") {
+      await this.createRobotTestPipeline(env, config);
+    }
 
     if (Config.isPermanentEnvironment()) {
       await this.createPipeline(env, config, "./deployment/lib/buildspec/buildspec.yml");
@@ -40,11 +46,13 @@ export class HassuPipelineStack extends Stack {
     let webhookFilters;
     let reportBuildStatus: boolean;
     const branch = config.getBranch();
-    if (branch === "main") {
-      // Github creds only once per account
+    if (branch === "main" && env == "dev") {
+      // GitHub creds only once per account
       new codebuild.GitHubSourceCredentials(this, "CodeBuildGitHubCreds", {
         accessToken: SecretValue.secretsManager("github-token"),
       });
+      // Common bucket for test reports
+      new Bucket(this, "reportbucket", { bucketName: Config.reportBucketName });
     }
     if (config.isFeatureBranch() && !config.isDeveloperEnvironment()) {
       webhookFilters = [codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs("feature/*")];
@@ -122,6 +130,49 @@ export class HassuPipelineStack extends Stack {
       new PolicyStatement({
         effect: Effect.ALLOW,
         actions: ["s3:*", "cloudformation:*", "sts:*", "ecr:*", "ssm:*", "secretsmanager:GetSecretValue"],
+        resources: ["*"],
+      })
+    );
+  }
+
+  private async createRobotTestPipeline(env: string, config: Config) {
+    const sourceProps: GitHubSourceProps = {
+      owner: "finnishtransportagency",
+      repo: "hassu",
+      webhook: true,
+      webhookTriggersBatchBuild: false,
+      reportBuildStatus: true,
+      webhookFilters: [codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs("robottest/*")],
+    };
+    const gitHubSource = codebuild.Source.gitHub(sourceProps);
+    new codebuild.Project(this, "HassuRobotTest", {
+      projectName: "Hassu-robottest-" + env,
+      buildSpec: BuildSpec.fromSourceFilename("./deployment/lib/buildspec/robottest.yml"),
+      source: gitHubSource,
+      cache: codebuild.Cache.local(LocalCacheMode.CUSTOM, LocalCacheMode.SOURCE, LocalCacheMode.DOCKER_LAYER),
+      environment: {
+        buildImage: LinuxBuildImage.fromEcrRepository(
+          Repository.fromRepositoryName(this, "RobotBuildImage", "hassu-robot")
+        ),
+        privileged: true,
+        computeType: ComputeType.SMALL,
+        environmentVariables: {
+          ENVIRONMENT: { value: env },
+          FRONTEND_DOMAIN_NAME_DEV: { value: await config.getSecureInfraParameter("FrontendDomainName", "dev") },
+        },
+      },
+      grantReportGroupPermissions: true,
+      badge: true,
+      artifacts: codebuild.Artifacts.s3({
+        bucket: Bucket.fromBucketName(this, "RobotTestArtifactBucket", Config.reportBucketName),
+        includeBuildId: false,
+        packageZip: false,
+        identifier: "RobotTest",
+      }),
+    }).addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["s3:*", "ecr:*", "ssm:*", "secretsmanager:GetSecretValue"],
         resources: ["*"],
       })
     );
