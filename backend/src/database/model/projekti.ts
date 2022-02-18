@@ -4,6 +4,7 @@ import {
   ProjektiRooli,
   ProjektiTyyppi,
   Viranomainen,
+  IlmoituksenVastaanottajat,
 } from "../../../../common/graphql/apiModel";
 
 export type Kuulutus = {
@@ -35,6 +36,7 @@ export type AloitusKuulutus = {
   hankkeenKuvausSaame?: string | null;
   elyKeskus?: string | null;
   esitettavatYhteystiedot?: Yhteystieto[] | null;
+  ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   palautusSyy?: string | null;
 };
 
