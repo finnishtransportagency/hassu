@@ -87,6 +87,7 @@ export class HassuPipelineStack extends Stack {
       reportBuildStatus,
       branchOrRef,
       webhookFilters,
+      cloneDepth: 0
     };
     const gitHubSource = codebuild.Source.gitHub(sourceProps);
     new codebuild.Project(this, "HassuProject", {
