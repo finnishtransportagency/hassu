@@ -1,4 +1,5 @@
 /* tslint:disable:no-console no-unused-expression */
+import * as cdk from "@aws-cdk/core";
 import { Construct, SecretValue, Stack } from "@aws-cdk/core";
 import { Bucket } from "@aws-cdk/aws-s3";
 import * as codebuild from "@aws-cdk/aws-codebuild";
@@ -9,6 +10,12 @@ import { LinuxBuildImage } from "@aws-cdk/aws-codebuild/lib/project";
 import { Effect, PolicyStatement } from "@aws-cdk/aws-iam";
 import { GitHubSourceProps } from "@aws-cdk/aws-codebuild/lib/source";
 import { Repository } from "@aws-cdk/aws-ecr/lib/repository";
+import { OriginAccessIdentity } from "@aws-cdk/aws-cloudfront";
+
+// These should correspond to CfnOutputs produced by this stack
+export type PipelineStackOutputs = {
+  CloudfrontOriginAccessIdentityReportBucket: string;
+};
 
 /**
  * The stack that defines the application pipeline
@@ -29,7 +36,7 @@ export class HassuPipelineStack extends Stack {
     const branch = config.getBranch();
     const env = Config.env;
     console.log("Deploying pipeline from branch " + branch + " to enviroment " + env);
-    
+
     if (env == "dev" || env == "test") {
       await this.createRobotTestPipeline(env, config);
     }
@@ -52,7 +59,17 @@ export class HassuPipelineStack extends Stack {
         accessToken: SecretValue.secretsManager("github-token"),
       });
       // Common bucket for test reports
-      new Bucket(this, "reportbucket", { bucketName: Config.reportBucketName });
+      const reportBucket = new Bucket(this, "reportbucket", { bucketName: Config.reportBucketName });
+
+      const oaiName = "CloudfrontOriginAccessIdentityReportBucketOAI";
+      const oai = new OriginAccessIdentity(this, oaiName, { comment: oaiName });
+
+      // tslint:disable-next-line:no-unused-expression
+      new cdk.CfnOutput(this, "CloudfrontOriginAccessIdentityReportBucket", {
+        value: oai.originAccessIdentityName || "",
+      });
+
+      reportBucket.grantRead(oai);
     }
     if (config.isFeatureBranch() && !config.isDeveloperEnvironment()) {
       webhookFilters = [codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs("feature/*")];
@@ -129,7 +146,15 @@ export class HassuPipelineStack extends Stack {
     }).addToRolePolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
-        actions: ["s3:*", "cloudformation:*", "sts:*", "ecr:*", "ssm:*", "secretsmanager:GetSecretValue"],
+        actions: [
+          "s3:*",
+          "cloudformation:*",
+          "sts:*",
+          "ecr:*",
+          "ssm:*",
+          "secretsmanager:GetSecretValue",
+          "codebuild:StartBuild",
+        ],
         resources: ["*"],
       })
     );
@@ -155,7 +180,7 @@ export class HassuPipelineStack extends Stack {
           Repository.fromRepositoryName(this, "RobotBuildImage", "hassu-robot")
         ),
         privileged: true,
-        computeType: ComputeType.SMALL,
+        computeType: ComputeType.MEDIUM,
         environmentVariables: {
           ENVIRONMENT: { value: env },
           FRONTEND_DOMAIN_NAME_DEV: { value: await config.getSecureInfraParameter("FrontendDomainName", "dev") },
@@ -167,6 +192,7 @@ export class HassuPipelineStack extends Stack {
         bucket: Bucket.fromBucketName(this, "RobotTestArtifactBucket", Config.reportBucketName),
         includeBuildId: false,
         packageZip: false,
+        encryption: false,
         identifier: "RobotTest",
       }),
     }).addToRolePolicy(
