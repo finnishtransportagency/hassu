@@ -36,6 +36,8 @@ import { GetServerSideProps } from "next";
 import { setupLambdaMonitoring } from "backend/src/aws/monitoring";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import TextInput from "@components/form/TextInput";
+import { lowerCase } from "lodash";
+import dayjs from "dayjs";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
 type RequiredProjektiFields = Required<{
@@ -125,8 +127,6 @@ export default function Aloituskuulutus({
     handleSubmit: handleSubmit2,
     formState: { errors: errors2 },
   } = useForm<PalautusValues>({ defaultValues: { syy: "" } });
-
-  const watchKuulutusPaiva = watch("aloitusKuulutus.kuulutusPaiva");
 
   useEffect(() => {
     if (projekti?.oid) {
@@ -297,6 +297,16 @@ export default function Aloituskuulutus({
   const voiHyvaksya =
     getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA) &&
     projekti?.nykyinenKayttaja.onProjektipaallikko;
+  const odottaaJulkaisua = () => {
+    const julkaisu = getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.HYVAKSYTTY);
+    if (julkaisu) {
+      // Toistaiseksi tarkastellaan julkaisupaivatietoa, koska ei ole olemassa erillista tilaa julkaistulle kuulutukselle
+      const julkaisupvm = dayjs(julkaisu.kuulutusPaiva);
+      if (dayjs().isBefore(julkaisupvm, "day")) {
+        return julkaisupvm.format("DD.MM.YYYY");
+      }
+    }
+  };
 
   return (
     <ProjektiPageLayout title="Aloituskuulutus">
@@ -315,13 +325,11 @@ export default function Aloituskuulutus({
                     Aloituskuulutus on palautettu korjattavaksi. Palautuksen syy: {projekti.aloitusKuulutus.palautusSyy}
                   </Notification>
                 )}
-                <Notification type={NotificationType.WARN}>
-                  Aloituskuulutusta ei ole vielä julkaistu palvelun julkisella puolella.{" "}
-                  {watchKuulutusPaiva && !errors.aloitusKuulutus?.kuulutusPaiva
-                    ? `Kuulutuspäivä on ${new Date(watchKuulutusPaiva).toLocaleDateString("fi")}`
-                    : "Kuulutuspäivää ei ole asetettu"}
-                  . Voit edelleen tehdä muutoksia projektin tietoihin. Tallennetut muutokset huomioidaan kuulutuksessa.
-                </Notification>
+                {odottaaJulkaisua() && (
+                  <Notification type={NotificationType.WARN}>
+                    {`Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä ${odottaaJulkaisua()}`}.
+                  </Notification>
+                )}
                 <h3 className="vayla-title">Suunnittelun aloittamisesta kuuluttaminen</h3>
                 <p>
                   Kun suunnitelman aloittamisesta kuulutetaan, projektista julkaistaan aloituskuulutustiedot tämän
@@ -367,7 +375,7 @@ export default function Aloituskuulutus({
                   <KuulutuksenYhteystiedot projekti={projekti} useFormReturn={useFormReturn} />
                 </div>
                 <Textarea
-                  label="Tiivistetty hankkeen sisällönkuvaus *"
+                  label="Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä. *"
                   {...register("aloitusKuulutus.hankkeenKuvaus")}
                   error={errors.aloitusKuulutus?.hankkeenKuvaus}
                   maxLength={maxAloituskuulutusLength}
@@ -379,7 +387,7 @@ export default function Aloituskuulutus({
 
                 <div className="content">
                   <p className="vayla-label">Esikatseltavat tiedostot</p>
-                  <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({kielitiedot.ensisijainenKieli})</p>
+                  <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({lowerCase(kielitiedot.ensisijainenKieli)})</p>
                   <div className="flex flex-col lg:flex-row gap-6">
                     <Button
                       type="submit"
@@ -412,7 +420,7 @@ export default function Aloituskuulutus({
 
                 {toissijainenKieli && (
                   <div className="content">
-                    <p>Kuulutus ja ilmoitus toissijaisella kielellä ({toissijainenKieli})</p>
+                    <p>Kuulutus ja ilmoitus toissijaisella kielellä ({lowerCase(toissijainenKieli)})</p>
                     <div className="flex flex-col lg:flex-row gap-6">
                       <Button
                         type="submit"
