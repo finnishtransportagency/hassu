@@ -37,7 +37,7 @@ phases:
   post_build:
     on-failure: ABORT
     commands:
-      - aws codebuild start-build --project-name Hassu-robottest-dev --source-version $CODEBUILD_SOURCE_VERSION
+      - aws codebuild start-build --project-name Hassu-robottest-$ENVIRONMENT --source-version $CODEBUILD_SOURCE_VERSION
 cache:
   paths:
     - "/root/.cache/**/*"
