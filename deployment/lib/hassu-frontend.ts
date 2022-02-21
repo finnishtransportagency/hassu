@@ -35,7 +35,7 @@ import { EdgeFunction } from "@aws-cdk/aws-cloudfront/lib/experimental";
 import { S3Origin } from "@aws-cdk/aws-cloudfront-origins";
 import { Bucket } from "@aws-cdk/aws-s3";
 import * as ssm from "@aws-cdk/aws-ssm";
-import { readBackendStackOutputs, readDatabaseStackOutputs } from "../bin/setupEnvironment";
+import { readBackendStackOutputs, readDatabaseStackOutputs, readPipelineStackOutputs } from "../bin/setupEnvironment";
 import { IOriginAccessIdentity } from "@aws-cdk/aws-cloudfront/lib/origin-access-identity";
 
 // These should correspond to CfnOutputs produced by this stack
@@ -51,6 +51,7 @@ export class HassuFrontendStack extends cdk.Stack {
   private props: HassuFrontendStackProps;
   private appSyncAPIKey?: string;
   private cloudFrontOriginAccessIdentity!: string;
+  private cloudFrontOriginAccessIdentityReportBucket!: string;
 
   constructor(scope: Construct, props: HassuFrontendStackProps) {
     const env = Config.env;
@@ -70,6 +71,8 @@ export class HassuFrontendStack extends cdk.Stack {
 
     this.appSyncAPIKey = (await readBackendStackOutputs()).AppSyncAPIKey;
     this.cloudFrontOriginAccessIdentity = (await readDatabaseStackOutputs()).CloudFrontOriginAccessIdentity || ""; // Empty default string for localstack deployment
+    this.cloudFrontOriginAccessIdentityReportBucket =
+      (await readPipelineStackOutputs()).CloudfrontOriginAccessIdentityReportBucket || ""; // Empty default string for localstack deployment
 
     await new Builder(".", "./build", {
       enableHTTPCompression: true,
@@ -197,7 +200,9 @@ export class HassuFrontendStack extends cdk.Stack {
     dmzProxyBehaviorWithLambda: BehaviorOptions,
     dmzProxyBehavior: BehaviorOptions
   ): Promise<Record<string, BehaviorOptions>> {
-    let { keyGroups, originAccessIdentity } = await this.createTrustedKeyGroupsAndOAI(config);
+    let { keyGroups, originAccessIdentity, originAccessIdentityReportBucket } = await this.createTrustedKeyGroupsAndOAI(
+      config
+    );
     let props: Record<string, any> = {
       "/oauth2/*": dmzProxyBehaviorWithLambda,
       "/graphql": dmzProxyBehaviorWithLambda,
@@ -216,7 +221,7 @@ export class HassuFrontendStack extends cdk.Stack {
         "reportBucket",
         Config.reportBucketName,
         keyGroups,
-        originAccessIdentity
+        originAccessIdentityReportBucket
       );
     }
     return props;
@@ -271,15 +276,19 @@ export class HassuFrontendStack extends cdk.Stack {
     };
   }
 
-  private async createTrustedKeyGroupsAndOAI(
-    config: Config
-  ): Promise<{ originAccessIdentity: IOriginAccessIdentity | undefined; keyGroups: KeyGroup[] }> {
+  private async createTrustedKeyGroupsAndOAI(config: Config): Promise<{
+    originAccessIdentity: IOriginAccessIdentity | undefined;
+    keyGroups: KeyGroup[];
+    originAccessIdentityReportBucket: IOriginAccessIdentity | undefined;
+  }> {
     let keyGroups: KeyGroup[];
     let originAccessIdentity: IOriginAccessIdentity | undefined;
+    let originAccessIdentityReportBucket: IOriginAccessIdentity | undefined;
 
     if (Config.env === "localstack") {
       keyGroups = [];
       originAccessIdentity = undefined;
+      originAccessIdentityReportBucket = undefined;
     } else {
       const publicKey = new cloudfront.PublicKey(this, "FrontendPublicKey", {
         publicKeyName: "FrontendPublicKey" + Config.env,
@@ -306,8 +315,14 @@ export class HassuFrontendStack extends cdk.Stack {
         "CloudfrontOriginAccessIdentity" + Config.env,
         this.cloudFrontOriginAccessIdentity
       );
+
+      originAccessIdentityReportBucket = OriginAccessIdentity.fromOriginAccessIdentityName(
+        this,
+        "CloudfrontOriginAccessIdentityReportBucket",
+        this.cloudFrontOriginAccessIdentityReportBucket
+      );
     }
 
-    return { keyGroups, originAccessIdentity };
+    return { keyGroups, originAccessIdentity, originAccessIdentityReportBucket };
   }
 }

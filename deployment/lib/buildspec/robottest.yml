@@ -13,7 +13,7 @@ artifacts:
   files:
     - "test/.report/**/*"
   discard-paths: yes
-  name: robot-$ENVIRONMENT/$CODEBUILD_BUILD_NUMBER
+  name: report/robot-$ENVIRONMENT/$CODEBUILD_BUILD_NUMBER
 
 cache:
   paths:

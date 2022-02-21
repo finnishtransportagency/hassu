@@ -14,6 +14,7 @@ import { DatabaseStackOutputs } from "../lib/hassu-database";
 import { SearchStackOutputs } from "../lib/hassu-search";
 import { FrontendStackOutputs } from "../lib/hassu-frontend";
 import { Config } from "../lib/config";
+import { PipelineStackOutputs } from "../lib/hassu-pipeline";
 
 const usEastCFClient = new CloudFormationClient({ region: "us-east-1" });
 const euWestCFClient = new CloudFormationClient({ region: "eu-west-1" });
@@ -36,6 +37,10 @@ async function readSearchStackOutputs(): Promise<SearchStackOutputs> {
 
 export async function readDatabaseStackOutputs(): Promise<DatabaseStackOutputs> {
   return (await readStackOutputs("database", Region.EU_WEST_1)) as DatabaseStackOutputs;
+}
+
+export async function readPipelineStackOutputs(): Promise<PipelineStackOutputs> {
+  return (await readStackOutputs("pipeline", Region.EU_WEST_1)) as PipelineStackOutputs;
 }
 
 export async function readFrontendStackOutputs(): Promise<FrontendStackOutputs> {
