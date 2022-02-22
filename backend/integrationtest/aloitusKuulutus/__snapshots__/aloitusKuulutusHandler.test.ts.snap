@@ -206,6 +206,10 @@ Object {
   },
   "aloitusKuulutusJulkaisut": Array [
     Object {
+      "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf",
+      "aloituskuulutusIlmoitusPDFPathRuotsi": "/aloituskuulutus/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Namnet pa svenska.pdf",
+      "aloituskuulutusPDFPath": "/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf",
+      "aloituskuulutusPDFPathRuotsi": "/aloituskuulutus/KUNGORELSE OM INLEDANDET AV PLANERINGEN Namnet pa svenska.pdf",
       "elyKeskus": "Pirkanmaa",
       "hankkeenKuvaus": "Lorem Ipsum",
       "hankkeenKuvausRuotsi": "På svenska",

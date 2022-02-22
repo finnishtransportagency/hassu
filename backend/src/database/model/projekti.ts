@@ -51,7 +51,11 @@ export type AloitusKuulutusJulkaisu = {
   suunnitteluSopimus?: SuunnitteluSopimus | null;
   kielitiedot?: Kielitiedot | null;
   aloituskuulutusPDFPath?: string | null;
+  aloituskuulutusPDFPathRuotsi?: string | null;
+  aloituskuulutusPDFPathSaame?: string | null;
   aloituskuulutusIlmoitusPDFPath?: string | null;
+  aloituskuulutusIlmoitusPDFPathRuotsi?: string | null;
+  aloituskuulutusIlmoitusPDFPathSaame?: string | null;
   tila?: AloitusKuulutusTila | null;
   muokkaaja?: string | null;
   hyvaksyja?: string | null;

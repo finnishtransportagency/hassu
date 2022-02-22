@@ -201,6 +201,7 @@ async function updateAloitusKuulutusJulkaisu(projekti: DBProjekti, julkaisu: Alo
           ":julkaisu": julkaisu,
         },
       };
+      log.info("Updating aloitusKuulutusJulkaisu to projekti", { params });
       await getDynamoDBDocumentClient().update(params).promise();
       break;
     }

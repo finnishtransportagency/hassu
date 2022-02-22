@@ -52,12 +52,13 @@ async function reject(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus, sy
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
   julkaisuWaitingForApproval: AloitusKuulutusJulkaisu,
-  projekti: DBProjekti
+  projekti: DBProjekti,
+  kieli: Kieli
 ) {
   const pdf = await asiakirjaService.createPdf({
     asiakirjaTyyppi,
     aloitusKuulutusJulkaisu: julkaisuWaitingForApproval,
-    kieli: Kieli.SUOMI, // TODO: generoi kaikki kielet
+    kieli,
   });
   return await fileService.createFileToProjekti({
     oid: projekti.oid,
@@ -77,18 +78,40 @@ async function approve(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus) {
   julkaisuWaitingForApproval.tila = AloitusKuulutusTila.HYVAKSYTTY;
   julkaisuWaitingForApproval.hyvaksyja = projektiPaallikko.uid;
 
-  await projektiDatabase.updateAloitusKuulutusJulkaisu(projekti, julkaisuWaitingForApproval);
+  const kielitiedot = julkaisuWaitingForApproval.kielitiedot;
 
-  julkaisuWaitingForApproval.aloituskuulutusPDFPath = await createAloituskuulutusPDF(
-    AsiakirjaTyyppi.ALOITUSKUULUTUS,
-    julkaisuWaitingForApproval,
-    projekti
-  );
-  julkaisuWaitingForApproval.aloituskuulutusIlmoitusPDFPath = await createAloituskuulutusPDF(
-    AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA,
-    julkaisuWaitingForApproval,
-    projekti
-  );
+  async function generatePDFsForLanguage(kieli: Kieli | Kieli.RUOTSI | Kieli.SAAME, julkaisu: AloitusKuulutusJulkaisu) {
+    if (!kieli) {
+      return;
+    }
+    const aloituskuulutusPDFPath = await createAloituskuulutusPDF(
+      AsiakirjaTyyppi.ALOITUSKUULUTUS,
+      julkaisu,
+      projekti,
+      kieli
+    );
+    const aloituskuulutusIlmoitusPDFPath = await createAloituskuulutusPDF(
+      AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA,
+      julkaisu,
+      projekti,
+      kieli
+    );
+    if (kieli == Kieli.SUOMI) {
+      julkaisu.aloituskuulutusPDFPath = aloituskuulutusPDFPath;
+      julkaisu.aloituskuulutusIlmoitusPDFPath = aloituskuulutusIlmoitusPDFPath;
+    } else if (kieli == Kieli.RUOTSI) {
+      julkaisu.aloituskuulutusPDFPathRuotsi = aloituskuulutusPDFPath;
+      julkaisu.aloituskuulutusIlmoitusPDFPathRuotsi = aloituskuulutusIlmoitusPDFPath;
+    } else if (kieli == Kieli.SAAME) {
+      julkaisu.aloituskuulutusPDFPathSaame = aloituskuulutusPDFPath;
+      julkaisu.aloituskuulutusIlmoitusPDFPathSaame = aloituskuulutusIlmoitusPDFPath;
+    }
+  }
+
+  await generatePDFsForLanguage(kielitiedot.ensisijainenKieli, julkaisuWaitingForApproval);
+  await generatePDFsForLanguage(kielitiedot.toissijainenKieli, julkaisuWaitingForApproval);
+
+  await projektiDatabase.updateAloitusKuulutusJulkaisu(projekti, julkaisuWaitingForApproval);
 }
 
 async function removeRejectionReasonIfExists(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus) {

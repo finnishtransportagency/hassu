@@ -93,7 +93,7 @@ describe("apiHandler", () => {
       const { Bucket: aloituskuulutusBucket, Key: aloituskuulutusKey } = mockS3CLient.call(callNumber).args[0]
         .input as PutObjectCommandInput;
       expect(aloituskuulutusBucket).to.eq(yllapitoBucketName);
-      expect(aloituskuulutusKey).to.eq(filePath);
+      expect(`${callNumber} ${aloituskuulutusKey}`).to.eq(`${callNumber} ${filePath}`);
     }
 
     describe("lataaProjekti", () => {
@@ -340,17 +340,15 @@ describe("apiHandler", () => {
         });
 
         const calls = mockS3CLient.calls();
-        expect(calls).to.have.length(2);
-        validatePutObjectCommandInput(
-          0,
-          "hassu-localstack-yllapito",
-          "yllapito/tiedostot/projekti/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf"
-        );
-        validatePutObjectCommandInput(
-          1,
-          "hassu-localstack-yllapito",
-          "yllapito/tiedostot/projekti/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf"
-        );
+        expect(calls).to.have.length(4);
+        [
+          "yllapito/tiedostot/projekti/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf",
+          "yllapito/tiedostot/projekti/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf",
+          "yllapito/tiedostot/projekti/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Projektin nimi saameksi.pdf",
+          "yllapito/tiedostot/projekti/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Projektin nimi saameksi.pdf",
+        ].forEach((fileName, callNumber) => {
+          validatePutObjectCommandInput(callNumber, "hassu-localstack-yllapito", fileName);
+        });
 
         // Verify that the accepted aloituskuulutus is available
         await validateAloitusKuulutusState({ oid, expectedState: AloitusKuulutusTila.HYVAKSYTTY });

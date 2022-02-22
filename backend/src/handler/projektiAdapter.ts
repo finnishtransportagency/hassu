@@ -169,9 +169,25 @@ function adaptAloitusKuulutusJulkaisut(
         suunnitteluSopimus: adaptSuunnitteluSopimus(suunnitteluSopimus),
         kielitiedot: adaptKielitiedot(kielitiedot),
         aloituskuulutusPDFPath: fileService.getYllapitoPathForProjektiFile(oid, julkaisu.aloituskuulutusPDFPath),
+        aloituskuulutusPDFPathRuotsi: fileService.getYllapitoPathForProjektiFile(
+          oid,
+          julkaisu.aloituskuulutusPDFPathRuotsi
+        ),
+        aloituskuulutusPDFPathSaame: fileService.getYllapitoPathForProjektiFile(
+          oid,
+          julkaisu.aloituskuulutusPDFPathSaame
+        ),
         aloituskuulutusIlmoitusPDFPath: fileService.getYllapitoPathForProjektiFile(
           oid,
           julkaisu.aloituskuulutusIlmoitusPDFPath
+        ),
+        aloituskuulutusIlmoitusPDFPathRuotsi: fileService.getYllapitoPathForProjektiFile(
+          oid,
+          julkaisu.aloituskuulutusIlmoitusPDFPathRuotsi
+        ),
+        aloituskuulutusIlmoitusPDFPathSaame: fileService.getYllapitoPathForProjektiFile(
+          oid,
+          julkaisu.aloituskuulutusIlmoitusPDFPathSaame
         ),
       };
     });

@@ -245,7 +245,9 @@ export default function Aloituskuulutus({
   };
 
   const vaihdaAloituskuulutuksenTila = async (toiminto: TilasiirtymaToiminto, viesti: string, syy?: string) => {
-    if (!projekti) return;
+    if (!projekti) {
+      return;
+    }
     setIsFormSubmitting(true);
     try {
       await api.siirraTila({ oid: projekti.oid, toiminto, syy });

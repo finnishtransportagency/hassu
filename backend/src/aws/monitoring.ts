@@ -5,7 +5,6 @@ import { config } from "../config";
 import http from "http";
 
 import https from "https";
-import { log } from "../logger";
 
 const XRAY_ENV_NAME = "_X_AMZN_TRACE_ID";
 const TRACE_ID_REGEX = /^Root=(.+);Parent=(.+);/;
@@ -25,7 +24,8 @@ export const reportError = (error: Error) => {
   try {
     segment?.addError(error);
   } catch (e) {
-    log.warn(e); // https://github.com/aws/aws-xray-sdk-node/issues/448
+    // Using pino logger here causes a recursive loop
+    console.warn(e); // https://github.com/aws/aws-xray-sdk-node/issues/448
   }
 };
 

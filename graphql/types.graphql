@@ -133,7 +133,11 @@ type AloitusKuulutusJulkaisu {
   suunnitteluSopimus: SuunnitteluSopimus
   kielitiedot: Kielitiedot
   aloituskuulutusPDFPath: String
+  aloituskuulutusPDFPathRuotsi: String
+  aloituskuulutusPDFPathSaame: String
   aloituskuulutusIlmoitusPDFPath: String
+  aloituskuulutusIlmoitusPDFPathRuotsi: String
+  aloituskuulutusIlmoitusPDFPathSaame: String
   tila: AloitusKuulutusTila
   muokkaaja: String
   hyvaksyja: String

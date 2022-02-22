@@ -174,8 +174,8 @@ export class FileService {
     } while (ContinuationToken);
   }
 
-  getYllapitoPathForProjektiFile(oid: string, path: string): string {
-    return `/${FileService.getProjektiDirectory(oid)}${path}`;
+  getYllapitoPathForProjektiFile(oid: string, path: string): string | undefined {
+    return path ? `/${FileService.getProjektiDirectory(oid)}${path}` : undefined;
   }
 }
 
