@@ -118,7 +118,6 @@ export default function Aloituskuulutus({
     handleSubmit,
     formState: { errors, isDirty },
     reset,
-    watch,
     setValue,
   } = useFormReturn;
 
