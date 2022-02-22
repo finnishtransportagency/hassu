@@ -116,7 +116,7 @@ export default function Aloituskuulutus({
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty },
+    formState: { errors },
     reset,
     setValue,
   } = useFormReturn;
@@ -192,7 +192,6 @@ export default function Aloituskuulutus({
     deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat);
     deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset);
     setIsFormSubmitting(true);
-    log.log("formData", formData);
     await api.tallennaProjekti(formData);
     await reloadProjekti();
   };
@@ -203,29 +202,37 @@ export default function Aloituskuulutus({
       await saveAloituskuulutus(formData);
       showSuccessMessage("Tallennus onnistui!");
     } catch (e) {
-      log.log("OnSubmit Error", e);
+      log.error("OnSubmit Error", e);
       showErrorMessage("Tallennuksessa tapahtui virhe");
     }
     setIsFormSubmitting(false);
   };
 
-  const lahetaHyvaksyttavaksi = async () => {
-    log.log("lähetä hyväksyttäväksi");
-    await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
+  const lahetaHyvaksyttavaksi = async (formData: FormValues) => {
+    log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
+    setIsFormSubmitting(true);
+    try {
+      await saveAloituskuulutus(formData);
+      await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
+    } catch (error) {
+      log.error("Virhe hyväksyntään lähetyksessä", error);
+      showErrorMessage("Hyväksyntään lähetyksessä tapahtui virhe");
+    }
+    setIsFormSubmitting(false);
   };
 
   const palautaMuokattavaksi = async (data: PalautusValues) => {
-    log.log("palauta muokattavaksi: ", data);
+    log.debug("palauta muokattavaksi: ", data);
     await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.HYLKAA, "Palautus", data.syy);
   };
 
   const palautaMuokattavaksiJaPoistu = async (data: PalautusValues) => {
-    log.log("palauta muokattavaksi ja poistu: ", data);
+    log.debug("palauta muokattavaksi ja poistu: ", data);
     await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.HYLKAA, "Palautus", data.syy);
     const siirtymaTimer = setTimeout(() => {
       setIsFormSubmitting(true);
       router.push(`/yllapito/projekti/${projekti?.oid}`);
-    }, 1500);
+    }, 1000);
     return () => {
       setIsFormSubmitting(false);
       clearTimeout(siirtymaTimer);
@@ -233,7 +240,7 @@ export default function Aloituskuulutus({
   };
 
   const hyvaksyKuulutus = async () => {
-    log.log("hyväksy kuulutus");
+    log.debug("hyväksy kuulutus");
     //await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
   };
 
@@ -463,12 +470,12 @@ export default function Aloituskuulutus({
             <input type="hidden" name="tallennaProjektiInput" value={serializedFormData} />
           </form>
           <hr />
-          <div className="flex gap-6 justify-between flex-wrap">
-            <Button onClick={handleSubmit(saveDraft)} disabled={!isDirty || disableFormEdit}>
-              Tallenna
+          <div className="flex gap-6 justify-end flex-wrap">
+            <Button onClick={handleSubmit(saveDraft)} disabled={disableFormEdit}>
+              Tallenna tiedot
             </Button>
-            <Button primary onClick={handleSubmit(lahetaHyvaksyttavaksi)} disabled={isDirty}>
-              Lähetä Hyväksyttäväksi
+            <Button primary onClick={handleSubmit(lahetaHyvaksyttavaksi)}>
+              Tallenna ja lähetä Hyväksyttäväksi
             </Button>
           </div>
         </>
@@ -493,7 +500,7 @@ export default function Aloituskuulutus({
           <div>
             <Dialog open={open} onClose={handleClickClose} fullWidth={true} maxWidth={"md"}>
               <DialogTitle>
-                <b>Kuulutuksen palauttaminen</b>
+                <div className="vayla-dialog-title">Kuulutuksen palauttaminen</div>
               </DialogTitle>
               <DialogContent>
                 <form>
@@ -509,7 +516,7 @@ export default function Aloituskuulutus({
                     maxLength={200}
                     hideLengthCounter={false}
                   ></TextInput>
-                  <div className="flex gap-6 justify-end">
+                  <div className="flex gap-6 justify-end pt-6">
                     <Button primary onClick={handleSubmit2(palautaMuokattavaksiJaPoistu)}>
                       Palauta ja poistu
                     </Button>
