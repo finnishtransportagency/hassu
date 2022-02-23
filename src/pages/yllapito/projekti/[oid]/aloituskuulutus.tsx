@@ -36,6 +36,8 @@ import { GetServerSideProps } from "next";
 import { setupLambdaMonitoring } from "backend/src/aws/monitoring";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import TextInput from "@components/form/TextInput";
+import { lowerCase } from "lodash";
+import dayjs from "dayjs";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
 type RequiredProjektiFields = Required<{
@@ -114,9 +116,8 @@ export default function Aloituskuulutus({
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty },
+    formState: { errors },
     reset,
-    watch,
     setValue,
   } = useFormReturn;
 
@@ -125,8 +126,6 @@ export default function Aloituskuulutus({
     handleSubmit: handleSubmit2,
     formState: { errors: errors2 },
   } = useForm<PalautusValues>({ defaultValues: { syy: "" } });
-
-  const watchKuulutusPaiva = watch("aloitusKuulutus.kuulutusPaiva");
 
   useEffect(() => {
     if (projekti?.oid) {
@@ -193,7 +192,6 @@ export default function Aloituskuulutus({
     deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat);
     deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset);
     setIsFormSubmitting(true);
-    log.log("formData", formData);
     await api.tallennaProjekti(formData);
     await reloadProjekti();
   };
@@ -204,29 +202,37 @@ export default function Aloituskuulutus({
       await saveAloituskuulutus(formData);
       showSuccessMessage("Tallennus onnistui!");
     } catch (e) {
-      log.log("OnSubmit Error", e);
+      log.error("OnSubmit Error", e);
       showErrorMessage("Tallennuksessa tapahtui virhe");
     }
     setIsFormSubmitting(false);
   };
 
-  const lahetaHyvaksyttavaksi = async () => {
-    log.log("lähetä hyväksyttäväksi");
-    await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
+  const lahetaHyvaksyttavaksi = async (formData: FormValues) => {
+    log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
+    setIsFormSubmitting(true);
+    try {
+      await saveAloituskuulutus(formData);
+      await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
+    } catch (error) {
+      log.error("Virhe hyväksyntään lähetyksessä", error);
+      showErrorMessage("Hyväksyntään lähetyksessä tapahtui virhe");
+    }
+    setIsFormSubmitting(false);
   };
 
   const palautaMuokattavaksi = async (data: PalautusValues) => {
-    log.log("palauta muokattavaksi: ", data);
+    log.debug("palauta muokattavaksi: ", data);
     await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.HYLKAA, "Palautus", data.syy);
   };
 
   const palautaMuokattavaksiJaPoistu = async (data: PalautusValues) => {
-    log.log("palauta muokattavaksi ja poistu: ", data);
+    log.debug("palauta muokattavaksi ja poistu: ", data);
     await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.HYLKAA, "Palautus", data.syy);
     const siirtymaTimer = setTimeout(() => {
       setIsFormSubmitting(true);
       router.push(`/yllapito/projekti/${projekti?.oid}`);
-    }, 1500);
+    }, 1000);
     return () => {
       setIsFormSubmitting(false);
       clearTimeout(siirtymaTimer);
@@ -234,7 +240,7 @@ export default function Aloituskuulutus({
   };
 
   const hyvaksyKuulutus = async () => {
-    log.log("hyväksy kuulutus");
+    log.debug("hyväksy kuulutus");
     //await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
   };
 
@@ -297,6 +303,16 @@ export default function Aloituskuulutus({
   const voiHyvaksya =
     getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA) &&
     projekti?.nykyinenKayttaja.onProjektipaallikko;
+  const odottaaJulkaisua = () => {
+    const julkaisu = getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.HYVAKSYTTY);
+    if (julkaisu) {
+      // Toistaiseksi tarkastellaan julkaisupaivatietoa, koska ei ole olemassa erillista tilaa julkaistulle kuulutukselle
+      const julkaisupvm = dayjs(julkaisu.kuulutusPaiva);
+      if (dayjs().isBefore(julkaisupvm, "day")) {
+        return julkaisupvm.format("DD.MM.YYYY");
+      }
+    }
+  };
 
   return (
     <ProjektiPageLayout title="Aloituskuulutus">
@@ -315,13 +331,11 @@ export default function Aloituskuulutus({
                     Aloituskuulutus on palautettu korjattavaksi. Palautuksen syy: {projekti.aloitusKuulutus.palautusSyy}
                   </Notification>
                 )}
-                <Notification type={NotificationType.WARN}>
-                  Aloituskuulutusta ei ole vielä julkaistu palvelun julkisella puolella.{" "}
-                  {watchKuulutusPaiva && !errors.aloitusKuulutus?.kuulutusPaiva
-                    ? `Kuulutuspäivä on ${new Date(watchKuulutusPaiva).toLocaleDateString("fi")}`
-                    : "Kuulutuspäivää ei ole asetettu"}
-                  . Voit edelleen tehdä muutoksia projektin tietoihin. Tallennetut muutokset huomioidaan kuulutuksessa.
-                </Notification>
+                {odottaaJulkaisua() && (
+                  <Notification type={NotificationType.WARN}>
+                    {`Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä ${odottaaJulkaisua()}`}.
+                  </Notification>
+                )}
                 <h3 className="vayla-title">Suunnittelun aloittamisesta kuuluttaminen</h3>
                 <p>
                   Kun suunnitelman aloittamisesta kuulutetaan, projektista julkaistaan aloituskuulutustiedot tämän
@@ -367,7 +381,7 @@ export default function Aloituskuulutus({
                   <KuulutuksenYhteystiedot projekti={projekti} useFormReturn={useFormReturn} />
                 </div>
                 <Textarea
-                  label="Tiivistetty hankkeen sisällönkuvaus *"
+                  label="Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä. *"
                   {...register("aloitusKuulutus.hankkeenKuvaus")}
                   error={errors.aloitusKuulutus?.hankkeenKuvaus}
                   maxLength={maxAloituskuulutusLength}
@@ -379,7 +393,7 @@ export default function Aloituskuulutus({
 
                 <div className="content">
                   <p className="vayla-label">Esikatseltavat tiedostot</p>
-                  <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({kielitiedot.ensisijainenKieli})</p>
+                  <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({lowerCase(kielitiedot.ensisijainenKieli)})</p>
                   <div className="flex flex-col lg:flex-row gap-6">
                     <Button
                       type="submit"
@@ -412,7 +426,7 @@ export default function Aloituskuulutus({
 
                 {toissijainenKieli && (
                   <div className="content">
-                    <p>Kuulutus ja ilmoitus toissijaisella kielellä ({toissijainenKieli})</p>
+                    <p>Kuulutus ja ilmoitus toissijaisella kielellä ({lowerCase(toissijainenKieli)})</p>
                     <div className="flex flex-col lg:flex-row gap-6">
                       <Button
                         type="submit"
@@ -456,12 +470,12 @@ export default function Aloituskuulutus({
             <input type="hidden" name="tallennaProjektiInput" value={serializedFormData} />
           </form>
           <hr />
-          <div className="flex gap-6 justify-between flex-wrap">
-            <Button onClick={handleSubmit(saveDraft)} disabled={!isDirty || disableFormEdit}>
-              Tallenna
+          <div className="flex gap-6 justify-end flex-wrap">
+            <Button onClick={handleSubmit(saveDraft)} disabled={disableFormEdit}>
+              Tallenna tiedot
             </Button>
-            <Button primary onClick={handleSubmit(lahetaHyvaksyttavaksi)} disabled={isDirty}>
-              Lähetä Hyväksyttäväksi
+            <Button primary onClick={handleSubmit(lahetaHyvaksyttavaksi)}>
+              Tallenna ja lähetä Hyväksyttäväksi
             </Button>
           </div>
         </>
@@ -486,7 +500,7 @@ export default function Aloituskuulutus({
           <div>
             <Dialog open={open} onClose={handleClickClose} fullWidth={true} maxWidth={"md"}>
               <DialogTitle>
-                <b>Kuulutuksen palauttaminen</b>
+                <div className="vayla-dialog-title">Kuulutuksen palauttaminen</div>
               </DialogTitle>
               <DialogContent>
                 <form>
@@ -502,7 +516,7 @@ export default function Aloituskuulutus({
                     maxLength={200}
                     hideLengthCounter={false}
                   ></TextInput>
-                  <div className="flex gap-6 justify-end">
+                  <div className="flex gap-6 justify-end pt-6">
                     <Button primary onClick={handleSubmit2(palautaMuokattavaksiJaPoistu)}>
                       Palauta ja poistu
                     </Button>
