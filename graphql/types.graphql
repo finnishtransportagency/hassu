@@ -52,7 +52,12 @@ enum AsiakirjaTyyppi {
   ILMOITUS_KUULUTUKSESTA
 }
 
-type Projekti {
+interface IProjekti {
+  oid: String!
+  aloitusKuulutusJulkaisut: [AloitusKuulutusJulkaisu!]
+}
+
+type Projekti implements IProjekti {
   oid: String!
   muistiinpano: String
   vaihe: String
@@ -89,6 +94,11 @@ type Velho {
   maakunnat: [String!]
   kunnat: [String!]
   linkki: String
+}
+
+type ProjektiJulkinen implements IProjekti {
+  oid: String!
+  aloitusKuulutusJulkaisut: [AloitusKuulutusJulkaisu!]
 }
 
 type Suunnitelma {

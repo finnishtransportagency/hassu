@@ -2,7 +2,7 @@ type Query {
   nykyinenKayttaja: NykyinenKayttaja
   listaaKayttajat(hakuehto: ListaaKayttajatInput!): [Kayttaja!]
   listaaProjektit: [Projekti!]
-  lataaProjekti(oid: String!): Projekti
+  lataaProjekti(oid: String!): IProjekti
   listaaVelhoProjektit(nimi: String!, requireExactMatch: Boolean): [VelhoHakuTulos!]
   esikatseleAsiakirjaPDF(
     oid: String!

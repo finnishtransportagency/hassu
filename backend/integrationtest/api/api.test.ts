@@ -11,6 +11,8 @@ import {
   ProjektiRooli,
   SuunnitteluSopimus,
   SuunnitteluSopimusInput,
+  TilasiirtymaToiminto,
+  TilasiirtymaTyyppi,
 } from "../../../common/graphql/apiModel";
 import fs from "fs";
 import axios from "axios";
@@ -54,7 +56,7 @@ describe("Api", () => {
     sandbox.stub(openSearchClient, "putProjekti");
   });
 
-  it("should search, load and save a project", async function () {
+  it.only("should search, load and save a project", async function () {
     if (process.env.SKIP_VELHO_TESTS) {
       this.skip();
     }
@@ -63,11 +65,10 @@ describe("Api", () => {
     const { oid, projekti } = await readProjektiFromVelho();
 
     // Expect that projektipaallikko is found
-    expect(
-      projekti.kayttoOikeudet?.filter(
-        (kayttaja) => kayttaja.rooli === ProjektiRooli.PROJEKTIPAALLIKKO && kayttaja.email
-      )
-    ).is.not.empty;
+    const projektiPaallikko = projekti.kayttoOikeudet
+      ?.filter((kayttaja) => kayttaja.rooli === ProjektiRooli.PROJEKTIPAALLIKKO && kayttaja.email)
+      .pop();
+    expect(projektiPaallikko).is.not.empty;
 
     const kayttoOikeudet = projekti.kayttoOikeudet?.map((value) => ({
       rooli: value.rooli,
@@ -172,6 +173,18 @@ describe("Api", () => {
     expect(updatedProjekti2.suunnitteluSopimus).to.be.undefined;
     expect(updatedProjekti2.kielitiedot).eql(kielitiedot);
 
+    userFixture.loginAsProjektiKayttaja(projektiPaallikko);
+    await api.siirraTila({
+      oid,
+      tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
+      toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+    });
+    await api.siirraTila({ oid, tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS, toiminto: TilasiirtymaToiminto.HYVAKSY });
+
+    userFixture.logout();
+    const publicProjekti = await loadProjektiFromDatabase(oid);
+    expect(publicProjekti).toMatchSnapshot();
+
     // Finally delete the projekti
     const archiveResult = await projektiArchive.archiveProjekti(oid);
     expect(archiveResult.oid).to.be.equal(oid);
@@ -188,12 +201,12 @@ describe("Api", () => {
 
   async function loadProjektiFromDatabase(oid: string) {
     const savedProjekti = await api.lataaProjekti(oid);
-    expect(savedProjekti.tallennettu).to.be.true;
+    expect(!savedProjekti.tallennettu || savedProjekti.tallennettu).to.be.true;
     return savedProjekti;
   }
 
   async function searchProjectsFromVelhoAndPickFirst(): Promise<string> {
-    const searchResult = await api.getVelhoSuunnitelmasByName("HASSUTESTIPROJEKTI");
+    const searchResult = await api.getVelhoSuunnitelmasByName("HASSU AUTOMAATTITESTIPROJEKTI1");
     // tslint:disable-next-line:no-unused-expression
     expect(searchResult).not.to.be.empty;
 

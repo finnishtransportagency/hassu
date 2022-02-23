@@ -104,7 +104,7 @@ function adaptLiittyvatSuunnitelmat(suunnitelmat?: Suunnitelma[] | null): API.Su
   return suunnitelmat as undefined | null;
 }
 
-function adaptKielitiedot(kielitiedot?: Kielitiedot | null): API.Kielitiedot | undefined | null {
+export function adaptKielitiedot(kielitiedot?: Kielitiedot | null): API.Kielitiedot | undefined | null {
   if (kielitiedot) {
     return {
       ...kielitiedot,
@@ -180,7 +180,7 @@ function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.AloitusKuu
   return kuulutus as undefined;
 }
 
-function adaptSuunnitteluSopimus(
+export function adaptSuunnitteluSopimus(
   suunnitteluSopimus?: SuunnitteluSopimus | null
 ): API.SuunnitteluSopimus | undefined | null {
   if (suunnitteluSopimus) {
@@ -193,14 +193,14 @@ function removeUndefinedFields(object: API.Projekti): Partial<API.Projekti> {
   return pickBy(object, (value) => value !== undefined);
 }
 
-function adaptYhteystiedot(yhteystiedot: Yhteystieto[]): API.Yhteystieto[] {
+export function adaptYhteystiedot(yhteystiedot: Yhteystieto[]): API.Yhteystieto[] {
   if (yhteystiedot) {
     return yhteystiedot.map((yt) => ({ __typename: "Yhteystieto", ...yt }));
   }
   return [];
 }
 
-function adaptJulkaisuPDFPaths(
+export function adaptJulkaisuPDFPaths(
   oid: string,
   aloitusKuulutusPDFS: LocalizedMap<AloitusKuulutusPDF>
 ): AloitusKuulutusPDFt | undefined {
@@ -224,7 +224,7 @@ function adaptJulkaisuPDFPaths(
   return { __typename: "AloitusKuulutusPDFt", SUOMI: result[Kieli.SUOMI], ...result };
 }
 
-function adaptHankkeenKuvaus(hankkeenKuvaus: LocalizedMap<string>): HankkeenKuvaukset {
+export function adaptHankkeenKuvaus(hankkeenKuvaus: LocalizedMap<string>): HankkeenKuvaukset {
   return {
     __typename: "HankkeenKuvaukset",
     SUOMI: hankkeenKuvaus.SUOMI,
@@ -232,7 +232,7 @@ function adaptHankkeenKuvaus(hankkeenKuvaus: LocalizedMap<string>): HankkeenKuva
   };
 }
 
-function adaptAloitusKuulutusJulkaisut(
+export function adaptAloitusKuulutusJulkaisut(
   oid: string,
   aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null
 ): API.AloitusKuulutusJulkaisu[] | undefined {
@@ -255,7 +255,7 @@ function adaptAloitusKuulutusJulkaisut(
   return undefined;
 }
 
-function adaptVelho(velho: Velho): API.Velho {
+export function adaptVelho(velho: Velho): API.Velho {
   return { __typename: "Velho", ...velho };
 }
 

@@ -1,5 +1,11 @@
 import { projektiDatabase } from "../database/projektiDatabase";
-import { requirePermissionLuku, requirePermissionLuonti, requirePermissionMuokkaa, requireVaylaUser } from "../user";
+import {
+  getVaylaUser,
+  requirePermissionLuku,
+  requirePermissionLuonti,
+  requirePermissionMuokkaa,
+  requireVaylaUser,
+} from "../user";
 import { velho } from "../velho/velhoClient";
 import * as API from "../../../common/graphql/apiModel";
 import {
@@ -22,6 +28,8 @@ import { sendEmail } from "../email/email";
 import { createPerustamisEmail } from "../email/emailTemplates";
 import { requireAdmin } from "../user/userService";
 import { projektiArchive } from "../archive/projektiArchiveService";
+import { NotFoundError } from "../error/NotFoundError";
+import { projektiAdapterJulkinen } from "./projektiAdapterJulkinen";
 
 /**
  * Function to determine the status of the projekti
@@ -61,22 +69,40 @@ function applyStatus(projekti: Projekti, param: { saved?: boolean }) {
   return projekti;
 }
 
-export async function loadProjekti(oid: string): Promise<API.Projekti> {
-  const vaylaUser = requirePermissionLuku();
+export async function loadProjekti(oid: string): Promise<API.Projekti | API.ProjektiJulkinen> {
+  const vaylaUser = getVaylaUser();
   if (vaylaUser) {
-    log.info("Loading projekti", { oid });
-    const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
-    if (projektiFromDB) {
-      projektiFromDB.tallennettu = true;
-      return applyStatus(projektiAdapter.adaptProjekti(projektiFromDB), { saved: true });
-    } else {
-      requirePermissionLuonti();
-      const projekti = await createProjektiFromVelho(oid, vaylaUser);
-      return projektiAdapter.adaptProjekti(projekti);
-    }
+    return await loadProjektiYllapito(oid, vaylaUser);
   } else {
-    throw new Error("Public access not implemented yet");
+    return await loadProjektiJulkinen(oid);
   }
+}
+
+async function loadProjektiYllapito(oid: string, vaylaUser: NykyinenKayttaja): Promise<API.Projekti> {
+  requirePermissionLuku();
+  log.info("Loading projekti", { oid });
+  const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
+  if (projektiFromDB) {
+    projektiFromDB.tallennettu = true;
+    return applyStatus(projektiAdapter.adaptProjekti(projektiFromDB), { saved: true });
+  } else {
+    requirePermissionLuonti();
+    const projekti = await createProjektiFromVelho(oid, vaylaUser);
+    return projektiAdapter.adaptProjekti(projekti);
+  }
+}
+
+async function loadProjektiJulkinen(oid: string): Promise<API.ProjektiJulkinen> {
+  const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
+  if (projektiFromDB) {
+    const adaptedProjekti = projektiAdapterJulkinen.adaptProjekti(projektiFromDB);
+    if (adaptedProjekti) {
+      return adaptedProjekti;
+    }
+    log.info("Projektilla ei ole julkista sisältöä", { oid });
+    throw new NotFoundError("Projektilla ei ole julkista sisältöä: " + oid);
+  }
+  throw new NotFoundError("Projektia ei löydy: " + oid);
 }
 
 export async function arkistoiProjekti(oid: string): Promise<ArkistointiTunnus> {

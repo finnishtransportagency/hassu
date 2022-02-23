@@ -99,6 +99,10 @@ export class FileService {
     return `yllapito/tiedostot/projekti/${oid}`;
   }
 
+  private static getPublicProjektiDirectory(oid: string) {
+    return `tiedostot/projekti/${oid}`;
+  }
+
   async getUploadedSourceFileInformation(
     uploadedFileSource: string
   ): Promise<{ ContentType: string; CopySource: string }> {
@@ -176,6 +180,10 @@ export class FileService {
 
   getYllapitoPathForProjektiFile(oid: string, path: string): string | undefined {
     return path ? `/${FileService.getProjektiDirectory(oid)}${path}` : undefined;
+  }
+
+  getPublicPathForProjektiFile(oid: string, path: string): string | undefined {
+    return path ? `/${FileService.getPublicProjektiDirectory(oid)}${path}` : undefined;
   }
 }
 
