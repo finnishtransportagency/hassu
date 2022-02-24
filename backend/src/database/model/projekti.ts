@@ -6,12 +6,12 @@ import {
   Viranomainen,
 } from "../../../../common/graphql/apiModel";
 
+export type LocalizedMap<T> = { [key in Kieli]?: T } | null;
+
 export type Kuulutus = {
   kuulutusPaiva?: string;
   siirtyySuunnitteluVaiheeseen?: string;
-  hankkeenKuvaus?: string;
-  hankkeenKuvausRuotsi?: string;
-  hankkeenKuvausSaame?: string;
+  hankkeenKuvaus?: LocalizedMap<string>;
   elyKeskus?: string;
   yhteystiedot?: string[];
 };
@@ -30,28 +30,27 @@ export type DBVaylaUser = {
 export type AloitusKuulutus = {
   kuulutusPaiva?: string | null;
   siirtyySuunnitteluVaiheeseen?: string | null;
-  hankkeenKuvaus?: string | null;
-  hankkeenKuvausRuotsi?: string | null;
-  hankkeenKuvausSaame?: string | null;
+  hankkeenKuvaus?: LocalizedMap<string>;
   elyKeskus?: string | null;
   esitettavatYhteystiedot?: Yhteystieto[] | null;
   palautusSyy?: string | null;
 };
 
+export type AloitusKuulutusPDF = {
+  aloituskuulutusPDFPath: string;
+  aloituskuulutusIlmoitusPDFPath: string;
+};
 export type AloitusKuulutusJulkaisu = {
   id: number;
   kuulutusPaiva?: string | null;
   siirtyySuunnitteluVaiheeseen?: string | null;
-  hankkeenKuvaus?: string | null;
-  hankkeenKuvausRuotsi?: string | null;
-  hankkeenKuvausSaame?: string | null;
+  hankkeenKuvaus?: LocalizedMap<string>;
   elyKeskus?: string | null;
   yhteystiedot: Yhteystieto[];
   velho: Velho;
   suunnitteluSopimus?: SuunnitteluSopimus | null;
   kielitiedot?: Kielitiedot | null;
-  aloituskuulutusPDFPath?: string | null;
-  aloituskuulutusIlmoitusPDFPath?: string | null;
+  aloituskuulutusPDF?: LocalizedMap<AloitusKuulutusPDF>;
   tila?: AloitusKuulutusTila | null;
   muokkaaja?: string | null;
   hyvaksyja?: string | null;

@@ -9,7 +9,7 @@ import { requirePermissionLuku, requirePermissionMuokkaa } from "../user";
 import { requireProjektiPaallikko } from "../user/userService";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { asiakirjaAdapter } from "./asiakirjaAdapter";
-import { AloitusKuulutus, AloitusKuulutusJulkaisu, DBProjekti } from "../database/model/projekti";
+import { AloitusKuulutus, AloitusKuulutusJulkaisu, AloitusKuulutusPDF, DBProjekti } from "../database/model/projekti";
 import { asiakirjaService } from "../asiakirja/asiakirjaService";
 import { fileService } from "../files/fileService";
 import { sendEmail } from "../email/email";
@@ -52,12 +52,13 @@ async function reject(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus, sy
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
   julkaisuWaitingForApproval: AloitusKuulutusJulkaisu,
-  projekti: DBProjekti
+  projekti: DBProjekti,
+  kieli: Kieli
 ) {
   const pdf = await asiakirjaService.createPdf({
     asiakirjaTyyppi,
     aloitusKuulutusJulkaisu: julkaisuWaitingForApproval,
-    kieli: Kieli.SUOMI, // TODO: generoi kaikki kielet
+    kieli,
   });
   return await fileService.createFileToProjekti({
     oid: projekti.oid,
@@ -77,18 +78,38 @@ async function approve(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus) {
   julkaisuWaitingForApproval.tila = AloitusKuulutusTila.HYVAKSYTTY;
   julkaisuWaitingForApproval.hyvaksyja = projektiPaallikko.uid;
 
-  await projektiDatabase.updateAloitusKuulutusJulkaisu(projekti, julkaisuWaitingForApproval);
+  const kielitiedot = julkaisuWaitingForApproval.kielitiedot;
 
-  julkaisuWaitingForApproval.aloituskuulutusPDFPath = await createAloituskuulutusPDF(
-    AsiakirjaTyyppi.ALOITUSKUULUTUS,
-    julkaisuWaitingForApproval,
-    projekti
+  async function generatePDFsForLanguage(kieli: Kieli, julkaisu: AloitusKuulutusJulkaisu): Promise<AloitusKuulutusPDF> {
+    const aloituskuulutusPDFPath = await createAloituskuulutusPDF(
+      AsiakirjaTyyppi.ALOITUSKUULUTUS,
+      julkaisu,
+      projekti,
+      kieli
+    );
+    const aloituskuulutusIlmoitusPDFPath = await createAloituskuulutusPDF(
+      AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA,
+      julkaisu,
+      projekti,
+      kieli
+    );
+    return { aloituskuulutusPDFPath, aloituskuulutusIlmoitusPDFPath };
+  }
+
+  julkaisuWaitingForApproval.aloituskuulutusPDF = {};
+  julkaisuWaitingForApproval.aloituskuulutusPDF[kielitiedot.ensisijainenKieli] = await generatePDFsForLanguage(
+    kielitiedot.ensisijainenKieli,
+    julkaisuWaitingForApproval
   );
-  julkaisuWaitingForApproval.aloituskuulutusIlmoitusPDFPath = await createAloituskuulutusPDF(
-    AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA,
-    julkaisuWaitingForApproval,
-    projekti
-  );
+
+  if (kielitiedot.toissijainenKieli) {
+    julkaisuWaitingForApproval.aloituskuulutusPDF[kielitiedot.toissijainenKieli] = await generatePDFsForLanguage(
+      kielitiedot.toissijainenKieli,
+      julkaisuWaitingForApproval
+    );
+  }
+
+  await projektiDatabase.updateAloitusKuulutusJulkaisu(projekti, julkaisuWaitingForApproval);
 }
 
 async function removeRejectionReasonIfExists(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus) {

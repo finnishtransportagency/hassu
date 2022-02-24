@@ -77,8 +77,8 @@ export default function AloituskuulutusRO({ aloituskuulutusjulkaisu, oid }: Prop
         </p>
         <p>
           {aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli === Kieli.SUOMI
-            ? aloituskuulutusjulkaisu?.hankkeenKuvaus
-            : aloituskuulutusjulkaisu?.hankkeenKuvausRuotsi}
+            ? aloituskuulutusjulkaisu?.hankkeenKuvaus?.SUOMI
+            : aloituskuulutusjulkaisu?.hankkeenKuvaus?.RUOTSI}
         </p>
       </div>
       {aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli && (
@@ -89,8 +89,8 @@ export default function AloituskuulutusRO({ aloituskuulutusjulkaisu, oid }: Prop
           </p>
           <p>
             {aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli === Kieli.SUOMI
-              ? aloituskuulutusjulkaisu?.hankkeenKuvaus
-              : aloituskuulutusjulkaisu?.hankkeenKuvausRuotsi}
+              ? aloituskuulutusjulkaisu?.hankkeenKuvaus?.SUOMI
+              : aloituskuulutusjulkaisu?.hankkeenKuvaus?.RUOTSI}
           </p>
         </div>
       )}

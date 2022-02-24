@@ -109,12 +109,27 @@ enum AloitusKuulutusTila {
   HYVAKSYTTY
 }
 
+type HankkeenKuvaukset {
+  SUOMI: String!
+  RUOTSI: String
+  SAAME: String
+}
+
+type AloitusKuulutusPDF {
+  aloituskuulutusPDFPath: String!
+  aloituskuulutusIlmoitusPDFPath: String!
+}
+
+type AloitusKuulutusPDFt {
+  SUOMI: AloitusKuulutusPDF!
+  RUOTSI: AloitusKuulutusPDF
+  SAAME: AloitusKuulutusPDF
+}
+
 type AloitusKuulutus {
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
-  hankkeenKuvaus: String
-  hankkeenKuvausRuotsi: String
-  hankkeenKuvausSaame: String
+  hankkeenKuvaus: HankkeenKuvaukset
   elyKeskus: String
   esitettavatYhteystiedot: [Yhteystieto]
   palautusSyy: String
@@ -124,16 +139,13 @@ type AloitusKuulutus {
 type AloitusKuulutusJulkaisu {
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
-  hankkeenKuvaus: String
-  hankkeenKuvausRuotsi: String
-  hankkeenKuvausSaame: String
+  hankkeenKuvaus: HankkeenKuvaukset
   elyKeskus: String
   yhteystiedot: [Yhteystieto!]!
   velho: Velho!
   suunnitteluSopimus: SuunnitteluSopimus
   kielitiedot: Kielitiedot
-  aloituskuulutusPDFPath: String
-  aloituskuulutusIlmoitusPDFPath: String
+  aloituskuulutusPDFt: AloitusKuulutusPDFt
   tila: AloitusKuulutusTila
   muokkaaja: String
   hyvaksyja: String

@@ -67,6 +67,15 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
   ProjektiTestType.PROJEKTI_IS_CREATED,
 ]);
 
+function removeTypeName(o: any | null | undefined) {
+  if (!o) {
+    return o;
+  }
+  let result = { ...o };
+  delete result["__typename"];
+  return result;
+}
+
 export default function Aloituskuulutus({
   setRouteLabels,
   kirjaamoOsoitteet,
@@ -106,7 +115,7 @@ export default function Aloituskuulutus({
 
   const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(aloituskuulutusSchema, { abortEarly: false, recursive: true }),
-    defaultValues: { aloitusKuulutus: { hankkeenKuvaus: "" } },
+    defaultValues: { aloitusKuulutus: { hankkeenKuvaus: { SUOMI: "" } } },
     mode: "onChange",
     reValidateMode: "onChange",
     context: formContext,
@@ -159,7 +168,7 @@ export default function Aloituskuulutus({
                 sahkoposti,
               })) || [],
           },
-          hankkeenKuvaus: projekti?.aloitusKuulutus?.hankkeenKuvaus,
+          hankkeenKuvaus: removeTypeName(projekti?.aloitusKuulutus?.hankkeenKuvaus),
           kuulutusPaiva: projekti?.aloitusKuulutus?.kuulutusPaiva,
           siirtyySuunnitteluVaiheeseen: projekti?.aloitusKuulutus?.siirtyySuunnitteluVaiheeseen,
           esitettavatYhteystiedot:
@@ -245,7 +254,9 @@ export default function Aloituskuulutus({
   };
 
   const vaihdaAloituskuulutuksenTila = async (toiminto: TilasiirtymaToiminto, viesti: string, syy?: string) => {
-    if (!projekti) return;
+    if (!projekti) {
+      return;
+    }
     setIsFormSubmitting(true);
     try {
       await api.siirraTila({ oid: projekti.oid, toiminto, syy });
@@ -382,8 +393,8 @@ export default function Aloituskuulutus({
                 </div>
                 <Textarea
                   label="Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä. *"
-                  {...register("aloitusKuulutus.hankkeenKuvaus")}
-                  error={errors.aloitusKuulutus?.hankkeenKuvaus}
+                  {...register("aloitusKuulutus.hankkeenKuvaus.SUOMI")}
+                  error={(errors.aloitusKuulutus?.hankkeenKuvaus as any)?.[Kieli.SUOMI]}
                   maxLength={maxAloituskuulutusLength}
                   disabled={disableFormEdit}
                 />

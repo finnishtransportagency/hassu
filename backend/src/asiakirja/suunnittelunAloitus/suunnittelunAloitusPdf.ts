@@ -146,11 +146,7 @@ export abstract class SuunnittelunAloitusPdf extends AbstractPdf {
   }
 
   protected hankkeenKuvaus() {
-    return this.localizedParagraph([
-      this.aloitusKuulutusJulkaisu?.hankkeenKuvaus || "",
-      this.aloitusKuulutusJulkaisu?.hankkeenKuvausRuotsi || "",
-      this.aloitusKuulutusJulkaisu?.hankkeenKuvausSaame || "",
-    ]);
+    return this.localizedParagraphFromMap(this.aloitusKuulutusJulkaisu?.hankkeenKuvaus);
   }
 
   protected lisatietojaAntavatParagraph() {
@@ -159,6 +155,15 @@ export abstract class SuunnittelunAloitusPdf extends AbstractPdf {
 
   protected localizedParagraph(suomiRuotsiSaameParagraphs: string[]) {
     return this.paragraph(this.selectText(suomiRuotsiSaameParagraphs));
+  }
+
+  protected localizedParagraphFromMap(localizations: { [key in Kieli]?: string }) {
+    const text = localizations[this.kieli];
+    if (text) {
+      return this.paragraph(text);
+    } else {
+      return this.paragraph("");
+    }
   }
 
   protected selectText(suomiRuotsiSaameParagraphs: string[]) {

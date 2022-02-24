@@ -13,9 +13,11 @@ Object {
         "sukunimi": "Koi",
       },
     ],
-    "hankkeenKuvaus": "Lorem Ipsum",
-    "hankkeenKuvausRuotsi": "På svenska",
-    "hankkeenKuvausSaame": "Saameksi",
+    "hankkeenKuvaus": Object {
+      "RUOTSI": "På svenska",
+      "SAAME": "Saameksi",
+      "SUOMI": "Lorem Ipsum",
+    },
     "kuulutusPaiva": "2022-01-02",
     "siirtyySuunnitteluVaiheeseen": "2022-01-01",
   },
@@ -36,18 +38,22 @@ Object {
         "sukunimi": "Koi",
       },
     ],
-    "hankkeenKuvaus": "Lorem Ipsum",
-    "hankkeenKuvausRuotsi": "På svenska",
-    "hankkeenKuvausSaame": "Saameksi",
+    "hankkeenKuvaus": Object {
+      "RUOTSI": "På svenska",
+      "SAAME": "Saameksi",
+      "SUOMI": "Lorem Ipsum",
+    },
     "kuulutusPaiva": "2022-01-02",
     "siirtyySuunnitteluVaiheeseen": "2022-01-01",
   },
   "aloitusKuulutusJulkaisut": Array [
     Object {
       "elyKeskus": "Pirkanmaa",
-      "hankkeenKuvaus": "Lorem Ipsum",
-      "hankkeenKuvausRuotsi": "På svenska",
-      "hankkeenKuvausSaame": "Saameksi",
+      "hankkeenKuvaus": Object {
+        "RUOTSI": "På svenska",
+        "SAAME": "Saameksi",
+        "SUOMI": "Lorem Ipsum",
+      },
       "id": 1,
       "kielitiedot": Object {
         "ensisijainenKieli": "SUOMI",
@@ -104,9 +110,11 @@ Object {
         "sukunimi": "Koi",
       },
     ],
-    "hankkeenKuvaus": "Lorem Ipsum",
-    "hankkeenKuvausRuotsi": "På svenska",
-    "hankkeenKuvausSaame": "Saameksi",
+    "hankkeenKuvaus": Object {
+      "RUOTSI": "På svenska",
+      "SAAME": "Saameksi",
+      "SUOMI": "Lorem Ipsum",
+    },
     "kuulutusPaiva": "2022-01-02",
     "palautusSyy": "Korjaa teksti",
     "siirtyySuunnitteluVaiheeseen": "2022-01-01",
@@ -128,9 +136,11 @@ Object {
         "sukunimi": "Koi",
       },
     ],
-    "hankkeenKuvaus": "Lorem Ipsum",
-    "hankkeenKuvausRuotsi": "På svenska",
-    "hankkeenKuvausSaame": "Saameksi",
+    "hankkeenKuvaus": Object {
+      "RUOTSI": "På svenska",
+      "SAAME": "Saameksi",
+      "SUOMI": "Lorem Ipsum",
+    },
     "kuulutusPaiva": "2022-01-02",
     "palautusSyy": null,
     "siirtyySuunnitteluVaiheeseen": "2022-01-01",
@@ -138,9 +148,11 @@ Object {
   "aloitusKuulutusJulkaisut": Array [
     Object {
       "elyKeskus": "Pirkanmaa",
-      "hankkeenKuvaus": "Lorem Ipsum",
-      "hankkeenKuvausRuotsi": "På svenska",
-      "hankkeenKuvausSaame": "Saameksi",
+      "hankkeenKuvaus": Object {
+        "RUOTSI": "På svenska",
+        "SAAME": "Saameksi",
+        "SUOMI": "Lorem Ipsum",
+      },
       "id": 1,
       "kielitiedot": Object {
         "ensisijainenKieli": "SUOMI",
@@ -197,19 +209,33 @@ Object {
         "sukunimi": "Koi",
       },
     ],
-    "hankkeenKuvaus": "Lorem Ipsum",
-    "hankkeenKuvausRuotsi": "På svenska",
-    "hankkeenKuvausSaame": "Saameksi",
+    "hankkeenKuvaus": Object {
+      "RUOTSI": "På svenska",
+      "SAAME": "Saameksi",
+      "SUOMI": "Lorem Ipsum",
+    },
     "kuulutusPaiva": "2022-01-02",
     "palautusSyy": null,
     "siirtyySuunnitteluVaiheeseen": "2022-01-01",
   },
   "aloitusKuulutusJulkaisut": Array [
     Object {
+      "aloituskuulutusPDF": Object {
+        "RUOTSI": Object {
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Namnet pa svenska.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/KUNGORELSE OM INLEDANDET AV PLANERINGEN Namnet pa svenska.pdf",
+        },
+        "SUOMI": Object {
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf",
+        },
+      },
       "elyKeskus": "Pirkanmaa",
-      "hankkeenKuvaus": "Lorem Ipsum",
-      "hankkeenKuvausRuotsi": "På svenska",
-      "hankkeenKuvausSaame": "Saameksi",
+      "hankkeenKuvaus": Object {
+        "RUOTSI": "På svenska",
+        "SAAME": "Saameksi",
+        "SUOMI": "Lorem Ipsum",
+      },
       "hyvaksyja": "A123",
       "id": 1,
       "kielitiedot": Object {
