@@ -1,6 +1,5 @@
-import Button from "@components/button/Button";
 import { Link } from "@mui/material";
-import { AloitusKuulutusJulkaisu, Kieli } from "@services/api";
+import { AloitusKuulutusJulkaisu } from "@services/api";
 import dayjs from "dayjs";
 import { lowerCase } from "lodash";
 import log from "loglevel";
@@ -11,12 +10,12 @@ interface Props {
 }
 
 export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu }: Props): ReactElement {
-  const naytaEsikatselu = async (action: string, kieli: Kieli | undefined | null) => {
-    log.info("Näytä esikatselu ", kieli);
-    if (!action) {
-      return;
-    }
-  };
+  // const naytaEsikatselu = async (action: string, kieli: Kieli | undefined | null) => {
+  //   log.info("Näytä esikatselu ", kieli);
+  //   if (!action) {
+  //     return;
+  //   }
+  // };
 
   return (
     <>
