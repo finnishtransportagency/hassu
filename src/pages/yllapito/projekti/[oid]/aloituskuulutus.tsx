@@ -38,6 +38,7 @@ import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import TextInput from "@components/form/TextInput";
 import { lowerCase } from "lodash";
 import dayjs from "dayjs";
+import HassuDialog from "@components/HassuDialog";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
 type RequiredProjektiFields = Required<{
@@ -98,6 +99,7 @@ export default function Aloituskuulutus({
   const pdfFormRef = useRef<HTMLFormElement | null>(null);
   const [formContext, setFormContext] = useState<Projekti | undefined>(undefined);
   const [open, setOpen] = useState(false);
+  const [openHyvaksy, setOpenHyvaksy] = useState(false);
 
   useEffect(() => {
     if (router.isReady) {
@@ -250,7 +252,7 @@ export default function Aloituskuulutus({
 
   const hyvaksyKuulutus = async () => {
     log.debug("hyväksy kuulutus");
-    //await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
+    await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
   };
 
   const vaihdaAloituskuulutuksenTila = async (toiminto: TilasiirtymaToiminto, viesti: string, syy?: string) => {
@@ -276,6 +278,14 @@ export default function Aloituskuulutus({
 
   const handleClickClose = () => {
     setOpen(false);
+  };
+
+  const handleClickOpenHyvaksy = () => {
+    setOpenHyvaksy(true);
+  };
+
+  const handleClickCloseHyvaksy = () => {
+    setOpenHyvaksy(false);
   };
 
   const showPDFPreview = (formData: FormValues, action: string, kieli: Kieli) => {
@@ -504,12 +514,12 @@ export default function Aloituskuulutus({
         <>
           <div className="flex gap-6 justify-end">
             <Button onClick={handleClickOpen}>Palauta</Button>
-            <Button primary onClick={handleSubmit(hyvaksyKuulutus)}>
+            <Button primary onClick={handleClickOpenHyvaksy}>
               Hyväksy ja lähetä
             </Button>
           </div>
           <div>
-            <Dialog open={open} onClose={handleClickClose} fullWidth={true} maxWidth={"md"}>
+            <HassuDialog open={open} onClose={handleClickClose}>
               <DialogTitle>
                 <div className="vayla-dialog-title">Kuulutuksen palauttaminen</div>
               </DialogTitle>
@@ -543,7 +553,65 @@ export default function Aloituskuulutus({
                   </div>
                 </form>
               </DialogContent>
-            </Dialog>
+            </HassuDialog>
+          </div>
+          <div>
+            <HassuDialog open={openHyvaksy} onClose={handleClickCloseHyvaksy}>
+              <DialogTitle>
+                <div className="vayla-dialog-title">Kuulutuksen hyväksyminen ja ilmoituksen lähettäminen</div>
+              </DialogTitle>
+              <DialogContent>
+                <form>
+                  <p>
+                    Olet hyväksymässä kuulutuksen ja käynnistämässä siihen liittyvän ilmoituksen automaattisen
+                    lähettämisen. Ilmoitus kuulutuksesta lähetetään seuraaville:
+                  </p>
+                  <div className="content">
+                    <p>Viranomaiset</p>
+                    <ul className="vayla-dialog-list">
+                      {projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => (
+                        <li key={kunta.nimi}>
+                          {kunta.nimi}, {kunta.sahkoposti}
+                        </li>
+                      ))}
+                    </ul>
+                    <p>Kunnat</p>
+                    <ul className="vayla-dialog-list">
+                      {projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => (
+                        <li key={kunta.nimi}>
+                          {kunta.nimi}, {kunta.sahkoposti}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="content">
+                    <p>
+                      Jos aloituskuulutukseen pitää tehdä muutoksia hyväksymisen jälkeen, tulee aloituskuulutus avata
+                      uudelleen ja lähettää päivitetyt ilmoitukset asianosaisille. Kuulutuspäivän jälkeen tulevat
+                      muutostarpeet vaativat aloituksen uudelleen kuuluttamisen.
+                    </p>
+                    <p>
+                      Klikkaamalla Hyväksy ja lähetä -painiketta vahvistat kuulutuksen tarkastetuksi ja hyväksyt sen
+                      julkaisun kuulutuspäivänä sekä ilmoituksien lähettämisen. Ilmoitukset lähetetään automaattisesti
+                      painikkeen klikkaamisen jälkeen.
+                    </p>
+                  </div>
+                  <div className="flex gap-6 justify-end pt-6">
+                    <Button primary onClick={handleSubmit(hyvaksyKuulutus)}>
+                      Hyväksy ja lähetä
+                    </Button>
+                    <Button
+                      onClick={(e) => {
+                        handleClickCloseHyvaksy();
+                        e.preventDefault();
+                      }}
+                    >
+                      Peruuta
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </HassuDialog>
           </div>
         </>
       )}
