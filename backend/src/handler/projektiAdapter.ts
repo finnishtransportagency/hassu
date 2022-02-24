@@ -1,14 +1,23 @@
 import {
   AloitusKuulutus,
   AloitusKuulutusJulkaisu,
+  AloitusKuulutusPDF,
   DBProjekti,
   Kielitiedot,
+  LocalizedMap,
   Suunnitelma,
   SuunnitteluSopimus,
   Velho,
   Yhteystieto,
 } from "../database/model/projekti";
 import * as API from "../../../common/graphql/apiModel";
+import {
+  AloitusKuulutusInput,
+  AloitusKuulutusPDFt,
+  HankkeenKuvaukset,
+  HankkeenKuvauksetInput,
+  Kieli,
+} from "../../../common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import { personSearch } from "../personSearch/personSearchClient";
@@ -68,7 +77,7 @@ export class ProjektiAdapter {
       {
         oid,
         muistiinpano,
-        aloitusKuulutus,
+        aloitusKuulutus: adaptAloitusKuulutusToSave(aloitusKuulutus),
         suunnitteluSopimus: adaptSuunnitteluSopimusToSave(projekti, suunnitteluSopimus),
         kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet(),
         kielitiedot,
@@ -111,7 +120,22 @@ function adaptSuunnitteluSopimusToSave(
     const { logo, ...rest } = suunnitteluSopimusInput;
     return { ...rest, logo: logo || projekti.suunnitteluSopimus?.logo };
   }
-  return suunnitteluSopimusInput as null | undefined;
+  return suunnitteluSopimusInput as undefined;
+}
+
+function adaptHankkeenKuvausToSave(hankkeenKuvaus: HankkeenKuvauksetInput): LocalizedMap<string> {
+  if (!hankkeenKuvaus) {
+    return undefined;
+  }
+  return { ...hankkeenKuvaus };
+}
+
+function adaptAloitusKuulutusToSave(aloitusKuulutus: AloitusKuulutusInput): AloitusKuulutus | null | undefined {
+  if (aloitusKuulutus) {
+    const { hankkeenKuvaus, ...rest } = aloitusKuulutus;
+    return { ...rest, hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus) };
+  }
+  return aloitusKuulutus as undefined;
 }
 
 function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.AloitusKuulutus | undefined {
@@ -126,8 +150,9 @@ function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.AloitusKuu
     );
     return {
       __typename: "AloitusKuulutus",
-      esitettavatYhteystiedot: yhteystiedot,
       ...otherKuulutusFields,
+      esitettavatYhteystiedot: yhteystiedot,
+      hankkeenKuvaus: adaptHankkeenKuvaus(kuulutus.hankkeenKuvaus),
     };
   }
   return kuulutus as undefined;
@@ -153,6 +178,38 @@ function adaptYhteystiedot(yhteystiedot: Yhteystieto[]): API.Yhteystieto[] {
   return [];
 }
 
+function adaptJulkaisuPDFPaths(
+  oid: string,
+  aloitusKuulutusPDFS: LocalizedMap<AloitusKuulutusPDF>
+): AloitusKuulutusPDFt | undefined {
+  if (!aloitusKuulutusPDFS) {
+    return undefined;
+  }
+
+  const result = {};
+  for (const kieli in aloitusKuulutusPDFS) {
+    result[kieli] = {
+      aloituskuulutusPDFPath: fileService.getYllapitoPathForProjektiFile(
+        oid,
+        aloitusKuulutusPDFS[kieli].aloituskuulutusPDFPath
+      ),
+      aloituskuulutusIlmoitusPDFPath: fileService.getYllapitoPathForProjektiFile(
+        oid,
+        aloitusKuulutusPDFS[kieli].aloituskuulutusIlmoitusPDFPath
+      ),
+    } as AloitusKuulutusPDF;
+  }
+  return { __typename: "AloitusKuulutusPDFt", SUOMI: result[Kieli.SUOMI], ...result };
+}
+
+function adaptHankkeenKuvaus(hankkeenKuvaus: LocalizedMap<string>): HankkeenKuvaukset {
+  return {
+    __typename: "HankkeenKuvaukset",
+    SUOMI: hankkeenKuvaus.SUOMI,
+    ...hankkeenKuvaus,
+  };
+}
+
 function adaptAloitusKuulutusJulkaisut(
   oid: string,
   aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null
@@ -164,31 +221,12 @@ function adaptAloitusKuulutusJulkaisut(
       return {
         ...fieldsToCopyAsIs,
         __typename: "AloitusKuulutusJulkaisu",
+        hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
         yhteystiedot: adaptYhteystiedot(yhteystiedot),
         velho: adaptVelho(velho),
         suunnitteluSopimus: adaptSuunnitteluSopimus(suunnitteluSopimus),
         kielitiedot: adaptKielitiedot(kielitiedot),
-        aloituskuulutusPDFPath: fileService.getYllapitoPathForProjektiFile(oid, julkaisu.aloituskuulutusPDFPath),
-        aloituskuulutusPDFPathRuotsi: fileService.getYllapitoPathForProjektiFile(
-          oid,
-          julkaisu.aloituskuulutusPDFPathRuotsi
-        ),
-        aloituskuulutusPDFPathSaame: fileService.getYllapitoPathForProjektiFile(
-          oid,
-          julkaisu.aloituskuulutusPDFPathSaame
-        ),
-        aloituskuulutusIlmoitusPDFPath: fileService.getYllapitoPathForProjektiFile(
-          oid,
-          julkaisu.aloituskuulutusIlmoitusPDFPath
-        ),
-        aloituskuulutusIlmoitusPDFPathRuotsi: fileService.getYllapitoPathForProjektiFile(
-          oid,
-          julkaisu.aloituskuulutusIlmoitusPDFPathRuotsi
-        ),
-        aloituskuulutusIlmoitusPDFPathSaame: fileService.getYllapitoPathForProjektiFile(
-          oid,
-          julkaisu.aloituskuulutusIlmoitusPDFPathSaame
-        ),
+        aloituskuulutusPDF: adaptJulkaisuPDFPaths(oid, julkaisu.aloituskuulutusPDF),
       };
     });
   }

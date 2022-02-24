@@ -9,7 +9,7 @@ import { requirePermissionLuku, requirePermissionMuokkaa } from "../user";
 import { requireProjektiPaallikko } from "../user/userService";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { asiakirjaAdapter } from "./asiakirjaAdapter";
-import { AloitusKuulutus, AloitusKuulutusJulkaisu, DBProjekti } from "../database/model/projekti";
+import { AloitusKuulutus, AloitusKuulutusJulkaisu, AloitusKuulutusPDF, DBProjekti } from "../database/model/projekti";
 import { asiakirjaService } from "../asiakirja/asiakirjaService";
 import { fileService } from "../files/fileService";
 import { sendEmail } from "../email/email";
@@ -80,10 +80,7 @@ async function approve(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus) {
 
   const kielitiedot = julkaisuWaitingForApproval.kielitiedot;
 
-  async function generatePDFsForLanguage(kieli: Kieli | Kieli.RUOTSI | Kieli.SAAME, julkaisu: AloitusKuulutusJulkaisu) {
-    if (!kieli) {
-      return;
-    }
+  async function generatePDFsForLanguage(kieli: Kieli, julkaisu: AloitusKuulutusJulkaisu): Promise<AloitusKuulutusPDF> {
     const aloituskuulutusPDFPath = await createAloituskuulutusPDF(
       AsiakirjaTyyppi.ALOITUSKUULUTUS,
       julkaisu,
@@ -96,20 +93,21 @@ async function approve(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus) {
       projekti,
       kieli
     );
-    if (kieli == Kieli.SUOMI) {
-      julkaisu.aloituskuulutusPDFPath = aloituskuulutusPDFPath;
-      julkaisu.aloituskuulutusIlmoitusPDFPath = aloituskuulutusIlmoitusPDFPath;
-    } else if (kieli == Kieli.RUOTSI) {
-      julkaisu.aloituskuulutusPDFPathRuotsi = aloituskuulutusPDFPath;
-      julkaisu.aloituskuulutusIlmoitusPDFPathRuotsi = aloituskuulutusIlmoitusPDFPath;
-    } else if (kieli == Kieli.SAAME) {
-      julkaisu.aloituskuulutusPDFPathSaame = aloituskuulutusPDFPath;
-      julkaisu.aloituskuulutusIlmoitusPDFPathSaame = aloituskuulutusIlmoitusPDFPath;
-    }
+    return { aloituskuulutusPDFPath, aloituskuulutusIlmoitusPDFPath };
   }
 
-  await generatePDFsForLanguage(kielitiedot.ensisijainenKieli, julkaisuWaitingForApproval);
-  await generatePDFsForLanguage(kielitiedot.toissijainenKieli, julkaisuWaitingForApproval);
+  julkaisuWaitingForApproval.aloituskuulutusPDF = {};
+  julkaisuWaitingForApproval.aloituskuulutusPDF[kielitiedot.ensisijainenKieli] = await generatePDFsForLanguage(
+    kielitiedot.ensisijainenKieli,
+    julkaisuWaitingForApproval
+  );
+
+  if (kielitiedot.toissijainenKieli) {
+    julkaisuWaitingForApproval.aloituskuulutusPDF[kielitiedot.toissijainenKieli] = await generatePDFsForLanguage(
+      kielitiedot.toissijainenKieli,
+      julkaisuWaitingForApproval
+    );
+  }
 
   await projektiDatabase.updateAloitusKuulutusJulkaisu(projekti, julkaisuWaitingForApproval);
 }

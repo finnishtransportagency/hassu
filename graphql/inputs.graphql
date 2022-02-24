@@ -28,12 +28,16 @@ input YhteystietoInput {
   sahkoposti: String!
 }
 
+input HankkeenKuvauksetInput {
+  SUOMI: String!
+  RUOTSI: String
+  SAAME: String
+}
+
 input AloitusKuulutusInput {
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
-  hankkeenKuvaus: String
-  hankkeenKuvausRuotsi: String
-  hankkeenKuvausSaame: String
+  hankkeenKuvaus: HankkeenKuvauksetInput
   elyKeskus: String
   esitettavatYhteystiedot: [YhteystietoInput]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput

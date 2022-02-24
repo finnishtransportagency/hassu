@@ -105,9 +105,12 @@ describe("Api", () => {
     const aloitusKuulutus: AloitusKuulutus = {
       __typename: "AloitusKuulutus",
       kuulutusPaiva: "2022-01-02",
-      hankkeenKuvaus: "Lorem Ipsum",
-      hankkeenKuvausRuotsi: "På Svenska",
-      hankkeenKuvausSaame: "Saameksi",
+      hankkeenKuvaus: {
+        __typename: "HankkeenKuvaukset",
+        SUOMI: "Lorem Ipsum",
+        RUOTSI: "På Svenska",
+        SAAME: "Saameksi",
+      },
       siirtyySuunnitteluVaiheeseen: "2022-01-01",
       elyKeskus: "Pirkanmaa",
       esitettavatYhteystiedot: [

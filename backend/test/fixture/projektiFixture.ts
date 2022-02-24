@@ -1,5 +1,4 @@
 import {
-  AloitusKuulutus,
   AloitusKuulutusInput,
   Kieli,
   Projekti,
@@ -14,7 +13,6 @@ import { DBProjekti } from "../../src/database/model/projekti";
 export class ProjektiFixture {
   public PROJEKTI1_NIMI = "Testiprojekti 1";
   public PROJEKTI1_MUISTIINPANO_1 = "Testiprojekti 1:n muistiinpano";
-  public PROJEKTI1_MUISTIINPANO_2 = "Testiprojekti 1:n muistiinpano 2";
   public PROJEKTI1_OID = "1";
 
   static pekkaProjariProjektiKayttaja: ProjektiKayttaja = {
@@ -83,9 +81,8 @@ export class ProjektiFixture {
 
   aloitusKuulutusInput: AloitusKuulutusInput = {
     kuulutusPaiva: "2022-01-02",
-    hankkeenKuvaus: "Lorem Ipsum",
-    hankkeenKuvausRuotsi: "På Svenska",
-    hankkeenKuvausSaame: "Saameksi",
+    hankkeenKuvaus: { SUOMI: "Lorem Ipsum", RUOTSI: "På Svenska", SAAME: "Saameksi" },
+
     siirtyySuunnitteluVaiheeseen: "2022-01-01",
     elyKeskus: "Pirkanmaa",
     esitettavatYhteystiedot: [
@@ -97,26 +94,6 @@ export class ProjektiFixture {
         puhelinnumero: "0293121213",
       },
     ],
-  };
-
-  aloitusKuulutus: AloitusKuulutus = {
-    __typename: "AloitusKuulutus",
-    ...this.aloitusKuulutusInput,
-    ilmoituksenVastaanottajat: {
-      __typename: "IlmoituksenVastaanottajat",
-      kunnat: this.aloitusKuulutusInput.ilmoituksenVastaanottajat?.kunnat?.map((k) => ({
-        __typename: "KuntaVastaanottaja",
-        ...k,
-      })),
-      viranomaiset: this.aloitusKuulutusInput.ilmoituksenVastaanottajat?.viranomaiset?.map((v) => ({
-        __typename: "ViranomaisVastaanottaja",
-        ...v,
-      })),
-    },
-    esitettavatYhteystiedot: this.aloitusKuulutusInput.esitettavatYhteystiedot.map((yt) => ({
-      __typename: "Yhteystieto",
-      ...yt,
-    })),
   };
 
   dbProjekti1: DBProjekti = {
@@ -158,9 +135,11 @@ export class ProjektiFixture {
     },
     aloitusKuulutus: {
       kuulutusPaiva: "2022-01-02",
-      hankkeenKuvaus: "Lorem Ipsum",
-      hankkeenKuvausRuotsi: "På svenska",
-      hankkeenKuvausSaame: "Saameksi",
+      hankkeenKuvaus: {
+        SUOMI: "Lorem Ipsum",
+        RUOTSI: "På svenska",
+        SAAME: "Saameksi",
+      },
       siirtyySuunnitteluVaiheeseen: "2022-01-01",
       elyKeskus: "Pirkanmaa",
       esitettavatYhteystiedot: [

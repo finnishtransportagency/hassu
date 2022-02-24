@@ -5,17 +5,18 @@ import { puhelinNumeroSchema } from "./puhelinNumero";
 
 const maxAloituskuulutusLength = 2000;
 
+let hankkeenKuvaus = Yup.string()
+  .max(
+    maxAloituskuulutusLength,
+    `Aloituskuulutukseen voidaan kirjoittaa maksimissaan ${maxAloituskuulutusLength} merkkiä`
+  )
+  .required("Hankkeen kuvaus ei voi olla tyhjä")
+  .nullable();
 export const aloituskuulutusSchema = Yup.object().shape({
   oid: Yup.string().required(),
   kayttoOikeudet: kayttoOikeudetSchema,
   aloitusKuulutus: Yup.object().shape({
-    hankkeenKuvaus: Yup.string()
-      .max(
-        maxAloituskuulutusLength,
-        `Aloituskuulutukseen voidaan kirjoittaa maksimissaan ${maxAloituskuulutusLength} merkkiä`
-      )
-      .required("Hankkeen kuvaus ei voi olla tyhjä")
-      .nullable(),
+    hankkeenKuvaus: Yup.object().shape({ SUOMI: hankkeenKuvaus }),
     kuulutusPaiva: Yup.string()
       .required("Kuulutuspäivä ei voi olla tyhjä")
       .nullable()

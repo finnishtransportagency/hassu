@@ -3,9 +3,11 @@
 exports[`asiakirjaService should generate pdf succesfully 1`] = `
 Object {
   "elyKeskus": "Pirkanmaa",
-  "hankkeenKuvaus": "Lorem Ipsum",
-  "hankkeenKuvausRuotsi": "På svenska",
-  "hankkeenKuvausSaame": "Saameksi",
+  "hankkeenKuvaus": Object {
+    "RUOTSI": "På svenska",
+    "SAAME": "Saameksi",
+    "SUOMI": "Lorem Ipsum",
+  },
   "id": 1,
   "kielitiedot": Object {
     "ensisijainenKieli": "SUOMI",
