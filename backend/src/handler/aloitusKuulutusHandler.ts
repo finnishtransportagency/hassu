@@ -96,14 +96,14 @@ async function approve(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus) {
     return { aloituskuulutusPDFPath, aloituskuulutusIlmoitusPDFPath };
   }
 
-  julkaisuWaitingForApproval.aloituskuulutusPDF = {};
-  julkaisuWaitingForApproval.aloituskuulutusPDF[kielitiedot.ensisijainenKieli] = await generatePDFsForLanguage(
+  julkaisuWaitingForApproval.aloituskuulutusPDFt = {};
+  julkaisuWaitingForApproval.aloituskuulutusPDFt[kielitiedot.ensisijainenKieli] = await generatePDFsForLanguage(
     kielitiedot.ensisijainenKieli,
     julkaisuWaitingForApproval
   );
 
   if (kielitiedot.toissijainenKieli) {
-    julkaisuWaitingForApproval.aloituskuulutusPDF[kielitiedot.toissijainenKieli] = await generatePDFsForLanguage(
+    julkaisuWaitingForApproval.aloituskuulutusPDFt[kielitiedot.toissijainenKieli] = await generatePDFsForLanguage(
       kielitiedot.toissijainenKieli,
       julkaisuWaitingForApproval
     );

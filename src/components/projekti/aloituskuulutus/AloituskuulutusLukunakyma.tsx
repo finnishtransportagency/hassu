@@ -10,7 +10,7 @@ interface Props {
   aloituskuulutusjulkaisu?: AloitusKuulutusJulkaisu | null;
 }
 
-export default function AloituskuulutusRO({ aloituskuulutusjulkaisu, oid }: Props): ReactElement {
+export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, oid }: Props): ReactElement {
   const muotoilePvm = (pvm: string | null | undefined) => {
     if (!pvm) {
       return;
@@ -20,7 +20,12 @@ export default function AloituskuulutusRO({ aloituskuulutusjulkaisu, oid }: Prop
 
   return (
     <>
-      {aloituskuulutusjulkaisu?.tila === AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA && (
+      {aloituskuulutusjulkaisu?.tila === AloitusKuulutusTila.HYVAKSYTTY && (
+        <Notification type={NotificationType.WARN}>
+          Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä {muotoilePvm(aloituskuulutusjulkaisu.kuulutusPaiva)}
+        </Notification>
+      )}
+      {aloituskuulutusjulkaisu?.tila !== AloitusKuulutusTila.HYVAKSYTTY && (
         <Notification type={NotificationType.WARN}>
           Aloituskuulutus on hyväksyttävänä projektipäälliköllä. Jos kuulutusta tarvitsee muokata, ota yhteys
           projektipäällikköön.
@@ -80,12 +85,12 @@ export default function AloituskuulutusRO({ aloituskuulutusjulkaisu, oid }: Prop
           </p>
         </div>
       )}
-      <AloituskuulutusPDFEsikatselu
-        oid={oid}
-        aloituskuulutusjulkaisu={aloituskuulutusjulkaisu}
-      />
-      <AloituskuulutusTiedostot aloituskuulutusjulkaisu={aloituskuulutusjulkaisu}/>
-
+      {aloituskuulutusjulkaisu?.tila !== AloitusKuulutusTila.HYVAKSYTTY && (
+        <AloituskuulutusPDFEsikatselu oid={oid} aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} />
+      )}
+      {aloituskuulutusjulkaisu?.tila === AloitusKuulutusTila.HYVAKSYTTY && (
+        <AloituskuulutusTiedostot aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} />
+      )}
     </>
   );
 }

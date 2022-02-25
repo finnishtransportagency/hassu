@@ -50,7 +50,7 @@ export type AloitusKuulutusJulkaisu = {
   velho: Velho;
   suunnitteluSopimus?: SuunnitteluSopimus | null;
   kielitiedot?: Kielitiedot | null;
-  aloituskuulutusPDF?: LocalizedMap<AloitusKuulutusPDF>;
+  aloituskuulutusPDFt?: LocalizedMap<AloitusKuulutusPDF>;
   tila?: AloitusKuulutusTila | null;
   muokkaaja?: string | null;
   hyvaksyja?: string | null;

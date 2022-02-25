@@ -30,7 +30,7 @@ import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import { cloneDeep, find } from "lodash";
 import useSnackbars from "src/hooks/useSnackbars";
 import { aloituskuulutusSchema } from "src/schemas/aloituskuulutus";
-import AloituskuulutusRO from "@components/projekti/aloituskuulutus/AloituskuulutusRO";
+import AloituskuulutusLukunakyma from "@components/projekti/aloituskuulutus/AloituskuulutusLukunakyma";
 import IlmoituksenVastaanottajat from "@components/projekti/aloituskuulutus/IlmoituksenVastaanottajat";
 import { GetServerSideProps } from "next";
 import { setupLambdaMonitoring } from "backend/src/aws/monitoring";
@@ -501,12 +501,16 @@ export default function Aloituskuulutus({
           </div>
         </>
       )}
-      {getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA) && (
+      {!voiMuokata && (
         <FormProvider {...useFormReturn}>
-          <AloituskuulutusRO
+          <AloituskuulutusLukunakyma
             oid={projekti?.oid}
-            aloituskuulutusjulkaisu={getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA)}
-          ></AloituskuulutusRO>
+            aloituskuulutusjulkaisu={
+              odottaaJulkaisua()
+                ? getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.HYVAKSYTTY)
+                : getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA)
+            }
+          ></AloituskuulutusLukunakyma>
         </FormProvider>
       )}
 

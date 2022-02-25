@@ -226,7 +226,7 @@ function adaptAloitusKuulutusJulkaisut(
         velho: adaptVelho(velho),
         suunnitteluSopimus: adaptSuunnitteluSopimus(suunnitteluSopimus),
         kielitiedot: adaptKielitiedot(kielitiedot),
-        aloituskuulutusPDF: adaptJulkaisuPDFPaths(oid, julkaisu.aloituskuulutusPDF),
+        aloituskuulutusPDFt: adaptJulkaisuPDFPaths(oid, julkaisu.aloituskuulutusPDFt),
       };
     });
   }
