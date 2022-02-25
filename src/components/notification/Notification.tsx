@@ -7,6 +7,7 @@ import classNames from "classnames";
 export enum NotificationType {
   DEFAULT = "default",
   INFO = "info",
+  INFO_GREEN = "info-green",
   INFO_GRAY = "info_gray",
   WARN = "warn",
   ERROR = "error",
@@ -16,6 +17,7 @@ const defaultIcons = new Map<NotificationType, IconProp | undefined>([
   [NotificationType.DEFAULT, undefined],
   [NotificationType.INFO, "info-circle"],
   [NotificationType.INFO_GRAY, "info-circle"],
+  [NotificationType.INFO_GREEN, "info-circle"],
   [NotificationType.WARN, "exclamation-circle"],
   [NotificationType.ERROR, "exclamation-triangle"],
 ]);

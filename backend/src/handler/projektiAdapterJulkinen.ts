@@ -1,16 +1,18 @@
-import { AloitusKuulutusJulkaisu, AloitusKuulutusPDF, DBProjekti, LocalizedMap } from "../database/model/projekti";
+import {
+  AloitusKuulutusJulkaisu,
+  AloitusKuulutusPDF,
+  DBProjekti,
+  LocalizedMap,
+  SuunnitteluSopimus,
+} from "../database/model/projekti";
 import * as API from "../../../common/graphql/apiModel";
 import { AloitusKuulutusPDFt, AloitusKuulutusTila, Kieli, ProjektiJulkinen } from "../../../common/graphql/apiModel";
 import pickBy from "lodash/pickBy";
 import dayjs from "dayjs";
-import {
-  adaptHankkeenKuvaus,
-  adaptKielitiedot,
-  adaptSuunnitteluSopimus,
-  adaptVelho,
-  adaptYhteystiedot,
-} from "./projektiAdapter";
+import { adaptHankkeenKuvaus, adaptKielitiedot, adaptVelho, adaptYhteystiedot } from "./projektiAdapter";
 import { fileService } from "../files/fileService";
+import { log } from "../logger";
+import { parseDate } from "../util/dateUtil";
 
 class ProjektiAdapterJulkinen {
   public adaptProjekti(dbProjekti: DBProjekti): API.ProjektiJulkinen | undefined {
@@ -26,6 +28,7 @@ class ProjektiAdapterJulkinen {
     const projekti: ProjektiJulkinen = {
       __typename: "ProjektiJulkinen",
       oid: dbProjekti.oid,
+      euRahoitus: dbProjekti.euRahoitus,
       aloitusKuulutusJulkaisut,
     };
     return removeUndefinedFields(projekti) as API.ProjektiJulkinen;
@@ -49,13 +52,27 @@ class ProjektiAdapterJulkinen {
             hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
             yhteystiedot: adaptYhteystiedot(yhteystiedot),
             velho: adaptVelho(velho),
-            suunnitteluSopimus: adaptSuunnitteluSopimus(suunnitteluSopimus),
+            suunnitteluSopimus: this.adaptSuunnitteluSopimus(oid, suunnitteluSopimus),
             kielitiedot: adaptKielitiedot(kielitiedot),
-            aloituskuulutusPDF: this.adaptJulkaisuPDFPaths(oid, julkaisu.aloituskuulutusPDF),
+            aloituskuulutusPDFt: this.adaptJulkaisuPDFPaths(oid, julkaisu.aloituskuulutusPDFt),
           };
         });
     }
     return undefined;
+  }
+
+  adaptSuunnitteluSopimus(
+    oid: string,
+    suunnitteluSopimus?: SuunnitteluSopimus | null
+  ): API.SuunnitteluSopimus | undefined | null {
+    if (suunnitteluSopimus) {
+      return {
+        __typename: "SuunnitteluSopimus",
+        ...suunnitteluSopimus,
+        logo: fileService.getPublicPathForProjektiFile(oid, suunnitteluSopimus.logo),
+      };
+    }
+    return suunnitteluSopimus as undefined | null;
   }
 
   adaptJulkaisuPDFPaths(
@@ -85,14 +102,18 @@ class ProjektiAdapterJulkinen {
 
 function checkIfAloitusKuulutusJulkaisutIsPublic(aloitusKuulutusJulkaisut: API.AloitusKuulutusJulkaisu[]): boolean {
   if (!(aloitusKuulutusJulkaisut && aloitusKuulutusJulkaisut.length == 1)) {
+    log.info("Projektilla ei ole hyväksyttyä aloituskuulutusta");
     return false;
   }
 
   const julkaisu = aloitusKuulutusJulkaisut[0];
-  if (julkaisu.kuulutusPaiva && dayjs(julkaisu.kuulutusPaiva).isAfter(dayjs())) {
+  if (julkaisu.kuulutusPaiva && parseDate(julkaisu.kuulutusPaiva).isAfter(dayjs())) {
+    log.info("Projektin aloituskuulutuksen kuulutuspäivä on tulevaisuudessa", {
+      kuulutusPaiva: parseDate(julkaisu.kuulutusPaiva).toISOString(),
+      now: dayjs().toISOString(),
+    });
     return false;
   }
-
   return true;
 }
 

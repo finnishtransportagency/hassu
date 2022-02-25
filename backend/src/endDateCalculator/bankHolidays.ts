@@ -9,7 +9,8 @@ export class BankHolidays {
   }
 
   isBankHoliday(date: Dayjs) {
-    const isWeekened = date.day() === 0 || date.day() === 6;
-    return isWeekened || !!this.bankHolidays.find((bankHoliday) => bankHoliday.isSame(date));
+    const pureDate = date.set("hours", 0).set("minutes", 0);
+    const isWeekened = pureDate.day() === 0 || pureDate.day() === 6;
+    return isWeekened || !!this.bankHolidays.find((bankHoliday) => bankHoliday.isSame(pureDate));
   }
 }

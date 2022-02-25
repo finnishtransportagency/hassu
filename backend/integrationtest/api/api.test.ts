@@ -56,7 +56,7 @@ describe("Api", () => {
     sandbox.stub(openSearchClient, "putProjekti");
   });
 
-  it.only("should search, load and save a project", async function () {
+  it("should search, load and save a project", async function () {
     if (process.env.SKIP_VELHO_TESTS) {
       this.skip();
     }

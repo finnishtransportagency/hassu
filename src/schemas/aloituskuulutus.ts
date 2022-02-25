@@ -2,6 +2,7 @@ import { IlmoitettavaViranomainen, Projekti } from "@services/api";
 import * as Yup from "yup";
 import { kayttoOikeudetSchema } from "./kayttoOikeudet";
 import { puhelinNumeroSchema } from "./puhelinNumero";
+import { isDevEnvironment } from "@services/config";
 
 const maxAloituskuulutusLength = 2000;
 
@@ -12,6 +13,19 @@ let hankkeenKuvaus = Yup.string()
   )
   .required("Hankkeen kuvaus ei voi olla tyhjä")
   .nullable();
+
+function validateDate(dateString: string) {
+  try {
+    const dateString2 = new Date(dateString!).toISOString().split("T")[0];
+    if (isDevEnvironment) {
+      return dateString!.startsWith(dateString2);
+    }
+    return dateString2 === dateString;
+  } catch {
+    return false;
+  }
+}
+
 export const aloituskuulutusSchema = Yup.object().shape({
   oid: Yup.string().required(),
   kayttoOikeudet: kayttoOikeudetSchema,
@@ -21,16 +35,10 @@ export const aloituskuulutusSchema = Yup.object().shape({
       .required("Kuulutuspäivä ei voi olla tyhjä")
       .nullable()
       .test("is-valid-date", "Virheellinen päivämäärä", (dateString) => {
-        let validDate = false;
-        try {
-          const dateString2 = new Date(dateString!).toISOString().split("T")[0];
-          if (dateString2 === dateString) {
-            validDate = true;
-          }
-        } catch {
-          validDate = false;
+        if (!dateString) {
+          return false;
         }
-        return validDate;
+        return validateDate(dateString);
       })
       .test("not-in-past", "Kuulutuspäivää ei voida asettaa menneisyyteen", (dateString) => {
         // KuulutusPaiva is not required when saved as a draft.
@@ -47,16 +55,7 @@ export const aloituskuulutusSchema = Yup.object().shape({
       if (!dateString) {
         return true;
       }
-      let validDate = false;
-      try {
-        const dateString2 = new Date(dateString!).toISOString().split("T")[0];
-        if (dateString2 === dateString) {
-          validDate = true;
-        }
-      } catch {
-        validDate = false;
-      }
-      return validDate;
+      return validateDate(dateString);
     }),
     esitettavatYhteystiedot: Yup.array()
       .notRequired()

@@ -1,4 +1,4 @@
-import { get } from "lodash";
+import get from "lodash/get";
 import { config } from "../config";
 import { DBProjekti } from "../database/model/projekti";
 import { EmailOptions } from "./email";

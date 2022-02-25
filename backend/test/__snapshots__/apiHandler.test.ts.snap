@@ -568,14 +568,14 @@ Object {
     "aloitusKuulutusJulkaisut": Array [
       Object {
         "__typename": "AloitusKuulutusJulkaisu",
-        "aloituskuulutusPDF": Object {
+        "aloituskuulutusPDFt": Object {
           "SAAME": Object {
-            "aloituskuulutusIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Projektin nimi saameksi.pdf",
-            "aloituskuulutusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Projektin nimi saameksi.pdf",
+            "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Projektin nimi saameksi.pdf",
+            "aloituskuulutusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Projektin nimi saameksi.pdf",
           },
           "SUOMI": Object {
-            "aloituskuulutusIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf",
-            "aloituskuulutusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf",
+            "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf",
+            "aloituskuulutusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf",
           },
           "__typename": "AloitusKuulutusPDFt",
         },
@@ -623,6 +623,7 @@ Object {
         ],
       },
     ],
+    "euRahoitus": false,
     "oid": "1",
   },
 }

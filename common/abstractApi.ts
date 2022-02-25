@@ -14,6 +14,7 @@ import {
   NykyinenKayttaja,
   PDF,
   Projekti,
+  ProjektiJulkinen,
   SiirraTilaMutationVariables,
   TallennaProjektiInput,
   TallennaProjektiMutationVariables,
@@ -104,6 +105,12 @@ export abstract class AbstractApi {
 
   async lataaProjekti(oid: string): Promise<Projekti> {
     return await this.callYllapitoAPI(apiConfig.lataaProjekti, {
+      oid,
+    } as LataaProjektiQueryVariables);
+  }
+
+  async lataaProjektiJulkinen(oid: string): Promise<ProjektiJulkinen> {
+    return await this.callAPI(apiConfig.lataaProjekti, {
       oid,
     } as LataaProjektiQueryVariables);
   }

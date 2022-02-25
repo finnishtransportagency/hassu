@@ -6,10 +6,10 @@ Object {
   "aloitusKuulutusJulkaisut": Array [
     Object {
       "__typename": "AloitusKuulutusJulkaisu",
-      "aloituskuulutusPDF": Object {
+      "aloituskuulutusPDFt": Object {
         "SUOMI": Object {
-          "aloituskuulutusIlmoitusPDFPath": "/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf",
-          "aloituskuulutusPDFPath": "/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf",
+          "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf",
+          "aloituskuulutusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf",
         },
         "__typename": "AloitusKuulutusPDFt",
       },
@@ -60,6 +60,7 @@ Object {
       ],
     },
   ],
+  "euRahoitus": false,
   "oid": "1.2.246.578.5.1.2978288874.2711575506",
 }
 `;

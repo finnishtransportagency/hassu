@@ -44,7 +44,7 @@ export class ProjektiAdapter {
       kayttoOikeudet: KayttoOikeudetManager.adaptAPIKayttoOikeudet(kayttoOikeudet),
       tyyppi: velho?.tyyppi || dbProjekti.tyyppi, // remove usage of projekti.tyyppi after all data has been migrated to new format
       aloitusKuulutus: adaptAloitusKuulutus(aloitusKuulutus),
-      suunnitteluSopimus: adaptSuunnitteluSopimus(suunnitteluSopimus),
+      suunnitteluSopimus: adaptSuunnitteluSopimus(dbProjekti.oid, suunnitteluSopimus),
       liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmat(liittyvatSuunnitelmat),
       aloitusKuulutusJulkaisut: adaptAloitusKuulutusJulkaisut(dbProjekti.oid, aloitusKuulutusJulkaisut),
       velho: {
@@ -180,11 +180,16 @@ function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.AloitusKuu
   return kuulutus as undefined;
 }
 
-export function adaptSuunnitteluSopimus(
+function adaptSuunnitteluSopimus(
+  oid: string,
   suunnitteluSopimus?: SuunnitteluSopimus | null
 ): API.SuunnitteluSopimus | undefined | null {
   if (suunnitteluSopimus) {
-    return { __typename: "SuunnitteluSopimus", ...suunnitteluSopimus };
+    return {
+      __typename: "SuunnitteluSopimus",
+      ...suunnitteluSopimus,
+      logo: fileService.getYllapitoPathForProjektiFile(oid, suunnitteluSopimus.logo),
+    };
   }
   return suunnitteluSopimus as undefined | null;
 }
@@ -246,7 +251,7 @@ export function adaptAloitusKuulutusJulkaisut(
         hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
         yhteystiedot: adaptYhteystiedot(yhteystiedot),
         velho: adaptVelho(velho),
-        suunnitteluSopimus: adaptSuunnitteluSopimus(suunnitteluSopimus),
+        suunnitteluSopimus: adaptSuunnitteluSopimus(oid, suunnitteluSopimus),
         kielitiedot: adaptKielitiedot(kielitiedot),
         aloituskuulutusPDFt: adaptJulkaisuPDFPaths(oid, julkaisu.aloituskuulutusPDFt),
       };

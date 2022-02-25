@@ -99,6 +99,7 @@ type Velho {
 type ProjektiJulkinen implements IProjekti {
   oid: String!
   aloitusKuulutusJulkaisut: [AloitusKuulutusJulkaisu!]
+  euRahoitus: Boolean
 }
 
 type Suunnitelma {

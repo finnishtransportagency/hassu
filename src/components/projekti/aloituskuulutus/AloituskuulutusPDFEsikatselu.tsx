@@ -1,6 +1,6 @@
 import Button from "@components/button/Button";
 import { AloitusKuulutusJulkaisu, Kieli } from "@services/api";
-import { lowerCase } from "lodash";
+import lowerCase from "lodash/lowerCase";
 import log from "loglevel";
 import { ReactElement, useRef } from "react";
 

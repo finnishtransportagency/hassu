@@ -1,15 +1,18 @@
 import awsExports from "../../aws-exports";
 import { createAuthLink } from "aws-appsync-auth-link";
 import { createHttpLink } from "apollo-link-http";
-import { API } from "@services/api/commonApi";
+import { API } from "./commonApi";
 import { setContext } from "apollo-link-context";
+import fetch from "node-fetch";
 
 const AWS = require("aws-sdk");
-AWS.config.update({
-  region: awsExports.aws_appsync_region,
-});
+if (awsExports.aws_appsync_region) {
+  AWS.config.update({
+    region: awsExports.aws_appsync_region,
+  });
+}
 
-if (typeof window !== "undefined") {
+if (typeof window !== "undefined" && awsExports.AWS_ACCESS_KEY_ID) {
   AWS.config.update({
     credentials: new AWS.Credentials({
       accessKeyId: awsExports.AWS_ACCESS_KEY_ID,
@@ -46,20 +49,20 @@ function getParamOrDefault(params: URLSearchParams | undefined, name: string, de
   return defaultValue;
 }
 
+const authenticatedVaylaUser = setContext((_, { headers }) => {
+  let params: URLSearchParams | undefined;
+  if (typeof window !== "undefined") {
+    params = window.location?.search ? new URLSearchParams(window.location.search) : undefined;
+  }
+  return {
+    headers: {
+      ...headers,
+      "x-hassudev-uid": getParamOrDefault(params, "x-hassudev-uid", process.env["x-hassudev-uid"]),
+      "x-hassudev-roles": getParamOrDefault(params, "x-hassudev-roles", process.env["x-hassudev-roles"]),
+    },
+  };
+});
 const links = [
-  setContext((_, { headers }) => {
-    let params: URLSearchParams | undefined;
-    if (typeof window !== "undefined") {
-      params = window.location?.search ? new URLSearchParams(window.location.search) : undefined;
-    }
-    return {
-      headers: {
-        ...headers,
-        "x-hassudev-uid": getParamOrDefault(params, "x-hassudev-uid", process.env["x-hassudev-uid"]),
-        "x-hassudev-roles": getParamOrDefault(params, "x-hassudev-roles", process.env["x-hassudev-roles"]),
-      },
-    };
-  }),
   createAuthLink({
     url: awsExports.aws_appsync_graphqlEndpoint,
     region: awsExports.aws_appsync_region,
@@ -67,7 +70,8 @@ const links = [
   }),
   createHttpLink({
     uri: awsExports.aws_appsync_graphqlEndpoint,
+    fetch: fetch as any,
   }),
 ];
 
-export const api = new API(links, links, false);
+export const api = new API(links, [authenticatedVaylaUser].concat(links), false);

@@ -4,9 +4,15 @@ import { ApolloLink, FetchResult, GraphQLRequest } from "apollo-link";
 import { setContext } from "apollo-link-context";
 import gql from "graphql-tag";
 import ApolloClient, { DefaultOptions } from "apollo-client";
-import { InMemoryCache } from "apollo-cache-inmemory";
+import { InMemoryCache, IntrospectionFragmentMatcher } from "apollo-cache-inmemory";
 import log from "loglevel";
 import { onError } from "apollo-link-error";
+import * as introspectionQueryResultData from "./fragmentTypes.json";
+import { IntrospectionResultData } from "apollo-cache-inmemory/lib/types";
+
+const fragmentMatcher = new IntrospectionFragmentMatcher({
+  introspectionQueryResultData: introspectionQueryResultData as IntrospectionResultData,
+});
 
 const defaultOptions: DefaultOptions = {
   watchQuery: {
@@ -56,12 +62,12 @@ export class API extends AbstractApi {
 
     this.publicClient = new ApolloClient({
       link: ApolloLink.from(publicLinks),
-      cache: new InMemoryCache(),
+      cache: new InMemoryCache({ fragmentMatcher }),
       defaultOptions,
     });
     this.authenticatedClient = new ApolloClient({
       link: ApolloLink.from(authenticatedLinks),
-      cache: new InMemoryCache(),
+      cache: new InMemoryCache({ fragmentMatcher }),
       defaultOptions,
     });
   }

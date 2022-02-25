@@ -1,4 +1,4 @@
-import { deburr } from "lodash";
+import deburr from "lodash/deburr";
 import log from "loglevel";
 import { PDF } from "../../../common/graphql/apiModel";
 

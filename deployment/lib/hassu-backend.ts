@@ -57,7 +57,7 @@ export class HassuBackendStack extends cdk.Stack {
     const api = this.createAPI(config);
     const commonEnvironmentVariables = await this.getCommonEnvironmentVariables(config);
     const personSearchUpdaterLambda = await this.createPersonSearchUpdaterLambda(commonEnvironmentVariables);
-    const backendLambda = await this.createBackendLambda(config, commonEnvironmentVariables, personSearchUpdaterLambda);
+    const backendLambda = await this.createBackendLambda(commonEnvironmentVariables, personSearchUpdaterLambda);
     this.attachDatabaseToBackend(backendLambda);
     HassuBackendStack.mapApiResolversToLambda(api, backendLambda);
     this.configureOpenSearchAccess(projektiSearchIndexer, backendLambda);
@@ -65,7 +65,7 @@ export class HassuBackendStack extends cdk.Stack {
     new cdk.CfnOutput(this, "AppSyncAPIKey", {
       value: api.apiKey || "",
     });
-    if (config.isDeveloperEnvironment()) {
+    if (Config.isDeveloperEnvironment()) {
       new cdk.CfnOutput(this, "AppSyncAPIURL", {
         value: api.graphqlUrl || "",
       });
@@ -94,7 +94,7 @@ export class HassuBackendStack extends cdk.Stack {
 
   private createAPI(config: Config) {
     let defaultAuthorization: AuthorizationMode;
-    if (config.isDeveloperEnvironment()) {
+    if (Config.isDeveloperEnvironment()) {
       defaultAuthorization = {
         authorizationType: appsync.AuthorizationType.IAM,
       };
@@ -118,7 +118,7 @@ export class HassuBackendStack extends cdk.Stack {
       authorizationConfig: { defaultAuthorization },
       xrayEnabled: true,
     });
-    if (!config.isDeveloperEnvironment()) {
+    if (!Config.isDeveloperEnvironment()) {
       new WafConfig(this, "Hassu-WAF", {
         api,
         allowedAddresses: Fn.split("\n", config.getInfraParameter("WAFAllowedAddresses")),
@@ -168,12 +168,11 @@ export class HassuBackendStack extends cdk.Stack {
   }
 
   private async createBackendLambda(
-    config: Config,
     commonEnvironmentVariables: Record<string, string>,
     personSearchUpdaterLambda: NodejsFunction
   ) {
     let define;
-    if (config.isDeveloperEnvironment()) {
+    if (Config.isDeveloperEnvironment()) {
       define = {
         // Replace strings during build time
         "process.env.USER_IDENTIFIER_FUNCTIONS": JSON.stringify("../../developer/identifyIAMUser"),

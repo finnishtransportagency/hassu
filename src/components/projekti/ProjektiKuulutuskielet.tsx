@@ -4,7 +4,7 @@ import { useFormContext } from "react-hook-form";
 import FormGroup from "@components/form/FormGroup";
 import Select from "@components/form/Select";
 import { Kieli } from "@services/api";
-import { lowerCase } from "lodash";
+import lowerCase from "lodash/lowerCase";
 
 export default function ProjektiKuulutuskielet(): ReactElement {
   const {
