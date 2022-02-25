@@ -2,7 +2,6 @@ import { Link } from "@mui/material";
 import { AloitusKuulutusJulkaisu, Kieli } from "@services/api";
 import dayjs from "dayjs";
 import { lowerCase } from "lodash";
-import log from "loglevel";
 import { ReactElement } from "react";
 
 interface Props {
