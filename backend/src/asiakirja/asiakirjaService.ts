@@ -11,14 +11,12 @@ interface CreatePdfOptions {
   kieli: Kieli;
 }
 
-enum AsiakirjanMuoto {
+export enum AsiakirjanMuoto {
   TIE,
   RATA,
 }
 
-function determineAsiakirjaMuoto(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu): AsiakirjanMuoto | null {
-  const tyyppi = aloitusKuulutusJulkaisu.velho.tyyppi;
-  const vaylamuoto = aloitusKuulutusJulkaisu.velho?.vaylamuoto;
+export function determineAsiakirjaMuoto(tyyppi: ProjektiTyyppi, vaylamuoto: string[]): AsiakirjanMuoto | null {
   if (tyyppi === ProjektiTyyppi.TIE || (tyyppi === ProjektiTyyppi.YLEINEN && vaylamuoto?.includes("tie"))) {
     return AsiakirjanMuoto.TIE;
   } else if (tyyppi === ProjektiTyyppi.RATA || (tyyppi === ProjektiTyyppi.YLEINEN && vaylamuoto?.includes("rata"))) {
@@ -30,7 +28,10 @@ function determineAsiakirjaMuoto(aloitusKuulutusJulkaisu: AloitusKuulutusJulkais
 export class AsiakirjaService {
   createPdf({ asiakirjaTyyppi, aloitusKuulutusJulkaisu, kieli }: CreatePdfOptions): Promise<PDF> {
     let pdf: Promise<PDF>;
-    const asiakirjanMuoto = determineAsiakirjaMuoto(aloitusKuulutusJulkaisu);
+    const asiakirjanMuoto = determineAsiakirjaMuoto(
+      aloitusKuulutusJulkaisu.velho.tyyppi,
+      aloitusKuulutusJulkaisu.velho.vaylamuoto
+    );
 
     switch (asiakirjaTyyppi) {
       case AsiakirjaTyyppi.ALOITUSKUULUTUS:

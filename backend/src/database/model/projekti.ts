@@ -4,6 +4,7 @@ import {
   ProjektiRooli,
   ProjektiTyyppi,
   Viranomainen,
+  IlmoituksenVastaanottajat,
 } from "../../../../common/graphql/apiModel";
 
 export type LocalizedMap<T> = { [key in Kieli]?: T } | null;
@@ -33,6 +34,7 @@ export type AloitusKuulutus = {
   hankkeenKuvaus?: LocalizedMap<string>;
   elyKeskus?: string | null;
   esitettavatYhteystiedot?: Yhteystieto[] | null;
+  ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   palautusSyy?: string | null;
 };
 
