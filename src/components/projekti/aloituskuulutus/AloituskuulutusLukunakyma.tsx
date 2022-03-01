@@ -1,18 +1,16 @@
 import { AloitusKuulutusJulkaisu, AloitusKuulutusTila, Kieli } from "@services/api";
-import React, { ReactElement, useRef } from "react";
+import React, { ReactElement } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { capitalize, replace, lowerCase } from "lodash";
-import Button from "@components/button/Button";
-import log from "loglevel";
+import AloituskuulutusPDFEsikatselu from "./AloituskuulutusPDFEsikatselu";
+import AloituskuulutusTiedostot from "./AloituskuulutusTiedostot";
 
 interface Props {
   oid?: string;
   aloituskuulutusjulkaisu?: AloitusKuulutusJulkaisu | null;
 }
 
-export default function AloituskuulutusRO({ aloituskuulutusjulkaisu, oid }: Props): ReactElement {
-  const pdfFormRef = useRef<HTMLFormElement | null>(null);
-
+export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, oid }: Props): ReactElement {
   const muotoilePvm = (pvm: string | null | undefined) => {
     if (!pvm) {
       return;
@@ -20,21 +18,14 @@ export default function AloituskuulutusRO({ aloituskuulutusjulkaisu, oid }: Prop
     return new Date(pvm).toLocaleDateString("fi");
   };
 
-  const naytaEsikatselu = async (action: string, kieli: Kieli | undefined | null) => {
-    log.info("Näytä esikatselu ", kieli);
-    if (!action) {
-      return;
-    }
-
-    if (pdfFormRef.current) {
-      pdfFormRef.current.action = action + "?kieli=" + kieli;
-      pdfFormRef.current?.submit();
-    }
-  };
-
   return (
     <>
-      {aloituskuulutusjulkaisu?.tila === AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA && (
+      {aloituskuulutusjulkaisu?.tila === AloitusKuulutusTila.HYVAKSYTTY && (
+        <Notification type={NotificationType.WARN}>
+          Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä {muotoilePvm(aloituskuulutusjulkaisu.kuulutusPaiva)}
+        </Notification>
+      )}
+      {aloituskuulutusjulkaisu?.tila !== AloitusKuulutusTila.HYVAKSYTTY && (
         <Notification type={NotificationType.WARN}>
           Aloituskuulutus on hyväksyttävänä projektipäälliköllä. Jos kuulutusta tarvitsee muokata, ota yhteys
           projektipäällikköön.
@@ -94,72 +85,12 @@ export default function AloituskuulutusRO({ aloituskuulutusjulkaisu, oid }: Prop
           </p>
         </div>
       )}
-      <div className="content">
-        <p className="vayla-label">Esikatseltavat tiedostot</p>
-        <p>
-          Kuulutus ja ilmoitus ensisijaisella kielellä (
-          {lowerCase(aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli)})
-        </p>
-        <div className="flex flex-col lg:flex-row gap-6">
-          <Button
-            type="submit"
-            onClick={() =>
-              naytaEsikatselu(
-                `/api/projekti/${oid}/aloituskuulutus/pdf`,
-                aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli
-              )
-            }
-          >
-            Kuulutuksen esikatselu
-          </Button>
-          <Button
-            type="submit"
-            onClick={() =>
-              naytaEsikatselu(
-                `/api/projekti/${oid}/aloituskuulutus/ilmoitus/pdf`,
-                aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli
-              )
-            }
-          >
-            Ilmoituksen esikatselu
-          </Button>
-        </div>
-      </div>
-      {aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli && (
-        <div className="content">
-          <p>
-            Kuulutus ja ilmoitus toissijaisella kielellä (
-            {lowerCase(aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli)})
-          </p>
-          <div className="flex flex-col lg:flex-row gap-6">
-            <Button
-              type="submit"
-              onClick={() =>
-                naytaEsikatselu(
-                  `/api/projekti/${oid}/aloituskuulutus/pdf`,
-                  aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli
-                )
-              }
-            >
-              Kuulutukset esikatselu
-            </Button>
-            <Button
-              type="submit"
-              onClick={() =>
-                naytaEsikatselu(
-                  `/api/projekti/${oid}/aloituskuulutus/ilmoitus/pdf`,
-                  aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli
-                )
-              }
-            >
-              Ilmoituksen esikatselu
-            </Button>
-          </div>
-        </div>
+      {aloituskuulutusjulkaisu?.tila !== AloitusKuulutusTila.HYVAKSYTTY && (
+        <AloituskuulutusPDFEsikatselu oid={oid} aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} />
       )}
-      <form ref={pdfFormRef} target="_blank" method="POST">
-        <input type="hidden" name="naytaEsikatselu" value="" />
-      </form>
+      {aloituskuulutusjulkaisu?.tila === AloitusKuulutusTila.HYVAKSYTTY && (
+        <AloituskuulutusTiedostot aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} />
+      )}
     </>
   );
 }

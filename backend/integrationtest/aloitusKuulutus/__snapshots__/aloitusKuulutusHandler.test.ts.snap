@@ -220,7 +220,7 @@ Object {
   },
   "aloitusKuulutusJulkaisut": Array [
     Object {
-      "aloituskuulutusPDF": Object {
+      "aloituskuulutusPDFt": Object {
         "RUOTSI": Object {
           "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Namnet pa svenska.pdf",
           "aloituskuulutusPDFPath": "/aloituskuulutus/KUNGORELSE OM INLEDANDET AV PLANERINGEN Namnet pa svenska.pdf",
