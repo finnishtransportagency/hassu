@@ -16,6 +16,8 @@ import {
   AloitusKuulutusPDFt,
   HankkeenKuvaukset,
   HankkeenKuvauksetInput,
+  IlmoituksenVastaanottajat,
+  IlmoituksenVastaanottajatInput,
   Kieli,
 } from "../../../common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
@@ -130,10 +132,30 @@ function adaptHankkeenKuvausToSave(hankkeenKuvaus: HankkeenKuvauksetInput): Loca
   return { ...hankkeenKuvaus };
 }
 
+function adaptIlmoituksenVastaanottajatToSave(
+  vastaanottajat: IlmoituksenVastaanottajatInput | null | undefined
+): IlmoituksenVastaanottajat {
+  if (!vastaanottajat) {
+    return vastaanottajat as null | undefined;
+  }
+  const kunnat: API.KuntaVastaanottaja[] =
+    vastaanottajat?.kunnat?.map((kunta) => ({ __typename: "KuntaVastaanottaja", ...kunta })) || null;
+  const viranomaiset: API.ViranomaisVastaanottaja[] =
+    vastaanottajat?.viranomaiset?.map((viranomainen) => ({
+      __typename: "ViranomaisVastaanottaja",
+      ...viranomainen,
+    })) || null;
+  return { __typename: "IlmoituksenVastaanottajat", kunnat, viranomaiset };
+}
+
 function adaptAloitusKuulutusToSave(aloitusKuulutus: AloitusKuulutusInput): AloitusKuulutus | null | undefined {
   if (aloitusKuulutus) {
-    const { hankkeenKuvaus, ...rest } = aloitusKuulutus;
-    return { ...rest, hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus) };
+    const { hankkeenKuvaus, ilmoituksenVastaanottajat, ...rest } = aloitusKuulutus;
+    return {
+      ...rest,
+      hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus),
+      ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat),
+    };
   }
   return aloitusKuulutus as undefined;
 }

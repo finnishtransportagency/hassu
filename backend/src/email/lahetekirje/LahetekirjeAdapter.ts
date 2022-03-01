@@ -161,7 +161,7 @@ export class LahetekirjeAdapter {
   }
 
   private get hankkeenKuvaus() {
-    return this.projekti?.aloitusKuulutus?.hankkeenKuvaus || "<HANKKEEN KUVAUS>";
+    return this.projekti?.aloitusKuulutus?.hankkeenKuvaus?.SUOMI || "<HANKKEEN KUVAUS>";
   }
 
   private get tilaajaAllatiivi() {
