@@ -11,6 +11,7 @@ import { IlmoitettavaViranomainen, ViranomaisVastaanottajaInput } from "@service
 interface Props {
   isLoading: boolean;
   kirjaamoOsoitteet: ViranomaisVastaanottajaInput[];
+  isReadonly: boolean;
 }
 
 type FormFields = {
@@ -22,7 +23,7 @@ type FormFields = {
   };
 };
 
-export default function IlmoituksenVastaanottajat({ isLoading, kirjaamoOsoitteet }: Props): ReactElement {
+export default function IlmoituksenVastaanottajat({ isLoading, kirjaamoOsoitteet, isReadonly }: Props): ReactElement {
   const { t } = useTranslation("commonFI");
 
   const {
@@ -147,6 +148,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, kirjaamoOsoitteet
             label="Sähköpostiosoite *"
             error={errors.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.[index]?.sahkoposti}
             {...register(`aloitusKuulutus.ilmoituksenVastaanottajat.kunnat.${index}.sahkoposti`)}
+            disabled={isReadonly}
           />
         </div>
       ))}

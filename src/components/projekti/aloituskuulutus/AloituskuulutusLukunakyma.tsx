@@ -95,7 +95,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, oid
         <AloituskuulutusTiedostot aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} />
       )}
       <div className="content">
-        <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} kirjaamoOsoitteet={kirjaamoOsoitteet || []} />
+        <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} kirjaamoOsoitteet={kirjaamoOsoitteet || []} isReadonly={true} />
       </div>
     </>
   );
