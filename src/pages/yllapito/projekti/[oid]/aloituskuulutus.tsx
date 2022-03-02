@@ -504,6 +504,8 @@ export default function Aloituskuulutus({
                 ? getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.HYVAKSYTTY)
                 : getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA)
             }
+            isLoadingProjekti={isLoadingProjekti}
+            kirjaamoOsoitteet={kirjaamoOsoitteet || []}
           ></AloituskuulutusLukunakyma>
         </FormProvider>
       )}
