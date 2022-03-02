@@ -24,7 +24,7 @@ export default function ProjektiSideNavigation(): ReactElement {
       href: oid && `/yllapito/projekti/${oid}/henkilot`,
       disabled: !projekti?.tallennettu,
     },
-    { title: "Projektin perustiedot", href: oid && `/yllapito/projekti/${oid}`, disabled: !projekti?.tallennettu },
+    { title: "Projektin tiedot", href: oid && `/yllapito/projekti/${oid}`, disabled: !projekti?.tallennettu },
     {
       title: "Aloituskuulutus",
       href: oid && `/yllapito/projekti/${oid}/aloituskuulutus`,

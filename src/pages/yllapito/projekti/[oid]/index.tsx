@@ -168,7 +168,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   }, [router.isReady, oid, projekti, setRouteLabels]);
 
   return (
-    <ProjektiPageLayout title={"Projektin perustiedot"}>
+    <ProjektiPageLayout title={"Projektin tiedot"}>
       <FormProvider {...useFormReturn}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableFormEdit}>
@@ -238,8 +238,8 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
             </div>
             <hr />
             <Notification>Tallennus ei vielä julkaise tietoja.</Notification>
-            <div className="flex justify-between flex-wrap gap-4">
-              <Button primary={true} disabled={disableFormEdit}>
+            <div className="flex gap-4">
+              <Button primary={true} className="ml-auto" disabled={disableFormEdit}>
                 {projekti?.status !== Status.EI_JULKAISTU ? "Tallenna" : "Tallenna ja siirry aloituskuulutukseen"}
               </Button>
             </div>

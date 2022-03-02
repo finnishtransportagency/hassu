@@ -357,12 +357,6 @@ export default function Aloituskuulutus({
                     {`Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä ${odottaaJulkaisua()}`}.
                   </Notification>
                 )}
-                <h3 className="vayla-title">Suunnittelun aloittamisesta kuuluttaminen</h3>
-                <p>
-                  Kun suunnitelman aloittamisesta kuulutetaan, projektista julkaistaan aloituskuulutustiedot tämän
-                  palvelun julkisella puolella. Aloituskuulutuksen näkyvilläoloaika määräytyy annetun kuulutuspäivän
-                  mukaan. Projekti siirtyy määräajan jälkeen automaattisesti suunnitteluvaiheeseen.
-                </p>
                 <Notification type={NotificationType.INFO} hideIcon>
                   <div>
                     <h3 className="vayla-small-title">Ohjeet</h3>

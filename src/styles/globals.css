@@ -58,10 +58,7 @@
   body :is(h6) {
     @apply mb-2;
   }
-  body h2 {
-    @apply vayla-title;
-  }
-  body h3 {
+  body :is(h2, h3) {
     @apply vayla-lead;
   }
   body section {

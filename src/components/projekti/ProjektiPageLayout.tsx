@@ -16,12 +16,12 @@ export default function ProjektiPageLayout({ children, title }: Props): ReactEle
 
   return (
     <section>
-      <h1>{title}</h1>
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-3">
         <div className="md:col-span-6 lg:col-span-4 xl:col-span-3">
           <ProjektiSideNavigation />
         </div>
         <div className="md:col-span-6 lg:col-span-8 xl:col-span-9">
+          <h1>{title}</h1>
           <h2>{projekti?.velho?.nimi || "-"}</h2>
           {projekti && !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden && (
             <Notification type={NotificationType.WARN}>
