@@ -13,7 +13,12 @@ interface Props {
   kirjaamoOsoitteet: ViranomaisVastaanottajaInput[];
 }
 
-export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, oid, isLoadingProjekti, kirjaamoOsoitteet }: Props): ReactElement {
+export default function AloituskuulutusLukunakyma({
+  aloituskuulutusjulkaisu,
+  oid,
+  isLoadingProjekti,
+  kirjaamoOsoitteet,
+}: Props): ReactElement {
   const muotoilePvm = (pvm: string | null | undefined) => {
     if (!pvm) {
       return;
@@ -95,7 +100,11 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, oid
         <AloituskuulutusTiedostot aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} />
       )}
       <div className="content">
-        <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} kirjaamoOsoitteet={kirjaamoOsoitteet || []} isReadonly={true} />
+        <IlmoituksenVastaanottajat
+          isLoading={isLoadingProjekti}
+          kirjaamoOsoitteet={kirjaamoOsoitteet || []}
+          aloituskuulutusjulkaisu={aloituskuulutusjulkaisu}
+        />
       </div>
     </>
   );
