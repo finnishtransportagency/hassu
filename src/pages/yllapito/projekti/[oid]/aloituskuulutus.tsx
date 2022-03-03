@@ -477,7 +477,6 @@ export default function Aloituskuulutus({
                   <IlmoituksenVastaanottajat
                     isLoading={isLoadingProjekti}
                     kirjaamoOsoitteet={kirjaamoOsoitteet || []}
-                    isReadonly={false}
                   />
                 </div>
               </fieldset>
