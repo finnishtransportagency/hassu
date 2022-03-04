@@ -395,20 +395,28 @@ export default function Aloituskuulutus({
                 <div className="content">
                   <KuulutuksenYhteystiedot projekti={projekti} useFormReturn={useFormReturn} />
                 </div>
+                <hr />
+                <h5 className="vayla-small-title">Hankkeen sisällönkuvaus</h5>
+                <p>
+                  Kirjoita aloituskuulutusta varten tiivistetty sisällönkuvaus hankkeesta. Kuvauksen on hyvä sisältää
+                  esimerkiksi tieto suunnittelukohteen alueellista rajauksesta (maantiealue ja vaikutusalue),
+                  suunnittelun tavoitteet, vaikutukset ja toimenpiteet pääpiirteittäin karkealla tasolla. Älä lisää
+                  tekstiin linkkejä.{" "}
+                </p>
                 <Textarea
-                  label="Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä. *"
-                  {...register("aloitusKuulutus.hankkeenKuvaus.SUOMI")}
-                  error={(errors.aloitusKuulutus?.hankkeenKuvaus as any)?.[Kieli.SUOMI]}
+                  label={`Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (${lowerCase(
+                    kielitiedot.ensisijainenKieli
+                  )}) *`}
+                  {...register(`aloitusKuulutus.hankkeenKuvaus.${kielitiedot.ensisijainenKieli}`)}
+                  error={(errors.aloitusKuulutus?.hankkeenKuvaus as any)?.[kielitiedot.ensisijainenKieli]}
                   maxLength={maxAloituskuulutusLength}
                   disabled={disableFormEdit}
                 />
-                <Notification type={NotificationType.INFO}>
+                <Notification type={NotificationType.INFO_GRAY}>
                   Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
                 </Notification>
 
                 <div className="content">
-                  <p className="vayla-label">Esikatseltavat tiedostot</p>
-                  <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({lowerCase(kielitiedot.ensisijainenKieli)})</p>
                   <div className="flex flex-col lg:flex-row gap-6">
                     <Button
                       type="submit"
@@ -421,7 +429,7 @@ export default function Aloituskuulutus({
                       )}
                       disabled={disableFormEdit}
                     >
-                      Esikatsele kuulutusta
+                      Kuulutuksen esikatselu
                     </Button>
                     <Button
                       type="submit"
@@ -434,14 +442,25 @@ export default function Aloituskuulutus({
                       )}
                       disabled={disableFormEdit}
                     >
-                      Esikatsele ilmoitusta
+                      Ilmoituksen esikatselu
                     </Button>
                   </div>
                 </div>
 
                 {toissijainenKieli && (
                   <div className="content">
-                    <p>Kuulutus ja ilmoitus toissijaisella kielellä ({lowerCase(toissijainenKieli)})</p>
+                    <Textarea
+                      label={`Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä (${lowerCase(
+                        toissijainenKieli
+                      )}) *`}
+                      {...register(`aloitusKuulutus.hankkeenKuvaus.${toissijainenKieli}`)}
+                      error={(errors.aloitusKuulutus?.hankkeenKuvaus as any)?.[toissijainenKieli]}
+                      maxLength={maxAloituskuulutusLength}
+                      disabled={disableFormEdit}
+                    />
+                    <Notification type={NotificationType.INFO_GRAY}>
+                      Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
+                    </Notification>
                     <div className="flex flex-col lg:flex-row gap-6">
                       <Button
                         type="submit"
@@ -454,7 +473,7 @@ export default function Aloituskuulutus({
                         )}
                         disabled={disableFormEdit}
                       >
-                        Esikatsele kuulutusta
+                        Kuulutuksen esikatselu
                       </Button>
                       <Button
                         type="submit"
@@ -467,7 +486,7 @@ export default function Aloituskuulutus({
                         )}
                         disabled={disableFormEdit}
                       >
-                        Esikatsele ilmoitusta
+                        Ilmoituksen esikatselu
                       </Button>
                     </div>
                   </div>
