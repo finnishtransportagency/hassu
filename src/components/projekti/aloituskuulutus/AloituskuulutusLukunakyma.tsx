@@ -1,16 +1,24 @@
-import { AloitusKuulutusJulkaisu, AloitusKuulutusTila, Kieli } from "@services/api";
+import { AloitusKuulutusJulkaisu, AloitusKuulutusTila, Kieli, ViranomaisVastaanottajaInput } from "@services/api";
 import React, { ReactElement } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { capitalize, replace, lowerCase } from "lodash";
 import AloituskuulutusPDFEsikatselu from "./AloituskuulutusPDFEsikatselu";
 import AloituskuulutusTiedostot from "./AloituskuulutusTiedostot";
+import IlmoituksenVastaanottajat from "./IlmoituksenVastaanottajat";
 
 interface Props {
   oid?: string;
   aloituskuulutusjulkaisu?: AloitusKuulutusJulkaisu | null;
+  isLoadingProjekti: boolean;
+  kirjaamoOsoitteet: ViranomaisVastaanottajaInput[];
 }
 
-export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, oid }: Props): ReactElement {
+export default function AloituskuulutusLukunakyma({
+  aloituskuulutusjulkaisu,
+  oid,
+  isLoadingProjekti,
+  kirjaamoOsoitteet,
+}: Props): ReactElement {
   const muotoilePvm = (pvm: string | null | undefined) => {
     if (!pvm) {
       return;
@@ -91,6 +99,13 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, oid
       {aloituskuulutusjulkaisu?.tila === AloitusKuulutusTila.HYVAKSYTTY && (
         <AloituskuulutusTiedostot aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} />
       )}
+      <div className="content">
+        <IlmoituksenVastaanottajat
+          isLoading={isLoadingProjekti}
+          kirjaamoOsoitteet={kirjaamoOsoitteet || []}
+          aloituskuulutusjulkaisu={aloituskuulutusjulkaisu}
+        />
+      </div>
     </>
   );
 }

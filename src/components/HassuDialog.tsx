@@ -1,7 +1,7 @@
-import { Dialog } from "@mui/material";
+import { Dialog, DialogProps } from "@mui/material";
 import React, { ReactElement } from "react";
 
-const HassuDialog = (props: any): ReactElement => {
+const HassuDialog = (props: DialogProps): ReactElement => {
   const { children, ...other } = props;
 
   return (

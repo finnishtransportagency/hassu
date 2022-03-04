@@ -39,6 +39,7 @@ import TextInput from "@components/form/TextInput";
 import { lowerCase } from "lodash";
 import dayjs from "dayjs";
 import HassuDialog from "@components/HassuDialog";
+import { GetParameterCommandOutput, SSMClient } from "@aws-sdk/client-ssm";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
 type RequiredProjektiFields = Required<{
@@ -523,6 +524,8 @@ export default function Aloituskuulutus({
                 ? getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.HYVAKSYTTY)
                 : getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA)
             }
+            isLoadingProjekti={isLoadingProjekti}
+            kirjaamoOsoitteet={kirjaamoOsoitteet || []}
           ></AloituskuulutusLukunakyma>
         </FormProvider>
       )}
@@ -647,9 +650,9 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () 
   const parameterName = "/kirjaamoOsoitteet";
   let kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] = [];
   try {
-    const kirjaamoOsoitteetJSON = await getSSMClient().send(new GetParameterCommand({ Name: parameterName }))?.Parameter
-      ?.Value;
-    kirjaamoOsoitteet = kirjaamoOsoitteetJSON ? JSON.parse(kirjaamoOsoitteetJSON) : [];
+    const ssmclient: SSMClient = await getSSMClient();
+    const response: GetParameterCommandOutput = await ssmclient.send(new GetParameterCommand({ Name: parameterName }));
+    kirjaamoOsoitteet = response.Parameter?.Value ? JSON.parse(response.Parameter.Value) : [];
   } catch (e) {
     log.error(`Could not pass prop 'kirjaamoOsoitteet' to 'aloituskuulutus' page`, e);
   }

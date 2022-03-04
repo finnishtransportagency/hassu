@@ -6,11 +6,18 @@ import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { formatProperNoun } from "common/util/formatProperNoun";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
-import { IlmoitettavaViranomainen, ViranomaisVastaanottajaInput } from "@services/api";
+import {
+  AloitusKuulutusJulkaisu,
+  AloitusKuulutusTila,
+  IlmoitettavaViranomainen,
+  ViranomaisVastaanottajaInput,
+} from "@services/api";
+import dayjs from "dayjs";
 
 interface Props {
   isLoading: boolean;
   kirjaamoOsoitteet: ViranomaisVastaanottajaInput[];
+  aloituskuulutusjulkaisu?: AloitusKuulutusJulkaisu | null;
 }
 
 type FormFields = {
@@ -22,8 +29,13 @@ type FormFields = {
   };
 };
 
-export default function IlmoituksenVastaanottajat({ isLoading, kirjaamoOsoitteet }: Props): ReactElement {
+export default function IlmoituksenVastaanottajat({
+  isLoading,
+  kirjaamoOsoitteet,
+  aloituskuulutusjulkaisu,
+}: Props): ReactElement {
   const { t } = useTranslation("commonFI");
+  const isReadonly = !!aloituskuulutusjulkaisu;
 
   const {
     register,
@@ -60,96 +72,180 @@ export default function IlmoituksenVastaanottajat({ isLoading, kirjaamoOsoitteet
 
   return (
     <>
+      <hr />
       <h5 className="vayla-small-title">Ilmoituksen vastaanottajat</h5>
-      <p>
-        Kuulutuksesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on
-        haettu Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle viranomaisorganisaatiolle, lisää
-        uusi rivi Lisää uusi -painikkeella.
-      </p>
-      <p>Jos kuntatiedoissa on virhe, tee korjaus Projektivelhoon.</p>
-      <h6 className="font-bold">Viranomaiset</h6>
-      {viranomaisFields.map((viranomainen, index) => (
-        <div key={viranomainen.id} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
-          <Select
-            label="Viranomainen *"
-            options={kirjaamoOsoitteet.map(({ nimi }) => ({ label: t(`viranomainen.${nimi}`), value: nimi }))}
-            {...register(`aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset.${index}.nimi`, {
-              onChange: (event) => {
-                const sahkoposti = kirjaamoOsoitteet.find(({ nimi }) => nimi === event.target.value)?.sahkoposti;
-                setValue(
-                  `aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`,
-                  sahkoposti || ""
-                );
-              },
-            })}
-            disabled
-            error={errors.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.[index]?.nimi}
-            addEmptyOption
-          />
-          <Controller
-            control={control}
-            name={`aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`}
-            render={({ field }) => (
-              <>
-                <TextInput label="Sähköpostiosoite *" value={field.value} disabled />
-                <input type="hidden" {...field} />
-              </>
-            )}
-          />
-          <div>
-            <div className="hidden lg:block lg:mt-6">
-              <IconButton
-                icon="trash"
-                onClick={(event) => {
-                  event.preventDefault();
-                  remove(index);
-                }}
-                disabled
+      {!isReadonly && (
+        <>
+          <p>
+            Kuulutuksesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on
+            haettu Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle viranomaisorganisaatiolle, lisää
+            uusi rivi Lisää uusi -painikkeella.
+          </p>
+          <p>Jos kuntatiedoissa on virhe, tee korjaus Projektivelhoon.</p>
+        </>
+      )}
+
+      {aloituskuulutusjulkaisu?.tila === AloitusKuulutusTila.HYVAKSYTTY && (
+        <>
+          <p>
+            Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Ei
+            lähetetty’, tarkasta sähköpostiosoite. Ota tarvittaessa yhteys pääkäyttäjään.
+          </p>
+        </>
+      )}
+
+      {!isReadonly && (
+        <>
+          <h6 className="font-bold">Viranomaiset</h6>
+          {viranomaisFields.map((viranomainen, index) => (
+            <div key={viranomainen.id} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
+              <Select
+                label="Viranomainen *"
+                options={kirjaamoOsoitteet.map(({ nimi }) => ({ label: t(`viranomainen.${nimi}`), value: nimi }))}
+                {...register(`aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset.${index}.nimi`, {
+                  onChange: (event) => {
+                    const sahkoposti = kirjaamoOsoitteet.find(({ nimi }) => nimi === event.target.value)?.sahkoposti;
+                    setValue(
+                      `aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`,
+                      sahkoposti || ""
+                    );
+                  },
+                })}
+                disabled={isReadonly}
+                error={errors.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.[index]?.nimi}
+                addEmptyOption
               />
+              <Controller
+                control={control}
+                name={`aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`}
+                render={({ field }) => (
+                  <>
+                    <TextInput label="Sähköpostiosoite *" value={field.value} disabled />
+                    <input type="hidden" {...field} />
+                  </>
+                )}
+              />
+              <div>
+                <div className="hidden lg:block lg:mt-6">
+                  <IconButton
+                    icon="trash"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      remove(index);
+                    }}
+                    disabled={isReadonly}
+                  />
+                </div>
+                <div className="block lg:hidden">
+                  <Button
+                    onClick={(event) => {
+                      event.preventDefault();
+                      remove(index);
+                    }}
+                    endIcon="trash"
+                    disabled={isReadonly}
+                  >
+                    Poista
+                  </Button>
+                </div>
+              </div>
             </div>
-            <div className="block lg:hidden">
-              <Button
-                onClick={(event) => {
-                  event.preventDefault();
-                  remove(index);
-                }}
-                endIcon="trash"
-                disabled
-              >
-                Poista
-              </Button>
-            </div>
+          ))}
+          <Button
+            className="mb-7"
+            type="button"
+            onClick={() => {
+              // @ts-ignore
+              append({ nimi: "", sahkoposti: "" });
+            }}
+            disabled={isReadonly}
+          >
+            Lisää uusi +
+          </Button>
+        </>
+      )}
+      {isReadonly && (
+        <>
+          <div className="content grid grid-cols-4 gap-x-6 mb-4">
+            <h6 className="font-bold">Viranomaiset</h6>
+            <p></p>
+            <p style={{ color: "#7A7A7A" }}>Ilmoituksen tila</p>
+            <p style={{ color: "#7A7A7A" }}>Lähetysaika</p>
+            {viranomaisFields.map((viranomainen) => (
+              <>
+                <p className="odd:bg-white even:bg-grey col-span-2">
+                  {t(`viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
+                </p>
+                <p className="odd:bg-white even:bg-grey">
+                  {aloituskuulutusjulkaisu.tila === AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA
+                    ? "Ei lähetetty"
+                    : "Lähetetty"}
+                </p>
+                <p className="odd:bg-white even:bg-grey">
+                  {aloituskuulutusjulkaisu.tila === AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA
+                    ? ""
+                    : dayjs().format("DD.MM.YYYY HH:MM")}
+                </p>
+              </>
+            ))}
           </div>
-        </div>
-      ))}
-      <Button
-        className="mb-7"
-        type="button"
-        onClick={() => {
-          // @ts-ignore
-          append({ nimi: "", sahkoposti: "" });
-        }}
-        disabled
-      >
-        Lisää uusi +
-      </Button>
+        </>
+      )}
+
       <h6 className="font-bold">Kunnat</h6>
       {isLoading ? <p>Ladataan kuntatietoja...</p> : kuntaFields.length === 0 && <p>Kuntia ei ole asetettu velhoon.</p>}
-      {kuntaFields.map((kunta, index) => (
-        <div key={kunta.id} className="grid grid-cols-3 gap-x-6 mb-4">
-          <input
-            type="hidden"
-            {...register(`aloitusKuulutus.ilmoituksenVastaanottajat.kunnat.${index}.nimi`)}
-            readOnly
-          />
-          <TextInput label="Kunta *" value={getKuntanimi(index)} disabled />
-          <TextInput
-            label="Sähköpostiosoite *"
-            error={errors.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.[index]?.sahkoposti}
-            {...register(`aloitusKuulutus.ilmoituksenVastaanottajat.kunnat.${index}.sahkoposti`)}
-          />
-        </div>
-      ))}
+      {!isReadonly && (
+        <>
+          {kuntaFields.map((kunta, index) => (
+            <div key={kunta.id} className="grid grid-cols-3 gap-x-6 mb-4">
+              <input
+                type="hidden"
+                {...register(`aloitusKuulutus.ilmoituksenVastaanottajat.kunnat.${index}.nimi`)}
+                readOnly
+              />
+              <TextInput label="Kunta *" value={getKuntanimi(index)} disabled />
+              <TextInput
+                label="Sähköpostiosoite *"
+                error={errors.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.[index]?.sahkoposti}
+                {...register(`aloitusKuulutus.ilmoituksenVastaanottajat.kunnat.${index}.sahkoposti`)}
+                disabled={isReadonly}
+              />
+            </div>
+          ))}
+        </>
+      )}
+      {isReadonly && (
+        <>
+          <div className="content grid grid-cols-4 mb-4">
+            <p className="vayla-table-header">Kunta</p>
+            <p className="vayla-table-header">Sähköpostiosoite</p>
+            <p className="vayla-table-header">Ilmoituksen tila</p>
+            <p className="vayla-table-header">Lähetysaika</p>
+            {kuntaFields.map((kunta, index) => (
+              <>
+                <p className={getStyleForRow(index)}>{kunta.nimi}</p>
+                <p className={getStyleForRow(index)}>{kunta.sahkoposti}</p>
+                <p className={getStyleForRow(index)}>
+                  {aloituskuulutusjulkaisu.tila === AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA
+                    ? "Ei lähetetty"
+                    : "Lähetetty"}
+                </p>
+                <p className={getStyleForRow(index)}>
+                  {aloituskuulutusjulkaisu.tila === AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA
+                    ? ""
+                    : dayjs().format("DD.MM.YYYY HH:MM")}
+                </p>
+              </>
+            ))}
+          </div>
+        </>
+      )}
     </>
   );
+}
+function getStyleForRow(index: number): string | undefined {
+  if (index % 2 == 0) {
+    return "vayla-table-even";
+  }
+  return "vayla-table-odd";
 }
