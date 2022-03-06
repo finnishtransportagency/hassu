@@ -41,6 +41,9 @@ import TextInput from "@components/form/TextInput";
 import dayjs from "dayjs";
 import HassuDialog from "@components/HassuDialog";
 import { GetParameterCommandOutput, SSMClient } from "@aws-sdk/client-ssm";
+import useTranslation from "next-translate/useTranslation";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
 type RequiredProjektiFields = Required<{
@@ -102,6 +105,7 @@ export default function Aloituskuulutus({
   const [formContext, setFormContext] = useState<Projekti | undefined>(undefined);
   const [open, setOpen] = useState(false);
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
+  const { t } = useTranslation("commonFI");
 
   useEffect(() => {
     if (router.isReady) {
@@ -570,6 +574,15 @@ export default function Aloituskuulutus({
                     >
                       Peruuta
                     </Button>
+                    <IconButton
+                      onClick={(e) => {
+                        handleClickClose();
+                        e.preventDefault();
+                      }}
+                      sx={{position: "absolute", right: "1rem", top: "2rem"}}
+                    >
+                      <CloseIcon />
+                    </IconButton>
                   </div>
                 </form>
               </DialogContent>
@@ -578,7 +591,7 @@ export default function Aloituskuulutus({
           <div>
             <HassuDialog open={openHyvaksy} onClose={handleClickCloseHyvaksy}>
               <DialogTitle>
-                <div className="vayla-dialog-title">Kuulutuksen hyväksyminen ja ilmoituksen lähettäminen</div>
+                <div className="vayla-dialog-title ">Kuulutuksen hyväksyminen ja ilmoituksen lähettäminen</div>
               </DialogTitle>
               <DialogContent>
                 <form>
@@ -589,9 +602,9 @@ export default function Aloituskuulutus({
                   <div className="content">
                     <p>Viranomaiset</p>
                     <ul className="vayla-dialog-list">
-                      {projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => (
-                        <li key={kunta.nimi}>
-                          {kunta.nimi}, {kunta.sahkoposti}
+                      {projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => (
+                        <li key={viranomainen.nimi}>
+                          {t(`viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
                         </li>
                       ))}
                     </ul>
@@ -628,6 +641,15 @@ export default function Aloituskuulutus({
                     >
                       Peruuta
                     </Button>
+                    <IconButton
+                      onClick={(e) => {
+                        handleClickCloseHyvaksy();
+                        e.preventDefault();
+                      }}
+                      sx={{position: "absolute", right: "1rem", top: "2rem"}}
+                    >
+                      <CloseIcon />
+                    </IconButton>
                   </div>
                 </form>
               </DialogContent>

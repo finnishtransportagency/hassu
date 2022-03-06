@@ -29,6 +29,7 @@ import {
   faChevronUp,
   faChevronLeft,
   faChevronDown,
+  faWindowClose
 } from "@fortawesome/free-solid-svg-icons";
 library.add(
   faAngleDown,
@@ -59,7 +60,8 @@ library.add(
   faInfo,
   faInfoCircle,
   faSearch,
-  faTrash
+  faTrash,
+  faWindowClose
 );
 
 import {
