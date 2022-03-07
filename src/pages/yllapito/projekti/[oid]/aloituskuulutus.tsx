@@ -553,13 +553,13 @@ export default function Aloituskuulutus({
                     syystä. Saat ilmoituksen, kun kuulutus on taas valmis hyväksyttäväksi. Jos haluat itse muokata
                     kuulutusta ja hyväksyä tehtyjen muutoksien jälkeen, valitse Palauta ja muokkaa.
                   </p>
-                  <TextInput
+                  <Textarea
                     label="Syy palautukselle *"
                     {...register2("syy", { required: "Palautuksen syy täytyy antaa" })}
                     error={errors2.syy}
                     maxLength={200}
                     hideLengthCounter={false}
-                  ></TextInput>
+                  ></Textarea>
                   <div className="flex gap-6 justify-end pt-6">
                     <Button primary onClick={handleSubmit2(palautaMuokattavaksiJaPoistu)}>
                       Palauta ja poistu
