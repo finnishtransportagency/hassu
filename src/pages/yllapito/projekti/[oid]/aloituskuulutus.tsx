@@ -42,8 +42,7 @@ import dayjs from "dayjs";
 import HassuDialog from "@components/HassuDialog";
 import { GetParameterCommandOutput, SSMClient } from "@aws-sdk/client-ssm";
 import useTranslation from "next-translate/useTranslation";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
+import WindowCloseButton from "@components/button/WindowCloseButton";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
 type RequiredProjektiFields = Required<{
@@ -574,15 +573,11 @@ export default function Aloituskuulutus({
                     >
                       Peruuta
                     </Button>
-                    <IconButton
-                      onClick={(e) => {
+                    <WindowCloseButton
+                      onClick={() => {
                         handleClickClose();
-                        e.preventDefault();
                       }}
-                      sx={{position: "absolute", right: "1rem", top: "2rem"}}
-                    >
-                      <CloseIcon />
-                    </IconButton>
+                    ></WindowCloseButton>
                   </div>
                 </form>
               </DialogContent>
@@ -641,15 +636,11 @@ export default function Aloituskuulutus({
                     >
                       Peruuta
                     </Button>
-                    <IconButton
-                      onClick={(e) => {
+                    <WindowCloseButton
+                      onClick={() => {
                         handleClickCloseHyvaksy();
-                        e.preventDefault();
                       }}
-                      sx={{position: "absolute", right: "1rem", top: "2rem"}}
-                    >
-                      <CloseIcon />
-                    </IconButton>
+                    ></WindowCloseButton>
                   </div>
                 </form>
               </DialogContent>
