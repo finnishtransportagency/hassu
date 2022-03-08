@@ -5,7 +5,7 @@ import * as sinon from "sinon";
 import { getS3Client } from "../../src/aws/clients";
 import { uuid } from "../../src/util/uuid";
 import { AwsClientStub, mockClient } from "aws-sdk-client-mock";
-import { HeadObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { HeadObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 const { expect } = require("chai");
 
@@ -44,5 +44,23 @@ describe("UploadService", () => {
     expect(mockS3CLient.send).to.be.calledTwice;
     expect((mockS3CLient.send.getCall(0).args as any)[0].input).toMatchSnapshot();
     expect((mockS3CLient.send.getCall(1).args as any)[0].input).toMatchSnapshot();
+  });
+
+  it("should create file to projekti successfully", async function () {
+    mockS3CLient = mockClient(getS3Client());
+    mockS3CLient.on(PutObjectCommand).resolves({ $metadata: {} });
+
+    const pathInProjekti = await fileService.createFileToProjekti({
+      oid: "1",
+      filePathInProjekti: "testfilepath",
+      fileName: "test.pdf",
+      contents: Buffer.from("foobar", "base64"),
+      inline: true,
+      contentType: "application/pdf",
+    });
+    expect(pathInProjekti).to.eq("/testfilepath/test.pdf");
+
+    expect(mockS3CLient.send).to.be.calledOnce;
+    expect((mockS3CLient.send.getCall(0).args as any)[0].input).toMatchSnapshot();
   });
 });
