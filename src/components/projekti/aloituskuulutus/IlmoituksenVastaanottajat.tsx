@@ -13,6 +13,9 @@ import {
   ViranomaisVastaanottajaInput,
 } from "@services/api";
 import dayjs from "dayjs";
+import Section from "@components/layout/Section";
+import SectionContent from "@components/layout/SectionContent";
+import HassuGrid from "@components/HassuGrid";
 
 interface Props {
   isLoading: boolean;
@@ -71,62 +74,61 @@ export default function IlmoituksenVastaanottajat({
   };
 
   return (
-    <>
-      <hr />
-      <h5 className="vayla-small-title">Ilmoituksen vastaanottajat</h5>
-      {!isReadonly && (
-        <>
-          <p>
-            Kuulutuksesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on
-            haettu Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle viranomaisorganisaatiolle, lisää
-            uusi rivi Lisää uusi -painikkeella.
-          </p>
-          <p>Jos kuntatiedoissa on virhe, tee korjaus Projektivelhoon.</p>
-        </>
-      )}
+    <Section>
+      <SectionContent>
+        <h5 className="vayla-small-title">Ilmoituksen vastaanottajat</h5>
+        {!isReadonly && (
+          <>
+            <p>
+              Kuulutuksesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat
+              on haettu Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle viranomaisorganisaatiolle,
+              lisää uusi rivi Lisää uusi -painikkeella.
+            </p>
+            <p>Jos kuntatiedoissa on virhe, tee korjaus Projektivelhoon.</p>
+          </>
+        )}
 
-      {aloituskuulutusjulkaisu?.tila === AloitusKuulutusTila.HYVAKSYTTY && (
-        <>
+        {aloituskuulutusjulkaisu?.tila === AloitusKuulutusTila.HYVAKSYTTY && (
           <p>
             Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Ei
             lähetetty’, tarkasta sähköpostiosoite. Ota tarvittaessa yhteys pääkäyttäjään.
           </p>
-        </>
-      )}
+        )}
+      </SectionContent>
 
       {!isReadonly && (
         <>
-          <h6 className="font-bold">Viranomaiset</h6>
-          {viranomaisFields.map((viranomainen, index) => (
-            <div key={viranomainen.id} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
-              <Select
-                label="Viranomainen *"
-                options={kirjaamoOsoitteet.map(({ nimi }) => ({ label: t(`viranomainen.${nimi}`), value: nimi }))}
-                {...register(`aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset.${index}.nimi`, {
-                  onChange: (event) => {
-                    const sahkoposti = kirjaamoOsoitteet.find(({ nimi }) => nimi === event.target.value)?.sahkoposti;
-                    setValue(
-                      `aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`,
-                      sahkoposti || ""
-                    );
-                  },
-                })}
-                disabled={isReadonly}
-                error={errors.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.[index]?.nimi}
-                addEmptyOption
-              />
-              <Controller
-                control={control}
-                name={`aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`}
-                render={({ field }) => (
-                  <>
-                    <TextInput label="Sähköpostiosoite *" value={field.value} disabled />
-                    <input type="hidden" {...field} />
-                  </>
-                )}
-              />
-              <div>
-                <div className="hidden lg:block lg:mt-6">
+          <SectionContent>
+            <h6 className="font-bold">Viranomaiset</h6>
+            {viranomaisFields.map((viranomainen, index) => (
+              <HassuGrid key={viranomainen.id} cols={[1, 1, 3]}>
+                <Select
+                  label="Viranomainen *"
+                  options={kirjaamoOsoitteet.map(({ nimi }) => ({ label: t(`viranomainen.${nimi}`), value: nimi }))}
+                  {...register(`aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset.${index}.nimi`, {
+                    onChange: (event) => {
+                      const sahkoposti = kirjaamoOsoitteet.find(({ nimi }) => nimi === event.target.value)?.sahkoposti;
+                      setValue(
+                        `aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`,
+                        sahkoposti || ""
+                      );
+                    },
+                  })}
+                  disabled={isReadonly}
+                  error={errors.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.[index]?.nimi}
+                  addEmptyOption
+                />
+                <Controller
+                  control={control}
+                  name={`aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`}
+                  render={({ field }) => (
+                    <>
+                      <TextInput label="Sähköpostiosoite *" value={field.value} disabled />
+                      <input type="hidden" {...field} />
+                    </>
+                  )}
+                />
+                <div className="hidden lg:block" style={{ alignSelf: "flex-end" }}>
                   <IconButton
                     icon="trash"
                     onClick={(event) => {
@@ -148,11 +150,10 @@ export default function IlmoituksenVastaanottajat({
                     Poista
                   </Button>
                 </div>
-              </div>
-            </div>
-          ))}
+              </HassuGrid>
+            ))}
+          </SectionContent>
           <Button
-            className="mb-7"
             type="button"
             onClick={() => {
               // @ts-ignore
@@ -165,8 +166,8 @@ export default function IlmoituksenVastaanottajat({
         </>
       )}
       {isReadonly && (
-        <>
-          <div className="content grid grid-cols-4 gap-x-6 mb-4">
+        <SectionContent>
+          <div className="grid grid-cols-4 gap-x-6 mb-4">
             <h6 className="font-bold">Viranomaiset</h6>
             <p></p>
             <p style={{ color: "#7A7A7A" }}>Ilmoituksen tila</p>
@@ -177,27 +178,30 @@ export default function IlmoituksenVastaanottajat({
                   {t(`viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
                 </p>
                 <p className="odd:bg-white even:bg-grey">
-                  {aloituskuulutusjulkaisu.tila === AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA
+                  {aloituskuulutusjulkaisu?.tila === AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA
                     ? "Ei lähetetty"
                     : "Lähetetty"}
                 </p>
                 <p className="odd:bg-white even:bg-grey">
-                  {aloituskuulutusjulkaisu.tila === AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA
+                  {aloituskuulutusjulkaisu?.tila === AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA
                     ? ""
                     : dayjs().format("DD.MM.YYYY HH:MM")}
                 </p>
               </>
             ))}
           </div>
-        </>
+        </SectionContent>
       )}
-
-      <h6 className="font-bold">Kunnat</h6>
-      {isLoading ? <p>Ladataan kuntatietoja...</p> : kuntaFields.length === 0 && <p>Kuntia ei ole asetettu velhoon.</p>}
-      {!isReadonly && (
-        <>
-          {kuntaFields.map((kunta, index) => (
-            <div key={kunta.id} className="grid grid-cols-3 gap-x-6 mb-4">
+      <SectionContent>
+        <h6 className="font-bold">Kunnat</h6>
+        {isLoading ? (
+          <p>Ladataan kuntatietoja...</p>
+        ) : (
+          kuntaFields.length === 0 && <p>Kuntia ei ole asetettu velhoon.</p>
+        )}
+        {!isReadonly &&
+          kuntaFields.map((kunta, index) => (
+            <HassuGrid key={kunta.id} cols={[1, 1, 3]}>
               <input
                 type="hidden"
                 {...register(`aloitusKuulutus.ilmoituksenVastaanottajat.kunnat.${index}.nimi`)}
@@ -210,12 +214,9 @@ export default function IlmoituksenVastaanottajat({
                 {...register(`aloitusKuulutus.ilmoituksenVastaanottajat.kunnat.${index}.sahkoposti`)}
                 disabled={isReadonly}
               />
-            </div>
+            </HassuGrid>
           ))}
-        </>
-      )}
-      {isReadonly && (
-        <>
+        {isReadonly && (
           <div className="content grid grid-cols-4 mb-4">
             <p className="vayla-table-header">Kunta</p>
             <p className="vayla-table-header">Sähköpostiosoite</p>
@@ -226,21 +227,21 @@ export default function IlmoituksenVastaanottajat({
                 <p className={getStyleForRow(index)}>{kunta.nimi}</p>
                 <p className={getStyleForRow(index)}>{kunta.sahkoposti}</p>
                 <p className={getStyleForRow(index)}>
-                  {aloituskuulutusjulkaisu.tila === AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA
+                  {aloituskuulutusjulkaisu?.tila === AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA
                     ? "Ei lähetetty"
                     : "Lähetetty"}
                 </p>
                 <p className={getStyleForRow(index)}>
-                  {aloituskuulutusjulkaisu.tila === AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA
+                  {aloituskuulutusjulkaisu?.tila === AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA
                     ? ""
                     : dayjs().format("DD.MM.YYYY HH:MM")}
                 </p>
               </>
             ))}
           </div>
-        </>
-      )}
-    </>
+        )}
+      </SectionContent>
+    </Section>
   );
 }
 function getStyleForRow(index: number): string | undefined {
