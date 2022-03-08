@@ -6,6 +6,7 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { Projekti, SuunnitelmaInput } from "@services/api";
 import IconButton from "@components/button/IconButton";
 import FormGroup from "@components/form/FormGroup";
+import { FormValues } from "@pages/yllapito/projekti/[oid]";
 
 const defaultSuunnitelma: SuunnitelmaInput = {
   asiatunnus: "",
@@ -19,6 +20,11 @@ interface Props {
 export default function ProjektiLiittyvatSuunnitelmat({ projekti }: Props): ReactElement {
   const [isLiittyviaSuunnitelmia, setLiittyviaSuunnitelmia] = useState(false);
 
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<FormValues>();
+
   useEffect(() => {
     if (projekti?.oid) {
       setLiittyviaSuunnitelmia(!!projekti?.liittyvatSuunnitelmat?.length);
@@ -28,22 +34,22 @@ export default function ProjektiLiittyvatSuunnitelmat({ projekti }: Props): Reac
   return (
     <>
       <h4 className="vayla-small-title">Projektiin liittyvät suunnitelmat</h4>
-      <FormGroup label="Liittyykö projektiin muita voimassaolevia lakisääteisiä suunnitelmia" flexDirection="row">
+      <FormGroup
+        label="Liittyykö projektiin muita voimassaolevia lakisääteisiä suunnitelmia? *"
+        flexDirection="row"
+        errorMessage={errors?.liittyviasuunnitelmia?.message}
+      >
         <RadioButton
           label="Kyllä"
-          name="liittyvia_suunnitelmia"
           value="true"
-          id="liittyvia_suunnitelmia_kylla"
+          {...register("liittyviasuunnitelmia")}
           onChange={() => setLiittyviaSuunnitelmia(true)}
-          checked={isLiittyviaSuunnitelmia}
         />
         <RadioButton
           label="Ei"
-          name="liittyvia_suunnitelmia"
           value="false"
-          id="liittyvia_suunnitelmia_ei"
+          {...register("liittyviasuunnitelmia")}
           onChange={() => setLiittyviaSuunnitelmia(false)}
-          checked={!isLiittyviaSuunnitelmia}
         />
       </FormGroup>
       {isLiittyviaSuunnitelmia && (

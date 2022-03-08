@@ -43,26 +43,18 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
   return (
     <>
       <h4 className="vayla-small-title">Suunnittelusopimus</h4>
-      <FormGroup label="Onko kyseessä suunnittelusopimuksella toteutettava suunnitteluhanke? *" flexDirection="row">
+      <FormGroup label="Onko kyseessä suunnittelusopimuksella toteutettava suunnitteluhanke? *" flexDirection="row" errorMessage={errors.suunnittelusopimusprojekti?.message}>
         <RadioButton
           label="Kyllä"
-          name="suunnittelusopimushanke"
           value="true"
-          checked={hasSuunnittaluSopimus}
-          onChange={() => {
-            setHasSuunnitteluSopimus(true);
-          }}
-          id="suunnittelusopimushanke_kylla"
+          {...register("suunnittelusopimusprojekti")}
+          onChange={() => {setHasSuunnitteluSopimus(true)}}
         ></RadioButton>
         <RadioButton
           label="Ei"
-          name="suunnittelusopimushanke"
           value="false"
-          checked={!hasSuunnittaluSopimus}
-          onChange={() => {
-            setHasSuunnitteluSopimus(false);
-          }}
-          id="suunnittelusopimushanke_ei"
+          {...register("suunnittelusopimusprojekti")}
+          onChange={() => {setHasSuunnitteluSopimus(false)}}
         ></RadioButton>
       </FormGroup>
       {hasSuunnittaluSopimus && (
