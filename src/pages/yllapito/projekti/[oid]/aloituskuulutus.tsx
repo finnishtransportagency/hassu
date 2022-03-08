@@ -37,7 +37,6 @@ import IlmoituksenVastaanottajat from "@components/projekti/aloituskuulutus/Ilmo
 import { GetServerSideProps } from "next";
 import { setupLambdaMonitoring } from "backend/src/aws/monitoring";
 import { DialogContent, DialogTitle } from "@mui/material";
-import TextInput from "@components/form/TextInput";
 import dayjs from "dayjs";
 import HassuDialog from "@components/HassuDialog";
 import { GetParameterCommandOutput, SSMClient } from "@aws-sdk/client-ssm";
