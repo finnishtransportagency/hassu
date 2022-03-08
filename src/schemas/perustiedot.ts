@@ -41,4 +41,6 @@ export const perustiedotValidationSchema = Yup.object().shape({
     .notRequired()
     .nullable()
     .default(null),
+  suunnittelusopimusprojekti: Yup.string().required("Suunnittelusopimustieto on pakollinen").nullable().default(null),
+  liittyviasuunnitelmia: Yup.string().required("Liittyvien suunnitelmien tieto on pakollinen").nullable().default(null),
 });

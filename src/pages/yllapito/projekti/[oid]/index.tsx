@@ -21,15 +21,19 @@ import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotific
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import FormGroup from "@components/form/FormGroup";
 import axios from "axios";
-import cloneDeep from "lodash/cloneDeep";
 import { maxNoteLength, perustiedotValidationSchema } from "src/schemas/perustiedot";
 import useSnackbars from "src/hooks/useSnackbars";
 import ProjektiKuulutuskielet from "@components/projekti/ProjektiKuulutuskielet";
 
-export type FormValues = Pick<
+type TransientFormValues = {
+  suunnittelusopimusprojekti: "true" | "false" | null;
+  liittyviasuunnitelmia: "true" | "false" | null;
+};
+type PersitentFormValues = Pick<
   TallennaProjektiInput,
   "oid" | "muistiinpano" | "euRahoitus" | "suunnitteluSopimus" | "liittyvatSuunnitelmat" | "kielitiedot"
 >;
+export type FormValues = TransientFormValues & PersitentFormValues;
 
 const loadedProjektiValidationSchema = getProjektiValidationSchema([
   ProjektiTestType.PROJEKTI_IS_LOADED,
@@ -62,6 +66,8 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
       euRahoitus: null,
       liittyvatSuunnitelmat: null,
       kielitiedot: null,
+      suunnittelusopimusprojekti: null,
+      liittyviasuunnitelmia: null,
     },
     mode: "onChange",
     reValidateMode: "onChange",
@@ -87,20 +93,20 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   };
 
   const onSubmit = async (data: FormValues) => {
-    const formData = cloneDeep(data);
-    deleteFieldArrayIds(formData.liittyvatSuunnitelmat);
+    const { suunnittelusopimusprojekti, liittyviasuunnitelmia, ...persistentData } = data;
+    deleteFieldArrayIds(persistentData.liittyvatSuunnitelmat);
     setFormIsSubmitting(true);
     try {
-      const logoTiedosto = formData.suunnitteluSopimus?.logo as unknown as File | undefined | string;
-      if (formData.suunnitteluSopimus && logoTiedosto instanceof File) {
-        formData.suunnitteluSopimus.logo = await talletaLogo(logoTiedosto);
-      } else if (formData.suunnitteluSopimus) {
+      const logoTiedosto = persistentData.suunnitteluSopimus?.logo as unknown as File | undefined | string;
+      if (persistentData.suunnitteluSopimus && logoTiedosto instanceof File) {
+        persistentData.suunnitteluSopimus.logo = await talletaLogo(logoTiedosto);
+      } else if (persistentData.suunnitteluSopimus) {
         // If logo has already been saved and no file has been given,
         // remove the logo property from formData so it won't get overwrited
-        delete formData.suunnitteluSopimus.logo;
+        delete persistentData.suunnitteluSopimus.logo;
       }
       setStatusBeforeSave(projekti?.status);
-      await api.tallennaProjekti(formData);
+      await api.tallennaProjekti(persistentData);
       await reloadProjekti();
       showSuccessMessage("Tallennus onnistui!");
     } catch (e) {
@@ -139,6 +145,10 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
             const { __typename, ...suunnitelmaInput } = suunnitelma;
             return suunnitelmaInput;
           }) || [],
+        suunnittelusopimusprojekti:
+          projekti.status === Status.EI_JULKAISTU ? null : projekti.suunnitteluSopimus ? "true" : "false",
+        liittyviasuunnitelmia:
+          projekti.status === Status.EI_JULKAISTU ? null : projekti.liittyvatSuunnitelmat?.length ? "true" : "false",
       };
       if (projekti.kielitiedot) {
         const { __typename, ...kielitiedotInput } = projekti.kielitiedot;
