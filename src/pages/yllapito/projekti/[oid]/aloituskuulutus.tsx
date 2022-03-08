@@ -27,7 +27,9 @@ import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/proje
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 import KuulutuksenYhteystiedot from "@components/projekti/aloituskuulutus/KuulutuksenYhteystiedot";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
-import { cloneDeep, find } from "lodash";
+import cloneDeep from "lodash/cloneDeep";
+import find from "lodash/find";
+import lowerCase from "lodash/lowerCase";
 import useSnackbars from "src/hooks/useSnackbars";
 import { aloituskuulutusSchema } from "src/schemas/aloituskuulutus";
 import AloituskuulutusLukunakyma from "@components/projekti/aloituskuulutus/AloituskuulutusLukunakyma";
@@ -36,7 +38,6 @@ import { GetServerSideProps } from "next";
 import { setupLambdaMonitoring } from "backend/src/aws/monitoring";
 import { DialogContent, DialogTitle } from "@mui/material";
 import TextInput from "@components/form/TextInput";
-import { lowerCase } from "lodash";
 import dayjs from "dayjs";
 import HassuDialog from "@components/HassuDialog";
 import { GetParameterCommandOutput, SSMClient } from "@aws-sdk/client-ssm";
@@ -520,9 +521,8 @@ export default function Aloituskuulutus({
           <AloituskuulutusLukunakyma
             oid={projekti?.oid}
             aloituskuulutusjulkaisu={
-              odottaaJulkaisua()
-                ? getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.HYVAKSYTTY)
-                : getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA)
+              getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.HYVAKSYTTY) ||
+              getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA)
             }
             isLoadingProjekti={isLoadingProjekti}
             kirjaamoOsoitteet={kirjaamoOsoitteet || []}

@@ -52,19 +52,19 @@ export class FileService {
     const sourceFileProperties = await this.getUploadedSourceFileInformation(filePath);
 
     const fileNameFromUpload = FileService.getFileNameFromPath(filePath);
-    const targetPath =
-      FileService.getProjektiDirectory(param.oid) + `/${param.targetFilePathInProjekti}/${fileNameFromUpload}`;
+    const targetPath = `/${param.targetFilePathInProjekti}/${fileNameFromUpload}`;
+    const targetBucketPath = FileService.getProjektiDirectory(param.oid) + targetPath;
     try {
       await getS3Client().send(
         new CopyObjectCommand({
           ...sourceFileProperties,
           Bucket: config.yllapitoBucketName,
-          Key: targetPath,
+          Key: targetBucketPath,
           MetadataDirective: "REPLACE",
         })
       );
       log.info(
-        `Copied uploaded file (${sourceFileProperties.ContentType}) ${sourceFileProperties.CopySource} to ${targetPath}`
+        `Copied uploaded file (${sourceFileProperties.ContentType}) ${sourceFileProperties.CopySource} to ${targetBucketPath}`
       );
       return targetPath;
     } catch (e) {
@@ -97,6 +97,10 @@ export class FileService {
 
   private static getProjektiDirectory(oid: string) {
     return `yllapito/tiedostot/projekti/${oid}`;
+  }
+
+  private static getPublicProjektiDirectory(oid: string) {
+    return `tiedostot/suunnitelma/${oid}`;
   }
 
   async getUploadedSourceFileInformation(
@@ -176,6 +180,10 @@ export class FileService {
 
   getYllapitoPathForProjektiFile(oid: string, path: string): string | undefined {
     return path ? `/${FileService.getProjektiDirectory(oid)}${path}` : undefined;
+  }
+
+  getPublicPathForProjektiFile(oid: string, path: string): string | undefined {
+    return path ? `/${FileService.getPublicProjektiDirectory(oid)}${path}` : undefined;
   }
 }
 

@@ -2,11 +2,13 @@ import React, { ReactElement, ReactNode } from "react";
 import styles, { notification } from "@styles/notification/Notification.module.css";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import classNames from "classnames";
 
 export enum NotificationType {
   DEFAULT = "default",
   INFO = "info",
+  INFO_GREEN = "info-green",
   INFO_GRAY = "info_gray",
   WARN = "warn",
   ERROR = "error",
@@ -46,6 +48,7 @@ export default function Notification({
           className={classNames(styles["start-icon"], type && styles[type])}
         />
       )}
+      {!hideIcon && type==NotificationType.INFO_GREEN && (<InfoOutlinedIcon className={classNames(styles["start-icon"], type && styles[type])}/>)}
       {children}
     </div>
   );

@@ -49,6 +49,13 @@ Info.args = {
   type: NotificationType.INFO,
 };
 
+export const InfoGreen = Template.bind({});
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+InfoGreen.args = {
+  children: "Ohjeet",
+  type: NotificationType.INFO_GREEN,
+};
+
 export const Warn = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Warn.args = {

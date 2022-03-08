@@ -131,7 +131,7 @@ export class Config extends BaseConfig {
       ? process.env.BUILD_BRANCH
       : await execShellCommand("git rev-parse --abbrev-ref HEAD");
 
-    if (this.isDeveloperEnvironment()) {
+    if (Config.isDeveloperEnvironment()) {
       this.frontendDomainName =
         (await readFrontendStackOutputs()).CloudfrontPrivateDNSName || "please-re-run-backend-deployment";
     } else {
@@ -151,7 +151,7 @@ export class Config extends BaseConfig {
     return this.branch;
   }
 
-  public isDeveloperEnvironment() {
+  public static isDeveloperEnvironment() {
     return !Config.isPermanentEnvironment() && "feature" !== Config.env;
   }
 }

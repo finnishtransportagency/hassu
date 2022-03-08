@@ -1,10 +1,14 @@
 import { AloitusKuulutusJulkaisu, AloitusKuulutusTila, Kieli, ViranomaisVastaanottajaInput } from "@services/api";
 import React, { ReactElement } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { capitalize, replace, lowerCase } from "lodash";
+import capitalize from "lodash/capitalize";
+import replace from "lodash/replace";
+import lowerCase from "lodash/lowerCase";
 import AloituskuulutusPDFEsikatselu from "./AloituskuulutusPDFEsikatselu";
 import AloituskuulutusTiedostot from "./AloituskuulutusTiedostot";
 import IlmoituksenVastaanottajat from "./IlmoituksenVastaanottajat";
+import { examineKuulutusPaiva } from "@components/projekti/aloituskuulutus/aloitusKuulutusUtil";
+import FormatDate from "@components/FormatDate";
 
 interface Props {
   oid?: string;
@@ -19,32 +23,38 @@ export default function AloituskuulutusLukunakyma({
   isLoadingProjekti,
   kirjaamoOsoitteet,
 }: Props): ReactElement {
-  const muotoilePvm = (pvm: string | null | undefined) => {
-    if (!pvm) {
-      return;
-    }
-    return new Date(pvm).toLocaleDateString("fi");
-  };
+  if (!aloituskuulutusjulkaisu || !oid) {
+    return <></>;
+  }
+
+  let { kuulutusPaiva, published } = examineKuulutusPaiva(aloituskuulutusjulkaisu);
 
   return (
     <>
-      {aloituskuulutusjulkaisu?.tila === AloitusKuulutusTila.HYVAKSYTTY && (
+      {!published && aloituskuulutusjulkaisu.tila === AloitusKuulutusTila.HYVAKSYTTY && (
         <Notification type={NotificationType.WARN}>
-          Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä {muotoilePvm(aloituskuulutusjulkaisu.kuulutusPaiva)}
+          Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä {kuulutusPaiva}
         </Notification>
       )}
-      {aloituskuulutusjulkaisu?.tila !== AloitusKuulutusTila.HYVAKSYTTY && (
+      {published && aloituskuulutusjulkaisu.tila === AloitusKuulutusTila.HYVAKSYTTY && (
+        <Notification type={NotificationType.INFO_GREEN}>
+          Aloituskuulutus on julkaistu {kuulutusPaiva}. Projekti näytetään kuulutuspäivästä lasketun määräajan jälkeen
+          palvelun julkisella puolella suunnittelussa olevana. Kuulutusvaihe päättyy{" "}
+          <FormatDate date={aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen} />.
+        </Notification>
+      )}
+      {aloituskuulutusjulkaisu.tila !== AloitusKuulutusTila.HYVAKSYTTY && (
         <Notification type={NotificationType.WARN}>
           Aloituskuulutus on hyväksyttävänä projektipäälliköllä. Jos kuulutusta tarvitsee muokata, ota yhteys
           projektipäällikköön.
         </Notification>
       )}
-      {aloituskuulutusjulkaisu?.suunnitteluSopimus && (
+      {aloituskuulutusjulkaisu.suunnitteluSopimus && (
         <Notification type={NotificationType.INFO_GRAY}>
           Hankkeesta on tehty suunnittelusopimus kunnan kanssa
           <br />
           <br />
-          {capitalize(aloituskuulutusjulkaisu?.suunnitteluSopimus.kunta)}
+          {capitalize(aloituskuulutusjulkaisu.suunnitteluSopimus.kunta)}
           <br />
           {capitalize(aloituskuulutusjulkaisu.suunnitteluSopimus.etunimi)}{" "}
           {capitalize(aloituskuulutusjulkaisu.suunnitteluSopimus.sukunimi)}, puh.{" "}
@@ -57,12 +67,14 @@ export default function AloituskuulutusLukunakyma({
       <div className="grid grid-cols-1 md:grid-cols-4 ">
         <p className="vayla-label md:col-span-1">Kuulutuspäivä</p>
         <p className="vayla-label md:col-span-3">Kuulutusvaihe päättyy</p>
-        <p className="md:col-span-1">{muotoilePvm(aloituskuulutusjulkaisu?.kuulutusPaiva)}</p>
-        <p className="md:col-span-3">{muotoilePvm(aloituskuulutusjulkaisu?.siirtyySuunnitteluVaiheeseen)}</p>
+        <p className="md:col-span-1">{kuulutusPaiva}</p>
+        <p className="md:col-span-3">
+          <FormatDate date={aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen} />
+        </p>
       </div>
       <div className="content">
         <p className="vayla-label">Kuulutuksessa esitettävät yhteystiedot</p>
-        {aloituskuulutusjulkaisu?.yhteystiedot?.map((yhteistieto, index) => (
+        {aloituskuulutusjulkaisu.yhteystiedot?.map((yhteistieto, index) => (
           <p key={index}>
             {capitalize(yhteistieto?.etunimi)} {capitalize(yhteistieto?.sukunimi)}, puh. {yhteistieto?.puhelinnumero},{" "}
             {yhteistieto?.sahkoposti ? replace(yhteistieto?.sahkoposti, "@", "[at]") : ""}
@@ -72,32 +84,32 @@ export default function AloituskuulutusLukunakyma({
       <div className="content">
         <p className="vayla-label">
           Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä. (
-          {lowerCase(aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli)})
+          {lowerCase(aloituskuulutusjulkaisu.kielitiedot?.ensisijainenKieli)})
         </p>
         <p>
-          {aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli === Kieli.SUOMI
-            ? aloituskuulutusjulkaisu?.hankkeenKuvaus?.SUOMI
-            : aloituskuulutusjulkaisu?.hankkeenKuvaus?.RUOTSI}
+          {aloituskuulutusjulkaisu.kielitiedot?.ensisijainenKieli === Kieli.SUOMI
+            ? aloituskuulutusjulkaisu.hankkeenKuvaus?.SUOMI
+            : aloituskuulutusjulkaisu.hankkeenKuvaus?.RUOTSI}
         </p>
       </div>
-      {aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli && (
+      {aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli && (
         <div className="content">
           <p className="vayla-label">
             Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä. (
-            {lowerCase(aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli)})
+            {lowerCase(aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli)})
           </p>
           <p>
-            {aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli === Kieli.SUOMI
-              ? aloituskuulutusjulkaisu?.hankkeenKuvaus?.SUOMI
-              : aloituskuulutusjulkaisu?.hankkeenKuvaus?.RUOTSI}
+            {aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli === Kieli.SUOMI
+              ? aloituskuulutusjulkaisu.hankkeenKuvaus?.SUOMI
+              : aloituskuulutusjulkaisu.hankkeenKuvaus?.RUOTSI}
           </p>
         </div>
       )}
-      {aloituskuulutusjulkaisu?.tila !== AloitusKuulutusTila.HYVAKSYTTY && (
+      {aloituskuulutusjulkaisu.tila !== AloitusKuulutusTila.HYVAKSYTTY && (
         <AloituskuulutusPDFEsikatselu oid={oid} aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} />
       )}
-      {aloituskuulutusjulkaisu?.tila === AloitusKuulutusTila.HYVAKSYTTY && (
-        <AloituskuulutusTiedostot aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} />
+      {aloituskuulutusjulkaisu.tila === AloitusKuulutusTila.HYVAKSYTTY && (
+        <AloituskuulutusTiedostot aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} oid={oid} />
       )}
       <div className="content">
         <IlmoituksenVastaanottajat

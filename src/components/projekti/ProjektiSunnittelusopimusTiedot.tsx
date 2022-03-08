@@ -37,7 +37,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
   useEffect(() => {
     getKuntaLista();
     setHasSuunnitteluSopimus(!!projekti?.suunnitteluSopimus);
-    setLogoUrl((projekti?.suunnitteluSopimus?.logo && "/" + projekti?.suunnitteluSopimus?.logo) || undefined);
+    setLogoUrl(projekti?.suunnitteluSopimus?.logo || undefined);
   }, [projekti]);
 
   return (

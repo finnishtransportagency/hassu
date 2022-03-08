@@ -2,6 +2,7 @@ import classNames from "classnames";
 import React from "react";
 import { FieldError } from "react-hook-form";
 import FormGroup from "./FormGroup";
+import { isDevEnvironment } from "@services/config";
 
 interface Props {
   error?: FieldError;
@@ -30,7 +31,7 @@ const DatePicker = (
       className={formGroupClassName}
     >
       <input
-        type="date"
+        type={isDevEnvironment ? "datetime-local" : "date"}
         maxLength={maxLength}
         {...props}
         ref={ref}

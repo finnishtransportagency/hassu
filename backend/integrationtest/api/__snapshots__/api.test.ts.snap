@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Api should search, load and save a project 1`] = `
+Object {
+  "__typename": "ProjektiJulkinen",
+  "aloitusKuulutusJulkaisut": Array [
+    Object {
+      "__typename": "AloitusKuulutusJulkaisuJulkinen",
+      "aloituskuulutusPDFt": Object {
+        "SUOMI": Object {
+          "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf",
+          "aloituskuulutusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf",
+        },
+        "__typename": "AloitusKuulutusPDFt",
+      },
+      "elyKeskus": "Pirkanmaa",
+      "hankkeenKuvaus": Object {
+        "RUOTSI": "På Svenska",
+        "SAAME": "Saameksi",
+        "SUOMI": "Lorem Ipsum",
+        "__typename": "HankkeenKuvaukset",
+      },
+      "kielitiedot": Object {
+        "__typename": "Kielitiedot",
+        "ensisijainenKieli": "SUOMI",
+      },
+      "kuulutusPaiva": "2022-01-02",
+      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "suunnitteluSopimus": undefined,
+      "velho": Object {
+        "__typename": "Velho",
+        "kunnat": Array [
+          "Helsinki",
+          " Vantaa",
+        ],
+        "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+        "tilaajaOrganisaatio": "Väylävirasto",
+        "tyyppi": "TIE",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "A-tunnus1",
+          "organisaatio": "CGI Suomi Oy",
+          "puhelinnumero": "123",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sukunimi": "Hassu",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
+  ],
+  "euRahoitus": false,
+  "oid": "1.2.246.578.5.1.2978288874.2711575506",
+}
+`;

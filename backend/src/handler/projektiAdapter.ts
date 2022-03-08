@@ -44,7 +44,7 @@ export class ProjektiAdapter {
       kayttoOikeudet: KayttoOikeudetManager.adaptAPIKayttoOikeudet(kayttoOikeudet),
       tyyppi: velho?.tyyppi || dbProjekti.tyyppi, // remove usage of projekti.tyyppi after all data has been migrated to new format
       aloitusKuulutus: adaptAloitusKuulutus(aloitusKuulutus),
-      suunnitteluSopimus: adaptSuunnitteluSopimus(suunnitteluSopimus),
+      suunnitteluSopimus: adaptSuunnitteluSopimus(dbProjekti.oid, suunnitteluSopimus),
       liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmat(liittyvatSuunnitelmat),
       aloitusKuulutusJulkaisut: adaptAloitusKuulutusJulkaisut(dbProjekti.oid, aloitusKuulutusJulkaisut),
       velho: {
@@ -104,7 +104,7 @@ function adaptLiittyvatSuunnitelmat(suunnitelmat?: Suunnitelma[] | null): API.Su
   return suunnitelmat as undefined | null;
 }
 
-function adaptKielitiedot(kielitiedot?: Kielitiedot | null): API.Kielitiedot | undefined | null {
+export function adaptKielitiedot(kielitiedot?: Kielitiedot | null): API.Kielitiedot | undefined | null {
   if (kielitiedot) {
     return {
       ...kielitiedot,
@@ -181,10 +181,15 @@ function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.AloitusKuu
 }
 
 function adaptSuunnitteluSopimus(
+  oid: string,
   suunnitteluSopimus?: SuunnitteluSopimus | null
 ): API.SuunnitteluSopimus | undefined | null {
   if (suunnitteluSopimus) {
-    return { __typename: "SuunnitteluSopimus", ...suunnitteluSopimus };
+    return {
+      __typename: "SuunnitteluSopimus",
+      ...suunnitteluSopimus,
+      logo: fileService.getYllapitoPathForProjektiFile(oid, suunnitteluSopimus.logo),
+    };
   }
   return suunnitteluSopimus as undefined | null;
 }
@@ -193,14 +198,14 @@ function removeUndefinedFields(object: API.Projekti): Partial<API.Projekti> {
   return pickBy(object, (value) => value !== undefined);
 }
 
-function adaptYhteystiedot(yhteystiedot: Yhteystieto[]): API.Yhteystieto[] {
+export function adaptYhteystiedot(yhteystiedot: Yhteystieto[]): API.Yhteystieto[] {
   if (yhteystiedot) {
     return yhteystiedot.map((yt) => ({ __typename: "Yhteystieto", ...yt }));
   }
   return [];
 }
 
-function adaptJulkaisuPDFPaths(
+export function adaptJulkaisuPDFPaths(
   oid: string,
   aloitusKuulutusPDFS: LocalizedMap<AloitusKuulutusPDF>
 ): AloitusKuulutusPDFt | undefined {
@@ -224,7 +229,7 @@ function adaptJulkaisuPDFPaths(
   return { __typename: "AloitusKuulutusPDFt", SUOMI: result[Kieli.SUOMI], ...result };
 }
 
-function adaptHankkeenKuvaus(hankkeenKuvaus: LocalizedMap<string>): HankkeenKuvaukset {
+export function adaptHankkeenKuvaus(hankkeenKuvaus: LocalizedMap<string>): HankkeenKuvaukset {
   return {
     __typename: "HankkeenKuvaukset",
     SUOMI: hankkeenKuvaus.SUOMI,
@@ -232,7 +237,7 @@ function adaptHankkeenKuvaus(hankkeenKuvaus: LocalizedMap<string>): HankkeenKuva
   };
 }
 
-function adaptAloitusKuulutusJulkaisut(
+export function adaptAloitusKuulutusJulkaisut(
   oid: string,
   aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null
 ): API.AloitusKuulutusJulkaisu[] | undefined {
@@ -246,7 +251,7 @@ function adaptAloitusKuulutusJulkaisut(
         hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
         yhteystiedot: adaptYhteystiedot(yhteystiedot),
         velho: adaptVelho(velho),
-        suunnitteluSopimus: adaptSuunnitteluSopimus(suunnitteluSopimus),
+        suunnitteluSopimus: adaptSuunnitteluSopimus(oid, suunnitteluSopimus),
         kielitiedot: adaptKielitiedot(kielitiedot),
         aloituskuulutusPDFt: adaptJulkaisuPDFPaths(oid, julkaisu.aloituskuulutusPDFt),
       };
@@ -255,7 +260,7 @@ function adaptAloitusKuulutusJulkaisut(
   return undefined;
 }
 
-function adaptVelho(velho: Velho): API.Velho {
+export function adaptVelho(velho: Velho): API.Velho {
   return { __typename: "Velho", ...velho };
 }
 

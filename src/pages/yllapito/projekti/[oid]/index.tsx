@@ -21,7 +21,7 @@ import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotific
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import FormGroup from "@components/form/FormGroup";
 import axios from "axios";
-import { cloneDeep } from "lodash";
+import cloneDeep from "lodash/cloneDeep";
 import { maxNoteLength, perustiedotValidationSchema } from "src/schemas/perustiedot";
 import useSnackbars from "src/hooks/useSnackbars";
 import ProjektiKuulutuskielet from "@components/projekti/ProjektiKuulutuskielet";

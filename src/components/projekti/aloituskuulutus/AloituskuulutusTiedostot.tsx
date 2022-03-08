@@ -1,14 +1,19 @@
 import { Link } from "@mui/material";
 import { AloitusKuulutusJulkaisu, Kieli } from "@services/api";
-import dayjs from "dayjs";
-import { lowerCase } from "lodash";
+import lowerCase from "lodash/lowerCase";
 import { ReactElement } from "react";
+import ExtLink from "@components/ExtLink";
+import { examineKuulutusPaiva } from "@components/projekti/aloituskuulutus/aloitusKuulutusUtil";
 
 interface Props {
+  oid: string;
   aloituskuulutusjulkaisu?: AloitusKuulutusJulkaisu | null;
 }
 
-export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu }: Props): ReactElement {
+export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid }: Props): ReactElement {
+  if (!oid || !aloituskuulutusjulkaisu) {
+    return <></>;
+  }
   const getPdft = (kieli: Kieli | undefined | null) => {
     if (!aloituskuulutusjulkaisu || !aloituskuulutusjulkaisu.aloituskuulutusPDFt || !kieli) {
       return undefined;
@@ -23,6 +28,13 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu }: Pr
     return path.substring(path.lastIndexOf("/") + 1);
   };
 
+  let { kuulutusPaiva, published } = examineKuulutusPaiva(aloituskuulutusjulkaisu);
+
+  let aloitusKuulutusHref: string | undefined;
+  if (published) {
+    aloitusKuulutusHref =
+      window.location.protocol + "//" + window.location.host + "/suunnitelma/" + oid + "/aloituskuulutus";
+  }
   return (
     <>
       <div className="content">
@@ -55,18 +67,12 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu }: Pr
             {toissijaisetPDFt && (
               <div className="flex flex-col">
                 <div>
-                  <Link
-                    underline="none"
-                    href={toissijaisetPDFt.aloituskuulutusPDFPath}
-                  >
+                  <Link underline="none" href={toissijaisetPDFt.aloituskuulutusPDFPath}>
                     {parseFilename(toissijaisetPDFt.aloituskuulutusPDFPath)}
                   </Link>
                 </div>
                 <div>
-                  <Link
-                    underline="none"
-                    href={toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath}
-                  >
+                  <Link underline="none" href={toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath}>
                     {parseFilename(toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath)}
                   </Link>
                 </div>
@@ -77,10 +83,10 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu }: Pr
 
         <div className="content">
           <p className="vayla-label">Kuulutus julkisella puolella</p>
-          <p>
-            Linkki julkiselle puolelle muodostetaan kuulutuspäivänä. Kuulutuspäivä on{" "}
-            {dayjs(aloituskuulutusjulkaisu?.kuulutusPaiva).format("DD.MM.YYYY")}.
-          </p>
+          {!published && (
+            <p>Linkki julkiselle puolelle muodostetaan kuulutuspäivänä. Kuulutuspäivä on {kuulutusPaiva}.</p>
+          )}
+          {published && <ExtLink href={aloitusKuulutusHref}>Kuulutus palvelun julkisella puolella</ExtLink>}
         </div>
       </div>
     </>

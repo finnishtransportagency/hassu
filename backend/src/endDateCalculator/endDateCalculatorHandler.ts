@@ -1,18 +1,32 @@
 import { LaskePaattymisPaivaQueryVariables } from "../../../common/graphql/apiModel";
-import { dateToString, parseDate } from "../util/dateUtil";
+import { dateTimeToString, dateToString, ISO_DATE_FORMAT, parseDate } from "../util/dateUtil";
 import { Dayjs } from "dayjs";
 import { bankHolidaysClient } from "./bankHolidaysClient";
+import { config } from "../config";
 
 export async function calculateEndDate({ alkupaiva }: LaskePaattymisPaivaQueryVariables) {
-  const start = parseDate(alkupaiva);
-  if (start.isValid()) {
-    let endDate: Dayjs = start.add(1 + 30, "day");
-    const bankHolidays = await bankHolidaysClient.getBankHolidays();
-    while (bankHolidays.isBankHoliday(endDate)) {
-      endDate = endDate.add(1, "day");
+  let start: Dayjs;
+  // Only accept dates in prod, but allow datetimes in other environments
+  const isDateOnly = config.isProd() || alkupaiva.length == ISO_DATE_FORMAT.length;
+  if (isDateOnly) {
+    start = parseDate(alkupaiva);
+    if (!start.isValid()) {
+      new Error("Alkupäivän pitää olla muotoa YYYY-MM-DD tai YYYY-MM-DDTHH:mm");
     }
+  } else {
+    start = parseDate(alkupaiva);
+    if (!start.isValid()) {
+      new Error("Alkupäivän pitää olla muotoa YYYY-MM-DDTHH:mm");
+    }
+  }
+  let endDate: Dayjs = start.add(1 + 30, "day");
+  const bankHolidays = await bankHolidaysClient.getBankHolidays();
+  while (bankHolidays.isBankHoliday(endDate)) {
+    endDate = endDate.add(1, "day");
+  }
+  if (isDateOnly) {
     return dateToString(endDate);
   } else {
-    throw new Error("Alkupäivän pitää olla muotoa YYYY-MM-DD");
+    return dateTimeToString(endDate);
   }
 }

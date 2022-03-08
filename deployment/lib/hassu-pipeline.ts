@@ -71,7 +71,7 @@ export class HassuPipelineStack extends Stack {
 
       reportBucket.grantRead(oai);
     }
-    if (config.isFeatureBranch() && !config.isDeveloperEnvironment()) {
+    if (config.isFeatureBranch() && !Config.isDeveloperEnvironment()) {
       webhookFilters = [codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs("feature/*")];
       reportBuildStatus = true;
     } else {

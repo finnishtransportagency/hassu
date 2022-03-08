@@ -1,6 +1,6 @@
 import * as sinon from "sinon";
 import * as Sinon from "sinon";
-import { NykyinenKayttaja, VaylaKayttajaTyyppi } from "../../../common/graphql/apiModel";
+import { NykyinenKayttaja, ProjektiKayttaja, VaylaKayttajaTyyppi } from "../../../common/graphql/apiModel";
 
 export class UserFixture {
   private sinonStub: Sinon.SinonStub;
@@ -14,6 +14,15 @@ export class UserFixture {
 
   public loginAs(vaylaUser: NykyinenKayttaja) {
     this.userService.identifyMockUser(vaylaUser);
+  }
+
+  loginAsProjektiKayttaja(projektiKayttaja: ProjektiKayttaja) {
+    this.userService.identifyMockUser({
+      __typename: "NykyinenKayttaja",
+      uid: projektiKayttaja.kayttajatunnus,
+      roolit: ["hassu_kayttaja", "Atunnukset"],
+      vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.A_TUNNUS,
+    });
   }
 
   public logout() {

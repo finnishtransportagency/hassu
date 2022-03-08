@@ -26,6 +26,7 @@ import { Kayttajas } from "../src/personSearch/kayttajas";
 import { AwsClientStub, mockClient } from "aws-sdk-client-mock";
 import { getS3Client } from "../src/aws/clients";
 import { PutObjectCommand, PutObjectCommandInput, S3Client } from "@aws-sdk/client-s3";
+import { NotFoundError } from "../src/error/NotFoundError";
 
 const { expect, assert } = require("chai");
 
@@ -292,6 +293,11 @@ describe("apiHandler", () => {
           }
         );
 
+        // Verify that projekti is not visible for anonymous users
+        userFixture.logout();
+        await expect(api.lataaProjekti(fixture.projekti1.oid)).to.eventually.be.rejectedWith(NotFoundError);
+        userFixture.loginAs(UserFixture.pekkaProjari);
+
         // Send aloituskuulutus to be approved
         const oid = projekti.oid;
         await api.siirraTila({
@@ -355,6 +361,13 @@ describe("apiHandler", () => {
 
         // Verify the end result using snapshot
         expect(await api.lataaProjekti(oid)).toMatchSnapshot();
+
+        // Verify the public result using snapshot
+        userFixture.logout();
+        expect({
+          description: "Public version of the projekti",
+          projekti: await api.lataaProjekti(oid),
+        }).toMatchSnapshot();
       });
     });
 

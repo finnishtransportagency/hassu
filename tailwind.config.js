@@ -42,7 +42,9 @@ module.exports = {
       turquoise: "#00b0cc",
       green: {
         dark: "#207a43",
+        darker: "#54AC54",
         DEFAULT: "#8dcb6d",
+        lightest: "#F5FFEF"
       },
       orange: {
         dark: "#F0AD4E",

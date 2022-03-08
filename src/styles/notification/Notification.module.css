@@ -18,6 +18,10 @@
   @apply text-turquoise;
 }
 
+.notification .start-icon.info-green {
+  @apply text-green-darker;
+}
+
 .notification .start-icon.warn {
   @apply text-orange-dark;
 }
@@ -36,6 +40,10 @@
 
 .notification.info-gray {
   @apply bg-gray-lightest border-gray;
+}
+
+.notification.info-green {
+  @apply bg-green-lightest border-green-darker;
 }
 
 .notification.warn {
