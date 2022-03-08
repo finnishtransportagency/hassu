@@ -12,10 +12,8 @@ import { asiakirjaAdapter } from "./asiakirjaAdapter";
 import { AloitusKuulutus, AloitusKuulutusJulkaisu, AloitusKuulutusPDF, DBProjekti } from "../database/model/projekti";
 import { asiakirjaService } from "../asiakirja/asiakirjaService";
 import { fileService } from "../files/fileService";
-import { sendEmail } from "../email/email";
-import { createHyvaksyttavanaEmail } from "../email/emailTemplates";
-import { log } from "../logger";
 import { parseDate } from "../util/dateUtil";
+import { emailHandler } from "./emailHandler";
 
 async function sendForApproval(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus) {
   const muokkaaja = requirePermissionMuokkaa(projekti);
@@ -30,13 +28,6 @@ async function sendForApproval(projekti: DBProjekti, aloitusKuulutus: AloitusKuu
   aloitusKuulutusJulkaisu.tila = AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA;
   aloitusKuulutusJulkaisu.muokkaaja = muokkaaja.uid;
   await projektiDatabase.insertAloitusKuulutusJulkaisu(projekti.oid, aloitusKuulutusJulkaisu);
-
-  const emailOptions = createHyvaksyttavanaEmail(projekti);
-  if (emailOptions.to) {
-    await sendEmail(emailOptions);
-  } else {
-    log.error("Aloituskuulutukselle ei loytynyt projektipaallikon sahkopostiosoitetta");
-  }
 }
 
 async function reject(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus, syy: string) {
@@ -143,10 +134,13 @@ class AloitusKuulutusHandler {
 
     if (toiminto == TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI) {
       await sendForApproval(projekti, aloitusKuulutus);
+      await emailHandler.sendEmail(toiminto, oid);
     } else if (toiminto == TilasiirtymaToiminto.HYLKAA) {
       await reject(projekti, aloitusKuulutus, syy);
+      await emailHandler.sendEmail(toiminto, oid);
     } else if (toiminto == TilasiirtymaToiminto.HYVAKSY) {
       await approve(projekti, aloitusKuulutus);
+      await emailHandler.sendEmail(toiminto, oid);
     } else {
       throw new Error("Tuntematon toiminto");
     }
