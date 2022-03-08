@@ -24,6 +24,8 @@ export type CreateFileProperties = {
   filePathInProjekti: string;
   fileName: string;
   contents: Buffer;
+  contentType?: string;
+  inline?: boolean;
 };
 
 export type PersistFileProperties = { targetFilePathInProjekti: string; uploadedFileSource: string; oid: string };
@@ -85,6 +87,8 @@ export class FileService {
           Body: param.contents,
           Bucket: config.yllapitoBucketName,
           Key: targetPath,
+          ContentType: param.contentType,
+          ContentDisposition: param.inline && "inline; filename=" + param.fileName,
         })
       );
       log.info(`Created file ${targetPath}`, commandOutput.$metadata);

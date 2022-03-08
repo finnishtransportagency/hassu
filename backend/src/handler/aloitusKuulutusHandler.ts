@@ -65,6 +65,8 @@ async function createAloituskuulutusPDF(
     filePathInProjekti: "aloituskuulutus",
     fileName: pdf.nimi,
     contents: Buffer.from(pdf.sisalto, "base64"),
+    inline: true,
+    contentType: "application/pdf",
   });
 }
 

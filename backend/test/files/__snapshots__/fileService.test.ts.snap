@@ -1,5 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`UploadService should create file to projekti successfully 1`] = `
+Object {
+  "Body": Object {
+    "data": Array [
+      126,
+      138,
+      27,
+      106,
+    ],
+    "type": "Buffer",
+  },
+  "Bucket": "hassu-localstack-yllapito",
+  "ContentDisposition": "inline; filename=test.pdf",
+  "ContentType": "application/pdf",
+  "Key": "yllapito/tiedostot/projekti/1/testfilepath/test.pdf",
+}
+`;
+
 exports[`UploadService should upload file successfully 1`] = `
 Object {
   "Bucket": "hassu-localstack-upload",
