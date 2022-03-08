@@ -87,7 +87,7 @@ export class HassuPipelineStack extends Stack {
       reportBuildStatus,
       branchOrRef,
       webhookFilters,
-      cloneDepth: 0
+      cloneDepth: 0,
     };
     const gitHubSource = codebuild.Source.gitHub(sourceProps);
     new codebuild.Project(this, "HassuProject", {
@@ -139,6 +139,10 @@ export class HassuPipelineStack extends Stack {
           NEXT_PUBLIC_VELHO_BASE_URL: {
             value: config.getInfraParameterPath("VelhoBaseUrl", config.velhoEnv),
             type: BuildEnvironmentVariableType.PARAMETER_STORE,
+          },
+          NODE_OPTIONS: {
+            value: "--max_old_space_size=4096 --max-old-space-size=4096",
+            type: BuildEnvironmentVariableType.PLAINTEXT,
           },
         },
       },
