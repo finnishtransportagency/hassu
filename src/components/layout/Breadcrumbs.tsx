@@ -1,8 +1,8 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import { breadcrumbs } from "@styles/Breadcrumbs.module.css";
 import { NextRouter, useRouter } from "next/router";
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
+import { Container, styled } from "@mui/material";
 
 export interface RouteLabels {
   [key: string]: { label: string; hideWhenNotCurrentRoute?: boolean };
@@ -86,25 +86,31 @@ export default function Breadcrumbs({ routeLabels }: Props): ReactElement {
   }, [router, routeLabels]);
 
   return (
-    <nav className={breadcrumbs}>
-      <ol>
-        <li>
-          <Link href={isYllapito() ? "/yllapito" : "/"}>{t("common:sivustonimi")}</Link>
-        </li>
-        {Object.entries(routeMapping).map(([route, { href, label }]) => (
-          <li key={route}>
-            {!isCurrentRoute(route, router) ? (
-              <Link href={href}>
-                <a>
-                  <span>{label}</span>
-                </a>
-              </Link>
-            ) : (
-              <span className="font-bold">{label}</span>
-            )}
+    <Container>
+      <nav>
+        <ol className="flex flex-wrap vayla-paragraph my-7">
+          <li className="mr-1 truncate-ellipsis max-w-xs">
+            <Link href={isYllapito() ? "/yllapito" : "/"}>{t("common:sivustonimi")}</Link>
           </li>
-        ))}
-      </ol>
-    </nav>
+          {Object.entries(routeMapping).map(([route, { href, label }]) => (
+            <ListItem className="mr-1 truncate-ellipsis max-w-xs" key={route}>
+              {!isCurrentRoute(route, router) ? (
+                <Link href={href}>
+                  <a>
+                    <span>{label}</span>
+                  </a>
+                </Link>
+              ) : (
+                <span className="font-bold">{label}</span>
+              )}
+            </ListItem>
+          ))}
+        </ol>
+      </nav>
+    </Container>
   );
 }
+
+const ListItem = styled("li")({
+  "&:before": { content: '">"', marginRight: "0.25rem" },
+});

@@ -1,6 +1,5 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import { Projekti } from "@services/api";
-import styles from "@styles/projekti/ProjektiPerustiedot.module.css";
 import RadioButton from "@components/form/RadioButton";
 import TextInput from "@components/form/TextInput";
 import Select from "@components/form/Select";
@@ -10,7 +9,9 @@ import FileInput from "@components/form/FileInput";
 import IconButton from "@components/button/IconButton";
 import FormGroup from "@components/form/FormGroup";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
-import classNames from "classnames";
+import Section from "@components/layout/Section";
+import HassuGrid from "@components/HassuGrid";
+import SectionContent from "@components/layout/SectionContent";
 
 interface Props {
   projekti?: Projekti | null;
@@ -41,115 +42,117 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
   }, [projekti]);
 
   return (
-    <>
+    <Section smallGaps>
       <h4 className="vayla-small-title">Suunnittelusopimus</h4>
-      <FormGroup label="Onko kyseessä suunnittelusopimuksella toteutettava suunnitteluhanke? *" flexDirection="row" errorMessage={errors.suunnittelusopimusprojekti?.message}>
+      <FormGroup
+        label="Onko kyseessä suunnittelusopimuksella toteutettava suunnitteluhanke? *"
+        flexDirection="row"
+        errorMessage={errors.suunnittelusopimusprojekti?.message}
+      >
         <RadioButton
           label="Kyllä"
           value="true"
           {...register("suunnittelusopimusprojekti")}
-          onChange={() => {setHasSuunnitteluSopimus(true)}}
+          onChange={() => {
+            setHasSuunnitteluSopimus(true);
+          }}
         ></RadioButton>
         <RadioButton
           label="Ei"
           value="false"
           {...register("suunnittelusopimusprojekti")}
-          onChange={() => {setHasSuunnitteluSopimus(false)}}
+          onChange={() => {
+            setHasSuunnitteluSopimus(false);
+          }}
         ></RadioButton>
       </FormGroup>
       {hasSuunnittaluSopimus && (
-        <div className={classNames(styles.cell, "indent")}>
-          <p>Kunnan projektipäällikön tiedot</p>
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-6 lg:pr-1 relative">
-            <div className="lg:col-span-4">
+        <SectionContent largeGap>
+          <SectionContent>
+            <p>Kunnan projektipäällikön tiedot</p>
+            <HassuGrid cols={[1, 1, 3]}>
               <Select
                 label="Kunta *"
                 options={kuntaOptions ? kuntaOptions : [{ label: "", value: "" }]}
                 error={(errors as any).suunnitteluSopimus?.kunta}
                 {...register("suunnitteluSopimus.kunta", { shouldUnregister: true })}
               />
-            </div>
-            <div className="lg:col-span-4">
               <TextInput
                 label="Etunimi *"
                 error={(errors as any).suunnitteluSopimus?.etunimi}
                 {...register("suunnitteluSopimus.etunimi", { shouldUnregister: true })}
               />
-            </div>
-            <div className="lg:col-span-4">
               <TextInput
                 label="Sukunimi *"
                 error={(errors as any).suunnitteluSopimus?.sukunimi}
                 {...register("suunnitteluSopimus.sukunimi", { shouldUnregister: true })}
               />
-            </div>
-            <div className="lg:col-span-4">
               <TextInput
                 label="Puhelinnumero *"
                 maxLength={maxPhoneLength}
                 error={(errors as any).suunnitteluSopimus?.puhelinnumero}
                 {...register("suunnitteluSopimus.puhelinnumero", { shouldUnregister: true })}
               />
-            </div>
-            <div className="lg:col-span-4">
               <TextInput
                 label="Sähköposti *"
                 error={(errors as any).suunnitteluSopimus?.email}
                 {...register("suunnitteluSopimus.email", { shouldUnregister: true })}
               />
-            </div>
-          </div>
-          <Controller
-            render={({ field }) =>
-              logoUrl ? (
-                <FormGroup
-                  label="Virallinen, kunnalta saatu logo. *"
-                  errorMessage={(errors as any).suunnitteluSopimus?.logo?.message}
-                >
-                  <div className="flex flex-row">
-                    <img
-                      className="h-11 border-gray border mb-3.5 py-2 px-3"
-                      src={logoUrl}
-                      alt="Suunnittelu sopimus logo"
-                    />
-                    <IconButton
-                      icon="trash"
-                      onClick={() => {
-                        setLogoUrl(undefined);
-                        // @ts-ignore
-                        setValue("suunnitteluSopimus.logo", undefined);
-                      }}
-                    />
-                  </div>
-                </FormGroup>
-              ) : (
-                <FileInput
-                  label="Virallinen, kunnalta saatu logo. *"
-                  error={(errors as any).suunnitteluSopimus?.logo}
-                  onDrop={(files) => {
-                    const logoTiedosto = files[0];
-                    if (logoTiedosto) {
-                      setLogoUrl(URL.createObjectURL(logoTiedosto));
-                      field.onChange(logoTiedosto);
-                    }
-                  }}
-                  onChange={(e) => {
-                    const logoTiedosto = e.target.files?.[0];
-                    if (logoTiedosto) {
-                      setLogoUrl(URL.createObjectURL(logoTiedosto));
-                      field.onChange(logoTiedosto);
-                    }
-                  }}
-                />
-              )
-            }
-            name="suunnitteluSopimus.logo"
-            control={control}
-            defaultValue={undefined}
-            shouldUnregister
-          />
-        </div>
+            </HassuGrid>
+          </SectionContent>
+          <SectionContent>
+            <Controller
+              render={({ field }) =>
+                logoUrl ? (
+                  <FormGroup
+                    label="Virallinen, kunnalta saatu logo. *"
+                    errorMessage={(errors as any).suunnitteluSopimus?.logo?.message}
+                  >
+                    <div className="flex flex-row">
+                      <img
+                        className="h-11 border-gray border mb-3.5 py-2 px-3"
+                        src={logoUrl}
+                        alt="Suunnittelu sopimus logo"
+                      />
+                      <IconButton
+                        icon="trash"
+                        onClick={() => {
+                          setLogoUrl(undefined);
+                          // @ts-ignore
+                          setValue("suunnitteluSopimus.logo", undefined);
+                        }}
+                      />
+                    </div>
+                  </FormGroup>
+                ) : (
+                  <FileInput
+                    label="Virallinen, kunnalta saatu logo. *"
+                    error={(errors as any).suunnitteluSopimus?.logo}
+                    onDrop={(files) => {
+                      const logoTiedosto = files[0];
+                      if (logoTiedosto) {
+                        setLogoUrl(URL.createObjectURL(logoTiedosto));
+                        field.onChange(logoTiedosto);
+                      }
+                    }}
+                    onChange={(e) => {
+                      const logoTiedosto = e.target.files?.[0];
+                      if (logoTiedosto) {
+                        setLogoUrl(URL.createObjectURL(logoTiedosto));
+                        field.onChange(logoTiedosto);
+                      }
+                    }}
+                  />
+                )
+              }
+              name="suunnitteluSopimus.logo"
+              control={control}
+              defaultValue={undefined}
+              shouldUnregister
+            />
+          </SectionContent>
+        </SectionContent>
       )}
-    </>
+    </Section>
   );
 }

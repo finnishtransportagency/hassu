@@ -1,6 +1,5 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import React from "react";
-import { wrapper } from "@styles/button/ButtonWrapper.module.css";
 import classNames from "classnames";
 import ButtonContent from "./ButtonContent";
 
@@ -18,6 +17,7 @@ const Button = (
     endIcon,
     primary,
     className,
+    style,
     onClick,
     ...props
   }: Props & React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>,
@@ -26,7 +26,7 @@ const Button = (
   const buttonClass = primary ? "btn-primary" : "btn";
 
   return (
-    <div className={classNames(wrapper, className)}>
+    <div className={classNames("relative inline-block", className)} style={style}>
       <button
         className={buttonClass}
         ref={ref}

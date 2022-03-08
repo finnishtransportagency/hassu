@@ -9,7 +9,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import Button from "@components/button/Button";
 import Textarea from "@components/form/Textarea";
-import Notification from "@components/notification/Notification";
 import ProjektiPerustiedot from "@components/projekti/ProjektiPerustiedot";
 import ExtLink from "@components/ExtLink";
 import RadioButton from "@components/form/RadioButton";
@@ -24,6 +23,8 @@ import axios from "axios";
 import { maxNoteLength, perustiedotValidationSchema, UIValuesSchema } from "src/schemas/perustiedot";
 import useSnackbars from "src/hooks/useSnackbars";
 import ProjektiKuulutuskielet from "@components/projekti/ProjektiKuulutuskielet";
+import Section from "@components/layout/Section";
+import HassuStack from "@components/layout/HassuStack";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -182,37 +183,25 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
     <ProjektiPageLayout title={"Projektin tiedot"}>
       <FormProvider {...useFormReturn}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <fieldset disabled={disableFormEdit}>
+          <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
             <input type="hidden" {...register("oid")} />
-            <ProjektiErrorNotification
-              disableValidation={isLoadingProjekti}
-              projekti={projekti}
-              validationSchema={loadedProjektiValidationSchema}
-            />
-            <div className="content">
+            <Section>
+              <ProjektiErrorNotification
+                disableValidation={isLoadingProjekti}
+                projekti={projekti}
+                validationSchema={loadedProjektiValidationSchema}
+              />
               <ProjektiPerustiedot projekti={projekti} />
-              <br />
-              {projekti?.velho?.linkki && <ExtLink href={projekti?.velho?.linkki}>Hankesivu</ExtLink>}
-              <ExtLink href={velhobaseurl + projekti?.oid}>Projektin sivu Projektivelhossa</ExtLink>
-            </div>
-            <hr />
-            <div className="content">
-              <ProjektiKuntatiedot projekti={projekti} />
-            </div>
-            <hr />
-            <div className="content">
-              <ProjektiKuulutuskielet />
-            </div>
-            <hr />
-            <div className="content">
-              <ProjektiLiittyvatSuunnitelmat projekti={projekti} />
-            </div>
-            <hr />
-            <div className="content">
-              <ProjektiSuunnittelusopimusTiedot projekti={projekti} />
-            </div>
-            <hr />
-            <div className="content">
+              <div>
+                {projekti?.velho?.linkki && <ExtLink href={projekti?.velho?.linkki}>Hankesivu</ExtLink>}
+                <ExtLink href={velhobaseurl + projekti?.oid}>Projektin sivu Projektivelhossa</ExtLink>
+              </div>
+            </Section>
+            <ProjektiKuntatiedot projekti={projekti} />
+            <ProjektiKuulutuskielet />
+            <ProjektiLiittyvatSuunnitelmat projekti={projekti} />
+            <ProjektiSuunnittelusopimusTiedot projekti={projekti} />
+            <Section smallGaps>
               <h4 className="vayla-small-title">EU-rahoitus</h4>
               <FormGroup
                 label="Rahoittaako EU suunnitteluhanketta? *"
@@ -230,15 +219,14 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
                   {...register("euRahoitus", { setValueAs: booleanToString })}
                 ></RadioButton>
               </FormGroup>
-            </div>
-            <hr />
-            <h4 className="vayla-small-title">Muistiinpanot</h4>
-            <p>
-              Voit kirjoittaa alla olevaan kenttään sisäisiä muistiinpanoja, jotka näkyvät kaikille projektiin
-              lisätyille henkilöille. Muistiinpanoa voi muokata ainoastaan henkilöt, joilla on projektiin
-              muokkausoikeudet. Vain viimeisimpänä tallennettu muistiinpano jää näkyviin.
-            </p>
-            <div className="flex flex-col">
+            </Section>
+            <Section smallGaps>
+              <h4 className="vayla-small-title">Muistiinpanot</h4>
+              <p>
+                Voit kirjoittaa alla olevaan kenttään sisäisiä muistiinpanoja, jotka näkyvät kaikille projektiin
+                lisätyille henkilöille. Muistiinpanoa voi muokata ainoastaan henkilöt, joilla on projektiin
+                muokkausoikeudet. Vain viimeisimpänä tallennettu muistiinpano jää näkyviin.
+              </p>
               <Textarea
                 label="Muistiinpano"
                 disabled={disableFormEdit}
@@ -246,14 +234,14 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
                 error={errors.muistiinpano}
                 maxLength={maxNoteLength}
               />
-            </div>
-            <hr />
-            <Notification>Tallennus ei vielä julkaise tietoja.</Notification>
-            <div className="flex gap-4">
-              <Button primary={true} className="ml-auto" disabled={disableFormEdit}>
-                {projekti?.status !== Status.EI_JULKAISTU ? "Tallenna" : "Tallenna ja siirry aloituskuulutukseen"}
-              </Button>
-            </div>
+            </Section>
+            <Section noDivider>
+              <HassuStack alignItems="flex-end">
+                <Button primary={true} disabled={disableFormEdit}>
+                  {projekti?.status !== Status.EI_JULKAISTU ? "Tallenna" : "Tallenna ja siirry aloituskuulutukseen"}
+                </Button>
+              </HassuStack>
+            </Section>
           </fieldset>
         </form>
       </FormProvider>

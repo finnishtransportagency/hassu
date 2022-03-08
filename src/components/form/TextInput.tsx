@@ -17,6 +17,7 @@ const TextInput = (
     label,
     hideErrorMessage,
     className,
+    style,
     hideLengthCounter = true,
     ...props
   }: Props & Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "ref">,
@@ -29,6 +30,7 @@ const TextInput = (
       label={label}
       errorMessage={hideErrorMessage ? undefined : error?.message}
       className={className}
+      style={style}
       bottomInfo={
         typeof maxLength === "number" &&
         !hideLengthCounter && (

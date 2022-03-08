@@ -7,6 +7,11 @@ import { Projekti, SuunnitelmaInput } from "@services/api";
 import IconButton from "@components/button/IconButton";
 import FormGroup from "@components/form/FormGroup";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
+import Section from "@components/layout/Section";
+import SectionContent from "@components/layout/SectionContent";
+import HassuGrid from "@components/HassuGrid";
+import HassuGridItem from "@components/HassuGridItem";
+import HassuStack from "@components/layout/HassuStack";
 
 const defaultSuunnitelma: SuunnitelmaInput = {
   asiatunnus: "",
@@ -32,30 +37,32 @@ export default function ProjektiLiittyvatSuunnitelmat({ projekti }: Props): Reac
   }, [projekti]);
 
   return (
-    <>
-      <h4 className="vayla-small-title">Projektiin liittyvät suunnitelmat</h4>
-      <FormGroup
-        label="Liittyykö projektiin muita voimassaolevia lakisääteisiä suunnitelmia? *"
-        flexDirection="row"
-        errorMessage={errors?.liittyviasuunnitelmia?.message}
-      >
-        <RadioButton
-          label="Kyllä"
-          value="true"
-          {...register("liittyviasuunnitelmia")}
-          onChange={() => setLiittyviaSuunnitelmia(true)}
-        />
-        <RadioButton
-          label="Ei"
-          value="false"
-          {...register("liittyviasuunnitelmia")}
-          onChange={() => setLiittyviaSuunnitelmia(false)}
-        />
-      </FormGroup>
+    <Section smallGaps>
+      <SectionContent>
+        <h4 className="vayla-small-title">Projektiin liittyvät suunnitelmat</h4>
+        <FormGroup
+          label="Liittyykö projektiin muita voimassaolevia lakisääteisiä suunnitelmia? *"
+          flexDirection="row"
+          errorMessage={errors?.liittyviasuunnitelmia?.message}
+        >
+          <RadioButton
+            label="Kyllä"
+            value="true"
+            {...register("liittyviasuunnitelmia")}
+            onChange={() => setLiittyviaSuunnitelmia(true)}
+          />
+          <RadioButton
+            label="Ei"
+            value="false"
+            {...register("liittyviasuunnitelmia")}
+            onChange={() => setLiittyviaSuunnitelmia(false)}
+          />
+        </FormGroup>
+      </SectionContent>
       {isLiittyviaSuunnitelmia && (
         <LiittyvatSuunnitelmat isLiittyviaSuunnitelmia={isLiittyviaSuunnitelmia} projekti={projekti} />
       )}
-    </>
+    </Section>
   );
 }
 
@@ -82,51 +89,56 @@ const LiittyvatSuunnitelmat = ({ isLiittyviaSuunnitelmia, projekti }: LiittyvatS
     }
   }, [isLiittyviaSuunnitelmia, remove, projekti]);
   return (
-    <fieldset>
-      <div>
-        {fields.map((field, index) => (
-          <div key={field.id} className="grid grid-cols-1 md:grid-cols-12 gap-x-6 mb-3">
-            <div className="md:col-span-4">
-              <TextInput
-                label="Asiatunnus"
-                {...register(`liittyvatSuunnitelmat.${index}.asiatunnus`)}
-                disabled={!isLiittyviaSuunnitelmia}
-                error={errors?.liittyvatSuunnitelmat?.[index]?.asiatunnus}
-              />
-            </div>
-            <div className="md:col-span-6">
-              <TextInput
-                label="Suunnitelman nimi"
-                {...register(`liittyvatSuunnitelmat.${index}.nimi`)}
-                disabled={!isLiittyviaSuunnitelmia}
-                error={errors?.liittyvatSuunnitelmat?.[index]?.nimi}
-              />
-            </div>
-            <div>
-              <div className="hidden lg:block lg:mt-6">
-                <IconButton
-                  icon="trash"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    remove(index);
-                  }}
+    <SectionContent largeGap sx={{ marginLeft: 4 }}>
+      {fields.map((field, index) => {
+        return (
+          <HassuGrid key={field.id} cols={[1, 3]}>
+            <TextInput
+              label="Asiatunnus"
+              {...register(`liittyvatSuunnitelmat.${index}.asiatunnus`)}
+              disabled={!isLiittyviaSuunnitelmia}
+              error={errors?.liittyvatSuunnitelmat?.[index]?.asiatunnus}
+            />
+            <HassuGridItem colSpan={[1, 1, 2]}>
+              <HassuStack
+                direction={["column", "row"]}
+                spacing={4}
+                rowGap={4}
+                columnGap={7}
+                alignItems={[undefined, undefined, "flex-end"]}
+              >
+                <TextInput
+                  label="Suunnitelman nimi"
+                  {...register(`liittyvatSuunnitelmat.${index}.nimi`)}
+                  disabled={!isLiittyviaSuunnitelmia}
+                  error={errors?.liittyvatSuunnitelmat?.[index]?.nimi}
+                  style={{ width: "100%" }}
                 />
-              </div>
-              <div className="block lg:hidden">
-                <Button
-                  onClick={(event) => {
-                    event.preventDefault();
-                    remove(index);
-                  }}
-                  endIcon="trash"
-                >
-                  Poista
-                </Button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+                <div className="hidden lg:block">
+                  <IconButton
+                    icon="trash"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      remove(index);
+                    }}
+                  />
+                </div>
+                <div className="block lg:hidden">
+                  <Button
+                    onClick={(event) => {
+                      event.preventDefault();
+                      remove(index);
+                    }}
+                    endIcon="trash"
+                  >
+                    Poista
+                  </Button>
+                </div>
+              </HassuStack>
+            </HassuGridItem>
+          </HassuGrid>
+        );
+      })}
       <Button
         onClick={(event) => {
           event.preventDefault();
@@ -136,6 +148,6 @@ const LiittyvatSuunnitelmat = ({ isLiittyviaSuunnitelmia, projekti }: LiittyvatS
       >
         Uusi rivi +
       </Button>
-    </fieldset>
+    </SectionContent>
   );
 };

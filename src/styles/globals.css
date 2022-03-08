@@ -4,7 +4,7 @@
 
 @layer base {
   body hr {
-    @apply border-gray mt-6 mb-10;
+    @apply border-gray;
   }
   body {
     @apply vayla-body-text;
@@ -60,9 +60,6 @@
   }
   body :is(h2, h3) {
     @apply vayla-lead;
-  }
-  body section {
-    @apply mb-4;
   }
 
   @font-face {
@@ -295,7 +292,7 @@
     @apply relative;
   }
   .btn {
-    @apply leading-relaxed uppercase inline-block py-1 px-6 shadow rounded-full bg-white text-primary-dark border border-primary-dark transition;
+    @apply leading-relaxed uppercase inline-block py-1 px-6 shadow rounded-full w-full bg-white text-primary-dark border border-primary-dark transition;
     font-size: 1.25rem;
   }
   .btn:disabled,
@@ -323,10 +320,7 @@
   .truncate-ellipsis {
     @apply overflow-ellipsis whitespace-nowrap overflow-hidden;
   }
-  section .content {
-    @apply mb-8 mt-6;
-  }
-  section .ingress {
+  .ingress {
     @apply mb-8;
   }
 }

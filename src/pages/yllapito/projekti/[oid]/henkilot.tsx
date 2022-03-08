@@ -17,6 +17,8 @@ import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 import { getProjektiValidationSchema, ProjektiTestType } from "../../../../schemas/projekti";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
+import Section from "@components/layout/Section";
+import HassuStack from "@components/layout/HassuStack";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
@@ -90,21 +92,20 @@ export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
     <ProjektiPageLayout title="Projektin Henkilöt">
       <FormProvider {...useFormReturn}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <fieldset disabled={disableFormEdit}>
-            <div className="content">
-              <ProjektiErrorNotification
-                projekti={projekti}
-                disableValidation={isLoadingProjekti}
-                validationSchema={loadedProjektiValidationSchema}
-              />
-              <KayttoOikeusHallinta disableFields={disableFormEdit} />
-            </div>
-            <hr />
-            <div className="flex gap-6 flex-col md:flex-row">
-              <Button className="ml-auto" primary disabled={disableFormEdit}>
-                Tallenna
-              </Button>
-            </div>
+          <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
+            <ProjektiErrorNotification
+              projekti={projekti}
+              disableValidation={isLoadingProjekti}
+              validationSchema={loadedProjektiValidationSchema}
+            />
+            <KayttoOikeusHallinta disableFields={disableFormEdit} />
+            <Section noDivider>
+              <HassuStack alignItems="flex-end">
+                <Button className="ml-auto" primary disabled={disableFormEdit}>
+                  Tallenna
+                </Button>
+              </HassuStack>
+            </Section>
           </fieldset>
         </form>
       </FormProvider>

@@ -1,5 +1,5 @@
 .notification {
-  @apply border p-5 flex flex-row vayla-paragraph mb-6 bg-gray-lightest border-gray;
+  @apply border p-5 flex flex-row vayla-paragraph bg-gray-lightest border-gray;
 }
 
 .notification .start-icon {

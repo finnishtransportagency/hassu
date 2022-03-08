@@ -1,6 +1,5 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import React, { ReactElement } from "react";
-import { wrapper } from "@styles/button/ButtonWrapper.module.css";
 import classNames from "classnames";
 import HassuLink from "@components/HassuLink";
 import ButtonContent from "./ButtonContent";
@@ -30,7 +29,7 @@ function ButtonLink(
   const buttonClass = primary ? "btn-primary" : "btn";
 
   return (
-    <div className={classNames(wrapper, className)}>
+    <div className={classNames("relative inline-block", className)}>
       <HassuLink
         ref={ref}
         href={!disabled ? href : undefined}

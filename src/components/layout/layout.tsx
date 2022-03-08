@@ -2,6 +2,7 @@ import React, { useState, useEffect, ReactElement, ReactNode } from "react";
 import Breadcrumbs, { RouteLabels } from "./Breadcrumbs";
 import Header from "./header/header";
 import { Footer } from "./footer";
+import { Container } from "@mui/material";
 
 interface Props {
   children: ReactNode;
@@ -26,7 +27,9 @@ export default function Layout({ children, routeLabels }: Props): ReactElement {
     <div className="min-h-screen relative flex flex-col">
       <Header scrolledPastOffset={toTopEnabled} />
       <Breadcrumbs routeLabels={routeLabels} />
-      <main className="container mb-10">{children}</main>
+      <Container sx={{ marginBottom: "110px" }}>
+        <main>{children}</main>
+      </Container>
       <Footer />
       <button
         onClick={() => {

@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import React, { ReactElement, ReactNode } from "react";
-import style from "@styles/form/FormGroup.module.css";
+import { styled, experimental_sx as sx } from "@mui/material";
 
 interface Props {
   label?: string;
@@ -17,13 +17,12 @@ export default function FormGroup({
   children,
   errorMessage,
   bottomInfo,
-  className,
   flexDirection = "col",
   ...props
 }: Props & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>): ReactElement {
   return (
-    <div className={classNames(style["form-group"], className)} {...props}>
-      {label && <label>{label}</label>}
+    <div {...props}>
+      {label && <Label>{label}</Label>}
       <div className={classNames("flex", `flex-${flexDirection}`)}>{children}</div>
       {(bottomInfo || errorMessage) && (
         <div className="flex">
@@ -34,3 +33,10 @@ export default function FormGroup({
     </div>
   );
 }
+
+const Label = styled("label")(() =>
+  sx({
+    display: "block",
+    marginBottom: 2,
+  })
+);
