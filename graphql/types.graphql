@@ -54,7 +54,6 @@ enum AsiakirjaTyyppi {
 
 interface IProjekti {
   oid: String!
-  aloitusKuulutusJulkaisut: [AloitusKuulutusJulkaisu!]
 }
 
 type Projekti implements IProjekti {
@@ -98,7 +97,7 @@ type Velho {
 
 type ProjektiJulkinen implements IProjekti {
   oid: String!
-  aloitusKuulutusJulkaisut: [AloitusKuulutusJulkaisu!]
+  aloitusKuulutusJulkaisut: [AloitusKuulutusJulkaisuJulkinen!]
   euRahoitus: Boolean
 }
 
@@ -160,6 +159,18 @@ type AloitusKuulutusJulkaisu {
   tila: AloitusKuulutusTila
   muokkaaja: String
   hyvaksyja: String
+}
+
+type AloitusKuulutusJulkaisuJulkinen {
+  kuulutusPaiva: String
+  siirtyySuunnitteluVaiheeseen: String
+  hankkeenKuvaus: HankkeenKuvaukset
+  elyKeskus: String
+  yhteystiedot: [Yhteystieto!]!
+  velho: Velho!
+  suunnitteluSopimus: SuunnitteluSopimus
+  kielitiedot: Kielitiedot
+  aloituskuulutusPDFt: AloitusKuulutusPDFt
 }
 
 type IlmoituksenVastaanottajat {

@@ -567,7 +567,7 @@ Object {
     "__typename": "ProjektiJulkinen",
     "aloitusKuulutusJulkaisut": Array [
       Object {
-        "__typename": "AloitusKuulutusJulkaisu",
+        "__typename": "AloitusKuulutusJulkaisuJulkinen",
         "aloituskuulutusPDFt": Object {
           "SAAME": Object {
             "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Projektin nimi saameksi.pdf",

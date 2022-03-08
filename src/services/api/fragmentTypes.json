@@ -324,6 +324,12 @@
       },
       {
         "kind": "OBJECT",
+        "name": "AloitusKuulutusJulkaisuJulkinen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "__Schema",
         "possibleTypes": null,
         "__typename": "__Type"

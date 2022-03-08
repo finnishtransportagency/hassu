@@ -3,10 +3,10 @@ import React, { ReactElement } from "react";
 import { useProjektiJulkinen } from "../../../hooks/useProjektiJulkinen";
 import FormatDate from "@components/FormatDate";
 import useTranslation from "next-translate/useTranslation";
-import { AloitusKuulutusJulkaisu, Kieli } from "../../../../common/graphql/apiModel";
+import { AloitusKuulutusJulkaisuJulkinen, Kieli } from "../../../../common/graphql/apiModel";
 import ExtLink from "@components/ExtLink";
 
-function formatYhteystiedotText(kuulutus: AloitusKuulutusJulkaisu) {
+function formatYhteystiedotText(kuulutus: AloitusKuulutusJulkaisuJulkinen) {
   const yhteystiedotList = kuulutus.yhteystiedot.map(
     (yt) =>
       yt.etunimi +

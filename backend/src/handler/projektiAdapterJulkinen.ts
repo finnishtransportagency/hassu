@@ -37,7 +37,7 @@ class ProjektiAdapterJulkinen {
   adaptAloitusKuulutusJulkaisut(
     oid: string,
     aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null
-  ): API.AloitusKuulutusJulkaisu[] | undefined {
+  ): API.AloitusKuulutusJulkaisuJulkinen[] | undefined {
     if (aloitusKuulutusJulkaisut) {
       return aloitusKuulutusJulkaisut
         .filter((julkaisu) => julkaisu.tila == AloitusKuulutusTila.HYVAKSYTTY)
@@ -45,7 +45,7 @@ class ProjektiAdapterJulkinen {
           const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot } = julkaisu;
 
           return {
-            __typename: "AloitusKuulutusJulkaisu",
+            __typename: "AloitusKuulutusJulkaisuJulkinen",
             kuulutusPaiva: julkaisu.kuulutusPaiva,
             elyKeskus: julkaisu.elyKeskus,
             siirtyySuunnitteluVaiheeseen: julkaisu.siirtyySuunnitteluVaiheeseen,
@@ -100,7 +100,7 @@ class ProjektiAdapterJulkinen {
   }
 }
 
-function checkIfAloitusKuulutusJulkaisutIsPublic(aloitusKuulutusJulkaisut: API.AloitusKuulutusJulkaisu[]): boolean {
+function checkIfAloitusKuulutusJulkaisutIsPublic(aloitusKuulutusJulkaisut: API.AloitusKuulutusJulkaisuJulkinen[]): boolean {
   if (!(aloitusKuulutusJulkaisut && aloitusKuulutusJulkaisut.length == 1)) {
     log.info("Projektilla ei ole hyväksyttyä aloituskuulutusta");
     return false;
