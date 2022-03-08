@@ -21,7 +21,7 @@ import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotific
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import FormGroup from "@components/form/FormGroup";
 import axios from "axios";
-import { maxNoteLength, perustiedotValidationSchema } from "src/schemas/perustiedot";
+import { maxNoteLength, perustiedotValidationSchema, UIValuesSchema } from "src/schemas/perustiedot";
 import useSnackbars from "src/hooks/useSnackbars";
 import ProjektiKuulutuskielet from "@components/projekti/ProjektiKuulutuskielet";
 
@@ -58,9 +58,10 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   const [formContext, setFormContext] = useState<Projekti | undefined>(undefined);
 
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  
 
   const formOptions: UseFormProps<FormValues> = {
-    resolver: yupResolver(perustiedotValidationSchema, { abortEarly: false, recursive: true }),
+    resolver: yupResolver(perustiedotValidationSchema.concat(UIValuesSchema), { abortEarly: false, recursive: true }),
     defaultValues: {
       muistiinpano: "",
       euRahoitus: null,
