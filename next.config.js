@@ -29,6 +29,10 @@ function setupLocalDevelopmentMode(config, env) {
           source: "/yllapito/tiedostot/:path*",
           destination: "https://" + process.env.FRONTEND_DOMAIN_NAME + "/yllapito/tiedostot/:path*",
         },
+        {
+          source: "/tiedostot/:path*",
+          destination: "https://" + process.env.FRONTEND_DOMAIN_NAME + "/tiedostot/:path*",
+        },
       ];
     },
   };

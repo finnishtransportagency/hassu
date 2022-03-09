@@ -15,6 +15,7 @@ import { fileService } from "../files/fileService";
 import { sendEmail } from "../email/email";
 import { createHyvaksyttavanaEmail } from "../email/emailTemplates";
 import { log } from "../logger";
+import { parseDate } from "../util/dateUtil";
 
 async function sendForApproval(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus) {
   const muokkaaja = requirePermissionMuokkaa(projekti);
@@ -67,6 +68,8 @@ async function createAloituskuulutusPDF(
     contents: Buffer.from(pdf.sisalto, "base64"),
     inline: true,
     contentType: "application/pdf",
+    publicationTimestamp: parseDate(julkaisuWaitingForApproval.kuulutusPaiva),
+    copyToPublic: true,
   });
 }
 
@@ -109,6 +112,14 @@ async function approve(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus) {
       kielitiedot.toissijainenKieli,
       julkaisuWaitingForApproval
     );
+
+    if (projekti.suunnitteluSopimus?.logo) {
+      await fileService.publishProjektiFile(
+        projekti.oid,
+        projekti.suunnitteluSopimus?.logo,
+        parseDate(julkaisuWaitingForApproval.kuulutusPaiva)
+      );
+    }
   }
 
   await projektiDatabase.updateAloitusKuulutusJulkaisu(projekti, julkaisuWaitingForApproval);

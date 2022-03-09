@@ -5,6 +5,7 @@ import { Duration, RemovalPolicy } from "@aws-cdk/core";
 import { Config } from "./config";
 import { BlockPublicAccess, Bucket, HttpMethods } from "@aws-cdk/aws-s3";
 import { OriginAccessIdentity } from "@aws-cdk/aws-cloudfront";
+import { IOriginAccessIdentity } from "@aws-cdk/aws-cloudfront/lib/origin-access-identity";
 
 // These should correspond to CfnOutputs produced by this stack
 export type DatabaseStackOutputs = {
@@ -18,6 +19,7 @@ export class HassuDatabaseStack extends cdk.Stack {
   public yllapitoBucket!: Bucket;
   public internalBucket!: Bucket;
   public archiveBucket!: Bucket;
+  public publicBucket!: Bucket;
   private config!: Config;
 
   constructor(scope: cdk.Construct) {
@@ -35,10 +37,22 @@ export class HassuDatabaseStack extends cdk.Stack {
     this.projektiTable = this.createProjektiTable();
     this.projektiArchiveTable = this.createProjektiArchiveTable();
 
+    let oai;
+    if (Config.env !== "localstack") {
+      const oaiName = "CloudfrontOriginAccessIdentity" + Config.env;
+      oai = new OriginAccessIdentity(this, oaiName, { comment: oaiName });
+
+      // tslint:disable-next-line:no-unused-expression
+      new cdk.CfnOutput(this, "CloudFrontOriginAccessIdentity", {
+        value: oai.originAccessIdentityName || "",
+      });
+    }
+
     this.uploadBucket = this.createUploadBucket();
-    this.yllapitoBucket = this.createYllapitoBucket();
+    this.yllapitoBucket = this.createYllapitoBucket(oai);
     this.internalBucket = this.createInternalBucket();
     this.archiveBucket = this.createArchiveBucket();
+    this.publicBucket = this.createPublicBucket(oai);
   }
 
   private createProjektiTable() {
@@ -114,7 +128,7 @@ export class HassuDatabaseStack extends cdk.Stack {
     });
   }
 
-  private createYllapitoBucket() {
+  private createYllapitoBucket(originAccessIdentity?: IOriginAccessIdentity) {
     const bucket = new Bucket(this, "YllapitoBucket", {
       bucketName: Config.yllapitoBucketName,
       versioned: true,
@@ -122,16 +136,21 @@ export class HassuDatabaseStack extends cdk.Stack {
       removalPolicy: RemovalPolicy.RETAIN,
     });
 
-    if (Config.env !== "localstack") {
-      const oaiName = "CloudfrontOriginAccessIdentity" + Config.env;
-      const oai = new OriginAccessIdentity(this, oaiName, { comment: oaiName });
+    if (originAccessIdentity) {
+      bucket.grantRead(originAccessIdentity);
+    }
+    return bucket;
+  }
 
-      // tslint:disable-next-line:no-unused-expression
-      new cdk.CfnOutput(this, "CloudFrontOriginAccessIdentity", {
-        value: oai.originAccessIdentityName || "",
-      });
-
-      bucket.grantRead(oai);
+  private createPublicBucket(originAccessIdentity?: IOriginAccessIdentity) {
+    let bucket = new Bucket(this, "PublicBucket", {
+      bucketName: Config.publicBucketName,
+      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+      removalPolicy: RemovalPolicy.RETAIN,
+      versioned: true,
+    });
+    if (originAccessIdentity) {
+      bucket.grantRead(originAccessIdentity);
     }
     return bucket;
   }

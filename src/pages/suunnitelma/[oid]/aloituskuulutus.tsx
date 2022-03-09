@@ -78,7 +78,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
       ))}
       {suunnitteluSopimus && (
         <div>
-          <p>{suunnitteluSopimus.logo}</p>
+          <p>{suunnitteluSopimus.logo && <img src={suunnitteluSopimus.logo} alt="Suunnittelusopimus logo" />}</p>
           <p>{suunnitteluSopimus.kunta}</p>
           <p>PROJEKTIPÄÄLLIKKÖ</p>
           <p>

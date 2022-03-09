@@ -3,328 +3,31 @@
     "types": [
       {
         "kind": "OBJECT",
-        "name": "Query",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "NykyinenKayttaja",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "SCALAR",
-        "name": "String",
+        "name": "__Directive",
         "possibleTypes": null,
         "__typename": "__Type"
       },
       {
         "kind": "ENUM",
-        "name": "VaylaKayttajaTyyppi",
+        "name": "__DirectiveLocation",
         "possibleTypes": null,
         "__typename": "__Type"
       },
       {
         "kind": "OBJECT",
-        "name": "Kayttaja",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "SCALAR",
-        "name": "Boolean",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "ListaaKayttajatInput",
+        "name": "__EnumValue",
         "possibleTypes": null,
         "__typename": "__Type"
       },
       {
         "kind": "OBJECT",
-        "name": "Projekti",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "ENUM",
-        "name": "ProjektiTyyppi",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "ENUM",
-        "name": "Status",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "ENUM",
-        "name": "Viranomainen",
+        "name": "__Field",
         "possibleTypes": null,
         "__typename": "__Type"
       },
       {
         "kind": "OBJECT",
-        "name": "AloitusKuulutus",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "HankkeenKuvaukset",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "Yhteystieto",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "IlmoituksenVastaanottajat",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "KuntaVastaanottaja",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "ViranomaisVastaanottaja",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "ENUM",
-        "name": "IlmoitettavaViranomainen",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "AloitusKuulutusJulkaisu",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "Velho",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "SuunnitteluSopimus",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "Kielitiedot",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "ENUM",
-        "name": "Kieli",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "AloitusKuulutusPDFt",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "AloitusKuulutusPDF",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "ENUM",
-        "name": "AloitusKuulutusTila",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "ProjektiKayttaja",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "ENUM",
-        "name": "ProjektiRooli",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "Suunnitelma",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "INTERFACE",
-        "name": "IProjekti",
-        "possibleTypes": [
-          {
-            "name": "Projekti",
-            "__typename": "__Type"
-          },
-          {
-            "name": "ProjektiJulkinen",
-            "__typename": "__Type"
-          }
-        ],
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "VelhoHakuTulos",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "PDF",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "ENUM",
-        "name": "AsiakirjaTyyppi",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "TallennaProjektiInput",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "SuunnitelmaInput",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "AloitusKuulutusInput",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "HankkeenKuvauksetInput",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "YhteystietoInput",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "IlmoituksenVastaanottajatInput",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "KuntaVastaanottajaInput",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "ViranomaisVastaanottajaInput",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "SuunnitteluSopimusInput",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "ProjektiKayttajaInput",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "KielitiedotInput",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "LatausTiedot",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "ENUM",
-        "name": "LaskuriTyyppi",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "Mutation",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "TilaSiirtymaInput",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "ENUM",
-        "name": "TilasiirtymaTyyppi",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "ENUM",
-        "name": "TilasiirtymaToiminto",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "ArkistointiTunnus",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "ProjektiJulkinen",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "AloitusKuulutusJulkaisuJulkinen",
+        "name": "__InputValue",
         "possibleTypes": null,
         "__typename": "__Type"
       },
@@ -348,31 +51,328 @@
       },
       {
         "kind": "OBJECT",
-        "name": "__Field",
+        "name": "AloitusKuulutus",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "AloitusKuulutusInput",
         "possibleTypes": null,
         "__typename": "__Type"
       },
       {
         "kind": "OBJECT",
-        "name": "__InputValue",
+        "name": "AloitusKuulutusJulkaisu",
         "possibleTypes": null,
         "__typename": "__Type"
       },
       {
         "kind": "OBJECT",
-        "name": "__EnumValue",
+        "name": "AloitusKuulutusJulkaisuJulkinen",
         "possibleTypes": null,
         "__typename": "__Type"
       },
       {
         "kind": "OBJECT",
-        "name": "__Directive",
+        "name": "AloitusKuulutusPDF",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "AloitusKuulutusPDFt",
         "possibleTypes": null,
         "__typename": "__Type"
       },
       {
         "kind": "ENUM",
-        "name": "__DirectiveLocation",
+        "name": "AloitusKuulutusTila",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ArkistointiTunnus",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "AsiakirjaTyyppi",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "SCALAR",
+        "name": "Boolean",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "HankkeenKuvaukset",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "HankkeenKuvauksetInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "IlmoitettavaViranomainen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "IlmoituksenVastaanottajat",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "IlmoituksenVastaanottajatInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "IProjekti",
+        "possibleTypes": [
+          {
+            "name": "Projekti",
+            "__typename": "__Type"
+          },
+          {
+            "name": "ProjektiJulkinen",
+            "__typename": "__Type"
+          }
+        ],
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Kayttaja",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "Kieli",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Kielitiedot",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "KielitiedotInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "KuntaVastaanottaja",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "KuntaVastaanottajaInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "LaskuriTyyppi",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "LatausTiedot",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "ListaaKayttajatInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Mutation",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "NykyinenKayttaja",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PDF",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Projekti",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ProjektiJulkinen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ProjektiKayttaja",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "ProjektiKayttajaInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "ProjektiRooli",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "ProjektiTyyppi",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Query",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "Status",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "SCALAR",
+        "name": "String",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Suunnitelma",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "SuunnitelmaInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "SuunnitteluSopimus",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "SuunnitteluSopimusInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "TallennaProjektiInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "TilaSiirtymaInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "TilasiirtymaToiminto",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "TilasiirtymaTyyppi",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "VaylaKayttajaTyyppi",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Velho",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "VelhoHakuTulos",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "Viranomainen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ViranomaisVastaanottaja",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "ViranomaisVastaanottajaInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Yhteystieto",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "YhteystietoInput",
         "possibleTypes": null,
         "__typename": "__Type"
       }

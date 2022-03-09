@@ -13,7 +13,7 @@ import {
   OriginRequestPolicy,
   OriginSslPolicy,
   PriceClass,
-  ViewerProtocolPolicy,
+  ViewerProtocolPolicy
 } from "@aws-cdk/aws-cloudfront";
 import { Config } from "./config";
 import { HttpOrigin } from "@aws-cdk/aws-cloudfront-origins/lib/http-origin";
@@ -28,7 +28,7 @@ import {
   PolicyDocument,
   PolicyStatement,
   Role,
-  ServicePrincipal,
+  ServicePrincipal
 } from "@aws-cdk/aws-iam";
 import * as fs from "fs";
 import { EdgeFunction } from "@aws-cdk/aws-cloudfront/lib/experimental";
@@ -84,20 +84,27 @@ export class HassuFrontendStack extends cdk.Stack {
       },
     }).build();
 
+    const edgeFunctionRole = this.createEdgeFunctionRole();
+
     const frontendRequestFunction = this.createFrontendRequestFunction(
       env,
       config.basicAuthenticationUsername,
-      config.basicAuthenticationPassword
+      config.basicAuthenticationPassword,
+      edgeFunctionRole
     );
+
     const dmzProxyBehaviorWithLambda = HassuFrontendStack.createDmzProxyBehavior(
       config.dmzProxyEndpoint,
       frontendRequestFunction
     );
+
     const dmzProxyBehavior = HassuFrontendStack.createDmzProxyBehavior(config.dmzProxyEndpoint);
     const behaviours: Record<string, BehaviorOptions> = await this.createDistributionProperties(
+      env,
       config,
       dmzProxyBehaviorWithLambda,
-      dmzProxyBehavior
+      dmzProxyBehavior,
+      edgeFunctionRole
     );
 
     let domain: any;
@@ -153,15 +160,25 @@ export class HassuFrontendStack extends cdk.Stack {
   private createFrontendRequestFunction(
     env: string,
     basicAuthenticationUsername: string,
-    basicAuthenticationPassword: string
+    basicAuthenticationPassword: string,
+    role: Role
   ): EdgeFunction {
     const sourceCode = fs.readFileSync(`${__dirname}/lambda/frontendRequest.js`).toString("UTF-8");
     const functionCode = Fn.sub(sourceCode, {
       BASIC_USERNAME: basicAuthenticationUsername,
       BASIC_PASSWORD: basicAuthenticationPassword,
     });
+    return new cloudfront.experimental.EdgeFunction(this, "frontendRequestFunction", {
+      runtime: Runtime.NODEJS_14_X,
+      functionName: "frontendRequestFunction" + env,
+      code: Code.fromInline(functionCode),
+      handler: "index.handler",
+      role,
+    });
+  }
 
-    const role = new Role(this, "frontendRequestFunctionRole", {
+  private createEdgeFunctionRole() {
+    return new Role(this, "edgeFunctionRole", {
       assumedBy: new CompositePrincipal(
         new ServicePrincipal("lambda.amazonaws.com"),
         new ServicePrincipal("edgelambda.amazonaws.com"),
@@ -186,9 +203,14 @@ export class HassuFrontendStack extends cdk.Stack {
         }),
       },
     });
-    return new cloudfront.experimental.EdgeFunction(this, "frontendRequestFunction", {
+  }
+
+  private createTiedostotOriginResponseFunction(env: string, role: Role): EdgeFunction {
+    const functionCode = fs.readFileSync(`${__dirname}/lambda/tiedostotOriginResponse.js`).toString("UTF-8");
+
+    return new cloudfront.experimental.EdgeFunction(this, "tiedostotOriginResponseFunction", {
       runtime: Runtime.NODEJS_14_X,
-      functionName: "frontendRequestFunction" + env,
+      functionName: "tiedostotOriginResponseFunction" + env,
       code: Code.fromInline(functionCode),
       handler: "index.handler",
       role,
@@ -196,9 +218,11 @@ export class HassuFrontendStack extends cdk.Stack {
   }
 
   private async createDistributionProperties(
+    env: string,
     config: Config,
     dmzProxyBehaviorWithLambda: BehaviorOptions,
-    dmzProxyBehavior: BehaviorOptions
+    dmzProxyBehavior: BehaviorOptions,
+    edgeFunctionRole: Role
   ): Promise<Record<string, BehaviorOptions>> {
     let { keyGroups, originAccessIdentity, originAccessIdentityReportBucket } = await this.createTrustedKeyGroupsAndOAI(
       config
@@ -206,6 +230,7 @@ export class HassuFrontendStack extends cdk.Stack {
     let props: Record<string, any> = {
       "/oauth2/*": dmzProxyBehaviorWithLambda,
       "/graphql": dmzProxyBehaviorWithLambda,
+      "/tiedostot/*": await this.createPublicBucketBehavior(env, edgeFunctionRole, originAccessIdentity),
       "/yllapito/tiedostot/*": await this.createPrivateBucketBehavior(
         "yllapitoBucket",
         Config.yllapitoBucketName,
@@ -273,6 +298,34 @@ export class HassuFrontendStack extends cdk.Stack {
       cachePolicy: CachePolicy.CACHING_DISABLED,
       originRequestPolicy: OriginRequestPolicy.CORS_S3_ORIGIN,
       trustedKeyGroups: keyGroups,
+    };
+  }
+
+  private async createPublicBucketBehavior(
+    env: string,
+    role: Role,
+    originAccessIdentity?: IOriginAccessIdentity
+  ): Promise<BehaviorOptions> {
+    const tiedostotOriginResponseFunction = this.createTiedostotOriginResponseFunction(env, role);
+    return {
+      origin: new S3Origin(
+        Bucket.fromBucketAttributes(this, "tiedostotBucketOrigin", {
+          region: "eu-west-1",
+          bucketName: Config.publicBucketName,
+        }),
+        {
+          originAccessIdentity,
+        }
+      ),
+      compress: true,
+      cachePolicy: CachePolicy.CACHING_OPTIMIZED,
+      originRequestPolicy: OriginRequestPolicy.CORS_S3_ORIGIN,
+      edgeLambdas: [
+        {
+          functionVersion: tiedostotOriginResponseFunction.currentVersion,
+          eventType: LambdaEdgeEventType.ORIGIN_RESPONSE,
+        },
+      ],
     };
   }
 

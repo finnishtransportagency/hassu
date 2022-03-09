@@ -13,6 +13,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { ArchivedProjektiKey } from "../database/projektiDatabase";
+import { Dayjs } from "dayjs";
 import { uriEscapePath } from "aws-sdk/lib/util";
 
 export type UploadFileProperties = {
@@ -27,6 +28,8 @@ export type CreateFileProperties = {
   contents: Buffer;
   contentType?: string;
   inline?: boolean;
+  publicationTimestamp?: Dayjs;
+  copyToPublic?: boolean;
 };
 
 export type PersistFileProperties = { targetFilePathInProjekti: string; uploadedFileSource: string; oid: string };
@@ -56,7 +59,7 @@ export class FileService {
 
     const fileNameFromUpload = FileService.getFileNameFromPath(filePath);
     const targetPath = `/${param.targetFilePathInProjekti}/${fileNameFromUpload}`;
-    const targetBucketPath = FileService.getProjektiDirectory(param.oid) + targetPath;
+    const targetBucketPath = FileService.getYllapitoProjektiDirectory(param.oid) + targetPath;
     try {
       await getS3Client().send(
         new CopyObjectCommand({
@@ -81,18 +84,27 @@ export class FileService {
    */
   async createFileToProjekti(param: CreateFileProperties): Promise<string> {
     const pathWithinProjekti = `/${param.filePathInProjekti}/${param.fileName}`;
-    const targetPath = FileService.getProjektiDirectory(param.oid) + pathWithinProjekti;
     try {
-      const commandOutput = await getS3Client().send(
-        new PutObjectCommand({
-          Body: param.contents,
-          Bucket: config.yllapitoBucketName,
-          Key: targetPath,
-          ContentType: param.contentType,
-          ContentDisposition: param.inline && "inline; filename=" + param.fileName,
-        })
+      const metadata: { [key: string]: string } = {};
+      if (param.publicationTimestamp) {
+        metadata["publication-timestamp"] = param.publicationTimestamp.toISOString();
+      }
+      await FileService.putFile(
+        config.yllapitoBucketName,
+        param,
+        FileService.getYllapitoProjektiDirectory(param.oid) + pathWithinProjekti,
+        metadata
       );
-      log.info(`Created file ${targetPath}`, commandOutput.$metadata);
+
+      if (param.copyToPublic) {
+        await FileService.putFile(
+          config.publicBucketName,
+          param,
+          FileService.getPublicProjektiDirectory(param.oid) + pathWithinProjekti,
+          metadata
+        );
+      }
+
       return pathWithinProjekti;
     } catch (e) {
       log.error(e);
@@ -100,7 +112,26 @@ export class FileService {
     }
   }
 
-  private static getProjektiDirectory(oid: string) {
+  private static async putFile(
+    bucket: string,
+    param: CreateFileProperties,
+    targetPath: string,
+    metadata: { [p: string]: string }
+  ) {
+    const commandOutput = await getS3Client().send(
+      new PutObjectCommand({
+        Body: param.contents,
+        Bucket: bucket,
+        Key: targetPath,
+        ContentType: param.contentType,
+        ContentDisposition: param.inline && "inline; filename=" + param.fileName,
+        Metadata: metadata,
+      })
+    );
+    log.info(`Created file ${bucket}/${targetPath}`, commandOutput.$metadata);
+  }
+
+  private static getYllapitoProjektiDirectory(oid: string) {
     return `yllapito/tiedostot/projekti/${oid}`;
   }
 
@@ -134,7 +165,7 @@ export class FileService {
   }
 
   async archiveProjekti({ oid, timestamp }: ArchivedProjektiKey): Promise<void> {
-    const sourcePrefix = FileService.getProjektiDirectory(oid);
+    const sourcePrefix = FileService.getYllapitoProjektiDirectory(oid);
     const targetPrefix = sourcePrefix + "/" + timestamp;
     const sourceBucket = config.yllapitoBucketName;
     const targetBucket = config.archiveBucketName;
@@ -149,6 +180,7 @@ export class FileService {
           Bucket: targetBucket,
           Key: targetKey,
           CopySource: uriEscapePath(`${sourceBucket}/${sourceKey}`),
+          MetadataDirective: "REPLACE",
         })
       );
 
@@ -187,11 +219,34 @@ export class FileService {
   }
 
   getYllapitoPathForProjektiFile(oid: string, path: string): string | undefined {
-    return path ? `/${FileService.getProjektiDirectory(oid)}${path}` : undefined;
+    return path ? `/${FileService.getYllapitoProjektiDirectory(oid)}${path}` : undefined;
   }
 
   getPublicPathForProjektiFile(oid: string, path: string): string | undefined {
     return path ? `/${FileService.getPublicProjektiDirectory(oid)}${path}` : undefined;
+  }
+
+  /**
+   * Copy file from yllapito to public bucket
+   */
+  async publishProjektiFile(oid: string, filePathInProjekti: string, publishDate?: Dayjs): Promise<void> {
+    const sourceBucket = config.yllapitoBucketName;
+    const targetBucket = config.publicBucketName;
+
+    const s3Client = getS3Client();
+    const metadata: { [key: string]: string } = {};
+    if (publishDate) {
+      metadata["publication-timestamp"] = publishDate.toISOString();
+    }
+    const copyObjectParams = {
+      Bucket: targetBucket,
+      Key: `${FileService.getPublicProjektiDirectory(oid)}${filePathInProjekti}`,
+      CopySource: `${sourceBucket}/${FileService.getYllapitoProjektiDirectory(oid)}${filePathInProjekti}`,
+      MetadataDirective: "REPLACE",
+      Metadata: metadata,
+    };
+    const copyObjectCommandOutput = await s3Client.send(new CopyObjectCommand(copyObjectParams));
+    log.info("Publish file", { copyObjectParams, copyObjectCommandOutput });
   }
 }
 

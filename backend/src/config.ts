@@ -27,6 +27,7 @@ const config = {
 
   uploadBucketName: process.env.UPLOAD_BUCKET_NAME,
   yllapitoBucketName: process.env.YLLAPITO_BUCKET_NAME,
+  publicBucketName: process.env.PUBLIC_BUCKET_NAME,
   internalBucketName: process.env.INTERNAL_BUCKET_NAME,
   archiveBucketName: process.env.ARCHIVE_BUCKET_NAME,
 

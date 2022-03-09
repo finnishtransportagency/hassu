@@ -6,6 +6,7 @@ import { getS3Client } from "../../src/aws/clients";
 import { uuid } from "../../src/util/uuid";
 import { AwsClientStub, mockClient } from "aws-sdk-client-mock";
 import { HeadObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { parseDate } from "../../src/util/dateUtil";
 
 const { expect } = require("chai");
 
@@ -57,6 +58,7 @@ describe("UploadService", () => {
       contents: Buffer.from("foobar", "base64"),
       inline: true,
       contentType: "application/pdf",
+      publicationTimestamp: parseDate("2000-01-01T12:34"),
     });
     expect(pathInProjekti).to.eq("/testfilepath/test ääkkösillä.pdf");
 

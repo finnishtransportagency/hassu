@@ -27,6 +27,7 @@ export type HassuBackendStackProps = {
   yllapitoBucket: Bucket;
   internalBucket: Bucket;
   archiveBucket: Bucket;
+  publicBucket: Bucket;
 };
 
 // These should correspond to CfnOutputs produced by this stack
@@ -229,6 +230,7 @@ export class HassuBackendStack extends cdk.Stack {
     this.props.uploadBucket.grantReadWrite(backendLambda);
     this.props.yllapitoBucket.grantReadWrite(backendLambda);
     this.props.internalBucket.grantReadWrite(backendLambda);
+    this.props.publicBucket.grantReadWrite(backendLambda);
     return backendLambda;
   }
 
@@ -291,6 +293,7 @@ export class HassuBackendStack extends cdk.Stack {
 
       UPLOAD_BUCKET_NAME: this.props.uploadBucket.bucketName,
       YLLAPITO_BUCKET_NAME: this.props.yllapitoBucket.bucketName,
+      PUBLIC_BUCKET_NAME: this.props.publicBucket.bucketName,
       INTERNAL_BUCKET_NAME: this.props.internalBucket.bucketName,
       ARCHIVE_BUCKET_NAME: this.props.archiveBucket.bucketName,
     };

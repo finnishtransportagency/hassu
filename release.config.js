@@ -76,10 +76,14 @@ module.exports = {
               type: "fix",
               section: "Korjauksia",
             },
+            {
+              type: "chore",
+              section: "Tehtävät",
+            },
           ],
         },
         writerOpts: {
-          commitGroupsSort: ["feat", "feature", "fix"],
+          commitGroupsSort: ["feat", "feature", "fix", "chore"],
         },
       },
     ],

@@ -17,6 +17,7 @@ process.env.AWS_REGION = "eu-west-1";
 
 process.env.UPLOAD_BUCKET_NAME = "hassu-localstack-upload";
 process.env.YLLAPITO_BUCKET_NAME = "hassu-localstack-yllapito";
+process.env.PUBLIC_BUCKET_NAME = "hassu-localstack-public";
 process.env.INTERNAL_BUCKET_NAME = "hassu-localstack-internal";
 process.env.ARCHIVE_BUCKET_NAME = "hassu-localstack-archive";
 process.env.S3_ENDPOINT = "http://localhost:4566";
