@@ -275,14 +275,14 @@
   .vayla-table-odd {
     @apply bg-white py-8 pl-4 mb-0;
     border-bottom-color: #4ac2f1;
-    border-bottom-style: "solid";
+    border-bottom-style: solid;
     border-bottom-width: 2px;
   }
 
   .vayla-table-even {
     @apply bg-gray-lightest py-8 pl-4 mb-0;
     border-bottom-color: #4ac2f1;
-    border-bottom-style: "solid";
+    border-bottom-style: solid;
     border-bottom-width: 2px;
   }
 
