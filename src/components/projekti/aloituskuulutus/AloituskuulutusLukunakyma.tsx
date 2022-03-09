@@ -66,11 +66,11 @@ export default function AloituskuulutusLukunakyma({
               : ""}
           </Notification>
         )}
-        <div className="grid grid-cols-1 md:grid-cols-4 ">
+        <div className="grid grid-cols-1 md:grid-cols-4">
           <p className="vayla-label md:col-span-1">Kuulutuspäivä</p>
           <p className="vayla-label md:col-span-3">Kuulutusvaihe päättyy</p>
-          <p className="md:col-span-1">{kuulutusPaiva}</p>
-          <p className="md:col-span-3">
+          <p className="md:col-span-1 mb-0">{kuulutusPaiva}</p>
+          <p className="md:col-span-3 mb-0">
             <FormatDate date={aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen} />
           </p>
         </div>
