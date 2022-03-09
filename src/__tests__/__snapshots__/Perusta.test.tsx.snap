@@ -9,10 +9,10 @@ Array [
     onSubmit={[Function]}
   >
     <section
-      className="css-4lmka5"
+      className="css-nyf8ax"
     >
       <div
-        className="css-1wxr44w"
+        className="css-uzh5nn"
       >
         <p>
           Hae projekti-VELHOon viety suunnitelma, jonka haluat tuoda 
@@ -107,7 +107,7 @@ Array [
     <hr />
   </form>,
   <section
-    className="css-4lmka5"
+    className="css-nyf8ax"
     noDivider={true}
   >
     <h2>

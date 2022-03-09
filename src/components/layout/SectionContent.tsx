@@ -6,7 +6,6 @@ interface Props {
 
 const SectionContent = styled("div")((props: Props) =>
   sx({
-    "& > *": { margin: 0 },
     "& > * + *": {
       marginTop: props.largeGap ? 7 : 4,
     },
