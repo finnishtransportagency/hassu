@@ -37,10 +37,11 @@ import IlmoituksenVastaanottajat from "@components/projekti/aloituskuulutus/Ilmo
 import { GetServerSideProps } from "next";
 import { setupLambdaMonitoring } from "backend/src/aws/monitoring";
 import { DialogContent, DialogTitle } from "@mui/material";
-import TextInput from "@components/form/TextInput";
 import dayjs from "dayjs";
 import HassuDialog from "@components/HassuDialog";
 import { GetParameterCommandOutput, SSMClient } from "@aws-sdk/client-ssm";
+import useTranslation from "next-translate/useTranslation";
+import WindowCloseButton from "@components/button/WindowCloseButton";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
 type RequiredProjektiFields = Required<{
@@ -102,6 +103,7 @@ export default function Aloituskuulutus({
   const [formContext, setFormContext] = useState<Projekti | undefined>(undefined);
   const [open, setOpen] = useState(false);
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
+  const { t } = useTranslation("commonFI");
 
   useEffect(() => {
     if (router.isReady) {
@@ -550,13 +552,13 @@ export default function Aloituskuulutus({
                     syystä. Saat ilmoituksen, kun kuulutus on taas valmis hyväksyttäväksi. Jos haluat itse muokata
                     kuulutusta ja hyväksyä tehtyjen muutoksien jälkeen, valitse Palauta ja muokkaa.
                   </p>
-                  <TextInput
+                  <Textarea
                     label="Syy palautukselle *"
                     {...register2("syy", { required: "Palautuksen syy täytyy antaa" })}
                     error={errors2.syy}
                     maxLength={200}
                     hideLengthCounter={false}
-                  ></TextInput>
+                  ></Textarea>
                   <div className="flex gap-6 justify-end pt-6">
                     <Button primary onClick={handleSubmit2(palautaMuokattavaksiJaPoistu)}>
                       Palauta ja poistu
@@ -570,6 +572,11 @@ export default function Aloituskuulutus({
                     >
                       Peruuta
                     </Button>
+                    <WindowCloseButton
+                      onClick={() => {
+                        handleClickClose();
+                      }}
+                    ></WindowCloseButton>
                   </div>
                 </form>
               </DialogContent>
@@ -578,7 +585,7 @@ export default function Aloituskuulutus({
           <div>
             <HassuDialog open={openHyvaksy} onClose={handleClickCloseHyvaksy}>
               <DialogTitle>
-                <div className="vayla-dialog-title">Kuulutuksen hyväksyminen ja ilmoituksen lähettäminen</div>
+                <div className="vayla-dialog-title ">Kuulutuksen hyväksyminen ja ilmoituksen lähettäminen</div>
               </DialogTitle>
               <DialogContent>
                 <form>
@@ -589,9 +596,9 @@ export default function Aloituskuulutus({
                   <div className="content">
                     <p>Viranomaiset</p>
                     <ul className="vayla-dialog-list">
-                      {projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => (
-                        <li key={kunta.nimi}>
-                          {kunta.nimi}, {kunta.sahkoposti}
+                      {projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => (
+                        <li key={viranomainen.nimi}>
+                          {t(`viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
                         </li>
                       ))}
                     </ul>
@@ -628,6 +635,11 @@ export default function Aloituskuulutus({
                     >
                       Peruuta
                     </Button>
+                    <WindowCloseButton
+                      onClick={() => {
+                        handleClickCloseHyvaksy();
+                      }}
+                    ></WindowCloseButton>
                   </div>
                 </form>
               </DialogContent>

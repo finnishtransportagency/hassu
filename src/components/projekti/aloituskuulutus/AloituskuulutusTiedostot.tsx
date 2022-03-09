@@ -46,12 +46,12 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid 
         {ensisijaisetPDFt && (
           <div className="flex flex-col">
             <div>
-              <Link underline="none" href={ensisijaisetPDFt.aloituskuulutusPDFPath}>
+              <Link underline="none" href={ensisijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
                 {parseFilename(ensisijaisetPDFt.aloituskuulutusPDFPath)}
               </Link>
             </div>
             <div>
-              <Link underline="none" href={ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath}>
+              <Link underline="none" href={ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath} target="_blank">
                 {parseFilename(ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath)}
               </Link>
             </div>
@@ -67,12 +67,12 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid 
             {toissijaisetPDFt && (
               <div className="flex flex-col">
                 <div>
-                  <Link underline="none" href={toissijaisetPDFt.aloituskuulutusPDFPath}>
+                  <Link underline="none" href={toissijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
                     {parseFilename(toissijaisetPDFt.aloituskuulutusPDFPath)}
                   </Link>
                 </div>
                 <div>
-                  <Link underline="none" href={toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath}>
+                  <Link underline="none" href={toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath} target="_blank">
                     {parseFilename(toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath)}
                   </Link>
                 </div>
