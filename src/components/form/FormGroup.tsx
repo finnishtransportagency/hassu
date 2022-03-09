@@ -23,7 +23,7 @@ export default function FormGroup({
   return (
     <div {...props}>
       {label && <Label>{label}</Label>}
-      <div className={classNames("flex", `flex-${flexDirection}`)}>{children}</div>
+      <div className={classNames("flex", flexDirection === "row" ? "flex-row" : "flex-col")}>{children}</div>
       {(bottomInfo || errorMessage) && (
         <div className="flex">
           {errorMessage && <span className="text-red">{errorMessage}</span>}
