@@ -16,16 +16,11 @@ module.exports = {
         "breadcrumb-arrow": "url('/breadcrumb-arrow.svg')",
       },
     },
-    container: {
-      center: true,
-      padding: "1rem",
-      screens: {
-        sm: "100%",
-        md: "100%",
-        lg: "1024px",
-        xl: "1280px",
-        "2xl": "1472px",
-      },
+    screens: {
+      sm: "640px",
+      md: "768px",
+      lg: "1280px",
+      xl: "1520px",
     },
     colors: {
       font: {
@@ -44,7 +39,7 @@ module.exports = {
         dark: "#207a43",
         darker: "#54AC54",
         DEFAULT: "#8dcb6d",
-        lightest: "#F5FFEF"
+        lightest: "#F5FFEF",
       },
       orange: {
         dark: "#F0AD4E",
