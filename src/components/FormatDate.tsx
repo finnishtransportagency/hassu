@@ -13,4 +13,4 @@ const FormatDate = ({ date }: Props) => {
   }
 };
 
-export default React.forwardRef(FormatDate);
+export default FormatDate;

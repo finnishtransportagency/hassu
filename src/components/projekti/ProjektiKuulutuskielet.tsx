@@ -1,10 +1,12 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import TextInput from "@components/form/TextInput";
 import { useFormContext } from "react-hook-form";
-import FormGroup from "@components/form/FormGroup";
 import Select from "@components/form/Select";
 import { Kieli } from "@services/api";
 import lowerCase from "lodash/lowerCase";
+import HassuGrid from "@components/HassuGrid";
+import Section from "@components/layout/Section";
+import SectionContent from "@components/layout/SectionContent";
 
 export default function ProjektiKuulutuskielet(): ReactElement {
   const {
@@ -51,42 +53,36 @@ export default function ProjektiKuulutuskielet(): ReactElement {
   };
 
   return (
-    <>
-      <h4 className="vayla-small-title">Projektin kuulutusten kielet</h4>
-      <FormGroup flexDirection="col" errorMessage={errors?.kielitiedot?.message}>
-        <div className="grid grid-cols-1 lg:grid-cols-8 gap-x-6 lg:pr-1 relative">
-          <div className="lg:col-span-4">
-            <Select
-              label="Ensisijainen kieli *"
-              options={kielioptions}
-              error={errors.kielitiedot?.ensisijainenKieli}
-              {...register("kielitiedot.ensisijainenKieli")}
-            />
-          </div>
-          <div className="lg:col-span-4">
-            <Select
-              label="Toissijainen kieli "
-              options={kielioptions2}
-              error={errors.kielitiedot?.toissijainenKieli}
-              {...register("kielitiedot.toissijainenKieli", {
-                setValueAs: (v) => (v ? v : null), // send unselected as null instead of empty string
-              })}
-            />
-          </div>
-          {hasVieraskieli() && (
-            <div className="lg:col-span-12">
-              {`Projektin nimi ${
-                vieraskieliEnsisijainen ? lowerCase(vieraskieliEnsisijainen) : lowerCase(kieli2)
-              }n kielellä`}
-              <TextInput
-                label=""
-                error={errors.kielitiedot?.projektinNimiVieraskielella}
-                {...register("kielitiedot.projektinNimiVieraskielella", { shouldUnregister: true })}
-              />
-            </div>
-          )}
-        </div>
-      </FormGroup>
-    </>
+    <Section>
+      <SectionContent>
+        <h4 className="vayla-small-title">Projektin kuulutusten kielet</h4>
+        <HassuGrid cols={[1, 1, 2, 3]}>
+          <Select
+            label="Ensisijainen kieli *"
+            options={kielioptions}
+            error={errors.kielitiedot?.ensisijainenKieli}
+            {...register("kielitiedot.ensisijainenKieli")}
+          />
+          <Select
+            label="Toissijainen kieli "
+            options={kielioptions2}
+            error={errors.kielitiedot?.toissijainenKieli}
+            {...register("kielitiedot.toissijainenKieli", {
+              setValueAs: (v) => (v ? v : null), // send unselected as null instead of empty string
+            })}
+          />
+        </HassuGrid>
+      </SectionContent>
+      {hasVieraskieli() && (
+        <TextInput
+          label={`Projektin nimi ${
+            vieraskieliEnsisijainen ? lowerCase(vieraskieliEnsisijainen) : lowerCase(kieli2)
+          }n kielellä`}
+          error={errors.kielitiedot?.projektinNimiVieraskielella}
+          {...register("kielitiedot.projektinNimiVieraskielella", { shouldUnregister: true })}
+        />
+      )}
+      <p>Huomaa, että valinta vaikuttaa siihen, mitä kenttiä järjestelmässä näytetään kuulutusten yhteydessä. </p>
+    </Section>
   );
 }

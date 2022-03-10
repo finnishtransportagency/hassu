@@ -11,6 +11,8 @@ import TextInput from "@components/form/TextInput";
 import Button from "@components/button/Button";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import useTranslation from "next-translate/useTranslation";
+import Section from "@components/layout/Section";
+import SectionContent from "@components/layout/SectionContent";
 
 interface SearchInput {
   name: string;
@@ -96,36 +98,32 @@ export default function Perusta() {
 
   return (
     <>
-      <section>
-        <h1>Perusta uusi projekti</h1>
-        <p className="ingress">
-          Hae projekti-VELHOon viety suunnitelma, jonka haluat tuoda {t("commonFI:sivustonimi")} -palveluun. Voit
-          käyttää hakuehtona projekti-VELHOon tallennettua asiatunnusta tai suunnitelman / projektin nimeä, tai näiden
-          osaa.
-        </p>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="w-64 content space-y-4">
-            <TextInput label="Asiatunnus" disabled />
+      <h1>Perusta uusi projekti</h1>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Section>
+          <SectionContent>
+            <p>
+              Hae projekti-VELHOon viety suunnitelma, jonka haluat tuoda {t("commonFI:sivustonimi")} -palveluun. Voit
+              käyttää hakuehtona projekti-VELHOon tallennettua asiatunnusta tai suunnitelman / projektin nimeä, tai
+              näiden osaa.
+            </p>
+            <TextInput className="md:max-w-xs" label="Asiatunnus" disabled />
             <TextInput
               error={errors.name}
+              className="md:max-w-xs"
               label="Projektin nimi"
               maxLength={PROJEKTI_NIMI_MAX_LENGTH}
               {...register("name")}
             />
-            <Button primary endIcon="search" id="hae" disabled={isLoading}>
-              Hae
-            </Button>
-          </div>
-        </form>
-        {searchError && (
-          <Notification type={NotificationType.ERROR} className="content">
-            {t(`haku-virhe.${searchError}`)}
-          </Notification>
-        )}
-      </section>
-      <hr />
+          </SectionContent>
+          <Button primary style={{ marginRight: "auto" }} endIcon="search" id="hae" disabled={isLoading}>
+            Hae
+          </Button>
+          {searchError && <Notification type={NotificationType.ERROR}>{t(`haku-virhe.${searchError}`)}</Notification>}
+        </Section>
+      </form>
       {resultSectionVisible && (
-        <section>
+        <Section noDivider>
           <h2>Hakutulokset</h2>
           <Notification type={NotificationType.INFO} hideIcon>
             <div>
@@ -158,7 +156,7 @@ export default function Perusta() {
               </p>
             )
           )}
-        </section>
+        </Section>
       )}
     </>
   );

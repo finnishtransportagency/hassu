@@ -1,15 +1,6 @@
 .breadcrumbs {
-  @apply container pt-10 pb-7;
-}
-
-.breadcrumbs ol {
-  @apply flex float-left flex-wrap vayla-paragraph;
-}
-
-.breadcrumbs li {
-  @apply float-left mr-1 relative truncate-ellipsis max-w-xs;
 }
 
 .breadcrumbs li + li::before {
-  @apply content-['>'] mr-1;
+  /* @apply content-['>'] mr-1; */
 }

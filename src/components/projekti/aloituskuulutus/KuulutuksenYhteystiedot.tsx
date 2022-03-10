@@ -3,6 +3,10 @@ import IconButton from "@components/button/IconButton";
 import CheckBox from "@components/form/CheckBox";
 import FormGroup from "@components/form/FormGroup";
 import TextInput from "@components/form/TextInput";
+import HassuGrid from "@components/HassuGrid";
+import HassuStack from "@components/layout/HassuStack";
+import Section from "@components/layout/Section";
+import SectionContent from "@components/layout/SectionContent";
 import { AloitusKuulutusInput, Projekti, ProjektiRooli, TallennaProjektiInput, YhteystietoInput } from "@services/api";
 import React, { ReactElement } from "react";
 import { useFieldArray, UseFormReturn } from "react-hook-form";
@@ -49,112 +53,101 @@ function KuulutuksenYhteystiedot<T extends FormValues>({
   });
 
   return (
-    <>
-      <h5 className="vayla-small-title">Kuulutuksessa esitettävät yhteystiedot</h5>
-      <p>
-        Voit valita kuulutuksessa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden
-        yhteystiedon. Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot
-        haetaan Projektin henkilöt -sivulle tallennetuista tiedoista.{" "}
-      </p>
-      <fieldset>
-        {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
-          <FormGroup label="Projektiin tallennetut henkilöt">
-            {projekti.kayttoOikeudet.map(({ nimi, rooli }, index) =>
-              rooli === ProjektiRooli.PROJEKTIPAALLIKKO ? (
-                <CheckBox key={index} label={nimi} disabled defaultChecked />
-              ) : (
-                <CheckBox key={index} label={nimi} {...register(`kayttoOikeudet.${index}.esitetaanKuulutuksessa`)} />
-              )
-            )}
-          </FormGroup>
-        ) : (
-          <p>Projektilla ei ole tallennettuja henkilöitä</p>
-        )}
-        <p className="pt-4">Uusi yhteystieto</p>
+    <Section>
+      <SectionContent>
+        <h5 className="vayla-small-title">Kuulutuksessa esitettävät yhteystiedot</h5>
+        <p>
+          Voit valita kuulutuksessa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden
+          yhteystiedon. Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot
+          haetaan Projektin henkilöt -sivulle tallennetuista tiedoista.{" "}
+        </p>
+      </SectionContent>
+      {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
+        <FormGroup label="Projektiin tallennetut henkilöt">
+          {projekti.kayttoOikeudet.map(({ nimi, rooli }, index) =>
+            rooli === ProjektiRooli.PROJEKTIPAALLIKKO ? (
+              <CheckBox key={index} label={nimi} disabled defaultChecked />
+            ) : (
+              <CheckBox key={index} label={nimi} {...register(`kayttoOikeudet.${index}.esitetaanKuulutuksessa`)} />
+            )
+          )}
+        </FormGroup>
+      ) : (
+        <p>Projektilla ei ole tallennettuja henkilöitä</p>
+      )}
+      <SectionContent>
+        <p>Uusi yhteystieto</p>
         <p>
           Lisää uudelle yhteystiedolle rivi Lisää uusi-painikkeella. Huomioi, että uusi yhteystieto ei tallennu
           Projektin henkilöt -sivulle eikä henkilölle tule käyttöoikeuksia projektiin.{" "}
         </p>
-        <div>
-          {fields.map((field, index) => (
-            <div key={field.id} className="flex flex-col lg:flex-row mb-10 lg:mb-3">
-              <div className="flex-auto grid grid-cols-1 lg:grid-cols-12 gap-x-6 lg:pr-1">
-                <div className="lg:col-span-4">
-                  <TextInput
-                    label="Etunimi *"
-                    {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.etunimi`)}
-                    error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.etunimi}
-                  />
-                </div>
-                <div className="lg:col-span-4">
-                  <TextInput
-                    label="Sukunimi *"
-                    {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.sukunimi`)}
-                    error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.sukunimi}
-                  />
-                </div>
-                <div className="lg:col-span-4">
-                  <TextInput
-                    label="Organisaatio / kunta *"
-                    {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.organisaatio`)}
-                    error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.organisaatio}
-                  />
-                </div>
-                <div className="lg:col-span-4">
-                  <TextInput
-                    label="Puhelinnumero *"
-                    {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.puhelinnumero`)}
-                    error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.puhelinnumero}
-                    maxLength={maxPhoneLength}
-                  />
-                </div>
-                <div className="lg:col-span-4">
-                  <TextInput
-                    label="Sähköpostiosoite *"
-                    {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.sahkoposti`)}
-                    error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.sahkoposti}
-                  />
-                </div>
-              </div>
-              <div>
-                <div className="hidden lg:block lg:mt-6">
-                  <IconButton
-                    icon="trash"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      remove(index);
-                    }}
-                    disabled={disableFields}
-                  />
-                </div>
-                <div className="block lg:hidden">
-                  <Button
-                    onClick={(event) => {
-                      event.preventDefault();
-                      remove(index);
-                    }}
-                    endIcon="trash"
-                    disabled={disableFields}
-                  >
-                    Poista
-                  </Button>
-                </div>
-              </div>
+      </SectionContent>
+      {fields.map((field, index) => (
+        <HassuStack key={field.id} direction={["column", "column", "row"]}>
+          <HassuGrid sx={{ width: "100%" }} cols={[1, 1, 3]}>
+            <TextInput
+              label="Etunimi *"
+              {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.etunimi`)}
+              error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.etunimi}
+            />
+            <TextInput
+              label="Sukunimi *"
+              {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.sukunimi`)}
+              error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.sukunimi}
+            />
+            <TextInput
+              label="Organisaatio / kunta *"
+              {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.organisaatio`)}
+              error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.organisaatio}
+            />
+            <TextInput
+              label="Puhelinnumero *"
+              {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.puhelinnumero`)}
+              error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.puhelinnumero}
+              maxLength={maxPhoneLength}
+            />
+            <TextInput
+              label="Sähköpostiosoite *"
+              {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.sahkoposti`)}
+              error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.sahkoposti}
+            />
+          </HassuGrid>
+          <div>
+            <div className="hidden lg:block lg:mt-8">
+              <IconButton
+                icon="trash"
+                onClick={(event) => {
+                  event.preventDefault();
+                  remove(index);
+                }}
+                disabled={disableFields}
+              />
             </div>
-          ))}
-        </div>
-
-        <Button
-          onClick={(event) => {
-            event.preventDefault();
-            append(defaultYhteystieto);
-          }}
-          disabled={disableFields}
-        >
-          Lisää uusi +
-        </Button>
-      </fieldset>
-    </>
+            <div className="block lg:hidden">
+              <Button
+                onClick={(event) => {
+                  event.preventDefault();
+                  remove(index);
+                }}
+                endIcon="trash"
+                disabled={disableFields}
+              >
+                Poista
+              </Button>
+            </div>
+          </div>
+        </HassuStack>
+      ))}
+      <Button
+        onClick={(event) => {
+          event.preventDefault();
+          append(defaultYhteystieto);
+        }}
+        disabled={disableFields}
+      >
+        Lisää uusi +
+      </Button>
+    </Section>
   );
 }
 

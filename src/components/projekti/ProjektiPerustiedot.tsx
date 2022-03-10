@@ -1,7 +1,8 @@
 import React, { ReactElement } from "react";
-import styles from "@styles/projekti/ProjektiPerustiedot.module.css";
 import { Projekti } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
+import SectionContent from "@components/layout/SectionContent";
+import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
 
 interface Props {
   projekti?: Projekti | null;
@@ -10,7 +11,7 @@ interface Props {
 export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
   const { t } = useTranslation("projekti");
   const velho = projekti?.velho;
-  const perustiedot = [
+  const perustiedot: KeyValueData[] = [
     { header: "Asiatunnus", data: velho?.asiatunnusELY },
     {
       header: "Vastaava viranomainen",
@@ -27,16 +28,9 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
   ];
 
   return (
-    <>
+    <SectionContent>
       <h4 className="vayla-small-title">Suunnitteluhankkeen perustiedot</h4>
-      <div className={styles["base-data-grid"]}>
-        {perustiedot.map(({ header, data }, index) => (
-          <div key={index} className={styles["data-row"]}>
-            <div className={styles.cell}>{header}</div>
-            <div className={styles.cell}>{data || "-"}</div>
-          </div>
-        ))}
-      </div>
-    </>
+      <KeyValueTable rows={perustiedot} />
+    </SectionContent>
   );
 }

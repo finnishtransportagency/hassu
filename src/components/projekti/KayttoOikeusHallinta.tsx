@@ -10,6 +10,10 @@ import useSWR, { KeyedMutator } from "swr";
 import { agencyPhoneNumberRegex, maxPhoneLength } from "src/schemas/puhelinNumero";
 import { useState } from "react";
 import classNames from "classnames";
+import Section from "@components/layout/Section";
+import SectionContent from "@components/layout/SectionContent";
+import HassuStack from "@components/layout/HassuStack";
+import HassuGrid from "@components/HassuGrid";
 
 // Extend TallennaProjektiInput by making the field nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "kayttoOikeudet">;
@@ -84,15 +88,9 @@ function KayttoOikeusHallinta({ disableFields }: Props) {
   const kayttoOikeudet = watch("kayttoOikeudet");
 
   return (
-    <>
-      <h4 className="vayla-small-title">Projektin henkilöiden ja käyttöoikeuksien hallinta</h4>
-      <p>
-        Lisää projektin hallinnolliseen käsittelyyn kuuluvat henkilöt lisäämällä uusia henkilörivejä. Henkilöiden
-        oikeudet projektin tietoihin ja toimintoihin määräytyvät valitun roolin mukaan. Voit tehdä muutoksia henkilöihin
-        ja heidän oikeuksiin hallinnollisen käsittelyn eri vaiheissa.
-      </p>
+    <Section>
       {projektiPaallikot.length > 0 && (
-        <div>
+        <SectionContent>
           <h5 className="vayla-paragraph">Projektipäällikkö (hallinnollisen käsittelyn vastuuhenkilö)</h5>
           <p>
             Projektipäällikön lähtötietona on projekti-VELHOon tallennettu projektipäällikkö. Jos haluat vaihtaa
@@ -111,25 +109,27 @@ function KayttoOikeusHallinta({ disableFields }: Props) {
               removeable={false}
             />
           ))}
-        </div>
+        </SectionContent>
       )}
-      <h5 className="vayla-paragraph">Muut henkilöt</h5>
-      {muutHenkilot.map((user, i) => {
-        const index = i + projektiPaallikot.length;
-        return (
-          <UserFields
-            disableFields={disableFields}
-            index={index}
-            isLoadingKayttajat={isLoadingKayttajat}
-            kayttajat={kayttajat || []}
-            kayttoOikeudet={kayttoOikeudet}
-            mutate={mutate}
-            remove={remove}
-            key={user.id}
-            removeable
-          />
-        );
-      })}
+      <SectionContent>
+        <h5 className="vayla-paragraph">Muut henkilöt</h5>
+        {muutHenkilot.map((user, i) => {
+          const index = i + projektiPaallikot.length;
+          return (
+            <UserFields
+              disableFields={disableFields}
+              index={index}
+              isLoadingKayttajat={isLoadingKayttajat}
+              kayttajat={kayttajat || []}
+              kayttoOikeudet={kayttoOikeudet}
+              mutate={mutate}
+              remove={remove}
+              key={user.id}
+              removeable
+            />
+          );
+        })}
+      </SectionContent>
       <Button
         onClick={(event) => {
           event.preventDefault();
@@ -142,7 +142,7 @@ function KayttoOikeusHallinta({ disableFields }: Props) {
       {(errors.kayttoOikeudet as any)?.message && (
         <p className="text-red pt-3">{(errors.kayttoOikeudet as any)?.message}</p>
       )}
-    </>
+    </Section>
   );
 }
 
@@ -178,93 +178,81 @@ const UserFields = ({
   } = useFormContext<RequiredInputValues>();
 
   return (
-    <div className="flex flex-col lg:flex-row mb-10 lg:mb-3">
-      <div className="grid w-full grid-cols-1 lg:grid-cols-12 gap-x-6 gap-y-3 lg:pr-1 mb-2">
-        <div className="lg:col-span-4">
-          {isProjektiPaallikko ? (
-            <TextInput label="Nimi *" value={getKayttajaNimi(kayttaja) || ""} disabled />
-          ) : (
-            <Autocomplete
-              label="Nimi *"
-              loading={isLoadingKayttajat}
-              options={async (hakusana) => await api.listUsers({ hakusana })}
-              initialOption={kayttaja}
-              getOptionLabel={getKayttajaNimi}
-              error={errors.kayttoOikeudet?.[index]?.kayttajatunnus}
-              onSelect={(henkilo) => {
-                if (henkilo && kayttajat) {
-                  kayttajat[index] = henkilo;
-                  mutate(kayttajat);
-                }
-                setValue(`kayttoOikeudet.${index}.kayttajatunnus`, henkilo?.uid || "", {
-                  shouldValidate: true,
-                });
-              }}
-              disabled={disableFields || isProjektiPaallikko}
-            />
-          )}
-        </div>
-        <div className="lg:col-span-4">
-          <TextInput label="Organisaatio" value={kayttaja?.organisaatio || ""} disabled />
-        </div>
-        <div className="lg:col-span-4 max-w-md">
-          {isProjektiPaallikko ? (
-            <Select label="Rooli *" value={kayttoOikeus.rooli || ""} options={rooliOptions} disabled />
-          ) : (
-            <Select
-              label="Rooli *"
-              {...register(`kayttoOikeudet.${index}.rooli`)}
-              error={errors.kayttoOikeudet?.[index]?.rooli}
-              options={rooliOptions.filter((rooli) => rooli.value !== ProjektiRooli.PROJEKTIPAALLIKKO)}
-              disabled={disableFields || isProjektiPaallikko}
-            />
-          )}
-        </div>
-        <div className="lg:col-span-4">
-          <TextInput
-            label="Puhelinnumero *"
-            {...register(`kayttoOikeudet.${index}.puhelinnumero`)}
-            error={errors.kayttoOikeudet?.[index]?.puhelinnumero}
-            maxLength={maxPhoneLength}
-            pattern={agencyPhoneNumberRegex}
-            disabled={disableFields}
+    <HassuStack direction={["column", "column", "row"]}>
+      <HassuGrid sx={{ width: "100%" }} cols={[1, 1, 3]}>
+        {isProjektiPaallikko ? (
+          <TextInput label="Nimi *" value={getKayttajaNimi(kayttaja) || ""} disabled />
+        ) : (
+          <Autocomplete
+            label="Nimi *"
+            loading={isLoadingKayttajat}
+            options={async (hakusana) => await api.listUsers({ hakusana })}
+            initialOption={kayttaja}
+            getOptionLabel={getKayttajaNimi}
+            error={errors.kayttoOikeudet?.[index]?.kayttajatunnus}
+            onSelect={(henkilo) => {
+              if (henkilo && kayttajat) {
+                kayttajat[index] = henkilo;
+                mutate(kayttajat);
+              }
+              setValue(`kayttoOikeudet.${index}.kayttajatunnus`, henkilo?.uid || "", {
+                shouldValidate: true,
+              });
+            }}
+            disabled={disableFields || isProjektiPaallikko}
           />
-        </div>
-        <div className="lg:col-span-4">
-          <TextInput label="Sähköpostiosoite *" value={kayttaja?.email || ""} disabled />
-        </div>
+        )}
+        <TextInput label="Organisaatio" value={kayttaja?.organisaatio || ""} disabled />
+        {isProjektiPaallikko ? (
+          <Select label="Rooli *" value={kayttoOikeus.rooli || ""} options={rooliOptions} disabled />
+        ) : (
+          <Select
+            label="Rooli *"
+            {...register(`kayttoOikeudet.${index}.rooli`)}
+            error={errors.kayttoOikeudet?.[index]?.rooli}
+            options={rooliOptions.filter((rooli) => rooli.value !== ProjektiRooli.PROJEKTIPAALLIKKO)}
+            disabled={disableFields || isProjektiPaallikko}
+          />
+        )}
+        <TextInput
+          label="Puhelinnumero *"
+          {...register(`kayttoOikeudet.${index}.puhelinnumero`)}
+          error={errors.kayttoOikeudet?.[index]?.puhelinnumero}
+          maxLength={maxPhoneLength}
+          pattern={agencyPhoneNumberRegex}
+          disabled={disableFields}
+        />
+        <TextInput label="Sähköpostiosoite *" value={kayttaja?.email || ""} disabled />
+      </HassuGrid>
+      <div className={classNames(removeable ? "hidden md:block mt-8" : "invisible")}>
+        <IconButton
+          icon="trash"
+          onClick={(event) => {
+            event.preventDefault();
+            if (removeable) {
+              remove(index);
+            }
+          }}
+          disabled={disableFields}
+        />
       </div>
-      <div className="lg:mt-6">
-        <div className={classNames(removeable ? "hidden lg:block" : "invisible")}>
-          <IconButton
-            icon="trash"
+      {removeable && (
+        <div className="block md:hidden">
+          <Button
             onClick={(event) => {
               event.preventDefault();
               if (removeable) {
                 remove(index);
               }
             }}
+            endIcon="trash"
             disabled={disableFields}
-          />
+          >
+            Poista
+          </Button>
         </div>
-        {removeable && (
-          <div className="block lg:hidden">
-            <Button
-              onClick={(event) => {
-                event.preventDefault();
-                if (removeable) {
-                  remove(index);
-                }
-              }}
-              endIcon="trash"
-              disabled={disableFields}
-            >
-              Poista
-            </Button>
-          </div>
-        )}
-      </div>
-    </div>
+      )}
+    </HassuStack>
   );
 };
 

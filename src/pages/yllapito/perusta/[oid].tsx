@@ -18,6 +18,7 @@ import { kayttoOikeudetSchema } from "src/schemas/kayttoOikeudet";
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
+import Section from "@components/layout/Section";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
@@ -106,27 +107,29 @@ export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactEle
       <h2>{projekti?.velho.nimi || "-"}</h2>
       <FormProvider {...useFormReturn}>
         <form>
-          <fieldset disabled={disableFormEdit}>
-            <ProjektiErrorNotification
-              projekti={projekti}
-              validationSchema={loadedProjektiValidationSchema}
-              disableValidation={isLoadingProjekti}
-            />
-            <ProjektiPerustiedot projekti={projekti} />
-            <hr />
+          <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
+            <Section>
+              <ProjektiErrorNotification
+                projekti={projekti}
+                validationSchema={loadedProjektiValidationSchema}
+                disableValidation={isLoadingProjekti}
+              />
+              <ProjektiPerustiedot projekti={projekti} />
+            </Section>
             <KayttoOikeusHallinta disableFields={disableFormEdit} />
-            <hr />
-            <div className="flex gap-6 flex-col md:flex-row">
-              <ButtonLink className="mr-auto" href="/yllapito/perusta">
-                Takaisin
-              </ButtonLink>
-              <Button type="button" primary onClick={handleSubmit(submitMoveToProject)} disabled={disableFormEdit}>
-                Tallenna ja siirry projektiin
-              </Button>
-              <Button type="button" onClick={handleSubmit(submitCreateAnotherOne)} disabled={disableFormEdit}>
-                Tallenna ja lisää toinen projekti
-              </Button>
-            </div>
+            <Section noDivider>
+              <div className="flex gap-6 flex-col md:flex-row">
+                <ButtonLink className="mr-auto" href="/yllapito/perusta">
+                  Takaisin
+                </ButtonLink>
+                <Button type="button" primary onClick={handleSubmit(submitMoveToProject)} disabled={disableFormEdit}>
+                  Tallenna ja siirry projektiin
+                </Button>
+                <Button type="button" onClick={handleSubmit(submitCreateAnotherOne)} disabled={disableFormEdit}>
+                  Tallenna ja lisää toinen projekti
+                </Button>
+              </div>
+            </Section>
           </fieldset>
         </form>
       </FormProvider>

@@ -1,10 +1,11 @@
 // import Image from "next/image";
+import { Container } from "@mui/material";
 import React from "react";
 
 export const Footer = ({}) => {
   return (
     <div className="bg-gray-lightest w-full self-start mt-auto">
-      <footer className="mt-4 container">
+      <Container sx={{ marginTop: 4 }} component="footer">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-2 py-3">
           <div className="col-span-4">
             {/* <Image src="/vayla-600px.jpg" alt="Väylä" width="100" height="100" /> */}
@@ -26,7 +27,7 @@ export const Footer = ({}) => {
             <a href="#">Palautelomake</a>
           </div>
         </div>
-      </footer>
+      </Container>
     </div>
   );
 };

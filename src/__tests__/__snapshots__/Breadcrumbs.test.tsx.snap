@@ -52,26 +52,34 @@ Object {
 `;
 
 exports[`Breadcrumbs renders correctly on 'known' /yllapito/perusta path 1`] = `
-<nav
-  className="breadcrumbs"
+<div
+  className="MuiContainer-root MuiContainer-maxWidthLg css-1oqqzyl-MuiContainer-root"
 >
-  <ol>
-    <li>
-      <a
-        href="/yllapito"
-        onClick={[Function]}
-        onMouseEnter={[Function]}
+  <nav>
+    <ol
+      className="flex flex-wrap vayla-paragraph my-7"
+    >
+      <li
+        className="mr-1 truncate-ellipsis max-w-xs"
       >
-        Valtion liikenneväylien suunnittelu
-      </a>
-    </li>
-    <li>
-      <span
-        className="font-bold"
+        <a
+          href="/yllapito"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+        >
+          Valtion liikenneväylien suunnittelu
+        </a>
+      </li>
+      <li
+        className="mr-1 truncate-ellipsis max-w-xs css-iaeou5"
       >
-        Projektin perustaminen
-      </span>
-    </li>
-  </ol>
-</nav>
+        <span
+          className="font-bold"
+        >
+          Projektin perustaminen
+        </span>
+      </li>
+    </ol>
+  </nav>
+</div>
 `;

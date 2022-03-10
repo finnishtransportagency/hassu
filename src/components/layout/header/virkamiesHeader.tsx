@@ -1,12 +1,12 @@
 import React, { ReactElement, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import style from "@styles/layout/virkamiesHeader.module.css";
 import { HeaderProps } from "./header";
 import ButtonLink from "@components/button/ButtonLink";
 
 import useTranslation from "next-translate/useTranslation";
 import useCurrentUser from "src/hooks/useCurrentUser";
+import { Container } from "@mui/material";
 
 interface NavigationRoute {
   label: string;
@@ -45,25 +45,29 @@ export function VirkamiesHeader({ scrolledPastOffset }: HeaderProps): ReactEleme
   const kayttajaNimi = kayttaja && kayttaja.etuNimi && kayttaja.sukuNimi && `${kayttaja.sukuNimi}, ${kayttaja.etuNimi}`;
 
   return (
-    <header className={style.header} style={{ top: `${scrolledPastOffset ? -headerTop : 0}px` }}>
+    <Container
+      className="sticky bg-white z-20 w-full transition-all"
+      component="header"
+      sx={{ top: `${scrolledPastOffset ? -headerTop : 0}px` }}
+    >
       <div ref={headerTopPortion}>
-        <div className={style.topbar}>
+        <div className="flex border-b border-gray-light py-5">
           <Link href="/yllapito">
-            <a className={style.title}>
+            <a className="flex flex-col uppercase vayla-small-title">
               <span>{t("commonFI:sivustonimi")}</span>
               <span className="font-normal">{t("commonSV:sivustonimi")}</span>
             </a>
           </Link>
-          <div className={style.user}>
+          <div className="flex items-end ml-auto space-x-5">
             <span className="vayla-paragraph">{kayttajaNimi}</span>
-            <ButtonLink href={logoutHref ? logoutHref : undefined} useNextLink={false} endIcon="external-link-alt">
+            <ButtonLink href={logoutHref} useNextLink={false} endIcon="external-link-alt">
               Poistu Palvelusta
             </ButtonLink>
           </div>
         </div>
       </div>
-      <nav>
-        <ul>
+      <nav className="flex py-6 vayla-navigation uppercase">
+        <ul className="flex float-left flex-wrap space-x-6">
           <li>
             <Link href="/yllapito">
               <a className="uppercase">
@@ -76,8 +80,8 @@ export function VirkamiesHeader({ scrolledPastOffset }: HeaderProps): ReactEleme
           ))}
         </ul>
       </nav>
-      <div className={style["bottom-border"]}></div>
-    </header>
+      <div className="pb-2" style={{ background: "linear-gradient(117deg, #009ae0, #49c2f1)" }}></div>
+    </Container>
   );
 }
 

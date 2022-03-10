@@ -36,12 +36,15 @@ import AloituskuulutusLukunakyma from "@components/projekti/aloituskuulutus/Aloi
 import IlmoituksenVastaanottajat from "@components/projekti/aloituskuulutus/IlmoituksenVastaanottajat";
 import { GetServerSideProps } from "next";
 import { setupLambdaMonitoring } from "backend/src/aws/monitoring";
-import { DialogContent, DialogTitle } from "@mui/material";
 import dayjs from "dayjs";
-import HassuDialog from "@components/HassuDialog";
-import { GetParameterCommandOutput, SSMClient } from "@aws-sdk/client-ssm";
 import useTranslation from "next-translate/useTranslation";
 import WindowCloseButton from "@components/button/WindowCloseButton";
+import { DialogContent, DialogTitle, Stack } from "@mui/material";
+import HassuDialog from "@components/HassuDialog";
+import { GetParameterCommandOutput, SSMClient } from "@aws-sdk/client-ssm";
+import Section from "@components/layout/Section";
+import SectionContent from "@components/layout/SectionContent";
+import HassuStack from "@components/layout/HassuStack";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
 type RequiredProjektiFields = Required<{
@@ -345,83 +348,85 @@ export default function Aloituskuulutus({
         <>
           <FormProvider {...useFormReturn}>
             <form>
-              <fieldset disabled={disableFormEdit}>
-                <ProjektiErrorNotification
-                  projekti={projekti}
-                  validationSchema={loadedProjektiValidationSchema}
-                  disableValidation={isLoadingProjekti}
-                />
-                {projekti.aloitusKuulutus?.palautusSyy && (
-                  <Notification type={NotificationType.WARN}>
-                    Aloituskuulutus on palautettu korjattavaksi. Palautuksen syy: {projekti.aloitusKuulutus.palautusSyy}
+              <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
+                <Section>
+                  <ProjektiErrorNotification
+                    projekti={projekti}
+                    validationSchema={loadedProjektiValidationSchema}
+                    disableValidation={isLoadingProjekti}
+                  />
+                  {projekti.aloitusKuulutus?.palautusSyy && (
+                    <Notification type={NotificationType.WARN}>
+                      Aloituskuulutus on palautettu korjattavaksi. Palautuksen syy:{" "}
+                      {projekti.aloitusKuulutus.palautusSyy}
+                    </Notification>
+                  )}
+                  {odottaaJulkaisua() && (
+                    <Notification type={NotificationType.WARN}>
+                      {`Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä ${odottaaJulkaisua()}`}.
+                    </Notification>
+                  )}
+                  <Notification type={NotificationType.INFO} hideIcon>
+                    <div>
+                      <h3 className="vayla-small-title">Ohjeet</h3>
+                      <ul className="list-disc block pl-5">
+                        <li>
+                          Anna päivämäärä, jolloin suunnittelun aloittamisesta kuulutetaan tämän palvelun julkisella
+                          puolella.
+                        </li>
+                        <li>
+                          Kuvaa aloituskuulutuksessa esitettävään sisällönkuvauskenttään lyhyesti suunnittelukohteen
+                          alueellinen rajaus (maantiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja
+                          toimenpiteet pääpiirteittäin karkealla tasolla. Älä lisää tekstiin linkkejä.
+                        </li>
+                      </ul>
+                    </div>
                   </Notification>
-                )}
-                {odottaaJulkaisua() && (
-                  <Notification type={NotificationType.WARN}>
-                    {`Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä ${odottaaJulkaisua()}`}.
-                  </Notification>
-                )}
-                <Notification type={NotificationType.INFO} hideIcon>
-                  <div>
-                    <h3 className="vayla-small-title">Ohjeet</h3>
-                    <ul className="list-disc block pl-5">
-                      <li>
-                        Anna päivämäärä, jolloin suunnittelun aloittamisesta kuulutetaan tämän palvelun julkisella
-                        puolella.
-                      </li>
-                      <li>
-                        Kuvaa aloituskuulutuksessa esitettävään sisällönkuvauskenttään lyhyesti suunnittelukohteen
-                        alueellinen rajaus (maantiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja
-                        toimenpiteet pääpiirteittäin karkealla tasolla. Älä lisää tekstiin linkkejä.
-                      </li>
-                    </ul>
+                  <div className="lg:flex md:gap-x-8">
+                    <DatePicker
+                      label="Kuulutuspäivä *"
+                      className="md:max-w-min"
+                      {...register("aloitusKuulutus.kuulutusPaiva")}
+                      disabled={disableFormEdit}
+                      min={today}
+                      error={errors.aloitusKuulutus?.kuulutusPaiva}
+                      onChange={(event) => {
+                        getPaattymispaiva(event.target.value);
+                      }}
+                    />
+                    <DatePicker
+                      className="md:max-w-min"
+                      label="Kuulutusvaihe päättyy"
+                      readOnly
+                      {...register("aloitusKuulutus.siirtyySuunnitteluVaiheeseen")}
+                    />
                   </div>
-                </Notification>
-                <div className="lg:flex md:gap-x-8">
-                  <DatePicker
-                    label="Kuulutuspäivä *"
-                    className="md:max-w-min"
-                    {...register("aloitusKuulutus.kuulutusPaiva")}
+                </Section>
+                <KuulutuksenYhteystiedot projekti={projekti} useFormReturn={useFormReturn} />
+                <Section noDivider={!!toissijainenKieli}>
+                  <SectionContent>
+                    <h5 className="vayla-small-title">Hankkeen sisällönkuvaus</h5>
+                    <p>
+                      Kirjoita aloituskuulutusta varten tiivistetty sisällönkuvaus hankkeesta. Kuvauksen on hyvä
+                      sisältää esimerkiksi tieto suunnittelukohteen alueellista rajauksesta (maantiealue ja
+                      vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet pääpiirteittäin karkealla
+                      tasolla. Älä lisää tekstiin linkkejä.{" "}
+                    </p>
+                  </SectionContent>
+                  <Textarea
+                    label={`Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (${lowerCase(
+                      kielitiedot.ensisijainenKieli
+                    )}) *`}
+                    {...register(`aloitusKuulutus.hankkeenKuvaus.${kielitiedot.ensisijainenKieli}`)}
+                    error={(errors.aloitusKuulutus?.hankkeenKuvaus as any)?.[kielitiedot.ensisijainenKieli]}
+                    maxLength={maxAloituskuulutusLength}
                     disabled={disableFormEdit}
-                    min={today}
-                    error={errors.aloitusKuulutus?.kuulutusPaiva}
-                    onChange={(event) => {
-                      getPaattymispaiva(event.target.value);
-                    }}
                   />
-                  <DatePicker
-                    className="md:max-w-min"
-                    label="Kuulutusvaihe päättyy"
-                    readOnly
-                    {...register("aloitusKuulutus.siirtyySuunnitteluVaiheeseen")}
-                  />
-                </div>
-                <div className="content">
-                  <KuulutuksenYhteystiedot projekti={projekti} useFormReturn={useFormReturn} />
-                </div>
-                <hr />
-                <h5 className="vayla-small-title">Hankkeen sisällönkuvaus</h5>
-                <p>
-                  Kirjoita aloituskuulutusta varten tiivistetty sisällönkuvaus hankkeesta. Kuvauksen on hyvä sisältää
-                  esimerkiksi tieto suunnittelukohteen alueellista rajauksesta (maantiealue ja vaikutusalue),
-                  suunnittelun tavoitteet, vaikutukset ja toimenpiteet pääpiirteittäin karkealla tasolla. Älä lisää
-                  tekstiin linkkejä.{" "}
-                </p>
-                <Textarea
-                  label={`Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (${lowerCase(
-                    kielitiedot.ensisijainenKieli
-                  )}) *`}
-                  {...register(`aloitusKuulutus.hankkeenKuvaus.${kielitiedot.ensisijainenKieli}`)}
-                  error={(errors.aloitusKuulutus?.hankkeenKuvaus as any)?.[kielitiedot.ensisijainenKieli]}
-                  maxLength={maxAloituskuulutusLength}
-                  disabled={disableFormEdit}
-                />
-                <Notification type={NotificationType.INFO_GRAY}>
-                  Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
-                </Notification>
+                  <Notification type={NotificationType.INFO_GRAY}>
+                    Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
+                  </Notification>
 
-                <div className="content">
-                  <div className="flex flex-col lg:flex-row gap-6">
+                  <HassuStack direction={["column", "column", "row"]}>
                     <Button
                       type="submit"
                       onClick={handleSubmit((formData) =>
@@ -448,11 +453,10 @@ export default function Aloituskuulutus({
                     >
                       Ilmoituksen esikatselu
                     </Button>
-                  </div>
-                </div>
-
+                  </HassuStack>
+                </Section>
                 {toissijainenKieli && (
-                  <div className="content">
+                  <Section>
                     <Textarea
                       label={`Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä (${lowerCase(
                         toissijainenKieli
@@ -465,7 +469,7 @@ export default function Aloituskuulutus({
                     <Notification type={NotificationType.INFO_GRAY}>
                       Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
                     </Notification>
-                    <div className="flex flex-col lg:flex-row gap-6">
+                    <HassuStack direction={["column", "column", "row"]}>
                       <Button
                         type="submit"
                         onClick={handleSubmit((formData) =>
@@ -492,30 +496,26 @@ export default function Aloituskuulutus({
                       >
                         Ilmoituksen esikatselu
                       </Button>
-                    </div>
-                  </div>
+                    </HassuStack>
+                  </Section>
                 )}
-                <div className="content">
-                  <IlmoituksenVastaanottajat
-                    isLoading={isLoadingProjekti}
-                    kirjaamoOsoitteet={kirjaamoOsoitteet || []}
-                  />
-                </div>
+                <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} kirjaamoOsoitteet={kirjaamoOsoitteet || []} />
               </fieldset>
             </form>
           </FormProvider>
           <form ref={pdfFormRef} target="_blank" method="POST">
             <input type="hidden" name="tallennaProjektiInput" value={serializedFormData} />
           </form>
-          <hr />
-          <div className="flex gap-6 justify-end flex-wrap">
-            <Button onClick={handleSubmit(saveDraft)} disabled={disableFormEdit}>
-              Tallenna tiedot
-            </Button>
-            <Button primary onClick={handleSubmit(lahetaHyvaksyttavaksi)}>
-              Tallenna ja lähetä Hyväksyttäväksi
-            </Button>
-          </div>
+          <Section noDivider>
+            <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
+              <Button onClick={handleSubmit(saveDraft)} disabled={disableFormEdit}>
+                Tallenna tiedot
+              </Button>
+              <Button primary onClick={handleSubmit(lahetaHyvaksyttavaksi)}>
+                Tallenna ja lähetä Hyväksyttäväksi
+              </Button>
+            </Stack>
+          </Section>
         </>
       )}
       {!voiMuokata && (
@@ -534,12 +534,14 @@ export default function Aloituskuulutus({
 
       {voiHyvaksya && (
         <>
-          <div className="flex gap-6 justify-end">
-            <Button onClick={handleClickOpen}>Palauta</Button>
-            <Button primary onClick={handleClickOpenHyvaksy}>
-              Hyväksy ja lähetä
-            </Button>
-          </div>
+          <Section noDivider>
+            <Stack direction={["column", "column", "row"]} justifyContent={[undefined, undefined, "flex-end"]}>
+              <Button onClick={handleClickOpen}>Palauta</Button>
+              <Button primary onClick={handleClickOpenHyvaksy}>
+                Hyväksy ja lähetä
+              </Button>
+            </Stack>
+          </Section>
           <div>
             <HassuDialog open={open} onClose={handleClickClose}>
               <DialogTitle>
