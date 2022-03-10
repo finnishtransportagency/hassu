@@ -27,6 +27,7 @@ phases:
       - npm run get-next-version
       - npm run lint
       - npm run localstack
+      - ./deployment/bin/setupLocalStack.sh
       - npm run setupenvironment
       - npm run test
       - npm run localstack:stop &

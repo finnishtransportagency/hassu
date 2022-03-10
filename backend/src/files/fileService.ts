@@ -13,6 +13,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { ArchivedProjektiKey } from "../database/projektiDatabase";
+import { uriEscapePath } from "aws-sdk/lib/util";
 
 export type UploadFileProperties = {
   fileNameWithPath: string;
@@ -114,7 +115,10 @@ export class FileService {
       const headObject = await getS3Client().send(
         new HeadObjectCommand({ Bucket: config.uploadBucketName, Key: uploadedFileSource })
       );
-      return { ContentType: headObject.ContentType, CopySource: config.uploadBucketName + "/" + uploadedFileSource };
+      return {
+        ContentType: headObject.ContentType,
+        CopySource: uriEscapePath(config.uploadBucketName + "/" + uploadedFileSource),
+      };
     } catch (e) {
       log.error(e);
       throw new NotFoundError("Uploaded file " + uploadedFileSource + " not found.");
@@ -144,7 +148,7 @@ export class FileService {
         new CopyObjectCommand({
           Bucket: targetBucket,
           Key: targetKey,
-          CopySource: `${sourceBucket}/${sourceKey}`,
+          CopySource: uriEscapePath(`${sourceBucket}/${sourceKey}`),
         })
       );
 

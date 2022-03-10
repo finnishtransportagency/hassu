@@ -43,6 +43,7 @@ export class PersonSearchUpdater {
     }
     log.debug("listAccountsOfType:" + accounttype);
     const response = await axios.request({
+      timeout: 120000,
       baseURL: endpoint,
       params: { accounttype },
       method: "GET",
