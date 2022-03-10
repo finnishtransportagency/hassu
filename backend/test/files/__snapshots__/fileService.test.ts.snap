@@ -15,6 +15,9 @@ Object {
   "ContentDisposition": "inline; filename=test ääkkösillä.pdf",
   "ContentType": "application/pdf",
   "Key": "yllapito/tiedostot/projekti/1/testfilepath/test ääkkösillä.pdf",
+  "Metadata": Object {
+    "publication-timestamp": "2000-01-01T10:34:00.000Z",
+  },
 }
 `;
 

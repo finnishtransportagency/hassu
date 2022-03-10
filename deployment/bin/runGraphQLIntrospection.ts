@@ -6,6 +6,14 @@ import { OperationType } from "../../common/abstractApi";
 import { Config } from "../lib/config";
 
 process.env.AWS_SDK_LOAD_CONFIG = "true";
+type Type = {
+  __typename: "__Type";
+  name: string;
+};
+type Schema = {
+  __typename: "__Schema";
+  types: Type[];
+};
 
 if (Config.isDeveloperEnvironment()) {
   api
@@ -24,11 +32,11 @@ if (Config.isDeveloperEnvironment()) {
         }
       }
 `,
-      operationType: OperationType.Query
+      operationType: OperationType.Query,
     })
-    .then((value: any) => {
-      let schema = { __schema: value };
-      fs.writeFileSync("src/services/api/fragmentTypes.json", JSON.stringify(schema, null, 2) + "\n");
+    .then((value: Schema) => {
+      value.types = value.types.sort((a, b) => a.name.localeCompare(b.name));
+      fs.writeFileSync("src/services/api/fragmentTypes.json", JSON.stringify({ __schema: value }, null, 2) + "\n");
     })
     .catch((reason: any) => console.log(reason));
 }

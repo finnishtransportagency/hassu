@@ -330,7 +330,14 @@ Array [
     "liittyvatSuunnitelmat": undefined,
     "muistiinpano": undefined,
     "oid": "1",
-    "suunnitteluSopimus": null,
+    "suunnitteluSopimus": Object {
+      "email": "a@b.com",
+      "etunimi": "Etunimi",
+      "kunta": "Nokia",
+      "logo": "/suunnittelusopimus/logo.gif",
+      "puhelinnumero": "0291111",
+      "sukunimi": "Sukunimi",
+    },
   },
 ]
 `;
@@ -404,8 +411,16 @@ Array [
     },
     "muistiinpano": "Testiprojekti 1:n muistiinpano",
     "oid": "1",
-    "status": "ALOITUSKUULUTUS",
-    "suunnitteluSopimus": null,
+    "status": "EI_JULKAISTU",
+    "suunnitteluSopimus": Object {
+      "__typename": "SuunnitteluSopimus",
+      "email": "a@b.com",
+      "etunimi": "Etunimi",
+      "kunta": "Nokia",
+      "logo": "/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
+      "puhelinnumero": "0291111",
+      "sukunimi": "Sukunimi",
+    },
     "tallennettu": true,
     "tyyppi": "TIE",
     "velho": Object {
@@ -418,6 +433,92 @@ Array [
 `;
 
 exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 10`] = `
+Array [
+  Object {
+    "Bucket": "hassu-localstack-yllapito",
+    "ContentDisposition": "inline; filename=KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf",
+    "ContentType": "application/pdf",
+    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf",
+    "Metadata": Object {
+      "publication-timestamp": "2022-01-01T22:00:00.000Z",
+    },
+  },
+  Object {
+    "Bucket": "hassu-localstack-public",
+    "ContentDisposition": "inline; filename=KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf",
+    "ContentType": "application/pdf",
+    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf",
+    "Metadata": Object {
+      "publication-timestamp": "2022-01-01T22:00:00.000Z",
+    },
+  },
+  Object {
+    "Bucket": "hassu-localstack-yllapito",
+    "ContentDisposition": "inline; filename=ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf",
+    "ContentType": "application/pdf",
+    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf",
+    "Metadata": Object {
+      "publication-timestamp": "2022-01-01T22:00:00.000Z",
+    },
+  },
+  Object {
+    "Bucket": "hassu-localstack-public",
+    "ContentDisposition": "inline; filename=ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf",
+    "ContentType": "application/pdf",
+    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf",
+    "Metadata": Object {
+      "publication-timestamp": "2022-01-01T22:00:00.000Z",
+    },
+  },
+  Object {
+    "Bucket": "hassu-localstack-yllapito",
+    "ContentDisposition": "inline; filename=KUULUTUS SUUNNITTELUN ALOITTAMISESTA Projektin nimi saameksi.pdf",
+    "ContentType": "application/pdf",
+    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Projektin nimi saameksi.pdf",
+    "Metadata": Object {
+      "publication-timestamp": "2022-01-01T22:00:00.000Z",
+    },
+  },
+  Object {
+    "Bucket": "hassu-localstack-public",
+    "ContentDisposition": "inline; filename=KUULUTUS SUUNNITTELUN ALOITTAMISESTA Projektin nimi saameksi.pdf",
+    "ContentType": "application/pdf",
+    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Projektin nimi saameksi.pdf",
+    "Metadata": Object {
+      "publication-timestamp": "2022-01-01T22:00:00.000Z",
+    },
+  },
+  Object {
+    "Bucket": "hassu-localstack-yllapito",
+    "ContentDisposition": "inline; filename=ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Projektin nimi saameksi.pdf",
+    "ContentType": "application/pdf",
+    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Projektin nimi saameksi.pdf",
+    "Metadata": Object {
+      "publication-timestamp": "2022-01-01T22:00:00.000Z",
+    },
+  },
+  Object {
+    "Bucket": "hassu-localstack-public",
+    "ContentDisposition": "inline; filename=ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Projektin nimi saameksi.pdf",
+    "ContentType": "application/pdf",
+    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Projektin nimi saameksi.pdf",
+    "Metadata": Object {
+      "publication-timestamp": "2022-01-01T22:00:00.000Z",
+    },
+  },
+  Object {
+    "Bucket": "hassu-localstack-public",
+    "CopySource": "hassu-localstack-yllapito/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
+    "Key": "tiedostot/suunnitelma/1/suunnittelusopimus/logo.gif",
+    "Metadata": Object {
+      "publication-timestamp": "2022-01-01T22:00:00.000Z",
+    },
+    "MetadataDirective": "REPLACE",
+  },
+]
+`;
+
+exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 11`] = `
 Object {
   "__typename": "Projekti",
   "aloitusKuulutus": Object {
@@ -477,7 +578,15 @@ Object {
       "kuulutusPaiva": "2022-01-02",
       "muokkaaja": "A123",
       "siirtyySuunnitteluVaiheeseen": "2022-01-01",
-      "suunnitteluSopimus": null,
+      "suunnitteluSopimus": Object {
+        "__typename": "SuunnitteluSopimus",
+        "email": "a@b.com",
+        "etunimi": "Etunimi",
+        "kunta": "Nokia",
+        "logo": "/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
+        "puhelinnumero": "0291111",
+        "sukunimi": "Sukunimi",
+      },
       "tila": "HYVAKSYTTY",
       "velho": Object {
         "__typename": "Velho",
@@ -548,8 +657,16 @@ Object {
   },
   "muistiinpano": "Testiprojekti 1:n muistiinpano",
   "oid": "1",
-  "status": "ALOITUSKUULUTUS",
-  "suunnitteluSopimus": null,
+  "status": "EI_JULKAISTU",
+  "suunnitteluSopimus": Object {
+    "__typename": "SuunnitteluSopimus",
+    "email": "a@b.com",
+    "etunimi": "Etunimi",
+    "kunta": "Nokia",
+    "logo": "/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
+    "puhelinnumero": "0291111",
+    "sukunimi": "Sukunimi",
+  },
   "tallennettu": true,
   "tyyppi": "TIE",
   "velho": Object {
@@ -560,7 +677,7 @@ Object {
 }
 `;
 
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 11`] = `
+exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 12`] = `
 Object {
   "description": "Public version of the projekti",
   "projekti": Object {
@@ -594,7 +711,15 @@ Object {
         },
         "kuulutusPaiva": "2022-01-02",
         "siirtyySuunnitteluVaiheeseen": "2022-01-01",
-        "suunnitteluSopimus": null,
+        "suunnitteluSopimus": Object {
+          "__typename": "SuunnitteluSopimus",
+          "email": "a@b.com",
+          "etunimi": "Etunimi",
+          "kunta": "Nokia",
+          "logo": "/tiedostot/suunnitelma/1/suunnittelusopimus/logo.gif",
+          "puhelinnumero": "0291111",
+          "sukunimi": "Sukunimi",
+        },
         "velho": Object {
           "__typename": "Velho",
           "kunnat": undefined,

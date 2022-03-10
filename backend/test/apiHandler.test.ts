@@ -25,8 +25,9 @@ import { PersonSearchFixture } from "./personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../src/personSearch/kayttajas";
 import { AwsClientStub, mockClient } from "aws-sdk-client-mock";
 import { getS3Client } from "../src/aws/clients";
-import { PutObjectCommand, PutObjectCommandInput, S3Client } from "@aws-sdk/client-s3";
+import { CopyObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { NotFoundError } from "../src/error/NotFoundError";
+import { fileService } from "../src/files/fileService";
 
 const { expect, assert } = require("chai");
 
@@ -55,6 +56,7 @@ describe("apiHandler", () => {
     let insertAloitusKuulutusJulkaisuStub: sinon.SinonStub;
     let updateAloitusKuulutusJulkaisuStub: sinon.SinonStub;
     let deleteAloitusKuulutusJulkaisuStub: sinon.SinonStub;
+    let persistFileToProjektiStub: sinon.SinonStub;
     let mockS3CLient: AwsClientStub<S3Client>;
 
     beforeEach(() => {
@@ -66,6 +68,7 @@ describe("apiHandler", () => {
       updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "updateAloitusKuulutusJulkaisu");
       deleteAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "deleteAloitusKuulutusJulkaisu");
       loadVelhoProjektiByOidStub = sinon.stub(velho, "loadProjekti");
+      persistFileToProjektiStub = sinon.stub(fileService, "persistFileToProjekti");
       mockS3CLient = mockClient(getS3Client());
 
       fixture = new ProjektiFixture();
@@ -88,13 +91,6 @@ describe("apiHandler", () => {
         kayttoOikeudet: [],
       }));
       createProjektiStub.resolves();
-    }
-
-    function validatePutObjectCommandInput(callNumber: number, yllapitoBucketName: string, filePath: string) {
-      const { Bucket: aloituskuulutusBucket, Key: aloituskuulutusKey } = mockS3CLient.call(callNumber).args[0]
-        .input as PutObjectCommandInput;
-      expect(aloituskuulutusBucket).to.eq(yllapitoBucketName);
-      expect(`${callNumber} ${aloituskuulutusKey}`).to.eq(`${callNumber} ${filePath}`);
     }
 
     describe("lataaProjekti", () => {
@@ -261,6 +257,7 @@ describe("apiHandler", () => {
         );
 
         // Add one muokkaaja more and examine the results. Also test that fields can be removed from database
+        persistFileToProjektiStub.resolves("/suunnittelusopimus/logo.gif");
         await saveAndLoadProjekti(
           projekti,
           "while adding one muokkaaja more. There should be three persons in the projekti now",
@@ -282,7 +279,14 @@ describe("apiHandler", () => {
                 rooli: ProjektiRooli.OMISTAJA,
               },
             ],
-            suunnitteluSopimus: null,
+            suunnitteluSopimus: {
+              email: "a@b.com",
+              puhelinnumero: "0291111",
+              kunta: "Nokia",
+              logo: "/suunnittelusopimus/logo.gif",
+              etunimi: "Etunimi",
+              sukunimi: "Sukunimi",
+            },
             euRahoitus: false, // mandatory field for perustiedot
             aloitusKuulutus: fixture.aloitusKuulutusInput,
             kielitiedot: {
@@ -339,6 +343,7 @@ describe("apiHandler", () => {
 
         // Accept aloituskuulutus
         mockS3CLient.on(PutObjectCommand).resolves({});
+        mockS3CLient.on(CopyObjectCommand).resolves({});
         await api.siirraTila({
           oid,
           tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
@@ -346,15 +351,14 @@ describe("apiHandler", () => {
         });
 
         const calls = mockS3CLient.calls();
-        expect(calls).to.have.length(4);
-        [
-          "yllapito/tiedostot/projekti/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf",
-          "yllapito/tiedostot/projekti/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf",
-          "yllapito/tiedostot/projekti/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Projektin nimi saameksi.pdf",
-          "yllapito/tiedostot/projekti/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Projektin nimi saameksi.pdf",
-        ].forEach((fileName, callNumber) => {
-          validatePutObjectCommandInput(callNumber, "hassu-localstack-yllapito", fileName);
-        });
+        expect(calls).to.have.length(9);
+        expect(
+          calls.map((call) => {
+            const input = call.args[0].input as any;
+            const { Body: _Body, ...otherArgs } = input;
+            return { ...otherArgs };
+          })
+        ).toMatchSnapshot();
 
         // Verify that the accepted aloituskuulutus is available
         await validateAloitusKuulutusState({ oid, expectedState: AloitusKuulutusTila.HYVAKSYTTY });

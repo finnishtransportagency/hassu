@@ -23,6 +23,7 @@ async function main() {
     yllapitoBucket: hassuDatabaseStack.yllapitoBucket,
     internalBucket: hassuDatabaseStack.internalBucket,
     archiveBucket: hassuDatabaseStack.archiveBucket,
+    publicBucket: hassuDatabaseStack.publicBucket,
   });
   await hassuBackendStack.process().catch((e) => {
     console.log("Deployment of HassuBackendStack failed:", e);

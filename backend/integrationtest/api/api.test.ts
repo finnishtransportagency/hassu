@@ -164,14 +164,11 @@ describe("Api", () => {
     // Test that fields can be removed as well
     await api.tallennaProjekti({
       oid,
-      suunnitteluSopimus: null,
+      muistiinpano: null,
     });
 
     const updatedProjekti2 = await loadProjektiFromDatabase(oid);
-    expect(updatedProjekti2.muistiinpano).to.be.equal(newNote);
-    expect(updatedProjekti2.aloitusKuulutus).eql(aloitusKuulutus);
-    expect(updatedProjekti2.suunnitteluSopimus).to.be.undefined;
-    expect(updatedProjekti2.kielitiedot).eql(kielitiedot);
+    expect(updatedProjekti2.muistiinpano).to.be.undefined;
 
     userFixture.loginAsProjektiKayttaja(projektiPaallikko);
     await api.siirraTila({
