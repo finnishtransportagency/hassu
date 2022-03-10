@@ -24,7 +24,7 @@ import { fileService } from "../files/fileService";
 import { personSearch } from "../personSearch/personSearchClient";
 import { perustiedotValidationSchema } from "../../../src/schemas/perustiedot";
 import { ValidationError } from "yup";
-import { sendEmail } from "../email/email";
+import { emailClient } from "../email/email";
 import { createPerustamisEmail } from "../email/emailTemplates";
 import { requireAdmin } from "../user/userService";
 import { projektiArchive } from "../archive/projektiArchiveService";
@@ -130,7 +130,7 @@ export async function createOrUpdateProjekti(input: TallennaProjektiInput): Prom
 
     const emailOptions = createPerustamisEmail(projekti);
     if (emailOptions.to) {
-      await sendEmail(emailOptions);
+      await emailClient.sendEmail(emailOptions);
       log.info("Sent email to projektipaallikko", emailOptions.to);
     }
   }

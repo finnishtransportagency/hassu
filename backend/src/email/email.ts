@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 
 export type EmailOptions = Pick<MailOptions, "to" | "subject" | "text" | "attachments">;
 
-export async function sendEmail(options: EmailOptions) {
+async function sendEmail(options: EmailOptions): Promise<void> {
   if (config.emailsOn !== "true") {
     return;
   }
@@ -31,3 +31,5 @@ export async function sendEmail(options: EmailOptions) {
     log.error("Email lähetys epäonnistui", e);
   }
 }
+
+export const emailClient = { sendEmail };

@@ -134,16 +134,15 @@ class AloitusKuulutusHandler {
 
     if (toiminto == TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI) {
       await sendForApproval(projekti, aloitusKuulutus);
-      await emailHandler.sendEmail(toiminto, oid);
     } else if (toiminto == TilasiirtymaToiminto.HYLKAA) {
       await reject(projekti, aloitusKuulutus, syy);
-      await emailHandler.sendEmail(toiminto, oid);
     } else if (toiminto == TilasiirtymaToiminto.HYVAKSY) {
       await approve(projekti, aloitusKuulutus);
-      await emailHandler.sendEmail(toiminto, oid);
     } else {
       throw new Error("Tuntematon toiminto");
     }
+
+    await emailHandler.sendEmailsByToiminto(toiminto, oid);
 
     return Promise.resolve(undefined);
   }
