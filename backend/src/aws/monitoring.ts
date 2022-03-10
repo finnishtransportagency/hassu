@@ -42,6 +42,13 @@ export function setupLambdaMonitoring() {
   }
 }
 
+export function getAxios() {
+  AWSXRay.captureHTTPsGlobal(http, true);
+  AWSXRay.captureHTTPsGlobal(https, true);
+  AWSXRay.capturePromise();
+  return require("axios");
+}
+
 export function setupLambdaMonitoringMetaData(subsegment: Subsegment | undefined) {
   const correlationId = getCorrelationId();
   subsegment?.addAnnotation("env", config.env || "undefined");

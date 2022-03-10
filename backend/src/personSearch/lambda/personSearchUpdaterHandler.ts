@@ -28,6 +28,8 @@ export async function handleEvent() {
       }
     } catch (e) {
       log.error(e);
+      // Prevent updating the data too often by updating the last modified date
+      await s3Cache.touch(PERSON_SEARCH_CACHE_KEY);
       throw e;
     } finally {
       if (subsegment) {

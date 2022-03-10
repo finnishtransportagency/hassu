@@ -2,11 +2,11 @@ import { config } from "../../config";
 import { adaptPersonSearchResult } from "./personSearchAdapter";
 import { log } from "../../logger";
 import { Kayttajas, Person } from "../kayttajas";
-import { wrapXrayAsync } from "../../aws/monitoring";
+import { getAxios, wrapXrayAsync } from "../../aws/monitoring";
 
 import { parseStringPromise as parseString } from "xml2js";
 
-import axios from "axios";
+const axios = getAxios();
 
 export class PersonSearchUpdater {
   private readonly personSearchAccountTypes: string[];
@@ -21,18 +21,14 @@ export class PersonSearchUpdater {
     }
     const kayttajas: Record<string, Person> = {};
     // First list all accounts from prod
-    await Promise.all(
-      this.personSearchAccountTypes.map((accountType) =>
-        this.listAccountsOfType(accountType, kayttajas, config.personSearchApiURLProd)
-      )
-    );
+    for (const accountType of this.personSearchAccountTypes) {
+      await this.listAccountsOfType(accountType, kayttajas, config.personSearchApiURLProd);
+    }
     // Then add all missing accounts from dev to existing map. If the same UID has multiple emails, the test emails are ignored. This code is not supposed to be run in production.
     if (config.personSearchApiURL) {
-      await Promise.all(
-        this.personSearchAccountTypes.map((accountType) =>
-          this.listAccountsOfType(accountType, kayttajas, config.personSearchApiURL)
-        )
-      );
+      for (const accountType of this.personSearchAccountTypes) {
+        await this.listAccountsOfType(accountType, kayttajas, config.personSearchApiURL);
+      }
     }
     return new Kayttajas(kayttajas);
   }
