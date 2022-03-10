@@ -27,7 +27,7 @@ describe("UploadService", () => {
   });
 
   it("should upload file successfully", async function () {
-    const uploadProperties = await fileService.createUploadURLForFile("logo.png");
+    const uploadProperties = await fileService.createUploadURLForFile("logo ääkkösillä.png");
     expect(uploadProperties.uploadURL).to.not.be.empty;
     expect(uploadProperties.fileNameWithPath).to.not.be.empty;
 
@@ -53,12 +53,12 @@ describe("UploadService", () => {
     const pathInProjekti = await fileService.createFileToProjekti({
       oid: "1",
       filePathInProjekti: "testfilepath",
-      fileName: "test.pdf",
+      fileName: "test ääkkösillä.pdf",
       contents: Buffer.from("foobar", "base64"),
       inline: true,
       contentType: "application/pdf",
     });
-    expect(pathInProjekti).to.eq("/testfilepath/test.pdf");
+    expect(pathInProjekti).to.eq("/testfilepath/test ääkkösillä.pdf");
 
     expect(mockS3CLient.send).to.be.calledOnce;
     expect((mockS3CLient.send.getCall(0).args as any)[0].input).toMatchSnapshot();

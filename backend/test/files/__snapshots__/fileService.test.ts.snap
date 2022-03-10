@@ -12,16 +12,16 @@ Object {
     "type": "Buffer",
   },
   "Bucket": "hassu-localstack-yllapito",
-  "ContentDisposition": "inline; filename=test.pdf",
+  "ContentDisposition": "inline; filename=test ääkkösillä.pdf",
   "ContentType": "application/pdf",
-  "Key": "yllapito/tiedostot/projekti/1/testfilepath/test.pdf",
+  "Key": "yllapito/tiedostot/projekti/1/testfilepath/test ääkkösillä.pdf",
 }
 `;
 
 exports[`UploadService should upload file successfully 1`] = `
 Object {
   "Bucket": "hassu-localstack-upload",
-  "Key": "1-2-3-4/logo.png",
+  "Key": "1-2-3-4/logo ääkkösillä.png",
 }
 `;
 
@@ -29,8 +29,8 @@ exports[`UploadService should upload file successfully 2`] = `
 Object {
   "Bucket": "hassu-localstack-yllapito",
   "ContentType": "image/png",
-  "CopySource": "hassu-localstack-upload/1-2-3-4/logo.png",
-  "Key": "yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.png",
+  "CopySource": "hassu-localstack-upload/1-2-3-4/logo%20%C3%A4%C3%A4kk%C3%B6sill%C3%A4.png",
+  "Key": "yllapito/tiedostot/projekti/1/suunnittelusopimus/logo ääkkösillä.png",
   "MetadataDirective": "REPLACE",
 }
 `;

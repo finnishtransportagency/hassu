@@ -57,7 +57,7 @@ describe("Api", () => {
   });
 
   it("should search, load and save a project", async function () {
-    if (process.env.SKIP_VELHO_TESTS) {
+    if (process.env.SKIP_VELHO_TESTS == "true") {
       this.skip();
     }
     userFixture.loginAs(UserFixture.mattiMeikalainen);

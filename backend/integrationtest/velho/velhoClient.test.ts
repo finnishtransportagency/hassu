@@ -5,19 +5,21 @@ import { velho } from "../../src/velho/velhoClient";
 import * as log from "loglevel";
 import { tieProjekti } from "./fixture/tieProjekti";
 
+const skipVelhoTests = process.env.SKIP_VELHO_TESTS == "true";
+
 describe("VelhoClient", () => {
   let oid: string;
   let name: string;
 
   it("should authenticate to Velho", async function () {
-    if (process.env.SKIP_VELHO_TESTS) {
+    if (skipVelhoTests) {
       this.skip();
     }
     expect(await velho.authenticate()).not.be.null;
   });
 
   it("should list projects from Velho", async function () {
-    if (process.env.SKIP_VELHO_TESTS) {
+    if (skipVelhoTests) {
       this.skip();
     }
     const searchResult = await velho.searchProjects("valtatien");
@@ -31,7 +33,7 @@ describe("VelhoClient", () => {
   });
 
   it("should list one exact project from Velho", async function () {
-    if (process.env.SKIP_VELHO_TESTS) {
+    if (skipVelhoTests) {
       this.skip();
     }
     expect(oid).to.not.be.null;
@@ -43,7 +45,7 @@ describe("VelhoClient", () => {
   });
 
   it("should load project from Velho", async function () {
-    if (process.env.SKIP_VELHO_TESTS) {
+    if (skipVelhoTests) {
       this.skip();
     }
     expect(oid).to.not.be.null;
@@ -53,7 +55,7 @@ describe("VelhoClient", () => {
   });
 
   it.skip("should create project to Velho for testing and delete it", async function () {
-    if (process.env.SKIP_VELHO_TESTS) {
+    if (skipVelhoTests) {
       this.skip();
     }
     expect(await velho.authenticate()).not.be.null;
