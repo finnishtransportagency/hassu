@@ -34,7 +34,7 @@ export default function FormGroup({
   );
 }
 
-const Label = styled("label")(() =>
+const Label = styled("label")(
   sx({
     display: "block",
     marginBottom: 2,

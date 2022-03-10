@@ -1,5 +1,5 @@
-import { Stack } from "@mui/material";
-import React, { ReactElement } from "react";
+import React, { Fragment, ReactElement } from "react";
+import { styled, experimental_sx as sx } from "@mui/material";
 
 export interface KeyValueData {
   header: string;
@@ -12,13 +12,27 @@ interface Props {
 
 export default function KeyValueTable({ rows }: Props): ReactElement {
   return (
-    <Stack>
+    <DescriptionList>
       {rows.map(({ header, data }, index) => (
-        <div key={index} className="lg:grid lg:grid-cols-12">
-          <div className="lg:col-span-4 xl:col-span-3 font-semibold lg:font-normal">{header}</div>
-          <div className="lg:col-span-8 xl:col-span-9">{data || "-"}</div>
-        </div>
+        <Fragment key={index}>
+          <dt className="font-semibold lg:font-normal">{header}</dt>
+          <dd>{data || "-"}</dd>
+        </Fragment>
       ))}
-    </Stack>
+    </DescriptionList>
   );
 }
+
+const DescriptionList = styled("dl")(
+  sx({
+    "& > dd + dt": {
+      marginTop: 4,
+    },
+    display: { lg: "inline-grid" },
+    gridTemplateColumns: { lg: "repeat(2, 18rem)" },
+    columnGap: { lg: 16 },
+    "& > dd + dt + dd ": {
+      marginTop: { lg: 4 },
+    },
+  })
+);

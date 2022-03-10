@@ -14,7 +14,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
   const perustiedot: KeyValueData[] = [
     { header: "Asiatunnus", data: velho?.asiatunnusELY },
     {
-      header: "Vastaava viranomainen",
+      header: "Suunnittelusta vastaava viranomainen",
       data: velho?.tilaajaOrganisaatio,
     },
     {
@@ -29,7 +29,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
 
   return (
     <SectionContent>
-      <h4 className="vayla-small-title">Suunnitteluhankkeen perustiedot</h4>
+      <h4 className="vayla-small-title">Projektin perustiedot</h4>
       <KeyValueTable rows={perustiedot} />
     </SectionContent>
   );

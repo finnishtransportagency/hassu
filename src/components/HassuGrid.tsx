@@ -1,5 +1,6 @@
 import { styled, experimental_sx as sx } from "@mui/material";
 import { ReactNode } from "react";
+import isPropValid from "@emotion/is-prop-valid";
 
 interface Props {
   children?: ReactNode;
@@ -15,7 +16,7 @@ const resolveGridTemplateColumns = (col: Props["cols"]) => {
   return undefined;
 };
 
-export const Grid = styled("div")((props: Props) => {
+export const Grid = styled("div", { shouldForwardProp: isPropValid })((props: Props) => {
   return sx({
     display: "grid",
     columnGap: 7,

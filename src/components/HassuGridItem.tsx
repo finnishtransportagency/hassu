@@ -1,5 +1,6 @@
 import { styled, experimental_sx as sx } from "@mui/material";
 import { ReactNode } from "react";
+import isPropValid from "@emotion/is-prop-valid";
 
 interface Props {
   children?: ReactNode;
@@ -18,7 +19,7 @@ const resolveGridColumn = (colSpan: Props["colSpan"]) => {
   return undefined;
 };
 
-export const GridItem = styled("div")((props: Props) => {
+export const HassuGridItem = styled("div", { shouldForwardProp: isPropValid })((props: Props) => {
   return sx({
     gridColumn: props.colSpanFull ? "1 / -1" : resolveGridColumn(props.colSpan),
     gridColumnStart: props.colStart,
@@ -26,4 +27,4 @@ export const GridItem = styled("div")((props: Props) => {
   });
 });
 
-export default GridItem;
+export default HassuGridItem;
