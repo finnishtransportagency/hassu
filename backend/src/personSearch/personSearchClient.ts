@@ -4,7 +4,7 @@ import { log } from "../logger";
 import { Kayttajas, Person } from "./kayttajas";
 import { wrapXrayAsync } from "../aws/monitoring";
 
-export const S3CACHE_TTL_MILLIS = 60 * 60 * 1000; // 15 min
+export const S3CACHE_TTL_MILLIS = 60 * 60 * 1000; // 60 min
 export enum SearchMode {
   EMAIL,
   UID,

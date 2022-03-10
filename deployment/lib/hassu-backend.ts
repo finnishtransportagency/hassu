@@ -242,7 +242,7 @@ export class HassuBackendStack extends cdk.Stack {
       handler: "handleEvent",
       memorySize: 512,
       reservedConcurrentExecutions: 1,
-      timeout: Duration.seconds(60),
+      timeout: Duration.seconds(120),
       bundling: {
         minify: true,
       },

@@ -1,4 +1,5 @@
 import {
+  CopyObjectCommand,
   DeleteObjectCommand,
   DeleteObjectCommandOutput,
   GetObjectCommand,
@@ -97,6 +98,23 @@ export class S3Cache {
     throw new Error("Problem with cached data: no contents in file");
   }
 
+  async touch(key: string): Promise<void> {
+    const s3Client: S3Client = getS3Client();
+    try {
+      const objectKey = "cache/" + key;
+      const output: GetObjectCommandOutput = await s3Client.send(
+        new CopyObjectCommand({
+          Bucket: config.internalBucketName,
+          Key: objectKey,
+          CopySource: config.internalBucketName + "/" + objectKey,
+        })
+      );
+      log.info("Touch " + objectKey, output.$metadata);
+    } catch (e: unknown) {
+      log.error(e);
+    }
+  }
+
   private static getExpiresTime(lastModified: Date | undefined, ttlMillis: number) {
     if (!lastModified) {
       return 0;
@@ -104,7 +122,7 @@ export class S3Cache {
     return lastModified.getTime() + ttlMillis;
   }
 
-  async put(key: string, data: any): Promise<void> {
+  async put(key: string, data: unknown): Promise<void> {
     if (!data) {
       return;
     }
