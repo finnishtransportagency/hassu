@@ -92,7 +92,7 @@ const LiittyvatSuunnitelmat = ({ isLiittyviaSuunnitelmia, projekti }: LiittyvatS
     <SectionContent largeGap sx={{ marginLeft: 4 }}>
       {fields.map((field, index) => {
         return (
-          <HassuGrid key={field.id} cols={[1, 3]}>
+          <HassuGrid key={field.id} cols={[1, 1, 3]}>
             <TextInput
               label="Asiatunnus"
               {...register(`liittyvatSuunnitelmat.${index}.asiatunnus`)}

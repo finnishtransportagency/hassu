@@ -20,6 +20,7 @@ const StyledSection = styled("section")((props: Props) =>
   sx({
     marginBottom: 12,
     marginTop: 7,
+    "& > *": { margin: 0 },
     "& > * + *": {
       marginTop: props.smallGaps ? 4 : 7,
     },

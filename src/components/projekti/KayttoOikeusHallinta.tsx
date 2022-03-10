@@ -224,7 +224,7 @@ const UserFields = ({
         />
         <TextInput label="Sähköpostiosoite *" value={kayttaja?.email || ""} disabled />
       </HassuGrid>
-      <div className={classNames(removeable ? "hidden lg:block mt-8" : "invisible")}>
+      <div className={classNames(removeable ? "hidden md:block mt-8" : "invisible")}>
         <IconButton
           icon="trash"
           onClick={(event) => {
@@ -237,7 +237,7 @@ const UserFields = ({
         />
       </div>
       {removeable && (
-        <div className="block lg:hidden">
+        <div className="block md:hidden">
           <Button
             onClick={(event) => {
               event.preventDefault();
