@@ -356,7 +356,7 @@ describe("apiHandler", () => {
         });
 
         const calls = mockS3CLient.calls();
-        expect(calls).to.have.length(9);
+        expect(calls).to.have.length(10);
         expect(
           calls.map((call) => {
             const input = call.args[0].input as any;

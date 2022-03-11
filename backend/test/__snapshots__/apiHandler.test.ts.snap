@@ -515,6 +515,10 @@ Array [
     },
     "MetadataDirective": "REPLACE",
   },
+  Object {
+    "Bucket": "hassu-localstack-yllapito",
+    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf",
+  },
 ]
 `;
 
