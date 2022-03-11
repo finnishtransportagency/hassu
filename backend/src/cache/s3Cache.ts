@@ -107,6 +107,9 @@ export class S3Cache {
           Bucket: config.internalBucketName,
           Key: objectKey,
           CopySource: config.internalBucketName + "/" + objectKey,
+          Metadata: {
+            modified: `${new Date().getTime()}`, // Copy is illegal if nothing changes, so this is to make a change
+          },
         })
       );
       log.info("Touch " + objectKey, output.$metadata);
