@@ -1,5 +1,6 @@
 import React, { ReactElement, ReactNode } from "react";
 import { styled, experimental_sx as sx } from "@mui/material";
+import isPropValid from "@emotion/is-prop-valid";
 
 interface Props {
   noDivider?: boolean;
@@ -7,16 +8,16 @@ interface Props {
   smallGaps?: boolean;
 }
 
-function Section({ children, ...rest }: Props): ReactElement {
+function Section({ children, noDivider, ...rest }: Props): ReactElement {
   return (
     <>
       <StyledSection {...rest}>{children}</StyledSection>
-      {!rest.noDivider && <hr />}
+      {!noDivider && <hr />}
     </>
   );
 }
 
-const StyledSection = styled("section")((props: Props) =>
+const StyledSection = styled("section", { shouldForwardProp: isPropValid })((props: Props) =>
   sx({
     marginBottom: 12,
     marginTop: 7,

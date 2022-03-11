@@ -108,7 +108,6 @@ Array [
   </form>,
   <section
     className="css-4lmka5"
-    noDivider={true}
   >
     <h2>
       Hakutulokset
