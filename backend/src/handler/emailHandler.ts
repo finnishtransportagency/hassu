@@ -16,6 +16,8 @@ import { GetObjectCommand, GetObjectCommandOutput, S3Client } from "@aws-sdk/cli
 import { createLahetekirjeEmail } from "../email/lahetekirje/lahetekirjeEmailTemplate";
 import { config } from "../config";
 import { Readable } from "stream";
+import { localDateTimeString } from "../util/dateUtil";
+
 
 async function getFileAttachment(oid: string, key: string): Promise<Mail.Attachment> {
   const s3Client: S3Client = getS3Client();
@@ -53,7 +55,7 @@ async function getKayttaja(uid: string) {
   return kayttajas.getKayttajaByUid(uid);
 }
 
-async function sendWaitingApprovalMails(projekti: DBProjekti) {
+async function sendWaitingApprovalMail(projekti: DBProjekti) {
   const emailOptions = createHyvaksyttavanaEmail(projekti);
   if (emailOptions.to) {
     await emailClient.sendEmail(emailOptions);
@@ -92,6 +94,15 @@ async function sendApprovalMailsAndAttachments(projekti: DBProjekti) {
     );
     emailOptionsLahetekirje.attachments = [aloituskuulutusIlmoitusPDF];
     await emailClient.sendEmail(emailOptionsLahetekirje);
+
+    const aikaleima = localDateTimeString();
+    aloituskuulutus.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => {
+      kunta.lahetetty = aikaleima;
+    });
+    aloituskuulutus.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => {
+      viranomainen.lahetetty = aikaleima;
+    });
+    await projektiDatabase.updateAloitusKuulutusJulkaisu(projekti, aloituskuulutus);
   } else {
     log.error("Ilmoitus aloituskuulutuksesta sahkopostin vastaanottajia ei loytynyt");
   }
@@ -103,7 +114,7 @@ class EmailHandler {
   async sendEmailsByToiminto(toiminto: TilasiirtymaToiminto, oid: string) {
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     if (toiminto == TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI) {
-      await sendWaitingApprovalMails(projekti);
+      await sendWaitingApprovalMail(projekti);
     } else if (toiminto == TilasiirtymaToiminto.HYLKAA) {
       // ei viela maaritelty
     } else if (toiminto == TilasiirtymaToiminto.HYVAKSY) {

@@ -26,3 +26,7 @@ export function dateToString(date: Dayjs) {
 export function dateTimeToString(date: Dayjs) {
   return date.format(DATE_TIME_FORMAT);
 }
+
+export function localDateTimeString() {
+  return dayjs().tz().format(DATE_TIME_FORMAT);
+}
