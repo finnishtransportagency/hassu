@@ -8,7 +8,7 @@ import {
 } from "../email/emailTemplates";
 import { log } from "../logger";
 import { personSearch } from "../personSearch/personSearchClient";
-import { Kieli, TilasiirtymaToiminto } from "../../../common/graphql/apiModel";
+import { Kayttaja, Kieli, TilasiirtymaToiminto } from "../../../common/graphql/apiModel";
 import Mail from "nodemailer/lib/mailer";
 import { DBProjekti } from "../database/model/projekti";
 import { getS3Client } from "../aws/clients";
@@ -17,7 +17,6 @@ import { createLahetekirjeEmail } from "../email/lahetekirje/lahetekirjeEmailTem
 import { config } from "../config";
 import { Readable } from "stream";
 import { localDateTimeString } from "../util/dateUtil";
-
 
 async function getFileAttachment(oid: string, key: string): Promise<Mail.Attachment> {
   const s3Client: S3Client = getS3Client();
@@ -44,18 +43,20 @@ async function getFileAttachment(oid: string, key: string): Promise<Mail.Attachm
   } catch (error) {
     log.error("Virhe liitetiedostojen haussa", error);
   }
+
+  return Promise.resolve(undefined);
 }
 
 function getFilename(path: string): string {
   return path.substring(path.lastIndexOf("/") + 1);
 }
 
-async function getKayttaja(uid: string) {
+async function getKayttaja(uid: string): Promise<Kayttaja> {
   const kayttajas = await personSearch.getKayttajas();
   return kayttajas.getKayttajaByUid(uid);
 }
 
-async function sendWaitingApprovalMail(projekti: DBProjekti) {
+async function sendWaitingApprovalMail(projekti: DBProjekti): Promise<void> {
   const emailOptions = createHyvaksyttavanaEmail(projekti);
   if (emailOptions.to) {
     await emailClient.sendEmail(emailOptions);
@@ -64,7 +65,7 @@ async function sendWaitingApprovalMail(projekti: DBProjekti) {
   }
 }
 
-async function sendApprovalMailsAndAttachments(projekti: DBProjekti) {
+async function sendApprovalMailsAndAttachments(projekti: DBProjekti): Promise<void> {
   const aloituskuulutus = asiakirjaAdapter.findAloitusKuulutusLastApproved(projekti);
   const muokkaaja = await getKayttaja(aloituskuulutus.muokkaaja);
   const emailOptionsMuokkaaja = createAloituskuulutusHyvaksyttyEmail(projekti, muokkaaja);
@@ -106,12 +107,10 @@ async function sendApprovalMailsAndAttachments(projekti: DBProjekti) {
   } else {
     log.error("Ilmoitus aloituskuulutuksesta sahkopostin vastaanottajia ei loytynyt");
   }
-
-  return Promise.resolve(undefined);
 }
 
 class EmailHandler {
-  async sendEmailsByToiminto(toiminto: TilasiirtymaToiminto, oid: string) {
+  async sendEmailsByToiminto(toiminto: TilasiirtymaToiminto, oid: string): Promise<void> {
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     if (toiminto == TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI) {
       await sendWaitingApprovalMail(projekti);
@@ -122,8 +121,6 @@ class EmailHandler {
     } else {
       throw new Error("Tuntematon toiminto");
     }
-
-    return Promise.resolve(undefined);
   }
 }
 
