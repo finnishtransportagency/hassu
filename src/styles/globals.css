@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @layer base {
+  body {
+    overflow-wrap: break-word;
+  }
   body hr {
     @apply border-gray;
   }
