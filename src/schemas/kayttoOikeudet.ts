@@ -1,13 +1,27 @@
 import * as Yup from "yup";
-import { ProjektiKayttajaInput, ProjektiRooli } from "@services/api";
-import { puhelinNumeroSchema } from "./puhelinNumero";
+import { Kayttaja, ProjektiKayttajaInput, ProjektiRooli, VaylaKayttajaTyyppi } from "@services/api";
+import { puhelinNumeroSchema, addAgencyNumberTests } from "./puhelinNumero";
+
+export interface KayttoOikeudetSchemaContext {
+  kayttajat: Kayttaja[];
+}
+
+const kayttajaIsAorL = (kayttajat?: Kayttaja[] | null, kayttajatunnus?: string | null) =>
+  kayttajat?.find(
+    ({ vaylaKayttajaTyyppi, uid }) =>
+      uid === kayttajatunnus &&
+      (VaylaKayttajaTyyppi.A_TUNNUS === vaylaKayttajaTyyppi || VaylaKayttajaTyyppi.L_TUNNUS === vaylaKayttajaTyyppi)
+  );
 
 export const kayttoOikeudetSchema = Yup.array()
   .of(
     Yup.object()
       .shape({
         rooli: Yup.mixed().oneOf(Object.values(ProjektiRooli), "Käyttäjälle on asetettava rooli"),
-        puhelinnumero: puhelinNumeroSchema,
+        puhelinnumero: puhelinNumeroSchema.when(["$kayttajat", "kayttajatunnus"], {
+          is: kayttajaIsAorL,
+          then: addAgencyNumberTests,
+        }),
         kayttajatunnus: Yup.string().required("Aseta käyttäjä"),
         esitetaanKuulutuksessa: Yup.boolean().nullable().notRequired(),
         id: Yup.string().nullable().notRequired(),
