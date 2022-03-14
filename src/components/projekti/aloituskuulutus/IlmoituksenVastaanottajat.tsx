@@ -39,6 +39,8 @@ export default function IlmoituksenVastaanottajat({
 }: Props): ReactElement {
   const { t } = useTranslation("commonFI");
   const isReadonly = !!aloituskuulutusjulkaisu;
+  const isKuntia = !!aloituskuulutusjulkaisu?.ilmoituksenVastaanottajat?.kunnat;
+  const isViranomaisia = !!aloituskuulutusjulkaisu?.ilmoituksenVastaanottajat?.viranomaiset;
 
   const {
     register,
@@ -172,23 +174,21 @@ export default function IlmoituksenVastaanottajat({
             <p></p>
             <p style={{ color: "#7A7A7A" }}>Ilmoituksen tila</p>
             <p style={{ color: "#7A7A7A" }}>Lähetysaika</p>
-            {viranomaisFields.map((viranomainen) => (
+            {isViranomaisia && (
               <>
-                <p className="odd:bg-white even:bg-grey col-span-2">
-                  {t(`viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
-                </p>
-                <p className="odd:bg-white even:bg-grey">
-                  {aloituskuulutusjulkaisu?.tila === AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA
-                    ? "Ei lähetetty"
-                    : "Lähetetty"}
-                </p>
-                <p className="odd:bg-white even:bg-grey">
-                  {aloituskuulutusjulkaisu?.tila === AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA
-                    ? ""
-                    : dayjs().format("DD.MM.YYYY HH:MM")}
-                </p>
+                {aloituskuulutusjulkaisu?.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => (
+                  <>
+                    <p className="odd:bg-white even:bg-grey col-span-2">
+                      {t(`viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
+                    </p>
+                    <p className="odd:bg-white even:bg-grey">{viranomainen.lahetetty ? "Lähetetty" : "Ei lähetetty"}</p>
+                    <p className="odd:bg-white even:bg-grey">
+                      {viranomainen.lahetetty ? dayjs(viranomainen.lahetetty).format("DD.MM.YYYY HH:mm") : null}
+                    </p>
+                  </>
+                ))}
               </>
-            ))}
+            )}
           </div>
         </SectionContent>
       )}
@@ -222,22 +222,20 @@ export default function IlmoituksenVastaanottajat({
             <p className="vayla-table-header">Sähköpostiosoite</p>
             <p className="vayla-table-header">Ilmoituksen tila</p>
             <p className="vayla-table-header">Lähetysaika</p>
-            {kuntaFields.map((kunta, index) => (
+            {isKuntia && (
               <>
-                <p className={getStyleForRow(index)}>{kunta.nimi}</p>
-                <p className={getStyleForRow(index)}>{kunta.sahkoposti}</p>
-                <p className={getStyleForRow(index)}>
-                  {aloituskuulutusjulkaisu?.tila === AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA
-                    ? "Ei lähetetty"
-                    : "Lähetetty"}
-                </p>
-                <p className={getStyleForRow(index)}>
-                  {aloituskuulutusjulkaisu?.tila === AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA
-                    ? ""
-                    : dayjs().format("DD.MM.YYYY HH:MM")}
-                </p>
+                {aloituskuulutusjulkaisu?.ilmoituksenVastaanottajat?.kunnat?.map((kunta, index) => (
+                  <>
+                    <p className={getStyleForRow(index)}>{kunta.nimi}</p>
+                    <p className={getStyleForRow(index)}>{kunta.sahkoposti}</p>
+                    <p className={getStyleForRow(index)}>{kunta.lahetetty ? "Lahetetty" : "Ei lähetetty"}</p>
+                    <p className={getStyleForRow(index)}>
+                      {kunta.lahetetty ? dayjs(kunta.lahetetty).format("DD.MM.YYYY HH:mm") : null}
+                    </p>
+                  </>
+                ))}
               </>
-            ))}
+            )}
           </div>
         )}
       </SectionContent>

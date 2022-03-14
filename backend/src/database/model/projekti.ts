@@ -56,6 +56,7 @@ export type AloitusKuulutusJulkaisu = {
   tila?: AloitusKuulutusTila | null;
   muokkaaja?: string | null;
   hyvaksyja?: string | null;
+  ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
 };
 
 export type Yhteystieto = {

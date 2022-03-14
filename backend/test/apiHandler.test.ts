@@ -25,9 +25,10 @@ import { PersonSearchFixture } from "./personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../src/personSearch/kayttajas";
 import { AwsClientStub, mockClient } from "aws-sdk-client-mock";
 import { getS3Client } from "../src/aws/clients";
-import { CopyObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { NotFoundError } from "../src/error/NotFoundError";
 import { fileService } from "../src/files/fileService";
+import { GetObjectCommand, PutObjectCommand, CopyObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { NotFoundError } from "../src/error/NotFoundError";
+import { emailClient } from "../src/email/email";
 
 const { expect, assert } = require("chai");
 
@@ -58,6 +59,7 @@ describe("apiHandler", () => {
     let deleteAloitusKuulutusJulkaisuStub: sinon.SinonStub;
     let persistFileToProjektiStub: sinon.SinonStub;
     let mockS3CLient: AwsClientStub<S3Client>;
+    let sendEmailStub: sinon.SinonStub;
 
     beforeEach(() => {
       createProjektiStub = sinon.stub(projektiDatabase, "createProjekti");
@@ -70,6 +72,7 @@ describe("apiHandler", () => {
       loadVelhoProjektiByOidStub = sinon.stub(velho, "loadProjekti");
       persistFileToProjektiStub = sinon.stub(fileService, "persistFileToProjekti");
       mockS3CLient = mockClient(getS3Client());
+      sendEmailStub = sinon.stub(emailClient, "sendEmail");
 
       fixture = new ProjektiFixture();
       personSearchFixture = new PersonSearchFixture();
@@ -81,6 +84,7 @@ describe("apiHandler", () => {
           personSearchFixture.createKayttaja("A2"),
         ])
       );
+      sendEmailStub.resolves();
     });
 
     function mockLataaProjektiFromVelho() {
@@ -344,6 +348,7 @@ describe("apiHandler", () => {
         // Accept aloituskuulutus
         mockS3CLient.on(PutObjectCommand).resolves({});
         mockS3CLient.on(CopyObjectCommand).resolves({});
+        mockS3CLient.on(GetObjectCommand).resolves({});
         await api.siirraTila({
           oid,
           tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
@@ -351,7 +356,7 @@ describe("apiHandler", () => {
         });
 
         const calls = mockS3CLient.calls();
-        expect(calls).to.have.length(9);
+        expect(calls).to.have.length(10);
         expect(
           calls.map((call) => {
             const input = call.args[0].input as any;

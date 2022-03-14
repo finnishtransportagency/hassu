@@ -32,7 +32,17 @@ export class AsiakirjaAdapter {
         .pop();
     }
   }
+
+  findAloitusKuulutusLastApproved(projekti: DBProjekti): AloitusKuulutusJulkaisu | undefined {
+    if (projekti.aloitusKuulutusJulkaisut) {
+      return projekti.aloitusKuulutusJulkaisut
+        .filter((julkaisu) => julkaisu.tila == AloitusKuulutusTila.HYVAKSYTTY)
+        .pop();
+    }
+  }
 }
+
+
 
 function adaptYhteystiedot(dbProjekti: DBProjekti, esitettavatYhteystiedot: Yhteystieto[] | null): Yhteystieto[] {
   const yt: Yhteystieto[] = [];

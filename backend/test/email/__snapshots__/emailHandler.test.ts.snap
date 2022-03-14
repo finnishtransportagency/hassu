@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`emailHandler sendEmailsByToiminto sendApprovalMailsAndAttachments should send emails and attachments succesfully 1`] = `
+Array [
+  Object {
+    "Bucket": "hassu-localstack-yllapito",
+    "Key": "yllapito/tiedostot/projekti/2/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
+  },
+  Object {
+    "Bucket": "hassu-localstack-yllapito",
+    "Key": "yllapito/tiedostot/projekti/2/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
+  },
+]
+`;

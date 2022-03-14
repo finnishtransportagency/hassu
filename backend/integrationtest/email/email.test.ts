@@ -1,6 +1,6 @@
 /* tslint:disable:only-arrow-functions no-unused-expression */
 import { describe, it } from "mocha";
-import { sendEmail } from "../../src/email/email";
+import { emailClient } from "../../src/email/email";
 import { AsiakirjaTyyppi, Kieli } from "../../../common/graphql/apiModel";
 import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
 import { asiakirjaAdapter } from "../../src/handler/asiakirjaAdapter";
@@ -30,7 +30,7 @@ describe.skip("Email", () => {
       kieli: Kieli.SUOMI,
     });
 
-    await sendEmail({
+    await emailClient.sendEmail({
       to: "mikko.haapamaki@cgi.com",
       subject: "Otsikkoa tässä",
       text: "Hei!\nToinen rivi tässä myös.",
