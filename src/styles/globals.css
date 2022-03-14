@@ -5,6 +5,7 @@
 @layer base {
   body {
     word-break: break-word;
+    overflow-wrap: anywhere;
   }
   body hr {
     @apply border-gray;
