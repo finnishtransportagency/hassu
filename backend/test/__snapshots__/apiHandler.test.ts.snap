@@ -411,7 +411,7 @@ Array [
     },
     "muistiinpano": "Testiprojekti 1:n muistiinpano",
     "oid": "1",
-    "status": "EI_JULKAISTU",
+    "status": "ALOITUSKUULUTUS",
     "suunnitteluSopimus": Object {
       "__typename": "SuunnitteluSopimus",
       "email": "a@b.com",
@@ -657,7 +657,7 @@ Object {
   },
   "muistiinpano": "Testiprojekti 1:n muistiinpano",
   "oid": "1",
-  "status": "EI_JULKAISTU",
+  "status": "ALOITUSKUULUTUS",
   "suunnitteluSopimus": Object {
     "__typename": "SuunnitteluSopimus",
     "email": "a@b.com",

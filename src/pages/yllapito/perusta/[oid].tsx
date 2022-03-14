@@ -14,7 +14,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import log from "loglevel";
 import Button from "@components/button/Button";
 import ButtonLink from "@components/button/ButtonLink";
-import { kayttoOikeudetSchema } from "src/schemas/kayttoOikeudet";
+import { kayttoOikeudetSchema, KayttoOikeudetSchemaContext } from "src/schemas/kayttoOikeudet";
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
@@ -41,6 +41,8 @@ export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactEle
   const router = useRouter();
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
 
+  const [formContext, setFormContext] = useState<KayttoOikeudetSchemaContext>({ kayttajat: [] });
+
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
   const { data: projekti, error: projektiLoadError, mutate: mutateProjekti } = useProjekti(oid);
   const isLoadingProjekti = !projekti && !projektiLoadError;
@@ -53,6 +55,7 @@ export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactEle
     defaultValues: { kayttoOikeudet: [defaultKayttaja] },
     mode: "onChange",
     reValidateMode: "onChange",
+    context: formContext,
   };
 
   const useFormReturn = useForm<FormValues>(formOptions);
@@ -116,7 +119,12 @@ export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactEle
               />
               <ProjektiPerustiedot projekti={projekti} />
             </Section>
-            <KayttoOikeusHallinta disableFields={disableFormEdit} />
+            <KayttoOikeusHallinta
+              disableFields={disableFormEdit}
+              onKayttajatUpdate={(kayttajat) => {
+                setFormContext({ kayttajat });
+              }}
+            />
             <Section noDivider>
               <div className="flex gap-6 flex-col md:flex-row">
                 <ButtonLink className="mr-auto" href="/yllapito/perusta">

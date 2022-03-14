@@ -6,7 +6,7 @@ export const maxNoteLength = 2000;
 export const UIValuesSchema = Yup.object().shape({
   suunnittelusopimusprojekti: Yup.string().required("Suunnittelusopimustieto on pakollinen").nullable().default(null),
   liittyviasuunnitelmia: Yup.string().required("Liittyvien suunnitelmien tieto on pakollinen").nullable().default(null),
-})
+});
 
 export const perustiedotValidationSchema = Yup.object().shape({
   oid: Yup.string().required(),

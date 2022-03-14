@@ -7,7 +7,7 @@ import Select from "@components/form/Select";
 import IconButton from "@components/button/IconButton";
 import Button from "@components/button/Button";
 import useSWR, { KeyedMutator } from "swr";
-import { agencyPhoneNumberRegex, maxPhoneLength } from "src/schemas/puhelinNumero";
+import { maxPhoneLength } from "src/schemas/puhelinNumero";
 import { useState } from "react";
 import classNames from "classnames";
 import Section from "@components/layout/Section";
@@ -23,6 +23,7 @@ type RequiredInputValues = Required<{
 
 interface Props {
   disableFields?: boolean;
+  onKayttajatUpdate: (kayttajat: Kayttaja[]) => void;
 }
 
 export const defaultKayttaja: ProjektiKayttajaInput = {
@@ -33,13 +34,12 @@ export const defaultKayttaja: ProjektiKayttajaInput = {
 };
 
 const rooliOptions = [
-  { label: "", value: "" },
   { label: "Projektipäällikkö", value: "PROJEKTIPAALLIKKO", disabled: true },
   { label: "Omistaja", value: "OMISTAJA" },
   { label: "Muokkaaja", value: "MUOKKAAJA" },
 ];
 
-function KayttoOikeusHallinta({ disableFields }: Props) {
+function KayttoOikeusHallinta({ disableFields, onKayttajatUpdate }: Props) {
   const {
     control,
     watch,
@@ -82,6 +82,7 @@ function KayttoOikeusHallinta({ disableFields }: Props) {
 
   useEffect(() => {
     setFallbackKayttajat(kayttajat || []);
+    onKayttajatUpdate(kayttajat || []);
   }, [kayttajat]);
 
   const isLoadingKayttajat = !kayttajat && !kayttajatLoadError;
@@ -219,7 +220,6 @@ const UserFields = ({
           {...register(`kayttoOikeudet.${index}.puhelinnumero`)}
           error={errors.kayttoOikeudet?.[index]?.puhelinnumero}
           maxLength={maxPhoneLength}
-          pattern={agencyPhoneNumberRegex}
           disabled={disableFields}
         />
         <TextInput label="Sähköpostiosoite *" value={kayttaja?.email || ""} disabled />

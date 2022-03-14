@@ -12,7 +12,7 @@ import { UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import log from "loglevel";
 import Button from "@components/button/Button";
-import { kayttoOikeudetSchema } from "src/schemas/kayttoOikeudet";
+import { kayttoOikeudetSchema, KayttoOikeudetSchemaContext } from "src/schemas/kayttoOikeudet";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 import { getProjektiValidationSchema, ProjektiTestType } from "../../../../schemas/projekti";
@@ -40,6 +40,7 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
 export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
   const router = useRouter();
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
+  const [formContext, setFormContext] = useState<KayttoOikeudetSchemaContext>({ kayttajat: [] });
 
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
   const { data: projekti, error: projektiLoadError, mutate: mutateProjekti } = useProjekti(oid);
@@ -55,6 +56,7 @@ export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
     defaultValues: { kayttoOikeudet: [defaultKayttaja] },
     mode: "onChange",
     reValidateMode: "onChange",
+    context: formContext,
   };
 
   const useFormReturn = useForm<FormValues>(formOptions);
@@ -98,7 +100,12 @@ export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
               disableValidation={isLoadingProjekti}
               validationSchema={loadedProjektiValidationSchema}
             />
-            <KayttoOikeusHallinta disableFields={disableFormEdit} />
+            <KayttoOikeusHallinta
+              disableFields={disableFormEdit}
+              onKayttajatUpdate={(kayttajat) => {
+                setFormContext({ kayttajat });
+              }}
+            />
             <Section noDivider>
               <HassuStack alignItems="flex-end">
                 <Button className="ml-auto" primary disabled={disableFormEdit}>
