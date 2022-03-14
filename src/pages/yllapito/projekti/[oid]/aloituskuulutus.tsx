@@ -357,8 +357,8 @@ export default function Aloituskuulutus({
                   />
                   {projekti.aloitusKuulutus?.palautusSyy && (
                     <Notification type={NotificationType.WARN}>
-                      Aloituskuulutus on palautettu korjattavaksi. Palautuksen syy:{" "}
-                      {projekti.aloitusKuulutus.palautusSyy}
+                      {"Aloituskuulutus on palautettu korjattavaksi. Palautuksen syy: " +
+                        projekti.aloitusKuulutus.palautusSyy}
                     </Notification>
                   )}
                   {odottaaJulkaisua() && (
