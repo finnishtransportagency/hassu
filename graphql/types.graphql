@@ -69,7 +69,7 @@ type Projekti implements IProjekti {
   velho: Velho!
   kayttoOikeudet: [ProjektiKayttaja!]
   """
-  false, jos projekti ladattiin Velhosta, mutta ei ole vielä tallennettu tietokantaan
+  false, jos projekti ladattiin Velhosta, mutta ei ole viela tallennettu tietokantaan
   """
   tallennettu: Boolean
   euRahoitus: Boolean
@@ -280,4 +280,23 @@ type Kielitiedot {
 type ArkistointiTunnus {
   oid: String!
   timestamp: String!
+}
+
+type ProjektiHakutulos {
+  tiesuunnitelmatMaara: Int
+  ratasuunnitelmatMaara: Int
+  yleissuunnitelmatMaara: Int
+  hakutulosProjektiTyyppi: ProjektiTyyppi
+  tulokset: [ProjektiHakutulosDokumentti!]
+}
+
+type ProjektiHakutulosDokumentti {
+  oid: String!
+  nimi: String
+  asiatunnus: String
+  maakunnat: [String!]
+  vaylamuoto: [String!]
+  suunnittelustaVastaavaViranomainen: Viranomainen
+  vaihe: Status
+  projektiTyyppi: ProjektiTyyppi
 }

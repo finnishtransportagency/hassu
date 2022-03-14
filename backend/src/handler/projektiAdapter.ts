@@ -19,12 +19,17 @@ import {
   IlmoituksenVastaanottajat,
   IlmoituksenVastaanottajatInput,
   Kieli,
+  Projekti,
+  Status,
 } from "../../../common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import { personSearch } from "../personSearch/personSearchClient";
 import pickBy from "lodash/pickBy";
 import { fileService } from "../files/fileService";
+import { perustiedotValidationSchema } from "../../../src/schemas/perustiedot";
+import { ValidationError } from "yup";
+import { log } from "../logger";
 
 export class ProjektiAdapter {
   public adaptProjekti(dbProjekti: DBProjekti): API.Projekti {
@@ -87,6 +92,44 @@ export class ProjektiAdapter {
         liittyvatSuunnitelmat,
       }
     ) as DBProjekti;
+  }
+
+  /**
+   * Function to determine the status of the projekti
+   * @param projekti
+   * @param param
+   */
+  applyStatus(projekti: Projekti, param: { saved?: boolean }) {
+    function checkIfSaved() {
+      if (param?.saved) {
+        projekti.tallennettu = true;
+        projekti.status = Status.EI_JULKAISTU;
+      }
+    }
+
+    function checkPerustiedot() {
+      try {
+        perustiedotValidationSchema.validateSync(projekti);
+        if (!projekti.aloitusKuulutus) {
+          projekti.aloitusKuulutus = { __typename: "AloitusKuulutus" };
+        }
+        projekti.status = Status.ALOITUSKUULUTUS;
+      } catch (e) {
+        if (e instanceof ValidationError) {
+          log.info("Perustiedot puutteelliset", e.errors);
+        } else {
+          throw e;
+        }
+      }
+    }
+
+    // Perustiedot is available if the projekti has been saved
+    checkIfSaved();
+
+    // Aloituskuulutus is available, if projekti has all basic information set
+    checkPerustiedot();
+
+    return projekti;
   }
 }
 

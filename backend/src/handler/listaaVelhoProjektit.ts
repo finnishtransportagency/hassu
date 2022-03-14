@@ -17,7 +17,7 @@ async function searchProjektisFromVelho(params: ListaaVelhoProjektitQueryVariabl
 }
 
 async function searchCorrespondingProjektisFromDatabase(velhoHakuTulos: VelhoHakuTulos[]) {
-  return (await projektiSearchService.search({ oid: velhoHakuTulos.map((value) => value.oid) })).map(
+  return (await projektiSearchService.searchByOid(velhoHakuTulos.map((value) => value.oid))).map(
     (projekti) => projekti.oid
   );
 }

@@ -177,6 +177,7 @@
     "deploy:database": "cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy database --require-approval never",
     "postdeploy:database": "npm run setupenvironment",
     "deploy:backend": "cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy backend --require-approval never",
+    "deploy:backend:hotswap": "cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy backend --require-approval never --hotswap",
     "postdeploy:backend": "npm run setupenvironment && npm run graphQLIntrospection",
     "predeploy:frontend": "rimraf build .next",
     "deploy:frontend": "cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy frontend --require-approval never",

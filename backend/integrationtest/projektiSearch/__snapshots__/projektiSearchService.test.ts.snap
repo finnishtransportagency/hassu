@@ -1,26 +1,47 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ProjektiSearchService should index, update, search, and delete document to search engine successfully 1`] = `
-Object {
-  "liittyvatSuunnitelmat": Array [
-    Object {
-      "asiatunnus": "atunnus123",
-      "nimi": "Littyva suunnitelma 1 nimi",
-    },
-  ],
-  "muistiinpano": "Testiprojekti 1:n muistiinpano",
-  "oid": "ProjektiSearchService1",
-  "velho": Object {
-    "kunnat": Array [
-      "Tampere",
-      "Nokia",
+exports[`ProjektiSearchService should search by list of oids successfully 1`] = `
+Array [
+  Object {
+    "asiatunnus": "A2",
+    "maakunnat": Array [
+      "Uusimaa",
+      "Pirkanmaa",
     ],
-    "nimi": "Testiprojekti 1",
-    "tilaajaOrganisaatio": "Uudenmaan ELY-keskus",
-    "tyyppi": "TIE",
+    "muokkaajat": Array [
+      "A123",
+      "A000111",
+    ],
+    "nimi": "unittest2",
+    "oid": "2",
+    "paivitetty": "2020-01-01T20:00:00.000Z",
+    "projektiTyyppi": "TIE",
+    "projektipaallikko": "Projari, Pekka",
+    "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
+    "vaihe": "EI_JULKAISTU",
     "vaylamuoto": Array [
       "tie",
     ],
   },
-}
+  Object {
+    "asiatunnus": "A1",
+    "maakunnat": Array [
+      "Pohjanmaa",
+    ],
+    "muokkaajat": Array [
+      "A123",
+      "A000111",
+    ],
+    "nimi": "unittest1",
+    "oid": "1",
+    "paivitetty": "2020-01-01T21:00:00.000Z",
+    "projektiTyyppi": "TIE",
+    "projektipaallikko": "Projari, Pekka",
+    "suunnittelustaVastaavaViranomainen": "POHJOIS_POHJANMAAN_ELY",
+    "vaihe": "EI_JULKAISTU",
+    "vaylamuoto": Array [
+      "tie",
+    ],
+  },
+]
 `;

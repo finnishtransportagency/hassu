@@ -10,10 +10,13 @@ import {
   LatausTiedot,
   ListaaKayttajatInput,
   ListaaKayttajatQueryVariables,
+  ListaaProjektitInput,
+  ListaaProjektitQueryVariables,
   ListaaVelhoProjektitQueryVariables,
   NykyinenKayttaja,
   PDF,
   Projekti,
+  ProjektiHakutulos,
   ProjektiJulkinen,
   SiirraTilaMutationVariables,
   TallennaProjektiInput,
@@ -140,8 +143,8 @@ export abstract class AbstractApi {
     } as ValmisteleTiedostonLatausQueryVariables);
   }
 
-  async listProjektit(): Promise<Projekti[]> {
-    return await this.callAPI(apiConfig.listaaProjektit);
+  async listProjektit(hakuehto: ListaaProjektitInput): Promise<ProjektiHakutulos> {
+    return await this.callAPI(apiConfig.listaaProjektit, { hakuehto } as ListaaProjektitQueryVariables);
   }
 
   async getCurrentUser(): Promise<NykyinenKayttaja | undefined> {
