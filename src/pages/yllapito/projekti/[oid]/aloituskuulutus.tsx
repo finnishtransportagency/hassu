@@ -45,6 +45,7 @@ import { GetParameterCommandOutput, SSMClient } from "@aws-sdk/client-ssm";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuStack from "@components/layout/HassuStack";
+import HassuGrid from "@components/HassuGrid";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
 type RequiredProjektiFields = Required<{
@@ -382,7 +383,7 @@ export default function Aloituskuulutus({
                       </ul>
                     </div>
                   </Notification>
-                  <div className="lg:flex md:gap-x-8">
+                  <HassuGrid cols={{ lg: 3 }}>
                     <DatePicker
                       label="Kuulutuspäivä *"
                       className="md:max-w-min"
@@ -400,7 +401,7 @@ export default function Aloituskuulutus({
                       readOnly
                       {...register("aloitusKuulutus.siirtyySuunnitteluVaiheeseen")}
                     />
-                  </div>
+                  </HassuGrid>
                 </Section>
                 <KuulutuksenYhteystiedot projekti={projekti} useFormReturn={useFormReturn} />
                 <Section noDivider={!!toissijainenKieli}>

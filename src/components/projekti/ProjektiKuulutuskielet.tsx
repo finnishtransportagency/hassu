@@ -56,7 +56,7 @@ export default function ProjektiKuulutuskielet(): ReactElement {
     <Section>
       <SectionContent>
         <h4 className="vayla-small-title">Projektin kuulutusten kielet</h4>
-        <HassuGrid cols={[1, 1, 2, 3]}>
+        <HassuGrid cols={{ lg: 3 }}>
           <Select
             label="Ensisijainen kieli *"
             options={kielioptions}

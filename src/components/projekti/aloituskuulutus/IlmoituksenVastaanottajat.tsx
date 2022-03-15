@@ -103,7 +103,7 @@ export default function IlmoituksenVastaanottajat({
           <SectionContent>
             <h6 className="font-bold">Viranomaiset</h6>
             {viranomaisFields.map((viranomainen, index) => (
-              <HassuGrid key={viranomainen.id} cols={[1, 1, 3]}>
+              <HassuGrid key={viranomainen.id} cols={{ lg: 3 }}>
                 <Select
                   label="Viranomainen *"
                   options={kirjaamoOsoitteet.map(({ nimi }) => ({ label: t(`viranomainen.${nimi}`), value: nimi }))}
@@ -201,7 +201,7 @@ export default function IlmoituksenVastaanottajat({
         )}
         {!isReadonly &&
           kuntaFields.map((kunta, index) => (
-            <HassuGrid key={kunta.id} cols={[1, 1, 3]}>
+            <HassuGrid key={kunta.id} cols={{ lg: 3 }}>
               <input
                 type="hidden"
                 {...register(`aloitusKuulutus.ilmoituksenVastaanottajat.kunnat.${index}.nimi`)}

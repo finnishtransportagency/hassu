@@ -12,6 +12,7 @@ import { maxPhoneLength } from "src/schemas/puhelinNumero";
 import Section from "@components/layout/Section";
 import HassuGrid from "@components/HassuGrid";
 import SectionContent from "@components/layout/SectionContent";
+import HassuStack from "@components/layout/HassuStack";
 
 interface Props {
   projekti?: Projekti | null;
@@ -56,7 +57,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
           onChange={() => {
             setHasSuunnitteluSopimus(true);
           }}
-        ></RadioButton>
+        />
         <RadioButton
           label="Ei"
           value="false"
@@ -64,13 +65,13 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
           onChange={() => {
             setHasSuunnitteluSopimus(false);
           }}
-        ></RadioButton>
+        />
       </FormGroup>
       {hasSuunnittaluSopimus && (
-        <SectionContent largeGap>
+        <SectionContent largeGaps sx={{ marginLeft: 4 }}>
           <SectionContent>
             <p>Kunnan projektipäällikön tiedot</p>
-            <HassuGrid cols={[1, 1, 3]}>
+            <HassuGrid cols={{ lg: 3 }}>
               <Select
                 label="Kunta *"
                 options={kuntaOptions ? kuntaOptions : [{ label: "", value: "" }]}
@@ -108,7 +109,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
                     label="Virallinen, kunnalta saatu logo. *"
                     errorMessage={(errors as any).suunnitteluSopimus?.logo?.message}
                   >
-                    <div className="flex flex-row">
+                    <HassuStack direction="row">
                       <img
                         className="h-11 border-gray border mb-3.5 py-2 px-3"
                         src={logoUrl}
@@ -122,7 +123,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
                           setValue("suunnitteluSopimus.logo", undefined);
                         }}
                       />
-                    </div>
+                    </HassuStack>
                   </FormGroup>
                 ) : (
                   <FileInput

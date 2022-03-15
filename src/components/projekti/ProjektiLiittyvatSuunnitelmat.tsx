@@ -38,27 +38,25 @@ export default function ProjektiLiittyvatSuunnitelmat({ projekti }: Props): Reac
 
   return (
     <Section smallGaps>
-      <SectionContent>
-        <h4 className="vayla-small-title">Projektiin liittyvät suunnitelmat</h4>
-        <FormGroup
-          label="Liittyykö projektiin muita voimassaolevia lakisääteisiä suunnitelmia? *"
-          flexDirection="row"
-          errorMessage={errors?.liittyviasuunnitelmia?.message}
-        >
-          <RadioButton
-            label="Kyllä"
-            value="true"
-            {...register("liittyviasuunnitelmia")}
-            onChange={() => setLiittyviaSuunnitelmia(true)}
-          />
-          <RadioButton
-            label="Ei"
-            value="false"
-            {...register("liittyviasuunnitelmia")}
-            onChange={() => setLiittyviaSuunnitelmia(false)}
-          />
-        </FormGroup>
-      </SectionContent>
+      <h4 className="vayla-small-title">Projektiin liittyvät suunnitelmat</h4>
+      <FormGroup
+        label="Liittyykö projektiin muita voimassaolevia lakisääteisiä suunnitelmia? *"
+        flexDirection="row"
+        errorMessage={errors?.liittyviasuunnitelmia?.message}
+      >
+        <RadioButton
+          label="Kyllä"
+          value="true"
+          {...register("liittyviasuunnitelmia")}
+          onChange={() => setLiittyviaSuunnitelmia(true)}
+        />
+        <RadioButton
+          label="Ei"
+          value="false"
+          {...register("liittyviasuunnitelmia")}
+          onChange={() => setLiittyviaSuunnitelmia(false)}
+        />
+      </FormGroup>
       {isLiittyviaSuunnitelmia && (
         <LiittyvatSuunnitelmat isLiittyviaSuunnitelmia={isLiittyviaSuunnitelmia} projekti={projekti} />
       )}
@@ -89,24 +87,18 @@ const LiittyvatSuunnitelmat = ({ isLiittyviaSuunnitelmia, projekti }: LiittyvatS
     }
   }, [isLiittyviaSuunnitelmia, remove, projekti]);
   return (
-    <SectionContent largeGap sx={{ marginLeft: 4 }}>
+    <SectionContent sx={{ marginLeft: 4 }}>
       {fields.map((field, index) => {
         return (
-          <HassuGrid key={field.id} cols={[1, 1, 3]}>
+          <HassuGrid key={field.id} cols={{ lg: 3 }}>
             <TextInput
               label="Asiatunnus"
               {...register(`liittyvatSuunnitelmat.${index}.asiatunnus`)}
               disabled={!isLiittyviaSuunnitelmia}
               error={errors?.liittyvatSuunnitelmat?.[index]?.asiatunnus}
             />
-            <HassuGridItem colSpan={[1, 1, 2]}>
-              <HassuStack
-                direction={["column", "row"]}
-                spacing={4}
-                rowGap={4}
-                columnGap={7}
-                alignItems={[undefined, undefined, "flex-end"]}
-              >
+            <HassuGridItem colSpan={{ lg: 2 }}>
+              <HassuStack direction={{ xs: "column", lg: "row" }} alignItems={{ lg: "flex-end" }}>
                 <TextInput
                   label="Suunnitelman nimi"
                   {...register(`liittyvatSuunnitelmat.${index}.nimi`)}
