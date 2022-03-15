@@ -29,18 +29,16 @@ function ButtonLink(
   const buttonClass = primary ? "btn-primary" : "btn";
 
   return (
-    <div className={classNames("relative inline-block", className)}>
-      <HassuLink
-        ref={ref}
-        href={!disabled ? href : undefined}
-        className={classNames(buttonClass, disabled && "disabled")}
-        {...props}
-      >
-        <ButtonContent primary={primary} startIcon={startIcon} endIcon={endIcon} disabled={disabled}>
-          {children}
-        </ButtonContent>
-      </HassuLink>
-    </div>
+    <HassuLink
+      ref={ref}
+      href={!disabled ? href : undefined}
+      className={classNames(buttonClass, className, disabled && "disabled")}
+      {...props}
+    >
+      <ButtonContent primary={primary} startIcon={startIcon} endIcon={endIcon} disabled={disabled}>
+        {children}
+      </ButtonContent>
+    </HassuLink>
   );
 }
 
