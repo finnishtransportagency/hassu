@@ -132,6 +132,7 @@ const LiittyvatSuunnitelmat = ({ isLiittyviaSuunnitelmia, projekti }: LiittyvatS
         );
       })}
       <Button
+        className="mt-7"
         onClick={(event) => {
           event.preventDefault();
           append(defaultSuunnitelma);
