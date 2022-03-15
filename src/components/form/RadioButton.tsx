@@ -1,5 +1,5 @@
 import React from "react";
-import { styled, experimental_sx as sx, Breakpoint } from "@mui/material";
+import { styled, experimental_sx as sx } from "@mui/material";
 import isPropValid from "@emotion/is-prop-valid";
 
 interface Props {
