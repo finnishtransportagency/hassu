@@ -21,7 +21,7 @@ const RadioButton = (
 
 export const StyledSpan = styled("span", { shouldForwardProp: isPropValid })(
   sx({
-    marginLeft: 4,
+    marginLeft: 3,
     marginRight: 7.5,
   })
 );
