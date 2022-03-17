@@ -30,6 +30,24 @@ async function listProjektit(): Promise<DBProjekti[]> {
   return data.Items as DBProjekti[];
 }
 
+async function scanProjektit(startKey?: string): Promise<{ startKey: string; projektis: DBProjekti[] }> {
+  try {
+    const params: DocumentClient.ScanInput = {
+      TableName: projektiTableName,
+      Limit: 10,
+      ExclusiveStartKey: startKey ? JSON.parse(startKey) : undefined,
+    };
+    const data: DocumentClient.ScanOutput = await getDynamoDBDocumentClient().scan(params).promise();
+    return {
+      projektis: data.Items as DBProjekti[],
+      startKey: data.LastEvaluatedKey ? JSON.stringify(data.LastEvaluatedKey) : undefined,
+    };
+  } catch (e) {
+    log.error(e);
+    throw e;
+  }
+}
+
 async function loadProjektiByOid(oid: string): Promise<DBProjekti | undefined> {
   const params: DocumentClient.GetItemInput = {
     TableName: projektiTableName,
@@ -219,6 +237,7 @@ export const projektiDatabase = {
   createProjekti,
   saveProjekti,
   listProjektit,
+  scanProjektit,
   loadProjektiByOid,
   archiveProjektiByOid,
   insertAloitusKuulutusJulkaisu,

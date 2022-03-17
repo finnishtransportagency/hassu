@@ -5,6 +5,9 @@ import { DBProjekti } from "../database/model/projekti";
 import { projektiSearchService } from "./projektiSearchService";
 import { setupLambdaMonitoring, setupLambdaMonitoringMetaData } from "../aws/monitoring";
 import * as AWSXRay from "aws-xray-sdk";
+import { MaintenanceEvent, ProjektiSearchMaintenanceService } from "./projektiSearchMaintenanceService";
+import { invokeLambda } from "../aws/lambda";
+import { Context } from "aws-lambda";
 
 const parse = DynamoDB.Converter.unmarshall;
 
@@ -28,9 +31,31 @@ async function handleRemove(record: DynamoDBRecord) {
   }
 }
 
-export const handleDynamoDBEvents = async (event: DynamoDBStreamEvent) => {
+async function handleManagementAction(action: "deleteIndex" | "index", event: MaintenanceEvent, context: Context) {
+  if (action == "deleteIndex") {
+    await new ProjektiSearchMaintenanceService().deleteIndex();
+  } else if (action == "index") {
+    const startKey = await new ProjektiSearchMaintenanceService().index(event);
+    if (startKey && startKey !== event.startKey) {
+      await invokeLambda(
+        context.functionName,
+        false,
+        JSON.stringify({ action: "index", startKey } as MaintenanceEvent)
+      );
+    }
+  }
+}
+
+export const handleDynamoDBEvents = async (
+  event: DynamoDBStreamEvent | MaintenanceEvent,
+  context: Context
+): Promise<void> => {
+  const action = (event as MaintenanceEvent).action;
+  if (action) {
+    return await handleManagementAction(action, event as MaintenanceEvent, context);
+  }
   setupLambdaMonitoring();
-  if (!event.Records) {
+  if (!(event as DynamoDBStreamEvent).Records) {
     log.warn("No records");
     return;
   }
@@ -38,7 +63,7 @@ export const handleDynamoDBEvents = async (event: DynamoDBStreamEvent) => {
     try {
       return await (async () => {
         setupLambdaMonitoringMetaData(subsegment);
-        for (const record of event.Records) {
+        for (const record of (event as DynamoDBStreamEvent).Records) {
           switch (record.eventName) {
             case "INSERT":
             case "MODIFY":
