@@ -1,10 +1,10 @@
-import { requirePermissionLuonti } from "../user";
+import { requirePermissionLuku } from "../user";
 import { personSearch } from "../personSearch/personSearchClient";
 import { Kayttaja, ListaaKayttajatInput } from "../../../common/graphql/apiModel";
 import { log } from "../logger";
 
 export async function listUsers(input: ListaaKayttajatInput): Promise<Kayttaja[]> {
-  requirePermissionLuonti();
+  requirePermissionLuku();
   const kayttajas = await personSearch.getKayttajas();
   if (input.kayttajatunnus) {
     return input.kayttajatunnus

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FieldArrayWithId, useFieldArray, useFormContext } from "react-hook-form";
 import { api, apiConfig, Kayttaja, ProjektiKayttajaInput, ProjektiRooli, TallennaProjektiInput } from "@services/api";
 import Autocomplete from "@components/form/Autocomplete";
@@ -8,7 +8,6 @@ import IconButton from "@components/button/IconButton";
 import Button from "@components/button/Button";
 import useSWR, { KeyedMutator } from "swr";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
-import { useState } from "react";
 import classNames from "classnames";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
@@ -187,7 +186,9 @@ const UserFields = ({
           <Autocomplete
             label="Nimi *"
             loading={isLoadingKayttajat}
-            options={async (hakusana) => await api.listUsers({ hakusana })}
+            options={async (hakusana) =>
+              !disableFields && hakusana.length > 0 ? await api.listUsers({ hakusana }) : []
+            }
             initialOption={kayttaja}
             getOptionLabel={getKayttajaNimi}
             error={errors.kayttoOikeudet?.[index]?.kayttajatunnus}
