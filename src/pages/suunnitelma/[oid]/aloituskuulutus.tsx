@@ -1,10 +1,14 @@
 import { useRouter } from "next/router";
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { useProjektiJulkinen } from "../../../hooks/useProjektiJulkinen";
 import FormatDate from "@components/FormatDate";
 import useTranslation from "next-translate/useTranslation";
 import { AloitusKuulutusJulkaisuJulkinen, Kieli } from "../../../../common/graphql/apiModel";
 import ExtLink from "@components/ExtLink";
+import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
+import Section from "@components/layout/Section";
+import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
+import { PageProps } from "@pages/_app";
 
 function formatYhteystiedotText(kuulutus: AloitusKuulutusJulkaisuJulkinen) {
   const yhteystiedotList = kuulutus.yhteystiedot.map(
@@ -32,21 +36,36 @@ function formatYhteystiedotText(kuulutus: AloitusKuulutusJulkaisuJulkinen) {
   }
 }
 
-export default function AloituskuulutusJulkinen(): ReactElement {
+
+
+export default function AloituskuulutusJulkinen({setRouteLabels}:PageProps): ReactElement {
   const router = useRouter();
   const { t } = useTranslation("projekti");
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
   const { data: projekti } = useProjektiJulkinen(oid);
+  const kuulutus = projekti?.aloitusKuulutusJulkaisut?.[0];
+  const velho = kuulutus?.velho;
 
-  if (!projekti) {
+  useEffect(() => {
+    console.log("oid", oid);
+    if (router.isReady) {
+      let routeLabel = "";
+      if (kuulutus?.velho?.nimi) {
+        routeLabel = kuulutus.velho.nimi;
+      } else if (typeof oid === "string") {
+        routeLabel = oid;
+      }
+      if (routeLabel) {
+        setRouteLabels({ "/suunnitelma/[oid]": { label: routeLabel } });
+        console.log("Aseta bread crumbs");
+      }
+    }
+  }, [router.isReady, oid, kuulutus, setRouteLabels]);
+
+  if(!projekti || !velho || !kuulutus){
     return <div />;
   }
-  if (!projekti.aloitusKuulutusJulkaisut || !projekti.aloitusKuulutusJulkaisut[0]) {
-    return <div />;
-  }
-  const kuulutus = projekti.aloitusKuulutusJulkaisut[0];
-  const velho = kuulutus.velho;
-  const suunnitteluSopimus = kuulutus.suunnitteluSopimus;
+  
 
   let sijainti = "";
   if (velho.maakunnat) {
@@ -56,55 +75,41 @@ export default function AloituskuulutusJulkinen(): ReactElement {
     sijainti = sijainti + velho.kunnat.join(", ");
   }
   const yhteystiedot = formatYhteystiedotText(kuulutus);
+  const keyValueData: KeyValueData[] = [
+    { header: "Nähtävilläoloaika", data: `${kuulutus.kuulutusPaiva} - ${kuulutus.siirtyySuunnitteluVaiheeseen}` },
+    { header: "Hankkeen sijainti", data: sijainti },
+    { header: "Suunnitelman tyyppi", data: velho?.tyyppi && t(`projekti-tyyppi.${velho?.tyyppi}`) },
+  ];
 
   let aloituskuulutusPDFPath =
     kuulutus.aloituskuulutusPDFt?.[kuulutus.kielitiedot?.ensisijainenKieli || Kieli.SUOMI]?.aloituskuulutusPDFPath;
   let kuulutusFileName = aloituskuulutusPDFPath?.replace(/.*\//, "").replace(/\.\w+$/, "");
   let kuulutusFileExt = aloituskuulutusPDFPath?.replace(/.*\./, "");
+
+  
+
   return (
-    <>
-      <h3 className="vayla-title">Yhteyshenkilöt</h3>
-      {kuulutus.yhteystiedot.map((yt) => (
-        <div key={yt.etunimi + yt.sukunimi}>
-          <p>{yt.organisaatio}</p>
+    <ProjektiJulkinenPageLayout title="Kuulutus suunnittelun aloittamisesta">
+      <>
+        <Section noDivider>
+          <KeyValueTable rows={keyValueData}></KeyValueTable>
           <p>
-            <b>
-              {yt.etunimi} {yt.sukunimi}
-            </b>
+            Kuulutus on julkaistu tietoverkossa Väyläviraston verkkosivuilla {kuulutus.kuulutusPaiva}. Asianosaisten
+            katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä
+            kuulutuksen julkaisusta (hallintolaki 62 a §). Suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä
+            suunnittelutyön edellyttämiä mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä (laki
+            liikennejärjestelmästä ja maanteistä LjMTL 16 §).{" "}
           </p>
-          <p>{yt.puhelinnumero}</p>
-          <p>{yt.sahkoposti}</p>
-        </div>
-      ))}
-      {suunnitteluSopimus && (
-        <div>
-          <p>{suunnitteluSopimus.logo && <img src={suunnitteluSopimus.logo} alt="Suunnittelusopimus logo" />}</p>
-          <p>{suunnitteluSopimus.kunta}</p>
-          <p>PROJEKTIPÄÄLLIKKÖ</p>
-          <p>
-            <b>
-              {suunnitteluSopimus.etunimi} {suunnitteluSopimus.sukunimi}
-            </b>
-          </p>
-          <p>{suunnitteluSopimus.puhelinnumero}</p>
-          <p>{suunnitteluSopimus.email}</p>
-        </div>
-      )}
-      <h2>Kuulutus suunnittelun aloittamisesta</h2>
-      <p>
-        Nähtävilläoloaika <FormatDate date={kuulutus.kuulutusPaiva} />-
-        <FormatDate date={kuulutus.siirtyySuunnitteluVaiheeseen} />
-      </p>
-      <p>Hankkeen sijainti {sijainti}</p>
-      <p>Suunnitelman tyyppi {velho?.tyyppi && t(`projekti-tyyppi.${velho?.tyyppi}`)}</p>
-      <h2>Suunnitteluhankkeen kuvaus</h2>
-      <p>{kuulutus.hankkeenKuvaus?.[kuulutus.kielitiedot?.ensisijainenKieli || Kieli.SUOMI]}</p>
-      <h2>Yhteystiedot</h2>
-      <p>Lisätietoja antavat {yhteystiedot}</p>
-      <h2>Ladattava kuulutus</h2>
-      <ExtLink href={aloituskuulutusPDFPath}>{kuulutusFileName}</ExtLink> ({kuulutusFileExt}) (
-      <FormatDate date={kuulutus.kuulutusPaiva} />-
-      <FormatDate date={kuulutus.siirtyySuunnitteluVaiheeseen} />){projekti.euRahoitus && <p>EU-logo tähän</p>}
-    </>
+          <h4 className="vayla-small-title">Suunnitteluhankkeen kuvaus</h4>
+          <p>{kuulutus.hankkeenKuvaus?.[kuulutus.kielitiedot?.ensisijainenKieli || Kieli.SUOMI]}</p>
+          <h4 className="vayla-small-title">Yhteystiedot</h4>
+          <p>Lisätietoja antavat {yhteystiedot}</p>
+          <h4 className="vayla-small-title">Ladattava kuulutus</h4>
+          <ExtLink href={aloituskuulutusPDFPath}>{kuulutusFileName}</ExtLink> ({kuulutusFileExt}) (
+          <FormatDate date={kuulutus.kuulutusPaiva} />-
+          <FormatDate date={kuulutus.siirtyySuunnitteluVaiheeseen} />){projekti.euRahoitus && <p>EU-logo tähän</p>}
+        </Section>
+      </>
+    </ProjektiJulkinenPageLayout>
   );
 }

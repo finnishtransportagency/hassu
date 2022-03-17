@@ -27,6 +27,7 @@ const defaultLabels: RouteLabels = {
   "/yllapito/projekti/[oid]/henkilot": { label: "Henkilöt ja käyttöoikeushallinta" },
   "/yllapito/ohjeet": { label: "Ohjeet" },
   "/suunnitelma": { label: "Suunnitelmat" },
+  "/suunnitelma/[oid]/aloituskuulutus": { label: "Aloituskuulutus" },
   "/suunnitelma/[...all]": { label: "Tutki suunnitelmaa" },
   "/_error": { label: "Virhe" },
 };
