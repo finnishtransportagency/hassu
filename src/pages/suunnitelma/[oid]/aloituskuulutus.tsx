@@ -9,6 +9,7 @@ import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/Pro
 import Section from "@components/layout/Section";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
 import { PageProps } from "@pages/_app";
+import { bgcolor } from "@mui/system";
 
 function formatYhteystiedotText(kuulutus: AloitusKuulutusJulkaisuJulkinen) {
   const yhteystiedotList = kuulutus.yhteystiedot.map(
@@ -36,9 +37,7 @@ function formatYhteystiedotText(kuulutus: AloitusKuulutusJulkaisuJulkinen) {
   }
 }
 
-
-
-export default function AloituskuulutusJulkinen({setRouteLabels}:PageProps): ReactElement {
+export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): ReactElement {
   const router = useRouter();
   const { t } = useTranslation("projekti");
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
@@ -62,10 +61,9 @@ export default function AloituskuulutusJulkinen({setRouteLabels}:PageProps): Rea
     }
   }, [router.isReady, oid, kuulutus, setRouteLabels]);
 
-  if(!projekti || !velho || !kuulutus){
+  if (!projekti || !velho || !kuulutus) {
     return <div />;
   }
-  
 
   let sijainti = "";
   if (velho.maakunnat) {
@@ -86,8 +84,6 @@ export default function AloituskuulutusJulkinen({setRouteLabels}:PageProps): Rea
   let kuulutusFileName = aloituskuulutusPDFPath?.replace(/.*\//, "").replace(/\.\w+$/, "");
   let kuulutusFileExt = aloituskuulutusPDFPath?.replace(/.*\./, "");
 
-  
-
   return (
     <ProjektiJulkinenPageLayout title="Kuulutus suunnittelun aloittamisesta">
       <>
@@ -107,7 +103,10 @@ export default function AloituskuulutusJulkinen({setRouteLabels}:PageProps): Rea
           <h4 className="vayla-small-title">Ladattava kuulutus</h4>
           <ExtLink href={aloituskuulutusPDFPath}>{kuulutusFileName}</ExtLink> ({kuulutusFileExt}) (
           <FormatDate date={kuulutus.kuulutusPaiva} />-
-          <FormatDate date={kuulutus.siirtyySuunnitteluVaiheeseen} />){projekti.euRahoitus && <p>EU-logo tähän</p>}
+          <FormatDate date={kuulutus.siirtyySuunnitteluVaiheeseen} />)
+          {projekti.euRahoitus && (
+            <img src="/eu-logo.jpg" width={134} height={138} alt="EU aluerahoitus" style={{ backgroundColor: "yellow" }} />
+          )}
         </Section>
       </>
     </ProjektiJulkinenPageLayout>

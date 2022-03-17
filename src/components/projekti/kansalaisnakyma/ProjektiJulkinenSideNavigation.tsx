@@ -1,44 +1,11 @@
 import React, { ReactElement } from "react";
-import HassuLink from "../../HassuLink";
-import styles from "@styles/projekti/ProjektiSideNavigation.module.css";
-import classNames from "classnames";
+import styles from "@styles/projekti/ProjektiJulkinenSideNavigation.module.css";
 import { useRouter } from "next/router";
-import useProjekti from "src/hooks/useProjekti";
-import { AloitusKuulutusJulkaisuJulkinen, Status } from "@services/api";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
+import HassuStack from "@components/layout/HassuStack";
+import HassuGrid from "@components/HassuGrid";
 import Section from "@components/layout/Section";
-
-interface Route {
-  title: string;
-  href?: string;
-  disabled?: boolean;
-}
-
-function formatYhteystiedotText(kuulutus: AloitusKuulutusJulkaisuJulkinen) {
-  const yhteystiedotList = kuulutus.yhteystiedot.map(
-    (yt) =>
-      yt.etunimi +
-      " " +
-      yt.sukunimi +
-      ", puh. " +
-      yt.puhelinnumero +
-      ", " +
-      yt.sahkoposti +
-      " (" +
-      yt.organisaatio +
-      ")"
-  );
-
-  if (yhteystiedotList.length == 1) {
-    return yhteystiedotList[0];
-  } else {
-    return (
-      yhteystiedotList.slice(0, yhteystiedotList.length - 1).join(", ") +
-      " ja " +
-      yhteystiedotList[yhteystiedotList.length - 1]
-    );
-  }
-}
+import SectionContent from "@components/layout/SectionContent";
 
 export default function ProjektiSideNavigation(): ReactElement {
   const router = useRouter();
@@ -61,37 +28,51 @@ export default function ProjektiSideNavigation(): ReactElement {
   if (velho.kunnat) {
     sijainti = sijainti + velho.kunnat.join(", ");
   }
-  const yhteystiedot = formatYhteystiedotText(kuulutus);
+
+  const getTilaajaLogoUrl = () => {
+    return "/vayla_sivussa_fi_sv_rgb.png";
+  };
 
   return (
-    <div role="navigation" className={styles["side-nav"]}>
-      <h4>Suunnitteluhankkeen yhteyshenkilöt</h4>
-      {kuulutus.yhteystiedot.map((yt) => (
-        <div key={yt.etunimi + yt.sukunimi}>
-          <p>{yt.organisaatio}</p>
-          <p>
-            <b>
-              {yt.etunimi} {yt.sukunimi}
-            </b>
-          </p>
-          <p>{yt.puhelinnumero}</p>
-          <p>{yt.sahkoposti}</p>
+    <Section noDivider>
+      <div role="navigation" className={styles["side-nav"]}>
+        <div className="flex justify-center" style={{ height: "60px", backgroundColor: "#0064AF", color: "white", alignItems: "center"}}>
+          <h4 className="vayla-title-small mb-0">Suunnitteluhankkeen yhteyshenkilöt</h4>
         </div>
-      ))}
-      {suunnitteluSopimus && (
-        <div>
-          <p>{suunnitteluSopimus.logo && <img src={suunnitteluSopimus.logo} alt="Suunnittelusopimus logo" />}</p>
-          <p>{suunnitteluSopimus.kunta}</p>
-          <p>PROJEKTIPÄÄLLIKKÖ</p>
-          <p>
-            <b>
-              {suunnitteluSopimus.etunimi} {suunnitteluSopimus.sukunimi}
-            </b>
-          </p>
-          <p>{suunnitteluSopimus.puhelinnumero}</p>
-          <p>{suunnitteluSopimus.email}</p>
-        </div>
-      )}
-    </div>
+        <SectionContent sx={{ paddingTop: "2rem", paddingRight: "2rem", paddingBottom: "2rem", paddingLeft: "2rem" }}>
+          <HassuStack>
+            <img src={getTilaajaLogoUrl()} style={{ paddingLeft: "" }} />
+            {kuulutus.yhteystiedot.map((yt) => (
+              <div key={yt.etunimi + yt.sukunimi}>
+                <p>{yt.organisaatio}</p>
+                <p>
+                  <b>
+                    {yt.etunimi} {yt.sukunimi}
+                  </b>
+                </p>
+                <p>{yt.puhelinnumero}</p>
+                <p>{yt.sahkoposti}</p>
+              </div>
+            ))}
+          </HassuStack>
+          {suunnitteluSopimus && (
+            <HassuStack>
+              <div>
+                <p>{suunnitteluSopimus.logo && <img src={suunnitteluSopimus.logo} alt="Suunnittelusopimus logo" />}</p>
+                <p>{suunnitteluSopimus.kunta}</p>
+                <p>PROJEKTIPÄÄLLIKKÖ</p>
+                <p>
+                  <b>
+                    {suunnitteluSopimus.etunimi} {suunnitteluSopimus.sukunimi}
+                  </b>
+                </p>
+                <p>{suunnitteluSopimus.puhelinnumero}</p>
+                <p>{suunnitteluSopimus.email}</p>
+              </div>
+            </HassuStack>
+          )}
+        </SectionContent>
+      </div>
+    </Section>
   );
 }
