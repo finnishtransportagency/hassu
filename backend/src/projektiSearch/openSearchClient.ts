@@ -67,6 +67,18 @@ export class OpenSearchClient {
     return await sendRequest(request);
   }
 
+  async deleteIndex(): Promise<void> {
+    const request = new HttpRequest({
+      headers: {
+        host: domain,
+      },
+      hostname: domain,
+      method: "DELETE",
+      path: index,
+    });
+    return await sendRequest(request);
+  }
+
   async query(query: any): Promise<any> {
     const request = new HttpRequest({
       body: JSON.stringify({

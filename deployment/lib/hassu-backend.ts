@@ -53,14 +53,15 @@ export class HassuBackendStack extends cdk.Stack {
   async process() {
     const config = await Config.instance(this);
 
-    const projektiSearchIndexer = this.createProjektiSearchIndexer();
-
     const api = this.createAPI(config);
     const commonEnvironmentVariables = await this.getCommonEnvironmentVariables(config);
     const personSearchUpdaterLambda = await this.createPersonSearchUpdaterLambda(commonEnvironmentVariables);
     const backendLambda = await this.createBackendLambda(commonEnvironmentVariables, personSearchUpdaterLambda);
-    this.attachDatabaseToBackend(backendLambda);
+    this.attachDatabaseToLambda(backendLambda);
     HassuBackendStack.mapApiResolversToLambda(api, backendLambda);
+
+    const projektiSearchIndexer = this.createProjektiSearchIndexer(commonEnvironmentVariables);
+    this.attachDatabaseToLambda(projektiSearchIndexer);
     this.configureOpenSearchAccess(projektiSearchIndexer, backendLambda);
 
     new cdk.CfnOutput(this, "AppSyncAPIKey", {
@@ -142,19 +143,28 @@ export class HassuBackendStack extends cdk.Stack {
     return apiKeyExpiration;
   }
 
-  private createProjektiSearchIndexer() {
+  private createProjektiSearchIndexer(commonEnvironmentVariables: Record<string, string>) {
+    const functionName = "hassu-dynamodb-stream-handler-" + Config.env;
     const streamHandler = new NodejsFunction(this, "DynamoDBStreamHandler", {
-      functionName: "hassu-dynamodb-stream-handler-" + Config.env,
+      functionName: functionName,
       runtime: lambda.Runtime.NODEJS_14_X,
       entry: `${__dirname}/../../backend/src/projektiSearch/dynamoDBStreamHandler.ts`,
       handler: "handleDynamoDBEvents",
       memorySize: 256,
       environment: {
+        ...commonEnvironmentVariables,
         SEARCH_DOMAIN: this.props.searchDomain.domainEndpoint,
       },
-      timeout: Duration.seconds(29),
+      timeout: Duration.seconds(120),
       tracing: Tracing.ACTIVE,
     });
+    streamHandler.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: ["arn:aws:lambda:eu-west-1:" + this.account + ":function:" + functionName],
+      })
+    );
 
     streamHandler.addEventSource(
       new DynamoEventSource(this.props.projektiTable, {
@@ -270,7 +280,7 @@ export class HassuBackendStack extends cdk.Stack {
     }
   }
 
-  private attachDatabaseToBackend(backendFn: NodejsFunction) {
+  private attachDatabaseToLambda(backendFn: NodejsFunction) {
     const projektiTable = this.props.projektiTable;
     projektiTable.grantFullAccess(backendFn);
     backendFn.addEnvironment("TABLE_PROJEKTI", projektiTable.tableName);

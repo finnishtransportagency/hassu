@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProjektiSearchService should index, update, search, and delete document to search engine successfully 1`] = `
+Object {
+  "liittyvatSuunnitelmat": Array [
+    Object {
+      "asiatunnus": "atunnus123",
+      "nimi": "Littyva suunnitelma 1 nimi",
+    },
+  ],
+  "muistiinpano": "Testiprojekti 1:n muistiinpano",
+  "oid": "ProjektiSearchService1",
+  "velho": Object {
+    "kunnat": Array [
+      "Tampere",
+      "Nokia",
+    ],
+    "nimi": "Testiprojekti 1",
+    "tilaajaOrganisaatio": "Uudenmaan ELY-keskus",
+    "tyyppi": "TIE",
+    "vaylamuoto": Array [
+      "tie",
+    ],
+  },
+}
+`;

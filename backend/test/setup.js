@@ -28,7 +28,6 @@ process.env.AWS_ACCESS_KEY_ID = "test";
 process.env.AWS_SECRET_ACCESS_KEY = "test";
 
 process.env.PERSON_SEARCH_UPDATER_LAMBDA_ARN = "not-supported-in-local-tests";
-process.env.SEARCH_DOMAIN = "search-not-supported-in-local-tests";
 process.env.FRONTEND_DOMAIN_NAME = "localhost";
 
 process.env.FRONTEND_PRIVATEKEY =

@@ -1,15 +1,29 @@
 import { InvocationType, InvokeCommand } from "@aws-sdk/client-lambda";
 import { getLambdaClient } from "./clients";
 
-export async function invokeLambda(functionName: string, synchronousCall: boolean): Promise<string | undefined> {
+export async function invokeLambda(
+  functionName: string,
+  synchronousCall: boolean,
+  payload?: string
+): Promise<string | undefined> {
   const lambdaClient = getLambdaClient();
-  const output = await lambdaClient.send(
-    new InvokeCommand({
-      FunctionName: functionName,
-      InvocationType: synchronousCall ? InvocationType.RequestResponse : InvocationType.Event,
-    })
-  );
+
   if (synchronousCall) {
+    const output = await lambdaClient.send(
+      new InvokeCommand({
+        FunctionName: functionName,
+        InvocationType: InvocationType.RequestResponse,
+        Payload: payload ? new TextEncoder().encode(payload) : undefined,
+      })
+    );
     return new TextDecoder().decode(output.Payload);
+  } else {
+    await lambdaClient.send(
+      new InvokeCommand({
+        FunctionName: functionName,
+        InvocationType: InvocationType.Event,
+        Payload: payload ? new TextEncoder().encode(payload) : undefined,
+      })
+    );
   }
 }
