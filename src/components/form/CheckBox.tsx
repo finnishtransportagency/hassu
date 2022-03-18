@@ -1,4 +1,5 @@
 import React from "react";
+import { StyledSpan } from "./RadioButton";
 
 interface Props {
   label?: string;
@@ -14,7 +15,7 @@ const CheckBox = (
   return (
     <label htmlFor={props?.id}>
       <input type="checkbox" {...props} ref={ref} />
-      <span className="pl-3 pr-6">{label}</span>
+      <StyledSpan>{label}</StyledSpan>
     </label>
   );
 };

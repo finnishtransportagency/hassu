@@ -1,10 +1,11 @@
 import { styled, experimental_sx as sx } from "@mui/material";
 import { ReactNode } from "react";
 import isPropValid from "@emotion/is-prop-valid";
+import { Breakpoints } from "./HassuGrid";
 
 interface Props {
   children?: ReactNode;
-  colSpan?: number | number[];
+  colSpan?: Breakpoints<number>;
   colSpanFull?: boolean;
   colStart?: number;
   colEnd?: number;
@@ -15,6 +16,11 @@ const resolveGridColumn = (colSpan: Props["colSpan"]) => {
     return `span ${colSpan} / span ${colSpan}`;
   } else if (Array.isArray(colSpan)) {
     return colSpan.map((colSpan) => `span ${colSpan} / span ${colSpan}`);
+  } else if (typeof colSpan === "object") {
+    return Object.entries(colSpan).reduce((result, [key, value]) => {
+      (result as any)[key] = `span ${value} / span ${value}`;
+      return result;
+    }, {});
   }
   return undefined;
 };

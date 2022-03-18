@@ -1,4 +1,6 @@
 import React from "react";
+import { styled, experimental_sx as sx } from "@mui/material";
+import isPropValid from "@emotion/is-prop-valid";
 
 interface Props {
   label?: string;
@@ -13,8 +15,15 @@ const RadioButton = (
 ) => (
   <label>
     <input type="radio" {...props} ref={ref} />
-    <span className="pl-3 pr-6">{label}</span>
+    <StyledSpan>{label}</StyledSpan>
   </label>
+);
+
+export const StyledSpan = styled("span", { shouldForwardProp: isPropValid })(
+  sx({
+    marginLeft: 3,
+    marginRight: 7.5,
+  })
 );
 
 export default React.forwardRef(RadioButton);

@@ -296,8 +296,9 @@
     @apply relative;
   }
   .btn {
-    @apply leading-relaxed uppercase inline-block py-1 px-6 shadow rounded-full w-full bg-white text-primary-dark border border-primary-dark transition;
+    @apply leading-relaxed uppercase block py-1 px-6 shadow rounded-full relative bg-white text-primary-dark border border-primary-dark transition;
     font-size: 1.25rem;
+    inline-size: fit-content;
   }
   .btn:disabled,
   .btn.disabled {
