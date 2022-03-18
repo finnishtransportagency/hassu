@@ -53,8 +53,7 @@ const Autocomplete = <T extends unknown>({
   const [filteredOptions, setFilteredOptions] = useState<T[]>(Array.isArray(propOptions) ? propOptions : []);
   const optionsRef = useRef<(HTMLLIElement | null)[]>([]);
   const listRef = useRef<HTMLDivElement>(null);
-
-  const slicedOptions = filteredOptions.slice(0, maxResults);
+  const slicedOptions = filteredOptions?.slice(0, maxResults) || [];
 
   const getNextIndex = () => (currentIndex < slicedOptions.length - 1 ? currentIndex + 1 : 0);
   const getPrevIndex = () => (currentIndex > 0 ? currentIndex - 1 : slicedOptions.length - 1);
