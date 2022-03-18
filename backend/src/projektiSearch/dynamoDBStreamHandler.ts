@@ -4,7 +4,7 @@ import DynamoDB from "aws-sdk/clients/dynamodb";
 import { DBProjekti } from "../database/model/projekti";
 import { projektiSearchService } from "./projektiSearchService";
 import { setupLambdaMonitoring, setupLambdaMonitoringMetaData } from "../aws/monitoring";
-import * as AWSXRay from "aws-xray-sdk";
+import * as AWSXRay from "aws-xray-sdk-core";
 import { MaintenanceEvent, ProjektiSearchMaintenanceService } from "./projektiSearchMaintenanceService";
 import { invokeLambda } from "../aws/lambda";
 import { Context } from "aws-lambda";

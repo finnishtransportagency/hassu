@@ -4,11 +4,10 @@ import * as sinon from "sinon";
 import { userService } from "../../src/user";
 import * as tokenvalidator from "../../src/user/validatejwttoken";
 import { UserFixture } from "../fixture/userFixture";
-import { mockClient } from "aws-sdk-client-mock";
-import { getUSEast1ssmClient } from "../../src/aws/clients";
-import { GetParameterCommand } from "@aws-sdk/client-ssm";
-import { GetParameterCommandOutput } from "@aws-sdk/client-ssm/dist-types/commands/GetParameterCommand";
 import { apiConfig } from "../../../common/abstractApi";
+import AWSMock from "aws-sdk-mock";
+import AWS from "aws-sdk";
+import { GetParameterResult } from "aws-sdk/clients/ssm";
 
 const { expect } = require("chai");
 
@@ -20,13 +19,15 @@ describe("userService", () => {
   afterEach(() => {
     sandbox.reset();
     sandbox.restore();
+    AWSMock.restore();
   });
 
   beforeEach(() => {
     validateTokenStub = sandbox.stub(tokenvalidator, "validateJwtToken");
-    const ssmClient = mockClient(getUSEast1ssmClient());
-
-    ssmClient.on(GetParameterCommand).resolves({ Parameter: { Value: "ASDF1234" } } as GetParameterCommandOutput);
+    AWSMock.setSDKInstance(AWS);
+    const getParameterStub = sinon.stub();
+    AWSMock.mock("SSM", "getParameter", getParameterStub);
+    getParameterStub.resolves({ Parameter: { Value: "ASDF1234" } } as GetParameterResult);
   });
 
   it("should identify user succesfully", async function () {

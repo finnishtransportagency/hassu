@@ -22,7 +22,7 @@ import { arkistoiProjekti, createOrUpdateProjekti, loadProjekti } from "./handle
 import { apiConfig } from "../../common/abstractApi";
 import { lataaAsiakirja } from "./handler/asiakirjaHandler";
 import { createUploadURLForFile } from "./handler/fileHandler";
-import * as AWSXRay from "aws-xray-sdk";
+import * as AWSXRay from "aws-xray-sdk-core";
 import { getCorrelationId, setupLambdaMonitoring, setupLambdaMonitoringMetaData } from "./aws/monitoring";
 import { calculateEndDate } from "./endDateCalculator/endDateCalculatorHandler";
 import { aloitusKuulutusHandler } from "./handler/aloitusKuulutusHandler";

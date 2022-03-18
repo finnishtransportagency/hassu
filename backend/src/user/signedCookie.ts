@@ -1,8 +1,6 @@
 import { config } from "../config";
-import { GetParameterCommand } from "@aws-sdk/client-ssm";
-import { getUSEast1ssmClient } from "../aws/clients";
-
-import * as AWS from "aws-sdk";
+import { getUSEast1ssm } from "../aws/client";
+import AWS from "aws-sdk";
 
 export async function createSignedCookies(): Promise<string[]> {
   const cloudFrontPolicy = JSON.stringify({
@@ -34,7 +32,7 @@ export async function createSignedCookies(): Promise<string[]> {
 async function getCloudFrontSigner() {
   if (!(globalThis as any).cloudFrontSigner) {
     const parameterKey = "/" + config.env + "/outputs/FrontendPublicKeyId";
-    const publicKeyId = await getUSEast1ssmClient().send(new GetParameterCommand({ Name: parameterKey }));
+    const publicKeyId = await getUSEast1ssm().getParameter({ Name: parameterKey }).promise();
     if (!publicKeyId.Parameter?.Value) {
       throw new Error("Configuration error: SSM parameter " + parameterKey + " not found");
     }

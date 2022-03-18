@@ -1,15 +1,14 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { api, AsiakirjaTyyppi, Kieli } from "@services/api";
-import { GetParameterCommand } from "@aws-sdk/client-ssm";
-import { getSSMClient } from "../../backend/src/aws/clients";
 import { setupLambdaMonitoring } from "../../backend/src/aws/monitoring";
+import AWS from "aws-sdk";
+
+const ssm = new AWS.SSM();
 
 setupLambdaMonitoring();
 
-const ssm = getSSMClient();
-
 async function getParameter(name: string) {
-  return (await ssm.send(new GetParameterCommand({ Name: name }))).Parameter?.Value;
+  return (await ssm.getParameter({ Name: name }).promise()).Parameter?.Value;
 }
 
 async function getParameterStore() {

@@ -1,20 +1,12 @@
 import { config } from "../config";
 import { log } from "../logger";
 import { NotFoundError } from "../error/NotFoundError";
-import { getS3Client } from "../aws/clients";
 import { uuid } from "../util/uuid";
-import {
-  CopyObjectCommand,
-  DeleteObjectCommand,
-  HeadObjectCommand,
-  ListObjectsV2Command,
-  ListObjectsV2CommandOutput,
-  PutObjectCommand,
-} from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { ArchivedProjektiKey } from "../database/projektiDatabase";
 import { Dayjs } from "dayjs";
 import { uriEscapePath } from "aws-sdk/lib/util";
+import { ListObjectsV2Output } from "aws-sdk/clients/s3";
+import { getS3 } from "../aws/client";
 
 export type UploadFileProperties = {
   fileNameWithPath: string;
@@ -40,12 +32,12 @@ export class FileService {
    */
   async createUploadURLForFile(filename: string): Promise<UploadFileProperties> {
     const fileNameWithPath = `${uuid.v4()}/${filename}`;
-    const command = new PutObjectCommand({
-      Key: fileNameWithPath,
+    const s3 = getS3();
+    const uploadURL = s3.getSignedUrl("putObject", {
       Bucket: config.uploadBucketName,
-    });
-    const uploadURL = await getSignedUrl(getS3Client(), command, {
-      expiresIn: 600,
+      Key: fileNameWithPath,
+      Expires: 600,
+      ContentType: 'application/octet-stream'
     });
     return { fileNameWithPath, uploadURL };
   }
@@ -61,14 +53,14 @@ export class FileService {
     const targetPath = `/${param.targetFilePathInProjekti}/${fileNameFromUpload}`;
     const targetBucketPath = FileService.getYllapitoProjektiDirectory(param.oid) + targetPath;
     try {
-      await getS3Client().send(
-        new CopyObjectCommand({
+      await getS3()
+        .copyObject({
           ...sourceFileProperties,
           Bucket: config.yllapitoBucketName,
           Key: targetBucketPath,
           MetadataDirective: "REPLACE",
         })
-      );
+        .promise();
       log.info(
         `Copied uploaded file (${sourceFileProperties.ContentType}) ${sourceFileProperties.CopySource} to ${targetBucketPath}`
       );
@@ -118,8 +110,8 @@ export class FileService {
     targetPath: string,
     metadata: { [p: string]: string }
   ) {
-    const commandOutput = await getS3Client().send(
-      new PutObjectCommand({
+    await getS3()
+      .putObject({
         Body: param.contents,
         Bucket: bucket,
         Key: targetPath,
@@ -127,8 +119,8 @@ export class FileService {
         ContentDisposition: param.inline && "inline; filename=" + param.fileName,
         Metadata: metadata,
       })
-    );
-    log.info(`Created file ${bucket}/${targetPath}`, commandOutput.$metadata);
+      .promise();
+    log.info(`Created file ${bucket}/${targetPath}`);
   }
 
   private static getYllapitoProjektiDirectory(oid: string) {
@@ -143,9 +135,9 @@ export class FileService {
     uploadedFileSource: string
   ): Promise<{ ContentType: string; CopySource: string }> {
     try {
-      const headObject = await getS3Client().send(
-        new HeadObjectCommand({ Bucket: config.uploadBucketName, Key: uploadedFileSource })
-      );
+      const headObject = await getS3()
+        .headObject({ Bucket: config.uploadBucketName, Key: uploadedFileSource })
+        .promise();
       return {
         ContentType: headObject.ContentType,
         CopySource: uriEscapePath(config.uploadBucketName + "/" + uploadedFileSource),
@@ -165,41 +157,41 @@ export class FileService {
   }
 
   async archiveProjekti({ oid, timestamp }: ArchivedProjektiKey): Promise<void> {
+    const s3 = getS3();
     const sourcePrefix = FileService.getYllapitoProjektiDirectory(oid);
     const targetPrefix = sourcePrefix + "/" + timestamp;
     const sourceBucket = config.yllapitoBucketName;
     const targetBucket = config.archiveBucketName;
 
-    let ContinuationToken;
-    const s3Client = getS3Client();
+    let ContinuationToken = undefined;
     const copyFile = async (sourceKey: string) => {
       const targetKey = sourceKey.replace(sourcePrefix, targetPrefix);
 
-      await s3Client.send(
-        new CopyObjectCommand({
+      await s3
+        .copyObject({
           Bucket: targetBucket,
           Key: targetKey,
           CopySource: uriEscapePath(`${sourceBucket}/${sourceKey}`),
           MetadataDirective: "REPLACE",
         })
-      );
+        .promise();
 
-      await s3Client.send(
-        new DeleteObjectCommand({
+      await s3
+        .deleteObject({
           Bucket: sourceBucket,
           Key: sourceKey,
         })
-      );
+        .promise();
     };
 
     do {
-      const { Contents = [], NextContinuationToken }: ListObjectsV2CommandOutput = await s3Client.send(
-        new ListObjectsV2Command({
+      const { Contents = [], NextContinuationToken }: ListObjectsV2Output = await s3
+        .listObjectsV2({
           Bucket: sourceBucket,
           Prefix: sourcePrefix,
           ContinuationToken,
         })
-      );
+        .promise();
 
       const sourceKeys = Contents.map(({ Key }) => Key);
 
@@ -233,7 +225,6 @@ export class FileService {
     const sourceBucket = config.yllapitoBucketName;
     const targetBucket = config.publicBucketName;
 
-    const s3Client = getS3Client();
     const metadata: { [key: string]: string } = {};
     if (publishDate) {
       metadata["publication-timestamp"] = publishDate.toISOString();
@@ -241,12 +232,19 @@ export class FileService {
     const copyObjectParams = {
       Bucket: targetBucket,
       Key: `${FileService.getPublicProjektiDirectory(oid)}${filePathInProjekti}`,
-      CopySource: uriEscapePath(`${sourceBucket}/${FileService.getYllapitoProjektiDirectory(oid)}${filePathInProjekti}`),
+      CopySource: uriEscapePath(
+        `${sourceBucket}/${FileService.getYllapitoProjektiDirectory(oid)}${filePathInProjekti}`
+      ),
       MetadataDirective: "REPLACE",
       Metadata: metadata,
     };
-    const copyObjectCommandOutput = await s3Client.send(new CopyObjectCommand(copyObjectParams));
-    log.info("Publish file", { copyObjectParams, copyObjectCommandOutput });
+    try {
+      const copyObjectCommandOutput = await getS3().copyObject(copyObjectParams).promise();
+      log.info("Publish file", { copyObjectParams, copyObjectCommandOutput });
+    } catch (e) {
+      log.error("CopyObject failed", e);
+      throw e;
+    }
   }
 }
 

@@ -11,24 +11,23 @@ import { personSearch } from "../personSearch/personSearchClient";
 import { Kayttaja, Kieli, TilasiirtymaToiminto } from "../../../common/graphql/apiModel";
 import Mail from "nodemailer/lib/mailer";
 import { DBProjekti } from "../database/model/projekti";
-import { getS3Client } from "../aws/clients";
-import { GetObjectCommand, GetObjectCommandOutput, S3Client } from "@aws-sdk/client-s3";
 import { createLahetekirjeEmail } from "../email/lahetekirje/lahetekirjeEmailTemplate";
 import { config } from "../config";
 import { Readable } from "stream";
 import { localDateTimeString } from "../util/dateUtil";
+import { GetObjectOutput } from "aws-sdk/clients/s3";
+import { getS3 } from "../aws/client";
 
 async function getFileAttachment(oid: string, key: string): Promise<Mail.Attachment> {
-  const s3Client: S3Client = getS3Client();
   log.info("haetaan s3:sta liitetiedosto", key);
 
   try {
-    const output: GetObjectCommandOutput = await s3Client.send(
-      new GetObjectCommand({
+    const output: GetObjectOutput = await getS3()
+      .getObject({
         Bucket: config.yllapitoBucketName,
         Key: `yllapito/tiedostot/projekti/${oid}` + key,
       })
-    );
+      .promise();
 
     if (output.Body instanceof Readable) {
       return {

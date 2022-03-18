@@ -151,6 +151,9 @@ export class HassuBackendStack extends cdk.Stack {
       entry: `${__dirname}/../../backend/src/projektiSearch/dynamoDBStreamHandler.ts`,
       handler: "handleDynamoDBEvents",
       memorySize: 256,
+      bundling: {
+        minify: true,
+      },
       environment: {
         ...commonEnvironmentVariables,
         SEARCH_DOMAIN: this.props.searchDomain.domainEndpoint,
@@ -201,6 +204,7 @@ export class HassuBackendStack extends cdk.Stack {
         define,
         minify: true,
         nodeModules: ["pdfkit"],
+        metafile: false,
         commandHooks: {
           beforeBundling(inputDir: string, outputDir: string): string[] {
             return [

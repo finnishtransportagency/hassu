@@ -41,11 +41,11 @@ import useTranslation from "next-translate/useTranslation";
 import WindowCloseButton from "@components/button/WindowCloseButton";
 import { DialogContent, DialogTitle, Stack } from "@mui/material";
 import HassuDialog from "@components/HassuDialog";
-import { GetParameterCommandOutput, SSMClient } from "@aws-sdk/client-ssm";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuStack from "@components/layout/HassuStack";
 import HassuGrid from "@components/HassuGrid";
+import { GetParameterResult } from "aws-sdk/clients/ssm";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
 type RequiredProjektiFields = Required<{
@@ -660,13 +660,11 @@ interface ServerSideProps {
 
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () => {
   setupLambdaMonitoring();
-  const { getSSMClient } = require("../../../../../backend/src/aws/clients");
-  const { GetParameterCommand } = require("@aws-sdk/client-ssm");
+  const { getSSM } = require("../../../../../backend/src/aws/client");
   const parameterName = "/kirjaamoOsoitteet";
   let kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] = [];
   try {
-    const ssmclient: SSMClient = await getSSMClient();
-    const response: GetParameterCommandOutput = await ssmclient.send(new GetParameterCommand({ Name: parameterName }));
+    const response: GetParameterResult = await getSSM().getParameter({ Name: parameterName }).promise();
     kirjaamoOsoitteet = response.Parameter?.Value ? JSON.parse(response.Parameter.Value) : [];
   } catch (e) {
     log.error(`Could not pass prop 'kirjaamoOsoitteet' to 'aloituskuulutus' page`, e);

@@ -1,5 +1,5 @@
 import { log } from "./logger";
-import * as AWSXRay from "aws-xray-sdk";
+import * as AWSXRay from "aws-xray-sdk-core";
 
 const config = {
   projektiTableName: process.env.TABLE_PROJEKTI,
@@ -28,7 +28,7 @@ const config = {
   uploadBucketName: process.env.UPLOAD_BUCKET_NAME,
   yllapitoBucketName: process.env.YLLAPITO_BUCKET_NAME,
   publicBucketName: process.env.PUBLIC_BUCKET_NAME,
-  internalBucketName: process.env.INTERNAL_BUCKET_NAME,
+  internalBucketName: process.env.INTERNAL_BUCKET_NAME || "unset",
   archiveBucketName: process.env.ARCHIVE_BUCKET_NAME,
 
   smtpKeyId: process.env.SMTP_KEY_ID,

@@ -1,4 +1,4 @@
-const AWSXRay = require("aws-xray-sdk");
+const AWSXRay = require("aws-xray-sdk-core");
 const mocha = require("mocha");
 
 const chai = require("chai");
@@ -62,6 +62,9 @@ process.env.FRONTEND_PRIVATEKEY =
 AWS.config.update({
   region: "eu-west-1",
 });
+
+process.env.S3_ENDPOINT = "http://localhost:4566";
+
 const ns = AWSXRay.getNamespace();
 let context;
 
