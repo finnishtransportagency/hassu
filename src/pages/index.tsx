@@ -7,11 +7,11 @@ const App = () => {
   return (
     <>
       <h2 className="mt-4">Tiesuunnitelmat</h2>
-      <ProjektiListaus admin projektiTyyppi={ProjektiTyyppi.TIE} />
+      <ProjektiListaus projektiTyyppi={ProjektiTyyppi.TIE} />
       <h2 className="mt-4">Ratasuunnitelmat</h2>
-      <ProjektiListaus admin projektiTyyppi={ProjektiTyyppi.RATA} />
+      <ProjektiListaus projektiTyyppi={ProjektiTyyppi.RATA} />
       <h2 className="mt-4">Yleissuunnitelmat</h2>
-      <ProjektiListaus admin projektiTyyppi={ProjektiTyyppi.YLEINEN} />
+      <ProjektiListaus projektiTyyppi={ProjektiTyyppi.YLEINEN} />
     </>
   );
 };
