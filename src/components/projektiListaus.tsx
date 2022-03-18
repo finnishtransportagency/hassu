@@ -9,6 +9,7 @@ type ProjektiListausState = {
 
 type ProjektiListausProps = {
   admin?: boolean;
+  projektiTyyppi: ProjektiTyyppi;
 };
 
 export class ProjektiListaus extends React.Component<ProjektiListausProps, ProjektiListausState> {
@@ -19,7 +20,7 @@ export class ProjektiListaus extends React.Component<ProjektiListausProps, Proje
 
   async fetchProjektit(): Promise<ProjektiHakutulos> {
     try {
-      const result = await api.listProjektit({ projektiTyyppi: ProjektiTyyppi.TIE });
+      const result = await api.listProjektit({ projektiTyyppi: this.props.projektiTyyppi });
       log.info("listProjektit:", result);
       return result;
     } catch (e: any) {
