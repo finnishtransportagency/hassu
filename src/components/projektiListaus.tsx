@@ -1,10 +1,10 @@
 import React from "react";
-import { api, Projekti } from "@services/api";
+import { api, ProjektiHakutulos, ProjektiTyyppi } from "@services/api";
 import log from "loglevel";
 import Link from "next/link";
 
 type ProjektiListausState = {
-  projektit: Projekti[];
+  hakutulos: ProjektiHakutulos;
 };
 
 type ProjektiListausProps = {
@@ -14,12 +14,12 @@ type ProjektiListausProps = {
 export class ProjektiListaus extends React.Component<ProjektiListausProps, ProjektiListausState> {
   constructor(props: ProjektiListausProps) {
     super(props);
-    this.state = { projektit: [] };
+    this.state = { hakutulos: { __typename: "ProjektiHakutulos" } };
   }
 
-  async fetchProjektit() {
+  async fetchProjektit(): Promise<ProjektiHakutulos> {
     try {
-      const result = await api.listProjektit();
+      const result = await api.listProjektit({ projektiTyyppi: ProjektiTyyppi.TIE });
       log.info("listProjektit:", result);
       return result;
     } catch (e: any) {
@@ -31,14 +31,14 @@ export class ProjektiListaus extends React.Component<ProjektiListausProps, Proje
           log.error("HTTP Status: " + httpStatus + "\n" + err.stack);
         });
       }
-      return [];
+      return { __typename: "ProjektiHakutulos" };
     }
   }
 
   async componentDidMount() {
-    const projektit = await this.fetchProjektit();
+    const hakutulos = await this.fetchProjektit();
     this.setState({
-      projektit,
+      hakutulos,
     });
   }
 
@@ -51,7 +51,7 @@ export class ProjektiListaus extends React.Component<ProjektiListausProps, Proje
           </tr>
         </thead>
         <tbody>
-          {this.state.projektit.map((projekti) => (
+          {this.state.hakutulos.tulokset?.map((projekti) => (
             <tr key={projekti.oid}>
               <td>
                 <Link
@@ -59,7 +59,7 @@ export class ProjektiListaus extends React.Component<ProjektiListausProps, Proje
                     (this.props.admin ? "/yllapito/projekti" : "/suunnitelma") + `/${encodeURIComponent(projekti.oid)}`
                   }
                 >
-                  <a>{projekti.velho?.nimi}</a>
+                  <a>{projekti.nimi}</a>
                 </Link>
               </td>
             </tr>

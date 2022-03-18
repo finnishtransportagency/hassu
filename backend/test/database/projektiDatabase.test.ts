@@ -39,7 +39,9 @@ describe("apiHandler", () => {
         await projektiDatabase.saveProjekti(fixture.dbProjekti1);
 
         sinon.assert.calledOnce(updateStub);
-        expect(updateStub.getCall(0).firstArg).toMatchSnapshot();
+        const updateCommand = updateStub.getCall(0).firstArg;
+        updateCommand.ExpressionAttributeValues[":paivitetty"] = "2022-03-15T14:29:48.845Z";
+        expect(updateCommand).toMatchSnapshot();
       });
 
       it("should remove null fields from DynamoDB", async () => {
@@ -57,7 +59,9 @@ describe("apiHandler", () => {
         await projektiDatabase.saveProjekti(projekti);
 
         sinon.assert.calledOnce(updateStub);
-        expect(updateStub.getCall(0).firstArg).toMatchSnapshot();
+        const updateCommand = updateStub.getCall(0).firstArg;
+        updateCommand.ExpressionAttributeValues[":paivitetty"] = "2022-03-15T14:29:48.845Z";
+        expect(updateCommand).toMatchSnapshot();
       });
 
       it("should return items from listProjektit call", async () => {

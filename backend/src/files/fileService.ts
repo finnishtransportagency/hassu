@@ -241,7 +241,7 @@ export class FileService {
     const copyObjectParams = {
       Bucket: targetBucket,
       Key: `${FileService.getPublicProjektiDirectory(oid)}${filePathInProjekti}`,
-      CopySource: `${sourceBucket}/${FileService.getYllapitoProjektiDirectory(oid)}${filePathInProjekti}`,
+      CopySource: uriEscapePath(`${sourceBucket}/${FileService.getYllapitoProjektiDirectory(oid)}${filePathInProjekti}`),
       MetadataDirective: "REPLACE",
       Metadata: metadata,
     };

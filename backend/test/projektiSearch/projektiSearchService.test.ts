@@ -41,7 +41,7 @@ describe("ProjektiSearchService", () => {
       },
       status: 404,
     });
-    await projektiSearchService.search({ oid: ["1"] });
+    await projektiSearchService.searchByOid(["1"]);
   });
 
   it("should handle successful result", async () => {
@@ -88,6 +88,6 @@ describe("ProjektiSearchService", () => {
         ],
       },
     });
-    expect(await projektiSearchService.search({ oid: ["1", "2"] })).toMatchSnapshot();
+    expect(await projektiSearchService.searchByOid(["1", "2"])).toMatchSnapshot();
   });
 });

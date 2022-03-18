@@ -56,8 +56,8 @@ AWSXRay.setLogger({
       log.info(message, { meta });
     }
   },
-  debug: (message, meta) => {
-    log.debug(message, { meta });
+  debug: () => {
+    // Ignore
   },
 });
 

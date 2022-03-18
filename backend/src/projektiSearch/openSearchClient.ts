@@ -1,5 +1,4 @@
 import { config } from "../config";
-import { log } from "../logger";
 
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
 import { SignatureV4 } from "@aws-sdk/signature-v4";
@@ -12,6 +11,18 @@ const region = process.env.AWS_REGION;
 const domain = config.searchDomain;
 const index = "projekti";
 const type = "_doc";
+
+export interface SortOrder {
+  order: "asc" | "desc";
+}
+
+export interface SearchOpts {
+  from?: number;
+  size?: number;
+  sort?: Record<string, SortOrder>[];
+  query?: unknown;
+  aggs?: unknown;
+}
 
 async function sendRequest(request: HttpRequest): Promise<any> {
   // Sign the request
@@ -33,7 +44,6 @@ async function sendRequest(request: HttpRequest): Promise<any> {
       responseBody += chunk;
     });
     response.body.on("end", () => {
-      log.info("Response body", { responseBody });
       resolve(JSON.parse(responseBody));
     });
   });
@@ -79,12 +89,10 @@ export class OpenSearchClient {
     return await sendRequest(request);
   }
 
-  async query(query: any): Promise<any> {
+  async query(query: SearchOpts): Promise<any> {
+    const body = JSON.stringify(query);
     const request = new HttpRequest({
-      body: JSON.stringify({
-        size: 100,
-        query,
-      }),
+      body,
       headers: {
         "Content-Type": "application/json",
         host: domain,

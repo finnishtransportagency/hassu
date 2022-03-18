@@ -2,48 +2,46 @@
 
 exports[`dynamoDBStreamHandler should index new projektis successfully 1`] = `
 Object {
-  "liittyvatSuunnitelmat": Array [
-    Object {
-      "asiatunnus": "atunnus123",
-      "nimi": "Littyva suunnitelma 1 nimi",
-    },
+  "asiatunnus": "A1",
+  "maakunnat": Array [
+    "Uusimaa",
+    "Pirkanmaa",
   ],
-  "muistiinpano": "Testiprojekti 1:n muistiinpano",
-  "velho": Object {
-    "kunnat": Array [
-      "Tampere",
-      "Nokia",
-    ],
-    "nimi": "Testiprojekti 1",
-    "tilaajaOrganisaatio": "Uudenmaan ELY-keskus",
-    "tyyppi": "TIE",
-    "vaylamuoto": Array [
-      "tie",
-    ],
-  },
+  "muokkaajat": Array [
+    "A123",
+    "A000111",
+  ],
+  "nimi": "Testiprojekti 1",
+  "paivitetty": "2022-03-15T13:00:00.000Z",
+  "projektiTyyppi": "TIE",
+  "projektipaallikko": "Projari, Pekka",
+  "suunnittelustaVastaavaViranomainen": undefined,
+  "vaihe": "EI_JULKAISTU",
+  "vaylamuoto": Array [
+    "tie",
+  ],
 }
 `;
 
 exports[`dynamoDBStreamHandler should index projekti updates successfully 1`] = `
 Object {
-  "liittyvatSuunnitelmat": Array [
-    Object {
-      "asiatunnus": "atunnus123",
-      "nimi": "Littyva suunnitelma 1 nimi",
-    },
+  "asiatunnus": "A1",
+  "maakunnat": Array [
+    "Uusimaa",
+    "Pirkanmaa",
   ],
-  "muistiinpano": "moro",
-  "velho": Object {
-    "kunnat": Array [
-      "Tampere",
-      "Nokia",
-    ],
-    "nimi": "Testiprojekti 1",
-    "tilaajaOrganisaatio": "Uudenmaan ELY-keskus",
-    "tyyppi": "TIE",
-    "vaylamuoto": Array [
-      "tie",
-    ],
-  },
+  "muokkaajat": Array [
+    "A123",
+    "A000111",
+  ],
+  "nimi": "Testiprojekti 1",
+  "paivitetty": "2022-03-15T13:00:00.000Z",
+  "projektiTyyppi": "TIE",
+  "projektipaallikko": "Projari, Pekka",
+  "suunnittelustaVastaavaViranomainen": undefined,
+  "vaihe": "EI_JULKAISTU",
+  "vaylamuoto": Array [
+    "tie",
+  ],
 }
 `;

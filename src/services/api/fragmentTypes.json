@@ -140,6 +140,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "SCALAR",
+        "name": "Int",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "INTERFACE",
         "name": "IProjekti",
         "possibleTypes": [
@@ -209,6 +215,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "ListaaProjektitInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "OBJECT",
         "name": "Mutation",
         "possibleTypes": null,
@@ -234,6 +246,18 @@
       },
       {
         "kind": "OBJECT",
+        "name": "ProjektiHakutulos",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ProjektiHakutulosDokumentti",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "ProjektiJulkinen",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -253,6 +277,12 @@
       {
         "kind": "ENUM",
         "name": "ProjektiRooli",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "ProjektiSarake",
         "possibleTypes": null,
         "__typename": "__Type"
       },

@@ -1,10 +1,10 @@
 import {
   AloitusKuulutusTila,
+  IlmoituksenVastaanottajat,
   Kieli,
   ProjektiRooli,
   ProjektiTyyppi,
   Viranomainen,
-  IlmoituksenVastaanottajat,
 } from "../../../../common/graphql/apiModel";
 
 export type LocalizedMap<T> = { [key in Kieli]?: T } | null;
@@ -125,4 +125,5 @@ export type DBProjekti = {
   // false, jos projekti ladattiin Velhosta, mutta ei ole vielä tallennettu tietokantaan
   tallennettu?: boolean;
   kayttoOikeudet: DBVaylaUser[];
+  paivitetty?: string;
 };

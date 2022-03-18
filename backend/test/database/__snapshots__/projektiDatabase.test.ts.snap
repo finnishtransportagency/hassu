@@ -9,6 +9,7 @@ Object {
     "#kielitiedot": "kielitiedot",
     "#liittyvatSuunnitelmat": "liittyvatSuunnitelmat",
     "#muistiinpano": "muistiinpano",
+    "#paivitetty": "paivitetty",
     "#suunnitteluSopimus": "suunnitteluSopimus",
     "#velho": "velho",
   },
@@ -65,6 +66,7 @@ Object {
       },
     ],
     ":muistiinpano": "Testiprojekti 1:n muistiinpano",
+    ":paivitetty": "2022-03-15T14:29:48.845Z",
     ":suunnitteluSopimus": Object {
       "email": "Joku.Jossain@vayla.fi",
       "etunimi": "Joku",
@@ -73,9 +75,14 @@ Object {
       "sukunimi": "Jossain",
     },
     ":velho": Object {
+      "asiatunnusVayla": "A1",
       "kunnat": Array [
         "Tampere",
         "Nokia",
+      ],
+      "maakunnat": Array [
+        "Uusimaa",
+        "Pirkanmaa",
       ],
       "nimi": "Testiprojekti 1",
       "tilaajaOrganisaatio": "Uudenmaan ELY-keskus",
@@ -89,7 +96,7 @@ Object {
     "oid": "1",
   },
   "TableName": "Projekti-localstack",
-  "UpdateExpression": "SET #kayttoOikeudet = :kayttoOikeudet , #velho = :velho , #muistiinpano = :muistiinpano , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus , #kielitiedot = :kielitiedot , #euRahoitus = :euRahoitus , #liittyvatSuunnitelmat = :liittyvatSuunnitelmat ",
+  "UpdateExpression": "SET #kayttoOikeudet = :kayttoOikeudet , #velho = :velho , #muistiinpano = :muistiinpano , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus , #kielitiedot = :kielitiedot , #euRahoitus = :euRahoitus , #liittyvatSuunnitelmat = :liittyvatSuunnitelmat , #paivitetty = :paivitetty ",
 }
 `;
 
@@ -97,14 +104,16 @@ exports[`apiHandler updateSuunnitelma saveProjekti should remove null fields fro
 Object {
   "ExpressionAttributeNames": Object {
     "#muistiinpano": "muistiinpano",
+    "#paivitetty": "paivitetty",
   },
   "ExpressionAttributeValues": Object {
     ":muistiinpano": "foo",
+    ":paivitetty": "2022-03-15T14:29:48.845Z",
   },
   "Key": Object {
     "oid": "1",
   },
   "TableName": "Projekti-localstack",
-  "UpdateExpression": "SET #muistiinpano = :muistiinpano REMOVE suunnitteluSopimus",
+  "UpdateExpression": "SET #muistiinpano = :muistiinpano , #paivitetty = :paivitetty REMOVE suunnitteluSopimus",
 }
 `;

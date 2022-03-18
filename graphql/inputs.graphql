@@ -79,6 +79,30 @@ input ListaaKayttajatInput {
   hakusana: String
 }
 
+enum ProjektiSarake {
+  NIMI
+  ASIATUNNUS
+  PROJEKTIPAALLIKKO
+  VASTUUORGANISAATIO
+  VAIHE
+  PAIVITETTY
+}
+
+input ListaaProjektitInput {
+  nimi: String
+  asiatunnus: String
+  maakunta: [String!]
+  vaylamuoto: [String!]
+  suunnittelustaVastaavaViranomainen: [Viranomainen!]
+  vaihe: [Status!]
+  vainProjektitMuokkausOikeuksin: Boolean
+  projektiTyyppi: ProjektiTyyppi
+  sivunumero: Int
+  sivunKoko: Int
+  jarjestysSarake: ProjektiSarake
+  jarjestysKasvava: Boolean
+}
+
 enum TilasiirtymaToiminto {
   LAHETA_HYVAKSYTTAVAKSI
   HYVAKSY

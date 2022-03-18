@@ -5,6 +5,7 @@ import {
   LaskePaattymisPaivaQueryVariables,
   LataaProjektiQueryVariables,
   ListaaKayttajatQueryVariables,
+  ListaaProjektitQueryVariables,
   ListaaVelhoProjektitQueryVariables,
   SiirraTilaMutationVariables,
   TallennaProjektiInput,
@@ -17,7 +18,7 @@ import { listaaVelhoProjektit } from "./handler/listaaVelhoProjektit";
 import { identifyUser } from "./user";
 import { getCurrentUser } from "./handler/getCurrentUser";
 import { listUsers } from "./handler/listUsers";
-import { arkistoiProjekti, createOrUpdateProjekti, listProjektit, loadProjekti } from "./handler/projektiHandler";
+import { arkistoiProjekti, createOrUpdateProjekti, loadProjekti } from "./handler/projektiHandler";
 import { apiConfig } from "../../common/abstractApi";
 import { lataaAsiakirja } from "./handler/asiakirjaHandler";
 import { createUploadURLForFile } from "./handler/fileHandler";
@@ -25,6 +26,7 @@ import * as AWSXRay from "aws-xray-sdk";
 import { getCorrelationId, setupLambdaMonitoring, setupLambdaMonitoringMetaData } from "./aws/monitoring";
 import { calculateEndDate } from "./endDateCalculator/endDateCalculatorHandler";
 import { aloitusKuulutusHandler } from "./handler/aloitusKuulutusHandler";
+import { listProjektit } from "./handler/listProjektitHandler";
 
 type AppSyncEventArguments =
   | unknown
@@ -42,7 +44,7 @@ async function executeOperation(event: AppSyncResolverEvent<AppSyncEventArgument
   log.info(event.info.fieldName);
   switch (event.info.fieldName as any) {
     case apiConfig.listaaProjektit.name:
-      return await listProjektit();
+      return await listProjektit((event.arguments as ListaaProjektitQueryVariables).hakuehto);
     case apiConfig.listaaVelhoProjektit.name:
       return await listaaVelhoProjektit(event.arguments as ListaaVelhoProjektitQueryVariables);
     case apiConfig.nykyinenKayttaja.name:

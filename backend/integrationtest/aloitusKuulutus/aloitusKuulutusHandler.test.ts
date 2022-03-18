@@ -8,6 +8,8 @@ import { aloitusKuulutusHandler } from "../../src/handler/aloitusKuulutusHandler
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { localstackS3Client } from "../util/s3Util";
+import { personSearchUpdaterClient } from "../../src/personSearch/personSearchUpdaterClient";
+import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/personSearchUpdaterHandler";
 
 const { expect } = require("chai");
 
@@ -21,9 +23,14 @@ async function takeSnapshot(oid: string) {
 
 describe("AloitusKuulutus", () => {
   let userFixture: UserFixture;
+  let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
 
   before(async () => {
     localstackS3Client();
+    readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
+    readUsersFromSearchUpdaterLambda.callsFake(async () => {
+      return await personSearchUpdaterHandler.handleEvent();
+    });
   });
 
   afterEach(() => {

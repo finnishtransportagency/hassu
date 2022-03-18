@@ -52,6 +52,7 @@ export class ProjektiFixture {
       __typename: "Velho",
       nimi: this.PROJEKTI1_NIMI,
       tyyppi: ProjektiTyyppi.TIE,
+      maakunnat: ["Uusimaa", "Pirkanmaa"],
     },
     muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
     status: Status.EI_JULKAISTU,
@@ -127,7 +128,9 @@ export class ProjektiFixture {
       tyyppi: ProjektiTyyppi.TIE,
       tilaajaOrganisaatio: "Uudenmaan ELY-keskus",
       kunnat: ["Tampere", "Nokia"],
+      maakunnat: ["Uusimaa", "Pirkanmaa"],
       vaylamuoto: ["tie"],
+      asiatunnusVayla: "A" + this.PROJEKTI1_OID,
     },
     muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
     suunnitteluSopimus: {
@@ -168,6 +171,7 @@ export class ProjektiFixture {
         nimi: "Littyva suunnitelma 1 nimi",
       },
     ],
+    paivitetty: "2022-03-15T13:00:00.000Z",
   };
 
   dbProjekti2: DBProjekti = {
@@ -199,6 +203,7 @@ export class ProjektiFixture {
       kunnat: ["Mikkeli", "Juva", "Savonlinna"],
       vaylamuoto: ["tie"],
       vastuuhenkilonEmail: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
+      maakunnat: ["Uusimaa", "Pirkanmaa"],
     },
     aloitusKuulutusJulkaisut: [
       {
@@ -332,5 +337,6 @@ export class ProjektiFixture {
         nimi: "Littyva suunnitelma 1 nimi",
       },
     ],
+    paivitetty: "2022-03-15T14:30:00.000Z",
   };
 }

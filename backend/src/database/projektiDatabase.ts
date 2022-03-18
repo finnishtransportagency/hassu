@@ -5,6 +5,7 @@ import { getDynamoDBDocumentClient } from "./dynamoDB";
 import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
 import { AWSError } from "aws-sdk";
 import { Response } from "aws-sdk/lib/response";
+import dayjs from "dayjs";
 
 const projektiTableName: string = config.projektiTableName;
 const archiveTableName: string = config.projektiArchiveTableName;
@@ -75,6 +76,9 @@ async function saveProjekti(dbProjekti: Partial<DBProjekti>): Promise<DocumentCl
   const removeExpression: string[] = [];
   const ExpressionAttributeNames = {};
   const ExpressionAttributeValues = {};
+
+  dbProjekti.paivitetty = dayjs().toISOString();
+
   for (const property in dbProjekti) {
     if (readOnlyFields.indexOf(property) >= 0) {
       continue;
