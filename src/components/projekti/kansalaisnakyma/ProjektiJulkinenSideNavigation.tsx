@@ -3,7 +3,6 @@ import styles from "@styles/projekti/ProjektiJulkinenSideNavigation.module.css";
 import { useRouter } from "next/router";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import HassuStack from "@components/layout/HassuStack";
-import HassuGrid from "@components/HassuGrid";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 
@@ -30,21 +29,31 @@ export default function ProjektiSideNavigation(): ReactElement {
   }
 
   const getTilaajaLogoUrl = () => {
-    return "/vayla_sivussa_fi_sv_rgb.png";
+    return kuulutus?.velho?.tilaajaOrganisaatio?.includes("ELY") ? "/ely-logo-vaaka.png" : "/vayla_sivussa_fi_sv_rgb.png";
   };
 
   return (
     <Section noDivider>
       <div role="navigation" className={styles["side-nav"]}>
-        <div className="flex justify-center" style={{ height: "60px", backgroundColor: "#0064AF", color: "white", alignItems: "center"}}>
+        <div
+          className="flex justify-center"
+          style={{
+            height: "60px",
+            backgroundColor: "#0064AF",
+            color: "white",
+            alignItems: "center",
+            fontWeight: "700",
+          }}
+        >
           <h4 className="vayla-title-small mb-0">Suunnitteluhankkeen yhteyshenkilöt</h4>
         </div>
-        <SectionContent sx={{ paddingTop: "2rem", paddingRight: "2rem", paddingBottom: "2rem", paddingLeft: "2rem" }}>
+        <SectionContent className={styles["side-nav-content"]}>
           <HassuStack>
-            <img src={getTilaajaLogoUrl()} style={{ paddingLeft: "" }} />
-            {kuulutus.yhteystiedot.map((yt) => (
-              <div key={yt.etunimi + yt.sukunimi}>
+            <img src={getTilaajaLogoUrl()} alt={`${kuulutus.velho.tilaajaOrganisaatio} logo`} />
+            {kuulutus.yhteystiedot.map((yt, index) => (
+              <div key={yt.etunimi + yt.sukunimi} className="vayla-calling-card">
                 <p>{yt.organisaatio}</p>
+                {index == 0 && <p>PROJEKTIPÄÄLLIKKÖ</p> /* yhteystiedoilta puuttuu tittelitieto */}
                 <p>
                   <b>
                     {yt.etunimi} {yt.sukunimi}
@@ -57,8 +66,10 @@ export default function ProjektiSideNavigation(): ReactElement {
           </HassuStack>
           {suunnitteluSopimus && (
             <HassuStack>
-              <div>
-                <p>{suunnitteluSopimus.logo && <img src={suunnitteluSopimus.logo} alt="Suunnittelusopimus logo" />}</p>
+              {suunnitteluSopimus.logo && (
+                <img src={suunnitteluSopimus.logo} alt={`${suunnitteluSopimus.kunta} logo`} />
+              )}
+              <div className="vayla-calling-card">
                 <p>{suunnitteluSopimus.kunta}</p>
                 <p>PROJEKTIPÄÄLLIKKÖ</p>
                 <p>

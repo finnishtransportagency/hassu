@@ -292,6 +292,10 @@
     color: #7a7a7a;
   }
 
+  .vayla-calling-card > p {
+    margin-bottom: 0px;
+  }
+
   .select-wrapper {
     @apply relative;
   }

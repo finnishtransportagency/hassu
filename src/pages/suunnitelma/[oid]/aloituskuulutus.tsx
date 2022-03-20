@@ -9,7 +9,9 @@ import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/Pro
 import Section from "@components/layout/Section";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
 import { PageProps } from "@pages/_app";
-import { bgcolor } from "@mui/system";
+import Notification, { NotificationType } from "@components/notification/Notification";
+import SectionContent from "@components/layout/SectionContent";
+import { formatDate } from "src/util/dateUtils";
 
 function formatYhteystiedotText(kuulutus: AloitusKuulutusJulkaisuJulkinen) {
   const yhteystiedotList = kuulutus.yhteystiedot.map(
@@ -56,7 +58,6 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
       }
       if (routeLabel) {
         setRouteLabels({ "/suunnitelma/[oid]": { label: routeLabel } });
-        console.log("Aseta bread crumbs");
       }
     }
   }, [router.isReady, oid, kuulutus, setRouteLabels]);
@@ -74,7 +75,10 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
   }
   const yhteystiedot = formatYhteystiedotText(kuulutus);
   const keyValueData: KeyValueData[] = [
-    { header: "Nähtävilläoloaika", data: `${kuulutus.kuulutusPaiva} - ${kuulutus.siirtyySuunnitteluVaiheeseen}` },
+    {
+      header: "Nähtävilläoloaika",
+      data: `${formatDate(kuulutus.kuulutusPaiva)} - ${formatDate(kuulutus.siirtyySuunnitteluVaiheeseen)}`,
+    },
     { header: "Hankkeen sijainti", data: sijainti },
     { header: "Suunnitelman tyyppi", data: velho?.tyyppi && t(`projekti-tyyppi.${velho?.tyyppi}`) },
   ];
@@ -89,24 +93,54 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
       <>
         <Section noDivider>
           <KeyValueTable rows={keyValueData}></KeyValueTable>
-          <p>
-            Kuulutus on julkaistu tietoverkossa Väyläviraston verkkosivuilla {kuulutus.kuulutusPaiva}. Asianosaisten
-            katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä
-            kuulutuksen julkaisusta (hallintolaki 62 a §). Suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä
-            suunnittelutyön edellyttämiä mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä (laki
-            liikennejärjestelmästä ja maanteistä LjMTL 16 §).{" "}
-          </p>
+          <SectionContent>
+            <p>
+              Kuulutus on julkaistu tietoverkossa Väyläviraston verkkosivuilla{" "}
+              <FormatDate date={kuulutus.kuulutusPaiva} />. Asianosaisten katsotaan saaneen tiedon suunnittelun
+              käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a
+              §).
+            </p>
+            <p>
+              Suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön edellyttämiä mittauksia,
+              maaperätutkimuksia ja muita valmistelevia toimenpiteitä (laki liikennejärjestelmästä ja maanteistä LjMTL
+              16 §).
+            </p>
+          </SectionContent>
           <h4 className="vayla-small-title">Suunnitteluhankkeen kuvaus</h4>
-          <p>{kuulutus.hankkeenKuvaus?.[kuulutus.kielitiedot?.ensisijainenKieli || Kieli.SUOMI]}</p>
+          <SectionContent>
+            <p>{kuulutus.hankkeenKuvaus?.[kuulutus.kielitiedot?.ensisijainenKieli || Kieli.SUOMI]}</p>
+          </SectionContent>
+          <h4 className="vayla-small-title">Asianosaisen oikeudet</h4>
+          <Notification type={NotificationType.INFO} hideIcon>
+            <SectionContent sx={{ padding: "1rem 1rem" }}>
+              <ul>
+                <li>
+                  Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin
+                  oloihin suunnitelma saattaa vaikuttaa on oikeus olla tutkimuksissa saapuvilla ja lausua mielipiteensä
+                  asiassa (LjMTL 16 § ja 27 §).
+                </li>
+                <li>
+                  Suunnittelun edetessä tullaan myöhemmin erikseen ilmoitettavalla tavalla varaamaan tilaisuus
+                  mielipiteen ilmaisemiseen suunnitelmasta (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §).
+                </li>
+                <li>
+                  Valmistuttuaan suunnitelmat asetetaan yleisesti nähtäville, jolloin asianosaisilla on mahdollisuus
+                  tehdä kirjallinen muistutus suunnitelmasta (LjMTL 27 §).
+                </li>
+              </ul>
+            </SectionContent>
+          </Notification>
           <h4 className="vayla-small-title">Yhteystiedot</h4>
-          <p>Lisätietoja antavat {yhteystiedot}</p>
+          <SectionContent>
+            <p>Lisätietoja antavat {yhteystiedot}</p>
+          </SectionContent>
           <h4 className="vayla-small-title">Ladattava kuulutus</h4>
-          <ExtLink href={aloituskuulutusPDFPath}>{kuulutusFileName}</ExtLink> ({kuulutusFileExt}) (
-          <FormatDate date={kuulutus.kuulutusPaiva} />-
-          <FormatDate date={kuulutus.siirtyySuunnitteluVaiheeseen} />)
-          {projekti.euRahoitus && (
-            <img src="/eu-logo.jpg" width={134} height={138} alt="EU aluerahoitus" style={{ backgroundColor: "yellow" }} />
-          )}
+          <SectionContent className="flex gap-4">
+            <ExtLink href={aloituskuulutusPDFPath}>{kuulutusFileName}</ExtLink> ({kuulutusFileExt}) (
+            <FormatDate date={kuulutus.kuulutusPaiva} />-
+            <FormatDate date={kuulutus.siirtyySuunnitteluVaiheeseen} />)
+          </SectionContent>
+          {projekti.euRahoitus && <img src="/eu-logo.jpg" width={134} height={138} alt="EU aluerahoitus" />}
         </Section>
       </>
     </ProjektiJulkinenPageLayout>

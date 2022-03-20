@@ -1,23 +1,31 @@
 .side-nav {
-    @apply bg-gray-lightest;
-    /* padding-top: 2rem;
-    padding-right: 2rem;
-    padding-bottom: 2rem;
-    padding-left: 2rem; */
-  }
-  
-  .side-nav > ul > li > a {
-    @apply block pr-12 p-4 border-l-4 border-transparent;
-  }
-  
-  .side-nav > ul > li > a.selected {
-    @apply border-primary;
-  }
-  
-  .side-nav > ul > li > a.disabled {
-    @apply text-gray;
-  }
-  
-  .side-nav > ul > li > :is(a.selected, a:not(.disabled):hover) {
-    @apply bg-gray-light;
-  }
+  @apply bg-gray-lightest;
+}
+
+.side-nav > ul > li > a {
+  @apply block pr-12 p-4 border-l-4 border-transparent;
+}
+
+.side-nav > ul > li > a.selected {
+  @apply border-primary;
+}
+
+.side-nav > ul > li > a.disabled {
+  @apply text-gray;
+}
+
+.side-nav > ul > li > :is(a.selected, a:not(.disabled):hover) {
+  @apply bg-gray-light;
+}
+
+.side-nav-content {
+  padding-top: 2.5rem;
+  padding-left: 2.5rem;
+  padding-bottom: 2.5rem;
+  padding-right: 2.5rem;
+}
+
+.side-nav-content img {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}

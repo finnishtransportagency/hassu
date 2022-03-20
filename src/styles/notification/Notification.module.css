@@ -57,3 +57,15 @@
 .notification p {
   @apply mb-0;
 }
+
+.notification ul {
+  list-style-type: disc;
+}
+
+.notification li {
+  padding-left: 1rem;
+}
+
+.notification li:not(:last-child) {
+  margin-bottom: 1rem;
+}
