@@ -85,7 +85,7 @@ export default function AloituskuulutusLukunakyma({
         </div>
         <div>
           <p className="vayla-label">
-            Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä. (
+            Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (
             {lowerCase(aloituskuulutusjulkaisu.kielitiedot?.ensisijainenKieli)})
           </p>
           <p>
@@ -97,7 +97,7 @@ export default function AloituskuulutusLukunakyma({
         {aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli && (
           <div className="content">
             <p className="vayla-label">
-              Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä. (
+              Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä (
               {lowerCase(aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli)})
             </p>
             <p>

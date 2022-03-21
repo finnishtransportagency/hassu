@@ -131,7 +131,7 @@ export abstract class SuunnittelunAloitusPdf extends AbstractPdf {
   private get titleElement() {
     return this.doc.struct("H2", {}, () => {
       const parts = [selectNimi(this.aloitusKuulutusJulkaisu, this.kieli)];
-      parts.push(this.projektiTyyppi);
+      // parts.push(this.projektiTyyppi);
       this.doc.text(parts.join(", ")).font("ArialMT").moveDown();
     });
   }
