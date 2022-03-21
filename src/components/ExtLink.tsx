@@ -5,6 +5,7 @@ import classNames from "classnames";
 
 interface Props {
   useNextLink?: boolean;
+  hideIcon?: true;
 }
 
 const ExtLink = (
@@ -13,6 +14,7 @@ const ExtLink = (
     children,
     className,
     target = "_blank",
+    hideIcon,
     ...props
   }: Props & Omit<React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "ref">,
   ref: React.ForwardedRef<HTMLAnchorElement>
@@ -22,7 +24,7 @@ const ExtLink = (
       <a ref={ref} href={href} target={target} {...props} className={classNames(styles["ext-link"], className)}>
         {children}
         &nbsp;
-        <FontAwesomeIcon icon="external-link-alt" size="lg"></FontAwesomeIcon>
+        {!hideIcon && <FontAwesomeIcon icon="external-link-alt" size="lg"></FontAwesomeIcon>}
       </a>
     </div>
   );
