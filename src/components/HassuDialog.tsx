@@ -10,7 +10,6 @@ const HassuDialog = (props: DialogProps): ReactElement => {
       maxWidth={"md"}
       PaperProps={{
         sx: {
-          padding: "1rem",
           borderTopWidth: "0.5rem",
           borderTopStyle: "solid",
           borderTopColor: "#49c2f1",
