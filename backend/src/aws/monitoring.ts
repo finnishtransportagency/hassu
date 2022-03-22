@@ -1,5 +1,5 @@
-import * as AWSXRay from "aws-xray-sdk";
-import { Subsegment } from "aws-xray-sdk";
+import * as AWSXRay from "aws-xray-sdk-core";
+import { Subsegment } from "aws-xray-sdk-core";
 import { config } from "../config";
 
 import http from "http";

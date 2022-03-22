@@ -1,29 +1,32 @@
-import { InvocationType, InvokeCommand } from "@aws-sdk/client-lambda";
-import { getLambdaClient } from "./clients";
+import AWS from "aws-sdk";
+import { log } from "../logger";
+
+const lambda = new AWS.Lambda();
 
 export async function invokeLambda(
   functionName: string,
   synchronousCall: boolean,
   payload?: string
 ): Promise<string | undefined> {
-  const lambdaClient = getLambdaClient();
-
-  if (synchronousCall) {
-    const output = await lambdaClient.send(
-      new InvokeCommand({
-        FunctionName: functionName,
-        InvocationType: InvocationType.RequestResponse,
-        Payload: payload ? new TextEncoder().encode(payload) : undefined,
-      })
-    );
-    return new TextDecoder().decode(output.Payload);
-  } else {
-    await lambdaClient.send(
-      new InvokeCommand({
-        FunctionName: functionName,
-        InvocationType: InvocationType.Event,
-        Payload: payload ? new TextEncoder().encode(payload) : undefined,
-      })
-    );
+  try {
+    if (synchronousCall) {
+      const output = await lambda
+        .invoke({
+          FunctionName: functionName,
+          Payload: payload || "{}",
+        })
+        .promise();
+      return new TextDecoder().decode(output.Payload as Buffer);
+    } else {
+      await lambda
+        .invokeAsync({
+          FunctionName: functionName,
+          InvokeArgs: payload || "{}",
+        })
+        .promise();
+    }
+  } catch (e) {
+    log.error("invokeLambda", e);
+    throw e;
   }
 }

@@ -23,26 +23,33 @@ import cloneDeep from "lodash/cloneDeep";
 import mergeWith from "lodash/mergeWith";
 import { PersonSearchFixture } from "./personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../src/personSearch/kayttajas";
-import { AwsClientStub, mockClient } from "aws-sdk-client-mock";
-import { getS3Client } from "../src/aws/clients";
 import { fileService } from "../src/files/fileService";
-import { GetObjectCommand, PutObjectCommand, CopyObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { NotFoundError } from "../src/error/NotFoundError";
 import { emailClient } from "../src/email/email";
+import AWSMock from "aws-sdk-mock";
+import AWS from "aws-sdk";
 
 const { expect, assert } = require("chai");
 
 describe("apiHandler", () => {
   let userFixture: UserFixture;
+  let awsStub: sinon.SinonStub;
 
   afterEach(() => {
     sinon.reset();
     sinon.restore();
     userFixture.logout();
+    AWSMock.restore();
   });
 
   beforeEach(() => {
     userFixture = new UserFixture(userService);
+    AWSMock.setSDKInstance(AWS);
+    awsStub = sinon.stub();
+    awsStub.resolves({});
+    AWSMock.mock("S3", "putObject", awsStub);
+    AWSMock.mock("S3", "copyObject", awsStub);
+    AWSMock.mock("S3", "getObject", awsStub);
   });
 
   describe("handleEvent", () => {
@@ -58,7 +65,6 @@ describe("apiHandler", () => {
     let updateAloitusKuulutusJulkaisuStub: sinon.SinonStub;
     let deleteAloitusKuulutusJulkaisuStub: sinon.SinonStub;
     let persistFileToProjektiStub: sinon.SinonStub;
-    let mockS3CLient: AwsClientStub<S3Client>;
     let sendEmailStub: sinon.SinonStub;
 
     beforeEach(() => {
@@ -71,7 +77,6 @@ describe("apiHandler", () => {
       deleteAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "deleteAloitusKuulutusJulkaisu");
       loadVelhoProjektiByOidStub = sinon.stub(velho, "loadProjekti");
       persistFileToProjektiStub = sinon.stub(fileService, "persistFileToProjekti");
-      mockS3CLient = mockClient(getS3Client());
       sendEmailStub = sinon.stub(emailClient, "sendEmail");
 
       fixture = new ProjektiFixture();
@@ -346,20 +351,17 @@ describe("apiHandler", () => {
         });
 
         // Accept aloituskuulutus
-        mockS3CLient.on(PutObjectCommand).resolves({});
-        mockS3CLient.on(CopyObjectCommand).resolves({});
-        mockS3CLient.on(GetObjectCommand).resolves({});
         await api.siirraTila({
           oid,
           tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
           toiminto: TilasiirtymaToiminto.HYVAKSY,
         });
 
-        const calls = mockS3CLient.calls();
+        const calls = awsStub.getCalls();
         expect(calls).to.have.length(10);
         expect(
           calls.map((call) => {
-            const input = call.args[0].input as any;
+            const input = call.args[0] as any;
             const { Body: _Body, ...otherArgs } = input;
             return { ...otherArgs };
           })

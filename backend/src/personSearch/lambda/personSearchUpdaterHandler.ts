@@ -2,7 +2,7 @@ import { log } from "../../logger";
 import { personSearchUpdater } from "./personSearchUpdater";
 import { s3Cache } from "../../cache/s3Cache";
 import { PERSON_SEARCH_CACHE_KEY, S3CACHE_TTL_MILLIS } from "../personSearchClient";
-import * as AWSXRay from "aws-xray-sdk";
+import * as AWSXRay from "aws-xray-sdk-core";
 import { setupLambdaMonitoring, setupLambdaMonitoringMetaData } from "../../aws/monitoring";
 
 /**

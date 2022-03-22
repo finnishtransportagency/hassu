@@ -94,19 +94,12 @@ class ProjektiSearchService {
       }
       queries.push({ term: { "muokkaajat.keyword": user.uid } });
     }
-    const results = await openSearchClient.query({
+    const resultsPromise = openSearchClient.query({
       query: ProjektiSearchService.buildQuery(queries, { term: { "projektiTyyppi.keyword": projektiTyyppi } }),
       size: pageSize,
       from: makeZeroBased(pageNumber) * pageSize,
       sort: ProjektiSearchService.adaptSort(params.jarjestysSarake, params.jarjestysKasvava),
     });
-    const searchResults = adaptSearchResultsToProjektiHakutulosDokumenttis(results);
-
-    const result: ProjektiHakutulos = {
-      __typename: "ProjektiHakutulos",
-      tulokset: searchResults,
-      hakutulosProjektiTyyppi: projektiTyyppi,
-    };
 
     const buckets = await openSearchClient.query({
       query: ProjektiSearchService.buildQuery(queries),
@@ -120,6 +113,14 @@ class ProjektiSearchService {
       },
       size: 0,
     });
+
+    const searchResults = adaptSearchResultsToProjektiHakutulosDokumenttis(await resultsPromise);
+
+    const result: ProjektiHakutulos = {
+      __typename: "ProjektiHakutulos",
+      tulokset: searchResults,
+      hakutulosProjektiTyyppi: projektiTyyppi,
+    };
 
     log.info(searchResults.length + " " + projektiTyyppi + " search results from OpenSearch");
     buckets.aggregations.projektiTyypit.buckets.forEach((bucket) => {

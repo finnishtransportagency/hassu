@@ -1,11 +1,10 @@
 import { config } from "../config";
-
-import { defaultProvider } from "@aws-sdk/credential-provider-node";
 import { SignatureV4 } from "@aws-sdk/signature-v4";
 import { NodeHttpHandler } from "@aws-sdk/node-http-handler";
 import { Sha256 } from "@aws-crypto/sha256-browser";
 import { HttpRequest as IHttpRequest } from "@aws-sdk/types";
 import { HttpRequest } from "@aws-sdk/protocol-http";
+import AWS from "aws-sdk";
 
 const region = process.env.AWS_REGION;
 const domain = config.searchDomain;
@@ -27,7 +26,7 @@ export interface SearchOpts {
 async function sendRequest(request: HttpRequest): Promise<any> {
   // Sign the request
   const signer = new SignatureV4({
-    credentials: defaultProvider(),
+    credentials: AWS.config.credentials,
     region,
     service: "es",
     sha256: Sha256,

@@ -1,20 +1,8 @@
-import {
-  CopyObjectCommand,
-  DeleteObjectCommand,
-  DeleteObjectCommandOutput,
-  GetObjectCommand,
-  GetObjectCommandOutput,
-  PutObjectCommand,
-  PutObjectCommandOutput,
-  S3Client,
-} from "@aws-sdk/client-s3";
-import { getS3Client } from "../aws/clients";
 import { config } from "../config";
 import { log } from "../logger";
-import { Readable } from "stream";
-import { streamToString } from "../util/streamUtil";
-
 import NodeCache from "node-cache";
+import { GetObjectOutput } from "aws-sdk/clients/s3";
+import { getS3 } from "../aws/client";
 
 export class S3Cache {
   cache: NodeCache;
@@ -64,17 +52,16 @@ export class S3Cache {
     key: string,
     ttlMillis: number
   ): Promise<{ expired?: boolean; missing?: boolean; expiresTime?: number; data?: any }> {
-    const s3Client: S3Client = getS3Client();
     try {
-      const output: GetObjectCommandOutput = await s3Client.send(
-        new GetObjectCommand({
+      const output: GetObjectOutput = await getS3()
+        .getObject({
           Bucket: config.internalBucketName,
           Key: "cache/" + key,
         })
-      );
-      const fileStream = output.Body;
-      if (fileStream instanceof Readable) {
-        const s3json = await streamToString(fileStream);
+        .promise();
+      const body = output.Body;
+      if (body instanceof Buffer) {
+        const s3json = (body as Buffer).toString("utf-8");
 
         const lastModified = output.LastModified;
         const expiresTime = S3Cache.getExpiresTime(lastModified, ttlMillis);
@@ -99,11 +86,10 @@ export class S3Cache {
   }
 
   async touch(key: string): Promise<void> {
-    const s3Client: S3Client = getS3Client();
     try {
       const objectKey = "cache/" + key;
-      const output: GetObjectCommandOutput = await s3Client.send(
-        new CopyObjectCommand({
+      await getS3()
+        .copyObject({
           Bucket: config.internalBucketName,
           Key: objectKey,
           CopySource: config.internalBucketName + "/" + objectKey,
@@ -111,8 +97,8 @@ export class S3Cache {
             modified: `${new Date().getTime()}`, // Copy is illegal if nothing changes, so this is to make a change
           },
         })
-      );
-      log.info("Touch " + objectKey, output.$metadata);
+        .promise();
+      log.info("Touch " + objectKey);
     } catch (e: unknown) {
       log.error(e);
     }
@@ -129,43 +115,30 @@ export class S3Cache {
     if (!data) {
       return;
     }
-    const s3Client: S3Client = getS3Client();
-    let output: PutObjectCommandOutput;
     try {
-      output = await s3Client.send(
-        new PutObjectCommand({
+      await getS3()
+        .putObject({
           Bucket: config.internalBucketName,
           Key: "cache/" + key,
           Body: Buffer.from(JSON.stringify(data)),
         })
-      );
+        .promise();
     } catch (e) {
       log.error(e);
-      throw new Error("Problem with internal S3 bucket");
-    }
-    if (output.$metadata.httpStatusCode !== 200) {
-      log.error(output);
       throw new Error("Problem with internal S3 bucket");
     }
   }
 
   async clear(key: string): Promise<void> {
-    const s3Client: S3Client = getS3Client();
-    let output: DeleteObjectCommandOutput;
     try {
-      output = await s3Client.send(
-        new DeleteObjectCommand({
+      await getS3()
+        .deleteObject({
           Bucket: config.internalBucketName,
           Key: "cache/" + key,
         })
-      );
+        .promise();
     } catch (e) {
       log.error(e);
-      throw new Error("Problem with internal S3 bucket");
-    }
-    const httpStatusCode = output.$metadata.httpStatusCode;
-    if (httpStatusCode !== 200 && httpStatusCode !== 204) {
-      log.error(output);
       throw new Error("Problem with internal S3 bucket");
     }
   }

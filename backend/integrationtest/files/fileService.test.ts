@@ -27,7 +27,7 @@ describe("UploadService", () => {
     // Upload file
     log.info("Uploading to:", uploadProperties);
     const putResponse = await axios.put(uploadProperties.uploadURL, fs.readFileSync(__dirname + "/logo.png"), {
-      headers: { "content-type": "image/png" },
+      headers: { "content-type": "application/octet-stream" }, // Always application/octet-stream. It's the content-type specified when pre-signing the URL
     });
     expect(putResponse.status).to.be.eq(200);
 
@@ -46,6 +46,6 @@ describe("UploadService", () => {
     log.info(url);
     const response = await axios.get(url);
     expect(response.status).to.be.eq(200);
-    expect(response.headers["content-type"]).to.be.eq("image/png");
+    expect(response.headers["content-type"]).to.be.eq("application/octet-stream");
   });
 });
