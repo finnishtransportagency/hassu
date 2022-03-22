@@ -177,6 +177,15 @@ const UserFields = ({
     formState: { errors },
   } = useFormContext<RequiredInputValues>();
 
+  async function listUserOptions(hakusana: string): Promise<Kayttaja[]> {
+    if (getKayttajaNimi(kayttaja) !== hakusana && !disableFields && hakusana.length > 0) {
+      return await api.listUsers({ hakusana });
+    } else if (kayttaja) {
+      return Promise.resolve([kayttaja]);
+    }
+    return Promise.resolve([]);
+  }
+
   return (
     <HassuStack direction={["column", "column", "row"]}>
       <HassuGrid sx={{ width: "100%" }} cols={[1, 1, 3]}>
@@ -186,9 +195,7 @@ const UserFields = ({
           <Autocomplete
             label="Nimi *"
             loading={isLoadingKayttajat}
-            options={async (hakusana) =>
-              !disableFields && hakusana.length > 0 ? await api.listUsers({ hakusana }) : []
-            }
+            options={async (hakusana) => await listUserOptions(hakusana)}
             initialOption={kayttaja}
             getOptionLabel={getKayttajaNimi}
             error={errors.kayttoOikeudet?.[index]?.kayttajatunnus}

@@ -103,7 +103,10 @@ const Autocomplete = <T extends unknown>({
   const setOptionValue = useCallback(
     (optionValue: T | null | undefined) => {
       if (optionValue) {
-        setTextValue(getOptionLabel(optionValue));
+        let newValue = getOptionLabel(optionValue);
+        if (textValue !== newValue) {
+          setTextValue(newValue);
+        }
       }
       setSelectedOption(optionValue);
       hide();
