@@ -13,7 +13,7 @@ function WindowCloseButton(
         onClick?.(e);
         e.preventDefault();
       }}
-      sx={{paddingLeft: "1.5rem"}}
+      sx={{marginLeft: "1.5rem"}}
       {...otherProps}
     >
       <CloseIcon />
