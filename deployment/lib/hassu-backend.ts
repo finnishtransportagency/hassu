@@ -198,7 +198,7 @@ export class HassuBackendStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_14_X,
       entry: `${__dirname}/../../backend/src/apiHandler.ts`,
       handler: "handleEvent",
-      memorySize: 512,
+      memorySize: 1769,
       timeout: Duration.seconds(29),
       bundling: {
         define,
