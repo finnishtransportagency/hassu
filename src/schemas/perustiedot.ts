@@ -22,7 +22,7 @@ export const perustiedotValidationSchema = Yup.object().shape({
   liittyvatSuunnitelmat: Yup.array()
     .of(
       Yup.object().shape({
-        asiatunnus: Yup.string().required("Asiatunnus puuttuu"),
+        asiatunnus: Yup.string().max(30).required("Asiatunnus puuttuu"),
         nimi: Yup.string().required("Suunnitelman nimi puuttuu"),
       })
     )

@@ -96,6 +96,8 @@ const LiittyvatSuunnitelmat = ({ isLiittyviaSuunnitelmia, projekti }: LiittyvatS
               {...register(`liittyvatSuunnitelmat.${index}.asiatunnus`)}
               disabled={!isLiittyviaSuunnitelmia}
               error={errors?.liittyvatSuunnitelmat?.[index]?.asiatunnus}
+              maxLength={30}
+              placeholder="esim. Väylä/4825/06.02.03/2020"
             />
             <HassuGridItem colSpan={{ lg: 2 }}>
               <HassuStack direction={{ xs: "column", lg: "row" }} alignItems={{ lg: "flex-end" }}>
