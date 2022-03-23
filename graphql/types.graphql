@@ -1,3 +1,5 @@
+# Huom: ala kayta skandinaavisia merkkeja tassa tiedostossa, koska muutoin CDK-asennus luulee joka kerta skeeman muuttuneen
+
 enum ProjektiRooli {
   PROJEKTIPAALLIKKO
   OMISTAJA
@@ -66,6 +68,7 @@ type Projekti implements IProjekti {
   aloitusKuulutus: AloitusKuulutus
   aloitusKuulutusJulkaisut: [AloitusKuulutusJulkaisu!]
   suunnitteluSopimus: SuunnitteluSopimus
+  suunnitteluVaihe: SuunnitteluVaihe
   velho: Velho!
   kayttoOikeudet: [ProjektiKayttaja!]
   """
@@ -75,6 +78,107 @@ type Projekti implements IProjekti {
   euRahoitus: Boolean
   liittyvatSuunnitelmat: [Suunnitelma!]
   kielitiedot: Kielitiedot
+}
+
+type SuunnitteluVaihe {
+  hankkeenKuvaus: HankkeenKuvaukset
+  arvioSeuraavanVaiheenAlkamisesta: String
+
+  vuorovaikutukset: [Vuorovaikutus!]
+}
+
+type Vuorovaikutus {
+  """
+  Vuorovaikutuksen jarjestysnumero
+  """
+  vuorovaikutusNumero: Int
+  vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuus!]
+  """
+  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
+  """
+  vuorovaikutusJulkaisuPaiva: String
+  """
+  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
+  """
+  kysymyksetJaPalautteetViimeistaan: String
+  """
+  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
+  """
+  aineistoPoistetaanNakyvista: String
+  videot: [Linkki!]
+  esitettavatYhteystiedot: [Yhteystieto]
+  """
+  Lista kayttajatunnuksia
+  """
+  vuorovaikutusYhteysHenkilot: [String!]
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+
+  aineistot: [Aineisto!]
+  palautteet: [Palaute!]
+}
+
+type Linkki {
+  nimi: String!
+  url: String!
+}
+
+type Aineisto {
+  kategoria: String!
+  """
+  Suhteellinen polku tiedostoon yllapidon S3-bucketissa projektin alla
+  """
+  tiedosto: String!
+  """
+  Aikaleima, milloin tiedosto on tuotu jarjestelmaan yyyy-MM-ddTHH:mm
+  """
+  tuotu: String!
+}
+
+type Palaute {
+  etunimi: String
+  sukunimi: String
+  sahkoposti: String
+  puhelinnumero: String
+  kysymysTaiPalaute: String
+  yhteydenottotapaEmail: Boolean
+  yhteydenottotapaPuhelin: Boolean
+  liite: String
+  otettuKasittelyyn: Boolean
+}
+
+enum VuorovaikutusTilaisuusTyyppi {
+  VERKOSSA
+  PAIKALLA
+  SOITTOAIKA
+}
+
+enum KaytettavaPalvelu {
+  TEAMS
+}
+
+type VuorovaikutusTilaisuus {
+  tyyppi: VuorovaikutusTilaisuusTyyppi!
+  nimi: String!
+  """
+  yyyy-MM-dd
+  """
+  paivamaara: String!
+  """
+  HH:mm
+  """
+  alkamisAika: String!
+  """
+  HH:mm
+  """
+  paattymisAika: String!
+  kaytettavaPalvelu: KaytettavaPalvelu
+  linkki: String
+
+  paikka: String
+  osoite: String
+  postinumero: String
+  postitoimipaikka: String
+  Saapumisohjeet: String
 }
 
 type Velho {
