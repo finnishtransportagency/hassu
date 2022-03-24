@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import { kayttoOikeudetSchema } from "./kayttoOikeudet";
 import { puhelinNumeroSchema } from "./puhelinNumero";
 import { isDevEnvironment } from "@services/config";
+import filter from "lodash/filter";
 
 const maxAloituskuulutusLength = 2000;
 
@@ -112,6 +113,16 @@ export const aloituskuulutusSchema = Yup.object().shape({
                 sahkoposti: Yup.string()
                   .email("Virheellinen sähköpostiosoite")
                   .required("Sähköpostiosoite on pakollinen"),
+              })
+              .test("unique", "Vastaanottaja on jo lisätty", (value, testContext) => {
+                const duplikaatit = filter(testContext.parent, value);
+                if (duplikaatit.length == 1) {
+                  return true;
+                }
+                return testContext.createError({
+                  path: `${testContext.path}.nimi`,
+                  message: "Viranomainen on jo valittu",
+                });
               })
               .required()
           )
