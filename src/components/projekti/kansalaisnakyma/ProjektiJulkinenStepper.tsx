@@ -11,22 +11,23 @@ import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
 import StartIcon from "@mui/icons-material/Start";
 import StepConnector, { stepConnectorClasses } from "@mui/material/StepConnector";
 import { StepIconProps } from "@mui/material/StepIcon";
-
-export default function ProjektiJulkinenStepper(): ReactElement {
-  const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
+import HassuLink from "@components/HassuLink";
+interface Props {
+  activeStep: number;
+  selectedStep: number;
+}
+export default function ProjektiJulkinenStepper({ activeStep, selectedStep }: Props): ReactElement {
+  const HassuConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {
       top: 22,
     },
     [`&.${stepConnectorClasses.active}`]: {
       [`& .${stepConnectorClasses.line}`]: {
-        // backgroundImage: "linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)",
-        backgroundImage: "linear-gradient( 90deg, #009AE0 0%, rgb(0,100,175) 100%)",
+        backgroundImage: "linear-gradient( 117deg, #009AE0, #0064AF)",
       },
     },
     [`&.${stepConnectorClasses.completed}`]: {
       [`& .${stepConnectorClasses.line}`]: {
-        // backgroundImage: "linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)",
-        // backgroundImage: "linear-gradient( 90deg, rgb(0,100,175) 0%, rgb(73,194,241) 100%)",
         backgroundImage: "linear-gradient(117deg, #009AE0, #009AE0)",
       },
     },
@@ -38,7 +39,7 @@ export default function ProjektiJulkinenStepper(): ReactElement {
     },
   }));
 
-  const ColorlibStepIconRoot = styled("div")<{
+  const HassuStepIconRoot = styled("div")<{
     ownerState: { completed?: boolean; active?: boolean };
   }>(({ theme, ownerState }) => ({
     backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[700] : "#ccc",
@@ -51,34 +52,42 @@ export default function ProjektiJulkinenStepper(): ReactElement {
     justifyContent: "center",
     alignItems: "center",
     ...(ownerState.active && {
-      //   backgroundImage: "linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)",
-    //   backgroundImage: "linear-gradient( 90deg, rgb(0,100,175) 0%, rgb(73,194,241) 100%)",
-    backgroundImage: "linear-gradient(117deg, #0064AF, #0064AF)",
-      boxShadow: "0 4px 10px 0 rgba(0,0,0,.25)",
+      backgroundImage: "linear-gradient(117deg, #0064AF, #0064AF)",
+      boxShadow: "0 4px 10px 0 rgba(0,0,0,.5)",
     }),
     ...(ownerState.completed && {
-      //   backgroundImage: "linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)",
-    //   backgroundImage: "linear-gradient( 90deg, rgb(0,100,175) 0%, rgb(73,194,241) 100%)",
-    backgroundImage: "linear-gradient(117deg, #009AE0, #009AE0)",
+      backgroundImage: "linear-gradient(117deg, #009AE0, #009AE0)",
     }),
   }));
 
-  function ColorlibStepIcon(props: StepIconProps) {
+  function HassuStepIcon(props: StepIconProps) {
     const { active, completed, className } = props;
 
     const icons: { [index: string]: React.ReactElement } = {
-      1: <StartIcon />,
-      2: <ArchitectureIcon />,
-      3: <VideoLabelIcon />,
+      1: (
+        <HassuLink href="/suunnitelma/1.2.246.578.5.1.2200243019.409429189/aloituskuulutus">
+          <StartIcon />
+        </HassuLink>
+      ),
+      2: (
+        <HassuLink href="/suunnitelma/1.2.246.578.5.1.2200243019.409429189/suunnittelu">
+          <ArchitectureIcon />
+        </HassuLink>
+      ),
+      3: (
+        <HassuLink href="/suunnitelma/1.2.246.578.5.1.2200243019.409429189/nahtavillaolo">
+          <VideoLabelIcon />
+        </HassuLink>
+      ),
       4: <HourglassEmptyIcon />,
       5: <AccountBalance />,
       6: <Gavel />,
     };
 
     return (
-      <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>
+      <HassuStepIconRoot ownerState={{ completed, active }} className={className}>
         {icons[String(props.icon)]}
-      </ColorlibStepIconRoot>
+      </HassuStepIconRoot>
     );
   }
 
@@ -91,14 +100,20 @@ export default function ProjektiJulkinenStepper(): ReactElement {
     "Lainvoimaisuus",
   ];
 
+  // TODO: activeStepin rinnalle selectedStep, jolloin activeStep edustaa projektin sen hetkista tilaa
+  // ja selectedStep kayttajan stepperista navigoimaa tilaa
   return (
     <>
       <div>
-        {/* <img src="/etenemispalkki.png" alt="etenemispalkki" /> */}
-        <Stepper alternativeLabel activeStep={2} connector={<ColorlibConnector />}>
-          {steps.map((label) => (
+        <Stepper alternativeLabel activeStep={activeStep} connector={<HassuConnector />}>
+          {steps.map((label, index) => (
             <Step key={label}>
-              <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
+              <StepLabel
+                StepIconComponent={HassuStepIcon}
+                sx={selectedStep == index ? { textDecoration: "underline" } : {}}
+              >
+                {label}
+              </StepLabel>
             </Step>
           ))}
         </Stepper>

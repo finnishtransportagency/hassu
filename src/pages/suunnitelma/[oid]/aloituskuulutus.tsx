@@ -91,7 +91,7 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
   let kuulutusFileExt = aloituskuulutusPDFPath?.replace(/.*\./, "");
 
   return (
-    <ProjektiJulkinenPageLayout title="Kuulutus suunnittelun aloittamisesta">
+    <ProjektiJulkinenPageLayout selectedStep={0} title="Kuulutus suunnittelun aloittamisesta">
       <>
         <Section noDivider>
           <KeyValueTable rows={keyValueData}></KeyValueTable>
