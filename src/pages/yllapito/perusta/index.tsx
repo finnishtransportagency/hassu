@@ -6,13 +6,13 @@ import { SchemaOf } from "yup";
 import { api, VelhoHakuTulos } from "@services/api";
 import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/router";
-import ProjektiTaulu from "@components/projekti/ProjektiTaulu";
 import TextInput from "@components/form/TextInput";
 import Button from "@components/button/Button";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import useTranslation from "next-translate/useTranslation";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
+import Table from "@components/Table";
 
 interface SearchInput {
   name: string;
@@ -142,10 +142,20 @@ export default function Perusta() {
             </div>
           </Notification>
           {(Array.isArray(hakuTulos) && hakuTulos.length > 0) || isLoading ? (
-            <ProjektiTaulu
-              projektit={hakuTulos || []}
+            <Table
+              cols={[
+                { header: "Asiatunnus", data: (projekti) => projekti.asianumero, fraction: 3 },
+                { header: "Nimi", data: (projekti) => projekti.nimi, fraction: 6 },
+                {
+                  header: "Tyyppi",
+                  data: (projekti) => projekti.tyyppi && t(`projekti:projekti-tyyppi.${projekti.tyyppi}`),
+                  fraction: 2,
+                },
+                { header: "Projektipäällikkö", data: (projekti) => projekti.projektiPaallikko, fraction: 3 },
+              ]}
+              rows={hakuTulos || []}
               isLoading={isLoading}
-              projektiLinkki={(pid) => `/yllapito/perusta/${pid}`}
+              rowLink={(projekti) => `/yllapito/perusta/${projekti?.oid}`}
             />
           ) : (
             !isLoading && (

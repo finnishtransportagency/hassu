@@ -7,10 +7,12 @@ import ButtonLink from "@components/button/ButtonLink";
 import useTranslation from "next-translate/useTranslation";
 import useCurrentUser from "src/hooks/useCurrentUser";
 import { Container } from "@mui/material";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 interface NavigationRoute {
   label: string;
   href: string;
+  icon?: IconProp;
   children?: Omit<NavigationRoute, "children">[];
 }
 
@@ -31,14 +33,14 @@ export function VirkamiesHeader({ scrolledPastOffset }: HeaderProps): ReactEleme
 
   const navigationRoutes: NavigationRoute[] = [
     {
-      label: t("commonFI:sivustonimi"),
+      label: "Etusivu",
       href: "/yllapito",
-      children: [{ label: "Projektin perustaminen", href: "/yllapito/perusta" }],
+      icon: "home",
     },
+    { label: "Projektin perustaminen", href: "/yllapito/perusta" },
     {
       label: "Ohjeet",
       href: "/yllapito/ohjeet",
-      children: [{ label: "Ohjeet", href: "/yllapito/ohjeet" }],
     },
   ];
 
@@ -67,16 +69,9 @@ export function VirkamiesHeader({ scrolledPastOffset }: HeaderProps): ReactEleme
         </div>
       </div>
       <nav className="flex py-6 vayla-navigation uppercase">
-        <ul className="flex float-left flex-wrap space-x-6">
-          <li>
-            <Link href="/yllapito">
-              <a className="uppercase">
-                <FontAwesomeIcon icon="home" size="lg" className="text-primary-dark" />
-              </a>
-            </Link>
-          </li>
-          {navigationRoutes.map(({ href, label }, index) => (
-            <HeaderNavigationItem key={index} href={href} label={label} />
+        <ul className="flex float-left flex-wrap space-x-20">
+          {navigationRoutes.map((route, index) => (
+            <HeaderNavigationItem key={index} {...route} />
           ))}
         </ul>
       </nav>
@@ -85,11 +80,14 @@ export function VirkamiesHeader({ scrolledPastOffset }: HeaderProps): ReactEleme
   );
 }
 
-function HeaderNavigationItem({ href, label }: NavigationRoute): ReactElement {
+function HeaderNavigationItem({ href, label, icon }: NavigationRoute): ReactElement {
   return (
     <li>
       <Link href={href}>
-        <a>{label}</a>
+        <a>
+          {icon && <FontAwesomeIcon icon={icon} size="lg" className="text-primary-dark mr-10" />}
+          {label}
+        </a>
       </Link>
     </li>
   );

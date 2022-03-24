@@ -8,5 +8,14 @@
     "tie": "Väg",
     "rata": "Spår",
     "vesi": "Vatten"
+  },
+  "projekti-status": {
+    "EI_JULKAISTU": "Ei julkaistu",
+    "ALOITUSKUULUTUS": "Aloituskuulutus",
+    "SUUNNITTELU": "Suunnittelu",
+    "NAHTAVILLAOLO": "Nähtävilläolo",
+    "HYVAKSYMISPAATOS": "Hyväksymispäätös",
+    "LAINVOIMA": "Lainvoima",
+    "ARKISTOITU": "Arkistoitu"
   }
 }

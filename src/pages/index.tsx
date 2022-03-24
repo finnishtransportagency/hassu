@@ -1,5 +1,5 @@
 import { ProjektiTyyppi } from "@services/api";
-import { ProjektiListaus } from "../components/projektiListaus";
+import ProjektiListaus from "../components/ProjektiListaus";
 
 const App = () => {
   // const [refreshListCounter, setRefreshListCounter] = useState(0)
