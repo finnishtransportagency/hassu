@@ -131,59 +131,114 @@ Array [
         </ul>
       </div>
     </div>
-    <table
-      className="project-table"
+    <div
+      style={
+        Object {
+          "overflowX": "auto",
+          "width": "100%",
+        }
+      }
     >
-      <thead>
-        <tr>
-          <th>
-            Tunnus
-          </th>
-          <th>
-            Nimi
-          </th>
-          <th>
-            Tyyppi
-          </th>
-          <th>
-            Projektipäällikkö
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          className="project-row"
-          href="/yllapito/perusta/1234"
-          onClick={[Function]}
-          onMouseEnter={[Function]}
+      <div
+        className="css-1axw1jn"
+      >
+        <div
+          className="css-16ek6gi"
         >
-          <td
-            className="sm:w-2/12"
-            data-label="Tunnus"
+          <div
+            className="css-vz9q3h"
+          />
+          <div
+            className="css-tkrprx"
+          />
+          <div
+            className="css-1y3afzz"
+          />
+          <div
+            className="css-vz9q3h"
+          />
+        </div>
+        <div
+          className="css-149vcos"
+        >
+          <div
+            className="css-bdnlv6"
           >
-            1234
-          </td>
-          <td
-            className="sm:w-6/12"
-            data-label="Nimi"
+            <div
+              className="css-1b06wj0"
+            >
+              Asiatunnus
+            </div>
+            <div
+              className="css-1b06wj0"
+            >
+              Nimi
+            </div>
+            <div
+              className="css-1b06wj0"
+            >
+              Tyyppi
+            </div>
+            <div
+              className="css-1b06wj0"
+            >
+              Projektipäällikkö
+            </div>
+          </div>
+        </div>
+        <div
+          className="css-rbvvpo"
+        >
+          <a
+            className="css-1q32lnk"
+            href="/yllapito/perusta/1234"
+            onClick={[Function]}
+            onMouseEnter={[Function]}
           >
-            Tampereen tie Hanke
-          </td>
-          <td
-            className="sm:w-2/12"
-            data-label="Tyyppi"
-          >
-            Tiesuunnitelma
-          </td>
-          <td
-            className="sm:w-2/12"
-            data-label="Projektipäällikkö"
-          >
-            -
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            <div
+              className="css-1w8t9p7"
+            >
+              Asiatunnus
+            </div>
+            <div
+              className="css-tgaxma"
+            >
+              -
+            </div>
+            <div
+              className="css-1w8t9p7"
+            >
+              Nimi
+            </div>
+            <div
+              className="css-tgaxma"
+            >
+              Tampereen tie Hanke
+            </div>
+            <div
+              className="css-1w8t9p7"
+            >
+              Tyyppi
+            </div>
+            <div
+              className="css-tgaxma"
+            >
+              Tiesuunnitelma
+            </div>
+            <div
+              className="css-1w8t9p7"
+            >
+              Projektipäällikkö
+            </div>
+            <div
+              className="css-tgaxma"
+            >
+              -
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
   </section>,
 ]
 `;
