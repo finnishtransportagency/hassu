@@ -4,14 +4,12 @@
 
 @layer base {
   body {
+    @apply vayla-body-text;
     word-break: break-word;
     overflow-wrap: anywhere;
   }
   body hr {
     @apply border-gray;
-  }
-  body {
-    @apply vayla-body-text;
   }
   body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select) {
     @apply border w-full py-2.5 px-3 outline-none vayla-body-text;

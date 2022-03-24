@@ -1,6 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import styles from "@styles/ExtLink.module.css";
 import classNames from "classnames";
 
 interface Props {
@@ -21,7 +20,7 @@ const ExtLink = (
 ) => {
   return (
     <div>
-      <a ref={ref} href={href} target={target} {...props} className={classNames(styles["ext-link"], className)}>
+      <a ref={ref} href={href} target={target} {...props} className={classNames("text-primary-dark", className)}>
         {children}
         &nbsp;
         {!hideIcon && <FontAwesomeIcon icon="external-link-alt" size="lg"></FontAwesomeIcon>}

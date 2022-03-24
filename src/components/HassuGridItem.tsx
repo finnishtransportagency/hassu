@@ -1,11 +1,11 @@
 import { styled, experimental_sx as sx } from "@mui/material";
 import { ReactNode } from "react";
 import isPropValid from "@emotion/is-prop-valid";
-import { Breakpoints } from "./HassuGrid";
+import { ResponsiveValues } from "./HassuGrid";
 
 interface Props {
   children?: ReactNode;
-  colSpan?: Breakpoints<number>;
+  colSpan?: ResponsiveValues<number>;
   colSpanFull?: boolean;
   colStart?: number;
   colEnd?: number;

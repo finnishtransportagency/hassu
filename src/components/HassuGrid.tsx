@@ -4,14 +4,15 @@ import isPropValid from "@emotion/is-prop-valid";
 
 interface Props {
   children?: ReactNode;
-  cols?: Breakpoints<number>;
+  cols?: ResponsiveValues<number>;
 }
 
-export type Breakpoints<T> =
+export type ResponsiveValues<T extends string | number> =
   | {
       [key in Breakpoint]?: T | undefined | null;
     }
-  | (T | undefined | null)[];
+  | (T | undefined | null)[]
+  | T;
 
 const resolveGridTemplateColumns = (col: Props["cols"]) => {
   if (typeof col === "number") {
