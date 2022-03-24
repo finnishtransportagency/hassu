@@ -1,6 +1,0 @@
-.breadcrumbs {
-}
-
-.breadcrumbs li + li::before {
-  /* @apply content-['>'] mr-1; */
-}
