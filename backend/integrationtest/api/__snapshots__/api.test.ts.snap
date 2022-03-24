@@ -2,6 +2,143 @@
 
 exports[`Api should search, load and save a project 1`] = `
 Object {
+  "__typename": "SuunnitteluVaihe",
+  "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
+  "hankkeenKuvaus": Object {
+    "SAAME": "Saameksi suunnitteluvaihe",
+    "SUOMI": "Lorem Ipsum suunnitteluvaihe",
+    "__typename": "HankkeenKuvaukset",
+  },
+  "vuorovaikutukset": Array [],
+}
+`;
+
+exports[`Api should search, load and save a project 2`] = `
+Object {
+  "__typename": "SuunnitteluVaihe",
+  "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
+  "hankkeenKuvaus": Object {
+    "SAAME": "Saameksi suunnitteluvaihe",
+    "SUOMI": "Lorem Ipsum suunnitteluvaihe",
+    "__typename": "HankkeenKuvaukset",
+  },
+  "vuorovaikutukset": Array [
+    Object {
+      "__typename": "Vuorovaikutus",
+      "aineistoPoistetaanNakyvista": "2022-03-23T23:45",
+      "esitettavatYhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+      "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+      "videot": Array [
+        Object {
+          "__typename": "Linkki",
+          "nimi": "Esittely 1",
+          "url": "https://video",
+        },
+      ],
+      "vuorovaikutusJulkaisuPaiva": "2022-03-23",
+      "vuorovaikutusNumero": 1,
+      "vuorovaikutusTilaisuudet": Array [
+        Object {
+          "__typename": "VuorovaikutusTilaisuus",
+          "alkamisAika": "15:00",
+          "kaytettavaPalvelu": "TEAMS",
+          "linkki": "https://linkki_tilaisuuteen",
+          "nimi": "Lorem ipsum 1",
+          "paattymisAika": "16:00",
+          "paivamaara": "2022-03-04",
+          "tyyppi": "VERKOSSA",
+        },
+        Object {
+          "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
+          "__typename": "VuorovaikutusTilaisuus",
+          "alkamisAika": "10:00",
+          "nimi": "Lorem ipsum two 1",
+          "osoite": "Katu 123",
+          "paattymisAika": "11:00",
+          "paikka": "Kunnantalo",
+          "paivamaara": "2022-04-05",
+          "postinumero": "00100",
+          "postitoimipaikka": "Helsinki",
+          "tyyppi": "PAIKALLA",
+        },
+      ],
+      "vuorovaikutusYhteysHenkilot": Array [
+        "A000112",
+      ],
+    },
+    Object {
+      "__typename": "Vuorovaikutus",
+      "aineistoPoistetaanNakyvista": "2022-03-23T23:45",
+      "esitettavatYhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+      "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+      "videot": Array [
+        Object {
+          "__typename": "Linkki",
+          "nimi": "Esittely 2",
+          "url": "https://video",
+        },
+      ],
+      "vuorovaikutusJulkaisuPaiva": "2022-03-23",
+      "vuorovaikutusNumero": 2,
+      "vuorovaikutusTilaisuudet": Array [
+        Object {
+          "__typename": "VuorovaikutusTilaisuus",
+          "alkamisAika": "15:00",
+          "kaytettavaPalvelu": "TEAMS",
+          "linkki": "https://linkki_tilaisuuteen",
+          "nimi": "Lorem ipsum 2",
+          "paattymisAika": "16:00",
+          "paivamaara": "2022-03-04",
+          "tyyppi": "VERKOSSA",
+        },
+        Object {
+          "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
+          "__typename": "VuorovaikutusTilaisuus",
+          "alkamisAika": "10:00",
+          "nimi": "Lorem ipsum two 2",
+          "osoite": "Katu 123",
+          "paattymisAika": "11:00",
+          "paikka": "Kunnantalo",
+          "paivamaara": "2022-04-05",
+          "postinumero": "00100",
+          "postitoimipaikka": "Helsinki",
+          "tyyppi": "PAIKALLA",
+        },
+      ],
+      "vuorovaikutusYhteysHenkilot": Array [
+        "A000112",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`Api should search, load and save a project 3`] = `
+"
++         \\"FOO123\\",
+"
+`;
+
+exports[`Api should search, load and save a project 4`] = `
+Object {
   "__typename": "ProjektiJulkinen",
   "aloitusKuulutusJulkaisut": Array [
     Object {

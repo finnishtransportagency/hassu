@@ -23,6 +23,8 @@ import { fail } from "assert";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { apiTestFixture } from "./apiTestFixture";
+import diffDefault from "jest-diff";
+import os from "os";
 
 const { expect } = require("chai");
 const sandbox = sinon.createSandbox();
@@ -114,8 +116,8 @@ describe("Api", () => {
       muistiinpano: null,
     });
 
-    const updatedProjekti2 = await loadProjektiFromDatabase(oid);
-    expect(updatedProjekti2.muistiinpano).to.be.undefined;
+    const projekti = await loadProjektiFromDatabase(oid);
+    expect(projekti.muistiinpano).to.be.undefined;
   }
 
   async function testAloituskuulutusApproval(oid: string, projektiPaallikko: ProjektiKayttaja) {
@@ -126,6 +128,50 @@ describe("Api", () => {
       toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
     });
     await api.siirraTila({ oid, tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS, toiminto: TilasiirtymaToiminto.HYVAKSY });
+  }
+
+  async function testSuunnitteluvaihePerustiedot(oid: string) {
+    await api.tallennaProjekti({
+      oid,
+      suunnitteluVaihe: {
+        hankkeenKuvaus: apiTestFixture.hankkeenKuvausSuunnittelu,
+        arvioSeuraavanVaiheenAlkamisesta: "huomenna",
+      },
+    });
+    const projekti = await loadProjektiFromDatabase(oid);
+    expect(projekti.suunnitteluVaihe).toMatchSnapshot();
+  }
+
+  async function testSuunnitteluvaiheVuorovaikutus(oid: string, projektiPaallikko: ProjektiKayttaja) {
+    const suunnitteluVaihe1 = await doTestSuunnitteluvaiheVuorovaikutus(oid, 1, [projektiPaallikko.kayttajatunnus]);
+    expect(suunnitteluVaihe1.vuorovaikutukset).to.have.length(1);
+    const suunnitteluVaihe2 = await doTestSuunnitteluvaiheVuorovaikutus(oid, 2, [projektiPaallikko.kayttajatunnus]);
+    expect(suunnitteluVaihe2).toMatchSnapshot();
+
+    // Verify that it's possible to update one vuorovaikutus at the time
+    const suunnitteluVaihe3 = await doTestSuunnitteluvaiheVuorovaikutus(oid, 2, [
+      projektiPaallikko.kayttajatunnus,
+      "FOO123",
+    ]);
+    const difference = diffDefault(suunnitteluVaihe2, suunnitteluVaihe3, {
+      omitAnnotationLines: true,
+      commonColor: () => null,
+      aColor: (a) => a,
+      bColor: (b) => b,
+    }).replace(new RegExp("[" + os.EOL + "]+", "g"), os.EOL);
+    expect(difference).toMatchSnapshot();
+  }
+
+  async function doTestSuunnitteluvaiheVuorovaikutus(
+    oid: string,
+    vuorovaikutusNumero: number,
+    vuorovaikutusYhteysHenkilot: string[]
+  ) {
+    await api.tallennaProjekti({
+      oid,
+      suunnitteluVaihe: apiTestFixture.suunnitteluVaihe(vuorovaikutusNumero, vuorovaikutusYhteysHenkilot),
+    });
+    return (await loadProjektiFromDatabase(oid)).suunnitteluVaihe;
   }
 
   async function testPublicAccessToProjekti(oid: string) {
@@ -153,6 +199,8 @@ describe("Api", () => {
     await testAloitusKuulutusEsikatselu(oid);
     await testNullifyProjektiField(oid);
     await testAloituskuulutusApproval(oid, projektiPaallikko);
+    await testSuunnitteluvaihePerustiedot(oid);
+    await testSuunnitteluvaiheVuorovaikutus(oid, projektiPaallikko);
     await testPublicAccessToProjekti(oid);
     await archiveProjekti(oid);
   });

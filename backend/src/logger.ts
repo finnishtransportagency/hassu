@@ -3,8 +3,18 @@ import { getVaylaUser } from "./user";
 import { getCorrelationId, reportError } from "./aws/monitoring";
 
 const level = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : "info";
+const pretty = process.env.USE_PINO_PRETTY == "true";
 
 function getLogger(tag: string) {
+  let transport = undefined;
+  if (pretty) {
+    transport = {
+      target: "pino-pretty",
+      options: {
+        colorize: true,
+      },
+    };
+  }
   // noinspection JSUnusedGlobalSymbols
   return pino({
     level,
@@ -38,6 +48,7 @@ function getLogger(tag: string) {
         return method.apply(this, [inputArgs[0]]);
       },
     },
+    transport,
   });
 }
 

@@ -4,7 +4,10 @@ import { Person } from "./kayttajas";
 
 class PersonSearchUpdaterClient {
   async readUsersFromSearchUpdaterLambda(): Promise<Record<string, Person>> {
-    const json = await invokeLambda(config.personSearchUpdaterLambdaArn, true);
+    let json: string;
+    if (config.personSearchUpdaterLambdaArn) {
+      json = await invokeLambda(config.personSearchUpdaterLambdaArn, true);
+    }
     if (!json) {
       throw new Error("Could not read list of users");
     }
@@ -16,9 +19,11 @@ class PersonSearchUpdaterClient {
   }
 
   triggerUpdate() {
-    // Fire-and-forget type of call to just trigger the update
-    // noinspection JSIgnoredPromiseFromCall
-    invokeLambda(config.personSearchUpdaterLambdaArn, false);
+    if (config.personSearchUpdaterLambdaArn) {
+      // Fire-and-forget type of call to just trigger the update
+      // noinspection JSIgnoredPromiseFromCall
+      invokeLambda(config.personSearchUpdaterLambdaArn, false);
+    }
   }
 }
 

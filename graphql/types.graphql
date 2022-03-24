@@ -91,7 +91,7 @@ type Vuorovaikutus {
   """
   Vuorovaikutuksen jarjestysnumero
   """
-  vuorovaikutusNumero: Int
+  vuorovaikutusNumero: Int!
   vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuus!]
   """
   yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm

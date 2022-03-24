@@ -81,7 +81,7 @@ input VuorovaikutusInput {
   """
   Vuorovaikutuksen jarjestysnumero
   """
-  vuorovaikutusNumero: Int
+  vuorovaikutusNumero: Int!
   vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusInput!]
   """
   yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
