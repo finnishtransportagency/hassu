@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React, { ReactElement, ReactNode } from "react";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import ProjektiJulkinenSideNavigation from "./ProjektiJulkinenSideNavigation";
+import ProjektiJulkinenStepper from "./ProjektiJulkinenStepper";
 
 interface Props {
   children: ReactNode;
@@ -31,7 +32,7 @@ export default function ProjektiPageLayout({ children, title }: Props): ReactEle
         <div className="md:col-span-6 lg:col-span-8 xl:col-span-9">
           <Section noDivider>
           <h1>{velho.nimi}</h1>
-          <div><img src="/etenemispalkki.png" alt="etenemispalkki"/></div>
+          <ProjektiJulkinenStepper />
           </Section>
           <Section noDivider>
           <h2 className="vayla-title">{title}</h2>
