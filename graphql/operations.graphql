@@ -3,7 +3,11 @@ type Query {
   listaaKayttajat(hakuehto: ListaaKayttajatInput!): [Kayttaja!]
   listaaProjektit(hakuehto: ListaaProjektitInput!): ProjektiHakutulos
   lataaProjekti(oid: String!): IProjekti
+
   listaaVelhoProjektit(nimi: String!, requireExactMatch: Boolean): [VelhoHakuTulos!]
+  listaaVelhoProjektiAineistot(oid: String!): [VelhoAineistoKategoria!]
+  haeVelhoProjektiAineistoLinkki(oid: String!, dokumenttiOid: String!): String
+
   esikatseleAsiakirjaPDF(
     oid: String!
     asiakirjaTyyppi: AsiakirjaTyyppi!

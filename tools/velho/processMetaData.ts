@@ -9,6 +9,7 @@ const redactedMetaData = {
       "projekti/vaihe",
       "projekti/organisaatio",
       "projekti/arvioitu-toteutusajankohta",
+      "aineisto/dokumenttityyppi",
     ].reduce((catalog: any, key) => {
       catalog[key] = (metaDataJSON.info["x-velho-nimikkeistot"] as any)[key];
       return catalog;

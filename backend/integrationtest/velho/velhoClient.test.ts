@@ -22,7 +22,7 @@ describe("VelhoClient", () => {
     if (skipVelhoTests) {
       this.skip();
     }
-    const searchResult = await velho.searchProjects("valtatien");
+    const searchResult = await velho.searchProjects("HASSU AUTOMAATTITESTIPROJEKTI1");
     expect(searchResult).not.null;
     expect(searchResult).not.be.empty;
     const firstSearchResult = searchResult[0];
@@ -49,9 +49,10 @@ describe("VelhoClient", () => {
       this.skip();
     }
     expect(oid).to.not.be.null;
-    const searchResult = await velho.loadProjekti(oid);
-    expect(searchResult).not.null;
-    log.debug(JSON.stringify(searchResult, null, 2));
+    const projektiAineistot = await velho.loadProjektiAineistot(oid);
+    const dokumenttiOid = projektiAineistot[0].aineistot[0].oid;
+    const link = await velho.getLinkForDocument(dokumenttiOid);
+    expect(link).to.contain("https://");
   });
 
   it.skip("should create project to Velho for testing and delete it", async function () {

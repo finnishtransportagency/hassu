@@ -328,6 +328,18 @@ type VelhoHakuTulos {
   projektiPaallikko: String
 }
 
+type VelhoAineistoKategoria {
+  kategoria: String!
+  aineistot: [VelhoAineisto!]!
+}
+
+type VelhoAineisto {
+  oid: String!
+  tiedosto: String!
+  dokumenttiTyyppi: String!
+  muokattu: String!
+}
+
 type NykyinenKayttaja {
   uid: String
   vaylaKayttajaTyyppi: VaylaKayttajaTyyppi

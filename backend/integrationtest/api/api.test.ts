@@ -174,6 +174,15 @@ describe("Api", () => {
     return (await loadProjektiFromDatabase(oid)).suunnitteluVaihe;
   }
 
+  async function testListDocumentsToImport(oid: string) {
+    const velhoAineistoKategories = await api.listaaVelhoProjektiAineistot(oid);
+    expect(velhoAineistoKategories).not.be.empty;
+    const aineistot = velhoAineistoKategories[0].aineistot;
+    expect(aineistot).not.be.empty;
+    const link = await api.haeVelhoProjektiAineistoLinkki(oid, aineistot[0].oid);
+    expect(link).to.contain("https://");
+  }
+
   async function testPublicAccessToProjekti(oid: string) {
     userFixture.logout();
     const publicProjekti = await loadProjektiFromDatabase(oid);
@@ -201,6 +210,7 @@ describe("Api", () => {
     await testAloituskuulutusApproval(oid, projektiPaallikko);
     await testSuunnitteluvaihePerustiedot(oid);
     await testSuunnitteluvaiheVuorovaikutus(oid, projektiPaallikko);
+    await testListDocumentsToImport(oid);
     await testPublicAccessToProjekti(oid);
     await archiveProjekti(oid);
   });

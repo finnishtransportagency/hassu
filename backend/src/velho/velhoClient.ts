@@ -3,12 +3,15 @@ import { config } from "../config";
 import * as HakuPalvelu from "./hakupalvelu";
 import * as ProjektiRekisteri from "./projektirekisteri";
 import { ProjektiProjektiLuonti } from "./projektirekisteri";
-import { VelhoHakuTulos } from "../../../common/graphql/apiModel";
-import { adaptProjekti, adaptSearchResults, ProjektiSearchResult } from "./velhoAdapter";
+import * as AineistoPalvelu from "./aineistopalvelu";
+import { AineistoAineisto } from "./aineistopalvelu";
+import { VelhoAineisto, VelhoAineistoKategoria, VelhoHakuTulos } from "../../../common/graphql/apiModel";
+import { adaptDokumenttiTyyppi, adaptProjekti, adaptSearchResults, ProjektiSearchResult } from "./velhoAdapter";
 import { VelhoError } from "../error/velhoError";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { DBProjekti } from "../database/model/projekti";
 import { personSearch } from "../personSearch/personSearchClient";
+import dayjs from "dayjs";
 
 const axios = require("axios");
 const NodeCache = require("node-cache");
@@ -107,7 +110,7 @@ export class VelhoClient {
       }
       const response = await hakuApi.hakupalveluApiV1HakuKohdeluokatPost({
         asetukset: {
-          palautettavat_kentat: [
+          "palautettavat-kentat": [
             ["projekti/projekti", "oid"],
             ["projekti/projekti", "ominaisuudet", "nimi"],
             ["projekti/projekti", "ominaisuudet", "vaihe"],
@@ -155,6 +158,70 @@ export class VelhoClient {
     return adaptProjekti(response.data);
   }
 
+  public async loadProjektiAineistot(oid: string): Promise<VelhoAineistoKategoria[]> {
+    try {
+      const toimeksiannot = await this.listToimeksiannot(oid);
+      const hakuApi = await this.createHakuApi();
+      const aineistot: Record<string, VelhoAineisto[]> = await toimeksiannot.reduce(
+        async (resultPromise: VelhoAineistoKategoria[], toimeksianto) => {
+          // List aineistot belonging to one toimeksianto
+          const aineistotResponse = await hakuApi.hakupalveluApiV1HakuAineistotLinkitOidGet(toimeksianto.oid);
+          checkResponseIsOK(aineistotResponse, "hakuApi.hakupalveluApiV1HakuAineistotLinkitOidGet " + toimeksianto.oid);
+          const aineistot: AineistoAineisto[] = aineistotResponse.data as AineistoAineisto[];
+          const result = await resultPromise;
+          aineistot.forEach((aineisto) => {
+            const { dokumenttiTyyppi, kategoria } = adaptDokumenttiTyyppi(`${aineisto.metatiedot.dokumenttityyppi}`);
+            if (!result[kategoria]) {
+              result[kategoria] = [];
+            }
+            result[kategoria].push({
+              __typename: "VelhoAineisto",
+              oid: aineisto.oid,
+              tiedosto: aineisto["tuorein-versio"].nimi,
+              dokumenttiTyyppi,
+              muokattu: dayjs(aineisto["tuorein-versio"].muokattu).format(),
+            } as VelhoAineisto);
+          });
+          return result;
+        },
+        {} as Record<string, VelhoAineisto[]>
+      );
+
+      // Convert map to a list of kategoria->aineistot pairs
+      const result: VelhoAineistoKategoria[] = [];
+      for (const kategoria in aineistot) {
+        result.push({ __typename: "VelhoAineistoKategoria", kategoria, aineistot: aineistot[kategoria] });
+      }
+      return result;
+    } catch (e) {
+      log.error(e);
+      throw new VelhoError(e.message, e);
+    }
+  }
+
+  public async getLinkForDocument(dokumenttiOid: string): Promise<string> {
+    const dokumenttiApi = await this.createDokumenttiApi();
+    const dokumenttiResponse = await dokumenttiApi.aineistopalveluApiV1AineistoOidDokumenttiGet(
+      dokumenttiOid,
+      undefined,
+      {
+        maxRedirects: 0,
+        validateStatus(status) {
+          return status >= 200 && status < 400;
+        },
+      }
+    );
+    return dokumenttiResponse.headers.location;
+  }
+
+  private async listToimeksiannot(oid: string) {
+    const projektiApi = await this.createProjektiRekisteriApi();
+    const toimeksiannotResponse = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidToimeksiannotGet(oid);
+    const toimeksiannot = [];
+    toimeksiannotResponse.data.forEach((toimeksianto) => toimeksiannot.push(toimeksianto));
+    return toimeksiannot;
+  }
+
   public async createProjektiForTesting(velhoProjekti: ProjektiProjektiLuonti): Promise<any> {
     const projektiApi = await this.createProjektiRekisteriApi();
     let response;
@@ -162,7 +229,7 @@ export class VelhoClient {
       // tslint:disable-next-line:no-console
       console.log("velhoProjekti", velhoProjekti);
       response = await projektiApi.projektirekisteriApiV2ProjektiPost(velhoProjekti, true, {
-        query: { "raportoi-vkm-virheet": true },
+        params: { "raportoi-vkm-virheet": true },
       });
     } catch (e) {
       throw new VelhoError(e.message, e);
@@ -191,6 +258,14 @@ export class VelhoClient {
     return new ProjektiRekisteri.ProjektiApi(
       new ProjektiRekisteri.Configuration(await this.getVelhoApiConfiguration())
     );
+  }
+
+  // private async createAineistoApi() {
+  //   return new AineistoPalvelu.AineistoApi(new AineistoPalvelu.Configuration(await this.getVelhoApiConfiguration()));
+  // }
+
+  private async createDokumenttiApi() {
+    return new AineistoPalvelu.DokumenttiApi(new AineistoPalvelu.Configuration(await this.getVelhoApiConfiguration()));
   }
 
   private async getVelhoApiConfiguration() {
