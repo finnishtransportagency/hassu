@@ -11,6 +11,8 @@ chai.use(jestSnapshotPlugin());
 const dotenv = require("dotenv");
 dotenv.config({ path: ".env.test" });
 
+process.env.USE_PINO_PRETTY = "true";
+
 process.env.TABLE_PROJEKTI = "Projekti-localstack";
 process.env.TABLE_PROJEKTI_ARCHIVE = "Projekti-arkisto-localstack";
 process.env.AWS_REGION = "eu-west-1";
@@ -27,7 +29,7 @@ process.env.AWS_SDK_LOAD_CONFIG = false;
 process.env.AWS_ACCESS_KEY_ID = "test";
 process.env.AWS_SECRET_ACCESS_KEY = "test";
 
-process.env.PERSON_SEARCH_UPDATER_LAMBDA_ARN = "not-supported-in-local-tests";
+process.env.PERSON_SEARCH_UPDATER_LAMBDA_ARN = "";
 process.env.FRONTEND_DOMAIN_NAME = "localhost";
 
 process.env.FRONTEND_PRIVATEKEY =

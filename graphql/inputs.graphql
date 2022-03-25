@@ -7,6 +7,7 @@ input TallennaProjektiInput {
   suunnitteluSopimus: SuunnitteluSopimusInput
   kayttoOikeudet: [ProjektiKayttajaInput!]
   kielitiedot: KielitiedotInput
+  suunnitteluVaihe: SuunnitteluVaiheInput
 }
 
 input KielitiedotInput {
@@ -65,6 +66,72 @@ input SuunnitteluSopimusInput {
   sukunimi: String!
   puhelinnumero: String!
   email: String!
+}
+
+input SuunnitteluVaiheInput {
+  hankkeenKuvaus: HankkeenKuvauksetInput
+  arvioSeuraavanVaiheenAlkamisesta: String
+  """
+  Yhden vuorovaikutuksen luonti/muokkaus
+  """
+  vuorovaikutus: VuorovaikutusInput
+}
+
+input VuorovaikutusInput {
+  """
+  Vuorovaikutuksen jarjestysnumero
+  """
+  vuorovaikutusNumero: Int!
+  vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusInput!]
+  """
+  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
+  """
+  vuorovaikutusJulkaisuPaiva: String
+  """
+  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
+  """
+  kysymyksetJaPalautteetViimeistaan: String
+  """
+  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
+  """
+  aineistoPoistetaanNakyvista: String
+  videot: [LinkkiInput!]
+  esitettavatYhteystiedot: [YhteystietoInput]
+  """
+  Lista kayttajatunnuksia
+  """
+  vuorovaikutusYhteysHenkilot: [String!]
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
+}
+
+input VuorovaikutusTilaisuusInput {
+  tyyppi: VuorovaikutusTilaisuusTyyppi!
+  nimi: String!
+  """
+  yyyy-MM-dd
+  """
+  paivamaara: String!
+  """
+  HH:mm
+  """
+  alkamisAika: String!
+  """
+  HH:mm
+  """
+  paattymisAika: String!
+  kaytettavaPalvelu: KaytettavaPalvelu
+  linkki: String
+
+  paikka: String
+  osoite: String
+  postinumero: String
+  postitoimipaikka: String
+  Saapumisohjeet: String
+}
+
+input LinkkiInput {
+  nimi: String!
+  url: String!
 }
 
 input ProjektiKayttajaInput {

@@ -21,6 +21,7 @@ import {
   Kieli,
   Projekti,
   Status,
+  SuunnitteluVaiheInput,
 } from "../../../common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
@@ -30,6 +31,7 @@ import { fileService } from "../files/fileService";
 import { perustiedotValidationSchema } from "../../../src/schemas/perustiedot";
 import { ValidationError } from "yup";
 import { log } from "../logger";
+import { Linkki, SuunnitteluVaihe, Vuorovaikutus, VuorovaikutusTilaisuus } from "../database/model/suunnitteluVaihe";
 
 export class ProjektiAdapter {
   public adaptProjekti(dbProjekti: DBProjekti): API.Projekti {
@@ -41,8 +43,11 @@ export class ProjektiAdapter {
       aloitusKuulutusJulkaisut,
       velho,
       kielitiedot,
+      suunnitteluVaihe,
+      vuorovaikutukset,
       ...fieldsToCopyAsIs
     } = dbProjekti;
+
     return removeUndefinedFields({
       __typename: "Projekti",
       tallennettu: !!dbProjekti.tallennettu,
@@ -57,6 +62,7 @@ export class ProjektiAdapter {
         ...velho,
       },
       kielitiedot: adaptKielitiedot(kielitiedot),
+      suunnitteluVaihe: adaptSuunnitteluVaihe(suunnitteluVaihe, vuorovaikutukset),
       ...fieldsToCopyAsIs,
     }) as API.Projekti;
   }
@@ -76,6 +82,7 @@ export class ProjektiAdapter {
       kielitiedot,
       euRahoitus,
       liittyvatSuunnitelmat,
+      suunnitteluVaihe,
     } = changes;
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
     kayttoOikeudetManager.applyChanges(kayttoOikeudet);
@@ -87,9 +94,11 @@ export class ProjektiAdapter {
         aloitusKuulutus: adaptAloitusKuulutusToSave(aloitusKuulutus),
         suunnitteluSopimus: adaptSuunnitteluSopimusToSave(projekti, suunnitteluSopimus),
         kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet(),
+        suunnitteluVaihe: adaptSuunnitteluVaiheToSave(suunnitteluVaihe),
         kielitiedot,
         euRahoitus,
         liittyvatSuunnitelmat,
+        vuorovaikutukset: suunnitteluVaihe?.vuorovaikutus ? [suunnitteluVaihe.vuorovaikutus] : undefined,
       }
     ) as DBProjekti;
   }
@@ -155,6 +164,69 @@ export function adaptKielitiedot(kielitiedot?: Kielitiedot | null): API.Kielitie
     };
   }
   return kielitiedot as undefined;
+}
+
+function adaptSuunnitteluVaihe(
+  suunnitteluVaihe: SuunnitteluVaihe,
+  vuorovaikutukset: Array<Vuorovaikutus>
+): API.SuunnitteluVaihe {
+  if (suunnitteluVaihe) {
+    return {
+      ...suunnitteluVaihe,
+      hankkeenKuvaus: suunnitteluVaihe.hankkeenKuvaus
+        ? adaptHankkeenKuvaus(suunnitteluVaihe.hankkeenKuvaus)
+        : undefined,
+      vuorovaikutukset: adaptVuorovaikutukset(vuorovaikutukset),
+      __typename: "SuunnitteluVaihe",
+    };
+  }
+  return suunnitteluVaihe as undefined;
+}
+
+function adaptSuunnitteluVaiheToSave(suunnitteluVaihe: SuunnitteluVaiheInput): SuunnitteluVaihe {
+  if (suunnitteluVaihe && (suunnitteluVaihe?.arvioSeuraavanVaiheenAlkamisesta || suunnitteluVaihe?.hankkeenKuvaus)) {
+    return {
+      arvioSeuraavanVaiheenAlkamisesta: suunnitteluVaihe.arvioSeuraavanVaiheenAlkamisesta,
+      hankkeenKuvaus: suunnitteluVaihe.hankkeenKuvaus
+        ? adaptHankkeenKuvaus(suunnitteluVaihe.hankkeenKuvaus)
+        : undefined,
+    };
+  }
+  return undefined;
+}
+
+function adaptVuorovaikutukset(vuorovaikutukset: Array<Vuorovaikutus>): API.Vuorovaikutus[] {
+  if (vuorovaikutukset && vuorovaikutukset.length > 0) {
+    return vuorovaikutukset.map((vuorovaikutus) => ({
+      ...vuorovaikutus,
+      vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
+      videot: adaptLinkkiList(vuorovaikutus.videot),
+      __typename: "Vuorovaikutus",
+    }));
+  }
+  return vuorovaikutukset as undefined;
+}
+
+function adaptVuorovaikutusTilaisuudet(
+  vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus>
+): API.VuorovaikutusTilaisuus[] {
+  if (vuorovaikutusTilaisuudet) {
+    return vuorovaikutusTilaisuudet.map((vuorovaikutusTilaisuus) => ({
+      ...vuorovaikutusTilaisuus,
+      __typename: "VuorovaikutusTilaisuus",
+    }));
+  }
+  return vuorovaikutusTilaisuudet as undefined;
+}
+
+function adaptLinkkiList(links: Array<Linkki>): API.Linkki[] {
+  if (links) {
+    return links.map((link) => ({
+      ...link,
+      __typename: "Linkki",
+    }));
+  }
+  return links as undefined;
 }
 
 function adaptSuunnitteluSopimusToSave(

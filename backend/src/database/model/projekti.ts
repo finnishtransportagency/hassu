@@ -6,6 +6,7 @@ import {
   ProjektiTyyppi,
   Viranomainen,
 } from "../../../../common/graphql/apiModel";
+import { SuunnitteluVaihe, Vuorovaikutus } from "./suunnitteluVaihe";
 
 export type LocalizedMap<T> = { [key in Kieli]?: T } | null;
 
@@ -121,6 +122,8 @@ export type DBProjekti = {
   suunnitteluSopimus?: SuunnitteluSopimus | null;
   velho?: Velho | null;
   liittyvatSuunnitelmat?: Suunnitelma[] | null;
+  suunnitteluVaihe?: SuunnitteluVaihe | null;
+  vuorovaikutukset?: Array<Vuorovaikutus> | null;
 
   // false, jos projekti ladattiin Velhosta, mutta ei ole vielä tallennettu tietokantaan
   tallennettu?: boolean;

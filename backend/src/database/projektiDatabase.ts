@@ -64,7 +64,12 @@ async function loadProjektiByOid(oid: string): Promise<DBProjekti | undefined> {
   return projekti;
 }
 
-const readOnlyFields = ["oid", "tallennettu", "aloitusKuulutusJulkaisut"] as (keyof DBProjekti)[] as string[];
+const skipAutomaticUpdateFields = [
+  "oid",
+  "tallennettu",
+  "aloitusKuulutusJulkaisut",
+  "vuorovaikutukset",
+] as (keyof DBProjekti)[] as string[];
 
 function createExpression(expression: string, properties: string[]) {
   return properties.length > 0 ? expression + " " + properties.join(" , ") : "";
@@ -80,7 +85,7 @@ async function saveProjekti(dbProjekti: Partial<DBProjekti>): Promise<DocumentCl
   dbProjekti.paivitetty = dayjs().toISOString();
 
   for (const property in dbProjekti) {
-    if (readOnlyFields.indexOf(property) >= 0) {
+    if (skipAutomaticUpdateFields.indexOf(property) >= 0) {
       continue;
     }
     const value = dbProjekti[property];
@@ -94,6 +99,19 @@ async function saveProjekti(dbProjekti: Partial<DBProjekti>): Promise<DocumentCl
       ExpressionAttributeNames["#" + property] = property;
       ExpressionAttributeValues[":" + property] = value;
     }
+  }
+
+  if (dbProjekti.vuorovaikutukset && dbProjekti.vuorovaikutukset.length > 0) {
+    if (dbProjekti.vuorovaikutukset.length > 1) {
+      throw new Error("Voit tallentaa vain yhden vuorovaikutuksen kerrallaan");
+    }
+    const vuorovaikutus = dbProjekti.vuorovaikutukset[0];
+    setExpression.push(`#vuorovaikutukset[${vuorovaikutus.vuorovaikutusNumero - 1}] = :vuorovaikutus`);
+    ExpressionAttributeNames["#vuorovaikutukset"] = "vuorovaikutukset";
+    ExpressionAttributeValues[":vuorovaikutus"] = vuorovaikutus;
+  } else {
+    setExpression.push("vuorovaikutukset = if_not_exists(vuorovaikutukset, :emptyList)");
+    ExpressionAttributeValues[":emptyList"] = [];
   }
 
   const updateExpression = createExpression("SET", setExpression) + " " + createExpression("REMOVE", removeExpression);
