@@ -80,9 +80,21 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep 
           <VideoLabelIcon />
         </HassuLink>
       ),
-      4: <HourglassEmptyIcon />,
-      5: <AccountBalance />,
-      6: <Gavel />,
+      4: (
+        <HassuLink href={`/suunnitelma/${oid}/hyvaksynnassa`}>
+          <HourglassEmptyIcon />
+        </HassuLink>
+      ),
+      5: (
+        <HassuLink href={`/suunnitelma/${oid}/hyvaksymispaatos`}>
+          <AccountBalance />
+        </HassuLink>
+      ),
+      6: (
+        <HassuLink href={`/suunnitelma/${oid}/lainvoima`}>
+          <Gavel />
+        </HassuLink>
+      ),
     };
 
     return (
