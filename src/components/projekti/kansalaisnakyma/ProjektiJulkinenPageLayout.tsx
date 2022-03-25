@@ -25,14 +25,16 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
   const kuulutus = projekti.aloitusKuulutusJulkaisut[0];
   const velho = kuulutus.velho;
 
-  const statusStepMap = new Map<Status, number>([
-    [Status.ALOITUSKUULUTUS, 0],
-    [Status.SUUNNITTELU, 1],
-    [Status.NAHTAVILLAOLO, 2],
-    [Status.ARKISTOITU, 3], // TODO: toistaiseksi puuttuu status "Hyvaksynnassa"
-    [Status.HYVAKSYMISPAATOS, 4],
-    [Status.LAINVOIMA, 5]
-  ]);
+  const statusStep: Record<Status, number> = {
+    EI_JULKAISTU: -1,
+    ALOITUSKUULUTUS: 0,
+    SUUNNITTELU: 1,
+    NAHTAVILLAOLO: 2,
+    HYVAKSYNNASSA: 3,
+    HYVAKSYMISPAATOS: 4,
+    LAINVOIMA: 5,
+    ARKISTOITU: -1,
+  };
 
   return (
     <section>
@@ -42,12 +44,16 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
         </div>
         <div className="md:col-span-6 lg:col-span-8 xl:col-span-9">
           <Section noDivider>
-          <h1>{velho.nimi}</h1>
-          <ProjektiJulkinenStepper activeStep={statusStepMap.get(Status.NAHTAVILLAOLO) || -1} selectedStep={selectedStep} />
+            <h1>{velho.nimi}</h1>
+            <ProjektiJulkinenStepper
+              oid={projekti.oid}
+              activeStep={statusStep[projekti.status || Status.EI_JULKAISTU]}
+              selectedStep={selectedStep}
+            />
           </Section>
           <Section noDivider>
-          <h2 className="vayla-title">{title}</h2>
-          {children}
+            <h2 className="vayla-title">{title}</h2>
+            {children}
           </Section>
         </div>
       </div>

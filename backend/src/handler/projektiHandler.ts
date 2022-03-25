@@ -55,7 +55,7 @@ async function loadProjektiJulkinen(oid: string): Promise<API.ProjektiJulkinen> 
   if (projektiFromDB) {
     const adaptedProjekti = projektiAdapterJulkinen.adaptProjekti(projektiFromDB);
     if (adaptedProjekti) {
-      return adaptedProjekti;
+      return projektiAdapterJulkinen.applyStatus(adaptedProjekti);
     }
     log.info("Projektilla ei ole julkista sisältöä", { oid });
     throw new NotFoundError("Projektilla ei ole julkista sisältöä: " + oid);

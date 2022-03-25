@@ -13,10 +13,11 @@ import StepConnector, { stepConnectorClasses } from "@mui/material/StepConnector
 import { StepIconProps } from "@mui/material/StepIcon";
 import HassuLink from "@components/HassuLink";
 interface Props {
+  oid: string;
   activeStep: number;
   selectedStep: number;
 }
-export default function ProjektiJulkinenStepper({ activeStep, selectedStep }: Props): ReactElement {
+export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep }: Props): ReactElement {
   const HassuConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {
       top: 22,
@@ -65,17 +66,17 @@ export default function ProjektiJulkinenStepper({ activeStep, selectedStep }: Pr
 
     const icons: { [index: string]: React.ReactElement } = {
       1: (
-        <HassuLink href="/suunnitelma/1.2.246.578.5.1.2200243019.409429189/aloituskuulutus">
+        <HassuLink href={`/suunnitelma/${oid}/aloituskuulutus`}>
           <StartIcon />
         </HassuLink>
       ),
       2: (
-        <HassuLink href="/suunnitelma/1.2.246.578.5.1.2200243019.409429189/suunnittelu">
+        <HassuLink href={`/suunnitelma/${oid}/suunnittelu`}>
           <ArchitectureIcon />
         </HassuLink>
       ),
       3: (
-        <HassuLink href="/suunnitelma/1.2.246.578.5.1.2200243019.409429189/nahtavillaolo">
+        <HassuLink href={`/suunnitelma/${oid}/nahtavillaolo`}>
           <VideoLabelIcon />
         </HassuLink>
       ),
