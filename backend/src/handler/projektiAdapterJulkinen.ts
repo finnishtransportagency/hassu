@@ -109,8 +109,8 @@ function checkIfAloitusKuulutusJulkaisutIsPublic(aloitusKuulutusJulkaisut: API.A
   const julkaisu = aloitusKuulutusJulkaisut[0];
   if (julkaisu.kuulutusPaiva && parseDate(julkaisu.kuulutusPaiva).isAfter(dayjs())) {
     log.info("Projektin aloituskuulutuksen kuulutuspäivä on tulevaisuudessa", {
-      kuulutusPaiva: parseDate(julkaisu.kuulutusPaiva).toISOString(),
-      now: dayjs().toISOString(),
+      kuulutusPaiva: parseDate(julkaisu.kuulutusPaiva).format(),
+      now: dayjs().format(),
     });
     return false;
   }

@@ -82,7 +82,7 @@ async function saveProjekti(dbProjekti: Partial<DBProjekti>): Promise<DocumentCl
   const ExpressionAttributeNames = {};
   const ExpressionAttributeValues = {};
 
-  dbProjekti.paivitetty = dayjs().toISOString();
+  dbProjekti.paivitetty = dayjs().format();
 
   for (const property in dbProjekti) {
     if (skipAutomaticUpdateFields.indexOf(property) >= 0) {
