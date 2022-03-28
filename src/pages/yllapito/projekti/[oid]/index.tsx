@@ -25,6 +25,7 @@ import useSnackbars from "src/hooks/useSnackbars";
 import ProjektiKuulutuskielet from "@components/projekti/ProjektiKuulutuskielet";
 import Section from "@components/layout/Section";
 import HassuStack from "@components/layout/HassuStack";
+import HassuSpinner from "@components/HassuSpinner";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -245,6 +246,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
           </fieldset>
         </form>
       </FormProvider>
+      <HassuSpinner open={formIsSubmitting || isLoadingProjekti}/>
     </ProjektiPageLayout>
   );
 }

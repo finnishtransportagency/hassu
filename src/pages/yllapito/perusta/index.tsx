@@ -13,6 +13,7 @@ import useTranslation from "next-translate/useTranslation";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import Table from "@components/Table";
+import HassuSpinner from "@components/HassuSpinner";
 
 interface SearchInput {
   name: string;
@@ -168,6 +169,7 @@ export default function Perusta() {
           )}
         </Section>
       )}
+      <HassuSpinner open={isLoading}/>
     </>
   );
 }
