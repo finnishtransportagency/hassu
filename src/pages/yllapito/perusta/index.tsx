@@ -28,8 +28,10 @@ enum SearchError {
   NO_RESULTS = "NO_RESULTS",
   SEARCH_UNSUCCESSFUL = "SEARCH_UNSUCCESSFUL",
 }
-
-export default function Perusta() {
+interface Props {
+  unitTest?: true
+}
+export default function Perusta(props:Props) {
   const { t } = useTranslation("velho-haku");
   const router = useRouter();
   const [hakuTulos, setHakuTulos] = useState<VelhoHakuTulos[] | null>([]);
@@ -169,7 +171,7 @@ export default function Perusta() {
           )}
         </Section>
       )}
-      <HassuSpinner open={isLoading}/>
+      {!props.unitTest && (<HassuSpinner open={isLoading}/>)}
     </>
   );
 }

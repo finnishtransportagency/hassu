@@ -36,7 +36,7 @@ describe("Perusta", () => {
       },
     };
     (useRouter as jest.Mock).mockReturnValue(router);
-    const component = await componentWithTranslation(<Perusta />);
+    const component = await componentWithTranslation(<Perusta unitTest/>);
     const tree = create(component);
 
     await act(async () => {
