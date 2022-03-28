@@ -86,7 +86,7 @@ describe.skip("ProjektiSearchService", () => {
       projekti.velho.maakunnat = data.maakunnat;
       projekti.velho.asiatunnusELY = data.asiatunnus;
       projekti.suunnittelustaVastaavaViranomainen = data.suunnittelustaVastaavaViranomainen;
-      projekti.paivitetty = dayjs("2020-01-01T23:00:00+02:00").add(-i, "hours").toISOString();
+      projekti.paivitetty = dayjs("2020-01-01T23:00:00+02:00").add(-i, "hours").format();
       await projektiSearchService.indexProjekti(projekti);
     }
     await delay(500);

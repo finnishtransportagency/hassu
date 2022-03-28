@@ -37,7 +37,7 @@ export class FileService {
       Bucket: config.uploadBucketName,
       Key: fileNameWithPath,
       Expires: 600,
-      ContentType: 'application/octet-stream'
+      ContentType: "application/octet-stream",
     });
     return { fileNameWithPath, uploadURL };
   }
@@ -79,7 +79,7 @@ export class FileService {
     try {
       const metadata: { [key: string]: string } = {};
       if (param.publicationTimestamp) {
-        metadata["publication-timestamp"] = param.publicationTimestamp.toISOString();
+        metadata["publication-timestamp"] = param.publicationTimestamp.format();
       }
       await FileService.putFile(
         config.yllapitoBucketName,
@@ -227,7 +227,7 @@ export class FileService {
 
     const metadata: { [key: string]: string } = {};
     if (publishDate) {
-      metadata["publication-timestamp"] = publishDate.toISOString();
+      metadata["publication-timestamp"] = publishDate.format();
     }
     const copyObjectParams = {
       Bucket: targetBucket,

@@ -4,7 +4,7 @@ import { fileService } from "../files/fileService";
 
 class ProjektiArchiveService {
   async archiveProjekti(oid: string): Promise<ArchivedProjektiKey> {
-    const timestamp = dayjs().toISOString();
+    const timestamp = dayjs().format();
     const archivedProjektiKey = { oid, timestamp };
     await projektiDatabase.archiveProjektiByOid(archivedProjektiKey);
 

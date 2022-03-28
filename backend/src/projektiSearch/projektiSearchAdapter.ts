@@ -38,7 +38,7 @@ export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocu
       .filter((value) => value.rooli == ProjektiRooli.PROJEKTIPAALLIKKO)
       .map((value) => value.nimi)
       .pop(),
-    paivitetty: projekti.paivitetty || dayjs().toISOString(),
+    paivitetty: projekti.paivitetty || dayjs().format(),
     muokkaajat: projekti.kayttoOikeudet.map((value) => value.kayttajatunnus),
   };
 }

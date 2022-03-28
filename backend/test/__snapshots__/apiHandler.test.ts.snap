@@ -446,7 +446,7 @@ Array [
     "ContentType": "application/pdf",
     "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf",
     "Metadata": Object {
-      "publication-timestamp": "2022-01-01T22:00:00.000Z",
+      "publication-timestamp": "2022-01-02T00:00:00+02:00",
     },
   },
   Object {
@@ -455,7 +455,7 @@ Array [
     "ContentType": "application/pdf",
     "Key": "tiedostot/suunnitelma/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf",
     "Metadata": Object {
-      "publication-timestamp": "2022-01-01T22:00:00.000Z",
+      "publication-timestamp": "2022-01-02T00:00:00+02:00",
     },
   },
   Object {
@@ -464,7 +464,7 @@ Array [
     "ContentType": "application/pdf",
     "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf",
     "Metadata": Object {
-      "publication-timestamp": "2022-01-01T22:00:00.000Z",
+      "publication-timestamp": "2022-01-02T00:00:00+02:00",
     },
   },
   Object {
@@ -473,7 +473,7 @@ Array [
     "ContentType": "application/pdf",
     "Key": "tiedostot/suunnitelma/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf",
     "Metadata": Object {
-      "publication-timestamp": "2022-01-01T22:00:00.000Z",
+      "publication-timestamp": "2022-01-02T00:00:00+02:00",
     },
   },
   Object {
@@ -482,7 +482,7 @@ Array [
     "ContentType": "application/pdf",
     "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Projektin nimi saameksi.pdf",
     "Metadata": Object {
-      "publication-timestamp": "2022-01-01T22:00:00.000Z",
+      "publication-timestamp": "2022-01-02T00:00:00+02:00",
     },
   },
   Object {
@@ -491,7 +491,7 @@ Array [
     "ContentType": "application/pdf",
     "Key": "tiedostot/suunnitelma/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Projektin nimi saameksi.pdf",
     "Metadata": Object {
-      "publication-timestamp": "2022-01-01T22:00:00.000Z",
+      "publication-timestamp": "2022-01-02T00:00:00+02:00",
     },
   },
   Object {
@@ -500,7 +500,7 @@ Array [
     "ContentType": "application/pdf",
     "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Projektin nimi saameksi.pdf",
     "Metadata": Object {
-      "publication-timestamp": "2022-01-01T22:00:00.000Z",
+      "publication-timestamp": "2022-01-02T00:00:00+02:00",
     },
   },
   Object {
@@ -509,7 +509,7 @@ Array [
     "ContentType": "application/pdf",
     "Key": "tiedostot/suunnitelma/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Projektin nimi saameksi.pdf",
     "Metadata": Object {
-      "publication-timestamp": "2022-01-01T22:00:00.000Z",
+      "publication-timestamp": "2022-01-02T00:00:00+02:00",
     },
   },
   Object {
@@ -517,7 +517,7 @@ Array [
     "CopySource": "hassu-localstack-yllapito/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
     "Key": "tiedostot/suunnitelma/1/suunnittelusopimus/logo.gif",
     "Metadata": Object {
-      "publication-timestamp": "2022-01-01T22:00:00.000Z",
+      "publication-timestamp": "2022-01-02T00:00:00+02:00",
     },
     "MetadataDirective": "REPLACE",
   },
