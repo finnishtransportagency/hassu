@@ -23,7 +23,7 @@ function extractValuesIntoMap(field: string) {
   const definition: any = (getMetadataJSON().info["x-velho-nimikkeistot"] as any)[field];
   const keyTitleMap = definition.nimikkeistoversiot[definition["uusin-nimikkeistoversio"]];
   Object.keys(keyTitleMap).forEach((key) => {
-    return (values[key] = keyTitleMap[key].otsikko);
+    return (values[key] = { otsikko: keyTitleMap[key].otsikko, kategoria: keyTitleMap[key].kategoria });
   });
   return values;
 }
@@ -33,7 +33,8 @@ const metadata = (() => {
   const vaiheet = extractValuesIntoMap("projekti/vaihe");
   const organisaatiot = extractValuesIntoMap("projekti/organisaatio");
   const toteutusAjankohdat = extractValuesIntoMap("projekti/arvioitu-toteutusajankohta");
-  return { tilat, vaiheet, organisaatiot, toteutusAjankohdat };
+  const dokumenttiTyypit = extractValuesIntoMap("aineisto/dokumenttityyppi");
+  return { tilat, vaiheet, organisaatiot, toteutusAjankohdat, dokumenttiTyypit };
 })();
 
 function adaptVaylamuoto(vaylamuodot: Set<ProjektirekisteriApiV2ProjektiOminaisuudetVaylamuotoEnum>) {
@@ -91,7 +92,7 @@ export function adaptProjekti(data: ProjektiProjekti): { projekti: DBProjekti; v
       nimi: data.ominaisuudet.nimi,
       tyyppi: projektiTyyppi,
       vaylamuoto: adaptVaylamuoto(data.ominaisuudet.vaylamuoto),
-      tilaajaOrganisaatio: metadata.organisaatiot[`${data.ominaisuudet.tilaajaorganisaatio}`],
+      tilaajaOrganisaatio: metadata.organisaatiot[`${data.ominaisuudet.tilaajaorganisaatio}`].otsikko,
       linkki: data.ominaisuudet.linkki,
       kunnat: data.ominaisuudet.kunta?.split(","),
       maakunnat: data.ominaisuudet.maakunta?.split(","),
@@ -104,4 +105,14 @@ export function adaptProjekti(data: ProjektiProjekti): { projekti: DBProjekti; v
     projekti,
     vastuuhenkilo: data.ominaisuudet.vastuuhenkilo,
   };
+}
+
+export function adaptDokumenttiTyyppi(dokumenttiTyyppi: string): { dokumenttiTyyppi: string; kategoria: string } {
+  const type = metadata.dokumenttiTyypit[dokumenttiTyyppi];
+  if (type) {
+    return {
+      dokumenttiTyyppi: type.otsikko,
+      kategoria: type.kategoria,
+    };
+  }
 }

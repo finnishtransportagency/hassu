@@ -1,7 +1,7 @@
 import {
   ArkistoiProjektiMutationVariables,
   AsiakirjaTyyppi,
-  EsikatseleAsiakirjaPDFQueryVariables,
+  EsikatseleAsiakirjaPDFQueryVariables, HaeVelhoProjektiAineistoLinkkiQueryVariables,
   Kayttaja,
   Kieli,
   LaskePaattymisPaivaQueryVariables,
@@ -12,6 +12,7 @@ import {
   ListaaKayttajatQueryVariables,
   ListaaProjektitInput,
   ListaaProjektitQueryVariables,
+  ListaaVelhoProjektiAineistotQueryVariables,
   ListaaVelhoProjektitQueryVariables,
   NykyinenKayttaja,
   PDF,
@@ -23,7 +24,8 @@ import {
   TallennaProjektiMutationVariables,
   TilaSiirtymaInput,
   ValmisteleTiedostonLatausQueryVariables,
-  VelhoHakuTulos,
+  VelhoAineistoKategoria,
+  VelhoHakuTulos
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -101,6 +103,16 @@ export const apiConfig: ApiConfig = {
     operationType: OperationType.Mutation,
     graphql: mutations.arkistoiProjekti,
   },
+  listaaVelhoProjektiAineistot: {
+    name: "listaaVelhoProjektiAineistot",
+    operationType: OperationType.Query,
+    graphql: queries.listaaVelhoProjektiAineistot,
+  },
+  haeVelhoProjektiAineistoLinkki: {
+    name: "haeVelhoProjektiAineistoLinkki",
+    operationType: OperationType.Query,
+    graphql: queries.haeVelhoProjektiAineistoLinkki,
+  },
 };
 
 export abstract class AbstractApi {
@@ -135,6 +147,19 @@ export abstract class AbstractApi {
       nimi,
       requireExactMatch,
     } as ListaaVelhoProjektitQueryVariables);
+  }
+
+  async listaaVelhoProjektiAineistot(oid: string): Promise<VelhoAineistoKategoria[]> {
+    return await this.callYllapitoAPI(apiConfig.listaaVelhoProjektiAineistot, {
+      oid,
+    } as ListaaVelhoProjektiAineistotQueryVariables);
+  }
+
+  async haeVelhoProjektiAineistoLinkki(oid:string, dokumenttiOid: string): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.haeVelhoProjektiAineistoLinkki, {
+      oid,
+      dokumenttiOid,
+    } as HaeVelhoProjektiAineistoLinkkiQueryVariables);
   }
 
   async valmisteleTiedostonLataus(tiedostoNimi: string): Promise<LatausTiedot> {

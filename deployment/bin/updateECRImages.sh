@@ -10,9 +10,11 @@ docker tag localstack/localstack:latest 283563576583.dkr.ecr.eu-west-1.amazonaws
 docker push 283563576583.dkr.ecr.eu-west-1.amazonaws.com/localstack:latest
 
 # Create buildimage to provide faster builds
-REPO_TAG=283563576583.dkr.ecr.eu-west-1.amazonaws.com/hassu-buildimage:latest
+BUILD_IMAGE_VERSION=1.0.0
+
+REPO_TAG=283563576583.dkr.ecr.eu-west-1.amazonaws.com/hassu-buildimage:$BUILD_IMAGE_VERSION
 aws ecr create-repository --repository-name hassu-buildimage || true
 docker pull $REPO_TAG || true
-docker build --progress=plain --cache-from $REPO_TAG -t hassu-buildimage:latest . && \
-  docker tag hassu-buildimage:latest $REPO_TAG && \
+docker build --progress=plain --cache-from $REPO_TAG -t hassu-buildimage:$BUILD_IMAGE_VERSION . && \
+  docker tag hassu-buildimage:$BUILD_IMAGE_VERSION $REPO_TAG && \
   docker push $REPO_TAG

@@ -2,10 +2,12 @@ import { log } from "./logger";
 import {
   ArkistoiProjektiMutationVariables,
   EsikatseleAsiakirjaPDFQueryVariables,
+  HaeVelhoProjektiAineistoLinkkiQueryVariables,
   LaskePaattymisPaivaQueryVariables,
   LataaProjektiQueryVariables,
   ListaaKayttajatQueryVariables,
   ListaaProjektitQueryVariables,
+  ListaaVelhoProjektiAineistotQueryVariables,
   ListaaVelhoProjektitQueryVariables,
   SiirraTilaMutationVariables,
   TallennaProjektiInput,
@@ -27,6 +29,7 @@ import { getCorrelationId, setupLambdaMonitoring, setupLambdaMonitoringMetaData 
 import { calculateEndDate } from "./endDateCalculator/endDateCalculatorHandler";
 import { aloitusKuulutusHandler } from "./handler/aloitusKuulutusHandler";
 import { listProjektit } from "./handler/listProjektitHandler";
+import { velhoDocumentHandler } from "./handler/velhoDocumentHandler";
 
 type AppSyncEventArguments =
   | unknown
@@ -45,8 +48,18 @@ async function executeOperation(event: AppSyncResolverEvent<AppSyncEventArgument
   switch (event.info.fieldName as any) {
     case apiConfig.listaaProjektit.name:
       return await listProjektit((event.arguments as ListaaProjektitQueryVariables).hakuehto);
+
     case apiConfig.listaaVelhoProjektit.name:
       return await listaaVelhoProjektit(event.arguments as ListaaVelhoProjektitQueryVariables);
+    case apiConfig.listaaVelhoProjektiAineistot.name:
+      return await velhoDocumentHandler.listaaVelhoProjektiAineistot(
+        (event.arguments as ListaaVelhoProjektiAineistotQueryVariables).oid
+      );
+    case apiConfig.haeVelhoProjektiAineistoLinkki.name:
+      return await velhoDocumentHandler.haeVelhoProjektiAineistoLinkki(
+        event.arguments as HaeVelhoProjektiAineistoLinkkiQueryVariables
+      );
+
     case apiConfig.nykyinenKayttaja.name:
       return await getCurrentUser();
     case apiConfig.listaaKayttajat.name:
