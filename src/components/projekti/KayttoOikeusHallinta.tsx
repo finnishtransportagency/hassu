@@ -177,8 +177,9 @@ const UserFields = ({
     formState: { errors },
   } = useFormContext<RequiredInputValues>();
 
+  const minSearchLength = 3;
   async function listUserOptions(hakusana: string): Promise<Kayttaja[]> {
-    if (getKayttajaNimi(kayttaja) !== hakusana && !disableFields && hakusana.length > 2) {
+    if (getKayttajaNimi(kayttaja) !== hakusana && !disableFields && hakusana.length >= minSearchLength) {
       return await api.listUsers({ hakusana });
     } else if (kayttaja) {
       return Promise.resolve([kayttaja]);
@@ -197,6 +198,7 @@ const UserFields = ({
             loading={isLoadingKayttajat}
             options={async (hakusana) => await listUserOptions(hakusana)}
             initialOption={kayttaja}
+            minSearchLength={minSearchLength}
             getOptionLabel={getKayttajaNimi}
             error={errors.kayttoOikeudet?.[index]?.kayttajatunnus}
             onSelect={(henkilo) => {
