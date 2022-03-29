@@ -26,6 +26,10 @@ import { requireAdmin } from "../user/userService";
 import { projektiArchive } from "../archive/projektiArchiveService";
 import { NotFoundError } from "../error/NotFoundError";
 import { projektiAdapterJulkinen } from "./projektiAdapterJulkinen";
+import { DBProjekti } from "../database/model/projekti";
+import { Aineisto } from "../database/model/suunnitteluVaihe";
+import dayjs from "dayjs";
+import { getAxios } from "../aws/monitoring";
 
 export async function loadProjekti(oid: string): Promise<API.Projekti | API.ProjektiJulkinen> {
   const vaylaUser = getVaylaUser();
@@ -77,7 +81,12 @@ export async function createOrUpdateProjekti(input: TallennaProjektiInput): Prom
     requirePermissionMuokkaa(projektiInDB);
     auditLog.info("Tallenna projekti", { input });
     await handleFiles(input);
-    await projektiDatabase.saveProjekti(await projektiAdapter.adaptProjektiToSave(projektiInDB, input));
+    const { projekti: projektiToSave, aineistotToDelete } = await projektiAdapter.adaptProjektiToSave(
+      projektiInDB,
+      input
+    );
+    await handleAineistot(projektiToSave, aineistotToDelete);
+    await projektiDatabase.saveProjekti(projektiToSave);
   } else {
     requirePermissionLuonti();
     const projekti = await createProjektiFromVelho(input.oid, requireVaylaUser(), input);
@@ -137,5 +146,59 @@ async function handleFiles(input: TallennaProjektiInput) {
       oid: input.oid,
       targetFilePathInProjekti: "suunnittelusopimus",
     });
+  }
+}
+
+function parseFilenameFromContentDisposition(disposition?: string) {
+  const utf8FilenameRegex = /filename\*=UTF-8''([\w%\-\\.]+)(?:; ?|$)/i;
+  const asciiFilenameRegex = /filename=(["']?)(.*?[^\\])\1(?:; ?|$)/i;
+
+  let fileName: string = null;
+  if (utf8FilenameRegex.test(disposition)) {
+    fileName = decodeURIComponent(utf8FilenameRegex.exec(disposition)[1]);
+  } else {
+    const matches = asciiFilenameRegex.exec(disposition);
+    if (matches != null && matches[2]) {
+      fileName = matches[2];
+    }
+  }
+  return fileName;
+}
+
+/**
+ * If there are uploaded files in the input, persist them into the project
+ */
+async function handleAineistot(projekti: DBProjekti, aineistotToDelete?: Aineisto[]) {
+  const axios = getAxios();
+
+  const vuorovaikutus = projekti.vuorovaikutukset?.[0];
+  const aineistot = vuorovaikutus?.aineistot;
+  if (aineistot) {
+    for (const aineisto of aineistot) {
+      if (aineisto.tiedosto == "") {
+        // Import file from Velho
+        const sourceURL = await velho.getLinkForDocument(aineisto.dokumenttiOid);
+        const axiosResponse = await axios.get(sourceURL);
+        const filePathInProjekti = "suunnitteluvaihe/vuorovaikutus_" + vuorovaikutus.vuorovaikutusNumero;
+        const fileName = parseFilenameFromContentDisposition(axiosResponse.headers["content-disposition"]);
+        aineisto.tiedosto = await fileService.createFileToProjekti({
+          oid: projekti.oid,
+          filePathInProjekti,
+          fileName,
+          contents: axiosResponse.data,
+        });
+        aineisto.tuotu = dayjs().format();
+        log.info("Tuotiin tiedosto Velhosta", { oid: projekti.oid, filePathInProjekti, fileName });
+      }
+    }
+    await Promise.all(
+      aineistotToDelete?.map(async (aineisto) => {
+        log.info("Poistetaan aineisto", aineisto);
+        return await fileService.deleteFileFromProjekti({
+          oid: projekti.oid,
+          fullFilePathInProjekti: aineisto.tiedosto,
+        });
+      })
+    );
   }
 }

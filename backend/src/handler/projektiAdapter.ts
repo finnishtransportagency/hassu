@@ -12,26 +12,31 @@ import {
 } from "../database/model/projekti";
 import * as API from "../../../common/graphql/apiModel";
 import {
+  AineistoInput,
   AloitusKuulutusInput,
   AloitusKuulutusPDFt,
   HankkeenKuvaukset,
-  HankkeenKuvauksetInput,
   IlmoituksenVastaanottajat,
   IlmoituksenVastaanottajatInput,
   Kieli,
-  Projekti,
-  Status,
-  SuunnitteluVaiheInput,
+  VuorovaikutusInput,
 } from "../../../common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import { personSearch } from "../personSearch/personSearchClient";
 import pickBy from "lodash/pickBy";
+import remove from "lodash/remove";
 import { fileService } from "../files/fileService";
 import { perustiedotValidationSchema } from "../../../src/schemas/perustiedot";
 import { ValidationError } from "yup";
 import { log } from "../logger";
-import { Linkki, SuunnitteluVaihe, Vuorovaikutus, VuorovaikutusTilaisuus } from "../database/model/suunnitteluVaihe";
+import {
+  Aineisto,
+  Linkki,
+  SuunnitteluVaihe,
+  Vuorovaikutus,
+  VuorovaikutusTilaisuus,
+} from "../database/model/suunnitteluVaihe";
 
 export class ProjektiAdapter {
   public adaptProjekti(dbProjekti: DBProjekti): API.Projekti {
@@ -68,10 +73,13 @@ export class ProjektiAdapter {
   }
 
   async adaptProjektiToPreview(projekti: DBProjekti, changes: API.TallennaProjektiInput): Promise<DBProjekti> {
-    return mergeWith(projekti, await this.adaptProjektiToSave(projekti, changes));
+    return mergeWith(projekti, (await this.adaptProjektiToSave(projekti, changes)).projekti);
   }
 
-  async adaptProjektiToSave(projekti: DBProjekti, changes: API.TallennaProjektiInput): Promise<DBProjekti> {
+  async adaptProjektiToSave(
+    projekti: DBProjekti,
+    changes: API.TallennaProjektiInput
+  ): Promise<{ projekti: DBProjekti; aineistotToDelete?: Aineisto[] }> {
     // Pick only fields that are relevant to DB
     const {
       oid,
@@ -86,7 +94,8 @@ export class ProjektiAdapter {
     } = changes;
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
     kayttoOikeudetManager.applyChanges(kayttoOikeudet);
-    return mergeWith(
+    const { vuorovaikutukset, aineistotToDelete } = adaptVuorovaikutusToSave(projekti, suunnitteluVaihe?.vuorovaikutus);
+    const dbProjekti = mergeWith(
       {},
       {
         oid,
@@ -98,9 +107,10 @@ export class ProjektiAdapter {
         kielitiedot,
         euRahoitus,
         liittyvatSuunnitelmat,
-        vuorovaikutukset: suunnitteluVaihe?.vuorovaikutus ? [suunnitteluVaihe.vuorovaikutus] : undefined,
+        vuorovaikutukset,
       }
     ) as DBProjekti;
+    return { projekti: dbProjekti, aineistotToDelete };
   }
 
   /**
@@ -108,11 +118,11 @@ export class ProjektiAdapter {
    * @param projekti
    * @param param
    */
-  applyStatus(projekti: Projekti, param: { saved?: boolean }) {
+  applyStatus(projekti: API.Projekti, param: { saved?: boolean }) {
     function checkIfSaved() {
       if (param?.saved) {
         projekti.tallennettu = true;
-        projekti.status = Status.EI_JULKAISTU;
+        projekti.status = API.Status.EI_JULKAISTU;
       }
     }
 
@@ -122,7 +132,7 @@ export class ProjektiAdapter {
         if (!projekti.aloitusKuulutus) {
           projekti.aloitusKuulutus = { __typename: "AloitusKuulutus" };
         }
-        projekti.status = Status.ALOITUSKUULUTUS;
+        projekti.status = API.Status.ALOITUSKUULUTUS;
       } catch (e) {
         if (e instanceof ValidationError) {
           log.info("Perustiedot puutteelliset", e.errors);
@@ -183,7 +193,7 @@ function adaptSuunnitteluVaihe(
   return suunnitteluVaihe as undefined;
 }
 
-function adaptSuunnitteluVaiheToSave(suunnitteluVaihe: SuunnitteluVaiheInput): SuunnitteluVaihe {
+function adaptSuunnitteluVaiheToSave(suunnitteluVaihe: API.SuunnitteluVaiheInput): SuunnitteluVaihe {
   if (suunnitteluVaihe && (suunnitteluVaihe?.arvioSeuraavanVaiheenAlkamisesta || suunnitteluVaihe?.hankkeenKuvaus)) {
     return {
       arvioSeuraavanVaiheenAlkamisesta: suunnitteluVaihe.arvioSeuraavanVaiheenAlkamisesta,
@@ -195,12 +205,94 @@ function adaptSuunnitteluVaiheToSave(suunnitteluVaihe: SuunnitteluVaiheInput): S
   return undefined;
 }
 
+function adaptVuorovaikutusToSave(
+  projekti: DBProjekti,
+  vuorovaikutus?: VuorovaikutusInput | null
+): { vuorovaikutukset?: Vuorovaikutus[]; aineistotToDelete?: Aineisto[] } {
+  if (vuorovaikutus) {
+    const { aineistot, aineistotToDelete } = adaptAineistotToSave(projekti, vuorovaikutus);
+    return {
+      vuorovaikutukset: [
+        {
+          ...vuorovaikutus,
+          ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(vuorovaikutus.ilmoituksenVastaanottajat),
+          esitettavatYhteystiedot: vuorovaikutus.esitettavatYhteystiedot
+            ? vuorovaikutus.esitettavatYhteystiedot.map((yt) => ({ __typename: "Yhteystieto", ...yt }))
+            : undefined,
+          aineistot,
+        },
+      ],
+      aineistotToDelete,
+    };
+  }
+  return { vuorovaikutukset: vuorovaikutus as undefined };
+}
+
+function pickAineistoFromInputByDocumenttiOid(aineistotInput: AineistoInput[], dokumenttiOid: string) {
+  const matchedElements = remove(aineistotInput, { dokumenttiOid });
+  if (matchedElements.length > 0) {
+    return matchedElements[0];
+  }
+  return undefined;
+}
+
+function adaptAineistotToSave(
+  projekti: DBProjekti,
+  vuorovaikutusInput: VuorovaikutusInput
+): { aineistot?: Aineisto[]; aineistotToDelete?: Aineisto[] } {
+  const vuorovaikutus = findVuorovaikutusByNumber(projekti, vuorovaikutusInput.vuorovaikutusNumero);
+  if (!vuorovaikutus) {
+    return {};
+  }
+  const aineistotInput = vuorovaikutusInput.aineistot ? [...vuorovaikutusInput.aineistot] : [];
+  const aineistotToDelete = [];
+
+  // Update existing ones
+  const dbAineistot = vuorovaikutus.aineistot || [];
+  dbAineistot.slice(0).forEach((dbAineisto, index, array) => {
+    const aineistoInput = pickAineistoFromInputByDocumenttiOid(aineistotInput, dbAineisto.dokumenttiOid);
+    if (aineistoInput) {
+      // Update existing one
+      dbAineisto.kategoria = aineistoInput.kategoria;
+      dbAineisto.jarjestys = aineistoInput.jarjestys;
+    } else {
+      aineistotToDelete.push(dbAineisto);
+    }
+  });
+
+  // Remove deleted ones
+  aineistotToDelete.forEach((aineistoToDelete) =>
+    remove(dbAineistot, { dokumenttiOid: aineistoToDelete.dokumenttiOid })
+  );
+
+  // Add new ones
+  for (const aineistoInput of aineistotInput) {
+    dbAineistot.push({
+      dokumenttiOid: aineistoInput.dokumenttiOid,
+      jarjestys: aineistoInput.jarjestys,
+      kategoria: aineistoInput.kategoria,
+      tiedosto: "", // To be properly filled when the file is actually imported
+      tuotu: "", // To be properly filled when the file is actually imported
+    });
+  }
+
+  return { aineistot: dbAineistot, aineistotToDelete };
+}
+
+function adaptAineistot(aineistot?: Aineisto[] | null): API.Aineisto[] | undefined {
+  if (aineistot && aineistot.length > 0) {
+    return aineistot.map((aineisto) => ({ __typename: "Aineisto", ...aineisto }));
+  }
+  return undefined;
+}
+
 function adaptVuorovaikutukset(vuorovaikutukset: Array<Vuorovaikutus>): API.Vuorovaikutus[] {
   if (vuorovaikutukset && vuorovaikutukset.length > 0) {
     return vuorovaikutukset.map((vuorovaikutus) => ({
       ...vuorovaikutus,
       vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
       videot: adaptLinkkiList(vuorovaikutus.videot),
+      aineistot: adaptAineistot(vuorovaikutus.aineistot),
       __typename: "Vuorovaikutus",
     }));
   }
@@ -240,7 +332,7 @@ function adaptSuunnitteluSopimusToSave(
   return suunnitteluSopimusInput as undefined;
 }
 
-function adaptHankkeenKuvausToSave(hankkeenKuvaus: HankkeenKuvauksetInput): LocalizedMap<string> {
+function adaptHankkeenKuvausToSave(hankkeenKuvaus: API.HankkeenKuvauksetInput): LocalizedMap<string> {
   if (!hankkeenKuvaus) {
     return undefined;
   }
@@ -377,6 +469,13 @@ export function adaptAloitusKuulutusJulkaisut(
 
 export function adaptVelho(velho: Velho): API.Velho {
   return { __typename: "Velho", ...velho };
+}
+
+export function findVuorovaikutusByNumber(
+  projekti: DBProjekti,
+  vuorovaikutusNumero: number
+): Vuorovaikutus | undefined {
+  return projekti.vuorovaikutukset?.filter((value) => value.vuorovaikutusNumero == vuorovaikutusNumero).pop();
 }
 
 export const projektiAdapter = new ProjektiAdapter();

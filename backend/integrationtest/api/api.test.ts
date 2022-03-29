@@ -3,6 +3,7 @@ import { api } from "./apiClient";
 import { setupLocalDatabase } from "../util/databaseUtil";
 import * as log from "loglevel";
 import {
+  AineistoInput,
   AsiakirjaTyyppi,
   Kieli,
   Projekti,
@@ -10,6 +11,7 @@ import {
   ProjektiRooli,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
+  VelhoAineistoKategoria,
 } from "../../../common/graphql/apiModel";
 import fs from "fs";
 import axios from "axios";
@@ -28,6 +30,11 @@ import os from "os";
 
 const { expect } = require("chai");
 const sandbox = sinon.createSandbox();
+
+function expectToMatchSnapshot(description: string, obj: unknown) {
+  expect({ description, obj }).toMatchSnapshot();
+}
+
 describe("Api", () => {
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
   let userFixture: UserFixture;
@@ -139,14 +146,14 @@ describe("Api", () => {
       },
     });
     const projekti = await loadProjektiFromDatabase(oid);
-    expect(projekti.suunnitteluVaihe).toMatchSnapshot();
+    expectToMatchSnapshot("testSuunnitteluvaihePerustiedot", projekti.suunnitteluVaihe);
   }
 
   async function testSuunnitteluvaiheVuorovaikutus(oid: string, projektiPaallikko: ProjektiKayttaja) {
     const suunnitteluVaihe1 = await doTestSuunnitteluvaiheVuorovaikutus(oid, 1, [projektiPaallikko.kayttajatunnus]);
     expect(suunnitteluVaihe1.vuorovaikutukset).to.have.length(1);
     const suunnitteluVaihe2 = await doTestSuunnitteluvaiheVuorovaikutus(oid, 2, [projektiPaallikko.kayttajatunnus]);
-    expect(suunnitteluVaihe2).toMatchSnapshot();
+    expectToMatchSnapshot("testSuunnitteluvaiheVuorovaikutus", suunnitteluVaihe2);
 
     // Verify that it's possible to update one vuorovaikutus at the time
     const suunnitteluVaihe3 = await doTestSuunnitteluvaiheVuorovaikutus(oid, 2, [
@@ -159,7 +166,7 @@ describe("Api", () => {
       aColor: (a) => a,
       bColor: (b) => b,
     }).replace(new RegExp("[" + os.EOL + "]+", "g"), os.EOL);
-    expect(difference).toMatchSnapshot();
+    expectToMatchSnapshot("modified testSuunnitteluvaiheVuorovaikutus", difference);
   }
 
   async function doTestSuunnitteluvaiheVuorovaikutus(
@@ -181,12 +188,50 @@ describe("Api", () => {
     expect(aineistot).not.be.empty;
     const link = await api.haeVelhoProjektiAineistoLinkki(oid, aineistot[0].oid);
     expect(link).to.contain("https://");
+    return velhoAineistoKategories;
+  }
+
+  async function testImportAineistot(oid: string, velhoAineistoKategorias: VelhoAineistoKategoria[]) {
+    const originalVuorovaikutus = (await loadProjektiFromDatabase(oid)).suunnitteluVaihe.vuorovaikutukset[0];
+
+    let order = 1;
+    const aineistot = velhoAineistoKategorias.reduce((documents, aineistoKategoria) => {
+      aineistoKategoria.aineistot.forEach((aineisto) => {
+        documents.push({ dokumenttiOid: aineisto.oid, jarjestys: order++, kategoria: aineistoKategoria.kategoria });
+      });
+      return documents;
+    }, [] as AineistoInput[]);
+
+    async function saveAndVerifyAineistoSave(oid: string, aineistot: AineistoInput[]) {
+      await api.tallennaProjekti({
+        oid,
+        suunnitteluVaihe: {
+          vuorovaikutus: {
+            ...originalVuorovaikutus,
+            aineistot,
+          },
+        },
+      });
+      const vuorovaikutus = (await loadProjektiFromDatabase(oid)).suunnitteluVaihe.vuorovaikutukset[0];
+      vuorovaikutus.aineistot?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
+      expectToMatchSnapshot("saveAndVerifyAineistoSave", vuorovaikutus);
+    }
+
+    await saveAndVerifyAineistoSave(oid, aineistot);
+    aineistot.map((aineisto) => {
+      aineisto.kategoria = aineisto.kategoria + " new";
+      aineisto.jarjestys = aineisto.jarjestys + 10;
+    });
+    await saveAndVerifyAineistoSave(oid, aineistot);
+
+    const aineistotWithoutFirst = aineistot.slice(1);
+    await saveAndVerifyAineistoSave(oid, aineistotWithoutFirst);
   }
 
   async function testPublicAccessToProjekti(oid: string) {
     userFixture.logout();
     const publicProjekti = await loadProjektiFromDatabase(oid);
-    expect(publicProjekti).toMatchSnapshot();
+    expectToMatchSnapshot("publicProjekti", publicProjekti);
   }
 
   async function archiveProjekti(oid: string) {
@@ -210,7 +255,8 @@ describe("Api", () => {
     await testAloituskuulutusApproval(oid, projektiPaallikko);
     await testSuunnitteluvaihePerustiedot(oid);
     await testSuunnitteluvaiheVuorovaikutus(oid, projektiPaallikko);
-    await testListDocumentsToImport(oid);
+    const velhoAineistoKategorias = await testListDocumentsToImport(oid);
+    await testImportAineistot(oid, velhoAineistoKategorias);
     await testPublicAccessToProjekti(oid);
     await archiveProjekti(oid);
   });
