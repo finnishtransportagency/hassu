@@ -46,6 +46,7 @@ import SectionContent from "@components/layout/SectionContent";
 import HassuStack from "@components/layout/HassuStack";
 import HassuGrid from "@components/HassuGrid";
 import { GetParameterResult } from "aws-sdk/clients/ssm";
+import HassuSpinner from "@components/HassuSpinner";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
 type RequiredProjektiFields = Required<{
@@ -676,6 +677,7 @@ export default function Aloituskuulutus({
           </div>
         </>
       )}
+      <HassuSpinner open={isFormSubmitting || isLoadingProjekti}/>
     </ProjektiPageLayout>
   );
 }

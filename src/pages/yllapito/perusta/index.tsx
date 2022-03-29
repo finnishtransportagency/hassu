@@ -13,6 +13,7 @@ import useTranslation from "next-translate/useTranslation";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import Table from "@components/Table";
+import HassuSpinner from "@components/HassuSpinner";
 
 interface SearchInput {
   name: string;
@@ -27,8 +28,10 @@ enum SearchError {
   NO_RESULTS = "NO_RESULTS",
   SEARCH_UNSUCCESSFUL = "SEARCH_UNSUCCESSFUL",
 }
-
-export default function Perusta() {
+interface Props {
+  unitTest?: true
+}
+export default function Perusta(props:Props) {
   const { t } = useTranslation("velho-haku");
   const router = useRouter();
   const [hakuTulos, setHakuTulos] = useState<VelhoHakuTulos[] | null>([]);
@@ -168,6 +171,7 @@ export default function Perusta() {
           )}
         </Section>
       )}
+      {!props.unitTest && (<HassuSpinner open={isLoading}/>)}
     </>
   );
 }

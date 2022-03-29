@@ -19,6 +19,7 @@ import { getProjektiValidationSchema, ProjektiTestType } from "../../../../schem
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import Section from "@components/layout/Section";
 import HassuStack from "@components/layout/HassuStack";
+import HassuSpinner from "@components/HassuSpinner";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
@@ -116,6 +117,7 @@ export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
           </fieldset>
         </form>
       </FormProvider>
+      <HassuSpinner open={formIsSubmitting || isLoadingProjekti}/>
     </ProjektiPageLayout>
   );
 }

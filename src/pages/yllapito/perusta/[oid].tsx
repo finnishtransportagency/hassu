@@ -19,6 +19,7 @@ import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/proje
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import Section from "@components/layout/Section";
+import HassuSpinner from "@components/HassuSpinner";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
@@ -141,6 +142,7 @@ export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactEle
           </fieldset>
         </form>
       </FormProvider>
+      <HassuSpinner open={formIsSubmitting || isLoadingProjekti}/>
     </section>
   );
 }

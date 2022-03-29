@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import log from "loglevel";
 import useTranslation from "next-translate/useTranslation";
 import Table from "@components/Table";
+import HassuSpinner from "@components/HassuSpinner";
 
 const PROJEKTI_TYYPPI_PARAM = "tyyppi";
 
@@ -73,6 +74,7 @@ const VirkamiesHomePage = () => {
           },
         ]}
       />
+      <HassuSpinner open={isLoading}/>
     </section>
   );
 };
