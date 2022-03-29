@@ -28,6 +28,8 @@ const defaultLabels: RouteLabels = {
   "/yllapito/ohjeet": { label: "Ohjeet" },
   "/suunnitelma": { label: "Suunnitelmat" },
   "/suunnitelma/[oid]/aloituskuulutus": { label: "Aloituskuulutus" },
+  "/suunnitelma/[oid]/suunnittelu": { label: "Suunnittelu" },
+  "/suunnitelma/[oid]/nahtavillaolo": { label: "Nähtävilläolo" },
   "/suunnitelma/[...all]": { label: "Tutki suunnitelmaa" },
   "/_error": { label: "Virhe" },
 };

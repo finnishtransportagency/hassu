@@ -294,7 +294,7 @@ Array [
       },
       "ilmoituksenVastaanottajat": undefined,
       "kuulutusPaiva": "2022-01-02",
-      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "siirtyySuunnitteluVaiheeseen": "2999-01-01",
     },
     "euRahoitus": false,
     "kayttoOikeudet": Array [
@@ -374,7 +374,7 @@ Array [
       },
       "ilmoituksenVastaanottajat": undefined,
       "kuulutusPaiva": "2022-01-02",
-      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "siirtyySuunnitteluVaiheeseen": "2999-01-01",
     },
     "euRahoitus": false,
     "kayttoOikeudet": Array [
@@ -553,7 +553,7 @@ Object {
     "ilmoituksenVastaanottajat": undefined,
     "kuulutusPaiva": "2022-01-02",
     "palautusSyy": null,
-    "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+    "siirtyySuunnitteluVaiheeseen": "2999-01-01",
   },
   "aloitusKuulutusJulkaisut": Array [
     Object {
@@ -587,7 +587,7 @@ Object {
       },
       "kuulutusPaiva": "2022-01-02",
       "muokkaaja": "A123",
-      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "siirtyySuunnitteluVaiheeseen": "2999-01-01",
       "suunnitteluSopimus": Object {
         "__typename": "SuunnitteluSopimus",
         "email": "a@b.com",
@@ -720,7 +720,7 @@ Object {
           "toissijainenKieli": "SAAME",
         },
         "kuulutusPaiva": "2022-01-02",
-        "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+        "siirtyySuunnitteluVaiheeseen": "2999-01-01",
         "suunnitteluSopimus": Object {
           "__typename": "SuunnitteluSopimus",
           "email": "a@b.com",
@@ -760,6 +760,7 @@ Object {
     ],
     "euRahoitus": false,
     "oid": "1",
+    "status": "ALOITUSKUULUTUS",
   },
 }
 `;

@@ -6,7 +6,13 @@ import {
   SuunnitteluSopimus,
 } from "../database/model/projekti";
 import * as API from "../../../common/graphql/apiModel";
-import { AloitusKuulutusPDFt, AloitusKuulutusTila, Kieli, ProjektiJulkinen } from "../../../common/graphql/apiModel";
+import {
+  AloitusKuulutusPDFt,
+  AloitusKuulutusTila,
+  Kieli,
+  ProjektiJulkinen,
+  Status,
+} from "../../../common/graphql/apiModel";
 import pickBy from "lodash/pickBy";
 import dayjs from "dayjs";
 import { adaptHankkeenKuvaus, adaptKielitiedot, adaptVelho, adaptYhteystiedot } from "./projektiAdapter";
@@ -15,6 +21,51 @@ import { log } from "../logger";
 import { parseDate } from "../util/dateUtil";
 
 class ProjektiAdapterJulkinen {
+  applyStatus(projekti: ProjektiJulkinen) {
+    function checkAloituskuulutus() {
+      if (projekti.aloitusKuulutusJulkaisut) {
+        const julkisetAloituskuulutukset = projekti.aloitusKuulutusJulkaisut.filter((julkaisu) => {
+          return julkaisu.kuulutusPaiva && parseDate(julkaisu.kuulutusPaiva).isBefore(dayjs());
+        });
+
+        if (julkisetAloituskuulutukset?.length > 0) {
+          projekti.status = Status.ALOITUSKUULUTUS;
+        }
+      }
+    }
+
+    function checkSuunnittelu() {
+      // Valiaikainen ui kehitysta varten, kunnes suunnitteluvaihe tietomallissa
+      if (projekti.aloitusKuulutusJulkaisut) {
+        const siirtynytSuunnitteluun = projekti.aloitusKuulutusJulkaisut.filter((julkaisu) => {
+          return (
+            julkaisu.siirtyySuunnitteluVaiheeseen && parseDate(julkaisu.siirtyySuunnitteluVaiheeseen).isBefore(dayjs())
+          );
+        });
+
+        if (siirtynytSuunnitteluun?.length > 0) {
+          projekti.status = Status.SUUNNITTELU;
+        }
+      }
+    }
+
+    projekti.status = Status.EI_JULKAISTU;
+
+    checkAloituskuulutus();
+
+    checkSuunnittelu();
+
+    // checkNahtavillaolo();
+
+    // checkHyvaksyttavana();
+
+    // checkPaatos();
+
+    // checkLainvoima();
+
+    return projekti;
+  }
+
   public adaptProjekti(dbProjekti: DBProjekti): API.ProjektiJulkinen | undefined {
     const aloitusKuulutusJulkaisut = this.adaptAloitusKuulutusJulkaisut(
       dbProjekti.oid,
@@ -100,7 +151,9 @@ class ProjektiAdapterJulkinen {
   }
 }
 
-function checkIfAloitusKuulutusJulkaisutIsPublic(aloitusKuulutusJulkaisut: API.AloitusKuulutusJulkaisuJulkinen[]): boolean {
+function checkIfAloitusKuulutusJulkaisutIsPublic(
+  aloitusKuulutusJulkaisut: API.AloitusKuulutusJulkaisuJulkinen[]
+): boolean {
   if (!(aloitusKuulutusJulkaisut && aloitusKuulutusJulkaisut.length == 1)) {
     log.info("Projektilla ei ole hyväksyttyä aloituskuulutusta");
     return false;

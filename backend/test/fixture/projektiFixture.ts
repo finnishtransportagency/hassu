@@ -88,7 +88,7 @@ export class ProjektiFixture {
     kuulutusPaiva: "2022-01-02",
     hankkeenKuvaus: { SUOMI: "Lorem Ipsum", RUOTSI: "På Svenska", SAAME: "Saameksi" },
 
-    siirtyySuunnitteluVaiheeseen: "2022-01-01",
+    siirtyySuunnitteluVaiheeseen: "2999-01-01",
     elyKeskus: "Pirkanmaa",
     esitettavatYhteystiedot: [
       {

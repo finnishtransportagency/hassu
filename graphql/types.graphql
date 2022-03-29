@@ -44,6 +44,7 @@ enum Status {
   ALOITUSKUULUTUS
   SUUNNITTELU
   NAHTAVILLAOLO
+  HYVAKSYNNASSA
   HYVAKSYMISPAATOS
   LAINVOIMA
   ARKISTOITU
@@ -203,6 +204,7 @@ type ProjektiJulkinen implements IProjekti {
   oid: String!
   aloitusKuulutusJulkaisut: [AloitusKuulutusJulkaisuJulkinen!]
   euRahoitus: Boolean
+  status: Status
 }
 
 type Suunnitelma {
