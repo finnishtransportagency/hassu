@@ -77,11 +77,14 @@ const Autocomplete = <T extends unknown>({
     }
   }, [prevTimer, timer]);
 
+  const [fetchingUsers, setFetchingUsers] = useState(false);
   useEffect(() => {
     let isMounted = true;
     const fetchOptions = async (text: string, fetcher: (text: string) => Promise<T[]> | T[]) => {
+      setFetchingUsers(true);
       const newTimer = setTimeout(async () => {
         const result = await fetcher(text);
+        setFetchingUsers(false);
         if (isMounted) {
           setFilteredOptions(result);
         }
@@ -212,9 +215,9 @@ const Autocomplete = <T extends unknown>({
             blur();
           }}
         />
-        {showOptions && (
+        {textValue.length > 2 && showOptions && (
           <div ref={listRef} className="max-h-96 bg-white absolute overflow-y-auto w-full border shadow-lg z-10">
-            {loading ? (
+            {loading || fetchingUsers ? (
               "Ladataan..."
             ) : slicedOptions.length > 0 ? (
               <ul>

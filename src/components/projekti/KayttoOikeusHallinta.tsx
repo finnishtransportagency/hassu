@@ -178,7 +178,7 @@ const UserFields = ({
   } = useFormContext<RequiredInputValues>();
 
   async function listUserOptions(hakusana: string): Promise<Kayttaja[]> {
-    if (getKayttajaNimi(kayttaja) !== hakusana && !disableFields && hakusana.length > 0) {
+    if (getKayttajaNimi(kayttaja) !== hakusana && !disableFields && hakusana.length > 2) {
       return await api.listUsers({ hakusana });
     } else if (kayttaja) {
       return Promise.resolve([kayttaja]);
