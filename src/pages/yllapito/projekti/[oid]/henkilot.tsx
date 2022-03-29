@@ -20,6 +20,7 @@ import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import Section from "@components/layout/Section";
 import HassuStack from "@components/layout/HassuStack";
 import HassuSpinner from "@components/HassuSpinner";
+import useSnackbars from "src/hooks/useSnackbars";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
@@ -62,6 +63,7 @@ export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
 
   const useFormReturn = useForm<FormValues>(formOptions);
   const { reset, handleSubmit } = useFormReturn;
+  const { showSuccessMessage, showErrorMessage } = useSnackbars();
 
   const onSubmit = async (formData: FormValues) => {
     deleteFieldArrayIds(formData?.kayttoOikeudet);
@@ -69,7 +71,9 @@ export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
     try {
       await api.tallennaProjekti(formData);
       mutateProjekti();
+      showSuccessMessage("Henkilötietojen tallennus onnistui");
     } catch (e) {
+      showErrorMessage("Tietojen tallennuksessa tapahtui virhe");
       log.log("OnSubmit Error", e);
     }
     setFormIsSubmitting(false);
