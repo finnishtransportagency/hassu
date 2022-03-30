@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import log from "loglevel";
 import useTranslation from "next-translate/useTranslation";
 import Table from "@components/Table";
+import Notification from "@components/notification/Notification";
 import HassuSpinner from "@components/HassuSpinner";
 
 import { styled, experimental_sx as sx } from "@mui/material";
@@ -133,7 +134,7 @@ const VirkamiesHomePage = () => {
           </Button>
         </SearchSection>
       </form>
-      <Section>
+      <Section noDivider>
         <Tabs
           value={tyyppi}
           onChange={(_, value) => {
@@ -151,14 +152,14 @@ const VirkamiesHomePage = () => {
             },
             {
               label:
-                "Tiesuunnitelmat" +
+                "Ratasuunnitelmat" +
                 (hakutulos?.hasOwnProperty("ratasuunnitelmatMaara") && ` (${hakutulos?.ratasuunnitelmatMaara || 0})`),
               content: <HomePageTable isLoading={isLoading} hakutulos={hakutulos} />,
               value: ProjektiTyyppi.RATA,
             },
             {
               label:
-                "Tiesuunnitelmat" +
+                "Yleissuunnitelmat" +
                 (hakutulos?.hasOwnProperty("yleissuunnitelmatMaara") && ` (${hakutulos?.yleissuunnitelmatMaara || 0})`),
               content: <HomePageTable isLoading={isLoading} hakutulos={hakutulos} />,
               value: ProjektiTyyppi.YLEINEN,
@@ -179,23 +180,29 @@ interface TableProps {
 const HomePageTable = ({ hakutulos, isLoading }: TableProps) => {
   const { t } = useTranslation();
   return (
-    <Table
-      cols={[
-        { header: "Nimi", data: (projekti) => projekti.nimi, fraction: 4 },
-        { header: "Asiatunnus", data: (projekti) => projekti.asiatunnus, fraction: 2 },
-        { header: "Projektipäällikkö", data: (projekti) => projekti.projektipaallikko, fraction: 2 },
-        {
-          header: "Vastuuorganisaatio",
-          data: (projekti) => t(`projekti:vastaava-viranomainen.${projekti.suunnittelustaVastaavaViranomainen}`),
-          fraction: 2,
-        },
-        { header: "Vaihe", data: (projekti) => t(`projekti:projekti-status.${projekti.vaihe}`), fraction: 1 },
-        { header: "Päivitetty", data: (projekti) => formatDate(projekti.paivitetty), fraction: 1 },
-      ]}
-      rows={hakutulos?.tulokset || []}
-      isLoading={isLoading}
-      rowLink={(projekti) => `/yllapito/projekti/${encodeURIComponent(projekti.oid)}`}
-    />
+    <>
+      {hakutulos?.tulokset?.length && hakutulos?.tulokset?.length > 0 ? (
+        <Table
+          cols={[
+            { header: "Nimi", data: (projekti) => projekti.nimi, fraction: 4 },
+            { header: "Asiatunnus", data: (projekti) => projekti.asiatunnus, fraction: 2 },
+            { header: "Projektipäällikkö", data: (projekti) => projekti.projektipaallikko, fraction: 2 },
+            {
+              header: "Vastuuorganisaatio",
+              data: (projekti) => t(`projekti:vastaava-viranomainen.${projekti.suunnittelustaVastaavaViranomainen}`),
+              fraction: 2,
+            },
+            { header: "Vaihe", data: (projekti) => t(`projekti:projekti-status.${projekti.vaihe}`), fraction: 1 },
+            { header: "Päivitetty", data: (projekti) => formatDate(projekti.paivitetty), fraction: 1 },
+          ]}
+          rows={hakutulos?.tulokset || []}
+          isLoading={isLoading}
+          rowLink={(projekti) => `/yllapito/projekti/${encodeURIComponent(projekti.oid)}`}
+        />
+      ) : (
+        <p>Ei projekteja.</p>
+      )}
+    </>
   );
 };
 
