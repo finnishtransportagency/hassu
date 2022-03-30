@@ -197,6 +197,7 @@ type Velho {
   vaylamuoto: [String!]
   asiatunnusVayla: String
   asiatunnusELY: String
+  suunnittelustaVastaavaViranomainen: Viranomainen
   tilaajaOrganisaatio: String
   toteuttavaOrganisaatio: String
   vastuuhenkilonNimi: String
@@ -425,4 +426,6 @@ type ProjektiHakutulosDokumentti {
   suunnittelustaVastaavaViranomainen: Viranomainen
   vaihe: Status
   projektiTyyppi: ProjektiTyyppi
+  paivitetty: String
+  projektipaallikko: String
 }

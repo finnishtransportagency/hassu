@@ -95,7 +95,11 @@ export type Velho = {
   vaylamuoto?: string[] | null;
   asiatunnusVayla?: string | null;
   asiatunnusELY?: string | null;
+  /**
+   * @deprecated suunnittelustaVastaavaViranomainen is the correct one
+   */
   tilaajaOrganisaatio?: string | null;
+  suunnittelustaVastaavaViranomainen?: Viranomainen | null;
   toteuttavaOrganisaatio?: string | null;
   vastuuhenkilonNimi?: string | null;
   vastuuhenkilonEmail?: string | null;
@@ -114,6 +118,9 @@ export type DBProjekti = {
    * @deprecated velho.tyyppi is the correct one
    */
   tyyppi?: ProjektiTyyppi | null;
+  /**
+   * @deprecated velho.suunnittelustaVastaavaViranomainen is the correct one
+   */
   suunnittelustaVastaavaViranomainen?: Viranomainen | null;
   kielitiedot?: Kielitiedot | null;
   euRahoitus?: boolean | null;

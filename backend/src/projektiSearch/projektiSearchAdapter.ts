@@ -30,7 +30,7 @@ export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocu
     nimi: projekti.velho.nimi,
     asiatunnus: projekti.velho.asiatunnusELY || projekti.velho.asiatunnusVayla,
     projektiTyyppi: projekti.velho.tyyppi,
-    suunnittelustaVastaavaViranomainen: projekti.suunnittelustaVastaavaViranomainen,
+    suunnittelustaVastaavaViranomainen: projekti.velho.suunnittelustaVastaavaViranomainen,
     maakunnat: projekti.velho.maakunnat,
     vaihe: apiProjekti.status,
     vaylamuoto: projekti.velho.vaylamuoto,

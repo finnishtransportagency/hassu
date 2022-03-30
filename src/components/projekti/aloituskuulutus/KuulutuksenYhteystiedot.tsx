@@ -63,7 +63,7 @@ function KuulutuksenYhteystiedot<T extends FormValues>({
         </p>
       </SectionContent>
       {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
-        <FormGroup label="Projektiin tallennetut henkilöt">
+        <FormGroup label="Projektiin tallennetut henkilöt" inlineFlex>
           {projekti.kayttoOikeudet.map(({ nimi, rooli }, index) =>
             rooli === ProjektiRooli.PROJEKTIPAALLIKKO ? (
               <CheckBox key={index} label={nimi} disabled defaultChecked />

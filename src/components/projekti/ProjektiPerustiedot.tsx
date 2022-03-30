@@ -15,11 +15,13 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
     { header: "Asiatunnus", data: velho?.asiatunnusELY },
     {
       header: "Suunnittelusta vastaava viranomainen",
-      data: velho?.tilaajaOrganisaatio,
+      data:
+        velho?.suunnittelustaVastaavaViranomainen &&
+        t(`vastaava-viranomainen.${velho.suunnittelustaVastaavaViranomainen}`),
     },
     {
       header: "Suunnitelman tyyppi",
-      data: velho?.tyyppi && t(`projekti-tyyppi.${velho?.tyyppi}`),
+      data: velho?.tyyppi && t(`projekti-tyyppi.${velho.tyyppi}`),
     },
     {
       header: "Väylämuoto",

@@ -29,9 +29,9 @@ enum SearchError {
   SEARCH_UNSUCCESSFUL = "SEARCH_UNSUCCESSFUL",
 }
 interface Props {
-  unitTest?: true
+  unitTest?: true;
 }
-export default function Perusta(props:Props) {
+export default function Perusta(props: Props) {
   const { t } = useTranslation("velho-haku");
   const router = useRouter();
   const [hakuTulos, setHakuTulos] = useState<VelhoHakuTulos[] | null>([]);
@@ -63,7 +63,7 @@ export default function Perusta(props:Props) {
   const onSubmit = useCallback(
     async (data: SearchInput) => {
       if (router.query[PROJEKTI_NIMI_PARAM] !== data.name) {
-        await router.push({ query: { [PROJEKTI_NIMI_PARAM]: data.name } });
+        await router.replace({ query: { [PROJEKTI_NIMI_PARAM]: data.name } }, undefined, { scroll: false });
         // Route change will trigger onSubmit (this function) another time
         // Return so that requests are not duplicated.
         return;
@@ -171,7 +171,7 @@ export default function Perusta(props:Props) {
           )}
         </Section>
       )}
-      {!props.unitTest && (<HassuSpinner open={isLoading}/>)}
+      {!props.unitTest && <HassuSpinner open={isLoading} />}
     </>
   );
 }

@@ -223,6 +223,7 @@ const UserFields = ({
             error={errors.kayttoOikeudet?.[index]?.rooli}
             options={rooliOptions.filter((rooli) => rooli.value !== ProjektiRooli.PROJEKTIPAALLIKKO)}
             disabled={disableFields || isProjektiPaallikko}
+            addEmptyOption
           />
         )}
         <TextInput
