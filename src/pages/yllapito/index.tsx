@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import log from "loglevel";
 import useTranslation from "next-translate/useTranslation";
 import Table from "@components/Table";
-import Notification from "@components/notification/Notification";
 import HassuSpinner from "@components/HassuSpinner";
 
 import { styled, experimental_sx as sx } from "@mui/material";
