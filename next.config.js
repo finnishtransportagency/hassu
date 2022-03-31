@@ -60,7 +60,6 @@ function setupLocalDevelopmentMode(config, env) {
           },
         ])
       );
-      console.log(config);
       return config;
     },
   };

@@ -7,6 +7,7 @@ type Query {
   listaaVelhoProjektit(nimi: String!, requireExactMatch: Boolean): [VelhoHakuTulos!]
   listaaVelhoProjektiAineistot(oid: String!): [VelhoAineistoKategoria!]
   haeVelhoProjektiAineistoLinkki(oid: String!, dokumenttiOid: String!): String
+  haeProjektiMuutoksetVelhosta(oid: String!): Velho
 
   esikatseleAsiakirjaPDF(
     oid: String!
@@ -22,6 +23,8 @@ type Query {
 type Mutation {
   tallennaProjekti(projekti: TallennaProjektiInput!): String
   siirraTila(tilasiirtyma: TilaSiirtymaInput): String
+
+  synkronoiProjektiMuutoksetVelhosta(oid: String!): Velho
 
   arkistoiProjekti(oid: String!): ArkistointiTunnus
 }
