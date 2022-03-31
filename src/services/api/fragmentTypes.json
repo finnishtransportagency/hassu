@@ -51,6 +51,18 @@
       },
       {
         "kind": "OBJECT",
+        "name": "Aineisto",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "AineistoInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "AloitusKuulutus",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -161,6 +173,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "ENUM",
+        "name": "KaytettavaPalvelu",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "OBJECT",
         "name": "Kayttaja",
         "possibleTypes": null,
@@ -209,6 +227,18 @@
         "__typename": "__Type"
       },
       {
+        "kind": "OBJECT",
+        "name": "Linkki",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "LinkkiInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "INPUT_OBJECT",
         "name": "ListaaKayttajatInput",
         "possibleTypes": null,
@@ -229,6 +259,12 @@
       {
         "kind": "OBJECT",
         "name": "NykyinenKayttaja",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Palaute",
         "possibleTypes": null,
         "__typename": "__Type"
       },
@@ -335,6 +371,18 @@
         "__typename": "__Type"
       },
       {
+        "kind": "OBJECT",
+        "name": "SuunnitteluVaihe",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "SuunnitteluVaiheInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "INPUT_OBJECT",
         "name": "TallennaProjektiInput",
         "possibleTypes": null,
@@ -372,6 +420,18 @@
       },
       {
         "kind": "OBJECT",
+        "name": "VelhoAineisto",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "VelhoAineistoKategoria",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "VelhoHakuTulos",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -391,6 +451,36 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "ViranomaisVastaanottajaInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Vuorovaikutus",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "VuorovaikutusInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "VuorovaikutusTilaisuus",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "VuorovaikutusTilaisuusInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "VuorovaikutusTilaisuusTyyppi",
         "possibleTypes": null,
         "__typename": "__Type"
       },

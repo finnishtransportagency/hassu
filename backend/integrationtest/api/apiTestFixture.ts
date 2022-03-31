@@ -105,7 +105,7 @@ class ApiTestFixture {
     ];
   };
 
-  suunnitteluVaihe = (vuorovaikutusNumero: number, vuorovaikutusYhteysHenkilot: string[]): SuunnitteluVaiheInput => ({
+  suunnitteluVaihe = (vuorovaikutusNumero: number, vuorovaikutusYhteysHenkilot?: string[]): SuunnitteluVaiheInput => ({
     vuorovaikutus: {
       vuorovaikutusNumero,
       vuorovaikutusJulkaisuPaiva: "2022-03-23",

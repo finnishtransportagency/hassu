@@ -24,27 +24,36 @@ axios.interceptors.request.use((request: AxiosRequestConfig) => {
   const contentType = request.headers["content-type"];
 
   if (contentType && contentType.includes("image")) {
-    log.debug("Request", request.url + "\n" + JSON.stringify(request.headers));
+    log.debug("Request", { url: request.url });
   } else {
-    log.debug("Request", request.url + "\n" + JSON.stringify(request.headers) + "\n" + request.data);
+    log.debug("Request", { url: request.url, data: stripTooLongLogs(request.data) });
   }
 
   return request;
 });
 
-function stripTooLongLogs(response: AxiosResponse) {
-  let data = `${response.data}`;
-  if (data?.length > 1000) {
-    data = data.slice(0, 1000) + "...";
+function stripTooLongLogs(data: any) {
+  if (!data) {
+    return undefined;
+  }
+  const text = JSON.stringify(data);
+  if (text.length > 10000) {
+    return text.slice(0, 10000) + "...";
   }
   return data;
 }
 
 function logResponse(level: string, response: AxiosResponse, contentType?: string) {
   if (contentType && contentType.includes("image")) {
-    log[level]({ response: response.status + " " + response.statusText });
+    log[level]({ response: { status: response.status, statusText: response.statusText } });
   } else {
-    log[level]({ response: response.status + " " + response.statusText + "\n" + stripTooLongLogs(response) });
+    log[level]({
+      response: {
+        status: response.status,
+        statusText: response.statusText,
+        data: response.headers?.["content-type"] != "binary/octet-stream" ? stripTooLongLogs(response.data) : undefined,
+      },
+    });
   }
 }
 

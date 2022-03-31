@@ -26,6 +26,8 @@ export type CreateFileProperties = {
 
 export type PersistFileProperties = { targetFilePathInProjekti: string; uploadedFileSource: string; oid: string };
 
+export type DeleteFileProperties = { fullFilePathInProjekti: string; oid: string };
+
 export class FileService {
   /**
    * Prepare upload URL for a given file. The uploaded file can be persisted to a projekti with persistFileToProjekti function call.
@@ -245,6 +247,20 @@ export class FileService {
       log.error("CopyObject failed", e);
       throw e;
     }
+  }
+
+  async deleteFileFromProjekti({ oid, fullFilePathInProjekti }: DeleteFileProperties) {
+    const sourcePrefix = FileService.getYllapitoProjektiDirectory(oid);
+    const key = sourcePrefix + fullFilePathInProjekti;
+
+    const bucket = config.yllapitoBucketName;
+    await getS3()
+      .deleteObject({
+        Bucket: bucket,
+        Key: key,
+      })
+      .promise();
+    log.info(`Deleted file ${bucket}/${key}`);
   }
 }
 

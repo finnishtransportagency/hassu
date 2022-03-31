@@ -26,6 +26,19 @@ export type Vuorovaikutus = {
   // Lista kayttajatunnuksia
   vuorovaikutusYhteysHenkilot?: Array<string> | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
+  aineistot?: Aineisto[] | null;
+};
+
+export type Aineisto = {
+  kategoria?: string | null;
+  // Dokumentin oid Velhossa
+  dokumenttiOid?: string | null;
+  // Suhteellinen polku tiedostoon yllapidon S3-bucketissa projektin alla
+  tiedosto: string;
+  // Aikaleima, milloin tiedosto on tuotu jarjestelmaan yyyy-MM-ddTHH:mm
+  tuotu: string;
+  // Numero jarjestamista varten
+  jarjestys?: number | null;
 };
 
 export type VuorovaikutusTilaisuus = {

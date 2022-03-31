@@ -124,7 +124,11 @@ type Linkki {
 }
 
 type Aineisto {
-  kategoria: String!
+  kategoria: String
+  """
+  Dokumentin oid Velhossa
+  """
+  dokumenttiOid: String
   """
   Suhteellinen polku tiedostoon yllapidon S3-bucketissa projektin alla
   """
@@ -133,6 +137,10 @@ type Aineisto {
   Aikaleima, milloin tiedosto on tuotu jarjestelmaan yyyy-MM-ddTHH:mm
   """
   tuotu: String!
+  """
+  Numero jarjestamista varten
+  """
+  jarjestys: Int
 }
 
 type Palaute {
