@@ -165,22 +165,22 @@ Array [
             className="css-bdnlv6"
           >
             <div
-              className="css-1b06wj0"
+              className="css-1ahfm29"
             >
               Asiatunnus
             </div>
             <div
-              className="css-1b06wj0"
+              className="css-1ahfm29"
             >
               Nimi
             </div>
             <div
-              className="css-1b06wj0"
+              className="css-1ahfm29"
             >
               Tyyppi
             </div>
             <div
-              className="css-1b06wj0"
+              className="css-1ahfm29"
             >
               Projektipäällikkö
             </div>
@@ -196,7 +196,7 @@ Array [
             onMouseEnter={[Function]}
           >
             <div
-              className="css-1w8t9p7"
+              className="css-100vy9s"
             >
               Asiatunnus
             </div>
@@ -206,7 +206,7 @@ Array [
               -
             </div>
             <div
-              className="css-1w8t9p7"
+              className="css-100vy9s"
             >
               Nimi
             </div>
@@ -216,7 +216,7 @@ Array [
               Tampereen tie Hanke
             </div>
             <div
-              className="css-1w8t9p7"
+              className="css-100vy9s"
             >
               Tyyppi
             </div>
@@ -226,7 +226,7 @@ Array [
               Tiesuunnitelma
             </div>
             <div
-              className="css-1w8t9p7"
+              className="css-100vy9s"
             >
               Projektipäällikkö
             </div>

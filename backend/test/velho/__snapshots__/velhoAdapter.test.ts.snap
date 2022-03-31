@@ -17,6 +17,7 @@ Object {
         "Uusimaa",
       ],
       "nimi": "Kaupungin sisääntulotien (mt 123) parantaminen välillä valtatien 1 eritasoliittymä - Päätie, Helsinki",
+      "suunnittelustaVastaavaViranomainen": "PIRKANMAAN_ELY",
       "tilaajaOrganisaatio": "Pirkanmaan ELY-keskus",
       "tyyppi": "TIE",
       "vastuuhenkilonEmail": "test@ely-keskus.fi",

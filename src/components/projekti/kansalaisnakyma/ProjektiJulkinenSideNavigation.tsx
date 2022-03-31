@@ -5,8 +5,11 @@ import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import HassuStack from "@components/layout/HassuStack";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
+import { Viranomainen } from "@services/api";
+import useTranslation from "next-translate/useTranslation";
 
 export default function ProjektiSideNavigation(): ReactElement {
+  const { t } = useTranslation("projekti");
   const router = useRouter();
   const oidParam = router.query.oid;
   const { data: projekti } = useProjektiJulkinen(oidParam as string);
@@ -28,8 +31,13 @@ export default function ProjektiSideNavigation(): ReactElement {
     sijainti = sijainti + velho.kunnat.join(", ");
   }
 
-  const getTilaajaLogoUrl = () => {
-    return kuulutus?.velho?.tilaajaOrganisaatio?.includes("ELY") ? "/ely-logo-vaaka.png" : "/vayla_sivussa_fi_sv_rgb.png";
+  const getTilaajaLogoImg = () => {
+    const viranomainen = kuulutus?.velho?.suunnittelustaVastaavaViranomainen;
+    if (Viranomainen.VAYLAVIRASTO === viranomainen) {
+      return { src: "/vayla_sivussa_fi_sv_rgb.png", alt: t(`common:vaylavirasto`) + " logo" };
+    } else {
+      return { src: "/ely-logo-vaaka.png", alt: t(`common:ely-keskus`) + " logo" };
+    }
   };
 
   return (
@@ -49,7 +57,7 @@ export default function ProjektiSideNavigation(): ReactElement {
         </div>
         <SectionContent className={styles["side-nav-content"]}>
           <HassuStack>
-            <img src={getTilaajaLogoUrl()} alt={`${kuulutus.velho.tilaajaOrganisaatio} logo`} />
+            <img {...getTilaajaLogoImg()} />
             {kuulutus.yhteystiedot.map((yt, index) => (
               <div key={yt.etunimi + yt.sukunimi} className="vayla-calling-card">
                 <p>{yt.organisaatio}</p>

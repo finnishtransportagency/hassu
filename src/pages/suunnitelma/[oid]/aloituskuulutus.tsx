@@ -99,8 +99,10 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
             <SectionContent>
               {suunnittelusopimus && (
                 <p>
-                  {suunnittelusopimus.kunta} ja {velho.tilaajaOrganisaatio} aloittavat yleissuunnitelman laatimisen
-                  tarpeellisine tutkimuksineen.
+                  {suunnittelusopimus.kunta} ja{" "}
+                  {velho.suunnittelustaVastaavaViranomainen &&
+                    t(`vastaava-viranomainen.${velho.suunnittelustaVastaavaViranomainen}`)}{" "}
+                  aloittavat yleissuunnitelman laatimisen tarpeellisine tutkimuksineen.
                 </p>
               )}
               <p>

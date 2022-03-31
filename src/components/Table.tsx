@@ -149,13 +149,14 @@ const Cell = styled("div")(
 const HeaderCell = styled(Cell)(
   sx({
     paddingBottom: { md: 2 },
-    fontWeight: 700,
+    color: "#7A7A7A",
   })
 );
 
-const BodyHeaderCell = styled(HeaderCell)(
+const BodyHeaderCell = styled(Cell)(
   sx({
     display: { xs: "block", md: "none" },
+    fontWeight: 700,
   })
 );
 

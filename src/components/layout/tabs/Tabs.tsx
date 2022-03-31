@@ -46,7 +46,7 @@ const TabPanel = styled(TabPanelUnstyled, { shouldForwardProp: isPropValid })(
 
 const TabsList = styled(TabsListUnstyled, { shouldForwardProp: isPropValid })(
   sx({
-    boxShadow: "0px -2px 0px 0px #E6E6E6 inset",
+    borderBottom: "2px solid #E6E6E6",
   })
 );
 
@@ -60,6 +60,7 @@ const Tab = styled(TabUnstyled, { shouldForwardProp: isPropValid })(
     borderTopRightRadius: "0.375rem",
     borderWidth: "2px",
     borderStyle: "solid",
+    marginBottom: "-2px",
     borderColor: "transparent",
     "&.TabUnstyled-root.Mui-selected": {
       borderColor: "#E6E6E6",
