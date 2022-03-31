@@ -16,8 +16,9 @@ interface Props {
   oid: string;
   activeStep: number;
   selectedStep: number;
+  vertical?: true;
 }
-export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep }: Props): ReactElement {
+export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep, vertical }: Props): ReactElement {
   const HassuConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {
       top: 22,
@@ -105,32 +106,48 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep 
   }
 
   const steps = [
-    "Suunnittelun käynnistäminen",
-    "Suunnittelussa",
-    "Suunnitteluaineisto nähtävillä",
-    "Hyväksynnässä",
-    "Päätös",
-    "Lainvoimaisuus",
+    `${vertical ? "1." : ""} Suunnittelun käynnistäminen`,
+    `${vertical ? "2." : ""} Suunnittelussa`,
+    `${vertical ? "3." : ""} Suunnitteluaineisto nähtävillä`,
+    `${vertical ? "4." : ""} Hyväksynnässä`,
+    `${vertical ? "5." : ""} Päätös`,
+    `${vertical ? "6." : ""} Lainvoimaisuus`,
   ];
 
-  // TODO: activeStepin rinnalle selectedStep, jolloin activeStep edustaa projektin sen hetkista tilaa
-  // ja selectedStep kayttajan stepperista navigoimaa tilaa
   return (
     <>
-      <div>
-        <Stepper alternativeLabel activeStep={activeStep} connector={<HassuConnector />}>
-          {steps.map((label, index) => (
-            <Step key={label}>
-              <StepLabel
-                StepIconComponent={HassuStepIcon}
-                sx={selectedStep == index ? { textDecoration: "underline" } : {}}
-              >
-                {label}
-              </StepLabel>
-            </Step>
-          ))}
-        </Stepper>
-      </div>
+      {!vertical && (
+        <div>
+          <Stepper alternativeLabel activeStep={activeStep} connector={<HassuConnector />}>
+            {steps.map((label, index) => (
+              <Step key={label}>
+                <StepLabel
+                  StepIconComponent={HassuStepIcon}
+                  sx={selectedStep == index ? { textDecoration: "underline" } : {}}
+                >
+                  {label}
+                </StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+        </div>
+      )}
+      {vertical && (
+        <div>
+          <Stepper activeStep={activeStep} orientation="vertical" connector={<HassuConnector />}>
+            {steps.map((label, index) => (
+              <Step key={label}>
+                <StepLabel
+                  StepIconComponent={HassuStepIcon}
+                  sx={selectedStep == index ? { textDecoration: "underline" } : {}}
+                >
+                  {label}
+                </StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+        </div>
+      )}
     </>
   );
 }

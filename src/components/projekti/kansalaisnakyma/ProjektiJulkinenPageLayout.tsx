@@ -49,6 +49,7 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
               oid={projekti.oid}
               activeStep={statusStep[projekti.status || Status.EI_JULKAISTU]}
               selectedStep={selectedStep}
+              vertical
             />
           </Section>
           <Section noDivider>
