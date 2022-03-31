@@ -60,12 +60,24 @@ class ProjektiSearchService {
 
     if (params.nimi) {
       queries.push({
-        match: {
-          nimi: {
-            query: params.nimi,
-            fuzziness: "AUTO",
-            minimum_should_match: -1,
-          },
+        bool: {
+          minimum_should_match: 1,
+          should: [
+            {
+              match_bool_prefix: {
+                nimi: params.nimi,
+              },
+            },
+            {
+              match: {
+                nimi: {
+                  query: params.nimi,
+                  fuzziness: "AUTO",
+                  minimum_should_match: -1,
+                },
+              },
+            },
+          ],
         },
       });
     }
