@@ -59,7 +59,15 @@ class ProjektiSearchService {
     const queries: unknown[] = [];
 
     if (params.nimi) {
-      queries.push({ match: { nimi: { query: params.nimi, operator: "and" } } });
+      queries.push({
+        match: {
+          nimi: {
+            query: params.nimi,
+            fuzziness: "AUTO",
+            minimum_should_match: -1,
+          },
+        },
+      });
     }
     if (params.asiatunnus) {
       queries.push({ term: { "asiatunnus.keyword": params.asiatunnus } });
