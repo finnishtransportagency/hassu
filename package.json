@@ -166,7 +166,7 @@
     "test": "npm-run-all --aggregate-output --parallel \"test:!(backend)\"",
     "husky:test": "npm-run-all --aggregate-output --parallel \"test:!(backend|integration)\"",
     "test:frontend": "jest --config \"./jest.frontend.config.js\"",
-    "test:backend": "cross-env TS_NODE_PROJECT=\"./backend/tsconfig.json\" mocha --update -r ts-node/register \"backend/test/**/*.test.ts\" --reporter mocha-multi-reporters --reporter-options configFile=mocha_reporter_config.json",
+    "test:backend": "cross-env TS_NODE_PROJECT=\"./backend/tsconfig.json\" mocha -r ts-node/register \"backend/test/**/*.test.ts\" --reporter mocha-multi-reporters --reporter-options configFile=mocha_reporter_config.json",
     "test:coverage": "nyc --report-dir .report/coverage --reporter text-summary --reporter lcov --reporter json --reporter clover npm run test:backend",
     "test:integration": "cross-env TS_NODE_PROJECT=\"./backend/tsconfig.json\" mocha -r ts-node/register \"backend/integrationtest/**/*.test.ts\"",
     "watch:test:frontend": "jest --config \"./jest.frontend.config.js\" --watch",
