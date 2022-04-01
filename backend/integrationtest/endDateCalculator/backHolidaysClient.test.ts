@@ -2,16 +2,11 @@
 import { describe, it } from "mocha";
 import { bankHolidaysClient } from "../../src/endDateCalculator/bankHolidaysClient";
 import dayjs from "dayjs";
-import { localstackS3Client } from "../util/s3Util";
 import * as sinon from "sinon";
 
 const { expect } = require("chai");
 
 describe("BackHolidaysClient", () => {
-  before(() => {
-    localstackS3Client();
-  });
-
   after(() => {
     sinon.restore();
   });

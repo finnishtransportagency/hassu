@@ -1,8 +1,9 @@
 import {
+  AineistoTila,
   IlmoituksenVastaanottajat,
   KaytettavaPalvelu,
   VuorovaikutusTilaisuusTyyppi,
-  Yhteystieto,
+  Yhteystieto
 } from "../../../../common/graphql/apiModel";
 import { LocalizedMap } from "./projekti";
 
@@ -34,11 +35,12 @@ export type Aineisto = {
   // Dokumentin oid Velhossa
   dokumenttiOid?: string | null;
   // Suhteellinen polku tiedostoon yllapidon S3-bucketissa projektin alla
-  tiedosto: string;
+  tiedosto?: string;
   // Aikaleima, milloin tiedosto on tuotu jarjestelmaan yyyy-MM-ddTHH:mm
-  tuotu: string;
+  tuotu?: string;
   // Numero jarjestamista varten
   jarjestys?: number | null;
+  tila: AineistoTila
 };
 
 export type VuorovaikutusTilaisuus = {

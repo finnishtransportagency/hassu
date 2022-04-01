@@ -23,7 +23,7 @@ const localDocumentClient = new DynamoDB.DocumentClient({
 // Try to use the database configuration from deployment in
 let localDynamoDBDocumentClientStub: SinonStub;
 
-function replaceAWSDynamoDBWithLocalstack() {
+export function replaceAWSDynamoDBWithLocalstack() {
   localDynamoDBDocumentClientStub = sinon.stub(dynamoDB, "getDynamoDBDocumentClient");
   localDynamoDBDocumentClientStub.returns(localDocumentClient);
 }

@@ -7,7 +7,6 @@ import { TilasiirtymaToiminto } from "../../../common/graphql/apiModel";
 import { aloitusKuulutusHandler } from "../../src/handler/aloitusKuulutusHandler";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
-import { localstackS3Client } from "../util/s3Util";
 import { personSearchUpdaterClient } from "../../src/personSearch/personSearchUpdaterClient";
 import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/personSearchUpdaterHandler";
 
@@ -26,7 +25,6 @@ describe("AloitusKuulutus", () => {
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
 
   before(async () => {
-    localstackS3Client();
     readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
     readUsersFromSearchUpdaterLambda.callsFake(async () => {
       return await personSearchUpdaterHandler.handleEvent();

@@ -13,6 +13,7 @@ import {
 import * as API from "../../../common/graphql/apiModel";
 import {
   AineistoInput,
+  AineistoTila,
   AloitusKuulutusInput,
   AloitusKuulutusPDFt,
   HankkeenKuvaukset,
@@ -79,7 +80,7 @@ export class ProjektiAdapter {
   async adaptProjektiToSave(
     projekti: DBProjekti,
     changes: API.TallennaProjektiInput
-  ): Promise<{ projekti: DBProjekti; aineistotToDelete?: Aineisto[] }> {
+  ): Promise<{ projekti: DBProjekti; aineistotToDelete?: Aineisto[]; vuorovaikutusNumeroForAineistotImport?: number }> {
     // Pick only fields that are relevant to DB
     const {
       oid,
@@ -94,7 +95,10 @@ export class ProjektiAdapter {
     } = changes;
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
     kayttoOikeudetManager.applyChanges(kayttoOikeudet);
-    const { vuorovaikutukset, aineistotToDelete } = adaptVuorovaikutusToSave(projekti, suunnitteluVaihe?.vuorovaikutus);
+    const { vuorovaikutukset, aineistotToDelete, vuorovaikutusNumeroForAineistotImport } = adaptVuorovaikutusToSave(
+      projekti,
+      suunnitteluVaihe?.vuorovaikutus
+    );
     const dbProjekti = mergeWith(
       {},
       {
@@ -110,7 +114,7 @@ export class ProjektiAdapter {
         vuorovaikutukset,
       }
     ) as DBProjekti;
-    return { projekti: dbProjekti, aineistotToDelete };
+    return { projekti: dbProjekti, aineistotToDelete, vuorovaikutusNumeroForAineistotImport };
   }
 
   /**
@@ -208,9 +212,16 @@ function adaptSuunnitteluVaiheToSave(suunnitteluVaihe: API.SuunnitteluVaiheInput
 function adaptVuorovaikutusToSave(
   projekti: DBProjekti,
   vuorovaikutus?: VuorovaikutusInput | null
-): { vuorovaikutukset?: Vuorovaikutus[]; aineistotToDelete?: Aineisto[] } {
+): {
+  vuorovaikutukset?: Vuorovaikutus[];
+  aineistotToDelete?: Aineisto[];
+  vuorovaikutusNumeroForAineistotImport?: number;
+} {
   if (vuorovaikutus) {
-    const { aineistot, aineistotToDelete } = adaptAineistotToSave(projekti, vuorovaikutus);
+    const { aineistot, aineistotToDelete, vuorovaikutusNumeroForAineistotImport } = adaptAineistotToSave(
+      projekti,
+      vuorovaikutus
+    );
     return {
       vuorovaikutukset: [
         {
@@ -223,6 +234,7 @@ function adaptVuorovaikutusToSave(
         },
       ],
       aineistotToDelete,
+      vuorovaikutusNumeroForAineistotImport,
     };
   }
   return { vuorovaikutukset: vuorovaikutus as undefined };
@@ -239,7 +251,7 @@ function pickAineistoFromInputByDocumenttiOid(aineistotInput: AineistoInput[], d
 function adaptAineistotToSave(
   projekti: DBProjekti,
   vuorovaikutusInput: VuorovaikutusInput
-): { aineistot?: Aineisto[]; aineistotToDelete?: Aineisto[] } {
+): { aineistot?: Aineisto[]; aineistotToDelete?: Aineisto[]; vuorovaikutusNumeroForAineistotImport?: number } {
   const vuorovaikutus = findVuorovaikutusByNumber(projekti, vuorovaikutusInput.vuorovaikutusNumero);
   if (!vuorovaikutus) {
     return {};
@@ -265,18 +277,19 @@ function adaptAineistotToSave(
     remove(dbAineistot, { dokumenttiOid: aineistoToDelete.dokumenttiOid })
   );
 
-  // Add new ones
+  // Add new ones and optionally trigger import later
+  let vuorovaikutusNumeroForAineistotImport = undefined;
   for (const aineistoInput of aineistotInput) {
     dbAineistot.push({
       dokumenttiOid: aineistoInput.dokumenttiOid,
       jarjestys: aineistoInput.jarjestys,
       kategoria: aineistoInput.kategoria,
-      tiedosto: "", // To be properly filled when the file is actually imported
-      tuotu: "", // To be properly filled when the file is actually imported
+      tila: AineistoTila.ODOTTAA,
     });
+    vuorovaikutusNumeroForAineistotImport = vuorovaikutus.vuorovaikutusNumero;
   }
 
-  return { aineistot: dbAineistot, aineistotToDelete };
+  return { aineistot: dbAineistot, aineistotToDelete, vuorovaikutusNumeroForAineistotImport };
 }
 
 function adaptAineistot(aineistot?: Aineisto[] | null): API.Aineisto[] | undefined {

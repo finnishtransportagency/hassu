@@ -19,3 +19,6 @@ export const getS3 = (): AWS.S3 => {
     return produce<AWS.S3>("s3", () => new AWS.S3({ region: "eu-west-1" }));
   }
 };
+export const getSQS = (): AWS.SQS => {
+  return produce<AWS.SQS>("sqs", () => new AWS.SQS({ region: "eu-west-1" }));
+};

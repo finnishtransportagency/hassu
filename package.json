@@ -64,6 +64,7 @@
     "@aws-cdk/aws-opensearchservice": "1.132.0",
     "@aws-cdk/aws-s3": "1.132.0",
     "@aws-cdk/aws-s3-deployment": "1.132.0",
+    "@aws-cdk/aws-sqs": "1.132.0",
     "@aws-cdk/aws-wafv2": "1.132.0",
     "@aws-cdk/core": "1.132.0",
     "@aws-cdk/pipelines": "1.132.0",
@@ -202,7 +203,11 @@
     "robot:setup": "ts-node --project=tsconfig.cdk.json deployment/bin/setupRobotEnvironment.ts",
     "robot": "cross-env docker run --rm --add-host=host.docker.internal:host-gateway -v $(pwd):/work -e TEST_SUITE 283563576583.dkr.ecr.eu-west-1.amazonaws.com/hassu-robot:latest /work/tools/robot/run_suite.sh",
     "robot:browser": "cross-env ROBOT_OPEN_BROWSER=true ./tools/robot/run_suite_local.sh",
-    "ecrLogin": "aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 283563576583.dkr.ecr.eu-west-1.amazonaws.com"
+    "ecrLogin": "aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 283563576583.dkr.ecr.eu-west-1.amazonaws.com",
+    "log:backend": "aws logs tail --follow --since 1h /aws/lambda/hassu-backend-$ENVIRONMENT",
+    "log:backend:dev": "aws logs tail --follow --since 1h /aws/lambda/hassu-backend-dev",
+    "log:aineistoimporter": "aws logs tail --follow --since 1h /aws/lambda/hassu-aineistoimporter-$ENVIRONMENT",
+    "log:aineistoimporter:dev": "aws logs tail --follow --since 1h /aws/lambda/hassu-aineistoimporter-dev"
   },
   "browserslist": {
     "production": [

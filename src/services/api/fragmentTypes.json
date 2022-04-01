@@ -62,6 +62,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "ENUM",
+        "name": "AineistoTila",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "OBJECT",
         "name": "AloitusKuulutus",
         "possibleTypes": null,

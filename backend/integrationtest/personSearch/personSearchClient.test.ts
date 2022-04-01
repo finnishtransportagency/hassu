@@ -2,7 +2,6 @@
 import { expect } from "chai";
 import { describe, it } from "mocha";
 import { personSearch } from "../../src/personSearch/personSearchClient";
-import { localstackS3Client } from "../util/s3Util";
 import { Kayttaja } from "../../../common/graphql/apiModel";
 import { personSearchUpdaterClient } from "../../src/personSearch/personSearchUpdaterClient";
 import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/personSearchUpdaterHandler";
@@ -23,9 +22,6 @@ export function expectNotEmptyKayttaja(kayttaja: Kayttaja) {
 
 describe("PersonSearchClient", () => {
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
-  before(() => {
-    localstackS3Client();
-  });
 
   beforeEach(() => {
     readUsersFromSearchUpdaterLambda = sandbox.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
