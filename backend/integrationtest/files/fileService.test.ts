@@ -5,15 +5,10 @@ import log from "loglevel";
 import axios from "axios";
 import * as fs from "fs";
 import * as sinon from "sinon";
-import { localstackS3Client } from "../util/s3Util";
 
 const { expect } = require("chai");
 
 describe("UploadService", () => {
-  before(() => {
-    localstackS3Client();
-  });
-
   after(() => {
     sinon.restore();
   });

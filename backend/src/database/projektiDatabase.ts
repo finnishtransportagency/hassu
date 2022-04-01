@@ -50,18 +50,27 @@ async function scanProjektit(startKey?: string): Promise<{ startKey: string; pro
 }
 
 async function loadProjektiByOid(oid: string): Promise<DBProjekti | undefined> {
-  const params: DocumentClient.GetItemInput = {
-    TableName: projektiTableName,
-    Key: { oid },
-    ConsistentRead: true,
-  };
-  const data = await getDynamoDBDocumentClient().get(params).promise();
-  if (!data.Item) {
-    return;
+  try {
+    const params: DocumentClient.GetItemInput = {
+      TableName: projektiTableName,
+      Key: { oid },
+      ConsistentRead: true,
+    };
+    const data = await getDynamoDBDocumentClient().get(params).promise();
+    if (!data.Item) {
+      return;
+    }
+    const projekti = data.Item as DBProjekti;
+    projekti.oid = oid;
+    return projekti;
+  } catch (e) {
+    if (e.code === "ResourceNotFoundException") {
+      log.warn("projektia ei löydy", { oid });
+      return undefined;
+    }
+    log.error(e);
+    throw e;
   }
-  const projekti = data.Item as DBProjekti;
-  projekti.oid = oid;
-  return projekti;
 }
 
 const skipAutomaticUpdateFields = [

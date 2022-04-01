@@ -7,11 +7,12 @@ import * as appsync from "@aws-cdk/aws-appsync";
 import { FieldLogLevel, GraphqlApi } from "@aws-cdk/aws-appsync";
 import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
 import { Table } from "@aws-cdk/aws-dynamodb";
+import { Queue } from "@aws-cdk/aws-sqs";
 import { Config } from "./config";
 import { apiConfig, OperationType } from "../../common/abstractApi";
 import { WafConfig } from "./wafConfig";
 import { AuthorizationMode } from "@aws-cdk/aws-appsync/lib/graphqlapi";
-import { DynamoEventSource } from "@aws-cdk/aws-lambda-event-sources";
+import { DynamoEventSource, SqsEventSource } from "@aws-cdk/aws-lambda-event-sources";
 import { Domain } from "@aws-cdk/aws-opensearchservice";
 import { OpenSearchAccessPolicy } from "@aws-cdk/aws-opensearchservice/lib/opensearch-access-policy";
 import { Effect, ManagedPolicy, PolicyStatement } from "@aws-cdk/aws-iam";
@@ -56,13 +57,21 @@ export class HassuBackendStack extends cdk.Stack {
     const api = this.createAPI(config);
     const commonEnvironmentVariables = await this.getCommonEnvironmentVariables(config);
     const personSearchUpdaterLambda = await this.createPersonSearchUpdaterLambda(commonEnvironmentVariables);
-    const backendLambda = await this.createBackendLambda(commonEnvironmentVariables, personSearchUpdaterLambda);
+    const aineistoSQS = await this.createAineistoImporterQueue();
+    const backendLambda = await this.createBackendLambda(
+      commonEnvironmentVariables,
+      personSearchUpdaterLambda,
+      aineistoSQS
+    );
     this.attachDatabaseToLambda(backendLambda);
     HassuBackendStack.mapApiResolversToLambda(api, backendLambda);
 
     const projektiSearchIndexer = this.createProjektiSearchIndexer(commonEnvironmentVariables);
     this.attachDatabaseToLambda(projektiSearchIndexer);
     this.configureOpenSearchAccess(projektiSearchIndexer, backendLambda);
+
+    let aineistoImporterLambda = await this.createAineistoImporterLambda(commonEnvironmentVariables, aineistoSQS);
+    this.attachDatabaseToLambda(aineistoImporterLambda);
 
     new cdk.CfnOutput(this, "AppSyncAPIKey", {
       value: api.apiKey || "",
@@ -183,7 +192,8 @@ export class HassuBackendStack extends cdk.Stack {
 
   private async createBackendLambda(
     commonEnvironmentVariables: Record<string, string>,
-    personSearchUpdaterLambda: NodejsFunction
+    personSearchUpdaterLambda: NodejsFunction,
+    aineistoSQS: Queue
   ) {
     let define;
     if (Config.isDeveloperEnvironment()) {
@@ -240,6 +250,8 @@ export class HassuBackendStack extends cdk.Stack {
       ManagedPolicy.fromAwsManagedPolicyName("CloudWatchLambdaInsightsExecutionRolePolicy")
     );
 
+    aineistoSQS.grantSendMessages(backendLambda);
+
     this.props.uploadBucket.grantPut(backendLambda);
     this.props.uploadBucket.grantReadWrite(backendLambda);
     this.props.yllapitoBucket.grantReadWrite(backendLambda);
@@ -267,6 +279,34 @@ export class HassuBackendStack extends cdk.Stack {
     });
     this.props.internalBucket.grantReadWrite(personSearchLambda);
     return personSearchLambda;
+  }
+
+  private async createAineistoImporterLambda(
+    commonEnvironmentVariables: Record<string, string>,
+    aineistoSQS: Queue
+  ): Promise<NodejsFunction> {
+    const importer = new NodejsFunction(this, "AineistoImporterLambda", {
+      functionName: "hassu-aineistoimporter-" + Config.env,
+      runtime: lambda.Runtime.NODEJS_14_X,
+      entry: `${__dirname}/../../backend/src/aineisto/aineistoImporterLambda.ts`,
+      handler: "handleEvent",
+      memorySize: 512,
+      reservedConcurrentExecutions: 1,
+      timeout: Duration.seconds(600),
+      bundling: {
+        minify: true,
+      },
+      environment: {
+        ...commonEnvironmentVariables,
+        AINEISTO_IMPORT_SQS_URL: aineistoSQS.queueUrl,
+      },
+      tracing: Tracing.PASS_THROUGH,
+    });
+    this.props.yllapitoBucket.grantReadWrite(importer);
+
+    const eventSource = new SqsEventSource(aineistoSQS, { batchSize: 1 });
+    importer.addEventSource(eventSource);
+    return importer;
   }
 
   private static mapApiResolversToLambda(api: GraphqlApi, backendFn: NodejsFunction) {
@@ -311,5 +351,14 @@ export class HassuBackendStack extends cdk.Stack {
       INTERNAL_BUCKET_NAME: this.props.internalBucket.bucketName,
       ARCHIVE_BUCKET_NAME: this.props.archiveBucket.bucketName,
     };
+  }
+
+  private async createAineistoImporterQueue() {
+    return new Queue(this, "AineistoImporter", {
+      queueName: "aineisto-importer-" + Config.env + ".fifo",
+      fifo: true,
+      contentBasedDeduplication: true,
+      visibilityTimeout: Duration.minutes(10),
+    });
   }
 }

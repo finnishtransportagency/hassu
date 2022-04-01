@@ -1,6 +1,6 @@
 import { describe, it } from "mocha";
 import { api } from "./apiClient";
-import { setupLocalDatabase } from "../util/databaseUtil";
+import { replaceAWSDynamoDBWithLocalstack, setupLocalDatabase } from "../util/databaseUtil";
 import * as log from "loglevel";
 import {
   AineistoInput,
@@ -19,7 +19,6 @@ import * as sinon from "sinon";
 import { personSearchUpdaterClient } from "../../src/personSearch/personSearchUpdaterClient";
 import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/personSearchUpdaterHandler";
 import { openSearchClient } from "../../src/projektiSearch/openSearchClient";
-import { localstackS3Client } from "../util/s3Util";
 import { projektiArchive } from "../../src/archive/projektiArchiveService";
 import { fail } from "assert";
 import { UserFixture } from "../../test/fixture/userFixture";
@@ -27,6 +26,9 @@ import { userService } from "../../src/user";
 import { apiTestFixture } from "./apiTestFixture";
 import diffDefault from "jest-diff";
 import os from "os";
+import { aineistoImporterClient } from "../../src/aineisto/aineistoImporterClient";
+import { handleEvent } from "../../src/aineisto/aineistoImporterLambda";
+import { SQSEvent, SQSRecord } from "aws-lambda/trigger/sqs";
 
 const { expect } = require("chai");
 const sandbox = sinon.createSandbox();
@@ -37,20 +39,21 @@ function expectToMatchSnapshot(description: string, obj: unknown) {
 
 describe("Api", () => {
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
+  let importAineistoStub: sinon.SinonStub;
   let userFixture: UserFixture;
+  let oid: string = undefined;
 
-  before(async () => {
-    localstackS3Client();
-  });
-
-  afterEach(() => {
+  after(() => {
     userFixture.logout();
     sandbox.restore();
+    sinon.restore();
   });
 
-  beforeEach("Initialize test database!", async () => await setupLocalDatabase());
+  before("Initialize test database!", async () => await setupLocalDatabase());
 
-  beforeEach(async () => {
+  const fakeAineistoImportQueue: SQSEvent[] = [];
+
+  before(async () => {
     userFixture = new UserFixture(userService);
     readUsersFromSearchUpdaterLambda = sandbox.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
     readUsersFromSearchUpdaterLambda.callsFake(async () => {
@@ -60,6 +63,11 @@ describe("Api", () => {
     sandbox.stub(openSearchClient, "query").resolves({ status: 200 });
     sandbox.stub(openSearchClient, "deleteProjekti");
     sandbox.stub(openSearchClient, "putProjekti");
+
+    importAineistoStub = sandbox.stub(aineistoImporterClient, "importAineisto");
+    importAineistoStub.callsFake(async (event) => {
+      fakeAineistoImportQueue.push({ Records: [{ body: JSON.stringify(event) } as SQSRecord] });
+    });
   });
 
   async function testProjektiHenkilot(projekti: Projekti, oid: string) {
@@ -213,7 +221,6 @@ describe("Api", () => {
         },
       });
       const vuorovaikutus = (await loadProjektiFromDatabase(oid)).suunnitteluVaihe.vuorovaikutukset[0];
-      vuorovaikutus.aineistot?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
       expectToMatchSnapshot("saveAndVerifyAineistoSave", vuorovaikutus);
     }
 
@@ -247,7 +254,8 @@ describe("Api", () => {
     }
     userFixture.loginAs(UserFixture.mattiMeikalainen);
 
-    const { oid, projekti } = await readProjektiFromVelho();
+    const projekti = await readProjektiFromVelho();
+    oid = projekti.oid;
     const projektiPaallikko = await testProjektiHenkilot(projekti, oid);
     await testProjektinTiedot(oid);
     await testAloitusKuulutusEsikatselu(oid);
@@ -258,6 +266,25 @@ describe("Api", () => {
     const velhoAineistoKategorias = await testListDocumentsToImport(oid);
     await testImportAineistot(oid, velhoAineistoKategorias);
     await testPublicAccessToProjekti(oid);
+  });
+
+  it("should import files from Velho using background queue", async function () {
+    if (process.env.SKIP_VELHO_TESTS == "true") {
+      this.skip();
+    }
+    replaceAWSDynamoDBWithLocalstack();
+    expect(fakeAineistoImportQueue).toMatchSnapshot();
+    for (const event of fakeAineistoImportQueue) {
+      await handleEvent(event, null, null);
+    }
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    const vuorovaikutus = (await loadProjektiFromDatabase(oid)).suunnitteluVaihe.vuorovaikutukset[0];
+    vuorovaikutus.aineistot?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
+    expect(vuorovaikutus).toMatchSnapshot();
+  });
+
+  it("should archive projekti", async function () {
+    replaceAWSDynamoDBWithLocalstack();
     await archiveProjekti(oid);
   });
 
@@ -266,7 +293,7 @@ describe("Api", () => {
     const projekti = await api.lataaProjekti(oid);
     await expect(projekti.tallennettu).to.be.false;
     log.info(JSON.stringify(projekti, null, 2));
-    return { oid, projekti };
+    return projekti;
   }
 
   async function loadProjektiFromDatabase(oid: string) {

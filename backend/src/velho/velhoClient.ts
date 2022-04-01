@@ -60,7 +60,7 @@ function logResponse(level: string, response: AxiosResponse, contentType?: strin
 axios.interceptors.response.use((response: AxiosResponse) => {
   const contentType: string | undefined = response.headers["content-type"];
 
-  if (response.status === 200) {
+  if (response.status < 400) {
     if (log.isLevelEnabled("debug")) {
       logResponse("debug", response, contentType);
     }

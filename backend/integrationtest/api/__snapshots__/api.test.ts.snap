@@ -1,5 +1,92 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Api should import files from Velho using background queue 1`] = `
+Array [
+  Object {
+    "Records": Array [
+      Object {
+        "body": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"vuorovaikutusNumero\\":1}",
+      },
+    ],
+  },
+]
+`;
+
+exports[`Api should import files from Velho using background queue 2`] = `
+Object {
+  "__typename": "Vuorovaikutus",
+  "aineistoPoistetaanNakyvista": "2022-03-23T23:45",
+  "aineistot": Array [
+    Object {
+      "__typename": "Aineisto",
+      "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
+      "jarjestys": 12,
+      "kategoria": "Yleinen new",
+      "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/ekatiedosto_eka.pdf",
+      "tila": "VALMIS",
+      "tuotu": "***unittest***",
+    },
+    Object {
+      "__typename": "Aineisto",
+      "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
+      "jarjestys": 13,
+      "kategoria": "Yleinen new",
+      "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/karttakuvalla_tiedosto.pdf",
+      "tila": "VALMIS",
+      "tuotu": "***unittest***",
+    },
+  ],
+  "esitettavatYhteystiedot": Array [
+    Object {
+      "__typename": "Yhteystieto",
+      "etunimi": "Marko",
+      "organisaatio": "Kajaani",
+      "puhelinnumero": "0293121213",
+      "sahkoposti": "markku.koi@koi.com",
+      "sukunimi": "Koi",
+    },
+  ],
+  "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+  "videot": Array [
+    Object {
+      "__typename": "Linkki",
+      "nimi": "Esittely 1",
+      "url": "https://video",
+    },
+  ],
+  "vuorovaikutusJulkaisuPaiva": "2022-03-23",
+  "vuorovaikutusNumero": 1,
+  "vuorovaikutusTilaisuudet": Array [
+    Object {
+      "__typename": "VuorovaikutusTilaisuus",
+      "alkamisAika": "15:00",
+      "kaytettavaPalvelu": "TEAMS",
+      "linkki": "https://linkki_tilaisuuteen",
+      "nimi": "Lorem ipsum 1",
+      "paattymisAika": "16:00",
+      "paivamaara": "2022-03-04",
+      "tyyppi": "VERKOSSA",
+    },
+    Object {
+      "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
+      "__typename": "VuorovaikutusTilaisuus",
+      "alkamisAika": "10:00",
+      "nimi": "Lorem ipsum two 1",
+      "osoite": "Katu 123",
+      "paattymisAika": "11:00",
+      "paikka": "Kunnantalo",
+      "paivamaara": "2022-04-05",
+      "postinumero": "00100",
+      "postitoimipaikka": "Helsinki",
+      "tyyppi": "PAIKALLA",
+    },
+  ],
+  "vuorovaikutusYhteysHenkilot": Array [
+    "A000112",
+  ],
+}
+`;
+
 exports[`Api should search, load and save a project 1`] = `
 Object {
   "description": "testSuunnitteluvaihePerustiedot",
@@ -160,24 +247,21 @@ Object {
         "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
         "jarjestys": 1,
         "kategoria": "Tietomallinnus",
-        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/tokatiedosto_toka.pdf",
-        "tuotu": "***unittest***",
+        "tila": "ODOTTAA",
       },
       Object {
         "__typename": "Aineisto",
         "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
         "jarjestys": 2,
         "kategoria": "Yleinen",
-        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/ekatiedosto_eka.pdf",
-        "tuotu": "***unittest***",
+        "tila": "ODOTTAA",
       },
       Object {
         "__typename": "Aineisto",
         "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
         "jarjestys": 3,
         "kategoria": "Yleinen",
-        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/karttakuvalla_tiedosto.pdf",
-        "tuotu": "***unittest***",
+        "tila": "ODOTTAA",
       },
     ],
     "esitettavatYhteystiedot": Array [
@@ -244,24 +328,21 @@ Object {
         "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
         "jarjestys": 11,
         "kategoria": "Tietomallinnus new",
-        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/tokatiedosto_toka.pdf",
-        "tuotu": "***unittest***",
+        "tila": "ODOTTAA",
       },
       Object {
         "__typename": "Aineisto",
         "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
         "jarjestys": 12,
         "kategoria": "Yleinen new",
-        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/ekatiedosto_eka.pdf",
-        "tuotu": "***unittest***",
+        "tila": "ODOTTAA",
       },
       Object {
         "__typename": "Aineisto",
         "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
         "jarjestys": 13,
         "kategoria": "Yleinen new",
-        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/karttakuvalla_tiedosto.pdf",
-        "tuotu": "***unittest***",
+        "tila": "ODOTTAA",
       },
     ],
     "esitettavatYhteystiedot": Array [
@@ -328,16 +409,14 @@ Object {
         "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
         "jarjestys": 12,
         "kategoria": "Yleinen new",
-        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/ekatiedosto_eka.pdf",
-        "tuotu": "***unittest***",
+        "tila": "ODOTTAA",
       },
       Object {
         "__typename": "Aineisto",
         "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
         "jarjestys": 13,
         "kategoria": "Yleinen new",
-        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/karttakuvalla_tiedosto.pdf",
-        "tuotu": "***unittest***",
+        "tila": "ODOTTAA",
       },
     ],
     "esitettavatYhteystiedot": Array [

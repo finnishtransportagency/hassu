@@ -132,15 +132,21 @@ type Aineisto {
   """
   Suhteellinen polku tiedostoon yllapidon S3-bucketissa projektin alla
   """
-  tiedosto: String!
+  tiedosto: String
   """
   Aikaleima, milloin tiedosto on tuotu jarjestelmaan yyyy-MM-ddTHH:mm
   """
-  tuotu: String!
+  tuotu: String
   """
   Numero jarjestamista varten
   """
   jarjestys: Int
+  tila: AineistoTila
+}
+
+enum AineistoTila {
+  ODOTTAA
+  VALMIS
 }
 
 type Palaute {

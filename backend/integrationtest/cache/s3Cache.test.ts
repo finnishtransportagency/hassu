@@ -2,15 +2,10 @@
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { S3Cache } from "../../src/cache/s3Cache";
-import { localstackS3Client } from "../util/s3Util";
 
 const { expect } = require("chai");
 
 describe("S3Cache", () => {
-  before(() => {
-    localstackS3Client();
-  });
-
   after(() => {
     sinon.restore();
   });
