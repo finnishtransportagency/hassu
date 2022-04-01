@@ -2,16 +2,18 @@ import React, { ReactElement } from "react";
 import { styled } from "@mui/material/styles";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
+import StepLabel, { stepLabelClasses } from "@mui/material/StepLabel";
 import ArchitectureIcon from "@mui/icons-material/Architecture";
 import VideoLabelIcon from "@mui/icons-material/VideoLabel";
 import Gavel from "@mui/icons-material/Gavel";
 import AccountBalance from "@mui/icons-material/AccountBalance";
 import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
 import StartIcon from "@mui/icons-material/Start";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import StepConnector, { stepConnectorClasses } from "@mui/material/StepConnector";
 import { StepIconProps } from "@mui/material/StepIcon";
 import HassuLink from "@components/HassuLink";
+import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
 interface Props {
   oid: string;
   activeStep: number;
@@ -19,6 +21,13 @@ interface Props {
   vertical?: true;
 }
 export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep, vertical }: Props): ReactElement {
+  const HassuLabel = styled(StepLabel)(() => ({
+    [`&.${stepLabelClasses.vertical}`]: {
+      paddingTop: 0,
+      paddingBottom: 0,
+    },
+  }));
+
   const HassuConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {
       top: 22,
@@ -39,6 +48,14 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
       backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[800] : "#eaeaf0",
       borderRadius: 1,
     },
+    [`& .${stepConnectorClasses.lineVertical}`]: {
+      marginLeft: 11,
+      width: 5,
+      // height: 5,
+      border: 0,
+      backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[800] : "#eaeaf0",
+      borderRadius: 1,
+    },
   }));
 
   const HassuStepIconRoot = styled("div")<{
@@ -55,7 +72,7 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
     alignItems: "center",
     ...(ownerState.active && {
       backgroundImage: "linear-gradient(117deg, #0064AF, #0064AF)",
-      boxShadow: "0 4px 10px 0 rgba(0,0,0,.5)",
+      boxShadow: vertical ? "4px 0px 10px 0 rgba(0,0,0,.5)" : "0 4px 10px 0 rgba(0,0,0,.5)",
     }),
     ...(ownerState.completed && {
       backgroundImage: "linear-gradient(117deg, #009AE0, #009AE0)",
@@ -134,18 +151,25 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
       )}
       {vertical && (
         <div>
-          <Stepper activeStep={activeStep} orientation="vertical" connector={<HassuConnector />}>
-            {steps.map((label, index) => (
-              <Step key={label}>
-                <StepLabel
-                  StepIconComponent={HassuStepIcon}
-                  sx={selectedStep == index ? { textDecoration: "underline" } : {}}
-                >
-                  {label}
-                </StepLabel>
-              </Step>
-            ))}
-          </Stepper>
+          <Accordion sx={{ border: "grey 1px solid" }}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+              <Typography>Navigoi vaiheita</Typography>
+            </AccordionSummary>
+            <AccordionDetails sx={{ padding: "1rem", borderTop: "1px grey solid" }}>
+              <Stepper activeStep={activeStep} orientation="vertical" connector={<HassuConnector />}>
+                {steps.map((label, index) => (
+                  <Step key={label}>
+                    <HassuLabel
+                      StepIconComponent={HassuStepIcon}
+                      sx={selectedStep == index ? { textDecoration: "underline" } : {}}
+                    >
+                      {label}
+                    </HassuLabel>
+                  </Step>
+                ))}
+              </Stepper>
+            </AccordionDetails>
+          </Accordion>
         </div>
       )}
     </>

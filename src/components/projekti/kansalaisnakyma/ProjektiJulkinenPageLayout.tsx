@@ -1,4 +1,6 @@
 import Section from "@components/layout/Section";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { Status } from "@services/api";
 import { useRouter } from "next/router";
 import React, { ReactElement, ReactNode } from "react";
@@ -13,6 +15,8 @@ interface Props {
 }
 
 export default function ProjektiPageLayout({ children, title, selectedStep }: Props): ReactElement {
+  const theme = useTheme();
+  const smallScreen = useMediaQuery(theme.breakpoints.down("md"));
   const router = useRouter();
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
   const { data: projekti } = useProjektiJulkinen(oid);
@@ -49,7 +53,7 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
               oid={projekti.oid}
               activeStep={statusStep[projekti.status || Status.EI_JULKAISTU]}
               selectedStep={selectedStep}
-              vertical
+              vertical={smallScreen ? true : undefined}
             />
           </Section>
           <Section noDivider>
