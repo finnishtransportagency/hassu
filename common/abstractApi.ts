@@ -1,7 +1,8 @@
 import {
   ArkistoiProjektiMutationVariables,
   AsiakirjaTyyppi,
-  EsikatseleAsiakirjaPDFQueryVariables, HaeVelhoProjektiAineistoLinkkiQueryVariables,
+  EsikatseleAsiakirjaPDFQueryVariables,
+  HaeVelhoProjektiAineistoLinkkiQueryVariables,
   Kayttaja,
   Kieli,
   LaskePaattymisPaivaQueryVariables,
@@ -25,7 +26,7 @@ import {
   TilaSiirtymaInput,
   ValmisteleTiedostonLatausQueryVariables,
   VelhoAineistoKategoria,
-  VelhoHakuTulos
+  VelhoHakuTulos,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -155,7 +156,7 @@ export abstract class AbstractApi {
     } as ListaaVelhoProjektiAineistotQueryVariables);
   }
 
-  async haeVelhoProjektiAineistoLinkki(oid:string, dokumenttiOid: string): Promise<string> {
+  async haeVelhoProjektiAineistoLinkki(oid: string, dokumenttiOid: string): Promise<string> {
     return await this.callYllapitoAPI(apiConfig.haeVelhoProjektiAineistoLinkki, {
       oid,
       dokumenttiOid,
@@ -169,6 +170,10 @@ export abstract class AbstractApi {
   }
 
   async listProjektit(hakuehto: ListaaProjektitInput): Promise<ProjektiHakutulos> {
+    return await this.callYllapitoAPI(apiConfig.listaaProjektit, { hakuehto } as ListaaProjektitQueryVariables);
+  }
+
+  async listPublicProjektit(hakuehto: ListaaProjektitInput): Promise<ProjektiHakutulos> {
     return await this.callAPI(apiConfig.listaaProjektit, { hakuehto } as ListaaProjektitQueryVariables);
   }
 

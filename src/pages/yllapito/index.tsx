@@ -20,6 +20,36 @@ import { ParsedUrlQuery } from "querystring";
 import { omitBy } from "lodash";
 import { formatDate } from "src/util/dateUtils";
 
+const mapQueryToListaaProjektiInput = (query: ParsedUrlQuery): ListaaProjektitInput => {
+  const result: ListaaProjektitInput = {};
+  if (typeof query?.projektiTyyppi === "string" && Object.keys(ProjektiTyyppi).includes(query?.projektiTyyppi)) {
+    result.projektiTyyppi = query.projektiTyyppi as ProjektiTyyppi;
+  }
+  if (query?.nimi && typeof query?.nimi === "string") {
+    result.nimi = query.nimi;
+  }
+  if (query?.asiatunnus && typeof query?.asiatunnus === "string") {
+    result.asiatunnus = query.asiatunnus;
+  }
+  if (query?.vaylamuoto && typeof query?.vaylamuoto === "string") {
+    result.vaylamuoto = [query?.vaylamuoto];
+  }
+  if (
+    typeof query?.suunnittelustaVastaavaViranomainen === "string" &&
+    Object.keys(Viranomainen).includes(query?.suunnittelustaVastaavaViranomainen)
+  ) {
+    result.suunnittelustaVastaavaViranomainen = [query?.suunnittelustaVastaavaViranomainen as Viranomainen];
+  }
+  if (typeof query?.vaihe === "string" && Object.keys(Status).includes(query?.vaihe)) {
+    result.vaihe = [query?.vaihe as Status];
+  }
+  if (query?.vainProjektitMuokkausOikeuksin === "true") {
+    result.vainProjektitMuokkausOikeuksin = true;
+  }
+
+  return result;
+};
+
 const VirkamiesHomePage = () => {
   const [tyyppi, setTyyppi] = useState<ProjektiTyyppi>(ProjektiTyyppi.TIE);
   const [hakutulos, setHakutulos] = useState<ProjektiHakutulos>();
@@ -29,56 +59,28 @@ const VirkamiesHomePage = () => {
 
   const { register, handleSubmit, reset } = useForm();
 
-  async function fetchProjektit(input: ListaaProjektitInput) {
-    setIsLoading(true);
-    try {
-      const result = await api.listProjektit(input);
-      log.info("listProjektit:", result);
-      setHakutulos(result);
-    } catch (e: any) {
-      log.error("Error listing projektit", e);
-      if (e.errors) {
-        e.errors.map((err: any) => {
-          const response = err.originalError?.response;
-          const httpStatus = response?.status;
-          log.error("HTTP Status: " + httpStatus + "\n" + err.stack);
-        });
-      }
-      setHakutulos({ __typename: "ProjektiHakutulos" });
-    }
-    setIsLoading(false);
-  }
-
-  const validateQueryParams = (query: ParsedUrlQuery): ListaaProjektitInput => {
-    const result: ListaaProjektitInput = {};
-    if (typeof query?.projektiTyyppi === "string" && Object.keys(ProjektiTyyppi).includes(query?.projektiTyyppi)) {
-      result.projektiTyyppi = query.projektiTyyppi as ProjektiTyyppi;
-    }
-    if (query?.nimi && typeof query?.nimi === "string") {
-      result.nimi = query.nimi;
-    }
-    if (query?.asiatunnus && typeof query?.asiatunnus === "string") {
-      result.asiatunnus = query.asiatunnus;
-    }
-    if (query?.vaylamuoto && typeof query?.vaylamuoto === "string") {
-      result.vaylamuoto = [query?.vaylamuoto];
-    }
-    if (
-      typeof query?.suunnittelustaVastaavaViranomainen === "string" &&
-      Object.keys(Viranomainen).includes(query?.suunnittelustaVastaavaViranomainen)
-    ) {
-      result.suunnittelustaVastaavaViranomainen = [query?.suunnittelustaVastaavaViranomainen as Viranomainen];
-    }
-    if (typeof query?.vaihe === "string" && Object.keys(Status).includes(query?.vaihe)) {
-      result.vaihe = [query?.vaihe as Status];
-    }
-
-    return result;
-  };
-
   useEffect(() => {
     if (router.isReady) {
-      const input = validateQueryParams(router.query);
+      async function fetchProjektit(input: ListaaProjektitInput) {
+        setIsLoading(true);
+        try {
+          const result = await api.listProjektit(input);
+          log.info("listProjektit:", result);
+          setHakutulos(result);
+        } catch (e: any) {
+          log.error("Error listing projektit", e);
+          if (e.errors) {
+            e.errors.map((err: any) => {
+              const response = err.originalError?.response;
+              const httpStatus = response?.status;
+              log.error("HTTP Status: " + httpStatus + "\n" + err.stack);
+            });
+          }
+          setHakutulos({ __typename: "ProjektiHakutulos" });
+        }
+        setIsLoading(false);
+      }
+      const input = mapQueryToListaaProjektiInput(router.query);
       setTyyppi(input.projektiTyyppi || ProjektiTyyppi.TIE);
       fetchProjektit(input);
       reset(input);
@@ -87,7 +89,7 @@ const VirkamiesHomePage = () => {
 
   const onSubmit = (data: any) => {
     const searchData = omitBy(data, (value) => !value || (Array.isArray(value) && value.length === 0));
-    router.replace({ query: { ...searchData } }, undefined, { scroll: false });
+    router.replace({ query: searchData }, undefined, { scroll: false });
   };
 
   return (
@@ -125,7 +127,10 @@ const VirkamiesHomePage = () => {
               {...register("vaihe")}
             />
             <FormGroup style={{ marginTop: "auto" }} inlineFlex>
-              <CheckBox label="Vain projektit, joihin muokkausoikeudet" disabled />
+              <CheckBox
+                label="Vain projektit, joihin muokkausoikeudet"
+                {...register("vainProjektitMuokkausOikeuksin")}
+              />
             </FormGroup>
           </HassuGrid>
           <Button endIcon={"search"} primary type="submit">
@@ -145,21 +150,25 @@ const VirkamiesHomePage = () => {
             {
               label:
                 "Tiesuunnitelmat" +
-                (hakutulos?.hasOwnProperty("tiesuunnitelmatMaara") && ` (${hakutulos?.tiesuunnitelmatMaara || 0})`),
+                (hakutulos?.hasOwnProperty("tiesuunnitelmatMaara") ? ` (${hakutulos?.tiesuunnitelmatMaara || 0})` : ""),
               content: <HomePageTable isLoading={isLoading} hakutulos={hakutulos} />,
               value: ProjektiTyyppi.TIE,
             },
             {
               label:
                 "Ratasuunnitelmat" +
-                (hakutulos?.hasOwnProperty("ratasuunnitelmatMaara") && ` (${hakutulos?.ratasuunnitelmatMaara || 0})`),
+                (hakutulos?.hasOwnProperty("ratasuunnitelmatMaara")
+                  ? ` (${hakutulos?.ratasuunnitelmatMaara || 0})`
+                  : ""),
               content: <HomePageTable isLoading={isLoading} hakutulos={hakutulos} />,
               value: ProjektiTyyppi.RATA,
             },
             {
               label:
                 "Yleissuunnitelmat" +
-                (hakutulos?.hasOwnProperty("yleissuunnitelmatMaara") && ` (${hakutulos?.yleissuunnitelmatMaara || 0})`),
+                (hakutulos?.hasOwnProperty("yleissuunnitelmatMaara")
+                  ? ` (${hakutulos?.yleissuunnitelmatMaara || 0})`
+                  : ""),
               content: <HomePageTable isLoading={isLoading} hakutulos={hakutulos} />,
               value: ProjektiTyyppi.YLEINEN,
             },
@@ -188,11 +197,21 @@ const HomePageTable = ({ hakutulos, isLoading }: TableProps) => {
             { header: "Projektipäällikkö", data: (projekti) => projekti.projektipaallikko, fraction: 2 },
             {
               header: "Vastuuorganisaatio",
-              data: (projekti) => t(`projekti:vastaava-viranomainen.${projekti.suunnittelustaVastaavaViranomainen}`),
+              data: (projekti) =>
+                projekti.suunnittelustaVastaavaViranomainen &&
+                t(`projekti:vastaava-viranomainen.${projekti.suunnittelustaVastaavaViranomainen}`),
               fraction: 2,
             },
-            { header: "Vaihe", data: (projekti) => t(`projekti:projekti-status.${projekti.vaihe}`), fraction: 1 },
-            { header: "Päivitetty", data: (projekti) => formatDate(projekti.paivitetty), fraction: 1 },
+            {
+              header: "Vaihe",
+              data: (projekti) => projekti.vaihe && t(`projekti:projekti-status.${projekti.vaihe}`),
+              fraction: 1,
+            },
+            {
+              header: "Päivitetty",
+              data: (projekti) => projekti.paivitetty && formatDate(projekti.paivitetty),
+              fraction: 1,
+            },
           ]}
           rows={hakutulos?.tulokset || []}
           isLoading={isLoading}
