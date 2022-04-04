@@ -48,7 +48,6 @@ async function executeOperation(event: AppSyncResolverEvent<AppSyncEventArgument
   switch (event.info.fieldName as any) {
     case apiConfig.listaaProjektit.name:
       return await listProjektit((event.arguments as ListaaProjektitQueryVariables).hakuehto);
-
     case apiConfig.listaaVelhoProjektit.name:
       return await listaaVelhoProjektit(event.arguments as ListaaVelhoProjektitQueryVariables);
     case apiConfig.listaaVelhoProjektiAineistot.name:

@@ -173,6 +173,10 @@ export abstract class AbstractApi {
     return await this.callYllapitoAPI(apiConfig.listaaProjektit, { hakuehto } as ListaaProjektitQueryVariables);
   }
 
+  async listPublicProjektit(hakuehto: ListaaProjektitInput): Promise<ProjektiHakutulos> {
+    return await this.callAPI(apiConfig.listaaProjektit, { hakuehto } as ListaaProjektitQueryVariables);
+  }
+
   async getCurrentUser(): Promise<NykyinenKayttaja | undefined> {
     try {
       return await this.callYllapitoAPI(apiConfig.nykyinenKayttaja);

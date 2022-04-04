@@ -17,7 +17,7 @@ export default function ProjektiListaus(props: ProjektiListausProps) {
   useEffect(() => {
     async function fetchProjektit() {
       try {
-        const result = await api.listProjektit({ projektiTyyppi: props.projektiTyyppi });
+        const result = await api.listPublicProjektit({ projektiTyyppi: props.projektiTyyppi });
         log.info("listProjektit:", result);
         setHakutulos(result);
       } catch (e: any) {
