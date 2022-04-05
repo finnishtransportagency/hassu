@@ -25,6 +25,7 @@ const defaultLabels: RouteLabels = {
   "/yllapito/projekti/[oid]": { label: "..." },
   "/yllapito/projekti/[oid]/aloituskuulutus": { label: "Aloituskuulutus" },
   "/yllapito/projekti/[oid]/henkilot": { label: "Henkilöt ja käyttöoikeushallinta" },
+  "/yllapito/projekti/[oid]/suunnittelu": { label: "Suunnittelu ja vuorovaikutus" },
   "/yllapito/ohjeet": { label: "Ohjeet" },
   "/suunnitelma": { label: "Suunnitelmat" },
   "/suunnitelma/[oid]/aloituskuulutus": { label: "Aloituskuulutus" },
