@@ -1,12 +1,7 @@
 import { config } from "../config";
-import { SignatureV4 } from "@aws-sdk/signature-v4";
-import { NodeHttpHandler } from "@aws-sdk/node-http-handler";
-import { Sha256 } from "@aws-crypto/sha256-browser";
-import { HttpRequest as IHttpRequest } from "@aws-sdk/types";
 import { HttpRequest } from "@aws-sdk/protocol-http";
-import AWS from "aws-sdk";
+import { sendSignedRequest } from "../aws/awsRequest";
 
-const region = process.env.AWS_REGION;
 const domain = config.searchDomain;
 const index = "projekti";
 const type = "_doc";
@@ -23,29 +18,8 @@ export interface SearchOpts {
   aggs?: unknown;
 }
 
-async function sendRequest(request: HttpRequest): Promise<any> {
-  // Sign the request
-  const signer = new SignatureV4({
-    credentials: AWS.config.credentials,
-    region,
-    service: "es",
-    sha256: Sha256,
-  });
-  const signedRequest: IHttpRequest = await signer.sign(request);
-
-  // Send the request
-  const client = new NodeHttpHandler();
-
-  const { response } = await client.handle(signedRequest as HttpRequest);
-  let responseBody = "";
-  return new Promise<any>((resolve) => {
-    response.body.on("data", (chunk) => {
-      responseBody += chunk;
-    });
-    response.body.on("end", () => {
-      resolve(JSON.parse(responseBody));
-    });
-  });
+export async function sendRequest(request: HttpRequest): Promise<unknown> {
+  return (await sendSignedRequest(request, "es")).body;
 }
 
 export class OpenSearchClient {
@@ -64,7 +38,7 @@ export class OpenSearchClient {
     return await sendRequest(request);
   }
 
-  async deleteProjekti(oid: string): Promise<any> {
+  async deleteProjekti(oid: string): Promise<void> {
     const request = new HttpRequest({
       headers: {
         host: domain,
@@ -73,7 +47,7 @@ export class OpenSearchClient {
       method: "DELETE",
       path: index + "/" + type + "/" + oid,
     });
-    return await sendRequest(request);
+    await sendRequest(request);
   }
 
   async deleteIndex(): Promise<void> {
@@ -85,7 +59,7 @@ export class OpenSearchClient {
       method: "DELETE",
       path: index,
     });
-    return await sendRequest(request);
+    await sendRequest(request);
   }
 
   async query(query: SearchOpts): Promise<any> {

@@ -3,9 +3,9 @@
 const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
 const nextTranslate = require("next-translate");
 const { BaseConfig } = require("./common/BaseConfig");
+const CopyFilePlugin = require("copy-file-plugin");
 
 function setupLocalDevelopmentMode(config, env) {
-  config.publicRuntimeConfig = { apiImpl: "developerApi" };
   process.env.AWS_SDK_LOAD_CONFIG = "true";
   const AWS = require("aws-sdk");
 
@@ -14,11 +14,13 @@ function setupLocalDevelopmentMode(config, env) {
     env.AWS_ACCESS_KEY_ID = credentials.accessKeyId;
     env.AWS_SECRET_ACCESS_KEY = credentials.secretAccessKey;
     env.AWS_SESSION_TOKEN = credentials.sessionToken;
+    env.AWS_REGION = "eu-west-1";
   }
   env["x-hassudev-uid"] = process.env.HASSUDEV_UID;
   env["x-hassudev-roles"] = process.env.HASSUDEV_ROLES;
 
-  env.REACT_APP_API_URL = process.env.REACT_APP_API_URL;
+  env.REACT_APP_API_URL = "http://localhost:3000/graphql";
+  env.APPSYNC_URL = process.env.REACT_APP_API_URL;
 
   config = {
     ...config,
@@ -33,7 +35,33 @@ function setupLocalDevelopmentMode(config, env) {
           source: "/tiedostot/:path*",
           destination: "https://" + process.env.FRONTEND_DOMAIN_NAME + "/tiedostot/:path*",
         },
+        {
+          source: "/graphql",
+          destination: "/api/graphql",
+        },
+        {
+          source: "/yllapito/graphql",
+          destination: "/api/graphql?yllapito=true",
+        },
       ];
+    },
+    webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+      // Important: return the modified config
+      config.plugins.push(
+        new CopyFilePlugin([
+          {
+            // For some reason index.html is not copied without a reference to node_modules. This file is not even copied to the destination...
+            from: "node_modules/.bin/npm",
+            to: config.output.path + "/static/graphql-playground/",
+          },
+          {
+            from: "backend/developer/playground.html",
+            to: config.output.path + "/static/graphql-playground/index.html",
+          },
+        ])
+      );
+      console.log(config);
+      return config;
     },
   };
   return config;
@@ -46,7 +74,7 @@ module.exports = (phase) => {
     INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
   };
   /**
-   * @type {import('next').NextConfig}
+   * @type {import("next").NextConfig}
    */
   let config = {
     reactStrictMode: true,
@@ -64,10 +92,9 @@ module.exports = (phase) => {
     } catch (e) {
       // Ignore
     }
-    env.REACT_APP_API_KEY= process.env.REACT_APP_API_KEY;
+    env.REACT_APP_API_KEY = process.env.REACT_APP_API_KEY;
     env.REACT_APP_API_URL = "https://" + process.env.FRONTEND_DOMAIN_NAME + "/graphql";
 
-    config.publicRuntimeConfig = { apiImpl: "permanentApi" };
     config.env = env;
   }
   return nextTranslate(config);
