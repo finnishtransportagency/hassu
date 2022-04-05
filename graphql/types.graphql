@@ -84,7 +84,7 @@ type Projekti implements IProjekti {
 type SuunnitteluVaihe {
   hankkeenKuvaus: HankkeenKuvaukset
   arvioSeuraavanVaiheenAlkamisesta: String
-
+  suunnittelunEteneminenJaKesto: String
   vuorovaikutukset: [Vuorovaikutus!]
 
   palautteet: [Palaute!]

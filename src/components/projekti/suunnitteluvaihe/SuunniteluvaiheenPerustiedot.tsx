@@ -1,29 +1,43 @@
-import { FormProvider, useForm, useFormContext, UseFormProps } from "react-hook-form";
+import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { suunnittelunPerustiedotSchema, maxAloituskuulutusLength } from "src/schemas/suunnittelunPerustiedot";
+import { suunnittelunPerustiedotSchema, maxHankkeenkuvausLength } from "src/schemas/suunnittelunPerustiedot";
 import SectionContent from "@components/layout/SectionContent";
 import Textarea from "@components/form/Textarea";
-import { Kieli, Projekti, SuunnitteluVaiheInput, TallennaProjektiInput } from "@services/api";
+import { Kieli, SuunnitteluVaiheInput, TallennaProjektiInput, api } from "@services/api";
 import Section from "@components/layout/Section";
 import lowerCase from "lodash/lowerCase";
-import { ReactElement, useEffect } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import TextInput from "@components/form/TextInput";
+import { Stack } from "@mui/material";
+import Button from "@components/button/Button";
+import useSnackbars from "src/hooks/useSnackbars";
+import log from "loglevel";
+import useProjekti from "src/hooks/useProjekti";
+import HassuSpinner from "@components/HassuSpinner";
+import { removeTypeName } from "src/util/removeTypeName";
 
-type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
+type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
   [K in keyof ProjektiFields]: NonNullable<ProjektiFields[K]>;
 }>;
 
 type FormValues = RequiredProjektiFields & {
-  suunnitteluVaihe: Pick<SuunnitteluVaiheInput, "hankkeenKuvaus" | "arvioSeuraavanVaiheenAlkamisesta">;
+  suunnitteluVaihe: Pick<
+    SuunnitteluVaiheInput,
+    "hankkeenKuvaus" | "arvioSeuraavanVaiheenAlkamisesta" | "suunnittelunEteneminenJaKesto"
+  >;
 };
 
 interface Props {
-  projekti?: Projekti | null;
+  oid?: string | undefined;
 }
 
-export default function SuunniteluvaiheenPerustiedot({ projekti }: Props): ReactElement {
+export default function SuunniteluvaiheenPerustiedot({ oid }: Props): ReactElement {
+  const [isFormSubmitting, setIsFormSubmitting] = useState(false);
+  const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const { data: projekti, mutate: reloadProjekti } = useProjekti(oid);
+
   const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(suunnittelunPerustiedotSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
@@ -35,7 +49,6 @@ export default function SuunniteluvaiheenPerustiedot({ projekti }: Props): React
           RUOTSI: projekti?.aloitusKuulutus?.hankkeenKuvaus?.RUOTSI,
           SAAME: projekti?.aloitusKuulutus?.hankkeenKuvaus?.SAAME,
         },
-        arvioSeuraavanVaiheenAlkamisesta: "1.1.2023",
       },
     },
   };
@@ -44,11 +57,40 @@ export default function SuunniteluvaiheenPerustiedot({ projekti }: Props): React
   const {
     register,
     reset,
+    handleSubmit,
     formState: { errors },
   } = useFormReturn;
 
+  const saveDraft = async (formData: FormValues) => {
+    setIsFormSubmitting(true);
+    try {
+      await saveSunnitteluvaihe(formData);
+      showSuccessMessage("Tallennus onnistui!");
+    } catch (e) {
+      log.error("OnSubmit Error", e);
+      showErrorMessage("Tallennuksessa tapahtui virhe");
+    }
+    setIsFormSubmitting(false);
+  };
+
+  const saveSunnitteluvaihe = async (formData: FormValues) => {
+    setIsFormSubmitting(true);
+    await api.tallennaProjekti(formData);
+    await reloadProjekti();
+  };
+
   useEffect(() => {
-    //   reset()
+    if (projekti?.oid) {
+      const tallentamisTiedot: FormValues = {
+        oid: projekti.oid,
+        suunnitteluVaihe: {
+          arvioSeuraavanVaiheenAlkamisesta: projekti.suunnitteluVaihe?.arvioSeuraavanVaiheenAlkamisesta,
+          suunnittelunEteneminenJaKesto: projekti.suunnitteluVaihe?.suunnittelunEteneminenJaKesto,
+          hankkeenKuvaus: removeTypeName(projekti.suunnitteluVaihe?.hankkeenKuvaus),
+        },
+      };
+      reset(tallentamisTiedot);
+    }
   }, [projekti, reset]);
 
   if (!projekti) {
@@ -58,6 +100,8 @@ export default function SuunniteluvaiheenPerustiedot({ projekti }: Props): React
   const kielitiedot = projekti.kielitiedot;
   const ensisijainenKieli = projekti.kielitiedot ? projekti.kielitiedot.ensisijainenKieli : Kieli.SUOMI;
   const toissijainenKieli = kielitiedot?.toissijainenKieli;
+
+  console.log(errors);
 
   return (
     <>
@@ -87,7 +131,7 @@ export default function SuunniteluvaiheenPerustiedot({ projekti }: Props): React
                   kielitiedot?.ensisijainenKieli ? kielitiedot.ensisijainenKieli : Kieli.SUOMI
                 ]
               }
-              maxLength={maxAloituskuulutusLength}
+              maxLength={maxHankkeenkuvausLength}
             />
             {toissijainenKieli && (
               <Textarea
@@ -96,7 +140,7 @@ export default function SuunniteluvaiheenPerustiedot({ projekti }: Props): React
                 )}) *`}
                 {...register(`suunnitteluVaihe.hankkeenKuvaus.${toissijainenKieli}`)}
                 error={(errors.suunnitteluVaihe?.hankkeenKuvaus as any)?.[toissijainenKieli]}
-                maxLength={maxAloituskuulutusLength}
+                maxLength={maxHankkeenkuvausLength}
               />
             )}
           </Section>
@@ -110,9 +154,9 @@ export default function SuunniteluvaiheenPerustiedot({ projekti }: Props): React
               </p>
               <Textarea
                 label="Julkisella puolella esitettävä suunnittelun etenemisen kuvaus"
-                {...register("suunnitteluVaihe.arvioSeuraavanVaiheenAlkamisesta")}
-                error={errors.suunnitteluVaihe?.arvioSeuraavanVaiheenAlkamisesta}
-                maxLength={maxAloituskuulutusLength}
+                maxLength={maxHankkeenkuvausLength}
+                {...register("suunnitteluVaihe.suunnittelunEteneminenJaKesto")}
+                error={errors.suunnitteluVaihe?.suunnittelunEteneminenJaKesto}
               />
               <p>
                 Anna arvio hallinnollisen käsittelyn seuraavan vaiheen alkamisesta. Seuraava vaihe on nähtävillä olo,
@@ -124,7 +168,12 @@ export default function SuunniteluvaiheenPerustiedot({ projekti }: Props): React
                 vaiheen alkamisesta ei pystytä vielä antamaan arviota'`}
                 .
               </p>
-              <TextInput label={"Arvio seuraavan vaiheen alkamisesta *"} maxLength={150}></TextInput>
+              <TextInput
+                label={"Arvio seuraavan vaiheen alkamisesta *"}
+                maxLength={150}
+                {...register("suunnitteluVaihe.arvioSeuraavanVaiheenAlkamisesta")}
+                error={errors.suunnitteluVaihe?.arvioSeuraavanVaiheenAlkamisesta}
+              ></TextInput>
             </SectionContent>
           </Section>
           <Section>
@@ -135,6 +184,22 @@ export default function SuunniteluvaiheenPerustiedot({ projekti }: Props): React
           </Section>
         </form>
       </FormProvider>
+      <Section noDivider>
+        <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
+          <Button onClick={handleSubmit(saveDraft)}>Tallenna luonnos</Button>
+          <Button
+            primary
+            onClick={() => {
+              console.log("tallenna ja julkaise");
+            }}
+            disabled
+          >
+            Tallenna ja julkaise perustiedot
+          </Button>
+          <Button disabled>Nähtävilläolon kuuluttaminen</Button>
+        </Stack>
+      </Section>
+      <HassuSpinner open={isFormSubmitting} />
     </>
   );
 }

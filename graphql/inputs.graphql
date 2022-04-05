@@ -71,6 +71,7 @@ input SuunnitteluSopimusInput {
 input SuunnitteluVaiheInput {
   hankkeenKuvaus: HankkeenKuvauksetInput
   arvioSeuraavanVaiheenAlkamisesta: String
+  suunnittelunEteneminenJaKesto: String
   """
   Yhden vuorovaikutuksen luonti/muokkaus
   """

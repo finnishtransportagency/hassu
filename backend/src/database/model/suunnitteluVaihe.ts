@@ -10,6 +10,7 @@ import { LocalizedMap } from "./projekti";
 export type SuunnitteluVaihe = {
   hankkeenKuvaus?: LocalizedMap<string>;
   arvioSeuraavanVaiheenAlkamisesta?: string | null;
+  suunnittelunEteneminenJaKesto?: string | null;
 };
 
 export type Vuorovaikutus = {

@@ -32,7 +32,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
         <Tabs
           defaultValue={1}
           tabs={[
-            { label: "Suunnitteluvaiheen perustiedot", content: <SuunnitteluvaiheenPerustiedot projekti={projekti} />, value: 1 },
+            { label: "Suunnitteluvaiheen perustiedot", content: <SuunnitteluvaiheenPerustiedot oid={oid} />, value: 1 },
             { label: "1. Vuorovaikuttaminen", content: <SuunniteluvaiheenVuorovaikutus />, value: 2 },
           ]}
         />

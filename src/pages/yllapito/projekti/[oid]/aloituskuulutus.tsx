@@ -47,6 +47,7 @@ import HassuStack from "@components/layout/HassuStack";
 import HassuGrid from "@components/HassuGrid";
 import { GetParameterResult } from "aws-sdk/clients/ssm";
 import HassuSpinner from "@components/HassuSpinner";
+import { removeTypeName } from "src/util/removeTypeName";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
 type RequiredProjektiFields = Required<{
@@ -75,15 +76,6 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
   ProjektiTestType.PROJEKTI_HAS_PAALLIKKO,
   ProjektiTestType.PROJEKTI_IS_CREATED,
 ]);
-
-function removeTypeName(o: any | null | undefined) {
-  if (!o) {
-    return o;
-  }
-  let result = { ...o };
-  delete result["__typename"];
-  return result;
-}
 
 export default function Aloituskuulutus({
   setRouteLabels,
@@ -677,7 +669,7 @@ export default function Aloituskuulutus({
           </div>
         </>
       )}
-      <HassuSpinner open={isFormSubmitting || isLoadingProjekti}/>
+      <HassuSpinner open={isFormSubmitting || isLoadingProjekti} />
     </ProjektiPageLayout>
   );
 }
