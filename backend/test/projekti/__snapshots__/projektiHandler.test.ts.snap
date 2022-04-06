@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`projektiHandler should detect Velho changes successfully 1`] = `
+Object {
+  "__typename": "Velho",
+  "nimi": "Uusi nimi",
+  "vastuuhenkilonEmail": "uusi@vayla.fi",
+  "vaylamuoto": Array [
+    "rata",
+  ],
+}
+`;
+
+exports[`projektiHandler should update Velho changes successfully 1`] = `
+Object {
+  "oid": "1",
+  "velho": Object {
+    "asiatunnusVayla": "A1",
+    "kunnat": Array [
+      "Tampere",
+      "Nokia",
+    ],
+    "maakunnat": Array [
+      "Uusimaa",
+      "Pirkanmaa",
+    ],
+    "nimi": "Uusi nimi",
+    "tilaajaOrganisaatio": "Uudenmaan ELY-keskus",
+    "tyyppi": "TIE",
+    "vastuuhenkilonEmail": "uusi@vayla.fi",
+    "vaylamuoto": Array [
+      "rata",
+    ],
+  },
+}
+`;

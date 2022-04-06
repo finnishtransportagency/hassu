@@ -197,7 +197,7 @@ type VuorovaikutusTilaisuus {
 }
 
 type Velho {
-  nimi: String!
+  nimi: String
   tyyppi: ProjektiTyyppi
   kuvaus: String
   vaylamuoto: [String!]

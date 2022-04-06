@@ -29,3 +29,13 @@ Object {
   "vastuuhenkilo": "test@ely-keskus.fi",
 }
 `;
+
+exports[`VelhoAdapter should find updated Velho fields successfully 1`] = `
+Object {
+  "nimi": "Uusi nimi",
+  "vastuuhenkilonEmail": "uusi@vayla.fi",
+  "vaylamuoto": Array [
+    "rata",
+  ],
+}
+`;

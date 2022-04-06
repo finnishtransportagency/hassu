@@ -13,11 +13,13 @@ import {
   NykyinenKayttaja,
   ProjektiRooli,
   TallennaProjektiInput,
+  Velho,
 } from "../../../common/graphql/apiModel";
-import { projektiAdapter } from "./projektiAdapter";
+import { adaptVelho, projektiAdapter } from "./projektiAdapter";
 import { auditLog, log } from "../logger";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import mergeWith from "lodash/mergeWith";
+import values from "lodash/values";
 import { fileService } from "../files/fileService";
 import { personSearch } from "../personSearch/personSearchClient";
 import { emailClient } from "../email/email";
@@ -26,6 +28,7 @@ import { requireAdmin } from "../user/userService";
 import { projektiArchive } from "../archive/projektiArchiveService";
 import { NotFoundError } from "../error/NotFoundError";
 import { projektiAdapterJulkinen } from "./projektiAdapterJulkinen";
+import { findUpdatedFields } from "../velho/velhoAdapter";
 import { DBProjekti } from "../database/model/projekti";
 import { Aineisto } from "../database/model/suunnitteluVaihe";
 import { aineistoImporterClient } from "../aineisto/aineistoImporterClient";
@@ -129,6 +132,46 @@ async function createProjektiFromVelho(oid: string, vaylaUser: NykyinenKayttaja,
 
     projekti.kayttoOikeudet = kayttoOikeudet.getKayttoOikeudet();
     return projekti;
+  } catch (e) {
+    log.error(e);
+    throw e;
+  }
+}
+
+export async function findUpdatesFromVelho(oid: string): Promise<Velho> {
+  try {
+    log.info("Loading projekti", { oid });
+    const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
+    requirePermissionMuokkaa(projektiFromDB);
+
+    log.info("Loading projekti from Velho", { oid });
+    const { projekti } = await velho.loadProjekti(oid);
+
+    return adaptVelho(findUpdatedFields(projektiFromDB.velho, projekti.velho));
+  } catch (e) {
+    log.error(e);
+    throw e;
+  }
+}
+
+export async function synchronizeUpdatesFromVelho(oid: string): Promise<Velho> {
+  try {
+    log.info("Loading projekti", { oid });
+    const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
+    requirePermissionMuokkaa(projektiFromDB);
+
+    log.info("Loading projekti from Velho", { oid });
+    const { projekti } = await velho.loadProjekti(oid);
+
+    const updatedFields = findUpdatedFields(projektiFromDB.velho, projekti.velho);
+    const updatedVelhoValues = values(updatedFields);
+    if (updatedVelhoValues.length > 0) {
+      log.info("Muutoksia projektiin löytynyt Velhosta", { oid, updatedFields });
+      await projektiDatabase.saveProjekti({ oid, velho: projekti.velho });
+      return adaptVelho(updatedFields);
+    } else {
+      log.info("Muutoksia projektiin löytynyt Velhosta", { oid });
+    }
   } catch (e) {
     log.error(e);
     throw e;

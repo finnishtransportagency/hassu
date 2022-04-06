@@ -2,6 +2,7 @@ import {
   ArkistoiProjektiMutationVariables,
   AsiakirjaTyyppi,
   EsikatseleAsiakirjaPDFQueryVariables,
+  HaeProjektiMuutoksetVelhostaQueryVariables,
   HaeVelhoProjektiAineistoLinkkiQueryVariables,
   Kayttaja,
   Kieli,
@@ -21,10 +22,12 @@ import {
   ProjektiHakutulos,
   ProjektiJulkinen,
   SiirraTilaMutationVariables,
+  SynkronoiProjektiMuutoksetVelhostaMutationVariables,
   TallennaProjektiInput,
   TallennaProjektiMutationVariables,
   TilaSiirtymaInput,
   ValmisteleTiedostonLatausQueryVariables,
+  Velho,
   VelhoAineistoKategoria,
   VelhoHakuTulos,
 } from "./graphql/apiModel";
@@ -113,6 +116,16 @@ export const apiConfig: ApiConfig = {
     name: "haeVelhoProjektiAineistoLinkki",
     operationType: OperationType.Query,
     graphql: queries.haeVelhoProjektiAineistoLinkki,
+  },
+  haeProjektiMuutoksetVelhosta: {
+    name: "haeProjektiMuutoksetVelhosta",
+    operationType: OperationType.Query,
+    graphql: queries.haeProjektiMuutoksetVelhosta,
+  },
+  synkronoiProjektiMuutoksetVelhosta: {
+    name: "synkronoiProjektiMuutoksetVelhosta",
+    operationType: OperationType.Mutation,
+    graphql: mutations.synkronoiProjektiMuutoksetVelhosta,
   },
 };
 
@@ -214,6 +227,18 @@ export abstract class AbstractApi {
     return await this.callYllapitoAPI(apiConfig.siirraTila, {
       tilasiirtyma,
     } as SiirraTilaMutationVariables);
+  }
+
+  async haeProjektiMuutoksetVelhosta(oid: string): Promise<Velho> {
+    return await this.callYllapitoAPI(apiConfig.haeProjektiMuutoksetVelhosta, {
+      oid,
+    } as HaeProjektiMuutoksetVelhostaQueryVariables);
+  }
+
+  async synkronoiProjektiMuutoksetVelhosta(oid: string): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.synkronoiProjektiMuutoksetVelhosta, {
+      oid,
+    } as SynkronoiProjektiMuutoksetVelhostaMutationVariables);
   }
 
   abstract callYllapitoAPI(operation: OperationConfig, variables?: any): Promise<any>;

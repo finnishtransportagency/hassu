@@ -2,6 +2,7 @@ import { log } from "./logger";
 import {
   ArkistoiProjektiMutationVariables,
   EsikatseleAsiakirjaPDFQueryVariables,
+  HaeProjektiMuutoksetVelhostaQueryVariables,
   HaeVelhoProjektiAineistoLinkkiQueryVariables,
   LaskePaattymisPaivaQueryVariables,
   LataaProjektiQueryVariables,
@@ -10,6 +11,7 @@ import {
   ListaaVelhoProjektiAineistotQueryVariables,
   ListaaVelhoProjektitQueryVariables,
   SiirraTilaMutationVariables,
+  SynkronoiProjektiMuutoksetVelhostaMutationVariables,
   TallennaProjektiInput,
   TallennaProjektiMutationVariables,
   TilaSiirtymaInput,
@@ -20,7 +22,13 @@ import { listaaVelhoProjektit } from "./handler/listaaVelhoProjektit";
 import { identifyUser } from "./user";
 import { getCurrentUser } from "./handler/getCurrentUser";
 import { listUsers } from "./handler/listUsers";
-import { arkistoiProjekti, createOrUpdateProjekti, loadProjekti } from "./handler/projektiHandler";
+import {
+  arkistoiProjekti,
+  createOrUpdateProjekti,
+  findUpdatesFromVelho,
+  loadProjekti,
+  synchronizeUpdatesFromVelho,
+} from "./handler/projektiHandler";
 import { apiConfig } from "../../common/abstractApi";
 import { lataaAsiakirja } from "./handler/asiakirjaHandler";
 import { createUploadURLForFile } from "./handler/fileHandler";
@@ -57,6 +65,12 @@ async function executeOperation(event: AppSyncResolverEvent<AppSyncEventArgument
     case apiConfig.haeVelhoProjektiAineistoLinkki.name:
       return await velhoDocumentHandler.haeVelhoProjektiAineistoLinkki(
         event.arguments as HaeVelhoProjektiAineistoLinkkiQueryVariables
+      );
+    case apiConfig.haeProjektiMuutoksetVelhosta.name:
+      return await findUpdatesFromVelho((event.arguments as HaeProjektiMuutoksetVelhostaQueryVariables).oid);
+    case apiConfig.synkronoiProjektiMuutoksetVelhosta.name:
+      return await synchronizeUpdatesFromVelho(
+        (event.arguments as SynkronoiProjektiMuutoksetVelhostaMutationVariables).oid
       );
 
     case apiConfig.nykyinenKayttaja.name:

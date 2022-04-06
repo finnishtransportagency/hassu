@@ -1,5 +1,5 @@
 import { ProjektiTyyppi, VelhoHakuTulos, Viranomainen } from "../../../common/graphql/apiModel";
-import { DBProjekti } from "../database/model/projekti";
+import { DBProjekti, Velho } from "../database/model/projekti";
 import { adaptKayttaja } from "../personSearch/personAdapter";
 import { userService } from "../user";
 import { Kayttajas } from "../personSearch/kayttajas";
@@ -8,6 +8,12 @@ import {
   ProjektirekisteriApiV2ProjektiOminaisuudet,
   ProjektirekisteriApiV2ProjektiOminaisuudetVaylamuotoEnum,
 } from "./projektirekisteri";
+import mergeWith from "lodash/mergeWith";
+import pickBy from "lodash/pickBy";
+import identity from "lodash/identity";
+import isArray from "lodash/isArray";
+import cloneDeep from "lodash/cloneDeep";
+import difference from "lodash/difference";
 
 let metaDataJSON: any;
 
@@ -154,4 +160,17 @@ export function adaptDokumenttiTyyppi(dokumenttiTyyppi: string): { dokumenttiTyy
       kategoria: type.kategoria,
     };
   }
+}
+
+export function findUpdatedFields(oldVelho: Velho, newVelho: Velho): Velho {
+  const modifiedFields = mergeWith(cloneDeep(newVelho), oldVelho, (newValue, oldValue) => {
+    if (isArray(newValue) || isArray(oldValue)) {
+      return difference(newValue, oldValue).length > 0 ? newValue : null;
+    }
+    if (newValue == oldValue) {
+      return null;
+    }
+    return newValue;
+  });
+  return pickBy(modifiedFields, identity) as Velho;
 }

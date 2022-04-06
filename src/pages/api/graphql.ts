@@ -23,7 +23,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       process.env["x-hassudev-roles"]
     ) as string;
   }
-  console.log(req.query);
   const request = new HttpRequest({
     headers: headers,
     hostname: urlObject.hostname,
