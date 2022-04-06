@@ -86,6 +86,8 @@ type SuunnitteluVaihe {
   arvioSeuraavanVaiheenAlkamisesta: String
 
   vuorovaikutukset: [Vuorovaikutus!]
+
+  palautteet: [Palaute!]
 }
 
 type Vuorovaikutus {
@@ -115,7 +117,6 @@ type Vuorovaikutus {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
 
   aineistot: [Aineisto!]
-  palautteet: [Palaute!]
 }
 
 type Linkki {
@@ -150,6 +151,7 @@ enum AineistoTila {
 }
 
 type Palaute {
+  id: ID!
   etunimi: String
   sukunimi: String
   sahkoposti: String

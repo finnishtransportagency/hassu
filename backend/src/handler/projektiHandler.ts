@@ -56,7 +56,7 @@ async function loadProjektiYllapito(oid: string, vaylaUser: NykyinenKayttaja): P
   }
 }
 
-async function loadProjektiJulkinen(oid: string): Promise<API.ProjektiJulkinen> {
+export async function loadProjektiJulkinen(oid: string): Promise<API.ProjektiJulkinen> {
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
   if (projektiFromDB) {
     const adaptedProjekti = projektiAdapterJulkinen.adaptProjekti(projektiFromDB);
@@ -217,4 +217,15 @@ async function handleAineistot(
       });
     }
   }
+}
+
+export async function requirePermissionMuokkaaProjekti(oid: string): Promise<DBProjekti> {
+  requirePermissionLuku();
+  log.info("Loading projekti", { oid });
+  const projekti = await projektiDatabase.loadProjektiByOid(oid);
+  if (!projekti) {
+    throw new NotFoundError("Projekti not found " + oid);
+  }
+  requirePermissionMuokkaa(projekti);
+  return projekti;
 }

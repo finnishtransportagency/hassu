@@ -34,6 +34,7 @@ import { log } from "../logger";
 import {
   Aineisto,
   Linkki,
+  Palaute,
   SuunnitteluVaihe,
   Vuorovaikutus,
   VuorovaikutusTilaisuus,
@@ -51,6 +52,7 @@ export class ProjektiAdapter {
       kielitiedot,
       suunnitteluVaihe,
       vuorovaikutukset,
+      palautteet,
       ...fieldsToCopyAsIs
     } = dbProjekti;
 
@@ -68,7 +70,7 @@ export class ProjektiAdapter {
         ...velho,
       },
       kielitiedot: adaptKielitiedot(kielitiedot),
-      suunnitteluVaihe: adaptSuunnitteluVaihe(suunnitteluVaihe, vuorovaikutukset),
+      suunnitteluVaihe: adaptSuunnitteluVaihe(suunnitteluVaihe, vuorovaikutukset, palautteet),
       ...fieldsToCopyAsIs,
     }) as API.Projekti;
   }
@@ -182,7 +184,8 @@ export function adaptKielitiedot(kielitiedot?: Kielitiedot | null): API.Kielitie
 
 function adaptSuunnitteluVaihe(
   suunnitteluVaihe: SuunnitteluVaihe,
-  vuorovaikutukset: Array<Vuorovaikutus>
+  vuorovaikutukset: Array<Vuorovaikutus>,
+  palautteet: Array<Palaute>
 ): API.SuunnitteluVaihe {
   if (suunnitteluVaihe) {
     return {
@@ -191,6 +194,7 @@ function adaptSuunnitteluVaihe(
         ? adaptHankkeenKuvaus(suunnitteluVaihe.hankkeenKuvaus)
         : undefined,
       vuorovaikutukset: adaptVuorovaikutukset(vuorovaikutukset),
+      palautteet: palautteet ? palautteet.map((palaute) => ({ __typename: "Palaute", ...palaute })) : undefined,
       __typename: "SuunnitteluVaihe",
     };
   }
