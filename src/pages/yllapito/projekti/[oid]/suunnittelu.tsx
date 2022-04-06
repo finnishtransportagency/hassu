@@ -10,7 +10,7 @@ import SuunnitteluvaiheenPerustiedot from "@components/projekti/suunnitteluvaihe
 export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
   const router = useRouter();
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
-  const { data: projekti } = useProjekti(oid);
+  const { data: projekti, mutate: reloadProjekti } = useProjekti(oid);
 
   useEffect(() => {
     if (router.isReady) {
@@ -32,7 +32,11 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
         <Tabs
           defaultValue={1}
           tabs={[
-            { label: "Suunnitteluvaiheen perustiedot", content: <SuunnitteluvaiheenPerustiedot oid={oid} />, value: 1 },
+            {
+              label: "Suunnitteluvaiheen perustiedot",
+              content: <SuunnitteluvaiheenPerustiedot projekti={projekti} reloadProjekti={reloadProjekti} />,
+              value: 1,
+            },
             { label: "1. Vuorovaikuttaminen", content: <SuunniteluvaiheenVuorovaikutus />, value: 2 },
           ]}
         />

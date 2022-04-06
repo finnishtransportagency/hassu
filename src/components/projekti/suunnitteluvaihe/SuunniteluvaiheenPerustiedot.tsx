@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { suunnittelunPerustiedotSchema, maxHankkeenkuvausLength } from "src/schemas/suunnittelunPerustiedot";
 import SectionContent from "@components/layout/SectionContent";
 import Textarea from "@components/form/Textarea";
-import { Kieli, SuunnitteluVaiheInput, TallennaProjektiInput, api } from "@services/api";
+import { Kieli, SuunnitteluVaiheInput, TallennaProjektiInput, api, Projekti } from "@services/api";
 import Section from "@components/layout/Section";
 import lowerCase from "lodash/lowerCase";
 import { ReactElement, useEffect, useState } from "react";
@@ -13,9 +13,10 @@ import { Stack } from "@mui/material";
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
-import useProjekti from "src/hooks/useProjekti";
 import HassuSpinner from "@components/HassuSpinner";
 import { removeTypeName } from "src/util/removeTypeName";
+import { KeyedMutator } from "swr";
+import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -30,13 +31,13 @@ type FormValues = RequiredProjektiFields & {
 };
 
 interface Props {
-  oid?: string | undefined;
+  projekti?: Projekti | null;
+  reloadProjekti?: KeyedMutator<ProjektiLisatiedolla | null>;
 }
 
-export default function SuunniteluvaiheenPerustiedot({ oid }: Props): ReactElement {
+export default function SuunniteluvaiheenPerustiedot({ projekti, reloadProjekti }: Props): ReactElement {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
-  const { data: projekti, mutate: reloadProjekti } = useProjekti(oid);
 
   const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(suunnittelunPerustiedotSchema, { abortEarly: false, recursive: true }),
@@ -76,7 +77,7 @@ export default function SuunniteluvaiheenPerustiedot({ oid }: Props): ReactEleme
   const saveSunnitteluvaihe = async (formData: FormValues) => {
     setIsFormSubmitting(true);
     await api.tallennaProjekti(formData);
-    await reloadProjekti();
+    if (reloadProjekti) await reloadProjekti();
   };
 
   useEffect(() => {
@@ -100,8 +101,6 @@ export default function SuunniteluvaiheenPerustiedot({ oid }: Props): ReactEleme
   const kielitiedot = projekti.kielitiedot;
   const ensisijainenKieli = projekti.kielitiedot ? projekti.kielitiedot.ensisijainenKieli : Kieli.SUOMI;
   const toissijainenKieli = kielitiedot?.toissijainenKieli;
-
-  console.log(errors);
 
   return (
     <>
@@ -179,7 +178,11 @@ export default function SuunniteluvaiheenPerustiedot({ oid }: Props): ReactEleme
           <Section>
             <h5 className="vayla-small-title">Saapuneet kysymykset ja palautteet</h5>
             <SectionContent>
-              <p>Ei saapuneita kysymyksiä tai palautteita</p>
+              <p>
+                {projekti.suunnitteluVaihe?.palautteet
+                  ? `Kysymyksiä tai palautteita ${projekti.suunnitteluVaihe.palautteet.length} kpl.`
+                  : "Ei saapuneita kysymyksiä tai palautteita"}
+              </p>
             </SectionContent>
           </Section>
         </form>
