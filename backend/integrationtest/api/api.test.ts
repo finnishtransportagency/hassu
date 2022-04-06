@@ -6,6 +6,7 @@ import {
   AineistoInput,
   AsiakirjaTyyppi,
   Kieli,
+  Palaute,
   Projekti,
   ProjektiKayttaja,
   ProjektiRooli,
@@ -235,6 +236,43 @@ describe("Api", () => {
     await saveAndVerifyAineistoSave(oid, aineistotWithoutFirst);
   }
 
+  async function insertAndManageFeedback(oid: string) {
+    const palauteId = await api.lisaaPalaute(oid, {
+      etunimi: "Matti",
+      sukunimi: "Meikalainen",
+      puhelinnumero: "123456",
+      sahkoposti: "test@vayla.fi",
+      yhteydenottotapaPuhelin: true,
+      yhteydenottotapaEmail: false,
+      kysymysTaiPalaute: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      liite: await tallennaLogo(),
+    });
+
+    const projekti = await loadProjektiFromDatabase(oid);
+    const palautteet = projekti.suunnitteluVaihe.palautteet;
+
+    function cleanupGeneratedIdFromFeedbacks(feedbacks?: Palaute[]) {
+      return feedbacks
+        ? feedbacks.map((palaute) => {
+            palaute.liite = palaute.liite.replace(palaute.id, "***unittest***");
+            palaute.id = "***unittest***";
+            return palaute;
+          })
+        : undefined;
+    }
+
+    expectToMatchSnapshot("projekti palaute lisätty", cleanupGeneratedIdFromFeedbacks(palautteet));
+
+    await api.otaPalauteKasittelyyn(oid, palauteId);
+
+    const projektiAfterFeedbackBeingHandled = await loadProjektiFromDatabase(oid);
+    const palautteetAfterFeedbackBeingHandled = projektiAfterFeedbackBeingHandled.suunnitteluVaihe.palautteet;
+    expectToMatchSnapshot(
+      "projekti palaute otettu käsittelyyn",
+      cleanupGeneratedIdFromFeedbacks(palautteetAfterFeedbackBeingHandled)
+    );
+  }
+
   async function testPublicAccessToProjekti(oid: string) {
     userFixture.logout();
     const publicProjekti = await loadProjektiFromDatabase(oid);
@@ -265,6 +303,7 @@ describe("Api", () => {
     await testSuunnitteluvaiheVuorovaikutus(oid, projektiPaallikko);
     const velhoAineistoKategorias = await testListDocumentsToImport(oid);
     await testImportAineistot(oid, velhoAineistoKategorias);
+    await insertAndManageFeedback(oid);
     await testPublicAccessToProjekti(oid);
   });
 

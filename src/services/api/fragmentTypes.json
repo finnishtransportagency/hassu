@@ -140,6 +140,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "SCALAR",
+        "name": "ID",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "ENUM",
         "name": "IlmoitettavaViranomainen",
         "possibleTypes": null,
@@ -271,6 +277,12 @@
       {
         "kind": "OBJECT",
         "name": "Palaute",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "PalauteInput",
         "possibleTypes": null,
         "__typename": "__Type"
       },

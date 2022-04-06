@@ -6,9 +6,11 @@ import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
 import { AWSError } from "aws-sdk";
 import { Response } from "aws-sdk/lib/response";
 import dayjs from "dayjs";
+import { NotFoundError } from "../error/NotFoundError";
+import { Palaute } from "./model/suunnitteluVaihe";
 
-const projektiTableName: string = config.projektiTableName;
-const archiveTableName: string = config.projektiArchiveTableName;
+const projektiTableName: string = config.projektiTableName || "missing";
+const archiveTableName: string = config.projektiArchiveTableName || "missing";
 
 export type ArchivedProjektiKey = {
   oid: string;
@@ -274,4 +276,51 @@ export const projektiDatabase = {
   insertAloitusKuulutusJulkaisu,
   deleteAloitusKuulutusJulkaisu,
   updateAloitusKuulutusJulkaisu,
+
+  async insertFeedback(oid: string, palaute: Palaute): Promise<string> {
+    log.info("insertFeedback", { oid, palaute });
+
+    const params = {
+      TableName: projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression: "SET #palautteet = list_append(if_not_exists(#palautteet, :empty_list), :palaute)",
+      ExpressionAttributeNames: {
+        "#palautteet": "palautteet",
+      },
+      ExpressionAttributeValues: {
+        ":palaute": [palaute],
+        ":empty_list": [],
+      },
+    };
+    log.info("Inserting palaute to projekti", { params });
+    await getDynamoDBDocumentClient().update(params).promise();
+    return palaute.id;
+  },
+
+  async markFeedbackIsBeingHandled(projekti: DBProjekti, id: string): Promise<string> {
+    const oid = projekti.oid;
+    log.info("markFeedbackIsBeingHandled", { oid, id });
+    const palauteIndex = projekti.palautteet.findIndex((value) => value.id === id);
+    if (palauteIndex < 0) {
+      throw new NotFoundError("Palautetta ei löydy: " + oid + " " + id);
+    }
+    const params = {
+      TableName: projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression: "SET #palautteet[" + palauteIndex + "].otettuKasittelyyn = :flag",
+      ExpressionAttributeNames: {
+        "#palautteet": "palautteet",
+      },
+      ExpressionAttributeValues: {
+        ":flag": true,
+      },
+    };
+    log.info("markFeedbackIsBeingHandled", { params });
+    await getDynamoDBDocumentClient().update(params).promise();
+    return id;
+  },
 };

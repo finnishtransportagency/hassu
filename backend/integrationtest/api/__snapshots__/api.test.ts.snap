@@ -98,6 +98,7 @@ Object {
       "SUOMI": "Lorem Ipsum suunnitteluvaihe",
       "__typename": "HankkeenKuvaukset",
     },
+    "palautteet": undefined,
     "vuorovaikutukset": Array [],
   },
 }
@@ -114,6 +115,7 @@ Object {
       "SUOMI": "Lorem Ipsum suunnitteluvaihe",
       "__typename": "HankkeenKuvaukset",
     },
+    "palautteet": undefined,
     "vuorovaikutukset": Array [
       Object {
         "__typename": "Vuorovaikutus",
@@ -472,6 +474,47 @@ Object {
 `;
 
 exports[`Api should search, load and save a project 7`] = `
+Object {
+  "description": "projekti palaute lisätty",
+  "obj": Array [
+    Object {
+      "__typename": "Palaute",
+      "etunimi": "Matti",
+      "id": "***unittest***",
+      "kysymysTaiPalaute": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "liite": "/palautteet/***unittest***/logo.png",
+      "puhelinnumero": "123456",
+      "sahkoposti": "test@vayla.fi",
+      "sukunimi": "Meikalainen",
+      "yhteydenottotapaEmail": false,
+      "yhteydenottotapaPuhelin": true,
+    },
+  ],
+}
+`;
+
+exports[`Api should search, load and save a project 8`] = `
+Object {
+  "description": "projekti palaute otettu käsittelyyn",
+  "obj": Array [
+    Object {
+      "__typename": "Palaute",
+      "etunimi": "Matti",
+      "id": "***unittest***",
+      "kysymysTaiPalaute": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "liite": "/palautteet/***unittest***/logo.png",
+      "otettuKasittelyyn": true,
+      "puhelinnumero": "123456",
+      "sahkoposti": "test@vayla.fi",
+      "sukunimi": "Meikalainen",
+      "yhteydenottotapaEmail": false,
+      "yhteydenottotapaPuhelin": true,
+    },
+  ],
+}
+`;
+
+exports[`Api should search, load and save a project 9`] = `
 Object {
   "description": "publicProjekti",
   "obj": Object {

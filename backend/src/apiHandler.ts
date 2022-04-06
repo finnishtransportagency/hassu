@@ -6,10 +6,12 @@ import {
   HaeVelhoProjektiAineistoLinkkiQueryVariables,
   LaskePaattymisPaivaQueryVariables,
   LataaProjektiQueryVariables,
+  LisaaPalauteMutationVariables,
   ListaaKayttajatQueryVariables,
   ListaaProjektitQueryVariables,
   ListaaVelhoProjektiAineistotQueryVariables,
   ListaaVelhoProjektitQueryVariables,
+  OtaPalauteKasittelyynMutationVariables,
   SiirraTilaMutationVariables,
   SynkronoiProjektiMuutoksetVelhostaMutationVariables,
   TallennaProjektiInput,
@@ -38,6 +40,7 @@ import { calculateEndDate } from "./endDateCalculator/endDateCalculatorHandler";
 import { aloitusKuulutusHandler } from "./handler/aloitusKuulutusHandler";
 import { listProjektit } from "./handler/listProjektitHandler";
 import { velhoDocumentHandler } from "./handler/velhoDocumentHandler";
+import { palauteHandler } from "./palaute/palauteHandler";
 
 type AppSyncEventArguments =
   | unknown
@@ -91,6 +94,10 @@ async function executeOperation(event: AppSyncResolverEvent<AppSyncEventArgument
       return await aloitusKuulutusHandler.siirraTila((event.arguments as SiirraTilaMutationVariables).tilasiirtyma);
     case apiConfig.arkistoiProjekti.name:
       return await arkistoiProjekti((event.arguments as ArkistoiProjektiMutationVariables).oid);
+    case apiConfig.lisaaPalaute.name:
+      return await palauteHandler.lisaaPalaute(event.arguments as LisaaPalauteMutationVariables);
+    case apiConfig.otaPalauteKasittelyyn.name:
+      return await palauteHandler.otaPalauteKasittelyyn(event.arguments as OtaPalauteKasittelyynMutationVariables);
     default:
       return null;
   }

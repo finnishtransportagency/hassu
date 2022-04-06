@@ -199,3 +199,14 @@ input TilaSiirtymaInput {
   toiminto: TilasiirtymaToiminto!
   syy: String
 }
+
+input PalauteInput {
+  etunimi: String
+  sukunimi: String
+  sahkoposti: String
+  puhelinnumero: String
+  kysymysTaiPalaute: String
+  yhteydenottotapaEmail: Boolean
+  yhteydenottotapaPuhelin: Boolean
+  liite: String
+}

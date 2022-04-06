@@ -10,6 +10,7 @@ import {
   LaskuriTyyppi,
   LataaProjektiQueryVariables,
   LatausTiedot,
+  LisaaPalauteMutationVariables,
   ListaaKayttajatInput,
   ListaaKayttajatQueryVariables,
   ListaaProjektitInput,
@@ -17,6 +18,8 @@ import {
   ListaaVelhoProjektiAineistotQueryVariables,
   ListaaVelhoProjektitQueryVariables,
   NykyinenKayttaja,
+  OtaPalauteKasittelyynMutationVariables,
+  PalauteInput,
   PDF,
   Projekti,
   ProjektiHakutulos,
@@ -116,6 +119,16 @@ export const apiConfig: ApiConfig = {
     name: "haeVelhoProjektiAineistoLinkki",
     operationType: OperationType.Query,
     graphql: queries.haeVelhoProjektiAineistoLinkki,
+  },
+  lisaaPalaute: {
+    name: "lisaaPalaute",
+    operationType: OperationType.Mutation,
+    graphql: mutations.lisaaPalaute,
+  },
+  otaPalauteKasittelyyn: {
+    name: "otaPalauteKasittelyyn",
+    operationType: OperationType.Mutation,
+    graphql: mutations.otaPalauteKasittelyyn,
   },
   haeProjektiMuutoksetVelhosta: {
     name: "haeProjektiMuutoksetVelhosta",
@@ -227,6 +240,20 @@ export abstract class AbstractApi {
     return await this.callYllapitoAPI(apiConfig.siirraTila, {
       tilasiirtyma,
     } as SiirraTilaMutationVariables);
+  }
+
+  async lisaaPalaute(oid: string, palaute: PalauteInput): Promise<string> {
+    return await this.callAPI(apiConfig.lisaaPalaute, {
+      oid,
+      palaute,
+    } as LisaaPalauteMutationVariables);
+  }
+
+  async otaPalauteKasittelyyn(oid: string, id: string): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.otaPalauteKasittelyyn, {
+      oid,
+      id,
+    } as OtaPalauteKasittelyynMutationVariables);
   }
 
   async haeProjektiMuutoksetVelhosta(oid: string): Promise<Velho> {

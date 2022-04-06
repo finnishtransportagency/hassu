@@ -65,3 +65,16 @@ export type Linkki = {
   nimi: string;
   url: string;
 };
+
+export type Palaute = {
+  id: string;
+  etunimi?: string | null;
+  sukunimi?: string | null;
+  sahkoposti?: string | null;
+  puhelinnumero?: string | null;
+  kysymysTaiPalaute?: string | null;
+  yhteydenottotapaEmail?: boolean | null;
+  yhteydenottotapaPuhelin?: boolean | null;
+  liite?: string | null;
+  otettuKasittelyyn?: boolean | null;
+};
