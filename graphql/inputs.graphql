@@ -72,6 +72,7 @@ input SuunnitteluVaiheInput {
   hankkeenKuvaus: HankkeenKuvauksetInput
   arvioSeuraavanVaiheenAlkamisesta: String
   suunnittelunEteneminenJaKesto: String
+  julkinen: Boolean
   """
   Yhden vuorovaikutuksen luonti/muokkaus
   """
@@ -83,6 +84,7 @@ input VuorovaikutusInput {
   Vuorovaikutuksen jarjestysnumero
   """
   vuorovaikutusNumero: Int!
+  julkinen: Boolean
   vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusInput!]
   """
   yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm

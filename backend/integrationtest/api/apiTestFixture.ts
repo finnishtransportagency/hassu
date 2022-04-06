@@ -105,11 +105,16 @@ class ApiTestFixture {
     ];
   };
 
-  suunnitteluVaihe = (vuorovaikutusNumero: number, vuorovaikutusYhteysHenkilot?: string[]): SuunnitteluVaiheInput => ({
+  suunnitteluVaihe = (
+    vuorovaikutusNumero: number,
+    vuorovaikutusYhteysHenkilot?: string[],
+    julkinen?: boolean
+  ): SuunnitteluVaiheInput => ({
     vuorovaikutus: {
       vuorovaikutusNumero,
+      julkinen,
       vuorovaikutusJulkaisuPaiva: "2022-03-23",
-      aineistoPoistetaanNakyvista: "2022-03-23T23:45",
+      aineistoPoistetaanNakyvista: "2222-03-23T23:45",
       videot: [{ nimi: "Esittely " + vuorovaikutusNumero, url: "https://video" }],
       kysymyksetJaPalautteetViimeistaan: "2022-03-23T23:48",
       esitettavatYhteystiedot: apiTestFixture.esitettavatYhteystiedot,

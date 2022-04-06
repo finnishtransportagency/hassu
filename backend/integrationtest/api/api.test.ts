@@ -10,9 +10,11 @@ import {
   Projekti,
   ProjektiKayttaja,
   ProjektiRooli,
+  Status,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
   VelhoAineistoKategoria,
+  Vuorovaikutus,
 } from "../../../common/graphql/apiModel";
 import fs from "fs";
 import axios from "axios";
@@ -36,6 +38,22 @@ const sandbox = sinon.createSandbox();
 
 function expectToMatchSnapshot(description: string, obj: unknown) {
   expect({ description, obj }).toMatchSnapshot();
+}
+
+function cleanupVuorovaikutusTimestamps(vuorovaikutukset: Vuorovaikutus[]) {
+  vuorovaikutukset.forEach((vuorovaikutus) =>
+    vuorovaikutus.aineistot?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"))
+  );
+}
+
+function cleanupGeneratedIdFromFeedbacks(feedbacks?: Palaute[]) {
+  return feedbacks
+    ? feedbacks.map((palaute) => {
+        palaute.liite = palaute.liite.replace(palaute.id, "***unittest***");
+        palaute.id = "***unittest***";
+        return palaute;
+      })
+    : undefined;
 }
 
 describe("Api", () => {
@@ -181,11 +199,12 @@ describe("Api", () => {
   async function doTestSuunnitteluvaiheVuorovaikutus(
     oid: string,
     vuorovaikutusNumero: number,
-    vuorovaikutusYhteysHenkilot: string[]
+    vuorovaikutusYhteysHenkilot: string[],
+    julkinen?: boolean
   ) {
     await api.tallennaProjekti({
       oid,
-      suunnitteluVaihe: apiTestFixture.suunnitteluVaihe(vuorovaikutusNumero, vuorovaikutusYhteysHenkilot),
+      suunnitteluVaihe: apiTestFixture.suunnitteluVaihe(vuorovaikutusNumero, vuorovaikutusYhteysHenkilot, julkinen),
     });
     return (await loadProjektiFromDatabase(oid)).suunnitteluVaihe;
   }
@@ -251,16 +270,6 @@ describe("Api", () => {
     const projekti = await loadProjektiFromDatabase(oid);
     const palautteet = projekti.suunnitteluVaihe.palautteet;
 
-    function cleanupGeneratedIdFromFeedbacks(feedbacks?: Palaute[]) {
-      return feedbacks
-        ? feedbacks.map((palaute) => {
-            palaute.liite = palaute.liite.replace(palaute.id, "***unittest***");
-            palaute.id = "***unittest***";
-            return palaute;
-          })
-        : undefined;
-    }
-
     expectToMatchSnapshot("projekti palaute lisätty", cleanupGeneratedIdFromFeedbacks(palautteet));
 
     await api.otaPalauteKasittelyyn(oid, palauteId);
@@ -273,10 +282,35 @@ describe("Api", () => {
     );
   }
 
-  async function testPublicAccessToProjekti(oid: string) {
+  async function julkaiseSuunnitteluvaihe(oid: string) {
+    const projekti = await loadProjektiFromDatabase(oid);
+    await api.tallennaProjekti({
+      oid,
+      suunnitteluVaihe: {
+        ...projekti.suunnitteluVaihe,
+        julkinen: true,
+      },
+    });
+  }
+
+  async function julkaiseVuorovaikutus(oid: string) {
+    const unpublishedVuorovaikutusProjekti = await loadProjektiFromDatabase(oid);
+    await api.tallennaProjekti({
+      oid,
+      suunnitteluVaihe: {
+        vuorovaikutus: { ...unpublishedVuorovaikutusProjekti.suunnitteluVaihe.vuorovaikutukset[0], julkinen: true },
+      },
+    });
+    userFixture.logout();
+    const suunnitteluVaihe = (await loadProjektiFromDatabase(oid)).suunnitteluVaihe;
+    cleanupVuorovaikutusTimestamps(suunnitteluVaihe.vuorovaikutukset);
+    await expectToMatchSnapshot("publicProjekti" + (" suunnitteluvaihe" || ""), suunnitteluVaihe);
+  }
+
+  async function testPublicAccessToProjekti(oid: string, description?: string) {
     userFixture.logout();
     const publicProjekti = await loadProjektiFromDatabase(oid);
-    expectToMatchSnapshot("publicProjekti", publicProjekti);
+    expectToMatchSnapshot("publicProjekti" + (description || ""), publicProjekti);
   }
 
   async function archiveProjekti(oid: string) {
@@ -303,24 +337,28 @@ describe("Api", () => {
     await testSuunnitteluvaiheVuorovaikutus(oid, projektiPaallikko);
     const velhoAineistoKategorias = await testListDocumentsToImport(oid);
     await testImportAineistot(oid, velhoAineistoKategorias);
+    await processQueue();
+    await testPublicAccessToProjekti(oid, " ennen suunnitteluvaihetta");
+
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await julkaiseSuunnitteluvaihe(oid);
+    expect((await loadProjektiFromDatabase(oid)).status).to.eq(Status.SUUNNITTELU);
     await insertAndManageFeedback(oid);
-    await testPublicAccessToProjekti(oid);
+
+    await julkaiseVuorovaikutus(oid);
   });
 
-  it("should import files from Velho using background queue", async function () {
-    if (process.env.SKIP_VELHO_TESTS == "true") {
-      this.skip();
-    }
-    replaceAWSDynamoDBWithLocalstack();
+  async function processQueue() {
     expect(fakeAineistoImportQueue).toMatchSnapshot();
     for (const event of fakeAineistoImportQueue) {
       await handleEvent(event, null, null);
     }
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    const vuorovaikutus = (await loadProjektiFromDatabase(oid)).suunnitteluVaihe.vuorovaikutukset[0];
-    vuorovaikutus.aineistot?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
+    const suunnitteluVaihe = (await loadProjektiFromDatabase(oid)).suunnitteluVaihe;
+    const vuorovaikutus = suunnitteluVaihe.vuorovaikutukset[0];
+    cleanupVuorovaikutusTimestamps([vuorovaikutus]);
     expect(vuorovaikutus).toMatchSnapshot();
-  });
+  }
 
   it("should archive projekti", async function () {
     replaceAWSDynamoDBWithLocalstack();

@@ -15,10 +15,19 @@ import {
 } from "../../../common/graphql/apiModel";
 import pickBy from "lodash/pickBy";
 import dayjs from "dayjs";
-import { adaptHankkeenKuvaus, adaptKielitiedot, adaptVelho, adaptYhteystiedot } from "./projektiAdapter";
+import {
+  adaptAineistot,
+  adaptHankkeenKuvaus,
+  adaptKielitiedot,
+  adaptLinkkiList,
+  adaptVelho,
+  adaptVuorovaikutusTilaisuudet,
+  adaptYhteystiedot,
+} from "./projektiAdapter";
 import { fileService } from "../files/fileService";
 import { log } from "../logger";
 import { parseDate } from "../util/dateUtil";
+import { Vuorovaikutus } from "../database/model/suunnitteluVaihe";
 
 class ProjektiAdapterJulkinen {
   applyStatus(projekti: ProjektiJulkinen) {
@@ -36,16 +45,8 @@ class ProjektiAdapterJulkinen {
 
     function checkSuunnittelu() {
       // Valiaikainen ui kehitysta varten, kunnes suunnitteluvaihe tietomallissa
-      if (projekti.aloitusKuulutusJulkaisut) {
-        const siirtynytSuunnitteluun = projekti.aloitusKuulutusJulkaisut.filter((julkaisu) => {
-          return (
-            julkaisu.siirtyySuunnitteluVaiheeseen && parseDate(julkaisu.siirtyySuunnitteluVaiheeseen).isBefore(dayjs())
-          );
-        });
-
-        if (siirtynytSuunnitteluun?.length > 0) {
-          projekti.status = Status.SUUNNITTELU;
-        }
+      if (projekti.suunnitteluVaihe) {
+        projekti.status = Status.SUUNNITTELU;
       }
     }
 
@@ -76,10 +77,16 @@ class ProjektiAdapterJulkinen {
       return undefined;
     }
 
+    let suunnitteluVaihe = undefined;
+    if (dbProjekti.suunnitteluVaihe?.julkinen) {
+      suunnitteluVaihe = ProjektiAdapterJulkinen.adaptSuunnitteluVaihe(dbProjekti);
+    }
+
     const projekti: ProjektiJulkinen = {
       __typename: "ProjektiJulkinen",
       oid: dbProjekti.oid,
       euRahoitus: dbProjekti.euRahoitus,
+      suunnitteluVaihe,
       aloitusKuulutusJulkaisut,
     };
     return removeUndefinedFields(projekti) as API.ProjektiJulkinen;
@@ -149,6 +156,40 @@ class ProjektiAdapterJulkinen {
     }
     return { __typename: "AloitusKuulutusPDFt", SUOMI: result[Kieli.SUOMI], ...result };
   }
+
+  private static adaptSuunnitteluVaihe(dbProjekti: DBProjekti): API.SuunnitteluVaiheJulkinen {
+    const { hankkeenKuvaus, arvioSeuraavanVaiheenAlkamisesta } = dbProjekti.suunnitteluVaihe;
+    return {
+      __typename: "SuunnitteluVaiheJulkinen",
+      hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
+      arvioSeuraavanVaiheenAlkamisesta,
+      vuorovaikutukset: adaptVuorovaikutukset(dbProjekti),
+    };
+  }
+}
+
+function adaptVuorovaikutukset(dbProjekti: DBProjekti): API.VuorovaikutusJulkinen[] {
+  const vuorovaikutukset = dbProjekti.vuorovaikutukset;
+  if (vuorovaikutukset && vuorovaikutukset.length > 0) {
+    return vuorovaikutukset
+      .map((vuorovaikutus) => {
+        const julkaisuPaiva = parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva);
+        if (julkaisuPaiva.isBefore(dayjs())) {
+          const aineistoPoistetaanNakyvista = parseDate(vuorovaikutus.aineistoPoistetaanNakyvista);
+          return {
+            ...vuorovaikutus,
+            __typename: "VuorovaikutusJulkinen",
+            vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
+            videot: adaptLinkkiList(vuorovaikutus.videot),
+            aineistot: adaptAineistot(vuorovaikutus.aineistot, julkaisuPaiva, aineistoPoistetaanNakyvista),
+            vuorovaikutusYhteystiedot: adaptAndMergeYhteystiedot(dbProjekti, vuorovaikutus),
+          } as API.VuorovaikutusJulkinen;
+        }
+        return undefined;
+      })
+      .filter((obj) => obj);
+  }
+  return vuorovaikutukset as undefined;
 }
 
 function checkIfAloitusKuulutusJulkaisutIsPublic(
@@ -168,6 +209,45 @@ function checkIfAloitusKuulutusJulkaisutIsPublic(
     return false;
   }
   return true;
+}
+
+function adaptAndMergeYhteystiedot(dbProjekti: DBProjekti, vuorovaikutus: Vuorovaikutus) {
+  let vuorovaikutusYhteystiedot = adaptYhteystiedotFromUsernames(dbProjekti, vuorovaikutus.vuorovaikutusYhteysHenkilot);
+  if (!vuorovaikutusYhteystiedot) {
+    vuorovaikutusYhteystiedot = [];
+  }
+  const yhteystiedot = adaptYhteystiedot(vuorovaikutus.esitettavatYhteystiedot);
+  if (yhteystiedot) {
+    vuorovaikutusYhteystiedot = vuorovaikutusYhteystiedot.concat(yhteystiedot);
+  }
+  return vuorovaikutusYhteystiedot;
+}
+
+function adaptYhteystiedotFromUsernames(
+  dbProjekti: DBProjekti,
+  usernames?: Array<string>
+): API.Yhteystieto[] | undefined {
+  if (!usernames || usernames.length == 0) {
+    return undefined;
+  }
+  const kayttoOikeudet = dbProjekti.kayttoOikeudet;
+  return usernames
+    .map((username) => {
+      const user = kayttoOikeudet.find((projektiUser) => projektiUser.kayttajatunnus == username);
+      if (!user) {
+        return undefined;
+      }
+      const lastnameFirstname = user.nimi.split(",");
+      return {
+        __typename: "Yhteystieto",
+        etunimi: lastnameFirstname[1]?.trim(),
+        sukunimi: lastnameFirstname[0]?.trim(),
+        organisaatio: user.organisaatio,
+        puhelinnumero: user.puhelinnumero,
+        sahkoposti: user.email,
+      } as API.Yhteystieto;
+    })
+    .filter((obj) => obj);
 }
 
 function removeUndefinedFields(object: API.ProjektiJulkinen): Partial<API.ProjektiJulkinen> {

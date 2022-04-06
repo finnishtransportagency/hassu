@@ -85,9 +85,18 @@ type SuunnitteluVaihe {
   hankkeenKuvaus: HankkeenKuvaukset
   arvioSeuraavanVaiheenAlkamisesta: String
   suunnittelunEteneminenJaKesto: String
+  julkinen: Boolean
+
   vuorovaikutukset: [Vuorovaikutus!]
 
   palautteet: [Palaute!]
+}
+
+type SuunnitteluVaiheJulkinen {
+  hankkeenKuvaus: HankkeenKuvaukset
+  arvioSeuraavanVaiheenAlkamisesta: String
+
+  vuorovaikutukset: [VuorovaikutusJulkinen!]
 }
 
 type Vuorovaikutus {
@@ -95,6 +104,7 @@ type Vuorovaikutus {
   Vuorovaikutuksen jarjestysnumero
   """
   vuorovaikutusNumero: Int!
+  julkinen: Boolean
   vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuus!]
   """
   yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
@@ -115,6 +125,30 @@ type Vuorovaikutus {
   """
   vuorovaikutusYhteysHenkilot: [String!]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+
+  aineistot: [Aineisto!]
+}
+
+type VuorovaikutusJulkinen {
+  """
+  Vuorovaikutuksen jarjestysnumero
+  """
+  vuorovaikutusNumero: Int!
+  vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuus!]
+  """
+  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
+  """
+  vuorovaikutusJulkaisuPaiva: String
+  """
+  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
+  """
+  kysymyksetJaPalautteetViimeistaan: String
+  """
+  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
+  """
+  aineistoPoistetaanNakyvista: String
+  videot: [Linkki!]
+  vuorovaikutusYhteystiedot: [Yhteystieto!]
 
   aineistot: [Aineisto!]
 }
@@ -220,6 +254,7 @@ type Velho {
 type ProjektiJulkinen implements IProjekti {
   oid: String!
   aloitusKuulutusJulkaisut: [AloitusKuulutusJulkaisuJulkinen!]
+  suunnitteluVaihe: SuunnitteluVaiheJulkinen
   euRahoitus: Boolean
   status: Status
 }
