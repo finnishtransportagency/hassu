@@ -33,9 +33,14 @@ type FormValues = RequiredProjektiFields & {
 interface Props {
   projekti?: Projekti | null;
   reloadProjekti?: KeyedMutator<ProjektiLisatiedolla | null>;
+  isDirtyHandler: (isDirty: boolean) => void;
 }
 
-export default function SuunniteluvaiheenPerustiedot({ projekti, reloadProjekti }: Props): ReactElement {
+export default function SuunniteluvaiheenPerustiedot({
+  projekti,
+  reloadProjekti,
+  isDirtyHandler,
+}: Props): ReactElement {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
 
@@ -59,7 +64,7 @@ export default function SuunniteluvaiheenPerustiedot({ projekti, reloadProjekti 
     register,
     reset,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useFormReturn;
 
   const saveDraft = async (formData: FormValues) => {
@@ -79,6 +84,10 @@ export default function SuunniteluvaiheenPerustiedot({ projekti, reloadProjekti 
     await api.tallennaProjekti(formData);
     if (reloadProjekti) await reloadProjekti();
   };
+
+  useEffect(() => {
+    isDirtyHandler(isDirty);
+  }, [isDirty, isDirtyHandler]);
 
   useEffect(() => {
     if (projekti?.oid) {
