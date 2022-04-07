@@ -83,6 +83,8 @@ export type HassuSSMParameters = {
   PersonSearchApiPassword: string;
   PersonSearchApiUsername: string;
   PersonSearchApiURL: string;
+  PersonSearchApiPasswordProd: string;
+  PersonSearchApiUsernameProd: string;
   PersonSearchApiURLProd: string;
 
   VelhoUsername: string;
@@ -164,9 +166,11 @@ export async function getEnvironmentVariablesFromSSM(variables?: HassuSSMParamet
     VELHO_PASSWORD: variables.VelhoPassword,
 
     PERSON_SEARCH_API_URL: variables.PersonSearchApiURL,
-    PERSON_SEARCH_API_URL_PROD: variables.PersonSearchApiURLProd,
     PERSON_SEARCH_API_USERNAME: variables.PersonSearchApiUsername,
     PERSON_SEARCH_API_PASSWORD: variables.PersonSearchApiPassword,
+    PERSON_SEARCH_API_URL_PROD: variables.PersonSearchApiURLProd,
+    PERSON_SEARCH_API_USERNAME_PROD: variables.PersonSearchApiUsernameProd,
+    PERSON_SEARCH_API_PASSWORD_PROD: variables.PersonSearchApiPasswordProd,
     PERSON_SEARCH_API_ACCOUNT_TYPES: variables.PersonSearchApiAccountTypes,
 
     NEXT_PUBLIC_VAYLA_EXTRANET_URL: variables.ExtranetHomePageUrl,

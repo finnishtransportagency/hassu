@@ -22,35 +22,58 @@ export class PersonSearchUpdater {
     const kayttajas: Record<string, Person> = {};
     // First list all accounts from prod
     for (const accountType of this.personSearchAccountTypes) {
-      await this.listAccountsOfType(accountType, kayttajas, config.personSearchApiURLProd);
+      await this.listAccountsOfType(
+        accountType,
+        kayttajas,
+        config.personSearchApiURLProd,
+        config.personSearchUsernameProd,
+        config.personSearchPasswordProd
+      );
     }
     // Then add all missing accounts from dev to existing map. If the same UID has multiple emails, the test emails are ignored. This code is not supposed to be run in production.
     if (config.personSearchApiURL) {
       for (const accountType of this.personSearchAccountTypes) {
-        await this.listAccountsOfType(accountType, kayttajas, config.personSearchApiURL);
+        await this.listAccountsOfType(
+          accountType,
+          kayttajas,
+          config.personSearchApiURL,
+          config.personSearchUsername,
+          config.personSearchPassword
+        );
       }
     }
     return new Kayttajas(kayttajas);
   }
 
-  private async listAccountsOfType(accounttype: string, persons: Record<string, Person>, endpoint: string | undefined) {
+  private async listAccountsOfType(
+    accounttype: string,
+    persons: Record<string, Person>,
+    endpoint: string,
+    username,
+    password
+  ) {
     if (!endpoint) {
       return;
     }
     log.debug("listAccountsOfType:" + accounttype);
-    const response = await axios.request({
+    const requestConfig = {
       timeout: 120000,
       baseURL: endpoint,
       params: { accounttype },
       method: "GET",
-      auth: { username: config.personSearchUsername, password: config.personSearchPassword },
-    });
-    if (response.status === 200) {
-      const responseJson: any = await wrapXrayAsync("xmlParse", () => parseString(response.data));
-      adaptPersonSearchResult(responseJson, persons);
-      log.debug("listAccountsOfType:" + accounttype + " " + Object.keys(persons).length + " persons in result map");
-    } else {
-      log.error(response.status + " " + response.statusText);
+      auth: { username, password },
+    };
+    try {
+      const response = await axios.request(requestConfig);
+      if (response.status === 200) {
+        const responseJson: any = await wrapXrayAsync("xmlParse", () => parseString(response.data));
+        adaptPersonSearchResult(responseJson, persons);
+        log.info("listAccountsOfType:" + accounttype + " " + Object.keys(persons).length + " persons in result map");
+      } else {
+        log.error(response.status + " " + response.statusText);
+      }
+    } catch (e) {
+      log.error("listAccountsOfType:" + accounttype + " failed.", { requestConfig, e });
     }
   }
 }

@@ -14,6 +14,8 @@ const config = {
   personSearchApiURLProd: process.env.PERSON_SEARCH_API_URL_PROD,
   personSearchUsername: process.env.PERSON_SEARCH_API_USERNAME,
   personSearchPassword: process.env.PERSON_SEARCH_API_PASSWORD,
+  personSearchUsernameProd: process.env.PERSON_SEARCH_API_USERNAME_PROD,
+  personSearchPasswordProd: process.env.PERSON_SEARCH_API_PASSWORD_PROD,
   personSearchAccountTypes: process.env.PERSON_SEARCH_API_ACCOUNT_TYPES?.split(","),
   personSearchUpdaterLambdaArn: process.env.PERSON_SEARCH_UPDATER_LAMBDA_ARN || "",
 
