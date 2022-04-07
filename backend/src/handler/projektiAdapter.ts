@@ -202,9 +202,15 @@ function adaptSuunnitteluVaihe(
 }
 
 function adaptSuunnitteluVaiheToSave(suunnitteluVaihe: API.SuunnitteluVaiheInput): SuunnitteluVaihe {
-  if (suunnitteluVaihe && (suunnitteluVaihe?.arvioSeuraavanVaiheenAlkamisesta || suunnitteluVaihe?.hankkeenKuvaus)) {
+  if (
+    suunnitteluVaihe &&
+    (suunnitteluVaihe.arvioSeuraavanVaiheenAlkamisesta ||
+      suunnitteluVaihe.hankkeenKuvaus ||
+      suunnitteluVaihe.suunnittelunEteneminenJaKesto)
+  ) {
     return {
       arvioSeuraavanVaiheenAlkamisesta: suunnitteluVaihe.arvioSeuraavanVaiheenAlkamisesta,
+      suunnittelunEteneminenJaKesto: suunnitteluVaihe.suunnittelunEteneminenJaKesto,
       hankkeenKuvaus: suunnitteluVaihe.hankkeenKuvaus
         ? adaptHankkeenKuvaus(suunnitteluVaihe.hankkeenKuvaus)
         : undefined,
