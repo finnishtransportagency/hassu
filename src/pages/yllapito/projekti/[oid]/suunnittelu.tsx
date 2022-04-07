@@ -11,6 +11,7 @@ import SectionContent from "@components/layout/SectionContent";
 import WindowCloseButton from "@components/button/WindowCloseButton";
 import HassuStack from "@components/layout/HassuStack";
 import Button from "@components/button/Button";
+import SuunniteluvaiheenVuorovaikuttaminen from "@components/projekti/suunnitteluvaihe/SuunniteluvaiheenVuorovaikuttaminen";
 
 export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
   const router = useRouter();
@@ -75,7 +76,18 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
               ),
               value: 1,
             },
-            { label: "1. Vuorovaikuttaminen", content: <SuunniteluvaiheenVuorovaikutus />, value: 2 },
+            {
+              label: "1. Vuorovaikuttaminen",
+              content: (
+                <SuunniteluvaiheenVuorovaikuttaminen
+                  projekti={projekti}
+                  reloadProjekti={reloadProjekti}
+                  isDirtyHandler={setIsChildDirty}
+                  vuorovaikutusnro={1}
+                />
+              ),
+              value: 2,
+            },
           ]}
         />
       </Section>
@@ -113,7 +125,3 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
     </ProjektiPageLayout>
   );
 }
-
-const SuunniteluvaiheenVuorovaikutus = () => {
-  return <>Vuorovaikutustiedot tähän</>;
-};
