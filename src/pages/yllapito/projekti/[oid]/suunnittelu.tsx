@@ -62,9 +62,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
         <Tabs
           defaultValue={1}
           value={currentTab}
-          onChange={(event, value) => {
-            handleChange(event, value);
-          }}
+          onChange={handleChange}
           tabs={[
             {
               label: "Suunnitteluvaiheen perustiedot",
@@ -72,9 +70,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
                 <SuunnitteluvaiheenPerustiedot
                   projekti={projekti}
                   reloadProjekti={reloadProjekti}
-                  isDirtyHandler={(isDirty: boolean) => {
-                    setIsChildDirty(isDirty);
-                  }}
+                  isDirtyHandler={setIsChildDirty}
                 />
               ),
               value: 1,
@@ -90,44 +86,25 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
               <div className="vayla-dialog-title flex">
                 <div className="flex-grow">Varmistus</div>
                 <div className="justify-end">
-                  <WindowCloseButton
-                    onClick={() => {
-                      handleClickClose();
-                    }}
-                  ></WindowCloseButton>
+                  <WindowCloseButton onClick={handleClickClose}></WindowCloseButton>
                 </div>
               </div>
             </SectionContent>
             <SectionContent>
               <div className="vayla-dialog-content">
-                <form>
-                  <HassuStack>
-                    <p>Sivulla on tallentamattomia tietoja. Haluatko siirtyä pois sivulta ja hylätä muutokset?</p>
-                  </HassuStack>
-                  <HassuStack
-                    direction={["column", "column", "row"]}
-                    justifyContent={[undefined, undefined, "flex-end"]}
-                    paddingTop={"1rem"}
-                  >
-                    <Button
-                      primary
-                      onClick={(e) => {
-                        handleClickOk();
-                        e.preventDefault();
-                      }}
-                    >
-                      Hylkää muutokset ja siirry
-                    </Button>
-                    <Button
-                      onClick={(e) => {
-                        handleClickClose();
-                        e.preventDefault();
-                      }}
-                    >
-                      Peruuta
-                    </Button>
-                  </HassuStack>
-                </form>
+                <HassuStack>
+                  <p>Sivulla on tallentamattomia tietoja. Haluatko siirtyä pois sivulta ja hylätä muutokset?</p>
+                </HassuStack>
+                <HassuStack
+                  direction={["column", "column", "row"]}
+                  justifyContent={[undefined, undefined, "flex-end"]}
+                  paddingTop={"1rem"}
+                >
+                  <Button primary onClick={handleClickOk}>
+                    Hylkää muutokset ja siirry
+                  </Button>
+                  <Button onClick={handleClickClose}>Peruuta</Button>
+                </HassuStack>
               </div>
             </SectionContent>
           </Section>
