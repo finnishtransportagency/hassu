@@ -269,13 +269,14 @@ export class HassuBackendStack extends cdk.Stack {
       memorySize: 512,
       reservedConcurrentExecutions: 1,
       timeout: Duration.seconds(120),
+      retryAttempts: 0,
       bundling: {
         minify: true,
       },
       environment: {
         ...commonEnvironmentVariables,
       },
-      tracing: Tracing.PASS_THROUGH,
+      tracing: Tracing.ACTIVE,
     });
     this.props.internalBucket.grantReadWrite(personSearchLambda);
     return personSearchLambda;

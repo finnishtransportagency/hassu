@@ -100,7 +100,7 @@ export class S3Cache {
         .promise();
       log.info("Touch " + objectKey);
     } catch (e: unknown) {
-      log.error(e);
+      log.error("touch " + key + " failed", e);
     }
   }
 
@@ -124,7 +124,7 @@ export class S3Cache {
         })
         .promise();
     } catch (e) {
-      log.error(e);
+      log.error("put failed", e);
       throw new Error("Problem with internal S3 bucket");
     }
   }
@@ -138,7 +138,7 @@ export class S3Cache {
         })
         .promise();
     } catch (e) {
-      log.error(e);
+      log.error("clear", e);
       throw new Error("Problem with internal S3 bucket");
     }
   }

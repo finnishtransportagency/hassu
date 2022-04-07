@@ -113,19 +113,27 @@ export class HassuPipelineStack extends Stack {
           VELHO_PASSWORD: { value: await config.getSecureInfraParameter("VelhoPassword", config.velhoEnv) },
 
           PERSON_SEARCH_API_URL: {
-            value: config.getInfraParameterPath("PersonSearchApiURL"),
+            value: "/PersonSearchApiURL",
             type: BuildEnvironmentVariableType.PARAMETER_STORE,
           },
           PERSON_SEARCH_API_URL_PROD: {
-            value: config.getInfraParameterPath("PersonSearchApiURLProd"),
+            value: "/PersonSearchApiURLProd",
             type: BuildEnvironmentVariableType.PARAMETER_STORE,
           },
           PERSON_SEARCH_API_USERNAME: {
-            value: config.getInfraParameterPath("PersonSearchApiUsername"),
+            value: "/PersonSearchApiUsername",
             type: BuildEnvironmentVariableType.PARAMETER_STORE,
           },
           PERSON_SEARCH_API_PASSWORD: {
-            value: config.getInfraParameterPath("PersonSearchApiPassword"),
+            value: "/PersonSearchApiPassword",
+            type: BuildEnvironmentVariableType.PARAMETER_STORE,
+          },
+          PERSON_SEARCH_API_USERNAME_PROD: {
+            value: "/PersonSearchApiUsernameProd",
+            type: BuildEnvironmentVariableType.PARAMETER_STORE,
+          },
+          PERSON_SEARCH_API_PASSWORD_PROD: {
+            value: "/PersonSearchApiPasswordProd",
             type: BuildEnvironmentVariableType.PARAMETER_STORE,
           },
           PERSON_SEARCH_API_ACCOUNT_TYPES: {
