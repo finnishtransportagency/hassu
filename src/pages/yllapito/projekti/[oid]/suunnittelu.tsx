@@ -57,39 +57,62 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
     }
   };
 
+  const createVuorovaikutusTabs = () => {
+    let tabs = [];
+    tabs.push({
+      label: "Suunnitteluvaiheen perustiedot",
+      content: (
+        <SuunnitteluvaiheenPerustiedot
+          projekti={projekti}
+          reloadProjekti={reloadProjekti}
+          isDirtyHandler={setIsChildDirty}
+        />
+      ),
+      value: 1,
+    });
+
+    if (!projekti) {
+      return tabs;
+    }
+
+    if (!projekti.suunnitteluVaihe?.vuorovaikutukset || projekti.suunnitteluVaihe.vuorovaikutukset.length < 1) {
+      tabs.push({
+        label: "1. Vuorovaikuttaminen",
+        content: (
+          <SuunniteluvaiheenVuorovaikuttaminen
+            projekti={projekti}
+            reloadProjekti={reloadProjekti}
+            isDirtyHandler={setIsChildDirty}
+            vuorovaikutusnro={1}
+          />
+        ),
+        value: 2,
+      });
+    } else {
+      projekti.suunnitteluVaihe.vuorovaikutukset.forEach((vuorovaikutus, index) => {
+        let tab = {
+          label: `${vuorovaikutus.vuorovaikutusNumero}. Vuorovaikuttaminen`,
+          content: (
+            <SuunniteluvaiheenVuorovaikuttaminen
+              projekti={projekti}
+              reloadProjekti={reloadProjekti}
+              isDirtyHandler={setIsChildDirty}
+              vuorovaikutusnro={vuorovaikutus.vuorovaikutusNumero}
+            />
+          ),
+          value: index + 2,
+        };
+
+        tabs.push(tab);
+      });
+    }
+    return tabs;
+  };
+
   return (
     <ProjektiPageLayout title="Suunnittelu">
       <Section noDivider>
-        <Tabs
-          defaultValue={1}
-          value={currentTab}
-          onChange={handleChange}
-          tabs={[
-            {
-              label: "Suunnitteluvaiheen perustiedot",
-              content: (
-                <SuunnitteluvaiheenPerustiedot
-                  projekti={projekti}
-                  reloadProjekti={reloadProjekti}
-                  isDirtyHandler={setIsChildDirty}
-                />
-              ),
-              value: 1,
-            },
-            {
-              label: "1. Vuorovaikuttaminen",
-              content: (
-                <SuunniteluvaiheenVuorovaikuttaminen
-                  projekti={projekti}
-                  reloadProjekti={reloadProjekti}
-                  isDirtyHandler={setIsChildDirty}
-                  vuorovaikutusnro={1}
-                />
-              ),
-              value: 2,
-            },
-          ]}
-        />
+        <Tabs defaultValue={1} value={currentTab} onChange={handleChange} tabs={createVuorovaikutusTabs()} />
       </Section>
       <div>
         <HassuDialog open={open} onClose={handleClickClose}>

@@ -96,7 +96,9 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
 
   useEffect(() => {
     if (projekti && projekti.oid) {
-      const vuorovaikutus = projekti.suunnitteluVaihe?.vuorovaikutukset?.[vuorovaikutusnro - 1];
+      const vuorovaikutus = projekti.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
+        return v.vuorovaikutusNumero === vuorovaikutusnro;
+      });
       const tallentamisTiedot: FormValues = {
         oid: projekti.oid,
         suunnitteluVaihe: {
