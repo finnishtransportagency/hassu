@@ -32,14 +32,14 @@ export class FileService {
   /**
    * Prepare upload URL for a given file. The uploaded file can be persisted to a projekti with persistFileToProjekti function call.
    */
-  async createUploadURLForFile(filename: string): Promise<UploadFileProperties> {
+  async createUploadURLForFile(filename: string, contentType: string): Promise<UploadFileProperties> {
     const fileNameWithPath = `${uuid.v4()}/${filename}`;
     const s3 = getS3();
     const uploadURL = s3.getSignedUrl("putObject", {
       Bucket: config.uploadBucketName,
       Key: fileNameWithPath,
       Expires: 600,
-      ContentType: "application/octet-stream",
+      ContentType: contentType,
     });
     return { fileNameWithPath, uploadURL };
   }
@@ -249,7 +249,7 @@ export class FileService {
     }
   }
 
-  async deleteFileFromProjekti({ oid, fullFilePathInProjekti }: DeleteFileProperties) {
+  async deleteFileFromProjekti({ oid, fullFilePathInProjekti }: DeleteFileProperties): Promise<void> {
     const sourcePrefix = FileService.getYllapitoProjektiDirectory(oid);
     const key = sourcePrefix + fullFilePathInProjekti;
 

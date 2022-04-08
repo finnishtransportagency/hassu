@@ -87,7 +87,7 @@ async function executeOperation(event: AppSyncResolverEvent<AppSyncEventArgument
     case apiConfig.esikatseleAsiakirjaPDF.name:
       return await lataaAsiakirja(event.arguments as EsikatseleAsiakirjaPDFQueryVariables);
     case apiConfig.valmisteleTiedostonLataus.name:
-      return await createUploadURLForFile((event.arguments as ValmisteleTiedostonLatausQueryVariables).tiedostoNimi);
+      return await createUploadURLForFile((event.arguments as ValmisteleTiedostonLatausQueryVariables));
     case apiConfig.laskePaattymisPaiva.name:
       return await calculateEndDate(event.arguments as LaskePaattymisPaivaQueryVariables);
     case apiConfig.siirraTila.name:

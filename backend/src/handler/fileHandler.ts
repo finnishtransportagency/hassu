@@ -1,8 +1,11 @@
 import { fileService } from "../files/fileService";
-import { LatausTiedot } from "../../../common/graphql/apiModel";
+import { LatausTiedot, ValmisteleTiedostonLatausQueryVariables } from "../../../common/graphql/apiModel";
 
-export async function createUploadURLForFile(fileName: string): Promise<LatausTiedot> {
-  const fileProperties = await fileService.createUploadURLForFile(fileName);
+export async function createUploadURLForFile({
+  tiedostoNimi,
+  contentType,
+}: ValmisteleTiedostonLatausQueryVariables): Promise<LatausTiedot> {
+  const fileProperties = await fileService.createUploadURLForFile(tiedostoNimi, contentType);
   return {
     __typename: "LatausTiedot",
     tiedostoPolku: fileProperties.fileNameWithPath,
