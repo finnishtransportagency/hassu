@@ -1,6 +1,6 @@
 import { config } from "../config";
-import { getUSEast1ssm } from "../aws/client";
 import AWS from "aws-sdk";
+import { getUSEast1ssm } from "../aws/client";
 
 export async function createSignedCookies(): Promise<string[]> {
   const cloudFrontPolicy = JSON.stringify({
@@ -31,15 +31,24 @@ export async function createSignedCookies(): Promise<string[]> {
 
 async function getCloudFrontSigner() {
   if (!(globalThis as any).cloudFrontSigner) {
-    const parameterKey = "/" + config.env + "/outputs/FrontendPublicKeyId";
-    const publicKeyId = await getUSEast1ssm().getParameter({ Name: parameterKey }).promise();
-    if (!publicKeyId.Parameter?.Value) {
-      throw new Error("Configuration error: SSM parameter " + parameterKey + " not found");
+    if (!config.frontendPublicKeyId) {
+      // deprecated. Delete after two deployments to each environment
+
+      const parameterKey = "/" + config.env + "/outputs/FrontendPublicKeyId";
+      const publicKeyId = await getUSEast1ssm().getParameter({ Name: parameterKey }).promise();
+      if (!publicKeyId.Parameter?.Value) {
+        throw new Error("Configuration error: SSM parameter " + parameterKey + " not found");
+      }
+      (globalThis as any).cloudFrontSigner = new AWS.CloudFront.Signer(
+        publicKeyId.Parameter.Value,
+        config.frontendPrivateKey || ""
+      );
+    } else {
+      (globalThis as any).cloudFrontSigner = new AWS.CloudFront.Signer(
+        config.frontendPublicKeyId,
+        config.frontendPrivateKey || ""
+      );
     }
-    (globalThis as any).cloudFrontSigner = new AWS.CloudFront.Signer(
-      publicKeyId.Parameter.Value,
-      config.frontendPrivateKey || ""
-    );
   }
   return (globalThis as any).cloudFrontSigner;
 }

@@ -13,7 +13,7 @@ import {
   OriginRequestPolicy,
   OriginSslPolicy,
   PriceClass,
-  ViewerProtocolPolicy
+  ViewerProtocolPolicy,
 } from "@aws-cdk/aws-cloudfront";
 import { Config } from "./config";
 import { HttpOrigin } from "@aws-cdk/aws-cloudfront-origins/lib/http-origin";
@@ -28,7 +28,7 @@ import {
   PolicyDocument,
   PolicyStatement,
   Role,
-  ServicePrincipal
+  ServicePrincipal,
 } from "@aws-cdk/aws-iam";
 import * as fs from "fs";
 import { EdgeFunction } from "@aws-cdk/aws-cloudfront/lib/experimental";
@@ -41,6 +41,7 @@ import { IOriginAccessIdentity } from "@aws-cdk/aws-cloudfront/lib/origin-access
 // These should correspond to CfnOutputs produced by this stack
 export type FrontendStackOutputs = {
   CloudfrontPrivateDNSName: string;
+  FrontendPublicKeyIdOutput: string;
 };
 
 interface HassuFrontendStackProps {
@@ -361,6 +362,9 @@ export class HassuFrontendStack extends cdk.Stack {
         description: "Generated FrontendPublicKeyId",
         parameterName: "/" + Config.env + "/outputs/FrontendPublicKeyId",
         stringValue: publicKey.publicKeyId,
+      });
+      new cdk.CfnOutput(this, "FrontendPublicKeyIdOutput", {
+        value: publicKey.publicKeyId || "",
       });
 
       originAccessIdentity = OriginAccessIdentity.fromOriginAccessIdentityName(
