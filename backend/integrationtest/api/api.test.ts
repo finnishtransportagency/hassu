@@ -354,7 +354,7 @@ describe("Api", () => {
   }
 
   async function tallennaLogo() {
-    const uploadProperties = await api.valmisteleTiedostonLataus("logo.png");
+    const uploadProperties = await api.valmisteleTiedostonLataus("logo.png", "image/png");
     expect(uploadProperties).to.not.be.empty;
     expect(uploadProperties.latausLinkki).to.not.be.undefined;
     expect(uploadProperties.tiedostoPolku).to.not.be.undefined;

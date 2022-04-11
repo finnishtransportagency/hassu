@@ -15,7 +15,7 @@ type Query {
     kieli: Kieli
     muutokset: TallennaProjektiInput
   ): PDF
-  valmisteleTiedostonLataus(tiedostoNimi: String!): LatausTiedot
+  valmisteleTiedostonLataus(tiedostoNimi: String!, contentType: String!): LatausTiedot
 
   laskePaattymisPaiva(alkupaiva: String!, tyyppi: LaskuriTyyppi!): String
 }

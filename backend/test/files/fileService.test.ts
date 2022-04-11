@@ -34,7 +34,7 @@ describe("UploadService", () => {
   });
 
   it("should upload file successfully", async function () {
-    const uploadProperties = await fileService.createUploadURLForFile("logo ääkkösillä.png");
+    const uploadProperties = await fileService.createUploadURLForFile("logo ääkkösillä.png", "image/png");
     expect(uploadProperties.uploadURL).to.not.be.empty;
     expect(uploadProperties.fileNameWithPath).to.not.be.empty;
 

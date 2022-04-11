@@ -60,7 +60,6 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   const [formContext, setFormContext] = useState<Projekti | undefined>(undefined);
 
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
-  
 
   const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(perustiedotValidationSchema.concat(UIValuesSchema), { abortEarly: false, recursive: true }),
@@ -86,10 +85,11 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   } = useFormReturn;
 
   const talletaLogo = async (logoTiedosto: File) => {
-    const response = await api.valmisteleTiedostonLataus(logoTiedosto.name);
+    const contentType = (logoTiedosto as Blob).type || "application/octet-stream";
+    const response = await api.valmisteleTiedostonLataus(logoTiedosto.name, contentType);
     await axios.put(response.latausLinkki, logoTiedosto, {
       headers: {
-        "Content-Type": "application/octet-stream",
+        "Content-Type": contentType,
       },
     });
     return response.tiedostoPolku;
@@ -246,7 +246,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
           </fieldset>
         </form>
       </FormProvider>
-      <HassuSpinner open={formIsSubmitting || isLoadingProjekti}/>
+      <HassuSpinner open={formIsSubmitting || isLoadingProjekti} />
     </ProjektiPageLayout>
   );
 }

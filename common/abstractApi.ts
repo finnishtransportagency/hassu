@@ -189,9 +189,10 @@ export abstract class AbstractApi {
     } as HaeVelhoProjektiAineistoLinkkiQueryVariables);
   }
 
-  async valmisteleTiedostonLataus(tiedostoNimi: string): Promise<LatausTiedot> {
+  async valmisteleTiedostonLataus(tiedostoNimi: string, contentType:string): Promise<LatausTiedot> {
     return await this.callYllapitoAPI(apiConfig.valmisteleTiedostonLataus, {
       tiedostoNimi,
+      contentType
     } as ValmisteleTiedostonLatausQueryVariables);
   }
 
