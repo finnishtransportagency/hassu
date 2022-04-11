@@ -17,7 +17,7 @@ import { Domain } from "@aws-cdk/aws-opensearchservice";
 import { OpenSearchAccessPolicy } from "@aws-cdk/aws-opensearchservice/lib/opensearch-access-policy";
 import { Effect, ManagedPolicy, PolicyStatement } from "@aws-cdk/aws-iam";
 import { Bucket } from "@aws-cdk/aws-s3";
-import { getEnvironmentVariablesFromSSM } from "../bin/setupEnvironment";
+import { getEnvironmentVariablesFromSSM, readFrontendStackOutputs } from "../bin/setupEnvironment";
 import { LambdaInsightsVersion } from "@aws-cdk/aws-lambda/lib/lambda-insights";
 
 export type HassuBackendStackProps = {
@@ -203,6 +203,9 @@ export class HassuBackendStack extends cdk.Stack {
       };
     }
 
+    let frontendStackOutputs = await readFrontendStackOutputs();
+    let frontendPublicKeyId = frontendStackOutputs?.FrontendPublicKeyIdOutput;
+    console.log(frontendStackOutputs);
     const backendLambda = new NodejsFunction(this, "API", {
       functionName: "hassu-backend-" + Config.env,
       runtime: lambda.Runtime.NODEJS_14_X,
@@ -232,6 +235,7 @@ export class HassuBackendStack extends cdk.Stack {
       environment: {
         ...commonEnvironmentVariables,
         PERSON_SEARCH_UPDATER_LAMBDA_ARN: personSearchUpdaterLambda.functionArn,
+        FRONTEND_PUBLIC_KEY_ID: frontendPublicKeyId,
       },
       tracing: Tracing.PASS_THROUGH,
       insightsVersion: LambdaInsightsVersion.VERSION_1_0_98_0,
