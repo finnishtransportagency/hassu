@@ -6,6 +6,19 @@ import TabUnstyled from "@mui/base/TabUnstyled";
 import { styled, experimental_sx as sx } from "@mui/material";
 import isPropValid from "@emotion/is-prop-valid";
 
+const TabStyle = {
+  Underlined: {
+    borderWidth: "4px",
+    "&.TabUnstyled-root.Mui-selected": {
+      borderColor: "#FFFFFF",
+      borderBottomColor: "#0064AF",
+      color: "#0064AF",
+    },
+  },
+} as const;
+
+export type TabStyle = keyof typeof TabStyle;
+
 interface Tabs {
   label: string;
   content: string | ReactNode;
@@ -17,6 +30,7 @@ interface Props {
   onChange?: ((event: React.SyntheticEvent<Element, Event>, value: string | number) => void) | undefined;
   value?: string | number | false;
   defaultValue?: string | number | false;
+  tabStyle?: TabStyle;
 }
 
 export default function TabbedContent(props: Props) {
@@ -24,7 +38,7 @@ export default function TabbedContent(props: Props) {
     <TabsUnstyled onChange={props.onChange} value={props.value} defaultValue={props.defaultValue}>
       <TabsList>
         {props.tabs.map((tab, index) => (
-          <Tab key={index} value={tab.value || index}>
+          <Tab key={index} value={tab.value || index} sx={props.tabStyle ? TabStyle[props.tabStyle] : undefined}>
             {tab.label}
           </Tab>
         ))}

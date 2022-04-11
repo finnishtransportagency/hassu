@@ -123,7 +123,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
         <form>
           <Section>
             <SectionContent largeGaps>
-              <h4 className="vayla-title">Vuorovaikuttaminen</h4>
+              <h5 className="vayla-small-title">Vuorovaikuttaminen</h5>
               <p>
                 Kansalainen pääsee vaikuttamaan väylähankkeen tai väylän suunnitteluun siinä vaiheessa. kun tehdään
                 yleissuunnitelmaa ja kun edetään tie- tai ratasuunnitelmaan. Kaikista suunnittelun vaiheista kuulutetaan
