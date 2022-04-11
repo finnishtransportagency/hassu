@@ -3,7 +3,7 @@ import {
   IlmoituksenVastaanottajat,
   KaytettavaPalvelu,
   VuorovaikutusTilaisuusTyyppi,
-  Yhteystieto
+  Yhteystieto,
 } from "../../../../common/graphql/apiModel";
 import { LocalizedMap } from "./projekti";
 
@@ -11,11 +11,13 @@ export type SuunnitteluVaihe = {
   hankkeenKuvaus?: LocalizedMap<string>;
   arvioSeuraavanVaiheenAlkamisesta?: string | null;
   suunnittelunEteneminenJaKesto?: string | null;
+  julkinen?: boolean | null;
 };
 
 export type Vuorovaikutus = {
   // Vuorovaikutuksen jarjestysnumero
   vuorovaikutusNumero: number;
+  julkinen?: boolean | null;
   vuorovaikutusTilaisuudet?: Array<VuorovaikutusTilaisuus> | null;
   // yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
   vuorovaikutusJulkaisuPaiva?: string | null;
@@ -41,7 +43,7 @@ export type Aineisto = {
   tuotu?: string;
   // Numero jarjestamista varten
   jarjestys?: number | null;
-  tila: AineistoTila
+  tila: AineistoTila;
 };
 
 export type VuorovaikutusTilaisuus = {

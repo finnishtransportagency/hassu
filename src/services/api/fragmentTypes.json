@@ -401,6 +401,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "OBJECT",
+        "name": "SuunnitteluVaiheJulkinen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "INPUT_OBJECT",
         "name": "TallennaProjektiInput",
         "possibleTypes": null,
@@ -481,6 +487,12 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "VuorovaikutusInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "VuorovaikutusJulkinen",
         "possibleTypes": null,
         "__typename": "__Type"
       },

@@ -223,13 +223,21 @@ export class FileService {
   /**
    * Copy file from yllapito to public bucket
    */
-  async publishProjektiFile(oid: string, filePathInProjekti: string, publishDate?: Dayjs): Promise<void> {
+  async publishProjektiFile(
+    oid: string,
+    filePathInProjekti: string,
+    publishDate?: Dayjs,
+    expirationDate?: Dayjs
+  ): Promise<void> {
     const sourceBucket = config.yllapitoBucketName;
     const targetBucket = config.publicBucketName;
 
     const metadata: { [key: string]: string } = {};
     if (publishDate) {
       metadata["publication-timestamp"] = publishDate.format();
+    }
+    if (expirationDate) {
+      metadata["expiration-timestamp"] = expirationDate.format();
     }
     const copyObjectParams = {
       Bucket: targetBucket,

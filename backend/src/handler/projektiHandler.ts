@@ -15,7 +15,7 @@ import {
   TallennaProjektiInput,
   Velho,
 } from "../../../common/graphql/apiModel";
-import { adaptVelho, projektiAdapter } from "./projektiAdapter";
+import { adaptVelho, ProjektiAdaptationResult, projektiAdapter } from "./projektiAdapter";
 import { auditLog, log } from "../logger";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import mergeWith from "lodash/mergeWith";
@@ -30,8 +30,7 @@ import { NotFoundError } from "../error/NotFoundError";
 import { projektiAdapterJulkinen } from "./projektiAdapterJulkinen";
 import { findUpdatedFields } from "../velho/velhoAdapter";
 import { DBProjekti } from "../database/model/projekti";
-import { Aineisto } from "../database/model/suunnitteluVaihe";
-import { aineistoImporterClient } from "../aineisto/aineistoImporterClient";
+import { aineistoService } from "../aineisto/aineistoService";
 
 export async function loadProjekti(oid: string): Promise<API.Projekti | API.ProjektiJulkinen> {
   const vaylaUser = getVaylaUser();
@@ -83,13 +82,9 @@ export async function createOrUpdateProjekti(input: TallennaProjektiInput): Prom
     requirePermissionMuokkaa(projektiInDB);
     auditLog.info("Tallenna projekti", { input });
     await handleFiles(input);
-    const {
-      projekti: projektiToSave,
-      aineistotToDelete,
-      vuorovaikutusNumeroForAineistotImport,
-    } = await projektiAdapter.adaptProjektiToSave(projektiInDB, input);
-    await handleAineistot(projektiToSave, aineistotToDelete, vuorovaikutusNumeroForAineistotImport);
-    await projektiDatabase.saveProjekti(projektiToSave);
+    const projektiAdaptationResult = await projektiAdapter.adaptProjektiToSave(projektiInDB, input);
+    await handleAineistot(projektiAdaptationResult);
+    await projektiDatabase.saveProjekti(projektiAdaptationResult.projekti);
   } else {
     requirePermissionLuonti();
     const projekti = await createProjektiFromVelho(input.oid, requireVaylaUser(), input);
@@ -195,27 +190,19 @@ async function handleFiles(input: TallennaProjektiInput) {
 /**
  * If there are uploaded files in the input, persist them into the project
  */
-async function handleAineistot(
-  projekti: DBProjekti,
-  aineistotToDelete?: Aineisto[],
-  vuorovaikutusNumeroForAineistotImport?: number
-) {
+async function handleAineistot(projektiAdaptationResult: ProjektiAdaptationResult) {
+  const { aineistotToDelete, vuorovaikutusNumeroForAineistotImport, projekti, vuorovaikutusPublishTriggered } =
+    projektiAdaptationResult;
   if (vuorovaikutusNumeroForAineistotImport) {
-    // Import files from Velho
-    await aineistoImporterClient.importAineisto({
-      oid: projekti.oid,
-      vuorovaikutusNumero: vuorovaikutusNumeroForAineistotImport,
-    });
+    await aineistoService.importAineisto(projekti.oid, vuorovaikutusNumeroForAineistotImport);
   }
 
   if (aineistotToDelete) {
-    for (const aineisto of aineistotToDelete) {
-      log.info("Poistetaan aineisto", aineisto);
-      await fileService.deleteFileFromProjekti({
-        oid: projekti.oid,
-        fullFilePathInProjekti: aineisto.tiedosto,
-      });
-    }
+    await aineistoService.deleteAineisto(projekti.oid, aineistotToDelete);
+  }
+
+  if (vuorovaikutusPublishTriggered) {
+    await aineistoService.publishVuorovaikutusAineisto(projekti.oid, vuorovaikutusPublishTriggered);
   }
 }
 

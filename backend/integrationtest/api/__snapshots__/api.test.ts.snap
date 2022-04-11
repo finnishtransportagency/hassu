@@ -1,92 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Api should import files from Velho using background queue 1`] = `
-Array [
-  Object {
-    "Records": Array [
-      Object {
-        "body": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"vuorovaikutusNumero\\":1}",
-      },
-    ],
-  },
-]
-`;
-
-exports[`Api should import files from Velho using background queue 2`] = `
-Object {
-  "__typename": "Vuorovaikutus",
-  "aineistoPoistetaanNakyvista": "2022-03-23T23:45",
-  "aineistot": Array [
-    Object {
-      "__typename": "Aineisto",
-      "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
-      "jarjestys": 12,
-      "kategoria": "Yleinen new",
-      "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/ekatiedosto_eka.pdf",
-      "tila": "VALMIS",
-      "tuotu": "***unittest***",
-    },
-    Object {
-      "__typename": "Aineisto",
-      "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
-      "jarjestys": 13,
-      "kategoria": "Yleinen new",
-      "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/karttakuvalla_tiedosto.pdf",
-      "tila": "VALMIS",
-      "tuotu": "***unittest***",
-    },
-  ],
-  "esitettavatYhteystiedot": Array [
-    Object {
-      "__typename": "Yhteystieto",
-      "etunimi": "Marko",
-      "organisaatio": "Kajaani",
-      "puhelinnumero": "0293121213",
-      "sahkoposti": "markku.koi@koi.com",
-      "sukunimi": "Koi",
-    },
-  ],
-  "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
-  "videot": Array [
-    Object {
-      "__typename": "Linkki",
-      "nimi": "Esittely 1",
-      "url": "https://video",
-    },
-  ],
-  "vuorovaikutusJulkaisuPaiva": "2022-03-23",
-  "vuorovaikutusNumero": 1,
-  "vuorovaikutusTilaisuudet": Array [
-    Object {
-      "__typename": "VuorovaikutusTilaisuus",
-      "alkamisAika": "15:00",
-      "kaytettavaPalvelu": "TEAMS",
-      "linkki": "https://linkki_tilaisuuteen",
-      "nimi": "Lorem ipsum 1",
-      "paattymisAika": "16:00",
-      "paivamaara": "2022-03-04",
-      "tyyppi": "VERKOSSA",
-    },
-    Object {
-      "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
-      "__typename": "VuorovaikutusTilaisuus",
-      "alkamisAika": "10:00",
-      "nimi": "Lorem ipsum two 1",
-      "osoite": "Katu 123",
-      "paattymisAika": "11:00",
-      "paikka": "Kunnantalo",
-      "paivamaara": "2022-04-05",
-      "postinumero": "00100",
-      "postitoimipaikka": "Helsinki",
-      "tyyppi": "PAIKALLA",
-    },
-  ],
-  "vuorovaikutusYhteysHenkilot": Array [
-    "A000112",
-  ],
-}
-`;
-
 exports[`Api should search, load and save a project 1`] = `
 Object {
   "description": "testSuunnitteluvaihePerustiedot",
@@ -98,6 +11,7 @@ Object {
       "SUOMI": "Lorem Ipsum suunnitteluvaihe",
       "__typename": "HankkeenKuvaukset",
     },
+    "julkinen": undefined,
     "palautteet": undefined,
     "vuorovaikutukset": Array [],
   },
@@ -115,11 +29,12 @@ Object {
       "SUOMI": "Lorem Ipsum suunnitteluvaihe",
       "__typename": "HankkeenKuvaukset",
     },
+    "julkinen": undefined,
     "palautteet": undefined,
     "vuorovaikutukset": Array [
       Object {
         "__typename": "Vuorovaikutus",
-        "aineistoPoistetaanNakyvista": "2022-03-23T23:45",
+        "aineistoPoistetaanNakyvista": "2222-03-23T23:45",
         "aineistot": undefined,
         "esitettavatYhteystiedot": Array [
           Object {
@@ -172,7 +87,7 @@ Object {
       },
       Object {
         "__typename": "Vuorovaikutus",
-        "aineistoPoistetaanNakyvista": "2022-03-23T23:45",
+        "aineistoPoistetaanNakyvista": "2222-03-23T23:45",
         "aineistot": undefined,
         "esitettavatYhteystiedot": Array [
           Object {
@@ -242,7 +157,7 @@ Object {
   "description": "saveAndVerifyAineistoSave",
   "obj": Object {
     "__typename": "Vuorovaikutus",
-    "aineistoPoistetaanNakyvista": "2022-03-23T23:45",
+    "aineistoPoistetaanNakyvista": "2222-03-23T23:45",
     "aineistot": Array [
       Object {
         "__typename": "Aineisto",
@@ -323,7 +238,7 @@ Object {
   "description": "saveAndVerifyAineistoSave",
   "obj": Object {
     "__typename": "Vuorovaikutus",
-    "aineistoPoistetaanNakyvista": "2022-03-23T23:45",
+    "aineistoPoistetaanNakyvista": "2222-03-23T23:45",
     "aineistot": Array [
       Object {
         "__typename": "Aineisto",
@@ -404,7 +319,7 @@ Object {
   "description": "saveAndVerifyAineistoSave",
   "obj": Object {
     "__typename": "Vuorovaikutus",
-    "aineistoPoistetaanNakyvista": "2022-03-23T23:45",
+    "aineistoPoistetaanNakyvista": "2222-03-23T23:45",
     "aineistot": Array [
       Object {
         "__typename": "Aineisto",
@@ -474,49 +389,95 @@ Object {
 `;
 
 exports[`Api should search, load and save a project 7`] = `
-Object {
-  "description": "projekti palaute lisätty",
-  "obj": Array [
-    Object {
-      "__typename": "Palaute",
-      "etunimi": "Matti",
-      "id": "***unittest***",
-      "kysymysTaiPalaute": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "liite": "/palautteet/***unittest***/logo.png",
-      "puhelinnumero": "123456",
-      "sahkoposti": "test@vayla.fi",
-      "sukunimi": "Meikalainen",
-      "yhteydenottotapaEmail": false,
-      "yhteydenottotapaPuhelin": true,
-    },
-  ],
-}
+Array [
+  Object {
+    "Records": Array [
+      Object {
+        "body": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"vuorovaikutusNumero\\":1}",
+      },
+    ],
+  },
+]
 `;
 
 exports[`Api should search, load and save a project 8`] = `
 Object {
-  "description": "projekti palaute otettu käsittelyyn",
-  "obj": Array [
+  "__typename": "Vuorovaikutus",
+  "aineistoPoistetaanNakyvista": "2222-03-23T23:45",
+  "aineistot": Array [
     Object {
-      "__typename": "Palaute",
-      "etunimi": "Matti",
-      "id": "***unittest***",
-      "kysymysTaiPalaute": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "liite": "/palautteet/***unittest***/logo.png",
-      "otettuKasittelyyn": true,
-      "puhelinnumero": "123456",
-      "sahkoposti": "test@vayla.fi",
-      "sukunimi": "Meikalainen",
-      "yhteydenottotapaEmail": false,
-      "yhteydenottotapaPuhelin": true,
+      "__typename": "Aineisto",
+      "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
+      "jarjestys": 12,
+      "kategoria": "Yleinen new",
+      "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/ekatiedosto_eka.pdf",
+      "tila": "VALMIS",
+      "tuotu": "***unittest***",
     },
+    Object {
+      "__typename": "Aineisto",
+      "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
+      "jarjestys": 13,
+      "kategoria": "Yleinen new",
+      "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/karttakuvalla_tiedosto.pdf",
+      "tila": "VALMIS",
+      "tuotu": "***unittest***",
+    },
+  ],
+  "esitettavatYhteystiedot": Array [
+    Object {
+      "__typename": "Yhteystieto",
+      "etunimi": "Marko",
+      "organisaatio": "Kajaani",
+      "puhelinnumero": "0293121213",
+      "sahkoposti": "markku.koi@koi.com",
+      "sukunimi": "Koi",
+    },
+  ],
+  "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+  "videot": Array [
+    Object {
+      "__typename": "Linkki",
+      "nimi": "Esittely 1",
+      "url": "https://video",
+    },
+  ],
+  "vuorovaikutusJulkaisuPaiva": "2022-03-23",
+  "vuorovaikutusNumero": 1,
+  "vuorovaikutusTilaisuudet": Array [
+    Object {
+      "__typename": "VuorovaikutusTilaisuus",
+      "alkamisAika": "15:00",
+      "kaytettavaPalvelu": "TEAMS",
+      "linkki": "https://linkki_tilaisuuteen",
+      "nimi": "Lorem ipsum 1",
+      "paattymisAika": "16:00",
+      "paivamaara": "2022-03-04",
+      "tyyppi": "VERKOSSA",
+    },
+    Object {
+      "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
+      "__typename": "VuorovaikutusTilaisuus",
+      "alkamisAika": "10:00",
+      "nimi": "Lorem ipsum two 1",
+      "osoite": "Katu 123",
+      "paattymisAika": "11:00",
+      "paikka": "Kunnantalo",
+      "paivamaara": "2022-04-05",
+      "postinumero": "00100",
+      "postitoimipaikka": "Helsinki",
+      "tyyppi": "PAIKALLA",
+    },
+  ],
+  "vuorovaikutusYhteysHenkilot": Array [
+    "A000112",
   ],
 }
 `;
 
 exports[`Api should search, load and save a project 9`] = `
 Object {
-  "description": "publicProjekti",
+  "description": "publicProjekti ennen suunnitteluvaihetta",
   "obj": Object {
     "__typename": "ProjektiJulkinen",
     "aloitusKuulutusJulkaisut": Array [
@@ -586,7 +547,228 @@ Object {
     ],
     "euRahoitus": false,
     "oid": "1.2.246.578.5.1.2978288874.2711575506",
-    "status": "SUUNNITTELU",
+    "status": "ALOITUSKUULUTUS",
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 10`] = `
+Object {
+  "description": "projekti palaute lisätty",
+  "obj": Array [
+    Object {
+      "__typename": "Palaute",
+      "etunimi": "Matti",
+      "id": "***unittest***",
+      "kysymysTaiPalaute": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "liite": "/palautteet/***unittest***/logo.png",
+      "puhelinnumero": "123456",
+      "sahkoposti": "test@vayla.fi",
+      "sukunimi": "Meikalainen",
+      "yhteydenottotapaEmail": false,
+      "yhteydenottotapaPuhelin": true,
+    },
+  ],
+}
+`;
+
+exports[`Api should search, load and save a project 11`] = `
+Object {
+  "description": "projekti palaute otettu käsittelyyn",
+  "obj": Array [
+    Object {
+      "__typename": "Palaute",
+      "etunimi": "Matti",
+      "id": "***unittest***",
+      "kysymysTaiPalaute": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "liite": "/palautteet/***unittest***/logo.png",
+      "otettuKasittelyyn": true,
+      "puhelinnumero": "123456",
+      "sahkoposti": "test@vayla.fi",
+      "sukunimi": "Meikalainen",
+      "yhteydenottotapaEmail": false,
+      "yhteydenottotapaPuhelin": true,
+    },
+  ],
+}
+`;
+
+exports[`Api should search, load and save a project 12`] = `
+Object {
+  "description": "publicProjekti suunnitteluvaihe",
+  "obj": Object {
+    "__typename": "SuunnitteluVaiheJulkinen",
+    "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
+    "hankkeenKuvaus": Object {
+      "SAAME": "Saameksi suunnitteluvaihe",
+      "SUOMI": "Lorem Ipsum suunnitteluvaihe",
+      "__typename": "HankkeenKuvaukset",
+    },
+    "vuorovaikutukset": Array [
+      Object {
+        "__typename": "VuorovaikutusJulkinen",
+        "aineistoPoistetaanNakyvista": "2222-03-23T23:45",
+        "aineistot": Array [
+          Object {
+            "__typename": "Aineisto",
+            "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
+            "jarjestys": 12,
+            "kategoria": "Yleinen new",
+            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/ekatiedosto_eka.pdf",
+            "tila": "VALMIS",
+            "tuotu": "***unittest***",
+          },
+          Object {
+            "__typename": "Aineisto",
+            "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
+            "jarjestys": 13,
+            "kategoria": "Yleinen new",
+            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/karttakuvalla_tiedosto.pdf",
+            "tila": "VALMIS",
+            "tuotu": "***unittest***",
+          },
+        ],
+        "esitettavatYhteystiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+        "julkinen": true,
+        "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+        "videot": Array [
+          Object {
+            "__typename": "Linkki",
+            "nimi": "Esittely 1",
+            "url": "https://video",
+          },
+        ],
+        "vuorovaikutusJulkaisuPaiva": "2022-03-23",
+        "vuorovaikutusNumero": 1,
+        "vuorovaikutusTilaisuudet": Array [
+          Object {
+            "__typename": "VuorovaikutusTilaisuus",
+            "alkamisAika": "15:00",
+            "kaytettavaPalvelu": "TEAMS",
+            "linkki": "https://linkki_tilaisuuteen",
+            "nimi": "Lorem ipsum 1",
+            "paattymisAika": "16:00",
+            "paivamaara": "2022-03-04",
+            "tyyppi": "VERKOSSA",
+          },
+          Object {
+            "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
+            "__typename": "VuorovaikutusTilaisuus",
+            "alkamisAika": "10:00",
+            "nimi": "Lorem ipsum two 1",
+            "osoite": "Katu 123",
+            "paattymisAika": "11:00",
+            "paikka": "Kunnantalo",
+            "paivamaara": "2022-04-05",
+            "postinumero": "00100",
+            "postitoimipaikka": "Helsinki",
+            "tyyppi": "PAIKALLA",
+          },
+        ],
+        "vuorovaikutusYhteysHenkilot": Array [
+          "A000112",
+        ],
+        "vuorovaikutusYhteystiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "A-tunnus1",
+            "organisaatio": "CGI Suomi Oy",
+            "puhelinnumero": "123",
+            "sahkoposti": "mikko.haapamki@cgi.com",
+            "sukunimi": "Hassu",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
+      Object {
+        "__typename": "VuorovaikutusJulkinen",
+        "aineistoPoistetaanNakyvista": "2222-03-23T23:45",
+        "aineistot": undefined,
+        "esitettavatYhteystiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+        "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+        "videot": Array [
+          Object {
+            "__typename": "Linkki",
+            "nimi": "Esittely 2",
+            "url": "https://video",
+          },
+        ],
+        "vuorovaikutusJulkaisuPaiva": "2022-03-23",
+        "vuorovaikutusNumero": 2,
+        "vuorovaikutusTilaisuudet": Array [
+          Object {
+            "__typename": "VuorovaikutusTilaisuus",
+            "alkamisAika": "15:00",
+            "kaytettavaPalvelu": "TEAMS",
+            "linkki": "https://linkki_tilaisuuteen",
+            "nimi": "Lorem ipsum 2",
+            "paattymisAika": "16:00",
+            "paivamaara": "2022-03-04",
+            "tyyppi": "VERKOSSA",
+          },
+          Object {
+            "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
+            "__typename": "VuorovaikutusTilaisuus",
+            "alkamisAika": "10:00",
+            "nimi": "Lorem ipsum two 2",
+            "osoite": "Katu 123",
+            "paattymisAika": "11:00",
+            "paikka": "Kunnantalo",
+            "paivamaara": "2022-04-05",
+            "postinumero": "00100",
+            "postitoimipaikka": "Helsinki",
+            "tyyppi": "PAIKALLA",
+          },
+        ],
+        "vuorovaikutusYhteysHenkilot": Array [
+          "A000112",
+          "FOO123",
+        ],
+        "vuorovaikutusYhteystiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "A-tunnus1",
+            "organisaatio": "CGI Suomi Oy",
+            "puhelinnumero": "123",
+            "sahkoposti": "mikko.haapamki@cgi.com",
+            "sukunimi": "Hassu",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
+    ],
   },
 }
 `;
