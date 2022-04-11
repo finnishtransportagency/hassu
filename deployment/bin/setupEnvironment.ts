@@ -105,6 +105,9 @@ export type HassuSSMParameters = {
 
   EmailsOn: string;
   EmailsTo: string;
+
+  SonarQubeHostURL: string;
+  SonarQubeAccessToken: string;
 };
 
 export async function readParametersByPath(path: string, region: Region): Promise<Record<string, string>> {
@@ -202,6 +205,8 @@ async function main() {
     INTERNAL_BUCKET_NAME: Config.internalBucketName,
     ARCHIVE_BUCKET_NAME: Config.archiveBucketName,
     FRONTEND_DOMAIN_NAME: frontendStackOutputs.CloudfrontPrivateDNSName,
+    SONARQUBE_HOST_URL: variables.SonarQubeHostURL,
+    SONARQUBE_ACCESS_TOKEN: variables.SonarQubeAccessToken,
   });
 }
 
