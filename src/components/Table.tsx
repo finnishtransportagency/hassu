@@ -1,93 +1,162 @@
-import React, { ReactElement, ReactNode, Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
+import { useTable, usePagination as usePaginationHook, CellProps, TableOptions, PluginHook } from "react-table";
 import { styled, experimental_sx as sx } from "@mui/material";
 import Link from "next/link";
 
-interface ColumnData<T> {
-  header: string;
-  data: (rowData: T) => string | ReactNode | undefined;
-  fraction?: number;
-}
-
-interface Props<T> {
-  isLoading?: boolean;
-  cols: ColumnData<T>[];
-  rows: T[];
+interface PaginationControlledProps<T extends object> {
   rowLink?: (rowData: T) => string;
+  tableOptions: TableOptions<T>;
+  onPageChange?: (props: { pageSize: number; pageIndex: number }) => void | Promise<void>;
+  gotoPage?: (updater: number) => void;
+  usePagination?: boolean;
 }
 
-export default function Table<T extends unknown>({ isLoading, rows, cols, rowLink }: Props<T>): ReactElement {
-  const colFractions = cols.reduce((acc, col) => acc + (col.fraction || 1), 0);
+// Let's add a fetchData method to our Table component that will be used to fetch
+// new data when pagination state changes
+// We can also add a loading state to let our table know it's loading new data
+export function Table<T extends object>({
+  tableOptions,
+  onPageChange,
+  gotoPage: controlledGotoPage,
+  rowLink,
+  usePagination,
+}: PaginationControlledProps<T>) {
+  const defaultTableOptions: Partial<TableOptions<T>> = {
+    defaultColumn: { Cell: ({ value }: CellProps<T>) => value || "-" },
+  };
+
+  const tableHooks: PluginHook<T>[] = [];
+
+  if (usePagination) {
+    tableHooks.push(usePaginationHook);
+  }
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headers,
+    prepareRow,
+    page,
+    rows,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage: uncontrolledGotoPage,
+    // Get the state from the instance
+    state: { pageIndex, pageSize },
+  } = useTable<T>({ ...defaultTableOptions, ...tableOptions }, ...tableHooks);
+
+  // const colFractions = tableOptions.columns.reduce((acc, col) => acc + (col.fraction || 1), 0);
+
+  useEffect(() => {
+    onPageChange?.({ pageSize, pageIndex });
+  }, [onPageChange, pageSize, pageIndex]);
+
+  const gotoPage = controlledGotoPage || uncontrolledGotoPage;
+  const nextPage = () => gotoPage(pageIndex + 1);
+  const previousPage = () => gotoPage(pageIndex - 1);
+
+  const data = usePagination ? page : rows;
+
+  // Render the UI for your table
   return (
-    <div style={{ overflowX: "auto", width: "100%" }}>
-      <StyledTable>
-        <ColGroup>
-          {cols.map(({ fraction }, index) => (
-            <Col key={index} sx={{ width: `calc(100% / ${colFractions} * ${fraction})` }} />
-          ))}
-        </ColGroup>
-        <Thead>
-          <Tr>
-            {cols.map(({ header }, index) => (
-              <HeaderCell key={index}>{header}</HeaderCell>
-            ))}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {isLoading
-            ? Array.from({ length: 3 }, (_, index) => (
-                <BodyTr key={index}>
-                  {cols.map(({ header }, index) => (
-                    <Fragment key={index}>
-                      <BodyHeaderCell>{header}</BodyHeaderCell>
-                      <DataCell>
-                        <div className="bg-gray h-4 min-w-xs md:w-full rounded-md mr-0 my-1 align-middle" />
-                      </DataCell>
-                    </Fragment>
-                  ))}
-                </BodyTr>
-              ))
-            : rows.map((row, index) =>
-                rowLink ? (
-                  <Link key={index} passHref href={rowLink(row)}>
-                    <BodyTr as="a">
-                      {cols.map(({ data, header }, index) => (
-                        <Fragment key={index}>
-                          <BodyHeaderCell>{header}</BodyHeaderCell>
-                          <DataCell>{data(row) || "-"}</DataCell>
-                        </Fragment>
-                      ))}
-                    </BodyTr>
-                  </Link>
-                ) : (
-                  <BodyTr key={index}>
-                    {cols.map(({ data, header }, index) => (
-                      <Fragment key={index}>
-                        <BodyHeaderCell>{header}</BodyHeaderCell>
-                        <DataCell>{data(row) || "-"}</DataCell>
+    <>
+      <div style={{ overflowX: "auto", width: "100%" }}>
+        <StyledTable {...getTableProps()}>
+          {/* <ColGroup>
+            {headers
+              .filter((column) => column.isVisible)
+              .map((column, index) => (
+                <Col
+                  key={index}
+                  // sx={{ width: `calc(100% / ${colFractions} * ${fraction})` }}
+                />
+              ))}
+          </ColGroup> */}
+          <Thead>
+            <Tr>
+              {headers
+                .filter((column) => column.isVisible)
+                .map((column) => (
+                  <HeaderCell {...column.getHeaderProps()} key={column.getHeaderProps().key}>
+                    {column.render("Header")}
+                    <span>{column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : ""}</span>
+                  </HeaderCell>
+                ))}
+            </Tr>
+          </Thead>
+          <Tbody {...getTableBodyProps()}>
+            {data.map((row) => {
+              prepareRow(row);
+              return rowLink ? (
+                <Link key={row.getRowProps().key} passHref href={rowLink(row.values as any)}>
+                  <BodyTr as="a" {...row.getRowProps()} key={row.getRowProps().key}>
+                    {row.cells.map((cell) => (
+                      <Fragment key={cell.getCellProps().key}>
+                        <BodyHeaderCell {...cell.column.getHeaderProps()}>
+                          {cell.column.render("Header")}
+                        </BodyHeaderCell>
+                        <DataCell {...cell.getCellProps()}>{cell.render("Cell")}</DataCell>
                       </Fragment>
                     ))}
                   </BodyTr>
-                )
-              )}
-        </Tbody>
-      </StyledTable>
-    </div>
+                </Link>
+              ) : (
+                <BodyTr {...row.getRowProps()} key={row.getRowProps().key}>
+                  {row.cells.map((cell) => (
+                    <Fragment key={cell.getCellProps().key}>
+                      <BodyHeaderCell {...cell.column.getHeaderProps()}>{cell.column.render("Header")}</BodyHeaderCell>
+                      <DataCell {...cell.getCellProps()}>{cell.render("Cell")}</DataCell>
+                    </Fragment>
+                  ))}
+                </BodyTr>
+              );
+            })}
+          </Tbody>
+        </StyledTable>
+      </div>
+      {usePagination && (
+        <div>
+          <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+            {"<<"}
+          </button>{" "}
+          <button onClick={previousPage} disabled={!canPreviousPage}>
+            {"<"}
+          </button>{" "}
+          <button onClick={nextPage} disabled={!canNextPage}>
+            {">"}
+          </button>{" "}
+          <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+            {">>"}
+          </button>{" "}
+          <span>
+            Page{" "}
+            <strong>
+              {pageIndex + 1} of {pageOptions.length}
+            </strong>{" "}
+          </span>
+        </div>
+      )}
+    </>
   );
 }
 
-const ColGroup = styled("div")(
-  sx({
-    display: "table-column-group",
-  })
-);
+export default Table;
 
-const Col = styled("div")(
-  sx({
-    display: "table-column",
-    minWidth: "110px",
-    maxWidth: "500px",
-  })
-);
+// const ColGroup = styled("div")(
+//   sx({
+//     display: "table-column-group",
+//   })
+// );
+
+// const Col = styled("div")(
+//   sx({
+//     display: "table-column",
+//     minWidth: "110px",
+//     maxWidth: "500px",
+//   })
+// );
 
 const StyledTable = styled("div")(
   sx({

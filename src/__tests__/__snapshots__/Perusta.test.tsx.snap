@@ -141,23 +141,8 @@ Array [
     >
       <div
         className="css-1axw1jn"
+        role="table"
       >
-        <div
-          className="css-16ek6gi"
-        >
-          <div
-            className="css-vz9q3h"
-          />
-          <div
-            className="css-tkrprx"
-          />
-          <div
-            className="css-1y3afzz"
-          />
-          <div
-            className="css-vz9q3h"
-          />
-        </div>
         <div
           className="css-149vcos"
         >
@@ -166,72 +151,106 @@ Array [
           >
             <div
               className="css-1ahfm29"
+              colSpan={1}
+              role="columnheader"
             >
               Asiatunnus
+              <span>
+                
+              </span>
             </div>
             <div
               className="css-1ahfm29"
+              colSpan={1}
+              role="columnheader"
             >
               Nimi
+              <span>
+                
+              </span>
             </div>
             <div
               className="css-1ahfm29"
+              colSpan={1}
+              role="columnheader"
             >
               Tyyppi
+              <span>
+                
+              </span>
             </div>
             <div
               className="css-1ahfm29"
+              colSpan={1}
+              role="columnheader"
             >
               Projektipäällikkö
+              <span>
+                
+              </span>
             </div>
           </div>
         </div>
         <div
           className="css-rbvvpo"
+          role="rowgroup"
         >
           <a
             className="css-1q32lnk"
             href="/yllapito/perusta/1234"
             onClick={[Function]}
             onMouseEnter={[Function]}
+            role="row"
           >
             <div
               className="css-100vy9s"
+              colSpan={1}
+              role="columnheader"
             >
               Asiatunnus
             </div>
             <div
               className="css-tgaxma"
+              role="cell"
             >
               -
             </div>
             <div
               className="css-100vy9s"
+              colSpan={1}
+              role="columnheader"
             >
               Nimi
             </div>
             <div
               className="css-tgaxma"
+              role="cell"
             >
               Tampereen tie Hanke
             </div>
             <div
               className="css-100vy9s"
+              colSpan={1}
+              role="columnheader"
             >
               Tyyppi
             </div>
             <div
               className="css-tgaxma"
+              role="cell"
             >
               Tiesuunnitelma
             </div>
             <div
               className="css-100vy9s"
+              colSpan={1}
+              role="columnheader"
             >
               Projektipäällikkö
             </div>
             <div
               className="css-tgaxma"
+              role="cell"
             >
               -
             </div>
