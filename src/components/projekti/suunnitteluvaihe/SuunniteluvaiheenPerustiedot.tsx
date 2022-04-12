@@ -130,12 +130,13 @@ export default function SuunniteluvaiheenPerustiedot({
   const kielitiedot = projekti.kielitiedot;
   const ensisijainenKieli = projekti.kielitiedot ? projekti.kielitiedot.ensisijainenKieli : Kieli.SUOMI;
   const toissijainenKieli = kielitiedot?.toissijainenKieli;
+  const julkinen = projekti.suunnitteluVaihe?.julkinen;
 
   return (
     <>
-      {projekti.suunnitteluVaihe && (
+      {julkinen && (
         <Notification type={NotificationType.INFO_GREEN}>
-          Suunnitteluvaiheen perustiedot on julkaistu palvelun julkiselle puolelle. Voit muokata kuvausta, sekä tietoja
+          Suunnitteluvaiheen perustiedot on julkaistu palvelun julkisella puolella. Voit muokata kuvausta, sekä tietoja
           etenemisestä ja kestosta. Muutokset päivittyvät palvelun julkiselle puolella Tallenna ja päivitä -painikkeen
           painamisen jälkeen.
         </Notification>
@@ -151,7 +152,7 @@ export default function SuunniteluvaiheenPerustiedot({
                 vaikutukset ja toimenpiteet pääpiirteittäin karkealla tasolla. Älä lisää tekstiin linkkejä.
               </p>
             </SectionContent>
-            {!projekti.suunnitteluVaihe && (
+            {!julkinen && (
               <Notification type={NotificationType.INFO_GRAY}>
                 Tiivistetty hankkeen sisälönkuvaus on noudettu aloituskuulutuvaiheesta. Voit muokata kuvausta. Muutokset
                 tulevat näkyviin palvelun julkiselle puolella Tallenna ja julkaise -painikkeen painamisen jälkeen.
@@ -228,15 +229,13 @@ export default function SuunniteluvaiheenPerustiedot({
       </FormProvider>
       <Section noDivider>
         <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
-          {!projekti.suunnitteluVaihe?.julkinen && (
+          {!julkinen && (
             <Button onClick={handleSubmit(saveDraft)} disabled={isFormSubmitting}>
               Tallenna luonnos
             </Button>
           )}
           <Button primary onClick={() => setOpenHyvaksy(true)} disabled={isFormSubmitting}>
-            {projekti?.suunnitteluVaihe?.julkinen
-              ? "Tallenna ja päivitä julkaisua"
-              : "Tallenna ja julkaise perustiedot"}
+            {julkinen ? "Tallenna ja päivitä julkaisua" : "Tallenna ja julkaise perustiedot"}
           </Button>
           <Button disabled>Nähtävilläolon kuuluttaminen</Button>
         </Stack>
@@ -246,7 +245,7 @@ export default function SuunniteluvaiheenPerustiedot({
           <Section noDivider smallGaps>
             <SectionContent>
               <div className="vayla-dialog-title flex">
-                <div className="flex-grow">Kuulutuksen hyväksyminen ja ilmoituksen lähettäminen</div>
+                <div className="flex-grow">Suunnitteluvaiheen perustietojen julkaisu</div>
                 <div className="justify-end">
                   <WindowCloseButton onClick={() => setOpenHyvaksy(false)}></WindowCloseButton>
                 </div>
@@ -258,13 +257,12 @@ export default function SuunniteluvaiheenPerustiedot({
                   <p>Olet julkaisemassa suunnitteluvaiheen perustiedot kansalaispuolelle.</p>
                   <div className="content">
                     <p>
-                      Jos perustietoihin pitää tehdä muutoksia hyväksymisen jälkeen, tulee perustiedot avata uudelleen
-                      ja tehdä tallennus ja julkaisu uudelleen.
+                      Jos perustietoihin pitää tehdä muutoksia julkaisun jälkeen, tulee perustiedot avata uudelleen ja
+                      tehdä tallennus ja julkaisun päivitys.
                     </p>
                     <p>
-                      Klikkaamalla Hyväksy ja lähetä -painiketta vahvistat kuulutuksen tarkastetuksi ja hyväksyt sen
-                      julkaisun kuulutuspäivänä sekä ilmoituksien lähettämisen. Ilmoitukset lähetetään automaattisesti
-                      painikkeen klikkaamisen jälkeen.
+                      Klikkaamalla Hyväksy ja julkaise -painiketta vahvistat perustiedot tarkastetuksi ja hyväksyt sen
+                      julkaisun.
                     </p>
                   </div>
                   <HassuStack
