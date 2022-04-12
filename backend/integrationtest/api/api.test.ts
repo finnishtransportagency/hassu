@@ -170,6 +170,7 @@ describe("Api", () => {
       suunnitteluVaihe: {
         hankkeenKuvaus: apiTestFixture.hankkeenKuvausSuunnittelu,
         arvioSeuraavanVaiheenAlkamisesta: "huomenna",
+        suunnittelunEteneminenJaKesto: "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
       },
     });
     const projekti = await loadProjektiFromDatabase(oid);
