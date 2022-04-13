@@ -11,6 +11,7 @@ import {
   SuunnitteluVaiheInput,
   VuorovaikutusTilaisuusTyyppi,
   Yhteystieto,
+  YhteystietoInput,
 } from "../../../common/graphql/apiModel";
 
 class ApiTestFixture {
@@ -42,6 +43,25 @@ class ApiTestFixture {
       sahkoposti: "markku.koi@koi.com",
       organisaatio: "Kajaani",
       puhelinnumero: "0293121213",
+    },
+  ];
+
+  esitettavatYhteystiedotInput: YhteystietoInput[] = [
+    {
+      etunimi: "Etunimi",
+      sukunimi: "Sukunimi",
+      sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+      organisaatio: "",
+      puhelinnumero: "0293121213",
+      titteli: "Projektipäällikkö",
+    },
+    {
+      etunimi: "Joku",
+      sukunimi: "Jokunen",
+      sahkoposti: "Joku.Jokunen@vayla.fi",
+      organisaatio: "",
+      puhelinnumero: "02998765",
+      titteli: "Konsultti",
     },
   ];
 
@@ -140,6 +160,23 @@ class ApiTestFixture {
           postinumero: "00100",
           postitoimipaikka: "Helsinki",
           Saapumisohjeet: "Ensimmäinen ovi vasemmalla",
+        },
+        {
+          tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+          nimi: "Soittoaikatilaisuuden nimi tässä",
+          paivamaara: "2022-04-05",
+          alkamisAika: "10:00",
+          paattymisAika: "11:00",
+          projektiYhteysHenkilot: vuorovaikutusYhteysHenkilot,
+          esitettavatYhteystiedot: this.esitettavatYhteystiedotInput,
+        },
+        {
+          tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+          nimi: "Toisen soittoaikatilaisuuden nimi tässä",
+          paivamaara: "2033-04-05",
+          alkamisAika: "12:00",
+          paattymisAika: "13:00",
+          esitettavatYhteystiedot: this.esitettavatYhteystiedotInput,
         },
       ],
     },

@@ -3,9 +3,8 @@ import {
   IlmoituksenVastaanottajat,
   KaytettavaPalvelu,
   VuorovaikutusTilaisuusTyyppi,
-  Yhteystieto,
 } from "../../../../common/graphql/apiModel";
-import { LocalizedMap } from "./projekti";
+import { LocalizedMap, Yhteystieto } from "./projekti";
 
 export type SuunnitteluVaihe = {
   hankkeenKuvaus?: LocalizedMap<string>;
@@ -60,6 +59,13 @@ export type VuorovaikutusTilaisuus = {
   postinumero?: string | null;
   postitoimipaikka?: string | null;
   Saapumisohjeet?: string | null;
+  projektiYhteysHenkilot?: Array<string> | null;
+  esitettavatYhteystiedot?: Array<Yhteystieto | null> | null;
+};
+
+export type NimiJaPuhelinnumero = {
+  nimi: string;
+  puhelinnumero: string;
 };
 
 export type Linkki = {

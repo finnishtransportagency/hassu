@@ -53,6 +53,7 @@ enum Status {
 enum AsiakirjaTyyppi {
   ALOITUSKUULUTUS
   ILMOITUS_KUULUTUKSESTA
+  YLEISOTILAISUUS_KUTSU
 }
 
 interface IProjekti {
@@ -115,7 +116,7 @@ type Vuorovaikutus {
   """
   kysymyksetJaPalautteetViimeistaan: String
   videot: [Linkki!]
-  esitettavatYhteystiedot: [Yhteystieto]
+  esitettavatYhteystiedot: [Yhteystieto!]
   """
   Lista kayttajatunnuksia
   """
@@ -222,6 +223,8 @@ type VuorovaikutusTilaisuus {
   postinumero: String
   postitoimipaikka: String
   Saapumisohjeet: String
+  projektiYhteysHenkilot: [String!]
+  esitettavatYhteystiedot: [Yhteystieto!]
 }
 
 type Velho {
@@ -262,6 +265,7 @@ type Yhteystieto {
   organisaatio: String!
   puhelinnumero: String!
   sahkoposti: String!
+  titteli: String
 }
 
 enum AloitusKuulutusTila {
@@ -291,7 +295,7 @@ type AloitusKuulutus {
   siirtyySuunnitteluVaiheeseen: String
   hankkeenKuvaus: HankkeenKuvaukset
   elyKeskus: String
-  esitettavatYhteystiedot: [Yhteystieto]
+  esitettavatYhteystiedot: [Yhteystieto!]
   palautusSyy: String
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
 }

@@ -44,7 +44,7 @@ export class Ilmoitus12R extends SuunnittelunAloitusPdf {
         },
       ]),
       this.lisatietojaAntavatParagraph(),
-      this.doc.struct("P", {}, this.moreInfoElements),
+      this.doc.struct("P", {}, this.moreInfoElements(this.aloitusKuulutusJulkaisu)),
     ];
   }
 }

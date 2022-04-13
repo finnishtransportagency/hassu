@@ -42,8 +42,6 @@ export class AsiakirjaAdapter {
   }
 }
 
-
-
 function adaptYhteystiedot(dbProjekti: DBProjekti, esitettavatYhteystiedot: Yhteystieto[] | null): Yhteystieto[] {
   const yt: Yhteystieto[] = [];
   dbProjekti.kayttoOikeudet
@@ -67,11 +65,13 @@ function adaptYhteystiedot(dbProjekti: DBProjekti, esitettavatYhteystiedot: Yhte
 }
 
 function adaptVelho(dbProjekti: DBProjekti): Velho {
-  const { nimi, tilaajaOrganisaatio, kunnat, tyyppi, vaylamuoto } = dbProjekti.velho!;
+  const { nimi, tilaajaOrganisaatio, suunnittelustaVastaavaViranomainen, kunnat, tyyppi, vaylamuoto } =
+    dbProjekti.velho!;
   return {
     nimi,
     tyyppi: tyyppi || dbProjekti.tyyppi, // remove deprectaed usage after all data has been updated in dev/test
     tilaajaOrganisaatio,
+    suunnittelustaVastaavaViranomainen,
     kunnat,
     vaylamuoto,
   };

@@ -2,6 +2,8 @@ import {
   AloitusKuulutusInput,
   AloitusKuulutusTila,
   IlmoitettavaViranomainen,
+  IlmoituksenVastaanottajat,
+  KaytettavaPalvelu,
   Kieli,
   Projekti,
   ProjektiKayttaja,
@@ -9,8 +11,75 @@ import {
   ProjektiTyyppi,
   Status,
   TallennaProjektiInput,
+  Viranomainen,
+  VuorovaikutusTilaisuusTyyppi,
+  Yhteystieto,
 } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../../src/database/model/projekti";
+import { Vuorovaikutus } from "../../src/database/model/suunnitteluVaihe";
+
+const esitettavatYhteystiedot = [
+  {
+    etunimi: "Marko",
+    sukunimi: "Koi",
+    sahkoposti: "markku.koi@koi.com",
+    organisaatio: "Kajaani",
+    puhelinnumero: "0293121213",
+  },
+];
+
+const ilmoituksenVastaanottajat: IlmoituksenVastaanottajat = {
+  __typename: "IlmoituksenVastaanottajat",
+  kunnat: [
+    {
+      sahkoposti: "mikkeli@mikke.li",
+      lahetetty: "2022-03-11T14:54",
+      nimi: "Mikkeli",
+      __typename: "KuntaVastaanottaja",
+    },
+    {
+      sahkoposti: "juva@ju.va",
+      lahetetty: "2022-03-11T14:54",
+      nimi: " Juva",
+      __typename: "KuntaVastaanottaja",
+    },
+    {
+      sahkoposti: "savonlinna@savonlin.na",
+      lahetetty: "2022-03-11T14:54",
+      nimi: " Savonlinna",
+      __typename: "KuntaVastaanottaja",
+    },
+  ],
+  viranomaiset: [
+    {
+      sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+      lahetetty: "2022-03-11T14:54",
+      nimi: IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+      __typename: "ViranomaisVastaanottaja",
+    },
+  ],
+};
+
+const esitettavatYhteystiedot2: Yhteystieto[] = [
+  {
+    __typename: "Yhteystieto",
+    etunimi: "Etunimi",
+    sukunimi: "Sukunimi",
+    sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+    organisaatio: "",
+    puhelinnumero: "0293121213",
+    titteli: "Projektipäällikkö",
+  },
+  {
+    __typename: "Yhteystieto",
+    etunimi: "Joku",
+    sukunimi: "Jokunen",
+    sahkoposti: "Joku.Jokunen@vayla.fi",
+    organisaatio: "",
+    puhelinnumero: "02998765",
+    titteli: "Konsultti",
+  },
+];
 
 export class ProjektiFixture {
   public PROJEKTI1_NIMI = "Testiprojekti 1";
@@ -90,15 +159,7 @@ export class ProjektiFixture {
 
     siirtyySuunnitteluVaiheeseen: "2999-01-01",
     elyKeskus: "Pirkanmaa",
-    esitettavatYhteystiedot: [
-      {
-        etunimi: "Marko",
-        sukunimi: "Koi",
-        sahkoposti: "markku.koi@koi.com",
-        organisaatio: "Kajaani",
-        puhelinnumero: "0293121213",
-      },
-    ],
+    esitettavatYhteystiedot,
   };
 
   dbProjekti1: DBProjekti = {
@@ -127,6 +188,7 @@ export class ProjektiFixture {
       nimi: this.PROJEKTI1_NIMI,
       tyyppi: ProjektiTyyppi.TIE,
       tilaajaOrganisaatio: "Uudenmaan ELY-keskus",
+      suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
       kunnat: ["Tampere", "Nokia"],
       maakunnat: ["Uusimaa", "Pirkanmaa"],
       vaylamuoto: ["tie"],
@@ -149,15 +211,7 @@ export class ProjektiFixture {
       },
       siirtyySuunnitteluVaiheeseen: "2022-01-01",
       elyKeskus: "Pirkanmaa",
-      esitettavatYhteystiedot: [
-        {
-          etunimi: "Marko",
-          sukunimi: "Koi",
-          sahkoposti: "markku.koi@koi.com",
-          organisaatio: "Kajaani",
-          puhelinnumero: "0293121213",
-        },
-      ],
+      esitettavatYhteystiedot,
     },
     kielitiedot: {
       ensisijainenKieli: Kieli.SUOMI,
@@ -224,37 +278,7 @@ export class ProjektiFixture {
           toissijainenKieli: Kieli.RUOTSI,
           ensisijainenKieli: Kieli.SUOMI,
         },
-        ilmoituksenVastaanottajat: {
-          __typename: "IlmoituksenVastaanottajat",
-          kunnat: [
-            {
-              sahkoposti: "mikkeli@mikke.li",
-              lahetetty: "2022-03-11T14:54",
-              nimi: "Mikkeli",
-              __typename: "KuntaVastaanottaja",
-            },
-            {
-              sahkoposti: "juva@ju.va",
-              lahetetty: "2022-03-11T14:54",
-              nimi: " Juva",
-              __typename: "KuntaVastaanottaja",
-            },
-            {
-              sahkoposti: "savonlinna@savonlin.na",
-              lahetetty: "2022-03-11T14:54",
-              nimi: " Savonlinna",
-              __typename: "KuntaVastaanottaja",
-            },
-          ],
-          viranomaiset: [
-            {
-              sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
-              lahetetty: "2022-03-11T14:54",
-              nimi: IlmoitettavaViranomainen.ETELA_SAVO_ELY,
-              __typename: "ViranomaisVastaanottaja",
-            },
-          ],
-        },
+        ilmoituksenVastaanottajat,
         kuulutusPaiva: "2022-03-28T14:28",
         muokkaaja: ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
         hyvaksyja: ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
@@ -338,5 +362,76 @@ export class ProjektiFixture {
       },
     ],
     paivitetty: "2022-03-15T14:30:00.000Z",
+  };
+
+  hankkeenKuvausSuunnitteluVaiheessa = {
+    SUOMI: "Hankkeen kuvaus suunnitteluvaiheessa",
+    RUOTSI: "Hankkeen kuvaus suunnitteluvaiheessa ruotsiksi",
+    SAAME: "Hankkeen kuvaus suunnitteluvaiheessa saameksi",
+  };
+
+  vuorovaikutus: Vuorovaikutus = {
+    vuorovaikutusNumero: 1,
+    julkinen: true,
+    vuorovaikutusJulkaisuPaiva: "2022-03-23",
+    videot: [{ nimi: "Esittely", url: "https://video" }],
+    kysymyksetJaPalautteetViimeistaan: "2022-03-23T23:48",
+    esitettavatYhteystiedot: [
+      {
+        etunimi: "Marko",
+        sukunimi: "Koi",
+        sahkoposti: "markku.koi@koi.com",
+        organisaatio: "Kajaani",
+        puhelinnumero: "0293121213",
+      },
+    ],
+    ilmoituksenVastaanottajat,
+    vuorovaikutusYhteysHenkilot: [
+      ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
+      ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
+    ],
+    vuorovaikutusTilaisuudet: [
+      {
+        tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+        nimi: "Lorem ipsum",
+        paivamaara: "2022-03-04",
+        alkamisAika: "15:00",
+        paattymisAika: "16:00",
+        kaytettavaPalvelu: KaytettavaPalvelu.TEAMS,
+        linkki: "https://linkki_tilaisuuteen",
+      },
+      {
+        tyyppi: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
+        nimi: "Lorem ipsum two",
+        paivamaara: "2022-04-05",
+        alkamisAika: "10:00",
+        paattymisAika: "11:00",
+        paikka: "Kunnantalo",
+        osoite: "Katu 123",
+        postinumero: "00100",
+        postitoimipaikka: "Helsinki",
+        Saapumisohjeet: "Ensimmäinen ovi vasemmalla",
+      },
+      {
+        tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+        nimi: "Soittoaikatilaisuuden nimi tässä",
+        paivamaara: "2022-04-05",
+        alkamisAika: "10:00",
+        paattymisAika: "11:00",
+        esitettavatYhteystiedot: esitettavatYhteystiedot2,
+        projektiYhteysHenkilot: [
+          ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
+          ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
+        ],
+      },
+      {
+        tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+        nimi: "Toisen soittoaikatilaisuuden nimi tässä",
+        paivamaara: "2033-04-05",
+        alkamisAika: "12:00",
+        paattymisAika: "13:00",
+        esitettavatYhteystiedot: esitettavatYhteystiedot2,
+      },
+    ],
   };
 }

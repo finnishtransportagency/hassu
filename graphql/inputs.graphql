@@ -27,6 +27,7 @@ input YhteystietoInput {
   organisaatio: String!
   puhelinnumero: String!
   sahkoposti: String!
+  titteli: String
 }
 
 input HankkeenKuvauksetInput {
@@ -40,7 +41,7 @@ input AloitusKuulutusInput {
   siirtyySuunnitteluVaiheeseen: String
   hankkeenKuvaus: HankkeenKuvauksetInput
   elyKeskus: String
-  esitettavatYhteystiedot: [YhteystietoInput]
+  esitettavatYhteystiedot: [YhteystietoInput!]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
 }
 
@@ -95,7 +96,7 @@ input VuorovaikutusInput {
   """
   kysymyksetJaPalautteetViimeistaan: String
   videot: [LinkkiInput!]
-  esitettavatYhteystiedot: [YhteystietoInput]
+  esitettavatYhteystiedot: [YhteystietoInput!]
   """
   Lista kayttajatunnuksia
   """
@@ -127,6 +128,8 @@ input VuorovaikutusTilaisuusInput {
   postinumero: String
   postitoimipaikka: String
   Saapumisohjeet: String
+  projektiYhteysHenkilot: [String!]
+  esitettavatYhteystiedot: [YhteystietoInput!]
 }
 
 input LinkkiInput {

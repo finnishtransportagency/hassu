@@ -8,15 +8,9 @@ const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
 };
 
 export class AloitusKuulutus10R extends SuunnittelunAloitusPdf {
-  private tietosuojaUrl;
 
   constructor(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu, kieli: Kieli) {
     super(aloitusKuulutusJulkaisu, kieli, headers[kieli == Kieli.SAAME ? Kieli.SUOMI : kieli]); //TODO lisää tuki Saamen eri muodoille
-    this.tietosuojaUrl = this.selectText([
-      "https://www.vayla.fi/tietosuoja",
-      "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy",
-      "https://www.vayla.fi/tietosuoja",
-    ]);
   }
 
   protected addDocumentElements() {
@@ -48,29 +42,9 @@ export class AloitusKuulutus10R extends SuunnittelunAloitusPdf {
         "RUOTSIKSI Suunnittelun edetessä tullaan myöhemmin erikseen ilmoitettavalla tavalla varaamaan tilaisuus mielipiteen ilmaisemiseen suunnitelmasta. Valmistuttuaan suunnitelma asetetaan yleisesti nähtäville, jolloin asianosaisilla on mahdollisuus tehdä kirjallinen muistutus suunnitelmasta. (ratalaki 22 §). ",
       ]),
 
-      this.doc.struct("P", {}, [
-        () => {
-          this.doc.text(
-            this.selectText([
-              `Väylävirasto käsittelee suunnitelmaan laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa `,
-              `RUOTSIKSI Väylävirasto käsittelee suunnitelmaan laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa `,
-            ]),
-            { continued: true }
-          );
-        },
-        this.doc.struct("Link", { alt: this.tietosuojaUrl }, () => {
-          this.doc.fillColor("blue").text(this.tietosuojaUrl, {
-            link: this.tietosuojaUrl,
-            continued: true,
-            underline: true,
-          });
-        }),
-        () => {
-          this.doc.fillColor("black").text(".", { link: undefined, underline: false }).moveDown();
-        },
-      ]),
+      this.vaylavirastoTietosuojaParagraph(),
       this.lisatietojaAntavatParagraph(),
-      this.doc.struct("P", {}, this.moreInfoElements),
+      this.doc.struct("P", {}, this.moreInfoElements(this.aloitusKuulutusJulkaisu)),
     ];
   }
 }

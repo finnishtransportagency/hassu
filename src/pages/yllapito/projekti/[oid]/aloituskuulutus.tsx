@@ -175,13 +175,12 @@ export default function Aloituskuulutus({
           kuulutusPaiva: projekti?.aloitusKuulutus?.kuulutusPaiva,
           siirtyySuunnitteluVaiheeseen: projekti?.aloitusKuulutus?.siirtyySuunnitteluVaiheeseen,
           esitettavatYhteystiedot:
-            projekti?.aloitusKuulutus?.esitettavatYhteystiedot?.map((yhteystieto) => {
-              if (yhteystieto) {
+            projekti?.aloitusKuulutus?.esitettavatYhteystiedot
+              ?.filter((yt) => yt)
+              .map((yhteystieto) => {
                 const { __typename, ...yhteystietoInput } = yhteystieto;
                 return yhteystietoInput;
-              }
-              return null;
-            }) || [],
+              }) || [],
         },
       };
 

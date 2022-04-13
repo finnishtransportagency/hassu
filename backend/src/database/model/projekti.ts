@@ -66,6 +66,7 @@ export type Yhteystieto = {
   organisaatio: string;
   puhelinnumero: string;
   sahkoposti: string;
+  titteli?: string;
 };
 
 export type SuunnitteluSopimus = {
