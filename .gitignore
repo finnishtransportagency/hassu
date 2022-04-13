@@ -60,3 +60,4 @@ build
 /robotenv.py
 __pycache__
 /.eslintcache
+.sonar

@@ -137,6 +137,7 @@
     "semantic-release": "18.0.1",
     "sinon": "11.1.2",
     "sinon-chai": "3.7.0",
+    "sonarqube-scanner": "2.8.1",
     "tailwindcss": "2.2.16",
     "ts-node": "10.2.0",
     "tsconfig-paths-webpack-plugin": "3.5.2",
@@ -165,12 +166,13 @@
     "localstack:stop": "docker-compose -f deployment/localstack/docker-compose.yml down",
     "setupenvironment": "ts-node --project=tsconfig.cdk.json deployment/bin/setupEnvironment.ts",
     "graphQLIntrospection": "ts-node $NODE_DEBUG_OPTION --project=tsconfig.cdk.json -r dotenv/config deployment/bin/runGraphQLIntrospection.ts dotenv_config_path=.env.local",
-    "test": "npm-run-all --aggregate-output --parallel \"test:!(backend)\"",
+    "test": "npm-run-all --aggregate-output --parallel \"test:!(backend|integration)\"",
     "husky:test": "npm-run-all --aggregate-output --parallel \"test:!(backend|integration)\"",
     "test:frontend": "jest --config \"./jest.frontend.config.js\"",
     "test:backend": "cross-env TS_NODE_PROJECT=\"./backend/tsconfig.json\" mocha -r ts-node/register \"backend/test/**/*.test.ts\" --reporter mocha-multi-reporters --reporter-options configFile=mocha_reporter_config.json",
     "test:coverage": "nyc --report-dir .report/coverage --reporter text-summary --reporter lcov --reporter json --reporter clover npm run test:backend",
     "test:integration": "cross-env TS_NODE_PROJECT=\"./backend/tsconfig.json\" mocha -r ts-node/register \"backend/integrationtest/**/*.test.ts\"",
+    "test:integration:coverage": "nyc --report-dir .report/coverage --reporter text-summary --reporter lcov --reporter json --reporter clover npm run test:integration",
     "watch:test:frontend": "jest --config \"./jest.frontend.config.js\" --watch",
     "watch:test:backend": "cross-env TS_NODE_PROJECT=\"./backend/tsconfig.json\" mocha $NODE_DEBUG_OPTION -r dotenv/config --require ts-node/register --watch --watch-extensions ts --watch-files backend --watch-files common \"backend/test/**/*.test.ts\"",
     "watch:test:integration": "cross-env TS_NODE_PROJECT=\"./backend/tsconfig.json\" mocha $NODE_DEBUG_OPTION -r dotenv/config --require ts-node/register --watch --watch-extensions ts --watch-files backend --watch-files common \"backend/integrationtest/**/*.test.ts\"",
@@ -208,7 +210,8 @@
     "log:backend": "aws logs tail --follow --since 1h /aws/lambda/hassu-backend-$ENVIRONMENT",
     "log:backend:dev": "aws logs tail --follow --since 1h /aws/lambda/hassu-backend-dev",
     "log:aineistoimporter": "aws logs tail --follow --since 1h /aws/lambda/hassu-aineistoimporter-$ENVIRONMENT",
-    "log:aineistoimporter:dev": "aws logs tail --follow --since 1h /aws/lambda/hassu-aineistoimporter-dev"
+    "log:aineistoimporter:dev": "aws logs tail --follow --since 1h /aws/lambda/hassu-aineistoimporter-dev",
+    "sonar": "node -r dotenv/config ./deployment/bin/sonar.js dotenv_config_path=.env.local"
   },
   "browserslist": {
     "production": [
