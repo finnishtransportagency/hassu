@@ -1,6 +1,6 @@
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
-import { ReactElement, useState } from "react";
+import { ReactElement } from "react";
 import { Badge, Chip, chipClasses } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Button from "@components/button/Button";
@@ -21,7 +21,6 @@ interface Props {
   windowHandler: (isDirty: boolean) => void;
 }
 export default function VuorovaikutusDialog({ open, windowHandler }: Props): ReactElement {
-
   const HassuBadge = styled(Badge)(() => ({
     [`&.${chipClasses.deleteIcon}`]: {
       marginLeft: "0.5rem",

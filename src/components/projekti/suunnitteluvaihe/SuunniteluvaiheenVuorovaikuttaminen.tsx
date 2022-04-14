@@ -228,7 +228,10 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
           </Button>
         </Stack>
       </Section>
-      <VuorovaikutusDialog open={openVuorovaikutustilaisuus} windowHandler={setOpenVuorovaikutustilaisuus}></VuorovaikutusDialog>
+      <VuorovaikutusDialog
+        open={openVuorovaikutustilaisuus}
+        windowHandler={setOpenVuorovaikutustilaisuus}
+      ></VuorovaikutusDialog>
       <HassuSpinner open={isFormSubmitting} />
     </>
   );
