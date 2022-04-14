@@ -1,10 +1,10 @@
 {
   "reporterEnabled": "spec, mocha-junit-reporter, mocha-sonarqube-reporter",
   "mochaJunitReporterReporterOptions": {
-    "mochaFile": "./.report/unit/test-results.xml"
+    "mochaFile": "./.report/unit/integration-test-results.xml"
   },
   "mochaSonarqubeReporterReporterOptions": {
-    "output": ".report/unit/sonarqube-test-results.xml",
+    "output": ".report/unit/sonarqube-integration-test-results.xml",
     "useFullFilePath": "true"
   }
 }
