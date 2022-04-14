@@ -7,6 +7,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import StepConnector, { stepConnectorClasses } from "@mui/material/StepConnector";
 import { StepIconProps } from "@mui/material/StepIcon";
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
+import HassuLink from "@components/HassuLink";
 interface Props {
   oid: string;
   activeStep: number;
@@ -14,7 +15,6 @@ interface Props {
   vertical?: true;
 }
 export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep, vertical }: Props): ReactElement {
-
   const HassuLabel = styled(StepLabel)(() => ({
     [`&.${stepLabelClasses.vertical}`]: {
       paddingTop: 0,
@@ -26,6 +26,10 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
     [`&.${stepConnectorClasses.root}`]: {
       left: "calc(-50%)",
       right: "calc(50%)",
+      [`&.${stepConnectorClasses.vertical}`]: {
+        marginLeft: 10,
+        minHeight: 40,
+      },
     },
     [`&.${stepConnectorClasses.active}`]: {
       [`& .${stepConnectorClasses.line}`]: {
@@ -48,11 +52,12 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
       border: 0,
       backgroundColor: "#D8D8D8",
       borderRadius: 1,
+      minHeight: 40,
     },
   }));
 
   const HassuStepIconRoot = styled("div")<{
-    ownerState: { completed?: boolean; active?: boolean };
+    ownerState: { completed?: boolean; active?: boolean; selected?: boolean };
   }>(({ ownerState }) => ({
     backgroundColor: "#D8D8D8",
     zIndex: 1,
@@ -63,28 +68,39 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
     borderRadius: "50%",
     justifyContent: "center",
     alignItems: "center",
-    ...(ownerState.active && {
-      backgroundImage: "linear-gradient(117deg, #0064AF, #0064AF)",
-      boxShadow: "0 0 0 10px #009AE1",
-    }),
-    ...(ownerState.completed && {
+    ...((ownerState.active || ownerState.completed) && {
       backgroundImage: "linear-gradient(117deg, #009AE1, #009AE1)",
+    }),
+    ...(ownerState.selected && {
+      boxShadow: "0 0 0 10px #009AE1",
+      backgroundImage: "linear-gradient(117deg, #0064AF, #0064AF)",
     }),
   }));
 
   function HassuStepIcon(props: StepIconProps) {
-    const { active, completed, className } = props;
+    const { active, completed, className, property } = props;
 
-    return <HassuStepIconRoot ownerState={{ completed, active }} className={className}></HassuStepIconRoot>;
+    const selected = property === "selected";
+
+    return <HassuStepIconRoot ownerState={{ completed, active, selected }} className={className}></HassuStepIconRoot>;
   }
 
   const steps = [
-    `${vertical ? "1." : ""} Suunnittelun käynnistäminen`,
-    `${vertical ? "2." : ""} Suunnittelussa`,
-    `${vertical ? "3." : ""} Suunnitteluaineisto nähtävillä`,
-    `${vertical ? "4." : ""} Hyväksynnässä`,
-    `${vertical ? "5." : ""} Päätös`,
-    `${vertical ? "6." : ""} Lainvoimaisuus`,
+    `Suunnittelun käynnistäminen`,
+    `Suunnittelussa`,
+    `Suunnitteluaineisto nähtävillä`,
+    `Hyväksynnässä`,
+    `Päätös`,
+    `Lainvoimaisuus`,
+  ];
+
+  const links = [
+    `/suunnitelma/${oid}/aloituskuulutus`,
+    `/suunnitelma/${oid}/suunnittelu`,
+    `/suunnitelma/${oid}/nahtavillaolo`,
+    `/suunnitelma/${oid}/hyvaksynnassa`,
+    `/suunnitelma/${oid}/hyvaksymispaatos`,
+    `/suunnitelma/${oid}/lainvoima`,
   ];
 
   return (
@@ -94,13 +110,15 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
           <Stepper alternativeLabel activeStep={activeStep} connector={<HassuConnector />}>
             {steps.map((label, index) => (
               <Step key={label}>
-                <HassuLabel
-                  componentsProps={{ label: { style: { fontWeight: selectedStep === index ? 700 : 400 } } }}
-                  StepIconComponent={HassuStepIcon}
-                  StepIconProps={{}}
-                >
-                  {label}
-                </HassuLabel>
+                <HassuLink key={index} href={index <= activeStep ? links[index] : undefined}>
+                  <HassuLabel
+                    componentsProps={{ label: { style: { fontWeight: selectedStep === index ? 700 : 400 } } }}
+                    StepIconComponent={HassuStepIcon}
+                    StepIconProps={selectedStep === index ? { property: "selected" } : {}}
+                  >
+                    {label}
+                  </HassuLabel>
+                </HassuLink>
               </Step>
             ))}
           </Stepper>
@@ -116,13 +134,15 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
               <Stepper activeStep={activeStep} orientation="vertical" connector={<HassuConnector />}>
                 {steps.map((label, index) => (
                   <Step key={label}>
-                    <HassuLabel
-                      componentsProps={{ label: { style: { fontWeight: selectedStep === index ? 700 : 400 } } }}
-                      StepIconComponent={HassuStepIconRoot}
-                      error={true}
-                    >
-                      {label}
-                    </HassuLabel>
+                    <HassuLink key={index} href={index <= activeStep ? links[index] : undefined}>
+                      <HassuLabel
+                        componentsProps={{ label: { style: { fontWeight: selectedStep === index ? 700 : 400 } } }}
+                        StepIconComponent={HassuStepIcon}
+                        StepIconProps={selectedStep === index ? { property: "selected" } : {}}
+                      >
+                        {label}
+                      </HassuLabel>
+                    </HassuLink>
                   </Step>
                 ))}
               </Stepper>
