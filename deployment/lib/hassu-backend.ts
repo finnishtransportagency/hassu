@@ -204,8 +204,6 @@ export class HassuBackendStack extends cdk.Stack {
     }
 
     let frontendStackOutputs = await readFrontendStackOutputs();
-    let frontendPublicKeyId = frontendStackOutputs?.FrontendPublicKeyIdOutput;
-    console.log(frontendStackOutputs);
     const backendLambda = new NodejsFunction(this, "API", {
       functionName: "hassu-backend-" + Config.env,
       runtime: lambda.Runtime.NODEJS_14_X,
@@ -235,7 +233,8 @@ export class HassuBackendStack extends cdk.Stack {
       environment: {
         ...commonEnvironmentVariables,
         PERSON_SEARCH_UPDATER_LAMBDA_ARN: personSearchUpdaterLambda.functionArn,
-        FRONTEND_PUBLIC_KEY_ID: frontendPublicKeyId,
+        FRONTEND_PUBLIC_KEY_ID: frontendStackOutputs?.FrontendPublicKeyIdOutput,
+        CLOUDFRONT_DISTRIBUTION_ID: frontendStackOutputs?.CloudfrontDistributionId,
       },
       tracing: Tracing.PASS_THROUGH,
       insightsVersion: LambdaInsightsVersion.VERSION_1_0_98_0,
@@ -342,6 +341,7 @@ export class HassuBackendStack extends cdk.Stack {
   private async getCommonEnvironmentVariables(config: Config): Promise<Record<string, string>> {
     return {
       ENVIRONMENT: Config.env,
+      TZ: "Europe/Helsinki",
       ...(await getEnvironmentVariablesFromSSM()),
 
       SEARCH_DOMAIN: this.props.searchDomain.domainEndpoint,

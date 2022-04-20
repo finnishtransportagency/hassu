@@ -7,16 +7,25 @@ dayjs.extend(utc);
 dayjs.extend(tz);
 dayjs.extend(customParseFormat);
 const DEFAULT_TIMEZONE = "Europe/Helsinki";
+process.env.TZ = DEFAULT_TIMEZONE;
 dayjs.tz.setDefault(DEFAULT_TIMEZONE);
 
 export const ISO_DATE_FORMAT = "YYYY-MM-DD";
 const DATE_TIME_FORMAT = "YYYY-MM-DDTHH:mm";
 
-export function parseDate(date: string) {
+export function parseDate(date: string): Dayjs {
+  let d: Dayjs;
   if (date.length == ISO_DATE_FORMAT.length) {
-    return dayjs(date, ISO_DATE_FORMAT, true).tz(DEFAULT_TIMEZONE, true);
+    d = dayjs(date, ISO_DATE_FORMAT, true).tz(DEFAULT_TIMEZONE, true);
+    if (d.isValid()) {
+      return d;
+    }
   }
-  return dayjs(date, DATE_TIME_FORMAT, true).tz(DEFAULT_TIMEZONE, true);
+  d = dayjs(date, DATE_TIME_FORMAT, true).tz(DEFAULT_TIMEZONE, true);
+  if (d.isValid()) {
+    return d;
+  }
+  return dayjs(date).tz(DEFAULT_TIMEZONE, true);
 }
 
 export function dateToString(date: Dayjs) {

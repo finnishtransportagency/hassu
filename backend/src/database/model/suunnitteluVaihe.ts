@@ -23,8 +23,6 @@ export type Vuorovaikutus = {
   vuorovaikutusJulkaisuPaiva?: string | null;
   // yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
   kysymyksetJaPalautteetViimeistaan?: string | null;
-  // yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
-  aineistoPoistetaanNakyvista?: string | null;
   videot?: Array<Linkki> | null;
   esitettavatYhteystiedot?: Array<Yhteystieto | null> | null;
   // Lista kayttajatunnuksia

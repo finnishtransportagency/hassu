@@ -4,7 +4,12 @@ import * as AWSXRay from "aws-xray-sdk-core";
 export function produce<T>(name: string, p: () => T, override = false): T {
   const key = "produce_" + name;
   if (!(globalThis as any)[key] || override || process.env.MOCHA_WORKER_ID) {
-    (globalThis as any)[key] = AWSXRay.captureAWSClient(p() as any);
+    const client = p();
+    try {
+      (globalThis as any)[key] = AWSXRay.captureAWSClient(client as any);
+    } catch (ignore) {
+      (globalThis as any)[key] = client;
+    }
   }
   return (globalThis as any)[key];
 }
@@ -22,3 +27,6 @@ export const getS3 = (): AWS.S3 => {
 export const getSQS = (): AWS.SQS => {
   return produce<AWS.SQS>("sqs", () => new AWS.SQS({ region: "eu-west-1" }));
 };
+
+export const getCloudFront = (): AWS.CloudFront =>
+  produce<AWS.CloudFront>("cloudfront", () => new AWS.CloudFront({ region: "us-east-1" }));

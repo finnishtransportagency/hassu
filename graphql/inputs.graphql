@@ -94,10 +94,6 @@ input VuorovaikutusInput {
   yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
   """
   kysymyksetJaPalautteetViimeistaan: String
-  """
-  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
-  """
-  aineistoPoistetaanNakyvista: String
   videot: [LinkkiInput!]
   esitettavatYhteystiedot: [YhteystietoInput]
   """

@@ -114,10 +114,6 @@ type Vuorovaikutus {
   yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
   """
   kysymyksetJaPalautteetViimeistaan: String
-  """
-  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
-  """
-  aineistoPoistetaanNakyvista: String
   videot: [Linkki!]
   esitettavatYhteystiedot: [Yhteystieto]
   """
@@ -143,10 +139,6 @@ type VuorovaikutusJulkinen {
   yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
   """
   kysymyksetJaPalautteetViimeistaan: String
-  """
-  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
-  """
-  aineistoPoistetaanNakyvista: String
   videot: [Linkki!]
   vuorovaikutusYhteystiedot: [Yhteystieto!]
 

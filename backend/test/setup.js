@@ -3,13 +3,20 @@ const mocha = require("mocha");
 
 const chai = require("chai");
 
-const { jestSnapshotPlugin } = require("mocha-chai-jest-snapshot");
+const { jestSnapshotPlugin, addSerializer } = require("mocha-chai-jest-snapshot");
 const AWS = require("aws-sdk");
 chai.use(require("chai-as-promised"));
 chai.use(jestSnapshotPlugin());
 
 const dotenv = require("dotenv");
 dotenv.config({ path: ".env.test" });
+
+// Serializer for Dayjs
+const isDayjs = require("dayjs").isDayjs;
+addSerializer({
+  test: (val) => isDayjs(val),
+  print: (val) => `"${val.format()}"`,
+});
 
 process.env.USE_PINO_PRETTY = "true";
 
@@ -31,6 +38,7 @@ process.env.AWS_SECRET_ACCESS_KEY = "test";
 
 process.env.PERSON_SEARCH_UPDATER_LAMBDA_ARN = "";
 process.env.FRONTEND_DOMAIN_NAME = "localhost";
+process.env.CLOUDFRONT_DISTRIBUTION_ID = "unit-test-distribution-id";
 
 process.env.FRONTEND_PRIVATEKEY =
   "-----BEGIN RSA PRIVATE KEY-----\n" +
@@ -80,3 +88,5 @@ mocha.afterEach(() => {
   AWSXRay.getSegment()?.close();
   ns.exit(context);
 });
+
+process.setMaxListeners(50);
