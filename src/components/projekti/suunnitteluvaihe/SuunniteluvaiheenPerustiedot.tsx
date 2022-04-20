@@ -71,6 +71,10 @@ export default function SuunniteluvaiheenPerustiedot({
     formState: { errors, isDirty },
   } = useFormReturn;
 
+  const confirmPublish = () => {
+    setOpenHyvaksy(true);
+  }
+
   const saveAndPublish = async (formData: FormValues) => {
     setIsFormSubmitting(true);
     try {
@@ -234,7 +238,7 @@ export default function SuunniteluvaiheenPerustiedot({
               Tallenna luonnos
             </Button>
           )}
-          <Button primary onClick={() => setOpenHyvaksy(true)} disabled={isFormSubmitting}>
+          <Button primary onClick={handleSubmit(confirmPublish)} disabled={isFormSubmitting}>
             {julkinen ? "Tallenna ja päivitä julkaisua" : "Tallenna ja julkaise perustiedot"}
           </Button>
           <Button disabled>Nähtävilläolon kuuluttaminen</Button>
