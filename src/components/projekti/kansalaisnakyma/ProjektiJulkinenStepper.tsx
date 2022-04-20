@@ -1,13 +1,14 @@
 import React, { ReactElement } from "react";
 import { styled } from "@mui/material/styles";
 import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
+import Step, { stepClasses } from "@mui/material/Step";
 import StepLabel, { stepLabelClasses } from "@mui/material/StepLabel";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import StepConnector, { stepConnectorClasses } from "@mui/material/StepConnector";
 import { StepIconProps } from "@mui/material/StepIcon";
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
 import HassuLink from "@components/HassuLink";
+
 interface Props {
   oid: string;
   activeStep: number;
@@ -15,10 +16,20 @@ interface Props {
   vertical?: true;
 }
 export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep, vertical }: Props): ReactElement {
+  const HassuStep = styled(Step)(() => ({
+    [`&.${stepClasses.root} > a span:hover`]: {
+      textDecoration: "underline",
+      color: "#0064AF",
+    },
+  }));
+
   const HassuLabel = styled(StepLabel)(() => ({
     [`&.${stepLabelClasses.vertical}`]: {
       paddingTop: 0,
       paddingBottom: 0,
+      [`& .${stepLabelClasses.iconContainer}`]: {
+        paddingRight: "2rem",
+      },
     },
   }));
 
@@ -103,24 +114,39 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
     `/suunnitelma/${oid}/lainvoima`,
   ];
 
+  const createStep = (label: string, index: number) => {
+    return (
+      <HassuStep key={label}>
+        {index <= activeStep && (
+          <HassuLink key={index} href={links[index]}>
+            <HassuLabel
+              componentsProps={{ label: { style: { fontWeight: selectedStep === index ? 700 : 400 } } }}
+              StepIconComponent={HassuStepIcon}
+              StepIconProps={selectedStep === index ? { property: "selected" } : {}}
+            >
+              {label}
+            </HassuLabel>
+          </HassuLink>
+        )}
+        {index > activeStep && (
+          <HassuLabel
+            componentsProps={{ label: { style: { fontWeight: selectedStep === index ? 700 : 400 } } }}
+            StepIconComponent={HassuStepIcon}
+            StepIconProps={selectedStep === index ? { property: "selected" } : {}}
+          >
+            {label}
+          </HassuLabel>
+        )}
+      </HassuStep>
+    );
+  };
+
   return (
     <>
       {!vertical && (
         <div>
           <Stepper alternativeLabel activeStep={activeStep} connector={<HassuConnector />}>
-            {steps.map((label, index) => (
-              <Step key={label}>
-                <HassuLink key={index} href={index <= activeStep ? links[index] : undefined}>
-                  <HassuLabel
-                    componentsProps={{ label: { style: { fontWeight: selectedStep === index ? 700 : 400 } } }}
-                    StepIconComponent={HassuStepIcon}
-                    StepIconProps={selectedStep === index ? { property: "selected" } : {}}
-                  >
-                    {label}
-                  </HassuLabel>
-                </HassuLink>
-              </Step>
-            ))}
+            {steps.map((label, index) => createStep(label, index))}
           </Stepper>
         </div>
       )}
@@ -132,19 +158,7 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
             </AccordionSummary>
             <AccordionDetails sx={{ padding: "1rem", borderTop: "1px grey solid" }}>
               <Stepper activeStep={activeStep} orientation="vertical" connector={<HassuConnector />}>
-                {steps.map((label, index) => (
-                  <Step key={label}>
-                    <HassuLink key={index} href={index <= activeStep ? links[index] : undefined}>
-                      <HassuLabel
-                        componentsProps={{ label: { style: { fontWeight: selectedStep === index ? 700 : 400 } } }}
-                        StepIconComponent={HassuStepIcon}
-                        StepIconProps={selectedStep === index ? { property: "selected" } : {}}
-                      >
-                        {label}
-                      </HassuLabel>
-                    </HassuLink>
-                  </Step>
-                ))}
+                {steps.map((label, index) => createStep(label, index))}
               </Stepper>
             </AccordionDetails>
           </Accordion>
