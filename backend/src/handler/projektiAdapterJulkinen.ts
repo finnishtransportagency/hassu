@@ -158,11 +158,12 @@ class ProjektiAdapterJulkinen {
   }
 
   private static adaptSuunnitteluVaihe(dbProjekti: DBProjekti): API.SuunnitteluVaiheJulkinen {
-    const { hankkeenKuvaus, arvioSeuraavanVaiheenAlkamisesta } = dbProjekti.suunnitteluVaihe;
+    const { hankkeenKuvaus, arvioSeuraavanVaiheenAlkamisesta, suunnittelunEteneminenJaKesto } = dbProjekti.suunnitteluVaihe;
     return {
       __typename: "SuunnitteluVaiheJulkinen",
       hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
       arvioSeuraavanVaiheenAlkamisesta,
+      suunnittelunEteneminenJaKesto,
       vuorovaikutukset: adaptVuorovaikutukset(dbProjekti),
     };
   }

@@ -17,6 +17,9 @@ import HassuSpinner from "@components/HassuSpinner";
 import { removeTypeName } from "src/util/removeTypeName";
 import { KeyedMutator } from "swr";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import HassuStack from "@components/layout/HassuStack";
+import HassuDialog from "@components/HassuDialog";
+import WindowCloseButton from "@components/button/WindowCloseButton";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -26,7 +29,7 @@ type RequiredProjektiFields = Required<{
 type FormValues = RequiredProjektiFields & {
   suunnitteluVaihe: Pick<
     SuunnitteluVaiheInput,
-    "hankkeenKuvaus" | "arvioSeuraavanVaiheenAlkamisesta" | "suunnittelunEteneminenJaKesto"
+    "hankkeenKuvaus" | "arvioSeuraavanVaiheenAlkamisesta" | "suunnittelunEteneminenJaKesto" | "julkinen"
   >;
 };
 
@@ -43,6 +46,7 @@ export default function SuunniteluvaiheenPerustiedot({
 }: Props): ReactElement {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const [openHyvaksy, setOpenHyvaksy] = useState(false);
 
   const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(suunnittelunPerustiedotSchema, { abortEarly: false, recursive: true }),
@@ -67,6 +71,24 @@ export default function SuunniteluvaiheenPerustiedot({
     formState: { errors, isDirty },
   } = useFormReturn;
 
+  const confirmPublish = () => {
+    setOpenHyvaksy(true);
+  }
+
+  const saveAndPublish = async (formData: FormValues) => {
+    setIsFormSubmitting(true);
+    try {
+      formData.suunnitteluVaihe.julkinen = true;
+      await saveSunnitteluvaihe(formData);
+      showSuccessMessage("Tallennus ja julkaisu onnistui");
+    } catch (e) {
+      log.error("OnSubmit Error", e);
+      showErrorMessage("Tallennuksessa tapahtui virhe");
+    }
+    setIsFormSubmitting(false);
+    setOpenHyvaksy(false);
+  };
+
   const saveDraft = async (formData: FormValues) => {
     setIsFormSubmitting(true);
     try {
@@ -80,10 +102,11 @@ export default function SuunniteluvaiheenPerustiedot({
   };
 
   const saveSunnitteluvaihe = async (formData: FormValues) => {
-    setIsFormSubmitting(true);
     await api.tallennaProjekti(formData);
     if (reloadProjekti) await reloadProjekti();
   };
+
+  console.log(errors);
 
   useEffect(() => {
     isDirtyHandler(isDirty);
@@ -97,6 +120,7 @@ export default function SuunniteluvaiheenPerustiedot({
           arvioSeuraavanVaiheenAlkamisesta: projekti.suunnitteluVaihe?.arvioSeuraavanVaiheenAlkamisesta,
           suunnittelunEteneminenJaKesto: projekti.suunnitteluVaihe?.suunnittelunEteneminenJaKesto,
           hankkeenKuvaus: removeTypeName(projekti.suunnitteluVaihe?.hankkeenKuvaus),
+          julkinen: projekti.suunnitteluVaihe?.julkinen,
         },
       };
       reset(tallentamisTiedot);
@@ -110,9 +134,17 @@ export default function SuunniteluvaiheenPerustiedot({
   const kielitiedot = projekti.kielitiedot;
   const ensisijainenKieli = projekti.kielitiedot ? projekti.kielitiedot.ensisijainenKieli : Kieli.SUOMI;
   const toissijainenKieli = kielitiedot?.toissijainenKieli;
+  const julkinen = projekti.suunnitteluVaihe?.julkinen;
 
   return (
     <>
+      {julkinen && (
+        <Notification type={NotificationType.INFO_GREEN}>
+          Suunnitteluvaiheen perustiedot on julkaistu palvelun julkisella puolella. Voit muokata kuvausta, sekä tietoja
+          etenemisestä ja kestosta. Muutokset päivittyvät palvelun julkiselle puolella Tallenna ja päivitä -painikkeen
+          painamisen jälkeen.
+        </Notification>
+      )}
       <FormProvider {...useFormReturn}>
         <form>
           <Section>
@@ -124,10 +156,12 @@ export default function SuunniteluvaiheenPerustiedot({
                 vaikutukset ja toimenpiteet pääpiirteittäin karkealla tasolla. Älä lisää tekstiin linkkejä.
               </p>
             </SectionContent>
-            <Notification type={NotificationType.INFO_GRAY}>
-              Tiivistetty hankkeen sisälönkuvaus on noudettu aloituskuulutuvaiheesta. Voit muokata kuvausta. Muutokset
-              päivittyvät palvelun julkiselle puolella Tallenna ja julkaise -painikkeen painamisen jälkeen.
-            </Notification>
+            {!julkinen && (
+              <Notification type={NotificationType.INFO_GRAY}>
+                Tiivistetty hankkeen sisälönkuvaus on noudettu aloituskuulutuvaiheesta. Voit muokata kuvausta. Muutokset
+                tulevat näkyviin palvelun julkiselle puolella Tallenna ja julkaise -painikkeen painamisen jälkeen.
+              </Notification>
+            )}
 
             <Textarea
               label={`Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (${lowerCase(
@@ -194,23 +228,70 @@ export default function SuunniteluvaiheenPerustiedot({
               </p>
             </SectionContent>
           </Section>
+          <input type="hidden" {...register("suunnitteluVaihe.julkinen")} />
         </form>
       </FormProvider>
       <Section noDivider>
         <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
-          <Button onClick={handleSubmit(saveDraft)}>Tallenna luonnos</Button>
-          <Button
-            primary
-            onClick={() => {
-              console.log("tallenna ja julkaise");
-            }}
-            disabled
-          >
-            Tallenna ja julkaise perustiedot
+          {!julkinen && (
+            <Button onClick={handleSubmit(saveDraft)} disabled={isFormSubmitting}>
+              Tallenna luonnos
+            </Button>
+          )}
+          <Button primary onClick={handleSubmit(confirmPublish)} disabled={isFormSubmitting}>
+            {julkinen ? "Tallenna ja päivitä julkaisua" : "Tallenna ja julkaise perustiedot"}
           </Button>
           <Button disabled>Nähtävilläolon kuuluttaminen</Button>
         </Stack>
       </Section>
+      <div>
+        <HassuDialog open={openHyvaksy} onClose={() => setOpenHyvaksy(false)}>
+          <Section noDivider smallGaps>
+            <SectionContent>
+              <div className="vayla-dialog-title flex">
+                <div className="flex-grow">Suunnitteluvaiheen perustietojen julkaisu</div>
+                <div className="justify-end">
+                  <WindowCloseButton onClick={() => setOpenHyvaksy(false)}></WindowCloseButton>
+                </div>
+              </div>
+            </SectionContent>
+            <SectionContent>
+              <div className="vayla-dialog-content">
+                <form>
+                  <p>Olet julkaisemassa suunnitteluvaiheen perustiedot kansalaispuolelle.</p>
+                  <div className="content">
+                    <p>
+                      Jos perustietoihin pitää tehdä muutoksia julkaisun jälkeen, tulee perustiedot avata uudelleen ja
+                      tehdä tallennus ja julkaisun päivitys.
+                    </p>
+                    <p>
+                      Klikkaamalla Hyväksy ja julkaise -painiketta vahvistat perustiedot tarkastetuksi ja hyväksyt sen
+                      julkaisun.
+                    </p>
+                  </div>
+                  <HassuStack
+                    direction={["column", "column", "row"]}
+                    justifyContent={[undefined, undefined, "flex-end"]}
+                    paddingTop={"1rem"}
+                  >
+                    <Button primary onClick={handleSubmit(saveAndPublish)}>
+                      Hyväksy ja julkaise
+                    </Button>
+                    <Button
+                      onClick={(e) => {
+                        setOpenHyvaksy(false);
+                        e.preventDefault();
+                      }}
+                    >
+                      Peruuta
+                    </Button>
+                  </HassuStack>
+                </form>
+              </div>
+            </SectionContent>
+          </Section>
+        </HassuDialog>
+      </div>
       <HassuSpinner open={isFormSubmitting} />
     </>
   );

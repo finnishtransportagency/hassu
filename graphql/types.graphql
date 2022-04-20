@@ -95,7 +95,7 @@ type SuunnitteluVaihe {
 type SuunnitteluVaiheJulkinen {
   hankkeenKuvaus: HankkeenKuvaukset
   arvioSeuraavanVaiheenAlkamisesta: String
-
+  suunnittelunEteneminenJaKesto: String
   vuorovaikutukset: [VuorovaikutusJulkinen!]
 }
 

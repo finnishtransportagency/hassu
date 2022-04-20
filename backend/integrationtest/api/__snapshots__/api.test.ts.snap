@@ -13,6 +13,7 @@ Object {
     },
     "julkinen": undefined,
     "palautteet": undefined,
+    "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
     "vuorovaikutukset": Array [],
   },
 }
@@ -31,6 +32,7 @@ Object {
     },
     "julkinen": undefined,
     "palautteet": undefined,
+    "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
     "vuorovaikutukset": Array [
       Object {
         "__typename": "Vuorovaikutus",
@@ -604,6 +606,7 @@ Object {
       "SUOMI": "Lorem Ipsum suunnitteluvaihe",
       "__typename": "HankkeenKuvaukset",
     },
+    "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
     "vuorovaikutukset": Array [
       Object {
         "__typename": "VuorovaikutusJulkinen",

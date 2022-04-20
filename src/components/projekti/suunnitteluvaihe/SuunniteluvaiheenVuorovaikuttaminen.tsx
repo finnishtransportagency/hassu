@@ -123,7 +123,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
         <form>
           <Section>
             <SectionContent largeGaps>
-              <h4 className="vayla-title">Vuorovaikuttaminen</h4>
+              <h5 className="vayla-small-title">Vuorovaikuttaminen</h5>
               <p>
                 Kansalainen pääsee vaikuttamaan väylähankkeen tai väylän suunnitteluun siinä vaiheessa. kun tehdään
                 yleissuunnitelmaa ja kun edetään tie- tai ratasuunnitelmaan. Kaikista suunnittelun vaiheista kuulutetaan
@@ -157,7 +157,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
           <Section>
             <h5 className="vayla-small-title">Vuorovaikutusmahdollisuudet palautteiden ja kysymyksien lisäksi</h5>
             <SectionContent>
-              <Button type="submit" onClick={() => console.log("tilaisuuden lisäys")}>
+              <Button type="submit" onClick={() => console.log("tilaisuuden lisäys")} disabled>
                 Lisää tilaisuus
               </Button>
             </SectionContent>
@@ -197,10 +197,10 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
             <h5 className="vayla-small-title">Kutsun ja ilmoituksen esikatselu</h5>
             <SectionContent>
               <HassuStack direction={["column", "column", "row"]}>
-                <Button type="submit" onClick={() => console.log("kutsun esikatselu")}>
+                <Button type="submit" onClick={() => console.log("kutsun esikatselu")} disabled>
                   Kutsun esikatselu
                 </Button>
-                <Button type="submit" onClick={() => console.log("ilmoituksen esikatselu")}>
+                <Button type="submit" onClick={() => console.log("ilmoituksen esikatselu")} disabled>
                   Ilmoituksen esikatselu
                 </Button>
               </HassuStack>

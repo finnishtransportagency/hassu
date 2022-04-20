@@ -112,7 +112,13 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
   return (
     <ProjektiPageLayout title="Suunnittelu">
       <Section noDivider>
-        <Tabs defaultValue={1} value={currentTab} onChange={handleChange} tabs={createVuorovaikutusTabs()} />
+        <Tabs
+          tabStyle={"Underlined"}
+          defaultValue={1}
+          value={currentTab}
+          onChange={handleChange}
+          tabs={createVuorovaikutusTabs()}
+        />
       </Section>
       <div>
         <HassuDialog open={open} onClose={handleClickClose}>

@@ -207,10 +207,11 @@ function adaptSuunnitteluVaihe(
   palautteet: Array<Palaute>
 ): API.SuunnitteluVaihe {
   if (suunnitteluVaihe) {
-    const { julkinen, arvioSeuraavanVaiheenAlkamisesta } = suunnitteluVaihe;
+    const { julkinen, arvioSeuraavanVaiheenAlkamisesta, suunnittelunEteneminenJaKesto } = suunnitteluVaihe;
     return {
       julkinen,
       arvioSeuraavanVaiheenAlkamisesta,
+      suunnittelunEteneminenJaKesto,
       hankkeenKuvaus: suunnitteluVaihe.hankkeenKuvaus
         ? adaptHankkeenKuvaus(suunnitteluVaihe.hankkeenKuvaus)
         : undefined,
