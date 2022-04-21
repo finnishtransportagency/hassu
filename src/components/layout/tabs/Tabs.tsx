@@ -21,7 +21,7 @@ export type TabStyle = keyof typeof TabStyle;
 
 interface Tabs {
   label: string;
-  content: string | ReactNode;
+  content?: string | ReactNode;
   value?: string | number;
 }
 
@@ -52,15 +52,12 @@ export default function TabbedContent(props: Props) {
   );
 }
 
-const TabPanel = styled(TabPanelUnstyled, { shouldForwardProp: isPropValid })(
-  sx({
-    marginTop: 7,
-  })
-);
+const TabPanel = styled(TabPanelUnstyled, { shouldForwardProp: isPropValid })(sx({}));
 
 const TabsList = styled(TabsListUnstyled, { shouldForwardProp: isPropValid })(
   sx({
     borderBottom: "2px solid #E6E6E6",
+    marginBottom: 7,
   })
 );
 

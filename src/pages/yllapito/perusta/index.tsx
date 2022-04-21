@@ -12,8 +12,8 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import useTranslation from "next-translate/useTranslation";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import Table from "@components/Table";
 import HassuSpinner from "@components/HassuSpinner";
+import Table from "@components/Table";
 
 interface SearchInput {
   name: string;
@@ -145,20 +145,23 @@ export default function Perusta(props: Props) {
             </div>
           </Notification>
           {(Array.isArray(hakuTulos) && hakuTulos.length > 0) || isLoading ? (
-            <Table
-              cols={[
-                { header: "Asiatunnus", data: (projekti) => projekti.asianumero, fraction: 3 },
-                { header: "Nimi", data: (projekti) => projekti.nimi, fraction: 6 },
-                {
-                  header: "Tyyppi",
-                  data: (projekti) => projekti.tyyppi && t(`projekti:projekti-tyyppi.${projekti.tyyppi}`),
-                  fraction: 2,
-                },
-                { header: "Projektipäällikkö", data: (projekti) => projekti.projektiPaallikko, fraction: 3 },
-              ]}
-              rows={hakuTulos || []}
-              isLoading={isLoading}
-              rowLink={(projekti) => `/yllapito/perusta/${projekti?.oid}`}
+            <Table<VelhoHakuTulos>
+              tableOptions={{
+                data: hakuTulos || [],
+                columns: [
+                  { Header: "Asiatunnus", accessor: "asianumero" },
+                  { Header: "Nimi", accessor: "nimi", minWidth: 400 },
+                  {
+                    Header: "Tyyppi",
+                    accessor: (projekti) => projekti.tyyppi && t(`projekti:projekti-tyyppi.${projekti.tyyppi}`),
+                    minWidth: 100,
+                  },
+                  { Header: "Projektipäällikkö", accessor: "projektiPaallikko" },
+                  { Header: "oid", accessor: "oid" },
+                ],
+                initialState: { hiddenColumns: ["oid"] },
+              }}
+              rowLink={(projekti) => `/yllapito/perusta/${encodeURIComponent(projekti.oid)}`}
             />
           ) : (
             !isLoading && (

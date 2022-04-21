@@ -1,150 +1,192 @@
-import React, { ReactElement, ReactNode, Fragment } from "react";
+import React, { useEffect } from "react";
+import {
+  useTable,
+  usePagination as usePaginationHook,
+  CellProps,
+  TableOptions,
+  PluginHook,
+  useFlexLayout,
+} from "react-table";
 import { styled, experimental_sx as sx } from "@mui/material";
 import Link from "next/link";
+import Pagination from "@mui/material/Pagination";
+import SectionContent from "@components/layout/SectionContent";
+import { breakpoints } from "@pages/_app";
+import useMediaQuery from "../hooks/useMediaQuery";
 
-interface ColumnData<T> {
-  header: string;
-  data: (rowData: T) => string | ReactNode | undefined;
-  fraction?: number;
-}
-
-interface Props<T> {
-  isLoading?: boolean;
-  cols: ColumnData<T>[];
-  rows: T[];
+interface PaginationControlledProps<T extends object> {
   rowLink?: (rowData: T) => string;
+  tableOptions: TableOptions<T>;
+  onPageChange?: (props: { pageSize: number; pageIndex: number }) => void | Promise<void>;
+  gotoPage?: (updater: number) => void;
+  usePagination?: boolean;
 }
 
-export default function Table<T extends unknown>({ isLoading, rows, cols, rowLink }: Props<T>): ReactElement {
-  const colFractions = cols.reduce((acc, col) => acc + (col.fraction || 1), 0);
+// Let's add a fetchData method to our Table component that will be used to fetch
+// new data when pagination state changes
+// We can also add a loading state to let our table know it's loading new data
+export function Table<T extends object>({
+  tableOptions,
+  onPageChange,
+  gotoPage: controlledGotoPage,
+  rowLink,
+  usePagination,
+}: PaginationControlledProps<T>) {
+  const defaultTableOptions: Partial<TableOptions<T>> = {
+    defaultColumn: { Cell: ({ value }: CellProps<T>) => value || "-" },
+  };
+
+  const tableHooks: PluginHook<T>[] = [useFlexLayout];
+
+  if (usePagination) {
+    tableHooks.push(usePaginationHook);
+  }
+
+  const {
+    getTableProps,
+    headerGroups,
+    prepareRow,
+    page,
+    rows,
+    pageCount,
+    gotoPage: uncontrolledGotoPage,
+    // Get the state from the instance
+    state: { pageIndex, pageSize },
+  } = useTable<T>({ ...defaultTableOptions, ...tableOptions }, ...tableHooks);
+
+  // const colFractions = tableOptions.columns.reduce((acc, col) => acc + (col.fraction || 1), 0);
+
+  useEffect(() => {
+    onPageChange?.({ pageSize, pageIndex });
+  }, [onPageChange, pageSize, pageIndex]);
+
+  const gotoPage = controlledGotoPage || uncontrolledGotoPage;
+
+  const data = usePagination ? page : rows;
+
+  const isMedium = useMediaQuery(`(min-width: ${breakpoints.values?.md}px)`);
+
+  // Render the UI for your table
   return (
-    <div style={{ overflowX: "auto", width: "100%" }}>
-      <StyledTable>
-        <ColGroup>
-          {cols.map(({ fraction }, index) => (
-            <Col key={index} sx={{ width: `calc(100% / ${colFractions} * ${fraction})` }} />
-          ))}
-        </ColGroup>
-        <Thead>
-          <Tr>
-            {cols.map(({ header }, index) => (
-              <HeaderCell key={index}>{header}</HeaderCell>
-            ))}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {isLoading
-            ? Array.from({ length: 3 }, (_, index) => (
-                <BodyTr key={index}>
-                  {cols.map(({ header }, index) => (
-                    <Fragment key={index}>
-                      <BodyHeaderCell>{header}</BodyHeaderCell>
-                      <DataCell>
-                        <div className="bg-gray h-4 min-w-xs md:w-full rounded-md mr-0 my-1 align-middle" />
-                      </DataCell>
-                    </Fragment>
-                  ))}
-                </BodyTr>
-              ))
-            : rows.map((row, index) =>
-                rowLink ? (
-                  <Link key={index} passHref href={rowLink(row)}>
-                    <BodyTr as="a">
-                      {cols.map(({ data, header }, index) => (
-                        <Fragment key={index}>
-                          <BodyHeaderCell>{header}</BodyHeaderCell>
-                          <DataCell>{data(row) || "-"}</DataCell>
-                        </Fragment>
-                      ))}
-                    </BodyTr>
-                  </Link>
-                ) : (
-                  <BodyTr key={index}>
-                    {cols.map(({ data, header }, index) => (
-                      <Fragment key={index}>
-                        <BodyHeaderCell>{header}</BodyHeaderCell>
-                        <DataCell>{data(row) || "-"}</DataCell>
-                      </Fragment>
-                    ))}
-                  </BodyTr>
-                )
-              )}
-        </Tbody>
+    <SectionContent largeGaps>
+      {usePagination && (
+        <Pagination
+          count={pageCount}
+          page={pageIndex + 1}
+          onChange={(_, pageIndex) => gotoPage(pageIndex - 1)}
+          showFirstButton
+          showLastButton
+          color="primary"
+          sx={{
+            ".MuiPagination-ul": { justifyContent: "flex-end" },
+          }}
+        />
+      )}
+      <StyledTable {...getTableProps({ style: { minWidth: "100%" } })}>
+        {headerGroups.map((headerGroup) => {
+          const { key: headerGroupKey, ...headerGroupProps } = headerGroup.getHeaderGroupProps();
+          return (
+            <Tr {...headerGroupProps} key={headerGroupKey}>
+              {headerGroup.headers.map((column) => {
+                const { key: headerKey, style, ...headerProps } = column.getHeaderProps();
+                return (
+                  <HeaderCell {...headerProps} style={isMedium ? style : { display: "none" }} key={headerKey}>
+                    {column.render("Header")}
+                    <span>{column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : ""}</span>
+                  </HeaderCell>
+                );
+              })}
+            </Tr>
+          );
+        })}
+        {data.map((row) => {
+          prepareRow(row);
+          const { key: rowKey, style: rowStyle, ...rowProps } = row.getRowProps();
+          return rowLink ? (
+            <Link key={rowKey} passHref href={rowLink(row.values as any)}>
+              <BodyTr as="a" style={isMedium ? rowStyle : undefined} {...rowProps}>
+                {row.cells.map((cell) => {
+                  const { key: cellKey, style: cellStyle, ...cellProps } = cell.getCellProps();
+                  return (
+                    <DataCell {...cellProps} style={isMedium ? cellStyle : undefined} key={cellKey}>
+                      <BodyHeaderCell {...cell.column.getHeaderProps()}>{cell.column.render("Header")}</BodyHeaderCell>
+                      {cell.render("Cell")}
+                    </DataCell>
+                  );
+                })}
+              </BodyTr>
+            </Link>
+          ) : (
+            <BodyTr {...rowProps} style={isMedium ? rowStyle : undefined} key={rowKey}>
+              {row.cells.map((cell) => {
+                const { key: cellKey, style: cellStyle, ...cellProps } = cell.getCellProps();
+                return (
+                  <DataCell {...cellProps} style={isMedium ? cellStyle : undefined} key={cellKey}>
+                    <BodyHeaderCell {...cell.column.getHeaderProps()}>{cell.column.render("Header")}</BodyHeaderCell>
+                    {cell.render("Cell")}
+                  </DataCell>
+                );
+              })}
+            </BodyTr>
+          );
+        })}
       </StyledTable>
-    </div>
+      {usePagination && (
+        <Pagination
+          count={pageCount}
+          page={pageIndex + 1}
+          onChange={(_, pageIndex) => gotoPage(pageIndex - 1)}
+          showFirstButton
+          showLastButton
+          color="primary"
+          sx={{
+            ".MuiPagination-ul": { justifyContent: "flex-end" },
+          }}
+        />
+      )}
+    </SectionContent>
   );
 }
 
-const ColGroup = styled("div")(
-  sx({
-    display: "table-column-group",
-  })
-);
-
-const Col = styled("div")(
-  sx({
-    display: "table-column",
-    minWidth: "110px",
-    maxWidth: "500px",
-  })
-);
+export default Table;
 
 const StyledTable = styled("div")(
   sx({
-    backgroundColor: "#FFFFFF",
-    display: { xs: "block", md: "table" },
-    tableLayout: "fixed",
-    minWidth: "100%",
+    display: "block",
+    backgroundColor: "#ffffff",
+    overflowX: { md: "auto" },
     wordBreak: "normal",
     overflowWrap: "normal",
   })
 );
 
-const Thead = styled("div")(
-  sx({
-    display: { xs: "none", md: "table-header-group" },
-  })
-);
-
 const Tr = styled("div")(
   sx({
-    display: { xs: "block", md: "table-row" },
+    paddingLeft: 4,
+    paddingRight: 4,
+    columnGap: 4,
+    rowGap: 2,
+    minWidth: "fit-content !important",
   })
 );
 
 const BodyTr = styled(Tr)(
   sx({
+    display: "flex",
+    flexDirection: { xs: "column", md: "row" },
     ":nth-of-type(odd)": {
-      backgroundColor: "#F8F8F8",
+      backgroundColor: "#f8f8f8",
     },
-    borderBottomWidth: { xs: "2px", md: undefined },
-    borderBottomColor: { xs: "#49c2f1", md: undefined },
-    borderBottomStyle: { xs: "solid", md: undefined },
     paddingTop: { xs: 4, md: 7.5 },
     paddingBottom: { xs: 4, md: 7.5 },
-    paddingLeft: { xs: 4, md: undefined },
-    paddingRight: { xs: 4, md: undefined },
+    minHeight: "85px",
+    borderBottomWidth: "2px",
+    borderBottomColor: "#49c2f1",
+    borderBottomStyle: "solid",
   })
 );
 
-const Tbody = styled("div")(
-  sx({
-    display: { xs: "block", md: "table-row-group" },
-  })
-);
-
-const Cell = styled("div")(
-  sx({
-    display: { xs: "block", md: "table-cell" },
-    paddingLeft: { md: 4 },
-    ":first-of-type": {
-      paddingLeft: { md: 4 },
-    },
-    ":last-of-type": {
-      paddingRight: { md: 4 },
-    },
-  })
-);
+const Cell = styled("div")(sx({}));
 
 const HeaderCell = styled(Cell)(
   sx({
@@ -157,19 +199,10 @@ const BodyHeaderCell = styled(Cell)(
   sx({
     display: { xs: "block", md: "none" },
     fontWeight: 700,
+    "& > * + *": {
+      paddingTop: 2,
+    },
   })
 );
 
-const DataCell = styled(Cell)(
-  sx({
-    borderBottomWidth: { md: "2px" },
-    borderBottomColor: { md: "#49c2f1" },
-    borderBottomStyle: { md: "solid" },
-    paddingTop: { md: 7.5 },
-    paddingBottom: { xs: 2, md: 7.5 },
-    ":last-of-type": {
-      paddingBottom: { xs: 0 },
-    },
-    height: { md: "85px" },
-  })
-);
+const DataCell = styled(Cell)(sx({}));

@@ -15,10 +15,6 @@ import {
 } from "../../../common/graphql/apiModel";
 import { getVaylaUser } from "../user";
 
-function makeZeroBased(pageNumber: number) {
-  return Math.max(0, pageNumber - 1);
-}
-
 const projektiSarakeToField: Record<ProjektiSarake, string> = {
   ASIATUNNUS: "asiatunnus.keyword",
   NIMI: "nimi.keyword",
@@ -117,7 +113,7 @@ class ProjektiSearchService {
     const resultsPromise = openSearchClient.query({
       query: ProjektiSearchService.buildQuery(queries, { term: { "projektiTyyppi.keyword": projektiTyyppi } }),
       size: pageSize,
-      from: makeZeroBased(pageNumber) * pageSize,
+      from: pageSize * pageNumber,
       sort: ProjektiSearchService.adaptSort(params.jarjestysSarake, params.jarjestysKasvava),
     });
 

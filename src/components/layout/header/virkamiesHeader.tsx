@@ -5,7 +5,7 @@ import { HeaderProps } from "./header";
 import ButtonLink from "@components/button/ButtonLink";
 
 import useTranslation from "next-translate/useTranslation";
-import useCurrentUser from "src/hooks/useCurrentUser";
+import useCurrentUser from "../../../hooks/useCurrentUser";
 import { Container } from "@mui/material";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
