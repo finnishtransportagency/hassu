@@ -282,7 +282,7 @@ const VirkamiesHomePage = () => {
             tableOptions={{
               data: hakutulos?.tulokset || [],
               columns: [
-                { Header: "Nimi", accessor: "nimi" },
+                { Header: "Nimi", accessor: "nimi", minWidth: 400 },
                 { Header: "Asiatunnus", accessor: "asiatunnus" },
                 { Header: "Projektipäällikkö", accessor: "projektipaallikko" },
                 {
@@ -294,10 +294,12 @@ const VirkamiesHomePage = () => {
                 {
                   Header: "Vaihe",
                   accessor: (projekti) => projekti.vaihe && t(`projekti:projekti-status.${projekti.vaihe}`),
+                  minWidth: 100,
                 },
                 {
                   Header: "Päivitetty",
                   accessor: (projekti) => projekti.paivitetty && formatDate(projekti.paivitetty),
+                  minWidth: 100,
                 },
                 { Header: "oid", accessor: "oid" },
               ],

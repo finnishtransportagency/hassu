@@ -12,13 +12,13 @@ import "../font-awesome-init";
 import useTranslation from "next-translate/useTranslation";
 import I18nProvider from "next-translate/I18nProvider";
 
-import commonFI from "src/locales/fi/common.json";
-import commonSV from "src/locales/sv/common.json";
+import commonFI from "../locales/fi/common.json";
+import commonSV from "../locales/sv/common.json";
 import { SnackbarProvider } from "@components/HassuSnackbarProvider";
 import { SWRConfig } from "swr";
 import { BreakpointsOptions, createTheme, ThemeProvider } from "@mui/material/styles";
 
-const breakpoints: BreakpointsOptions = {
+export const breakpoints: BreakpointsOptions = {
   values: {
     xs: 0,
     sm: 640,
@@ -29,7 +29,19 @@ const breakpoints: BreakpointsOptions = {
 };
 
 const defaultTheme = createTheme({ breakpoints });
-const theme = createTheme({
+export const theme = createTheme({
+  palette: {
+    primary: {
+      contrastText: "#ffffff",
+      dark: "#0064af",
+      main: "#0099ff",
+      light: "#49c2f1",
+    },
+    text: {
+      primary: "#242222",
+    },
+  },
+  typography: { fontFamily: '"Exo 2"' },
   spacing: (factor: number) => `${0.25 * factor}rem`,
   breakpoints,
   components: {

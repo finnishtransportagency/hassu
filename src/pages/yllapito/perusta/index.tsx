@@ -150,10 +150,11 @@ export default function Perusta(props: Props) {
                 data: hakuTulos || [],
                 columns: [
                   { Header: "Asiatunnus", accessor: "asianumero" },
-                  { Header: "Nimi", accessor: "nimi" },
+                  { Header: "Nimi", accessor: "nimi", minWidth: 400 },
                   {
                     Header: "Tyyppi",
                     accessor: (projekti) => projekti.tyyppi && t(`projekti:projekti-tyyppi.${projekti.tyyppi}`),
+                    minWidth: 100,
                   },
                   { Header: "Projektipäällikkö", accessor: "projektiPaallikko" },
                   { Header: "oid", accessor: "oid" },
