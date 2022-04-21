@@ -106,8 +106,6 @@ export default function SuunniteluvaiheenPerustiedot({
     if (reloadProjekti) await reloadProjekti();
   };
 
-  console.log(errors);
-
   useEffect(() => {
     isDirtyHandler(isDirty);
   }, [isDirty, isDirtyHandler]);
