@@ -6,6 +6,7 @@ import {
   TableOptions,
   PluginHook,
   useFlexLayout,
+  useSortBy as useSortByHook,
 } from "react-table";
 import { styled, experimental_sx as sx } from "@mui/material";
 import Link from "next/link";
@@ -20,6 +21,7 @@ interface PaginationControlledProps<T extends object> {
   onPageChange?: (props: { pageSize: number; pageIndex: number }) => void | Promise<void>;
   gotoPage?: (updater: number) => void;
   usePagination?: boolean;
+  useSortBy?: boolean;
 }
 
 // Let's add a fetchData method to our Table component that will be used to fetch
@@ -31,12 +33,17 @@ export function Table<T extends object>({
   gotoPage: controlledGotoPage,
   rowLink,
   usePagination,
+  useSortBy,
 }: PaginationControlledProps<T>) {
   const defaultTableOptions: Partial<TableOptions<T>> = {
     defaultColumn: { Cell: ({ value }: CellProps<T>) => value || "-" },
   };
 
   const tableHooks: PluginHook<T>[] = [useFlexLayout];
+
+  if (useSortBy) {
+    tableHooks.push(useSortByHook);
+  }
 
   if (usePagination) {
     tableHooks.push(usePaginationHook);
@@ -53,8 +60,6 @@ export function Table<T extends object>({
     // Get the state from the instance
     state: { pageIndex, pageSize },
   } = useTable<T>({ ...defaultTableOptions, ...tableOptions }, ...tableHooks);
-
-  // const colFractions = tableOptions.columns.reduce((acc, col) => acc + (col.fraction || 1), 0);
 
   useEffect(() => {
     onPageChange?.({ pageSize, pageIndex });
@@ -88,7 +93,11 @@ export function Table<T extends object>({
           return (
             <Tr {...headerGroupProps} key={headerGroupKey}>
               {headerGroup.headers.map((column) => {
-                const { key: headerKey, style, ...headerProps } = column.getHeaderProps();
+                const {
+                  key: headerKey,
+                  style,
+                  ...headerProps
+                } = column.getHeaderProps(useSortBy ? column.getSortByToggleProps() : undefined);
                 return (
                   <HeaderCell {...headerProps} style={isMedium ? style : { display: "none" }} key={headerKey}>
                     {column.render("Header")}
@@ -107,9 +116,12 @@ export function Table<T extends object>({
               <BodyTr as="a" style={isMedium ? rowStyle : undefined} {...rowProps}>
                 {row.cells.map((cell) => {
                   const { key: cellKey, style: cellStyle, ...cellProps } = cell.getCellProps();
+                  const { style: headerStyles, ...headerProps } = cell.column.getHeaderProps();
                   return (
                     <DataCell {...cellProps} style={isMedium ? cellStyle : undefined} key={cellKey}>
-                      <BodyHeaderCell {...cell.column.getHeaderProps()}>{cell.column.render("Header")}</BodyHeaderCell>
+                      <BodyHeaderCell {...headerProps} style={isMedium ? headerStyles : undefined}>
+                        {cell.column.render("Header")}
+                      </BodyHeaderCell>
                       {cell.render("Cell")}
                     </DataCell>
                   );
@@ -120,9 +132,12 @@ export function Table<T extends object>({
             <BodyTr {...rowProps} style={isMedium ? rowStyle : undefined} key={rowKey}>
               {row.cells.map((cell) => {
                 const { key: cellKey, style: cellStyle, ...cellProps } = cell.getCellProps();
+                const { style: headerStyles, ...headerProps } = cell.column.getHeaderProps();
                 return (
                   <DataCell {...cellProps} style={isMedium ? cellStyle : undefined} key={cellKey}>
-                    <BodyHeaderCell {...cell.column.getHeaderProps()}>{cell.column.render("Header")}</BodyHeaderCell>
+                    <BodyHeaderCell {...headerProps} style={isMedium ? headerStyles : undefined}>
+                      {cell.column.render("Header")}
+                    </BodyHeaderCell>
                     {cell.render("Cell")}
                   </DataCell>
                 );
@@ -155,8 +170,6 @@ const StyledTable = styled("div")(
     display: "block",
     backgroundColor: "#ffffff",
     overflowX: { md: "auto" },
-    wordBreak: "normal",
-    overflowWrap: "normal",
   })
 );
 

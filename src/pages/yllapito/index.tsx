@@ -320,6 +320,7 @@ const VirkamiesHomePage = () => {
             }}
             rowLink={(projekti) => `/yllapito/projekti/${encodeURIComponent(projekti.oid)}`}
             usePagination
+            useSortBy
           />
         ) : (
           <p>Ei projekteja.</p>
