@@ -15,26 +15,34 @@ import TextInput from "@components/form/TextInput";
 import Select from "@components/form/Select";
 import HassuGrid from "@components/HassuGrid";
 import TimePicker from "@components/form/TimePicker";
-import { KaytettavaPalvelu, VuorovaikutusInput, VuorovaikutusTilaisuusInput, VuorovaikutusTilaisuusTyyppi } from "@services/api";
+import { KaytettavaPalvelu, VuorovaikutusTilaisuusInput, VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import capitalize from "lodash/capitalize";
 import { useFieldArray, useFormContext } from "react-hook-form";
+import { VuorovaikutusFormValues } from "@components/projekti/suunnitteluvaihe/SuunniteluvaiheenVuorovaikuttaminen";
 
-type FormFields = {
-  suunnitteluVaihe: {
-    vuorovaikutus: Pick<
-      VuorovaikutusInput,
-      | "vuorovaikutusTilaisuudet"
-    >;
-  };
-}
-
-const defaultTilaisuus: VuorovaikutusTilaisuusInput = {
+const defaultOnlineTilaisuus: VuorovaikutusTilaisuusInput = {
   nimi: "",
+  paivamaara: "",
   alkamisAika: "",
   paattymisAika: "",
+  tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+};
+
+const defaultFyysinenTilaisuus: VuorovaikutusTilaisuusInput = {
+  nimi: "",
   paivamaara: "",
-  tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA
-}
+  alkamisAika: "",
+  paattymisAika: "",
+  tyyppi: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
+};
+
+const defaultSoittoaikaTilaisuus: VuorovaikutusTilaisuusInput = {
+  nimi: "",
+  paivamaara: "",
+  alkamisAika: "",
+  paattymisAika: "",
+  tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+};
 
 interface Props {
   open: boolean;
@@ -43,11 +51,11 @@ interface Props {
 export default function VuorovaikutusDialog({ open, windowHandler }: Props): ReactElement {
   const {
     register,
-    formState: { errors },
+    // formState: { errors },
     control,
-  } = useFormContext<FormFields>(); // retrieve all hook methods
+  } = useFormContext<VuorovaikutusFormValues>();
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append } = useFieldArray({
     control,
     name: "suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet",
   });
@@ -84,43 +92,77 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
                     clickable
                     onClick={(event) => {
                       event.preventDefault();
-                      append(defaultTilaisuus);
+                      console.log("lisaa online");
+                      append(defaultOnlineTilaisuus);
                     }}
                     label="Live-tilaisuus verkossa"
                     variant="outlined"
-                    onDelete={() => console.log("lul delete")}
+                    onDelete={() => {
+                      console.log("lisaa online");
+                      append(defaultOnlineTilaisuus);
+                    }}
                     deleteIcon={<HassuBadge badgeContent={2} color={"primary"} />}
                   />
                   <Chip
                     icon={<LocationCityIcon />}
                     clickable
+                    onClick={(event) => {
+                      event.preventDefault();
+                      console.log("lisaa fyysinen");
+                      append(defaultFyysinenTilaisuus);
+                    }}
                     label="Fyysinen tilaisuus"
                     variant="outlined"
-                    onDelete={() => console.log("delete lul")}
+                    onDelete={() => {
+                      console.log("lisaa fyysinen");
+                      append(defaultFyysinenTilaisuus);
+                    }}
                     deleteIcon={<HassuBadge badgeContent={1} color={"primary"} />}
                   />
                   <Chip
                     icon={<LocalPhoneIcon />}
                     clickable
+                    onClick={(event) => {
+                      event.preventDefault();
+                      console.log("lisaa soittoaika");
+                      append(defaultSoittoaikaTilaisuus);
+                    }}
                     label="Soittoaika"
                     variant="outlined"
-                    onDelete={() => console.log("d lul")}
+                    onDelete={() => {
+                      console.log("lisaa soittoaika");
+                      append(defaultSoittoaikaTilaisuus);
+                    }}
                     deleteIcon={<HassuBadge badgeContent={"0"} color={"primary"} />}
                   />
                 </HassuStack>
                 <Section>
                   {fields.map((tilaisuus, index) => {
-                    <>
+                    <SectionContent key={tilaisuus.id}>
                       <TextInput
                         label="Tilaisuuden nimi *"
                         {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.nimi`)}
-                        // error={errors2.syy}
+                        // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
                         maxLength={200}
                       ></TextInput>
                       <HassuStack direction={["column", "column", "row"]}>
-                        <DatePicker label="Päivämäärä *"></DatePicker>
-                        <TimePicker label="Alkaa *"></TimePicker>
-                        <TimePicker label="Päättyy *"></TimePicker>
+                        <DatePicker
+                          label="Päivämäärä *"
+                          {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.paivamaara`)}
+                          // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
+                        ></DatePicker>
+                        <TimePicker
+                          label="Alkaa *"
+                          {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.alkamisAika`)}
+                          // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
+                        ></TimePicker>
+                        <TimePicker
+                          label="Päättyy *"
+                          {...register(
+                            `suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.paattymisAika`
+                          )}
+                          // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
+                        ></TimePicker>
                       </HassuStack>
                       <HassuGrid cols={{ lg: 3 }}>
                         <Select
@@ -129,15 +171,24 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
                             return { label: capitalize(palvelu), value: palvelu };
                           })}
                           label="Käytettävä palvelu *"
+                          {...register(
+                            `suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.kaytettavaPalvelu`
+                          )}
+                          // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
                         />
                       </HassuGrid>
-                      <TextInput label="Linkki tilaisuuteen *" maxLength={200}></TextInput>
+                      <TextInput
+                        label="Linkki tilaisuuteen *"
+                        maxLength={200}
+                        {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.linkki`)}
+                        // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
+                      ></TextInput>
                       <p>
                         Linkki tilaisuuteen julkaistaan palvelun julkisella puolella kaksi (2) tuntia ennen tilaisuuden
                         alkamista.
                       </p>
                       <Button>Poista</Button>
-                    </>;
+                    </SectionContent>;
                   })}
                 </Section>
               </HassuStack>

@@ -43,7 +43,7 @@ type RequiredProjektiFields = Required<{
   [K in keyof ProjektiFields]: NonNullable<ProjektiFields[K]>;
 }>;
 
-type FormValues = RequiredProjektiFields & {
+export type VuorovaikutusFormValues = RequiredProjektiFields & {
   suunnitteluVaihe: {
     vuorovaikutus: Pick<
       VuorovaikutusInput,
@@ -86,14 +86,35 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const today = dayjs().format();
 
-  const formOptions: UseFormProps<FormValues> = {
+  const formOptions: UseFormProps<VuorovaikutusFormValues> = {
     resolver: yupResolver(vuorovaikutusSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
-    defaultValues: {},
+    defaultValues: {
+      // suunnitteluVaihe: {
+      //   vuorovaikutus: {
+      //     vuorovaikutusTilaisuudet: [
+      //       {
+      //         Saapumisohjeet: "",
+      //         alkamisAika: "",
+      //         kaytettavaPalvelu: undefined,
+      //         linkki: "",
+      //         nimi: "",
+      //         osoite: "",
+      //         paattymisAika: "",
+      //         paikka: "",
+      //         paivamaara: "",
+      //         postinumero: "",
+      //         postitoimipaikka: "",
+      //         tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+      //       },
+      //     ],
+      //   },
+      // },
+    },
   };
 
-  const useFormReturn = useForm<FormValues>(formOptions);
+  const useFormReturn = useForm<VuorovaikutusFormValues>(formOptions);
   const {
     register,
     reset,
@@ -107,7 +128,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
     name: "suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot",
   });
 
-  const saveDraft = async (formData: FormValues) => {
+  const saveDraft = async (formData: VuorovaikutusFormValues) => {
     setIsFormSubmitting(true);
     try {
       await saveSunnitteluvaihe(formData);
@@ -119,7 +140,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
     setIsFormSubmitting(false);
   };
 
-  const saveSunnitteluvaihe = async (formData: FormValues) => {
+  const saveSunnitteluvaihe = async (formData: VuorovaikutusFormValues) => {
     setIsFormSubmitting(true);
     await api.tallennaProjekti(formData);
     if (reloadProjekti) await reloadProjekti();
@@ -134,8 +155,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
       const vuorovaikutus = projekti.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
         return v.vuorovaikutusNumero === vuorovaikutusnro;
       });
-
-      const tallentamisTiedot: FormValues = {
+      const tallentamisTiedot: VuorovaikutusFormValues = {
         oid: projekti.oid,
         suunnitteluVaihe: {
           vuorovaikutus: {
@@ -148,6 +168,11 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
                 .map(({ kayttajatunnus }) => kayttajatunnus) || [],
             esitettavatYhteystiedot:
               vuorovaikutus?.esitettavatYhteystiedot?.map((yhteystieto) => removeTypeName(yhteystieto)) || [],
+            vuorovaikutusTilaisuudet:
+              vuorovaikutus?.vuorovaikutusTilaisuudet?.map((tilaisuus) => {
+                const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
+                return vuorovaikutusTilaisuusInput;
+              }) || [],
           },
         },
       };
@@ -365,27 +390,11 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
               </SectionContent>
             </Section>
           </fieldset>
+          <VuorovaikutusDialog
+            open={openVuorovaikutustilaisuus}
+            windowHandler={setOpenVuorovaikutustilaisuus}
+          ></VuorovaikutusDialog>
         </form>
-      </FormProvider>
-      <Section noDivider>
-        <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
-          <Button onClick={handleSubmit(saveDraft)}>Tallenna luonnos</Button>
-          <Button
-            primary
-            onClick={() => {
-              console.log("tallenna ja julkaise");
-            }}
-            disabled
-          >
-            Tallenna julkaistavaksi
-          </Button>
-        </Stack>
-      </Section>
-      <FormProvider {...useFormReturn}>
-        <VuorovaikutusDialog
-          open={openVuorovaikutustilaisuus}
-          windowHandler={setOpenVuorovaikutustilaisuus}
-        ></VuorovaikutusDialog>
       </FormProvider>
       <HassuSpinner open={isFormSubmitting} />
     </>
