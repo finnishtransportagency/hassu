@@ -55,7 +55,7 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
     control,
   } = useFormContext<VuorovaikutusFormValues>();
 
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet",
   });
@@ -70,6 +70,10 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
     },
   }));
 
+  const countTilaisuudet = (tyyppi: VuorovaikutusTilaisuusTyyppi) => {
+    return fields.filter((tilaisuus) => tilaisuus.tyyppi === tyyppi).length || "0";
+  };
+
   return (
     <HassuDialog open={open} onClose={() => windowHandler(false)} maxWidth={"lg"}>
       <Section noDivider smallGaps>
@@ -83,61 +87,70 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
         </SectionContent>
         <SectionContent>
           <div className="vayla-dialog-content">
-            <form>
-              <HassuStack>
-                <p>Voit valita saman vuorovaikutustavan useammin kuin yhden kerran.</p>
-                <HassuStack direction={["column", "column", "row"]}>
-                  <Chip
-                    icon={<HeadphonesIcon />}
-                    clickable
-                    onClick={(event) => {
-                      event.preventDefault();
-                      console.log("lisaa online");
-                      append(defaultOnlineTilaisuus);
-                    }}
-                    label="Live-tilaisuus verkossa"
-                    variant="outlined"
-                    onDelete={() => {
-                      console.log("lisaa online");
-                      append(defaultOnlineTilaisuus);
-                    }}
-                    deleteIcon={<HassuBadge badgeContent={2} color={"primary"} />}
-                  />
-                  <Chip
-                    icon={<LocationCityIcon />}
-                    clickable
-                    onClick={(event) => {
-                      event.preventDefault();
-                      console.log("lisaa fyysinen");
-                      append(defaultFyysinenTilaisuus);
-                    }}
-                    label="Fyysinen tilaisuus"
-                    variant="outlined"
-                    onDelete={() => {
-                      console.log("lisaa fyysinen");
-                      append(defaultFyysinenTilaisuus);
-                    }}
-                    deleteIcon={<HassuBadge badgeContent={1} color={"primary"} />}
-                  />
-                  <Chip
-                    icon={<LocalPhoneIcon />}
-                    clickable
-                    onClick={(event) => {
-                      event.preventDefault();
-                      console.log("lisaa soittoaika");
-                      append(defaultSoittoaikaTilaisuus);
-                    }}
-                    label="Soittoaika"
-                    variant="outlined"
-                    onDelete={() => {
-                      console.log("lisaa soittoaika");
-                      append(defaultSoittoaikaTilaisuus);
-                    }}
-                    deleteIcon={<HassuBadge badgeContent={"0"} color={"primary"} />}
-                  />
-                </HassuStack>
-                <Section>
-                  {fields.map((tilaisuus, index) => {
+            <HassuStack>
+              <p>Voit valita saman vuorovaikutustavan useammin kuin yhden kerran.</p>
+              <HassuStack direction={["column", "column", "row"]}>
+                <Chip
+                  icon={<HeadphonesIcon />}
+                  clickable
+                  onClick={(event) => {
+                    event.preventDefault();
+                    append(defaultOnlineTilaisuus);
+                  }}
+                  label="Live-tilaisuus verkossa"
+                  variant="outlined"
+                  onDelete={() => {
+                    append(defaultOnlineTilaisuus);
+                  }}
+                  deleteIcon={
+                    <HassuBadge
+                      badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.VERKOSSA)}
+                      color={"primary"}
+                    />
+                  }
+                />
+                <Chip
+                  icon={<LocationCityIcon />}
+                  clickable
+                  onClick={(event) => {
+                    event.preventDefault();
+                    append(defaultFyysinenTilaisuus);
+                  }}
+                  label="Fyysinen tilaisuus"
+                  variant="outlined"
+                  onDelete={() => {
+                    append(defaultFyysinenTilaisuus);
+                  }}
+                  deleteIcon={
+                    <HassuBadge
+                      badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.PAIKALLA)}
+                      color={"primary"}
+                    />
+                  }
+                />
+                <Chip
+                  icon={<LocalPhoneIcon />}
+                  clickable
+                  onClick={(event) => {
+                    event.preventDefault();
+                    append(defaultSoittoaikaTilaisuus);
+                  }}
+                  label="Soittoaika"
+                  variant="outlined"
+                  onDelete={() => {
+                    append(defaultSoittoaikaTilaisuus);
+                  }}
+                  deleteIcon={
+                    <HassuBadge
+                      badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.SOITTOAIKA)}
+                      color={"primary"}
+                    />
+                  }
+                />
+              </HassuStack>
+              <Section>
+                {fields.map((tilaisuus, index) => {
+                  return (
                     <SectionContent key={tilaisuus.id}>
                       <TextInput
                         label="Tilaisuuden nimi *"
@@ -187,29 +200,36 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
                         Linkki tilaisuuteen julkaistaan palvelun julkisella puolella kaksi (2) tuntia ennen tilaisuuden
                         alkamista.
                       </p>
-                      <Button>Poista</Button>
-                    </SectionContent>;
-                  })}
-                </Section>
-              </HassuStack>
-              <HassuStack
-                direction={["column", "column", "row"]}
-                justifyContent={[undefined, undefined, "flex-end"]}
-                paddingTop={"1rem"}
+                      <Button
+                        onClick={(event) => {
+                          event.preventDefault();
+                          remove(index);
+                        }}
+                      >
+                        Poista
+                      </Button>
+                    </SectionContent>
+                  );
+                })}
+              </Section>
+            </HassuStack>
+            <HassuStack
+              direction={["column", "column", "row"]}
+              justifyContent={[undefined, undefined, "flex-end"]}
+              paddingTop={"1rem"}
+            >
+              <Button primary onClick={() => console.log("tallenna")}>
+                Tallenna
+              </Button>
+              <Button
+                onClick={(e) => {
+                  windowHandler(false);
+                  e.preventDefault();
+                }}
               >
-                <Button primary onClick={() => console.log("tallenna")}>
-                  Tallenna
-                </Button>
-                <Button
-                  onClick={(e) => {
-                    windowHandler(false);
-                    e.preventDefault();
-                  }}
-                >
-                  Peruuta
-                </Button>
-              </HassuStack>
-            </form>
+                Peruuta
+              </Button>
+            </HassuStack>
           </div>
         </SectionContent>
       </Section>
