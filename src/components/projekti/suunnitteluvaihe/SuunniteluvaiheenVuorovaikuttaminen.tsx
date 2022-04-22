@@ -8,6 +8,8 @@ import {
   VuorovaikutusInput,
   ProjektiRooli,
   YhteystietoInput,
+  Vuorovaikutus,
+  VuorovaikutusTilaisuusTyyppi,
 } from "@services/api";
 import Section from "@components/layout/Section";
 import { ReactElement, useEffect, useState, Fragment } from "react";
@@ -37,6 +39,8 @@ import LocationCityIcon from "@mui/icons-material/LocationCity";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import Select from "@components/form/Select";
 import VuorovaikutusDialog from "./VuorovaikutustilaisuusDialog";
+import { formatDate } from "src/util/dateUtils";
+import capitalize from "lodash/capitalize";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -84,34 +88,14 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
   const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const [vuorovaikutus, setVuorovaikutus] = useState<Vuorovaikutus | undefined>(undefined);
   const today = dayjs().format();
 
   const formOptions: UseFormProps<VuorovaikutusFormValues> = {
     resolver: yupResolver(vuorovaikutusSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
-    defaultValues: {
-      // suunnitteluVaihe: {
-      //   vuorovaikutus: {
-      //     vuorovaikutusTilaisuudet: [
-      //       {
-      //         Saapumisohjeet: "",
-      //         alkamisAika: "",
-      //         kaytettavaPalvelu: undefined,
-      //         linkki: "",
-      //         nimi: "",
-      //         osoite: "",
-      //         paattymisAika: "",
-      //         paikka: "",
-      //         paivamaara: "",
-      //         postinumero: "",
-      //         postitoimipaikka: "",
-      //         tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-      //       },
-      //     ],
-      //   },
-      // },
-    },
+    defaultValues: {},
   };
 
   const useFormReturn = useForm<VuorovaikutusFormValues>(formOptions);
@@ -152,9 +136,12 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
 
   useEffect(() => {
     if (projekti && projekti.oid) {
-      const vuorovaikutus = projekti.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
+      const v = projekti.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
         return v.vuorovaikutusNumero === vuorovaikutusnro;
       });
+
+      setVuorovaikutus(v);
+
       const tallentamisTiedot: VuorovaikutusFormValues = {
         oid: projekti.oid,
         suunnitteluVaihe: {
@@ -169,7 +156,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
             esitettavatYhteystiedot:
               vuorovaikutus?.esitettavatYhteystiedot?.map((yhteystieto) => removeTypeName(yhteystieto)) || [],
             vuorovaikutusTilaisuudet:
-              vuorovaikutus?.vuorovaikutusTilaisuudet?.map((tilaisuus) => {
+              v?.vuorovaikutusTilaisuudet?.map((tilaisuus) => {
                 const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
                 return vuorovaikutusTilaisuusInput;
               }) || [],
@@ -185,6 +172,16 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
   }
 
   console.log(errors);
+
+  const isVerkkotilaisuuksia = !!vuorovaikutus?.vuorovaikutusTilaisuudet?.find(
+    (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA
+  );
+  const isFyysisiatilaisuuksia = !!vuorovaikutus?.vuorovaikutusTilaisuudet?.find(
+    (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA
+  );
+  const isSoittoaikoja = !!vuorovaikutus?.vuorovaikutusTilaisuudet?.find(
+    (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA
+  );
 
   return (
     <>
@@ -229,6 +226,66 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
             <Section>
               <h4 className="vayla-small-title">Vuorovaikutusmahdollisuudet palautteiden ja kysymyksien lisäksi</h4>
               <SectionContent>
+                {isVerkkotilaisuuksia && (
+                  <>
+                    <p>
+                      <b>Live-tilaisuudet verkossa</b>
+                    </p>
+                    {vuorovaikutus?.vuorovaikutusTilaisuudet
+                      ?.filter((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA)
+                      .map((tilaisuus, index) => {
+                        return (
+                          <div key={index}>
+                            <p>
+                              {capitalize(tilaisuus.nimi)}, {formatDate(tilaisuus.paivamaara)} klo{" "}
+                              {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, Linkki tilaisuuteen: {tilaisuus.linkki}
+                            </p>
+                          </div>
+                        );
+                      })}
+                  </>
+                )}
+                {isFyysisiatilaisuuksia && (
+                  <>
+                    <p>
+                      <b>Fyysiset tilaisuudet</b>
+                    </p>
+                    {vuorovaikutus?.vuorovaikutusTilaisuudet
+                      ?.filter((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA)
+                      .map((tilaisuus, index) => {
+                        return (
+                          <div key={index}>
+                            <p>
+                              {capitalize(tilaisuus.nimi)}, {formatDate(tilaisuus.paivamaara)} klo{" "}
+                              {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, Osoite: {tilaisuus.paikka},{" "}
+                              {tilaisuus.osoite} {tilaisuus.postinumero} {tilaisuus.postitoimipaikka}
+                            </p>
+                          </div>
+                        );
+                      })}
+                  </>
+                )}
+                {isSoittoaikoja && (
+                  <>
+                    <p>
+                      <b>Soittoaika</b>
+                    </p>
+                    {vuorovaikutus?.vuorovaikutusTilaisuudet
+                      ?.filter((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA)
+                      .map((tilaisuus, index) => {
+                        return (
+                          <div key={index}>
+                            <p>
+                              {capitalize(tilaisuus.nimi)}, {formatDate(tilaisuus.paivamaara)} klo{" "}
+                              {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}
+                            </p>
+                            <p>yhteistiedot TBD</p>
+                          </div>
+                        );
+                      })}
+                  </>
+                )}
+
                 <Button
                   onClick={(e) => {
                     setOpenVuorovaikutustilaisuus(true);
@@ -240,6 +297,50 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
               </SectionContent>
             </Section>
             <LuonnoksetJaAineistot />
+            <Section>
+              <h5 className="vayla-small-title">Vuorovaikuttamisen yhteyshenkilöt</h5>
+              <SectionContent>
+                <p>
+                  Voit valita kutsussa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden
+                  yhteystiedon. Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden
+                  yhteystiedot haetaan Projektin henkilöt -sivulle tallennetuista tiedoista.
+                </p>
+              </SectionContent>
+            </Section>
+            <Section>
+              <h5 className="vayla-small-title">Ilmoituksen vastaanottajat</h5>
+              <SectionContent>
+                <p>
+                  Vuorovaikuttamisesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville
+                  kunnille. Kunnat on haettu Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle
+                  viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi -painikkeella
+                </p>
+                <p>Jos kuntatiedoissa on virhe, tee korjaus Projektivelhoon.</p>
+              </SectionContent>
+            </Section>
+            <Section>
+              <h5 className="vayla-small-title">Kutsun ja ilmoituksen esikatselu</h5>
+              <SectionContent>
+                <HassuStack direction={["column", "column", "row"]}>
+                  <Button type="submit" onClick={() => console.log("kutsun esikatselu")} disabled>
+                    Kutsun esikatselu
+                  </Button>
+                  <Button type="submit" onClick={() => console.log("ilmoituksen esikatselu")} disabled>
+                    Ilmoituksen esikatselu
+                  </Button>
+                </HassuStack>
+              </SectionContent>
+            </Section>
+            <Section>
+              <h5 className="vayla-small-title">Suunnitelmaluonnokset ja esittelyaineistot</h5>
+              <SectionContent>
+                <p>
+                  Esittelyvideo tulee olla ladattuna erilliseen videojulkaisupalveluun (esim. Youtube) ja videon
+                  katselulinkki tuodaan sille tarkoitettuun kenttään. Luonnokset ja muut materiaalit tuodaan
+                  Projektivelhosta.
+                </p>
+              </SectionContent>
+            </Section>
             <Section>
               <SectionContent>
                 <h4 className="vayla-small-title">Vuorovaikuttamisen yhteyshenkilöt</h4>
