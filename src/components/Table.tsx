@@ -97,19 +97,22 @@ export function Table<T extends object>({
                 } = column.getHeaderProps(
                   useSortBy
                     ? column.getSortByToggleProps({
-                        onClick: () => {
-                          let desc: boolean | undefined;
-                          if (column.isSorted) {
-                            if (column.sortDescFirst) {
-                              desc = column.isSortedDesc ? false : undefined;
-                            } else {
-                              desc = column.isSortedDesc ? undefined : true;
-                            }
-                          } else {
-                            desc = column.sortDescFirst ? true : false;
-                          }
-                          setSortBy(desc === undefined ? [] : [{ desc, id: column.id }]);
-                        },
+                        title: undefined,
+                        onClick: column.disableSortBy
+                          ? undefined
+                          : () => {
+                              let desc: boolean | undefined;
+                              if (column.isSorted) {
+                                if (column.sortDescFirst) {
+                                  desc = column.isSortedDesc ? false : undefined;
+                                } else {
+                                  desc = column.isSortedDesc ? undefined : true;
+                                }
+                              } else {
+                                desc = column.sortDescFirst ? true : false;
+                              }
+                              setSortBy(desc === undefined ? [] : [{ desc, id: column.id }]);
+                            },
                       })
                     : undefined
                 );

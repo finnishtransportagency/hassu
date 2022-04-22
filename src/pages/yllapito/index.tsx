@@ -307,8 +307,12 @@ const VirkamiesHomePage = () => {
               data: hakutulos?.tulokset || [],
               columns: [
                 { Header: "Nimi", accessor: "nimi", minWidth: 400, id: ProjektiSarake.NIMI },
-                { Header: "Asiatunnus", accessor: "asiatunnus", id: ProjektiSarake.ASIATUNNUS },
-                { Header: "Projektipäällikkö", accessor: "projektipaallikko", id: ProjektiSarake.PROJEKTIPAALLIKKO },
+                { Header: "Asiatunnus", accessor: "asiatunnus", id: ProjektiSarake.ASIATUNNUS, disableSortBy: true },
+                {
+                  Header: "Projektipäällikkö",
+                  accessor: "projektipaallikko",
+                  id: ProjektiSarake.PROJEKTIPAALLIKKO,
+                },
                 {
                   Header: "Vastuuorganisaatio",
                   accessor: (projekti) =>
@@ -329,7 +333,7 @@ const VirkamiesHomePage = () => {
                   id: ProjektiSarake.PAIVITETTY,
                   sortDescFirst: true,
                 },
-                { Header: "oid", accessor: "oid" },
+                { Header: "oid", accessor: "oid", disableSortBy: true },
               ],
               manualPagination: true,
               manualSortBy: true,
