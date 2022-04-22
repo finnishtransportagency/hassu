@@ -146,6 +146,7 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
                       color={"primary"}
                     />
                   }
+                  disabled
                 />
               </HassuStack>
 

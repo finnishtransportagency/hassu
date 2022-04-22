@@ -1,7 +1,14 @@
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
-import { TallennaProjektiInput, Projekti, api, VuorovaikutusInput } from "@services/api";
+import {
+  TallennaProjektiInput,
+  Projekti,
+  api,
+  VuorovaikutusInput,
+  Vuorovaikutus,
+  VuorovaikutusTilaisuusTyyppi,
+} from "@services/api";
 import Section from "@components/layout/Section";
 import { ReactElement, useEffect, useState } from "react";
 import { Stack } from "@mui/material";
@@ -16,6 +23,8 @@ import dayjs from "dayjs";
 import { vuorovaikutusSchema } from "src/schemas/vuorovaikutus";
 import HassuStack from "@components/layout/HassuStack";
 import VuorovaikutusDialog from "./VuorovaikutustilaisuusDialog";
+import { formatDate } from "src/util/dateUtils";
+import capitalize from "lodash/capitalize";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -55,34 +64,14 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
   const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const [vuorovaikutus, setVuorovaikutus] = useState<Vuorovaikutus | undefined>(undefined);
   const today = dayjs().format();
 
   const formOptions: UseFormProps<VuorovaikutusFormValues> = {
     resolver: yupResolver(vuorovaikutusSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
-    defaultValues: {
-      // suunnitteluVaihe: {
-      //   vuorovaikutus: {
-      //     vuorovaikutusTilaisuudet: [
-      //       {
-      //         Saapumisohjeet: "",
-      //         alkamisAika: "",
-      //         kaytettavaPalvelu: undefined,
-      //         linkki: "",
-      //         nimi: "",
-      //         osoite: "",
-      //         paattymisAika: "",
-      //         paikka: "",
-      //         paivamaara: "",
-      //         postinumero: "",
-      //         postitoimipaikka: "",
-      //         tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-      //       },
-      //     ],
-      //   },
-      // },
-    },
+    defaultValues: {},
   };
 
   const useFormReturn = useForm<VuorovaikutusFormValues>(formOptions);
@@ -118,18 +107,21 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
 
   useEffect(() => {
     if (projekti && projekti.oid) {
-      const vuorovaikutus = projekti.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
+      const v = projekti.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
         return v.vuorovaikutusNumero === vuorovaikutusnro;
       });
+
+      setVuorovaikutus(v);
+
       const tallentamisTiedot: VuorovaikutusFormValues = {
         oid: projekti.oid,
         suunnitteluVaihe: {
           vuorovaikutus: {
             vuorovaikutusNumero: vuorovaikutusnro,
-            vuorovaikutusJulkaisuPaiva: vuorovaikutus?.vuorovaikutusJulkaisuPaiva,
-            kysymyksetJaPalautteetViimeistaan: vuorovaikutus?.kysymyksetJaPalautteetViimeistaan,
+            vuorovaikutusJulkaisuPaiva: v?.vuorovaikutusJulkaisuPaiva,
+            kysymyksetJaPalautteetViimeistaan: v?.kysymyksetJaPalautteetViimeistaan,
             vuorovaikutusTilaisuudet:
-              vuorovaikutus?.vuorovaikutusTilaisuudet?.map((tilaisuus) => {
+              v?.vuorovaikutusTilaisuudet?.map((tilaisuus) => {
                 const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
                 return vuorovaikutusTilaisuusInput;
               }) || [],
@@ -143,6 +135,16 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
   if (!projekti) {
     return <></>;
   }
+
+  const isVerkkotilaisuuksia = !!vuorovaikutus?.vuorovaikutusTilaisuudet?.find(
+    (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA
+  );
+  const isFyysisiatilaisuuksia = !!vuorovaikutus?.vuorovaikutusTilaisuudet?.find(
+    (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA
+  );
+  const isSoittoaikoja = !!vuorovaikutus?.vuorovaikutusTilaisuudet?.find(
+    (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA
+  );
 
   return (
     <>
@@ -184,6 +186,66 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
           <Section>
             <h5 className="vayla-small-title">Vuorovaikutusmahdollisuudet palautteiden ja kysymyksien lisäksi</h5>
             <SectionContent>
+              {isVerkkotilaisuuksia && (
+                <>
+                  <p>
+                    <b>Live-tilaisuudet verkossa</b>
+                  </p>
+                  {vuorovaikutus?.vuorovaikutusTilaisuudet
+                    ?.filter((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA)
+                    .map((tilaisuus, index) => {
+                      return (
+                        <div key={index}>
+                          <p>
+                            {capitalize(tilaisuus.nimi)}, {formatDate(tilaisuus.paivamaara)} klo {tilaisuus.alkamisAika}
+                            -{tilaisuus.paattymisAika}, Linkki tilaisuuteen: {tilaisuus.linkki}
+                          </p>
+                        </div>
+                      );
+                    })}
+                </>
+              )}
+              {isFyysisiatilaisuuksia && (
+                <>
+                  <p>
+                    <b>Fyysiset tilaisuudet</b>
+                  </p>
+                  {vuorovaikutus?.vuorovaikutusTilaisuudet
+                    ?.filter((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA)
+                    .map((tilaisuus, index) => {
+                      return (
+                        <div key={index}>
+                          <p>
+                            {capitalize(tilaisuus.nimi)}, {formatDate(tilaisuus.paivamaara)} klo {tilaisuus.alkamisAika}
+                            -{tilaisuus.paattymisAika}, Osoite: {tilaisuus.paikka}, {tilaisuus.osoite}{" "}
+                            {tilaisuus.postinumero} {tilaisuus.postitoimipaikka}
+                          </p>
+                        </div>
+                      );
+                    })}
+                </>
+              )}
+              {isSoittoaikoja && (
+                <>
+                  <p>
+                    <b>Soittoaika</b>
+                  </p>
+                  {vuorovaikutus?.vuorovaikutusTilaisuudet
+                    ?.filter((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA)
+                    .map((tilaisuus, index) => {
+                      return (
+                        <div key={index}>
+                          <p>
+                            {capitalize(tilaisuus.nimi)}, {formatDate(tilaisuus.paivamaara)} klo {tilaisuus.alkamisAika}
+                            -{tilaisuus.paattymisAika}
+                          </p>
+                          <p>yhteistiedot TBD</p>
+                        </div>
+                      );
+                    })}
+                </>
+              )}
+
               <Button
                 onClick={(e) => {
                   setOpenVuorovaikutustilaisuus(true);
