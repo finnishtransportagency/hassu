@@ -148,10 +148,14 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
                   }
                 />
               </HassuStack>
-              <Section>
-                {fields.map((tilaisuus, index) => {
-                  return (
-                    <SectionContent key={tilaisuus.id}>
+
+              {fields.map((tilaisuus, index) => {
+                return (
+                  <Section key={tilaisuus.id}>
+                    <SectionContent>
+                      {tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA && <h4 className="vayla-small-title">Live-tilaisuudet verkossa</h4>}
+                      {tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA && <h4 className="vayla-small-title">Fyysiset tilaisuudet</h4>}
+                      {tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA && <h4 className="vayla-small-title">Soittoaika</h4>}
                       <TextInput
                         label="Tilaisuuden nimi *"
                         {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.nimi`)}
@@ -209,20 +213,27 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
                         Poista
                       </Button>
                     </SectionContent>
-                  );
-                })}
-              </Section>
+                  </Section>
+                );
+              })}
             </HassuStack>
             <HassuStack
               direction={["column", "column", "row"]}
               justifyContent={[undefined, undefined, "flex-end"]}
               paddingTop={"1rem"}
             >
-              <Button primary onClick={() => console.log("tallenna")}>
+              <Button
+                primary
+                onClick={(e) => {
+                  windowHandler(false);
+                  e.preventDefault();
+                }}
+              >
                 Tallenna
               </Button>
               <Button
                 onClick={(e) => {
+                  //TODO isDirty -> poista muutokset
                   windowHandler(false);
                   e.preventDefault();
                 }}
