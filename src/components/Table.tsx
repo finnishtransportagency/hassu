@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   useTable,
   usePagination as usePaginationHook,
@@ -7,6 +7,7 @@ import {
   PluginHook,
   useFlexLayout,
   useSortBy as useSortByHook,
+  SortingRule,
 } from "react-table";
 import { styled, experimental_sx as sx } from "@mui/material";
 import Link from "next/link";
@@ -14,23 +15,21 @@ import Pagination from "@mui/material/Pagination";
 import SectionContent from "@components/layout/SectionContent";
 import { breakpoints } from "@pages/_app";
 import useMediaQuery from "../hooks/useMediaQuery";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface PaginationControlledProps<T extends object> {
   rowLink?: (rowData: T) => string;
   tableOptions: TableOptions<T>;
-  onPageChange?: (props: { pageSize: number; pageIndex: number }) => void | Promise<void>;
-  gotoPage?: (updater: number) => void;
+  pageChanger?: (updater: number) => void;
+  sortByChanger?: (sortBy: SortingRule<T>[]) => void;
   usePagination?: boolean;
   useSortBy?: boolean;
 }
 
-// Let's add a fetchData method to our Table component that will be used to fetch
-// new data when pagination state changes
-// We can also add a loading state to let our table know it's loading new data
 export function Table<T extends object>({
   tableOptions,
-  onPageChange,
-  gotoPage: controlledGotoPage,
+  pageChanger,
+  sortByChanger,
   rowLink,
   usePagination,
   useSortBy,
@@ -56,16 +55,14 @@ export function Table<T extends object>({
     page,
     rows,
     pageCount,
+    setSortBy: uncontrolledSetSortBy,
     gotoPage: uncontrolledGotoPage,
     // Get the state from the instance
-    state: { pageIndex, pageSize },
+    state: { pageIndex },
   } = useTable<T>({ ...defaultTableOptions, ...tableOptions }, ...tableHooks);
 
-  useEffect(() => {
-    onPageChange?.({ pageSize, pageIndex });
-  }, [onPageChange, pageSize, pageIndex]);
-
-  const gotoPage = controlledGotoPage || uncontrolledGotoPage;
+  const gotoPage = pageChanger || uncontrolledGotoPage;
+  const setSortBy = sortByChanger || uncontrolledSetSortBy;
 
   const data = usePagination ? page : rows;
 
@@ -97,11 +94,31 @@ export function Table<T extends object>({
                   key: headerKey,
                   style,
                   ...headerProps
-                } = column.getHeaderProps(useSortBy ? column.getSortByToggleProps() : undefined);
+                } = column.getHeaderProps(
+                  useSortBy
+                    ? column.getSortByToggleProps({
+                        onClick: () => {
+                          let desc: boolean | undefined;
+                          if (column.isSorted) {
+                            if (column.sortDescFirst) {
+                              desc = column.isSortedDesc ? false : undefined;
+                            } else {
+                              desc = column.isSortedDesc ? undefined : true;
+                            }
+                          } else {
+                            desc = column.sortDescFirst ? true : false;
+                          }
+                          setSortBy(desc === undefined ? [] : [{ desc, id: column.id }]);
+                        },
+                      })
+                    : undefined
+                );
                 return (
                   <HeaderCell {...headerProps} style={isMedium ? style : { display: "none" }} key={headerKey}>
                     {column.render("Header")}
-                    <span>{column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : ""}</span>
+                    {column.isSorted && (
+                      <FontAwesomeIcon className="ml-4" icon={column.isSortedDesc ? "arrow-down" : "arrow-up"} />
+                    )}
                   </HeaderCell>
                 );
               })}
