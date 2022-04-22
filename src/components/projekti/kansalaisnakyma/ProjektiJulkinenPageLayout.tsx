@@ -16,7 +16,7 @@ interface Props {
 
 export default function ProjektiPageLayout({ children, title, selectedStep }: Props): ReactElement {
   const theme = useTheme();
-  const smallScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const smallScreen = useMediaQuery(theme.breakpoints.down("lg"));
   const router = useRouter();
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
   const { data: projekti } = useProjektiJulkinen(oid);
