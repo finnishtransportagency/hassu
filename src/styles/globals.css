@@ -327,6 +327,9 @@
   .btn-primary {
     @apply btn bg-primary-dark text-white;
   }
+  .btn-remove-red {
+    @apply btn text-red border-red;
+  }
   .alert {
     @apply border py-2 px-3 bg-gray-lightest border-gray;
   }

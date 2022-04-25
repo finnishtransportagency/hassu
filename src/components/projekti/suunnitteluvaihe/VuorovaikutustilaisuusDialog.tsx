@@ -20,27 +20,25 @@ import capitalize from "lodash/capitalize";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { VuorovaikutusFormValues } from "@components/projekti/suunnitteluvaihe/SuunniteluvaiheenVuorovaikuttaminen";
 
-const defaultOnlineTilaisuus: VuorovaikutusTilaisuusInput = {
+const defaultTilaisuus = {
   nimi: "",
   paivamaara: "",
   alkamisAika: "",
   paattymisAika: "",
+};
+
+const defaultOnlineTilaisuus: VuorovaikutusTilaisuusInput = {
+  ...defaultTilaisuus,
   tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
 };
 
 const defaultFyysinenTilaisuus: VuorovaikutusTilaisuusInput = {
-  nimi: "",
-  paivamaara: "",
-  alkamisAika: "",
-  paattymisAika: "",
+  ...defaultTilaisuus,
   tyyppi: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
 };
 
 const defaultSoittoaikaTilaisuus: VuorovaikutusTilaisuusInput = {
-  nimi: "",
-  paivamaara: "",
-  alkamisAika: "",
-  paattymisAika: "",
+  ...defaultTilaisuus,
   tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
 };
 
@@ -51,8 +49,9 @@ interface Props {
 export default function VuorovaikutusDialog({ open, windowHandler }: Props): ReactElement {
   const {
     register,
-    // formState: { errors },
+    formState: { errors },
     control,
+    handleSubmit,
   } = useFormContext<VuorovaikutusFormValues>();
 
   const { fields, append, remove } = useFieldArray({
@@ -70,9 +69,27 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
     },
   }));
 
+  const HassuChip = styled(Chip)(() => ({
+    [`&.${chipClasses.root}`]: {
+      height: "40px",
+      borderRadius: "20px",
+    },
+  }));
+
   const countTilaisuudet = (tyyppi: VuorovaikutusTilaisuusTyyppi) => {
     return fields.filter((tilaisuus) => tilaisuus.tyyppi === tyyppi).length || "0";
   };
+
+  const saveTilaisuudet = (formData: VuorovaikutusFormValues) => {
+    console.log(formData);
+    windowHandler(false);
+  };
+
+  const isVerkkotilaisuuksia = !!fields.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA);
+  const isFyysisiatilaisuuksia = !!fields.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA);
+  // const isSoittoaikoja = !!fields.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA);
+
+  console.log(errors);
 
   return (
     <HassuDialog open={open} onClose={() => windowHandler(false)} maxWidth={"lg"}>
@@ -90,7 +107,7 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
             <HassuStack>
               <p>Voit valita saman vuorovaikutustavan useammin kuin yhden kerran.</p>
               <HassuStack direction={["column", "column", "row"]}>
-                <Chip
+                <HassuChip
                   icon={<HeadphonesIcon />}
                   clickable
                   onClick={(event) => {
@@ -109,7 +126,7 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
                     />
                   }
                 />
-                <Chip
+                <HassuChip
                   icon={<LocationCityIcon />}
                   clickable
                   onClick={(event) => {
@@ -128,7 +145,7 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
                     />
                   }
                 />
-                <Chip
+                <HassuChip
                   icon={<LocalPhoneIcon />}
                   clickable
                   onClick={(event) => {
@@ -149,87 +166,179 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
                   disabled
                 />
               </HassuStack>
+              {isVerkkotilaisuuksia && (
+                <Section>
+                  <h4 className="vayla-small-title">Live-tilaisuudet verkossa</h4>
+                  {fields.map((tilaisuus, index) => {
+                    if (tilaisuus.tyyppi !== VuorovaikutusTilaisuusTyyppi.VERKOSSA) return;
+                    return (
+                      <SectionContent key={index}>
+                        <TextInput
+                          label="Tilaisuuden nimi *"
+                          {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.nimi`)}
+                          error={
+                            (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusTilaisuudet?.[index]?.nimi
+                          }
+                          maxLength={200}
+                        ></TextInput>
+                        <HassuStack direction={["column", "column", "row"]}>
+                          <DatePicker
+                            label="Päivämäärä *"
+                            {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.paivamaara`)}
+                            // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
+                          ></DatePicker>
+                          <TimePicker
+                            label="Alkaa *"
+                            {...register(
+                              `suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.alkamisAika`
+                            )}
+                            // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
+                          ></TimePicker>
+                          <TimePicker
+                            label="Päättyy *"
+                            {...register(
+                              `suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.paattymisAika`
+                            )}
+                            // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
+                          ></TimePicker>
+                        </HassuStack>
+                        <HassuGrid cols={{ lg: 3 }}>
+                          <Select
+                            addEmptyOption
+                            options={Object.keys(KaytettavaPalvelu).map((palvelu) => {
+                              return { label: capitalize(palvelu), value: palvelu };
+                            })}
+                            label="Käytettävä palvelu *"
+                            {...register(
+                              `suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.kaytettavaPalvelu`
+                            )}
+                            // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
+                          />
+                        </HassuGrid>
+                        <TextInput
+                          label="Linkki tilaisuuteen *"
+                          maxLength={200}
+                          {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.linkki`)}
+                          // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
+                        ></TextInput>
+                        <p>
+                          Linkki tilaisuuteen julkaistaan palvelun julkisella puolella kaksi (2) tuntia ennen
+                          tilaisuuden alkamista.
+                        </p>
+                        <Button
+                          className="btn-remove-red"
+                          onClick={(event) => {
+                            event.preventDefault();
+                            remove(index);
+                          }}
+                        >
+                          Poista
+                        </Button>
+                      </SectionContent>
+                    );
+                  })}
+                </Section>
+              )}
+              {isFyysisiatilaisuuksia && (
+                <Section>
+                  <h4 className="vayla-small-title">Fyysiset tilaisuudet</h4>
+                  {fields.map((tilaisuus, index) => {
+                    if (tilaisuus.tyyppi !== VuorovaikutusTilaisuusTyyppi.PAIKALLA) return;
+                    return (
+                      <SectionContent key={index}>
+                        <TextInput
+                          label="Tilaisuuden nimi *"
+                          {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.nimi`)}
+                          error={
+                            (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusTilaisuudet?.[index]?.nimi
+                          }
+                          maxLength={200}
+                        ></TextInput>
+                        <HassuStack direction={["column", "column", "row"]}>
+                          <DatePicker
+                            label="Päivämäärä *"
+                            {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.paivamaara`)}
+                            // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
+                          ></DatePicker>
+                          <TimePicker
+                            label="Alkaa *"
+                            {...register(
+                              `suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.alkamisAika`
+                            )}
+                            // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
+                          ></TimePicker>
+                          <TimePicker
+                            label="Päättyy *"
+                            {...register(
+                              `suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.paattymisAika`
+                            )}
+                            // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
+                          ></TimePicker>
+                        </HassuStack>
+                        <HassuGrid cols={{ lg: 5 }}>
+                          <TextInput
+                            label="Paikka"
+                            maxLength={200}
+                            style={{ gridColumn: "1 / span 2" }}
+                            {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.paikka`)}
+                            // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
+                          ></TextInput>
+                        </HassuGrid>
+                        <HassuGrid cols={{ lg: 5 }}>
+                          <TextInput
+                            label="Osoite *"
+                            maxLength={200}
+                            style={{ gridColumn: "1 / span 2" }}
+                            {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.osoite`)}
+                            // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
+                          ></TextInput>
+                          <TextInput
+                            label="Postinumero *"
+                            maxLength={200}
+                            {...register(
+                              `suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.postinumero`
+                            )}
+                            // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
+                          ></TextInput>
 
-              {fields.map((tilaisuus, index) => {
-                return (
-                  <Section key={tilaisuus.id}>
-                    <SectionContent>
-                      {tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA && <h4 className="vayla-small-title">Live-tilaisuudet verkossa</h4>}
-                      {tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA && <h4 className="vayla-small-title">Fyysiset tilaisuudet</h4>}
-                      {tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA && <h4 className="vayla-small-title">Soittoaika</h4>}
-                      <TextInput
-                        label="Tilaisuuden nimi *"
-                        {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.nimi`)}
-                        // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
-                        maxLength={200}
-                      ></TextInput>
-                      <HassuStack direction={["column", "column", "row"]}>
-                        <DatePicker
-                          label="Päivämäärä *"
-                          {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.paivamaara`)}
-                          // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
-                        ></DatePicker>
-                        <TimePicker
-                          label="Alkaa *"
-                          {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.alkamisAika`)}
-                          // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
-                        ></TimePicker>
-                        <TimePicker
-                          label="Päättyy *"
+                          <TextInput
+                            label="Postitoimipaikka"
+                            maxLength={200}
+                            {...register(
+                              `suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.postitoimipaikka`
+                            )}
+                            // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
+                          ></TextInput>
+                        </HassuGrid>
+                        <TextInput
+                          label="Saapumisohjeet"
                           {...register(
-                            `suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.paattymisAika`
+                            `suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.Saapumisohjeet`
                           )}
                           // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
-                        ></TimePicker>
-                      </HassuStack>
-                      <HassuGrid cols={{ lg: 3 }}>
-                        <Select
-                          addEmptyOption
-                          options={Object.keys(KaytettavaPalvelu).map((palvelu) => {
-                            return { label: capitalize(palvelu), value: palvelu };
-                          })}
-                          label="Käytettävä palvelu *"
-                          {...register(
-                            `suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.kaytettavaPalvelu`
-                          )}
-                          // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
-                        />
-                      </HassuGrid>
-                      <TextInput
-                        label="Linkki tilaisuuteen *"
-                        maxLength={200}
-                        {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.linkki`)}
-                        // error={errors?.suunnitteluVaihe?.vuorovaikutus?...}
-                      ></TextInput>
-                      <p>
-                        Linkki tilaisuuteen julkaistaan palvelun julkisella puolella kaksi (2) tuntia ennen tilaisuuden
-                        alkamista.
-                      </p>
-                      <Button
-                        onClick={(event) => {
-                          event.preventDefault();
-                          remove(index);
-                        }}
-                      >
-                        Poista
-                      </Button>
-                    </SectionContent>
-                  </Section>
-                );
-              })}
+                          maxLength={200}
+                        ></TextInput>
+                        <Button
+                          className="btn-remove-red"
+                          onClick={(event) => {
+                            event.preventDefault();
+                            remove(index);
+                          }}
+                        >
+                          Poista
+                        </Button>
+                      </SectionContent>
+                    );
+                  })}
+                </Section>
+              )}
             </HassuStack>
             <HassuStack
               direction={["column", "column", "row"]}
               justifyContent={[undefined, undefined, "flex-end"]}
               paddingTop={"1rem"}
             >
-              <Button
-                primary
-                onClick={(e) => {
-                  windowHandler(false);
-                  e.preventDefault();
-                }}
-              >
+              <Button primary onClick={handleSubmit(saveTilaisuudet)}>
                 Tallenna
               </Button>
               <Button

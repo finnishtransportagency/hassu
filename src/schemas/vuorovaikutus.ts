@@ -18,6 +18,11 @@ export const vuorovaikutusSchema = Yup.object().shape({
           return isValidDate(date);
         }),
       esitettavatYhteystiedot: Yup.array().notRequired().of(yhteystietoSchema),
+      vuorovaikutusTilaisuudet: Yup.array().of(
+        Yup.object().shape({
+          nimi: Yup.string().required("Tilaisuuden nimi täytyy antaa").nullable(),
+        })
+      ),
     }),
   }),
 });
