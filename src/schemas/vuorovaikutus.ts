@@ -16,6 +16,11 @@ export const vuorovaikutusSchema = Yup.object().shape({
         .test("valid-date", "Virheellinen päivämäärä", (date) => {
           return isValidDate(date);
         }),
+      vuorovaikutusTilaisuudet: Yup.array().of(
+        Yup.object().shape({
+          nimi: Yup.string().required("Tilaisuuden nimi täytyy antaa").nullable(),
+        })
+      ),
     }),
   }),
 });
