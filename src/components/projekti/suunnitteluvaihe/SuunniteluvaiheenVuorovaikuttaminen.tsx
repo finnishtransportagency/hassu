@@ -105,6 +105,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
     handleSubmit,
     formState: { errors, isDirty },
     control,
+    getValues,
   } = useFormReturn;
 
   const { fields, append, remove } = useFieldArray({
@@ -171,23 +172,21 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
     return <></>;
   }
 
-  console.log(errors);
+  const vuorovaikutusTilaisuudet = getValues("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet");
 
-  const isVerkkotilaisuuksia = !!vuorovaikutus?.vuorovaikutusTilaisuudet?.find(
+  const isVerkkotilaisuuksia = !!vuorovaikutusTilaisuudet?.find(
     (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA
   );
-  const isFyysisiatilaisuuksia = !!vuorovaikutus?.vuorovaikutusTilaisuudet?.find(
+  const isFyysisiatilaisuuksia = !!vuorovaikutusTilaisuudet?.find(
     (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA
   );
-  const isSoittoaikoja = !!vuorovaikutus?.vuorovaikutusTilaisuudet?.find(
-    (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA
-  );
+  const isSoittoaikoja = !!vuorovaikutusTilaisuudet?.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA);
 
   return (
     <>
       <FormProvider {...useFormReturn}>
         <form>
-          <fieldset style={{ display: "contents" }}>
+          <fieldset>
             <Section>
               <SectionContent>
                 <h4 className="vayla-small-title">Vuorovaikuttaminen</h4>
@@ -250,7 +249,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
                     <p>
                       <b>Fyysiset tilaisuudet</b>
                     </p>
-                    {vuorovaikutus?.vuorovaikutusTilaisuudet
+                    {vuorovaikutusTilaisuudet
                       ?.filter((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA)
                       .map((tilaisuus, index) => {
                         return (
@@ -270,7 +269,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
                     <p>
                       <b>Soittoaika</b>
                     </p>
-                    {vuorovaikutus?.vuorovaikutusTilaisuudet
+                    {vuorovaikutusTilaisuudet
                       ?.filter((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA)
                       .map((tilaisuus, index) => {
                         return (
