@@ -44,9 +44,12 @@ import dayjs, { Dayjs } from "dayjs";
 
 export type ProjektiAdaptationResult = {
   projekti: DBProjekti;
-  aineistotToDelete?: Aineisto[];
-  vuorovaikutusNumeroForAineistotImport?: number;
-  vuorovaikutusPublishTriggered?: Vuorovaikutus;
+  aineistoChanges?: {
+    vuorovaikutus?: Vuorovaikutus;
+    aineistotToDelete?: Aineisto[];
+    hasPendingImports?: boolean;
+    julkinenChanged?: boolean;
+  };
 };
 
 export class ProjektiAdapter {
@@ -252,26 +255,58 @@ function adaptVuorovaikutusToSave(
 ): Vuorovaikutus[] {
   if (vuorovaikutusInput) {
     const dbVuorovaikutus = findVuorovaikutusByNumber(projekti, vuorovaikutusInput.vuorovaikutusNumero);
+
+    let vuorovaikutusToSave: Vuorovaikutus;
     if (dbVuorovaikutus?.julkinen) {
-      log.warn("Yritetty tallentaa julkisen vuorovaikutuksen päälle");
-      return undefined;
+      // Allow only aineistot to be updated
+      vuorovaikutusToSave = {
+        ...dbVuorovaikutus,
+        aineistot: adaptAineistotToSave(projektiAdaptationResult, vuorovaikutusInput, dbVuorovaikutus),
+      };
+    } else {
+      vuorovaikutusToSave = {
+        ...vuorovaikutusInput,
+        ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(vuorovaikutusInput.ilmoituksenVastaanottajat),
+        esitettavatYhteystiedot: vuorovaikutusInput.esitettavatYhteystiedot
+          ? vuorovaikutusInput.esitettavatYhteystiedot.map((yt) => ({ __typename: "Yhteystieto", ...yt }))
+          : undefined,
+        aineistot: adaptAineistotToSave(projektiAdaptationResult, vuorovaikutusInput, dbVuorovaikutus),
+      };
     }
-    const aineistot = adaptAineistotToSave(projektiAdaptationResult, vuorovaikutusInput, dbVuorovaikutus);
-    const vuorovaikutusToSave: Vuorovaikutus = {
-      ...vuorovaikutusInput,
-      ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(vuorovaikutusInput.ilmoituksenVastaanottajat),
-      esitettavatYhteystiedot: vuorovaikutusInput.esitettavatYhteystiedot
-        ? vuorovaikutusInput.esitettavatYhteystiedot.map((yt) => ({ __typename: "Yhteystieto", ...yt }))
-        : undefined,
-      aineistot,
-    };
-    if (!dbVuorovaikutus?.julkinen && vuorovaikutusToSave.julkinen) {
-      projektiAdaptationResult.vuorovaikutusPublishTriggered = vuorovaikutusToSave;
+
+    checkIfAineistoJulkinenChanged(vuorovaikutusToSave, dbVuorovaikutus, projektiAdaptationResult);
+    if (projektiAdaptationResult.aineistoChanges) {
+      projektiAdaptationResult.aineistoChanges.vuorovaikutus = vuorovaikutusToSave;
     }
 
     return [vuorovaikutusToSave];
   }
   return undefined;
+}
+
+function checkIfAineistoJulkinenChanged(
+  vuorovaikutusToSave: Vuorovaikutus,
+  dbVuorovaikutus: Vuorovaikutus,
+  projektiAdaptationResult: Partial<ProjektiAdaptationResult>
+) {
+  function vuorovaikutusPublishedForTheFirstTime(dbVuorovaikutus: Vuorovaikutus, vuorovaikutusToSave: Vuorovaikutus) {
+    return !dbVuorovaikutus?.julkinen && vuorovaikutusToSave.julkinen;
+  }
+
+  function vuorovaikutusNotPublicAnymore(dbVuorovaikutus: Vuorovaikutus, vuorovaikutusToSave: Vuorovaikutus) {
+    return dbVuorovaikutus && dbVuorovaikutus.julkinen && !vuorovaikutusToSave.julkinen;
+  }
+
+  if (
+    vuorovaikutusPublishedForTheFirstTime(dbVuorovaikutus, vuorovaikutusToSave) ||
+    vuorovaikutusNotPublicAnymore(dbVuorovaikutus, vuorovaikutusToSave)
+  ) {
+    if (projektiAdaptationResult.aineistoChanges) {
+      projektiAdaptationResult.aineistoChanges.julkinenChanged = true;
+    } else {
+      projektiAdaptationResult.aineistoChanges = { julkinenChanged: true };
+    }
+  }
 }
 
 function pickAineistoFromInputByDocumenttiOid(aineistotInput: AineistoInput[], dokumenttiOid: string) {
@@ -312,7 +347,7 @@ function adaptAineistotToSave(
   );
 
   // Add new ones and optionally trigger import later
-  let vuorovaikutusNumeroForAineistotImport = undefined;
+  let hasPendingImports = undefined;
   for (const aineistoInput of aineistotInput) {
     dbAineistot.push({
       dokumenttiOid: aineistoInput.dokumenttiOid,
@@ -320,23 +355,14 @@ function adaptAineistotToSave(
       kategoria: aineistoInput.kategoria,
       tila: AineistoTila.ODOTTAA,
     });
-    vuorovaikutusNumeroForAineistotImport = vuorovaikutus.vuorovaikutusNumero;
+    hasPendingImports = true;
   }
-  projektiAdaptationResult.aineistotToDelete = aineistotToDelete;
-  projektiAdaptationResult.vuorovaikutusNumeroForAineistotImport = vuorovaikutusNumeroForAineistotImport;
+  projektiAdaptationResult.aineistoChanges = { vuorovaikutus: null, aineistotToDelete, hasPendingImports };
   return dbAineistot;
 }
 
-export function adaptAineistot(
-  aineistot?: Aineisto[] | null,
-  julkaisuPaiva?: Dayjs,
-  aineistoPoistetaanNakyvista?: Dayjs
-): Aineisto[] | undefined {
-  const now = dayjs();
-  if (
-    (julkaisuPaiva && julkaisuPaiva.isAfter(dayjs())) ||
-    (aineistoPoistetaanNakyvista && aineistoPoistetaanNakyvista.isBefore(now))
-  ) {
+export function adaptAineistot(aineistot?: Aineisto[] | null, julkaisuPaiva?: Dayjs): Aineisto[] | undefined {
+  if (julkaisuPaiva && julkaisuPaiva.isAfter(dayjs())) {
     return undefined;
   }
   if (aineistot && aineistot.length > 0) {

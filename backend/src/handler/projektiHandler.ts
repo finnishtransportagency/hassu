@@ -191,18 +191,23 @@ async function handleFiles(input: TallennaProjektiInput) {
  * If there are uploaded files in the input, persist them into the project
  */
 async function handleAineistot(projektiAdaptationResult: ProjektiAdaptationResult) {
-  const { aineistotToDelete, vuorovaikutusNumeroForAineistotImport, projekti, vuorovaikutusPublishTriggered } =
-    projektiAdaptationResult;
-  if (vuorovaikutusNumeroForAineistotImport) {
-    await aineistoService.importAineisto(projekti.oid, vuorovaikutusNumeroForAineistotImport);
+  const { aineistoChanges, projekti } = projektiAdaptationResult;
+  if (!aineistoChanges) {
+    return;
+  }
+  if (aineistoChanges.hasPendingImports) {
+    await aineistoService.importAineisto(projekti.oid, aineistoChanges.vuorovaikutus.vuorovaikutusNumero);
   }
 
-  if (aineistotToDelete) {
-    await aineistoService.deleteAineisto(projekti.oid, aineistotToDelete);
+  if (aineistoChanges.aineistotToDelete) {
+    await aineistoService.deleteAineisto(projekti.oid, aineistoChanges.aineistotToDelete);
   }
 
-  if (vuorovaikutusPublishTriggered) {
-    await aineistoService.publishVuorovaikutusAineisto(projekti.oid, vuorovaikutusPublishTriggered);
+  if (
+    aineistoChanges.vuorovaikutus?.julkinen &&
+    (aineistoChanges.hasPendingImports || aineistoChanges.aineistotToDelete || aineistoChanges.julkinenChanged)
+  ) {
+    await aineistoService.synchronizeVuorovaikutusAineistoToPublic(projektiAdaptationResult);
   }
 }
 

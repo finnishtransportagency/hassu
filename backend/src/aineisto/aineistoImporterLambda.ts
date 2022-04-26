@@ -32,7 +32,7 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
         for (const aineisto of vuorovaikutus.aineistot) {
           const sourceURL = await velho.getLinkForDocument(aineisto.dokumenttiOid);
           const axiosResponse = await axios.get(sourceURL);
-          const filePathInProjekti = "suunnitteluvaihe/vuorovaikutus_" + vuorovaikutus.vuorovaikutusNumero;
+          const filePathInProjekti = fileService.getVuorovaikutusPath(vuorovaikutus);
           const fileName = parseFilenameFromContentDisposition(axiosResponse.headers["content-disposition"]);
           aineisto.tiedosto = await fileService.createFileToProjekti({
             oid: projekti.oid,

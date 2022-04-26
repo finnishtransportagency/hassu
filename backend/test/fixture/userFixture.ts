@@ -1,9 +1,8 @@
 import * as sinon from "sinon";
-import * as Sinon from "sinon";
 import { NykyinenKayttaja, ProjektiKayttaja, VaylaKayttajaTyyppi } from "../../../common/graphql/apiModel";
 
 export class UserFixture {
-  private sinonStub: Sinon.SinonStub;
+  private sinonStub: sinon.SinonStub;
   private userService: any;
 
   constructor(userService: any) {

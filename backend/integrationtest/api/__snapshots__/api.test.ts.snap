@@ -36,7 +36,6 @@ Object {
     "vuorovaikutukset": Array [
       Object {
         "__typename": "Vuorovaikutus",
-        "aineistoPoistetaanNakyvista": "2222-03-23T23:45",
         "aineistot": undefined,
         "esitettavatYhteystiedot": Array [
           Object {
@@ -89,7 +88,6 @@ Object {
       },
       Object {
         "__typename": "Vuorovaikutus",
-        "aineistoPoistetaanNakyvista": "2222-03-23T23:45",
         "aineistot": undefined,
         "esitettavatYhteystiedot": Array [
           Object {
@@ -159,7 +157,6 @@ Object {
   "description": "saveAndVerifyAineistoSave",
   "obj": Object {
     "__typename": "Vuorovaikutus",
-    "aineistoPoistetaanNakyvista": "2222-03-23T23:45",
     "aineistot": Array [
       Object {
         "__typename": "Aineisto",
@@ -240,7 +237,6 @@ Object {
   "description": "saveAndVerifyAineistoSave",
   "obj": Object {
     "__typename": "Vuorovaikutus",
-    "aineistoPoistetaanNakyvista": "2222-03-23T23:45",
     "aineistot": Array [
       Object {
         "__typename": "Aineisto",
@@ -321,7 +317,6 @@ Object {
   "description": "saveAndVerifyAineistoSave",
   "obj": Object {
     "__typename": "Vuorovaikutus",
-    "aineistoPoistetaanNakyvista": "2222-03-23T23:45",
     "aineistot": Array [
       Object {
         "__typename": "Aineisto",
@@ -405,7 +400,6 @@ Array [
 exports[`Api should search, load and save a project 8`] = `
 Object {
   "__typename": "Vuorovaikutus",
-  "aineistoPoistetaanNakyvista": "2222-03-23T23:45",
   "aineistot": Array [
     Object {
       "__typename": "Aineisto",
@@ -610,7 +604,6 @@ Object {
     "vuorovaikutukset": Array [
       Object {
         "__typename": "VuorovaikutusJulkinen",
-        "aineistoPoistetaanNakyvista": "2222-03-23T23:45",
         "aineistot": Array [
           Object {
             "__typename": "Aineisto",
@@ -701,7 +694,6 @@ Object {
       },
       Object {
         "__typename": "VuorovaikutusJulkinen",
-        "aineistoPoistetaanNakyvista": "2222-03-23T23:45",
         "aineistot": undefined,
         "esitettavatYhteystiedot": Array [
           Object {
@@ -772,6 +764,96 @@ Object {
         ],
       },
     ],
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 13`] = `
+Object {
+  "yllapito S3 files just after vuorovaikutus published": Object {
+    "aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {},
+    "aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {},
+    "palautteet/***unittest***/logo.png": Object {},
+    "suunnittelusopimus/logo.png": Object {},
+    "suunnitteluvaihe/vuorovaikutus_1/ekatiedosto_eka.pdf": Object {},
+    "suunnitteluvaihe/vuorovaikutus_1/karttakuvalla_tiedosto.pdf": Object {},
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 14`] = `
+Object {
+  "public S3 files just after vuorovaikutus published": Object {
+    "aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/ekatiedosto_eka.pdf": Object {
+      "publishDate": "2022-03-23T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/karttakuvalla_tiedosto.pdf": Object {
+      "publishDate": "2022-03-23T00:00:00+02:00",
+    },
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 15`] = `
+Object {
+  "DistributionId": "unit-test-distribution-id",
+  "InvalidationBatch": Object {
+    "CallerReference": "***unittest***",
+    "Paths": Object {
+      "Items": Array [
+        "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/*",
+      ],
+      "Quantity": 1,
+    },
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 16`] = `
+Object {
+  "yllapito S3 files vuorovaikutus publish date changed and last aineisto deleted": Object {
+    "aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {},
+    "aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {},
+    "palautteet/***unittest***/logo.png": Object {},
+    "suunnittelusopimus/logo.png": Object {},
+    "suunnitteluvaihe/vuorovaikutus_1/ekatiedosto_eka.pdf": Object {},
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 17`] = `
+Object {
+  "public S3 files vuorovaikutus publish date changed and last aineisto deleted": Object {
+    "aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/ekatiedosto_eka.pdf": Object {
+      "publishDate": "2022-03-23T00:00:00+02:00",
+    },
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 18`] = `
+Object {
+  "DistributionId": "unit-test-distribution-id",
+  "InvalidationBatch": Object {
+    "CallerReference": "***unittest***",
+    "Paths": Object {
+      "Items": Array [
+        "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/*",
+      ],
+      "Quantity": 1,
+    },
   },
 }
 `;

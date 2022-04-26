@@ -19,6 +19,7 @@ import {
 import fs from "fs";
 import axios from "axios";
 import * as sinon from "sinon";
+import Sinon from "sinon";
 import { personSearchUpdaterClient } from "../../src/personSearch/personSearchUpdaterClient";
 import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/personSearchUpdaterHandler";
 import { openSearchClient } from "../../src/projektiSearch/openSearchClient";
@@ -32,6 +33,12 @@ import os from "os";
 import { aineistoImporterClient } from "../../src/aineisto/aineistoImporterClient";
 import { handleEvent } from "../../src/aineisto/aineistoImporterLambda";
 import { SQSEvent, SQSRecord } from "aws-lambda/trigger/sqs";
+import { fileService } from "../../src/files/fileService";
+import AWSMock from "aws-sdk-mock";
+import AWS from "aws-sdk";
+import { getCloudFront, produce } from "../../src/aws/client";
+import { parseDate } from "../../src/util/dateUtil";
+import { cleanProjektiS3Files } from "../util/s3Util";
 
 const { expect } = require("chai");
 const sandbox = sinon.createSandbox();
@@ -56,19 +63,49 @@ function cleanupGeneratedIdFromFeedbacks(feedbacks?: Palaute[]) {
     : undefined;
 }
 
+function cleanupGeneratedIds(obj: any) {
+  return Object.keys(obj).reduce((cleanObj, key) => {
+    const cleanedUpKey = key.replace(/[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}/g, "***unittest***");
+    cleanObj[cleanedUpKey] = obj[key];
+    return cleanObj;
+  }, {});
+}
+
+function verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub: Sinon.SinonStub<any[], any>) {
+  expect(awsCloudfrontInvalidationStub.getCalls()).to.have.length(1);
+  expect(awsCloudfrontInvalidationStub.getCalls()[0].args).to.have.length(2);
+  const invalidationParams = awsCloudfrontInvalidationStub.getCalls()[0].args[0];
+  invalidationParams.InvalidationBatch.CallerReference = "***unittest***";
+  expect(invalidationParams).toMatchSnapshot();
+  awsCloudfrontInvalidationStub.resetHistory();
+}
+
+async function takeS3Snapshot(oid: string, description: string) {
+  expect({
+    ["yllapito S3 files " + description]: cleanupGeneratedIds(await fileService.listYllapitoProjektiFiles(oid, "")),
+  }).toMatchSnapshot(description);
+  expect({
+    ["public S3 files " + description]: cleanupGeneratedIds(await fileService.listPublicProjektiFiles(oid, "", true)),
+  }).toMatchSnapshot(description);
+}
+
 describe("Api", () => {
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
   let importAineistoStub: sinon.SinonStub;
   let userFixture: UserFixture;
   let oid: string = undefined;
+  let awsCloudfrontInvalidationStub: sinon.SinonStub;
 
   after(() => {
     userFixture.logout();
     sandbox.restore();
     sinon.restore();
+    AWSMock.restore();
   });
 
-  before("Initialize test database!", async () => await setupLocalDatabase());
+  before("Initialize test database!", async () => {
+    await setupLocalDatabase();
+  });
 
   const fakeAineistoImportQueue: SQSEvent[] = [];
 
@@ -87,6 +124,13 @@ describe("Api", () => {
     importAineistoStub.callsFake(async (event) => {
       fakeAineistoImportQueue.push({ Records: [{ body: JSON.stringify(event) } as SQSRecord] });
     });
+
+    awsCloudfrontInvalidationStub = sandbox.stub();
+    awsCloudfrontInvalidationStub.resolves({});
+    AWSMock.setSDKInstance(AWS);
+    produce<AWS.CloudFront>("cloudfront", () => undefined, true);
+    AWSMock.mock("CloudFront", "createInvalidation", awsCloudfrontInvalidationStub);
+    getCloudFront();
   });
 
   async function testProjektiHenkilot(projekti: Projekti, oid: string) {
@@ -256,6 +300,23 @@ describe("Api", () => {
     await saveAndVerifyAineistoSave(oid, aineistotWithoutFirst);
   }
 
+  async function testUpdatePublishDateAndDeleteAineisto(oid: string) {
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    const vuorovaikutus = (await loadProjektiFromDatabase(oid)).suunnitteluVaihe.vuorovaikutukset[0];
+    vuorovaikutus.aineistot.pop();
+    const input = {
+      oid,
+      suunnitteluVaihe: {
+        vuorovaikutus: {
+          ...vuorovaikutus,
+          vuorovaikutusJulkaisuPaiva: parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva).add(1, "date").format(),
+          aineistot: vuorovaikutus.aineistot,
+        },
+      },
+    };
+    await api.tallennaProjekti(input);
+  }
+
   async function insertAndManageFeedback(oid: string) {
     const palauteId = await api.lisaaPalaute(oid, {
       etunimi: "Matti",
@@ -329,6 +390,7 @@ describe("Api", () => {
 
     const projekti = await readProjektiFromVelho();
     oid = projekti.oid;
+    await cleanProjektiS3Files(oid);
     const projektiPaallikko = await testProjektiHenkilot(projekti, oid);
     await testProjektinTiedot(oid);
     await testAloitusKuulutusEsikatselu(oid);
@@ -347,6 +409,12 @@ describe("Api", () => {
     await insertAndManageFeedback(oid);
 
     await julkaiseVuorovaikutus(oid);
+    await takeS3Snapshot(oid, "just after vuorovaikutus published");
+    verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub);
+
+    await testUpdatePublishDateAndDeleteAineisto(oid);
+    await takeS3Snapshot(oid, "vuorovaikutus publish date changed and last aineisto deleted");
+    verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub);
   });
 
   async function processQueue() {

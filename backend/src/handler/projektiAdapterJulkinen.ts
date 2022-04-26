@@ -176,13 +176,12 @@ function adaptVuorovaikutukset(dbProjekti: DBProjekti): API.VuorovaikutusJulkine
       .map((vuorovaikutus) => {
         const julkaisuPaiva = parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva);
         if (julkaisuPaiva.isBefore(dayjs())) {
-          const aineistoPoistetaanNakyvista = parseDate(vuorovaikutus.aineistoPoistetaanNakyvista);
           return {
             ...vuorovaikutus,
             __typename: "VuorovaikutusJulkinen",
             vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
             videot: adaptLinkkiList(vuorovaikutus.videot),
-            aineistot: adaptAineistot(vuorovaikutus.aineistot, julkaisuPaiva, aineistoPoistetaanNakyvista),
+            aineistot: adaptAineistot(vuorovaikutus.aineistot, julkaisuPaiva),
             vuorovaikutusYhteystiedot: adaptAndMergeYhteystiedot(dbProjekti, vuorovaikutus),
           } as API.VuorovaikutusJulkinen;
         }

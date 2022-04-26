@@ -41,6 +41,7 @@ import { IOriginAccessIdentity } from "@aws-cdk/aws-cloudfront/lib/origin-access
 // These should correspond to CfnOutputs produced by this stack
 export type FrontendStackOutputs = {
   CloudfrontPrivateDNSName: string;
+  CloudfrontDistributionId: string;
   FrontendPublicKeyIdOutput: string;
 };
 
@@ -141,6 +142,9 @@ export class HassuFrontendStack extends cdk.Stack {
 
     new cdk.CfnOutput(this, "CloudfrontPrivateDNSName", {
       value: nextJSLambdaEdge.distribution.distributionDomainName || "",
+    });
+    new cdk.CfnOutput(this, "CloudfrontDistributionId", {
+      value: nextJSLambdaEdge.distribution.distributionId || "",
     });
   }
 

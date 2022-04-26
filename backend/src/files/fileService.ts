@@ -7,6 +7,8 @@ import { Dayjs } from "dayjs";
 import { uriEscapePath } from "aws-sdk/lib/util";
 import { ListObjectsV2Output } from "aws-sdk/clients/s3";
 import { getS3 } from "../aws/client";
+import { Vuorovaikutus } from "../database/model/suunnitteluVaihe";
+import { parseDate } from "../util/dateUtil";
 
 export type UploadFileProperties = {
   fileNameWithPath: string;
@@ -24,9 +26,20 @@ export type CreateFileProperties = {
   copyToPublic?: boolean;
 };
 
+// Simple types to hold aineisto information for syncronization purposes
+export type SimpleAineistoMap = { [fullFilePathInProjekti: string]: AineistoMetadata };
+export type AineistoMetadata = {
+  publishDate?: Dayjs;
+  expirationDate?: Dayjs;
+};
+
 export type PersistFileProperties = { targetFilePathInProjekti: string; uploadedFileSource: string; oid: string };
 
 export type DeleteFileProperties = { fullFilePathInProjekti: string; oid: string };
+
+const S3_METADATA_PUBLISH_TIMESTAMP = "publication-timestamp";
+
+const S3_METADATA_EXPIRATION_TIMESTAMP = "expiration-timestamp";
 
 export class FileService {
   /**
@@ -81,7 +94,7 @@ export class FileService {
     try {
       const metadata: { [key: string]: string } = {};
       if (param.publicationTimestamp) {
-        metadata["publication-timestamp"] = param.publicationTimestamp.format();
+        metadata[S3_METADATA_PUBLISH_TIMESTAMP] = param.publicationTimestamp.format();
       }
       await FileService.putFile(
         config.yllapitoBucketName,
@@ -159,33 +172,26 @@ export class FileService {
   }
 
   async archiveProjekti({ oid, timestamp }: ArchivedProjektiKey): Promise<void> {
+    const yllapitoProjektiDirectory = FileService.getYllapitoProjektiDirectory(oid);
+    await this.moveFilesRecursively(
+      config.yllapitoBucketName,
+      yllapitoProjektiDirectory,
+      config.archiveBucketName,
+      yllapitoProjektiDirectory + "/" + timestamp
+    );
+
+    const publicProjektiDirectory = FileService.getPublicProjektiDirectory(oid);
+    await this.moveFilesRecursively(
+      config.publicBucketName,
+      publicProjektiDirectory,
+      config.archiveBucketName,
+      publicProjektiDirectory + "/" + timestamp
+    );
+  }
+
+  private async moveFilesRecursively(sourceBucket: string, sourcePrefix: string, targetBucket, targetPrefix: string) {
     const s3 = getS3();
-    const sourcePrefix = FileService.getYllapitoProjektiDirectory(oid);
-    const targetPrefix = sourcePrefix + "/" + timestamp;
-    const sourceBucket = config.yllapitoBucketName;
-    const targetBucket = config.archiveBucketName;
-
     let ContinuationToken = undefined;
-    const copyFile = async (sourceKey: string) => {
-      const targetKey = sourceKey.replace(sourcePrefix, targetPrefix);
-
-      await s3
-        .copyObject({
-          Bucket: targetBucket,
-          Key: targetKey,
-          CopySource: uriEscapePath(`${sourceBucket}/${sourceKey}`),
-          MetadataDirective: "REPLACE",
-        })
-        .promise();
-
-      await s3
-        .deleteObject({
-          Bucket: sourceBucket,
-          Key: sourceKey,
-        })
-        .promise();
-    };
-
     do {
       const { Contents = [], NextContinuationToken }: ListObjectsV2Output = await s3
         .listObjectsV2({
@@ -202,7 +208,7 @@ export class FileService {
           while (sourceKeys.length) {
             const key = sourceKeys.pop();
             if (key) {
-              await copyFile(key);
+              await FileService.moveFile(sourceBucket, key, targetBucket, key.replace(sourcePrefix, targetPrefix));
             }
           }
         })
@@ -212,12 +218,36 @@ export class FileService {
     } while (ContinuationToken);
   }
 
+  private static async moveFile(sourceBucket: string, sourceKey: string, targetBucket: string, targetKey: string) {
+    const s3 = getS3();
+
+    await s3
+      .copyObject({
+        Bucket: targetBucket,
+        Key: targetKey,
+        CopySource: uriEscapePath(`${sourceBucket}/${sourceKey}`),
+        MetadataDirective: "REPLACE",
+      })
+      .promise();
+
+    await s3
+      .deleteObject({
+        Bucket: sourceBucket,
+        Key: sourceKey,
+      })
+      .promise();
+  }
+
   getYllapitoPathForProjektiFile(oid: string, path: string): string | undefined {
     return path ? `/${FileService.getYllapitoProjektiDirectory(oid)}${path}` : undefined;
   }
 
   getPublicPathForProjektiFile(oid: string, path: string): string | undefined {
     return path ? `/${FileService.getPublicProjektiDirectory(oid)}${path}` : undefined;
+  }
+
+  getVuorovaikutusPath(vuorovaikutus: Vuorovaikutus): string {
+    return "suunnitteluvaihe/vuorovaikutus_" + vuorovaikutus.vuorovaikutusNumero;
   }
 
   /**
@@ -234,10 +264,10 @@ export class FileService {
 
     const metadata: { [key: string]: string } = {};
     if (publishDate) {
-      metadata["publication-timestamp"] = publishDate.format();
+      metadata[S3_METADATA_PUBLISH_TIMESTAMP] = publishDate.format();
     }
     if (expirationDate) {
-      metadata["expiration-timestamp"] = expirationDate.format();
+      metadata[S3_METADATA_EXPIRATION_TIMESTAMP] = expirationDate.format();
     }
     const copyObjectParams = {
       Bucket: targetBucket,
@@ -257,11 +287,17 @@ export class FileService {
     }
   }
 
-  async deleteFileFromProjekti({ oid, fullFilePathInProjekti }: DeleteFileProperties): Promise<void> {
-    const sourcePrefix = FileService.getYllapitoProjektiDirectory(oid);
-    const key = sourcePrefix + fullFilePathInProjekti;
+  async deleteYllapitoFileFromProjekti({ oid, fullFilePathInProjekti }: DeleteFileProperties): Promise<void> {
+    const projektiPath = FileService.getYllapitoProjektiDirectory(oid);
+    await FileService.deleteFileFromProjekti(config.yllapitoBucketName, projektiPath + fullFilePathInProjekti);
+  }
 
-    const bucket = config.yllapitoBucketName;
+  async deletePublicFileFromProjekti({ oid, fullFilePathInProjekti }: DeleteFileProperties): Promise<void> {
+    const projektiPath = FileService.getPublicProjektiDirectory(oid);
+    await FileService.deleteFileFromProjekti(config.publicBucketName, projektiPath + fullFilePathInProjekti);
+  }
+
+  private static async deleteFileFromProjekti(bucket: string, key: string): Promise<void> {
     await getS3()
       .deleteObject({
         Bucket: bucket,
@@ -269,6 +305,75 @@ export class FileService {
       })
       .promise();
     log.info(`Deleted file ${bucket}/${key}`);
+  }
+
+  async listYllapitoProjektiFiles(oid: string, path: string): Promise<SimpleAineistoMap> {
+    const bucketName = config.yllapitoBucketName;
+    const s3ProjektiPath = FileService.getYllapitoProjektiDirectory(oid) + "/" + path;
+    return FileService.listObjects(bucketName, s3ProjektiPath);
+  }
+
+  async listPublicProjektiFiles(oid: string, path: string, withMetadata = false): Promise<SimpleAineistoMap> {
+    const bucketName = config.publicBucketName;
+    const s3ProjektiPath = FileService.getPublicProjektiDirectory(oid) + "/" + path;
+    return FileService.listObjects(bucketName, s3ProjektiPath, withMetadata);
+  }
+
+  private static async listObjects(bucketName: string, s3ProjektiPath: string, withMetadata = false) {
+    let ContinuationToken = undefined;
+    const s3 = getS3();
+    const result: SimpleAineistoMap = {};
+
+    do {
+      const { Contents: contents = [], NextContinuationToken: nextContinuationToken }: ListObjectsV2Output = await s3
+        .listObjectsV2({
+          Bucket: bucketName,
+          Prefix: s3ProjektiPath,
+          ContinuationToken,
+        })
+        .promise();
+
+      const sourceKeys = contents.map(({ Key }) => Key);
+      for (const key of sourceKeys) {
+        let metadata = {};
+        if (withMetadata) {
+          metadata = await FileService.getFileMetaData(bucketName, key);
+        }
+        result[key.replace(s3ProjektiPath, "")] = metadata;
+      }
+
+      ContinuationToken = nextContinuationToken;
+    } while (ContinuationToken);
+    return result;
+  }
+
+  async getPublicFileMetadata(oid: string, path: string): Promise<AineistoMetadata> {
+    return FileService.getFileMetaData(config.publicBucketName, this.getPublicPathForProjektiFile(oid, path));
+  }
+
+  private static async getFileMetaData(bucketName: string, key: string): Promise<AineistoMetadata> {
+    try {
+      const keyWithoutLeadingSlash = key.replace(/^\//, "");
+      const headObject = await getS3().headObject({ Bucket: bucketName, Key: keyWithoutLeadingSlash }).promise();
+      const metadata = headObject.Metadata;
+      const publishDate = metadata[S3_METADATA_PUBLISH_TIMESTAMP];
+      const expirationDate = metadata[S3_METADATA_EXPIRATION_TIMESTAMP];
+      const result: AineistoMetadata = {};
+
+      if (publishDate) {
+        result.publishDate = parseDate(publishDate);
+      }
+      if (expirationDate) {
+        result.expirationDate = parseDate(expirationDate);
+      }
+      return result;
+    } catch (e) {
+      if (e.code == "NotFound") {
+        return undefined;
+      }
+      log.error(e);
+      throw e;
+    }
   }
 }
 

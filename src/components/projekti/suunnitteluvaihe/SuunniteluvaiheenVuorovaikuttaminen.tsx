@@ -25,7 +25,6 @@ type FormValues = RequiredProjektiFields & {
   suunnitteluVaihe: {
     vuorovaikutus: Pick<
       VuorovaikutusInput,
-      | "aineistoPoistetaanNakyvista"
       | "aineistot"
       | "esitettavatYhteystiedot"
       | "kysymyksetJaPalautteetViimeistaan"
