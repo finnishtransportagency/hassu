@@ -307,7 +307,7 @@ const VirkamiesHomePage = () => {
               data: hakutulos?.tulokset || [],
               columns: [
                 { Header: "Nimi", accessor: "nimi", minWidth: 400, id: ProjektiSarake.NIMI },
-                { Header: "Asiatunnus", accessor: "asiatunnus", id: ProjektiSarake.ASIATUNNUS, disableSortBy: true },
+                { Header: "Asiatunnus", accessor: "asiatunnus", id: ProjektiSarake.ASIATUNNUS },
                 {
                   Header: "Projektipäällikkö",
                   accessor: "projektipaallikko",
@@ -337,7 +337,6 @@ const VirkamiesHomePage = () => {
               ],
               manualPagination: true,
               manualSortBy: true,
-              disableMultiSort: true,
               pageCount: Math.ceil(tuloksienMaarat[tyyppi] / PAGE_SIZE),
               useControlledState: (state) => {
                 return useMemo(

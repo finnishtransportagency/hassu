@@ -86,15 +86,15 @@ export function Table<T extends object>({
       )}
       <StyledTable {...getTableProps({ style: { minWidth: "100%" } })}>
         {headerGroups.map((headerGroup) => {
-          const { key: headerGroupKey, ...headerGroupProps } = headerGroup.getHeaderGroupProps();
+          const {
+            key: headerGroupKey,
+            style: headerGroupStyle,
+            ...headerGroupProps
+          } = headerGroup.getHeaderGroupProps();
           return (
-            <Tr {...headerGroupProps} key={headerGroupKey}>
+            <Tr {...headerGroupProps} style={isMedium ? headerGroupStyle : { display: "none" }} key={headerGroupKey}>
               {headerGroup.headers.map((column) => {
-                const {
-                  key: headerKey,
-                  style,
-                  ...headerProps
-                } = column.getHeaderProps(
+                const { key: headerKey, ...headerProps } = column.getHeaderProps(
                   useSortBy
                     ? column.getSortByToggleProps({
                         title: undefined,
@@ -117,7 +117,11 @@ export function Table<T extends object>({
                     : undefined
                 );
                 return (
-                  <HeaderCell {...headerProps} style={isMedium ? style : { display: "none" }} key={headerKey}>
+                  <HeaderCell
+                    as={useSortBy && !column.disableSortBy ? "button" : undefined}
+                    {...headerProps}
+                    key={headerKey}
+                  >
                     {column.render("Header")}
                     {column.isSorted && (
                       <FontAwesomeIcon className="ml-4" icon={column.isSortedDesc ? "arrow-down" : "arrow-up"} />
@@ -225,6 +229,7 @@ const HeaderCell = styled(Cell)(
   sx({
     paddingBottom: { md: 2 },
     color: "#7A7A7A",
+    textAlign: "left",
   })
 );
 

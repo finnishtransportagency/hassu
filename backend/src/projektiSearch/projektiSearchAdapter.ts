@@ -28,7 +28,7 @@ export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocu
 
   return {
     nimi: projekti.velho.nimi,
-    asiatunnus: projekti.velho.asiatunnusELY || projekti.velho.asiatunnusVayla,
+    asiatunnus: projekti.velho.asiatunnusELY || projekti.velho.asiatunnusVayla || "",
     projektiTyyppi: projekti.velho.tyyppi,
     suunnittelustaVastaavaViranomainen: projekti.velho.suunnittelustaVastaavaViranomainen,
     maakunnat: projekti.velho.maakunnat,
