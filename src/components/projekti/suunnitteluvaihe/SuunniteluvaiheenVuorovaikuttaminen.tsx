@@ -80,6 +80,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
     reset,
     handleSubmit,
     formState: { errors, isDirty },
+    getValues,
   } = useFormReturn;
 
   const saveDraft = async (formData: VuorovaikutusFormValues) => {
@@ -136,15 +137,15 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
     return <></>;
   }
 
-  const isVerkkotilaisuuksia = !!vuorovaikutus?.vuorovaikutusTilaisuudet?.find(
+  const vuorovaikutusTilaisuudet = getValues("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet");
+
+  const isVerkkotilaisuuksia = !!vuorovaikutusTilaisuudet?.find(
     (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA
   );
-  const isFyysisiatilaisuuksia = !!vuorovaikutus?.vuorovaikutusTilaisuudet?.find(
+  const isFyysisiatilaisuuksia = !!vuorovaikutusTilaisuudet?.find(
     (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA
   );
-  const isSoittoaikoja = !!vuorovaikutus?.vuorovaikutusTilaisuudet?.find(
-    (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA
-  );
+  const isSoittoaikoja = !!vuorovaikutusTilaisuudet?.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA);
 
   return (
     <>
@@ -210,7 +211,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
                   <p>
                     <b>Fyysiset tilaisuudet</b>
                   </p>
-                  {vuorovaikutus?.vuorovaikutusTilaisuudet
+                  {vuorovaikutusTilaisuudet
                     ?.filter((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA)
                     .map((tilaisuus, index) => {
                       return (
@@ -230,7 +231,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
                   <p>
                     <b>Soittoaika</b>
                   </p>
-                  {vuorovaikutus?.vuorovaikutusTilaisuudet
+                  {vuorovaikutusTilaisuudet
                     ?.filter((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA)
                     .map((tilaisuus, index) => {
                       return (
