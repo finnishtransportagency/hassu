@@ -16,6 +16,7 @@ import SectionContent from "@components/layout/SectionContent";
 import { breakpoints } from "@pages/_app";
 import useMediaQuery from "../hooks/useMediaQuery";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Select from "./form/Select";
 
 interface PaginationControlledProps<T extends object> {
   rowLink?: (rowData: T) => string;
@@ -52,6 +53,7 @@ export function Table<T extends object>({
     getTableProps,
     headerGroups,
     prepareRow,
+    columns,
     page,
     rows,
     pageCount,
@@ -68,9 +70,44 @@ export function Table<T extends object>({
 
   const isMedium = useMediaQuery(`(min-width: ${breakpoints.values?.md}px)`);
 
+  const sortOptions = columns
+    .filter((column) => column.isVisible && !column.disableSortBy && typeof column.Header?.toString() === "string")
+    .reduce<{ label: string; value: string }[]>((acc, column) => {
+      const header = column.Header!.toString();
+      const id = column.id.toString();
+
+      const columnIsDateTime = column.sortType === "datetime";
+
+      const columnAsc = {
+        label: header + ` ${columnIsDateTime ? " (vanhin ensin)" : "(A-Ö)"}`,
+        value: JSON.stringify({ id, desc: false }),
+      };
+      const columnDesc = {
+        label: header + ` ${columnIsDateTime ? " (uusin ensin)" : "(Ö-A)"}`,
+        value: JSON.stringify({ id, desc: true }),
+      };
+      if (column.sortDescFirst) {
+        acc.push(columnDesc);
+        acc.push(columnAsc);
+      } else {
+        acc.push(columnAsc);
+        acc.push(columnDesc);
+      }
+      return acc;
+    }, []);
+
   // Render the UI for your table
   return (
     <SectionContent largeGaps>
+      {useSortBy && !isMedium && (
+        <Select
+          label="Järjestä"
+          options={sortOptions}
+          onChange={(event) => {
+            setSortBy([JSON.parse(event.target.value)]);
+          }}
+        />
+      )}
       {usePagination && (
         <Pagination
           count={pageCount}

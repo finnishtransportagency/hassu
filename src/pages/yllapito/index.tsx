@@ -332,6 +332,7 @@ const VirkamiesHomePage = () => {
                   minWidth: 100,
                   id: ProjektiSarake.PAIVITETTY,
                   sortDescFirst: true,
+                  sortType: "datetime",
                 },
                 { Header: "oid", accessor: "oid", disableSortBy: true },
               ],
