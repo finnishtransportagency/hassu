@@ -26,7 +26,9 @@ const projektiSarakeToField: Record<ProjektiSarake, string> = {
 
 class ProjektiSearchService {
   async indexProjekti(projekti: DBProjekti) {
-    await openSearchClient.putProjekti(projekti.oid, adaptProjektiToIndex(projekti));
+    const projektiToIndex = adaptProjektiToIndex(projekti);
+    log.info("Index projekti", { projektiToIndex });
+    return openSearchClient.putProjekti(projekti.oid, projektiToIndex);
   }
 
   async removeProjekti(oid: string) {

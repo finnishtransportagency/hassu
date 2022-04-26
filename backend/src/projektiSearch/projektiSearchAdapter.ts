@@ -27,20 +27,20 @@ export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocu
   const apiProjekti = projektiAdapter.applyStatus(projektiAdapter.adaptProjekti(projekti), { saved: true });
 
   return {
-    nimi: projekti.velho.nimi,
-    asiatunnus: projekti.velho.asiatunnusELY || projekti.velho.asiatunnusVayla || "",
+    nimi: safeTrim(projekti.velho.nimi),
+    asiatunnus: safeTrim(projekti.velho.asiatunnusELY || projekti.velho.asiatunnusVayla || ""),
     projektiTyyppi: projekti.velho.tyyppi,
     suunnittelustaVastaavaViranomainen: projekti.velho.suunnittelustaVastaavaViranomainen,
-    maakunnat: projekti.velho.maakunnat,
+    maakunnat: projekti.velho.maakunnat?.map(safeTrim),
     vaihe: apiProjekti.status,
-    vaylamuoto: projekti.velho.vaylamuoto,
+    vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
     projektipaallikko: projekti.kayttoOikeudet
       .filter((value) => value.rooli == ProjektiRooli.PROJEKTIPAALLIKKO)
-      .map((value) => value.nimi)
+      .map((value) => safeTrim(value.nimi))
       .pop(),
     paivitetty: projekti.paivitetty || dayjs().format(),
     muokkaajat: projekti.kayttoOikeudet.map((value) => value.kayttajatunnus),
-  };
+  } as Partial<ProjektiDocument>;
 }
 
 export function adaptSearchResultsToProjektiDocuments(results: any): ProjektiDocument[] {
@@ -61,4 +61,10 @@ export function adaptSearchResultsToProjektiHakutulosDokumenttis(results: any): 
       return { ...hit._source, oid: hit._id, __typename: "ProjektiHakutulosDokumentti" } as ProjektiHakutulosDokumentti;
     }) || []
   );
+}
+
+function safeTrim(s: string): string | unknown {
+  if (s) {
+    return s.trim();
+  }
 }

@@ -14,7 +14,7 @@ const parse = DynamoDB.Converter.unmarshall;
 async function handleUpdate(record: DynamoDBRecord) {
   if (record.dynamodb?.NewImage) {
     const projekti = parse(record.dynamodb.NewImage) as DBProjekti;
-    log.info(`${record.eventName}`, { projekti });
+    log.info(`${record.eventName}`, { oid: projekti.oid });
     await projektiSearchService.indexProjekti(projekti);
   } else {
     log.error("No DynamoDB record to update");
