@@ -25,6 +25,14 @@
     "TIE": "Tiesuunnitelma",
     "YLEINEN": "Yleissuunnitelma"
   },
+  "projekti-vaiheet": {
+    "suunnittelun_kaynnistaminen": "Suunnittelun käynnistäminen",
+    "suunnittelussa": "Suunnittelussa",
+    "suunnitteluaineisto_nahtavilla": "Suunnitteluaineisto nähtävillä",
+    "hyvaksynnassa": "Hyväksynnässä",
+    "paatos": "Päätös",
+    "lainvoimaisuus": "Lainvoimaisuus"
+  },
   "projekti-vayla-muoto": {
     "tie": "Tie",
     "rata": "Rata",

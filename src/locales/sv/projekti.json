@@ -25,6 +25,14 @@
     "TIE": "Spårplan",
     "YLEINEN": "Översiktsplan"
   },
+  "projekti-vaiheet": {
+    "suunnittelun_kaynnistaminen": "RUOTSIKSI Suunnittelun käynnistäminen",
+    "suunnittelussa": "RUOTSIKSI Suunnittelussa",
+    "suunnitteluaineisto_nahtavilla": "RUOTSIKSI Suunnitteluaineisto nähtävillä",
+    "hyvaksynnassa": "RUOTSIKSI Hyväksynnässä",
+    "paatos": "RUOTSIKSI Päätös",
+    "lainvoimaisuus": "RUOTSIKSI Lainvoimaisuus"
+  },
   "projekti-vayla-muoto": {
     "tie": "Väg",
     "rata": "Spår",

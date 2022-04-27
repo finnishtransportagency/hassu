@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import Stepper from "@mui/material/Stepper";
 import Step, { stepClasses } from "@mui/material/Step";
 import StepLabel, { stepLabelClasses } from "@mui/material/StepLabel";
+import useTranslation from "next-translate/useTranslation";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import StepConnector, { stepConnectorClasses } from "@mui/material/StepConnector";
 import { StepIconProps } from "@mui/material/StepIcon";
@@ -16,6 +17,9 @@ interface Props {
   vertical?: true;
 }
 export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep, vertical }: Props): ReactElement {
+
+  const { t } = useTranslation("projekti");
+
   const HassuStep = styled(Step)(() => ({
     [`&.${stepClasses.root} > a span:hover`]: {
       textDecoration: "underline",
@@ -97,12 +101,12 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
   }
 
   const steps = [
-    `Suunnittelun käynnistäminen`,
-    `Suunnittelussa`,
-    `Suunnitteluaineisto nähtävillä`,
-    `Hyväksynnässä`,
-    `Päätös`,
-    `Lainvoimaisuus`,
+    t(`projekti-vaiheet.suunnittelun_kaynnistaminen`),
+    t(`projekti-vaiheet.suunnittelussa`),
+    t(`projekti-vaiheet.suunnitteluaineisto_nahtavilla`),
+    t(`projekti-vaiheet.hyvaksynnassa`),
+    t(`projekti-vaiheet.paatos`),
+    t(`projekti-vaiheet.lainvoimaisuus`),
   ];
 
   const links = [
