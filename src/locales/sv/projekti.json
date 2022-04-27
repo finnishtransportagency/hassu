@@ -10,26 +10,26 @@
     "vesi": "Vatten"
   },
   "projekti-status": {
-    "EI_JULKAISTU": "Ei julkaistu",
-    "ALOITUSKUULUTUS": "Aloituskuulutus",
-    "SUUNNITTELU": "Suunnittelu",
-    "NAHTAVILLAOLO": "Nähtävilläolo",
-    "HYVAKSYMISPAATOS": "Hyväksymispäätös",
-    "HYVAKSYNNASSA": "Hyväksynnässä",
-    "LAINVOIMA": "Lainvoima",
-    "ARKISTOITU": "Arkistoitu"
+    "EI_JULKAISTU": "RUOTSIKSI Ei julkaistu",
+    "ALOITUSKUULUTUS": "RUOTSIKSI Aloituskuulutus",
+    "SUUNNITTELU": "RUOTSIKSI Suunnittelu",
+    "NAHTAVILLAOLO": "RUOTSIKSI Nähtävilläolo",
+    "HYVAKSYMISPAATOS": "RUOTSIKSI Hyväksymispäätös",
+    "HYVAKSYNNASSA": "RUOTSIKSI Hyväksynnässä",
+    "LAINVOIMA": "RUOTSIKSI Lainvoima",
+    "ARKISTOITU": "RUOTSIKSI Arkistoitu"
   },
   "vastaava-viranomainen": {
-    "ETELA_POHJANMAAN_ELY": "Etelä-Pohjanmaan ELY-keskus",
-    "UUDENMAAN_ELY": "Uudenmaan ELY-keskus",
-    "MUU": "Muu",
-    "LAPIN_ELY": "Lapin ELY-keskus",
-    "POHJOIS_SAVON_ELY": "Pohjois-Savon ELY-keskus",
-    "VAYLAVIRASTO": "Väylävirasto",
-    "KESKI_SUOMEN_ELY": "Keski-Suomen ELY-keskus",
-    "KAAKKOIS_SUOMEN_ELY": "Kaakkois-Suomen ELY-keskus",
-    "POHJOIS_POHJANMAAN_ELY": "Pohjois-Pohjanmaan ELY-keskus",
-    "PIRKANMAAN_ELY": "Pirkanmaan ELY-keskus",
-    "VARSINAIS_SUOMEN_ELY": "Varsinais-Suomen ELY-keskus"
+    "ETELA_POHJANMAAN_ELY": "RUOTSIKSI Etelä-Pohjanmaan ELY-keskus",
+    "UUDENMAAN_ELY": "RUOTSIKSI Uudenmaan ELY-keskus",
+    "MUU": "RUOTSIKSI Muu",
+    "LAPIN_ELY": "RUOTSIKSI Lapin ELY-keskus",
+    "POHJOIS_SAVON_ELY": "RUOTSIKSI Pohjois-Savon ELY-keskus",
+    "VAYLAVIRASTO": "RUOTSIKSI Väylävirasto",
+    "KESKI_SUOMEN_ELY": "RUOTSIKSI Keski-Suomen ELY-keskus",
+    "KAAKKOIS_SUOMEN_ELY": "RUOTSIKSI Kaakkois-Suomen ELY-keskus",
+    "POHJOIS_POHJANMAAN_ELY": "RUOTSIKSI Pohjois-Pohjanmaan ELY-keskus",
+    "PIRKANMAAN_ELY": "RUOTSIKSI Pirkanmaan ELY-keskus",
+    "VARSINAIS_SUOMEN_ELY": "RUOTSIKSI Varsinais-Suomen ELY-keskus"
   }
 }
