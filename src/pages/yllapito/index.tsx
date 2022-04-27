@@ -3,6 +3,7 @@ import {
   ListaaProjektitInput,
   ProjektiHakutulos,
   ProjektiHakutulosDokumentti,
+  ProjektiSarake,
   ProjektiTyyppi,
   Status,
   Viranomainen,
@@ -14,6 +15,7 @@ import log from "loglevel";
 import useTranslation from "next-translate/useTranslation";
 import HassuSpinner from "@components/HassuSpinner";
 
+import { SortingRule } from "react-table";
 import { styled, experimental_sx as sx } from "@mui/material";
 import Section from "@components/layout/Section";
 import HassuGrid from "@components/HassuGrid";
@@ -29,6 +31,9 @@ import { formatDate } from "src/util/dateUtils";
 import Table from "@components/Table";
 
 const DEFAULT_TYYPPI = ProjektiTyyppi.TIE;
+const DEFAULT_PROJEKTI_SARAKE = ProjektiSarake.PAIVITETTY;
+const DEFAULT_JARJESTYS_KASVAVA = false;
+const PAGE_SIZE = 10;
 
 const mapQueryToListaaProjektiInput = (query: ParsedUrlQuery): ListaaProjektitInput => {
   const result: ListaaProjektitInput = { projektiTyyppi: DEFAULT_TYYPPI, sivunumero: 0 };
@@ -59,6 +64,12 @@ const mapQueryToListaaProjektiInput = (query: ParsedUrlQuery): ListaaProjektitIn
   if (typeof query?.sivunumero === "string" && !isNaN(+query.sivunumero)) {
     result.sivunumero = Math.floor(+query.sivunumero) - 1;
   }
+  if (typeof query?.jarjestysSarake === "string" && Object.keys(ProjektiSarake).includes(query.jarjestysSarake)) {
+    result.jarjestysSarake = query?.jarjestysSarake as ProjektiSarake;
+  }
+  if (query?.jarjestysKasvava === "true") {
+    result.jarjestysKasvava = true;
+  }
   return result;
 };
 
@@ -88,6 +99,12 @@ const mapListaaProjektiInputToQuery = (input: ListaaProjektitInput): ParsedUrlQu
   if (input?.sivunumero) {
     result.sivunumero = (input.sivunumero + 1).toString();
   }
+  if (input?.jarjestysSarake && input.jarjestysSarake !== ProjektiSarake.PAIVITETTY) {
+    result.jarjestysSarake = input.jarjestysSarake;
+  }
+  if (input?.jarjestysKasvava) {
+    result.jarjestysKasvava = "true";
+  }
   return result;
 };
 
@@ -110,11 +127,11 @@ const defaultFormData: ListaaProjektitInput = {
   vainProjektitMuokkausOikeuksin: false,
 };
 
-const PAGE_SIZE = 10;
-
 const VirkamiesHomePage = () => {
   const [tyyppi, setTyyppi] = useState<ProjektiTyyppi>(DEFAULT_TYYPPI);
   const [sivunumero, setSivunumero] = useState(0);
+  const [jarjestysKasvava, setJarjestysKasvava] = useState(DEFAULT_JARJESTYS_KASVAVA);
+  const [jarjestysSarake, setJarjestysSarake] = useState(DEFAULT_PROJEKTI_SARAKE);
   const [hakutulos, setHakutulos] = useState<ProjektiHakutulos>();
   const [searchInput, setSearchInput] = useState<ListaaProjektitInput>();
   const [isLoading, setIsLoading] = useState(true);
@@ -131,9 +148,11 @@ const VirkamiesHomePage = () => {
       router.push({ query: mapListaaProjektiInputToQuery(searchData) }, undefined, { scroll: false });
       setTyyppi(searchData.projektiTyyppi || DEFAULT_TYYPPI);
       setSivunumero(searchData.sivunumero || 0);
+      setJarjestysKasvava(searchData.jarjestysKasvava || DEFAULT_JARJESTYS_KASVAVA);
+      setJarjestysSarake(searchData.jarjestysSarake || DEFAULT_PROJEKTI_SARAKE);
       try {
         const result = await api.listProjektit(searchData);
-        log.info("listProjektit:", result);
+        // log.info("listProjektit:", result);
         setHakutulos(result);
       } catch (e: any) {
         log.error("Error listing projektit", e);
@@ -156,7 +175,7 @@ const VirkamiesHomePage = () => {
   useEffect(() => {
     if (router.isReady && !searchInput) {
       const input = mapQueryToListaaProjektiInput(router.query);
-      const { sivunumero, projektiTyyppi, ...resetData } = input;
+      const { sivunumero, projektiTyyppi, jarjestysKasvava, jarjestysSarake, sivunKoko, ...resetData } = input;
       reset({ ...defaultFormData, ...resetData });
       fetchProjektit(input);
     }
@@ -171,6 +190,11 @@ const VirkamiesHomePage = () => {
     [ProjektiTyyppi.RATA]: hakutulos?.ratasuunnitelmatMaara || 0,
     [ProjektiTyyppi.YLEINEN]: hakutulos?.yleissuunnitelmatMaara || 0,
   };
+
+  const sortingRules = useMemo<SortingRule<ProjektiHakutulosDokumentti>[]>(
+    () => [{ id: jarjestysSarake, desc: !jarjestysKasvava }],
+    [jarjestysSarake, jarjestysKasvava]
+  );
 
   return (
     <>
@@ -282,44 +306,66 @@ const VirkamiesHomePage = () => {
             tableOptions={{
               data: hakutulos?.tulokset || [],
               columns: [
-                { Header: "Nimi", accessor: "nimi", minWidth: 400 },
-                { Header: "Asiatunnus", accessor: "asiatunnus" },
-                { Header: "Projektipäällikkö", accessor: "projektipaallikko" },
+                { Header: "Nimi", accessor: "nimi", minWidth: 400, id: ProjektiSarake.NIMI },
+                { Header: "Asiatunnus", accessor: "asiatunnus", id: ProjektiSarake.ASIATUNNUS },
+                {
+                  Header: "Projektipäällikkö",
+                  accessor: "projektipaallikko",
+                  id: ProjektiSarake.PROJEKTIPAALLIKKO,
+                },
                 {
                   Header: "Vastuuorganisaatio",
                   accessor: (projekti) =>
                     projekti.suunnittelustaVastaavaViranomainen &&
                     t(`projekti:vastaava-viranomainen.${projekti.suunnittelustaVastaavaViranomainen}`),
+                  id: ProjektiSarake.VASTUUORGANISAATIO,
                 },
                 {
                   Header: "Vaihe",
                   accessor: (projekti) => projekti.vaihe && t(`projekti:projekti-status.${projekti.vaihe}`),
                   minWidth: 100,
+                  id: ProjektiSarake.VAIHE,
                 },
                 {
                   Header: "Päivitetty",
                   accessor: (projekti) => projekti.paivitetty && formatDate(projekti.paivitetty),
                   minWidth: 100,
+                  id: ProjektiSarake.PAIVITETTY,
+                  sortDescFirst: true,
+                  sortType: "datetime",
                 },
-                { Header: "oid", accessor: "oid" },
+                { Header: "oid", accessor: "oid", disableSortBy: true },
               ],
               manualPagination: true,
+              manualSortBy: true,
               pageCount: Math.ceil(tuloksienMaarat[tyyppi] / PAGE_SIZE),
-              useControlledState: (state) =>
-                useMemo(
+              useControlledState: (state) => {
+                return useMemo(
                   () => ({
                     ...state,
                     pageIndex: sivunumero,
+                    sortBy: sortingRules,
                     hiddenColumns: ["oid"],
                   }),
                   [state]
-                ),
+                );
+              },
             }}
-            gotoPage={(page) => {
+            pageChanger={(page) => {
               fetchProjektit({ ...searchInput, sivunumero: page });
+            }}
+            sortByChanger={(sortBy) => {
+              const { id, desc } = sortBy?.[0] || { id: DEFAULT_PROJEKTI_SARAKE, desc: !DEFAULT_JARJESTYS_KASVAVA };
+              fetchProjektit({
+                ...searchInput,
+                sivunumero: 0,
+                jarjestysSarake: id as ProjektiSarake,
+                jarjestysKasvava: !desc,
+              });
             }}
             rowLink={(projekti) => `/yllapito/projekti/${encodeURIComponent(projekti.oid)}`}
             usePagination
+            useSortBy
           />
         ) : (
           <p>Ei projekteja.</p>

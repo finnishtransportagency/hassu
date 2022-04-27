@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   useTable,
   usePagination as usePaginationHook,
@@ -6,6 +6,8 @@ import {
   TableOptions,
   PluginHook,
   useFlexLayout,
+  useSortBy as useSortByHook,
+  SortingRule,
 } from "react-table";
 import { styled, experimental_sx as sx } from "@mui/material";
 import Link from "next/link";
@@ -13,30 +15,35 @@ import Pagination from "@mui/material/Pagination";
 import SectionContent from "@components/layout/SectionContent";
 import { breakpoints } from "@pages/_app";
 import useMediaQuery from "../hooks/useMediaQuery";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Select from "./form/Select";
 
 interface PaginationControlledProps<T extends object> {
   rowLink?: (rowData: T) => string;
   tableOptions: TableOptions<T>;
-  onPageChange?: (props: { pageSize: number; pageIndex: number }) => void | Promise<void>;
-  gotoPage?: (updater: number) => void;
+  pageChanger?: (updater: number) => void;
+  sortByChanger?: (sortBy: SortingRule<T>[]) => void;
   usePagination?: boolean;
+  useSortBy?: boolean;
 }
 
-// Let's add a fetchData method to our Table component that will be used to fetch
-// new data when pagination state changes
-// We can also add a loading state to let our table know it's loading new data
 export function Table<T extends object>({
   tableOptions,
-  onPageChange,
-  gotoPage: controlledGotoPage,
+  pageChanger,
+  sortByChanger,
   rowLink,
   usePagination,
+  useSortBy,
 }: PaginationControlledProps<T>) {
   const defaultTableOptions: Partial<TableOptions<T>> = {
     defaultColumn: { Cell: ({ value }: CellProps<T>) => value || "-" },
   };
 
   const tableHooks: PluginHook<T>[] = [useFlexLayout];
+
+  if (useSortBy) {
+    tableHooks.push(useSortByHook);
+  }
 
   if (usePagination) {
     tableHooks.push(usePaginationHook);
@@ -46,29 +53,61 @@ export function Table<T extends object>({
     getTableProps,
     headerGroups,
     prepareRow,
+    columns,
     page,
     rows,
     pageCount,
+    setSortBy: uncontrolledSetSortBy,
     gotoPage: uncontrolledGotoPage,
     // Get the state from the instance
-    state: { pageIndex, pageSize },
+    state: { pageIndex },
   } = useTable<T>({ ...defaultTableOptions, ...tableOptions }, ...tableHooks);
 
-  // const colFractions = tableOptions.columns.reduce((acc, col) => acc + (col.fraction || 1), 0);
-
-  useEffect(() => {
-    onPageChange?.({ pageSize, pageIndex });
-  }, [onPageChange, pageSize, pageIndex]);
-
-  const gotoPage = controlledGotoPage || uncontrolledGotoPage;
+  const gotoPage = pageChanger || uncontrolledGotoPage;
+  const setSortBy = sortByChanger || uncontrolledSetSortBy;
 
   const data = usePagination ? page : rows;
 
   const isMedium = useMediaQuery(`(min-width: ${breakpoints.values?.md}px)`);
 
+  const sortOptions = columns
+    .filter((column) => column.isVisible && !column.disableSortBy && typeof column.Header?.toString() === "string")
+    .reduce<{ label: string; value: string }[]>((acc, column) => {
+      const header = column.Header!.toString();
+      const id = column.id.toString();
+
+      const columnIsDateTime = column.sortType === "datetime";
+
+      const columnAsc = {
+        label: header + ` ${columnIsDateTime ? " (vanhin ensin)" : "(A-Ö)"}`,
+        value: JSON.stringify({ id, desc: false }),
+      };
+      const columnDesc = {
+        label: header + ` ${columnIsDateTime ? " (uusin ensin)" : "(Ö-A)"}`,
+        value: JSON.stringify({ id, desc: true }),
+      };
+      if (column.sortDescFirst) {
+        acc.push(columnDesc);
+        acc.push(columnAsc);
+      } else {
+        acc.push(columnAsc);
+        acc.push(columnDesc);
+      }
+      return acc;
+    }, []);
+
   // Render the UI for your table
   return (
     <SectionContent largeGaps>
+      {useSortBy && !isMedium && (
+        <Select
+          label="Järjestä"
+          options={sortOptions}
+          onChange={(event) => {
+            setSortBy([JSON.parse(event.target.value)]);
+          }}
+        />
+      )}
       {usePagination && (
         <Pagination
           count={pageCount}
@@ -84,15 +123,46 @@ export function Table<T extends object>({
       )}
       <StyledTable {...getTableProps({ style: { minWidth: "100%" } })}>
         {headerGroups.map((headerGroup) => {
-          const { key: headerGroupKey, ...headerGroupProps } = headerGroup.getHeaderGroupProps();
+          const {
+            key: headerGroupKey,
+            style: headerGroupStyle,
+            ...headerGroupProps
+          } = headerGroup.getHeaderGroupProps();
           return (
-            <Tr {...headerGroupProps} key={headerGroupKey}>
+            <Tr {...headerGroupProps} style={isMedium ? headerGroupStyle : { display: "none" }} key={headerGroupKey}>
               {headerGroup.headers.map((column) => {
-                const { key: headerKey, style, ...headerProps } = column.getHeaderProps();
+                const { key: headerKey, ...headerProps } = column.getHeaderProps(
+                  useSortBy
+                    ? column.getSortByToggleProps({
+                        title: undefined,
+                        onClick: column.disableSortBy
+                          ? undefined
+                          : () => {
+                              let desc: boolean | undefined;
+                              if (column.isSorted) {
+                                if (column.sortDescFirst) {
+                                  desc = column.isSortedDesc ? false : undefined;
+                                } else {
+                                  desc = column.isSortedDesc ? undefined : true;
+                                }
+                              } else {
+                                desc = column.sortDescFirst ? true : false;
+                              }
+                              setSortBy(desc === undefined ? [] : [{ desc, id: column.id }]);
+                            },
+                      })
+                    : undefined
+                );
                 return (
-                  <HeaderCell {...headerProps} style={isMedium ? style : { display: "none" }} key={headerKey}>
+                  <HeaderCell
+                    as={useSortBy && !column.disableSortBy ? "button" : undefined}
+                    {...headerProps}
+                    key={headerKey}
+                  >
                     {column.render("Header")}
-                    <span>{column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : ""}</span>
+                    {column.isSorted && (
+                      <FontAwesomeIcon className="ml-4" icon={column.isSortedDesc ? "arrow-down" : "arrow-up"} />
+                    )}
                   </HeaderCell>
                 );
               })}
@@ -107,9 +177,12 @@ export function Table<T extends object>({
               <BodyTr as="a" style={isMedium ? rowStyle : undefined} {...rowProps}>
                 {row.cells.map((cell) => {
                   const { key: cellKey, style: cellStyle, ...cellProps } = cell.getCellProps();
+                  const { style: headerStyles, ...headerProps } = cell.column.getHeaderProps();
                   return (
                     <DataCell {...cellProps} style={isMedium ? cellStyle : undefined} key={cellKey}>
-                      <BodyHeaderCell {...cell.column.getHeaderProps()}>{cell.column.render("Header")}</BodyHeaderCell>
+                      <BodyHeaderCell {...headerProps} style={isMedium ? headerStyles : undefined}>
+                        {cell.column.render("Header")}
+                      </BodyHeaderCell>
                       {cell.render("Cell")}
                     </DataCell>
                   );
@@ -120,9 +193,12 @@ export function Table<T extends object>({
             <BodyTr {...rowProps} style={isMedium ? rowStyle : undefined} key={rowKey}>
               {row.cells.map((cell) => {
                 const { key: cellKey, style: cellStyle, ...cellProps } = cell.getCellProps();
+                const { style: headerStyles, ...headerProps } = cell.column.getHeaderProps();
                 return (
                   <DataCell {...cellProps} style={isMedium ? cellStyle : undefined} key={cellKey}>
-                    <BodyHeaderCell {...cell.column.getHeaderProps()}>{cell.column.render("Header")}</BodyHeaderCell>
+                    <BodyHeaderCell {...headerProps} style={isMedium ? headerStyles : undefined}>
+                      {cell.column.render("Header")}
+                    </BodyHeaderCell>
                     {cell.render("Cell")}
                   </DataCell>
                 );
@@ -155,8 +231,6 @@ const StyledTable = styled("div")(
     display: "block",
     backgroundColor: "#ffffff",
     overflowX: { md: "auto" },
-    wordBreak: "normal",
-    overflowWrap: "normal",
   })
 );
 
@@ -192,6 +266,7 @@ const HeaderCell = styled(Cell)(
   sx({
     paddingBottom: { md: 2 },
     color: "#7A7A7A",
+    textAlign: "left",
   })
 );
 
