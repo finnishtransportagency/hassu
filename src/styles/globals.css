@@ -306,6 +306,21 @@
     margin-bottom: 0px;
   }
 
+  .vayla-tilaisuus-item:nth-child(odd){
+    background: #F8F8F8;
+  }
+
+  .vayla-tilaisuus-item {
+    padding-top:1rem;
+    padding-left: 1rem;
+    border-left-style: solid;
+    border-left-width: 0.6rem;
+    border-left-color: #009AE0;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-color: #4AC2F1;
+  }
+
   .select-wrapper {
     @apply relative;
   }
