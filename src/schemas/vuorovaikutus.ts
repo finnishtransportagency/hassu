@@ -40,10 +40,12 @@ export const vuorovaikutusSchema = Yup.object().shape({
               then: Yup.string().required("Verkkotilaisuudessa käytettävä palvelu täytyy valita"),
             })
             .nullable(),
-          linkki: Yup.string().when("tyyppi", {
-            is: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-            then: Yup.string().required("Verkkotilaisuuden linkki täytyy antaa"),
-          }),
+          linkki: Yup.string()
+            .when("tyyppi", {
+              is: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+              then: Yup.string().required("Verkkotilaisuuden linkki täytyy antaa"),
+            })
+            .nullable(),
           osoite: Yup.string()
             .when("tyyppi", {
               is: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
