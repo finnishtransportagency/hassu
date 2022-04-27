@@ -1,4 +1,25 @@
 {
+  "info": {
+    "ei-rata": {
+      "aloittavat_yleissuunnitelman_laatimisen": "RUOTSIKSI aloittavat yleissuunnitelman laatimisen tarpeellisine tutkimuksineen.",
+      "kuulutus_on_julkaistu": "RUOTSIKSI Kuulutus on julkaistu tietoverkossa Väyläviraston verkkosivuilla",
+      "asianosaisten_katsotaan_saaneen": "RUOTSIKSI Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
+      "suunnitelmasta_vastaavalla_on": "RUOTSIKSI Suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön edellyttämiä mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §).",
+      "kiinteiston_omistajilla_ja": "RUOTSIKSI Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa on oikeus olla tutkimuksissa saapuvilla ja lausua mielipiteensä asiassa (LjMTL 16 § ja 27 §).",
+      "suunnittelun_edetessa_tullaan": "RUOTSIKSI Suunnittelun edetessä tullaan myöhemmin erikseen ilmoitettavalla tavalla varaamaan tilaisuus mielipiteen ilmaisemiseen suunnitelmasta (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §).",
+      "valmistuttuaan_suunnitelmat_asetetaan": "RUOTSIKSI Valmistuttuaan suunnitelmat asetetaan yleisesti nähtäville, jolloin asianosaisilla on mahdollisuus tehdä kirjallinen muistutus suunnitelmasta (LjMTL 27 §).",
+      "vaylavirasto_kasittelee_suunnitelman": "RUOTSIKSI Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa www.vayla.fi/tietosuoja."
+    },
+    "rata": {
+      "vaylavirasto_on_julkaissut": "RUOTSIKSI Väylävirasto on julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista",
+      "asianosaiasten_katsotaan_saaneen": "RUOTSIKSI Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisemisesta. (ratalaki 95 §, HL 62 a §)",
+      "rataverkon_haltijalla_on": "RUOTSIKSI Rataverkon haltijalla on oikeus tehdä suunnittelualueeseen kuuluvalla kiinteistöllä suunnitteluun liittyviä mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä (ratalaki 9 §).",
+      "kiinteiston_omistajilla_ja": "RUOTSIKSI Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa on oikeus olla tutkimuksissa saapuvilla ja lausua mielipiteensä asiassa (ratalaki 22 § ja 9 §).",
+      "suunnittelun_edetessa_tullaan": "RUOTSIKSI Suunnittelun edetessä tullaan myöhemmin erikseen ilmoitettavalla tavalla varaamaan tilaisuus mielipiteen ilmaisemiseen suunnitelmasta.",
+      "valmistuttuaan_suunnitelma_asetetaan": "RUOTSIKSI Valmistuttuaan suunnitelma asetetaan yleisesti nähtäville, jolloin asianosaisilla on mahdollisuus tehdä kirjallinen muistutus suunnitelmasta. (ratalaki 22 §).",
+      "vaylavirasto_kasittelee_suunnitelman": "RUOTSIKSI Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa www.vayla.fi/tietosuoja."
+    }
+  },
   "projekti-tyyppi": {
     "RATA": "Vägplan",
     "TIE": "Spårplan",
@@ -18,6 +39,24 @@
     "HYVAKSYNNASSA": "RUOTSIKSI Hyväksynnässä",
     "LAINVOIMA": "RUOTSIKSI Lainvoima",
     "ARKISTOITU": "RUOTSIKSI Arkistoitu"
+  },
+  "ui-kuvatekstit": {
+    "eu_aluerahoitus": "RUOTSIKSI EU aluerahoitus"
+  },
+  "ui-linkkitekstit": {
+    "tutustu_osallistumismahdollisuuksiin": "RUOTSIKSI Tutustu osallistumismahdollisuuksiin",
+    "tutustu_hankesuunnitteluun": "RUOTSIKSI Tutustu hankesuunnitteluun"
+  },
+  "ui-otsikot": {
+    "kuulutus_suunnitelman_alkamisesta": "RUOTSIKSI Kuulutus suunnittelun aloittamisesta",
+    "nahtavillaoloaika": "RUOTSIKSI Nähtävilläoloaika",
+    "hankkeen_sijainti": "RUOTSIKSI Hankkeen sijainti",
+    "suunnitelman_tyyppi": "RUOTSIKSI Suunnitelman tyyppi",
+    "suunnitteluhankkeen_kuvaus": "RUOTSIKSI Suunnitteluhankkeen kuvaus",
+    "asianosaisen_oikeudet": "RUOTSIKSI Asianosaisen oikeudet",
+    "yhteystiedot": "RUOTSIKSI Yhteystiedot",
+    "lisatietoja_antavat": "RUOTSIKSI Lisätietoja antavat",
+    "ladattava_kuulutus": "RUOTSIKSI Ladattava kuulutus"
   },
   "vastaava-viranomainen": {
     "ETELA_POHJANMAAN_ELY": "RUOTSIKSI Etelä-Pohjanmaan ELY-keskus",
