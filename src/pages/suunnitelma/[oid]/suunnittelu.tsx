@@ -5,7 +5,7 @@ import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import { useRouter } from "next/router";
 import SectionContent from "@components/layout/SectionContent";
 import useTranslation from "next-translate/useTranslation";
-import { Yhteystieto, YhteystietoInput } from "@services/api";
+import { YhteystietoInput } from "@services/api";
 
 export default function Suunnittelu(): ReactElement {
   const router = useRouter();
@@ -13,7 +13,7 @@ export default function Suunnittelu(): ReactElement {
   const { data: projekti } = useProjektiJulkinen(oid);
   const { t } = useTranslation();
 
-  const mockProjektiYhteystiedot: YhteystietoInput[] = [
+  const mockVuorovaikutusYhteystiedot: YhteystietoInput[] = [
     {
       etunimi: "Veijo",
       sukunimi: "Väylämies",
@@ -37,7 +37,7 @@ export default function Suunnittelu(): ReactElement {
     },
   ];
 
-  const yhteystiedotListana = mockProjektiYhteystiedot.map((yhteystieto) => t("common:yhteystieto", yhteystieto));
+  const yhteystiedotListana = mockVuorovaikutusYhteystiedot.map((yhteystieto) => t("common:yhteystieto", yhteystieto));
 
   return (
     <ProjektiJulkinenPageLayout selectedStep={1} title="Tutustu hankkeeseen ja vuorovaikuta">
