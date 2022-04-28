@@ -17,7 +17,7 @@ describe("Breadcrumbs", () => {
     const router = {
       isReady: true,
       pathname: "/_error",
-      asPath: "/yllapito/projekti/1234/?locale=fi",
+      asPath: "/yllapito/projekti/1234/",
     } as NextRouter;
     const routes = generateRoutes(router, {});
     expect(routes).toMatchSnapshot();
@@ -27,7 +27,7 @@ describe("Breadcrumbs", () => {
     const router = {
       isReady: true,
       pathname: "/tuntematon/polku/[sid]/[pid]",
-      asPath: "/tuntematon/polku/123/456/?locale=fi",
+      asPath: "/tuntematon/polku/123/456/",
     } as NextRouter;
     const routes = generateRoutes(router, {});
     expect(routes).toMatchSnapshot();
@@ -41,7 +41,7 @@ describe("Breadcrumbs", () => {
     const router = {
       isReady: true,
       pathname: "/tuntematon/polku/[sid]/[pid]",
-      asPath: "/tuntematon/polku/123/456/?locale=fi",
+      asPath: "/tuntematon/polku/123/456/",
     } as NextRouter;
     const routes = generateRoutes(router, routeLabels);
     expect(routes).toMatchSnapshot();
