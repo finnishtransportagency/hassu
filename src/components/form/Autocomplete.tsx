@@ -118,7 +118,7 @@ const Autocomplete = <T extends unknown>({
       setSelectedOption(optionValue);
       hide();
     },
-    [hide, getOptionLabel]
+    [hide, getOptionLabel, textValue]
   );
 
   const updateOption = (option: T | null) => {
@@ -128,9 +128,14 @@ const Autocomplete = <T extends unknown>({
     setOptionValue(option);
   };
 
+  const [initDone, setInitDone] = useState(false);
+
   useEffect(() => {
-    setOptionValue(initialOption);
-  }, [initialOption, setOptionValue]);
+    if (!initDone) {
+      setOptionValue(initialOption);
+      setInitDone(true);
+    }
+  }, [initialOption, setInitDone, setOptionValue]);
 
   const changeIndex = (index: number) => {
     const child = optionsRef.current[index];
