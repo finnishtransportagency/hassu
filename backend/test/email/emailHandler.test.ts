@@ -64,7 +64,7 @@ describe("emailHandler", () => {
             "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi\n" +
             "Testiprojekti 2 email lahetys\n" +
             "on luotu aloituskuulutus, joka odottaa hyväksyntääsi.\n" +
-            "Voit tarkastella projektia osoitteessa https://localhost/yllapito/projekti/2\n" +
+            "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/2\n" +
             "Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
           to: "pekka.projari@vayla.fi",
         });

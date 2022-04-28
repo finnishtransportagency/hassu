@@ -22,6 +22,8 @@ import {
   Kieli,
   Status,
   VuorovaikutusInput,
+  VuorovaikutusTilaisuusInput,
+  YhteystietoInput,
 } from "../../../common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
@@ -138,7 +140,7 @@ export class ProjektiAdapter {
    * @param projekti
    * @param param
    */
-  applyStatus(projekti: API.Projekti, param: { saved?: boolean }) {
+  applyStatus(projekti: API.Projekti, param: { saved?: boolean }): API.Projekti {
     function checkIfSaved() {
       if (param?.saved) {
         projekti.tallennettu = true;
@@ -248,6 +250,40 @@ function adaptSuunnitteluVaiheToSave(
   return undefined;
 }
 
+function adaptYhteystiedotToSave(yhteystietoInputs: Array<YhteystietoInput>) {
+  return yhteystietoInputs?.length > 0 ? yhteystietoInputs.map((yt) => ({ ...yt })) : undefined;
+}
+
+function adaptKayttajatunnusList(projekti: DBProjekti, yhteysHenkilot: Array<string>): string[] | undefined {
+  if (!yhteysHenkilot || yhteysHenkilot.length == 0) {
+    return undefined;
+  }
+  // Include only usernames that can be found from projekti
+  const unfilteredList = yhteysHenkilot.map((yh) => {
+    const projektiUser = projekti.kayttoOikeudet.find((value) => value.kayttajatunnus == yh);
+    if (projektiUser) {
+      return yh;
+    } else {
+      return undefined;
+    }
+  });
+  const list = unfilteredList.filter((yh) => yh);
+  return list.length > 0 ? list : undefined;
+}
+
+function adaptVuorovaikutusTilaisuudetToSave(
+  projekti: DBProjekti,
+  vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuusInput>
+): VuorovaikutusTilaisuus[] | undefined {
+  return vuorovaikutusTilaisuudet?.length > 0
+    ? vuorovaikutusTilaisuudet.map((vv) => ({
+        ...vv,
+        esitettavatYhteystiedot: adaptYhteystiedotToSave(vv.esitettavatYhteystiedot),
+        projektiYhteysHenkilot: adaptKayttajatunnusList(projekti, vv.projektiYhteysHenkilot),
+      }))
+    : undefined;
+}
+
 function adaptVuorovaikutusToSave(
   projekti: DBProjekti,
   projektiAdaptationResult: Partial<ProjektiAdaptationResult>,
@@ -266,10 +302,13 @@ function adaptVuorovaikutusToSave(
     } else {
       vuorovaikutusToSave = {
         ...vuorovaikutusInput,
+        vuorovaikutusYhteysHenkilot: adaptKayttajatunnusList(projekti, vuorovaikutusInput.vuorovaikutusYhteysHenkilot),
+        vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudetToSave(
+          projekti,
+          vuorovaikutusInput.vuorovaikutusTilaisuudet
+        ),
         ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(vuorovaikutusInput.ilmoituksenVastaanottajat),
-        esitettavatYhteystiedot: vuorovaikutusInput.esitettavatYhteystiedot
-          ? vuorovaikutusInput.esitettavatYhteystiedot.map((yt) => ({ __typename: "Yhteystieto", ...yt }))
-          : undefined,
+        esitettavatYhteystiedot: adaptYhteystiedotToSave(vuorovaikutusInput.esitettavatYhteystiedot),
         aineistot: adaptAineistotToSave(projektiAdaptationResult, vuorovaikutusInput, dbVuorovaikutus),
       };
     }
@@ -289,18 +328,15 @@ function checkIfAineistoJulkinenChanged(
   dbVuorovaikutus: Vuorovaikutus,
   projektiAdaptationResult: Partial<ProjektiAdaptationResult>
 ) {
-  function vuorovaikutusPublishedForTheFirstTime(dbVuorovaikutus: Vuorovaikutus, vuorovaikutusToSave: Vuorovaikutus) {
+  function vuorovaikutusPublishedForTheFirstTime() {
     return !dbVuorovaikutus?.julkinen && vuorovaikutusToSave.julkinen;
   }
 
-  function vuorovaikutusNotPublicAnymore(dbVuorovaikutus: Vuorovaikutus, vuorovaikutusToSave: Vuorovaikutus) {
+  function vuorovaikutusNotPublicAnymore() {
     return dbVuorovaikutus && dbVuorovaikutus.julkinen && !vuorovaikutusToSave.julkinen;
   }
 
-  if (
-    vuorovaikutusPublishedForTheFirstTime(dbVuorovaikutus, vuorovaikutusToSave) ||
-    vuorovaikutusNotPublicAnymore(dbVuorovaikutus, vuorovaikutusToSave)
-  ) {
+  if (vuorovaikutusPublishedForTheFirstTime() || vuorovaikutusNotPublicAnymore()) {
     if (projektiAdaptationResult.aineistoChanges) {
       projektiAdaptationResult.aineistoChanges.julkinenChanged = true;
     } else {
@@ -393,6 +429,7 @@ export function adaptVuorovaikutusTilaisuudet(
   if (vuorovaikutusTilaisuudet) {
     return vuorovaikutusTilaisuudet.map((vuorovaikutusTilaisuus) => ({
       ...vuorovaikutusTilaisuus,
+      esitettavatYhteystiedot: adaptYhteystiedot(vuorovaikutusTilaisuus.esitettavatYhteystiedot),
       __typename: "VuorovaikutusTilaisuus",
     }));
   }
@@ -493,11 +530,11 @@ function removeUndefinedFields(object: API.Projekti): Partial<API.Projekti> {
   return pickBy(object, (value) => value !== undefined);
 }
 
-export function adaptYhteystiedot(yhteystiedot: Yhteystieto[]): API.Yhteystieto[] {
+export function adaptYhteystiedot(yhteystiedot: Yhteystieto[]): API.Yhteystieto[] | undefined | null {
   if (yhteystiedot) {
     return yhteystiedot.map((yt) => ({ __typename: "Yhteystieto", ...yt }));
   }
-  return [];
+  return yhteystiedot as undefined | null;
 }
 
 export function adaptJulkaisuPDFPaths(

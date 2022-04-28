@@ -15,7 +15,7 @@ Object {
   "paivitetty": "2022-03-15T13:00:00.000Z",
   "projektiTyyppi": "TIE",
   "projektipaallikko": "Projari, Pekka",
-  "suunnittelustaVastaavaViranomainen": undefined,
+  "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
   "vaihe": "EI_JULKAISTU",
   "vaylamuoto": Array [
     "tie",
@@ -38,7 +38,7 @@ Object {
   "paivitetty": "2022-03-15T13:00:00.000Z",
   "projektiTyyppi": "TIE",
   "projektipaallikko": "Projari, Pekka",
-  "suunnittelustaVastaavaViranomainen": undefined,
+  "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
   "vaihe": "EI_JULKAISTU",
   "vaylamuoto": Array [
     "tie",

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`asiakirjaService should generate pdf succesfully 1`] = `
+exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 1`] = `
 Object {
   "elyKeskus": "Pirkanmaa",
   "hankkeenKuvaus": Object {
@@ -29,6 +29,55 @@ Object {
       "Nokia",
     ],
     "nimi": "Testiprojekti 1",
+    "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
+    "tilaajaOrganisaatio": "Uudenmaan ELY-keskus",
+    "tyyppi": "TIE",
+    "vaylamuoto": Array [
+      "tie",
+    ],
+  },
+  "yhteystiedot": Array [
+    Object {
+      "etunimi": "Marko",
+      "organisaatio": "Kajaani",
+      "puhelinnumero": "0293121213",
+      "sahkoposti": "markku.koi@koi.com",
+      "sukunimi": "Koi",
+    },
+  ],
+}
+`;
+
+exports[`asiakirjaService should generate kuulutus pdf succesfully 1`] = `
+Object {
+  "elyKeskus": "Pirkanmaa",
+  "hankkeenKuvaus": Object {
+    "RUOTSI": "På svenska",
+    "SAAME": "Saameksi",
+    "SUOMI": "Lorem Ipsum",
+  },
+  "id": 1,
+  "kielitiedot": Object {
+    "ensisijainenKieli": "SUOMI",
+    "projektinNimiVieraskielella": "Namnet på svenska",
+    "toissijainenKieli": "RUOTSI",
+  },
+  "kuulutusPaiva": "2022-01-02",
+  "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+  "suunnitteluSopimus": Object {
+    "email": "Joku.Jossain@vayla.fi",
+    "etunimi": "Joku",
+    "kunta": "Nokia",
+    "puhelinnumero": "123",
+    "sukunimi": "Jossain",
+  },
+  "velho": Object {
+    "kunnat": Array [
+      "Tampere",
+      "Nokia",
+    ],
+    "nimi": "Testiprojekti 1",
+    "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
     "tilaajaOrganisaatio": "Uudenmaan ELY-keskus",
     "tyyppi": "TIE",
     "vaylamuoto": Array [

@@ -19,5 +19,8 @@
     "UUDENMAAN_ELY": "Uudenmaan ELY-keskus",
     "VARSINAIS_SUOMEN_ELY": "Varsinais-Suomen ELY-keskus",
     "VAYLAVIRASTO": "Väylävirasto"
+  },
+  "rooli": {
+    "PROJEKTIPAALLIKKO": "Projektledare"
   }
 }

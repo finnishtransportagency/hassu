@@ -37,7 +37,7 @@ process.env.AWS_ACCESS_KEY_ID = "test";
 process.env.AWS_SECRET_ACCESS_KEY = "test";
 
 process.env.PERSON_SEARCH_UPDATER_LAMBDA_ARN = "";
-process.env.FRONTEND_DOMAIN_NAME = "localhost";
+process.env.FRONTEND_DOMAIN_NAME = "localhost:3000";
 process.env.CLOUDFRONT_DISTRIBUTION_ID = "unit-test-distribution-id";
 
 process.env.FRONTEND_PRIVATEKEY =

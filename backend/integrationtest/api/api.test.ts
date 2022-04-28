@@ -28,8 +28,6 @@ import { fail } from "assert";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { apiTestFixture } from "./apiTestFixture";
-import diffDefault from "jest-diff";
-import os from "os";
 import { aineistoImporterClient } from "../../src/aineisto/aineistoImporterClient";
 import { handleEvent } from "../../src/aineisto/aineistoImporterLambda";
 import { SQSEvent, SQSRecord } from "aws-lambda/trigger/sqs";
@@ -39,6 +37,7 @@ import AWS from "aws-sdk";
 import { getCloudFront, produce } from "../../src/aws/client";
 import { parseDate } from "../../src/util/dateUtil";
 import { cleanProjektiS3Files } from "../util/s3Util";
+import { detailedDiff } from "deep-object-diff";
 
 const { expect } = require("chai");
 const sandbox = sinon.createSandbox();
@@ -230,15 +229,13 @@ describe("Api", () => {
     // Verify that it's possible to update one vuorovaikutus at the time
     const suunnitteluVaihe3 = await doTestSuunnitteluvaiheVuorovaikutus(oid, 2, [
       projektiPaallikko.kayttajatunnus,
-      "FOO123",
+      UserFixture.mattiMeikalainen.uid,
     ]);
-    const difference = diffDefault(suunnitteluVaihe2, suunnitteluVaihe3, {
-      omitAnnotationLines: true,
-      commonColor: () => null,
-      aColor: (a) => a,
-      bColor: (b) => b,
-    }).replace(new RegExp("[" + os.EOL + "]+", "g"), os.EOL);
-    expectToMatchSnapshot("modified testSuunnitteluvaiheVuorovaikutus", difference);
+    const difference = detailedDiff(suunnitteluVaihe2, suunnitteluVaihe3);
+    expectToMatchSnapshot(
+      "added " + UserFixture.mattiMeikalainen.uid + " to vuorovaikutus and vuorovaikutustilaisuus",
+      difference
+    );
   }
 
   async function doTestSuunnitteluvaiheVuorovaikutus(

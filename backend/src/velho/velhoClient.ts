@@ -2,9 +2,7 @@ import { log } from "../logger";
 import { config } from "../config";
 import * as HakuPalvelu from "./hakupalvelu";
 import * as ProjektiRekisteri from "./projektirekisteri";
-import { ProjektiProjektiLuonti } from "./projektirekisteri";
 import * as AineistoPalvelu from "./aineistopalvelu";
-import { AineistoAineisto } from "./aineistopalvelu";
 import { VelhoAineisto, VelhoAineistoKategoria, VelhoHakuTulos } from "../../../common/graphql/apiModel";
 import { adaptDokumenttiTyyppi, adaptProjekti, adaptSearchResults, ProjektiSearchResult } from "./velhoAdapter";
 import { VelhoError } from "../error/velhoError";
@@ -176,7 +174,7 @@ export class VelhoClient {
           // List aineistot belonging to one toimeksianto
           const aineistotResponse = await hakuApi.hakupalveluApiV1HakuAineistotLinkitOidGet(toimeksianto.oid);
           checkResponseIsOK(aineistotResponse, "hakuApi.hakupalveluApiV1HakuAineistotLinkitOidGet " + toimeksianto.oid);
-          const aineistot: AineistoAineisto[] = aineistotResponse.data as AineistoAineisto[];
+          const aineistot: AineistoPalvelu.AineistoAineisto[] = aineistotResponse.data as AineistoPalvelu.AineistoAineisto[];
           const result = await resultPromise;
           aineistot.forEach((aineisto) => {
             const { dokumenttiTyyppi, kategoria } = adaptDokumenttiTyyppi(`${aineisto.metatiedot.dokumenttityyppi}`);
@@ -231,7 +229,7 @@ export class VelhoClient {
     return toimeksiannot;
   }
 
-  public async createProjektiForTesting(velhoProjekti: ProjektiProjektiLuonti): Promise<any> {
+  public async createProjektiForTesting(velhoProjekti: ProjektiRekisteri.ProjektiProjektiLuonti): Promise<any> {
     const projektiApi = await this.createProjektiRekisteriApi();
     let response;
     try {

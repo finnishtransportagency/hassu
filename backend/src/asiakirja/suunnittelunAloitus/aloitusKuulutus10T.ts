@@ -47,30 +47,10 @@ export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
         "RUOTSIKSI Valmistuttuaan suunnitelmat asetetaan yleisesti nähtäville, jolloin asianosaisilla on mahdollisuus tehdä kirjallinen muistutus suunnitelmasta (LjMTL 27 §). ",
       ]),
 
-      this.doc.struct("P", {}, [
-        () => {
-          this.doc.text(
-            this.selectText([
-              `${this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio} käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa `,
-              `RUOTSIKSI ${this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio} käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa `,
-            ]),
-            { continued: true }
-          );
-        },
-        this.doc.struct("Link", { alt: this.tietosuojaUrl }, () => {
-          this.doc.fillColor("blue").text(this.tietosuojaUrl, {
-            link: this.tietosuojaUrl,
-            continued: true,
-            underline: true,
-          });
-        }),
-        () => {
-          this.doc.fillColor("black").text(".", { link: undefined, underline: false }).moveDown();
-        },
-      ]),
+      this.viranomainenTietosuojaParagraph(this.aloitusKuulutusJulkaisu),
 
-      this.localizedParagraph(["Lisätietoja antavat "]),
-      this.doc.struct("P", {}, this.moreInfoElements),
+      this.lisatietojaAntavatParagraph(),
+      this.doc.struct("P", {}, this.moreInfoElements(this.aloitusKuulutusJulkaisu)),
       () => {
         this.doc.font("ArialMTBold");
         this.doc.text(this.kuuluttaja).moveDown();
@@ -84,10 +64,6 @@ export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
       return formatProperNoun(suunnitteluSopimus.kunta);
     }
     return this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio || "Kuuluttaja";
-  }
-
-  private get tietosuojaUrl() {
-    return this.isVaylaTilaaja ? "https://vayla.fi/tietosuoja" : "https://www.ely-keskus.fi/tietosuoja";
   }
 
   private get startOfPlanningPhrase() {
