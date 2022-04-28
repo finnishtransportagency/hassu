@@ -339,6 +339,8 @@ export default function Aloituskuulutus({
     return <div>Kielitiedot puttuu</div>;
   }
 
+  const migroitu = getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.MIGROITU);
+
   return (
     <ProjektiPageLayout title="Aloituskuulutus">
       {voiMuokata && (
@@ -671,6 +673,13 @@ export default function Aloituskuulutus({
             </HassuDialog>
           </div>
         </>
+      )}
+      {migroitu && (
+        <Section noDivider>
+          <>
+            <p>Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.</p>
+          </>
+        </Section>
       )}
       <HassuSpinner open={isFormSubmitting || isLoadingProjekti} />
     </ProjektiPageLayout>

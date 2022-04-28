@@ -273,6 +273,7 @@ type Yhteystieto {
 enum AloitusKuulutusTila {
   ODOTTAA_HYVAKSYNTAA
   HYVAKSYTTY
+  MIGROITU
 }
 
 type HankkeenKuvaukset {
@@ -296,7 +297,6 @@ type AloitusKuulutus {
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
   hankkeenKuvaus: HankkeenKuvaukset
-  elyKeskus: String
   esitettavatYhteystiedot: [Yhteystieto!]
   palautusSyy: String
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
@@ -306,7 +306,6 @@ type AloitusKuulutusJulkaisu {
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
   hankkeenKuvaus: HankkeenKuvaukset
-  elyKeskus: String
   yhteystiedot: [Yhteystieto!]!
   velho: Velho!
   suunnitteluSopimus: SuunnitteluSopimus
@@ -322,12 +321,12 @@ type AloitusKuulutusJulkaisuJulkinen {
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
   hankkeenKuvaus: HankkeenKuvaukset
-  elyKeskus: String
   yhteystiedot: [Yhteystieto!]!
   velho: Velho!
   suunnitteluSopimus: SuunnitteluSopimus
   kielitiedot: Kielitiedot
   aloituskuulutusPDFt: AloitusKuulutusPDFt
+  tila: AloitusKuulutusTila
 }
 
 type IlmoituksenVastaanottajat {

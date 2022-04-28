@@ -2,7 +2,6 @@
 
 exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 1`] = `
 Object {
-  "elyKeskus": "Pirkanmaa",
   "hankkeenKuvaus": Object {
     "RUOTSI": "På svenska",
     "SAAME": "Saameksi",
@@ -50,7 +49,6 @@ Object {
 
 exports[`asiakirjaService should generate kuulutus pdf succesfully 1`] = `
 Object {
-  "elyKeskus": "Pirkanmaa",
   "hankkeenKuvaus": Object {
     "RUOTSI": "På svenska",
     "SAAME": "Saameksi",

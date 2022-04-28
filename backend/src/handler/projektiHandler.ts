@@ -102,7 +102,11 @@ export async function createOrUpdateProjekti(input: TallennaProjektiInput): Prom
   return input.oid;
 }
 
-async function createProjektiFromVelho(oid: string, vaylaUser: NykyinenKayttaja, input?: TallennaProjektiInput) {
+export async function createProjektiFromVelho(
+  oid: string,
+  vaylaUser: NykyinenKayttaja,
+  input?: TallennaProjektiInput
+): Promise<DBProjekti> {
   try {
     log.info("Loading projekti from Velho", { oid });
     const { projekti, vastuuhenkilo } = await velho.loadProjekti(oid);

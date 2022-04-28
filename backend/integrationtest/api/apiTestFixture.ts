@@ -75,7 +75,6 @@ class ApiTestFixture {
       SAAME: "Saameksi",
     },
     siirtyySuunnitteluVaiheeseen: "2022-01-01",
-    elyKeskus: "Pirkanmaa",
     esitettavatYhteystiedot: this.esitettavatYhteystiedot,
   };
 

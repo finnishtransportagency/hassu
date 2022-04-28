@@ -40,6 +40,7 @@
     "vesi": "Vesi"
   },
   "projekti-status": {
+    "EI_JULKAISTU_PROJEKTIN_HENKILOT": "Ei julkaistu",
     "EI_JULKAISTU": "Ei julkaistu",
     "ALOITUSKUULUTUS": "Aloituskuulutus",
     "SUUNNITTELU": "Suunnittelu",

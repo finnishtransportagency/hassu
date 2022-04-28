@@ -17,9 +17,9 @@ export class S3Cache {
     triggerUpdate: () => void,
     populateMissingData: () => Promise<T>
   ): Promise<T> {
-    const cachedData = this.cache.get(key) as T;
+    const cachedData = this.cache.get(key);
     if (cachedData) {
-      return cachedData;
+      return cachedData as T;
     }
 
     const s3Object = await this.getS3Object(key, ttlMillis);
@@ -61,7 +61,7 @@ export class S3Cache {
         .promise();
       const body = output.Body;
       if (body instanceof Buffer) {
-        const s3json = (body as Buffer).toString("utf-8");
+        const s3json = body.toString("utf-8");
 
         const lastModified = output.LastModified;
         const expiresTime = S3Cache.getExpiresTime(lastModified, ttlMillis);

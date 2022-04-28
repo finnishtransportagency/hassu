@@ -29,15 +29,15 @@ async function getFileAttachment(oid: string, key: string): Promise<Mail.Attachm
       })
       .promise();
 
-    if (output.Body instanceof Readable) {
+    if (output.Body instanceof Readable || output.Body instanceof Buffer) {
       return {
         filename: getFilename(key),
         contentDisposition: "attachment",
         contentType: "application/pdf",
-        content: output.Body as Readable,
+        content: output.Body,
       };
     } else {
-      log.error("Liitetiedoston sisaltossa ongelmia");
+      log.error("Liitetiedoston sisallossa ongelmia");
     }
   } catch (error) {
     log.error("Virhe liitetiedostojen haussa", error);
