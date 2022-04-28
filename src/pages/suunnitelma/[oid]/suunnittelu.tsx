@@ -12,7 +12,7 @@ import HeadphonesIcon from "@mui/icons-material/Headphones";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
-import { VuorovaikutusTilaisuusTyyppi } from "@services/api";
+import { VuorovaikutusTilaisuus, VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import capitalize from "lodash/capitalize";
 
 export default function Suunnittelu(): ReactElement {
@@ -46,23 +46,84 @@ export default function Suunnittelu(): ReactElement {
   ];
 
   const yhteystiedotListana = mockVuorovaikutusYhteystiedot.map((yhteystieto) => t("common:yhteystieto", yhteystieto));
+  const today = dayjs();
 
   if (!projekti || !projekti.suunnitteluVaihe) {
     return <></>;
   }
 
   const vuorovaikutus = projekti.suunnitteluVaihe.vuorovaikutukset?.[0]; //TODO voiko olla useita, ja mika niista naytetaan
+  const tulevatTilaisuudet = vuorovaikutus?.vuorovaikutusTilaisuudet?.filter((t) =>
+    dayjs(t.paivamaara).isAfter(today || dayjs(t.paivamaara).isSame(today))
+  );
+  const menneetTilaisuudet = vuorovaikutus?.vuorovaikutusTilaisuudet?.filter((t) =>
+    dayjs(t.paivamaara).isBefore(today)
+  );
 
-  const getIcon = (tyyppi: VuorovaikutusTilaisuusTyyppi) => {
+  const getIcon = (tyyppi: VuorovaikutusTilaisuusTyyppi, inactive?: boolean) => {
     switch (tyyppi) {
       case VuorovaikutusTilaisuusTyyppi.PAIKALLA:
-        return <LocationCityIcon />;
+        return <LocationCityIcon sx={{ color: inactive ? "#999999" : "#0064AF" }} />;
       case VuorovaikutusTilaisuusTyyppi.SOITTOAIKA:
-        return <LocalPhoneIcon />;
+        return <LocalPhoneIcon sx={{ color: inactive ? "#999999" : "#0064AF" }} />;
       case VuorovaikutusTilaisuusTyyppi.VERKOSSA:
-        return <HeadphonesIcon />;
+        return <HeadphonesIcon sx={{ color: inactive ? "#999999" : "#0064AF" }} />;
       default:
-        return <QuestionMarkIcon />;
+        return <QuestionMarkIcon sx={{ color: inactive ? "#999999" : "#0064AF" }} />;
+    }
+  };
+
+  const getTitle = (tilaisuus: VuorovaikutusTilaisuus) => {
+    return (
+      <p>
+        <b>
+          {capitalize(t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`))} {formatDate(tilaisuus.paivamaara)}{" "}
+          klo {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, {capitalize(tilaisuus.nimi)}
+        </b>
+      </p>
+    );
+  };
+
+  const getContent = (tilaisuus: VuorovaikutusTilaisuus) => {
+    switch (tilaisuus.tyyppi) {
+      case VuorovaikutusTilaisuusTyyppi.PAIKALLA:
+        return (
+          <div>
+            <p>
+              Osoite: {tilaisuus.osoite}, {tilaisuus.postinumero} {tilaisuus.postitoimipaikka}
+            </p>
+            <p>
+              Yleisötilaisuus järjestetään fyysisenä tilaisuutena ylläolevassa osoitteessa.{" "}
+              {tilaisuus.Saapumisohjeet ? capitalize(tilaisuus.Saapumisohjeet) : undefined}
+            </p>
+          </div>
+        );
+      case VuorovaikutusTilaisuusTyyppi.SOITTOAIKA:
+        return (
+          <div>
+            <p>
+              Voit soittaa alla esitetyille henkilöille myös soittoajan ulkopuolella, mutta parhaiten tavoitat heidät
+              esitettynä ajankohtana.
+            </p>
+            <p>Pekka Kallisto, projektipäällikkö (Varsinais-Suomen ELY-keskus): 0401238979</p>
+          </div>
+        );
+      case VuorovaikutusTilaisuusTyyppi.VERKOSSA:
+        return (
+          <div>
+            <p>Yleisötilaisuus järjestetään suorana verkkotapahtumana.</p>
+            <p>
+              Tilaisuus toteutetaan Teamsin välityksellä. Teams-sovelluksen asentamista omalle laitteelle ei edellytetä.
+              Liittymislinkki toimii Internet-selaimella tietokoneella tai mobiililaitteella.
+            </p>
+            <p>
+              Liity tilaisuuteen: Tilaisuuden liittymislinkki julkaistaan tässä kaksi (2) tuntia ennen tilaisuuden alkua
+              ja poistetaan tilaisuuden jälkeen.
+            </p>
+          </div>
+        );
+      default:
+        return <></>;
     }
   };
 
@@ -71,21 +132,21 @@ export default function Suunnittelu(): ReactElement {
       <>
         <Section>
           <SectionContent>
-            <h5 className="vayla-small-title">Suunnitteluhankkeen kuvaus</h5>
+            <h4 className="vayla-small-title">Suunnitteluhankkeen kuvaus</h4>
             <p>{projekti.suunnitteluVaihe.hankkeenKuvaus?.SUOMI}</p>
           </SectionContent>
           <SectionContent>
-            <h5 className="vayla-small-title">Suunnittelun eteneminen</h5>
+            <h4 className="vayla-small-title">Suunnittelun eteneminen</h4>
             <p>{projekti.suunnitteluVaihe.suunnittelunEteneminenJaKesto}</p>
           </SectionContent>
           <SectionContent>
-            <h5 className="vayla-small-title">Arvio seuraavan vaiheen alkamisesta</h5>
+            <h4 className="vayla-small-title">Arvio seuraavan vaiheen alkamisesta</h4>
             <p>{projekti.suunnitteluVaihe.arvioSeuraavanVaiheenAlkamisesta}</p>
           </SectionContent>
         </Section>
         <Section>
           <SectionContent>
-            <h5 className="vayla-small-title">Osallistumisen ja vaikuttamisen mahdollisuudet ja aikataulut</h5>
+            <h3 className="vayla-title">Osallistumisen ja vaikuttamisen mahdollisuudet ja aikataulut</h3>
             {!vuorovaikutus && (
               <p>
                 Voit osallistua vuorovaikutustilaisuuksiin, tutustua suunnittelu- ja esittelyaineistoihin sekä jättää
@@ -101,22 +162,25 @@ export default function Suunnittelu(): ReactElement {
                   suunnitteluun.
                 </p>
                 <p>
-                  Suunnitelmaluonnokset ja esittelyaineistot ovat tutustuttavissa sivun alareunassa. Siirry
-                  aineistoihin.
+                  Suunnitelmaluonnokset ja esittelyaineistot ovat tutustuttavissa sivun alareunassa.{" "}
+                  <a href="">Siirry aineistoihin.</a>
                 </p>
                 <p>
                   Kysymykset ja palautteet toivotaan esitettävän{" "}
-                  {formatDate(vuorovaikutus.kysymyksetJaPalautteetViimeistaan)} mennessä. Siirry lomakkeelle.
+                  {formatDate(vuorovaikutus.kysymyksetJaPalautteetViimeistaan)} mennessä.{" "}
+                  <a href="">Siirry lomakkeelle.</a>
                 </p>
               </>
             )}
           </SectionContent>
           <SectionContent>
-            <h5 className="vayla-small-title">Tulevat vuorovaikutustilaisuudet</h5>
-            {!vuorovaikutus && <p>Vuorovaikutustilaisuudet julkaistaan mahdollisimman pian.</p>}
-            {vuorovaikutus && (
+            <h4 className="vayla-small-title">Tulevat vuorovaikutustilaisuudet</h4>
+            {(!vuorovaikutus || !tulevatTilaisuudet || tulevatTilaisuudet.length < 1) && (
+              <p>Vuorovaikutustilaisuudet julkaistaan mahdollisimman pian.</p>
+            )}
+            {tulevatTilaisuudet && (
               <div className="vayla-tilaisuus-list">
-                {vuorovaikutus.vuorovaikutusTilaisuudet
+                {tulevatTilaisuudet
                   ?.sort((a, b) => {
                     if (dayjs(a.paivamaara).isBefore(dayjs(b.paivamaara))) {
                       return -1;
@@ -128,36 +192,48 @@ export default function Suunnittelu(): ReactElement {
                   })
                   .map((tilaisuus, index) => {
                     return (
-                      <div key={index} className="vayla-tilaisuus-item">
+                      <div key={index} className="vayla-tilaisuus-item active">
                         <div className="flex flex-cols gap-5">
                           {getIcon(tilaisuus.tyyppi)}
-                          <p>
-                            <b>
-                              {formatDayOfWeek(tilaisuus.paivamaara)} {formatDate(tilaisuus.paivamaara)} klo{" "}
-                              {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, {capitalize(tilaisuus.nimi)}
-                            </b>
-                          </p>
+                          {getTitle(tilaisuus)}
                         </div>
-                        <div>
-                          <p>Yleisötilaisuus järjestetään suorana verkkotapahtumana.</p>
-                          <p>
-                            Tilaisuus toteutetaan Teamsin välityksellä. Teams-sovelluksen asentamista omalle laitteelle
-                            ei edellytetä. Liittymislinkki toimii Internet-selaimella tietokoneella tai
-                            mobiililaitteella.{" "}
-                          </p>
-                          <p>
-                            Liity tilaisuuteen: Tilaisuuden liittymislinkki julkaistaan tässä kaksi (2) tuntia ennen
-                            tilaisuuden alkua ja poistetaan tilaisuuden jälkeen.
-                          </p>
-                        </div>
+                        {getContent(tilaisuus)}
                       </div>
                     );
                   })}
               </div>
             )}
           </SectionContent>
+          {menneetTilaisuudet && (
+            <SectionContent>
+              <h4 className="vayla-small-title">Menneet vuorovaikutustilaisuudet</h4>
+              <div className="vayla-tilaisuus-list">
+                {menneetTilaisuudet
+                  ?.sort((a, b) => {
+                    if (dayjs(a.paivamaara).isBefore(dayjs(b.paivamaara))) {
+                      return -1;
+                    }
+                    if (dayjs(a.paivamaara).isAfter(dayjs(b.paivamaara))) {
+                      return 1;
+                    }
+                    return 0;
+                  })
+                  .map((tilaisuus, index) => {
+                    return (
+                      <div key={index} className="vayla-tilaisuus-item inactive">
+                        <div className="flex flex-cols gap-5">
+                          {getIcon(tilaisuus.tyyppi, true)}
+                          {getTitle(tilaisuus)}
+                        </div>
+                        {getContent(tilaisuus)}
+                      </div>
+                    );
+                  })}
+              </div>
+            </SectionContent>
+          )}
           <SectionContent>
-            <h5 className="vayla-small-title">Esittelyaineisto ja suunnitelmaluonnokset</h5>
+            <h4 className="vayla-small-title">Esittelyaineisto ja suunnitelmaluonnokset</h4>
             {!vuorovaikutus && <p>Aineistot ja luonnokset julkaistaan lähempänä vuorovaikutustilaisuutta.</p>}
           </SectionContent>
         </Section>

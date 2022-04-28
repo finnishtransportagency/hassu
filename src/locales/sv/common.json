@@ -42,5 +42,13 @@
   "yhteystiedot": "RUOTSI_Yhteystiedot",
   "lisatietoja_antavat": "RUOTSI_Lisätietoja antavat {{yhteystiedot}}.",
   "yhteystieto": "RUOTSI_{{etunimi}} {{sukunimi}}, puh. {{puhelinnumero}}, {{sahkoposti}} ({{organisaatio}})",
-  "ja": "RUOTSI_ja"
+  "ja": "RUOTSI_ja",
+  "viikonpaiva_0": "söndag",
+  "viikonpaiva_1": "måndag",
+  "viikonpaiva_2": "tisdag",
+  "viikonpaiva_3": "onsdag",
+  "viikonpaiva_4": "torsdag",
+  "viikonpaiva_5": "fredag",
+  "viikonpaiva_6": "lördag"
+  
 }

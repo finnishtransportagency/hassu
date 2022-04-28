@@ -42,5 +42,13 @@
   "yhteystiedot": "Yhteystiedot",
   "lisatietoja_antavat": "Lisätietoja antavat {{yhteystiedot}}.",
   "yhteystieto": "{{etunimi}} {{sukunimi}}, puh. {{puhelinnumero}}, {{sahkoposti}} ({{organisaatio}})",
-  "ja": "ja"
+  "ja": "ja",
+  "viikonpaiva_0": "sunnuntai",
+  "viikonpaiva_1": "maanantai",
+  "viikonpaiva_2": "tiistai",
+  "viikonpaiva_3": "keskiviikko",
+  "viikonpaiva_4": "torstai",
+  "viikonpaiva_5": "perjantai",
+  "viikonpaiva_6": "lauantai"
+  
 }
