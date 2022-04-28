@@ -1,5 +1,5 @@
 import FormGroup from "./FormGroup";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { FieldError } from "react-hook-form";
 import useOutsideClickDetection from "../../hooks/useOutsideClickDetection";
 import usePrevious from "../../hooks/usePrevious";
@@ -55,7 +55,9 @@ const Autocomplete = <T extends unknown>({
   const [filteredOptions, setFilteredOptions] = useState<T[]>(Array.isArray(propOptions) ? propOptions : []);
   const optionsRef = useRef<(HTMLLIElement | null)[]>([]);
   const listRef = useRef<HTMLDivElement>(null);
-  const slicedOptions = filteredOptions?.slice(0, maxResults) || [];
+  const slicedOptions = useMemo(() => {
+    return filteredOptions?.slice(0, maxResults) || [];
+  }, [filteredOptions, maxResults]);
 
   const getNextIndex = () => (currentIndex < slicedOptions.length - 1 ? currentIndex + 1 : 0);
   const getPrevIndex = () => (currentIndex > 0 ? currentIndex - 1 : slicedOptions.length - 1);
