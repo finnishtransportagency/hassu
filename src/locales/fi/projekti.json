@@ -53,7 +53,8 @@
   },
   "ui-linkkitekstit": {
     "tutustu_osallistumismahdollisuuksiin": "Tutustu osallistumismahdollisuuksiin",
-    "tutustu_hankesuunnitteluun": "Tutustu hankesuunnitteluun"
+    "tutustu_hankesuunnitteluun": "Tutustu hankesuunnitteluun",
+    "takaisin_listaukseen": "Takaisin listaukseen"
   },
   "ui-otsikot": {
     "kuulutus_suunnitelman_alkamisesta": "Kuulutus suunnittelun aloittamisesta",
@@ -64,7 +65,14 @@
     "asianosaisen_oikeudet": "Asianosaisen oikeudet",
     "yhteystiedot": "Yhteystiedot",
     "lisatietoja_antavat": "Lisätietoja antavat",
-    "ladattava_kuulutus": "Ladattava kuulutus"
+    "ladattava_kuulutus": "Ladattava kuulutus",
+    "nimi": "Nimi",
+    "asiatunnus": "Asiatunnus",
+    "projektipaallikko": "Projektipäällikkö",
+    "vastuuorganisaatio": "Vastuuorganisaatio",
+    "vaihe": "Vaihe",
+    "paivitetty": "Päivitetty",
+    "oid": "oid"
   },
   "vastaava-viranomainen": {
     "ETELA_POHJANMAAN_ELY": "Etelä-Pohjanmaan ELY-keskus",

@@ -53,7 +53,8 @@
   },
   "ui-linkkitekstit": {
     "tutustu_osallistumismahdollisuuksiin": "RUOTSIKSI Tutustu osallistumismahdollisuuksiin",
-    "tutustu_hankesuunnitteluun": "RUOTSIKSI Tutustu hankesuunnitteluun"
+    "tutustu_hankesuunnitteluun": "RUOTSIKSI Tutustu hankesuunnitteluun",
+    "takaisin_listaukseen": "RUOTSIKSI Takaisin listaukseen"
   },
   "ui-otsikot": {
     "kuulutus_suunnitelman_alkamisesta": "RUOTSIKSI Kuulutus suunnittelun aloittamisesta",
@@ -64,7 +65,14 @@
     "asianosaisen_oikeudet": "RUOTSIKSI Asianosaisen oikeudet",
     "yhteystiedot": "RUOTSIKSI Yhteystiedot",
     "lisatietoja_antavat": "RUOTSIKSI Lisätietoja antavat",
-    "ladattava_kuulutus": "RUOTSIKSI Ladattava kuulutus"
+    "ladattava_kuulutus": "RUOTSIKSI Ladattava kuulutus",
+    "nimi": "RUOTSIKSI Nimi",
+    "asiatunnus": "RUOTSIKSI Asiatunnus",
+    "projektipaallikko": "RUOTSIKSI Projektipäällikkö",
+    "vastuuorganisaatio": "RUOTSIKSI Vastuuorganisaatio",
+    "vaihe": "RUOTSIKSI Vaihe",
+    "paivitetty": "RUOTSIKSI Päivitetty",
+    "oid": "RUOTSIKSI oid"
   },
   "vastaava-viranomainen": {
     "ETELA_POHJANMAAN_ELY": "RUOTSIKSI Etelä-Pohjanmaan ELY-keskus",
