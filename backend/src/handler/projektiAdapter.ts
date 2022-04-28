@@ -24,6 +24,7 @@ import {
   VuorovaikutusInput,
   VuorovaikutusTilaisuusInput,
   YhteystietoInput,
+  ProjektiRooli,
 } from "../../../common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
@@ -267,6 +268,16 @@ function adaptKayttajatunnusList(projekti: DBProjekti, yhteysHenkilot: Array<str
       return undefined;
     }
   });
+
+  // Users with PROJEKTIPAALLIKKO role should always be in the kayttajaTunnusList
+  // Push PROJEKTIPAALLIKKO into the list if not there already
+  const projektipaallikkonTunnus = projekti.kayttoOikeudet?.find(
+    ({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO
+  )?.kayttajatunnus;
+  if (!unfilteredList.includes(projektipaallikkonTunnus)) {
+    unfilteredList.push(projektipaallikkonTunnus);
+  }
+
   const list = unfilteredList.filter((yh) => yh);
   return list.length > 0 ? list : undefined;
 }
