@@ -82,7 +82,7 @@ function KayttoOikeusHallinta({ disableFields, onKayttajatUpdate }: Props) {
   useEffect(() => {
     setFallbackKayttajat(kayttajat || []);
     onKayttajatUpdate(kayttajat || []);
-  }, [kayttajat]);
+  }, [kayttajat, onKayttajatUpdate]);
 
   const isLoadingKayttajat = !kayttajat && !kayttajatLoadError;
   const kayttoOikeudet = watch("kayttoOikeudet");

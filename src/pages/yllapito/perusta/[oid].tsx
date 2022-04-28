@@ -1,11 +1,11 @@
 import { PageProps } from "@pages/_app";
-import React, { ReactElement, useEffect } from "react";
+import React, { ReactElement, useEffect, useCallback } from "react";
 import useProjekti from "src/hooks/useProjekti";
 import { useRouter } from "next/router";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import ProjektiPerustiedot from "@components/projekti/ProjektiPerustiedot";
 import KayttoOikeusHallinta, { defaultKayttaja } from "@components/projekti/KayttoOikeusHallinta";
-import { api, TallennaProjektiInput } from "@services/api";
+import { api, TallennaProjektiInput, Kayttaja } from "@services/api";
 import * as Yup from "yup";
 import { useState } from "react";
 import { FormProvider, useForm, UseFormReturn } from "react-hook-form";
@@ -105,6 +105,10 @@ export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactEle
     }
   }, [projekti, reset]);
 
+  const onKayttajatUpdate = useCallback((kayttajat : Kayttaja[]) => {
+    setFormContext({ kayttajat });
+  }, [setFormContext]);
+
   return (
     <section>
       <h1>Projektin Perustaminen</h1>
@@ -122,9 +126,7 @@ export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactEle
             </Section>
             <KayttoOikeusHallinta
               disableFields={disableFormEdit}
-              onKayttajatUpdate={(kayttajat) => {
-                setFormContext({ kayttajat });
-              }}
+              onKayttajatUpdate={onKayttajatUpdate}
             />
             <Section noDivider>
               <div className="flex gap-6 flex-col md:flex-row">
