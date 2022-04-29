@@ -5,11 +5,11 @@ import useTranslation from "next-translate/useTranslation";
 import { Container, styled } from "@mui/material";
 
 export interface RouteLabels {
-  [key: string]: { label: string; hideWhenNotCurrentRoute?: boolean };
+  [key: string]: { label: string; hideWhenNotCurrentRoute?: boolean, translate?: boolean };
 }
 
 export interface RouteMapping {
-  [key: string]: { label: string; href: string };
+  [key: string]: { label: string; translate?: boolean, href: string };
 }
 
 interface Props {
@@ -17,22 +17,22 @@ interface Props {
 }
 
 const defaultLabels: RouteLabels = {
-  "/": { label: "Etusivu" },
-  "/yllapito": { label: "Etusivu", hideWhenNotCurrentRoute: true },
-  "/yllapito/perusta": { label: "Projektin perustaminen" },
+  "/": { label: "etusivu", translate: true },
+  "/yllapito": { label: "etusivu", hideWhenNotCurrentRoute: true, translate: true },
+  "/yllapito/perusta": { label: "projektin_perustaminen", translate: true },
   "/yllapito/perusta/[oid]": { label: "..." },
-  "/yllapito/projekti": { label: "Projektit" },
+  "/yllapito/projekti": { label: "projektit", translate: true },
   "/yllapito/projekti/[oid]": { label: "..." },
-  "/yllapito/projekti/[oid]/aloituskuulutus": { label: "Aloituskuulutus" },
-  "/yllapito/projekti/[oid]/henkilot": { label: "Henkilöt ja käyttöoikeushallinta" },
-  "/yllapito/projekti/[oid]/suunnittelu": { label: "Suunnittelu ja vuorovaikutus" },
-  "/yllapito/ohjeet": { label: "Ohjeet" },
-  "/suunnitelma": { label: "Suunnitelmat" },
-  "/suunnitelma/[oid]/aloituskuulutus": { label: "Aloituskuulutus" },
-  "/suunnitelma/[oid]/suunnittelu": { label: "Suunnittelu" },
-  "/suunnitelma/[oid]/nahtavillaolo": { label: "Nähtävilläolo" },
-  "/suunnitelma/[...all]": { label: "Tutki suunnitelmaa" },
-  "/_error": { label: "Virhe" },
+  "/yllapito/projekti/[oid]/aloituskuulutus": { label: "aloituskuulutus", translate: true },
+  "/yllapito/projekti/[oid]/henkilot": { label: "henkilot_ja_kayttooikeushallinta", translate: true },
+  "/yllapito/projekti/[oid]/suunnittelu": { label: "suunnittelu_ja_vuorovaikutus", translate: true },
+  "/yllapito/ohjeet": { label: "ohjeet", translate: true },
+  "/suunnitelma": { label: "suunnitelmat", translate: true },
+  "/suunnitelma/[oid]/aloituskuulutus": { label: "aloituskuulutus", translate: true },
+  "/suunnitelma/[oid]/suunnittelu": { label: "suunnittelu", translate: true },
+  "/suunnitelma/[oid]/nahtavillaolo": { label: "nahtavillaolo", translate: true },
+  "/suunnitelma/[...all]": { label: "tutki_suunnitelmaa", translate: true },
+  "/_error": { label: "virhe", translate: true },
 };
 
 const ERROR_ROUTE = "/_error";
@@ -55,7 +55,7 @@ export const generateRoutes = (nextRouter: NextRouter, routeLabels: RouteLabels)
   if (nextRouter.pathname === ERROR_ROUTE) {
     return ERROR_MAPPING;
   }
-  const labels = { ...defaultLabels, ...routeLabels };
+  const labels : RouteLabels = { ...defaultLabels, ...routeLabels };
   // Some breadcrumb require to be hidden when it is not current route
   const isRouteVisible = (pathname: string) =>
     !labels[pathname]?.hideWhenNotCurrentRoute || isCurrentRoute(pathname, nextRouter);
@@ -68,7 +68,8 @@ export const generateRoutes = (nextRouter: NextRouter, routeLabels: RouteLabels)
     if (isRouteVisible(jointPathname)) {
       const href = joinPath(pathSplitted, index);
       const label = labels[jointPathname]?.label || pathname;
-      reducer[jointPathname] = { href, label };
+      const translate = labels[jointPathname]?.translate || false;
+      reducer[jointPathname] = { href, label, translate };
     }
     return reducer;
   }, {});
@@ -96,16 +97,16 @@ export default function Breadcrumbs({ routeLabels }: Props): ReactElement {
           <li className="mr-1 truncate-ellipsis max-w-xs">
             <Link href={isYllapito() ? "/yllapito" : "/"}>{t("common:sivustonimi")}</Link>
           </li>
-          {Object.entries(routeMapping).map(([route, { href, label }]) => (
+          {Object.entries(routeMapping).map(([route, { href, label, translate }]) => (
             <ListItem className="mr-1 truncate-ellipsis max-w-xs" key={route}>
               {!isCurrentRoute(route, router) ? (
                 <Link href={href}>
                   <a>
-                    <span>{label}</span>
+                    <span>{translate ? t(`common:polut.${label}`) : label}</span>
                   </a>
                 </Link>
               ) : (
-                <span className="font-bold">{label}</span>
+                <span className="font-bold">{translate ? t(`common:polut.${label}`) : label}</span>
               )}
             </ListItem>
           ))}

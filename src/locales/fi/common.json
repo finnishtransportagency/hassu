@@ -1,4 +1,20 @@
 {
+  "kansalaisheader": "KANSALAISHEADER - TBD",
+  "polut": {
+    "etusivu": "Etusivu",
+    "projektin_perustaminen": "Projektin perustaminen",
+    "...": "...",
+    "projektit": "Projektit",
+    "aloituskuulutus": "Aloituskuulutus",
+    "henkilot_ja_kayttooikeushallinta": "Henkilöt ja käyttöoikeushallinta",
+    "suunnittelu_ja_vuorovaikutus": "Suunnittelu ja vuorovaikutus",
+    "ohjeet": "Ohjeet",
+    "suunnitelmat": "Suunnitelmat",
+    "suunnittelu": "Suunnittelu",
+    "nahtavillaolo": "Nähtävilläolo",
+    "tutki_suunnitelmaa": "Tutki suunnitelmaa",
+    "virhe": "Virhe"
+  },
   "sivustonimi": "Valtion liikenneväylien suunnittelu",
   "vaylavirasto": "Väylävirasto",
   "ely-keskus": "ELY-keskus",

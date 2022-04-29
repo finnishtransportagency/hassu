@@ -2,11 +2,13 @@ import React from "react";
 import Link from "next/link";
 import useSWR from "swr";
 import { useRouter } from "next/router";
+import useTranslation from "next-translate/useTranslation";
 import log from "loglevel";
 import { api } from "@services/api";
 
 function ProjektiPage() {
   const router = useRouter();
+  const { t } = useTranslation("projekti");
   const oid = router.query.all?.[0];
   const { data: projekti, error } = useSWR(JSON.stringify({ oid }), projektiLoader);
   if (error) {
@@ -19,12 +21,12 @@ function ProjektiPage() {
   log.info("loaded", projekti);
   return (
     <>
-      <p>Nimi: {projekti.velho?.nimi}</p>
+      <p>{t("ui-otsikot.nimi")}{": "}{projekti.velho?.nimi}</p>
       <p/>
       <p />
       <p>
         <Link href="..">
-          <a className="btn btn-sm btn-success mb-2">Takaisin listaukseen</a>
+          <a className="btn btn-sm btn-success mb-2">{t("ui-linkkitekstit.takaisin_listaukseen")}</a>
         </Link>
       </p>
     </>

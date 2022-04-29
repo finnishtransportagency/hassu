@@ -76,13 +76,13 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
     sijainti = sijainti + velho.kunnat.join(", ");
   }
   const yhteystiedot = formatYhteystiedotText(kuulutus);
-  const keyValueData: KeyValueData[] = [
+  const keyValueData : KeyValueData[] = [
     {
-      header: "Nähtävilläoloaika",
+      header: t(`ui-otsikot.nahtavillaoloaika`),
       data: `${formatDate(kuulutus.kuulutusPaiva)} - ${formatDate(kuulutus.siirtyySuunnitteluVaiheeseen)}`,
     },
-    { header: "Hankkeen sijainti", data: sijainti },
-    { header: "Suunnitelman tyyppi", data: velho?.tyyppi && t(`projekti-tyyppi.${velho?.tyyppi}`) },
+    { header: t(`ui-otsikot.hankkeen_sijainti`), data: sijainti },
+    { header: t(`ui-otsikot.suunnitelman_tyyppi`), data: velho?.tyyppi && t(`projekti-tyyppi.${velho?.tyyppi}`) },
   ];
 
   let aloituskuulutusPDFPath =
@@ -91,7 +91,7 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
   let kuulutusFileExt = aloituskuulutusPDFPath?.replace(/.*\./, "");
 
   return (
-    <ProjektiJulkinenPageLayout selectedStep={0} title="Kuulutus suunnittelun aloittamisesta">
+    <ProjektiJulkinenPageLayout selectedStep={0} title={t(`ui-otsikot.kuulutus_suunnitelman_alkamisesta`)}>
       <>
         <Section noDivider>
           <KeyValueTable rows={keyValueData}></KeyValueTable>
@@ -103,77 +103,63 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
                   {velho.suunnittelustaVastaavaViranomainen
                     ? t(`vastaava-viranomainen.${velho.suunnittelustaVastaavaViranomainen}`)
                     : velho.tilaajaOrganisaatio}{" "}
-                  aloittavat yleissuunnitelman laatimisen tarpeellisine tutkimuksineen.
+                  {t(`info.ei-rata.aloittavat_yleissuunnitelman_laatimisen`)}
                 </p>
               )}
               <p>
-                Kuulutus on julkaistu tietoverkossa Väyläviraston verkkosivuilla{" "}
-                <FormatDate date={kuulutus.kuulutusPaiva} />. Asianosaisten katsotaan saaneen tiedon suunnittelun
-                käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a
-                §).
+                {t(`info.ei-rata.kuulutus_on_julkaistu`)}{" "}
+                <FormatDate date={kuulutus.kuulutusPaiva} />.{" "}{t(`info.ei-rata.asianosaisten_katsotaan_saaneen`)}
               </p>
               <p>
-                Suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön edellyttämiä mittauksia,
-                maaperätutkimuksia ja muita valmistelevia toimenpiteitä (laki liikennejärjestelmästä ja maanteistä LjMTL
-                16 §).
+                {t(`info.ei-rata.suunnitelmasta_vastaavalla_on`)}
               </p>
             </SectionContent>
           )}
           {velho.tyyppi === ProjektiTyyppi.RATA && (
             <SectionContent>
               <p>
-                Väylävirasto on julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista{" "}
+                {t(`info.rata.vaylavirasto_on_julkaissut`)}{" "}
                 <FormatDate date={kuulutus.kuulutusPaiva} />.
               </p>
               <p>
-                Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä
-                päivänä kuulutuksen julkaisemisesta. (ratalaki 95 §, HL 62 a §)
+                {t(`info.rata.asianosaisten_katsotaan_saaneen`)}
               </p>
               <p>
-                Rataverkon haltijalla on oikeus tehdä suunnittelualueeseen kuuluvalla kiinteistöllä suunnitteluun
-                liittyviä mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä (ratalaki 9 §).
+                {t(`info.rata.rataverkon_haltijalla_on`)}
               </p>
             </SectionContent>
           )}
 
-          <h4 className="vayla-small-title">Suunnitteluhankkeen kuvaus</h4>
+          <h4 className="vayla-small-title">{t(`ui-otsikot.suunnitteluhankkeen_kuvaus`)}</h4>
           <SectionContent>
             <p>{kuulutus.hankkeenKuvaus?.[kuulutus.kielitiedot?.ensisijainenKieli || Kieli.SUOMI]}</p>
           </SectionContent>
-          <h4 className="vayla-small-title">Asianosaisen oikeudet</h4>
+          <h4 className="vayla-small-title">{t(`ui-otsikot.asianosaisen_oikeudet`)}</h4>
           <Notification type={NotificationType.INFO} hideIcon>
             <SectionContent sx={{ padding: "1rem 1rem" }}>
               {velho.tyyppi !== ProjektiTyyppi.RATA && (
                 <ul>
                   <li>
-                    Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai
-                    muihin oloihin suunnitelma saattaa vaikuttaa on oikeus olla tutkimuksissa saapuvilla ja lausua
-                    mielipiteensä asiassa (LjMTL 16 § ja 27 §).
+                    {t(`info.ei-rata.kiinteiston_omistajilla_ja`)}
                   </li>
                   <li>
-                    Suunnittelun edetessä tullaan myöhemmin erikseen ilmoitettavalla tavalla varaamaan tilaisuus
-                    mielipiteen ilmaisemiseen suunnitelmasta (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §).
+                    {t(`info.ei-rata.suunnittelun_edetessa_tullaan`)}
                   </li>
                   <li>
-                    Valmistuttuaan suunnitelmat asetetaan yleisesti nähtäville, jolloin asianosaisilla on mahdollisuus
-                    tehdä kirjallinen muistutus suunnitelmasta (LjMTL 27 §).
+                    {t(`info.ei-rata.valmistuttuaan_suunnitelmat_asetetaan`)}
                   </li>
                 </ul>
               )}
               {velho.tyyppi === ProjektiTyyppi.RATA && (
                 <ul>
                   <li>
-                    Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai
-                    muihin oloihin suunnitelma saattaa vaikuttaa on oikeus olla tutkimuksissa saapuvilla ja lausua
-                    mielipiteensä asiassa (ratalaki 22 § ja 9 §).
+                    {t(`info.rata.kiinteston_omistajilla_ja`)}
                   </li>
                   <li>
-                    Suunnittelun edetessä tullaan myöhemmin erikseen ilmoitettavalla tavalla varaamaan tilaisuus
-                    mielipiteen ilmaisemiseen suunnitelmasta.
+                    {t(`info.rata.suunnittelun_edetessa_tullaan`)}
                   </li>
                   <li>
-                    Valmistuttuaan suunnitelma asetetaan yleisesti nähtäville, jolloin asianosaisilla on mahdollisuus
-                    tehdä kirjallinen muistutus suunnitelmasta. (ratalaki 22 §).
+                    {t(`info.rata.valmistuttuaan_suunnitelmat_asetetaan`)}
                   </li>
                 </ul>
               )}
@@ -182,37 +168,33 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
           <SectionContent>
             {velho.tyyppi !== ProjektiTyyppi.RATA && (
               <p>
-                Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi
-                tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon
-                osoitteessa www.vayla.fi/tietosuoja.
+                {t(`info.ei-rata.vaylavirasto_kasittelee_suunnitelman`)}
               </p>
             )}
             {velho.tyyppi === ProjektiTyyppi.RATA && (
               <p>
-                Väylävirasto käsittelee suunnitelmaan laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi
-                tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon
-                osoitteessa https://www.vayla.fi/tietosuoja.
+                {t(`info.rata.vaylavirasto_kasittelee_suunnitelman`)}
               </p>
             )}
           </SectionContent>
-          <h4 className="vayla-small-title">Yhteystiedot</h4>
+          <h4 className="vayla-small-title">{t(`ui-otsikot.yhteystiedot`)}</h4>
           <SectionContent>
-            <p>Lisätietoja antavat {yhteystiedot}</p>
+            <p>{t(`ui-otsikot.lisatietoja_antavat`)}{" "}{yhteystiedot}</p>
           </SectionContent>
-          <h4 className="vayla-small-title">Ladattava kuulutus</h4>
+          <h4 className="vayla-small-title">{t(`ui-otsikot.ladattava_kuulutus`)}</h4>
           <SectionContent className="flex gap-4">
             <ExtLink href={aloituskuulutusPDFPath}>{kuulutusFileName}</ExtLink> ({kuulutusFileExt}) (
             <FormatDate date={kuulutus.kuulutusPaiva} />-
             <FormatDate date={kuulutus.siirtyySuunnitteluVaiheeseen} />)
           </SectionContent>
-          {projekti.euRahoitus && <img src="/eu-logo.jpg" width={134} alt="EU aluerahoitus" />}
+          {projekti.euRahoitus && <img src="/eu-logo.jpg" width={134} alt={t(`ui-kuvatekstit.eu_aluerahoitus`)} />}
           <SectionContent sx={{ marginTop: "2rem" }}>
             <HassuStack rowGap={0}>
               <ExtLink hideIcon href="https://www.vayla.fi/tietosuoja">
-                Tutustu osallistumismahdollisuuksiin
+                {t(`ui-linkkitekstit.tutustu_osallistumismahdollisuuksiin`)}
               </ExtLink>
               <ExtLink hideIcon href="https://vayla.fi/suunnittelu-rakentaminen/hankkeiden-suunnittelu">
-                Tutustu hankesuunnitteluun
+                {t(`ui-linkkitekstit.tutustu_hankesuunnitteluun`)}
               </ExtLink>
             </HassuStack>
           </SectionContent>

@@ -41,24 +41,24 @@ export default function ProjektiListaus(props: ProjektiListausProps) {
       <Table<ProjektiHakutulosDokumentti>
         tableOptions={{
           columns: [
-            { Header: "Nimi", accessor: "nimi" },
-            { Header: "Asiatunnus", accessor: "asiatunnus" },
-            { Header: "Projektipäällikkö", accessor: "projektipaallikko" },
+            { Header: t("projekti:ui-otsikot.nimi") as string, accessor: "nimi" },
+            { Header: t("projekti:ui-otsikot.asiatunnus") as string, accessor: "asiatunnus" },
+            { Header: t("projekti:ui-otsikot.projektipaallikko") as string, accessor: "projektipaallikko" },
             {
-              Header: "Vastuuorganisaatio",
+              Header: t("projekti:ui-otsikot.vastuuorganisaatio") as string,
               accessor: (projekti) =>
                 projekti.suunnittelustaVastaavaViranomainen &&
                 t(`projekti:vastaava-viranomainen.${projekti.suunnittelustaVastaavaViranomainen}`),
             },
             {
-              Header: "Vaihe",
+              Header: t("projekti:ui-otsikot.vaihe") as string,
               accessor: (projekti) => projekti.vaihe && t(`projekti:projekti-status.${projekti.vaihe}`),
             },
             {
-              Header: "Päivitetty",
+              Header: t("projekti:ui-otsikot.paivitetty") as string,
               accessor: (projekti) => projekti.paivitetty && formatDate(projekti.paivitetty),
             },
-            { Header: "oid", accessor: "oid" },
+            { Header: t("projekti:ui-otsikot.oid") as string, accessor: "oid" },
           ],
           initialState: { hiddenColumns: ["oid"] },
           data: hakutulos?.tulokset || [],
