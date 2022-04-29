@@ -9,5 +9,5 @@ export const isValidDate = (date: string | number | Date | dayjs.Dayjs | null | 
 };
 
 export const formatDayOfWeek = (date: string | number | Date | dayjs.Dayjs | null | undefined) => {
-  return dayjs(date).format("dddd"); //TODO translate
+  return dayjs(date).format("dddd");
 };

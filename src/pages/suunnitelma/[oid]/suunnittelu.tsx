@@ -52,7 +52,7 @@ export default function Suunnittelu(): ReactElement {
     return <></>;
   }
 
-  const vuorovaikutus = projekti.suunnitteluVaihe.vuorovaikutukset?.[0]; //TODO voiko olla useita, ja mika niista naytetaan
+  const vuorovaikutus = projekti.suunnitteluVaihe.vuorovaikutukset?.[0];
   const tulevatTilaisuudet = vuorovaikutus?.vuorovaikutusTilaisuudet?.filter((t) =>
     dayjs(t.paivamaara).isAfter(today || dayjs(t.paivamaara).isSame(today))
   );
