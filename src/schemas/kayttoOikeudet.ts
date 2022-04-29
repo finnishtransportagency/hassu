@@ -1,6 +1,6 @@
 import * as Yup from "yup";
-import { Kayttaja, ProjektiKayttajaInput, ProjektiRooli, VaylaKayttajaTyyppi } from "@services/api";
-import { puhelinNumeroSchema, addAgencyNumberTests } from "./puhelinNumero";
+import { Kayttaja, ProjektiKayttajaInput, ProjektiRooli, VaylaKayttajaTyyppi } from "../../common/graphql/apiModel";
+import { addAgencyNumberTests, puhelinNumeroSchema } from "./puhelinNumero";
 
 export interface KayttoOikeudetSchemaContext {
   kayttajat: Kayttaja[];
@@ -38,13 +38,11 @@ export const kayttoOikeudetSchema = Yup.array()
       })
   )
   .test("must-contain-projektipaallikko", "Projektille täytyy määrittää projektipäällikkö", (list) => {
-    const listContainsProjektiPaallikko =
-      !!list && (list as ProjektiKayttajaInput[]).some(({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO);
-    return listContainsProjektiPaallikko;
+    return !!list && (list as ProjektiKayttajaInput[]).some(({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO);
   })
   .test("singular-projektipaallikko", "Projektilla voi olla vain yksi projektipäällikkö", (list) => {
-    const listContainsProjektiPaallikko =
+    return (
       !!list &&
-      (list as ProjektiKayttajaInput[]).filter(({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO).length < 2;
-    return listContainsProjektiPaallikko;
+      (list as ProjektiKayttajaInput[]).filter(({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO).length < 2
+    );
   });

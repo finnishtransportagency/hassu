@@ -30,6 +30,7 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
   const velho = kuulutus.velho;
 
   const statusStep: Record<Status, number> = {
+    EI_JULKAISTU_PROJEKTIN_HENKILOT: -2,
     EI_JULKAISTU: -1,
     ALOITUSKUULUTUS: 0,
     SUUNNITTELU: 1,

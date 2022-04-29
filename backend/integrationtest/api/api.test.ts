@@ -9,6 +9,7 @@ import {
   Palaute,
   Projekti,
   ProjektiKayttaja,
+  ProjektiKayttajaInput,
   ProjektiRooli,
   Status,
   TilasiirtymaToiminto,
@@ -62,7 +63,7 @@ function cleanupGeneratedIdFromFeedbacks(feedbacks?: Palaute[]) {
     : undefined;
 }
 
-function cleanupGeneratedIds(obj: any) {
+function cleanupGeneratedIds(obj: unknown) {
   return Object.keys(obj).reduce((cleanObj, key) => {
     const cleanedUpKey = key.replace(/[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}/g, "***unittest***");
     cleanObj[cleanedUpKey] = obj[key];
@@ -70,7 +71,7 @@ function cleanupGeneratedIds(obj: any) {
   }, {});
 }
 
-function verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub: Sinon.SinonStub<any[], any>) {
+function verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub: Sinon.SinonStub) {
   expect(awsCloudfrontInvalidationStub.getCalls()).to.have.length(1);
   expect(awsCloudfrontInvalidationStub.getCalls()[0].args).to.have.length(2);
   const invalidationParams = awsCloudfrontInvalidationStub.getCalls()[0].args[0];
@@ -132,14 +133,27 @@ describe("Api", () => {
     getCloudFront();
   });
 
-  async function testProjektiHenkilot(projekti: Projekti, oid: string) {
+  async function testProjektiHenkilot(projekti: Projekti) {
+    await api.tallennaProjekti({
+      oid,
+      kayttoOikeudet: projekti.kayttoOikeudet?.map(
+        (value) =>
+          ({
+            rooli: value.rooli,
+            kayttajatunnus: value.kayttajatunnus,
+            // Emulate migration where the phone number may be empty
+          } as ProjektiKayttajaInput)
+      ),
+    });
+    const p = await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
+
     // Expect that projektipaallikko is found
-    const projektiPaallikko = projekti.kayttoOikeudet
+    const projektiPaallikko = p.kayttoOikeudet
       ?.filter((kayttaja) => kayttaja.rooli === ProjektiRooli.PROJEKTIPAALLIKKO && kayttaja.email)
       .pop();
     expect(projektiPaallikko).is.not.empty;
 
-    const kayttoOikeudet = projekti.kayttoOikeudet?.map((value) => ({
+    const kayttoOikeudet = p.kayttoOikeudet?.map((value) => ({
       rooli: value.rooli,
       kayttajatunnus: value.kayttajatunnus,
       puhelinnumero: "123",
@@ -150,7 +164,8 @@ describe("Api", () => {
       oid,
       kayttoOikeudet,
     });
-    await loadProjektiFromDatabase(oid);
+    await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU);
+
     return projektiPaallikko;
   }
 
@@ -167,7 +182,7 @@ describe("Api", () => {
     });
 
     // Check that the saved projekti is what it is supposed to be
-    const updatedProjekti = await loadProjektiFromDatabase(oid);
+    const updatedProjekti = await loadProjektiFromDatabase(oid, Status.ALOITUSKUULUTUS);
     expect(updatedProjekti.muistiinpano).to.be.equal(apiTestFixture.newNote);
     expect(updatedProjekti.aloitusKuulutus).eql(apiTestFixture.aloitusKuulutus);
     expect(updatedProjekti.suunnitteluSopimus).include(apiTestFixture.suunnitteluSopimus);
@@ -193,7 +208,7 @@ describe("Api", () => {
       muistiinpano: null,
     });
 
-    const projekti = await loadProjektiFromDatabase(oid);
+    const projekti = await loadProjektiFromDatabase(oid, Status.ALOITUSKUULUTUS);
     expect(projekti.muistiinpano).to.be.undefined;
   }
 
@@ -216,7 +231,7 @@ describe("Api", () => {
         suunnittelunEteneminenJaKesto: "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
       },
     });
-    const projekti = await loadProjektiFromDatabase(oid);
+    const projekti = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
     expectToMatchSnapshot("testSuunnitteluvaihePerustiedot", projekti.suunnitteluVaihe);
   }
 
@@ -248,7 +263,7 @@ describe("Api", () => {
       oid,
       suunnitteluVaihe: apiTestFixture.suunnitteluVaihe(vuorovaikutusNumero, vuorovaikutusYhteysHenkilot, julkinen),
     });
-    return (await loadProjektiFromDatabase(oid)).suunnitteluVaihe;
+    return (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe;
   }
 
   async function testListDocumentsToImport(oid: string) {
@@ -262,7 +277,8 @@ describe("Api", () => {
   }
 
   async function testImportAineistot(oid: string, velhoAineistoKategorias: VelhoAineistoKategoria[]) {
-    const originalVuorovaikutus = (await loadProjektiFromDatabase(oid)).suunnitteluVaihe.vuorovaikutukset[0];
+    const originalVuorovaikutus = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe
+      .vuorovaikutukset[0];
 
     let order = 1;
     const aineistot = velhoAineistoKategorias.reduce((documents, aineistoKategoria) => {
@@ -282,7 +298,8 @@ describe("Api", () => {
           },
         },
       });
-      const vuorovaikutus = (await loadProjektiFromDatabase(oid)).suunnitteluVaihe.vuorovaikutukset[0];
+      const vuorovaikutus = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe
+        .vuorovaikutukset[0];
       expectToMatchSnapshot("saveAndVerifyAineistoSave", vuorovaikutus);
     }
 
@@ -299,7 +316,8 @@ describe("Api", () => {
 
   async function testUpdatePublishDateAndDeleteAineisto(oid: string) {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    const vuorovaikutus = (await loadProjektiFromDatabase(oid)).suunnitteluVaihe.vuorovaikutukset[0];
+    const vuorovaikutus = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe
+      .vuorovaikutukset[0];
     vuorovaikutus.aineistot.pop();
     const input = {
       oid,
@@ -326,14 +344,14 @@ describe("Api", () => {
       liite: await tallennaLogo(),
     });
 
-    const projekti = await loadProjektiFromDatabase(oid);
+    const projekti = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
     const palautteet = projekti.suunnitteluVaihe.palautteet;
 
     expectToMatchSnapshot("projekti palaute lisätty", cleanupGeneratedIdFromFeedbacks(palautteet));
 
     await api.otaPalauteKasittelyyn(oid, palauteId);
 
-    const projektiAfterFeedbackBeingHandled = await loadProjektiFromDatabase(oid);
+    const projektiAfterFeedbackBeingHandled = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
     const palautteetAfterFeedbackBeingHandled = projektiAfterFeedbackBeingHandled.suunnitteluVaihe.palautteet;
     expectToMatchSnapshot(
       "projekti palaute otettu käsittelyyn",
@@ -342,7 +360,7 @@ describe("Api", () => {
   }
 
   async function julkaiseSuunnitteluvaihe(oid: string) {
-    const projekti = await loadProjektiFromDatabase(oid);
+    const projekti = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
     await api.tallennaProjekti({
       oid,
       suunnitteluVaihe: {
@@ -353,7 +371,7 @@ describe("Api", () => {
   }
 
   async function julkaiseVuorovaikutus(oid: string) {
-    const unpublishedVuorovaikutusProjekti = await loadProjektiFromDatabase(oid);
+    const unpublishedVuorovaikutusProjekti = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
     await api.tallennaProjekti({
       oid,
       suunnitteluVaihe: {
@@ -361,14 +379,14 @@ describe("Api", () => {
       },
     });
     userFixture.logout();
-    const suunnitteluVaihe = (await loadProjektiFromDatabase(oid)).suunnitteluVaihe;
+    const suunnitteluVaihe = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe;
     cleanupVuorovaikutusTimestamps(suunnitteluVaihe.vuorovaikutukset);
     await expectToMatchSnapshot("publicProjekti" + (" suunnitteluvaihe" || ""), suunnitteluVaihe);
   }
 
-  async function testPublicAccessToProjekti(oid: string, description?: string) {
+  async function testPublicAccessToProjekti(oid: string, expectedStatus: Status, description?: string) {
     userFixture.logout();
-    const publicProjekti = await loadProjektiFromDatabase(oid);
+    const publicProjekti = await loadProjektiFromDatabase(oid, expectedStatus);
     expectToMatchSnapshot("publicProjekti" + (description || ""), publicProjekti);
   }
 
@@ -388,7 +406,7 @@ describe("Api", () => {
     const projekti = await readProjektiFromVelho();
     oid = projekti.oid;
     await cleanProjektiS3Files(oid);
-    const projektiPaallikko = await testProjektiHenkilot(projekti, oid);
+    const projektiPaallikko = await testProjektiHenkilot(projekti);
     await testProjektinTiedot(oid);
     await testAloitusKuulutusEsikatselu(oid);
     await testNullifyProjektiField(oid);
@@ -398,11 +416,11 @@ describe("Api", () => {
     const velhoAineistoKategorias = await testListDocumentsToImport(oid);
     await testImportAineistot(oid, velhoAineistoKategorias);
     await processQueue();
-    await testPublicAccessToProjekti(oid, " ennen suunnitteluvaihetta");
+    await testPublicAccessToProjekti(oid, Status.ALOITUSKUULUTUS, " ennen suunnitteluvaihetta");
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await julkaiseSuunnitteluvaihe(oid);
-    expect((await loadProjektiFromDatabase(oid)).status).to.eq(Status.SUUNNITTELU);
+    await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
     await insertAndManageFeedback(oid);
 
     await julkaiseVuorovaikutus(oid);
@@ -420,7 +438,7 @@ describe("Api", () => {
       await handleEvent(event, null, null);
     }
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    const suunnitteluVaihe = (await loadProjektiFromDatabase(oid)).suunnitteluVaihe;
+    const suunnitteluVaihe = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe;
     const vuorovaikutus = suunnitteluVaihe.vuorovaikutukset[0];
     cleanupVuorovaikutusTimestamps([vuorovaikutus]);
     expect(vuorovaikutus).toMatchSnapshot();
@@ -439,9 +457,12 @@ describe("Api", () => {
     return projekti;
   }
 
-  async function loadProjektiFromDatabase(oid: string) {
+  async function loadProjektiFromDatabase(oid: string, expectedStatus?: Status) {
     const savedProjekti = await api.lataaProjekti(oid);
     expect(!savedProjekti.tallennettu || savedProjekti.tallennettu).to.be.true;
+    if (expectedStatus) {
+      expect(savedProjekti.status).to.be.eq(expectedStatus);
+    }
     return savedProjekti;
   }
 
