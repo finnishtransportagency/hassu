@@ -38,5 +38,9 @@
   },
   "rooli": {
     "PROJEKTIPAALLIKKO": "Projektipäällikkö"
-  }
+  },
+  "yhteystiedot": "Yhteystiedot",
+  "lisatietoja_antavat": "Lisätietoja antavat {{yhteystiedot}}.",
+  "yhteystieto": "{{etunimi}} {{sukunimi}}, puh. {{puhelinnumero}}, {{sahkoposti}} ({{organisaatio}})",
+  "ja": "ja"
 }

@@ -1,9 +1,16 @@
-import { FormProvider, useForm, UseFormProps } from "react-hook-form";
+import { Controller, FormProvider, useFieldArray, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
-import { TallennaProjektiInput, Projekti, api, VuorovaikutusInput } from "@services/api";
+import {
+  TallennaProjektiInput,
+  Projekti,
+  api,
+  VuorovaikutusInput,
+  ProjektiRooli,
+  YhteystietoInput,
+} from "@services/api";
 import Section from "@components/layout/Section";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useState, Fragment } from "react";
 import { Stack } from "@mui/material";
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
@@ -15,6 +22,13 @@ import DatePicker from "@components/form/DatePicker";
 import dayjs from "dayjs";
 import { vuorovaikutusSchema } from "src/schemas/vuorovaikutus";
 import HassuStack from "@components/layout/HassuStack";
+import CheckBox from "@components/form/CheckBox";
+import FormGroup from "@components/form/FormGroup";
+import TextInput from "@components/form/TextInput";
+import HassuGrid from "@components/HassuGrid";
+import { maxPhoneLength } from "src/schemas/puhelinNumero";
+import IconButton from "@components/button/IconButton";
+import { removeTypeName } from "src/util/removeTypeName";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -36,6 +50,14 @@ type FormValues = RequiredProjektiFields & {
       | "vuorovaikutusYhteysHenkilot"
     >;
   };
+};
+
+const defaultYhteystieto: YhteystietoInput = {
+  etunimi: "",
+  sukunimi: "",
+  organisaatio: "",
+  puhelinnumero: "",
+  sahkoposti: "",
 };
 
 interface Props {
@@ -68,7 +90,13 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
     reset,
     handleSubmit,
     formState: { errors, isDirty },
+    control,
   } = useFormReturn;
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot",
+  });
 
   const saveDraft = async (formData: FormValues) => {
     setIsFormSubmitting(true);
@@ -84,7 +112,6 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
 
   const saveSunnitteluvaihe = async (formData: FormValues) => {
     setIsFormSubmitting(true);
-    console.log(formData);
     await api.tallennaProjekti(formData);
     if (reloadProjekti) await reloadProjekti();
   };
@@ -98,6 +125,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
       const vuorovaikutus = projekti.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
         return v.vuorovaikutusNumero === vuorovaikutusnro;
       });
+
       const tallentamisTiedot: FormValues = {
         oid: projekti.oid,
         suunnitteluVaihe: {
@@ -105,6 +133,12 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
             vuorovaikutusNumero: vuorovaikutusnro,
             vuorovaikutusJulkaisuPaiva: vuorovaikutus?.vuorovaikutusJulkaisuPaiva,
             kysymyksetJaPalautteetViimeistaan: vuorovaikutus?.kysymyksetJaPalautteetViimeistaan,
+            vuorovaikutusYhteysHenkilot:
+              projekti.kayttoOikeudet
+                ?.filter(({ kayttajatunnus }) => vuorovaikutus?.vuorovaikutusYhteysHenkilot?.includes(kayttajatunnus))
+                .map(({ kayttajatunnus }) => kayttajatunnus) || [],
+            esitettavatYhteystiedot:
+              vuorovaikutus?.esitettavatYhteystiedot?.map((yhteystieto) => removeTypeName(yhteystieto)) || [],
           },
         },
       };
@@ -116,95 +150,214 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
     return <></>;
   }
 
+  console.log(errors);
+
   return (
     <>
       <FormProvider {...useFormReturn}>
         <form>
-          <Section>
-            <SectionContent largeGaps>
-              <h5 className="vayla-small-title">Vuorovaikuttaminen</h5>
-              <p>
-                Kansalainen pääsee vaikuttamaan väylähankkeen tai väylän suunnitteluun siinä vaiheessa. kun tehdään
-                yleissuunnitelmaa ja kun edetään tie- tai ratasuunnitelmaan. Kaikista suunnittelun vaiheista kuulutetaan
-                tai ilmoitetaan, jotta asianosaisilla on mahdollisuus kommentoida suunnitelmia.
-              </p>
-              <h5 className="vayla-small-title">Julkaisupäivä</h5>
-              <p>
-                Anna päivämäärä, jolloin vuorovaikutusosio palvelun julkisella puolella ja kutsu vuorovaikutukseen
-                muilla ilmoituskanavilla julkaistaan.
-              </p>
-            </SectionContent>
-            <DatePicker
-              label="Julkaisupäivä *"
-              className="md:max-w-min"
-              {...register("suunnitteluVaihe.vuorovaikutus.vuorovaikutusJulkaisuPaiva")}
-              min={today}
-              error={errors.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusJulkaisuPaiva}
-            />
-            <SectionContent largeGaps>
-              <h5 className="vayla-small-title">Kysymyksien esittäminen ja palautteiden antaminen</h5>
-              <p>Anna päivämäärä, johon mennessä kansalaisten toivotaan esittävän kysymykset ja palautteet.</p>
-            </SectionContent>
-            <DatePicker
-              label="Kysymykset ja palautteet viimeistään *"
-              className="md:max-w-min"
-              {...register("suunnitteluVaihe.vuorovaikutus.kysymyksetJaPalautteetViimeistaan")}
-              min={today}
-              error={errors.suunnitteluVaihe?.vuorovaikutus?.kysymyksetJaPalautteetViimeistaan}
-            />
-          </Section>
-          <Section>
-            <h5 className="vayla-small-title">Vuorovaikutusmahdollisuudet palautteiden ja kysymyksien lisäksi</h5>
-            <SectionContent>
-              <Button type="submit" onClick={() => console.log("tilaisuuden lisäys")} disabled>
-                Lisää tilaisuus
+          <fieldset style={{ display: "contents" }}>
+            <Section>
+              <SectionContent largeGaps>
+                <h5 className="vayla-small-title">Vuorovaikuttaminen</h5>
+                <p>
+                  Kansalainen pääsee vaikuttamaan väylähankkeen tai väylän suunnitteluun siinä vaiheessa. kun tehdään
+                  yleissuunnitelmaa ja kun edetään tie- tai ratasuunnitelmaan. Kaikista suunnittelun vaiheista
+                  kuulutetaan tai ilmoitetaan, jotta asianosaisilla on mahdollisuus kommentoida suunnitelmia.
+                </p>
+                <h5 className="vayla-small-title">Julkaisupäivä</h5>
+                <p>
+                  Anna päivämäärä, jolloin vuorovaikutusosio palvelun julkisella puolella ja kutsu vuorovaikutukseen
+                  muilla ilmoituskanavilla julkaistaan.
+                </p>
+              </SectionContent>
+              <DatePicker
+                label="Julkaisupäivä *"
+                className="md:max-w-min"
+                {...register("suunnitteluVaihe.vuorovaikutus.vuorovaikutusJulkaisuPaiva")}
+                min={today}
+                error={errors.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusJulkaisuPaiva}
+              />
+              <SectionContent largeGaps>
+                <h5 className="vayla-small-title">Kysymyksien esittäminen ja palautteiden antaminen</h5>
+                <p>Anna päivämäärä, johon mennessä kansalaisten toivotaan esittävän kysymykset ja palautteet.</p>
+              </SectionContent>
+              <DatePicker
+                label="Kysymykset ja palautteet viimeistään *"
+                className="md:max-w-min"
+                {...register("suunnitteluVaihe.vuorovaikutus.kysymyksetJaPalautteetViimeistaan")}
+                min={today}
+                error={errors.suunnitteluVaihe?.vuorovaikutus?.kysymyksetJaPalautteetViimeistaan}
+              />
+            </Section>
+            <Section>
+              <h5 className="vayla-small-title">Vuorovaikutusmahdollisuudet palautteiden ja kysymyksien lisäksi</h5>
+              <SectionContent>
+                <Button type="submit" onClick={() => console.log("tilaisuuden lisäys")} disabled>
+                  Lisää tilaisuus
+                </Button>
+              </SectionContent>
+            </Section>
+            <Section>
+              <h5 className="vayla-small-title">Suunnitelmaluonnokset ja esittelyaineistot</h5>
+              <SectionContent>
+                <p>
+                  Esittelyvideo tulee olla ladattuna erilliseen videojulkaisupalveluun (esim. Youtube) ja videon
+                  katselulinkki tuodaan sille tarkoitettuun kenttään. Luonnokset ja muut materiaalit tuodaan
+                  Projektivelhosta.
+                </p>
+              </SectionContent>
+            </Section>
+            <Section>
+              <SectionContent>
+                <h5 className="vayla-small-title">Vuorovaikuttamisen yhteyshenkilöt</h5>
+                <p>
+                  Voit valita kutsussa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden
+                  yhteystiedon. Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden
+                  yhteystiedot haetaan Projektin henkilöt -sivulle tallennetuista tiedoista.
+                </p>
+                {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
+                  <Controller
+                    control={control}
+                    name={`suunnitteluVaihe.vuorovaikutus.vuorovaikutusYhteysHenkilot`}
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <FormGroup label="Projektiin tallennetut henkilöt" inlineFlex>
+                        {projekti.kayttoOikeudet?.map(({ nimi, rooli, kayttajatunnus }, index) => {
+                          const tunnuslista = value || [];
+                          return (
+                            <Fragment key={index}>
+                              {rooli === ProjektiRooli.PROJEKTIPAALLIKKO ? (
+                                <CheckBox label={nimi} disabled checked {...field} />
+                              ) : (
+                                <CheckBox
+                                  label={nimi}
+                                  onChange={(event) => {
+                                    if (!event.target.checked) {
+                                      onChange(tunnuslista.filter((tunnus) => tunnus !== kayttajatunnus));
+                                    } else {
+                                      onChange([...tunnuslista, kayttajatunnus]);
+                                    }
+                                  }}
+                                  checked={tunnuslista.includes(kayttajatunnus)}
+                                  {...field}
+                                />
+                              )}
+                            </Fragment>
+                          );
+                        })}
+                      </FormGroup>
+                    )}
+                  />
+                ) : (
+                  <p>Projektilla ei ole tallennettuja henkilöitä</p>
+                )}
+              </SectionContent>
+              <SectionContent>
+                <p>Uusi yhteystieto</p>
+                <p>
+                  Lisää uudelle yhteystiedolle rivi Lisää uusi-painikkeella. Huomioi, että uusi yhteystieto ei tallennu
+                  Projektin henkilöt -sivulle eikä henkilölle tule käyttöoikeuksia projektiin.
+                </p>
+              </SectionContent>
+              {fields.map((field, index) => (
+                <HassuStack key={field.id} direction={["column", "column", "row"]}>
+                  <HassuGrid sx={{ width: "100%" }} cols={[1, 1, 3]}>
+                    <TextInput
+                      label="Etunimi *"
+                      {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.etunimi`)}
+                      error={
+                        (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.etunimi
+                      }
+                    />
+                    <TextInput
+                      label="Sukunimi *"
+                      {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.sukunimi`)}
+                      error={
+                        (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.sukunimi
+                      }
+                    />
+                    <TextInput
+                      label="Organisaatio / kunta *"
+                      {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.organisaatio`)}
+                      error={
+                        (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.organisaatio
+                      }
+                    />
+                    <TextInput
+                      label="Puhelinnumero *"
+                      {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.puhelinnumero`)}
+                      error={
+                        (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]
+                          ?.puhelinnumero
+                      }
+                      maxLength={maxPhoneLength}
+                    />
+                    <TextInput
+                      label="Sähköpostiosoite *"
+                      {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.sahkoposti`)}
+                      error={
+                        (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.sahkoposti
+                      }
+                    />
+                  </HassuGrid>
+                  <div>
+                    <div className="hidden lg:block lg:mt-8">
+                      <IconButton
+                        icon="trash"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          remove(index);
+                        }}
+                      />
+                    </div>
+                    <div className="block lg:hidden">
+                      <Button
+                        onClick={(event) => {
+                          event.preventDefault();
+                          remove(index);
+                        }}
+                        endIcon="trash"
+                      >
+                        Poista
+                      </Button>
+                    </div>
+                  </div>
+                </HassuStack>
+              ))}
+              <Button
+                onClick={(event) => {
+                  event.preventDefault();
+                  append(defaultYhteystieto);
+                }}
+              >
+                Lisää uusi +
               </Button>
-            </SectionContent>
-          </Section>
-          <Section>
-            <h5 className="vayla-small-title">Suunnitelmaluonnokset ja esittelyaineistot</h5>
-            <SectionContent>
-              <p>
-                Esittelyvideo tulee olla ladattuna erilliseen videojulkaisupalveluun (esim. Youtube) ja videon
-                katselulinkki tuodaan sille tarkoitettuun kenttään. Luonnokset ja muut materiaalit tuodaan
-                Projektivelhosta.
-              </p>
-            </SectionContent>
-          </Section>
-          <Section>
-            <h5 className="vayla-small-title">Vuorovaikuttamisen yhteyshenkilöt</h5>
-            <SectionContent>
-              <p>
-                Voit valita kutsussa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden
-                yhteystiedon. Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden
-                yhteystiedot haetaan Projektin henkilöt -sivulle tallennetuista tiedoista.
-              </p>
-            </SectionContent>
-          </Section>
-          <Section>
-            <h5 className="vayla-small-title">Ilmoituksen vastaanottajat</h5>
-            <SectionContent>
-              <p>
-                Vuorovaikuttamisesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille.
-                Kunnat on haettu Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle
-                viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi -painikkeella
-              </p>
-              <p>Jos kuntatiedoissa on virhe, tee korjaus Projektivelhoon.</p>
-            </SectionContent>
-          </Section>
-          <Section>
-            <h5 className="vayla-small-title">Kutsun ja ilmoituksen esikatselu</h5>
-            <SectionContent>
-              <HassuStack direction={["column", "column", "row"]}>
-                <Button type="submit" onClick={() => console.log("kutsun esikatselu")} disabled>
-                  Kutsun esikatselu
-                </Button>
-                <Button type="submit" onClick={() => console.log("ilmoituksen esikatselu")} disabled>
-                  Ilmoituksen esikatselu
-                </Button>
-              </HassuStack>
-            </SectionContent>
-          </Section>
+            </Section>
+            <Section>
+              <h5 className="vayla-small-title">Ilmoituksen vastaanottajat</h5>
+              <SectionContent>
+                <p>
+                  Vuorovaikuttamisesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville
+                  kunnille. Kunnat on haettu Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle
+                  viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi -painikkeella
+                </p>
+                <p>Jos kuntatiedoissa on virhe, tee korjaus Projektivelhoon.</p>
+              </SectionContent>
+            </Section>
+            <Section>
+              <h5 className="vayla-small-title">Kutsun ja ilmoituksen esikatselu</h5>
+              <SectionContent>
+                <HassuStack direction={["column", "column", "row"]}>
+                  <Button type="submit" onClick={() => console.log("kutsun esikatselu")} disabled>
+                    Kutsun esikatselu
+                  </Button>
+                  <Button type="submit" onClick={() => console.log("ilmoituksen esikatselu")} disabled>
+                    Ilmoituksen esikatselu
+                  </Button>
+                </HassuStack>
+              </SectionContent>
+            </Section>
+          </fieldset>
         </form>
       </FormProvider>
       <Section noDivider>

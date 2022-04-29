@@ -1,3 +1,11 @@
 .icon-button {
-  @apply h-11 w-11 p-px rounded-full hover:bg-black hover:bg-opacity-10 active:bg-opacity-5;
+  @apply h-11 w-11 p-px rounded-full;
+}
+
+.icon-button:not(:disabled) {
+  @apply hover:bg-black hover:bg-opacity-10  active:bg-opacity-5;
+}
+
+.icon-button:disabled {
+  @apply opacity-50 cursor-default;
 }

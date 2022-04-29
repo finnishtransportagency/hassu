@@ -38,5 +38,9 @@
   },
   "rooli": {
     "PROJEKTIPAALLIKKO": "Projektledare"
-  }
+  },
+  "yhteystiedot": "RUOTSI_Yhteystiedot",
+  "lisatietoja_antavat": "RUOTSI_Lisätietoja antavat {{yhteystiedot}}.",
+  "yhteystieto": "RUOTSI_{{etunimi}} {{sukunimi}}, puh. {{puhelinnumero}}, {{sahkoposti}} ({{organisaatio}})",
+  "ja": "RUOTSI_ja"
 }

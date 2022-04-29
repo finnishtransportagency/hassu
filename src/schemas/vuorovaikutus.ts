@@ -1,5 +1,6 @@
 import { isValidDate } from "src/util/dateUtils";
 import * as Yup from "yup";
+import { yhteystietoSchema } from "./yhteystieto";
 
 export const vuorovaikutusSchema = Yup.object().shape({
   oid: Yup.string().required(),
@@ -16,6 +17,7 @@ export const vuorovaikutusSchema = Yup.object().shape({
         .test("valid-date", "Virheellinen päivämäärä", (date) => {
           return isValidDate(date);
         }),
+      esitettavatYhteystiedot: Yup.array().notRequired().of(yhteystietoSchema),
     }),
   }),
 });

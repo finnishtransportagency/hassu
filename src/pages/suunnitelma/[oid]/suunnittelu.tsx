@@ -4,11 +4,40 @@ import Section from "@components/layout/Section";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import { useRouter } from "next/router";
 import SectionContent from "@components/layout/SectionContent";
+import useTranslation from "next-translate/useTranslation";
+import { YhteystietoInput } from "@services/api";
 
 export default function Suunnittelu(): ReactElement {
   const router = useRouter();
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
   const { data: projekti } = useProjektiJulkinen(oid);
+  const { t } = useTranslation();
+
+  const mockVuorovaikutusYhteystiedot: YhteystietoInput[] = [
+    {
+      etunimi: "Veijo",
+      sukunimi: "Väylämies",
+      puhelinnumero: "029 000 0000",
+      sahkoposti: "etunimi.sukunimi@vayla.fi",
+      organisaatio: "Väylävirasto",
+    },
+    {
+      etunimi: "Veijo",
+      sukunimi: "Väylämies",
+      puhelinnumero: "029 000 0000",
+      sahkoposti: "etunimi.sukunimi@vayla.fi",
+      organisaatio: "Väylävirasto",
+    },
+    {
+      etunimi: "Veijo",
+      sukunimi: "Väylämies",
+      puhelinnumero: "029 000 0000",
+      sahkoposti: "etunimi.sukunimi@vayla.fi",
+      organisaatio: "Väylävirasto",
+    },
+  ];
+
+  const yhteystiedotListana = mockVuorovaikutusYhteystiedot.map((yhteystieto) => t("common:yhteystieto", yhteystieto));
 
   return (
     <ProjektiJulkinenPageLayout selectedStep={1} title="Tutustu hankkeeseen ja vuorovaikuta">
@@ -35,6 +64,17 @@ export default function Suunnittelu(): ReactElement {
               palautteen tai kysyä hankkeesta. Osallistumalla sinulla on mahdollisuus vaikuttaa hankkeen suunnitteluun.
               Suunnitelmaluonnokset ja esittelyaineistot ovat tutustuttavissa xx.xx.xxxx asti. Siirry aineistoihin.
               Kysymykset ja palautteet toivotaan esitettävän xx.xx.xxxx mennessä. Siirry lomakkeelle.
+            </p>
+          </SectionContent>
+        </Section>
+        <Section>
+          <SectionContent>
+            <h5 className="vayla-small-title">{t("common:yhteystiedot")}</h5>
+            <p>
+              {t("common:lisatietoja_antavat", {
+                yhteystiedot:
+                  yhteystiedotListana.slice(0, -1).join(", ") + ` ${t("common:ja")} ` + yhteystiedotListana.slice(-1),
+              })}
             </p>
           </SectionContent>
         </Section>

@@ -1,9 +1,9 @@
-import { IlmoitettavaViranomainen, Projekti } from "@services/api";
+import { IlmoitettavaViranomainen } from "@services/api";
 import * as Yup from "yup";
 import { kayttoOikeudetSchema } from "./kayttoOikeudet";
-import { puhelinNumeroSchema } from "./puhelinNumero";
 import { isDevEnvironment } from "@services/config";
 import filter from "lodash/filter";
+import { yhteystietoSchema } from "./yhteystieto";
 
 const maxAloituskuulutusLength = 2000;
 
@@ -58,39 +58,7 @@ export const aloituskuulutusSchema = Yup.object().shape({
       }
       return validateDate(dateString);
     }),
-    esitettavatYhteystiedot: Yup.array()
-      .notRequired()
-      .of(
-        Yup.object()
-          .shape({
-            etunimi: Yup.string().required("Etunimi on pakollinen"),
-            sukunimi: Yup.string().required("Sukunimi on pakollinen"),
-            puhelinnumero: puhelinNumeroSchema.test(
-              "puhelinnumero-not-in-kayttoOikeudet",
-              "Tieto löytyy projektin henkilöistä. Valitse henkilö projektiin tallennettujen listasta",
-              function (puhelinnumero) {
-                const projekti = this.options.context as Projekti;
-                return !projekti?.kayttoOikeudet?.some(
-                  (kayttaja) => kayttaja.puhelinnumero && kayttaja.puhelinnumero === puhelinnumero
-                );
-              }
-            ),
-            sahkoposti: Yup.string()
-              .required("Sähköpostiosoite on pakollinen")
-              .email("Virheellinen sähköpostiosoite")
-              .test(
-                "sahkoposti-not-in-kayttoOikeudet",
-                "Tieto löytyy projektin henkilöistä. Valitse henkilö projektiin tallennettujen listasta",
-                function (sahkoposti) {
-                  const projekti = this.options.context as Projekti;
-                  return !projekti?.kayttoOikeudet?.some((kayttaja) => kayttaja.email && kayttaja.email === sahkoposti);
-                }
-              ),
-            organisaatio: Yup.string().required("Organisaatio on pakollinen"),
-            id: Yup.string().nullable().notRequired(),
-          })
-          .nullable()
-      ),
+    esitettavatYhteystiedot: Yup.array().notRequired().of(yhteystietoSchema),
     ilmoituksenVastaanottajat: Yup.object()
       .shape({
         kunnat: Yup.array()

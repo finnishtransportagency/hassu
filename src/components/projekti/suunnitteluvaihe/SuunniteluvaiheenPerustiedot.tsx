@@ -73,7 +73,7 @@ export default function SuunniteluvaiheenPerustiedot({
 
   const confirmPublish = () => {
     setOpenHyvaksy(true);
-  }
+  };
 
   const saveAndPublish = async (formData: FormValues) => {
     setIsFormSubmitting(true);
@@ -105,8 +105,6 @@ export default function SuunniteluvaiheenPerustiedot({
     await api.tallennaProjekti(formData);
     if (reloadProjekti) await reloadProjekti();
   };
-
-  console.log(errors);
 
   useEffect(() => {
     isDirtyHandler(isDirty);
