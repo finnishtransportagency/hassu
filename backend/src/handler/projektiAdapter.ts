@@ -44,6 +44,7 @@ import {
   VuorovaikutusTilaisuus,
 } from "../database/model/suunnitteluVaihe";
 import dayjs, { Dayjs } from "dayjs";
+import { kayttoOikeudetSchema } from "../../../src/schemas/kayttoOikeudet";
 
 export type ProjektiAdaptationResult = {
   projekti: DBProjekti;
@@ -146,23 +147,38 @@ export class ProjektiAdapter {
       if (param?.saved) {
         projekti.tallennettu = true;
         projekti.status = API.Status.EI_JULKAISTU;
+      } else {
+        return true;
       }
     }
 
     function checkPerustiedot() {
       try {
-        perustiedotValidationSchema.validateSync(projekti);
-        if (!projekti.aloitusKuulutus) {
-          projekti.aloitusKuulutus = { __typename: "AloitusKuulutus" };
-        }
-        projekti.status = API.Status.ALOITUSKUULUTUS;
+        kayttoOikeudetSchema.validateSync(projekti.kayttoOikeudet);
       } catch (e) {
         if (e instanceof ValidationError) {
-          log.info("Perustiedot puutteelliset", e.errors);
+          log.info("Käyttöoikeudet puutteelliset", e);
+          projekti.status = API.Status.EI_JULKAISTU_PROJEKTIN_HENKILOT;
+          return true; // This is the final status
         } else {
           throw e;
         }
       }
+      try {
+        perustiedotValidationSchema.validateSync(projekti);
+      } catch (e) {
+        if (e instanceof ValidationError) {
+          log.info("Perustiedot puutteelliset", e.errors);
+          return true; // This is the final status
+        } else {
+          throw e;
+        }
+      }
+
+      if (!projekti.aloitusKuulutus) {
+        projekti.aloitusKuulutus = { __typename: "AloitusKuulutus" };
+      }
+      projekti.status = API.Status.ALOITUSKUULUTUS;
     }
 
     function checkSuunnittelu() {
@@ -172,10 +188,14 @@ export class ProjektiAdapter {
     }
 
     // Perustiedot is available if the projekti has been saved
-    checkIfSaved();
+    if (checkIfSaved()) {
+      return projekti;
+    }
 
     // Aloituskuulutus is available, if projekti has all basic information set
-    checkPerustiedot();
+    if (checkPerustiedot()) {
+      return projekti;
+    }
 
     checkSuunnittelu();
 

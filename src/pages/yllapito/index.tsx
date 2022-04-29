@@ -196,6 +196,16 @@ const VirkamiesHomePage = () => {
     [jarjestysSarake, jarjestysKasvava]
   );
 
+  const statusOptions: Status[] = [
+    Status.EI_JULKAISTU,
+    Status.ALOITUSKUULUTUS,
+    Status.SUUNNITTELU,
+    Status.NAHTAVILLAOLO,
+    Status.HYVAKSYNNASSA,
+    Status.HYVAKSYMISPAATOS,
+    Status.LAINVOIMA,
+  ];
+
   return (
     <>
       <h1 className="vayla-title">Projektit</h1>
@@ -246,7 +256,7 @@ const VirkamiesHomePage = () => {
               render={({ field: { value, onChange, ...field } }) => (
                 <Select
                   label="Vaihe"
-                  options={Object.values(Status).map((status) => ({
+                  options={statusOptions.map((status) => ({
                     value: status,
                     label: t(`projekti-status.${status}`),
                   }))}

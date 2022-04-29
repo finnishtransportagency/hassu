@@ -39,7 +39,9 @@ enum IlmoitettavaViranomainen {
   VAYLAVIRASTO
 }
 
+# Keep statuses in the process order below
 enum Status {
+  EI_JULKAISTU_PROJEKTIN_HENKILOT
   EI_JULKAISTU
   ALOITUSKUULUTUS
   SUUNNITTELU

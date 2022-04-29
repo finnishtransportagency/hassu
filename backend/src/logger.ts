@@ -12,6 +12,8 @@ function getLogger(tag: string) {
       target: "pino-pretty",
       options: {
         colorize: true,
+        messageFormat: "{tag} {uid} {msg}",
+        ignore: "tag,uid",
       },
     };
   }
