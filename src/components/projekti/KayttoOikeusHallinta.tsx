@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { FieldArrayWithId, useFieldArray, useFormContext } from "react-hook-form";
 import { api, apiConfig, Kayttaja, ProjektiKayttajaInput, ProjektiRooli, TallennaProjektiInput } from "@services/api";
 import Autocomplete from "@components/form/Autocomplete";
@@ -167,10 +167,13 @@ const UserFields = ({
   kayttoOikeudet,
   removeable,
 }: UserFieldProps) => {
-  const kayttoOikeus = kayttoOikeudet[index];
+  const kayttoOikeus = useMemo(() => kayttoOikeudet[index], [kayttoOikeudet, index]);
   const isProjektiPaallikko = kayttoOikeus.rooli === ProjektiRooli.PROJEKTIPAALLIKKO;
   const kayttaja = kayttajat?.find(({ uid }) => uid === kayttoOikeus.kayttajatunnus);
-  const getKayttajaNimi = (k: Kayttaja | null | undefined) => (k && `${k.sukuNimi}, ${k.etuNimi}`) || "";
+  const getKayttajaNimi = useCallback((k: Kayttaja | null | undefined) => {
+    return (k && `${k.sukuNimi}, ${k.etuNimi}`) || "";
+  }, []);
+  
   const {
     register,
     setValue,
@@ -178,14 +181,14 @@ const UserFields = ({
   } = useFormContext<RequiredInputValues>();
 
   const minSearchLength = 3;
-  async function listUserOptions(hakusana: string): Promise<Kayttaja[]> {
+  const listUserOptions = useCallback(async (hakusana: string): Promise<Kayttaja[]> => {
     if (getKayttajaNimi(kayttaja) !== hakusana && !disableFields && hakusana.length >= minSearchLength) {
       return await api.listUsers({ hakusana });
     } else if (kayttaja) {
       return Promise.resolve([kayttaja]);
     }
     return Promise.resolve([]);
-  }
+  }, [getKayttajaNimi, disableFields, minSearchLength, kayttaja]);
 
   return (
     <HassuStack direction={["column", "column", "row"]}>
@@ -196,7 +199,7 @@ const UserFields = ({
           <Autocomplete
             label="Nimi *"
             loading={isLoadingKayttajat}
-            options={async (hakusana) => await listUserOptions(hakusana)}
+            options={listUserOptions}
             initialOption={kayttaja}
             minSearchLength={minSearchLength}
             getOptionLabel={getKayttajaNimi}
