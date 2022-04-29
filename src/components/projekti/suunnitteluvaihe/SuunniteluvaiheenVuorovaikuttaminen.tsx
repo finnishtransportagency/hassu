@@ -150,6 +150,8 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
     return <></>;
   }
 
+  console.log(errors);
+
   return (
     <>
       <FormProvider {...useFormReturn}>
@@ -263,28 +265,39 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
                     <TextInput
                       label="Etunimi *"
                       {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.etunimi`)}
-                      error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.etunimi}
+                      error={
+                        (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.etunimi
+                      }
                     />
                     <TextInput
                       label="Sukunimi *"
                       {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.sukunimi`)}
-                      error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.sukunimi}
+                      error={
+                        (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.sukunimi
+                      }
                     />
                     <TextInput
                       label="Organisaatio / kunta *"
                       {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.organisaatio`)}
-                      error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.organisaatio}
+                      error={
+                        (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.organisaatio
+                      }
                     />
                     <TextInput
                       label="Puhelinnumero *"
                       {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.puhelinnumero`)}
-                      error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.puhelinnumero}
+                      error={
+                        (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]
+                          ?.puhelinnumero
+                      }
                       maxLength={maxPhoneLength}
                     />
                     <TextInput
                       label="Sähköpostiosoite *"
                       {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.sahkoposti`)}
-                      error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.sahkoposti}
+                      error={
+                        (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.sahkoposti
+                      }
                     />
                   </HassuGrid>
                   <div>
@@ -295,7 +308,6 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
                           event.preventDefault();
                           remove(index);
                         }}
-                        // disabled={disableFields}
                       />
                     </div>
                     <div className="block lg:hidden">
@@ -305,7 +317,6 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
                           remove(index);
                         }}
                         endIcon="trash"
-                        // disabled={disableFields}
                       >
                         Poista
                       </Button>
@@ -318,7 +329,6 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
                   event.preventDefault();
                   append(defaultYhteystieto);
                 }}
-                // disabled={disableFields}
               >
                 Lisää uusi +
               </Button>
