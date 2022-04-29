@@ -1,0 +1,12 @@
+{
+  "analysis": {
+    "analyzer": {
+      "sortable": {
+        "tokenizer": "keyword",
+        "filter": [
+          "lowercase"
+        ]
+      }
+    }
+  }
+}

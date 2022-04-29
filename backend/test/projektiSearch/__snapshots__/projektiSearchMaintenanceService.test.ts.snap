@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProjektiSearchMaintenanceService should delete and create index 1`] = `
+Object {
+  "put": Array [
+    Object {
+      "args": Array [
+        "projekti",
+        "",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`ProjektiSearchMaintenanceService should delete and create index 2`] = `
+Object {
+  "delete": Array [],
+}
+`;
+
+exports[`ProjektiSearchMaintenanceService should delete and create index 3`] = `
+Object {
+  "putSettings": Array [
+    Object {
+      "args": Array [
+        "projekti",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`ProjektiSearchMaintenanceService should delete and create index 4`] = `
+Object {
+  "putMapping": Array [
+    Object {
+      "args": Array [
+        "projekti",
+      ],
+    },
+  ],
+}
+`;

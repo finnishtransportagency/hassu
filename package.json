@@ -215,7 +215,10 @@
     "log:backend:dev": "aws logs tail --follow --since 1h /aws/lambda/hassu-backend-dev",
     "log:aineistoimporter": "aws logs tail --follow --since 1h /aws/lambda/hassu-aineistoimporter-$ENVIRONMENT",
     "log:aineistoimporter:dev": "aws logs tail --follow --since 1h /aws/lambda/hassu-aineistoimporter-dev",
-    "sonar": "node -r dotenv/config ./deployment/bin/sonar.js dotenv_config_path=.env.local"
+    "log:dynamodb-stream-handler:dev": "aws logs tail --follow --since 1h /aws/lambda/hassu-dynamodb-stream-handler-$ENVIRONMENT",
+    "sonar": "node -r dotenv/config ./deployment/bin/sonar.js dotenv_config_path=.env.local",
+    "opensearch:getmapping": "cross-env DOTENV_CONFIG_PATH=.env.test ts-node --project=backend/tsconfig.json -r dotenv/config ./deployment/bin/opensearch.ts getmapping projekti backend/src/projektiSearch/projekti-mapping.json",
+    "opensearch:getsettings": "cross-env DOTENV_CONFIG_PATH=.env.test ts-node --project=backend/tsconfig.json -r dotenv/config ./deployment/bin/opensearch.ts getsettings projekti backend/src/projektiSearch/projekti-settings.json"
   },
   "browserslist": {
     "production": [
