@@ -19,6 +19,7 @@ import { Effect, ManagedPolicy, PolicyStatement } from "@aws-cdk/aws-iam";
 import { Bucket } from "@aws-cdk/aws-s3";
 import { getEnvironmentVariablesFromSSM, readFrontendStackOutputs } from "../bin/setupEnvironment";
 import { LambdaInsightsVersion } from "@aws-cdk/aws-lambda/lib/lambda-insights";
+const path = require("path");
 
 export type HassuBackendStackProps = {
   searchDomain: Domain;
@@ -219,7 +220,9 @@ export class HassuBackendStack extends cdk.Stack {
         commandHooks: {
           beforeBundling(inputDir: string, outputDir: string): string[] {
             return [
-              `./node_modules/.bin/copyfiles -f -u 1 ${inputDir}/backend/src/asiakirja/files/* ${outputDir}/files`,
+              `${path.normalize(
+                "./node_modules/.bin/copyfiles"
+              )} -f -u 1 ${inputDir}/backend/src/asiakirja/files/* ${outputDir}/files`,
             ];
           },
           afterBundling(): string[] {
