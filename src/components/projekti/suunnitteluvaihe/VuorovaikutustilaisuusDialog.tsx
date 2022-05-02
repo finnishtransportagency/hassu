@@ -91,13 +91,30 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
   // const isSoittoaikoja = !!fields.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA);
 
   return (
-    <HassuDialog open={open} onClose={() => windowHandler(false)} maxWidth={"lg"}>
+    <HassuDialog
+      open={open}
+      onClose={() => {
+        if (isDirty) {
+          resetField("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet");
+        }
+        windowHandler(false);
+      }}
+      maxWidth={"lg"}
+    >
       <Section noDivider smallGaps>
         <SectionContent>
           <div className="vayla-dialog-title flex">
             <div className="flex-grow">Vuorovaikutustilaisuuden lisääminen</div>
             <div className="justify-end">
-              <WindowCloseButton onClick={() => windowHandler(false)}></WindowCloseButton>
+              <WindowCloseButton
+                onClick={(e) => {
+                  if (isDirty) {
+                    resetField("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet");
+                  }
+                  windowHandler(false);
+                  e.preventDefault();
+                }}
+              ></WindowCloseButton>
             </div>
           </div>
         </SectionContent>
