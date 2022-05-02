@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState, useCallback } from "react";
 import { Projekti } from "@services/api";
 import RadioButton from "@components/form/RadioButton";
 import TextInput from "@components/form/TextInput";
@@ -31,16 +31,19 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
   const [logoUrl, setLogoUrl] = useState<string | undefined>(undefined);
   const [kuntaOptions, setKuntaOptions] = useState([]);
 
-  const getKuntaLista = async () => {
+  const getKuntaLista = useCallback(async () => {
     const list = await (await fetch("/api/kuntalista.json")).json();
     setKuntaOptions(list);
-  };
+  }, [setKuntaOptions]);
 
   useEffect(() => {
     getKuntaLista();
+  }, [getKuntaLista]);
+
+  useEffect(() => {
     setHasSuunnitteluSopimus(!!projekti?.suunnitteluSopimus);
     setLogoUrl(projekti?.suunnitteluSopimus?.logo || undefined);
-  }, [projekti]);
+  }, [projekti, setHasSuunnitteluSopimus, setLogoUrl]);
 
   return (
     <Section smallGaps>

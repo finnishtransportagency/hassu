@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import log from "loglevel";
 import { PageProps } from "@pages/_app";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
@@ -43,11 +43,21 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
   ProjektiTestType.PROJEKTI_IS_CREATED,
 ]);
 
+function booleanToString(value: any) {
+  if (typeof value === "boolean") {
+    return `${value}`;
+  }
+  return value;
+}
+
 export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   const velhobaseurl = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-";
 
   const router = useRouter();
-  const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
+  const oid = useMemo(() => {
+    return typeof router.query.oid === "string" ? router.query.oid : undefined;
+  }, [router]);
+
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti(oid);
   const [statusBeforeSave, setStatusBeforeSave] = useState<Status | null | undefined>();
   const isLoadingProjekti = !projekti && !projektiLoadError;
@@ -61,22 +71,25 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
 
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
 
-  const formOptions: UseFormProps<FormValues> = {
-    resolver: yupResolver(perustiedotValidationSchema.concat(UIValuesSchema), { abortEarly: false, recursive: true }),
-    defaultValues: {
-      muistiinpano: "",
-      euRahoitus: null,
-      liittyvatSuunnitelmat: null,
-      kielitiedot: null,
-      suunnittelusopimusprojekti: null,
-      liittyviasuunnitelmia: null,
-    },
-    mode: "onChange",
-    reValidateMode: "onChange",
-    context: { ...formContext },
-  };
+  const formOptions: UseFormProps<FormValues> = useMemo(() => {
+    return {
+      resolver: yupResolver(perustiedotValidationSchema.concat(UIValuesSchema), { abortEarly: false, recursive: true }),
+      defaultValues: {
+        muistiinpano: "",
+        euRahoitus: null,
+        liittyvatSuunnitelmat: null,
+        kielitiedot: null,
+        suunnittelusopimusprojekti: null,
+        liittyviasuunnitelmia: null,
+      },
+      mode: "onChange",
+      reValidateMode: "onChange",
+      context: { ...formContext },
+    };
+  }, [formContext]);
 
   const useFormReturn = useForm<FormValues>(formOptions);
+
   const {
     register,
     handleSubmit,
@@ -84,7 +97,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
     reset,
   } = useFormReturn;
 
-  const talletaLogo = async (logoTiedosto: File) => {
+  const talletaLogo = useCallback(async (logoTiedosto: File) => {
     const contentType = (logoTiedosto as Blob).type || "application/octet-stream";
     const response = await api.valmisteleTiedostonLataus(logoTiedosto.name, contentType);
     await axios.put(response.latausLinkki, logoTiedosto, {
@@ -93,9 +106,9 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
       },
     });
     return response.tiedostoPolku;
-  };
+  }, []);
 
-  const onSubmit = async (data: FormValues) => {
+  const onSubmit = useCallback(async (data: FormValues) => {
     const { suunnittelusopimusprojekti, liittyviasuunnitelmia, ...persistentData } = data;
     deleteFieldArrayIds(persistentData.liittyvatSuunnitelmat);
     setFormIsSubmitting(true);
@@ -117,14 +130,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
       showErrorMessage("Tallennuksessa tapahtui virhe!");
     }
     setFormIsSubmitting(false);
-  };
-
-  function booleanToString(value: any) {
-    if (typeof value === "boolean") {
-      return `${value}`;
-    }
-    return value;
-  }
+  }, [setFormIsSubmitting, setStatusBeforeSave, reloadProjekti, showSuccessMessage, showErrorMessage, projekti, talletaLogo]);
 
   useEffect(() => {
     if (projekti && projekti.oid) {
