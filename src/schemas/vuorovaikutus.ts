@@ -5,6 +5,46 @@ import { yhteystietoSchema } from "./yhteystieto";
 
 const validTimeRegexp = /^([0-1]?[0-9]|2[0-4]):([0-5]?[0-9])$/;
 
+export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
+  vuorovaikutusTilaisuudet: Yup.array().of(
+    Yup.object().shape({
+      tyyppi: Yup.mixed<VuorovaikutusTilaisuusTyyppi>().oneOf(Object.values(VuorovaikutusTilaisuusTyyppi)).required(),
+      nimi: Yup.string().required("Tilaisuuden nimi täytyy antaa").nullable(),
+      paivamaara: Yup.string()
+        .required("Vuorovaikutustilaisuuden päivämäärä täytyy antaa")
+        .test("valid-date", "Virheellinen päivämäärä", (date) => {
+          return isValidDate(date);
+        }),
+      alkamisAika: Yup.string().required("Tilaisuuden alkamisaika täytyy antaa").matches(validTimeRegexp),
+      paattymisAika: Yup.string().required("Tilaisuuden päättymisaika täytyy antaa").matches(validTimeRegexp),
+      kaytettavaPalvelu: Yup.string()
+        .when("tyyppi", {
+          is: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+          then: Yup.string().required("Verkkotilaisuudessa käytettävä palvelu täytyy valita"),
+        })
+        .nullable(),
+      linkki: Yup.string()
+        .when("tyyppi", {
+          is: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+          then: Yup.string().required("Verkkotilaisuuden linkki täytyy antaa"),
+        })
+        .nullable(),
+      osoite: Yup.string()
+        .when("tyyppi", {
+          is: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
+          then: Yup.string().required("Tilaisuuden osoite täytyy antaa"),
+        })
+        .nullable(),
+      postinumero: Yup.string()
+        .when("tyyppi", {
+          is: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
+          then: Yup.string().required("Tilaisuuden postinumero täytyy antaa"),
+        })
+        .nullable(),
+    })
+  ),
+});
+
 export const vuorovaikutusSchema = Yup.object().shape({
   oid: Yup.string().required(),
   suunnitteluVaihe: Yup.object().shape({
@@ -21,45 +61,7 @@ export const vuorovaikutusSchema = Yup.object().shape({
           return isValidDate(date);
         }),
       esitettavatYhteystiedot: Yup.array().notRequired().of(yhteystietoSchema),
-      vuorovaikutusTilaisuudet: Yup.array().of(
-        Yup.object().shape({
-          tyyppi: Yup.mixed<VuorovaikutusTilaisuusTyyppi>()
-            .oneOf(Object.values(VuorovaikutusTilaisuusTyyppi))
-            .required(),
-          nimi: Yup.string().required("Tilaisuuden nimi täytyy antaa").nullable(),
-          paivamaara: Yup.string()
-            .required("Vuorovaikutustilaisuuden päivämäärä täytyy antaa")
-            .test("valid-date", "Virheellinen päivämäärä", (date) => {
-              return isValidDate(date);
-            }),
-          alkamisAika: Yup.string().required("Tilaisuuden alkamisaika täytyy antaa").matches(validTimeRegexp),
-          paattymisAika: Yup.string().required("Tilaisuuden päättymisaika täytyy antaa").matches(validTimeRegexp),
-          kaytettavaPalvelu: Yup.string()
-            .when("tyyppi", {
-              is: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-              then: Yup.string().required("Verkkotilaisuudessa käytettävä palvelu täytyy valita"),
-            })
-            .nullable(),
-          linkki: Yup.string()
-            .when("tyyppi", {
-              is: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-              then: Yup.string().required("Verkkotilaisuuden linkki täytyy antaa"),
-            })
-            .nullable(),
-          osoite: Yup.string()
-            .when("tyyppi", {
-              is: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
-              then: Yup.string().required("Tilaisuuden osoite täytyy antaa"),
-            })
-            .nullable(),
-          postinumero: Yup.string()
-            .when("tyyppi", {
-              is: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
-              then: Yup.string().required("Tilaisuuden postinumero täytyy antaa"),
-            })
-            .nullable(),
-        })
-      ),
+      //vuorovaikutusTilaisuudet: Yup.array().notRequired().of(vuorovaikutustilaisuudetSchema),
     }),
   }),
 });

@@ -17,8 +17,10 @@ import HassuGrid from "@components/HassuGrid";
 import TimePicker from "@components/form/TimePicker";
 import { KaytettavaPalvelu, VuorovaikutusTilaisuusInput, VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import capitalize from "lodash/capitalize";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray, useForm, useFormContext, UseFormProps } from "react-hook-form";
 import { VuorovaikutusFormValues } from "@components/projekti/suunnitteluvaihe/SuunniteluvaiheenVuorovaikuttaminen";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { vuorovaikutustilaisuudetSchema } from "src/schemas/vuorovaikutus";
 
 const defaultTilaisuus = {
   nimi: "",
@@ -42,22 +44,35 @@ const defaultSoittoaikaTilaisuus: VuorovaikutusTilaisuusInput = {
   tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
 };
 
+export type VuorovaikutustilaisuusFormValues = {
+  vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[];
+};
 interface Props {
   open: boolean;
   windowHandler: (isOpen: boolean) => void;
 }
+
 export default function VuorovaikutusDialog({ open, windowHandler }: Props): ReactElement {
+  const formOptions: UseFormProps<VuorovaikutustilaisuusFormValues> = {
+    resolver: yupResolver(vuorovaikutustilaisuudetSchema, { abortEarly: false, recursive: true }),
+    mode: "onChange",
+    reValidateMode: "onChange",
+    defaultValues: {},
+  };
+
+  const { setValue: parentSetValue } = useFormContext<VuorovaikutusFormValues>();
+
   const {
     register,
-    formState: { errors, isDirty },
     control,
+    reset,
+    formState: { errors, isDirty },
     handleSubmit,
-    resetField,
-  } = useFormContext<VuorovaikutusFormValues>();
+  } = useForm<VuorovaikutustilaisuusFormValues>(formOptions);
 
   const { fields, append, remove } = useFieldArray({
-    control,
-    name: "suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet",
+    control: control,
+    name: "vuorovaikutusTilaisuudet",
   });
 
   const HassuBadge = styled(Badge)(() => ({
@@ -81,8 +96,9 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
     return fields.filter((tilaisuus) => tilaisuus.tyyppi === tyyppi).length || "0";
   };
 
-  const saveTilaisuudet = (formData: VuorovaikutusFormValues) => {
+  const saveTilaisuudet = (formData: VuorovaikutustilaisuusFormValues) => {
     console.log(formData);
+    parentSetValue("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet", formData.vuorovaikutusTilaisuudet);
     windowHandler(false);
   };
 
@@ -90,12 +106,14 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
   const isFyysisiatilaisuuksia = !!fields.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA);
   // const isSoittoaikoja = !!fields.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA);
 
+  console.log(errors);
+
   return (
     <HassuDialog
       open={open}
       onClose={() => {
         if (isDirty) {
-          resetField("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet");
+          reset();
         }
         windowHandler(false);
       }}
@@ -109,7 +127,7 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
               <WindowCloseButton
                 onClick={(e) => {
                   if (isDirty) {
-                    resetField("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet");
+                    reset();
                   }
                   windowHandler(false);
                   e.preventDefault();
@@ -191,40 +209,25 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
                       <SectionContent key={index}>
                         <TextInput
                           label="Tilaisuuden nimi *"
-                          {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.nimi`)}
-                          error={
-                            (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusTilaisuudet?.[index]?.nimi
-                          }
+                          {...register(`vuorovaikutusTilaisuudet.${index}.nimi`)}
+                          error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.nimi}
                           maxLength={200}
                         ></TextInput>
                         <HassuStack direction={["column", "column", "row"]}>
                           <DatePicker
                             label="Päivämäärä *"
-                            {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.paivamaara`)}
-                            error={
-                              (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusTilaisuudet?.[index]
-                                ?.paivamaara
-                            }
+                            {...register(`vuorovaikutusTilaisuudet.${index}.paivamaara`)}
+                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.paivamaara}
                           ></DatePicker>
                           <TimePicker
                             label="Alkaa *"
-                            {...register(
-                              `suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.alkamisAika`
-                            )}
-                            error={
-                              (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusTilaisuudet?.[index]
-                                ?.alkamisAika
-                            }
+                            {...register(`vuorovaikutusTilaisuudet.${index}.alkamisAika`)}
+                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.alkamisAika}
                           ></TimePicker>
                           <TimePicker
                             label="Päättyy *"
-                            {...register(
-                              `suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.paattymisAika`
-                            )}
-                            error={
-                              (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusTilaisuudet?.[index]
-                                ?.paattymisAika
-                            }
+                            {...register(`vuorovaikutusTilaisuudet.${index}.paattymisAika`)}
+                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.paattymisAika}
                           ></TimePicker>
                         </HassuStack>
                         <HassuGrid cols={{ lg: 3 }}>
@@ -234,22 +237,15 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
                               return { label: capitalize(palvelu), value: palvelu };
                             })}
                             label="Käytettävä palvelu *"
-                            {...register(
-                              `suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.kaytettavaPalvelu`
-                            )}
-                            error={
-                              (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusTilaisuudet?.[index]
-                                ?.kaytettavaPalvelu
-                            }
+                            {...register(`vuorovaikutusTilaisuudet.${index}.kaytettavaPalvelu`)}
+                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.kaytettavaPalvelu}
                           />
                         </HassuGrid>
                         <TextInput
                           label="Linkki tilaisuuteen *"
                           maxLength={200}
-                          {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.linkki`)}
-                          error={
-                            (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusTilaisuudet?.[index]?.linkki
-                          }
+                          {...register(`vuorovaikutusTilaisuudet.${index}.linkki`)}
+                          error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.linkki}
                         ></TextInput>
                         <p>
                           Linkki tilaisuuteen julkaistaan palvelun julkisella puolella kaksi (2) tuntia ennen
@@ -278,40 +274,25 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
                       <SectionContent key={index}>
                         <TextInput
                           label="Tilaisuuden nimi *"
-                          {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.nimi`)}
-                          error={
-                            (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusTilaisuudet?.[index]?.nimi
-                          }
+                          {...register(`vuorovaikutusTilaisuudet.${index}.nimi`)}
+                          error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.nimi}
                           maxLength={200}
                         ></TextInput>
                         <HassuStack direction={["column", "column", "row"]}>
                           <DatePicker
                             label="Päivämäärä *"
-                            {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.paivamaara`)}
-                            error={
-                              (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusTilaisuudet?.[index]
-                                ?.paivamaara
-                            }
+                            {...register(`vuorovaikutusTilaisuudet.${index}.paivamaara`)}
+                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.paivamaara}
                           ></DatePicker>
                           <TimePicker
                             label="Alkaa *"
-                            {...register(
-                              `suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.alkamisAika`
-                            )}
-                            error={
-                              (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusTilaisuudet?.[index]
-                                ?.alkamisAika
-                            }
+                            {...register(`vuorovaikutusTilaisuudet.${index}.alkamisAika`)}
+                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.alkamisAika}
                           ></TimePicker>
                           <TimePicker
                             label="Päättyy *"
-                            {...register(
-                              `suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.paattymisAika`
-                            )}
-                            error={
-                              (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusTilaisuudet?.[index]
-                                ?.paattymisAika
-                            }
+                            {...register(`vuorovaikutusTilaisuudet.${index}.paattymisAika`)}
+                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.paattymisAika}
                           ></TimePicker>
                         </HassuStack>
                         <HassuGrid cols={{ lg: 5 }}>
@@ -319,11 +300,8 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
                             label="Paikka"
                             maxLength={200}
                             style={{ gridColumn: "1 / span 2" }}
-                            {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.paikka`)}
-                            error={
-                              (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusTilaisuudet?.[index]
-                                ?.paikka
-                            }
+                            {...register(`vuorovaikutusTilaisuudet.${index}.paikka`)}
+                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.paikka}
                           ></TextInput>
                         </HassuGrid>
                         <HassuGrid cols={{ lg: 5 }}>
@@ -331,45 +309,27 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
                             label="Osoite *"
                             maxLength={200}
                             style={{ gridColumn: "1 / span 2" }}
-                            {...register(`suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.osoite`)}
-                            error={
-                              (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusTilaisuudet?.[index]
-                                ?.osoite
-                            }
+                            {...register(`vuorovaikutusTilaisuudet.${index}.osoite`)}
+                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.osoite}
                           ></TextInput>
                           <TextInput
                             label="Postinumero *"
                             maxLength={200}
-                            {...register(
-                              `suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.postinumero`
-                            )}
-                            error={
-                              (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusTilaisuudet?.[index]
-                                ?.postinumero
-                            }
+                            {...register(`vuorovaikutusTilaisuudet.${index}.postinumero`)}
+                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.postinumero}
                           ></TextInput>
 
                           <TextInput
                             label="Postitoimipaikka"
                             maxLength={200}
-                            {...register(
-                              `suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.postitoimipaikka`
-                            )}
-                            error={
-                              (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusTilaisuudet?.[index]
-                                ?.postitoimipaikka
-                            }
+                            {...register(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka`)}
+                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.postitoimipaikka}
                           ></TextInput>
                         </HassuGrid>
                         <TextInput
                           label="Saapumisohjeet"
-                          {...register(
-                            `suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet.${index}.Saapumisohjeet`
-                          )}
-                          error={
-                            (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusTilaisuudet?.[index]
-                              ?.Saapumisohjeet
-                          }
+                          {...register(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet`)}
+                          error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.Saapumisohjeet}
                           maxLength={200}
                         ></TextInput>
                         <Button
@@ -398,7 +358,7 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
               <Button
                 onClick={(e) => {
                   if (isDirty) {
-                    resetField("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet");
+                    reset();
                   }
                   windowHandler(false);
                   e.preventDefault();
