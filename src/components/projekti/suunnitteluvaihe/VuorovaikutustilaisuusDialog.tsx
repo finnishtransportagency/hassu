@@ -1,6 +1,6 @@
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
-import { ReactElement } from "react";
+import { ReactElement, useCallback, useEffect } from "react";
 import { Badge, Chip, chipClasses } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Button from "@components/button/Button";
@@ -50,14 +50,15 @@ export type VuorovaikutustilaisuusFormValues = {
 interface Props {
   open: boolean;
   windowHandler: (isOpen: boolean) => void;
+  tilaisuudet: VuorovaikutusTilaisuusInput[] | null | undefined;
 }
 
-export default function VuorovaikutusDialog({ open, windowHandler }: Props): ReactElement {
+export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet }: Props): ReactElement {
   const formOptions: UseFormProps<VuorovaikutustilaisuusFormValues> = {
     resolver: yupResolver(vuorovaikutustilaisuudetSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
-    defaultValues: {},
+    defaultValues: { vuorovaikutusTilaisuudet: [] },
   };
 
   const { setValue: parentSetValue } = useFormContext<VuorovaikutusFormValues>();
@@ -74,6 +75,15 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
     control: control,
     name: "vuorovaikutusTilaisuudet",
   });
+
+  useEffect(() => {
+    if (tilaisuudet) {
+      const tilaisuuksienTiedot = {
+        vuorovaikutusTilaisuudet: tilaisuudet,
+      };
+      reset(tilaisuuksienTiedot);
+    }
+  }, [tilaisuudet, reset]);
 
   const HassuBadge = styled(Badge)(() => ({
     [`&.${chipClasses.deleteIcon}`]: {
@@ -92,33 +102,37 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
     },
   }));
 
-  const countTilaisuudet = (tyyppi: VuorovaikutusTilaisuusTyyppi) => {
-    return fields.filter((tilaisuus) => tilaisuus.tyyppi === tyyppi).length || "0";
-  };
+  const countTilaisuudet = useCallback(
+    (tyyppi: VuorovaikutusTilaisuusTyyppi) => {
+      return fields.filter((tilaisuus) => tilaisuus.tyyppi === tyyppi).length || "0";
+    },
+    [fields]
+  );
 
-  const saveTilaisuudet = (formData: VuorovaikutustilaisuusFormValues) => {
-    console.log(formData);
-    parentSetValue("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet", formData.vuorovaikutusTilaisuudet);
+  const saveTilaisuudet = useCallback(
+    (formData: VuorovaikutustilaisuusFormValues) => {
+      console.log(formData);
+      parentSetValue("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet", formData.vuorovaikutusTilaisuudet, {
+        shouldDirty: true,
+      });
+      windowHandler(false);
+    },
+    [parentSetValue, windowHandler]
+  );
+
+  const onClose = useCallback(() => {
     windowHandler(false);
-  };
+    if (isDirty) {
+      reset();
+    }
+  }, [isDirty, reset, windowHandler]);
 
   const isVerkkotilaisuuksia = !!fields.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA);
   const isFyysisiatilaisuuksia = !!fields.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA);
   // const isSoittoaikoja = !!fields.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA);
 
-  console.log(errors);
-
   return (
-    <HassuDialog
-      open={open}
-      onClose={() => {
-        if (isDirty) {
-          reset();
-        }
-        windowHandler(false);
-      }}
-      maxWidth={"lg"}
-    >
+    <HassuDialog open={open} onClose={onClose} maxWidth={"lg"}>
       <Section noDivider smallGaps>
         <SectionContent>
           <div className="vayla-dialog-title flex">
@@ -126,10 +140,7 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
             <div className="justify-end">
               <WindowCloseButton
                 onClick={(e) => {
-                  if (isDirty) {
-                    reset();
-                  }
-                  windowHandler(false);
+                  onClose();
                   e.preventDefault();
                 }}
               ></WindowCloseButton>
@@ -357,10 +368,7 @@ export default function VuorovaikutusDialog({ open, windowHandler }: Props): Rea
               </Button>
               <Button
                 onClick={(e) => {
-                  if (isDirty) {
-                    reset();
-                  }
-                  windowHandler(false);
+                  onClose();
                   e.preventDefault();
                 }}
               >

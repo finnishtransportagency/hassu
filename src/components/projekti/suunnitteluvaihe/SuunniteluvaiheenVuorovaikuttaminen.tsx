@@ -8,11 +8,10 @@ import {
   VuorovaikutusInput,
   ProjektiRooli,
   YhteystietoInput,
-  Vuorovaikutus,
   VuorovaikutusTilaisuusTyyppi,
 } from "@services/api";
 import Section from "@components/layout/Section";
-import { ReactElement, useEffect, useState, Fragment } from "react";
+import { ReactElement, useEffect, useState, Fragment, useCallback } from "react";
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
@@ -88,7 +87,6 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
   const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
-  const [vuorovaikutus, setVuorovaikutus] = useState<Vuorovaikutus | undefined>(undefined);
   const today = dayjs().format();
 
   const formOptions: UseFormProps<VuorovaikutusFormValues> = {
@@ -113,23 +111,29 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
     name: "suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot",
   });
 
-  const saveDraft = async (formData: VuorovaikutusFormValues) => {
-    setIsFormSubmitting(true);
-    try {
-      await saveSunnitteluvaihe(formData);
-      showSuccessMessage("Tallennus onnistui!");
-    } catch (e) {
-      log.error("OnSubmit Error", e);
-      showErrorMessage("Tallennuksessa tapahtui virhe");
-    }
-    setIsFormSubmitting(false);
-  };
+  const saveSunnitteluvaihe = useCallback(
+    async (formData: VuorovaikutusFormValues) => {
+      setIsFormSubmitting(true);
+      await api.tallennaProjekti(formData);
+      if (reloadProjekti) await reloadProjekti();
+    },
+    [setIsFormSubmitting, reloadProjekti]
+  );
 
-  const saveSunnitteluvaihe = async (formData: VuorovaikutusFormValues) => {
-    setIsFormSubmitting(true);
-    await api.tallennaProjekti(formData);
-    if (reloadProjekti) await reloadProjekti();
-  };
+  const saveDraft = useCallback(
+    async (formData: VuorovaikutusFormValues) => {
+      setIsFormSubmitting(true);
+      try {
+        await saveSunnitteluvaihe(formData);
+        showSuccessMessage("Tallennus onnistui!");
+      } catch (e) {
+        log.error("OnSubmit Error", e);
+        showErrorMessage("Tallennuksessa tapahtui virhe");
+      }
+      setIsFormSubmitting(false);
+    },
+    [setIsFormSubmitting, showSuccessMessage, showErrorMessage, saveSunnitteluvaihe]
+  );
 
   useEffect(() => {
     isDirtyHandler(isDirty);
@@ -140,8 +144,6 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
       const v = projekti.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
         return v.vuorovaikutusNumero === vuorovaikutusnro;
       });
-
-      setVuorovaikutus(v);
 
       const tallentamisTiedot: VuorovaikutusFormValues = {
         oid: projekti.oid,
@@ -181,7 +183,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
     (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA
   );
   const isSoittoaikoja = !!vuorovaikutusTilaisuudet?.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA);
-  console.log(errors);
+
   return (
     <>
       <FormProvider {...useFormReturn}>
@@ -463,6 +465,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
           <VuorovaikutusDialog
             open={openVuorovaikutustilaisuus}
             windowHandler={setOpenVuorovaikutustilaisuus}
+            tilaisuudet={vuorovaikutusTilaisuudet}
           ></VuorovaikutusDialog>
         </form>
       </FormProvider>
