@@ -13,7 +13,6 @@ import {
 } from "@services/api";
 import Section from "@components/layout/Section";
 import { ReactElement, useEffect, useState, Fragment } from "react";
-import { Stack } from "@mui/material";
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
@@ -41,6 +40,7 @@ import Select from "@components/form/Select";
 import VuorovaikutusDialog from "./VuorovaikutustilaisuusDialog";
 import { formatDate } from "src/util/dateUtils";
 import capitalize from "lodash/capitalize";
+import { Stack } from "@mui/material";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -148,14 +148,14 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
         suunnitteluVaihe: {
           vuorovaikutus: {
             vuorovaikutusNumero: vuorovaikutusnro,
-            vuorovaikutusJulkaisuPaiva: vuorovaikutus?.vuorovaikutusJulkaisuPaiva,
-            kysymyksetJaPalautteetViimeistaan: vuorovaikutus?.kysymyksetJaPalautteetViimeistaan,
+            vuorovaikutusJulkaisuPaiva: v?.vuorovaikutusJulkaisuPaiva,
+            kysymyksetJaPalautteetViimeistaan: v?.kysymyksetJaPalautteetViimeistaan,
             vuorovaikutusYhteysHenkilot:
               projekti.kayttoOikeudet
-                ?.filter(({ kayttajatunnus }) => vuorovaikutus?.vuorovaikutusYhteysHenkilot?.includes(kayttajatunnus))
+                ?.filter(({ kayttajatunnus }) => v?.vuorovaikutusYhteysHenkilot?.includes(kayttajatunnus))
                 .map(({ kayttajatunnus }) => kayttajatunnus) || [],
             esitettavatYhteystiedot:
-              vuorovaikutus?.esitettavatYhteystiedot?.map((yhteystieto) => removeTypeName(yhteystieto)) || [],
+              v?.esitettavatYhteystiedot?.map((yhteystieto) => removeTypeName(yhteystieto)) || [],
             vuorovaikutusTilaisuudet:
               v?.vuorovaikutusTilaisuudet?.map((tilaisuus) => {
                 const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
@@ -181,7 +181,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
     (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA
   );
   const isSoittoaikoja = !!vuorovaikutusTilaisuudet?.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA);
-
+  console.log(errors);
   return (
     <>
       <FormProvider {...useFormReturn}>
@@ -230,7 +230,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
                     <p>
                       <b>Live-tilaisuudet verkossa</b>
                     </p>
-                    {vuorovaikutus?.vuorovaikutusTilaisuudet
+                    {vuorovaikutusTilaisuudet
                       ?.filter((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA)
                       .map((tilaisuus, index) => {
                         return (
@@ -296,50 +296,6 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
               </SectionContent>
             </Section>
             <LuonnoksetJaAineistot />
-            <Section>
-              <h5 className="vayla-small-title">Vuorovaikuttamisen yhteyshenkilöt</h5>
-              <SectionContent>
-                <p>
-                  Voit valita kutsussa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden
-                  yhteystiedon. Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden
-                  yhteystiedot haetaan Projektin henkilöt -sivulle tallennetuista tiedoista.
-                </p>
-              </SectionContent>
-            </Section>
-            <Section>
-              <h5 className="vayla-small-title">Ilmoituksen vastaanottajat</h5>
-              <SectionContent>
-                <p>
-                  Vuorovaikuttamisesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville
-                  kunnille. Kunnat on haettu Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle
-                  viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi -painikkeella
-                </p>
-                <p>Jos kuntatiedoissa on virhe, tee korjaus Projektivelhoon.</p>
-              </SectionContent>
-            </Section>
-            <Section>
-              <h5 className="vayla-small-title">Kutsun ja ilmoituksen esikatselu</h5>
-              <SectionContent>
-                <HassuStack direction={["column", "column", "row"]}>
-                  <Button type="submit" onClick={() => console.log("kutsun esikatselu")} disabled>
-                    Kutsun esikatselu
-                  </Button>
-                  <Button type="submit" onClick={() => console.log("ilmoituksen esikatselu")} disabled>
-                    Ilmoituksen esikatselu
-                  </Button>
-                </HassuStack>
-              </SectionContent>
-            </Section>
-            <Section>
-              <h5 className="vayla-small-title">Suunnitelmaluonnokset ja esittelyaineistot</h5>
-              <SectionContent>
-                <p>
-                  Esittelyvideo tulee olla ladattuna erilliseen videojulkaisupalveluun (esim. Youtube) ja videon
-                  katselulinkki tuodaan sille tarkoitettuun kenttään. Luonnokset ja muut materiaalit tuodaan
-                  Projektivelhosta.
-                </p>
-              </SectionContent>
-            </Section>
             <Section>
               <SectionContent>
                 <h4 className="vayla-small-title">Vuorovaikuttamisen yhteyshenkilöt</h4>
@@ -488,6 +444,20 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
                   </Button>
                 </HassuStack>
               </SectionContent>
+            </Section>
+            <Section noDivider>
+              <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
+                <Button onClick={handleSubmit(saveDraft)}>Tallenna luonnos</Button>
+                <Button
+                  primary
+                  onClick={() => {
+                    console.log("tallenna ja julkaise");
+                  }}
+                  disabled
+                >
+                  Tallenna julkaistavaksi
+                </Button>
+              </Stack>
             </Section>
           </fieldset>
           <VuorovaikutusDialog
