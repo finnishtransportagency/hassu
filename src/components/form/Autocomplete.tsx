@@ -1,9 +1,7 @@
 import FormGroup from "./FormGroup";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { FieldError } from "react-hook-form";
 import useOutsideClickDetection from "../../hooks/useOutsideClickDetection";
-import usePrevious from "../../hooks/usePrevious";
-
 export interface Props<T> {
   error?: FieldError;
   label?: string;
@@ -50,12 +48,12 @@ const Autocomplete = <T extends unknown>({
   }, []);
   const wrapperRef = useRef<HTMLDivElement>(null);
   useOutsideClickDetection(wrapperRef, hide);
-  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
-  const prevTimer = usePrevious(timer);
   const [filteredOptions, setFilteredOptions] = useState<T[]>(Array.isArray(propOptions) ? propOptions : []);
   const optionsRef = useRef<(HTMLLIElement | null)[]>([]);
   const listRef = useRef<HTMLDivElement>(null);
-  const slicedOptions = filteredOptions?.slice(0, maxResults) || [];
+  const slicedOptions = useMemo(() => {
+    return filteredOptions?.slice(0, maxResults) || [];
+  }, [filteredOptions, maxResults]);
 
   const getNextIndex = () => (currentIndex < slicedOptions.length - 1 ? currentIndex + 1 : 0);
   const getPrevIndex = () => (currentIndex > 0 ? currentIndex - 1 : slicedOptions.length - 1);
@@ -71,39 +69,32 @@ const Autocomplete = <T extends unknown>({
     focus();
   };
 
-  useEffect(() => {
-    // Whenever new timer is set as timer
-    // clear the older timer to prevent it from triggering
-    if (prevTimer && prevTimer !== timer) {
-      clearTimeout(prevTimer);
-    }
-  }, [prevTimer, timer]);
-
   const [fetchingUsers, setFetchingUsers] = useState(false);
+
+  // Set timer to fetch options if options is not given
   useEffect(() => {
-    let isMounted = true;
-    const fetchOptions = async (text: string, fetcher: (text: string) => Promise<T[]> | T[]) => {
+    let myTimer : NodeJS.Timeout | null = null;
+    if (!Array.isArray(propOptions)) {
       setFetchingUsers(true);
-      const newTimer = setTimeout(async () => {
-        const result = await fetcher(text);
+      myTimer = setTimeout(async () => {
+        const result = await propOptions(textValue);
         setFetchingUsers(false);
-        if (isMounted) {
-          setFilteredOptions(result);
-        }
+        setFilteredOptions(result);
       }, onTextChangeDelay);
-      setTimer(newTimer);
-    };
+    }
+    return () => {
+      if (myTimer) clearTimeout(myTimer);
+    }
+  }, [textValue, propOptions, setFetchingUsers, setFilteredOptions, onTextChangeDelay]);
+
+  // Set filteredOptions if options is given
+  useEffect(() => {
     if (Array.isArray(propOptions)) {
       setFilteredOptions(
         propOptions.filter((option) => getOptionLabel(option).toLowerCase().includes(textValue.toLowerCase()))
       );
-    } else {
-      fetchOptions(textValue, propOptions);
     }
-    return () => {
-      isMounted = false;
-    };
-  }, [textValue, getOptionLabel, propOptions, onTextChangeDelay]);
+  }, [propOptions, setFilteredOptions, getOptionLabel, textValue]);
 
   const setOptionValue = useCallback(
     (optionValue: T | null | undefined) => {
@@ -116,7 +107,7 @@ const Autocomplete = <T extends unknown>({
       setSelectedOption(optionValue);
       hide();
     },
-    [hide, getOptionLabel]
+    [hide, getOptionLabel, textValue]
   );
 
   const updateOption = (option: T | null) => {
@@ -126,9 +117,14 @@ const Autocomplete = <T extends unknown>({
     setOptionValue(option);
   };
 
+  const [initDone, setInitDone] = useState(false);
+
   useEffect(() => {
-    setOptionValue(initialOption);
-  }, [initialOption, setOptionValue]);
+    if (!initDone && initialOption) {
+      setOptionValue(initialOption);
+      setInitDone(true);
+    }
+  }, [initialOption, initDone, setInitDone, setOptionValue]);
 
   const changeIndex = (index: number) => {
     const child = optionsRef.current[index];
