@@ -5,13 +5,13 @@ import useProjekti from "src/hooks/useProjekti";
 import { PageProps } from "@pages/_app";
 import Section from "@components/layout/Section";
 import Tabs from "@components/layout/tabs/Tabs";
-import SuunnitteluvaiheenPerustiedot from "@components/projekti/suunnitteluvaihe/SuunniteluvaiheenPerustiedot";
+import SuunnitteluvaiheenPerustiedot from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenPerustiedot";
 import HassuDialog from "@components/HassuDialog";
 import SectionContent from "@components/layout/SectionContent";
 import WindowCloseButton from "@components/button/WindowCloseButton";
 import HassuStack from "@components/layout/HassuStack";
 import Button from "@components/button/Button";
-import SuunniteluvaiheenVuorovaikuttaminen from "@components/projekti/suunnitteluvaihe/SuunniteluvaiheenVuorovaikuttaminen";
+import SuunnitteluvaiheenVuorovaikuttaminen from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
 
 export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
   const router = useRouter();
@@ -79,7 +79,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
       tabs.push({
         label: "1. Vuorovaikuttaminen",
         content: (
-          <SuunniteluvaiheenVuorovaikuttaminen
+          <SuunnitteluvaiheenVuorovaikuttaminen
             projekti={projekti}
             reloadProjekti={reloadProjekti}
             isDirtyHandler={setIsChildDirty}
@@ -93,7 +93,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
         let tab = {
           label: `${vuorovaikutus.vuorovaikutusNumero}. Vuorovaikuttaminen`,
           content: (
-            <SuunniteluvaiheenVuorovaikuttaminen
+            <SuunnitteluvaiheenVuorovaikuttaminen
               projekti={projekti}
               reloadProjekti={reloadProjekti}
               isDirtyHandler={setIsChildDirty}

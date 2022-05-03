@@ -39,7 +39,7 @@ interface Props {
   isDirtyHandler: (isDirty: boolean) => void;
 }
 
-export default function SuunniteluvaiheenPerustiedot({
+export default function SuunnitteluvaiheenPerustiedot({
   projekti,
   reloadProjekti,
   isDirtyHandler,

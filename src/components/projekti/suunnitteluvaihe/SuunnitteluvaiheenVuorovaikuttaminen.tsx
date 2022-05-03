@@ -76,7 +76,7 @@ interface Props {
   vuorovaikutusnro: number;
 }
 
-export default function SuunniteluvaiheenVuorovaikuttaminen({
+export default function SuunnitteluvaiheenVuorovaikuttaminen({
   projekti,
   reloadProjekti,
   isDirtyHandler,
