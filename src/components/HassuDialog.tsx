@@ -21,7 +21,7 @@ const HassuDialog = (props: DialogProps & Props): ReactElement => {
           borderTopStyle: "solid",
           borderImage: "linear-gradient(117deg, #009ae0, #49c2f1) 1",
           borderRadius: "0",
-          // padding: 7,
+          padding: 7,
         },
       }}
       {...dialogProps}
