@@ -79,7 +79,7 @@ export default function SuunnitteluvaiheenPerustiedot({
     setIsFormSubmitting(true);
     try {
       formData.suunnitteluVaihe.julkinen = true;
-      await saveSunnitteluvaihe(formData);
+      await saveSuunnitteluvaihe(formData);
       showSuccessMessage("Tallennus ja julkaisu onnistui");
     } catch (e) {
       log.error("OnSubmit Error", e);
@@ -92,7 +92,7 @@ export default function SuunnitteluvaiheenPerustiedot({
   const saveDraft = async (formData: FormValues) => {
     setIsFormSubmitting(true);
     try {
-      await saveSunnitteluvaihe(formData);
+      await saveSuunnitteluvaihe(formData);
       showSuccessMessage("Tallennus onnistui!");
     } catch (e) {
       log.error("OnSubmit Error", e);
@@ -101,7 +101,7 @@ export default function SuunnitteluvaiheenPerustiedot({
     setIsFormSubmitting(false);
   };
 
-  const saveSunnitteluvaihe = async (formData: FormValues) => {
+  const saveSuunnitteluvaihe = async (formData: FormValues) => {
     await api.tallennaProjekti(formData);
     if (reloadProjekti) await reloadProjekti();
   };

@@ -37,6 +37,7 @@ import { Stack } from "@mui/material";
 import HassuDialog from "@components/HassuDialog";
 import WindowCloseButton from "@components/button/WindowCloseButton";
 import useTranslation from "next-translate/useTranslation";
+import { UseFormReturn } from "react-hook-form";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -57,6 +58,16 @@ export type VuorovaikutusFormValues = RequiredProjektiFields & {
       | "vuorovaikutusTilaisuudet"
       | "vuorovaikutusYhteysHenkilot"
       | "julkinen"
+    >;
+  };
+};
+
+type FormValuesForLuonnoksetJaAineistot = RequiredProjektiFields & {
+  suunnitteluVaihe: {
+    vuorovaikutus: Pick<
+      VuorovaikutusInput,
+      | "vuorovaikutusNumero"
+      | "videot"
     >;
   };
 };
@@ -93,7 +104,14 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
     resolver: yupResolver(vuorovaikutusSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
-    defaultValues: {},
+    defaultValues: {
+      suunnitteluVaihe: {
+        vuorovaikutus: {
+          vuorovaikutusNumero: vuorovaikutusnro,
+          videot: projekti?.suunnitteluVaihe?.vuorovaikutukset?.[vuorovaikutusnro-1]?.videot
+        }
+      },
+    },
   };
 
   const useFormReturn = useForm<VuorovaikutusFormValues>(formOptions);
@@ -325,7 +343,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                 </Button>
               </SectionContent>
             </Section>
-            <LuonnoksetJaAineistot />
+            <LuonnoksetJaAineistot useFormReturn={useFormReturn as UseFormReturn<FormValuesForLuonnoksetJaAineistot, object>} />
             <Section>
               <SectionContent>
                 <h4 className="vayla-small-title">Vuorovaikuttamisen yhteyshenkilöt</h4>
