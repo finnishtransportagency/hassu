@@ -29,6 +29,7 @@ import HassuGrid from "@components/HassuGrid";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
 import IconButton from "@components/button/IconButton";
 import { removeTypeName } from "src/util/removeTypeName";
+import LuonnoksetJaAineistot from "./LuonnoksetJaAineistot";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -158,59 +159,52 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
         <form>
           <fieldset style={{ display: "contents" }}>
             <Section>
-              <SectionContent largeGaps>
-                <h5 className="vayla-small-title">Vuorovaikuttaminen</h5>
+              <SectionContent>
+                <h4 className="vayla-small-title">Vuorovaikuttaminen</h4>
                 <p>
                   Kansalainen pääsee vaikuttamaan väylähankkeen tai väylän suunnitteluun siinä vaiheessa. kun tehdään
                   yleissuunnitelmaa ja kun edetään tie- tai ratasuunnitelmaan. Kaikista suunnittelun vaiheista
                   kuulutetaan tai ilmoitetaan, jotta asianosaisilla on mahdollisuus kommentoida suunnitelmia.
                 </p>
-                <h5 className="vayla-small-title">Julkaisupäivä</h5>
+              </SectionContent>
+              <SectionContent>
+                <h4 className="vayla-small-title">Julkaisupäivä</h4>
                 <p>
                   Anna päivämäärä, jolloin vuorovaikutusosio palvelun julkisella puolella ja kutsu vuorovaikutukseen
                   muilla ilmoituskanavilla julkaistaan.
                 </p>
+                <DatePicker
+                  label="Julkaisupäivä *"
+                  className="md:max-w-min"
+                  {...register("suunnitteluVaihe.vuorovaikutus.vuorovaikutusJulkaisuPaiva")}
+                  min={today}
+                  error={errors.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusJulkaisuPaiva}
+                />
               </SectionContent>
-              <DatePicker
-                label="Julkaisupäivä *"
-                className="md:max-w-min"
-                {...register("suunnitteluVaihe.vuorovaikutus.vuorovaikutusJulkaisuPaiva")}
-                min={today}
-                error={errors.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusJulkaisuPaiva}
-              />
-              <SectionContent largeGaps>
-                <h5 className="vayla-small-title">Kysymyksien esittäminen ja palautteiden antaminen</h5>
+              <SectionContent>
+                <h4 className="vayla-small-title">Kysymyksien esittäminen ja palautteiden antaminen</h4>
                 <p>Anna päivämäärä, johon mennessä kansalaisten toivotaan esittävän kysymykset ja palautteet.</p>
+                <DatePicker
+                  label="Kysymykset ja palautteet viimeistään *"
+                  className="md:max-w-min"
+                  {...register("suunnitteluVaihe.vuorovaikutus.kysymyksetJaPalautteetViimeistaan")}
+                  min={today}
+                  error={errors.suunnitteluVaihe?.vuorovaikutus?.kysymyksetJaPalautteetViimeistaan}
+                />
               </SectionContent>
-              <DatePicker
-                label="Kysymykset ja palautteet viimeistään *"
-                className="md:max-w-min"
-                {...register("suunnitteluVaihe.vuorovaikutus.kysymyksetJaPalautteetViimeistaan")}
-                min={today}
-                error={errors.suunnitteluVaihe?.vuorovaikutus?.kysymyksetJaPalautteetViimeistaan}
-              />
             </Section>
             <Section>
-              <h5 className="vayla-small-title">Vuorovaikutusmahdollisuudet palautteiden ja kysymyksien lisäksi</h5>
+              <h4 className="vayla-small-title">Vuorovaikutusmahdollisuudet palautteiden ja kysymyksien lisäksi</h4>
               <SectionContent>
                 <Button type="submit" onClick={() => console.log("tilaisuuden lisäys")} disabled>
                   Lisää tilaisuus
                 </Button>
               </SectionContent>
             </Section>
-            <Section>
-              <h5 className="vayla-small-title">Suunnitelmaluonnokset ja esittelyaineistot</h5>
-              <SectionContent>
-                <p>
-                  Esittelyvideo tulee olla ladattuna erilliseen videojulkaisupalveluun (esim. Youtube) ja videon
-                  katselulinkki tuodaan sille tarkoitettuun kenttään. Luonnokset ja muut materiaalit tuodaan
-                  Projektivelhosta.
-                </p>
-              </SectionContent>
-            </Section>
+            <LuonnoksetJaAineistot />
             <Section>
               <SectionContent>
-                <h5 className="vayla-small-title">Vuorovaikuttamisen yhteyshenkilöt</h5>
+                <h4 className="vayla-small-title">Vuorovaikuttamisen yhteyshenkilöt</h4>
                 <p>
                   Voit valita kutsussa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden
                   yhteystiedon. Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden
@@ -334,7 +328,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
               </Button>
             </Section>
             <Section>
-              <h5 className="vayla-small-title">Ilmoituksen vastaanottajat</h5>
+              <h4 className="vayla-small-title">Ilmoituksen vastaanottajat</h4>
               <SectionContent>
                 <p>
                   Vuorovaikuttamisesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville
@@ -345,7 +339,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
               </SectionContent>
             </Section>
             <Section>
-              <h5 className="vayla-small-title">Kutsun ja ilmoituksen esikatselu</h5>
+              <h4 className="vayla-small-title">Kutsun ja ilmoituksen esikatselu</h4>
               <SectionContent>
                 <HassuStack direction={["column", "column", "row"]}>
                   <Button type="submit" onClick={() => console.log("kutsun esikatselu")} disabled>

@@ -43,6 +43,6 @@ export default function FormGroup({
 const Label = styled("label")(
   sx({
     display: "block",
-    marginBottom: 2,
+    marginBottom: 1,
   })
 );
