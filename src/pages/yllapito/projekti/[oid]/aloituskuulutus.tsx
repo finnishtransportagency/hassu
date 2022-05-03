@@ -1,7 +1,7 @@
 import Textarea from "@components/form/Textarea";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { useRouter } from "next/router";
-import React, { ReactElement, useEffect, useRef, useState } from "react";
+import React, { ReactElement, useEffect, useRef, useState, useMemo, useCallback } from "react";
 import useProjekti from "src/hooks/useProjekti";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -15,6 +15,7 @@ import {
   Kieli,
   LaskuriTyyppi,
   Projekti,
+  Kielitiedot,
   Status,
   TallennaProjektiInput,
   TilasiirtymaToiminto,
@@ -189,25 +190,27 @@ export default function Aloituskuulutus({
     }
   }, [projekti, reset]);
 
-  const getAloituskuulutusjulkaisuByTila = (tila: AloitusKuulutusTila): AloitusKuulutusJulkaisu | undefined => {
+  const getAloituskuulutusjulkaisuByTila = useCallback((tila: AloitusKuulutusTila): AloitusKuulutusJulkaisu | undefined => {
     if (!projekti?.aloitusKuulutusJulkaisut) {
       return undefined;
     }
     return find(projekti.aloitusKuulutusJulkaisut, (julkaisu) => {
       return julkaisu.tila === tila;
     });
-  };
+  }, [projekti]);
 
-  const saveAloituskuulutus = async (formData: FormValues) => {
+  const saveAloituskuulutus = useCallback(async (formData: FormValues) => {
     deleteFieldArrayIds(formData?.aloitusKuulutus?.esitettavatYhteystiedot);
     deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat);
     deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset);
     setIsFormSubmitting(true);
     await api.tallennaProjekti(formData);
     await reloadProjekti();
-  };
+  }, [setIsFormSubmitting, reloadProjekti]);
 
-  const saveDraft = async (formData: FormValues) => {
+  const { showSuccessMessage, showErrorMessage } = useSnackbars();
+
+  const saveDraft = useCallback(async (formData: FormValues) => {
     setIsFormSubmitting(true);
     try {
       await saveAloituskuulutus(formData);
@@ -217,45 +220,9 @@ export default function Aloituskuulutus({
       showErrorMessage("Tallennuksessa tapahtui virhe");
     }
     setIsFormSubmitting(false);
-  };
+  }, [setIsFormSubmitting, saveAloituskuulutus, showSuccessMessage, showErrorMessage]);
 
-  const lahetaHyvaksyttavaksi = async (formData: FormValues) => {
-    log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
-    setIsFormSubmitting(true);
-    try {
-      await saveAloituskuulutus(formData);
-      await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
-    } catch (error) {
-      log.error("Virhe hyväksyntään lähetyksessä", error);
-      showErrorMessage("Hyväksyntään lähetyksessä tapahtui virhe");
-    }
-    setIsFormSubmitting(false);
-  };
-
-  const palautaMuokattavaksi = async (data: PalautusValues) => {
-    log.debug("palauta muokattavaksi: ", data);
-    await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.HYLKAA, "Palautus", data.syy);
-  };
-
-  const palautaMuokattavaksiJaPoistu = async (data: PalautusValues) => {
-    log.debug("palauta muokattavaksi ja poistu: ", data);
-    await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.HYLKAA, "Palautus", data.syy);
-    const siirtymaTimer = setTimeout(() => {
-      setIsFormSubmitting(true);
-      router.push(`/yllapito/projekti/${projekti?.oid}`);
-    }, 1000);
-    return () => {
-      setIsFormSubmitting(false);
-      clearTimeout(siirtymaTimer);
-    };
-  };
-
-  const hyvaksyKuulutus = async () => {
-    log.debug("hyväksy kuulutus");
-    await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
-  };
-
-  const vaihdaAloituskuulutuksenTila = async (toiminto: TilasiirtymaToiminto, viesti: string, syy?: string) => {
+  const vaihdaAloituskuulutuksenTila = useCallback(async (toiminto: TilasiirtymaToiminto, viesti: string, syy?: string) => {
     if (!projekti) {
       return;
     }
@@ -270,7 +237,43 @@ export default function Aloituskuulutus({
     }
     setIsFormSubmitting(false);
     setOpen(false);
-  };
+  }, [setIsFormSubmitting, reloadProjekti, showSuccessMessage, showErrorMessage, setOpen, projekti]);
+
+  const lahetaHyvaksyttavaksi = useCallback(async (formData: FormValues) => {
+    log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
+    setIsFormSubmitting(true);
+    try {
+      await saveAloituskuulutus(formData);
+      await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
+    } catch (error) {
+      log.error("Virhe hyväksyntään lähetyksessä", error);
+      showErrorMessage("Hyväksyntään lähetyksessä tapahtui virhe");
+    }
+    setIsFormSubmitting(false);
+  }, [setIsFormSubmitting, saveAloituskuulutus, vaihdaAloituskuulutuksenTila, showErrorMessage]);
+
+  const palautaMuokattavaksi = useCallback(async (data: PalautusValues) => {
+    log.debug("palauta muokattavaksi: ", data);
+    await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.HYLKAA, "Palautus", data.syy);
+  }, [vaihdaAloituskuulutuksenTila]);
+
+  const palautaMuokattavaksiJaPoistu = useCallback(async (data: PalautusValues) => {
+    log.debug("palauta muokattavaksi ja poistu: ", data);
+    await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.HYLKAA, "Palautus", data.syy);
+    const siirtymaTimer = setTimeout(() => {
+      setIsFormSubmitting(true);
+      router.push(`/yllapito/projekti/${projekti?.oid}`);
+    }, 1000);
+    return () => {
+      setIsFormSubmitting(false);
+      clearTimeout(siirtymaTimer);
+    };
+  }, [vaihdaAloituskuulutuksenTila, setIsFormSubmitting, projekti, router]);
+
+  const hyvaksyKuulutus = useCallback(async () => {
+    log.debug("hyväksy kuulutus");
+    await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
+  }, [vaihdaAloituskuulutuksenTila]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -288,7 +291,7 @@ export default function Aloituskuulutus({
     setOpenHyvaksy(false);
   };
 
-  const showPDFPreview = (formData: FormValues, action: string, kieli: Kieli) => {
+  const showPDFPreview = useCallback((formData: FormValues, action: string, kieli: Kieli) => {
     const formDataToSend = cloneDeep(formData);
     deleteFieldArrayIds(formDataToSend?.aloitusKuulutus?.esitettavatYhteystiedot);
     deleteFieldArrayIds(formDataToSend?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat);
@@ -298,11 +301,9 @@ export default function Aloituskuulutus({
       pdfFormRef.current.action = action + "?kieli=" + kieli;
       pdfFormRef.current?.submit();
     }
-  };
+  }, [setSerializedFormData, pdfFormRef]);
 
-  const { showSuccessMessage, showErrorMessage } = useSnackbars();
-
-  const getPaattymispaiva = async (value: string) => {
+  const getPaattymispaiva = useCallback(async (value: string) => {
     try {
       const paattymispaiva = await api.laskePaattymisPaiva(value, LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA);
       setValue("aloitusKuulutus.siirtyySuunnitteluVaiheeseen", paattymispaiva);
@@ -310,21 +311,16 @@ export default function Aloituskuulutus({
       showErrorMessage("Kuulutuksen päättymispäivän laskennassa tapahtui virhe");
       log.error("Päättymispäivän laskennassa virhe", error);
     }
-  };
+  }, [setValue, showErrorMessage]);
 
-  if (!projekti) {
-    return <div />;
-  }
-  if (!projekti.kielitiedot) {
-    return <div>Kielitiedot puttuu</div>;
-  }
-  const kielitiedot = projekti.kielitiedot;
-  const toissijainenKieli = kielitiedot.toissijainenKieli;
+  const kielitiedot : (Kielitiedot | null | undefined) = projekti?.kielitiedot;
+  const toissijainenKieli = kielitiedot?.toissijainenKieli;
   const voiMuokata = !projekti?.aloitusKuulutusJulkaisut || projekti.aloitusKuulutusJulkaisut.length < 1;
   const voiHyvaksya =
     getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA) &&
     projekti?.nykyinenKayttaja.onProjektipaallikko;
-  const odottaaJulkaisua = () => {
+
+  const odottaaJulkaisua = useMemo(() => {
     const julkaisu = getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.HYVAKSYTTY);
     if (julkaisu) {
       // Toistaiseksi tarkastellaan julkaisupaivatietoa, koska ei ole olemassa erillista tilaa julkaistulle kuulutukselle
@@ -333,7 +329,15 @@ export default function Aloituskuulutus({
         return julkaisupvm.format("DD.MM.YYYY");
       }
     }
-  };
+    return null;
+  }, [getAloituskuulutusjulkaisuByTila]);
+
+  if (!projekti) {
+    return <div />;
+  }
+  if (!kielitiedot) {
+    return <div>Kielitiedot puttuu</div>;
+  }
 
   return (
     <ProjektiPageLayout title="Aloituskuulutus">
@@ -354,9 +358,9 @@ export default function Aloituskuulutus({
                         projekti.aloitusKuulutus.palautusSyy}
                     </Notification>
                   )}
-                  {odottaaJulkaisua() && (
+                  {odottaaJulkaisua && (
                     <Notification type={NotificationType.WARN}>
-                      {`Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä ${odottaaJulkaisua()}`}.
+                      {`Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä ${odottaaJulkaisua}`}.
                     </Notification>
                   )}
                   <Notification type={NotificationType.INFO} hideIcon>
@@ -408,7 +412,7 @@ export default function Aloituskuulutus({
                   </SectionContent>
                   <Textarea
                     label={`Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (${lowerCase(
-                      kielitiedot.ensisijainenKieli
+                      kielitiedot?.ensisijainenKieli
                     )}) *`}
                     {...register(`aloitusKuulutus.hankkeenKuvaus.${kielitiedot.ensisijainenKieli}`)}
                     error={(errors.aloitusKuulutus?.hankkeenKuvaus as any)?.[kielitiedot.ensisijainenKieli]}
