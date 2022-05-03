@@ -221,6 +221,13 @@
     color: #242222;
   }
 
+  .vayla-smallest-title {
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #242222;
+  }
+
   .vayla-body-text {
     font-weight: 400;
     font-size: 1rem;
