@@ -14,6 +14,7 @@ import { Stack } from "@mui/material";
 import { TallennaProjektiInput, VuorovaikutusInput } from "@services/api";
 import { useFieldArray, UseFormReturn } from "react-hook-form";
 import Accordion from "@components/Accordion";
+import Table from "@components/Table";
 
 type Videot = Pick<VuorovaikutusInput, "videot">;
 type SuunnitteluMateriaali = Pick<VuorovaikutusInput, "suunnittelumateriaali">;
@@ -89,7 +90,22 @@ export default function LuonnoksetJaAineistot<T extends FormValues>({ useFormRet
               <HassuGridItem colSpan={{ lg: 2 }}>
                 <Accordion
                   items={[
-                    { title: "Vuorovaikutustilaisuus", content: "hello" },
+                    {
+                      title: "Vuorovaikutustilaisuus",
+                      content: (
+                        <Table<{ tiedosto: string; velho: string; tyyppi: string; valitse: string }>
+                          tableOptions={{
+                            columns: [
+                              { Header: "Tiedosto", accessor: "tiedosto" },
+                              { Header: "Muokattu Projektivelhossa", accessor: "velho" },
+                              { Header: "Dokumenttityyppi", accessor: "tyyppi" },
+                              { Header: "Valitse", accessor: "valitse" },
+                            ],
+                            data: [{ tiedosto: "Hello", velho: "Hello", tyyppi: "Hello", valitse: "Hello" }],
+                          }}
+                        />
+                      ),
+                    },
                     { title: "Nähtävilläolo", content: "hello" },
                     { title: "Hyväksymispäätös", content: "hello" },
                   ]}
