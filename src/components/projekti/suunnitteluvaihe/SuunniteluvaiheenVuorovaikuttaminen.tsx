@@ -8,10 +8,10 @@ import {
   VuorovaikutusInput,
   ProjektiRooli,
   YhteystietoInput,
+  VuorovaikutusTilaisuusTyyppi,
 } from "@services/api";
 import Section from "@components/layout/Section";
-import { ReactElement, useEffect, useState, Fragment } from "react";
-import { Stack } from "@mui/material";
+import { ReactElement, useEffect, useState, Fragment, useCallback } from "react";
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
@@ -30,13 +30,17 @@ import { maxPhoneLength } from "src/schemas/puhelinNumero";
 import IconButton from "@components/button/IconButton";
 import { removeTypeName } from "src/util/removeTypeName";
 import LuonnoksetJaAineistot from "./LuonnoksetJaAineistot";
+import VuorovaikutusDialog from "./VuorovaikutustilaisuusDialog";
+import { formatDate } from "src/util/dateUtils";
+import capitalize from "lodash/capitalize";
+import { Stack } from "@mui/material";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
   [K in keyof ProjektiFields]: NonNullable<ProjektiFields[K]>;
 }>;
 
-type FormValues = RequiredProjektiFields & {
+export type VuorovaikutusFormValues = RequiredProjektiFields & {
   suunnitteluVaihe: {
     vuorovaikutus: Pick<
       VuorovaikutusInput,
@@ -74,24 +78,26 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
   isDirtyHandler,
   vuorovaikutusnro,
 }: Props): ReactElement {
+  const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const today = dayjs().format();
 
-  const formOptions: UseFormProps<FormValues> = {
+  const formOptions: UseFormProps<VuorovaikutusFormValues> = {
     resolver: yupResolver(vuorovaikutusSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues: {},
   };
 
-  const useFormReturn = useForm<FormValues>(formOptions);
+  const useFormReturn = useForm<VuorovaikutusFormValues>(formOptions);
   const {
     register,
     reset,
     handleSubmit,
     formState: { errors, isDirty },
     control,
+    getValues,
   } = useFormReturn;
 
   const { fields, append, remove } = useFieldArray({
@@ -99,23 +105,29 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
     name: "suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot",
   });
 
-  const saveDraft = async (formData: FormValues) => {
-    setIsFormSubmitting(true);
-    try {
-      await saveSunnitteluvaihe(formData);
-      showSuccessMessage("Tallennus onnistui!");
-    } catch (e) {
-      log.error("OnSubmit Error", e);
-      showErrorMessage("Tallennuksessa tapahtui virhe");
-    }
-    setIsFormSubmitting(false);
-  };
+  const saveSunnitteluvaihe = useCallback(
+    async (formData: VuorovaikutusFormValues) => {
+      setIsFormSubmitting(true);
+      await api.tallennaProjekti(formData);
+      if (reloadProjekti) await reloadProjekti();
+    },
+    [setIsFormSubmitting, reloadProjekti]
+  );
 
-  const saveSunnitteluvaihe = async (formData: FormValues) => {
-    setIsFormSubmitting(true);
-    await api.tallennaProjekti(formData);
-    if (reloadProjekti) await reloadProjekti();
-  };
+  const saveDraft = useCallback(
+    async (formData: VuorovaikutusFormValues) => {
+      setIsFormSubmitting(true);
+      try {
+        await saveSunnitteluvaihe(formData);
+        showSuccessMessage("Tallennus onnistui!");
+      } catch (e) {
+        log.error("OnSubmit Error", e);
+        showErrorMessage("Tallennuksessa tapahtui virhe");
+      }
+      setIsFormSubmitting(false);
+    },
+    [setIsFormSubmitting, showSuccessMessage, showErrorMessage, saveSunnitteluvaihe]
+  );
 
   useEffect(() => {
     isDirtyHandler(isDirty);
@@ -123,23 +135,28 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
 
   useEffect(() => {
     if (projekti && projekti.oid) {
-      const vuorovaikutus = projekti.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
+      const v = projekti.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
         return v.vuorovaikutusNumero === vuorovaikutusnro;
       });
 
-      const tallentamisTiedot: FormValues = {
+      const tallentamisTiedot: VuorovaikutusFormValues = {
         oid: projekti.oid,
         suunnitteluVaihe: {
           vuorovaikutus: {
             vuorovaikutusNumero: vuorovaikutusnro,
-            vuorovaikutusJulkaisuPaiva: vuorovaikutus?.vuorovaikutusJulkaisuPaiva,
-            kysymyksetJaPalautteetViimeistaan: vuorovaikutus?.kysymyksetJaPalautteetViimeistaan,
+            vuorovaikutusJulkaisuPaiva: v?.vuorovaikutusJulkaisuPaiva,
+            kysymyksetJaPalautteetViimeistaan: v?.kysymyksetJaPalautteetViimeistaan,
             vuorovaikutusYhteysHenkilot:
               projekti.kayttoOikeudet
-                ?.filter(({ kayttajatunnus }) => vuorovaikutus?.vuorovaikutusYhteysHenkilot?.includes(kayttajatunnus))
+                ?.filter(({ kayttajatunnus }) => v?.vuorovaikutusYhteysHenkilot?.includes(kayttajatunnus))
                 .map(({ kayttajatunnus }) => kayttajatunnus) || [],
             esitettavatYhteystiedot:
-              vuorovaikutus?.esitettavatYhteystiedot?.map((yhteystieto) => removeTypeName(yhteystieto)) || [],
+              v?.esitettavatYhteystiedot?.map((yhteystieto) => removeTypeName(yhteystieto)) || [],
+            vuorovaikutusTilaisuudet:
+              v?.vuorovaikutusTilaisuudet?.map((tilaisuus) => {
+                const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
+                return vuorovaikutusTilaisuusInput;
+              }) || [],
           },
         },
       };
@@ -151,13 +168,21 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
     return <></>;
   }
 
-  console.log(errors);
+  const vuorovaikutusTilaisuudet = getValues("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet");
+
+  const isVerkkotilaisuuksia = !!vuorovaikutusTilaisuudet?.find(
+    (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA
+  );
+  const isFyysisiatilaisuuksia = !!vuorovaikutusTilaisuudet?.find(
+    (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA
+  );
+  const isSoittoaikoja = !!vuorovaikutusTilaisuudet?.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA);
 
   return (
     <>
       <FormProvider {...useFormReturn}>
         <form>
-          <fieldset style={{ display: "contents" }}>
+          <fieldset>
             <Section>
               <SectionContent>
                 <h4 className="vayla-small-title">Vuorovaikuttaminen</h4>
@@ -196,7 +221,72 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
             <Section>
               <h4 className="vayla-small-title">Vuorovaikutusmahdollisuudet palautteiden ja kysymyksien lisäksi</h4>
               <SectionContent>
-                <Button type="submit" onClick={() => console.log("tilaisuuden lisäys")} disabled>
+                {isVerkkotilaisuuksia && (
+                  <>
+                    <p>
+                      <b>Live-tilaisuudet verkossa</b>
+                    </p>
+                    {vuorovaikutusTilaisuudet
+                      ?.filter((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA)
+                      .map((tilaisuus, index) => {
+                        return (
+                          <div key={index}>
+                            <p>
+                              {capitalize(tilaisuus.nimi)}, {formatDate(tilaisuus.paivamaara)} klo{" "}
+                              {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, Linkki tilaisuuteen: {tilaisuus.linkki}
+                            </p>
+                          </div>
+                        );
+                      })}
+                  </>
+                )}
+                {isFyysisiatilaisuuksia && (
+                  <>
+                    <p>
+                      <b>Fyysiset tilaisuudet</b>
+                    </p>
+                    {vuorovaikutusTilaisuudet
+                      ?.filter((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA)
+                      .map((tilaisuus, index) => {
+                        return (
+                          <div key={index}>
+                            <p>
+                              {capitalize(tilaisuus.nimi)}, {formatDate(tilaisuus.paivamaara)} klo{" "}
+                              {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, Osoite: {tilaisuus.paikka},{" "}
+                              {tilaisuus.osoite} {tilaisuus.postinumero} {tilaisuus.postitoimipaikka}
+                            </p>
+                          </div>
+                        );
+                      })}
+                  </>
+                )}
+                {isSoittoaikoja && (
+                  <>
+                    <p>
+                      <b>Soittoaika</b>
+                    </p>
+                    {vuorovaikutusTilaisuudet
+                      ?.filter((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA)
+                      .map((tilaisuus, index) => {
+                        return (
+                          <div key={index}>
+                            <p>
+                              {capitalize(tilaisuus.nimi)}, {formatDate(tilaisuus.paivamaara)} klo{" "}
+                              {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}
+                            </p>
+                            <p>yhteistiedot TBD</p>
+                          </div>
+                        );
+                      })}
+                  </>
+                )}
+
+                <Button
+                  onClick={(e) => {
+                    setOpenVuorovaikutustilaisuus(true);
+                    e.preventDefault();
+                  }}
+                >
                   Lisää tilaisuus
                 </Button>
               </SectionContent>
@@ -351,23 +441,28 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
                 </HassuStack>
               </SectionContent>
             </Section>
+            <Section noDivider>
+              <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
+                <Button onClick={handleSubmit(saveDraft)}>Tallenna luonnos</Button>
+                <Button
+                  primary
+                  onClick={() => {
+                    console.log("tallenna ja julkaise");
+                  }}
+                  disabled
+                >
+                  Tallenna julkaistavaksi
+                </Button>
+              </Stack>
+            </Section>
           </fieldset>
+          <VuorovaikutusDialog
+            open={openVuorovaikutustilaisuus}
+            windowHandler={setOpenVuorovaikutustilaisuus}
+            tilaisuudet={vuorovaikutusTilaisuudet}
+          ></VuorovaikutusDialog>
         </form>
       </FormProvider>
-      <Section noDivider>
-        <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
-          <Button onClick={handleSubmit(saveDraft)}>Tallenna luonnos</Button>
-          <Button
-            primary
-            onClick={() => {
-              console.log("tallenna ja julkaise");
-            }}
-            disabled
-          >
-            Tallenna julkaistavaksi
-          </Button>
-        </Stack>
-      </Section>
       <HassuSpinner open={isFormSubmitting} />
     </>
   );
