@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState, useMemo } from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { useRouter } from "next/router";
 import useProjekti from "src/hooks/useProjekti";
@@ -57,7 +57,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
     }
   };
 
-  const createVuorovaikutusTabs = () => {
+  const vuorovaikutusTabs = useMemo(() => {
     let tabs = [];
     tabs.push({
       label: "Suunnitteluvaiheen perustiedot",
@@ -107,7 +107,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
       });
     }
     return tabs;
-  };
+  }, [projekti, reloadProjekti]);
 
   return (
     <ProjektiPageLayout title="Suunnittelu">
@@ -117,7 +117,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
           defaultValue={1}
           value={currentTab}
           onChange={handleChange}
-          tabs={createVuorovaikutusTabs()}
+          tabs={vuorovaikutusTabs}
         />
       </Section>
       <div>
