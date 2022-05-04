@@ -12,6 +12,7 @@ import {
   ProjektiHakutulos,
   ProjektiSarake,
   ProjektiTyyppi,
+  Status,
 } from "../../../common/graphql/apiModel";
 import { getVaylaUser } from "../user";
 
@@ -98,7 +99,11 @@ class ProjektiSearchService {
       });
     }
     if (params.vaihe) {
-      queries.push({ terms: { "vaihe.keyword": params.vaihe } });
+      const vaiheParam = params.vaihe;
+      if (vaiheParam.indexOf(Status.EI_JULKAISTU) >= 0) {
+        vaiheParam.push(Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
+      }
+      queries.push({ terms: { "vaihe.keyword": vaiheParam } });
     }
 
     if (params.vainProjektitMuokkausOikeuksin) {

@@ -1,5 +1,87 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ProjektiSearchService should handle query parameters successfully 1`] = `
+Object {
+  "from": 0,
+  "query": Object {
+    "bool": Object {
+      "must": Array [
+        Object {
+          "bool": Object {
+            "minimum_should_match": 1,
+            "should": Array [
+              Object {
+                "match_bool_prefix": Object {
+                  "nimi": "foo",
+                },
+              },
+              Object {
+                "match": Object {
+                  "nimi": Object {
+                    "fuzziness": "AUTO",
+                    "minimum_should_match": -1,
+                    "query": "foo",
+                  },
+                },
+              },
+            ],
+          },
+        },
+        Object {
+          "terms": Object {
+            "maakunnat.keyword": Array [
+              "Pirkanmaa",
+            ],
+          },
+        },
+        Object {
+          "terms": Object {
+            "vaylamuoto.keyword": Array [
+              "tie",
+            ],
+          },
+        },
+        Object {
+          "terms": Object {
+            "suunnittelustaVastaavaViranomainen.keyword": Array [
+              "VAYLAVIRASTO",
+              "UUDENMAAN_ELY",
+            ],
+          },
+        },
+        Object {
+          "terms": Object {
+            "vaihe.keyword": Array [
+              "EI_JULKAISTU",
+              "SUUNNITTELU",
+              "EI_JULKAISTU_PROJEKTIN_HENKILOT",
+            ],
+          },
+        },
+        Object {
+          "term": Object {
+            "projektiTyyppi.keyword": "TIE",
+          },
+        },
+      ],
+    },
+  },
+  "size": 10,
+  "sort": Array [
+    Object {
+      "paivitetty": Object {
+        "order": "desc",
+      },
+    },
+    Object {
+      "nimi.keyword": Object {
+        "order": "asc",
+      },
+    },
+  ],
+}
+`;
+
 exports[`ProjektiSearchService should handle successful result 1`] = `
 Array [
   Object {

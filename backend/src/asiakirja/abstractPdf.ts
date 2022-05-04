@@ -1,5 +1,4 @@
 import deburr from "lodash/deburr";
-import log from "loglevel";
 import { PDF } from "../../../common/graphql/apiModel";
 
 import PDFDocument from "pdfkit";
@@ -93,7 +92,6 @@ export abstract class AbstractPdf {
 
     // PDF/A standard requires fonts to be embedded.
     const arialFontFile = __dirname + "/files/arialmt.ttf";
-    log.info(arialFontFile);
     doc.registerFont("ArialMT", arialFontFile);
     doc.registerFont("ArialMTBold", __dirname + "/files/ARIALBOLDMT.OTF");
 

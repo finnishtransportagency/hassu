@@ -10,14 +10,6 @@ import { Palaute, SuunnitteluVaihe, Vuorovaikutus } from "./suunnitteluVaihe";
 
 export type LocalizedMap<T> = { [key in Kieli]?: T } | null;
 
-export type Kuulutus = {
-  kuulutusPaiva?: string;
-  siirtyySuunnitteluVaiheeseen?: string;
-  hankkeenKuvaus?: LocalizedMap<string>;
-  elyKeskus?: string;
-  yhteystiedot?: string[];
-};
-
 export type DBVaylaUser = {
   rooli: ProjektiRooli;
   email: string;
@@ -33,7 +25,6 @@ export type AloitusKuulutus = {
   kuulutusPaiva?: string | null;
   siirtyySuunnitteluVaiheeseen?: string | null;
   hankkeenKuvaus?: LocalizedMap<string>;
-  elyKeskus?: string | null;
   esitettavatYhteystiedot?: Yhteystieto[] | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   palautusSyy?: string | null;

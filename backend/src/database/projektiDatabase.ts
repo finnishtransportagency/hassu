@@ -87,7 +87,11 @@ function createExpression(expression: string, properties: string[]) {
 }
 
 async function saveProjekti(dbProjekti: Partial<DBProjekti>): Promise<DocumentClient.UpdateItemOutput> {
-  log.info("Updating projekti to Hassu ", { dbProjekti });
+  if (log.isLevelEnabled("debug")) {
+    log.debug("Updating projekti to Hassu ", { projekti: dbProjekti });
+  } else {
+    log.info("Updating projekti to Hassu ", { oid: dbProjekti.oid });
+  }
   const setExpression: string[] = [];
   const removeExpression: string[] = [];
   const ExpressionAttributeNames = {};
@@ -137,7 +141,10 @@ async function saveProjekti(dbProjekti: Partial<DBProjekti>): Promise<DocumentCl
     ExpressionAttributeValues,
   };
 
-  log.info("Updating projekti to Hassu", { params });
+  if (log.isLevelEnabled("debug")) {
+    log.debug("Updating projekti to Hassu ", { params });
+  }
+
   return await getDynamoDBDocumentClient().update(params).promise();
 }
 

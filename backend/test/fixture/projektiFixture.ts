@@ -158,7 +158,6 @@ export class ProjektiFixture {
     hankkeenKuvaus: { SUOMI: "Lorem Ipsum", RUOTSI: "På Svenska", SAAME: "Saameksi" },
 
     siirtyySuunnitteluVaiheeseen: "2999-01-01",
-    elyKeskus: "Pirkanmaa",
     esitettavatYhteystiedot,
   };
 
@@ -210,7 +209,6 @@ export class ProjektiFixture {
         SAAME: "Saameksi",
       },
       siirtyySuunnitteluVaiheeseen: "2022-01-01",
-      elyKeskus: "Pirkanmaa",
       esitettavatYhteystiedot,
     },
     kielitiedot: {

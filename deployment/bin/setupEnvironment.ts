@@ -196,6 +196,7 @@ async function main() {
   writeEnvFile(".env.test", {
     SEARCH_DOMAIN: searchStackOutputs.SearchDomainOutput,
     FRONTEND_DOMAIN_NAME: frontendStackOutputs.CloudfrontPrivateDNSName,
+    TABLE_PROJEKTI: Config.projektiTableName,
 
     ...environmentVariables,
   });

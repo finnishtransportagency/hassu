@@ -25,6 +25,20 @@ export class AsiakirjaAdapter {
     throw new Error("Aloituskuulutus puuttuu");
   }
 
+  migrateAloitusKuulutusJulkaisu(dbProjekti: DBProjekti): AloitusKuulutusJulkaisu {
+    if (dbProjekti.aloitusKuulutus) {
+      const { palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.aloitusKuulutus;
+      return {
+        ...includedFields,
+        id: createNextID(dbProjekti),
+        yhteystiedot: [],
+        velho: adaptVelho(dbProjekti),
+        suunnitteluSopimus: null,
+      };
+    }
+    throw new Error("Aloituskuulutus puuttuu");
+  }
+
   findAloitusKuulutusWaitingForApproval(projekti: DBProjekti): AloitusKuulutusJulkaisu | undefined {
     if (projekti.aloitusKuulutusJulkaisut) {
       return projekti.aloitusKuulutusJulkaisut

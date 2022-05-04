@@ -15,7 +15,6 @@ Object {
   },
   "ExpressionAttributeValues": Object {
     ":aloitusKuulutus": Object {
-      "elyKeskus": "Pirkanmaa",
       "esitettavatYhteystiedot": Array [
         Object {
           "etunimi": "Marko",

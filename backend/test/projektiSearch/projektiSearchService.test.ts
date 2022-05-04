@@ -2,6 +2,7 @@ import { describe, it } from "mocha";
 import { openSearchClient } from "../../src/projektiSearch/openSearchClient";
 import { projektiSearchService } from "../../src/projektiSearch/projektiSearchService";
 import * as sinon from "sinon";
+import { ProjektiTyyppi, Status, Viranomainen } from "../../../common/graphql/apiModel";
 
 const sandbox = require("sinon").createSandbox();
 
@@ -89,5 +90,64 @@ describe("ProjektiSearchService", () => {
       },
     });
     expect(await projektiSearchService.searchByOid(["1", "2"])).toMatchSnapshot();
+  });
+
+  it("should handle query parameters successfully", async () => {
+    openSearchQueryStub.returns({
+      took: 8,
+      timed_out: false,
+      _shards: { total: 5, successful: 5, skipped: 0, failed: 0 },
+      hits: {
+        total: { value: 2, relation: "eq" },
+        max_score: 1.0,
+        hits: [
+          {
+            _index: "projekti",
+            _type: "_doc",
+            _id: "1",
+            _score: 1.0,
+            _source: {
+              muistiinpano: "testi",
+              tyyppi: "TIE",
+              velho: {
+                tilaajaOrganisaatio: "Etelä-Pohjanmaan ELY-keskus",
+                nimi: "Nimi1",
+                vaylamuoto: ["tie"],
+              },
+              status: "EI_JULKAISTU",
+            },
+          },
+          {
+            _index: "projekti",
+            _type: "_doc",
+            _id: "2",
+            _score: 1.0,
+            _source: {
+              muistiinpano: "",
+              tyyppi: "TIE",
+              velho: {
+                tilaajaOrganisaatio: "Uudenmaan ELY-keskus",
+                nimi: "Nimi2",
+                vaylamuoto: ["tie"],
+              },
+              status: "EI_JULKAISTU",
+            },
+          },
+        ],
+      },
+    });
+    openSearchQueryStub.returns({
+      aggregations: { projektiTyypit: { buckets: [{ key: ProjektiTyyppi.TIE, doc_count: 2 }] } },
+    });
+
+    await projektiSearchService.search({
+      projektiTyyppi: ProjektiTyyppi.TIE,
+      nimi: "foo",
+      vaylamuoto: ["tie"],
+      maakunta: ["Pirkanmaa"],
+      suunnittelustaVastaavaViranomainen: [Viranomainen.VAYLAVIRASTO, Viranomainen.UUDENMAAN_ELY],
+      vaihe: [Status.EI_JULKAISTU, Status.SUUNNITTELU],
+    });
+    expect(openSearchQueryStub.getCalls()[0].args[0]).toMatchSnapshot();
   });
 });

@@ -40,7 +40,6 @@ input AloitusKuulutusInput {
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
   hankkeenKuvaus: HankkeenKuvauksetInput
-  elyKeskus: String
   esitettavatYhteystiedot: [YhteystietoInput!]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
 }

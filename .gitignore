@@ -61,3 +61,7 @@ build
 __pycache__
 /.eslintcache
 .sonar
+migration/node_modules
+migration/~*
+
+/migration/.env.test

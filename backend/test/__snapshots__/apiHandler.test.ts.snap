@@ -277,7 +277,6 @@ Array [
   "Save projekti having while adding one muokkaaja more. There should be three persons in the projekti now",
   Object {
     "aloitusKuulutus": Object {
-      "elyKeskus": "Pirkanmaa",
       "esitettavatYhteystiedot": Array [
         Object {
           "etunimi": "Marko",
@@ -355,7 +354,6 @@ Array [
     "__typename": "Projekti",
     "aloitusKuulutus": Object {
       "__typename": "AloitusKuulutus",
-      "elyKeskus": "Pirkanmaa",
       "esitettavatYhteystiedot": Array [
         Object {
           "__typename": "Yhteystieto",
@@ -533,7 +531,6 @@ Object {
   "__typename": "Projekti",
   "aloitusKuulutus": Object {
     "__typename": "AloitusKuulutus",
-    "elyKeskus": "Pirkanmaa",
     "esitettavatYhteystiedot": Array [
       Object {
         "__typename": "Yhteystieto",
@@ -569,7 +566,6 @@ Object {
         },
         "__typename": "AloitusKuulutusPDFt",
       },
-      "elyKeskus": "Pirkanmaa",
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
         "SAAME": "Saameksi",
@@ -707,7 +703,6 @@ Object {
           },
           "__typename": "AloitusKuulutusPDFt",
         },
-        "elyKeskus": "Pirkanmaa",
         "hankkeenKuvaus": Object {
           "RUOTSI": "På Svenska",
           "SAAME": "Saameksi",
@@ -731,6 +726,7 @@ Object {
           "puhelinnumero": "0291111",
           "sukunimi": "Sukunimi",
         },
+        "tila": "HYVAKSYTTY",
         "velho": Object {
           "__typename": "Velho",
           "kunnat": undefined,

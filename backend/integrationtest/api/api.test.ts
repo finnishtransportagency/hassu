@@ -453,7 +453,7 @@ describe("Api", () => {
     const oid = await searchProjectsFromVelhoAndPickFirst();
     const projekti = await api.lataaProjekti(oid);
     await expect(projekti.tallennettu).to.be.false;
-    log.info(JSON.stringify(projekti, null, 2));
+    log.info({ projekti });
     return projekti;
   }
 
