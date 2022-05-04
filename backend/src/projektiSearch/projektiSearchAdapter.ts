@@ -24,7 +24,8 @@ export type ProjektiDocument = {
 };
 
 export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocument> {
-  const apiProjekti = projektiAdapter.applyStatus(projektiAdapter.adaptProjekti(projekti), { saved: true });
+  projekti.tallennettu = true;
+  const apiProjekti = projektiAdapter.adaptProjekti(projekti);
 
   return {
     nimi: safeTrim(projekti.velho.nimi),

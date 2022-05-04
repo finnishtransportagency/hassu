@@ -77,6 +77,10 @@ input SuunnitteluVaiheInput {
   Yhden vuorovaikutuksen luonti/muokkaus
   """
   vuorovaikutus: VuorovaikutusInput
+  """
+  Palautteiden vastaanottajat. Lista kayttajatunnuksia
+  """
+  palautteidenVastaanottajat: [String!]
 }
 
 input VuorovaikutusInput {

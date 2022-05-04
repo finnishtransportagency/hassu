@@ -3,6 +3,7 @@ import { Kayttaja } from "../../../common/graphql/apiModel";
 import { config } from "../config";
 import { DBProjekti } from "../database/model/projekti";
 import { EmailOptions } from "./email";
+import { linkSuunnitteluVaihe } from "../../../common/links";
 
 function template(strs: TemplateStringsArray, ...exprs: string[]) {
   return function (obj: any) {
@@ -79,5 +80,13 @@ export function createAloituskuulutusHyvaksyttyPDFEmail(projekti: DBProjekti): E
     subject: hyvaksyttyPDFOtsikko(projekti),
     text: hyvaksyttyPDFTeksti({ domain, ...projekti }),
     to: hyvaksyttyPDFVastaanottajat(projekti),
+  };
+}
+
+export function createNewFeedbackAvailableEmail(oid: string, recipient: string): EmailOptions {
+  return {
+    subject: "Suunnitelmaan on tullut palautetta",
+    text: "Suunnitelmaan on tullut palautetta: " + linkSuunnitteluVaihe(oid),
+    to: recipient,
   };
 }

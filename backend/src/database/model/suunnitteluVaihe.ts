@@ -11,6 +11,8 @@ export type SuunnitteluVaihe = {
   arvioSeuraavanVaiheenAlkamisesta?: string | null;
   suunnittelunEteneminenJaKesto?: string | null;
   julkinen?: boolean | null;
+  // Palautteiden vastaanottajat. Lista kayttajatunnuksia
+  palautteidenVastaanottajat?: Array<string> | null;
 };
 
 export type Vuorovaikutus = {

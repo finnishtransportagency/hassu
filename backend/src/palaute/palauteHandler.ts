@@ -4,19 +4,25 @@ import {
   Status,
 } from "../../../common/graphql/apiModel";
 import { NotFoundError } from "../error/NotFoundError";
-import { loadProjektiJulkinen, requirePermissionMuokkaaProjekti } from "../handler/projektiHandler";
+import { requirePermissionMuokkaaProjekti } from "../handler/projektiHandler";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { adaptPalauteInput } from "./palauteAdapter";
 import { fileService } from "../files/fileService";
+import { projektiAdapterJulkinen } from "../handler/projektiAdapterJulkinen";
+import { palauteEmailService } from "./palauteEmailService";
 
 class PalauteHandler {
   async lisaaPalaute({ oid, palaute: palauteInput }: LisaaPalauteMutationVariables) {
-    const projekti = await loadProjektiJulkinen(oid);
-    if (!projekti) {
+    const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
+    if (!projektiFromDB) {
+      throw new NotFoundError("Projektia ei löydy");
+    }
+    const julkinenProjekti = projektiAdapterJulkinen.adaptProjekti(projektiFromDB);
+    if (!julkinenProjekti) {
       throw new NotFoundError("Projektia ei löydy tai se ei ole vielä julkinen");
     }
 
-    if (projekti.status !== Status.SUUNNITTELU) {
+    if (julkinenProjekti.status !== Status.SUUNNITTELU) {
       throw new NotFoundError("Projekti ei ole suunnitteluvaiheessa, joten palautetta ei voi antaa");
     }
     const palaute = adaptPalauteInput(palauteInput);
@@ -27,7 +33,9 @@ class PalauteHandler {
         targetFilePathInProjekti: "palautteet/" + palaute.id,
       });
     }
-    return await projektiDatabase.insertFeedback(oid, palaute);
+    const palauteId = await projektiDatabase.insertFeedback(oid, palaute);
+    await palauteEmailService.sendEmailsToPalautteidenVastaanottajat(projektiFromDB);
+    return palauteId;
   }
 
   async otaPalauteKasittelyyn({ oid, id }: OtaPalauteKasittelyynMutationVariables) {

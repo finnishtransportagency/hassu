@@ -1,24 +1,29 @@
 /* tslint:disable:no-unused-expression */
 import * as cdk from "@aws-cdk/core";
-import { Construct, Duration, Fn } from "@aws-cdk/core";
+import { Duration, Fn } from "@aws-cdk/core";
 import * as lambda from "@aws-cdk/aws-lambda";
 import { StartingPosition, Tracing } from "@aws-cdk/aws-lambda";
 import * as appsync from "@aws-cdk/aws-appsync";
 import { FieldLogLevel, GraphqlApi } from "@aws-cdk/aws-appsync";
 import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
 import { Table } from "@aws-cdk/aws-dynamodb";
-import { Queue } from "@aws-cdk/aws-sqs";
+import { Queue, QueueEncryption } from "@aws-cdk/aws-sqs";
 import { Config } from "./config";
 import { apiConfig, OperationType } from "../../common/abstractApi";
 import { WafConfig } from "./wafConfig";
 import { AuthorizationMode } from "@aws-cdk/aws-appsync/lib/graphqlapi";
 import { DynamoEventSource, SqsEventSource } from "@aws-cdk/aws-lambda-event-sources";
+import * as eventTargets from "@aws-cdk/aws-events-targets";
+import * as events from "@aws-cdk/aws-events";
 import { Domain } from "@aws-cdk/aws-opensearchservice";
 import { OpenSearchAccessPolicy } from "@aws-cdk/aws-opensearchservice/lib/opensearch-access-policy";
 import { Effect, ManagedPolicy, PolicyStatement } from "@aws-cdk/aws-iam";
 import { Bucket } from "@aws-cdk/aws-s3";
 import { getEnvironmentVariablesFromSSM, readFrontendStackOutputs } from "../bin/setupEnvironment";
 import { LambdaInsightsVersion } from "@aws-cdk/aws-lambda/lib/lambda-insights";
+import { RuleTargetInput } from "@aws-cdk/aws-events/lib/input";
+import { EmailEventType } from "../../backend/src/email/emailEvent";
+
 const path = require("path");
 
 export type HassuBackendStackProps = {
@@ -41,7 +46,7 @@ export type BackendStackOutputs = {
 export class HassuBackendStack extends cdk.Stack {
   private readonly props: HassuBackendStackProps;
 
-  constructor(scope: Construct, props: HassuBackendStackProps) {
+  constructor(scope: cdk.App, props: HassuBackendStackProps) {
     super(scope, "backend", {
       stackName: "hassu-backend-" + Config.env,
       env: {
@@ -59,6 +64,7 @@ export class HassuBackendStack extends cdk.Stack {
     const commonEnvironmentVariables = await this.getCommonEnvironmentVariables(config);
     const personSearchUpdaterLambda = await this.createPersonSearchUpdaterLambda(commonEnvironmentVariables);
     const aineistoSQS = await this.createAineistoImporterQueue();
+    const emailSQS = await this.createEmailQueueSystem();
     const backendLambda = await this.createBackendLambda(
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
@@ -73,6 +79,9 @@ export class HassuBackendStack extends cdk.Stack {
 
     let aineistoImporterLambda = await this.createAineistoImporterLambda(commonEnvironmentVariables, aineistoSQS);
     this.attachDatabaseToLambda(aineistoImporterLambda);
+
+    let emailQueueLambda = await this.createEmailQueueLambda(commonEnvironmentVariables, emailSQS);
+    this.attachDatabaseToLambda(emailQueueLambda);
 
     new cdk.CfnOutput(this, "AppSyncAPIKey", {
       value: api.apiKey || "",
@@ -316,6 +325,32 @@ export class HassuBackendStack extends cdk.Stack {
     return importer;
   }
 
+  private async createEmailQueueLambda(
+    commonEnvironmentVariables: Record<string, string>,
+    emailSQS: Queue
+  ): Promise<NodejsFunction> {
+    const importer = new NodejsFunction(this, "EmailQueueLambda", {
+      functionName: "hassu-email-" + Config.env,
+      runtime: lambda.Runtime.NODEJS_14_X,
+      entry: `${__dirname}/../../backend/src/email/emailSQSHandler.ts`,
+      handler: "handleEvent",
+      memorySize: 512,
+      reservedConcurrentExecutions: 1,
+      timeout: Duration.seconds(60),
+      bundling: {
+        minify: true,
+      },
+      environment: {
+        ...commonEnvironmentVariables,
+      },
+      tracing: Tracing.PASS_THROUGH,
+    });
+
+    const eventSource = new SqsEventSource(emailSQS, { batchSize: 1 });
+    importer.addEventSource(eventSource);
+    return importer;
+  }
+
   private static mapApiResolversToLambda(api: GraphqlApi, backendFn: NodejsFunction) {
     const lambdaDataSource = api.addLambdaDataSource("lambdaDatasource", backendFn);
 
@@ -368,5 +403,24 @@ export class HassuBackendStack extends cdk.Stack {
       contentBasedDeduplication: true,
       visibilityTimeout: Duration.minutes(10),
     });
+  }
+
+  private async createEmailQueueSystem() {
+    const queue = new Queue(this, "EmailQueue", {
+      queueName: "email-" + Config.env,
+      visibilityTimeout: Duration.minutes(10),
+      encryption: QueueEncryption.KMS_MANAGED,
+    });
+    new events.Rule(this, "EmailDigestSchedulerRule", {
+      schedule: events.Schedule.cron({ year: "*", month: "*", weekDay: "MON", hour: "5", minute: "0" }),
+      targets: [
+        new eventTargets.SqsQueue(queue, {
+          maxEventAge: Duration.hours(24),
+          retryAttempts: 10,
+          message: RuleTargetInput.fromObject({ type: EmailEventType.UUDET_PALAUTTEET_DIGEST }),
+        }),
+      ],
+    });
+    return queue;
   }
 }

@@ -93,6 +93,10 @@ type SuunnitteluVaihe {
   vuorovaikutukset: [Vuorovaikutus!]
 
   palautteet: [Palaute!]
+  """
+  Palautteiden vastaanottajat. Lista kayttajatunnuksia
+  """
+  palautteidenVastaanottajat: [String!]
 }
 
 type SuunnitteluVaiheJulkinen {
