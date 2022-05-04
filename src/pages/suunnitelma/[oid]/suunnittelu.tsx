@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import SectionContent from "@components/layout/SectionContent";
 import useTranslation from "next-translate/useTranslation";
 import { YhteystietoInput } from "@services/api";
-import { formatDate, formatDayOfWeek } from "src/util/dateUtils";
+import { formatDate } from "src/util/dateUtils";
 import dayjs from "dayjs";
 import HeadphonesIcon from "@mui/icons-material/Headphones";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
@@ -61,6 +61,7 @@ export default function Suunnittelu(): ReactElement {
   );
 
   const getIcon = (tyyppi: VuorovaikutusTilaisuusTyyppi, inactive?: boolean) => {
+    console.log("TilaisuusIcon rendered");
     switch (tyyppi) {
       case VuorovaikutusTilaisuusTyyppi.PAIKALLA:
         return <LocationCityIcon sx={{ color: inactive ? "#999999" : "#0064AF" }} />;
@@ -73,33 +74,36 @@ export default function Suunnittelu(): ReactElement {
     }
   };
 
-  const getTitle = (tilaisuus: VuorovaikutusTilaisuus) => {
+  const TilaisuusTitle = React.memo((props: { tilaisuus: VuorovaikutusTilaisuus }) => {
     return (
       <p>
         <b>
-          {capitalize(t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`))} {formatDate(tilaisuus.paivamaara)}{" "}
-          klo {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, {capitalize(tilaisuus.nimi)}
+          {capitalize(t(`common:viikonpaiva_${dayjs(props.tilaisuus.paivamaara).day()}`))}{" "}
+          {formatDate(props.tilaisuus.paivamaara)} klo {props.tilaisuus.alkamisAika}-{props.tilaisuus.paattymisAika},{" "}
+          {capitalize(props.tilaisuus.nimi)}
         </b>
       </p>
     );
-  };
+  });
 
-  const getContent = (tilaisuus: VuorovaikutusTilaisuus) => {
-    switch (tilaisuus.tyyppi) {
-      case VuorovaikutusTilaisuusTyyppi.PAIKALLA:
-        return (
+  TilaisuusTitle.displayName = "TilaisuusTitle";
+
+  const TilaisuusContent = React.memo((props: { tilaisuus: VuorovaikutusTilaisuus }) => {
+    console.log("TilaisuusTitle rendered");
+    return (
+      <>
+        {props.tilaisuus && props.tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA && (
           <div>
             <p>
-              Osoite: {tilaisuus.osoite}, {tilaisuus.postinumero} {tilaisuus.postitoimipaikka}
+              Osoite: {props.tilaisuus.osoite}, {props.tilaisuus.postinumero} {props.tilaisuus.postitoimipaikka}
             </p>
             <p>
               Yleisötilaisuus järjestetään fyysisenä tilaisuutena ylläolevassa osoitteessa.{" "}
-              {tilaisuus.Saapumisohjeet ? capitalize(tilaisuus.Saapumisohjeet) : undefined}
+              {props.tilaisuus.Saapumisohjeet ? capitalize(props.tilaisuus.Saapumisohjeet) : undefined}
             </p>
           </div>
-        );
-      case VuorovaikutusTilaisuusTyyppi.SOITTOAIKA:
-        return (
+        )}
+        {props.tilaisuus && props.tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA && (
           <div>
             <p>
               Voit soittaa alla esitetyille henkilöille myös soittoajan ulkopuolella, mutta parhaiten tavoitat heidät
@@ -107,9 +111,8 @@ export default function Suunnittelu(): ReactElement {
             </p>
             <p>Pekka Kallisto, projektipäällikkö (Varsinais-Suomen ELY-keskus): 0401238979</p>
           </div>
-        );
-      case VuorovaikutusTilaisuusTyyppi.VERKOSSA:
-        return (
+        )}
+        {props.tilaisuus && props.tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA && (
           <div>
             <p>Yleisötilaisuus järjestetään suorana verkkotapahtumana.</p>
             <p>
@@ -121,11 +124,12 @@ export default function Suunnittelu(): ReactElement {
               ja poistetaan tilaisuuden jälkeen.
             </p>
           </div>
-        );
-      default:
-        return <></>;
-    }
-  };
+        )}
+      </>
+    );
+  });
+
+  TilaisuusContent.displayName = "SuunnitteluContent";
 
   return (
     <ProjektiJulkinenPageLayout selectedStep={1} title="Tutustu hankkeeseen ja vuorovaikuta">
@@ -195,9 +199,9 @@ export default function Suunnittelu(): ReactElement {
                       <div key={index} className="vayla-tilaisuus-item active">
                         <div className="flex flex-cols gap-5">
                           {getIcon(tilaisuus.tyyppi)}
-                          {getTitle(tilaisuus)}
+                          <TilaisuusTitle tilaisuus={tilaisuus} />
                         </div>
-                        {getContent(tilaisuus)}
+                        <TilaisuusContent tilaisuus={tilaisuus} />
                       </div>
                     );
                   })}
@@ -223,9 +227,9 @@ export default function Suunnittelu(): ReactElement {
                       <div key={index} className="vayla-tilaisuus-item inactive">
                         <div className="flex flex-cols gap-5">
                           {getIcon(tilaisuus.tyyppi, true)}
-                          {getTitle(tilaisuus)}
+                          <TilaisuusTitle tilaisuus={tilaisuus} />
                         </div>
-                        {getContent(tilaisuus)}
+                        <TilaisuusContent tilaisuus={tilaisuus} />
                       </div>
                     );
                   })}
