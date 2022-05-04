@@ -131,18 +131,21 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
     [setIsFormSubmitting, showSuccessMessage, showErrorMessage, saveSunnitteluvaihe]
   );
 
-  const saveAndPublish = async (formData: VuorovaikutusFormValues) => {
-    setIsFormSubmitting(true);
-    try {
-      setValue("suunnitteluVaihe.vuorovaikutus.julkinen", true);
-      await saveSunnitteluvaihe(formData);
-      showSuccessMessage("Tallennus onnistui!");
-    } catch (e) {
-      log.error("OnSubmit Error", e);
-      showErrorMessage("Tallennuksessa tapahtui virhe");
-    }
-    setIsFormSubmitting(false);
-  };
+  const saveAndPublish = useCallback(
+    async (formData: VuorovaikutusFormValues) => {
+      setIsFormSubmitting(true);
+      try {
+        setValue("suunnitteluVaihe.vuorovaikutus.julkinen", true);
+        await saveSunnitteluvaihe(formData);
+        showSuccessMessage("Tallennus onnistui!");
+      } catch (e) {
+        log.error("OnSubmit Error", e);
+        showErrorMessage("Tallennuksessa tapahtui virhe");
+      }
+      setIsFormSubmitting(false);
+    },
+    [saveSunnitteluvaihe, setValue, showErrorMessage, showSuccessMessage]
+  );
 
   useEffect(() => {
     isDirtyHandler(isDirty);
