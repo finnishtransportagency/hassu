@@ -81,7 +81,13 @@
     "vaihe": "Vaihe",
     "paivitetty": "Päivitetty",
     "oid": "oid",
-    "oikopolut": "Oikopolut"
+    "oikopolut": "Oikopolut",
+    "suunnittelun_eteneminen": "Suunnittelun eteneminen",
+    "arvio_seuraavan_vaiheen_alkamisesta": "Arvio seuraavan vaiheen alkamisesta",
+    "vaikuttamisen_mahdollisuudet_ja_aikataulut": "Osallistumisen ja vaikuttamisen mahdollisuudet ja aikataulut",
+    "tulevat_vuorovaikutustilaisuudet": "Tulevat vuorovaikutustilaisuudet",
+    "menneet_vuorovaikutustilaisuudet": "Menneet vuorovaikutustilaisuudet",
+    "esittelyaineisto_ja_suunnitelmaluonnokset": "Esittelyaineisto ja suunnitelmaluonnokset"
   },
   "vastaava-viranomainen": {
     "ETELA_POHJANMAAN_ELY": "Etelä-Pohjanmaan ELY-keskus",

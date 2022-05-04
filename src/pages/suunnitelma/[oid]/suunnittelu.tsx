@@ -11,7 +11,6 @@ import dayjs from "dayjs";
 import HeadphonesIcon from "@mui/icons-material/Headphones";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
-import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import { VuorovaikutusTilaisuus, VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import capitalize from "lodash/capitalize";
 
@@ -60,19 +59,23 @@ export default function Suunnittelu(): ReactElement {
     dayjs(t.paivamaara).isBefore(today)
   );
 
-  const getIcon = (tyyppi: VuorovaikutusTilaisuusTyyppi, inactive?: boolean) => {
-    console.log("TilaisuusIcon rendered");
-    switch (tyyppi) {
-      case VuorovaikutusTilaisuusTyyppi.PAIKALLA:
-        return <LocationCityIcon sx={{ color: inactive ? "#999999" : "#0064AF" }} />;
-      case VuorovaikutusTilaisuusTyyppi.SOITTOAIKA:
-        return <LocalPhoneIcon sx={{ color: inactive ? "#999999" : "#0064AF" }} />;
-      case VuorovaikutusTilaisuusTyyppi.VERKOSSA:
-        return <HeadphonesIcon sx={{ color: inactive ? "#999999" : "#0064AF" }} />;
-      default:
-        return <QuestionMarkIcon sx={{ color: inactive ? "#999999" : "#0064AF" }} />;
-    }
-  };
+  const TilaisuusIcon = React.memo((props: { tyyppi: VuorovaikutusTilaisuusTyyppi; inactive?: true }) => {
+    return (
+      <>
+        {props.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA && (
+          <LocationCityIcon sx={{ color: props.inactive ? "#999999" : "#0064AF" }} />
+        )}
+        {props.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA && (
+          <LocalPhoneIcon sx={{ color: props.inactive ? "#999999" : "#0064AF" }} />
+        )}
+        {props.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA && (
+          <HeadphonesIcon sx={{ color: props.inactive ? "#999999" : "#0064AF" }} />
+        )}
+      </>
+    );
+  });
+
+  TilaisuusIcon.displayName = "TilaisuusIcon";
 
   const TilaisuusTitle = React.memo((props: { tilaisuus: VuorovaikutusTilaisuus }) => {
     return (
@@ -89,7 +92,6 @@ export default function Suunnittelu(): ReactElement {
   TilaisuusTitle.displayName = "TilaisuusTitle";
 
   const TilaisuusContent = React.memo((props: { tilaisuus: VuorovaikutusTilaisuus }) => {
-    console.log("TilaisuusTitle rendered");
     return (
       <>
         {props.tilaisuus && props.tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA && (
@@ -136,21 +138,21 @@ export default function Suunnittelu(): ReactElement {
       <>
         <Section>
           <SectionContent>
-            <h4 className="vayla-small-title">Suunnitteluhankkeen kuvaus</h4>
+            <h4 className="vayla-small-title">{t(`projekti:ui-otsikot.suunnitteluhankkeen_kuvaus`)}</h4>
             <p>{projekti.suunnitteluVaihe.hankkeenKuvaus?.SUOMI}</p>
           </SectionContent>
           <SectionContent>
-            <h4 className="vayla-small-title">Suunnittelun eteneminen</h4>
+            <h4 className="vayla-small-title">{t(`projekti:ui-otsikot.suunnittelun_eteneminen`)}</h4>
             <p>{projekti.suunnitteluVaihe.suunnittelunEteneminenJaKesto}</p>
           </SectionContent>
           <SectionContent>
-            <h4 className="vayla-small-title">Arvio seuraavan vaiheen alkamisesta</h4>
+            <h4 className="vayla-small-title">{t(`projekti:ui-otsikot.arvio_seuraavan_vaiheen_alkamisesta`)}</h4>
             <p>{projekti.suunnitteluVaihe.arvioSeuraavanVaiheenAlkamisesta}</p>
           </SectionContent>
         </Section>
         <Section>
           <SectionContent>
-            <h3 className="vayla-title">Osallistumisen ja vaikuttamisen mahdollisuudet ja aikataulut</h3>
+            <h3 className="vayla-title">{t(`projekti:ui-otsikot.vaikuttamisen_mahdollisuudet_ja_aikataulut`)}</h3>
             {!vuorovaikutus && (
               <p>
                 Voit osallistua vuorovaikutustilaisuuksiin, tutustua suunnittelu- ja esittelyaineistoihin sekä jättää
@@ -178,7 +180,7 @@ export default function Suunnittelu(): ReactElement {
             )}
           </SectionContent>
           <SectionContent>
-            <h4 className="vayla-small-title">Tulevat vuorovaikutustilaisuudet</h4>
+            <h4 className="vayla-small-title">{t(`projekti:ui-otsikot.tulevat_vuorovaikutustilaisuudet`)}</h4>
             {(!vuorovaikutus || !tulevatTilaisuudet || tulevatTilaisuudet.length < 1) && (
               <p>Vuorovaikutustilaisuudet julkaistaan mahdollisimman pian.</p>
             )}
@@ -198,7 +200,7 @@ export default function Suunnittelu(): ReactElement {
                     return (
                       <div key={index} className="vayla-tilaisuus-item active">
                         <div className="flex flex-cols gap-5">
-                          {getIcon(tilaisuus.tyyppi)}
+                          <TilaisuusIcon tyyppi={tilaisuus.tyyppi} />
                           <TilaisuusTitle tilaisuus={tilaisuus} />
                         </div>
                         <TilaisuusContent tilaisuus={tilaisuus} />
@@ -210,7 +212,7 @@ export default function Suunnittelu(): ReactElement {
           </SectionContent>
           {menneetTilaisuudet && (
             <SectionContent>
-              <h4 className="vayla-small-title">Menneet vuorovaikutustilaisuudet</h4>
+              <h4 className="vayla-small-title">{t(`projekti:ui-otsikot.menneet_vuorovaikutustilaisuudet`)}</h4>
               <div className="vayla-tilaisuus-list">
                 {menneetTilaisuudet
                   ?.sort((a, b) => {
@@ -226,7 +228,7 @@ export default function Suunnittelu(): ReactElement {
                     return (
                       <div key={index} className="vayla-tilaisuus-item inactive">
                         <div className="flex flex-cols gap-5">
-                          {getIcon(tilaisuus.tyyppi, true)}
+                          <TilaisuusIcon tyyppi={tilaisuus.tyyppi} inactive />
                           <TilaisuusTitle tilaisuus={tilaisuus} />
                         </div>
                         <TilaisuusContent tilaisuus={tilaisuus} />
@@ -237,7 +239,7 @@ export default function Suunnittelu(): ReactElement {
             </SectionContent>
           )}
           <SectionContent>
-            <h4 className="vayla-small-title">Esittelyaineisto ja suunnitelmaluonnokset</h4>
+            <h4 className="vayla-small-title">{t(`projekti:ui-otsikot.esittelyaineisto_ja_suunnitelmaluonnokset`)}</h4>
             {!vuorovaikutus && <p>Aineistot ja luonnokset julkaistaan lähempänä vuorovaikutustilaisuutta.</p>}
           </SectionContent>
         </Section>
