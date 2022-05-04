@@ -1,6 +1,7 @@
 import { Controller, FormProvider, useFieldArray, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
+import { LinkkiInput } from "../../../../common/graphql/apiModel";
 import {
   TallennaProjektiInput,
   Projekti,
@@ -53,6 +54,7 @@ export type VuorovaikutusFormValues = RequiredProjektiFields & {
       | "kysymyksetJaPalautteetViimeistaan"
       | "ilmoituksenVastaanottajat"
       | "videot"
+      | "suunnittelumateriaali"
       | "vuorovaikutusJulkaisuPaiva"
       | "vuorovaikutusNumero"
       | "vuorovaikutusTilaisuudet"
@@ -68,6 +70,7 @@ type FormValuesForLuonnoksetJaAineistot = RequiredProjektiFields & {
       VuorovaikutusInput,
       | "vuorovaikutusNumero"
       | "videot"
+      | "suunnittelumateriaali"
     >;
   };
 };
@@ -100,6 +103,13 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
   const today = dayjs().format();
   const { t } = useTranslation();
 
+  const defaultListWithEmptyLink = useCallback((list : (LinkkiInput[] | null | undefined)) : LinkkiInput[] => {
+    if (!list || !list.length) {
+      return [{ url: "", nimi: "" }];
+    }
+    return list.map(link => ({ nimi: link.nimi, url: link.url }));
+  }, []);
+
   const formOptions: UseFormProps<VuorovaikutusFormValues> = {
     resolver: yupResolver(vuorovaikutusSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
@@ -108,10 +118,11 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
       suunnitteluVaihe: {
         vuorovaikutus: {
           vuorovaikutusNumero: vuorovaikutusnro,
-          videot: projekti?.suunnitteluVaihe?.vuorovaikutukset?.[vuorovaikutusnro-1]?.videot
+          videot: defaultListWithEmptyLink(projekti?.suunnitteluVaihe?.vuorovaikutukset?.[vuorovaikutusnro-1]?.videot),
+          suunnittelumateriaali: removeTypeName(projekti?.suunnitteluVaihe?.vuorovaikutukset?.[vuorovaikutusnro-1]?.suunnittelumateriaali)  || { nimi: "", url: "" },
         }
       },
-    },
+    }
   };
 
   const useFormReturn = useForm<VuorovaikutusFormValues>(formOptions);
@@ -200,12 +211,14 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                 return vuorovaikutusTilaisuusInput;
               }) || [],
             julkinen: v?.julkinen,
+            videot: defaultListWithEmptyLink(v?.videot as LinkkiInput[]),
+            suunnittelumateriaali: removeTypeName(v?.suunnittelumateriaali) as LinkkiInput || { nimi: "", url: "" }
           },
         },
       };
       reset(tallentamisTiedot);
     }
-  }, [projekti, reset, vuorovaikutusnro]);
+  }, [projekti, reset, vuorovaikutusnro, defaultListWithEmptyLink]);
 
   const handleClickOpenHyvaksy = () => {
     setOpenHyvaksy(true);

@@ -18,6 +18,7 @@ import {
 import { useFieldArray, UseFormReturn } from "react-hook-form";
 
 type Videot = Pick<VuorovaikutusInput, "videot">;
+type SuunnitteluMateriaali = Pick<VuorovaikutusInput, "suunnittelumateriaali">;
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -26,7 +27,7 @@ type RequiredProjektiFields = Required<{
 
 type FormValues = RequiredProjektiFields & {
   suunnitteluVaihe: {
-    vuorovaikutus: Videot;
+    vuorovaikutus: Videot | SuunnitteluMateriaali;
   };
 };
 
@@ -116,31 +117,33 @@ export default function LuonnoksetJaAineistot<T extends FormValues>({
               style={{ width: "100%" }}
               key={field.id}
               {...register(`suunnitteluVaihe.vuorovaikutus.videot.${index}.url`)}
-              label="Linkki videoon"
-              error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.videot?.[index].url}
+              label={`Linkki videoon${videotFields.length > 1 ? ' *' : ''}`}
+              error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.videot?.[index]?.url}
             />
-            <div>
-              <div className="hidden lg:block lg:mt-8">
-                <IconButton
-                  icon="trash"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    removeVideot(index);
-                  }}
-                />
+            {!!index &&
+              <div>
+                <div className="hidden lg:block lg:mt-8">
+                  <IconButton
+                    icon="trash"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      removeVideot(index);
+                    }}
+                  />
+                </div>
+                <div className="block lg:hidden">
+                  <Button
+                    onClick={(event) => {
+                      event.preventDefault();
+                      removeVideot(index);
+                    }}
+                    endIcon="trash"
+                  >
+                    Poista
+                  </Button>
+                </div>
               </div>
-              <div className="block lg:hidden">
-                <Button
-                  onClick={(event) => {
-                    event.preventDefault();
-                    removeVideot(index);
-                  }}
-                  endIcon="trash"
-                >
-                  Poista
-                </Button>
-              </div>
-            </div>
+            }
           </HassuStack>
         )}
       <Button
@@ -158,8 +161,18 @@ export default function LuonnoksetJaAineistot<T extends FormValues>({
           Muu esittelymateraali on järjestelmän ulkopuolelle julkaistua suunnitelmaan liittyvää materiaalia. Muun
           esittelymateriaalin lisääminen on vapaaehtoista.{" "}
         </p>
-        <TextInput label="Linkin kuvaus" disabled />
-        <TextInput label="Linkki muihin esittelyaineistoihin" disabled />
+        <TextInput
+          style={{ width: "100%" }}
+          label="Linkin kuvaus"
+          {...register(`suunnitteluVaihe.vuorovaikutus.suunnittelumateriaali.nimi`)}
+          error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.suunnittelumateriaali?.nimi}
+        />
+        <TextInput
+          style={{ width: "100%" }}
+          label="Linkki muihin esittelyaineistoihin"
+          {...register(`suunnitteluVaihe.vuorovaikutus.suunnittelumateriaali.url`)}
+          error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.suunnittelumateriaali?.url}
+        />
       </SectionContent>
     </Section>
   );
