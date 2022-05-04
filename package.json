@@ -160,6 +160,13 @@
     "pregenerate:api": "graphql-schema-utilities -s \"{./graphql/types.graphql,./graphql/inputs.graphql,./graphql/operations.graphql}\" -o schema.graphql",
     "generate:api": "cross-env docker run --rm -v $INIT_CWD:/work 283563576583.dkr.ecr.eu-west-1.amazonaws.com/hassu-buildimage:1.0.0 bash -c \"cd /work && amplify codegen\"",
     "generate": "npm-run-all --aggregate-output --parallel generate:*",
+
+    "local:generate:velhoapi": "VELHO_ACCESS_TOKEN=\"$(ts-node --project=tsconfig.cdk.json -r dotenv/config ./tools/velho/authenticate.ts dotenv_config_path=.env.test)\" ./tools/velho/gradlew -p ./tools/velho --info",
+    "postlocal:generate:velhoapi": "ts-node --project=tsconfig.cdk.json ./tools/velho/processMetaData.ts ./backend/src/velho/metadata.json",
+    "prelocal:generate:api": "graphql-schema-utilities -s \"{./graphql/types.graphql,./graphql/inputs.graphql,./graphql/operations.graphql}\" -o schema.graphql",
+    "local:generate:api": "amplify codegen",
+    "local:generate": "npm-run-all --aggregate-output --parallel local:generate:*",
+
     "lint:backend": "eslint --cache --ignore-path .gitignore --ext .ts backend",
     "lint:app": "next lint",
     "lint:tsc": "tsc --project tsconfig.json",

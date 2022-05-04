@@ -96,7 +96,10 @@ export class HassuPipelineStack extends Stack {
       source: gitHubSource,
       cache: codebuild.Cache.local(LocalCacheMode.CUSTOM, LocalCacheMode.SOURCE, LocalCacheMode.DOCKER_LAYER),
       environment: {
-        buildImage: LinuxBuildImage.STANDARD_5_0,
+        buildImage: LinuxBuildImage.fromEcrRepository(
+          Repository.fromRepositoryName(this, "hassu-buildimage", "hassu-buildimage"),
+          "1.0.0"
+        ), //.STANDARD_5_0,
         privileged: true,
         computeType: ComputeType.MEDIUM,
         environmentVariables: {
