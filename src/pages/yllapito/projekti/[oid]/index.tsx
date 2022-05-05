@@ -187,7 +187,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   }, [router.isReady, oid, projekti, setRouteLabels]);
 
   return (
-    <ProjektiPageLayout title={"Projektin tiedot"}>
+    <ProjektiPageLayout title={"Projektin tiedot"} showUpdateButton>
       <FormProvider {...useFormReturn}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
