@@ -6,7 +6,7 @@ export function produce<T>(name: string, p: () => T, override = false): T {
   if (!(globalThis as any)[key] || override || process.env.MOCHA_WORKER_ID) {
     const client = p();
     try {
-      (globalThis as any)[key] = AWSXRay.captureAWSClient(client as any);
+      (globalThis as any)[key] = AWSXRay.captureAWSClient(client);
     } catch (ignore) {
       (globalThis as any)[key] = client;
     }

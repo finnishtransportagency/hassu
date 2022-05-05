@@ -2,7 +2,7 @@ import { Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { AloitusKuulutusJulkaisu } from "../../database/model/projekti";
 import { CommonPdf } from "./commonPdf";
 import { KutsuAdapter } from "./KutsuAdapter";
-
+import PDFStructureElement = PDFKit.PDFStructureElement;
 export abstract class SuunnittelunAloitusPdf extends CommonPdf {
   protected header: string;
   protected aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu;
@@ -32,7 +32,7 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf {
     throw new Error("Method 'addDocumentElements()' must be implemented.");
   }
 
-  protected get projektiTyyppi() {
+  protected get projektiTyyppi(): string {
     let tyyppi = "";
     switch (this.aloitusKuulutusJulkaisu.velho.tyyppi) {
       case ProjektiTyyppi.TIE:
@@ -48,13 +48,13 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf {
     return tyyppi;
   }
 
-  protected get kuulutusPaiva() {
+  protected get kuulutusPaiva(): string {
     return this.aloitusKuulutusJulkaisu?.kuulutusPaiva
       ? new Date(this.aloitusKuulutusJulkaisu?.kuulutusPaiva).toLocaleDateString("fi")
       : "DD.MM.YYYY";
   }
 
-  protected get tilaajaGenetiivi() {
+  protected get tilaajaGenetiivi(): string {
     const tilaajaOrganisaatio = this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio;
     return tilaajaOrganisaatio
       ? tilaajaOrganisaatio === "Väylävirasto"
@@ -63,7 +63,7 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf {
       : "Tilaajaorganisaation";
   }
 
-  protected hankkeenKuvaus() {
+  protected hankkeenKuvaus(): PDFStructureElement {
     return this.localizedParagraphFromMap(this.aloitusKuulutusJulkaisu?.hankkeenKuvaus);
   }
 }

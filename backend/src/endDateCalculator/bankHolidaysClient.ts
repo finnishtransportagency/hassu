@@ -12,23 +12,27 @@ export const BANK_HOLIDAYS_CACHE_TTL_MILLIS = 365 * 24 * 60 * 60 * 1000; // one 
 async function getBankHolidays(): Promise<BankHolidays> {
   try {
     return await wrapXrayAsync("getBankHolidays", async () => {
-      const kayttajaMap: any = await s3Cache.get(
+      const bankholidays: string[] = await s3Cache.get(
         BANK_HOLIDAYS_CACHE_KEY,
         BANK_HOLIDAYS_CACHE_TTL_MILLIS,
         async () => {
           await fetchBankHolidaysFromAPI();
         },
         async () => {
-          return await fetchBankHolidaysFromAPI();
+          return fetchBankHolidaysFromAPI();
         }
       );
-      return new BankHolidays(kayttajaMap);
+      return new BankHolidays(bankholidays);
     });
   } catch (e) {
     log.error("getBankHolidays", { e });
     throw e;
   }
 }
+
+type SpecialDate = {
+  date: string;
+};
 
 async function fetchBankHolidaysFromAPI() {
   // Fetch current year and two more as they are available in the API
@@ -44,7 +48,9 @@ async function fetchBankHolidaysFromAPI() {
         method: "GET",
       });
       dates.push(
-        ...response.data.specialDates.map((specialDate: any) => dateToString(dayjs(specialDate.date, "DD.MM.YYYY")))
+        ...response.data.specialDates.map((specialDate: SpecialDate) =>
+          dateToString(dayjs(specialDate.date, "DD.MM.YYYY"))
+        )
       );
     } catch (e) {
       if (e.isAxiosError) {

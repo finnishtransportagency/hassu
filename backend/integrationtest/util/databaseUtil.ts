@@ -23,12 +23,12 @@ const localDocumentClient = new DynamoDB.DocumentClient({
 // Try to use the database configuration from deployment in
 let localDynamoDBDocumentClientStub: SinonStub;
 
-export function replaceAWSDynamoDBWithLocalstack() {
+export function replaceAWSDynamoDBWithLocalstack(): void {
   localDynamoDBDocumentClientStub = sinon.stub(dynamoDB, "getDynamoDBDocumentClient");
   localDynamoDBDocumentClientStub.returns(localDocumentClient);
 }
 
-export async function setupLocalDatabase() {
+export async function setupLocalDatabase(): Promise<void> {
   try {
     await deleteAllItemsFromDatabase();
   } catch (e) {

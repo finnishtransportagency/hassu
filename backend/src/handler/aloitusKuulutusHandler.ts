@@ -52,7 +52,7 @@ async function createAloituskuulutusPDF(
     aloitusKuulutusJulkaisu: julkaisuWaitingForApproval,
     kieli,
   });
-  return await fileService.createFileToProjekti({
+  return fileService.createFileToProjekti({
     oid: projekti.oid,
     filePathInProjekti: "aloituskuulutus",
     fileName: pdf.nimi,

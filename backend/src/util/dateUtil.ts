@@ -28,14 +28,14 @@ export function parseDate(date: string): Dayjs {
   return dayjs(date).tz(DEFAULT_TIMEZONE, true);
 }
 
-export function dateToString(date: Dayjs) {
+export function dateToString(date: Dayjs): string {
   return date.format(ISO_DATE_FORMAT);
 }
 
-export function dateTimeToString(date: Dayjs) {
+export function dateTimeToString(date: Dayjs): string {
   return date.format(DATE_TIME_FORMAT);
 }
 
-export function localDateTimeString() {
+export function localDateTimeString(): string {
   return dayjs().tz().format(DATE_TIME_FORMAT);
 }

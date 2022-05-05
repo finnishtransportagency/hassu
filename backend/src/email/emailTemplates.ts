@@ -6,7 +6,7 @@ import { EmailOptions } from "./email";
 import { linkSuunnitteluVaihe } from "../../../common/links";
 
 function template(strs: TemplateStringsArray, ...exprs: string[]) {
-  return function (obj: any) {
+  return function (obj: unknown) {
     const result = [strs[0]];
     exprs.forEach(function (key, i) {
       const value = get(obj, key);

@@ -12,7 +12,7 @@ import * as AWSXRay from "aws-xray-sdk-core";
 
 export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   setupLambdaMonitoring();
-  return await AWSXRay.captureAsyncFunc("handler", async (subsegment) => {
+  return AWSXRay.captureAsyncFunc("handler", async (subsegment) => {
     try {
       const axios = getAxios();
       for (const record of event.Records) {

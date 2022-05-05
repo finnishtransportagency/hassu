@@ -30,7 +30,7 @@ axios.interceptors.request.use((request: AxiosRequestConfig) => {
   return request;
 });
 
-function stripTooLongLogs(data: any) {
+function stripTooLongLogs(data: unknown) {
   if (!data) {
     return undefined;
   }
@@ -84,7 +84,7 @@ function checkResponseIsOK(response: AxiosResponse, message: string) {
 }
 
 export class VelhoClient {
-  public async authenticate() {
+  public async authenticate(): Promise<string> {
     let accessToken = accessTokenCache.get(ACCESS_TOKEN_CACHE_KEY);
     if (accessToken) {
       return accessToken;
@@ -101,7 +101,7 @@ export class VelhoClient {
   }
 
   /** Method to remove access token for testing purposes */
-  public logout() {
+  public logout(): void {
     accessTokenCache.del(ACCESS_TOKEN_CACHE_KEY);
   }
 
@@ -124,7 +124,8 @@ export class VelhoClient {
             ["projekti/projekti", "ominaisuudet", "vastuuhenkilo"],
           ],
           tyyppi: HakuPalvelu.HakulausekeAsetuksetTyyppiEnum.Kohdeluokkahaku,
-          jarjesta: [[["projekti/projekti", "ominaisuudet", "nimi"], "nouseva" as any]],
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          jarjesta: [[["projekti/projekti", "ominaisuudet", "nimi"], "nouseva" as any]], // NOSONAR
         },
         lauseke: [
           "ja",
@@ -170,18 +171,19 @@ export class VelhoClient {
       const toimeksiannot = await this.listToimeksiannot(oid);
       const hakuApi = await this.createHakuApi();
       const aineistot: Record<string, VelhoAineisto[]> = await toimeksiannot.reduce(
-        async (resultPromise: VelhoAineistoKategoria[], toimeksianto) => {
+        async (resultPromise: Promise<Record<string, VelhoAineisto[]>>, toimeksianto) => {
           // List aineistot belonging to one toimeksianto
           const aineistotResponse = await hakuApi.hakupalveluApiV1HakuAineistotLinkitOidGet(toimeksianto.oid);
           checkResponseIsOK(aineistotResponse, "hakuApi.hakupalveluApiV1HakuAineistotLinkitOidGet " + toimeksianto.oid);
-          const aineistot: AineistoPalvelu.AineistoAineisto[] = aineistotResponse.data as AineistoPalvelu.AineistoAineisto[];
-          const result = await resultPromise;
-          aineistot.forEach((aineisto) => {
+          const aineistoArray: AineistoPalvelu.AineistoAineisto[] =
+            aineistotResponse.data as AineistoPalvelu.AineistoAineisto[];
+          const results = await resultPromise;
+          aineistoArray.forEach((aineisto) => {
             const { dokumenttiTyyppi, kategoria } = adaptDokumenttiTyyppi(`${aineisto.metatiedot.dokumenttityyppi}`);
-            if (!result[kategoria]) {
-              result[kategoria] = [];
+            if (!results[kategoria]) {
+              results[kategoria] = [];
             }
-            result[kategoria].push({
+            results[kategoria].push({
               __typename: "VelhoAineisto",
               oid: aineisto.oid,
               tiedosto: aineisto["tuorein-versio"].nimi,
@@ -189,7 +191,7 @@ export class VelhoClient {
               muokattu: dayjs(aineisto["tuorein-versio"].muokattu).format(),
             } as VelhoAineisto);
           });
-          return result;
+          return results;
         },
         {} as Record<string, VelhoAineisto[]>
       );
@@ -229,7 +231,9 @@ export class VelhoClient {
     return toimeksiannot;
   }
 
-  public async createProjektiForTesting(velhoProjekti: ProjektiRekisteri.ProjektiProjektiLuonti): Promise<any> {
+  public async createProjektiForTesting(
+    velhoProjekti: ProjektiRekisteri.ProjektiProjektiLuonti
+  ): Promise<ProjektiRekisteri.ProjektiProjekti> {
     const projektiApi = await this.createProjektiRekisteriApi();
     let response;
     try {
@@ -238,14 +242,18 @@ export class VelhoClient {
       response = await projektiApi.projektirekisteriApiV2ProjektiPost(velhoProjekti, true, {
         params: { "raportoi-vkm-virheet": true },
       });
-    } catch (e) {
-      throw new VelhoError(e.message, e);
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        throw new VelhoError(e.message, e);
+      } else {
+        throw new VelhoError("createProjektiForTesting");
+      }
     }
     checkResponseIsOK(response, "Create projekti for testing");
     return response.data;
   }
 
-  public async deleteProjektiForTesting(oid: string): Promise<any> {
+  public async deleteProjektiForTesting(oid: string): Promise<ProjektiRekisteri.ProjektiProjekti> {
     const projektiApi = await this.createProjektiRekisteriApi();
     let response;
     try {
