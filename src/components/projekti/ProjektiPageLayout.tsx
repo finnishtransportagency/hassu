@@ -25,16 +25,18 @@ export default function ProjektiPageLayout({ children, title, showUpdateButton }
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
 
   const uudelleenLataaProjekit = async () => {
-    try {
-      setLoading(true);
-      await api.synkronoiProjektiMuutoksetVelhosta(projekti?.oid || "");
-      await reloadProjekti();
-      setLoading(false);
-      showSuccessMessage("Projekti pivitetty");
-    } catch (e) {
-      setLoading(false);
-      log.log("realoadProjekti Error", e);
-      showErrorMessage("Päivittämisessä tapahtui virhe!");
+    if (projekti?.oid) {
+      try {
+        setLoading(true);
+        await api.synkronoiProjektiMuutoksetVelhosta(projekti.oid);
+        await reloadProjekti();
+        setLoading(false);
+        showSuccessMessage("Projekti päivitetty");
+      } catch (e) {
+        setLoading(false);
+        log.log("realoadProjekti Error", e);
+        showErrorMessage("Päivittämisessä tapahtui virhe!");
+      }
     }
   }
 
