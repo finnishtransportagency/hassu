@@ -76,9 +76,15 @@ describe("apiHandler", () => {
           },
         });
 
-        await projektiDatabase.listProjektit();
+        await projektiDatabase.findProjektiOidsWithNewFeedback();
 
         sinon.assert.calledOnce(scanStub);
+        sinon.assert.calledOnceWithExactly(scanStub, {
+          TableName: "Projekti-localstack",
+          IndexName: "UusiaPalautteitaIndex",
+          Limit: 10,
+          ExclusiveStartKey: undefined,
+        });
       });
     });
   });

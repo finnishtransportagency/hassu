@@ -35,9 +35,9 @@ import { aineistoService } from "../aineisto/aineistoService";
 export async function loadProjekti(oid: string): Promise<API.Projekti | API.ProjektiJulkinen> {
   const vaylaUser = getVaylaUser();
   if (vaylaUser) {
-    return await loadProjektiYllapito(oid, vaylaUser);
+    return loadProjektiYllapito(oid, vaylaUser);
   } else {
-    return await loadProjektiJulkinen(oid);
+    return loadProjektiJulkinen(oid);
   }
 }
 
@@ -47,7 +47,7 @@ async function loadProjektiYllapito(oid: string, vaylaUser: NykyinenKayttaja): P
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
   if (projektiFromDB) {
     projektiFromDB.tallennettu = true;
-    return projektiAdapter.applyStatus(projektiAdapter.adaptProjekti(projektiFromDB), { saved: true });
+    return projektiAdapter.adaptProjekti(projektiFromDB);
   } else {
     requirePermissionLuonti();
     const projekti = await createProjektiFromVelho(oid, vaylaUser);
@@ -60,7 +60,7 @@ export async function loadProjektiJulkinen(oid: string): Promise<API.ProjektiJul
   if (projektiFromDB) {
     const adaptedProjekti = projektiAdapterJulkinen.adaptProjekti(projektiFromDB);
     if (adaptedProjekti) {
-      return projektiAdapterJulkinen.applyStatus(adaptedProjekti);
+      return adaptedProjekti;
     }
     log.info("Projektilla ei ole julkista sisältöä", { oid });
     throw new NotFoundError("Projektilla ei ole julkista sisältöä: " + oid);

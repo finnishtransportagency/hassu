@@ -13,6 +13,9 @@ Object {
     },
     "julkinen": undefined,
     "palautteet": undefined,
+    "palautteidenVastaanottajat": Array [
+      "A000111",
+    ],
     "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
     "vuorovaikutukset": Array [],
   },
@@ -32,6 +35,9 @@ Object {
     },
     "julkinen": undefined,
     "palautteet": undefined,
+    "palautteidenVastaanottajat": Array [
+      "A000111",
+    ],
     "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
     "vuorovaikutukset": Array [
       Object {
@@ -1371,4 +1377,93 @@ Object {
     },
   },
 }
+`;
+
+exports[`Api should search, load and save a project 19`] = `
+Array [
+  Object {
+    "emailOptions": Object {
+      "subject": "Valtion liikenneväylien suunnittelu: Uusi projekti perustettu ",
+      "text": "Valtion liikenneväylien suunnittelu -järjestelmään on tuotu Projektivelhosta projektisi:
+HASSU AUTOMAATTITESTIPROJEKTI1
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506
+Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+      "to": "mikko.haapamki@cgi.com",
+    },
+  },
+  Object {
+    "emailOptions": Object {
+      "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ",
+      "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
+HASSU AUTOMAATTITESTIPROJEKTI1
+on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506
+Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+      "to": "mikko.haapamki@cgi.com",
+    },
+  },
+  Object {
+    "emailOptions": Object {
+      "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ",
+      "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
+HASSU AUTOMAATTITESTIPROJEKTI1
+aloituskuulutus on hyväksytty.
+Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
+Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+      "to": "mikko.haapamki@cgi.com",
+    },
+  },
+  Object {
+    "emailOptions": Object {
+      "attachments": "***unittest***",
+      "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ",
+      "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
+HASSU AUTOMAATTITESTIPROJEKTI1
+aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
+
+Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
+
+Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+      "to": "mikko.haapamki@cgi.com",
+    },
+  },
+  Object {
+    "emailOptions": Object {
+      "attachments": "***unittest***",
+      "subject": "TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA ILMOITTAMINEN - HASSU AUTOMAATTITESTIPROJEKTI1",
+      "text": "TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA ILMOITTAMINEN
+
+HASSU AUTOMAATTITESTIPROJEKTI1
+
+Väylävirasto ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee suunnittelun ja maastotöiden aloittamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä. 
+
+Kuulutus julkaistaan 2.1.2022, Väyläviraston tietoverkossa osoitteessa https://vayla.fi/kuulutukset. 
+
+Väylävirasto pyytää suunnittelualueen kuntia julkisemaan julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa Väylävirastolle. 
+
+Lorem Ipsum
+
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa https://vayla.fi/tietosuoja. 
+
+Lisätietoja antaa 
+CGI Suomi Oy, A-tunnus1 Hassu, puh. 123, mikko.haapamki@cgi.com 
+Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com ",
+      "to": Array [],
+    },
+  },
+  Object {
+    "emailOptions": Object {
+      "subject": "Suunnitelmaan on tullut palautetta",
+      "text": "Suunnitelmaan on tullut palautetta: https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu",
+      "to": "mikko.haapamaki@cgi.com",
+    },
+  },
+  Object {
+    "emailOptions": Object {
+      "subject": "Suunnitelmaan on tullut palautetta",
+      "text": "Suunnitelmaan on tullut palautetta: https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu",
+      "to": "mikko.haapamki@cgi.com",
+    },
+  },
+]
 `;

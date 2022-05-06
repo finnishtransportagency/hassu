@@ -23,7 +23,7 @@ import { parseDate } from "../util/dateUtil";
 import { Vuorovaikutus } from "../database/model/suunnitteluVaihe";
 
 class ProjektiAdapterJulkinen {
-  applyStatus(projekti: API.ProjektiJulkinen) {
+  private applyStatus(projekti: API.ProjektiJulkinen) {
     function checkAloituskuulutus() {
       if (projekti.aloitusKuulutusJulkaisut) {
         const julkisetAloituskuulutukset = projekti.aloitusKuulutusJulkaisut.filter((julkaisu) => {
@@ -82,7 +82,8 @@ class ProjektiAdapterJulkinen {
       suunnitteluVaihe,
       aloitusKuulutusJulkaisut,
     };
-    return removeUndefinedFields(projekti) as API.ProjektiJulkinen;
+    const projektiJulkinen = removeUndefinedFields(projekti) as API.ProjektiJulkinen;
+    return this.applyStatus(projektiJulkinen);
   }
 
   adaptAloitusKuulutusJulkaisut(

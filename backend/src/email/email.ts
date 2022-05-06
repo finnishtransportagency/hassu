@@ -18,6 +18,7 @@ export type EmailOptions = Pick<MailOptions, "to" | "subject" | "text" | "attach
 
 async function sendEmail(options: EmailOptions): Promise<void> {
   if (config.emailsOn !== "true") {
+    log.info("Sähköpostin lähetys kytketty pois päältä", { emailOptions: options });
     return;
   }
   try {

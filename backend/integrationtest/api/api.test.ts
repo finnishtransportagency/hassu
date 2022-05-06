@@ -39,6 +39,8 @@ import { getCloudFront, produce } from "../../src/aws/client";
 import { parseDate } from "../../src/util/dateUtil";
 import { cleanProjektiS3Files } from "../util/s3Util";
 import { detailedDiff } from "deep-object-diff";
+import { emailClient } from "../../src/email/email";
+import { palauteEmailService } from "../../src/palaute/palauteEmailService";
 
 const { expect } = require("chai");
 const sandbox = sinon.createSandbox();
@@ -95,6 +97,7 @@ describe("Api", () => {
   let userFixture: UserFixture;
   let oid: string = undefined;
   let awsCloudfrontInvalidationStub: sinon.SinonStub;
+  let emailClientStub: sinon.SinonStub;
 
   after(() => {
     userFixture.logout();
@@ -131,6 +134,8 @@ describe("Api", () => {
     produce<AWS.CloudFront>("cloudfront", () => undefined, true);
     AWSMock.mock("CloudFront", "createInvalidation", awsCloudfrontInvalidationStub);
     getCloudFront();
+
+    emailClientStub = sinon.stub(emailClient, "sendEmail");
   });
 
   async function testProjektiHenkilot(projekti: Projekti) {
@@ -229,6 +234,7 @@ describe("Api", () => {
         hankkeenKuvaus: apiTestFixture.hankkeenKuvausSuunnittelu,
         arvioSeuraavanVaiheenAlkamisesta: "huomenna",
         suunnittelunEteneminenJaKesto: "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+        palautteidenVastaanottajat: [UserFixture.mattiMeikalainen.uid],
       },
     });
     const projekti = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
@@ -430,6 +436,9 @@ describe("Api", () => {
     await testUpdatePublishDateAndDeleteAineisto(oid);
     await takeS3Snapshot(oid, "vuorovaikutus publish date changed and last aineisto deleted");
     verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub);
+
+    await sendEmailDigests();
+    verifyEmailsSent();
   });
 
   async function processQueue() {
@@ -444,7 +453,7 @@ describe("Api", () => {
     expect(vuorovaikutus).toMatchSnapshot();
   }
 
-  it("should archive projekti", async function () {
+  it.skip("should archive projekti", async function () {
     replaceAWSDynamoDBWithLocalstack();
     await archiveProjekti(oid);
   });
@@ -492,5 +501,23 @@ describe("Api", () => {
     );
     expect(putResponse.status).to.be.eq(200);
     return uploadProperties.tiedostoPolku;
+  }
+
+  async function sendEmailDigests() {
+    await palauteEmailService.sendNewFeedbackDigest();
+  }
+
+  function verifyEmailsSent() {
+    expect(
+      emailClientStub.getCalls().map((call) => {
+        const arg = call.args[0];
+        if (arg.attachments) {
+          arg.attachments = "***unittest***";
+        }
+        return {
+          emailOptions: arg,
+        };
+      })
+    ).toMatchSnapshot();
   }
 });

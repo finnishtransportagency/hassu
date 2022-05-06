@@ -124,6 +124,7 @@ export type DBProjekti = {
   suunnitteluVaihe?: SuunnitteluVaihe | null;
   vuorovaikutukset?: Array<Vuorovaikutus> | null;
   palautteet?: Array<Palaute> | null;
+  uusiaPalautteita?: number;
 
   // false, jos projekti ladattiin Velhosta, mutta ei ole vielä tallennettu tietokantaan
   tallennettu?: boolean;

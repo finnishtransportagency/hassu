@@ -20,11 +20,12 @@ import {
   IlmoituksenVastaanottajat,
   IlmoituksenVastaanottajatInput,
   Kieli,
+  Projekti,
+  ProjektiRooli,
   Status,
   VuorovaikutusInput,
   VuorovaikutusTilaisuusInput,
   YhteystietoInput,
-  ProjektiRooli,
 } from "../../../common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
@@ -72,7 +73,7 @@ export class ProjektiAdapter {
       ...fieldsToCopyAsIs
     } = dbProjekti;
 
-    return removeUndefinedFields({
+    const apiProjekti = removeUndefinedFields({
       __typename: "Projekti",
       tallennettu: !!dbProjekti.tallennettu,
       kayttoOikeudet: KayttoOikeudetManager.adaptAPIKayttoOikeudet(kayttoOikeudet),
@@ -89,6 +90,10 @@ export class ProjektiAdapter {
       suunnitteluVaihe: adaptSuunnitteluVaihe(suunnitteluVaihe, vuorovaikutukset, palautteet),
       ...fieldsToCopyAsIs,
     }) as API.Projekti;
+    if (apiProjekti.tallennettu) {
+      this.applyStatus(apiProjekti);
+    }
+    return apiProjekti;
   }
 
   async adaptProjektiToPreview(projekti: DBProjekti, changes: API.TallennaProjektiInput): Promise<DBProjekti> {
@@ -140,18 +145,8 @@ export class ProjektiAdapter {
   /**
    * Function to determine the status of the projekti
    * @param projekti
-   * @param param
    */
-  applyStatus(projekti: API.Projekti, param: { saved?: boolean }): API.Projekti {
-    function checkIfSaved() {
-      if (param?.saved) {
-        projekti.tallennettu = true;
-        projekti.status = API.Status.EI_JULKAISTU;
-      } else {
-        return true;
-      }
-    }
-
+  private applyStatus(projekti: Projekti): Projekti {
     function checkPerustiedot() {
       try {
         kayttoOikeudetSchema.validateSync(projekti.kayttoOikeudet);
@@ -188,9 +183,8 @@ export class ProjektiAdapter {
     }
 
     // Perustiedot is available if the projekti has been saved
-    if (checkIfSaved()) {
-      return projekti;
-    }
+    projekti.tallennettu = true;
+    projekti.status = API.Status.EI_JULKAISTU;
 
     // Aloituskuulutus is available, if projekti has all basic information set
     if (checkPerustiedot()) {
@@ -233,7 +227,8 @@ function adaptSuunnitteluVaihe(
   palautteet: Array<Palaute>
 ): API.SuunnitteluVaihe {
   if (suunnitteluVaihe) {
-    const { julkinen, arvioSeuraavanVaiheenAlkamisesta, suunnittelunEteneminenJaKesto } = suunnitteluVaihe;
+    const { julkinen, arvioSeuraavanVaiheenAlkamisesta, suunnittelunEteneminenJaKesto, palautteidenVastaanottajat } =
+      suunnitteluVaihe;
     return {
       julkinen,
       arvioSeuraavanVaiheenAlkamisesta,
@@ -243,6 +238,7 @@ function adaptSuunnitteluVaihe(
         : undefined,
       vuorovaikutukset: adaptVuorovaikutukset(vuorovaikutukset),
       palautteet: palautteet ? palautteet.map((palaute) => ({ __typename: "Palaute", ...palaute })) : undefined,
+      palautteidenVastaanottajat,
       __typename: "SuunnitteluVaihe",
     };
   }
@@ -259,13 +255,19 @@ function adaptSuunnitteluVaiheToSave(
       suunnitteluVaihe.hankkeenKuvaus ||
       suunnitteluVaihe.suunnittelunEteneminenJaKesto)
   ) {
+    const {
+      arvioSeuraavanVaiheenAlkamisesta,
+      suunnittelunEteneminenJaKesto,
+      hankkeenKuvaus,
+      julkinen,
+      palautteidenVastaanottajat,
+    } = suunnitteluVaihe;
     return {
-      arvioSeuraavanVaiheenAlkamisesta: suunnitteluVaihe.arvioSeuraavanVaiheenAlkamisesta,
-      suunnittelunEteneminenJaKesto: suunnitteluVaihe.suunnittelunEteneminenJaKesto,
-      hankkeenKuvaus: suunnitteluVaihe.hankkeenKuvaus
-        ? adaptHankkeenKuvaus(suunnitteluVaihe.hankkeenKuvaus)
-        : undefined,
-      julkinen: suunnitteluVaihe.julkinen,
+      arvioSeuraavanVaiheenAlkamisesta,
+      suunnittelunEteneminenJaKesto,
+      hankkeenKuvaus: hankkeenKuvaus ? adaptHankkeenKuvaus(hankkeenKuvaus) : undefined,
+      julkinen,
+      palautteidenVastaanottajat,
     };
   }
   return undefined;

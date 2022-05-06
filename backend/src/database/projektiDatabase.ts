@@ -25,14 +25,6 @@ async function createProjekti(projekti: DBProjekti): Promise<DocumentClient.PutI
   return await getDynamoDBDocumentClient().put(params).promise();
 }
 
-async function listProjektit(): Promise<DBProjekti[]> {
-  const params = {
-    TableName: projektiTableName,
-  };
-  const data = await getDynamoDBDocumentClient().scan(params).promise();
-  return data.Items as DBProjekti[];
-}
-
 async function scanProjektit(startKey?: string): Promise<{ startKey: string; projektis: DBProjekti[] }> {
   try {
     const params: DocumentClient.ScanInput = {
@@ -276,7 +268,6 @@ function checkAndRaiseError<T>(response: Response<T, AWSError>, msg: string) {
 export const projektiDatabase = {
   createProjekti,
   saveProjekti,
-  listProjektit,
   scanProjektit,
   loadProjektiByOid,
   archiveProjektiByOid,
@@ -292,18 +283,34 @@ export const projektiDatabase = {
       Key: {
         oid,
       },
-      UpdateExpression: "SET #palautteet = list_append(if_not_exists(#palautteet, :empty_list), :palaute)",
+      UpdateExpression:
+        "SET #palautteet = list_append(if_not_exists(#palautteet, :empty_list), :palaute), #uusiaPalautteita = :uusiaPalautteita",
       ExpressionAttributeNames: {
         "#palautteet": "palautteet",
+        "#uusiaPalautteita": "uusiaPalautteita",
       },
       ExpressionAttributeValues: {
         ":palaute": [palaute],
         ":empty_list": [],
+        ":uusiaPalautteita": 1, // 1 meaning "true", because the dynamodb index allows only string, number, and binary types
       },
     };
     log.info("Inserting palaute to projekti", { params });
     await getDynamoDBDocumentClient().update(params).promise();
     return palaute.id;
+  },
+
+  async clearNewFeedbacksFlagOnProject(oid: string): Promise<void> {
+    log.info("clearNewFeedbacksFlagOnProject", { oid });
+
+    const params = {
+      TableName: projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression: "REMOVE uusiaPalautteita",
+    };
+    await getDynamoDBDocumentClient().update(params).promise();
   },
 
   async markFeedbackIsBeingHandled(projekti: DBProjekti, id: string): Promise<string> {
@@ -329,5 +336,29 @@ export const projektiDatabase = {
     log.info("markFeedbackIsBeingHandled", { params });
     await getDynamoDBDocumentClient().update(params).promise();
     return id;
+  },
+
+  async findProjektiOidsWithNewFeedback(): Promise<string[]> {
+    const result = [];
+
+    try {
+      let lastEvaluatedKey = undefined;
+      do {
+        const params: DocumentClient.ScanInput = {
+          TableName: projektiTableName,
+          IndexName: "UusiaPalautteitaIndex",
+          Limit: 10,
+          ExclusiveStartKey: lastEvaluatedKey,
+        };
+        const data: DocumentClient.ScanOutput = await getDynamoDBDocumentClient().scan(params).promise();
+        data.Items.forEach((item) => result.push(item.oid));
+        lastEvaluatedKey = data.LastEvaluatedKey;
+      } while (lastEvaluatedKey);
+    } catch (e) {
+      log.error(e);
+      throw e;
+    }
+
+    return result;
   },
 };

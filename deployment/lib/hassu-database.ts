@@ -1,5 +1,5 @@
 import * as ddb from "@aws-cdk/aws-dynamodb";
-import { StreamViewType } from "@aws-cdk/aws-dynamodb";
+import { ProjectionType, StreamViewType } from "@aws-cdk/aws-dynamodb";
 import * as cdk from "@aws-cdk/core";
 import { Duration, RemovalPolicy } from "@aws-cdk/core";
 import { Config } from "./config";
@@ -65,6 +65,13 @@ export class HassuDatabaseStack extends cdk.Stack {
       },
       stream: StreamViewType.NEW_IMAGE,
     });
+    table.addGlobalSecondaryIndex({
+      indexName: "UusiaPalautteitaIndex",
+      sortKey: { name: "uusiaPalautteita", type: ddb.AttributeType.NUMBER },
+      partitionKey: { name: "oid", type: ddb.AttributeType.STRING },
+      projectionType: ProjectionType.KEYS_ONLY,
+    });
+
     if (Config.isPermanentEnvironment()) {
       table.applyRemovalPolicy(RemovalPolicy.RETAIN);
     }
