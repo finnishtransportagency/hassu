@@ -26,6 +26,7 @@ import ProjektiKuulutuskielet from "@components/projekti/ProjektiKuulutuskielet"
 import Section from "@components/layout/Section";
 import HassuStack from "@components/layout/HassuStack";
 import HassuSpinner from "@components/HassuSpinner";
+import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -172,19 +173,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
     }
   }, [projekti, reset, router, statusBeforeSave]);
 
-  useEffect(() => {
-    if (router.isReady) {
-      let routeLabel = "";
-      if (projekti?.velho?.nimi) {
-        routeLabel = projekti.velho?.nimi;
-      } else if (typeof oid === "string") {
-        routeLabel = oid;
-      }
-      if (routeLabel) {
-        setRouteLabels({ "/yllapito/projekti/[oid]": { label: routeLabel } });
-      }
-    }
-  }, [router.isReady, oid, projekti, setRouteLabels]);
+  useProjektiBreadcrumbs(setRouteLabels);
 
   return (
     <ProjektiPageLayout title={"Projektin tiedot"} showUpdateButton>

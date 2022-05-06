@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { ReactElement, useEffect } from "react";
+import React, { ReactElement } from "react";
 import { useProjektiJulkinen } from "../../../hooks/useProjektiJulkinen";
 import FormatDate from "@components/FormatDate";
 import useTranslation from "next-translate/useTranslation";
@@ -18,6 +18,7 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import SectionContent from "@components/layout/SectionContent";
 import { formatDate } from "src/util/dateUtils";
 import HassuStack from "@components/layout/HassuStack";
+import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 
 function formatYhteystiedotText(kuulutus: AloitusKuulutusJulkaisuJulkinen) {
   const yhteystiedotList = kuulutus.yhteystiedot.map(
@@ -54,20 +55,7 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
   const velho = kuulutus?.velho;
   const suunnittelusopimus = kuulutus?.suunnitteluSopimus;
 
-  useEffect(() => {
-    console.log("oid", oid);
-    if (router.isReady) {
-      let routeLabel = "";
-      if (kuulutus?.velho?.nimi) {
-        routeLabel = kuulutus.velho.nimi;
-      } else if (typeof oid === "string") {
-        routeLabel = oid;
-      }
-      if (routeLabel) {
-        setRouteLabels({ "/suunnitelma/[oid]": { label: routeLabel } });
-      }
-    }
-  }, [router.isReady, oid, kuulutus, setRouteLabels]);
+  useProjektiBreadcrumbs(setRouteLabels);
 
   if (!projekti || !velho || !kuulutus) {
     return <div />;
