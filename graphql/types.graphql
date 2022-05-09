@@ -122,7 +122,7 @@ type Vuorovaikutus {
   """
   kysymyksetJaPalautteetViimeistaan: String
   videot: [Linkki!]
-  suunnittelumateriaali: Linkki!
+  suunnittelumateriaali: Linkki
   esitettavatYhteystiedot: [Yhteystieto!]
   """
   Lista kayttajatunnuksia
@@ -148,7 +148,7 @@ type VuorovaikutusJulkinen {
   """
   kysymyksetJaPalautteetViimeistaan: String
   videot: [Linkki!]
-  suunnittelumateriaali: Linkki!
+  suunnittelumateriaali: Linkki
   vuorovaikutusYhteystiedot: [Yhteystieto!]
 
   aineistot: [Aineisto!]
