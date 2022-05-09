@@ -29,7 +29,7 @@ describe("asiakirjaService", async () => {
     expect(pdf.sisalto.length).to.be.greaterThan(50000);
     expect(pdf.nimi).to.eq(expectedFilename);
     fs.mkdirSync(".report", { recursive: true });
-    fs.writeFileSync(".report/unittest_" + pdf.nimi, Buffer.from(pdf.sisalto, "base64"));
+    fs.writeFileSync(".report/" + pdf.nimi, Buffer.from(pdf.sisalto, "base64"));
   }
 
   it("should generate kuulutus pdf succesfully", async () => {
@@ -59,9 +59,8 @@ describe("asiakirjaService", async () => {
     expectedFilename: string
   ) {
     const pdf = await new AsiakirjaService().createPdf({
-      projekti,
+      projekti: { ...projekti, suunnitteluVaihe },
       aloitusKuulutusJulkaisu,
-      suunnitteluVaihe,
       vuorovaikutus,
       asiakirjaTyyppi: AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU,
       kieli,
@@ -69,7 +68,7 @@ describe("asiakirjaService", async () => {
     // expect(pdf.sisalto.length).to.be.greaterThan(50000);
     expect(pdf.nimi).to.eq(expectedFilename);
     fs.mkdirSync(".report", { recursive: true });
-    fs.writeFileSync(".report/unittest_" + pdf.nimi, Buffer.from(pdf.sisalto, "base64"));
+    fs.writeFileSync(".report/" + pdf.nimi, Buffer.from(pdf.sisalto, "base64"));
   }
 
   it("should generate kutsu 20T/R pdf succesfully", async () => {

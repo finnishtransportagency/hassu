@@ -2,6 +2,7 @@ import * as nodemailer from "nodemailer";
 import { config } from "../config";
 import { log } from "../logger";
 import { MailOptions } from "nodemailer/lib/smtp-transport";
+import cloneDeep from "lodash/cloneDeep";
 
 const transporter = nodemailer.createTransport({
   port: 465,
@@ -18,7 +19,15 @@ export type EmailOptions = Pick<MailOptions, "to" | "subject" | "text" | "attach
 
 async function sendEmail(options: EmailOptions): Promise<void> {
   if (config.emailsOn !== "true") {
-    log.info("Sähköpostin lähetys kytketty pois päältä", { emailOptions: options });
+    const { attachments: attachments, ...restOptions } = options;
+    log.info("Sähköpostin lähetys kytketty pois päältä", {
+      emailOptions: restOptions,
+      attachments: attachments?.map((att) => {
+        const a = cloneDeep(att);
+        a.content = "***test***";
+        return a;
+      }),
+    });
     return;
   }
   try {

@@ -15,7 +15,7 @@ import {
   TallennaProjektiInput,
   Velho,
 } from "../../../common/graphql/apiModel";
-import { adaptVelho, ProjektiAdaptationResult, projektiAdapter } from "./projektiAdapter";
+import { adaptVelho, projektiAdapter } from "./projektiAdapter";
 import { auditLog, log } from "../logger";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import mergeWith from "lodash/mergeWith";
@@ -30,7 +30,7 @@ import { NotFoundError } from "../error/NotFoundError";
 import { projektiAdapterJulkinen } from "./projektiAdapterJulkinen";
 import { findUpdatedFields } from "../velho/velhoAdapter";
 import { DBProjekti } from "../database/model/projekti";
-import { aineistoService } from "../aineisto/aineistoService";
+import { vuorovaikutusService } from "../vuorovaikutus/vuorovaikutusService";
 
 export async function loadProjekti(oid: string): Promise<API.Projekti | API.ProjektiJulkinen> {
   const vaylaUser = getVaylaUser();
@@ -56,7 +56,7 @@ async function loadProjektiYllapito(oid: string, vaylaUser: NykyinenKayttaja): P
 }
 
 export async function loadProjektiJulkinen(oid: string): Promise<API.ProjektiJulkinen> {
-  const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
+  const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid, false);
   if (projektiFromDB) {
     const adaptedProjekti = projektiAdapterJulkinen.adaptProjekti(projektiFromDB);
     if (adaptedProjekti) {
@@ -83,8 +83,8 @@ export async function createOrUpdateProjekti(input: TallennaProjektiInput): Prom
     auditLog.info("Tallenna projekti", { input });
     await handleFiles(input);
     const projektiAdaptationResult = await projektiAdapter.adaptProjektiToSave(projektiInDB, input);
-    await handleAineistot(projektiAdaptationResult);
     await projektiDatabase.saveProjekti(projektiAdaptationResult.projekti);
+    await vuorovaikutusService.handleAineistot(projektiAdaptationResult);
   } else {
     requirePermissionLuonti();
     const projekti = await createProjektiFromVelho(input.oid, requireVaylaUser(), input);
@@ -188,30 +188,6 @@ async function handleFiles(input: TallennaProjektiInput) {
       oid: input.oid,
       targetFilePathInProjekti: "suunnittelusopimus",
     });
-  }
-}
-
-/**
- * If there are uploaded files in the input, persist them into the project
- */
-async function handleAineistot(projektiAdaptationResult: ProjektiAdaptationResult) {
-  const { aineistoChanges, projekti } = projektiAdaptationResult;
-  if (!aineistoChanges) {
-    return;
-  }
-  if (aineistoChanges.hasPendingImports) {
-    await aineistoService.importAineisto(projekti.oid, aineistoChanges.vuorovaikutus.vuorovaikutusNumero);
-  }
-
-  if (aineistoChanges.aineistotToDelete) {
-    await aineistoService.deleteAineisto(projekti.oid, aineistoChanges.aineistotToDelete);
-  }
-
-  if (
-    aineistoChanges.vuorovaikutus?.julkinen &&
-    (aineistoChanges.hasPendingImports || aineistoChanges.aineistotToDelete || aineistoChanges.julkinenChanged)
-  ) {
-    await aineistoService.synchronizeVuorovaikutusAineistoToPublic(projektiAdaptationResult);
   }
 }
 

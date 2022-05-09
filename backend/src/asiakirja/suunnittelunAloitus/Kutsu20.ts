@@ -1,4 +1,4 @@
-import { AloitusKuulutusJulkaisu, DBProjekti } from "../../database/model/projekti";
+import { AloitusKuulutusJulkaisu, DBProjekti, DBVaylaUser } from "../../database/model/projekti";
 import { Kieli, ProjektiRooli, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
 import { SuunnitteluVaihe, Vuorovaikutus, VuorovaikutusTilaisuus } from "../../database/model/suunnitteluVaihe";
 import { formatList, KutsuPdf, projektiTyyppiToFilenamePrefix } from "./kutsuPdf";
@@ -31,13 +31,12 @@ export class Kutsu20 extends KutsuPdf {
   private readonly suunnitteluVaihe: SuunnitteluVaihe;
   private readonly asiakirjanMuoto: AsiakirjanMuoto;
   private readonly oid: string;
-  private projekti: DBProjekti;
   private readonly vuorovaikutus: Vuorovaikutus;
+  private readonly kayttoOikeudet: DBVaylaUser[];
 
   constructor(
     projekti: DBProjekti,
     aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu,
-    suunnitteluVaihe: SuunnitteluVaihe,
     vuorovaikutus: Vuorovaikutus,
     kieli: Kieli,
     asiakirjanMuoto: AsiakirjanMuoto
@@ -54,9 +53,9 @@ export class Kutsu20 extends KutsuPdf {
         projektiTyyppiToFilenamePrefix(aloitusKuulutusJulkaisu.velho.tyyppi) +
         fileNamePrefix[language]
     );
-    this.projekti = projekti;
+    this.kayttoOikeudet = projekti.kayttoOikeudet;
     this.oid = projekti.oid;
-    this.suunnitteluVaihe = suunnitteluVaihe;
+    this.suunnitteluVaihe = projekti.suunnitteluVaihe;
     this.vuorovaikutus = vuorovaikutus;
     this.asiakirjanMuoto = asiakirjanMuoto;
   }
@@ -280,7 +279,7 @@ export class Kutsu20 extends KutsuPdf {
 
           if (tilaisuus.projektiYhteysHenkilot) {
             tilaisuus.projektiYhteysHenkilot.forEach((kayttajatunnus) => {
-              const user = this.projekti.kayttoOikeudet
+              const user = this.kayttoOikeudet
                 .filter(
                   (kayttaja) =>
                     kayttaja.kayttajatunnus == kayttajatunnus || kayttaja.rooli == ProjektiRooli.PROJEKTIPAALLIKKO
