@@ -8,7 +8,7 @@ import {
   YhteystietoInput
 } from "@services/api";
 import Section from "@components/layout/Section";
-import { ReactElement, Fragment } from "react";
+import { ReactElement, useMemo, Fragment } from "react";
 import Button from "@components/button/Button";
 import HassuStack from "@components/layout/HassuStack";
 import CheckBox from "@components/form/CheckBox";
@@ -18,6 +18,8 @@ import HassuGrid from "@components/HassuGrid";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
 import IconButton from "@components/button/IconButton";
 import { UseFormReturn } from "react-hook-form";
+import capitalize from "lodash/capitalize";
+import replace from "lodash/replace";
 
 const defaultYhteystieto: YhteystietoInput = {
   etunimi: "",
@@ -44,12 +46,22 @@ type FormValues = RequiredProjektiFields & {
 interface Props<T> {
   useFormReturn: UseFormReturn<T>;
   projekti: Projekti;
+  vuorovaikutusnro: number;
 }
 
 export default function EsitettavatYhteystiedot<T extends FormValues>({
   projekti,
+  vuorovaikutusnro,
   useFormReturn,
 }: Props<T>): ReactElement {
+
+  const v = useMemo(() => {
+    return projekti?.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
+      return v.vuorovaikutusNumero === vuorovaikutusnro;
+    });
+  }, [projekti, vuorovaikutusnro]);
+
+  const julkinen = v?.julkinen;
 
   const {
     register,
@@ -61,6 +73,23 @@ export default function EsitettavatYhteystiedot<T extends FormValues>({
     control,
     name: "suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot",
   });
+
+  //TODO: lisää v?.vuorovaikutusYhteyshenkilot
+  if (julkinen) {
+    return (
+      <Section>
+        <SectionContent>
+          <p className="vayla-label mb-5">Vuorovaikuttamisen yhteyshenkilöt</p>
+          {v?.esitettavatYhteystiedot?.map((yhteystieto, index) => (
+            <p style={{ margin: 0 }} key={index}>
+              {capitalize(yhteystieto.etunimi)} {capitalize(yhteystieto.sukunimi)}, puh. {yhteystieto.puhelinnumero},{" "}
+              {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio})
+            </p>
+          ))}
+        </SectionContent>
+      </Section>
+    );
+  }
 
   return (
     <Section>
