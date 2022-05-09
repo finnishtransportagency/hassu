@@ -325,26 +325,17 @@ function adaptVuorovaikutusToSave(
   if (vuorovaikutusInput) {
     const dbVuorovaikutus = findVuorovaikutusByNumber(projekti, vuorovaikutusInput.vuorovaikutusNumero);
 
-    let vuorovaikutusToSave: Vuorovaikutus;
-    if (dbVuorovaikutus?.julkinen) {
-      // Allow only aineistot to be updated
-      vuorovaikutusToSave = {
-        ...dbVuorovaikutus,
-        aineistot: adaptAineistotToSave(projektiAdaptationResult, vuorovaikutusInput, dbVuorovaikutus),
-      };
-    } else {
-      vuorovaikutusToSave = {
-        ...vuorovaikutusInput,
-        vuorovaikutusYhteysHenkilot: adaptKayttajatunnusList(projekti, vuorovaikutusInput.vuorovaikutusYhteysHenkilot),
-        vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudetToSave(
-          projekti,
-          vuorovaikutusInput.vuorovaikutusTilaisuudet
-        ),
-        ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(vuorovaikutusInput.ilmoituksenVastaanottajat),
-        esitettavatYhteystiedot: adaptYhteystiedotToSave(vuorovaikutusInput.esitettavatYhteystiedot),
-        aineistot: adaptAineistotToSave(projektiAdaptationResult, vuorovaikutusInput, dbVuorovaikutus),
-      };
-    }
+    const vuorovaikutusToSave: Vuorovaikutus = {
+      ...vuorovaikutusInput,
+      vuorovaikutusYhteysHenkilot: adaptKayttajatunnusList(projekti, vuorovaikutusInput.vuorovaikutusYhteysHenkilot),
+      vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudetToSave(
+        projekti,
+        vuorovaikutusInput.vuorovaikutusTilaisuudet
+      ),
+      ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(vuorovaikutusInput.ilmoituksenVastaanottajat),
+      esitettavatYhteystiedot: adaptYhteystiedotToSave(vuorovaikutusInput.esitettavatYhteystiedot),
+      aineistot: adaptAineistotToSave(projektiAdaptationResult, vuorovaikutusInput, dbVuorovaikutus),
+    };
 
     checkIfAineistoJulkinenChanged(vuorovaikutusToSave, dbVuorovaikutus, projektiAdaptationResult);
     if (projektiAdaptationResult.aineistoChanges) {

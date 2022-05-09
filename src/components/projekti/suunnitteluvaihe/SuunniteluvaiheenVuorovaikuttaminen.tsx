@@ -147,6 +147,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
         log.error("OnSubmit Error", e);
         showErrorMessage("Tallennuksessa tapahtui virhe");
       }
+      setOpenHyvaksy(false);
       setIsFormSubmitting(false);
     },
     [saveSunnitteluvaihe, setValue, showErrorMessage, showSuccessMessage]
