@@ -7,9 +7,10 @@ import {
   PluginHook,
   useFlexLayout,
   useSortBy as useSortByHook,
+  useRowSelect as useRowSelectHook,
   SortingRule,
 } from "react-table";
-import { styled, experimental_sx as sx } from "@mui/material";
+import { styled, experimental_sx as sx, Stack } from "@mui/material";
 import Link from "next/link";
 import Pagination from "@mui/material/Pagination";
 import SectionContent from "@components/layout/SectionContent";
@@ -25,6 +26,7 @@ interface PaginationControlledProps<T extends object> {
   sortByChanger?: (sortBy: SortingRule<T>[]) => void;
   usePagination?: boolean;
   useSortBy?: boolean;
+  useRowSelect?: boolean;
 }
 
 export function Table<T extends object>({
@@ -34,6 +36,7 @@ export function Table<T extends object>({
   rowLink,
   usePagination,
   useSortBy,
+  useRowSelect,
 }: PaginationControlledProps<T>) {
   const defaultTableOptions: Partial<TableOptions<T>> = {
     defaultColumn: { Cell: ({ value }: CellProps<T>) => value || "-" },
@@ -47,6 +50,48 @@ export function Table<T extends object>({
 
   if (usePagination) {
     tableHooks.push(usePaginationHook);
+  }
+
+  if (useRowSelect) {
+    tableHooks.push(useRowSelectHook);
+    tableHooks.push((hooks) => {
+      hooks.visibleColumns.push((columns) => [
+        // Let's make a column for selection
+        ...columns,
+        {
+          id: "selection",
+          //   // The header can use the table's getToggleAllRowsSelectedProps method
+          //   // to render a checkbox
+          Header: (header) => {
+            const props = header?.getToggleAllRowsSelectedProps?.() || {};
+            return (
+              <Stack alignItems="center" rowGap="0">
+                <span>Valitse</span>
+                <span>
+                  {"( "}
+                  <IndeterminateCheckbox {...props} />
+                  {" )"}
+                </span>
+              </Stack>
+            );
+          },
+          //   // The cell can use the individual row's getToggleRowSelectedProps method
+          //   // to the render a checkbox
+          Cell: (cell: React.PropsWithChildren<CellProps<T>>) => {
+            const props = cell?.row?.getToggleRowSelectedProps?.() || {};
+            return (
+              <Stack alignItems="center" rowGap="0">
+                <span>
+                  <IndeterminateCheckbox {...props} />
+                </span>
+              </Stack>
+            );
+          },
+          minWidth: 100,
+          width: 100,
+        },
+      ]);
+    });
   }
 
   const {
@@ -127,7 +172,7 @@ export function Table<T extends object>({
             key: headerGroupKey,
             style: headerGroupStyle,
             ...headerGroupProps
-          } = headerGroup.getHeaderGroupProps();
+          } = headerGroup.getHeaderGroupProps({ style: { alignItems: "flex-end" } });
           return (
             <Tr {...headerGroupProps} style={isMedium ? headerGroupStyle : { display: "none" }} key={headerGroupKey}>
               {headerGroup.headers.map((column) => {
@@ -191,18 +236,32 @@ export function Table<T extends object>({
             </Link>
           ) : (
             <BodyTr {...rowProps} style={isMedium ? rowStyle : undefined} key={rowKey}>
-              {row.cells.map((cell) => {
-                const { key: cellKey, style: cellStyle, ...cellProps } = cell.getCellProps();
-                const { style: headerStyles, ...headerProps } = cell.column.getHeaderProps();
-                return (
-                  <DataCell {...cellProps} style={isMedium ? cellStyle : undefined} key={cellKey}>
-                    <BodyHeaderCell {...headerProps} style={isMedium ? headerStyles : undefined}>
-                      {cell.column.render("Header")}
-                    </BodyHeaderCell>
-                    {cell.render("Cell")}
-                  </DataCell>
-                );
-              })}
+              {row.cells
+                .filter((cell) => isMedium || cell.column.id !== "selection")
+                .map((cell, index) => {
+                  const { key: cellKey, style: cellStyle, ...cellProps } = cell.getCellProps();
+                  const { style: headerStyles, ...headerProps } = cell.column.getHeaderProps();
+                  return (
+                    <DataCell {...cellProps} style={isMedium ? cellStyle : undefined} key={cellKey}>
+                      {useRowSelect && !isMedium && index === 0 ? (
+                        <>
+                          <BodyHeaderCell {...headerProps} style={isMedium ? headerStyles : undefined}>
+                            {cell.column.render("Header")}
+                            {row.cells.find((cell) => cell.column.id === "selection")?.render("Cell")}
+                          </BodyHeaderCell>
+                          {cell.render("Cell")}
+                        </>
+                      ) : (
+                        <>
+                          <BodyHeaderCell {...headerProps} style={isMedium ? headerStyles : undefined}>
+                            {cell.column.render("Header")}
+                          </BodyHeaderCell>
+                          {cell.render("Cell")}
+                        </>
+                      )}
+                    </DataCell>
+                  );
+                })}
             </BodyTr>
           );
         })}
@@ -225,6 +284,20 @@ export function Table<T extends object>({
 }
 
 export default Table;
+
+const IndeterminateCheckbox = React.forwardRef<HTMLInputElement, { indeterminate?: boolean }>(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = React.useRef(null);
+    const resolvedRef = ref || defaultRef;
+
+    React.useEffect(() => {
+      (resolvedRef as any).current.indeterminate = indeterminate;
+    }, [resolvedRef, indeterminate]);
+
+    return <input type="checkbox" ref={resolvedRef} {...rest} />;
+  }
+);
+IndeterminateCheckbox.displayName = "IndeterminateCheckbox";
 
 const StyledTable = styled("div")(
   sx({
@@ -272,7 +345,9 @@ const HeaderCell = styled(Cell)(
 
 const BodyHeaderCell = styled(Cell)(
   sx({
-    display: { xs: "block", md: "none" },
+    display: { xs: "flex", md: "none" },
+    flexDirection: "row",
+    justifyContent: "space-between",
     fontWeight: 700,
     "& > * + *": {
       paddingTop: 2,

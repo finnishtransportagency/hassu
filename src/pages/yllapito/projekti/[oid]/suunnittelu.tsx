@@ -7,11 +7,10 @@ import Section from "@components/layout/Section";
 import Tabs from "@components/layout/tabs/Tabs";
 import SuunnitteluvaiheenPerustiedot from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenPerustiedot";
 import HassuDialog from "@components/HassuDialog";
-import SectionContent from "@components/layout/SectionContent";
-import WindowCloseButton from "@components/button/WindowCloseButton";
 import HassuStack from "@components/layout/HassuStack";
 import Button from "@components/button/Button";
 import SuunnitteluvaiheenVuorovaikuttaminen from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
+import { DialogActions, DialogContent } from "@mui/material";
 
 export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
   const router = useRouter();
@@ -121,34 +120,21 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
         />
       </Section>
       <div>
-        <HassuDialog open={open} onClose={handleClickClose}>
-          <Section noDivider smallGaps>
-            <SectionContent>
-              <div className="vayla-dialog-title flex">
-                <div className="flex-grow">Varmistus</div>
-                <div className="justify-end">
-                  <WindowCloseButton onClick={handleClickClose}></WindowCloseButton>
-                </div>
-              </div>
-            </SectionContent>
-            <SectionContent>
-              <div className="vayla-dialog-content">
-                <HassuStack>
-                  <p>Sivulla on tallentamattomia tietoja. Haluatko siirtyä pois sivulta ja hylätä muutokset?</p>
-                </HassuStack>
-                <HassuStack
-                  direction={["column", "column", "row"]}
-                  justifyContent={[undefined, undefined, "flex-end"]}
-                  paddingTop={"1rem"}
-                >
-                  <Button primary onClick={handleClickOk}>
-                    Hylkää muutokset ja siirry
-                  </Button>
-                  <Button onClick={handleClickClose}>Peruuta</Button>
-                </HassuStack>
-              </div>
-            </SectionContent>
-          </Section>
+        <HassuDialog title="Tallentamattomia muutoksia" open={open} onClose={handleClickClose}>
+          <DialogContent>
+            <HassuStack>
+              <p>
+                Olet tehnyt sivulle muutoksia, joita ei ole tallennettu. Tehdyt muutokset menetetään, jos poistut
+                sivulta. Haluatko poistua tallentamatta?{" "}
+              </p>
+            </HassuStack>
+          </DialogContent>
+          <DialogActions>
+            <Button primary onClick={handleClickOk}>
+              Hylkää muutokset ja siirry
+            </Button>
+            <Button onClick={handleClickClose}>Peruuta</Button>
+          </DialogActions>
         </HassuDialog>
       </div>
     </ProjektiPageLayout>

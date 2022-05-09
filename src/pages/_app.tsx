@@ -68,6 +68,29 @@ export const theme = createTheme({
         columnGap: 7,
       },
     },
+    MuiDialogTitle: {
+      defaultProps: { sx: { paddingTop: 0, paddingLeft: 0, paddingRight: 0, paddingBottom: 0, marginBottom: 7 } },
+    },
+    MuiDialogContent: {
+      defaultProps: {
+        sx: { paddingTop: 0, paddingLeft: 0, paddingRight: 0, paddingBottom: 0, marginBottom: 7 },
+      },
+    },
+    MuiDialogActions: {
+      defaultProps: {
+        disableSpacing: true,
+        sx: {
+          flexDirection: { xs: "column", md: "row" },
+          paddingBottom: 0,
+          paddingLeft: 0,
+          paddingRight: 0,
+          paddingTop: 0,
+          columnGap: 7.5,
+          rowGap: 4,
+          alignItems: "flex-end",
+        },
+      },
+    },
   },
 });
 

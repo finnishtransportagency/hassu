@@ -1,20 +1,22 @@
 // import { useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "@components/button/Button";
 import TextInput from "@components/form/TextInput";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import HassuDialog from "@components/HassuDialog";
-import HassuGrid from "@components/HassuGrid";
 import IconButton from "@components/button/IconButton";
 import HassuStack from "@components/layout/HassuStack";
-import HassuGridItem from "@components/HassuGridItem";
-import { Stack } from "@mui/material";
 import { TallennaProjektiInput, VuorovaikutusInput } from "@services/api";
 import { useFieldArray, UseFormReturn } from "react-hook-form";
-import Accordion from "@components/Accordion";
+import { DialogActions, DialogContent, Divider, Stack } from "@mui/material";
+import HassuAccordion from "@components/HassuAccordion";
 import Table from "@components/Table";
+import { api, VelhoAineisto, VelhoAineistoKategoria } from "@services/api";
+import { useProjektiRoute } from "src/hooks/useProjektiRoute";
+import { formatDateTime } from "src/util/dateUtils";
+import HassuSpinner from "@components/HassuSpinner";
 
 type Videot = Pick<VuorovaikutusInput, "videot">;
 type SuunnitteluMateriaali = Pick<VuorovaikutusInput, "suunnittelumateriaali">;
@@ -35,9 +37,26 @@ interface Props<T> {
 }
 
 export default function LuonnoksetJaAineistot<T extends FormValues>({ useFormReturn }: Props<T>) {
+  const { data: projekti } = useProjektiRoute();
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [aineistoKategoriat, setAineistoKategoriat] = useState<VelhoAineistoKategoria[]>();
+
   const openAineistoDialog = () => setAineistoDialogOpen(true);
   const closeAineistoDialog = () => setAineistoDialogOpen(false);
+
+  useEffect(() => {
+    if (projekti && aineistoDialogOpen) {
+      const haeAineistotDialogiin = async () => {
+        setIsLoading(true);
+        const velhoAineistoKategoriat = await api.listaaVelhoProjektiAineistot(projekti.oid);
+        setAineistoKategoriat(velhoAineistoKategoriat);
+        setIsLoading(false);
+      };
+      haeAineistotDialogiin();
+    }
+  }, [aineistoDialogOpen, projekti, setAineistoKategoriat]);
+
   // const context = useFormContext();
 
   const {
@@ -76,56 +95,73 @@ export default function LuonnoksetJaAineistot<T extends FormValues>({ useFormRet
         </Button>
         <HassuDialog
           title="Aineistojen valitseminen"
-          showCloseButton
           open={aineistoDialogOpen}
           onClose={closeAineistoDialog}
           maxWidth="lg"
+          scroll="paper"
+          PaperProps={{
+            sx: {
+              maxHeight: "80vh",
+              minHeight: "80vh",
+            },
+          }}
         >
-          <SectionContent largeGaps>
+          <DialogContent sx={{ display: "flex", flexDirection: "column", padding: 0, marginBottom: 7 }}>
             <p>
               Näet alla Projektivelhoon tehdyt toimeksiannot ja toimeksiantoihin ladatut tiedostot. Valitse tiedostot,
               jotka haluat tuoda suunnitteluvaiheeseen.{" "}
             </p>
-            <HassuGrid cols={{ xs: 1, lg: 3 }} sx={{ columnGap: 0 }}>
-              <HassuGridItem colSpan={{ lg: 2 }}>
-                <Accordion
-                  items={[
-                    {
-                      title: "Vuorovaikutustilaisuus",
-                      content: (
-                        <Table<{ tiedosto: string; velho: string; tyyppi: string; valitse: string }>
-                          tableOptions={{
-                            columns: [
-                              { Header: "Tiedosto", accessor: "tiedosto" },
-                              { Header: "Muokattu Projektivelhossa", accessor: "velho" },
-                              { Header: "Dokumenttityyppi", accessor: "tyyppi" },
-                              { Header: "Valitse", accessor: "valitse" },
-                            ],
-                            data: [{ tiedosto: "Hello", velho: "Hello", tyyppi: "Hello", valitse: "Hello" }],
-                          }}
-                        />
-                      ),
-                    },
-                    { title: "Nähtävilläolo", content: "hello" },
-                    { title: "Hyväksymispäätös", content: "hello" },
-                  ]}
-                />
-              </HassuGridItem>
-              <HassuGridItem
-                sx={{ borderLeft: { lg: "solid 1px #999990" }, paddingLeft: { lg: 7.5 }, marginLeft: { lg: 7.5 } }}
-              >
+            <Stack direction="row" style={{ flex: "1 1 auto" }} divider={<Divider orientation="vertical" flexItem />}>
+              <div style={{ width: "75%" }}>
+                {aineistoKategoriat && aineistoKategoriat.length > 0 ? (
+                  <HassuAccordion
+                    items={
+                      aineistoKategoriat?.map((kategoria) => ({
+                        title: kategoria.kategoria,
+                        content: (
+                          <>
+                            {kategoria.aineistot && kategoria.aineistot.length > 0 ? (
+                              <Table<VelhoAineisto>
+                                tableOptions={{
+                                  columns: [
+                                    { Header: "Tiedosto", accessor: "tiedosto" },
+                                    {
+                                      Header: "Muokattu Projektivelhossa",
+                                      accessor: (aineisto) => formatDateTime(aineisto.muokattu),
+                                    },
+                                    { Header: "Dokumenttityyppi", accessor: "dokumenttiTyyppi" },
+                                  ],
+                                  data: kategoria.aineistot,
+                                }}
+                                useRowSelect
+                              />
+                            ) : (
+                              <p>Projektilla ei ole aineistoa</p>
+                            )}
+                          </>
+                        ),
+                      })) || []
+                    }
+                  />
+                ) : isLoading ? (
+                  "Haetaan ainestotietoja velhosta..."
+                ) : (
+                  "Projektivelhossa ei ole aineistoa projektille."
+                )}
+              </div>
+              <div style={{ width: "25%" }}>
                 <h5 className="vayla-smallest-title">Valitut tiedostot</h5>
-              </HassuGridItem>
-            </HassuGrid>
-            <Stack direction={{ xs: "column", md: "row" }} justifyContent="flex-end">
-              <Button primary type="button" onClick={closeAineistoDialog}>
-                Tuo valitut aineistot
-              </Button>
-              <Button type="button" onClick={closeAineistoDialog}>
-                Peruuta
-              </Button>
+              </div>
             </Stack>
-          </SectionContent>
+          </DialogContent>
+          <DialogActions>
+            <Button primary type="button" disabled onClick={closeAineistoDialog}>
+              Tuo valitut aineistot
+            </Button>
+            <Button type="button" onClick={closeAineistoDialog}>
+              Peruuta
+            </Button>
+          </DialogActions>
         </HassuDialog>
       </SectionContent>
       <SectionContent>
@@ -193,6 +229,7 @@ export default function LuonnoksetJaAineistot<T extends FormValues>({ useFormRet
           error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.suunnittelumateriaali?.url}
         />
       </SectionContent>
+      <HassuSpinner open={isLoading} />
     </Section>
   );
 }

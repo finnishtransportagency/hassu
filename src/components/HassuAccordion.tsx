@@ -45,6 +45,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   paddingTop: theme.spacing(1),
   paddingBottom: theme.spacing(3),
   paddingLeft: theme.spacing(9),
+  paddingRight: 0,
 }));
 
 interface AccordionItem {
@@ -66,9 +67,11 @@ export default function CustomizedAccordions(props: Props) {
 
   return (
     <div>
-      {items.map((item, id) => (
-        <Accordion expanded={expanded === id} onChange={handleChange(id)}>
-          <AccordionSummary>{item.title}</AccordionSummary>
+      {items.map((item, index) => (
+        <Accordion key={index} expanded={expanded === index} onChange={handleChange(index)}>
+          <AccordionSummary>
+            <span className="vayla-smallest-title">{item.title}</span>
+          </AccordionSummary>
           <AccordionDetails>{item.content}</AccordionDetails>
         </Accordion>
       ))}
