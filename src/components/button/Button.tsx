@@ -18,6 +18,7 @@ const Button = (
     primary,
     className,
     onClick,
+    style,
     ...props
   }: Props & React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>,
   ref: React.ForwardedRef<HTMLButtonElement>
@@ -26,6 +27,7 @@ const Button = (
 
   return (
     <button
+      style={style}
       className={classNames(buttonClass, className)}
       ref={ref}
       // Work around for click events bubbling from children even if button is disabled
