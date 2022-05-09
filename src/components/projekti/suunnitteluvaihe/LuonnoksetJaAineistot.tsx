@@ -239,4 +239,4 @@ export default function LuonnoksetJaAineistot<T extends FormValues>({ useFormRet
   );
 }
 
-const StyledDiv = styled("div")();
+const StyledDiv = styled("div")({});
