@@ -34,6 +34,9 @@ import VuorovaikutusDialog from "./VuorovaikutustilaisuusDialog";
 import { formatDate } from "src/util/dateUtils";
 import capitalize from "lodash/capitalize";
 import { Stack } from "@mui/material";
+import HassuDialog from "@components/HassuDialog";
+import WindowCloseButton from "@components/button/WindowCloseButton";
+import useTranslation from "next-translate/useTranslation";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -81,8 +84,10 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
 }: Props): ReactElement {
   const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
+  const [openHyvaksy, setOpenHyvaksy] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const today = dayjs().format();
+  const { t } = useTranslation();
 
   const formOptions: UseFormProps<VuorovaikutusFormValues> = {
     resolver: yupResolver(vuorovaikutusSchema, { abortEarly: false, recursive: true }),
@@ -142,6 +147,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
         log.error("OnSubmit Error", e);
         showErrorMessage("Tallennuksessa tapahtui virhe");
       }
+      setOpenHyvaksy(false);
       setIsFormSubmitting(false);
     },
     [saveSunnitteluvaihe, setValue, showErrorMessage, showSuccessMessage]
@@ -183,10 +189,19 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
     }
   }, [projekti, reset, vuorovaikutusnro]);
 
+  const handleClickOpenHyvaksy = () => {
+    setOpenHyvaksy(true);
+  };
+
+  const handleClickCloseHyvaksy = () => {
+    setOpenHyvaksy(false);
+  };
+
   if (!projekti) {
     return <></>;
   }
 
+  const ilmoituksenVastaanottajat = getValues("suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat");
   const vuorovaikutusTilaisuudet = getValues("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet");
 
   const isVerkkotilaisuuksia = !!vuorovaikutusTilaisuudet?.find(
@@ -463,7 +478,13 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
             <Section noDivider>
               <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
                 <Button onClick={handleSubmit(saveDraft)}>Tallenna luonnos</Button>
-                <Button primary onClick={handleSubmit(saveAndPublish)}>
+                <Button
+                  primary
+                  onClick={(event) => {
+                    handleClickOpenHyvaksy();
+                    event.preventDefault();
+                  }}
+                >
                   Tallenna julkaistavaksi
                 </Button>
               </Stack>
@@ -476,6 +497,76 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
           ></VuorovaikutusDialog>
         </form>
       </FormProvider>
+      <div>
+        <HassuDialog open={openHyvaksy} onClose={handleClickCloseHyvaksy}>
+          <Section noDivider smallGaps>
+            <SectionContent>
+              <div className="vayla-dialog-title flex">
+                <div className="flex-grow">Kuulutuksen hyväksyminen ja ilmoituksen lähettäminen</div>
+                <div className="justify-end">
+                  <WindowCloseButton
+                    onClick={() => {
+                      handleClickCloseHyvaksy();
+                    }}
+                  ></WindowCloseButton>
+                </div>
+              </div>
+            </SectionContent>
+            <SectionContent>
+              <div className="vayla-dialog-content">
+                <form>
+                  <p>
+                    Olet tallentamassa vuorovaikutustiedot ja käynnistämässä siihen liittyvän ilmoituksen automaattisen
+                    lähettämisen. Ilmoitus vuorovaikutuksesta lähetetään seuraaville:
+                  </p>
+                  <div className="content">
+                    <p>Viranomaiset</p>
+                    <ul className="vayla-dialog-list">
+                      {ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => (
+                        <li key={viranomainen.nimi}>
+                          {t(`common:viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
+                        </li>
+                      ))}
+                    </ul>
+                    <p>Kunnat</p>
+                    <ul className="vayla-dialog-list">
+                      {ilmoituksenVastaanottajat?.kunnat?.map((kunta) => (
+                        <li key={kunta.nimi}>
+                          {kunta.nimi}, {kunta.sahkoposti}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="content">
+                    <p>
+                      Klikkaamalla Tallenna ja lähetä -painiketta vahvistat vuorovaikutustiedot tarkastetuksi ja
+                      hyväksyt sen julkaisun asetettuna julkaisupäivänä sekä ilmoituksien lähettämisen. Ilmoitukset
+                      lähetetään automaattisesti painikkeen klikkaamisen jälkeen.
+                    </p>
+                  </div>
+                  <HassuStack
+                    direction={["column", "column", "row"]}
+                    justifyContent={[undefined, undefined, "flex-end"]}
+                    paddingTop={"1rem"}
+                  >
+                    <Button primary onClick={handleSubmit(saveAndPublish)}>
+                      Hyväksy ja lähetä
+                    </Button>
+                    <Button
+                      onClick={(e) => {
+                        handleClickCloseHyvaksy();
+                        e.preventDefault();
+                      }}
+                    >
+                      Peruuta
+                    </Button>
+                  </HassuStack>
+                </form>
+              </div>
+            </SectionContent>
+          </Section>
+        </HassuDialog>
+      </div>
       <HassuSpinner open={isFormSubmitting} />
     </>
   );
