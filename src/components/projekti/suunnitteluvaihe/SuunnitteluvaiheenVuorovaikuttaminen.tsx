@@ -33,6 +33,7 @@ import useTranslation from "next-translate/useTranslation";
 import { UseFormReturn } from "react-hook-form";
 import EsitettavatYhteystiedot from "./EsitettavatYhteystiedot";
 import LuonnoksetJaAineistot from "./LuonnoksetJaAineistot";
+import IlmoituksenVastaanottajat from "./IlmotuksenVastaanottajat";
 import { removeTypeName } from "src/util/removeTypeName";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
@@ -72,6 +73,16 @@ type FormValuesForEsitettavatYhteystiedot = RequiredProjektiFields & {
       | "vuorovaikutusNumero"
       | "esitettavatYhteystiedot"
       | "vuorovaikutusYhteysHenkilot"
+    >;
+  };
+};
+
+type FormValuesForIlmoituksenVastaanottajat = RequiredProjektiFields & {
+  suunnitteluVaihe: {
+    vuorovaikutus: Pick<
+      VuorovaikutusInput,
+      | "vuorovaikutusNumero"
+      | "ilmoituksenVastaanottajat"
     >;
   };
 };
@@ -364,17 +375,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
             </Section>
             <LuonnoksetJaAineistot useFormReturn={useFormReturn as UseFormReturn<FormValuesForLuonnoksetJaAineistot, object>} />
             <EsitettavatYhteystiedot useFormReturn={useFormReturn as UseFormReturn<FormValuesForEsitettavatYhteystiedot, object>} projekti={projekti} />
-            <Section>
-              <h4 className="vayla-small-title">Ilmoituksen vastaanottajat</h4>
-              <SectionContent>
-                <p>
-                  Vuorovaikuttamisesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville
-                  kunnille. Kunnat on haettu Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle
-                  viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi -painikkeella
-                </p>
-                <p>Jos kuntatiedoissa on virhe, tee korjaus Projektivelhoon.</p>
-              </SectionContent>
-            </Section>
+            <IlmoituksenVastaanottajat useFormReturn={useFormReturn as UseFormReturn<FormValuesForIlmoituksenVastaanottajat, object>} />
             <Section>
               <h4 className="vayla-small-title">Kutsun ja ilmoituksen esikatselu</h4>
               <SectionContent>
