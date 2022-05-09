@@ -53,6 +53,7 @@ export type VuorovaikutusFormValues = RequiredProjektiFields & {
       | "vuorovaikutusNumero"
       | "vuorovaikutusTilaisuudet"
       | "vuorovaikutusYhteysHenkilot"
+      | "julkinen"
     >;
   };
 };
@@ -98,6 +99,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
     formState: { errors, isDirty },
     control,
     getValues,
+    setValue,
   } = useFormReturn;
 
   const { fields, append, remove } = useFieldArray({
@@ -129,6 +131,22 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
     [setIsFormSubmitting, showSuccessMessage, showErrorMessage, saveSunnitteluvaihe]
   );
 
+  const saveAndPublish = useCallback(
+    async (formData: VuorovaikutusFormValues) => {
+      setIsFormSubmitting(true);
+      try {
+        setValue("suunnitteluVaihe.vuorovaikutus.julkinen", true);
+        await saveSunnitteluvaihe(formData);
+        showSuccessMessage("Tallennus onnistui!");
+      } catch (e) {
+        log.error("OnSubmit Error", e);
+        showErrorMessage("Tallennuksessa tapahtui virhe");
+      }
+      setIsFormSubmitting(false);
+    },
+    [saveSunnitteluvaihe, setValue, showErrorMessage, showSuccessMessage]
+  );
+
   useEffect(() => {
     isDirtyHandler(isDirty);
   }, [isDirty, isDirtyHandler]);
@@ -157,6 +175,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
                 const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
                 return vuorovaikutusTilaisuusInput;
               }) || [],
+            julkinen: v?.julkinen,
           },
         },
       };
@@ -444,13 +463,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
             <Section noDivider>
               <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
                 <Button onClick={handleSubmit(saveDraft)}>Tallenna luonnos</Button>
-                <Button
-                  primary
-                  onClick={() => {
-                    console.log("tallenna ja julkaise");
-                  }}
-                  disabled
-                >
+                <Button primary onClick={handleSubmit(saveAndPublish)}>
                   Tallenna julkaistavaksi
                 </Button>
               </Stack>

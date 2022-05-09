@@ -81,7 +81,13 @@
     "vaihe": "RUOTSIKSI Vaihe",
     "paivitetty": "RUOTSIKSI Päivitetty",
     "oid": "RUOTSIKSI oid",
-    "oikopolut": "RUOTSIKSI Oikopolut"
+    "oikopolut": "RUOTSIKSI Oikopolut",
+    "suunnittelun_eteneminen": "RUOTSIKSI Suunnittelun eteneminen",
+    "arvio_seuraavan_vaiheen_alkamisesta": "RUOTSIKSI Arvio seuraavan vaiheen alkamisesta",
+    "vaikuttamisen_mahdollisuudet_ja_aikataulut": "RUOTSIKSI Osallistumisen ja vaikuttamisen mahdollisuudet ja aikataulut",
+    "tulevat_vuorovaikutustilaisuudet": "RUOTSIKSI Tulevat vuorovaikutustilaisuudet",
+    "menneet_vuorovaikutustilaisuudet": "RUOTSIKSI Menneet vuorovaikutustilaisuudet",
+    "esittelyaineisto_ja_suunnitelmaluonnokset": "RUOTSIKSI Esittelyaineisto ja suunnitelmaluonnokset"
   },
   "vastaava-viranomainen": {
     "ETELA_POHJANMAAN_ELY": "RUOTSIKSI Etelä-Pohjanmaan ELY-keskus",
