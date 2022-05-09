@@ -1,4 +1,4 @@
-import { Controller, FormProvider, useFieldArray, useForm, UseFormProps } from "react-hook-form";
+import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
 import { LinkkiInput } from "../../../../common/graphql/apiModel";
@@ -7,13 +7,12 @@ import {
   Projekti,
   api,
   VuorovaikutusInput,
-  ProjektiRooli,
-  YhteystietoInput,
   VuorovaikutusTilaisuusTyyppi,
   Yhteystieto,
+  YhteystietoInput
 } from "@services/api";
 import Section from "@components/layout/Section";
-import React, { ReactElement, useEffect, useState, Fragment, useCallback } from "react";
+import React, { ReactElement, useEffect, useState, useCallback } from "react";
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
@@ -24,14 +23,6 @@ import DatePicker from "@components/form/DatePicker";
 import dayjs from "dayjs";
 import { vuorovaikutusSchema } from "src/schemas/vuorovaikutus";
 import HassuStack from "@components/layout/HassuStack";
-import CheckBox from "@components/form/CheckBox";
-import FormGroup from "@components/form/FormGroup";
-import TextInput from "@components/form/TextInput";
-import HassuGrid from "@components/HassuGrid";
-import { maxPhoneLength } from "src/schemas/puhelinNumero";
-import IconButton from "@components/button/IconButton";
-import { removeTypeName } from "src/util/removeTypeName";
-import LuonnoksetJaAineistot from "./LuonnoksetJaAineistot";
 import VuorovaikutusDialog from "./VuorovaikutustilaisuusDialog";
 import { formatDate } from "src/util/dateUtils";
 import capitalize from "lodash/capitalize";
@@ -40,6 +31,9 @@ import HassuDialog from "@components/HassuDialog";
 import WindowCloseButton from "@components/button/WindowCloseButton";
 import useTranslation from "next-translate/useTranslation";
 import { UseFormReturn } from "react-hook-form";
+import EsitettavatYhteystiedot from "./EsitettavatYhteystiedot";
+import LuonnoksetJaAineistot from "./LuonnoksetJaAineistot";
+import { removeTypeName } from "src/util/removeTypeName";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -71,12 +65,15 @@ type FormValuesForLuonnoksetJaAineistot = RequiredProjektiFields & {
   };
 };
 
-const defaultYhteystieto: YhteystietoInput = {
-  etunimi: "",
-  sukunimi: "",
-  organisaatio: "",
-  puhelinnumero: "",
-  sahkoposti: "",
+type FormValuesForEsitettavatYhteystiedot = RequiredProjektiFields & {
+  suunnitteluVaihe: {
+    vuorovaikutus: Pick<
+      VuorovaikutusInput,
+      | "vuorovaikutusNumero"
+      | "esitettavatYhteystiedot"
+      | "vuorovaikutusYhteysHenkilot"
+    >;
+  };
 };
 
 interface Props {
@@ -131,14 +128,8 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
     reset,
     handleSubmit,
     formState: { errors, isDirty },
-    control,
     getValues,
   } = useFormReturn;
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot",
-  });
 
   const saveSunnitteluvaihe = useCallback(
     async (formData: VuorovaikutusFormValues) => {
@@ -371,134 +362,8 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                 </Button>
               </SectionContent>
             </Section>
-            <LuonnoksetJaAineistot
-              useFormReturn={useFormReturn as UseFormReturn<FormValuesForLuonnoksetJaAineistot, object>}
-            />
-            <Section>
-              <SectionContent>
-                <h4 className="vayla-small-title">Vuorovaikuttamisen yhteyshenkilöt</h4>
-                <p>
-                  Voit valita kutsussa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden
-                  yhteystiedon. Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden
-                  yhteystiedot haetaan Projektin henkilöt -sivulle tallennetuista tiedoista.
-                </p>
-                {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
-                  <Controller
-                    control={control}
-                    name={`suunnitteluVaihe.vuorovaikutus.vuorovaikutusYhteysHenkilot`}
-                    render={({ field: { onChange, value, ...field } }) => (
-                      <FormGroup label="Projektiin tallennetut henkilöt" inlineFlex>
-                        {projekti.kayttoOikeudet?.map(({ nimi, rooli, kayttajatunnus }, index) => {
-                          const tunnuslista = value || [];
-                          return (
-                            <Fragment key={index}>
-                              {rooli === ProjektiRooli.PROJEKTIPAALLIKKO ? (
-                                <CheckBox label={nimi} disabled checked {...field} />
-                              ) : (
-                                <CheckBox
-                                  label={nimi}
-                                  onChange={(event) => {
-                                    if (!event.target.checked) {
-                                      onChange(tunnuslista.filter((tunnus) => tunnus !== kayttajatunnus));
-                                    } else {
-                                      onChange([...tunnuslista, kayttajatunnus]);
-                                    }
-                                  }}
-                                  checked={tunnuslista.includes(kayttajatunnus)}
-                                  {...field}
-                                />
-                              )}
-                            </Fragment>
-                          );
-                        })}
-                      </FormGroup>
-                    )}
-                  />
-                ) : (
-                  <p>Projektilla ei ole tallennettuja henkilöitä</p>
-                )}
-              </SectionContent>
-              <SectionContent>
-                <p>Uusi yhteystieto</p>
-                <p>
-                  Lisää uudelle yhteystiedolle rivi Lisää uusi-painikkeella. Huomioi, että uusi yhteystieto ei tallennu
-                  Projektin henkilöt -sivulle eikä henkilölle tule käyttöoikeuksia projektiin.
-                </p>
-              </SectionContent>
-              {fields.map((field, index) => (
-                <HassuStack key={field.id} direction={["column", "column", "row"]}>
-                  <HassuGrid sx={{ width: "100%" }} cols={[1, 1, 3]}>
-                    <TextInput
-                      label="Etunimi *"
-                      {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.etunimi`)}
-                      error={
-                        (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.etunimi
-                      }
-                    />
-                    <TextInput
-                      label="Sukunimi *"
-                      {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.sukunimi`)}
-                      error={
-                        (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.sukunimi
-                      }
-                    />
-                    <TextInput
-                      label="Organisaatio / kunta *"
-                      {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.organisaatio`)}
-                      error={
-                        (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.organisaatio
-                      }
-                    />
-                    <TextInput
-                      label="Puhelinnumero *"
-                      {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.puhelinnumero`)}
-                      error={
-                        (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]
-                          ?.puhelinnumero
-                      }
-                      maxLength={maxPhoneLength}
-                    />
-                    <TextInput
-                      label="Sähköpostiosoite *"
-                      {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.sahkoposti`)}
-                      error={
-                        (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.sahkoposti
-                      }
-                    />
-                  </HassuGrid>
-                  <div>
-                    <div className="hidden lg:block lg:mt-8">
-                      <IconButton
-                        icon="trash"
-                        onClick={(event) => {
-                          event.preventDefault();
-                          remove(index);
-                        }}
-                      />
-                    </div>
-                    <div className="block lg:hidden">
-                      <Button
-                        onClick={(event) => {
-                          event.preventDefault();
-                          remove(index);
-                        }}
-                        endIcon="trash"
-                      >
-                        Poista
-                      </Button>
-                    </div>
-                  </div>
-                </HassuStack>
-              ))}
-              <Button
-                onClick={(event) => {
-                  event.preventDefault();
-                  append(defaultYhteystieto);
-                }}
-              >
-                Lisää uusi +
-              </Button>
-            </Section>
+            <LuonnoksetJaAineistot useFormReturn={useFormReturn as UseFormReturn<FormValuesForLuonnoksetJaAineistot, object>} />
+            <EsitettavatYhteystiedot useFormReturn={useFormReturn as UseFormReturn<FormValuesForEsitettavatYhteystiedot, object>} projekti={projekti} />
             <Section>
               <h4 className="vayla-small-title">Ilmoituksen vastaanottajat</h4>
               <SectionContent>
