@@ -113,11 +113,11 @@ export default function LuonnoksetJaAineistot<T extends FormValues>({ useFormRet
               jotka haluat tuoda suunnitteluvaiheeseen.{" "}
             </p>
             <Stack
-              direction={{ xs: "column", md: "row" }}
+              direction={{ xs: "column", lg: "row" }}
               style={{ flex: "1 1 auto" }}
               divider={<Divider orientation="vertical" flexItem />}
             >
-              <StyledDiv sx={{ width: { md: "75%" } }}>
+              <StyledDiv sx={{ width: { lg: "75%" } }}>
                 {aineistoKategoriat && aineistoKategoriat.length > 0 ? (
                   <HassuAccordion
                     items={
@@ -154,7 +154,7 @@ export default function LuonnoksetJaAineistot<T extends FormValues>({ useFormRet
                   "Projektivelhossa ei ole aineistoa projektille."
                 )}
               </StyledDiv>
-              <StyledDiv sx={{ width: { md: "25%" } }}>
+              <StyledDiv sx={{ width: { lg: "25%" } }}>
                 <h5 className="vayla-smallest-title">Valitut tiedostot</h5>
               </StyledDiv>
             </Stack>
