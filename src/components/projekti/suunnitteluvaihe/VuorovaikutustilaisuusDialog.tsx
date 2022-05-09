@@ -1,7 +1,7 @@
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
-import { ReactElement, useCallback, useEffect } from "react";
 import { Badge, Chip, chipClasses, DialogActions, DialogContent } from "@mui/material";
+import React, { Fragment, ReactElement, useCallback, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Button from "@components/button/Button";
 import DatePicker from "@components/form/DatePicker";
@@ -14,12 +14,21 @@ import TextInput from "@components/form/TextInput";
 import Select from "@components/form/Select";
 import HassuGrid from "@components/HassuGrid";
 import TimePicker from "@components/form/TimePicker";
-import { KaytettavaPalvelu, VuorovaikutusTilaisuusInput, VuorovaikutusTilaisuusTyyppi } from "@services/api";
+import {
+  KaytettavaPalvelu,
+  ProjektiKayttaja,
+  ProjektiRooli,
+  VuorovaikutusTilaisuusInput,
+  VuorovaikutusTilaisuusTyyppi,
+} from "@services/api";
 import capitalize from "lodash/capitalize";
-import { useFieldArray, useForm, useFormContext, UseFormProps } from "react-hook-form";
 import { VuorovaikutusFormValues } from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
+import { Controller, FormProvider, useFieldArray, useForm, useFormContext, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { vuorovaikutustilaisuudetSchema } from "src/schemas/vuorovaikutus";
+import FormGroup from "@components/form/FormGroup";
+import CheckBox from "@components/form/CheckBox";
+import SoittoajanYhteyshenkilot from "./SoittoajanYhteyshenkilot";
 
 const defaultTilaisuus = {
   nimi: "",
@@ -50,9 +59,10 @@ interface Props {
   open: boolean;
   windowHandler: (isOpen: boolean) => void;
   tilaisuudet: VuorovaikutusTilaisuusInput[] | null | undefined;
+  kayttoOikeudet: ProjektiKayttaja[] | null | undefined;
 }
 
-export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet }: Props): ReactElement {
+export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet, kayttoOikeudet }: Props): ReactElement {
   const formOptions: UseFormProps<VuorovaikutustilaisuusFormValues> = {
     resolver: yupResolver(vuorovaikutustilaisuudetSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
@@ -62,13 +72,14 @@ export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet }
 
   const { setValue: parentSetValue } = useFormContext<VuorovaikutusFormValues>();
 
+  const useFormReturn = useForm<VuorovaikutustilaisuusFormValues>(formOptions);
   const {
     register,
     control,
     reset,
     formState: { errors, isDirty },
     handleSubmit,
-  } = useForm<VuorovaikutustilaisuusFormValues>(formOptions);
+  } = useFormReturn;
 
   const { fields, append, remove } = useFieldArray({
     control: control,
@@ -101,6 +112,38 @@ export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet }
     },
   }));
 
+  const TilaisuudenNimiJaAika = React.memo((props: { index: number }) => {
+    return (
+      <>
+        <TextInput
+          label="Tilaisuuden nimi *"
+          {...register(`vuorovaikutusTilaisuudet.${props.index}.nimi`)}
+          error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.nimi}
+          maxLength={200}
+        ></TextInput>
+        <HassuStack direction={["column", "column", "row"]}>
+          <DatePicker
+            label="Päivämäärä *"
+            {...register(`vuorovaikutusTilaisuudet.${props.index}.paivamaara`)}
+            error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.paivamaara}
+          ></DatePicker>
+          <TimePicker
+            label="Alkaa *"
+            {...register(`vuorovaikutusTilaisuudet.${props.index}.alkamisAika`)}
+            error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.alkamisAika}
+          ></TimePicker>
+          <TimePicker
+            label="Päättyy *"
+            {...register(`vuorovaikutusTilaisuudet.${props.index}.paattymisAika`)}
+            error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.paattymisAika}
+          ></TimePicker>
+        </HassuStack>
+      </>
+    );
+  });
+
+  TilaisuudenNimiJaAika.displayName = "TilaisuudenNimiJaAika";
+
   const countTilaisuudet = useCallback(
     (tyyppi: VuorovaikutusTilaisuusTyyppi) => {
       return fields.filter((tilaisuus) => tilaisuus.tyyppi === tyyppi).length || "0";
@@ -128,7 +171,7 @@ export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet }
 
   const isVerkkotilaisuuksia = !!fields.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA);
   const isFyysisiatilaisuuksia = !!fields.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA);
-  // const isSoittoaikoja = !!fields.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA);
+  const isSoittoaikoja = !!fields.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA);
 
   return (
     <HassuDialog

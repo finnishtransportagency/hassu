@@ -339,7 +339,11 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                               {capitalize(tilaisuus.nimi)}, {formatDate(tilaisuus.paivamaara)} klo{" "}
                               {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}
                             </p>
-                            <p>yhteistiedot TBD</p>
+                            <div>{tilaisuus.esitettavatYhteystiedot?.map((yhteystieto, index) => {
+                              return (
+                                <p key={index}>{yhteystieto.etunimi}</p>
+                              )
+                            })}</div>
                           </div>
                         );
                       })}
@@ -525,6 +529,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
             open={openVuorovaikutustilaisuus}
             windowHandler={setOpenVuorovaikutustilaisuus}
             tilaisuudet={vuorovaikutusTilaisuudet}
+            kayttoOikeudet={projekti.kayttoOikeudet}
           ></VuorovaikutusDialog>
         </form>
       </FormProvider>
