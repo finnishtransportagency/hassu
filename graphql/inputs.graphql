@@ -99,6 +99,7 @@ input VuorovaikutusInput {
   """
   kysymyksetJaPalautteetViimeistaan: String
   videot: [LinkkiInput!]
+  suunnittelumateriaali: LinkkiInput
   esitettavatYhteystiedot: [YhteystietoInput!]
   """
   Lista kayttajatunnuksia

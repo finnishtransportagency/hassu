@@ -39,7 +39,7 @@ interface Props {
   isDirtyHandler: (isDirty: boolean) => void;
 }
 
-export default function SuunniteluvaiheenPerustiedot({
+export default function SuunnitteluvaiheenPerustiedot({
   projekti,
   reloadProjekti,
   isDirtyHandler,
@@ -79,7 +79,7 @@ export default function SuunniteluvaiheenPerustiedot({
     setIsFormSubmitting(true);
     try {
       formData.suunnitteluVaihe.julkinen = true;
-      await saveSunnitteluvaihe(formData);
+      await saveSuunnitteluvaihe(formData);
       showSuccessMessage("Tallennus ja julkaisu onnistui");
     } catch (e) {
       log.error("OnSubmit Error", e);
@@ -92,7 +92,7 @@ export default function SuunniteluvaiheenPerustiedot({
   const saveDraft = async (formData: FormValues) => {
     setIsFormSubmitting(true);
     try {
-      await saveSunnitteluvaihe(formData);
+      await saveSuunnitteluvaihe(formData);
       showSuccessMessage("Tallennus onnistui!");
     } catch (e) {
       log.error("OnSubmit Error", e);
@@ -101,7 +101,7 @@ export default function SuunniteluvaiheenPerustiedot({
     setIsFormSubmitting(false);
   };
 
-  const saveSunnitteluvaihe = async (formData: FormValues) => {
+  const saveSuunnitteluvaihe = async (formData: FormValues) => {
     await api.tallennaProjekti(formData);
     if (reloadProjekti) await reloadProjekti();
   };

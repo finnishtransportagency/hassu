@@ -62,6 +62,16 @@ export const vuorovaikutusSchema = Yup.object().shape({
         }),
       esitettavatYhteystiedot: Yup.array().notRequired().of(yhteystietoSchema),
       //vuorovaikutusTilaisuudet: Yup.array().notRequired().of(vuorovaikutustilaisuudetSchema),
+      videot: Yup.array().notRequired().of(Yup.object().shape({
+        nimi: Yup.string(),
+        url: Yup.string().url("URL ei kelpaa").required()
+      })).compact(function (linkki) {
+        return !linkki.url;
+      }),
+      suunnittelumateriaali: Yup.object().notRequired().shape({
+        nimi: Yup.string().required("Anna nimi"),
+        url: Yup.string().url("URL ei kelpaa").required("Anna osoite")
+      }),
     }),
   }),
 });

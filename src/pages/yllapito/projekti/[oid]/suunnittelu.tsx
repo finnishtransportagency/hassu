@@ -1,17 +1,17 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState, useMemo } from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { useRouter } from "next/router";
 import useProjekti from "src/hooks/useProjekti";
 import { PageProps } from "@pages/_app";
 import Section from "@components/layout/Section";
 import Tabs from "@components/layout/tabs/Tabs";
-import SuunnitteluvaiheenPerustiedot from "@components/projekti/suunnitteluvaihe/SuunniteluvaiheenPerustiedot";
+import SuunnitteluvaiheenPerustiedot from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenPerustiedot";
 import HassuDialog from "@components/HassuDialog";
 import SectionContent from "@components/layout/SectionContent";
 import WindowCloseButton from "@components/button/WindowCloseButton";
 import HassuStack from "@components/layout/HassuStack";
 import Button from "@components/button/Button";
-import SuunniteluvaiheenVuorovaikuttaminen from "@components/projekti/suunnitteluvaihe/SuunniteluvaiheenVuorovaikuttaminen";
+import SuunnitteluvaiheenVuorovaikuttaminen from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
 
 export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
   const router = useRouter();
@@ -57,7 +57,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
     }
   };
 
-  const createVuorovaikutusTabs = () => {
+  const vuorovaikutusTabs = useMemo(() => {
     let tabs = [];
     tabs.push({
       label: "Suunnitteluvaiheen perustiedot",
@@ -79,7 +79,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
       tabs.push({
         label: "1. Vuorovaikuttaminen",
         content: (
-          <SuunniteluvaiheenVuorovaikuttaminen
+          <SuunnitteluvaiheenVuorovaikuttaminen
             projekti={projekti}
             reloadProjekti={reloadProjekti}
             isDirtyHandler={setIsChildDirty}
@@ -93,7 +93,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
         let tab = {
           label: `${vuorovaikutus.vuorovaikutusNumero}. Vuorovaikuttaminen`,
           content: (
-            <SuunniteluvaiheenVuorovaikuttaminen
+            <SuunnitteluvaiheenVuorovaikuttaminen
               projekti={projekti}
               reloadProjekti={reloadProjekti}
               isDirtyHandler={setIsChildDirty}
@@ -107,7 +107,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
       });
     }
     return tabs;
-  };
+  }, [projekti, reloadProjekti]);
 
   return (
     <ProjektiPageLayout title="Suunnittelu">
@@ -117,7 +117,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
           defaultValue={1}
           value={currentTab}
           onChange={handleChange}
-          tabs={createVuorovaikutusTabs()}
+          tabs={vuorovaikutusTabs}
         />
       </Section>
       <div>

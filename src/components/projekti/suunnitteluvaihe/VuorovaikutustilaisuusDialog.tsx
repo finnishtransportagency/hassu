@@ -18,7 +18,7 @@ import TimePicker from "@components/form/TimePicker";
 import { KaytettavaPalvelu, VuorovaikutusTilaisuusInput, VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import capitalize from "lodash/capitalize";
 import { useFieldArray, useForm, useFormContext, UseFormProps } from "react-hook-form";
-import { VuorovaikutusFormValues } from "@components/projekti/suunnitteluvaihe/SuunniteluvaiheenVuorovaikuttaminen";
+import { VuorovaikutusFormValues } from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { vuorovaikutustilaisuudetSchema } from "src/schemas/vuorovaikutus";
 

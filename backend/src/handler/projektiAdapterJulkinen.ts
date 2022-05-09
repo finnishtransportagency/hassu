@@ -12,6 +12,7 @@ import {
   adaptAineistot,
   adaptHankkeenKuvaus,
   adaptKielitiedot,
+  adaptLinkki,
   adaptLinkkiList,
   adaptVelho,
   adaptVuorovaikutusTilaisuudet,
@@ -178,6 +179,7 @@ function adaptVuorovaikutukset(dbProjekti: DBProjekti): API.VuorovaikutusJulkine
             __typename: "VuorovaikutusJulkinen",
             vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
             videot: adaptLinkkiList(vuorovaikutus.videot),
+            suunnittelumateriaali: adaptLinkki(vuorovaikutus.suunnittelumateriaali),
             aineistot: adaptAineistot(vuorovaikutus.aineistot, julkaisuPaiva),
             vuorovaikutusYhteystiedot: adaptAndMergeYhteystiedot(dbProjekti, vuorovaikutus),
           } as API.VuorovaikutusJulkinen;

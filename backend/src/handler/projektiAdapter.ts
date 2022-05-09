@@ -436,12 +436,13 @@ function adaptVuorovaikutukset(vuorovaikutukset: Array<Vuorovaikutus>): API.Vuor
     return vuorovaikutukset.map(
       (vuorovaikutus) =>
         ({
-          ...vuorovaikutus,
-          vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
-          videot: adaptLinkkiList(vuorovaikutus.videot),
-          aineistot: adaptAineistot(vuorovaikutus.aineistot),
-          __typename: "Vuorovaikutus",
-        } as API.Vuorovaikutus)
+        ...vuorovaikutus,
+        vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
+        suunnittelumateriaali: adaptLinkki(vuorovaikutus.suunnittelumateriaali),
+        videot: adaptLinkkiList(vuorovaikutus.videot),
+        aineistot: adaptAineistot(vuorovaikutus.aineistot),
+        __typename: "Vuorovaikutus",
+      } as API.Vuorovaikutus)
     );
   }
   return vuorovaikutukset as undefined;
@@ -458,6 +459,16 @@ export function adaptVuorovaikutusTilaisuudet(
     }));
   }
   return vuorovaikutusTilaisuudet as undefined;
+}
+
+export function adaptLinkki(link: Linkki): API.Linkki {
+  if (link) {
+    return {
+      ...link,
+      __typename: "Linkki"
+    }
+  }
+  return link as undefined;
 }
 
 export function adaptLinkkiList(links: Array<Linkki>): API.Linkki[] {

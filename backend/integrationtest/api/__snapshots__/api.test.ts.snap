@@ -54,6 +54,7 @@ Object {
           },
         ],
         "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+        "suunnittelumateriaali": undefined,
         "videot": Array [
           Object {
             "__typename": "Linkki",
@@ -167,6 +168,7 @@ Object {
           },
         ],
         "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+        "suunnittelumateriaali": undefined,
         "videot": Array [
           Object {
             "__typename": "Linkki",
@@ -336,6 +338,7 @@ Object {
       },
     ],
     "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+    "suunnittelumateriaali": undefined,
     "videot": Array [
       Object {
         "__typename": "Linkki",
@@ -477,6 +480,7 @@ Object {
       },
     ],
     "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+    "suunnittelumateriaali": undefined,
     "videot": Array [
       Object {
         "__typename": "Linkki",
@@ -611,6 +615,7 @@ Object {
       },
     ],
     "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+    "suunnittelumateriaali": undefined,
     "videot": Array [
       Object {
         "__typename": "Linkki",
@@ -759,6 +764,7 @@ Object {
     },
   ],
   "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+  "suunnittelumateriaali": undefined,
   "videot": Array [
     Object {
       "__typename": "Linkki",
@@ -1026,6 +1032,7 @@ Object {
         ],
         "julkinen": true,
         "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+        "suunnittelumateriaali": undefined,
         "videot": Array [
           Object {
             "__typename": "Linkki",
@@ -1157,6 +1164,7 @@ Object {
           },
         ],
         "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+        "suunnittelumateriaali": undefined,
         "videot": Array [
           Object {
             "__typename": "Linkki",

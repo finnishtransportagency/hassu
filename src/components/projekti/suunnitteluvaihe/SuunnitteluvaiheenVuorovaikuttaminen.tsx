@@ -1,6 +1,7 @@
 import { Controller, FormProvider, useFieldArray, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
+import { LinkkiInput } from "../../../../common/graphql/apiModel";
 import {
   TallennaProjektiInput,
   Projekti,
@@ -37,6 +38,7 @@ import { Stack } from "@mui/material";
 import HassuDialog from "@components/HassuDialog";
 import WindowCloseButton from "@components/button/WindowCloseButton";
 import useTranslation from "next-translate/useTranslation";
+import { UseFormReturn } from "react-hook-form";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -52,11 +54,23 @@ export type VuorovaikutusFormValues = RequiredProjektiFields & {
       | "kysymyksetJaPalautteetViimeistaan"
       | "ilmoituksenVastaanottajat"
       | "videot"
+      | "suunnittelumateriaali"
       | "vuorovaikutusJulkaisuPaiva"
       | "vuorovaikutusNumero"
       | "vuorovaikutusTilaisuudet"
       | "vuorovaikutusYhteysHenkilot"
       | "julkinen"
+    >;
+  };
+};
+
+type FormValuesForLuonnoksetJaAineistot = RequiredProjektiFields & {
+  suunnitteluVaihe: {
+    vuorovaikutus: Pick<
+      VuorovaikutusInput,
+      | "vuorovaikutusNumero"
+      | "videot"
+      | "suunnittelumateriaali"
     >;
   };
 };
@@ -76,7 +90,7 @@ interface Props {
   vuorovaikutusnro: number;
 }
 
-export default function SuunniteluvaiheenVuorovaikuttaminen({
+export default function SuunnitteluvaiheenVuorovaikuttaminen({
   projekti,
   reloadProjekti,
   isDirtyHandler,
@@ -89,11 +103,26 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
   const today = dayjs().format();
   const { t } = useTranslation();
 
+  const defaultListWithEmptyLink = useCallback((list : (LinkkiInput[] | null | undefined)) : LinkkiInput[] => {
+    if (!list || !list.length) {
+      return [{ url: "", nimi: "" }];
+    }
+    return list.map(link => ({ nimi: link.nimi, url: link.url }));
+  }, []);
+
   const formOptions: UseFormProps<VuorovaikutusFormValues> = {
     resolver: yupResolver(vuorovaikutusSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
-    defaultValues: {},
+    defaultValues: {
+      suunnitteluVaihe: {
+        vuorovaikutus: {
+          vuorovaikutusNumero: vuorovaikutusnro,
+          videot: defaultListWithEmptyLink(projekti?.suunnitteluVaihe?.vuorovaikutukset?.[vuorovaikutusnro-1]?.videot),
+          suunnittelumateriaali: removeTypeName(projekti?.suunnitteluVaihe?.vuorovaikutukset?.[vuorovaikutusnro-1]?.suunnittelumateriaali)  || { nimi: "", url: "" },
+        }
+      },
+    }
   };
 
   const useFormReturn = useForm<VuorovaikutusFormValues>(formOptions);
@@ -182,12 +211,14 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
                 return vuorovaikutusTilaisuusInput;
               }) || [],
             julkinen: v?.julkinen,
+            videot: defaultListWithEmptyLink(v?.videot as LinkkiInput[]),
+            suunnittelumateriaali: removeTypeName(v?.suunnittelumateriaali) as LinkkiInput || { nimi: "", url: "" }
           },
         },
       };
       reset(tallentamisTiedot);
     }
-  }, [projekti, reset, vuorovaikutusnro]);
+  }, [projekti, reset, vuorovaikutusnro, defaultListWithEmptyLink]);
 
   const handleClickOpenHyvaksy = () => {
     setOpenHyvaksy(true);
@@ -325,7 +356,7 @@ export default function SuunniteluvaiheenVuorovaikuttaminen({
                 </Button>
               </SectionContent>
             </Section>
-            <LuonnoksetJaAineistot />
+            <LuonnoksetJaAineistot useFormReturn={useFormReturn as UseFormReturn<FormValuesForLuonnoksetJaAineistot, object>} />
             <Section>
               <SectionContent>
                 <h4 className="vayla-small-title">Vuorovaikuttamisen yhteyshenkilöt</h4>
