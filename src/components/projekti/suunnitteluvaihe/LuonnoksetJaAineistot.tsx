@@ -17,6 +17,7 @@ import { api, VelhoAineisto, VelhoAineistoKategoria } from "@services/api";
 import { useProjektiRoute } from "src/hooks/useProjektiRoute";
 import { formatDateTime } from "src/util/dateUtils";
 import HassuSpinner from "@components/HassuSpinner";
+import { styled } from "@mui/material/styles";
 
 type Videot = Pick<VuorovaikutusInput, "videot">;
 type SuunnitteluMateriaali = Pick<VuorovaikutusInput, "suunnittelumateriaali">;
@@ -111,8 +112,12 @@ export default function LuonnoksetJaAineistot<T extends FormValues>({ useFormRet
               Näet alla Projektivelhoon tehdyt toimeksiannot ja toimeksiantoihin ladatut tiedostot. Valitse tiedostot,
               jotka haluat tuoda suunnitteluvaiheeseen.{" "}
             </p>
-            <Stack direction="row" style={{ flex: "1 1 auto" }} divider={<Divider orientation="vertical" flexItem />}>
-              <div style={{ width: "75%" }}>
+            <Stack
+              direction={{ xs: "column", md: "row" }}
+              style={{ flex: "1 1 auto" }}
+              divider={<Divider orientation="vertical" flexItem />}
+            >
+              <StyledDiv sx={{ width: { md: "75%" } }}>
                 {aineistoKategoriat && aineistoKategoriat.length > 0 ? (
                   <HassuAccordion
                     items={
@@ -148,10 +153,10 @@ export default function LuonnoksetJaAineistot<T extends FormValues>({ useFormRet
                 ) : (
                   "Projektivelhossa ei ole aineistoa projektille."
                 )}
-              </div>
-              <div style={{ width: "25%" }}>
+              </StyledDiv>
+              <StyledDiv sx={{ width: { md: "25%" } }}>
                 <h5 className="vayla-smallest-title">Valitut tiedostot</h5>
-              </div>
+              </StyledDiv>
             </Stack>
           </DialogContent>
           <DialogActions>
@@ -233,3 +238,5 @@ export default function LuonnoksetJaAineistot<T extends FormValues>({ useFormRet
     </Section>
   );
 }
+
+const StyledDiv = styled("div")();
