@@ -13,7 +13,7 @@ import LocationCityIcon from "@mui/icons-material/LocationCity";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import { VuorovaikutusTilaisuus, VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import capitalize from "lodash/capitalize";
-import { SoittoajanYhteystieto } from "@components/projekti/suunnitteluvaihe/SuunniteluvaiheenVuorovaikuttaminen";
+import { SoittoajanYhteystieto } from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
 
 export default function Suunnittelu(): ReactElement {
   const router = useRouter();
