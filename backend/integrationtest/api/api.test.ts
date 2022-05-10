@@ -417,6 +417,7 @@ describe("Api", () => {
     await testAloitusKuulutusEsikatselu(oid);
     await testNullifyProjektiField(oid);
     await testAloituskuulutusApproval(oid, projektiPaallikko);
+
     await testSuunnitteluvaihePerustiedot(oid);
     await testSuunnitteluvaiheVuorovaikutus(oid, projektiPaallikko);
     const velhoAineistoKategorias = await testListDocumentsToImport(oid);
@@ -512,7 +513,10 @@ describe("Api", () => {
       emailClientStub.getCalls().map((call) => {
         const arg = call.args[0];
         if (arg.attachments) {
-          arg.attachments = "***unittest***";
+          arg.attachments = arg.attachments.map((attachment) => {
+            attachment.content = "***unittest***";
+            return attachment;
+          });
         }
         return {
           emailOptions: arg,

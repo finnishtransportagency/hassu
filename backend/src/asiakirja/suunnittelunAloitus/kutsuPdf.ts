@@ -38,7 +38,8 @@ export abstract class KutsuPdf extends CommonPdf {
   protected titleElement(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu): PDFStructureElement {
     return this.doc.struct("H2", {}, () => {
       const parts = [selectNimi(aloitusKuulutusJulkaisu, this.kieli) + this.kuntaOrKunnat];
-      this.doc.text(parts.join(", ")).font("ArialMT").moveDown();
+      const title = parts.join(", ");
+      this.doc.text(title).font("ArialMT").moveDown();
     });
   }
 

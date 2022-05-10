@@ -43,12 +43,17 @@ async function scanProjektit(startKey?: string): Promise<{ startKey: string; pro
   }
 }
 
-async function loadProjektiByOid(oid: string): Promise<DBProjekti | undefined> {
+/**
+ * Load projekti from DynamoDB
+ * @param oid Projekti oid
+ * @param stronglyConsistentRead Use stringly consistent read operation to DynamoDB. Set "false" in public website to save database capacity.
+ */
+async function loadProjektiByOid(oid: string, stronglyConsistentRead = true): Promise<DBProjekti | undefined> {
   try {
     const params: DocumentClient.GetItemInput = {
       TableName: projektiTableName,
       Key: { oid },
-      ConsistentRead: true,
+      ConsistentRead: stronglyConsistentRead,
     };
     const data = await getDynamoDBDocumentClient().get(params).promise();
     if (!data.Item) {

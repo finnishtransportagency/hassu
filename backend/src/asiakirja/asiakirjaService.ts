@@ -5,12 +5,11 @@ import { AloitusKuulutus10R } from "./suunnittelunAloitus/aloitusKuulutus10R";
 import { Ilmoitus12T } from "./suunnittelunAloitus/ilmoitus12T";
 import { Ilmoitus12R } from "./suunnittelunAloitus/ilmoitus12R";
 import { Kutsu20 } from "./suunnittelunAloitus/Kutsu20";
-import { SuunnitteluVaihe, Vuorovaikutus } from "../database/model/suunnitteluVaihe";
+import { Vuorovaikutus } from "../database/model/suunnitteluVaihe";
 
 interface CreatePdfOptions {
   projekti?: DBProjekti;
   aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu;
-  suunnitteluVaihe?: SuunnitteluVaihe;
   vuorovaikutus?: Vuorovaikutus;
   asiakirjaTyyppi: AsiakirjaTyyppi;
   kieli: Kieli;
@@ -35,7 +34,6 @@ export class AsiakirjaService {
     projekti,
     asiakirjaTyyppi,
     aloitusKuulutusJulkaisu,
-    suunnitteluVaihe,
     vuorovaikutus,
     kieli,
   }: CreatePdfOptions): Promise<PDF> {
@@ -78,8 +76,7 @@ export class AsiakirjaService {
         switch (asiakirjanMuoto) {
           case AsiakirjanMuoto.TIE:
           case AsiakirjanMuoto.RATA:
-            pdf = new Kutsu20(projekti, aloitusKuulutusJulkaisu, suunnitteluVaihe, vuorovaikutus, kieli, asiakirjanMuoto)
-              .pdf;
+            pdf = new Kutsu20(projekti, aloitusKuulutusJulkaisu, vuorovaikutus, kieli, asiakirjanMuoto).pdf;
             break;
           default:
             throw new Error(

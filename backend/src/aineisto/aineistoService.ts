@@ -61,7 +61,12 @@ class AineistoService {
             CallerReference: "synchronizeVuorovaikutusAineistoToPublic" + new Date().getTime(),
             Paths: {
               Quantity: 1,
-              Items: [fileService.getPublicPathForProjektiFile(oid, "/" + vuorovaikutusPath + "/*")],
+              Items: [
+                fileService.getPublicPathForProjektiFile(
+                  oid,
+                  "/" + fileService.getVuorovaikutusPath(vuorovaikutus) + "/*"
+                ),
+              ],
             },
           },
         })

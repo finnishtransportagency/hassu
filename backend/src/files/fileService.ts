@@ -250,6 +250,10 @@ export class FileService {
     return "suunnitteluvaihe/vuorovaikutus_" + vuorovaikutus.vuorovaikutusNumero;
   }
 
+  getVuorovaikutusAineistoPath(vuorovaikutus: Vuorovaikutus): string {
+    return this.getVuorovaikutusPath(vuorovaikutus) + "/aineisto";
+  }
+
   /**
    * Copy file from yllapito to public bucket
    */

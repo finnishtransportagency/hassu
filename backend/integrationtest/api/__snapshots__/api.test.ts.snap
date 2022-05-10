@@ -739,7 +739,7 @@ Object {
       "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
       "jarjestys": 12,
       "kategoria": "Yleinen new",
-      "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/ekatiedosto_eka.pdf",
+      "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
       "tila": "VALMIS",
       "tuotu": "***unittest***",
     },
@@ -748,7 +748,7 @@ Object {
       "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
       "jarjestys": 13,
       "kategoria": "Yleinen new",
-      "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/karttakuvalla_tiedosto.pdf",
+      "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
       "tila": "VALMIS",
       "tuotu": "***unittest***",
     },
@@ -1006,7 +1006,7 @@ Object {
             "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
             "jarjestys": 12,
             "kategoria": "Yleinen new",
-            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/ekatiedosto_eka.pdf",
+            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
             "tila": "VALMIS",
             "tuotu": "***unittest***",
           },
@@ -1015,7 +1015,7 @@ Object {
             "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
             "jarjestys": 13,
             "kategoria": "Yleinen new",
-            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/karttakuvalla_tiedosto.pdf",
+            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
             "tila": "VALMIS",
             "tuotu": "***unittest***",
           },
@@ -1304,8 +1304,9 @@ Object {
     "aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {},
     "palautteet/***unittest***/logo.png": Object {},
     "suunnittelusopimus/logo.png": Object {},
-    "suunnitteluvaihe/vuorovaikutus_1/ekatiedosto_eka.pdf": Object {},
-    "suunnitteluvaihe/vuorovaikutus_1/karttakuvalla_tiedosto.pdf": Object {},
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {},
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf": Object {},
+    "suunnitteluvaihe/vuorovaikutus_1/kutsu/20T TS Yleisotilaisuus kutsu HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {},
   },
 }
 `;
@@ -1319,10 +1320,13 @@ Object {
     "aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/ekatiedosto_eka.pdf": Object {
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {
       "publishDate": "2022-03-23T00:00:00+02:00",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/karttakuvalla_tiedosto.pdf": Object {
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf": Object {
+      "publishDate": "2022-03-23T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/kutsu/20T TS Yleisotilaisuus kutsu HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {
       "publishDate": "2022-03-23T00:00:00+02:00",
     },
   },
@@ -1351,7 +1355,8 @@ Object {
     "aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {},
     "palautteet/***unittest***/logo.png": Object {},
     "suunnittelusopimus/logo.png": Object {},
-    "suunnitteluvaihe/vuorovaikutus_1/ekatiedosto_eka.pdf": Object {},
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {},
+    "suunnitteluvaihe/vuorovaikutus_1/kutsu/20T TS Yleisotilaisuus kutsu HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {},
   },
 }
 `;
@@ -1365,7 +1370,10 @@ Object {
     "aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/ekatiedosto_eka.pdf": Object {
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {
+      "publishDate": "2022-03-23T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/kutsu/20T TS Yleisotilaisuus kutsu HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {
       "publishDate": "2022-03-23T00:00:00+02:00",
     },
   },
@@ -1423,7 +1431,14 @@ Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tä
   },
   Object {
     "emailOptions": Object {
-      "attachments": "***unittest***",
+      "attachments": Array [
+        Object {
+          "content": "***unittest***",
+          "contentDisposition": "attachment",
+          "contentType": "application/pdf",
+          "filename": "KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf",
+        },
+      ],
       "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ",
       "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
 HASSU AUTOMAATTITESTIPROJEKTI1
@@ -1437,7 +1452,14 @@ Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipääll
   },
   Object {
     "emailOptions": Object {
-      "attachments": "***unittest***",
+      "attachments": Array [
+        Object {
+          "content": "***unittest***",
+          "contentDisposition": "attachment",
+          "contentType": "application/pdf",
+          "filename": "ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf",
+        },
+      ],
       "subject": "TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA ILMOITTAMINEN - HASSU AUTOMAATTITESTIPROJEKTI1",
       "text": "TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA ILMOITTAMINEN
 
