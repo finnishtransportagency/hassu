@@ -9,11 +9,21 @@ import SuunnitteluvaiheenPerustiedot from "@components/projekti/suunnitteluvaihe
 import HassuDialog from "@components/HassuDialog";
 import HassuStack from "@components/layout/HassuStack";
 import Button from "@components/button/Button";
+import { setupLambdaMonitoring } from "backend/src/aws/monitoring";
 import SuunnitteluvaiheenVuorovaikuttaminen from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
 import { DialogActions, DialogContent } from "@mui/material";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
+import {
+  ViranomaisVastaanottajaInput,
+} from "@services/api";
+import { GetServerSideProps } from "next";
+import { GetParameterResult } from "aws-sdk/clients/ssm";
+import log from "loglevel";
 
-export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
+export default function Suunnittelu({
+  setRouteLabels,
+  kirjaamoOsoitteet
+}: PageProps & ServerSideProps ): ReactElement {
   const router = useRouter();
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
   const { data: projekti, mutate: reloadProjekti } = useProjekti(oid);
@@ -72,6 +82,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
             reloadProjekti={reloadProjekti}
             isDirtyHandler={setIsChildDirty}
             vuorovaikutusnro={1}
+            kirjaamoOsoitteet={kirjaamoOsoitteet || null}
           />
         ),
         value: 2,
@@ -86,6 +97,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
               reloadProjekti={reloadProjekti}
               isDirtyHandler={setIsChildDirty}
               vuorovaikutusnro={vuorovaikutus.vuorovaikutusNumero}
+              kirjaamoOsoitteet={kirjaamoOsoitteet || null}
             />
           ),
           value: index + 2,
@@ -95,7 +107,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
       });
     }
     return tabs;
-  }, [projekti, reloadProjekti]);
+  }, [projekti, reloadProjekti, kirjaamoOsoitteet]);
 
   return (
     <ProjektiPageLayout title="Suunnittelu">
@@ -129,3 +141,24 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
     </ProjektiPageLayout>
   );
 }
+
+interface ServerSideProps {
+  kirjaamoOsoitteet?: ViranomaisVastaanottajaInput[];
+}
+
+export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () => {
+  setupLambdaMonitoring();
+  const { getSSM } = require("../../../../../backend/src/aws/client");
+  const parameterName = "/kirjaamoOsoitteet";
+  let kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] = [];
+  try {
+    const response: GetParameterResult = await getSSM().getParameter({ Name: parameterName }).promise();
+    kirjaamoOsoitteet = response.Parameter?.Value ? JSON.parse(response.Parameter.Value) : [];
+  } catch (e) {
+    log.error(`Could not pass prop 'kirjaamoOsoitteet' to 'aloituskuulutus' page`, e);
+  }
+
+  return {
+    props: { kirjaamoOsoitteet }, // will be passed to the page component as props
+  };
+};

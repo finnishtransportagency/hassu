@@ -9,7 +9,10 @@ import {
   VuorovaikutusInput,
   VuorovaikutusTilaisuusTyyppi,
   Yhteystieto,
-  YhteystietoInput
+  YhteystietoInput,
+  ViranomaisVastaanottajaInput,
+  IlmoitettavaViranomainen,
+  IlmoituksenVastaanottajatInput
 } from "@services/api";
 import Section from "@components/layout/Section";
 import React, { ReactElement, useEffect, useState, useMemo, useCallback } from "react";
@@ -33,8 +36,9 @@ import useTranslation from "next-translate/useTranslation";
 import { UseFormReturn } from "react-hook-form";
 import EsitettavatYhteystiedot from "./EsitettavatYhteystiedot";
 import LuonnoksetJaAineistot from "./LuonnoksetJaAineistot";
-import IlmoituksenVastaanottajat from "./IlmotuksenVastaanottajat";
+import IlmoituksenVastaanottajat from "./IlmoituksenVastaanottajat";
 import { removeTypeName } from "src/util/removeTypeName";
+import getIlmoitettavaViranomainen from "src/util/getIlmoitettavaViranomainen";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -77,21 +81,62 @@ type FormValuesForEsitettavatYhteystiedot = RequiredProjektiFields & {
   };
 };
 
-type FormValuesForIlmoituksenVastaanottajat = RequiredProjektiFields & {
-  suunnitteluVaihe: {
-    vuorovaikutus: Pick<
-      VuorovaikutusInput,
-      | "vuorovaikutusNumero"
-      | "ilmoituksenVastaanottajat"
-    >;
-  };
-};
-
 interface Props {
   projekti?: Projekti | null;
   reloadProjekti?: KeyedMutator<ProjektiLisatiedolla | null>;
   isDirtyHandler: (isDirty: boolean) => void;
   vuorovaikutusnro: number;
+  kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] | null
+}
+
+const defaultListWithEmptyLink = (list : (LinkkiInput[] | null | undefined)) : LinkkiInput[] => {
+  if (!list || !list.length) {
+    return [{ url: "", nimi: "" }];
+  }
+  return list.map(link => ({ nimi: link.nimi, url: link.url }));
+};
+
+const defaultVastaanottajat = (projekti: Projekti | null | undefined, vuorovaikutusnro: number, kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] | null) : IlmoituksenVastaanottajatInput => {
+  const v = projekti?.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
+    return v.vuorovaikutusNumero === vuorovaikutusnro;
+  });
+  let kunnat: KuntaVastaanottajaInput[];
+  let viranomaiset: ViranomaisVastaanottajaInput[];
+  if (v?.ilmoituksenVastaanottajat?.kunnat) {
+    kunnat = v?.ilmoituksenVastaanottajat?.kunnat.map(kunta => {
+      kunta = removeTypeName(kunta);
+      delete kunta.lahetetty;
+      return kunta;
+    });
+  } else {
+    kunnat = projekti?.velho?.kunnat?.map(s => {
+      return {
+      nimi: s,
+      sahkoposti: ""
+    } as KuntaVastaanottajaInput; }) || []
+  }
+  if (v?.ilmoituksenVastaanottajat?.viranomaiset) {
+    viranomaiset = v?.ilmoituksenVastaanottajat?.viranomaiset.map(kunta => {
+      kunta = removeTypeName(kunta);
+      delete kunta.lahetetty;
+      return kunta;
+    });
+  } else {
+    viranomaiset = projekti?.velho?.suunnittelustaVastaavaViranomainen === "VAYLAVIRASTO"
+    ? (projekti?.velho?.maakunnat?.map(maakunta => {
+        const ely : IlmoitettavaViranomainen = getIlmoitettavaViranomainen(maakunta);
+        return kirjaamoOsoitteet?.find(osoite => osoite.nimi == ely)
+          || { nimi: maakunta, sahkoposti: "" } as ViranomaisVastaanottajaInput;
+      })  || [])
+    : [
+        kirjaamoOsoitteet?.find(osoite => osoite.nimi == "VAYLAVIRASTO")
+        || { nimi: "VAYLAVIRASTO" as IlmoitettavaViranomainen, sahkoposti: "" } as ViranomaisVastaanottajaInput
+      ]
+  }
+  return {
+    kunnat,
+    viranomaiset
+  };
 }
 
 export default function SuunnitteluvaiheenVuorovaikuttaminen({
@@ -99,20 +144,15 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
   reloadProjekti,
   isDirtyHandler,
   vuorovaikutusnro,
+  kirjaamoOsoitteet
 }: Props): ReactElement {
+
   const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const today = dayjs().format();
   const { t } = useTranslation();
-
-  const defaultListWithEmptyLink = useCallback((list: LinkkiInput[] | null | undefined): LinkkiInput[] => {
-    if (!list || !list.length) {
-      return [{ url: "", nimi: "" }];
-    }
-    return list.map((link) => ({ nimi: link.nimi, url: link.url }));
-  }, []);
 
   const defaultValues : Omit<VuorovaikutusFormValues, "oid"> = useMemo(() => {
     const v = projekti?.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
@@ -130,13 +170,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
               .map(({ kayttajatunnus }) => kayttajatunnus) || [],
           esitettavatYhteystiedot:
             v?.esitettavatYhteystiedot?.map((yhteystieto) => removeTypeName(yhteystieto)) || [],
-          ilmoituksenVastaanottajat: {
-            kunnat: projekti?.suunnitteluSopimus?.kunta.split(",").map(s => s.trim()).map(s => {
-              return {
-              nimi: s,
-              sahkoposti: ""
-            } as KuntaVastaanottajaInput; })
-          },
+          ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, vuorovaikutusnro, kirjaamoOsoitteet),
           vuorovaikutusTilaisuudet:
             v?.vuorovaikutusTilaisuudet?.map((tilaisuus) => {
               const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
@@ -148,7 +182,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
         },
       }
     };
-  }, [projekti, vuorovaikutusnro, defaultListWithEmptyLink]);
+  }, [projekti, vuorovaikutusnro, kirjaamoOsoitteet]);
 
   const formOptions: UseFormProps<VuorovaikutusFormValues> = useMemo(() => {
     return {
@@ -222,7 +256,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
       };
       reset(tallentamisTiedot);
     }
-  }, [projekti, defaultValues, reset, defaultListWithEmptyLink]);
+  }, [projekti, defaultValues, reset]);
 
   const handleClickOpenHyvaksy = () => {
     setOpenHyvaksy(true);
@@ -373,7 +407,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
             </Section>
             <LuonnoksetJaAineistot useFormReturn={useFormReturn as UseFormReturn<FormValuesForLuonnoksetJaAineistot, object>} />
             <EsitettavatYhteystiedot useFormReturn={useFormReturn as UseFormReturn<FormValuesForEsitettavatYhteystiedot, object>} projekti={projekti} />
-            <IlmoituksenVastaanottajat useFormReturn={useFormReturn as UseFormReturn<FormValuesForIlmoituksenVastaanottajat, object>} />
+            <IlmoituksenVastaanottajat kirjaamoOsoitteet={kirjaamoOsoitteet} />
             <Section>
               <h4 className="vayla-small-title">Kutsun ja ilmoituksen esikatselu</h4>
               <SectionContent>
