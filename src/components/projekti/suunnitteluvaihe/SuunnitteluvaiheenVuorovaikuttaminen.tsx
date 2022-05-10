@@ -1,7 +1,7 @@
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
-import { LinkkiInput } from "../../../../common/graphql/apiModel";
+import { KuntaVastaanottajaInput, LinkkiInput } from "../../../../common/graphql/apiModel";
 import {
   TallennaProjektiInput,
   Projekti,
@@ -12,7 +12,7 @@ import {
   YhteystietoInput
 } from "@services/api";
 import Section from "@components/layout/Section";
-import React, { ReactElement, useEffect, useState, useCallback } from "react";
+import React, { ReactElement, useEffect, useState, useMemo, useCallback } from "react";
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
@@ -114,24 +114,50 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
     return list.map((link) => ({ nimi: link.nimi, url: link.url }));
   }, []);
 
-  const formOptions: UseFormProps<VuorovaikutusFormValues> = {
-    resolver: yupResolver(vuorovaikutusSchema, { abortEarly: false, recursive: true }),
-    mode: "onChange",
-    reValidateMode: "onChange",
-    defaultValues: {
+  const defaultValues : Omit<VuorovaikutusFormValues, "oid"> = useMemo(() => {
+    const v = projekti?.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
+      return v.vuorovaikutusNumero === vuorovaikutusnro;
+    });
+    return {
       suunnitteluVaihe: {
         vuorovaikutus: {
           vuorovaikutusNumero: vuorovaikutusnro,
-          videot: defaultListWithEmptyLink(
-            projekti?.suunnitteluVaihe?.vuorovaikutukset?.[vuorovaikutusnro - 1]?.videot
-          ),
-          suunnittelumateriaali: removeTypeName(
-            projekti?.suunnitteluVaihe?.vuorovaikutukset?.[vuorovaikutusnro - 1]?.suunnittelumateriaali
-          ) || { nimi: "", url: "" },
+          vuorovaikutusJulkaisuPaiva: v?.vuorovaikutusJulkaisuPaiva,
+          kysymyksetJaPalautteetViimeistaan: v?.kysymyksetJaPalautteetViimeistaan,
+          vuorovaikutusYhteysHenkilot:
+            projekti?.kayttoOikeudet
+              ?.filter(({ kayttajatunnus }) => v?.vuorovaikutusYhteysHenkilot?.includes(kayttajatunnus))
+              .map(({ kayttajatunnus }) => kayttajatunnus) || [],
+          esitettavatYhteystiedot:
+            v?.esitettavatYhteystiedot?.map((yhteystieto) => removeTypeName(yhteystieto)) || [],
+          ilmoituksenVastaanottajat: {
+            kunnat: projekti?.suunnitteluSopimus?.kunta.split(",").map(s => s.trim()).map(s => {
+              return {
+              nimi: s,
+              sahkoposti: ""
+            } as KuntaVastaanottajaInput; })
+          },
+          vuorovaikutusTilaisuudet:
+            v?.vuorovaikutusTilaisuudet?.map((tilaisuus) => {
+              const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
+              return vuorovaikutusTilaisuusInput;
+            }) || [],
+          julkinen: v?.julkinen,
+          videot: defaultListWithEmptyLink(v?.videot as LinkkiInput[]),
+          suunnittelumateriaali: removeTypeName(v?.suunnittelumateriaali) as LinkkiInput || { nimi: "", url: "" }
         },
-      },
-    },
-  };
+      }
+    };
+  }, [projekti, vuorovaikutusnro, defaultListWithEmptyLink]);
+
+  const formOptions: UseFormProps<VuorovaikutusFormValues> = useMemo(() => {
+    return {
+      resolver: yupResolver(vuorovaikutusSchema, { abortEarly: false, recursive: true }),
+      mode: "onChange",
+      reValidateMode: "onChange",
+      defaultValues
+    };
+  }, [defaultValues]);
 
   const useFormReturn = useForm<VuorovaikutusFormValues>(formOptions);
   const {
@@ -190,41 +216,13 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
 
   useEffect(() => {
     if (projekti && projekti.oid) {
-      const v = projekti.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
-        return v.vuorovaikutusNumero === vuorovaikutusnro;
-      });
-
       const tallentamisTiedot: VuorovaikutusFormValues = {
         oid: projekti.oid,
-        suunnitteluVaihe: {
-          vuorovaikutus: {
-            vuorovaikutusNumero: vuorovaikutusnro,
-            vuorovaikutusJulkaisuPaiva: v?.vuorovaikutusJulkaisuPaiva,
-            kysymyksetJaPalautteetViimeistaan: v?.kysymyksetJaPalautteetViimeistaan,
-            vuorovaikutusYhteysHenkilot:
-              projekti.kayttoOikeudet
-                ?.filter(({ kayttajatunnus }) => v?.vuorovaikutusYhteysHenkilot?.includes(kayttajatunnus))
-                .map(({ kayttajatunnus }) => kayttajatunnus) || [],
-            esitettavatYhteystiedot:
-              v?.esitettavatYhteystiedot?.map((yhteystieto) => removeTypeName(yhteystieto)) || [],
-            vuorovaikutusTilaisuudet:
-              v?.vuorovaikutusTilaisuudet?.map((tilaisuus) => {
-                const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
-                vuorovaikutusTilaisuusInput.esitettavatYhteystiedot =
-                  vuorovaikutusTilaisuusInput?.esitettavatYhteystiedot?.map((yhteystieto) =>
-                    removeTypeName(yhteystieto)
-                  ) || [];
-                return vuorovaikutusTilaisuusInput;
-              }) || [],
-            julkinen: v?.julkinen,
-            videot: defaultListWithEmptyLink(v?.videot as LinkkiInput[]),
-            suunnittelumateriaali: (removeTypeName(v?.suunnittelumateriaali) as LinkkiInput) || { nimi: "", url: "" },
-          },
-        },
+        ...defaultValues,
       };
       reset(tallentamisTiedot);
     }
-  }, [projekti, reset, vuorovaikutusnro, defaultListWithEmptyLink]);
+  }, [projekti, defaultValues, reset, defaultListWithEmptyLink]);
 
   const handleClickOpenHyvaksy = () => {
     setOpenHyvaksy(true);
