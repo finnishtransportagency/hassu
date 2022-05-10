@@ -13,6 +13,7 @@ import LocationCityIcon from "@mui/icons-material/LocationCity";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import { VuorovaikutusTilaisuus, VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import capitalize from "lodash/capitalize";
+import { SoittoajanYhteystieto } from "@components/projekti/suunnitteluvaihe/SuunniteluvaiheenVuorovaikuttaminen";
 
 export default function Suunnittelu(): ReactElement {
   const router = useRouter();
@@ -111,7 +112,9 @@ export default function Suunnittelu(): ReactElement {
               Voit soittaa alla esitetyille henkilöille myös soittoajan ulkopuolella, mutta parhaiten tavoitat heidät
               esitettynä ajankohtana.
             </p>
-            <p>Pekka Kallisto, projektipäällikkö (Varsinais-Suomen ELY-keskus): 0401238979</p>
+            {props.tilaisuus.esitettavatYhteystiedot?.map((yhteystieto, index) => {
+              return <SoittoajanYhteystieto key={index} yhteystieto={yhteystieto} />;
+            })}
           </div>
         )}
         {props.tilaisuus && props.tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA && (

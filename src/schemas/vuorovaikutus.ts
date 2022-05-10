@@ -41,6 +41,10 @@ export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
           then: Yup.string().required("Tilaisuuden postinumero täytyy antaa"),
         })
         .nullable(),
+      esitettavatYhteystiedot: Yup.array().when("tyyppi", {
+        is: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+        then: Yup.array().of(yhteystietoSchema),
+      }),
     })
   ),
 });
