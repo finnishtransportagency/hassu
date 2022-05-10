@@ -55,20 +55,27 @@ interface AccordionItem {
 
 interface Props {
   items: AccordionItem[];
+  singular?: boolean;
 }
 
 export default function CustomizedAccordions(props: Props) {
-  const { items } = props;
-  const [expanded, setExpanded] = useState<number | false>(false);
+  const { items, singular } = props;
+  const [expanded, setExpanded] = useState<number[]>([]);
 
   const handleChange = (panel: number) => (_: React.SyntheticEvent, newExpanded: boolean) => {
-    setExpanded(newExpanded ? panel : false);
+    if (singular) {
+      setExpanded(newExpanded ? [panel] : []);
+    } else {
+      setExpanded(
+        newExpanded ? [...expanded, panel] : (expanded as number[] | []).filter((panelId) => panelId !== panel)
+      );
+    }
   };
 
   return (
     <div>
       {items.map((item, index) => (
-        <Accordion key={index} expanded={expanded === index} onChange={handleChange(index)}>
+        <Accordion key={index} expanded={expanded.includes(index)} onChange={handleChange(index)}>
           <AccordionSummary>
             <span className="vayla-smallest-title">{item.title}</span>
           </AccordionSummary>
