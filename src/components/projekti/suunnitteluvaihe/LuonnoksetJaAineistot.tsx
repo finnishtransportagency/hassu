@@ -18,6 +18,8 @@ import { useProjektiRoute } from "src/hooks/useProjektiRoute";
 import { formatDateTime } from "src/util/dateUtils";
 import HassuSpinner from "@components/HassuSpinner";
 import { styled } from "@mui/material/styles";
+import ExtLink from "@components/ExtLink";
+import log from "loglevel";
 
 type Videot = Pick<VuorovaikutusInput, "videot">;
 type SuunnitteluMateriaali = Pick<VuorovaikutusInput, "suunnittelumateriaali">;
@@ -99,7 +101,6 @@ export default function LuonnoksetJaAineistot<T extends FormValues>({ useFormRet
           open={aineistoDialogOpen}
           onClose={closeAineistoDialog}
           maxWidth="lg"
-          scroll="paper"
           PaperProps={{
             sx: {
               maxHeight: "80vh",
@@ -129,14 +130,41 @@ export default function LuonnoksetJaAineistot<T extends FormValues>({ useFormRet
                               <Table<VelhoAineisto>
                                 tableOptions={{
                                   columns: [
-                                    { Header: "Tiedosto", accessor: "tiedosto" },
+                                    {
+                                      Header: "Tiedosto",
+                                      accessor: (aineisto) => (
+                                        <ExtLink
+                                          as="button"
+                                          onClick={async () => {
+                                            if (projekti?.oid) {
+                                              try {
+                                                const link = await api.haeVelhoProjektiAineistoLinkki(
+                                                  projekti.oid,
+                                                  aineisto.oid
+                                                );
+                                                const anchor = document.createElement("a");
+                                                anchor.href = link;
+                                                anchor.download = aineisto.tiedosto;
+                                                anchor.click();
+                                              } catch (e) {
+                                                log.error("Error gathering aineistolinkki", e);
+                                              }
+                                            }
+                                          }}
+                                        >
+                                          {aineisto.tiedosto}
+                                        </ExtLink>
+                                      ),
+                                    },
                                     {
                                       Header: "Muokattu Projektivelhossa",
                                       accessor: (aineisto) => formatDateTime(aineisto.muokattu),
                                     },
                                     { Header: "Dokumenttityyppi", accessor: "dokumenttiTyyppi" },
+                                    { Header: "oid", accessor: "oid" },
                                   ],
                                   data: kategoria.aineistot,
+                                  initialState: { hiddenColumns: ["oid"] },
                                 }}
                                 useRowSelect
                               />
