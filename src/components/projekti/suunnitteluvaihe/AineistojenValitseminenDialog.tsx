@@ -1,4 +1,3 @@
-// import { useFormContext } from "react-hook-form";
 import { useEffect, useState } from "react";
 import Button from "@components/button/Button";
 import HassuDialog from "@components/HassuDialog";
@@ -33,17 +32,7 @@ export default function AineistojenValitseminenDialog(props: Pick<DialogProps, "
 
   return (
     <>
-      <HassuDialog
-        title="Aineistojen valitseminen"
-        {...props}
-        maxWidth="lg"
-        PaperProps={{
-          sx: {
-            maxHeight: "80vh",
-            minHeight: "80vh",
-          },
-        }}
-      >
+      <HassuDialog title="Aineistojen valitseminen" scroll="body" {...props} maxWidth="lg">
         <DialogContent sx={{ display: "flex", flexDirection: "column", padding: 0, marginBottom: 7 }}>
           <p>
             Näet alla Projektivelhoon tehdyt toimeksiannot ja toimeksiantoihin ladatut tiedostot. Valitse tiedostot,

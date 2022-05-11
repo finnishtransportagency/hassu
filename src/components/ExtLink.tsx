@@ -28,7 +28,8 @@ const ExtLink = (
   ref: React.ForwardedRef<HTMLAnchorElement>
 ) => (
   <Anchor
-    target={!as && as === "a" ? target : undefined}
+    // If element type is not undefined or 'a' (anchor), don't set target attribute
+    target={!as || as === "a" ? target : undefined}
     as={as}
     ref={ref}
     className={classNames("text-primary-dark", className)}

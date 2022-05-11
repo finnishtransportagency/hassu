@@ -81,7 +81,7 @@ export default function LuonnoksetJaAineistot<T extends FormValues>({ useFormRet
               style={{ width: "100%" }}
               key={field.id}
               {...register(`suunnitteluVaihe.vuorovaikutus.videot.${index}.url`)}
-              label={`Linkki videoon${videotFields.length > 1 ? " *" : ""}`}
+              label="Linkki videoon"
               error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.videot?.[index]?.url}
             />
             {!!index && (

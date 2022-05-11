@@ -131,7 +131,13 @@ export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet }
   // const isSoittoaikoja = !!fields.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA);
 
   return (
-    <HassuDialog open={open} title="Vuorovaikutustilaisuuden lisääminen" onClose={onClose} maxWidth={"lg"}>
+    <HassuDialog
+      scroll="body"
+      open={open}
+      title="Vuorovaikutustilaisuuden lisääminen"
+      onClose={onClose}
+      maxWidth={"lg"}
+    >
       <DialogContent>
         <HassuStack>
           <p>Voit valita saman vuorovaikutustavan useammin kuin yhden kerran.</p>
