@@ -1,25 +1,15 @@
 // import { useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Button from "@components/button/Button";
 import TextInput from "@components/form/TextInput";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import HassuDialog from "@components/HassuDialog";
 import IconButton from "@components/button/IconButton";
 import HassuStack from "@components/layout/HassuStack";
 import { TallennaProjektiInput, VuorovaikutusInput } from "@services/api";
 import { useFieldArray, UseFormReturn } from "react-hook-form";
-import { DialogActions, DialogContent, Divider, Stack } from "@mui/material";
-import HassuAccordion from "@components/HassuAccordion";
-import Table from "@components/Table";
-import { api, VelhoAineisto, VelhoAineistoKategoria } from "@services/api";
-import { useProjektiRoute } from "src/hooks/useProjektiRoute";
-import { formatDateTime } from "src/util/dateUtils";
-import HassuSpinner from "@components/HassuSpinner";
-import { styled } from "@mui/material/styles";
-import ExtLink from "@components/ExtLink";
-import log from "loglevel";
+import AineistojenValitseminenDialog from "./AineistojenValitseminenDialog";
 
 type Videot = Pick<VuorovaikutusInput, "videot">;
 type SuunnitteluMateriaali = Pick<VuorovaikutusInput, "suunnittelumateriaali">;
@@ -40,25 +30,10 @@ interface Props<T> {
 }
 
 export default function LuonnoksetJaAineistot<T extends FormValues>({ useFormReturn }: Props<T>) {
-  const { data: projekti } = useProjektiRoute();
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [aineistoKategoriat, setAineistoKategoriat] = useState<VelhoAineistoKategoria[]>();
 
   const openAineistoDialog = () => setAineistoDialogOpen(true);
   const closeAineistoDialog = () => setAineistoDialogOpen(false);
-
-  useEffect(() => {
-    if (projekti && aineistoDialogOpen) {
-      const haeAineistotDialogiin = async () => {
-        setIsLoading(true);
-        const velhoAineistoKategoriat = await api.listaaVelhoProjektiAineistot(projekti.oid);
-        setAineistoKategoriat(velhoAineistoKategoriat);
-        setIsLoading(false);
-      };
-      haeAineistotDialogiin();
-    }
-  }, [aineistoDialogOpen, projekti, setAineistoKategoriat]);
 
   // const context = useFormContext();
 
@@ -96,106 +71,7 @@ export default function LuonnoksetJaAineistot<T extends FormValues>({ useFormRet
         <Button type="button" onClick={openAineistoDialog}>
           Tuo Aineistoja
         </Button>
-        <HassuDialog
-          title="Aineistojen valitseminen"
-          open={aineistoDialogOpen}
-          onClose={closeAineistoDialog}
-          maxWidth="lg"
-          PaperProps={{
-            sx: {
-              maxHeight: "80vh",
-              minHeight: "80vh",
-            },
-          }}
-        >
-          <DialogContent sx={{ display: "flex", flexDirection: "column", padding: 0, marginBottom: 7 }}>
-            <p>
-              Näet alla Projektivelhoon tehdyt toimeksiannot ja toimeksiantoihin ladatut tiedostot. Valitse tiedostot,
-              jotka haluat tuoda suunnitteluvaiheeseen.{" "}
-            </p>
-            <Stack
-              direction={{ xs: "column", lg: "row" }}
-              style={{ flex: "1 1 auto" }}
-              divider={<Divider orientation="vertical" flexItem />}
-            >
-              <StyledDiv sx={{ width: { lg: "75%" } }}>
-                {aineistoKategoriat && aineistoKategoriat.length > 0 ? (
-                  <HassuAccordion
-                    items={
-                      aineistoKategoriat?.map((kategoria) => ({
-                        title: kategoria.kategoria,
-                        content: (
-                          <>
-                            {kategoria.aineistot && kategoria.aineistot.length > 0 ? (
-                              <Table<VelhoAineisto>
-                                tableOptions={{
-                                  columns: [
-                                    {
-                                      Header: "Tiedosto",
-                                      accessor: (aineisto) => (
-                                        <ExtLink
-                                          as="button"
-                                          onClick={async () => {
-                                            if (projekti?.oid) {
-                                              try {
-                                                const link = await api.haeVelhoProjektiAineistoLinkki(
-                                                  projekti.oid,
-                                                  aineisto.oid
-                                                );
-                                                const anchor = document.createElement("a");
-                                                anchor.href = link;
-                                                anchor.download = aineisto.tiedosto;
-                                                anchor.click();
-                                              } catch (e) {
-                                                log.error("Error gathering aineistolinkki", e);
-                                              }
-                                            }
-                                          }}
-                                        >
-                                          {aineisto.tiedosto}
-                                        </ExtLink>
-                                      ),
-                                    },
-                                    {
-                                      Header: "Muokattu Projektivelhossa",
-                                      accessor: (aineisto) => formatDateTime(aineisto.muokattu),
-                                    },
-                                    { Header: "Dokumenttityyppi", accessor: "dokumenttiTyyppi" },
-                                    { Header: "oid", accessor: "oid" },
-                                  ],
-                                  data: kategoria.aineistot,
-                                  initialState: { hiddenColumns: ["oid"] },
-                                }}
-                                useRowSelect
-                              />
-                            ) : (
-                              <p>Projektilla ei ole aineistoa</p>
-                            )}
-                          </>
-                        ),
-                      })) || []
-                    }
-                  />
-                ) : isLoading ? (
-                  "Haetaan ainestotietoja velhosta..."
-                ) : (
-                  "Projektivelhossa ei ole aineistoa projektille."
-                )}
-              </StyledDiv>
-              <StyledDiv sx={{ width: { lg: "25%" } }}>
-                <h5 className="vayla-smallest-title">Valitut tiedostot</h5>
-              </StyledDiv>
-            </Stack>
-          </DialogContent>
-          <DialogActions>
-            <Button primary type="button" disabled onClick={closeAineistoDialog}>
-              Tuo valitut aineistot
-            </Button>
-            <Button type="button" onClick={closeAineistoDialog}>
-              Peruuta
-            </Button>
-          </DialogActions>
-        </HassuDialog>
+        <AineistojenValitseminenDialog open={aineistoDialogOpen} onClose={closeAineistoDialog} />
       </SectionContent>
       <SectionContent>
         <h5 className="vayla-smallest-title">Ennalta kuvattu videoesittely</h5>
@@ -262,9 +138,6 @@ export default function LuonnoksetJaAineistot<T extends FormValues>({ useFormRet
           error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.suunnittelumateriaali?.url}
         />
       </SectionContent>
-      <HassuSpinner open={isLoading} />
     </Section>
   );
 }
-
-const StyledDiv = styled("div")({});

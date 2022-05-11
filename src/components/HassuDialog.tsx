@@ -35,7 +35,7 @@ const HassuDialog = (props: DialogProps & Props): ReactElement => {
               {title}
             </h4>
             {!hideCloseButton && (
-              <WindowCloseButton size="small" onClick={() => dialogProps.onClose?.({}, "backdropClick")} />
+              <WindowCloseButton size="small" onClick={() => dialogProps.onClose?.({}, "escapeKeyDown")} />
             )}
           </Stack>
         </DialogTitle>
