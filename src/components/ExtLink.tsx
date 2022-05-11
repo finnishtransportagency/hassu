@@ -1,32 +1,46 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import classNames from "classnames";
+import { styled, Theme } from "@mui/material/styles";
+import { MUIStyledCommonProps } from "@mui/system";
 
 interface Props {
-  useNextLink?: boolean;
   hideIcon?: true;
 }
 
 const ExtLink = (
   {
-    href,
+    target = "_blank",
     children,
     className,
-    target = "_blank",
     hideIcon,
+    as,
     ...props
-  }: Props & Omit<React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "ref">,
+  }: Omit<
+    Props &
+      React.PropsWithChildren<
+        MUIStyledCommonProps<Theme> &
+          React.ClassAttributes<HTMLAnchorElement> &
+          React.AnchorHTMLAttributes<HTMLAnchorElement>
+      >,
+    "ref"
+  >,
   ref: React.ForwardedRef<HTMLAnchorElement>
-) => {
-  return (
-    <div>
-      <a ref={ref} href={href} target={target} {...props} className={classNames("text-primary-dark", className)}>
-        {children}
-        &nbsp;
-        {!hideIcon && <FontAwesomeIcon icon="external-link-alt" size="lg"></FontAwesomeIcon>}
-      </a>
-    </div>
-  );
-};
+) => (
+  <Anchor
+    // If element type is not undefined or 'a' (anchor), don't set target attribute
+    target={!as || as === "a" ? target : undefined}
+    as={as}
+    ref={ref}
+    className={classNames("text-primary-dark", className)}
+    {...props}
+  >
+    {children}
+    &nbsp;
+    {!hideIcon && <FontAwesomeIcon icon="external-link-alt" size="lg" />}
+  </Anchor>
+);
+
+const Anchor = styled("a")({ display: "flex", flexFlow: "row wrap" });
 
 export default React.forwardRef(ExtLink);

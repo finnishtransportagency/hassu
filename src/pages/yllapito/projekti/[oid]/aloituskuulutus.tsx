@@ -39,8 +39,7 @@ import { GetServerSideProps } from "next";
 import { setupLambdaMonitoring } from "backend/src/aws/monitoring";
 import dayjs from "dayjs";
 import useTranslation from "next-translate/useTranslation";
-import WindowCloseButton from "@components/button/WindowCloseButton";
-import { Stack } from "@mui/material";
+import { DialogActions, DialogContent, Stack } from "@mui/material";
 import HassuDialog from "@components/HassuDialog";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
@@ -542,134 +541,99 @@ export default function Aloituskuulutus({
             </Stack>
           </Section>
           <div>
-            <HassuDialog open={open} onClose={handleClickClose}>
-              <Section noDivider smallGaps>
-                <SectionContent>
-                  <div className="vayla-dialog-title flex">
-                    <div className="flex-grow">Kuulutuksen palauttaminen</div>
-                    <div className="justify-end">
-                      <WindowCloseButton
-                        onClick={() => {
-                          handleClickClose();
-                        }}
-                      ></WindowCloseButton>
-                    </div>
-                  </div>
-                </SectionContent>
-                <SectionContent>
-                  <div className="vayla-dialog-content">
-                    <form>
-                      <HassuStack>
-                        <p>
-                          Olet palauttamassa kuulutuksen korjattavaksi. Kuulutuksen tekijä saa tiedon palautuksesta ja
-                          sen syystä. Saat ilmoituksen, kun kuulutus on taas valmis hyväksyttäväksi. Jos haluat itse
-                          muokata kuulutusta ja hyväksyä tehtyjen muutoksien jälkeen, valitse Palauta ja muokkaa.
-                        </p>
-                        <Textarea
-                          label="Syy palautukselle *"
-                          {...register2("syy", { required: "Palautuksen syy täytyy antaa" })}
-                          error={errors2.syy}
-                          maxLength={200}
-                          hideLengthCounter={false}
-                        ></Textarea>
-                      </HassuStack>
-                      <HassuStack
-                        direction={["column", "column", "row"]}
-                        justifyContent={[undefined, undefined, "flex-end"]}
-                        paddingTop={"1rem"}
-                      >
-                        <Button primary onClick={handleSubmit2(palautaMuokattavaksiJaPoistu)}>
-                          Palauta ja poistu
-                        </Button>
-                        <Button onClick={handleSubmit2(palautaMuokattavaksi)}>Palauta ja muokkaa</Button>
-                        <Button
-                          onClick={(e) => {
-                            handleClickClose();
-                            e.preventDefault();
-                          }}
-                        >
-                          Peruuta
-                        </Button>
-                      </HassuStack>
-                    </form>
-                  </div>
-                </SectionContent>
-              </Section>
+            <HassuDialog open={open} title="Kuulutuksen palauttaminen" onClose={handleClickClose}>
+              <form>
+                <HassuStack>
+                  <p>
+                    Olet palauttamassa kuulutuksen korjattavaksi. Kuulutuksen tekijä saa tiedon palautuksesta ja sen
+                    syystä. Saat ilmoituksen, kun kuulutus on taas valmis hyväksyttäväksi. Jos haluat itse muokata
+                    kuulutusta ja hyväksyä tehtyjen muutoksien jälkeen, valitse Palauta ja muokkaa.
+                  </p>
+                  <Textarea
+                    label="Syy palautukselle *"
+                    {...register2("syy", { required: "Palautuksen syy täytyy antaa" })}
+                    error={errors2.syy}
+                    maxLength={200}
+                    hideLengthCounter={false}
+                  ></Textarea>
+                </HassuStack>
+                <HassuStack
+                  direction={["column", "column", "row"]}
+                  justifyContent={[undefined, undefined, "flex-end"]}
+                  paddingTop={"1rem"}
+                >
+                  <Button primary onClick={handleSubmit2(palautaMuokattavaksiJaPoistu)}>
+                    Palauta ja poistu
+                  </Button>
+                  <Button onClick={handleSubmit2(palautaMuokattavaksi)}>Palauta ja muokkaa</Button>
+                  <Button
+                    onClick={(e) => {
+                      handleClickClose();
+                      e.preventDefault();
+                    }}
+                  >
+                    Peruuta
+                  </Button>
+                </HassuStack>
+              </form>
             </HassuDialog>
           </div>
           <div>
-            <HassuDialog open={openHyvaksy} onClose={handleClickCloseHyvaksy}>
-              <Section noDivider smallGaps>
-                <SectionContent>
-                  <div className="vayla-dialog-title flex">
-                    <div className="flex-grow">Kuulutuksen hyväksyminen ja ilmoituksen lähettäminen</div>
-                    <div className="justify-end">
-                      <WindowCloseButton
-                        onClick={() => {
-                          handleClickCloseHyvaksy();
-                        }}
-                      ></WindowCloseButton>
-                    </div>
+            <HassuDialog
+              title="Kuulutuksen hyväksyminen ja ilmoituksen lähettäminen"
+              hideCloseButton
+              open={openHyvaksy}
+              onClose={handleClickCloseHyvaksy}
+            >
+              <form style={{ display: "contents" }}>
+                <DialogContent>
+                  <p>
+                    Olet hyväksymässä kuulutuksen ja käynnistämässä siihen liittyvän ilmoituksen automaattisen
+                    lähettämisen. Ilmoitus kuulutuksesta lähetetään seuraaville:
+                  </p>
+                  <div>
+                    <p>Viranomaiset</p>
+                    <ul className="vayla-dialog-list">
+                      {projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => (
+                        <li key={viranomainen.nimi}>
+                          {t(`viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
+                        </li>
+                      ))}
+                    </ul>
+                    <p>Kunnat</p>
+                    <ul className="vayla-dialog-list">
+                      {projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => (
+                        <li key={kunta.nimi}>
+                          {kunta.nimi}, {kunta.sahkoposti}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                </SectionContent>
-                <SectionContent>
-                  <div className="vayla-dialog-content">
-                    <form>
-                      <p>
-                        Olet hyväksymässä kuulutuksen ja käynnistämässä siihen liittyvän ilmoituksen automaattisen
-                        lähettämisen. Ilmoitus kuulutuksesta lähetetään seuraaville:
-                      </p>
-                      <div className="content">
-                        <p>Viranomaiset</p>
-                        <ul className="vayla-dialog-list">
-                          {projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => (
-                            <li key={viranomainen.nimi}>
-                              {t(`viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
-                            </li>
-                          ))}
-                        </ul>
-                        <p>Kunnat</p>
-                        <ul className="vayla-dialog-list">
-                          {projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => (
-                            <li key={kunta.nimi}>
-                              {kunta.nimi}, {kunta.sahkoposti}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div className="content">
-                        <p>
-                          Jos aloituskuulutukseen pitää tehdä muutoksia hyväksymisen jälkeen, tulee aloituskuulutus
-                          avata uudelleen ja lähettää päivitetyt ilmoitukset asianosaisille. Kuulutuspäivän jälkeen
-                          tulevat muutostarpeet vaativat aloituksen uudelleen kuuluttamisen.
-                        </p>
-                        <p>
-                          Klikkaamalla Hyväksy ja lähetä -painiketta vahvistat kuulutuksen tarkastetuksi ja hyväksyt sen
-                          julkaisun kuulutuspäivänä sekä ilmoituksien lähettämisen. Ilmoitukset lähetetään
-                          automaattisesti painikkeen klikkaamisen jälkeen.
-                        </p>
-                      </div>
-                      <HassuStack
-                        direction={["column", "column", "row"]}
-                        justifyContent={[undefined, undefined, "flex-end"]}
-                        paddingTop={"1rem"}
-                      >
-                        <Button primary onClick={handleSubmit(hyvaksyKuulutus)}>
-                          Hyväksy ja lähetä
-                        </Button>
-                        <Button
-                          onClick={(e) => {
-                            handleClickCloseHyvaksy();
-                            e.preventDefault();
-                          }}
-                        >
-                          Peruuta
-                        </Button>
-                      </HassuStack>
-                    </form>
-                  </div>
-                </SectionContent>
-              </Section>
+                  <p>
+                    Jos aloituskuulutukseen pitää tehdä muutoksia hyväksymisen jälkeen, tulee aloituskuulutus avata
+                    uudelleen ja lähettää päivitetyt ilmoitukset asianosaisille. Kuulutuspäivän jälkeen tulevat
+                    muutostarpeet vaativat aloituksen uudelleen kuuluttamisen.
+                  </p>
+                  <p>
+                    Klikkaamalla Hyväksy ja lähetä -painiketta vahvistat kuulutuksen tarkastetuksi ja hyväksyt sen
+                    julkaisun kuulutuspäivänä sekä ilmoituksien lähettämisen. Ilmoitukset lähetetään automaattisesti
+                    painikkeen klikkaamisen jälkeen.
+                  </p>
+                </DialogContent>
+                <DialogActions>
+                  <Button primary onClick={handleSubmit(hyvaksyKuulutus)}>
+                    Hyväksy ja lähetä
+                  </Button>
+                  <Button
+                    onClick={(e) => {
+                      handleClickCloseHyvaksy();
+                      e.preventDefault();
+                    }}
+                  >
+                    Peruuta
+                  </Button>
+                </DialogActions>
+              </form>
             </HassuDialog>
           </div>
         </>

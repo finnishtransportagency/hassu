@@ -1,15 +1,15 @@
-import { Dialog, DialogProps, Stack } from "@mui/material";
+import { Dialog, DialogProps, DialogTitle, Stack } from "@mui/material";
 import React, { ReactElement } from "react";
 import WindowCloseButton from "./button/WindowCloseButton";
-import { styled, experimental_sx as sx } from "@mui/material";
-
 interface Props {
   title?: string;
-  showCloseButton?: boolean;
+  hideCloseButton?: boolean;
 }
 
 const HassuDialog = (props: DialogProps & Props): ReactElement => {
-  const { children, title, showCloseButton, ...dialogProps } = props;
+  const { children, title, hideCloseButton, PaperProps, ...dialogProps } = props;
+
+  const { sx: paperSx, ...paperProps } = PaperProps || {};
 
   return (
     <Dialog
@@ -21,28 +21,28 @@ const HassuDialog = (props: DialogProps & Props): ReactElement => {
           borderTopStyle: "solid",
           borderImage: "linear-gradient(117deg, #009ae0, #49c2f1) 1",
           borderRadius: "0",
-          // padding: 7,
+          padding: 7,
+          ...paperSx,
         },
+        ...paperProps,
       }}
       {...dialogProps}
     >
-      {(title || showCloseButton) && (
-        <Stack direction="row" alignItems="flex-start" justifyContent="space-between">
-          <Title className="vayla-dialog-title">{title}</Title>
-          {showCloseButton && (
-            <WindowCloseButton size="small" onClick={() => dialogProps.onClose?.({}, "backdropClick")} />
-          )}
-        </Stack>
+      {title && (
+        <DialogTitle>
+          <Stack direction="row" alignItems="flex-start" justifyContent="space-between">
+            <h4 style={{ margin: 0 }} className="vayla-dialog-title">
+              {title}
+            </h4>
+            {!hideCloseButton && (
+              <WindowCloseButton size="small" onClick={() => dialogProps.onClose?.({}, "escapeKeyDown")} />
+            )}
+          </Stack>
+        </DialogTitle>
       )}
       {children}
     </Dialog>
   );
 };
-
-const Title = styled("div")(
-  sx({
-    marginBottom: 7,
-  })
-);
 
 export default HassuDialog;

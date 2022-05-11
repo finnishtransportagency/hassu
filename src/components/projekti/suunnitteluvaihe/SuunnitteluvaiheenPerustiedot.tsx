@@ -9,7 +9,7 @@ import lowerCase from "lodash/lowerCase";
 import { ReactElement, useEffect, useState } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import TextInput from "@components/form/TextInput";
-import { Stack } from "@mui/material";
+import { DialogActions, DialogContent, Stack } from "@mui/material";
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
@@ -17,9 +17,7 @@ import HassuSpinner from "@components/HassuSpinner";
 import { removeTypeName } from "src/util/removeTypeName";
 import { KeyedMutator } from "swr";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
-import HassuStack from "@components/layout/HassuStack";
 import HassuDialog from "@components/HassuDialog";
-import WindowCloseButton from "@components/button/WindowCloseButton";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -242,54 +240,40 @@ export default function SuunnitteluvaiheenPerustiedot({
           <Button disabled>Nähtävilläolon kuuluttaminen</Button>
         </Stack>
       </Section>
-      <div>
-        <HassuDialog open={openHyvaksy} onClose={() => setOpenHyvaksy(false)}>
-          <Section noDivider smallGaps>
-            <SectionContent>
-              <div className="vayla-dialog-title flex">
-                <div className="flex-grow">Suunnitteluvaiheen perustietojen julkaisu</div>
-                <div className="justify-end">
-                  <WindowCloseButton onClick={() => setOpenHyvaksy(false)}></WindowCloseButton>
-                </div>
-              </div>
-            </SectionContent>
-            <SectionContent>
-              <div className="vayla-dialog-content">
-                <form>
-                  <p>Olet julkaisemassa suunnitteluvaiheen perustiedot kansalaispuolelle.</p>
-                  <div className="content">
-                    <p>
-                      Jos perustietoihin pitää tehdä muutoksia julkaisun jälkeen, tulee perustiedot avata uudelleen ja
-                      tehdä tallennus ja julkaisun päivitys.
-                    </p>
-                    <p>
-                      Klikkaamalla Hyväksy ja julkaise -painiketta vahvistat perustiedot tarkastetuksi ja hyväksyt sen
-                      julkaisun.
-                    </p>
-                  </div>
-                  <HassuStack
-                    direction={["column", "column", "row"]}
-                    justifyContent={[undefined, undefined, "flex-end"]}
-                    paddingTop={"1rem"}
-                  >
-                    <Button primary onClick={handleSubmit(saveAndPublish)}>
-                      Hyväksy ja julkaise
-                    </Button>
-                    <Button
-                      onClick={(e) => {
-                        setOpenHyvaksy(false);
-                        e.preventDefault();
-                      }}
-                    >
-                      Peruuta
-                    </Button>
-                  </HassuStack>
-                </form>
-              </div>
-            </SectionContent>
-          </Section>
-        </HassuDialog>
-      </div>
+      <HassuDialog
+        open={openHyvaksy}
+        title="Suunnitteluvaiheen perustietojen julkaisu"
+        onClose={() => setOpenHyvaksy(false)}
+      >
+        <form style={{ display: "contents" }}>
+          <DialogContent>
+            <p>Olet julkaisemassa suunnitteluvaiheen perustiedot kansalaispuolelle.</p>
+            <div className="content">
+              <p>
+                Jos perustietoihin pitää tehdä muutoksia julkaisun jälkeen, tulee perustiedot avata uudelleen ja tehdä
+                tallennus ja julkaisun päivitys.
+              </p>
+              <p>
+                Klikkaamalla Hyväksy ja julkaise -painiketta vahvistat perustiedot tarkastetuksi ja hyväksyt sen
+                julkaisun.
+              </p>
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <Button primary onClick={handleSubmit(saveAndPublish)}>
+              Hyväksy ja julkaise
+            </Button>
+            <Button
+              onClick={(e) => {
+                setOpenHyvaksy(false);
+                e.preventDefault();
+              }}
+            >
+              Peruuta
+            </Button>
+          </DialogActions>
+        </form>
+      </HassuDialog>
       <HassuSpinner open={isFormSubmitting} />
     </>
   );

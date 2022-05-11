@@ -4,10 +4,15 @@ export const formatDate = (date: string | number | Date | dayjs.Dayjs | null | u
   return dayjs(date).format("DD.MM.YYYY");
 };
 
-export const isValidDate = (date: string | number | Date | dayjs.Dayjs | null | undefined) => {
-  return dayjs(date).isValid();
-};
-
 export const formatDayOfWeek = (date: string | number | Date | dayjs.Dayjs | null | undefined) => {
   return dayjs(date).format("dddd");
+};
+
+// TODO i18n, jos käytössä kansalaispuolella
+export const formatDateTime = (date: string | number | Date | dayjs.Dayjs | null | undefined) => {
+  return dayjs(date).format("DD.MM.YYYY [klo] HH:mm");
+};
+
+export const isValidDate = (date: string | number | Date | dayjs.Dayjs | null | undefined) => {
+  return dayjs(date).isValid();
 };
