@@ -67,12 +67,7 @@ export type VuorovaikutusFormValues = RequiredProjektiFields & {
 
 type FormValuesForLuonnoksetJaAineistot = RequiredProjektiFields & {
   suunnitteluVaihe: {
-    vuorovaikutus: Pick<
-      VuorovaikutusInput,
-      | "vuorovaikutusNumero"
-      | "videot"
-      | "suunnittelumateriaali"
-    >;
+    vuorovaikutus: Pick<VuorovaikutusInput, "vuorovaikutusNumero" | "videot" | "suunnittelumateriaali">;
   };
 };
 
@@ -104,11 +99,11 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
   const today = dayjs().format();
   const { t } = useTranslation();
 
-  const defaultListWithEmptyLink = useCallback((list : (LinkkiInput[] | null | undefined)) : LinkkiInput[] => {
+  const defaultListWithEmptyLink = useCallback((list: LinkkiInput[] | null | undefined): LinkkiInput[] => {
     if (!list || !list.length) {
       return [{ url: "", nimi: "" }];
     }
-    return list.map(link => ({ nimi: link.nimi, url: link.url }));
+    return list.map((link) => ({ nimi: link.nimi, url: link.url }));
   }, []);
 
   const formOptions: UseFormProps<VuorovaikutusFormValues> = {
@@ -119,11 +114,15 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
       suunnitteluVaihe: {
         vuorovaikutus: {
           vuorovaikutusNumero: vuorovaikutusnro,
-          videot: defaultListWithEmptyLink(projekti?.suunnitteluVaihe?.vuorovaikutukset?.[vuorovaikutusnro-1]?.videot),
-          suunnittelumateriaali: removeTypeName(projekti?.suunnitteluVaihe?.vuorovaikutukset?.[vuorovaikutusnro-1]?.suunnittelumateriaali)  || { nimi: "", url: "" },
-        }
+          videot: defaultListWithEmptyLink(
+            projekti?.suunnitteluVaihe?.vuorovaikutukset?.[vuorovaikutusnro - 1]?.videot
+          ),
+          suunnittelumateriaali: removeTypeName(
+            projekti?.suunnitteluVaihe?.vuorovaikutukset?.[vuorovaikutusnro - 1]?.suunnittelumateriaali
+          ) || { nimi: "", url: "" },
+        },
       },
-    }
+    },
   };
 
   const useFormReturn = useForm<VuorovaikutusFormValues>(formOptions);
@@ -134,7 +133,6 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
     formState: { errors, isDirty },
     control,
     getValues,
-    setValue,
   } = useFormReturn;
 
   const { fields, append, remove } = useFieldArray({
@@ -170,7 +168,8 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
     async (formData: VuorovaikutusFormValues) => {
       setIsFormSubmitting(true);
       try {
-        setValue("suunnitteluVaihe.vuorovaikutus.julkinen", true);
+        formData.suunnitteluVaihe.vuorovaikutus.julkinen = true;
+        console.log(formData);
         await saveSunnitteluvaihe(formData);
         showSuccessMessage("Tallennus onnistui!");
       } catch (e) {
@@ -180,7 +179,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
       setOpenHyvaksy(false);
       setIsFormSubmitting(false);
     },
-    [saveSunnitteluvaihe, setValue, showErrorMessage, showSuccessMessage]
+    [saveSunnitteluvaihe, showErrorMessage, showSuccessMessage]
   );
 
   useEffect(() => {
@@ -217,7 +216,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
               }) || [],
             julkinen: v?.julkinen,
             videot: defaultListWithEmptyLink(v?.videot as LinkkiInput[]),
-            suunnittelumateriaali: removeTypeName(v?.suunnittelumateriaali) as LinkkiInput || { nimi: "", url: "" }
+            suunnittelumateriaali: (removeTypeName(v?.suunnittelumateriaali) as LinkkiInput) || { nimi: "", url: "" },
           },
         },
       };
@@ -372,7 +371,9 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                 </Button>
               </SectionContent>
             </Section>
-            <LuonnoksetJaAineistot useFormReturn={useFormReturn as UseFormReturn<FormValuesForLuonnoksetJaAineistot, object>} />
+            <LuonnoksetJaAineistot
+              useFormReturn={useFormReturn as UseFormReturn<FormValuesForLuonnoksetJaAineistot, object>}
+            />
             <Section>
               <SectionContent>
                 <h4 className="vayla-small-title">Vuorovaikuttamisen yhteyshenkilöt</h4>
@@ -543,6 +544,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
             tilaisuudet={vuorovaikutusTilaisuudet}
             kayttoOikeudet={projekti.kayttoOikeudet}
           ></VuorovaikutusDialog>
+          <input type="hidden" {...register("suunnitteluVaihe.vuorovaikutus.julkinen")} />
         </form>
       </FormProvider>
       <div>

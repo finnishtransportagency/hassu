@@ -112,6 +112,10 @@ export default function Suunnittelu(): ReactElement {
               Voit soittaa alla esitetyille henkilöille myös soittoajan ulkopuolella, mutta parhaiten tavoitat heidät
               esitettynä ajankohtana.
             </p>
+            {props.tilaisuus.projektiYhteysHenkilot?.map((yhteyshenkilo, index) => {
+              //TODO tarvitaan Yhteystieto-mappays tai sitten bakkarista valmiiksi kaivettuna
+              return <p key={index}>{yhteyshenkilo}</p>;
+            })}
             {props.tilaisuus.esitettavatYhteystiedot?.map((yhteystieto, index) => {
               return <SoittoajanYhteystieto key={index} yhteystieto={yhteystieto} />;
             })}

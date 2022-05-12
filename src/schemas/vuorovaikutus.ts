@@ -45,6 +45,12 @@ export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
         is: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
         then: Yup.array().of(yhteystietoSchema),
       }),
+      projektiYhteysHenkilot: Yup.array()
+        .when("tyyppi", {
+          is: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+          then: Yup.array().of(Yup.string()).required("Vähintään yksi yhteyshenkilö pitää valita"),
+        })
+        .nullable(),
     })
   ),
 });

@@ -17,7 +17,6 @@ import TimePicker from "@components/form/TimePicker";
 import {
   KaytettavaPalvelu,
   ProjektiKayttaja,
-  ProjektiRooli,
   VuorovaikutusTilaisuusInput,
   VuorovaikutusTilaisuusTyyppi,
 } from "@services/api";
