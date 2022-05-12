@@ -1,7 +1,7 @@
 type Query {
   nykyinenKayttaja: NykyinenKayttaja
   listaaKayttajat(hakuehto: ListaaKayttajatInput!): [Kayttaja!]
-  listaaProjektit(hakuehto: ListaaProjektitInput!): ProjektiHakutulos
+  listaaProjektit(hakuehto: ListaaProjektitInput!): IProjektiHakutulos
   lataaProjekti(oid: String!): IProjekti
 
   listaaVelhoProjektit(nimi: String!, requireExactMatch: Boolean): [VelhoHakuTulos!]

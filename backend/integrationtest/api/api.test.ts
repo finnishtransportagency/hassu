@@ -23,7 +23,7 @@ import * as sinon from "sinon";
 import Sinon from "sinon";
 import { personSearchUpdaterClient } from "../../src/personSearch/personSearchUpdaterClient";
 import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/personSearchUpdaterHandler";
-import { openSearchClient } from "../../src/projektiSearch/openSearchClient";
+import { openSearchClientYllapito } from "../../src/projektiSearch/openSearchClient";
 import { projektiArchive } from "../../src/archive/projektiArchiveService";
 import { fail } from "assert";
 import { UserFixture } from "../../test/fixture/userFixture";
@@ -119,9 +119,9 @@ describe("Api", () => {
       return await personSearchUpdaterHandler.handleEvent();
     });
 
-    sandbox.stub(openSearchClient, "query").resolves({ status: 200 });
-    sandbox.stub(openSearchClient, "deleteProjekti");
-    sandbox.stub(openSearchClient, "putProjekti");
+    sandbox.stub(openSearchClientYllapito, "query").resolves({ status: 200 });
+    sandbox.stub(openSearchClientYllapito, "deleteProjekti");
+    sandbox.stub(openSearchClientYllapito, "putProjekti");
 
     importAineistoStub = sandbox.stub(aineistoImporterClient, "importAineisto");
     importAineistoStub.callsFake(async (event) => {
@@ -393,6 +393,7 @@ describe("Api", () => {
   async function testPublicAccessToProjekti(oid: string, expectedStatus: Status, description?: string) {
     userFixture.logout();
     const publicProjekti = await loadProjektiFromDatabase(oid, expectedStatus);
+    publicProjekti.paivitetty = "***unit test***";
     expectToMatchSnapshot("publicProjekti" + (description || ""), publicProjekti);
   }
 

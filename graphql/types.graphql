@@ -60,6 +60,7 @@ enum AsiakirjaTyyppi {
 
 interface IProjekti {
   oid: String!
+  paivitetty: String
 }
 
 type Projekti implements IProjekti {
@@ -82,6 +83,7 @@ type Projekti implements IProjekti {
   euRahoitus: Boolean
   liittyvatSuunnitelmat: [Suunnitelma!]
   kielitiedot: Kielitiedot
+  paivitetty: String
 }
 
 type SuunnitteluVaihe {
@@ -254,12 +256,29 @@ type Velho {
   linkki: String
 }
 
+type VelhoJulkinen {
+  nimi: String
+  tyyppi: ProjektiTyyppi
+  kuvaus: String
+  vaylamuoto: [String!]
+  asiatunnusVayla: String
+  asiatunnusELY: String
+  suunnittelustaVastaavaViranomainen: Viranomainen
+  tilaajaOrganisaatio: String
+  toteuttavaOrganisaatio: String
+  maakunnat: [String!]
+  kunnat: [String!]
+}
+
 type ProjektiJulkinen implements IProjekti {
   oid: String!
   aloitusKuulutusJulkaisut: [AloitusKuulutusJulkaisuJulkinen!]
   suunnitteluVaihe: SuunnitteluVaiheJulkinen
   euRahoitus: Boolean
   status: Status
+  velho: VelhoJulkinen!
+  kielitiedot: Kielitiedot
+  paivitetty: String
 }
 
 type Suunnitelma {
@@ -328,7 +347,7 @@ type AloitusKuulutusJulkaisuJulkinen {
   siirtyySuunnitteluVaiheeseen: String
   hankkeenKuvaus: HankkeenKuvaukset
   yhteystiedot: [Yhteystieto!]!
-  velho: Velho!
+  velho: VelhoJulkinen!
   suunnitteluSopimus: SuunnitteluSopimus
   kielitiedot: Kielitiedot
   aloituskuulutusPDFt: AloitusKuulutusPDFt
@@ -455,7 +474,11 @@ type ArkistointiTunnus {
   timestamp: String!
 }
 
-type ProjektiHakutulos {
+interface IProjektiHakutulos {
+  tulokset: [ProjektiHakutulosDokumentti!]
+}
+
+type ProjektiHakutulos implements IProjektiHakutulos {
   tiesuunnitelmatMaara: Int
   ratasuunnitelmatMaara: Int
   yleissuunnitelmatMaara: Int
@@ -463,9 +486,15 @@ type ProjektiHakutulos {
   tulokset: [ProjektiHakutulosDokumentti!]
 }
 
+type ProjektiHakutulosJulkinen implements IProjektiHakutulos {
+  hakutulosMaara: Int
+  tulokset: [ProjektiHakutulosDokumentti!]
+}
+
 type ProjektiHakutulosDokumentti {
   oid: String!
   nimi: String
+  hankkeenKuvaus: String
   asiatunnus: String
   maakunnat: [String!]
   vaylamuoto: [String!]

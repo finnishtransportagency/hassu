@@ -76,15 +76,17 @@ export class HassuFrontendStack extends cdk.Stack {
     this.cloudFrontOriginAccessIdentityReportBucket =
       (await readPipelineStackOutputs()).CloudfrontOriginAccessIdentityReportBucket || ""; // Empty default string for localstack deployment
 
-    await new Builder(".", "./build", {
-      enableHTTPCompression: true,
-      minifyHandlers: true,
-      args: ["build"],
-      env: {
-        FRONTEND_DOMAIN_NAME: config.frontendDomainName,
-        REACT_APP_API_KEY: this.appSyncAPIKey,
-      },
-    }).build();
+    if (process.env.SKIP_NEXTJS_BUILD !== "true") {
+      await new Builder(".", "./build", {
+        enableHTTPCompression: true,
+        minifyHandlers: true,
+        args: ["build"],
+        env: {
+          FRONTEND_DOMAIN_NAME: config.frontendDomainName,
+          REACT_APP_API_KEY: this.appSyncAPIKey,
+        },
+      }).build();
+    }
 
     const edgeFunctionRole = this.createEdgeFunctionRole();
 

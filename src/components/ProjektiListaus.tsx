@@ -1,22 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { api, ProjektiHakutulos, ProjektiHakutulosDokumentti, ProjektiTyyppi } from "@services/api";
+import { api, Kieli, ProjektiHakutulosDokumentti, ProjektiHakutulosJulkinen } from "@services/api";
 import log from "loglevel";
 import Table from "./Table";
 import useTranslation from "next-translate/useTranslation";
 import { formatDate } from "src/util/dateUtils";
 
-type ProjektiListausProps = {
-  projektiTyyppi: ProjektiTyyppi;
-};
-
-export default function ProjektiListaus(props: ProjektiListausProps) {
-  const [hakutulos, setHakutulos] = useState<ProjektiHakutulos>();
+export default function ProjektiListaus() {
+  const [hakutulos, setHakutulos] = useState<ProjektiHakutulosJulkinen>();
   const { t } = useTranslation();
 
   useEffect(() => {
     async function fetchProjektit() {
       try {
-        const result = await api.listPublicProjektit({ projektiTyyppi: props.projektiTyyppi });
+        const result = await api.listProjektitJulkinen({ kieli: Kieli.SUOMI });
         log.info("listProjektit:", result);
         setHakutulos(result);
       } catch (e: any) {
@@ -28,13 +24,12 @@ export default function ProjektiListaus(props: ProjektiListausProps) {
             log.error("HTTP Status: " + httpStatus + "\n" + err.stack);
           });
         }
-        setHakutulos({ __typename: "ProjektiHakutulos" });
+        setHakutulos({ __typename: "ProjektiHakutulosJulkinen" });
       }
     }
-    if (props.projektiTyyppi) {
-      fetchProjektit();
-    }
-  }, [props.projektiTyyppi]);
+
+    fetchProjektit();
+  });
 
   return (
     <>

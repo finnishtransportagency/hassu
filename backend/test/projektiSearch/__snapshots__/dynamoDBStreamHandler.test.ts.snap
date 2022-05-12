@@ -2,7 +2,7 @@
 
 exports[`dynamoDBStreamHandler should index new projektis successfully 1`] = `
 Object {
-  "asiatunnus": "A1",
+  "asiatunnus": undefined,
   "maakunnat": Array [
     "Uusimaa",
     "Pirkanmaa",
@@ -11,12 +11,58 @@ Object {
     "A123",
     "A000111",
   ],
-  "nimi": "Testiprojekti 1",
-  "paivitetty": "2022-03-15T13:00:00.000Z",
+  "nimi": "Testiprojekti 2 email lahetys",
+  "paivitetty": "2022-03-15T14:30:00.000Z",
   "projektiTyyppi": "TIE",
   "projektipaallikko": "Projari, Pekka",
-  "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
-  "vaihe": "EI_JULKAISTU",
+  "suunnittelustaVastaavaViranomainen": undefined,
+  "vaihe": "SUUNNITTELU",
+  "vaylamuoto": Array [
+    "tie",
+  ],
+}
+`;
+
+exports[`dynamoDBStreamHandler should index new projektis successfully 2`] = `
+Object {
+  "hankkeenKuvaus": "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
+  "kunnat": Array [
+    "Mikkeli",
+    "Juva",
+    "Savonlinna",
+  ],
+  "maakunnat": Array [
+    "Uusimaa",
+    "Pirkanmaa",
+  ],
+  "nimi": "Marikan testiprojekti",
+  "paivitetty": "2022-03-15T14:30:00.000Z",
+  "projektiTyyppi": "TIE",
+  "publishTimestamp": "2022-03-28T14:28:00+03:00",
+  "vaihe": "ALOITUSKUULUTUS",
+  "vaylamuoto": Array [
+    "tie",
+  ],
+}
+`;
+
+exports[`dynamoDBStreamHandler should index new projektis successfully 3`] = `
+Object {
+  "hankkeenKuvaus": "Designplatsen är en del av elektrifieringsprojektet Hyvinge-Hangö, som också kommer att genomföra plankorsningsåtgärder. I den fastställda spårplanen är borttagandet av tävlingsstoppet och Leksvallskorsningen genom förbättring av en ny plankorsning vid Helmströms plankorsning vid denna punkt godkänd som planlösning. En uppdatering av Spårplanen kommer nu att lanseras då och man planerar att ta bort alla tre plankorsningarna på den nya Leksvallsöverfarten.",
+  "kunnat": Array [
+    "Mikkeli",
+    "Juva",
+    "Savonlinna",
+  ],
+  "maakunnat": Array [
+    "Uusimaa",
+    "Pirkanmaa",
+  ],
+  "nimi": "Marikas testprojekt",
+  "paivitetty": "2022-03-15T14:30:00.000Z",
+  "projektiTyyppi": "TIE",
+  "publishTimestamp": "2022-03-28T14:28:00+03:00",
+  "vaihe": "ALOITUSKUULUTUS",
   "vaylamuoto": Array [
     "tie",
   ],
@@ -25,7 +71,7 @@ Object {
 
 exports[`dynamoDBStreamHandler should index projekti updates successfully 1`] = `
 Object {
-  "asiatunnus": "A1",
+  "asiatunnus": undefined,
   "maakunnat": Array [
     "Uusimaa",
     "Pirkanmaa",
@@ -34,12 +80,12 @@ Object {
     "A123",
     "A000111",
   ],
-  "nimi": "Testiprojekti 1",
-  "paivitetty": "2022-03-15T13:00:00.000Z",
+  "nimi": "Testiprojekti 2 email lahetys",
+  "paivitetty": "2022-03-15T14:30:00.000Z",
   "projektiTyyppi": "TIE",
   "projektipaallikko": "Projari, Pekka",
-  "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
-  "vaihe": "EI_JULKAISTU",
+  "suunnittelustaVastaavaViranomainen": undefined,
+  "vaihe": "SUUNNITTELU",
   "vaylamuoto": Array [
     "tie",
   ],

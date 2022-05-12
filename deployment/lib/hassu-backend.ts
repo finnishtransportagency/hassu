@@ -15,11 +15,15 @@ import { AuthorizationMode } from "@aws-cdk/aws-appsync/lib/graphqlapi";
 import { DynamoEventSource, SqsEventSource } from "@aws-cdk/aws-lambda-event-sources";
 import * as eventTargets from "@aws-cdk/aws-events-targets";
 import * as events from "@aws-cdk/aws-events";
-import { Domain } from "@aws-cdk/aws-opensearchservice";
+import { Domain, IDomain } from "@aws-cdk/aws-opensearchservice";
 import { OpenSearchAccessPolicy } from "@aws-cdk/aws-opensearchservice/lib/opensearch-access-policy";
 import { Effect, ManagedPolicy, PolicyStatement } from "@aws-cdk/aws-iam";
 import { Bucket } from "@aws-cdk/aws-s3";
-import { getEnvironmentVariablesFromSSM, readFrontendStackOutputs } from "../bin/setupEnvironment";
+import {
+  getEnvironmentVariablesFromSSM,
+  readAccountStackOutputs,
+  readFrontendStackOutputs,
+} from "../bin/setupEnvironment";
 import { LambdaInsightsVersion } from "@aws-cdk/aws-lambda/lib/lambda-insights";
 import { RuleTargetInput } from "@aws-cdk/aws-events/lib/input";
 import { EmailEventType } from "../../backend/src/email/emailEvent";
@@ -27,7 +31,6 @@ import { EmailEventType } from "../../backend/src/email/emailEvent";
 const path = require("path");
 
 export type HassuBackendStackProps = {
-  searchDomain: Domain;
   projektiTable: Table;
   projektiArchiveTable: Table;
   uploadBucket: Bucket;
@@ -60,8 +63,19 @@ export class HassuBackendStack extends cdk.Stack {
   async process() {
     const config = await Config.instance(this);
 
+    let accountStackOutputs = await readAccountStackOutputs();
+    let searchDomain: IDomain;
+    if (Config.env !== "localstack") {
+      searchDomain = Domain.fromDomainAttributes(this, "DomainEndPoint", {
+        domainEndpoint: accountStackOutputs.SearchDomainEndpointOutput,
+        domainArn: accountStackOutputs.SearchDomainArnOutput,
+      });
+    } else {
+      searchDomain = Domain.fromDomainEndpoint(this, "DomainEndPoint", "http://not-used-with-localstack");
+    }
+
     const api = this.createAPI(config);
-    const commonEnvironmentVariables = await this.getCommonEnvironmentVariables(config);
+    const commonEnvironmentVariables = await this.getCommonEnvironmentVariables(config, searchDomain);
     const personSearchUpdaterLambda = await this.createPersonSearchUpdaterLambda(commonEnvironmentVariables);
     const aineistoSQS = await this.createAineistoImporterQueue();
     const emailSQS = await this.createEmailQueueSystem();
@@ -75,7 +89,7 @@ export class HassuBackendStack extends cdk.Stack {
 
     const projektiSearchIndexer = this.createProjektiSearchIndexer(commonEnvironmentVariables);
     this.attachDatabaseToLambda(projektiSearchIndexer);
-    this.configureOpenSearchAccess(projektiSearchIndexer, backendLambda);
+    this.configureOpenSearchAccess(projektiSearchIndexer, backendLambda, searchDomain);
 
     let aineistoImporterLambda = await this.createAineistoImporterLambda(commonEnvironmentVariables, aineistoSQS);
     this.attachDatabaseToLambda(aineistoImporterLambda);
@@ -93,11 +107,14 @@ export class HassuBackendStack extends cdk.Stack {
     }
   }
 
-  private configureOpenSearchAccess(projektiSearchIndexer: NodejsFunction, backendLambda: NodejsFunction) {
+  private configureOpenSearchAccess(
+    projektiSearchIndexer: NodejsFunction,
+    backendLambda: NodejsFunction,
+    searchDomain: IDomain
+  ) {
     // Grant write access to the app-search index
-    const searchDomain = this.props.searchDomain;
-    searchDomain.grantIndexWrite(Config.searchIndex, projektiSearchIndexer);
-    searchDomain.grantIndexReadWrite(Config.searchIndex, backendLambda);
+    searchDomain.grantIndexWrite("projekti-" + Config.env + "-*", projektiSearchIndexer);
+    searchDomain.grantIndexReadWrite("projekti-" + Config.env + "-*", backendLambda);
 
     new OpenSearchAccessPolicy(this, "OpenSearchAccessPolicy", {
       domainName: searchDomain.domainName,
@@ -105,7 +122,7 @@ export class HassuBackendStack extends cdk.Stack {
       accessPolicies: [
         new PolicyStatement({
           effect: Effect.ALLOW,
-          actions: ["es:ESHttpGet", "es:ESHttpPut", "es:ESHttpPost"],
+          actions: ["es:ESHttpGet", "es:ESHttpPut", "es:ESHttpPost", "es:ESHttpDelete"],
           principals: [projektiSearchIndexer.grantPrincipal, backendLambda.grantPrincipal],
           resources: [searchDomain.domainArn],
         }),
@@ -175,7 +192,6 @@ export class HassuBackendStack extends cdk.Stack {
       },
       environment: {
         ...commonEnvironmentVariables,
-        SEARCH_DOMAIN: this.props.searchDomain.domainEndpoint,
       },
       timeout: Duration.seconds(120),
       tracing: Tracing.ACTIVE,
@@ -376,13 +392,13 @@ export class HassuBackendStack extends cdk.Stack {
     backendFn.addEnvironment("TABLE_PROJEKTI_ARCHIVE", archiveTable.tableName);
   }
 
-  private async getCommonEnvironmentVariables(config: Config): Promise<Record<string, string>> {
+  private async getCommonEnvironmentVariables(config: Config, searchDomain: IDomain): Promise<Record<string, string>> {
     return {
       ENVIRONMENT: Config.env,
       TZ: "Europe/Helsinki",
       ...(await getEnvironmentVariablesFromSSM()),
 
-      SEARCH_DOMAIN: this.props.searchDomain.domainEndpoint,
+      SEARCH_DOMAIN: searchDomain.domainEndpoint,
 
       FRONTEND_DOMAIN_NAME: config.frontendDomainName,
 

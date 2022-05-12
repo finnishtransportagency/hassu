@@ -5,7 +5,6 @@ import * as cdk from "@aws-cdk/core";
 import { HassuBackendStack } from "../lib/hassu-backend";
 import { HassuFrontendStack } from "../lib/hassu-frontend";
 import { HassuDatabaseStack } from "../lib/hassu-database";
-import { HassuSearchStack } from "../lib/hassu-search";
 
 async function main() {
   const app = new cdk.App();
@@ -14,11 +13,9 @@ async function main() {
     console.log("Deployment of hassuDatabaseStack failed:", e);
     process.exit(1);
   });
-  const hassuSearchStack = new HassuSearchStack(app);
   const hassuBackendStack = new HassuBackendStack(app, {
     projektiTable: hassuDatabaseStack.projektiTable,
     projektiArchiveTable: hassuDatabaseStack.projektiArchiveTable,
-    searchDomain: hassuSearchStack.searchDomain,
     uploadBucket: hassuDatabaseStack.uploadBucket,
     yllapitoBucket: hassuDatabaseStack.yllapitoBucket,
     internalBucket: hassuDatabaseStack.internalBucket,

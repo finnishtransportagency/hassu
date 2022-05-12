@@ -183,13 +183,13 @@
     "deploy:database": "cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy database --require-approval never",
     "postdeploy:database": "npm run setupenvironment",
     "deploy:backend": "cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy backend --require-approval never",
-    "deploy:backend:hotswap": "cdk $NODE_DEBUG_OPTION --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy backend --require-approval never --hotswap",
+    "deploy:backend:hotswap": "cross-env SKIP_NEXTJS_BUILD=true cdk $NODE_DEBUG_OPTION --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy backend --require-approval never --hotswap",
     "postdeploy:backend": "npm run setupenvironment && npm run graphQLIntrospection",
     "postdeploy:backend:hotswap": "npm run setupenvironment && npm run graphQLIntrospection",
     "predeploy:frontend": "rimraf build .next",
     "deploy:frontend": "cdk $NODE_DEBUG_OPTION --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy frontend --require-approval never",
     "postdeploy:frontend": "npm run setupenvironment",
-    "deploy:app": "REACT_APP_API_URL= && npm run build && aws s3 sync out s3://hassu-app-$ENVIRONMENT",
+    "deploy:account:dev": "cross-env ENVIRONMENT=dev cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-account\" deploy account --require-approval never",
     "deploy:pipeline": "cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-pipeline\" deploy hassu-pipeline --require-approval never",
     "deploy:pipeline:main": "cross-env ENVIRONMENT=dev BUILD_BRANCH=main cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-pipeline\" deploy hassu-pipeline --require-approval never",
     "deploy:pipeline:test": "cross-env ENVIRONMENT=test BUILD_BRANCH=test cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-pipeline\" deploy hassu-pipeline --require-approval never",
@@ -216,11 +216,14 @@
     "log:backend:dev": "aws logs tail --follow --since 1h /aws/lambda/hassu-backend-dev",
     "log:aineistoimporter": "aws logs tail --follow --since 1h /aws/lambda/hassu-aineistoimporter-$ENVIRONMENT",
     "log:aineistoimporter:dev": "aws logs tail --follow --since 1h /aws/lambda/hassu-aineistoimporter-dev",
-    "log:dynamodb-stream-handler:dev": "aws logs tail --follow --since 1h /aws/lambda/hassu-dynamodb-stream-handler-$ENVIRONMENT",
+    "log:dynamodb-stream-handler": "aws logs tail --follow --since 1h /aws/lambda/hassu-dynamodb-stream-handler-$ENVIRONMENT",
+    "log:dynamodb-stream-handler:dev": "aws logs tail --follow --since 1h /aws/lambda/hassu-dynamodb-stream-handler-dev",
     "log:email": "aws logs tail --follow --since 1h /aws/lambda/hassu-email-$ENVIRONMENT",
     "sonar": "node -r dotenv/config ./deployment/bin/sonar.js dotenv_config_path=.env.local",
     "opensearch:getmapping": "cross-env DOTENV_CONFIG_PATH=.env.test ts-node --project=backend/tsconfig.json -r dotenv/config ./deployment/bin/opensearch.ts getmapping projekti backend/src/projektiSearch/projekti-mapping.json",
-    "opensearch:getsettings": "cross-env DOTENV_CONFIG_PATH=.env.test ts-node --project=backend/tsconfig.json -r dotenv/config ./deployment/bin/opensearch.ts getsettings projekti backend/src/projektiSearch/projekti-settings.json"
+    "opensearch:getsettings": "cross-env DOTENV_CONFIG_PATH=.env.test ts-node --project=backend/tsconfig.json -r dotenv/config ./deployment/bin/opensearch.ts getsettings projekti backend/src/projektiSearch/projekti-settings.json",
+    "opensearch:delete-index": "aws lambda invoke --cli-binary-format raw-in-base64-out --function-name hassu-dynamodb-stream-handler-$ENVIRONMENT --payload '{\"action\": \"deleteIndex\"}' --log-type Tail lambda_response.json | node ./deployment/bin/process-lambda-output.js && rimraf lambda_response.json",
+    "opensearch:index": "aws lambda invoke --cli-binary-format raw-in-base64-out --function-name hassu-dynamodb-stream-handler-$ENVIRONMENT --payload '{\"action\": \"index\"}' --log-type Tail lambda_response.json | node ./deployment/bin/process-lambda-output.js && rimraf lambda_response.json"
   },
   "browserslist": {
     "production": [

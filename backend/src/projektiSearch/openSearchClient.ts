@@ -2,9 +2,9 @@ import { config } from "../config";
 import { HttpRequest } from "@aws-sdk/protocol-http";
 import { sendSignedRequest } from "../aws/awsRequest";
 import { log } from "../logger";
+import { Kieli } from "../../../common/graphql/apiModel";
 
 const domain = config.searchDomain;
-const index = "projekti";
 const type = "_doc";
 
 export interface SortOrder {
@@ -23,9 +23,23 @@ export async function sendRequest(request: HttpRequest): Promise<unknown> {
   return (await sendSignedRequest(request, "es")).body;
 }
 
-export class OpenSearchClient {
-  async putProjekti(oid: string, projekti: unknown): Promise<unknown> {
-    return this.put(index, "/" + type + "/" + oid, JSON.stringify(projekti));
+export enum OpenSearchIndexType {
+  YLLAPITO = "yllapito",
+  JULKINEN = "julkinen",
+}
+
+export abstract class OpenSearchClient {
+  private index: string;
+
+  constructor(index: string) {
+    this.index = index;
+  }
+
+  async putProjekti(oid: string, projekti: unknown): Promise<void> {
+    const response = await this.put("/" + type + "/" + oid, JSON.stringify(projekti));
+    if (response["result"] !== "created" || response["result"] !== "updated") {
+      log.warn(response);
+    }
   }
 
   async deleteProjekti(oid: string): Promise<void> {
@@ -39,7 +53,7 @@ export class OpenSearchClient {
       },
       hostname: domain,
       method: "DELETE",
-      path: index + path,
+      path: this.index + path,
     });
     return sendRequest(request);
   }
@@ -50,6 +64,7 @@ export class OpenSearchClient {
 
   async query(query: SearchOpts): Promise<any> {
     const body = JSON.stringify(query);
+    log.info("query", { index: this.index, query });
     const request = new HttpRequest({
       body,
       headers: {
@@ -58,35 +73,35 @@ export class OpenSearchClient {
       },
       hostname: domain,
       method: "POST",
-      path: index + "/_search",
+      path: this.index + "/_search",
     });
     return sendRequest(request);
   }
 
-  async getSettings(theIndex: string): Promise<unknown> {
-    return OpenSearchClient.get(theIndex, "/_settings");
+  async getSettings(): Promise<unknown> {
+    return this.get("/_settings");
   }
 
-  async putSettings(theIndex: string, settings: string): Promise<unknown> {
-    await OpenSearchClient.closeIndex(theIndex);
+  async putSettings(settings: string): Promise<unknown> {
+    await this.closeIndex();
 
     try {
-      return await this.put(theIndex, "/_settings", settings);
+      return await this.put("/_settings", settings);
     } finally {
-      await OpenSearchClient.openIndex(theIndex);
+      await this.openIndex();
     }
   }
 
-  async getMapping(theIndex: string): Promise<unknown> {
-    const mapping = await OpenSearchClient.get(theIndex, "/_mapping");
+  async getMapping(): Promise<unknown> {
+    const mapping = await this.get("/_mapping");
     return (mapping as any).projekti.mappings;
   }
 
-  async putMapping(theIndex: string, mapping: string): Promise<unknown> {
-    return this.put(theIndex, "/_mapping", mapping);
+  async putMapping(mapping: string): Promise<unknown> {
+    return this.put("/_mapping", mapping);
   }
 
-  private static get(theIndex: string, path: string) {
+  async get(path: string): Promise<any> {
     const request = new HttpRequest({
       headers: {
         host: domain,
@@ -94,12 +109,12 @@ export class OpenSearchClient {
       query: { pretty: "true" },
       hostname: domain,
       method: "GET",
-      path: theIndex + path,
+      path: this.index + path,
     });
     return sendRequest(request);
   }
 
-  put(theIndex: string, path: string, body: string): Promise<unknown> {
+  async put(path: string, body: string): Promise<unknown> {
     const request = new HttpRequest({
       headers: {
         "Content-Type": "application/json",
@@ -108,13 +123,13 @@ export class OpenSearchClient {
       body,
       hostname: domain,
       method: "PUT",
-      path: theIndex + path,
+      path: this.index + path,
     });
     return sendRequest(request);
   }
 
-  private static async closeIndex(theIndex: string) {
-    log.info("closeIndex " + theIndex);
+  protected async closeIndex(): Promise<void> {
+    log.info("closeIndex " + this.index);
     const request = new HttpRequest({
       headers: {
         "Content-Type": "application/json",
@@ -122,13 +137,13 @@ export class OpenSearchClient {
       },
       hostname: domain,
       method: "POST",
-      path: theIndex + "/_close",
+      path: this.index + "/_close",
     });
     log.info(await sendRequest(request));
   }
 
-  private static async openIndex(theIndex: string) {
-    log.info("openIndex " + theIndex);
+  private async openIndex() {
+    log.info("openIndex " + this.index);
     const request = new HttpRequest({
       headers: {
         "Content-Type": "application/json",
@@ -136,10 +151,27 @@ export class OpenSearchClient {
       },
       hostname: domain,
       method: "POST",
-      path: theIndex + "/_open",
+      path: this.index + "/_open",
     });
     log.info(sendRequest(request));
   }
 }
 
-export const openSearchClient = new OpenSearchClient();
+class OpenSearchClientYllapito extends OpenSearchClient {
+  constructor() {
+    super(config.opensearchYllapitoIndex);
+  }
+}
+
+class OpenSearchClientJulkinen extends OpenSearchClient {
+  constructor(kieli: Kieli) {
+    super(config.opensearchJulkinenIndexPrefix + kieli.toLowerCase());
+  }
+}
+
+export const openSearchClientYllapito = new OpenSearchClientYllapito();
+export const openSearchClientJulkinen = {
+  [Kieli.SUOMI]: new OpenSearchClientJulkinen(Kieli.SUOMI),
+  [Kieli.RUOTSI]: new OpenSearchClientJulkinen(Kieli.RUOTSI),
+  [Kieli.SAAME]: new OpenSearchClientJulkinen(Kieli.SAAME),
+};
