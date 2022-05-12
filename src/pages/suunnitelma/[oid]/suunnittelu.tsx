@@ -217,7 +217,7 @@ export default function Suunnittelu(): ReactElement {
               </div>
             )}
           </SectionContent>
-          {menneetTilaisuudet && (
+          {(menneetTilaisuudet && menneetTilaisuudet.length > 0) && (
             <SectionContent>
               <h4 className="vayla-small-title">{t(`projekti:ui-otsikot.menneet_vuorovaikutustilaisuudet`)}</h4>
               <div className="vayla-tilaisuus-list">
