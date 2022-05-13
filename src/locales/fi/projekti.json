@@ -87,7 +87,9 @@
     "vaikuttamisen_mahdollisuudet_ja_aikataulut": "Osallistumisen ja vaikuttamisen mahdollisuudet ja aikataulut",
     "tulevat_vuorovaikutustilaisuudet": "Tulevat vuorovaikutustilaisuudet",
     "menneet_vuorovaikutustilaisuudet": "Menneet vuorovaikutustilaisuudet",
-    "esittelyaineisto_ja_suunnitelmaluonnokset": "Esittelyaineisto ja suunnitelmaluonnokset"
+    "esittelyaineisto_ja_suunnitelmaluonnokset": "Esittelyaineisto ja suunnitelmaluonnokset",
+    "muut_materiaalit": "Muut esittelymateriaalit",
+    "video_materiaalit": "Enakkoon kuvattu videoesittely"
   },
   "vastaava-viranomainen": {
     "ETELA_POHJANMAAN_ELY": "Etelä-Pohjanmaan ELY-keskus",

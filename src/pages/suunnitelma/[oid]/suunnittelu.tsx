@@ -16,6 +16,7 @@ import { VuorovaikutusTilaisuus, VuorovaikutusTilaisuusTyyppi } from "@services/
 import capitalize from "lodash/capitalize";
 import { SoittoajanYhteystieto } from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
 import { PageProps } from "@pages/_app";
+import ExtLink from "@components/ExtLink";
 
 export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
   const router = useRouter();
@@ -252,6 +253,39 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
           <SectionContent>
             <h4 className="vayla-small-title">{t(`projekti:ui-otsikot.esittelyaineisto_ja_suunnitelmaluonnokset`)}</h4>
             {!vuorovaikutus && <p>Aineistot ja luonnokset julkaistaan lähempänä vuorovaikutustilaisuutta.</p>}
+            {/* TODO: oma laskuri aineistoijen esilla ololle, mielellaan valmiiksi jo taustapalvelusta saatuna */}
+            {vuorovaikutus && (
+              <p>
+                Suunnitelmaluonnokset ja esittelyaineistot ovat tutustuttavissa{" "}
+                {formatDate(dayjs(vuorovaikutus.vuorovaikutusJulkaisuPaiva).add(30, "day"))} asti
+              </p>
+            )}
+            {vuorovaikutus?.videot && vuorovaikutus.videot.length > 0 && (
+              <>
+                <h5 className="vayla-smallest-title">{t(`projekti:ui-otsikot.video_materiaalit`)}</h5>
+                <p>Tutustu ennalta kuvattuun videoesittelyyn alta.</p>
+                {vuorovaikutus?.videot?.map((video) => {
+                  return (
+                    <>
+                      {(parseVideoURL(video.url) && (
+                        <iframe width={"600px"} height={"360"} src={parseVideoURL(video.url)}></iframe>
+                      )) || <p>&lt;Videolinkki ei ole kelvollinen&gt;</p>}
+                    </>
+                  );
+                })}
+              </>
+            )}
+            {vuorovaikutus?.suunnittelumateriaali?.url && (
+              <>
+                <h5 className="vayla-smallest-title">{t(`projekti:ui-otsikot.muut_materiaalit`)}</h5>
+                <p>{vuorovaikutus.suunnittelumateriaali.nimi}</p>
+                <p>
+                  <ExtLink href={vuorovaikutus.suunnittelumateriaali.url}>
+                    {vuorovaikutus.suunnittelumateriaali.url}
+                  </ExtLink>
+                </p>
+              </>
+            )}
           </SectionContent>
         </Section>
         <Section>
@@ -269,3 +303,16 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
     </ProjektiJulkinenPageLayout>
   );
 }
+const parseVideoURL = (url: string): string | undefined => {
+  if (url.includes("youtube")) {
+    const youtubeUrl = "https://www.youtube.com/embed/";
+    const youtubeID = url.split("v=")?.[1];
+    return youtubeUrl.concat(youtubeID ? youtubeID : "");
+  } else if (url.includes("vimeo")) {
+    const vimeoUrl = "https://player.vimeo.com/video";
+    const vimeoID = url.substring(url.lastIndexOf("/"));
+    return vimeoUrl.concat(vimeoID);
+  }
+  // not supported
+  return undefined;
+};
