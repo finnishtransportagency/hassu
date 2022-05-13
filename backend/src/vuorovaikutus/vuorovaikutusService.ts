@@ -1,9 +1,10 @@
 import { ProjektiAdaptationResult } from "../handler/projektiAdapter";
 import { aineistoService } from "../aineisto/aineistoService";
-import { AloitusKuulutusTila, AsiakirjaTyyppi } from "../../../common/graphql/apiModel";
+import { AloitusKuulutusTila, AsiakirjaTyyppi, IlmoituksenVastaanottajat } from "../../../common/graphql/apiModel";
 import { asiakirjaService } from "../asiakirja/asiakirjaService";
 import { fileService } from "../files/fileService";
 import { projektiDatabase } from "../database/projektiDatabase";
+import { emailClient } from "../email/email";
 
 class VuorovaikutusService {
   /**
@@ -64,6 +65,33 @@ class VuorovaikutusService {
       inline: true,
       contentType: "application/pdf",
     });
+
+    const emailOptions = asiakirjaService.createEmail({
+      projekti: projektiInDB,
+      asiakirjaTyyppi: AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU,
+      vuorovaikutus,
+      kieli: projektiInDB.kielitiedot.ensisijainenKieli,
+    });
+    emailOptions.attachments = [
+      {
+        filename: pdf.nimi,
+        contentDisposition: "attachment",
+        contentType: "application/pdf",
+        content: Buffer.from(pdf.sisalto, "base64"),
+      },
+    ];
+
+    const recipients = this.collectRecipients(vuorovaikutus.ilmoituksenVastaanottajat);
+    for (const recipient of recipients) {
+      await emailClient.sendEmail({ ...emailOptions, to: recipient });
+    }
+  }
+
+  collectRecipients(ilmoituksenVastaanottajat: IlmoituksenVastaanottajat): string[] {
+    return []
+      .concat(ilmoituksenVastaanottajat?.kunnat?.map((kunta) => kunta.sahkoposti))
+      .concat(ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => viranomainen.sahkoposti))
+      .filter((s) => s);
   }
 }
 

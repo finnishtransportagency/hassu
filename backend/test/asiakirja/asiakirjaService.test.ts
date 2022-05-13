@@ -7,9 +7,9 @@ import { asiakirjaAdapter } from "../../src/handler/asiakirjaAdapter";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import { AloitusKuulutusJulkaisu, DBProjekti } from "../../src/database/model/projekti";
 import { SuunnitteluVaihe, Vuorovaikutus } from "../../src/database/model/suunnitteluVaihe";
-import { formatList } from "../../src/asiakirja/suunnittelunAloitus/kutsuPdf";
-import { CommonPdf } from "../../src/asiakirja/suunnittelunAloitus/commonPdf";
 import cloneDeep from "lodash/cloneDeep";
+import { translate } from "../../src/util/localization";
+import { formatList } from "../../src/asiakirja/suunnittelunAloitus/KutsuAdapter";
 
 const { assert, expect } = require("chai");
 
@@ -69,6 +69,15 @@ describe("asiakirjaService", async () => {
     expect(pdf.nimi).to.eq(expectedFilename);
     fs.mkdirSync(".report", { recursive: true });
     fs.writeFileSync(".report/" + pdf.nimi, Buffer.from(pdf.sisalto, "base64"));
+
+    const email = await new AsiakirjaService().createEmail({
+      projekti: { ...projekti, suunnitteluVaihe },
+      aloitusKuulutusJulkaisu,
+      vuorovaikutus,
+      asiakirjaTyyppi: AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU,
+      kieli,
+    });
+    expect(email).toMatchSnapshot();
   }
 
   it("should generate kutsu 20T/R pdf succesfully", async () => {
@@ -83,7 +92,7 @@ describe("asiakirjaService", async () => {
       { hankkeenKuvaus: projektiFixture.hankkeenKuvausSuunnitteluVaiheessa },
       projektiFixture.vuorovaikutus,
       Kieli.SUOMI,
-      "20T TS Yleisotilaisuus kutsu Testiprojekti 1.pdf"
+      "TS Tie Yleisotilaisuus kutsu.pdf"
     );
     await testKutsuWithLanguage(
       projekti,
@@ -91,7 +100,7 @@ describe("asiakirjaService", async () => {
       { hankkeenKuvaus: projektiFixture.hankkeenKuvausSuunnitteluVaiheessa },
       projektiFixture.vuorovaikutus,
       Kieli.RUOTSI,
-      "20T TS INBJUDAN TILL DISKUSSION Namnet pa svenska.pdf"
+      "TS Tie INBJUDAN TILL DISKUSSION.pdf"
     );
 
     aloitusKuulutusJulkaisu.velho.suunnittelustaVastaavaViranomainen = Viranomainen.VAYLAVIRASTO;
@@ -103,7 +112,7 @@ describe("asiakirjaService", async () => {
       { hankkeenKuvaus: projektiFixture.hankkeenKuvausSuunnitteluVaiheessa },
       projektiFixture.vuorovaikutus,
       Kieli.SUOMI,
-      "20R Yleisotilaisuus kutsu Testiprojekti 1.pdf"
+      "TS Rata Yleisotilaisuus kutsu.pdf"
     );
     await testKutsuWithLanguage(
       projekti,
@@ -111,7 +120,7 @@ describe("asiakirjaService", async () => {
       { hankkeenKuvaus: projektiFixture.hankkeenKuvausSuunnitteluVaiheessa },
       projektiFixture.vuorovaikutus,
       Kieli.RUOTSI,
-      "20R INBJUDAN TILL DISKUSSION Namnet pa svenska.pdf"
+      "TS Rata INBJUDAN TILL DISKUSSION.pdf"
     );
   });
 
@@ -126,14 +135,7 @@ describe("asiakirjaService", async () => {
   });
 
   it("should find localization properly", () => {
-    class TestPdf extends CommonPdf {
-      testLocalization(key: string) {
-        return this.getLocalization(key);
-      }
-    }
-
-    const testPdf = new TestPdf("", "", Kieli.SUOMI);
-    expect(testPdf.testLocalization("vaylavirasto")).to.eq("Väylävirasto");
-    expect(testPdf.testLocalization("viranomainen.PIRKANMAAN_ELY")).to.eq("Pirkanmaan ELY-keskus");
+    expect(translate("vaylavirasto", Kieli.SUOMI)).to.eq("Väylävirasto");
+    expect(translate("viranomainen.PIRKANMAAN_ELY", Kieli.SUOMI)).to.eq("Pirkanmaan ELY-keskus");
   });
 });

@@ -1,19 +1,18 @@
 import { AbstractPdf } from "../abstractPdf";
 import { Kieli, Viranomainen } from "../../../../common/graphql/apiModel";
-import * as commonFI from "../../../../src/locales/fi/common.json";
-import * as commonSV from "../../../../src/locales/sv/common.json";
-import { AloitusKuulutusJulkaisu, Kielitiedot, Yhteystieto } from "../../database/model/projekti";
+import { SuunnitteluSopimus, Velho, Yhteystieto } from "../../database/model/projekti";
 import log from "loglevel";
-import { formatProperNoun } from "../../../../common/util/formatProperNoun";
+import { KutsuAdapter } from "./KutsuAdapter";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
 export abstract class CommonPdf extends AbstractPdf {
-  private tietosuojaUrl;
   protected kieli: Kieli;
+  protected readonly kutsuAdapter: KutsuAdapter;
 
-  constructor(header: string, nimi: string, kieli: Kieli) {
-    super(header, nimi);
+  protected constructor(header: string, kieli: Kieli, kutsuAdapter: KutsuAdapter,fileName:string) {
+    super(header, kutsuAdapter.nimi, fileName);
     this.kieli = kieli;
+    this.kutsuAdapter = kutsuAdapter;
   }
 
   protected selectText(suomiRuotsiSaameParagraphs: string[]): string {
@@ -27,11 +26,7 @@ export abstract class CommonPdf extends AbstractPdf {
   }
 
   protected vaylavirastoTietosuojaParagraph(): PDFStructureElement {
-    const tietosuojaUrl = this.selectText([
-      "https://www.vayla.fi/tietosuoja",
-      "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy",
-      "https://www.vayla.fi/tietosuoja",
-    ]);
+    const tietosuojaUrl = this.kutsuAdapter.tietosuojaUrl;
     return this.doc.struct("P", {}, [
       () => {
         this.doc.text(
@@ -42,25 +37,19 @@ export abstract class CommonPdf extends AbstractPdf {
           { continued: true }
         );
       },
-      this.doc.struct("Link", { alt: tietosuojaUrl }, () => {
-        this.doc.fillColor("blue").text(tietosuojaUrl, {
-          link: tietosuojaUrl,
-          continued: true,
-          underline: true,
-        });
-      }),
+      this.link(tietosuojaUrl),
       () => {
         this.doc.fillColor("black").text(".", { link: undefined, underline: false }).moveDown();
       },
     ]);
   }
 
-  protected viranomainenTietosuojaParagraph(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu): PDFStructureElement {
-    const viranomainen = this.localizedTilaajaOrganisaatio(
-      aloitusKuulutusJulkaisu.velho.suunnittelustaVastaavaViranomainen,
-      aloitusKuulutusJulkaisu.velho.tilaajaOrganisaatio
+  protected viranomainenTietosuojaParagraph(velho: Velho): PDFStructureElement {
+    const viranomainen = KutsuAdapter.tilaajaOrganisaatioForViranomainen(
+      velho.suunnittelustaVastaavaViranomainen,
+      this.kieli
     );
-    const tietosuojaUrl = this.isVaylaTilaaja(aloitusKuulutusJulkaisu)
+    const tietosuojaUrl = this.isVaylaTilaaja(velho)
       ? "https://vayla.fi/tietosuoja"
       : "https://www.ely-keskus.fi/tietosuoja";
     return this.doc.struct("P", {}, [
@@ -73,46 +62,25 @@ export abstract class CommonPdf extends AbstractPdf {
           { continued: true }
         );
       },
-      this.doc.struct("Link", { alt: this.tietosuojaUrl }, () => {
-        this.doc.fillColor("blue").text(this.tietosuojaUrl, {
-          link: tietosuojaUrl,
-          continued: true,
-          underline: true,
-        });
-      }),
+      this.link(tietosuojaUrl),
       () => {
         this.doc.fillColor("black").text(".", { link: undefined, underline: false }).moveDown();
       },
     ]);
   }
 
-  protected localizedTilaajaOrganisaatio(
-    suunnittelustaVastaavaViranomainen: string,
-    tilaajaOrganisaatio?: string | undefined
-  ): string {
-    return suunnittelustaVastaavaViranomainen
-      ? this.getLocalization("viranomainen." + suunnittelustaVastaavaViranomainen)
-      : tilaajaOrganisaatio;
+  private link(url) {
+    return this.doc.struct("Link", { alt: url }, () => {
+      this.doc.fillColor("blue").text(url, {
+        link: url,
+        continued: true,
+        underline: true,
+      });
+    });
   }
 
-  protected getLocalization(key: string): string {
-    let bundle;
-    if (this.kieli == Kieli.SUOMI) {
-      bundle = commonFI;
-    } else if (this.kieli == Kieli.RUOTSI) {
-      bundle = commonSV;
-    } else {
-      return;
-    }
-    return key.split(".").reduce((previousValue, currentValue) => {
-      return previousValue[currentValue];
-    }, bundle);
-  }
-
-  protected isVaylaTilaaja(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu): boolean {
-    return aloitusKuulutusJulkaisu.velho.suunnittelustaVastaavaViranomainen
-      ? aloitusKuulutusJulkaisu.velho.suunnittelustaVastaavaViranomainen == Viranomainen.VAYLAVIRASTO
-      : aloitusKuulutusJulkaisu.velho.tilaajaOrganisaatio === "Väylävirasto";
+  protected isVaylaTilaaja(velho: Velho): boolean {
+    return velho.suunnittelustaVastaavaViranomainen == Viranomainen.VAYLAVIRASTO;
   }
 
   protected lisatietojaAntavatParagraph(): PDFStructureElement {
@@ -138,9 +106,9 @@ export abstract class CommonPdf extends AbstractPdf {
     });
   }
 
-  protected titleElement(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu): PDFStructureElement {
+  protected titleElement(): PDFStructureElement {
     return this.doc.struct("H2", {}, () => {
-      const parts = [selectNimi(aloitusKuulutusJulkaisu, this.kieli)];
+      const parts = [this.kutsuAdapter.nimi];
       this.doc.text(parts.join(", ")).font("ArialMT").moveDown();
     });
   }
@@ -163,33 +131,14 @@ export abstract class CommonPdf extends AbstractPdf {
     );
   }
 
-  protected getYhteystiedot(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu) {
-    const yt: Yhteystieto[] = [];
-    const suunnitteluSopimus = aloitusKuulutusJulkaisu.suunnitteluSopimus;
-    if (suunnitteluSopimus) {
-      const { email, puhelinnumero, sukunimi, etunimi, kunta } = suunnitteluSopimus;
-      yt.push({
-        etunimi,
-        sukunimi,
-        puhelinnumero,
-        sahkoposti: email,
-        organisaatio: kunta,
-      });
-    }
-    return yt.concat(aloitusKuulutusJulkaisu.yhteystiedot).map(({ sukunimi, etunimi, organisaatio, ...rest }) => ({
-      etunimi: formatProperNoun(etunimi),
-      sukunimi: formatProperNoun(sukunimi),
-      organisaatio: formatProperNoun(organisaatio),
-      ...rest,
-    }));
-  }
-
   protected moreInfoElements(
-    aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu,
+    yhteystiedot: Yhteystieto[],
+    suunnitteluSopimus?: SuunnitteluSopimus,
     showOrganization = true
   ): PDFKit.PDFStructureElementChild[] {
-    return this.getYhteystiedot(aloitusKuulutusJulkaisu).map(
-      ({ organisaatio, etunimi, sukunimi, puhelinnumero, sahkoposti }) => {
+    return this.kutsuAdapter
+      .yhteystiedot(yhteystiedot, suunnitteluSopimus)
+      .map(({ organisaatio, etunimi, sukunimi, puhelinnumero, sahkoposti }) => {
         return () => {
           const noSpamSahkoposti = sahkoposti.replace(/@/g, "(at)");
           const organization = showOrganization ? `${organisaatio}, ` : "";
@@ -197,8 +146,7 @@ export abstract class CommonPdf extends AbstractPdf {
             .text(`${organization}${etunimi} ${sukunimi}, ${this.localizedPuh} ${puhelinnumero}, ${noSpamSahkoposti} `)
             .moveDown();
         };
-      }
-    );
+      });
   }
 
   private get localizedPuh(): string {
@@ -208,19 +156,4 @@ export abstract class CommonPdf extends AbstractPdf {
       return "tel.";
     }
   }
-}
-
-export function selectNimi(julkaisu: AloitusKuulutusJulkaisu, kieli: Kieli): string {
-  if (isKieliSupported(kieli, julkaisu.kielitiedot)) {
-    if (kieli == Kieli.SUOMI) {
-      return julkaisu?.velho.nimi;
-    } else {
-      return julkaisu.kielitiedot.projektinNimiVieraskielella;
-    }
-  }
-  throw new Error("Pyydettyä kieliversiota ei ole saatavilla");
-}
-
-function isKieliSupported(kieli: Kieli, kielitiedot: Kielitiedot) {
-  return kielitiedot.ensisijainenKieli == kieli || kielitiedot.toissijainenKieli == kieli;
 }

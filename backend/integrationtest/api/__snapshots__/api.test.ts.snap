@@ -1306,7 +1306,7 @@ Object {
     "suunnittelusopimus/logo.png": Object {},
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {},
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf": Object {},
-    "suunnitteluvaihe/vuorovaikutus_1/kutsu/20T TS Yleisotilaisuus kutsu HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {},
+    "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {},
   },
 }
 `;
@@ -1326,7 +1326,7 @@ Object {
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf": Object {
       "publishDate": "2022-03-23T00:00:00+02:00",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/kutsu/20T TS Yleisotilaisuus kutsu HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {
+    "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {
       "publishDate": "2022-03-23T00:00:00+02:00",
     },
   },
@@ -1356,7 +1356,7 @@ Object {
     "palautteet/***unittest***/logo.png": Object {},
     "suunnittelusopimus/logo.png": Object {},
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {},
-    "suunnitteluvaihe/vuorovaikutus_1/kutsu/20T TS Yleisotilaisuus kutsu HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {},
+    "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {},
   },
 }
 `;
@@ -1373,7 +1373,7 @@ Object {
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {
       "publishDate": "2022-03-23T00:00:00+02:00",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/kutsu/20T TS Yleisotilaisuus kutsu HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {
+    "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {
       "publishDate": "2022-03-23T00:00:00+02:00",
     },
   },

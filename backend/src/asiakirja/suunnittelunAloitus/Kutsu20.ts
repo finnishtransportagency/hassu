@@ -1,12 +1,18 @@
-import { AloitusKuulutusJulkaisu, DBProjekti, DBVaylaUser } from "../../database/model/projekti";
-import { Kieli, ProjektiRooli, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
+import { DBProjekti, DBVaylaUser } from "../../database/model/projekti";
+import {
+  Kieli,
+  ProjektiRooli,
+  ProjektiTyyppi,
+  VuorovaikutusTilaisuusTyyppi,
+} from "../../../../common/graphql/apiModel";
 import { SuunnitteluVaihe, Vuorovaikutus, VuorovaikutusTilaisuus } from "../../database/model/suunnitteluVaihe";
-import { formatList, KutsuPdf, projektiTyyppiToFilenamePrefix } from "./kutsuPdf";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import dayjs from "dayjs";
 import { linkSuunnitteluVaihe } from "../../../../common/links";
-import { selectNimi } from "./commonPdf";
+import { CommonPdf } from "./commonPdf";
 import { AsiakirjanMuoto } from "../asiakirjaService";
+import { translate } from "../../util/localization";
+import { formatList, KutsuAdapter } from "./KutsuAdapter";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
@@ -27,37 +33,65 @@ function formatTime(time: string) {
   return time.replace(":", ".");
 }
 
-export class Kutsu20 extends KutsuPdf {
+function createFileName(kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto, tyyppi: ProjektiTyyppi) {
+  const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
+  const asiakirjaTyyppi = asiakirjanMuoto == AsiakirjanMuoto.TIE ? "Tie" : "Rata";
+  return projektiTyyppiToFilenamePrefix(tyyppi) + " " + asiakirjaTyyppi + " " + fileNamePrefix[language];
+}
+
+export class Kutsu20 extends CommonPdf {
   private readonly suunnitteluVaihe: SuunnitteluVaihe;
   private readonly asiakirjanMuoto: AsiakirjanMuoto;
   private readonly oid: string;
   private readonly vuorovaikutus: Vuorovaikutus;
   private readonly kayttoOikeudet: DBVaylaUser[];
+  protected header: string;
+  private projekti: DBProjekti;
+  protected kieli: Kieli;
 
-  constructor(
-    projekti: DBProjekti,
-    aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu,
-    vuorovaikutus: Vuorovaikutus,
-    kieli: Kieli,
-    asiakirjanMuoto: AsiakirjanMuoto
-  ) {
-    const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
-    const asiakirjaTyyppi = asiakirjanMuoto == AsiakirjanMuoto.TIE ? "T" : "R";
+  constructor(projekti: DBProjekti, vuorovaikutus: Vuorovaikutus, kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto) {
+    const fileName = createFileName(kieli, asiakirjanMuoto, projekti.velho.tyyppi);
     super(
-      aloitusKuulutusJulkaisu,
+      fileName,
       kieli,
-      headers[language],
-      "20" +
-        asiakirjaTyyppi +
-        " " +
-        projektiTyyppiToFilenamePrefix(aloitusKuulutusJulkaisu.velho.tyyppi) +
-        fileNamePrefix[language]
+      new KutsuAdapter({ projekti, kieli, asiakirjanMuoto, projektiTyyppi: projekti.velho.tyyppi }),
+      fileName
     );
+    this.projekti = projekti;
+    const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
+    this.header = headers[language];
+    this.kieli = kieli;
+
     this.kayttoOikeudet = projekti.kayttoOikeudet;
     this.oid = projekti.oid;
     this.suunnitteluVaihe = projekti.suunnitteluVaihe;
     this.vuorovaikutus = vuorovaikutus;
     this.asiakirjanMuoto = asiakirjanMuoto;
+  }
+
+  protected addContent(): void {
+    const vaylaTilaaja = this.isVaylaTilaaja(this.projekti.velho);
+    const elements: PDFKit.PDFStructureElementChild[] = [
+      this.logo(vaylaTilaaja),
+      this.headerElement(this.header),
+      this.titleElement(),
+      ...this.addDocumentElements(),
+    ].filter((element) => element);
+    this.doc.addStructure(this.doc.struct("Document", {}, elements));
+  }
+
+  protected titleElement(): PDFStructureElement {
+    return this.doc.struct("H2", {}, () => {
+      this.doc.text(this.kutsuAdapter.title).font("ArialMT").moveDown();
+    });
+  }
+
+  protected get localizedKlo(): string {
+    if (this.kieli == Kieli.SUOMI) {
+      return "klo";
+    } else {
+      return "kl.";
+    }
   }
 
   protected addDocumentElements(): PDFStructureElement[] {
@@ -105,7 +139,7 @@ export class Kutsu20 extends KutsuPdf {
       this.soittoajat(this.vuorovaikutus.vuorovaikutusTilaisuudet),
 
       this.lisatietojaAntavatParagraph(),
-      this.doc.struct("P", {}, this.moreInfoElements(this.aloitusKuulutusJulkaisu, false)),
+      this.doc.struct("P", {}, this.moreInfoElements(this.vuorovaikutus.esitettavatYhteystiedot, undefined, false)),
 
       this.tervetuloa(),
       this.kutsuja(),
@@ -114,7 +148,7 @@ export class Kutsu20 extends KutsuPdf {
 
   private tietosuojaParagraph() {
     if (this.asiakirjanMuoto !== AsiakirjanMuoto.RATA) {
-      return this.viranomainenTietosuojaParagraph(this.aloitusKuulutusJulkaisu);
+      return this.viranomainenTietosuojaParagraph(this.projekti.velho);
     } else {
       return this.vaylavirastoTietosuojaParagraph();
     }
@@ -122,14 +156,9 @@ export class Kutsu20 extends KutsuPdf {
 
   private kutsuja() {
     if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
-      return this.paragraph(
-        this.localizedTilaajaOrganisaatio(
-          this.aloitusKuulutusJulkaisu.velho.suunnittelustaVastaavaViranomainen,
-          this.aloitusKuulutusJulkaisu.velho.tilaajaOrganisaatio
-        )
-      );
+      return this.paragraph(this.kutsuAdapter.tilaajaOrganisaatio);
     } else {
-      return this.paragraph(this.getLocalization("vaylavirasto"));
+      return this.paragraph(translate("vaylavirasto", this.kieli));
     }
   }
 
@@ -143,11 +172,8 @@ export class Kutsu20 extends KutsuPdf {
     let organisaatiotText: string;
     let laatii: string;
     if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
-      const tilaajaOrganisaatio = this.localizedTilaajaOrganisaatio(
-        this.aloitusKuulutusJulkaisu.velho.suunnittelustaVastaavaViranomainen,
-        this.aloitusKuulutusJulkaisu.velho.tilaajaOrganisaatio
-      );
-      const kunnat = this.aloitusKuulutusJulkaisu.velho?.kunnat;
+      const tilaajaOrganisaatio = this.kutsuAdapter.tilaajaOrganisaatio;
+      const kunnat = this.projekti.velho?.kunnat;
       const organisaatiot = kunnat ? [tilaajaOrganisaatio, ...kunnat] : [tilaajaOrganisaatio];
       const trimmattutOrganisaatiot = organisaatiot.map((organisaatio) => formatProperNoun(organisaatio));
       const viimeinenOrganisaatio = trimmattutOrganisaatiot.slice(-1);
@@ -159,16 +185,14 @@ export class Kutsu20 extends KutsuPdf {
         laatii = "utarbetar";
       }
     } else {
-      organisaatiotText = this.getLocalization("vaylavirasto");
+      organisaatiotText = translate("vaylavirasto", this.kieli);
       if (this.kieli == Kieli.SUOMI) {
         laatii = "laatii";
       } else {
         laatii = "utarbetar";
       }
     }
-    return `${organisaatiotText} ${laatii} ${this.projektiTyyppiToSuunnitelmaa(
-      this.aloitusKuulutusJulkaisu.velho.tyyppi
-    )} ${selectNimi(this.aloitusKuulutusJulkaisu, this.kieli)}`;
+    return `${organisaatiotText} ${laatii} ${this.kutsuAdapter.suunnitelmaa} ${this.kutsuAdapter.nimi}`;
   }
 
   private vuorovaikutusTilaisuudet(vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus>) {
@@ -286,7 +310,7 @@ export class Kutsu20 extends KutsuPdf {
                 )
                 .pop();
               if (user) {
-                const role = this.getLocalization("rooli." + user.rooli);
+                const role = translate("rooli." + user.rooli, this.kieli);
                 this.doc.text(safeConcatStrings(", ", [user.nimi, role, user.puhelinnumero]));
               }
             });
@@ -315,3 +339,10 @@ export class Kutsu20 extends KutsuPdf {
     )} - ${formatTime(tilaisuus.paattymisAika)}`;
   }
 }
+
+export const projektiTyyppiToFilenamePrefix = (projektiTyyppi: ProjektiTyyppi): string =>
+  ({
+    [ProjektiTyyppi.YLEINEN]: "YS",
+    [ProjektiTyyppi.TIE]: "TS",
+    [ProjektiTyyppi.RATA]: "RS",
+  }[projektiTyyppi]);
