@@ -3,6 +3,7 @@ import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { useRouter } from "next/router";
 import React, { ReactElement, useEffect, useRef, useState, useMemo, useCallback } from "react";
 import useProjekti from "src/hooks/useProjekti";
+import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@components/button/Button";
@@ -102,19 +103,7 @@ export default function Aloituskuulutus({
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
   const { t } = useTranslation("commonFI");
 
-  useEffect(() => {
-    if (router.isReady) {
-      let routeLabel = "";
-      if (projekti?.velho?.nimi) {
-        routeLabel = projekti.velho?.nimi;
-      } else if (typeof oid === "string") {
-        routeLabel = oid;
-      }
-      if (routeLabel) {
-        setRouteLabels({ "/yllapito/projekti/[oid]": { label: routeLabel } });
-      }
-    }
-  }, [router.isReady, oid, projekti, setRouteLabels]);
+  useProjektiBreadcrumbs(setRouteLabels);
 
   const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(aloituskuulutusSchema, { abortEarly: false, recursive: true }),

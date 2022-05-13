@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState, useMemo } from "react";
+import React, { ReactElement, useState, useMemo } from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { useRouter } from "next/router";
 import useProjekti from "src/hooks/useProjekti";
@@ -11,6 +11,7 @@ import HassuStack from "@components/layout/HassuStack";
 import Button from "@components/button/Button";
 import SuunnitteluvaiheenVuorovaikuttaminen from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
 import { DialogActions, DialogContent } from "@mui/material";
+import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 
 export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
   const router = useRouter();
@@ -31,19 +32,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
     setOpen(false);
   };
 
-  useEffect(() => {
-    if (router.isReady) {
-      let routeLabel = "";
-      if (projekti?.velho?.nimi) {
-        routeLabel = projekti.velho?.nimi;
-      } else if (typeof oid === "string") {
-        routeLabel = oid;
-      }
-      if (routeLabel) {
-        setRouteLabels({ "/yllapito/projekti/[oid]": { label: routeLabel } });
-      }
-    }
-  }, [router.isReady, oid, projekti, setRouteLabels]);
+  useProjektiBreadcrumbs(setRouteLabels);
 
   const handleChange = (event: React.SyntheticEvent<Element, Event>, value: string | number) => {
     if (isChildDirty) {

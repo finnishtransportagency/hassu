@@ -2,6 +2,7 @@ import React, { ReactElement } from "react";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
+import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import { useRouter } from "next/router";
 import SectionContent from "@components/layout/SectionContent";
 import useTranslation from "next-translate/useTranslation";
@@ -14,12 +15,15 @@ import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import { VuorovaikutusTilaisuus, VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import capitalize from "lodash/capitalize";
 import { SoittoajanYhteystieto } from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
+import { PageProps } from "@pages/_app";
 
-export default function Suunnittelu(): ReactElement {
+export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
   const router = useRouter();
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
   const { data: projekti } = useProjektiJulkinen(oid);
   const { t } = useTranslation();
+
+  useProjektiBreadcrumbs(setRouteLabels);
 
   const mockVuorovaikutusYhteystiedot: YhteystietoInput[] = [
     {
@@ -217,7 +221,7 @@ export default function Suunnittelu(): ReactElement {
               </div>
             )}
           </SectionContent>
-          {(menneetTilaisuudet && menneetTilaisuudet.length > 0) && (
+          {menneetTilaisuudet && menneetTilaisuudet.length > 0 && (
             <SectionContent>
               <h4 className="vayla-small-title">{t(`projekti:ui-otsikot.menneet_vuorovaikutustilaisuudet`)}</h4>
               <div className="vayla-tilaisuus-list">
