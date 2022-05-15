@@ -17,6 +17,7 @@ import capitalize from "lodash/capitalize";
 import { SoittoajanYhteystieto } from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
 import { PageProps } from "@pages/_app";
 import ExtLink from "@components/ExtLink";
+import { parseVideoURL } from "src/util/videoParser";
 
 export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
   const router = useRouter();
@@ -303,16 +304,3 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
     </ProjektiJulkinenPageLayout>
   );
 }
-const parseVideoURL = (url: string): string | undefined => {
-  if (url.includes("youtube")) {
-    const youtubeUrl = "https://www.youtube.com/embed/";
-    const youtubeID = url.split("v=")?.[1];
-    return youtubeUrl.concat(youtubeID ? youtubeID : "");
-  } else if (url.includes("vimeo")) {
-    const vimeoUrl = "https://player.vimeo.com/video";
-    const vimeoID = url.substring(url.lastIndexOf("/"));
-    return vimeoUrl.concat(vimeoID);
-  }
-  // not supported
-  return undefined;
-};

@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`VideoParser returns embedded vimeo urls correctly 1`] = `"https://player.vimeo.com/video/76979871"`;
+
+exports[`VideoParser returns embedded youtube urls correctly 1`] = `"https://www.youtube.com/embed/jNQXAC9IVRw"`;
