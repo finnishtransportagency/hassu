@@ -6,10 +6,12 @@ import { Ilmoitus12T } from "./suunnittelunAloitus/ilmoitus12T";
 import { Ilmoitus12R } from "./suunnittelunAloitus/ilmoitus12R";
 import { Kutsu20 } from "./suunnittelunAloitus/Kutsu20";
 import { Vuorovaikutus } from "../database/model/suunnitteluVaihe";
+import { Kutsu21 } from "./suunnittelunAloitus/Kutsu21";
+import { EmailOptions } from "../email/email";
 
 interface CreatePdfOptions {
   projekti?: DBProjekti;
-  aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu;
+  aloitusKuulutusJulkaisu?: AloitusKuulutusJulkaisu;
   vuorovaikutus?: Vuorovaikutus;
   asiakirjaTyyppi: AsiakirjaTyyppi;
   kieli: Kieli;
@@ -76,7 +78,7 @@ export class AsiakirjaService {
         switch (asiakirjanMuoto) {
           case AsiakirjanMuoto.TIE:
           case AsiakirjanMuoto.RATA:
-            pdf = new Kutsu20(projekti, aloitusKuulutusJulkaisu, vuorovaikutus, kieli, asiakirjanMuoto).pdf;
+            pdf = new Kutsu20(projekti, vuorovaikutus, kieli, asiakirjanMuoto).pdf;
             break;
           default:
             throw new Error(
@@ -88,6 +90,25 @@ export class AsiakirjaService {
         throw new Error(`Asiakirjatyyppi ('${asiakirjaTyyppi}') ei ole vielä tuettu`);
     }
     return pdf;
+  }
+
+  createEmail({ projekti, asiakirjaTyyppi, vuorovaikutus, kieli }: CreatePdfOptions): EmailOptions {
+    const asiakirjanMuoto = determineAsiakirjaMuoto(projekti.velho.tyyppi, projekti.velho.vaylamuoto);
+
+    switch (asiakirjaTyyppi) {
+      case AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU:
+        switch (asiakirjanMuoto) {
+          case AsiakirjanMuoto.TIE:
+          case AsiakirjanMuoto.RATA:
+            return new Kutsu21(projekti, vuorovaikutus, kieli, asiakirjanMuoto).createEmail();
+          default:
+            throw new Error(
+              `Ilmoituspohjaa ei pystytä päättelemään. tyyppi: '${projekti.velho.tyyppi}', vaylamuoto: '${projekti.velho?.vaylamuoto}'`
+            );
+        }
+      default:
+        throw new Error(`Asiakirjatyyppi ('${asiakirjaTyyppi}') ei ole vielä tuettu`);
+    }
   }
 }
 

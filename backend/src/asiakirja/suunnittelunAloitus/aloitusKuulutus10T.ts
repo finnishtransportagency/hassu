@@ -47,10 +47,17 @@ export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
         "RUOTSIKSI Valmistuttuaan suunnitelmat asetetaan yleisesti nähtäville, jolloin asianosaisilla on mahdollisuus tehdä kirjallinen muistutus suunnitelmasta (LjMTL 27 §). ",
       ]),
 
-      this.viranomainenTietosuojaParagraph(this.aloitusKuulutusJulkaisu),
+      this.viranomainenTietosuojaParagraph(this.aloitusKuulutusJulkaisu.velho),
 
       this.lisatietojaAntavatParagraph(),
-      this.doc.struct("P", {}, this.moreInfoElements(this.aloitusKuulutusJulkaisu)),
+      this.doc.struct(
+        "P",
+        {},
+        this.moreInfoElements(
+          this.aloitusKuulutusJulkaisu.yhteystiedot,
+          this.aloitusKuulutusJulkaisu.suunnitteluSopimus
+        )
+      ),
       () => {
         this.doc.font("ArialMTBold");
         this.doc.text(this.kuuluttaja).moveDown();

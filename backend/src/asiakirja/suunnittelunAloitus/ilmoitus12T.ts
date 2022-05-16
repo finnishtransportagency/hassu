@@ -4,7 +4,7 @@ import { Kieli } from "../../../../common/graphql/apiModel";
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
   SUOMI: "ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA",
-  RUOTSI: "MEDDELANDE OM KUNGÖRELSE FRÅN BEHÖRIG MYNDIGHET"
+  RUOTSI: "MEDDELANDE OM KUNGÖRELSE FRÅN BEHÖRIG MYNDIGHET",
 };
 
 export class Ilmoitus12T extends SuunnittelunAloitusPdf {
@@ -16,7 +16,7 @@ export class Ilmoitus12T extends SuunnittelunAloitusPdf {
     return [
       this.localizedParagraph([
         `${this.aloitusKuulutusJulkaisu.velho.tilaajaOrganisaatio} julkaisee tietoverkossaan liikennejärjestelmästä ja maanteistä annetun lain (503/2005) sekä hallintolain 62 a §:n mukaisesti kuulutuksen, joka koskee otsikossa mainitun ${this.projektiTyyppi}n suunnittelun ja maastotöiden aloittamista. ${this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä. `,
-        `RUOTSIKSI ${this.aloitusKuulutusJulkaisu.velho.tilaajaOrganisaatio} julkaisee tietoverkossaan liikennejärjestelmästä ja maanteistä annetun lain (503/2005) sekä hallintolain 62 a §:n mukaisesti kuulutuksen, joka koskee otsikossa mainitun ${this.projektiTyyppi}n suunnittelun ja maastotöiden aloittamista. ${this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä. `
+        `RUOTSIKSI ${this.aloitusKuulutusJulkaisu.velho.tilaajaOrganisaatio} julkaisee tietoverkossaan liikennejärjestelmästä ja maanteistä annetun lain (503/2005) sekä hallintolain 62 a §:n mukaisesti kuulutuksen, joka koskee otsikossa mainitun ${this.projektiTyyppi}n suunnittelun ja maastotöiden aloittamista. ${this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä. `,
       ]),
 
       this.doc.struct("P", {}, [
@@ -24,10 +24,10 @@ export class Ilmoitus12T extends SuunnittelunAloitusPdf {
           this.doc.text(
             this.selectText([
               `Kuulutus julkaistaan ${this.kuulutusPaiva}, ${this.tilaajaGenetiivi} tietoverkossa osoitteessa `,
-              `RUOTSIKSI Kuulutus julkaistaan ${this.kuulutusPaiva}, ${this.tilaajaGenetiivi} tietoverkossa osoitteessa `
+              `RUOTSIKSI Kuulutus julkaistaan ${this.kuulutusPaiva}, ${this.tilaajaGenetiivi} tietoverkossa osoitteessa `,
             ]),
             {
-              continued: true
+              continued: true,
             }
           );
         },
@@ -35,19 +35,28 @@ export class Ilmoitus12T extends SuunnittelunAloitusPdf {
           this.doc.fillColor("blue").text(this.kuulutusOsoite, {
             link: this.kuulutusOsoite,
             continued: true,
-            underline: true
+            underline: true,
           });
         }),
         () => {
           this.doc.fillColor("black").text(". ", { link: undefined, underline: false }).moveDown();
-        }
+        },
       ]),
       this.lisatietojaAntavatParagraph(),
-      this.doc.struct("P", {}, this.moreInfoElements(this.aloitusKuulutusJulkaisu))
+      this.doc.struct(
+        "P",
+        {},
+        this.moreInfoElements(
+          this.aloitusKuulutusJulkaisu.yhteystiedot,
+          this.aloitusKuulutusJulkaisu.suunnitteluSopimus
+        )
+      ),
     ];
   }
 
   private get kuulutusOsoite() {
-    return this.isVaylaTilaaja(this.aloitusKuulutusJulkaisu) ? "https://www.vayla.fi/kuulutukset" : "https://www.ely-keskus.fi/kuulutukset";
+    return this.isVaylaTilaaja(this.aloitusKuulutusJulkaisu.velho)
+      ? "https://www.vayla.fi/kuulutukset"
+      : "https://www.ely-keskus.fi/kuulutukset";
   }
 }

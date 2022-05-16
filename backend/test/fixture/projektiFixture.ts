@@ -18,75 +18,75 @@ import {
 import { DBProjekti } from "../../src/database/model/projekti";
 import { Vuorovaikutus } from "../../src/database/model/suunnitteluVaihe";
 
-const esitettavatYhteystiedot = [
-  {
-    etunimi: "Marko",
-    sukunimi: "Koi",
-    sahkoposti: "markku.koi@koi.com",
-    organisaatio: "Kajaani",
-    puhelinnumero: "0293121213",
-  },
-];
-
-const ilmoituksenVastaanottajat: IlmoituksenVastaanottajat = {
-  __typename: "IlmoituksenVastaanottajat",
-  kunnat: [
-    {
-      sahkoposti: "mikkeli@mikke.li",
-      lahetetty: "2022-03-11T14:54",
-      nimi: "Mikkeli",
-      __typename: "KuntaVastaanottaja",
-    },
-    {
-      sahkoposti: "juva@ju.va",
-      lahetetty: "2022-03-11T14:54",
-      nimi: " Juva",
-      __typename: "KuntaVastaanottaja",
-    },
-    {
-      sahkoposti: "savonlinna@savonlin.na",
-      lahetetty: "2022-03-11T14:54",
-      nimi: " Savonlinna",
-      __typename: "KuntaVastaanottaja",
-    },
-  ],
-  viranomaiset: [
-    {
-      sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
-      lahetetty: "2022-03-11T14:54",
-      nimi: IlmoitettavaViranomainen.ETELA_SAVO_ELY,
-      __typename: "ViranomaisVastaanottaja",
-    },
-  ],
-};
-
-const esitettavatYhteystiedot2: Yhteystieto[] = [
-  {
-    __typename: "Yhteystieto",
-    etunimi: "Etunimi",
-    sukunimi: "Sukunimi",
-    sahkoposti: "Etunimi.Sukunimi@vayla.fi",
-    organisaatio: "",
-    puhelinnumero: "0293121213",
-    titteli: "Projektipäällikkö",
-  },
-  {
-    __typename: "Yhteystieto",
-    etunimi: "Joku",
-    sukunimi: "Jokunen",
-    sahkoposti: "Joku.Jokunen@vayla.fi",
-    organisaatio: "",
-    puhelinnumero: "02998765",
-    titteli: "Konsultti",
-  },
-];
-
 export class ProjektiFixture {
   public PROJEKTI1_NIMI = "Testiprojekti 1";
   public PROJEKTI1_MUISTIINPANO_1 = "Testiprojekti 1:n muistiinpano";
   public PROJEKTI1_OID = "1";
   public PROJEKTI2_NIMI = "Testiprojekti 2 email lahetys";
   public PROJEKTI2_OID = "2";
+
+  esitettavatYhteystiedot = [
+    {
+      etunimi: "Marko",
+      sukunimi: "Koi",
+      sahkoposti: "markku.koi@koi.com",
+      organisaatio: "Kajaani",
+      puhelinnumero: "0293121213",
+    },
+  ];
+
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat = {
+    __typename: "IlmoituksenVastaanottajat",
+    kunnat: [
+      {
+        sahkoposti: "mikkeli@mikke.li",
+        lahetetty: "2022-03-11T14:54",
+        nimi: "Mikkeli",
+        __typename: "KuntaVastaanottaja",
+      },
+      {
+        sahkoposti: "juva@ju.va",
+        lahetetty: "2022-03-11T14:54",
+        nimi: " Juva",
+        __typename: "KuntaVastaanottaja",
+      },
+      {
+        sahkoposti: "savonlinna@savonlin.na",
+        lahetetty: "2022-03-11T14:54",
+        nimi: " Savonlinna",
+        __typename: "KuntaVastaanottaja",
+      },
+    ],
+    viranomaiset: [
+      {
+        sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+        lahetetty: "2022-03-11T14:54",
+        nimi: IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+        __typename: "ViranomaisVastaanottaja",
+      },
+    ],
+  };
+
+  esitettavatYhteystiedot2: Yhteystieto[] = [
+    {
+      __typename: "Yhteystieto",
+      etunimi: "Etunimi",
+      sukunimi: "Sukunimi",
+      sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+      organisaatio: "",
+      puhelinnumero: "0293121213",
+      titteli: "Projektipäällikkö",
+    },
+    {
+      __typename: "Yhteystieto",
+      etunimi: "Joku",
+      sukunimi: "Jokunen",
+      sahkoposti: "Joku.Jokunen@vayla.fi",
+      organisaatio: "",
+      puhelinnumero: "02998765",
+      titteli: "Konsultti",
+    },
+  ];
 
   static pekkaProjariProjektiKayttaja: ProjektiKayttaja = {
     __typename: "ProjektiKayttaja",
@@ -158,7 +158,7 @@ export class ProjektiFixture {
     hankkeenKuvaus: { SUOMI: "Lorem Ipsum", RUOTSI: "På Svenska", SAAME: "Saameksi" },
 
     siirtyySuunnitteluVaiheeseen: "2999-01-01",
-    esitettavatYhteystiedot,
+    esitettavatYhteystiedot: this.esitettavatYhteystiedot,
   };
 
   dbProjekti1: DBProjekti = {
@@ -209,7 +209,7 @@ export class ProjektiFixture {
         SAAME: "Saameksi",
       },
       siirtyySuunnitteluVaiheeseen: "2022-01-01",
-      esitettavatYhteystiedot,
+      esitettavatYhteystiedot: this.esitettavatYhteystiedot,
     },
     kielitiedot: {
       ensisijainenKieli: Kieli.SUOMI,
@@ -276,7 +276,7 @@ export class ProjektiFixture {
           toissijainenKieli: Kieli.RUOTSI,
           ensisijainenKieli: Kieli.SUOMI,
         },
-        ilmoituksenVastaanottajat,
+        ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
         kuulutusPaiva: "2022-03-28T14:28",
         muokkaaja: ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
         hyvaksyja: ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
@@ -383,7 +383,7 @@ export class ProjektiFixture {
         puhelinnumero: "0293121213",
       },
     ],
-    ilmoituksenVastaanottajat,
+    ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
     vuorovaikutusYhteysHenkilot: [
       ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
       ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
@@ -416,7 +416,7 @@ export class ProjektiFixture {
         paivamaara: "2022-04-05",
         alkamisAika: "10:00",
         paattymisAika: "11:00",
-        esitettavatYhteystiedot: esitettavatYhteystiedot2,
+        esitettavatYhteystiedot: this.esitettavatYhteystiedot2,
         projektiYhteysHenkilot: [
           ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
           ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
@@ -428,7 +428,7 @@ export class ProjektiFixture {
         paivamaara: "2033-04-05",
         alkamisAika: "12:00",
         paattymisAika: "13:00",
-        esitettavatYhteystiedot: esitettavatYhteystiedot2,
+        esitettavatYhteystiedot: this.esitettavatYhteystiedot2,
       },
     ],
   };

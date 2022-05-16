@@ -44,7 +44,7 @@ export class AloitusKuulutus10R extends SuunnittelunAloitusPdf {
 
       this.vaylavirastoTietosuojaParagraph(),
       this.lisatietojaAntavatParagraph(),
-      this.doc.struct("P", {}, this.moreInfoElements(this.aloitusKuulutusJulkaisu)),
+      this.doc.struct("P", {}, this.moreInfoElements(this.aloitusKuulutusJulkaisu.yhteystiedot,this.aloitusKuulutusJulkaisu.suunnitteluSopimus)),
     ];
   }
 }
