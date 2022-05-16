@@ -1,19 +1,21 @@
-import { Controller, FormProvider, useFieldArray, useForm, UseFormProps } from "react-hook-form";
+import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
-import { LinkkiInput } from "../../../../common/graphql/apiModel";
+import { KuntaVastaanottajaInput, LinkkiInput } from "../../../../common/graphql/apiModel";
 import {
   TallennaProjektiInput,
   Projekti,
   api,
   VuorovaikutusInput,
-  ProjektiRooli,
-  YhteystietoInput,
   VuorovaikutusTilaisuusTyyppi,
   Yhteystieto,
+  YhteystietoInput,
+  ViranomaisVastaanottajaInput,
+  IlmoitettavaViranomainen,
+  IlmoituksenVastaanottajatInput
 } from "@services/api";
 import Section from "@components/layout/Section";
-import React, { ReactElement, useEffect, useState, Fragment, useCallback } from "react";
+import React, { ReactElement, useEffect, useState, useMemo, useCallback } from "react";
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
@@ -24,14 +26,6 @@ import DatePicker from "@components/form/DatePicker";
 import dayjs from "dayjs";
 import { vuorovaikutusSchema } from "src/schemas/vuorovaikutus";
 import HassuStack from "@components/layout/HassuStack";
-import CheckBox from "@components/form/CheckBox";
-import FormGroup from "@components/form/FormGroup";
-import TextInput from "@components/form/TextInput";
-import HassuGrid from "@components/HassuGrid";
-import { maxPhoneLength } from "src/schemas/puhelinNumero";
-import IconButton from "@components/button/IconButton";
-import { removeTypeName } from "src/util/removeTypeName";
-import LuonnoksetJaAineistot from "./LuonnoksetJaAineistot";
 import VuorovaikutusDialog from "./VuorovaikutustilaisuusDialog";
 import { formatDate } from "src/util/dateUtils";
 import capitalize from "lodash/capitalize";
@@ -40,6 +34,11 @@ import HassuDialog from "@components/HassuDialog";
 import WindowCloseButton from "@components/button/WindowCloseButton";
 import useTranslation from "next-translate/useTranslation";
 import { UseFormReturn } from "react-hook-form";
+import EsitettavatYhteystiedot from "./EsitettavatYhteystiedot";
+import LuonnoksetJaAineistot from "./LuonnoksetJaAineistot";
+import IlmoituksenVastaanottajat from "./IlmoituksenVastaanottajat";
+import { removeTypeName } from "src/util/removeTypeName";
+import getIlmoitettavaViranomainen from "src/util/getIlmoitettavaViranomainen";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -71,12 +70,15 @@ type FormValuesForLuonnoksetJaAineistot = RequiredProjektiFields & {
   };
 };
 
-const defaultYhteystieto: YhteystietoInput = {
-  etunimi: "",
-  sukunimi: "",
-  organisaatio: "",
-  puhelinnumero: "",
-  sahkoposti: "",
+type FormValuesForEsitettavatYhteystiedot = RequiredProjektiFields & {
+  suunnitteluVaihe: {
+    vuorovaikutus: Pick<
+      VuorovaikutusInput,
+      | "vuorovaikutusNumero"
+      | "esitettavatYhteystiedot"
+      | "vuorovaikutusYhteysHenkilot"
+    >;
+  };
 };
 
 interface Props {
@@ -84,6 +86,57 @@ interface Props {
   reloadProjekti?: KeyedMutator<ProjektiLisatiedolla | null>;
   isDirtyHandler: (isDirty: boolean) => void;
   vuorovaikutusnro: number;
+  kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] | null
+}
+
+const defaultListWithEmptyLink = (list : (LinkkiInput[] | null | undefined)) : LinkkiInput[] => {
+  if (!list || !list.length) {
+    return [{ url: "", nimi: "" }];
+  }
+  return list.map(link => ({ nimi: link.nimi, url: link.url }));
+};
+
+const defaultVastaanottajat = (projekti: Projekti | null | undefined, vuorovaikutusnro: number, kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] | null) : IlmoituksenVastaanottajatInput => {
+  const v = projekti?.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
+    return v.vuorovaikutusNumero === vuorovaikutusnro;
+  });
+  let kunnat: KuntaVastaanottajaInput[];
+  let viranomaiset: ViranomaisVastaanottajaInput[];
+  if (v?.ilmoituksenVastaanottajat?.kunnat) {
+    kunnat = v?.ilmoituksenVastaanottajat?.kunnat.map(kunta => {
+      kunta = removeTypeName(kunta);
+      delete kunta.lahetetty;
+      return kunta;
+    });
+  } else {
+    kunnat = projekti?.velho?.kunnat?.map(s => {
+      return {
+      nimi: s,
+      sahkoposti: ""
+    } as KuntaVastaanottajaInput; }) || []
+  }
+  if (v?.ilmoituksenVastaanottajat?.viranomaiset) {
+    viranomaiset = v?.ilmoituksenVastaanottajat?.viranomaiset.map(kunta => {
+      kunta = removeTypeName(kunta);
+      delete kunta.lahetetty;
+      return kunta;
+    });
+  } else {
+    viranomaiset = projekti?.velho?.suunnittelustaVastaavaViranomainen === "VAYLAVIRASTO"
+    ? (projekti?.velho?.maakunnat?.map(maakunta => {
+        const ely : IlmoitettavaViranomainen = getIlmoitettavaViranomainen(maakunta);
+        return kirjaamoOsoitteet?.find(osoite => osoite.nimi == ely)
+          || { nimi: maakunta, sahkoposti: "" } as ViranomaisVastaanottajaInput;
+      })  || [])
+    : [
+        kirjaamoOsoitteet?.find(osoite => osoite.nimi == "VAYLAVIRASTO")
+        || { nimi: "VAYLAVIRASTO" as IlmoitettavaViranomainen, sahkoposti: "" } as ViranomaisVastaanottajaInput
+      ]
+  }
+  return {
+    kunnat,
+    viranomaiset
+  };
 }
 
 export default function SuunnitteluvaiheenVuorovaikuttaminen({
@@ -91,7 +144,9 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
   reloadProjekti,
   isDirtyHandler,
   vuorovaikutusnro,
+  kirjaamoOsoitteet
 }: Props): ReactElement {
+
   const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
@@ -99,31 +154,44 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
   const today = dayjs().format();
   const { t } = useTranslation();
 
-  const defaultListWithEmptyLink = useCallback((list: LinkkiInput[] | null | undefined): LinkkiInput[] => {
-    if (!list || !list.length) {
-      return [{ url: "", nimi: "" }];
-    }
-    return list.map((link) => ({ nimi: link.nimi, url: link.url }));
-  }, []);
-
-  const formOptions: UseFormProps<VuorovaikutusFormValues> = {
-    resolver: yupResolver(vuorovaikutusSchema, { abortEarly: false, recursive: true }),
-    mode: "onChange",
-    reValidateMode: "onChange",
-    defaultValues: {
+  const defaultValues : Omit<VuorovaikutusFormValues, "oid"> = useMemo(() => {
+    const v = projekti?.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
+      return v.vuorovaikutusNumero === vuorovaikutusnro;
+    });
+    return {
       suunnitteluVaihe: {
         vuorovaikutus: {
           vuorovaikutusNumero: vuorovaikutusnro,
-          videot: defaultListWithEmptyLink(
-            projekti?.suunnitteluVaihe?.vuorovaikutukset?.[vuorovaikutusnro - 1]?.videot
-          ),
-          suunnittelumateriaali: removeTypeName(
-            projekti?.suunnitteluVaihe?.vuorovaikutukset?.[vuorovaikutusnro - 1]?.suunnittelumateriaali
-          ) || { nimi: "", url: "" },
+          vuorovaikutusJulkaisuPaiva: v?.vuorovaikutusJulkaisuPaiva,
+          kysymyksetJaPalautteetViimeistaan: v?.kysymyksetJaPalautteetViimeistaan,
+          vuorovaikutusYhteysHenkilot:
+            projekti?.kayttoOikeudet
+              ?.filter(({ kayttajatunnus }) => v?.vuorovaikutusYhteysHenkilot?.includes(kayttajatunnus))
+              .map(({ kayttajatunnus }) => kayttajatunnus) || [],
+          esitettavatYhteystiedot:
+            v?.esitettavatYhteystiedot?.map((yhteystieto) => removeTypeName(yhteystieto)) || [],
+          ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, vuorovaikutusnro, kirjaamoOsoitteet),
+          vuorovaikutusTilaisuudet:
+            v?.vuorovaikutusTilaisuudet?.map((tilaisuus) => {
+              const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
+              return vuorovaikutusTilaisuusInput;
+            }) || [],
+          julkinen: v?.julkinen,
+          videot: defaultListWithEmptyLink(v?.videot as LinkkiInput[]),
+          suunnittelumateriaali: removeTypeName(v?.suunnittelumateriaali) as LinkkiInput || { nimi: "", url: "" }
         },
-      },
-    },
-  };
+      }
+    };
+  }, [projekti, vuorovaikutusnro, kirjaamoOsoitteet]);
+
+  const formOptions: UseFormProps<VuorovaikutusFormValues> = useMemo(() => {
+    return {
+      resolver: yupResolver(vuorovaikutusSchema, { abortEarly: false, recursive: true }),
+      mode: "onChange",
+      reValidateMode: "onChange",
+      defaultValues
+    };
+  }, [defaultValues]);
 
   const useFormReturn = useForm<VuorovaikutusFormValues>(formOptions);
   const {
@@ -131,14 +199,8 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
     reset,
     handleSubmit,
     formState: { errors, isDirty },
-    control,
     getValues,
   } = useFormReturn;
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot",
-  });
 
   const saveSunnitteluvaihe = useCallback(
     async (formData: VuorovaikutusFormValues) => {
@@ -188,41 +250,13 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
 
   useEffect(() => {
     if (projekti && projekti.oid) {
-      const v = projekti.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
-        return v.vuorovaikutusNumero === vuorovaikutusnro;
-      });
-
       const tallentamisTiedot: VuorovaikutusFormValues = {
         oid: projekti.oid,
-        suunnitteluVaihe: {
-          vuorovaikutus: {
-            vuorovaikutusNumero: vuorovaikutusnro,
-            vuorovaikutusJulkaisuPaiva: v?.vuorovaikutusJulkaisuPaiva,
-            kysymyksetJaPalautteetViimeistaan: v?.kysymyksetJaPalautteetViimeistaan,
-            vuorovaikutusYhteysHenkilot:
-              projekti.kayttoOikeudet
-                ?.filter(({ kayttajatunnus }) => v?.vuorovaikutusYhteysHenkilot?.includes(kayttajatunnus))
-                .map(({ kayttajatunnus }) => kayttajatunnus) || [],
-            esitettavatYhteystiedot:
-              v?.esitettavatYhteystiedot?.map((yhteystieto) => removeTypeName(yhteystieto)) || [],
-            vuorovaikutusTilaisuudet:
-              v?.vuorovaikutusTilaisuudet?.map((tilaisuus) => {
-                const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
-                vuorovaikutusTilaisuusInput.esitettavatYhteystiedot =
-                  vuorovaikutusTilaisuusInput?.esitettavatYhteystiedot?.map((yhteystieto) =>
-                    removeTypeName(yhteystieto)
-                  ) || [];
-                return vuorovaikutusTilaisuusInput;
-              }) || [],
-            julkinen: v?.julkinen,
-            videot: defaultListWithEmptyLink(v?.videot as LinkkiInput[]),
-            suunnittelumateriaali: (removeTypeName(v?.suunnittelumateriaali) as LinkkiInput) || { nimi: "", url: "" },
-          },
-        },
+        ...defaultValues,
       };
       reset(tallentamisTiedot);
     }
-  }, [projekti, reset, vuorovaikutusnro, defaultListWithEmptyLink]);
+  }, [projekti, defaultValues, reset]);
 
   const handleClickOpenHyvaksy = () => {
     setOpenHyvaksy(true);
@@ -371,145 +405,9 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                 </Button>
               </SectionContent>
             </Section>
-            <LuonnoksetJaAineistot
-              useFormReturn={useFormReturn as UseFormReturn<FormValuesForLuonnoksetJaAineistot, object>}
-            />
-            <Section>
-              <SectionContent>
-                <h4 className="vayla-small-title">Vuorovaikuttamisen yhteyshenkilöt</h4>
-                <p>
-                  Voit valita kutsussa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden
-                  yhteystiedon. Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden
-                  yhteystiedot haetaan Projektin henkilöt -sivulle tallennetuista tiedoista.
-                </p>
-                {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
-                  <Controller
-                    control={control}
-                    name={`suunnitteluVaihe.vuorovaikutus.vuorovaikutusYhteysHenkilot`}
-                    render={({ field: { onChange, value, ...field } }) => (
-                      <FormGroup label="Projektiin tallennetut henkilöt" inlineFlex>
-                        {projekti.kayttoOikeudet?.map(({ nimi, rooli, kayttajatunnus }, index) => {
-                          const tunnuslista = value || [];
-                          return (
-                            <Fragment key={index}>
-                              {rooli === ProjektiRooli.PROJEKTIPAALLIKKO ? (
-                                <CheckBox label={nimi} disabled checked {...field} />
-                              ) : (
-                                <CheckBox
-                                  label={nimi}
-                                  onChange={(event) => {
-                                    if (!event.target.checked) {
-                                      onChange(tunnuslista.filter((tunnus) => tunnus !== kayttajatunnus));
-                                    } else {
-                                      onChange([...tunnuslista, kayttajatunnus]);
-                                    }
-                                  }}
-                                  checked={tunnuslista.includes(kayttajatunnus)}
-                                  {...field}
-                                />
-                              )}
-                            </Fragment>
-                          );
-                        })}
-                      </FormGroup>
-                    )}
-                  />
-                ) : (
-                  <p>Projektilla ei ole tallennettuja henkilöitä</p>
-                )}
-              </SectionContent>
-              <SectionContent>
-                <p>Uusi yhteystieto</p>
-                <p>
-                  Lisää uudelle yhteystiedolle rivi Lisää uusi-painikkeella. Huomioi, että uusi yhteystieto ei tallennu
-                  Projektin henkilöt -sivulle eikä henkilölle tule käyttöoikeuksia projektiin.
-                </p>
-              </SectionContent>
-              {fields.map((field, index) => (
-                <HassuStack key={field.id} direction={["column", "column", "row"]}>
-                  <HassuGrid sx={{ width: "100%" }} cols={[1, 1, 3]}>
-                    <TextInput
-                      label="Etunimi *"
-                      {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.etunimi`)}
-                      error={
-                        (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.etunimi
-                      }
-                    />
-                    <TextInput
-                      label="Sukunimi *"
-                      {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.sukunimi`)}
-                      error={
-                        (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.sukunimi
-                      }
-                    />
-                    <TextInput
-                      label="Organisaatio / kunta *"
-                      {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.organisaatio`)}
-                      error={
-                        (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.organisaatio
-                      }
-                    />
-                    <TextInput
-                      label="Puhelinnumero *"
-                      {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.puhelinnumero`)}
-                      error={
-                        (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]
-                          ?.puhelinnumero
-                      }
-                      maxLength={maxPhoneLength}
-                    />
-                    <TextInput
-                      label="Sähköpostiosoite *"
-                      {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.sahkoposti`)}
-                      error={
-                        (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.sahkoposti
-                      }
-                    />
-                  </HassuGrid>
-                  <div>
-                    <div className="hidden lg:block lg:mt-8">
-                      <IconButton
-                        icon="trash"
-                        onClick={(event) => {
-                          event.preventDefault();
-                          remove(index);
-                        }}
-                      />
-                    </div>
-                    <div className="block lg:hidden">
-                      <Button
-                        onClick={(event) => {
-                          event.preventDefault();
-                          remove(index);
-                        }}
-                        endIcon="trash"
-                      >
-                        Poista
-                      </Button>
-                    </div>
-                  </div>
-                </HassuStack>
-              ))}
-              <Button
-                onClick={(event) => {
-                  event.preventDefault();
-                  append(defaultYhteystieto);
-                }}
-              >
-                Lisää uusi +
-              </Button>
-            </Section>
-            <Section>
-              <h4 className="vayla-small-title">Ilmoituksen vastaanottajat</h4>
-              <SectionContent>
-                <p>
-                  Vuorovaikuttamisesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville
-                  kunnille. Kunnat on haettu Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle
-                  viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi -painikkeella
-                </p>
-                <p>Jos kuntatiedoissa on virhe, tee korjaus Projektivelhoon.</p>
-              </SectionContent>
-            </Section>
+            <LuonnoksetJaAineistot useFormReturn={useFormReturn as UseFormReturn<FormValuesForLuonnoksetJaAineistot, object>} />
+            <EsitettavatYhteystiedot useFormReturn={useFormReturn as UseFormReturn<FormValuesForEsitettavatYhteystiedot, object>} projekti={projekti} />
+            <IlmoituksenVastaanottajat kirjaamoOsoitteet={kirjaamoOsoitteet} />
             <Section>
               <h4 className="vayla-small-title">Kutsun ja ilmoituksen esikatselu</h4>
               <SectionContent>

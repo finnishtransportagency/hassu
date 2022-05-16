@@ -41,7 +41,7 @@ export default function LuonnoksetJaAineistot<T extends FormValues>({ useFormRet
     control,
     register,
     formState: { errors },
-  } = useFormReturn as unknown as UseFormReturn<FormValues>;
+  } = useFormReturn as UseFormReturn<FormValues>;
 
   const {
     fields: videotFields,
