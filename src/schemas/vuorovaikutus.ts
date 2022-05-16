@@ -80,8 +80,24 @@ export const vuorovaikutusSchema = Yup.object().shape({
         return !linkki.url;
       }),
       suunnittelumateriaali: Yup.object().notRequired().shape({
-        nimi: Yup.string().required("Anna nimi"),
-        url: Yup.string().url("URL ei kelpaa").required("Anna osoite")
+        nimi: Yup.string().test("nimi-puttuu", "Nimi puuttuu", (value, testContext) => {
+          if (!value && testContext.parent.url) {
+            return testContext.createError({
+              path: `${testContext.path}`,
+              message: "Nimi on annettava, jos osoite on annettu",
+            });
+          }
+          return true;
+        }),
+        url: Yup.string().url("URL ei kelpaa").test("url-puttuu", "Url puuttuu", (value, testContext) => {
+          if (!value && testContext.parent.nimi) {
+            return testContext.createError({
+              path: `${testContext.path}`,
+              message: "Osoite on annettava, jos nimi on annettu",
+            });
+          }
+          return true;
+        })
       }),
       ilmoituksenVastaanottajat: Yup.object()
       .shape({
