@@ -269,7 +269,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
                   return (
                     <>
                       {(parseVideoURL(video.url) && (
-                        <iframe width={"600px"} height={"360"} src={parseVideoURL(video.url)}></iframe>
+                        <iframe width={"640px"} height={"360"} src={parseVideoURL(video.url)}></iframe>
                       )) || <p>&lt;Videolinkki ei ole kelvollinen&gt;</p>}
                     </>
                   );
