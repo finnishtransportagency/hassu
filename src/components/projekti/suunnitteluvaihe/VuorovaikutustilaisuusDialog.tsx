@@ -115,7 +115,7 @@ export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet, 
     return (
       <>
         <TextInput
-          label="Tilaisuuden nimi *"
+          label="Tilaisuuden nimi"
           {...register(`vuorovaikutusTilaisuudet.${props.index}.nimi`)}
           error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.nimi}
           maxLength={200}
@@ -251,29 +251,7 @@ export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet, 
                     if (tilaisuus.tyyppi !== VuorovaikutusTilaisuusTyyppi.VERKOSSA) return;
                     return (
                       <SectionContent key={index}>
-                        <TextInput
-                          label="Tilaisuuden nimi *"
-                          {...register(`vuorovaikutusTilaisuudet.${index}.nimi`)}
-                          error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.nimi}
-                          maxLength={200}
-                        ></TextInput>
-                        <HassuStack direction={["column", "column", "row"]}>
-                          <DatePicker
-                            label="Päivämäärä *"
-                            {...register(`vuorovaikutusTilaisuudet.${index}.paivamaara`)}
-                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.paivamaara}
-                          ></DatePicker>
-                          <TimePicker
-                            label="Alkaa *"
-                            {...register(`vuorovaikutusTilaisuudet.${index}.alkamisAika`)}
-                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.alkamisAika}
-                          ></TimePicker>
-                          <TimePicker
-                            label="Päättyy *"
-                            {...register(`vuorovaikutusTilaisuudet.${index}.paattymisAika`)}
-                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.paattymisAika}
-                          ></TimePicker>
-                        </HassuStack>
+                        <TilaisuudenNimiJaAika index={index} />
                         <HassuGrid cols={{ lg: 3 }}>
                           <Select
                             addEmptyOption
@@ -316,29 +294,7 @@ export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet, 
                     if (tilaisuus.tyyppi !== VuorovaikutusTilaisuusTyyppi.PAIKALLA) return;
                     return (
                       <SectionContent key={index}>
-                        <TextInput
-                          label="Tilaisuuden nimi *"
-                          {...register(`vuorovaikutusTilaisuudet.${index}.nimi`)}
-                          error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.nimi}
-                          maxLength={200}
-                        ></TextInput>
-                        <HassuStack direction={["column", "column", "row"]}>
-                          <DatePicker
-                            label="Päivämäärä *"
-                            {...register(`vuorovaikutusTilaisuudet.${index}.paivamaara`)}
-                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.paivamaara}
-                          ></DatePicker>
-                          <TimePicker
-                            label="Alkaa *"
-                            {...register(`vuorovaikutusTilaisuudet.${index}.alkamisAika`)}
-                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.alkamisAika}
-                          ></TimePicker>
-                          <TimePicker
-                            label="Päättyy *"
-                            {...register(`vuorovaikutusTilaisuudet.${index}.paattymisAika`)}
-                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.paattymisAika}
-                          ></TimePicker>
-                        </HassuStack>
+                        <TilaisuudenNimiJaAika index={index} />
                         <HassuGrid cols={{ lg: 5 }}>
                           <TextInput
                             label="Paikka"

@@ -10,7 +10,7 @@ export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
   vuorovaikutusTilaisuudet: Yup.array().of(
     Yup.object().shape({
       tyyppi: Yup.mixed<VuorovaikutusTilaisuusTyyppi>().oneOf(Object.values(VuorovaikutusTilaisuusTyyppi)).required(),
-      nimi: Yup.string().required("Tilaisuuden nimi täytyy antaa").nullable(),
+      nimi: Yup.string().nullable(),
       paivamaara: Yup.string()
         .required("Vuorovaikutustilaisuuden päivämäärä täytyy antaa")
         .test("valid-date", "Virheellinen päivämäärä", (date) => {
