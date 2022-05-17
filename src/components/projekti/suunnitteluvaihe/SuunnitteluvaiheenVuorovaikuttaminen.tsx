@@ -1,7 +1,7 @@
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
-import { KuntaVastaanottajaInput, LinkkiInput } from "../../../../common/graphql/apiModel";
+import { KuntaVastaanottajaInput, LinkkiInput, VuorovaikutusTilaisuusInput } from "../../../../common/graphql/apiModel";
 import {
   TallennaProjektiInput,
   Projekti,
@@ -12,7 +12,7 @@ import {
   YhteystietoInput,
   ViranomaisVastaanottajaInput,
   IlmoitettavaViranomainen,
-  IlmoituksenVastaanottajatInput
+  IlmoituksenVastaanottajatInput,
 } from "@services/api";
 import Section from "@components/layout/Section";
 import React, { ReactElement, useEffect, useState, useMemo, useCallback } from "react";
@@ -74,9 +74,7 @@ type FormValuesForEsitettavatYhteystiedot = RequiredProjektiFields & {
   suunnitteluVaihe: {
     vuorovaikutus: Pick<
       VuorovaikutusInput,
-      | "vuorovaikutusNumero"
-      | "esitettavatYhteystiedot"
-      | "vuorovaikutusYhteysHenkilot"
+      "vuorovaikutusNumero" | "esitettavatYhteystiedot" | "vuorovaikutusYhteysHenkilot"
     >;
   };
 };
@@ -86,67 +84,75 @@ interface Props {
   reloadProjekti?: KeyedMutator<ProjektiLisatiedolla | null>;
   isDirtyHandler: (isDirty: boolean) => void;
   vuorovaikutusnro: number;
-  kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] | null
+  kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] | null;
 }
 
-const defaultListWithEmptyLink = (list : (LinkkiInput[] | null | undefined)) : LinkkiInput[] => {
+const defaultListWithEmptyLink = (list: LinkkiInput[] | null | undefined): LinkkiInput[] => {
   if (!list || !list.length) {
     return [{ url: "", nimi: "" }];
   }
-  return list.map(link => ({ nimi: link.nimi, url: link.url }));
+  return list.map((link) => ({ nimi: link.nimi, url: link.url }));
 };
 
-const defaultVastaanottajat = (projekti: Projekti | null | undefined, vuorovaikutusnro: number, kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] | null) : IlmoituksenVastaanottajatInput => {
+const defaultVastaanottajat = (
+  projekti: Projekti | null | undefined,
+  vuorovaikutusnro: number,
+  kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] | null
+): IlmoituksenVastaanottajatInput => {
   const v = projekti?.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
     return v.vuorovaikutusNumero === vuorovaikutusnro;
   });
   let kunnat: KuntaVastaanottajaInput[];
   let viranomaiset: ViranomaisVastaanottajaInput[];
   if (v?.ilmoituksenVastaanottajat?.kunnat) {
-    kunnat = v?.ilmoituksenVastaanottajat?.kunnat.map(kunta => {
+    kunnat = v?.ilmoituksenVastaanottajat?.kunnat.map((kunta) => {
       kunta = removeTypeName(kunta);
       delete kunta.lahetetty;
       return kunta;
     });
   } else {
-    kunnat = projekti?.velho?.kunnat?.map(s => {
-      return {
-      nimi: s,
-      sahkoposti: ""
-    } as KuntaVastaanottajaInput; }) || []
+    kunnat =
+      projekti?.velho?.kunnat?.map((s) => {
+        return {
+          nimi: s,
+          sahkoposti: "",
+        } as KuntaVastaanottajaInput;
+      }) || [];
   }
   if (v?.ilmoituksenVastaanottajat?.viranomaiset) {
-    viranomaiset = v?.ilmoituksenVastaanottajat?.viranomaiset.map(kunta => {
+    viranomaiset = v?.ilmoituksenVastaanottajat?.viranomaiset.map((kunta) => {
       kunta = removeTypeName(kunta);
       delete kunta.lahetetty;
       return kunta;
     });
   } else {
-    viranomaiset = projekti?.velho?.suunnittelustaVastaavaViranomainen === "VAYLAVIRASTO"
-    ? (projekti?.velho?.maakunnat?.map(maakunta => {
-        const ely : IlmoitettavaViranomainen = getIlmoitettavaViranomainen(maakunta);
-        return kirjaamoOsoitteet?.find(osoite => osoite.nimi == ely)
-          || { nimi: maakunta, sahkoposti: "" } as ViranomaisVastaanottajaInput;
-      })  || [])
-    : [
-        kirjaamoOsoitteet?.find(osoite => osoite.nimi == "VAYLAVIRASTO")
-        || { nimi: "VAYLAVIRASTO" as IlmoitettavaViranomainen, sahkoposti: "" } as ViranomaisVastaanottajaInput
-      ]
+    viranomaiset =
+      projekti?.velho?.suunnittelustaVastaavaViranomainen === "VAYLAVIRASTO"
+        ? projekti?.velho?.maakunnat?.map((maakunta) => {
+            const ely: IlmoitettavaViranomainen = getIlmoitettavaViranomainen(maakunta);
+            return (
+              kirjaamoOsoitteet?.find((osoite) => osoite.nimi == ely) ||
+              ({ nimi: maakunta, sahkoposti: "" } as ViranomaisVastaanottajaInput)
+            );
+          }) || []
+        : [
+            kirjaamoOsoitteet?.find((osoite) => osoite.nimi == "VAYLAVIRASTO") ||
+              ({ nimi: "VAYLAVIRASTO" as IlmoitettavaViranomainen, sahkoposti: "" } as ViranomaisVastaanottajaInput),
+          ];
   }
   return {
     kunnat,
-    viranomaiset
+    viranomaiset,
   };
-}
+};
 
 export default function SuunnitteluvaiheenVuorovaikuttaminen({
   projekti,
   reloadProjekti,
   isDirtyHandler,
   vuorovaikutusnro,
-  kirjaamoOsoitteet
+  kirjaamoOsoitteet,
 }: Props): ReactElement {
-
   const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
@@ -154,7 +160,18 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
   const today = dayjs().format();
   const { t } = useTranslation();
 
-  const defaultValues : Omit<VuorovaikutusFormValues, "oid"> = useMemo(() => {
+  const TilaisuudenPerustiedot = React.memo((props: { tilaisuus: VuorovaikutusTilaisuusInput }) => {
+    return (
+      <>
+        {capitalize(t(`common:viikonpaiva_${dayjs(props.tilaisuus.paivamaara).day()}`))}{" "}
+        {formatDate(props.tilaisuus.paivamaara)} klo {props.tilaisuus.alkamisAika}-{props.tilaisuus.paattymisAika}
+        {props.tilaisuus.nimi ? `${" "}(${capitalize(props.tilaisuus.nimi)})` : undefined}
+      </>
+    );
+  });
+  TilaisuudenPerustiedot.displayName = "TilaisuudenPerustiedot";
+
+  const defaultValues: Omit<VuorovaikutusFormValues, "oid"> = useMemo(() => {
     const v = projekti?.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
       return v.vuorovaikutusNumero === vuorovaikutusnro;
     });
@@ -168,8 +185,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
             projekti?.kayttoOikeudet
               ?.filter(({ kayttajatunnus }) => v?.vuorovaikutusYhteysHenkilot?.includes(kayttajatunnus))
               .map(({ kayttajatunnus }) => kayttajatunnus) || [],
-          esitettavatYhteystiedot:
-            v?.esitettavatYhteystiedot?.map((yhteystieto) => removeTypeName(yhteystieto)) || [],
+          esitettavatYhteystiedot: v?.esitettavatYhteystiedot?.map((yhteystieto) => removeTypeName(yhteystieto)) || [],
           ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, vuorovaikutusnro, kirjaamoOsoitteet),
           vuorovaikutusTilaisuudet:
             v?.vuorovaikutusTilaisuudet?.map((tilaisuus) => {
@@ -178,9 +194,9 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
             }) || [],
           julkinen: v?.julkinen,
           videot: defaultListWithEmptyLink(v?.videot as LinkkiInput[]),
-          suunnittelumateriaali: removeTypeName(v?.suunnittelumateriaali) as LinkkiInput || { nimi: "", url: "" }
+          suunnittelumateriaali: (removeTypeName(v?.suunnittelumateriaali) as LinkkiInput) || { nimi: "", url: "" },
         },
-      }
+      },
     };
   }, [projekti, vuorovaikutusnro, kirjaamoOsoitteet]);
 
@@ -189,7 +205,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
       resolver: yupResolver(vuorovaikutusSchema, { abortEarly: false, recursive: true }),
       mode: "onChange",
       reValidateMode: "onChange",
-      defaultValues
+      defaultValues,
     };
   }, [defaultValues]);
 
@@ -335,10 +351,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                         return (
                           <div key={index}>
                             <p>
-                              {capitalize(tilaisuus.nimi)},{" "}
-                              {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)}{" "}
-                              {formatDate(tilaisuus.paivamaara)} klo {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika},
-                              Linkki tilaisuuteen: {tilaisuus.linkki}
+                              <TilaisuudenPerustiedot tilaisuus={tilaisuus} />, Linkki tilaisuuteen: {tilaisuus.linkki}
                             </p>
                           </div>
                         );
@@ -356,11 +369,8 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                         return (
                           <div key={index}>
                             <p>
-                              {capitalize(tilaisuus.nimi)},{" "}
-                              {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)}{" "}
-                              {formatDate(tilaisuus.paivamaara)} klo {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika},
-                              Osoite: {tilaisuus.paikka}, {tilaisuus.osoite} {tilaisuus.postinumero}{" "}
-                              {tilaisuus.postitoimipaikka}
+                              <TilaisuudenPerustiedot tilaisuus={tilaisuus} />, Osoite: {tilaisuus.paikka},{" "}
+                              {tilaisuus.osoite} {tilaisuus.postinumero} {tilaisuus.postitoimipaikka}
                             </p>
                           </div>
                         );
@@ -378,9 +388,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                         return (
                           <div key={index}>
                             <p>
-                              {capitalize(tilaisuus.nimi)},{" "}
-                              {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)}{" "}
-                              {formatDate(tilaisuus.paivamaara)} klo {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}
+                              <TilaisuudenPerustiedot tilaisuus={tilaisuus} />
                             </p>
                             <div>
                               {tilaisuus.esitettavatYhteystiedot?.map((yhteystieto, index) => {
@@ -405,8 +413,13 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                 </Button>
               </SectionContent>
             </Section>
-            <LuonnoksetJaAineistot useFormReturn={useFormReturn as UseFormReturn<FormValuesForLuonnoksetJaAineistot, object>} />
-            <EsitettavatYhteystiedot useFormReturn={useFormReturn as UseFormReturn<FormValuesForEsitettavatYhteystiedot, object>} projekti={projekti} />
+            <LuonnoksetJaAineistot
+              useFormReturn={useFormReturn as UseFormReturn<FormValuesForLuonnoksetJaAineistot, object>}
+            />
+            <EsitettavatYhteystiedot
+              useFormReturn={useFormReturn as UseFormReturn<FormValuesForEsitettavatYhteystiedot, object>}
+              projekti={projekti}
+            />
             <IlmoituksenVastaanottajat kirjaamoOsoitteet={kirjaamoOsoitteet} />
             <Section>
               <h4 className="vayla-small-title">Kutsun ja ilmoituksen esikatselu</h4>

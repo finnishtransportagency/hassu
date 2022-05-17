@@ -48,7 +48,7 @@ export type Aineisto = {
 
 export type VuorovaikutusTilaisuus = {
   tyyppi: VuorovaikutusTilaisuusTyyppi;
-  nimi: string;
+  nimi?: string;
   // yyyy-MM-dd
   paivamaara: string;
   // HH:mm

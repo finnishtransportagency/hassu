@@ -111,7 +111,7 @@ input VuorovaikutusInput {
 
 input VuorovaikutusTilaisuusInput {
   tyyppi: VuorovaikutusTilaisuusTyyppi!
-  nimi: String!
+  nimi: String
   """
   yyyy-MM-dd
   """
