@@ -32,6 +32,7 @@ export default function Layout({ children, routeLabels }: Props): ReactElement {
       </Container>
       <Footer />
       <button
+        id="to-top-button"
         onClick={() => {
           window.scrollTo(0, 0);
         }}

@@ -6,6 +6,32 @@ import filter from "lodash/filter";
 
 const validTimeRegexp = /^([0-1]?[0-9]|2[0-4]):([0-5]?[0-9])$/;
 
+export const palauteSchema = Yup.object().shape({
+  etunimi: Yup.string().notRequired().max(100),
+  sukunimi: Yup.string().notRequired().max(100),
+  sahkoposti: Yup.string().notRequired().email(),
+  puhelinnumero: Yup.string().notRequired().max(20),
+  kysymysTaiPalaute: Yup.string().required().max(2000),
+  yhteydenottotapaEmail: Yup.boolean().notRequired(),
+  yhteydenottotapaPuhelin: Yup.boolean().notRequired(),
+  liite: Yup.mixed().notRequired()
+    .test({
+      message: 'Tiedoston on oltava tyyppiä PDF, PNG tai JPG',
+      test: (file, context) => {
+        const isValid = !file || ['image/png', 'image/jpg', 'image/jpeg', 'application/pdf'].includes((file?.type));
+        if (!isValid) context?.createError();
+        return isValid;
+      }
+    })
+    .test({
+      message: `Tiedosto on liian suuri. Max koko 4Mt.`,
+      test: (file) => {
+        const isValid = !file || file?.size < 32000000;
+        return isValid;
+      }
+    })
+});
+
 export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
   vuorovaikutusTilaisuudet: Yup.array().of(
     Yup.object().shape({
