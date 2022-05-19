@@ -190,6 +190,9 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
           vuorovaikutusTilaisuudet:
             v?.vuorovaikutusTilaisuudet?.map((tilaisuus) => {
               const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
+              const { esitettavatYhteystiedot } = vuorovaikutusTilaisuusInput;
+              vuorovaikutusTilaisuusInput.esitettavatYhteystiedot =
+                esitettavatYhteystiedot?.map((yt) => removeTypeName(yt)) || [];
               return vuorovaikutusTilaisuusInput;
             }) || [],
           julkinen: v?.julkinen,

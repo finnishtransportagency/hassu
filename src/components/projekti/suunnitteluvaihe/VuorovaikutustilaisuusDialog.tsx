@@ -28,6 +28,7 @@ import { vuorovaikutustilaisuudetSchema } from "src/schemas/vuorovaikutus";
 import FormGroup from "@components/form/FormGroup";
 import CheckBox from "@components/form/CheckBox";
 import SoittoajanYhteyshenkilot from "./SoittoajanYhteyshenkilot";
+import dayjs from "dayjs";
 
 const defaultTilaisuus = {
   nimi: "",
@@ -68,7 +69,7 @@ export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet, 
     reValidateMode: "onChange",
     defaultValues: { vuorovaikutusTilaisuudet: [] },
   };
-
+  const today = dayjs().format();
   const { setValue: parentSetValue } = useFormContext<VuorovaikutusFormValues>();
 
   const useFormReturn = useForm<VuorovaikutustilaisuusFormValues>(formOptions);
@@ -125,6 +126,7 @@ export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet, 
             label="Päivämäärä *"
             {...register(`vuorovaikutusTilaisuudet.${props.index}.paivamaara`)}
             error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.paivamaara}
+            min={today}
           ></DatePicker>
           <TimePicker
             label="Alkaa *"
