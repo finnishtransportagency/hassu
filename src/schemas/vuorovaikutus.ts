@@ -29,37 +29,41 @@ export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
         kaytettavaPalvelu: Yup.string()
           .when("tyyppi", {
             is: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-            then: Yup.string().required("Verkkotilaisuudessa käytettävä palvelu täytyy valita"),
+            then: Yup.string().required("Verkkotilaisuudessa käytettävä palvelu täytyy valita").nullable(),
           })
           .nullable(),
         linkki: Yup.string()
           .when("tyyppi", {
             is: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-            then: Yup.string().url("URL ei kelpaa").required("Verkkotilaisuuden linkki täytyy antaa"),
+            then: Yup.string().url("URL ei kelpaa").required("Verkkotilaisuuden linkki täytyy antaa").nullable(),
           })
           .nullable(),
         osoite: Yup.string()
           .when("tyyppi", {
             is: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
-            then: Yup.string().required("Tilaisuuden osoite täytyy antaa"),
+            then: Yup.string().required("Tilaisuuden osoite täytyy antaa").nullable(),
           })
           .nullable(),
         postinumero: Yup.string()
           .when("tyyppi", {
             is: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
-            then: Yup.string().required("Tilaisuuden postinumero täytyy antaa"),
+            then: Yup.string().required("Tilaisuuden postinumero täytyy antaa").nullable(),
           })
           .nullable(),
         esitettavatYhteystiedot: Yup.array()
           .when("tyyppi", {
             is: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
-            then: Yup.array().of(yhteystietoSchema),
+            then: Yup.array().of(yhteystietoSchema).nullable(),
           })
           .nullable(),
         projektiYhteysHenkilot: Yup.array()
           .when("tyyppi", {
             is: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
-            then: Yup.array().of(Yup.string()).required("Vähintään yksi yhteyshenkilö pitää valita"),
+            then: Yup.array()
+              .of(Yup.string())
+              .required("Vähintään yksi yhteyshenkilö pitää valita")
+              .min(1, "Vähintään yksi yhteyshenkilö pitää valita")
+              .nullable(),
           })
           .nullable(),
       })
@@ -83,7 +87,11 @@ export const vuorovaikutusSchema = Yup.object().shape({
           return isValidDate(date);
         }),
       esitettavatYhteystiedot: Yup.array().notRequired().of(yhteystietoSchema),
-      //vuorovaikutusTilaisuudet: Yup.array().notRequired().of(vuorovaikutustilaisuudetSchema),
+      // vuorovaikutusTilaisuudet: Yup.array()
+      //   .of(vuorovaikutustilaisuudetSchema)
+      //   .required("Vähintään yksi tilaisuus täytyy antaa")
+      //   .min(1, "Vähintään yksi tilaisuus täytyy antaa")
+      //   .nullable(),
       videot: Yup.array()
         .notRequired()
         .of(

@@ -1,4 +1,4 @@
-import { FormProvider, useForm, UseFormProps } from "react-hook-form";
+import { FieldError, FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
 import { KuntaVastaanottajaInput, LinkkiInput, VuorovaikutusTilaisuusInput } from "../../../../common/graphql/apiModel";
@@ -415,6 +415,13 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                     : "Lisää tilaisuus"}
                 </Button>
               </SectionContent>
+              {errors.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusTilaisuudet && (
+                <div>
+                  <span className="text-red">
+                    {(errors.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusTilaisuudet as FieldError)?.message}
+                  </span>
+                </div>
+              )}
             </Section>
             <LuonnoksetJaAineistot
               useFormReturn={useFormReturn as UseFormReturn<FormValuesForLuonnoksetJaAineistot, object>}
