@@ -210,7 +210,7 @@ enum KaytettavaPalvelu {
 
 type VuorovaikutusTilaisuus {
   tyyppi: VuorovaikutusTilaisuusTyyppi!
-  nimi: String!
+  nimi: String
   """
   yyyy-MM-dd
   """

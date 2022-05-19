@@ -34,7 +34,9 @@ export default function SoittoajanYhteyshenkilot({ tilaisuusIndex }: Props): Rea
   return (
     <>
       <SectionContent>
-        <p>Uusi yhteystieto</p>
+        <p>
+          <b>Uusi yhteystieto</b>
+        </p>
         <p>
           Lisää uudelle yhteystiedolle rivi Lisää uusi-painikkeella. Huomioi, että uusi yhteystieto ei tallennu
           Projektin henkilöt -sivulle eikä henkilölle tule käyttöoikeuksia projektiin.
