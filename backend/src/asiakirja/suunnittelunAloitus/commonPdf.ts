@@ -9,7 +9,7 @@ export abstract class CommonPdf extends AbstractPdf {
   protected kieli: Kieli;
   protected readonly kutsuAdapter: KutsuAdapter;
 
-  protected constructor(header: string, kieli: Kieli, kutsuAdapter: KutsuAdapter,fileName:string) {
+  protected constructor(header: string, kieli: Kieli, kutsuAdapter: KutsuAdapter, fileName: string) {
     super(header, kutsuAdapter.nimi, fileName);
     this.kieli = kieli;
     this.kutsuAdapter = kutsuAdapter;

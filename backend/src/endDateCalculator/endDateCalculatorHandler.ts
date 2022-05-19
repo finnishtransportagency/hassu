@@ -4,19 +4,19 @@ import { Dayjs } from "dayjs";
 import { bankHolidaysClient } from "./bankHolidaysClient";
 import { config } from "../config";
 
-export async function calculateEndDate({ alkupaiva }: LaskePaattymisPaivaQueryVariables) {
+export async function calculateEndDate({ alkupaiva }: LaskePaattymisPaivaQueryVariables): Promise<string> {
   let start: Dayjs;
   // Only accept dates in prod, but allow datetimes in other environments
   const isDateOnly = config.isProd() || alkupaiva.length == ISO_DATE_FORMAT.length;
   if (isDateOnly) {
     start = parseDate(alkupaiva);
     if (!start.isValid()) {
-      new Error("Alkupäivän pitää olla muotoa YYYY-MM-DD tai YYYY-MM-DDTHH:mm");
+      throw new Error("Alkupäivän pitää olla muotoa YYYY-MM-DD tai YYYY-MM-DDTHH:mm");
     }
   } else {
     start = parseDate(alkupaiva);
     if (!start.isValid()) {
-      new Error("Alkupäivän pitää olla muotoa YYYY-MM-DDTHH:mm");
+      throw new Error("Alkupäivän pitää olla muotoa YYYY-MM-DDTHH:mm");
     }
   }
   let endDate: Dayjs = start.add(1 + 30, "day");

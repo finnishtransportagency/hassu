@@ -1,6 +1,6 @@
 import { ProjektiProjektiLuonti } from "../../../src/velho/projektirekisteri";
 
-export const tieProjekti = (nimi: string) =>
+export const tieProjekti = (nimi: string): ProjektiProjektiLuonti =>
   ({
     ominaisuudet: {
       tila: "tila/tila15", // Aktiivinen
@@ -31,4 +31,4 @@ export const tieProjekti = (nimi: string) =>
     schemaversio: 6,
     projektijoukko: null,
     alkaen: null,
-  } as any as ProjektiProjektiLuonti);
+  } as unknown as ProjektiProjektiLuonti);

@@ -12,7 +12,7 @@ export class Ilmoitus12T extends SuunnittelunAloitusPdf {
     super(aloitusKuulutusJulkaisu, kieli, headers[kieli == Kieli.SAAME ? Kieli.SUOMI : kieli]); //TODO lisää tuki Saamen eri muodoille
   }
 
-  protected addDocumentElements() {
+  protected addDocumentElements(): PDFKit.PDFStructureElementChild[] {
     return [
       this.localizedParagraph([
         `${this.aloitusKuulutusJulkaisu.velho.tilaajaOrganisaatio} julkaisee tietoverkossaan liikennejärjestelmästä ja maanteistä annetun lain (503/2005) sekä hallintolain 62 a §:n mukaisesti kuulutuksen, joka koskee otsikossa mainitun ${this.projektiTyyppi}n suunnittelun ja maastotöiden aloittamista. ${this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä. `,

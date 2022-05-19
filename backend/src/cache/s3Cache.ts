@@ -22,7 +22,7 @@ export class S3Cache {
       return cachedData as T;
     }
 
-    const s3Object = await this.getS3Object(key, ttlMillis);
+    const s3Object = await this.getS3Object<T>(key, ttlMillis);
     if (s3Object.expired) {
       log.info(`${key} expired, triggering update.`);
       triggerUpdate();
@@ -48,10 +48,10 @@ export class S3Cache {
     throw new Error("Unknown issue with S3 cache");
   }
 
-  async getS3Object(
+  async getS3Object<T>(
     key: string,
     ttlMillis: number
-  ): Promise<{ expired?: boolean; missing?: boolean; expiresTime?: number; data?: any }> {
+  ): Promise<{ expired?: boolean; missing?: boolean; expiresTime?: number; data?: T }> {
     try {
       const output: GetObjectOutput = await getS3()
         .getObject({
@@ -71,9 +71,9 @@ export class S3Cache {
           expired: expiresTime <= new Date().getTime(),
         };
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
       // If the cached file does not exist at all, load it synchronously. This is meant to happen only once in deployed environments.
-      if (e.name === "NoSuchKey") {
+      if (e instanceof Error && e.name === "NoSuchKey") {
         return {
           missing: true,
         };

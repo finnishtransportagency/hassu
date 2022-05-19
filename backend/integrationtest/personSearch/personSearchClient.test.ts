@@ -10,7 +10,7 @@ import log from "loglevel";
 
 const sandbox = sinon.createSandbox();
 
-export function expectNotEmptyKayttaja(kayttaja: Kayttaja) {
+export function expectNotEmptyKayttaja(kayttaja: Kayttaja): void {
   expect(kayttaja.vaylaKayttajaTyyppi).to.not.be.empty;
   expect(kayttaja.etuNimi).to.not.be.empty;
   expect(kayttaja.sukuNimi).to.not.be.empty;

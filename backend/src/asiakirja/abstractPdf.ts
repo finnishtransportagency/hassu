@@ -2,14 +2,16 @@ import deburr from "lodash/deburr";
 import { PDF } from "../../../common/graphql/apiModel";
 
 import PDFDocument from "pdfkit";
+import PDFStructureElement = PDFKit.PDFStructureElement;
+import PDFKitReference = PDFKit.PDFKitReference;
 
 export abstract class AbstractPdf {
-  private title: string;
-  private fileName: string;
+  private readonly title: string;
+  private readonly fileName: string;
   protected fileBasePath: string;
   protected doc: PDFKit.PDFDocument;
 
-  constructor(header: string, nimi: string, fileName:string) {
+  constructor(header: string, nimi: string, fileName: string) {
     this.title = header + "; " + nimi;
     // Clean filename by joining allowed characters together
     this.fileName =
@@ -20,7 +22,7 @@ export abstract class AbstractPdf {
     this.doc = this.setupAccessibleDocument();
   }
 
-  protected paragraph(text: string) {
+  protected paragraph(text: string): PDFStructureElement {
     return this.doc.struct("P", {}, [
       () => {
         this.doc.text(text).moveDown(1);
@@ -68,9 +70,9 @@ export abstract class AbstractPdf {
       Type: "OutputIntent",
       S: "GTS_PDFA1",
       // tslint:disable-next-line:no-construct
-      Info: new String("sRGB IEC61966-2.1"),
+      Info: new String("sRGB IEC61966-2.1"), // NOSONAR
       // tslint:disable-next-line:no-construct
-      OutputConditionIdentifier: new String("sRGB IEC61966-2.1"),
+      OutputConditionIdentifier: new String("sRGB IEC61966-2.1"), // NOSONAR
       DestOutputProfile: refColorProfile,
     });
     refOutputIntent.end(undefined);
@@ -86,9 +88,14 @@ export abstract class AbstractPdf {
     refMetadata.write(Buffer.from(metadata, "utf-8"));
     refMetadata.end(undefined);
 
-    // Add manually created objects to catalog.
-    (doc as any)._root.data.OutputIntents = [refOutputIntent];
-    (doc as any)._root.data.Metadata = refMetadata;
+    // Add manually created objects to catalog. Data structure is internal to PDFKit, so it needs some hacking.
+    type Catalog = { OutputIntents: PDFKitReference[]; Metadata: PDFKitReference };
+    type InternalDoc = typeof PDFDocument & { _root: { data: Catalog } };
+
+    const internalDoc: InternalDoc = doc as InternalDoc;
+    const data = internalDoc._root.data;
+    data.OutputIntents = [refOutputIntent];
+    data.Metadata = refMetadata;
 
     // PDF/A standard requires fonts to be embedded.
     const arialFontFile = __dirname + "/files/arialmt.ttf";
@@ -101,21 +108,21 @@ export abstract class AbstractPdf {
       })
     );
 
-    return doc as PDFKit.PDFDocument;
+    return doc;
   }
 
-  protected addContent() {
+  protected addContent(): void {
     throw new Error("Method 'addContent()' must be implemented.");
   }
 
-  public get pdf() {
+  public get pdf(): Promise<PDF> {
     this.addContent();
     return this.finishPdfDocument();
   }
 
   private finishPdfDocument() {
     return new Promise<PDF>((resolve) => {
-      const buffers = Array<any>();
+      const buffers = Array<Buffer>();
       this.doc.on("data", buffers.push.bind(buffers));
       this.doc.on("end", () => {
         const all = Buffer.concat(buffers);

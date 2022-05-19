@@ -83,9 +83,7 @@ describe("emailHandler", () => {
         expect(calls).to.have.length(2);
         expect(
           calls.map((call) => {
-            const input = call.args[0] as any;
-            const { Body: _Body, ...otherArgs } = input;
-            return { ...otherArgs };
+            return { ...call.args[0] };
           })
         ).toMatchSnapshot();
         sinon.assert.callCount(sendEmailStub, 3);
