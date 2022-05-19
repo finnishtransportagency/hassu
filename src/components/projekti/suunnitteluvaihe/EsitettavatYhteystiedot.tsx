@@ -1,12 +1,6 @@
-import { Controller, useFieldArray } from "react-hook-form";
+import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
-import {
-  TallennaProjektiInput,
-  Projekti,
-  VuorovaikutusInput,
-  ProjektiRooli,
-  YhteystietoInput
-} from "@services/api";
+import { ProjektiRooli, YhteystietoInput } from "@services/api";
 import Section from "@components/layout/Section";
 import { ReactElement, useMemo, Fragment } from "react";
 import Button from "@components/button/Button";
@@ -17,9 +11,10 @@ import TextInput from "@components/form/TextInput";
 import HassuGrid from "@components/HassuGrid";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
 import IconButton from "@components/button/IconButton";
-import { UseFormReturn } from "react-hook-form";
 import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
+import { useProjektiRoute } from "src/hooks/useProjektiRoute";
+import { VuorovaikutusFormValues } from "./SuunnitteluvaiheenVuorovaikuttaminen";
 
 const defaultYhteystieto: YhteystietoInput = {
   etunimi: "",
@@ -29,31 +24,12 @@ const defaultYhteystieto: YhteystietoInput = {
   sahkoposti: "",
 };
 
-type EsitettavatYhteystiedot = Pick<VuorovaikutusInput, "esitettavatYhteystiedot">;
-type VuorovaikutusYhteysHenkilot = Pick<VuorovaikutusInput, "vuorovaikutusYhteysHenkilot">;
-
-type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
-type RequiredProjektiFields = Required<{
-  [K in keyof ProjektiFields]: NonNullable<ProjektiFields[K]>;
-}>;
-
-type FormValues = RequiredProjektiFields & {
-  suunnitteluVaihe: {
-    vuorovaikutus: EsitettavatYhteystiedot | VuorovaikutusYhteysHenkilot;
-  };
-};
-
-interface Props<T> {
-  useFormReturn: UseFormReturn<T>;
-  projekti: Projekti;
+interface Props {
   vuorovaikutusnro: number;
 }
 
-export default function EsitettavatYhteystiedot<T extends FormValues>({
-  projekti,
-  vuorovaikutusnro,
-  useFormReturn,
-}: Props<T>): ReactElement {
+export default function EsitettavatYhteystiedot({ vuorovaikutusnro }: Props): ReactElement {
+  const { data: projekti } = useProjektiRoute();
 
   const v = useMemo(() => {
     return projekti?.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
@@ -66,8 +42,8 @@ export default function EsitettavatYhteystiedot<T extends FormValues>({
   const {
     register,
     formState: { errors },
-    control
-  } = useFormReturn as UseFormReturn<FormValues>;
+    control,
+  } = useFormContext<VuorovaikutusFormValues>();
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -83,7 +59,8 @@ export default function EsitettavatYhteystiedot<T extends FormValues>({
           {v?.esitettavatYhteystiedot?.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
               {capitalize(yhteystieto.etunimi)} {capitalize(yhteystieto.sukunimi)}, puh. {yhteystieto.puhelinnumero},{" "}
-              {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio})
+              {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio}
+              )
             </p>
           ))}
         </SectionContent>
@@ -97,8 +74,8 @@ export default function EsitettavatYhteystiedot<T extends FormValues>({
         <h4 className="vayla-small-title">Vuorovaikuttamisen yhteyshenkilöt</h4>
         <p>
           Voit valita kutsussa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden
-          yhteystiedon. Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden
-          yhteystiedot haetaan Projektin henkilöt -sivulle tallennetuista tiedoista.
+          yhteystiedon. Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot
+          haetaan Projektin henkilöt -sivulle tallennetuista tiedoista.
         </p>
         {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
           <Controller
@@ -129,9 +106,13 @@ export default function EsitettavatYhteystiedot<T extends FormValues>({
                     </Fragment>
                   );
                 })}
-                {projekti?.suunnitteluSopimus &&
-                  <CheckBox label={`${projekti.suunnitteluSopimus.sukunimi}, ${projekti.suunnitteluSopimus.etunimi}`} disabled defaultChecked />
-                }
+                {projekti?.suunnitteluSopimus && (
+                  <CheckBox
+                    label={`${projekti.suunnitteluSopimus.sukunimi}, ${projekti.suunnitteluSopimus.etunimi}`}
+                    disabled
+                    defaultChecked
+                  />
+                )}
               </FormGroup>
             )}
           />
@@ -152,39 +133,28 @@ export default function EsitettavatYhteystiedot<T extends FormValues>({
             <TextInput
               label="Etunimi *"
               {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.etunimi`)}
-              error={
-                (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.etunimi
-              }
+              error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.etunimi}
             />
             <TextInput
               label="Sukunimi *"
               {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.sukunimi`)}
-              error={
-                (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.sukunimi
-              }
+              error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.sukunimi}
             />
             <TextInput
               label="Organisaatio / kunta *"
               {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.organisaatio`)}
-              error={
-                (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.organisaatio
-              }
+              error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.organisaatio}
             />
             <TextInput
               label="Puhelinnumero *"
               {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.puhelinnumero`)}
-              error={
-                (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]
-                  ?.puhelinnumero
-              }
+              error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.puhelinnumero}
               maxLength={maxPhoneLength}
             />
             <TextInput
               label="Sähköpostiosoite *"
               {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.sahkoposti`)}
-              error={
-                (errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.sahkoposti
-              }
+              error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.sahkoposti}
             />
           </HassuGrid>
           <div>

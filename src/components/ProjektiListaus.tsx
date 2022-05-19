@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { api, Kieli, ProjektiHakutulosDokumentti, ProjektiHakutulosJulkinen } from "@services/api";
 import log from "loglevel";
-import Table from "./Table";
+import HassuTable from "./HassuTable";
 import useTranslation from "next-translate/useTranslation";
 import { formatDate } from "src/util/dateUtils";
+import { useHassuTable } from "src/hooks/useHassuTable";
+import { Column } from "react-table";
 
 export default function ProjektiListaus() {
   const [hakutulos, setHakutulos] = useState<ProjektiHakutulosJulkinen>();
@@ -31,35 +33,42 @@ export default function ProjektiListaus() {
     fetchProjektit();
   });
 
+  const columns = useMemo<Column<ProjektiHakutulosDokumentti>[]>(
+    () => [
+      { Header: t("projekti:ui-otsikot.nimi") as string, accessor: "nimi" },
+      { Header: t("projekti:ui-otsikot.asiatunnus") as string, accessor: "asiatunnus" },
+      { Header: t("projekti:ui-otsikot.projektipaallikko") as string, accessor: "projektipaallikko" },
+      {
+        Header: t("projekti:ui-otsikot.vastuuorganisaatio") as string,
+        accessor: (projekti) =>
+          projekti.suunnittelustaVastaavaViranomainen &&
+          t(`projekti:vastaava-viranomainen.${projekti.suunnittelustaVastaavaViranomainen}`),
+      },
+      {
+        Header: t("projekti:ui-otsikot.vaihe") as string,
+        accessor: (projekti) => projekti.vaihe && t(`projekti:projekti-status.${projekti.vaihe}`),
+      },
+      {
+        Header: t("projekti:ui-otsikot.paivitetty") as string,
+        accessor: (projekti) => projekti.paivitetty && formatDate(projekti.paivitetty),
+      },
+      { Header: t("projekti:ui-otsikot.oid") as string, accessor: "oid" },
+    ],
+    [t]
+  );
+
+  const tableProps = useHassuTable<ProjektiHakutulosDokumentti>({
+    tableOptions: {
+      columns,
+      initialState: { hiddenColumns: ["oid"] },
+      data: hakutulos?.tulokset || [],
+    },
+    rowLink: (projekti) => `/suunnitelma/${encodeURIComponent(projekti.oid)}`,
+  });
+
   return (
     <>
-      <Table<ProjektiHakutulosDokumentti>
-        tableOptions={{
-          columns: [
-            { Header: t("projekti:ui-otsikot.nimi") as string, accessor: "nimi" },
-            { Header: t("projekti:ui-otsikot.asiatunnus") as string, accessor: "asiatunnus" },
-            { Header: t("projekti:ui-otsikot.projektipaallikko") as string, accessor: "projektipaallikko" },
-            {
-              Header: t("projekti:ui-otsikot.vastuuorganisaatio") as string,
-              accessor: (projekti) =>
-                projekti.suunnittelustaVastaavaViranomainen &&
-                t(`projekti:vastaava-viranomainen.${projekti.suunnittelustaVastaavaViranomainen}`),
-            },
-            {
-              Header: t("projekti:ui-otsikot.vaihe") as string,
-              accessor: (projekti) => projekti.vaihe && t(`projekti:projekti-status.${projekti.vaihe}`),
-            },
-            {
-              Header: t("projekti:ui-otsikot.paivitetty") as string,
-              accessor: (projekti) => projekti.paivitetty && formatDate(projekti.paivitetty),
-            },
-            { Header: t("projekti:ui-otsikot.oid") as string, accessor: "oid" },
-          ],
-          initialState: { hiddenColumns: ["oid"] },
-          data: hakutulos?.tulokset || [],
-        }}
-        rowLink={(projekti) => `/suunnitelma/${encodeURIComponent(projekti.oid)}`}
-      />
+      <HassuTable {...tableProps} />
     </>
   );
 }

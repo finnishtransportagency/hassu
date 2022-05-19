@@ -145,7 +145,7 @@ input AineistoInput {
   """
   Dokumentin oid Velhossa
   """
-  dokumenttiOid: String
+  dokumenttiOid: String!
   kategoria: String
   """
   Numero jarjestamista varten

@@ -15,7 +15,7 @@ import log from "loglevel";
 import useTranslation from "next-translate/useTranslation";
 import HassuSpinner from "@components/HassuSpinner";
 
-import { SortingRule } from "react-table";
+import { Column, SortingRule } from "react-table";
 import { styled, experimental_sx as sx } from "@mui/material";
 import Section from "@components/layout/Section";
 import HassuGrid from "@components/HassuGrid";
@@ -28,7 +28,8 @@ import { Controller, useForm } from "react-hook-form";
 import { ParsedUrlQuery } from "querystring";
 import { omitBy } from "lodash";
 import { formatDate } from "src/util/dateUtils";
-import Table from "@components/Table";
+import { useHassuTable } from "src/hooks/useHassuTable";
+import HassuTable from "@components/HassuTable";
 
 const DEFAULT_TYYPPI = ProjektiTyyppi.TIE;
 const DEFAULT_PROJEKTI_SARAKE = ProjektiSarake.PAIVITETTY;
@@ -191,10 +192,7 @@ const VirkamiesHomePage = () => {
     [ProjektiTyyppi.YLEINEN]: hakutulos?.yleissuunnitelmatMaara || 0,
   };
 
-  const sortingRules = useMemo<SortingRule<ProjektiHakutulosDokumentti>[]>(
-    () => [{ id: jarjestysSarake, desc: !jarjestysKasvava }],
-    [jarjestysSarake, jarjestysKasvava]
-  );
+  const sortingRules = [{ id: jarjestysSarake, desc: !jarjestysKasvava }];
 
   const statusOptions: Status[] = [
     Status.EI_JULKAISTU,
@@ -312,70 +310,13 @@ const VirkamiesHomePage = () => {
           ]}
         />
         {hakutulos?.tulokset?.length ? (
-          <Table<ProjektiHakutulosDokumentti>
-            tableOptions={{
-              data: hakutulos?.tulokset || [],
-              columns: [
-                { Header: "Nimi", accessor: "nimi", minWidth: 400, id: ProjektiSarake.NIMI },
-                { Header: "Asiatunnus", accessor: "asiatunnus", id: ProjektiSarake.ASIATUNNUS },
-                {
-                  Header: "Projektipäällikkö",
-                  accessor: "projektipaallikko",
-                  id: ProjektiSarake.PROJEKTIPAALLIKKO,
-                },
-                {
-                  Header: "Vastuuorganisaatio",
-                  accessor: (projekti) =>
-                    projekti.suunnittelustaVastaavaViranomainen &&
-                    t(`projekti:vastaava-viranomainen.${projekti.suunnittelustaVastaavaViranomainen}`),
-                  id: ProjektiSarake.VASTUUORGANISAATIO,
-                },
-                {
-                  Header: "Vaihe",
-                  accessor: (projekti) => projekti.vaihe && t(`projekti:projekti-status.${projekti.vaihe}`),
-                  minWidth: 100,
-                  id: ProjektiSarake.VAIHE,
-                },
-                {
-                  Header: "Päivitetty",
-                  accessor: (projekti) => projekti.paivitetty && formatDate(projekti.paivitetty),
-                  minWidth: 100,
-                  id: ProjektiSarake.PAIVITETTY,
-                  sortDescFirst: true,
-                  sortType: "datetime",
-                },
-                { Header: "oid", accessor: "oid", disableSortBy: true },
-              ],
-              manualPagination: true,
-              manualSortBy: true,
-              pageCount: Math.ceil(tuloksienMaarat[tyyppi] / PAGE_SIZE),
-              useControlledState: (state) => {
-                return useMemo(
-                  () => ({
-                    ...state,
-                    pageIndex: sivunumero,
-                    sortBy: sortingRules,
-                    hiddenColumns: ["oid"],
-                  }),
-                  [state]
-                );
-              },
-            }}
-            pageChanger={(page) => {
-              fetchProjektit({ ...searchInput, sivunumero: page });
-            }}
-            sortByChanger={(sortBy) => {
-              const { id, desc } = sortBy?.[0] || { id: DEFAULT_PROJEKTI_SARAKE, desc: !DEFAULT_JARJESTYS_KASVAVA };
-              fetchProjektit({
-                ...searchInput,
-                sivunumero: 0,
-                jarjestysSarake: id as ProjektiSarake,
-                jarjestysKasvava: !desc,
-              });
-            }}
-            rowLink={(projekti) => `/yllapito/projekti/${encodeURIComponent(projekti.oid)}`}
-            usePagination
-            useSortBy
+          <FrontPageTable
+            data={hakutulos?.tulokset || []}
+            fetchProjektit={fetchProjektit}
+            searchInput={searchInput}
+            sivunumero={sivunumero}
+            sortingRules={sortingRules}
+            tuloksienMaara={tuloksienMaarat[tyyppi]}
           />
         ) : (
           <p>Ei projekteja.</p>
@@ -384,6 +325,91 @@ const VirkamiesHomePage = () => {
       <HassuSpinner open={isLoading} />
     </>
   );
+};
+
+interface FrontPageTableProps {
+  data: ProjektiHakutulosDokumentti[];
+  tuloksienMaara: number;
+  sivunumero: number;
+  sortingRules: SortingRule<ProjektiHakutulosDokumentti>[];
+  fetchProjektit: (input: ListaaProjektitInput) => Promise<void>;
+  searchInput: ListaaProjektitInput | undefined;
+}
+
+const FrontPageTable = (props: FrontPageTableProps) => {
+  const { data, tuloksienMaara, fetchProjektit, searchInput } = props;
+  const { t } = useTranslation("projekti");
+
+  const columns: Column<ProjektiHakutulosDokumentti>[] = useMemo(
+    () => [
+      { Header: "Nimi", accessor: "nimi", minWidth: 400, id: ProjektiSarake.NIMI },
+      { Header: "Asiatunnus", accessor: "asiatunnus", id: ProjektiSarake.ASIATUNNUS },
+      {
+        Header: "Projektipäällikkö",
+        accessor: "projektipaallikko",
+        id: ProjektiSarake.PROJEKTIPAALLIKKO,
+      },
+      {
+        Header: "Vastuuorganisaatio",
+        accessor: (projekti) =>
+          projekti.suunnittelustaVastaavaViranomainen &&
+          t(`projekti:vastaava-viranomainen.${projekti.suunnittelustaVastaavaViranomainen}`),
+        id: ProjektiSarake.VASTUUORGANISAATIO,
+      },
+      {
+        Header: "Vaihe",
+        accessor: (projekti) => projekti.vaihe && t(`projekti:projekti-status.${projekti.vaihe}`),
+        minWidth: 100,
+        id: ProjektiSarake.VAIHE,
+      },
+      {
+        Header: "Päivitetty",
+        accessor: (projekti) => projekti.paivitetty && formatDate(projekti.paivitetty),
+        minWidth: 100,
+        id: ProjektiSarake.PAIVITETTY,
+        sortDescFirst: true,
+        sortType: "datetime",
+      },
+      { Header: "oid", accessor: "oid", disableSortBy: true },
+    ],
+    [t]
+  );
+
+  const tableProps = useHassuTable<ProjektiHakutulosDokumentti>({
+    tableOptions: {
+      data,
+      columns,
+      manualPagination: true,
+      manualSortBy: true,
+      pageCount: Math.ceil(tuloksienMaara / PAGE_SIZE),
+      useControlledState: (state) => {
+        return useMemo(
+          () => ({
+            ...state,
+            pageIndex: props.sivunumero,
+            sortBy: props.sortingRules,
+            hiddenColumns: ["oid"],
+          }),
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+          [state, props.sivunumero, props.sortingRules]
+        );
+      },
+    },
+    pageChanger: (page) => fetchProjektit({ ...searchInput, sivunumero: page }),
+    sortByChanger: (sortBy) => {
+      const { id, desc } = sortBy?.[0] || { id: DEFAULT_PROJEKTI_SARAKE, desc: !DEFAULT_JARJESTYS_KASVAVA };
+      fetchProjektit({
+        ...searchInput,
+        sivunumero: 0,
+        jarjestysSarake: id as ProjektiSarake,
+        jarjestysKasvava: !desc,
+      });
+    },
+    rowLink: (projekti) => `/yllapito/projekti/${encodeURIComponent(projekti.oid)}`,
+    usePagination: true,
+    useSortBy: true,
+  });
+  return <HassuTable {...tableProps} />;
 };
 
 // Create a file for this styled component if used elsewhere
