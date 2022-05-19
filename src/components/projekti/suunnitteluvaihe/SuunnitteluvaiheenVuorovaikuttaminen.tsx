@@ -1,7 +1,7 @@
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
-import { KuntaVastaanottajaInput, LinkkiInput, VuorovaikutusTilaisuusInput, Kieli } from "../../../../common/graphql/apiModel";
+import { KuntaVastaanottajaInput, LinkkiInput, VuorovaikutusTilaisuusInput, Kieli, Kielitiedot } from "../../../../common/graphql/apiModel";
 import {
   TallennaProjektiInput,
   Projekti,
@@ -35,6 +35,7 @@ import LukutilaLinkkiJaKutsut from "./LukutilaLinkkiJaKutsut";
 import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
 import VuorovaikutustilaisuusDialog from "./VuorovaikutustilaisuusDialog";
 import cloneDeep from "lodash/cloneDeep";
+const omitDeep = require("omit-deep-lodash");
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -298,6 +299,17 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
   }
 
   const ilmoituksenVastaanottajat = getValues("suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat");
+  const vuorovaikutusTilaisuudet = getValues("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet");
+
+  const isVerkkotilaisuuksia = !!vuorovaikutusTilaisuudet?.find(
+    (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA
+  );
+  const isFyysisiatilaisuuksia = !!vuorovaikutusTilaisuudet?.find(
+    (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA
+  );
+  const isSoittoaikoja = !!vuorovaikutusTilaisuudet?.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA);
+  const kielitiedot: Kielitiedot | null | undefined = projekti.kielitiedot;
+
   return (
     <>
       <FormProvider {...useFormReturn}>
