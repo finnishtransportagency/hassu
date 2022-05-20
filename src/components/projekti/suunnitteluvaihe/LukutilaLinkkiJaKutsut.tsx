@@ -8,6 +8,7 @@ import {
 } from "@services/api";
 import { examineJulkaisuPaiva } from "src/util/dateUtils";
 import { Link } from "@mui/material";
+import ExtLink from "@components/ExtLink";
 import lowerCase from "lodash/lowerCase";
 
 interface Props {
@@ -31,7 +32,7 @@ export default function LukutilaLinkkiJaKutsut({
       <SectionContent>
         <p className="vayla-label mb-5">Kutsu vuorovaikuttamiseen julkisella puolella</p>
         {published
-          ? <p><Link underline="none" href={`/suunnitelma/${projekti.oid}/suunnittelu`}>Linkki</Link></p>
+          ? <p><ExtLink href={`/suunnitelma/${projekti.oid}/suunnittelu`}>Linkki</ExtLink></p>
           : <p>Linkki julkiselle puolelle muodostetaan vuorovaikuttamisen julkaisupäivänä. Julkaisupäivä {julkaisuPaiva}. </p>
         }
         <p className="vayla-label mb-5">Ladattavat kutsut ja ilmoitukset</p>
