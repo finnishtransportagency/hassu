@@ -67,7 +67,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
         windowHandler={setOpenVuorovaikutustilaisuus}
         tilaisuudet={vuorovaikutusTilaisuudet}
         kayttoOikeudet={projekti.kayttoOikeudet}
-        julkinen={vuorovaikutus.julkinen || false}
+        julkinen={vuorovaikutus.julkinen || false}
         avaaHyvaksymisDialogi={avaaHyvaksymisDialogi}
       />
       <Section>
