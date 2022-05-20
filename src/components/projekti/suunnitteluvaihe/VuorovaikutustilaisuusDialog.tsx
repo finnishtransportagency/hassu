@@ -154,7 +154,6 @@ export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet, 
 
   const saveTilaisuudet = useCallback(
     (formData: VuorovaikutustilaisuusFormValues) => {
-      console.log(formData);
       parentSetValue("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet", formData.vuorovaikutusTilaisuudet, {
         shouldDirty: true,
       });

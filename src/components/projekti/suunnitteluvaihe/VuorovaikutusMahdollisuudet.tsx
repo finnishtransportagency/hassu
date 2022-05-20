@@ -9,19 +9,18 @@ import {
   Vuorovaikutus
 } from "@services/api";
 import Section from "@components/layout/Section";
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, Dispatch, SetStateAction } from "react";
 import Button from "@components/button/Button";
 
 import dayjs from "dayjs";
 import { formatDate } from "src/util/dateUtils";
 import capitalize from "lodash/capitalize";
 import useTranslation from "next-translate/useTranslation";
-import VuorovaikutustilaisuusDialog from "./VuorovaikutustilaisuusDialog";
 
 interface Props {
   projekti: Projekti;
   vuorovaikutus: Vuorovaikutus;
-  avaaHyvaksymisDialogi: () => void;
+  setOpenVuorovaikutustilaisuus: Dispatch<SetStateAction<boolean>>;
 }
 
 type FormFields = {
@@ -35,10 +34,9 @@ type FormFields = {
 export default function SuunnitteluvaiheenVuorovaikuttaminen({
   projekti,
   vuorovaikutus,
-  avaaHyvaksymisDialogi
+  setOpenVuorovaikutustilaisuus
 }: Props): ReactElement {
   const { t } = useTranslation();
-  const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
 
   const {
     getValues,
@@ -62,14 +60,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
 
   return (
     <>
-      <VuorovaikutustilaisuusDialog
-        open={openVuorovaikutustilaisuus}
-        windowHandler={setOpenVuorovaikutustilaisuus}
-        tilaisuudet={vuorovaikutusTilaisuudet}
-        kayttoOikeudet={projekti.kayttoOikeudet}
-        julkinen={vuorovaikutus.julkinen || false}
-        avaaHyvaksymisDialogi={avaaHyvaksymisDialogi}
-      />
+
       <Section>
         {vuorovaikutus.julkinen
           ? <>

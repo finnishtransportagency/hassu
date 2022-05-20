@@ -33,6 +33,7 @@ import VuorovaikuttamisenInfo from "./VuorovaikuttamisenInfo";
 import PaivamaaratJaTiedot from "./PaivamaaratJaTiedot";
 import LukutilaLinkkiJaKutsut from "./LukutilaLinkkiJaKutsut";
 import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
+import VuorovaikutustilaisuusDialog from "./VuorovaikutustilaisuusDialog";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -149,6 +150,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
 }: Props): ReactElement {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
+  const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
 
   const v = useMemo(() => {
@@ -237,6 +239,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
         showErrorMessage("Tallennuksessa tapahtui virhe");
       }
       setOpenHyvaksy(false);
+      setOpenVuorovaikutustilaisuus(false);
       setIsFormSubmitting(false);
     },
     [saveSunnitteluvaihe, showErrorMessage, showSuccessMessage]
@@ -285,7 +288,17 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
               </SectionContent>
               <PaivamaaratJaTiedot projekti={projekti} vuorovaikutusnro={vuorovaikutusnro} />
             </Section>
-            <VuorovaikutusMahdollisuudet projekti={projekti} vuorovaikutus={v} avaaHyvaksymisDialogi={() => setOpenHyvaksy(true)} />
+            <VuorovaikutusMahdollisuudet projekti={projekti} vuorovaikutus={v} setOpenVuorovaikutustilaisuus={setOpenVuorovaikutustilaisuus} />
+            <VuorovaikutustilaisuusDialog
+              open={openVuorovaikutustilaisuus}
+              windowHandler={(t: boolean) => {
+                setOpenVuorovaikutustilaisuus(t);
+              }}
+              tilaisuudet={v?.vuorovaikutusTilaisuudet}
+              kayttoOikeudet={projekti.kayttoOikeudet}
+              julkinen={v?.julkinen || false}
+              avaaHyvaksymisDialogi={() => setOpenHyvaksy(true)}
+            />
             <LuonnoksetJaAineistot
               avaaHyvaksymisDialogi={() => setOpenHyvaksy(true)}
               vuorovaikutus={v}
