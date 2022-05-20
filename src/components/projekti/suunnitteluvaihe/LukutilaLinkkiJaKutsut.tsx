@@ -1,6 +1,6 @@
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
-import React, { ReactElement, useMemo } from "react";
+import React, { ReactElement } from "react";
 import {
   Vuorovaikutus,
   Projekti,
@@ -23,13 +23,8 @@ export default function LukutilaLinkkiJaKutsut({
 
   let { julkaisuPaiva, published } = examineJulkaisuPaiva(true, vuorovaikutus.vuorovaikutusJulkaisuPaiva);
 
-  const aloituskuulutusjulkaisu = useMemo(() => {
-    return projekti?.aloitusKuulutusJulkaisut?.[projekti?.aloitusKuulutusJulkaisut?.length - 1 || 0];
-  }, [projekti]);
-
-  const ensisijainenKieli = aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli || Kieli.SUOMI;
-  const toissijainenKieli = aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli || Kieli.RUOTSI;
-
+  const ensisijainenKieli = projekti.kielitiedot?.ensisijainenKieli || Kieli.SUOMI;
+  const toissijainenKieli = projekti.kielitiedot?.toissijainenKieli;
 
   return (
     <Section>
@@ -43,9 +38,13 @@ export default function LukutilaLinkkiJaKutsut({
         <div>Kutsu ja ilmoitus pääkielellä ({lowerCase(ensisijainenKieli)})</div>
         <div><Link underline="none" href="#">Linkki</Link></div>
         <div><Link underline="none" href="#">Linkki2</Link></div>
-        <div>Kutsu ja ilmoitus toisella kielellä ({lowerCase(toissijainenKieli)})</div>
-        <div><Link underline="none" href="#">Linkki</Link></div>
-        <div><Link underline="none" href="#">Linkki2</Link></div>
+        {toissijainenKieli &&
+          <>
+            <div>Kutsu ja ilmoitus toisella kielellä ({lowerCase(toissijainenKieli)})</div>
+            <div><Link underline="none" href="#">Linkki</Link></div>
+            <div><Link underline="none" href="#">Linkki2</Link></div>
+          </>
+        }
       </SectionContent>
     </Section>
   );
