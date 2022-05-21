@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useCallback, useEffect, useState } from "react";
 import RadioButton from "@components/form/RadioButton";
 import TextInput from "@components/form/TextInput";
 import Button from "@components/button/Button";
@@ -28,13 +28,33 @@ export default function ProjektiLiittyvatSuunnitelmat({ projekti }: Props): Reac
   const {
     register,
     formState: { errors },
+    control,
   } = useFormContext<FormValues>();
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "liittyvatSuunnitelmat",
+  });
+
+  const handleLiittyviaSuunnitelmia = useCallback(
+    (open: boolean) => {
+      if (open && fields.length < 1) {
+        append(defaultSuunnitelma);
+      } else if (!open) {
+        remove();
+      }
+      setLiittyviaSuunnitelmia(open);
+    },
+    [append, fields.length, remove]
+  );
 
   useEffect(() => {
     if (projekti?.oid) {
       setLiittyviaSuunnitelmia(!!projekti?.liittyvatSuunnitelmat?.length);
     }
   }, [projekti]);
+
+  console.log(errors);
 
   return (
     <Section smallGaps>
@@ -48,101 +68,74 @@ export default function ProjektiLiittyvatSuunnitelmat({ projekti }: Props): Reac
           label="Kyllä"
           value="true"
           {...register("liittyviasuunnitelmia")}
-          onChange={() => setLiittyviaSuunnitelmia(true)}
+          onChange={() => handleLiittyviaSuunnitelmia(true)}
         />
         <RadioButton
           label="Ei"
           value="false"
           {...register("liittyviasuunnitelmia")}
-          onChange={() => setLiittyviaSuunnitelmia(false)}
+          onChange={() => handleLiittyviaSuunnitelmia(false)}
         />
       </FormGroup>
       {isLiittyviaSuunnitelmia && (
-        <LiittyvatSuunnitelmat isLiittyviaSuunnitelmia={isLiittyviaSuunnitelmia} projekti={projekti} />
+        <SectionContent sx={{ marginLeft: 4 }}>
+          {fields.map((field, index) => {
+            return (
+              <HassuGrid key={field.id} cols={{ lg: 3 }}>
+                <TextInput
+                  label="Asiatunnus"
+                  {...register(`liittyvatSuunnitelmat.${index}.asiatunnus`)}
+                  disabled={!isLiittyviaSuunnitelmia}
+                  error={(errors as any)?.liittyvatSuunnitelmat?.[index]?.asiatunnus}
+                  maxLength={30}
+                  placeholder="esim. Väylä/4825/06.02.03/2020"
+                />
+                <HassuGridItem colSpan={{ lg: 2 }}>
+                  <HassuStack direction={{ xs: "column", lg: "row" }} alignItems={{ lg: "flex-end" }}>
+                    <TextInput
+                      label="Suunnitelman nimi"
+                      {...register(`liittyvatSuunnitelmat.${index}.nimi`)}
+                      disabled={!isLiittyviaSuunnitelmia}
+                      error={(errors as any)?.liittyvatSuunnitelmat?.[index]?.nimi}
+                      style={{ width: "100%" }}
+                    />
+                    <div className="hidden lg:block">
+                      <IconButton
+                        icon="trash"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          remove(index);
+                        }}
+                      />
+                    </div>
+                    <div className="block lg:hidden">
+                      <Button
+                        onClick={(event) => {
+                          event.preventDefault();
+                          remove(index);
+                        }}
+                        endIcon="trash"
+                      >
+                        Poista
+                      </Button>
+                    </div>
+                  </HassuStack>
+                </HassuGridItem>
+              </HassuGrid>
+            );
+          })}
+          <Button
+            className="mt-7"
+            onClick={(event) => {
+              event.preventDefault();
+              append(defaultSuunnitelma);
+            }}
+            disabled={!isLiittyviaSuunnitelmia}
+          >
+            Uusi rivi +
+          </Button>
+        </SectionContent>
       )}
     </Section>
   );
 }
-
-interface LiittyvatSuunnitelmatProps {
-  isLiittyviaSuunnitelmia: boolean;
-  projekti?: Projekti | null;
-}
-
-const LiittyvatSuunnitelmat = ({ isLiittyviaSuunnitelmia, projekti }: LiittyvatSuunnitelmatProps) => {
-  const {
-    register,
-    control,
-    formState: { errors },
-  } = useFormContext(); // retrieve all hook methods
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "liittyvatSuunnitelmat",
-  });
-
-  useEffect(() => {
-    if (projekti?.oid && !isLiittyviaSuunnitelmia) {
-      remove();
-    }
-  }, [isLiittyviaSuunnitelmia, remove, projekti]);
-  return (
-    <SectionContent sx={{ marginLeft: 4 }}>
-      {fields.map((field, index) => {
-        return (
-          <HassuGrid key={field.id} cols={{ lg: 3 }}>
-            <TextInput
-              label="Asiatunnus"
-              {...register(`liittyvatSuunnitelmat.${index}.asiatunnus`)}
-              disabled={!isLiittyviaSuunnitelmia}
-              error={errors?.liittyvatSuunnitelmat?.[index]?.asiatunnus}
-              maxLength={30}
-              placeholder="esim. Väylä/4825/06.02.03/2020"
-            />
-            <HassuGridItem colSpan={{ lg: 2 }}>
-              <HassuStack direction={{ xs: "column", lg: "row" }} alignItems={{ lg: "flex-end" }}>
-                <TextInput
-                  label="Suunnitelman nimi"
-                  {...register(`liittyvatSuunnitelmat.${index}.nimi`)}
-                  disabled={!isLiittyviaSuunnitelmia}
-                  error={errors?.liittyvatSuunnitelmat?.[index]?.nimi}
-                  style={{ width: "100%" }}
-                />
-                <div className="hidden lg:block">
-                  <IconButton
-                    icon="trash"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      remove(index);
-                    }}
-                  />
-                </div>
-                <div className="block lg:hidden">
-                  <Button
-                    onClick={(event) => {
-                      event.preventDefault();
-                      remove(index);
-                    }}
-                    endIcon="trash"
-                  >
-                    Poista
-                  </Button>
-                </div>
-              </HassuStack>
-            </HassuGridItem>
-          </HassuGrid>
-        );
-      })}
-      <Button
-        className="mt-7"
-        onClick={(event) => {
-          event.preventDefault();
-          append(defaultSuunnitelma);
-        }}
-        disabled={!isLiittyviaSuunnitelmia}
-      >
-        Uusi rivi +
-      </Button>
-    </SectionContent>
-  );
-};
