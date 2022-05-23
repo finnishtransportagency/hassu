@@ -29,12 +29,14 @@ type FormValues = RequiredProjektiFields & {
 interface Props<T> {
   useFormReturn: UseFormReturn<T>;
   vuorovaikutus: Vuorovaikutus | undefined;
-  avaaHyvaksymisDialogi: () => void;
+  muokkaustila: boolean;
+  setMuokkaustila: React.Dispatch<React.SetStateAction<boolean>>;
+  saveForm: (e?: React.BaseSyntheticEvent<object, any, any> | undefined) => Promise<void>;
 }
 
-export default function LuonnoksetJaAineistot<T extends FormValues>({ useFormReturn, vuorovaikutus, avaaHyvaksymisDialogi}: Props<T>) {
+export default function LuonnoksetJaAineistot<T extends FormValues>({ saveForm, useFormReturn, vuorovaikutus, muokkaustila, setMuokkaustila}: Props<T>) {
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
-  const [muokkaustila, setMuokkaustila] = useState(false);
+
 
   const openAineistoDialog = () => setAineistoDialogOpen(true);
   const closeAineistoDialog = () => setAineistoDialogOpen(false);
@@ -44,7 +46,8 @@ export default function LuonnoksetJaAineistot<T extends FormValues>({ useFormRet
   const {
     control,
     register,
-    formState: { errors },
+    formState: { errors, isDirty },
+    reset
   } = useFormReturn as UseFormReturn<FormValues>;
 
   const {
@@ -107,13 +110,13 @@ export default function LuonnoksetJaAineistot<T extends FormValues>({ useFormRet
                 <HassuStack direction={["column", "column", "row"]}>
                   <Button primary type="submit" onClick={(e) => {
                     e.preventDefault();
-                    setMuokkaustila(false);
-                    avaaHyvaksymisDialogi();
+                    saveForm();
                   }}>
                     Päivitä
                   </Button>
                   <Button onClick={(e) => {
                     e.preventDefault();
+                    if (isDirty) reset();
                     setMuokkaustila(false);
                   }}>
                     Peruuta

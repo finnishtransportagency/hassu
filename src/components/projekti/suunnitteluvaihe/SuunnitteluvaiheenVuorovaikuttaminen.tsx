@@ -151,6 +151,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
   const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
+  const [aineistoMuokkaustila, setAineistoMuokkaustila] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
 
   const v = useMemo(() => {
@@ -240,6 +241,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
       }
       setOpenHyvaksy(false);
       setOpenVuorovaikutustilaisuus(false);
+      setAineistoMuokkaustila(false);
       setIsFormSubmitting(false);
     },
     [saveSunnitteluvaihe, showErrorMessage, showSuccessMessage]
@@ -300,7 +302,9 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
               avaaHyvaksymisDialogi={() => setOpenHyvaksy(true)}
             />
             <LuonnoksetJaAineistot
-              avaaHyvaksymisDialogi={() => setOpenHyvaksy(true)}
+              saveForm={saveForm}
+              muokkaustila={aineistoMuokkaustila}
+              setMuokkaustila={setAineistoMuokkaustila}
               vuorovaikutus={v}
               useFormReturn={useFormReturn as UseFormReturn<FormValuesForLuonnoksetJaAineistot, object>}
             />
