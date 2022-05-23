@@ -158,8 +158,11 @@ export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet, 
         shouldDirty: true,
       });
       windowHandler(false);
+      if (julkinen) {
+        avaaHyvaksymisDialogi();
+      }
     },
-    [parentSetValue, windowHandler]
+    [parentSetValue, windowHandler, julkinen, avaaHyvaksymisDialogi]
   );
 
   const onClose = useCallback(() => {
@@ -465,14 +468,7 @@ export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet, 
       </DialogContent>
 
       <DialogActions>
-        <Button primary onClick={() => {
-          if (julkinen) {
-            handleSubmit(saveTilaisuudet)();
-            avaaHyvaksymisDialogi();
-          } else {
-            handleSubmit(saveTilaisuudet)();
-          }
-        }}>
+        <Button primary onClick={handleSubmit(saveTilaisuudet)}>
           Tallenna
         </Button>
         <Button

@@ -45,7 +45,7 @@ export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
       esitettavatYhteystiedot: Yup.array().when("tyyppi", {
         is: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
         then: Yup.array().of(yhteystietoSchema),
-      }),
+      }).nullable(),
       projektiYhteysHenkilot: Yup.array()
         .when("tyyppi", {
           is: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
