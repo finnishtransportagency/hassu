@@ -35,7 +35,7 @@ import LukutilaLinkkiJaKutsut from "./LukutilaLinkkiJaKutsut";
 import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
 import VuorovaikutustilaisuusDialog from "./VuorovaikutustilaisuusDialog";
 import cloneDeep from "lodash/cloneDeep";
-const omitDeep = require("omit-deep-lodash");
+// const omitDeep = require("omit-deep-lodash");
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
