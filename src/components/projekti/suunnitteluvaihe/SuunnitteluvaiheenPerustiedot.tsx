@@ -18,6 +18,7 @@ import { removeTypeName } from "src/util/removeTypeName";
 import { KeyedMutator } from "swr";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import HassuDialog from "@components/HassuDialog";
+import SaapuneetKysymyksetJaPalautteet from "./SaapuneetKysymyksetJaPalautteet";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -214,16 +215,7 @@ export default function SuunnitteluvaiheenPerustiedot({
               ></TextInput>
             </SectionContent>
           </Section>
-          <Section>
-            <h5 className="vayla-small-title">Saapuneet kysymykset ja palautteet</h5>
-            <SectionContent>
-              <p>
-                {projekti.suunnitteluVaihe?.palautteet
-                  ? `Kysymyksiä tai palautteita ${projekti.suunnitteluVaihe.palautteet.length} kpl.`
-                  : "Ei saapuneita kysymyksiä tai palautteita"}
-              </p>
-            </SectionContent>
-          </Section>
+          {projekti && <SaapuneetKysymyksetJaPalautteet projekti={projekti} reloadProjekti={reloadProjekti} />}
           <input type="hidden" {...register("suunnitteluVaihe.julkinen")} />
         </form>
       </FormProvider>

@@ -78,6 +78,7 @@ export type Linkki = {
 
 export type Palaute = {
   id: string;
+  vastaanotettu: string;
   etunimi?: string | null;
   sukunimi?: string | null;
   sahkoposti?: string | null;
