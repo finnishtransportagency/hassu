@@ -26,8 +26,8 @@ type Props = {
 
 const useFormOptions = { defaultValues: { aineistoKategoriat: [] } };
 
-export default function AineistojenValitseminenDialog(props: Props) {
-  const { onClose, open, updateValitutAineistot } = props;
+export default function AineistojenValitseminenDialog({ updateValitutAineistot, ...MuiDialogProps }: Props) {
+  const { onClose, open } = MuiDialogProps;
   const { data: projekti } = useProjektiRoute();
   const [isLoading, setIsLoading] = useState(false);
   const [aineistoKategoriat, setAineistoKategoriat] = useState<VelhoAineistoKategoria[]>();
@@ -100,7 +100,7 @@ export default function AineistojenValitseminenDialog(props: Props) {
         PaperProps={{ sx: { maxHeight: "95vh", minHeight: "95vh" } }}
         title="Aineistojen valitseminen"
         scroll="paper"
-        {...props}
+        {...MuiDialogProps}
         maxWidth="lg"
       >
         <form style={{ display: "contents" }}>
