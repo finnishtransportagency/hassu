@@ -4,7 +4,6 @@ import * as Yup from "yup";
 import { yhteystietoSchema } from "./yhteystieto";
 import filter from "lodash/filter";
 
-
 const validTimeRegexp = /^([0-1]?[0-9]|2[0-4]):([0-5]?[0-9])$/;
 
 export const palauteSchema = Yup.object().shape({
