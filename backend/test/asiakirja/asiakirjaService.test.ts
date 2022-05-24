@@ -25,6 +25,7 @@ describe("asiakirjaService", async () => {
       aloitusKuulutusJulkaisu,
       asiakirjaTyyppi: AsiakirjaTyyppi.ALOITUSKUULUTUS,
       kieli,
+      luonnos: true,
     });
     expect(pdf.sisalto.length).to.be.greaterThan(50000);
     expect(pdf.nimi).to.eq(expectedFilename);
@@ -64,6 +65,7 @@ describe("asiakirjaService", async () => {
       vuorovaikutus,
       asiakirjaTyyppi: AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU,
       kieli,
+      luonnos: true,
     });
     // expect(pdf.sisalto.length).to.be.greaterThan(50000);
     expect(pdf.nimi).to.eq(expectedFilename);
@@ -76,6 +78,7 @@ describe("asiakirjaService", async () => {
       vuorovaikutus,
       asiakirjaTyyppi: AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU,
       kieli,
+      luonnos: true,
     });
     expect(email).toMatchSnapshot();
   }

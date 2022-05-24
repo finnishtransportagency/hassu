@@ -28,6 +28,7 @@ describe.skip("Email", () => {
       aloitusKuulutusJulkaisu: asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projekti),
       asiakirjaTyyppi: AsiakirjaTyyppi.ALOITUSKUULUTUS,
       kieli: Kieli.SUOMI,
+      luonnos: false,
     });
 
     await emailClient.sendEmail({

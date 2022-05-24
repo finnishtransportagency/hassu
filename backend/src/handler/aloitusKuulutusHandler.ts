@@ -51,6 +51,7 @@ async function createAloituskuulutusPDF(
     asiakirjaTyyppi,
     aloitusKuulutusJulkaisu: julkaisuWaitingForApproval,
     kieli,
+    luonnos: false,
   });
   return fileService.createFileToProjekti({
     oid: projekti.oid,

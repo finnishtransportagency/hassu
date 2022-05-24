@@ -53,6 +53,7 @@ class VuorovaikutusService {
       aloitusKuulutusJulkaisu,
       vuorovaikutus,
       kieli: projektiInDB.kielitiedot.ensisijainenKieli,
+      luonnos: false,
     });
 
     const vuorovaikutusKutsuPath = fileService.getVuorovaikutusPath(vuorovaikutus) + "/kutsu";
@@ -71,6 +72,7 @@ class VuorovaikutusService {
       asiakirjaTyyppi: AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU,
       vuorovaikutus,
       kieli: projektiInDB.kielitiedot.ensisijainenKieli,
+      luonnos: false,
     });
     emailOptions.attachments = [
       {
