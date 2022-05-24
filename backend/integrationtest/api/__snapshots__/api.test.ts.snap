@@ -1006,7 +1006,7 @@ Object {
       "puhelinnumero": "123456",
       "sahkoposti": "test@vayla.fi",
       "sukunimi": "Meikalainen",
-      "vastaanotettu": "2022-05-25T12:45",
+      "vastaanotettu": "***unittest***",
       "yhteydenottotapaEmail": false,
       "yhteydenottotapaPuhelin": true,
     },
@@ -1028,7 +1028,7 @@ Object {
       "puhelinnumero": "123456",
       "sahkoposti": "test@vayla.fi",
       "sukunimi": "Meikalainen",
-      "vastaanotettu": "2022-05-25T12:45",
+      "vastaanotettu": "***unittest***",
       "yhteydenottotapaEmail": false,
       "yhteydenottotapaPuhelin": true,
     },
@@ -1516,18 +1516,18 @@ Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipääll
 
 HASSU AUTOMAATTITESTIPROJEKTI1
 
-Väylävirasto ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee suunnittelun ja maastotöiden aloittamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä. 
+Väylävirasto ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee suunnittelun ja maastotöiden aloittamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
 
-Kuulutus julkaistaan 2.1.2022, Väyläviraston tietoverkossa osoitteessa https://vayla.fi/kuulutukset. 
+Kuulutus julkaistaan 2.1.2022, Väyläviraston tietoverkossa osoitteessa https://vayla.fi/kuulutukset.
 
-Väylävirasto pyytää suunnittelualueen kuntia julkisemaan julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa Väylävirastolle. 
+Väylävirasto pyytää suunnittelualueen kuntia julkisemaan julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa Väylävirastolle.
 
 Lorem Ipsum
 
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa https://vayla.fi/tietosuoja. 
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa https://vayla.fi/tietosuoja.
 
-Lisätietoja antaa 
-CGI Suomi Oy, A-tunnus1 Hassu, puh. 123, mikko.haapamki@cgi.com 
+Lisätietoja antaa
+CGI Suomi Oy, A-tunnus1 Hassu, puh. 123, mikko.haapamki@cgi.com
 Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com ",
       "to": Array [],
     },
