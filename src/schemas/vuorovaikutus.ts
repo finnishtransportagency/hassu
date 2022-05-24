@@ -9,24 +9,17 @@ const validTimeRegexp = /^([0-1]?[0-9]|2[0-4]):([0-5]?[0-9])$/;
 export const palauteSchema = Yup.object().shape({
   etunimi: Yup.string().notRequired().max(100),
   sukunimi: Yup.string().notRequired().max(100),
-  sahkoposti: Yup.string().notRequired().email(),
+  sahkoposti: Yup.string().notRequired().email("sahkoposti_ei_kelpaa"),
   puhelinnumero: Yup.string().notRequired().max(20),
-  kysymysTaiPalaute: Yup.string().required().max(2000),
+  kysymysTaiPalaute: Yup.string().required("palaute_on_jatettava").max(2000),
   yhteydenottotapaEmail: Yup.boolean().notRequired(),
   yhteydenottotapaPuhelin: Yup.boolean().notRequired(),
-  liite: Yup.mixed().notRequired()
+  liite: Yup.string().notRequired()
     .test({
-      message: 'Tiedoston on oltava tyyppiä PDF, PNG tai JPG',
+      message: 'vain_kuva_tai_pdf',
       test: (file, context) => {
-        const isValid = !file || ['image/png', 'image/jpg', 'image/jpeg', 'application/pdf'].includes((file?.type));
+        const isValid = !file || /.*\.[(jpg)|(jpeg)|(png)|(pdf)]/.test(file);
         if (!isValid) context?.createError();
-        return isValid;
-      }
-    })
-    .test({
-      message: `Tiedosto on liian suuri. Max koko 4Mt.`,
-      test: (file) => {
-        const isValid = !file || file?.size < 32000000;
         return isValid;
       }
     })

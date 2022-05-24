@@ -4,7 +4,7 @@ import Button from "@components/button/Button";
 import HassuStack from "@components/layout/HassuStack";
 import HassuDialog from "@components/HassuDialog";
 import HassuGrid from "@components/HassuGrid";
-import { FormProvider, useForm, UseFormProps, Controller } from "react-hook-form";
+import { FormProvider, useForm, UseFormProps, Controller, FieldError } from "react-hook-form";
 import { palauteSchema } from "src/schemas/vuorovaikutus";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useTranslation from "next-translate/useTranslation";
@@ -35,7 +35,7 @@ interface PalauteFormInput {
   kysymysTaiPalaute: string;
   yhteydenottotapaEmail: boolean | null;
   yhteydenottotapaPuhelin: boolean | null;
-  liite: File | null;
+  liite: string | null;
 }
 
 const defaultValues = {
@@ -47,7 +47,7 @@ const defaultValues = {
 
 export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovaikutus }: Props): ReactElement {
   const { t } = useTranslation();
-  const [tiedosto, setTiedosto] = useState<string | undefined>(undefined);
+  const [tiedosto, setTiedosto] = useState<File | undefined>(undefined);
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
   const [kiitosDialogiOpen, setKiitosDialogiOpen] = useState(false);
 
@@ -85,24 +85,24 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
       setFormIsSubmitting(true);
       try {
         const palauteFinalValues : PalauteInput = { ...formData, liite: null };
-        if (formData.liite) {
-          palauteFinalValues.liite = await talletaTiedosto(formData.liite);
+        if (tiedosto) {
+          palauteFinalValues.liite = await talletaTiedosto(tiedosto);
         }
         (Object.keys(palauteFinalValues) as Array<keyof PalauteInput>).forEach(key => {
           if (!palauteFinalValues[key]) delete palauteFinalValues[key];
         });
         await api.lisaaPalaute(projekti.oid, palauteFinalValues);
-        showSuccessMessage("Tallennus onnistui!");
+        showSuccessMessage(t("common:ilmoitukset.tallennus_onnistui"));
         onClose();
         setKiitosDialogiOpen(true);
         reset(defaultValues);
       } catch (e) {
         log.log("OnSubmit Error", e);
-        showErrorMessage("Tallennuksessa tapahtui virhe!");
+        showErrorMessage(t("common:ilmoitukset.tallennuksessa_tapahtui_virhe"));
       }
       setFormIsSubmitting(false);
     },
-    [talletaTiedosto, projekti, onClose, showErrorMessage, showSuccessMessage, reset]
+    [talletaTiedosto, projekti, onClose, showErrorMessage, showSuccessMessage, reset, t, tiedosto]
   );
 
   return (
@@ -141,7 +141,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
                   <TextInput
                     label="Sähköposti"
                     {...register("sahkoposti")}
-                    error={errors.sahkoposti}
+                    error={errors?.sahkoposti?.message ? { message: t(`common:virheet.${errors.sahkoposti.message}`) } as FieldError: undefined}
                   />
                   <TextInput
                     style={{ maxWidth: "15em" }}
@@ -157,7 +157,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
                 className="mt-4"
                 label="Palaute"
                 {...register("kysymysTaiPalaute")}
-                error={errors.kysymysTaiPalaute}
+                error={errors?.kysymysTaiPalaute?.message ? { message: t(`common:virheet.${errors.kysymysTaiPalaute.message}`) } as FieldError: undefined}
               />
               <div>
                 <p style={{ fontWeight: "bold" }}>Toivottu yhteydenottotapa</p>
@@ -180,11 +180,11 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
                 {tiedosto
                   ? <FormGroup
                       label="Valittu tiedosto"
-                      errorMessage={errors.liite?.toString()}
+                      errorMessage={errors?.liite?.message ? t(`common:virheet.${errors.liite.message}`) : ""}
                     >
                       <HassuStack direction="row">
                         <div style={{ marginTop: "auto", marginBottom: "auto" }}>
-                          {tiedosto}
+                          {tiedosto.name}
                         </div>
                         <IconButton
                           icon="trash"
@@ -213,9 +213,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
                       type="file"
                       accept="image/jpeg, image/png, image/jpg, application/pdf"
                       onChange={(e) => {
-                        console.log(e.target);
-                        console.log(e.target.value);
-                        setTiedosto(e.target.value);
+                        setTiedosto(e.target.files?.[0]);
                         field.onChange(e.target.value)
                       }}
                     />
