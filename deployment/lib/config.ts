@@ -41,6 +41,7 @@ export class Config extends BaseConfig {
   private branch?: string;
   public static readonly tags = { Environment: Config.env, Project: "Hassu" };
   private readonly scope: Construct;
+  public static readonly isHotswap = process.env.HASSU_HOTSWAP == "true";
 
   private constructor(scope: Construct) {
     super();

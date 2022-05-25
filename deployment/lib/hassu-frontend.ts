@@ -68,6 +68,10 @@ export class HassuFrontendStack extends cdk.Stack {
   }
 
   public async process() {
+    if (Config.isHotswap) {
+      return;
+    }
+
     const env = Config.env;
     const config = await Config.instance(this);
 
@@ -76,17 +80,15 @@ export class HassuFrontendStack extends cdk.Stack {
     this.cloudFrontOriginAccessIdentityReportBucket =
       (await readPipelineStackOutputs()).CloudfrontOriginAccessIdentityReportBucket || ""; // Empty default string for localstack deployment
 
-    if (process.env.SKIP_NEXTJS_BUILD !== "true") {
-      await new Builder(".", "./build", {
-        enableHTTPCompression: true,
-        minifyHandlers: true,
-        args: ["build"],
-        env: {
-          FRONTEND_DOMAIN_NAME: config.frontendDomainName,
-          REACT_APP_API_KEY: this.appSyncAPIKey,
-        },
-      }).build();
-    }
+    await new Builder(".", "./build", {
+      enableHTTPCompression: true,
+      minifyHandlers: true,
+      args: ["build"],
+      env: {
+        FRONTEND_DOMAIN_NAME: config.frontendDomainName,
+        REACT_APP_API_KEY: this.appSyncAPIKey,
+      },
+    }).build();
 
     const edgeFunctionRole = this.createEdgeFunctionRole();
 

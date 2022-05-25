@@ -1,11 +1,15 @@
 import * as ddb from "@aws-cdk/aws-dynamodb";
 import { ProjectionType, StreamViewType } from "@aws-cdk/aws-dynamodb";
 import * as cdk from "@aws-cdk/core";
-import { Duration, RemovalPolicy } from "@aws-cdk/core";
+import { Duration, RemovalPolicy, Tags } from "@aws-cdk/core";
 import { Config } from "./config";
 import { BlockPublicAccess, Bucket, HttpMethods } from "@aws-cdk/aws-s3";
 import { OriginAccessIdentity } from "@aws-cdk/aws-cloudfront";
 import { IOriginAccessIdentity } from "@aws-cdk/aws-cloudfront/lib/origin-access-identity";
+import * as backup from "@aws-cdk/aws-backup";
+import * as events from "@aws-cdk/aws-events";
+import { Effect, PolicyStatement } from "@aws-cdk/aws-iam";
+import { IConstruct } from "@aws-cdk/core/lib/construct-compat";
 
 // These should correspond to CfnOutputs produced by this stack
 export type DatabaseStackOutputs = {
@@ -53,6 +57,7 @@ export class HassuDatabaseStack extends cdk.Stack {
     this.internalBucket = this.createInternalBucket();
     this.archiveBucket = this.createArchiveBucket();
     this.publicBucket = this.createPublicBucket(oai);
+    this.createBackupPlan();
   }
 
   private createProjektiTable() {
@@ -65,6 +70,7 @@ export class HassuDatabaseStack extends cdk.Stack {
       },
       stream: StreamViewType.NEW_IMAGE,
     });
+    HassuDatabaseStack.enableBackup(table);
     table.addGlobalSecondaryIndex({
       indexName: "UusiaPalautteitaIndex",
       sortKey: { name: "uusiaPalautteita", type: ddb.AttributeType.NUMBER },
@@ -91,6 +97,7 @@ export class HassuDatabaseStack extends cdk.Stack {
         type: ddb.AttributeType.STRING,
       },
     });
+    HassuDatabaseStack.enableBackup(table);
 
     // TODO: uncomment after cdk-construct+aws-cdk version upgrade
     // const cfnTable = table.node.defaultChild as CfnTable;
@@ -127,12 +134,14 @@ export class HassuDatabaseStack extends cdk.Stack {
   }
 
   private createArchiveBucket() {
-    return new Bucket(this, "ArchiveBucket", {
+    const bucket = new Bucket(this, "ArchiveBucket", {
       bucketName: Config.archiveBucketName,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       removalPolicy: RemovalPolicy.RETAIN,
-      versioned: false,
+      versioned: true,
     });
+    HassuDatabaseStack.enableBackup(bucket);
+    return bucket;
   }
 
   private createYllapitoBucket(originAccessIdentity?: IOriginAccessIdentity) {
@@ -146,11 +155,18 @@ export class HassuDatabaseStack extends cdk.Stack {
     if (originAccessIdentity) {
       bucket.grantRead(originAccessIdentity);
     }
+    HassuDatabaseStack.enableBackup(bucket);
     return bucket;
   }
 
+  private static enableBackup(scope: IConstruct) {
+    if (Config.isPermanentEnvironment()) {
+      Tags.of(scope).add("hassu-backup", "true");
+    }
+  }
+
   private createPublicBucket(originAccessIdentity?: IOriginAccessIdentity) {
-    let bucket = new Bucket(this, "PublicBucket", {
+    const bucket = new Bucket(this, "PublicBucket", {
       bucketName: Config.publicBucketName,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       removalPolicy: RemovalPolicy.RETAIN,
@@ -159,6 +175,122 @@ export class HassuDatabaseStack extends cdk.Stack {
     if (originAccessIdentity) {
       bucket.grantRead(originAccessIdentity);
     }
+    HassuDatabaseStack.enableBackup(bucket);
     return bucket;
+  }
+
+  private createBackupPlan() {
+    if (Config.isPermanentEnvironment()) {
+      const backupPlanName = "Plan-" + Config.env;
+      const backupVaultName = "Vault-" + Config.env;
+
+      const plan = new backup.BackupPlan(this, backupPlanName, {
+        backupPlanName,
+        backupVault: new backup.BackupVault(this, backupVaultName, { backupVaultName }),
+        backupPlanRules: [
+          new backup.BackupPlanRule({
+            ruleName: "Daily",
+            startWindow: Duration.hours(1),
+            completionWindow: Duration.hours(2),
+            deleteAfter: Duration.days(35),
+            scheduleExpression: events.Schedule.cron({
+              minute: "0",
+              hour: "5",
+              day: "*",
+              month: "*",
+              year: "*",
+            }),
+          }),
+        ],
+      });
+
+      // Enable continuous backups via addOverride because our current CDK version doesn't support it
+      const cfnPlan = plan.node.defaultChild as backup.CfnBackupPlan;
+      cfnPlan.addOverride("Properties.BackupPlan.BackupPlanRule.0.EnableContinuousBackup", true);
+
+      const backupSelection = plan.addSelection("HassuBackupTag", {
+        allowRestores: true,
+        resources: [backup.BackupResource.fromTag("hassu-backup", "true")],
+      });
+      backupSelection.grantPrincipal.addToPrincipalPolicy(
+        new PolicyStatement({
+          sid: "S3BucketBackupPermissions",
+          actions: [
+            "s3:GetInventoryConfiguration",
+            "s3:PutInventoryConfiguration",
+            "s3:ListBucketVersions",
+            "s3:ListBucket",
+            "s3:GetBucketVersioning",
+            "s3:GetBucketNotification",
+            "s3:PutBucketNotification",
+            "s3:GetBucketLocation",
+            "s3:GetBucketTagging",
+          ],
+          effect: Effect.ALLOW,
+          resources: ["arn:aws:s3:::*"],
+        })
+      );
+      backupSelection.grantPrincipal.addToPrincipalPolicy(
+        new PolicyStatement({
+          sid: "S3ObjectBackupPermissions",
+          actions: [
+            "s3:GetObjectAcl",
+            "s3:GetObject",
+            "s3:GetObjectVersionTagging",
+            "s3:GetObjectVersionAcl",
+            "s3:GetObjectTagging",
+            "s3:GetObjectVersion",
+          ],
+          effect: Effect.ALLOW,
+          resources: ["arn:aws:s3:::*/*"],
+        })
+      );
+      backupSelection.grantPrincipal.addToPrincipalPolicy(
+        new PolicyStatement({
+          sid: "S3GlobalPermissions",
+          actions: ["s3:ListAllMyBuckets"],
+          effect: Effect.ALLOW,
+          resources: ["*"],
+        })
+      );
+      backupSelection.grantPrincipal.addToPrincipalPolicy(
+        new PolicyStatement({
+          sid: "KMSBackupPermissions",
+          actions: ["kms:Decrypt", "kms:DescribeKey"],
+          effect: Effect.ALLOW,
+          resources: ["*"],
+          conditions: {
+            StringLike: {
+              "kms:ViaService": "s3.*.amazonaws.com",
+            },
+          },
+        })
+      );
+      backupSelection.grantPrincipal.addToPrincipalPolicy(
+        new PolicyStatement({
+          sid: "EventsPermissions",
+          actions: [
+            "events:DescribeRule",
+            "events:EnableRule",
+            "events:PutRule",
+            "events:DeleteRule",
+            "events:PutTargets",
+            "events:RemoveTargets",
+            "events:ListTargetsByRule",
+            "events:DisableRule",
+          ],
+          effect: Effect.ALLOW,
+          resources: ["arn:aws:events:*:*:rule/AwsBackupManagedRule*"],
+        })
+      );
+      backupSelection.grantPrincipal.addToPrincipalPolicy(
+        new PolicyStatement({
+          sid: "EventsMetricsGlobalPermissions",
+          actions: ["cloudwatch:GetMetricData", "events:ListRules"],
+          effect: Effect.ALLOW,
+          resources: ["*"],
+        })
+      );
+    }
   }
 }
