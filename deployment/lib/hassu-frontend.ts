@@ -1,6 +1,6 @@
 /* tslint:disable:no-unused-expression */
 import * as cdk from "@aws-cdk/core";
-import { Construct, Fn } from "@aws-cdk/core";
+import { Construct, Duration, Fn, RemovalPolicy } from "@aws-cdk/core";
 import * as acm from "@aws-cdk/aws-certificatemanager";
 import * as cloudfront from "@aws-cdk/aws-cloudfront";
 import {
@@ -13,7 +13,7 @@ import {
   OriginRequestPolicy,
   OriginSslPolicy,
   PriceClass,
-  ViewerProtocolPolicy,
+  ViewerProtocolPolicy
 } from "@aws-cdk/aws-cloudfront";
 import { Config } from "./config";
 import { HttpOrigin } from "@aws-cdk/aws-cloudfront-origins/lib/http-origin";
@@ -28,12 +28,12 @@ import {
   PolicyDocument,
   PolicyStatement,
   Role,
-  ServicePrincipal,
+  ServicePrincipal
 } from "@aws-cdk/aws-iam";
 import * as fs from "fs";
 import { EdgeFunction } from "@aws-cdk/aws-cloudfront/lib/experimental";
 import { S3Origin } from "@aws-cdk/aws-cloudfront-origins";
-import { Bucket } from "@aws-cdk/aws-s3";
+import { BlockPublicAccess, Bucket } from "@aws-cdk/aws-s3";
 import * as ssm from "@aws-cdk/aws-ssm";
 import { readBackendStackOutputs, readDatabaseStackOutputs, readPipelineStackOutputs } from "../bin/setupEnvironment";
 import { IOriginAccessIdentity } from "@aws-cdk/aws-cloudfront/lib/origin-access-identity";
@@ -122,6 +122,15 @@ export class HassuFrontendStack extends cdk.Stack {
     }
 
     const id = `NextJsApp-${env}`;
+
+    const logBucket = new Bucket(this, "CloudfrontLogs", {
+      bucketName: `hassu-${Config.env}-cloudfront`,
+      versioned: false,
+      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+      removalPolicy: RemovalPolicy.RETAIN,
+      lifecycleRules: [{ enabled: true, expiration: Duration.days(366 / 2) }],
+    });
+
     const nextJSLambdaEdge = new NextJSLambdaEdge(this, id, {
       serverlessBuildOutDir: "./build",
       runtime: Runtime.NODEJS_14_X,
@@ -139,16 +148,17 @@ export class HassuFrontendStack extends cdk.Stack {
           ? [{ functionVersion: frontendRequestFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }]
           : [],
       },
-      cloudfrontProps: { priceClass: PriceClass.PRICE_CLASS_100 },
+      cloudfrontProps: { priceClass: PriceClass.PRICE_CLASS_100, logBucket },
       invalidationPaths: ["/*"],
     });
     this.configureNextJSAWSPermissions(nextJSLambdaEdge);
 
+    const distribution: cloudfront.Distribution = nextJSLambdaEdge.distribution;
     new cdk.CfnOutput(this, "CloudfrontPrivateDNSName", {
-      value: nextJSLambdaEdge.distribution.distributionDomainName || "",
+      value: distribution.distributionDomainName || "",
     });
     new cdk.CfnOutput(this, "CloudfrontDistributionId", {
-      value: nextJSLambdaEdge.distribution.distributionId || "",
+      value: distribution.distributionId || "",
     });
   }
 
