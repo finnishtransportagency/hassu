@@ -27,31 +27,8 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
 
   useProjektiBreadcrumbs(setRouteLabels);
 
-  const mockVuorovaikutusYhteystiedot: YhteystietoInput[] = [
-    {
-      etunimi: "Veijo",
-      sukunimi: "Väylämies",
-      puhelinnumero: "029 000 0000",
-      sahkoposti: "etunimi.sukunimi@vayla.fi",
-      organisaatio: "Väylävirasto",
-    },
-    {
-      etunimi: "Veijo",
-      sukunimi: "Väylämies",
-      puhelinnumero: "029 000 0000",
-      sahkoposti: "etunimi.sukunimi@vayla.fi",
-      organisaatio: "Väylävirasto",
-    },
-    {
-      etunimi: "Veijo",
-      sukunimi: "Väylämies",
-      puhelinnumero: "029 000 0000",
-      sahkoposti: "etunimi.sukunimi@vayla.fi",
-      organisaatio: "Väylävirasto",
-    },
-  ];
+  // const yhteystiedotListana = mockVuorovaikutusYhteystiedot.map((yhteystieto) => t("common:yhteystieto", yhteystieto));
 
-  const yhteystiedotListana = mockVuorovaikutusYhteystiedot.map((yhteystieto) => t("common:yhteystieto", yhteystieto));
   const today = dayjs();
 
   if (!projekti || !projekti.suunnitteluVaihe) {
@@ -65,6 +42,10 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
   const menneetTilaisuudet = vuorovaikutus?.vuorovaikutusTilaisuudet?.filter((t) =>
     dayjs(t.paivamaara).isBefore(today)
   );
+
+  const yhteystiedotListana = vuorovaikutus?.vuorovaikutusYhteystiedot?.map((yhteystieto) =>
+    t("common:yhteystieto", yhteystieto)
+  ) || [];
 
   const TilaisuusIcon = React.memo((props: { tyyppi: VuorovaikutusTilaisuusTyyppi; inactive?: true }) => {
     return (
