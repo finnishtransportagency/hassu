@@ -769,6 +769,32 @@ Object {
       "toissijainenKieli": "SAAME",
     },
     "oid": "1",
+    "projektiHenkilot": Array [
+      Object {
+        "__typename": "ProjektiKayttajaJulkinen",
+        "email": "pekka.projari@vayla.fi",
+        "id": "0",
+        "nimi": "Projari, Pekka",
+        "organisaatio": "Väylävirasto",
+        "puhelinnumero": "11",
+      },
+      Object {
+        "__typename": "ProjektiKayttajaJulkinen",
+        "email": "matti.meikalainen@vayla.fi",
+        "id": "1",
+        "nimi": "Meikäläinen, Matti",
+        "organisaatio": "ELY",
+        "puhelinnumero": "123456789",
+      },
+      Object {
+        "__typename": "ProjektiKayttajaJulkinen",
+        "email": "A2@vayla.fi",
+        "id": "2",
+        "nimi": "SukunimiA2, EtunimiA2",
+        "organisaatio": "Väylävirasto",
+        "puhelinnumero": "123456789",
+      },
+    ],
     "status": "ALOITUSKUULUTUS",
     "velho": Object {
       "__typename": "VelhoJulkinen",

@@ -2,11 +2,17 @@ import {
   AloitusKuulutusJulkaisu,
   AloitusKuulutusPDF,
   DBProjekti,
+  DBVaylaUser,
   LocalizedMap,
   SuunnitteluSopimus,
   Velho,
 } from "../database/model/projekti";
 import * as API from "../../../common/graphql/apiModel";
+import {
+  ProjektiKayttajaJulkinen,
+  SuunnitteluVaiheJulkinen,
+  VuorovaikutusJulkinen,
+} from "../../../common/graphql/apiModel";
 import pickBy from "lodash/pickBy";
 import dayjs from "dayjs";
 import {
@@ -71,9 +77,11 @@ class ProjektiAdapterJulkinen {
       return undefined;
     }
 
+    const projektiHenkilot: ProjektiHenkilot = adaptProjektiHenkilot(dbProjekti.kayttoOikeudet);
+
     let suunnitteluVaihe = undefined;
     if (dbProjekti.suunnitteluVaihe?.julkinen) {
-      suunnitteluVaihe = ProjektiAdapterJulkinen.adaptSuunnitteluVaihe(dbProjekti);
+      suunnitteluVaihe = ProjektiAdapterJulkinen.adaptSuunnitteluVaihe(dbProjekti, projektiHenkilot);
     }
 
     const projekti: API.ProjektiJulkinen = {
@@ -85,6 +93,7 @@ class ProjektiAdapterJulkinen {
       suunnitteluVaihe,
       aloitusKuulutusJulkaisut,
       paivitetty: dbProjekti.paivitetty,
+      projektiHenkilot: Object.values(projektiHenkilot),
     };
     const projektiJulkinen = removeUndefinedFields(projekti) as API.ProjektiJulkinen;
     return this.applyStatus(projektiJulkinen);
@@ -157,7 +166,10 @@ class ProjektiAdapterJulkinen {
     return { __typename: "AloitusKuulutusPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
   }
 
-  private static adaptSuunnitteluVaihe(dbProjekti: DBProjekti): API.SuunnitteluVaiheJulkinen {
+  private static adaptSuunnitteluVaihe(
+    dbProjekti: DBProjekti,
+    projektiHenkilot: ProjektiHenkilot
+  ): SuunnitteluVaiheJulkinen {
     const { hankkeenKuvaus, arvioSeuraavanVaiheenAlkamisesta, suunnittelunEteneminenJaKesto } =
       dbProjekti.suunnitteluVaihe;
     return {
@@ -165,12 +177,12 @@ class ProjektiAdapterJulkinen {
       hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
       arvioSeuraavanVaiheenAlkamisesta,
       suunnittelunEteneminenJaKesto,
-      vuorovaikutukset: adaptVuorovaikutukset(dbProjekti),
+      vuorovaikutukset: adaptVuorovaikutukset(dbProjekti, projektiHenkilot),
     };
   }
 }
 
-function adaptVuorovaikutukset(dbProjekti: DBProjekti): API.VuorovaikutusJulkinen[] {
+function adaptVuorovaikutukset(dbProjekti: DBProjekti, projektiHenkilot: ProjektiHenkilot): VuorovaikutusJulkinen[] {
   const vuorovaikutukset = dbProjekti.vuorovaikutukset;
   if (vuorovaikutukset && vuorovaikutukset.length > 0) {
     return vuorovaikutukset
@@ -185,6 +197,9 @@ function adaptVuorovaikutukset(dbProjekti: DBProjekti): API.VuorovaikutusJulkine
             suunnittelumateriaali: adaptLinkki(vuorovaikutus.suunnittelumateriaali),
             aineistot: adaptAineistot(vuorovaikutus.aineistot, julkaisuPaiva),
             vuorovaikutusYhteystiedot: adaptAndMergeYhteystiedot(dbProjekti, vuorovaikutus),
+            vuorovaikutusYhteysHenkilot: vuorovaikutus.vuorovaikutusYhteysHenkilot.map(
+              (username) => projektiHenkilot[username].id
+            ),
           } as API.VuorovaikutusJulkinen;
         }
         return undefined;
@@ -297,5 +312,22 @@ export function adaptVelho(velho: Velho): API.VelhoJulkinen {
     toteuttavaOrganisaatio,
   };
 }
+
+type ProjektiHenkilot = { [id: string]: ProjektiKayttajaJulkinen };
+
+function adaptProjektiHenkilot(kayttoOikeudet: DBVaylaUser[]): ProjektiHenkilot {
+  return kayttoOikeudet?.reduce((result: ProjektiHenkilot, user, index) => {
+    result[user.kayttajatunnus] = {
+      id: `${index}`,
+      __typename: "ProjektiKayttajaJulkinen",
+      nimi: user.nimi,
+      email: user.email,
+      puhelinnumero: user.puhelinnumero,
+      organisaatio: user.organisaatio,
+    };
+    return result;
+  }, {});
+}
+
 
 export const projektiAdapterJulkinen = new ProjektiAdapterJulkinen();

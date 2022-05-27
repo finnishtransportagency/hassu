@@ -40,5 +40,5 @@ export async function projektiLoader(params: string) {
   if (!oid) {
     return null;
   }
-  return await api.lataaProjekti(oid);
+  return await api.lataaProjektiJulkinen(oid);
 }
