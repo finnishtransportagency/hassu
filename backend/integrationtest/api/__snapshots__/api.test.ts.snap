@@ -949,6 +949,24 @@ Object {
     },
     "oid": "1.2.246.578.5.1.2978288874.2711575506",
     "paivitetty": "***unit test***",
+    "projektiHenkilot": Array [
+      Object {
+        "__typename": "ProjektiKayttajaJulkinen",
+        "email": "mikko.haapamki@cgi.com",
+        "id": "0",
+        "nimi": "Hassu, A-tunnus1",
+        "organisaatio": "CGI Suomi Oy",
+        "puhelinnumero": "123",
+      },
+      Object {
+        "__typename": "ProjektiKayttajaJulkinen",
+        "email": "mikko.haapamaki@cgi.com",
+        "id": "1",
+        "nimi": "Hassu, A-Tunnus",
+        "organisaatio": "CGI Suomi Oy",
+        "puhelinnumero": "123",
+      },
+    ],
     "status": "ALOITUSKUULUTUS",
     "velho": Object {
       "__typename": "VelhoJulkinen",
@@ -1160,7 +1178,7 @@ Object {
           },
         ],
         "vuorovaikutusYhteysHenkilot": Array [
-          "A000112",
+          "0",
         ],
         "vuorovaikutusYhteystiedot": Array [
           Object {
@@ -1293,8 +1311,8 @@ Object {
           },
         ],
         "vuorovaikutusYhteysHenkilot": Array [
-          "A000112",
-          "A000111",
+          "0",
+          "1",
         ],
         "vuorovaikutusYhteystiedot": Array [
           Object {

@@ -350,6 +350,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "OBJECT",
+        "name": "ProjektiKayttajaJulkinen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "ENUM",
         "name": "ProjektiRooli",
         "possibleTypes": null,
