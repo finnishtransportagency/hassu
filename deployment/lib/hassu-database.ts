@@ -10,6 +10,7 @@ import * as backup from "@aws-cdk/aws-backup";
 import * as events from "@aws-cdk/aws-events";
 import { Effect, PolicyStatement } from "@aws-cdk/aws-iam";
 import { IConstruct } from "@aws-cdk/core/lib/construct-compat";
+import { BackupPlanRuleProps } from "@aws-cdk/aws-backup/lib/rule";
 
 // These should correspond to CfnOutputs produced by this stack
 export type DatabaseStackOutputs = {
@@ -184,15 +185,27 @@ export class HassuDatabaseStack extends cdk.Stack {
       const backupPlanName = "Plan-" + Config.env;
       const backupVaultName = "Vault-" + Config.env;
 
+      let backupPlanRuleProps: BackupPlanRuleProps;
+      if (Config.isProductionEnvironment()) {
+        backupPlanRuleProps = {
+          moveToColdStorageAfter: Duration.days(35),
+          deleteAfter: Duration.days(365),
+        };
+      } else {
+        backupPlanRuleProps = {
+          deleteAfter: Duration.days(35),
+        };
+      }
+
       const plan = new backup.BackupPlan(this, backupPlanName, {
         backupPlanName,
         backupVault: new backup.BackupVault(this, backupVaultName, { backupVaultName }),
         backupPlanRules: [
           new backup.BackupPlanRule({
+            ...backupPlanRuleProps,
             ruleName: "Daily",
             startWindow: Duration.hours(1),
             completionWindow: Duration.hours(2),
-            deleteAfter: Duration.days(35),
             scheduleExpression: events.Schedule.cron({
               minute: "0",
               hour: "5",
