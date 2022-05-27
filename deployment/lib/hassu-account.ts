@@ -5,31 +5,29 @@ import { Config } from "./config";
 import { Domain, EngineVersion } from "@aws-cdk/aws-opensearchservice";
 
 // These should correspond to CfnOutputs produced by this stack
-export type SearchStackOutputs = {
-  SearchDomainOutput:string
-}
+export type AccountStackOutputs = {
+  SearchDomainEndpointOutput: string;
+  SearchDomainArnOutput: string;
+};
 
-export class HassuSearchStack extends cdk.Stack {
+export class HassuAccountStack extends cdk.Stack {
   public readonly searchDomain: Domain;
 
   constructor(scope: Construct) {
-    const domainName = "hassu-search-" + Config.env;
-    super(scope, "search", {
-      stackName: domainName,
+    super(scope, "account", {
+      stackName: "hassu-account",
       env: {
         region: "eu-west-1",
       },
       tags: Config.tags,
     });
 
-    let removalPolicy: cdk.RemovalPolicy;
-    if (Config.isPermanentEnvironment()) {
-      removalPolicy = RemovalPolicy.RETAIN;
-    } else {
-      removalPolicy = RemovalPolicy.DESTROY;
+    if (!Config.isDevAccount() && !Config.isProdAccount()) {
+      throw new Error("Only dev and prod accounts are supported");
     }
+
     this.searchDomain = new Domain(this, "SearchDomain", {
-      domainName,
+      domainName: "hassu-search",
       version: EngineVersion.OPENSEARCH_1_0,
       enableVersionUpgrade: true,
       capacity: {
@@ -37,11 +35,14 @@ export class HassuSearchStack extends cdk.Stack {
         dataNodes: 1,
         dataNodeInstanceType: "t3.small.search",
       },
-      removalPolicy,
+      removalPolicy: RemovalPolicy.RETAIN,
     });
 
-    new cdk.CfnOutput(this, "SearchDomainOutput", {
+    new cdk.CfnOutput(this, "SearchDomainEndpointOutput", {
       value: this.searchDomain.domainEndpoint || "",
+    });
+    new cdk.CfnOutput(this, "SearchDomainArnOutput", {
+      value: this.searchDomain.domainArn || "",
     });
   }
 }

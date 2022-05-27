@@ -54,5 +54,5 @@ function getLogger(tag: string) {
   });
 }
 
-export const log = getLogger("YLLAPITO");
+export const log = getLogger("BACKEND");
 export const auditLog = getLogger("AUDIT");

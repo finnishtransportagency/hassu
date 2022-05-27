@@ -176,6 +176,7 @@ enum ProjektiSarake {
 
 input ListaaProjektitInput {
   nimi: String
+  kieli: Kieli
   asiatunnus: String
   maakunta: [String!]
   vaylamuoto: [String!]

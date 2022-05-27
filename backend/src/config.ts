@@ -20,6 +20,8 @@ const config = {
   personSearchUpdaterLambdaArn: process.env.PERSON_SEARCH_UPDATER_LAMBDA_ARN || "",
 
   searchDomain: process.env.SEARCH_DOMAIN,
+  opensearchYllapitoIndex: "projekti-" + process.env.ENVIRONMENT + "-yllapito",
+  opensearchJulkinenIndexPrefix: "projekti-" + process.env.ENVIRONMENT + "-julkinen-",
 
   env: process.env.ENVIRONMENT,
 

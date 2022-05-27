@@ -185,6 +185,21 @@
         "__typename": "__Type"
       },
       {
+        "kind": "INTERFACE",
+        "name": "IProjektiHakutulos",
+        "possibleTypes": [
+          {
+            "name": "ProjektiHakutulos",
+            "__typename": "__Type"
+          },
+          {
+            "name": "ProjektiHakutulosJulkinen",
+            "__typename": "__Type"
+          }
+        ],
+        "__typename": "__Type"
+      },
+      {
         "kind": "ENUM",
         "name": "KaytettavaPalvelu",
         "possibleTypes": null,
@@ -307,6 +322,12 @@
       {
         "kind": "OBJECT",
         "name": "ProjektiHakutulosDokumentti",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ProjektiHakutulosJulkinen",
         "possibleTypes": null,
         "__typename": "__Type"
       },
@@ -457,6 +478,12 @@
       {
         "kind": "OBJECT",
         "name": "VelhoHakuTulos",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "VelhoJulkinen",
         "possibleTypes": null,
         "__typename": "__Type"
       },

@@ -43,9 +43,90 @@ Object {
         },
         Object {
           "terms": Object {
+            "vaihe.keyword": Array [
+              "EI_JULKAISTU",
+              "SUUNNITTELU",
+              "EI_JULKAISTU_PROJEKTIN_HENKILOT",
+            ],
+          },
+        },
+        Object {
+          "terms": Object {
             "suunnittelustaVastaavaViranomainen.keyword": Array [
               "VAYLAVIRASTO",
               "UUDENMAAN_ELY",
+            ],
+          },
+        },
+        Object {
+          "term": Object {
+            "projektiTyyppi.keyword": "TIE",
+          },
+        },
+      ],
+    },
+  },
+  "size": 10,
+  "sort": Array [
+    Object {
+      "paivitetty": Object {
+        "order": "desc",
+      },
+    },
+    Object {
+      "nimi.keyword": Object {
+        "order": "asc",
+      },
+    },
+  ],
+}
+`;
+
+exports[`ProjektiSearchService should handle query parameters successfully 2`] = `
+Object {
+  "aggs": Object {
+    "projektiTyypit": Object {
+      "terms": Object {
+        "field": "projektiTyyppi.keyword",
+        "size": 10,
+      },
+    },
+  },
+  "query": Object {
+    "bool": Object {
+      "must": Array [
+        Object {
+          "bool": Object {
+            "minimum_should_match": 1,
+            "should": Array [
+              Object {
+                "match_bool_prefix": Object {
+                  "nimi": "foo",
+                },
+              },
+              Object {
+                "match": Object {
+                  "nimi": Object {
+                    "fuzziness": "AUTO",
+                    "minimum_should_match": -1,
+                    "query": "foo",
+                  },
+                },
+              },
+            ],
+          },
+        },
+        Object {
+          "terms": Object {
+            "maakunnat.keyword": Array [
+              "Pirkanmaa",
+            ],
+          },
+        },
+        Object {
+          "terms": Object {
+            "vaylamuoto.keyword": Array [
+              "tie",
             ],
           },
         },
@@ -59,8 +140,31 @@ Object {
           },
         },
         Object {
-          "term": Object {
-            "projektiTyyppi.keyword": "TIE",
+          "terms": Object {
+            "suunnittelustaVastaavaViranomainen.keyword": Array [
+              "VAYLAVIRASTO",
+              "UUDENMAAN_ELY",
+            ],
+          },
+        },
+      ],
+    },
+  },
+  "size": 0,
+}
+`;
+
+exports[`ProjektiSearchService should handle query parameters successfully for public search 1`] = `
+Object {
+  "from": 0,
+  "query": Object {
+    "bool": Object {
+      "must": Array [
+        Object {
+          "range": Object {
+            "publishTimestamp": Object {
+              "lte": "now",
+            },
           },
         },
       ],

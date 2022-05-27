@@ -904,14 +904,19 @@ Object {
         },
         "tila": "HYVAKSYTTY",
         "velho": Object {
-          "__typename": "Velho",
+          "__typename": "VelhoJulkinen",
+          "asiatunnusELY": undefined,
+          "asiatunnusVayla": undefined,
           "kunnat": Array [
             "Helsinki",
             " Vantaa",
           ],
+          "kuvaus": undefined,
+          "maakunnat": undefined,
           "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
           "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
           "tilaajaOrganisaatio": "Väylävirasto",
+          "toteuttavaOrganisaatio": undefined,
           "tyyppi": "TIE",
           "vaylamuoto": Array [
             "tie",
@@ -938,8 +943,34 @@ Object {
       },
     ],
     "euRahoitus": false,
+    "kielitiedot": Object {
+      "__typename": "Kielitiedot",
+      "ensisijainenKieli": "SUOMI",
+    },
     "oid": "1.2.246.578.5.1.2978288874.2711575506",
+    "paivitetty": "***unit test***",
     "status": "ALOITUSKUULUTUS",
+    "velho": Object {
+      "__typename": "VelhoJulkinen",
+      "asiatunnusELY": undefined,
+      "asiatunnusVayla": undefined,
+      "kunnat": Array [
+        "Helsinki",
+        " Vantaa",
+      ],
+      "kuvaus": undefined,
+      "maakunnat": Array [
+        "Uusimaa",
+      ],
+      "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+      "tilaajaOrganisaatio": "Väylävirasto",
+      "toteuttavaOrganisaatio": undefined,
+      "tyyppi": "TIE",
+      "vaylamuoto": Array [
+        "tie",
+      ],
+    },
   },
 }
 `;

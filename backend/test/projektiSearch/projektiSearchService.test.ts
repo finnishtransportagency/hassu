@@ -1,22 +1,65 @@
 import { describe, it } from "mocha";
-import { openSearchClient } from "../../src/projektiSearch/openSearchClient";
+import { openSearchClientJulkinen, openSearchClientYllapito } from "../../src/projektiSearch/openSearchClient";
 import { projektiSearchService } from "../../src/projektiSearch/projektiSearchService";
 import * as sinon from "sinon";
-import { ProjektiTyyppi, Status, Viranomainen } from "../../../common/graphql/apiModel";
+import { Kieli, ProjektiTyyppi, Status, Viranomainen } from "../../../common/graphql/apiModel";
 
 const sandbox = require("sinon").createSandbox();
 
 const { expect } = require("chai");
 
+const fakeSearchResponse = {
+  took: 8,
+  timed_out: false,
+  _shards: { total: 5, successful: 5, skipped: 0, failed: 0 },
+  hits: {
+    total: { value: 2, relation: "eq" },
+    max_score: 1.0,
+    hits: [
+      {
+        _index: "projekti",
+        _type: "_doc",
+        _id: "1",
+        _score: 1.0,
+        _source: {
+          muistiinpano: "testi",
+          tyyppi: "TIE",
+          velho: {
+            tilaajaOrganisaatio: "Etelä-Pohjanmaan ELY-keskus",
+            nimi: "Nimi1",
+            vaylamuoto: ["tie"],
+          },
+          status: "EI_JULKAISTU",
+        },
+      },
+      {
+        _index: "projekti",
+        _type: "_doc",
+        _id: "2",
+        _score: 1.0,
+        _source: {
+          muistiinpano: "",
+          tyyppi: "TIE",
+          velho: {
+            tilaajaOrganisaatio: "Uudenmaan ELY-keskus",
+            nimi: "Nimi2",
+            vaylamuoto: ["tie"],
+          },
+          status: "EI_JULKAISTU",
+        },
+      },
+    ],
+  },
+};
 describe("ProjektiSearchService", () => {
   let openSearchQueryStub: sinon.SinonStub;
-  before(() => {
-    openSearchQueryStub = sandbox.stub(openSearchClient, "query");
+  let openSearchSuomiQueryStub: sinon.SinonStub;
+  beforeEach(() => {
+    openSearchQueryStub = sandbox.stub(openSearchClientYllapito, "query");
+    openSearchSuomiQueryStub = sandbox.stub(openSearchClientJulkinen["SUOMI"], "query");
   });
   afterEach(() => {
     sandbox.reset();
-  });
-  after(() => {
     sandbox.restore();
   });
 
@@ -93,54 +136,12 @@ describe("ProjektiSearchService", () => {
   });
 
   it("should handle query parameters successfully", async () => {
-    openSearchQueryStub.returns({
-      took: 8,
-      timed_out: false,
-      _shards: { total: 5, successful: 5, skipped: 0, failed: 0 },
-      hits: {
-        total: { value: 2, relation: "eq" },
-        max_score: 1.0,
-        hits: [
-          {
-            _index: "projekti",
-            _type: "_doc",
-            _id: "1",
-            _score: 1.0,
-            _source: {
-              muistiinpano: "testi",
-              tyyppi: "TIE",
-              velho: {
-                tilaajaOrganisaatio: "Etelä-Pohjanmaan ELY-keskus",
-                nimi: "Nimi1",
-                vaylamuoto: ["tie"],
-              },
-              status: "EI_JULKAISTU",
-            },
-          },
-          {
-            _index: "projekti",
-            _type: "_doc",
-            _id: "2",
-            _score: 1.0,
-            _source: {
-              muistiinpano: "",
-              tyyppi: "TIE",
-              velho: {
-                tilaajaOrganisaatio: "Uudenmaan ELY-keskus",
-                nimi: "Nimi2",
-                vaylamuoto: ["tie"],
-              },
-              status: "EI_JULKAISTU",
-            },
-          },
-        ],
-      },
-    });
-    openSearchQueryStub.returns({
+    openSearchQueryStub.onFirstCall().returns(fakeSearchResponse);
+    openSearchQueryStub.onSecondCall().returns({
       aggregations: { projektiTyypit: { buckets: [{ key: ProjektiTyyppi.TIE, doc_count: 2 }] } },
     });
 
-    await projektiSearchService.search({
+    await projektiSearchService.searchYllapito({
       projektiTyyppi: ProjektiTyyppi.TIE,
       nimi: "foo",
       vaylamuoto: ["tie"],
@@ -149,5 +150,15 @@ describe("ProjektiSearchService", () => {
       vaihe: [Status.EI_JULKAISTU, Status.SUUNNITTELU],
     });
     expect(openSearchQueryStub.getCalls()[0].args[0]).toMatchSnapshot();
+    expect(openSearchQueryStub.getCalls()[1].args[0]).toMatchSnapshot();
+  });
+
+  it("should handle query parameters successfully for public search", async () => {
+    openSearchSuomiQueryStub.returns(fakeSearchResponse);
+
+    await projektiSearchService.searchJulkinen({
+      kieli: Kieli.SUOMI,
+    });
+    expect(openSearchSuomiQueryStub.getCalls()[0].args[0]).toMatchSnapshot();
   });
 });

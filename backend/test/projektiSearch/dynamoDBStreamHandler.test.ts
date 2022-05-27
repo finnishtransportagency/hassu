@@ -1,7 +1,7 @@
 import { describe, it } from "mocha";
 import { handleDynamoDBEvents } from "../../src/projektiSearch/dynamoDBStreamHandler";
 import { ProjektiSearchFixture } from "./projektiSearchFixture";
-import { openSearchClient } from "../../src/projektiSearch/openSearchClient";
+import { openSearchClientJulkinen, openSearchClientYllapito } from "../../src/projektiSearch/openSearchClient";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import { Context } from "aws-lambda";
 
@@ -12,9 +12,14 @@ const { expect } = require("chai");
 describe("dynamoDBStreamHandler", () => {
   let fixture: ProjektiSearchFixture;
   const projektiFixture: ProjektiFixture = new ProjektiFixture();
-  const projekti = projektiFixture.dbProjekti1;
-  const indexProjektiStub = sandbox.stub(openSearchClient, "putProjekti");
-  const removeProjektiStub = sandbox.stub(openSearchClient, "deleteProjekti");
+  const projekti = projektiFixture.dbProjekti2;
+  const indexProjektiStub = sandbox.stub(openSearchClientYllapito, "putProjekti");
+  const removeProjektiStub = sandbox.stub(openSearchClientYllapito, "deleteProjekti");
+  const indexProjektiSuomiStub = sandbox.stub(openSearchClientJulkinen["SUOMI"], "putProjekti");
+  const indexProjektiRuotsiStub = sandbox.stub(openSearchClientJulkinen["RUOTSI"], "putProjekti");
+  const removeProjektiSuomiStub = sandbox.stub(openSearchClientJulkinen["SUOMI"], "deleteProjekti");
+  const removeProjektiRuotsiStub = sandbox.stub(openSearchClientJulkinen["RUOTSI"], "deleteProjekti");
+  const removeProjektiSaameStub = sandbox.stub(openSearchClientJulkinen["SAAME"], "deleteProjekti");
 
   beforeEach(() => {
     fixture = new ProjektiSearchFixture();
@@ -32,6 +37,8 @@ describe("dynamoDBStreamHandler", () => {
     expect(indexProjektiStub).callCount(1);
     expect(indexProjektiStub.getCall(0).args[0]).to.be.equal(projekti.oid);
     expect(indexProjektiStub.getCall(0).args[1]).toMatchSnapshot();
+    expect(indexProjektiSuomiStub.getCall(0).args[1]).toMatchSnapshot();
+    expect(indexProjektiRuotsiStub.getCall(0).args[1]).toMatchSnapshot();
   });
 
   it("should index projekti updates successfully", async () => {
@@ -45,11 +52,8 @@ describe("dynamoDBStreamHandler", () => {
     await handleDynamoDBEvents(fixture.createdDeleteProjektiEvent(projekti.oid), context);
     expect(removeProjektiStub).callCount(1);
     expect(removeProjektiStub.getCall(0).firstArg).to.be.equal(projekti.oid);
-  });
-
-  it("should search projects successfully", async () => {
-    await handleDynamoDBEvents(fixture.createdDeleteProjektiEvent(projekti.oid), context);
-    expect(removeProjektiStub).callCount(1);
-    expect(removeProjektiStub.getCall(0).firstArg).to.be.equal(projekti.oid);
+    expect(removeProjektiSuomiStub.getCall(0).firstArg).to.be.equal(projekti.oid);
+    expect(removeProjektiRuotsiStub.getCall(0).firstArg).to.be.equal(projekti.oid);
+    expect(removeProjektiSaameStub.getCall(0).firstArg).to.be.equal(projekti.oid);
   });
 });

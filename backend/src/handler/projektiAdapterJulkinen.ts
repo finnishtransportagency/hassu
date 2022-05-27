@@ -4,6 +4,7 @@ import {
   DBProjekti,
   LocalizedMap,
   SuunnitteluSopimus,
+  Velho,
 } from "../database/model/projekti";
 import * as API from "../../../common/graphql/apiModel";
 import pickBy from "lodash/pickBy";
@@ -14,7 +15,6 @@ import {
   adaptKielitiedot,
   adaptLinkki,
   adaptLinkkiList,
-  adaptVelho,
   adaptVuorovaikutusTilaisuudet,
   adaptYhteystiedot,
 } from "./projektiAdapter";
@@ -79,9 +79,12 @@ class ProjektiAdapterJulkinen {
     const projekti: API.ProjektiJulkinen = {
       __typename: "ProjektiJulkinen",
       oid: dbProjekti.oid,
+      kielitiedot: adaptKielitiedot(dbProjekti.kielitiedot),
+      velho: adaptVelho(dbProjekti.velho),
       euRahoitus: dbProjekti.euRahoitus,
       suunnitteluVaihe,
       aloitusKuulutusJulkaisut,
+      paivitetty: dbProjekti.paivitetty,
     };
     const projektiJulkinen = removeUndefinedFields(projekti) as API.ProjektiJulkinen;
     return this.applyStatus(projektiJulkinen);
@@ -263,6 +266,36 @@ function adaptYhteystiedotFromUsernames(
 
 function removeUndefinedFields(object: API.ProjektiJulkinen): Partial<API.ProjektiJulkinen> {
   return pickBy(object, (value) => value !== undefined);
+}
+
+export function adaptVelho(velho: Velho): API.VelhoJulkinen {
+  const {
+    nimi,
+    tyyppi,
+    kunnat,
+    maakunnat,
+    suunnittelustaVastaavaViranomainen,
+    vaylamuoto,
+    asiatunnusVayla,
+    asiatunnusELY,
+    kuvaus,
+    tilaajaOrganisaatio,
+    toteuttavaOrganisaatio,
+  } = velho;
+  return {
+    __typename: "VelhoJulkinen",
+    nimi,
+    tyyppi,
+    kunnat,
+    maakunnat,
+    suunnittelustaVastaavaViranomainen,
+    vaylamuoto,
+    asiatunnusVayla,
+    asiatunnusELY,
+    kuvaus,
+    tilaajaOrganisaatio,
+    toteuttavaOrganisaatio,
+  };
 }
 
 export const projektiAdapterJulkinen = new ProjektiAdapterJulkinen();

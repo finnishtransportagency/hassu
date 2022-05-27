@@ -114,7 +114,7 @@ describe.skip("ProjektiSearchService", () => {
 
   it("should search by name successfully", async () => {
     const results = (
-      await projektiSearchService.search({
+      await projektiSearchService.searchYllapito({
         nimi: "unittest3",
         projektiTyyppi: ProjektiTyyppi.RATA,
       })
@@ -125,7 +125,7 @@ describe.skip("ProjektiSearchService", () => {
 
   it("should search by vaihe successfully", async () => {
     const results = (
-      await projektiSearchService.search({
+      await projektiSearchService.searchYllapito({
         vaihe: [Status.EI_JULKAISTU],
       })
     ).tulokset;
@@ -136,7 +136,7 @@ describe.skip("ProjektiSearchService", () => {
 
   it("should search by suunnittelustaVastaavaViranomainen successfully", async () => {
     const results = (
-      await projektiSearchService.search({
+      await projektiSearchService.searchYllapito({
         suunnittelustaVastaavaViranomainen: [Viranomainen.KESKI_SUOMEN_ELY, Viranomainen.UUDENMAAN_ELY],
       })
     ).tulokset;
@@ -150,7 +150,7 @@ describe.skip("ProjektiSearchService", () => {
 
   it("should search by vaihe and name successfully", async () => {
     const results = (
-      await projektiSearchService.search({
+      await projektiSearchService.searchYllapito({
         nimi: "unittest3",
         projektiTyyppi: ProjektiTyyppi.RATA,
         vaihe: [Status.EI_JULKAISTU],
@@ -162,7 +162,7 @@ describe.skip("ProjektiSearchService", () => {
 
   it("should not include results if name and vaihe don't match at the same time", async () => {
     const results = (
-      await projektiSearchService.search({
+      await projektiSearchService.searchYllapito({
         nimi: "unittest3",
         projektiTyyppi: ProjektiTyyppi.RATA,
         vaihe: [Status.NAHTAVILLAOLO],
@@ -173,7 +173,7 @@ describe.skip("ProjektiSearchService", () => {
 
   it("should search by asiatunnus", async () => {
     const results = (
-      await projektiSearchService.search({
+      await projektiSearchService.searchYllapito({
         asiatunnus: "A3",
         projektiTyyppi: ProjektiTyyppi.RATA,
       })
@@ -184,7 +184,7 @@ describe.skip("ProjektiSearchService", () => {
 
   it("should search by vaylamuoto", async () => {
     const results = (
-      await projektiSearchService.search({
+      await projektiSearchService.searchYllapito({
         vaylamuoto: ["tie"],
       })
     ).tulokset;
@@ -195,7 +195,7 @@ describe.skip("ProjektiSearchService", () => {
 
   it("should search by maakunta", async () => {
     const results = (
-      await projektiSearchService.search({
+      await projektiSearchService.searchYllapito({
         maakunta: ["Uusimaa", "Pirkanmaa"],
       })
     ).tulokset;
@@ -207,7 +207,7 @@ describe.skip("ProjektiSearchService", () => {
   it("should search by modification permissions", async () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     const results = (
-      await projektiSearchService.search({
+      await projektiSearchService.searchYllapito({
         vainProjektitMuokkausOikeuksin: true,
       })
     ).tulokset;
@@ -215,7 +215,7 @@ describe.skip("ProjektiSearchService", () => {
 
     userFixture.loginAs(UserFixture.manuMuokkaaja);
     const results2 = (
-      await projektiSearchService.search({
+      await projektiSearchService.searchYllapito({
         vainProjektitMuokkausOikeuksin: true,
       })
     ).tulokset;

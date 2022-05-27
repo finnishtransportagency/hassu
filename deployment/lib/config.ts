@@ -38,7 +38,6 @@ export class Config extends BaseConfig {
   public readonly velhoEnv;
   public readonly basicAuthenticationUsername: string;
   public readonly basicAuthenticationPassword: string;
-  public static readonly searchIndex: string = "projekti";
   private branch?: string;
   public static readonly tags = { Environment: Config.env, Project: "Hassu" };
   private readonly scope: Construct;
@@ -154,5 +153,13 @@ export class Config extends BaseConfig {
 
   public static isDeveloperEnvironment() {
     return !Config.isPermanentEnvironment() && "feature" !== Config.env;
+  }
+
+  public static isDevAccount() {
+    return Config.isPermanentEnvironment() && BaseConfig.env !== "prod";
+  }
+
+  public static isProdAccount() {
+    return BaseConfig.env == "prod";
   }
 }

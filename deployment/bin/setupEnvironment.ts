@@ -11,10 +11,10 @@ import { BaseConfig } from "../../common/BaseConfig";
 import * as fs from "fs";
 import { BackendStackOutputs } from "../lib/hassu-backend";
 import { DatabaseStackOutputs } from "../lib/hassu-database";
-import { SearchStackOutputs } from "../lib/hassu-search";
 import { FrontendStackOutputs } from "../lib/hassu-frontend";
 import { Config } from "../lib/config";
 import { PipelineStackOutputs } from "../lib/hassu-pipeline";
+import { AccountStackOutputs } from "../lib/hassu-account";
 
 const usEastCFClient = new CloudFormationClient({ region: "us-east-1" });
 const euWestCFClient = new CloudFormationClient({ region: "eu-west-1" });
@@ -31,8 +31,8 @@ export async function readBackendStackOutputs(): Promise<BackendStackOutputs> {
   return (await readStackOutputs("backend", Region.EU_WEST_1)) as BackendStackOutputs;
 }
 
-async function readSearchStackOutputs(): Promise<SearchStackOutputs> {
-  return (await readStackOutputs("search", Region.EU_WEST_1)) as SearchStackOutputs;
+export async function readAccountStackOutputs(): Promise<AccountStackOutputs> {
+  return (await readStackOutputsForRawStackName("hassu-account", Region.EU_WEST_1)) as AccountStackOutputs;
 }
 
 export async function readDatabaseStackOutputs(): Promise<DatabaseStackOutputs> {
@@ -48,6 +48,10 @@ export async function readFrontendStackOutputs(): Promise<FrontendStackOutputs> 
 }
 
 async function readStackOutputs(stackName: string, region: Region): Promise<Record<string, string>> {
+  return readStackOutputsForRawStackName(`hassu-${stackName}-${BaseConfig.env}`, region);
+}
+
+async function readStackOutputsForRawStackName(stackName: string, region: Region): Promise<Record<string, string>> {
   if (!BaseConfig.isActuallyDeployedEnvironment()) {
     return {};
   }
@@ -59,7 +63,7 @@ async function readStackOutputs(stackName: string, region: Region): Promise<Reco
   }
   try {
     const output: DescribeStacksCommandOutput = await cfClient.send(
-      new DescribeStacksCommand({ StackName: `hassu-${stackName}-${BaseConfig.env}` })
+      new DescribeStacksCommand({ StackName: stackName })
     );
     return (
       output.Stacks?.[0].Outputs?.reduce((params, param) => {
@@ -188,13 +192,13 @@ export async function getEnvironmentVariablesFromSSM(variables?: HassuSSMParamet
 }
 
 async function main() {
-  const searchStackOutputs = await readSearchStackOutputs();
+  const searchStackOutputs = await readAccountStackOutputs();
   const backendStackOutputs = await readBackendStackOutputs();
   const frontendStackOutputs = await readFrontendStackOutputs();
   const variables = await readParametersForEnv<HassuSSMParameters>(BaseConfig.infraEnvironment, Region.EU_WEST_1);
   const environmentVariables = await getEnvironmentVariablesFromSSM(variables);
   writeEnvFile(".env.test", {
-    SEARCH_DOMAIN: searchStackOutputs.SearchDomainOutput,
+    SEARCH_DOMAIN: searchStackOutputs.SearchDomainEndpointOutput,
     FRONTEND_DOMAIN_NAME: frontendStackOutputs.CloudfrontPrivateDNSName,
     TABLE_PROJEKTI: Config.projektiTableName,
 

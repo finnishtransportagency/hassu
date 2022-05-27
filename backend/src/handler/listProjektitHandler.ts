@@ -1,6 +1,12 @@
 import { projektiSearchService } from "../projektiSearch/projektiSearchService";
-import { ListaaProjektitInput, ProjektiHakutulos } from "../../../common/graphql/apiModel";
+import { ListaaProjektitInput, ProjektiHakutulos, ProjektiHakutulosJulkinen } from "../../../common/graphql/apiModel";
+import { getVaylaUser } from "../user";
 
-export async function listProjektit(input: ListaaProjektitInput): Promise<ProjektiHakutulos> {
-  return projektiSearchService.search(input);
+export async function listProjektit(
+  input: ListaaProjektitInput
+): Promise<ProjektiHakutulos | ProjektiHakutulosJulkinen> {
+  if (getVaylaUser()) {
+    return projektiSearchService.searchYllapito(input);
+  }
+  return projektiSearchService.searchJulkinen(input);
 }

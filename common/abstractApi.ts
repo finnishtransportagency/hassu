@@ -23,6 +23,7 @@ import {
   PDF,
   Projekti,
   ProjektiHakutulos,
+  ProjektiHakutulosJulkinen,
   ProjektiJulkinen,
   SiirraTilaMutationVariables,
   SynkronoiProjektiMuutoksetVelhostaMutationVariables,
@@ -189,15 +190,19 @@ export abstract class AbstractApi {
     } as HaeVelhoProjektiAineistoLinkkiQueryVariables);
   }
 
-  async valmisteleTiedostonLataus(tiedostoNimi: string, contentType:string): Promise<LatausTiedot> {
+  async valmisteleTiedostonLataus(tiedostoNimi: string, contentType: string): Promise<LatausTiedot> {
     return await this.callYllapitoAPI(apiConfig.valmisteleTiedostonLataus, {
       tiedostoNimi,
-      contentType
+      contentType,
     } as ValmisteleTiedostonLatausQueryVariables);
   }
 
   async listProjektit(hakuehto: ListaaProjektitInput): Promise<ProjektiHakutulos> {
     return await this.callYllapitoAPI(apiConfig.listaaProjektit, { hakuehto } as ListaaProjektitQueryVariables);
+  }
+
+  async listProjektitJulkinen(hakuehto: ListaaProjektitInput): Promise<ProjektiHakutulosJulkinen> {
+    return await this.callAPI(apiConfig.listaaProjektit, { hakuehto } as ListaaProjektitQueryVariables);
   }
 
   async listPublicProjektit(hakuehto: ListaaProjektitInput): Promise<ProjektiHakutulos> {
