@@ -6,7 +6,6 @@ import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import { useRouter } from "next/router";
 import SectionContent from "@components/layout/SectionContent";
 import useTranslation from "next-translate/useTranslation";
-import { YhteystietoInput } from "@services/api";
 import { formatDate } from "src/util/dateUtils";
 import dayjs from "dayjs";
 import HeadphonesIcon from "@mui/icons-material/Headphones";
@@ -27,8 +26,6 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
 
   useProjektiBreadcrumbs(setRouteLabels);
 
-  // const yhteystiedotListana = mockVuorovaikutusYhteystiedot.map((yhteystieto) => t("common:yhteystieto", yhteystieto));
-
   const today = dayjs();
 
   if (!projekti || !projekti.suunnitteluVaihe) {
@@ -43,9 +40,10 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
     dayjs(t.paivamaara).isBefore(today)
   );
 
-  const yhteystiedotListana = vuorovaikutus?.vuorovaikutusYhteystiedot?.map((yhteystieto) =>
-    t("common:yhteystieto", yhteystieto)
-  ) || [];
+  const yhteystiedotListana =
+    vuorovaikutus?.vuorovaikutusYhteystiedot?.map((yhteystieto) => t("common:yhteystieto", yhteystieto)) || [];
+
+  const suunnittelusopimus = projekti?.aloitusKuulutusJulkaisut?.[0].suunnitteluSopimus;
 
   const TilaisuusIcon = React.memo((props: { tyyppi: VuorovaikutusTilaisuusTyyppi; inactive?: true }) => {
     return (
@@ -270,17 +268,28 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
             )}
           </SectionContent>
         </Section>
-        <Section>
-          <SectionContent>
-            <h5 className="vayla-small-title">{t("common:yhteystiedot")}</h5>
-            <p>
-              {t("common:lisatietoja_antavat", {
-                yhteystiedot:
-                  yhteystiedotListana.slice(0, -1).join(", ") + ` ${t("common:ja")} ` + yhteystiedotListana.slice(-1),
-              })}
-            </p>
-          </SectionContent>
-        </Section>
+        {vuorovaikutus &&
+          vuorovaikutus.vuorovaikutusYhteystiedot &&
+          vuorovaikutus.vuorovaikutusYhteystiedot.length > 0 && (
+            <Section>
+              <SectionContent>
+                <h5 className="vayla-small-title">{t("common:yhteystiedot")}</h5>
+                <p>
+                  {t("common:lisatietoja_antavat", {
+                    yhteystiedot: yhteystiedotListana.join(", "),
+                  })}
+                  {/* TODO vaihda projektin suunnittelusopimustietoihin kun saatavilla */}
+                  {suunnittelusopimus && (
+                    <>
+                      {` ${t("common:ja")} `}
+                      {suunnittelusopimus.etunimi} {suunnittelusopimus.sukunimi} puh. {suunnittelusopimus.puhelinnumero}{" "}
+                      {suunnittelusopimus.email} ({capitalize(suunnittelusopimus.kunta)}).
+                    </>
+                  )}
+                </p>
+              </SectionContent>
+            </Section>
+          )}
       </>
     </ProjektiJulkinenPageLayout>
   );
