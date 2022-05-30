@@ -409,38 +409,6 @@ export default function Aloituskuulutus({
                     maxLength={maxAloituskuulutusLength}
                     disabled={disableFormEdit}
                   />
-                  <Notification type={NotificationType.INFO_GRAY}>
-                    Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
-                  </Notification>
-
-                  <HassuStack direction={["column", "column", "row"]}>
-                    <Button
-                      type="submit"
-                      onClick={handleSubmit((formData) =>
-                        showPDFPreview(
-                          formData,
-                          `/api/projekti/${projekti?.oid}/aloituskuulutus/pdf`,
-                          kielitiedot.ensisijainenKieli
-                        )
-                      )}
-                      disabled={disableFormEdit}
-                    >
-                      Kuulutuksen esikatselu
-                    </Button>
-                    <Button
-                      type="submit"
-                      onClick={handleSubmit((formData) =>
-                        showPDFPreview(
-                          formData,
-                          `/api/projekti/${projekti?.oid}/aloituskuulutus/ilmoitus/pdf`,
-                          kielitiedot.ensisijainenKieli
-                        )
-                      )}
-                      disabled={disableFormEdit}
-                    >
-                      Ilmoituksen esikatselu
-                    </Button>
-                  </HassuStack>
                 </Section>
                 {toissijainenKieli && (
                   <Section>
@@ -453,37 +421,6 @@ export default function Aloituskuulutus({
                       maxLength={maxAloituskuulutusLength}
                       disabled={disableFormEdit}
                     />
-                    <Notification type={NotificationType.INFO_GRAY}>
-                      Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
-                    </Notification>
-                    <HassuStack direction={["column", "column", "row"]}>
-                      <Button
-                        type="submit"
-                        onClick={handleSubmit((formData) =>
-                          showPDFPreview(
-                            formData,
-                            `/api/projekti/${projekti?.oid}/aloituskuulutus/pdf`,
-                            toissijainenKieli
-                          )
-                        )}
-                        disabled={disableFormEdit}
-                      >
-                        Kuulutuksen esikatselu
-                      </Button>
-                      <Button
-                        type="submit"
-                        onClick={handleSubmit((formData) =>
-                          showPDFPreview(
-                            formData,
-                            `/api/projekti/${projekti?.oid}/aloituskuulutus/ilmoitus/pdf`,
-                            toissijainenKieli
-                          )
-                        )}
-                        disabled={disableFormEdit}
-                      >
-                        Ilmoituksen esikatselu
-                      </Button>
-                    </HassuStack>
                   </Section>
                 )}
                 <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} kirjaamoOsoitteet={kirjaamoOsoitteet || []} />
@@ -493,6 +430,79 @@ export default function Aloituskuulutus({
           <form ref={pdfFormRef} target="_blank" method="POST">
             <input type="hidden" name="tallennaProjektiInput" value={serializedFormData} />
           </form>
+          <Section>
+            <Notification type={NotificationType.INFO_GRAY}>
+              Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
+            </Notification>
+            <p>Esitettävät tiedot ensisijaisella kielellä ({lowerCase(
+              kielitiedot?.ensisijainenKieli || Kieli.SUOMI
+            )})</p>
+            <HassuStack direction={["column", "column", "row"]}>
+              <Button
+                type="submit"
+                onClick={handleSubmit((formData) =>
+                  showPDFPreview(
+                    formData,
+                    `/api/projekti/${projekti?.oid}/aloituskuulutus/pdf`,
+                    kielitiedot.ensisijainenKieli
+                  )
+                )}
+                disabled={disableFormEdit}
+              >
+                Kuulutuksen esikatselu
+              </Button>
+              <Button
+                type="submit"
+                onClick={handleSubmit((formData) =>
+                  showPDFPreview(
+                    formData,
+                    `/api/projekti/${projekti?.oid}/aloituskuulutus/ilmoitus/pdf`,
+                    kielitiedot.ensisijainenKieli
+                  )
+                )}
+                disabled={disableFormEdit}
+              >
+                Ilmoituksen esikatselu
+              </Button>
+            </HassuStack>
+            {toissijainenKieli &&
+              <>
+                <p>
+                  Esitettävät tiedot toissijaisella kielellä ({lowerCase(
+                    kielitiedot?.toissijainenKieli || Kieli.RUOTSI
+                  )}
+                </p>
+                <HassuStack direction={["column", "column", "row"]}>
+                  <Button
+                    type="submit"
+                    onClick={handleSubmit((formData) =>
+                      showPDFPreview(
+                        formData,
+                        `/api/projekti/${projekti?.oid}/aloituskuulutus/pdf`,
+                        toissijainenKieli || Kieli.RUOTSI
+                      )
+                    )}
+                    disabled={disableFormEdit}
+                  >
+                    Kuulutuksen esikatselu
+                  </Button>
+                  <Button
+                    type="submit"
+                    onClick={handleSubmit((formData) =>
+                      showPDFPreview(
+                        formData,
+                        `/api/projekti/${projekti?.oid}/aloituskuulutus/ilmoitus/pdf`,
+                        toissijainenKieli || Kieli.RUOTSI
+                      )
+                    )}
+                    disabled={disableFormEdit}
+                  >
+                    Ilmoituksen esikatselu
+                  </Button>
+                </HassuStack>
+              </>
+            }
+          </Section>
           <Section noDivider>
             <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
               <Button onClick={handleSubmit(saveDraft)} disabled={disableFormEdit}>

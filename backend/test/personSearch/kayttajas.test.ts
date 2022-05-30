@@ -41,5 +41,8 @@ describe("kayttajas", () => {
 });
 
 const sortByUidFn = (a: Kayttaja, b: Kayttaja) => {
-  return a.uid!.localeCompare(b.uid!);
+  if (!a.uid || !b.uid) {
+    throw new Error("Tried to compare users without usernames");
+  }
+  return a.uid.localeCompare(b.uid);
 };

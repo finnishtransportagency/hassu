@@ -3,16 +3,17 @@ import { adaptProjekti, findUpdatedFields } from "../../src/velho/velhoAdapter";
 import { default as velhoTieProjecti } from "./fixture/velhoTieProjekti.json";
 import cloneDeep from "lodash/cloneDeep";
 import { Velho } from "../../src/database/model/projekti";
+import { ProjektiProjekti } from "../../src/velho/projektirekisteri";
 
 const { expect } = require("chai");
 
 describe("VelhoAdapter", () => {
   it("should adapt project from Velho successfully", async () => {
-    expect(adaptProjekti(velhoTieProjecti.data as any)).toMatchSnapshot();
+    expect(adaptProjekti(velhoTieProjecti.data as unknown as ProjektiProjekti)).toMatchSnapshot();
   });
 
   it("should find updated Velho fields successfully", async () => {
-    const oldVelho: Velho = adaptProjekti(velhoTieProjecti.data as any).projekti.velho;
+    const oldVelho: Velho = adaptProjekti(velhoTieProjecti.data as unknown as ProjektiProjekti).projekti.velho;
     const newVelho: Velho = cloneDeep(oldVelho);
     newVelho.nimi = "Uusi nimi";
     newVelho.vaylamuoto = ["rata"];

@@ -42,62 +42,60 @@ import { listProjektit } from "./handler/listProjektitHandler";
 import { velhoDocumentHandler } from "./handler/velhoDocumentHandler";
 import { palauteHandler } from "./palaute/palauteHandler";
 
-type AppSyncEventArguments =
+export type AppSyncEventArguments =
   | unknown
   | LataaProjektiQueryVariables
   | ListaaVelhoProjektitQueryVariables
   | TallennaProjektiInput
   | TilaSiirtymaInput;
 
-type LambdaResult = {
-  data: any;
+export type LambdaResult = {
+  data: unknown;
   correlationId: string;
 };
 
 async function executeOperation(event: AppSyncResolverEvent<AppSyncEventArguments>) {
   log.info(event.info.fieldName);
-  switch (event.info.fieldName as any) {
+  switch (event.info.fieldName) {
     case apiConfig.listaaProjektit.name:
-      return await listProjektit((event.arguments as ListaaProjektitQueryVariables).hakuehto);
+      return listProjektit((event.arguments as ListaaProjektitQueryVariables).hakuehto);
     case apiConfig.listaaVelhoProjektit.name:
-      return await listaaVelhoProjektit(event.arguments as ListaaVelhoProjektitQueryVariables);
+      return listaaVelhoProjektit(event.arguments as ListaaVelhoProjektitQueryVariables);
     case apiConfig.listaaVelhoProjektiAineistot.name:
-      return await velhoDocumentHandler.listaaVelhoProjektiAineistot(
+      return velhoDocumentHandler.listaaVelhoProjektiAineistot(
         (event.arguments as ListaaVelhoProjektiAineistotQueryVariables).oid
       );
     case apiConfig.haeVelhoProjektiAineistoLinkki.name:
-      return await velhoDocumentHandler.haeVelhoProjektiAineistoLinkki(
+      return velhoDocumentHandler.haeVelhoProjektiAineistoLinkki(
         event.arguments as HaeVelhoProjektiAineistoLinkkiQueryVariables
       );
     case apiConfig.haeProjektiMuutoksetVelhosta.name:
-      return await findUpdatesFromVelho((event.arguments as HaeProjektiMuutoksetVelhostaQueryVariables).oid);
+      return findUpdatesFromVelho((event.arguments as HaeProjektiMuutoksetVelhostaQueryVariables).oid);
     case apiConfig.synkronoiProjektiMuutoksetVelhosta.name:
-      return await synchronizeUpdatesFromVelho(
-        (event.arguments as SynkronoiProjektiMuutoksetVelhostaMutationVariables).oid
-      );
+      return synchronizeUpdatesFromVelho((event.arguments as SynkronoiProjektiMuutoksetVelhostaMutationVariables).oid);
 
     case apiConfig.nykyinenKayttaja.name:
-      return await getCurrentUser();
+      return getCurrentUser();
     case apiConfig.listaaKayttajat.name:
-      return await listUsers((event.arguments as ListaaKayttajatQueryVariables).hakuehto);
+      return listUsers((event.arguments as ListaaKayttajatQueryVariables).hakuehto);
     case apiConfig.lataaProjekti.name:
-      return await loadProjekti((event.arguments as LataaProjektiQueryVariables).oid);
+      return loadProjekti((event.arguments as LataaProjektiQueryVariables).oid);
     case apiConfig.tallennaProjekti.name:
-      return await createOrUpdateProjekti((event.arguments as TallennaProjektiMutationVariables).projekti);
+      return createOrUpdateProjekti((event.arguments as TallennaProjektiMutationVariables).projekti);
     case apiConfig.esikatseleAsiakirjaPDF.name:
-      return await lataaAsiakirja(event.arguments as EsikatseleAsiakirjaPDFQueryVariables);
+      return lataaAsiakirja(event.arguments as EsikatseleAsiakirjaPDFQueryVariables);
     case apiConfig.valmisteleTiedostonLataus.name:
-      return await createUploadURLForFile((event.arguments as ValmisteleTiedostonLatausQueryVariables));
+      return createUploadURLForFile(event.arguments as ValmisteleTiedostonLatausQueryVariables);
     case apiConfig.laskePaattymisPaiva.name:
-      return await calculateEndDate(event.arguments as LaskePaattymisPaivaQueryVariables);
+      return calculateEndDate(event.arguments as LaskePaattymisPaivaQueryVariables);
     case apiConfig.siirraTila.name:
-      return await aloitusKuulutusHandler.siirraTila((event.arguments as SiirraTilaMutationVariables).tilasiirtyma);
+      return aloitusKuulutusHandler.siirraTila((event.arguments as SiirraTilaMutationVariables).tilasiirtyma);
     case apiConfig.arkistoiProjekti.name:
-      return await arkistoiProjekti((event.arguments as ArkistoiProjektiMutationVariables).oid);
+      return arkistoiProjekti((event.arguments as ArkistoiProjektiMutationVariables).oid);
     case apiConfig.lisaaPalaute.name:
-      return await palauteHandler.lisaaPalaute(event.arguments as LisaaPalauteMutationVariables);
+      return palauteHandler.lisaaPalaute(event.arguments as LisaaPalauteMutationVariables);
     case apiConfig.otaPalauteKasittelyyn.name:
-      return await palauteHandler.otaPalauteKasittelyyn(event.arguments as OtaPalauteKasittelyynMutationVariables);
+      return palauteHandler.otaPalauteKasittelyyn(event.arguments as OtaPalauteKasittelyynMutationVariables);
     default:
       return null;
   }
@@ -109,7 +107,7 @@ export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArgume
     log.debug({ event });
   }
 
-  return await AWSXRay.captureAsyncFunc("handler", async (subsegment) => {
+  return AWSXRay.captureAsyncFunc("handler", async (subsegment) => {
     try {
       setupLambdaMonitoringMetaData(subsegment);
 
@@ -117,12 +115,14 @@ export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArgume
         await identifyUser(event);
         const data = await executeOperation(event);
         return { data, correlationId: getCorrelationId() } as LambdaResult;
-      } catch (e: any) {
+      } catch (e: unknown) {
         log.error(e);
-        e.message = JSON.stringify({
-          message: e.message,
-          correlationId: getCorrelationId(),
-        });
+        if (e instanceof Error) {
+          e.message = JSON.stringify({
+            message: e.message,
+            correlationId: getCorrelationId(),
+          });
+        }
         throw e;
       }
     } finally {

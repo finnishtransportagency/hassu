@@ -7,14 +7,21 @@ import { NykyinenKayttaja, ProjektiRooli, VaylaKayttajaTyyppi } from "../../../c
 import { DBProjekti } from "../database/model/projekti";
 import { createSignedCookies } from "./signedCookie";
 import { apiConfig } from "../../../common/abstractApi";
-import { JwtPayload } from "jsonwebtoken";
 
 function parseRoles(roles: string): string[] | undefined {
   return roles
-    ? (roles
+    ? roles
         .replace("\\", "")
         .split(",")
-        .map((s) => s.split("/").pop()) as string[])
+        .map((s) => {
+          const s1 = s.split("/").pop();
+          if (s1) {
+            return s1;
+          }
+          // tsc fails if undefined is returned here
+          return "";
+        })
+        .filter((s) => s)
     : undefined;
 }
 
@@ -32,7 +39,6 @@ function adaptKayttajaTyyppi(roolit: string[] | null | undefined): VaylaKayttaja
       }
     }
   }
-  return;
 }
 
 export type KayttajaPermissions = {
@@ -40,17 +46,13 @@ export type KayttajaPermissions = {
   roolit?: string[] | null;
 };
 
-export type IdentifyUserFunc = (event: AppSyncResolverEvent<any>) => Promise<NykyinenKayttaja | undefined>;
+export type IdentifyUserFunc = (event: AppSyncResolverEvent<unknown>) => Promise<NykyinenKayttaja | undefined>;
 
-const identifyLoggedInVaylaUser: IdentifyUserFunc = async (event: AppSyncResolverEvent<any>) => {
+const identifyLoggedInVaylaUser: IdentifyUserFunc = async (event: AppSyncResolverEvent<unknown>) => {
   const headers = event.request?.headers;
 
   if (headers && headers["x-iam-accesstoken"] && config.cognitoURL) {
-    const jwt = (await validateJwtToken(
-      headers["x-iam-accesstoken"],
-      headers["x-iam-data"] || "",
-      config.cognitoURL
-    )) as JwtPayload;
+    const jwt = await validateJwtToken(headers["x-iam-accesstoken"], headers["x-iam-data"] || "", config.cognitoURL);
     if (jwt) {
       const roolit = parseRoles(jwt["custom:rooli"]);
       const user: NykyinenKayttaja = {
@@ -74,7 +76,7 @@ const identifyLoggedInVaylaUser: IdentifyUserFunc = async (event: AppSyncResolve
 
 const identifyUserFunctions = [identifyLoggedInVaylaUser];
 
-export const identifyUser = async (event: AppSyncResolverEvent<any>) => {
+export const identifyUser = async (event: AppSyncResolverEvent<unknown>): Promise<void> => {
   (globalThis as any).currentUser = undefined;
   for (const identifyUserFunction of identifyUserFunctions) {
     const user = await identifyUserFunction(event);
@@ -86,7 +88,9 @@ export const identifyUser = async (event: AppSyncResolverEvent<any>) => {
   }
 };
 
-export const installIdentifyUserFunction = (func: IdentifyUserFunc) => identifyUserFunctions.push(func);
+export const installIdentifyUserFunction = (func: IdentifyUserFunc): void => {
+  identifyUserFunctions.push(func);
+};
 
 if (process.env.USER_IDENTIFIER_FUNCTIONS) {
   import(process.env.USER_IDENTIFIER_FUNCTIONS);
@@ -96,7 +100,7 @@ if (process.env.USER_IDENTIFIER_FUNCTIONS) {
  * For test use only
  * @param kayttaja
  */
-export function identifyMockUser(kayttaja?: NykyinenKayttaja) {
+export function identifyMockUser(kayttaja?: NykyinenKayttaja): void {
   (globalThis as any).currentUser = kayttaja;
   if ((globalThis as any).currentUser) {
     log.info("Mock user", { user: (globalThis as any).currentUser });

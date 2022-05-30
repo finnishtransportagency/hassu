@@ -9,14 +9,14 @@ import { Kayttajas } from "../personSearch/kayttajas";
 
 export class KayttoOikeudetManager {
   private users: DBVaylaUser[];
-  private kayttajas: Kayttajas;
+  private readonly kayttajas: Kayttajas;
 
   constructor(users: DBVaylaUser[], kayttajas: Kayttajas) {
     this.users = users;
     this.kayttajas = kayttajas;
   }
 
-  applyChanges(changes: ProjektiKayttajaInput[] | undefined | null) {
+  applyChanges(changes: ProjektiKayttajaInput[] | undefined | null): DBVaylaUser[] | undefined {
     if (!changes) {
       return;
     }
@@ -73,7 +73,7 @@ export class KayttoOikeudetManager {
     this.users = resultUsers;
   }
 
-  getKayttoOikeudet() {
+  getKayttoOikeudet() : DBVaylaUser[]{
     return this.users;
   }
 
@@ -84,11 +84,11 @@ export class KayttoOikeudetManager {
     }));
   }
 
-  addProjektiPaallikkoFromEmail(vastuuhenkiloEmail: string) {
+  addProjektiPaallikkoFromEmail(vastuuhenkiloEmail: string) : DBVaylaUser|undefined{
     return this.resolveProjektiPaallikkoFromVelhoVastuuhenkilo(vastuuhenkiloEmail);
   }
 
-  resolveProjektiPaallikkoFromVelhoVastuuhenkilo(vastuuhenkiloEmail: string) {
+  resolveProjektiPaallikkoFromVelhoVastuuhenkilo(vastuuhenkiloEmail: string): DBVaylaUser|undefined {
     // Replace or create new projektipaallikko
     this.removeProjektiPaallikko();
     const projektiPaallikko = this.fillInUserInfoFromUserManagement({
@@ -105,9 +105,9 @@ export class KayttoOikeudetManager {
     }
   }
 
-  addUserByKayttajatunnus(kayttajatunnus: string, rooli: ProjektiRooli) {
+  addUserByKayttajatunnus(kayttajatunnus: string, rooli: ProjektiRooli) : DBVaylaUser | undefined{
     const user = this.fillInUserInfoFromUserManagement({
-      user: { kayttajatunnus, rooli } as any,
+      user: { kayttajatunnus, rooli } as Partial<DBVaylaUser>,
       searchMode: SearchMode.UID,
     });
     if (user) {
@@ -129,7 +129,7 @@ export class KayttoOikeudetManager {
     if (searchMode === SearchMode.UID) {
       account = kayttajas.getKayttajaByUid(user.kayttajatunnus);
     } else {
-      account = kayttajas.findByEmail(user.email!);
+      account = kayttajas.findByEmail(user.email);
     }
     if (account) {
       // Projektipaallikko must be either L or A account
@@ -139,7 +139,6 @@ export class KayttoOikeudetManager {
       mergeKayttaja(user, account);
       return user as DBVaylaUser;
     }
-    return;
   }
 
   private removeProjektiPaallikko() {

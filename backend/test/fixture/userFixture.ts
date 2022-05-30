@@ -11,11 +11,11 @@ export class UserFixture {
     this.sinonStub.resolves();
   }
 
-  public loginAs(vaylaUser: NykyinenKayttaja) {
+  public loginAs(vaylaUser: NykyinenKayttaja): void {
     this.userService.identifyMockUser(vaylaUser);
   }
 
-  loginAsProjektiKayttaja(projektiKayttaja: ProjektiKayttaja) {
+  loginAsProjektiKayttaja(projektiKayttaja: ProjektiKayttaja): void {
     this.userService.identifyMockUser({
       __typename: "NykyinenKayttaja",
       uid: projektiKayttaja.kayttajatunnus,
@@ -24,7 +24,7 @@ export class UserFixture {
     });
   }
 
-  public logout() {
+  public logout(): void {
     this.userService.identifyMockUser(undefined);
   }
 

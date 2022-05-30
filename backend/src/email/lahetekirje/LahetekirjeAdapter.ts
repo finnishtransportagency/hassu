@@ -1,8 +1,7 @@
 import log from "loglevel";
 import { ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../../asiakirja/asiakirjaService";
-import { Yhteystieto } from "../../database/model/projekti";
-import { DBProjekti } from "../../database/model/projekti";
+import { DBProjekti, Yhteystieto } from "../../database/model/projekti";
 
 type SuunnitelmaTyyppi = "tiesuunnitelma" | "ratasuunnitelma" | "yleissuunnitelma";
 
@@ -31,7 +30,7 @@ export class LahetekirjeAdapter {
   }
 
   public get lahetekirjeTiedot(): LahetekirjeTiedot {
-    const tiedot: LahetekirjeTiedot = {
+    return {
       nimi: this.nimi,
       tilaajaPitka: this.tilaajaPitka,
       kuulutuksenSyy: this.kuulutuksenSyy,
@@ -47,14 +46,13 @@ export class LahetekirjeAdapter {
       suunnitelmaTyyppi: this.suunnitelmaTyyppi,
       asiakirjanMuoto: determineAsiakirjaMuoto(this.projekti.velho.tyyppi, this.projekti.velho.vaylamuoto),
     };
-    return tiedot;
   }
 
-  protected get isVaylaTilaaja() {
+  protected get isVaylaTilaaja() :boolean{
     return this.projekti?.velho?.tilaajaOrganisaatio === "Väylävirasto";
   }
 
-  protected get isElyTilaaja() {
+  protected get isElyTilaaja() :boolean{
     return (
       this.projekti?.velho?.tilaajaOrganisaatio && this.projekti?.velho?.tilaajaOrganisaatio.endsWith("ELY-keskus")
     );

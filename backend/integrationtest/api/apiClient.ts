@@ -1,22 +1,23 @@
-import * as apiHandler from "../../src/apiHandler";
 import { AbstractApi, OperationConfig } from "../../../common/abstractApi";
+import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
+import { AppSyncEventArguments, handleEvent } from "../../src/apiHandler";
 
 class API extends AbstractApi {
-  async callAPI(operation: OperationConfig, variables?: any): Promise<any> {
+  async callAPI(operation: OperationConfig, variables?: unknown): Promise<unknown> {
     return (
-      await apiHandler.handleEvent({
+      await handleEvent({
         info: { fieldName: operation.name },
         arguments: variables,
-      } as any)
+      } as AppSyncResolverEvent<AppSyncEventArguments>)
     ).data;
   }
 
-  async callYllapitoAPI(operation: OperationConfig, variables?: any): Promise<any> {
+  async callYllapitoAPI(operation: OperationConfig, variables?: unknown): Promise<unknown> {
     const payload = {
       info: { fieldName: operation.name },
       arguments: variables,
-    } as any;
-    return (await apiHandler.handleEvent(payload)).data;
+    } as AppSyncResolverEvent<AppSyncEventArguments>;
+    return (await handleEvent(payload)).data;
   }
 }
 

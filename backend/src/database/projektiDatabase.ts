@@ -20,9 +20,9 @@ export type ArchivedProjektiKey = {
 async function createProjekti(projekti: DBProjekti): Promise<DocumentClient.PutItemOutput> {
   const params: DocumentClient.PutItemInput = {
     TableName: projektiTableName,
-    Item: projekti as DBProjekti,
+    Item: projekti,
   };
-  return await getDynamoDBDocumentClient().put(params).promise();
+  return getDynamoDBDocumentClient().put(params).promise();
 }
 
 async function scanProjektit(startKey?: string): Promise<{ startKey: string; projektis: DBProjekti[] }> {
@@ -142,7 +142,7 @@ async function saveProjekti(dbProjekti: Partial<DBProjekti>): Promise<DocumentCl
     log.debug("Updating projekti to Hassu ", { params });
   }
 
-  return await getDynamoDBDocumentClient().update(params).promise();
+  return getDynamoDBDocumentClient().update(params).promise();
 }
 
 async function archiveProjektiByOid({ oid, timestamp }: ArchivedProjektiKey): Promise<void> {
@@ -206,7 +206,7 @@ async function insertAloitusKuulutusJulkaisu(
     },
   };
   log.info("Inserting aloitusKuulutusJulkaisu to projekti", { params });
-  return await getDynamoDBDocumentClient().update(params).promise();
+  return getDynamoDBDocumentClient().update(params).promise();
 }
 
 async function deleteAloitusKuulutusJulkaisu(projekti: DBProjekti, julkaisu: AloitusKuulutusJulkaisu): Promise<void> {

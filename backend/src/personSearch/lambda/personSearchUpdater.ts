@@ -5,6 +5,7 @@ import { Kayttajas, Person } from "../kayttajas";
 import { getAxios, wrapXrayAsync } from "../../aws/monitoring";
 
 import { parseStringPromise as parseString } from "xml2js";
+import { AxiosRequestConfig } from "axios";
 
 const axios = getAxios();
 
@@ -56,7 +57,7 @@ export class PersonSearchUpdater {
       return;
     }
     log.debug("listAccountsOfType:" + accounttype);
-    const requestConfig = {
+    const requestConfig: AxiosRequestConfig = {
       timeout: 120000,
       baseURL: endpoint,
       params: { accounttype },

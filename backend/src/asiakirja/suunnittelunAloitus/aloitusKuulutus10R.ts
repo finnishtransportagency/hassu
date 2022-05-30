@@ -13,7 +13,7 @@ export class AloitusKuulutus10R extends SuunnittelunAloitusPdf {
     super(aloitusKuulutusJulkaisu, kieli, headers[kieli == Kieli.SAAME ? Kieli.SUOMI : kieli]); //TODO lisää tuki Saamen eri muodoille
   }
 
-  protected addDocumentElements() {
+  protected addDocumentElements(): PDFKit.PDFStructureElementChild[] {
     return [
       this.localizedParagraph([
         `Väylävirasto aloittaa otsikon mukaisen ${this.projektiTyyppi}n laatimisen tarpeellisine tutkimuksineen. `,

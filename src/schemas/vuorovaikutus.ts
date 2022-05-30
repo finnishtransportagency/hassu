@@ -9,8 +9,10 @@ const validTimeRegexp = /^([0-1]?[0-9]|2[0-4]):([0-5]?[0-9])$/;
 export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
   vuorovaikutusTilaisuudet: Yup.array().of(
     Yup.object().shape({
-      tyyppi: Yup.mixed<VuorovaikutusTilaisuusTyyppi>().oneOf(Object.values(VuorovaikutusTilaisuusTyyppi)).required(),
-      nimi: Yup.string().required("Tilaisuuden nimi täytyy antaa").nullable(),
+      tyyppi: Yup.mixed<VuorovaikutusTilaisuusTyyppi>()
+        .oneOf(Object.values(VuorovaikutusTilaisuusTyyppi))
+        .required(),
+      nimi: Yup.string().nullable(),
       paivamaara: Yup.string()
         .required("Vuorovaikutustilaisuuden päivämäärä täytyy antaa")
         .test("valid-date", "Virheellinen päivämäärä", (date) => {
@@ -42,14 +44,20 @@ export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
           then: Yup.string().required("Tilaisuuden postinumero täytyy antaa"),
         })
         .nullable(),
-      esitettavatYhteystiedot: Yup.array().when("tyyppi", {
-        is: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
-        then: Yup.array().of(yhteystietoSchema),
-      }).nullable(),
+      esitettavatYhteystiedot: Yup.array()
+        .when("tyyppi", {
+          is: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+          then: Yup.array().of(yhteystietoSchema),
+        })
+        .nullable(),
       projektiYhteysHenkilot: Yup.array()
         .when("tyyppi", {
           is: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
-          then: Yup.array().of(Yup.string()).required("Vähintään yksi yhteyshenkilö pitää valita"),
+          then: Yup.array()
+            .of(Yup.string())
+            .required("Vähintään yksi yhteyshenkilö pitää valita")
+            .min(1, "Vähintään yksi yhteyshenkilö pitää valita")
+            .nullable(),
         })
         .nullable(),
     })
@@ -72,77 +80,90 @@ export const vuorovaikutusSchema = Yup.object().shape({
           return isValidDate(date);
         }),
       esitettavatYhteystiedot: Yup.array().notRequired().of(yhteystietoSchema),
-      //vuorovaikutusTilaisuudet: Yup.array().notRequired().of(vuorovaikutustilaisuudetSchema),
-      videot: Yup.array().notRequired().of(Yup.object().shape({
-        nimi: Yup.string(),
-        url: Yup.string().url("URL ei kelpaa").notRequired()
-      })).compact(function (linkki) {
-        return !linkki.url;
-      }),
-      suunnittelumateriaali: Yup.object().notRequired().shape({
-        nimi: Yup.string().test("nimi-puttuu", "Nimi puuttuu", (value, testContext) => {
-          if (!value && testContext.parent.url) {
-            return testContext.createError({
-              path: `${testContext.path}`,
-              message: "Nimi on annettava, jos osoite on annettu",
-            });
-          }
-          return true;
+      // vuorovaikutusTilaisuudet: Yup.array()
+      //   .of(vuorovaikutustilaisuudetSchema)
+      //   .required("Vähintään yksi tilaisuus täytyy antaa")
+      //   .min(1, "Vähintään yksi tilaisuus täytyy antaa")
+      //   .nullable(),
+      videot: Yup.array()
+        .notRequired()
+        .of(
+          Yup.object().shape({
+            nimi: Yup.string(),
+            url: Yup.string().url("URL ei kelpaa").notRequired(),
+          })
+        )
+        .compact(function (linkki) {
+          return !linkki.url;
         }),
-        url: Yup.string().url("URL ei kelpaa").test("url-puttuu", "Url puuttuu", (value, testContext) => {
-          if (!value && testContext.parent.nimi) {
-            return testContext.createError({
-              path: `${testContext.path}`,
-              message: "Osoite on annettava, jos nimi on annettu",
-            });
-          }
-          return true;
-        })
-      }),
-      ilmoituksenVastaanottajat: Yup.object()
-      .shape({
-        kunnat: Yup.array()
-          .of(
-            Yup.object()
-              .shape({
-                nimi: Yup.string().required(),
-                sahkoposti: Yup.string()
-                  .email("Virheellinen sähköpostiosoite")
-                  .required("Sähköpostiosoite on pakollinen"),
-              })
-              .required()
-          )
-          .compact(function (kunta) {
-            return !kunta.nimi && !kunta.sahkoposti;
-          })
-          .notRequired(),
-        viranomaiset: Yup.array()
-          .of(
-            Yup.object()
-              .shape({
-                nimi: Yup.mixed().oneOf(Object.values(IlmoitettavaViranomainen), "Viranomaistieto on pakollinen"),
-                sahkoposti: Yup.string()
-                  .email("Virheellinen sähköpostiosoite")
-                  .required("Sähköpostiosoite on pakollinen"),
-              })
-              .test("unique", "Vastaanottaja on jo lisätty", (value, testContext) => {
-                const duplikaatit = filter(testContext.parent, value);
-                if (duplikaatit.length == 1) {
-                  return true;
-                }
+      suunnittelumateriaali: Yup.object()
+        .notRequired()
+        .shape({
+          nimi: Yup.string().test("nimi-puttuu", "Nimi puuttuu", (value, testContext) => {
+            if (!value && testContext.parent.url) {
+              return testContext.createError({
+                path: `${testContext.path}`,
+                message: "Nimi on annettava, jos osoite on annettu",
+              });
+            }
+            return true;
+          }),
+          url: Yup.string()
+            .url("URL ei kelpaa")
+            .test("url-puttuu", "Url puuttuu", (value, testContext) => {
+              if (!value && testContext.parent.nimi) {
                 return testContext.createError({
-                  path: `${testContext.path}.nimi`,
-                  message: "Viranomainen on jo valittu",
+                  path: `${testContext.path}`,
+                  message: "Osoite on annettava, jos nimi on annettu",
                 });
-              })
-              .required()
-          )
-          .compact(function (viranomainen) {
-            return !viranomainen.nimi && !viranomainen.sahkoposti;
-          })
-          .notRequired(),
-      })
-      .required(),
+              }
+              return true;
+            }),
+        }),
+      ilmoituksenVastaanottajat: Yup.object()
+        .shape({
+          kunnat: Yup.array()
+            .of(
+              Yup.object()
+                .shape({
+                  nimi: Yup.string().required(),
+                  sahkoposti: Yup.string()
+                    .email("Virheellinen sähköpostiosoite")
+                    .required("Sähköpostiosoite on pakollinen"),
+                })
+                .required()
+            )
+            .compact(function (kunta) {
+              return !kunta.nimi && !kunta.sahkoposti;
+            })
+            .notRequired(),
+          viranomaiset: Yup.array()
+            .of(
+              Yup.object()
+                .shape({
+                  nimi: Yup.mixed().oneOf(Object.values(IlmoitettavaViranomainen), "Viranomaistieto on pakollinen"),
+                  sahkoposti: Yup.string()
+                    .email("Virheellinen sähköpostiosoite")
+                    .required("Sähköpostiosoite on pakollinen"),
+                })
+                .test("unique", "Vastaanottaja on jo lisätty", (value, testContext) => {
+                  const duplikaatit = filter(testContext.parent, value);
+                  if (duplikaatit.length == 1) {
+                    return true;
+                  }
+                  return testContext.createError({
+                    path: `${testContext.path}.nimi`,
+                    message: "Viranomainen on jo valittu",
+                  });
+                })
+                .required()
+            )
+            .compact(function (viranomainen) {
+              return !viranomainen.nimi && !viranomainen.sahkoposti;
+            })
+            .notRequired(),
+        })
+        .required(),
     }),
   }),
 });

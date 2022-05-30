@@ -89,8 +89,8 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
       <p>
         <b>
           {capitalize(t(`common:viikonpaiva_${dayjs(props.tilaisuus.paivamaara).day()}`))}{" "}
-          {formatDate(props.tilaisuus.paivamaara)} klo {props.tilaisuus.alkamisAika}-{props.tilaisuus.paattymisAika},{" "}
-          {capitalize(props.tilaisuus.nimi)}
+          {formatDate(props.tilaisuus.paivamaara)} klo {props.tilaisuus.alkamisAika}-{props.tilaisuus.paattymisAika}
+          {props.tilaisuus.nimi ? `, ${capitalize(props.tilaisuus.nimi)}` : undefined}
         </b>
       </p>
     );

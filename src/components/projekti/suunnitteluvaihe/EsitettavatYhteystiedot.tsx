@@ -129,6 +129,9 @@ export default function EsitettavatYhteystiedot<T extends FormValues>({
                     </Fragment>
                   );
                 })}
+                {projekti?.suunnitteluSopimus &&
+                  <CheckBox label={`${projekti.suunnitteluSopimus.sukunimi}, ${projekti.suunnitteluSopimus.etunimi}`} disabled defaultChecked />
+                }
               </FormGroup>
             )}
           />

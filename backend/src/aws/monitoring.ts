@@ -1,15 +1,15 @@
 import * as AWSXRay from "aws-xray-sdk-core";
-import { Subsegment } from "aws-xray-sdk-core";
 import { config } from "../config";
 
 import http from "http";
 
 import https from "https";
+import { AxiosStatic } from "axios";
 
 const XRAY_ENV_NAME = "_X_AMZN_TRACE_ID";
 const TRACE_ID_REGEX = /^Root=(.+);Parent=(.+);/;
 
-export const getCorrelationId = () => {
+export const getCorrelationId = (): string | undefined => {
   const tracingInfo = process.env[XRAY_ENV_NAME] || "";
   const matches = tracingInfo.match(TRACE_ID_REGEX) || ["", "", ""];
 
@@ -19,7 +19,7 @@ export const getCorrelationId = () => {
   }
 };
 
-export const reportError = (error: Error) => {
+export const reportError = (error: Error): void => {
   const segment = AWSXRay.getSegment();
   try {
     segment?.addError(error);
@@ -29,7 +29,7 @@ export const reportError = (error: Error) => {
   }
 };
 
-export function setupLambdaMonitoring() {
+export function setupLambdaMonitoring(): void {
   AWSXRay.captureHTTPsGlobal(http, true);
   AWSXRay.captureHTTPsGlobal(https, true);
   AWSXRay.capturePromise();
@@ -42,14 +42,14 @@ export function setupLambdaMonitoring() {
   }
 }
 
-export function getAxios() {
+export function getAxios(): AxiosStatic {
   AWSXRay.captureHTTPsGlobal(http, true);
   AWSXRay.captureHTTPsGlobal(https, true);
   AWSXRay.capturePromise();
   return require("axios");
 }
 
-export function setupLambdaMonitoringMetaData(subsegment: Subsegment | undefined) {
+export function setupLambdaMonitoringMetaData(subsegment: AWSXRay.Subsegment | undefined): void {
   const correlationId = getCorrelationId();
   subsegment?.addAnnotation("env", config.env || "undefined");
   if (correlationId) {
@@ -64,9 +64,9 @@ export function wrapXray<T>(segmentName: string, f: () => T): T {
 }
 
 export async function wrapXrayAsync<T>(segmentName: string, f: () => T): Promise<T> {
-  return await AWSXRay.captureAsyncFunc(segmentName, async (subsegment) => {
+  return AWSXRay.captureAsyncFunc(segmentName, async (subsegment) => {
     try {
-      return await f();
+      return f();
     } finally {
       if (subsegment) {
         subsegment.close();
