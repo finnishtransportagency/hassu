@@ -14,6 +14,10 @@ class BaseConfig {
     return ["dev", "test", "prod"].indexOf(BaseConfig.env) >= 0;
   }
 
+  static isProductionEnvironment() {
+    return "prod" === BaseConfig.env;
+  }
+
   /**
    * Utility function to determine if there are AWS resources for the given ENVIRONMENT expected.
    */
