@@ -6,6 +6,7 @@ interface Props {
   noDivider?: boolean;
   children?: ReactNode;
   smallGaps?: boolean;
+  className?: string;
 }
 
 function Section({ children, noDivider, ...rest }: Props): ReactElement {

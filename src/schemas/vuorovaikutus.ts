@@ -7,68 +7,61 @@ import filter from "lodash/filter";
 const validTimeRegexp = /^([0-1]?[0-9]|2[0-4]):([0-5]?[0-9])$/;
 
 export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
-  vuorovaikutusTilaisuudet: Yup.array()
-    .of(
-      Yup.object().shape({
-        tyyppi: Yup.mixed<VuorovaikutusTilaisuusTyyppi>()
-          .oneOf(Object.values(VuorovaikutusTilaisuusTyyppi))
-          .required()
-          .nullable(),
-        nimi: Yup.string().nullable(),
-        paivamaara: Yup.string()
-          .required("Vuorovaikutustilaisuuden päivämäärä täytyy antaa")
-          .test("valid-date", "Virheellinen päivämäärä", (date) => {
-            return isValidDate(date);
-          })
-          .nullable(),
-        alkamisAika: Yup.string().required("Tilaisuuden alkamisaika täytyy antaa").matches(validTimeRegexp).nullable(),
-        paattymisAika: Yup.string()
-          .required("Tilaisuuden päättymisaika täytyy antaa")
-          .matches(validTimeRegexp)
-          .nullable(),
-        kaytettavaPalvelu: Yup.string()
-          .when("tyyppi", {
-            is: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-            then: Yup.string().required("Verkkotilaisuudessa käytettävä palvelu täytyy valita").nullable(),
-          })
-          .nullable(),
-        linkki: Yup.string()
-          .when("tyyppi", {
-            is: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-            then: Yup.string().url("URL ei kelpaa").required("Verkkotilaisuuden linkki täytyy antaa").nullable(),
-          })
-          .nullable(),
-        osoite: Yup.string()
-          .when("tyyppi", {
-            is: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
-            then: Yup.string().required("Tilaisuuden osoite täytyy antaa").nullable(),
-          })
-          .nullable(),
-        postinumero: Yup.string()
-          .when("tyyppi", {
-            is: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
-            then: Yup.string().required("Tilaisuuden postinumero täytyy antaa").nullable(),
-          })
-          .nullable(),
-        esitettavatYhteystiedot: Yup.array()
-          .when("tyyppi", {
-            is: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
-            then: Yup.array().of(yhteystietoSchema).nullable(),
-          })
-          .nullable(),
-        projektiYhteysHenkilot: Yup.array()
-          .when("tyyppi", {
-            is: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
-            then: Yup.array()
-              .of(Yup.string())
-              .required("Vähintään yksi yhteyshenkilö pitää valita")
-              .min(1, "Vähintään yksi yhteyshenkilö pitää valita")
-              .nullable(),
-          })
-          .nullable(),
-      })
-    )
-    .nullable(),
+  vuorovaikutusTilaisuudet: Yup.array().of(
+    Yup.object().shape({
+      tyyppi: Yup.mixed<VuorovaikutusTilaisuusTyyppi>()
+        .oneOf(Object.values(VuorovaikutusTilaisuusTyyppi))
+        .required(),
+      nimi: Yup.string().nullable(),
+      paivamaara: Yup.string()
+        .required("Vuorovaikutustilaisuuden päivämäärä täytyy antaa")
+        .test("valid-date", "Virheellinen päivämäärä", (date) => {
+          return isValidDate(date);
+        }),
+      alkamisAika: Yup.string().required("Tilaisuuden alkamisaika täytyy antaa").matches(validTimeRegexp),
+      paattymisAika: Yup.string().required("Tilaisuuden päättymisaika täytyy antaa").matches(validTimeRegexp),
+      kaytettavaPalvelu: Yup.string()
+        .when("tyyppi", {
+          is: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+          then: Yup.string().required("Verkkotilaisuudessa käytettävä palvelu täytyy valita"),
+        })
+        .nullable(),
+      linkki: Yup.string()
+        .when("tyyppi", {
+          is: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+          then: Yup.string().required("Verkkotilaisuuden linkki täytyy antaa"),
+        })
+        .nullable(),
+      osoite: Yup.string()
+        .when("tyyppi", {
+          is: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
+          then: Yup.string().required("Tilaisuuden osoite täytyy antaa"),
+        })
+        .nullable(),
+      postinumero: Yup.string()
+        .when("tyyppi", {
+          is: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
+          then: Yup.string().required("Tilaisuuden postinumero täytyy antaa"),
+        })
+        .nullable(),
+      esitettavatYhteystiedot: Yup.array()
+        .when("tyyppi", {
+          is: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+          then: Yup.array().of(yhteystietoSchema),
+        })
+        .nullable(),
+      projektiYhteysHenkilot: Yup.array()
+        .when("tyyppi", {
+          is: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+          then: Yup.array()
+            .of(Yup.string())
+            .required("Vähintään yksi yhteyshenkilö pitää valita")
+            .min(1, "Vähintään yksi yhteyshenkilö pitää valita")
+            .nullable(),
+        })
+        .nullable(),
+    })
+  ),
 });
 
 export const vuorovaikutusSchema = Yup.object().shape({

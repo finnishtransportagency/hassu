@@ -60,9 +60,11 @@ interface Props {
   windowHandler: (isOpen: boolean) => void;
   tilaisuudet: VuorovaikutusTilaisuusInput[] | null | undefined;
   kayttoOikeudet: ProjektiKayttaja[] | null | undefined;
+  julkinen: boolean;
+  avaaHyvaksymisDialogi: () => void;
 }
 
-export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet, kayttoOikeudet }: Props): ReactElement {
+export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet, kayttoOikeudet, julkinen, avaaHyvaksymisDialogi }: Props): ReactElement {
   const formOptions: UseFormProps<VuorovaikutustilaisuusFormValues> = {
     resolver: yupResolver(vuorovaikutustilaisuudetSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
@@ -154,13 +156,15 @@ export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet, 
 
   const saveTilaisuudet = useCallback(
     (formData: VuorovaikutustilaisuusFormValues) => {
-      console.log(formData);
       parentSetValue("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet", formData.vuorovaikutusTilaisuudet, {
         shouldDirty: true,
       });
       windowHandler(false);
+      if (julkinen) {
+        avaaHyvaksymisDialogi();
+      }
     },
-    [parentSetValue, windowHandler]
+    [parentSetValue, windowHandler, julkinen, avaaHyvaksymisDialogi]
   );
 
   const onClose = useCallback(() => {

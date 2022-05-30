@@ -1,15 +1,12 @@
-import { FieldError, FormProvider, useForm, UseFormProps } from "react-hook-form";
+import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
-import { KuntaVastaanottajaInput, LinkkiInput, VuorovaikutusTilaisuusInput } from "../../../../common/graphql/apiModel";
+import { KuntaVastaanottajaInput, LinkkiInput } from "../../../../common/graphql/apiModel";
 import {
   TallennaProjektiInput,
   Projekti,
   api,
   VuorovaikutusInput,
-  VuorovaikutusTilaisuusTyyppi,
-  Yhteystieto,
-  YhteystietoInput,
   ViranomaisVastaanottajaInput,
   IlmoitettavaViranomainen,
   IlmoituksenVastaanottajatInput,
@@ -22,23 +19,21 @@ import log from "loglevel";
 import HassuSpinner from "@components/HassuSpinner";
 import { KeyedMutator } from "swr";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
-import DatePicker from "@components/form/DatePicker";
-import dayjs from "dayjs";
 import { vuorovaikutusSchema } from "src/schemas/vuorovaikutus";
 import HassuStack from "@components/layout/HassuStack";
-import VuorovaikutusDialog from "./VuorovaikutustilaisuusDialog";
-import { formatDate } from "src/util/dateUtils";
-import capitalize from "lodash/capitalize";
 import { Stack } from "@mui/material";
-import HassuDialog from "@components/HassuDialog";
-import WindowCloseButton from "@components/button/WindowCloseButton";
-import useTranslation from "next-translate/useTranslation";
+import HyvaksymisDialogi from "./HyvaksymisDialogi";
 import { UseFormReturn } from "react-hook-form";
 import EsitettavatYhteystiedot from "./EsitettavatYhteystiedot";
 import LuonnoksetJaAineistot from "./LuonnoksetJaAineistot";
 import IlmoituksenVastaanottajat from "./IlmoituksenVastaanottajat";
 import { removeTypeName } from "src/util/removeTypeName";
 import getIlmoitettavaViranomainen from "src/util/getIlmoitettavaViranomainen";
+import VuorovaikuttamisenInfo from "./VuorovaikuttamisenInfo";
+import PaivamaaratJaTiedot from "./PaivamaaratJaTiedot";
+import LukutilaLinkkiJaKutsut from "./LukutilaLinkkiJaKutsut";
+import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
+import VuorovaikutustilaisuusDialog from "./VuorovaikutustilaisuusDialog";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -153,28 +148,19 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
   vuorovaikutusnro,
   kirjaamoOsoitteet,
 }: Props): ReactElement {
-  const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
+  const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
+  const [aineistoMuokkaustila, setAineistoMuokkaustila] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
-  const today = dayjs().format();
-  const { t } = useTranslation();
 
-  const TilaisuudenPerustiedot = React.memo((props: { tilaisuus: VuorovaikutusTilaisuusInput }) => {
-    return (
-      <>
-        {capitalize(t(`common:viikonpaiva_${dayjs(props.tilaisuus.paivamaara).day()}`))}{" "}
-        {formatDate(props.tilaisuus.paivamaara)} klo {props.tilaisuus.alkamisAika}-{props.tilaisuus.paattymisAika}
-        {props.tilaisuus.nimi ? `${" "}(${capitalize(props.tilaisuus.nimi)})` : undefined}
-      </>
-    );
-  });
-  TilaisuudenPerustiedot.displayName = "TilaisuudenPerustiedot";
-
-  const defaultValues: Omit<VuorovaikutusFormValues, "oid"> = useMemo(() => {
-    const v = projekti?.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
+  const v = useMemo(() => {
+    return projekti?.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
       return v.vuorovaikutusNumero === vuorovaikutusnro;
     });
+  }, [projekti, vuorovaikutusnro]);
+
+  const defaultValues: Omit<VuorovaikutusFormValues, "oid"> = useMemo(() => {
     return {
       suunnitteluVaihe: {
         vuorovaikutus: {
@@ -201,7 +187,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
         },
       },
     };
-  }, [projekti, vuorovaikutusnro, kirjaamoOsoitteet]);
+  }, [projekti, vuorovaikutusnro, kirjaamoOsoitteet, v]);
 
   const formOptions: UseFormProps<VuorovaikutusFormValues> = useMemo(() => {
     return {
@@ -217,7 +203,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
     register,
     reset,
     handleSubmit,
-    formState: { errors, isDirty },
+    formState: { isDirty },
     getValues,
   } = useFormReturn;
 
@@ -250,7 +236,6 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
       setIsFormSubmitting(true);
       try {
         formData.suunnitteluVaihe.vuorovaikutus.julkinen = true;
-        console.log(formData);
         await saveSunnitteluvaihe(formData);
         showSuccessMessage("Tallennus onnistui!");
       } catch (e) {
@@ -258,10 +243,16 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
         showErrorMessage("Tallennuksessa tapahtui virhe");
       }
       setOpenHyvaksy(false);
+      setOpenVuorovaikutustilaisuus(false);
+      setAineistoMuokkaustila(false);
       setIsFormSubmitting(false);
     },
     [saveSunnitteluvaihe, showErrorMessage, showSuccessMessage]
   );
+
+  const saveForm = useMemo(() => {
+    return handleSubmit(saveAndPublish);
+  }, [handleSubmit, saveAndPublish]);
 
   useEffect(() => {
     isDirtyHandler(isDirty);
@@ -285,273 +276,93 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
     setOpenHyvaksy(false);
   };
 
-  if (!projekti) {
+  if (!projekti || !v) {
     return <></>;
   }
 
   const ilmoituksenVastaanottajat = getValues("suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat");
-  const vuorovaikutusTilaisuudet = getValues("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet");
-
-  const isVerkkotilaisuuksia = !!vuorovaikutusTilaisuudet?.find(
-    (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA
-  );
-  const isFyysisiatilaisuuksia = !!vuorovaikutusTilaisuudet?.find(
-    (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA
-  );
-  const isSoittoaikoja = !!vuorovaikutusTilaisuudet?.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA);
-
   return (
     <>
       <FormProvider {...useFormReturn}>
         <form>
           <fieldset>
-            <Section>
+            <Section className="mb-4">
               <SectionContent>
-                <h4 className="vayla-small-title">Vuorovaikuttaminen</h4>
-                <p>
-                  Kansalainen pääsee vaikuttamaan väylähankkeen tai väylän suunnitteluun siinä vaiheessa. kun tehdään
-                  yleissuunnitelmaa ja kun edetään tie- tai ratasuunnitelmaan. Kaikista suunnittelun vaiheista
-                  kuulutetaan tai ilmoitetaan, jotta asianosaisilla on mahdollisuus kommentoida suunnitelmia.
-                </p>
+                <h3 className="vayla-small-title">Vuorovaikuttaminen</h3>
+                <VuorovaikuttamisenInfo vuorovaikutus={v} />
               </SectionContent>
-              <SectionContent>
-                <h4 className="vayla-small-title">Julkaisupäivä</h4>
-                <p>
-                  Anna päivämäärä, jolloin vuorovaikutusosio palvelun julkisella puolella ja kutsu vuorovaikutukseen
-                  muilla ilmoituskanavilla julkaistaan.
-                </p>
-                <DatePicker
-                  label="Julkaisupäivä *"
-                  className="md:max-w-min"
-                  {...register("suunnitteluVaihe.vuorovaikutus.vuorovaikutusJulkaisuPaiva")}
-                  min={today}
-                  error={errors.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusJulkaisuPaiva}
-                />
-              </SectionContent>
-              <SectionContent>
-                <h4 className="vayla-small-title">Kysymyksien esittäminen ja palautteiden antaminen</h4>
-                <p>Anna päivämäärä, johon mennessä kansalaisten toivotaan esittävän kysymykset ja palautteet.</p>
-                <DatePicker
-                  label="Kysymykset ja palautteet viimeistään *"
-                  className="md:max-w-min"
-                  {...register("suunnitteluVaihe.vuorovaikutus.kysymyksetJaPalautteetViimeistaan")}
-                  min={today}
-                  error={errors.suunnitteluVaihe?.vuorovaikutus?.kysymyksetJaPalautteetViimeistaan}
-                />
-              </SectionContent>
+              <PaivamaaratJaTiedot projekti={projekti} vuorovaikutusnro={vuorovaikutusnro} />
             </Section>
-            <Section>
-              <h4 className="vayla-small-title">Vuorovaikutusmahdollisuudet palautteiden ja kysymyksien lisäksi</h4>
-              <SectionContent>
-                {isVerkkotilaisuuksia && (
-                  <>
-                    <p>
-                      <b>Live-tilaisuudet verkossa</b>
-                    </p>
-                    {vuorovaikutusTilaisuudet
-                      ?.filter((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA)
-                      .map((tilaisuus, index) => {
-                        return (
-                          <div key={index}>
-                            <p>
-                              <TilaisuudenPerustiedot tilaisuus={tilaisuus} />, Linkki tilaisuuteen: {tilaisuus.linkki}
-                            </p>
-                          </div>
-                        );
-                      })}
-                  </>
-                )}
-                {isFyysisiatilaisuuksia && (
-                  <>
-                    <p>
-                      <b>Fyysiset tilaisuudet</b>
-                    </p>
-                    {vuorovaikutusTilaisuudet
-                      ?.filter((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA)
-                      .map((tilaisuus, index) => {
-                        return (
-                          <div key={index}>
-                            <p>
-                              <TilaisuudenPerustiedot tilaisuus={tilaisuus} />, Osoite: {tilaisuus.paikka},{" "}
-                              {tilaisuus.osoite} {tilaisuus.postinumero} {tilaisuus.postitoimipaikka}
-                            </p>
-                          </div>
-                        );
-                      })}
-                  </>
-                )}
-                {isSoittoaikoja && (
-                  <>
-                    <p>
-                      <b>Soittoajat</b>
-                    </p>
-                    {vuorovaikutusTilaisuudet
-                      ?.filter((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA)
-                      .map((tilaisuus, index) => {
-                        return (
-                          <div key={index}>
-                            <p>
-                              <TilaisuudenPerustiedot tilaisuus={tilaisuus} />
-                            </p>
-                            <div>
-                              {tilaisuus.esitettavatYhteystiedot?.map((yhteystieto, index) => {
-                                return <SoittoajanYhteystieto key={index} yhteystieto={yhteystieto} />;
-                              })}
-                            </div>
-                          </div>
-                        );
-                      })}
-                  </>
-                )}
-
-                <Button
-                  onClick={(e) => {
-                    setOpenVuorovaikutustilaisuus(true);
-                    e.preventDefault();
-                  }}
-                >
-                  {isFyysisiatilaisuuksia || isVerkkotilaisuuksia || isSoittoaikoja
-                    ? "Muokkaa tilaisuuksia"
-                    : "Lisää tilaisuus"}
-                </Button>
-              </SectionContent>
-              {errors.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusTilaisuudet && (
-                <div>
-                  <span className="text-red">
-                    {(errors.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusTilaisuudet as FieldError)?.message}
-                  </span>
-                </div>
-              )}
-            </Section>
+            <VuorovaikutusMahdollisuudet projekti={projekti} vuorovaikutus={v} setOpenVuorovaikutustilaisuus={setOpenVuorovaikutustilaisuus} />
+            <VuorovaikutustilaisuusDialog
+              open={openVuorovaikutustilaisuus}
+              windowHandler={(t: boolean) => {
+                setOpenVuorovaikutustilaisuus(t);
+              }}
+              tilaisuudet={v?.vuorovaikutusTilaisuudet}
+              kayttoOikeudet={projekti.kayttoOikeudet}
+              julkinen={v?.julkinen || false}
+              avaaHyvaksymisDialogi={() => setOpenHyvaksy(true)}
+            />
             <LuonnoksetJaAineistot
+              saveForm={saveForm}
+              muokkaustila={aineistoMuokkaustila}
+              setMuokkaustila={setAineistoMuokkaustila}
+              vuorovaikutus={v}
               useFormReturn={useFormReturn as UseFormReturn<FormValuesForLuonnoksetJaAineistot, object>}
             />
             <EsitettavatYhteystiedot
               useFormReturn={useFormReturn as UseFormReturn<FormValuesForEsitettavatYhteystiedot, object>}
               projekti={projekti}
+              vuorovaikutusnro={vuorovaikutusnro}
             />
-            <IlmoituksenVastaanottajat kirjaamoOsoitteet={kirjaamoOsoitteet} />
-            <Section>
-              <h4 className="vayla-small-title">Kutsun ja ilmoituksen esikatselu</h4>
-              <SectionContent>
-                <HassuStack direction={["column", "column", "row"]}>
-                  <Button type="submit" onClick={() => console.log("kutsun esikatselu")} disabled>
-                    Kutsun esikatselu
+            {v?.julkinen &&
+              <LukutilaLinkkiJaKutsut vuorovaikutus={v} projekti={projekti} />
+            }
+            <IlmoituksenVastaanottajat kirjaamoOsoitteet={kirjaamoOsoitteet} vuorovaikutus={v} />
+            {!v?.julkinen &&
+              <Section>
+                <h4 className="vayla-small-title">Kutsun ja ilmoituksen esikatselu</h4>
+                <SectionContent>
+                  <HassuStack direction={["column", "column", "row"]}>
+                    <Button type="submit" onClick={() => console.log("kutsun esikatselu")} disabled>
+                      Kutsun esikatselu
+                    </Button>
+                    <Button type="submit" onClick={() => console.log("ilmoituksen esikatselu")} disabled>
+                      Ilmoituksen esikatselu
+                    </Button>
+                  </HassuStack>
+                </SectionContent>
+              </Section>
+            }
+            {!v?.julkinen &&
+              <Section noDivider>
+                <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
+                  {!v?.julkinen && <Button onClick={handleSubmit(saveDraft)}>Tallenna luonnos</Button>}
+                  <Button
+                    primary
+                    onClick={(event) => {
+                      handleClickOpenHyvaksy();
+                      event.preventDefault();
+                    }}
+                  >
+                    Tallenna julkaistavaksi
                   </Button>
-                  <Button type="submit" onClick={() => console.log("ilmoituksen esikatselu")} disabled>
-                    Ilmoituksen esikatselu
-                  </Button>
-                </HassuStack>
-              </SectionContent>
-            </Section>
-            <Section noDivider>
-              <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
-                <Button onClick={handleSubmit(saveDraft)}>Tallenna luonnos</Button>
-                <Button
-                  primary
-                  onClick={(event) => {
-                    handleClickOpenHyvaksy();
-                    event.preventDefault();
-                  }}
-                >
-                  Tallenna julkaistavaksi
-                </Button>
-              </Stack>
-            </Section>
+                </Stack>
+              </Section>
+            }
           </fieldset>
-          <VuorovaikutusDialog
-            open={openVuorovaikutustilaisuus}
-            windowHandler={setOpenVuorovaikutustilaisuus}
-            tilaisuudet={vuorovaikutusTilaisuudet}
-            kayttoOikeudet={projekti.kayttoOikeudet}
-          ></VuorovaikutusDialog>
           <input type="hidden" {...register("suunnitteluVaihe.vuorovaikutus.julkinen")} />
         </form>
       </FormProvider>
-      <div>
-        <HassuDialog open={openHyvaksy} onClose={handleClickCloseHyvaksy}>
-          <Section noDivider smallGaps>
-            <SectionContent>
-              <div className="vayla-dialog-title flex">
-                <div className="flex-grow">Kuulutuksen hyväksyminen ja ilmoituksen lähettäminen</div>
-                <div className="justify-end">
-                  <WindowCloseButton
-                    onClick={() => {
-                      handleClickCloseHyvaksy();
-                    }}
-                  ></WindowCloseButton>
-                </div>
-              </div>
-            </SectionContent>
-            <SectionContent>
-              <div className="vayla-dialog-content">
-                <form>
-                  <p>
-                    Olet tallentamassa vuorovaikutustiedot ja käynnistämässä siihen liittyvän ilmoituksen automaattisen
-                    lähettämisen. Ilmoitus vuorovaikutuksesta lähetetään seuraaville:
-                  </p>
-                  <div className="content">
-                    <p>Viranomaiset</p>
-                    <ul className="vayla-dialog-list">
-                      {ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => (
-                        <li key={viranomainen.nimi}>
-                          {t(`common:viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
-                        </li>
-                      ))}
-                    </ul>
-                    <p>Kunnat</p>
-                    <ul className="vayla-dialog-list">
-                      {ilmoituksenVastaanottajat?.kunnat?.map((kunta) => (
-                        <li key={kunta.nimi}>
-                          {kunta.nimi}, {kunta.sahkoposti}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="content">
-                    <p>
-                      Klikkaamalla Tallenna ja lähetä -painiketta vahvistat vuorovaikutustiedot tarkastetuksi ja
-                      hyväksyt sen julkaisun asetettuna julkaisupäivänä sekä ilmoituksien lähettämisen. Ilmoitukset
-                      lähetetään automaattisesti painikkeen klikkaamisen jälkeen.
-                    </p>
-                  </div>
-                  <HassuStack
-                    direction={["column", "column", "row"]}
-                    justifyContent={[undefined, undefined, "flex-end"]}
-                    paddingTop={"1rem"}
-                  >
-                    <Button primary onClick={handleSubmit(saveAndPublish)}>
-                      Hyväksy ja lähetä
-                    </Button>
-                    <Button
-                      onClick={(e) => {
-                        handleClickCloseHyvaksy();
-                        e.preventDefault();
-                      }}
-                    >
-                      Peruuta
-                    </Button>
-                  </HassuStack>
-                </form>
-              </div>
-            </SectionContent>
-          </Section>
-        </HassuDialog>
-      </div>
+      <HyvaksymisDialogi
+        ilmoituksenVastaanottajat={ilmoituksenVastaanottajat}
+        dialogiOnAuki={openHyvaksy}
+        onClose={handleClickCloseHyvaksy}
+        tallenna={saveForm}
+        julkinen={v?.julkinen || false}
+      />
       <HassuSpinner open={isFormSubmitting} />
     </>
   );
 }
-export const SoittoajanYhteystieto = React.memo((props: { yhteystieto: Yhteystieto | YhteystietoInput }) => {
-  return (
-    <>
-      <p>
-        {props.yhteystieto.etunimi} {props.yhteystieto.sukunimi}
-        {props.yhteystieto.titteli ? `, ${props.yhteystieto.titteli}` : null}
-        {props.yhteystieto.organisaatio ? ` (${props.yhteystieto.organisaatio})` : null}:{" "}
-        {props.yhteystieto.puhelinnumero}
-      </p>
-    </>
-  );
-});
-SoittoajanYhteystieto.displayName = "SoittoajanYhteystieto";
