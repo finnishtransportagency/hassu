@@ -90,7 +90,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                   return (
                     <div key={index}>
                       <p>
-                        {capitalize(tilaisuus.nimi)},{" "}
+                        {tilaisuus.nimi ? capitalize(tilaisuus.nimi) : "Verkkotilaisuus"},{" "}
                         {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)}{" "}
                         {formatDate(tilaisuus.paivamaara)} klo {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika},
                         Linkki tilaisuuteen: {tilaisuus.linkki}
@@ -111,7 +111,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                   return (
                     <div key={index}>
                       <p>
-                        {capitalize(tilaisuus.nimi)},{" "}
+                        {tilaisuus.nimi ? capitalize(tilaisuus.nimi) : "Fyysinen tilaisuus"},{" "}
                         {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)}{" "}
                         {formatDate(tilaisuus.paivamaara)} klo {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika},
                         Osoite: {tilaisuus.paikka}, {tilaisuus.osoite} {tilaisuus.postinumero}{" "}
@@ -133,7 +133,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                   return (
                     <div key={index}>
                       <p>
-                        {capitalize(tilaisuus.nimi)},{" "}
+                        {tilaisuus.nimi ? capitalize(tilaisuus.nimi) : "Soittoaika"},{" "}
                         {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)}{" "}
                         {formatDate(tilaisuus.paivamaara)} klo {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}
                       </p>
