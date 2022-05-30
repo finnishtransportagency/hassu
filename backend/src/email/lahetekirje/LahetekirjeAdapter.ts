@@ -199,7 +199,7 @@ export class LahetekirjeAdapter {
     esitettavatYhteystiedot?.forEach((yhteystieto) => {
       yt.push(yhteystieto);
     });
-    return yt.map((y) => `${y.organisaatio}, ${y.etunimi} ${y.sukunimi}, puh. ${y.puhelinnumero}, ${y.sahkoposti} `);
+    return yt.map((y) => `${y.organisaatio}, ${y.etunimi} ${y.sukunimi}, puh. ${y.puhelinnumero}, ${y.sahkoposti}`);
   }
 
   private get vastaanottajat() {
