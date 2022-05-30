@@ -108,6 +108,9 @@ class ProjektiAdapterJulkinen {
       const julkaisu =
         findJulkaisuByStatus(aloitusKuulutusJulkaisut, API.AloitusKuulutusTila.HYVAKSYTTY) ||
         findJulkaisuByStatus(aloitusKuulutusJulkaisut, API.AloitusKuulutusTila.MIGROITU);
+      if (!julkaisu) {
+        return undefined;
+      }
       const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot } = julkaisu;
 
       return [
@@ -328,6 +331,5 @@ function adaptProjektiHenkilot(kayttoOikeudet: DBVaylaUser[]): ProjektiHenkilot 
     return result;
   }, {});
 }
-
 
 export const projektiAdapterJulkinen = new ProjektiAdapterJulkinen();
