@@ -78,7 +78,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
       defaultValues: {
         muistiinpano: "",
         euRahoitus: null,
-        liittyvatSuunnitelmat: null,
+        liittyvatSuunnitelmat: [],
         kielitiedot: null,
         suunnittelusopimusprojekti: null,
         liittyviasuunnitelmia: null,
