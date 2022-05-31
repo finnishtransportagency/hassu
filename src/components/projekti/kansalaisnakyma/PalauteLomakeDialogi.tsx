@@ -215,7 +215,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
                       id="file-input"
                       type="file"
                       accept="image/jpeg, image/png, image/jpg, application/pdf"
-                      onChange={(e) => {
+                      onChange={e => {
                         const tiedosto = e.target.files?.[0];
                         setTiedosto(tiedosto);
                         if (tiedosto && tiedosto.size > 4500000) {
