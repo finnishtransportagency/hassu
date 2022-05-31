@@ -1,10 +1,31 @@
 import useSWR from "swr";
 import { api, apiConfig, NykyinenKayttaja, Projekti, ProjektiRooli } from "@services/api";
 import useCurrentUser from "./useCurrentUser";
+import { useState } from "react";
+import { isEqual } from "lodash";
 
 export function useProjekti(oid?: string) {
+  const [some, setSome] = useState<{ [key: string]: ProjektiLisatiedolla }>({});
   const { data: kayttaja } = useCurrentUser();
-  return useSWR([apiConfig.lataaProjekti.graphql, oid, kayttaja], projektiLoader);
+
+  console.log({ oid });
+  const swr = useSWR([apiConfig.lataaProjekti.graphql, oid, kayttaja], projektiLoader, {
+    onSuccess: (data, key) => {
+      if (data) {
+        some[key] = data;
+        setSome(some);
+      }
+    },
+
+    fallback: some,
+    compare: (a, b) => {
+      const result = isEqual(a, b);
+      console.log({ result, a, b });
+      return result;
+    },
+  });
+
+  return swr;
 }
 
 interface ProjektiLisatiedot {
