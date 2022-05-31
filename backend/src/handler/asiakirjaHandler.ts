@@ -26,6 +26,7 @@ export async function lataaAsiakirja({
           aloitusKuulutusJulkaisu,
           asiakirjaTyyppi,
           kieli,
+          luonnos: true,
         });
       } else {
         if (muutokset) {
@@ -41,6 +42,7 @@ export async function lataaAsiakirja({
             aloitusKuulutusJulkaisu: asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projektiWithChanges),
             asiakirjaTyyppi,
             kieli,
+            luonnos: true,
           });
         } else {
           // Previewing saved projekti
@@ -48,6 +50,7 @@ export async function lataaAsiakirja({
             aloitusKuulutusJulkaisu: asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projekti),
             asiakirjaTyyppi,
             kieli,
+            luonnos: true,
           });
         }
       }

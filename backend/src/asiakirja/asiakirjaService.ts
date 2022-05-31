@@ -15,6 +15,7 @@ interface CreatePdfOptions {
   vuorovaikutus?: Vuorovaikutus;
   asiakirjaTyyppi: AsiakirjaTyyppi;
   kieli: Kieli;
+  luonnos: boolean;
 }
 
 export enum AsiakirjanMuoto {
@@ -38,6 +39,7 @@ export class AsiakirjaService {
     aloitusKuulutusJulkaisu,
     vuorovaikutus,
     kieli,
+    luonnos
   }: CreatePdfOptions): Promise<PDF> {
     let pdf: Promise<PDF>;
     const asiakirjanMuoto = determineAsiakirjaMuoto(
@@ -49,10 +51,10 @@ export class AsiakirjaService {
       case AsiakirjaTyyppi.ALOITUSKUULUTUS:
         switch (asiakirjanMuoto) {
           case AsiakirjanMuoto.TIE:
-            pdf = new AloitusKuulutus10T(aloitusKuulutusJulkaisu, kieli).pdf;
+            pdf = new AloitusKuulutus10T(aloitusKuulutusJulkaisu, kieli).pdf(luonnos);
             break;
           case AsiakirjanMuoto.RATA:
-            pdf = new AloitusKuulutus10R(aloitusKuulutusJulkaisu, kieli).pdf;
+            pdf = new AloitusKuulutus10R(aloitusKuulutusJulkaisu, kieli).pdf(luonnos);
             break;
           default:
             throw new Error(
@@ -63,10 +65,10 @@ export class AsiakirjaService {
       case AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA:
         switch (asiakirjanMuoto) {
           case AsiakirjanMuoto.TIE:
-            pdf = new Ilmoitus12T(aloitusKuulutusJulkaisu, kieli).pdf;
+            pdf = new Ilmoitus12T(aloitusKuulutusJulkaisu, kieli).pdf(luonnos);
             break;
           case AsiakirjanMuoto.RATA:
-            pdf = new Ilmoitus12R(aloitusKuulutusJulkaisu, kieli).pdf;
+            pdf = new Ilmoitus12R(aloitusKuulutusJulkaisu, kieli).pdf(luonnos);
             break;
           default:
             throw new Error(
@@ -78,7 +80,7 @@ export class AsiakirjaService {
         switch (asiakirjanMuoto) {
           case AsiakirjanMuoto.TIE:
           case AsiakirjanMuoto.RATA:
-            pdf = new Kutsu20(projekti, vuorovaikutus, kieli, asiakirjanMuoto).pdf;
+            pdf = new Kutsu20(projekti, vuorovaikutus, kieli, asiakirjanMuoto).pdf(luonnos);
             break;
           default:
             throw new Error(

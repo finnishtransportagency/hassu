@@ -38,6 +38,7 @@ export abstract class AbstractPdf {
       info: { Title: this.title },
       lang: "fi",
       displayTitle: true,
+      bufferPages: true,
     });
 
     const SRGB_IEC61966_ICC_PROFILE_B64 =
@@ -115,9 +116,28 @@ export abstract class AbstractPdf {
     throw new Error("Method 'addContent()' must be implemented.");
   }
 
-  public get pdf(): Promise<PDF> {
+  public pdf(luonnos: boolean): Promise<PDF> {
     this.addContent();
+    if (luonnos) {
+      this.addDraftWatermark();
+    }
     return this.finishPdfDocument();
+  }
+
+  private addDraftWatermark() {
+    this.doc.save();
+    const pageRange = this.doc.bufferedPageRange();
+    for (let page = pageRange.start; page < pageRange.start + pageRange.count; page++) {
+      this.doc.switchToPage(page);
+      const x = 100;
+      const y = 570;
+      this.doc
+        .rotate(-50, { origin: [x, y] })
+        .fontSize(120)
+        .opacity(0.1)
+        .text("LUONNOS", x, y, { width: 1000 });
+      this.doc.restore();
+    }
   }
 
   private finishPdfDocument() {
