@@ -57,9 +57,9 @@ export default function LuonnoksetJaAineistot({ saveForm, vuorovaikutus, muokkau
 
   return (
     <>
-      {!muokkaustila && julkinen ? (
+      {!muokkaustila && julkinen && (
         <Section>
-          <Button style={{ float: "right" }} type="submit" onClick={() => setMuokkaustila(true)}>
+          <Button style={{ float: "right" }} type="button" onClick={() => setMuokkaustila(true)}>
             Muokkaa
           </Button>
           <p className="vayla-label mb-5">Suunnitelmaluonnokset ja esittelyaineistot</p>
@@ -116,157 +116,156 @@ export default function LuonnoksetJaAineistot({ saveForm, vuorovaikutus, muokkau
             </SectionContent>
           )}
         </Section>
-      ) : (
-        <Section>
-          <SectionContent>
-            {julkinen ? (
-              <HassuStack direction={["column", "column", "row"]} justifyContent="space-between">
-                <h4 style={{ display: "inline" }} className="vayla-small-title">
-                  Suunnitelmaluonnokset ja esittelyaineistot
-                </h4>
-                <HassuStack direction={["column", "column", "row"]}>
-                  <Button
-                    primary
-                    type="submit"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      saveForm();
-                    }}
-                  >
-                    Päivitä
-                  </Button>
-                  <Button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (isDirty) reset();
-                      setMuokkaustila(false);
-                    }}
-                  >
-                    Peruuta
-                  </Button>
-                </HassuStack>
+      )}
+      <Section className={muokkaustila || !julkinen ? "" : "hidden"}>
+        <SectionContent>
+          {julkinen ? (
+            <HassuStack direction={["column", "column", "row"]} justifyContent="space-between">
+              <h4 style={{ display: "inline" }} className="vayla-small-title">
+                Suunnitelmaluonnokset ja esittelyaineistot
+              </h4>
+              <HassuStack direction={["column", "column", "row"]}>
+                <Button
+                  primary
+                  type="submit"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    saveForm();
+                  }}
+                >
+                  Päivitä
+                </Button>
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (isDirty) reset();
+                    setMuokkaustila(false);
+                  }}
+                >
+                  Peruuta
+                </Button>
               </HassuStack>
-            ) : (
-              <h4 className="vayla-small-title">Suunnitelmaluonnokset ja esittelyaineistot</h4>
-            )}
-            <p>
-              Esittelyvideo tulee olla ladattuna erilliseen videojulkaisupalveluun (esim. Youtube) ja videon
-              katselulinkki tuodaan sille tarkoitettuun kenttään. Luonnokset ja muut materiaalit tuodaan
-              Projektivelhosta. Suunnitelmaluonnokset ja esittelyaineistot on mahdollista. Suunnitelmaluonnokset ja
-              aineistot julkaistaan palvelun julkisella puolella vuorovaikutuksen julkaisupäivänä.{" "}
-            </p>
-            <Notification type={NotificationType.INFO_GRAY}>
-              Huomioithan, että suunnitelmaluonnoksien ja esittelyaineistojen tulee täyttää saavutettavuusvaatimukset.{" "}
-            </Notification>
-          </SectionContent>
-          <SectionContent>
-            <h5 className="vayla-smallest-title">Suunnitelmaluonnokset ja esittelyaineistot</h5>
-            <p>Aineistoille tulee valita kategoria / otsikko, jonka alla ne esitetään palvelun julkisella puolella. </p>
-            <p>
-              Aineistojen järjestys kunkin otsikon alla määräytyy listan järjestyksen mukaan. Voit vaihtaa järjestystä
-              tarttumalla hiirellä raahaus-ikonista ja siirtämällä rivin paikkaa.{" "}
-            </p>
-            <>
-              <p>Aineistot: </p>
-              {projekti?.oid &&
-                aineistotFields.map((aineisto, index) => (
-                  <Stack direction="row" alignItems="center" key={aineisto.id}>
-                    <AineistoNimiExtLink
-                      key={aineisto.id}
-                      aineistoNimi={
-                        vuorovaikutus?.aineistot?.find((a) => a.dokumenttiOid === aineisto.dokumenttiOid)?.tiedosto ||
-                        valitutAineistot.find(({ oid }) => oid === aineisto.dokumenttiOid)?.tiedosto ||
-                        `oid-${aineisto.dokumenttiOid}`
-                      }
-                      aineistoOid={aineisto.dokumenttiOid}
-                      projektiOid={projekti.oid}
-                    />
+            </HassuStack>
+          ) : (
+            <h4 className="vayla-small-title">Suunnitelmaluonnokset ja esittelyaineistot</h4>
+          )}
+          <p>
+            Esittelyvideo tulee olla ladattuna erilliseen videojulkaisupalveluun (esim. Youtube) ja videon katselulinkki
+            tuodaan sille tarkoitettuun kenttään. Luonnokset ja muut materiaalit tuodaan Projektivelhosta.
+            Suunnitelmaluonnokset ja esittelyaineistot on mahdollista. Suunnitelmaluonnokset ja aineistot julkaistaan
+            palvelun julkisella puolella vuorovaikutuksen julkaisupäivänä.{" "}
+          </p>
+          <Notification type={NotificationType.INFO_GRAY}>
+            Huomioithan, että suunnitelmaluonnoksien ja esittelyaineistojen tulee täyttää saavutettavuusvaatimukset.{" "}
+          </Notification>
+        </SectionContent>
+        <SectionContent>
+          <h5 className="vayla-smallest-title">Suunnitelmaluonnokset ja esittelyaineistot</h5>
+          <p>Aineistoille tulee valita kategoria / otsikko, jonka alla ne esitetään palvelun julkisella puolella. </p>
+          <p>
+            Aineistojen järjestys kunkin otsikon alla määräytyy listan järjestyksen mukaan. Voit vaihtaa järjestystä
+            tarttumalla hiirellä raahaus-ikonista ja siirtämällä rivin paikkaa.{" "}
+          </p>
+          <>
+            <p>Aineistot: </p>
+            {projekti?.oid &&
+              aineistotFields.map((aineisto, index) => (
+                <Stack direction="row" alignItems="center" key={aineisto.id}>
+                  <AineistoNimiExtLink
+                    key={aineisto.id}
+                    aineistoNimi={
+                      vuorovaikutus?.aineistot?.find((a) => a.dokumenttiOid === aineisto.dokumenttiOid)?.tiedosto ||
+                      valitutAineistot.find(({ oid }) => oid === aineisto.dokumenttiOid)?.tiedosto ||
+                      `oid-${aineisto.dokumenttiOid}`
+                    }
+                    aineistoOid={aineisto.dokumenttiOid}
+                    projektiOid={projekti.oid}
+                  />
+                  <IconButton
+                    onClick={(event) => {
+                      event.preventDefault();
+                      removeAineistot(index);
+                    }}
+                    icon="trash"
+                  />
+                </Stack>
+              ))}
+          </>
+          <Button type="button" onClick={openAineistoDialog}>
+            Tuo Aineistoja
+          </Button>
+          <AineistojenValitseminenDialog
+            open={aineistoDialogOpen}
+            onClose={closeAineistoDialog}
+            updateValitutAineistot={setValitutAineistot}
+          />
+        </SectionContent>
+        <SectionContent>
+          <h5 className="vayla-smallest-title">Ennalta kuvattu videoesittely</h5>
+          {videotFields.map((field, index) => (
+            <HassuStack key={field.id} direction={"row"}>
+              <TextInput
+                style={{ width: "100%" }}
+                key={field.id}
+                {...register(`suunnitteluVaihe.vuorovaikutus.videot.${index}.url`)}
+                label="Linkki videoon"
+                error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.videot?.[index]?.url}
+              />
+              {!!index && (
+                <div>
+                  <div className="hidden lg:block lg:mt-8">
                     <IconButton
+                      icon="trash"
                       onClick={(event) => {
                         event.preventDefault();
-                        removeAineistot(index);
+                        removeVideot(index);
                       }}
-                      icon="trash"
                     />
-                  </Stack>
-                ))}
-            </>
-            <Button type="button" onClick={openAineistoDialog}>
-              Tuo Aineistoja
-            </Button>
-            <AineistojenValitseminenDialog
-              open={aineistoDialogOpen}
-              onClose={closeAineistoDialog}
-              updateValitutAineistot={setValitutAineistot}
-            />
-          </SectionContent>
-          <SectionContent>
-            <h5 className="vayla-smallest-title">Ennalta kuvattu videoesittely</h5>
-            {videotFields.map((field, index) => (
-              <HassuStack key={field.id} direction={"row"}>
-                <TextInput
-                  style={{ width: "100%" }}
-                  key={field.id}
-                  {...register(`suunnitteluVaihe.vuorovaikutus.videot.${index}.url`)}
-                  label="Linkki videoon"
-                  error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.videot?.[index]?.url}
-                />
-                {!!index && (
-                  <div>
-                    <div className="hidden lg:block lg:mt-8">
-                      <IconButton
-                        icon="trash"
-                        onClick={(event) => {
-                          event.preventDefault();
-                          removeVideot(index);
-                        }}
-                      />
-                    </div>
-                    <div className="block lg:hidden">
-                      <Button
-                        onClick={(event) => {
-                          event.preventDefault();
-                          removeVideot(index);
-                        }}
-                        endIcon="trash"
-                      >
-                        Poista
-                      </Button>
-                    </div>
                   </div>
-                )}
-              </HassuStack>
-            ))}
-            <Button
-              onClick={(event) => {
-                event.preventDefault();
-                appendVideot({ nimi: "", url: "" });
-              }}
-            >
-              Lisää uusi +
-            </Button>
-          </SectionContent>
-          <SectionContent>
-            <h5 className="vayla-smallest-title">Muut esittelymateriaalit</h5>
-            <p>
-              Muu esittelymateraali on järjestelmän ulkopuolelle julkaistua suunnitelmaan liittyvää materiaalia. Muun
-              esittelymateriaalin lisääminen on vapaaehtoista.{" "}
-            </p>
-            <TextInput
-              style={{ width: "100%" }}
-              label="Linkin kuvaus"
-              {...register(`suunnitteluVaihe.vuorovaikutus.suunnittelumateriaali.nimi`)}
-              error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.suunnittelumateriaali?.nimi}
-            />
-            <TextInput
-              style={{ width: "100%" }}
-              label="Linkki muihin esittelyaineistoihin"
-              {...register(`suunnitteluVaihe.vuorovaikutus.suunnittelumateriaali.url`)}
-              error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.suunnittelumateriaali?.url}
-            />
-          </SectionContent>
-        </Section>
-      )}
+                  <div className="block lg:hidden">
+                    <Button
+                      onClick={(event) => {
+                        event.preventDefault();
+                        removeVideot(index);
+                      }}
+                      endIcon="trash"
+                    >
+                      Poista
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </HassuStack>
+          ))}
+          <Button
+            onClick={(event) => {
+              event.preventDefault();
+              appendVideot({ nimi: "", url: "" });
+            }}
+          >
+            Lisää uusi +
+          </Button>
+        </SectionContent>
+        <SectionContent>
+          <h5 className="vayla-smallest-title">Muut esittelymateriaalit</h5>
+          <p>
+            Muu esittelymateraali on järjestelmän ulkopuolelle julkaistua suunnitelmaan liittyvää materiaalia. Muun
+            esittelymateriaalin lisääminen on vapaaehtoista.{" "}
+          </p>
+          <TextInput
+            style={{ width: "100%" }}
+            label="Linkin kuvaus"
+            {...register(`suunnitteluVaihe.vuorovaikutus.suunnittelumateriaali.nimi`)}
+            error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.suunnittelumateriaali?.nimi}
+          />
+          <TextInput
+            style={{ width: "100%" }}
+            label="Linkki muihin esittelyaineistoihin"
+            {...register(`suunnitteluVaihe.vuorovaikutus.suunnittelumateriaali.url`)}
+            error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.suunnittelumateriaali?.url}
+          />
+        </SectionContent>
+      </Section>
     </>
   );
 }
