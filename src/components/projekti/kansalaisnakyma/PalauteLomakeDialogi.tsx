@@ -50,6 +50,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
   const [tiedosto, setTiedosto] = useState<File | undefined>(undefined);
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
   const [kiitosDialogiOpen, setKiitosDialogiOpen] = useState(false);
+  const [tiedostoLiianSuuri, setTiedostoLiianSuuri] = useState(false);
 
   const formOptions: UseFormProps<PalauteFormInput> = {
     resolver: yupResolver(palauteSchema, { abortEarly: false, recursive: true }),
@@ -184,12 +185,14 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
                     >
                       <HassuStack direction="row">
                         <div style={{ marginTop: "auto", marginBottom: "auto" }}>
-                          {tiedosto.name}
+                          <div>{tiedosto.name}</div>
+                          {tiedostoLiianSuuri && <div style={{ color: "red", fontWeight: "bold" }}>Tiedosto on liian suuri</div>}
                         </div>
                         <IconButton
                           icon="trash"
                           onClick={() => {
                             setTiedosto(undefined);
+                            setTiedostoLiianSuuri(false);
                             (document.getElementById("file-input") as HTMLInputElement).value = "";
                             setValue("liite", null);
                           }}
@@ -213,7 +216,11 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
                       type="file"
                       accept="image/jpeg, image/png, image/jpg, application/pdf"
                       onChange={(e) => {
-                        setTiedosto(e.target.files?.[0]);
+                        const tiedosto = e.target.files?.[0];
+                        setTiedosto(tiedosto);
+                        if (tiedosto && tiedosto.size > 4194304) {
+                          setTiedostoLiianSuuri(true);
+                        }
                         field.onChange(e.target.value)
                       }}
                     />
@@ -229,7 +236,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
         </DialogContent>
 
         <DialogActions>
-          <Button primary onClick={handleSubmit(save)}>
+          <Button primary onClick={handleSubmit(save)} disabled={tiedostoLiianSuuri}>
             {t("common:laheta")}
           </Button>
           <Button
