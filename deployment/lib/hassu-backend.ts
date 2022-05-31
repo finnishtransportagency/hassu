@@ -283,6 +283,21 @@ export class HassuBackendStack extends cdk.Stack {
 
     aineistoSQS.grantSendMessages(backendLambda);
 
+    if (frontendStackOutputs?.CloudfrontDistributionId) {
+      backendLambda.addToRolePolicy(
+        new PolicyStatement({
+          effect: Effect.ALLOW,
+          actions: ["cloudfront:CreateInvalidation"],
+          resources: [
+            "arn:aws:cloudfront::" +
+              cdk.Aws.ACCOUNT_ID +
+              ":distribution/" +
+              frontendStackOutputs?.CloudfrontDistributionId,
+          ],
+        })
+      );
+    }
+
     this.props.uploadBucket.grantPut(backendLambda);
     this.props.uploadBucket.grantReadWrite(backendLambda);
     this.props.yllapitoBucket.grantReadWrite(backendLambda);

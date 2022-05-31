@@ -80,7 +80,10 @@ export class KutsuAdapter {
 
   get tilaajaOrganisaatio(): string {
     const suunnittelustaVastaavaViranomainen = this.velho.suunnittelustaVastaavaViranomainen;
-    return translate("viranomainen." + suunnittelustaVastaavaViranomainen, this.kieli);
+    return (
+      translate("viranomainen." + suunnittelustaVastaavaViranomainen, this.kieli) ||
+      "<Suunnittelusta vastaavan viranomaisen tieto puuttuu>"
+    );
   }
 
   get tilaajaOrganisaatiota(): string {
@@ -98,7 +101,7 @@ export class KutsuAdapter {
   }
 
   static tilaajaOrganisaatioForViranomainen(viranomainen: Viranomainen | null, kieli: Kieli): string {
-    return translate("viranomainen." + viranomainen, kieli);
+    return translate("viranomainen." + viranomainen, kieli) || "<Tilaajaorganisaation tieto puuttuu>";
   }
 
   get tilaajaGenetiivi(): string {

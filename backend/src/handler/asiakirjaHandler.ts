@@ -6,6 +6,7 @@ import { NotFoundError } from "../error/NotFoundError";
 import { asiakirjaService } from "../asiakirja/asiakirjaService";
 import { projektiAdapter } from "./projektiAdapter";
 import { asiakirjaAdapter } from "./asiakirjaAdapter";
+import { Vuorovaikutus } from "../database/model/suunnitteluVaihe";
 
 export async function lataaAsiakirja({
   oid,
@@ -35,6 +36,8 @@ export async function lataaAsiakirja({
           projektiWithChanges.suunnitteluSopimus = projekti.suunnitteluSopimus;
 
           return asiakirjaService.createPdf({
+            projekti: projektiWithChanges,
+            vuorovaikutus: (muutokset.suunnitteluVaihe.vuorovaikutus as Vuorovaikutus) || null,
             aloitusKuulutusJulkaisu: asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projektiWithChanges),
             asiakirjaTyyppi,
             kieli,

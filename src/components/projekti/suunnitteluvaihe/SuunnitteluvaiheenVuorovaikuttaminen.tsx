@@ -1,7 +1,12 @@
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
-import { KuntaVastaanottajaInput, LinkkiInput } from "../../../../common/graphql/apiModel";
+import {
+  KuntaVastaanottajaInput,
+  LinkkiInput,
+  Kieli,
+  Kielitiedot,
+} from "../../../../common/graphql/apiModel";
 import {
   TallennaProjektiInput,
   Projekti,
@@ -12,7 +17,7 @@ import {
   IlmoituksenVastaanottajatInput,
 } from "@services/api";
 import Section from "@components/layout/Section";
-import React, { ReactElement, useEffect, useState, useMemo, useCallback } from "react";
+import React, { ReactElement, useEffect, useState, useMemo, useCallback, useRef } from "react";
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
@@ -34,6 +39,7 @@ import PaivamaaratJaTiedot from "./PaivamaaratJaTiedot";
 import LukutilaLinkkiJaKutsut from "./LukutilaLinkkiJaKutsut";
 import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
 import VuorovaikutustilaisuusDialog from "./VuorovaikutustilaisuusDialog";
+import cloneDeep from "lodash/cloneDeep";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -153,6 +159,8 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
   const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
   const [aineistoMuokkaustila, setAineistoMuokkaustila] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const [serializedFormData, setSerializedFormData] = useState("{}");
+  const pdfFormRef = useRef<HTMLFormElement | null>(null);
 
   const v = useMemo(() => {
     return projekti?.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
@@ -254,6 +262,18 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
     return handleSubmit(saveAndPublish);
   }, [handleSubmit, saveAndPublish]);
 
+  const showPDFPreview = useCallback(
+    (formData: TallennaProjektiInput, action: string, kieli: Kieli) => {
+      const formDataToSend = cloneDeep(formData);
+      setSerializedFormData(JSON.stringify(formDataToSend));
+      if (pdfFormRef.current) {
+        pdfFormRef.current.action = action + "?kieli=" + kieli;
+        pdfFormRef.current?.submit();
+      }
+    },
+    [setSerializedFormData, pdfFormRef]
+  );
+
   useEffect(() => {
     isDirtyHandler(isDirty);
   }, [isDirty, isDirtyHandler]);
@@ -276,11 +296,13 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
     setOpenHyvaksy(false);
   };
 
-  if (!projekti || !v) {
+  if (!projekti || !v) {
     return <></>;
   }
 
   const ilmoituksenVastaanottajat = getValues("suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat");
+  const kielitiedot: Kielitiedot | null | undefined = projekti.kielitiedot;
+
   return (
     <>
       <FormProvider {...useFormReturn}>
@@ -293,7 +315,11 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
               </SectionContent>
               <PaivamaaratJaTiedot projekti={projekti} vuorovaikutusnro={vuorovaikutusnro} />
             </Section>
-            <VuorovaikutusMahdollisuudet projekti={projekti} vuorovaikutus={v} setOpenVuorovaikutustilaisuus={setOpenVuorovaikutustilaisuus} />
+            <VuorovaikutusMahdollisuudet
+              projekti={projekti}
+              vuorovaikutus={v}
+              setOpenVuorovaikutustilaisuus={setOpenVuorovaikutustilaisuus}
+            />
             <VuorovaikutustilaisuusDialog
               open={openVuorovaikutustilaisuus}
               windowHandler={(t: boolean) => {
@@ -316,26 +342,43 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
               projekti={projekti}
               vuorovaikutusnro={vuorovaikutusnro}
             />
-            {v?.julkinen &&
-              <LukutilaLinkkiJaKutsut vuorovaikutus={v} projekti={projekti} />
-            }
+            {v?.julkinen && <LukutilaLinkkiJaKutsut vuorovaikutus={v} projekti={projekti} />}
             <IlmoituksenVastaanottajat kirjaamoOsoitteet={kirjaamoOsoitteet} vuorovaikutus={v} />
-            {!v?.julkinen &&
+            {!v?.julkinen && (
               <Section>
                 <h4 className="vayla-small-title">Kutsun ja ilmoituksen esikatselu</h4>
                 <SectionContent>
                   <HassuStack direction={["column", "column", "row"]}>
-                    <Button type="submit" onClick={() => console.log("kutsun esikatselu")} disabled>
+                    <Button
+                      type="submit"
+                      onClick={handleSubmit((formData) =>
+                        showPDFPreview(
+                          formData,
+                          `/api/projekti/${projekti?.oid}/suunnittelu/kutsu/pdf`,
+                          kielitiedot?.ensisijainenKieli || Kieli.SUOMI
+                        )
+                      )}
+                    >
                       Kutsun esikatselu
                     </Button>
-                    <Button type="submit" onClick={() => console.log("ilmoituksen esikatselu")} disabled>
+                    <Button
+                      type="submit"
+                      onClick={handleSubmit((formData) =>
+                        showPDFPreview(
+                          formData,
+                          `/api/projekti/${projekti?.oid}/suunnittelu/ilmoitus/pdf`,
+                          kielitiedot?.ensisijainenKieli || Kieli.SUOMI
+                        )
+                      )}
+                      disabled
+                    >
                       Ilmoituksen esikatselu
                     </Button>
                   </HassuStack>
                 </SectionContent>
               </Section>
-            }
-            {!v?.julkinen &&
+            )}
+            {!v?.julkinen && (
               <Section noDivider>
                 <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
                   {!v?.julkinen && <Button onClick={handleSubmit(saveDraft)}>Tallenna luonnos</Button>}
@@ -350,17 +393,20 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                   </Button>
                 </Stack>
               </Section>
-            }
+            )}
           </fieldset>
           <input type="hidden" {...register("suunnitteluVaihe.vuorovaikutus.julkinen")} />
         </form>
       </FormProvider>
+      <form ref={pdfFormRef} target="_blank" method="POST">
+        <input type="hidden" name="tallennaProjektiInput" value={serializedFormData} />
+      </form>
       <HyvaksymisDialogi
         ilmoituksenVastaanottajat={ilmoituksenVastaanottajat}
         dialogiOnAuki={openHyvaksy}
         onClose={handleClickCloseHyvaksy}
         tallenna={saveForm}
-        julkinen={v?.julkinen || false}
+        julkinen={v?.julkinen || false}
       />
       <HassuSpinner open={isFormSubmitting} />
     </>

@@ -80,11 +80,11 @@ export const vuorovaikutusSchema = Yup.object().shape({
           return isValidDate(date);
         }),
       esitettavatYhteystiedot: Yup.array().notRequired().of(yhteystietoSchema),
-      // vuorovaikutusTilaisuudet: Yup.array()
-      //   .of(vuorovaikutustilaisuudetSchema)
-      //   .required("Vähintään yksi tilaisuus täytyy antaa")
-      //   .min(1, "Vähintään yksi tilaisuus täytyy antaa")
-      //   .nullable(),
+      vuorovaikutusTilaisuudet: Yup.array()
+        .of(vuorovaikutustilaisuudetSchema)
+        .required("Vähintään yksi tilaisuus täytyy antaa")
+        .min(1, "Vähintään yksi tilaisuus täytyy antaa")
+        .nullable(),
       videot: Yup.array()
         .notRequired()
         .of(

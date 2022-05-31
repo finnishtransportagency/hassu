@@ -158,6 +158,7 @@ export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet, 
     (formData: VuorovaikutustilaisuusFormValues) => {
       parentSetValue("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet", formData.vuorovaikutusTilaisuudet, {
         shouldDirty: true,
+        shouldValidate: true,
       });
       windowHandler(false);
       if (julkinen) {
