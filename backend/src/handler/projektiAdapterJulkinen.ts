@@ -200,7 +200,7 @@ function adaptVuorovaikutukset(dbProjekti: DBProjekti, projektiHenkilot: Projekt
             suunnittelumateriaali: adaptLinkki(vuorovaikutus.suunnittelumateriaali),
             aineistot: adaptAineistot(vuorovaikutus.aineistot, julkaisuPaiva),
             vuorovaikutusYhteystiedot: adaptAndMergeYhteystiedot(dbProjekti, vuorovaikutus),
-            vuorovaikutusYhteysHenkilot: vuorovaikutus.vuorovaikutusYhteysHenkilot.map(
+            vuorovaikutusYhteysHenkilot: vuorovaikutus.vuorovaikutusYhteysHenkilot?.map(
               (username) => projektiHenkilot[username].id
             ),
           } as API.VuorovaikutusJulkinen;
