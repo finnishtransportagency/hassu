@@ -1,7 +1,13 @@
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
-import { KuntaVastaanottajaInput, LinkkiInput, Kieli, Kielitiedot } from "../../../../common/graphql/apiModel";
+import {
+  KuntaVastaanottajaInput,
+  LinkkiInput,
+  Vuorovaikutus,
+  Kieli,
+  Kielitiedot,
+} from "../../../../common/graphql/apiModel";
 import {
   TallennaProjektiInput,
   Projekti,
@@ -126,6 +132,11 @@ const defaultVastaanottajat = (
   };
 };
 
+const defaultVuorovaikutus: Vuorovaikutus = {
+  __typename: "Vuorovaikutus",
+  vuorovaikutusNumero: 1,
+};
+
 export default function SuunnitteluvaiheenVuorovaikuttaminen({
   projekti,
   reloadProjekti,
@@ -145,7 +156,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
     () =>
       projekti?.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
         return v.vuorovaikutusNumero === vuorovaikutusnro;
-      }),
+      }) || defaultVuorovaikutus,
     [projekti, vuorovaikutusnro]
   );
 
@@ -287,7 +298,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
     setOpenHyvaksy(false);
   };
 
-  if (!projekti || !vuorovaikutus) {
+  if (!projekti) {
     return <></>;
   }
 
