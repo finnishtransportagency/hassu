@@ -130,23 +130,23 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
               <HassuStack>
                 <HassuGrid sx={{ width: "100%" }} cols={[1, 1, 2]}>
                   <TextInput
-                    label="Etunimi"
+                    label={t("common:etunimi")}
                     {...register("etunimi")}
                     error={errors.etunimi}
                   />
                   <TextInput
-                    label="Sukunimi"
+                    label={t("common:sukunimi")}
                     {...register("sukunimi")}
                     error={errors.sukunimi}
                   />
                   <TextInput
-                    label="Sähköposti"
+                    label={t("common:sahkoposti")}
                     {...register("sahkoposti")}
                     error={errors?.sahkoposti?.message ? { message: t(`common:virheet.${errors.sahkoposti.message}`) } as FieldError: undefined}
                   />
                   <TextInput
                     style={{ maxWidth: "15em" }}
-                    label="Puhelinnumero"
+                    label={t("common:puhelinnumero")}
                     {...register("puhelinnumero")}
                     error={errors.puhelinnumero}
                   />
@@ -156,37 +156,37 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
                 minRows={3}
                 maxRows={13}
                 className="mt-4"
-                label="Palaute"
+                label={t("projekti:palautelomake.palaute")}
                 {...register("kysymysTaiPalaute")}
                 error={errors?.kysymysTaiPalaute?.message ? { message: t(`common:virheet.${errors.kysymysTaiPalaute.message}`) } as FieldError: undefined}
               />
               <div>
-                <p style={{ fontWeight: "bold" }}>Toivottu yhteydenottotapa</p>
+                <p style={{ fontWeight: "bold" }}>{t("projekti:palautelomake.toivottu_yhteydenottotapa")}</p>
                 <div>
                   <CheckBox
-                    label="Sähköposti"
+                    label={t("common:sahkoposti")}
                     {...register("yhteydenottotapaEmail")}
                   />
                 </div>
                 <div>
                   <CheckBox
-                    label="Puhelinsoitto"
+                    label={t("projekti:palautelomake.puhelinsoitto")}
                     {...register("yhteydenottotapaPuhelin")}
                   />
                 </div>
               </div>
               <div className="mt-3">
-                <p style={{ fontWeight: "bold" }}>Liite</p>
-                <p>Tuetut tiedostomuodot ovat PDF, JPG ja PNG. Sallittu tiedostokoko on maksimissaan 4,5Mt.</p>
+                <p style={{ fontWeight: "bold" }}>{t("common:liite")}</p>
+                <p>{t("projekti:palautelomake.tuetut_tiedostomuodot_ovat")}</p>
                 {tiedosto
                   ? <FormGroup
-                      label="Valittu tiedosto"
+                      label={t("common:valittu_tiedosto")}
                       errorMessage={errors?.liite?.message ? t(`common:virheet.${errors.liite.message}`) : ""}
                     >
                       <HassuStack direction="row">
                         <div style={{ marginTop: "auto", marginBottom: "auto" }}>
                           <div>{tiedosto.name}</div>
-                          {tiedostoLiianSuuri && <div style={{ color: "red", fontWeight: "bold" }}>Tiedosto on liian suuri</div>}
+                          {tiedostoLiianSuuri && <div style={{ color: "red", fontWeight: "bold" }}>{t("common:tiedosto_on_liian_suuri")}</div>}
                         </div>
                         <IconButton
                           icon="trash"
@@ -205,7 +205,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
                         document.getElementById("file-input")?.click()
                       }}
                     >
-                      Hae tiedosto
+                      {t("common:hae_tiedosto")}
                     </Button>
                 }
                 <Controller
@@ -264,25 +264,26 @@ interface KiitosProps {
 }
 
 export function KiitosDialogi({ open, onClose}: KiitosProps): ReactElement {
+  const { t } = useTranslation();
   return (
     <HassuDialog
       scroll="body"
       open={open}
-      title={"Kiitos viestistä"}
+      title={t("projekti:palautelomake.kiitos_viestista")}
       onClose={onClose}
       maxWidth={"sm"}
     >
       <DialogContent>
-        <p>Olemme vastaanottaneet viestisi.</p>
-        <p>Kaikki viestit käsitellään ja ne pyritään huomioimaan suunnittelussa. Viimeistellyt suunnitelmat asetetaan myöhemmin nähtäville.</p>
-        <p>Jos toivoit yhteydenottoa, hankkeen suunnittelutiimi on sinuun yhteydessä mahdollisimman pian.</p>
+        <p>{t("projekti:palautelomake.olemme_vastaanottaneet_viestisi")}</p>
+        <p>{t("projekti:palautelomake.kaikki_viestit_kasitellaan")}</p>
+        <p>{t("projekti:palautelomake.jos_toivoit_yhteydenottoa")}</p>
       </DialogContent>
       <DialogActions>
         <Button
           onClick={onClose}
           primary
         >
-          Sulje
+          {t("common:sulje")}
         </Button>
       </DialogActions>
     </HassuDialog>

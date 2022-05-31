@@ -62,5 +62,14 @@
   "ilmoitukset": {
     "tallennus_onnistui": "Tallennus onnistui",
     "tallennuksessa_tapahtui_virhe": "Tallennuksessa tapahtui virhe"
-  }
+  },
+  "etunimi": "Etunimi",
+  "sukunimi": "Sukunimi",
+  "sahkoposti": "Sähköposti",
+  "puhelinnumero": "Puhelinnumero",
+  "tiedosto_on_liian_suuri": "Tiedosto on liian suuri",
+  "valittu_tiedosto": "Valittu tiedosto",
+  "hae_tiedosto": "Hae tiedosto",
+  "sulje": "Sulje",
+  "liite": "Liite"
 }

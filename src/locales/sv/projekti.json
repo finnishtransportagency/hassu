@@ -106,5 +106,16 @@
   },
   "jata_palaute_tai": "RUOTSIKSI Jätä palaute tai esitä kysymys",
   "voit_jattaa_palautetta": "RUOTSIKSI Voit jättää palautetta tai esittää kysymyksen suunnitteluhankkeeseen liittyen. Jos toivot kysymykseesi vastausta, jätäthän yhteystietosi ja toivotun yhteydenottotavan.",
-  "kysymykset_ja_palautteet": "RUOTSIKSI Kysymykset ja palautteet toivotaan lähetettävän xx.xx.xxxx mennessä."
+  "kysymykset_ja_palautteet": "RUOTSIKSI Kysymykset ja palautteet toivotaan lähetettävän xx.xx.xxxx mennessä.",
+  "palautelomake": {
+    "jata_palaute": "RUOTSIKSI Jätä palaute tai kysy hankkeesta",
+    "kiitos_viestista": "RUOTSIKSI Kiitos viestistä",
+    "palaute": "RUOTSIKSI Palaute",
+    "puhelinsoitto": "RUOTSIKSI Puhelinsoitto",
+    "toivottu_yhteydenottotapa": "RUOTSIKSI Toivottu yhteydenottotapa",
+    "tuetut_tiedostomuodot_ovat": "RUOTSIKSI Tuetut tiedostomuodot ovat PDF, JPG ja PNG. Sallittu tiedostokoko on maksimissaan 4,5Mt.",
+    "olemme_vastaanottaneet_viestisi": "RUOTSIKSI Olemme vastaanottaneet viestisi.",
+    "kaikki_viestit_kasitellaan": "RUOTSIKSI Kaikki viestit käsitellään ja ne pyritään huomioimaan suunnittelussa. Viimeistellyt suunnitelmat asetetaan myöhemmin nähtäville.",
+    "jos_toivoit_yhteydenottoa": "RUOTSIKSI Jos toivoit yhteydenottoa, hankkeen suunnittelutiimi on sinuun yhteydessä mahdollisimman pian."
+  }
 }

@@ -62,5 +62,14 @@
   "ilmoitukset": {
     "tallennus_onnistui": "RUOTSIKSI Tallennus onnistui",
     "tallennuksessa_tapahtui_virhe": "RUOTSIKSI Tallennuksessa tapahtui virhe"
-  }
+  },
+  "etunimi": "RUOTSIKSI Etunimi",
+  "sukunimi": "RUOTSIKSI Sukunimi",
+  "sahkoposti": "RUOTSIKSI Sähköposti",
+  "puhelinnumero": "RUOTSIKSI Puhelinnumero",
+  "tiedosto_on_liian_suuri": "RUOTSIKSI Tiedosto on liian suuri",
+  "valittu_tiedosto": "RUOTSIKSI Valittu tiedosto",
+  "hae_tiedosto": "RUOTSIKSI Hae tiedosto",
+  "sulje": "RUOTSIKSI Sulje",
+  "liite": "RUOTSIKSI Liite"
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import { styled, experimental_sx as sx } from "@mui/material";
+import useTranslation from "next-translate/useTranslation";
 
 interface Props {
   onClick?: () => void;
@@ -15,6 +16,8 @@ const JataPalautettaNappi = (
   const element = document.getElementById("to-top-button");
   if (element) element.parentNode?.removeChild(element);
 
+  const { t } = useTranslation("projekti");
+
   return (
     <>
       <TavallinenNappi
@@ -24,7 +27,7 @@ const JataPalautettaNappi = (
         onClick={onClick}
         style={{ borderRadius: 0, width: "100%", textTransform: "none", fontWeight: "bold" }}
       >
-        Jätä palaute tai kysy hankkeesta
+        {t("palautelomake.jata_palaute")}
         <img style={{ display: "inline", marginLeft: "1em" }} src="/kysymys-ikoni.svg" alt="kysymysikoni" />
       </TavallinenNappi>
       <LeijuvaNappi
