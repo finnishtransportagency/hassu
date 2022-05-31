@@ -1,4 +1,3 @@
-// import { useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
 import { useState } from "react";
@@ -7,36 +6,25 @@ import TextInput from "@components/form/TextInput";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import IconButton from "@components/button/IconButton";
 import HassuStack from "@components/layout/HassuStack";
-import { TallennaProjektiInput, VuorovaikutusInput, Vuorovaikutus } from "@services/api";
-import { useFieldArray, UseFormReturn } from "react-hook-form";
+import { Vuorovaikutus, VelhoAineisto } from "@services/api";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import AineistojenValitseminenDialog from "./AineistojenValitseminenDialog";
-import { Link } from "@mui/material";
+import { Link, Stack } from "@mui/material";
+import { VuorovaikutusFormValues } from "./SuunnitteluvaiheenVuorovaikuttaminen";
+import AineistoNimiExtLink from "../AineistoNimiExtLink";
+import { useProjektiRoute } from "src/hooks/useProjektiRoute";
 
-type Videot = Pick<VuorovaikutusInput, "videot">;
-type SuunnitteluMateriaali = Pick<VuorovaikutusInput, "suunnittelumateriaali">;
-
-type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
-type RequiredProjektiFields = Required<{
-  [K in keyof ProjektiFields]: NonNullable<ProjektiFields[K]>;
-}>;
-
-type FormValues = RequiredProjektiFields & {
-  suunnitteluVaihe: {
-    vuorovaikutus: Videot | SuunnitteluMateriaali;
-  };
-};
-
-interface Props<T> {
-  useFormReturn: UseFormReturn<T>;
+interface Props {
   vuorovaikutus: Vuorovaikutus | undefined;
   muokkaustila: boolean;
   setMuokkaustila: React.Dispatch<React.SetStateAction<boolean>>;
   saveForm: (e?: React.BaseSyntheticEvent<object, any, any> | undefined) => Promise<void>;
 }
 
-export default function LuonnoksetJaAineistot<T extends FormValues>({ saveForm, useFormReturn, vuorovaikutus, muokkaustila, setMuokkaustila}: Props<T>) {
+export default function LuonnoksetJaAineistot({ saveForm, vuorovaikutus, muokkaustila, setMuokkaustila }: Props) {
+  const { data: projekti } = useProjektiRoute();
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
-
+  const [valitutAineistot, setValitutAineistot] = useState<VelhoAineisto[]>([]);
 
   const openAineistoDialog = () => setAineistoDialogOpen(true);
   const closeAineistoDialog = () => setAineistoDialogOpen(false);
@@ -47,8 +35,13 @@ export default function LuonnoksetJaAineistot<T extends FormValues>({ saveForm, 
     control,
     register,
     formState: { errors, isDirty },
-    reset
-  } = useFormReturn as UseFormReturn<FormValues>;
+    reset,
+  } = useFormContext<VuorovaikutusFormValues>();
+
+  const { fields: aineistotFields, remove: removeAineistot } = useFieldArray({
+    control,
+    name: "suunnitteluVaihe.vuorovaikutus.aineistot",
+  });
 
   const {
     fields: videotFields,
@@ -64,67 +57,98 @@ export default function LuonnoksetJaAineistot<T extends FormValues>({ saveForm, 
 
   return (
     <>
-      {(!muokkaustila && julkinen) &&
+      {!muokkaustila && julkinen && (
         <Section>
-          <Button style={{ float: "right" }} type="submit" onClick={() => setMuokkaustila(true)}>
+          <Button style={{ float: "right" }} type="button" onClick={() => setMuokkaustila(true)}>
             Muokkaa
           </Button>
           <p className="vayla-label mb-5">Suunnitelmaluonnokset ja esittelyaineistot</p>
-          {!!(vuorovaikutus?.videot && vuorovaikutus?.videot.length) &&
+          {!!(vuorovaikutus?.videot && vuorovaikutus?.videot.length) && (
             <SectionContent>
               <div>Videoesittely</div>
-              {vuorovaikutus.videot.map(video => <div key={video.url}><Link underline="none" href={video.url}>{video.url}</Link></div>)}
+              {vuorovaikutus.videot.map((video) => (
+                <div key={video.url}>
+                  <Link underline="none" href={video.url}>
+                    {video.url}
+                  </Link>
+                </div>
+              ))}
             </SectionContent>
-          }
-          {!(vuorovaikutus?.aineistot && vuorovaikutus?.aineistot.length) &&
+          )}
+          {!(vuorovaikutus?.aineistot && vuorovaikutus?.aineistot.length) && (
             <SectionContent>
               <p>Lisää suunnitelmalle luonnokset ja esittelyaineistot Muokkaa-painikkeesta.</p>
             </SectionContent>
-          }
-          {!!(esittelyaineistot && esittelyaineistot.length) &&
+          )}
+          {!!(esittelyaineistot && esittelyaineistot.length) && (
             <SectionContent>
               <div>Esittelyaineistot</div>
-              {esittelyaineistot.map(aineisto => <div key={aineisto.dokumenttiOid}><Link underline="none" href={aineisto.tiedosto || "#"}>{aineisto.tiedosto}</Link></div>)}
+              {esittelyaineistot.map((aineisto) => (
+                <div key={aineisto.dokumenttiOid}>
+                  <Link underline="none" href={aineisto.tiedosto || "#"}>
+                    {aineisto.tiedosto}
+                  </Link>
+                </div>
+              ))}
             </SectionContent>
-          }
-          {!!(suunnitelmaluonnokset && suunnitelmaluonnokset.length) &&
+          )}
+          {!!(suunnitelmaluonnokset && suunnitelmaluonnokset.length) && (
             <SectionContent>
               <div>Suunnitelmaluonnokset</div>
-              {suunnitelmaluonnokset.map(aineisto => <div key={aineisto.dokumenttiOid}><Link underline="none" href={aineisto.tiedosto || "#"}>{aineisto.tiedosto}</Link></div>)}
+              {suunnitelmaluonnokset.map((aineisto) => (
+                <div key={aineisto.dokumenttiOid}>
+                  <Link underline="none" href={aineisto.tiedosto || "#"}>
+                    {aineisto.tiedosto}
+                  </Link>
+                </div>
+              ))}
             </SectionContent>
-          }
-          {vuorovaikutus?.suunnittelumateriaali?.nimi &&
+          )}
+          {vuorovaikutus?.suunnittelumateriaali?.nimi && (
             <SectionContent>
               <div>Muu esittelymateriaali</div>
               <div>{vuorovaikutus.suunnittelumateriaali.nimi}</div>
-              <div><Link underline="none" href={vuorovaikutus.suunnittelumateriaali.url}>{vuorovaikutus.suunnittelumateriaali.url}</Link></div>
+              <div>
+                <Link underline="none" href={vuorovaikutus.suunnittelumateriaali.url}>
+                  {vuorovaikutus.suunnittelumateriaali.url}
+                </Link>
+              </div>
             </SectionContent>
-          }
+          )}
         </Section>
-      }
-      <Section className={(muokkaustila || !julkinen) ? "" : "hidden"}>
+      )}
+      <Section className={muokkaustila || !julkinen ? "" : "hidden"}>
         <SectionContent>
-          {julkinen
-            ? <HassuStack direction={["column", "column", "row"]} justifyContent="space-between" >
-                <h4 style={{ display: "inline" }} className="vayla-small-title">Suunnitelmaluonnokset ja esittelyaineistot</h4>
-                <HassuStack direction={["column", "column", "row"]}>
-                  <Button primary type="submit" onClick={(e) => {
+          {julkinen ? (
+            <HassuStack direction={["column", "column", "row"]} justifyContent="space-between">
+              <h4 style={{ display: "inline" }} className="vayla-small-title">
+                Suunnitelmaluonnokset ja esittelyaineistot
+              </h4>
+              <HassuStack direction={["column", "column", "row"]}>
+                <Button
+                  primary
+                  type="submit"
+                  onClick={(e) => {
                     e.preventDefault();
                     saveForm();
-                  }}>
-                    Päivitä
-                  </Button>
-                  <Button onClick={(e) => {
+                  }}
+                >
+                  Päivitä
+                </Button>
+                <Button
+                  onClick={(e) => {
                     e.preventDefault();
                     if (isDirty) reset();
                     setMuokkaustila(false);
-                  }}>
-                    Peruuta
-                  </Button>
-                </HassuStack>
+                  }}
+                >
+                  Peruuta
+                </Button>
               </HassuStack>
-            : <h4 className="vayla-small-title">Suunnitelmaluonnokset ja esittelyaineistot</h4>
-          }
+            </HassuStack>
+          ) : (
+            <h4 className="vayla-small-title">Suunnitelmaluonnokset ja esittelyaineistot</h4>
+          )}
           <p>
             Esittelyvideo tulee olla ladattuna erilliseen videojulkaisupalveluun (esim. Youtube) ja videon katselulinkki
             tuodaan sille tarkoitettuun kenttään. Luonnokset ja muut materiaalit tuodaan Projektivelhosta.
@@ -137,10 +161,44 @@ export default function LuonnoksetJaAineistot<T extends FormValues>({ saveForm, 
         </SectionContent>
         <SectionContent>
           <h5 className="vayla-smallest-title">Suunnitelmaluonnokset ja esittelyaineistot</h5>
+          <p>Aineistoille tulee valita kategoria / otsikko, jonka alla ne esitetään palvelun julkisella puolella. </p>
+          <p>
+            Aineistojen järjestys kunkin otsikon alla määräytyy listan järjestyksen mukaan. Voit vaihtaa järjestystä
+            tarttumalla hiirellä raahaus-ikonista ja siirtämällä rivin paikkaa.{" "}
+          </p>
+          <>
+            <p>Aineistot: </p>
+            {projekti?.oid &&
+              aineistotFields.map((aineisto, index) => (
+                <Stack direction="row" alignItems="center" key={aineisto.id}>
+                  <AineistoNimiExtLink
+                    key={aineisto.id}
+                    aineistoNimi={
+                      vuorovaikutus?.aineistot?.find((a) => a.dokumenttiOid === aineisto.dokumenttiOid)?.tiedosto ||
+                      valitutAineistot.find(({ oid }) => oid === aineisto.dokumenttiOid)?.tiedosto ||
+                      `oid-${aineisto.dokumenttiOid}`
+                    }
+                    aineistoOid={aineisto.dokumenttiOid}
+                    projektiOid={projekti.oid}
+                  />
+                  <IconButton
+                    onClick={(event) => {
+                      event.preventDefault();
+                      removeAineistot(index);
+                    }}
+                    icon="trash"
+                  />
+                </Stack>
+              ))}
+          </>
           <Button type="button" onClick={openAineistoDialog}>
             Tuo Aineistoja
           </Button>
-          <AineistojenValitseminenDialog open={aineistoDialogOpen} onClose={closeAineistoDialog} />
+          <AineistojenValitseminenDialog
+            open={aineistoDialogOpen}
+            onClose={closeAineistoDialog}
+            updateValitutAineistot={setValitutAineistot}
+          />
         </SectionContent>
         <SectionContent>
           <h5 className="vayla-smallest-title">Ennalta kuvattu videoesittely</h5>

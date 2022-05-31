@@ -13,17 +13,12 @@ import { setupLambdaMonitoring } from "backend/src/aws/monitoring";
 import SuunnitteluvaiheenVuorovaikuttaminen from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
 import { DialogActions, DialogContent } from "@mui/material";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
-import {
-  ViranomaisVastaanottajaInput,
-} from "@services/api";
+import { ViranomaisVastaanottajaInput } from "@services/api";
 import { GetServerSideProps } from "next";
 import { GetParameterResult } from "aws-sdk/clients/ssm";
 import log from "loglevel";
 
-export default function Suunnittelu({
-  setRouteLabels,
-  kirjaamoOsoitteet
-}: PageProps & ServerSideProps ): ReactElement {
+export default function Suunnittelu({ setRouteLabels, kirjaamoOsoitteet }: PageProps & ServerSideProps): ReactElement {
   const router = useRouter();
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
   const { data: projekti, mutate: reloadProjekti } = useProjekti(oid);
@@ -56,24 +51,23 @@ export default function Suunnittelu({
   };
 
   const vuorovaikutusTabs = useMemo(() => {
-    let tabs = [];
-    tabs.push({
-      label: "Suunnitteluvaiheen perustiedot",
-      content: (
-        <SuunnitteluvaiheenPerustiedot
-          projekti={projekti}
-          reloadProjekti={reloadProjekti}
-          isDirtyHandler={setIsChildDirty}
-        />
-      ),
-      value: 1,
-    });
-
+    const tabs = [
+      {
+        label: "Suunnitteluvaiheen perustiedot",
+        content: (
+          <SuunnitteluvaiheenPerustiedot
+            projekti={projekti}
+            reloadProjekti={reloadProjekti}
+            isDirtyHandler={setIsChildDirty}
+          />
+        ),
+      },
+    ];
     if (!projekti) {
       return tabs;
     }
-
-    if (!projekti.suunnitteluVaihe?.vuorovaikutukset || projekti.suunnitteluVaihe.vuorovaikutukset.length < 1) {
+    console.log(projekti);
+    if (!projekti.suunnitteluVaihe?.vuorovaikutukset?.length) {
       tabs.push({
         label: "1. Vuorovaikuttaminen",
         content: (
@@ -82,14 +76,13 @@ export default function Suunnittelu({
             reloadProjekti={reloadProjekti}
             isDirtyHandler={setIsChildDirty}
             vuorovaikutusnro={1}
-            kirjaamoOsoitteet={kirjaamoOsoitteet || null}
+            kirjaamoOsoitteet={kirjaamoOsoitteet || null}
           />
         ),
-        value: 2,
       });
     } else {
-      projekti.suunnitteluVaihe.vuorovaikutukset.forEach((vuorovaikutus, index) => {
-        let tab = {
+      projekti?.suunnitteluVaihe?.vuorovaikutukset?.forEach((vuorovaikutus) => {
+        const tab = {
           label: `${vuorovaikutus.vuorovaikutusNumero}. Vuorovaikuttaminen`,
           content: (
             <SuunnitteluvaiheenVuorovaikuttaminen
@@ -97,12 +90,10 @@ export default function Suunnittelu({
               reloadProjekti={reloadProjekti}
               isDirtyHandler={setIsChildDirty}
               vuorovaikutusnro={vuorovaikutus.vuorovaikutusNumero}
-              kirjaamoOsoitteet={kirjaamoOsoitteet || null}
+              kirjaamoOsoitteet={kirjaamoOsoitteet || null}
             />
           ),
-          value: index + 2,
         };
-
         tabs.push(tab);
       });
     }

@@ -263,6 +263,7 @@ export class HassuBackendStack extends cdk.Stack {
         PERSON_SEARCH_UPDATER_LAMBDA_ARN: personSearchUpdaterLambda.functionArn,
         FRONTEND_PUBLIC_KEY_ID: frontendStackOutputs?.FrontendPublicKeyIdOutput,
         CLOUDFRONT_DISTRIBUTION_ID: frontendStackOutputs?.CloudfrontDistributionId,
+        AINEISTO_IMPORT_SQS_URL: aineistoSQS.queueUrl,
       },
       tracing: Tracing.PASS_THROUGH,
       insightsVersion: LambdaInsightsVersion.VERSION_1_0_98_0,

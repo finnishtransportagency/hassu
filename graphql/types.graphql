@@ -167,7 +167,7 @@ type Aineisto {
   """
   Dokumentin oid Velhossa
   """
-  dokumenttiOid: String
+  dokumenttiOid: String!
   """
   Suhteellinen polku tiedostoon yllapidon S3-bucketissa projektin alla
   """

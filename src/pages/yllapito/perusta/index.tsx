@@ -4,16 +4,18 @@ import * as Yup from "yup";
 import { SchemaOf } from "yup";
 
 import { api, VelhoHakuTulos } from "@services/api";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/router";
 import TextInput from "@components/form/TextInput";
 import Button from "@components/button/Button";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import useTranslation from "next-translate/useTranslation";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuSpinner from "@components/HassuSpinner";
-import Table from "@components/Table";
+import { useHassuTable } from "src/hooks/useHassuTable";
+import { Column } from "react-table";
+import useTranslation from "next-translate/useTranslation";
+import HassuTable from "@components/HassuTable";
 
 interface SearchInput {
   name: string;
@@ -145,24 +147,7 @@ export default function Perusta(props: Props) {
             </div>
           </Notification>
           {(Array.isArray(hakuTulos) && hakuTulos.length > 0) || isLoading ? (
-            <Table<VelhoHakuTulos>
-              tableOptions={{
-                data: hakuTulos || [],
-                columns: [
-                  { Header: "Asiatunnus", accessor: "asianumero" },
-                  { Header: "Nimi", accessor: "nimi", minWidth: 400 },
-                  {
-                    Header: "Tyyppi",
-                    accessor: (projekti) => projekti.tyyppi && t(`projekti:projekti-tyyppi.${projekti.tyyppi}`),
-                    minWidth: 100,
-                  },
-                  { Header: "Projektipäällikkö", accessor: "projektiPaallikko" },
-                  { Header: "oid", accessor: "oid" },
-                ],
-                initialState: { hiddenColumns: ["oid"] },
-              }}
-              rowLink={(projekti) => `/yllapito/perusta/${encodeURIComponent(projekti.oid)}`}
-            />
+            <PerustaTable hakuTulos={hakuTulos || []} />
           ) : (
             !isLoading && (
               <p>
@@ -178,3 +163,36 @@ export default function Perusta(props: Props) {
     </>
   );
 }
+
+interface PerustaTableProps {
+  hakuTulos: VelhoHakuTulos[];
+}
+
+const PerustaTable = ({ hakuTulos }: PerustaTableProps) => {
+  const { t } = useTranslation("velho-haku");
+  const columns: Column<VelhoHakuTulos>[] = useMemo(
+    () => [
+      { Header: "Asiatunnus", accessor: "asianumero" },
+      { Header: "Nimi", accessor: "nimi", minWidth: 400 },
+      {
+        Header: "Tyyppi",
+        accessor: (projekti) => projekti.tyyppi && t(`projekti:projekti-tyyppi.${projekti.tyyppi}`),
+        minWidth: 100,
+      },
+      { Header: "Projektipäällikkö", accessor: "projektiPaallikko" },
+      { Header: "oid", accessor: "oid" },
+    ],
+    [t]
+  );
+
+  const tableProps = useHassuTable<VelhoHakuTulos>({
+    tableOptions: {
+      data: hakuTulos || [],
+      columns,
+      initialState: { hiddenColumns: ["oid"] },
+    },
+    rowLink: (projekti) => `/yllapito/perusta/${encodeURIComponent(projekti.oid)}`,
+  });
+
+  return <HassuTable {...tableProps} />;
+};
