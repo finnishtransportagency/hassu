@@ -1,10 +1,6 @@
-import SectionContent from "@components/layout/SectionContent";
-import Section from "@components/layout/Section";
 import React, { ReactElement } from "react";
 import Button from "@components/button/Button";
-import HassuStack from "@components/layout/HassuStack";
 import HassuDialog from "@components/HassuDialog";
-import WindowCloseButton from "@components/button/WindowCloseButton";
 import useTranslation from "next-translate/useTranslation";
 import { IlmoituksenVastaanottajatInput } from "@services/api";
 import { DialogActions, DialogContent } from "@mui/material";
