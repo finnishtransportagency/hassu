@@ -325,6 +325,12 @@ function adaptVuorovaikutusToSave(
   if (vuorovaikutusInput) {
     const dbVuorovaikutus = findVuorovaikutusByNumber(projekti, vuorovaikutusInput.vuorovaikutusNumero);
 
+    const { esittelyaineistot, suunnitelmaluonnokset } = adaptAineistotToSave(
+      projektiAdaptationResult,
+      vuorovaikutusInput,
+      dbVuorovaikutus
+    );
+
     const vuorovaikutusToSave: Vuorovaikutus = {
       ...vuorovaikutusInput,
       vuorovaikutusYhteysHenkilot: adaptKayttajatunnusList(projekti, vuorovaikutusInput.vuorovaikutusYhteysHenkilot),
@@ -334,7 +340,8 @@ function adaptVuorovaikutusToSave(
       ),
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(vuorovaikutusInput.ilmoituksenVastaanottajat),
       esitettavatYhteystiedot: adaptYhteystiedotToSave(vuorovaikutusInput.esitettavatYhteystiedot),
-      aineistot: adaptAineistotToSave(projektiAdaptationResult, vuorovaikutusInput, dbVuorovaikutus),
+      esittelyaineistot,
+      suunnitelmaluonnokset,
     };
 
     checkIfAineistoJulkinenChanged(vuorovaikutusToSave, dbVuorovaikutus, projektiAdaptationResult);
@@ -381,21 +388,37 @@ function adaptAineistotToSave(
   projektiAdaptationResult: Partial<ProjektiAdaptationResult>,
   vuorovaikutusInput: VuorovaikutusInput,
   vuorovaikutus?: Vuorovaikutus
-): Aineisto[] | undefined {
+): Pick<Vuorovaikutus, "esittelyaineistot" | "suunnitelmaluonnokset"> {
   if (!vuorovaikutus) {
-    return undefined;
+    return { esittelyaineistot: undefined, suunnitelmaluonnokset: undefined };
   }
-  const aineistotInput = vuorovaikutusInput.aineistot ? [...vuorovaikutusInput.aineistot] : [];
+
+  const esittelyaineistotInput = vuorovaikutusInput.esittelyaineistot || [];
+  const suunnitelmaluonnoksetInput = vuorovaikutusInput.suunnitelmaluonnokset || [];
+
+  const dbEsittelyAineistot = vuorovaikutus.esittelyaineistot || [];
+  const dbSuunnitelmaLuonnokset = vuorovaikutus.suunnitelmaluonnokset || [];
+  const dbAineistot = [...dbEsittelyAineistot, ...dbSuunnitelmaLuonnokset];
+
   const aineistotToDelete = [];
 
-  // Update existing ones
-  const dbAineistot = vuorovaikutus.aineistot || [];
-  dbAineistot.slice(0).forEach((dbAineisto) => {
-    const aineistoInput = pickAineistoFromInputByDocumenttiOid(aineistotInput, dbAineisto.dokumenttiOid);
-    if (aineistoInput) {
+  dbAineistot.forEach((dbAineisto) => {
+    const esittelyAineistoInput = pickAineistoFromInputByDocumenttiOid(
+      esittelyaineistotInput,
+      dbAineisto.dokumenttiOid
+    );
+    const suunnitelmaLuonnosInput = pickAineistoFromInputByDocumenttiOid(
+      suunnitelmaluonnoksetInput,
+      dbAineisto.dokumenttiOid
+    );
+    if (esittelyAineistoInput) {
       // Update existing one
-      dbAineisto.kategoria = aineistoInput.kategoria;
-      dbAineisto.jarjestys = aineistoInput.jarjestys;
+      dbAineisto.nimi = esittelyAineistoInput.nimi;
+      dbEsittelyAineistot.push(dbAineisto);
+    } else if (suunnitelmaLuonnosInput) {
+      // Update existing one
+      dbAineisto.nimi = suunnitelmaLuonnosInput.nimi;
+      dbSuunnitelmaLuonnokset.push(dbAineisto);
     } else {
       aineistotToDelete.push(dbAineisto);
     }
@@ -408,17 +431,27 @@ function adaptAineistotToSave(
 
   // Add new ones and optionally trigger import later
   let hasPendingImports = undefined;
-  for (const aineistoInput of aineistotInput) {
-    dbAineistot.push({
+
+  for (const aineistoInput of esittelyaineistotInput) {
+    dbEsittelyAineistot.push({
       dokumenttiOid: aineistoInput.dokumenttiOid,
-      jarjestys: aineistoInput.jarjestys,
-      kategoria: aineistoInput.kategoria,
+      nimi: aineistoInput.nimi,
       tila: AineistoTila.ODOTTAA,
     });
     hasPendingImports = true;
   }
+
+  for (const aineistoInput of suunnitelmaluonnoksetInput) {
+    dbSuunnitelmaLuonnokset.push({
+      dokumenttiOid: aineistoInput.dokumenttiOid,
+      nimi: aineistoInput.nimi,
+      tila: AineistoTila.ODOTTAA,
+    });
+    hasPendingImports = true;
+  }
+
   projektiAdaptationResult.aineistoChanges = { vuorovaikutus: null, aineistotToDelete, hasPendingImports };
-  return dbAineistot;
+  return { esittelyaineistot: dbEsittelyAineistot, suunnitelmaluonnokset: dbSuunnitelmaLuonnokset };
 }
 
 export function adaptAineistot(aineistot?: Aineisto[] | null, julkaisuPaiva?: Dayjs): Aineisto[] | undefined {
@@ -436,13 +469,14 @@ function adaptVuorovaikutukset(vuorovaikutukset: Array<Vuorovaikutus>): API.Vuor
     return vuorovaikutukset.map(
       (vuorovaikutus) =>
         ({
-        ...vuorovaikutus,
-        vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
-        suunnittelumateriaali: adaptLinkki(vuorovaikutus.suunnittelumateriaali),
-        videot: adaptLinkkiList(vuorovaikutus.videot),
-        aineistot: adaptAineistot(vuorovaikutus.aineistot),
-        __typename: "Vuorovaikutus",
-      } as API.Vuorovaikutus)
+          ...vuorovaikutus,
+          vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
+          suunnittelumateriaali: adaptLinkki(vuorovaikutus.suunnittelumateriaali),
+          videot: adaptLinkkiList(vuorovaikutus.videot),
+          esittelyaineistot: adaptAineistot(vuorovaikutus.esittelyaineistot),
+          suunnitelmaluonnokset: adaptAineistot(vuorovaikutus.suunnitelmaluonnokset),
+          __typename: "Vuorovaikutus",
+        } as API.Vuorovaikutus)
     );
   }
   return vuorovaikutukset as undefined;
@@ -465,8 +499,8 @@ export function adaptLinkki(link: Linkki): API.Linkki {
   if (link) {
     return {
       ...link,
-      __typename: "Linkki"
-    }
+      __typename: "Linkki",
+    };
   }
   return link as undefined;
 }

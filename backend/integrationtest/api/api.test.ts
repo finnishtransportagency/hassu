@@ -16,6 +16,7 @@ import {
   TilasiirtymaTyyppi,
   VelhoAineistoKategoria,
   Vuorovaikutus,
+  VuorovaikutusInput,
 } from "../../../common/graphql/apiModel";
 import fs from "fs";
 import axios from "axios";
@@ -50,9 +51,10 @@ function expectToMatchSnapshot(description: string, obj: unknown) {
 }
 
 function cleanupVuorovaikutusTimestamps(vuorovaikutukset: Vuorovaikutus[]) {
-  vuorovaikutukset.forEach((vuorovaikutus) =>
-    vuorovaikutus.aineistot?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"))
-  );
+  vuorovaikutukset.forEach((vuorovaikutus) => {
+    vuorovaikutus.esittelyaineistot?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
+    vuorovaikutus.suunnitelmaluonnokset?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
+  });
 }
 
 function cleanupGeneratedIdAndTimestampFromFeedbacks(feedbacks?: Palaute[]) {
@@ -287,21 +289,42 @@ describe("Api", () => {
     const originalVuorovaikutus = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe
       .vuorovaikutukset[0];
 
-    let order = 1;
-    const aineistot = velhoAineistoKategorias.reduce((documents, aineistoKategoria) => {
-      aineistoKategoria.aineistot.forEach((aineisto) => {
-        documents.push({ dokumenttiOid: aineisto.oid, jarjestys: order++, kategoria: aineistoKategoria.kategoria });
-      });
-      return documents;
-    }, [] as AineistoInput[]);
+    const { esittelyaineistot, suunnitelmaluonnokset } = velhoAineistoKategorias.reduce<
+      Pick<VuorovaikutusInput, "esittelyaineistot" | "suunnitelmaluonnokset">
+    >(
+      (documents, aineistoKategoria) => {
+        aineistoKategoria.aineistot.forEach((aineisto, index) => {
+          if (index % 2 === 0) {
+            documents.esittelyaineistot.push({
+              dokumenttiOid: aineisto.oid,
+              jarjestys: documents.suunnitelmaluonnokset.length + 1,
+              nimi: aineisto.tiedosto,
+            });
+          } else {
+            documents.suunnitelmaluonnokset.push({
+              dokumenttiOid: aineisto.oid,
+              jarjestys: documents.suunnitelmaluonnokset.length + 1,
+              nimi: aineisto.tiedosto,
+            });
+          }
+        });
+        return documents;
+      },
+      { esittelyaineistot: [], suunnitelmaluonnokset: [] }
+    );
 
-    async function saveAndVerifyAineistoSave(oid: string, aineistot: AineistoInput[]) {
+    async function saveAndVerifyAineistoSave(
+      oid: string,
+      esittelyaineistot: AineistoInput[],
+      suunnitelmaluonnokset: AineistoInput[]
+    ) {
       await api.tallennaProjekti({
         oid,
         suunnitteluVaihe: {
           vuorovaikutus: {
             ...originalVuorovaikutus,
-            aineistot,
+            esittelyaineistot,
+            suunnitelmaluonnokset,
           },
         },
       });
@@ -310,29 +333,33 @@ describe("Api", () => {
       expectToMatchSnapshot("saveAndVerifyAineistoSave", vuorovaikutus);
     }
 
-    await saveAndVerifyAineistoSave(oid, aineistot);
-    aineistot.map((aineisto) => {
-      aineisto.kategoria = aineisto.kategoria + " new";
+    await saveAndVerifyAineistoSave(oid, esittelyaineistot, suunnitelmaluonnokset);
+    esittelyaineistot.map((aineisto) => {
+      aineisto.nimi = aineisto.nimi + " new";
       aineisto.jarjestys = aineisto.jarjestys + 10;
     });
-    await saveAndVerifyAineistoSave(oid, aineistot);
+    suunnitelmaluonnokset.map((aineisto) => {
+      aineisto.nimi = aineisto.nimi + " new";
+      aineisto.jarjestys = aineisto.jarjestys + 10;
+    });
+    await saveAndVerifyAineistoSave(oid, esittelyaineistot, suunnitelmaluonnokset);
 
-    const aineistotWithoutFirst = aineistot.slice(1);
-    await saveAndVerifyAineistoSave(oid, aineistotWithoutFirst);
+    const esittelyaineistotWithoutFirst = esittelyaineistot.slice(1);
+    await saveAndVerifyAineistoSave(oid, esittelyaineistotWithoutFirst, suunnitelmaluonnokset);
   }
 
   async function testUpdatePublishDateAndDeleteAineisto(oid: string) {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     const vuorovaikutus = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe
       .vuorovaikutukset[0];
-    vuorovaikutus.aineistot.pop();
+    vuorovaikutus.esittelyaineistot.pop();
+    vuorovaikutus.suunnitelmaluonnokset.pop();
     const input = {
       oid,
       suunnitteluVaihe: {
         vuorovaikutus: {
           ...vuorovaikutus,
           vuorovaikutusJulkaisuPaiva: parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva).add(1, "date").format(),
-          aineistot: vuorovaikutus.aineistot,
         },
       },
     };

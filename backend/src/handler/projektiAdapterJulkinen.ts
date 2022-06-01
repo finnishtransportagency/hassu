@@ -198,7 +198,8 @@ function adaptVuorovaikutukset(dbProjekti: DBProjekti, projektiHenkilot: Projekt
             vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
             videot: adaptLinkkiList(vuorovaikutus.videot),
             suunnittelumateriaali: adaptLinkki(vuorovaikutus.suunnittelumateriaali),
-            aineistot: adaptAineistot(vuorovaikutus.aineistot, julkaisuPaiva),
+            esittelyaineistot: adaptAineistot(vuorovaikutus.esittelyaineistot, julkaisuPaiva),
+            suunnitelmaluonnokset: adaptAineistot(vuorovaikutus.suunnitelmaluonnokset, julkaisuPaiva),
             vuorovaikutusYhteystiedot: adaptAndMergeYhteystiedot(dbProjekti, vuorovaikutus),
             vuorovaikutusYhteysHenkilot: vuorovaikutus.vuorovaikutusYhteysHenkilot?.map(
               (username) => projektiHenkilot[username].id

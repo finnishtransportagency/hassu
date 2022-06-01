@@ -50,7 +50,8 @@ export type VuorovaikutusFormValues = RequiredProjektiFields & {
   suunnitteluVaihe: {
     vuorovaikutus: Pick<
       VuorovaikutusInput,
-      | "aineistot"
+      | "esittelyaineistot"
+      | "suunnitelmaluonnokset"
       | "esitettavatYhteystiedot"
       | "kysymyksetJaPalautteetViimeistaan"
       | "ilmoituksenVastaanottajat"
@@ -80,7 +81,7 @@ const defaultListWithEmptyLink = (list: LinkkiInput[] | null | undefined): Linkk
   return list.map((link) => ({ nimi: link.nimi, url: link.url }));
 };
 
-const defaultVastaanottajat = (
+export const defaultVastaanottajat = (
   projekti: Projekti | null | undefined,
   vuorovaikutusnro: number,
   kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] | null
@@ -164,11 +165,15 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
     return {
       suunnitteluVaihe: {
         vuorovaikutus: {
-          aineistot:
-            vuorovaikutus?.aineistot?.map(({ dokumenttiOid, jarjestys, kategoria }) => ({
+          esittelyaineistot:
+            vuorovaikutus?.esittelyaineistot?.map(({ dokumenttiOid, nimi }) => ({
               dokumenttiOid,
-              jarjestys,
-              kategoria,
+              nimi,
+            })) || [],
+          suunnitelmaluonnokset:
+            vuorovaikutus?.suunnitelmaluonnokset?.map(({ dokumenttiOid, nimi }) => ({
+              dokumenttiOid,
+              nimi,
             })) || [],
           vuorovaikutusNumero: vuorovaikutusnro,
           vuorovaikutusJulkaisuPaiva: vuorovaikutus?.vuorovaikutusJulkaisuPaiva,
@@ -179,7 +184,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
               .map(({ kayttajatunnus }) => kayttajatunnus) || [],
           esitettavatYhteystiedot:
             vuorovaikutus?.esitettavatYhteystiedot?.map((yhteystieto) => removeTypeName(yhteystieto)) || [],
-          ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, vuorovaikutusnro, kirjaamoOsoitteet),
+          ilmoituksenVastaanottajat: { kunnat: [], viranomaiset: [] },
           vuorovaikutusTilaisuudet:
             vuorovaikutus?.vuorovaikutusTilaisuudet?.map((tilaisuus) => {
               const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
@@ -197,7 +202,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
         },
       },
     };
-  }, [projekti, vuorovaikutusnro, kirjaamoOsoitteet, vuorovaikutus]);
+  }, [projekti, vuorovaikutusnro, vuorovaikutus]);
 
   const formOptions: UseFormProps<VuorovaikutusFormValues> = useMemo(() => {
     return {
@@ -228,6 +233,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
 
   const saveDraft = useCallback(
     async (formData: VuorovaikutusFormValues) => {
+      console.log(formData);
       setIsFormSubmitting(true);
       try {
         await saveSunnitteluvaihe(formData);
