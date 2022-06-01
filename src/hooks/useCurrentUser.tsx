@@ -1,8 +1,11 @@
 import useSWR from "swr";
 import { api, apiConfig } from "@services/api";
+import { isEqual, omit } from "lodash";
 
 export function useCurrentUser() {
-  return useSWR([apiConfig.nykyinenKayttaja.graphql], userLoader);
+  return useSWR([apiConfig.nykyinenKayttaja.graphql], userLoader, {
+    compare: (a, b) => isEqual(omit(a, "keksit"), omit(b, "keksit")),
+  });
 }
 
 async function userLoader(_: string) {
