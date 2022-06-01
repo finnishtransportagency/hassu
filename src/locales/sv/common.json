@@ -50,6 +50,26 @@
   "viikonpaiva_3": "onsdag",
   "viikonpaiva_4": "torsdag",
   "viikonpaiva_5": "fredag",
-  "viikonpaiva_6": "lördag"
-  
+  "viikonpaiva_6": "lördag",
+  "laheta": "RUOTSIKSI Lähetä",
+  "peruuta": "RUOTSIKSI Peruuta",
+  "virheet": {
+    "sahkoposti_ei_kelpaa": "RUOTSIKSI Sähköposti ei kelpaa",
+    "vain_kuva_tai_pdf": "RUOTSIKSI Tiedoston on oltava tyyppiä PDF, PNG tai JPG",
+    "max_4mt": "RUOTSIKSI Tiedosto on liian suuri. Max koko 4Mt.",
+    "palaute_on_jatettava": "RUOTSIKSI Palaute on pakollinen tieto"
+  },
+  "ilmoitukset": {
+    "tallennus_onnistui": "RUOTSIKSI Tallennus onnistui",
+    "tallennuksessa_tapahtui_virhe": "RUOTSIKSI Tallennuksessa tapahtui virhe"
+  },
+  "etunimi": "RUOTSIKSI Etunimi",
+  "sukunimi": "RUOTSIKSI Sukunimi",
+  "sahkoposti": "RUOTSIKSI Sähköposti",
+  "puhelinnumero": "RUOTSIKSI Puhelinnumero",
+  "tiedosto_on_liian_suuri": "RUOTSIKSI Tiedosto on liian suuri",
+  "valittu_tiedosto": "RUOTSIKSI Valittu tiedosto",
+  "hae_tiedosto": "RUOTSIKSI Hae tiedosto",
+  "sulje": "RUOTSIKSI Sulje",
+  "liite": "RUOTSIKSI Liite"
 }

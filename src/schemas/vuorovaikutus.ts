@@ -6,6 +6,25 @@ import filter from "lodash/filter";
 
 const validTimeRegexp = /^([0-1]?[0-9]|2[0-4]):([0-5]?[0-9])$/;
 
+export const palauteSchema = Yup.object().shape({
+  etunimi: Yup.string().notRequired().max(100).nullable(),
+  sukunimi: Yup.string().notRequired().max(100).nullable(),
+  sahkoposti: Yup.string().notRequired().email("sahkoposti_ei_kelpaa").nullable(),
+  puhelinnumero: Yup.string().notRequired().max(20).nullable(),
+  kysymysTaiPalaute: Yup.string().required("palaute_on_jatettava").max(2000),
+  yhteydenottotapaEmail: Yup.boolean().notRequired().nullable(),
+  yhteydenottotapaPuhelin: Yup.boolean().notRequired().nullable(),
+  liite: Yup.string().notRequired().nullable()
+    .test({
+      message: 'vain_kuva_tai_pdf',
+      test: (file, context) => {
+        const isValid = !file || /.*\.[(jpg)|(jpeg)|(png)|(pdf)]/.test(file);
+        if (!isValid) context?.createError();
+        return isValid;
+      }
+    })
+});
+
 export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
   vuorovaikutusTilaisuudet: Yup.array().of(
     Yup.object().shape({

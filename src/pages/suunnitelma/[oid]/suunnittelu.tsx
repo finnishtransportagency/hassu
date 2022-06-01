@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useState } from "react";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
@@ -17,9 +17,12 @@ import { SoittoajanYhteystieto } from "@components/projekti/suunnitteluvaihe/Vuo
 import { PageProps } from "@pages/_app";
 import ExtLink from "@components/ExtLink";
 import { parseVideoURL } from "src/util/videoParser";
+import PalauteLomakeDialogi from "src/components/projekti/kansalaisnakyma/PalauteLomakeDialogi";
+import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
 
 export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
   const router = useRouter();
+  const [palauteLomakeOpen, setPalauteLomakeOpen] = useState(false);
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
   const { data: projekti } = useProjektiJulkinen(oid);
   const { t } = useTranslation();
@@ -142,7 +145,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
             <p>{projekti.suunnitteluVaihe.arvioSeuraavanVaiheenAlkamisesta}</p>
           </SectionContent>
         </Section>
-        <Section>
+        <Section noDivider>
           <SectionContent>
             <h3 className="vayla-title">{t(`projekti:ui-otsikot.vaikuttamisen_mahdollisuudet_ja_aikataulut`)}</h3>
             {!vuorovaikutus && (
@@ -290,6 +293,19 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
               </SectionContent>
             </Section>
           )}
+          {vuorovaikutus && 
+            <>
+              <JataPalautettaNappi
+                onClick={() => setPalauteLomakeOpen(true)}
+              />
+              <PalauteLomakeDialogi
+                vuorovaikutus={vuorovaikutus}
+                open={palauteLomakeOpen}
+                onClose={() => setPalauteLomakeOpen(false)}
+                projekti={projekti}
+              />
+            </>
+          }
       </>
     </ProjektiJulkinenPageLayout>
   );

@@ -21,6 +21,7 @@ const Textarea = (
     hideLengthCounter,
     className,
     maxRows = 20,
+    minRows = 1,
     ...props
   }: Props & Omit<TextareaAutosizeProps, "ref">,
   ref: TextareaAutosizeProps["ref"]
@@ -50,6 +51,7 @@ const Textarea = (
         ref={ref}
         maxLength={maxLength}
         maxRows={maxRows}
+        minRows={minRows}
         className={classNames(error && "error")}
       />
     </FormGroup>
