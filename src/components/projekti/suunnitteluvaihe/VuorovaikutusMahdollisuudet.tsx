@@ -6,7 +6,7 @@ import {
   Yhteystieto,
   YhteystietoInput,
   VuorovaikutusTilaisuusInput,
-  Vuorovaikutus
+  Vuorovaikutus,
 } from "@services/api";
 import Section from "@components/layout/Section";
 import React, { ReactElement, Dispatch, SetStateAction } from "react";
@@ -26,21 +26,19 @@ interface Props {
 type FormFields = {
   suunnitteluVaihe: {
     vuorovaikutus: {
-      vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuusInput> | null
-    }
+      vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuusInput> | null;
+    };
   };
 };
 
 export default function SuunnitteluvaiheenVuorovaikuttaminen({
   projekti,
   vuorovaikutus,
-  setOpenVuorovaikutustilaisuus
+  setOpenVuorovaikutustilaisuus,
 }: Props): ReactElement {
   const { t } = useTranslation();
 
-  const {
-    getValues,
-  } = useFormContext<FormFields>();
+  const { getValues } = useFormContext<FormFields>();
 
   if (!projekti) {
     return <></>;
@@ -60,24 +58,29 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
 
   return (
     <>
-
       <Section>
-        {vuorovaikutus.julkinen
-          ? <>
-              <Button
-                style={{ float: "right" }}
-                onClick={(e) => {
-                  setOpenVuorovaikutustilaisuus(true);
-                  e.preventDefault();
-                }}
-              >
-                Muokkaa
-              </Button>
+        {vuorovaikutus.julkinen ? (
+          <>
+            <Button
+              style={{ float: "right" }}
+              onClick={(e) => {
+                setOpenVuorovaikutustilaisuus(true);
+                e.preventDefault();
+              }}
+            >
+              Muokkaa
+            </Button>
+            <div className="pt-10">
               <p className="vayla-label">Vuorovaikutusmahdollisuudet palautteiden ja kysymyksien lisäksi</p>
-              <p>Verkossa jaettavien tilaisuuksien liittymislinkit julkaistaan palvelun julkisella puolella kaksi (2) tuntia ennen tilaisuuden alkua.</p>
-            </>
-          : <h4 className="vayla-small-title">Vuorovaikutusmahdollisuudet palautteiden ja kysymyksien lisäksi</h4>
-        }
+              <p>
+                Verkossa jaettavien tilaisuuksien liittymislinkit julkaistaan palvelun julkisella puolella kaksi (2)
+                tuntia ennen tilaisuuden alkua.
+              </p>
+            </div>
+          </>
+        ) : (
+          <h4 className="vayla-small-title">Vuorovaikutusmahdollisuudet palautteiden ja kysymyksien lisäksi</h4>
+        )}
         <SectionContent>
           {isVerkkotilaisuuksia && (
             <>
@@ -92,8 +95,8 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                       <p>
                         {tilaisuus.nimi ? capitalize(tilaisuus.nimi) : "Verkkotilaisuus"},{" "}
                         {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)}{" "}
-                        {formatDate(tilaisuus.paivamaara)} klo {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika},
-                        Linkki tilaisuuteen: {tilaisuus.linkki}
+                        {formatDate(tilaisuus.paivamaara)} klo {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, Linkki
+                        tilaisuuteen: {tilaisuus.linkki}
                       </p>
                     </div>
                   );
@@ -147,7 +150,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                 })}
             </>
           )}
-          {!vuorovaikutus.julkinen &&
+          {!vuorovaikutus.julkinen && (
             <Button
               onClick={(e) => {
                 setOpenVuorovaikutustilaisuus(true);
@@ -158,7 +161,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                 ? "Muokkaa tilaisuuksia"
                 : "Lisää tilaisuus"}
             </Button>
-          }
+          )}
         </SectionContent>
       </Section>
     </>
