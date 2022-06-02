@@ -17,6 +17,7 @@ import TimePicker from "@components/form/TimePicker";
 import {
   KaytettavaPalvelu,
   ProjektiKayttaja,
+  VuorovaikutusTilaisuus,
   VuorovaikutusTilaisuusInput,
   VuorovaikutusTilaisuusTyyppi,
 } from "@services/api";
@@ -29,6 +30,7 @@ import FormGroup from "@components/form/FormGroup";
 import CheckBox from "@components/form/CheckBox";
 import SoittoajanYhteyshenkilot from "./SoittoajanYhteyshenkilot";
 import dayjs from "dayjs";
+import { removeTypeName } from "src/util/removeTypeName";
 
 const defaultTilaisuus = {
   nimi: "",
@@ -58,13 +60,20 @@ export type VuorovaikutustilaisuusFormValues = {
 interface Props {
   open: boolean;
   windowHandler: (isOpen: boolean) => void;
-  tilaisuudet: VuorovaikutusTilaisuusInput[] | null | undefined;
+  tilaisuudet: VuorovaikutusTilaisuus[] | null | undefined;
   kayttoOikeudet: ProjektiKayttaja[] | null | undefined;
   julkinen: boolean;
   avaaHyvaksymisDialogi: () => void;
 }
 
-export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet, kayttoOikeudet, julkinen, avaaHyvaksymisDialogi }: Props): ReactElement {
+export default function VuorovaikutusDialog({
+  open,
+  windowHandler,
+  tilaisuudet,
+  kayttoOikeudet,
+  julkinen,
+  avaaHyvaksymisDialogi,
+}: Props): ReactElement {
   const formOptions: UseFormProps<VuorovaikutustilaisuusFormValues> = {
     resolver: yupResolver(vuorovaikutustilaisuudetSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
@@ -91,7 +100,14 @@ export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet, 
   useEffect(() => {
     if (tilaisuudet) {
       const tilaisuuksienTiedot = {
-        vuorovaikutusTilaisuudet: tilaisuudet,
+        vuorovaikutusTilaisuudet:
+          tilaisuudet.map((tilaisuus) => {
+            const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
+            const { esitettavatYhteystiedot } = vuorovaikutusTilaisuusInput;
+            vuorovaikutusTilaisuusInput.esitettavatYhteystiedot =
+              esitettavatYhteystiedot?.map((yt) => removeTypeName(yt)) || [];
+            return vuorovaikutusTilaisuusInput;
+          }) || [],
       };
       reset(tilaisuuksienTiedot);
     }
