@@ -52,8 +52,8 @@ export default function LuonnoksetJaAineistot({ saveForm, vuorovaikutus, muokkau
     name: "suunnitteluVaihe.vuorovaikutus.videot",
   });
 
-  const esittelyaineistot = vuorovaikutus?.aineistot?.filter(() => true);
-  const suunnitelmaluonnokset = vuorovaikutus?.aineistot?.filter(() => true);
+  const esittelyaineistot = vuorovaikutus?.aineistot?.filter((aineisto) => aineisto.kategoria === "Yleinen");
+  const suunnitelmaluonnokset = vuorovaikutus?.aineistot?.filter((aineisto) => aineisto.kategoria === "// TODO");
 
   return (
     <>
