@@ -67,7 +67,7 @@ export default function LuonnoksetJaAineistot({ saveForm, vuorovaikutus, muokkau
             <SectionContent>
               <div>Videoesittely</div>
               {vuorovaikutus.videot.map((video) => (
-                <div key={video.url}>
+                <div key={video.url} style={{ marginTop: "0.4rem" }}>
                   <Link underline="none" href={video.url}>
                     {video.url}
                   </Link>
@@ -84,7 +84,7 @@ export default function LuonnoksetJaAineistot({ saveForm, vuorovaikutus, muokkau
             <SectionContent>
               <div>Esittelyaineistot</div>
               {esittelyaineistot.map((aineisto) => (
-                <div key={aineisto.dokumenttiOid}>
+                <div key={aineisto.dokumenttiOid} style={{ marginTop: "0.4rem" }}>
                   <Link underline="none" href={aineisto.tiedosto || "#"}>
                     {aineisto.tiedosto}
                   </Link>
@@ -96,7 +96,7 @@ export default function LuonnoksetJaAineistot({ saveForm, vuorovaikutus, muokkau
             <SectionContent>
               <div>Suunnitelmaluonnokset</div>
               {suunnitelmaluonnokset.map((aineisto) => (
-                <div key={aineisto.dokumenttiOid}>
+                <div key={aineisto.dokumenttiOid} style={{ marginTop: "0.4rem" }}>
                   <Link underline="none" href={aineisto.tiedosto || "#"}>
                     {aineisto.tiedosto}
                   </Link>
@@ -107,8 +107,8 @@ export default function LuonnoksetJaAineistot({ saveForm, vuorovaikutus, muokkau
           {vuorovaikutus?.suunnittelumateriaali?.nimi && (
             <SectionContent>
               <div>Muu esittelymateriaali</div>
-              <div>{vuorovaikutus.suunnittelumateriaali.nimi}</div>
-              <div>
+              <div style={{ marginTop: "0.4rem" }}>{vuorovaikutus.suunnittelumateriaali.nimi}</div>
+              <div style={{ marginTop: "0.4rem" }}>
                 <Link underline="none" href={vuorovaikutus.suunnittelumateriaali.url}>
                   {vuorovaikutus.suunnittelumateriaali.url}
                 </Link>
