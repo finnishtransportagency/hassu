@@ -1,6 +1,6 @@
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
-import { ProjektiRooli, YhteystietoInput } from "@services/api";
+import { ProjektiRooli, YhteystietoInput, ProjektiKayttaja } from "@services/api";
 import Section from "@components/layout/Section";
 import { ReactElement, useMemo, Fragment } from "react";
 import Button from "@components/button/Button";
@@ -50,7 +50,20 @@ export default function EsitettavatYhteystiedot({ vuorovaikutusnro }: Props): Re
     name: "suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot",
   });
 
-  //TODO: lisää v?.vuorovaikutusYhteyshenkilot
+  const vuorovaikutusYhteysHenkilot: ProjektiKayttaja[] = v?.vuorovaikutusYhteysHenkilot
+    ? v?.vuorovaikutusYhteysHenkilot
+        .map((hlo) => {
+          const yhteysHenkiloTietoineen: ProjektiKayttaja | undefined = (projekti?.kayttoOikeudet || []).find(
+            (ko) => ko.kayttajatunnus === hlo
+          );
+          if (!yhteysHenkiloTietoineen) {
+            return {} as ProjektiKayttaja;
+          }
+          return yhteysHenkiloTietoineen as ProjektiKayttaja;
+        })
+        .filter((pk) => pk.nimi)
+    : [];
+
   if (julkinen) {
     return (
       <Section>
@@ -61,6 +74,12 @@ export default function EsitettavatYhteystiedot({ vuorovaikutusnro }: Props): Re
               {capitalize(yhteystieto.etunimi)} {capitalize(yhteystieto.sukunimi)}, puh. {yhteystieto.puhelinnumero},{" "}
               {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio}
               )
+            </p>
+          ))}
+          {vuorovaikutusYhteysHenkilot.map((yhteystieto, index) => (
+            <p style={{ margin: 0 }} key={index}>
+              {yhteystieto.nimi}, puh. {yhteystieto.puhelinnumero},{" "}
+              {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} ({yhteystieto.organisaatio})
             </p>
           ))}
         </SectionContent>

@@ -54,8 +54,6 @@ export default function ProjektiLiittyvatSuunnitelmat({ projekti }: Props): Reac
     }
   }, [projekti]);
 
-  console.log(errors);
-
   return (
     <Section smallGaps>
       <h4 className="vayla-small-title">Projektiin liittyvät suunnitelmat</h4>

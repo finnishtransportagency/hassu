@@ -52,8 +52,8 @@ export default function LuonnoksetJaAineistot({ saveForm, vuorovaikutus, muokkau
     name: "suunnitteluVaihe.vuorovaikutus.videot",
   });
 
-  const esittelyaineistot = vuorovaikutus?.aineistot?.filter(() => true);
-  const suunnitelmaluonnokset = vuorovaikutus?.aineistot?.filter(() => true);
+  const esittelyaineistot = vuorovaikutus?.aineistot?.filter((aineisto) => aineisto.kategoria === "Yleinen");
+  const suunnitelmaluonnokset = vuorovaikutus?.aineistot?.filter((aineisto) => aineisto.kategoria === "// TODO");
 
   return (
     <>
@@ -67,7 +67,7 @@ export default function LuonnoksetJaAineistot({ saveForm, vuorovaikutus, muokkau
             <SectionContent>
               <div>Videoesittely</div>
               {vuorovaikutus.videot.map((video) => (
-                <div key={video.url}>
+                <div key={video.url} style={{ marginTop: "0.4rem" }}>
                   <Link underline="none" href={video.url}>
                     {video.url}
                   </Link>
@@ -84,7 +84,7 @@ export default function LuonnoksetJaAineistot({ saveForm, vuorovaikutus, muokkau
             <SectionContent>
               <div>Esittelyaineistot</div>
               {esittelyaineistot.map((aineisto) => (
-                <div key={aineisto.dokumenttiOid}>
+                <div key={aineisto.dokumenttiOid} style={{ marginTop: "0.4rem" }}>
                   <Link underline="none" href={aineisto.tiedosto || "#"}>
                     {aineisto.tiedosto}
                   </Link>
@@ -96,7 +96,7 @@ export default function LuonnoksetJaAineistot({ saveForm, vuorovaikutus, muokkau
             <SectionContent>
               <div>Suunnitelmaluonnokset</div>
               {suunnitelmaluonnokset.map((aineisto) => (
-                <div key={aineisto.dokumenttiOid}>
+                <div key={aineisto.dokumenttiOid} style={{ marginTop: "0.4rem" }}>
                   <Link underline="none" href={aineisto.tiedosto || "#"}>
                     {aineisto.tiedosto}
                   </Link>
@@ -107,8 +107,8 @@ export default function LuonnoksetJaAineistot({ saveForm, vuorovaikutus, muokkau
           {vuorovaikutus?.suunnittelumateriaali?.nimi && (
             <SectionContent>
               <div>Muu esittelymateriaali</div>
-              <div>{vuorovaikutus.suunnittelumateriaali.nimi}</div>
-              <div>
+              <div style={{ marginTop: "0.4rem" }}>{vuorovaikutus.suunnittelumateriaali.nimi}</div>
+              <div style={{ marginTop: "0.4rem" }}>
                 <Link underline="none" href={vuorovaikutus.suunnittelumateriaali.url}>
                   {vuorovaikutus.suunnittelumateriaali.url}
                 </Link>
@@ -120,7 +120,7 @@ export default function LuonnoksetJaAineistot({ saveForm, vuorovaikutus, muokkau
       <Section className={muokkaustila || !julkinen ? "" : "hidden"}>
         <SectionContent>
           {julkinen ? (
-            <HassuStack direction={["column", "column", "row"]} justifyContent="space-between">
+            <HassuStack className="mt-12" direction={["column", "column", "row"]} justifyContent="space-between">
               <h4 style={{ display: "inline" }} className="vayla-small-title">
                 Suunnitelmaluonnokset ja esittelyaineistot
               </h4>
@@ -167,7 +167,7 @@ export default function LuonnoksetJaAineistot({ saveForm, vuorovaikutus, muokkau
             tarttumalla hiirellä raahaus-ikonista ja siirtämällä rivin paikkaa.{" "}
           </p>
           <>
-            <p>Aineistot: </p>
+            {!!aineistotFields.length && <p>Aineistot: </p>}
             {projekti?.oid &&
               aineistotFields.map((aineisto, index) => (
                 <Stack direction="row" alignItems="center" key={aineisto.id}>
