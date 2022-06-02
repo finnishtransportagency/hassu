@@ -1,16 +1,12 @@
 import SectionContent from "@components/layout/SectionContent";
+import Section from "@components/layout/Section";
 import { useFormContext } from "react-hook-form";
-import {
-  Projekti,
-  Kieli
-} from "@services/api";
+import { Projekti, Kieli } from "@services/api";
 import React, { ReactElement, useMemo } from "react";
 import DatePicker from "@components/form/DatePicker";
 import { formatDate } from "src/util/dateUtils";
 import dayjs from "dayjs";
 import lowerCase from "lodash/lowerCase";
-
-
 
 interface Props {
   projekti?: Projekti | null;
@@ -20,20 +16,16 @@ interface Props {
 type FormFields = {
   suunnitteluVaihe: {
     vuorovaikutus: {
-      vuorovaikutusJulkaisuPaiva: string | null,
+      vuorovaikutusJulkaisuPaiva: string | null;
       kysymyksetJaPalautteetViimeistaan: string | null;
-    }
+    };
   };
 };
 
-export default function SuunnitteluvaiheenVuorovaikuttaminen({
-  projekti,
-  vuorovaikutusnro
-}: Props): ReactElement {
-
+export default function SuunnitteluvaiheenVuorovaikuttaminen({ projekti, vuorovaikutusnro }: Props): ReactElement {
   const {
     register,
-    formState: { errors }
+    formState: { errors },
   } = useFormContext<FormFields>();
 
   const today = dayjs().format();
@@ -49,10 +41,9 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
   }, [projekti]);
 
   const ensisijainenKieli = aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli || Kieli.SUOMI;
-  const toissijainenKieli = aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli || Kieli.RUOTSI;
+  const toissijainenKieli = aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli || Kieli.RUOTSI;
 
   const julkinen = v?.julkinen;
-
 
   if (!projekti) {
     return <></>;
@@ -60,42 +51,33 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
 
   if (julkinen && aloituskuulutusjulkaisu) {
     return (
-      <>
+      <Section noDivider>
         <SectionContent>
           <p className="vayla-label">Julkaisupäivä</p>
-          <p>
-            {formatDate(v?.vuorovaikutusJulkaisuPaiva)}
-          </p>
+          <p>{formatDate(v?.vuorovaikutusJulkaisuPaiva)}</p>
         </SectionContent>
         <SectionContent>
           <p className="vayla-label">
-            Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (
-            {lowerCase(ensisijainenKieli)})
+            Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä ({lowerCase(ensisijainenKieli)})
           </p>
-          <p>
-            {projekti?.aloitusKuulutus?.hankkeenKuvaus?.[ensisijainenKieli]}
-          </p>
+          <p>{projekti?.aloitusKuulutus?.hankkeenKuvaus?.[ensisijainenKieli]}</p>
         </SectionContent>
         {aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli && (
           <SectionContent className="content">
             <p className="vayla-label">
-              Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä (
-              {lowerCase(toissijainenKieli)})
+              Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(toissijainenKieli)})
             </p>
-            <p>
-              {projekti?.aloitusKuulutus?.hankkeenKuvaus?.[toissijainenKieli]}
-            </p>
+            <p>{projekti?.aloitusKuulutus?.hankkeenKuvaus?.[toissijainenKieli]}</p>
           </SectionContent>
         )}
-        <SectionContent>
-          <p className="vayla-label">
-            Kysymykset ja palautteet
-          </p>
+        <SectionContent className="pb-7">
+          <p className="vayla-label">Kysymykset ja palautteet</p>
           <p>
-            Kansalaisia pyydetään esittämään kysymykset ja palautteet viimeistään   {formatDate(v?.kysymyksetJaPalautteetViimeistaan)}.
+            Kansalaisia pyydetään esittämään kysymykset ja palautteet viimeistään{" "}
+            {formatDate(v?.kysymyksetJaPalautteetViimeistaan)}.
           </p>
         </SectionContent>
-      </>
+      </Section>
     );
   }
 
@@ -104,8 +86,8 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
       <SectionContent>
         <h4 className="vayla-small-title">Julkaisupäivä</h4>
         <p>
-          Anna päivämäärä, jolloin vuorovaikutusosio palvelun julkisella puolella ja kutsu vuorovaikutukseen
-          muilla ilmoituskanavilla julkaistaan.
+          Anna päivämäärä, jolloin vuorovaikutusosio palvelun julkisella puolella ja kutsu vuorovaikutukseen muilla
+          ilmoituskanavilla julkaistaan.
         </p>
         <DatePicker
           label="Julkaisupäivä *"
@@ -128,5 +110,4 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
       </SectionContent>
     </>
   );
-
 }
