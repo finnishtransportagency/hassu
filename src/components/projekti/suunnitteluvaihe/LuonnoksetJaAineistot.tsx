@@ -120,7 +120,7 @@ export default function LuonnoksetJaAineistot({ saveForm, vuorovaikutus, muokkau
       <Section className={muokkaustila || !julkinen ? "" : "hidden"}>
         <SectionContent>
           {julkinen ? (
-            <HassuStack direction={["column", "column", "row"]} justifyContent="space-between">
+            <HassuStack className="mt-12" direction={["column", "column", "row"]} justifyContent="space-between">
               <h4 style={{ display: "inline" }} className="vayla-small-title">
                 Suunnitelmaluonnokset ja esittelyaineistot
               </h4>
