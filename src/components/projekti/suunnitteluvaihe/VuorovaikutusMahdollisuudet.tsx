@@ -117,8 +117,8 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                         {tilaisuus.nimi ? capitalize(tilaisuus.nimi) : "Fyysinen tilaisuus"},{" "}
                         {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)}{" "}
                         {formatDate(tilaisuus.paivamaara)} klo {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika},
-                        Osoite: {tilaisuus.paikka}, {tilaisuus.osoite} {tilaisuus.postinumero}{" "}
-                        {tilaisuus.postitoimipaikka}
+                        Osoite: {tilaisuus.paikka ? `${tilaisuus.paikka}, ` : ""}
+                        {tilaisuus.osoite}, {tilaisuus.postinumero} {tilaisuus.postitoimipaikka}
                       </p>
                     </div>
                   );
