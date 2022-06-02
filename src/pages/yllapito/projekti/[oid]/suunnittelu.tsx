@@ -66,7 +66,7 @@ export default function Suunnittelu({ setRouteLabels, kirjaamoOsoitteet }: PageP
     if (!projekti) {
       return tabs;
     }
-    console.log(projekti);
+
     if (!projekti.suunnitteluVaihe?.vuorovaikutukset?.length) {
       tabs.push({
         label: "1. Vuorovaikuttaminen",
