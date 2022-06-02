@@ -38,7 +38,7 @@ export async function lataaAsiakirja({
 
           return asiakirjaService.createPdf({
             projekti: projektiWithChanges,
-            vuorovaikutus: (muutokset.suunnitteluVaihe.vuorovaikutus as Vuorovaikutus) || null,
+            vuorovaikutus: (muutokset.suunnitteluVaihe?.vuorovaikutus as Vuorovaikutus) || null,
             aloitusKuulutusJulkaisu: asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projektiWithChanges),
             asiakirjaTyyppi,
             kieli,
