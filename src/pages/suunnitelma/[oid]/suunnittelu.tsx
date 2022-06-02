@@ -128,6 +128,11 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
 
   TilaisuusContent.displayName = "SuunnitteluContent";
 
+  const suunnitelmaluonnokset = vuorovaikutus?.aineistot?.filter(
+    () => true //TODO
+  );
+  const esittelyaineistot = vuorovaikutus?.aineistot?.filter((aineisto) => aineisto.kategoria === "Esittelyaineisto");
+
   return (
     <ProjektiJulkinenPageLayout selectedStep={1} title="Tutustu hankkeeseen ja vuorovaikuta">
       <>
@@ -243,6 +248,38 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
                 {formatDate(dayjs(vuorovaikutus.vuorovaikutusJulkaisuPaiva).add(30, "day"))} asti
               </p>
             )}
+            {esittelyaineistot && esittelyaineistot.length > 0 && (
+              <>
+                <h5 className="vayla-smallest-title">{t(`projekti:esittelyaineistot`)}</h5>
+                {esittelyaineistot?.map((aineisto) =>
+                  aineisto.tiedosto ? (
+                    <ExtLink
+                      style={{ display: "block", marginTop: "0.5em" }}
+                      key={aineisto.dokumenttiOid}
+                      href={`/tiedostot/suunnitelma/${projekti.oid}${aineisto.tiedosto}`}
+                    >
+                      {aineisto.tiedosto.split("/").reduce((_acc, cur) => cur, "") || "Linkki"}
+                    </ExtLink>
+                  ) : null
+                )}
+              </>
+            )}
+            {suunnitelmaluonnokset && suunnitelmaluonnokset.length > 0 && (
+              <>
+                <h5 className="vayla-smallest-title">{t(`projekti:suunnitelmaluonnokset`)}</h5>
+                {suunnitelmaluonnokset?.map((aineisto) =>
+                  aineisto.tiedosto ? (
+                    <ExtLink
+                      style={{ display: "block", marginTop: "0.5em" }}
+                      key={aineisto.dokumenttiOid}
+                      href={`/tiedostot/suunnitelma/${projekti.oid}${aineisto.tiedosto}`}
+                    >
+                      {aineisto.tiedosto.split("/").reduce((_acc, cur) => cur, "") || "Linkki"}
+                    </ExtLink>
+                  ) : null
+                )}
+              </>
+            )}
             {vuorovaikutus?.videot && vuorovaikutus.videot.length > 0 && (
               <>
                 <h5 className="vayla-smallest-title">{t(`projekti:ui-otsikot.video_materiaalit`)}</h5>
@@ -293,19 +330,17 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
               </SectionContent>
             </Section>
           )}
-          {vuorovaikutus && 
-            <>
-              <JataPalautettaNappi
-                onClick={() => setPalauteLomakeOpen(true)}
-              />
-              <PalauteLomakeDialogi
-                vuorovaikutus={vuorovaikutus}
-                open={palauteLomakeOpen}
-                onClose={() => setPalauteLomakeOpen(false)}
-                projekti={projekti}
-              />
-            </>
-          }
+        {vuorovaikutus && (
+          <>
+            <JataPalautettaNappi onClick={() => setPalauteLomakeOpen(true)} />
+            <PalauteLomakeDialogi
+              vuorovaikutus={vuorovaikutus}
+              open={palauteLomakeOpen}
+              onClose={() => setPalauteLomakeOpen(false)}
+              projekti={projekti}
+            />
+          </>
+        )}
       </>
     </ProjektiJulkinenPageLayout>
   );
