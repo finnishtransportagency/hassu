@@ -55,11 +55,12 @@ function cleanupVuorovaikutusTimestamps(vuorovaikutukset: Vuorovaikutus[]) {
   );
 }
 
-function cleanupGeneratedIdFromFeedbacks(feedbacks?: Palaute[]) {
+function cleanupGeneratedIdAndTimestampFromFeedbacks(feedbacks?: Palaute[]) {
   return feedbacks
     ? feedbacks.map((palaute) => {
         palaute.liite = palaute.liite.replace(palaute.id, "***unittest***");
         palaute.id = "***unittest***";
+        palaute.vastaanotettu = "***unittest***";
         return palaute;
       })
     : undefined;
@@ -353,7 +354,7 @@ describe("Api", () => {
     const projekti = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
     const palautteet = projekti.suunnitteluVaihe.palautteet;
 
-    expectToMatchSnapshot("projekti palaute lisätty", cleanupGeneratedIdFromFeedbacks(palautteet));
+    expectToMatchSnapshot("projekti palaute lisätty", cleanupGeneratedIdAndTimestampFromFeedbacks(palautteet));
 
     await api.otaPalauteKasittelyyn(oid, palauteId);
 
@@ -361,7 +362,7 @@ describe("Api", () => {
     const palautteetAfterFeedbackBeingHandled = projektiAfterFeedbackBeingHandled.suunnitteluVaihe.palautteet;
     expectToMatchSnapshot(
       "projekti palaute otettu käsittelyyn",
-      cleanupGeneratedIdFromFeedbacks(palautteetAfterFeedbackBeingHandled)
+      cleanupGeneratedIdAndTimestampFromFeedbacks(palautteetAfterFeedbackBeingHandled)
     );
   }
 

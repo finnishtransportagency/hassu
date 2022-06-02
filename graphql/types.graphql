@@ -190,6 +190,7 @@ enum AineistoTila {
 
 type Palaute {
   id: ID!
+  vastaanotettu: String
   etunimi: String
   sukunimi: String
   sahkoposti: String
