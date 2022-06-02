@@ -104,7 +104,7 @@ function KysymysTaiPalaute({
       </div>
       {palaute.liite &&
         <div>
-          <Link href={`yllapito/tiedostot/projekti/${oid}${palaute.liite}`}>Liite</Link>
+          <Link href={`/yllapito/tiedostot/projekti/${oid}${palaute.liite}`}>Liite</Link>
         </div>
       }
     </>
