@@ -167,7 +167,7 @@ export default function LuonnoksetJaAineistot({ saveForm, vuorovaikutus, muokkau
             tarttumalla hiirellä raahaus-ikonista ja siirtämällä rivin paikkaa.{" "}
           </p>
           <>
-            <p>Aineistot: </p>
+            {!!aineistotFields.length && <p>Aineistot: </p>}
             {projekti?.oid &&
               aineistotFields.map((aineisto, index) => (
                 <Stack direction="row" alignItems="center" key={aineisto.id}>
