@@ -7,30 +7,54 @@ import filter from "lodash/filter";
 const validTimeRegexp = /^([0-1]?[0-9]|2[0-4]):([0-5]?[0-9])$/;
 
 export const palauteSchema = Yup.object().shape({
-  etunimi: Yup.string().notRequired().max(100).nullable(),
-  sukunimi: Yup.string().notRequired().max(100).nullable(),
-  sahkoposti: Yup.string().notRequired().email("sahkoposti_ei_kelpaa").nullable(),
-  puhelinnumero: Yup.string().notRequired().max(20).nullable(),
+  etunimi: Yup.string().notRequired().max(100, "etunimi_max_100").nullable(),
+  sukunimi: Yup.string().notRequired().max(100, "sukunimi_max_100").nullable(),
+  sahkoposti: Yup.string()
+    .notRequired()
+    .email("sahkoposti_ei_kelpaa")
+    .nullable()
+    .test({
+      message: "sahkoposti_pakollinen_jos",
+      test: (sahkoposti, context) => {
+        if (context.parent.yhteydenottotapaEmail === true && !sahkoposti) {
+          return false;
+        }
+        return true;
+      },
+    }),
+  puhelinnumero: Yup.string()
+    .notRequired()
+    .max(20, "puh_max_20")
+    .nullable()
+    .test({
+      message: "puhelinnumero_pakollinen_jos",
+      test: (puhelinnumero, context) => {
+        if (context.parent.yhteydenottotapaPuhelin === true && !puhelinnumero) {
+          return false;
+        }
+        return true;
+      },
+    }),
   kysymysTaiPalaute: Yup.string().required("palaute_on_jatettava").max(2000),
   yhteydenottotapaEmail: Yup.boolean().notRequired().nullable(),
   yhteydenottotapaPuhelin: Yup.boolean().notRequired().nullable(),
-  liite: Yup.string().notRequired().nullable()
+  liite: Yup.string()
+    .notRequired()
+    .nullable()
     .test({
-      message: 'vain_kuva_tai_pdf',
+      message: "vain_kuva_tai_pdf",
       test: (file, context) => {
         const isValid = !file || /.*\.[(jpg)|(jpeg)|(png)|(pdf)]/.test(file);
         if (!isValid) context?.createError();
         return isValid;
-      }
-    })
+      },
+    }),
 });
 
 export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
   vuorovaikutusTilaisuudet: Yup.array().of(
     Yup.object().shape({
-      tyyppi: Yup.mixed<VuorovaikutusTilaisuusTyyppi>()
-        .oneOf(Object.values(VuorovaikutusTilaisuusTyyppi))
-        .required(),
+      tyyppi: Yup.mixed<VuorovaikutusTilaisuusTyyppi>().oneOf(Object.values(VuorovaikutusTilaisuusTyyppi)).required(),
       nimi: Yup.string().nullable(),
       paivamaara: Yup.string()
         .required("Vuorovaikutustilaisuuden päivämäärä täytyy antaa")
