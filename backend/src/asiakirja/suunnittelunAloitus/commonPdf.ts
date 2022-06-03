@@ -1,8 +1,8 @@
 import { AbstractPdf } from "../abstractPdf";
 import { Kieli, Viranomainen } from "../../../../common/graphql/apiModel";
 import { SuunnitteluSopimus, Velho, Yhteystieto } from "../../database/model/projekti";
-import log from "loglevel";
 import { KutsuAdapter } from "./KutsuAdapter";
+import { log } from "../../logger";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
 export abstract class CommonPdf extends AbstractPdf {
