@@ -208,7 +208,10 @@ export class KutsuAdapter {
     yhteystiedot: Yhteystieto[],
     suunnitteluSopimus?: SuunnitteluSopimus
   ): { organisaatio; etunimi; sukunimi; puhelinnumero; sahkoposti }[] {
-    const yt: Yhteystieto[] = [];
+    let yt: Yhteystieto[] = [];
+    if (yhteystiedot) {
+      yt = yt.concat(yhteystiedot);
+    }
     if (suunnitteluSopimus) {
       const { email, puhelinnumero, sukunimi, etunimi, kunta } = suunnitteluSopimus;
       yt.push({
@@ -219,7 +222,7 @@ export class KutsuAdapter {
         organisaatio: kunta,
       });
     }
-    return yt.concat(yhteystiedot).map(yhteystietoMapper);
+    return yt.map(yhteystietoMapper);
   }
 
   get yhteystiedotVuorovaikutus(): { organisaatio; etunimi; sukunimi; puhelinnumero; sahkoposti }[] {
