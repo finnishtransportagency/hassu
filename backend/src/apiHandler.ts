@@ -41,6 +41,8 @@ import { aloitusKuulutusHandler } from "./handler/aloitusKuulutusHandler";
 import { listProjektit } from "./handler/listProjektitHandler";
 import { velhoDocumentHandler } from "./handler/velhoDocumentHandler";
 import { palauteHandler } from "./palaute/palauteHandler";
+import { ClientError } from "./error/ClientError";
+import { SystemError } from "./error/SystemError";
 
 export type AppSyncEventArguments =
   | unknown
@@ -118,9 +120,25 @@ export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArgume
       } catch (e: unknown) {
         log.error(e);
         if (e instanceof Error) {
+          // Only data that is sent out in case of error is the error message. We wish to log correlationId with the
+          // error, so the only way to do it is to encode the data into error message field. The error field is decoded
+          // in deployment/lib/template/response.vtl
+
+          let errorType = "Error";
+          let errorSubType: string;
+          if (e instanceof ClientError) {
+            errorType = "ClientError";
+            errorSubType = e.className;
+          } else if (e instanceof SystemError) {
+            errorType = "SystemError";
+            errorSubType = e.className;
+          }
+
           e.message = JSON.stringify({
             message: e.message,
             correlationId: getCorrelationId(),
+            errorType,
+            errorSubType,
           });
         }
         throw e;
