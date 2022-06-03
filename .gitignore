@@ -65,3 +65,7 @@ migration/node_modules
 migration/~*
 
 /migration/.env.test
+
+cypress/videos
+cypress/screenshots
+cypress.env.json

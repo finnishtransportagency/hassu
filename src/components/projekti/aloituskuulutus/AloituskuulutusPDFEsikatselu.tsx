@@ -24,65 +24,45 @@ export default function AloituskuulutusPDFEsikatselu({ oid, aloituskuulutusjulka
     }
   };
 
+  const ensisijainenKieli = aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli;
+  const toissijainenKieli = aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli;
   return (
     <>
       <div className="content">
         <p className="vayla-label">Esikatseltavat tiedostot</p>
-        <p>
-          Kuulutus ja ilmoitus ensisijaisella kielellä (
-          {lowerCase(aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli)})
-        </p>
+        <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({lowerCase(ensisijainenKieli)})</p>
         <div className="flex flex-col lg:flex-row gap-6">
           <Button
+            id={"preview_kuulutus_pdf_" + ensisijainenKieli}
             type="submit"
-            onClick={() =>
-              naytaEsikatselu(
-                `/api/projekti/${oid}/aloituskuulutus/pdf`,
-                aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli
-              )
-            }
+            onClick={() => naytaEsikatselu(`/api/projekti/${oid}/aloituskuulutus/pdf`, ensisijainenKieli)}
           >
             Kuulutuksen esikatselu
           </Button>
           <Button
+            id={"preview_ilmoitus_pdf_" + ensisijainenKieli}
             type="submit"
-            onClick={() =>
-              naytaEsikatselu(
-                `/api/projekti/${oid}/aloituskuulutus/ilmoitus/pdf`,
-                aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli
-              )
-            }
+            onClick={() => naytaEsikatselu(`/api/projekti/${oid}/aloituskuulutus/ilmoitus/pdf`, ensisijainenKieli)}
           >
             Ilmoituksen esikatselu
           </Button>
         </div>
       </div>
-      {aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli && (
+      {toissijainenKieli && (
         <div className="content">
-          <p>
-            Kuulutus ja ilmoitus toissijaisella kielellä (
-            {lowerCase(aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli)})
-          </p>
+          <p>Kuulutus ja ilmoitus toissijaisella kielellä ({lowerCase(toissijainenKieli)})</p>
           <div className="flex flex-col lg:flex-row gap-6">
             <Button
+              id={"preview_kuulutus_pdf_" + toissijainenKieli}
               type="submit"
-              onClick={() =>
-                naytaEsikatselu(
-                  `/api/projekti/${oid}/aloituskuulutus/pdf`,
-                  aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli
-                )
-              }
+              onClick={() => naytaEsikatselu(`/api/projekti/${oid}/aloituskuulutus/pdf`, toissijainenKieli)}
             >
               Kuulutukset esikatselu
             </Button>
             <Button
+              id={"preview_ilmoitus_pdf_" + toissijainenKieli}
               type="submit"
-              onClick={() =>
-                naytaEsikatselu(
-                  `/api/projekti/${oid}/aloituskuulutus/ilmoitus/pdf`,
-                  aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli
-                )
-              }
+              onClick={() => naytaEsikatselu(`/api/projekti/${oid}/aloituskuulutus/ilmoitus/pdf`, toissijainenKieli)}
             >
               Ilmoituksen esikatselu
             </Button>

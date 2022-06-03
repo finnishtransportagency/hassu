@@ -46,7 +46,7 @@ export const FileInput = ({
         <p className="mb-4 vayla-paragraph flex flex-wrap justify-center">
           <span>Pudota tiedosto tähän tai</span>
         </p>
-        <input {...getInputProps({ onChange })} />
+        <input name="fileInput" {...getInputProps({ onChange })} />
         <Button
           type="button"
           onClick={(e) => {

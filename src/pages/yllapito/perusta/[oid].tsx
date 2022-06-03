@@ -133,7 +133,7 @@ export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactEle
                 <ButtonLink className="mr-auto" href="/yllapito/perusta">
                   Takaisin
                 </ButtonLink>
-                <Button type="button" primary onClick={handleSubmit(submitMoveToProject)} disabled={disableFormEdit}>
+                <Button id="save_and_open_projekti" type="button" primary onClick={handleSubmit(submitMoveToProject)} disabled={disableFormEdit}>
                   Tallenna ja siirry projektiin
                 </Button>
                 <Button type="button" onClick={handleSubmit(submitCreateAnotherOne)} disabled={disableFormEdit}>

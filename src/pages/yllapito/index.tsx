@@ -16,7 +16,7 @@ import useTranslation from "next-translate/useTranslation";
 import HassuSpinner from "@components/HassuSpinner";
 
 import { Column, SortingRule } from "react-table";
-import { styled, experimental_sx as sx } from "@mui/material";
+import { experimental_sx as sx, styled } from "@mui/material";
 import Section from "@components/layout/Section";
 import HassuGrid from "@components/HassuGrid";
 import TextInput from "@components/form/TextInput";
@@ -272,7 +272,7 @@ const VirkamiesHomePage = () => {
               />
             </FormGroup>
           </HassuGrid>
-          <Button endIcon={"search"} primary type="submit">
+          <Button id="search" endIcon={"search"} primary type="submit">
             Hae
           </Button>
         </SearchSection>

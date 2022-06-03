@@ -1,0 +1,10 @@
+{
+  "experimentalStudio": true,
+  "chromeWebSecurity": false,
+  "experimentalSessionAndOrigin": true,
+  "defaultCommandTimeout": 10000,
+  "env": {
+    "projektiNimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+    "oid": "1.2.246.578.5.1.2978288874.2711575506"
+  }
+}
