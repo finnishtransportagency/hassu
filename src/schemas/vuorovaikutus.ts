@@ -14,23 +14,23 @@ export const palauteSchema = Yup.object().shape({
   kysymysTaiPalaute: Yup.string().required("palaute_on_jatettava").max(2000),
   yhteydenottotapaEmail: Yup.boolean().notRequired().nullable(),
   yhteydenottotapaPuhelin: Yup.boolean().notRequired().nullable(),
-  liite: Yup.string().notRequired().nullable()
+  liite: Yup.string()
+    .notRequired()
+    .nullable()
     .test({
-      message: 'vain_kuva_tai_pdf',
+      message: "vain_kuva_tai_pdf",
       test: (file, context) => {
         const isValid = !file || /.*\.[(jpg)|(jpeg)|(png)|(pdf)]/.test(file);
         if (!isValid) context?.createError();
         return isValid;
-      }
-    })
+      },
+    }),
 });
 
 export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
   vuorovaikutusTilaisuudet: Yup.array().of(
     Yup.object().shape({
-      tyyppi: Yup.mixed<VuorovaikutusTilaisuusTyyppi>()
-        .oneOf(Object.values(VuorovaikutusTilaisuusTyyppi))
-        .required(),
+      tyyppi: Yup.mixed<VuorovaikutusTilaisuusTyyppi>().oneOf(Object.values(VuorovaikutusTilaisuusTyyppi)).required(),
       nimi: Yup.string().nullable(),
       paivamaara: Yup.string()
         .required("Vuorovaikutustilaisuuden päivämäärä täytyy antaa")
@@ -180,7 +180,15 @@ export const vuorovaikutusSchema = Yup.object().shape({
             .compact(function (viranomainen) {
               return !viranomainen.nimi && !viranomainen.sahkoposti;
             })
-            .notRequired(),
+            .test("length", "Vähintään yksi viranomainen valittava", (arr, testContext) => {
+              if (arr && arr.length >= 1) {
+                return true;
+              }
+              return testContext.createError({
+                path: `${testContext.path}`,
+                message: "Vähintään yksi viranomainen on valittava",
+              });
+            }),
         })
         .required(),
     }),
