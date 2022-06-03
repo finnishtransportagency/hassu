@@ -6,11 +6,7 @@ import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { formatProperNoun } from "common/util/formatProperNoun";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
-import {
-  IlmoitettavaViranomainen,
-  KuntaVastaanottajaInput,
-  Vuorovaikutus
-} from "@services/api";
+import { IlmoitettavaViranomainen, KuntaVastaanottajaInput, Vuorovaikutus } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
@@ -28,14 +24,11 @@ type FormFields = {
         kunnat: { nimi: string; sahkoposti: string }[];
         viranomaiset: { nimi: IlmoitettavaViranomainen; sahkoposti: string }[];
       };
-    }
+    };
   };
 };
 
-export default function IlmoituksenVastaanottajat({
-  kirjaamoOsoitteet,
-  vuorovaikutus
-}: Props): ReactElement {
+export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet, vuorovaikutus }: Props): ReactElement {
   const { t } = useTranslation("commonFI");
 
   const julkinen = !!vuorovaikutus?.julkinen;
@@ -79,7 +72,7 @@ export default function IlmoituksenVastaanottajat({
 
   return (
     <>
-      {julkinen &&
+      {julkinen && (
         <Section>
           <h4 className="vayla-small-title">Ilmoituksen vastaanottajat</h4>
           <SectionContent>
@@ -95,8 +88,8 @@ export default function IlmoituksenVastaanottajat({
               <p style={{ color: "#7A7A7A" }}>Ilmoituksen tila</p>
               <p style={{ color: "#7A7A7A" }}>Lähetysaika</p>
 
-              {vuorovaikutus?.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => (
-                <>
+              {vuorovaikutus?.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen, index) => (
+                <React.Fragment key={index}>
                   <p className="odd:bg-white even:bg-grey col-span-2">
                     {t(`viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
                   </p>
@@ -104,7 +97,7 @@ export default function IlmoituksenVastaanottajat({
                   <p className="odd:bg-white even:bg-grey">
                     {viranomainen.lahetetty ? dayjs(viranomainen.lahetetty).format("DD.MM.YYYY HH:mm") : null}
                   </p>
-                </>
+                </React.Fragment>
               ))}
             </div>
           </SectionContent>
@@ -116,19 +109,19 @@ export default function IlmoituksenVastaanottajat({
               <p className="vayla-table-header">Ilmoituksen tila</p>
               <p className="vayla-table-header">Lähetysaika</p>
               {vuorovaikutus?.ilmoituksenVastaanottajat?.kunnat?.map((kunta, index) => (
-                <>
+                <React.Fragment key={index}>
                   <p className={getStyleForRow(index)}>{kunta.nimi}</p>
                   <p className={getStyleForRow(index)}>{kunta.sahkoposti}</p>
                   <p className={getStyleForRow(index)}>{kunta.lahetetty ? "Lahetetty" : "Ei lähetetty"}</p>
                   <p className={getStyleForRow(index)}>
                     {kunta.lahetetty ? dayjs(kunta.lahetetty).format("DD.MM.YYYY HH:mm") : null}
                   </p>
-                </>
+                </React.Fragment>
               ))}
             </div>
           </SectionContent>
         </Section>
-      }
+      )}
       <div style={julkinen ? { display: "none" } : {}}>
         <Section>
           <h4 className="vayla-small-title">Ilmoituksen vastaanottajat</h4>
@@ -148,17 +141,27 @@ export default function IlmoituksenVastaanottajat({
                 <HassuGrid key={viranomainen.id} cols={{ lg: 3 }}>
                   <Select
                     label="Viranomainen *"
-                    options={kirjaamoOsoitteet?.map(({ nimi }) => ({ label: nimi ? t(`viranomainen.${nimi}`) : "", value: nimi }))}
-                    {...register(`suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.viranomaiset.${index}.nimi`, {
-                      onChange: (event) => {
-                        const sahkoposti = kirjaamoOsoitteet?.find(({ nimi }) => nimi === event.target.value)?.sahkoposti;
-                        setValue(
-                          `suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`,
-                          sahkoposti || ""
-                        );
-                      },
-                    })}
-                    error={errors?.suunnitteluVaihe?.vuorovaikutus?.ilmoituksenVastaanottajat?.viranomaiset?.[index]?.nimi}
+                    options={kirjaamoOsoitteet?.map(({ nimi }) => ({
+                      label: nimi ? t(`viranomainen.${nimi}`) : "",
+                      value: nimi,
+                    }))}
+                    {...register(
+                      `suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.viranomaiset.${index}.nimi`,
+                      {
+                        onChange: (event) => {
+                          const sahkoposti = kirjaamoOsoitteet?.find(
+                            ({ nimi }) => nimi === event.target.value
+                          )?.sahkoposti;
+                          setValue(
+                            `suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`,
+                            sahkoposti || ""
+                          );
+                        },
+                      }
+                    )}
+                    error={
+                      errors?.suunnitteluVaihe?.vuorovaikutus?.ilmoituksenVastaanottajat?.viranomaiset?.[index]?.nimi
+                    }
                     addEmptyOption
                   />
                   <Controller
@@ -171,7 +174,7 @@ export default function IlmoituksenVastaanottajat({
                       </>
                     )}
                   />
-                  {!!index &&
+                  {!!index && (
                     <>
                       <div className="hidden lg:block" style={{ alignSelf: "flex-end" }}>
                         <IconButton
@@ -194,7 +197,7 @@ export default function IlmoituksenVastaanottajat({
                         </Button>
                       </div>
                     </>
-                  }
+                  )}
                 </HassuGrid>
               ))}
             </SectionContent>
@@ -221,7 +224,9 @@ export default function IlmoituksenVastaanottajat({
                 <TextInput label="Kunta *" value={getKuntanimi(index)} disabled />
                 <TextInput
                   label="Sähköpostiosoite *"
-                  error={errors?.suunnitteluVaihe?.vuorovaikutus?.ilmoituksenVastaanottajat?.kunnat?.[index]?.sahkoposti}
+                  error={
+                    errors?.suunnitteluVaihe?.vuorovaikutus?.ilmoituksenVastaanottajat?.kunnat?.[index]?.sahkoposti
+                  }
                   {...register(`suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.kunnat.${index}.sahkoposti`)}
                 />
               </HassuGrid>
