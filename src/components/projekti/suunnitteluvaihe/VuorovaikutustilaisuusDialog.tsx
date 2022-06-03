@@ -80,7 +80,7 @@ export default function VuorovaikutusDialog({
     reValidateMode: "onChange",
     defaultValues: { vuorovaikutusTilaisuudet: [] },
   };
-  const today = dayjs().format();
+
   const { setValue: parentSetValue } = useFormContext<VuorovaikutusFormValues>();
 
   const useFormReturn = useForm<VuorovaikutustilaisuusFormValues>(formOptions);
@@ -129,39 +129,6 @@ export default function VuorovaikutusDialog({
       borderRadius: "20px",
     },
   }));
-
-  const TilaisuudenNimiJaAika = React.memo((props: { index: number }) => {
-    return (
-      <>
-        <TextInput
-          label="Tilaisuuden nimi"
-          {...register(`vuorovaikutusTilaisuudet.${props.index}.nimi`)}
-          error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.nimi}
-          maxLength={200}
-        ></TextInput>
-        <HassuStack direction={["column", "column", "row"]}>
-          <DatePicker
-            label="Päivämäärä *"
-            {...register(`vuorovaikutusTilaisuudet.${props.index}.paivamaara`)}
-            error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.paivamaara}
-            min={today}
-          ></DatePicker>
-          <TimePicker
-            label="Alkaa *"
-            {...register(`vuorovaikutusTilaisuudet.${props.index}.alkamisAika`)}
-            error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.alkamisAika}
-          ></TimePicker>
-          <TimePicker
-            label="Päättyy *"
-            {...register(`vuorovaikutusTilaisuudet.${props.index}.paattymisAika`)}
-            error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.paattymisAika}
-          ></TimePicker>
-        </HassuStack>
-      </>
-    );
-  });
-
-  TilaisuudenNimiJaAika.displayName = "TilaisuudenNimiJaAika";
 
   const countTilaisuudet = useCallback(
     (tyyppi: VuorovaikutusTilaisuusTyyppi) => {
@@ -456,5 +423,42 @@ export default function VuorovaikutusDialog({
         </Button>
       </DialogActions>
     </HassuDialog>
+  );
+}
+
+function TilaisuudenNimiJaAika(props: { index: number }) {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<VuorovaikutustilaisuusFormValues>();
+  const today = dayjs().format();
+
+  return (
+    <>
+      <TextInput
+        label="Tilaisuuden nimi"
+        {...register(`vuorovaikutusTilaisuudet.${props.index}.nimi`)}
+        error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.nimi}
+        maxLength={200}
+      />
+      <HassuStack direction={["column", "column", "row"]}>
+        <DatePicker
+          label="Päivämäärä *"
+          {...register(`vuorovaikutusTilaisuudet.${props.index}.paivamaara`)}
+          error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.paivamaara}
+          min={today}
+        ></DatePicker>
+        <TimePicker
+          label="Alkaa *"
+          {...register(`vuorovaikutusTilaisuudet.${props.index}.alkamisAika`)}
+          error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.alkamisAika}
+        ></TimePicker>
+        <TimePicker
+          label="Päättyy *"
+          {...register(`vuorovaikutusTilaisuudet.${props.index}.paattymisAika`)}
+          error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.paattymisAika}
+        ></TimePicker>
+      </HassuStack>
+    </>
   );
 }
