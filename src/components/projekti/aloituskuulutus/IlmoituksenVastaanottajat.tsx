@@ -2,7 +2,7 @@ import Button from "@components/button/Button";
 import Select from "@components/form/Select";
 import TextInput from "@components/form/TextInput";
 import React, { ReactElement } from "react";
-import { Controller, useFieldArray, useFormContext } from "react-hook-form";
+import { Controller, useFieldArray, useFormContext, FieldError } from "react-hook-form";
 import { formatProperNoun } from "common/util/formatProperNoun";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
@@ -17,6 +17,10 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
 
+interface HelperType {
+  kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
+  viranomaiset?: FieldError | null | undefined;
+}
 interface Props {
   isLoading: boolean;
   kirjaamoOsoitteet: ViranomaisVastaanottajaInput[];
@@ -102,6 +106,11 @@ export default function IlmoituksenVastaanottajat({
         <>
           <SectionContent>
             <h6 className="font-bold">Viranomaiset</h6>
+            {(errors.aloitusKuulutus?.ilmoituksenVastaanottajat as HelperType)?.viranomaiset && (
+              <p className="text-red">
+                {(errors.aloitusKuulutus?.ilmoituksenVastaanottajat as HelperType).viranomaiset?.message}
+              </p>
+            )}
             {viranomaisFields.map((viranomainen, index) => (
               <HassuGrid key={viranomainen.id} cols={{ lg: 3 }}>
                 <Select
