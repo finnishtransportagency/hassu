@@ -27,6 +27,8 @@ import * as log from "loglevel";
 import { fail } from "assert";
 import { palauteEmailService } from "../../../src/palaute/palauteEmailService";
 import { expectToMatchSnapshot } from "./util";
+import { handleEvent } from "../../../src/aineisto/aineistoImporterLambda";
+import { SQSEvent } from "aws-lambda/trigger/sqs";
 
 const { expect } = require("chai");
 
@@ -391,4 +393,37 @@ export async function readProjektiFromVelho(): Promise<Projekti> {
 
 export async function sendEmailDigests(): Promise<void> {
   await palauteEmailService.sendNewFeedbackDigest();
+}
+
+export function verifyEmailsSent(emailClientStub: sinon.SinonStub<any[], any>): void {
+  expect(
+    emailClientStub.getCalls().map((call) => {
+      const arg = call.args[0];
+      if (arg.attachments) {
+        arg.attachments = arg.attachments.map((attachment) => {
+          attachment.content = "***unittest***";
+          return attachment;
+        });
+      }
+      return {
+        emailOptions: arg,
+      };
+    })
+  ).toMatchSnapshot();
+}
+
+export async function processQueue(
+  fakeAineistoImportQueue: SQSEvent[],
+  userFixture: UserFixture,
+  oid: string
+): Promise<void> {
+  expect(fakeAineistoImportQueue).toMatchSnapshot();
+  for (const event of fakeAineistoImportQueue) {
+    await handleEvent(event, null, null);
+  }
+  userFixture.loginAs(UserFixture.mattiMeikalainen);
+  const suunnitteluVaihe = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe;
+  const vuorovaikutus = suunnitteluVaihe.vuorovaikutukset[0];
+  cleanupVuorovaikutusTimestamps([vuorovaikutus]);
+  expect(vuorovaikutus).toMatchSnapshot();
 }

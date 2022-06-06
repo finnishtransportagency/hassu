@@ -8,7 +8,6 @@ import { openSearchClientYllapito } from "../../src/projektiSearch/openSearchCli
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { aineistoImporterClient } from "../../src/aineisto/aineistoImporterClient";
-import { handleEvent } from "../../src/aineisto/aineistoImporterLambda";
 import { SQSEvent, SQSRecord } from "aws-lambda/trigger/sqs";
 import AWSMock from "aws-sdk-mock";
 import AWS from "aws-sdk";
@@ -21,6 +20,7 @@ import {
   julkaiseSuunnitteluvaihe,
   julkaiseVuorovaikutus,
   loadProjektiFromDatabase,
+  processQueue,
   readProjektiFromVelho,
   sendEmailDigests,
   testAloituskuulutusApproval,
@@ -35,10 +35,9 @@ import {
   testSuunnitteluvaiheVuorovaikutus,
   testUpdatePublishDateAndDeleteAineisto,
   verifyCloudfrontWasInvalidated,
+  verifyEmailsSent,
 } from "./testUtil/tests";
-import { cleanupVuorovaikutusTimestamps } from "./testUtil/cleanUpFunctions";
 import { takeS3Snapshot } from "./testUtil/util";
-const { expect } = require("chai");
 const sandbox = sinon.createSandbox();
 
 describe("Api", () => {
@@ -107,7 +106,7 @@ describe("Api", () => {
     await testSuunnitteluvaiheVuorovaikutus(oid, projektiPaallikko);
     const velhoAineistoKategorias = await testListDocumentsToImport(oid);
     await testImportAineistot(oid, velhoAineistoKategorias);
-    await processQueue();
+    await processQueue(fakeAineistoImportQueue, userFixture, oid);
     await testPublicAccessToProjekti(oid, Status.ALOITUSKUULUTUS, userFixture, " ennen suunnitteluvaihetta");
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -124,40 +123,11 @@ describe("Api", () => {
     verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub);
 
     await sendEmailDigests();
-    verifyEmailsSent();
+    verifyEmailsSent(emailClientStub);
   });
-
-  async function processQueue() {
-    expect(fakeAineistoImportQueue).toMatchSnapshot();
-    for (const event of fakeAineistoImportQueue) {
-      await handleEvent(event, null, null);
-    }
-    userFixture.loginAs(UserFixture.mattiMeikalainen);
-    const suunnitteluVaihe = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe;
-    const vuorovaikutus = suunnitteluVaihe.vuorovaikutukset[0];
-    cleanupVuorovaikutusTimestamps([vuorovaikutus]);
-    expect(vuorovaikutus).toMatchSnapshot();
-  }
 
   it.skip("should archive projekti", async function () {
     replaceAWSDynamoDBWithLocalstack();
     await archiveProjekti(oid);
   });
-
-  function verifyEmailsSent() {
-    expect(
-      emailClientStub.getCalls().map((call) => {
-        const arg = call.args[0];
-        if (arg.attachments) {
-          arg.attachments = arg.attachments.map((attachment) => {
-            attachment.content = "***unittest***";
-            return attachment;
-          });
-        }
-        return {
-          emailOptions: arg,
-        };
-      })
-    ).toMatchSnapshot();
-  }
 });
