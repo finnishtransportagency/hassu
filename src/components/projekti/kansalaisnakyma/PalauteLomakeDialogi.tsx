@@ -42,7 +42,7 @@ const defaultValues = {
   kysymysTaiPalaute: "",
   yhteydenottotapaEmail: false,
   yhteydenottotapaPuhelin: false,
-  liite: null
+  liite: null,
 };
 
 export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovaikutus }: Props): ReactElement {
@@ -56,7 +56,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
     resolver: yupResolver(palauteSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
-    defaultValues
+    defaultValues,
   };
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const useFormReturn = useForm<PalauteFormInput>(formOptions);
@@ -67,7 +67,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
     control,
     formState: { errors },
     setValue,
-    reset
+    reset,
   } = useFormReturn;
 
   const talletaTiedosto = useCallback(async (tiedosto: File) => {
@@ -85,11 +85,11 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
     async (formData: PalauteFormInput) => {
       setFormIsSubmitting(true);
       try {
-        const palauteFinalValues : PalauteInput = { ...formData, liite: null };
+        const palauteFinalValues: PalauteInput = { ...formData, liite: null };
         if (tiedosto) {
           palauteFinalValues.liite = await talletaTiedosto(tiedosto);
         }
-        (Object.keys(palauteFinalValues) as Array<keyof PalauteInput>).forEach(key => {
+        (Object.keys(palauteFinalValues) as Array<keyof PalauteInput>).forEach((key) => {
           if (!palauteFinalValues[key]) delete palauteFinalValues[key];
         });
         await api.lisaaPalaute(projekti.oid, palauteFinalValues);
@@ -108,18 +108,10 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
 
   return (
     <>
-      <HassuDialog
-        scroll="body"
-        open={open}
-        title={t("projekti:jata_palaute_tai")}
-        onClose={onClose}
-        maxWidth={"md"}
-      >
+      <HassuDialog scroll="body" open={open} title={t("projekti:jata_palaute_tai")} onClose={onClose} maxWidth={"md"}>
         <DialogContent>
-          <p>
-            {t("projekti:voit_jattaa_palautetta")}
-          </p>
-          <p style={{ fontWeight: "bold"}}>
+          <p>{t("projekti:voit_jattaa_palautetta")}</p>
+          <p style={{ fontWeight: "bold" }}>
             {t("projekti:kysymykset_ja_palautteet").replace(
               "xx.xx.xxxx",
               formatDate(vuorovaikutus.kysymyksetJaPalautteetViimeistaan)
@@ -132,23 +124,39 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
                   <TextInput
                     label={t("common:etunimi")}
                     {...register("etunimi")}
-                    error={errors.etunimi}
+                    error={
+                      errors?.etunimi?.message
+                        ? ({ message: t(`common:virheet.${errors.etunimi.message}`) } as FieldError)
+                        : undefined
+                    }
                   />
                   <TextInput
                     label={t("common:sukunimi")}
                     {...register("sukunimi")}
-                    error={errors.sukunimi}
+                    error={
+                      errors?.sukunimi?.message
+                        ? ({ message: t(`common:virheet.${errors.sukunimi.message}`) } as FieldError)
+                        : undefined
+                    }
                   />
                   <TextInput
                     label={t("common:sahkoposti")}
                     {...register("sahkoposti")}
-                    error={errors?.sahkoposti?.message ? { message: t(`common:virheet.${errors.sahkoposti.message}`) } as FieldError: undefined}
+                    error={
+                      errors?.sahkoposti?.message
+                        ? ({ message: t(`common:virheet.${errors.sahkoposti.message}`) } as FieldError)
+                        : undefined
+                    }
                   />
                   <TextInput
                     style={{ maxWidth: "15em" }}
                     label={t("common:puhelinnumero")}
                     {...register("puhelinnumero")}
-                    error={errors.puhelinnumero}
+                    error={
+                      errors?.puhelinnumero?.message
+                        ? ({ message: t(`common:virheet.${errors.puhelinnumero.message}`) } as FieldError)
+                        : undefined
+                    }
                   />
                 </HassuGrid>
               </HassuStack>
@@ -156,17 +164,18 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
                 minRows={3}
                 maxRows={13}
                 className="mt-4"
-                label={t("projekti:palautelomake.palaute")}
+                label={`${t("projekti:palautelomake.palaute")} *`}
                 {...register("kysymysTaiPalaute")}
-                error={errors?.kysymysTaiPalaute?.message ? { message: t(`common:virheet.${errors.kysymysTaiPalaute.message}`) } as FieldError: undefined}
+                error={
+                  errors?.kysymysTaiPalaute?.message
+                    ? ({ message: t(`common:virheet.${errors.kysymysTaiPalaute.message}`) } as FieldError)
+                    : undefined
+                }
               />
               <div>
                 <p style={{ fontWeight: "bold" }}>{t("projekti:palautelomake.toivottu_yhteydenottotapa")}</p>
                 <div>
-                  <CheckBox
-                    label={t("common:sahkoposti")}
-                    {...register("yhteydenottotapaEmail")}
-                  />
+                  <CheckBox label={t("common:sahkoposti")} {...register("yhteydenottotapaEmail")} />
                 </div>
                 <div>
                   <CheckBox
@@ -178,53 +187,56 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
               <div className="mt-3">
                 <p style={{ fontWeight: "bold" }}>{t("common:liite")}</p>
                 <p>{t("projekti:palautelomake.tuetut_tiedostomuodot_ovat")}</p>
-                {tiedosto
-                  ? <FormGroup
-                      label={t("common:valittu_tiedosto")}
-                      errorMessage={errors?.liite?.message ? t(`common:virheet.${errors.liite.message}`) : ""}
-                    >
-                      <HassuStack direction="row">
-                        <div style={{ marginTop: "auto", marginBottom: "auto" }}>
-                          <div>{tiedosto.name}</div>
-                          {tiedostoLiianSuuri && <div style={{ color: "red", fontWeight: "bold" }}>{t("common:tiedosto_on_liian_suuri")}</div>}
-                        </div>
-                        <IconButton
-                          icon="trash"
-                          onClick={() => {
-                            setTiedosto(undefined);
-                            setTiedostoLiianSuuri(false);
-                            (document.getElementById("file-input") as HTMLInputElement).value = "";
-                            setValue("liite", null);
-                          }}
-                        />
-                      </HassuStack>
-                    </FormGroup>
-                  : <Button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        document.getElementById("file-input")?.click()
-                      }}
-                    >
-                      {t("common:hae_tiedosto")}
-                    </Button>
-                }
+                {tiedosto ? (
+                  <FormGroup
+                    label={t("common:valittu_tiedosto")}
+                    errorMessage={errors?.liite?.message ? t(`common:virheet.${errors.liite.message}`) : ""}
+                  >
+                    <HassuStack direction="row">
+                      <div style={{ marginTop: "auto", marginBottom: "auto" }}>
+                        <div>{tiedosto.name}</div>
+                        {tiedostoLiianSuuri && (
+                          <div style={{ color: "red", fontWeight: "bold" }}>{t("common:tiedosto_on_liian_suuri")}</div>
+                        )}
+                      </div>
+                      <IconButton
+                        icon="trash"
+                        onClick={() => {
+                          setTiedosto(undefined);
+                          setTiedostoLiianSuuri(false);
+                          (document.getElementById("file-input") as HTMLInputElement).value = "";
+                          setValue("liite", null);
+                        }}
+                      />
+                    </HassuStack>
+                  </FormGroup>
+                ) : (
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      document.getElementById("file-input")?.click();
+                    }}
+                  >
+                    {t("common:hae_tiedosto")}
+                  </Button>
+                )}
                 <Controller
-                  render={({ field }) =>
+                  render={({ field }) => (
                     <input
                       className="hidden"
                       id="file-input"
                       type="file"
                       accept="image/jpeg, image/png, image/jpg, application/pdf"
-                      onChange={e => {
+                      onChange={(e) => {
                         const tiedosto = e.target.files?.[0];
                         setTiedosto(tiedosto);
                         if (tiedosto && tiedosto.size > 4500000) {
                           setTiedostoLiianSuuri(true);
                         }
-                        field.onChange(e.target.value)
+                        field.onChange(e.target.value);
                       }}
                     />
-                  }
+                  )}
                   name="liite"
                   control={control}
                   defaultValue={null}
@@ -250,10 +262,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
         </DialogActions>
         <HassuSpinner open={formIsSubmitting} />
       </HassuDialog>
-      <KiitosDialogi
-        open={kiitosDialogiOpen}
-        onClose={() => setKiitosDialogiOpen(false)}
-      />
+      <KiitosDialogi open={kiitosDialogiOpen} onClose={() => setKiitosDialogiOpen(false)} />
     </>
   );
 }
@@ -263,7 +272,7 @@ interface KiitosProps {
   onClose: () => void;
 }
 
-export function KiitosDialogi({ open, onClose}: KiitosProps): ReactElement {
+export function KiitosDialogi({ open, onClose }: KiitosProps): ReactElement {
   const { t } = useTranslation();
   return (
     <HassuDialog
@@ -279,16 +288,10 @@ export function KiitosDialogi({ open, onClose}: KiitosProps): ReactElement {
         <p>{t("projekti:palautelomake.jos_toivoit_yhteydenottoa")}</p>
       </DialogContent>
       <DialogActions>
-        <Button
-          onClick={onClose}
-          primary
-        >
+        <Button onClick={onClose} primary>
           {t("common:sulje")}
         </Button>
       </DialogActions>
     </HassuDialog>
   );
 }
-
-
-

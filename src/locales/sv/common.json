@@ -57,7 +57,12 @@
     "sahkoposti_ei_kelpaa": "RUOTSIKSI Sähköposti ei kelpaa",
     "vain_kuva_tai_pdf": "RUOTSIKSI Tiedoston on oltava tyyppiä PDF, PNG tai JPG",
     "max_4mt": "RUOTSIKSI Tiedosto on liian suuri. Max koko 4Mt.",
-    "palaute_on_jatettava": "RUOTSIKSI Palaute on pakollinen tieto"
+    "palaute_on_jatettava": "RUOTSIKSI Palaute on pakollinen tieto",
+    "etunimi_max_100": "RUOTSIKSI Etunimi voi olla enintään 100 merkkiä",
+    "sukunimi_max_100": "RUOTSIKSI Sukunimi voi olla enintään 100 merkkiä",
+    "puh_max_20": "RUOTSIKSI Puhelinnumero voi olla enintään 20 merkkiä pitkä",
+    "sahkoposti_pakollinen_jos": "RUOTSIKSI Anna sähköpostiosoite, jos haluat yhteydenoton sähköpostitse",
+    "puhelinnumero_pakollinen_jos": "RUOTSIKSI Anna puhelinnumero, jos haluat yhteydenoton puhelimitse"
   },
   "ilmoitukset": {
     "tallennus_onnistui": "RUOTSIKSI Tallennus onnistui",
