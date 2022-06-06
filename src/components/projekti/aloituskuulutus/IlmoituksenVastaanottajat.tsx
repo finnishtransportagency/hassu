@@ -185,8 +185,8 @@ export default function IlmoituksenVastaanottajat({
             <p style={{ color: "#7A7A7A" }}>Lähetysaika</p>
             {isViranomaisia && (
               <>
-                {aloituskuulutusjulkaisu?.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => (
-                  <>
+                {aloituskuulutusjulkaisu?.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen, index) => (
+                  <React.Fragment key={index}>
                     <p className="odd:bg-white even:bg-grey col-span-2">
                       {t(`viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
                     </p>
@@ -194,7 +194,7 @@ export default function IlmoituksenVastaanottajat({
                     <p className="odd:bg-white even:bg-grey">
                       {viranomainen.lahetetty ? dayjs(viranomainen.lahetetty).format("DD.MM.YYYY HH:mm") : null}
                     </p>
-                  </>
+                  </React.Fragment>
                 ))}
               </>
             )}
@@ -234,14 +234,14 @@ export default function IlmoituksenVastaanottajat({
             {isKuntia && (
               <>
                 {aloituskuulutusjulkaisu?.ilmoituksenVastaanottajat?.kunnat?.map((kunta, index) => (
-                  <>
+                  <React.Fragment key={index}>
                     <p className={getStyleForRow(index)}>{kunta.nimi}</p>
                     <p className={getStyleForRow(index)}>{kunta.sahkoposti}</p>
                     <p className={getStyleForRow(index)}>{kunta.lahetetty ? "Lahetetty" : "Ei lähetetty"}</p>
                     <p className={getStyleForRow(index)}>
                       {kunta.lahetetty ? dayjs(kunta.lahetetty).format("DD.MM.YYYY HH:mm") : null}
                     </p>
-                  </>
+                  </React.Fragment>
                 ))}
               </>
             )}
