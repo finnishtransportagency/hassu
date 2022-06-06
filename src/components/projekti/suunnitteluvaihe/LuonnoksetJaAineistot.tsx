@@ -457,6 +457,7 @@ const AineistoTable = ({
     () => [
       {
         Header: "Aineisto",
+        width: 250,
         accessor: (aineisto) => {
           const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
           const errorpath =
