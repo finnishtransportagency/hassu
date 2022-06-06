@@ -1,32 +1,28 @@
 import { describe, it } from "mocha";
-import { api } from "./apiClient";
 import { replaceAWSDynamoDBWithLocalstack, setupLocalDatabase } from "../util/databaseUtil";
-import * as log from "loglevel";
 import { Status } from "../../../common/graphql/apiModel";
 import * as sinon from "sinon";
-import Sinon from "sinon";
 import { personSearchUpdaterClient } from "../../src/personSearch/personSearchUpdaterClient";
 import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/personSearchUpdaterHandler";
 import { openSearchClientYllapito } from "../../src/projektiSearch/openSearchClient";
-import { fail } from "assert";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { aineistoImporterClient } from "../../src/aineisto/aineistoImporterClient";
 import { handleEvent } from "../../src/aineisto/aineistoImporterLambda";
 import { SQSEvent, SQSRecord } from "aws-lambda/trigger/sqs";
-import { fileService } from "../../src/files/fileService";
 import AWSMock from "aws-sdk-mock";
 import AWS from "aws-sdk";
 import { getCloudFront, produce } from "../../src/aws/client";
 import { cleanProjektiS3Files } from "../util/s3Util";
 import { emailClient } from "../../src/email/email";
-import { palauteEmailService } from "../../src/palaute/palauteEmailService";
 import {
   archiveProjekti,
   insertAndManageFeedback,
   julkaiseSuunnitteluvaihe,
   julkaiseVuorovaikutus,
   loadProjektiFromDatabase,
+  readProjektiFromVelho,
+  sendEmailDigests,
   testAloituskuulutusApproval,
   testAloitusKuulutusEsikatselu,
   testImportAineistot,
@@ -38,36 +34,12 @@ import {
   testSuunnitteluvaihePerustiedot,
   testSuunnitteluvaiheVuorovaikutus,
   testUpdatePublishDateAndDeleteAineisto,
+  verifyCloudfrontWasInvalidated,
 } from "./testUtil/tests";
 import { cleanupVuorovaikutusTimestamps } from "./testUtil/cleanUpFunctions";
+import { takeS3Snapshot } from "./testUtil/util";
 const { expect } = require("chai");
 const sandbox = sinon.createSandbox();
-
-function cleanupGeneratedIds(obj: unknown) {
-  return Object.keys(obj).reduce((cleanObj, key) => {
-    const cleanedUpKey = key.replace(/[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}/g, "***unittest***");
-    cleanObj[cleanedUpKey] = obj[key];
-    return cleanObj;
-  }, {});
-}
-
-function verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub: Sinon.SinonStub) {
-  expect(awsCloudfrontInvalidationStub.getCalls()).to.have.length(1);
-  expect(awsCloudfrontInvalidationStub.getCalls()[0].args).to.have.length(2);
-  const invalidationParams = awsCloudfrontInvalidationStub.getCalls()[0].args[0];
-  invalidationParams.InvalidationBatch.CallerReference = "***unittest***";
-  expect(invalidationParams).toMatchSnapshot();
-  awsCloudfrontInvalidationStub.resetHistory();
-}
-
-async function takeS3Snapshot(oid: string, description: string) {
-  expect({
-    ["yllapito S3 files " + description]: cleanupGeneratedIds(await fileService.listYllapitoProjektiFiles(oid, "")),
-  }).toMatchSnapshot(description);
-  expect({
-    ["public S3 files " + description]: cleanupGeneratedIds(await fileService.listPublicProjektiFiles(oid, "", true)),
-  }).toMatchSnapshot(description);
-}
 
 describe("Api", () => {
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
@@ -171,30 +143,6 @@ describe("Api", () => {
     replaceAWSDynamoDBWithLocalstack();
     await archiveProjekti(oid);
   });
-
-  async function readProjektiFromVelho() {
-    const oid = await searchProjectsFromVelhoAndPickFirst();
-    const projekti = await api.lataaProjekti(oid);
-    await expect(projekti.tallennettu).to.be.false;
-    log.info({ projekti });
-    return projekti;
-  }
-
-  async function searchProjectsFromVelhoAndPickFirst(): Promise<string> {
-    const searchResult = await api.getVelhoSuunnitelmasByName("HASSU AUTOMAATTITESTIPROJEKTI1");
-    // tslint:disable-next-line:no-unused-expression
-    expect(searchResult).not.to.be.empty;
-
-    const oid = searchResult.pop()?.oid;
-    if (!oid) {
-      fail("No suitable projekti found from Velho");
-    }
-    return oid;
-  }
-
-  async function sendEmailDigests() {
-    await palauteEmailService.sendNewFeedbackDigest();
-  }
 
   function verifyEmailsSent() {
     expect(

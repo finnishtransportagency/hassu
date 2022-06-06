@@ -22,11 +22,21 @@ import { detailedDiff } from "deep-object-diff";
 import { parseDate } from "../../../src/util/dateUtil";
 import { projektiArchive } from "../../../src/archive/projektiArchiveService";
 import { cleanupGeneratedIdAndTimestampFromFeedbacks, cleanupVuorovaikutusTimestamps } from "./cleanUpFunctions";
+import Sinon from "sinon";
+import * as log from "loglevel";
+import { fail } from "assert";
+import { palauteEmailService } from "../../../src/palaute/palauteEmailService";
+import { expectToMatchSnapshot } from "./util";
 
 const { expect } = require("chai");
 
-function expectToMatchSnapshot(description: string, obj: unknown): void {
-  expect({ description, obj }).toMatchSnapshot();
+export function verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub: Sinon.SinonStub): void {
+  expect(awsCloudfrontInvalidationStub.getCalls()).to.have.length(1);
+  expect(awsCloudfrontInvalidationStub.getCalls()[0].args).to.have.length(2);
+  const invalidationParams = awsCloudfrontInvalidationStub.getCalls()[0].args[0];
+  invalidationParams.InvalidationBatch.CallerReference = "***unittest***";
+  expect(invalidationParams).toMatchSnapshot();
+  awsCloudfrontInvalidationStub.resetHistory();
 }
 
 export async function loadProjektiFromDatabase(oid: string, expectedStatus?: Status): Promise<Projekti> {
@@ -357,4 +367,28 @@ export async function archiveProjekti(oid: string): Promise<void> {
   const archiveResult = await projektiArchive.archiveProjekti(oid);
   expect(archiveResult.oid).to.be.equal(oid);
   expect(archiveResult.timestamp).to.not.be.empty;
+}
+
+export async function searchProjectsFromVelhoAndPickFirst(): Promise<string> {
+  const searchResult = await api.getVelhoSuunnitelmasByName("HASSU AUTOMAATTITESTIPROJEKTI1");
+  // tslint:disable-next-line:no-unused-expression
+  expect(searchResult).not.to.be.empty;
+
+  const oid = searchResult.pop()?.oid;
+  if (!oid) {
+    fail("No suitable projekti found from Velho");
+  }
+  return oid;
+}
+
+export async function readProjektiFromVelho(): Promise<Projekti> {
+  const oid = await searchProjectsFromVelhoAndPickFirst();
+  const projekti = await api.lataaProjekti(oid);
+  await expect(projekti.tallennettu).to.be.false;
+  log.info({ projekti });
+  return projekti;
+}
+
+export async function sendEmailDigests(): Promise<void> {
+  await palauteEmailService.sendNewFeedbackDigest();
 }
