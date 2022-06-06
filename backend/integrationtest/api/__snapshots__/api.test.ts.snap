@@ -42,7 +42,6 @@ Object {
     "vuorovaikutukset": Array [
       Object {
         "__typename": "Vuorovaikutus",
-        "aineistot": undefined,
         "esitettavatYhteystiedot": Array [
           Object {
             "__typename": "Yhteystieto",
@@ -53,7 +52,9 @@ Object {
             "sukunimi": "Koi",
           },
         ],
+        "esittelyaineistot": undefined,
         "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+        "suunnitelmaluonnokset": undefined,
         "suunnittelumateriaali": undefined,
         "videot": Array [
           Object {
@@ -156,7 +157,6 @@ Object {
       },
       Object {
         "__typename": "Vuorovaikutus",
-        "aineistot": undefined,
         "esitettavatYhteystiedot": Array [
           Object {
             "__typename": "Yhteystieto",
@@ -167,7 +167,9 @@ Object {
             "sukunimi": "Koi",
           },
         ],
+        "esittelyaineistot": undefined,
         "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+        "suunnitelmaluonnokset": undefined,
         "suunnittelumateriaali": undefined,
         "videot": Array [
           Object {
@@ -304,29 +306,6 @@ Object {
   "description": "saveAndVerifyAineistoSave",
   "obj": Object {
     "__typename": "Vuorovaikutus",
-    "aineistot": Array [
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
-        "jarjestys": 1,
-        "kategoria": "Tietomallinnus",
-        "tila": "ODOTTAA",
-      },
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
-        "jarjestys": 2,
-        "kategoria": "Yleinen",
-        "tila": "ODOTTAA",
-      },
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
-        "jarjestys": 3,
-        "kategoria": "Yleinen",
-        "tila": "ODOTTAA",
-      },
-    ],
     "esitettavatYhteystiedot": Array [
       Object {
         "__typename": "Yhteystieto",
@@ -337,7 +316,29 @@ Object {
         "sukunimi": "Koi",
       },
     ],
+    "esittelyaineistot": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
+        "nimi": "tokatiedosto_toka.pdf",
+        "tila": "ODOTTAA",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
+        "nimi": "ekatiedosto_eka.pdf",
+        "tila": "ODOTTAA",
+      },
+    ],
     "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+    "suunnitelmaluonnokset": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
+        "nimi": "karttakuvalla_tiedosto.pdf",
+        "tila": "ODOTTAA",
+      },
+    ],
     "suunnittelumateriaali": undefined,
     "videot": Array [
       Object {
@@ -446,29 +447,6 @@ Object {
   "description": "saveAndVerifyAineistoSave",
   "obj": Object {
     "__typename": "Vuorovaikutus",
-    "aineistot": Array [
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
-        "jarjestys": 11,
-        "kategoria": "Tietomallinnus new",
-        "tila": "ODOTTAA",
-      },
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
-        "jarjestys": 12,
-        "kategoria": "Yleinen new",
-        "tila": "ODOTTAA",
-      },
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
-        "jarjestys": 13,
-        "kategoria": "Yleinen new",
-        "tila": "ODOTTAA",
-      },
-    ],
     "esitettavatYhteystiedot": Array [
       Object {
         "__typename": "Yhteystieto",
@@ -479,7 +457,32 @@ Object {
         "sukunimi": "Koi",
       },
     ],
+    "esittelyaineistot": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
+        "jarjestys": 11,
+        "nimi": "tokatiedosto_toka.pdf new",
+        "tila": "ODOTTAA",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
+        "jarjestys": 11,
+        "nimi": "ekatiedosto_eka.pdf new",
+        "tila": "ODOTTAA",
+      },
+    ],
     "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+    "suunnitelmaluonnokset": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
+        "jarjestys": 11,
+        "nimi": "karttakuvalla_tiedosto.pdf new",
+        "tila": "ODOTTAA",
+      },
+    ],
     "suunnittelumateriaali": undefined,
     "videot": Array [
       Object {
@@ -588,22 +591,6 @@ Object {
   "description": "saveAndVerifyAineistoSave",
   "obj": Object {
     "__typename": "Vuorovaikutus",
-    "aineistot": Array [
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
-        "jarjestys": 12,
-        "kategoria": "Yleinen new",
-        "tila": "ODOTTAA",
-      },
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
-        "jarjestys": 13,
-        "kategoria": "Yleinen new",
-        "tila": "ODOTTAA",
-      },
-    ],
     "esitettavatYhteystiedot": Array [
       Object {
         "__typename": "Yhteystieto",
@@ -614,7 +601,9 @@ Object {
         "sukunimi": "Koi",
       },
     ],
+    "esittelyaineistot": undefined,
     "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+    "suunnitelmaluonnokset": undefined,
     "suunnittelumateriaali": undefined,
     "videot": Array [
       Object {
@@ -733,26 +722,6 @@ Array [
 exports[`Api should search, load and save a project 8`] = `
 Object {
   "__typename": "Vuorovaikutus",
-  "aineistot": Array [
-    Object {
-      "__typename": "Aineisto",
-      "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
-      "jarjestys": 12,
-      "kategoria": "Yleinen new",
-      "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
-      "tila": "VALMIS",
-      "tuotu": "***unittest***",
-    },
-    Object {
-      "__typename": "Aineisto",
-      "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
-      "jarjestys": 13,
-      "kategoria": "Yleinen new",
-      "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
-      "tila": "VALMIS",
-      "tuotu": "***unittest***",
-    },
-  ],
   "esitettavatYhteystiedot": Array [
     Object {
       "__typename": "Yhteystieto",
@@ -763,7 +732,9 @@ Object {
       "sukunimi": "Koi",
     },
   ],
+  "esittelyaineistot": undefined,
   "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+  "suunnitelmaluonnokset": undefined,
   "suunnittelumateriaali": undefined,
   "videot": Array [
     Object {
@@ -1051,26 +1022,6 @@ Object {
     "vuorovaikutukset": Array [
       Object {
         "__typename": "VuorovaikutusJulkinen",
-        "aineistot": Array [
-          Object {
-            "__typename": "Aineisto",
-            "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
-            "jarjestys": 12,
-            "kategoria": "Yleinen new",
-            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
-            "tila": "VALMIS",
-            "tuotu": "***unittest***",
-          },
-          Object {
-            "__typename": "Aineisto",
-            "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
-            "jarjestys": 13,
-            "kategoria": "Yleinen new",
-            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
-            "tila": "VALMIS",
-            "tuotu": "***unittest***",
-          },
-        ],
         "esitettavatYhteystiedot": Array [
           Object {
             "__typename": "Yhteystieto",
@@ -1081,8 +1032,10 @@ Object {
             "sukunimi": "Koi",
           },
         ],
+        "esittelyaineistot": undefined,
         "julkinen": true,
         "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+        "suunnitelmaluonnokset": undefined,
         "suunnittelumateriaali": undefined,
         "videot": Array [
           Object {
@@ -1203,7 +1156,6 @@ Object {
       },
       Object {
         "__typename": "VuorovaikutusJulkinen",
-        "aineistot": undefined,
         "esitettavatYhteystiedot": Array [
           Object {
             "__typename": "Yhteystieto",
@@ -1214,7 +1166,9 @@ Object {
             "sukunimi": "Koi",
           },
         ],
+        "esittelyaineistot": undefined,
         "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+        "suunnitelmaluonnokset": undefined,
         "suunnittelumateriaali": undefined,
         "videot": Array [
           Object {
@@ -1355,8 +1309,6 @@ Object {
     "aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {},
     "palautteet/***unittest***/logo.png": Object {},
     "suunnittelusopimus/logo.png": Object {},
-    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {},
-    "suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf": Object {},
     "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {},
   },
 }
@@ -1370,12 +1322,6 @@ Object {
     },
     "aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {
       "publishDate": "2022-01-02T00:00:00+02:00",
-    },
-    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {
-      "publishDate": "2022-03-23T00:00:00+02:00",
-    },
-    "suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf": Object {
-      "publishDate": "2022-03-23T00:00:00+02:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {
       "publishDate": "2022-03-23T00:00:00+02:00",
@@ -1397,154 +1343,4 @@ Object {
     },
   },
 }
-`;
-
-exports[`Api should search, load and save a project 16`] = `
-Object {
-  "yllapito S3 files vuorovaikutus publish date changed and last aineisto deleted": Object {
-    "aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {},
-    "aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {},
-    "palautteet/***unittest***/logo.png": Object {},
-    "suunnittelusopimus/logo.png": Object {},
-    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {},
-    "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {},
-  },
-}
-`;
-
-exports[`Api should search, load and save a project 17`] = `
-Object {
-  "public S3 files vuorovaikutus publish date changed and last aineisto deleted": Object {
-    "aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {
-      "publishDate": "2022-01-02T00:00:00+02:00",
-    },
-    "aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {
-      "publishDate": "2022-01-02T00:00:00+02:00",
-    },
-    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {
-      "publishDate": "2022-03-23T00:00:00+02:00",
-    },
-    "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {
-      "publishDate": "2022-03-23T00:00:00+02:00",
-    },
-  },
-}
-`;
-
-exports[`Api should search, load and save a project 18`] = `
-Object {
-  "DistributionId": "unit-test-distribution-id",
-  "InvalidationBatch": Object {
-    "CallerReference": "***unittest***",
-    "Paths": Object {
-      "Items": Array [
-        "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/*",
-      ],
-      "Quantity": 1,
-    },
-  },
-}
-`;
-
-exports[`Api should search, load and save a project 19`] = `
-Array [
-  Object {
-    "emailOptions": Object {
-      "subject": "Valtion liikenneväylien suunnittelu: Uusi projekti perustettu ",
-      "text": "Valtion liikenneväylien suunnittelu -järjestelmään on tuotu Projektivelhosta projektisi:
-HASSU AUTOMAATTITESTIPROJEKTI1
-Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506
-Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
-      "to": "mikko.haapamki@cgi.com",
-    },
-  },
-  Object {
-    "emailOptions": Object {
-      "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ",
-      "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
-HASSU AUTOMAATTITESTIPROJEKTI1
-on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
-Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506
-Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
-      "to": "mikko.haapamki@cgi.com",
-    },
-  },
-  Object {
-    "emailOptions": Object {
-      "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ",
-      "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
-HASSU AUTOMAATTITESTIPROJEKTI1
-aloituskuulutus on hyväksytty.
-Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
-Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
-      "to": "mikko.haapamki@cgi.com",
-    },
-  },
-  Object {
-    "emailOptions": Object {
-      "attachments": Array [
-        Object {
-          "content": "***unittest***",
-          "contentDisposition": "attachment",
-          "contentType": "application/pdf",
-          "filename": "KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf",
-        },
-      ],
-      "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ",
-      "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
-HASSU AUTOMAATTITESTIPROJEKTI1
-aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
-
-Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
-
-Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
-      "to": "mikko.haapamki@cgi.com",
-    },
-  },
-  Object {
-    "emailOptions": Object {
-      "attachments": Array [
-        Object {
-          "content": "***unittest***",
-          "contentDisposition": "attachment",
-          "contentType": "application/pdf",
-          "filename": "ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf",
-        },
-      ],
-      "subject": "TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA ILMOITTAMINEN - HASSU AUTOMAATTITESTIPROJEKTI1",
-      "text": "TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA ILMOITTAMINEN
-
-HASSU AUTOMAATTITESTIPROJEKTI1
-
-Väylävirasto ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee suunnittelun ja maastotöiden aloittamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
-
-Kuulutus julkaistaan 2.1.2022, Väyläviraston tietoverkossa osoitteessa https://vayla.fi/kuulutukset.
-
-Väylävirasto pyytää suunnittelualueen kuntia julkisemaan julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa Väylävirastolle.
-
-Lorem Ipsum
-
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa https://vayla.fi/tietosuoja.
-
-Lisätietoja antaa
-CGI Suomi Oy, A-tunnus1 Hassu, puh. 123, mikko.haapamki@cgi.com
-Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com",
-      "to": Array [],
-    },
-  },
-  Object {
-    "emailOptions": Object {
-      "subject": "Suunnitelmaan on tullut palautetta",
-      "text": "Suunnitelmaan on tullut palautetta: https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu",
-      "to": "mikko.haapamaki@cgi.com",
-    },
-  },
-  Object {
-    "emailOptions": Object {
-      "subject": "Suunnitelmaan on tullut palautetta",
-      "text": "Suunnitelmaan on tullut palautetta: https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu",
-      "to": "mikko.haapamki@cgi.com",
-    },
-  },
-]
 `;
