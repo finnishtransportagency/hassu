@@ -29,7 +29,9 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({ vuorovaikutus }: 
   return (
     <Notification type={NotificationType.WARN}>
       Vuorovaikutusta ei ole vielä julkaistu palvelun julkisella puolella. Julkaisu {julkaisuPaiva}.
-      {!vuorovaikutus.aineistot ? " Huomaathan, että suunnitelma-aineistot tulee vielä lisätä." : ""}
+      {!vuorovaikutus.esittelyaineistot?.length && !vuorovaikutus.suunnitelmaluonnokset?.length
+        ? " Huomaathan, että suunnitelma-aineistot tulee vielä lisätä."
+        : ""}
     </Notification>
   );
 }

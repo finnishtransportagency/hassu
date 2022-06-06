@@ -395,12 +395,11 @@ function adaptAineistotToSave(
 
   const esittelyaineistotInput = vuorovaikutusInput.esittelyaineistot || [];
   const suunnitelmaluonnoksetInput = vuorovaikutusInput.suunnitelmaluonnokset || [];
+  const dbAineistot = [...(vuorovaikutus.suunnitelmaluonnokset || []), ...(vuorovaikutus.esittelyaineistot || [])];
 
-  const dbEsittelyAineistot = vuorovaikutus.esittelyaineistot || [];
-  const dbSuunnitelmaLuonnokset = vuorovaikutus.suunnitelmaluonnokset || [];
-  const dbAineistot = [...dbEsittelyAineistot, ...dbSuunnitelmaLuonnokset];
-
-  const aineistotToDelete = [];
+  const dbEsittelyAineistot: Aineisto[] = [];
+  const dbSuunnitelmaLuonnokset: Aineisto[] = [];
+  const aineistotToDelete: Aineisto[] = [];
 
   dbAineistot.forEach((dbAineisto) => {
     const esittelyAineistoInput = pickAineistoFromInputByDocumenttiOid(
@@ -414,20 +413,19 @@ function adaptAineistotToSave(
     if (esittelyAineistoInput) {
       // Update existing one
       dbAineisto.nimi = esittelyAineistoInput.nimi;
+      dbAineisto.jarjestys = esittelyAineistoInput.jarjestys;
       dbEsittelyAineistot.push(dbAineisto);
-    } else if (suunnitelmaLuonnosInput) {
+    }
+    if (suunnitelmaLuonnosInput) {
       // Update existing one
       dbAineisto.nimi = suunnitelmaLuonnosInput.nimi;
+      dbAineisto.jarjestys = suunnitelmaLuonnosInput.jarjestys;
       dbSuunnitelmaLuonnokset.push(dbAineisto);
-    } else {
+    }
+    if (!esittelyAineistoInput && !suunnitelmaLuonnosInput) {
       aineistotToDelete.push(dbAineisto);
     }
   });
-
-  // Remove deleted ones
-  aineistotToDelete.forEach((aineistoToDelete) =>
-    remove(dbAineistot, { dokumenttiOid: aineistoToDelete.dokumenttiOid })
-  );
 
   // Add new ones and optionally trigger import later
   let hasPendingImports = undefined;

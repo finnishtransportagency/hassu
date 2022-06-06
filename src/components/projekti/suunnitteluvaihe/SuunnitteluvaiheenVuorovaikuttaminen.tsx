@@ -42,11 +42,8 @@ import VuorovaikutustilaisuusDialog from "./VuorovaikutustilaisuusDialog";
 import cloneDeep from "lodash/cloneDeep";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
-type RequiredProjektiFields = Required<{
-  [K in keyof ProjektiFields]: NonNullable<ProjektiFields[K]>;
-}>;
 
-export type VuorovaikutusFormValues = RequiredProjektiFields & {
+export type VuorovaikutusFormValues = ProjektiFields & {
   suunnitteluVaihe: {
     vuorovaikutus: Pick<
       VuorovaikutusInput,
@@ -152,6 +149,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const [serializedFormData, setSerializedFormData] = useState("{}");
   const pdfFormRef = useRef<HTMLFormElement | null>(null);
+  const [formContext, setFormContext] = useState<VuorovaikutusFormValues>();
 
   const vuorovaikutus = useMemo(
     () =>
@@ -210,8 +208,9 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
       mode: "onChange",
       reValidateMode: "onChange",
       defaultValues,
+      context: formContext,
     };
-  }, [defaultValues]);
+  }, [defaultValues, formContext]);
 
   const useFormReturn = useForm<VuorovaikutusFormValues>(formOptions);
   const {
@@ -221,6 +220,10 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
     formState: { isDirty },
     getValues,
   } = useFormReturn;
+
+  const updateFormContext = useCallback(() => {
+    setFormContext(getValues());
+  }, [setFormContext, getValues]);
 
   const saveSunnitteluvaihe = useCallback(
     async (formData: VuorovaikutusFormValues) => {
@@ -343,6 +346,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
               muokkaustila={aineistoMuokkaustila}
               setMuokkaustila={setAineistoMuokkaustila}
               vuorovaikutus={vuorovaikutus}
+              updateFormContext={updateFormContext}
             />
             <EsitettavatYhteystiedot vuorovaikutusnro={vuorovaikutusnro} />
             {vuorovaikutus?.julkinen && <LukutilaLinkkiJaKutsut vuorovaikutus={vuorovaikutus} projekti={projekti} />}

@@ -43,6 +43,8 @@ export type Aineisto = {
   nimi: string;
   // Aikaleima, milloin tiedosto on tuotu jarjestelmaan yyyy-MM-ddTHH:mm
   tuotu?: string;
+  // Numero jarjestamista varten
+  jarjestys?: number | null;
   tila: AineistoTila;
 };
 

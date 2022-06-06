@@ -14,23 +14,23 @@ export const palauteSchema = Yup.object().shape({
   kysymysTaiPalaute: Yup.string().required("palaute_on_jatettava").max(2000),
   yhteydenottotapaEmail: Yup.boolean().notRequired().nullable(),
   yhteydenottotapaPuhelin: Yup.boolean().notRequired().nullable(),
-  liite: Yup.string().notRequired().nullable()
+  liite: Yup.string()
+    .notRequired()
+    .nullable()
     .test({
-      message: 'vain_kuva_tai_pdf',
+      message: "vain_kuva_tai_pdf",
       test: (file, context) => {
         const isValid = !file || /.*\.[(jpg)|(jpeg)|(png)|(pdf)]/.test(file);
         if (!isValid) context?.createError();
         return isValid;
-      }
-    })
+      },
+    }),
 });
 
 export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
   vuorovaikutusTilaisuudet: Yup.array().of(
     Yup.object().shape({
-      tyyppi: Yup.mixed<VuorovaikutusTilaisuusTyyppi>()
-        .oneOf(Object.values(VuorovaikutusTilaisuusTyyppi))
-        .required(),
+      tyyppi: Yup.mixed<VuorovaikutusTilaisuusTyyppi>().oneOf(Object.values(VuorovaikutusTilaisuusTyyppi)).required(),
       nimi: Yup.string().nullable(),
       paivamaara: Yup.string()
         .required("Vuorovaikutustilaisuuden päivämäärä täytyy antaa")
@@ -83,11 +83,22 @@ export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
   ),
 });
 
+const getAineistoSchema = () =>
+  Yup.object().shape({
+    dokumenttiOid: Yup.string().required(),
+    nimi: Yup.string().required(),
+    jarjestys: Yup.number().integer().notRequired(),
+  });
+
+const getAineistotSchema = () => Yup.array().of(getAineistoSchema()).nullable();
+
 export const vuorovaikutusSchema = Yup.object().shape({
   oid: Yup.string().required(),
   suunnitteluVaihe: Yup.object().shape({
     vuorovaikutus: Yup.object().shape({
       vuorovaikutusNumero: Yup.number().required(),
+      esittelyaineisto: getAineistotSchema(),
+      suunnitelmaluonnokset: getAineistotSchema(),
       vuorovaikutusJulkaisuPaiva: Yup.string()
         .required("Julkaisupäivä täytyy antaa")
         .test("valid-date", "Virheellinen päivämäärä", (date) => {
