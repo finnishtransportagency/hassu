@@ -94,7 +94,15 @@ export const aloituskuulutusSchema = Yup.object().shape({
               })
               .required()
           )
-          .notRequired(),
+          .test("length", "Vähintään yksi viranomainen valittava", (arr, testContext) => {
+            if (arr && arr.length >= 1) {
+              return true;
+            }
+            return testContext.createError({
+              path: `${testContext.path}`,
+              message: "Vähintään yksi viranomainen on valittava",
+            });
+          }),
       })
       .required(),
   }),

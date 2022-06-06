@@ -332,6 +332,7 @@ function adaptVuorovaikutusToSave(
         projekti,
         vuorovaikutusInput.vuorovaikutusTilaisuudet
       ),
+      //Jos vuorovaikutuksen ilmoituksella ei tarvitse olla viranomaisvastaanottajia, muokkaa adaptIlmoituksenVastaanottajatToSavea
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(vuorovaikutusInput.ilmoituksenVastaanottajat),
       esitettavatYhteystiedot: adaptYhteystiedotToSave(vuorovaikutusInput.esitettavatYhteystiedot),
       aineistot: adaptAineistotToSave(projektiAdaptationResult, vuorovaikutusInput, dbVuorovaikutus),
@@ -436,13 +437,13 @@ function adaptVuorovaikutukset(vuorovaikutukset: Array<Vuorovaikutus>): API.Vuor
     return vuorovaikutukset.map(
       (vuorovaikutus) =>
         ({
-        ...vuorovaikutus,
-        vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
-        suunnittelumateriaali: adaptLinkki(vuorovaikutus.suunnittelumateriaali),
-        videot: adaptLinkkiList(vuorovaikutus.videot),
-        aineistot: adaptAineistot(vuorovaikutus.aineistot),
-        __typename: "Vuorovaikutus",
-      } as API.Vuorovaikutus)
+          ...vuorovaikutus,
+          vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
+          suunnittelumateriaali: adaptLinkki(vuorovaikutus.suunnittelumateriaali),
+          videot: adaptLinkkiList(vuorovaikutus.videot),
+          aineistot: adaptAineistot(vuorovaikutus.aineistot),
+          __typename: "Vuorovaikutus",
+        } as API.Vuorovaikutus)
     );
   }
   return vuorovaikutukset as undefined;
@@ -465,8 +466,8 @@ export function adaptLinkki(link: Linkki): API.Linkki {
   if (link) {
     return {
       ...link,
-      __typename: "Linkki"
-    }
+      __typename: "Linkki",
+    };
   }
   return link as undefined;
 }
@@ -507,6 +508,9 @@ function adaptIlmoituksenVastaanottajatToSave(
   }
   const kunnat: API.KuntaVastaanottaja[] =
     vastaanottajat?.kunnat?.map((kunta) => ({ __typename: "KuntaVastaanottaja", ...kunta })) || null;
+  if (!vastaanottajat?.viranomaiset || vastaanottajat.viranomaiset.length === 0) {
+    throw new Error("Viranomaisvastaanottajia pitää olla vähintään yksi.");
+  }
   const viranomaiset: API.ViranomaisVastaanottaja[] =
     vastaanottajat?.viranomaiset?.map((viranomainen) => ({
       __typename: "ViranomaisVastaanottaja",

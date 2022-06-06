@@ -204,7 +204,15 @@ export const vuorovaikutusSchema = Yup.object().shape({
             .compact(function (viranomainen) {
               return !viranomainen.nimi && !viranomainen.sahkoposti;
             })
-            .notRequired(),
+            .test("length", "Vähintään yksi viranomainen valittava", (arr, testContext) => {
+              if (arr && arr.length >= 1) {
+                return true;
+              }
+              return testContext.createError({
+                path: `${testContext.path}`,
+                message: "Vähintään yksi viranomainen on valittava",
+              });
+            }),
         })
         .required(),
     }),
