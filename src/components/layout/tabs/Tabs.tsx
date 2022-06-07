@@ -14,19 +14,24 @@ const TabStyle = {
       borderBottomColor: "#0064AF",
       color: "#0064AF",
     },
+    "&:disabled": {
+      cursor: "default",
+      color: "#999999",
+    },
   },
 } as const;
 
 export type TabStyle = keyof typeof TabStyle;
 
-interface Tabs {
+export interface HassuTabProps {
   label: string;
   content?: string | ReactNode;
   value?: string | number;
+  disabled?: boolean;
 }
 
 interface Props {
-  tabs: Tabs[];
+  tabs: HassuTabProps[];
   onChange?: ((event: React.SyntheticEvent<Element, Event>, value: string | number) => void) | undefined;
   value?: string | number | false;
   defaultValue?: string | number | false;
@@ -38,7 +43,12 @@ export default function TabbedContent(props: Props) {
     <TabsUnstyled onChange={props.onChange} value={props.value} defaultValue={props.defaultValue}>
       <TabsList>
         {props.tabs.map((tab, index) => (
-          <Tab key={index} value={tab.value || index} sx={props.tabStyle ? TabStyle[props.tabStyle] : undefined}>
+          <Tab
+            key={index}
+            disabled={tab.disabled}
+            value={tab.value || index}
+            sx={props.tabStyle ? TabStyle[props.tabStyle] : undefined}
+          >
             {tab.label}
           </Tab>
         ))}
@@ -76,6 +86,10 @@ const Tab = styled(TabUnstyled, { shouldForwardProp: isPropValid })(
     "&.TabUnstyled-root.Mui-selected": {
       borderColor: "#E6E6E6",
       borderBottomColor: "#FFFFFF",
+    },
+    "&:disabled": {
+      cursor: "default",
+      color: "#999999",
     },
   })
 );

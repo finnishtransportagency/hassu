@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import useProjekti from "src/hooks/useProjekti";
 import { PageProps } from "@pages/_app";
 import Section from "@components/layout/Section";
-import Tabs from "@components/layout/tabs/Tabs";
+import Tabs, { HassuTabProps } from "@components/layout/tabs/Tabs";
 import SuunnitteluvaiheenPerustiedot from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenPerustiedot";
 import HassuDialog from "@components/HassuDialog";
 import HassuStack from "@components/layout/HassuStack";
@@ -23,9 +23,9 @@ export default function Suunnittelu({ setRouteLabels, kirjaamoOsoitteet }: PageP
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
   const { data: projekti, mutate: reloadProjekti } = useProjekti(oid);
   const [isChildDirty, setIsChildDirty] = useState(false);
-  const [currentTab, setCurrentTab] = useState(1);
+  const [currentTab, setCurrentTab] = useState(0);
   const [open, setOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(1);
+  const [selectedValue, setSelectedValue] = useState(0);
 
   const handleClickClose = () => {
     setOpen(false);
@@ -51,7 +51,7 @@ export default function Suunnittelu({ setRouteLabels, kirjaamoOsoitteet }: PageP
   };
 
   const vuorovaikutusTabs = useMemo(() => {
-    const tabs = [
+    const tabs: HassuTabProps[] = [
       {
         label: "Suunnitteluvaiheen perustiedot",
         content: (
@@ -70,6 +70,7 @@ export default function Suunnittelu({ setRouteLabels, kirjaamoOsoitteet }: PageP
     if (!projekti.suunnitteluVaihe?.vuorovaikutukset?.length) {
       tabs.push({
         label: "1. Vuorovaikuttaminen",
+        disabled: !projekti.suunnitteluVaihe,
         content: (
           <SuunnitteluvaiheenVuorovaikuttaminen
             projekti={projekti}
@@ -84,6 +85,7 @@ export default function Suunnittelu({ setRouteLabels, kirjaamoOsoitteet }: PageP
       projekti?.suunnitteluVaihe?.vuorovaikutukset?.forEach((vuorovaikutus) => {
         const tab = {
           label: `${vuorovaikutus.vuorovaikutusNumero}. Vuorovaikuttaminen`,
+          disabled: !projekti.suunnitteluVaihe,
           content: (
             <SuunnitteluvaiheenVuorovaikuttaminen
               projekti={projekti}
@@ -103,32 +105,24 @@ export default function Suunnittelu({ setRouteLabels, kirjaamoOsoitteet }: PageP
   return (
     <ProjektiPageLayout title="Suunnittelu">
       <Section noDivider>
-        <Tabs
-          tabStyle={"Underlined"}
-          defaultValue={1}
-          value={currentTab}
-          onChange={handleChange}
-          tabs={vuorovaikutusTabs}
-        />
+        <Tabs tabStyle={"Underlined"} value={currentTab} onChange={handleChange} tabs={vuorovaikutusTabs} />
       </Section>
-      <div>
-        <HassuDialog title="Tallentamattomia muutoksia" open={open} onClose={handleClickClose}>
-          <DialogContent>
-            <HassuStack>
-              <p>
-                Olet tehnyt sivulle muutoksia, joita ei ole tallennettu. Tehdyt muutokset menetetään, jos poistut
-                sivulta. Haluatko poistua tallentamatta?{" "}
-              </p>
-            </HassuStack>
-          </DialogContent>
-          <DialogActions>
-            <Button primary onClick={handleClickOk}>
-              Hylkää muutokset ja siirry
-            </Button>
-            <Button onClick={handleClickClose}>Peruuta</Button>
-          </DialogActions>
-        </HassuDialog>
-      </div>
+      <HassuDialog title="Tallentamattomia muutoksia" open={open} onClose={handleClickClose}>
+        <DialogContent>
+          <HassuStack>
+            <p>
+              Olet tehnyt sivulle muutoksia, joita ei ole tallennettu. Tehdyt muutokset menetetään, jos poistut sivulta.
+              Haluatko poistua tallentamatta?
+            </p>
+          </HassuStack>
+        </DialogContent>
+        <DialogActions>
+          <Button primary onClick={handleClickOk}>
+            Hylkää muutokset ja siirry
+          </Button>
+          <Button onClick={handleClickClose}>Peruuta</Button>
+        </DialogActions>
+      </HassuDialog>
     </ProjektiPageLayout>
   );
 }
