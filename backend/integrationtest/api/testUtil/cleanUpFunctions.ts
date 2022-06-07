@@ -13,8 +13,7 @@ export function cleanupGeneratedIdAndTimestampFromFeedbacks(feedbacks?: Palaute[
 
 export function cleanupVuorovaikutusTimestamps(vuorovaikutukset: Vuorovaikutus[]): void {
   vuorovaikutukset.forEach((vuorovaikutus) => {
-    vuorovaikutus.esittelyaineistot?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
-    vuorovaikutus.suunnitelmaluonnokset?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
+    vuorovaikutus.aineistot?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
   });
 }
 
