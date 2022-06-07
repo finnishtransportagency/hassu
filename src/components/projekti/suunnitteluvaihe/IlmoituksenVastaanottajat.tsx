@@ -1,8 +1,8 @@
 import Button from "@components/button/Button";
 import Select from "@components/form/Select";
 import TextInput from "@components/form/TextInput";
-import React, { ReactElement } from "react";
-import { Controller, useFieldArray, useFormContext, FieldError } from "react-hook-form";
+import React, { ReactElement, Fragment } from "react";
+import { Controller, FieldError, useFieldArray, useFormContext } from "react-hook-form";
 import { formatProperNoun } from "common/util/formatProperNoun";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
@@ -113,14 +113,14 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet, vuorovaik
               <p className="vayla-table-header">Ilmoituksen tila</p>
               <p className="vayla-table-header">Lähetysaika</p>
               {vuorovaikutus?.ilmoituksenVastaanottajat?.kunnat?.map((kunta, index) => (
-                <React.Fragment key={index}>
+                <Fragment key={index}>
                   <p className={getStyleForRow(index)}>{kunta.nimi}</p>
                   <p className={getStyleForRow(index)}>{kunta.sahkoposti}</p>
                   <p className={getStyleForRow(index)}>{kunta.lahetetty ? "Lahetetty" : "Ei lähetetty"}</p>
                   <p className={getStyleForRow(index)}>
                     {kunta.lahetetty ? dayjs(kunta.lahetetty).format("DD.MM.YYYY HH:mm") : null}
                   </p>
-                </React.Fragment>
+                </Fragment>
               ))}
             </div>
           </SectionContent>

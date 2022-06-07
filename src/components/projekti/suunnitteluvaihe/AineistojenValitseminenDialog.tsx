@@ -12,8 +12,7 @@ import { DialogProps } from "@mui/material";
 import HassuTable from "@components/HassuTable";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import { Column } from "react-table";
-import { useForm, useFormContext } from "react-hook-form";
-import { VuorovaikutusFormValues } from "./SuunnitteluvaiheenVuorovaikuttaminen";
+import { useForm } from "react-hook-form";
 import AineistoNimiExtLink from "../AineistoNimiExtLink";
 
 interface FormData {
@@ -21,18 +20,17 @@ interface FormData {
 }
 
 type Props = {
-  updateValitutAineistot: (valitutAineistot: VelhoAineisto[]) => void;
+  onSubmit: (aineistot: AineistoInput[]) => void;
 } & Required<Pick<DialogProps, "onClose" | "open">>;
 
 const useFormOptions = { defaultValues: { aineistoKategoriat: [] } };
 
-export default function AineistojenValitseminenDialog({ updateValitutAineistot, ...MuiDialogProps }: Props) {
-  const { onClose, open } = MuiDialogProps;
+export default function AineistojenValitseminenDialog({ onSubmit, ...muiDialogProps }: Props) {
+  const { onClose, open } = muiDialogProps;
   const { data: projekti } = useProjektiRoute();
   const [isLoading, setIsLoading] = useState(false);
   const [aineistoKategoriat, setAineistoKategoriat] = useState<VelhoAineistoKategoria[]>();
 
-  const { setValue: setValueForContext, watch: watchContext } = useFormContext<VuorovaikutusFormValues>();
   const { setValue, watch, handleSubmit } = useForm<FormData>(useFormOptions);
 
   useEffect(() => {
@@ -42,15 +40,10 @@ export default function AineistojenValitseminenDialog({ updateValitutAineistot, 
         const velhoAineistoKategoriat = await api.listaaVelhoProjektiAineistot(projekti.oid);
         setAineistoKategoriat(velhoAineistoKategoriat);
         setIsLoading(false);
-        const aineistoTiedot = velhoAineistoKategoriat.reduce<VelhoAineisto[]>((aineistoTietoLista, kategoria) => {
-          aineistoTietoLista.push(...kategoria.aineistot);
-          return aineistoTietoLista;
-        }, []);
-        updateValitutAineistot(aineistoTiedot);
       };
       haeAineistotDialogiin();
     }
-  }, [projekti, setAineistoKategoriat, open, updateValitutAineistot]);
+  }, [projekti, setAineistoKategoriat, open]);
 
   const valitutAineistoKategoriat = watch("aineistoKategoriat");
 
@@ -70,29 +63,28 @@ export default function AineistojenValitseminenDialog({ updateValitutAineistot, 
     [aineistoKategoriat, setValue]
   );
 
-  const oldAineistoInput = watchContext("suunnitteluVaihe.vuorovaikutus.aineistot");
-
   const moveAineistoToMainForm = async (data: FormData) => {
-    const aineistoMap = new Map((oldAineistoInput || []).map((aineisto) => [aineisto.dokumenttiOid, aineisto]));
-
     const newAineistoInput = data.aineistoKategoriat.reduce<AineistoInput[]>((aineistot, kategoria) => {
       aineistot.push(
-        ...kategoria.aineistot.map((aineisto, jarjestys) => ({
+        ...kategoria.aineistot.map((aineisto) => ({
           dokumenttiOid: aineisto.oid,
-          kategoria: kategoria.kategoria,
-          jarjestys,
+          nimi: aineisto.tiedosto,
         }))
       );
       return aineistot;
     }, []);
-
-    newAineistoInput.forEach((aineistoInput) => {
-      aineistoMap.set(aineistoInput.dokumenttiOid, aineistoInput);
-    });
-
-    setValueForContext("suunnitteluVaihe.vuorovaikutus.aineistot", [...aineistoMap.values()]);
+    onSubmit(newAineistoInput);
     onClose?.({}, "escapeKeyDown");
   };
+
+  if (!projekti) {
+    return <></>;
+  }
+
+  const valitutAineistot = valitutAineistoKategoriat.reduce<VelhoAineisto[]>((aineistot, kategoria) => {
+    aineistot.push(...kategoria.aineistot);
+    return aineistot;
+  }, []);
 
   return (
     <>
@@ -100,7 +92,7 @@ export default function AineistojenValitseminenDialog({ updateValitutAineistot, 
         PaperProps={{ sx: { maxHeight: "95vh", minHeight: "95vh" } }}
         title="Aineistojen valitseminen"
         scroll="paper"
-        {...MuiDialogProps}
+        {...muiDialogProps}
         maxWidth="lg"
       >
         <form style={{ display: "contents" }}>
@@ -119,7 +111,7 @@ export default function AineistojenValitseminenDialog({ updateValitutAineistot, 
                   <HassuAccordion
                     items={
                       aineistoKategoriat?.map((kategoria) => ({
-                        title: kategoria.kategoria,
+                        title: `${kategoria.kategoria} (${kategoria?.aineistot?.length || 0})`,
                         content: (
                           <>
                             {projekti?.oid && kategoria.aineistot && kategoria.aineistot.length > 0 ? (
@@ -144,22 +136,17 @@ export default function AineistojenValitseminenDialog({ updateValitutAineistot, 
                 )}
               </StyledDiv>
               <StyledDiv sx={{ width: { lg: "25%" } }}>
-                <h5 className="vayla-smallest-title">Valitut tiedostot</h5>
+                <h5 className="vayla-smallest-title">{`Valitut tiedostot (${valitutAineistot.length})`}</h5>
                 {projekti?.oid &&
-                  valitutAineistoKategoriat
-                    .reduce<VelhoAineisto[]>((aineistot, kategoria) => {
-                      aineistot.push(...kategoria.aineistot);
-                      return aineistot;
-                    }, [])
-                    .map((aineisto) => (
-                      <AineistoNimiExtLink
-                        key={aineisto.oid}
-                        aineistoOid={aineisto.oid}
-                        aineistoNimi={aineisto.tiedosto}
-                        projektiOid={projekti.oid}
-                        addTopMargin
-                      />
-                    ))}
+                  valitutAineistot.map((aineisto) => (
+                    <AineistoNimiExtLink
+                      key={aineisto.oid}
+                      aineistoOid={aineisto.oid}
+                      aineistoNimi={aineisto.tiedosto}
+                      projektiOid={projekti.oid}
+                      addTopMargin
+                    />
+                  ))}
               </StyledDiv>
             </Stack>
           </DialogContent>

@@ -107,11 +107,22 @@ export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
   ),
 });
 
+const getAineistoSchema = () =>
+  Yup.object().shape({
+    dokumenttiOid: Yup.string().required(),
+    nimi: Yup.string().required(),
+    jarjestys: Yup.number().integer().notRequired(),
+  });
+
+const getAineistotSchema = () => Yup.array().of(getAineistoSchema()).nullable();
+
 export const vuorovaikutusSchema = Yup.object().shape({
   oid: Yup.string().required(),
   suunnitteluVaihe: Yup.object().shape({
     vuorovaikutus: Yup.object().shape({
       vuorovaikutusNumero: Yup.number().required(),
+      esittelyaineisto: getAineistotSchema(),
+      suunnitelmaluonnokset: getAineistotSchema(),
       vuorovaikutusJulkaisuPaiva: Yup.string()
         .required("Julkaisupäivä täytyy antaa")
         .test("valid-date", "Virheellinen päivämäärä", (date) => {

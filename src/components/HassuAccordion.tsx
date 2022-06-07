@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { Dispatch, Key, ReactNode, useState } from "react";
 import { styled } from "@mui/material/styles";
 import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
 import MuiAccordionSummary, { AccordionSummaryProps } from "@mui/material/AccordionSummary";
@@ -51,18 +51,22 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 interface AccordionItem {
   title: string;
   content: ReactNode | string;
+  id?: Key;
 }
 
 interface Props {
   items: AccordionItem[];
   singular?: boolean;
+  expandedState?: [Key[], Dispatch<Key[]>];
 }
 
 export default function CustomizedAccordions(props: Props) {
   const { items, singular } = props;
-  const [expanded, setExpanded] = useState<number[]>([]);
+  const uncontrolledExpanded = useState<Key[]>([]);
 
-  const handleChange = (panel: number) => (_: React.SyntheticEvent, newExpanded: boolean) => {
+  const [expanded, setExpanded] = props.expandedState || uncontrolledExpanded;
+
+  const handleChange = (panel: Key) => (_: React.SyntheticEvent, newExpanded: boolean) => {
     if (singular) {
       setExpanded(newExpanded ? [panel] : []);
     } else {
@@ -74,14 +78,17 @@ export default function CustomizedAccordions(props: Props) {
 
   return (
     <div>
-      {items.map((item, index) => (
-        <Accordion key={index} expanded={expanded.includes(index)} onChange={handleChange(index)}>
-          <AccordionSummary>
-            <span className="vayla-smallest-title">{item.title}</span>
-          </AccordionSummary>
-          <AccordionDetails>{item.content}</AccordionDetails>
-        </Accordion>
-      ))}
+      {items.map((item, index) => {
+        const key = item.id || index;
+        return (
+          <Accordion key={key} expanded={expanded.includes(key)} onChange={handleChange(key)}>
+            <AccordionSummary>
+              <span className="vayla-smallest-title">{item.title}</span>
+            </AccordionSummary>
+            <AccordionDetails>{item.content}</AccordionDetails>
+          </Accordion>
+        );
+      })}
     </div>
   );
 }

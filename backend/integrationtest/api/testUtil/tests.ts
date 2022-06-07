@@ -11,6 +11,7 @@ import {
   AineistoInput,
   VelhoAineistoKategoria,
   Vuorovaikutus,
+  VuorovaikutusInput,
 } from "../../../../common/graphql/apiModel";
 import { api } from "../apiClient";
 import axios from "axios";
@@ -218,20 +219,24 @@ export async function testListDocumentsToImport(oid: string): Promise<VelhoAinei
 
 export async function saveAndVerifyAineistoSave(
   oid: string,
-  aineistot: AineistoInput[],
-  originalVuorovaikutus: Vuorovaikutus
+  esittelyaineistot: AineistoInput[],
+  suunnitelmaluonnokset: AineistoInput[],
+  originalVuorovaikutus: Vuorovaikutus,
+  identifier?: string | number
 ): Promise<void> {
   await api.tallennaProjekti({
     oid,
     suunnitteluVaihe: {
       vuorovaikutus: {
         ...originalVuorovaikutus,
-        aineistot,
+        esittelyaineistot,
+        suunnitelmaluonnokset,
       },
     },
   });
   const vuorovaikutus = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe.vuorovaikutukset[0];
-  expectToMatchSnapshot("saveAndVerifyAineistoSave", vuorovaikutus);
+  const description = "saveAndVerifyAineistoSave" + (identifier !== undefined ? ` #${identifier}` : "");
+  expectToMatchSnapshot(description, vuorovaikutus);
 }
 
 export async function testImportAineistot(
@@ -241,29 +246,62 @@ export async function testImportAineistot(
   const originalVuorovaikutus = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe
     .vuorovaikutukset[0];
 
-  let order = 1;
-  const aineistot = velhoAineistoKategorias.reduce((documents, aineistoKategoria) => {
-    aineistoKategoria.aineistot.forEach((aineisto) => {
-      documents.push({ dokumenttiOid: aineisto.oid, jarjestys: order++, kategoria: aineistoKategoria.kategoria });
-    });
-    return documents;
-  }, [] as AineistoInput[]);
+  const { esittelyaineistot, suunnitelmaluonnokset } = velhoAineistoKategorias.reduce<
+    Pick<VuorovaikutusInput, "esittelyaineistot" | "suunnitelmaluonnokset">
+  >(
+    (documents, aineistoKategoria) => {
+      aineistoKategoria.aineistot.forEach((aineisto, index) => {
+        if (index % 2 === 0) {
+          documents.esittelyaineistot.push({
+            dokumenttiOid: aineisto.oid,
+            jarjestys: documents.esittelyaineistot.length + 1,
+            nimi: aineisto.tiedosto,
+          });
+        } else {
+          documents.suunnitelmaluonnokset.push({
+            dokumenttiOid: aineisto.oid,
+            jarjestys: documents.suunnitelmaluonnokset.length + 1,
+            nimi: aineisto.tiedosto,
+          });
+        }
+      });
+      return documents;
+    },
+    { esittelyaineistot: [], suunnitelmaluonnokset: [] }
+  );
 
-  await saveAndVerifyAineistoSave(oid, aineistot, originalVuorovaikutus);
-  aineistot.map((aineisto) => {
-    aineisto.kategoria = aineisto.kategoria + " new";
+  await saveAndVerifyAineistoSave(oid, esittelyaineistot, suunnitelmaluonnokset, originalVuorovaikutus, "initialSave");
+  esittelyaineistot.map((aineisto) => {
+    aineisto.nimi = "new " + aineisto.nimi;
     aineisto.jarjestys = aineisto.jarjestys + 10;
   });
-  await saveAndVerifyAineistoSave(oid, aineistot, originalVuorovaikutus);
+  suunnitelmaluonnokset.map((aineisto) => {
+    aineisto.nimi = "new " + aineisto.nimi;
+    aineisto.jarjestys = aineisto.jarjestys + 10;
+  });
+  await saveAndVerifyAineistoSave(
+    oid,
+    esittelyaineistot,
+    suunnitelmaluonnokset,
+    originalVuorovaikutus,
+    "updateNimiAndJarjestys"
+  );
 
-  const aineistotWithoutFirst = aineistot.slice(1);
-  await saveAndVerifyAineistoSave(oid, aineistotWithoutFirst, originalVuorovaikutus);
+  // const esittelyaineistotWithoutFirst = esittelyaineistot; //.slice(1);
+  await saveAndVerifyAineistoSave(
+    oid,
+    esittelyaineistot,
+    suunnitelmaluonnokset,
+    originalVuorovaikutus,
+    "esittelyAineistotWithoutFirst"
+  );
 }
 
 export async function testUpdatePublishDateAndDeleteAineisto(oid: string, userFixture: UserFixture): Promise<void> {
   userFixture.loginAs(UserFixture.mattiMeikalainen);
   const vuorovaikutus = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe.vuorovaikutukset[0];
-  vuorovaikutus.aineistot.pop();
+  vuorovaikutus.esittelyaineistot.pop();
+  vuorovaikutus.suunnitelmaluonnokset.pop();
   const input = {
     oid,
     suunnitteluVaihe: {
