@@ -1,0 +1,405 @@
+import {
+  Projekti,
+  ProjektiKayttajaInput,
+  ProjektiKayttaja,
+  TilasiirtymaTyyppi,
+  TilasiirtymaToiminto,
+  ProjektiRooli,
+  Status,
+  AsiakirjaTyyppi,
+  Kieli,
+  AineistoInput,
+  VelhoAineistoKategoria,
+  Vuorovaikutus,
+} from "../../../../common/graphql/apiModel";
+import { api } from "../apiClient";
+import axios from "axios";
+import { apiTestFixture } from "../apiTestFixture";
+import fs from "fs";
+import { UserFixture } from "../../../test/fixture/userFixture";
+import { detailedDiff } from "deep-object-diff";
+import { parseDate } from "../../../src/util/dateUtil";
+import { projektiArchive } from "../../../src/archive/projektiArchiveService";
+import { cleanupGeneratedIdAndTimestampFromFeedbacks, cleanupVuorovaikutusTimestamps } from "./cleanUpFunctions";
+import Sinon from "sinon";
+import * as log from "loglevel";
+import { fail } from "assert";
+import { palauteEmailService } from "../../../src/palaute/palauteEmailService";
+import { expectToMatchSnapshot } from "./util";
+import { handleEvent } from "../../../src/aineisto/aineistoImporterLambda";
+import { SQSEvent } from "aws-lambda/trigger/sqs";
+
+const { expect } = require("chai");
+
+export function verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub: Sinon.SinonStub): void {
+  expect(awsCloudfrontInvalidationStub.getCalls()).to.have.length(1);
+  expect(awsCloudfrontInvalidationStub.getCalls()[0].args).to.have.length(2);
+  const invalidationParams = awsCloudfrontInvalidationStub.getCalls()[0].args[0];
+  invalidationParams.InvalidationBatch.CallerReference = "***unittest***";
+  expect(invalidationParams).toMatchSnapshot();
+  awsCloudfrontInvalidationStub.resetHistory();
+}
+
+export async function loadProjektiFromDatabase(oid: string, expectedStatus?: Status): Promise<Projekti> {
+  const savedProjekti = await api.lataaProjekti(oid);
+  expect(!savedProjekti.tallennettu || savedProjekti.tallennettu).to.be.true;
+  if (expectedStatus) {
+    expect(savedProjekti.status).to.be.eq(expectedStatus);
+  }
+  return savedProjekti;
+}
+
+export async function testProjektiHenkilot(projekti: Projekti, oid: string): Promise<ProjektiKayttaja> {
+  await api.tallennaProjekti({
+    oid,
+    kayttoOikeudet: projekti.kayttoOikeudet?.map(
+      (value) =>
+        ({
+          rooli: value.rooli,
+          kayttajatunnus: value.kayttajatunnus,
+          // Emulate migration where the phone number may be empty
+        } as ProjektiKayttajaInput)
+    ),
+  });
+  const p = await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
+
+  // Expect that projektipaallikko is found
+  const projektiPaallikko = p.kayttoOikeudet
+    ?.filter((kayttaja) => kayttaja.rooli === ProjektiRooli.PROJEKTIPAALLIKKO && kayttaja.email)
+    .pop();
+  expect(projektiPaallikko).is.not.empty;
+
+  const kayttoOikeudet = p.kayttoOikeudet?.map((value) => ({
+    rooli: value.rooli,
+    kayttajatunnus: value.kayttajatunnus,
+    puhelinnumero: "123",
+  }));
+
+  // Save and load projekti
+  await api.tallennaProjekti({
+    oid,
+    kayttoOikeudet,
+  });
+  await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU);
+
+  return projektiPaallikko;
+}
+
+async function tallennaLogo() {
+  const uploadProperties = await api.valmisteleTiedostonLataus("logo.png", "image/png");
+  expect(uploadProperties).to.not.be.empty;
+  expect(uploadProperties.latausLinkki).to.not.be.undefined;
+  expect(uploadProperties.tiedostoPolku).to.not.be.undefined;
+  const putResponse = await axios.put(
+    uploadProperties.latausLinkki,
+    fs.readFileSync(__dirname + "/../../files/logo.png"),
+    {
+      headers: { "content-type": "image/png" },
+    }
+  );
+  expect(putResponse.status).to.be.eq(200);
+  return uploadProperties.tiedostoPolku;
+}
+
+export async function testProjektinTiedot(oid: string): Promise<void> {
+  // Fill in information to projekti, including a file
+  const uploadedFile = await tallennaLogo();
+  await api.tallennaProjekti({
+    oid,
+    muistiinpano: apiTestFixture.newNote,
+    aloitusKuulutus: apiTestFixture.aloitusKuulutus,
+    suunnitteluSopimus: apiTestFixture.createSuunnitteluSopimusInput(uploadedFile),
+    kielitiedot: apiTestFixture.kielitiedotInput,
+    euRahoitus: false,
+  });
+
+  // Check that the saved projekti is what it is supposed to be
+  const updatedProjekti = await loadProjektiFromDatabase(oid, Status.ALOITUSKUULUTUS);
+  expect(updatedProjekti.muistiinpano).to.be.equal(apiTestFixture.newNote);
+  expect(updatedProjekti.aloitusKuulutus).eql(apiTestFixture.aloitusKuulutus);
+  expect(updatedProjekti.suunnitteluSopimus).include(apiTestFixture.suunnitteluSopimus);
+  expect(updatedProjekti.suunnitteluSopimus?.logo).contain("/suunnittelusopimus/logo.png");
+  expect(updatedProjekti.kielitiedot).eql(apiTestFixture.kielitiedot);
+  expect(updatedProjekti.euRahoitus).to.be.false;
+}
+
+export async function testAloitusKuulutusEsikatselu(oid: string): Promise<void> {
+  // Generate Aloituskuulutus PDF
+  const pdf = await api.esikatseleAsiakirjaPDF(oid, AsiakirjaTyyppi.ALOITUSKUULUTUS, Kieli.SUOMI);
+  expect(pdf.nimi).to.include(".pdf");
+  expect(pdf.sisalto).not.to.be.empty;
+  expect(pdf.sisalto.length).to.be.greaterThan(50000);
+  fs.mkdirSync(".report", { recursive: true });
+  fs.writeFileSync(".report/" + pdf.nimi, Buffer.from(pdf.sisalto, "base64"));
+}
+
+export async function testNullifyProjektiField(oid: string): Promise<void> {
+  // Test that fields can be removed as well
+  await api.tallennaProjekti({
+    oid,
+    muistiinpano: null,
+  });
+
+  const projekti = await loadProjektiFromDatabase(oid, Status.ALOITUSKUULUTUS);
+  expect(projekti.muistiinpano).to.be.undefined;
+}
+
+export async function testAloituskuulutusApproval(
+  oid: string,
+  projektiPaallikko: ProjektiKayttaja,
+  userFixture: UserFixture
+): Promise<void> {
+  userFixture.loginAsProjektiKayttaja(projektiPaallikko);
+  await api.siirraTila({
+    oid,
+    tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
+    toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+  });
+  await api.siirraTila({ oid, tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS, toiminto: TilasiirtymaToiminto.HYVAKSY });
+}
+
+export async function testSuunnitteluvaihePerustiedot(oid: string): Promise<void> {
+  await api.tallennaProjekti({
+    oid,
+    suunnitteluVaihe: {
+      hankkeenKuvaus: apiTestFixture.hankkeenKuvausSuunnittelu,
+      arvioSeuraavanVaiheenAlkamisesta: "huomenna",
+      suunnittelunEteneminenJaKesto: "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+      palautteidenVastaanottajat: [UserFixture.mattiMeikalainen.uid],
+    },
+  });
+  const projekti = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
+  expectToMatchSnapshot("testSuunnitteluvaihePerustiedot", projekti.suunnitteluVaihe);
+}
+
+async function doTestSuunnitteluvaiheVuorovaikutus(
+  oid: string,
+  vuorovaikutusNumero: number,
+  vuorovaikutusYhteysHenkilot: string[],
+  julkinen?: boolean
+) {
+  await api.tallennaProjekti({
+    oid,
+    suunnitteluVaihe: apiTestFixture.suunnitteluVaihe(vuorovaikutusNumero, vuorovaikutusYhteysHenkilot, julkinen),
+  });
+  return (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe;
+}
+
+export async function testSuunnitteluvaiheVuorovaikutus(
+  oid: string,
+  projektiPaallikko: ProjektiKayttaja
+): Promise<void> {
+  const suunnitteluVaihe1 = await doTestSuunnitteluvaiheVuorovaikutus(oid, 1, [projektiPaallikko.kayttajatunnus]);
+  expect(suunnitteluVaihe1.vuorovaikutukset).to.have.length(1);
+  const suunnitteluVaihe2 = await doTestSuunnitteluvaiheVuorovaikutus(oid, 2, [projektiPaallikko.kayttajatunnus]);
+  expectToMatchSnapshot("testSuunnitteluvaiheVuorovaikutus", suunnitteluVaihe2);
+
+  // Verify that it's possible to update one vuorovaikutus at the time
+  const suunnitteluVaihe3 = await doTestSuunnitteluvaiheVuorovaikutus(oid, 2, [
+    projektiPaallikko.kayttajatunnus,
+    UserFixture.mattiMeikalainen.uid,
+  ]);
+  const difference = detailedDiff(suunnitteluVaihe2, suunnitteluVaihe3);
+  expectToMatchSnapshot(
+    "added " + UserFixture.mattiMeikalainen.uid + " to vuorovaikutus and vuorovaikutustilaisuus",
+    difference
+  );
+}
+
+export async function testListDocumentsToImport(oid: string): Promise<VelhoAineistoKategoria[]> {
+  const velhoAineistoKategories = await api.listaaVelhoProjektiAineistot(oid);
+  expect(velhoAineistoKategories).not.be.empty;
+  const aineistot = velhoAineistoKategories[0].aineistot;
+  expect(aineistot).not.be.empty;
+  const link = await api.haeVelhoProjektiAineistoLinkki(oid, aineistot[0].oid);
+  expect(link).to.contain("https://");
+  return velhoAineistoKategories;
+}
+
+export async function saveAndVerifyAineistoSave(
+  oid: string,
+  aineistot: AineistoInput[],
+  originalVuorovaikutus: Vuorovaikutus
+): Promise<void> {
+  await api.tallennaProjekti({
+    oid,
+    suunnitteluVaihe: {
+      vuorovaikutus: {
+        ...originalVuorovaikutus,
+        aineistot,
+      },
+    },
+  });
+  const vuorovaikutus = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe.vuorovaikutukset[0];
+  expectToMatchSnapshot("saveAndVerifyAineistoSave", vuorovaikutus);
+}
+
+export async function testImportAineistot(
+  oid: string,
+  velhoAineistoKategorias: VelhoAineistoKategoria[]
+): Promise<void> {
+  const originalVuorovaikutus = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe
+    .vuorovaikutukset[0];
+
+  let order = 1;
+  const aineistot = velhoAineistoKategorias.reduce((documents, aineistoKategoria) => {
+    aineistoKategoria.aineistot.forEach((aineisto) => {
+      documents.push({ dokumenttiOid: aineisto.oid, jarjestys: order++, kategoria: aineistoKategoria.kategoria });
+    });
+    return documents;
+  }, [] as AineistoInput[]);
+
+  await saveAndVerifyAineistoSave(oid, aineistot, originalVuorovaikutus);
+  aineistot.map((aineisto) => {
+    aineisto.kategoria = aineisto.kategoria + " new";
+    aineisto.jarjestys = aineisto.jarjestys + 10;
+  });
+  await saveAndVerifyAineistoSave(oid, aineistot, originalVuorovaikutus);
+
+  const aineistotWithoutFirst = aineistot.slice(1);
+  await saveAndVerifyAineistoSave(oid, aineistotWithoutFirst, originalVuorovaikutus);
+}
+
+export async function testUpdatePublishDateAndDeleteAineisto(oid: string, userFixture: UserFixture): Promise<void> {
+  userFixture.loginAs(UserFixture.mattiMeikalainen);
+  const vuorovaikutus = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe.vuorovaikutukset[0];
+  vuorovaikutus.aineistot.pop();
+  const input = {
+    oid,
+    suunnitteluVaihe: {
+      vuorovaikutus: {
+        ...vuorovaikutus,
+        vuorovaikutusJulkaisuPaiva: parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva).add(1, "date").format(),
+      },
+    },
+  };
+  await api.tallennaProjekti(input);
+}
+
+export async function insertAndManageFeedback(oid: string): Promise<void> {
+  const palauteId = await api.lisaaPalaute(oid, {
+    etunimi: "Matti",
+    sukunimi: "Meikalainen",
+    puhelinnumero: "123456",
+    sahkoposti: "test@vayla.fi",
+    yhteydenottotapaPuhelin: true,
+    yhteydenottotapaEmail: false,
+    kysymysTaiPalaute: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    liite: await tallennaLogo(),
+  });
+
+  const projekti = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
+  const palautteet = projekti.suunnitteluVaihe.palautteet;
+
+  expectToMatchSnapshot("projekti palaute lisätty", cleanupGeneratedIdAndTimestampFromFeedbacks(palautteet));
+
+  await api.otaPalauteKasittelyyn(oid, palauteId);
+
+  const projektiAfterFeedbackBeingHandled = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
+  const palautteetAfterFeedbackBeingHandled = projektiAfterFeedbackBeingHandled.suunnitteluVaihe.palautteet;
+  expectToMatchSnapshot(
+    "projekti palaute otettu käsittelyyn",
+    cleanupGeneratedIdAndTimestampFromFeedbacks(palautteetAfterFeedbackBeingHandled)
+  );
+}
+
+export async function julkaiseSuunnitteluvaihe(oid: string): Promise<void> {
+  const projekti = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
+  await api.tallennaProjekti({
+    oid,
+    suunnitteluVaihe: {
+      ...projekti.suunnitteluVaihe,
+      julkinen: true,
+    },
+  });
+}
+
+export async function julkaiseVuorovaikutus(oid: string, userFixture: UserFixture): Promise<void> {
+  const unpublishedVuorovaikutusProjekti = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
+  await api.tallennaProjekti({
+    oid,
+    suunnitteluVaihe: {
+      vuorovaikutus: { ...unpublishedVuorovaikutusProjekti.suunnitteluVaihe.vuorovaikutukset[0], julkinen: true },
+    },
+  });
+  userFixture.logout();
+  const suunnitteluVaihe = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe;
+  cleanupVuorovaikutusTimestamps(suunnitteluVaihe.vuorovaikutukset);
+  await expectToMatchSnapshot("publicProjekti" + (" suunnitteluvaihe" || ""), suunnitteluVaihe);
+}
+
+export async function testPublicAccessToProjekti(
+  oid: string,
+  expectedStatus: Status,
+  userFixture: UserFixture,
+  description?: string
+): Promise<void> {
+  userFixture.logout();
+  const publicProjekti = await loadProjektiFromDatabase(oid, expectedStatus);
+  publicProjekti.paivitetty = "***unit test***";
+  expectToMatchSnapshot("publicProjekti" + (description || ""), publicProjekti);
+}
+
+export async function archiveProjekti(oid: string): Promise<void> {
+  // Finally delete the projekti
+  const archiveResult = await projektiArchive.archiveProjekti(oid);
+  expect(archiveResult.oid).to.be.equal(oid);
+  expect(archiveResult.timestamp).to.not.be.empty;
+}
+
+export async function searchProjectsFromVelhoAndPickFirst(): Promise<string> {
+  const searchResult = await api.getVelhoSuunnitelmasByName("HASSU AUTOMAATTITESTIPROJEKTI1");
+  // tslint:disable-next-line:no-unused-expression
+  expect(searchResult).not.to.be.empty;
+
+  const oid = searchResult.pop()?.oid;
+  if (!oid) {
+    fail("No suitable projekti found from Velho");
+  }
+  return oid;
+}
+
+export async function readProjektiFromVelho(): Promise<Projekti> {
+  const oid = await searchProjectsFromVelhoAndPickFirst();
+  const projekti = await api.lataaProjekti(oid);
+  await expect(projekti.tallennettu).to.be.false;
+  log.info({ projekti });
+  return projekti;
+}
+
+export async function sendEmailDigests(): Promise<void> {
+  await palauteEmailService.sendNewFeedbackDigest();
+}
+
+export function verifyEmailsSent(emailClientStub: sinon.SinonStub<any[], any>): void {
+  expect(
+    emailClientStub.getCalls().map((call) => {
+      const arg = call.args[0];
+      if (arg.attachments) {
+        arg.attachments = arg.attachments.map((attachment) => {
+          attachment.content = "***unittest***";
+          return attachment;
+        });
+      }
+      return {
+        emailOptions: arg,
+      };
+    })
+  ).toMatchSnapshot();
+}
+
+export async function processQueue(
+  fakeAineistoImportQueue: SQSEvent[],
+  userFixture: UserFixture,
+  oid: string
+): Promise<void> {
+  expect(fakeAineistoImportQueue).toMatchSnapshot();
+  for (const event of fakeAineistoImportQueue) {
+    await handleEvent(event, null, null);
+  }
+  userFixture.loginAs(UserFixture.mattiMeikalainen);
+  const suunnitteluVaihe = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe;
+  const vuorovaikutus = suunnitteluVaihe.vuorovaikutukset[0];
+  cleanupVuorovaikutusTimestamps([vuorovaikutus]);
+  expect(vuorovaikutus).toMatchSnapshot();
+}
