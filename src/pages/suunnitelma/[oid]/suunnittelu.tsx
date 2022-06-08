@@ -284,13 +284,13 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
               <>
                 <h5 className="vayla-smallest-title">{t(`projekti:ui-otsikot.video_materiaalit`)}</h5>
                 <p>Tutustu ennalta kuvattuun videoesittelyyn alta.</p>
-                {vuorovaikutus?.videot?.map((video) => {
+                {vuorovaikutus?.videot?.map((video, index) => {
                   return (
-                    <>
+                    <React.Fragment key={index}>
                       {(parseVideoURL(video.url) && (
                         <iframe width={"640px"} height={"360"} src={parseVideoURL(video.url)}></iframe>
                       )) || <p>&lt;Videolinkki ei ole kelvollinen&gt;</p>}
-                    </>
+                    </React.Fragment>
                   );
                 })}
               </>
