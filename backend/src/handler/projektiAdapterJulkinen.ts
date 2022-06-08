@@ -21,13 +21,12 @@ import {
   adaptKielitiedot,
   adaptLinkki,
   adaptLinkkiList,
-  adaptVuorovaikutusTilaisuudet,
   adaptYhteystiedot,
 } from "./projektiAdapter";
 import { fileService } from "../files/fileService";
 import { log } from "../logger";
 import { parseDate } from "../util/dateUtil";
-import { Vuorovaikutus } from "../database/model/suunnitteluVaihe";
+import { Vuorovaikutus, VuorovaikutusTilaisuus } from "../database/model/suunnitteluVaihe";
 
 class ProjektiAdapterJulkinen {
   private applyStatus(projekti: API.ProjektiJulkinen) {
@@ -185,6 +184,10 @@ class ProjektiAdapterJulkinen {
   }
 }
 
+function adaptUsernamesToProjektiHenkiloIds(usernames: Array<string>, projektiHenkilot: ProjektiHenkilot) {
+  return usernames?.map((username) => projektiHenkilot[username].id);
+}
+
 function adaptVuorovaikutukset(dbProjekti: DBProjekti, projektiHenkilot: ProjektiHenkilot): VuorovaikutusJulkinen[] {
   const vuorovaikutukset = dbProjekti.vuorovaikutukset;
   if (vuorovaikutukset && vuorovaikutukset.length > 0) {
@@ -192,17 +195,19 @@ function adaptVuorovaikutukset(dbProjekti: DBProjekti, projektiHenkilot: Projekt
       .map((vuorovaikutus) => {
         const julkaisuPaiva = parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva);
         if (julkaisuPaiva.isBefore(dayjs())) {
+          const usernames = vuorovaikutus.vuorovaikutusYhteysHenkilot;
           return {
             ...vuorovaikutus,
             __typename: "VuorovaikutusJulkinen",
-            vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
+            vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(
+              vuorovaikutus.vuorovaikutusTilaisuudet,
+              projektiHenkilot
+            ),
             videot: adaptLinkkiList(vuorovaikutus.videot),
             suunnittelumateriaali: adaptLinkki(vuorovaikutus.suunnittelumateriaali),
             aineistot: adaptAineistot(vuorovaikutus.aineistot, julkaisuPaiva),
             vuorovaikutusYhteystiedot: adaptAndMergeYhteystiedot(dbProjekti, vuorovaikutus),
-            vuorovaikutusYhteysHenkilot: vuorovaikutus.vuorovaikutusYhteysHenkilot?.map(
-              (username) => projektiHenkilot[username].id
-            ),
+            vuorovaikutusYhteysHenkilot: adaptUsernamesToProjektiHenkiloIds(usernames, projektiHenkilot),
           } as API.VuorovaikutusJulkinen;
         }
         return undefined;
@@ -210,6 +215,24 @@ function adaptVuorovaikutukset(dbProjekti: DBProjekti, projektiHenkilot: Projekt
       .filter((obj) => obj);
   }
   return vuorovaikutukset as undefined;
+}
+
+function adaptVuorovaikutusTilaisuudet(
+  vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus>,
+  projektiHenkilot: ProjektiHenkilot
+): VuorovaikutusTilaisuus[] {
+  if (vuorovaikutusTilaisuudet) {
+    return vuorovaikutusTilaisuudet.map((vuorovaikutusTilaisuus) => ({
+      ...vuorovaikutusTilaisuus,
+      projektiYhteysHenkilot: adaptUsernamesToProjektiHenkiloIds(
+        vuorovaikutusTilaisuus.projektiYhteysHenkilot,
+        projektiHenkilot
+      ),
+      esitettavatYhteystiedot: adaptYhteystiedot(vuorovaikutusTilaisuus.esitettavatYhteystiedot),
+      __typename: "VuorovaikutusTilaisuus",
+    }));
+  }
+  return vuorovaikutusTilaisuudet as undefined;
 }
 
 function findJulkaisuByStatus<T extends { tila?: API.AloitusKuulutusTila }>(
