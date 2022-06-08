@@ -52,7 +52,16 @@ export default function ProjektiSideNavigation(): ReactElement {
       title: "Nähtävilläolovaihe",
       status: Status.SUUNNITTELU,
       href: oid && `/yllapito/projekti/${oid}/nahtavillaolo`,
-      disabled: true,
+      disabled: !!(
+        projekti?.status &&
+        // TODO Correct this when we can get projects to Status.NAHTAVILLAOLO
+        ![
+          Status.ALOITUSKUULUTUS,
+          Status.EI_JULKAISTU,
+          Status.EI_JULKAISTU_PROJEKTIN_HENKILOT,
+          Status.SUUNNITTELU,
+        ].includes(projekti.status)
+      ),
     },
   ];
 
