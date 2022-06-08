@@ -48,86 +48,6 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
 
   const suunnittelusopimus = projekti?.aloitusKuulutusJulkaisut?.[0].suunnitteluSopimus;
 
-  const TilaisuusIcon = React.memo((props: { tyyppi: VuorovaikutusTilaisuusTyyppi; inactive?: true }) => {
-    return (
-      <>
-        {props.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA && (
-          <LocationCityIcon sx={{ color: props.inactive ? "#999999" : "#0064AF" }} />
-        )}
-        {props.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA && (
-          <LocalPhoneIcon sx={{ color: props.inactive ? "#999999" : "#0064AF" }} />
-        )}
-        {props.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA && (
-          <HeadphonesIcon sx={{ color: props.inactive ? "#999999" : "#0064AF" }} />
-        )}
-      </>
-    );
-  });
-
-  TilaisuusIcon.displayName = "TilaisuusIcon";
-
-  const TilaisuusTitle = React.memo((props: { tilaisuus: VuorovaikutusTilaisuus }) => {
-    return (
-      <p>
-        <b>
-          {capitalize(t(`common:viikonpaiva_${dayjs(props.tilaisuus.paivamaara).day()}`))}{" "}
-          {formatDate(props.tilaisuus.paivamaara)} klo {props.tilaisuus.alkamisAika}-{props.tilaisuus.paattymisAika}
-          {props.tilaisuus.nimi ? `, ${capitalize(props.tilaisuus.nimi)}` : undefined}
-        </b>
-      </p>
-    );
-  });
-
-  TilaisuusTitle.displayName = "TilaisuusTitle";
-
-  const TilaisuusContent = React.memo((props: { tilaisuus: VuorovaikutusTilaisuus }) => {
-    return (
-      <>
-        {props.tilaisuus && props.tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA && (
-          <div>
-            <p>
-              Osoite: {props.tilaisuus.osoite}, {props.tilaisuus.postinumero} {props.tilaisuus.postitoimipaikka}
-            </p>
-            <p>
-              Yleisötilaisuus järjestetään fyysisenä tilaisuutena ylläolevassa osoitteessa.{" "}
-              {props.tilaisuus.Saapumisohjeet ? capitalize(props.tilaisuus.Saapumisohjeet) : undefined}
-            </p>
-          </div>
-        )}
-        {props.tilaisuus && props.tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA && (
-          <div>
-            <p>
-              Voit soittaa alla esitetyille henkilöille myös soittoajan ulkopuolella, mutta parhaiten tavoitat heidät
-              esitettynä ajankohtana.
-            </p>
-            {props.tilaisuus.projektiYhteysHenkilot?.map((yhteyshenkilo, index) => {
-              //TODO tarvitaan Yhteystieto-mappays tai sitten bakkarista valmiiksi kaivettuna
-              return <p key={index}>{yhteyshenkilo}</p>;
-            })}
-            {props.tilaisuus.esitettavatYhteystiedot?.map((yhteystieto, index) => {
-              return <SoittoajanYhteystieto key={index} yhteystieto={yhteystieto} />;
-            })}
-          </div>
-        )}
-        {props.tilaisuus && props.tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA && (
-          <div>
-            <p>Yleisötilaisuus järjestetään suorana verkkotapahtumana.</p>
-            <p>
-              Tilaisuus toteutetaan Teamsin välityksellä. Teams-sovelluksen asentamista omalle laitteelle ei edellytetä.
-              Liittymislinkki toimii Internet-selaimella tietokoneella tai mobiililaitteella.
-            </p>
-            <p>
-              Liity tilaisuuteen: Tilaisuuden liittymislinkki julkaistaan tässä kaksi (2) tuntia ennen tilaisuuden alkua
-              ja poistetaan tilaisuuden jälkeen.
-            </p>
-          </div>
-        )}
-      </>
-    );
-  });
-
-  TilaisuusContent.displayName = "SuunnitteluContent";
-
   const suunnitelmaluonnokset = vuorovaikutus?.suunnitelmaluonnokset;
   const esittelyaineistot = vuorovaikutus?.esittelyaineistot;
 
@@ -341,5 +261,81 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
         )}
       </>
     </ProjektiJulkinenPageLayout>
+  );
+}
+
+function TilaisuusContent({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuus }) {
+  return (
+    <>
+      {tilaisuus && tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA && (
+        <div>
+          <p>
+            Osoite: {tilaisuus.osoite}, {tilaisuus.postinumero} {tilaisuus.postitoimipaikka}
+          </p>
+          <p>
+            Yleisötilaisuus järjestetään fyysisenä tilaisuutena ylläolevassa osoitteessa.{" "}
+            {tilaisuus.Saapumisohjeet ? capitalize(tilaisuus.Saapumisohjeet) : undefined}
+          </p>
+        </div>
+      )}
+      {tilaisuus && tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA && (
+        <div>
+          <p>
+            Voit soittaa alla esitetyille henkilöille myös soittoajan ulkopuolella, mutta parhaiten tavoitat heidät
+            esitettynä ajankohtana.
+          </p>
+          {tilaisuus.projektiYhteysHenkilot?.map((yhteyshenkilo, index) => {
+            //TODO tarvitaan Yhteystieto-mappays tai sitten bakkarista valmiiksi kaivettuna
+            return <p key={index}>{yhteyshenkilo}</p>;
+          })}
+          {tilaisuus.esitettavatYhteystiedot?.map((yhteystieto, index) => {
+            return <SoittoajanYhteystieto key={index} yhteystieto={yhteystieto} />;
+          })}
+        </div>
+      )}
+      {tilaisuus && tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA && (
+        <div>
+          <p>Yleisötilaisuus järjestetään suorana verkkotapahtumana.</p>
+          <p>
+            Tilaisuus toteutetaan Teamsin välityksellä. Teams-sovelluksen asentamista omalle laitteelle ei edellytetä.
+            Liittymislinkki toimii Internet-selaimella tietokoneella tai mobiililaitteella.
+          </p>
+          <p>
+            Liity tilaisuuteen: Tilaisuuden liittymislinkki julkaistaan tässä kaksi (2) tuntia ennen tilaisuuden alkua
+            ja poistetaan tilaisuuden jälkeen.
+          </p>
+        </div>
+      )}
+    </>
+  );
+}
+
+function TilaisuusIcon({ tyyppi, inactive }: { tyyppi: VuorovaikutusTilaisuusTyyppi; inactive?: true }) {
+  return (
+    <>
+      {tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA && (
+        <LocationCityIcon sx={{ color: inactive ? "#999999" : "#0064AF" }} />
+      )}
+      {tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA && (
+        <LocalPhoneIcon sx={{ color: inactive ? "#999999" : "#0064AF" }} />
+      )}
+      {tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA && (
+        <HeadphonesIcon sx={{ color: inactive ? "#999999" : "#0064AF" }} />
+      )}
+    </>
+  );
+}
+
+function TilaisuusTitle({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuus }) {
+  const { t } = useTranslation();
+
+  return (
+    <p>
+      <b>
+        {capitalize(t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`))} {formatDate(tilaisuus.paivamaara)}{" "}
+        klo {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}
+        {tilaisuus.nimi ? `, ${capitalize(tilaisuus.nimi)}` : undefined}
+      </b>
+    </p>
   );
 }
