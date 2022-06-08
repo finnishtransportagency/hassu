@@ -300,8 +300,8 @@ export async function testImportAineistot(
 export async function testUpdatePublishDateAndDeleteAineisto(oid: string, userFixture: UserFixture): Promise<void> {
   userFixture.loginAs(UserFixture.mattiMeikalainen);
   const vuorovaikutus = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe.vuorovaikutukset[0];
-  vuorovaikutus.esittelyaineistot.pop();
-  vuorovaikutus.suunnitelmaluonnokset.pop();
+  vuorovaikutus.esittelyaineistot?.pop();
+  vuorovaikutus.suunnitelmaluonnokset?.pop();
   const input = {
     oid,
     suunnitteluVaihe: {
