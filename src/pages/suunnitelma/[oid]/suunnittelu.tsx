@@ -19,6 +19,7 @@ import ExtLink from "@components/ExtLink";
 import { parseVideoURL } from "src/util/videoParser";
 import PalauteLomakeDialogi from "src/components/projekti/kansalaisnakyma/PalauteLomakeDialogi";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
+import { ProjektiKayttajaJulkinen } from "@services/api";
 
 export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
   const router = useRouter();
@@ -121,7 +122,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
                           <TilaisuusIcon tyyppi={tilaisuus.tyyppi} />
                           <TilaisuusTitle tilaisuus={tilaisuus} />
                         </div>
-                        <TilaisuusContent tilaisuus={tilaisuus} />
+                        <TilaisuusContent tilaisuus={tilaisuus} projektiHenkilot={projekti.projektiHenkilot} />
                       </div>
                     );
                   })}
@@ -149,7 +150,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
                           <TilaisuusIcon tyyppi={tilaisuus.tyyppi} inactive />
                           <TilaisuusTitle tilaisuus={tilaisuus} />
                         </div>
-                        <TilaisuusContent tilaisuus={tilaisuus} />
+                        <TilaisuusContent tilaisuus={tilaisuus} projektiHenkilot={projekti.projektiHenkilot} />
                       </div>
                     );
                   })}
@@ -264,7 +265,13 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
   );
 }
 
-function TilaisuusContent({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuus }) {
+function TilaisuusContent({
+  tilaisuus,
+  projektiHenkilot,
+}: {
+  tilaisuus: VuorovaikutusTilaisuus;
+  projektiHenkilot: ProjektiKayttajaJulkinen[] | null | undefined;
+}) {
   return (
     <>
       {tilaisuus && tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA && (
@@ -284,10 +291,18 @@ function TilaisuusContent({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuus }) 
             Voit soittaa alla esitetyille henkilöille myös soittoajan ulkopuolella, mutta parhaiten tavoitat heidät
             esitettynä ajankohtana.
           </p>
-          {tilaisuus.projektiYhteysHenkilot?.map((yhteyshenkilo, index) => {
-            //TODO tarvitaan Yhteystieto-mappays tai sitten bakkarista valmiiksi kaivettuna
-            return <p key={index}>{yhteyshenkilo}</p>;
-          })}
+          {tilaisuus.projektiYhteysHenkilot
+            ?.map(
+              (yhteyshenkilo) => projektiHenkilot?.find((hlo) => yhteyshenkilo === hlo.id) as ProjektiKayttajaJulkinen
+            )
+            .map((yhteystieto: ProjektiKayttajaJulkinen) => {
+              return (
+                <p key={yhteystieto.id}>
+                  {yhteystieto.nimi}
+                  {yhteystieto.organisaatio ? ` (${yhteystieto.organisaatio})` : null}: {yhteystieto.puhelinnumero}
+                </p>
+              );
+            })}
           {tilaisuus.esitettavatYhteystiedot?.map((yhteystieto, index) => {
             return <SoittoajanYhteystieto key={index} yhteystieto={yhteystieto} />;
           })}
