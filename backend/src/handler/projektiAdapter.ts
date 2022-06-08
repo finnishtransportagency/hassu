@@ -449,7 +449,7 @@ function adaptVuorovaikutukset(vuorovaikutukset: Array<Vuorovaikutus>): API.Vuor
   return vuorovaikutukset as undefined;
 }
 
-export function adaptVuorovaikutusTilaisuudet(
+function adaptVuorovaikutusTilaisuudet(
   vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus>
 ): API.VuorovaikutusTilaisuus[] {
   if (vuorovaikutusTilaisuudet) {

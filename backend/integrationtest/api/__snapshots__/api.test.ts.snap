@@ -1103,6 +1103,7 @@ Object {
             "nimi": "Lorem ipsum 1",
             "paattymisAika": "16:00",
             "paivamaara": "2022-03-04",
+            "projektiYhteysHenkilot": undefined,
             "tyyppi": "VERKOSSA",
           },
           Object {
@@ -1117,6 +1118,7 @@ Object {
             "paivamaara": "2022-04-05",
             "postinumero": "00100",
             "postitoimipaikka": "Helsinki",
+            "projektiYhteysHenkilot": undefined,
             "tyyppi": "PAIKALLA",
           },
           Object {
@@ -1146,7 +1148,7 @@ Object {
             "paattymisAika": "11:00",
             "paivamaara": "2022-04-05",
             "projektiYhteysHenkilot": Array [
-              "A000112",
+              "0",
             ],
             "tyyppi": "SOITTOAIKA",
           },
@@ -1176,6 +1178,7 @@ Object {
             "nimi": "Toisen soittoaikatilaisuuden nimi tässä",
             "paattymisAika": "13:00",
             "paivamaara": "2033-04-05",
+            "projektiYhteysHenkilot": undefined,
             "tyyppi": "SOITTOAIKA",
           },
         ],
@@ -1235,6 +1238,7 @@ Object {
             "nimi": "Lorem ipsum 2",
             "paattymisAika": "16:00",
             "paivamaara": "2022-03-04",
+            "projektiYhteysHenkilot": undefined,
             "tyyppi": "VERKOSSA",
           },
           Object {
@@ -1249,6 +1253,7 @@ Object {
             "paivamaara": "2022-04-05",
             "postinumero": "00100",
             "postitoimipaikka": "Helsinki",
+            "projektiYhteysHenkilot": undefined,
             "tyyppi": "PAIKALLA",
           },
           Object {
@@ -1278,8 +1283,8 @@ Object {
             "paattymisAika": "11:00",
             "paivamaara": "2022-04-05",
             "projektiYhteysHenkilot": Array [
-              "A000112",
-              "A000111",
+              "0",
+              "1",
             ],
             "tyyppi": "SOITTOAIKA",
           },
@@ -1309,6 +1314,7 @@ Object {
             "nimi": "Toisen soittoaikatilaisuuden nimi tässä",
             "paattymisAika": "13:00",
             "paivamaara": "2033-04-05",
+            "projektiYhteysHenkilot": undefined,
             "tyyppi": "SOITTOAIKA",
           },
         ],

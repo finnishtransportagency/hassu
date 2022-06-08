@@ -42,7 +42,7 @@ class AineistoService {
     }
 
     const aineistotToDelete = projektiAdaptationResult.aineistoChanges.aineistotToDelete;
-    if (aineistotToDelete.length > 0) {
+    if (aineistotToDelete && aineistotToDelete.length > 0) {
       // Delete files from public
       hasChanges = true;
       for (const fileNameToDelete of aineistotToDelete) {
