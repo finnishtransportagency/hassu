@@ -4,10 +4,16 @@ import useTranslation from "next-translate/useTranslation";
 import { HeaderProps } from "./header";
 import { useRouter } from "next/router";
 import Button from "@components/button/Button";
+import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
+import { Kieli } from "@services/api";
+import useSnackbars from "src/hooks/useSnackbars";
 
 export function KansalaisHeader({}: HeaderProps): ReactElement {
   const { t } = useTranslation("common");
   const router = useRouter();
+  const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
+  const { data: projekti } = useProjektiJulkinen(oid);
+  const { showInfoMessage } = useSnackbars();
 
   const replacer = useCallback(
     (_substring: string, key: string, _offset: number, _string: number): string => {
@@ -32,7 +38,17 @@ export function KansalaisHeader({}: HeaderProps): ReactElement {
         </Button>
         <Button
           className="inline m-3"
-          onClick={() => router.push(router.pathname.replace(/\[(.*)\]/, replacer), undefined, { locale: "sv" })}
+          onClick={() => {
+            if (
+              projekti &&
+              projekti.kielitiedot?.ensisijainenKieli !== Kieli.RUOTSI &&
+              projekti.kielitiedot?.toissijainenKieli !== Kieli.RUOTSI
+            ) {
+              showInfoMessage("RUOTSIKSI Projektia ei ole saatavilla ruotsin kielellä");
+              return router.push("/", undefined, { locale: "sv" });
+            }
+            router.push(router.pathname.replace(/\[(.*)\]/, replacer), undefined, { locale: "sv" });
+          }}
         >
           Ruotsiksi
         </Button>
