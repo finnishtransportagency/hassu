@@ -6,11 +6,11 @@ import {
   Kielitiedot,
   SuunnitteluSopimus,
   Velho,
+  Vuorovaikutus,
   Yhteystieto,
-} from "../../database/model/projekti";
+} from "../../database/model";
 import { AsiakirjanMuoto } from "../asiakirjaService";
 import { translate } from "../../util/localization";
-import { Vuorovaikutus } from "../../database/model/suunnitteluVaihe";
 import { linkSuunnitteluVaihe } from "../../../../common/links";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 

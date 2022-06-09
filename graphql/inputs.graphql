@@ -8,6 +8,7 @@ input TallennaProjektiInput {
   kayttoOikeudet: [ProjektiKayttajaInput!]
   kielitiedot: KielitiedotInput
   suunnitteluVaihe: SuunnitteluVaiheInput
+  nahtavillaoloVaihe: NahtavillaoloVaiheInput
 }
 
 input KielitiedotInput {
@@ -137,6 +138,18 @@ input VuorovaikutusTilaisuusInput {
   esitettavatYhteystiedot: [YhteystietoInput!]
 }
 
+input NahtavillaoloVaiheInput {
+  aineistoNahtavilla: [AineistoInput!]
+  lisaAineisto: [AineistoInput!]
+  kuulutusPaiva: String
+  kuulutusVaihePaattyyPaiva: String
+  muistutusoikeusPaattyyPaiva: String
+  hankkeenKuvaus: HankkeenKuvauksetInput
+  kuulutusYhteysHenkilot: [String!]
+  kuulutusYhteystiedot: [YhteystietoInput!]
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
+}
+
 input LinkkiInput {
   nimi: String!
   url: String!
@@ -199,6 +212,7 @@ enum TilasiirtymaToiminto {
 
 enum TilasiirtymaTyyppi {
   ALOITUSKUULUTUS
+  NAHTAVILLAOLO
 }
 
 input TilaSiirtymaInput {

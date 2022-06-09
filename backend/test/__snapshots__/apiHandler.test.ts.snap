@@ -155,6 +155,7 @@ Array [
     "kielitiedot": undefined,
     "liittyvatSuunnitelmat": undefined,
     "muistiinpano": undefined,
+    "nahtavillaoloVaihe": undefined,
     "oid": "1",
     "suunnitteluSopimus": undefined,
     "suunnitteluVaihe": undefined,
@@ -223,6 +224,7 @@ Array [
     "kielitiedot": undefined,
     "liittyvatSuunnitelmat": undefined,
     "muistiinpano": undefined,
+    "nahtavillaoloVaihe": undefined,
     "oid": "1",
     "suunnitteluSopimus": undefined,
     "suunnitteluVaihe": undefined,
@@ -332,6 +334,7 @@ Array [
     },
     "liittyvatSuunnitelmat": undefined,
     "muistiinpano": undefined,
+    "nahtavillaoloVaihe": undefined,
     "oid": "1",
     "suunnitteluSopimus": Object {
       "email": "a@b.com",

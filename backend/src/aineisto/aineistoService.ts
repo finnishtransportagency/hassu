@@ -1,4 +1,4 @@
-import { Aineisto } from "../database/model/suunnitteluVaihe";
+import { Aineisto } from "../database/model";
 import { aineistoImporterClient } from "./aineistoImporterClient";
 import { log } from "../logger";
 import { fileService } from "../files/fileService";

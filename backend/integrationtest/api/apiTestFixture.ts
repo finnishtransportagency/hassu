@@ -2,10 +2,12 @@ import {
   AloitusKuulutus,
   HankkeenKuvauksetInput,
   IlmoitettavaViranomainen,
+  IlmoituksenVastaanottajat,
   KaytettavaPalvelu,
   Kieli,
   Kielitiedot,
   KielitiedotInput,
+  NahtavillaoloVaiheInput,
   SuunnitteluSopimus,
   SuunnitteluSopimusInput,
   SuunnitteluVaiheInput,
@@ -92,36 +94,36 @@ class ApiTestFixture {
     SAAME: "Saameksi suunnitteluvaihe",
   };
 
-  ilmoituksenVastaanottajat: {
-    __typename: "IlmoituksenVastaanottajat";
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat = {
+    __typename: "IlmoituksenVastaanottajat",
     kunnat: [
       {
-        sahkoposti: "mikkeli@mikke.li";
-        lahetetty: "2022-03-11T14:54";
-        nimi: "Mikkeli";
-        __typename: "KuntaVastaanottaja";
+        sahkoposti: "mikkeli@mikke.li",
+        lahetetty: "2022-03-11T14:54",
+        nimi: "Mikkeli",
+        __typename: "KuntaVastaanottaja",
       },
       {
-        sahkoposti: "juva@ju.va";
-        lahetetty: "2022-03-11T14:54";
-        nimi: " Juva";
-        __typename: "KuntaVastaanottaja";
+        sahkoposti: "juva@ju.va",
+        lahetetty: "2022-03-11T14:54",
+        nimi: " Juva",
+        __typename: "KuntaVastaanottaja",
       },
       {
-        sahkoposti: "savonlinna@savonlin.na";
-        lahetetty: "2022-03-11T14:54";
-        nimi: " Savonlinna";
-        __typename: "KuntaVastaanottaja";
-      }
-    ];
+        sahkoposti: "savonlinna@savonlin.na",
+        lahetetty: "2022-03-11T14:54",
+        nimi: " Savonlinna",
+        __typename: "KuntaVastaanottaja",
+      },
+    ],
     viranomaiset: [
       {
-        sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi";
-        lahetetty: "2022-03-11T14:54";
-        nimi: IlmoitettavaViranomainen.ETELA_SAVO_ELY;
-        __typename: "ViranomaisVastaanottaja";
-      }
-    ];
+        sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+        lahetetty: "2022-03-11T14:54",
+        nimi: IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+        __typename: "ViranomaisVastaanottaja",
+      },
+    ],
   };
 
   suunnitteluVaihe = (
@@ -179,6 +181,19 @@ class ApiTestFixture {
         },
       ],
     },
+  });
+
+  nahtavillaoloVaihe = (kuulutusYhteysHenkilot: string[]): NahtavillaoloVaiheInput => ({
+    hankkeenKuvaus: {
+      SUOMI: "Lorem Ipsum nahtavillaoloVaihe",
+      SAAME: "Saameksi nahtavillaoloVaihe",
+    },
+    kuulutusPaiva: "2022-06-07",
+    kuulutusVaihePaattyyPaiva: "2042-06-07",
+    muistutusoikeusPaattyyPaiva: "2042-06-08",
+    kuulutusYhteysHenkilot,
+    ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
+    kuulutusYhteystiedot: this.esitettavatYhteystiedotInput,
   });
 }
 

@@ -7,8 +7,8 @@ import {
   Viranomainen,
 } from "../../../../common/graphql/apiModel";
 import { Palaute, SuunnitteluVaihe, Vuorovaikutus } from "./suunnitteluVaihe";
-
-export type LocalizedMap<T> = { [key in Kieli]?: T } | null;
+import { NahtavillaoloVaihe } from "./nahtavillaoloVaihe";
+import { LocalizedMap, Yhteystieto } from "./common";
 
 export type DBVaylaUser = {
   rooli: ProjektiRooli;
@@ -49,15 +49,6 @@ export type AloitusKuulutusJulkaisu = {
   muokkaaja?: string | null;
   hyvaksyja?: string | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
-};
-
-export type Yhteystieto = {
-  etunimi: string;
-  sukunimi: string;
-  organisaatio: string;
-  puhelinnumero: string;
-  sahkoposti: string;
-  titteli?: string;
 };
 
 export type SuunnitteluSopimus = {
@@ -123,6 +114,7 @@ export type DBProjekti = {
   liittyvatSuunnitelmat?: Suunnitelma[] | null;
   suunnitteluVaihe?: SuunnitteluVaihe | null;
   vuorovaikutukset?: Array<Vuorovaikutus> | null;
+  nahtavillaoloVaihe?: NahtavillaoloVaihe | null;
   palautteet?: Array<Palaute> | null;
   uusiaPalautteita?: number;
 

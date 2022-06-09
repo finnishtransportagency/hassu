@@ -1,6 +1,6 @@
 import { AbstractPdf } from "../abstractPdf";
 import { Kieli, Viranomainen } from "../../../../common/graphql/apiModel";
-import { SuunnitteluSopimus, Velho, Yhteystieto } from "../../database/model/projekti";
+import { SuunnitteluSopimus, Velho, Yhteystieto } from "../../database/model";
 import { KutsuAdapter } from "./KutsuAdapter";
 import { log } from "../../logger";
 import PDFStructureElement = PDFKit.PDFStructureElement;

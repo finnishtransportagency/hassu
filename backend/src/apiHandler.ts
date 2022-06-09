@@ -37,12 +37,12 @@ import { createUploadURLForFile } from "./handler/fileHandler";
 import * as AWSXRay from "aws-xray-sdk-core";
 import { getCorrelationId, setupLambdaMonitoring, setupLambdaMonitoringMetaData } from "./aws/monitoring";
 import { calculateEndDate } from "./endDateCalculator/endDateCalculatorHandler";
-import { aloitusKuulutusHandler } from "./handler/aloitusKuulutusHandler";
 import { listProjektit } from "./handler/listProjektitHandler";
 import { velhoDocumentHandler } from "./handler/velhoDocumentHandler";
 import { palauteHandler } from "./palaute/palauteHandler";
 import { ClientError } from "./error/ClientError";
 import { SystemError } from "./error/SystemError";
+import { tilaHandler } from "./handler/tilaHandler";
 
 export type AppSyncEventArguments =
   | unknown
@@ -91,7 +91,7 @@ async function executeOperation(event: AppSyncResolverEvent<AppSyncEventArgument
     case apiConfig.laskePaattymisPaiva.name:
       return calculateEndDate(event.arguments as LaskePaattymisPaivaQueryVariables);
     case apiConfig.siirraTila.name:
-      return aloitusKuulutusHandler.siirraTila((event.arguments as SiirraTilaMutationVariables).tilasiirtyma);
+      return tilaHandler.siirraTila((event.arguments as SiirraTilaMutationVariables).tilasiirtyma);
     case apiConfig.arkistoiProjekti.name:
       return arkistoiProjekti((event.arguments as ArkistoiProjektiMutationVariables).oid);
     case apiConfig.lisaaPalaute.name:
