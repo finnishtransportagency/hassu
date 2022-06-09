@@ -6,6 +6,7 @@ import { Kayttajas } from "../personSearch/kayttajas";
 import {
   ProjektiProjekti,
   ProjektirekisteriApiV2ProjektiOminaisuudet,
+  ProjektirekisteriApiV2ProjektiOminaisuudetVastuuhenkilo,
   ProjektirekisteriApiV2ProjektiOminaisuudetVaylamuotoEnum,
 } from "./projektirekisteri";
 import mergeWith from "lodash/mergeWith";
@@ -14,6 +15,7 @@ import identity from "lodash/identity";
 import isArray from "lodash/isArray";
 import cloneDeep from "lodash/cloneDeep";
 import difference from "lodash/difference";
+import { log } from "../logger";
 
 let metaDataJSON: any;
 
@@ -106,7 +108,7 @@ function getViranomainen(organisaatio: Organisaatio) {
 export function adaptSearchResults(searchResults: ProjektiSearchResult[], kayttajas: Kayttajas): VelhoHakuTulos[] {
   if (searchResults) {
     return searchResults.map((result) => {
-      const projektiPaallikko = kayttajas.findByEmail(result.ominaisuudet.vastuuhenkilo);
+      const projektiPaallikko = kayttajas.findByEmail(getVastuuhenkiloEmail(result.ominaisuudet.vastuuhenkilo));
       const projektiPaallikkoNimi =
         projektiPaallikko && userService.hasPermissionLuonti(projektiPaallikko)
           ? adaptKayttaja(projektiPaallikko).nimi
@@ -123,9 +125,32 @@ export function adaptSearchResults(searchResults: ProjektiSearchResult[], kaytta
   return [];
 }
 
+function getVastuuhenkiloEmail(vastuuhenkilo: ProjektirekisteriApiV2ProjektiOminaisuudetVastuuhenkilo): string {
+  if (vastuuhenkilo?.sahkoposti) {
+    return vastuuhenkilo?.sahkoposti;
+  }
+  // Support the data based on the old schema
+  return vastuuhenkilo as unknown as string;
+}
+
+function getKunnat(data: ProjektiProjekti) {
+  if (data.ominaisuudet.kunta) {
+    log.info({ kunta: data.ominaisuudet.kunta }); // TODO add support for object type when we have test data available
+  }
+  return data.ominaisuudet["muu-kunta"]?.split(",");
+}
+
+function getMaakunnat(data: ProjektiProjekti) {
+  if (data.ominaisuudet.maakunta) {
+    log.info({ maakunta: data.ominaisuudet.maakunta }); // TODO add support for object type when we have test data available
+  }
+  return data.ominaisuudet["muu-maakunta"]?.split(",");
+}
+
 export function adaptProjekti(data: ProjektiProjekti): { projekti: DBProjekti; vastuuhenkilo: string } {
   const projektiTyyppi = getProjektiTyyppi(data.ominaisuudet.vaihe as any);
   const viranomainen = getViranomainen(data.ominaisuudet.tilaajaorganisaatio as any);
+  const vastuuhenkiloEmail = getVastuuhenkiloEmail(data.ominaisuudet.vastuuhenkilo);
   const projekti: DBProjekti = {
     oid: "" + data.oid,
     tyyppi: projektiTyyppi,
@@ -139,16 +164,16 @@ export function adaptProjekti(data: ProjektiProjekti): { projekti: DBProjekti; v
       // TODO implementoi suomi-ruotsi -käännökset Viranomais-tiedolle backendissa
       tilaajaOrganisaatio: metadata.organisaatiot[`${data.ominaisuudet.tilaajaorganisaatio}`].otsikko,
       linkki: data.ominaisuudet.linkki,
-      kunnat: data.ominaisuudet.kunta?.split(","),
-      maakunnat: data.ominaisuudet.maakunta?.split(","),
-      vastuuhenkilonEmail: data.ominaisuudet.vastuuhenkilo,
+      kunnat: getKunnat(data),
+      maakunnat: getMaakunnat(data),
+      vastuuhenkilonEmail: vastuuhenkiloEmail,
     },
     kayttoOikeudet: [],
   };
 
   return {
     projekti,
-    vastuuhenkilo: data.ominaisuudet.vastuuhenkilo,
+    vastuuhenkilo: vastuuhenkiloEmail,
   };
 }
 

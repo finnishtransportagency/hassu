@@ -160,7 +160,9 @@ export class VelhoClient {
     try {
       response = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidGet(oid);
     } catch (e) {
-      throw new VelhoError(e.message, e);
+      log.error(e);
+      return adaptProjekti(e.response.data.value); // TODO temporary hack, remove after velho has been fixed
+      // throw new VelhoError(e.message, e);
     }
     checkResponseIsOK(response, "loadProjekti with oid '" + oid + "'");
     return adaptProjekti(response.data);
