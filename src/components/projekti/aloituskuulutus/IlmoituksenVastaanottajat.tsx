@@ -141,6 +141,7 @@ export default function IlmoituksenVastaanottajat({
                 />
                 <div className="hidden lg:block" style={{ alignSelf: "flex-end" }}>
                   <IconButton
+                    name="viranomainen_trash_button"
                     icon="trash"
                     onClick={(event) => {
                       event.preventDefault();
@@ -165,6 +166,7 @@ export default function IlmoituksenVastaanottajat({
             ))}
           </SectionContent>
           <Button
+            id="add_new_viranomainen"
             type="button"
             onClick={() => {
               // @ts-ignore

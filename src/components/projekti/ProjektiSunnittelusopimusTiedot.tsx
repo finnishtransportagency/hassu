@@ -76,28 +76,33 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
             <p>Kunnan projektipäällikön tiedot</p>
             <HassuGrid cols={{ lg: 3 }}>
               <Select
+                id="suunnittelusopimus_kunta"
                 label="Kunta *"
                 options={kuntaOptions ? kuntaOptions : [{ label: "", value: "" }]}
                 error={(errors as any).suunnitteluSopimus?.kunta}
                 {...register("suunnitteluSopimus.kunta", { shouldUnregister: true })}
               />
               <TextInput
+                id="suunnittelusopimus_etunimi"
                 label="Etunimi *"
                 error={(errors as any).suunnitteluSopimus?.etunimi}
                 {...register("suunnitteluSopimus.etunimi", { shouldUnregister: true })}
               />
               <TextInput
+                id="suunnittelusopimus_sukunimi"
                 label="Sukunimi *"
                 error={(errors as any).suunnitteluSopimus?.sukunimi}
                 {...register("suunnitteluSopimus.sukunimi", { shouldUnregister: true })}
               />
               <TextInput
+                id="suunnittelusopimus_puhelinnumero"
                 label="Puhelinnumero *"
                 maxLength={maxPhoneLength}
                 error={(errors as any).suunnitteluSopimus?.puhelinnumero}
                 {...register("suunnitteluSopimus.puhelinnumero", { shouldUnregister: true })}
               />
               <TextInput
+                id="suunnittelusopimus_sahkoposti"
                 label="Sähköposti *"
                 error={(errors as any).suunnitteluSopimus?.email}
                 {...register("suunnitteluSopimus.email", { shouldUnregister: true })}
@@ -119,6 +124,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
                         alt="Suunnittelu sopimus logo"
                       />
                       <IconButton
+                        name="suunnittelusopimus_logo_trash_button"
                         icon="trash"
                         onClick={() => {
                           setLogoUrl(undefined);

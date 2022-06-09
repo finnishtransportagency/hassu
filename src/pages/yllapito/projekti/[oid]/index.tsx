@@ -233,7 +233,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
             </Section>
             <Section noDivider>
               <HassuStack alignItems="flex-end">
-                <Button primary={true} disabled={disableFormEdit}>
+                <Button id="save" primary={true} disabled={disableFormEdit}>
                   {projekti?.status !== Status.EI_JULKAISTU ? "Tallenna" : "Tallenna ja siirry aloituskuulutukseen"}
                 </Button>
               </HassuStack>

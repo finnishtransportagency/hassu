@@ -99,30 +99,32 @@ export default function ProjektiLiittyvatSuunnitelmat({ projekti }: Props): Reac
                     />
                     <div className="hidden lg:block">
                       <IconButton
-                        icon="trash"
-                        onClick={(event) => {
-                          event.preventDefault();
-                          remove(index);
-                        }}
-                      />
-                    </div>
-                    <div className="block lg:hidden">
-                      <Button
-                        onClick={(event) => {
-                          event.preventDefault();
-                          remove(index);
-                        }}
-                        endIcon="trash"
-                      >
-                        Poista
-                      </Button>
-                    </div>
-                  </HassuStack>
-                </HassuGridItem>
-              </HassuGrid>
-            );
-          })}
-          <Button
+                        name="linked_plan_trash_button"
+                    icon="trash"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      remove(index);
+                    }}
+                  />
+                </div>
+                <div className="block lg:hidden">
+                  <Button
+                    onClick={(event) => {
+                      event.preventDefault();
+                      remove(index);
+                    }}
+                    endIcon="trash"
+                  >
+                    Poista
+                  </Button>
+                </div>
+              </HassuStack>
+            </HassuGridItem>
+          </HassuGrid>
+        );
+      })}
+      <Button
+        id="linked_plands_new_row"
             className="mt-7"
             onClick={(event) => {
               event.preventDefault();

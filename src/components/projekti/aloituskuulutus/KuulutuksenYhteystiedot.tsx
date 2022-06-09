@@ -118,6 +118,7 @@ function KuulutuksenYhteystiedot<T extends FormValues>({
           <div>
             <div className="hidden lg:block lg:mt-8">
               <IconButton
+                name="contact_info_trash_button"
                 icon="trash"
                 onClick={(event) => {
                   event.preventDefault();
@@ -142,6 +143,7 @@ function KuulutuksenYhteystiedot<T extends FormValues>({
         </HassuStack>
       ))}
       <Button
+        id="add_new_contact"
         onClick={(event) => {
           event.preventDefault();
           append(defaultYhteystieto);

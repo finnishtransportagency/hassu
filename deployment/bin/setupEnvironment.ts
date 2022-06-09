@@ -160,6 +160,10 @@ function writeEnvFile(fileName: string, variables: { [p: string]: string }) {
   fs.writeFileSync(fileName, envFile);
 }
 
+function writeJSONFile(fileName: string, variables: { [p: string]: unknown }) {
+  fs.writeFileSync(fileName, JSON.stringify(variables, null, 2));
+}
+
 export async function getEnvironmentVariablesFromSSM(variables?: HassuSSMParameters) {
   if (!variables) {
     variables = await readParametersForEnv<HassuSSMParameters>(BaseConfig.infraEnvironment, Region.EU_WEST_1);
@@ -213,6 +217,37 @@ async function main() {
     SONARQUBE_HOST_URL: variables.SonarQubeHostURL,
     SONARQUBE_ACCESS_TOKEN: variables.SonarQubeAccessToken,
   });
+
+  const testUsers = await readParametersByPath("/testusers/", Region.EU_WEST_1);
+  const testUsersConfig: { [key: string]: unknown } = {};
+  for (const user in testUsers) {
+    if (testUsers.hasOwnProperty(user)) {
+      const [username, password, roles] = testUsers[user].split(" ");
+      testUsersConfig[`${user}-username`] = username;
+      testUsersConfig[`${user}-password`] = password;
+      testUsersConfig[`${user}-roles`] = roles || "Atunnukset,hassu_admin";
+    }
+  }
+
+  if (BaseConfig.isPermanentEnvironment()) {
+    writeJSONFile("cypress.env.json", {
+      host:
+        "https://" +
+        variables.basicAuthenticationUsername +
+        ":" +
+        variables.basicAuthenticationPassword +
+        "@" +
+        variables.FrontendDomainName,
+      localServer: false,
+      ...testUsersConfig,
+    });
+  } else {
+    writeJSONFile("cypress.env.json", {
+      host: "http://localhost:3000",
+      localServer: true,
+      ...testUsersConfig,
+    });
+  }
 }
 
 main().catch((e) => {

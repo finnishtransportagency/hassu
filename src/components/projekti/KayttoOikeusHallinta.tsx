@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FieldArrayWithId, useFieldArray, useFormContext } from "react-hook-form";
 import { api, apiConfig, Kayttaja, ProjektiKayttajaInput, ProjektiRooli, TallennaProjektiInput } from "@services/api";
 import Autocomplete from "@components/form/Autocomplete";
@@ -173,7 +173,7 @@ const UserFields = ({
   const getKayttajaNimi = useCallback((k: Kayttaja | null | undefined) => {
     return (k && `${k.sukuNimi}, ${k.etuNimi}`) || "";
   }, []);
-  
+
   const {
     register,
     setValue,
@@ -181,14 +181,21 @@ const UserFields = ({
   } = useFormContext<RequiredInputValues>();
 
   const minSearchLength = 3;
-  const listUserOptions = useCallback(async (hakusana: string): Promise<Kayttaja[]> => {
-    if (getKayttajaNimi(kayttaja) !== hakusana && !disableFields && hakusana.length >= minSearchLength) {
-      return await api.listUsers({ hakusana });
-    } else if (kayttaja) {
-      return Promise.resolve([kayttaja]);
-    }
-    return Promise.resolve([]);
-  }, [getKayttajaNimi, disableFields, minSearchLength, kayttaja]);
+  const listUserOptions = useCallback(
+    async (hakusana: string): Promise<Kayttaja[]> => {
+      if (getKayttajaNimi(kayttaja) !== hakusana && !disableFields && hakusana.length >= minSearchLength) {
+        return await api.listUsers({ hakusana });
+      } else if (kayttaja) {
+        return Promise.resolve([kayttaja]);
+      }
+      return Promise.resolve([]);
+    },
+    [getKayttajaNimi, disableFields, minSearchLength, kayttaja]
+  );
+
+  if (!kayttaja || isLoadingKayttajat) {
+    return <></>;
+  }
 
   return (
     <HassuStack direction={["column", "column", "row"]}>

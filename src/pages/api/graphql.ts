@@ -8,17 +8,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const urlObject = new URL(process.env.APPSYNC_URL || "");
   const isYllapito = req.query.yllapito == "true";
 
-  let params: URLSearchParams | undefined;
-  if (typeof window !== "undefined") {
-    params = window.location?.search ? new URLSearchParams(window.location.search) : undefined;
-  }
   let headers = {
     host: urlObject.host,
   } as unknown as HeaderBag;
   if (isYllapito) {
-    headers["x-hassudev-uid"] = getParamOrDefault(params, "x-hassudev-uid", process.env["x-hassudev-uid"]) as string;
-    headers["x-hassudev-roles"] = getParamOrDefault(
-      params,
+    headers["x-hassudev-uid"] = getCookieOrDefault(
+      req.cookies,
+      "x-hassudev-uid",
+      process.env["x-hassudev-uid"]
+    ) as string;
+    headers["x-hassudev-roles"] = getCookieOrDefault(
+      req.cookies,
       "x-hassudev-roles",
       process.env["x-hassudev-roles"]
     ) as string;
@@ -35,29 +35,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   res.status(statusCode).json(JSON.stringify(responseBody));
 }
 
-function storeValue(name: string, value: string) {
-  if (typeof window !== "undefined") {
-    localStorage.setItem(name, value);
-  }
-}
-
-function getValue(name: string) {
-  if (typeof window !== "undefined") {
-    return localStorage.getItem(name);
-  }
-}
-
-function getParamOrDefault(params: URLSearchParams | undefined, name: string, defaultValue: string | undefined) {
-  if (params) {
-    if (params.has(name)) {
-      const value = params.get(name) || "";
-      storeValue(name, value);
-      return value;
-    }
-  }
-  const valueFromStorage = getValue(name);
-  if (!!valueFromStorage) {
-    return valueFromStorage;
+function getCookieOrDefault(cookies: { [p: string]: string }, name: string, defaultValue: string | undefined) {
+  let value = cookies?.[name];
+  if (value) {
+    return value;
   }
   return defaultValue;
 }
