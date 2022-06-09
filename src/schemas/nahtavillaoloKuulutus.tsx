@@ -37,7 +37,7 @@ export const nahtavillaoloKuulutusSchema = Yup.object().shape({
           return dateString >= todayISODate;
         }),
       kuulutusVaihePaattyyPaiva: Yup.string().test("is-valid-date", "Virheellinen päivämäärä", (dateString) => {
-        // siirtyyLainvoimaan is not required when saved as a draft.
+        // kuulutusVaihePaattyyPaiva is not required when saved as a draft.
         // This test doesn't throw errors if date is not set.
         if (!dateString) {
           return true;
