@@ -3,7 +3,7 @@ import { ApolloQueryResult } from "apollo-client/core/types";
 import { ApolloLink, FetchResult, GraphQLRequest } from "apollo-link";
 import { setContext } from "apollo-link-context";
 import gql from "graphql-tag";
-import ApolloClient, { DefaultOptions } from "apollo-client";
+import ApolloClient, { ApolloError, DefaultOptions } from "apollo-client";
 import { InMemoryCache, IntrospectionFragmentMatcher } from "apollo-cache-inmemory";
 import log from "loglevel";
 import { onError } from "apollo-link-error";
@@ -24,6 +24,23 @@ const defaultOptions: DefaultOptions = {
     errorPolicy: "all",
   },
 };
+
+// Apollo client is missing type for this
+type NetworkError = {
+  name?: string;
+  response?: unknown;
+  statusCode?: number;
+  bodyText?: string;
+};
+
+export class AuthenticationRequiredError extends Error {
+  constructor(m?: string) {
+    super(m);
+
+    // Set the prototype explicitly.
+    Object.setPrototypeOf(this, AuthenticationRequiredError.prototype);
+  }
+}
 
 export class API extends AbstractApi {
   private publicClient: ApolloClient<any>;
@@ -73,26 +90,38 @@ export class API extends AbstractApi {
   }
 
   async callGraphQL(client: ApolloClient<any>, operation: OperationConfig, variables: any) {
-    switch (operation.operationType) {
-      case OperationType.Query:
-        const queryResponse: ApolloQueryResult<any> = await client.query({
-          query: gql(operation.graphql),
-          variables,
-          fetchPolicy: "network-only",
-          errorPolicy: "all",
-          fetchResults: true,
-        });
-        if (queryResponse.errors && !queryResponse.data) {
-          log.warn(queryResponse.errors);
-          throw new Error("API palautti virheen.");
+    try {
+      switch (operation.operationType) {
+        case OperationType.Query:
+          const queryResponse: ApolloQueryResult<any> = await client.query({
+            query: gql(operation.graphql),
+            variables,
+            fetchPolicy: "network-only",
+            errorPolicy: "all",
+            fetchResults: true,
+          });
+          if (queryResponse.errors && !queryResponse.data) {
+            log.warn(queryResponse.errors);
+            throw new Error("API palautti virheen.");
+          }
+          return queryResponse.data?.[operation.name];
+        case OperationType.Mutation:
+          const fetchResponse: FetchResult<any> = await client.mutate({
+            mutation: gql(operation.graphql),
+            variables,
+          });
+          return fetchResponse.data?.[operation.name];
+      }
+    } catch (e) {
+      if (e instanceof ApolloError) {
+        const networkError = e.networkError as unknown as NetworkError;
+        if (networkError?.statusCode == 302) {
+          window.location.pathname = "/yllapito/kirjaudu";
+          return;
         }
-        return queryResponse.data?.[operation.name];
-      case OperationType.Mutation:
-        const fetchResponse: FetchResult<any> = await client.mutate({
-          mutation: gql(operation.graphql),
-          variables,
-        });
-        return fetchResponse.data?.[operation.name];
+      } else {
+        throw e;
+      }
     }
     throw Error("Unknown operation");
   }

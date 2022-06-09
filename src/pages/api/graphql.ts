@@ -32,11 +32,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   });
   const { body: responseBody, statusCode } = await sendSignedRequest(request, "appsync");
 
-  if (statusCode === 302) {
-    res.redirect(302, "/yllapito/kirjaudu");
-    return;
-  }
-
   res.status(statusCode).json(JSON.stringify(responseBody));
 }
 
