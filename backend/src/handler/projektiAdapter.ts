@@ -277,7 +277,11 @@ function adaptYhteystiedotToSave(yhteystietoInputs: Array<YhteystietoInput>) {
   return yhteystietoInputs?.length > 0 ? yhteystietoInputs.map((yt) => ({ ...yt })) : undefined;
 }
 
-function adaptKayttajatunnusList(projekti: DBProjekti, yhteysHenkilot: Array<string>): string[] | undefined {
+function adaptKayttajatunnusList(
+  projekti: DBProjekti,
+  yhteysHenkilot: Array<string>,
+  doNotForceProjektipaallikko?: boolean
+): string[] | undefined {
   if (!yhteysHenkilot || yhteysHenkilot.length == 0) {
     return undefined;
   }
@@ -296,7 +300,7 @@ function adaptKayttajatunnusList(projekti: DBProjekti, yhteysHenkilot: Array<str
   const projektipaallikkonTunnus = projekti.kayttoOikeudet?.find(
     ({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO
   )?.kayttajatunnus;
-  if (!unfilteredList.includes(projektipaallikkonTunnus)) {
+  if (!doNotForceProjektipaallikko && !unfilteredList.includes(projektipaallikkonTunnus)) {
     unfilteredList.push(projektipaallikkonTunnus);
   }
 
@@ -312,7 +316,7 @@ function adaptVuorovaikutusTilaisuudetToSave(
     ? vuorovaikutusTilaisuudet.map((vv) => ({
         ...vv,
         esitettavatYhteystiedot: adaptYhteystiedotToSave(vv.esitettavatYhteystiedot),
-        projektiYhteysHenkilot: adaptKayttajatunnusList(projekti, vv.projektiYhteysHenkilot),
+        projektiYhteysHenkilot: adaptKayttajatunnusList(projekti, vv.projektiYhteysHenkilot, true),
       }))
     : undefined;
 }
