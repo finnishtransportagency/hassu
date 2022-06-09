@@ -8,9 +8,9 @@
       "maku-indeksi": "100, 2000=100",
       "hankekortti": null,
       "kustannusarvio": 1,
-      "kunta": "Helsinki,Vantaa,Espoo",
+      "muu-kunta": "Helsinki,Vantaa,Espoo",
       "paattyy": "1111-11-01T00:00:00Z",
-      "maakunta": "Uusimaa",
+      "muu-maakunta": "Uusimaa",
       "vaylamuoto": [
         "tie"
       ],
