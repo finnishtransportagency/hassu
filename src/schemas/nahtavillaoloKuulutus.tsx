@@ -14,8 +14,19 @@ function validateDate(dateString: string) {
 }
 //
 
+const maxNahtavillaoloLength = 2000;
+
+let hankkeenKuvaus = Yup.string()
+  .max(
+    maxNahtavillaoloLength,
+    `Nähtävilläolovaiheeseen voidaan kirjoittaa maksimissaan ${maxNahtavillaoloLength} merkkiä`
+  )
+  .required("Hankkeen kuvaus ei voi olla tyhjä")
+  .nullable();
+
 export const nahtavillaoloKuulutusSchema = Yup.object().shape({
   oid: Yup.string().required(),
+  hankkeenKuvaus: Yup.object().shape({ SUOMI: hankkeenKuvaus }),
   nahtavillaoloVaihe: Yup.object()
     .required()
     .shape({
