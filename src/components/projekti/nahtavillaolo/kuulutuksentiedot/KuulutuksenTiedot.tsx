@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { useProjektiRoute } from "src/hooks/useProjektiRoute";
 import { nahtavillaoloKuulutusSchema } from "src/schemas/nahtavillaoloKuulutus";
+import { removeTypeName } from "src/util/removeTypeName";
 import NahtavillaoloPainikkeet from "../NahtavillaoloPainikkeet";
 import HankkeenSisallonKuvaus from "./HankkeenSisallonKuvaus";
 import KuulutuksenJaIlmoituksenEsikatselu from "./KuulutuksenJaIlmoituksenEsikatselu";
@@ -27,7 +28,16 @@ export default function KuulutuksenTiedot({}: Props) {
         kuulutusPaiva: projekti?.nahtavillaoloVaihe?.kuulutusPaiva,
         kuulutusVaihePaattyyPaiva: projekti?.nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva,
         muistutusoikeusPaattyyPaiva: projekti?.nahtavillaoloVaihe?.muistutusoikeusPaattyyPaiva,
-        hankkeenKuvaus: projekti?.nahtavillaoloVaihe?.hankkeenKuvaus,
+        hankkeenKuvaus: removeTypeName(projekti?.nahtavillaoloVaihe?.hankkeenKuvaus),
+        kuulutusYhteystiedot: projekti?.nahtavillaoloVaihe?.kuulutusYhteystiedot
+          ? projekti.nahtavillaoloVaihe.kuulutusYhteystiedot.map((yhteystieto) => removeTypeName(yhteystieto))
+          : [],
+        kuulutusYhteysHenkilot:
+          projekti?.kayttoOikeudet
+            ?.filter(({ kayttajatunnus }) =>
+              projekti?.nahtavillaoloVaihe?.kuulutusYhteysHenkilot?.includes(kayttajatunnus)
+            )
+            .map(({ kayttajatunnus }) => kayttajatunnus) || [],
       },
     },
   };

@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import { isDevEnvironment } from "@services/config";
+import { yhteystietoSchema } from "./yhteystieto";
 
 function validateDate(dateString: string) {
   try {
@@ -26,10 +27,12 @@ let hankkeenKuvaus = Yup.string()
 
 export const nahtavillaoloKuulutusSchema = Yup.object().shape({
   oid: Yup.string().required(),
-  hankkeenKuvaus: Yup.object().shape({ SUOMI: hankkeenKuvaus }),
   nahtavillaoloVaihe: Yup.object()
     .required()
     .shape({
+      kuulutusYhteystiedot: Yup.array().notRequired().of(yhteystietoSchema),
+      kuulutusYhteysHenkilot: Yup.array().notRequired().of(Yup.string()),
+      hankkeenKuvaus: Yup.object().shape({ SUOMI: hankkeenKuvaus }),
       kuulutusPaiva: Yup.string()
         .required("Kuulutuspäivä ei voi olla tyhjä")
         .nullable()

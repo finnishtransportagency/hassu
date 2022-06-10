@@ -26,7 +26,7 @@ export default function KuulutusJaJulkaisuPaiva({ kielitiedot }: Props) {
   const toissijainenKieli = kielitiedot?.toissijainenKieli;
 
   return (
-    <Section noDivider>
+    <Section>
       <SectionContent>
         <h4 className="vayla-small-title">Hankkeen sisällönkuvaus</h4>
         <p>
