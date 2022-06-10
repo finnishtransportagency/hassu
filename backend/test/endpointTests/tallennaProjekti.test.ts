@@ -6,12 +6,17 @@ import AWSMock from "aws-sdk-mock";
 import AWS from "aws-sdk";
 import { api } from "../../integrationtest/api/apiClient";
 import { TallennaProjektiInput } from "../../../common/graphql/apiModel";
+import { personSearch } from "../../src/personSearch/personSearchClient";
+import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
+import { Kayttajas } from "../../src/personSearch/kayttajas";
 
 const { expect } = require("chai");
 
 describe("tallennaProjekti endpoint", () => {
   let userFixture: UserFixture;
   let awsStub: sinon.SinonStub;
+  let getKayttajasStub: sinon.SinonStub;
+  let personSearchFixture: PersonSearchFixture;
 
   afterEach(() => {
     sinon.reset();
@@ -21,7 +26,18 @@ describe("tallennaProjekti endpoint", () => {
   });
 
   beforeEach(() => {
+    personSearchFixture = new PersonSearchFixture();
     userFixture = new UserFixture(userService);
+    getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
+    getKayttajasStub.resolves(
+      Kayttajas.fromKayttajaList([
+        personSearchFixture.pekkaProjari,
+        personSearchFixture.mattiMeikalainen,
+        personSearchFixture.manuMuokkaaja,
+        personSearchFixture.createKayttaja("A2"),
+      ])
+    );
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
     AWSMock.setSDKInstance(AWS);
     awsStub = sinon.stub();
     awsStub.resolves({});
@@ -37,8 +53,7 @@ describe("tallennaProjekti endpoint", () => {
       euRahoitus: true,
       liittyvatSuunnitelmat: null,
     };
-    const response = api.tallennaProjekti(projektiInput);
-    console.log(response);
-    expect(response).not.be(false);
+    const response = await api.tallennaProjekti(projektiInput);
+    expect(response);
   });
 });
