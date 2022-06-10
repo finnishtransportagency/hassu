@@ -417,7 +417,6 @@ export default function Aloituskuulutus({
                     />
                   </HassuGrid>
                 </Section>
-                <KuulutuksenYhteystiedot projekti={projekti} useFormReturn={useFormReturn} />
                 <Section noDivider={!!toissijainenKieli}>
                   <SectionContent>
                     <h5 className="vayla-small-title">Hankkeen sisällönkuvaus</h5>
@@ -451,6 +450,7 @@ export default function Aloituskuulutus({
                     />
                   </Section>
                 )}
+                <KuulutuksenYhteystiedot projekti={projekti} useFormReturn={useFormReturn} />
                 <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} kirjaamoOsoitteet={kirjaamoOsoitteet || []} />
               </fieldset>
             </form>

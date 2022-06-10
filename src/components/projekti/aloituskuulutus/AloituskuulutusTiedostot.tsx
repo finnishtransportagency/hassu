@@ -38,13 +38,13 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid 
   return (
     <>
       <div className="content">
-        <p className="vayla-label">Tiedostot</p>
+        <p className="vayla-label">Ladattavat kuulutukset ja ilmoitukset</p>
         <p>
           Kuulutus ja ilmoitus ensisijaisella kielellä (
           {lowerCase(aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli)})
         </p>
         {ensisijaisetPDFt && (
-          <div className="flex flex-col">
+          <div className="flex flex-col mb-4">
             <div>
               <Link underline="none" href={ensisijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
                 {parseFilename(ensisijaisetPDFt.aloituskuulutusPDFPath)}
@@ -59,7 +59,7 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid 
         )}
 
         {aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli && (
-          <div className="content">
+          <div className="content mb-4">
             <p>
               Kuulutus ja ilmoitus toissijaisella kielellä (
               {lowerCase(aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli)})
