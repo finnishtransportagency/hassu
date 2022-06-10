@@ -1,4 +1,4 @@
-import { DBProjekti, Kielitiedot } from "../database/model/projekti";
+import { DBProjekti, Kielitiedot } from "../database/model";
 import {
   Kieli,
   ProjektiHakutulosDokumentti,
@@ -19,6 +19,7 @@ export type ProjektiDocument = {
   hankkeenKuvaus?: string;
   asiatunnus?: string;
   maakunnat?: string[];
+  kunnat?: string[];
   vaylamuoto?: string[];
   suunnittelustaVastaavaViranomainen?: Viranomainen;
   vaihe?: Status;

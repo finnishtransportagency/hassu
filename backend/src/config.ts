@@ -19,10 +19,6 @@ const config = {
   personSearchAccountTypes: process.env.PERSON_SEARCH_API_ACCOUNT_TYPES?.split(","),
   personSearchUpdaterLambdaArn: process.env.PERSON_SEARCH_UPDATER_LAMBDA_ARN || "",
 
-  searchDomain: process.env.SEARCH_DOMAIN,
-  opensearchYllapitoIndex: "projekti-" + process.env.ENVIRONMENT + "-yllapito",
-  opensearchJulkinenIndexPrefix: "projekti-" + process.env.ENVIRONMENT + "-julkinen-",
-
   env: process.env.ENVIRONMENT,
 
   frontendDomainName: process.env.FRONTEND_DOMAIN_NAME,

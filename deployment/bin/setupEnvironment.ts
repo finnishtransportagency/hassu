@@ -216,6 +216,7 @@ async function main() {
     FRONTEND_DOMAIN_NAME: frontendStackOutputs.CloudfrontPrivateDNSName,
     SONARQUBE_HOST_URL: variables.SonarQubeHostURL,
     SONARQUBE_ACCESS_TOKEN: variables.SonarQubeAccessToken,
+    SEARCH_DOMAIN: searchStackOutputs.SearchDomainEndpointOutput,
   });
 
   const testUsers = await readParametersByPath("/testusers/", Region.EU_WEST_1);

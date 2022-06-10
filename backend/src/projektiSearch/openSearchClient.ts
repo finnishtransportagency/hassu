@@ -1,10 +1,10 @@
-import { config } from "../config";
+import { openSearchConfig } from "./openSearchConfig";
 import { HttpRequest } from "@aws-sdk/protocol-http";
 import { sendSignedRequest } from "../aws/awsRequest";
 import { log } from "../logger";
 import { Kieli } from "../../../common/graphql/apiModel";
 
-const domain = config.searchDomain;
+const domain = openSearchConfig.searchDomain || "search-domain-missing";
 const type = "_doc";
 
 export interface SortOrder {
@@ -35,15 +35,15 @@ export abstract class OpenSearchClient {
     this.index = index;
   }
 
-  async putProjekti(oid: string, projekti: unknown): Promise<void> {
-    const response = await this.put("/" + type + "/" + oid, JSON.stringify(projekti));
-    if (response["result"] !== "created" || response["result"] !== "updated") {
+  async putDocument(key: string, document: unknown): Promise<void> {
+    const response = (await this.put("/" + type + "/" + key, JSON.stringify(document))) as { result: string };
+    if (response["result"] !== "created" && response["result"] !== "updated") {
       log.warn(response);
     }
   }
 
-  async deleteProjekti(oid: string): Promise<void> {
-    await this.delete("/" + type + "/" + oid);
+  async deleteDocument(key: string): Promise<void> {
+    await this.delete("/" + type + "/" + key);
   }
 
   async delete(path: string): Promise<unknown> {
@@ -159,13 +159,19 @@ export abstract class OpenSearchClient {
 
 class OpenSearchClientYllapito extends OpenSearchClient {
   constructor() {
-    super(config.opensearchYllapitoIndex);
+    super(openSearchConfig.opensearchYllapitoIndex);
   }
 }
 
 class OpenSearchClientJulkinen extends OpenSearchClient {
   constructor(kieli: Kieli) {
-    super(config.opensearchJulkinenIndexPrefix + kieli.toLowerCase());
+    super(openSearchConfig.opensearchJulkinenIndexPrefix + kieli.toLowerCase());
+  }
+}
+
+class OpenSearchClientIlmoitustauluSyote extends OpenSearchClient {
+  constructor() {
+    super(openSearchConfig.opensearchIlmoitustauluSyoteIndex);
   }
 }
 
@@ -175,3 +181,4 @@ export const openSearchClientJulkinen = {
   [Kieli.RUOTSI]: new OpenSearchClientJulkinen(Kieli.RUOTSI),
   [Kieli.SAAME]: new OpenSearchClientJulkinen(Kieli.SAAME),
 };
+export const openSearchClientIlmoitustauluSyote = new OpenSearchClientIlmoitustauluSyote();

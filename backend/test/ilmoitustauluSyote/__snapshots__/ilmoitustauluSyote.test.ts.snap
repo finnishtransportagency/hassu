@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IlmoitustauluSyote Should index projekti into ilmoitustaulusyote index successfully 1`] = `
+Array [
+  Object {
+    "date": "2022-03-28T14:28:00+03:00",
+    "kieli": "SUOMI",
+    "kunnat": Array [
+      "Mikkeli",
+      "Juva",
+      "Savonlinna",
+    ],
+    "maakunnat": Array [
+      "Uusimaa",
+      "Pirkanmaa",
+    ],
+    "oid": "2",
+    "title": "Kuulutus suunnittelun aloittamisesta: Marikan testiprojekti",
+    "type": "Kuulutus",
+    "url": "https://localhost:3000/suunnitelma/2/aloituskuulutus",
+    "vaylamuoto": Array [
+      "tie",
+    ],
+  },
+  Object {
+    "date": "2022-03-28T14:28:00+03:00",
+    "kieli": "RUOTSI",
+    "kunnat": Array [
+      "Mikkeli",
+      "Juva",
+      "Savonlinna",
+    ],
+    "maakunnat": Array [
+      "Uusimaa",
+      "Pirkanmaa",
+    ],
+    "oid": "2",
+    "title": "RUOTSIKSI Kuulutus suunnittelun aloittamisesta: Marikas testprojekt",
+    "type": "Kuulutus",
+    "url": "https://localhost:3000/suunnitelma/2/aloituskuulutus",
+    "vaylamuoto": Array [
+      "tie",
+    ],
+  },
+]
+`;

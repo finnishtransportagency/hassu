@@ -24,11 +24,9 @@ describe("Projektin aloituskuulutus", () => {
       }
     });
 
-    cy.get('[name="aloitusKuulutus.kuulutusPaiva"]')
-      .should("be.enabled")
-      .type(dayjs().format("YYYY-MM-DDTHH:mm"), {
-        waitForAnimations: true,
-      });
+    cy.get('[name="aloitusKuulutus.kuulutusPaiva"]').should("be.enabled").type(dayjs().format("YYYY-MM-DDTHH:mm"), {
+      waitForAnimations: true,
+    });
 
     cy.get("main").then((elem) => {
       let htmlElements = elem.find('[name="contact_info_trash_button"]');
@@ -45,8 +43,12 @@ describe("Projektin aloituskuulutus", () => {
     cy.get('[name="aloitusKuulutus.esitettavatYhteystiedot.0.puhelinnumero"]').type("0293333333");
     cy.get('[name="aloitusKuulutus.esitettavatYhteystiedot.0.sahkoposti"]').type("test@vayla.fi");
 
-    cy.get('[name="aloitusKuulutus.hankkeenKuvaus.SUOMI"]').clear().type("Hankkeen kuvaus Suomeksi");
-    cy.get('[name="aloitusKuulutus.hankkeenKuvaus.RUOTSI"]').clear().type("Hankkeen kuvaus Ruotsiksi");
+    cy.get('[name="aloitusKuulutus.hankkeenKuvaus.SUOMI"]')
+      .clear({ scrollBehavior: "center" })
+      .type("Hankkeen kuvaus Suomeksi");
+    cy.get('[name="aloitusKuulutus.hankkeenKuvaus.RUOTSI"]')
+      .clear({ scrollBehavior: "center" })
+      .type("Hankkeen kuvaus Ruotsiksi");
 
     cy.get("main").then((elem) => {
       let htmlElements = elem.find('[name="viranomainen_trash_button"]');

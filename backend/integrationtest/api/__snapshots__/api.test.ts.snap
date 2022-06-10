@@ -1105,7 +1105,7 @@ Object {
           "asiatunnusVayla": undefined,
           "kunnat": Array [
             "Helsinki",
-            " Vantaa",
+            "Vantaa",
           ],
           "kuvaus": undefined,
           "maakunnat": undefined,
@@ -1170,7 +1170,7 @@ Object {
       "asiatunnusVayla": undefined,
       "kunnat": Array [
         "Helsinki",
-        " Vantaa",
+        "Vantaa",
       ],
       "kuvaus": undefined,
       "maakunnat": Array [

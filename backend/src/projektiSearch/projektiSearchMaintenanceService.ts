@@ -1,4 +1,8 @@
-import { openSearchClientJulkinen, openSearchClientYllapito } from "./openSearchClient";
+import {
+  openSearchClientIlmoitustauluSyote,
+  openSearchClientJulkinen,
+  openSearchClientYllapito,
+} from "./openSearchClient";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { projektiSearchService } from "./projektiSearchService";
 import projektiSettings from "./projekti-settings.json";
@@ -24,6 +28,8 @@ export class ProjektiSearchMaintenanceService {
       log.info(await client.putSettings(JSON.stringify(projektiSettings)));
       log.info(await client.putMapping(JSON.stringify(projektiJulkinenMapping)));
     }
+
+    log.info(await openSearchClientIlmoitustauluSyote.deleteIndex());
   }
 
   async index(event: MaintenanceEvent): Promise<string> {

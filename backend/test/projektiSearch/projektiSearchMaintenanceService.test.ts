@@ -1,6 +1,7 @@
 import { describe, it } from "mocha";
 import {
   OpenSearchClient,
+  openSearchClientIlmoitustauluSyote,
   openSearchClientJulkinen,
   openSearchClientYllapito,
 } from "../../src/projektiSearch/openSearchClient";
@@ -16,12 +17,14 @@ describe("ProjektiSearchMaintenanceService", () => {
   let suomiStub: sinon.SinonStubbedInstance<OpenSearchClient>;
   let ruotsiStub: sinon.SinonStubbedInstance<OpenSearchClient>;
   let saameStub: sinon.SinonStubbedInstance<OpenSearchClient>;
+  let ilmoitustauluStub: sinon.SinonStubbedInstance<OpenSearchClient>;
 
   before(() => {
     yllapitoStub = sandbox.stub(openSearchClientYllapito);
     suomiStub = sandbox.stub(openSearchClientJulkinen["SUOMI"]);
     ruotsiStub = sandbox.stub(openSearchClientJulkinen["RUOTSI"]);
     saameStub = sandbox.stub(openSearchClientJulkinen["SAAME"]);
+    ilmoitustauluStub = sandbox.stub(openSearchClientIlmoitustauluSyote);
   });
   afterEach(() => {
     sandbox.reset();
@@ -33,9 +36,13 @@ describe("ProjektiSearchMaintenanceService", () => {
   it("should delete and create index", async () => {
     await new ProjektiSearchMaintenanceService().deleteIndex();
     [yllapitoStub, suomiStub, ruotsiStub, saameStub].map((clientStub) => {
-      [clientStub.put, clientStub.delete, clientStub.putSettings, clientStub.putMapping].forEach((operationStub) =>
-        expect(operationStub.calledOnce)
-      );
+      [
+        clientStub.put,
+        clientStub.delete,
+        clientStub.putSettings,
+        clientStub.putMapping,
+        ilmoitustauluStub.delete,
+      ].forEach((operationStub) => expect(operationStub.calledOnce));
     });
   });
 });
