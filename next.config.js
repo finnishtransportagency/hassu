@@ -22,6 +22,9 @@ function setupLocalDevelopmentMode(config, env) {
   env.REACT_APP_API_URL = "http://localhost:3000/graphql";
   env.APPSYNC_URL = process.env.REACT_APP_API_URL;
 
+  /**
+   * @type {import("next").NextConfig}
+   */
   config = {
     ...config,
     env,
@@ -42,6 +45,16 @@ function setupLocalDevelopmentMode(config, env) {
         {
           source: "/yllapito/graphql",
           destination: "/api/graphql?yllapito=true",
+        },
+      ];
+    },
+    redirects: () => {
+      return [
+        // Just some dummy url to prevent login page loops on local
+        {
+          source: "/yllapito/kirjaudu",
+          destination: "/fake_login_page",
+          permanent: false,
         },
       ];
     },
