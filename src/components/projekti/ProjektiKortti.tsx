@@ -1,4 +1,4 @@
-import { Projekti } from "@services/api";
+import { AloitusKuulutusTila, Projekti } from "@services/api";
 import React, { ReactElement } from "react";
 import styles from "@styles/projekti/ProjektiSideNavigation.module.css";
 import MuiAccordion, { AccordionProps, accordionClasses } from "@mui/material/Accordion";
@@ -8,6 +8,7 @@ import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExtLink from "@components/ExtLink";
 import { styled } from "@mui/material/styles";
+import { examineKuulutusPaiva } from "./aloituskuulutus/aloitusKuulutusUtil";
 
 const Accordion = styled((props: AccordionProps) => <MuiAccordion disableGutters elevation={0} square {...props} />)({
   paddingTop: "0.5rem",
@@ -29,6 +30,12 @@ interface Props {
 }
 
 export default function ProjektiKortti(props: Props): ReactElement {
+  const julkinen =
+    props.projekti?.aloitusKuulutusJulkaisut?.[0] &&
+    examineKuulutusPaiva(props.projekti.aloitusKuulutusJulkaisut[0]).published;
+  const julkinenURL =
+    window.location.protocol + "//" + window.location.host + "/suunnitelma/" + props.projekti.oid + "/aloituskuulutus";
+
   return (
     <div role="navigation" className={styles["side-nav"]} style={{ marginBottom: "1rem" }}>
       <Accordion>
@@ -45,12 +52,12 @@ export default function ProjektiKortti(props: Props): ReactElement {
           {/* TODO: Poista placeholder kun asiatunnus saadaan velhosta varmasti, eika ole tyhja */}
           <Typography>VÄYLÄ/1234/xx.xx.xx/2022</Typography>
         </AccordionSummary>
-        <AccordionDetails>
-          {/* TODO: vaihda kun saadaan projektin perusosoiteelle nakyma, tai ohjaamaan aktiiviseen vaiheeseen */}
-          <ExtLink href={`https://hassudev.testivaylapilvi.fi/suunnitelma/${props.projekti.oid}/aloituskuulutus`}>
-            Suunnitelma julkisella puolella
-          </ExtLink>
-        </AccordionDetails>
+        {julkinen && (
+          <AccordionDetails>
+            {/* TODO: vaihda kun saadaan projektin perusosoiteelle nakyma, tai ohjaamaan aktiiviseen vaiheeseen */}
+            <ExtLink href={julkinenURL}>Suunnitelma julkisella puolella</ExtLink>
+          </AccordionDetails>
+        )}
       </Accordion>
     </div>
   );
