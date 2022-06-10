@@ -1,14 +1,14 @@
 import {
-  Projekti,
-  ProjektiKayttajaInput,
-  ProjektiKayttaja,
-  TilasiirtymaTyyppi,
-  TilasiirtymaToiminto,
-  ProjektiRooli,
-  Status,
+  AineistoInput,
   AsiakirjaTyyppi,
   Kieli,
-  AineistoInput,
+  Projekti,
+  ProjektiKayttaja,
+  ProjektiKayttajaInput,
+  ProjektiRooli,
+  Status,
+  TilasiirtymaToiminto,
+  TilasiirtymaTyyppi,
   VelhoAineistoKategoria,
   Vuorovaikutus,
   VuorovaikutusInput,
@@ -29,6 +29,7 @@ import { palauteEmailService } from "../../../src/palaute/palauteEmailService";
 import { expectToMatchSnapshot } from "./util";
 import { handleEvent } from "../../../src/aineisto/aineistoImporterLambda";
 import { SQSEvent } from "aws-lambda/trigger/sqs";
+import cloneDeep from "lodash/cloneDeep";
 
 const { expect } = require("chai");
 
@@ -281,16 +282,16 @@ export async function testImportAineistot(
   });
   await saveAndVerifyAineistoSave(
     oid,
-    esittelyaineistot,
-    suunnitelmaluonnokset,
+    cloneDeep(esittelyaineistot),
+    cloneDeep(suunnitelmaluonnokset),
     originalVuorovaikutus,
     "updateNimiAndJarjestys"
   );
 
-  // const esittelyaineistotWithoutFirst = esittelyaineistot; //.slice(1);
+  const esittelyaineistotWithoutFirst = esittelyaineistot.slice(1);
   await saveAndVerifyAineistoSave(
     oid,
-    esittelyaineistot,
+    esittelyaineistotWithoutFirst,
     suunnitelmaluonnokset,
     originalVuorovaikutus,
     "esittelyAineistotWithoutFirst"
@@ -379,10 +380,7 @@ export async function testPublicAccessToProjekti(
 }
 
 export async function archiveProjekti(oid: string): Promise<void> {
-  // Finally delete the projekti
-  const archiveResult = await projektiArchive.archiveProjekti(oid);
-  expect(archiveResult.oid).to.be.equal(oid);
-  expect(archiveResult.timestamp).to.not.be.empty;
+  await projektiArchive.archiveProjekti(oid);
 }
 
 export async function searchProjectsFromVelhoAndPickFirst(): Promise<string> {

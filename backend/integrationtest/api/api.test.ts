@@ -38,13 +38,16 @@ import {
   verifyEmailsSent,
 } from "./testUtil/tests";
 import { takeS3Snapshot } from "./testUtil/util";
+
 const sandbox = sinon.createSandbox();
+const { expect } = require("chai");
+
+const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
 describe("Api", () => {
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
   let importAineistoStub: sinon.SinonStub;
   let userFixture: UserFixture;
-  let oid: string = undefined;
   let awsCloudfrontInvalidationStub: sinon.SinonStub;
   let emailClientStub: sinon.SinonStub;
 
@@ -55,13 +58,10 @@ describe("Api", () => {
     AWSMock.restore();
   });
 
-  before("Initialize test database!", async () => {
-    await setupLocalDatabase();
-  });
-
   const fakeAineistoImportQueue: SQSEvent[] = [];
 
   before(async () => {
+    await setupLocalDatabase();
     userFixture = new UserFixture(userService);
     readUsersFromSearchUpdaterLambda = sandbox.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
     readUsersFromSearchUpdaterLambda.callsFake(async () => {
@@ -85,6 +85,12 @@ describe("Api", () => {
     getCloudFront();
 
     emailClientStub = sinon.stub(emailClient, "sendEmail");
+
+    try {
+      await archiveProjekti(oid);
+    } catch (ignored) {
+      // ignored
+    }
   });
 
   it("should search, load and save a project", async function () {
@@ -94,7 +100,7 @@ describe("Api", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
 
     const projekti = await readProjektiFromVelho();
-    oid = projekti.oid;
+    expect(oid).to.eq(projekti.oid);
     await cleanProjektiS3Files(oid);
     const projektiPaallikko = await testProjektiHenkilot(projekti, oid);
     await testProjektinTiedot(oid);
