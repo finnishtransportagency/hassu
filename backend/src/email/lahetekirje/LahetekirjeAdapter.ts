@@ -1,7 +1,7 @@
 import log from "loglevel";
 import { ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../../asiakirja/asiakirjaService";
-import { DBProjekti, Yhteystieto } from "../../database/model/projekti";
+import { DBProjekti, Yhteystieto } from "../../database/model";
 
 type SuunnitelmaTyyppi = "tiesuunnitelma" | "ratasuunnitelma" | "yleissuunnitelma";
 
@@ -48,11 +48,11 @@ export class LahetekirjeAdapter {
     };
   }
 
-  protected get isVaylaTilaaja() :boolean{
+  protected get isVaylaTilaaja(): boolean {
     return this.projekti?.velho?.tilaajaOrganisaatio === "Väylävirasto";
   }
 
-  protected get isElyTilaaja() :boolean{
+  protected get isElyTilaaja(): boolean {
     return (
       this.projekti?.velho?.tilaajaOrganisaatio && this.projekti?.velho?.tilaajaOrganisaatio.endsWith("ELY-keskus")
     );

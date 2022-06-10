@@ -300,7 +300,8 @@ export async function testImportAineistot(
 
 export async function testUpdatePublishDateAndDeleteAineisto(oid: string, userFixture: UserFixture): Promise<void> {
   userFixture.loginAs(UserFixture.mattiMeikalainen);
-  const vuorovaikutus = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe.vuorovaikutukset[0];
+  const vuorovaikutus = (await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO)).suunnitteluVaihe
+    .vuorovaikutukset[0];
   vuorovaikutus.esittelyaineistot?.pop();
   vuorovaikutus.suunnitelmaluonnokset?.pop();
   const input = {
@@ -327,14 +328,14 @@ export async function insertAndManageFeedback(oid: string): Promise<void> {
     liite: await tallennaLogo(),
   });
 
-  const projekti = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
+  const projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
   const palautteet = projekti.suunnitteluVaihe.palautteet;
 
   expectToMatchSnapshot("projekti palaute lisätty", cleanupGeneratedIdAndTimestampFromFeedbacks(palautteet));
 
   await api.otaPalauteKasittelyyn(oid, palauteId);
 
-  const projektiAfterFeedbackBeingHandled = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
+  const projektiAfterFeedbackBeingHandled = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
   const palautteetAfterFeedbackBeingHandled = projektiAfterFeedbackBeingHandled.suunnitteluVaihe.palautteet;
   expectToMatchSnapshot(
     "projekti palaute otettu käsittelyyn",
@@ -354,7 +355,7 @@ export async function julkaiseSuunnitteluvaihe(oid: string): Promise<void> {
 }
 
 export async function julkaiseVuorovaikutus(oid: string, userFixture: UserFixture): Promise<void> {
-  const unpublishedVuorovaikutusProjekti = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
+  const unpublishedVuorovaikutusProjekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
   await api.tallennaProjekti({
     oid,
     suunnitteluVaihe: {

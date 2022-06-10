@@ -1,4 +1,4 @@
-import { AloitusKuulutusJulkaisu, DBProjekti, Velho, Yhteystieto } from "../database/model/projekti";
+import { AloitusKuulutusJulkaisu, DBProjekti, Velho, Yhteystieto } from "../database/model";
 import cloneDeep from "lodash/cloneDeep";
 import { AloitusKuulutusTila } from "../../../common/graphql/apiModel";
 

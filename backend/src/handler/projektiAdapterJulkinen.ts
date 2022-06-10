@@ -6,13 +6,10 @@ import {
   LocalizedMap,
   SuunnitteluSopimus,
   Velho,
-} from "../database/model/projekti";
+  Vuorovaikutus,
+  VuorovaikutusTilaisuus,
+} from "../database/model";
 import * as API from "../../../common/graphql/apiModel";
-import {
-  ProjektiKayttajaJulkinen,
-  SuunnitteluVaiheJulkinen,
-  VuorovaikutusJulkinen,
-} from "../../../common/graphql/apiModel";
 import pickBy from "lodash/pickBy";
 import dayjs from "dayjs";
 import {
@@ -26,7 +23,6 @@ import {
 import { fileService } from "../files/fileService";
 import { log } from "../logger";
 import { parseDate } from "../util/dateUtil";
-import { Vuorovaikutus, VuorovaikutusTilaisuus } from "../database/model/suunnitteluVaihe";
 
 class ProjektiAdapterJulkinen {
   private applyStatus(projekti: API.ProjektiJulkinen) {
@@ -171,7 +167,7 @@ class ProjektiAdapterJulkinen {
   private static adaptSuunnitteluVaihe(
     dbProjekti: DBProjekti,
     projektiHenkilot: ProjektiHenkilot
-  ): SuunnitteluVaiheJulkinen {
+  ): API.SuunnitteluVaiheJulkinen {
     const { hankkeenKuvaus, arvioSeuraavanVaiheenAlkamisesta, suunnittelunEteneminenJaKesto } =
       dbProjekti.suunnitteluVaihe;
     return {
@@ -188,7 +184,7 @@ function adaptUsernamesToProjektiHenkiloIds(usernames: Array<string>, projektiHe
   return usernames?.map((username) => projektiHenkilot[username].id);
 }
 
-function adaptVuorovaikutukset(dbProjekti: DBProjekti, projektiHenkilot: ProjektiHenkilot): VuorovaikutusJulkinen[] {
+function adaptVuorovaikutukset(dbProjekti: DBProjekti, projektiHenkilot: ProjektiHenkilot): API.VuorovaikutusJulkinen[] {
   const vuorovaikutukset = dbProjekti.vuorovaikutukset;
   if (vuorovaikutukset && vuorovaikutukset.length > 0) {
     return vuorovaikutukset
@@ -340,7 +336,7 @@ export function adaptVelho(velho: Velho): API.VelhoJulkinen {
   };
 }
 
-type ProjektiHenkilot = { [id: string]: ProjektiKayttajaJulkinen };
+type ProjektiHenkilot = { [id: string]: API.ProjektiKayttajaJulkinen };
 
 function adaptProjektiHenkilot(kayttoOikeudet: DBVaylaUser[]): ProjektiHenkilot {
   return kayttoOikeudet?.reduce((result: ProjektiHenkilot, user, index) => {

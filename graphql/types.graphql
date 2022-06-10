@@ -74,6 +74,7 @@ type Projekti implements IProjekti {
   aloitusKuulutusJulkaisut: [AloitusKuulutusJulkaisu!]
   suunnitteluSopimus: SuunnitteluSopimus
   suunnitteluVaihe: SuunnitteluVaihe
+  nahtavillaoloVaihe: NahtavillaoloVaihe
   velho: Velho!
   kayttoOikeudet: [ProjektiKayttaja!]
   """
@@ -157,6 +158,26 @@ type VuorovaikutusJulkinen {
 
   esittelyaineistot: [Aineisto!]
   suunnitelmaluonnokset: [Aineisto!]
+}
+
+type NahtavillaoloVaihe {
+  aineistoNahtavilla: [Aineisto!]
+  lisaAineisto: [Aineisto!]
+  kuulutusPaiva: String
+  kuulutusVaihePaattyyPaiva: String
+  muistutusoikeusPaattyyPaiva: String
+  hankkeenKuvaus: HankkeenKuvaukset
+  kuulutusYhteysHenkilot: [String!]
+  kuulutusYhteystiedot: [Yhteystieto!]
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+  tila: NahtavillaoloVaiheTila
+  palautusSyy: String
+}
+
+enum NahtavillaoloVaiheTila {
+  ODOTTAA_HYVAKSYNTAA
+  HYVAKSYTTY
+  PALAUTETTU
 }
 
 type Linkki {

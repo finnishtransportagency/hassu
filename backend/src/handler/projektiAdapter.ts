@@ -1,32 +1,24 @@
 import {
+  Aineisto,
   AloitusKuulutus,
   AloitusKuulutusJulkaisu,
   AloitusKuulutusPDF,
   DBProjekti,
   Kielitiedot,
+  Linkki,
   LocalizedMap,
+  NahtavillaoloVaihe,
+  Palaute,
   Suunnitelma,
   SuunnitteluSopimus,
+  SuunnitteluVaihe,
   Velho,
+  Vuorovaikutus,
+  VuorovaikutusTilaisuus,
   Yhteystieto,
-} from "../database/model/projekti";
+} from "../database/model";
 import * as API from "../../../common/graphql/apiModel";
-import {
-  AineistoInput,
-  AineistoTila,
-  AloitusKuulutusInput,
-  AloitusKuulutusPDFt,
-  HankkeenKuvaukset,
-  IlmoituksenVastaanottajat,
-  IlmoituksenVastaanottajatInput,
-  Kieli,
-  Projekti,
-  ProjektiRooli,
-  Status,
-  VuorovaikutusInput,
-  VuorovaikutusTilaisuusInput,
-  YhteystietoInput,
-} from "../../../common/graphql/apiModel";
+import { AineistoTila, NahtavillaoloVaiheInput } from "../../../common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import { personSearch } from "../personSearch/personSearchClient";
@@ -36,14 +28,6 @@ import { fileService } from "../files/fileService";
 import { perustiedotValidationSchema } from "../../../src/schemas/perustiedot";
 import { ValidationError } from "yup";
 import { log } from "../logger";
-import {
-  Aineisto,
-  Linkki,
-  Palaute,
-  SuunnitteluVaihe,
-  Vuorovaikutus,
-  VuorovaikutusTilaisuus,
-} from "../database/model/suunnitteluVaihe";
 import dayjs, { Dayjs } from "dayjs";
 import { kayttoOikeudetSchema } from "../../../src/schemas/kayttoOikeudet";
 
@@ -70,6 +54,7 @@ export class ProjektiAdapter {
       suunnitteluVaihe,
       vuorovaikutukset,
       palautteet,
+      nahtavillaoloVaihe,
       ...fieldsToCopyAsIs
     } = dbProjekti;
 
@@ -88,6 +73,7 @@ export class ProjektiAdapter {
       },
       kielitiedot: adaptKielitiedot(kielitiedot),
       suunnitteluVaihe: adaptSuunnitteluVaihe(suunnitteluVaihe, vuorovaikutukset, palautteet),
+      nahtavillaoloVaihe: adaptNahtavillaoloVaihe(nahtavillaoloVaihe),
       ...fieldsToCopyAsIs,
     }) as API.Projekti;
     if (apiProjekti.tallennettu) {
@@ -115,6 +101,7 @@ export class ProjektiAdapter {
       euRahoitus,
       liittyvatSuunnitelmat,
       suunnitteluVaihe,
+      nahtavillaoloVaihe,
     } = changes;
     const projektiAdaptationResult: Partial<ProjektiAdaptationResult> = {};
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
@@ -133,6 +120,7 @@ export class ProjektiAdapter {
         suunnitteluSopimus: adaptSuunnitteluSopimusToSave(projekti, suunnitteluSopimus),
         kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet(),
         suunnitteluVaihe: adaptSuunnitteluVaiheToSave(projekti.suunnitteluVaihe, suunnitteluVaihe),
+        nahtavillaoloVaihe: adaptNahtavillaoloVaiheToSave(nahtavillaoloVaihe),
         kielitiedot,
         euRahoitus,
         liittyvatSuunnitelmat,
@@ -146,7 +134,7 @@ export class ProjektiAdapter {
    * Function to determine the status of the projekti
    * @param projekti
    */
-  private applyStatus(projekti: Projekti): Projekti {
+  private applyStatus(projekti: API.Projekti): API.Projekti {
     function checkPerustiedot() {
       try {
         kayttoOikeudetSchema.validateSync(projekti.kayttoOikeudet);
@@ -178,7 +166,13 @@ export class ProjektiAdapter {
 
     function checkSuunnittelu() {
       if (projekti?.aloitusKuulutusJulkaisut) {
-        projekti.status = Status.SUUNNITTELU;
+        projekti.status = API.Status.SUUNNITTELU;
+      }
+    }
+
+    function checkNahtavillaolo() {
+      if (projekti?.suunnitteluVaihe?.julkinen) {
+        projekti.status = API.Status.NAHTAVILLAOLO;
       }
     }
 
@@ -192,6 +186,8 @@ export class ProjektiAdapter {
     }
 
     checkSuunnittelu();
+
+    checkNahtavillaolo();
 
     return projekti;
   }
@@ -273,7 +269,44 @@ function adaptSuunnitteluVaiheToSave(
   return undefined;
 }
 
-function adaptYhteystiedotToSave(yhteystietoInputs: Array<YhteystietoInput>) {
+function adaptNahtavillaoloVaihe(nahtavillaoloVaihe: NahtavillaoloVaihe): API.NahtavillaoloVaihe {
+  if (!nahtavillaoloVaihe) {
+    return undefined;
+  }
+  const { aineistoNahtavilla, lisaAineisto, kuulutusYhteystiedot, ilmoituksenVastaanottajat, hankkeenKuvaus, ...rest } =
+    nahtavillaoloVaihe;
+  return {
+    __typename: "NahtavillaoloVaihe",
+    ...rest,
+    aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
+    lisaAineisto: adaptAineistot(lisaAineisto),
+    kuulutusYhteystiedot: adaptYhteystiedot(kuulutusYhteystiedot),
+    ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
+    hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
+  };
+}
+
+function adaptNahtavillaoloVaiheToSave(nahtavillaoloVaihe: NahtavillaoloVaiheInput): NahtavillaoloVaihe {
+  if (!nahtavillaoloVaihe) {
+    return undefined;
+  }
+  const {
+    aineistoNahtavilla: _aineistoNahtavilla,
+    lisaAineisto: _lisaAineisto,
+    kuulutusYhteystiedot,
+    ilmoituksenVastaanottajat,
+    hankkeenKuvaus,
+    ...rest
+  } = nahtavillaoloVaihe;
+  return {
+    ...rest,
+    kuulutusYhteystiedot: adaptYhteystiedotToSave(kuulutusYhteystiedot),
+    ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat),
+    hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus),
+  } as NahtavillaoloVaihe;
+}
+
+function adaptYhteystiedotToSave(yhteystietoInputs: Array<API.YhteystietoInput>) {
   return yhteystietoInputs?.length > 0 ? yhteystietoInputs.map((yt) => ({ ...yt })) : undefined;
 }
 
@@ -298,7 +331,7 @@ function adaptKayttajatunnusList(
   // Users with PROJEKTIPAALLIKKO role should always be in the kayttajaTunnusList
   // Push PROJEKTIPAALLIKKO into the list if not there already
   const projektipaallikkonTunnus = projekti.kayttoOikeudet?.find(
-    ({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO
+    ({ rooli }) => rooli === API.ProjektiRooli.PROJEKTIPAALLIKKO
   )?.kayttajatunnus;
   if (!doNotForceProjektipaallikko && !unfilteredList.includes(projektipaallikkonTunnus)) {
     unfilteredList.push(projektipaallikkonTunnus);
@@ -310,7 +343,7 @@ function adaptKayttajatunnusList(
 
 function adaptVuorovaikutusTilaisuudetToSave(
   projekti: DBProjekti,
-  vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuusInput>
+  vuorovaikutusTilaisuudet: Array<API.VuorovaikutusTilaisuusInput>
 ): VuorovaikutusTilaisuus[] | undefined {
   return vuorovaikutusTilaisuudet?.length > 0
     ? vuorovaikutusTilaisuudet.map((vv) => ({
@@ -324,7 +357,7 @@ function adaptVuorovaikutusTilaisuudetToSave(
 function adaptVuorovaikutusToSave(
   projekti: DBProjekti,
   projektiAdaptationResult: Partial<ProjektiAdaptationResult>,
-  vuorovaikutusInput?: VuorovaikutusInput | null
+  vuorovaikutusInput?: API.VuorovaikutusInput | null
 ): Vuorovaikutus[] {
   if (vuorovaikutusInput) {
     const dbVuorovaikutus = findVuorovaikutusByNumber(projekti, vuorovaikutusInput.vuorovaikutusNumero);
@@ -381,7 +414,7 @@ function checkIfAineistoJulkinenChanged(
   }
 }
 
-function pickAineistoFromInputByDocumenttiOid(aineistotInput: AineistoInput[], dokumenttiOid: string) {
+function pickAineistoFromInputByDocumenttiOid(aineistotInput: API.AineistoInput[], dokumenttiOid: string) {
   const matchedElements = remove(aineistotInput, { dokumenttiOid });
   if (matchedElements.length > 0) {
     return matchedElements[0];
@@ -391,7 +424,7 @@ function pickAineistoFromInputByDocumenttiOid(aineistotInput: AineistoInput[], d
 
 function adaptAineistotToSave(
   projektiAdaptationResult: Partial<ProjektiAdaptationResult>,
-  vuorovaikutusInput: VuorovaikutusInput,
+  vuorovaikutusInput: API.VuorovaikutusInput,
   vuorovaikutus?: Vuorovaikutus
 ): Pick<Vuorovaikutus, "esittelyaineistot" | "suunnitelmaluonnokset"> {
   if (!vuorovaikutus) {
@@ -440,7 +473,7 @@ function adaptAineistotToSave(
       dokumenttiOid: aineistoInput.dokumenttiOid,
       nimi: aineistoInput.nimi,
       jarjestys: aineistoInput.jarjestys,
-      tila: AineistoTila.ODOTTAA,
+      tila: API.AineistoTila.ODOTTAA,
     });
     hasPendingImports = true;
   }
@@ -459,12 +492,16 @@ function adaptAineistotToSave(
   return { esittelyaineistot: dbEsittelyAineistot, suunnitelmaluonnokset: dbSuunnitelmaLuonnokset };
 }
 
-export function adaptAineistot(aineistot?: Aineisto[] | null, julkaisuPaiva?: Dayjs): Aineisto[] | undefined {
+export function adaptAineistot(aineistot?: Aineisto[] | null, julkaisuPaiva?: Dayjs): API.Aineisto[] | undefined {
   if (julkaisuPaiva && julkaisuPaiva.isAfter(dayjs())) {
     return undefined;
   }
   if (aineistot && aineistot.length > 0) {
-    return aineistot.map((aineisto) => ({ __typename: "Aineisto", ...aineisto }));
+    return aineistot.map((aineisto) => ({
+      __typename: "Aineisto",
+      dokumenttiOid: aineisto.dokumenttiOid,
+      ...aineisto,
+    }));
   }
   return undefined;
 }
@@ -539,8 +576,8 @@ function adaptHankkeenKuvausToSave(hankkeenKuvaus: API.HankkeenKuvauksetInput): 
 }
 
 function adaptIlmoituksenVastaanottajatToSave(
-  vastaanottajat: IlmoituksenVastaanottajatInput | null | undefined
-): IlmoituksenVastaanottajat {
+  vastaanottajat: API.IlmoituksenVastaanottajatInput | null | undefined
+): API.IlmoituksenVastaanottajat {
   if (!vastaanottajat) {
     return vastaanottajat as null | undefined;
   }
@@ -557,7 +594,23 @@ function adaptIlmoituksenVastaanottajatToSave(
   return { __typename: "IlmoituksenVastaanottajat", kunnat, viranomaiset };
 }
 
-function adaptAloitusKuulutusToSave(aloitusKuulutus: AloitusKuulutusInput): AloitusKuulutus | null | undefined {
+function adaptIlmoituksenVastaanottajat(
+  vastaanottajat: API.IlmoituksenVastaanottajat | null | undefined
+): API.IlmoituksenVastaanottajat {
+  if (!vastaanottajat) {
+    return vastaanottajat as null | undefined;
+  }
+  const kunnat: API.KuntaVastaanottaja[] =
+    vastaanottajat?.kunnat?.map((kunta) => ({ __typename: "KuntaVastaanottaja", ...kunta })) || null;
+  const viranomaiset: API.ViranomaisVastaanottaja[] =
+    vastaanottajat?.viranomaiset?.map((viranomainen) => ({
+      __typename: "ViranomaisVastaanottaja",
+      ...viranomainen,
+    })) || null;
+  return { __typename: "IlmoituksenVastaanottajat", kunnat, viranomaiset };
+}
+
+function adaptAloitusKuulutusToSave(aloitusKuulutus: API.AloitusKuulutusInput): AloitusKuulutus | null | undefined {
   if (aloitusKuulutus) {
     const { hankkeenKuvaus, ilmoituksenVastaanottajat, ...rest } = aloitusKuulutus;
     return {
@@ -617,7 +670,7 @@ export function adaptYhteystiedot(yhteystiedot: Yhteystieto[]): API.Yhteystieto[
 export function adaptJulkaisuPDFPaths(
   oid: string,
   aloitusKuulutusPDFS: LocalizedMap<AloitusKuulutusPDF>
-): AloitusKuulutusPDFt | undefined {
+): API.AloitusKuulutusPDFt | undefined {
   if (!aloitusKuulutusPDFS) {
     return undefined;
   }
@@ -635,10 +688,10 @@ export function adaptJulkaisuPDFPaths(
       ),
     } as AloitusKuulutusPDF;
   }
-  return { __typename: "AloitusKuulutusPDFt", SUOMI: result[Kieli.SUOMI], ...result };
+  return { __typename: "AloitusKuulutusPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
 }
 
-export function adaptHankkeenKuvaus(hankkeenKuvaus: LocalizedMap<string>): HankkeenKuvaukset {
+export function adaptHankkeenKuvaus(hankkeenKuvaus: LocalizedMap<string>): API.HankkeenKuvaukset {
   return {
     __typename: "HankkeenKuvaukset",
     SUOMI: hankkeenKuvaus.SUOMI,

@@ -38,6 +38,7 @@ import {
   verifyEmailsSent,
 } from "./testUtil/tests";
 import { takeS3Snapshot } from "./testUtil/util";
+import { testNahtavillaOlo } from "./testUtil/nahtavillaolo";
 
 const sandbox = sinon.createSandbox();
 const { expect } = require("chai");
@@ -117,7 +118,7 @@ describe("Api", () => {
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await julkaiseSuunnitteluvaihe(oid);
-    await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
+    await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
     await insertAndManageFeedback(oid);
 
     await julkaiseVuorovaikutus(oid, userFixture);
@@ -130,6 +131,9 @@ describe("Api", () => {
 
     await sendEmailDigests();
     verifyEmailsSent(emailClientStub);
+
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await testNahtavillaOlo(oid, projektiPaallikko.kayttajatunnus);
   });
 
   it.skip("should archive projekti", async function () {
