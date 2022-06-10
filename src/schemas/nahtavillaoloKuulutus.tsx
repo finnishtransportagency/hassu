@@ -13,7 +13,6 @@ function validateDate(dateString: string) {
     return false;
   }
 }
-//
 
 const maxNahtavillaoloLength = 2000;
 
