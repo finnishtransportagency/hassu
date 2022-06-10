@@ -15,10 +15,10 @@ function validateDate(dateString: string) {
 
 export const nahtavillaoloKuulutusSchema = Yup.object().shape({
   oid: Yup.string().required(),
-  nahtavillaolo: Yup.object()
+  nahtavillaoloVaihe: Yup.object()
     .required()
     .shape({
-      kuulutuspaiva: Yup.string()
+      kuulutusPaiva: Yup.string()
         .required("Kuulutuspäivä ei voi olla tyhjä")
         .nullable()
         .test("is-valid-date", "Virheellinen päivämäärä", (dateString) => {
@@ -36,7 +36,7 @@ export const nahtavillaoloKuulutusSchema = Yup.object().shape({
           const todayISODate = new Date().toISOString().split("T")[0];
           return dateString >= todayISODate;
         }),
-      siirtyyLainvoimaan: Yup.string().test("is-valid-date", "Virheellinen päivämäärä", (dateString) => {
+      kuulutusVaihePaattyyPaiva: Yup.string().test("is-valid-date", "Virheellinen päivämäärä", (dateString) => {
         // siirtyyLainvoimaan is not required when saved as a draft.
         // This test doesn't throw errors if date is not set.
         if (!dateString) {
@@ -44,7 +44,7 @@ export const nahtavillaoloKuulutusSchema = Yup.object().shape({
         }
         return validateDate(dateString);
       }),
-      muistutusoikeusPaattyy: Yup.string().test("is-valid-date", "Virheellinen päivämäärä", (dateString) => {
+      muistutusoikeusPaattyyPaiva: Yup.string().test("is-valid-date", "Virheellinen päivämäärä", (dateString) => {
         // muistutusoikeusPaattyy is not required when saved as a draft.
         // This test doesn't throw errors if date is not set.
         if (!dateString) {

@@ -2,40 +2,52 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import React, { useCallback } from "react";
 import { useFormContext } from "react-hook-form";
-import { KuulutuksenTiedotFormValues } from "./KuulutuksenTiedot";
 import DatePicker from "@components/form/DatePicker";
 import dayjs from "dayjs";
 import log from "loglevel";
-// import { api, LaskuriTyyppi } from "@services/api";
+import { api, LaskuriTyyppi } from "@services/api";
 import useSnackbars from "src/hooks/useSnackbars";
 import HassuGrid from "@components/HassuGrid";
 
 type Props = {};
 
+type FormFields = {
+  nahtavillaoloVaihe: {
+    kuulutusPaiva: string | null;
+    kuulutusVaihePaattyyPaiva: string | null;
+    muistutusoikeusPaattyyPaiva: string | null;
+  };
+};
+
 export default function KuulutusJaJulkaisuPaiva({}: Props) {
   const {
     register,
     formState: { errors },
-    control,
     setValue,
-  } = useFormContext<KuulutuksenTiedotFormValues>();
+  } = useFormContext<FormFields>();
 
-  const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const { showErrorMessage } = useSnackbars();
 
   const today = dayjs().format();
 
   const getPaattymispaiva = useCallback(
     async (value: string) => {
       try {
-        //const paattymispaiva = await api.laskePaattymisPaiva(value, LaskuriTyyppi.NAHTAVILLAOLOKUULUTUKSEN_PAATTYMISPAIVA);
-        //setValue("nahtavillaolo.siirtyyLainvoimaan", paattymispaiva);
+        const paattymispaiva = await api.laskePaattymisPaiva(
+          value,
+          LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA // LaskuriTyyppi.NAHTAVILLAOLOKUULUTUKSEN_PAATTYMISPAIVA
+        );
+        setValue("nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva", paattymispaiva);
       } catch (error) {
         showErrorMessage("Kuulutuksen päättymispäivän laskennassa tapahtui virhe");
         log.error("Nähtävilläolon päättymispäivän laskennassa virhe", error);
       }
       try {
-        //const muistutuspaiva = await api.laskePaattymisPaiva(value, LaskuriTyyppi.MUISTUTUSTEN_PAATTYMISPAIVA);
-        //setValue("nahtavillaolo.siirtyyLainvoimaan", paattymispaiva);
+        const muistutuspaiva = await api.laskePaattymisPaiva(
+          value,
+          LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA //LaskuriTyyppi.MUISTUTUSTEN_PAATTYMISPAIVA
+        );
+        setValue("nahtavillaoloVaihe.muistutusoikeusPaattyyPaiva", muistutuspaiva);
       } catch (error) {
         showErrorMessage("Muistutuspäivän laskennassa tapahtui virhe");
         log.error("Muistutuspäivän laskennassa virhe", error);
@@ -56,9 +68,9 @@ export default function KuulutusJaJulkaisuPaiva({}: Props) {
           <DatePicker
             label="Kuulutuspäivä *"
             className="md:max-w-min"
-            //{...register("nahtavillaolo.kuulutusPaiva")}
+            {...register("nahtavillaoloVaihe.kuulutusPaiva")}
             min={today}
-            //error={errors.nahtavillaolo?.kuulutusPaiva}
+            error={errors.nahtavillaoloVaihe?.kuulutusPaiva}
             onChange={(event) => {
               getPaattymispaiva(event.target.value);
             }}
@@ -67,7 +79,7 @@ export default function KuulutusJaJulkaisuPaiva({}: Props) {
             className="md:max-w-min"
             label="Kuulutusvaihe päättyy"
             readOnly
-            //{...register("nahtavillaolo.siirtyyLainvoimaan")}
+            {...register("nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva")}
           />
         </HassuGrid>
       </SectionContent>
@@ -80,9 +92,8 @@ export default function KuulutusJaJulkaisuPaiva({}: Props) {
         <DatePicker
           label="Muistutusoikeus päättyy"
           className="md:max-w-min"
-          //{...register("nahtavillaolo.muistutusoikeusPaattyy")}
+          {...register("nahtavillaoloVaihe.muistutusoikeusPaattyyPaiva")}
           min={today}
-          //error={errors.nahtavillaolo?.muistutusoikeusPaattyy}
           readOnly
           onChange={(event) => {
             getPaattymispaiva(event.target.value);

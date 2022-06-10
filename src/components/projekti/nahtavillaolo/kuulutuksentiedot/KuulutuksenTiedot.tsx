@@ -12,14 +12,25 @@ import KuulutusJaJulkaisuPaiva from "./KuulutusJaJulkaisuPaiva";
 
 type Props = {};
 
-export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid">;
+export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid" | "nahtavillaoloVaihe">;
 
-export default function NahtavilleAsetettavatAineistot({}: Props) {
+export default function KuulutuksenTiedot({}: Props) {
   const { data: projekti } = useProjektiRoute();
+
+  console.log("plop", projekti);
+
   const formOptions: UseFormProps<KuulutuksenTiedotFormValues> = {
     resolver: yupResolver(nahtavillaoloKuulutusSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
+    defaultValues: {
+      oid: projekti?.oid,
+      nahtavillaoloVaihe: {
+        kuulutusPaiva: projekti?.nahtavillaoloVaihe?.kuulutusPaiva,
+        kuulutusVaihePaattyyPaiva: projekti?.nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva,
+        muistutusoikeusPaattyyPaiva: projekti?.nahtavillaoloVaihe?.muistutusoikeusPaattyyPaiva,
+      },
+    },
   };
 
   const useFormReturn = useForm<KuulutuksenTiedotFormValues>(formOptions);
