@@ -694,7 +694,7 @@ export function adaptJulkaisuPDFPaths(
 export function adaptHankkeenKuvaus(hankkeenKuvaus: LocalizedMap<string>): API.HankkeenKuvaukset {
   return {
     __typename: "HankkeenKuvaukset",
-    SUOMI: hankkeenKuvaus.SUOMI,
+    SUOMI: hankkeenKuvaus?.SUOMI,
     ...hankkeenKuvaus,
   };
 }
