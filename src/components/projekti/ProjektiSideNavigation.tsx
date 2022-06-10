@@ -5,6 +5,7 @@ import classNames from "classnames";
 import { useRouter } from "next/router";
 import useProjekti from "src/hooks/useProjekti";
 import { Status } from "@services/api";
+import ProjektiKortti from "./ProjektiKortti";
 
 interface Route {
   title: string;
@@ -96,20 +97,32 @@ export default function ProjektiSideNavigation(): ReactElement {
       }
     }
   }
+
+  if (!projekti) {
+    return <></>;
+  }
+  
   return (
-    <div role="navigation" className={styles["side-nav"]}>
-      <ul>
-        {routes.map((route, index) => (
-          <li key={index}>
-            <HassuLink
-              href={!route.disabled ? route.href : undefined}
-              className={classNames(route.disabled && styles.disabled, router.asPath === route.href && styles.selected)}
-            >
-              {route.title}
-            </HassuLink>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <>
+      <ProjektiKortti projekti={projekti}></ProjektiKortti>
+
+      <div role="navigation" className={styles["side-nav"]}>
+        <ul>
+          {routes.map((route, index) => (
+            <li key={index}>
+              <HassuLink
+                href={!route.disabled ? route.href : undefined}
+                className={classNames(
+                  route.disabled && styles.disabled,
+                  router.asPath === route.href && styles.selected
+                )}
+              >
+                {route.title}
+              </HassuLink>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
   );
 }
