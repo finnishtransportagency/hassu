@@ -132,7 +132,8 @@ type Vuorovaikutus {
   vuorovaikutusYhteysHenkilot: [String!]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
 
-  aineistot: [Aineisto!]
+  esittelyaineistot: [Aineisto!]
+  suunnitelmaluonnokset: [Aineisto!]
 }
 
 type VuorovaikutusJulkinen {
@@ -154,7 +155,8 @@ type VuorovaikutusJulkinen {
   vuorovaikutusYhteystiedot: [Yhteystieto!]
   vuorovaikutusYhteysHenkilot: [String!]
 
-  aineistot: [Aineisto!]
+  esittelyaineistot: [Aineisto!]
+  suunnitelmaluonnokset: [Aineisto!]
 }
 
 type Linkki {
@@ -163,7 +165,6 @@ type Linkki {
 }
 
 type Aineisto {
-  kategoria: String
   """
   Dokumentin oid Velhossa
   """
@@ -172,6 +173,10 @@ type Aineisto {
   Suhteellinen polku tiedostoon yllapidon S3-bucketissa projektin alla
   """
   tiedosto: String
+  """
+  Kayttajalle esitettava tiedostonimi, joka nakyy vaikkei tiedostoa olisi viela tallennettu
+  """
+  nimi: String!
   """
   Aikaleima, milloin tiedosto on tuotu jarjestelmaan yyyy-MM-ddTHH:mm
   """

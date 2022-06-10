@@ -205,7 +205,8 @@ function adaptVuorovaikutukset(dbProjekti: DBProjekti, projektiHenkilot: Projekt
             ),
             videot: adaptLinkkiList(vuorovaikutus.videot),
             suunnittelumateriaali: adaptLinkki(vuorovaikutus.suunnittelumateriaali),
-            aineistot: adaptAineistot(vuorovaikutus.aineistot, julkaisuPaiva),
+            esittelyaineistot: adaptAineistot(vuorovaikutus.esittelyaineistot, julkaisuPaiva),
+            suunnitelmaluonnokset: adaptAineistot(vuorovaikutus.suunnitelmaluonnokset, julkaisuPaiva),
             vuorovaikutusYhteystiedot: adaptAndMergeYhteystiedot(dbProjekti, vuorovaikutus),
             vuorovaikutusYhteysHenkilot: adaptUsernamesToProjektiHenkiloIds(usernames, projektiHenkilot),
           } as API.VuorovaikutusJulkinen;

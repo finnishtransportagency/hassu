@@ -30,15 +30,17 @@ export type Vuorovaikutus = {
   // Lista kayttajatunnuksia
   vuorovaikutusYhteysHenkilot?: Array<string> | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
-  aineistot?: Aineisto[] | null;
+  esittelyaineistot?: Aineisto[] | null;
+  suunnitelmaluonnokset?: Aineisto[] | null;
 };
 
 export type Aineisto = {
-  kategoria?: string | null;
   // Dokumentin oid Velhossa
-  dokumenttiOid?: string | null;
+  dokumenttiOid: string;
   // Suhteellinen polku tiedostoon yllapidon S3-bucketissa projektin alla
   tiedosto?: string;
+  // Tiedostonimi naytettavaksi
+  nimi: string;
   // Aikaleima, milloin tiedosto on tuotu jarjestelmaan yyyy-MM-ddTHH:mm
   tuotu?: string;
   // Numero jarjestamista varten

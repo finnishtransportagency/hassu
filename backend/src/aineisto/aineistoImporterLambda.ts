@@ -29,7 +29,9 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
           throw new Error("Vuorovaikutusta " + vuorovaikutusNumero + " ei löydy projektista " + oid);
         }
 
-        for (const aineisto of vuorovaikutus.aineistot) {
+        const aineistot = [...(vuorovaikutus.esittelyaineistot || []), ...(vuorovaikutus.suunnitelmaluonnokset || [])];
+
+        for (const aineisto of aineistot) {
           const sourceURL = await velho.getLinkForDocument(aineisto.dokumenttiOid);
           const axiosResponse = await axios.get(sourceURL);
           const filePathInProjekti = fileService.getVuorovaikutusAineistoPath(vuorovaikutus);

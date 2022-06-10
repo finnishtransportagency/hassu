@@ -128,10 +128,8 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
 
   TilaisuusContent.displayName = "SuunnitteluContent";
 
-  const suunnitelmaluonnokset = vuorovaikutus?.aineistot?.filter(
-    () => true //TODO
-  );
-  const esittelyaineistot = vuorovaikutus?.aineistot?.filter((aineisto) => aineisto.kategoria === "Esittelyaineisto");
+  const suunnitelmaluonnokset = vuorovaikutus?.suunnitelmaluonnokset;
+  const esittelyaineistot = vuorovaikutus?.esittelyaineistot;
 
   return (
     <ProjektiJulkinenPageLayout selectedStep={1} title="Tutustu hankkeeseen ja vuorovaikuta">

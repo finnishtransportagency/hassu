@@ -42,7 +42,6 @@ Object {
     "vuorovaikutukset": Array [
       Object {
         "__typename": "Vuorovaikutus",
-        "aineistot": undefined,
         "esitettavatYhteystiedot": Array [
           Object {
             "__typename": "Yhteystieto",
@@ -53,7 +52,9 @@ Object {
             "sukunimi": "Koi",
           },
         ],
+        "esittelyaineistot": undefined,
         "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+        "suunnitelmaluonnokset": undefined,
         "suunnittelumateriaali": undefined,
         "videot": Array [
           Object {
@@ -156,7 +157,6 @@ Object {
       },
       Object {
         "__typename": "Vuorovaikutus",
-        "aineistot": undefined,
         "esitettavatYhteystiedot": Array [
           Object {
             "__typename": "Yhteystieto",
@@ -167,7 +167,9 @@ Object {
             "sukunimi": "Koi",
           },
         ],
+        "esittelyaineistot": undefined,
         "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+        "suunnitelmaluonnokset": undefined,
         "suunnittelumateriaali": undefined,
         "videot": Array [
           Object {
@@ -301,32 +303,9 @@ Object {
 
 exports[`Api should search, load and save a project 4`] = `
 Object {
-  "description": "saveAndVerifyAineistoSave",
+  "description": "saveAndVerifyAineistoSave #initialSave",
   "obj": Object {
     "__typename": "Vuorovaikutus",
-    "aineistot": Array [
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
-        "jarjestys": 1,
-        "kategoria": "Tietomallinnus",
-        "tila": "ODOTTAA",
-      },
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
-        "jarjestys": 2,
-        "kategoria": "Yleinen",
-        "tila": "ODOTTAA",
-      },
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
-        "jarjestys": 3,
-        "kategoria": "Yleinen",
-        "tila": "ODOTTAA",
-      },
-    ],
     "esitettavatYhteystiedot": Array [
       Object {
         "__typename": "Yhteystieto",
@@ -337,7 +316,32 @@ Object {
         "sukunimi": "Koi",
       },
     ],
+    "esittelyaineistot": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
+        "jarjestys": 1,
+        "nimi": "tokatiedosto_toka.pdf",
+        "tila": "ODOTTAA",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
+        "jarjestys": 2,
+        "nimi": "ekatiedosto_eka.pdf",
+        "tila": "ODOTTAA",
+      },
+    ],
     "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+    "suunnitelmaluonnokset": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
+        "jarjestys": 1,
+        "nimi": "karttakuvalla_tiedosto.pdf",
+        "tila": "ODOTTAA",
+      },
+    ],
     "suunnittelumateriaali": undefined,
     "videot": Array [
       Object {
@@ -443,32 +447,9 @@ Object {
 
 exports[`Api should search, load and save a project 5`] = `
 Object {
-  "description": "saveAndVerifyAineistoSave",
+  "description": "saveAndVerifyAineistoSave #updateNimiAndJarjestys",
   "obj": Object {
     "__typename": "Vuorovaikutus",
-    "aineistot": Array [
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
-        "jarjestys": 11,
-        "kategoria": "Tietomallinnus new",
-        "tila": "ODOTTAA",
-      },
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
-        "jarjestys": 12,
-        "kategoria": "Yleinen new",
-        "tila": "ODOTTAA",
-      },
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
-        "jarjestys": 13,
-        "kategoria": "Yleinen new",
-        "tila": "ODOTTAA",
-      },
-    ],
     "esitettavatYhteystiedot": Array [
       Object {
         "__typename": "Yhteystieto",
@@ -479,7 +460,32 @@ Object {
         "sukunimi": "Koi",
       },
     ],
+    "esittelyaineistot": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
+        "jarjestys": 11,
+        "nimi": "new tokatiedosto_toka.pdf",
+        "tila": "ODOTTAA",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
+        "jarjestys": 12,
+        "nimi": "new ekatiedosto_eka.pdf",
+        "tila": "ODOTTAA",
+      },
+    ],
     "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+    "suunnitelmaluonnokset": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
+        "jarjestys": 11,
+        "nimi": "new karttakuvalla_tiedosto.pdf",
+        "tila": "ODOTTAA",
+      },
+    ],
     "suunnittelumateriaali": undefined,
     "videot": Array [
       Object {
@@ -585,25 +591,9 @@ Object {
 
 exports[`Api should search, load and save a project 6`] = `
 Object {
-  "description": "saveAndVerifyAineistoSave",
+  "description": "saveAndVerifyAineistoSave #esittelyAineistotWithoutFirst",
   "obj": Object {
     "__typename": "Vuorovaikutus",
-    "aineistot": Array [
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
-        "jarjestys": 12,
-        "kategoria": "Yleinen new",
-        "tila": "ODOTTAA",
-      },
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
-        "jarjestys": 13,
-        "kategoria": "Yleinen new",
-        "tila": "ODOTTAA",
-      },
-    ],
     "esitettavatYhteystiedot": Array [
       Object {
         "__typename": "Yhteystieto",
@@ -614,7 +604,25 @@ Object {
         "sukunimi": "Koi",
       },
     ],
+    "esittelyaineistot": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
+        "jarjestys": 12,
+        "nimi": "new ekatiedosto_eka.pdf",
+        "tila": "ODOTTAA",
+      },
+    ],
     "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+    "suunnitelmaluonnokset": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
+        "jarjestys": 11,
+        "nimi": "new karttakuvalla_tiedosto.pdf",
+        "tila": "ODOTTAA",
+      },
+    ],
     "suunnittelumateriaali": undefined,
     "videot": Array [
       Object {
@@ -733,26 +741,6 @@ Array [
 exports[`Api should search, load and save a project 8`] = `
 Object {
   "__typename": "Vuorovaikutus",
-  "aineistot": Array [
-    Object {
-      "__typename": "Aineisto",
-      "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
-      "jarjestys": 12,
-      "kategoria": "Yleinen new",
-      "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
-      "tila": "VALMIS",
-      "tuotu": "***unittest***",
-    },
-    Object {
-      "__typename": "Aineisto",
-      "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
-      "jarjestys": 13,
-      "kategoria": "Yleinen new",
-      "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
-      "tila": "VALMIS",
-      "tuotu": "***unittest***",
-    },
-  ],
   "esitettavatYhteystiedot": Array [
     Object {
       "__typename": "Yhteystieto",
@@ -763,7 +751,29 @@ Object {
       "sukunimi": "Koi",
     },
   ],
+  "esittelyaineistot": Array [
+    Object {
+      "__typename": "Aineisto",
+      "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
+      "jarjestys": 12,
+      "nimi": "new ekatiedosto_eka.pdf",
+      "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
+      "tila": "VALMIS",
+      "tuotu": "***unittest***",
+    },
+  ],
   "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+  "suunnitelmaluonnokset": Array [
+    Object {
+      "__typename": "Aineisto",
+      "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
+      "jarjestys": 11,
+      "nimi": "new karttakuvalla_tiedosto.pdf",
+      "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
+      "tila": "VALMIS",
+      "tuotu": "***unittest***",
+    },
+  ],
   "suunnittelumateriaali": undefined,
   "videot": Array [
     Object {
@@ -1051,26 +1061,6 @@ Object {
     "vuorovaikutukset": Array [
       Object {
         "__typename": "VuorovaikutusJulkinen",
-        "aineistot": Array [
-          Object {
-            "__typename": "Aineisto",
-            "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
-            "jarjestys": 12,
-            "kategoria": "Yleinen new",
-            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
-            "tila": "VALMIS",
-            "tuotu": "***unittest***",
-          },
-          Object {
-            "__typename": "Aineisto",
-            "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
-            "jarjestys": 13,
-            "kategoria": "Yleinen new",
-            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
-            "tila": "VALMIS",
-            "tuotu": "***unittest***",
-          },
-        ],
         "esitettavatYhteystiedot": Array [
           Object {
             "__typename": "Yhteystieto",
@@ -1081,8 +1071,30 @@ Object {
             "sukunimi": "Koi",
           },
         ],
+        "esittelyaineistot": Array [
+          Object {
+            "__typename": "Aineisto",
+            "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
+            "jarjestys": 12,
+            "nimi": "new ekatiedosto_eka.pdf",
+            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
+            "tila": "VALMIS",
+            "tuotu": "***unittest***",
+          },
+        ],
         "julkinen": true,
         "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+        "suunnitelmaluonnokset": Array [
+          Object {
+            "__typename": "Aineisto",
+            "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
+            "jarjestys": 11,
+            "nimi": "new karttakuvalla_tiedosto.pdf",
+            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
+            "tila": "VALMIS",
+            "tuotu": "***unittest***",
+          },
+        ],
         "suunnittelumateriaali": undefined,
         "videot": Array [
           Object {
@@ -1206,7 +1218,6 @@ Object {
       },
       Object {
         "__typename": "VuorovaikutusJulkinen",
-        "aineistot": undefined,
         "esitettavatYhteystiedot": Array [
           Object {
             "__typename": "Yhteystieto",
@@ -1217,7 +1228,9 @@ Object {
             "sukunimi": "Koi",
           },
         ],
+        "esittelyaineistot": undefined,
         "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+        "suunnitelmaluonnokset": undefined,
         "suunnittelumateriaali": undefined,
         "videot": Array [
           Object {
@@ -1412,7 +1425,6 @@ Object {
     "aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {},
     "palautteet/***unittest***/logo.png": Object {},
     "suunnittelusopimus/logo.png": Object {},
-    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {},
     "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {},
   },
 }
@@ -1426,9 +1438,6 @@ Object {
     },
     "aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {
       "publishDate": "2022-01-02T00:00:00+02:00",
-    },
-    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {
-      "publishDate": "2022-03-23T00:00:00+02:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {
       "publishDate": "2022-03-23T00:00:00+02:00",

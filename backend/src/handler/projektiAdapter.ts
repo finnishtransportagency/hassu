@@ -329,6 +329,12 @@ function adaptVuorovaikutusToSave(
   if (vuorovaikutusInput) {
     const dbVuorovaikutus = findVuorovaikutusByNumber(projekti, vuorovaikutusInput.vuorovaikutusNumero);
 
+    const { esittelyaineistot, suunnitelmaluonnokset } = adaptAineistotToSave(
+      projektiAdaptationResult,
+      vuorovaikutusInput,
+      dbVuorovaikutus
+    );
+
     const vuorovaikutusToSave: Vuorovaikutus = {
       ...vuorovaikutusInput,
       vuorovaikutusYhteysHenkilot: adaptKayttajatunnusList(projekti, vuorovaikutusInput.vuorovaikutusYhteysHenkilot),
@@ -339,7 +345,8 @@ function adaptVuorovaikutusToSave(
       //Jos vuorovaikutuksen ilmoituksella ei tarvitse olla viranomaisvastaanottajia, muokkaa adaptIlmoituksenVastaanottajatToSavea
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(vuorovaikutusInput.ilmoituksenVastaanottajat),
       esitettavatYhteystiedot: adaptYhteystiedotToSave(vuorovaikutusInput.esitettavatYhteystiedot),
-      aineistot: adaptAineistotToSave(projektiAdaptationResult, vuorovaikutusInput, dbVuorovaikutus),
+      esittelyaineistot,
+      suunnitelmaluonnokset,
     };
 
     checkIfAineistoJulkinenChanged(vuorovaikutusToSave, dbVuorovaikutus, projektiAdaptationResult);
@@ -386,44 +393,70 @@ function adaptAineistotToSave(
   projektiAdaptationResult: Partial<ProjektiAdaptationResult>,
   vuorovaikutusInput: VuorovaikutusInput,
   vuorovaikutus?: Vuorovaikutus
-): Aineisto[] | undefined {
+): Pick<Vuorovaikutus, "esittelyaineistot" | "suunnitelmaluonnokset"> {
   if (!vuorovaikutus) {
-    return undefined;
+    return { esittelyaineistot: undefined, suunnitelmaluonnokset: undefined };
   }
-  const aineistotInput = vuorovaikutusInput.aineistot ? [...vuorovaikutusInput.aineistot] : [];
-  const aineistotToDelete = [];
 
-  // Update existing ones
-  const dbAineistot = vuorovaikutus.aineistot || [];
-  dbAineistot.slice(0).forEach((dbAineisto) => {
-    const aineistoInput = pickAineistoFromInputByDocumenttiOid(aineistotInput, dbAineisto.dokumenttiOid);
-    if (aineistoInput) {
+  const esittelyaineistotInput = vuorovaikutusInput.esittelyaineistot || [];
+  const suunnitelmaluonnoksetInput = vuorovaikutusInput.suunnitelmaluonnokset || [];
+  const dbAineistot = [...(vuorovaikutus.suunnitelmaluonnokset || []), ...(vuorovaikutus.esittelyaineistot || [])];
+
+  const dbEsittelyAineistot: Aineisto[] = [];
+  const dbSuunnitelmaLuonnokset: Aineisto[] = [];
+  const aineistotToDelete: Aineisto[] = [];
+
+  dbAineistot.forEach((dbAineisto) => {
+    const esittelyAineistoInput = pickAineistoFromInputByDocumenttiOid(
+      esittelyaineistotInput,
+      dbAineisto.dokumenttiOid
+    );
+    const suunnitelmaLuonnosInput = pickAineistoFromInputByDocumenttiOid(
+      suunnitelmaluonnoksetInput,
+      dbAineisto.dokumenttiOid
+    );
+    if (esittelyAineistoInput) {
       // Update existing one
-      dbAineisto.kategoria = aineistoInput.kategoria;
-      dbAineisto.jarjestys = aineistoInput.jarjestys;
-    } else {
+      dbAineisto.nimi = esittelyAineistoInput.nimi;
+      dbAineisto.jarjestys = esittelyAineistoInput.jarjestys;
+      dbEsittelyAineistot.push(dbAineisto);
+    }
+    if (suunnitelmaLuonnosInput) {
+      // Update existing one
+      dbAineisto.nimi = suunnitelmaLuonnosInput.nimi;
+      dbAineisto.jarjestys = suunnitelmaLuonnosInput.jarjestys;
+      dbSuunnitelmaLuonnokset.push(dbAineisto);
+    }
+    if (!esittelyAineistoInput && !suunnitelmaLuonnosInput) {
       aineistotToDelete.push(dbAineisto);
     }
   });
 
-  // Remove deleted ones
-  aineistotToDelete.forEach((aineistoToDelete) =>
-    remove(dbAineistot, { dokumenttiOid: aineistoToDelete.dokumenttiOid })
-  );
-
   // Add new ones and optionally trigger import later
   let hasPendingImports = undefined;
-  for (const aineistoInput of aineistotInput) {
-    dbAineistot.push({
+
+  for (const aineistoInput of esittelyaineistotInput) {
+    dbEsittelyAineistot.push({
       dokumenttiOid: aineistoInput.dokumenttiOid,
+      nimi: aineistoInput.nimi,
       jarjestys: aineistoInput.jarjestys,
-      kategoria: aineistoInput.kategoria,
       tila: AineistoTila.ODOTTAA,
     });
     hasPendingImports = true;
   }
+
+  for (const aineistoInput of suunnitelmaluonnoksetInput) {
+    dbSuunnitelmaLuonnokset.push({
+      dokumenttiOid: aineistoInput.dokumenttiOid,
+      nimi: aineistoInput.nimi,
+      jarjestys: aineistoInput.jarjestys,
+      tila: AineistoTila.ODOTTAA,
+    });
+    hasPendingImports = true;
+  }
+
   projektiAdaptationResult.aineistoChanges = { vuorovaikutus: null, aineistotToDelete, hasPendingImports };
-  return dbAineistot;
+  return { esittelyaineistot: dbEsittelyAineistot, suunnitelmaluonnokset: dbSuunnitelmaLuonnokset };
 }
 
 export function adaptAineistot(aineistot?: Aineisto[] | null, julkaisuPaiva?: Dayjs): Aineisto[] | undefined {
@@ -445,7 +478,8 @@ function adaptVuorovaikutukset(vuorovaikutukset: Array<Vuorovaikutus>): API.Vuor
           vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
           suunnittelumateriaali: adaptLinkki(vuorovaikutus.suunnittelumateriaali),
           videot: adaptLinkkiList(vuorovaikutus.videot),
-          aineistot: adaptAineistot(vuorovaikutus.aineistot),
+          esittelyaineistot: adaptAineistot(vuorovaikutus.esittelyaineistot),
+          suunnitelmaluonnokset: adaptAineistot(vuorovaikutus.suunnitelmaluonnokset),
           __typename: "Vuorovaikutus",
         } as API.Vuorovaikutus)
     );

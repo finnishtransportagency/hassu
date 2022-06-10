@@ -106,7 +106,8 @@ input VuorovaikutusInput {
   """
   vuorovaikutusYhteysHenkilot: [String!]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
-  aineistot: [AineistoInput!]
+  esittelyaineistot: [AineistoInput!]
+  suunnitelmaluonnokset: [AineistoInput!]
 }
 
 input VuorovaikutusTilaisuusInput {
@@ -146,7 +147,7 @@ input AineistoInput {
   Dokumentin oid Velhossa
   """
   dokumenttiOid: String!
-  kategoria: String
+  nimi: String!
   """
   Numero jarjestamista varten
   """
