@@ -17,8 +17,6 @@ export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid" | "n
 export default function KuulutuksenTiedot({}: Props) {
   const { data: projekti } = useProjektiRoute();
 
-  console.log("plop", projekti);
-
   const formOptions: UseFormProps<KuulutuksenTiedotFormValues> = {
     resolver: yupResolver(nahtavillaoloKuulutusSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
@@ -29,6 +27,7 @@ export default function KuulutuksenTiedot({}: Props) {
         kuulutusPaiva: projekti?.nahtavillaoloVaihe?.kuulutusPaiva,
         kuulutusVaihePaattyyPaiva: projekti?.nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva,
         muistutusoikeusPaattyyPaiva: projekti?.nahtavillaoloVaihe?.muistutusoikeusPaattyyPaiva,
+        hankkeenKuvaus: projekti?.nahtavillaoloVaihe?.hankkeenKuvaus,
       },
     },
   };
@@ -49,7 +48,7 @@ export default function KuulutuksenTiedot({}: Props) {
     <FormProvider {...useFormReturn}>
       <form>
         <KuulutusJaJulkaisuPaiva />
-        <HankkeenSisallonKuvaus />
+        <HankkeenSisallonKuvaus kielitiedot={projekti?.kielitiedot} />
         <KuulutuksessaEsitettavatYhteystiedot />
         <KuulutuksenJaIlmoituksenEsikatselu />
         <NahtavillaoloPainikkeet />
