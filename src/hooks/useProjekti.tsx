@@ -18,7 +18,6 @@ async function projektiLoader(_: string, oid: string | undefined, kayttaja: Nyky
     return null;
   }
   const projekti = await api.lataaProjekti(oid);
-  console.log("projekti", projekti);
   const lisatiedot: ProjektiLisatiedot = {
     nykyinenKayttaja: {
       omaaMuokkausOikeuden: userIsAdmin(kayttaja) || userHasAccessToProjekti({ projekti, kayttaja }),
