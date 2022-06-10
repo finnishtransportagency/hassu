@@ -1,4 +1,4 @@
-import { AloitusKuulutusTila, Projekti } from "@services/api";
+import { Projekti } from "@services/api";
 import React, { ReactElement } from "react";
 import styles from "@styles/projekti/ProjektiSideNavigation.module.css";
 import MuiAccordion, { AccordionProps, accordionClasses } from "@mui/material/Accordion";
