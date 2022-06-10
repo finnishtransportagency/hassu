@@ -12,6 +12,7 @@ function validateDate(dateString: string) {
     return false;
   }
 }
+//
 
 export const nahtavillaoloKuulutusSchema = Yup.object().shape({
   oid: Yup.string().required(),
