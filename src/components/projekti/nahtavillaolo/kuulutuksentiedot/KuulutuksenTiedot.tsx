@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { TallennaProjektiInput } from "@services/api";
-import React, { useEffect } from "react";
+import React from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { useProjektiRoute } from "src/hooks/useProjektiRoute";
 import { nahtavillaoloKuulutusSchema } from "src/schemas/nahtavillaoloKuulutus";
@@ -43,16 +43,6 @@ export default function KuulutuksenTiedot({}: Props) {
   };
 
   const useFormReturn = useForm<KuulutuksenTiedotFormValues>(formOptions);
-  const { reset } = useFormReturn;
-
-  useEffect(() => {
-    if (projekti?.oid) {
-      const tallentamisTiedot: KuulutuksenTiedotFormValues = {
-        oid: projekti.oid,
-      };
-      reset(tallentamisTiedot);
-    }
-  }, [projekti, reset]);
 
   return (
     <FormProvider {...useFormReturn}>
