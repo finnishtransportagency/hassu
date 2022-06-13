@@ -11,6 +11,7 @@ import KuulutuksessaEsitettavatYhteystiedot from "./KuulutuksessaEsitettavatYhte
 import KuulutusJaJulkaisuPaiva from "./KuulutusJaJulkaisuPaiva";
 import IlmoituksenVastaanottajatKomponentti from "./IlmoituksenVastaanottajat";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
+import { removeTypeName } from "src/util/removeTypeName";
 
 function defaultValues(projekti: Projekti, kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] | null) {
   return {
@@ -19,6 +20,16 @@ function defaultValues(projekti: Projekti, kirjaamoOsoitteet: ViranomaisVastaano
       kuulutusPaiva: projekti?.nahtavillaoloVaihe?.kuulutusPaiva,
       kuulutusVaihePaattyyPaiva: projekti?.nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva,
       muistutusoikeusPaattyyPaiva: projekti?.nahtavillaoloVaihe?.muistutusoikeusPaattyyPaiva,
+      hankkeenKuvaus: removeTypeName(projekti?.nahtavillaoloVaihe?.hankkeenKuvaus),
+      kuulutusYhteystiedot: projekti?.nahtavillaoloVaihe?.kuulutusYhteystiedot
+        ? projekti.nahtavillaoloVaihe.kuulutusYhteystiedot.map((yhteystieto) => removeTypeName(yhteystieto))
+        : [],
+      kuulutusYhteysHenkilot:
+        projekti?.kayttoOikeudet
+          ?.filter(({ kayttajatunnus }) =>
+            projekti?.nahtavillaoloVaihe?.kuulutusYhteysHenkilot?.includes(kayttajatunnus)
+          )
+          .map(({ kayttajatunnus }) => kayttajatunnus) || [],
       ilmoituksenVastaanottajat: defaultVastaanottajat(
         projekti,
         projekti.nahtavillaoloVaihe?.ilmoituksenVastaanottajat,
