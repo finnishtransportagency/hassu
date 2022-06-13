@@ -75,15 +75,6 @@ export default function AloituskuulutusLukunakyma({
           </p>
         </div>
         <div>
-          <p className="vayla-label">Kuulutuksessa esitettävät yhteystiedot</p>
-          {aloituskuulutusjulkaisu.yhteystiedot?.map((yhteistieto, index) => (
-            <p style={{ margin: 0 }} key={index}>
-              {capitalize(yhteistieto?.etunimi)} {capitalize(yhteistieto?.sukunimi)}, puh. {yhteistieto?.puhelinnumero},{" "}
-              {yhteistieto?.sahkoposti ? replace(yhteistieto?.sahkoposti, "@", "[at]") : ""}
-            </p>
-          ))}
-        </div>
-        <div>
           <p className="vayla-label">
             Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (
             {lowerCase(aloituskuulutusjulkaisu.kielitiedot?.ensisijainenKieli)})
@@ -107,6 +98,22 @@ export default function AloituskuulutusLukunakyma({
             </p>
           </div>
         )}
+        <div>
+          <p className="vayla-label">Kuulutuksessa esitettävät yhteystiedot</p>
+          {aloituskuulutusjulkaisu.yhteystiedot?.map((yhteistieto, index) => (
+            <p style={{ margin: 0 }} key={index}>
+              {capitalize(yhteistieto?.etunimi)} {capitalize(yhteistieto?.sukunimi)}, puh. {yhteistieto?.puhelinnumero},{" "}
+              {yhteistieto?.sahkoposti ? replace(yhteistieto?.sahkoposti, "@", "[at]") : ""}
+            </p>
+          ))}
+        </div>
+      </Section>
+      <IlmoituksenVastaanottajat
+        isLoading={isLoadingProjekti}
+        kirjaamoOsoitteet={kirjaamoOsoitteet || []}
+        aloituskuulutusjulkaisu={aloituskuulutusjulkaisu}
+      />
+      <Section>
         {aloituskuulutusjulkaisu.tila !== AloitusKuulutusTila.HYVAKSYTTY && (
           <AloituskuulutusPDFEsikatselu oid={oid} aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} />
         )}
@@ -114,11 +121,6 @@ export default function AloituskuulutusLukunakyma({
           <AloituskuulutusTiedostot aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} oid={oid} />
         )}
       </Section>
-      <IlmoituksenVastaanottajat
-        isLoading={isLoadingProjekti}
-        kirjaamoOsoitteet={kirjaamoOsoitteet || []}
-        aloituskuulutusjulkaisu={aloituskuulutusjulkaisu}
-      />
     </>
   );
 }
