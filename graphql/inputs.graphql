@@ -217,7 +217,7 @@ enum TilasiirtymaTyyppi {
 
 input TilaSiirtymaInput {
   oid: String!
-  tyyppi: TilasiirtymaTyyppi
+  tyyppi: TilasiirtymaTyyppi!
   toiminto: TilasiirtymaToiminto!
   syy: String
 }

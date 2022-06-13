@@ -21,6 +21,7 @@ import {
   TallennaProjektiInput,
   TilasiirtymaToiminto,
   ViranomaisVastaanottajaInput,
+  TilasiirtymaTyyppi,
 } from "@services/api";
 import log from "loglevel";
 import { PageProps } from "@pages/_app";
@@ -226,7 +227,7 @@ export default function Aloituskuulutus({
       }
       setIsFormSubmitting(true);
       try {
-        await api.siirraTila({ oid: projekti.oid, toiminto, syy });
+        await api.siirraTila({ oid: projekti.oid, toiminto, syy, tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS });
         await reloadProjekti();
         showSuccessMessage(`${viesti} onnistui`);
       } catch (error) {
@@ -555,7 +556,9 @@ export default function Aloituskuulutus({
         <>
           <Section noDivider>
             <Stack direction={["column", "column", "row"]} justifyContent={[undefined, undefined, "flex-end"]}>
-              <Button id="button_reject" onClick={handleClickOpen}>Palauta</Button>
+              <Button id="button_reject" onClick={handleClickOpen}>
+                Palauta
+              </Button>
               <Button id="button_open_acceptance_dialog" primary onClick={handleClickOpenHyvaksy}>
                 Hyväksy ja lähetä
               </Button>
@@ -586,7 +589,9 @@ export default function Aloituskuulutus({
                   <Button primary onClick={handleSubmit2(palautaMuokattavaksiJaPoistu)}>
                     Palauta ja poistu
                   </Button>
-                  <Button id="reject_and_edit" onClick={handleSubmit2(palautaMuokattavaksi)}>Palauta ja muokkaa</Button>
+                  <Button id="reject_and_edit" onClick={handleSubmit2(palautaMuokattavaksi)}>
+                    Palauta ja muokkaa
+                  </Button>
                   <Button
                     onClick={(e) => {
                       handleClickClose();
