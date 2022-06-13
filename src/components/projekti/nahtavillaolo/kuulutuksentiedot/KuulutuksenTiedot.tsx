@@ -75,9 +75,9 @@ export default function KuulutuksenTiedot({ kirjaamoOsoitteet }: Props) {
           kirjaamoOsoitteet={kirjaamoOsoitteet}
           nahtavillaoloVaihe={projekti?.nahtavillaoloVaihe}
         />
-        <KuulutuksenJaIlmoituksenEsikatselu />
-        <NahtavillaoloPainikkeet />
       </form>
+      <KuulutuksenJaIlmoituksenEsikatselu projekti={projekti as Projekti} />
+      <NahtavillaoloPainikkeet />
     </FormProvider>
   );
 }
