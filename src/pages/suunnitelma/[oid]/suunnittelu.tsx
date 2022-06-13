@@ -251,7 +251,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
           )}
         {vuorovaikutus && (
           <>
-            <JataPalautettaNappi onClick={() => setPalauteLomakeOpen(true)} />
+            <JataPalautettaNappi teksti={t("projekti:palautelomake.jata_palaute")} onClick={() => setPalauteLomakeOpen(true)} />
             <PalauteLomakeDialogi
               vuorovaikutus={vuorovaikutus}
               open={palauteLomakeOpen}
