@@ -11,7 +11,7 @@ import { expectToMatchSnapshot } from "./util";
 import { loadProjektiFromDatabase, testPublicAccessToProjekti } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";
 
-const { expect } = require("chai");
+const { expect } = require("chai"); //
 
 export async function testNahtavillaOlo(oid: string, projektiPaallikko: string): Promise<void> {
   await api.tallennaProjekti({
