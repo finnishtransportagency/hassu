@@ -1,8 +1,8 @@
-import { VuorovaikutusTilaisuusTyyppi, IlmoitettavaViranomainen } from "@services/api";
+import { VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import { isValidDate } from "src/util/dateUtils";
 import * as Yup from "yup";
 import { yhteystietoSchema } from "./yhteystieto";
-import filter from "lodash/filter";
+import { ilmoituksenVastaanottajat } from "./common";
 
 const validTimeRegexp = /^([0-1]?[0-9]|2[0-4]):([0-5]?[0-9])$/;
 
@@ -175,58 +175,7 @@ export const vuorovaikutusSchema = Yup.object().shape({
               return true;
             }),
         }),
-      ilmoituksenVastaanottajat: Yup.object()
-        .shape({
-          kunnat: Yup.array()
-            .of(
-              Yup.object()
-                .shape({
-                  nimi: Yup.string().required(),
-                  sahkoposti: Yup.string()
-                    .email("Virheellinen sähköpostiosoite")
-                    .required("Sähköpostiosoite on pakollinen"),
-                })
-                .required()
-            )
-            .compact(function (kunta) {
-              return !kunta.nimi && !kunta.sahkoposti;
-            })
-            .notRequired(),
-          viranomaiset: Yup.array()
-            .of(
-              Yup.object()
-                .shape({
-                  nimi: Yup.mixed().oneOf(Object.values(IlmoitettavaViranomainen), "Viranomaistieto on pakollinen"),
-                  sahkoposti: Yup.string()
-                    .email("Virheellinen sähköpostiosoite")
-                    .required("Sähköpostiosoite on pakollinen"),
-                })
-                .test("unique", "Vastaanottaja on jo lisätty", (value, testContext) => {
-                  const duplikaatit = filter(testContext.parent, value);
-                  if (duplikaatit.length == 1) {
-                    return true;
-                  }
-                  return testContext.createError({
-                    path: `${testContext.path}.nimi`,
-                    message: "Viranomainen on jo valittu",
-                  });
-                })
-                .required()
-            )
-            .compact(function (viranomainen) {
-              return !viranomainen.nimi && !viranomainen.sahkoposti;
-            })
-            .test("length", "Vähintään yksi viranomainen valittava", (arr, testContext) => {
-              if (arr && arr.length >= 1) {
-                return true;
-              }
-              return testContext.createError({
-                path: `${testContext.path}`,
-                message: "Vähintään yksi viranomainen on valittava",
-              });
-            }),
-        })
-        .required(),
+      ilmoituksenVastaanottajat: ilmoituksenVastaanottajat(),
     }),
   }),
 });
