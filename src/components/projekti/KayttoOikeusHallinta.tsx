@@ -193,10 +193,6 @@ const UserFields = ({
     [getKayttajaNimi, disableFields, minSearchLength, kayttaja]
   );
 
-  if (!kayttaja || isLoadingKayttajat) {
-    return <></>;
-  }
-
   return (
     <HassuStack direction={["column", "column", "row"]}>
       <HassuGrid sx={{ width: "100%" }} cols={[1, 1, 3]}>

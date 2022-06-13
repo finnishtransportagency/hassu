@@ -100,11 +100,12 @@ export class API extends AbstractApi {
             errorPolicy: "all",
             fetchResults: true,
           });
-          if (queryResponse.errors && !queryResponse.data) {
+          const data = queryResponse.data?.[operation.name];
+          if (queryResponse.errors && !data) {
             log.warn(queryResponse.errors);
             throw new Error("API palautti virheen.");
           }
-          return queryResponse.data?.[operation.name];
+          return data;
         case OperationType.Mutation:
           const fetchResponse: FetchResult<any> = await client.mutate({
             mutation: gql(operation.graphql),

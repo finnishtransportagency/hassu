@@ -63,6 +63,20 @@ interface IProjekti {
   paivitetty: String
 }
 
+enum ProjektiPaallikkoVirheTyyppi {
+  PUUTTUU
+  EI_LOYDY
+}
+
+type ProjektipaallikkoVirhe {
+  tyyppi: ProjektiPaallikkoVirheTyyppi!
+  sahkoposti: String
+}
+
+type ProjektiVirhe {
+  projektipaallikko: ProjektipaallikkoVirhe
+}
+
 type Projekti implements IProjekti {
   oid: String!
   muistiinpano: String
@@ -85,6 +99,7 @@ type Projekti implements IProjekti {
   liittyvatSuunnitelmat: [Suunnitelma!]
   kielitiedot: Kielitiedot
   paivitetty: String
+  virhetiedot: ProjektiVirhe
 }
 
 type SuunnitteluVaihe {

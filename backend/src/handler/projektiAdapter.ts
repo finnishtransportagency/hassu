@@ -42,7 +42,7 @@ export type ProjektiAdaptationResult = {
 };
 
 export class ProjektiAdapter {
-  public adaptProjekti(dbProjekti: DBProjekti): API.Projekti {
+  public adaptProjekti(dbProjekti: DBProjekti, virhetiedot?: API.ProjektiVirhe): API.Projekti {
     const {
       kayttoOikeudet,
       aloitusKuulutus,
@@ -74,6 +74,7 @@ export class ProjektiAdapter {
       kielitiedot: adaptKielitiedot(kielitiedot),
       suunnitteluVaihe: adaptSuunnitteluVaihe(suunnitteluVaihe, vuorovaikutukset, palautteet),
       nahtavillaoloVaihe: adaptNahtavillaoloVaihe(nahtavillaoloVaihe),
+      virhetiedot,
       ...fieldsToCopyAsIs,
     }) as API.Projekti;
     if (apiProjekti.tallennettu) {

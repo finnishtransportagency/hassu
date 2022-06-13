@@ -374,6 +374,18 @@
         "__typename": "__Type"
       },
       {
+        "kind": "OBJECT",
+        "name": "ProjektipaallikkoVirhe",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "ProjektiPaallikkoVirheTyyppi",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "ENUM",
         "name": "ProjektiRooli",
         "possibleTypes": null,
@@ -388,6 +400,12 @@
       {
         "kind": "ENUM",
         "name": "ProjektiTyyppi",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ProjektiVirhe",
         "possibleTypes": null,
         "__typename": "__Type"
       },
