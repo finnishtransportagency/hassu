@@ -133,6 +133,7 @@ export const vuorovaikutusSchema = Yup.object().shape({
         .test("valid-date", "Virheellinen päivämäärä", (date) => {
           return isValidDate(date);
         }),
+      vuorovaikutusYhteysHenkilot: Yup.array().notRequired().of(Yup.string()),
       esitettavatYhteystiedot: Yup.array().notRequired().of(yhteystietoSchema),
       vuorovaikutusTilaisuudet: Yup.array()
         .of(vuorovaikutustilaisuudetSchema)

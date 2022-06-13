@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import { isDevEnvironment } from "@services/config";
+import { yhteystietoSchema } from "./yhteystieto";
 
 function validateDate(dateString: string) {
   try {
@@ -13,11 +14,24 @@ function validateDate(dateString: string) {
   }
 }
 
+const maxNahtavillaoloLength = 2000;
+
+let hankkeenKuvaus = Yup.string()
+  .max(
+    maxNahtavillaoloLength,
+    `Nähtävilläolovaiheeseen voidaan kirjoittaa maksimissaan ${maxNahtavillaoloLength} merkkiä`
+  )
+  .required("Hankkeen kuvaus ei voi olla tyhjä")
+  .nullable();
+
 export const nahtavillaoloKuulutusSchema = Yup.object().shape({
   oid: Yup.string().required(),
   nahtavillaoloVaihe: Yup.object()
     .required()
     .shape({
+      kuulutusYhteystiedot: Yup.array().notRequired().of(yhteystietoSchema),
+      kuulutusYhteysHenkilot: Yup.array().notRequired().of(Yup.string()),
+      hankkeenKuvaus: Yup.object().shape({ SUOMI: hankkeenKuvaus }),
       kuulutusPaiva: Yup.string()
         .required("Kuulutuspäivä ei voi olla tyhjä")
         .nullable()
@@ -37,7 +51,7 @@ export const nahtavillaoloKuulutusSchema = Yup.object().shape({
           return dateString >= todayISODate;
         }),
       kuulutusVaihePaattyyPaiva: Yup.string().test("is-valid-date", "Virheellinen päivämäärä", (dateString) => {
-        // siirtyyLainvoimaan is not required when saved as a draft.
+        // kuulutusVaihePaattyyPaiva is not required when saved as a draft.
         // This test doesn't throw errors if date is not set.
         if (!dateString) {
           return true;
