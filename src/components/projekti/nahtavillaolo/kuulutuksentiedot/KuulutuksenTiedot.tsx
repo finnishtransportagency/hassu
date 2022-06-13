@@ -1,13 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  TallennaProjektiInput,
-  IlmoitettavaViranomainen,
-  KuntaVastaanottajaInput,
-  ViranomaisVastaanottajaInput,
-  Projekti,
-  IlmoituksenVastaanottajatInput,
-  IlmoituksenVastaanottajat,
-} from "@services/api";
+import { TallennaProjektiInput, ViranomaisVastaanottajaInput, Projekti } from "@services/api";
 import React, { useEffect } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { useProjektiRoute } from "src/hooks/useProjektiRoute";
