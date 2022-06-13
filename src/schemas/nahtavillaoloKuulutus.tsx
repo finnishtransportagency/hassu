@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import { isDevEnvironment } from "@services/config";
 import { yhteystietoSchema } from "./yhteystieto";
+import { ilmoituksenVastaanottajat } from "./common";
 
 function validateDate(dateString: string) {
   try {
@@ -66,5 +67,6 @@ export const nahtavillaoloKuulutusSchema = Yup.object().shape({
         }
         return validateDate(dateString);
       }),
+      ilmoituksenVastaanottajat: ilmoituksenVastaanottajat(),
     }),
 });

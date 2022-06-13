@@ -3,7 +3,7 @@ import { setupLocalDatabase } from "../util/databaseUtil";
 import * as sinon from "sinon";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { ProjektiFixture } from "../../test/fixture/projektiFixture";
-import { TilasiirtymaToiminto } from "../../../common/graphql/apiModel";
+import { TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
 import { aloitusKuulutusHandler } from "../../src/handler/aloitusKuulutusHandler";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
@@ -50,19 +50,36 @@ describe("AloitusKuulutus", () => {
     await projektiDatabase.createProjekti(projekti);
     await takeSnapshot(oid);
 
-    await aloitusKuulutusHandler.siirraTila({ oid, toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI });
+    await aloitusKuulutusHandler.siirraTila({
+      oid,
+      toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+      tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
+    });
     await takeSnapshot(oid);
 
     userFixture.loginAs(UserFixture.pekkaProjari);
-    await aloitusKuulutusHandler.siirraTila({ oid, toiminto: TilasiirtymaToiminto.HYLKAA, syy: "Korjaa teksti" });
+    await aloitusKuulutusHandler.siirraTila({
+      oid,
+      toiminto: TilasiirtymaToiminto.HYLKAA,
+      syy: "Korjaa teksti",
+      tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
+    });
     await takeSnapshot(oid);
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    await aloitusKuulutusHandler.siirraTila({ oid, toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI });
+    await aloitusKuulutusHandler.siirraTila({
+      oid,
+      toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+      tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
+    });
     await takeSnapshot(oid);
 
     userFixture.loginAs(UserFixture.pekkaProjari);
-    await aloitusKuulutusHandler.siirraTila({ oid, toiminto: TilasiirtymaToiminto.HYVAKSY });
+    await aloitusKuulutusHandler.siirraTila({
+      oid,
+      toiminto: TilasiirtymaToiminto.HYVAKSY,
+      tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
+    });
     await takeSnapshot(oid);
   });
 });

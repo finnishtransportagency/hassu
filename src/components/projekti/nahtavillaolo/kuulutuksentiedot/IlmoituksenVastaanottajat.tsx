@@ -1,18 +1,251 @@
+import Button from "@components/button/Button";
+import Select from "@components/form/Select";
+import TextInput from "@components/form/TextInput";
+import React, { ReactElement, Fragment } from "react";
+import { Controller, FieldError, useFieldArray, useFormContext } from "react-hook-form";
+import { formatProperNoun } from "common/util/formatProperNoun";
+import useTranslation from "next-translate/useTranslation";
+import IconButton from "@components/button/IconButton";
+import {
+  KuntaVastaanottajaInput,
+  NahtavillaoloVaihe,
+  NahtavillaoloVaiheTila,
+  ViranomaisVastaanottajaInput,
+} from "@services/api";
 import Section from "@components/layout/Section";
-import React from "react";
+import SectionContent from "@components/layout/SectionContent";
+import HassuGrid from "@components/HassuGrid";
+import dayjs from "dayjs";
 
-type Props = {};
+interface HelperType {
+  kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
+  viranomaiset?: FieldError | null | undefined;
+}
+interface Props {
+  kirjaamoOsoitteet: KuntaVastaanottajaInput[] | null;
+  nahtavillaoloVaihe: NahtavillaoloVaihe | null | undefined;
+}
 
-export default function IlmoituksenVastaanottajat({}: Props) {
+type FormFields = {
+  nahtavillaoloVaihe: {
+    ilmoituksenVastaanottajat: {
+      kunnat: Array<KuntaVastaanottajaInput>;
+      viranomaiset: Array<ViranomaisVastaanottajaInput>;
+    };
+  };
+};
+
+export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet, nahtavillaoloVaihe }: Props): ReactElement {
+  const { t } = useTranslation("commonFI");
+
+  const julkinen = nahtavillaoloVaihe?.tila === NahtavillaoloVaiheTila.HYVAKSYTTY;
+
+  const {
+    register,
+    control,
+    formState: { errors },
+    setValue,
+    watch,
+  } = useFormContext<FormFields>();
+
+  const ilmoituksenVastaanottajat = watch("nahtavillaoloVaihe.ilmoituksenVastaanottajat");
+
+  const { fields: kuntaFields } = useFieldArray({
+    control,
+    name: "nahtavillaoloVaihe.ilmoituksenVastaanottajat.kunnat",
+  });
+
+  const {
+    fields: viranomaisFields,
+    append,
+    remove,
+  } = useFieldArray({
+    control,
+    name: "nahtavillaoloVaihe.ilmoituksenVastaanottajat.viranomaiset",
+  });
+
+  const getKuntanimi = (index: number) => {
+    const nimi = ilmoituksenVastaanottajat?.kunnat?.[index].nimi;
+    if (!nimi) {
+      return;
+    }
+
+    return formatProperNoun(nimi);
+  };
+
+  if (!kirjaamoOsoitteet) {
+    return <></>;
+  }
+
   return (
-    <Section>
-      <h4 className="vayla-small-title">Ilmoituksen vastaanottajat</h4>
-      <p>
-        Kuulutuksesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on
-        haettu Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle viranomaisorganisaatiolle, lisää
-        uusi rivi Lisää uusi -painikkeella.
-      </p>
-      <p>Jos kuntatiedoissa on virhe, tee korjaus Projektivelhoon.</p>
-    </Section>
+    <>
+      {julkinen && (
+        <Section>
+          <h4 className="vayla-small-title">Ilmoituksen vastaanottajat</h4>
+          <SectionContent>
+            <p>
+              Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Ei
+              lähetetty’, tarkasta sähköpostiosoite. Ota tarvittaessa yhteys pääkäyttäjään.
+            </p>
+          </SectionContent>
+          <SectionContent>
+            <div className="grid grid-cols-4 gap-x-6 mb-4">
+              <h6 className="font-bold">Viranomaiset</h6>
+              <p></p>
+              <p style={{ color: "#7A7A7A" }}>Ilmoituksen tila</p>
+              <p style={{ color: "#7A7A7A" }}>Lähetysaika</p>
+
+              {nahtavillaoloVaihe?.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen, index) => (
+                <React.Fragment key={index}>
+                  <p className="odd:bg-white even:bg-grey col-span-2">
+                    {t(`viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
+                  </p>
+                  <p className="odd:bg-white even:bg-grey">{viranomainen.lahetetty ? "Lähetetty" : "Ei lähetetty"}</p>
+                  <p className="odd:bg-white even:bg-grey">
+                    {viranomainen.lahetetty ? dayjs(viranomainen.lahetetty).format("DD.MM.YYYY HH:mm") : null}
+                  </p>
+                </React.Fragment>
+              ))}
+            </div>
+          </SectionContent>
+          <SectionContent>
+            <h6 className="font-bold">Kunnat</h6>
+            <div className="content grid grid-cols-4 mb-4">
+              <p className="vayla-table-header">Kunta</p>
+              <p className="vayla-table-header">Sähköpostiosoite</p>
+              <p className="vayla-table-header">Ilmoituksen tila</p>
+              <p className="vayla-table-header">Lähetysaika</p>
+              {nahtavillaoloVaihe?.ilmoituksenVastaanottajat?.kunnat?.map((kunta, index) => (
+                <Fragment key={index}>
+                  <p className={getStyleForRow(index)}>{kunta.nimi}</p>
+                  <p className={getStyleForRow(index)}>{kunta.sahkoposti}</p>
+                  <p className={getStyleForRow(index)}>{kunta.lahetetty ? "Lahetetty" : "Ei lähetetty"}</p>
+                  <p className={getStyleForRow(index)}>
+                    {kunta.lahetetty ? dayjs(kunta.lahetetty).format("DD.MM.YYYY HH:mm") : null}
+                  </p>
+                </Fragment>
+              ))}
+            </div>
+          </SectionContent>
+        </Section>
+      )}
+      <div style={julkinen ? { display: "none" } : {}}>
+        <Section>
+          <h4 className="vayla-small-title">Ilmoituksen vastaanottajat</h4>
+          <SectionContent>
+            <p>
+              Vuorovaikuttamisesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille.
+              Kunnat on haettu Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle
+              viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi -painikkeella
+            </p>
+            <p>Jos kuntatiedoissa on virhe, tee korjaus Projektivelhoon.</p>
+          </SectionContent>
+
+          <>
+            <SectionContent>
+              <h6 className="font-bold">Viranomaiset</h6>
+              {(errors.nahtavillaoloVaihe?.ilmoituksenVastaanottajat as HelperType)?.viranomaiset && (
+                <p className="text-red">
+                  {(errors.nahtavillaoloVaihe?.ilmoituksenVastaanottajat as HelperType).viranomaiset?.message}
+                </p>
+              )}
+              {viranomaisFields.map((viranomainen, index) => (
+                <HassuGrid key={viranomainen.id} cols={{ lg: 3 }}>
+                  <Select
+                    label="Viranomainen *"
+                    options={kirjaamoOsoitteet?.map(({ nimi }) => ({
+                      label: nimi ? t(`viranomainen.${nimi}`) : "",
+                      value: nimi,
+                    }))}
+                    {...register(`nahtavillaoloVaihe.ilmoituksenVastaanottajat.viranomaiset.${index}.nimi`, {
+                      onChange: (event) => {
+                        const sahkoposti = kirjaamoOsoitteet?.find(
+                          ({ nimi }) => nimi === event.target.value
+                        )?.sahkoposti;
+                        setValue(
+                          `nahtavillaoloVaihe.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`,
+                          sahkoposti || ""
+                        );
+                      },
+                    })}
+                    error={errors?.nahtavillaoloVaihe?.ilmoituksenVastaanottajat?.viranomaiset?.[index]?.nimi}
+                    addEmptyOption
+                  />
+                  <Controller
+                    control={control}
+                    name={`nahtavillaoloVaihe.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`}
+                    render={({ field }) => (
+                      <>
+                        <TextInput label="Sähköpostiosoite *" value={field.value} disabled />
+                        <input type="hidden" {...field} />
+                      </>
+                    )}
+                  />
+                  {!!index && (
+                    <>
+                      <div className="hidden lg:block" style={{ alignSelf: "flex-end" }}>
+                        <IconButton
+                          icon="trash"
+                          onClick={(event) => {
+                            event.preventDefault();
+                            remove(index);
+                          }}
+                        />
+                      </div>
+                      <div className="block lg:hidden">
+                        <Button
+                          onClick={(event) => {
+                            event.preventDefault();
+                            remove(index);
+                          }}
+                          endIcon="trash"
+                        >
+                          Poista
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </HassuGrid>
+              ))}
+            </SectionContent>
+            <Button
+              type="button"
+              onClick={() => {
+                // @ts-ignore
+                append({ nimi: "", sahkoposti: "" });
+              }}
+            >
+              Lisää uusi +
+            </Button>
+          </>
+          <SectionContent>
+            <h6 className="font-bold">Kunnat</h6>
+
+            {kuntaFields.map((kunta, index) => (
+              <HassuGrid key={kunta.id} cols={{ lg: 3 }}>
+                <input
+                  type="hidden"
+                  {...register(`nahtavillaoloVaihe.ilmoituksenVastaanottajat.kunnat.${index}.nimi`)}
+                  readOnly
+                />
+                <TextInput label="Kunta *" value={getKuntanimi(index)} disabled />
+                <TextInput
+                  label="Sähköpostiosoite *"
+                  error={errors?.nahtavillaoloVaihe?.ilmoituksenVastaanottajat?.kunnat?.[index]?.sahkoposti}
+                  {...register(`nahtavillaoloVaihe.ilmoituksenVastaanottajat.kunnat.${index}.sahkoposti`)}
+                />
+              </HassuGrid>
+            ))}
+          </SectionContent>
+        </Section>
+      </div>
+    </>
   );
+}
+
+function getStyleForRow(index: number): string | undefined {
+  if (index % 2 == 0) {
+    return "vayla-table-even";
+  }
+  return "vayla-table-odd";
 }

@@ -6,8 +6,16 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import Tabs from "@components/layout/tabs/Tabs";
 import KuulutuksenTiedot from "@components/projekti/nahtavillaolo/kuulutuksentiedot/KuulutuksenTiedot";
 import NahtavilleAsetettavatAineistot from "@components/projekti/nahtavillaolo/nahtavilleAsetettavatAineistot/NahtavilleAsetettavatAineistot";
+import { setupLambdaMonitoring } from "backend/src/aws/monitoring";
+import { ViranomaisVastaanottajaInput } from "@services/api";
+import { GetServerSideProps } from "next";
+import { GetParameterResult } from "aws-sdk/clients/ssm";
+import log from "loglevel";
 
-export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactElement {
+export default function Nahtavillaolo({
+  setRouteLabels,
+  kirjaamoOsoitteet,
+}: PageProps & ServerSideProps): ReactElement {
   useProjektiBreadcrumbs(setRouteLabels);
 
   return (
@@ -45,9 +53,30 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
         defaultValue={0}
         tabs={[
           { label: "Nähtäville asetettavat aineistot", content: <NahtavilleAsetettavatAineistot /> },
-          { label: "Kuulutuksen tiedot", content: <KuulutuksenTiedot /> },
+          { label: "Kuulutuksen tiedot", content: <KuulutuksenTiedot kirjaamoOsoitteet={kirjaamoOsoitteet || null} /> },
         ]}
       />
     </ProjektiPageLayout>
   );
 }
+
+interface ServerSideProps {
+  kirjaamoOsoitteet?: ViranomaisVastaanottajaInput[];
+}
+
+export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () => {
+  setupLambdaMonitoring();
+  const { getSSM } = require("../../../../../backend/src/aws/client");
+  const parameterName = "/kirjaamoOsoitteet";
+  let kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] = [];
+  try {
+    const response: GetParameterResult = await getSSM().getParameter({ Name: parameterName }).promise();
+    kirjaamoOsoitteet = response.Parameter?.Value ? JSON.parse(response.Parameter.Value) : [];
+  } catch (e) {
+    log.error(`Could not pass prop 'kirjaamoOsoitteet' to 'aloituskuulutus' page`, e);
+  }
+
+  return {
+    props: { kirjaamoOsoitteet }, // will be passed to the page component as props
+  };
+};
