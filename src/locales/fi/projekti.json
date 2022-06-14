@@ -19,6 +19,16 @@
       "valmistuttuaan_suunnitelma_asetetaan": "Valmistuttuaan suunnitelma asetetaan yleisesti nähtäville, jolloin asianosaisilla on mahdollisuus tehdä kirjallinen muistutus suunnitelmasta. (ratalaki 22 §).",
       "vaylavirasto_kasittelee_suunnitelman": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa www.vayla.fi/tietosuoja."
     },
+    "nahtavillaolo": {
+      "ei-rata": {
+        "vaylavirasto_on_laatinut": "Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman",
+        "kuulutus_julkaistu": "Kuulutus on julkaistu tietoverkossa Väyläviraston verkkosivuilla",
+        "asianosaisten_katsotaan_saaneen": "Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä päivänä kuulutuksen julkaisemisajankohdasta (hallintolaki 62 a §)",
+        "kiinteiston_omistajilla_ja": "Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa, on mahdollisuus muistutusten tekemiseen suunnitelmasta. Muistutukset on toimitettava",
+        "ennen_paattymista": "ennen nähtävänäoloajan päättymistä (LjMTL 27 §)  Valtion liikenneväylien suunnittelu -järjestelmään osoitteeseen",
+        "sahkopostilla_muistutus": "Sähköpostilla muistutusta lähettäessä on liitettävä viestiin projektin asiatunnus."
+      }
+    },
     "hankesuunnitelmista": "Hankesuunnitelmista lorem ipsum-teksti tähän, joka kertoo lyhyesti mitä tämä sivusto pitää sisällään. Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam dicta voluptatem fugit quos praesentium architecto accusamus non earum fuga veritatis, quia facilis est repellendus et iste similique beatae perferendis totam?"
   },
   "projekti-tyyppi": {
@@ -89,7 +99,14 @@
     "menneet_vuorovaikutustilaisuudet": "Menneet vuorovaikutustilaisuudet",
     "esittelyaineisto_ja_suunnitelmaluonnokset": "Esittelyaineisto ja suunnitelmaluonnokset",
     "muut_materiaalit": "Muut esittelymateriaalit",
-    "video_materiaalit": "Enakkoon kuvattu videoesittely"
+    "video_materiaalit": "Enakkoon kuvattu videoesittely",
+    "nahtavillaolo": {
+      "suunnitteluhankkeen_kuvaus": "Suunnitteluhankkeen kuvaus",
+      "asianosaisen_oikeudet": "Asianosaisen oikeudet",
+      "esittelyaineisto_ja_suunnitelmat": "Esittelyaineisto ja suunnitelmat",
+      "muistutuksen_jattaminen": "Muistutuksen jättäminen",
+      "yhteystiedot": "Yhteystiedot"
+    }
   },
   "vastaava-viranomainen": {
     "ETELA_POHJANMAAN_ELY": "Etelä-Pohjanmaan ELY-keskus",
@@ -116,6 +133,7 @@
     "tuetut_tiedostomuodot_ovat": "Tuetut tiedostomuodot ovat PDF, JPG ja PNG. Sallittu tiedostokoko on maksimissaan 4,5Mt.",
     "olemme_vastaanottaneet_viestisi": "Olemme vastaanottaneet viestisi.",
     "kaikki_viestit_kasitellaan": "Kaikki viestit käsitellään ja ne pyritään huomioimaan suunnittelussa. Viimeistellyt suunnitelmat asetetaan myöhemmin nähtäville.",
-    "jos_toivoit_yhteydenottoa": "Jos toivoit yhteydenottoa, hankkeen suunnittelutiimi on sinuun yhteydessä mahdollisimman pian."
+    "jos_toivoit_yhteydenottoa": "Jos toivoit yhteydenottoa, hankkeen suunnittelutiimi on sinuun yhteydessä mahdollisimman pian.",
+    "jata_muistutus": "Jätä muistutus hankkeesta"
   }
 }

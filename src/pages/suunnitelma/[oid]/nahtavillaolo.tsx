@@ -9,9 +9,11 @@ import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import { formatDate } from "src/util/dateUtils";
 import SectionContent from "@components/layout/SectionContent";
-import { ProjektiTyyppi } from "@services/api";
+import { Kieli, ProjektiTyyppi, Viranomainen } from "@services/api";
 import FormatDate from "@components/FormatDate";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
+import Notification, { NotificationType } from "@components/notification/Notification";
+import HassuLink from "@components/HassuLink";
 
 export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactElement {
   const router = useRouter();
@@ -47,6 +49,10 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
   const yhteystiedotListana =
     kuulutus.kuulutusYhteystiedot?.map((yhteystieto) => t("common:yhteystieto", yhteystieto)) || [];
 
+  const vastaavaViranomainen = velho.suunnittelustaVastaavaViranomainen
+    ? velho.suunnittelustaVastaavaViranomainen
+    : velho.tilaajaOrganisaatio;
+
   return (
     <ProjektiJulkinenPageLayout selectedStep={2} title="Kuulutus suunnitelman nähtäville asettamisesta">
       <>
@@ -54,24 +60,49 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
           <KeyValueTable rows={keyValueData}></KeyValueTable>
           {velho.tyyppi !== ProjektiTyyppi.RATA && (
             <SectionContent>
-              <p>{t(`info.nahtavillaolo.ei-rata.vaylavirasto_on_laatinut ${projekti.velho.nimi}`)}.</p>
               <p>
-                {t(`info.nahtavillaolo.ei-rata.kuulutus_julkaistu`)} <FormatDate date={kuulutus.kuulutusPaiva} />.
+                {t(`info.nahtavillaolo.ei-rata.vaylavirasto_on_laatinut`)} {projekti.velho.nimi}.
+              </p>
+              <p>
+                {t(`info.nahtavillaolo.ei-rata.kuulutus_julkaistu`)} <FormatDate date={kuulutus.kuulutusPaiva} />.{" "}
                 {t(`info.nahtavillaolo.ei-rata.asianosaisten_katsotaan_saaneen`)}
               </p>
             </SectionContent>
           )}
-          <h4 className="vayla-small-title">Suunnitteluhankkeen kuvaus</h4>
-          <SectionContent></SectionContent>
-          <h4 className="vayla-small-title">Asianosaisen oikeudet</h4>
-          <SectionContent></SectionContent>
-          <h4 className="vayla-small-title">Esittelyaineisto ja suunnitelmat</h4>
-          <SectionContent></SectionContent>
-          <h4 className="vayla-small-title">Muistutuksen jättäminen</h4>
+          <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.suunnitteluhankkeen_kuvaus`)}</h4>
           <SectionContent>
-            <JataPalautettaNappi teksti={t("palautelomake.jata_muistutus")} onClick={() => console.log("jätä muistutus")} />
+            {kuulutus.hankkeenKuvaus?.[projekti.kielitiedot?.ensisijainenKieli || Kieli.SUOMI]}
           </SectionContent>
-          <h4 className="vayla-small-title">Yhteystiedot</h4>
+          <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.asianosaisen_oikeudet`)}</h4>
+          <SectionContent>
+            <Notification type={NotificationType.INFO} hideIcon>
+              <SectionContent sx={{ padding: "1rem 1rem" }}>
+                {velho.tyyppi !== ProjektiTyyppi.RATA && (
+                  <ul>
+                    <li>
+                      {t(`info.nahtavillaolo.ei-rata.kiinteiston_omistajilla_ja`)}{" "}
+                      {vastaavaViranomainen === Viranomainen.VAYLAVIRASTO
+                        ? t(`common:vaylavirastolle`)
+                        : t(`common:ely-keskukselle`)}{" "}
+                      {t(`info.nahtavillaolo.ei-rata.ennen_paattymista`)}{" "}
+                      <HassuLink href={window.location.href}>{window.location.href}</HassuLink>.{" "}
+                      {t(`info.nahtavillaolo.ei-rata.sahkopostilla_muistutus`)}
+                    </li>
+                  </ul>
+                )}
+              </SectionContent>
+            </Notification>
+          </SectionContent>
+          <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.esittelyaineisto_ja_suunnitelmat`)}</h4>
+          <SectionContent></SectionContent>
+          <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.muistutuksen_jattaminen`)}</h4>
+          <SectionContent>
+            <JataPalautettaNappi
+              teksti={t("palautelomake.jata_muistutus")}
+              onClick={() => console.log("jätä muistutus")}
+            />
+          </SectionContent>
+          <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.yhteystiedot`)}</h4>
           <SectionContent>
             <p>
               {t("common:lisatietoja_antavat", {

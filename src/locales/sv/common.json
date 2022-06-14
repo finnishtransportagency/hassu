@@ -19,6 +19,8 @@
   "sivustonimi": "Planering av statens trafikleder",
   "vaylavirasto": "Trafikledsverket",
   "ely-keskus": "NTM-centralen",
+  "vaylavirastolle": "till Trafikledsverket",
+  "ely-keskukselle": "till NTM-centralen",
   "viranomainen": {
     "ETELA_POHJANMAAN_ELY": "RUOTSIKSI Etelä-Pohjanmaan ELY-keskus",
     "ETELA_SAVO_ELY": "RUOTSIKSI Etelä-Savon ELY-keskus",
