@@ -7,7 +7,7 @@ import lowerCase from "lodash/lowerCase";
 import AloituskuulutusPDFEsikatselu from "./AloituskuulutusPDFEsikatselu";
 import AloituskuulutusTiedostot from "./AloituskuulutusTiedostot";
 import IlmoituksenVastaanottajat from "./IlmoituksenVastaanottajat";
-import { examineKuulutusPaiva } from "@components/projekti/aloituskuulutus/aloitusKuulutusUtil";
+import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
 import Section from "@components/layout/Section";
 
@@ -28,7 +28,7 @@ export default function AloituskuulutusLukunakyma({
     return <></>;
   }
 
-  let { kuulutusPaiva, published } = examineKuulutusPaiva(aloituskuulutusjulkaisu);
+  let { kuulutusPaiva, published } = examineKuulutusPaiva(aloituskuulutusjulkaisu?.kuulutusPaiva);
 
   return (
     <>

@@ -12,6 +12,7 @@ import KuulutusJaJulkaisuPaiva from "./KuulutusJaJulkaisuPaiva";
 import IlmoituksenVastaanottajatKomponentti from "./IlmoituksenVastaanottajat";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import { removeTypeName } from "src/util/removeTypeName";
+import Lukunakyma from "./Lukunakyma";
 
 function defaultValues(projekti: Projekti, kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] | null) {
   return {
@@ -64,6 +65,17 @@ export default function KuulutuksenTiedot({ kirjaamoOsoitteet }: Props) {
       reset(tallentamisTiedot);
     }
   }, [projekti, kirjaamoOsoitteet, reset]);
+
+  if (projekti?.nahtavillaoloVaiheJulkaisut && projekti?.nahtavillaoloVaiheJulkaisut.length) {
+    return (
+      <Lukunakyma
+        projekti={projekti}
+        nahtavillaoloVaiheJulkaisu={
+          projekti.nahtavillaoloVaiheJulkaisut[projekti.nahtavillaoloVaiheJulkaisut.length - 1]
+        }
+      />
+    );
+  }
 
   return (
     <FormProvider {...useFormReturn}>

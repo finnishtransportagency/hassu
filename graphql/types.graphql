@@ -422,6 +422,18 @@ type AloitusKuulutusPDFt {
   SAAME: AloitusKuulutusPDF
 }
 
+type NahtavillaoloPDF {
+  nahtavillaoloPDFPath: String!
+  nahtavillaoloIlmoitusPDFPath: String!
+  nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: String!
+}
+
+type NahtavillaoloPDFt {
+  SUOMI: NahtavillaoloPDF!
+  RUOTSI: NahtavillaoloPDF
+  SAAME: NahtavillaoloPDF
+}
+
 type AloitusKuulutus {
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
@@ -446,6 +458,23 @@ type AloitusKuulutusJulkaisu {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
 }
 
+type NahtavillaoloVaiheJulkaisu {
+  aineistoNahtavilla: [Aineisto!]
+  lisaAineisto: [Aineisto!]
+  kuulutusPaiva: String
+  kuulutusVaihePaattyyPaiva: String
+  muistutusoikeusPaattyyPaiva: String
+  kielitiedot: Kielitiedot
+  hankkeenKuvaus: HankkeenKuvaukset
+  kuulutusYhteysHenkilot: [String!]
+  kuulutusYhteystiedot: [Yhteystieto!]
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+  tila: NahtavillaoloVaiheTila
+  muokkaaja: String
+  hyvaksyja: String
+  nahtavillaoloPDFt: NahtavillaoloPDFt
+}
+
 type AloitusKuulutusJulkaisuJulkinen {
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
@@ -456,6 +485,21 @@ type AloitusKuulutusJulkaisuJulkinen {
   kielitiedot: Kielitiedot
   aloituskuulutusPDFt: AloitusKuulutusPDFt
   tila: AloitusKuulutusTila
+}
+
+type NahtavillaoloVaiheJulkaisuJulkinen {
+  aineistoNahtavilla: [Aineisto!]
+  lisaAineisto: [Aineisto!]
+  kuulutusPaiva: String
+  kuulutusVaihePaattyyPaiva: String
+  muistutusoikeusPaattyyPaiva: String
+  kielitiedot: Kielitiedot
+  hankkeenKuvaus: HankkeenKuvaukset
+  kuulutusYhteysHenkilot: [String!]
+  kuulutusYhteystiedot: [Yhteystieto!]
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+  tila: NahtavillaoloVaiheTila
+  nahtavillaoloPDFt: NahtavillaoloPDFt
 }
 
 type IlmoituksenVastaanottajat {

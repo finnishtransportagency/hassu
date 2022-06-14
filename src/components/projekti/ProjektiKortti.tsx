@@ -8,7 +8,7 @@ import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExtLink from "@components/ExtLink";
 import { styled } from "@mui/material/styles";
-import { examineKuulutusPaiva } from "./aloituskuulutus/aloitusKuulutusUtil";
+import { examineKuulutusPaiva } from "../../util/aloitusKuulutusUtil";
 
 const Accordion = styled((props: AccordionProps) => <MuiAccordion disableGutters elevation={0} square {...props} />)({
   paddingTop: "0.5rem",
@@ -32,7 +32,7 @@ interface Props {
 export default function ProjektiKortti(props: Props): ReactElement {
   const julkinen =
     props.projekti?.aloitusKuulutusJulkaisut?.[0] &&
-    examineKuulutusPaiva(props.projekti.aloitusKuulutusJulkaisut[0]).published;
+    examineKuulutusPaiva(props.projekti.aloitusKuulutusJulkaisut[0]?.kuulutusPaiva).published;
   const julkinenURL =
     window.location.protocol + "//" + window.location.host + "/suunnitelma/" + props.projekti.oid + "/aloituskuulutus";
 
