@@ -28,7 +28,11 @@ const projektiTestMap = new Map<ProjektiTestType, TestFunction>([
   [
     ProjektiTestType.PROJEKTI_IS_LOADED,
     (objectSchema) =>
-      objectSchema.test(ProjektiTestType.PROJEKTI_IS_LOADED, "Projekti ei latautunut oikein", (projekti) => !!projekti),
+      objectSchema.test(
+        ProjektiTestType.PROJEKTI_IS_LOADED,
+        "Projekti ei latautunut oikein",
+        (projekti) => !!projekti?.oid
+      ),
   ],
   [
     ProjektiTestType.PROJEKTI_HAS_PAALLIKKO,
@@ -37,7 +41,7 @@ const projektiTestMap = new Map<ProjektiTestType, TestFunction>([
         ProjektiTestType.PROJEKTI_HAS_PAALLIKKO,
         "Projektille ei ole asetettu projektipäällikköä",
         (projekti) =>
-          !projekti || !!projekti?.kayttoOikeudet?.some(({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO)
+          !projekti?.oid || !!projekti?.kayttoOikeudet?.some(({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO)
       ),
   ],
   [
@@ -46,7 +50,7 @@ const projektiTestMap = new Map<ProjektiTestType, TestFunction>([
       objectSchema.test(
         ProjektiTestType.PROJEKTI_IS_CREATED,
         "Projektia ei ole perustettu",
-        (projekti) => !projekti || !!projekti?.tallennettu
+        (projekti) => !projekti?.oid || !!projekti?.tallennettu
       ),
   ],
   [
@@ -55,7 +59,7 @@ const projektiTestMap = new Map<ProjektiTestType, TestFunction>([
       objectSchema.test(
         ProjektiTestType.PROJEKTI_NOT_CREATED,
         "Projekti on jo perustettu",
-        (projekti) => !projekti || !projekti?.tallennettu
+        (projekti) => !projekti?.oid || !projekti?.tallennettu
       ),
   ],
 ]);

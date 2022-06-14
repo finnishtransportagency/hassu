@@ -73,7 +73,7 @@ export class KayttoOikeudetManager {
     this.users = resultUsers;
   }
 
-  getKayttoOikeudet() : DBVaylaUser[]{
+  getKayttoOikeudet(): DBVaylaUser[] {
     return this.users;
   }
 
@@ -84,11 +84,11 @@ export class KayttoOikeudetManager {
     }));
   }
 
-  addProjektiPaallikkoFromEmail(vastuuhenkiloEmail: string) : DBVaylaUser|undefined{
+  addProjektiPaallikkoFromEmail(vastuuhenkiloEmail: string): DBVaylaUser | undefined {
     return this.resolveProjektiPaallikkoFromVelhoVastuuhenkilo(vastuuhenkiloEmail);
   }
 
-  resolveProjektiPaallikkoFromVelhoVastuuhenkilo(vastuuhenkiloEmail: string): DBVaylaUser|undefined {
+  resolveProjektiPaallikkoFromVelhoVastuuhenkilo(vastuuhenkiloEmail: string): DBVaylaUser | undefined {
     // Replace or create new projektipaallikko
     this.removeProjektiPaallikko();
     const projektiPaallikko = this.fillInUserInfoFromUserManagement({
@@ -105,7 +105,7 @@ export class KayttoOikeudetManager {
     }
   }
 
-  addUserByKayttajatunnus(kayttajatunnus: string, rooli: ProjektiRooli) : DBVaylaUser | undefined{
+  addUserByKayttajatunnus(kayttajatunnus: string, rooli: ProjektiRooli): DBVaylaUser | undefined {
     const user = this.fillInUserInfoFromUserManagement({
       user: { kayttajatunnus, rooli } as Partial<DBVaylaUser>,
       searchMode: SearchMode.UID,

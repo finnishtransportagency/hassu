@@ -50,8 +50,13 @@ async function loadProjektiYllapito(oid: string, vaylaUser: NykyinenKayttaja): P
     return projektiAdapter.adaptProjekti(projektiFromDB);
   } else {
     requirePermissionLuonti();
-    const projekti = await createProjektiFromVelho(oid, vaylaUser);
-    return projektiAdapter.adaptProjekti(projekti);
+    const { projekti, virhetiedot: projektipaallikkoVirhetieto } = await createProjektiFromVelho(oid, vaylaUser);
+    let virhetiedot: API.ProjektiVirhe | undefined;
+    if (projektipaallikkoVirhetieto) {
+      virhetiedot = { __typename: "ProjektiVirhe", projektipaallikko: projektipaallikkoVirhetieto };
+    }
+
+    return projektiAdapter.adaptProjekti(projekti, virhetiedot);
   }
 }
 
@@ -87,7 +92,7 @@ export async function createOrUpdateProjekti(input: TallennaProjektiInput): Prom
     await vuorovaikutusService.handleAineistot(projektiAdaptationResult);
   } else {
     requirePermissionLuonti();
-    const projekti = await createProjektiFromVelho(input.oid, requireVaylaUser(), input);
+    const { projekti } = await createProjektiFromVelho(input.oid, requireVaylaUser(), input);
     log.info("Creating projekti to Hassu", { oid });
     await projektiDatabase.createProjekti(projekti);
     log.info("Created projekti to Hassu", { projekti });
@@ -106,10 +111,11 @@ export async function createProjektiFromVelho(
   oid: string,
   vaylaUser: NykyinenKayttaja,
   input?: TallennaProjektiInput
-): Promise<DBProjekti> {
+): Promise<{ projekti: DBProjekti; virhetiedot?: API.ProjektipaallikkoVirhe }> {
   try {
     log.info("Loading projekti from Velho", { oid });
     const { projekti, vastuuhenkilo } = await velho.loadProjekti(oid);
+    const result: { projekti: DBProjekti; virhetiedot?: API.ProjektipaallikkoVirhe } = { projekti };
 
     const kayttoOikeudet = new KayttoOikeudetManager([], await personSearch.getKayttajas());
 
@@ -123,6 +129,16 @@ export async function createProjektiFromVelho(
       // Loading a projekti from Velho for a first time
       const projektiPaallikko = kayttoOikeudet.addProjektiPaallikkoFromEmail(vastuuhenkilo);
 
+      if (!vastuuhenkilo) {
+        result.virhetiedot = { __typename: "ProjektipaallikkoVirhe", tyyppi: API.ProjektiPaallikkoVirheTyyppi.PUUTTUU };
+      } else if (!projektiPaallikko) {
+        result.virhetiedot = {
+          __typename: "ProjektipaallikkoVirhe",
+          tyyppi: API.ProjektiPaallikkoVirheTyyppi.EI_LOYDY,
+          sahkoposti: vastuuhenkilo,
+        };
+      }
+
       // Prefill current user as sihteeri if it is different from project manager
       if ((!projektiPaallikko || projektiPaallikko.kayttajatunnus !== vaylaUser.uid) && vaylaUser.uid) {
         kayttoOikeudet.addUserByKayttajatunnus(vaylaUser.uid, ProjektiRooli.OMISTAJA);
@@ -130,7 +146,7 @@ export async function createProjektiFromVelho(
     }
 
     projekti.kayttoOikeudet = kayttoOikeudet.getKayttoOikeudet();
-    return projekti;
+    return result;
   } catch (e) {
     log.error(e);
     throw e;
