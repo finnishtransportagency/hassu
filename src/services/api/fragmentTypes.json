@@ -296,6 +296,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "OBJECT",
+        "name": "NahtavillaoloVaiheJulkinen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "ENUM",
         "name": "NahtavillaoloVaiheTila",
         "possibleTypes": null,

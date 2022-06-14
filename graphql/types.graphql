@@ -189,6 +189,15 @@ type NahtavillaoloVaihe {
   palautusSyy: String
 }
 
+type NahtavillaoloVaiheJulkinen {
+  kuulutusPaiva: String
+  kuulutusVaihePaattyyPaiva: String
+  muistutusoikeusPaattyyPaiva: String
+  hankkeenKuvaus: HankkeenKuvaukset
+  kuulutusYhteysHenkilot: [String!]
+  kuulutusYhteystiedot: [Yhteystieto!]
+}
+
 enum NahtavillaoloVaiheTila {
   ODOTTAA_HYVAKSYNTAA
   HYVAKSYTTY
@@ -323,6 +332,7 @@ type ProjektiJulkinen implements IProjekti {
   kielitiedot: Kielitiedot
   projektiHenkilot: [ProjektiKayttajaJulkinen!]
   paivitetty: String
+  nahtavillaoloVaihe: NahtavillaoloVaiheJulkinen
 }
 
 type Suunnitelma {

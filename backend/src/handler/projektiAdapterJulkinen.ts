@@ -4,6 +4,7 @@ import {
   DBProjekti,
   DBVaylaUser,
   LocalizedMap,
+  NahtavillaoloVaihe,
   SuunnitteluSopimus,
   Velho,
   Vuorovaikutus,
@@ -45,13 +46,25 @@ class ProjektiAdapterJulkinen {
       }
     }
 
+    function checkNahtavillaolo() {
+      // TODO: selvita tuleeko aloitukuulutuksen kaltaiset snapshotit
+      if (projekti.nahtavillaoloVaihe) {
+        if (
+          projekti.nahtavillaoloVaihe.kuulutusPaiva &&
+          parseDate(projekti.nahtavillaoloVaihe.kuulutusPaiva).isBefore(dayjs())
+        ) {
+          projekti.status = API.Status.NAHTAVILLAOLO;
+        }
+      }
+    }
+
     projekti.status = API.Status.EI_JULKAISTU;
 
     checkAloituskuulutus();
 
     checkSuunnittelu();
 
-    // checkNahtavillaolo();
+    checkNahtavillaolo();
 
     // checkHyvaksyttavana();
 
@@ -79,6 +92,11 @@ class ProjektiAdapterJulkinen {
       suunnitteluVaihe = ProjektiAdapterJulkinen.adaptSuunnitteluVaihe(dbProjekti, projektiHenkilot);
     }
 
+    let nahtavillaoloVaihe = undefined;
+    if (isNahtavillaoloVaihePublic(dbProjekti.nahtavillaoloVaihe)) {
+      nahtavillaoloVaihe = ProjektiAdapterJulkinen.adaptNahtavillaoloVaihe(dbProjekti, projektiHenkilot);
+    }
+
     const projekti: API.ProjektiJulkinen = {
       __typename: "ProjektiJulkinen",
       oid: dbProjekti.oid,
@@ -89,6 +107,7 @@ class ProjektiAdapterJulkinen {
       aloitusKuulutusJulkaisut,
       paivitetty: dbProjekti.paivitetty,
       projektiHenkilot: Object.values(projektiHenkilot),
+      nahtavillaoloVaihe,
     };
     const projektiJulkinen = removeUndefinedFields(projekti) as API.ProjektiJulkinen;
     return this.applyStatus(projektiJulkinen);
@@ -178,13 +197,40 @@ class ProjektiAdapterJulkinen {
       vuorovaikutukset: adaptVuorovaikutukset(dbProjekti, projektiHenkilot),
     };
   }
+
+  //TODO: lisaa julkisia kenttia ja tarkista yhteystietojen osalta onko tarve mergelle henkiloiden kanssa
+  private static adaptNahtavillaoloVaihe(
+    dbProjekti: DBProjekti,
+    projektiHenkilot: ProjektiHenkilot
+  ): API.NahtavillaoloVaiheJulkinen {
+    const {
+      hankkeenKuvaus,
+      kuulutusPaiva,
+      kuulutusVaihePaattyyPaiva,
+      kuulutusYhteysHenkilot,
+      kuulutusYhteystiedot,
+      muistutusoikeusPaattyyPaiva,
+    } = dbProjekti.nahtavillaoloVaihe;
+    return {
+      __typename: "NahtavillaoloVaiheJulkinen",
+      hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
+      kuulutusPaiva,
+      kuulutusVaihePaattyyPaiva,
+      muistutusoikeusPaattyyPaiva,
+      kuulutusYhteysHenkilot: adaptUsernamesToProjektiHenkiloIds(kuulutusYhteysHenkilot, projektiHenkilot),
+      kuulutusYhteystiedot: adaptYhteystiedot(kuulutusYhteystiedot),
+    };
+  }
 }
 
 function adaptUsernamesToProjektiHenkiloIds(usernames: Array<string>, projektiHenkilot: ProjektiHenkilot) {
   return usernames?.map((username) => projektiHenkilot[username].id);
 }
 
-function adaptVuorovaikutukset(dbProjekti: DBProjekti, projektiHenkilot: ProjektiHenkilot): API.VuorovaikutusJulkinen[] {
+function adaptVuorovaikutukset(
+  dbProjekti: DBProjekti,
+  projektiHenkilot: ProjektiHenkilot
+): API.VuorovaikutusJulkinen[] {
   const vuorovaikutukset = dbProjekti.vuorovaikutukset;
   if (vuorovaikutukset && vuorovaikutukset.length > 0) {
     return vuorovaikutukset
@@ -258,6 +304,19 @@ function checkIfAloitusKuulutusJulkaisutIsPublic(
     }
   } else if (!findJulkaisuByStatus(aloitusKuulutusJulkaisut, API.AloitusKuulutusTila.MIGROITU)) {
     // If there are no HYVAKSYTTY or MIGROITU aloitusKuulutusJulkaisu, hide projekti
+    return false;
+  }
+  return true;
+}
+
+function isNahtavillaoloVaihePublic(nahtavillaoloVaihe: NahtavillaoloVaihe): boolean {
+  if(!nahtavillaoloVaihe) {
+    return false;
+  }
+  if (nahtavillaoloVaihe.tila !== API.NahtavillaoloVaiheTila.HYVAKSYTTY) {
+    return false;
+  }
+  if (parseDate(nahtavillaoloVaihe.kuulutusPaiva).isAfter(dayjs())) {
     return false;
   }
   return true;
