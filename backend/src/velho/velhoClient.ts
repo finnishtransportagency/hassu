@@ -5,7 +5,7 @@ import * as ProjektiRekisteri from "./projektirekisteri";
 import * as AineistoPalvelu from "./aineistopalvelu";
 import { VelhoAineisto, VelhoAineistoKategoria, VelhoHakuTulos } from "../../../common/graphql/apiModel";
 import { adaptDokumenttiTyyppi, adaptProjekti, adaptSearchResults, ProjektiSearchResult } from "./velhoAdapter";
-import { VelhoError } from "../error/VelhoError";
+import { VelhoError } from "../error/velhoError";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { DBProjekti } from "../database/model/projekti";
 import { personSearch } from "../personSearch/personSearchClient";
