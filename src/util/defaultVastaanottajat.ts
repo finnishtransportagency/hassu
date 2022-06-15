@@ -17,12 +17,14 @@ export default function defaultVastaanottajat(
   let kunnat: KuntaVastaanottajaInput[];
   let viranomaiset: ViranomaisVastaanottajaInput[];
   if (ilmoituksenVastaanottajat?.kunnat) {
+    // tapaus, jossa lomake on jo kerran tallennettu
     kunnat = ilmoituksenVastaanottajat?.kunnat.map((kunta) => {
       kunta = removeTypeName(kunta);
       delete kunta.lahetetty;
       return kunta;
     });
   } else {
+    // tapaus, jossa lomake alustetaan ensimmäistä kertaa
     kunnat =
       projekti?.velho?.kunnat?.map((s) => {
         return {
@@ -32,12 +34,14 @@ export default function defaultVastaanottajat(
       }) || [];
   }
   if (ilmoituksenVastaanottajat?.viranomaiset) {
+    // tapaus, jossa lomake on jo kerran tallennettu
     viranomaiset = ilmoituksenVastaanottajat?.viranomaiset.map((kunta) => {
       kunta = removeTypeName(kunta);
       delete kunta.lahetetty;
       return kunta;
     });
   } else {
+    // tapaus, jossa lomake alustetaan ensimmäistä kertaa
     viranomaiset =
       projekti?.velho?.suunnittelustaVastaavaViranomainen === "VAYLAVIRASTO"
         ? projekti?.velho?.maakunnat?.map((maakunta) => {
