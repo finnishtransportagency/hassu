@@ -15,6 +15,8 @@ export type Yhteystieto = {
 export type Aineisto = {
   // Dokumentin oid Velhossa
   dokumenttiOid: string;
+  // Kategorian ID, joka viittaa kategoriapuun kategoriaan
+  kategoriaId?: string;
   // Suhteellinen polku tiedostoon yllapidon S3-bucketissa projektin alla
   tiedosto?: string;
   // Tiedostonimi naytettavaksi

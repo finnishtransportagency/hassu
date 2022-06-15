@@ -485,6 +485,7 @@ function adaptAineistotToSave(
     dbEsittelyAineistot.push({
       dokumenttiOid: aineistoInput.dokumenttiOid,
       nimi: aineistoInput.nimi,
+      kategoriaId: aineistoInput.kategoriaId,
       jarjestys: aineistoInput.jarjestys,
       tila: API.AineistoTila.ODOTTAA,
     });
@@ -495,6 +496,7 @@ function adaptAineistotToSave(
     dbSuunnitelmaLuonnokset.push({
       dokumenttiOid: aineistoInput.dokumenttiOid,
       nimi: aineistoInput.nimi,
+      kategoriaId: aineistoInput.kategoriaId,
       jarjestys: aineistoInput.jarjestys,
       tila: AineistoTila.ODOTTAA,
     });
