@@ -14,3 +14,19 @@ export type NahtavillaoloVaihe = {
   palautusSyy?: string | null;
   tila: NahtavillaoloVaiheTila | null;
 };
+
+export type NahtavillaoloVaiheJulkaisu = {
+  id: number;
+  aineistoNahtavilla?: Array<Aineisto> | null;
+  lisaAineisto?: Array<Aineisto> | null;
+  kuulutusPaiva?: string | null;
+  kuulutusVaihePaattyyPaiva?: string | null;
+  muistutusoikeusPaattyyPaiva?: string | null;
+  hankkeenKuvaus?: LocalizedMap<string>;
+  kuulutusYhteysHenkilot?: Array<string> | null;
+  kuulutusYhteystiedot?: Array<Yhteystieto> | null;
+  ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
+  tila: NahtavillaoloVaiheTila | null;
+  muokkaaja?: string | null;
+  hyvaksyja?: string | null;
+};

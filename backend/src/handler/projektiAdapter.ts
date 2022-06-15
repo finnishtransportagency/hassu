@@ -8,6 +8,7 @@ import {
   Linkki,
   LocalizedMap,
   NahtavillaoloVaihe,
+  NahtavillaoloVaiheJulkaisu,
   Palaute,
   Suunnitelma,
   SuunnitteluSopimus,
@@ -55,6 +56,7 @@ export class ProjektiAdapter {
       vuorovaikutukset,
       palautteet,
       nahtavillaoloVaihe,
+      nahtavillaoloVaiheJulkaisut,
       ...fieldsToCopyAsIs
     } = dbProjekti;
 
@@ -74,6 +76,7 @@ export class ProjektiAdapter {
       kielitiedot: adaptKielitiedot(kielitiedot),
       suunnitteluVaihe: adaptSuunnitteluVaihe(suunnitteluVaihe, vuorovaikutukset, palautteet),
       nahtavillaoloVaihe: adaptNahtavillaoloVaihe(nahtavillaoloVaihe),
+      nahtavillaoloVaiheJulkaisut: adaptNahtavillaoloVaiheJulkaisut(nahtavillaoloVaiheJulkaisut),
       virhetiedot,
       ...fieldsToCopyAsIs,
     }) as API.Projekti;
@@ -717,6 +720,34 @@ export function adaptAloitusKuulutusJulkaisut(
         suunnitteluSopimus: adaptSuunnitteluSopimus(oid, suunnitteluSopimus),
         kielitiedot: adaptKielitiedot(kielitiedot),
         aloituskuulutusPDFt: adaptJulkaisuPDFPaths(oid, julkaisu.aloituskuulutusPDFt),
+      };
+    });
+  }
+  return undefined;
+}
+
+export function adaptNahtavillaoloVaiheJulkaisut(
+  julkaisut?: NahtavillaoloVaiheJulkaisu[] | null
+): API.NahtavillaoloVaiheJulkaisu[] | undefined {
+  if (julkaisut) {
+    return julkaisut.map((julkaisu) => {
+      const {
+        aineistoNahtavilla,
+        lisaAineisto,
+        hankkeenKuvaus,
+        ilmoituksenVastaanottajat,
+        kuulutusYhteystiedot,
+        ...fieldsToCopyAsIs
+      } = julkaisu;
+
+      return {
+        ...fieldsToCopyAsIs,
+        __typename: "NahtavillaoloVaiheJulkaisu",
+        hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
+        kuulutusYhteystiedot: adaptYhteystiedot(kuulutusYhteystiedot),
+        ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
+        aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
+        lisaAineisto: adaptAineistot(lisaAineisto),
       };
     });
   }

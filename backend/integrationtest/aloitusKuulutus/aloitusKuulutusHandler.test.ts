@@ -4,11 +4,11 @@ import * as sinon from "sinon";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { ProjektiFixture } from "../../test/fixture/projektiFixture";
 import { TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
-import { aloitusKuulutusHandler } from "../../src/handler/aloitusKuulutusHandler";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { personSearchUpdaterClient } from "../../src/personSearch/personSearchUpdaterClient";
 import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/personSearchUpdaterHandler";
+import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
 
 const { expect } = require("chai");
 
@@ -50,7 +50,7 @@ describe("AloitusKuulutus", () => {
     await projektiDatabase.createProjekti(projekti);
     await takeSnapshot(oid);
 
-    await aloitusKuulutusHandler.siirraTila({
+    await aloitusKuulutusTilaManager.siirraTila({
       oid,
       toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
       tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
@@ -58,7 +58,7 @@ describe("AloitusKuulutus", () => {
     await takeSnapshot(oid);
 
     userFixture.loginAs(UserFixture.pekkaProjari);
-    await aloitusKuulutusHandler.siirraTila({
+    await aloitusKuulutusTilaManager.siirraTila({
       oid,
       toiminto: TilasiirtymaToiminto.HYLKAA,
       syy: "Korjaa teksti",
@@ -67,7 +67,7 @@ describe("AloitusKuulutus", () => {
     await takeSnapshot(oid);
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    await aloitusKuulutusHandler.siirraTila({
+    await aloitusKuulutusTilaManager.siirraTila({
       oid,
       toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
       tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
@@ -75,7 +75,7 @@ describe("AloitusKuulutus", () => {
     await takeSnapshot(oid);
 
     userFixture.loginAs(UserFixture.pekkaProjari);
-    await aloitusKuulutusHandler.siirraTila({
+    await aloitusKuulutusTilaManager.siirraTila({
       oid,
       toiminto: TilasiirtymaToiminto.HYVAKSY,
       tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,

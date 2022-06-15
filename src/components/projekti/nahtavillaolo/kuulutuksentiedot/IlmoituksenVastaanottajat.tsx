@@ -1,17 +1,12 @@
 import Button from "@components/button/Button";
 import Select from "@components/form/Select";
 import TextInput from "@components/form/TextInput";
-import React, { ReactElement, Fragment } from "react";
+import React, { Fragment, ReactElement } from "react";
 import { Controller, FieldError, useFieldArray, useFormContext } from "react-hook-form";
 import { formatProperNoun } from "common/util/formatProperNoun";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
-import {
-  KuntaVastaanottajaInput,
-  NahtavillaoloVaihe,
-  NahtavillaoloVaiheTila,
-  ViranomaisVastaanottajaInput,
-} from "@services/api";
+import { KuntaVastaanottajaInput, NahtavillaoloVaihe, ViranomaisVastaanottajaInput } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
@@ -21,6 +16,7 @@ interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
   viranomaiset?: FieldError | null | undefined;
 }
+
 interface Props {
   kirjaamoOsoitteet: KuntaVastaanottajaInput[] | null;
   nahtavillaoloVaihe: NahtavillaoloVaihe | null | undefined;
@@ -38,7 +34,7 @@ type FormFields = {
 export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet, nahtavillaoloVaihe }: Props): ReactElement {
   const { t } = useTranslation("commonFI");
 
-  const julkinen = nahtavillaoloVaihe?.tila === NahtavillaoloVaiheTila.HYVAKSYTTY;
+  const julkinen = false; //nahtavillaoloVaihe?.tila === NahtavillaoloVaiheTila.HYVAKSYTTY;
 
   const {
     register,

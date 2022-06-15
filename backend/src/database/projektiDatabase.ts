@@ -8,6 +8,7 @@ import { Response } from "aws-sdk/lib/response";
 import dayjs from "dayjs";
 import { NotFoundError } from "../error/NotFoundError";
 import { Palaute } from "./model/suunnitteluVaihe";
+import { NahtavillaoloVaiheJulkaisu } from "./model";
 
 const projektiTableName: string = config.projektiTableName || "missing";
 const archiveTableName: string = config.projektiArchiveTableName || "missing";
@@ -184,48 +185,55 @@ async function archiveProjektiByOid({ oid, timestamp }: ArchivedProjektiKey): Pr
   checkAndRaiseError(removeResult.$response, "Arkistointi ei onnistunut");
 }
 
-async function insertAloitusKuulutusJulkaisu(
-  oid: string,
-  julkaisu: AloitusKuulutusJulkaisu
-): Promise<DocumentClient.UpdateItemOutput> {
-  log.info("insertAloitusKuulutusJulkaisu", { oid, julkaisu });
+function checkAndRaiseError<T>(response: Response<T, AWSError>, msg: string) {
+  if (response.error) {
+    log.error(msg, { error: response.error });
+    throw new Error(msg);
+  }
+}
 
+function insertJulkaisuToList(oid: string, listFieldName: string, julkaisu: unknown, description: string) {
+  log.info("Insert " + description, { oid, julkaisu });
   const params = {
     TableName: projektiTableName,
     Key: {
       oid,
     },
-    UpdateExpression:
-      "SET #aloitusKuulutusJulkaisut = list_append(if_not_exists(#aloitusKuulutusJulkaisut, :empty_list), :julkaisu)",
+    UpdateExpression: `SET #${listFieldName} = list_append(if_not_exists(#${listFieldName}, :empty_list), :julkaisu)`,
     ExpressionAttributeNames: {
-      "#aloitusKuulutusJulkaisut": "aloitusKuulutusJulkaisut",
+      [`#${listFieldName}`]: listFieldName,
     },
     ExpressionAttributeValues: {
       ":julkaisu": [julkaisu],
       ":empty_list": [],
     },
   };
-  log.info("Inserting aloitusKuulutusJulkaisu to projekti", { params });
+  log.info("Inserting " + description + " to projekti", { params });
   return getDynamoDBDocumentClient().update(params).promise();
 }
 
-async function deleteAloitusKuulutusJulkaisu(projekti: DBProjekti, julkaisu: AloitusKuulutusJulkaisu): Promise<void> {
-  const aloitusKuulutusJulkaisut = projekti.aloitusKuulutusJulkaisut;
-  if (!aloitusKuulutusJulkaisut) {
+async function deleteJulkaisuFromList(
+  oid: string,
+  listFieldName: string,
+  julkaisut: JulkaisuWithId[],
+  julkaisuIdToDelete: number,
+  description: string
+) {
+  if (!julkaisut) {
     return;
   }
-  for (let idx = 0; idx < aloitusKuulutusJulkaisut.length; idx++) {
-    if (aloitusKuulutusJulkaisut[idx].id == julkaisu.id) {
-      log.info("deleteAloitusKuulutusJulkaisu", { idx, julkaisu });
+  for (let idx = 0; idx < julkaisut.length; idx++) {
+    if (julkaisut[idx].id == julkaisuIdToDelete) {
+      log.info("delete " + description, { idx, julkaisuIdToDelete });
 
       const params = {
         TableName: projektiTableName,
         Key: {
-          oid: projekti.oid,
+          oid,
         },
-        UpdateExpression: "REMOVE #aloitusKuulutusJulkaisut[" + idx + "]",
+        UpdateExpression: "REMOVE #" + listFieldName + "[" + idx + "]",
         ExpressionAttributeNames: {
-          "#aloitusKuulutusJulkaisut": "aloitusKuulutusJulkaisut",
+          ["#" + listFieldName]: listFieldName,
         },
       };
       await getDynamoDBDocumentClient().update(params).promise();
@@ -234,39 +242,39 @@ async function deleteAloitusKuulutusJulkaisu(projekti: DBProjekti, julkaisu: Alo
   }
 }
 
-async function updateAloitusKuulutusJulkaisu(projekti: DBProjekti, julkaisu: AloitusKuulutusJulkaisu): Promise<void> {
-  const aloitusKuulutusJulkaisut = projekti.aloitusKuulutusJulkaisut;
-  if (!aloitusKuulutusJulkaisut) {
+type JulkaisuWithId = { id: number } & unknown;
+
+async function updateJulkaisuToList(
+  oid: string,
+  listFieldName: string,
+  julkaisut: JulkaisuWithId[],
+  julkaisu: JulkaisuWithId,
+  description: string
+) {
+  if (!julkaisut) {
     return;
   }
-  for (let idx = 0; idx < aloitusKuulutusJulkaisut.length; idx++) {
-    if (aloitusKuulutusJulkaisut[idx].id == julkaisu.id) {
-      log.info("updateAloitusKuulutusJulkaisu", { idx, julkaisu });
+  for (let idx = 0; idx < julkaisut.length; idx++) {
+    if (julkaisut[idx].id == julkaisu.id) {
+      log.info("update " + description, { idx, julkaisu });
 
       const params = {
         TableName: projektiTableName,
         Key: {
-          oid: projekti.oid,
+          oid,
         },
-        UpdateExpression: "SET #aloitusKuulutusJulkaisut[" + idx + "] = :julkaisu",
+        UpdateExpression: "SET #" + listFieldName + "[" + idx + "] = :julkaisu",
         ExpressionAttributeNames: {
-          "#aloitusKuulutusJulkaisut": "aloitusKuulutusJulkaisut",
+          ["#" + listFieldName]: listFieldName,
         },
         ExpressionAttributeValues: {
           ":julkaisu": julkaisu,
         },
       };
-      log.info("Updating aloitusKuulutusJulkaisu to projekti", { params });
+      log.info("Updating " + description + " to projekti", { params });
       await getDynamoDBDocumentClient().update(params).promise();
       break;
     }
-  }
-}
-
-function checkAndRaiseError<T>(response: Response<T, AWSError>, msg: string) {
-  if (response.error) {
-    log.error(msg, { error: response.error });
-    throw new Error(msg);
   }
 }
 
@@ -276,9 +284,33 @@ export const projektiDatabase = {
   scanProjektit,
   loadProjektiByOid,
   archiveProjektiByOid,
-  insertAloitusKuulutusJulkaisu,
-  deleteAloitusKuulutusJulkaisu,
-  updateAloitusKuulutusJulkaisu,
+
+  async insertAloitusKuulutusJulkaisu(
+    oid: string,
+    julkaisu: AloitusKuulutusJulkaisu
+  ): Promise<DocumentClient.UpdateItemOutput> {
+    return insertJulkaisuToList(oid, "aloitusKuulutusJulkaisut", julkaisu, "AloitusKuulutusJulkaisu");
+  },
+
+  async deleteAloitusKuulutusJulkaisu(projekti: DBProjekti, julkaisuIdToDelete: number): Promise<void> {
+    return deleteJulkaisuFromList(
+      projekti.oid,
+      "aloitusKuulutusJulkaisut",
+      projekti.aloitusKuulutusJulkaisut,
+      julkaisuIdToDelete,
+      "AloitusKuulutusJulkaisu"
+    );
+  },
+
+  async updateAloitusKuulutusJulkaisu(projekti: DBProjekti, julkaisu: AloitusKuulutusJulkaisu): Promise<void> {
+    await updateJulkaisuToList(
+      projekti.oid,
+      "aloitusKuulutusJulkaisut",
+      projekti.aloitusKuulutusJulkaisut,
+      julkaisu,
+      "AloitusKuulutusJulkaisu"
+    );
+  },
 
   async insertFeedback(oid: string, palaute: Palaute): Promise<string> {
     log.info("insertFeedback", { oid, palaute });
@@ -365,5 +397,32 @@ export const projektiDatabase = {
     }
 
     return result;
+  },
+
+  async insertNahtavillaoloVaiheJulkaisu(
+    oid: string,
+    julkaisu: NahtavillaoloVaiheJulkaisu
+  ): Promise<DocumentClient.UpdateItemOutput> {
+    return insertJulkaisuToList(oid, "nahtavillaoloVaiheJulkaisut", julkaisu, "NahtavillaoloVaiheJulkaisu");
+  },
+
+  async deleteNahtavillaoloVaiheJulkaisu(projekti: DBProjekti, julkaisuIdToDelete: number): Promise<void> {
+    return deleteJulkaisuFromList(
+      projekti.oid,
+      "nahtavillaoloVaiheJulkaisut",
+      projekti.nahtavillaoloVaiheJulkaisut,
+      julkaisuIdToDelete,
+      "NahtavillaoloVaiheJulkaisu"
+    );
+  },
+
+  async updateNahtavillaoloVaiheJulkaisu(projekti: DBProjekti, julkaisu: NahtavillaoloVaiheJulkaisu): Promise<void> {
+    await updateJulkaisuToList(
+      projekti.oid,
+      "nahtavillaoloVaiheJulkaisut",
+      projekti.nahtavillaoloVaiheJulkaisut,
+      julkaisu,
+      "NahtavillaoloVaiheJulkaisu"
+    );
   },
 };

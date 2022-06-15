@@ -20,7 +20,7 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
   const { t } = useTranslation("projekti");
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
   const { data: projekti } = useProjektiJulkinen(oid);
-  const kuulutus = projekti?.nahtavillaoloVaihe;
+  const kuulutus = projekti?.nahtavillaoloVaiheJulkaisut?.pop();
   const velho = projekti?.velho;
 
   useProjektiBreadcrumbs(setRouteLabels);
@@ -108,7 +108,7 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
               {t("common:lisatietoja_antavat", {
                 yhteystiedot: yhteystiedotListana.join(", "),
               })}
-              {/* TODO hae projektin suunnittelusopimustiedoista kun saatavilla julkisessa rajapinnassa 
+              {/* TODO hae projektin suunnittelusopimustiedoista kun saatavilla julkisessa rajapinnassa
               {suunnittelusopimus && (
                 <>
                   {` ${t("common:ja")} `}
