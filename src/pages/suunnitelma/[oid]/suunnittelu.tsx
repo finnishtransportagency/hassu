@@ -20,7 +20,7 @@ import { parseVideoURL } from "src/util/videoParser";
 import PalauteLomakeDialogi from "src/components/projekti/kansalaisnakyma/PalauteLomakeDialogi";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
 import { ProjektiKayttajaJulkinen } from "@services/api";
-import useKansalaiskieli from "src/hooks/useKanslaisKieli";
+import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 
 export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
   const router = useRouter();
