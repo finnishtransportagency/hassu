@@ -9,7 +9,7 @@ describe("Projektin aloituskuulutus", () => {
     cy.login("A1");
   });
 
-  it("Projektin aloituskuulutus", () => {
+  it("Projektin aloituskuulutus", { scrollBehavior: "center" }, () => {
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/aloituskuulutus");
     cy.contains(projektiNimi);
 

@@ -222,11 +222,15 @@ export default function SuunnitteluvaiheenPerustiedot({
       <Section noDivider>
         <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
           {!julkinen && (
-            <Button onClick={handleSubmit(saveDraft)} disabled={isFormSubmitting}>
+            <Button
+              id="save_suunnitteluvaihe_perustiedot_draft"
+              onClick={handleSubmit(saveDraft)}
+              disabled={isFormSubmitting}
+            >
               Tallenna luonnos
             </Button>
           )}
-          <Button primary onClick={handleSubmit(confirmPublish)} disabled={isFormSubmitting}>
+          <Button primary id="save_and_publish" onClick={handleSubmit(confirmPublish)} disabled={isFormSubmitting}>
             {julkinen ? "Tallenna ja päivitä julkaisua" : "Tallenna ja julkaise perustiedot"}
           </Button>
           <Button disabled>Nähtävilläolon kuuluttaminen</Button>
@@ -252,10 +256,11 @@ export default function SuunnitteluvaiheenPerustiedot({
             </div>
           </DialogContent>
           <DialogActions>
-            <Button primary onClick={handleSubmit(saveAndPublish)}>
+            <Button primary id="accept_publish" onClick={handleSubmit(saveAndPublish)}>
               Hyväksy ja julkaise
             </Button>
             <Button
+              id="cancel_publish"
               onClick={(e) => {
                 setOpenHyvaksy(false);
                 e.preventDefault();

@@ -29,38 +29,36 @@ export default function AineistojenValitseminenDialog({ onSubmit, ...muiDialogPr
   const { onClose, open } = muiDialogProps;
   const { data: projekti } = useProjektiRoute();
   const [isLoading, setIsLoading] = useState(false);
-  const [aineistoKategoriat, setAineistoKategoriat] = useState<VelhoAineistoKategoria[]>();
+  const [fetchedAineistoKategoriat, setFetchedAineistoKategoriat] = useState<VelhoAineistoKategoria[]>();
 
-  const { setValue, watch, handleSubmit } = useForm<FormData>(useFormOptions);
+  const { setValue, watch, handleSubmit, getValues } = useForm<FormData>(useFormOptions);
 
   useEffect(() => {
     if (projekti && open) {
       const haeAineistotDialogiin = async () => {
         setIsLoading(true);
         const velhoAineistoKategoriat = await api.listaaVelhoProjektiAineistot(projekti.oid);
-        setAineistoKategoriat(velhoAineistoKategoriat);
+        setFetchedAineistoKategoriat(velhoAineistoKategoriat);
         setIsLoading(false);
       };
       haeAineistotDialogiin();
     }
-  }, [projekti, setAineistoKategoriat, open]);
+  }, [projekti, setFetchedAineistoKategoriat, open]);
 
-  const valitutAineistoKategoriat = watch("aineistoKategoriat");
+  const aineistoKategoriatWatch = watch("aineistoKategoriat");
 
-  const updateValitut = useCallback<(kategoria: string, selectedRows: VelhoAineisto[]) => void>(
-    (kategoria, rows) => {
-      const aineistoK =
-        aineistoKategoriat?.reduce<VelhoAineistoKategoria[]>((kategoriat, current) => {
-          if (current.kategoria === kategoria) {
-            kategoriat.push({ ...current, aineistot: rows });
-          } else {
-            kategoriat.push(current);
-          }
-          return kategoriat;
-        }, []) || [];
-      setValue("aineistoKategoriat", aineistoK);
+  const updateValitut = useCallback<(kategoriaNimi: string, selectedRows: VelhoAineisto[]) => void>(
+    (kategoriaNimi, rows) => {
+      const aineistoKategoriat = getValues("aineistoKategoriat");
+      const aineistoKategoria = aineistoKategoriat.find((kategoria) => kategoria.kategoria === kategoriaNimi);
+      if (aineistoKategoria) {
+        aineistoKategoria.aineistot = rows;
+      } else {
+        aineistoKategoriat.push({ aineistot: rows, kategoria: kategoriaNimi, __typename: "VelhoAineistoKategoria" });
+      }
+      setValue("aineistoKategoriat", aineistoKategoriat);
     },
-    [aineistoKategoriat, setValue]
+    [setValue, getValues]
   );
 
   const moveAineistoToMainForm = async (data: FormData) => {
@@ -81,7 +79,7 @@ export default function AineistojenValitseminenDialog({ onSubmit, ...muiDialogPr
     return <></>;
   }
 
-  const valitutAineistot = valitutAineistoKategoriat.reduce<VelhoAineisto[]>((aineistot, kategoria) => {
+  const valitutAineistot = aineistoKategoriatWatch.reduce<VelhoAineisto[]>((aineistot, kategoria) => {
     aineistot.push(...kategoria.aineistot);
     return aineistot;
   }, []);
@@ -107,11 +105,12 @@ export default function AineistojenValitseminenDialog({ onSubmit, ...muiDialogPr
               divider={<Divider orientation="vertical" flexItem />}
             >
               <StyledDiv sx={{ width: { lg: "75%" } }}>
-                {aineistoKategoriat && aineistoKategoriat.length > 0 ? (
+                {fetchedAineistoKategoriat && fetchedAineistoKategoriat.length > 0 ? (
                   <HassuAccordion
                     items={
-                      aineistoKategoriat?.map((kategoria) => ({
+                      fetchedAineistoKategoriat?.map((kategoria) => ({
                         title: `${kategoria.kategoria} (${kategoria?.aineistot?.length || 0})`,
+                        id: `aineisto_accordion_${kategoria.kategoria}`,
                         content: (
                           <>
                             {projekti?.oid && kategoria.aineistot && kategoria.aineistot.length > 0 ? (
@@ -151,7 +150,12 @@ export default function AineistojenValitseminenDialog({ onSubmit, ...muiDialogPr
             </Stack>
           </DialogContent>
           <DialogActions>
-            <Button primary type="button" onClick={handleSubmit(moveAineistoToMainForm)}>
+            <Button
+              primary
+              type="button"
+              id="select_valitut_aineistot_button"
+              onClick={handleSubmit(moveAineistoToMainForm)}
+            >
               Tuo valitut aineistot
             </Button>
             <Button type="button" onClick={() => onClose?.({}, "escapeKeyDown")}>

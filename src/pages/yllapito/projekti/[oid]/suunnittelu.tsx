@@ -54,6 +54,7 @@ export default function Suunnittelu({ setRouteLabels, kirjaamoOsoitteet }: PageP
     const tabs: HassuTabProps[] = [
       {
         label: "Suunnitteluvaiheen perustiedot",
+        tabId: "perustiedot_tab",
         content: (
           <SuunnitteluvaiheenPerustiedot
             projekti={projekti}
@@ -70,11 +71,10 @@ export default function Suunnittelu({ setRouteLabels, kirjaamoOsoitteet }: PageP
     if (!projekti.suunnitteluVaihe?.vuorovaikutukset?.length) {
       tabs.push({
         label: "1. Vuorovaikuttaminen",
+        tabId: "1_vuorovaikuttaminen_tab",
         disabled: !projekti.suunnitteluVaihe,
         content: (
           <SuunnitteluvaiheenVuorovaikuttaminen
-            projekti={projekti}
-            reloadProjekti={reloadProjekti}
             isDirtyHandler={setIsChildDirty}
             vuorovaikutusnro={1}
             kirjaamoOsoitteet={kirjaamoOsoitteet || null}
@@ -85,11 +85,10 @@ export default function Suunnittelu({ setRouteLabels, kirjaamoOsoitteet }: PageP
       projekti?.suunnitteluVaihe?.vuorovaikutukset?.forEach((vuorovaikutus) => {
         const tab = {
           label: `${vuorovaikutus.vuorovaikutusNumero}. Vuorovaikuttaminen`,
+          tabId: `${vuorovaikutus.vuorovaikutusNumero}_vuorovaikuttaminen_tab`,
           disabled: !projekti.suunnitteluVaihe,
           content: (
             <SuunnitteluvaiheenVuorovaikuttaminen
-              projekti={projekti}
-              reloadProjekti={reloadProjekti}
               isDirtyHandler={setIsChildDirty}
               vuorovaikutusnro={vuorovaikutus.vuorovaikutusNumero}
               kirjaamoOsoitteet={kirjaamoOsoitteet || null}

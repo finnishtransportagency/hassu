@@ -3,7 +3,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
 import {
   TallennaProjektiInput,
-  Projekti,
   api,
   VuorovaikutusInput,
   ViranomaisVastaanottajaInput,
@@ -18,8 +17,6 @@ import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
 import HassuSpinner from "@components/HassuSpinner";
-import { KeyedMutator } from "swr";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { vuorovaikutusSchema } from "src/schemas/vuorovaikutus";
 import HassuStack from "@components/layout/HassuStack";
 import { Stack } from "@mui/material";
@@ -35,6 +32,7 @@ import LukutilaLinkkiJaKutsut from "./LukutilaLinkkiJaKutsut";
 import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
 import VuorovaikutustilaisuusDialog from "./VuorovaikutustilaisuusDialog";
 import cloneDeep from "lodash/cloneDeep";
+import { useProjektiRoute } from "src/hooks/useProjektiRoute";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 
@@ -59,8 +57,6 @@ export type VuorovaikutusFormValues = ProjektiFields & {
 };
 
 interface Props {
-  projekti?: Projekti | null;
-  reloadProjekti?: KeyedMutator<ProjektiLisatiedolla | null>;
   isDirtyHandler: (isDirty: boolean) => void;
   vuorovaikutusnro: number;
   kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] | null;
@@ -79,12 +75,11 @@ const defaultVuorovaikutus: Vuorovaikutus = {
 };
 
 export default function SuunnitteluvaiheenVuorovaikuttaminen({
-  projekti,
-  reloadProjekti,
   isDirtyHandler,
   vuorovaikutusnro,
   kirjaamoOsoitteet,
 }: Props): ReactElement {
+  const { data: projekti, mutate: reloadProjekti } = useProjektiRoute();
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
   const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
@@ -242,7 +237,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
         oid: projekti.oid,
         ...defaultValues,
       };
-      reset(tallentamisTiedot);
+      reset(tallentamisTiedot, { keepDirty: true });
     }
   }, [projekti, defaultValues, reset]);
 
@@ -305,6 +300,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                   <HassuStack direction={["column", "column", "row"]}>
                     <Button
                       type="submit"
+                      id="preview_kutsu_pdf_SUOMI"
                       onClick={handleSubmit((formData) =>
                         showPDFPreview(
                           formData,
@@ -335,9 +331,12 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
             {!vuorovaikutus?.julkinen && (
               <Section noDivider>
                 <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
-                  <Button onClick={handleSubmit(saveDraft)}>Tallenna luonnos</Button>
+                  <Button id="save_suunnitteluvaihe_vuorovaikutukset_draft" onClick={handleSubmit(saveDraft)}>
+                    Tallenna luonnos
+                  </Button>
                   <Button
                     primary
+                    id="save_and_publish"
                     onClick={(event) => {
                       handleClickOpenHyvaksy();
                       event.preventDefault();

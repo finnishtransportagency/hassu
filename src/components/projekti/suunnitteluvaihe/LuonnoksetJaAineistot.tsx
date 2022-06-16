@@ -245,7 +245,11 @@ export default function LuonnoksetJaAineistot({
               },
             ]}
           />
-          <Button type="button" onClick={() => setEsittelyAineistoDialogOpen(true)}>
+          <Button
+            type="button"
+            id="select_esittelyaineistot_button"
+            onClick={() => setEsittelyAineistoDialogOpen(true)}
+          >
             Tuo Aineistoja
           </Button>
           <AineistojenValitseminenDialog
@@ -288,7 +292,11 @@ export default function LuonnoksetJaAineistot({
               },
             ]}
           />
-          <Button type="button" onClick={() => setSuunnitelmaLuonnoksetDialogOpen(true)}>
+          <Button
+            type="button"
+            id="select_suunnitelmaluonnokset_button"
+            onClick={() => setSuunnitelmaLuonnoksetDialogOpen(true)}
+          >
             Tuo Aineistoja
           </Button>
           <AineistojenValitseminenDialog
@@ -344,6 +352,7 @@ export default function LuonnoksetJaAineistot({
             </HassuStack>
           ))}
           <Button
+            id="append_videoesittelyt_button"
             onClick={(event) => {
               event.preventDefault();
               appendVideot({ nimi: "", url: "" });

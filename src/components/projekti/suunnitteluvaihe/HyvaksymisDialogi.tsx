@@ -65,7 +65,7 @@ export default function HyvaksymisDialogi({
           </div>
         </DialogContent>
         <DialogActions>
-          <Button primary onClick={tallenna}>
+          <Button primary id="accept_and_publish_vuorovaikutus" onClick={tallenna}>
             Hyväksy ja lähetä
           </Button>
           <Button
