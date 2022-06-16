@@ -2005,6 +2005,7 @@ Object {
     ],
     "lisaAineisto": undefined,
     "muistutusoikeusPaattyyPaiva": "2042-06-08",
+    "nahtavillaoloPDFt": undefined,
   },
 }
 `;
@@ -2079,6 +2080,7 @@ Object {
       ],
       "lisaAineisto": undefined,
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
+      "nahtavillaoloPDFt": undefined,
     },
     "nahtavillaoloVaiheJulkaisut": Array [
       Object {
@@ -2122,6 +2124,10 @@ Object {
             },
           ],
         },
+        "kielitiedot": Object {
+          "__typename": "Kielitiedot",
+          "ensisijainenKieli": "SUOMI",
+        },
         "kuulutusPaiva": "2022-06-07",
         "kuulutusVaihePaattyyPaiva": "2042-06-07",
         "kuulutusYhteysHenkilot": Array [
@@ -2150,9 +2156,52 @@ Object {
         "lisaAineisto": undefined,
         "muistutusoikeusPaattyyPaiva": "2042-06-08",
         "muokkaaja": "A000112",
+        "nahtavillaoloPDFt": undefined,
         "tila": "HYVAKSYTTY",
       },
     ],
   },
+}
+`;
+
+exports[`Api should search, load and save a project 22`] = `
+Object {
+  "description": "publicProjektiNahtavillaOloJulkinenAfterApproval",
+  "obj": Array [
+    Object {
+      "__typename": "NahtavillaoloVaiheJulkaisuJulkinen",
+      "hankkeenKuvaus": Object {
+        "SAAME": "Saameksi nahtavillaoloVaihe",
+        "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
+        "__typename": "HankkeenKuvaukset",
+      },
+      "kuulutusPaiva": "2022-06-07",
+      "kuulutusVaihePaattyyPaiva": "2042-06-07",
+      "kuulutusYhteysHenkilot": Array [
+        "0",
+      ],
+      "kuulutusYhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Etunimi",
+          "organisaatio": "",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "sukunimi": "Sukunimi",
+          "titteli": "Projektipäällikkö",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Joku",
+          "organisaatio": "",
+          "puhelinnumero": "02998765",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "sukunimi": "Jokunen",
+          "titteli": "Konsultti",
+        },
+      ],
+      "muistutusoikeusPaattyyPaiva": "2042-06-08",
+    },
+  ],
 }
 `;

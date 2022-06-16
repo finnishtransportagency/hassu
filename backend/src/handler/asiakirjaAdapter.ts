@@ -30,6 +30,7 @@ export class AsiakirjaAdapter {
       const { palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.nahtavillaoloVaihe;
       return {
         ...includedFields,
+        kielitiedot: cloneDeep(dbProjekti.kielitiedot),
         id: createNextID(dbProjekti),
       };
     }

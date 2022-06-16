@@ -3,6 +3,7 @@ import {
   AsiakirjaTyyppi,
   Kieli,
   Projekti,
+  ProjektiJulkinen,
   ProjektiKayttaja,
   ProjektiKayttajaInput,
   ProjektiRooli,
@@ -45,6 +46,17 @@ export function verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub: Si
 export async function loadProjektiFromDatabase(oid: string, expectedStatus?: Status): Promise<Projekti> {
   const savedProjekti = await api.lataaProjekti(oid);
   expect(!savedProjekti.tallennettu || savedProjekti.tallennettu).to.be.true;
+  if (expectedStatus) {
+    expect(savedProjekti.status).to.be.eq(expectedStatus);
+  }
+  return savedProjekti;
+}
+
+export async function loadProjektiJulkinenFromDatabase(
+  oid: string,
+  expectedStatus?: Status
+): Promise<ProjektiJulkinen> {
+  const savedProjekti = await api.lataaProjektiJulkinen(oid);
   if (expectedStatus) {
     expect(savedProjekti.status).to.be.eq(expectedStatus);
   }
@@ -365,19 +377,25 @@ export async function julkaiseVuorovaikutus(oid: string, userFixture: UserFixtur
   userFixture.logout();
   const suunnitteluVaihe = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe;
   cleanupVuorovaikutusTimestamps(suunnitteluVaihe.vuorovaikutukset);
-  await expectToMatchSnapshot("publicProjekti" + (" suunnitteluvaihe" || ""), suunnitteluVaihe);
+  expectToMatchSnapshot("publicProjekti" + (" suunnitteluvaihe" || ""), suunnitteluVaihe);
 }
 
 export async function testPublicAccessToProjekti(
   oid: string,
   expectedStatus: Status,
   userFixture: UserFixture,
-  description?: string
+  description?: string,
+  projektiDataExtractor?: (projekti: ProjektiJulkinen) => unknown
 ): Promise<void> {
   userFixture.logout();
-  const publicProjekti = await loadProjektiFromDatabase(oid, expectedStatus);
+  const publicProjekti = await loadProjektiJulkinenFromDatabase(oid, expectedStatus);
   publicProjekti.paivitetty = "***unit test***";
-  expectToMatchSnapshot("publicProjekti" + (description || ""), publicProjekti);
+
+  let actual: unknown = publicProjekti;
+  if (projektiDataExtractor) {
+    actual = projektiDataExtractor(publicProjekti);
+  }
+  expectToMatchSnapshot("publicProjekti" + (description || ""), actual);
 }
 
 export async function archiveProjekti(oid: string): Promise<void> {

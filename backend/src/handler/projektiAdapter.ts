@@ -7,6 +7,7 @@ import {
   Kielitiedot,
   Linkki,
   LocalizedMap,
+  NahtavillaoloPDF,
   NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
   Palaute,
@@ -75,8 +76,8 @@ export class ProjektiAdapter {
       },
       kielitiedot: adaptKielitiedot(kielitiedot),
       suunnitteluVaihe: adaptSuunnitteluVaihe(suunnitteluVaihe, vuorovaikutukset, palautteet),
-      nahtavillaoloVaihe: adaptNahtavillaoloVaihe(nahtavillaoloVaihe),
-      nahtavillaoloVaiheJulkaisut: adaptNahtavillaoloVaiheJulkaisut(nahtavillaoloVaiheJulkaisut),
+      nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti.oid, nahtavillaoloVaihe),
+      nahtavillaoloVaiheJulkaisut: adaptNahtavillaoloVaiheJulkaisut(dbProjekti.oid, nahtavillaoloVaiheJulkaisut),
       virhetiedot,
       ...fieldsToCopyAsIs,
     }) as API.Projekti;
@@ -273,15 +274,23 @@ function adaptSuunnitteluVaiheToSave(
   return undefined;
 }
 
-function adaptNahtavillaoloVaihe(nahtavillaoloVaihe: NahtavillaoloVaihe): API.NahtavillaoloVaihe {
+function adaptNahtavillaoloVaihe(oid: string, nahtavillaoloVaihe: NahtavillaoloVaihe): API.NahtavillaoloVaihe {
   if (!nahtavillaoloVaihe) {
     return undefined;
   }
-  const { aineistoNahtavilla, lisaAineisto, kuulutusYhteystiedot, ilmoituksenVastaanottajat, hankkeenKuvaus, ...rest } =
-    nahtavillaoloVaihe;
+  const {
+    aineistoNahtavilla,
+    lisaAineisto,
+    kuulutusYhteystiedot,
+    ilmoituksenVastaanottajat,
+    hankkeenKuvaus,
+    nahtavillaoloPDFt,
+    ...rest
+  } = nahtavillaoloVaihe;
   return {
     __typename: "NahtavillaoloVaihe",
     ...rest,
+    nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(oid, nahtavillaoloPDFt),
     aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
     lisaAineisto: adaptAineistot(lisaAineisto),
     kuulutusYhteystiedot: adaptYhteystiedot(kuulutusYhteystiedot),
@@ -695,6 +704,34 @@ export function adaptJulkaisuPDFPaths(
   return { __typename: "AloitusKuulutusPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
 }
 
+export function adaptNahtavillaoloPDFPaths(
+  oid: string,
+  nahtavillaoloPDFs: LocalizedMap<NahtavillaoloPDF>
+): API.NahtavillaoloPDFt | undefined {
+  if (!nahtavillaoloPDFs) {
+    return undefined;
+  }
+
+  const result = {};
+  for (const kieli in nahtavillaoloPDFs) {
+    result[kieli] = {
+      nahtavillaoloPDFPath: fileService.getYllapitoPathForProjektiFile(
+        oid,
+        nahtavillaoloPDFs[kieli].nahtavillaoloPDFPath
+      ),
+      nahtavillaoloIlmoitusPDFPath: fileService.getYllapitoPathForProjektiFile(
+        oid,
+        nahtavillaoloPDFs[kieli].nahtavillaoloIlmoitusPDFPath
+      ),
+      nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: fileService.getYllapitoPathForProjektiFile(
+        oid,
+        nahtavillaoloPDFs[kieli].nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath
+      ),
+    } as NahtavillaoloPDF;
+  }
+  return { __typename: "NahtavillaoloPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
+}
+
 export function adaptHankkeenKuvaus(hankkeenKuvaus: LocalizedMap<string>): API.HankkeenKuvaukset {
   return {
     __typename: "HankkeenKuvaukset",
@@ -727,6 +764,7 @@ export function adaptAloitusKuulutusJulkaisut(
 }
 
 export function adaptNahtavillaoloVaiheJulkaisut(
+  oid: string,
   julkaisut?: NahtavillaoloVaiheJulkaisu[] | null
 ): API.NahtavillaoloVaiheJulkaisu[] | undefined {
   if (julkaisut) {
@@ -737,6 +775,8 @@ export function adaptNahtavillaoloVaiheJulkaisut(
         hankkeenKuvaus,
         ilmoituksenVastaanottajat,
         kuulutusYhteystiedot,
+        nahtavillaoloPDFt,
+        kielitiedot,
         ...fieldsToCopyAsIs
       } = julkaisu;
 
@@ -744,10 +784,12 @@ export function adaptNahtavillaoloVaiheJulkaisut(
         ...fieldsToCopyAsIs,
         __typename: "NahtavillaoloVaiheJulkaisu",
         hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
+        kielitiedot: adaptKielitiedot(kielitiedot),
         kuulutusYhteystiedot: adaptYhteystiedot(kuulutusYhteystiedot),
         ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
         aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
         lisaAineisto: adaptAineistot(lisaAineisto),
+        nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(oid, nahtavillaoloPDFt),
       };
     });
   }

@@ -8,7 +8,7 @@ import {
   TilasiirtymaTyyppi,
 } from "../../../../common/graphql/apiModel";
 import { expectToMatchSnapshot } from "./util";
-import { loadProjektiFromDatabase } from "./tests";
+import { loadProjektiFromDatabase, testPublicAccessToProjekti } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";
 
 const { expect } = require("chai");
@@ -44,4 +44,12 @@ export async function testNahtavillaOloApproval(
     nahtavillaoloVaihe: projekti.nahtavillaoloVaihe,
     nahtavillaoloVaiheJulkaisut: projekti.nahtavillaoloVaiheJulkaisut,
   });
+
+  await testPublicAccessToProjekti(
+    oid,
+    Status.NAHTAVILLAOLO,
+    userFixture,
+    "NahtavillaOloJulkinenAfterApproval",
+    (projektiJulkinen) => projektiJulkinen.nahtavillaoloVaiheJulkaisut
+  );
 }

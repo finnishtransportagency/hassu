@@ -186,6 +186,7 @@ type NahtavillaoloVaihe {
   kuulutusYhteysHenkilot: [String!]
   kuulutusYhteystiedot: [Yhteystieto!]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+  nahtavillaoloPDFt: NahtavillaoloPDFt
   palautusSyy: String
 }
 
@@ -196,6 +197,7 @@ type NahtavillaoloVaiheJulkaisu {
   kuulutusVaihePaattyyPaiva: String
   muistutusoikeusPaattyyPaiva: String
   hankkeenKuvaus: HankkeenKuvaukset
+  kielitiedot: Kielitiedot
   kuulutusYhteysHenkilot: [String!]
   kuulutusYhteystiedot: [Yhteystieto!]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
@@ -212,6 +214,7 @@ type NahtavillaoloVaiheJulkaisuJulkinen {
   kuulutusVaihePaattyyPaiva: String
   muistutusoikeusPaattyyPaiva: String
   hankkeenKuvaus: HankkeenKuvaukset
+  kielitiedot: Kielitiedot
   kuulutusYhteysHenkilot: [String!]
   kuulutusYhteystiedot: [Yhteystieto!]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
