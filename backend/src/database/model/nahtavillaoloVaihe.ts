@@ -40,23 +40,3 @@ export type NahtavillaoloPDF = {
   nahtavillaoloIlmoitusPDFPath: string;
   nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: string;
 };
-
-export type NahtavillaoloPDF = {
-  nahtavillaoloPDFPath: string;
-  nahtavillaoloIlmoitusPDFPath: string;
-  nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: string;
-};
-
-export type NahtavillaoloVaiheJulkaisu = {
-  aineistoNahtavilla?: Array<Aineisto> | null;
-  lisaAineisto?: Array<Aineisto> | null;
-  kuulutusPaiva?: string | null;
-  kuulutusVaihePaattyyPaiva?: string | null;
-  muistutusoikeusPaattyyPaiva?: string | null;
-  hankkeenKuvaus?: LocalizedMap<string>;
-  kuulutusYhteysHenkilot?: Array<string> | null;
-  kuulutusYhteystiedot?: Array<Yhteystieto> | null;
-  ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
-  tila: NahtavillaoloVaiheTila | null;
-  nahtavillaoloPDFt: LocalizedMap<NahtavillaoloPDF>;
-};
