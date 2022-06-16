@@ -24,8 +24,7 @@
         "vaylavirasto_on_laatinut": "Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman",
         "kuulutus_julkaistu": "Kuulutus on julkaistu tietoverkossa Väyläviraston verkkosivuilla",
         "asianosaisten_katsotaan_saaneen": "Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä päivänä kuulutuksen julkaisemisajankohdasta (hallintolaki 62 a §)",
-        "kiinteiston_omistajilla_ja": "Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa, on mahdollisuus muistutusten tekemiseen suunnitelmasta. Muistutukset on toimitettava",
-        "ennen_paattymista": "ennen nähtävänäoloajan päättymistä (LjMTL 27 §)  Valtion liikenneväylien suunnittelu -järjestelmään osoitteeseen",
+        "kiinteiston_omistajilla_ja": "Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa, on mahdollisuus muistutusten tekemiseen suunnitelmasta. Muistutukset on toimitettava {{viranomainen}} ennen nähtävänäoloajan päättymistä (LjMTL 27 §) Valtion liikenneväylien suunnittelu -järjestelmään osoitteeseen {{url}}",
         "sahkopostilla_muistutus": "Sähköpostilla muistutusta lähettäessä on liitettävä viestiin projektin asiatunnus."
       }
     },

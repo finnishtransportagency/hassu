@@ -236,6 +236,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
                 <p>
                   {t("common:lisatietoja_antavat", {
                     yhteystiedot: yhteystiedotListana.join(", "),
+                    count: yhteystiedotListana.length,
                   })}
                   {/* TODO vaihda projektin suunnittelusopimustietoihin kun saatavilla */}
                   {suunnittelusopimus && (
@@ -251,7 +252,10 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
           )}
         {vuorovaikutus && (
           <>
-            <JataPalautettaNappi teksti={t("projekti:palautelomake.jata_palaute")} onClick={() => setPalauteLomakeOpen(true)} />
+            <JataPalautettaNappi
+              teksti={t("projekti:palautelomake.jata_palaute")}
+              onClick={() => setPalauteLomakeOpen(true)}
+            />
             <PalauteLomakeDialogi
               vuorovaikutus={vuorovaikutus}
               open={palauteLomakeOpen}
