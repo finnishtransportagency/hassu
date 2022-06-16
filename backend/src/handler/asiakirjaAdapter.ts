@@ -1,6 +1,6 @@
-import { AloitusKuulutusJulkaisu, DBProjekti, Velho, Yhteystieto } from "../database/model";
+import { AloitusKuulutusJulkaisu, DBProjekti, NahtavillaoloVaiheJulkaisu, Velho, Yhteystieto } from "../database/model";
 import cloneDeep from "lodash/cloneDeep";
-import { AloitusKuulutusTila } from "../../../common/graphql/apiModel";
+import { AloitusKuulutusTila, NahtavillaoloVaiheTila } from "../../../common/graphql/apiModel";
 
 function createNextID(dbProjekti: DBProjekti) {
   if (!dbProjekti.aloitusKuulutusJulkaisut) {
@@ -25,6 +25,18 @@ export class AsiakirjaAdapter {
     throw new Error("Aloituskuulutus puuttuu");
   }
 
+  adaptNahtavillaoloVaiheJulkaisu(dbProjekti: DBProjekti): NahtavillaoloVaiheJulkaisu {
+    if (dbProjekti.nahtavillaoloVaihe) {
+      const { palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.nahtavillaoloVaihe;
+      return {
+        ...includedFields,
+        kielitiedot: cloneDeep(dbProjekti.kielitiedot),
+        id: createNextID(dbProjekti),
+      };
+    }
+    throw new Error("NahtavillaoloVaihe puuttuu");
+  }
+
   migrateAloitusKuulutusJulkaisu(dbProjekti: DBProjekti): AloitusKuulutusJulkaisu {
     if (dbProjekti.aloitusKuulutus) {
       const { palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.aloitusKuulutus;
@@ -43,6 +55,14 @@ export class AsiakirjaAdapter {
     if (projekti.aloitusKuulutusJulkaisut) {
       return projekti.aloitusKuulutusJulkaisut
         .filter((julkaisu) => julkaisu.tila == AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA)
+        .pop();
+    }
+  }
+
+  findNahtavillaoloWaitingForApproval(projekti: DBProjekti): NahtavillaoloVaiheJulkaisu | undefined {
+    if (projekti.nahtavillaoloVaiheJulkaisut) {
+      return projekti.nahtavillaoloVaiheJulkaisut
+        .filter((julkaisu) => julkaisu.tila == NahtavillaoloVaiheTila.ODOTTAA_HYVAKSYNTAA)
         .pop();
     }
   }

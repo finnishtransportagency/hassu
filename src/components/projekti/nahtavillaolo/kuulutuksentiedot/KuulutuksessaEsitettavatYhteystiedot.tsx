@@ -1,8 +1,8 @@
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
-import { ProjektiRooli, YhteystietoInput, ProjektiKayttaja, NahtavillaoloVaiheTila } from "@services/api";
+import { NahtavillaoloVaiheTila, Projekti, ProjektiKayttaja, ProjektiRooli, YhteystietoInput } from "@services/api";
 import Section from "@components/layout/Section";
-import { ReactElement, Fragment } from "react";
+import { Fragment, ReactElement } from "react";
 import Button from "@components/button/Button";
 import HassuStack from "@components/layout/HassuStack";
 import CheckBox from "@components/form/CheckBox";
@@ -26,10 +26,19 @@ const defaultYhteystieto: YhteystietoInput = {
 
 interface Props {}
 
+function hasHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti: Projekti | null | undefined) {
+  return (
+    (
+      projekti?.nahtavillaoloVaiheJulkaisut?.filter((julkaisu) => julkaisu.tila == NahtavillaoloVaiheTila.HYVAKSYTTY) ||
+      []
+    ).length > 0
+  );
+}
+
 export default function EsitettavatYhteystiedot({}: Props): ReactElement {
   const { data: projekti } = useProjektiRoute();
 
-  const eiVoiMuokata = projekti?.nahtavillaoloVaihe?.tila === NahtavillaoloVaiheTila.HYVAKSYTTY;
+  const eiVoiMuokata = hasHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti);
 
   const {
     register,

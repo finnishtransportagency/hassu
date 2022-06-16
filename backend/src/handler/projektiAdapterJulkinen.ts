@@ -4,7 +4,7 @@ import {
   DBProjekti,
   DBVaylaUser,
   LocalizedMap,
-  NahtavillaoloVaihe,
+  NahtavillaoloVaiheJulkaisu,
   SuunnitteluSopimus,
   Velho,
   Vuorovaikutus,
@@ -47,14 +47,12 @@ class ProjektiAdapterJulkinen {
     }
 
     function checkNahtavillaolo() {
-      // TODO: selvita tuleeko aloitukuulutuksen kaltaiset snapshotit
-      if (projekti.nahtavillaoloVaihe) {
-        if (
-          projekti.nahtavillaoloVaihe.kuulutusPaiva &&
-          parseDate(projekti.nahtavillaoloVaihe.kuulutusPaiva).isBefore(dayjs())
-        ) {
-          projekti.status = API.Status.NAHTAVILLAOLO;
-        }
+      const nahtavillaoloVaiheJulkaisut = projekti.nahtavillaoloVaiheJulkaisut?.filter((julkaisu) => {
+        return julkaisu.kuulutusPaiva && parseDate(julkaisu.kuulutusPaiva).isBefore(dayjs());
+      });
+
+      if (nahtavillaoloVaiheJulkaisut) {
+        projekti.status = API.Status.NAHTAVILLAOLO;
       }
     }
 
@@ -92,11 +90,10 @@ class ProjektiAdapterJulkinen {
       suunnitteluVaihe = ProjektiAdapterJulkinen.adaptSuunnitteluVaihe(dbProjekti, projektiHenkilot);
     }
 
-    let nahtavillaoloVaihe = undefined;
-    if (isNahtavillaoloVaihePublic(dbProjekti.nahtavillaoloVaihe)) {
-      nahtavillaoloVaihe = ProjektiAdapterJulkinen.adaptNahtavillaoloVaihe(dbProjekti, projektiHenkilot);
-    }
-
+    const nahtavillaoloVaiheJulkaisut = ProjektiAdapterJulkinen.adaptNahtavillaoloVaiheJulkaisut(
+      dbProjekti,
+      projektiHenkilot
+    );
     const projekti: API.ProjektiJulkinen = {
       __typename: "ProjektiJulkinen",
       oid: dbProjekti.oid,
@@ -107,7 +104,7 @@ class ProjektiAdapterJulkinen {
       aloitusKuulutusJulkaisut,
       paivitetty: dbProjekti.paivitetty,
       projektiHenkilot: Object.values(projektiHenkilot),
-      nahtavillaoloVaihe,
+      nahtavillaoloVaiheJulkaisut,
     };
     const projektiJulkinen = removeUndefinedFields(projekti) as API.ProjektiJulkinen;
     return this.applyStatus(projektiJulkinen);
@@ -199,27 +196,29 @@ class ProjektiAdapterJulkinen {
   }
 
   //TODO: lisaa julkisia kenttia ja tarkista yhteystietojen osalta onko tarve mergelle henkiloiden kanssa
-  private static adaptNahtavillaoloVaihe(
+  private static adaptNahtavillaoloVaiheJulkaisut(
     dbProjekti: DBProjekti,
     projektiHenkilot: ProjektiHenkilot
-  ): API.NahtavillaoloVaiheJulkinen {
-    const {
-      hankkeenKuvaus,
-      kuulutusPaiva,
-      kuulutusVaihePaattyyPaiva,
-      kuulutusYhteysHenkilot,
-      kuulutusYhteystiedot,
-      muistutusoikeusPaattyyPaiva,
-    } = dbProjekti.nahtavillaoloVaihe;
-    return {
-      __typename: "NahtavillaoloVaiheJulkinen",
-      hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
-      kuulutusPaiva,
-      kuulutusVaihePaattyyPaiva,
-      muistutusoikeusPaattyyPaiva,
-      kuulutusYhteysHenkilot: adaptUsernamesToProjektiHenkiloIds(kuulutusYhteysHenkilot, projektiHenkilot),
-      kuulutusYhteystiedot: adaptYhteystiedot(kuulutusYhteystiedot),
-    };
+  ): API.NahtavillaoloVaiheJulkaisuJulkinen[] {
+    return dbProjekti.nahtavillaoloVaiheJulkaisut?.filter(isNahtavillaoloVaihePublic).map((julkaisu) => {
+      const {
+        hankkeenKuvaus,
+        kuulutusPaiva,
+        kuulutusVaihePaattyyPaiva,
+        kuulutusYhteysHenkilot,
+        kuulutusYhteystiedot,
+        muistutusoikeusPaattyyPaiva,
+      } = julkaisu;
+      return {
+        __typename: "NahtavillaoloVaiheJulkaisuJulkinen",
+        hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
+        kuulutusPaiva,
+        kuulutusVaihePaattyyPaiva,
+        muistutusoikeusPaattyyPaiva,
+        kuulutusYhteysHenkilot: adaptUsernamesToProjektiHenkiloIds(kuulutusYhteysHenkilot, projektiHenkilot),
+        kuulutusYhteystiedot: adaptYhteystiedot(kuulutusYhteystiedot),
+      };
+    });
   }
 }
 
@@ -309,8 +308,8 @@ function checkIfAloitusKuulutusJulkaisutIsPublic(
   return true;
 }
 
-function isNahtavillaoloVaihePublic(nahtavillaoloVaihe: NahtavillaoloVaihe): boolean {
-  if(!nahtavillaoloVaihe) {
+function isNahtavillaoloVaihePublic(nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu): boolean {
+  if (!nahtavillaoloVaihe) {
     return false;
   }
   if (nahtavillaoloVaihe.tila !== API.NahtavillaoloVaiheTila.HYVAKSYTTY) {

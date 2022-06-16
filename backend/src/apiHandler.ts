@@ -42,7 +42,7 @@ import { velhoDocumentHandler } from "./handler/velhoDocumentHandler";
 import { palauteHandler } from "./palaute/palauteHandler";
 import { ClientError } from "./error/ClientError";
 import { SystemError } from "./error/SystemError";
-import { tilaHandler } from "./handler/tilaHandler";
+import { tilaHandler } from "./handler/tila/tilaHandler";
 
 export type AppSyncEventArguments =
   | unknown

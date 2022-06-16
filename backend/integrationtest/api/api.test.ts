@@ -38,7 +38,7 @@ import {
   verifyEmailsSent,
 } from "./testUtil/tests";
 import { takeS3Snapshot } from "./testUtil/util";
-import { testNahtavillaOlo } from "./testUtil/nahtavillaolo";
+import { testNahtavillaOlo, testNahtavillaOloApproval } from "./testUtil/nahtavillaolo";
 
 const sandbox = sinon.createSandbox();
 const { expect } = require("chai");
@@ -134,6 +134,7 @@ describe("Api", () => {
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await testNahtavillaOlo(oid, projektiPaallikko.kayttajatunnus);
+    await testNahtavillaOloApproval(oid, projektiPaallikko, userFixture);
   });
 
   it.skip("should archive projekti", async function () {

@@ -285,6 +285,18 @@
       },
       {
         "kind": "OBJECT",
+        "name": "NahtavillaoloPDF",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "NahtavillaoloPDFt",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "NahtavillaoloVaihe",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -292,6 +304,18 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "NahtavillaoloVaiheInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "NahtavillaoloVaiheJulkaisu",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "NahtavillaoloVaiheJulkaisuJulkinen",
         "possibleTypes": null,
         "__typename": "__Type"
       },

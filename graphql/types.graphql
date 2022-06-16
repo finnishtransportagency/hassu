@@ -89,6 +89,7 @@ type Projekti implements IProjekti {
   suunnitteluSopimus: SuunnitteluSopimus
   suunnitteluVaihe: SuunnitteluVaihe
   nahtavillaoloVaihe: NahtavillaoloVaihe
+  nahtavillaoloVaiheJulkaisut: [NahtavillaoloVaiheJulkaisu!]
   velho: Velho!
   kayttoOikeudet: [ProjektiKayttaja!]
   """
@@ -185,8 +186,51 @@ type NahtavillaoloVaihe {
   kuulutusYhteysHenkilot: [String!]
   kuulutusYhteystiedot: [Yhteystieto!]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
-  tila: NahtavillaoloVaiheTila
+  nahtavillaoloPDFt: NahtavillaoloPDFt
   palautusSyy: String
+}
+
+type NahtavillaoloVaiheJulkaisu {
+  aineistoNahtavilla: [Aineisto!]
+  lisaAineisto: [Aineisto!]
+  kuulutusPaiva: String
+  kuulutusVaihePaattyyPaiva: String
+  muistutusoikeusPaattyyPaiva: String
+  hankkeenKuvaus: HankkeenKuvaukset
+  kielitiedot: Kielitiedot
+  kuulutusYhteysHenkilot: [String!]
+  kuulutusYhteystiedot: [Yhteystieto!]
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+  nahtavillaoloPDFt: NahtavillaoloPDFt
+  tila: NahtavillaoloVaiheTila
+  muokkaaja: String
+  hyvaksyja: String
+}
+
+type NahtavillaoloVaiheJulkaisuJulkinen {
+  aineistoNahtavilla: [Aineisto!]
+  lisaAineisto: [Aineisto!]
+  kuulutusPaiva: String
+  kuulutusVaihePaattyyPaiva: String
+  muistutusoikeusPaattyyPaiva: String
+  hankkeenKuvaus: HankkeenKuvaukset
+  kielitiedot: Kielitiedot
+  kuulutusYhteysHenkilot: [String!]
+  kuulutusYhteystiedot: [Yhteystieto!]
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+  nahtavillaoloPDFt: NahtavillaoloPDFt
+}
+
+type NahtavillaoloPDF {
+  nahtavillaoloPDFPath: String!
+  nahtavillaoloIlmoitusPDFPath: String!
+  nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: String!
+}
+
+type NahtavillaoloPDFt {
+  SUOMI: NahtavillaoloPDF!
+  RUOTSI: NahtavillaoloPDF
+  SAAME: NahtavillaoloPDF
 }
 
 type NahtavillaoloVaiheJulkinen {
@@ -332,7 +376,7 @@ type ProjektiJulkinen implements IProjekti {
   kielitiedot: Kielitiedot
   projektiHenkilot: [ProjektiKayttajaJulkinen!]
   paivitetty: String
-  nahtavillaoloVaihe: NahtavillaoloVaiheJulkinen
+  nahtavillaoloVaiheJulkaisut: [NahtavillaoloVaiheJulkaisuJulkinen!]
 }
 
 type Suunnitelma {

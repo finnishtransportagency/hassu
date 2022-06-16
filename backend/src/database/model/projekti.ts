@@ -7,7 +7,7 @@ import {
   Viranomainen,
 } from "../../../../common/graphql/apiModel";
 import { Palaute, SuunnitteluVaihe, Vuorovaikutus } from "./suunnitteluVaihe";
-import { NahtavillaoloVaihe } from "./nahtavillaoloVaihe";
+import { NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "./nahtavillaoloVaihe";
 import { LocalizedMap, Yhteystieto } from "./common";
 
 export type DBVaylaUser = {
@@ -34,6 +34,7 @@ export type AloitusKuulutusPDF = {
   aloituskuulutusPDFPath: string;
   aloituskuulutusIlmoitusPDFPath: string;
 };
+
 export type AloitusKuulutusJulkaisu = {
   id: number;
   kuulutusPaiva?: string | null;
@@ -115,6 +116,7 @@ export type DBProjekti = {
   suunnitteluVaihe?: SuunnitteluVaihe | null;
   vuorovaikutukset?: Array<Vuorovaikutus> | null;
   nahtavillaoloVaihe?: NahtavillaoloVaihe | null;
+  nahtavillaoloVaiheJulkaisut?: NahtavillaoloVaiheJulkaisu[] | null;
   palautteet?: Array<Palaute> | null;
   uusiaPalautteita?: number;
 
