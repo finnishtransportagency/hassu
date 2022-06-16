@@ -1,4 +1,4 @@
-import { NahtavillaoloVaiheJulkaisu, Projekti, NahtavillaoloVaiheTila, Kieli, ProjektiKayttaja } from "@services/api";
+import { NahtavillaoloVaiheJulkaisu, NahtavillaoloVaiheTila, Kieli, ProjektiKayttaja } from "@services/api";
 import React, { ReactElement } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import capitalize from "lodash/capitalize";
@@ -11,10 +11,10 @@ import SectionContent from "@components/layout/SectionContent";
 import IlmoituksenVastaanottajatLukutila from "./IlmoituksenVastaanottajatLukutila";
 import ExtLink from "@components/ExtLink";
 import { Link } from "@mui/material";
-
+import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 interface Props {
   nahtavillaoloVaiheJulkaisu?: NahtavillaoloVaiheJulkaisu | null;
-  projekti: Projekti;
+  projekti: ProjektiLisatiedolla;
 }
 
 export default function AloituskuulutusLukunakyma({ nahtavillaoloVaiheJulkaisu, projekti }: Props): ReactElement {

@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { useProjektiRoute } from "src/hooks/useProjektiRoute";
 import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot";
-import NahtavillaoloPainikkeet from "../NahtavillaoloPainikkeet";
+import NahtavillaoloPainikkeet from "./NahtavillaoloPainikkeet";
 import LausuntopyyntoonLiitettavaLisaaineisto from "./LausuntopyyntoonLiitettavaLisaaineisto";
 import SuunnitelmatJaAineistot from "./SuunnitelmatJaAineistot";
 
