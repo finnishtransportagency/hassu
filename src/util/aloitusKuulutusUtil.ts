@@ -1,10 +1,9 @@
-import { AloitusKuulutusJulkaisu } from "../../../../common/graphql/apiModel";
 import dayjs from "dayjs";
 
-export function examineKuulutusPaiva(aloituskuulutusjulkaisu: AloitusKuulutusJulkaisu) {
-  let kuulutusPaiva: string | undefined;
+export function examineKuulutusPaiva(givenKuulutusPaiva: string | null | undefined) {
   let published: boolean;
-  const date = aloituskuulutusjulkaisu?.kuulutusPaiva;
+  let kuulutusPaiva: string | undefined;
+  const date = givenKuulutusPaiva;
   if (date) {
     let parsedDate = dayjs(date);
     if (date.length == 10) {

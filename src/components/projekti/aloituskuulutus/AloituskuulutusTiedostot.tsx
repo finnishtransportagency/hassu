@@ -3,7 +3,7 @@ import { AloitusKuulutusJulkaisu, Kieli } from "@services/api";
 import lowerCase from "lodash/lowerCase";
 import { ReactElement } from "react";
 import ExtLink from "@components/ExtLink";
-import { examineKuulutusPaiva } from "@components/projekti/aloituskuulutus/aloitusKuulutusUtil";
+import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 
 interface Props {
   oid: string;
@@ -28,7 +28,7 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid 
     return path.substring(path.lastIndexOf("/") + 1);
   };
 
-  let { kuulutusPaiva, published } = examineKuulutusPaiva(aloituskuulutusjulkaisu);
+  let { kuulutusPaiva, published } = examineKuulutusPaiva(aloituskuulutusjulkaisu?.kuulutusPaiva);
 
   let aloitusKuulutusHref: string | undefined;
   if (published) {
