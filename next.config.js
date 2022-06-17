@@ -21,6 +21,7 @@ function setupLocalDevelopmentMode(config, env) {
 
   env.REACT_APP_API_URL = "http://localhost:3000/graphql";
   env.APPSYNC_URL = process.env.REACT_APP_API_URL;
+  env.SEARCH_DOMAIN = process.env.SEARCH_DOMAIN;
 
   /**
    * @type {import("next").NextConfig}
@@ -106,6 +107,7 @@ module.exports = (phase) => {
     }
     env.REACT_APP_API_KEY = process.env.REACT_APP_API_KEY;
     env.REACT_APP_API_URL = "https://" + process.env.FRONTEND_DOMAIN_NAME + "/graphql";
+    env.SEARCH_DOMAIN = process.env.SEARCH_DOMAIN;
 
     config.env = env;
   }

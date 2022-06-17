@@ -1,4 +1,4 @@
-import { DBProjekti } from "../database/model/projekti";
+import { DBProjekti } from "../database/model";
 import {
   adaptProjektiToIndex,
   adaptProjektiToJulkinenIndex,
@@ -19,6 +19,7 @@ import {
 } from "../../../common/graphql/apiModel";
 import { getVaylaUser } from "../user";
 import { projektiAdapterJulkinen } from "../handler/projektiAdapterJulkinen";
+import { ilmoitustauluSyoteService } from "../ilmoitustauluSyote/ilmoitustauluSyoteService";
 
 const projektiSarakeToField: Record<ProjektiSarake, string> = {
   ASIATUNNUS: "asiatunnus.keyword",
@@ -33,24 +34,28 @@ class ProjektiSearchService {
   async indexProjekti(projekti: DBProjekti) {
     const projektiToIndex = adaptProjektiToIndex(projekti);
     log.info("Index projekti", { oid: projekti.oid, projektiToIndex });
-    await openSearchClientYllapito.putProjekti(projekti.oid, projektiToIndex);
+    await openSearchClientYllapito.putDocument(projekti.oid, projektiToIndex);
 
     projekti.tallennettu = true;
     const apiProjekti = projektiAdapterJulkinen.adaptProjekti(projekti);
-    for (const kieli of Object.values(Kieli)) {
-      const projektiJulkinenToIndex = adaptProjektiToJulkinenIndex(apiProjekti, kieli);
-      if (projektiJulkinenToIndex) {
-        log.info("Index julkinen projekti", { oid: projekti.oid, kieli, projektiJulkinenToIndex });
-        await openSearchClientJulkinen[kieli].putProjekti(projekti.oid, projektiJulkinenToIndex);
+    if (apiProjekti) {
+      for (const kieli of Object.values(Kieli)) {
+        const projektiJulkinenToIndex = adaptProjektiToJulkinenIndex(apiProjekti, kieli);
+        if (projektiJulkinenToIndex) {
+          log.info("Index julkinen projekti", { oid: projekti.oid, kieli, projektiJulkinenToIndex });
+          await openSearchClientJulkinen[kieli].putDocument(projekti.oid, projektiJulkinenToIndex);
+        }
       }
+      await ilmoitustauluSyoteService.index(apiProjekti);
     }
   }
 
   async removeProjekti(oid: string) {
-    await openSearchClientYllapito.deleteProjekti(oid);
+    await openSearchClientYllapito.deleteDocument(oid);
     for (const kieli of Object.values(Kieli)) {
-      await openSearchClientJulkinen[kieli].deleteProjekti(oid);
+      await openSearchClientJulkinen[kieli].deleteDocument(oid);
     }
+    await ilmoitustauluSyoteService.remove(oid);
   }
 
   async searchByOid(oid: string[]): Promise<ProjektiDocument[]> {

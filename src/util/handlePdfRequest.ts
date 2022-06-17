@@ -1,26 +1,17 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { api, AsiakirjaTyyppi, Kieli } from "@services/api";
 import { setupLambdaMonitoring } from "../../backend/src/aws/monitoring";
-import AWS from "aws-sdk";
-
-const ssm = new AWS.SSM();
+import { parameterStore } from "./parameterStore";
+import { createAuthorizationHeader } from "./basicAuthentication";
 
 setupLambdaMonitoring();
 
-async function getParameter(name: string) {
-  return (await ssm.getParameter({ Name: name }).promise()).Parameter?.Value;
-}
-
-async function getParameterStore() {
-  const parameterStore = {} as any;
-
-  parameterStore.BASIC_USERNAME = await getParameter(
-    "/" + process.env.INFRA_ENVIRONMENT + "/basicAuthenticationUsername"
-  );
-  parameterStore.BASIC_PASSWORD = await getParameter(
-    "/" + process.env.INFRA_ENVIRONMENT + "/basicAuthenticationPassword"
-  );
-  return parameterStore;
+async function getCredentials() {
+  const username =
+    (await parameterStore.getParameter("/" + process.env.INFRA_ENVIRONMENT + "/basicAuthenticationUsername")) || "";
+  const password =
+    (await parameterStore.getParameter("/" + process.env.INFRA_ENVIRONMENT + "/basicAuthenticationPassword")) || "";
+  return { username, password };
 }
 
 interface PdfRequestProps {
@@ -44,12 +35,10 @@ export const handlePdfRequest = async ({ req, res, asiakirjaTyyppi, virheviesti 
 
   try {
     // Basic authentication header is added here because it is not present in NextApiRequest. The actual API call authenticates the user with cookies, so this is not a security issue
-    const parameterStore = await getParameterStore();
+    const { username, password } = await getCredentials();
     api.setOneTimeForwardHeaders({
       ...req.headers,
-      authorization:
-        "Basic " +
-        Buffer.from(parameterStore.BASIC_USERNAME + ":" + parameterStore.BASIC_PASSWORD, "binary").toString("base64"),
+      authorization: createAuthorizationHeader(username, password),
     });
     let changes;
     if (tallennaProjektiInput) {

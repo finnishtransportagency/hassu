@@ -70,8 +70,8 @@ describe("Api", () => {
     });
 
     sandbox.stub(openSearchClientYllapito, "query").resolves({ status: 200 });
-    sandbox.stub(openSearchClientYllapito, "deleteProjekti");
-    sandbox.stub(openSearchClientYllapito, "putProjekti");
+    sandbox.stub(openSearchClientYllapito, "deleteDocument");
+    sandbox.stub(openSearchClientYllapito, "putDocument");
 
     importAineistoStub = sandbox.stub(aineistoImporterClient, "importAineisto");
     importAineistoStub.callsFake(async (event) => {

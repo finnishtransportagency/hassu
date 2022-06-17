@@ -302,6 +302,7 @@ export class ProjektiFixture {
           nimi: "Marikan testiprojekti",
           tyyppi: ProjektiTyyppi.YLEINEN,
           kunnat: ["Mikkeli", " Juva", " Savonlinna"],
+          maakunnat: ["Uusimaa", "Pirkanmaa"],
         },
         id: 1,
         tila: AloitusKuulutusTila.HYVAKSYTTY,
