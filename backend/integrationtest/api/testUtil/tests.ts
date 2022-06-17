@@ -267,12 +267,14 @@ export async function testImportAineistot(
         if (index % 2 === 0) {
           documents.esittelyaineistot.push({
             dokumenttiOid: aineisto.oid,
+            kategoriaId: aineisto.kategoriaId,
             jarjestys: documents.esittelyaineistot.length + 1,
             nimi: aineisto.tiedosto,
           });
         } else {
           documents.suunnitelmaluonnokset.push({
             dokumenttiOid: aineisto.oid,
+            kategoriaId: aineisto.kategoriaId,
             jarjestys: documents.suunnitelmaluonnokset.length + 1,
             nimi: aineisto.tiedosto,
           });

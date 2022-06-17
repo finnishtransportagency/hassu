@@ -259,6 +259,10 @@ type Aineisto {
   """
   dokumenttiOid: String!
   """
+  Kategorian ID, joka viittaa kategoriapuun kategoriaan
+  """
+  kategoriaId: String
+  """
   Suhteellinen polku tiedostoon yllapidon S3-bucketissa projektin alla
   """
   tiedosto: String
@@ -518,6 +522,10 @@ type VelhoAineistoKategoria {
 type VelhoAineisto {
   oid: String!
   tiedosto: String!
+  """
+  Ehdotetun kategorian ID, joka viittaa kategoriapuun kategoriaan
+  """
+  kategoriaId: String
   dokumenttiTyyppi: String!
   muokattu: String!
 }

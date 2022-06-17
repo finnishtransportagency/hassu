@@ -10,6 +10,7 @@ import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { DBProjekti } from "../database/model/projekti";
 import { personSearch } from "../personSearch/personSearchClient";
 import dayjs from "dayjs";
+import { aineistoKategoriat } from "../../../common/aineistoKategoriat";
 
 const axios = require("axios");
 const NodeCache = require("node-cache");
@@ -185,10 +186,12 @@ export class VelhoClient {
             if (!results[kategoria]) {
               results[kategoria] = [];
             }
+            const tiedostoNimi = aineisto["tuorein-versio"].nimi;
             results[kategoria].push({
               __typename: "VelhoAineisto",
               oid: aineisto.oid,
-              tiedosto: aineisto["tuorein-versio"].nimi,
+              tiedosto: tiedostoNimi,
+              kategoriaId: aineistoKategoriat.findKategoria(aineisto.metatiedot.kuvaus, tiedostoNimi)?.id,
               dokumenttiTyyppi,
               muokattu: dayjs(aineisto["tuorein-versio"].muokattu).format(),
             } as VelhoAineisto);

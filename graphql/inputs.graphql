@@ -160,6 +160,10 @@ input AineistoInput {
   Dokumentin oid Velhossa
   """
   dokumenttiOid: String!
+  """
+  Kategorian ID, joka viittaa kategoriapuun kategoriaan
+  """
+  kategoriaId: String
   nimi: String!
   """
   Numero jarjestamista varten
