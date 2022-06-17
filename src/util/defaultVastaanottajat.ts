@@ -5,6 +5,7 @@ import {
   Projekti,
   IlmoituksenVastaanottajatInput,
   IlmoituksenVastaanottajat,
+  KirjaamoOsoite,
 } from "@services/api";
 import { removeTypeName } from "./removeTypeName";
 import getIlmoitettavaViranomainen from "./getIlmoitettavaViranomainen";
@@ -12,7 +13,7 @@ import getIlmoitettavaViranomainen from "./getIlmoitettavaViranomainen";
 export default function defaultVastaanottajat(
   projekti: Projekti | null | undefined,
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat | null | undefined,
-  kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] | null
+  kirjaamoOsoitteet: KirjaamoOsoite[] | undefined
 ): IlmoituksenVastaanottajatInput {
   let kunnat: KuntaVastaanottajaInput[];
   let viranomaiset: ViranomaisVastaanottajaInput[];
@@ -42,18 +43,22 @@ export default function defaultVastaanottajat(
     });
   } else {
     // tapaus, jossa lomake alustetaan ensimmäistä kertaa
+    const vaylavirastoKirjaamo = kirjaamoOsoitteet?.find((osoite) => osoite.nimi == "VAYLAVIRASTO");
     viranomaiset =
       projekti?.velho?.suunnittelustaVastaavaViranomainen === "VAYLAVIRASTO"
         ? projekti?.velho?.maakunnat?.map((maakunta) => {
             const ely: IlmoitettavaViranomainen = getIlmoitettavaViranomainen(maakunta);
-            return (
-              kirjaamoOsoitteet?.find((osoite) => osoite.nimi == ely) ||
-              ({ nimi: maakunta, sahkoposti: "" } as ViranomaisVastaanottajaInput)
-            );
+            const kirjaamoOsoite = kirjaamoOsoitteet?.find((osoite) => osoite.nimi == ely);
+            if (kirjaamoOsoite) {
+              return { nimi: kirjaamoOsoite.nimi, sahkoposti: kirjaamoOsoite.sahkoposti };
+            } else {
+              return { nimi: maakunta, sahkoposti: "" } as ViranomaisVastaanottajaInput;
+            }
           }) || []
         : [
-            kirjaamoOsoitteet?.find((osoite) => osoite.nimi == "VAYLAVIRASTO") ||
-              ({ nimi: "VAYLAVIRASTO" as IlmoitettavaViranomainen, sahkoposti: "" } as ViranomaisVastaanottajaInput),
+            vaylavirastoKirjaamo
+              ? { nimi: vaylavirastoKirjaamo.nimi, sahkoposti: vaylavirastoKirjaamo.sahkoposti }
+              : ({ nimi: "VAYLAVIRASTO" as IlmoitettavaViranomainen, sahkoposti: "" } as ViranomaisVastaanottajaInput),
           ];
   }
   return {

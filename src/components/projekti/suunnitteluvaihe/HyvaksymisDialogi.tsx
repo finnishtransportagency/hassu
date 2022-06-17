@@ -39,6 +39,7 @@ export default function HyvaksymisDialogi({
             <ul className="vayla-dialog-list">
               {ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => (
                 <li key={viranomainen.nimi}>
+                  {console.log({ viranomainen })}
                   {t(`common:viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
                 </li>
               ))}
@@ -65,7 +66,7 @@ export default function HyvaksymisDialogi({
           </div>
         </DialogContent>
         <DialogActions>
-          <Button primary onClick={tallenna}>
+          <Button primary id="accept_and_publish_vuorovaikutus" onClick={tallenna}>
             Hyväksy ja lähetä
           </Button>
           <Button

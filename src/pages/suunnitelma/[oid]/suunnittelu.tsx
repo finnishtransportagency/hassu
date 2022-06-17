@@ -20,6 +20,7 @@ import { parseVideoURL } from "src/util/videoParser";
 import PalauteLomakeDialogi from "src/components/projekti/kansalaisnakyma/PalauteLomakeDialogi";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
 import { ProjektiKayttajaJulkinen } from "@services/api";
+import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 
 export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
   const router = useRouter();
@@ -27,6 +28,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
   const { data: projekti } = useProjektiJulkinen(oid);
   const { t } = useTranslation();
+  const kieli = useKansalaiskieli();
 
   useProjektiBreadcrumbs(setRouteLabels);
 
@@ -58,7 +60,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
         <Section>
           <SectionContent>
             <h4 className="vayla-small-title">{t(`projekti:ui-otsikot.suunnitteluhankkeen_kuvaus`)}</h4>
-            <p>{projekti.suunnitteluVaihe.hankkeenKuvaus?.SUOMI}</p>
+            <p>{projekti.suunnitteluVaihe.hankkeenKuvaus?.[kieli]}</p>
           </SectionContent>
           <SectionContent>
             <h4 className="vayla-small-title">{t(`projekti:ui-otsikot.suunnittelun_eteneminen`)}</h4>

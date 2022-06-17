@@ -25,6 +25,7 @@ export type TabStyle = keyof typeof TabStyle;
 
 export interface HassuTabProps {
   label: string;
+  tabId?: string;
   content?: string | ReactNode;
   value?: string | number;
   disabled?: boolean;
@@ -45,6 +46,7 @@ export default function TabbedContent(props: Props) {
         {props.tabs.map((tab, index) => (
           <Tab
             key={index}
+            id={tab.tabId}
             disabled={tab.disabled}
             value={tab.value || index}
             sx={props.tabStyle ? TabStyle[props.tabStyle] : undefined}

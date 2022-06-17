@@ -34,6 +34,7 @@ import {
   Velho,
   VelhoAineistoKategoria,
   VelhoHakuTulos,
+  KirjaamoOsoite,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -140,6 +141,11 @@ export const apiConfig: ApiConfig = {
     name: "synkronoiProjektiMuutoksetVelhosta",
     operationType: OperationType.Mutation,
     graphql: mutations.synkronoiProjektiMuutoksetVelhosta,
+  },
+  listKirjaamoOsoitteet: {
+    name: "listKirjaamoOsoitteet",
+    operationType: OperationType.Query,
+    graphql: queries.listKirjaamoOsoitteet,
   },
 };
 
@@ -272,6 +278,10 @@ export abstract class AbstractApi {
     return await this.callYllapitoAPI(apiConfig.synkronoiProjektiMuutoksetVelhosta, {
       oid,
     } as SynkronoiProjektiMuutoksetVelhostaMutationVariables);
+  }
+
+  async listKirjaamoOsoitteet(): Promise<KirjaamoOsoite[]> {
+    return await this.callYllapitoAPI(apiConfig.listKirjaamoOsoitteet);
   }
 
   abstract callYllapitoAPI(operation: OperationConfig, variables?: any): Promise<any>;

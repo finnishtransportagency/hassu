@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { TallennaProjektiInput, ViranomaisVastaanottajaInput, Projekti } from "@services/api";
+import { TallennaProjektiInput, KirjaamoOsoite, Projekti } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import React, { useEffect, useState } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
@@ -14,8 +14,9 @@ import IlmoituksenVastaanottajatKomponentti from "./IlmoituksenVastaanottajat";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import { removeTypeName } from "src/util/removeTypeName";
 import Lukunakyma from "./Lukunakyma";
+import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 
-function defaultValues(projekti: Projekti, kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] | null) {
+function defaultValues(projekti: Projekti, kirjaamoOsoitteet: KirjaamoOsoite[] | undefined) {
   return {
     oid: projekti.oid,
     nahtavillaoloVaihe: {
@@ -41,15 +42,12 @@ function defaultValues(projekti: Projekti, kirjaamoOsoitteet: ViranomaisVastaano
   };
 }
 
-type Props = {
-  kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] | null;
-};
-
 export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid" | "nahtavillaoloVaihe">;
 
-export default function KuulutuksenTiedot({ kirjaamoOsoitteet }: Props) {
+export default function KuulutuksenTiedot() {
   const { data: projekti } = useProjektiRoute();
   const [formContext, setFormContext] = useState<Projekti | undefined>(undefined);
+  const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
   const formOptions: UseFormProps<KuulutuksenTiedotFormValues> = {
     resolver: yupResolver(nahtavillaoloKuulutusSchema, { abortEarly: false, recursive: true }),

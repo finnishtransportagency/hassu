@@ -183,6 +183,7 @@ export default function VuorovaikutusDialog({
                     event.preventDefault();
                     append(defaultOnlineTilaisuus);
                   }}
+                  id="add_live_tilaisuus"
                   label="Live-tilaisuus verkossa"
                   variant="outlined"
                   onDelete={() => {
@@ -202,6 +203,7 @@ export default function VuorovaikutusDialog({
                     event.preventDefault();
                     append(defaultFyysinenTilaisuus);
                   }}
+                  id="add_fyysinen_tilaisuus"
                   label="Fyysinen tilaisuus"
                   variant="outlined"
                   onDelete={() => {
@@ -221,6 +223,7 @@ export default function VuorovaikutusDialog({
                     event.preventDefault();
                     append(defaultSoittoaikaTilaisuus);
                   }}
+                  id="add_soittoaika"
                   label="Soittoaika"
                   variant="outlined"
                   onDelete={() => {
@@ -410,7 +413,7 @@ export default function VuorovaikutusDialog({
       </DialogContent>
 
       <DialogActions>
-        <Button primary onClick={handleSubmit(saveTilaisuudet)}>
+        <Button primary onClick={handleSubmit(saveTilaisuudet)} id="save_vuorovaikutus_tilaisuudet">
           Tallenna
         </Button>
         <Button

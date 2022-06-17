@@ -201,6 +201,7 @@ export default function EsitettavatYhteystiedot({ vuorovaikutusnro }: Props): Re
         </HassuStack>
       ))}
       <Button
+        id="append_vuorovaikuttamisen_yhteystiedot_button"
         onClick={(event) => {
           event.preventDefault();
           append(defaultYhteystieto);

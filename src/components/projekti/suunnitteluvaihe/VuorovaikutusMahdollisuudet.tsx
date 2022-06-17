@@ -119,6 +119,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                         {formatDate(tilaisuus.paivamaara)} klo {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika},
                         Osoite: {tilaisuus.paikka ? `${tilaisuus.paikka}, ` : ""}
                         {tilaisuus.osoite}, {tilaisuus.postinumero} {tilaisuus.postitoimipaikka}
+                        {tilaisuus.Saapumisohjeet && <>, Saapumisohjeet: {tilaisuus.Saapumisohjeet}</>}
                       </p>
                     </div>
                   );
@@ -156,6 +157,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                 setOpenVuorovaikutustilaisuus(true);
                 e.preventDefault();
               }}
+              id="add_or_edit_tilaisuus"
             >
               {isFyysisiatilaisuuksia || isVerkkotilaisuuksia || isSoittoaikoja
                 ? "Muokkaa tilaisuuksia"

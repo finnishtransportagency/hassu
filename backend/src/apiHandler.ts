@@ -39,6 +39,7 @@ import { getCorrelationId, setupLambdaMonitoring, setupLambdaMonitoringMetaData 
 import { calculateEndDate } from "./endDateCalculator/endDateCalculatorHandler";
 import { listProjektit } from "./handler/listProjektitHandler";
 import { velhoDocumentHandler } from "./handler/velhoDocumentHandler";
+import { listKirjaamoOsoitteet } from "./kirjaamoOsoitteet/kirjaamoOsoitteetHandler";
 import { palauteHandler } from "./palaute/palauteHandler";
 import { ClientError } from "./error/ClientError";
 import { SystemError } from "./error/SystemError";
@@ -98,6 +99,8 @@ async function executeOperation(event: AppSyncResolverEvent<AppSyncEventArgument
       return palauteHandler.lisaaPalaute(event.arguments as LisaaPalauteMutationVariables);
     case apiConfig.otaPalauteKasittelyyn.name:
       return palauteHandler.otaPalauteKasittelyyn(event.arguments as OtaPalauteKasittelyynMutationVariables);
+    case apiConfig.listKirjaamoOsoitteet.name:
+      return listKirjaamoOsoitteet();
     default:
       return null;
   }

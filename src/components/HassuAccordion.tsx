@@ -81,7 +81,12 @@ export default function CustomizedAccordions(props: Props) {
       {items.map((item, index) => {
         const key = item.id || index;
         return (
-          <Accordion key={key} expanded={expanded.includes(key)} onChange={handleChange(key)}>
+          <Accordion
+            key={key}
+            id={typeof item.id === "string" ? item.id : undefined}
+            expanded={expanded.includes(key)}
+            onChange={handleChange(key)}
+          >
             <AccordionSummary>
               <span className="vayla-smallest-title">{item.title}</span>
             </AccordionSummary>
