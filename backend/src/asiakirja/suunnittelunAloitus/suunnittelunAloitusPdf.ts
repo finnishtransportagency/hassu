@@ -1,15 +1,24 @@
 import { Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
-import { AloitusKuulutusJulkaisu } from "../../database/model/projekti";
+import { AloitusKuulutusJulkaisu } from "../../database/model";
 import { CommonPdf } from "./commonPdf";
 import { KutsuAdapter } from "./KutsuAdapter";
+import { AsiakirjanMuoto } from "../asiakirjaService";
 import PDFStructureElement = PDFKit.PDFStructureElement;
+
 export abstract class SuunnittelunAloitusPdf extends CommonPdf {
   protected header: string;
   protected aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu;
 
-  constructor(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu, kieli: Kieli, header: string) {
+  constructor(
+    aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu,
+    kieli: Kieli,
+    header: string,
+    asiakirjanMuoto: AsiakirjanMuoto
+  ) {
     const kutsuAdapter = new KutsuAdapter({
-      aloitusKuulutusJulkaisu,
+      velho: aloitusKuulutusJulkaisu.velho,
+      asiakirjanMuoto,
+      kielitiedot: aloitusKuulutusJulkaisu.kielitiedot,
       kieli,
       projektiTyyppi: aloitusKuulutusJulkaisu.velho.tyyppi,
     });

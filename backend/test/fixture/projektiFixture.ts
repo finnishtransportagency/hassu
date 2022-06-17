@@ -15,14 +15,13 @@ import {
   VuorovaikutusTilaisuusTyyppi,
   Yhteystieto,
 } from "../../../common/graphql/apiModel";
-import { DBProjekti } from "../../src/database/model/projekti";
-import { Vuorovaikutus } from "../../src/database/model/suunnitteluVaihe";
+import { DBProjekti, Vuorovaikutus } from "../../src/database/model";
 
 export class ProjektiFixture {
   public PROJEKTI1_NIMI = "Testiprojekti 1";
   public PROJEKTI1_MUISTIINPANO_1 = "Testiprojekti 1:n muistiinpano";
   public PROJEKTI1_OID = "1";
-  public PROJEKTI2_NIMI = "Testiprojekti 2 email lahetys";
+  public PROJEKTI2_NIMI = "Testiprojekti 2";
   public PROJEKTI2_OID = "2";
 
   esitettavatYhteystiedot = [
@@ -256,6 +255,7 @@ export class ProjektiFixture {
       vaylamuoto: ["tie"],
       vastuuhenkilonEmail: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
       maakunnat: ["Uusimaa", "Pirkanmaa"],
+      suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
       asiatunnusVayla: "A" + this.PROJEKTI2_OID,
     },
     aloitusKuulutusJulkaisut: [
@@ -348,6 +348,21 @@ export class ProjektiFixture {
       kuulutusPaiva: "2022-03-28T14:28",
       siirtyySuunnitteluVaiheeseen: "2022-04-28T14:28",
       esitettavatYhteystiedot: [],
+    },
+    nahtavillaoloVaihe: {
+      hankkeenKuvaus: {
+        SUOMI: "Lorem Ipsum nahtavillaoloVaihe",
+        SAAME: "Saameksi nahtavillaoloVaihe",
+      },
+      kuulutusPaiva: "2022-06-07",
+      kuulutusVaihePaattyyPaiva: "2042-06-07",
+      muistutusoikeusPaattyyPaiva: "2042-06-08",
+      kuulutusYhteysHenkilot: [
+        ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
+        ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
+      ],
+      ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
+      kuulutusYhteystiedot: this.esitettavatYhteystiedot,
     },
     kielitiedot: {
       ensisijainenKieli: Kieli.SUOMI,

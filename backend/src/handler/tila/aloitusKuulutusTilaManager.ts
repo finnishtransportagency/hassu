@@ -13,7 +13,7 @@ async function createAloituskuulutusPDF(
   projekti: DBProjekti,
   kieli: Kieli
 ) {
-  const pdf = await asiakirjaService.createPdf({
+  const pdf = await asiakirjaService.createAloituskuulutusPdf({
     asiakirjaTyyppi,
     aloitusKuulutusJulkaisu: julkaisuWaitingForApproval,
     kieli,

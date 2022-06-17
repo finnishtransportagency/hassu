@@ -139,7 +139,7 @@ export async function testProjektinTiedot(oid: string): Promise<void> {
 
 export async function testAloitusKuulutusEsikatselu(oid: string): Promise<void> {
   // Generate Aloituskuulutus PDF
-  const pdf = await api.esikatseleAsiakirjaPDF(oid, AsiakirjaTyyppi.ALOITUSKUULUTUS, Kieli.SUOMI);
+  const pdf = await api.esikatseleAsiakirjaPDF(oid, AsiakirjaTyyppi.ALOITUSKUULUTUS, Kieli.SUOMI, { oid });
   expect(pdf.nimi).to.include(".pdf");
   expect(pdf.sisalto).not.to.be.empty;
   expect(pdf.sisalto.length).to.be.greaterThan(50000);
