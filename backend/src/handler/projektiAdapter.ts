@@ -777,6 +777,7 @@ export function adaptNahtavillaoloVaiheJulkaisut(
         kuulutusYhteystiedot,
         nahtavillaoloPDFt,
         kielitiedot,
+        velho,
         ...fieldsToCopyAsIs
       } = julkaisu;
 
@@ -790,6 +791,7 @@ export function adaptNahtavillaoloVaiheJulkaisut(
         aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
         lisaAineisto: adaptAineistot(lisaAineisto),
         nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(oid, nahtavillaoloPDFt),
+        velho: adaptVelho(velho),
       };
     });
   }

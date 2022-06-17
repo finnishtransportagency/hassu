@@ -1,6 +1,7 @@
 import { AloitusKuulutusJulkaisu, DBProjekti, NahtavillaoloVaiheJulkaisu, Velho, Yhteystieto } from "../database/model";
 import cloneDeep from "lodash/cloneDeep";
 import { AloitusKuulutusTila, NahtavillaoloVaiheTila } from "../../../common/graphql/apiModel";
+import { deepClone } from "aws-cdk/lib/util";
 
 function createNextID(dbProjekti: DBProjekti) {
   if (!dbProjekti.aloitusKuulutusJulkaisut) {
@@ -30,8 +31,9 @@ export class AsiakirjaAdapter {
       const { palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.nahtavillaoloVaihe;
       return {
         ...includedFields,
-        kielitiedot: cloneDeep(dbProjekti.kielitiedot),
         id: createNextID(dbProjekti),
+        velho: adaptVelho(dbProjekti),
+        kielitiedot: cloneDeep(dbProjekti.kielitiedot),
       };
     }
     throw new Error("NahtavillaoloVaihe puuttuu");
@@ -99,16 +101,7 @@ function adaptYhteystiedot(dbProjekti: DBProjekti, esitettavatYhteystiedot: Yhte
 }
 
 function adaptVelho(dbProjekti: DBProjekti): Velho {
-  const { nimi, tilaajaOrganisaatio, suunnittelustaVastaavaViranomainen, kunnat, tyyppi, vaylamuoto } =
-    dbProjekti.velho!;
-  return {
-    nimi,
-    tyyppi: tyyppi || dbProjekti.tyyppi, // remove deprectaed usage after all data has been updated in dev/test
-    tilaajaOrganisaatio,
-    suunnittelustaVastaavaViranomainen,
-    kunnat,
-    vaylamuoto,
-  };
+  return deepClone(dbProjekti.velho);
 }
 
 export const asiakirjaAdapter = new AsiakirjaAdapter();

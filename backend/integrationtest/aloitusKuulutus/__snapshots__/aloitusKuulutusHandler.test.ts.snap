@@ -69,9 +69,14 @@ Object {
       },
       "tila": "ODOTTAA_HYVAKSYNTAA",
       "velho": Object {
+        "asiatunnusVayla": "A1",
         "kunnat": Array [
           "Tampere",
           "Nokia",
+        ],
+        "maakunnat": Array [
+          "Uusimaa",
+          "Pirkanmaa",
         ],
         "nimi": "Testiprojekti 1",
         "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
@@ -166,9 +171,14 @@ Object {
       },
       "tila": "ODOTTAA_HYVAKSYNTAA",
       "velho": Object {
+        "asiatunnusVayla": "A1",
         "kunnat": Array [
           "Tampere",
           "Nokia",
+        ],
+        "maakunnat": Array [
+          "Uusimaa",
+          "Pirkanmaa",
         ],
         "nimi": "Testiprojekti 1",
         "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
@@ -249,9 +259,14 @@ Object {
       },
       "tila": "HYVAKSYTTY",
       "velho": Object {
+        "asiatunnusVayla": "A1",
         "kunnat": Array [
           "Tampere",
           "Nokia",
+        ],
+        "maakunnat": Array [
+          "Uusimaa",
+          "Pirkanmaa",
         ],
         "nimi": "Testiprojekti 1",
         "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",

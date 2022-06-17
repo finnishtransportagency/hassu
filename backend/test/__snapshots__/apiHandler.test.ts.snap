@@ -599,12 +599,8 @@ Object {
       "tila": "HYVAKSYTTY",
       "velho": Object {
         "__typename": "Velho",
-        "kunnat": undefined,
         "nimi": "Testiprojekti 1",
-        "suunnittelustaVastaavaViranomainen": undefined,
-        "tilaajaOrganisaatio": undefined,
         "tyyppi": "TIE",
-        "vaylamuoto": undefined,
       },
       "yhteystiedot": Array [
         Object {

@@ -208,6 +208,7 @@ class ProjektiAdapterJulkinen {
         kuulutusYhteysHenkilot,
         kuulutusYhteystiedot,
         muistutusoikeusPaattyyPaiva,
+        velho,
       } = julkaisu;
       return {
         __typename: "NahtavillaoloVaiheJulkaisuJulkinen",
@@ -217,6 +218,7 @@ class ProjektiAdapterJulkinen {
         muistutusoikeusPaattyyPaiva,
         kuulutusYhteysHenkilot: adaptUsernamesToProjektiHenkiloIds(kuulutusYhteysHenkilot, projektiHenkilot),
         kuulutusYhteystiedot: adaptYhteystiedot(kuulutusYhteystiedot),
+        velho: adaptVelho(velho),
       };
     });
   }

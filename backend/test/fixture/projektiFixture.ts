@@ -256,6 +256,7 @@ export class ProjektiFixture {
       vaylamuoto: ["tie"],
       vastuuhenkilonEmail: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
       maakunnat: ["Uusimaa", "Pirkanmaa"],
+      asiatunnusVayla: "A" + this.PROJEKTI2_OID,
     },
     aloitusKuulutusJulkaisut: [
       {

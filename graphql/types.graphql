@@ -197,6 +197,7 @@ type NahtavillaoloVaiheJulkaisu {
   kuulutusVaihePaattyyPaiva: String
   muistutusoikeusPaattyyPaiva: String
   hankkeenKuvaus: HankkeenKuvaukset
+  velho: Velho!
   kielitiedot: Kielitiedot
   kuulutusYhteysHenkilot: [String!]
   kuulutusYhteystiedot: [Yhteystieto!]
@@ -214,6 +215,7 @@ type NahtavillaoloVaiheJulkaisuJulkinen {
   kuulutusVaihePaattyyPaiva: String
   muistutusoikeusPaattyyPaiva: String
   hankkeenKuvaus: HankkeenKuvaukset
+  velho: VelhoJulkinen!
   kielitiedot: Kielitiedot
   kuulutusYhteysHenkilot: [String!]
   kuulutusYhteystiedot: [Yhteystieto!]

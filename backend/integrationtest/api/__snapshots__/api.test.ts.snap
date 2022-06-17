@@ -1108,7 +1108,9 @@ Object {
             "Vantaa",
           ],
           "kuvaus": undefined,
-          "maakunnat": undefined,
+          "maakunnat": Array [
+            "Uusimaa",
+          ],
           "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
           "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
           "tilaajaOrganisaatio": "Väylävirasto",
@@ -2158,6 +2160,25 @@ Object {
         "muokkaaja": "A000112",
         "nahtavillaoloPDFt": undefined,
         "tila": "HYVAKSYTTY",
+        "velho": Object {
+          "__typename": "Velho",
+          "kunnat": Array [
+            "Helsinki",
+            " Vantaa",
+          ],
+          "linkki": null,
+          "maakunnat": Array [
+            "Uusimaa",
+          ],
+          "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+          "tilaajaOrganisaatio": "Väylävirasto",
+          "tyyppi": "TIE",
+          "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+          "vaylamuoto": Array [
+            "tie",
+          ],
+        },
       },
     ],
   },
@@ -2201,6 +2222,27 @@ Object {
         },
       ],
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
+      "velho": Object {
+        "__typename": "VelhoJulkinen",
+        "asiatunnusELY": undefined,
+        "asiatunnusVayla": undefined,
+        "kunnat": Array [
+          "Helsinki",
+          "Vantaa",
+        ],
+        "kuvaus": undefined,
+        "maakunnat": Array [
+          "Uusimaa",
+        ],
+        "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+        "tilaajaOrganisaatio": "Väylävirasto",
+        "toteuttavaOrganisaatio": undefined,
+        "tyyppi": "TIE",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
     },
   ],
 }

@@ -59,7 +59,7 @@ describe("emailHandler", () => {
 
         sinon.assert.calledOnce(sendEmailStub);
         sinon.assert.calledWith(sendEmailStub, {
-          subject: "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ",
+          subject: "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää A2",
           text:
             "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi\n" +
             "Testiprojekti 2 email lahetys\n" +

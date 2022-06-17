@@ -1,6 +1,6 @@
 import { Aineisto, LocalizedMap, Yhteystieto } from "./common";
 import { IlmoituksenVastaanottajat, NahtavillaoloVaiheTila } from "../../../../common/graphql/apiModel";
-import { Kielitiedot } from "./projekti";
+import { Kielitiedot, Velho } from "./projekti";
 
 export type NahtavillaoloVaihe = {
   aineistoNahtavilla?: Array<Aineisto> | null;
@@ -24,6 +24,7 @@ export type NahtavillaoloVaiheJulkaisu = {
   kuulutusVaihePaattyyPaiva?: string | null;
   muistutusoikeusPaattyyPaiva?: string | null;
   hankkeenKuvaus?: LocalizedMap<string>;
+  velho: Velho;
   kielitiedot: Kielitiedot;
   kuulutusYhteysHenkilot?: Array<string> | null;
   kuulutusYhteystiedot?: Array<Yhteystieto> | null;
