@@ -43,7 +43,10 @@
     "PROJEKTIPAALLIKKO": "Projektipäällikkö"
   },
   "yhteystiedot": "Yhteystiedot",
-  "lisatietoja_antavat": "Lisätietoja antavat {{yhteystiedot}}",
+  "lisatietoja_antavat": {
+    "one": "Lisätietoja antaa {{yhteystiedot}}",
+    "other":"Lisätietoja antavat {{yhteystiedot}}"
+  },
   "yhteystieto": "{{etunimi}} {{sukunimi}}, puh. {{puhelinnumero}}, {{sahkoposti}} ({{organisaatio}})",
   "ja": "ja",
   "viikonpaiva_0": "sunnuntai",

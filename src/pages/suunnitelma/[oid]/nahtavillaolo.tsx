@@ -13,7 +13,6 @@ import { Kieli, ProjektiTyyppi, Viranomainen } from "@services/api";
 import FormatDate from "@components/FormatDate";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import HassuLink from "@components/HassuLink";
 
 export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactElement {
   const router = useRouter();
@@ -80,12 +79,13 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
                 {velho.tyyppi !== ProjektiTyyppi.RATA && (
                   <ul>
                     <li>
-                      {t(`info.nahtavillaolo.ei-rata.kiinteiston_omistajilla_ja`)}{" "}
-                      {vastaavaViranomainen === Viranomainen.VAYLAVIRASTO
-                        ? t(`common:vaylavirastolle`)
-                        : t(`common:ely-keskukselle`)}{" "}
-                      {t(`info.nahtavillaolo.ei-rata.ennen_paattymista`)}{" "}
-                      <HassuLink href={window.location.href}>{window.location.href}</HassuLink>.{" "}
+                      {t(`info.nahtavillaolo.ei-rata.kiinteiston_omistajilla_ja`, {
+                        viranomainen:
+                          vastaavaViranomainen === Viranomainen.VAYLAVIRASTO
+                            ? t(`common:vaylavirastolle`)
+                            : t(`common:ely-keskukselle`),
+                        url: window.location.href,
+                      })}{" "}
                       {t(`info.nahtavillaolo.ei-rata.sahkopostilla_muistutus`)}
                     </li>
                   </ul>
@@ -105,8 +105,12 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
           <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.yhteystiedot`)}</h4>
           <SectionContent>
             <p>
+              {/* {t(yhteystiedotListana.length > 1 ? "common:lisatietoja_antavat" : "common:lisatietoja_antaa", {
+                yhteystiedot: yhteystiedotListana.join(", "),
+              })} */}
               {t("common:lisatietoja_antavat", {
                 yhteystiedot: yhteystiedotListana.join(", "),
+                count: yhteystiedotListana.length,
               })}
               {/* TODO hae projektin suunnittelusopimustiedoista kun saatavilla julkisessa rajapinnassa
               {suunnittelusopimus && (
