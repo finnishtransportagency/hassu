@@ -5,7 +5,7 @@ import { Stack } from "@mui/material";
 import { api } from "@services/api";
 import log from "loglevel";
 import { useRouter } from "next/router";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useProjektiRoute } from "src/hooks/useProjektiRoute";
 import useSnackbars from "src/hooks/useSnackbars";
@@ -29,6 +29,15 @@ export default function Painikkeet({ projekti }: Props) {
   const [openHyvaksy, setOpenHyvaksy] = useState<boolean>(false);
   const router = useRouter();
 
+  const mounted = useRef(false);
+
+  useEffect(() => {
+    mounted.current = true; // Will set it to true on mount ...
+    return () => {
+      mounted.current = false;
+    }; // ... and to false on unmount
+  }, []);
+
   const { handleSubmit } = useFormContext<KuulutuksenTiedotFormValues>();
 
   const saveSuunnitteluvaihe = useCallback(
@@ -48,7 +57,9 @@ export default function Painikkeet({ projekti }: Props) {
       log.error("OnSubmit Error", e);
       showErrorMessage("Tallennuksessa tapahtui virhe");
     }
-    setIsFormSubmitting(false);
+    if (mounted.current) {
+      setIsFormSubmitting(false);
+    }
   };
 
   const vaihdaNahtavillaolonTila = useCallback(
@@ -65,9 +76,11 @@ export default function Painikkeet({ projekti }: Props) {
         log.error(error);
         showErrorMessage("Toiminnossa tapahtui virhe");
       }
-      setIsFormSubmitting(false);
-      setOpen(false);
-      setOpenHyvaksy(false);
+      if (mounted.current) {
+        setIsFormSubmitting(false);
+        setOpen(false);
+        setOpenHyvaksy(false);
+      }
     },
     [setIsFormSubmitting, reloadProjekti, showSuccessMessage, showErrorMessage, setOpen, projekti]
   );
@@ -83,7 +96,9 @@ export default function Painikkeet({ projekti }: Props) {
         log.error("Virhe hyväksyntään lähetyksessä", error);
         showErrorMessage("Hyväksyntään lähetyksessä tapahtui virhe");
       }
-      setIsFormSubmitting(false);
+      if (mounted.current) {
+        setIsFormSubmitting(false);
+      }
     },
     [setIsFormSubmitting, saveSuunnitteluvaihe, vaihdaNahtavillaolonTila, showErrorMessage]
   );
@@ -128,7 +143,7 @@ export default function Painikkeet({ projekti }: Props) {
 
   return (
     <>
-      {voiHyvaksya && (
+      {!!voiHyvaksya && (
         <Section noDivider>
           <Stack direction={["column", "column", "row"]} justifyContent={[undefined, undefined, "flex-end"]}>
             <Button id="button_reject" onClick={() => setOpen(true)}>
@@ -140,7 +155,7 @@ export default function Painikkeet({ projekti }: Props) {
           </Stack>
         </Section>
       )}
-      {voiMuokata && (
+      {!!voiMuokata && (
         <>
           <Section noDivider>
             <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
