@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { TallennaProjektiInput, ViranomaisVastaanottajaInput, Projekti } from "@services/api";
+import { TallennaProjektiInput, KirjaamoOsoite, Projekti } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import React, { useEffect, useState } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
@@ -15,7 +15,7 @@ import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import { removeTypeName } from "src/util/removeTypeName";
 import Lukunakyma from "./Lukunakyma";
 
-function defaultValues(projekti: Projekti, kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] | undefined) {
+function defaultValues(projekti: Projekti, kirjaamoOsoitteet: KirjaamoOsoite[] | undefined) {
   return {
     oid: projekti.oid,
     nahtavillaoloVaihe: {
@@ -42,7 +42,7 @@ function defaultValues(projekti: Projekti, kirjaamoOsoitteet: ViranomaisVastaano
 }
 
 type Props = {
-  kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] | undefined;
+  kirjaamoOsoitteet: KirjaamoOsoite[] | undefined;
 };
 
 export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid" | "nahtavillaoloVaihe">;
