@@ -14,6 +14,7 @@ import IlmoituksenVastaanottajatKomponentti from "./IlmoituksenVastaanottajat";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import { removeTypeName } from "src/util/removeTypeName";
 import Lukunakyma from "./Lukunakyma";
+import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 
 function defaultValues(projekti: Projekti, kirjaamoOsoitteet: KirjaamoOsoite[] | undefined) {
   return {
@@ -41,15 +42,12 @@ function defaultValues(projekti: Projekti, kirjaamoOsoitteet: KirjaamoOsoite[] |
   };
 }
 
-type Props = {
-  kirjaamoOsoitteet: KirjaamoOsoite[] | undefined;
-};
-
 export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid" | "nahtavillaoloVaihe">;
 
-export default function KuulutuksenTiedot({ kirjaamoOsoitteet }: Props) {
+export default function KuulutuksenTiedot() {
   const { data: projekti } = useProjektiRoute();
   const [formContext, setFormContext] = useState<Projekti | undefined>(undefined);
+  const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
   const formOptions: UseFormProps<KuulutuksenTiedotFormValues> = {
     resolver: yupResolver(nahtavillaoloKuulutusSchema, { abortEarly: false, recursive: true }),
