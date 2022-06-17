@@ -167,6 +167,8 @@ export function adaptProjekti(data: ProjektiProjekti): { projekti: DBProjekti; v
       kunnat: getKunnat(data),
       maakunnat: getMaakunnat(data),
       vastuuhenkilonEmail: vastuuhenkiloEmail,
+      asiatunnusVayla: data.ominaisuudet["asiatunnus-vaylavirasto"],
+      asiatunnusELY: data.ominaisuudet["asiatunnus-ely"],
     },
     kayttoOikeudet: [],
   };

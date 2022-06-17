@@ -23,9 +23,14 @@ Object {
     "sukunimi": "Jossain",
   },
   "velho": Object {
+    "asiatunnusVayla": "A1",
     "kunnat": Array [
       "Tampere",
       "Nokia",
+    ],
+    "maakunnat": Array [
+      "Uusimaa",
+      "Pirkanmaa",
     ],
     "nimi": "Testiprojekti 1",
     "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
@@ -166,9 +171,14 @@ Object {
     "sukunimi": "Jossain",
   },
   "velho": Object {
+    "asiatunnusVayla": "A1",
     "kunnat": Array [
       "Tampere",
       "Nokia",
+    ],
+    "maakunnat": Array [
+      "Uusimaa",
+      "Pirkanmaa",
     ],
     "nimi": "Testiprojekti 1",
     "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",

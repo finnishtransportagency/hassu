@@ -2,7 +2,7 @@
 
 exports[`dynamoDBStreamHandler should index new projektis successfully 1`] = `
 Object {
-  "asiatunnus": undefined,
+  "asiatunnus": "A2",
   "maakunnat": Array [
     "Uusimaa",
     "Pirkanmaa",
@@ -71,7 +71,7 @@ Object {
 
 exports[`dynamoDBStreamHandler should index projekti updates successfully 1`] = `
 Object {
-  "asiatunnus": undefined,
+  "asiatunnus": "A2",
   "maakunnat": Array [
     "Uusimaa",
     "Pirkanmaa",
