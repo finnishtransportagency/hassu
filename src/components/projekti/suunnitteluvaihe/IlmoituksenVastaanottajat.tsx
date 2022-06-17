@@ -17,7 +17,7 @@ interface HelperType {
   viranomaiset?: FieldError | null | undefined;
 }
 interface Props {
-  kirjaamoOsoitteet: KuntaVastaanottajaInput[] | null;
+  kirjaamoOsoitteet: KuntaVastaanottajaInput[] | undefined;
   vuorovaikutus: Vuorovaikutus | undefined;
 }
 

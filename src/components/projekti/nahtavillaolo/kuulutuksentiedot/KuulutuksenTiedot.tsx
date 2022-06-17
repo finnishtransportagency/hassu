@@ -15,7 +15,7 @@ import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import { removeTypeName } from "src/util/removeTypeName";
 import Lukunakyma from "./Lukunakyma";
 
-function defaultValues(projekti: Projekti, kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] | null) {
+function defaultValues(projekti: Projekti, kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] | undefined) {
   return {
     oid: projekti.oid,
     nahtavillaoloVaihe: {
@@ -42,7 +42,7 @@ function defaultValues(projekti: Projekti, kirjaamoOsoitteet: ViranomaisVastaano
 }
 
 type Props = {
-  kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] | null;
+  kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] | undefined;
 };
 
 export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid" | "nahtavillaoloVaihe">;

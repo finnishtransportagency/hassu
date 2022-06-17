@@ -463,6 +463,11 @@ type IlmoituksenVastaanottajat {
   viranomaiset: [ViranomaisVastaanottaja!]
 }
 
+type KirjaamoOsoite {
+  nimi: IlmoitettavaViranomainen!
+  sahkoposti: String!
+}
+
 type ViranomaisVastaanottaja {
   nimi: IlmoitettavaViranomainen!
   sahkoposti: String!

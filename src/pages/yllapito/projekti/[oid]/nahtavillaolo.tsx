@@ -53,7 +53,7 @@ export default function Nahtavillaolo({
         defaultValue={0}
         tabs={[
           { label: "Nähtäville asetettavat aineistot", content: <NahtavilleAsetettavatAineistot /> },
-          { label: "Kuulutuksen tiedot", content: <KuulutuksenTiedot kirjaamoOsoitteet={kirjaamoOsoitteet || null} /> },
+          { label: "Kuulutuksen tiedot", content: <KuulutuksenTiedot kirjaamoOsoitteet={kirjaamoOsoitteet} /> },
         ]}
       />
     </ProjektiPageLayout>

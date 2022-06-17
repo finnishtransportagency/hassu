@@ -18,7 +18,7 @@ interface HelperType {
 }
 
 interface Props {
-  kirjaamoOsoitteet: KuntaVastaanottajaInput[] | null;
+  kirjaamoOsoitteet: KuntaVastaanottajaInput[] | undefined;
   nahtavillaoloVaihe: NahtavillaoloVaihe | null | undefined;
 }
 

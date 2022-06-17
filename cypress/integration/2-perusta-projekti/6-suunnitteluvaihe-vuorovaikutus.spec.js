@@ -171,7 +171,7 @@ describe("Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
       });
 
     cy.reload();
-    cy.get("#1_vuorovaikuttaminen_tab").click();
+    cy.wait(1000).get("#1_vuorovaikuttaminen_tab").click();
 
     mainFormSelectorToTextMap.forEach((text, selector) => {
       cy.get(selector, {

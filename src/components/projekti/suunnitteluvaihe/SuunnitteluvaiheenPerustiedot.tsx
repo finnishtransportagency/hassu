@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { suunnittelunPerustiedotSchema, maxHankkeenkuvausLength } from "src/schemas/suunnittelunPerustiedot";
 import SectionContent from "@components/layout/SectionContent";
 import Textarea from "@components/form/Textarea";
-import { Kieli, SuunnitteluVaiheInput, TallennaProjektiInput, api, Projekti } from "@services/api";
+import { Kieli, SuunnitteluVaiheInput, TallennaProjektiInput, api } from "@services/api";
 import Section from "@components/layout/Section";
 import lowerCase from "lodash/lowerCase";
 import { ReactElement, useEffect, useState } from "react";
@@ -15,10 +15,9 @@ import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
 import HassuSpinner from "@components/HassuSpinner";
 import { removeTypeName } from "src/util/removeTypeName";
-import { KeyedMutator } from "swr";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import HassuDialog from "@components/HassuDialog";
 import SaapuneetKysymyksetJaPalautteet from "./SaapuneetKysymyksetJaPalautteet";
+import { useProjektiRoute } from "src/hooks/useProjektiRoute";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -33,16 +32,11 @@ type FormValues = RequiredProjektiFields & {
 };
 
 interface Props {
-  projekti?: Projekti | null;
-  reloadProjekti?: KeyedMutator<ProjektiLisatiedolla | null>;
   isDirtyHandler: (isDirty: boolean) => void;
 }
 
-export default function SuunnitteluvaiheenPerustiedot({
-  projekti,
-  reloadProjekti,
-  isDirtyHandler,
-}: Props): ReactElement {
+export default function SuunnitteluvaiheenPerustiedot({ isDirtyHandler }: Props): ReactElement {
+  const { data: projekti, mutate: reloadProjekti } = useProjektiRoute();
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const [openHyvaksy, setOpenHyvaksy] = useState(false);

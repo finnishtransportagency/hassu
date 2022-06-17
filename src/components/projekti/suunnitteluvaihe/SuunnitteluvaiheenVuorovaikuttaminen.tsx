@@ -5,7 +5,6 @@ import {
   TallennaProjektiInput,
   api,
   VuorovaikutusInput,
-  ViranomaisVastaanottajaInput,
   LinkkiInput,
   Vuorovaikutus,
   Kieli,
@@ -33,6 +32,7 @@ import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
 import VuorovaikutustilaisuusDialog from "./VuorovaikutustilaisuusDialog";
 import cloneDeep from "lodash/cloneDeep";
 import { useProjektiRoute } from "src/hooks/useProjektiRoute";
+import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 
@@ -59,7 +59,6 @@ export type VuorovaikutusFormValues = ProjektiFields & {
 interface Props {
   isDirtyHandler: (isDirty: boolean) => void;
   vuorovaikutusnro: number;
-  kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] | null;
 }
 
 const defaultListWithEmptyLink = (list: LinkkiInput[] | null | undefined): LinkkiInput[] => {
@@ -77,7 +76,6 @@ const defaultVuorovaikutus: Vuorovaikutus = {
 export default function SuunnitteluvaiheenVuorovaikuttaminen({
   isDirtyHandler,
   vuorovaikutusnro,
-  kirjaamoOsoitteet,
 }: Props): ReactElement {
   const { data: projekti, mutate: reloadProjekti } = useProjektiRoute();
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
@@ -88,6 +86,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
   const [serializedFormData, setSerializedFormData] = useState("{}");
   const pdfFormRef = useRef<HTMLFormElement | null>(null);
   const [formContext, setFormContext] = useState<VuorovaikutusFormValues>();
+  const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
   const vuorovaikutus = useMemo(
     () =>

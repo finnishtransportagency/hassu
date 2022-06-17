@@ -18,6 +18,7 @@ type Query {
   valmisteleTiedostonLataus(tiedostoNimi: String!, contentType: String!): LatausTiedot
 
   laskePaattymisPaiva(alkupaiva: String!, tyyppi: LaskuriTyyppi!): String
+  listKirjaamoOsoitteet: [KirjaamoOsoite!]
 }
 
 type Mutation {

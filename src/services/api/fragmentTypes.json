@@ -231,6 +231,12 @@
       },
       {
         "kind": "OBJECT",
+        "name": "KirjaamoOsoite",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "KuntaVastaanottaja",
         "possibleTypes": null,
         "__typename": "__Type"
