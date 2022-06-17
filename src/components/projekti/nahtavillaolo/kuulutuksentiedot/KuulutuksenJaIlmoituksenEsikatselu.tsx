@@ -68,6 +68,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ projekti }: Props) 
               style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
               id={"preview_lahetekirje_pdf_" + ensisijainenKieli}
               type="submit"
+              disabled
               onClick={() =>
                 naytaEsikatselu(`/api/projekti/${projekti.oid}/nahtavillaolo/lahetekirje/pdf`, ensisijainenKieli)
               }
@@ -129,6 +130,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ projekti }: Props) 
                 style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
                 id={"preview_ilmoitus_kiinteiston_omistajalle_pdf_" + toissijainenKieli}
                 type="submit"
+                disabled
                 onClick={() =>
                   naytaEsikatselu(
                     `/api/projekti/${projekti.oid}/nahtavillaolo/ilmoitus_kiinteiston_omistajalle/pdf`,
