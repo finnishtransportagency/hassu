@@ -19,7 +19,7 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
   const { t } = useTranslation("projekti");
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
   const { data: projekti } = useProjektiJulkinen(oid);
-  const kuulutus = projekti?.nahtavillaoloVaiheJulkaisut?.pop();
+  const kuulutus = projekti?.nahtavillaoloVaiheJulkaisut?.[0];
   const velho = projekti?.velho;
 
   useProjektiBreadcrumbs(setRouteLabels);
