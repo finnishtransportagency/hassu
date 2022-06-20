@@ -75,6 +75,8 @@
   },
   "etunimi": "Etunimi",
   "sukunimi": "Sukunimi",
+  "katuosoite": "Katuosoite",
+  "postinumero_ja_paikka": "Postinumero ja postitoimipaikka",
   "sahkoposti": "Sähköposti",
   "puhelinnumero": "Puhelinnumero",
   "tiedosto_on_liian_suuri": "Tiedosto on liian suuri",

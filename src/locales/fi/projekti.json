@@ -175,5 +175,18 @@
     "70YS": "70YS Kuulutus hyväksymispäätöksen voimassaolon jatkamisesta",
     "71YS": "71YS Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta kunnalle",
     "72YS": "72YS Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta maakuntaliitolle"
+  },
+  "muistutuslomake": {
+    "voit_antaa_muistutuksen": "Voit antaa muistutuksen suunnitteluhankkeeseesta. Muistutukset tulee jättää {{pvm}} mennessä. Yhteystietonsa jättäneille muistutuksen tekijöille lähetetään myöhemmin tiedoksi Liikenne- ja viestintävirasto Traficomin tekemä hyväksymispäätös. Tieto hyväksymispäätöksestä toimitetaan ensisijaisesti alla annettuun sähköpostiosoitteeseen.",
+    "kasittelemme_henkilotietoja": "Käsittelemme henkilötietoja tietosuojasäännösten, muun lainsäädännön ja tietosuojaselosteen mukaisesti. Lue lisää Hassun tietosuojaselosteesta {{url}}",
+    "kiitos_viestista": "Kiitos viestistä",
+    "muistutus": "Muistutus",
+    "suunnitelman_asiatunnus": "Suunnitelman asiatunnus",
+    "suunnitelman_nimi": "Suunnitelmanimi",
+    "tuetut_tiedostomuodot_ovat": "Tuetut tiedostomuodot ovat PDF, JPG ja PNG. Sallittu tiedostokoko on maksimissaan 25Mt.",
+    "olemme_vastaanottaneet_viestisi": "Olemme vastaanottaneet viestisi.",
+    "kaikki_viestit_kasitellaan": "Kaikki viestit käsitellään ja ne pyritään huomioimaan suunnittelussa. Viimeistellyt suunnitelmat asetetaan myöhemmin nähtäville.",
+    "jos_toivoit_yhteydenottoa": "Jos toivoit yhteydenottoa, hankkeen suunnittelutiimi on sinuun yhteydessä mahdollisimman pian.",
+    "jata_muistutus": "Jätä muistutus hankkeesta"
   }
 }

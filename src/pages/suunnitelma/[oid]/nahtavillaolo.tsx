@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useState } from "react";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
@@ -13,6 +13,7 @@ import { Kieli, ProjektiTyyppi, Viranomainen } from "@services/api";
 import FormatDate from "@components/FormatDate";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
 import Notification, { NotificationType } from "@components/notification/Notification";
+import MuistutusLomakeDialogi from "@components/projekti/kansalaisnakyma/MuistutusLomakeDialogi";
 
 export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactElement {
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
   const { data: projekti } = useProjektiJulkinen(oid);
   const kuulutus = projekti?.nahtavillaoloVaiheJulkaisut?.[0];
   const velho = projekti?.velho;
+  const [muistutusLomakeOpen, setMuistutusLomakeOpen] = useState(false);
 
   useProjektiBreadcrumbs(setRouteLabels);
 
@@ -98,8 +100,14 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
           <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.muistutuksen_jattaminen`)}</h4>
           <SectionContent>
             <JataPalautettaNappi
-              teksti={t("palautelomake.jata_muistutus")}
-              onClick={() => console.log("jätä muistutus")}
+              teksti={t("muistutuslomake.jata_muistutus")}
+              onClick={() => setMuistutusLomakeOpen(true)}
+            />
+            <MuistutusLomakeDialogi
+              nahtavillaolo={kuulutus}
+              open={muistutusLomakeOpen}
+              onClose={() => setMuistutusLomakeOpen(false)}
+              projekti={projekti}
             />
           </SectionContent>
           <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.yhteystiedot`)}</h4>
