@@ -23,11 +23,8 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
   if (!projekti) {
     return <div />;
   }
-  if (!projekti.aloitusKuulutusJulkaisut || !projekti.aloitusKuulutusJulkaisut[0]) {
-    return <div />;
-  }
-  const kuulutus = projekti.aloitusKuulutusJulkaisut[0];
-  const velho = kuulutus.velho;
+
+  const velho = projekti.velho;
 
   const statusStep: Record<Status, number> = {
     EI_JULKAISTU_PROJEKTIN_HENKILOT: -2,
@@ -49,7 +46,7 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
         </div>
         <div className="md:col-span-6 lg:col-span-8 xl:col-span-9">
           <Section noDivider>
-            <h1>{velho.nimi}</h1>
+            <h1>{velho?.nimi}</h1>
             <ProjektiJulkinenStepper
               oid={projekti.oid}
               activeStep={statusStep[projekti.status || Status.EI_JULKAISTU]}
