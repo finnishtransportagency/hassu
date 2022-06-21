@@ -98,13 +98,13 @@ export class HassuDatabaseStack extends cdk.Stack {
         type: ddb.AttributeType.STRING,
       },
     });
-    HassuDatabaseStack.enableBackup(table);
 
     // TODO: uncomment after cdk-construct+aws-cdk version upgrade
     // const cfnTable = table.node.defaultChild as CfnTable;
     // cfnTable.tableClass = "STANDARD_INFREQUENT_ACCESS";
 
     if (Config.isPermanentEnvironment()) {
+      HassuDatabaseStack.enableBackup(table);
       table.applyRemovalPolicy(RemovalPolicy.RETAIN);
     }
     return table;
@@ -141,7 +141,13 @@ export class HassuDatabaseStack extends cdk.Stack {
       removalPolicy: RemovalPolicy.RETAIN,
       versioned: true,
     });
-    HassuDatabaseStack.enableBackup(bucket);
+    if (Config.isPermanentEnvironment()) {
+      HassuDatabaseStack.enableBackup(bucket);
+    } else {
+      // Do not keep archived data in developer environments
+      bucket.addLifecycleRule({ id: this.stackName + "-upload-delete-after-48h", expiration: Duration.hours(48) });
+    }
+
     return bucket;
   }
 

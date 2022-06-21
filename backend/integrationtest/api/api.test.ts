@@ -36,9 +36,14 @@ import {
   testUpdatePublishDateAndDeleteAineisto,
   verifyCloudfrontWasInvalidated,
   verifyEmailsSent,
+  verifyVuorovaikutusSnapshot,
 } from "./testUtil/tests";
 import { takeS3Snapshot } from "./testUtil/util";
-import { testNahtavillaOlo, testNahtavillaOloApproval } from "./testUtil/nahtavillaolo";
+import {
+  testImportNahtavillaoloAineistot,
+  testNahtavillaOlo,
+  testNahtavillaOloApproval,
+} from "./testUtil/nahtavillaolo";
 
 const sandbox = sinon.createSandbox();
 const { expect } = require("chai");
@@ -113,7 +118,9 @@ describe("Api", () => {
     await testSuunnitteluvaiheVuorovaikutus(oid, projektiPaallikko);
     const velhoAineistoKategorias = await testListDocumentsToImport(oid);
     await testImportAineistot(oid, velhoAineistoKategorias);
-    await processQueue(fakeAineistoImportQueue, userFixture, oid);
+    await processQueue(fakeAineistoImportQueue);
+    await verifyVuorovaikutusSnapshot(oid, userFixture);
+
     await testPublicAccessToProjekti(oid, Status.ALOITUSKUULUTUS, userFixture, " ennen suunnitteluvaihetta");
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -122,10 +129,12 @@ describe("Api", () => {
     await insertAndManageFeedback(oid);
 
     await julkaiseVuorovaikutus(oid, userFixture);
+    await processQueue(fakeAineistoImportQueue);
     await takeS3Snapshot(oid, "just after vuorovaikutus published");
     verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub);
 
     await testUpdatePublishDateAndDeleteAineisto(oid, userFixture);
+    await processQueue(fakeAineistoImportQueue);
     await takeS3Snapshot(oid, "vuorovaikutus publish date changed and last aineisto deleted");
     verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub);
 
@@ -134,7 +143,11 @@ describe("Api", () => {
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await testNahtavillaOlo(oid, projektiPaallikko.kayttajatunnus);
+    await testImportNahtavillaoloAineistot(oid, velhoAineistoKategorias);
+    await processQueue(fakeAineistoImportQueue);
     await testNahtavillaOloApproval(oid, projektiPaallikko, userFixture);
+    await processQueue(fakeAineistoImportQueue);
+    await takeS3Snapshot(oid, "Nahtavillaolo published");
   });
 
   it.skip("should archive projekti", async function () {

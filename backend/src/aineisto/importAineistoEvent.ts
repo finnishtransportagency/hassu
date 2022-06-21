@@ -1,4 +1,11 @@
+export enum ImportAineistoEventType {
+  IMPORT = "IMPORT",
+  PUBLISH_NAHTAVILLAOLO = "PUBLISH_NAHTAVILLAOLO",
+}
+
 export type ImportAineistoEvent = {
+  type: ImportAineistoEventType;
   oid: string;
-  vuorovaikutusNumero: number;
+  publishVuorovaikutusWithNumero?: number;
+  publishNahtavillaoloWithId?: number;
 };

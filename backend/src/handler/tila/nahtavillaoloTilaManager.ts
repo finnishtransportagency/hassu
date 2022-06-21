@@ -3,6 +3,7 @@ import { TilaManager } from "./TilaManager";
 import { DBProjekti, NahtavillaoloVaihe } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
+import { aineistoService } from "../../aineisto/aineistoService";
 
 function getNahtavillaoloVaihe(projekti: DBProjekti): NahtavillaoloVaihe {
   const nahtavillaoloVaihe = projekti.nahtavillaoloVaihe;
@@ -32,6 +33,7 @@ class NahtavillaoloTilaManager extends TilaManager {
     nahtavillaoloVaiheJulkaisu.tila = NahtavillaoloVaiheTila.ODOTTAA_HYVAKSYNTAA;
     nahtavillaoloVaiheJulkaisu.muokkaaja = muokkaaja.uid;
     await projektiDatabase.insertNahtavillaoloVaiheJulkaisu(projekti.oid, nahtavillaoloVaiheJulkaisu);
+    await aineistoService.publishNahtavillaolo(projekti.oid, nahtavillaoloVaiheJulkaisu.id);
   }
 
   async approve(projekti: DBProjekti, projektiPaallikko: NykyinenKayttaja): Promise<void> {

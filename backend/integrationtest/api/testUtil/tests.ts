@@ -12,7 +12,6 @@ import {
   TilasiirtymaTyyppi,
   VelhoAineistoKategoria,
   Vuorovaikutus,
-  VuorovaikutusInput,
 } from "../../../../common/graphql/apiModel";
 import { api } from "../apiClient";
 import axios from "axios";
@@ -35,8 +34,8 @@ import cloneDeep from "lodash/cloneDeep";
 const { expect } = require("chai");
 
 export function verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub: Sinon.SinonStub): void {
-  expect(awsCloudfrontInvalidationStub.getCalls()).to.have.length(1);
-  expect(awsCloudfrontInvalidationStub.getCalls()[0].args).to.have.length(2);
+  expect(awsCloudfrontInvalidationStub.getCalls()).to.have.length(1, "verifyCloudfrontWasInvalidated");
+  expect(awsCloudfrontInvalidationStub.getCalls()[0].args).to.have.length(2, "verifyCloudfrontWasInvalidated");
   const invalidationParams = awsCloudfrontInvalidationStub.getCalls()[0].args[0];
   invalidationParams.InvalidationBatch.CallerReference = "***unittest***";
   expect(invalidationParams).toMatchSnapshot();
@@ -259,38 +258,40 @@ export async function testImportAineistot(
   const originalVuorovaikutus = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe
     .vuorovaikutukset[0];
 
-  const { esittelyaineistot, suunnitelmaluonnokset } = velhoAineistoKategorias.reduce<
-    Pick<VuorovaikutusInput, "esittelyaineistot" | "suunnitelmaluonnokset">
-  >(
-    (documents, aineistoKategoria) => {
-      aineistoKategoria.aineistot.forEach((aineisto, index) => {
-        if (index % 2 === 0) {
-          documents.esittelyaineistot.push({
-            dokumenttiOid: aineisto.oid,
-            kategoriaId: aineisto.kategoriaId,
-            jarjestys: documents.esittelyaineistot.length + 1,
-            nimi: aineisto.tiedosto,
-          });
-        } else {
-          documents.suunnitelmaluonnokset.push({
-            dokumenttiOid: aineisto.oid,
-            kategoriaId: aineisto.kategoriaId,
-            jarjestys: documents.suunnitelmaluonnokset.length + 1,
-            nimi: aineisto.tiedosto,
-          });
-        }
-      });
-      return documents;
-    },
-    { esittelyaineistot: [], suunnitelmaluonnokset: [] }
-  );
+  const aineistot = velhoAineistoKategorias
+    .reduce((documents, aineistoKategoria) => {
+      return documents.concat(
+        aineistoKategoria.aineistot.filter(
+          (aineisto) =>
+            ["ekatiedosto_eka.pdf", "tokatiedosto_toka.pdf", "karttakuvalla_tiedosto.pdf"].indexOf(aineisto.tiedosto) >=
+            0
+        )
+      );
+    }, [])
+    .sort((a, b) => b.tiedosto.localeCompare(a.tiedosto));
+
+  let index = 1;
+  const esittelyaineistot = [aineistot[0], aineistot[2]].map((aineisto) => ({
+    dokumenttiOid: aineisto.oid,
+    kategoriaId: aineisto.kategoriaId,
+    jarjestys: index++,
+    nimi: aineisto.tiedosto,
+  }));
+
+  index = 1;
+  const suunnitelmaluonnokset = [aineistot[1]].map((aineisto) => ({
+    dokumenttiOid: aineisto.oid,
+    kategoriaId: aineisto.kategoriaId,
+    jarjestys: index++,
+    nimi: aineisto.tiedosto,
+  }));
 
   await saveAndVerifyAineistoSave(oid, esittelyaineistot, suunnitelmaluonnokset, originalVuorovaikutus, "initialSave");
-  esittelyaineistot.map((aineisto) => {
+  esittelyaineistot.forEach((aineisto) => {
     aineisto.nimi = "new " + aineisto.nimi;
     aineisto.jarjestys = aineisto.jarjestys + 10;
   });
-  suunnitelmaluonnokset.map((aineisto) => {
+  suunnitelmaluonnokset.forEach((aineisto) => {
     aineisto.nimi = "new " + aineisto.nimi;
     aineisto.jarjestys = aineisto.jarjestys + 10;
   });
@@ -318,16 +319,27 @@ export async function testUpdatePublishDateAndDeleteAineisto(oid: string, userFi
     .vuorovaikutukset[0];
   vuorovaikutus.esittelyaineistot?.pop();
   vuorovaikutus.suunnitelmaluonnokset?.pop();
+  const updatedVuorovaikutusJulkaisuPaiva = parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva)
+    .add(1, "day")
+    .format("YYYY-MM-DD");
   const input = {
     oid,
     suunnitteluVaihe: {
       vuorovaikutus: {
         ...vuorovaikutus,
-        vuorovaikutusJulkaisuPaiva: parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva).add(1, "date").format(),
+        vuorovaikutusJulkaisuPaiva: updatedVuorovaikutusJulkaisuPaiva,
       },
     },
   };
   await api.tallennaProjekti(input);
+}
+
+export async function verifyVuorovaikutusSnapshot(oid: string, userFixture: UserFixture): Promise<void> {
+  userFixture.loginAs(UserFixture.mattiMeikalainen);
+  const suunnitteluVaihe = (await loadProjektiFromDatabase(oid)).suunnitteluVaihe;
+  const vuorovaikutus = suunnitteluVaihe.vuorovaikutukset[0];
+  cleanupVuorovaikutusTimestamps([vuorovaikutus]);
+  expect(vuorovaikutus).toMatchSnapshot();
 }
 
 export async function insertAndManageFeedback(oid: string): Promise<void> {
@@ -445,18 +457,10 @@ export function verifyEmailsSent(emailClientStub: sinon.SinonStub<any[], any>): 
   ).toMatchSnapshot();
 }
 
-export async function processQueue(
-  fakeAineistoImportQueue: SQSEvent[],
-  userFixture: UserFixture,
-  oid: string
-): Promise<void> {
-  expect(fakeAineistoImportQueue).toMatchSnapshot();
+export async function processQueue(fakeAineistoImportQueue: SQSEvent[]): Promise<void> {
+  // expect(fakeAineistoImportQueue).to.not.be.empty;
   for (const event of fakeAineistoImportQueue) {
     await handleEvent(event, null, null);
   }
-  userFixture.loginAs(UserFixture.mattiMeikalainen);
-  const suunnitteluVaihe = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe;
-  const vuorovaikutus = suunnitteluVaihe.vuorovaikutukset[0];
-  cleanupVuorovaikutusTimestamps([vuorovaikutus]);
-  expect(vuorovaikutus).toMatchSnapshot();
+  fakeAineistoImportQueue.splice(0, fakeAineistoImportQueue.length); // Clear the queue
 }

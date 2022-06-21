@@ -22,7 +22,7 @@ import { Bucket } from "@aws-cdk/aws-s3";
 import {
   getEnvironmentVariablesFromSSM,
   readAccountStackOutputs,
-  readFrontendStackOutputs,
+  readFrontendStackOutputs
 } from "../bin/setupEnvironment";
 import { LambdaInsightsVersion } from "@aws-cdk/aws-lambda/lib/lambda-insights";
 import { RuleTargetInput } from "@aws-cdk/aws-events/lib/input";
@@ -262,7 +262,6 @@ export class HassuBackendStack extends cdk.Stack {
         ...commonEnvironmentVariables,
         PERSON_SEARCH_UPDATER_LAMBDA_ARN: personSearchUpdaterLambda.functionArn,
         FRONTEND_PUBLIC_KEY_ID: frontendStackOutputs?.FrontendPublicKeyIdOutput,
-        CLOUDFRONT_DISTRIBUTION_ID: frontendStackOutputs?.CloudfrontDistributionId,
         AINEISTO_IMPORT_SQS_URL: aineistoSQS.queueUrl,
       },
       tracing: Tracing.PASS_THROUGH,
@@ -284,26 +283,12 @@ export class HassuBackendStack extends cdk.Stack {
 
     aineistoSQS.grantSendMessages(backendLambda);
 
-    if (frontendStackOutputs?.CloudfrontDistributionId) {
-      backendLambda.addToRolePolicy(
-        new PolicyStatement({
-          effect: Effect.ALLOW,
-          actions: ["cloudfront:CreateInvalidation"],
-          resources: [
-            "arn:aws:cloudfront::" +
-              cdk.Aws.ACCOUNT_ID +
-              ":distribution/" +
-              frontendStackOutputs?.CloudfrontDistributionId,
-          ],
-        })
-      );
-    }
-
     this.props.uploadBucket.grantPut(backendLambda);
     this.props.uploadBucket.grantReadWrite(backendLambda);
     this.props.yllapitoBucket.grantReadWrite(backendLambda);
     this.props.internalBucket.grantReadWrite(backendLambda);
     this.props.publicBucket.grantReadWrite(backendLambda);
+    this.props.archiveBucket.grantReadWrite(backendLambda);
     return backendLambda;
   }
 
@@ -333,6 +318,8 @@ export class HassuBackendStack extends cdk.Stack {
     commonEnvironmentVariables: Record<string, string>,
     aineistoSQS: Queue
   ): Promise<NodejsFunction> {
+    let frontendStackOutputs = await readFrontendStackOutputs();
+
     const importer = new NodejsFunction(this, "AineistoImporterLambda", {
       functionName: "hassu-aineistoimporter-" + Config.env,
       runtime: lambda.Runtime.NODEJS_14_X,
@@ -347,10 +334,28 @@ export class HassuBackendStack extends cdk.Stack {
       environment: {
         ...commonEnvironmentVariables,
         AINEISTO_IMPORT_SQS_URL: aineistoSQS.queueUrl,
+        CLOUDFRONT_DISTRIBUTION_ID: frontendStackOutputs?.CloudfrontDistributionId,
       },
       tracing: Tracing.PASS_THROUGH,
     });
+
     this.props.yllapitoBucket.grantReadWrite(importer);
+    this.props.publicBucket.grantReadWrite(importer);
+
+    if (frontendStackOutputs?.CloudfrontDistributionId) {
+      importer.addToRolePolicy(
+        new PolicyStatement({
+          effect: Effect.ALLOW,
+          actions: ["cloudfront:CreateInvalidation"],
+          resources: [
+            "arn:aws:cloudfront::" +
+              cdk.Aws.ACCOUNT_ID +
+              ":distribution/" +
+              frontendStackOutputs?.CloudfrontDistributionId,
+          ],
+        })
+      );
+    }
 
     const eventSource = new SqsEventSource(aineistoSQS, { batchSize: 1 });
     importer.addEventSource(eventSource);

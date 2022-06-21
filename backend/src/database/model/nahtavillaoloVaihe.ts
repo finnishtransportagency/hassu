@@ -3,6 +3,7 @@ import { IlmoituksenVastaanottajat, NahtavillaoloVaiheTila } from "../../../../c
 import { Kielitiedot, Velho } from "./projekti";
 
 export type NahtavillaoloVaihe = {
+  id: number;
   aineistoNahtavilla?: Array<Aineisto> | null;
   lisaAineisto?: Array<Aineisto> | null;
   kuulutusPaiva?: string | null;
