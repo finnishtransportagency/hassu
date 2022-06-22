@@ -576,6 +576,7 @@ type LatausTiedot {
 
 enum LaskuriTyyppi {
   KUULUTUKSEN_PAATTYMISPAIVA
+  NAHTAVILLAOLON_KUULUTUKSEN_PAATTYMISPAIVA
 }
 
 enum Kieli {
