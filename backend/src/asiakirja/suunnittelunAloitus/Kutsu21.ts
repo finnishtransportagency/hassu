@@ -1,6 +1,5 @@
-import { DBProjekti } from "../../database/model/projekti";
+import { DBProjekti, Vuorovaikutus } from "../../database/model";
 import { Kieli } from "../../../../common/graphql/apiModel";
-import { Vuorovaikutus } from "../../database/model/suunnitteluVaihe";
 import { AsiakirjanMuoto } from "../asiakirjaService";
 import { EmailOptions } from "../../email/email";
 import { KutsuAdapter } from "./KutsuAdapter";
@@ -12,7 +11,9 @@ export class Kutsu21 {
   constructor(projekti: DBProjekti, vuorovaikutus: Vuorovaikutus, kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto) {
     this.kieli = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
     this.adapter = new KutsuAdapter({
-      projekti,
+      oid: projekti.oid,
+      kielitiedot: projekti.kielitiedot,
+      velho: projekti.velho,
       kieli: this.kieli,
       asiakirjanMuoto,
       projektiTyyppi: projekti.velho.tyyppi,

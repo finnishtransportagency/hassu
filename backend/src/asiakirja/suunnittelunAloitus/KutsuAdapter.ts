@@ -1,24 +1,16 @@
 import { Kieli, ProjektiRooli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
-import {
-  AloitusKuulutusJulkaisu,
-  DBProjekti,
-  DBVaylaUser,
-  Kielitiedot,
-  SuunnitteluSopimus,
-  Velho,
-  Vuorovaikutus,
-  Yhteystieto,
-} from "../../database/model";
+import { DBVaylaUser, Kielitiedot, SuunnitteluSopimus, Velho, Vuorovaikutus, Yhteystieto } from "../../database/model";
 import { AsiakirjanMuoto } from "../asiakirjaService";
 import { translate } from "../../util/localization";
 import { linkSuunnitteluVaihe } from "../../../../common/links";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 
 export type KutsuAdapterProps = {
-  aloitusKuulutusJulkaisu?: AloitusKuulutusJulkaisu;
-  projekti?: DBProjekti;
+  oid?: string;
+  velho: Velho;
+  kielitiedot: Kielitiedot;
   kieli: Kieli;
-  asiakirjanMuoto?: AsiakirjanMuoto;
+  asiakirjanMuoto: AsiakirjanMuoto;
   projektiTyyppi: ProjektiTyyppi;
   vuorovaikutus?: Vuorovaikutus;
   kayttoOikeudet?: DBVaylaUser[];
@@ -42,24 +34,25 @@ export class KutsuAdapter {
   private readonly velho: Velho;
   private readonly kieli: Kieli;
   private readonly asiakirjanMuoto: AsiakirjanMuoto;
-  private readonly oid: string;
+  private readonly oid?: string;
   private readonly projektiTyyppi: ProjektiTyyppi;
-  private readonly vuorovaikutus: Vuorovaikutus;
-  private kayttoOikeudet: DBVaylaUser[];
+  private readonly vuorovaikutus?: Vuorovaikutus;
+  private kayttoOikeudet?: DBVaylaUser[];
   private readonly kielitiedot: Kielitiedot;
 
   constructor({
-    projekti,
-    aloitusKuulutusJulkaisu,
+    oid,
+    velho,
+    kielitiedot,
     asiakirjanMuoto,
     kieli,
     projektiTyyppi,
     vuorovaikutus,
     kayttoOikeudet,
   }: KutsuAdapterProps) {
-    this.oid = projekti?.oid;
-    this.velho = aloitusKuulutusJulkaisu ? aloitusKuulutusJulkaisu.velho : projekti.velho;
-    this.kielitiedot = aloitusKuulutusJulkaisu ? aloitusKuulutusJulkaisu.kielitiedot : projekti.kielitiedot;
+    this.oid = oid;
+    this.velho = velho;
+    this.kielitiedot = kielitiedot;
     this.kieli = kieli;
     this.asiakirjanMuoto = asiakirjanMuoto;
     this.projektiTyyppi = projektiTyyppi;
@@ -191,6 +184,10 @@ export class KutsuAdapter {
       "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy",
       "https://www.vayla.fi/tietosuoja"
     );
+  }
+
+  get asianumero(): string {
+    return this.velho.asiatunnusVayla || this.velho.asiatunnusELY;
   }
 
   selectText(suomi: string, ruotsi?: string, saame?: string): string {

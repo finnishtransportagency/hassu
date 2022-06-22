@@ -13,7 +13,7 @@ type Query {
     oid: String!
     asiakirjaTyyppi: AsiakirjaTyyppi!
     kieli: Kieli
-    muutokset: TallennaProjektiInput
+    muutokset: TallennaProjektiInput!
   ): PDF
   valmisteleTiedostonLataus(tiedostoNimi: String!, contentType: String!): LatausTiedot
 

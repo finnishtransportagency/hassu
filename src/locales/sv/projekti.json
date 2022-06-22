@@ -26,6 +26,9 @@
         "asianosaisten_katsotaan_saaneen": "RUOTSIKSI Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä päivänä kuulutuksen julkaisemisajankohdasta (hallintolaki 62 a §)",
         "kiinteiston_omistajilla_ja": "RUOTSIKSI Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa, on mahdollisuus muistutusten tekemiseen suunnitelmasta. Muistutukset on toimitettava {{viranomainen}} ennen nähtävänäoloajan päättymistä (LjMTL 27 §) Valtion liikenneväylien suunnittelu -järjestelmään osoitteeseen {{url}}",
         "sahkopostilla_muistutus": "RUOTSIKSI Sähköpostilla muistutusta lähettäessä on liitettävä viestiin projektin asiatunnus."
+      },
+      "rata": {
+        "vaylavirasto_on_laatinut": "RUOTSIKSI Väylävirasto on laatinut ratalain (110/2007) mukaisen yleis-/ratasuunnitelman"
       }
     },
     "hankesuunnitelmista": "RUOTSIKSI Hankesuunnitelmista lorem ipsum-teksti tähän, joka kertoo lyhyesti mitä tämä sivusto pitää sisällään. Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam dicta voluptatem fugit quos praesentium architecto accusamus non earum fuga veritatis, quia facilis est repellendus et iste similique beatae perferendis totam?"

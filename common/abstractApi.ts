@@ -231,7 +231,7 @@ export abstract class AbstractApi {
     oid: string,
     asiakirjaTyyppi: AsiakirjaTyyppi,
     kieli: Kieli,
-    muutokset?: TallennaProjektiInput
+    muutokset: TallennaProjektiInput
   ): Promise<PDF> {
     return await this.callYllapitoAPI(apiConfig.esikatseleAsiakirjaPDF, {
       oid,

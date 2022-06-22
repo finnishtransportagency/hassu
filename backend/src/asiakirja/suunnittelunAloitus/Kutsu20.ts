@@ -54,7 +54,14 @@ export class Kutsu20 extends CommonPdf {
     super(
       fileName,
       kieli,
-      new KutsuAdapter({ projekti, kieli, asiakirjanMuoto, projektiTyyppi: projekti.velho.tyyppi }),
+      new KutsuAdapter({
+        oid: projekti.oid,
+        kielitiedot: projekti.kielitiedot,
+        velho: projekti.velho,
+        kieli,
+        asiakirjanMuoto,
+        projektiTyyppi: projekti.velho.tyyppi,
+      }),
       fileName
     );
     this.projekti = projekti;

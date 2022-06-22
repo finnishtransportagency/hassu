@@ -1,48 +1,60 @@
 import { AsiakirjaTyyppi, Kieli, PDF, ProjektiTyyppi } from "../../../common/graphql/apiModel";
-import { AloitusKuulutusJulkaisu, DBProjekti } from "../database/model/projekti";
+import { AloitusKuulutusJulkaisu, DBProjekti, NahtavillaoloVaihe } from "../database/model";
 import { AloitusKuulutus10T } from "./suunnittelunAloitus/aloitusKuulutus10T";
 import { AloitusKuulutus10R } from "./suunnittelunAloitus/aloitusKuulutus10R";
 import { Ilmoitus12T } from "./suunnittelunAloitus/ilmoitus12T";
 import { Ilmoitus12R } from "./suunnittelunAloitus/ilmoitus12R";
 import { Kutsu20 } from "./suunnittelunAloitus/Kutsu20";
-import { Vuorovaikutus } from "../database/model/suunnitteluVaihe";
+import { Vuorovaikutus } from "../database/model/";
 import { Kutsu21 } from "./suunnittelunAloitus/Kutsu21";
 import { EmailOptions } from "../email/email";
+import { Kutsu30 } from "./suunnittelunAloitus/Kutsu30";
+import { kirjaamoOsoitteetService } from "../kirjaamoOsoitteet/kirjaamoOsoitteetService";
 
-interface CreatePdfOptions {
-  projekti?: DBProjekti;
-  aloitusKuulutusJulkaisu?: AloitusKuulutusJulkaisu;
-  vuorovaikutus?: Vuorovaikutus;
+interface CreateNahtavillaoloKuulutusPdfOptions {
+  projekti: DBProjekti;
+  nahtavillaoloVaihe: NahtavillaoloVaihe;
+  kieli: Kieli;
+  luonnos: boolean;
+}
+
+interface YleisotilaisuusKutsuPdfOptions {
+  projekti: DBProjekti;
+  vuorovaikutus: Vuorovaikutus;
+  kieli: Kieli;
+  luonnos: boolean;
+}
+
+interface AloituskuulutusPdfOptions {
+  aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu;
   asiakirjaTyyppi: AsiakirjaTyyppi;
   kieli: Kieli;
   luonnos: boolean;
 }
 
 export enum AsiakirjanMuoto {
-  TIE,
-  RATA,
+  TIE = "TIE",
+  RATA = "RATA",
 }
 
-export function determineAsiakirjaMuoto(tyyppi: ProjektiTyyppi, vaylamuoto: string[]): AsiakirjanMuoto | null {
+export function determineAsiakirjaMuoto(tyyppi: ProjektiTyyppi, vaylamuoto: string[]): AsiakirjanMuoto | undefined {
   if (tyyppi === ProjektiTyyppi.TIE || (tyyppi === ProjektiTyyppi.YLEINEN && vaylamuoto?.includes("tie"))) {
     return AsiakirjanMuoto.TIE;
   } else if (tyyppi === ProjektiTyyppi.RATA || (tyyppi === ProjektiTyyppi.YLEINEN && vaylamuoto?.includes("rata"))) {
     return AsiakirjanMuoto.RATA;
   }
-  return null;
+  throw new Error("Asiakirjan muotoa ei voitu päätellä");
 }
 
 export class AsiakirjaService {
-  createPdf({
-    projekti,
+  createAloituskuulutusPdf({
     asiakirjaTyyppi,
     aloitusKuulutusJulkaisu,
-    vuorovaikutus,
     kieli,
-    luonnos
-  }: CreatePdfOptions): Promise<PDF> {
+    luonnos,
+  }: AloituskuulutusPdfOptions): Promise<PDF> {
     let pdf: Promise<PDF>;
-    const asiakirjanMuoto = determineAsiakirjaMuoto(
+    const asiakirjanMuoto: AsiakirjanMuoto | undefined = determineAsiakirjaMuoto(
       aloitusKuulutusJulkaisu.velho.tyyppi,
       aloitusKuulutusJulkaisu.velho.vaylamuoto
     );
@@ -58,7 +70,7 @@ export class AsiakirjaService {
             break;
           default:
             throw new Error(
-              `Aloituskuulutuspohjaa ei pystytä päättelemään. tyyppi: '${aloitusKuulutusJulkaisu.velho.tyyppi}', vaylamuoto: '${aloitusKuulutusJulkaisu.velho?.vaylamuoto}'`
+              `Aloituskuulutuspohjaa ei pystytä päättelemään. asiakirjanMuoto:'${asiakirjanMuoto}' tyyppi: '${aloitusKuulutusJulkaisu.velho.tyyppi}', vaylamuoto: '${aloitusKuulutusJulkaisu.velho?.vaylamuoto}'`
             );
         }
         break;
@@ -76,41 +88,42 @@ export class AsiakirjaService {
             );
         }
         break;
-      case AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU:
-        switch (asiakirjanMuoto) {
-          case AsiakirjanMuoto.TIE:
-          case AsiakirjanMuoto.RATA:
-            pdf = new Kutsu20(projekti, vuorovaikutus, kieli, asiakirjanMuoto).pdf(luonnos);
-            break;
-          default:
-            throw new Error(
-              `Ilmoituspohjaa ei pystytä päättelemään. tyyppi: '${aloitusKuulutusJulkaisu.velho.tyyppi}', vaylamuoto: '${aloitusKuulutusJulkaisu.velho?.vaylamuoto}'`
-            );
-        }
-        break;
       default:
         throw new Error(`Asiakirjatyyppi ('${asiakirjaTyyppi}') ei ole vielä tuettu`);
     }
     return pdf;
   }
 
-  createEmail({ projekti, asiakirjaTyyppi, vuorovaikutus, kieli }: CreatePdfOptions): EmailOptions {
-    const asiakirjanMuoto = determineAsiakirjaMuoto(projekti.velho.tyyppi, projekti.velho.vaylamuoto);
+  createYleisotilaisuusKutsuPdf({
+    projekti,
+    vuorovaikutus,
+    kieli,
+    luonnos,
+  }: YleisotilaisuusKutsuPdfOptions): Promise<PDF> {
+    const asiakirjanMuoto = determineAsiakirjaMuoto(projekti?.velho?.tyyppi, projekti?.velho?.vaylamuoto);
+    return new Kutsu20(projekti, vuorovaikutus, kieli, asiakirjanMuoto).pdf(luonnos);
+  }
 
-    switch (asiakirjaTyyppi) {
-      case AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU:
-        switch (asiakirjanMuoto) {
-          case AsiakirjanMuoto.TIE:
-          case AsiakirjanMuoto.RATA:
-            return new Kutsu21(projekti, vuorovaikutus, kieli, asiakirjanMuoto).createEmail();
-          default:
-            throw new Error(
-              `Ilmoituspohjaa ei pystytä päättelemään. tyyppi: '${projekti.velho.tyyppi}', vaylamuoto: '${projekti.velho?.vaylamuoto}'`
-            );
-        }
-      default:
-        throw new Error(`Asiakirjatyyppi ('${asiakirjaTyyppi}') ei ole vielä tuettu`);
-    }
+  async createNahtavillaoloKuulutusPdf({
+    projekti,
+    nahtavillaoloVaihe,
+    kieli,
+    luonnos,
+  }: CreateNahtavillaoloKuulutusPdfOptions): Promise<PDF> {
+    const asiakirjanMuoto = determineAsiakirjaMuoto(projekti?.velho?.tyyppi, projekti?.velho?.vaylamuoto);
+
+    return new Kutsu30(
+      projekti,
+      nahtavillaoloVaihe,
+      kieli,
+      asiakirjanMuoto,
+      await kirjaamoOsoitteetService.listKirjaamoOsoitteet()
+    ).pdf(luonnos);
+  }
+
+  createYleisotilaisuusKutsuEmail({ projekti, vuorovaikutus, kieli }: YleisotilaisuusKutsuPdfOptions): EmailOptions {
+    const asiakirjanMuoto = determineAsiakirjaMuoto(projekti.velho.tyyppi, projekti.velho.vaylamuoto);
+    return new Kutsu21(projekti, vuorovaikutus, kieli, asiakirjanMuoto).createEmail();
   }
 }
 

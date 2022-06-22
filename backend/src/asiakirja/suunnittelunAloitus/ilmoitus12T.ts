@@ -1,6 +1,7 @@
 import { SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
 import { AloitusKuulutusJulkaisu } from "../../database/model/projekti";
 import { Kieli } from "../../../../common/graphql/apiModel";
+import { AsiakirjanMuoto } from "../asiakirjaService";
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
   SUOMI: "ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA",
@@ -9,7 +10,7 @@ const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
 
 export class Ilmoitus12T extends SuunnittelunAloitusPdf {
   constructor(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu, kieli: Kieli) {
-    super(aloitusKuulutusJulkaisu, kieli, headers[kieli == Kieli.SAAME ? Kieli.SUOMI : kieli]); //TODO lisää tuki Saamen eri muodoille
+    super(aloitusKuulutusJulkaisu, kieli, headers[kieli == Kieli.SAAME ? Kieli.SUOMI : kieli], AsiakirjanMuoto.TIE); //TODO lisää tuki Saamen eri muodoille
   }
 
   protected addDocumentElements(): PDFKit.PDFStructureElementChild[] {

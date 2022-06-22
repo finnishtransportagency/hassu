@@ -1,6 +1,6 @@
 import { ProjektiAdaptationResult } from "../handler/projektiAdapter";
 import { aineistoService } from "../aineisto/aineistoService";
-import { AloitusKuulutusTila, AsiakirjaTyyppi, IlmoituksenVastaanottajat } from "../../../common/graphql/apiModel";
+import { IlmoituksenVastaanottajat } from "../../../common/graphql/apiModel";
 import { asiakirjaService } from "../asiakirja/asiakirjaService";
 import { fileService } from "../files/fileService";
 import { projektiDatabase } from "../database/projektiDatabase";
@@ -44,13 +44,8 @@ class VuorovaikutusService {
   async handleVuorovaikutusKutsu({ aineistoChanges: { vuorovaikutus }, projekti: { oid } }: ProjektiAdaptationResult) {
     // Generate invitation PDF
     const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
-    const aloitusKuulutusJulkaisu = projektiInDB.aloitusKuulutusJulkaisut
-      .filter((julkaisu) => julkaisu.tila == AloitusKuulutusTila.HYVAKSYTTY)
-      .pop();
-    const pdf = await asiakirjaService.createPdf({
-      asiakirjaTyyppi: AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU,
+    const pdf = await asiakirjaService.createYleisotilaisuusKutsuPdf({
       projekti: projektiInDB,
-      aloitusKuulutusJulkaisu,
       vuorovaikutus,
       kieli: projektiInDB.kielitiedot.ensisijainenKieli,
       luonnos: false,
@@ -67,9 +62,8 @@ class VuorovaikutusService {
       contentType: "application/pdf",
     });
 
-    const emailOptions = asiakirjaService.createEmail({
+    const emailOptions = asiakirjaService.createYleisotilaisuusKutsuEmail({
       projekti: projektiInDB,
-      asiakirjaTyyppi: AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU,
       vuorovaikutus,
       kieli: projektiInDB.kielitiedot.ensisijainenKieli,
       luonnos: false,

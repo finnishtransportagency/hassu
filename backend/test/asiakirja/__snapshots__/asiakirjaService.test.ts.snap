@@ -2,62 +2,10 @@
 
 exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 1`] = `
 Object {
-  "hankkeenKuvaus": Object {
-    "RUOTSI": "På svenska",
-    "SAAME": "Saameksi",
-    "SUOMI": "Lorem Ipsum",
-  },
-  "id": 1,
-  "kielitiedot": Object {
-    "ensisijainenKieli": "SUOMI",
-    "projektinNimiVieraskielella": "Namnet på svenska",
-    "toissijainenKieli": "RUOTSI",
-  },
-  "kuulutusPaiva": "2022-01-02",
-  "siirtyySuunnitteluVaiheeseen": "2022-01-01",
-  "suunnitteluSopimus": Object {
-    "email": "Joku.Jossain@vayla.fi",
-    "etunimi": "Joku",
-    "kunta": "Nokia",
-    "puhelinnumero": "123",
-    "sukunimi": "Jossain",
-  },
-  "velho": Object {
-    "asiatunnusVayla": "A1",
-    "kunnat": Array [
-      "Tampere",
-      "Nokia",
-    ],
-    "maakunnat": Array [
-      "Uusimaa",
-      "Pirkanmaa",
-    ],
-    "nimi": "Testiprojekti 1",
-    "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
-    "tilaajaOrganisaatio": "Uudenmaan ELY-keskus",
-    "tyyppi": "TIE",
-    "vaylamuoto": Array [
-      "tie",
-    ],
-  },
-  "yhteystiedot": Array [
-    Object {
-      "etunimi": "Marko",
-      "organisaatio": "Kajaani",
-      "puhelinnumero": "0293121213",
-      "sahkoposti": "markku.koi@koi.com",
-      "sukunimi": "Koi",
-    },
-  ],
-}
-`;
-
-exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 2`] = `
-Object {
   "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
-  "text": "Testiprojekti 1, Tampere ja Nokia
+  "text": "Testiprojekti 1 UUDENMAAN_ELY+TIE+SUOMI, Tampere ja Nokia
 
-Uudenmaan ELY-keskus laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista tiesuunnitelmaa Testiprojekti 1.
+Uudenmaan ELY-keskus laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista tiesuunnitelmaa Testiprojekti 1 UUDENMAAN_ELY+TIE+SUOMI.
 
 Uudenmaan ELY-keskus ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun tiesuunnitelman yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
 
@@ -66,6 +14,30 @@ Kutsu julkaistaan 23.3.2022 Uudenmaan ELY-keskuksen tietoverkossa osoitteessa ht
 Uudenmaan ELY-keskus pyytää Tampere, Nokia ja Uudenmaan ELY-keskusta julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa Uudenmaan ELY-keskukselle.
 
 Uudenmaan ELY-keskus käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Lisätietoja väyläsuunnittelun tietosuojakäytänteistä on saatavilla verkkosivujen tietosuojaosiossa osoitteessa https://www.vayla.fi/tietosuoja.
+
+Lisätietoja antaa:
+Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
+Väylävirasto, Pekka Projari, puhelin pekka.projari@vayla.fi ja sähköposti pekka.projari@vayla.fi.
+Väylävirasto, Matti Meikalainen, puhelin Matti.Meikalainen@vayla.fi ja sähköposti Matti.Meikalainen@vayla.fi.
+
+LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
+}
+`;
+
+exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 2`] = `
+Object {
+  "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
+  "text": "Namnet på svenska, Tampere och Nokia
+
+RUOTSIKSI Uudenmaan ELY-keskus<RUOTSI laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista RUOTSI>vägplanen Namnet på svenska.
+
+RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun vägplanen yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
+
+<RUOTSIKutsu julkaistaan 23.3.2022 RUOTSIKSI Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.RUOTSI>
+
+RUOTSIKSI Uudenmaan ELY-keskus pyytää Tampere, Nokia ja RUOTSIKSI Uudenmaan ELY-keskusta julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa RUOTSIKSI Uudenmaan ELY-keskukselle.
+
+RUOTSIKSI Uudenmaan ELY-keskus käsittelee vägplanen laatimiseen liittyen tarpeellisia henkilötietoja. Lisätietoja väyläsuunnittelun tietosuojakäytänteistä on saatavilla verkkosivujen tietosuojaosiossa osoitteessa https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
 
 Lisätietoja antaa:
 Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
@@ -78,18 +50,18 @@ LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
 
 exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 3`] = `
 Object {
-  "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
-  "text": "Namnet på svenska, Tampere och Nokia
+  "subject": "",
+  "text": "Testiprojekti 1 VAYLAVIRASTO+RATA+SUOMI, Tampere ja Nokia
 
-RUOTSIKSI Uudenmaan ELY-keskus<RUOTSI laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista RUOTSI>vägplanen Namnet på svenska.
+Väylävirasto laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista ratasuunnitelmaa Testiprojekti 1 VAYLAVIRASTO+RATA+SUOMI.
 
-RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun vägplanen yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
+Väylävirasto ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun ratasuunnitelman yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
 
-<RUOTSIKutsu julkaistaan 23.3.2022 RUOTSIKSI Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.RUOTSI>
+Kutsu julkaistaan 23.3.2022 väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
 
-RUOTSIKSI Uudenmaan ELY-keskus pyytää Tampere, Nokia ja RUOTSIKSI Uudenmaan ELY-keskusta julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa RUOTSIKSI Uudenmaan ELY-keskukselle.
+Väylävirasto pyytää Tampere, Nokia ja Väylävirastoa julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa Väylävirastolle.
 
-RUOTSIKSI Uudenmaan ELY-keskus käsittelee vägplanen laatimiseen liittyen tarpeellisia henkilötietoja. Lisätietoja väyläsuunnittelun tietosuojakäytänteistä on saatavilla verkkosivujen tietosuojaosiossa osoitteessa https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
+Väylävirasto käsittelee ratasuunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Lisätietoja väyläsuunnittelun tietosuojakäytänteistä on saatavilla verkkosivujen tietosuojaosiossa osoitteessa https://www.vayla.fi/tietosuoja.
 
 Lisätietoja antaa:
 Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
@@ -102,42 +74,18 @@ LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
 
 exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 4`] = `
 Object {
-  "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
-  "text": "Testiprojekti 1, Tampere ja Nokia
-
-Uudenmaan ELY-keskus laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista tiesuunnitelmaa Testiprojekti 1.
-
-Uudenmaan ELY-keskus ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun tiesuunnitelman yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
-
-Kutsu julkaistaan 23.3.2022 Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
-
-Uudenmaan ELY-keskus pyytää Tampere, Nokia ja Uudenmaan ELY-keskusta julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa Uudenmaan ELY-keskukselle.
-
-Uudenmaan ELY-keskus käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Lisätietoja väyläsuunnittelun tietosuojakäytänteistä on saatavilla verkkosivujen tietosuojaosiossa osoitteessa https://www.vayla.fi/tietosuoja.
-
-Lisätietoja antaa:
-Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
-Väylävirasto, Pekka Projari, puhelin pekka.projari@vayla.fi ja sähköposti pekka.projari@vayla.fi.
-Väylävirasto, Matti Meikalainen, puhelin Matti.Meikalainen@vayla.fi ja sähköposti Matti.Meikalainen@vayla.fi.
-
-LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
-}
-`;
-
-exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 5`] = `
-Object {
-  "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
+  "subject": "",
   "text": "Namnet på svenska, Tampere och Nokia
 
-RUOTSIKSI Uudenmaan ELY-keskus<RUOTSI laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista RUOTSI>vägplanen Namnet på svenska.
+RUOTSIKSI Väylävirasto<RUOTSI laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista RUOTSI>järnvägsplanen Namnet på svenska.
 
-RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun vägplanen yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
+RUOTSIKSI Väylävirasto ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun järnvägsplanen yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
 
-<RUOTSIKutsu julkaistaan 23.3.2022 RUOTSIKSI Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.RUOTSI>
+<RUOTSIKutsu julkaistaan 23.3.2022 trafikledsverkets tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.RUOTSI>
 
-RUOTSIKSI Uudenmaan ELY-keskus pyytää Tampere, Nokia ja RUOTSIKSI Uudenmaan ELY-keskusta julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa RUOTSIKSI Uudenmaan ELY-keskukselle.
+RUOTSIKSI Väylävirasto pyytää Tampere, Nokia ja RUOTSIKSI Väylävirastoa julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa RUOTSIKSI Väylävirastolle.
 
-RUOTSIKSI Uudenmaan ELY-keskus käsittelee vägplanen laatimiseen liittyen tarpeellisia henkilötietoja. Lisätietoja väyläsuunnittelun tietosuojakäytänteistä on saatavilla verkkosivujen tietosuojaosiossa osoitteessa https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
+RUOTSIKSI Väylävirasto käsittelee järnvägsplanen laatimiseen liittyen tarpeellisia henkilötietoja. Lisätietoja väyläsuunnittelun tietosuojakäytänteistä on saatavilla verkkosivujen tietosuojaosiossa osoitteessa https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
 
 Lisätietoja antaa:
 Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
