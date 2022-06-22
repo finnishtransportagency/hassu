@@ -35,6 +35,8 @@ import {
   VelhoAineistoKategoria,
   VelhoHakuTulos,
   KirjaamoOsoite,
+  MuistutusInput,
+  LisaaMuistutusMutationVariables,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -146,6 +148,11 @@ export const apiConfig: ApiConfig = {
     name: "listKirjaamoOsoitteet",
     operationType: OperationType.Query,
     graphql: queries.listKirjaamoOsoitteet,
+  },
+  lisaaMuistutus: {
+    name: "lisaaMuistutus",
+    operationType: OperationType.Mutation,
+    graphql: mutations.lisaaMuistutus,
   },
 };
 
@@ -259,6 +266,13 @@ export abstract class AbstractApi {
       oid,
       palaute,
     } as LisaaPalauteMutationVariables);
+  }
+
+  async lisaaMuistutus(oid: string, muistutus: MuistutusInput): Promise<string> {
+    return await this.callAPI(apiConfig.lisaaMuistutus, {
+      oid,
+      muistutus,
+    } as LisaaMuistutusMutationVariables);
   }
 
   async otaPalauteKasittelyyn(oid: string, id: string): Promise<string> {

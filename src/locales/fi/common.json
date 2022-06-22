@@ -67,7 +67,10 @@
     "sukunimi_max_100": "Sukunimi voi olla enintään 100 merkkiä",
     "puh_max_20": "Puhelinnumero voi olla enintään 20 merkkiä pitkä",
     "sahkoposti_pakollinen_jos": "Anna sähköpostiosoite, jos haluat yhteydenoton sähköpostitse",
-    "puhelinnumero_pakollinen_jos": "Anna puhelinnumero, jos haluat yhteydenoton puhelimitse"
+    "puhelinnumero_pakollinen_jos": "Anna puhelinnumero, jos haluat yhteydenoton puhelimitse",
+    "muistutus_on_jatettava": "Muistutus on pakollinen tieto",
+    "katuosoite_max_100": "Katuosoite voi olla enintään 100 merkkiä",
+    "postinumero_ja_paikka_max_30": "Postinumero ja postitoimipaikka voivat olla enintään 30 merkkiä"
   },
   "ilmoitukset": {
     "tallennus_onnistui": "Tallennus onnistui",

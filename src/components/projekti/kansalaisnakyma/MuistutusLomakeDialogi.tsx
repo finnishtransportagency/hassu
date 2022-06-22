@@ -5,10 +5,9 @@ import HassuStack from "@components/layout/HassuStack";
 import HassuDialog from "@components/HassuDialog";
 import HassuGrid from "@components/HassuGrid";
 import { FormProvider, useForm, UseFormProps, Controller, FieldError } from "react-hook-form";
-import { palauteSchema } from "src/schemas/vuorovaikutus";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useTranslation from "next-translate/useTranslation";
-import { ProjektiJulkinen, PalauteInput, api, NahtavillaoloVaiheJulkaisuJulkinen } from "@services/api";
+import { ProjektiJulkinen, api, NahtavillaoloVaiheJulkaisuJulkinen, MuistutusInput } from "@services/api";
 import { formatDate } from "src/util/dateUtils";
 import TextInput from "@components/form/TextInput";
 import Textarea from "@components/form/Textarea";
@@ -19,6 +18,7 @@ import HassuSpinner from "@components/HassuSpinner";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
 import Section from "@components/layout/Section";
+import { muistutusSchema } from "src/schemas/nahtavillaoloMuistutus";
 
 interface Props {
   open: boolean;
@@ -27,21 +27,19 @@ interface Props {
   projekti: ProjektiJulkinen;
 }
 
-interface PalauteFormInput {
+interface MuistutusFormInput {
   etunimi: string;
   sukunimi: string;
+  katuosoite: string;
+  postinumeroJaPostitoimipaikka: string;
   sahkoposti: string;
   puhelinnumero: string;
-  kysymysTaiPalaute: string;
-  yhteydenottotapaEmail: boolean | null;
-  yhteydenottotapaPuhelin: boolean | null;
+  muistutus: string;
   liite: string | null;
 }
 
 const defaultValues = {
-  kysymysTaiPalaute: "",
-  yhteydenottotapaEmail: false,
-  yhteydenottotapaPuhelin: false,
+  muistutus: "",
   liite: null,
 };
 
@@ -52,14 +50,14 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
   const [kiitosDialogiOpen, setKiitosDialogiOpen] = useState(false);
   const [tiedostoLiianSuuri, setTiedostoLiianSuuri] = useState(false);
 
-  const formOptions: UseFormProps<PalauteFormInput> = {
-    resolver: yupResolver(palauteSchema, { abortEarly: false, recursive: true }),
+  const formOptions: UseFormProps<MuistutusFormInput> = {
+    resolver: yupResolver(muistutusSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues,
   };
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
-  const useFormReturn = useForm<PalauteFormInput>(formOptions);
+  const useFormReturn = useForm<MuistutusFormInput>(formOptions);
 
   const {
     register,
@@ -82,17 +80,17 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
   }, []);
 
   const save = useCallback(
-    async (formData: PalauteFormInput) => {
+    async (formData: MuistutusFormInput) => {
       setFormIsSubmitting(true);
       try {
-        const palauteFinalValues: PalauteInput = { ...formData, liite: null };
+        const muistutusFinalValues: MuistutusInput = { ...formData, liite: null };
         if (tiedosto) {
-          palauteFinalValues.liite = await talletaTiedosto(tiedosto);
+          muistutusFinalValues.liite = await talletaTiedosto(tiedosto);
         }
-        (Object.keys(palauteFinalValues) as Array<keyof PalauteInput>).forEach((key) => {
-          if (!palauteFinalValues[key]) delete palauteFinalValues[key];
+        (Object.keys(muistutusFinalValues) as Array<keyof MuistutusInput>).forEach((key) => {
+          if (!muistutusFinalValues[key]) delete muistutusFinalValues[key];
         });
-        await api.lisaaPalaute(projekti.oid, palauteFinalValues);
+        await api.lisaaMuistutus(projekti.oid, muistutusFinalValues);
         showSuccessMessage(t("common:ilmoitukset.tallennus_onnistui"));
         onClose();
         setKiitosDialogiOpen(true);
@@ -145,19 +143,19 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
                     />
                     <TextInput
                       label={t("common:katuosoite")}
-                      {...register("sahkoposti")}
+                      {...register("katuosoite")}
                       error={
-                        errors?.sahkoposti?.message
-                          ? ({ message: t(`common:virheet.${errors.sahkoposti.message}`) } as FieldError)
+                        errors?.katuosoite?.message
+                          ? ({ message: t(`common:virheet.${errors.katuosoite.message}`) } as FieldError)
                           : undefined
                       }
                     />
                     <TextInput
                       label={t("common:postinumero_ja_paikka")}
-                      {...register("sahkoposti")}
+                      {...register("postinumeroJaPostitoimipaikka")}
                       error={
-                        errors?.sahkoposti?.message
-                          ? ({ message: t(`common:virheet.${errors.sahkoposti.message}`) } as FieldError)
+                        errors?.postinumeroJaPostitoimipaikka?.message
+                          ? ({ message: t(`common:virheet.${errors.postinumeroJaPostitoimipaikka.message}`) } as FieldError)
                           : undefined
                       }
                     />
@@ -196,10 +194,10 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
                 maxRows={13}
                 className="mt-4"
                 label={`${t("projekti:muistutuslomake.muistutus")} *`}
-                {...register("kysymysTaiPalaute")}
+                {...register("muistutus")}
                 error={
-                  errors?.kysymysTaiPalaute?.message
-                    ? ({ message: t(`common:virheet.${errors.kysymysTaiPalaute.message}`) } as FieldError)
+                  errors?.muistutus?.message
+                    ? ({ message: t(`common:virheet.${errors.muistutus.message}`) } as FieldError)
                     : undefined
                 }
               />

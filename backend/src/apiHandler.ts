@@ -101,6 +101,8 @@ async function executeOperation(event: AppSyncResolverEvent<AppSyncEventArgument
       return palauteHandler.otaPalauteKasittelyyn(event.arguments as OtaPalauteKasittelyynMutationVariables);
     case apiConfig.listKirjaamoOsoitteet.name:
       return listKirjaamoOsoitteet();
+    case apiConfig.lisaaMuistutus.name:
+      return "Kiitos muistutuksesta!"; //TODO: muistutuksen tallennus
     default:
       return null;
   }
