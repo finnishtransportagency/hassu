@@ -13,7 +13,7 @@ import {
   OriginRequestPolicy,
   OriginSslPolicy,
   PriceClass,
-  ViewerProtocolPolicy
+  ViewerProtocolPolicy,
 } from "@aws-cdk/aws-cloudfront";
 import { Config } from "./config";
 import { HttpOrigin } from "@aws-cdk/aws-cloudfront-origins/lib/http-origin";
@@ -28,7 +28,7 @@ import {
   PolicyDocument,
   PolicyStatement,
   Role,
-  ServicePrincipal
+  ServicePrincipal,
 } from "@aws-cdk/aws-iam";
 import * as fs from "fs";
 import { EdgeFunction } from "@aws-cdk/aws-cloudfront/lib/experimental";
@@ -152,6 +152,7 @@ export class HassuFrontendStack extends cdk.Stack {
       invalidationPaths: ["/*"],
     });
     this.configureNextJSAWSPermissions(nextJSLambdaEdge);
+    HassuFrontendStack.configureNextJSRequestHeaders(nextJSLambdaEdge);
 
     const distribution: cloudfront.Distribution = nextJSLambdaEdge.distribution;
     new cdk.CfnOutput(this, "CloudfrontPrivateDNSName", {
@@ -174,6 +175,16 @@ export class HassuFrontendStack extends cdk.Stack {
     nextJSLambdaEdge.edgeLambdaRole.grantPassRole(new ServicePrincipal("logger.cloudfront.amazonaws.com"));
 
     this.props.internalBucket.grantReadWrite(nextJSLambdaEdge.edgeLambdaRole);
+  }
+
+  private static configureNextJSRequestHeaders(nextJSLambdaEdge: NextJSLambdaEdge) {
+    // Enable forwarding the headers to the nextjs API lambda to get the authorization header
+    const additionalBehaviors = (nextJSLambdaEdge.distribution as any).additionalBehaviors;
+    for (const additionalBehavior of additionalBehaviors) {
+      if (additionalBehavior.props.pathPattern == "api/*") {
+        additionalBehavior.props.originRequestPolicy = OriginRequestPolicy.ALL_VIEWER;
+      }
+    }
   }
 
   private createFrontendRequestFunction(
