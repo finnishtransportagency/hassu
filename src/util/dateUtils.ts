@@ -8,7 +8,7 @@ export const formatDayOfWeek = (date: string | number | Date | dayjs.Dayjs | nul
   return dayjs(date).format("dddd");
 };
 
-// TODO i18n, jos käytössä kansalaispuolella
+// TODO i18n, koska käytössä myös kansalaispuolella
 export const formatDateTime = (date: string | number | Date | dayjs.Dayjs | null | undefined) => {
   return dayjs(date).format("DD.MM.YYYY [klo] HH:mm");
 };

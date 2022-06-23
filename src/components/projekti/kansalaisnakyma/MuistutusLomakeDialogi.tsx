@@ -7,8 +7,8 @@ import HassuGrid from "@components/HassuGrid";
 import { FormProvider, useForm, UseFormProps, Controller, FieldError } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useTranslation from "next-translate/useTranslation";
-import { ProjektiJulkinen, api, NahtavillaoloVaiheJulkaisuJulkinen, MuistutusInput } from "@services/api";
-import { formatDate } from "src/util/dateUtils";
+import { ProjektiJulkinen, api, NahtavillaoloVaiheJulkaisuJulkinen, MuistutusInput, Viranomainen } from "@services/api";
+import { formatDate, formatDateTime } from "src/util/dateUtils";
 import TextInput from "@components/form/TextInput";
 import Textarea from "@components/form/Textarea";
 import IconButton from "@components/button/IconButton";
@@ -155,7 +155,9 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
                       {...register("postinumeroJaPostitoimipaikka")}
                       error={
                         errors?.postinumeroJaPostitoimipaikka?.message
-                          ? ({ message: t(`common:virheet.${errors.postinumeroJaPostitoimipaikka.message}`) } as FieldError)
+                          ? ({
+                              message: t(`common:virheet.${errors.postinumeroJaPostitoimipaikka.message}`),
+                            } as FieldError)
                           : undefined
                       }
                     />
@@ -248,7 +250,7 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
                       onChange={(e) => {
                         const tiedosto = e.target.files?.[0];
                         setTiedosto(tiedosto);
-                        if (tiedosto && tiedosto.size > 4500000) {
+                        if (tiedosto && tiedosto.size > 2500000) {
                           setTiedostoLiianSuuri(true);
                         }
                         field.onChange(e.target.value);
@@ -280,7 +282,12 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
         </DialogActions>
         <HassuSpinner open={formIsSubmitting} />
       </HassuDialog>
-      <KiitosDialogi open={kiitosDialogiOpen} onClose={() => setKiitosDialogiOpen(false)} />
+      <KiitosDialogi
+        open={kiitosDialogiOpen}
+        projekti={projekti}
+        nahtavillaolo={nahtavillaolo}
+        onClose={() => setKiitosDialogiOpen(false)}
+      />
     </>
   );
 }
@@ -288,9 +295,11 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
 interface KiitosProps {
   open: boolean;
   onClose: () => void;
+  nahtavillaolo: NahtavillaoloVaiheJulkaisuJulkinen;
+  projekti: ProjektiJulkinen;
 }
 
-export function KiitosDialogi({ open, onClose }: KiitosProps): ReactElement {
+export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo }: KiitosProps): ReactElement {
   const { t } = useTranslation();
   return (
     <HassuDialog
@@ -301,9 +310,20 @@ export function KiitosDialogi({ open, onClose }: KiitosProps): ReactElement {
       maxWidth={"sm"}
     >
       <DialogContent>
-        <p>{t("projekti:muistutuslomake.olemme_vastaanottaneet_viestisi")}</p>
-        <p>{t("projekti:muistutuslomake.kaikki_viestit_kasitellaan")}</p>
-        <p>{t("projekti:muistutuslomake.jos_toivoit_yhteydenottoa")}</p>
+        <p>
+          {t("projekti:muistutuslomake.olemme_vastaanottaneet_viestisi", {
+            viranomainen: projekti.velho?.suunnittelustaVastaavaViranomainen
+              ? projekti.velho?.suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO
+                ? t("common:vaylaviraston")
+                : t("common:ely-keskuksen")
+              : "<Viranomaistieto puuttuu>",
+          })}
+        </p>
+        <p>
+          {t("projekti:muistutuslomake.voit_antaa_muistutuksia", {
+            pvm: formatDateTime(nahtavillaolo.muistutusoikeusPaattyyPaiva),
+          })}
+        </p>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} primary>
