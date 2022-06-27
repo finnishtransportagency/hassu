@@ -18,7 +18,7 @@ import { localDateTimeString } from "../util/dateUtil";
 import { GetObjectOutput } from "aws-sdk/clients/s3";
 import { getS3 } from "../aws/client";
 
-async function getFileAttachment(oid: string, key: string): Promise<Mail.Attachment> {
+export async function getFileAttachment(oid: string, key: string): Promise<Mail.Attachment> {
   log.info("haetaan s3:sta liitetiedosto", key);
 
   try {
@@ -33,7 +33,7 @@ async function getFileAttachment(oid: string, key: string): Promise<Mail.Attachm
       return {
         filename: getFilename(key),
         contentDisposition: "attachment",
-        contentType: "application/pdf",
+        contentType: output.ContentType || "application/pdf",
         content: output.Body,
       };
     } else {

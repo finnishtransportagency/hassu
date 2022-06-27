@@ -50,6 +50,8 @@ Voit tarkastella aloituskuulutusta osoitteessa https://${"domain"}/yllapito/proj
 
 Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 const hyvaksyttyPDFVastaanottajat = template`${"velho.vastuuhenkilonEmail"}`;
+const muistutusTeksti = template`Nähtävillä olevaan suunnitelmaan ${"oid"} on tullut muistutus. Muistutus ja siihen liittyvät tiedostot löytyvät liitteistä.`;
+const muistutusVastaanottaja = template`${"velho.suunnittelustaVastaavaViranomainen"}`;
 
 export function createPerustamisEmail(projekti: DBProjekti): EmailOptions {
   return {
@@ -89,4 +91,12 @@ export function createNewFeedbackAvailableEmail(oid: string, recipient: string):
     text: "Suunnitelmaan on tullut palautetta: " + linkSuunnitteluVaihe(oid),
     to: recipient,
   };
+}
+
+export function createMuistutusKirjaamolleEmail(projekti: DBProjekti): EmailOptions {
+  return {
+    subject: "Suunnitelmaan on tullut muistutus",
+    text: muistutusTeksti(projekti),
+    to: muistutusVastaanottaja(projekti),
+  }
 }
