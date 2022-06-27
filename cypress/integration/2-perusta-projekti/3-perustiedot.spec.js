@@ -4,6 +4,7 @@ const oid = Cypress.env("oid");
 
 describe("Projektin perustiedot", () => {
   before(() => {
+    cy.abortEarly();
     cy.login("A1");
   });
 

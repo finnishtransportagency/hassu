@@ -3,6 +3,7 @@ const oid = Cypress.env("oid");
 
 describe("Perusta projekti", () => {
   before(() => {
+    cy.abortEarly();
     Cypress.config("scrollBehavior", "nearest");
     cy.login("A1");
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/arkistoi");

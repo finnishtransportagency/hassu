@@ -55,7 +55,7 @@ function setupLocalDevelopmentMode(config, env) {
         {
           source: "/yllapito/kirjaudu",
           destination: "/fake_login_page",
-          permanent: false,
+          permanent: true,
         },
       ];
     },

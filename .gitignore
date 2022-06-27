@@ -57,8 +57,6 @@ build
 
 /test/.report
 
-/robotenv.py
-__pycache__
 /.eslintcache
 .sonar
 migration/node_modules

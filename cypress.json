@@ -6,5 +6,10 @@
   "env": {
     "projektiNimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
     "oid": "1.2.246.578.5.1.2978288874.2711575506"
+  },
+  "reporter": "junit",
+  "reporterOptions": {
+    "mochaFile": ".report/e2e-test-output-[hash].xml",
+    "toConsole": true
   }
 }
