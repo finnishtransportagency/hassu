@@ -3,7 +3,7 @@ import cloneDeep from "lodash/cloneDeep";
 import { AloitusKuulutusTila, NahtavillaoloVaiheTila } from "../../../common/graphql/apiModel";
 import { deepClone } from "aws-cdk/lib/util";
 
-function createNextID(dbProjekti: DBProjekti) {
+function createNextAloitusKuulutusJulkaisuID(dbProjekti: DBProjekti) {
   if (!dbProjekti.aloitusKuulutusJulkaisut) {
     return 1;
   }
@@ -16,7 +16,7 @@ export class AsiakirjaAdapter {
       const { esitettavatYhteystiedot, palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.aloitusKuulutus;
       return {
         ...includedFields,
-        id: createNextID(dbProjekti),
+        id: createNextAloitusKuulutusJulkaisuID(dbProjekti),
         yhteystiedot: adaptYhteystiedot(dbProjekti, esitettavatYhteystiedot),
         velho: adaptVelho(dbProjekti),
         suunnitteluSopimus: cloneDeep(dbProjekti.suunnitteluSopimus),
@@ -31,7 +31,6 @@ export class AsiakirjaAdapter {
       const { palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.nahtavillaoloVaihe;
       return {
         ...includedFields,
-        id: createNextID(dbProjekti),
         velho: adaptVelho(dbProjekti),
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
       };
@@ -44,7 +43,7 @@ export class AsiakirjaAdapter {
       const { palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.aloitusKuulutus;
       return {
         ...includedFields,
-        id: createNextID(dbProjekti),
+        id: createNextAloitusKuulutusJulkaisuID(dbProjekti),
         yhteystiedot: [],
         velho: adaptVelho(dbProjekti),
         suunnitteluSopimus: null,

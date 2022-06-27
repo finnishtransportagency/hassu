@@ -1,4 +1,10 @@
-import { Vuorovaikutus, Palaute } from "../../../../common/graphql/apiModel";
+import {
+  NahtavillaoloVaihe,
+  NahtavillaoloVaiheJulkaisu,
+  NahtavillaoloVaiheJulkaisuJulkinen,
+  Palaute,
+  Vuorovaikutus,
+} from "../../../../common/graphql/apiModel";
 
 export function cleanupGeneratedIdAndTimestampFromFeedbacks(feedbacks?: Palaute[]): Palaute[] {
   return feedbacks
@@ -16,6 +22,21 @@ export function cleanupVuorovaikutusTimestamps(vuorovaikutukset: Vuorovaikutus[]
     vuorovaikutus.esittelyaineistot?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
     vuorovaikutus.suunnitelmaluonnokset?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
   });
+}
+
+export function cleanupNahtavillaoloTimestamps(
+  nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu | NahtavillaoloVaihe
+): NahtavillaoloVaiheJulkaisu | NahtavillaoloVaihe {
+  nahtavillaoloVaihe.aineistoNahtavilla?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
+  nahtavillaoloVaihe.lisaAineisto?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
+  return nahtavillaoloVaihe;
+}
+
+export function cleanupNahtavillaoloJulkaisuJulkinenTimestamps(
+  nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisuJulkinen
+): NahtavillaoloVaiheJulkaisuJulkinen {
+  nahtavillaoloVaihe.aineistoNahtavilla?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
+  return nahtavillaoloVaihe;
 }
 
 export function cleanupGeneratedIds(obj: unknown) {

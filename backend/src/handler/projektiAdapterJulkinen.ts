@@ -202,6 +202,7 @@ class ProjektiAdapterJulkinen {
   ): API.NahtavillaoloVaiheJulkaisuJulkinen[] {
     return dbProjekti.nahtavillaoloVaiheJulkaisut?.filter(isNahtavillaoloVaihePublic).map((julkaisu) => {
       const {
+        aineistoNahtavilla,
         hankkeenKuvaus,
         kuulutusPaiva,
         kuulutusVaihePaattyyPaiva,
@@ -212,6 +213,7 @@ class ProjektiAdapterJulkinen {
       } = julkaisu;
       return {
         __typename: "NahtavillaoloVaiheJulkaisuJulkinen",
+        aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
         hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
         kuulutusPaiva,
         kuulutusVaihePaattyyPaiva,

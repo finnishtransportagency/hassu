@@ -350,6 +350,7 @@ export class ProjektiFixture {
       esitettavatYhteystiedot: [],
     },
     nahtavillaoloVaihe: {
+      id: 1,
       hankkeenKuvaus: {
         SUOMI: "Lorem Ipsum nahtavillaoloVaihe",
         SAAME: "Saameksi nahtavillaoloVaihe",

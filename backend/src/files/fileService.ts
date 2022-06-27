@@ -7,7 +7,7 @@ import { Dayjs } from "dayjs";
 import { uriEscapePath } from "aws-sdk/lib/util";
 import { ListObjectsV2Output } from "aws-sdk/clients/s3";
 import { getS3 } from "../aws/client";
-import { Vuorovaikutus } from "../database/model/suunnitteluVaihe";
+import { NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu, Vuorovaikutus } from "../database/model";
 import { parseDate } from "../util/dateUtil";
 
 export type UploadFileProperties = {
@@ -138,11 +138,11 @@ export class FileService {
     log.info(`Created file ${bucket}/${targetPath}`);
   }
 
-  private static getYllapitoProjektiDirectory(oid: string) {
+  public static getYllapitoProjektiDirectory(oid: string) {
     return `yllapito/tiedostot/projekti/${oid}`;
   }
 
-  private static getPublicProjektiDirectory(oid: string) {
+  public static getPublicProjektiDirectory(oid: string) {
     return `tiedostot/suunnitelma/${oid}`;
   }
 
@@ -252,6 +252,10 @@ export class FileService {
 
   getVuorovaikutusAineistoPath(vuorovaikutus: Vuorovaikutus): string {
     return this.getVuorovaikutusPath(vuorovaikutus) + "/aineisto";
+  }
+
+  getNahtavillaoloVaihePath(nahtavillaoloVaihe: NahtavillaoloVaihe|NahtavillaoloVaiheJulkaisu): string {
+    return "nahtavillaolo/" + nahtavillaoloVaihe.id;
   }
 
   /**

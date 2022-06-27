@@ -20,7 +20,6 @@ import {
   Yhteystieto,
 } from "../database/model";
 import * as API from "../../../common/graphql/apiModel";
-import { AineistoTila, NahtavillaoloVaiheInput } from "../../../common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import { personSearch } from "../personSearch/personSearchClient";
@@ -33,15 +32,49 @@ import { log } from "../logger";
 import dayjs, { Dayjs } from "dayjs";
 import { kayttoOikeudetSchema } from "../../../src/schemas/kayttoOikeudet";
 
-export type ProjektiAdaptationResult = {
-  projekti: DBProjekti;
-  aineistoChanges?: {
-    vuorovaikutus?: Vuorovaikutus;
-    aineistotToDelete?: Aineisto[];
-    hasPendingImports?: boolean;
-    julkinenChanged?: boolean;
-  };
+export enum ProjektiEventType {
+  VUOROVAIKUTUS_PUBLISHED = "VUOROVAIKUTUS_PUBLISHED",
+  AINEISTO_CHANGED = "AINEISTO_CHANGED",
+}
+
+export type VuorovaikutusPublishedEvent = {
+  eventType: ProjektiEventType.VUOROVAIKUTUS_PUBLISHED;
+  vuorovaikutusNumero: number;
 };
+
+export type AineistoChangedEvent = { eventType: ProjektiEventType.AINEISTO_CHANGED };
+
+export type ProjektiEvent = VuorovaikutusPublishedEvent | AineistoChangedEvent;
+
+export class ProjektiAdaptationResult {
+  private dbProjekti: DBProjekti;
+  private events: ProjektiEvent[] = [];
+
+  setProjekti(dbProjekti: DBProjekti): void {
+    this.dbProjekti = dbProjekti;
+  }
+
+  pushEvent(event: ProjektiEvent): void {
+    if (!this.events.find((e) => e.eventType == event.eventType)) {
+      this.events.push(event);
+    }
+  }
+
+  get projekti(): DBProjekti {
+    return this.dbProjekti;
+  }
+
+  async onEvent(
+    eventType: ProjektiEventType,
+    eventHandler: (event: ProjektiEvent, projekti: DBProjekti) => Promise<void>
+  ): Promise<void> {
+    for (const event of this.events) {
+      if (event.eventType == eventType) {
+        await eventHandler(event, this.projekti);
+      }
+    }
+  }
+}
 
 export class ProjektiAdapter {
   public adaptProjekti(dbProjekti: DBProjekti, virhetiedot?: API.ProjektiVirhe): API.Projekti {
@@ -108,7 +141,7 @@ export class ProjektiAdapter {
       suunnitteluVaihe,
       nahtavillaoloVaihe,
     } = changes;
-    const projektiAdaptationResult: Partial<ProjektiAdaptationResult> = {};
+    const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult();
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
     kayttoOikeudetManager.applyChanges(kayttoOikeudet);
     const vuorovaikutukset = adaptVuorovaikutusToSave(
@@ -125,14 +158,20 @@ export class ProjektiAdapter {
         suunnitteluSopimus: adaptSuunnitteluSopimusToSave(projekti, suunnitteluSopimus),
         kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet(),
         suunnitteluVaihe: adaptSuunnitteluVaiheToSave(projekti.suunnitteluVaihe, suunnitteluVaihe),
-        nahtavillaoloVaihe: adaptNahtavillaoloVaiheToSave(nahtavillaoloVaihe),
+        nahtavillaoloVaihe: adaptNahtavillaoloVaiheToSave(
+          projekti.nahtavillaoloVaihe,
+          nahtavillaoloVaihe,
+          projektiAdaptationResult,
+          projekti.nahtavillaoloVaiheJulkaisut?.length
+        ),
         kielitiedot,
         euRahoitus,
         liittyvatSuunnitelmat,
         vuorovaikutukset,
       }
     ) as DBProjekti;
-    return { projekti: dbProjekti, ...projektiAdaptationResult };
+    projektiAdaptationResult.setProjekti(dbProjekti);
+    return projektiAdaptationResult;
   }
 
   /**
@@ -299,20 +338,50 @@ function adaptNahtavillaoloVaihe(oid: string, nahtavillaoloVaihe: NahtavillaoloV
   };
 }
 
-function adaptNahtavillaoloVaiheToSave(nahtavillaoloVaihe: NahtavillaoloVaiheInput): NahtavillaoloVaihe {
+function adaptNahtavillaoloVaiheToSave(
+  dbNahtavillaoloVaihe: NahtavillaoloVaihe,
+  nahtavillaoloVaihe: API.NahtavillaoloVaiheInput,
+  projektiAdaptationResult: ProjektiAdaptationResult,
+  nahtavillaoloVaiheJulkaisutCount: number | undefined
+): NahtavillaoloVaihe {
   if (!nahtavillaoloVaihe) {
     return undefined;
   }
   const {
-    aineistoNahtavilla: _aineistoNahtavilla,
-    lisaAineisto: _lisaAineisto,
+    aineistoNahtavilla: aineistoNahtavillaInput,
+    lisaAineisto: lisaAineistoInput,
     kuulutusYhteystiedot,
     ilmoituksenVastaanottajat,
     hankkeenKuvaus,
     ...rest
   } = nahtavillaoloVaihe;
+
+  const aineistoNahtavilla = adaptAineistotToSave(
+    dbNahtavillaoloVaihe?.aineistoNahtavilla,
+    aineistoNahtavillaInput,
+    projektiAdaptationResult
+  );
+
+  const lisaAineisto = adaptAineistotToSave(
+    dbNahtavillaoloVaihe?.lisaAineisto,
+    lisaAineistoInput,
+    projektiAdaptationResult
+  );
+
+  let id = dbNahtavillaoloVaihe?.id;
+  if (!id) {
+    if (nahtavillaoloVaiheJulkaisutCount) {
+      id = nahtavillaoloVaiheJulkaisutCount + 1;
+    } else {
+      id = 1;
+    }
+  }
+
   return {
     ...rest,
+    id,
+    aineistoNahtavilla,
+    lisaAineisto,
     kuulutusYhteystiedot: adaptYhteystiedotToSave(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat),
     hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus),
@@ -375,10 +444,15 @@ function adaptVuorovaikutusToSave(
   if (vuorovaikutusInput) {
     const dbVuorovaikutus = findVuorovaikutusByNumber(projekti, vuorovaikutusInput.vuorovaikutusNumero);
 
-    const { esittelyaineistot, suunnitelmaluonnokset } = adaptAineistotToSave(
-      projektiAdaptationResult,
-      vuorovaikutusInput,
-      dbVuorovaikutus
+    const esittelyaineistot = adaptAineistotToSave(
+      dbVuorovaikutus?.esittelyaineistot,
+      vuorovaikutusInput.esittelyaineistot,
+      projektiAdaptationResult
+    );
+    const suunnitelmaluonnokset = adaptAineistotToSave(
+      dbVuorovaikutus?.suunnitelmaluonnokset,
+      vuorovaikutusInput.suunnitelmaluonnokset,
+      projektiAdaptationResult
     );
 
     const vuorovaikutusToSave: Vuorovaikutus = {
@@ -396,9 +470,6 @@ function adaptVuorovaikutusToSave(
     };
 
     checkIfAineistoJulkinenChanged(vuorovaikutusToSave, dbVuorovaikutus, projektiAdaptationResult);
-    if (projektiAdaptationResult.aineistoChanges) {
-      projektiAdaptationResult.aineistoChanges.vuorovaikutus = vuorovaikutusToSave;
-    }
 
     return [vuorovaikutusToSave];
   }
@@ -418,12 +489,28 @@ function checkIfAineistoJulkinenChanged(
     return dbVuorovaikutus && dbVuorovaikutus.julkinen && !vuorovaikutusToSave.julkinen;
   }
 
+  function vuorovaikutusJulkaisuPaivaChanged() {
+    return (
+      dbVuorovaikutus?.vuorovaikutusJulkaisuPaiva &&
+      dbVuorovaikutus.vuorovaikutusJulkaisuPaiva !== vuorovaikutusToSave.vuorovaikutusJulkaisuPaiva
+    );
+  }
+
   if (vuorovaikutusPublishedForTheFirstTime() || vuorovaikutusNotPublicAnymore()) {
-    if (projektiAdaptationResult.aineistoChanges) {
-      projektiAdaptationResult.aineistoChanges.julkinenChanged = true;
-    } else {
-      projektiAdaptationResult.aineistoChanges = { julkinenChanged: true };
-    }
+    projektiAdaptationResult.pushEvent({
+      eventType: ProjektiEventType.VUOROVAIKUTUS_PUBLISHED,
+      vuorovaikutusNumero: vuorovaikutusToSave.vuorovaikutusNumero,
+    } as VuorovaikutusPublishedEvent);
+  }
+
+  if (
+    vuorovaikutusPublishedForTheFirstTime() ||
+    vuorovaikutusNotPublicAnymore() ||
+    vuorovaikutusJulkaisuPaivaChanged()
+  ) {
+    projektiAdaptationResult.pushEvent({
+      eventType: ProjektiEventType.AINEISTO_CHANGED,
+    } as AineistoChangedEvent);
   }
 }
 
@@ -436,75 +523,48 @@ function pickAineistoFromInputByDocumenttiOid(aineistotInput: API.AineistoInput[
 }
 
 function adaptAineistotToSave(
-  projektiAdaptationResult: Partial<ProjektiAdaptationResult>,
-  vuorovaikutusInput: API.VuorovaikutusInput,
-  vuorovaikutus?: Vuorovaikutus
-): Pick<Vuorovaikutus, "esittelyaineistot" | "suunnitelmaluonnokset"> {
-  if (!vuorovaikutus) {
-    return { esittelyaineistot: undefined, suunnitelmaluonnokset: undefined };
+  dbAineistot: Aineisto[] | undefined,
+  aineistotInput: API.AineistoInput[] | undefined,
+  projektiAdaptationResult: Partial<ProjektiAdaptationResult>
+): Aineisto[] | undefined {
+  const resultAineistot = [];
+  let hasPendingChanges = undefined;
+
+  // Examine and update existing documents
+  if (dbAineistot) {
+    dbAineistot.forEach((dbAineisto) => {
+      const updateAineistoInput = pickAineistoFromInputByDocumenttiOid(aineistotInput, dbAineisto.dokumenttiOid);
+      if (updateAineistoInput) {
+        // Update existing one
+        dbAineisto.nimi = updateAineistoInput.nimi;
+        dbAineisto.jarjestys = updateAineistoInput.jarjestys;
+        resultAineistot.push(dbAineisto);
+      }
+      if (!updateAineistoInput) {
+        dbAineisto.tila = API.AineistoTila.ODOTTAA_POISTOA;
+        hasPendingChanges = true;
+      }
+    });
   }
-
-  const esittelyaineistotInput = vuorovaikutusInput.esittelyaineistot || [];
-  const suunnitelmaluonnoksetInput = vuorovaikutusInput.suunnitelmaluonnokset || [];
-  const dbAineistot = [...(vuorovaikutus.suunnitelmaluonnokset || []), ...(vuorovaikutus.esittelyaineistot || [])];
-
-  const dbEsittelyAineistot: Aineisto[] = [];
-  const dbSuunnitelmaLuonnokset: Aineisto[] = [];
-  const aineistotToDelete: Aineisto[] = [];
-
-  dbAineistot.forEach((dbAineisto) => {
-    const esittelyAineistoInput = pickAineistoFromInputByDocumenttiOid(
-      esittelyaineistotInput,
-      dbAineisto.dokumenttiOid
-    );
-    const suunnitelmaLuonnosInput = pickAineistoFromInputByDocumenttiOid(
-      suunnitelmaluonnoksetInput,
-      dbAineisto.dokumenttiOid
-    );
-    if (esittelyAineistoInput) {
-      // Update existing one
-      dbAineisto.nimi = esittelyAineistoInput.nimi;
-      dbAineisto.jarjestys = esittelyAineistoInput.jarjestys;
-      dbEsittelyAineistot.push(dbAineisto);
-    }
-    if (suunnitelmaLuonnosInput) {
-      // Update existing one
-      dbAineisto.nimi = suunnitelmaLuonnosInput.nimi;
-      dbAineisto.jarjestys = suunnitelmaLuonnosInput.jarjestys;
-      dbSuunnitelmaLuonnokset.push(dbAineisto);
-    }
-    if (!esittelyAineistoInput && !suunnitelmaLuonnosInput) {
-      aineistotToDelete.push(dbAineisto);
-    }
-  });
 
   // Add new ones and optionally trigger import later
-  let hasPendingImports = undefined;
-
-  for (const aineistoInput of esittelyaineistotInput) {
-    dbEsittelyAineistot.push({
-      dokumenttiOid: aineistoInput.dokumenttiOid,
-      nimi: aineistoInput.nimi,
-      kategoriaId: aineistoInput.kategoriaId,
-      jarjestys: aineistoInput.jarjestys,
-      tila: API.AineistoTila.ODOTTAA,
-    });
-    hasPendingImports = true;
+  if (aineistotInput) {
+    for (const aineistoInput of aineistotInput) {
+      resultAineistot.push({
+        dokumenttiOid: aineistoInput.dokumenttiOid,
+        nimi: aineistoInput.nimi,
+        kategoriaId: aineistoInput.kategoriaId,
+        jarjestys: aineistoInput.jarjestys,
+        tila: API.AineistoTila.ODOTTAA_TUONTIA,
+      });
+      hasPendingChanges = true;
+    }
   }
 
-  for (const aineistoInput of suunnitelmaluonnoksetInput) {
-    dbSuunnitelmaLuonnokset.push({
-      dokumenttiOid: aineistoInput.dokumenttiOid,
-      nimi: aineistoInput.nimi,
-      kategoriaId: aineistoInput.kategoriaId,
-      jarjestys: aineistoInput.jarjestys,
-      tila: AineistoTila.ODOTTAA,
-    });
-    hasPendingImports = true;
+  if (hasPendingChanges) {
+    projektiAdaptationResult.pushEvent({ eventType: ProjektiEventType.AINEISTO_CHANGED } as AineistoChangedEvent);
   }
-
-  projektiAdaptationResult.aineistoChanges = { vuorovaikutus: null, aineistotToDelete, hasPendingImports };
-  return { esittelyaineistot: dbEsittelyAineistot, suunnitelmaluonnokset: dbSuunnitelmaLuonnokset };
+  return resultAineistot;
 }
 
 export function adaptAineistot(aineistot?: Aineisto[] | null, julkaisuPaiva?: Dayjs): API.Aineisto[] | undefined {

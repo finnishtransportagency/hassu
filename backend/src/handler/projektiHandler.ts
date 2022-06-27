@@ -15,7 +15,13 @@ import {
   TallennaProjektiInput,
   Velho,
 } from "../../../common/graphql/apiModel";
-import { adaptVelho, projektiAdapter } from "./projektiAdapter";
+import {
+  adaptVelho,
+  ProjektiAdaptationResult,
+  projektiAdapter,
+  ProjektiEventType,
+  VuorovaikutusPublishedEvent,
+} from "./projektiAdapter";
 import { auditLog, log } from "../logger";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import mergeWith from "lodash/mergeWith";
@@ -29,8 +35,9 @@ import { projektiArchive } from "../archive/projektiArchiveService";
 import { NotFoundError } from "../error/NotFoundError";
 import { projektiAdapterJulkinen } from "./projektiAdapterJulkinen";
 import { findUpdatedFields } from "../velho/velhoAdapter";
-import { DBProjekti } from "../database/model/projekti";
+import { DBProjekti } from "../database/model";
 import { vuorovaikutusService } from "../vuorovaikutus/vuorovaikutusService";
+import { aineistoService } from "../aineisto/aineistoService";
 
 export async function loadProjekti(oid: string): Promise<API.Projekti | API.ProjektiJulkinen> {
   const vaylaUser = getVaylaUser();
@@ -89,7 +96,7 @@ export async function createOrUpdateProjekti(input: TallennaProjektiInput): Prom
     await handleFiles(input);
     const projektiAdaptationResult = await projektiAdapter.adaptProjektiToSave(projektiInDB, input);
     await projektiDatabase.saveProjekti(projektiAdaptationResult.projekti);
-    await vuorovaikutusService.handleAineistot(projektiAdaptationResult);
+    await handleEvents(projektiAdaptationResult);
   } else {
     requirePermissionLuonti();
     const { projekti } = await createProjektiFromVelho(input.oid, requireVaylaUser(), input);
@@ -216,4 +223,16 @@ export async function requirePermissionMuokkaaProjekti(oid: string): Promise<DBP
   }
   requirePermissionMuokkaa(projekti);
   return projekti;
+}
+
+async function handleEvents(projektiAdaptationResult: ProjektiAdaptationResult) {
+  await projektiAdaptationResult.onEvent(
+    ProjektiEventType.VUOROVAIKUTUS_PUBLISHED,
+    async (event: VuorovaikutusPublishedEvent, projekti: DBProjekti) => {
+      return vuorovaikutusService.handleVuorovaikutusKutsu(projekti.oid, event.vuorovaikutusNumero);
+    }
+  );
+  await projektiAdaptationResult.onEvent(ProjektiEventType.AINEISTO_CHANGED, async (_event, projekti) => {
+    return aineistoService.importAineisto(projekti.oid);
+  });
 }

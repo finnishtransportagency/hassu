@@ -213,7 +213,6 @@ type NahtavillaoloVaiheJulkaisu {
 
 type NahtavillaoloVaiheJulkaisuJulkinen {
   aineistoNahtavilla: [Aineisto!]
-  lisaAineisto: [Aineisto!]
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
   muistutusoikeusPaattyyPaiva: String
@@ -287,8 +286,9 @@ type Aineisto {
 }
 
 enum AineistoTila {
-  ODOTTAA
+  ODOTTAA_TUONTIA
   VALMIS
+  ODOTTAA_POISTOA
 }
 
 type Palaute {
