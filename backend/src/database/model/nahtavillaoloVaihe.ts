@@ -41,3 +41,16 @@ export type NahtavillaoloPDF = {
   nahtavillaoloIlmoitusPDFPath: string;
   nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: string;
 };
+
+export type Muistutus = {
+  id: string;
+  vastaanotettu: string;
+  etunimi?: string | null;
+  sukunimi?: string | null;
+  katuosoite?: string | null;
+  postinumeroJaPostitoimipaikka?: string | null;
+  sahkoposti?: string | null;
+  puhelinnumero?: string | null;
+  muistutus?: string | null;
+  liite?: string | null;
+};

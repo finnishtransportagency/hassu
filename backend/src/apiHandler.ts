@@ -6,6 +6,7 @@ import {
   HaeVelhoProjektiAineistoLinkkiQueryVariables,
   LaskePaattymisPaivaQueryVariables,
   LataaProjektiQueryVariables,
+  LisaaMuistutusMutationVariables,
   LisaaPalauteMutationVariables,
   ListaaKayttajatQueryVariables,
   ListaaProjektitQueryVariables,
@@ -44,6 +45,7 @@ import { palauteHandler } from "./palaute/palauteHandler";
 import { ClientError } from "./error/ClientError";
 import { SystemError } from "./error/SystemError";
 import { tilaHandler } from "./handler/tila/tilaHandler";
+import { muistutusHandler } from "./muistutus/muistutusHandler";
 
 export type AppSyncEventArguments =
   | unknown
@@ -102,7 +104,7 @@ async function executeOperation(event: AppSyncResolverEvent<AppSyncEventArgument
     case apiConfig.listKirjaamoOsoitteet.name:
       return listKirjaamoOsoitteet();
     case apiConfig.lisaaMuistutus.name:
-      return "Kiitos muistutuksesta!"; //TODO: muistutuksen tallennus
+      return muistutusHandler.kasittelePalaute(event.arguments as LisaaMuistutusMutationVariables);
     default:
       return null;
   }
