@@ -49,7 +49,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 }));
 
 interface AccordionItem {
-  title: string;
+  title: string | JSX.Element;
   content: ReactNode | string;
   id?: Key;
 }
@@ -88,7 +88,7 @@ export default function CustomizedAccordions(props: Props) {
             onChange={handleChange(key)}
           >
             <AccordionSummary>
-              <span className="vayla-smallest-title">{item.title}</span>
+              {typeof item.title === "string" ? <span className="vayla-smallest-title">{item.title}</span> : item.title}
             </AccordionSummary>
             <AccordionDetails>{item.content}</AccordionDetails>
           </Accordion>

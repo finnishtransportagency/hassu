@@ -36,6 +36,10 @@ export class AineistoKategoria {
   public get hakulauseet() {
     return this.props.hakulauseet;
   }
+
+  public get nimi() {
+    return this.props.nimi;
+  }
 }
 
 export class AineistoKategoriat {

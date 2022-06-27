@@ -4,11 +4,17 @@ import React from "react";
 import { FieldError } from "react-hook-form";
 import FormGroup from "./FormGroup";
 
+export interface SelectOption {
+  label: string;
+  value: string;
+  disabled?: boolean;
+}
+
 interface Props {
   error?: FieldError;
   label?: string;
   hideErrorMessage?: boolean;
-  options: { label: string; value: string; disabled?: boolean }[];
+  options: SelectOption[];
   addEmptyOption?: boolean;
 }
 

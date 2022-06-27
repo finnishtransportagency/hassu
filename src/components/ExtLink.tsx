@@ -41,6 +41,12 @@ const ExtLink = (
   </Anchor>
 );
 
-const Anchor = styled("a")({ display: "flex", flexFlow: "row wrap" });
+const Anchor = styled("a")({
+  display: "flex",
+  flexFlow: "row",
+  alignItems: "flex-start",
+  textAlign: "left",
+  justifyContent: "flex-start",
+});
 
 export default React.forwardRef(ExtLink);

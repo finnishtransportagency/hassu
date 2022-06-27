@@ -538,6 +538,7 @@ function adaptAineistotToSave(
         // Update existing one
         dbAineisto.nimi = updateAineistoInput.nimi;
         dbAineisto.jarjestys = updateAineistoInput.jarjestys;
+        dbAineisto.kategoriaId = updateAineistoInput.kategoriaId;
         resultAineistot.push(dbAineisto);
       }
       if (!updateAineistoInput) {

@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { TallennaProjektiInput } from "@services/api";
+import { Aineisto, AineistoInput, TallennaProjektiInput } from "@services/api";
 import React, { useEffect } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { useProjektiRoute } from "src/hooks/useProjektiRoute";
@@ -7,13 +7,50 @@ import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot
 import NahtavillaoloPainikkeet from "./NahtavillaoloPainikkeet";
 import LausuntopyyntoonLiitettavaLisaaineisto from "./LausuntopyyntoonLiitettavaLisaaineisto";
 import SuunnitelmatJaAineistot from "./SuunnitelmatJaAineistot";
+import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { AineistoKategoria, aineistoKategoriat } from "common/aineistoKategoriat";
 
-type Props = {};
+type AineistoNahtavilla = {
+  aineistoNahtavilla: {
+    [kategoriaId: string]: AineistoInput[];
+  };
+};
 
-export type NahtavilleAsetettavatAineistotFormValues = Pick<TallennaProjektiInput, "oid">;
+export type NahtavilleAsetettavatAineistotFormValues = Pick<TallennaProjektiInput, "oid"> & AineistoNahtavilla;
 
-export default function NahtavilleAsetettavatAineistot({}: Props) {
+const addAineistoKategoria = (
+  aineistoNahtavilla: AineistoNahtavilla["aineistoNahtavilla"],
+  kategoria: AineistoKategoria,
+  allAineisto: Aineisto[] | undefined | null
+) => {
+  const aineisto: Aineisto[] = allAineisto?.filter(({ kategoriaId }) => kategoriaId === kategoria.id) || [];
+  aineistoNahtavilla[kategoria.id] = aineisto.map<AineistoInput>(({ dokumenttiOid, jarjestys, nimi, kategoriaId }) => ({
+    dokumenttiOid,
+    nimi,
+    jarjestys,
+    kategoriaId,
+  }));
+  // Uncomment to add alakategoriat recursively
+  // kategoria.alaKategoriat?.forEach((k) => addAineistoKategoria(aineistoNahtavilla, k));
+};
+
+function defaultValues(projekti: ProjektiLisatiedolla): NahtavilleAsetettavatAineistotFormValues {
+  const aineistoNahtavilla = aineistoKategoriat
+    .listKategoriat()
+    .reduce<AineistoNahtavilla["aineistoNahtavilla"]>((aineistot, currentKategoria) => {
+      addAineistoKategoria(aineistot, currentKategoria, projekti.nahtavillaoloVaihe?.aineistoNahtavilla);
+      return aineistot;
+    }, {});
+
+  return {
+    oid: projekti.oid,
+    aineistoNahtavilla,
+  };
+}
+
+export default function NahtavilleAsetettavatAineistot() {
   const { data: projekti } = useProjektiRoute();
+
   const formOptions: UseFormProps<NahtavilleAsetettavatAineistotFormValues> = {
     resolver: yupResolver(nahtavillaoloAineistotSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
@@ -25,9 +62,8 @@ export default function NahtavilleAsetettavatAineistot({}: Props) {
 
   useEffect(() => {
     if (projekti?.oid) {
-      const tallentamisTiedot: NahtavilleAsetettavatAineistotFormValues = {
-        oid: projekti.oid,
-      };
+      const tallentamisTiedot = defaultValues(projekti);
+      console.log({ tallentamisTiedot });
       reset(tallentamisTiedot);
     }
   }, [projekti, reset]);
