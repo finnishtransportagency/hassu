@@ -16,7 +16,10 @@ import { removeTypeName } from "src/util/removeTypeName";
 import Lukunakyma from "./Lukunakyma";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 
-function defaultValues(projekti: Projekti, kirjaamoOsoitteet: KirjaamoOsoite[] | undefined) {
+function defaultValues(
+  projekti: Projekti,
+  kirjaamoOsoitteet: KirjaamoOsoite[] | undefined
+): KuulutuksenTiedotFormValues {
   return {
     oid: projekti.oid,
     nahtavillaoloVaihe: {
