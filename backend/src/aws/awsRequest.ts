@@ -15,7 +15,7 @@ export async function sendSignedRequest(
   }
   const signer = new SignatureV4({
     credentials: AWS.config.credentials,
-    region: process.env.AWS_REGION || "eu-west-1",
+    region: "eu-west-1",
     service,
     sha256: Sha256,
   });

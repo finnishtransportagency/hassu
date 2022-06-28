@@ -15,8 +15,7 @@ import { AuthorizationMode } from "@aws-cdk/aws-appsync/lib/graphqlapi";
 import { DynamoEventSource, SqsEventSource } from "@aws-cdk/aws-lambda-event-sources";
 import * as eventTargets from "@aws-cdk/aws-events-targets";
 import * as events from "@aws-cdk/aws-events";
-import { Domain, IDomain } from "@aws-cdk/aws-opensearchservice";
-import { OpenSearchAccessPolicy } from "@aws-cdk/aws-opensearchservice/lib/opensearch-access-policy";
+import { IDomain } from "@aws-cdk/aws-opensearchservice";
 import { Effect, ManagedPolicy, PolicyStatement } from "@aws-cdk/aws-iam";
 import { Bucket } from "@aws-cdk/aws-s3";
 import {
@@ -27,6 +26,7 @@ import {
 import { LambdaInsightsVersion } from "@aws-cdk/aws-lambda/lib/lambda-insights";
 import { RuleTargetInput } from "@aws-cdk/aws-events/lib/input";
 import { EmailEventType } from "../../backend/src/email/emailEvent";
+import { getOpenSearchDomain } from "./common";
 
 const path = require("path");
 
@@ -63,16 +63,8 @@ export class HassuBackendStack extends cdk.Stack {
   async process() {
     const config = await Config.instance(this);
 
-    let accountStackOutputs = await readAccountStackOutputs();
-    let searchDomain: IDomain;
-    if (Config.env !== "localstack") {
-      searchDomain = Domain.fromDomainAttributes(this, "DomainEndPoint", {
-        domainEndpoint: accountStackOutputs.SearchDomainEndpointOutput,
-        domainArn: accountStackOutputs.SearchDomainArnOutput,
-      });
-    } else {
-      searchDomain = Domain.fromDomainEndpoint(this, "DomainEndPoint", "http://not-used-with-localstack");
-    }
+    const accountStackOutputs = await readAccountStackOutputs();
+    const searchDomain = await getOpenSearchDomain(this, accountStackOutputs);
 
     const api = this.createAPI(config);
     const commonEnvironmentVariables = await this.getCommonEnvironmentVariables(config, searchDomain);
@@ -89,7 +81,7 @@ export class HassuBackendStack extends cdk.Stack {
 
     const projektiSearchIndexer = this.createProjektiSearchIndexer(commonEnvironmentVariables);
     this.attachDatabaseToLambda(projektiSearchIndexer);
-    this.configureOpenSearchAccess(projektiSearchIndexer, backendLambda, searchDomain);
+    HassuBackendStack.configureOpenSearchAccess(projektiSearchIndexer, backendLambda, searchDomain);
 
     let aineistoImporterLambda = await this.createAineistoImporterLambda(commonEnvironmentVariables, aineistoSQS);
     this.attachDatabaseToLambda(aineistoImporterLambda);
@@ -107,7 +99,7 @@ export class HassuBackendStack extends cdk.Stack {
     }
   }
 
-  private configureOpenSearchAccess(
+  private static configureOpenSearchAccess(
     projektiSearchIndexer: NodejsFunction,
     backendLambda: NodejsFunction,
     searchDomain: IDomain
@@ -115,19 +107,6 @@ export class HassuBackendStack extends cdk.Stack {
     // Grant write access to the app-search index
     searchDomain.grantIndexWrite("projekti-" + Config.env + "-*", projektiSearchIndexer);
     searchDomain.grantIndexReadWrite("projekti-" + Config.env + "-*", backendLambda);
-
-    new OpenSearchAccessPolicy(this, "OpenSearchAccessPolicy", {
-      domainName: searchDomain.domainName,
-      domainArn: searchDomain.domainArn,
-      accessPolicies: [
-        new PolicyStatement({
-          effect: Effect.ALLOW,
-          actions: ["es:ESHttpGet", "es:ESHttpPut", "es:ESHttpPost", "es:ESHttpDelete"],
-          principals: [projektiSearchIndexer.grantPrincipal, backendLambda.grantPrincipal],
-          resources: [searchDomain.domainArn],
-        }),
-      ],
-    });
   }
 
   private createAPI(config: Config) {
