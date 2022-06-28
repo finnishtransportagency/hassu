@@ -3,6 +3,8 @@ import * as cdk from "@aws-cdk/core";
 import { Construct, RemovalPolicy } from "@aws-cdk/core";
 import { Config } from "./config";
 import { Domain, EngineVersion } from "@aws-cdk/aws-opensearchservice";
+import { OpenSearchAccessPolicy } from "@aws-cdk/aws-opensearchservice/lib/opensearch-access-policy";
+import { AccountRootPrincipal, Effect, PolicyStatement } from "@aws-cdk/aws-iam";
 
 // These should correspond to CfnOutputs produced by this stack
 export type AccountStackOutputs = {
@@ -36,6 +38,19 @@ export class HassuAccountStack extends cdk.Stack {
         dataNodeInstanceType: "t3.small.search",
       },
       removalPolicy: RemovalPolicy.RETAIN,
+    });
+
+    new OpenSearchAccessPolicy(this, "OpenSearchAccessPolicy", {
+      domainName: this.searchDomain.domainName,
+      domainArn: this.searchDomain.domainArn,
+      accessPolicies: [
+        new PolicyStatement({
+          effect: Effect.ALLOW,
+          actions: ["es:ESHttpGet", "es:ESHttpPut", "es:ESHttpPost", "es:ESHttpDelete"],
+          principals: [new AccountRootPrincipal().grantPrincipal],
+          resources: [this.searchDomain.domainArn],
+        }),
+      ],
     });
 
     new cdk.CfnOutput(this, "SearchDomainEndpointOutput", {

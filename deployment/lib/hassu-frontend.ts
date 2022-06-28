@@ -13,7 +13,7 @@ import {
   OriginRequestPolicy,
   OriginSslPolicy,
   PriceClass,
-  ViewerProtocolPolicy,
+  ViewerProtocolPolicy
 } from "@aws-cdk/aws-cloudfront";
 import { Config } from "./config";
 import { HttpOrigin } from "@aws-cdk/aws-cloudfront-origins/lib/http-origin";
@@ -28,15 +28,21 @@ import {
   PolicyDocument,
   PolicyStatement,
   Role,
-  ServicePrincipal,
+  ServicePrincipal
 } from "@aws-cdk/aws-iam";
 import * as fs from "fs";
 import { EdgeFunction } from "@aws-cdk/aws-cloudfront/lib/experimental";
 import { S3Origin } from "@aws-cdk/aws-cloudfront-origins";
 import { BlockPublicAccess, Bucket } from "@aws-cdk/aws-s3";
 import * as ssm from "@aws-cdk/aws-ssm";
-import { readBackendStackOutputs, readDatabaseStackOutputs, readPipelineStackOutputs } from "../bin/setupEnvironment";
+import {
+  readAccountStackOutputs,
+  readBackendStackOutputs,
+  readDatabaseStackOutputs,
+  readPipelineStackOutputs
+} from "../bin/setupEnvironment";
 import { IOriginAccessIdentity } from "@aws-cdk/aws-cloudfront/lib/origin-access-identity";
+import { getOpenSearchDomain } from "./common";
 
 // These should correspond to CfnOutputs produced by this stack
 export type FrontendStackOutputs = {
@@ -153,6 +159,12 @@ export class HassuFrontendStack extends cdk.Stack {
     });
     this.configureNextJSAWSPermissions(nextJSLambdaEdge);
     HassuFrontendStack.configureNextJSRequestHeaders(nextJSLambdaEdge);
+
+    const accountStackOutputs = await readAccountStackOutputs();
+    const searchDomain = await getOpenSearchDomain(this, accountStackOutputs);
+    if (nextJSLambdaEdge.nextApiLambda) {
+      searchDomain.grantIndexReadWrite("projekti-" + Config.env + "-*", nextJSLambdaEdge.nextApiLambda);
+    }
 
     const distribution: cloudfront.Distribution = nextJSLambdaEdge.distribution;
     new cdk.CfnOutput(this, "CloudfrontPrivateDNSName", {
