@@ -1,35 +1,50 @@
-import { Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
-import { AloitusKuulutusJulkaisu } from "../../database/model";
+import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
+import { DBVaylaUser, Kielitiedot, LocalizedMap, SuunnitteluSopimus, Velho, Yhteystieto } from "../../database/model";
 import { CommonPdf } from "./commonPdf";
 import { KutsuAdapter } from "./KutsuAdapter";
 import { AsiakirjanMuoto } from "../asiakirjaService";
+import { translate } from "../../util/localization";
 import PDFStructureElement = PDFKit.PDFStructureElement;
+
+export type IlmoitusAsiakirjaTyyppi = Extract<
+  AsiakirjaTyyppi,
+  AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA | AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE
+>;
+export type IlmoitusParams = {
+  kieli: Kieli;
+  velho: Velho;
+  kielitiedot: Kielitiedot;
+  hankkeenKuvaus: LocalizedMap<string>;
+  kuulutusPaiva: string;
+  yhteystiedot: Yhteystieto[];
+  suunnitteluSopimus?: SuunnitteluSopimus;
+
+  // kayttoOikeudet must be set if yhteysHenkilot is set
+  yhteysHenkilot?: string[];
+  kayttoOikeudet?: DBVaylaUser[];
+};
 
 export abstract class SuunnittelunAloitusPdf extends CommonPdf {
   protected header: string;
-  protected aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu;
+  protected params: IlmoitusParams;
 
-  constructor(
-    aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu,
-    kieli: Kieli,
-    header: string,
-    asiakirjanMuoto: AsiakirjanMuoto
-  ) {
+  constructor(params: IlmoitusParams, header: string, asiakirjanMuoto: AsiakirjanMuoto, fileNameKey: string) {
     const kutsuAdapter = new KutsuAdapter({
-      velho: aloitusKuulutusJulkaisu.velho,
+      velho: params.velho,
       asiakirjanMuoto,
-      kielitiedot: aloitusKuulutusJulkaisu.kielitiedot,
-      kieli,
-      projektiTyyppi: aloitusKuulutusJulkaisu.velho.tyyppi,
+      kielitiedot: params.kielitiedot,
+      kieli: params.kieli,
+      projektiTyyppi: params.velho.tyyppi,
+      kayttoOikeudet: params.kayttoOikeudet,
     });
-    super(header, kieli, kutsuAdapter, header + " " + kutsuAdapter.nimi);
+    super(header, params.kieli, kutsuAdapter, translate("tiedostonimi." + fileNameKey, params.kieli));
     this.header = header;
-    this.aloitusKuulutusJulkaisu = aloitusKuulutusJulkaisu;
+    this.params = params;
   }
 
   protected addContent(): void {
     const elements: PDFKit.PDFStructureElementChild[] = [
-      this.logo(this.isVaylaTilaaja(this.aloitusKuulutusJulkaisu.velho)),
+      this.logo(this.isVaylaTilaaja(this.params.velho)),
       this.headerElement(this.header),
       this.titleElement(),
       ...this.addDocumentElements(),
@@ -43,7 +58,7 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf {
 
   protected get projektiTyyppi(): string {
     let tyyppi = "";
-    switch (this.aloitusKuulutusJulkaisu.velho.tyyppi) {
+    switch (this.params.velho.tyyppi) {
       case ProjektiTyyppi.TIE:
         tyyppi = "tiesuunnitelma";
         break;
@@ -58,21 +73,19 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf {
   }
 
   protected get kuulutusPaiva(): string {
-    return this.aloitusKuulutusJulkaisu?.kuulutusPaiva
-      ? new Date(this.aloitusKuulutusJulkaisu?.kuulutusPaiva).toLocaleDateString("fi")
-      : "DD.MM.YYYY";
+    return this.params.kuulutusPaiva ? new Date(this.params.kuulutusPaiva).toLocaleDateString("fi") : "DD.MM.YYYY";
   }
 
   protected get tilaajaGenetiivi(): string {
-    const tilaajaOrganisaatio = this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio;
-    return tilaajaOrganisaatio
-      ? tilaajaOrganisaatio === "Väylävirasto"
-        ? "Väyläviraston"
-        : tilaajaOrganisaatio?.slice(0, -1) + "ksen"
-      : "Tilaajaorganisaation";
+    const tilaajaOrganisaatio = this.params.velho?.tilaajaOrganisaatio;
+    if (tilaajaOrganisaatio === "Väylävirasto") {
+      return tilaajaOrganisaatio ? "Väyläviraston" : "Tilaajaorganisaation";
+    } else {
+      return tilaajaOrganisaatio ? tilaajaOrganisaatio?.slice(0, -1) + "ksen" : "Tilaajaorganisaation";
+    }
   }
 
   protected hankkeenKuvaus(): PDFStructureElement {
-    return this.localizedParagraphFromMap(this.aloitusKuulutusJulkaisu?.hankkeenKuvaus);
+    return this.localizedParagraphFromMap(this.params.hankkeenKuvaus);
   }
 }

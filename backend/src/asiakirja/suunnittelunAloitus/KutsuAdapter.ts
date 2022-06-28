@@ -22,12 +22,14 @@ const yhteystietoMapper = ({
   organisaatio,
   puhelinnumero,
   sahkoposti,
-}): { organisaatio; etunimi; sukunimi; puhelinnumero; sahkoposti } => ({
+  titteli,
+}): { organisaatio; etunimi; sukunimi; puhelinnumero; sahkoposti; titteli } => ({
   etunimi: formatProperNoun(etunimi),
   sukunimi: formatProperNoun(sukunimi),
   organisaatio: formatProperNoun(organisaatio),
   puhelinnumero,
   sahkoposti,
+  titteli,
 });
 
 export class KutsuAdapter {
@@ -203,11 +205,27 @@ export class KutsuAdapter {
 
   yhteystiedot(
     yhteystiedot: Yhteystieto[],
-    suunnitteluSopimus?: SuunnitteluSopimus
-  ): { organisaatio; etunimi; sukunimi; puhelinnumero; sahkoposti }[] {
+    suunnitteluSopimus?: SuunnitteluSopimus,
+    yhteysHenkilot?: string[]
+  ): { organisaatio; etunimi; sukunimi; puhelinnumero; sahkoposti; titteli }[] {
     let yt: Yhteystieto[] = [];
     if (yhteystiedot) {
       yt = yt.concat(yhteystiedot);
+    }
+    if (yhteysHenkilot) {
+      if (!this.kayttoOikeudet) {
+        throw new Error("BUG: Kayttöoikeudet pitää antaa jos yhteyshenkilöt on annettu.");
+      }
+      this.getUsersForUsernames(yhteysHenkilot).forEach((user) => {
+        const [sukunimi, etunimi] = user.nimi.split(/, /g);
+        yt.push({
+          etunimi,
+          sukunimi,
+          organisaatio: user.organisaatio,
+          sahkoposti: user.email,
+          puhelinnumero: user.puhelinnumero,
+        });
+      });
     }
     if (suunnitteluSopimus) {
       const { email, puhelinnumero, sukunimi, etunimi, kunta } = suunnitteluSopimus;
@@ -223,23 +241,11 @@ export class KutsuAdapter {
   }
 
   get yhteystiedotVuorovaikutus(): { organisaatio; etunimi; sukunimi; puhelinnumero; sahkoposti }[] {
-    let yt: Yhteystieto[] = [];
-    if (this.vuorovaikutus?.esitettavatYhteystiedot) {
-      yt = yt.concat(this.vuorovaikutus.esitettavatYhteystiedot);
-    }
-    if (this.vuorovaikutus?.vuorovaikutusYhteysHenkilot) {
-      this.getUsersForUsernames(this.vuorovaikutus.vuorovaikutusYhteysHenkilot).forEach((user) => {
-        const [sukunimi, etunimi] = user.nimi.split(/, /g);
-        yt.push({
-          etunimi,
-          sukunimi,
-          organisaatio: user.organisaatio,
-          sahkoposti: user.email,
-          puhelinnumero: user.email,
-        });
-      });
-    }
-    return yt.map(yhteystietoMapper);
+    return this.yhteystiedot(
+      this.vuorovaikutus?.esitettavatYhteystiedot || [],
+      undefined,
+      this.vuorovaikutus?.vuorovaikutusYhteysHenkilot
+    );
   }
 
   private getUsersForUsernames(usernames?: string[]): DBVaylaUser[] | undefined {

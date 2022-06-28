@@ -67,6 +67,9 @@ export class LahetekirjeAdapter {
       case ProjektiTyyppi.TIE:
         result = "tiesuunnitelma";
         break;
+      case ProjektiTyyppi.YLEINEN:
+        result = "yleissuunnitelma";
+        break;
     }
     return result;
   }

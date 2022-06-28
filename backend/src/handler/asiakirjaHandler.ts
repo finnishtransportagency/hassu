@@ -9,7 +9,7 @@ import {
 } from "../../../common/graphql/apiModel";
 import { log } from "../logger";
 import { NotFoundError } from "../error/NotFoundError";
-import { asiakirjaService } from "../asiakirja/asiakirjaService";
+import { asiakirjaService, NahtavillaoloKuulutusAsiakirjaTyyppi } from "../asiakirja/asiakirjaService";
 import { projektiAdapter } from "./projektiAdapter";
 import { asiakirjaAdapter } from "./asiakirjaAdapter";
 import { DBProjekti, Vuorovaikutus } from "../database/model";
@@ -63,7 +63,12 @@ async function handleYleisotilaisuusKutsu(
   });
 }
 
-async function handleNahtavillaoloKuulutus(projekti: DBProjekti, kieli: Kieli, muutokset: TallennaProjektiInput) {
+async function handleNahtavillaoloKuulutus(
+  projekti: DBProjekti,
+  kieli: Kieli,
+  muutokset: TallennaProjektiInput,
+  asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi
+) {
   // Previewing projekti with unsaved changes. adaptProjektiToPreview combines database content with the user provided changes
   const projektiWithChanges = await projektiAdapter.adaptProjektiToPreview(projekti, muutokset);
   projektiWithChanges.velho = projekti.velho; // Restore read-only velho data which was removed by adaptProjektiToSave
@@ -71,9 +76,10 @@ async function handleNahtavillaoloKuulutus(projekti: DBProjekti, kieli: Kieli, m
 
   return asiakirjaService.createNahtavillaoloKuulutusPdf({
     projekti: projektiWithChanges,
-    nahtavillaoloVaihe: projektiWithChanges.nahtavillaoloVaihe,
+    nahtavillaoloVaihe: asiakirjaAdapter.adaptNahtavillaoloVaiheJulkaisu(projektiWithChanges),
     kieli,
     luonnos: true,
+    asiakirjaTyyppi,
   });
 }
 
@@ -95,7 +101,9 @@ export async function lataaAsiakirja({
         case AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU:
           return handleYleisotilaisuusKutsu(projekti, asiakirjaTyyppi, kieli, muutokset);
         case AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS:
-          return handleNahtavillaoloKuulutus(projekti, kieli, muutokset);
+        case AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE:
+        case AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE:
+          return handleNahtavillaoloKuulutus(projekti, kieli, muutokset, asiakirjaTyyppi);
         default:
           throw new Error("Not implemented");
       }

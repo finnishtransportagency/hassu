@@ -1,6 +1,5 @@
-import { SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
-import { AloitusKuulutusJulkaisu } from "../../database/model/projekti";
-import { Kieli } from "../../../../common/graphql/apiModel";
+import { IlmoitusAsiakirjaTyyppi, IlmoitusParams, SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
+import { Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { AsiakirjanMuoto } from "../asiakirjaService";
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
@@ -8,16 +7,32 @@ const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
   RUOTSI: "MEDDELANDE OM KUNGÖRELSE FRÅN BEHÖRIG MYNDIGHET",
 };
 
+const fileNameKeys: Record<IlmoitusAsiakirjaTyyppi, Partial<Record<ProjektiTyyppi, string>>> = {
+  ILMOITUS_KUULUTUKSESTA: {
+    [ProjektiTyyppi.TIE]: "T412_1",
+    [ProjektiTyyppi.YLEINEN]: "12YS_aloituskuulutus",
+  },
+  ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE: {
+    [ProjektiTyyppi.TIE]: "T414_1",
+    [ProjektiTyyppi.YLEINEN]: "12YS_nahtavillaolo",
+  },
+};
+
 export class Ilmoitus12T extends SuunnittelunAloitusPdf {
-  constructor(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu, kieli: Kieli) {
-    super(aloitusKuulutusJulkaisu, kieli, headers[kieli == Kieli.SAAME ? Kieli.SUOMI : kieli], AsiakirjanMuoto.TIE); //TODO lisää tuki Saamen eri muodoille
+  constructor(asiakirjaTyyppi: IlmoitusAsiakirjaTyyppi, params: IlmoitusParams) {
+    super(
+      params,
+      headers[params.kieli == Kieli.SAAME ? Kieli.SUOMI : params.kieli],
+      AsiakirjanMuoto.TIE,
+      fileNameKeys[asiakirjaTyyppi]?.[params.velho.tyyppi]
+    ); //TODO lisää tuki Saamen eri muodoille
   }
 
   protected addDocumentElements(): PDFKit.PDFStructureElementChild[] {
     return [
       this.localizedParagraph([
-        `${this.aloitusKuulutusJulkaisu.velho.tilaajaOrganisaatio} julkaisee tietoverkossaan liikennejärjestelmästä ja maanteistä annetun lain (503/2005) sekä hallintolain 62 a §:n mukaisesti kuulutuksen, joka koskee otsikossa mainitun ${this.projektiTyyppi}n suunnittelun ja maastotöiden aloittamista. ${this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä. `,
-        `RUOTSIKSI ${this.aloitusKuulutusJulkaisu.velho.tilaajaOrganisaatio} julkaisee tietoverkossaan liikennejärjestelmästä ja maanteistä annetun lain (503/2005) sekä hallintolain 62 a §:n mukaisesti kuulutuksen, joka koskee otsikossa mainitun ${this.projektiTyyppi}n suunnittelun ja maastotöiden aloittamista. ${this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä. `,
+        `${this.params.velho.tilaajaOrganisaatio} julkaisee tietoverkossaan liikennejärjestelmästä ja maanteistä annetun lain (503/2005) sekä hallintolain 62 a §:n mukaisesti kuulutuksen, joka koskee otsikossa mainitun ${this.projektiTyyppi}n suunnittelun ja maastotöiden aloittamista. ${this.params.velho?.tilaajaOrganisaatio} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä. `,
+        `RUOTSIKSI ${this.params.velho.tilaajaOrganisaatio} julkaisee tietoverkossaan liikennejärjestelmästä ja maanteistä annetun lain (503/2005) sekä hallintolain 62 a §:n mukaisesti kuulutuksen, joka koskee otsikossa mainitun ${this.projektiTyyppi}n suunnittelun ja maastotöiden aloittamista. ${this.params.velho?.tilaajaOrganisaatio} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä. `,
       ]),
 
       this.doc.struct("P", {}, [
@@ -47,16 +62,13 @@ export class Ilmoitus12T extends SuunnittelunAloitusPdf {
       this.doc.struct(
         "P",
         {},
-        this.moreInfoElements(
-          this.aloitusKuulutusJulkaisu.yhteystiedot,
-          this.aloitusKuulutusJulkaisu.suunnitteluSopimus
-        )
+        this.moreInfoElements(this.params.yhteystiedot, this.params.suunnitteluSopimus, this.params.yhteysHenkilot)
       ),
     ];
   }
 
   private get kuulutusOsoite() {
-    return this.isVaylaTilaaja(this.aloitusKuulutusJulkaisu.velho)
+    return this.isVaylaTilaaja(this.params.velho)
       ? "https://www.vayla.fi/kuulutukset"
       : "https://www.ely-keskus.fi/kuulutukset";
   }

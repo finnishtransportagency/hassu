@@ -1,6 +1,6 @@
 /* tslint:disable:only-arrow-functions */
 import { describe, it } from "mocha";
-import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
+import { AsiakirjaService, NahtavillaoloKuulutusAsiakirjaTyyppi } from "../../src/asiakirja/asiakirjaService";
 import { AsiakirjaTyyppi, Kieli, KirjaamoOsoite, ProjektiTyyppi, Viranomainen } from "../../../common/graphql/apiModel";
 import fs from "fs";
 import { asiakirjaAdapter } from "../../src/handler/asiakirjaAdapter";
@@ -34,18 +34,22 @@ describe("asiakirjaService", async () => {
   async function testKuulutusWithLanguage(
     aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu,
     kieli: Kieli,
+    asiakirjaTyyppi: AsiakirjaTyyppi,
     expectedFilename: string
   ) {
     const pdf = await new AsiakirjaService().createAloituskuulutusPdf({
       aloitusKuulutusJulkaisu,
-      asiakirjaTyyppi: AsiakirjaTyyppi.ALOITUSKUULUTUS,
+      asiakirjaTyyppi,
       kieli,
       luonnos: true,
     });
     expect(pdf.sisalto.length).to.be.greaterThan(50000);
     expect(pdf.nimi).to.eq(expectedFilename);
     fs.mkdirSync(".report", { recursive: true });
-    fs.writeFileSync(".report/" + pdf.nimi, Buffer.from(pdf.sisalto, "base64"));
+    fs.writeFileSync(
+      ".report/esikatselu_aloituskuulutus_" + kieli + "_" + pdf.nimi,
+      Buffer.from(pdf.sisalto, "base64")
+    );
   }
 
   it("should generate kuulutus pdf succesfully", async () => {
@@ -56,14 +60,30 @@ describe("asiakirjaService", async () => {
     await testKuulutusWithLanguage(
       aloitusKuulutusJulkaisu,
       Kieli.SUOMI,
-      "KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf"
+      AsiakirjaTyyppi.ALOITUSKUULUTUS,
+      "T412 Aloituskuulutus.pdf"
+    );
+    await testKuulutusWithLanguage(
+      aloitusKuulutusJulkaisu,
+      Kieli.SUOMI,
+      AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA,
+      "T412_1 Ilmoitus aloituskuulutuksesta.pdf"
     );
     await testKuulutusWithLanguage(
       aloitusKuulutusJulkaisu,
       Kieli.RUOTSI,
-      "KUNGORELSE OM INLEDANDET AV PLANERINGEN Namnet pa svenska.pdf"
+      AsiakirjaTyyppi.ALOITUSKUULUTUS,
+      "T412 Aloituskuulutus RUOTSIKSI.pdf"
     );
-    await assert.isRejected(testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.SAAME, "asd"));
+    await testKuulutusWithLanguage(
+      aloitusKuulutusJulkaisu,
+      Kieli.RUOTSI,
+      AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA,
+      "T412_1 Ilmoitus aloituskuulutuksesta RUOTSIKSI.pdf"
+    );
+    await assert.isRejected(
+      testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.SAAME, AsiakirjaTyyppi.ALOITUSKUULUTUS, "asd")
+    );
   });
 
   async function testKutsuWithLanguage(
@@ -140,21 +160,24 @@ describe("asiakirjaService", async () => {
     projekti: DBProjekti,
     nahtavillaoloVaihe: NahtavillaoloVaihe,
     kieli: Kieli,
+    asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
     expectedFilename: string
   ) {
+    const projektiToTestWith = { ...projekti, nahtavillaoloVaihe };
     const pdf = await new AsiakirjaService().createNahtavillaoloKuulutusPdf({
-      projekti: { ...projekti, nahtavillaoloVaihe },
-      nahtavillaoloVaihe,
+      projekti: projektiToTestWith,
+      nahtavillaoloVaihe: asiakirjaAdapter.adaptNahtavillaoloVaiheJulkaisu(projektiToTestWith),
       kieli,
       luonnos: true,
+      asiakirjaTyyppi,
     });
     // expect(pdf.sisalto.length).to.be.greaterThan(50000);
     expect(pdf.nimi).to.eq(expectedFilename);
     fs.mkdirSync(".report", { recursive: true });
-    fs.writeFileSync(".report/" + pdf.nimi, Buffer.from(pdf.sisalto, "base64"));
+    fs.writeFileSync(".report/esikatselu_nahtavillaolo_" + pdf.nimi, Buffer.from(pdf.sisalto, "base64"));
   }
 
-  it("should generate kuulutus 30T/R pdf succesfully", async () => {
+  it("should generate kuulutukset for Nahtavillaolo succesfully", async () => {
     kirjaamoOsoitteetStub.resolves([
       {
         __typename: "KirjaamoOsoite",
@@ -163,13 +186,76 @@ describe("asiakirjaService", async () => {
       } as KirjaamoOsoite,
     ]);
     const projekti: DBProjekti = cloneDeep(projektiFixture.dbProjekti2);
-    const aloitusKuulutusJulkaisu = asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projekti);
-    aloitusKuulutusJulkaisu.velho.suunnittelustaVastaavaViranomainen = Viranomainen.UUDENMAAN_ELY;
+    projekti.velho.tyyppi = ProjektiTyyppi.TIE;
+    projekti.velho.vaylamuoto = ["tie"];
     await testNahtavillaoloKuulutusWithLanguage(
       projekti,
       projekti.nahtavillaoloVaihe,
       Kieli.SUOMI,
-      "Nahtavillaolo_Testiprojekti 2.pdf"
+      AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS,
+      "T414 Kuulutus suunnitelman nahtavillaolo.pdf"
+    );
+    await testNahtavillaoloKuulutusWithLanguage(
+      projekti,
+      projekti.nahtavillaoloVaihe,
+      Kieli.SUOMI,
+      AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE,
+      "T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf"
+    );
+    await testNahtavillaoloKuulutusWithLanguage(
+      projekti,
+      projekti.nahtavillaoloVaihe,
+      Kieli.SUOMI,
+      AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
+      "31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf"
+    );
+
+    projekti.velho.tyyppi = ProjektiTyyppi.RATA;
+    projekti.velho.vaylamuoto = ["rata"];
+    await testNahtavillaoloKuulutusWithLanguage(
+      projekti,
+      projekti.nahtavillaoloVaihe,
+      Kieli.SUOMI,
+      AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS,
+      "30R Kuulutus suunnitelman nahtavillaolo.pdf"
+    );
+    await testNahtavillaoloKuulutusWithLanguage(
+      projekti,
+      projekti.nahtavillaoloVaihe,
+      Kieli.SUOMI,
+      AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE,
+      "12R Ilmoitus suunnitelman nahtavillaolo.pdf"
+    );
+    await testNahtavillaoloKuulutusWithLanguage(
+      projekti,
+      projekti.nahtavillaoloVaihe,
+      Kieli.SUOMI,
+      AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
+      "31R Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf"
+    );
+
+    projekti.velho.tyyppi = ProjektiTyyppi.YLEINEN;
+    projekti.velho.vaylamuoto = ["rata"];
+    await testNahtavillaoloKuulutusWithLanguage(
+      projekti,
+      projekti.nahtavillaoloVaihe,
+      Kieli.SUOMI,
+      AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS,
+      "30YS Kuulutus suunnitelman nahtavillaolo.pdf"
+    );
+    await testNahtavillaoloKuulutusWithLanguage(
+      projekti,
+      projekti.nahtavillaoloVaihe,
+      Kieli.SUOMI,
+      AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE,
+      "12YS Ilmoitus suunnitelman nahtavillaolo.pdf"
+    );
+    await testNahtavillaoloKuulutusWithLanguage(
+      projekti,
+      projekti.nahtavillaoloVaihe,
+      Kieli.SUOMI,
+      AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
+      "31YS Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf"
     );
   });
 

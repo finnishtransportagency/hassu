@@ -1064,8 +1064,8 @@ Object {
         "__typename": "AloitusKuulutusJulkaisuJulkinen",
         "aloituskuulutusPDFt": Object {
           "SUOMI": Object {
-            "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf",
-            "aloituskuulutusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf",
+            "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+            "aloituskuulutusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412 Aloituskuulutus.pdf",
           },
           "__typename": "AloitusKuulutusPDFt",
         },
@@ -1613,8 +1613,8 @@ Object {
 exports[`Api should search, load and save a project 12`] = `
 Object {
   "yllapito S3 files just after vuorovaikutus published": Object {
-    "aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {},
-    "aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {},
+    "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {},
+    "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": Object {},
     "palautteet/***unittest***/logo.png": Object {},
     "suunnittelusopimus/logo.png": Object {},
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {},
@@ -1627,10 +1627,10 @@ Object {
 exports[`Api should search, load and save a project 13`] = `
 Object {
   "public S3 files just after vuorovaikutus published": Object {
-    "aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {
+    "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
-    "aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {
+    "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": Object {
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {
@@ -1664,8 +1664,8 @@ Object {
 exports[`Api should search, load and save a project 15`] = `
 Object {
   "yllapito S3 files vuorovaikutus publish date changed and last aineisto deleted": Object {
-    "aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {},
-    "aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {},
+    "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {},
+    "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": Object {},
     "palautteet/***unittest***/logo.png": Object {},
     "suunnittelusopimus/logo.png": Object {},
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {},
@@ -1678,10 +1678,10 @@ Object {
 exports[`Api should search, load and save a project 16`] = `
 Object {
   "public S3 files vuorovaikutus publish date changed and last aineisto deleted": Object {
-    "aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {
+    "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
-    "aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {
+    "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": Object {
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {
@@ -1753,7 +1753,7 @@ Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tä
           "content": "***unittest***",
           "contentDisposition": "attachment",
           "contentType": "application/pdf",
-          "filename": "KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf",
+          "filename": "T412 Aloituskuulutus.pdf",
         },
       ],
       "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ",
@@ -1774,7 +1774,7 @@ Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipääll
           "content": "***unittest***",
           "contentDisposition": "attachment",
           "contentType": "application/pdf",
-          "filename": "ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf",
+          "filename": "T412_1 Ilmoitus aloituskuulutuksesta.pdf",
         },
       ],
       "subject": "TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA ILMOITTAMINEN - HASSU AUTOMAATTITESTIPROJEKTI1",
@@ -1830,7 +1830,7 @@ Väylävirasto käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia hen
 
 Lisätietoja antaa:
 Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
-CGI Suomi Oy, A-Tunnus1 Hassu, puhelin mikko.haapamki@cgi.com ja sähköposti mikko.haapamki@cgi.com.
+CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
 
 LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
       "to": "mikkeli@mikke.li",
@@ -1861,7 +1861,7 @@ Väylävirasto käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia hen
 
 Lisätietoja antaa:
 Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
-CGI Suomi Oy, A-Tunnus1 Hassu, puhelin mikko.haapamki@cgi.com ja sähköposti mikko.haapamki@cgi.com.
+CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
 
 LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
       "to": "juva@ju.va",
@@ -1892,7 +1892,7 @@ Väylävirasto käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia hen
 
 Lisätietoja antaa:
 Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
-CGI Suomi Oy, A-Tunnus1 Hassu, puhelin mikko.haapamki@cgi.com ja sähköposti mikko.haapamki@cgi.com.
+CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
 
 LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
       "to": "savonlinna@savonlin.na",
@@ -1923,7 +1923,7 @@ Väylävirasto käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia hen
 
 Lisätietoja antaa:
 Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
-CGI Suomi Oy, A-Tunnus1 Hassu, puhelin mikko.haapamki@cgi.com ja sähköposti mikko.haapamki@cgi.com.
+CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
 
 LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
       "to": "kirjaamo.etela-savo@ely-keskus.fi",
@@ -2753,8 +2753,8 @@ Object {
 exports[`Api should search, load and save a project 23`] = `
 Object {
   "yllapito S3 files Nahtavillaolo published": Object {
-    "aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {},
-    "aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {},
+    "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {},
+    "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": Object {},
     "nahtavillaolo/1/T211 Piirustusmerkinnät.txt": Object {},
     "nahtavillaolo/1/T212 Yleiskartta.txt": Object {},
     "nahtavillaolo/1/T213 Teiden hallinnolsten järjestelyjen kartat.txt": Object {},
@@ -2780,10 +2780,10 @@ Object {
 exports[`Api should search, load and save a project 24`] = `
 Object {
   "public S3 files Nahtavillaolo published": Object {
-    "aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {
+    "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
-    "aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA HASSU AUTOMAATTITESTIPROJEKTI1.pdf": Object {
+    "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": Object {
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
     "nahtavillaolo/1/T211 Piirustusmerkinnät.txt": Object {

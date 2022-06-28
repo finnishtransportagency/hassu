@@ -8,7 +8,7 @@ import get from "lodash/get";
 const languageBundles = {
   [Kieli.SUOMI]: [commonFI as Record<string, unknown>, projektiFI as Record<string, unknown>],
   [Kieli.RUOTSI]: [commonSV as Record<string, unknown>, projektiSV as Record<string, unknown>],
-  [Kieli.SAAME]: [],
+  [Kieli.SAAME]: [commonFI as Record<string, unknown>, projektiFI as Record<string, unknown>], // TODO: Lisää tuki saamelle
 };
 
 export function translate(key: string, kieli: Kieli): string | undefined {

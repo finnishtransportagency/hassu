@@ -21,14 +21,14 @@
     },
     "nahtavillaolo": {
       "ei-rata": {
-        "vaylavirasto_on_laatinut": "RUOTSIKSI Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman",
+        "on_laatinut": "RUOTSIKSI on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen",
         "kuulutus_julkaistu": "RUOTSIKSI Kuulutus on julkaistu tietoverkossa Väyläviraston verkkosivuilla",
         "asianosaisten_katsotaan_saaneen": "RUOTSIKSI Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä päivänä kuulutuksen julkaisemisajankohdasta (hallintolaki 62 a §)",
         "kiinteiston_omistajilla_ja": "RUOTSIKSI Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa, on mahdollisuus muistutusten tekemiseen suunnitelmasta. Muistutukset on toimitettava {{viranomainen}} ennen nähtävänäoloajan päättymistä (LjMTL 27 §) Valtion liikenneväylien suunnittelu -järjestelmään osoitteeseen {{url}}",
         "sahkopostilla_muistutus": "RUOTSIKSI Sähköpostilla muistutusta lähettäessä on liitettävä viestiin projektin asiatunnus."
       },
       "rata": {
-        "vaylavirasto_on_laatinut": "RUOTSIKSI Väylävirasto on laatinut ratalain (110/2007) mukaisen yleis-/ratasuunnitelman"
+        "on_laatinut": "RUOTSIKSI on laatinut ratalain (110/2007) mukaisen"
       }
     },
     "hankesuunnitelmista": "RUOTSIKSI Hankesuunnitelmista lorem ipsum-teksti tähän, joka kertoo lyhyesti mitä tämä sivusto pitää sisällään. Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam dicta voluptatem fugit quos praesentium architecto accusamus non earum fuga veritatis, quia facilis est repellendus et iste similique beatae perferendis totam?"
@@ -137,5 +137,40 @@
     "kaikki_viestit_kasitellaan": "RUOTSIKSI Kaikki viestit käsitellään ja ne pyritään huomioimaan suunnittelussa. Viimeistellyt suunnitelmat asetetaan myöhemmin nähtäville.",
     "jos_toivoit_yhteydenottoa": "RUOTSIKSI Jos toivoit yhteydenottoa, hankkeen suunnittelutiimi on sinuun yhteydessä mahdollisimman pian.",
     "jata_muistutus": "RUOTSIKSI Jätä muistutus hankkeesta"
+  },
+  "tiedostonimi": {
+    "T412": "T412 Aloituskuulutus RUOTSIKSI",
+    "T412_1": "T412_1 Ilmoitus aloituskuulutuksesta RUOTSIKSI",
+    "T413": "T413 Kutsu vuorovaikutukseen RUOTSIKSI",
+    "T414": "T414 Kuulutus suunnitelman nähtävilläolo RUOTSIKSI",
+    "T414_1": "T414_1 Ilmoitus suunnitelman nähtävilläolo RUOTSIKSI",
+    "T431": "T431 Kuulutus hyväksymispäätöksen nähtävilläolo RUOTSIKSI",
+    "T431_1": "T431_1 Ilmoitus hyväksymispäätöksestä kunnalle ja ELYlle RUOTSIKSI",
+    "T431_2": "T431_2 Ilmoitus hyväksymispäätöksen kuulutuksesta RUOTSIKSI",
+    "T441": "T441 Kuulutus hyväksymispäätöksen voimassaolon jatkamisesta RUOTSIKSI",
+    "T441_1": "T441_1 Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta kunnalle RUOTSIKSI",
+    "T441_2": "T441_2 Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta maakuntaliitolle RUOTSIKSI",
+    "10R": "10R Aloituskuulutus RUOTSIKSI",
+    "12R_aloituskuulutus": "12R Ilmoitus aloituskuulutuksesta RUOTSIKSI",
+    "20R": "20R Kutsu vuorovaikutukseen RUOTSIKSI",
+    "30R": "30R Kuulutus suunnitelman nähtävilläolo RUOTSIKSI",
+    "12R_nahtavillaolo": "12R Ilmoitus suunnitelman nähtävilläolo RUOTSIKSI",
+    "60R": "60R Kuulutus hyväksymispäätöksen nähtävilläolo RUOTSIKSI",
+    "61R": "61R Ilmoitus hyväksymispäätöksestä kunnalle ja ELYlle RUOTSIKSI",
+    "12R_hyvaksymispaatos": "12R Ilmoitus hyväksymispäätöksen kuulutuksesta RUOTSIKSI",
+    "70R": "70R Kuulutus hyväksymispäätöksen voimassaolon jatkamisesta RUOTSIKSI",
+    "71R": "71R Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta kunnalle RUOTSIKSI",
+    "72R": "72R Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta maakuntaliitolle RUOTSIKSI",
+    "10YS": "10YS Aloituskuulutus RUOTSIKSI",
+    "12YS_aloituskuulutus": "12YS Ilmoitus aloituskuulutuksesta RUOTSIKSI",
+    "20YS": "20YS Kutsu vuorovaikutukseen RUOTSIKSI",
+    "30YS": "30YS Kuulutus suunnitelman nähtävilläolo RUOTSIKSI",
+    "12YS_nahtavillaolo": "12YS Ilmoitus suunnitelman nähtävilläolo RUOTSIKSI",
+    "60YS": "60YS Kuulutus hyväksymispäätöksen nähtävilläolo RUOTSIKSI",
+    "61YS": "61YS Ilmoitus hyväksymispäätöksestä kunnalle ja ELYlle RUOTSIKSI",
+    "12YS_hyvaksymispaatos": "12YS Ilmoitus hyväksymispäätöksen kuulutuksesta RUOTSIKSI",
+    "70YS": "70YS Kuulutus hyväksymispäätöksen voimassaolon jatkamisesta RUOTSIKSI",
+    "71YS": "71YS Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta kunnalle RUOTSIKSI",
+    "72YS": "72YS Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta maakuntaliitolle RUOTSIKSI"
   }
 }
