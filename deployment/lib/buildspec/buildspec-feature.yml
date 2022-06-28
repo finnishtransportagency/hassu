@@ -12,8 +12,8 @@ phases:
     commands:
       - aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 283563576583.dkr.ecr.eu-west-1.amazonaws.com
 
-      - nohup docker pull 283563576583.dkr.ecr.eu-west-1.amazonaws.com/hassu-buildimage:1.0.0 &
-      - nohup docker pull 283563576583.dkr.ecr.eu-west-1.amazonaws.com/localstack:latest &
+      - nohup docker pull 283563576583.dkr.ecr.eu-west-1.amazonaws.com/hassu-buildimage:1.0.2 &
+      - nohup docker pull 283563576583.dkr.ecr.eu-west-1.amazonaws.com/localstack:0.14.1 &
 
       - npm install -g npm@8.1.3
       - npm ci

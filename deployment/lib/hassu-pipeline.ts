@@ -38,7 +38,7 @@ export class HassuPipelineStack extends Stack {
     console.log("Deploying pipeline from branch " + branch + " to enviroment " + env);
 
     if (env == "dev" || env == "test") {
-      await this.createRobotTestPipeline(env, config);
+      await this.createE2eTestPipeline(env, config);
     }
 
     if (Config.isPermanentEnvironment()) {
@@ -173,7 +173,7 @@ export class HassuPipelineStack extends Stack {
     );
   }
 
-  private async createRobotTestPipeline(env: string, config: Config) {
+  private async createE2eTestPipeline(env: string, config: Config) {
     const sourceProps: GitHubSourceProps = {
       owner: "finnishtransportagency",
       repo: "hassu",
@@ -183,14 +183,15 @@ export class HassuPipelineStack extends Stack {
       webhookFilters: [codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs("robottest/*")],
     };
     const gitHubSource = codebuild.Source.gitHub(sourceProps);
-    new codebuild.Project(this, "HassuRobotTest", {
-      projectName: "Hassu-robottest-" + env,
-      buildSpec: BuildSpec.fromSourceFilename("./deployment/lib/buildspec/robottest.yml"),
+    new codebuild.Project(this, "HassuE2eTest", {
+      projectName: "Hassu-e2etest-" + env,
+      buildSpec: BuildSpec.fromSourceFilename("./deployment/lib/buildspec/e2etest.yml"),
       source: gitHubSource,
       cache: codebuild.Cache.local(LocalCacheMode.CUSTOM, LocalCacheMode.SOURCE, LocalCacheMode.DOCKER_LAYER),
       environment: {
         buildImage: LinuxBuildImage.fromEcrRepository(
-          Repository.fromRepositoryName(this, "RobotBuildImage", "hassu-robot")
+          Repository.fromRepositoryName(this, "RobotBuildImage", "hassu-buildimage"),
+          "1.0.2"
         ),
         privileged: true,
         computeType: ComputeType.MEDIUM,

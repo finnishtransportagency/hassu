@@ -6,6 +6,7 @@ const oid = Cypress.env("oid");
 
 describe("Projektin aloituskuulutus", () => {
   before(() => {
+    cy.abortEarly();
     cy.login("A1");
   });
 

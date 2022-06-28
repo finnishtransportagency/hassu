@@ -36,31 +36,35 @@ Cypress.Commands.overwrite("type", (originalFn, subject, text, options = {}) => 
 
 Cypress.config("scrollBehavior", "nearest");
 
-// The following code copied from https://rajneesh-m49.medium.com/skipping-cypress-tests-on-first-failure-and-saving-resources-2c63e3bb0705 to skip running tests after failure
+function abortEarly() {
+  if (this.currentTest.state === "failed") {
+    return cy.task("shouldSkip", true);
+  }
+  cy.task("shouldSkip").then((value) => {
+    if (value) this.skip();
+  });
+}
+
+function setAbortEarlyStatus() {
+  if (this.currentTest.state === "failed") {
+    return cy.task("shouldSkip", true);
+  }
+}
+
+beforeEach(abortEarly);
+afterEach(setAbortEarlyStatus);
+
 before(() => {
   if (Cypress.browser.isHeaded) {
-    cy.clearCookie("shouldSkip");
-  } else {
-    cy.getCookie("shouldSkip").then((cookie) => {
-      if (cookie && typeof cookie === "object" && cookie.value === "true") {
-        Cypress.runner.stop();
-      }
-    });
+    // Reset the shouldSkip flag at the start of a run, so that it
+    //  doesn't carry over into subsequent runs.
+    // Do this only for headed runs because in headless runs,
+    //  the `before` hook is executed for each spec file.
+    cy.task("resetShouldSkipFlag");
   }
 });
 
-afterEach(function onAfterEach() {
-  if (this.currentTest.state === "failed") {
-    cy.setCookie("shouldSkip", "true");
-    //set cookie to skip tests for further specs
-    Cypress.runner.stop();
-    //this will skip tests only for current spec
-  }
-});
-
-Cypress.Cookies.defaults({
-  preserve: "shouldSkip",
-});
+Cypress.Commands.add("abortEarly", abortEarly);
 
 Cypress.Commands.add("login", (testuser) => {
   cy.session(testuser, () => {
@@ -90,6 +94,7 @@ Cypress.Commands.add("login", (testuser) => {
           });
         });
       });
+      cy.url({ timeout: 4000 }).should("not.contain", "sso");
     }
   });
 });

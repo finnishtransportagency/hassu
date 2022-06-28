@@ -3,12 +3,14 @@ import { ApolloQueryResult } from "apollo-client/core/types";
 import { ApolloLink, FetchResult, GraphQLRequest } from "apollo-link";
 import { setContext } from "apollo-link-context";
 import gql from "graphql-tag";
-import ApolloClient, { ApolloError, DefaultOptions } from "apollo-client";
+import ApolloClient, { DefaultOptions } from "apollo-client";
 import { InMemoryCache, IntrospectionFragmentMatcher } from "apollo-cache-inmemory";
 import log from "loglevel";
 import { onError } from "apollo-link-error";
 import * as introspectionQueryResultData from "./fragmentTypes.json";
 import { IntrospectionResultData } from "apollo-cache-inmemory/lib/types";
+
+export const ERROR_MESSAGE_NOT_AUTHENTICATED = "NOT_AUTHENTICATED";
 
 const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData: introspectionQueryResultData as IntrospectionResultData,
@@ -25,26 +27,9 @@ const defaultOptions: DefaultOptions = {
   },
 };
 
-// Apollo client is missing type for this
-type NetworkError = {
-  name?: string;
-  response?: unknown;
-  statusCode?: number;
-  bodyText?: string;
-};
-
-export class AuthenticationRequiredError extends Error {
-  constructor(m?: string) {
-    super(m);
-
-    // Set the prototype explicitly.
-    Object.setPrototypeOf(this, AuthenticationRequiredError.prototype);
-  }
-}
-
 export class API extends AbstractApi {
-  private publicClient: ApolloClient<any>;
-  private authenticatedClient: ApolloClient<any>;
+  private readonly publicClient: ApolloClient<any>;
+  private readonly authenticatedClient: ApolloClient<any>;
 
   constructor(publicLinks: ApolloLink[], authenticatedLinks: ApolloLink[], enableOneTimeHeaders: boolean = true) {
     super();
@@ -90,39 +75,33 @@ export class API extends AbstractApi {
   }
 
   async callGraphQL(client: ApolloClient<any>, operation: OperationConfig, variables: any) {
-    try {
-      switch (operation.operationType) {
-        case OperationType.Query:
-          const queryResponse: ApolloQueryResult<any> = await client.query({
-            query: gql(operation.graphql),
-            variables,
-            fetchPolicy: "network-only",
-            errorPolicy: "all",
-            fetchResults: true,
-          });
-          const data = queryResponse.data?.[operation.name];
-          if (queryResponse.errors && !data) {
-            log.warn(queryResponse.errors);
-            throw new Error("API palautti virheen.");
+    switch (operation.operationType) {
+      case OperationType.Query:
+        const queryResponse: ApolloQueryResult<any> = await client.query({
+          query: gql(operation.graphql),
+          variables,
+          fetchPolicy: "network-only",
+          errorPolicy: "all",
+          fetchResults: true,
+        });
+        const data = queryResponse.data?.[operation.name];
+        if (queryResponse.errors && !data) {
+          for (const error of queryResponse.errors) {
+            if (error.message === ERROR_MESSAGE_NOT_AUTHENTICATED) {
+              window.location.assign("/yllapito/kirjaudu");
+              throw new Error(ERROR_MESSAGE_NOT_AUTHENTICATED);
+            }
           }
-          return data;
-        case OperationType.Mutation:
-          const fetchResponse: FetchResult<any> = await client.mutate({
-            mutation: gql(operation.graphql),
-            variables,
-          });
-          return fetchResponse.data?.[operation.name];
-      }
-    } catch (e) {
-      if (e instanceof ApolloError) {
-        const networkError = e.networkError as unknown as NetworkError;
-        if (networkError?.statusCode == 302) {
-          window.location.pathname = "/yllapito/kirjaudu";
-          return;
+          log.warn(queryResponse.errors);
+          throw new Error("API palautti virheen.");
         }
-      } else {
-        throw e;
-      }
+        return data;
+      case OperationType.Mutation:
+        const fetchResponse: FetchResult<any> = await client.mutate({
+          mutation: gql(operation.graphql),
+          variables,
+        });
+        return fetchResponse.data?.[operation.name];
     }
     throw Error("Unknown operation");
   }

@@ -4,6 +4,7 @@ const oid = Cypress.env("oid");
 
 describe("Hae projekti Velhosta", () => {
   before(() => {
+    cy.abortEarly();
     cy.login("A1");
 
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/arkistoi");

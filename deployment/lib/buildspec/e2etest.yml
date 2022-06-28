@@ -3,24 +3,27 @@ version: 0.2
 phases:
   install:
     commands:
-      - npm ci --no-audit
-      - npm run robot:setup
+      - npm i --no-audit
+      - npm run setupenvironment
   build:
     commands:
-      - ./tools/robot/run_suite_local.sh
+      - npm run e2e:test:run
       - echo Test report available at https://$FRONTEND_DOMAIN_NAME_DEV/report/robot-$ENVIRONMENT/$CODEBUILD_BUILD_NUMBER/report.html
 artifacts:
   files:
-    - "test/.report/**/*"
+    - ".report/e2e-test-output-*.xml"
+    - "cypress/screenshots/**/*"
+    - "cypress/videos/**/*"
   discard-paths: yes
   name: report/robot-$ENVIRONMENT/$CODEBUILD_BUILD_NUMBER
 
 cache:
   paths:
     - "/root/.npm/**/*"
+    - "/root/.cache/**/*"
 
 reports:
   unit-tests:
-    files: "xunit.xml"
-    base-directory: test/.report
+    files: "e2e-test-output-*.xml"
+    base-directory: .report
     discard-paths: true
