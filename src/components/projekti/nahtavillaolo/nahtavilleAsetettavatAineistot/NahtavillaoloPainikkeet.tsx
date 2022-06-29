@@ -11,12 +11,16 @@ import useSnackbars from "src/hooks/useSnackbars";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import { NahtavilleAsetettavatAineistotFormValues } from "./NahtavilleAsetettavatAineistot";
 
-const mapFormValuesToTallennaProjektiInput = (
-  formData: NahtavilleAsetettavatAineistotFormValues
-): TallennaProjektiInput => {
-  const aineistoNahtavilla = Object.values(formData.aineistoNahtavilla).flat();
-  deleteFieldArrayIds(aineistoNahtavilla);
-  return { oid: formData.oid, nahtavillaoloVaihe: { aineistoNahtavilla } };
+const mapFormValuesToTallennaProjektiInput = ({
+  oid,
+  lisaAineisto,
+  aineistoNahtavilla,
+}: NahtavilleAsetettavatAineistotFormValues): TallennaProjektiInput => {
+  const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla).flat();
+  deleteFieldArrayIds(aineistoNahtavillaFlat);
+  deleteFieldArrayIds(lisaAineisto);
+
+  return { oid, nahtavillaoloVaihe: { aineistoNahtavilla: aineistoNahtavillaFlat, lisaAineisto: lisaAineisto } };
 };
 
 export default function NahtavillaoloPainikkeet() {
