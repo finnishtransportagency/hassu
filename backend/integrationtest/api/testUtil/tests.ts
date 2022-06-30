@@ -317,7 +317,6 @@ export async function testUpdatePublishDateAndDeleteAineisto(oid: string, userFi
   userFixture.loginAs(UserFixture.mattiMeikalainen);
   const vuorovaikutus = (await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO)).suunnitteluVaihe
     .vuorovaikutukset[0];
-  vuorovaikutus.esittelyaineistot?.pop();
   vuorovaikutus.suunnitelmaluonnokset?.pop();
   const updatedVuorovaikutusJulkaisuPaiva = parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva)
     .add(1, "day")

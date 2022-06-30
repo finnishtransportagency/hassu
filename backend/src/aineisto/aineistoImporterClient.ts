@@ -8,7 +8,7 @@ class AineistoImporterClient {
   async importAineisto(params: ImportAineistoEvent) {
     const messageParams: SQS.Types.SendMessageRequest = {
       MessageGroupId: params.oid,
-      MessageBody: JSON.stringify(params),
+      MessageBody: JSON.stringify({ timestamp: Date.now(), ...params }),
       QueueUrl: config.aineistoImportSqsUrl,
     };
     log.info({ messageParams });

@@ -10,16 +10,17 @@ import SuunnitelmatJaAineistot from "./SuunnitelmatJaAineistot";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { AineistoKategoria, aineistoKategoriat } from "common/aineistoKategoriat";
 
-type AineistoNahtavilla = {
+type Aineistot = {
   aineistoNahtavilla: {
     [kategoriaId: string]: AineistoInput[];
   };
+  lisaAineisto: AineistoInput[];
 };
 
-export type NahtavilleAsetettavatAineistotFormValues = Pick<TallennaProjektiInput, "oid"> & AineistoNahtavilla;
+export type NahtavilleAsetettavatAineistotFormValues = Pick<TallennaProjektiInput, "oid"> & Aineistot;
 
 const addAineistoKategoria = (
-  aineistoNahtavilla: AineistoNahtavilla["aineistoNahtavilla"],
+  aineistoNahtavilla: Aineistot["aineistoNahtavilla"],
   kategoria: AineistoKategoria,
   allAineisto: Aineisto[] | undefined | null
 ) => {
@@ -37,14 +38,22 @@ const addAineistoKategoria = (
 function defaultValues(projekti: ProjektiLisatiedolla): NahtavilleAsetettavatAineistotFormValues {
   const aineistoNahtavilla = aineistoKategoriat
     .listKategoriat()
-    .reduce<AineistoNahtavilla["aineistoNahtavilla"]>((aineistot, currentKategoria) => {
+    .reduce<Aineistot["aineistoNahtavilla"]>((aineistot, currentKategoria) => {
       addAineistoKategoria(aineistot, currentKategoria, projekti.nahtavillaoloVaihe?.aineistoNahtavilla);
       return aineistot;
     }, {});
 
+  const lisaAineisto: AineistoInput[] =
+    projekti.nahtavillaoloVaihe?.lisaAineisto?.map(({ dokumenttiOid, nimi, jarjestys }) => ({
+      dokumenttiOid,
+      jarjestys,
+      nimi,
+    })) || [];
+
   return {
     oid: projekti.oid,
     aineistoNahtavilla,
+    lisaAineisto,
   };
 }
 
