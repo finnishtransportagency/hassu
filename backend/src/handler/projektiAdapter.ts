@@ -20,6 +20,7 @@ import {
   Yhteystieto,
 } from "../database/model";
 import * as API from "../../../common/graphql/apiModel";
+import { AineistoTila } from "../../../common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import { personSearch } from "../personSearch/personSearchClient";
@@ -578,11 +579,13 @@ export function adaptAineistot(aineistot?: Aineisto[] | null, julkaisuPaiva?: Da
     return undefined;
   }
   if (aineistot && aineistot.length > 0) {
-    return aineistot.map((aineisto) => ({
-      __typename: "Aineisto",
-      dokumenttiOid: aineisto.dokumenttiOid,
-      ...aineisto,
-    }));
+    return aineistot
+      .filter((aineisto) => aineisto.tila != AineistoTila.ODOTTAA_POISTOA)
+      .map((aineisto) => ({
+        __typename: "Aineisto",
+        dokumenttiOid: aineisto.dokumenttiOid,
+        ...aineisto,
+      }));
   }
   return undefined;
 }
