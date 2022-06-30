@@ -24,61 +24,54 @@ export default function HyvaksymisDialogi({
 
   return (
     <HassuDialog open={dialogiOnAuki} title="Kuulutuksen hyväksyminen ja ilmoituksen lähettäminen" onClose={onClose}>
-      <form style={{ display: "contents" }}>
-        <DialogContent>
+      <DialogContent>
+        {julkinen ? (
+          <p>Olet päivittämässä vuorovaikutustietoja. Ilmoitus päivitetyistä tiedoista lähetetään seuraaville:</p>
+        ) : (
+          <p>
+            Olet tallentamassa vuorovaikutustiedot ja käynnistämässä siihen liittyvän ilmoituksen automaattisen
+            lähettämisen. Ilmoitus vuorovaikutuksesta lähetetään seuraaville:
+          </p>
+        )}
+        <div>
+          <p>Viranomaiset</p>
+          <ul className="vayla-dialog-list">
+            {ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => (
+              <li key={viranomainen.nimi}>
+                {console.log({ viranomainen })}
+                {t(`common:viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
+              </li>
+            ))}
+          </ul>
+          <p>Kunnat</p>
+          <ul className="vayla-dialog-list">
+            {ilmoituksenVastaanottajat?.kunnat?.map((kunta) => (
+              <li key={kunta.nimi}>
+                {kunta.nimi}, {kunta.sahkoposti}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
           {julkinen ? (
-            <p>Olet päivittämässä vuorovaikutustietoja. Ilmoitus päivitetyistä tiedoista lähetetään seuraaville:</p>
+            <p>Ilmoitukset lähetetään automaattisesti painikkeen klikkaamisen jälkeen.</p>
           ) : (
             <p>
-              Olet tallentamassa vuorovaikutustiedot ja käynnistämässä siihen liittyvän ilmoituksen automaattisen
-              lähettämisen. Ilmoitus vuorovaikutuksesta lähetetään seuraaville:
+              Klikkaamalla Tallenna ja lähetä -painiketta vahvistat vuorovaikutustiedot tarkastetuksi ja hyväksyt sen
+              julkaisun asetettuna julkaisupäivänä sekä ilmoituksien lähettämisen. Ilmoitukset lähetetään
+              automaattisesti painikkeen klikkaamisen jälkeen.
             </p>
           )}
-          <div>
-            <p>Viranomaiset</p>
-            <ul className="vayla-dialog-list">
-              {ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => (
-                <li key={viranomainen.nimi}>
-                  {console.log({ viranomainen })}
-                  {t(`common:viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
-                </li>
-              ))}
-            </ul>
-            <p>Kunnat</p>
-            <ul className="vayla-dialog-list">
-              {ilmoituksenVastaanottajat?.kunnat?.map((kunta) => (
-                <li key={kunta.nimi}>
-                  {kunta.nimi}, {kunta.sahkoposti}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            {julkinen ? (
-              <p>Ilmoitukset lähetetään automaattisesti painikkeen klikkaamisen jälkeen.</p>
-            ) : (
-              <p>
-                Klikkaamalla Tallenna ja lähetä -painiketta vahvistat vuorovaikutustiedot tarkastetuksi ja hyväksyt sen
-                julkaisun asetettuna julkaisupäivänä sekä ilmoituksien lähettämisen. Ilmoitukset lähetetään
-                automaattisesti painikkeen klikkaamisen jälkeen.
-              </p>
-            )}
-          </div>
-        </DialogContent>
-        <DialogActions>
-          <Button primary id="accept_and_publish_vuorovaikutus" onClick={tallenna}>
-            Hyväksy ja lähetä
-          </Button>
-          <Button
-            onClick={(e) => {
-              onClose();
-              e.preventDefault();
-            }}
-          >
-            Peruuta
-          </Button>
-        </DialogActions>
-      </form>
+        </div>
+      </DialogContent>
+      <DialogActions>
+        <Button primary type="button" id="accept_and_publish_vuorovaikutus" onClick={tallenna}>
+          Hyväksy ja lähetä
+        </Button>
+        <Button type="button" onClick={onClose}>
+          Peruuta
+        </Button>
+      </DialogActions>
     </HassuDialog>
   );
 }
