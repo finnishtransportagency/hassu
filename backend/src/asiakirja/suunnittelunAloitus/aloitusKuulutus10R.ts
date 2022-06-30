@@ -1,6 +1,5 @@
-import { SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
-import { AloitusKuulutusJulkaisu } from "../../database/model/projekti";
-import { Kieli } from "../../../../common/graphql/apiModel";
+import { IlmoitusParams, SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
+import { Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { AsiakirjanMuoto } from "../asiakirjaService";
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
@@ -9,8 +8,13 @@ const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
 };
 
 export class AloitusKuulutus10R extends SuunnittelunAloitusPdf {
-  constructor(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu, kieli: Kieli) {
-    super(aloitusKuulutusJulkaisu, kieli, headers[kieli == Kieli.SAAME ? Kieli.SUOMI : kieli], AsiakirjanMuoto.RATA); //TODO lisää tuki Saamen eri muodoille
+  constructor(params: IlmoitusParams) {
+    super(
+      params,
+      headers[params.kieli == Kieli.SAAME ? Kieli.SUOMI : params.kieli],
+      AsiakirjanMuoto.RATA,
+      params.velho.tyyppi == ProjektiTyyppi.YLEINEN ? "10YS" : "10R"
+    );
   }
 
   protected addDocumentElements(): PDFKit.PDFStructureElementChild[] {
@@ -44,14 +48,7 @@ export class AloitusKuulutus10R extends SuunnittelunAloitusPdf {
 
       this.vaylavirastoTietosuojaParagraph(),
       this.lisatietojaAntavatParagraph(),
-      this.doc.struct(
-        "P",
-        {},
-        this.moreInfoElements(
-          this.aloitusKuulutusJulkaisu.yhteystiedot,
-          this.aloitusKuulutusJulkaisu.suunnitteluSopimus
-        )
-      ),
+      this.doc.struct("P", {}, this.moreInfoElements(this.params.yhteystiedot, this.params.suunnitteluSopimus)),
     ];
   }
 }

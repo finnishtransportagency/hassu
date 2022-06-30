@@ -102,7 +102,7 @@ export abstract class CommonPdf extends AbstractPdf {
 
   protected headerElement(header: string): PDFStructureElement {
     return this.doc.struct("H1", {}, () => {
-      this.doc.moveDown(1).font("ArialMTBold").fontSize(10).text(header).moveDown(1);
+      this.doc.moveDown(1).font("ArialMTBold").fontSize(10).text(header).font("ArialMT").moveDown(1);
     });
   }
 
@@ -134,16 +134,20 @@ export abstract class CommonPdf extends AbstractPdf {
   protected moreInfoElements(
     yhteystiedot: Yhteystieto[],
     suunnitteluSopimus?: SuunnitteluSopimus,
+    yhteysHenkilot?: string[],
     showOrganization = true
   ): PDFKit.PDFStructureElementChild[] {
     return this.kutsuAdapter
-      .yhteystiedot(yhteystiedot, suunnitteluSopimus)
-      .map(({ organisaatio, etunimi, sukunimi, puhelinnumero, sahkoposti }) => {
+      .yhteystiedot(yhteystiedot, suunnitteluSopimus, yhteysHenkilot)
+      .map(({ organisaatio, etunimi, sukunimi, puhelinnumero, sahkoposti, titteli }) => {
         return () => {
           const noSpamSahkoposti = sahkoposti.replace(/@/g, "(at)");
           const organization = showOrganization ? `${organisaatio}, ` : "";
+          const title = titteli ? `${titteli}, ` : "";
           this.doc
-            .text(`${organization}${etunimi} ${sukunimi}, ${this.localizedPuh} ${puhelinnumero}, ${noSpamSahkoposti} `)
+            .text(
+              `${organization}${title}${etunimi} ${sukunimi}, ${this.localizedPuh} ${puhelinnumero}, ${noSpamSahkoposti} `
+            )
             .moveDown();
         };
       });

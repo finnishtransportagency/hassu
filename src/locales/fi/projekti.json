@@ -21,14 +21,14 @@
     },
     "nahtavillaolo": {
       "ei-rata": {
-        "vaylavirasto_on_laatinut": "Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen yleis-/tiesuunnitelman",
+        "on_laatinut": "on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen",
         "kuulutus_julkaistu": "Kuulutus on julkaistu tietoverkossa Väyläviraston verkkosivuilla",
         "asianosaisten_katsotaan_saaneen": "Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä päivänä kuulutuksen julkaisemisajankohdasta (hallintolaki 62 a §)",
         "kiinteiston_omistajilla_ja": "Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa, on mahdollisuus muistutusten tekemiseen suunnitelmasta. Muistutukset on toimitettava {{viranomainen}} ennen nähtävänäoloajan päättymistä (LjMTL 27 §) Valtion liikenneväylien suunnittelu -järjestelmään osoitteeseen {{url}}",
         "sahkopostilla_muistutus": "Sähköpostilla muistutusta lähettäessä on liitettävä viestiin projektin asiatunnus."
       },
       "rata": {
-        "vaylavirasto_on_laatinut": "Väylävirasto on laatinut ratalain (110/2007) mukaisen yleis-/ratasuunnitelman"
+        "on_laatinut": "on laatinut ratalain (110/2007) mukaisen"
       }
     },
     "hankesuunnitelmista": "Hankesuunnitelmista lorem ipsum-teksti tähän, joka kertoo lyhyesti mitä tämä sivusto pitää sisällään. Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam dicta voluptatem fugit quos praesentium architecto accusamus non earum fuga veritatis, quia facilis est repellendus et iste similique beatae perferendis totam?"
@@ -137,5 +137,43 @@
     "kaikki_viestit_kasitellaan": "Kaikki viestit käsitellään ja ne pyritään huomioimaan suunnittelussa. Viimeistellyt suunnitelmat asetetaan myöhemmin nähtäville.",
     "jos_toivoit_yhteydenottoa": "Jos toivoit yhteydenottoa, hankkeen suunnittelutiimi on sinuun yhteydessä mahdollisimman pian.",
     "jata_muistutus": "Jätä muistutus hankkeesta"
+  },
+  "tiedostonimi": {
+    "T412": "T412 Aloituskuulutus",
+    "T412_1": "T412_1 Ilmoitus aloituskuulutuksesta",
+    "T413": "T413 Kutsu vuorovaikutukseen",
+    "T414": "T414 Kuulutus suunnitelman nähtävilläolo",
+    "T414_1": "T414_1 Ilmoitus suunnitelman nähtävilläolo",
+    "31T": "31T Ilmoitus kiinteistonomistajat nahtaville asettaminen",
+    "T431": "T431 Kuulutus hyväksymispäätöksen nähtävilläolo",
+    "T431_1": "T431_1 Ilmoitus hyväksymispäätöksestä kunnalle ja ELYlle",
+    "T431_2": "T431_2 Ilmoitus hyväksymispäätöksen kuulutuksesta",
+    "T441": "T441 Kuulutus hyväksymispäätöksen voimassaolon jatkamisesta",
+    "T441_1": "T441_1 Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta kunnalle",
+    "T441_2": "T441_2 Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta maakuntaliitolle",
+    "10R": "10R Aloituskuulutus",
+    "12R_aloituskuulutus": "12R Ilmoitus aloituskuulutuksesta",
+    "20R": "20R Kutsu vuorovaikutukseen",
+    "30R": "30R Kuulutus suunnitelman nähtävilläolo",
+    "31R": "31R Ilmoitus kiinteistonomistajat nahtaville asettaminen",
+    "12R_nahtavillaolo": "12R Ilmoitus suunnitelman nähtävilläolo",
+    "60R": "60R Kuulutus hyväksymispäätöksen nähtävilläolo",
+    "61R": "61R Ilmoitus hyväksymispäätöksestä kunnalle ja ELYlle",
+    "12R_hyvaksymispaatos": "12R Ilmoitus hyväksymispäätöksen kuulutuksesta",
+    "70R": "70R Kuulutus hyväksymispäätöksen voimassaolon jatkamisesta",
+    "71R": "71R Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta kunnalle",
+    "72R": "72R Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta maakuntaliitolle",
+    "10YS": "10YS Aloituskuulutus",
+    "12YS_aloituskuulutus": "12YS Ilmoitus aloituskuulutuksesta",
+    "20YS": "20YS Kutsu vuorovaikutukseen",
+    "30YS": "30YS Kuulutus suunnitelman nähtävilläolo",
+    "31YS": "31YS Ilmoitus kiinteistonomistajat nahtaville asettaminen",
+    "12YS_nahtavillaolo": "12YS Ilmoitus suunnitelman nähtävilläolo",
+    "60YS": "60YS Kuulutus hyväksymispäätöksen nähtävilläolo",
+    "61YS": "61YS Ilmoitus hyväksymispäätöksestä kunnalle ja ELYlle",
+    "12YS_hyvaksymispaatos": "12YS Ilmoitus hyväksymispäätöksen kuulutuksesta",
+    "70YS": "70YS Kuulutus hyväksymispäätöksen voimassaolon jatkamisesta",
+    "71YS": "71YS Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta kunnalle",
+    "72YS": "72YS Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta maakuntaliitolle"
   }
 }

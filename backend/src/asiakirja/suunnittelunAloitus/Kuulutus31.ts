@@ -1,6 +1,5 @@
-import { DBProjekti, Velho } from "../../database/model/";
-import { Kieli, KirjaamoOsoite } from "../../../../common/graphql/apiModel";
-import { NahtavillaoloVaihe } from "../../database/model";
+import { DBProjekti, NahtavillaoloVaiheJulkaisu, Velho } from "../../database/model/";
+import { Kieli, KirjaamoOsoite, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { AsiakirjanMuoto } from "../asiakirjaService";
 import { translate } from "../../util/localization";
@@ -13,24 +12,28 @@ const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
   RUOTSI: "Kungörelse om framläggandet av planen",
 };
 
-const fileNamePrefix: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
-  SUOMI: "Nähtävilläolo",
-  RUOTSI: "INBJUDAN TILL DISKUSSION",
+const fileNameKeys: Record<AsiakirjanMuoto, Partial<Record<ProjektiTyyppi, string>>> = {
+  TIE: { [ProjektiTyyppi.TIE]: "31T", [ProjektiTyyppi.YLEINEN]: "31YS" },
+  RATA: { [ProjektiTyyppi.RATA]: "31R", [ProjektiTyyppi.YLEINEN]: "31YS" },
 };
 
-function createFileName(kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto, projektiNimi: string) {
+function createFileName(kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto, projektiTyyppi: ProjektiTyyppi) {
+  const key = fileNameKeys[asiakirjanMuoto]?.[projektiTyyppi];
+  if (!key) {
+    throw new Error("Unsupported operation");
+  }
   const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
-  return fileNamePrefix[language] + "_" + projektiNimi;
+  return translate("tiedostonimi." + key, language);
 }
 
 function formatDate(date: string) {
   return date ? new Date(date).toLocaleDateString("fi") : "DD.MM.YYYY";
 }
 
-export class Kutsu30 extends CommonPdf {
+export class Kuulutus31 extends CommonPdf {
   private readonly asiakirjanMuoto: AsiakirjanMuoto;
   // private readonly oid: string;
-  private readonly nahtavillaoloVaihe: NahtavillaoloVaihe;
+  private readonly nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu;
   // private readonly kayttoOikeudet: DBVaylaUser[];
   protected header: string;
   protected kieli: Kieli;
@@ -39,7 +42,7 @@ export class Kutsu30 extends CommonPdf {
 
   constructor(
     projekti: DBProjekti,
-    nahtavillaoloVaihe: NahtavillaoloVaihe,
+    nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu,
     kieli: Kieli,
     asiakirjanMuoto: AsiakirjanMuoto,
     kirjaamoOsoitteet: KirjaamoOsoite[]
@@ -52,8 +55,9 @@ export class Kutsu30 extends CommonPdf {
       kieli,
       asiakirjanMuoto,
       projektiTyyppi: velho.tyyppi,
+      kayttoOikeudet: projekti.kayttoOikeudet,
     });
-    const fileName = createFileName(kieli, asiakirjanMuoto, kutsuAdapter.nimi);
+    const fileName = createFileName(kieli, asiakirjanMuoto, velho.tyyppi);
     super(fileName, kieli, kutsuAdapter, fileName);
     this.velho = velho;
     const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
@@ -69,35 +73,33 @@ export class Kutsu30 extends CommonPdf {
     const vaylaTilaaja = this.isVaylaTilaaja(this.velho);
     const elements: PDFKit.PDFStructureElementChild[] = [
       this.logo(vaylaTilaaja),
-      this.headerElement(this.header),
-      this.titleElement(),
+      this.addHeader(),
       ...this.addDocumentElements(),
     ].filter((element) => element);
     this.doc.addStructure(this.doc.struct("Document", {}, elements));
   }
 
-  protected titleElement(): PDFStructureElement {
-    return this.doc.struct("H2", {}, () => {
-      this.doc.text(this.kutsuAdapter.title).font("ArialMT").moveDown();
-    });
-  }
-
   protected addDocumentElements(): PDFStructureElement[] {
-    const hallintolaki62 = this.selectText([
-      "Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §). ",
-      "RUOTSIKSI Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §). ",
-    ]);
     return [
       this.paragraph(this.startOfPlanningPhrase),
-      this.localizedParagraph([
-        `Kuulutus on julkaistu tietoverkossa ${this.tilaajaGenetiivi} verkkosivuilla ${this.kuulutusPaiva}. ${hallintolaki62}`,
-        `RUOTSIKSI Kuulutus on julkaistu tietoverkossa ${this.tilaajaGenetiivi} verkkosivuilla ${this.kuulutusPaiva}. ${hallintolaki62}`,
-      ]),
       this.pidetaanNahtavillaParagraph(),
-      this.muistutuksetParagraph(),
+      this.lahetettyOmistajilleParagraph(),
+      this.localizedParagraph([
+        "Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne.",
+        "RUOTSIKSI Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne.",
+      ]),
       this.tietosuojaParagraph(),
       this.lisatietojaAntavatParagraph(),
-      this.doc.struct("P", {}, this.moreInfoElements(this.nahtavillaoloVaihe.kuulutusYhteystiedot, undefined, true)),
+      this.doc.struct(
+        "P",
+        {},
+        this.moreInfoElements(
+          this.nahtavillaoloVaihe.kuulutusYhteystiedot,
+          undefined,
+          this.nahtavillaoloVaihe.kuulutusYhteysHenkilot,
+          true
+        )
+      ),
       this.kutsuja(),
     ].filter((elem) => elem);
   }
@@ -113,11 +115,13 @@ export class Kutsu30 extends CommonPdf {
   private get startOfPlanningPhrase() {
     let organisaatiotText: string;
     if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
-      organisaatiotText = translate("info.nahtavillaolo.rata.vaylavirasto_on_laatinut", this.kieli);
+      organisaatiotText = translate("info.nahtavillaolo.rata.on_laatinut", this.kieli);
     } else {
-      organisaatiotText = translate("info.nahtavillaolo.ei-rata.vaylavirasto_on_laatinut", this.kieli);
+      organisaatiotText = translate("info.nahtavillaolo.ei-rata.on_laatinut", this.kieli);
     }
-    return `${organisaatiotText} ${this.kutsuAdapter.nimi}, ${this.getKunnatString()}`;
+    return `${this.kutsuAdapter.tilaajaOrganisaatio} ${organisaatiotText} ${this.kutsuAdapter.suunnitelman} ${
+      this.kutsuAdapter.nimi
+    }, ${this.getKunnatString()}`;
   }
 
   private getKunnatString() {
@@ -132,13 +136,17 @@ export class Kutsu30 extends CommonPdf {
     return formatDate(this.nahtavillaoloVaihe?.kuulutusPaiva);
   }
 
+  protected get kuulutusVaihePaattyyPaiva(): string {
+    return formatDate(this.nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva);
+  }
+
   protected get tilaajaGenetiivi(): string {
     const tilaajaOrganisaatio = this.velho?.tilaajaOrganisaatio;
-    return tilaajaOrganisaatio
-      ? tilaajaOrganisaatio === "Väylävirasto"
-        ? "Väyläviraston"
-        : tilaajaOrganisaatio?.slice(0, -1) + "ksen"
-      : "Tilaajaorganisaation";
+    if (tilaajaOrganisaatio) {
+      return tilaajaOrganisaatio === "Väylävirasto" ? "Väyläviraston" : tilaajaOrganisaatio?.slice(0, -1) + "ksen";
+    } else {
+      return "Tilaajaorganisaation";
+    }
   }
 
   private pidetaanNahtavillaParagraph() {
@@ -168,8 +176,13 @@ export class Kutsu30 extends CommonPdf {
         });
       }),
       () => {
-        this.doc.fillColor("black").text(" (LjMTL 27 §). ", { link: undefined, underline: false }).moveDown();
+        this.doc.fillColor("black").text(" (LjMTL 27 §). ", { link: undefined, underline: false });
       },
+      this.localizedParagraph([
+        `Kiinteistön omistajilla ja muilla asianosaisilla on mahdollisuus muistutuksen tekemiseen suunnitelmasta. ` +
+          `Muistutukset on toimitettava ${this.kutsuAdapter.tilaajaGenetiivi} kirjaamoon ${this.kirjaamo}` +
+          `tai <postiosoite> ennen nähtävillä oloajan päättymistä. Muistutukseen on liitettävä asian asianumero ${this.kutsuAdapter.asianumero}`,
+      ]),
     ]);
   }
 
@@ -177,12 +190,6 @@ export class Kutsu30 extends CommonPdf {
     return this.isVaylaTilaaja(this.velho)
       ? "https://www.vayla.fi/kuulutukset"
       : "https://www.ely-keskus.fi/kuulutukset";
-  }
-
-  private muistutuksetParagraph() {
-    return this.paragraph(
-      `Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa, on mahdollisuus muistutusten tekemiseen suunnitelmasta. Muistutukset on toimitettava ${this.kutsuAdapter.tilaajaOrganisaatiolle} ennen nähtävänäoloajan päättymistä (LjMTL 27 §) osoitteeseen ${this.kirjaamo}. Muistutukseen on liitettävä asian asianumero ${this.kutsuAdapter.asianumero}.`
-    );
   }
 
   private tietosuojaParagraph() {
@@ -193,6 +200,12 @@ export class Kutsu30 extends CommonPdf {
     }
   }
 
+  private addHeader() {
+    return this.headerElement(
+      this.kutsuAdapter.title + ", " + translate("projekti-tyyppi." + this.velho.tyyppi, this.kieli).toLowerCase()
+    );
+  }
+
   get kirjaamo(): string {
     const kirjaamoOsoite = this.kirjaamoOsoitteet
       .filter((osoite) => osoite.nimi == this.velho.suunnittelustaVastaavaViranomainen.toString())
@@ -201,5 +214,31 @@ export class Kutsu30 extends CommonPdf {
       return kirjaamoOsoite.sahkoposti;
     }
     return "<kirjaamon " + this.velho.suunnittelustaVastaavaViranomainen + " osoitetta ei löydy>";
+  }
+
+  private lahetettyOmistajilleParagraph() {
+    if (this.velho.tyyppi == ProjektiTyyppi.YLEINEN) {
+      return this.localizedParagraph([
+        `Tämä ilmoitus on lähetetty kaikille niille kiinteistön omistajille ja haltijoille, joiden kiinteistön alueelle suunniteltu uusi tielinjaus sijoittuu (LjMTL 27 § 3 mom).`,
+      ]);
+    } else if (this.velho.tyyppi == ProjektiTyyppi.TIE) {
+      return this.localizedParagraph([
+        `Tämä ilmoitus on lähetetty kaikille niille kiinteistön omistajille ja haltijoille (LjMTL 27 § 3 mom):
+\t- joiden kiinteistöltä suunnitelman mukaan lunastetaan aluetta,
+\t- joiden kiinteistön alueelle muodostuu suoja- tai näkemäalue,
+\t- joiden kiinteistön alueeseen perustetaan muu oikeus tai
+\t- joiden kiinteistö rajoittuu tiealueeseen/rautatiealueeseen.
+`,
+      ]);
+    } else {
+      return this.localizedParagraph([
+        `Tämä ilmoitus on lähetetty kaikille niille kiinteistön omistajille ja halti-joille (ratalaki 22 § 3 mom):
+\t- joiden kiinteistöstä suunnitelman mukaan lunastetaan aluetta
+\t- joiden kiinteistön alueelle muodostuu suoja- tai näkemäalue
+\t- joiden kiinteistön alueeseen perustetaan muu oikeus (tieoikeus, laskuoja)
+\t- joiden kiinteistö rajoittuu rautatiealueeseen/tiealueeseen
+`,
+      ]);
+    }
   }
 }

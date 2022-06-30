@@ -1,6 +1,5 @@
-import { SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
-import { AloitusKuulutusJulkaisu } from "../../database/model/projekti";
-import { Kieli } from "../../../../common/graphql/apiModel";
+import { IlmoitusParams, SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
+import { Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import { AsiakirjanMuoto } from "../asiakirjaService";
 
@@ -10,8 +9,13 @@ const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
 };
 
 export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
-  constructor(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu, kieli: Kieli) {
-    super(aloitusKuulutusJulkaisu, kieli, headers[kieli == Kieli.SAAME ? Kieli.SUOMI : kieli], AsiakirjanMuoto.TIE); //TODO lisää tuki Saamen eri muodoille
+  constructor(params: IlmoitusParams) {
+    super(
+      params,
+      headers[params.kieli == Kieli.SAAME ? Kieli.SUOMI : params.kieli],
+      AsiakirjanMuoto.TIE,
+      params.velho.tyyppi == ProjektiTyyppi.YLEINEN ? "10YS" : "T412"
+    );
   }
 
   protected addDocumentElements(): PDFKit.PDFStructureElementChild[] {
@@ -48,17 +52,10 @@ export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
         "RUOTSIKSI Valmistuttuaan suunnitelmat asetetaan yleisesti nähtäville, jolloin asianosaisilla on mahdollisuus tehdä kirjallinen muistutus suunnitelmasta (LjMTL 27 §). ",
       ]),
 
-      this.viranomainenTietosuojaParagraph(this.aloitusKuulutusJulkaisu.velho),
+      this.viranomainenTietosuojaParagraph(this.params.velho),
 
       this.lisatietojaAntavatParagraph(),
-      this.doc.struct(
-        "P",
-        {},
-        this.moreInfoElements(
-          this.aloitusKuulutusJulkaisu.yhteystiedot,
-          this.aloitusKuulutusJulkaisu.suunnitteluSopimus
-        )
-      ),
+      this.doc.struct("P", {}, this.moreInfoElements(this.params.yhteystiedot, this.params.suunnitteluSopimus)),
       () => {
         this.doc.font("ArialMTBold");
         this.doc.text(this.kuuluttaja).moveDown();
@@ -67,23 +64,23 @@ export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
   }
 
   private get kuuluttaja() {
-    const suunnitteluSopimus = this.aloitusKuulutusJulkaisu.suunnitteluSopimus;
+    const suunnitteluSopimus = this.params.suunnitteluSopimus;
     if (suunnitteluSopimus?.kunta) {
       return formatProperNoun(suunnitteluSopimus.kunta);
     }
-    return this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio || "Kuuluttaja";
+    return this.params.velho?.tilaajaOrganisaatio || "Kuuluttaja";
   }
 
   private get startOfPlanningPhrase() {
     let phrase: string;
-    const suunnitteluSopimus = this.aloitusKuulutusJulkaisu.suunnitteluSopimus;
+    const suunnitteluSopimus = this.params.suunnitteluSopimus;
     if (suunnitteluSopimus) {
       phrase = `${formatProperNoun(suunnitteluSopimus?.kunta || "Kunta")}, sovittuaan asiasta ${
         this.tilaajaGenetiivi
       } kanssa, käynnistää ${this.projektiTyyppi}n laatimisen tarpeellisine tutkimuksineen. `;
     } else {
-      const tilaajaOrganisaatio = this.aloitusKuulutusJulkaisu.velho?.tilaajaOrganisaatio || "Tilaajaorganisaatio";
-      const kunnat = this.aloitusKuulutusJulkaisu.velho?.kunnat;
+      const tilaajaOrganisaatio = this.params.velho?.tilaajaOrganisaatio || "Tilaajaorganisaatio";
+      const kunnat = this.params.velho?.kunnat;
       const organisaatiot = kunnat ? [tilaajaOrganisaatio, ...kunnat] : [tilaajaOrganisaatio];
       const trimmattutOrganisaatiot = organisaatiot.map((organisaatio) => formatProperNoun(organisaatio));
       const viimeinenOrganisaatio = trimmattutOrganisaatiot.slice(-1);

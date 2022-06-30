@@ -1,6 +1,5 @@
-import { SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
-import { AloitusKuulutusJulkaisu } from "../../database/model/projekti";
-import { Kieli } from "../../../../common/graphql/apiModel";
+import { IlmoitusAsiakirjaTyyppi, IlmoitusParams, SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
+import { Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { AsiakirjanMuoto } from "../asiakirjaService";
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
@@ -8,11 +7,27 @@ const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
   RUOTSI: "TILLKÄNNAGIVANDE OM TRAFIKLEDSVERKETS KUNGÖRELSE",
 };
 
+const fileNameKeys: Record<IlmoitusAsiakirjaTyyppi, Partial<Record<ProjektiTyyppi, string>>> = {
+  ILMOITUS_KUULUTUKSESTA: {
+    [ProjektiTyyppi.RATA]: "12R_aloituskuulutus",
+    [ProjektiTyyppi.YLEINEN]: "12YS_aloituskuulutus",
+  },
+  ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE: {
+    [ProjektiTyyppi.RATA]: "12R_nahtavillaolo",
+    [ProjektiTyyppi.YLEINEN]: "12YS_nahtavillaolo",
+  },
+};
+
 export class Ilmoitus12R extends SuunnittelunAloitusPdf {
   private kuulutusOsoite = "https://www.vayla.fi/kuulutukset";
 
-  constructor(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu, kieli: Kieli) {
-    super(aloitusKuulutusJulkaisu, kieli, headers[kieli == Kieli.SAAME ? Kieli.SUOMI : kieli], AsiakirjanMuoto.RATA); //TODO lisää tuki Saamen eri muodoille
+  constructor(asiakirjaTyyppi: IlmoitusAsiakirjaTyyppi, params: IlmoitusParams) {
+    super(
+      params,
+      headers[params.kieli == Kieli.SAAME ? Kieli.SUOMI : params.kieli],
+      AsiakirjanMuoto.RATA,
+      fileNameKeys[asiakirjaTyyppi]?.[params.velho.tyyppi]
+    ); //TODO lisää tuki Saamen eri muodoille
   }
 
   protected addDocumentElements(): PDFKit.PDFStructureElementChild[] {
@@ -48,10 +63,7 @@ export class Ilmoitus12R extends SuunnittelunAloitusPdf {
       this.doc.struct(
         "P",
         {},
-        this.moreInfoElements(
-          this.aloitusKuulutusJulkaisu.yhteystiedot,
-          this.aloitusKuulutusJulkaisu.suunnitteluSopimus
-        )
+        this.moreInfoElements(this.params.yhteystiedot, this.params.suunnitteluSopimus, this.params.yhteysHenkilot)
       ),
     ];
   }

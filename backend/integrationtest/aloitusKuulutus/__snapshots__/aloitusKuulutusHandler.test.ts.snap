@@ -227,12 +227,12 @@ Object {
     Object {
       "aloituskuulutusPDFt": Object {
         "RUOTSI": Object {
-          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Namnet pa svenska.pdf",
-          "aloituskuulutusPDFPath": "/aloituskuulutus/KUNGORELSE OM INLEDANDET AV PLANERINGEN Namnet pa svenska.pdf",
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta RUOTSIKSI.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/T412 Aloituskuulutus RUOTSIKSI.pdf",
         },
         "SUOMI": Object {
-          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf",
-          "aloituskuulutusPDFPath": "/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf",
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/T412 Aloituskuulutus.pdf",
         },
       },
       "hankkeenKuvaus": Object {

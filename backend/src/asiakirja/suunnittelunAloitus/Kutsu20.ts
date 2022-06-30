@@ -146,7 +146,11 @@ export class Kutsu20 extends CommonPdf {
       this.soittoajat(this.vuorovaikutus.vuorovaikutusTilaisuudet),
 
       this.lisatietojaAntavatParagraph(),
-      this.doc.struct("P", {}, this.moreInfoElements(this.vuorovaikutus.esitettavatYhteystiedot, undefined, false)),
+      this.doc.struct(
+        "P",
+        {},
+        this.moreInfoElements(this.vuorovaikutus.esitettavatYhteystiedot, undefined, undefined, false)
+      ),
 
       this.tervetuloa(),
       this.kutsuja(),

@@ -443,72 +443,72 @@ exports[`apiHandler handleEvent tallennaProjekti should modify permissions from 
 Array [
   Object {
     "Bucket": "hassu-localstack-yllapito",
-    "ContentDisposition": "inline; filename=KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf",
+    "ContentDisposition": "inline; filename=T412 Aloituskuulutus.pdf",
     "ContentType": "application/pdf",
-    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf",
+    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
     "Metadata": Object {
       "publication-timestamp": "2022-01-02T00:00:00+02:00",
     },
   },
   Object {
     "Bucket": "hassu-localstack-public",
-    "ContentDisposition": "inline; filename=KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf",
+    "ContentDisposition": "inline; filename=T412 Aloituskuulutus.pdf",
     "ContentType": "application/pdf",
-    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf",
+    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
     "Metadata": Object {
       "publication-timestamp": "2022-01-02T00:00:00+02:00",
     },
   },
   Object {
     "Bucket": "hassu-localstack-yllapito",
-    "ContentDisposition": "inline; filename=ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf",
+    "ContentDisposition": "inline; filename=T412_1 Ilmoitus aloituskuulutuksesta.pdf",
     "ContentType": "application/pdf",
-    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf",
+    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
     "Metadata": Object {
       "publication-timestamp": "2022-01-02T00:00:00+02:00",
     },
   },
   Object {
     "Bucket": "hassu-localstack-public",
-    "ContentDisposition": "inline; filename=ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf",
+    "ContentDisposition": "inline; filename=T412_1 Ilmoitus aloituskuulutuksesta.pdf",
     "ContentType": "application/pdf",
-    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf",
+    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
     "Metadata": Object {
       "publication-timestamp": "2022-01-02T00:00:00+02:00",
     },
   },
   Object {
     "Bucket": "hassu-localstack-yllapito",
-    "ContentDisposition": "inline; filename=KUULUTUS SUUNNITTELUN ALOITTAMISESTA Projektin nimi saameksi.pdf",
+    "ContentDisposition": "inline; filename=T412 Aloituskuulutus.pdf",
     "ContentType": "application/pdf",
-    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Projektin nimi saameksi.pdf",
+    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
     "Metadata": Object {
       "publication-timestamp": "2022-01-02T00:00:00+02:00",
     },
   },
   Object {
     "Bucket": "hassu-localstack-public",
-    "ContentDisposition": "inline; filename=KUULUTUS SUUNNITTELUN ALOITTAMISESTA Projektin nimi saameksi.pdf",
+    "ContentDisposition": "inline; filename=T412 Aloituskuulutus.pdf",
     "ContentType": "application/pdf",
-    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Projektin nimi saameksi.pdf",
+    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
     "Metadata": Object {
       "publication-timestamp": "2022-01-02T00:00:00+02:00",
     },
   },
   Object {
     "Bucket": "hassu-localstack-yllapito",
-    "ContentDisposition": "inline; filename=ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Projektin nimi saameksi.pdf",
+    "ContentDisposition": "inline; filename=T412_1 Ilmoitus aloituskuulutuksesta.pdf",
     "ContentType": "application/pdf",
-    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Projektin nimi saameksi.pdf",
+    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
     "Metadata": Object {
       "publication-timestamp": "2022-01-02T00:00:00+02:00",
     },
   },
   Object {
     "Bucket": "hassu-localstack-public",
-    "ContentDisposition": "inline; filename=ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Projektin nimi saameksi.pdf",
+    "ContentDisposition": "inline; filename=T412_1 Ilmoitus aloituskuulutuksesta.pdf",
     "ContentType": "application/pdf",
-    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Projektin nimi saameksi.pdf",
+    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
     "Metadata": Object {
       "publication-timestamp": "2022-01-02T00:00:00+02:00",
     },
@@ -524,7 +524,7 @@ Array [
   },
   Object {
     "Bucket": "hassu-localstack-yllapito",
-    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf",
+    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
   },
 ]
 `;
@@ -560,12 +560,12 @@ Object {
       "__typename": "AloitusKuulutusJulkaisu",
       "aloituskuulutusPDFt": Object {
         "SAAME": Object {
-          "aloituskuulutusIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Projektin nimi saameksi.pdf",
-          "aloituskuulutusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Projektin nimi saameksi.pdf",
+          "aloituskuulutusIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          "aloituskuulutusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
         },
         "SUOMI": Object {
-          "aloituskuulutusIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf",
-          "aloituskuulutusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf",
+          "aloituskuulutusIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          "aloituskuulutusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
         },
         "__typename": "AloitusKuulutusPDFt",
       },
@@ -693,12 +693,12 @@ Object {
         "__typename": "AloitusKuulutusJulkaisuJulkinen",
         "aloituskuulutusPDFt": Object {
           "SAAME": Object {
-            "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Projektin nimi saameksi.pdf",
-            "aloituskuulutusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Projektin nimi saameksi.pdf",
+            "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+            "aloituskuulutusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
           },
           "SUOMI": Object {
-            "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Testiprojekti 1.pdf",
-            "aloituskuulutusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Testiprojekti 1.pdf",
+            "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+            "aloituskuulutusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
           },
           "__typename": "AloitusKuulutusPDFt",
         },
