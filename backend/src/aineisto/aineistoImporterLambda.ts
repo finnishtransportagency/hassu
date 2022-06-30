@@ -10,11 +10,12 @@ import { AineistoTila } from "../../../common/graphql/apiModel";
 import * as AWSXRay from "aws-xray-sdk-core";
 import { aineistoService } from "./aineistoService";
 import { Aineisto, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu, Vuorovaikutus } from "../database/model";
+import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 
 let axios;
 
 async function handleVuorovaikutusAineisto(oid: string, vuorovaikutus: Vuorovaikutus): Promise<boolean> {
-  const filePathInProjekti = fileService.getVuorovaikutusAineistoPath(vuorovaikutus);
+  const filePathInProjekti = new ProjektiPaths(oid).vuorovaikutus(vuorovaikutus).aineisto;
   const hasEsittelyAineistotChanges = await handleAineistot(oid, vuorovaikutus.esittelyaineistot, filePathInProjekti);
   const hasSuunnitelmaluonnoksetChanges = await handleAineistot(
     oid,
@@ -28,25 +29,21 @@ async function handleNahtavillaoloVaiheAineistot(
   oid: string,
   nahtavillaoloVaihe: NahtavillaoloVaihe
 ): Promise<boolean> {
-  const filePathInProjekti = fileService.getNahtavillaoloVaihePath(nahtavillaoloVaihe);
+  const paths = new ProjektiPaths(oid).nahtavillaoloVaihe(nahtavillaoloVaihe);
   let aineistoNahtavillaChanges;
   let lisaAineistoChanges;
 
   if (nahtavillaoloVaihe.aineistoNahtavilla) {
-    aineistoNahtavillaChanges = await handleAineistot(oid, nahtavillaoloVaihe.aineistoNahtavilla, filePathInProjekti);
+    aineistoNahtavillaChanges = await handleAineistot(oid, nahtavillaoloVaihe.aineistoNahtavilla, paths);
   }
 
   if (nahtavillaoloVaihe.lisaAineisto) {
-    lisaAineistoChanges = await handleAineistot(oid, nahtavillaoloVaihe.lisaAineisto, filePathInProjekti);
+    lisaAineistoChanges = await handleAineistot(oid, nahtavillaoloVaihe.lisaAineisto, paths);
   }
   return aineistoNahtavillaChanges || lisaAineistoChanges;
 }
 
-async function handleAineistot(
-  oid: string,
-  aineistot: Aineisto[] | undefined,
-  filePathInProjekti: string
-): Promise<boolean> {
+async function handleAineistot(oid: string, aineistot: Aineisto[] | undefined, paths: PathTuple): Promise<boolean> {
   if (!aineistot) {
     return false;
   }
@@ -54,10 +51,10 @@ async function handleAineistot(
   const originalAineistot = aineistot.splice(0, aineistot.length); // Move list contents to a separate list. Aineistot list contents are formed in the following loop
   for (const aineisto of originalAineistot) {
     if (aineisto.tila == AineistoTila.ODOTTAA_POISTOA) {
-      await aineistoService.deleteAineisto(oid, aineisto);
+      await aineistoService.deleteAineisto(oid, aineisto, paths.yllapitoPath, paths.publicPath);
       hasChanges = true;
     } else if (aineisto.tila == AineistoTila.ODOTTAA_TUONTIA) {
-      await importAineisto(aineisto, oid, filePathInProjekti);
+      await importAineisto(aineisto, oid, paths.yllapitoPath);
       aineistot.push(aineisto);
       hasChanges = true;
     } else {

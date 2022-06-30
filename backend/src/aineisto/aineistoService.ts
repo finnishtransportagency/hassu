@@ -7,18 +7,20 @@ import { config } from "../config";
 import { parseDate } from "../util/dateUtil";
 import { Dayjs } from "dayjs";
 import { ImportAineistoEventType } from "./importAineistoEvent";
+import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 
-async function synchronizeAineistoToPublic(oid: string, aineistoPath: string, publishDate: Dayjs) {
+async function synchronizeAineistoToPublic(oid: string, paths: PathTuple, publishDate: Dayjs) {
   let hasChanges = false;
-  const yllapitoFiles = await fileService.listYllapitoProjektiFiles(oid, aineistoPath);
+  const yllapitoFiles = await fileService.listYllapitoProjektiFiles(oid, paths.yllapitoPath);
   for (const fileName in yllapitoFiles) {
-    const fullFileName = "/" + aineistoPath + fileName;
-    const metadata = await fileService.getPublicFileMetadata(oid, fullFileName);
+    const fileNameYllapito = "/" + paths.yllapitoPath + fileName;
+    const fileNamePublic = "/" + paths.publicPath + fileName;
+    const metadata = await fileService.getPublicFileMetadata(oid, fileNameYllapito);
     const publishDateChanged = metadata && !metadata.publishDate.isSame(publishDate);
     if (!metadata || publishDateChanged) {
       // Public file is missing, so it needs to be published
-      log.info("Publish:", fullFileName);
-      await fileService.publishProjektiFile(oid, fullFileName, publishDate);
+      log.info("Publish:", fileNameYllapito);
+      await fileService.publishProjektiFile(oid, fileNameYllapito, fileNamePublic, publishDate);
       hasChanges = true;
     }
   }
@@ -28,10 +30,10 @@ async function synchronizeAineistoToPublic(oid: string, aineistoPath: string, pu
       .createInvalidation({
         DistributionId: config.cloudFrontDistributionId,
         InvalidationBatch: {
-          CallerReference: "synchronizeVuorovaikutusAineistoToPublic" + new Date().getTime(),
+          CallerReference: "synchronizeAineistoToPublic" + new Date().getTime(),
           Paths: {
             Quantity: 1,
-            Items: [fileService.getPublicPathForProjektiFile(oid, "/" + aineistoPath + "/*")],
+            Items: [fileService.getPublicPathForProjektiFile(oid, "/" + paths.publicPath + "/*")],
           },
         },
       })
@@ -65,29 +67,50 @@ class AineistoService {
     if (!publishDate) {
       throw new Error("Vuorovaikutusta ei voi julkaista jos vuorovaikutusJulkaisuPaiva ei ole asetettu");
     }
-    const vuorovaikutusPath = fileService.getVuorovaikutusPath(vuorovaikutus);
-    await synchronizeAineistoToPublic(oid, vuorovaikutusPath, publishDate);
+    const vuorovaikutusPaths = new ProjektiPaths(oid).vuorovaikutus(vuorovaikutus);
+    await synchronizeAineistoToPublic(oid, vuorovaikutusPaths, publishDate);
   }
 
-  async synchronizeNahtavillaoloVaiheJulkaisuAineistoToPublic(oid: string, nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu): Promise<void> {
+  async synchronizeNahtavillaoloVaiheJulkaisuAineistoToPublic(
+    oid: string,
+    nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu
+  ): Promise<void> {
     const publishDate = parseDate(nahtavillaoloVaiheJulkaisu.kuulutusPaiva);
     if (!publishDate) {
       throw new Error("Nahtavillaoloaineistoa ei voi julkaista jos vuorovaikutusJulkaisuPaiva ei ole asetettu");
     }
-    const nahtavillaoloVaihePath = fileService.getNahtavillaoloVaihePath(nahtavillaoloVaiheJulkaisu);
-    await synchronizeAineistoToPublic(oid, nahtavillaoloVaihePath, publishDate);
+    await synchronizeAineistoToPublic(
+      oid,
+      new ProjektiPaths(oid).nahtavillaoloVaihe(nahtavillaoloVaiheJulkaisu),
+      publishDate
+    );
   }
 
-  async deleteAineisto(oid: string, aineisto: Aineisto) {
-    log.info("Poistetaan aineisto", aineisto);
-    await fileService.deleteYllapitoFileFromProjekti({
-      oid,
-      fullFilePathInProjekti: aineisto.tiedosto,
-    });
-    await fileService.deletePublicFileFromProjekti({
-      oid,
-      fullFilePathInProjekti: aineisto.tiedosto,
-    });
+  async deleteAineisto(
+    oid: string,
+    aineisto: Aineisto,
+    yllapitoFilePathInProjekti: string,
+    publicFilePathInProjekti: string
+  ) {
+    const fullFilePathInProjekti = aineisto.tiedosto;
+    if (fullFilePathInProjekti) {
+      // Do not try to delete file that was not yet imported to system
+      log.info("Poistetaan aineisto", aineisto);
+      await fileService.deleteYllapitoFileFromProjekti({
+        oid,
+        filePathInProjekti: fullFilePathInProjekti,
+      });
+
+      // Transform yllapito file path to public one to support cases when they differ
+      const publicFullFilePathInProjekti = fullFilePathInProjekti.replace(
+        yllapitoFilePathInProjekti,
+        publicFilePathInProjekti
+      );
+      await fileService.deletePublicFileFromProjekti({
+        oid,
+        filePathInProjekti: publicFullFilePathInProjekti,
+      });
+    }
   }
 }
 

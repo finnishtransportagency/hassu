@@ -1256,9 +1256,9 @@ Object {
             "__typename": "Aineisto",
             "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
             "jarjestys": 12,
+            "kategoriaId": undefined,
             "nimi": "new ekatiedosto_eka.pdf",
-            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
-            "tila": "VALMIS",
+            "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
             "tuotu": "***unittest***",
           },
         ],
@@ -1302,8 +1302,7 @@ Object {
             "jarjestys": 11,
             "kategoriaId": "T1xx",
             "nimi": "new karttakuvalla_tiedosto.pdf",
-            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
-            "tila": "VALMIS",
+            "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
             "tuotu": "***unittest***",
           },
         ],
@@ -2574,8 +2573,7 @@ Object {
           "jarjestys": 1,
           "kategoriaId": "T2xx",
           "nimi": "T222 Meluesteiden periaatekuvat.txt",
-          "tiedosto": "/nahtavillaolo/1/T222 Meluesteiden periaatekuvat.txt",
-          "tila": "VALMIS",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T222 Meluesteiden periaatekuvat.txt",
           "tuotu": "***unittest***",
         },
         Object {
@@ -2584,8 +2582,7 @@ Object {
           "jarjestys": 2,
           "kategoriaId": "T2xx",
           "nimi": "T213 Teiden hallinnolsten järjestelyjen kartat.txt",
-          "tiedosto": "/nahtavillaolo/1/T213 Teiden hallinnolsten järjestelyjen kartat.txt",
-          "tila": "VALMIS",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T213 Teiden hallinnolsten järjestelyjen kartat.txt",
           "tuotu": "***unittest***",
         },
         Object {
@@ -2594,8 +2591,7 @@ Object {
           "jarjestys": 3,
           "kategoriaId": "T2xx",
           "nimi": "T224 Siltataulukko.txt",
-          "tiedosto": "/nahtavillaolo/1/T224 Siltataulukko.txt",
-          "tila": "VALMIS",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T224 Siltataulukko.txt",
           "tuotu": "***unittest***",
         },
         Object {
@@ -2604,8 +2600,7 @@ Object {
           "jarjestys": 4,
           "kategoriaId": "T2xx",
           "nimi": "T211 Piirustusmerkinnät.txt",
-          "tiedosto": "/nahtavillaolo/1/T211 Piirustusmerkinnät.txt",
-          "tila": "VALMIS",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T211 Piirustusmerkinnät.txt",
           "tuotu": "***unittest***",
         },
         Object {
@@ -2614,8 +2609,7 @@ Object {
           "jarjestys": 5,
           "kategoriaId": "T2xx",
           "nimi": "T212 Yleiskartta.txt",
-          "tiedosto": "/nahtavillaolo/1/T212 Yleiskartta.txt",
-          "tila": "VALMIS",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T212 Yleiskartta.txt",
           "tuotu": "***unittest***",
         },
         Object {
@@ -2624,8 +2618,7 @@ Object {
           "jarjestys": 6,
           "kategoriaId": "T2xx",
           "nimi": "T214 Suunnitelmakartat.txt",
-          "tiedosto": "/nahtavillaolo/1/T214 Suunnitelmakartat.txt",
-          "tila": "VALMIS",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T214 Suunnitelmakartat.txt",
           "tuotu": "***unittest***",
         },
         Object {
@@ -2634,8 +2627,7 @@ Object {
           "jarjestys": 7,
           "kategoriaId": "T2xx",
           "nimi": "T217 Yleiskartta yksityisteistä.txt",
-          "tiedosto": "/nahtavillaolo/1/T217 Yleiskartta yksityisteistä.txt",
-          "tila": "VALMIS",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T217 Yleiskartta yksityisteistä.txt",
           "tuotu": "***unittest***",
         },
         Object {
@@ -2644,8 +2636,7 @@ Object {
           "jarjestys": 8,
           "kategoriaId": "T2xx",
           "nimi": "T221 Siltojen ja tukimuurien ympäristöpiirustukset.txt",
-          "tiedosto": "/nahtavillaolo/1/T221 Siltojen ja tukimuurien ympäristöpiirustukset.txt",
-          "tila": "VALMIS",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T221 Siltojen ja tukimuurien ympäristöpiirustukset.txt",
           "tuotu": "***unittest***",
         },
         Object {
@@ -2654,8 +2645,7 @@ Object {
           "jarjestys": 9,
           "kategoriaId": "T2xx",
           "nimi": "T220 Ympäristörakenteet.txt",
-          "tiedosto": "/nahtavillaolo/1/T220 Ympäristörakenteet.txt",
-          "tila": "VALMIS",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T220 Ympäristörakenteet.txt",
           "tuotu": "***unittest***",
         },
         Object {
@@ -2664,8 +2654,7 @@ Object {
           "jarjestys": 10,
           "kategoriaId": "T2xx",
           "nimi": "T218 Radat.txt",
-          "tiedosto": "/nahtavillaolo/1/T218 Radat.txt",
-          "tila": "VALMIS",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T218 Radat.txt",
           "tuotu": "***unittest***",
         },
         Object {
@@ -2674,8 +2663,7 @@ Object {
           "jarjestys": 11,
           "kategoriaId": "T2xx",
           "nimi": "T215 Poikkileikkaukset.txt",
-          "tiedosto": "/nahtavillaolo/1/T215 Poikkileikkaukset.txt",
-          "tila": "VALMIS",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T215 Poikkileikkaukset.txt",
           "tuotu": "***unittest***",
         },
         Object {
@@ -2684,8 +2672,7 @@ Object {
           "jarjestys": 12,
           "kategoriaId": "T2xx",
           "nimi": "T223 Tunneleiden ympäristöpiirustukset.txt",
-          "tiedosto": "/nahtavillaolo/1/T223 Tunneleiden ympäristöpiirustukset.txt",
-          "tila": "VALMIS",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T223 Tunneleiden ympäristöpiirustukset.txt",
           "tuotu": "***unittest***",
         },
       ],
@@ -2781,43 +2768,43 @@ Object {
     "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": Object {
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
-    "nahtavillaolo/1/T211 Piirustusmerkinnät.txt": Object {
+    "nahtavillaolo/T211 Piirustusmerkinnät.txt": Object {
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "nahtavillaolo/1/T212 Yleiskartta.txt": Object {
+    "nahtavillaolo/T212 Yleiskartta.txt": Object {
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "nahtavillaolo/1/T213 Teiden hallinnolsten järjestelyjen kartat.txt": Object {
+    "nahtavillaolo/T213 Teiden hallinnolsten järjestelyjen kartat.txt": Object {
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "nahtavillaolo/1/T214 Suunnitelmakartat.txt": Object {
+    "nahtavillaolo/T214 Suunnitelmakartat.txt": Object {
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "nahtavillaolo/1/T215 Poikkileikkaukset.txt": Object {
+    "nahtavillaolo/T215 Poikkileikkaukset.txt": Object {
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "nahtavillaolo/1/T217 Yleiskartta yksityisteistä.txt": Object {
+    "nahtavillaolo/T217 Yleiskartta yksityisteistä.txt": Object {
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "nahtavillaolo/1/T218 Radat.txt": Object {
+    "nahtavillaolo/T218 Radat.txt": Object {
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "nahtavillaolo/1/T220 Ympäristörakenteet.txt": Object {
+    "nahtavillaolo/T220 Ympäristörakenteet.txt": Object {
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "nahtavillaolo/1/T221 Siltojen ja tukimuurien ympäristöpiirustukset.txt": Object {
+    "nahtavillaolo/T221 Siltojen ja tukimuurien ympäristöpiirustukset.txt": Object {
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "nahtavillaolo/1/T222 Meluesteiden periaatekuvat.txt": Object {
+    "nahtavillaolo/T222 Meluesteiden periaatekuvat.txt": Object {
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "nahtavillaolo/1/T223 Tunneleiden ympäristöpiirustukset.txt": Object {
+    "nahtavillaolo/T223 Tunneleiden ympäristöpiirustukset.txt": Object {
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "nahtavillaolo/1/T224 Siltataulukko.txt": Object {
+    "nahtavillaolo/T224 Siltataulukko.txt": Object {
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "nahtavillaolo/1/tokatiedosto_toka.pdf": Object {
+    "nahtavillaolo/tokatiedosto_toka.pdf": Object {
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {

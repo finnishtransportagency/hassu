@@ -116,10 +116,12 @@ class AloitusKuulutusTilaManager extends TilaManager {
         julkaisuWaitingForApproval
       );
 
-      if (projekti.suunnitteluSopimus?.logo) {
+      const logoFilePath = projekti.suunnitteluSopimus?.logo;
+      if (logoFilePath) {
         await fileService.publishProjektiFile(
           projekti.oid,
-          projekti.suunnitteluSopimus?.logo,
+          logoFilePath,
+          logoFilePath,
           parseDate(julkaisuWaitingForApproval.kuulutusPaiva)
         );
       }
