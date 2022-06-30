@@ -536,6 +536,10 @@ function adaptAineistotToSave(
       const updateAineistoInput = pickAineistoFromInputByDocumenttiOid(aineistotInput, dbAineisto.dokumenttiOid);
       if (updateAineistoInput) {
         // Update existing one
+
+        if (dbAineisto.nimi !== updateAineistoInput.nimi) {
+          hasPendingChanges = true;
+        }
         dbAineisto.nimi = updateAineistoInput.nimi;
         dbAineisto.jarjestys = updateAineistoInput.jarjestys;
         dbAineisto.kategoriaId = updateAineistoInput.kategoriaId;
@@ -543,6 +547,7 @@ function adaptAineistotToSave(
       }
       if (!updateAineistoInput) {
         dbAineisto.tila = API.AineistoTila.ODOTTAA_POISTOA;
+        resultAineistot.push(dbAineisto);
         hasPendingChanges = true;
       }
     });

@@ -254,7 +254,7 @@ export class FileService {
     return this.getVuorovaikutusPath(vuorovaikutus) + "/aineisto";
   }
 
-  getNahtavillaoloVaihePath(nahtavillaoloVaihe: NahtavillaoloVaihe|NahtavillaoloVaiheJulkaisu): string {
+  getNahtavillaoloVaihePath(nahtavillaoloVaihe: NahtavillaoloVaihe | NahtavillaoloVaiheJulkaisu): string {
     return "nahtavillaolo/" + nahtavillaoloVaihe.id;
   }
 

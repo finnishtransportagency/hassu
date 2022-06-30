@@ -733,6 +733,13 @@ Object {
     "esittelyaineistot": Array [
       Object {
         "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
+        "jarjestys": 11,
+        "nimi": "new tokatiedosto_toka.pdf",
+        "tila": "ODOTTAA_POISTOA",
+      },
+      Object {
+        "__typename": "Aineisto",
         "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
         "jarjestys": 12,
         "nimi": "new ekatiedosto_eka.pdf",
@@ -1669,7 +1676,6 @@ Object {
     "palautteet/***unittest***/logo.png": Object {},
     "suunnittelusopimus/logo.png": Object {},
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {},
-    "suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf": Object {},
     "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {},
   },
 }
@@ -1685,9 +1691,6 @@ Object {
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {
-      "publishDate": "2022-03-24T00:00:00+02:00",
-    },
-    "suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf": Object {
       "publishDate": "2022-03-24T00:00:00+02:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {
@@ -2771,7 +2774,6 @@ Object {
     "palautteet/***unittest***/logo.png": Object {},
     "suunnittelusopimus/logo.png": Object {},
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {},
-    "suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf": Object {},
     "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {},
   },
 }
@@ -2826,9 +2828,6 @@ Object {
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {
-      "publishDate": "2022-03-24T00:00:00+02:00",
-    },
-    "suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf": Object {
       "publishDate": "2022-03-24T00:00:00+02:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {
