@@ -149,8 +149,9 @@ export default function SuunnitteluvaiheenPerustiedot({ isDirtyHandler }: Props)
             </SectionContent>
             {!julkinen && (
               <Notification type={NotificationType.INFO_GRAY}>
-                Tiivistetty hankkeen sisälönkuvaus on noudettu aloituskuulutuvaiheesta. Voit muokata kuvausta. Muutokset
-                tulevat näkyviin palvelun julkiselle puolella Tallenna ja julkaise -painikkeen painamisen jälkeen.
+                Tiivistetty hankkeen sisällönkuvaus on noudettu aloituskuulutuvaiheesta. Voit muokata kuvausta.
+                Muutokset tulevat näkyviin palvelun julkiselle puolella Tallenna ja julkaise -painikkeen painamisen
+                jälkeen.
               </Notification>
             )}
 
