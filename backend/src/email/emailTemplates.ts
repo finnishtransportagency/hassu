@@ -1,9 +1,10 @@
 import get from "lodash/get";
-import { Kayttaja } from "../../../common/graphql/apiModel";
+import { Kayttaja, Viranomainen } from "../../../common/graphql/apiModel";
 import { config } from "../config";
 import { DBProjekti } from "../database/model/projekti";
 import { EmailOptions } from "./email";
 import { linkSuunnitteluVaihe } from "../../../common/links";
+import { Muistutus } from "../database/model";
 
 function template(strs: TemplateStringsArray, ...exprs: string[]) {
   return function (obj: unknown) {
@@ -50,8 +51,29 @@ Voit tarkastella aloituskuulutusta osoitteessa https://${"domain"}/yllapito/proj
 
 Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 const hyvaksyttyPDFVastaanottajat = template`${"velho.vastuuhenkilonEmail"}`;
-const muistutusTeksti = template`Nähtävillä olevaan suunnitelmaan ${"oid"} on tullut muistutus. Muistutus ja siihen liittyvät tiedostot löytyvät liitteistä.`;
-const muistutusVastaanottaja = template`${"velho.suunnittelustaVastaavaViranomainen"}`;
+const muistutusTeksti = template`
+Muistutus vastaanotettu
+${"vastaanotettu"}
+
+Nimi
+${"etunimi"} ${"sukunimi"}
+
+Postiosoite
+${"katuosoite"} ${"postinumeroJaPostitoimipaikka"}
+
+Sähköposti
+${"sahkoposti"}
+
+Puhelinnumero
+${"puhelinnumero"}
+
+Suunnitelman asiatunnus
+${"asiatunnus"}
+
+Muistutus
+${"muistutus"}
+`;
+const muistutusOtsikko = template`Muistutus - ${"id"}`;
 
 export function createPerustamisEmail(projekti: DBProjekti): EmailOptions {
   return {
@@ -93,10 +115,15 @@ export function createNewFeedbackAvailableEmail(oid: string, recipient: string):
   };
 }
 
-export function createMuistutusKirjaamolleEmail(projekti: DBProjekti): EmailOptions {
+export function createMuistutusKirjaamolleEmail(projekti: DBProjekti, muistutus: Muistutus, sahkoposti: string): EmailOptions {
+  const asiatunnus =
+    projekti.velho.suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO
+      ? projekti.velho.asiatunnusELY
+      : projekti.velho.asiatunnusVayla;
   return {
-    subject: "Suunnitelmaan on tullut muistutus",
-    text: muistutusTeksti(projekti),
-    to: muistutusVastaanottaja(projekti),
-  }
+    subject: muistutusOtsikko(muistutus),
+    text: muistutusTeksti({asiatunnus, ...muistutus }),
+    to: sahkoposti,
+    //testing cicd
+  };
 }
