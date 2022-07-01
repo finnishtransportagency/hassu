@@ -236,3 +236,14 @@ input PalauteInput {
   yhteydenottotapaPuhelin: Boolean
   liite: String
 }
+
+input MuistutusInput {
+  etunimi: String
+  sukunimi: String
+  katuosoite: String
+  postinumeroJaPostitoimipaikka: String
+  sahkoposti: String
+  puhelinnumero: String
+  muistutus: String
+  liite: String
+}

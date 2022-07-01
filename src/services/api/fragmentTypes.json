@@ -284,6 +284,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "MuistutusInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "OBJECT",
         "name": "Mutation",
         "possibleTypes": null,
