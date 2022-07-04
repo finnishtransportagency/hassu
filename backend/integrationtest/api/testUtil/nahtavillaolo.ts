@@ -78,7 +78,6 @@ export async function testImportNahtavillaoloAineistot(
       return documents;
     }, [] as VelhoAineisto[])
     .sort((a, b) => a.oid.localeCompare(b.oid));
-  console.log(t2xx);
 
   const lisaAineisto = velhoAineistoKategorias
     .reduce((documents, aineistoKategoria) => {

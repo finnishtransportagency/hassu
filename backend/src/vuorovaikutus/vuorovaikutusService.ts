@@ -4,6 +4,7 @@ import { asiakirjaService } from "../asiakirja/asiakirjaService";
 import { fileService } from "../files/fileService";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { emailClient } from "../email/email";
+import { ProjektiPaths } from "../files/ProjektiPath";
 
 class VuorovaikutusService {
   async handleVuorovaikutusKutsu(oid: string, vuorovaikutusNumero: number) {
@@ -17,7 +18,7 @@ class VuorovaikutusService {
       luonnos: false,
     });
 
-    const vuorovaikutusKutsuPath = fileService.getVuorovaikutusPath(vuorovaikutus) + "/kutsu";
+    const vuorovaikutusKutsuPath = new ProjektiPaths(oid).vuorovaikutus(vuorovaikutus).yllapitoPath + "/kutsu";
 
     await fileService.createFileToProjekti({
       oid,

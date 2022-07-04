@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProjektiPaths should create public full paths successfully 1`] = `
+Array [
+  "tiedostot/suunnitelma/123",
+  "tiedostot/suunnitelma/123/suunnitteluvaihe/vuorovaikutus_456",
+  "tiedostot/suunnitelma/123/suunnitteluvaihe/vuorovaikutus_456/aineisto",
+  "tiedostot/suunnitelma/123/nahtavillaolo",
+]
+`;
+
+exports[`ProjektiPaths should create public projekti relative paths successfully 1`] = `
+Array [
+  "tiedostot/suunnitelma/123",
+  "suunnitteluvaihe/vuorovaikutus_456",
+  "suunnitteluvaihe/vuorovaikutus_456/aineisto",
+  "nahtavillaolo",
+]
+`;
+
+exports[`ProjektiPaths should create yllapito paths successfully 1`] = `
+Array [
+  "yllapito/tiedostot/projekti/123",
+  "suunnitteluvaihe/vuorovaikutus_456",
+  "nahtavillaolo/7",
+]
+`;

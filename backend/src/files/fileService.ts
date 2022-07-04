@@ -7,8 +7,8 @@ import { Dayjs } from "dayjs";
 import { uriEscapePath } from "aws-sdk/lib/util";
 import { ListObjectsV2Output } from "aws-sdk/clients/s3";
 import { getS3 } from "../aws/client";
-import { NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu, Vuorovaikutus } from "../database/model";
 import { parseDate } from "../util/dateUtil";
+import { ProjektiPaths } from "./ProjektiPath";
 
 export type UploadFileProperties = {
   fileNameWithPath: string;
@@ -35,7 +35,7 @@ export type AineistoMetadata = {
 
 export type PersistFileProperties = { targetFilePathInProjekti: string; uploadedFileSource: string; oid: string };
 
-export type DeleteFileProperties = { fullFilePathInProjekti: string; oid: string };
+export type DeleteFileProperties = { filePathInProjekti: string; oid: string };
 
 const S3_METADATA_PUBLISH_TIMESTAMP = "publication-timestamp";
 
@@ -66,7 +66,7 @@ export class FileService {
 
     const fileNameFromUpload = FileService.getFileNameFromPath(filePath);
     const targetPath = `/${param.targetFilePathInProjekti}/${fileNameFromUpload}`;
-    const targetBucketPath = FileService.getYllapitoProjektiDirectory(param.oid) + targetPath;
+    const targetBucketPath = new ProjektiPaths(param.oid).yllapitoPath + targetPath;
     try {
       await getS3()
         .copyObject({
@@ -138,12 +138,12 @@ export class FileService {
     log.info(`Created file ${bucket}/${targetPath}`);
   }
 
-  public static getYllapitoProjektiDirectory(oid: string) {
-    return `yllapito/tiedostot/projekti/${oid}`;
+  public static getYllapitoProjektiDirectory(oid: string): string {
+    return new ProjektiPaths(oid).yllapitoPath;
   }
 
-  public static getPublicProjektiDirectory(oid: string) {
-    return `tiedostot/suunnitelma/${oid}`;
+  public static getPublicProjektiDirectory(oid: string): string {
+    return new ProjektiPaths(oid).publicPath;
   }
 
   async getUploadedSourceFileInformation(
@@ -246,24 +246,13 @@ export class FileService {
     return path ? `/${FileService.getPublicProjektiDirectory(oid)}${path}` : undefined;
   }
 
-  getVuorovaikutusPath(vuorovaikutus: Vuorovaikutus): string {
-    return "suunnitteluvaihe/vuorovaikutus_" + vuorovaikutus.vuorovaikutusNumero;
-  }
-
-  getVuorovaikutusAineistoPath(vuorovaikutus: Vuorovaikutus): string {
-    return this.getVuorovaikutusPath(vuorovaikutus) + "/aineisto";
-  }
-
-  getNahtavillaoloVaihePath(nahtavillaoloVaihe: NahtavillaoloVaihe | NahtavillaoloVaiheJulkaisu): string {
-    return "nahtavillaolo/" + nahtavillaoloVaihe.id;
-  }
-
   /**
    * Copy file from yllapito to public bucket
    */
   async publishProjektiFile(
     oid: string,
-    filePathInProjekti: string,
+    yllapitoFilePathInProjekti: string,
+    publicFilePathInProjekti: string,
     publishDate?: Dayjs,
     expirationDate?: Dayjs
   ): Promise<void> {
@@ -279,9 +268,9 @@ export class FileService {
     }
     const copyObjectParams = {
       Bucket: targetBucket,
-      Key: `${FileService.getPublicProjektiDirectory(oid)}${filePathInProjekti}`,
+      Key: `${FileService.getPublicProjektiDirectory(oid)}${publicFilePathInProjekti}`,
       CopySource: uriEscapePath(
-        `${sourceBucket}/${FileService.getYllapitoProjektiDirectory(oid)}${filePathInProjekti}`
+        `${sourceBucket}/${FileService.getYllapitoProjektiDirectory(oid)}${yllapitoFilePathInProjekti}`
       ),
       MetadataDirective: "REPLACE",
       Metadata: metadata,
@@ -295,14 +284,20 @@ export class FileService {
     }
   }
 
-  async deleteYllapitoFileFromProjekti({ oid, fullFilePathInProjekti }: DeleteFileProperties): Promise<void> {
+  async deleteYllapitoFileFromProjekti({ oid, filePathInProjekti }: DeleteFileProperties): Promise<void> {
+    if (!filePathInProjekti) {
+      throw new NotFoundError("BUG: tiedostonimi on annettava jotta tiedoston voi poistaa");
+    }
     const projektiPath = FileService.getYllapitoProjektiDirectory(oid);
-    await FileService.deleteFileFromProjekti(config.yllapitoBucketName, projektiPath + fullFilePathInProjekti);
+    await FileService.deleteFileFromProjekti(config.yllapitoBucketName, projektiPath + filePathInProjekti);
   }
 
-  async deletePublicFileFromProjekti({ oid, fullFilePathInProjekti }: DeleteFileProperties): Promise<void> {
+  async deletePublicFileFromProjekti({ oid, filePathInProjekti }: DeleteFileProperties): Promise<void> {
+    if (!filePathInProjekti) {
+      throw new NotFoundError("BUG: tiedostonimi on annettava jotta tiedoston voi poistaa");
+    }
     const projektiPath = FileService.getPublicProjektiDirectory(oid);
-    await FileService.deleteFileFromProjekti(config.publicBucketName, projektiPath + fullFilePathInProjekti);
+    await FileService.deleteFileFromProjekti(config.publicBucketName, projektiPath + filePathInProjekti);
   }
 
   private static async deleteFileFromProjekti(bucket: string, key: string): Promise<void> {
