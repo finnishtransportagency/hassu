@@ -6,7 +6,7 @@ ENV NVM_DIR=/root/.nvm
 RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION} && nvm use v${NODE_VERSION} && nvm alias default v${NODE_VERSION}
 ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
 RUN . "$NVM_DIR/nvm.sh" && npm install -g npm@8.1.3
-RUN . "$NVM_DIR/nvm.sh" && npm install -f -g @aws-amplify/cli
+RUN . "$NVM_DIR/nvm.sh" && npm install -f -g @aws-amplify/cli && amplify
 
 COPY tools /tools
 RUN cd /tools/velho && ./gradlew dependencies

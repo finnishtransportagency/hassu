@@ -272,8 +272,26 @@
         "__typename": "__Type"
       },
       {
+        "kind": "OBJECT",
+        "name": "LisaAineisto",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "LisaAineistoParametrit",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "INPUT_OBJECT",
         "name": "ListaaKayttajatInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "ListaaLisaAineistoInput",
         "possibleTypes": null,
         "__typename": "__Type"
       },

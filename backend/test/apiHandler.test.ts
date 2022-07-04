@@ -17,7 +17,7 @@ import {
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
 } from "../../common/graphql/apiModel";
-import { AloitusKuulutusJulkaisu, DBProjekti } from "../src/database/model/projekti";
+import { AloitusKuulutusJulkaisu, DBProjekti } from "../src/database/model";
 import * as log from "loglevel";
 import cloneDeep from "lodash/cloneDeep";
 import mergeWith from "lodash/mergeWith";
@@ -127,13 +127,21 @@ describe("apiHandler", () => {
             oid: fixture.PROJEKTI1_OID,
             ...updatedValues,
           });
+
           if (p.tallennettu) {
             expect(saveProjektiStub.calledOnce);
-            expect(["Save projekti having " + description, saveProjektiStub.getCall(0).firstArg]).toMatchSnapshot();
+            const projekti = saveProjektiStub.getCall(0).firstArg;
+            expect(projekti.salt).to.not.be.empty;
+            projekti.salt = "***unittest***";
+            expect(["Save projekti having " + description, projekti]).toMatchSnapshot();
             saveProjektiStub.resetHistory();
           } else {
             expect(createProjektiStub.calledOnce);
-            expect(["Create projekti having " + description, createProjektiStub.getCall(0).firstArg]).toMatchSnapshot();
+            const projekti = createProjektiStub.getCall(0).firstArg;
+            if (projekti.salt) {
+              projekti.salt = "***unittest***";
+            }
+            expect(["Create projekti having " + description, projekti]).toMatchSnapshot();
             createProjektiStub.resetHistory();
           }
           // Load projekti and examine its permissions again
@@ -239,7 +247,7 @@ describe("apiHandler", () => {
         });
 
         // Remove omistaja and save
-        projekti = await saveAndLoadProjekti(projekti, "having only projektipaallikko", {
+        projekti = await saveAndLoadProjekti(projekti, "only projektipaallikko", {
           kayttoOikeudet: [
             {
               rooli: ProjektiRooli.PROJEKTIPAALLIKKO,

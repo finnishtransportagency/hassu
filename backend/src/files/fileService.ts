@@ -26,6 +26,12 @@ export type CreateFileProperties = {
   copyToPublic?: boolean;
 };
 
+export type DownloadFileProperties = {
+  contentDisposition?: string;
+  contentType?: string;
+  contents: Buffer;
+};
+
 // Simple types to hold aineisto information for syncronization purposes
 export type SimpleAineistoMap = { [fullFilePathInProjekti: string]: AineistoMetadata };
 export type AineistoMetadata = {
@@ -377,6 +383,14 @@ export class FileService {
       log.error(e);
       throw e;
     }
+  }
+
+  createYllapitoSignedDownloadLink(oid: string, tiedosto: string): string {
+    return getS3().getSignedUrl("getObject", {
+      Bucket: config.yllapitoBucketName,
+      Key: new ProjektiPaths(oid).yllapitoPath + tiedosto,
+      Expires: 60 * 60, // One hour
+    });
   }
 }
 

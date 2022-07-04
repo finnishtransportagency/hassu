@@ -1,4 +1,5 @@
 import {
+  Aineisto,
   NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
   NahtavillaoloVaiheJulkaisuJulkinen,
@@ -27,8 +28,18 @@ export function cleanupVuorovaikutusTimestamps(vuorovaikutukset: Vuorovaikutus[]
 export function cleanupNahtavillaoloTimestamps(
   nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu | NahtavillaoloVaihe
 ): NahtavillaoloVaiheJulkaisu | NahtavillaoloVaihe {
-  nahtavillaoloVaihe.aineistoNahtavilla?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
-  nahtavillaoloVaihe.lisaAineisto?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
+  function aineistoCleanupFunc(aineisto: Aineisto) {
+    if (aineisto.tuotu) {
+      aineisto.tuotu = "***unittest***";
+    }
+  }
+
+  nahtavillaoloVaihe.aineistoNahtavilla?.forEach(aineistoCleanupFunc);
+  nahtavillaoloVaihe.lisaAineisto?.forEach(aineistoCleanupFunc);
+  if ((nahtavillaoloVaihe as NahtavillaoloVaihe).lisaAineistoParametrit) {
+    (nahtavillaoloVaihe as NahtavillaoloVaihe).lisaAineistoParametrit.hash = "***unittest***";
+    (nahtavillaoloVaihe as NahtavillaoloVaihe).lisaAineistoParametrit.poistumisPaiva = "***unittest***";
+  }
   return nahtavillaoloVaihe;
 }
 
@@ -39,7 +50,7 @@ export function cleanupNahtavillaoloJulkaisuJulkinenTimestamps(
   return nahtavillaoloVaihe;
 }
 
-export function cleanupGeneratedIds(obj: unknown) {
+export function cleanupGeneratedIds(obj: unknown): unknown {
   return Object.keys(obj).reduce((cleanObj, key) => {
     const cleanedUpKey = key.replace(/[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}/g, "***unittest***");
     cleanObj[cleanedUpKey] = obj[key];

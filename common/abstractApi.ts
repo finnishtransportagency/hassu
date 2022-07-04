@@ -6,17 +6,23 @@ import {
   HaeVelhoProjektiAineistoLinkkiQueryVariables,
   Kayttaja,
   Kieli,
+  KirjaamoOsoite,
   LaskePaattymisPaivaQueryVariables,
   LaskuriTyyppi,
   LataaProjektiQueryVariables,
   LatausTiedot,
+  LisaAineisto,
+  LisaaMuistutusMutationVariables,
   LisaaPalauteMutationVariables,
   ListaaKayttajatInput,
   ListaaKayttajatQueryVariables,
+  ListaaLisaAineistoInput,
+  ListaaLisaAineistoQueryVariables,
   ListaaProjektitInput,
   ListaaProjektitQueryVariables,
   ListaaVelhoProjektiAineistotQueryVariables,
   ListaaVelhoProjektitQueryVariables,
+  MuistutusInput,
   NykyinenKayttaja,
   OtaPalauteKasittelyynMutationVariables,
   PalauteInput,
@@ -34,9 +40,6 @@ import {
   Velho,
   VelhoAineistoKategoria,
   VelhoHakuTulos,
-  KirjaamoOsoite,
-  MuistutusInput,
-  LisaaMuistutusMutationVariables,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -153,6 +156,11 @@ export const apiConfig: ApiConfig = {
     name: "lisaaMuistutus",
     operationType: OperationType.Mutation,
     graphql: mutations.lisaaMuistutus,
+  },
+  listaaLisaAineisto: {
+    name: "listaaLisaAineisto",
+    operationType: OperationType.Query,
+    graphql: queries.listaaLisaAineisto,
   },
 };
 
@@ -296,6 +304,13 @@ export abstract class AbstractApi {
 
   async listKirjaamoOsoitteet(): Promise<KirjaamoOsoite[]> {
     return await this.callYllapitoAPI(apiConfig.listKirjaamoOsoitteet);
+  }
+
+  async listaaLisaAineisto(oid: string, lisaAineistoTiedot: ListaaLisaAineistoInput): Promise<LisaAineisto[]> {
+    return await this.callYllapitoAPI(apiConfig.listaaLisaAineisto, {
+      oid,
+      lisaAineistoTiedot,
+    } as ListaaLisaAineistoQueryVariables);
   }
 
   abstract callYllapitoAPI(operation: OperationConfig, variables?: any): Promise<any>;

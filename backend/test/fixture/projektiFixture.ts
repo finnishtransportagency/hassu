@@ -377,6 +377,7 @@ export class ProjektiFixture {
         nimi: "Littyva suunnitelma 1 nimi",
       },
     ],
+    salt: "foo",
     paivitetty: "2022-03-15T14:30:00.000Z",
   };
 

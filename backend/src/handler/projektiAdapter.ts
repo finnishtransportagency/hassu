@@ -31,6 +31,7 @@ import { ValidationError } from "yup";
 import { log } from "../logger";
 import dayjs, { Dayjs } from "dayjs";
 import { kayttoOikeudetSchema } from "../../../src/schemas/kayttoOikeudet";
+import { lisaAineistoService } from "../aineisto/lisaAineistoService";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 
 export enum ProjektiEventType {
@@ -92,6 +93,7 @@ export class ProjektiAdapter {
       palautteet,
       nahtavillaoloVaihe,
       nahtavillaoloVaiheJulkaisut,
+      salt: _salt,
       ...fieldsToCopyAsIs
     } = dbProjekti;
 
@@ -110,7 +112,7 @@ export class ProjektiAdapter {
       },
       kielitiedot: adaptKielitiedot(kielitiedot),
       suunnitteluVaihe: adaptSuunnitteluVaihe(suunnitteluVaihe, vuorovaikutukset, palautteet),
-      nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti.oid, nahtavillaoloVaihe),
+      nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe),
       nahtavillaoloVaiheJulkaisut: adaptNahtavillaoloVaiheJulkaisut(dbProjekti.oid, nahtavillaoloVaiheJulkaisut),
       virhetiedot,
       ...fieldsToCopyAsIs,
@@ -170,6 +172,7 @@ export class ProjektiAdapter {
         euRahoitus,
         liittyvatSuunnitelmat,
         vuorovaikutukset,
+        salt: projekti.salt || lisaAineistoService.generateSalt(),
       }
     ) as DBProjekti;
     projektiAdaptationResult.setProjekti(dbProjekti);
@@ -275,9 +278,7 @@ function adaptSuunnitteluVaihe(
       julkinen,
       arvioSeuraavanVaiheenAlkamisesta,
       suunnittelunEteneminenJaKesto,
-      hankkeenKuvaus: suunnitteluVaihe.hankkeenKuvaus
-        ? adaptHankkeenKuvaus(suunnitteluVaihe.hankkeenKuvaus)
-        : undefined,
+      hankkeenKuvaus: adaptHankkeenKuvaus(suunnitteluVaihe.hankkeenKuvaus),
       vuorovaikutukset: adaptVuorovaikutukset(vuorovaikutukset),
       palautteet: palautteet ? palautteet.map((palaute) => ({ __typename: "Palaute", ...palaute })) : undefined,
       palautteidenVastaanottajat,
@@ -327,7 +328,10 @@ function adaptSuunnitteluVaiheToSave(
   return undefined;
 }
 
-function adaptNahtavillaoloVaihe(oid: string, nahtavillaoloVaihe: NahtavillaoloVaihe): API.NahtavillaoloVaihe {
+function adaptNahtavillaoloVaihe(
+  dbProjekti: DBProjekti,
+  nahtavillaoloVaihe: NahtavillaoloVaihe
+): API.NahtavillaoloVaihe {
   if (!nahtavillaoloVaihe) {
     return undefined;
   }
@@ -343,9 +347,14 @@ function adaptNahtavillaoloVaihe(oid: string, nahtavillaoloVaihe: NahtavillaoloV
   return {
     __typename: "NahtavillaoloVaihe",
     ...rest,
-    nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(oid, nahtavillaoloPDFt),
+    nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(dbProjekti.oid, nahtavillaoloPDFt),
     aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
     lisaAineisto: adaptAineistot(lisaAineisto),
+    lisaAineistoParametrit: lisaAineistoService.generateListingParams(
+      dbProjekti.oid,
+      nahtavillaoloVaihe.id,
+      dbProjekti.salt
+    ),
     kuulutusYhteystiedot: adaptYhteystiedot(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
     hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
@@ -823,11 +832,13 @@ export function adaptNahtavillaoloPDFPaths(
 }
 
 export function adaptHankkeenKuvaus(hankkeenKuvaus: LocalizedMap<string>): API.HankkeenKuvaukset {
-  return {
-    __typename: "HankkeenKuvaukset",
-    SUOMI: hankkeenKuvaus?.SUOMI,
-    ...hankkeenKuvaus,
-  };
+  if (hankkeenKuvaus && Object.keys(hankkeenKuvaus).length > 0) {
+    return {
+      __typename: "HankkeenKuvaukset",
+      SUOMI: hankkeenKuvaus?.SUOMI,
+      ...hankkeenKuvaus,
+    };
+  }
 }
 
 export function adaptAloitusKuulutusJulkaisut(
