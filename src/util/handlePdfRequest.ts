@@ -43,7 +43,7 @@ export const handlePdfRequest = async ({ req, res }: PdfRequestProps) => {
     if (!asiakirjaTyyppi || !tallennaProjektiInput) {
       res.status(500);
       res.setHeader("Content-Type", "text/plain;charset=UTF-8");
-      res.send("Asiakirjan esikatselua ei voi tehdä. Esikatselu pyynnöstä puuttuu tietoja.");
+      res.send("Asiakirjan esikatselua ei voi tehdä. Esikatselupyynnöstä puuttuu tietoja.");
       return;
     } else {
       changes = JSON.parse(tallennaProjektiInput) as TallennaProjektiInput;
