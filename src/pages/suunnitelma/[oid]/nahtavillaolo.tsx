@@ -6,7 +6,6 @@ import { PageProps } from "@pages/_app";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
-import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import { formatDate } from "src/util/dateUtils";
 import SectionContent from "@components/layout/SectionContent";
 import { Kieli, ProjektiTyyppi, Viranomainen } from "@services/api";
@@ -14,6 +13,7 @@ import FormatDate from "@components/FormatDate";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import MuistutusLomakeDialogi from "@components/projekti/kansalaisnakyma/MuistutusLomakeDialogi";
+import useProjektiBreadcrumbsJulkinen from "src/hooks/useProjektiBreadcrumbsJulkinen";
 
 export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactElement {
   const router = useRouter();
@@ -24,7 +24,7 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
   const velho = projekti?.velho;
   const [muistutusLomakeOpen, setMuistutusLomakeOpen] = useState(false);
 
-  useProjektiBreadcrumbs(setRouteLabels);
+  useProjektiBreadcrumbsJulkinen(setRouteLabels);
 
   if (!projekti || !kuulutus || !velho) {
     return <div />;

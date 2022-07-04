@@ -2,7 +2,6 @@ import React, { ReactElement, useState } from "react";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
-import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import { useRouter } from "next/router";
 import SectionContent from "@components/layout/SectionContent";
 import useTranslation from "next-translate/useTranslation";
@@ -21,6 +20,7 @@ import PalauteLomakeDialogi from "src/components/projekti/kansalaisnakyma/Palaut
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
 import { ProjektiKayttajaJulkinen } from "@services/api";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
+import useProjektiBreadcrumbsJulkinen from "src/hooks/useProjektiBreadcrumbsJulkinen";
 
 export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
   const router = useRouter();
@@ -30,7 +30,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
   const { t } = useTranslation();
   const kieli = useKansalaiskieli();
 
-  useProjektiBreadcrumbs(setRouteLabels);
+  useProjektiBreadcrumbsJulkinen(setRouteLabels);
 
   const today = dayjs();
 

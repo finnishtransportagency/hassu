@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { useProjekti } from "./useProjekti";
 import { PageProps } from "@pages/_app";
+import { useProjektiJulkinen } from "./useProjektiJulkinen";
 
 export const useProjektiBreadcrumbs = (setRouteLabels: PageProps["setRouteLabels"]) => {
   const router = useRouter();
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
-  const { data: projekti } = useProjekti(oid);
+  const { data: projekti } = useProjektiJulkinen(oid);
 
   useEffect(() => {
     if (router.isReady) {
