@@ -343,6 +343,8 @@ export default function Aloituskuulutus({
 
   const ensisijainenKieli = kielitiedot?.ensisijainenKieli;
   const toissijainenKieli = kielitiedot?.toissijainenKieli;
+  const esikatselePdf = pdfFormRef.current?.esikatselePdf;
+
   return (
     <ProjektiPageLayout title="Aloituskuulutus">
       {voiMuokata && (
@@ -442,7 +444,7 @@ export default function Aloituskuulutus({
             </form>
           </FormProvider>
           <PdfPreviewForm ref={pdfFormRef} />
-          {pdfFormRef.current?.esikatselePdf && (
+          {esikatselePdf && (
             <Section>
               <Notification type={NotificationType.INFO_GRAY}>
                 Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
@@ -453,7 +455,7 @@ export default function Aloituskuulutus({
                   id={"preview_kuulutus_pdf_" + ensisijainenKieli}
                   type="submit"
                   onClick={handleSubmit((formData) =>
-                    pdfFormRef.current?.esikatselePdf(formData, AsiakirjaTyyppi.ALOITUSKUULUTUS, ensisijainenKieli)
+                    esikatselePdf(formData, AsiakirjaTyyppi.ALOITUSKUULUTUS, ensisijainenKieli)
                   )}
                   disabled={disableFormEdit}
                 >
@@ -463,11 +465,7 @@ export default function Aloituskuulutus({
                   id={"preview_ilmoitus_pdf_" + ensisijainenKieli}
                   type="submit"
                   onClick={handleSubmit((formData) =>
-                    pdfFormRef.current?.esikatselePdf(
-                      formData,
-                      AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA,
-                      ensisijainenKieli
-                    )
+                    esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, ensisijainenKieli)
                   )}
                   disabled={disableFormEdit}
                 >
@@ -482,7 +480,7 @@ export default function Aloituskuulutus({
                       id={"preview_kuulutus_pdf_" + toissijainenKieli}
                       type="submit"
                       onClick={handleSubmit((formData) =>
-                        pdfFormRef.current?.esikatselePdf(formData, AsiakirjaTyyppi.ALOITUSKUULUTUS, toissijainenKieli)
+                        esikatselePdf(formData, AsiakirjaTyyppi.ALOITUSKUULUTUS, toissijainenKieli)
                       )}
                       disabled={disableFormEdit}
                     >
@@ -492,11 +490,7 @@ export default function Aloituskuulutus({
                       id={"preview_ilmoitus_pdf_" + toissijainenKieli}
                       type="submit"
                       onClick={handleSubmit((formData) =>
-                        pdfFormRef.current?.esikatselePdf(
-                          formData,
-                          AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA,
-                          toissijainenKieli
-                        )
+                        esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, toissijainenKieli)
                       )}
                       disabled={disableFormEdit}
                     >

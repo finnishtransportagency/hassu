@@ -3,14 +3,14 @@ import React, { useImperativeHandle, useRef, useState } from "react";
 import { useProjektiRoute } from "src/hooks/useProjektiRoute";
 import useSnackbars from "src/hooks/useSnackbars";
 
-type PdfPreviewFormProps = {};
-
 type EsikatselePdfFunction = (formData: TallennaProjektiInput, asiakirjaTyyppi: AsiakirjaTyyppi, kieli: Kieli) => void;
-type Handle = {
+
+type PdfPreviewFormProps = {};
+type PdfPreviewFormHandle = {
   esikatselePdf: EsikatselePdfFunction;
 };
 
-const PdfPreviewForm: React.ForwardRefRenderFunction<Handle, PdfPreviewFormProps> = ({}, ref) => {
+const PdfPreviewForm: React.ForwardRefRenderFunction<PdfPreviewFormHandle, PdfPreviewFormProps> = (_props, ref) => {
   const { data: projekti } = useProjektiRoute();
   const { showErrorMessage } = useSnackbars();
 
