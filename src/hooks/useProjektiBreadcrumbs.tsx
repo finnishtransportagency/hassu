@@ -20,7 +20,6 @@ export const useProjektiBreadcrumbs = (setRouteLabels: PageProps["setRouteLabels
         setRouteLabels({
           "/yllapito/projekti/[oid]": { label: routeLabel },
           "/yllapito/perusta/[oid]": { label: routeLabel },
-          "/suunnitelma/[oid]": { label: routeLabel },
         });
       }
     }
