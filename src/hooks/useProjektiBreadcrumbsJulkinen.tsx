@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { PageProps } from "@pages/_app";
 import { useProjektiJulkinen } from "./useProjektiJulkinen";
 
-export const useProjektiBreadcrumbs = (setRouteLabels: PageProps["setRouteLabels"]) => {
+export const useProjektiBreadcrumbsJulkinen = (setRouteLabels: PageProps["setRouteLabels"]) => {
   const router = useRouter();
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
   const { data: projekti } = useProjektiJulkinen(oid);
@@ -25,4 +25,4 @@ export const useProjektiBreadcrumbs = (setRouteLabels: PageProps["setRouteLabels
   }, [router.isReady, oid, projekti, setRouteLabels]);
 };
 
-export default useProjektiBreadcrumbs;
+export default useProjektiBreadcrumbsJulkinen;
