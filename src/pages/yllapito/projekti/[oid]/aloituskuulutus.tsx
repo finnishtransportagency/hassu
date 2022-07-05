@@ -2,7 +2,7 @@ import Textarea from "@components/form/Textarea";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { useRouter } from "next/router";
 import React, { ReactElement, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import useProjekti from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -86,8 +86,7 @@ export default function Aloituskuulutus({
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [serializedFormData, setSerializedFormData] = useState("{}");
   const router = useRouter();
-  const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
-  const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti(oid);
+  const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti();
   const isLoadingProjekti = !projekti && !projektiLoadError;
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
   const isIncorrectProjektiStatus = !projekti?.status || projekti?.status === Status.EI_JULKAISTU;

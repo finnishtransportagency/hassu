@@ -10,10 +10,10 @@ import Button from "@components/button/Button";
 import SuunnitteluvaiheenVuorovaikuttaminen from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
 import { DialogActions, DialogContent } from "@mui/material";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
-import { useProjektiRoute } from "src/hooks/useProjektiRoute";
+import { useProjekti } from "src/hooks/useProjekti";
 
 export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
-  const { data: projekti } = useProjektiRoute();
+  const { data: projekti } = useProjekti();
   const [isChildDirty, setIsChildDirty] = useState(false);
   const [currentTab, setCurrentTab] = useState(0);
   const [open, setOpen] = useState(false);

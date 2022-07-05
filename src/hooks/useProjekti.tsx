@@ -1,8 +1,14 @@
 import useSWR from "swr";
 import { api, apiConfig, NykyinenKayttaja, Projekti, ProjektiRooli } from "@services/api";
 import useCurrentUser from "./useCurrentUser";
+import { useRouter } from "next/router";
 
-export function useProjekti(oid?: string) {
+export function useProjekti() {
+  const router = useRouter();
+  const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
+  if (!router.route.startsWith("/yllapito")) {
+    throw new Error("Inproper route for the use of useProjekti hook");
+  }
   const { data: kayttaja } = useCurrentUser();
   return useSWR([apiConfig.lataaProjekti.graphql, oid, kayttaja], projektiLoader);
 }
@@ -13,7 +19,7 @@ interface ProjektiLisatiedot {
 
 export type ProjektiLisatiedolla = Projekti & ProjektiLisatiedot;
 
-async function projektiLoader(_: string, oid: string | undefined, kayttaja: NykyinenKayttaja | undefined) {
+async function projektiLoader(_query: string, oid: string | undefined, kayttaja: NykyinenKayttaja | undefined) {
   if (!oid) {
     return null;
   }
@@ -38,5 +44,3 @@ const userIsProjectManager = ({ kayttaja, projekti }: { kayttaja?: NykyinenKaytt
   !!projekti?.kayttoOikeudet?.find(
     ({ kayttajatunnus, rooli }) => kayttaja.uid === kayttajatunnus && rooli === ProjektiRooli.PROJEKTIPAALLIKKO
   );
-
-export default useProjekti;

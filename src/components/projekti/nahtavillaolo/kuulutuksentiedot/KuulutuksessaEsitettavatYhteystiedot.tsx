@@ -13,7 +13,7 @@ import { maxPhoneLength } from "src/schemas/puhelinNumero";
 import IconButton from "@components/button/IconButton";
 import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
-import { useProjektiRoute } from "src/hooks/useProjektiRoute";
+import { useProjekti } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./KuulutuksenTiedot";
 
 const defaultYhteystieto: YhteystietoInput = {
@@ -36,7 +36,7 @@ function hasHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti: Projekti | null | und
 }
 
 export default function EsitettavatYhteystiedot({}: Props): ReactElement {
-  const { data: projekti } = useProjektiRoute();
+  const { data: projekti } = useProjekti();
 
   const eiVoiMuokata = hasHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti);
 

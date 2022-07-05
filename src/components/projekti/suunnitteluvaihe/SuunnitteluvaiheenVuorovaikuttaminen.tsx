@@ -31,7 +31,7 @@ import LukutilaLinkkiJaKutsut from "./LukutilaLinkkiJaKutsut";
 import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
 import VuorovaikutustilaisuusDialog from "./VuorovaikutustilaisuusDialog";
 import cloneDeep from "lodash/cloneDeep";
-import { useProjektiRoute } from "src/hooks/useProjektiRoute";
+import { useProjekti } from "src/hooks/useProjekti";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
@@ -77,7 +77,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
   isDirtyHandler,
   vuorovaikutusnro,
 }: Props): ReactElement {
-  const { data: projekti, mutate: reloadProjekti } = useProjektiRoute();
+  const { data: projekti, mutate: reloadProjekti } = useProjekti();
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
   const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);

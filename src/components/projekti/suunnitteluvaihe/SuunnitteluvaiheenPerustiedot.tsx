@@ -17,7 +17,7 @@ import HassuSpinner from "@components/HassuSpinner";
 import { removeTypeName } from "src/util/removeTypeName";
 import HassuDialog from "@components/HassuDialog";
 import SaapuneetKysymyksetJaPalautteet from "./SaapuneetKysymyksetJaPalautteet";
-import { useProjektiRoute } from "src/hooks/useProjektiRoute";
+import { useProjekti } from "src/hooks/useProjekti";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -36,7 +36,7 @@ interface Props {
 }
 
 export default function SuunnitteluvaiheenPerustiedot({ isDirtyHandler }: Props): ReactElement {
-  const { data: projekti, mutate: reloadProjekti } = useProjektiRoute();
+  const { data: projekti, mutate: reloadProjekti } = useProjekti();
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const [openHyvaksy, setOpenHyvaksy] = useState(false);

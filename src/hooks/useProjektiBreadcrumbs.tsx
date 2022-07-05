@@ -6,7 +6,7 @@ import { PageProps } from "@pages/_app";
 export const useProjektiBreadcrumbs = (setRouteLabels: PageProps["setRouteLabels"]) => {
   const router = useRouter();
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
-  const { data: projekti } = useProjekti(oid);
+  const { data: projekti } = useProjekti();
 
   useEffect(() => {
     if (router.isReady) {

@@ -13,7 +13,7 @@ import { maxPhoneLength } from "src/schemas/puhelinNumero";
 import IconButton from "@components/button/IconButton";
 import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
-import { useProjektiRoute } from "src/hooks/useProjektiRoute";
+import { useProjekti } from "src/hooks/useProjekti";
 import { VuorovaikutusFormValues } from "./SuunnitteluvaiheenVuorovaikuttaminen";
 
 const defaultYhteystieto: YhteystietoInput = {
@@ -29,7 +29,7 @@ interface Props {
 }
 
 export default function EsitettavatYhteystiedot({ vuorovaikutusnro }: Props): ReactElement {
-  const { data: projekti } = useProjektiRoute();
+  const { data: projekti } = useProjekti();
 
   const v = useMemo(() => {
     return projekti?.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {

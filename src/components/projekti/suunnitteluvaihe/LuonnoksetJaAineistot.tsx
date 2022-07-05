@@ -20,7 +20,7 @@ import AineistojenValitseminenDialog from "./AineistojenValitseminenDialog";
 import { Link } from "@mui/material";
 import { VuorovaikutusFormValues } from "./SuunnitteluvaiheenVuorovaikuttaminen";
 import AineistoNimiExtLink from "../AineistoNimiExtLink";
-import { useProjektiRoute } from "src/hooks/useProjektiRoute";
+import { useProjekti } from "src/hooks/useProjekti";
 import { Aineisto, Vuorovaikutus } from "@services/api";
 import HassuTable from "@components/HassuTable";
 import { useHassuTable } from "src/hooks/useHassuTable";
@@ -46,7 +46,7 @@ export default function LuonnoksetJaAineistot({
   setMuokkaustila,
   updateFormContext,
 }: Props) {
-  const { data: projekti } = useProjektiRoute();
+  const { data: projekti } = useProjekti();
   const [esittelyAineistoDialogOpen, setEsittelyAineistoDialogOpen] = useState(false);
   const [suunnitelmaLuonnoksetDialogOpen, setSuunnitelmaLuonnoksetDialogOpen] = useState(false);
   const [expandedEsittelyAineisto, setExpandedEsittelyAineisto] = useState<Key[]>([]);

@@ -3,7 +3,6 @@ import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/Pro
 import Section from "@components/layout/Section";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
 import { PageProps } from "@pages/_app";
-import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import { formatDate } from "src/util/dateUtils";
@@ -16,10 +15,8 @@ import MuistutusLomakeDialogi from "@components/projekti/kansalaisnakyma/Muistut
 import useProjektiBreadcrumbsJulkinen from "src/hooks/useProjektiBreadcrumbsJulkinen";
 
 export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactElement {
-  const router = useRouter();
   const { t } = useTranslation("projekti");
-  const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
-  const { data: projekti } = useProjektiJulkinen(oid);
+  const { data: projekti } = useProjektiJulkinen();
   const kuulutus = projekti?.nahtavillaoloVaiheJulkaisut?.[0];
   const velho = projekti?.velho;
   const [muistutusLomakeOpen, setMuistutusLomakeOpen] = useState(false);

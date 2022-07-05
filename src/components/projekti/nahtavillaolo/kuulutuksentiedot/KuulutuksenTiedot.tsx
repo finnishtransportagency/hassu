@@ -3,7 +3,7 @@ import { TallennaProjektiInput, KirjaamoOsoite, Projekti } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import React, { useEffect, useState } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
-import { useProjektiRoute } from "src/hooks/useProjektiRoute";
+import { useProjekti } from "src/hooks/useProjekti";
 import { nahtavillaoloKuulutusSchema } from "src/schemas/nahtavillaoloKuulutus";
 import Painikkeet from "./Painikkeet";
 import HankkeenSisallonKuvaus from "./HankkeenSisallonKuvaus";
@@ -48,7 +48,7 @@ function defaultValues(
 export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid" | "nahtavillaoloVaihe">;
 
 export default function KuulutuksenTiedot() {
-  const { data: projekti } = useProjektiRoute();
+  const { data: projekti } = useProjekti();
   const [formContext, setFormContext] = useState<Projekti | undefined>(undefined);
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 

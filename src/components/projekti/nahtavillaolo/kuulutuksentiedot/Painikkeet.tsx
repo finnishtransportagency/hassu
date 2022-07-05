@@ -7,7 +7,7 @@ import log from "loglevel";
 import { useRouter } from "next/router";
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
-import { useProjektiRoute } from "src/hooks/useProjektiRoute";
+import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import { TilasiirtymaToiminto, TilasiirtymaTyyppi, NahtavillaoloVaiheTila, Projekti } from "@services/api";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
@@ -22,7 +22,7 @@ interface Props {
 }
 
 export default function Painikkeet({ projekti }: Props) {
-  const { mutate: reloadProjekti } = useProjektiRoute();
+  const { mutate: reloadProjekti } = useProjekti();
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const [open, setOpen] = useState<boolean>(false);

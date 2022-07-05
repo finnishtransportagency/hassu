@@ -6,7 +6,7 @@ import { api, TallennaProjektiInput } from "@services/api";
 import log from "loglevel";
 import React, { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { useProjektiRoute } from "src/hooks/useProjektiRoute";
+import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import { NahtavilleAsetettavatAineistotFormValues } from "./NahtavilleAsetettavatAineistot";
@@ -24,7 +24,7 @@ const mapFormValuesToTallennaProjektiInput = ({
 };
 
 export default function NahtavillaoloPainikkeet() {
-  const { mutate: reloadProjekti } = useProjektiRoute();
+  const { mutate: reloadProjekti } = useProjekti();
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
 

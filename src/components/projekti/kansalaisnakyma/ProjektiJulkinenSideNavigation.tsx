@@ -1,6 +1,5 @@
 import React, { ReactElement } from "react";
 import styles from "@styles/projekti/ProjektiJulkinenSideNavigation.module.css";
-import { useRouter } from "next/router";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import HassuStack from "@components/layout/HassuStack";
 import Section from "@components/layout/Section";
@@ -10,9 +9,7 @@ import useTranslation from "next-translate/useTranslation";
 
 export default function ProjektiSideNavigation(): ReactElement {
   const { t } = useTranslation("projekti");
-  const router = useRouter();
-  const oidParam = router.query.oid;
-  const { data: projekti } = useProjektiJulkinen(oidParam as string);
+  const { data: projekti } = useProjektiJulkinen();
   if (!projekti) {
     return <div />;
   }

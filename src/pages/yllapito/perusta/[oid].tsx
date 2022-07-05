@@ -1,6 +1,6 @@
 import { PageProps } from "@pages/_app";
 import React, { ReactElement, useEffect, useCallback } from "react";
-import useProjekti from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
 import { useRouter } from "next/router";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import ProjektiPerustiedot from "@components/projekti/ProjektiPerustiedot";
@@ -45,7 +45,7 @@ export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactEle
   const [formContext, setFormContext] = useState<KayttoOikeudetSchemaContext>({ kayttajat: [] });
 
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
-  const { data: projekti, error: projektiLoadError, mutate: mutateProjekti } = useProjekti(oid);
+  const { data: projekti, error: projektiLoadError, mutate: mutateProjekti } = useProjekti();
   const isLoadingProjekti = !projekti && !projektiLoadError;
   const projektiHasError = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
   const disableFormEdit = projektiHasError || isLoadingProjekti || formIsSubmitting;
