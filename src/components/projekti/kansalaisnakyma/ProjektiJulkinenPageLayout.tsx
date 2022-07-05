@@ -2,7 +2,6 @@ import Section from "@components/layout/Section";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { Status } from "@services/api";
-import { useRouter } from "next/router";
 import React, { ReactElement, ReactNode } from "react";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import ProjektiJulkinenSideNavigation from "./ProjektiJulkinenSideNavigation";
@@ -17,9 +16,7 @@ interface Props {
 export default function ProjektiPageLayout({ children, title, selectedStep }: Props): ReactElement {
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down("lg"));
-  const router = useRouter();
-  const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
-  const { data: projekti } = useProjektiJulkinen(oid);
+  const { data: projekti } = useProjektiJulkinen();
   if (!projekti) {
     return <div />;
   }

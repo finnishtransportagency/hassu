@@ -11,8 +11,7 @@ import useSnackbars from "src/hooks/useSnackbars";
 export function KansalaisHeader({}: HeaderProps): ReactElement {
   const { t } = useTranslation("common");
   const router = useRouter();
-  const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
-  const { data: projekti } = useProjektiJulkinen(oid);
+  const { data: projekti } = useProjektiJulkinen();
   const { showInfoMessage } = useSnackbars();
 
   const replacer = useCallback(

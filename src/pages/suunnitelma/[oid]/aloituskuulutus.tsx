@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import React, { ReactElement } from "react";
 import { useProjektiJulkinen } from "../../../hooks/useProjektiJulkinen";
 import FormatDate from "@components/FormatDate";
@@ -47,10 +46,8 @@ function formatYhteystiedotText(kuulutus: AloitusKuulutusJulkaisuJulkinen) {
 }
 
 export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): ReactElement {
-  const router = useRouter();
   const { t } = useTranslation("projekti");
-  const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
-  const { data: projekti } = useProjektiJulkinen(oid);
+  const { data: projekti } = useProjektiJulkinen();
   const kuulutus = projekti?.aloitusKuulutusJulkaisut?.[0];
   const velho = kuulutus?.velho;
   const suunnittelusopimus = kuulutus?.suunnitteluSopimus;

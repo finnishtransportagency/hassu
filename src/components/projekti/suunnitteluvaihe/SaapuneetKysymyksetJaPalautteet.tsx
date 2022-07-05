@@ -17,74 +17,69 @@ interface Props {
   reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null> | undefined;
 }
 
-export default function SaapuneetKysymyksetJaPalautteet({
-  projekti,
-  reloadProjekti
-}: Props): ReactElement {
-
-  const columns = useMemo(() => [
-    { Header: "Vastaanotettu", accessor: (palaute: Palaute) => <VastaanottoaikaJaLiite palaute={palaute} />,
-      id: "Nimi",
-      width: 40
-    },
-    {
-      Header: "Kysymys / palaute",
-      accessor: (palaute: Palaute) => <KysymysTaiPalaute oid={projekti.oid} palaute={palaute} />,
-      id: "KysymysTaiPalaute",
-      minWidth: 100
-    },
-    {
-      Header: "Yhteydenottopyyntö",
-      accessor: (palaute: Palaute) => <YhteydenottopyyntoSolu palaute={palaute} />,
-      id: "Yhteydenottopyynto",
-      width: 45
-    },
-    {
-      Header: "Otettu käsittelyyn",
-      accessor: (palaute: Palaute) =>
-        <KasittelePalauteCheckbox reloadProjekti={reloadProjekti} oid={projekti.oid} palaute={palaute} />,
-      id: "otettuKasittelyyn",
-      width: 40
-    }
-  ], [projekti, reloadProjekti]);
+export default function SaapuneetKysymyksetJaPalautteet({ projekti, reloadProjekti }: Props): ReactElement {
+  const columns = useMemo(
+    () => [
+      {
+        Header: "Vastaanotettu",
+        accessor: (palaute: Palaute) => <VastaanottoaikaJaLiite palaute={palaute} />,
+        id: "Nimi",
+        width: 40,
+      },
+      {
+        Header: "Kysymys / palaute",
+        accessor: (palaute: Palaute) => <KysymysTaiPalaute oid={projekti.oid} palaute={palaute} />,
+        id: "KysymysTaiPalaute",
+        minWidth: 100,
+      },
+      {
+        Header: "Yhteydenottopyyntö",
+        accessor: (palaute: Palaute) => <YhteydenottopyyntoSolu palaute={palaute} />,
+        id: "Yhteydenottopyynto",
+        width: 45,
+      },
+      {
+        Header: "Otettu käsittelyyn",
+        accessor: (palaute: Palaute) => (
+          <KasittelePalauteCheckbox reloadProjekti={reloadProjekti} oid={projekti.oid} palaute={palaute} />
+        ),
+        id: "otettuKasittelyyn",
+        width: 40,
+      },
+    ],
+    [projekti, reloadProjekti]
+  );
 
   const palauteTableProps = useHassuTable<Palaute>({
     tableOptions: {
       data: projekti.suunnitteluVaihe?.palautteet || [],
-      columns
-    }
+      columns,
+    },
   });
 
   return (
     <Section>
       <h5 className="vayla-small-title">Saapuneet kysymykset ja palautteet</h5>
       <SectionContent>
-        {(!projekti.suunnitteluVaihe?.palautteet || projekti.suunnitteluVaihe?.palautteet.length === 0) &&
-          <p>
-            Ei saapuneita kysymyksiä tai palautteita
-          </p>
-        }
-        {(projekti.suunnitteluVaihe?.palautteet && projekti.suunnitteluVaihe?.palautteet.length > 0) &&
+        {(!projekti.suunnitteluVaihe?.palautteet || projekti.suunnitteluVaihe?.palautteet.length === 0) && (
+          <p>Ei saapuneita kysymyksiä tai palautteita</p>
+        )}
+        {projekti.suunnitteluVaihe?.palautteet && projekti.suunnitteluVaihe?.palautteet.length > 0 && (
           <>
             <HassuTable {...palauteTableProps} />
-            <ButtonLink href="">
-              Lataa tiedostona
-            </ButtonLink>
+            <ButtonLink href="">Lataa tiedostona</ButtonLink>
           </>
-
-        }
+        )}
       </SectionContent>
     </Section>
   );
-};
-
-interface PalauteProps {
-  palaute: Palaute
 }
 
-function VastaanottoaikaJaLiite({
-  palaute
-}: PalauteProps) : ReactElement {
+interface PalauteProps {
+  palaute: Palaute;
+}
+
+function VastaanottoaikaJaLiite({ palaute }: PalauteProps): ReactElement {
   const parsedDate = dayjs(palaute.vastaanotettu);
   return (
     <>
@@ -93,22 +88,19 @@ function VastaanottoaikaJaLiite({
   );
 }
 
-function KysymysTaiPalaute({
-  palaute,
-  oid
-}: PalauteProps & { oid: string }) : ReactElement {
+function KysymysTaiPalaute({ palaute, oid }: PalauteProps & { oid: string }): ReactElement {
   return (
     <>
       <div>
         <p style={{ whiteSpace: "pre-line" }}>{palaute.kysymysTaiPalaute}</p>
       </div>
-      {palaute.liite &&
+      {palaute.liite && (
         <div>
           <Link href={`/yllapito/tiedostot/projekti/${oid}${palaute.liite}`}>Liite</Link>
         </div>
-      }
+      )}
     </>
-  )
+  );
 }
 
 interface KasittelePalauteCheckboxProps {
@@ -116,20 +108,16 @@ interface KasittelePalauteCheckboxProps {
   oid: string;
   reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null> | undefined;
 }
-function KasittelePalauteCheckbox({
-  palaute,
-  oid,
-  reloadProjekti
-}: KasittelePalauteCheckboxProps) : ReactElement {
+function KasittelePalauteCheckbox({ palaute, oid, reloadProjekti }: KasittelePalauteCheckboxProps): ReactElement {
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const merkitseKasittelyynOtetuksi = useCallback(async () => {
     setIsSubmitting(true);
     try {
-      await api.otaPalauteKasittelyyn(oid, palaute.id)
+      await api.otaPalauteKasittelyyn(oid, palaute.id);
     } catch (e) {
-      showErrorMessage("Palautteen merkitseminen käsiteltäväksi epäonnistui.")
+      showErrorMessage("Palautteen merkitseminen käsiteltäväksi epäonnistui.");
       setIsSubmitting(false);
       return;
     }
@@ -140,24 +128,22 @@ function KasittelePalauteCheckbox({
 
   return (
     <>
-      <CheckBox onChange={merkitseKasittelyynOtetuksi} checked={!!palaute.otettuKasittelyyn} disabled={!!palaute.otettuKasittelyyn} />
+      <CheckBox
+        onChange={merkitseKasittelyynOtetuksi}
+        checked={!!palaute.otettuKasittelyyn}
+        disabled={!!palaute.otettuKasittelyyn}
+      />
       <HassuSpinner open={isSubmitting} />
     </>
   );
 }
 
-function YhteydenottopyyntoSolu({
-  palaute
-}: PalauteProps) : ReactElement {
+function YhteydenottopyyntoSolu({ palaute }: PalauteProps): ReactElement {
   return (
     <div>
-      <div>{(palaute.yhteydenottotapaEmail || palaute.yhteydenottotapaPuhelin) ? 'Kyllä' : 'Ei'}</div>
-      {(palaute.yhteydenottotapaEmail && palaute.sahkoposti) &&
-        <div>{palaute.sahkoposti}</div>
-      }
-      {(palaute.yhteydenottotapaPuhelin && palaute.puhelinnumero) &&
-        <div>{palaute.puhelinnumero}</div>
-      }
+      <div>{palaute.yhteydenottotapaEmail || palaute.yhteydenottotapaPuhelin ? "Kyllä" : "Ei"}</div>
+      {palaute.yhteydenottotapaEmail && palaute.sahkoposti && <div>{palaute.sahkoposti}</div>}
+      {palaute.yhteydenottotapaPuhelin && palaute.puhelinnumero && <div>{palaute.puhelinnumero}</div>}
     </div>
   );
 }

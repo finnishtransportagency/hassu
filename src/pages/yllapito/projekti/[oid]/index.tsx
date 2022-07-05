@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback, useMemo } from "react";
 import log from "loglevel";
 import { PageProps } from "@pages/_app";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
-import useProjekti from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
 import { api, Projekti, Status, TallennaProjektiInput } from "@services/api";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
@@ -55,11 +55,8 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   const velhobaseurl = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-";
 
   const router = useRouter();
-  const oid = useMemo(() => {
-    return typeof router.query.oid === "string" ? router.query.oid : undefined;
-  }, [router]);
 
-  const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti(oid);
+  const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti();
   const [statusBeforeSave, setStatusBeforeSave] = useState<Status | null | undefined>();
   const isLoadingProjekti = !projekti && !projektiLoadError;
 
@@ -109,29 +106,40 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
     return response.tiedostoPolku;
   }, []);
 
-  const onSubmit = useCallback(async (data: FormValues) => {
-    const { suunnittelusopimusprojekti, liittyviasuunnitelmia, ...persistentData } = data;
-    deleteFieldArrayIds(persistentData.liittyvatSuunnitelmat);
-    setFormIsSubmitting(true);
-    try {
-      const logoTiedosto = persistentData.suunnitteluSopimus?.logo as unknown as File | undefined | string;
-      if (persistentData.suunnitteluSopimus && logoTiedosto instanceof File) {
-        persistentData.suunnitteluSopimus.logo = await talletaLogo(logoTiedosto);
-      } else if (persistentData.suunnitteluSopimus) {
-        // If logo has already been saved and no file has been given,
-        // remove the logo property from formData so it won't get overwrited
-        delete persistentData.suunnitteluSopimus.logo;
+  const onSubmit = useCallback(
+    async (data: FormValues) => {
+      const { suunnittelusopimusprojekti, liittyviasuunnitelmia, ...persistentData } = data;
+      deleteFieldArrayIds(persistentData.liittyvatSuunnitelmat);
+      setFormIsSubmitting(true);
+      try {
+        const logoTiedosto = persistentData.suunnitteluSopimus?.logo as unknown as File | undefined | string;
+        if (persistentData.suunnitteluSopimus && logoTiedosto instanceof File) {
+          persistentData.suunnitteluSopimus.logo = await talletaLogo(logoTiedosto);
+        } else if (persistentData.suunnitteluSopimus) {
+          // If logo has already been saved and no file has been given,
+          // remove the logo property from formData so it won't get overwrited
+          delete persistentData.suunnitteluSopimus.logo;
+        }
+        setStatusBeforeSave(projekti?.status);
+        await api.tallennaProjekti(persistentData);
+        await reloadProjekti();
+        showSuccessMessage("Tallennus onnistui!");
+      } catch (e) {
+        log.log("OnSubmit Error", e);
+        showErrorMessage("Tallennuksessa tapahtui virhe!");
       }
-      setStatusBeforeSave(projekti?.status);
-      await api.tallennaProjekti(persistentData);
-      await reloadProjekti();
-      showSuccessMessage("Tallennus onnistui!");
-    } catch (e) {
-      log.log("OnSubmit Error", e);
-      showErrorMessage("Tallennuksessa tapahtui virhe!");
-    }
-    setFormIsSubmitting(false);
-  }, [setFormIsSubmitting, setStatusBeforeSave, reloadProjekti, showSuccessMessage, showErrorMessage, projekti, talletaLogo]);
+      setFormIsSubmitting(false);
+    },
+    [
+      setFormIsSubmitting,
+      setStatusBeforeSave,
+      reloadProjekti,
+      showSuccessMessage,
+      showErrorMessage,
+      projekti,
+      talletaLogo,
+    ]
+  );
 
   useEffect(() => {
     if (projekti && projekti.oid) {

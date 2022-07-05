@@ -1,9 +1,8 @@
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { api } from "@services/api";
 import Button from "@components/button/Button";
-import { useRouter } from "next/router";
 import React, { useState, ReactElement, ReactNode } from "react";
-import useProjekti from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
 import ProjektiSideNavigation from "./ProjektiSideNavigation";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
@@ -13,13 +12,11 @@ import HassuSpinner from "@components/HassuSpinner";
 interface Props {
   children: ReactNode;
   title: string;
-  showUpdateButton?: boolean
+  showUpdateButton?: boolean;
 }
 
 export default function ProjektiPageLayout({ children, title, showUpdateButton }: Props): ReactElement {
-  const router = useRouter();
-  const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
-  const { data: projekti, mutate: reloadProjekti } = useProjekti(oid);
+  const { data: projekti, mutate: reloadProjekti } = useProjekti();
   const [loading, setLoading] = useState(false);
 
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
@@ -38,7 +35,7 @@ export default function ProjektiPageLayout({ children, title, showUpdateButton }
         showErrorMessage("Päivittämisessä tapahtui virhe!");
       }
     }
-  }
+  };
 
   return (
     <section>
@@ -51,13 +48,11 @@ export default function ProjektiPageLayout({ children, title, showUpdateButton }
             sx={{ marginBottom: { xs: 3, sm: 0 } }}
             alignItems="flex-start"
             justifyContent="space-between"
-            direction={{ xs: 'column', sm: 'row' }}
+            direction={{ xs: "column", sm: "row" }}
             rowGap={0}
           >
             <h1>{title}</h1>
-            {showUpdateButton &&
-              <Button  onClick={uudelleenLataaProjekit}>Päivitä tiedot</Button>
-            }
+            {showUpdateButton && <Button onClick={uudelleenLataaProjekit}>Päivitä tiedot</Button>}
           </Stack>
           <h2>{projekti?.velho?.nimi || "-"}</h2>
           {projekti && !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden && (

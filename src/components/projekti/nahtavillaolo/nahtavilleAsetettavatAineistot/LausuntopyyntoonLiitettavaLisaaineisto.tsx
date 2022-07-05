@@ -13,7 +13,7 @@ import React, { useMemo, useRef, useState } from "react";
 import { FieldArrayWithId, useFormContext, useFieldArray } from "react-hook-form";
 import { Column } from "react-table";
 import { useHassuTable } from "src/hooks/useHassuTable";
-import { useProjektiRoute } from "src/hooks/useProjektiRoute";
+import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import { formatDateTime } from "src/util/dateUtils";
 import { NahtavilleAsetettavatAineistotFormValues } from "./NahtavilleAsetettavatAineistot";
@@ -21,7 +21,7 @@ import { NahtavilleAsetettavatAineistotFormValues } from "./NahtavilleAsetettava
 type Props = {};
 
 export default function LausuntopyyntoonLiitettavaLisaaineisto({}: Props) {
-  const { data: projekti } = useProjektiRoute();
+  const { data: projekti } = useProjekti();
   const { watch, setValue } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
   const lisaAineisto = watch("lisaAineisto");
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
@@ -97,7 +97,7 @@ interface AineistoTableProps {
 const AineistoTable = (props: AineistoTableProps) => {
   const { control, formState, register } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
   const { fields, remove } = useFieldArray({ name: "lisaAineisto", control });
-  const { data: projekti } = useProjektiRoute();
+  const { data: projekti } = useProjekti();
 
   const enrichedFields: FormAineisto[] = useMemo(
     () =>

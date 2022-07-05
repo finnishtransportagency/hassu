@@ -2,7 +2,6 @@ import React, { ReactElement, useState } from "react";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
-import { useRouter } from "next/router";
 import SectionContent from "@components/layout/SectionContent";
 import useTranslation from "next-translate/useTranslation";
 import { formatDate } from "src/util/dateUtils";
@@ -23,10 +22,8 @@ import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import useProjektiBreadcrumbsJulkinen from "src/hooks/useProjektiBreadcrumbsJulkinen";
 
 export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
-  const router = useRouter();
   const [palauteLomakeOpen, setPalauteLomakeOpen] = useState(false);
-  const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
-  const { data: projekti } = useProjektiJulkinen(oid);
+  const { data: projekti } = useProjektiJulkinen();
   const { t } = useTranslation();
   const kieli = useKansalaiskieli();
 

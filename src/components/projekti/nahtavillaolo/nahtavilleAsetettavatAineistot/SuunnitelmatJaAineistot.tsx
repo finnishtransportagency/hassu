@@ -15,7 +15,7 @@ import React, { useMemo, useState } from "react";
 import { FieldArrayWithId, useFieldArray, useFormContext } from "react-hook-form";
 import { Column } from "react-table";
 import { useHassuTable } from "src/hooks/useHassuTable";
-import { useProjektiRoute } from "src/hooks/useProjektiRoute";
+import { useProjekti } from "src/hooks/useProjekti";
 import { formatDateTime } from "src/util/dateUtils";
 import { NahtavilleAsetettavatAineistotFormValues } from "./NahtavilleAsetettavatAineistot";
 
@@ -62,7 +62,7 @@ interface SuunnitelmaAineistoKategoriaContentProps {
 }
 
 const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoriaContentProps) => {
-  const { data: projekti } = useProjektiRoute();
+  const { data: projekti } = useProjekti();
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
   const { setValue, watch } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
 
@@ -105,7 +105,7 @@ interface AineistoTableProps {
 }
 
 const AineistoTable = (props: AineistoTableProps) => {
-  const { data: projekti } = useProjektiRoute();
+  const { data: projekti } = useProjekti();
   const { control, formState, register, getValues, setValue } =
     useFormContext<NahtavilleAsetettavatAineistotFormValues>();
   const aineistoRoute: `aineistoNahtavilla.${string}` = `aineistoNahtavilla.${props.kategoriaId}`;

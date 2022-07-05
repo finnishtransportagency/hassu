@@ -1,13 +1,19 @@
 import useSWR from "swr";
 import { api, apiConfig, ProjektiJulkinen } from "@services/api";
+import { useRouter } from "next/router";
 
-export function useProjektiJulkinen(oid?: string) {
-  return useSWR<ProjektiJulkinen | undefined>([apiConfig.lataaProjekti.graphql, oid], projektiLoader);
+export function useProjektiJulkinen() {
+  const router = useRouter();
+  if (router.route.startsWith("/yllapito")) {
+    throw new Error("Inproper route for the use of useProjektiJulkinen hook");
+  }
+  const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
+  return useSWR([apiConfig.lataaProjekti.graphql, oid], projektiLoader);
 }
 
-async function projektiLoader(_: string, oid: string | undefined): Promise<ProjektiJulkinen | undefined> {
+async function projektiLoader(_query: string, oid: string | undefined): Promise<ProjektiJulkinen | null> {
   if (!oid) {
-    return;
+    return null;
   }
   return await api.lataaProjektiJulkinen(oid);
 }

@@ -6,7 +6,7 @@ import { useProjektiJulkinen } from "./useProjektiJulkinen";
 export const useProjektiBreadcrumbsJulkinen = (setRouteLabels: PageProps["setRouteLabels"]) => {
   const router = useRouter();
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
-  const { data: projekti } = useProjektiJulkinen(oid);
+  const { data: projekti } = useProjektiJulkinen();
 
   useEffect(() => {
     if (router.isReady) {

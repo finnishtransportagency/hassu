@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Aineisto, AineistoInput, TallennaProjektiInput } from "@services/api";
 import React, { useEffect } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
-import { useProjektiRoute } from "src/hooks/useProjektiRoute";
+import { useProjekti } from "src/hooks/useProjekti";
 import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot";
 import NahtavillaoloPainikkeet from "./NahtavillaoloPainikkeet";
 import LausuntopyyntoonLiitettavaLisaaineisto from "./LausuntopyyntoonLiitettavaLisaaineisto";
@@ -58,7 +58,7 @@ function defaultValues(projekti: ProjektiLisatiedolla): NahtavilleAsetettavatAin
 }
 
 export default function NahtavilleAsetettavatAineistot() {
-  const { data: projekti } = useProjektiRoute();
+  const { data: projekti } = useProjekti();
 
   const formOptions: UseFormProps<NahtavilleAsetettavatAineistotFormValues> = {
     resolver: yupResolver(nahtavillaoloAineistotSchema, { abortEarly: false, recursive: true }),

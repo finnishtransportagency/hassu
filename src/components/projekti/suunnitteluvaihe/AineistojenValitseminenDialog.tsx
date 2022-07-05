@@ -4,7 +4,7 @@ import HassuDialog from "@components/HassuDialog";
 import { DialogActions, DialogContent, Divider, Stack } from "@mui/material";
 import HassuAccordion from "@components/HassuAccordion";
 import { AineistoInput, api, VelhoAineisto, VelhoAineistoKategoria } from "@services/api";
-import { useProjektiRoute } from "src/hooks/useProjektiRoute";
+import { useProjekti } from "src/hooks/useProjekti";
 import { formatDateTime } from "src/util/dateUtils";
 import HassuSpinner from "@components/HassuSpinner";
 import { styled } from "@mui/material/styles";
@@ -27,7 +27,7 @@ const useFormOptions = { defaultValues: { aineistoKategoriat: [] } };
 
 export default function AineistojenValitseminenDialog({ onSubmit, ...muiDialogProps }: Props) {
   const { onClose, open } = muiDialogProps;
-  const { data: projekti } = useProjektiRoute();
+  const { data: projekti } = useProjekti();
   const [isLoading, setIsLoading] = useState(false);
   const [fetchedAineistoKategoriat, setFetchedAineistoKategoriat] = useState<VelhoAineistoKategoria[]>();
 

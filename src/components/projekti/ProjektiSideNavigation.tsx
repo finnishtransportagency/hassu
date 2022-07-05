@@ -3,7 +3,7 @@ import HassuLink from "../HassuLink";
 import styles from "@styles/projekti/ProjektiSideNavigation.module.css";
 import classNames from "classnames";
 import { useRouter } from "next/router";
-import useProjekti from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
 import { Status } from "@services/api";
 import ProjektiKortti from "./ProjektiKortti";
 
@@ -20,8 +20,7 @@ function statusOrdinal(status: Status): number {
 
 export default function ProjektiSideNavigation(): ReactElement {
   const router = useRouter();
-  const oidParam = router.query.oid;
-  const { data: projekti } = useProjekti(oidParam as string);
+  const { data: projekti } = useProjekti();
   const oid = projekti?.oid;
 
   const routes: Route[] = [
@@ -92,7 +91,7 @@ export default function ProjektiSideNavigation(): ReactElement {
   if (!projekti) {
     return <></>;
   }
-  
+
   return (
     <>
       <ProjektiKortti projekti={projekti}></ProjektiKortti>

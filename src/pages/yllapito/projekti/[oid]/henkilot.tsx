@@ -1,7 +1,6 @@
 import { PageProps } from "@pages/_app";
 import React, { ReactElement, useEffect, useCallback } from "react";
-import useProjekti from "src/hooks/useProjekti";
-import { useRouter } from "next/router";
+import { useProjekti } from "src/hooks/useProjekti";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import KayttoOikeusHallinta, { defaultKayttaja } from "@components/projekti/KayttoOikeusHallinta";
 import { api, TallennaProjektiInput, Kayttaja } from "@services/api";
@@ -40,12 +39,10 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
 ]);
 
 export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
-  const router = useRouter();
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
   const [formContext, setFormContext] = useState<KayttoOikeudetSchemaContext>({ kayttajat: [] });
 
-  const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
-  const { data: projekti, error: projektiLoadError, mutate: mutateProjekti } = useProjekti(oid);
+  const { data: projekti, error: projektiLoadError, mutate: mutateProjekti } = useProjekti();
   const isLoadingProjekti = !projekti && !projektiLoadError;
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
   const disableFormEdit =
@@ -95,9 +92,12 @@ export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
     }
   }, [projekti, reset]);
 
-  const onKayttajatUpdate = useCallback((kayttajat : Kayttaja[]) => {
-    setFormContext({ kayttajat });
-  }, [setFormContext]);
+  const onKayttajatUpdate = useCallback(
+    (kayttajat: Kayttaja[]) => {
+      setFormContext({ kayttajat });
+    },
+    [setFormContext]
+  );
 
   return (
     <ProjektiPageLayout title="Projektin Henkilöt">
@@ -109,10 +109,7 @@ export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
               disableValidation={isLoadingProjekti}
               validationSchema={loadedProjektiValidationSchema}
             />
-            <KayttoOikeusHallinta
-              disableFields={disableFormEdit}
-              onKayttajatUpdate={onKayttajatUpdate}
-            />
+            <KayttoOikeusHallinta disableFields={disableFormEdit} onKayttajatUpdate={onKayttajatUpdate} />
             <Section noDivider>
               <HassuStack alignItems="flex-end">
                 <Button className="ml-auto" primary disabled={disableFormEdit}>
@@ -123,7 +120,7 @@ export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
           </fieldset>
         </form>
       </FormProvider>
-      <HassuSpinner open={formIsSubmitting || isLoadingProjekti}/>
+      <HassuSpinner open={formIsSubmitting || isLoadingProjekti} />
     </ProjektiPageLayout>
   );
 }
