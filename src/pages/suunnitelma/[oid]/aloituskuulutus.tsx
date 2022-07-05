@@ -18,7 +18,7 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import SectionContent from "@components/layout/SectionContent";
 import { formatDate } from "src/util/dateUtils";
 import HassuStack from "@components/layout/HassuStack";
-import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
+import useProjektiBreadcrumbsJulkinen from "src/hooks/useProjektiBreadcrumbsJulkinen";
 
 function formatYhteystiedotText(kuulutus: AloitusKuulutusJulkaisuJulkinen) {
   const yhteystiedotList = kuulutus.yhteystiedot.map(
@@ -55,7 +55,7 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
   const velho = kuulutus?.velho;
   const suunnittelusopimus = kuulutus?.suunnitteluSopimus;
 
-  useProjektiBreadcrumbs(setRouteLabels);
+  useProjektiBreadcrumbsJulkinen(setRouteLabels);
 
   if (!projekti || !velho || !kuulutus) {
     return <div />;
