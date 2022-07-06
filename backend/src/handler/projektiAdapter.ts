@@ -20,7 +20,6 @@ import {
   Yhteystieto,
 } from "../database/model";
 import * as API from "../../../common/graphql/apiModel";
-import { AineistoTila } from "../../../common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import { personSearch } from "../personSearch/personSearchClient";
@@ -32,6 +31,7 @@ import { ValidationError } from "yup";
 import { log } from "../logger";
 import dayjs, { Dayjs } from "dayjs";
 import { kayttoOikeudetSchema } from "../../../src/schemas/kayttoOikeudet";
+import { IllegalArgumentError } from "../error/IllegalArgumentError";
 
 export enum ProjektiEventType {
   VUOROVAIKUTUS_PUBLISHED = "VUOROVAIKUTUS_PUBLISHED",
@@ -150,15 +150,16 @@ export class ProjektiAdapter {
       projektiAdaptationResult,
       suunnitteluVaihe?.vuorovaikutus
     );
+    const aloitusKuulutusToSave = adaptAloitusKuulutusToSave(aloitusKuulutus);
     const dbProjekti = mergeWith(
       {},
       {
         oid,
         muistiinpano,
-        aloitusKuulutus: adaptAloitusKuulutusToSave(aloitusKuulutus),
+        aloitusKuulutus: aloitusKuulutusToSave,
         suunnitteluSopimus: adaptSuunnitteluSopimusToSave(projekti, suunnitteluSopimus),
         kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet(),
-        suunnitteluVaihe: adaptSuunnitteluVaiheToSave(projekti.suunnitteluVaihe, suunnitteluVaihe),
+        suunnitteluVaihe: adaptSuunnitteluVaiheToSave(projekti, suunnitteluVaihe),
         nahtavillaoloVaihe: adaptNahtavillaoloVaiheToSave(
           projekti.nahtavillaoloVaihe,
           nahtavillaoloVaihe,
@@ -287,15 +288,27 @@ function adaptSuunnitteluVaihe(
 }
 
 function adaptSuunnitteluVaiheToSave(
-  dbSuunnitteluVaihe: SuunnitteluVaihe,
+  dbProjekti: DBProjekti,
   suunnitteluVaihe: API.SuunnitteluVaiheInput
 ): SuunnitteluVaihe {
+  function validateSuunnitteluVaihePublishing() {
+    const isSuunnitteluVaiheBeingPublished = !dbProjekti.suunnitteluVaihe?.julkinen && suunnitteluVaihe.julkinen;
+    if (isSuunnitteluVaiheBeingPublished) {
+      // Publishing is allowed only if there is a published aloituskuulutusjulkaisu
+      if (!findPublishedAloitusKuulutusJulkaisu(dbProjekti.aloitusKuulutusJulkaisut)) {
+        throw new IllegalArgumentError("Suunnitteluvaihetta ei voi julkaista ennen kuin aloituskuulutus on julkaistu");
+      }
+    }
+  }
+
   if (
     suunnitteluVaihe &&
     (suunnitteluVaihe.arvioSeuraavanVaiheenAlkamisesta ||
       suunnitteluVaihe.hankkeenKuvaus ||
       suunnitteluVaihe.suunnittelunEteneminenJaKesto)
   ) {
+    validateSuunnitteluVaihePublishing();
+
     const {
       arvioSeuraavanVaiheenAlkamisesta,
       suunnittelunEteneminenJaKesto,
@@ -354,7 +367,10 @@ function adaptNahtavillaoloVaiheToSave(
     kuulutusYhteystiedot,
     ilmoituksenVastaanottajat,
     hankkeenKuvaus,
-    ...rest
+    kuulutusPaiva,
+    kuulutusVaihePaattyyPaiva,
+    muistutusoikeusPaattyyPaiva,
+    kuulutusYhteysHenkilot,
   } = nahtavillaoloVaihe;
 
   const aineistoNahtavilla = adaptAineistotToSave(
@@ -378,15 +394,18 @@ function adaptNahtavillaoloVaiheToSave(
     }
   }
 
-  return {
-    ...rest,
+  return mergeWith({}, dbNahtavillaoloVaihe, {
+    kuulutusPaiva,
+    kuulutusVaihePaattyyPaiva,
+    muistutusoikeusPaattyyPaiva,
+    kuulutusYhteysHenkilot,
     id,
     aineistoNahtavilla,
     lisaAineisto,
     kuulutusYhteystiedot: adaptYhteystiedotToSave(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat),
     hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus),
-  } as NahtavillaoloVaihe;
+  } as NahtavillaoloVaihe);
 }
 
 function adaptYhteystiedotToSave(yhteystietoInputs: Array<API.YhteystietoInput>) {
@@ -580,7 +599,7 @@ export function adaptAineistot(aineistot?: Aineisto[] | null, julkaisuPaiva?: Da
   }
   if (aineistot && aineistot.length > 0) {
     return aineistot
-      .filter((aineisto) => aineisto.tila != AineistoTila.ODOTTAA_POISTOA)
+      .filter((aineisto) => aineisto.tila != API.AineistoTila.ODOTTAA_POISTOA)
       .map((aineisto) => ({
         __typename: "Aineisto",
         dokumenttiOid: aineisto.dokumenttiOid,
@@ -878,6 +897,22 @@ export function findVuorovaikutusByNumber(
   vuorovaikutusNumero: number
 ): Vuorovaikutus | undefined {
   return projekti.vuorovaikutukset?.filter((value) => value.vuorovaikutusNumero == vuorovaikutusNumero).pop();
+}
+
+export function findPublishedAloitusKuulutusJulkaisu(
+  aloitusKuulutusJulkaisut: AloitusKuulutusJulkaisu[]
+): AloitusKuulutusJulkaisu | undefined {
+  return (
+    findJulkaisuByStatus(aloitusKuulutusJulkaisut, API.AloitusKuulutusTila.HYVAKSYTTY) ||
+    findJulkaisuByStatus(aloitusKuulutusJulkaisut, API.AloitusKuulutusTila.MIGROITU)
+  );
+}
+
+export function findJulkaisuByStatus<T extends { tila?: API.AloitusKuulutusTila }>(
+  aloitusKuulutusJulkaisut: T[],
+  tila: API.AloitusKuulutusTila
+): T | undefined {
+  return aloitusKuulutusJulkaisut?.filter((j) => j.tila == tila).pop();
 }
 
 export const projektiAdapter = new ProjektiAdapter();

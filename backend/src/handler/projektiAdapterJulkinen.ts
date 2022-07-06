@@ -20,6 +20,8 @@ import {
   adaptLinkki,
   adaptLinkkiList,
   adaptYhteystiedot,
+  findJulkaisuByStatus,
+  findPublishedAloitusKuulutusJulkaisu,
 } from "./projektiAdapter";
 import { fileService } from "../files/fileService";
 import { log } from "../logger";
@@ -117,9 +119,7 @@ class ProjektiAdapterJulkinen {
   ): API.AloitusKuulutusJulkaisuJulkinen[] | undefined {
     if (aloitusKuulutusJulkaisut) {
       // Pick HYVAKSYTTY or MIGROITU aloituskuulutusjulkaisu, by this order
-      const julkaisu =
-        findJulkaisuByStatus(aloitusKuulutusJulkaisut, API.AloitusKuulutusTila.HYVAKSYTTY) ||
-        findJulkaisuByStatus(aloitusKuulutusJulkaisut, API.AloitusKuulutusTila.MIGROITU);
+      const julkaisu = findPublishedAloitusKuulutusJulkaisu(aloitusKuulutusJulkaisut);
       if (!julkaisu) {
         return undefined;
       }
@@ -327,13 +327,6 @@ function adaptVuorovaikutusTilaisuudet(
   return vuorovaikutusTilaisuudet as undefined;
 }
 
-function findJulkaisuByStatus<T extends { tila?: API.AloitusKuulutusTila }>(
-  aloitusKuulutusJulkaisut: T[],
-  tila: API.AloitusKuulutusTila
-): T {
-  return aloitusKuulutusJulkaisut.filter((j) => j.tila == tila).pop();
-}
-
 function checkIfAloitusKuulutusJulkaisutIsPublic(
   aloitusKuulutusJulkaisut: API.AloitusKuulutusJulkaisuJulkinen[]
 ): boolean {
@@ -365,7 +358,7 @@ function isNahtavillaoloVaihePublic(nahtavillaoloVaihe: NahtavillaoloVaiheJulkai
   if (nahtavillaoloVaihe.tila !== API.NahtavillaoloVaiheTila.HYVAKSYTTY) {
     return false;
   }
-  if (parseDate(nahtavillaoloVaihe.kuulutusPaiva).isAfter(dayjs())) {
+  if (!nahtavillaoloVaihe.kuulutusPaiva || parseDate(nahtavillaoloVaihe.kuulutusPaiva).isAfter(dayjs())) {
     return false;
   }
   return true;
