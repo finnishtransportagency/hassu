@@ -481,6 +481,11 @@ function adaptVuorovaikutusToSave(
   vuorovaikutusInput?: API.VuorovaikutusInput | null
 ): Vuorovaikutus[] {
   if (vuorovaikutusInput) {
+    // Prevent saving vuorovaikutus if suunnitteluvaihe is not yet saved
+    if (!projekti.suunnitteluVaihe) {
+      throw new IllegalArgumentError("Vuorovaikutusta ei voi lisätä ennen kuin suunnitteluvaihe on tallennettu");
+    }
+
     const dbVuorovaikutus = findVuorovaikutusByNumber(projekti, vuorovaikutusInput.vuorovaikutusNumero);
 
     const esittelyaineistot = adaptAineistotToSave(
@@ -706,7 +711,7 @@ function adaptIlmoituksenVastaanottajatToSave(
   const kunnat: API.KuntaVastaanottaja[] =
     vastaanottajat?.kunnat?.map((kunta) => ({ __typename: "KuntaVastaanottaja", ...kunta })) || null;
   if (!vastaanottajat?.viranomaiset || vastaanottajat.viranomaiset.length === 0) {
-    throw new Error("Viranomaisvastaanottajia pitää olla vähintään yksi.");
+    throw new IllegalArgumentError("Viranomaisvastaanottajia pitää olla vähintään yksi.");
   }
   const viranomaiset: API.ViranomaisVastaanottaja[] =
     vastaanottajat?.viranomaiset?.map((viranomainen) => ({
