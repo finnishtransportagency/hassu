@@ -69,7 +69,6 @@ export async function testImportNahtavillaoloAineistot(
   oid: string,
   velhoAineistoKategorias: VelhoAineistoKategoria[]
 ): Promise<void> {
-  const projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
   const t2xx = velhoAineistoKategorias
     .reduce((documents, aineistoKategoria) => {
       aineistoKategoria.aineistot
@@ -91,7 +90,6 @@ export async function testImportNahtavillaoloAineistot(
   await api.tallennaProjekti({
     oid,
     nahtavillaoloVaihe: {
-      ...projekti.nahtavillaoloVaihe,
       aineistoNahtavilla: adaptAineistoToInput(t2xx),
       lisaAineisto: adaptAineistoToInput(lisaAineisto),
     },
@@ -99,7 +97,6 @@ export async function testImportNahtavillaoloAineistot(
 
   const nahtavillaoloVaihe = (await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO)).nahtavillaoloVaihe;
   expectToMatchSnapshot("testImportNahtavillaoloAineistot", {
-    aineistoNahtavilla: nahtavillaoloVaihe.aineistoNahtavilla,
-    lisaAineisto: nahtavillaoloVaihe.lisaAineisto,
+    nahtavillaoloVaihe,
   });
 }
