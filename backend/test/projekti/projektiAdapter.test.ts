@@ -40,4 +40,34 @@ describe("projektiAdapter", () => {
     });
     expect(result.projekti.suunnitteluVaihe.julkinen).to.be.true;
   });
+
+  it("should prevent saving vuorovaikutus without saved suunnitteluvaihe", async () => {
+    const projekti = cloneDeep(fixture.dbProjekti2);
+    projekti.suunnitteluVaihe = undefined;
+
+    // Validate that there is an error if trying to publish suunnitteluvaihe before there is a published aloituskuulutusjulkaisu
+    expect(
+      projektiAdapter.adaptProjektiToSave(projekti, {
+        oid: projekti.oid,
+        suunnitteluVaihe: {
+          hankkeenKuvaus: fixture.hankkeenKuvausSuunnitteluVaiheessa,
+          vuorovaikutus: fixture.vuorovaikutus,
+        },
+      })
+    ).to.be.rejectedWith(IllegalArgumentError);
+  });
+
+  it("should allow saving vuorovaikutus with saved suunnitteluvaihe", async () => {
+    const projekti = cloneDeep(fixture.dbProjekti2);
+    projekti.suunnitteluVaihe = { hankkeenKuvaus: fixture.hankkeenKuvausSuunnitteluVaiheessa };
+
+    const result = await projektiAdapter.adaptProjektiToSave(projekti, {
+      oid: projekti.oid,
+      suunnitteluVaihe: {
+        hankkeenKuvaus: fixture.hankkeenKuvausSuunnitteluVaiheessa,
+        vuorovaikutus: fixture.vuorovaikutus,
+      },
+    });
+    expect(result.projekti.suunnitteluVaihe).not.to.be.undefined;
+  });
 });
