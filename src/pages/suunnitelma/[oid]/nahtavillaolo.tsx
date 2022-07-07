@@ -17,7 +17,7 @@ import useProjektiBreadcrumbsJulkinen from "src/hooks/useProjektiBreadcrumbsJulk
 export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactElement {
   const { t } = useTranslation("projekti");
   const { data: projekti } = useProjektiJulkinen();
-  const kuulutus = projekti?.nahtavillaoloVaiheJulkaisut?.[0];
+  const kuulutus = projekti?.nahtavillaoloVaihe;
   const velho = projekti?.velho;
   const [muistutusLomakeOpen, setMuistutusLomakeOpen] = useState(false);
 

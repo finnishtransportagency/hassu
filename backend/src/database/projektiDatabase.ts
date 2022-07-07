@@ -1,5 +1,5 @@
 import { log } from "../logger";
-import { AloitusKuulutusJulkaisu, DBProjekti } from "./model/projekti";
+import { AloitusKuulutusJulkaisu, DBProjekti, NahtavillaoloVaiheJulkaisu, Palaute } from "./model";
 import { config } from "../config";
 import { getDynamoDBDocumentClient } from "./dynamoDB";
 import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
@@ -7,8 +7,6 @@ import { AWSError } from "aws-sdk";
 import { Response } from "aws-sdk/lib/response";
 import dayjs from "dayjs";
 import { NotFoundError } from "../error/NotFoundError";
-import { Palaute } from "./model/suunnitteluVaihe";
-import { NahtavillaoloVaiheJulkaisu } from "./model";
 
 const projektiTableName: string = config.projektiTableName || "missing";
 const archiveTableName: string = config.projektiArchiveTableName || "missing";
@@ -78,6 +76,7 @@ const skipAutomaticUpdateFields = [
   "tallennettu",
   "aloitusKuulutusJulkaisut",
   "vuorovaikutukset",
+  "nahtavillaoloVaiheJulkaisut",
 ] as (keyof DBProjekti)[] as string[];
 
 function createExpression(expression: string, properties: string[]) {

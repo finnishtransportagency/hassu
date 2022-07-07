@@ -29,8 +29,8 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
     ALOITUSKUULUTUS: 0,
     SUUNNITTELU: 1,
     NAHTAVILLAOLO: 2,
-    HYVAKSYNNASSA: 3,
-    HYVAKSYMISPAATOS: 4,
+    HYVAKSYMISMENETTELYSSA: 3,
+    HYVAKSYTTY: 4,
     LAINVOIMA: 5,
     ARKISTOITU: -1,
   };

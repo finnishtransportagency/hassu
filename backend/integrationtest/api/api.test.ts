@@ -45,6 +45,7 @@ import {
   testNahtavillaoloApproval,
   testNahtavillaoloLisaAineisto,
 } from "./testUtil/nahtavillaolo";
+import { testHyvaksyntaVaiheHyvaksymismenettelyssa } from "./testUtil/hyvaksyntaVaihe";
 
 const sandbox = sinon.createSandbox();
 const { expect } = require("chai");
@@ -150,6 +151,8 @@ describe("Api", () => {
     await testNahtavillaoloApproval(oid, projektiPaallikko, userFixture);
     await processQueue(fakeAineistoImportQueue);
     await takeS3Snapshot(oid, "Nahtavillaolo published");
+
+    await testHyvaksyntaVaiheHyvaksymismenettelyssa(oid, userFixture);
   });
 
   it.skip("should archive projekti", async function () {

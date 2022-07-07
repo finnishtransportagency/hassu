@@ -33,6 +33,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { kayttoOikeudetSchema } from "../../../src/schemas/kayttoOikeudet";
 import { lisaAineistoService } from "../aineisto/lisaAineistoService";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
+import { ISO_DATE_FORMAT, parseDate } from "../util/dateUtil";
 
 export enum ProjektiEventType {
   VUOROVAIKUTUS_PUBLISHED = "VUOROVAIKUTUS_PUBLISHED",
@@ -225,6 +226,13 @@ export class ProjektiAdapter {
       }
     }
 
+    function checkHyvaksymisMenettelyssa() {
+      const nahtavillaoloVaihe = projekti?.nahtavillaoloVaihe;
+      if (isDateInThePast(nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva)) {
+        projekti.status = API.Status.HYVAKSYMISMENETTELYSSA;
+      }
+    }
+
     // Perustiedot is available if the projekti has been saved
     projekti.tallennettu = true;
     projekti.status = API.Status.EI_JULKAISTU;
@@ -237,6 +245,8 @@ export class ProjektiAdapter {
     checkSuunnittelu();
 
     checkNahtavillaolo();
+
+    checkHyvaksymisMenettelyssa();
 
     return projekti;
   }
@@ -924,6 +934,18 @@ export function findJulkaisuByStatus<T extends { tila?: API.AloitusKuulutusTila 
   tila: API.AloitusKuulutusTila
 ): T | undefined {
   return aloitusKuulutusJulkaisut?.filter((j) => j.tila == tila).pop();
+}
+
+export function isDateInThePast(kuulutusVaihePaattyyPaiva: string | undefined): boolean {
+  if (kuulutusVaihePaattyyPaiva) {
+    // Support times as well for testing, so do not set the time if it was already provided
+    let date = parseDate(kuulutusVaihePaattyyPaiva);
+    if (kuulutusVaihePaattyyPaiva.length == ISO_DATE_FORMAT.length) {
+      date = date.set("hour", 23).set("minute", 59);
+    }
+    return date.isBefore(dayjs());
+  }
+  return false;
 }
 
 export const projektiAdapter = new ProjektiAdapter();
