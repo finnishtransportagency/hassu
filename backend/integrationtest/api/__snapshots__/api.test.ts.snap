@@ -2003,6 +2003,12 @@ Object {
       },
     ],
     "lisaAineisto": undefined,
+    "lisaAineistoParametrit": Object {
+      "__typename": "LisaAineistoParametrit",
+      "hash": "***unittest***",
+      "nahtavillaoloVaiheId": 1,
+      "poistumisPaiva": "***unittest***",
+    },
     "muistutusoikeusPaattyyPaiva": "2042-06-08",
     "nahtavillaoloPDFt": undefined,
   },
@@ -2054,62 +2060,6 @@ Object {
           "jarjestys": 5,
           "kategoriaId": "T2xx",
           "nimi": "T212 Yleiskartta.txt",
-          "tila": "ODOTTAA_TUONTIA",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2951684371.1595457721",
-          "jarjestys": 6,
-          "kategoriaId": "T2xx",
-          "nimi": "T214 Suunnitelmakartat.txt",
-          "tila": "ODOTTAA_TUONTIA",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2984895343.2324123820",
-          "jarjestys": 7,
-          "kategoriaId": "T2xx",
-          "nimi": "T217 Yleiskartta yksityisteistä.txt",
-          "tila": "ODOTTAA_TUONTIA",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2989898206.2419448230",
-          "jarjestys": 8,
-          "kategoriaId": "T2xx",
-          "nimi": "T221 Siltojen ja tukimuurien ympäristöpiirustukset.txt",
-          "tila": "ODOTTAA_TUONTIA",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.3018910986.78749844",
-          "jarjestys": 9,
-          "kategoriaId": "T2xx",
-          "nimi": "T220 Ympäristörakenteet.txt",
-          "tila": "ODOTTAA_TUONTIA",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.3029722284.1063097585",
-          "jarjestys": 10,
-          "kategoriaId": "T2xx",
-          "nimi": "T218 Radat.txt",
-          "tila": "ODOTTAA_TUONTIA",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.3115104343.3054025254",
-          "jarjestys": 11,
-          "kategoriaId": "T2xx",
-          "nimi": "T215 Poikkileikkaukset.txt",
-          "tila": "ODOTTAA_TUONTIA",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.3169279973.376365778",
-          "jarjestys": 12,
-          "kategoriaId": "T2xx",
-          "nimi": "T223 Tunneleiden ympäristöpiirustukset.txt",
           "tila": "ODOTTAA_TUONTIA",
         },
       ],
@@ -2184,6 +2134,12 @@ Object {
           "tila": "ODOTTAA_TUONTIA",
         },
       ],
+      "lisaAineistoParametrit": Object {
+        "__typename": "LisaAineistoParametrit",
+        "hash": "***unittest***",
+        "nahtavillaoloVaiheId": 1,
+        "poistumisPaiva": "***unittest***",
+      },
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
       "nahtavillaoloPDFt": undefined,
     },
@@ -2192,6 +2148,60 @@ Object {
 `;
 
 exports[`Api should search, load and save a project 21`] = `
+Object {
+  "description": "lisaAineisto",
+  "obj": Object {
+    "aineistot": Array [
+      Object {
+        "__typename": "LisaAineisto",
+        "jarjestys": 1,
+        "kategoriaId": "T2xx",
+        "linkki": "***unittest***",
+        "nimi": "T222 Meluesteiden periaatekuvat.txt",
+      },
+      Object {
+        "__typename": "LisaAineisto",
+        "jarjestys": 2,
+        "kategoriaId": "T2xx",
+        "linkki": "***unittest***",
+        "nimi": "T213 Teiden hallinnolsten järjestelyjen kartat.txt",
+      },
+      Object {
+        "__typename": "LisaAineisto",
+        "jarjestys": 3,
+        "kategoriaId": "T2xx",
+        "linkki": "***unittest***",
+        "nimi": "T224 Siltataulukko.txt",
+      },
+      Object {
+        "__typename": "LisaAineisto",
+        "jarjestys": 4,
+        "kategoriaId": "T2xx",
+        "linkki": "***unittest***",
+        "nimi": "T211 Piirustusmerkinnät.txt",
+      },
+      Object {
+        "__typename": "LisaAineisto",
+        "jarjestys": 5,
+        "kategoriaId": "T2xx",
+        "linkki": "***unittest***",
+        "nimi": "T212 Yleiskartta.txt",
+      },
+    ],
+    "lisaAineistot": Array [
+      Object {
+        "__typename": "LisaAineisto",
+        "jarjestys": 1,
+        "kategoriaId": undefined,
+        "linkki": "***unittest***",
+        "nimi": "tokatiedosto_toka.pdf",
+      },
+    ],
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 22`] = `
 Object {
   "description": "testNahtavillaOloAfterApproval",
   "obj": Object {
@@ -2245,76 +2255,6 @@ Object {
           "kategoriaId": "T2xx",
           "nimi": "T212 Yleiskartta.txt",
           "tiedosto": "/nahtavillaolo/1/T212 Yleiskartta.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2951684371.1595457721",
-          "jarjestys": 6,
-          "kategoriaId": "T2xx",
-          "nimi": "T214 Suunnitelmakartat.txt",
-          "tiedosto": "/nahtavillaolo/1/T214 Suunnitelmakartat.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2984895343.2324123820",
-          "jarjestys": 7,
-          "kategoriaId": "T2xx",
-          "nimi": "T217 Yleiskartta yksityisteistä.txt",
-          "tiedosto": "/nahtavillaolo/1/T217 Yleiskartta yksityisteistä.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2989898206.2419448230",
-          "jarjestys": 8,
-          "kategoriaId": "T2xx",
-          "nimi": "T221 Siltojen ja tukimuurien ympäristöpiirustukset.txt",
-          "tiedosto": "/nahtavillaolo/1/T221 Siltojen ja tukimuurien ympäristöpiirustukset.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.3018910986.78749844",
-          "jarjestys": 9,
-          "kategoriaId": "T2xx",
-          "nimi": "T220 Ympäristörakenteet.txt",
-          "tiedosto": "/nahtavillaolo/1/T220 Ympäristörakenteet.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.3029722284.1063097585",
-          "jarjestys": 10,
-          "kategoriaId": "T2xx",
-          "nimi": "T218 Radat.txt",
-          "tiedosto": "/nahtavillaolo/1/T218 Radat.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.3115104343.3054025254",
-          "jarjestys": 11,
-          "kategoriaId": "T2xx",
-          "nimi": "T215 Poikkileikkaukset.txt",
-          "tiedosto": "/nahtavillaolo/1/T215 Poikkileikkaukset.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.3169279973.376365778",
-          "jarjestys": 12,
-          "kategoriaId": "T2xx",
-          "nimi": "T223 Tunneleiden ympäristöpiirustukset.txt",
-          "tiedosto": "/nahtavillaolo/1/T223 Tunneleiden ympäristöpiirustukset.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -2392,6 +2332,12 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "lisaAineistoParametrit": Object {
+        "__typename": "LisaAineistoParametrit",
+        "hash": "***unittest***",
+        "nahtavillaoloVaiheId": 1,
+        "poistumisPaiva": "***unittest***",
+      },
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
       "nahtavillaoloPDFt": undefined,
     },
@@ -2446,76 +2392,6 @@ Object {
             "kategoriaId": "T2xx",
             "nimi": "T212 Yleiskartta.txt",
             "tiedosto": "/nahtavillaolo/1/T212 Yleiskartta.txt",
-            "tila": "VALMIS",
-            "tuotu": "***unittest***",
-          },
-          Object {
-            "__typename": "Aineisto",
-            "dokumenttiOid": "1.2.246.578.5.100.2951684371.1595457721",
-            "jarjestys": 6,
-            "kategoriaId": "T2xx",
-            "nimi": "T214 Suunnitelmakartat.txt",
-            "tiedosto": "/nahtavillaolo/1/T214 Suunnitelmakartat.txt",
-            "tila": "VALMIS",
-            "tuotu": "***unittest***",
-          },
-          Object {
-            "__typename": "Aineisto",
-            "dokumenttiOid": "1.2.246.578.5.100.2984895343.2324123820",
-            "jarjestys": 7,
-            "kategoriaId": "T2xx",
-            "nimi": "T217 Yleiskartta yksityisteistä.txt",
-            "tiedosto": "/nahtavillaolo/1/T217 Yleiskartta yksityisteistä.txt",
-            "tila": "VALMIS",
-            "tuotu": "***unittest***",
-          },
-          Object {
-            "__typename": "Aineisto",
-            "dokumenttiOid": "1.2.246.578.5.100.2989898206.2419448230",
-            "jarjestys": 8,
-            "kategoriaId": "T2xx",
-            "nimi": "T221 Siltojen ja tukimuurien ympäristöpiirustukset.txt",
-            "tiedosto": "/nahtavillaolo/1/T221 Siltojen ja tukimuurien ympäristöpiirustukset.txt",
-            "tila": "VALMIS",
-            "tuotu": "***unittest***",
-          },
-          Object {
-            "__typename": "Aineisto",
-            "dokumenttiOid": "1.2.246.578.5.100.3018910986.78749844",
-            "jarjestys": 9,
-            "kategoriaId": "T2xx",
-            "nimi": "T220 Ympäristörakenteet.txt",
-            "tiedosto": "/nahtavillaolo/1/T220 Ympäristörakenteet.txt",
-            "tila": "VALMIS",
-            "tuotu": "***unittest***",
-          },
-          Object {
-            "__typename": "Aineisto",
-            "dokumenttiOid": "1.2.246.578.5.100.3029722284.1063097585",
-            "jarjestys": 10,
-            "kategoriaId": "T2xx",
-            "nimi": "T218 Radat.txt",
-            "tiedosto": "/nahtavillaolo/1/T218 Radat.txt",
-            "tila": "VALMIS",
-            "tuotu": "***unittest***",
-          },
-          Object {
-            "__typename": "Aineisto",
-            "dokumenttiOid": "1.2.246.578.5.100.3115104343.3054025254",
-            "jarjestys": 11,
-            "kategoriaId": "T2xx",
-            "nimi": "T215 Poikkileikkaukset.txt",
-            "tiedosto": "/nahtavillaolo/1/T215 Poikkileikkaukset.txt",
-            "tila": "VALMIS",
-            "tuotu": "***unittest***",
-          },
-          Object {
-            "__typename": "Aineisto",
-            "dokumenttiOid": "1.2.246.578.5.100.3169279973.376365778",
-            "jarjestys": 12,
-            "kategoriaId": "T2xx",
-            "nimi": "T223 Tunneleiden ympäristöpiirustukset.txt",
-            "tiedosto": "/nahtavillaolo/1/T223 Tunneleiden ympäristöpiirustukset.txt",
             "tila": "VALMIS",
             "tuotu": "***unittest***",
           },
@@ -2627,7 +2503,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 22`] = `
+exports[`Api should search, load and save a project 23`] = `
 Object {
   "description": "publicProjektiNahtavillaOloJulkinenAfterApproval",
   "obj": Array [
@@ -2677,69 +2553,6 @@ Object {
           "kategoriaId": "T2xx",
           "nimi": "T212 Yleiskartta.txt",
           "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T212 Yleiskartta.txt",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2951684371.1595457721",
-          "jarjestys": 6,
-          "kategoriaId": "T2xx",
-          "nimi": "T214 Suunnitelmakartat.txt",
-          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T214 Suunnitelmakartat.txt",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2984895343.2324123820",
-          "jarjestys": 7,
-          "kategoriaId": "T2xx",
-          "nimi": "T217 Yleiskartta yksityisteistä.txt",
-          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T217 Yleiskartta yksityisteistä.txt",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2989898206.2419448230",
-          "jarjestys": 8,
-          "kategoriaId": "T2xx",
-          "nimi": "T221 Siltojen ja tukimuurien ympäristöpiirustukset.txt",
-          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T221 Siltojen ja tukimuurien ympäristöpiirustukset.txt",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.3018910986.78749844",
-          "jarjestys": 9,
-          "kategoriaId": "T2xx",
-          "nimi": "T220 Ympäristörakenteet.txt",
-          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T220 Ympäristörakenteet.txt",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.3029722284.1063097585",
-          "jarjestys": 10,
-          "kategoriaId": "T2xx",
-          "nimi": "T218 Radat.txt",
-          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T218 Radat.txt",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.3115104343.3054025254",
-          "jarjestys": 11,
-          "kategoriaId": "T2xx",
-          "nimi": "T215 Poikkileikkaukset.txt",
-          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T215 Poikkileikkaukset.txt",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.3169279973.376365778",
-          "jarjestys": 12,
-          "kategoriaId": "T2xx",
-          "nimi": "T223 Tunneleiden ympäristöpiirustukset.txt",
-          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T223 Tunneleiden ympäristöpiirustukset.txt",
           "tuotu": "***unittest***",
         },
       ],
@@ -2800,7 +2613,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 23`] = `
+exports[`Api should search, load and save a project 24`] = `
 Object {
   "yllapito S3 files Nahtavillaolo published": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {},
@@ -2808,14 +2621,7 @@ Object {
     "nahtavillaolo/1/T211 Piirustusmerkinnät.txt": Object {},
     "nahtavillaolo/1/T212 Yleiskartta.txt": Object {},
     "nahtavillaolo/1/T213 Teiden hallinnolsten järjestelyjen kartat.txt": Object {},
-    "nahtavillaolo/1/T214 Suunnitelmakartat.txt": Object {},
-    "nahtavillaolo/1/T215 Poikkileikkaukset.txt": Object {},
-    "nahtavillaolo/1/T217 Yleiskartta yksityisteistä.txt": Object {},
-    "nahtavillaolo/1/T218 Radat.txt": Object {},
-    "nahtavillaolo/1/T220 Ympäristörakenteet.txt": Object {},
-    "nahtavillaolo/1/T221 Siltojen ja tukimuurien ympäristöpiirustukset.txt": Object {},
     "nahtavillaolo/1/T222 Meluesteiden periaatekuvat.txt": Object {},
-    "nahtavillaolo/1/T223 Tunneleiden ympäristöpiirustukset.txt": Object {},
     "nahtavillaolo/1/T224 Siltataulukko.txt": Object {},
     "nahtavillaolo/1/tokatiedosto_toka.pdf": Object {},
     "palautteet/***unittest***/logo.png": Object {},
@@ -2826,7 +2632,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 24`] = `
+exports[`Api should search, load and save a project 25`] = `
 Object {
   "public S3 files Nahtavillaolo published": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {
@@ -2844,28 +2650,7 @@ Object {
     "nahtavillaolo/T213 Teiden hallinnolsten järjestelyjen kartat.txt": Object {
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "nahtavillaolo/T214 Suunnitelmakartat.txt": Object {
-      "publishDate": "2022-06-07T00:00:00+03:00",
-    },
-    "nahtavillaolo/T215 Poikkileikkaukset.txt": Object {
-      "publishDate": "2022-06-07T00:00:00+03:00",
-    },
-    "nahtavillaolo/T217 Yleiskartta yksityisteistä.txt": Object {
-      "publishDate": "2022-06-07T00:00:00+03:00",
-    },
-    "nahtavillaolo/T218 Radat.txt": Object {
-      "publishDate": "2022-06-07T00:00:00+03:00",
-    },
-    "nahtavillaolo/T220 Ympäristörakenteet.txt": Object {
-      "publishDate": "2022-06-07T00:00:00+03:00",
-    },
-    "nahtavillaolo/T221 Siltojen ja tukimuurien ympäristöpiirustukset.txt": Object {
-      "publishDate": "2022-06-07T00:00:00+03:00",
-    },
     "nahtavillaolo/T222 Meluesteiden periaatekuvat.txt": Object {
-      "publishDate": "2022-06-07T00:00:00+03:00",
-    },
-    "nahtavillaolo/T223 Tunneleiden ympäristöpiirustukset.txt": Object {
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "nahtavillaolo/T224 Siltataulukko.txt": Object {

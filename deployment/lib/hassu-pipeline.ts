@@ -191,7 +191,7 @@ export class HassuPipelineStack extends Stack {
       environment: {
         buildImage: LinuxBuildImage.fromEcrRepository(
           Repository.fromRepositoryName(this, "RobotBuildImage", "hassu-buildimage"),
-          "1.0.2"
+          "1.0.4"
         ),
         privileged: true,
         computeType: ComputeType.MEDIUM,

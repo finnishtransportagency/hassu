@@ -41,8 +41,9 @@ import {
 import { takeS3Snapshot } from "./testUtil/util";
 import {
   testImportNahtavillaoloAineistot,
-  testNahtavillaOlo,
-  testNahtavillaOloApproval,
+  testNahtavillaolo,
+  testNahtavillaoloApproval,
+  testNahtavillaoloLisaAineisto,
 } from "./testUtil/nahtavillaolo";
 
 const sandbox = sinon.createSandbox();
@@ -142,10 +143,11 @@ describe("Api", () => {
     verifyEmailsSent(emailClientStub);
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    await testNahtavillaOlo(oid, projektiPaallikko.kayttajatunnus);
-    await testImportNahtavillaoloAineistot(oid, velhoAineistoKategorias);
+    await testNahtavillaolo(oid, projektiPaallikko.kayttajatunnus);
+    const nahtavillaoloVaihe = await testImportNahtavillaoloAineistot(oid, velhoAineistoKategorias);
     await processQueue(fakeAineistoImportQueue);
-    await testNahtavillaOloApproval(oid, projektiPaallikko, userFixture);
+    await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit);
+    await testNahtavillaoloApproval(oid, projektiPaallikko, userFixture);
     await processQueue(fakeAineistoImportQueue);
     await takeS3Snapshot(oid, "Nahtavillaolo published");
   });

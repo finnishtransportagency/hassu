@@ -183,6 +183,7 @@ type VuorovaikutusJulkinen {
 type NahtavillaoloVaihe {
   aineistoNahtavilla: [Aineisto!]
   lisaAineisto: [Aineisto!]
+  lisaAineistoParametrit: LisaAineistoParametrit
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
   muistutusoikeusPaattyyPaiva: String
@@ -629,4 +630,34 @@ type ProjektiHakutulosDokumentti {
   projektiTyyppi: ProjektiTyyppi
   paivitetty: String
   projektipaallikko: String
+}
+
+type LisaAineistot {
+  aineistot: [LisaAineisto!]
+  lisaAineistot: [LisaAineisto!]
+}
+
+type LisaAineisto {
+  """
+  Kategorian ID, joka viittaa kategoriapuun kategoriaan
+  """
+  kategoriaId: String
+  """
+  Tiedoston latauslinkki
+  """
+  linkki: String
+  """
+  Kayttajalle esitettava tiedostonimi
+  """
+  nimi: String!
+  """
+  Numero jarjestamista varten
+  """
+  jarjestys: Int
+}
+
+type LisaAineistoParametrit {
+  nahtavillaoloVaiheId: Int!
+  poistumisPaiva: String!
+  hash: String!
 }

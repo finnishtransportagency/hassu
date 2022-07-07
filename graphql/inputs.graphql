@@ -247,3 +247,9 @@ input MuistutusInput {
   muistutus: String
   liite: String
 }
+
+input ListaaLisaAineistoInput {
+  nahtavillaoloVaiheId: Int!
+  poistumisPaiva: String!
+  hash: String!
+}

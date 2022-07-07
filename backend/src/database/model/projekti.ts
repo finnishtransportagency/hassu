@@ -124,4 +124,6 @@ export type DBProjekti = {
   tallennettu?: boolean;
   kayttoOikeudet: DBVaylaUser[];
   paivitetty?: string;
+  // Secret salt to use when generating lisaaineisto links within this projekti
+  salt?: string;
 };

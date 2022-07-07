@@ -137,7 +137,7 @@ Array [
 
 exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 4`] = `
 Array [
-  "Save projekti having having only projektipaallikko",
+  "Save projekti having only projektipaallikko",
   Object {
     "aloitusKuulutus": undefined,
     "euRahoitus": undefined,
@@ -157,6 +157,7 @@ Array [
     "muistiinpano": undefined,
     "nahtavillaoloVaihe": undefined,
     "oid": "1",
+    "salt": "***unittest***",
     "suunnitteluSopimus": undefined,
     "suunnitteluVaihe": undefined,
     "vuorovaikutukset": undefined,
@@ -166,7 +167,7 @@ Array [
 
 exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 5`] = `
 Array [
-  "Loaded projekti having having only projektipaallikko",
+  "Loaded projekti having only projektipaallikko",
   Object {
     "__typename": "Projekti",
     "kayttoOikeudet": Array [
@@ -226,6 +227,7 @@ Array [
     "muistiinpano": undefined,
     "nahtavillaoloVaihe": undefined,
     "oid": "1",
+    "salt": "***unittest***",
     "suunnitteluSopimus": undefined,
     "suunnitteluVaihe": undefined,
     "vuorovaikutukset": undefined,
@@ -336,6 +338,7 @@ Array [
     "muistiinpano": undefined,
     "nahtavillaoloVaihe": undefined,
     "oid": "1",
+    "salt": "***unittest***",
     "suunnitteluSopimus": Object {
       "email": "a@b.com",
       "etunimi": "Etunimi",

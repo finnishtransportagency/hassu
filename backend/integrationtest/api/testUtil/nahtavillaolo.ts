@@ -1,6 +1,8 @@
 import { api } from "../apiClient";
 import { apiTestFixture } from "../apiTestFixture";
 import {
+  LisaAineistoParametrit,
+  NahtavillaoloVaihe,
   NahtavillaoloVaiheTila,
   ProjektiKayttaja,
   Status,
@@ -13,19 +15,21 @@ import { expectToMatchSnapshot } from "./util";
 import { loadProjektiFromDatabase, testPublicAccessToProjekti } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import { cleanupNahtavillaoloJulkaisuJulkinenTimestamps, cleanupNahtavillaoloTimestamps } from "./cleanUpFunctions";
+import cloneDeep from "lodash/cloneDeep";
+import axios from "axios";
 
 const { expect } = require("chai"); //
 
-export async function testNahtavillaOlo(oid: string, projektiPaallikko: string): Promise<void> {
+export async function testNahtavillaolo(oid: string, projektiPaallikko: string): Promise<void> {
   await api.tallennaProjekti({
     oid,
     nahtavillaoloVaihe: apiTestFixture.nahtavillaoloVaihe([projektiPaallikko]),
   });
   const projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
-  expectToMatchSnapshot("testNahtavillaOloPerustiedot", projekti.nahtavillaoloVaihe);
+  expectToMatchSnapshot("testNahtavillaOloPerustiedot", cleanupNahtavillaoloTimestamps(projekti.nahtavillaoloVaihe));
 }
 
-export async function testNahtavillaOloApproval(
+export async function testNahtavillaoloApproval(
   oid: string,
   projektiPaallikko: ProjektiKayttaja,
   userFixture: UserFixture
@@ -59,16 +63,18 @@ export async function testNahtavillaOloApproval(
 }
 
 function adaptAineistoToInput(t2xx: VelhoAineisto[]) {
-  return t2xx.map((aineisto, index) => {
-    const { oid: dokumenttiOid, tiedosto: nimi, kategoriaId } = aineisto;
-    return { kategoriaId, jarjestys: index + 1, nimi, dokumenttiOid };
-  });
+  return t2xx
+    .map((aineisto, index) => {
+      const { oid: dokumenttiOid, tiedosto: nimi, kategoriaId } = aineisto;
+      return { kategoriaId, jarjestys: index + 1, nimi, dokumenttiOid };
+    })
+    .slice(0, 5); // Optimization: don't copy all files
 }
 
 export async function testImportNahtavillaoloAineistot(
   oid: string,
   velhoAineistoKategorias: VelhoAineistoKategoria[]
-): Promise<void> {
+): Promise<NahtavillaoloVaihe> {
   const t2xx = velhoAineistoKategorias
     .reduce((documents, aineistoKategoria) => {
       aineistoKategoria.aineistot
@@ -95,8 +101,43 @@ export async function testImportNahtavillaoloAineistot(
     },
   });
 
-  const nahtavillaoloVaihe = (await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO)).nahtavillaoloVaihe;
+  const projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
+  const nahtavillaoloVaihe = cloneDeep(projekti.nahtavillaoloVaihe);
+  expect(nahtavillaoloVaihe.lisaAineistoParametrit).not.to.be.undefined;
   expectToMatchSnapshot("testImportNahtavillaoloAineistot", {
-    nahtavillaoloVaihe,
+    nahtavillaoloVaihe: cleanupNahtavillaoloTimestamps(nahtavillaoloVaihe),
   });
+  return projekti.nahtavillaoloVaihe;
+}
+
+async function validateFileIsDownloadable(aineistoURL: string) {
+  try {
+    const getResponse = await axios.get(aineistoURL);
+    expect(getResponse.status).to.be.eq(200);
+  } catch (e) {
+    console.log(e);
+    expect.fail("Could not download lisäaineisto from url:" + aineistoURL);
+  }
+}
+
+export async function testNahtavillaoloLisaAineisto(
+  oid: string,
+  lisaAineistoParametrit: LisaAineistoParametrit
+): Promise<void> {
+  expect(lisaAineistoParametrit).to.not.be.empty;
+  const lisaAineistot = await api.listaaLisaAineisto(oid, lisaAineistoParametrit);
+  expectToMatchSnapshot("lisaAineisto", {
+    aineistot: lisaAineistot.aineistot.map((aineisto) => {
+      const a = cloneDeep(aineisto);
+      a.linkki = "***unittest***";
+      return a;
+    }),
+    lisaAineistot: lisaAineistot.lisaAineistot.map((aineisto) => {
+      const a = cloneDeep(aineisto);
+      a.linkki = "***unittest***";
+      return a;
+    }),
+  });
+  await validateFileIsDownloadable(lisaAineistot.aineistot[0].linkki);
+  await validateFileIsDownloadable(lisaAineistot.lisaAineistot[0].linkki);
 }

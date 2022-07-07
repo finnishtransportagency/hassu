@@ -11,6 +11,7 @@ import * as AWSXRay from "aws-xray-sdk-core";
 import { aineistoService } from "./aineistoService";
 import { Aineisto, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu, Vuorovaikutus } from "../database/model";
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
+import * as mime from "mime-types";
 
 let axios;
 
@@ -69,10 +70,13 @@ async function importAineisto(aineisto: Aineisto, oid: string, filePathInProjekt
   const sourceURL = await velho.getLinkForDocument(aineisto.dokumenttiOid);
   const axiosResponse = await axios.get(sourceURL);
   const fileName = parseFilenameFromContentDisposition(axiosResponse.headers["content-disposition"]);
+  const contentType = mime.lookup(fileName);
   aineisto.tiedosto = await fileService.createFileToProjekti({
     oid,
     filePathInProjekti,
     fileName,
+    contentType: contentType || undefined,
+    inline: true,
     contents: axiosResponse.data,
   });
   aineisto.tila = AineistoTila.VALMIS;
