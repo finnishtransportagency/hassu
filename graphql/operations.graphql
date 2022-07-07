@@ -20,7 +20,7 @@ type Query {
   laskePaattymisPaiva(alkupaiva: String!, tyyppi: LaskuriTyyppi!): String
   listKirjaamoOsoitteet: [KirjaamoOsoite!]
 
-  listaaLisaAineisto(oid: String!, lisaAineistoTiedot: ListaaLisaAineistoInput): [LisaAineisto!]
+  listaaLisaAineisto(oid: String!, lisaAineistoTiedot: ListaaLisaAineistoInput): LisaAineistot!
 }
 
 type Mutation {

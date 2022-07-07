@@ -110,22 +110,7 @@ export async function testImportNahtavillaoloAineistot(
   return projekti.nahtavillaoloVaihe;
 }
 
-export async function testNahtavillaoloLisaAineisto(
-  oid: string,
-  lisaAineistoParametrit: LisaAineistoParametrit
-): Promise<void> {
-  expect(lisaAineistoParametrit).to.not.be.empty;
-  const aineistot = await api.listaaLisaAineisto(oid, lisaAineistoParametrit);
-  expectToMatchSnapshot(
-    "lisaAineisto",
-    aineistot.map((aineisto) => {
-      const a = cloneDeep(aineisto);
-      a.linkki = "***unittest***";
-      return a;
-    })
-  );
-
-  const aineistoURL = aineistot[0].linkki;
+async function validateFileIsDownloadable(aineistoURL: string) {
   try {
     const getResponse = await axios.get(aineistoURL);
     expect(getResponse.status).to.be.eq(200);
@@ -133,4 +118,26 @@ export async function testNahtavillaoloLisaAineisto(
     console.log(e);
     expect.fail("Could not download lisäaineisto from url:" + aineistoURL);
   }
+}
+
+export async function testNahtavillaoloLisaAineisto(
+  oid: string,
+  lisaAineistoParametrit: LisaAineistoParametrit
+): Promise<void> {
+  expect(lisaAineistoParametrit).to.not.be.empty;
+  const lisaAineistot = await api.listaaLisaAineisto(oid, lisaAineistoParametrit);
+  expectToMatchSnapshot("lisaAineisto", {
+    aineistot: lisaAineistot.aineistot.map((aineisto) => {
+      const a = cloneDeep(aineisto);
+      a.linkki = "***unittest***";
+      return a;
+    }),
+    lisaAineistot: lisaAineistot.lisaAineistot.map((aineisto) => {
+      const a = cloneDeep(aineisto);
+      a.linkki = "***unittest***";
+      return a;
+    }),
+  });
+  await validateFileIsDownloadable(lisaAineistot.aineistot[0].linkki);
+  await validateFileIsDownloadable(lisaAineistot.lisaAineistot[0].linkki);
 }

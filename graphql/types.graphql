@@ -632,6 +632,11 @@ type ProjektiHakutulosDokumentti {
   projektipaallikko: String
 }
 
+type LisaAineistot {
+  aineistot: [LisaAineisto!]
+  lisaAineistot: [LisaAineisto!]
+}
+
 type LisaAineisto {
   """
   Kategorian ID, joka viittaa kategoriapuun kategoriaan

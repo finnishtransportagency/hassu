@@ -1,22 +1,30 @@
-import { LisaAineisto, LisaAineistoParametrit, ListaaLisaAineistoInput } from "../../../common/graphql/apiModel";
+import {
+  LisaAineisto,
+  LisaAineistoParametrit,
+  LisaAineistot,
+  ListaaLisaAineistoInput,
+} from "../../../common/graphql/apiModel";
 
 import crypto from "crypto";
 import dayjs from "dayjs";
 import { IllegalAccessError } from "../error/IllegalAccessError";
-import { Aineisto, DBProjekti } from "../database/model";
+import { DBProjekti, NahtavillaoloVaiheJulkaisu } from "../database/model";
 import { NotFoundError } from "../error/NotFoundError";
 import { fileService } from "../files/fileService";
 
 class LisaAineistoService {
-  listaaLisaAineisto(projekti: DBProjekti, params: ListaaLisaAineistoInput): LisaAineisto[] {
-    const aineistot = findNahtavillaoloVaiheLisaAineistoById(projekti, params.nahtavillaoloVaiheId);
-    return (
-      aineistot?.map((aineisto) => {
-        const { nimi, jarjestys, kategoriaId } = aineisto;
-        const linkki = fileService.createYllapitoSignedDownloadLink(projekti.oid, aineisto.tiedosto);
-        return { __typename: "LisaAineisto", nimi, jarjestys, kategoriaId, linkki };
-      }) || []
-    );
+  listaaLisaAineisto(projekti: DBProjekti, params: ListaaLisaAineistoInput): LisaAineistot {
+    const nahtavillaolo = findNahtavillaoloVaiheById(projekti, params.nahtavillaoloVaiheId);
+
+    function adaptLisaAineisto(aineisto): LisaAineisto {
+      const { nimi, jarjestys, kategoriaId } = aineisto;
+      const linkki = fileService.createYllapitoSignedDownloadLink(projekti.oid, aineisto.tiedosto);
+      return { __typename: "LisaAineisto", nimi, jarjestys, kategoriaId, linkki };
+    }
+
+    const aineistot = nahtavillaolo.aineistoNahtavilla?.map(adaptLisaAineisto) || [];
+    const lisaAineistot = nahtavillaolo.lisaAineisto?.map(adaptLisaAineisto) || [];
+    return { __typename: "LisaAineistot", aineistot, lisaAineistot };
   }
 
   generateListingParams(oid: string, nahtavillaoloVaiheId: number, salt: string): LisaAineistoParametrit {
@@ -65,15 +73,15 @@ class LisaAineistoService {
   }
 }
 
-function findNahtavillaoloVaiheLisaAineistoById(
+function findNahtavillaoloVaiheById(
   projekti: DBProjekti,
   nahtavillaoloVaiheId: number
-): Aineisto[] | undefined {
+): NahtavillaoloVaiheJulkaisu | undefined {
   return []
     .concat(projekti.nahtavillaoloVaiheJulkaisut)
     .concat(projekti.nahtavillaoloVaihe)
     .filter((nahtavillaolo) => nahtavillaolo?.id == nahtavillaoloVaiheId)
-    .pop()?.lisaAineisto;
+    .pop();
 }
 
 export const lisaAineistoService = new LisaAineistoService();

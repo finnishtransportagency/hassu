@@ -11,7 +11,7 @@ import {
   LaskuriTyyppi,
   LataaProjektiQueryVariables,
   LatausTiedot,
-  LisaAineisto,
+  LisaAineistot,
   LisaaMuistutusMutationVariables,
   LisaaPalauteMutationVariables,
   ListaaKayttajatInput,
@@ -306,7 +306,7 @@ export abstract class AbstractApi {
     return await this.callYllapitoAPI(apiConfig.listKirjaamoOsoitteet);
   }
 
-  async listaaLisaAineisto(oid: string, lisaAineistoTiedot: ListaaLisaAineistoInput): Promise<LisaAineisto[]> {
+  async listaaLisaAineisto(oid: string, lisaAineistoTiedot: ListaaLisaAineistoInput): Promise<LisaAineistot> {
     return await this.callYllapitoAPI(apiConfig.listaaLisaAineisto, {
       oid,
       lisaAineistoTiedot,

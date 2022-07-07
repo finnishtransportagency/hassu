@@ -2150,15 +2150,54 @@ Object {
 exports[`Api should search, load and save a project 21`] = `
 Object {
   "description": "lisaAineisto",
-  "obj": Array [
-    Object {
-      "__typename": "LisaAineisto",
-      "jarjestys": 1,
-      "kategoriaId": undefined,
-      "linkki": "***unittest***",
-      "nimi": "tokatiedosto_toka.pdf",
-    },
-  ],
+  "obj": Object {
+    "aineistot": Array [
+      Object {
+        "__typename": "LisaAineisto",
+        "jarjestys": 1,
+        "kategoriaId": "T2xx",
+        "linkki": "***unittest***",
+        "nimi": "T222 Meluesteiden periaatekuvat.txt",
+      },
+      Object {
+        "__typename": "LisaAineisto",
+        "jarjestys": 2,
+        "kategoriaId": "T2xx",
+        "linkki": "***unittest***",
+        "nimi": "T213 Teiden hallinnolsten järjestelyjen kartat.txt",
+      },
+      Object {
+        "__typename": "LisaAineisto",
+        "jarjestys": 3,
+        "kategoriaId": "T2xx",
+        "linkki": "***unittest***",
+        "nimi": "T224 Siltataulukko.txt",
+      },
+      Object {
+        "__typename": "LisaAineisto",
+        "jarjestys": 4,
+        "kategoriaId": "T2xx",
+        "linkki": "***unittest***",
+        "nimi": "T211 Piirustusmerkinnät.txt",
+      },
+      Object {
+        "__typename": "LisaAineisto",
+        "jarjestys": 5,
+        "kategoriaId": "T2xx",
+        "linkki": "***unittest***",
+        "nimi": "T212 Yleiskartta.txt",
+      },
+    ],
+    "lisaAineistot": Array [
+      Object {
+        "__typename": "LisaAineisto",
+        "jarjestys": 1,
+        "kategoriaId": undefined,
+        "linkki": "***unittest***",
+        "nimi": "tokatiedosto_toka.pdf",
+      },
+    ],
+  },
 }
 `;
 
