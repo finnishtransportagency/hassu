@@ -199,8 +199,8 @@ const VirkamiesHomePage = () => {
     Status.ALOITUSKUULUTUS,
     Status.SUUNNITTELU,
     Status.NAHTAVILLAOLO,
-    Status.HYVAKSYNNASSA,
-    Status.HYVAKSYMISPAATOS,
+    Status.HYVAKSYMISMENETTELYSSA,
+    Status.HYVAKSYTTY,
     Status.LAINVOIMA,
   ];
 

@@ -46,8 +46,8 @@ enum Status {
   ALOITUSKUULUTUS
   SUUNNITTELU
   NAHTAVILLAOLO
-  HYVAKSYNNASSA
-  HYVAKSYMISPAATOS
+  HYVAKSYMISMENETTELYSSA
+  HYVAKSYTTY
   LAINVOIMA
   ARKISTOITU
 }
@@ -387,7 +387,7 @@ type ProjektiJulkinen implements IProjekti {
   kielitiedot: Kielitiedot
   projektiHenkilot: [ProjektiKayttajaJulkinen!]
   paivitetty: String
-  nahtavillaoloVaiheJulkaisut: [NahtavillaoloVaiheJulkaisuJulkinen!]
+  nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisuJulkinen
 }
 
 type Suunnitelma {

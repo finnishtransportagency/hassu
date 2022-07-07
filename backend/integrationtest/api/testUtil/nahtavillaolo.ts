@@ -58,7 +58,9 @@ export async function testNahtavillaoloApproval(
     userFixture,
     "NahtavillaOloJulkinenAfterApproval",
     (projektiJulkinen) =>
-      projektiJulkinen.nahtavillaoloVaiheJulkaisut.map(cleanupNahtavillaoloJulkaisuJulkinenTimestamps)
+      (projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenTimestamps(
+        projektiJulkinen.nahtavillaoloVaihe
+      ))
   );
 }
 

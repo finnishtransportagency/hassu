@@ -47,7 +47,9 @@ function getLogger(tag: string) {
           const arg2 = inputArgs.shift();
           return method.apply(this, [arg2, arg1, ...inputArgs]);
         }
-        return method.apply(this, [inputArgs[0]]);
+        if (inputArgs[0]) {
+          return method.apply(this, [inputArgs[0]]);
+        }
       },
     },
     transport,
