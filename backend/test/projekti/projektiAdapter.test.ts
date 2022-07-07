@@ -49,7 +49,10 @@ describe("projektiAdapter", () => {
     expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
-        suunnitteluVaihe: { vuorovaikutus: fixture.vuorovaikutus },
+        suunnitteluVaihe: {
+          hankkeenKuvaus: fixture.hankkeenKuvausSuunnitteluVaiheessa,
+          vuorovaikutus: fixture.vuorovaikutus,
+        },
       })
     ).to.be.rejectedWith(IllegalArgumentError);
   });
@@ -58,12 +61,13 @@ describe("projektiAdapter", () => {
     const projekti = cloneDeep(fixture.dbProjekti2);
     projekti.suunnitteluVaihe = { hankkeenKuvaus: fixture.hankkeenKuvausSuunnitteluVaiheessa };
 
-    // Validate that there is an error if trying to publish suunnitteluvaihe before there is a published aloituskuulutusjulkaisu
-    expect(
-      projektiAdapter.adaptProjektiToSave(projekti, {
-        oid: projekti.oid,
-        suunnitteluVaihe: { vuorovaikutus: fixture.vuorovaikutus },
-      })
-    ).to.be.rejectedWith(IllegalArgumentError);
+    const result = await projektiAdapter.adaptProjektiToSave(projekti, {
+      oid: projekti.oid,
+      suunnitteluVaihe: {
+        hankkeenKuvaus: fixture.hankkeenKuvausSuunnitteluVaiheessa,
+        vuorovaikutus: fixture.vuorovaikutus,
+      },
+    });
+    expect(result.projekti.suunnitteluVaihe).not.to.be.undefined;
   });
 });
