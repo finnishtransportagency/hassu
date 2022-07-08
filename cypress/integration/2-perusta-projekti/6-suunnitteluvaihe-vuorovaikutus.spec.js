@@ -14,6 +14,15 @@ describe("Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
   });
 
   it("Tallenna suunnitteluvaiheen vuorovaikutuksen tiedot", { scrollBehavior: "center" }, function () {
+    // Remove most of the data from vuorovaikutus to enable re-tunning this test as many times as needed
+    cy.request("POST", Cypress.env("host") + "/yllapito/graphql", {
+      operationName: "MyMutation",
+      variables: {},
+      query: `mutation MyMutation {
+  tallennaProjekti(projekti: {oid: "${oid}", suunnitteluVaihe: {vuorovaikutus: {vuorovaikutusNumero: 1}}})
+}`,
+    });
+
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu");
     cy.contains(projektiNimi);
     cy.wait(2000);

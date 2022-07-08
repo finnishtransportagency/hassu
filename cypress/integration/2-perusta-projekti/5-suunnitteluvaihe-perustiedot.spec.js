@@ -13,14 +13,23 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
   });
 
   it("Tallenna suunnitteluvaiheen perustiedot", { scrollBehavior: "center" }, function () {
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu");
+    // Remove most of the data from suunnitteluvaihe to enable re-tunning this test as many times as needed
+    cy.request("POST", Cypress.env("host") + "/yllapito/graphql", {
+      operationName: "MyMutation",
+      variables: {},
+      query: `mutation MyMutation {
+  tallennaProjekti(projekti: {oid: "${oid}", suunnitteluVaihe: {arvioSeuraavanVaiheenAlkamisesta: "-"}})
+}`,
+    });
+
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu", { timeout: 30000 });
     cy.contains(projektiNimi);
     cy.wait(2000);
 
     cy.get("main").then((main) => {
       let saveDraftButton = main.find("#save_suunnitteluvaihe_perustiedot_draft");
       if (saveDraftButton.length === 0) {
-        this.skip();
+        expect.fail("Suunnitteluvaihe not editable");
       }
     });
 
