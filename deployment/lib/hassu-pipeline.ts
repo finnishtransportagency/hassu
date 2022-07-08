@@ -174,13 +174,17 @@ export class HassuPipelineStack extends Stack {
   }
 
   private async createE2eTestPipeline(env: string, config: Config) {
+    let webhookFilters = undefined;
+    if (env == "dev") {
+      webhookFilters = [codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs("robottest/*")];
+    }
     const sourceProps: GitHubSourceProps = {
       owner: "finnishtransportagency",
       repo: "hassu",
       webhook: true,
       webhookTriggersBatchBuild: false,
       reportBuildStatus: true,
-      webhookFilters: [codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs("robottest/*")],
+      webhookFilters,
     };
     const gitHubSource = codebuild.Source.gitHub(sourceProps);
     new codebuild.Project(this, "HassuE2eTest", {
@@ -191,7 +195,7 @@ export class HassuPipelineStack extends Stack {
       environment: {
         buildImage: LinuxBuildImage.fromEcrRepository(
           Repository.fromRepositoryName(this, "RobotBuildImage", "hassu-buildimage"),
-          "1.0.4"
+          "1.0.3"
         ),
         privileged: true,
         computeType: ComputeType.MEDIUM,
