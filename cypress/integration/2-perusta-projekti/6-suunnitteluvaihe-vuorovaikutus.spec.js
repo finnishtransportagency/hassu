@@ -1,31 +1,53 @@
 /// <reference types="cypress" />
 import dayjs from "dayjs";
+import { capturePDFPreview, requestPDFs } from "../../support/util";
 
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
+
+function selectAllAineistotFromCategory(accordion) {
+  cy.get(accordion).click();
+  cy.get(accordion +
+    " input[type='checkbox']").should(($tr) => {
+    expect($tr).to.have.length.gte(2);
+  }).wait(1000);
+  cy.get(accordion).contains("Valitse").should("be.visible")
+    .parent()
+    .within(() => {
+      cy.get("input[type='checkbox']").click();
+    });
+}
 
 describe("Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
   before(() => {
     cy.abortEarly();
   });
 
-  beforeEach(() => {
+  it("Tallenna suunnitteluvaiheen vuorovaikutuksen tiedot", { scrollBehavior: "center" }, function() {
     cy.login("A1");
-  });
+    // Remove most of the data from vuorovaikutus to enable re-tunning this test as many times as needed
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu");
+    cy.request({
+      method: "POST",
+      url: Cypress.env("host") + "/yllapito/graphql",
+      headers: {
+        "x-api-key": Cypress.env("apiKey")
+      },
+      body:
+        {
+          operationName: "MyMutation",
+          variables: {},
+          query: `mutation MyMutation {
+  tallennaProjekti(projekti: {oid: "${oid}", suunnitteluVaihe: {vuorovaikutus: {vuorovaikutusNumero: 1}}})
+}`,
+        }
+    });
 
-  it("Tallenna suunnitteluvaiheen vuorovaikutuksen tiedot", { scrollBehavior: "center" }, function () {
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu");
     cy.contains(projektiNimi);
     cy.wait(2000);
 
-    cy.get("main").then((main) => {
-      let vuorovaikuttaminenTab = main.find("#1_vuorovaikuttaminen_tab");
-      if (vuorovaikuttaminenTab.length > 0) {
-        cy.wrap(vuorovaikuttaminenTab).click();
-      } else {
-        this.skip();
-      }
-    });
+    cy.get("#1_vuorovaikuttaminen_tab").click();
 
     cy.get("main").then((main) => {
       let saveButton = main.find("#save_suunnitteluvaihe_vuorovaikutukset_draft");
@@ -100,23 +122,12 @@ describe("Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
     cy.wait(2000).get("#save_vuorovaikutus_tilaisuudet").click();
 
     cy.get("#select_esittelyaineistot_button").click();
-    cy.get("#aineisto_accordion_Tietomallinnus")
-      .click()
-      .contains("Valitse")
-      .parent()
-      .within(() => {
-        cy.get("input[type='checkbox']").click();
-      });
+    selectAllAineistotFromCategory("#aineisto_accordion_Tietomallinnus");
 
     cy.get("#select_valitut_aineistot_button").click();
     cy.get("#select_suunnitelmaluonnokset_button").click();
-    cy.get("#aineisto_accordion_Yleinen")
-      .click()
-      .contains("Valitse")
-      .parent()
-      .within(() => {
-        cy.get("input[type='checkbox']").click();
-      });
+
+    selectAllAineistotFromCategory("#aineisto_accordion_Yleinen");
     cy.get("#select_valitut_aineistot_button").click();
 
     cy.get("main").then((main) => {
@@ -146,33 +157,10 @@ describe("Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
     cy.get("#save_suunnitteluvaihe_vuorovaikutukset_draft").click();
 
     cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank aloituskuulutus page otherwise
-
-    const pdfs = [];
-    cy.get('[name="tallennaProjektiInput"')
-      .parent()
-      .then((form) => {
-        cy.stub(form.get()[0], "submit")
-          .callsFake((a, b, c) => {
-            let action = form.get()[0].getAttribute("action");
-            let tallennaProjektiInput = form.get()[0].children.namedItem("tallennaProjektiInput").getAttribute("value");
-            pdfs.push({
-              action: action,
-              tallennaProjektiInput: tallennaProjektiInput,
-            });
-          })
-          .as("formSubmit");
-      });
+    const pdfs = capturePDFPreview();
 
     cy.get("#preview_kutsu_pdf_SUOMI").click();
-    cy.get("@formSubmit")
-      .should("have.been.called")
-      .then(() => {
-        for (const pdf of pdfs) {
-          cy.request("POST", pdf.action, { tallennaProjektiInput: pdf.tallennaProjektiInput }).then((response) => {
-            expect(response.status).to.eq(200);
-          });
-        }
-      });
+    requestPDFs(pdfs);
 
     cy.reload();
     cy.wait(1000).get("#1_vuorovaikuttaminen_tab").click();
@@ -188,9 +176,10 @@ describe("Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
         timeout: 10000,
       }).should("have.value", text);
     });
-  });
+  })
 
-  it("Muokkaa ja julkaise suunnitteluvaiheen vuorovaikutuksen tiedot", { scrollBehavior: "center" }, function () {
+  it("Muokkaa ja julkaise suunnitteluvaiheen vuorovaikutuksen tiedot", { scrollBehavior: "center" }, function() {
+    cy.login("A1");
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu");
     cy.contains(projektiNimi);
 
@@ -288,23 +277,10 @@ describe("Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
     cy.get("#save_vuorovaikutus_tilaisuudet").click();
 
     cy.get("#select_esittelyaineistot_button").click();
-    cy.get("#aineisto_accordion_Tietomallinnus")
-      .click()
-      .contains("Valitse")
-      .parent()
-      .within(() => {
-        cy.get("input[type='checkbox']").click();
-      });
-
+    selectAllAineistotFromCategory("#aineisto_accordion_Tietomallinnus");
     cy.get("#select_valitut_aineistot_button").click();
     cy.get("#select_suunnitelmaluonnokset_button").click();
-    cy.get("#aineisto_accordion_Yleinen")
-      .click()
-      .contains("Valitse")
-      .parent()
-      .within(() => {
-        cy.get("input[type='checkbox']").click();
-      });
+    selectAllAineistotFromCategory("#aineisto_accordion_Yleinen");
     cy.get("#select_valitut_aineistot_button").click();
 
     cy.get("main").then((main) => {

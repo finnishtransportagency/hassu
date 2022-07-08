@@ -449,7 +449,7 @@ exports[`apiHandler handleEvent tallennaProjekti should modify permissions from 
 Array [
   Object {
     "Bucket": "hassu-localstack-yllapito",
-    "ContentDisposition": "inline; filename=T412 Aloituskuulutus.pdf",
+    "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
     "ContentType": "application/pdf",
     "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
     "Metadata": Object {
@@ -458,7 +458,7 @@ Array [
   },
   Object {
     "Bucket": "hassu-localstack-public",
-    "ContentDisposition": "inline; filename=T412 Aloituskuulutus.pdf",
+    "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
     "ContentType": "application/pdf",
     "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
     "Metadata": Object {
@@ -467,7 +467,7 @@ Array [
   },
   Object {
     "Bucket": "hassu-localstack-yllapito",
-    "ContentDisposition": "inline; filename=T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+    "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
     "ContentType": "application/pdf",
     "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
     "Metadata": Object {
@@ -476,7 +476,7 @@ Array [
   },
   Object {
     "Bucket": "hassu-localstack-public",
-    "ContentDisposition": "inline; filename=T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+    "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
     "ContentType": "application/pdf",
     "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
     "Metadata": Object {
@@ -485,7 +485,7 @@ Array [
   },
   Object {
     "Bucket": "hassu-localstack-yllapito",
-    "ContentDisposition": "inline; filename=T412 Aloituskuulutus.pdf",
+    "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
     "ContentType": "application/pdf",
     "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
     "Metadata": Object {
@@ -494,7 +494,7 @@ Array [
   },
   Object {
     "Bucket": "hassu-localstack-public",
-    "ContentDisposition": "inline; filename=T412 Aloituskuulutus.pdf",
+    "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
     "ContentType": "application/pdf",
     "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
     "Metadata": Object {
@@ -503,7 +503,7 @@ Array [
   },
   Object {
     "Bucket": "hassu-localstack-yllapito",
-    "ContentDisposition": "inline; filename=T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+    "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
     "ContentType": "application/pdf",
     "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
     "Metadata": Object {
@@ -512,7 +512,7 @@ Array [
   },
   Object {
     "Bucket": "hassu-localstack-public",
-    "ContentDisposition": "inline; filename=T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+    "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
     "ContentType": "application/pdf",
     "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
     "Metadata": Object {
