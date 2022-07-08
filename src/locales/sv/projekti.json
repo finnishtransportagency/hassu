@@ -25,7 +25,9 @@
         "kuulutus_julkaistu": "RUOTSIKSI Kuulutus on julkaistu tietoverkossa Väyläviraston verkkosivuilla",
         "asianosaisten_katsotaan_saaneen": "RUOTSIKSI Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä päivänä kuulutuksen julkaisemisajankohdasta (hallintolaki 62 a §)",
         "kiinteiston_omistajilla_ja": "RUOTSIKSI Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa, on mahdollisuus muistutusten tekemiseen suunnitelmasta. Muistutukset on toimitettava {{viranomainen}} ennen nähtävänäoloajan päättymistä (LjMTL 27 §) Valtion liikenneväylien suunnittelu -järjestelmään osoitteeseen {{url}}",
-        "sahkopostilla_muistutus": "RUOTSIKSI Sähköpostilla muistutusta lähettäessä on liitettävä viestiin projektin asiatunnus."
+        "sahkopostilla_muistutus": "RUOTSIKSI Sähköpostilla muistutusta lähettäessä on liitettävä viestiin projektin asiatunnus.",
+        "vaylavirasto_on_laatinut": "<p>RUOTSIKSI Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen <b>{{suunnitelmaTyyppiGenetiivi}} {{projektiNimi}}</b>.</p>",
+        "suunnitelmiin_on_mahdollista": "<p>RUOTSIKSI Suunnitelmiin on mahdollista tutustua <b>{{kuulutusVaihePaattyyPaiva}}</b> saakka, jonka jälkeen suunnitelmat poistuvat näkyviltä.</p>"
       },
       "rata": {
         "on_laatinut": "RUOTSIKSI on laatinut ratalain (110/2007) mukaisen"
@@ -37,6 +39,11 @@
     "RATA": "Vägplan",
     "TIE": "Spårplan",
     "YLEINEN": "Översiktsplan"
+  },
+  "projekti-tyyppi-genetiivi": {
+    "RATA": "RUOTSIKSI Ratasuunnitelman",
+    "TIE": "RUOTSIKSI Tiesuunnitelman",
+    "YLEINEN": "RUOTSIKSI Yleissuunnitelman"
   },
   "projekti-vaiheet": {
     "suunnittelun_kaynnistaminen": "RUOTSIKSI Suunnittelun käynnistäminen",
