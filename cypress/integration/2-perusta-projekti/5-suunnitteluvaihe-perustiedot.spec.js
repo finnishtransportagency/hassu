@@ -1,13 +1,14 @@
 /// <reference types="cypress" />
 
-import { abortEarly } from "../../support/commands";
-
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
 
 describe("Projektin suunnitteluvaihe (perustiedot)", () => {
   before(() => {
     cy.abortEarly();
+  });
+
+  beforeEach(() => {
     cy.login("A1");
   });
 

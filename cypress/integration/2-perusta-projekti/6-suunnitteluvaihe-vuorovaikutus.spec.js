@@ -7,6 +7,9 @@ const oid = Cypress.env("oid");
 describe("Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
   before(() => {
     cy.abortEarly();
+  });
+
+  beforeEach(() => {
     cy.login("A1");
   });
 

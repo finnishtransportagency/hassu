@@ -98,3 +98,8 @@ Cypress.Commands.add("login", (testuser) => {
     }
   });
 });
+
+Cypress.Commands.add("archiveProjekti", (oid) => {
+  cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/arkistoi");
+  cy.get("#result").should("contain", "Arkistoinnin tulos");
+});

@@ -7,7 +7,7 @@ describe("Hae projekti Velhosta", () => {
     cy.abortEarly();
     cy.login("A1");
 
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/arkistoi");
+    cy.archiveProjekti(oid);
   });
 
   it("Hae projekti Velhosta", () => {
