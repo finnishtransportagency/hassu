@@ -9,13 +9,10 @@ describe("Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
     cy.abortEarly();
   });
 
-  beforeEach(() => {
-    cy.login("A1");
-  });
-
   it("Tallenna suunnitteluvaiheen vuorovaikutuksen tiedot", { scrollBehavior: "center" }, function () {
+    cy.login("A1");
     // Remove most of the data from vuorovaikutus to enable re-tunning this test as many times as needed
-    cy.request("POST", Cypress.env("host") + "/yllapito/graphql", {
+    cy.request("POST", "/yllapito/graphql", {
       operationName: "MyMutation",
       variables: {},
       query: `mutation MyMutation {
@@ -200,6 +197,7 @@ describe("Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
   });
 
   it("Muokkaa ja julkaise suunnitteluvaiheen vuorovaikutuksen tiedot", { scrollBehavior: "center" }, function () {
+    cy.login("A1");
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu");
     cy.contains(projektiNimi);
 

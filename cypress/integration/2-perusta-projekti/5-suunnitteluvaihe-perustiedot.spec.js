@@ -8,13 +8,10 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
     cy.abortEarly();
   });
 
-  beforeEach(() => {
-    cy.login("A1");
-  });
-
   it("Tallenna suunnitteluvaiheen perustiedot", { scrollBehavior: "center" }, function () {
+    cy.login("A1");
     // Remove most of the data from suunnitteluvaihe to enable re-tunning this test as many times as needed
-    cy.request("POST", Cypress.env("host") + "/yllapito/graphql", {
+    cy.request("POST", "/yllapito/graphql", {
       operationName: "MyMutation",
       variables: {},
       query: `mutation MyMutation {
@@ -75,6 +72,7 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
   });
 
   it("Muokkaa ja julkaise suunnitteluvaiheen perustiedot", { scrollBehavior: "center" }, () => {
+    cy.login("A1");
     const selectorToTextMap = new Map([
       ['[name="suunnitteluVaihe.hankkeenKuvaus.SUOMI"]', "Päivitetty hankkeen kuvaus Suomeksi"],
       ['[name="suunnitteluVaihe.hankkeenKuvaus.RUOTSI"]', "Päivitetty hankkeen kuvaus Ruotsiksi"],
