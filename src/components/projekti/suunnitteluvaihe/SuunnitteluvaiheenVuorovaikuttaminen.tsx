@@ -177,7 +177,6 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
 
   const saveDraft = useCallback(
     async (formData: VuorovaikutusFormValues) => {
-      console.log(formData);
       setIsFormSubmitting(true);
       try {
         await saveSunnitteluvaihe(formData);
@@ -333,14 +332,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                   <Button id="save_suunnitteluvaihe_vuorovaikutukset_draft" onClick={handleSubmit(saveDraft)}>
                     Tallenna luonnos
                   </Button>
-                  <Button
-                    primary
-                    id="save_and_publish"
-                    onClick={(event) => {
-                      handleClickOpenHyvaksy();
-                      event.preventDefault();
-                    }}
-                  >
+                  <Button primary id="save_and_publish" onClick={handleSubmit(handleClickOpenHyvaksy)}>
                     Tallenna julkaistavaksi
                   </Button>
                 </Stack>
