@@ -1,6 +1,6 @@
 import { AsiakirjaTyyppi, Kieli, TallennaProjektiInput } from "@services/api";
 import React, { useImperativeHandle, useRef, useState } from "react";
-import { useProjektiRoute } from "src/hooks/useProjektiRoute";
+import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 
 type EsikatselePdfFunction = (formData: TallennaProjektiInput, asiakirjaTyyppi: AsiakirjaTyyppi, kieli: Kieli) => void;
@@ -11,7 +11,7 @@ type PdfPreviewFormHandle = {
 };
 
 const PdfPreviewForm: React.ForwardRefRenderFunction<PdfPreviewFormHandle, PdfPreviewFormProps> = (_props, ref) => {
-  const { data: projekti } = useProjektiRoute();
+  const { data: projekti } = useProjekti();
   const { showErrorMessage } = useSnackbars();
 
   const pdfFormRef = useRef<HTMLFormElement>(null);

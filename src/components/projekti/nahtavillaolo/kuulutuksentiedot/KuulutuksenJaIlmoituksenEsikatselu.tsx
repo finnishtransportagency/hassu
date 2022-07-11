@@ -5,7 +5,7 @@ import React from "react";
 import lowerCase from "lodash/lowerCase";
 import Button from "@components/button/Button";
 import { Box } from "@mui/material";
-import { useProjektiRoute } from "src/hooks/useProjektiRoute";
+import { useProjekti } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./KuulutuksenTiedot";
 import { useFormContext } from "react-hook-form";
 
@@ -14,7 +14,7 @@ type Props = {
 };
 
 export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Props) {
-  const { data: projekti } = useProjektiRoute();
+  const { data: projekti } = useProjekti();
 
   const { handleSubmit } = useFormContext<KuulutuksenTiedotFormValues>();
 
