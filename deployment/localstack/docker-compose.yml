@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   localstack:
-    image: 283563576583.dkr.ecr.eu-west-1.amazonaws.com/localstack:0.14.2-arm64
+    image: 283563576583.dkr.ecr.eu-west-1.amazonaws.com/localstack:0.14.1
     ports:
       - "4566-4584:4566-4584"
       - "${PORT_WEB_UI-8080}:${PORT_WEB_UI-8080}"
