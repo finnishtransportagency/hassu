@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { api, AsiakirjaTyyppi, Kieli } from "@services/api";
+import { api, AsiakirjaTyyppi, Kieli, TallennaProjektiInput } from "@services/api";
 import { setupLambdaMonitoring } from "../../backend/src/aws/monitoring";
 import { parameterStore } from "./parameterStore";
 import { createAuthorizationHeader } from "./basicAuthentication";
@@ -17,14 +17,12 @@ async function getCredentials() {
 interface PdfRequestProps {
   req: NextApiRequest;
   res: NextApiResponse;
-  asiakirjaTyyppi: AsiakirjaTyyppi;
-  virheviesti?: string;
 }
 
-export const handlePdfRequest = async ({ req, res, asiakirjaTyyppi, virheviesti }: PdfRequestProps) => {
+export const handlePdfRequest = async ({ req, res }: PdfRequestProps) => {
   const {
     query: { oid, kieli },
-    body: { tallennaProjektiInput },
+    body: { tallennaProjektiInput, asiakirjaTyyppi },
   } = req;
   if (Array.isArray(oid)) {
     throw new Error("Vain yksi oid-parametri sallitaan");
@@ -40,12 +38,19 @@ export const handlePdfRequest = async ({ req, res, asiakirjaTyyppi, virheviesti 
       ...req.headers,
       authorization: createAuthorizationHeader(username, password),
     });
-    let changes;
-    if (tallennaProjektiInput) {
-      changes = JSON.parse(tallennaProjektiInput);
+    let changes: TallennaProjektiInput;
+    let tyyppi: AsiakirjaTyyppi;
+    if (!asiakirjaTyyppi || !tallennaProjektiInput) {
+      res.status(500);
+      res.setHeader("Content-Type", "text/plain;charset=UTF-8");
+      res.send("Asiakirjan esikatselua ei voi tehdä. Esikatselupyynnöstä puuttuu tietoja.");
+      return;
+    } else {
+      changes = JSON.parse(tallennaProjektiInput) as TallennaProjektiInput;
+      tyyppi = asiakirjaTyyppi as AsiakirjaTyyppi;
     }
 
-    const pdf = await api.esikatseleAsiakirjaPDF(oid, asiakirjaTyyppi, kieli as Kieli, changes);
+    const pdf = await api.esikatseleAsiakirjaPDF(oid, tyyppi, kieli as Kieli, changes);
     if (pdf) {
       res.setHeader("Content-Type", "application/pdf");
       res.setHeader("Content-disposition", "inline; filename=" + pdf.nimi);
@@ -53,7 +58,7 @@ export const handlePdfRequest = async ({ req, res, asiakirjaTyyppi, virheviesti 
     } else {
       res.status(404);
       res.setHeader("Content-Type", "text/plain;charset=UTF-8");
-      res.send(virheviesti || "Asiakirjan luonti epäonnistui");
+      res.send("Asiakirjan luonti epäonnistui");
     }
   } catch (e: any) {
     // tslint:disable-next-line:no-console

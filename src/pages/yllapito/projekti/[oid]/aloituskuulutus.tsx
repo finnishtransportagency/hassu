@@ -1,7 +1,7 @@
 import Textarea from "@components/form/Textarea";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { useRouter } from "next/router";
-import React, { ReactElement, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
@@ -22,6 +22,7 @@ import {
   TilasiirtymaToiminto,
   ViranomaisVastaanottajaInput,
   TilasiirtymaTyyppi,
+  AsiakirjaTyyppi,
 } from "@services/api";
 import log from "loglevel";
 import { PageProps } from "@pages/_app";
@@ -30,7 +31,6 @@ import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/proje
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 import KuulutuksenYhteystiedot from "@components/projekti/aloituskuulutus/KuulutuksenYhteystiedot";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
-import cloneDeep from "lodash/cloneDeep";
 import find from "lodash/find";
 import lowerCase from "lodash/lowerCase";
 import useSnackbars from "src/hooks/useSnackbars";
@@ -50,6 +50,7 @@ import HassuGrid from "@components/HassuGrid";
 import { GetParameterResult } from "aws-sdk/clients/ssm";
 import HassuSpinner from "@components/HassuSpinner";
 import { removeTypeName } from "src/util/removeTypeName";
+import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
 type RequiredProjektiFields = Required<{
@@ -84,7 +85,6 @@ export default function Aloituskuulutus({
   kirjaamoOsoitteet,
 }: PageProps & ServerSideProps): ReactElement {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
-  const [serializedFormData, setSerializedFormData] = useState("{}");
   const router = useRouter();
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti();
   const isLoadingProjekti = !projekti && !projektiLoadError;
@@ -97,11 +97,12 @@ export default function Aloituskuulutus({
     isFormSubmitting ||
     isIncorrectProjektiStatus;
   const today = new Date().toISOString().split("T")[0];
-  const pdfFormRef = useRef<HTMLFormElement | null>(null);
   const [formContext, setFormContext] = useState<Projekti | undefined>(undefined);
   const [open, setOpen] = useState(false);
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
   const { t } = useTranslation("commonFI");
+
+  const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
 
   useProjektiBreadcrumbs(setRouteLabels);
 
@@ -300,21 +301,6 @@ export default function Aloituskuulutus({
     setOpenHyvaksy(false);
   };
 
-  const showPDFPreview = useCallback(
-    (formData: FormValues, action: string, kieli: Kieli) => {
-      const formDataToSend = cloneDeep(formData);
-      deleteFieldArrayIds(formDataToSend?.aloitusKuulutus?.esitettavatYhteystiedot);
-      deleteFieldArrayIds(formDataToSend?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat);
-      deleteFieldArrayIds(formDataToSend?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset);
-      setSerializedFormData(JSON.stringify(formDataToSend));
-      if (pdfFormRef.current) {
-        pdfFormRef.current.action = action + "?kieli=" + kieli;
-        pdfFormRef.current?.submit();
-      }
-    },
-    [setSerializedFormData, pdfFormRef]
-  );
-
   const getPaattymispaiva = useCallback(
     async (value: string) => {
       try {
@@ -357,6 +343,8 @@ export default function Aloituskuulutus({
 
   const ensisijainenKieli = kielitiedot?.ensisijainenKieli;
   const toissijainenKieli = kielitiedot?.toissijainenKieli;
+  const esikatselePdf = pdfFormRef.current?.esikatselePdf;
+
   return (
     <ProjektiPageLayout title="Aloituskuulutus">
       {voiMuokata && (
@@ -455,76 +443,64 @@ export default function Aloituskuulutus({
               </fieldset>
             </form>
           </FormProvider>
-          <form ref={pdfFormRef} target="_blank" method="POST">
-            <input type="hidden" name="tallennaProjektiInput" value={serializedFormData} />
-          </form>
-          <Section>
-            <Notification type={NotificationType.INFO_GRAY}>
-              Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
-            </Notification>
-            <p>Esitettävät tiedot ensisijaisella kielellä ({lowerCase(ensisijainenKieli || Kieli.SUOMI)})</p>
-            <HassuStack direction={["column", "column", "row"]}>
-              <Button
-                id={"preview_kuulutus_pdf_" + ensisijainenKieli}
-                type="submit"
-                onClick={handleSubmit((formData) =>
-                  showPDFPreview(formData, `/api/projekti/${projekti?.oid}/aloituskuulutus/pdf`, ensisijainenKieli)
-                )}
-                disabled={disableFormEdit}
-              >
-                Kuulutuksen esikatselu
-              </Button>
-              <Button
-                id={"preview_ilmoitus_pdf_" + ensisijainenKieli}
-                type="submit"
-                onClick={handleSubmit((formData) =>
-                  showPDFPreview(
-                    formData,
-                    `/api/projekti/${projekti?.oid}/aloituskuulutus/ilmoitus/pdf`,
-                    ensisijainenKieli
-                  )
-                )}
-                disabled={disableFormEdit}
-              >
-                Ilmoituksen esikatselu
-              </Button>
-            </HassuStack>
-            {toissijainenKieli && (
-              <>
-                <p>Esitettävät tiedot toissijaisella kielellä ({lowerCase(toissijainenKieli || Kieli.RUOTSI)}</p>
-                <HassuStack direction={["column", "column", "row"]}>
-                  <Button
-                    id={"preview_kuulutus_pdf_" + toissijainenKieli}
-                    type="submit"
-                    onClick={handleSubmit((formData) =>
-                      showPDFPreview(
-                        formData,
-                        `/api/projekti/${projekti?.oid}/aloituskuulutus/pdf`,
-                        toissijainenKieli || Kieli.RUOTSI
-                      )
-                    )}
-                    disabled={disableFormEdit}
-                  >
-                    Kuulutuksen esikatselu
-                  </Button>
-                  <Button
-                    id={"preview_ilmoitus_pdf_" + toissijainenKieli}
-                    type="submit"
-                    onClick={handleSubmit((formData) =>
-                      showPDFPreview(
-                        formData,
-                        `/api/projekti/${projekti?.oid}/aloituskuulutus/ilmoitus/pdf`,
-                        toissijainenKieli || Kieli.RUOTSI
-                      )
-                    )}
-                    disabled={disableFormEdit}
-                  >
-                    Ilmoituksen esikatselu
-                  </Button>
-                </HassuStack>
-              </>
-            )}
-          </Section>
+          <PdfPreviewForm ref={pdfFormRef} />
+          {esikatselePdf && (
+            <Section>
+              <Notification type={NotificationType.INFO_GRAY}>
+                Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
+              </Notification>
+              <p>Esitettävät tiedot ensisijaisella kielellä ({lowerCase(ensisijainenKieli || Kieli.SUOMI)})</p>
+              <HassuStack direction={["column", "column", "row"]}>
+                <Button
+                  id={"preview_kuulutus_pdf_" + ensisijainenKieli}
+                  type="submit"
+                  onClick={handleSubmit((formData) =>
+                    esikatselePdf(formData, AsiakirjaTyyppi.ALOITUSKUULUTUS, ensisijainenKieli)
+                  )}
+                  disabled={disableFormEdit}
+                >
+                  Kuulutuksen esikatselu
+                </Button>
+                <Button
+                  id={"preview_ilmoitus_pdf_" + ensisijainenKieli}
+                  type="submit"
+                  onClick={handleSubmit((formData) =>
+                    esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, ensisijainenKieli)
+                  )}
+                  disabled={disableFormEdit}
+                >
+                  Ilmoituksen esikatselu
+                </Button>
+              </HassuStack>
+              {toissijainenKieli && (
+                <>
+                  <p>Esitettävät tiedot toissijaisella kielellä ({lowerCase(toissijainenKieli || Kieli.RUOTSI)})</p>
+                  <HassuStack direction={["column", "column", "row"]}>
+                    <Button
+                      id={"preview_kuulutus_pdf_" + toissijainenKieli}
+                      type="submit"
+                      onClick={handleSubmit((formData) =>
+                        esikatselePdf(formData, AsiakirjaTyyppi.ALOITUSKUULUTUS, toissijainenKieli)
+                      )}
+                      disabled={disableFormEdit}
+                    >
+                      Kuulutuksen esikatselu
+                    </Button>
+                    <Button
+                      id={"preview_ilmoitus_pdf_" + toissijainenKieli}
+                      type="submit"
+                      onClick={handleSubmit((formData) =>
+                        esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, toissijainenKieli)
+                      )}
+                      disabled={disableFormEdit}
+                    >
+                      Ilmoituksen esikatselu
+                    </Button>
+                  </HassuStack>
+                </>
+              )}
+            </Section>
+          )}
           <Section noDivider>
             <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
               <Button onClick={handleSubmit(saveDraft)} disabled={disableFormEdit}>

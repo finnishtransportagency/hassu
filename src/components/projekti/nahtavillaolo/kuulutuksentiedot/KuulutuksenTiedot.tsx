@@ -15,6 +15,7 @@ import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import { removeTypeName } from "src/util/removeTypeName";
 import Lukunakyma from "./Lukunakyma";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
+import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 
 function defaultValues(
   projekti: Projekti,
@@ -52,6 +53,8 @@ export default function KuulutuksenTiedot() {
   const [formContext, setFormContext] = useState<Projekti | undefined>(undefined);
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
+  const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
+
   const formOptions: UseFormProps<KuulutuksenTiedotFormValues> = {
     resolver: yupResolver(nahtavillaoloKuulutusSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
@@ -86,19 +89,24 @@ export default function KuulutuksenTiedot() {
         </Notification>
       )}
       {voiMuokata && (
-        <FormProvider {...useFormReturn}>
-          <form>
-            <KuulutusJaJulkaisuPaiva />
-            <HankkeenSisallonKuvaus kielitiedot={projekti?.kielitiedot} />
-            <KuulutuksessaEsitettavatYhteystiedot />
-            <IlmoituksenVastaanottajatKomponentti
-              kirjaamoOsoitteet={kirjaamoOsoitteet}
-              nahtavillaoloVaihe={projekti?.nahtavillaoloVaihe}
-            />
-            <KuulutuksenJaIlmoituksenEsikatselu projekti={projekti as Projekti} />
-            <Painikkeet projekti={projekti} />
-          </form>
-        </FormProvider>
+        <>
+          <FormProvider {...useFormReturn}>
+            <form>
+              <KuulutusJaJulkaisuPaiva />
+              <HankkeenSisallonKuvaus kielitiedot={projekti?.kielitiedot} />
+              <KuulutuksessaEsitettavatYhteystiedot />
+              <IlmoituksenVastaanottajatKomponentti
+                kirjaamoOsoitteet={kirjaamoOsoitteet}
+                nahtavillaoloVaihe={projekti?.nahtavillaoloVaihe}
+              />
+              {pdfFormRef.current?.esikatselePdf && (
+                <KuulutuksenJaIlmoituksenEsikatselu esikatselePdf={pdfFormRef.current?.esikatselePdf} />
+              )}
+              <Painikkeet projekti={projekti} />
+            </form>
+          </FormProvider>
+          <PdfPreviewForm ref={pdfFormRef} />
+        </>
       )}
       {!voiMuokata &&
         projekti &&

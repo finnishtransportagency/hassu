@@ -7,11 +7,10 @@ import {
   VuorovaikutusInput,
   LinkkiInput,
   Vuorovaikutus,
-  Kieli,
-  Kielitiedot,
+  AsiakirjaTyyppi,
 } from "@services/api";
 import Section from "@components/layout/Section";
-import React, { ReactElement, useEffect, useState, useMemo, useCallback, useRef } from "react";
+import React, { ReactElement, useEffect, useState, useMemo, useCallback } from "react";
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
@@ -30,9 +29,10 @@ import PaivamaaratJaTiedot from "./PaivamaaratJaTiedot";
 import LukutilaLinkkiJaKutsut from "./LukutilaLinkkiJaKutsut";
 import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
 import VuorovaikutustilaisuusDialog from "./VuorovaikutustilaisuusDialog";
-import cloneDeep from "lodash/cloneDeep";
 import { useProjekti } from "src/hooks/useProjekti";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
+import PdfPreviewForm from "../PdfPreviewForm";
+import { lowerCase } from "lodash";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 
@@ -83,8 +83,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
   const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
   const [aineistoMuokkaustila, setAineistoMuokkaustila] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
-  const [serializedFormData, setSerializedFormData] = useState("{}");
-  const pdfFormRef = useRef<HTMLFormElement | null>(null);
+  const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
   const [formContext, setFormContext] = useState<VuorovaikutusFormValues>();
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
@@ -213,18 +212,6 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
     return handleSubmit(saveAndPublish);
   }, [handleSubmit, saveAndPublish]);
 
-  const showPDFPreview = useCallback(
-    (formData: TallennaProjektiInput, action: string, kieli: Kieli) => {
-      const formDataToSend = cloneDeep(formData);
-      setSerializedFormData(JSON.stringify(formDataToSend));
-      if (pdfFormRef.current) {
-        pdfFormRef.current.action = action + "?kieli=" + kieli;
-        pdfFormRef.current?.submit();
-      }
-    },
-    [setSerializedFormData, pdfFormRef]
-  );
-
   useEffect(() => {
     isDirtyHandler(isDirty);
   }, [isDirty, isDirtyHandler]);
@@ -252,7 +239,10 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
   }
 
   const ilmoituksenVastaanottajat = getValues("suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat");
-  const kielitiedot: Kielitiedot | null | undefined = projekti.kielitiedot;
+
+  const ensisijainenKieli = projekti.kielitiedot?.ensisijainenKieli;
+  const toissijainenKieli = projekti.kielitiedot?.toissijainenKieli;
+  const esikatselePdf = pdfFormRef.current?.esikatselePdf;
 
   return (
     <>
@@ -291,38 +281,48 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
             <EsitettavatYhteystiedot vuorovaikutusnro={vuorovaikutusnro} />
             {vuorovaikutus?.julkinen && <LukutilaLinkkiJaKutsut vuorovaikutus={vuorovaikutus} projekti={projekti} />}
             <IlmoituksenVastaanottajat kirjaamoOsoitteet={kirjaamoOsoitteet} vuorovaikutus={vuorovaikutus} />
-            {!vuorovaikutus?.julkinen && (
+            {!vuorovaikutus?.julkinen && !!esikatselePdf && (
               <Section>
                 <h4 className="vayla-small-title">Kutsun ja ilmoituksen esikatselu</h4>
-                <SectionContent>
-                  <HassuStack direction={["column", "column", "row"]}>
-                    <Button
-                      type="submit"
-                      id="preview_kutsu_pdf_SUOMI"
-                      onClick={handleSubmit((formData) =>
-                        showPDFPreview(
-                          formData,
-                          `/api/projekti/${projekti?.oid}/suunnittelu/kutsu/pdf`,
-                          kielitiedot?.ensisijainenKieli || Kieli.SUOMI
-                        )
-                      )}
-                    >
-                      Kutsun esikatselu
-                    </Button>
-                    <Button
-                      type="submit"
-                      onClick={handleSubmit((formData) =>
-                        showPDFPreview(
-                          formData,
-                          `/api/projekti/${projekti?.oid}/suunnittelu/ilmoitus/pdf`,
-                          kielitiedot?.ensisijainenKieli || Kieli.SUOMI
-                        )
-                      )}
-                      disabled
-                    >
-                      Ilmoituksen esikatselu
-                    </Button>
-                  </HassuStack>
+                <SectionContent largeGaps>
+                  {ensisijainenKieli && (
+                    <>
+                      <p>Esikatsele tiedostot ensisijaisella kielellä ({lowerCase(ensisijainenKieli)})</p>
+                      <HassuStack direction={["column", "column", "row"]}>
+                        <Button
+                          type="submit"
+                          id={`preview_kutsu_pdf_${ensisijainenKieli}`}
+                          onClick={handleSubmit((formData) =>
+                            esikatselePdf(formData, AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU, ensisijainenKieli)
+                          )}
+                        >
+                          Kutsun esikatselu
+                        </Button>
+                        <Button type="submit" disabled>
+                          Ilmoituksen esikatselu
+                        </Button>
+                      </HassuStack>
+                    </>
+                  )}
+                  {toissijainenKieli && (
+                    <>
+                      <p>Esikatsele tiedostot toissijaisella kielellä ({lowerCase(toissijainenKieli)})</p>
+                      <HassuStack direction={["column", "column", "row"]}>
+                        <Button
+                          type="submit"
+                          id={`preview_kutsu_pdf_${toissijainenKieli}`}
+                          onClick={handleSubmit((formData) =>
+                            esikatselePdf(formData, AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU, toissijainenKieli)
+                          )}
+                        >
+                          Kutsun esikatselu
+                        </Button>
+                        <Button type="submit" disabled>
+                          Ilmoituksen esikatselu
+                        </Button>
+                      </HassuStack>
+                    </>
+                  )}
                 </SectionContent>
               </Section>
             )}
@@ -342,9 +342,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
           <input type="hidden" {...register("suunnitteluVaihe.vuorovaikutus.julkinen")} />
         </form>
       </FormProvider>
-      <form ref={pdfFormRef} target="_blank" method="POST">
-        <input type="hidden" name="tallennaProjektiInput" value={serializedFormData} />
-      </form>
+      <PdfPreviewForm ref={pdfFormRef} />
       <HyvaksymisDialogi
         ilmoituksenVastaanottajat={ilmoituksenVastaanottajat}
         dialogiOnAuki={openHyvaksy}
