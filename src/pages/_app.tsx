@@ -17,6 +17,7 @@ import commonSV from "../locales/sv/common.json";
 import { SnackbarProvider } from "@components/HassuSnackbarProvider";
 import { SWRConfig } from "swr";
 import { BreakpointsOptions, createTheme, ThemeProvider } from "@mui/material/styles";
+import { SpacingOptions } from "@mui/system";
 
 export const breakpoints: BreakpointsOptions = {
   values: {
@@ -28,7 +29,9 @@ export const breakpoints: BreakpointsOptions = {
   },
 };
 
-const defaultTheme = createTheme({ breakpoints });
+const spacing: SpacingOptions = (factor: number) => `${0.25 * factor}rem`;
+
+const defaultTheme = createTheme({ breakpoints, spacing });
 export const theme = createTheme({
   palette: {
     primary: {
@@ -41,8 +44,8 @@ export const theme = createTheme({
       primary: "#242222",
     },
   },
-  typography: { fontFamily: '"Exo 2"' },
-  spacing: (factor: number) => `${0.25 * factor}rem`,
+  typography: { fontFamily: '"Exo 2"', allVariants: { color: "#242222" } },
+  spacing,
   breakpoints,
   components: {
     MuiContainer: {
@@ -69,26 +72,51 @@ export const theme = createTheme({
       },
     },
     MuiDialogTitle: {
-      defaultProps: { sx: { paddingTop: 0, paddingLeft: 0, paddingRight: 0, paddingBottom: 0, marginBottom: 7 } },
+      styleOverrides: {
+        root: {
+          paddingTop: defaultTheme.spacing(0),
+          paddingLeft: defaultTheme.spacing(0),
+          paddingRight: defaultTheme.spacing(0),
+          paddingBottom: defaultTheme.spacing(0),
+          marginBottom: defaultTheme.spacing(7),
+        },
+      },
     },
     MuiDialogContent: {
-      defaultProps: {
-        sx: { paddingTop: 0, paddingLeft: 0, paddingRight: 0, paddingBottom: 0, marginBottom: 7 },
+      styleOverrides: {
+        root: {
+          paddingTop: defaultTheme.spacing(0),
+          paddingLeft: defaultTheme.spacing(0),
+          paddingRight: defaultTheme.spacing(0),
+          paddingBottom: defaultTheme.spacing(0),
+          marginBottom: defaultTheme.spacing(7),
+        },
       },
     },
     MuiDialogActions: {
-      defaultProps: {
-        disableSpacing: true,
-        sx: {
-          flexDirection: { xs: "column", md: "row" },
-          paddingBottom: 0,
-          paddingLeft: 0,
-          paddingRight: 0,
-          paddingTop: 0,
-          columnGap: 7.5,
-          rowGap: 4,
+      styleOverrides: {
+        root: {
+          [defaultTheme.breakpoints.up("xs")]: { flexDirection: "column" },
+          [defaultTheme.breakpoints.up("md")]: { flexDirection: "row" },
+          paddingBottom: defaultTheme.spacing(0),
+          paddingLeft: defaultTheme.spacing(0),
+          paddingRight: defaultTheme.spacing(0),
+          paddingTop: defaultTheme.spacing(0),
+          columnGap: defaultTheme.spacing(7.5),
+          rowGap: defaultTheme.spacing(4),
           alignItems: "flex-end",
         },
+      },
+      defaultProps: {
+        disableSpacing: true,
+      },
+    },
+    MuiLink: {
+      defaultProps: {
+        color: "#0064AF",
+        underline: "hover",
+        fontSize: "1.125rem",
+        lineHeight: 1.222,
       },
     },
   },
