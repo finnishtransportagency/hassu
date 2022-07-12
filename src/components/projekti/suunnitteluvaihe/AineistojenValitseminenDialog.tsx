@@ -13,7 +13,7 @@ import HassuTable from "@components/HassuTable";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import { Column } from "react-table";
 import { useForm } from "react-hook-form";
-import AineistoNimiExtLink from "../AineistoNimiExtLink";
+import VelhoAineistoNimiExtLink from "../VelhoAineistoNimiExtLink";
 
 interface FormData {
   aineistoKategoriat: VelhoAineistoKategoria[];
@@ -118,7 +118,6 @@ export default function AineistojenValitseminenDialog({ onSubmit, ...muiDialogPr
                                 setSelectedAineisto={updateValitut}
                                 kategoria={kategoria.kategoria}
                                 data={kategoria.aineistot}
-                                projektiOid={projekti.oid}
                               />
                             ) : (
                               <p>Projektilla ei ole aineistoa</p>
@@ -138,11 +137,10 @@ export default function AineistojenValitseminenDialog({ onSubmit, ...muiDialogPr
                 <h5 className="vayla-smallest-title">{`Valitut tiedostot (${valitutAineistot.length})`}</h5>
                 {projekti?.oid &&
                   valitutAineistot.map((aineisto) => (
-                    <AineistoNimiExtLink
+                    <VelhoAineistoNimiExtLink
                       key={aineisto.oid}
                       aineistoOid={aineisto.oid}
                       aineistoNimi={aineisto.tiedosto}
-                      projektiOid={projekti.oid}
                       addTopMargin
                     />
                   ))}
@@ -170,20 +168,19 @@ export default function AineistojenValitseminenDialog({ onSubmit, ...muiDialogPr
 }
 
 interface AineistoTableProps {
-  projektiOid: string;
   data: VelhoAineisto[];
   kategoria: string;
   setSelectedAineisto: (kategoria: string, selectedRows: VelhoAineisto[]) => void;
 }
 
-const AineistoTable = ({ projektiOid, data, setSelectedAineisto, kategoria }: AineistoTableProps) => {
+const AineistoTable = ({ data, setSelectedAineisto, kategoria }: AineistoTableProps) => {
   const columns: Column<VelhoAineisto>[] = useMemo(
     () => [
       {
         Header: "Tiedosto",
         minWidth: 250,
         accessor: (aineisto) => (
-          <AineistoNimiExtLink aineistoOid={aineisto.oid} aineistoNimi={aineisto.tiedosto} projektiOid={projektiOid} />
+          <VelhoAineistoNimiExtLink aineistoOid={aineisto.oid} aineistoNimi={aineisto.tiedosto} />
         ),
       },
       {
@@ -193,7 +190,7 @@ const AineistoTable = ({ projektiOid, data, setSelectedAineisto, kategoria }: Ai
       { Header: "Dokumenttityyppi", accessor: "dokumenttiTyyppi" },
       { Header: "oid", accessor: "oid" },
     ],
-    [projektiOid]
+    []
   );
 
   const tableProps = useHassuTable<VelhoAineisto>({

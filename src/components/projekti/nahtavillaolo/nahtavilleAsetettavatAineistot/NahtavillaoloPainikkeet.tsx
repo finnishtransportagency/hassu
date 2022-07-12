@@ -17,6 +17,7 @@ const mapFormValuesToTallennaProjektiInput = ({
   aineistoNahtavilla,
 }: NahtavilleAsetettavatAineistotFormValues): TallennaProjektiInput => {
   const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla).flat();
+  console.log(aineistoNahtavillaFlat);
   deleteFieldArrayIds(aineistoNahtavillaFlat);
   deleteFieldArrayIds(lisaAineisto);
 

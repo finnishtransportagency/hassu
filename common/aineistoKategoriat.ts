@@ -53,6 +53,10 @@ export class AineistoKategoriat {
     return this.ylaKategoriat;
   }
 
+  public listKategoriaIds(): string[] {
+    return getNestedCategoryIds(this.ylaKategoriat);
+  }
+
   public findKategoria(aineistoKuvaus: string, tiedostoNimi: string): AineistoKategoria | undefined {
     const ylakategoria = findMatchingCategory(this.ylaKategoriat, aineistoKuvaus);
     if (ylakategoria) {
@@ -82,6 +86,17 @@ export class AineistoKategoriat {
   }
 }
 
+export const getNestedCategoryIds: (kategoriat: AineistoKategoria[]) => string[] = (kategoriat) => {
+  const kategoriaIds: string[] = [];
+  kategoriat.forEach((kategoria) => {
+    kategoriaIds.push(kategoria.id);
+    if (kategoria.alaKategoriat) {
+      kategoriaIds.push(...getNestedCategoryIds(kategoria.alaKategoriat));
+    }
+  });
+  return kategoriaIds;
+};
+
 function isMatchingToHakulauseet(hakulauseet: string[] | undefined, keyword: string): boolean {
   const matchingHakulauseet = hakulauseet?.filter((hakulause) => {
     return !!keyword.match(hakulause);
@@ -107,9 +122,9 @@ export const aineistoKategoriat = new AineistoKategoriat([
     nimi: "Selostusosa",
     hakulauseet: ["T1[0-9]{2}"],
     alakategoriat: [
-      { id: "TBD11", nimi: "Kaavakartat", hakulauseet: ["T119"] },
-      { id: "TBD12", nimi: "Suunnitteluprosessiin liittyvä aineisto" },
-      { id: "TBD13", nimi: "YVA" },
+      { id: "TBD101", nimi: "Kaavakartat", hakulauseet: ["T119"] },
+      { id: "TBD102", nimi: "Suunnitteluprosessiin liittyvä aineisto" },
+      { id: "TBD103", nimi: "YVA" },
     ],
   },
   {
@@ -117,18 +132,18 @@ export const aineistoKategoriat = new AineistoKategoriat([
     nimi: "Pääpiirustukset",
     hakulauseet: ["T2[0-9]{2}"],
     alakategoriat: [
-      { id: "TBD21", nimi: "Yleiskartat" },
-      { id: "TBD22", nimi: "Hallinnollisten järjestelyiden kartat" },
-      { id: "TBD23", nimi: "Suunnitelmakartat" },
-      { id: "TBD24", nimi: "Pituusleikkaukset", hakulauseet: ["T216"] },
-      { id: "TBD25", nimi: "Poikkileikkaukset" },
-      { id: "TBD26", nimi: "Siltasuunnitelmat ja muut taitorakenteet" },
-      { id: "TBD27", nimi: "Ympäristörakenteet, esim. meluesteet" },
-      { id: "TBD28", nimi: "Lunastuskartat" },
-      { id: "TBD29", nimi: "Liikennepaikkojen suunnitelmat" },
-      { id: "TBD30", nimi: "Maanteiden toimenpiteet ratasuunnitelmassa" },
-      { id: "TBD31", nimi: "Ratojen toimenpiteet tiesuunnitelmassa" },
-      { id: "TBD32", nimi: "Muut piirustukset ja kuvat" },
+      { id: "TBD201", nimi: "Yleiskartat" },
+      { id: "TBD202", nimi: "Hallinnollisten järjestelyiden kartat" },
+      { id: "TBD203", nimi: "Suunnitelmakartat" },
+      { id: "TBD204", nimi: "Pituusleikkaukset", hakulauseet: ["T216"] },
+      { id: "TBD205", nimi: "Poikkileikkaukset" },
+      { id: "TBD206", nimi: "Siltasuunnitelmat ja muut taitorakenteet" },
+      { id: "TBD207", nimi: "Ympäristörakenteet, esim. meluesteet" },
+      { id: "TBD208", nimi: "Lunastuskartat" },
+      { id: "TBD209", nimi: "Liikennepaikkojen suunnitelmat" },
+      { id: "TBD210", nimi: "Maanteiden toimenpiteet ratasuunnitelmassa" },
+      { id: "TBD211", nimi: "Ratojen toimenpiteet tiesuunnitelmassa" },
+      { id: "TBD212", nimi: "Muut piirustukset ja kuvat" },
     ],
   },
   {
@@ -136,15 +151,15 @@ export const aineistoKategoriat = new AineistoKategoriat([
     nimi: "Informatiivinen aineisto",
     hakulauseet: ["T3[0-9]{2}"],
     alakategoriat: [
-      { id: "TBD31", nimi: "Vaikutuksia kuvaavat selvitykset" },
-      { id: "TBD32", nimi: "Ulkopuoliset rakenteet" },
-      { id: "TBD33", nimi: "Tutkitut vaihtoehdot" },
-      { id: "TBD34", nimi: "Katusuunnitelmat" },
-      { id: "TBD35", nimi: "Visualisointikuvat" },
-      { id: "TBD36", nimi: "Ympäristösuunnitelmat", hakulauseet: ["T320"] },
-      { id: "TBD37", nimi: "Muut selvitykset" },
-      { id: "TBD38", nimi: "Valaistuksen ja liikenteenohjauksen yleiskartat" },
-      { id: "TBD39", nimi: "Johtosiirrot ja kunnallistekniset suunnitelmat" },
+      { id: "TBD301", nimi: "Vaikutuksia kuvaavat selvitykset" },
+      { id: "TBD302", nimi: "Ulkopuoliset rakenteet" },
+      { id: "TBD303", nimi: "Tutkitut vaihtoehdot" },
+      { id: "TBD304", nimi: "Katusuunnitelmat" },
+      { id: "TBD305", nimi: "Visualisointikuvat" },
+      { id: "TBD306", nimi: "Ympäristösuunnitelmat", hakulauseet: ["T320"] },
+      { id: "TBD307", nimi: "Muut selvitykset" },
+      { id: "TBD308", nimi: "Valaistuksen ja liikenteenohjauksen yleiskartat" },
+      { id: "TBD309", nimi: "Johtosiirrot ja kunnallistekniset suunnitelmat" },
     ],
   },
 ]);

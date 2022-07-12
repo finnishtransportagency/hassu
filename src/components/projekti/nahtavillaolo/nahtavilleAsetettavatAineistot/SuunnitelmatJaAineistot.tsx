@@ -1,4 +1,5 @@
 import Button from "@components/button/Button";
+import ButtonFlat from "@components/button/ButtonFlat";
 import IconButton from "@components/button/IconButton";
 import Select, { SelectOption } from "@components/form/Select";
 import HassuAccordion from "@components/HassuAccordion";
@@ -6,12 +7,13 @@ import HassuTable from "@components/HassuTable";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import AineistoNimiExtLink from "@components/projekti/AineistoNimiExtLink";
+import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import AineistojenValitseminenDialog from "@components/projekti/suunnitteluvaihe/AineistojenValitseminenDialog";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Aineisto } from "@services/api";
-import { AineistoKategoria, aineistoKategoriat } from "common/aineistoKategoriat";
+import { AineistoKategoria, aineistoKategoriat, getNestedCategoryIds } from "common/aineistoKategoriat";
 import { find } from "lodash";
-import React, { useMemo, useState } from "react";
+import React, { Key, useMemo, useState } from "react";
 import { FieldArrayWithId, useFieldArray, useFormContext } from "react-hook-form";
 import { Column } from "react-table";
 import { useHassuTable } from "src/hooks/useHassuTable";
@@ -25,9 +27,21 @@ const kategoriaInfoText: Record<string, string> = {
   T3xx: "Informatiivisen aineiston alle tuodaan C- tai T300 -kansioiden aineistot.",
 };
 
+const getKategoriaAineistoMaara = (
+  aineistoNahtavilla: NahtavilleAsetettavatAineistotFormValues["aineistoNahtavilla"] | undefined,
+  kategoria: AineistoKategoria
+) => {
+  let nestedAineistoMaaraSum = 0;
+  const aineistot = Object.values(aineistoNahtavilla || {}).flat();
+  const ids = getNestedCategoryIds([kategoria]);
+  nestedAineistoMaaraSum += aineistot.filter(({ kategoriaId }) => kategoriaId && ids.includes(kategoriaId)).length;
+  return nestedAineistoMaaraSum;
+};
+
 export default function SuunnitelmatJaAineistot() {
   const { watch } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
   const aineistoNahtavilla = watch("aineistoNahtavilla");
+  const [expandedAineisto, setExpandedAineisto] = useState<Key[]>([]);
 
   return (
     <Section>
@@ -39,29 +53,63 @@ export default function SuunnitelmatJaAineistot() {
       <Notification type={NotificationType.INFO_GRAY}>
         Huomioithan, että suunnitelma-aineistojen tulee täyttää saavutettavuusvaatimukset.
       </Notification>
+
+      <ButtonFlat
+        type="button"
+        onClick={() => {
+          if (!!expandedAineisto.length) {
+            setExpandedAineisto([]);
+          } else {
+            setExpandedAineisto(aineistoKategoriat.listKategoriaIds());
+          }
+        }}
+        iconComponent={
+          <span className="fa-layers">
+            <FontAwesomeIcon
+              icon="chevron-down"
+              transform={`down-6`}
+              flip={!!expandedAineisto.length ? "vertical" : undefined}
+            />
+            <FontAwesomeIcon
+              icon="chevron-up"
+              transform={`up-6`}
+              flip={!!expandedAineisto.length ? "vertical" : undefined}
+            />
+          </span>
+        }
+      >
+        {!!expandedAineisto.length ? "Sulje" : "Avaa"} kaikki kategoriat
+      </ButtonFlat>
       <HassuAccordion
+        expandedState={[expandedAineisto, setExpandedAineisto]}
         items={aineistoKategoriat.listKategoriat().map((paakategoria) => ({
           title: (
-            <span className="vayla-small-title">{`${paakategoria.nimi} (${
-              aineistoNahtavilla?.[paakategoria.id].length || 0
-            })`}</span>
+            <span className="vayla-small-title">{`${paakategoria.nimi} (${getKategoriaAineistoMaara(
+              aineistoNahtavilla,
+              paakategoria
+            )})`}</span>
           ),
           content: (
             <SectionContent largeGaps>
-              <SuunnitelmaAineistoKategoriaContent paakategoria={paakategoria} />
+              <SuunnitelmaAineistoPaakategoriaContent
+                paakategoria={paakategoria}
+                expandedAineistoState={[expandedAineisto, setExpandedAineisto]}
+              />
             </SectionContent>
           ),
+          id: paakategoria.id,
         }))}
       />
     </Section>
   );
 }
 
-interface SuunnitelmaAineistoKategoriaContentProps {
+interface SuunnitelmaAineistoPaakategoriaContentProps {
   paakategoria: AineistoKategoria;
+  expandedAineistoState: [React.Key[], React.Dispatch<React.Key[]>];
 }
 
-const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoriaContentProps) => {
+const SuunnitelmaAineistoPaakategoriaContent = (props: SuunnitelmaAineistoPaakategoriaContentProps) => {
   const { data: projekti } = useProjekti();
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
   const { setValue, watch } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
@@ -73,8 +121,12 @@ const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoria
   return (
     <>
       <p>{kategoriaInfoText[props.paakategoria.id]}</p>
-      {!!projekti?.oid && !!aineistot?.length && (
-        <AineistoTable kategoriaId={props.paakategoria.id} projektiOid={projekti?.oid} />
+      {!!projekti?.oid && !!aineistot?.length && <AineistoTable kategoriaId={props.paakategoria.id} />}
+      {props.paakategoria.alaKategoriat && (
+        <SuunnitelmaAineistoAlakategoriaAccordion
+          alakategoriat={props.paakategoria.alaKategoriat}
+          expandedAineistoState={props.expandedAineistoState}
+        />
       )}
       <Button type="button" onClick={() => setAineistoDialogOpen(true)}>
         Tuo Aineistoja
@@ -96,13 +148,75 @@ const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoria
   );
 };
 
+interface SuunnitelmaAineistoAlakategoriaAccordionProps {
+  alakategoriat: AineistoKategoria[];
+  expandedAineistoState: [React.Key[], React.Dispatch<React.Key[]>];
+}
+
+const SuunnitelmaAineistoAlakategoriaAccordion = (props: SuunnitelmaAineistoAlakategoriaAccordionProps) => {
+  const { watch } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
+  const aineistoNahtavilla = watch("aineistoNahtavilla");
+  return (
+    <HassuAccordion
+      expandedState={props.expandedAineistoState}
+      items={props.alakategoriat.map((alakategoria) => ({
+        title: `${alakategoria.nimi} (${getKategoriaAineistoMaara(aineistoNahtavilla, alakategoria)})`,
+        content: <AlakategoriaContent kategoria={alakategoria} expandedAineistoState={props.expandedAineistoState} />,
+        id: alakategoria.id,
+      }))}
+    />
+  );
+};
+
+interface AlakategoriaContentProps {
+  kategoria: AineistoKategoria;
+  expandedAineistoState: [React.Key[], React.Dispatch<React.Key[]>];
+}
+
+const AlakategoriaContent = (props: AlakategoriaContentProps) => {
+  const { watch } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
+  const aineistoRoute: `aineistoNahtavilla.${string}` = `aineistoNahtavilla.${props.kategoria.id}`;
+  const aineistot = watch(aineistoRoute);
+  return (
+    <>
+      {!!aineistot?.length ? (
+        <AineistoTable kategoriaId={props.kategoria.id} />
+      ) : (
+        <p>Kategoriaan ei ole asetettu aineistoa.</p>
+      )}
+      {!!props.kategoria.alaKategoriat?.length && (
+        <SuunnitelmaAineistoAlakategoriaAccordion
+          expandedAineistoState={props.expandedAineistoState}
+          alakategoriat={props.kategoria.alaKategoriat}
+        />
+      )}
+    </>
+  );
+};
+
 type FormAineisto = FieldArrayWithId<NahtavilleAsetettavatAineistotFormValues, `aineistoNahtavilla.${string}`, "id"> &
-  Pick<Aineisto, "tila" | "tuotu">;
+  Pick<Aineisto, "tila" | "tuotu" | "tiedosto">;
 
 interface AineistoTableProps {
   kategoriaId: string;
-  projektiOid: string;
 }
+
+const getAllOptionsForKategoriat: (kategoriat: AineistoKategoria[], ylakategoriaNimi?: string) => SelectOption[] = (
+  kategoriat,
+  ylakategoriaNimi
+) => {
+  const ylakategoriaPrefix = ylakategoriaNimi ? `${ylakategoriaNimi} - ` : "";
+  const kategoriaIds: SelectOption[] = [];
+  kategoriat.forEach((kategoria) => {
+    kategoriaIds.push({ label: ylakategoriaPrefix + kategoria.nimi, value: kategoria.id });
+    if (kategoria.alaKategoriat) {
+      kategoriaIds.push(...getAllOptionsForKategoriat(kategoria.alaKategoriat, ylakategoriaPrefix + kategoria.nimi));
+    }
+  });
+  return kategoriaIds;
+};
+
+const ALL_OPTIONS = getAllOptionsForKategoriat(aineistoKategoriat.listKategoriat());
 
 const AineistoTable = (props: AineistoTableProps) => {
   const { data: projekti } = useProjekti();
@@ -115,9 +229,10 @@ const AineistoTable = (props: AineistoTableProps) => {
     () =>
       fields.map((field) => {
         const aineistoData = projekti?.nahtavillaoloVaihe?.aineistoNahtavilla || [];
-        const { tila, tuotu } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
+        const { tila, tuotu, tiedosto } =
+          aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
 
-        return { tila, tuotu, ...field };
+        return { tila, tuotu, tiedosto, ...field };
       }),
     [fields, projekti]
   );
@@ -133,11 +248,7 @@ const AineistoTable = (props: AineistoTableProps) => {
           const errorMessage = (formState.errors.aineistoNahtavilla?.[errorpath]?.[index] as any | undefined)?.message;
           return (
             <>
-              <AineistoNimiExtLink
-                aineistoNimi={aineisto.nimi}
-                aineistoOid={aineisto.dokumenttiOid}
-                projektiOid={props.projektiOid}
-              />
+              <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto} />
               {errorMessage && <p className="text-red">{errorMessage}</p>}
               <input type="hidden" {...register(`${aineistoRoute}.${index}.dokumenttiOid`)} />
               <input type="hidden" {...register(`${aineistoRoute}.${index}.nimi`)} />
@@ -152,15 +263,9 @@ const AineistoTable = (props: AineistoTableProps) => {
       {
         Header: "Kategoria",
         accessor: (aineisto) => {
-          const options = aineistoKategoriat
-            .listKategoriat()
-            .reduce<SelectOption[]>((accumulatedOptions, paakategoria) => {
-              accumulatedOptions.push({ label: paakategoria.nimi, value: paakategoria.id });
-              return accumulatedOptions;
-            }, []);
           return (
             <Select
-              options={options}
+              options={ALL_OPTIONS}
               defaultValue={props.kategoriaId}
               onChange={(event) => {
                 const newKategoria = event.target.value;
@@ -169,7 +274,12 @@ const AineistoTable = (props: AineistoTableProps) => {
                   const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
 
                   if (!find(values, { dokumenttiOid: aineisto.dokumenttiOid })) {
-                    values.push({ ...aineisto, kategoriaId: newKategoria, jarjestys: values.length });
+                    values.push({
+                      dokumenttiOid: aineisto.dokumenttiOid,
+                      nimi: aineisto.nimi,
+                      kategoriaId: newKategoria,
+                      jarjestys: values.length,
+                    });
                     setValue(`aineistoNahtavilla.${newKategoria}`, values);
                   }
                   remove(index);
@@ -203,7 +313,6 @@ const AineistoTable = (props: AineistoTableProps) => {
       formState.errors.aineistoNahtavilla,
       getValues,
       props.kategoriaId,
-      props.projektiOid,
       register,
       remove,
       setValue,

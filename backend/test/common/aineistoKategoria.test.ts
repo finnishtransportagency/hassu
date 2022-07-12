@@ -9,7 +9,7 @@ describe("AineistoKategoria", () => {
       "01 Prosessi/Yleiset/T100 Tiesuunnitelman selostusosa",
       "T119 Kaavakartat, määräykset ja merkinnät.txt"
     );
-    expect(aineistoKategoria.id).to.eq("TBD11");
+    expect(aineistoKategoria.id).to.eq("TBD101");
     expect(aineistoKategoria.parentKategoria.id).to.eq("T1xx");
 
     expect(
@@ -17,11 +17,11 @@ describe("AineistoKategoria", () => {
         "06 Suunnitelma/Suunnitelmakokonaisuus/T300 Tiesuunnitelman informatiivinen aineisto",
         "T320 Ympäristösuunnitelma.txt"
       ).id
-    ).to.eq("TBD36");
+    ).to.eq("TBD306");
   });
 
   it("should find correct kategoria based on id", () => {
-    expect(aineistoKategoriat.findById("TBD11").id).to.eq("TBD11");
+    expect(aineistoKategoriat.findById("TBD101").id).to.eq("TBD101");
   });
 
   it("should list category tree successfully", () => {
