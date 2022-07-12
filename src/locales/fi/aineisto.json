@@ -1,0 +1,33 @@
+{
+  "aineisto-kategoria-nimi": {
+    "T1xx": "Selostusosa",
+    "TBD101": "Kaavakartat",
+    "TBD102": "Suunnitteluprosessiin liittyvä aineisto",
+    "TBD103": "YVA",
+
+    "T2xx": "Pääpiirustukset",
+    "TBD201": "Yleiskartat",
+    "TBD202": "Hallinnollisten järjestelyiden kartat",
+    "TBD203": "Suunnitelmakartat",
+    "TBD204": "Pituusleikkaukset",
+    "TBD205": "Poikkileikkaukset",
+    "TBD206": "Siltasuunnitelmat ja muut taitorakenteet",
+    "TBD207": "Ympäristörakenteet, esim. meluesteet",
+    "TBD208": "Lunastuskartat",
+    "TBD209": "Liikennepaikkojen suunnitelmat",
+    "TBD210": "Maanteiden toimenpiteet ratasuunnitelmassa",
+    "TBD211": "Ratojen toimenpiteet tiesuunnitelmassa",
+    "TBD212": "Muut piirustukset ja kuvat",
+
+    "T3xx": "Informatiivinen aineisto",
+    "TBD301": "Vaikutuksia kuvaavat selvitykset",
+    "TBD302": "Ulkopuoliset rakenteet",
+    "TBD303": "Tutkitut vaihtoehdot",
+    "TBD304": "Katusuunnitelmat",
+    "TBD305": "Visualisointikuvat",
+    "TBD306": "Ympäristösuunnitelmat",
+    "TBD307": "Muut selvitykset",
+    "TBD308": "Valaistuksen ja liikenteenohjauksen yleiskartat",
+    "TBD309": "Johtosiirrot ja kunnallistekniset suunnitelmat"
+  }
+}

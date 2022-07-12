@@ -204,6 +204,7 @@ interface AineistoKategoriaAccordionProps {
 }
 
 const AineistoKategoriaAccordion = (props: AineistoKategoriaAccordionProps) => {
+  const { t } = useTranslation("aineisto");
   return props.aineistoKategoriat ? (
     <HassuAccordion
       items={props.aineistoKategoriat?.map((kategoria) => {
@@ -213,7 +214,7 @@ const AineistoKategoriaAccordion = (props: AineistoKategoriaAccordionProps) => {
             kategoria.alaKategoriat?.some((alakategoria) => alakategoria.id === aineisto.kategoriaId)
         );
         return {
-          title: `${kategoria.nimi} (${aineistot?.length || 0})`,
+          title: `${t(`aineisto-kategoria-nimi.${kategoria.id}`)} (${aineistot?.length || 0})`,
           content: (
             <SuunnitelmaAineistoKategoriaContent
               aineistot={aineistot}

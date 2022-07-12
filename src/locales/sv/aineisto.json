@@ -1,0 +1,33 @@
+{
+  "aineisto-kategoria-nimi": {
+    "T1xx": "RUOTSI Selostusosa",
+    "TBD101": "RUOTSI Kaavakartat",
+    "TBD102": "RUOTSI Suunnitteluprosessiin liittyvä aineisto",
+    "TBD103": "RUOTSI YVA",
+
+    "T2xx": "RUOTSI Pääpiirustukset",
+    "TBD201": "RUOTSI Yleiskartat",
+    "TBD202": "RUOTSI Hallinnollisten järjestelyiden kartat",
+    "TBD203": "RUOTSI Suunnitelmakartat",
+    "TBD204": "RUOTSI Pituusleikkaukset",
+    "TBD205": "RUOTSI Poikkileikkaukset",
+    "TBD206": "RUOTSI Siltasuunnitelmat ja muut taitorakenteet",
+    "TBD207": "RUOTSI Ympäristörakenteet, esim. meluesteet",
+    "TBD208": "RUOTSI Lunastuskartat",
+    "TBD209": "RUOTSI Liikennepaikkojen suunnitelmat",
+    "TBD210": "RUOTSI Maanteiden toimenpiteet ratasuunnitelmassa",
+    "TBD211": "RUOTSI Ratojen toimenpiteet tiesuunnitelmassa",
+    "TBD212": "RUOTSI Muut piirustukset ja kuvat",
+
+    "T3xx": "RUOTSI Informatiivinen aineisto",
+    "TBD301": "RUOTSI Vaikutuksia kuvaavat selvitykset",
+    "TBD302": "RUOTSI Ulkopuoliset rakenteet",
+    "TBD303": "RUOTSI Tutkitut vaihtoehdot",
+    "TBD304": "RUOTSI Katusuunnitelmat",
+    "TBD305": "RUOTSI Visualisointikuvat",
+    "TBD306": "RUOTSI Ympäristösuunnitelmat",
+    "TBD307": "RUOTSI Muut selvitykset",
+    "TBD308": "RUOTSI Valaistuksen ja liikenteenohjauksen yleiskartat",
+    "TBD309": "RUOTSI Johtosiirrot ja kunnallistekniset suunnitelmat"
+  }
+}
