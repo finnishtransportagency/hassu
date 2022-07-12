@@ -3,7 +3,7 @@ import IconButton from "@components/button/IconButton";
 import TextInput from "@components/form/TextInput";
 import HassuTable from "@components/HassuTable";
 import Section from "@components/layout/Section";
-import AineistoNimiExtLink from "@components/projekti/AineistoNimiExtLink";
+import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import AineistojenValitseminenDialog from "@components/projekti/suunnitteluvaihe/AineistojenValitseminenDialog";
 import { VuorovaikutusFormValues } from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
 import { Stack } from "@mui/material";
@@ -18,9 +18,7 @@ import useSnackbars from "src/hooks/useSnackbars";
 import { formatDateTime } from "src/util/dateUtils";
 import { NahtavilleAsetettavatAineistotFormValues } from "./NahtavilleAsetettavatAineistot";
 
-type Props = {};
-
-export default function LausuntopyyntoonLiitettavaLisaaineisto({}: Props) {
+export default function LausuntopyyntoonLiitettavaLisaaineisto() {
   const { data: projekti } = useProjekti();
   const { watch, setValue } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
   const lisaAineisto = watch("lisaAineisto");
@@ -36,7 +34,7 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto({}: Props) {
         liitettävään aineistoon muodostuu, kun aineisto on tuotu Velhosta. Linkin takana oleva sisältö muodostuu
         nähtäville asetetuista aineistoista sekä lausuntopyynnön lisäaineistosta.
       </p>
-      {!!projekti?.oid && !!lisaAineisto?.length && <AineistoTable projektiOid={projekti.oid} />}
+      {!!projekti?.oid && !!lisaAineisto?.length && <AineistoTable />}
       <Button type="button" onClick={() => setAineistoDialogOpen(true)}>
         Tuo Aineistoja
       </Button>
@@ -88,13 +86,9 @@ type FormAineisto = FieldArrayWithId<
   "suunnitteluVaihe.vuorovaikutus.esittelyaineistot",
   "id"
 > &
-  Pick<Aineisto, "tila" | "tuotu">;
+  Pick<Aineisto, "tila" | "tuotu" | "tiedosto">;
 
-interface AineistoTableProps {
-  projektiOid: string;
-}
-
-const AineistoTable = (props: AineistoTableProps) => {
+const AineistoTable = () => {
   const { control, formState, register } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
   const { fields, remove } = useFieldArray({ name: "lisaAineisto", control });
   const { data: projekti } = useProjekti();
@@ -103,9 +97,10 @@ const AineistoTable = (props: AineistoTableProps) => {
     () =>
       fields.map((field) => {
         const aineistoData = projekti?.nahtavillaoloVaihe?.lisaAineisto || [];
-        const { tila, tuotu } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
+        const { tila, tuotu, tiedosto } =
+          aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
 
-        return { tila, tuotu, ...field };
+        return { tila, tuotu, tiedosto, ...field };
       }),
     [fields, projekti]
   );
@@ -120,11 +115,7 @@ const AineistoTable = (props: AineistoTableProps) => {
           const errorMessage = (formState.errors.aineistoNahtavilla?.lisaAineisto?.[index] as any | undefined)?.message;
           return (
             <>
-              <AineistoNimiExtLink
-                aineistoNimi={aineisto.nimi}
-                aineistoOid={aineisto.dokumenttiOid}
-                projektiOid={props.projektiOid}
-              />
+              <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto} />
               {errorMessage && <p className="text-red">{errorMessage}</p>}
               <input type="hidden" {...register(`lisaAineisto.${index}.dokumenttiOid`)} />
               <input type="hidden" {...register(`lisaAineisto.${index}.nimi`)} />
@@ -154,7 +145,7 @@ const AineistoTable = (props: AineistoTableProps) => {
       { Header: "id", accessor: "id" },
       { Header: "dokumenttiOid", accessor: "dokumenttiOid" },
     ],
-    [enrichedFields, formState.errors.aineistoNahtavilla, props.projektiOid, register, remove]
+    [enrichedFields, formState.errors.aineistoNahtavilla, register, remove]
   );
   const tableProps = useHassuTable<FormAineisto>({
     tableOptions: { columns, data: enrichedFields || [], initialState: { hiddenColumns: ["dokumenttiOid", "id"] } },

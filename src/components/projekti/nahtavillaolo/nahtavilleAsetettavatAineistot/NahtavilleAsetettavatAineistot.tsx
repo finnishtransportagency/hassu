@@ -8,41 +8,35 @@ import NahtavillaoloPainikkeet from "./NahtavillaoloPainikkeet";
 import LausuntopyyntoonLiitettavaLisaaineisto from "./LausuntopyyntoonLiitettavaLisaaineisto";
 import SuunnitelmatJaAineistot from "./SuunnitelmatJaAineistot";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
-import { AineistoKategoria, aineistoKategoriat } from "common/aineistoKategoriat";
+import { aineistoKategoriat } from "common/aineistoKategoriat";
 
-type Aineistot = {
-  aineistoNahtavilla: {
-    [kategoriaId: string]: AineistoInput[];
-  };
+interface AineistoNahtavilla {
+  [kategoriaId: string]: AineistoInput[];
+}
+
+type FormData = {
+  aineistoNahtavilla: AineistoNahtavilla;
   lisaAineisto: AineistoInput[];
 };
 
-export type NahtavilleAsetettavatAineistotFormValues = Pick<TallennaProjektiInput, "oid"> & Aineistot;
+export type NahtavilleAsetettavatAineistotFormValues = Pick<TallennaProjektiInput, "oid"> & FormData;
 
-const addAineistoKategoria = (
-  aineistoNahtavilla: Aineistot["aineistoNahtavilla"],
-  kategoria: AineistoKategoria,
-  allAineisto: Aineisto[] | undefined | null
-) => {
-  const aineisto: Aineisto[] = allAineisto?.filter(({ kategoriaId }) => kategoriaId === kategoria.id) || [];
-  aineistoNahtavilla[kategoria.id] = aineisto.map<AineistoInput>(({ dokumenttiOid, jarjestys, nimi, kategoriaId }) => ({
-    dokumenttiOid,
-    nimi,
-    jarjestys,
-    kategoriaId,
-  }));
-  // Uncomment to add alakategoriat recursively
-  // kategoria.alaKategoriat?.forEach((k) => addAineistoKategoria(aineistoNahtavilla, k));
+const getDefaultValueForAineistoNahtavilla = (aineistot: Aineisto[] | undefined | null) => {
+  return aineistoKategoriat.listKategoriaIds().reduce<AineistoNahtavilla>((aineistoNahtavilla, currentKategoriaId) => {
+    aineistoNahtavilla[currentKategoriaId] =
+      aineistot
+        ?.filter((aineisto) => aineisto.kategoriaId === currentKategoriaId)
+        .map<AineistoInput>((aineisto) => ({
+          dokumenttiOid: aineisto.dokumenttiOid,
+          nimi: aineisto.nimi,
+          jarjestys: aineisto.jarjestys,
+          kategoriaId: aineisto.kategoriaId,
+        })) || [];
+    return aineistoNahtavilla;
+  }, {});
 };
 
 function defaultValues(projekti: ProjektiLisatiedolla): NahtavilleAsetettavatAineistotFormValues {
-  const aineistoNahtavilla = aineistoKategoriat
-    .listKategoriat()
-    .reduce<Aineistot["aineistoNahtavilla"]>((aineistot, currentKategoria) => {
-      addAineistoKategoria(aineistot, currentKategoria, projekti.nahtavillaoloVaihe?.aineistoNahtavilla);
-      return aineistot;
-    }, {});
-
   const lisaAineisto: AineistoInput[] =
     projekti.nahtavillaoloVaihe?.lisaAineisto?.map(({ dokumenttiOid, nimi, jarjestys }) => ({
       dokumenttiOid,
@@ -52,7 +46,7 @@ function defaultValues(projekti: ProjektiLisatiedolla): NahtavilleAsetettavatAin
 
   return {
     oid: projekti.oid,
-    aineistoNahtavilla,
+    aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(projekti.nahtavillaoloVaihe?.aineistoNahtavilla),
     lisaAineisto,
   };
 }
@@ -72,7 +66,6 @@ export default function NahtavilleAsetettavatAineistot() {
   useEffect(() => {
     if (projekti?.oid) {
       const tallentamisTiedot = defaultValues(projekti);
-      console.log({ tallentamisTiedot });
       reset(tallentamisTiedot);
     }
   }, [projekti, reset]);

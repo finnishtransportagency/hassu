@@ -19,7 +19,7 @@ import {
 import AineistojenValitseminenDialog from "./AineistojenValitseminenDialog";
 import { Link } from "@mui/material";
 import { VuorovaikutusFormValues } from "./SuunnitteluvaiheenVuorovaikuttaminen";
-import AineistoNimiExtLink from "../AineistoNimiExtLink";
+import HassuAineistoNimiExtLink from "../HassuAineistoNimiExtLink";
 import { useProjekti } from "src/hooks/useProjekti";
 import { Aineisto, Vuorovaikutus } from "@services/api";
 import HassuTable from "@components/HassuTable";
@@ -228,7 +228,6 @@ export default function LuonnoksetJaAineistot({
                   <>
                     {projekti?.oid && vuorovaikutus && !!esittelyaineistot?.length ? (
                       <AineistoTable
-                        projektiOid={projekti.oid}
                         aineistoTyyppi={SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT}
                         esittelyAineistotFieldArray={esittelyAineistotFieldArray}
                         suunnitelmaLuonnoksetFieldArray={suunnitelmaLuonnoksetFieldArray}
@@ -273,9 +272,8 @@ export default function LuonnoksetJaAineistot({
                 title: `Suunnitelmaluonnokset (${suunnitelmaluonnokset?.length || 0})`,
                 content: (
                   <>
-                    {projekti?.oid && vuorovaikutus && !!suunnitelmaluonnokset?.length ? (
+                    {vuorovaikutus && !!suunnitelmaluonnokset?.length ? (
                       <AineistoTable
-                        projektiOid={projekti.oid}
                         aineistoTyyppi={SuunnitteluVaiheAineistoTyyppi.SUUNNITELMALUONNOKSET}
                         esittelyAineistotFieldArray={esittelyAineistotFieldArray}
                         suunnitelmaLuonnoksetFieldArray={suunnitelmaLuonnoksetFieldArray}
@@ -395,10 +393,9 @@ type FormAineisto = FieldArrayWithId<
   "suunnitteluVaihe.vuorovaikutus.esittelyaineistot",
   "id"
 > &
-  Pick<Aineisto, "tila" | "tuotu">;
+  Pick<Aineisto, "tila" | "tuotu" | "tiedosto">;
 
 interface AineistoTableProps {
-  projektiOid: string;
   aineistoTyyppi: SuunnitteluVaiheAineistoTyyppi;
   esittelyAineistotFieldArray: UseFieldArrayReturn<
     VuorovaikutusFormValues,
@@ -417,7 +414,6 @@ interface AineistoTableProps {
 }
 
 const AineistoTable = ({
-  projektiOid,
   aineistoTyyppi,
   suunnitelmaLuonnoksetFieldArray,
   esittelyAineistotFieldArray,
@@ -453,9 +449,10 @@ const AineistoTable = ({
           ...(vuorovaikutus.esittelyaineistot || []),
           ...(vuorovaikutus.suunnitelmaluonnokset || []),
         ];
-        const { tila, tuotu } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
+        const { tila, tuotu, tiedosto } =
+          aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
 
-        return { tila, tuotu, ...field };
+        return { tila, tuotu, tiedosto, ...field };
       }),
     [fields, vuorovaikutus]
   );
@@ -476,11 +473,7 @@ const AineistoTable = ({
           const errorMessage = (formState.errors as any).suunnitteluVaihe?.vuorovaikutus?.[errorpath]?.[index]?.message;
           return (
             <>
-              <AineistoNimiExtLink
-                aineistoNimi={aineisto.nimi}
-                aineistoOid={aineisto.dokumenttiOid}
-                projektiOid={projektiOid}
-              />
+              <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto} />
               {errorMessage && <p className="text-red">{errorMessage}</p>}
               <input type="hidden" {...register(`${fieldArrayName}.${index}.dokumenttiOid`)} />
               <input type="hidden" {...register(`${fieldArrayName}.${index}.nimi`)} />
@@ -538,7 +531,6 @@ const AineistoTable = ({
       aineistoTyyppi,
       fieldArrayName,
       enrichedFields,
-      projektiOid,
       register,
       remove,
       appendToOtherArray,
