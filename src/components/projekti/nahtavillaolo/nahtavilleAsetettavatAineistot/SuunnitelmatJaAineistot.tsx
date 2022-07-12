@@ -13,7 +13,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Aineisto } from "@services/api";
 import { AineistoKategoria, aineistoKategoriat, getNestedCategoryIds } from "common/aineistoKategoriat";
 import { find } from "lodash";
-import React, { Key, useMemo, useState } from "react";
+import useTranslation from "next-translate/useTranslation";
+import React, { Key, useCallback, useMemo, useState } from "react";
 import { FieldArrayWithId, useFieldArray, useFormContext } from "react-hook-form";
 import { Column } from "react-table";
 import { useHassuTable } from "src/hooks/useHassuTable";
@@ -42,6 +43,7 @@ export default function SuunnitelmatJaAineistot() {
   const { watch } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
   const aineistoNahtavilla = watch("aineistoNahtavilla");
   const [expandedAineisto, setExpandedAineisto] = useState<Key[]>([]);
+  const { t } = useTranslation("aineisto");
 
   return (
     <Section>
@@ -84,10 +86,9 @@ export default function SuunnitelmatJaAineistot() {
         expandedState={[expandedAineisto, setExpandedAineisto]}
         items={aineistoKategoriat.listKategoriat().map((paakategoria) => ({
           title: (
-            <span className="vayla-small-title">{`${paakategoria.nimi} (${getKategoriaAineistoMaara(
-              aineistoNahtavilla,
-              paakategoria
-            )})`}</span>
+            <span className="vayla-small-title">{`${t(
+              `aineisto-kategoria-nimi.${paakategoria.id}`
+            )} (${getKategoriaAineistoMaara(aineistoNahtavilla, paakategoria)})`}</span>
           ),
           content: (
             <SectionContent largeGaps>
@@ -155,12 +156,16 @@ interface SuunnitelmaAineistoAlakategoriaAccordionProps {
 
 const SuunnitelmaAineistoAlakategoriaAccordion = (props: SuunnitelmaAineistoAlakategoriaAccordionProps) => {
   const { watch } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
+  const { t } = useTranslation("aineisto");
   const aineistoNahtavilla = watch("aineistoNahtavilla");
   return (
     <HassuAccordion
       expandedState={props.expandedAineistoState}
       items={props.alakategoriat.map((alakategoria) => ({
-        title: `${alakategoria.nimi} (${getKategoriaAineistoMaara(aineistoNahtavilla, alakategoria)})`,
+        title: `${t(`aineisto-kategoria-nimi.${alakategoria.id}`)} (${getKategoriaAineistoMaara(
+          aineistoNahtavilla,
+          alakategoria
+        )})`,
         content: <AlakategoriaContent kategoria={alakategoria} expandedAineistoState={props.expandedAineistoState} />,
         id: alakategoria.id,
       }))}
@@ -201,29 +206,42 @@ interface AineistoTableProps {
   kategoriaId: string;
 }
 
-const getAllOptionsForKategoriat: (kategoriat: AineistoKategoria[], ylakategoriaNimi?: string) => SelectOption[] = (
-  kategoriat,
-  ylakategoriaNimi
-) => {
-  const ylakategoriaPrefix = ylakategoriaNimi ? `${ylakategoriaNimi} - ` : "";
-  const kategoriaIds: SelectOption[] = [];
-  kategoriat.forEach((kategoria) => {
-    kategoriaIds.push({ label: ylakategoriaPrefix + kategoria.nimi, value: kategoria.id });
-    if (kategoria.alaKategoriat) {
-      kategoriaIds.push(...getAllOptionsForKategoriat(kategoria.alaKategoriat, ylakategoriaPrefix + kategoria.nimi));
-    }
-  });
-  return kategoriaIds;
-};
-
-const ALL_OPTIONS = getAllOptionsForKategoriat(aineistoKategoriat.listKategoriat());
-
 const AineistoTable = (props: AineistoTableProps) => {
   const { data: projekti } = useProjekti();
   const { control, formState, register, getValues, setValue } =
     useFormContext<NahtavilleAsetettavatAineistotFormValues>();
   const aineistoRoute: `aineistoNahtavilla.${string}` = `aineistoNahtavilla.${props.kategoriaId}`;
   const { fields, remove } = useFieldArray({ name: aineistoRoute, control });
+  const { t } = useTranslation("aineisto");
+
+  const getAllOptionsForKategoriat: (kategoriat: AineistoKategoria[], ylakategoriaNimi?: string) => SelectOption[] =
+    useCallback(
+      (kategoriat, ylakategoriaNimi) => {
+        const ylakategoriaPrefix = ylakategoriaNimi ? `${ylakategoriaNimi} - ` : "";
+        const kategoriaIds: SelectOption[] = [];
+        kategoriat.forEach((kategoria) => {
+          kategoriaIds.push({
+            label: ylakategoriaPrefix + t(`aineisto-kategoria-nimi.${kategoria.id}`),
+            value: kategoria.id,
+          });
+          if (kategoria.alaKategoriat) {
+            kategoriaIds.push(
+              ...getAllOptionsForKategoriat(
+                kategoria.alaKategoriat,
+                ylakategoriaPrefix + t(`aineisto-kategoria-nimi.${kategoria.id}`)
+              )
+            );
+          }
+        });
+        return kategoriaIds;
+      },
+      [t]
+    );
+
+  const allOptions = useMemo(
+    () => getAllOptionsForKategoriat(aineistoKategoriat.listKategoriat()),
+    [getAllOptionsForKategoriat]
+  );
 
   const enrichedFields: FormAineisto[] = useMemo(
     () =>
@@ -265,7 +283,7 @@ const AineistoTable = (props: AineistoTableProps) => {
         accessor: (aineisto) => {
           return (
             <Select
-              options={ALL_OPTIONS}
+              options={allOptions}
               defaultValue={props.kategoriaId}
               onChange={(event) => {
                 const newKategoria = event.target.value;
@@ -316,6 +334,7 @@ const AineistoTable = (props: AineistoTableProps) => {
       register,
       remove,
       setValue,
+      allOptions,
     ]
   );
   const tableProps = useHassuTable<FormAineisto>({

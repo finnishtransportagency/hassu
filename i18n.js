@@ -4,6 +4,8 @@ module.exports = {
   pages: {
     "*": ["common", "projekti"],
     "/yllapito/perusta": ["velho-haku"],
+    "/suunnitelma/[oid]/nahtavillaolo": ["aineisto"],
+    "/yllapito/projekti/[oid]/nahtavillaolo": ["aineisto"],
   },
   loadLocaleFrom: (lang, ns) =>
     // You can use a dynamic import, fetch, whatever. You should
