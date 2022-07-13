@@ -11,6 +11,7 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
 import dayjs from "dayjs";
+import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -18,7 +19,6 @@ interface HelperType {
 }
 
 interface Props {
-  kirjaamoOsoitteet: KuntaVastaanottajaInput[] | undefined;
   nahtavillaoloVaihe: NahtavillaoloVaihe | null | undefined;
 }
 
@@ -31,8 +31,9 @@ type FormFields = {
   };
 };
 
-export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet, nahtavillaoloVaihe }: Props): ReactElement {
+export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props): ReactElement {
   const { t } = useTranslation("commonFI");
+  const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
   const julkinen = false; //nahtavillaoloVaihe?.tila === NahtavillaoloVaiheTila.HYVAKSYTTY;
 
