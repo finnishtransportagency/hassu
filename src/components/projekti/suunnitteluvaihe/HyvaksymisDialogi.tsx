@@ -38,7 +38,6 @@ export default function HyvaksymisDialogi({
           <ul className="vayla-dialog-list">
             {ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => (
               <li key={viranomainen.nimi}>
-                {console.log({ viranomainen })}
                 {t(`common:viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
               </li>
             ))}

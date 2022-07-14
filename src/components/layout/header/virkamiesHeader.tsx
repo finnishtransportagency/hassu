@@ -53,14 +53,14 @@ export function VirkamiesHeader({ scrolledPastOffset }: HeaderProps): ReactEleme
       sx={{ top: `${scrolledPastOffset ? -headerTop : 0}px` }}
     >
       <div ref={headerTopPortion}>
-        <div className="flex border-b border-gray-light py-5">
+        <div className="flex border-b border-gray-light py-5 flex-wrap justify-between gap-x-5 gap-y-5">
           <Link href="/yllapito">
             <a className="flex flex-col uppercase vayla-small-title">
               <span>{t("commonFI:sivustonimi")}</span>
               <span className="font-normal">{t("commonSV:sivustonimi")}</span>
             </a>
           </Link>
-          <div className="flex items-end ml-auto space-x-5">
+          <div className="flex flex-wrap items-end gap-x-5 gap-y-3">
             <span className="vayla-paragraph">{kayttajaNimi}</span>
             <ButtonLink href={logoutHref} useNextLink={false} endIcon="external-link-alt">
               Poistu Palvelusta

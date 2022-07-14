@@ -9,7 +9,7 @@ import { useFormContext } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
-import { NahtavilleAsetettavatAineistotFormValues } from "./NahtavilleAsetettavatAineistot";
+import { NahtavilleAsetettavatAineistotFormValues } from "./Muokkausnakyma";
 
 const mapFormValuesToTallennaProjektiInput = ({
   oid,
@@ -17,7 +17,6 @@ const mapFormValuesToTallennaProjektiInput = ({
   aineistoNahtavilla,
 }: NahtavilleAsetettavatAineistotFormValues): TallennaProjektiInput => {
   const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla).flat();
-  console.log(aineistoNahtavillaFlat);
   deleteFieldArrayIds(aineistoNahtavillaFlat);
   deleteFieldArrayIds(lisaAineisto);
 

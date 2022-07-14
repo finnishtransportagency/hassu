@@ -16,7 +16,7 @@ import { useHassuTable } from "src/hooks/useHassuTable";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import { formatDateTime } from "src/util/dateUtils";
-import { NahtavilleAsetettavatAineistotFormValues } from "./NahtavilleAsetettavatAineistot";
+import { NahtavilleAsetettavatAineistotFormValues } from "./Muokkausnakyma";
 
 export default function LausuntopyyntoonLiitettavaLisaaineisto() {
   const { data: projekti } = useProjekti();
@@ -25,6 +25,11 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
   const linkRef = useRef<HTMLInputElement>(null);
   const { showInfoMessage, showErrorMessage } = useSnackbars();
+
+  const linkHref = useMemo(() => {
+    const parametrit = projekti?.nahtavillaoloVaihe?.lisaAineistoParametrit;
+    return `${window.location.protocol}//${window.location.host}/suunnitelma/${projekti?.oid}/lausuntopyyntoaineistot?hash=${parametrit?.hash}&id=${parametrit?.nahtavillaoloVaiheId}&poistumisPaiva=${parametrit?.poistumisPaiva}`;
+  }, [projekti]);
 
   return (
     <Section>
@@ -60,7 +65,7 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
           label="Linkki lausuntopyyntöön liitettävään aineistoon"
           style={{ flexGrow: 1 }}
           disabled
-          value="https://valtionvayliensuunnittelu.fi/linkki-puuttuu"
+          value={linkHref}
           ref={linkRef}
         />
         <IconButton
