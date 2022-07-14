@@ -1,3 +1,5 @@
+import { Aineisto, AineistoInput } from "./graphql/apiModel";
+
 export {};
 
 type AineistoKategoriaProps = {
@@ -90,6 +92,16 @@ export const getNestedCategoryIds: (kategoriat: AineistoKategoria[]) => string[]
     }
   });
   return kategoriaIds;
+};
+
+export const getNestedAineistoMaaraForCategory = (
+  aineistot: (Aineisto | AineistoInput)[],
+  kategoria: AineistoKategoria
+) => {
+  let nestedAineistoMaaraSum = 0;
+  const ids = getNestedCategoryIds([kategoria]);
+  nestedAineistoMaaraSum += aineistot.filter(({ kategoriaId }) => kategoriaId && ids.includes(kategoriaId)).length;
+  return nestedAineistoMaaraSum;
 };
 
 function isMatchingToHakulauseet(hakulauseet: string[] | undefined, keyword: string): boolean {

@@ -6,16 +6,12 @@ import { Controller, useFieldArray, useFormContext, FieldError } from "react-hoo
 import { formatProperNoun } from "common/util/formatProperNoun";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
-import {
-  AloitusKuulutusJulkaisu,
-  AloitusKuulutusTila,
-  IlmoitettavaViranomainen,
-  ViranomaisVastaanottajaInput,
-} from "@services/api";
+import { AloitusKuulutusJulkaisu, AloitusKuulutusTila, IlmoitettavaViranomainen } from "@services/api";
 import dayjs from "dayjs";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
+import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -23,7 +19,6 @@ interface HelperType {
 }
 interface Props {
   isLoading: boolean;
-  kirjaamoOsoitteet: ViranomaisVastaanottajaInput[];
   aloituskuulutusjulkaisu?: AloitusKuulutusJulkaisu | null;
 }
 
@@ -36,15 +31,12 @@ type FormFields = {
   };
 };
 
-export default function IlmoituksenVastaanottajat({
-  isLoading,
-  kirjaamoOsoitteet,
-  aloituskuulutusjulkaisu,
-}: Props): ReactElement {
+export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusjulkaisu }: Props): ReactElement {
   const { t } = useTranslation("commonFI");
   const isReadonly = !!aloituskuulutusjulkaisu;
   const isKuntia = !!aloituskuulutusjulkaisu?.ilmoituksenVastaanottajat?.kunnat;
   const isViranomaisia = !!aloituskuulutusjulkaisu?.ilmoituksenVastaanottajat?.viranomaiset;
+  const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
   const {
     register,
@@ -102,7 +94,7 @@ export default function IlmoituksenVastaanottajat({
         )}
       </SectionContent>
 
-      {!isReadonly && (
+      {!isReadonly && kirjaamoOsoitteet && (
         <>
           <SectionContent>
             <h6 className="font-bold">Viranomaiset</h6>

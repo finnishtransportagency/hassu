@@ -5,6 +5,7 @@ module.exports = {
     "*": ["common", "projekti"],
     "/yllapito/perusta": ["velho-haku"],
     "/suunnitelma/[oid]/nahtavillaolo": ["aineisto"],
+    "/suunnitelma/[oid]/lausuntopyyntoaineistot": ["aineisto"],
     "/yllapito/projekti/[oid]/nahtavillaolo": ["aineisto"],
   },
   loadLocaleFrom: (lang, ns) =>

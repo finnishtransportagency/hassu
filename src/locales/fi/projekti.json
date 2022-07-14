@@ -64,8 +64,8 @@
     "ALOITUSKUULUTUS": "Aloituskuulutus",
     "SUUNNITTELU": "Suunnittelu",
     "NAHTAVILLAOLO": "Nähtävilläolo",
-    "HYVAKSYMISPAATOS": "Hyväksymispäätös",
-    "HYVAKSYNNASSA": "Hyväksynnässä",
+    "HYVAKSYTTY": "Hyväksymispäätös",
+    "HYVAKSYMISMENETTELYSSA": "Hyväksynnässä",
     "LAINVOIMA": "Lainvoima",
     "ARKISTOITU": "Arkistoitu"
   },

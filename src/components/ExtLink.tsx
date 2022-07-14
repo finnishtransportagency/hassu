@@ -1,11 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import classNames from "classnames";
-import { styled, Theme } from "@mui/material/styles";
-import { MUIStyledCommonProps } from "@mui/system";
+import { styled } from "@mui/material/styles";
 
 interface Props {
-  hideIcon?: true;
+  hideIcon?: boolean;
+  disabled?: boolean;
 }
 
 const ExtLink = (
@@ -14,17 +14,10 @@ const ExtLink = (
     children,
     className,
     hideIcon,
+    disabled,
     as,
     ...props
-  }: Omit<
-    Props &
-      React.PropsWithChildren<
-        MUIStyledCommonProps<Theme> &
-          React.ClassAttributes<HTMLAnchorElement> &
-          React.AnchorHTMLAttributes<HTMLAnchorElement>
-      >,
-    "ref"
-  >,
+  }: Props & Omit<React.ComponentProps<typeof Anchor>, "ref">,
   ref: React.ForwardedRef<HTMLAnchorElement>
 ) => (
   <Anchor
@@ -32,21 +25,17 @@ const ExtLink = (
     target={!as || as === "a" ? target : undefined}
     as={as}
     ref={ref}
-    className={classNames("text-primary-dark", className)}
+    className={classNames(disabled ? "text-gray" : "text-primary-dark", className)}
     {...props}
   >
     {children}
-    &nbsp;
     {!hideIcon && <FontAwesomeIcon className="ml-3" icon="external-link-alt" size="lg" />}
   </Anchor>
 );
 
 const Anchor = styled("a")({
-  display: "flex",
-  flexFlow: "row",
-  alignItems: "flex-start",
+  display: "inline",
   textAlign: "left",
-  justifyContent: "flex-start",
 });
 
 export default React.forwardRef(ExtLink);

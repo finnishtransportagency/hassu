@@ -1,4 +1,4 @@
-import { AloitusKuulutusJulkaisu, AloitusKuulutusTila, Kieli, ViranomaisVastaanottajaInput } from "@services/api";
+import { AloitusKuulutusJulkaisu, AloitusKuulutusTila, Kieli } from "@services/api";
 import React, { ReactElement } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import capitalize from "lodash/capitalize";
@@ -15,14 +15,12 @@ interface Props {
   oid?: string;
   aloituskuulutusjulkaisu?: AloitusKuulutusJulkaisu | null;
   isLoadingProjekti: boolean;
-  kirjaamoOsoitteet: ViranomaisVastaanottajaInput[];
 }
 
 export default function AloituskuulutusLukunakyma({
   aloituskuulutusjulkaisu,
   oid,
   isLoadingProjekti,
-  kirjaamoOsoitteet,
 }: Props): ReactElement {
   if (!aloituskuulutusjulkaisu || !oid) {
     return <></>;
@@ -108,11 +106,7 @@ export default function AloituskuulutusLukunakyma({
           ))}
         </div>
       </Section>
-      <IlmoituksenVastaanottajat
-        isLoading={isLoadingProjekti}
-        kirjaamoOsoitteet={kirjaamoOsoitteet || []}
-        aloituskuulutusjulkaisu={aloituskuulutusjulkaisu}
-      />
+      <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} />
       <Section>
         {aloituskuulutusjulkaisu.tila !== AloitusKuulutusTila.HYVAKSYTTY && (
           <AloituskuulutusPDFEsikatselu oid={oid} aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} />

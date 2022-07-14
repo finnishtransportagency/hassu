@@ -6,11 +6,23 @@ interface Props {
   aineistoNimi: string;
 }
 
-const HassuAineistoNimiExtLink = ({ aineistoNimi, tiedostoPolku, addTopMargin }: Props) => {
+const HassuAineistoNimiExtLink = ({
+  aineistoNimi,
+  tiedostoPolku,
+  addTopMargin,
+  ...extlinkProps
+}: Props & Omit<React.ComponentProps<typeof ExtLink>, "children">) => {
   const { data: projekti } = useProjekti();
   const href = tiedostoPolku && projekti ? `/yllapito/tiedostot/projekti/${projekti.oid}/${tiedostoPolku}` : undefined;
   return (
-    <ExtLink sx={addTopMargin ? { marginTop: 4 } : undefined} href={href} target="_blank">
+    <ExtLink
+      sx={addTopMargin ? { marginTop: 4 } : undefined}
+      href={href}
+      target="_blank"
+      disabled={!href}
+      hideIcon={!href}
+      {...extlinkProps}
+    >
       {aineistoNimi}
     </ExtLink>
   );

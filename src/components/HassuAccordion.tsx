@@ -48,7 +48,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   paddingRight: 0,
 }));
 
-interface AccordionItem {
+export interface AccordionItem {
   title: string | JSX.Element;
   content: ReactNode | string;
   id?: Key;

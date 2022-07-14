@@ -95,10 +95,7 @@ export default function KuulutuksenTiedot() {
               <KuulutusJaJulkaisuPaiva />
               <HankkeenSisallonKuvaus kielitiedot={projekti?.kielitiedot} />
               <KuulutuksessaEsitettavatYhteystiedot />
-              <IlmoituksenVastaanottajatKomponentti
-                kirjaamoOsoitteet={kirjaamoOsoitteet}
-                nahtavillaoloVaihe={projekti?.nahtavillaoloVaihe}
-              />
+              <IlmoituksenVastaanottajatKomponentti nahtavillaoloVaihe={projekti?.nahtavillaoloVaihe} />
               {pdfFormRef.current?.esikatselePdf && (
                 <KuulutuksenJaIlmoituksenEsikatselu esikatselePdf={pdfFormRef.current?.esikatselePdf} />
               )}

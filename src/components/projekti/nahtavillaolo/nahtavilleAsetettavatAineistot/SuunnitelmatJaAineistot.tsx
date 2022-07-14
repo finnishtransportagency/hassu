@@ -11,7 +11,7 @@ import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtL
 import AineistojenValitseminenDialog from "@components/projekti/suunnitteluvaihe/AineistojenValitseminenDialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Aineisto } from "@services/api";
-import { AineistoKategoria, aineistoKategoriat, getNestedCategoryIds } from "common/aineistoKategoriat";
+import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory } from "common/aineistoKategoriat";
 import { find } from "lodash";
 import useTranslation from "next-translate/useTranslation";
 import React, { Key, useCallback, useMemo, useState } from "react";
@@ -20,7 +20,7 @@ import { Column } from "react-table";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import { useProjekti } from "src/hooks/useProjekti";
 import { formatDateTime } from "src/util/dateUtils";
-import { NahtavilleAsetettavatAineistotFormValues } from "./NahtavilleAsetettavatAineistot";
+import { NahtavilleAsetettavatAineistotFormValues } from "./Muokkausnakyma";
 
 const kategoriaInfoText: Record<string, string> = {
   T1xx: "Selostusosan alle tuodaan A- tai T100 -kansioiden aineistot.",
@@ -28,20 +28,11 @@ const kategoriaInfoText: Record<string, string> = {
   T3xx: "Informatiivisen aineiston alle tuodaan C- tai T300 -kansioiden aineistot.",
 };
 
-const getKategoriaAineistoMaara = (
-  aineistoNahtavilla: NahtavilleAsetettavatAineistotFormValues["aineistoNahtavilla"] | undefined,
-  kategoria: AineistoKategoria
-) => {
-  let nestedAineistoMaaraSum = 0;
-  const aineistot = Object.values(aineistoNahtavilla || {}).flat();
-  const ids = getNestedCategoryIds([kategoria]);
-  nestedAineistoMaaraSum += aineistot.filter(({ kategoriaId }) => kategoriaId && ids.includes(kategoriaId)).length;
-  return nestedAineistoMaaraSum;
-};
-
 export default function SuunnitelmatJaAineistot() {
   const { watch } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
   const aineistoNahtavilla = watch("aineistoNahtavilla");
+
+  const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla || {}).flat();
   const [expandedAineisto, setExpandedAineisto] = useState<Key[]>([]);
   const { t } = useTranslation("aineisto");
 
@@ -88,7 +79,7 @@ export default function SuunnitelmatJaAineistot() {
           title: (
             <span className="vayla-small-title">{`${t(
               `aineisto-kategoria-nimi.${paakategoria.id}`
-            )} (${getKategoriaAineistoMaara(aineistoNahtavilla, paakategoria)})`}</span>
+            )} (${getNestedAineistoMaaraForCategory(aineistoNahtavillaFlat, paakategoria)})`}</span>
           ),
           content: (
             <SectionContent largeGaps>
@@ -158,12 +149,13 @@ const SuunnitelmaAineistoAlakategoriaAccordion = (props: SuunnitelmaAineistoAlak
   const { watch } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
   const { t } = useTranslation("aineisto");
   const aineistoNahtavilla = watch("aineistoNahtavilla");
+  const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla || {}).flat();
   return (
     <HassuAccordion
       expandedState={props.expandedAineistoState}
       items={props.alakategoriat.map((alakategoria) => ({
-        title: `${t(`aineisto-kategoria-nimi.${alakategoria.id}`)} (${getKategoriaAineistoMaara(
-          aineistoNahtavilla,
+        title: `${t(`aineisto-kategoria-nimi.${alakategoria.id}`)} (${getNestedAineistoMaaraForCategory(
+          aineistoNahtavillaFlat,
           alakategoria
         )})`,
         content: <AlakategoriaContent kategoria={alakategoria} expandedAineistoState={props.expandedAineistoState} />,

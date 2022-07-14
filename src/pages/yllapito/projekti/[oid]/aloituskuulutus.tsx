@@ -20,7 +20,6 @@ import {
   Status,
   TallennaProjektiInput,
   TilasiirtymaToiminto,
-  ViranomaisVastaanottajaInput,
   TilasiirtymaTyyppi,
   AsiakirjaTyyppi,
 } from "@services/api";
@@ -37,8 +36,6 @@ import useSnackbars from "src/hooks/useSnackbars";
 import { aloituskuulutusSchema } from "src/schemas/aloituskuulutus";
 import AloituskuulutusLukunakyma from "@components/projekti/aloituskuulutus/AloituskuulutusLukunakyma";
 import IlmoituksenVastaanottajat from "@components/projekti/aloituskuulutus/IlmoituksenVastaanottajat";
-import { GetServerSideProps } from "next";
-import { setupLambdaMonitoring } from "backend/src/aws/monitoring";
 import dayjs from "dayjs";
 import useTranslation from "next-translate/useTranslation";
 import { DialogActions, DialogContent, Stack } from "@mui/material";
@@ -47,7 +44,6 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuStack from "@components/layout/HassuStack";
 import HassuGrid from "@components/HassuGrid";
-import { GetParameterResult } from "aws-sdk/clients/ssm";
 import HassuSpinner from "@components/HassuSpinner";
 import { removeTypeName } from "src/util/removeTypeName";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
@@ -80,10 +76,7 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
   ProjektiTestType.PROJEKTI_IS_CREATED,
 ]);
 
-export default function Aloituskuulutus({
-  setRouteLabels,
-  kirjaamoOsoitteet,
-}: PageProps & ServerSideProps): ReactElement {
+export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactElement {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const router = useRouter();
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti();
@@ -439,7 +432,7 @@ export default function Aloituskuulutus({
                   </Section>
                 )}
                 <KuulutuksenYhteystiedot projekti={projekti} useFormReturn={useFormReturn} />
-                <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} kirjaamoOsoitteet={kirjaamoOsoitteet || []} />
+                <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} />
               </fieldset>
             </form>
           </FormProvider>
@@ -522,7 +515,6 @@ export default function Aloituskuulutus({
               getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA)
             }
             isLoadingProjekti={isLoadingProjekti}
-            kirjaamoOsoitteet={kirjaamoOsoitteet || []}
           ></AloituskuulutusLukunakyma>
         </FormProvider>
       )}
@@ -650,24 +642,3 @@ export default function Aloituskuulutus({
     </ProjektiPageLayout>
   );
 }
-
-interface ServerSideProps {
-  kirjaamoOsoitteet?: ViranomaisVastaanottajaInput[];
-}
-
-export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () => {
-  setupLambdaMonitoring();
-  const { getSSM } = require("../../../../../backend/src/aws/client");
-  const parameterName = "/kirjaamoOsoitteet";
-  let kirjaamoOsoitteet: ViranomaisVastaanottajaInput[] = [];
-  try {
-    const response: GetParameterResult = await getSSM().getParameter({ Name: parameterName }).promise();
-    kirjaamoOsoitteet = response.Parameter?.Value ? JSON.parse(response.Parameter.Value) : [];
-  } catch (e) {
-    log.error(`Could not pass prop 'kirjaamoOsoitteet' to 'aloituskuulutus' page`, e);
-  }
-
-  return {
-    props: { kirjaamoOsoitteet }, // will be passed to the page component as props
-  };
-};
