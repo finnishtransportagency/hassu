@@ -27,6 +27,7 @@ import Section from "@components/layout/Section";
 import HassuStack from "@components/layout/HassuStack";
 import HassuSpinner from "@components/HassuSpinner";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
+import { Stack } from "@mui/material";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -196,10 +197,10 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
                 validationSchema={loadedProjektiValidationSchema}
               />
               <ProjektiPerustiedot projekti={projekti} />
-              <div>
+              <Stack direction="column">
                 {projekti?.velho?.linkki && <ExtLink href={projekti?.velho?.linkki}>Hankesivu</ExtLink>}
                 <ExtLink href={velhobaseurl + projekti?.oid}>Projektin sivu Projektivelhossa</ExtLink>
-              </div>
+              </Stack>
             </Section>
             <ProjektiKuntatiedot projekti={projekti} />
             <ProjektiKuulutuskielet />
