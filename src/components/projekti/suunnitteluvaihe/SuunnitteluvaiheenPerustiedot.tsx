@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { suunnittelunPerustiedotSchema, maxHankkeenkuvausLength } from "src/schemas/suunnittelunPerustiedot";
 import SectionContent from "@components/layout/SectionContent";
 import Textarea from "@components/form/Textarea";
-import { Kieli, SuunnitteluVaiheInput, TallennaProjektiInput, api } from "@services/api";
+import { Kieli, SuunnitteluVaiheInput, TallennaProjektiInput, api, AloitusKuulutusTila } from "@services/api";
 import Section from "@components/layout/Section";
 import lowerCase from "lodash/lowerCase";
 import { ReactElement, useEffect, useState } from "react";
@@ -17,7 +17,7 @@ import HassuSpinner from "@components/HassuSpinner";
 import { removeTypeName } from "src/util/removeTypeName";
 import HassuDialog from "@components/HassuDialog";
 import SaapuneetKysymyksetJaPalautteet from "./SaapuneetKysymyksetJaPalautteet";
-import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -127,6 +127,8 @@ export default function SuunnitteluvaiheenPerustiedot({ isDirtyHandler }: Props)
   const toissijainenKieli = kielitiedot?.toissijainenKieli;
   const julkinen = projekti.suunnitteluVaihe?.julkinen;
 
+  const suunnitteluVaiheCanBePublished = canProjektiBePublished(projekti);
+
   return (
     <>
       {julkinen && (
@@ -225,7 +227,12 @@ export default function SuunnitteluvaiheenPerustiedot({ isDirtyHandler }: Props)
               Tallenna luonnos
             </Button>
           )}
-          <Button primary id="save_and_publish" onClick={handleSubmit(confirmPublish)} disabled={isFormSubmitting}>
+          <Button
+            primary
+            id="save_and_publish"
+            onClick={handleSubmit(confirmPublish)}
+            disabled={isFormSubmitting || !suunnitteluVaiheCanBePublished}
+          >
             {julkinen ? "Tallenna ja päivitä julkaisua" : "Tallenna ja julkaise perustiedot"}
           </Button>
           <Button disabled>Nähtävilläolon kuuluttaminen</Button>
@@ -270,3 +277,13 @@ export default function SuunnitteluvaiheenPerustiedot({ isDirtyHandler }: Props)
     </>
   );
 }
+
+function canProjektiBePublished(projekti: ProjektiLisatiedolla): boolean {
+  return projektiHasPublishedAloituskuulutusJulkaisu(projekti);
+}
+
+const projektiHasPublishedAloituskuulutusJulkaisu: (projekti: ProjektiLisatiedolla) => boolean = (projekti) =>
+  !!projekti.aloitusKuulutusJulkaisut?.some(
+    (julkaisu) =>
+      julkaisu.tila && [AloitusKuulutusTila.HYVAKSYTTY, AloitusKuulutusTila.MIGROITU].includes(julkaisu.tila)
+  );
