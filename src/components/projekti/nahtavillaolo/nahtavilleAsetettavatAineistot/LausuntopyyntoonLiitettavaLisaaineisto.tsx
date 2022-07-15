@@ -28,7 +28,10 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
 
   const linkHref = useMemo(() => {
     const parametrit = projekti?.nahtavillaoloVaihe?.lisaAineistoParametrit;
-    return `${window.location.protocol}//${window.location.host}/suunnitelma/${projekti?.oid}/lausuntopyyntoaineistot?hash=${parametrit?.hash}&id=${parametrit?.nahtavillaoloVaiheId}&poistumisPaiva=${parametrit?.poistumisPaiva}`;
+    if (typeof window === "undefined") {
+      return undefined;
+    }
+    return `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${projekti?.oid}/lausuntopyyntoaineistot?hash=${parametrit?.hash}&id=${parametrit?.nahtavillaoloVaiheId}&poistumisPaiva=${parametrit?.poistumisPaiva}`;
   }, [projekti]);
 
   return (

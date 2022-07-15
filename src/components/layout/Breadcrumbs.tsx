@@ -5,11 +5,11 @@ import useTranslation from "next-translate/useTranslation";
 import { Container, styled } from "@mui/material";
 
 export interface RouteLabels {
-  [key: string]: { label: string; hideWhenNotCurrentRoute?: boolean, translate?: boolean };
+  [key: string]: { label: string; hideWhenNotCurrentRoute?: boolean; translate?: boolean };
 }
 
 export interface RouteMapping {
-  [key: string]: { label: string; translate?: boolean, href: string };
+  [key: string]: { label: string; translate?: boolean; href: string };
 }
 
 interface Props {
@@ -26,6 +26,7 @@ const defaultLabels: RouteLabels = {
   "/yllapito/projekti/[oid]/aloituskuulutus": { label: "aloituskuulutus", translate: true },
   "/yllapito/projekti/[oid]/henkilot": { label: "henkilot_ja_kayttooikeushallinta", translate: true },
   "/yllapito/projekti/[oid]/suunnittelu": { label: "suunnittelu_ja_vuorovaikutus", translate: true },
+  "/yllapito/projekti/[oid]/nahtavillaolo": { label: "nahtavillaolovaihe", translate: true },
   "/yllapito/ohjeet": { label: "ohjeet", translate: true },
   "/suunnitelma": { label: "suunnitelmat", translate: true },
   "/suunnitelma/[oid]/aloituskuulutus": { label: "aloituskuulutus", translate: true },
@@ -55,7 +56,7 @@ export const generateRoutes = (nextRouter: NextRouter, routeLabels: RouteLabels)
   if (nextRouter.pathname === ERROR_ROUTE) {
     return ERROR_MAPPING;
   }
-  const labels : RouteLabels = { ...defaultLabels, ...routeLabels };
+  const labels: RouteLabels = { ...defaultLabels, ...routeLabels };
   // Some breadcrumb require to be hidden when it is not current route
   const isRouteVisible = (pathname: string) =>
     !labels[pathname]?.hideWhenNotCurrentRoute || isCurrentRoute(pathname, nextRouter);
@@ -68,7 +69,7 @@ export const generateRoutes = (nextRouter: NextRouter, routeLabels: RouteLabels)
     if (isRouteVisible(jointPathname)) {
       const href = joinPath(pathSplitted, index);
       const label = labels[jointPathname]?.label || pathname;
-      const translate = labels[jointPathname]?.translate || false;
+      const translate = labels[jointPathname]?.translate || false;
       reducer[jointPathname] = { href, label, translate };
     }
     return reducer;

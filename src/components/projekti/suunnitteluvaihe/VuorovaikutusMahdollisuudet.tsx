@@ -38,7 +38,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
 }: Props): ReactElement {
   const { t } = useTranslation();
 
-  const { getValues } = useFormContext<FormFields>();
+  const { getValues, getFieldState } = useFormContext<FormFields>();
 
   if (!projekti) {
     return <></>;
@@ -55,6 +55,8 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
     (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA
   );
   const isSoittoaikoja = !!vuorovaikutusTilaisuudet?.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA);
+
+  const tilaisuudetError = getFieldState("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet").error;
 
   return (
     <>
@@ -79,7 +81,10 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
             </div>
           </>
         ) : (
-          <h4 className="vayla-small-title">Vuorovaikutusmahdollisuudet palautteiden ja kysymyksien lisäksi</h4>
+          <>
+            <h4 className="vayla-small-title">Vuorovaikutusmahdollisuudet palautteiden ja kysymyksien lisäksi</h4>
+            {tilaisuudetError && <p className="text-red">{tilaisuudetError.message}</p>}
+          </>
         )}
         <SectionContent>
           {isVerkkotilaisuuksia && (

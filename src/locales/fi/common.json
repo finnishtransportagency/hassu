@@ -9,6 +9,7 @@
     "aloituskuulutus": "Aloituskuulutus",
     "henkilot_ja_kayttooikeushallinta": "Henkilöt ja käyttöoikeushallinta",
     "suunnittelu_ja_vuorovaikutus": "Suunnittelu ja vuorovaikutus",
+    "nahtavillaolovaihe": "Nähtävilläolovaihe",
     "ohjeet": "Ohjeet",
     "suunnitelmat": "Suunnitelmat",
     "suunnittelu": "Suunnittelu",
@@ -47,7 +48,7 @@
   "yhteystiedot": "Yhteystiedot",
   "lisatietoja_antavat": {
     "one": "Lisätietoja antaa {{yhteystiedot}}",
-    "other":"Lisätietoja antavat {{yhteystiedot}}"
+    "other": "Lisätietoja antavat {{yhteystiedot}}"
   },
   "yhteystieto": "{{etunimi}} {{sukunimi}}, puh. {{puhelinnumero}}, {{sahkoposti}} ({{organisaatio}})",
   "ja": "ja",

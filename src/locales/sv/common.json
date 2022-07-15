@@ -9,6 +9,7 @@
     "aloituskuulutus": "RUOTSIKSI Aloituskuulutus",
     "henkilot_ja_kayttooikeushallinta": "RUOTSIKSI Henkilöt ja käyttöoikeushallinta",
     "suunnittelu_ja_vuorovaikutus": "RUOTSIKSI Suunnittelu ja vuorovaikutus",
+    "nahtavillaolovaihe": "RUOTSIKSI Nähtävilläolovaihe",
     "ohjeet": "RUOTSIKSI Ohjeet",
     "suunnitelmat": "RUOTSIKSI Suunnitelmat",
     "suunnittelu": "RUOTSIKSI Suunnittelu",
@@ -47,7 +48,7 @@
   "yhteystiedot": "RUOTSI_Yhteystiedot",
   "lisatietoja_antavat": {
     "one": "RUOTSIKSI Lisätietoja antaa {{yhteystiedot}}",
-    "other":"RUOTSIKSI Lisätietoja antavat {{yhteystiedot}}"
+    "other": "RUOTSIKSI Lisätietoja antavat {{yhteystiedot}}"
   },
   "yhteystieto": "RUOTSI_{{etunimi}} {{sukunimi}}, puh. {{puhelinnumero}}, {{sahkoposti}} ({{organisaatio}})",
   "ja": "RUOTSI_ja",
