@@ -618,7 +618,7 @@ function adaptAineistotToSave(
         dbAineisto.kategoriaId = updateAineistoInput.kategoriaId;
         resultAineistot.push(dbAineisto);
       }
-      if (!updateAineistoInput) {
+      if (!updateAineistoInput && aineistotInput) {
         dbAineisto.tila = API.AineistoTila.ODOTTAA_POISTOA;
         resultAineistot.push(dbAineisto);
         hasPendingChanges = true;
