@@ -72,6 +72,17 @@ export type Kielitiedot = {
   projektinNimiVieraskielella?: string;
 };
 
+export type KasittelynTila = {
+  hyvaksymispaaatos: Hyvaksymispaatos;
+  ensimmainenJatkopaatos?: Hyvaksymispaatos;
+  toinenJatkopaatos?: Hyvaksymispaatos;
+}
+
+export type Hyvaksymispaatos = {
+  paatoksenPvm: string;
+  asianumero: string;
+}
+
 export type Velho = {
   nimi: string;
   tyyppi?: ProjektiTyyppi | null;
@@ -126,4 +137,5 @@ export type DBProjekti = {
   paivitetty?: string;
   // Secret salt to use when generating lisaaineisto links within this projekti
   salt?: string;
+  kasittelynTila?: KasittelynTila | null;
 };

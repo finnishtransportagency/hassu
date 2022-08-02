@@ -661,3 +661,14 @@ type LisaAineistoParametrit {
   poistumisPaiva: String!
   hash: String!
 }
+
+type KasittelynTila {
+  hyvaksymispaaatos: Hyvaksymispaatos
+  ensimmainenJatkopaatos: Hyvaksymispaatos
+  toinenJatkopaatos: Hyvaksymispaatos
+}
+
+type Hyvaksymispaatos {
+  paatoksenPvm: String!
+  asianumero: String!
+}
