@@ -256,12 +256,12 @@ input ListaaLisaAineistoInput {
 }
 
 input KasittelyntilaInput {
-  hyvaksymispaaatos: HyvaksymispaatosInput
+  hyvaksymispaatos: HyvaksymispaatosInput
   ensimmainenJatkopaatos: HyvaksymispaatosInput
   toinenJatkopaatos: HyvaksymispaatosInput
 }
 
 input HyvaksymispaatosInput {
-  paatoksenPvm: String!
-  asianumero: String!
+  paatoksenPvm: String
+  asianumero: String
 }

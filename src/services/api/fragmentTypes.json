@@ -140,6 +140,18 @@
         "__typename": "__Type"
       },
       {
+        "kind": "OBJECT",
+        "name": "Hyvaksymispaatos",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "HyvaksymispaatosInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "SCALAR",
         "name": "ID",
         "possibleTypes": null,
@@ -197,6 +209,18 @@
             "__typename": "__Type"
           }
         ],
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "KasittelynTila",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "KasittelyntilaInput",
+        "possibleTypes": null,
         "__typename": "__Type"
       },
       {

@@ -105,6 +105,7 @@ type Projekti implements IProjekti {
   kielitiedot: Kielitiedot
   paivitetty: String
   virhetiedot: ProjektiVirhe
+  kasittelynTila: KasittelynTila
 }
 
 type SuunnitteluVaihe {
@@ -663,12 +664,12 @@ type LisaAineistoParametrit {
 }
 
 type KasittelynTila {
-  hyvaksymispaaatos: Hyvaksymispaatos
+  hyvaksymispaatos: Hyvaksymispaatos
   ensimmainenJatkopaatos: Hyvaksymispaatos
   toinenJatkopaatos: Hyvaksymispaatos
 }
 
 type Hyvaksymispaatos {
-  paatoksenPvm: String!
-  asianumero: String!
+  paatoksenPvm: String
+  asianumero: String
 }

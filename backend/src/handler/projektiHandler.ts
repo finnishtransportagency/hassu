@@ -86,6 +86,9 @@ export async function arkistoiProjekti(oid: string): Promise<ArkistointiTunnus> 
 }
 
 export async function createOrUpdateProjekti(input: TallennaProjektiInput): Promise<string> {
+  if (input.kasittelynTila) {
+    requireAdmin(); // Hyvaksymispaatoksia voi tallentaa vain Hasssun yllapitaja
+  }
   requirePermissionLuku();
   const oid = input.oid;
   const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);

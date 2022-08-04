@@ -73,14 +73,14 @@ export type Kielitiedot = {
 };
 
 export type KasittelynTila = {
-  hyvaksymispaaatos: Hyvaksymispaatos;
+  hyvaksymispaatos: Hyvaksymispaatos;
   ensimmainenJatkopaatos?: Hyvaksymispaatos;
   toinenJatkopaatos?: Hyvaksymispaatos;
 }
 
 export type Hyvaksymispaatos = {
-  paatoksenPvm: string;
-  asianumero: string;
+  paatoksenPvm?: string;
+  asianumero?: string;
 }
 
 export type Velho = {
