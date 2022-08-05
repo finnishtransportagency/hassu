@@ -14,7 +14,7 @@ export function useProjekti() {
 }
 
 interface ProjektiLisatiedot {
-  nykyinenKayttaja: { omaaMuokkausOikeuden: boolean; onProjektipaallikko: boolean };
+  nykyinenKayttaja: { omaaMuokkausOikeuden: boolean; onProjektipaallikko: boolean; onYllapitaja: boolean };
 }
 
 export type ProjektiLisatiedolla = Projekti & ProjektiLisatiedot;
@@ -28,6 +28,7 @@ async function projektiLoader(_query: string, oid: string | undefined, kayttaja:
     nykyinenKayttaja: {
       omaaMuokkausOikeuden: userIsAdmin(kayttaja) || userHasAccessToProjekti({ projekti, kayttaja }),
       onProjektipaallikko: userIsAdmin(kayttaja) || userIsProjectManager({ kayttaja, projekti }),
+      onYllapitaja: userIsAdmin(kayttaja),
     },
   };
   return {

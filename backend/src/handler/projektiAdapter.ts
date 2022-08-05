@@ -4,6 +4,8 @@ import {
   AloitusKuulutusJulkaisu,
   AloitusKuulutusPDF,
   DBProjekti,
+  Hyvaksymispaatos,
+  KasittelynTila,
   Kielitiedot,
   Linkki,
   LocalizedMap,
@@ -95,6 +97,7 @@ export class ProjektiAdapter {
       nahtavillaoloVaihe,
       nahtavillaoloVaiheJulkaisut,
       salt: _salt,
+      kasittelynTila,
       ...fieldsToCopyAsIs
     } = dbProjekti;
 
@@ -116,6 +119,7 @@ export class ProjektiAdapter {
       nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe),
       nahtavillaoloVaiheJulkaisut: adaptNahtavillaoloVaiheJulkaisut(dbProjekti.oid, nahtavillaoloVaiheJulkaisut),
       virhetiedot,
+      kasittelynTila: adaptKasittelynTila(kasittelynTila),
       ...fieldsToCopyAsIs,
     }) as API.Projekti;
     if (apiProjekti.tallennettu) {
@@ -144,6 +148,7 @@ export class ProjektiAdapter {
       liittyvatSuunnitelmat,
       suunnitteluVaihe,
       nahtavillaoloVaihe,
+      kasittelynTila,
     } = changes;
     const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult();
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
@@ -174,6 +179,7 @@ export class ProjektiAdapter {
         liittyvatSuunnitelmat,
         vuorovaikutukset,
         salt: projekti.salt || lisaAineistoService.generateSalt(),
+        kasittelynTila,
       }
     ) as DBProjekti;
     projektiAdaptationResult.setProjekti(dbProjekti);
@@ -250,6 +256,29 @@ export class ProjektiAdapter {
 
     return projekti;
   }
+}
+
+function adaptKasittelynTila(kasittelynTila?: KasittelynTila | null): API.KasittelynTila | undefined | null {
+  if (kasittelynTila) {
+    const { hyvaksymispaatos, ensimmainenJatkopaatos, toinenJatkopaatos } = kasittelynTila;
+    return {
+      hyvaksymispaatos: adaptHyvaksymispaatos(hyvaksymispaatos),
+      ensimmainenJatkopaatos: adaptHyvaksymispaatos(ensimmainenJatkopaatos),
+      toinenJatkopaatos: adaptHyvaksymispaatos(toinenJatkopaatos),
+      __typename: "KasittelynTila",
+    };
+  }
+  return kasittelynTila as undefined;
+}
+
+function adaptHyvaksymispaatos(hyvaksymispaatos: Hyvaksymispaatos): API.Hyvaksymispaatos | undefined | null {
+  if (hyvaksymispaatos) {
+    return {
+      ...hyvaksymispaatos,
+      __typename: "Hyvaksymispaatos",
+    };
+  }
+  return hyvaksymispaatos as undefined;
 }
 
 function adaptLiittyvatSuunnitelmat(suunnitelmat?: Suunnitelma[] | null): API.Suunnitelma[] | undefined | null {

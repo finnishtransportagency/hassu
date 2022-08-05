@@ -37,6 +37,12 @@ export default function ProjektiSideNavigation(): ReactElement {
       disabled: !projekti?.tallennettu,
     },
     {
+      title: "Käsittelyn tila",
+      status: Status.ALOITUSKUULUTUS, //TODO: avataan nyt samaan aikaan kuin aloituskuulutus lahinna esteettisista syista, ei ole speksattu tarkasti avautumista? Muutettava myohemmin, ettei sotke automaattista ohjausta (ordinal) tietyn vaiheen tayttamisen
+      href: oid && `/yllapito/projekti/${oid}/kasittelyntila`,
+      disabled: !projekti?.tallennettu, //pidetaanko tama alusta asti auki, kun vain adminille kaytossa, vai seuraako vaiheita
+    },
+    {
       title: "Aloituskuulutus",
       status: Status.ALOITUSKUULUTUS,
       href: oid && `/yllapito/projekti/${oid}/aloituskuulutus`,

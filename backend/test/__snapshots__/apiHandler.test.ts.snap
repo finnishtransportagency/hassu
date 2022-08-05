@@ -141,6 +141,7 @@ Array [
   Object {
     "aloitusKuulutus": undefined,
     "euRahoitus": undefined,
+    "kasittelynTila": undefined,
     "kayttoOikeudet": Array [
       Object {
         "email": "pekka.projari@vayla.fi",
@@ -202,6 +203,7 @@ Array [
   Object {
     "aloitusKuulutus": undefined,
     "euRahoitus": undefined,
+    "kasittelynTila": undefined,
     "kayttoOikeudet": Array [
       Object {
         "email": "pekka.projari@vayla.fi",
@@ -300,6 +302,7 @@ Array [
       "siirtyySuunnitteluVaiheeseen": "2999-01-01",
     },
     "euRahoitus": false,
+    "kasittelynTila": undefined,
     "kayttoOikeudet": Array [
       Object {
         "email": "pekka.projari@vayla.fi",

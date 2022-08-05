@@ -9,6 +9,7 @@ input TallennaProjektiInput {
   kielitiedot: KielitiedotInput
   suunnitteluVaihe: SuunnitteluVaiheInput
   nahtavillaoloVaihe: NahtavillaoloVaiheInput
+  kasittelynTila: KasittelyntilaInput
 }
 
 input KielitiedotInput {
@@ -252,4 +253,15 @@ input ListaaLisaAineistoInput {
   nahtavillaoloVaiheId: Int!
   poistumisPaiva: String!
   hash: String!
+}
+
+input KasittelyntilaInput {
+  hyvaksymispaatos: HyvaksymispaatosInput
+  ensimmainenJatkopaatos: HyvaksymispaatosInput
+  toinenJatkopaatos: HyvaksymispaatosInput
+}
+
+input HyvaksymispaatosInput {
+  paatoksenPvm: String
+  asianumero: String
 }
