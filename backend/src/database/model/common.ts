@@ -11,7 +11,6 @@ export type Yhteystieto = {
   titteli?: string;
 };
 
-
 export type Aineisto = {
   // Dokumentin oid Velhossa
   dokumenttiOid: string;
@@ -27,4 +26,3 @@ export type Aineisto = {
   jarjestys?: number | null;
   tila: AineistoTila;
 };
-

@@ -39,6 +39,15 @@ enum IlmoitettavaViranomainen {
   VAYLAVIRASTO
 }
 
+enum HallintoOikeus {
+  HELSINKI
+  HAMEENLINNA
+  ITA_SUOMI
+  POHJOIS_SUOMI
+  TURKU
+  VAASA
+}
+
 # Keep statuses in the process order below
 enum Status {
   EI_JULKAISTU_PROJEKTIN_HENKILOT
@@ -94,6 +103,8 @@ type Projekti implements IProjekti {
   suunnitteluVaihe: SuunnitteluVaihe
   nahtavillaoloVaihe: NahtavillaoloVaihe
   nahtavillaoloVaiheJulkaisut: [NahtavillaoloVaiheJulkaisu!]
+  hyvaksymisVaihe: HyvaksymisVaihe
+  hyvaksymisVaiheJulkaisut: [HyvaksymisVaiheJulkaisu!]
   velho: Velho!
   kayttoOikeudet: [ProjektiKayttaja!]
   """
@@ -196,6 +207,29 @@ type NahtavillaoloVaihe {
   palautusSyy: String
 }
 
+type HyvaksymisVaihe {
+  hyvaksymisPaatos: [Aineisto!]
+  aineistoNahtavilla: [Aineisto!]
+  kuulutusPaiva: String
+  kuulutusVaihePaattyyPaiva: String
+  hallintoOikeudet: [HallintoOikeus!]
+  kuulutusYhteystiedot: [Yhteystieto!]
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+  hyvaksymisVaihePDFt: HyvaksymisVaihePDFt
+  palautusSyy: String
+}
+
+type HyvaksymisVaiheJulkinen {
+  hyvaksymisPaatos: [Aineisto!]
+  aineistoNahtavilla: [Aineisto!]
+  kuulutusPaiva: String
+  kuulutusVaihePaattyyPaiva: String
+  hallintoOikeudet: [HallintoOikeus!]
+  kuulutusYhteystiedot: [Yhteystieto!]
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+  hyvaksymisVaihePDFt: HyvaksymisVaihePDFt
+}
+
 type NahtavillaoloVaiheJulkaisu {
   aineistoNahtavilla: [Aineisto!]
   lisaAineisto: [Aineisto!]
@@ -214,6 +248,22 @@ type NahtavillaoloVaiheJulkaisu {
   hyvaksyja: String
 }
 
+type HyvaksymisVaiheJulkaisu {
+  aineistoNahtavilla: [Aineisto!]
+  hyvaksymisPaatos: [Aineisto!]
+  kuulutusPaiva: String
+  kuulutusVaihePaattyyPaiva: String
+  velho: Velho!
+  kielitiedot: Kielitiedot
+  kuulutusYhteystiedot: [Yhteystieto!]
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+  hallintoOikeudet: [HallintoOikeus!]
+  hyvaksymisVaihePDFt: HyvaksymisVaihePDFt
+  tila: HyvaksymisVaiheTila
+  muokkaaja: String
+  hyvaksyja: String
+}
+
 type NahtavillaoloVaiheJulkaisuJulkinen {
   aineistoNahtavilla: [Aineisto!]
   kuulutusPaiva: String
@@ -228,6 +278,19 @@ type NahtavillaoloVaiheJulkaisuJulkinen {
   nahtavillaoloPDFt: NahtavillaoloPDFt
 }
 
+type HyvaksymisVaiheJulkaisuJulkinen {
+  aineistoNahtavilla: [Aineisto!]
+  hyvaksymisPaatos: [Aineisto!]
+  kuulutusPaiva: String
+  kuulutusVaihePaattyyPaiva: String
+  velho: VelhoJulkinen!
+  kielitiedot: Kielitiedot
+  hallintoOikeudet: [HallintoOikeus!]
+  kuulutusYhteystiedot: [Yhteystieto!]
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+  hyvaksymisVaihePDFt: HyvaksymisVaihePDFt
+}
+
 type NahtavillaoloPDF {
   nahtavillaoloPDFPath: String!
   nahtavillaoloIlmoitusPDFPath: String!
@@ -240,6 +303,20 @@ type NahtavillaoloPDFt {
   SAAME: NahtavillaoloPDF
 }
 
+type HyvaksymisVaihePDF {
+  hyvaksymisKuulutusPDFPath: String!
+  hyvaksymisIlmoitusPDFPath: String!
+  hyvaksymisLahetekirjePDFPath: String!
+  hyvaksymisIlmoitusLausunnonantajillePDFPath: String!
+  hyvaksymisIlmoitusMuistuttajillePDFPath: String!
+}
+
+type HyvaksymisVaihePDFt {
+  SUOMI: HyvaksymisVaihePDF!
+  RUOTSI: HyvaksymisVaihePDF
+  SAAME: HyvaksymisVaihePDF
+}
+
 type NahtavillaoloVaiheJulkinen {
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
@@ -250,6 +327,12 @@ type NahtavillaoloVaiheJulkinen {
 }
 
 enum NahtavillaoloVaiheTila {
+  ODOTTAA_HYVAKSYNTAA
+  HYVAKSYTTY
+  PALAUTETTU
+}
+
+enum HyvaksymisVaiheTila {
   ODOTTAA_HYVAKSYNTAA
   HYVAKSYTTY
   PALAUTETTU
@@ -389,6 +472,7 @@ type ProjektiJulkinen implements IProjekti {
   projektiHenkilot: [ProjektiKayttajaJulkinen!]
   paivitetty: String
   nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisuJulkinen
+  hyvaksymisVaihe: HyvaksymisVaiheJulkaisuJulkinen
 }
 
 type Suunnitelma {

@@ -9,6 +9,7 @@ input TallennaProjektiInput {
   kielitiedot: KielitiedotInput
   suunnitteluVaihe: SuunnitteluVaiheInput
   nahtavillaoloVaihe: NahtavillaoloVaiheInput
+  hyvaksymisVaihe: HyvaksymisVaiheInput
   kasittelynTila: KasittelyntilaInput
 }
 
@@ -146,6 +147,17 @@ input NahtavillaoloVaiheInput {
   kuulutusVaihePaattyyPaiva: String
   muistutusoikeusPaattyyPaiva: String
   hankkeenKuvaus: HankkeenKuvauksetInput
+  kuulutusYhteysHenkilot: [String!]
+  kuulutusYhteystiedot: [YhteystietoInput!]
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
+}
+
+input HyvaksymisVaiheInput {
+  hyvaksymisPaatos: [AineistoInput!]
+  aineistoNahtavilla: [AineistoInput!]
+  kuulutusPaiva: String
+  kuulutusVaihePaattyyPaiva: String
+  hallintoOikeudet: [HallintoOikeus!]
   kuulutusYhteysHenkilot: [String!]
   kuulutusYhteystiedot: [YhteystietoInput!]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
