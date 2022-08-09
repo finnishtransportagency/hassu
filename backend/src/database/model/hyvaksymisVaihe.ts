@@ -10,6 +10,7 @@ export type HyvaksymisVaihe = {
   kuulutusVaihePaattyyPaiva?: string | null;
   hallintoOikeudet?: Array<HallintoOikeus> | null;
   kuulutusYhteystiedot?: Array<Yhteystieto> | null;
+  kuulutusYhteysHenkilot?: Array<string> | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   hyvaksymisVaihePDFt?: LocalizedMap<HyvaksymisVaihePDF>;
   palautusSyy?: string | null;
@@ -25,6 +26,7 @@ export type HyvaksymisVaiheJulkaisu = {
   kielitiedot: Kielitiedot;
   hallintoOikeudet: Array<HallintoOikeus> | null;
   kuulutusYhteystiedot?: Array<Yhteystieto> | null;
+  kuulutusYhteysHenkilot?: Array<string> | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   hyvaksymisVaihePDFt?: LocalizedMap<HyvaksymisVaihePDF>;
   tila?: HyvaksymisVaiheTila | null;
