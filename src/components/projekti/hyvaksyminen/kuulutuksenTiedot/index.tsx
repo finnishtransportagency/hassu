@@ -5,12 +5,13 @@ import React, { useEffect, useState } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import { hyvaksymispaatosKuulutusSchema } from "src/schemas/hyvaksymispaatosKuulutus";
-// import Painikkeet from "./Painikkeet";
-// import HankkeenSisallonKuvaus from "./HankkeenSisallonKuvaus";
-// import KuulutuksenJaIlmoituksenEsikatselu from "./KuulutuksenJaIlmoituksenEsikatselu";
-// import KuulutuksessaEsitettavatYhteystiedot from "./KuulutuksessaEsitettavatYhteystiedot";
-// import KuulutusJaJulkaisuPaiva from "./KuulutusJaJulkaisuPaiva";
-// import IlmoituksenVastaanottajatKomponentti from "./IlmoituksenVastaanottajat";
+import Painikkeet from "./Painikkeet";
+import KuulutuksenJaIlmoituksenEsikatselu from "./KuulutuksenJaIlmoituksenEsikatselu";
+import KuulutuksessaEsitettavatYhteystiedot from "./KuulutuksessaEsitettavatYhteystiedot";
+import KuulutusJaJulkaisuPaiva from "./KuulutusJaJulkaisuPaiva";
+import PaatoksenPaiva from "./PaatoksenPaiva";
+import MuutoksenHaku from "./MuutoksenHaku";
+import IlmoituksenVastaanottajatKomponentti from "./IlmoituksenVastaanottajat";
 // import Lukunakyma from "./Lukunakyma";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import { removeTypeName } from "src/util/removeTypeName";
@@ -85,14 +86,16 @@ export default function KuulutuksenTiedot() {
         <>
           <FormProvider {...useFormReturn}>
             <form>
-              {/* <KuulutusJaJulkaisuPaiva />
-              <HankkeenSisallonKuvaus kielitiedot={projekti?.kielitiedot} />
+              <KuulutusJaJulkaisuPaiva />
+              <PaatoksenPaiva />
+              <MuutoksenHaku />
               <KuulutuksessaEsitettavatYhteystiedot />
               <IlmoituksenVastaanottajatKomponentti hyvaksymisVaihe={projekti?.hyvaksymisVaihe} />
+
               {pdfFormRef.current?.esikatselePdf && (
                 <KuulutuksenJaIlmoituksenEsikatselu esikatselePdf={pdfFormRef.current?.esikatselePdf} />
               )}
-              <Painikkeet projekti={projekti} /> */}
+              <Painikkeet projekti={projekti} />
             </form>
           </FormProvider>
           <PdfPreviewForm ref={pdfFormRef} />
