@@ -230,6 +230,7 @@ enum TilasiirtymaToiminto {
 enum TilasiirtymaTyyppi {
   ALOITUSKUULUTUS
   NAHTAVILLAOLO
+  HYVAKSYMISVAIHE
 }
 
 input TilaSiirtymaInput {
