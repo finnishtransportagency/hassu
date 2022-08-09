@@ -137,7 +137,7 @@ export class FileService {
         Bucket: bucket,
         Key: targetPath,
         ContentType: param.contentType,
-        ContentDisposition: param.inline && "inline; filename=" + param.fileName,
+        ContentDisposition: param.inline && "inline; filename*=UTF-8''" + encodeURIComponent(param.fileName),
         Metadata: metadata,
       })
       .promise();

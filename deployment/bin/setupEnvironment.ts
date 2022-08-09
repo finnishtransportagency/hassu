@@ -240,6 +240,7 @@ async function main() {
         "@" +
         variables.FrontendDomainName,
       localServer: false,
+      apiKey: backendStackOutputs.AppSyncAPIKey,
       ...testUsersConfig,
     });
   } else {

@@ -1,5 +1,6 @@
 /// <reference types="cypress" />
 import dayjs from "dayjs";
+import { capturePDFPreview, requestPDFs } from "../../support/util";
 
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
@@ -64,35 +65,12 @@ describe("Projektin aloituskuulutus", () => {
     cy.get('[name="aloitusKuulutus.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').clear().type("test@vayla.fi");
     cy.get('[name="aloitusKuulutus.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').clear().type("test@vayla.fi");
 
-    const pdfs = [];
-    cy.get('[name="tallennaProjektiInput"')
-      .parent()
-      .then((form) => {
-        cy.stub(form.get()[0], "submit")
-          .callsFake((a, b, c) => {
-            let action = form.get()[0].getAttribute("action");
-            let tallennaProjektiInput = form.get()[0].children.namedItem("tallennaProjektiInput").getAttribute("value");
-            pdfs.push({
-              action: action,
-              tallennaProjektiInput: tallennaProjektiInput,
-            });
-          })
-          .as("formSubmit");
-      });
+    const pdfs = capturePDFPreview();
     cy.get("#preview_kuulutus_pdf_SUOMI").click();
     cy.get("#preview_kuulutus_pdf_RUOTSI").click();
     cy.get("#preview_ilmoitus_pdf_SUOMI").click();
     cy.get("#preview_ilmoitus_pdf_RUOTSI").click();
-    cy.get("@formSubmit")
-      .should("have.been.called")
-      .then(() => {
-        for (const pdf of pdfs) {
-          cy.request("POST", pdf.action, { tallennaProjektiInput: pdf.tallennaProjektiInput }).then((response) => {
-            expect(response.status).to.eq(200);
-          });
-        }
-      });
-
+    requestPDFs(pdfs);
     cy.get("#save_and_send_for_acceptance").click();
     cy.contains("Aloituskuulutus on hyväksyttävänä");
     cy.get("#button_open_acceptance_dialog")
