@@ -128,6 +128,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "ENUM",
+        "name": "HallintoOikeus",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "OBJECT",
         "name": "HankkeenKuvaukset",
         "possibleTypes": null,
@@ -148,6 +154,54 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "HyvaksymispaatosInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "HyvaksymisVaihe",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "HyvaksymisVaiheInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "HyvaksymisVaiheJulkaisu",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "HyvaksymisVaiheJulkaisuJulkinen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "HyvaksymisVaiheJulkinen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "HyvaksymisVaihePDF",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "HyvaksymisVaihePDFt",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "HyvaksymisVaiheTila",
         "possibleTypes": null,
         "__typename": "__Type"
       },

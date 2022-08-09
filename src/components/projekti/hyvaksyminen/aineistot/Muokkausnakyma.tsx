@@ -6,7 +6,7 @@ import { useProjekti } from "src/hooks/useProjekti";
 import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot";
 import HyvaksymisVaihePainikkeet from "./HyvaksymisVaihePainikkeet";
 import Hyvaksymispaatos from "./Hyvaksymispaatos";
-import SuunnitelmatJaAineistot from "./SuunnitelmatJaAineistot";
+import SuunnitelmatJaAineistot from "../../common/SuunnitelmatJaAineistot";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { aineistoKategoriat } from "common/aineistoKategoriat";
 

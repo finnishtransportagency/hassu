@@ -8,9 +8,9 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
-import AineistojenValitseminenDialog from "@components/projekti/suunnitteluvaihe/AineistojenValitseminenDialog";
+import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Aineisto } from "@services/api";
+import { Aineisto, AineistoInput } from "@services/api";
 import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory } from "common/aineistoKategoriat";
 import { find } from "lodash";
 import useTranslation from "next-translate/useTranslation";
@@ -20,7 +20,14 @@ import { Column } from "react-table";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import { useProjekti } from "src/hooks/useProjekti";
 import { formatDateTime } from "src/util/dateUtils";
-import { HyvaksymisVaiheAineistotFormValues } from "./Muokkausnakyma";
+
+interface AineistoNahtavilla {
+  [kategoriaId: string]: AineistoInput[];
+}
+
+interface FormValues {
+  aineistoNahtavilla: AineistoNahtavilla;
+}
 
 const kategoriaInfoText: Record<string, string> = {
   T1xx: "Selostusosan alle tuodaan A- tai T100 -kansioiden aineistot.",
@@ -29,7 +36,7 @@ const kategoriaInfoText: Record<string, string> = {
 };
 
 export default function SuunnitelmatJaAineistot() {
-  const { watch } = useFormContext<HyvaksymisVaiheAineistotFormValues>();
+  const { watch } = useFormContext<FormValues>();
   const aineistoNahtavilla = watch("aineistoNahtavilla");
 
   const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla || {}).flat();
@@ -104,7 +111,7 @@ interface SuunnitelmaAineistoPaakategoriaContentProps {
 const SuunnitelmaAineistoPaakategoriaContent = (props: SuunnitelmaAineistoPaakategoriaContentProps) => {
   const { data: projekti } = useProjekti();
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
-  const { setValue, watch } = useFormContext<HyvaksymisVaiheAineistotFormValues>();
+  const { setValue, watch } = useFormContext<FormValues>();
 
   const aineistoRoute: `aineistoNahtavilla.${string}` = `aineistoNahtavilla.${props.paakategoria.id}`;
 
@@ -146,7 +153,7 @@ interface SuunnitelmaAineistoAlakategoriaAccordionProps {
 }
 
 const SuunnitelmaAineistoAlakategoriaAccordion = (props: SuunnitelmaAineistoAlakategoriaAccordionProps) => {
-  const { watch } = useFormContext<HyvaksymisVaiheAineistotFormValues>();
+  const { watch } = useFormContext<FormValues>();
   const { t } = useTranslation("aineisto");
   const aineistoNahtavilla = watch("aineistoNahtavilla");
   const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla || {}).flat();
@@ -171,7 +178,7 @@ interface AlakategoriaContentProps {
 }
 
 const AlakategoriaContent = (props: AlakategoriaContentProps) => {
-  const { watch } = useFormContext<HyvaksymisVaiheAineistotFormValues>();
+  const { watch } = useFormContext<FormValues>();
   const aineistoRoute: `aineistoNahtavilla.${string}` = `aineistoNahtavilla.${props.kategoria.id}`;
   const aineistot = watch(aineistoRoute);
   return (
@@ -191,7 +198,7 @@ const AlakategoriaContent = (props: AlakategoriaContentProps) => {
   );
 };
 
-type FormAineisto = FieldArrayWithId<HyvaksymisVaiheAineistotFormValues, `aineistoNahtavilla.${string}`, "id"> &
+type FormAineisto = FieldArrayWithId<FormValues, `aineistoNahtavilla.${string}`, "id"> &
   Pick<Aineisto, "tila" | "tuotu" | "tiedosto">;
 
 interface AineistoTableProps {
@@ -200,7 +207,7 @@ interface AineistoTableProps {
 
 const AineistoTable = (props: AineistoTableProps) => {
   const { data: projekti } = useProjekti();
-  const { control, formState, register, getValues, setValue } = useFormContext<HyvaksymisVaiheAineistotFormValues>();
+  const { control, formState, register, getValues, setValue } = useFormContext<FormValues>();
   const aineistoRoute: `aineistoNahtavilla.${string}` = `aineistoNahtavilla.${props.kategoriaId}`;
   const { fields, remove } = useFieldArray({ name: aineistoRoute, control });
   const { t } = useTranslation("aineisto");

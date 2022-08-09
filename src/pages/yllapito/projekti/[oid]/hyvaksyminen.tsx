@@ -5,7 +5,7 @@ import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import Tabs from "@components/layout/tabs/Tabs";
 import KuulutuksenTiedot from "@components/projekti/hyvaksyminen/kuulutuksenTiedot/index";
-import PaatosAineistot from "@components/projekti/hyvaksyminen/paatosAineistot/index";
+import PaatosAineistot from "@components/projekti/hyvaksyminen/aineistot/index";
 
 export default function Hyvaksyminen({ setRouteLabels }: PageProps): ReactElement {
   useProjektiBreadcrumbs(setRouteLabels);
