@@ -5,12 +5,14 @@ import {
   AloitusKuulutusPDF,
   DBProjekti,
   Hyvaksymispaatos,
+  HyvaksymisVaihe,
+  HyvaksymisVaiheJulkaisu,
+  HyvaksymisVaihePDF,
   KasittelynTila,
   Kielitiedot,
   Linkki,
   LocalizedMap,
   NahtavillaoloPDF,
-  HyvaksymisVaihePDF,
   NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
   Palaute,
@@ -21,10 +23,9 @@ import {
   Vuorovaikutus,
   VuorovaikutusTilaisuus,
   Yhteystieto,
-  HyvaksymisVaihe,
-  HyvaksymisVaiheJulkaisu,
 } from "../database/model";
 import * as API from "../../../common/graphql/apiModel";
+import { NahtavillaoloVaiheTila } from "../../../common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import { personSearch } from "../personSearch/personSearchClient";
@@ -240,7 +241,7 @@ export class ProjektiAdapter {
     }
 
     function checkHyvaksymisMenettelyssa() {
-      const nahtavillaoloVaihe = projekti?.nahtavillaoloVaihe;
+      const nahtavillaoloVaihe = projekti?.nahtavillaoloVaiheJulkaisut?.filter(julkaisu => julkaisu.tila == NahtavillaoloVaiheTila.HYVAKSYTTY).pop();
       if (isDateInThePast(nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva)) {
         projekti.status = API.Status.HYVAKSYMISMENETTELYSSA;
       }
