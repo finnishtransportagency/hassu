@@ -157,6 +157,7 @@ export class ProjektiAdapter {
       suunnitteluVaihe,
       nahtavillaoloVaihe,
       kasittelynTila,
+      hyvaksymisVaihe
     } = changes;
     const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult();
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
@@ -182,6 +183,7 @@ export class ProjektiAdapter {
           projektiAdaptationResult,
           projekti.nahtavillaoloVaiheJulkaisut?.length
         ),
+        hyvaksymisVaihe: adaptHyvaksymisVaiheToSave(projekti.hyvaksymisVaihe, hyvaksymisVaihe, projektiAdaptationResult, projekti.hyvaksymisVaiheJulkaisut?.length),
         kielitiedot,
         euRahoitus,
         liittyvatSuunnitelmat,
@@ -487,6 +489,59 @@ function adaptHyvaksymisVaihe(dbProjekti: DBProjekti, hyvaksymisVaihe: Hyvaksymi
   };
 }
 
+function adaptHyvaksymisVaiheToSave(
+  dbHyvaksymisVaihe: HyvaksymisVaihe,
+  hyvaksymisVaihe: API.HyvaksymisVaiheInput,
+  projektiAdaptationResult: ProjektiAdaptationResult,
+  hyvaksymisVaiheJulkaisutCount: number | undefined
+): HyvaksymisVaihe {
+  if (!hyvaksymisVaihe) {
+    return undefined;
+  }
+  const {
+    hyvaksymisPaatos: hyvaksymisPaatosInput,
+    aineistoNahtavilla: aineistoNahtavillaInput,
+    kuulutusYhteystiedot,
+    ilmoituksenVastaanottajat,
+    kuulutusPaiva,
+    kuulutusVaihePaattyyPaiva,
+    kuulutusYhteysHenkilot,
+  } = hyvaksymisVaihe;
+
+  const aineistoNahtavilla = adaptAineistotToSave(
+    dbHyvaksymisVaihe?.aineistoNahtavilla,
+    aineistoNahtavillaInput,
+    projektiAdaptationResult
+  );
+
+  const hyvaksymisPaatos = adaptAineistotToSave(
+    dbHyvaksymisVaihe?.hyvaksymisPaatos,
+    hyvaksymisPaatosInput,
+    projektiAdaptationResult
+  );
+
+  let id = dbHyvaksymisVaihe?.id;
+  if (!id) {
+    if (hyvaksymisVaiheJulkaisutCount) {
+      id = hyvaksymisVaiheJulkaisutCount + 1;
+    } else {
+      id = 1;
+    }
+  }
+
+  const newChanges: HyvaksymisVaihe = {
+    kuulutusPaiva,
+    kuulutusVaihePaattyyPaiva,
+    kuulutusYhteysHenkilot,
+    id,
+    hyvaksymisPaatos,
+    aineistoNahtavilla,
+    kuulutusYhteystiedot: adaptYhteystiedotToSave(kuulutusYhteystiedot),
+    ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat),
+  };
+  return mergeWith({}, dbHyvaksymisVaihe, newChanges);
+}
+
 function adaptYhteystiedotToSave(yhteystietoInputs: Array<API.YhteystietoInput>) {
   return yhteystietoInputs?.length > 0 ? yhteystietoInputs.map((yt) => ({ ...yt })) : undefined;
 }
@@ -528,10 +583,10 @@ function adaptVuorovaikutusTilaisuudetToSave(
 ): VuorovaikutusTilaisuus[] | undefined {
   return vuorovaikutusTilaisuudet?.length > 0
     ? vuorovaikutusTilaisuudet.map((vv) => ({
-        ...vv,
-        esitettavatYhteystiedot: adaptYhteystiedotToSave(vv.esitettavatYhteystiedot),
-        projektiYhteysHenkilot: adaptKayttajatunnusList(projekti, vv.projektiYhteysHenkilot, true),
-      }))
+      ...vv,
+      esitettavatYhteystiedot: adaptYhteystiedotToSave(vv.esitettavatYhteystiedot),
+      projektiYhteysHenkilot: adaptKayttajatunnusList(projekti, vv.projektiYhteysHenkilot, true),
+    }))
     : undefined;
 }
 

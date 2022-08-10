@@ -141,6 +141,7 @@ Array [
   Object {
     "aloitusKuulutus": undefined,
     "euRahoitus": undefined,
+    "hyvaksymisVaihe": undefined,
     "kasittelynTila": undefined,
     "kayttoOikeudet": Array [
       Object {
@@ -203,6 +204,7 @@ Array [
   Object {
     "aloitusKuulutus": undefined,
     "euRahoitus": undefined,
+    "hyvaksymisVaihe": undefined,
     "kasittelynTila": undefined,
     "kayttoOikeudet": Array [
       Object {
@@ -302,6 +304,7 @@ Array [
       "siirtyySuunnitteluVaiheeseen": "2999-01-01",
     },
     "euRahoitus": false,
+    "hyvaksymisVaihe": undefined,
     "kasittelynTila": undefined,
     "kayttoOikeudet": Array [
       Object {

@@ -9,7 +9,13 @@ import { projektiDatabase } from "../database/projektiDatabase";
 import { AineistoTila } from "../../../common/graphql/apiModel";
 import * as AWSXRay from "aws-xray-sdk-core";
 import { aineistoService } from "./aineistoService";
-import { Aineisto, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu, Vuorovaikutus } from "../database/model";
+import {
+  Aineisto,
+  HyvaksymisVaihe,
+  NahtavillaoloVaihe,
+  NahtavillaoloVaiheJulkaisu,
+  Vuorovaikutus
+} from "../database/model";
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import * as mime from "mime-types";
 
@@ -42,6 +48,24 @@ async function handleNahtavillaoloVaiheAineistot(
     lisaAineistoChanges = await handleAineistot(oid, nahtavillaoloVaihe.lisaAineisto, paths);
   }
   return aineistoNahtavillaChanges || lisaAineistoChanges;
+}
+
+async function handleHyvaksymisVaiheAineistot(
+  oid: string,
+  hyvaksymisVaihe: HyvaksymisVaihe
+): Promise<boolean> {
+  let aineistoNahtavillaChanges;
+  let hyvaksymisPaatosChanges;
+  const hyvaksymisVaihePaths = new ProjektiPaths(oid).hyvaksymisVaihe(hyvaksymisVaihe);
+
+  if (hyvaksymisVaihe.aineistoNahtavilla) {
+    aineistoNahtavillaChanges = await handleAineistot(oid, hyvaksymisVaihe.aineistoNahtavilla, hyvaksymisVaihePaths);
+  }
+
+  if (hyvaksymisVaihe.hyvaksymisPaatos) {
+    hyvaksymisPaatosChanges = await handleAineistot(oid, hyvaksymisVaihe.hyvaksymisPaatos, hyvaksymisVaihePaths.hyvaksymispaatos);
+  }
+  return hyvaksymisPaatosChanges || aineistoNahtavillaChanges;
 }
 
 async function handleAineistot(oid: string, aineistot: Aineisto[] | undefined, paths: PathTuple): Promise<boolean> {
@@ -136,6 +160,15 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
               await projektiDatabase.saveProjekti({
                 oid,
                 nahtavillaoloVaihe,
+              });
+            }
+          }
+          const hyvaksymisVaihe = projekti.hyvaksymisVaihe;
+          if (hyvaksymisVaihe) {
+            if (await handleHyvaksymisVaiheAineistot(projekti.oid, hyvaksymisVaihe)) {
+              await projektiDatabase.saveProjekti({
+                oid,
+                hyvaksymisVaihe,
               });
             }
           }
