@@ -178,10 +178,10 @@ export class HassuPipelineStack extends Stack {
     if (env == "dev") {
       webhookFilters = [codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs("robottest/*")];
     }
-    const sourceProps: GitHubSourceProps = {
+    const sourceProps = {
       owner: "finnishtransportagency",
       repo: "hassu",
-      webhook: true,
+      webhook: !!webhookFilters,
       webhookTriggersBatchBuild: false,
       reportBuildStatus: true,
       webhookFilters,

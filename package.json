@@ -212,7 +212,7 @@
     "storybook": "start-storybook -p 6006 -s ./public",
     "build-storybook": "build-storybook -s ./public",
     "get-next-version": "npx semantic-release --no-ci --dryRun",
-    "release": "npx semantic-release --no-ci",
+    "release": "cross-env HUSKY=0 npx semantic-release --no-ci",
     "createVelhoProjekti": "ts-node --project=backend/tsconfig.json -r dotenv/config ./backend/bin/createVelhoProjekti dotenv_config_path=.env.test",
     "deleteVelhoProjekti": "ts-node --project=backend/tsconfig.json -r dotenv/config ./backend/bin/deleteVelhoProjekti dotenv_config_path=.env.test",
     "e2e:test:run": "cypress run -b chrome",
