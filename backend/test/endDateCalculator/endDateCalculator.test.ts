@@ -55,6 +55,12 @@ describe("Api", () => {
     ).to.be.equal("2022-12-05");
   });
 
+  it("should calculate correct Hyväksymispäätöksen kuulutusaika end date over weekend", async () => {
+    expect(
+      await calculateEndDate({ alkupaiva: "2022-11-03", tyyppi: LaskuriTyyppi.HYVAKSYMISPAATOKSEN_KUULUTUSAIKA })
+    ).to.be.equal("2022-12-12");
+  });
+
   it("should manage list of bank holidays correctly", () => {
     const bankHolidays = new BankHolidays(["2022-12-24", "2022-12-25"]);
     expect(bankHolidays.isBankHoliday(parseDate("2022-12-24"))).to.be.true;
