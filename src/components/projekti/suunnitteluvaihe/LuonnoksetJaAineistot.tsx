@@ -16,7 +16,7 @@ import {
   UseFormRegister,
   UseFormWatch,
 } from "react-hook-form";
-import AineistojenValitseminenDialog from "./AineistojenValitseminenDialog";
+import AineistojenValitseminenDialog from "../common/AineistojenValitseminenDialog";
 import { Link } from "@mui/material";
 import { VuorovaikutusFormValues } from "./SuunnitteluvaiheenVuorovaikuttaminen";
 import HassuAineistoNimiExtLink from "../HassuAineistoNimiExtLink";

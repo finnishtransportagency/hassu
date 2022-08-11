@@ -4,7 +4,7 @@ import TextInput from "@components/form/TextInput";
 import HassuTable from "@components/HassuTable";
 import Section from "@components/layout/Section";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
-import AineistojenValitseminenDialog from "@components/projekti/suunnitteluvaihe/AineistojenValitseminenDialog";
+import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import { VuorovaikutusFormValues } from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
 import { Stack } from "@mui/material";
 import { Aineisto } from "@services/api";

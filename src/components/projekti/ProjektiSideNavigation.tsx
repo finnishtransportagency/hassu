@@ -60,6 +60,12 @@ export default function ProjektiSideNavigation(): ReactElement {
       href: oid && `/yllapito/projekti/${oid}/nahtavillaolo`,
       disabled: !projekti?.status || !projekti?.suunnitteluVaihe || !projekti.suunnitteluVaihe.julkinen,
     },
+    {
+      title: "Hyväksyminen",
+      status: Status.HYVAKSYMISMENETTELYSSA,
+      href: oid && `/yllapito/projekti/${oid}/hyvaksyminen`,
+      disabled: !projekti?.status || !projekti.nahtavillaoloVaiheJulkaisut,
+    },
   ];
 
   // Use router.asPath to find out which step is open in browser

@@ -5,6 +5,9 @@ import {
   AloitusKuulutusPDF,
   DBProjekti,
   Hyvaksymispaatos,
+  HyvaksymisVaihe,
+  HyvaksymisVaiheJulkaisu,
+  HyvaksymisVaihePDF,
   KasittelynTila,
   Kielitiedot,
   Linkki,
@@ -22,6 +25,7 @@ import {
   Yhteystieto,
 } from "../database/model";
 import * as API from "../../../common/graphql/apiModel";
+import { NahtavillaoloVaiheTila } from "../../../common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import { personSearch } from "../personSearch/personSearchClient";
@@ -96,6 +100,8 @@ export class ProjektiAdapter {
       palautteet,
       nahtavillaoloVaihe,
       nahtavillaoloVaiheJulkaisut,
+      hyvaksymisVaihe,
+      hyvaksymisVaiheJulkaisut,
       salt: _salt,
       kasittelynTila,
       ...fieldsToCopyAsIs
@@ -118,6 +124,8 @@ export class ProjektiAdapter {
       suunnitteluVaihe: adaptSuunnitteluVaihe(suunnitteluVaihe, vuorovaikutukset, palautteet),
       nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe),
       nahtavillaoloVaiheJulkaisut: adaptNahtavillaoloVaiheJulkaisut(dbProjekti.oid, nahtavillaoloVaiheJulkaisut),
+      hyvaksymisVaihe: adaptHyvaksymisVaihe(dbProjekti, hyvaksymisVaihe),
+      hyvaksymisVaiheJulkaisut: adaptHyvaksymisVaiheJulkaisut(dbProjekti.oid, hyvaksymisVaiheJulkaisut),
       virhetiedot,
       kasittelynTila: adaptKasittelynTila(kasittelynTila),
       ...fieldsToCopyAsIs,
@@ -233,7 +241,7 @@ export class ProjektiAdapter {
     }
 
     function checkHyvaksymisMenettelyssa() {
-      const nahtavillaoloVaihe = projekti?.nahtavillaoloVaihe;
+      const nahtavillaoloVaihe = projekti?.nahtavillaoloVaiheJulkaisut?.filter(julkaisu => julkaisu.tila == NahtavillaoloVaiheTila.HYVAKSYTTY).pop();
       if (isDateInThePast(nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva)) {
         projekti.status = API.Status.HYVAKSYMISMENETTELYSSA;
       }
@@ -454,6 +462,29 @@ function adaptNahtavillaoloVaiheToSave(
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat),
     hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus),
   } as NahtavillaoloVaihe);
+}
+
+function adaptHyvaksymisVaihe(dbProjekti: DBProjekti, hyvaksymisVaihe: HyvaksymisVaihe): API.HyvaksymisVaihe {
+  if (!hyvaksymisVaihe) {
+    return undefined;
+  }
+  const {
+    aineistoNahtavilla,
+    hyvaksymisPaatos,
+    kuulutusYhteystiedot,
+    ilmoituksenVastaanottajat,
+    hyvaksymisVaihePDFt,
+    ...rest
+  } = hyvaksymisVaihe;
+  return {
+    __typename: "HyvaksymisVaihe",
+    ...rest,
+    hyvaksymisVaihePDFt: adaptHyvaksymisVaihePDFPaths(dbProjekti.oid, hyvaksymisVaihePDFt),
+    aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
+    hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatos),
+    kuulutusYhteystiedot: adaptYhteystiedot(kuulutusYhteystiedot),
+    ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
+  };
 }
 
 function adaptYhteystiedotToSave(yhteystietoInputs: Array<API.YhteystietoInput>) {
@@ -875,6 +906,42 @@ export function adaptNahtavillaoloPDFPaths(
   return { __typename: "NahtavillaoloPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
 }
 
+export function adaptHyvaksymisVaihePDFPaths(
+  oid: string,
+  hyvaksymisVaihePDFs: LocalizedMap<HyvaksymisVaihePDF>
+): API.HyvaksymisVaihePDFt | undefined {
+  if (!hyvaksymisVaihePDFs) {
+    return undefined;
+  }
+
+  const result = {};
+  for (const kieli in hyvaksymisVaihePDFs) {
+    result[kieli] = {
+      hyvaksymisKuulutusPDFPath: fileService.getYllapitoPathForProjektiFile(
+        oid,
+        hyvaksymisVaihePDFs[kieli].hyvaksymisKuulutusPDFPath
+      ),
+      hyvaksymisIlmoitusPDFPath: fileService.getYllapitoPathForProjektiFile(
+        oid,
+        hyvaksymisVaihePDFs[kieli].hyvaksymisVaiheIlmoitusPDFPath
+      ),
+      hyvaksymisLahetekirjePDFPath: fileService.getYllapitoPathForProjektiFile(
+        oid,
+        hyvaksymisVaihePDFs[kieli].hyvaksymisIlmoitusKiinteistonOmistajallePDFPath
+      ),
+      hyvaksymisIlmoitusMuistuttajillePDFPath: fileService.getYllapitoPathForProjektiFile(
+        oid,
+        hyvaksymisVaihePDFs[kieli].hyvaksymisIlmoitusKiinteistonOmistajallePDFPath
+      ),
+      hyvaksymisIlmoitusLausunnonantajillePDFPath: fileService.getYllapitoPathForProjektiFile(
+        oid,
+        hyvaksymisVaihePDFs[kieli].hyvaksymisIlmoitusKiinteistonOmistajallePDFPath
+      ),
+    } as HyvaksymisVaihePDF;
+  }
+  return { __typename: "HyvaksymisVaihePDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
+}
+
 export function adaptHankkeenKuvaus(hankkeenKuvaus: LocalizedMap<string>): API.HankkeenKuvaukset {
   if (hankkeenKuvaus && Object.keys(hankkeenKuvaus).length > 0) {
     return {
@@ -936,6 +1003,39 @@ export function adaptNahtavillaoloVaiheJulkaisut(
         aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
         lisaAineisto: adaptAineistot(lisaAineisto),
         nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(oid, nahtavillaoloPDFt),
+        velho: adaptVelho(velho),
+      };
+    });
+  }
+  return undefined;
+}
+
+export function adaptHyvaksymisVaiheJulkaisut(
+  oid: string,
+  julkaisut?: HyvaksymisVaiheJulkaisu[] | null
+): API.HyvaksymisVaiheJulkaisu[] | undefined {
+  if (julkaisut) {
+    return julkaisut.map((julkaisu) => {
+      const {
+        aineistoNahtavilla,
+        hyvaksymisPaatos,
+        ilmoituksenVastaanottajat,
+        kuulutusYhteystiedot,
+        hyvaksymisVaihePDFt,
+        kielitiedot,
+        velho,
+        ...fieldsToCopyAsIs
+      } = julkaisu;
+
+      return {
+        ...fieldsToCopyAsIs,
+        __typename: "HyvaksymisVaiheJulkaisu",
+        kielitiedot: adaptKielitiedot(kielitiedot),
+        hyvaksymisVaihePDFt: adaptHyvaksymisVaihePDFPaths(oid, hyvaksymisVaihePDFt),
+        aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
+        hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatos),
+        kuulutusYhteystiedot: adaptYhteystiedot(kuulutusYhteystiedot),
+        ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
         velho: adaptVelho(velho),
       };
     });
