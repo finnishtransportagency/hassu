@@ -11,7 +11,7 @@ import {
   VelhoAineisto,
   VelhoAineistoKategoria,
 } from "../../../../common/graphql/apiModel";
-import { expectToMatchSnapshot } from "./util";
+import { adaptAineistoToInput, expectToMatchSnapshot } from "./util";
 import { loadProjektiFromDatabase, testPublicAccessToProjekti } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import { cleanupNahtavillaoloJulkaisuJulkinenTimestamps, cleanupNahtavillaoloTimestamps } from "./cleanUpFunctions";
@@ -62,15 +62,6 @@ export async function testNahtavillaoloApproval(
         projektiJulkinen.nahtavillaoloVaihe
       ))
   );
-}
-
-function adaptAineistoToInput(t2xx: VelhoAineisto[]) {
-  return t2xx
-    .map((aineisto, index) => {
-      const { oid: dokumenttiOid, tiedosto: nimi, kategoriaId } = aineisto;
-      return { kategoriaId, jarjestys: index + 1, nimi, dokumenttiOid };
-    })
-    .slice(0, 5); // Optimization: don't copy all files
 }
 
 export async function testImportNahtavillaoloAineistot(

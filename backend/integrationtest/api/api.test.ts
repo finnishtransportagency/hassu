@@ -38,14 +38,17 @@ import {
   verifyEmailsSent,
   verifyVuorovaikutusSnapshot,
 } from "./testUtil/tests";
-import { takeS3Snapshot } from "./testUtil/util";
+import { takeS3Snapshot, takeYllapitoS3Snapshot } from "./testUtil/util";
 import {
   testImportNahtavillaoloAineistot,
   testNahtavillaolo,
   testNahtavillaoloApproval,
   testNahtavillaoloLisaAineisto,
 } from "./testUtil/nahtavillaolo";
-import { testHyvaksyntaVaiheHyvaksymismenettelyssa } from "./testUtil/hyvaksyntaVaihe";
+import {
+  testHyvaksyntaVaiheHyvaksymismenettelyssa,
+  testImportHyvaksymisPaatosAineistot
+} from "./testUtil/hyvaksyntaVaihe";
 
 const sandbox = sinon.createSandbox();
 const { expect } = require("chai");
@@ -101,7 +104,7 @@ describe("Api", () => {
     }
   });
 
-  it("should search, load and save a project", async function () {
+  it("should search, load and save a project", async function() {
     if (process.env.SKIP_VELHO_TESTS == "true") {
       this.skip();
     }
@@ -153,9 +156,12 @@ describe("Api", () => {
     await takeS3Snapshot(oid, "Nahtavillaolo published");
 
     await testHyvaksyntaVaiheHyvaksymismenettelyssa(oid, userFixture);
+    await testImportHyvaksymisPaatosAineistot(oid, velhoAineistoKategorias);
+    await processQueue(fakeAineistoImportQueue);
+    await takeYllapitoS3Snapshot(oid, "Hyvaksymispaatos created", "hyvaksymisvaihe");
   });
 
-  it.skip("should archive projekti", async function () {
+  it.skip("should archive projekti", async function() {
     replaceAWSDynamoDBWithLocalstack();
     await archiveProjekti(oid);
   });

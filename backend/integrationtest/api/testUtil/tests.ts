@@ -457,7 +457,6 @@ export function verifyEmailsSent(emailClientStub: sinon.SinonStub<any[], any>): 
 }
 
 export async function processQueue(fakeAineistoImportQueue: SQSEvent[]): Promise<void> {
-  // expect(fakeAineistoImportQueue).to.not.be.empty;
   for (const event of fakeAineistoImportQueue) {
     await handleEvent(event, null, null);
   }

@@ -1611,6 +1611,21 @@ Object {
 
 exports[`Api should search, load and save a project 12`] = `
 Object {
+  "DistributionId": "unit-test-distribution-id",
+  "InvalidationBatch": Object {
+    "CallerReference": "***unittest***",
+    "Paths": Object {
+      "Items": Array [
+        "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/*",
+      ],
+      "Quantity": 1,
+    },
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 13`] = `
+Object {
   "yllapito S3 files just after vuorovaikutus published": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {},
     "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": Object {},
@@ -1623,7 +1638,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 13`] = `
+exports[`Api should search, load and save a project 14`] = `
 Object {
   "public S3 files just after vuorovaikutus published": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {
@@ -1645,7 +1660,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 14`] = `
+exports[`Api should search, load and save a project 15`] = `
 Object {
   "DistributionId": "unit-test-distribution-id",
   "InvalidationBatch": Object {
@@ -1660,7 +1675,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 15`] = `
+exports[`Api should search, load and save a project 16`] = `
 Object {
   "yllapito S3 files vuorovaikutus publish date changed and last aineisto deleted": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {},
@@ -1673,7 +1688,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 16`] = `
+exports[`Api should search, load and save a project 17`] = `
 Object {
   "public S3 files vuorovaikutus publish date changed and last aineisto deleted": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {
@@ -1687,21 +1702,6 @@ Object {
     },
     "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {
       "publishDate": "2022-03-24T00:00:00+02:00",
-    },
-  },
-}
-`;
-
-exports[`Api should search, load and save a project 17`] = `
-Object {
-  "DistributionId": "unit-test-distribution-id",
-  "InvalidationBatch": Object {
-    "CallerReference": "***unittest***",
-    "Paths": Object {
-      "Items": Array [
-        "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/*",
-      ],
-      "Quantity": 1,
     },
   },
 }
@@ -2663,6 +2663,49 @@ Object {
     "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {
       "publishDate": "2022-03-24T00:00:00+02:00",
     },
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 26`] = `
+Object {
+  "description": "testImportHyvaksymisPaatosAineistot",
+  "obj": Object {
+    "hyvaksymisVaihe": Object {
+      "__typename": "HyvaksymisVaihe",
+      "aineistoNahtavilla": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
+          "jarjestys": 1,
+          "kategoriaId": "T1xx",
+          "nimi": "T113 TS Esite.txt",
+          "tila": "ODOTTAA_TUONTIA",
+        },
+      ],
+      "hyvaksymisPaatos": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "nimi": "TYHJÄ.txt",
+          "tila": "ODOTTAA_TUONTIA",
+        },
+      ],
+      "hyvaksymisVaihePDFt": undefined,
+      "id": 1,
+      "ilmoituksenVastaanottajat": undefined,
+      "kuulutusYhteystiedot": undefined,
+    },
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 27`] = `
+Object {
+  "yllapito S3 files Hyvaksymispaatos created": Object {
+    "/1/T113 TS Esite.txt": Object {},
+    "/1/hyvaksymispaatos/TYHJÄ.txt": Object {},
   },
 }
 `;

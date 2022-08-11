@@ -1,4 +1,10 @@
-import { NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu, Vuorovaikutus } from "../database/model";
+import {
+  HyvaksymisVaihe,
+  HyvaksymisVaiheJulkaisu,
+  NahtavillaoloVaihe,
+  NahtavillaoloVaiheJulkaisu,
+  Vuorovaikutus
+} from "../database/model";
 
 export abstract class PathTuple {
   protected readonly parent: PathTuple;
@@ -42,6 +48,10 @@ export class ProjektiPaths extends PathTuple {
 
   nahtavillaoloVaihe(nahtavillaoloVaihe: NahtavillaoloVaihe | NahtavillaoloVaiheJulkaisu): PathTuple {
     return new NahtavillaoloVaihePaths(this, nahtavillaoloVaihe);
+  }
+
+  hyvaksymisVaihe(hyvaksymisVaihe: HyvaksymisVaihe | HyvaksymisVaiheJulkaisu): HyvaksymisVaihePaths {
+    return new HyvaksymisVaihePaths(this, "hyvaksymisvaihe", hyvaksymisVaihe);
   }
 }
 
@@ -98,5 +108,38 @@ class NahtavillaoloVaihePaths extends PathTuple {
 
   get publicPath(): string {
     return "nahtavillaolo";
+  }
+}
+
+class VersionedPaths<T extends { id: number }> extends PathTuple {
+  private id: number;
+  private folder: string;
+
+  constructor(parent: PathTuple, folder: string, versionedElement: T) {
+    super(parent);
+    this.folder = folder;
+    this.id = versionedElement.id;
+  }
+
+  get yllapitoPath(): string {
+    return this.folder + "/" + this.id;
+  }
+
+  get publicPath(): string {
+    return this.folder;
+  }
+}
+
+class HyvaksymisVaihePaths extends VersionedPaths<HyvaksymisVaihe | HyvaksymisVaiheJulkaisu> {
+  get hyvaksymispaatos(): PathTuple {
+    return new (class extends PathTuple {
+      get publicPath(): string {
+        return this.parent.publicPath + "/" + "hyvaksymispaatos";
+      }
+
+      get yllapitoPath(): string {
+        return this.parent.yllapitoPath + "/" + "hyvaksymispaatos";
+      }
+    })(this);
   }
 }
