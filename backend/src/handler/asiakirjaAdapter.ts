@@ -1,6 +1,13 @@
-import { AloitusKuulutusJulkaisu, DBProjekti, NahtavillaoloVaiheJulkaisu, Velho, Yhteystieto } from "../database/model";
+import {
+  AloitusKuulutusJulkaisu,
+  DBProjekti,
+  HyvaksymisPaatosVaiheJulkaisu,
+  NahtavillaoloVaiheJulkaisu,
+  Velho,
+  Yhteystieto
+} from "../database/model";
 import cloneDeep from "lodash/cloneDeep";
-import { AloitusKuulutusTila, NahtavillaoloVaiheTila } from "../../../common/graphql/apiModel";
+import { AloitusKuulutusTila, HyvaksymisPaatosVaiheTila, NahtavillaoloVaiheTila } from "../../../common/graphql/apiModel";
 import { deepClone } from "aws-cdk/lib/util";
 
 function createNextAloitusKuulutusJulkaisuID(dbProjekti: DBProjekti) {
@@ -38,6 +45,18 @@ export class AsiakirjaAdapter {
     throw new Error("NahtavillaoloVaihe puuttuu");
   }
 
+  adaptHyvaksymisPaatosVaiheJulkaisu(dbProjekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu {
+    if (dbProjekti.hyvaksymisPaatosVaihe) {
+      const { palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.hyvaksymisPaatosVaihe;
+      return {
+        ...includedFields,
+        velho: adaptVelho(dbProjekti),
+        kielitiedot: cloneDeep(dbProjekti.kielitiedot),
+      };
+    }
+    throw new Error("NahtavillaoloVaihe puuttuu");
+  }
+
   migrateAloitusKuulutusJulkaisu(dbProjekti: DBProjekti): AloitusKuulutusJulkaisu {
     if (dbProjekti.aloitusKuulutus) {
       const { palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.aloitusKuulutus;
@@ -64,6 +83,14 @@ export class AsiakirjaAdapter {
     if (projekti.nahtavillaoloVaiheJulkaisut) {
       return projekti.nahtavillaoloVaiheJulkaisut
         .filter((julkaisu) => julkaisu.tila == NahtavillaoloVaiheTila.ODOTTAA_HYVAKSYNTAA)
+        .pop();
+    }
+  }
+
+  findHyvaksymisPaatosVaiheWaitingForApproval(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
+    if (projekti.hyvaksymisPaatosVaiheJulkaisut) {
+      return projekti.hyvaksymisPaatosVaiheJulkaisut
+        .filter((julkaisu) => julkaisu.tila == HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA)
         .pop();
     }
   }

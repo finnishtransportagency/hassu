@@ -9,7 +9,7 @@ import React, { useState, useCallback, useRef, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
-import { TilasiirtymaToiminto, TilasiirtymaTyyppi, HyvaksymisVaiheTila, Projekti } from "@services/api";
+import { TilasiirtymaToiminto, TilasiirtymaTyyppi, HyvaksymisPaatosVaiheTila, Projekti } from "@services/api";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./index";
 import Modaalit from "./Modaalit";
@@ -40,7 +40,7 @@ export default function Painikkeet({ projekti }: Props) {
 
   const { handleSubmit } = useFormContext<KuulutuksenTiedotFormValues>();
 
-  const saveHyvaksymisvaihe = useCallback(
+  const saveHyvaksymisPaatosVaihe = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
       await api.tallennaProjekti(formData);
       if (reloadProjekti) await reloadProjekti();
@@ -51,7 +51,7 @@ export default function Painikkeet({ projekti }: Props) {
   const saveDraft = async (formData: KuulutuksenTiedotFormValues) => {
     setIsFormSubmitting(true);
     try {
-      await saveHyvaksymisvaihe(formData);
+      await saveHyvaksymisPaatosVaihe(formData);
       showSuccessMessage("Tallennus onnistui!");
     } catch (e) {
       log.error("OnSubmit Error", e);
@@ -62,14 +62,14 @@ export default function Painikkeet({ projekti }: Props) {
     }
   };
 
-  const vaihdaHyvaksymisVaiheenTila = useCallback(
+  const vaihdaHyvaksymisPaatosVaiheenTila = useCallback(
     async (toiminto: TilasiirtymaToiminto, viesti: string, syy?: string) => {
       if (!projekti) {
         return;
       }
       setIsFormSubmitting(true);
       try {
-        await api.siirraTila({ oid: projekti.oid, toiminto, syy, tyyppi: TilasiirtymaTyyppi.HYVAKSYMISVAIHE });
+        await api.siirraTila({ oid: projekti.oid, toiminto, syy, tyyppi: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE });
         await reloadProjekti();
         showSuccessMessage(`${viesti} onnistui`);
       } catch (error) {
@@ -90,8 +90,8 @@ export default function Painikkeet({ projekti }: Props) {
       log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
       setIsFormSubmitting(true);
       try {
-        await saveHyvaksymisvaihe(formData);
-        await vaihdaHyvaksymisVaiheenTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
+        await saveHyvaksymisPaatosVaihe(formData);
+        await vaihdaHyvaksymisPaatosVaiheenTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
       } catch (error) {
         log.error("Virhe hyväksyntään lähetyksessä", error);
         showErrorMessage("Hyväksyntään lähetyksessä tapahtui virhe");
@@ -100,21 +100,21 @@ export default function Painikkeet({ projekti }: Props) {
         setIsFormSubmitting(false);
       }
     },
-    [setIsFormSubmitting, saveHyvaksymisvaihe, vaihdaHyvaksymisVaiheenTila, showErrorMessage]
+    [setIsFormSubmitting, saveHyvaksymisPaatosVaihe, vaihdaHyvaksymisPaatosVaiheenTila, showErrorMessage]
   );
 
   const palautaMuokattavaksi = useCallback(
     async (data: PalautusValues) => {
       log.debug("palauta muokattavaksi: ", data);
-      await vaihdaHyvaksymisVaiheenTila(TilasiirtymaToiminto.HYLKAA, "Palautus", data.syy);
+      await vaihdaHyvaksymisPaatosVaiheenTila(TilasiirtymaToiminto.HYLKAA, "Palautus", data.syy);
     },
-    [vaihdaHyvaksymisVaiheenTila]
+    [vaihdaHyvaksymisPaatosVaiheenTila]
   );
 
   const palautaMuokattavaksiJaPoistu = useCallback(
     async (data: PalautusValues) => {
       log.debug("palauta muokattavaksi ja poistu: ", data);
-      await vaihdaHyvaksymisVaiheenTila(TilasiirtymaToiminto.HYLKAA, "Palautus", data.syy);
+      await vaihdaHyvaksymisPaatosVaiheenTila(TilasiirtymaToiminto.HYLKAA, "Palautus", data.syy);
       const siirtymaTimer = setTimeout(() => {
         setIsFormSubmitting(true);
         router.push(`/yllapito/projekti/${projekti?.oid}`);
@@ -124,21 +124,21 @@ export default function Painikkeet({ projekti }: Props) {
         clearTimeout(siirtymaTimer);
       };
     },
-    [vaihdaHyvaksymisVaiheenTila, setIsFormSubmitting, projekti, router]
+    [vaihdaHyvaksymisPaatosVaiheenTila, setIsFormSubmitting, projekti, router]
   );
 
   const hyvaksyKuulutus = useCallback(async () => {
     log.debug("hyväksy kuulutus");
-    await vaihdaHyvaksymisVaiheenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
-  }, [vaihdaHyvaksymisVaiheenTila]);
+    await vaihdaHyvaksymisPaatosVaiheenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
+  }, [vaihdaHyvaksymisPaatosVaiheenTila]);
 
-  const voiMuokata = !projekti?.hyvaksymisVaiheJulkaisut || projekti.hyvaksymisVaiheJulkaisut.length < 1;
+  const voiMuokata = !projekti?.hyvaksymisPaatosVaiheJulkaisut || projekti.hyvaksymisPaatosVaiheJulkaisut.length < 1;
 
   const voiHyvaksya =
-    projekti.hyvaksymisVaiheJulkaisut &&
-    projekti.hyvaksymisVaiheJulkaisut.length &&
-    projekti.hyvaksymisVaiheJulkaisut[projekti.hyvaksymisVaiheJulkaisut.length - 1].tila ===
-      HyvaksymisVaiheTila.ODOTTAA_HYVAKSYNTAA &&
+    projekti.hyvaksymisPaatosVaiheJulkaisut &&
+    projekti.hyvaksymisPaatosVaiheJulkaisut.length &&
+    projekti.hyvaksymisPaatosVaiheJulkaisut[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1].tila ===
+      HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA &&
     projekti?.nykyinenKayttaja.onProjektipaallikko;
 
   return (

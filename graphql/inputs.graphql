@@ -9,7 +9,7 @@ input TallennaProjektiInput {
   kielitiedot: KielitiedotInput
   suunnitteluVaihe: SuunnitteluVaiheInput
   nahtavillaoloVaihe: NahtavillaoloVaiheInput
-  hyvaksymisVaihe: HyvaksymisVaiheInput
+  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheInput
   kasittelynTila: KasittelyntilaInput
 }
 
@@ -152,7 +152,7 @@ input NahtavillaoloVaiheInput {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
 }
 
-input HyvaksymisVaiheInput {
+input HyvaksymisPaatosVaiheInput {
   hyvaksymisPaatos: [AineistoInput!]
   aineistoNahtavilla: [AineistoInput!]
   kuulutusPaiva: String
@@ -230,7 +230,7 @@ enum TilasiirtymaToiminto {
 enum TilasiirtymaTyyppi {
   ALOITUSKUULUTUS
   NAHTAVILLAOLO
-  HYVAKSYMISVAIHE
+  HYVAKSYMISPAATOSVAIHE
 }
 
 input TilaSiirtymaInput {

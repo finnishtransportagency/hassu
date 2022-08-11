@@ -1,8 +1,8 @@
 import React, { ReactElement } from "react";
 import useTranslation from "next-translate/useTranslation";
 import {
-  HyvaksymisVaiheJulkaisu,
-  HyvaksymisVaiheTila,
+  HyvaksymisPaatosVaiheJulkaisu,
+  HyvaksymisPaatosVaiheTila,
   IlmoituksenVastaanottajat as IlmoituksenVastaanottajatType,
 } from "@services/api";
 import dayjs from "dayjs";
@@ -10,15 +10,15 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 
 interface Props {
-  hyvaksymisVaiheJulkaisu: HyvaksymisVaiheJulkaisu;
+  hyvaksymisPaatosVaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu;
 }
 
-export default function IlmoituksenVastaanottajat({ hyvaksymisVaiheJulkaisu }: Props): ReactElement {
+export default function IlmoituksenVastaanottajat({ hyvaksymisPaatosVaiheJulkaisu }: Props): ReactElement {
   const { t } = useTranslation("commonFI");
-  const isKuntia = !!hyvaksymisVaiheJulkaisu.ilmoituksenVastaanottajat?.kunnat;
-  const isViranomaisia = !!hyvaksymisVaiheJulkaisu.ilmoituksenVastaanottajat?.viranomaiset;
+  const isKuntia = !!hyvaksymisPaatosVaiheJulkaisu.ilmoituksenVastaanottajat?.kunnat;
+  const isViranomaisia = !!hyvaksymisPaatosVaiheJulkaisu.ilmoituksenVastaanottajat?.viranomaiset;
   const ilmoituksenVastaanottajat: IlmoituksenVastaanottajatType | null | undefined =
-    hyvaksymisVaiheJulkaisu.ilmoituksenVastaanottajat;
+    hyvaksymisPaatosVaiheJulkaisu.ilmoituksenVastaanottajat;
 
   return (
     <Section>
@@ -34,7 +34,7 @@ export default function IlmoituksenVastaanottajat({ hyvaksymisVaiheJulkaisu }: P
           <p>Jos kuntatiedoissa on virhe, tee korjaus Projektivelhoon.</p>
         </>
 
-        {hyvaksymisVaiheJulkaisu.tila === HyvaksymisVaiheTila.HYVAKSYTTY && (
+        {hyvaksymisPaatosVaiheJulkaisu.tila === HyvaksymisPaatosVaiheTila.HYVAKSYTTY && (
           <p>
             Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Ei
             lähetetty’, tarkasta sähköpostiosoite. Ota tarvittaessa yhteys pääkäyttäjään.

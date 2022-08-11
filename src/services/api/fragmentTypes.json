@@ -159,49 +159,49 @@
       },
       {
         "kind": "OBJECT",
-        "name": "HyvaksymisVaihe",
+        "name": "HyvaksymisPaatosVaihe",
         "possibleTypes": null,
         "__typename": "__Type"
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "HyvaksymisVaiheInput",
+        "name": "HyvaksymisPaatosVaiheInput",
         "possibleTypes": null,
         "__typename": "__Type"
       },
       {
         "kind": "OBJECT",
-        "name": "HyvaksymisVaiheJulkaisu",
+        "name": "HyvaksymisPaatosVaiheJulkaisu",
         "possibleTypes": null,
         "__typename": "__Type"
       },
       {
         "kind": "OBJECT",
-        "name": "HyvaksymisVaiheJulkaisuJulkinen",
+        "name": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
         "possibleTypes": null,
         "__typename": "__Type"
       },
       {
         "kind": "OBJECT",
-        "name": "HyvaksymisVaiheJulkinen",
+        "name": "HyvaksymisPaatosVaiheJulkinen",
         "possibleTypes": null,
         "__typename": "__Type"
       },
       {
         "kind": "OBJECT",
-        "name": "HyvaksymisVaihePDF",
+        "name": "HyvaksymisPaatosVaihePDF",
         "possibleTypes": null,
         "__typename": "__Type"
       },
       {
         "kind": "OBJECT",
-        "name": "HyvaksymisVaihePDFt",
+        "name": "HyvaksymisPaatosVaihePDFt",
         "possibleTypes": null,
         "__typename": "__Type"
       },
       {
         "kind": "ENUM",
-        "name": "HyvaksymisVaiheTila",
+        "name": "HyvaksymisPaatosVaiheTila",
         "possibleTypes": null,
         "__typename": "__Type"
       },

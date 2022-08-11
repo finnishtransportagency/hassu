@@ -12,7 +12,7 @@ import HassuGrid from "@components/HassuGrid";
 type Props = {};
 
 type FormFields = {
-  hyvaksymisVaihe: {
+  hyvaksymisPaatosVaihe: {
     kuulutusPaiva: string | null;
     kuulutusVaihePaattyyPaiva: string | null;
   };
@@ -36,7 +36,7 @@ export default function KuulutusJaJulkaisuPaiva({}: Props) {
           value,
           LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA // TODO: Tähän jotain muuta??
         );
-        setValue("hyvaksymisVaihe.kuulutusVaihePaattyyPaiva", paattymispaiva);
+        setValue("hyvaksymisPaatosVaihe.kuulutusVaihePaattyyPaiva", paattymispaiva);
       } catch (error) {
         showErrorMessage("Kuulutuksen päättymispäivän laskennassa tapahtui virhe");
         log.error("Kuulutusvaiheen päättymispäivän laskennassa virhe", error);
@@ -54,9 +54,9 @@ export default function KuulutusJaJulkaisuPaiva({}: Props) {
           <DatePicker
             label="Kuulutuspäivä *"
             className="md:max-w-min"
-            {...register("hyvaksymisVaihe.kuulutusPaiva")}
+            {...register("hyvaksymisPaatosVaihe.kuulutusPaiva")}
             min={today}
-            error={errors.hyvaksymisVaihe?.kuulutusPaiva}
+            error={errors.hyvaksymisPaatosVaihe?.kuulutusPaiva}
             onChange={(event) => {
               getPaattymispaiva(event.target.value);
             }}
@@ -65,7 +65,7 @@ export default function KuulutusJaJulkaisuPaiva({}: Props) {
             className="md:max-w-min"
             label="Kuulutusvaihe päättyy"
             readOnly
-            {...register("hyvaksymisVaihe.kuulutusVaihePaattyyPaiva")}
+            {...register("hyvaksymisPaatosVaihe.kuulutusVaihePaattyyPaiva")}
           />
         </HassuGrid>
       </SectionContent>

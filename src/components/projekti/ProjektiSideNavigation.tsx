@@ -63,7 +63,7 @@ export default function ProjektiSideNavigation(): ReactElement {
     {
       title: "Hyväksyminen",
       status: Status.HYVAKSYMISMENETTELYSSA,
-      href: oid && `/yllapito/projekti/${oid}/hyvaksyminen`,
+      href: oid && `/yllapito/projekti/${oid}/hyvaksymispaatos`,
       disabled: !projekti?.status || !projekti.nahtavillaoloVaiheJulkaisut,
     },
   ];

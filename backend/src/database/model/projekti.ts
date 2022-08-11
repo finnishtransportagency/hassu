@@ -8,7 +8,7 @@ import {
 } from "../../../../common/graphql/apiModel";
 import { Palaute, SuunnitteluVaihe, Vuorovaikutus } from "./suunnitteluVaihe";
 import { NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "./nahtavillaoloVaihe";
-import { HyvaksymisVaihe, HyvaksymisVaiheJulkaisu } from "./hyvaksymisVaihe";
+import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "./hyvaksymisPaatosVaihe";
 import { LocalizedMap, Yhteystieto } from "./common";
 
 export type DBVaylaUser = {
@@ -129,8 +129,8 @@ export type DBProjekti = {
   vuorovaikutukset?: Array<Vuorovaikutus> | null;
   nahtavillaoloVaihe?: NahtavillaoloVaihe | null;
   nahtavillaoloVaiheJulkaisut?: NahtavillaoloVaiheJulkaisu[] | null;
-  hyvaksymisVaihe?: HyvaksymisVaihe | null;
-  hyvaksymisVaiheJulkaisut?: HyvaksymisVaiheJulkaisu[] | null;
+  hyvaksymisPaatosVaihe?: HyvaksymisPaatosVaihe | null;
+  hyvaksymisPaatosVaiheJulkaisut?: HyvaksymisPaatosVaiheJulkaisu[] | null;
   palautteet?: Array<Palaute> | null;
   uusiaPalautteita?: number;
 

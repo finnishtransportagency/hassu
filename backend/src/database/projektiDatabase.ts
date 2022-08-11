@@ -1,5 +1,11 @@
 import { log } from "../logger";
-import { AloitusKuulutusJulkaisu, DBProjekti, NahtavillaoloVaiheJulkaisu, Palaute } from "./model";
+import {
+  AloitusKuulutusJulkaisu,
+  DBProjekti,
+  HyvaksymisPaatosVaiheJulkaisu,
+  NahtavillaoloVaiheJulkaisu,
+  Palaute
+} from "./model";
 import { config } from "../config";
 import { getDynamoDBDocumentClient } from "./dynamoDB";
 import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
@@ -422,6 +428,33 @@ export const projektiDatabase = {
       projekti.nahtavillaoloVaiheJulkaisut,
       julkaisu,
       "NahtavillaoloVaiheJulkaisu"
+    );
+  },
+
+  async insertHyvaksymisPaatosVaiheJulkaisu(
+    oid: string,
+    julkaisu: HyvaksymisPaatosVaiheJulkaisu
+  ): Promise<DocumentClient.UpdateItemOutput> {
+    return insertJulkaisuToList(oid, "hyvaksymisPaatosVaiheJulkaisut", julkaisu, "HyvaksymisPaatosVaiheJulkaisu");
+  },
+
+  async deleteHyvaksymisPaatosVaiheJulkaisu(projekti: DBProjekti, julkaisuIdToDelete: number): Promise<void> {
+    return deleteJulkaisuFromList(
+      projekti.oid,
+      "hyvaksymisPaatosVaiheJulkaisut",
+      projekti.hyvaksymisPaatosVaiheJulkaisut,
+      julkaisuIdToDelete,
+      "HyvaksymisPaatosVaiheJulkaisu"
+    );
+  },
+
+  async updateHyvaksymisPaatosVaiheJulkaisu(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu): Promise<void> {
+    await updateJulkaisuToList(
+      projekti.oid,
+      "hyvaksymisPaatosVaiheJulkaisut",
+      projekti.hyvaksymisPaatosVaiheJulkaisut,
+      julkaisu,
+      "HyvaksymisPaatosVaiheJulkaisu"
     );
   },
 };

@@ -1,8 +1,8 @@
 import { Aineisto, LocalizedMap, Yhteystieto } from "./common";
-import { IlmoituksenVastaanottajat, HyvaksymisVaiheTila, HallintoOikeus } from "../../../../common/graphql/apiModel";
+import { IlmoituksenVastaanottajat, HyvaksymisPaatosVaiheTila, HallintoOikeus } from "../../../../common/graphql/apiModel";
 import { Kielitiedot, Velho } from "./projekti";
 
-export type HyvaksymisVaihe = {
+export type HyvaksymisPaatosVaihe = {
   id: number;
   aineistoNahtavilla?: Array<Aineisto> | null;
   hyvaksymisPaatos?: Array<Aineisto> | null;
@@ -12,11 +12,11 @@ export type HyvaksymisVaihe = {
   kuulutusYhteystiedot?: Array<Yhteystieto> | null;
   kuulutusYhteysHenkilot?: Array<string> | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
-  hyvaksymisVaihePDFt?: LocalizedMap<HyvaksymisVaihePDF>;
+  hyvaksymisPaatosVaihePDFt?: LocalizedMap<HyvaksymisPaatosVaihePDF>;
   palautusSyy?: string | null;
 };
 
-export type HyvaksymisVaiheJulkaisu = {
+export type HyvaksymisPaatosVaiheJulkaisu = {
   id: number;
   aineistoNahtavilla?: Array<Aineisto> | null;
   hyvaksymisPaatos?: Array<Aineisto> | null;
@@ -28,13 +28,13 @@ export type HyvaksymisVaiheJulkaisu = {
   kuulutusYhteystiedot?: Array<Yhteystieto> | null;
   kuulutusYhteysHenkilot?: Array<string> | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
-  hyvaksymisVaihePDFt?: LocalizedMap<HyvaksymisVaihePDF>;
-  tila?: HyvaksymisVaiheTila | null;
+  hyvaksymisPaatosVaihePDFt?: LocalizedMap<HyvaksymisPaatosVaihePDF>;
+  tila?: HyvaksymisPaatosVaiheTila | null;
   muokkaaja?: string | null;
   hyvaksyja?: string | null;
 };
 
-export type HyvaksymisVaihePDF = {
+export type HyvaksymisPaatosVaihePDF = {
   hyvaksymisKuulutusPDFPath: string;
   hyvaksymisIlmoitusPDFPath: string;
   hyvaksymisLahetekirjePDFPath: string;

@@ -6,7 +6,7 @@ import { Controller, FieldError, useFieldArray, useFormContext } from "react-hoo
 import { formatProperNoun } from "common/util/formatProperNoun";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
-import { KuntaVastaanottajaInput, HyvaksymisVaihe, ViranomaisVastaanottajaInput } from "@services/api";
+import { KuntaVastaanottajaInput, HyvaksymisPaatosVaihe, ViranomaisVastaanottajaInput } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
@@ -19,11 +19,11 @@ interface HelperType {
 }
 
 interface Props {
-  hyvaksymisVaihe: HyvaksymisVaihe | null | undefined;
+  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | null | undefined;
 }
 
 type FormFields = {
-  hyvaksymisVaihe: {
+  hyvaksymisPaatosVaihe: {
     ilmoituksenVastaanottajat: {
       kunnat: Array<KuntaVastaanottajaInput>;
       viranomaiset: Array<ViranomaisVastaanottajaInput>;
@@ -31,11 +31,11 @@ type FormFields = {
   };
 };
 
-export default function IlmoituksenVastaanottajat({ hyvaksymisVaihe }: Props): ReactElement {
+export default function IlmoituksenVastaanottajat({ hyvaksymisPaatosVaihe }: Props): ReactElement {
   const { t } = useTranslation("commonFI");
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
-  const julkinen = false; //hyvaksymisVaihe?.tila === HyvaksymisVaiheTila.HYVAKSYTTY;
+  const julkinen = false; //hyvaksymisPaatosVaihe?.tila === HyvaksymisPaatosVaiheTila.HYVAKSYTTY;
 
   const {
     register,
@@ -45,11 +45,11 @@ export default function IlmoituksenVastaanottajat({ hyvaksymisVaihe }: Props): R
     watch,
   } = useFormContext<FormFields>();
 
-  const ilmoituksenVastaanottajat = watch("hyvaksymisVaihe.ilmoituksenVastaanottajat");
+  const ilmoituksenVastaanottajat = watch("hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat");
 
   const { fields: kuntaFields } = useFieldArray({
     control,
-    name: "hyvaksymisVaihe.ilmoituksenVastaanottajat.kunnat",
+    name: "hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat.kunnat",
   });
 
   const {
@@ -58,7 +58,7 @@ export default function IlmoituksenVastaanottajat({ hyvaksymisVaihe }: Props): R
     remove,
   } = useFieldArray({
     control,
-    name: "hyvaksymisVaihe.ilmoituksenVastaanottajat.viranomaiset",
+    name: "hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat.viranomaiset",
   });
 
   const getKuntanimi = (index: number) => {
@@ -92,7 +92,7 @@ export default function IlmoituksenVastaanottajat({ hyvaksymisVaihe }: Props): R
               <p style={{ color: "#7A7A7A" }}>Ilmoituksen tila</p>
               <p style={{ color: "#7A7A7A" }}>Lähetysaika</p>
 
-              {hyvaksymisVaihe?.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen, index) => (
+              {hyvaksymisPaatosVaihe?.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen, index) => (
                 <React.Fragment key={index}>
                   <p className="odd:bg-white even:bg-grey col-span-2">
                     {t(`viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
@@ -112,7 +112,7 @@ export default function IlmoituksenVastaanottajat({ hyvaksymisVaihe }: Props): R
               <p className="vayla-table-header">Sähköpostiosoite</p>
               <p className="vayla-table-header">Ilmoituksen tila</p>
               <p className="vayla-table-header">Lähetysaika</p>
-              {hyvaksymisVaihe?.ilmoituksenVastaanottajat?.kunnat?.map((kunta, index) => (
+              {hyvaksymisPaatosVaihe?.ilmoituksenVastaanottajat?.kunnat?.map((kunta, index) => (
                 <Fragment key={index}>
                   <p className={getStyleForRow(index)}>{kunta.nimi}</p>
                   <p className={getStyleForRow(index)}>{kunta.sahkoposti}</p>
@@ -141,9 +141,9 @@ export default function IlmoituksenVastaanottajat({ hyvaksymisVaihe }: Props): R
           <>
             <SectionContent>
               <h6 className="font-bold">Viranomaiset</h6>
-              {(errors.hyvaksymisVaihe?.ilmoituksenVastaanottajat as HelperType)?.viranomaiset && (
+              {(errors.hyvaksymisPaatosVaihe?.ilmoituksenVastaanottajat as HelperType)?.viranomaiset && (
                 <p className="text-red">
-                  {(errors.hyvaksymisVaihe?.ilmoituksenVastaanottajat as HelperType).viranomaiset?.message}
+                  {(errors.hyvaksymisPaatosVaihe?.ilmoituksenVastaanottajat as HelperType).viranomaiset?.message}
                 </p>
               )}
               {viranomaisFields.map((viranomainen, index) => (
@@ -154,23 +154,23 @@ export default function IlmoituksenVastaanottajat({ hyvaksymisVaihe }: Props): R
                       label: nimi ? t(`viranomainen.${nimi}`) : "",
                       value: nimi,
                     }))}
-                    {...register(`hyvaksymisVaihe.ilmoituksenVastaanottajat.viranomaiset.${index}.nimi`, {
+                    {...register(`hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat.viranomaiset.${index}.nimi`, {
                       onChange: (event) => {
                         const sahkoposti = kirjaamoOsoitteet?.find(
                           ({ nimi }) => nimi === event.target.value
                         )?.sahkoposti;
                         setValue(
-                          `hyvaksymisVaihe.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`,
+                          `hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`,
                           sahkoposti || ""
                         );
                       },
                     })}
-                    error={errors?.hyvaksymisVaihe?.ilmoituksenVastaanottajat?.viranomaiset?.[index]?.nimi}
+                    error={errors?.hyvaksymisPaatosVaihe?.ilmoituksenVastaanottajat?.viranomaiset?.[index]?.nimi}
                     addEmptyOption
                   />
                   <Controller
                     control={control}
-                    name={`hyvaksymisVaihe.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`}
+                    name={`hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`}
                     render={({ field }) => (
                       <>
                         <TextInput label="Sähköpostiosoite *" value={field.value} disabled />
@@ -222,14 +222,14 @@ export default function IlmoituksenVastaanottajat({ hyvaksymisVaihe }: Props): R
               <HassuGrid key={kunta.id} cols={{ lg: 3 }}>
                 <input
                   type="hidden"
-                  {...register(`hyvaksymisVaihe.ilmoituksenVastaanottajat.kunnat.${index}.nimi`)}
+                  {...register(`hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat.kunnat.${index}.nimi`)}
                   readOnly
                 />
                 <TextInput label="Kunta *" value={getKuntanimi(index)} disabled />
                 <TextInput
                   label="Sähköpostiosoite *"
-                  error={errors?.hyvaksymisVaihe?.ilmoituksenVastaanottajat?.kunnat?.[index]?.sahkoposti}
-                  {...register(`hyvaksymisVaihe.ilmoituksenVastaanottajat.kunnat.${index}.sahkoposti`)}
+                  error={errors?.hyvaksymisPaatosVaihe?.ilmoituksenVastaanottajat?.kunnat?.[index]?.sahkoposti}
+                  {...register(`hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat.kunnat.${index}.sahkoposti`)}
                 />
               </HassuGrid>
             ))}

@@ -244,7 +244,7 @@ const AineistoTable = (props: AineistoTableProps) => {
   const enrichedFields: FormAineisto[] = useMemo(
     () =>
       fields.map((field) => {
-        const aineistoData = projekti?.hyvaksymisVaihe?.aineistoNahtavilla || [];
+        const aineistoData = projekti?.hyvaksymisPaatosVaihe?.aineistoNahtavilla || [];
         const { tila, tuotu, tiedosto } =
           aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
 

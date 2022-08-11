@@ -1,4 +1,4 @@
-import { HyvaksymisVaiheJulkaisu, HyvaksymisVaiheTila } from "@services/api";
+import { HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaiheTila } from "@services/api";
 import React, { ReactElement } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import capitalize from "lodash/capitalize";
@@ -13,23 +13,23 @@ import ExtLink from "@components/ExtLink";
 // import { Link } from "@mui/material";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 interface Props {
-  hyvaksymisVaiheJulkaisu?: HyvaksymisVaiheJulkaisu | null;
+  hyvaksymisPaatosVaiheJulkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
   projekti: ProjektiLisatiedolla;
 }
 
-export default function AloituskuulutusLukunakyma({ hyvaksymisVaiheJulkaisu, projekti }: Props): ReactElement {
-  if (!hyvaksymisVaiheJulkaisu || !projekti) {
+export default function AloituskuulutusLukunakyma({ hyvaksymisPaatosVaiheJulkaisu, projekti }: Props): ReactElement {
+  if (!hyvaksymisPaatosVaiheJulkaisu || !projekti) {
     return <></>;
   }
 
-  let { kuulutusPaiva, published } = examineKuulutusPaiva(hyvaksymisVaiheJulkaisu.kuulutusPaiva);
-  let hyvaksymisVaiheHref: string | undefined;
+  let { kuulutusPaiva, published } = examineKuulutusPaiva(hyvaksymisPaatosVaiheJulkaisu.kuulutusPaiva);
+  let hyvaksymisPaatosVaiheHref: string | undefined;
   if (published) {
-    hyvaksymisVaiheHref =
-      window.location.protocol + "//" + window.location.host + "/suunnitelma/" + projekti.oid + "/nahtavillaolo";
+    hyvaksymisPaatosVaiheHref =
+      window.location.protocol + "//" + window.location.host + "/suunnitelma/" + projekti.oid + "/hyvaksymispaatos";
   }
-  // const vuorovaikutusYhteysHenkilot: ProjektiKayttaja[] = hyvaksymisVaiheJulkaisu.kuulutusYhteysHenkilot
-  //   ? hyvaksymisVaiheJulkaisu.kuulutusYhteysHenkilot
+  // const vuorovaikutusYhteysHenkilot: ProjektiKayttaja[] = hyvaksymisPaatosVaiheJulkaisu.kuulutusYhteysHenkilot
+  //   ? hyvaksymisPaatosVaiheJulkaisu.kuulutusYhteysHenkilot
   //       .map((hlo) => {
   //         const yhteysHenkiloTietoineen: ProjektiKayttaja | undefined = (projekti?.kayttoOikeudet || []).find(
   //           (ko) => ko.kayttajatunnus === hlo
@@ -43,35 +43,35 @@ export default function AloituskuulutusLukunakyma({ hyvaksymisVaiheJulkaisu, pro
   //   : [];
 
   // const getPdft = (kieli: Kieli | undefined | null) => {
-  //   if (!hyvaksymisVaiheJulkaisu || !hyvaksymisVaiheJulkaisu.hyvaksymisVaihePDFt || !kieli) {
+  //   if (!hyvaksymisPaatosJulkaisu || !hyvaksymisPaatosJulkaisu.hyvaksymisPaatosPDFt || !kieli) {
   //     return undefined;
   //   }
-  //   return hyvaksymisVaiheJulkaisu.hyvaksymisVaihePDFt[kieli];
+  //   return hyvaksymisPaatosVaiheJulkaisu.hyvaksymisPaatosVaihePDFt[kieli];
   // };
 
   // const parseFilename = (path: string) => {
   //   return path.substring(path.lastIndexOf("/") + 1);
   // };
 
-  // const ensisijaisetPDFt = getPdft(hyvaksymisVaiheJulkaisu.kielitiedot?.ensisijainenKieli);
-  // const toissijaisetPDFt = getPdft(hyvaksymisVaiheJulkaisu.kielitiedot?.toissijainenKieli);
+  // const ensisijaisetPDFt = getPdft(hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.ensisijainenKieli);
+  // const toissijaisetPDFt = getPdft(hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.toissijainenKieli);
 
   return (
     <>
       <Section>
-        {!published && hyvaksymisVaiheJulkaisu.tila === HyvaksymisVaiheTila.HYVAKSYTTY && (
+        {!published && hyvaksymisPaatosVaiheJulkaisu.tila === HyvaksymisPaatosVaiheTila.HYVAKSYTTY && (
           <Notification type={NotificationType.WARN}>
             Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä {kuulutusPaiva}
           </Notification>
         )}
-        {published && hyvaksymisVaiheJulkaisu.tila === HyvaksymisVaiheTila.HYVAKSYTTY && (
+        {published && hyvaksymisPaatosVaiheJulkaisu.tila === HyvaksymisPaatosVaiheTila.HYVAKSYTTY && (
           <Notification type={NotificationType.INFO_GREEN}>
             Kuulutus nähtäville asettamisesta on julkaistu {kuulutusPaiva}. Projekti näytetään kuulutuspäivästä lasketun
             määräajan jälkeen palvelun julkisella puolella suunnittelussa olevana. Kuulutusvaihe päättyy{" "}
-            <FormatDate date={hyvaksymisVaiheJulkaisu.kuulutusVaihePaattyyPaiva} />.
+            <FormatDate date={hyvaksymisPaatosVaiheJulkaisu.kuulutusVaihePaattyyPaiva} />.
           </Notification>
         )}
-        {hyvaksymisVaiheJulkaisu.tila !== HyvaksymisVaiheTila.HYVAKSYTTY && (
+        {hyvaksymisPaatosVaiheJulkaisu.tila !== HyvaksymisPaatosVaiheTila.HYVAKSYTTY && (
           <Notification type={NotificationType.WARN}>
             Kuulutus nähtäville asettamisesta odottaa hyväksyntää. Tarkasta kuulutus ja a) hyväksy tai b) palaute
             kuulutus korjattavaksi, jos havaitset puutteita tai virheen.
@@ -82,14 +82,14 @@ export default function AloituskuulutusLukunakyma({ hyvaksymisVaiheJulkaisu, pro
           <p className="vayla-label md:col-span-3">Kuulutusvaihe päättyy</p>
           <p className="md:col-span-1 mb-0">{kuulutusPaiva}</p>
           <p className="md:col-span-3 mb-0">
-            <FormatDate date={hyvaksymisVaiheJulkaisu.kuulutusVaihePaattyyPaiva} />
+            <FormatDate date={hyvaksymisPaatosVaiheJulkaisu.kuulutusVaihePaattyyPaiva} />
           </p>
         </div>
       </Section>
       <Section>
         <SectionContent>
           <p className="vayla-label mb-5">Kuulutuksen yhteyshenkilöt</p>
-          {hyvaksymisVaiheJulkaisu.kuulutusYhteystiedot?.map((yhteystieto, index) => (
+          {hyvaksymisPaatosVaiheJulkaisu.kuulutusYhteystiedot?.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
               {capitalize(yhteystieto.etunimi)} {capitalize(yhteystieto.sukunimi)}, puh. {yhteystieto.puhelinnumero},{" "}
               {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio}
@@ -108,20 +108,20 @@ export default function AloituskuulutusLukunakyma({ hyvaksymisVaiheJulkaisu, pro
           {!published && (
             <p>Linkki julkiselle puolelle muodostetaan kuulutuspäivänä. Kuulutuspäivä on {kuulutusPaiva}.</p>
           )}
-          {published && <ExtLink href={hyvaksymisVaiheHref}>Kuulutus palvelun julkisella puolella</ExtLink>}
+          {published && <ExtLink href={hyvaksymisPaatosVaiheHref}>Kuulutus palvelun julkisella puolella</ExtLink>}
         </SectionContent>
         <SectionContent>
           <p className="vayla-label">Ladattavat kuulutukset ja ilmoitukset</p>
           <p>
             Kuulutus ja ilmoitus ensisijaisella kielellä (
-            {lowerCase(hyvaksymisVaiheJulkaisu.kielitiedot?.ensisijainenKieli)})
+            {lowerCase(hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.ensisijainenKieli)})
           </p>
         </SectionContent>
       </Section>
-      <IlmoituksenVastaanottajatLukutila hyvaksymisVaiheJulkaisu={hyvaksymisVaiheJulkaisu} />
+      <IlmoituksenVastaanottajatLukutila hyvaksymisPaatosVaiheJulkaisu={hyvaksymisPaatosVaiheJulkaisu} />
       <Section>
-        {/* {hyvaksymisVaiheJulkaisu.tila !== HyvaksymisVaiheTila.HYVAKSYTTY && (
-          <NahtavillaoloPDFEsikatselu oid={oid} hyvaksymisVaihe={hyvaksymisVaihe} />
+        {/* {hyvaksymisPaatosVaiheJulkaisu.tila !== HyvaksymisPaatosVaiheTila.HYVAKSYTTY && (
+          <NahtavillaoloPDFEsikatselu oid={oid} hyvaksymisPaatosVaihe={hyvaksymisPaatosVaihe} />
         )} */}
       </Section>
     </>

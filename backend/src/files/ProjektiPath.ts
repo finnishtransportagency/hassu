@@ -1,6 +1,6 @@
 import {
-  HyvaksymisVaihe,
-  HyvaksymisVaiheJulkaisu,
+  HyvaksymisPaatosVaihe,
+  HyvaksymisPaatosVaiheJulkaisu,
   NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
   Vuorovaikutus
@@ -50,8 +50,8 @@ export class ProjektiPaths extends PathTuple {
     return new NahtavillaoloVaihePaths(this, nahtavillaoloVaihe);
   }
 
-  hyvaksymisVaihe(hyvaksymisVaihe: HyvaksymisVaihe | HyvaksymisVaiheJulkaisu): HyvaksymisVaihePaths {
-    return new HyvaksymisVaihePaths(this, "hyvaksymisvaihe", hyvaksymisVaihe);
+  hyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | HyvaksymisPaatosVaiheJulkaisu): HyvaksymisPaatosVaihePaths {
+    return new HyvaksymisPaatosVaihePaths(this, "hyvaksymispaatos", hyvaksymisPaatosVaihe);
   }
 }
 
@@ -130,15 +130,15 @@ class VersionedPaths<T extends { id: number }> extends PathTuple {
   }
 }
 
-class HyvaksymisVaihePaths extends VersionedPaths<HyvaksymisVaihe | HyvaksymisVaiheJulkaisu> {
-  get hyvaksymispaatos(): PathTuple {
+class HyvaksymisPaatosVaihePaths extends VersionedPaths<HyvaksymisPaatosVaihe | HyvaksymisPaatosVaiheJulkaisu> {
+  get paatos(): PathTuple {
     return new (class extends PathTuple {
       get publicPath(): string {
-        return this.parent.publicPath + "/" + "hyvaksymispaatos";
+        return this.parent.publicPath + "/" + "paatos";
       }
 
       get yllapitoPath(): string {
-        return this.parent.yllapitoPath + "/" + "hyvaksymispaatos";
+        return this.parent.yllapitoPath + "/" + "paatos";
       }
     })(this);
   }
