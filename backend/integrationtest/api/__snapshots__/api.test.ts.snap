@@ -2683,6 +2683,7 @@ Object {
           "tila": "ODOTTAA_TUONTIA",
         },
       ],
+      "hallintoOikeus": "HAMEENLINNA",
       "hyvaksymisPaatos": Array [
         Object {
           "__typename": "Aineisto",
@@ -2694,8 +2695,60 @@ Object {
       ],
       "hyvaksymisVaihePDFt": undefined,
       "id": 1,
-      "ilmoituksenVastaanottajat": undefined,
-      "kuulutusYhteystiedot": undefined,
+      "ilmoituksenVastaanottajat": Object {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": Array [
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "lahetetty": "2022-03-11T14:54",
+            "nimi": "Mikkeli",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "lahetetty": "2022-03-11T14:54",
+            "nimi": " Juva",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "lahetetty": "2022-03-11T14:54",
+            "nimi": " Savonlinna",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "__typename": "ViranomaisVastaanottaja",
+            "lahetetty": "2022-03-11T14:54",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "kuulutusYhteysHenkilot": Array [
+        "A000112",
+      ],
+      "kuulutusYhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Etunimi",
+          "organisaatio": "",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "sukunimi": "Sukunimi",
+          "titteli": "Projektipäällikkö",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Joku",
+          "organisaatio": "",
+          "puhelinnumero": "02998765",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "sukunimi": "Jokunen",
+          "titteli": "Konsultti",
+        },
+      ],
     },
   },
 }

@@ -27,7 +27,7 @@ function defaultValues(
     hyvaksymisVaihe: {
       kuulutusPaiva: projekti?.hyvaksymisVaihe?.kuulutusPaiva,
       kuulutusVaihePaattyyPaiva: projekti?.hyvaksymisVaihe?.kuulutusVaihePaattyyPaiva,
-      hallintoOikeudet: projekti?.hyvaksymisVaihe?.hallintoOikeudet,
+      hallintoOikeus: projekti?.hyvaksymisVaihe?.hallintoOikeus,
       kuulutusYhteystiedot: projekti?.hyvaksymisVaihe?.kuulutusYhteystiedot
         ? projekti.hyvaksymisVaihe.kuulutusYhteystiedot.map((yhteystieto) => removeTypeName(yhteystieto))
         : [],

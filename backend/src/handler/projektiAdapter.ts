@@ -506,6 +506,7 @@ function adaptHyvaksymisVaiheToSave(
     kuulutusPaiva,
     kuulutusVaihePaattyyPaiva,
     kuulutusYhteysHenkilot,
+    hallintoOikeus
   } = hyvaksymisVaihe;
 
   const aineistoNahtavilla = adaptAineistotToSave(
@@ -538,6 +539,7 @@ function adaptHyvaksymisVaiheToSave(
     aineistoNahtavilla,
     kuulutusYhteystiedot: adaptYhteystiedotToSave(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat),
+    hallintoOikeus
   };
   return mergeWith({}, dbHyvaksymisVaihe, newChanges);
 }

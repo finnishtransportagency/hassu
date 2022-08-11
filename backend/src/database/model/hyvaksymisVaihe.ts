@@ -8,7 +8,7 @@ export type HyvaksymisVaihe = {
   hyvaksymisPaatos?: Array<Aineisto> | null;
   kuulutusPaiva?: string | null;
   kuulutusVaihePaattyyPaiva?: string | null;
-  hallintoOikeudet?: Array<HallintoOikeus> | null;
+  hallintoOikeus?: HallintoOikeus | null;
   kuulutusYhteystiedot?: Array<Yhteystieto> | null;
   kuulutusYhteysHenkilot?: Array<string> | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
@@ -24,7 +24,7 @@ export type HyvaksymisVaiheJulkaisu = {
   kuulutusVaihePaattyyPaiva?: string | null;
   velho: Velho;
   kielitiedot: Kielitiedot;
-  hallintoOikeudet: Array<HallintoOikeus> | null;
+  hallintoOikeus?: HallintoOikeus | null;
   kuulutusYhteystiedot?: Array<Yhteystieto> | null;
   kuulutusYhteysHenkilot?: Array<string> | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
