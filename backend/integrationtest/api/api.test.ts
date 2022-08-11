@@ -156,7 +156,7 @@ describe("Api", () => {
     await takeS3Snapshot(oid, "Nahtavillaolo published");
 
     await testHyvaksyntaVaiheHyvaksymismenettelyssa(oid, userFixture);
-    await testImportHyvaksymisPaatosAineistot(oid, velhoAineistoKategorias);
+    await testImportHyvaksymisPaatosAineistot(oid, velhoAineistoKategorias, projektiPaallikko.kayttajatunnus);
     await processQueue(fakeAineistoImportQueue);
     await takeYllapitoS3Snapshot(oid, "Hyvaksymispaatos created", "hyvaksymisvaihe");
   });

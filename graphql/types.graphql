@@ -212,7 +212,7 @@ type HyvaksymisVaihe {
   aineistoNahtavilla: [Aineisto!]
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
-  hallintoOikeudet: [HallintoOikeus!]
+  hallintoOikeus: HallintoOikeus
   kuulutusYhteystiedot: [Yhteystieto!]
   kuulutusYhteysHenkilot: [String!]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
@@ -225,7 +225,7 @@ type HyvaksymisVaiheJulkinen {
   aineistoNahtavilla: [Aineisto!]
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
-  hallintoOikeudet: [HallintoOikeus!]
+  hallintoOikeus: HallintoOikeus
   kuulutusYhteystiedot: [Yhteystieto!]
   kuulutusYhteysHenkilot: [String!]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
@@ -260,7 +260,7 @@ type HyvaksymisVaiheJulkaisu {
   kuulutusYhteystiedot: [Yhteystieto!]
   kuulutusYhteysHenkilot: [String!]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
-  hallintoOikeudet: [HallintoOikeus!]
+  hallintoOikeus: HallintoOikeus
   hyvaksymisVaihePDFt: HyvaksymisVaihePDFt
   tila: HyvaksymisVaiheTila
   muokkaaja: String
@@ -288,7 +288,7 @@ type HyvaksymisVaiheJulkaisuJulkinen {
   kuulutusVaihePaattyyPaiva: String
   velho: VelhoJulkinen!
   kielitiedot: Kielitiedot
-  hallintoOikeudet: [HallintoOikeus!]
+  hallintoOikeus: HallintoOikeus
   kuulutusYhteystiedot: [Yhteystieto!]
   kuulutusYhteysHenkilot: [String!]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat

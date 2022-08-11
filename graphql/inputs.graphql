@@ -157,7 +157,7 @@ input HyvaksymisVaiheInput {
   aineistoNahtavilla: [AineistoInput!]
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
-  hallintoOikeudet: [HallintoOikeus!]
+  hallintoOikeus: HallintoOikeus
   kuulutusYhteysHenkilot: [String!]
   kuulutusYhteystiedot: [YhteystietoInput!]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput

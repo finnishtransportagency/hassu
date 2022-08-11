@@ -1,10 +1,11 @@
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { loadProjektiFromDatabase, loadProjektiJulkinenFromDatabase } from "./tests";
-import { Status, VelhoAineisto, VelhoAineistoKategoria } from "../../../../common/graphql/apiModel";
+import { HallintoOikeus, Status, VelhoAineisto, VelhoAineistoKategoria } from "../../../../common/graphql/apiModel";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import { expect } from "chai";
 import { api } from "../apiClient";
 import { adaptAineistoToInput, expectToMatchSnapshot } from "./util";
+import { apiTestFixture } from "../apiTestFixture";
 
 export async function testHyvaksyntaVaiheHyvaksymismenettelyssa(oid: string, userFixture: UserFixture): Promise<void> {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
@@ -24,7 +25,7 @@ export async function testHyvaksyntaVaiheHyvaksymismenettelyssa(oid: string, use
 
 export async function testImportHyvaksymisPaatosAineistot(
   oid: string,
-  velhoAineistoKategorias: VelhoAineistoKategoria[]
+  velhoAineistoKategorias: VelhoAineistoKategoria[], projektiPaallikko: string
 ): Promise<void> {
   const lisaAineisto = velhoAineistoKategorias
     .reduce((documents, aineistoKategoria) => {
@@ -37,7 +38,12 @@ export async function testImportHyvaksymisPaatosAineistot(
     oid,
     hyvaksymisVaihe: {
       hyvaksymisPaatos: adaptAineistoToInput([lisaAineisto[0]]),
-      aineistoNahtavilla: adaptAineistoToInput(lisaAineisto.slice(2, 3))
+      aineistoNahtavilla: adaptAineistoToInput(lisaAineisto.slice(2, 3)),
+
+      ilmoituksenVastaanottajat: apiTestFixture.ilmoituksenVastaanottajat,
+      kuulutusYhteystiedot: apiTestFixture.esitettavatYhteystiedotInput,
+      kuulutusYhteysHenkilot: [projektiPaallikko],
+      hallintoOikeus: HallintoOikeus.HAMEENLINNA
     },
   });
 
