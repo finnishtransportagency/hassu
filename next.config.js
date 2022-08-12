@@ -93,6 +93,16 @@ module.exports = (phase) => {
   let config = {
     reactStrictMode: true,
     // trailingSlash: true,
+
+    // .dev.ts, .dev.tsx", .dev.js, and .dev.jsx are only available in non-prod environments
+    pageExtensions: ["ts", "tsx", "js", "jsx"]
+      .map((extension) => {
+        const isDevServer = BaseConfig.env !== "prod";
+        const prodExtension = `(?<!dev\.)${extension}`;
+        const devExtension = `dev\.${extension}`;
+        return isDevServer ? [devExtension, extension] : prodExtension;
+      })
+      .flat(),
   };
   if (phase === PHASE_DEVELOPMENT_SERVER) {
     config = setupLocalDevelopmentMode(config, env);

@@ -6,7 +6,7 @@ let client: DynamoDB.DocumentClient;
 
 function getDynamoDBDocumentClient(): DynamoDB.DocumentClient {
   if (!client) {
-    client = new DynamoDB.DocumentClient({ apiVersion: "2012-08-10" });
+    client = new DynamoDB.DocumentClient({ apiVersion: "2012-08-10", region: "eu-west-1" });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     AWSXRay.captureAWSClient((client as any).service); // NOSONAR
   }
