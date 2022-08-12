@@ -5,6 +5,8 @@ import { fileService } from "../files/fileService";
 import { projektiAdapterJulkinen } from "../handler/projektiAdapterJulkinen";
 import { muistutusEmailService } from "./muistutusEmailService";
 import { adaptMuistutusInput } from "./muistutusAdapter";
+import { isValidEmail } from "../util/emailUtil";
+import { log } from "../logger";
 
 class MuistutusHandler {
   async kasittelePalaute({ oid, muistutus: muistutusInput }: LisaaMuistutusMutationVariables) {
@@ -30,10 +32,14 @@ class MuistutusHandler {
       });
     }
 
-    //TODO: lähetä muistutus ja liite kirjaamoon
     muistutusEmailService.sendEmailToKirjaamo(projektiFromDB, muistutus);
-    
-    //TODO: lähetä kuittaus muistuttajan sähköpostiin
+
+    if (muistutus.sahkoposti && isValidEmail(muistutus.sahkoposti)) {
+      muistutusEmailService.sendEmailToMuistuttaja(projektiFromDB, muistutus);
+    } else {
+      log.error("Muistuttajalle ei voitu lähettää kuittausviestiä: ", muistutus.sahkoposti);
+    }
+
     //TODO: kasvata ja tallenna lähetettyjen muistutusten määrää projektilla ->
     // ehkä aikaleimoina, niin lisää jäljitettävyyttä?
 

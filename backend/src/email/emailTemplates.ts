@@ -74,6 +74,7 @@ Muistutus
 ${"muistutus"}
 `;
 const muistutusOtsikko = template`Muistutus - ${"id"}`;
+const muistuttajanOtsikko = template`Olemme välittäneet muisutuksesi eteenpäin`;
 
 export function createPerustamisEmail(projekti: DBProjekti): EmailOptions {
   return {
@@ -124,6 +125,17 @@ export function createMuistutusKirjaamolleEmail(projekti: DBProjekti, muistutus:
     subject: muistutusOtsikko(muistutus),
     text: muistutusTeksti({asiatunnus, ...muistutus }),
     to: sahkoposti,
-    //testing cicd
+  };
+}
+
+export function createKuittausMuistuttajalleEmail(projekti: DBProjekti, muistutus: Muistutus): EmailOptions {
+  const asiatunnus =
+    projekti.velho.suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO
+      ? projekti.velho.asiatunnusELY
+      : projekti.velho.asiatunnusVayla;
+  return {
+    subject: muistuttajanOtsikko(muistutus),
+    text: muistutusTeksti({asiatunnus, ...muistutus }),
+    to: muistutus.sahkoposti,
   };
 }
