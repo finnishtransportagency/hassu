@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   TableOptions,
   PluginHook,
@@ -11,6 +11,31 @@ import {
 } from "react-table";
 import { HassuTableProps } from "@components/HassuTable";
 import { Stack } from "@mui/material";
+import { Column, TableState } from "react-table";
+
+interface Test<D extends object> {
+  columns: readonly Column<D>[];
+  data: readonly D[];
+  initialState: Partial<TableState<D>> | undefined;
+}
+
+export const useHassuTableStabilizer = <D extends object>(tableOptions: Test<D>): HassuTableProps<D> => {
+  const [tableProps, setTableProps] = useState<HassuTableProps<D> | null>(null);
+
+  const newTableProps = useHassuTable<D>({
+    tableOptions,
+    useRowSelect: true,
+  });
+
+  useEffect(() => {
+    if (!tableProps) {
+      setTableProps(newTableProps);
+    }
+  }, [tableProps, setTableProps, newTableProps]);
+
+  if (!tableProps) return newTableProps;
+  return tableProps;
+};
 
 export type UseHassuTableProps<D extends object> = Omit<HassuTableProps<D>, "tableInstance"> & {
   tableOptions: TableOptions<D>;
