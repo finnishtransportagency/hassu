@@ -6,6 +6,6 @@ import Muokkausnakyma from "./Muokkausnakyma";
 export default function Aineistot() {
   const { data: projekti } = useProjekti();
 
-  const voiMuokata = !projekti?.hyvaksymisVaiheJulkaisut?.length;
+  const voiMuokata = !projekti?.hyvaksymisPaatosVaiheJulkaisut?.length;
   return voiMuokata ? <Muokkausnakyma /> : <Lukunakyma />;
 }

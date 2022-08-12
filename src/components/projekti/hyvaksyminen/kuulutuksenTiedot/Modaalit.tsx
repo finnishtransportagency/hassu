@@ -99,7 +99,7 @@ export default function NahtavillaoloPainikkeet({
               <div>
                 <p>Viranomaiset</p>
                 <ul className="vayla-dialog-list">
-                  {projekti?.hyvaksymisVaihe?.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => (
+                  {projekti?.hyvaksymisPaatosVaihe?.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => (
                     <li key={viranomainen.nimi}>
                       {t(`viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
                     </li>
@@ -107,7 +107,7 @@ export default function NahtavillaoloPainikkeet({
                 </ul>
                 <p>Kunnat</p>
                 <ul className="vayla-dialog-list">
-                  {projekti?.hyvaksymisVaihe?.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => (
+                  {projekti?.hyvaksymisPaatosVaihe?.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => (
                     <li key={kunta.nimi}>
                       {kunta.nimi}, {kunta.sahkoposti}
                     </li>

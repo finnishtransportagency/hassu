@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot";
-import HyvaksymisVaihePainikkeet from "./HyvaksymisVaihePainikkeet";
+import HyvaksymisPaatosVaihePainikkeet from "./HyvaksymisPaatosVaihePainikkeet";
 import Hyvaksymispaatos from "./Hyvaksymispaatos";
 import SuunnitelmatJaAineistot from "../../common/SuunnitelmatJaAineistot";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
@@ -19,7 +19,7 @@ type FormData = {
   hyvaksymisPaatos: AineistoInput[];
 };
 
-export type HyvaksymisVaiheAineistotFormValues = Pick<TallennaProjektiInput, "oid"> & FormData;
+export type HyvaksymisPaatosVaiheAineistotFormValues = Pick<TallennaProjektiInput, "oid"> & FormData;
 
 const getDefaultValueForAineistoNahtavilla = (aineistot: Aineisto[] | undefined | null) => {
   return aineistoKategoriat.listKategoriaIds().reduce<AineistoNahtavilla>((aineistoNahtavilla, currentKategoriaId) => {
@@ -36,9 +36,9 @@ const getDefaultValueForAineistoNahtavilla = (aineistot: Aineisto[] | undefined 
   }, {});
 };
 
-function defaultValues(projekti: ProjektiLisatiedolla): HyvaksymisVaiheAineistotFormValues {
+function defaultValues(projekti: ProjektiLisatiedolla): HyvaksymisPaatosVaiheAineistotFormValues {
   const hyvaksymisPaatos: AineistoInput[] =
-    projekti.hyvaksymisVaihe?.hyvaksymisPaatos?.map(({ dokumenttiOid, nimi, jarjestys }) => ({
+    projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos?.map(({ dokumenttiOid, nimi, jarjestys }) => ({
       dokumenttiOid,
       jarjestys,
       nimi,
@@ -46,7 +46,7 @@ function defaultValues(projekti: ProjektiLisatiedolla): HyvaksymisVaiheAineistot
 
   return {
     oid: projekti.oid,
-    aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(projekti.hyvaksymisVaihe?.aineistoNahtavilla),
+    aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(projekti.hyvaksymisPaatosVaihe?.aineistoNahtavilla),
     hyvaksymisPaatos,
   };
 }
@@ -54,13 +54,13 @@ function defaultValues(projekti: ProjektiLisatiedolla): HyvaksymisVaiheAineistot
 export default function Muokkausnakyma() {
   const { data: projekti } = useProjekti();
 
-  const formOptions: UseFormProps<HyvaksymisVaiheAineistotFormValues> = {
+  const formOptions: UseFormProps<HyvaksymisPaatosVaiheAineistotFormValues> = {
     resolver: yupResolver(nahtavillaoloAineistotSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
   };
 
-  const useFormReturn = useForm<HyvaksymisVaiheAineistotFormValues>(formOptions);
+  const useFormReturn = useForm<HyvaksymisPaatosVaiheAineistotFormValues>(formOptions);
   const { reset } = useFormReturn;
 
   useEffect(() => {
@@ -76,7 +76,7 @@ export default function Muokkausnakyma() {
       <form>
         <Hyvaksymispaatos />
         <SuunnitelmatJaAineistot />
-        <HyvaksymisVaihePainikkeet />
+        <HyvaksymisPaatosVaihePainikkeet />
       </form>
     </FormProvider>
   );

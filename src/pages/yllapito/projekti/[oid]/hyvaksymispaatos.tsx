@@ -7,11 +7,11 @@ import Tabs from "@components/layout/tabs/Tabs";
 import KuulutuksenTiedot from "@components/projekti/hyvaksyminen/kuulutuksenTiedot/index";
 import PaatosAineistot from "@components/projekti/hyvaksyminen/aineistot/index";
 
-export default function Hyvaksyminen({ setRouteLabels }: PageProps): ReactElement {
+export default function Hyvaksymispaatos({ setRouteLabels }: PageProps): ReactElement {
   useProjektiBreadcrumbs(setRouteLabels);
 
   return (
-    <ProjektiPageLayout title="Hyvaksymisvaihe">
+    <ProjektiPageLayout title="Kuulutus hyväksymispäätöksestä">
       <Notification type={NotificationType.INFO} hideIcon>
         <div>
           <h3 className="vayla-small-title">Ohjeet</h3>

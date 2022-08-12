@@ -1,13 +1,23 @@
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { loadProjektiFromDatabase, loadProjektiJulkinenFromDatabase } from "./tests";
-import { HallintoOikeus, Status, VelhoAineisto, VelhoAineistoKategoria } from "../../../../common/graphql/apiModel";
+import {
+  HallintoOikeus,
+  HyvaksymisPaatosVaiheTila,
+  ProjektiKayttaja,
+  Status,
+  TilasiirtymaToiminto,
+  TilasiirtymaTyyppi,
+  VelhoAineisto,
+  VelhoAineistoKategoria
+} from "../../../../common/graphql/apiModel";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import { expect } from "chai";
 import { api } from "../apiClient";
 import { adaptAineistoToInput, expectToMatchSnapshot } from "./util";
 import { apiTestFixture } from "../apiTestFixture";
+import { cleanupHyvaksymisPaatosVaiheTimestamps } from "./cleanUpFunctions";
 
-export async function testHyvaksyntaVaiheHyvaksymismenettelyssa(oid: string, userFixture: UserFixture): Promise<void> {
+export async function testHyvaksymisPaatosVaiheHyvaksymismenettelyssa(oid: string, userFixture: UserFixture): Promise<void> {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   const julkaisu = dbProjekti.nahtavillaoloVaiheJulkaisut[0];
   julkaisu.kuulutusVaihePaattyyPaiva = "2022-06-08";
@@ -36,7 +46,7 @@ export async function testImportHyvaksymisPaatosAineistot(
 
   await api.tallennaProjekti({
     oid,
-    hyvaksymisVaihe: {
+    hyvaksymisPaatosVaihe: {
       hyvaksymisPaatos: adaptAineistoToInput([lisaAineisto[0]]),
       aineistoNahtavilla: adaptAineistoToInput(lisaAineisto.slice(2, 3)),
 
@@ -48,8 +58,48 @@ export async function testImportHyvaksymisPaatosAineistot(
   });
 
   const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA);
-  const hyvaksymisVaihe = projekti.hyvaksymisVaihe;
+  const hyvaksymisPaatosVaihe = projekti.hyvaksymisPaatosVaihe;
   expectToMatchSnapshot("testImportHyvaksymisPaatosAineistot", {
-    hyvaksymisVaihe,
+    hyvaksymisPaatosVaihe,
   });
+}
+
+export async function testHyvaksymisPaatosVaiheApproval(
+  oid: string,
+  projektiPaallikko: ProjektiKayttaja,
+  userFixture: UserFixture
+): Promise<void> {
+  userFixture.loginAsProjektiKayttaja(projektiPaallikko);
+  await api.siirraTila({
+    oid,
+    tyyppi: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
+    toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+  });
+
+  const projektiHyvaksyttavaksi = await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA);
+  expect(projektiHyvaksyttavaksi.hyvaksymisPaatosVaiheJulkaisut).to.have.length(1);
+  expect(projektiHyvaksyttavaksi.hyvaksymisPaatosVaiheJulkaisut[0].tila).to.eq(HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA);
+
+  await api.siirraTila({
+    oid,
+    tyyppi: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
+    toiminto: TilasiirtymaToiminto.HYVAKSY
+  });
+  const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA);
+  expectToMatchSnapshot("testHyvaksymisPaatosVaiheAfterApproval", {
+    hyvaksymisPaatosVaihe: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.hyvaksymisPaatosVaihe),
+    hyvaksymisPaatosVaiheJulkaisut: projekti.hyvaksymisPaatosVaiheJulkaisut.map(cleanupHyvaksymisPaatosVaiheTimestamps),
+  });
+
+  // TODO
+  // await testPublicAccessToProjekti(
+  //   oid,
+  //   Status.HYVAKSYMISMENETTELYSSA,
+  //   userFixture,
+  //   "HyvaksymisPaatosVaiheJulkinenAfterApproval",
+  //   (projektiJulkinen) =>
+  //     (projektiJulkinen.hyvaksymisPaatosVaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
+  //       projektiJulkinen.hyvaksymisPaatosVaihe
+  //     ))
+  // );
 }

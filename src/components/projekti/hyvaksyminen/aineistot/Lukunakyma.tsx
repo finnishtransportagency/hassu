@@ -2,7 +2,7 @@ import HassuAccordion, { AccordionItem } from "@components/HassuAccordion";
 import Section from "@components/layout/Section";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import { Stack } from "@mui/material";
-import { HyvaksymisVaiheJulkaisu } from "@services/api";
+import { HyvaksymisPaatosVaiheJulkaisu } from "@services/api";
 import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory } from "common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
 import React, { FC, useMemo } from "react";
@@ -14,7 +14,7 @@ export default function Lukunakyma() {
 
   const julkaisu = useMemo(
     () =>
-      projekti?.hyvaksymisVaihe || projekti?.hyvaksymisVaiheJulkaisut?.[projekti.hyvaksymisVaiheJulkaisut.length - 1],
+      projekti?.hyvaksymisPaatosVaihe || projekti?.hyvaksymisPaatosVaiheJulkaisut?.[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1],
     [projekti]
   );
 
@@ -35,7 +35,7 @@ export default function Lukunakyma() {
         )}
         <AineistoNahtavillaAccordion
           kategoriat={aineistoKategoriat.listKategoriat()}
-          julkaisu={julkaisu as HyvaksymisVaiheJulkaisu}
+          julkaisu={julkaisu as HyvaksymisPaatosVaiheJulkaisu}
         />
       </Section>
     </>
@@ -43,7 +43,7 @@ export default function Lukunakyma() {
 }
 
 interface AineistoNahtavillaAccordionProps {
-  julkaisu: HyvaksymisVaiheJulkaisu;
+  julkaisu: HyvaksymisPaatosVaiheJulkaisu;
   kategoriat: AineistoKategoria[];
 }
 

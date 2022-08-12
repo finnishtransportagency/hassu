@@ -46,9 +46,10 @@ import {
   testNahtavillaoloLisaAineisto,
 } from "./testUtil/nahtavillaolo";
 import {
-  testHyvaksyntaVaiheHyvaksymismenettelyssa,
+  testHyvaksymisPaatosVaiheApproval,
+  testHyvaksymisPaatosVaiheHyvaksymismenettelyssa,
   testImportHyvaksymisPaatosAineistot
-} from "./testUtil/hyvaksyntaVaihe";
+} from "./testUtil/hyvaksymisPaatosVaihe";
 
 const sandbox = sinon.createSandbox();
 const { expect } = require("chai");
@@ -155,10 +156,13 @@ describe("Api", () => {
     await processQueue(fakeAineistoImportQueue);
     await takeS3Snapshot(oid, "Nahtavillaolo published");
 
-    await testHyvaksyntaVaiheHyvaksymismenettelyssa(oid, userFixture);
+    await testHyvaksymisPaatosVaiheHyvaksymismenettelyssa(oid, userFixture);
     await testImportHyvaksymisPaatosAineistot(oid, velhoAineistoKategorias, projektiPaallikko.kayttajatunnus);
     await processQueue(fakeAineistoImportQueue);
-    await takeYllapitoS3Snapshot(oid, "Hyvaksymispaatos created", "hyvaksymisvaihe");
+    await takeYllapitoS3Snapshot(oid, "Hyvaksymispaatos created", "hyvaksymispaatos");
+
+    await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture);
+
   });
 
   it.skip("should archive projekti", async function() {

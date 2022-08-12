@@ -103,8 +103,8 @@ type Projekti implements IProjekti {
   suunnitteluVaihe: SuunnitteluVaihe
   nahtavillaoloVaihe: NahtavillaoloVaihe
   nahtavillaoloVaiheJulkaisut: [NahtavillaoloVaiheJulkaisu!]
-  hyvaksymisVaihe: HyvaksymisVaihe
-  hyvaksymisVaiheJulkaisut: [HyvaksymisVaiheJulkaisu!]
+  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe
+  hyvaksymisPaatosVaiheJulkaisut: [HyvaksymisPaatosVaiheJulkaisu!]
   velho: Velho!
   kayttoOikeudet: [ProjektiKayttaja!]
   """
@@ -207,7 +207,7 @@ type NahtavillaoloVaihe {
   palautusSyy: String
 }
 
-type HyvaksymisVaihe {
+type HyvaksymisPaatosVaihe {
   hyvaksymisPaatos: [Aineisto!]
   aineistoNahtavilla: [Aineisto!]
   kuulutusPaiva: String
@@ -216,11 +216,11 @@ type HyvaksymisVaihe {
   kuulutusYhteystiedot: [Yhteystieto!]
   kuulutusYhteysHenkilot: [String!]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
-  hyvaksymisVaihePDFt: HyvaksymisVaihePDFt
+  hyvaksymisPaatosVaihePDFt: HyvaksymisPaatosVaihePDFt
   palautusSyy: String
 }
 
-type HyvaksymisVaiheJulkinen {
+type HyvaksymisPaatosVaiheJulkinen {
   hyvaksymisPaatos: [Aineisto!]
   aineistoNahtavilla: [Aineisto!]
   kuulutusPaiva: String
@@ -229,7 +229,7 @@ type HyvaksymisVaiheJulkinen {
   kuulutusYhteystiedot: [Yhteystieto!]
   kuulutusYhteysHenkilot: [String!]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
-  hyvaksymisVaihePDFt: HyvaksymisVaihePDFt
+  hyvaksymisPaatosVaihePDFt: HyvaksymisPaatosVaihePDFt
 }
 
 type NahtavillaoloVaiheJulkaisu {
@@ -250,7 +250,7 @@ type NahtavillaoloVaiheJulkaisu {
   hyvaksyja: String
 }
 
-type HyvaksymisVaiheJulkaisu {
+type HyvaksymisPaatosVaiheJulkaisu {
   aineistoNahtavilla: [Aineisto!]
   hyvaksymisPaatos: [Aineisto!]
   kuulutusPaiva: String
@@ -261,8 +261,8 @@ type HyvaksymisVaiheJulkaisu {
   kuulutusYhteysHenkilot: [String!]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   hallintoOikeus: HallintoOikeus
-  hyvaksymisVaihePDFt: HyvaksymisVaihePDFt
-  tila: HyvaksymisVaiheTila
+  hyvaksymisPaatosVaihePDFt: HyvaksymisPaatosVaihePDFt
+  tila: HyvaksymisPaatosVaiheTila
   muokkaaja: String
   hyvaksyja: String
 }
@@ -281,7 +281,7 @@ type NahtavillaoloVaiheJulkaisuJulkinen {
   nahtavillaoloPDFt: NahtavillaoloPDFt
 }
 
-type HyvaksymisVaiheJulkaisuJulkinen {
+type HyvaksymisPaatosVaiheJulkaisuJulkinen {
   aineistoNahtavilla: [Aineisto!]
   hyvaksymisPaatos: [Aineisto!]
   kuulutusPaiva: String
@@ -292,7 +292,7 @@ type HyvaksymisVaiheJulkaisuJulkinen {
   kuulutusYhteystiedot: [Yhteystieto!]
   kuulutusYhteysHenkilot: [String!]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
-  hyvaksymisVaihePDFt: HyvaksymisVaihePDFt
+  hyvaksymisPaatosVaihePDFt: HyvaksymisPaatosVaihePDFt
 }
 
 type NahtavillaoloPDF {
@@ -307,7 +307,7 @@ type NahtavillaoloPDFt {
   SAAME: NahtavillaoloPDF
 }
 
-type HyvaksymisVaihePDF {
+type HyvaksymisPaatosVaihePDF {
   hyvaksymisKuulutusPDFPath: String!
   hyvaksymisIlmoitusPDFPath: String!
   hyvaksymisLahetekirjePDFPath: String!
@@ -315,10 +315,10 @@ type HyvaksymisVaihePDF {
   hyvaksymisIlmoitusMuistuttajillePDFPath: String!
 }
 
-type HyvaksymisVaihePDFt {
-  SUOMI: HyvaksymisVaihePDF!
-  RUOTSI: HyvaksymisVaihePDF
-  SAAME: HyvaksymisVaihePDF
+type HyvaksymisPaatosVaihePDFt {
+  SUOMI: HyvaksymisPaatosVaihePDF!
+  RUOTSI: HyvaksymisPaatosVaihePDF
+  SAAME: HyvaksymisPaatosVaihePDF
 }
 
 type NahtavillaoloVaiheJulkinen {
@@ -336,7 +336,7 @@ enum NahtavillaoloVaiheTila {
   PALAUTETTU
 }
 
-enum HyvaksymisVaiheTila {
+enum HyvaksymisPaatosVaiheTila {
   ODOTTAA_HYVAKSYNTAA
   HYVAKSYTTY
   PALAUTETTU
@@ -476,7 +476,7 @@ type ProjektiJulkinen implements IProjekti {
   projektiHenkilot: [ProjektiKayttajaJulkinen!]
   paivitetty: String
   nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisuJulkinen
-  hyvaksymisVaihe: HyvaksymisVaiheJulkaisuJulkinen
+  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
 }
 
 type Suunnitelma {

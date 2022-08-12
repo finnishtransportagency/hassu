@@ -1,5 +1,8 @@
 import {
   Aineisto,
+  HyvaksymisPaatosVaihe,
+  HyvaksymisPaatosVaiheJulkaisu,
+  HyvaksymisPaatosVaiheJulkaisuJulkinen,
   NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
   NahtavillaoloVaiheJulkaisuJulkinen,
@@ -10,11 +13,11 @@ import {
 export function cleanupGeneratedIdAndTimestampFromFeedbacks(feedbacks?: Palaute[]): Palaute[] {
   return feedbacks
     ? feedbacks.map((palaute) => {
-        palaute.liite = palaute.liite.replace(palaute.id, "***unittest***");
-        palaute.id = "***unittest***";
-        palaute.vastaanotettu = "***unittest***";
-        return palaute;
-      })
+      palaute.liite = palaute.liite.replace(palaute.id, "***unittest***");
+      palaute.id = "***unittest***";
+      palaute.vastaanotettu = "***unittest***";
+      return palaute;
+    })
     : undefined;
 }
 
@@ -25,15 +28,15 @@ export function cleanupVuorovaikutusTimestamps(vuorovaikutukset: Vuorovaikutus[]
   });
 }
 
+function aineistoCleanupFunc(aineisto: Aineisto) {
+  if (aineisto.tuotu) {
+    aineisto.tuotu = "***unittest***";
+  }
+}
+
 export function cleanupNahtavillaoloTimestamps(
   nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu | NahtavillaoloVaihe
 ): NahtavillaoloVaiheJulkaisu | NahtavillaoloVaihe {
-  function aineistoCleanupFunc(aineisto: Aineisto) {
-    if (aineisto.tuotu) {
-      aineisto.tuotu = "***unittest***";
-    }
-  }
-
   nahtavillaoloVaihe.aineistoNahtavilla?.forEach(aineistoCleanupFunc);
   nahtavillaoloVaihe.lisaAineisto?.forEach(aineistoCleanupFunc);
   if ((nahtavillaoloVaihe as NahtavillaoloVaihe).lisaAineistoParametrit) {
@@ -49,6 +52,23 @@ export function cleanupNahtavillaoloJulkaisuJulkinenTimestamps(
   nahtavillaoloVaihe.aineistoNahtavilla?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
   return nahtavillaoloVaihe;
 }
+
+export function cleanupHyvaksymisPaatosVaiheTimestamps(
+  vaihe: HyvaksymisPaatosVaiheJulkaisu | HyvaksymisPaatosVaihe
+): HyvaksymisPaatosVaiheJulkaisu | HyvaksymisPaatosVaihe {
+  vaihe.aineistoNahtavilla?.forEach(aineistoCleanupFunc);
+  vaihe.hyvaksymisPaatos?.forEach(aineistoCleanupFunc);
+  return vaihe;
+}
+
+export function cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
+  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
+): HyvaksymisPaatosVaiheJulkaisuJulkinen {
+  hyvaksymisPaatosVaihe.aineistoNahtavilla?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
+  hyvaksymisPaatosVaihe.hyvaksymisPaatos?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
+  return hyvaksymisPaatosVaihe;
+}
+
 
 export function cleanupGeneratedIds(obj: unknown): unknown {
   return Object.keys(obj).reduce((cleanObj, key) => {

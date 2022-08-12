@@ -1,6 +1,6 @@
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
-import { HyvaksymisVaiheTila, Projekti, ProjektiRooli, YhteystietoInput } from "@services/api";
+import { HyvaksymisPaatosVaiheTila, Projekti, ProjektiRooli, YhteystietoInput } from "@services/api";
 import Section from "@components/layout/Section";
 import { Fragment, ReactElement } from "react";
 import Button from "@components/button/Button";
@@ -26,9 +26,9 @@ const defaultYhteystieto: YhteystietoInput = {
 
 interface Props {}
 
-function hasHyvaksyttyHyvaksymisVaiheJulkaisu(projekti: Projekti | null | undefined) {
+function hasHyvaksyttyHyvaksymisPaatosVaiheJulkaisu(projekti: Projekti | null | undefined) {
   return (
-    (projekti?.hyvaksymisVaiheJulkaisut?.filter((julkaisu) => julkaisu.tila == HyvaksymisVaiheTila.HYVAKSYTTY) || [])
+    (projekti?.hyvaksymisPaatosVaiheJulkaisut?.filter((julkaisu) => julkaisu.tila == HyvaksymisPaatosVaiheTila.HYVAKSYTTY) || [])
       .length > 0
   );
 }
@@ -36,7 +36,7 @@ function hasHyvaksyttyHyvaksymisVaiheJulkaisu(projekti: Projekti | null | undefi
 export default function EsitettavatYhteystiedot({}: Props): ReactElement {
   const { data: projekti } = useProjekti();
 
-  const eiVoiMuokata = hasHyvaksyttyHyvaksymisVaiheJulkaisu(projekti);
+  const eiVoiMuokata = hasHyvaksyttyHyvaksymisPaatosVaiheJulkaisu(projekti);
 
   const {
     register,
@@ -46,12 +46,12 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "hyvaksymisVaihe.kuulutusYhteystiedot",
+    name: "hyvaksymisPaatosVaihe.kuulutusYhteystiedot",
   });
 
   // // TODO: tyypityksestä puuttuu vielä kuulutusYhteysHenkilot
-  // const vuorovaikutusYhteysHenkilot: ProjektiKayttaja[] = projekti?.hyvaksymisVaihe?.kuulutusYhteysHenkilot
-  //   ? projekti.hyvaksymisVaihe.kuulutusYhteysHenkilot
+  // const vuorovaikutusYhteysHenkilot: ProjektiKayttaja[] = projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteysHenkilot
+  //   ? projekti.hyvaksymisPaatosVaihe.kuulutusYhteysHenkilot
   //       .map((hlo) => {
   //         const yhteysHenkiloTietoineen: ProjektiKayttaja | undefined = (projekti?.kayttoOikeudet || []).find(
   //           (ko) => ko.kayttajatunnus === hlo
@@ -69,7 +69,7 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
       <Section>
         <SectionContent>
           {/* <p className="vayla-label mb-5">Vuorovaikuttamisen yhteyshenkilöt</p>
-          {projekti?.hyvaksymisVaihe?.kuulutusYhteystiedot?.map((yhteystieto, index) => (
+          {projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
               {capitalize(yhteystieto.etunimi)} {capitalize(yhteystieto.sukunimi)}, puh. {yhteystieto.puhelinnumero},{" "}
               {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio}
@@ -99,7 +99,7 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
         {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
           <Controller
             control={control}
-            name={`hyvaksymisVaihe.kuulutusYhteysHenkilot`}
+            name={`hyvaksymisPaatosVaihe.kuulutusYhteysHenkilot`}
             render={({ field: { onChange, value, ...field } }) => (
               <FormGroup label="Projektiin tallennetut henkilöt" inlineFlex>
                 {projekti?.suunnitteluSopimus && (
@@ -151,29 +151,29 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
           <HassuGrid sx={{ width: "100%" }} cols={[1, 1, 3]}>
             <TextInput
               label="Etunimi *"
-              {...register(`hyvaksymisVaihe.kuulutusYhteystiedot.${index}.etunimi`)}
-              error={(errors as any).hyvaksymisVaihe?.kuulutusYhteystiedot?.[index]?.etunimi}
+              {...register(`hyvaksymisPaatosVaihe.kuulutusYhteystiedot.${index}.etunimi`)}
+              error={(errors as any).hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.[index]?.etunimi}
             />
             <TextInput
               label="Sukunimi *"
-              {...register(`hyvaksymisVaihe.kuulutusYhteystiedot.${index}.sukunimi`)}
-              error={(errors as any).hyvaksymisVaihe?.kuulutusYhteystiedot?.[index]?.sukunimi}
+              {...register(`hyvaksymisPaatosVaihe.kuulutusYhteystiedot.${index}.sukunimi`)}
+              error={(errors as any).hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.[index]?.sukunimi}
             />
             <TextInput
               label="Organisaatio / kunta *"
-              {...register(`hyvaksymisVaihe.kuulutusYhteystiedot.${index}.organisaatio`)}
-              error={(errors as any).hyvaksymisVaihe?.kuulutusYhteystiedot?.[index]?.organisaatio}
+              {...register(`hyvaksymisPaatosVaihe.kuulutusYhteystiedot.${index}.organisaatio`)}
+              error={(errors as any).hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.[index]?.organisaatio}
             />
             <TextInput
               label="Puhelinnumero *"
-              {...register(`hyvaksymisVaihe.kuulutusYhteystiedot.${index}.puhelinnumero`)}
-              error={(errors as any).hyvaksymisVaihe?.kuulutusYhteystiedot?.[index]?.puhelinnumero}
+              {...register(`hyvaksymisPaatosVaihe.kuulutusYhteystiedot.${index}.puhelinnumero`)}
+              error={(errors as any).hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.[index]?.puhelinnumero}
               maxLength={maxPhoneLength}
             />
             <TextInput
               label="Sähköpostiosoite *"
-              {...register(`hyvaksymisVaihe.kuulutusYhteystiedot.${index}.sahkoposti`)}
-              error={(errors as any).hyvaksymisVaihe?.kuulutusYhteystiedot?.[index]?.sahkoposti}
+              {...register(`hyvaksymisPaatosVaihe.kuulutusYhteystiedot.${index}.sahkoposti`)}
+              error={(errors as any).hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.[index]?.sahkoposti}
             />
           </HassuGrid>
           <div>

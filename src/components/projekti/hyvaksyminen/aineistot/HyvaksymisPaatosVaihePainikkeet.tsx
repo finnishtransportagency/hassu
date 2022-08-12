@@ -9,18 +9,18 @@ import { useFormContext } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
-import { HyvaksymisVaiheAineistotFormValues } from "./Muokkausnakyma";
+import { HyvaksymisPaatosVaiheAineistotFormValues } from "./Muokkausnakyma";
 
 const mapFormValuesToTallennaProjektiInput = ({
   oid,
   hyvaksymisPaatos,
   aineistoNahtavilla,
-}: HyvaksymisVaiheAineistotFormValues): TallennaProjektiInput => {
+}: HyvaksymisPaatosVaiheAineistotFormValues): TallennaProjektiInput => {
   const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla).flat();
   deleteFieldArrayIds(aineistoNahtavillaFlat);
   deleteFieldArrayIds(hyvaksymisPaatos);
 
-  return { oid, hyvaksymisVaihe: { aineistoNahtavilla: aineistoNahtavillaFlat, hyvaksymisPaatos } };
+  return { oid, hyvaksymisPaatosVaihe: { aineistoNahtavilla: aineistoNahtavillaFlat, hyvaksymisPaatos } };
 };
 
 export default function NahtavillaoloPainikkeet() {
@@ -28,14 +28,14 @@ export default function NahtavillaoloPainikkeet() {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
 
-  const { handleSubmit } = useFormContext<HyvaksymisVaiheAineistotFormValues>();
+  const { handleSubmit } = useFormContext<HyvaksymisPaatosVaiheAineistotFormValues>();
 
   const saveSuunnitteluvaihe = async (formData: TallennaProjektiInput) => {
     await api.tallennaProjekti(formData);
     if (reloadProjekti) await reloadProjekti();
   };
 
-  const saveDraft = async (formData: HyvaksymisVaiheAineistotFormValues) => {
+  const saveDraft = async (formData: HyvaksymisPaatosVaiheAineistotFormValues) => {
     setIsFormSubmitting(true);
     try {
       await saveSuunnitteluvaihe(mapFormValuesToTallennaProjektiInput(formData));

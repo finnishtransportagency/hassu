@@ -11,7 +11,7 @@ import * as AWSXRay from "aws-xray-sdk-core";
 import { aineistoService } from "./aineistoService";
 import {
   Aineisto,
-  HyvaksymisVaihe,
+  HyvaksymisPaatosVaihe,
   NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
   Vuorovaikutus
@@ -50,20 +50,20 @@ async function handleNahtavillaoloVaiheAineistot(
   return aineistoNahtavillaChanges || lisaAineistoChanges;
 }
 
-async function handleHyvaksymisVaiheAineistot(
+async function handleHyvaksymisPaatosVaiheAineistot(
   oid: string,
-  hyvaksymisVaihe: HyvaksymisVaihe
+  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe
 ): Promise<boolean> {
   let aineistoNahtavillaChanges;
   let hyvaksymisPaatosChanges;
-  const hyvaksymisVaihePaths = new ProjektiPaths(oid).hyvaksymisVaihe(hyvaksymisVaihe);
+  const hyvaksymisPaatosVaihePaths = new ProjektiPaths(oid).hyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe);
 
-  if (hyvaksymisVaihe.aineistoNahtavilla) {
-    aineistoNahtavillaChanges = await handleAineistot(oid, hyvaksymisVaihe.aineistoNahtavilla, hyvaksymisVaihePaths);
+  if (hyvaksymisPaatosVaihe.aineistoNahtavilla) {
+    aineistoNahtavillaChanges = await handleAineistot(oid, hyvaksymisPaatosVaihe.aineistoNahtavilla, hyvaksymisPaatosVaihePaths);
   }
 
-  if (hyvaksymisVaihe.hyvaksymisPaatos) {
-    hyvaksymisPaatosChanges = await handleAineistot(oid, hyvaksymisVaihe.hyvaksymisPaatos, hyvaksymisVaihePaths.hyvaksymispaatos);
+  if (hyvaksymisPaatosVaihe.hyvaksymisPaatos) {
+    hyvaksymisPaatosChanges = await handleAineistot(oid, hyvaksymisPaatosVaihe.hyvaksymisPaatos, hyvaksymisPaatosVaihePaths.paatos);
   }
   return hyvaksymisPaatosChanges || aineistoNahtavillaChanges;
 }
@@ -163,12 +163,12 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
               });
             }
           }
-          const hyvaksymisVaihe = projekti.hyvaksymisVaihe;
-          if (hyvaksymisVaihe) {
-            if (await handleHyvaksymisVaiheAineistot(projekti.oid, hyvaksymisVaihe)) {
+          const hyvaksymisPaatosVaihe = projekti.hyvaksymisPaatosVaihe;
+          if (hyvaksymisPaatosVaihe) {
+            if (await handleHyvaksymisPaatosVaiheAineistot(projekti.oid, hyvaksymisPaatosVaihe)) {
               await projektiDatabase.saveProjekti({
                 oid,
-                hyvaksymisVaihe,
+                hyvaksymisPaatosVaihe,
               });
             }
           }

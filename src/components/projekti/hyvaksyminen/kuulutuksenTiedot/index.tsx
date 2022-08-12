@@ -24,23 +24,23 @@ function defaultValues(
 ): KuulutuksenTiedotFormValues {
   return {
     oid: projekti.oid,
-    hyvaksymisVaihe: {
-      kuulutusPaiva: projekti?.hyvaksymisVaihe?.kuulutusPaiva,
-      kuulutusVaihePaattyyPaiva: projekti?.hyvaksymisVaihe?.kuulutusVaihePaattyyPaiva,
-      hallintoOikeus: projekti?.hyvaksymisVaihe?.hallintoOikeus,
-      kuulutusYhteystiedot: projekti?.hyvaksymisVaihe?.kuulutusYhteystiedot
-        ? projekti.hyvaksymisVaihe.kuulutusYhteystiedot.map((yhteystieto) => removeTypeName(yhteystieto))
+    hyvaksymisPaatosVaihe: {
+      kuulutusPaiva: projekti?.hyvaksymisPaatosVaihe?.kuulutusPaiva,
+      kuulutusVaihePaattyyPaiva: projekti?.hyvaksymisPaatosVaihe?.kuulutusVaihePaattyyPaiva,
+      hallintoOikeus: projekti?.hyvaksymisPaatosVaihe?.hallintoOikeus,
+      kuulutusYhteystiedot: projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot
+        ? projekti.hyvaksymisPaatosVaihe.kuulutusYhteystiedot.map((yhteystieto) => removeTypeName(yhteystieto))
         : [],
       ilmoituksenVastaanottajat: defaultVastaanottajat(
         projekti,
-        projekti.hyvaksymisVaihe?.ilmoituksenVastaanottajat,
+        projekti.hyvaksymisPaatosVaihe?.ilmoituksenVastaanottajat,
         kirjaamoOsoitteet
       ),
     },
   };
 }
 
-export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid" | "hyvaksymisVaihe">;
+export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid" | "hyvaksymisPaatosVaihe">;
 
 export default function KuulutuksenTiedot() {
   const { data: projekti } = useProjekti();
@@ -68,7 +68,7 @@ export default function KuulutuksenTiedot() {
     }
   }, [projekti, kirjaamoOsoitteet, reset]);
 
-  const voiMuokata = !projekti?.hyvaksymisVaiheJulkaisut || projekti.hyvaksymisVaiheJulkaisut.length < 1;
+  const voiMuokata = !projekti?.hyvaksymisPaatosVaiheJulkaisut || projekti.hyvaksymisPaatosVaiheJulkaisut.length < 1;
 
   if (!projekti) {
     return null;
@@ -76,10 +76,10 @@ export default function KuulutuksenTiedot() {
 
   return (
     <>
-      {projekti.hyvaksymisVaihe?.palautusSyy && (
+      {projekti.hyvaksymisPaatosVaihe?.palautusSyy && (
         <Notification type={NotificationType.WARN}>
           {"Hyväksymisvaihejulkaisu on palautettu korjattavaksi. Palautuksen syy: " +
-            projekti.hyvaksymisVaihe.palautusSyy}
+            projekti.hyvaksymisPaatosVaihe.palautusSyy}
         </Notification>
       )}
       {voiMuokata && (
@@ -90,7 +90,7 @@ export default function KuulutuksenTiedot() {
               <PaatoksenPaiva />
               <MuutoksenHaku />
               <KuulutuksessaEsitettavatYhteystiedot />
-              <IlmoituksenVastaanottajatKomponentti hyvaksymisVaihe={projekti?.hyvaksymisVaihe} />
+              <IlmoituksenVastaanottajatKomponentti hyvaksymisPaatosVaihe={projekti?.hyvaksymisPaatosVaihe} />
 
               {pdfFormRef.current?.esikatselePdf && (
                 <KuulutuksenJaIlmoituksenEsikatselu esikatselePdf={pdfFormRef.current?.esikatselePdf} />
@@ -101,11 +101,11 @@ export default function KuulutuksenTiedot() {
           <PdfPreviewForm ref={pdfFormRef} />
         </>
       )}
-      {!voiMuokata && projekti && projekti.hyvaksymisVaiheJulkaisut?.[projekti.hyvaksymisVaiheJulkaisut.length - 1] && (
+      {!voiMuokata && projekti && projekti.hyvaksymisPaatosVaiheJulkaisut?.[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1] && (
         <FormProvider {...useFormReturn}>
           {/* <Lukunakyma
             projekti={projekti}
-            hyvaksymisVaiheJulkaisu={projekti.hyvaksymisVaiheJulkaisut[projekti.hyvaksymisVaiheJulkaisut.length - 1]}
+            hyvaksymisPaatosVaiheJulkaisu={projekti.hyvaksymisPaatosVaiheJulkaisut[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1]}
           />
           <Painikkeet projekti={projekti} /> */}
         </FormProvider>
