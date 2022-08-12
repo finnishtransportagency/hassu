@@ -20,7 +20,7 @@ import HassuStack from "@components/layout/HassuStack";
 import { Stack } from "@mui/material";
 import HyvaksymisDialogi from "./HyvaksymisDialogi";
 import EsitettavatYhteystiedot from "./EsitettavatYhteystiedot";
-import LuonnoksetJaAineistot from "./LuonnoksetJaAineistot";
+import LuonnoksetJaAineistot from "./LuonnoksetJaAineistot/LuonnoksetJaAineistot";
 import IlmoituksenVastaanottajat from "./IlmoituksenVastaanottajat";
 import { removeTypeName } from "src/util/removeTypeName";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
