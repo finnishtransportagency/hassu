@@ -11,6 +11,7 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
 import dayjs from "dayjs";
+import { useProjekti } from "src/hooks/useProjekti";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -34,6 +35,7 @@ type FormFields = {
 
 export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet, vuorovaikutus }: Props): ReactElement {
   const { t } = useTranslation("commonFI");
+  const { data: projekti } = useProjekti();
 
   const julkinen = !!vuorovaikutus?.julkinen;
 
@@ -42,10 +44,7 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet, vuorovaik
     control,
     formState: { errors },
     setValue,
-    watch,
   } = useFormContext<FormFields>();
-
-  const ilmoituksenVastaanottajat = watch("suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat");
 
   const { fields: kuntaFields } = useFieldArray({
     control,
@@ -60,15 +59,6 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet, vuorovaik
     control,
     name: "suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.viranomaiset",
   });
-
-  const getKuntanimi = (index: number) => {
-    const nimi = ilmoituksenVastaanottajat?.kunnat?.[index].nimi;
-    if (!nimi) {
-      return;
-    }
-
-    return formatProperNoun(nimi);
-  };
 
   if (!kirjaamoOsoitteet) {
     return <></>;
@@ -233,7 +223,11 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet, vuorovaik
                   {...register(`suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.kunnat.${index}.nimi`)}
                   readOnly
                 />
-                <TextInput label="Kunta *" value={getKuntanimi(index)} disabled />
+                <TextInput
+                  label="Kunta *"
+                  value={formatProperNoun((projekti?.velho?.kunnat || [])[index] || "")}
+                  disabled
+                />
                 <TextInput
                   label="Sähköpostiosoite *"
                   error={

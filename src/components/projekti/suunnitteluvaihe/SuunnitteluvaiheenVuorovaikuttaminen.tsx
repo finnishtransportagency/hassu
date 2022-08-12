@@ -343,13 +343,15 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
         </form>
       </FormProvider>
       <PdfPreviewForm ref={pdfFormRef} />
-      <HyvaksymisDialogi
-        ilmoituksenVastaanottajat={ilmoituksenVastaanottajat}
-        dialogiOnAuki={openHyvaksy}
-        onClose={handleClickCloseHyvaksy}
-        tallenna={saveForm}
-        julkinen={!!vuorovaikutus?.julkinen}
-      />
+      {openHyvaksy && (
+        <HyvaksymisDialogi
+          ilmoituksenVastaanottajat={ilmoituksenVastaanottajat}
+          dialogiOnAuki={openHyvaksy}
+          onClose={handleClickCloseHyvaksy}
+          tallenna={saveForm}
+          julkinen={!!vuorovaikutus?.julkinen}
+        />
+      )}
       <HassuSpinner open={isFormSubmitting} />
     </>
   );
