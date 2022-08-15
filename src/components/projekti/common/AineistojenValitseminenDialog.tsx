@@ -199,6 +199,10 @@ const AineistoTable = ({ data, setSelectedAineisto, kategoria }: AineistoTablePr
     initialState: { hiddenColumns: ["oid"] },
   });
 
+  useEffect(() => {
+    console.log(tableProps);
+  }, [tableProps]);
+
   const selectedRows = useMemo(
     () => tableProps.tableInstance.selectedFlatRows.map((flatRow) => flatRow.original),
     [tableProps.tableInstance.selectedFlatRows]

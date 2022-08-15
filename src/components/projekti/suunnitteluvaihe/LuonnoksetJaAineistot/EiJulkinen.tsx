@@ -11,7 +11,7 @@ interface Props {
 export default function EiJulkinenLuonnoksetJaAineistotLomake({ vuorovaikutus, updateFormContext }: Props) {
   return (
     <>
-      <SectionContent>
+      <SectionContent className="mt-8">
         <h4 className="vayla-small-title">Suunnitelmaluonnokset ja esittelyaineistot</h4>
         <p>
           Esittelyvideo tulee olla ladattuna erilliseen videojulkaisupalveluun (esim. Youtube) ja videon katselulinkki

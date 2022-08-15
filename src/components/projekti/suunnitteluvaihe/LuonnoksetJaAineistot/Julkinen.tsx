@@ -58,7 +58,7 @@ export default function JulkinenLuonnoksetJaAineistotLomake({
           </HassuStack>
         ) : (
           <>
-            <Button style={{ float: "right" }} type="button" onClick={() => setMuokkaustila(true)}>
+            <Button className="mb-5" style={{ float: "right" }} type="button" onClick={() => setMuokkaustila(true)}>
               Muokkaa
             </Button>
             <p className="vayla-label mb-5">Suunnitelmaluonnokset ja esittelyaineistot</p>
