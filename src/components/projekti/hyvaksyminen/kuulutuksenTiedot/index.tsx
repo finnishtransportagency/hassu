@@ -12,7 +12,7 @@ import KuulutusJaJulkaisuPaiva from "./KuulutusJaJulkaisuPaiva";
 import PaatoksenPaiva from "./PaatoksenPaiva";
 import MuutoksenHaku from "./MuutoksenHaku";
 import IlmoituksenVastaanottajatKomponentti from "./IlmoituksenVastaanottajat";
-// import Lukunakyma from "./Lukunakyma";
+import Lukunakyma from "./Lukunakyma";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import { removeTypeName } from "src/util/removeTypeName";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
@@ -111,11 +111,13 @@ export default function KuulutuksenTiedot() {
         projekti &&
         projekti.hyvaksymisPaatosVaiheJulkaisut?.[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1] && (
           <FormProvider {...useFormReturn}>
-            {/* <Lukunakyma
-            projekti={projekti}
-            hyvaksymisPaatosVaiheJulkaisu={projekti.hyvaksymisPaatosVaiheJulkaisut[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1]}
-          />
-          <Painikkeet projekti={projekti} /> */}
+            <Lukunakyma
+              projekti={projekti}
+              hyvaksymisPaatosVaiheJulkaisu={
+                projekti.hyvaksymisPaatosVaiheJulkaisut[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1]
+              }
+            />
+            <Painikkeet projekti={projekti} />
           </FormProvider>
         )}
     </>

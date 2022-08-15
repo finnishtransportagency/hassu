@@ -52,7 +52,7 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
     name: "hyvaksymisPaatosVaihe.kuulutusYhteystiedot",
   });
 
-  const vuorovaikutusYhteysHenkilot: ProjektiKayttaja[] = projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteysHenkilot
+  const kuulutusYhteysHenkilot: ProjektiKayttaja[] = projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteysHenkilot
     ? projekti.hyvaksymisPaatosVaihe.kuulutusYhteysHenkilot
         .map((hlo) => {
           const yhteysHenkiloTietoineen: ProjektiKayttaja | undefined = (projekti?.kayttoOikeudet || []).find(
@@ -78,7 +78,7 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
               )
             </p>
           ))}
-          {vuorovaikutusYhteysHenkilot.map((yhteystieto, index) => (
+          {kuulutusYhteysHenkilot.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
               {yhteystieto.nimi}, puh. {yhteystieto.puhelinnumero},{" "}
               {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} ({yhteystieto.organisaatio})
