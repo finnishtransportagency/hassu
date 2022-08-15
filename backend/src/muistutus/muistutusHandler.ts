@@ -9,17 +9,20 @@ import { isValidEmail } from "../util/emailUtil";
 import { log } from "../logger";
 
 class MuistutusHandler {
-  async kasittelePalaute({ oid, muistutus: muistutusInput }: LisaaMuistutusMutationVariables) {
+  async kasitteleMuistutus({ oid, muistutus: muistutusInput }: LisaaMuistutusMutationVariables) {
     const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
     if (!projektiFromDB) {
+      log.error("Projektia ei löydy");
       throw new NotFoundError("Projektia ei löydy");
     }
     const julkinenProjekti = projektiAdapterJulkinen.adaptProjekti(projektiFromDB);
     if (!julkinenProjekti) {
+      log.error("Projektia ei löydy tai se ei ole vielä julkinen");
       throw new NotFoundError("Projektia ei löydy tai se ei ole vielä julkinen");
     }
 
     if (julkinenProjekti.status !== Status.NAHTAVILLAOLO) {
+      log.error("Projekti ei ole nähtävilläolovaiheessa, joten muistutuksia ei voi antaa", julkinenProjekti.status);
       throw new NotFoundError("Projekti ei ole nähtävilläolovaiheessa, joten muistutuksia ei voi antaa");
     }
 
@@ -32,10 +35,10 @@ class MuistutusHandler {
       });
     }
 
-    muistutusEmailService.sendEmailToKirjaamo(projektiFromDB, muistutus);
+    await muistutusEmailService.sendEmailToKirjaamo(projektiFromDB, muistutus);
 
     if (muistutus.sahkoposti && isValidEmail(muistutus.sahkoposti)) {
-      muistutusEmailService.sendEmailToMuistuttaja(projektiFromDB, muistutus);
+      await muistutusEmailService.sendEmailToMuistuttaja(projektiFromDB, muistutus);
     } else {
       log.error("Muistuttajalle ei voitu lähettää kuittausviestiä: ", muistutus.sahkoposti);
     }

@@ -74,7 +74,7 @@ Muistutus
 ${"muistutus"}
 `;
 const muistutusOtsikko = template`Muistutus - ${"id"}`;
-const muistuttajanOtsikko = template`Olemme välittäneet muisutuksesi eteenpäin`;
+const muistuttajanOtsikko = template`Vahvistus muistutuksen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta`;
 
 export function createPerustamisEmail(projekti: DBProjekti): EmailOptions {
   return {

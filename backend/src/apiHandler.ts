@@ -106,7 +106,7 @@ async function executeOperation(event: AppSyncResolverEvent<AppSyncEventArgument
     case apiConfig.listKirjaamoOsoitteet.name:
       return listKirjaamoOsoitteet();
     case apiConfig.lisaaMuistutus.name:
-      return muistutusHandler.kasittelePalaute(event.arguments as LisaaMuistutusMutationVariables);
+      return muistutusHandler.kasitteleMuistutus(event.arguments as LisaaMuistutusMutationVariables);
     case apiConfig.listaaLisaAineisto.name:
       return lisaAineistoHandler.listaaLisaAineisto(event.arguments as ListaaLisaAineistoQueryVariables);
     default:
