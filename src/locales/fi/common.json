@@ -17,6 +17,14 @@
     "tutki_suunnitelmaa": "Tutki suunnitelmaa",
     "virhe": "Virhe"
   },
+  "hallinto-oikeus": {
+    "HELSINKI": "Helsingin hallinto-oikeus",
+    "HAMEENLINNA": "Hämeenlinnan hallinto-oikeus",
+    "ITA_SUOMI": "Itä-Suomen hallinto-oikeus",
+    "POHJOIS_SUOMI": "Pohjois-Suomen hallinto-oikeus",
+    "TURKU": "Turun hallinto-oikeus",
+    "VAASA": "Vaasan hallinto-oikeus"
+  },
   "sivustonimi": "Valtion liikenneväylien suunnittelu",
   "vaylavirasto": "Väylävirasto",
   "ely-keskus": "ELY-keskus",
