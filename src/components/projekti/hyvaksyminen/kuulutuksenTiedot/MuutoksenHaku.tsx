@@ -47,8 +47,8 @@ export default function MuutoksenHaku({}: Props) {
                 {...register(`hyvaksymisPaatosVaihe.hallintoOikeus`)}
                 error={errors?.hyvaksymisPaatosVaihe?.hallintoOikeus}
                 addEmptyOption
-                value={value?.[0]}
-                onChange={(event) => onChange([event.target.value])}
+                value={value}
+                onChange={(event) => onChange(event.target.value)}
                 {...field}
               />
             )}
