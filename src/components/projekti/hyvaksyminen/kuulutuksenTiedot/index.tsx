@@ -88,6 +88,7 @@ export default function KuulutuksenTiedot() {
             projekti.hyvaksymisPaatosVaihe.palautusSyy}
         </Notification>
       )}
+
       {voiMuokata && (
         <>
           <FormProvider {...useFormReturn}>
