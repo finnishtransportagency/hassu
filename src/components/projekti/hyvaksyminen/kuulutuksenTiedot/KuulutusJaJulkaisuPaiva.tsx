@@ -32,10 +32,7 @@ export default function KuulutusJaJulkaisuPaiva({}: Props) {
   const getPaattymispaiva = useCallback(
     async (value: string) => {
       try {
-        const paattymispaiva = await api.laskePaattymisPaiva(
-          value,
-          LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA // TODO: Tähän jotain muuta??
-        );
+        const paattymispaiva = await api.laskePaattymisPaiva(value, LaskuriTyyppi.HYVAKSYMISPAATOKSEN_KUULUTUSAIKA);
         setValue("hyvaksymisPaatosVaihe.kuulutusVaihePaattyyPaiva", paattymispaiva);
       } catch (error) {
         showErrorMessage("Kuulutuksen päättymispäivän laskennassa tapahtui virhe");

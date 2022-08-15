@@ -87,7 +87,7 @@ export default function KuulutuksenTiedot() {
           <FormProvider {...useFormReturn}>
             <form>
               <KuulutusJaJulkaisuPaiva />
-              <PaatoksenPaiva />
+              <PaatoksenPaiva projekti={projekti} />
               <MuutoksenHaku />
               <KuulutuksessaEsitettavatYhteystiedot />
               <IlmoituksenVastaanottajatKomponentti hyvaksymisPaatosVaihe={projekti?.hyvaksymisPaatosVaihe} />
@@ -101,15 +101,17 @@ export default function KuulutuksenTiedot() {
           <PdfPreviewForm ref={pdfFormRef} />
         </>
       )}
-      {!voiMuokata && projekti && projekti.hyvaksymisPaatosVaiheJulkaisut?.[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1] && (
-        <FormProvider {...useFormReturn}>
-          {/* <Lukunakyma
+      {!voiMuokata &&
+        projekti &&
+        projekti.hyvaksymisPaatosVaiheJulkaisut?.[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1] && (
+          <FormProvider {...useFormReturn}>
+            {/* <Lukunakyma
             projekti={projekti}
             hyvaksymisPaatosVaiheJulkaisu={projekti.hyvaksymisPaatosVaiheJulkaisut[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1]}
           />
           <Painikkeet projekti={projekti} /> */}
-        </FormProvider>
-      )}
+          </FormProvider>
+        )}
     </>
   );
 }
