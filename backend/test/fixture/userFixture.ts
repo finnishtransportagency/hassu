@@ -24,6 +24,15 @@ export class UserFixture {
     });
   }
 
+  loginAsAdmin(): void {
+    this.userService.identifyMockUser({
+      __typename: "NykyinenKayttaja",
+      uid: "theadminuid",
+      roolit: ["hassu_kayttaja", "hassu_admin"],
+      vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.A_TUNNUS,
+    });
+  }
+
   public logout(): void {
     this.userService.identifyMockUser(undefined);
   }

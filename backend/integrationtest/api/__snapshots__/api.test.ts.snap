@@ -2726,6 +2726,8 @@ Object {
           },
         ],
       },
+      "kuulutusPaiva": "2022-06-09",
+      "kuulutusVaihePaattyyPaiva": "2100-01-01",
       "kuulutusYhteysHenkilot": Array [
         "A000112",
       ],
@@ -2826,6 +2828,8 @@ Object {
           },
         ],
       },
+      "kuulutusPaiva": "2022-06-09",
+      "kuulutusVaihePaattyyPaiva": "2100-01-01",
       "kuulutusYhteysHenkilot": Array [
         "A000112",
       ],
@@ -2915,6 +2919,8 @@ Object {
           "__typename": "Kielitiedot",
           "ensisijainenKieli": "SUOMI",
         },
+        "kuulutusPaiva": "2022-06-09",
+        "kuulutusVaihePaattyyPaiva": "2100-01-01",
         "kuulutusYhteysHenkilot": Array [
           "A000112",
         ],
@@ -2961,6 +2967,68 @@ Object {
         },
       },
     ],
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 29`] = `
+Object {
+  "description": "publicProjektiHyvaksymisPaatosVaiheJulkinenAfterApproval",
+  "obj": Object {
+    "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
+    "aineistoNahtavilla": undefined,
+    "hallintoOikeus": "HAMEENLINNA",
+    "hyvaksymisPaatos": undefined,
+    "kielitiedot": Object {
+      "__typename": "Kielitiedot",
+      "ensisijainenKieli": "SUOMI",
+    },
+    "kuulutusPaiva": "2022-06-09",
+    "kuulutusVaihePaattyyPaiva": "2022-06-08",
+    "kuulutusYhteysHenkilot": Array [
+      "0",
+    ],
+    "kuulutusYhteystiedot": Array [
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Etunimi",
+        "organisaatio": "",
+        "puhelinnumero": "0293121213",
+        "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+        "sukunimi": "Sukunimi",
+        "titteli": "Projektipäällikkö",
+      },
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Joku",
+        "organisaatio": "",
+        "puhelinnumero": "02998765",
+        "sahkoposti": "Joku.Jokunen@vayla.fi",
+        "sukunimi": "Jokunen",
+        "titteli": "Konsultti",
+      },
+    ],
+    "velho": Object {
+      "__typename": "VelhoJulkinen",
+      "asiatunnusELY": undefined,
+      "asiatunnusVayla": undefined,
+      "kunnat": Array [
+        "Helsinki",
+        "Vantaa",
+      ],
+      "kuvaus": undefined,
+      "maakunnat": Array [
+        "Uusimaa",
+      ],
+      "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+      "tilaajaOrganisaatio": "Väylävirasto",
+      "toteuttavaOrganisaatio": undefined,
+      "tyyppi": "TIE",
+      "vaylamuoto": Array [
+        "tie",
+      ],
+    },
   },
 }
 `;

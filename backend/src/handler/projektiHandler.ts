@@ -87,7 +87,7 @@ export async function arkistoiProjekti(oid: string): Promise<ArkistointiTunnus> 
 
 export async function createOrUpdateProjekti(input: TallennaProjektiInput): Promise<string> {
   if (input.kasittelynTila) {
-    requireAdmin(); // Hyvaksymispaatoksia voi tallentaa vain Hasssun yllapitaja
+    requireAdmin("Hyvaksymispaatoksia voi tallentaa vain Hasssun yllapitaja");
   }
   requirePermissionLuku();
   const oid = input.oid;
@@ -120,7 +120,7 @@ export async function createOrUpdateProjekti(input: TallennaProjektiInput): Prom
 export async function createProjektiFromVelho(
   oid: string,
   vaylaUser: NykyinenKayttaja,
-  input?: TallennaProjektiInput
+  input?: TallennaProjektiInput,
 ): Promise<{ projekti: DBProjekti; virhetiedot?: API.ProjektipaallikkoVirhe }> {
   try {
     log.info("Loading projekti from Velho", { oid });
@@ -233,7 +233,7 @@ async function handleEvents(projektiAdaptationResult: ProjektiAdaptationResult) 
     ProjektiEventType.VUOROVAIKUTUS_PUBLISHED,
     async (event: VuorovaikutusPublishedEvent, projekti: DBProjekti) => {
       return vuorovaikutusService.handleVuorovaikutusKutsu(projekti.oid, event.vuorovaikutusNumero);
-    }
+    },
   );
   await projektiAdaptationResult.onEvent(ProjektiEventType.AINEISTO_CHANGED, async (_event, projekti) => {
     return aineistoService.importAineisto(projekti.oid);

@@ -1,5 +1,5 @@
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
-import { loadProjektiFromDatabase, loadProjektiJulkinenFromDatabase } from "./tests";
+import { loadProjektiFromDatabase, loadProjektiJulkinenFromDatabase, testPublicAccessToProjekti } from "./tests";
 import {
   HallintoOikeus,
   HyvaksymisPaatosVaiheTila,
@@ -15,7 +15,10 @@ import { expect } from "chai";
 import { api } from "../apiClient";
 import { adaptAineistoToInput, expectToMatchSnapshot } from "./util";
 import { apiTestFixture } from "../apiTestFixture";
-import { cleanupHyvaksymisPaatosVaiheTimestamps } from "./cleanUpFunctions";
+import {
+  cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps,
+  cleanupHyvaksymisPaatosVaiheTimestamps
+} from "./cleanUpFunctions";
 
 export async function testHyvaksymisPaatosVaiheHyvaksymismenettelyssa(oid: string, userFixture: UserFixture): Promise<void> {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
@@ -23,6 +26,15 @@ export async function testHyvaksymisPaatosVaiheHyvaksymismenettelyssa(oid: strin
   julkaisu.kuulutusVaihePaattyyPaiva = "2022-06-08";
   await projektiDatabase.updateNahtavillaoloVaiheJulkaisu(dbProjekti, julkaisu);
 
+  userFixture.loginAsAdmin();
+  await api.tallennaProjekti({
+    oid,
+    kasittelynTila: {
+      hyvaksymispaatos: { asianumero: "asianro123", paatoksenPvm: "2022-06-09" }
+    },
+  });
+
+  userFixture.loginAs(UserFixture.mattiMeikalainen);
   await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA); // Verify status in yllapito
 
   // Verify status in public
@@ -53,7 +65,10 @@ export async function testImportHyvaksymisPaatosAineistot(
       ilmoituksenVastaanottajat: apiTestFixture.ilmoituksenVastaanottajat,
       kuulutusYhteystiedot: apiTestFixture.esitettavatYhteystiedotInput,
       kuulutusYhteysHenkilot: [projektiPaallikko],
-      hallintoOikeus: HallintoOikeus.HAMEENLINNA
+      hallintoOikeus: HallintoOikeus.HAMEENLINNA,
+
+      kuulutusPaiva: "2022-06-09",
+      kuulutusVaihePaattyyPaiva: "2100-01-01",
     },
   });
 
@@ -91,15 +106,20 @@ export async function testHyvaksymisPaatosVaiheApproval(
     hyvaksymisPaatosVaiheJulkaisut: projekti.hyvaksymisPaatosVaiheJulkaisut.map(cleanupHyvaksymisPaatosVaiheTimestamps),
   });
 
-  // TODO
-  // await testPublicAccessToProjekti(
-  //   oid,
-  //   Status.HYVAKSYMISMENETTELYSSA,
-  //   userFixture,
-  //   "HyvaksymisPaatosVaiheJulkinenAfterApproval",
-  //   (projektiJulkinen) =>
-  //     (projektiJulkinen.hyvaksymisPaatosVaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
-  //       projektiJulkinen.hyvaksymisPaatosVaihe
-  //     ))
-  // );
+  // Move hyvaksymisPaatosVaiheJulkaisu into the past
+  const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
+  const julkaisu = dbProjekti.hyvaksymisPaatosVaiheJulkaisut[0];
+  julkaisu.kuulutusVaihePaattyyPaiva = "2022-06-08";
+  await projektiDatabase.updateHyvaksymisPaatosVaiheJulkaisu(dbProjekti, julkaisu);
+
+  await testPublicAccessToProjekti(
+    oid,
+    Status.HYVAKSYTTY,
+    userFixture,
+    "HyvaksymisPaatosVaiheJulkinenAfterApproval",
+    (projektiJulkinen) =>
+      (projektiJulkinen.hyvaksymisPaatosVaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
+        projektiJulkinen.hyvaksymisPaatosVaihe
+      ))
+  );
 }

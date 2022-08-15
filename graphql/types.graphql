@@ -228,7 +228,6 @@ type HyvaksymisPaatosVaiheJulkinen {
   hallintoOikeus: HallintoOikeus
   kuulutusYhteystiedot: [Yhteystieto!]
   kuulutusYhteysHenkilot: [String!]
-  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   hyvaksymisPaatosVaihePDFt: HyvaksymisPaatosVaihePDFt
 }
 
@@ -277,7 +276,6 @@ type NahtavillaoloVaiheJulkaisuJulkinen {
   kielitiedot: Kielitiedot
   kuulutusYhteysHenkilot: [String!]
   kuulutusYhteystiedot: [Yhteystieto!]
-  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   nahtavillaoloPDFt: NahtavillaoloPDFt
 }
 
@@ -291,7 +289,6 @@ type HyvaksymisPaatosVaiheJulkaisuJulkinen {
   hallintoOikeus: HallintoOikeus
   kuulutusYhteystiedot: [Yhteystieto!]
   kuulutusYhteysHenkilot: [String!]
-  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   hyvaksymisPaatosVaihePDFt: HyvaksymisPaatosVaihePDFt
 }
 
