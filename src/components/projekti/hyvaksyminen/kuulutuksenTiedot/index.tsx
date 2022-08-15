@@ -31,6 +31,12 @@ function defaultValues(
       kuulutusYhteystiedot: projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot
         ? projekti.hyvaksymisPaatosVaihe.kuulutusYhteystiedot.map((yhteystieto) => removeTypeName(yhteystieto))
         : [],
+      kuulutusYhteysHenkilot:
+        projekti?.kayttoOikeudet
+          ?.filter(({ kayttajatunnus }) =>
+            projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteysHenkilot?.includes(kayttajatunnus)
+          )
+          .map(({ kayttajatunnus }) => kayttajatunnus) || [],
       ilmoituksenVastaanottajat: defaultVastaanottajat(
         projekti,
         projekti.hyvaksymisPaatosVaihe?.ilmoituksenVastaanottajat,
