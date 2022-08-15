@@ -178,6 +178,7 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
               error={(errors as any).hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.[index]?.sahkoposti}
             />
           </HassuGrid>
+
           <div>
             <div className="hidden lg:block lg:mt-8">
               <IconButton
