@@ -1,4 +1,4 @@
-import { Aineisto, NahtavillaoloVaiheJulkaisu, Vuorovaikutus } from "../database/model";
+import { Aineisto, HyvaksymisPaatosVaiheJulkaisu, NahtavillaoloVaiheJulkaisu, Vuorovaikutus } from "../database/model";
 import { aineistoImporterClient } from "./aineistoImporterClient";
 import { log } from "../logger";
 import { fileService } from "../files/fileService";
@@ -51,13 +51,21 @@ class AineistoService {
   }
 
   async publishNahtavillaolo(oid: string, nahtavillaoloId: number) {
-    // Import files from Velho
     await aineistoImporterClient.importAineisto({
       type: ImportAineistoEventType.PUBLISH_NAHTAVILLAOLO,
       oid,
       publishNahtavillaoloWithId: nahtavillaoloId,
     });
   }
+
+  async publishHyvaksymisPaatosVaihe(oid: string, hyvaksymisPaatosId: number) {
+    await aineistoImporterClient.importAineisto({
+      type: ImportAineistoEventType.PUBLISH_HYVAKSYMISPAATOS,
+      oid,
+      publishHyvaksymisPaatosWithId: hyvaksymisPaatosId,
+    });
+  }
+
 
   /**
    * Copy aineisto to public S3 with proper publish and expiration dates
@@ -82,6 +90,21 @@ class AineistoService {
     await synchronizeAineistoToPublic(
       oid,
       new ProjektiPaths(oid).nahtavillaoloVaihe(nahtavillaoloVaiheJulkaisu),
+      publishDate
+    );
+  }
+
+  async synchronizeHyvaksymisPaatosVaiheJulkaisuAineistoToPublic(
+    oid: string,
+    julkaisu: HyvaksymisPaatosVaiheJulkaisu
+  ): Promise<void> {
+    const publishDate = parseDate(julkaisu.kuulutusPaiva);
+    if (!publishDate) {
+      throw new Error("HyvaksymisPaatosVaiheJulkaisua ei voi julkaista jos vuorovaikutusJulkaisuPaiva ei ole asetettu");
+    }
+    await synchronizeAineistoToPublic(
+      oid,
+      new ProjektiPaths(oid).hyvaksymisPaatosVaihe(julkaisu),
       publishDate
     );
   }

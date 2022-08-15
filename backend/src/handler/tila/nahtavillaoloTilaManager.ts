@@ -33,7 +33,6 @@ class NahtavillaoloTilaManager extends TilaManager {
     nahtavillaoloVaiheJulkaisu.tila = NahtavillaoloVaiheTila.ODOTTAA_HYVAKSYNTAA;
     nahtavillaoloVaiheJulkaisu.muokkaaja = muokkaaja.uid;
     await projektiDatabase.insertNahtavillaoloVaiheJulkaisu(projekti.oid, nahtavillaoloVaiheJulkaisu);
-    await aineistoService.publishNahtavillaolo(projekti.oid, nahtavillaoloVaiheJulkaisu.id);
   }
 
   async approve(projekti: DBProjekti, projektiPaallikko: NykyinenKayttaja): Promise<void> {
@@ -49,6 +48,8 @@ class NahtavillaoloTilaManager extends TilaManager {
     // TODO: generoi PDFt
 
     await projektiDatabase.updateNahtavillaoloVaiheJulkaisu(projekti, julkaisuWaitingForApproval);
+
+    await aineistoService.publishNahtavillaolo(projekti.oid, julkaisuWaitingForApproval.id);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

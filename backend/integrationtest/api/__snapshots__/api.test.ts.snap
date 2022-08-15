@@ -3032,3 +3032,16 @@ Object {
   },
 }
 `;
+
+exports[`Api should search, load and save a project 30`] = `
+Object {
+  "public S3 files Hyvaksymispaatos approved": Object {
+    "/T113 TS Esite.txt": Object {
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "/paatos/TYHJÄ.txt": Object {
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+  },
+}
+`;
