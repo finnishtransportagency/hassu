@@ -1,6 +1,5 @@
-import { HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaiheTila, ProjektiKayttaja } from "@services/api";
+import { HyvaksymisPaatosVaiheJulkaisu, ProjektiKayttaja } from "@services/api";
 import React, { ReactElement } from "react";
-import Notification, { NotificationType } from "@components/notification/Notification";
 import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
 import lowerCase from "lodash/lowerCase";
@@ -61,26 +60,6 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
 
   return (
     <>
-      <Section>
-        {!published && hyvaksymisPaatosVaiheJulkaisu.tila === HyvaksymisPaatosVaiheTila.HYVAKSYTTY && (
-          <Notification type={NotificationType.WARN}>
-            Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä {kuulutusPaiva}
-          </Notification>
-        )}
-        {published && hyvaksymisPaatosVaiheJulkaisu.tila === HyvaksymisPaatosVaiheTila.HYVAKSYTTY && (
-          <Notification type={NotificationType.INFO_GREEN}>
-            Kuulutus nähtäville asettamisesta on julkaistu {kuulutusPaiva}. Projekti näytetään kuulutuspäivästä lasketun
-            määräajan jälkeen palvelun julkisella puolella suunnittelussa olevana. Kuulutusvaihe päättyy{" "}
-            <FormatDate date={hyvaksymisPaatosVaiheJulkaisu.kuulutusVaihePaattyyPaiva} />.
-          </Notification>
-        )}
-        {hyvaksymisPaatosVaiheJulkaisu.tila !== HyvaksymisPaatosVaiheTila.HYVAKSYTTY && (
-          <Notification type={NotificationType.WARN}>
-            Kuulutus nähtäville asettamisesta odottaa hyväksyntää. Tarkasta kuulutus ja a) hyväksy tai b) palaute
-            kuulutus korjattavaksi, jos havaitset puutteita tai virheen.
-          </Notification>
-        )}
-      </Section>
       <Section>
         <div className="grid grid-cols-1 md:grid-cols-4">
           <p className="vayla-label md:col-span-1">Kuulutuspäivä</p>
