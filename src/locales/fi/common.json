@@ -25,6 +25,14 @@
     "TURKU": "Turun hallinto-oikeus",
     "VAASA": "Vaasan hallinto-oikeus"
   },
+  "hallinto-oikeus-ablatiivi": {
+    "HELSINKI": "Helsingin hallinto-oikeudelta",
+    "HAMEENLINNA": "Hämeenlinnan hallinto-oikeudelta",
+    "ITA_SUOMI": "Itä-Suomen hallinto-oikeudelta",
+    "POHJOIS_SUOMI": "Pohjois-Suomen hallinto-oikeudelta",
+    "TURKU": "Turun hallinto-oikeudelta",
+    "VAASA": "Vaasan hallinto-oikeudelta"
+  },
   "sivustonimi": "Valtion liikenneväylien suunnittelu",
   "vaylavirasto": "Väylävirasto",
   "ely-keskus": "ELY-keskus",

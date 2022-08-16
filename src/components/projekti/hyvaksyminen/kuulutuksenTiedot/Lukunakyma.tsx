@@ -11,13 +11,30 @@ import SectionContent from "@components/layout/SectionContent";
 import IlmoituksenVastaanottajatLukutila from "./IlmoituksenVastaanottajatLukutila";
 import ExtLink from "@components/ExtLink";
 // import { Link } from "@mui/material";
+import useTranslation from "next-translate/useTranslation";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 interface Props {
   hyvaksymisPaatosVaiheJulkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
   projekti: ProjektiLisatiedolla;
 }
 
-export default function AloituskuulutusLukunakyma({ hyvaksymisPaatosVaiheJulkaisu, projekti }: Props): ReactElement {
+export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulkaisu, projekti }: Props): ReactElement {
+  const { t } = useTranslation("common");
+
+  // const getPdft = (kieli: Kieli | undefined | null) => {
+  //   if (!hyvaksymisPaatosJulkaisu || !hyvaksymisPaatosJulkaisu.hyvaksymisPaatosPDFt || !kieli) {
+  //     return undefined;
+  //   }
+  //   return hyvaksymisPaatosVaiheJulkaisu.hyvaksymisPaatosVaihePDFt[kieli];
+  // };
+
+  // const parseFilename = (path: string) => {
+  //   return path.substring(path.lastIndexOf("/") + 1);
+  // };
+
+  // const ensisijaisetPDFt = getPdft(hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.ensisijainenKieli);
+  // const toissijaisetPDFt = getPdft(hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.toissijainenKieli);
+
   if (!hyvaksymisPaatosVaiheJulkaisu || !projekti) {
     return <></>;
   }
@@ -42,20 +59,6 @@ export default function AloituskuulutusLukunakyma({ hyvaksymisPaatosVaiheJulkais
         .filter((pk) => pk.nimi)
     : [];
 
-  // const getPdft = (kieli: Kieli | undefined | null) => {
-  //   if (!hyvaksymisPaatosJulkaisu || !hyvaksymisPaatosJulkaisu.hyvaksymisPaatosPDFt || !kieli) {
-  //     return undefined;
-  //   }
-  //   return hyvaksymisPaatosVaiheJulkaisu.hyvaksymisPaatosVaihePDFt[kieli];
-  // };
-
-  // const parseFilename = (path: string) => {
-  //   return path.substring(path.lastIndexOf("/") + 1);
-  // };
-
-  // const ensisijaisetPDFt = getPdft(hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.ensisijainenKieli);
-  // const toissijaisetPDFt = getPdft(hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.toissijainenKieli);
-
   return (
     <>
       <Section>
@@ -77,6 +80,8 @@ export default function AloituskuulutusLukunakyma({ hyvaksymisPaatosVaiheJulkais
             kuulutus korjattavaksi, jos havaitset puutteita tai virheen.
           </Notification>
         )}
+      </Section>
+      <Section>
         <div className="grid grid-cols-1 md:grid-cols-4">
           <p className="vayla-label md:col-span-1">Kuulutuspäivä</p>
           <p className="vayla-label md:col-span-3">Kuulutusvaihe päättyy</p>
@@ -85,6 +90,23 @@ export default function AloituskuulutusLukunakyma({ hyvaksymisPaatosVaiheJulkais
             <FormatDate date={hyvaksymisPaatosVaiheJulkaisu.kuulutusVaihePaattyyPaiva} />
           </p>
         </div>
+        <div className="grid grid-cols-1 md:grid-cols-4">
+          <p className="vayla-label md:col-span-1">Päätöksen päivä</p>
+          <p className="vayla-label md:col-span-3">Päätöksen asianumero</p>
+          <p className="md:col-span-1 mb-0">
+            <FormatDate date={projekti.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm} />
+          </p>
+          <p className="md:col-span-3 mb-0">{projekti.kasittelynTila?.hyvaksymispaatos?.asianumero}</p>
+        </div>
+        <p>Päätös ja sen liitteet löytyvät Päätös ja sen liitteenä oleva aineisto -välilehdeltä.</p>
+      </Section>
+      <Section>
+        <h4 className="vayla-label">Muutoksenhaku</h4>
+        <p>
+          Päätökseen voi valittamalla hakea muutosta{" "}
+          {t(`hallinto-oikeus-ablatiivi.${hyvaksymisPaatosVaiheJulkaisu.hallintoOikeus}`)} 30 päivän kuluessa päätöksen
+          tiedoksiannosta. Valitusosoituksen tiedosto löytyy Päätös ja sen liitteenä oleva aineisto -välilehdeltä.
+        </p>
       </Section>
       <Section>
         <SectionContent>
@@ -119,11 +141,6 @@ export default function AloituskuulutusLukunakyma({ hyvaksymisPaatosVaiheJulkais
         </SectionContent>
       </Section>
       <IlmoituksenVastaanottajatLukutila hyvaksymisPaatosVaiheJulkaisu={hyvaksymisPaatosVaiheJulkaisu} />
-      <Section>
-        {/* {hyvaksymisPaatosVaiheJulkaisu.tila !== HyvaksymisPaatosVaiheTila.HYVAKSYTTY && (
-          <NahtavillaoloPDFEsikatselu oid={oid} hyvaksymisPaatosVaihe={hyvaksymisPaatosVaihe} />
-        )} */}
-      </Section>
     </>
   );
 }
