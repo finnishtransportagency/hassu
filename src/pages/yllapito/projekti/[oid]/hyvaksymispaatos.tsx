@@ -6,9 +6,14 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import Tabs from "@components/layout/tabs/Tabs";
 import KuulutuksenTiedot from "@components/projekti/hyvaksyminen/kuulutuksenTiedot/index";
 import PaatosAineistot from "@components/projekti/hyvaksyminen/aineistot/index";
+import { useProjekti } from "src/hooks/useProjekti";
 
 export default function Hyvaksymispaatos({ setRouteLabels }: PageProps): ReactElement {
   useProjektiBreadcrumbs(setRouteLabels);
+  const { data: projekti } = useProjekti();
+
+  const kertaalleenLahetettyHyvaksyttavaksi =
+    projekti?.hyvaksymisPaatosVaiheJulkaisut && projekti.hyvaksymisPaatosVaiheJulkaisut.length >= 1;
 
   return (
     <ProjektiPageLayout title="Kuulutus hyväksymispäätöksestä">
@@ -23,10 +28,17 @@ export default function Hyvaksymispaatos({ setRouteLabels }: PageProps): ReactEl
       <Tabs
         tabStyle="Underlined"
         defaultValue={0}
-        tabs={[
-          { label: "Päätös ja liitteenä oleva aineisto", content: <PaatosAineistot /> },
-          { label: "Kuulutuksen tiedot", content: <KuulutuksenTiedot /> },
-        ]}
+        tabs={
+          kertaalleenLahetettyHyvaksyttavaksi
+            ? [
+                { label: "Kuulutuksen tiedot", content: <KuulutuksenTiedot /> },
+                { label: "Päätös ja liitteenä oleva aineisto", content: <PaatosAineistot /> },
+              ]
+            : [
+                { label: "Päätös ja liitteenä oleva aineisto", content: <PaatosAineistot /> },
+                { label: "Kuulutuksen tiedot", content: <KuulutuksenTiedot /> },
+              ]
+        }
       />
     </ProjektiPageLayout>
   );
