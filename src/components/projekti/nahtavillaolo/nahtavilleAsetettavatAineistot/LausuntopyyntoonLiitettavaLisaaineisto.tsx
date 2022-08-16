@@ -28,7 +28,7 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
 
   const linkHref = useMemo(() => {
     const parametrit = projekti?.nahtavillaoloVaihe?.lisaAineistoParametrit;
-    if (typeof window === "undefined") {
+    if (typeof window === "undefined" || !parametrit) {
       return undefined;
     }
     return `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${projekti?.oid}/lausuntopyyntoaineistot?hash=${parametrit?.hash}&id=${parametrit?.nahtavillaoloVaiheId}&poistumisPaiva=${parametrit?.poistumisPaiva}`;
@@ -68,13 +68,14 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
           label="Linkki lausuntopyyntöön liitettävään aineistoon"
           style={{ flexGrow: 1 }}
           disabled
-          value={linkHref}
+          value={linkHref || "-"}
           ref={linkRef}
         />
         <IconButton
           icon="copy"
           className="text-primary-dark"
           type="button"
+          disabled={!linkHref}
           onClick={() => {
             if (!!linkRef.current?.value) {
               navigator.clipboard.writeText(linkRef.current.value);

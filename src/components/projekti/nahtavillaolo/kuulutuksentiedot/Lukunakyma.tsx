@@ -1,6 +1,5 @@
-import { NahtavillaoloVaiheJulkaisu, NahtavillaoloVaiheTila, Kieli, ProjektiKayttaja } from "@services/api";
+import { NahtavillaoloVaiheJulkaisu, Kieli, ProjektiKayttaja } from "@services/api";
 import React, { ReactElement } from "react";
-import Notification, { NotificationType } from "@components/notification/Notification";
 import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
 import lowerCase from "lodash/lowerCase";
@@ -17,7 +16,7 @@ interface Props {
   projekti: ProjektiLisatiedolla;
 }
 
-export default function AloituskuulutusLukunakyma({ nahtavillaoloVaiheJulkaisu, projekti }: Props): ReactElement {
+export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, projekti }: Props): ReactElement {
   if (!nahtavillaoloVaiheJulkaisu || !projekti) {
     return <></>;
   }
@@ -59,24 +58,6 @@ export default function AloituskuulutusLukunakyma({ nahtavillaoloVaiheJulkaisu, 
   return (
     <>
       <Section>
-        {!published && nahtavillaoloVaiheJulkaisu.tila === NahtavillaoloVaiheTila.HYVAKSYTTY && (
-          <Notification type={NotificationType.WARN}>
-            Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä {kuulutusPaiva}
-          </Notification>
-        )}
-        {published && nahtavillaoloVaiheJulkaisu.tila === NahtavillaoloVaiheTila.HYVAKSYTTY && (
-          <Notification type={NotificationType.INFO_GREEN}>
-            Kuulutus nähtäville asettamisesta on julkaistu {kuulutusPaiva}. Projekti näytetään kuulutuspäivästä lasketun
-            määräajan jälkeen palvelun julkisella puolella suunnittelussa olevana. Kuulutusvaihe päättyy{" "}
-            <FormatDate date={nahtavillaoloVaiheJulkaisu.kuulutusVaihePaattyyPaiva} />.
-          </Notification>
-        )}
-        {nahtavillaoloVaiheJulkaisu.tila !== NahtavillaoloVaiheTila.HYVAKSYTTY && (
-          <Notification type={NotificationType.WARN}>
-            Kuulutus nähtäville asettamisesta odottaa hyväksyntää. Tarkasta kuulutus ja a) hyväksy tai b) palaute
-            kuulutus korjattavaksi, jos havaitset puutteita tai virheen.
-          </Notification>
-        )}
         <div className="grid grid-cols-1 md:grid-cols-4">
           <p className="vayla-label md:col-span-1">Kuulutuspäivä</p>
           <p className="vayla-label md:col-span-3">Kuulutusvaihe päättyy</p>
