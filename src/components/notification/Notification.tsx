@@ -1,8 +1,9 @@
-import React, { ReactElement, ReactNode } from "react";
+import React, { ReactElement, ReactNode, useState } from "react";
 import styles, { notification } from "@styles/notification/Notification.module.css";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import CloseIcon from "@mui/icons-material/Close";
 import classNames from "classnames";
 
 export enum NotificationType {
@@ -27,6 +28,7 @@ interface Props {
   type?: NotificationType;
   icon?: IconProp;
   hideIcon?: boolean;
+  closable?: boolean;
 }
 
 export default function Notification({
@@ -34,22 +36,37 @@ export default function Notification({
   type = NotificationType.DEFAULT,
   icon,
   hideIcon,
+  closable = false,
   className,
   ...props
 }: Props & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>): ReactElement {
   const defaultIcon = type && defaultIcons.get(type);
   const shownIcon = icon || defaultIcon;
+  const [open, setOpen] = useState(true);
+
+  if (!open) {
+    return <></>;
+  }
   return (
     <div {...props} className={classNames(className, notification, type && styles[type])}>
-      {!hideIcon && shownIcon && (
-        <FontAwesomeIcon
-          icon={shownIcon}
-          size="lg"
-          className={classNames(styles["start-icon"], type && styles[type])}
-        />
+      {closable && (
+        <button onClick={() => setOpen(false)} style={{ float: "right", display: "block" }}>
+          <CloseIcon />
+        </button>
       )}
-      {!hideIcon && type==NotificationType.INFO_GREEN && (<InfoOutlinedIcon className={classNames(styles["start-icon"], type && styles[type])}/>)}
-      {children}
+      <div className="flex flex-row">
+        {!hideIcon && shownIcon && (
+          <FontAwesomeIcon
+            icon={shownIcon}
+            size="lg"
+            className={classNames(styles["start-icon"], type && styles[type])}
+          />
+        )}
+        {!hideIcon && type == NotificationType.INFO_GREEN && (
+          <InfoOutlinedIcon className={classNames(styles["start-icon"], type && styles[type])} />
+        )}
+        {children}
+      </div>
     </div>
   );
 }
