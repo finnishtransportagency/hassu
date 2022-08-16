@@ -269,15 +269,18 @@ class ProjektiAdapterJulkinen {
       } = julkaisu;
       const paths = new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(julkaisu);
 
-      let apiHyvaksymisPaatos: API.Aineisto[];
+      let apiHyvaksymisPaatosAineisto: API.Aineisto[];
       let apiAineistoNahtavilla: API.Aineisto[];
       if (!isKuulutusNahtavillaVaiheOver(julkaisu)) {
-        apiHyvaksymisPaatos = adaptAineistotJulkinen(dbProjekti.oid, hyvaksymisPaatos, paths);
+        apiHyvaksymisPaatosAineisto = adaptAineistotJulkinen(dbProjekti.oid, hyvaksymisPaatos, paths);
         apiAineistoNahtavilla = adaptAineistotJulkinen(dbProjekti.oid, aineistoNahtavilla, paths);
       }
+      const hyvaksymispaatos = dbProjekti.kasittelynTila.hyvaksymispaatos;
       return {
         __typename: "HyvaksymisPaatosVaiheJulkaisuJulkinen",
-        hyvaksymisPaatos: apiHyvaksymisPaatos,
+        hyvaksymisPaatos: apiHyvaksymisPaatosAineisto,
+        hyvaksymisPaatoksenPvm: hyvaksymispaatos.paatoksenPvm,
+        hyvaksymisPaatoksenAsianumero: hyvaksymispaatos.asianumero,
         aineistoNahtavilla: apiAineistoNahtavilla,
         kuulutusPaiva,
         kuulutusVaihePaattyyPaiva,

@@ -2684,6 +2684,8 @@ Object {
         },
       ],
       "hallintoOikeus": "HAMEENLINNA",
+      "hyvaksymisPaatoksenAsianumero": "asianro123",
+      "hyvaksymisPaatoksenPvm": "2022-06-09",
       "hyvaksymisPaatos": Array [
         Object {
           "__typename": "Aineisto",
@@ -2752,6 +2754,16 @@ Object {
         },
       ],
     },
+    "kasittelynTila": Object {
+      "__typename": "KasittelynTila",
+      "ensimmainenJatkopaatos": undefined,
+      "hyvaksymispaatos": Object {
+        "__typename": "Hyvaksymispaatos",
+        "asianumero": "asianro123",
+        "paatoksenPvm": "2022-06-09",
+      },
+      "toinenJatkopaatos": undefined,
+    },
   },
 }
 `;
@@ -2784,6 +2796,8 @@ Object {
         },
       ],
       "hallintoOikeus": "HAMEENLINNA",
+      "hyvaksymisPaatoksenAsianumero": "asianro123",
+      "hyvaksymisPaatoksenPvm": "2022-06-09",
       "hyvaksymisPaatos": Array [
         Object {
           "__typename": "Aineisto",
@@ -2871,6 +2885,8 @@ Object {
         ],
         "hallintoOikeus": "HAMEENLINNA",
         "hyvaksyja": "A000112",
+        "hyvaksymisPaatoksenAsianumero": "asianro123",
+        "hyvaksymisPaatoksenPvm": "2022-06-09",
         "hyvaksymisPaatos": Array [
           Object {
             "__typename": "Aineisto",
@@ -2978,6 +2994,8 @@ Object {
     "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
     "aineistoNahtavilla": undefined,
     "hallintoOikeus": "HAMEENLINNA",
+    "hyvaksymisPaatoksenAsianumero": "asianro123",
+    "hyvaksymisPaatoksenPvm": "2022-06-09",
     "hyvaksymisPaatos": undefined,
     "kielitiedot": Object {
       "__typename": "Kielitiedot",

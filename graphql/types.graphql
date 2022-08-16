@@ -209,6 +209,8 @@ type NahtavillaoloVaihe {
 
 type HyvaksymisPaatosVaihe {
   hyvaksymisPaatos: [Aineisto!]
+  hyvaksymisPaatoksenPvm: String!
+  hyvaksymisPaatoksenAsianumero: String!
   aineistoNahtavilla: [Aineisto!]
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
@@ -218,17 +220,6 @@ type HyvaksymisPaatosVaihe {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   hyvaksymisPaatosVaihePDFt: HyvaksymisPaatosVaihePDFt
   palautusSyy: String
-}
-
-type HyvaksymisPaatosVaiheJulkinen {
-  hyvaksymisPaatos: [Aineisto!]
-  aineistoNahtavilla: [Aineisto!]
-  kuulutusPaiva: String
-  kuulutusVaihePaattyyPaiva: String
-  hallintoOikeus: HallintoOikeus
-  kuulutusYhteystiedot: [Yhteystieto!]
-  kuulutusYhteysHenkilot: [String!]
-  hyvaksymisPaatosVaihePDFt: HyvaksymisPaatosVaihePDFt
 }
 
 type NahtavillaoloVaiheJulkaisu {
@@ -252,6 +243,8 @@ type NahtavillaoloVaiheJulkaisu {
 type HyvaksymisPaatosVaiheJulkaisu {
   aineistoNahtavilla: [Aineisto!]
   hyvaksymisPaatos: [Aineisto!]
+  hyvaksymisPaatoksenPvm: String!
+  hyvaksymisPaatoksenAsianumero: String!
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
   velho: Velho!
@@ -282,6 +275,8 @@ type NahtavillaoloVaiheJulkaisuJulkinen {
 type HyvaksymisPaatosVaiheJulkaisuJulkinen {
   aineistoNahtavilla: [Aineisto!]
   hyvaksymisPaatos: [Aineisto!]
+  hyvaksymisPaatoksenPvm: String!
+  hyvaksymisPaatoksenAsianumero: String!
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
   velho: VelhoJulkinen!
