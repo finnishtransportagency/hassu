@@ -88,7 +88,7 @@ export default function EsitettavatYhteystiedot({ vuorovaikutusnro }: Props): Re
   }
 
   return (
-    <Section>
+    <Section className="mt-8">
       <SectionContent>
         <h4 className="vayla-small-title">Vuorovaikuttamisen yhteyshenkilöt</h4>
         <p>

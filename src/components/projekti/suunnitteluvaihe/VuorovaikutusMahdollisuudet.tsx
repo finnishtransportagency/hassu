@@ -72,7 +72,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
             >
               Muokkaa
             </Button>
-            <div className="pt-10">
+            <div className="pt-6">
               <p className="vayla-label">Vuorovaikutusmahdollisuudet palautteiden ja kysymyksien lisäksi</p>
               <p>
                 Verkossa jaettavien tilaisuuksien liittymislinkit julkaistaan palvelun julkisella puolella kaksi (2)

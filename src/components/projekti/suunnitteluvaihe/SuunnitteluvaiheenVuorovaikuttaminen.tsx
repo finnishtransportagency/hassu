@@ -20,7 +20,7 @@ import HassuStack from "@components/layout/HassuStack";
 import { Stack } from "@mui/material";
 import HyvaksymisDialogi from "./HyvaksymisDialogi";
 import EsitettavatYhteystiedot from "./EsitettavatYhteystiedot";
-import LuonnoksetJaAineistot from "./LuonnoksetJaAineistot";
+import LuonnoksetJaAineistot from "./LuonnoksetJaAineistot/LuonnoksetJaAineistot";
 import IlmoituksenVastaanottajat from "./IlmoituksenVastaanottajat";
 import { removeTypeName } from "src/util/removeTypeName";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
@@ -343,13 +343,15 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
         </form>
       </FormProvider>
       <PdfPreviewForm ref={pdfFormRef} />
-      <HyvaksymisDialogi
-        ilmoituksenVastaanottajat={ilmoituksenVastaanottajat}
-        dialogiOnAuki={openHyvaksy}
-        onClose={handleClickCloseHyvaksy}
-        tallenna={saveForm}
-        julkinen={!!vuorovaikutus?.julkinen}
-      />
+      {openHyvaksy && (
+        <HyvaksymisDialogi
+          ilmoituksenVastaanottajat={ilmoituksenVastaanottajat}
+          dialogiOnAuki={openHyvaksy}
+          onClose={handleClickCloseHyvaksy}
+          tallenna={saveForm}
+          julkinen={!!vuorovaikutus?.julkinen}
+        />
+      )}
       <HassuSpinner open={isFormSubmitting} />
     </>
   );
