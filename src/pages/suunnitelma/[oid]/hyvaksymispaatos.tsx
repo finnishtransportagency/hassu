@@ -7,9 +7,11 @@ import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
 import Section from "@components/layout/Section";
 import Trans from "next-translate/Trans";
 import { Link } from "@mui/material";
+import ExtLink from "@components/ExtLink";
+import Notification, { NotificationType } from "@components/notification/Notification";
 
 export default function Hyvaksymispaatos(): ReactElement {
-  const { t } = useTranslation("projekti");
+  const { t } = useTranslation();
   const { data: projekti } = useProjektiJulkinen();
   const kuulutus = projekti?.hyvaksymisPaatosVaihe;
   const velho = kuulutus?.velho;
@@ -29,11 +31,14 @@ export default function Hyvaksymispaatos(): ReactElement {
 
   const keyValueData: KeyValueData[] = [
     {
-      header: t(`ui-otsikot.nahtavillaoloaika`),
+      header: t(`projekti:ui-otsikot.nahtavillaoloaika`),
       data: aikavali,
     },
-    { header: t(`ui-otsikot.hankkeen_sijainti`), data: sijainti },
-    { header: t(`ui-otsikot.suunnitelman_tyyppi`), data: velho?.tyyppi && t(`projekti-tyyppi.${velho?.tyyppi}`) },
+    { header: t(`projekti:ui-otsikot.hankkeen_sijainti`), data: sijainti },
+    {
+      header: t(`projekti:ui-otsikot.suunnitelman_tyyppi`),
+      data: velho?.tyyppi && t(`projekti:projekti-tyyppi.${velho?.tyyppi}`),
+    },
   ];
 
   const kuulutuspaiva = kuulutus.kuulutusPaiva ? new Date(kuulutus.kuulutusPaiva) : null;
@@ -78,6 +83,28 @@ export default function Hyvaksymispaatos(): ReactElement {
           }}
           components={{ p: <p /> }}
         />
+      </Section>
+      <Section>
+        <h4 className="vayla-small-title">Asianosaisen oikeudet</h4>
+        <Notification hideIcon type={NotificationType.INFO}>
+          <p>
+            <Trans
+              i18nKey="projekti:info.hyvaksytty.paatokseen_voi_valittamalla"
+              values={{
+                hallintoOikeudelta: t(`common:hallinto-oikeus-ablatiivi.${kuulutus.hallintoOikeus}`),
+              }}
+            />
+          </p>
+        </Notification>
+        <p>
+          <Trans
+            i18nKey="projekti:info.hyvaksytty.vaylavirasto_kasittelee_suunnitelman"
+            values={{
+              linkki: t("common:vayla-tietosuojasivu"),
+            }}
+            components={{ a: <ExtLink href={t("common:vayla-tietosuojasivu")} /> }}
+          />
+        </p>
       </Section>
     </ProjektiJulkinenPageLayout>
   );
