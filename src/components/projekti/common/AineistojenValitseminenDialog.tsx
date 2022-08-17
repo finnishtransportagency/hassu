@@ -10,7 +10,7 @@ import HassuSpinner from "@components/HassuSpinner";
 import { styled } from "@mui/material/styles";
 import { DialogProps } from "@mui/material";
 import HassuTable from "@components/HassuTable";
-import { useHassuTableStabilizer } from "src/hooks/useHassuTable";
+import { useHassuTable } from "src/hooks/useHassuTable";
 import { Column } from "react-table";
 import { useForm } from "react-hook-form";
 import VelhoAineistoNimiExtLink from "../VelhoAineistoNimiExtLink";
@@ -193,15 +193,14 @@ const AineistoTable = ({ data, setSelectedAineisto, kategoria }: AineistoTablePr
     []
   );
 
-  const tableProps = useHassuTableStabilizer<VelhoAineisto>({
-    columns,
-    data,
-    initialState: { hiddenColumns: ["oid"] },
+  const tableProps = useHassuTable<VelhoAineisto>({
+    tableOptions: {
+      columns,
+      data,
+      initialState: { hiddenColumns: ["oid"] },
+    },
+    useRowSelect: true,
   });
-
-  useEffect(() => {
-    console.log(tableProps);
-  }, [tableProps]);
 
   const selectedRows = useMemo(
     () => tableProps.tableInstance.selectedFlatRows.map((flatRow) => flatRow.original),
