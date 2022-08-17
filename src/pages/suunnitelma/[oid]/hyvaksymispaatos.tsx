@@ -62,7 +62,7 @@ export default function Hyvaksymispaatos(): ReactElement {
             linkki: "TODO",
             osoite: "TODO",
           }}
-          components={{ p: <p />, b: <b />, a: <Link /> }}
+          components={{ p: <p />, b: <b />, a: <Link href={"TODO"} /> }}
         />
         <Trans
           i18nKey="projekti:info.hyvaksytty.kuulutus_on_julkaistu"
