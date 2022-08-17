@@ -21,7 +21,7 @@
     },
     "hyvaksytty": {
       "liikenne_ja_viestintavirasto_on_paatoksellaan": "<p>Liikenne- ja viestintävirasto on {{hyvaksymisPaiva}} päätöksellään {{paatosNumero}} hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisesti tiesuunnitelman {{suunnitelmanNimi}}, {{sijainti}}.</p>",
-      "paatos_ja_sen_perusteena_olevat": "<p>Päätös (www-versio) ja sen perusteena olevat asiakirjat sekä valitusosoitus ovat nähtävillä sähköisessä muodossa tietoverkossa tämän kuulutuksen nähtävilläolon ajan <b>{{nahtavillaoloaikavali}}</b> <a href={{linkki}}>{{linkki}}</a> (sekä paperiaineisto osoitteessa {{osoite}}). (LjMTL 103 §).</p>",
+      "paatos_ja_sen_perusteena_olevat": "<p>Päätös (www-versio) ja sen perusteena olevat asiakirjat sekä valitusosoitus ovat nähtävillä sähköisessä muodossa tietoverkossa tämän kuulutuksen nähtävilläolon ajan <b>{{nahtavillaoloaikavali}}</b> <a>{{linkki}}</a> (sekä paperiaineisto osoitteessa {{osoite}}). (LjMTL 103 §).</p>",
       "kuulutus_on_julkaistu": "<p>Kuulutus on julkaistu tietoverkossa Väyläviraston verkkosivuilla {{julkaisupaiva}}.</p>",
       "tiedoksisaannin_katsotaan_tapahtuneet": "<p>Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä kuulutuksen julkaisemisajankohdasta (hallintolaki 62 a §), eli {{tiedoksiantopaiva}}.</p>"
     },
