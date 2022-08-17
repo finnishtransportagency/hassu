@@ -11,7 +11,6 @@ import {
 } from "react-table";
 import { HassuTableProps } from "@components/HassuTable";
 import { Stack } from "@mui/material";
-import { Column, TableState } from "react-table";
 
 export type UseHassuTableProps<D extends object> = Omit<HassuTableProps<D>, "tableInstance"> & {
   tableOptions: TableOptions<D>;
