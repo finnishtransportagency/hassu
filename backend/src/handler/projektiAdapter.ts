@@ -231,20 +231,25 @@ export class ProjektiAdapter {
     }
 
     function checkSuunnittelu() {
-      if (projekti?.aloitusKuulutusJulkaisut) {
+      if (projekti.aloitusKuulutusJulkaisut) {
         projekti.status = API.Status.SUUNNITTELU;
       }
     }
 
     function checkNahtavillaolo() {
-      if (projekti?.suunnitteluVaihe?.julkinen) {
+      if (projekti.suunnitteluVaihe?.julkinen) {
         projekti.status = API.Status.NAHTAVILLAOLO;
       }
     }
 
     function checkHyvaksymisMenettelyssa() {
-      const nahtavillaoloVaihe = projekti?.nahtavillaoloVaiheJulkaisut?.filter(julkaisu => julkaisu.tila == NahtavillaoloVaiheTila.HYVAKSYTTY).pop();
-      if (isDateInThePast(nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva)) {
+      const hyvaksymisPaatos = projekti.kasittelynTila?.hyvaksymispaatos;
+      const hasHyvaksymisPaatos = hyvaksymisPaatos && hyvaksymisPaatos.asianumero && hyvaksymisPaatos.paatoksenPvm;
+
+      const nahtavillaoloVaihe = projekti.nahtavillaoloVaiheJulkaisut?.filter(julkaisu => julkaisu.tila == NahtavillaoloVaiheTila.HYVAKSYTTY).pop();
+      const nahtavillaoloKuulutusPaattyyInThePast = isDateInThePast(nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva);
+
+      if (hasHyvaksymisPaatos && nahtavillaoloKuulutusPaattyyInThePast) {
         projekti.status = API.Status.HYVAKSYMISMENETTELYSSA;
       }
     }

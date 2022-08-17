@@ -164,12 +164,12 @@ export function requirePermissionMuokkaa(projekti: DBProjekti): NykyinenKayttaja
   return kayttaja;
 }
 
-export function requireAdmin(): NykyinenKayttaja {
+export function requireAdmin(description?:string): NykyinenKayttaja {
   const kayttaja = requireVaylaUser();
   if (isHassuAdmin(kayttaja)) {
     return kayttaja;
   }
-  throw new IllegalAccessError("Sinulla ei ole admin-oikeuksia");
+  throw new IllegalAccessError("Sinulla ei ole admin-oikeuksia" + (description ? " (" + description + ")" : ""));
 }
 
 export function requireProjektiPaallikko(projekti: DBProjekti): NykyinenKayttaja {

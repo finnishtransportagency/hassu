@@ -64,6 +64,9 @@ export function cleanupHyvaksymisPaatosVaiheTimestamps(
 export function cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
 ): HyvaksymisPaatosVaiheJulkaisuJulkinen {
+  if (!hyvaksymisPaatosVaihe) {
+    return undefined;
+  }
   hyvaksymisPaatosVaihe.aineistoNahtavilla?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
   hyvaksymisPaatosVaihe.hyvaksymisPaatos?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
   return hyvaksymisPaatosVaihe;

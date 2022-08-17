@@ -4,6 +4,7 @@ import {
   AloitusKuulutusPDF,
   DBProjekti,
   DBVaylaUser,
+  HyvaksymisPaatosVaiheJulkaisu,
   LocalizedMap,
   NahtavillaoloVaiheJulkaisu,
   SuunnitteluSopimus,
@@ -12,7 +13,10 @@ import {
   VuorovaikutusTilaisuus,
 } from "../database/model";
 import * as API from "../../../common/graphql/apiModel";
-import { NahtavillaoloVaiheJulkaisuJulkinen } from "../../../common/graphql/apiModel";
+import {
+  HyvaksymisPaatosVaiheJulkaisuJulkinen,
+  NahtavillaoloVaiheJulkaisuJulkinen
+} from "../../../common/graphql/apiModel";
 import pickBy from "lodash/pickBy";
 import dayjs, { Dayjs } from "dayjs";
 import {
@@ -65,6 +69,13 @@ class ProjektiAdapterJulkinen {
       }
     }
 
+    function checkHyvaksytty() {
+      const hyvaksymisPaatosVaihe = projekti.hyvaksymisPaatosVaihe;
+      if (isDateInThePast(hyvaksymisPaatosVaihe?.kuulutusPaiva)) {
+        projekti.status = API.Status.HYVAKSYTTY;
+      }
+    }
+
     projekti.status = API.Status.EI_JULKAISTU;
 
     checkAloituskuulutus();
@@ -75,7 +86,7 @@ class ProjektiAdapterJulkinen {
 
     checkHyvaksymisMenettelyssa();
 
-    // checkPaatos();
+    checkHyvaksytty();
 
     // checkLainvoima();
 
@@ -100,6 +111,8 @@ class ProjektiAdapterJulkinen {
     }
 
     const nahtavillaoloVaihe = ProjektiAdapterJulkinen.adaptNahtavillaoloVaiheJulkaisu(dbProjekti, projektiHenkilot);
+    const hyvaksymisPaatosVaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(dbProjekti, projektiHenkilot);
+
     const projekti: API.ProjektiJulkinen = {
       __typename: "ProjektiJulkinen",
       oid: dbProjekti.oid,
@@ -111,6 +124,7 @@ class ProjektiAdapterJulkinen {
       paivitetty: dbProjekti.paivitetty,
       projektiHenkilot: Object.values(projektiHenkilot),
       nahtavillaoloVaihe,
+      hyvaksymisPaatosVaihe,
     };
     const projektiJulkinen = removeUndefinedFields(projekti) as API.ProjektiJulkinen;
     return this.applyStatus(projektiJulkinen);
@@ -219,7 +233,7 @@ class ProjektiAdapterJulkinen {
       const paths = new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(julkaisu);
 
       let apiAineistoNahtavilla: API.Aineisto[];
-      if (!isNahtavillaoloVaiheOver(julkaisu)) {
+      if (!isKuulutusNahtavillaVaiheOver(julkaisu)) {
         apiAineistoNahtavilla = adaptAineistotJulkinen(dbProjekti.oid, aineistoNahtavilla, paths);
       }
       return {
@@ -232,6 +246,46 @@ class ProjektiAdapterJulkinen {
         kuulutusYhteysHenkilot: adaptUsernamesToProjektiHenkiloIds(kuulutusYhteysHenkilot, projektiHenkilot),
         kuulutusYhteystiedot: adaptYhteystiedot(kuulutusYhteystiedot),
         velho: adaptVelho(velho),
+      };
+    }
+  }
+
+  private static adaptHyvaksymisPaatosVaihe(
+    dbProjekti: DBProjekti,
+    projektiHenkilot: ProjektiHenkilot,
+  ): API.HyvaksymisPaatosVaiheJulkaisuJulkinen {
+    const julkaisu = pickExactlyOneHyvaksymisPaatosVaihe(dbProjekti.hyvaksymisPaatosVaiheJulkaisut);
+    if (julkaisu) {
+      const {
+        hyvaksymisPaatos,
+        aineistoNahtavilla,
+        kuulutusPaiva,
+        kuulutusVaihePaattyyPaiva,
+        kuulutusYhteysHenkilot,
+        kuulutusYhteystiedot,
+        velho,
+        kielitiedot,
+        hallintoOikeus,
+      } = julkaisu;
+      const paths = new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(julkaisu);
+
+      let apiHyvaksymisPaatos: API.Aineisto[];
+      let apiAineistoNahtavilla: API.Aineisto[];
+      if (!isKuulutusNahtavillaVaiheOver(julkaisu)) {
+        apiHyvaksymisPaatos = adaptAineistotJulkinen(dbProjekti.oid, hyvaksymisPaatos, paths);
+        apiAineistoNahtavilla = adaptAineistotJulkinen(dbProjekti.oid, aineistoNahtavilla, paths);
+      }
+      return {
+        __typename: "HyvaksymisPaatosVaiheJulkaisuJulkinen",
+        hyvaksymisPaatos: apiHyvaksymisPaatos,
+        aineistoNahtavilla: apiAineistoNahtavilla,
+        kuulutusPaiva,
+        kuulutusVaihePaattyyPaiva,
+        kuulutusYhteysHenkilot: adaptUsernamesToProjektiHenkiloIds(kuulutusYhteysHenkilot, projektiHenkilot),
+        kuulutusYhteystiedot: adaptYhteystiedot(kuulutusYhteystiedot),
+        velho: adaptVelho(velho),
+        kielitiedot: adaptKielitiedot(kielitiedot),
+        hallintoOikeus,
       };
     }
   }
@@ -248,6 +302,29 @@ function pickExactlyOneNahtavillaoloVaiheJulkaisu(
     return julkaisut.pop();
   }
 }
+
+function pickExactlyOneHyvaksymisPaatosVaihe(
+  hyvaksymisPaatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[],
+): HyvaksymisPaatosVaiheJulkaisu | undefined {
+  const julkaisut = hyvaksymisPaatosVaiheJulkaisut?.filter(isHyvaksymisPaatosVaihePublic);
+  if (julkaisut) {
+    if (julkaisut.length > 1) {
+      throw new Error("Bug: vain yksi HyvaksymisPaatosVaiheJulkaisu voi olla julkinen kerrallaan");
+    }
+    return julkaisut.pop();
+  }
+}
+
+function isHyvaksymisPaatosVaihePublic(vaihe: HyvaksymisPaatosVaiheJulkaisu): boolean {
+  if (!vaihe) {
+    return false;
+  }
+  if (!vaihe.kuulutusPaiva || parseDate(vaihe.kuulutusPaiva).isAfter(dayjs())) {
+    return false;
+  }
+  return vaihe.tila === API.HyvaksymisPaatosVaiheTila.HYVAKSYTTY;
+}
+
 
 function isUnsetOrInPast(julkaisuPaiva: dayjs.Dayjs) {
   return !julkaisuPaiva || julkaisuPaiva.isBefore(dayjs());
@@ -381,8 +458,8 @@ function isNahtavillaoloVaihePublic(nahtavillaoloVaihe: NahtavillaoloVaiheJulkai
   return nahtavillaoloVaihe.tila === API.NahtavillaoloVaiheTila.HYVAKSYTTY;
 }
 
-function isNahtavillaoloVaiheOver(
-  nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu | NahtavillaoloVaiheJulkaisuJulkinen
+function isKuulutusNahtavillaVaiheOver(
+  nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu | NahtavillaoloVaiheJulkaisuJulkinen | HyvaksymisPaatosVaiheJulkaisu | HyvaksymisPaatosVaiheJulkaisuJulkinen
 ): boolean {
   return (
     !nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva ||
