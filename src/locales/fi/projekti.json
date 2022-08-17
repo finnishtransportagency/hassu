@@ -93,6 +93,7 @@
   },
   "ui-otsikot": {
     "kuulutus_suunnitelman_alkamisesta": "Kuulutus suunnittelun aloittamisesta",
+    "kuulutus_suunnitelman_hyvaksymisesta": "Kuulutus suunnitelman hyväksymisestä",
     "nahtavillaoloaika": "Nähtävilläoloaika",
     "hankkeen_sijainti": "Hankkeen sijainti",
     "suunnitelman_tyyppi": "Suunnitelman tyyppi",
@@ -117,6 +118,7 @@
     "esittelyaineisto_ja_suunnitelmaluonnokset": "Esittelyaineisto ja suunnitelmaluonnokset",
     "muut_materiaalit": "Muut esittelymateriaalit",
     "video_materiaalit": "Enakkoon kuvattu videoesittely",
+    "paatos": "Päätös",
     "nahtavillaolo": {
       "suunnitteluhankkeen_kuvaus": "Suunnitteluhankkeen kuvaus",
       "asianosaisen_oikeudet": "Asianosaisen oikeudet",
