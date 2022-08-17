@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import { isDevEnvironment } from "@services/config";
 import { ilmoituksenVastaanottajat } from "./common";
+import { yhteystietoSchema } from "./yhteystieto";
 
 function validateDate(dateString: string) {
   try {
@@ -15,10 +16,11 @@ function validateDate(dateString: string) {
 }
 export const hyvaksymispaatosKuulutusSchema = Yup.object().shape({
   oid: Yup.string().required(),
-  nahtavillaoloVaihe: Yup.object()
+  hyvaksymisPaatosVaihe: Yup.object()
     .required()
     .shape({
-      hallintoOikeudet: Yup.array().of(Yup.string()),
+      hallintoOikeus: Yup.string().required("Hallinto-oikeus on valittava"),
+      kuulutusYhteystiedot: Yup.array().notRequired().of(yhteystietoSchema),
       kuulutusYhteysHenkilot: Yup.array().notRequired().of(Yup.string()),
       kuulutusPaiva: Yup.string()
         .required("Kuulutuspäivä ei voi olla tyhjä")

@@ -1,4 +1,4 @@
-import { HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaiheTila } from "@services/api";
+import { HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaiheTila, ProjektiKayttaja } from "@services/api";
 import React, { ReactElement } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import capitalize from "lodash/capitalize";
@@ -28,19 +28,19 @@ export default function AloituskuulutusLukunakyma({ hyvaksymisPaatosVaiheJulkais
     hyvaksymisPaatosVaiheHref =
       window.location.protocol + "//" + window.location.host + "/suunnitelma/" + projekti.oid + "/hyvaksymispaatos";
   }
-  // const vuorovaikutusYhteysHenkilot: ProjektiKayttaja[] = hyvaksymisPaatosVaiheJulkaisu.kuulutusYhteysHenkilot
-  //   ? hyvaksymisPaatosVaiheJulkaisu.kuulutusYhteysHenkilot
-  //       .map((hlo) => {
-  //         const yhteysHenkiloTietoineen: ProjektiKayttaja | undefined = (projekti?.kayttoOikeudet || []).find(
-  //           (ko) => ko.kayttajatunnus === hlo
-  //         );
-  //         if (!yhteysHenkiloTietoineen) {
-  //           return {} as ProjektiKayttaja;
-  //         }
-  //         return yhteysHenkiloTietoineen as ProjektiKayttaja;
-  //       })
-  //       .filter((pk) => pk.nimi)
-  //   : [];
+  const vuorovaikutusYhteysHenkilot: ProjektiKayttaja[] = hyvaksymisPaatosVaiheJulkaisu.kuulutusYhteysHenkilot
+    ? hyvaksymisPaatosVaiheJulkaisu.kuulutusYhteysHenkilot
+        .map((hlo) => {
+          const yhteysHenkiloTietoineen: ProjektiKayttaja | undefined = (projekti?.kayttoOikeudet || []).find(
+            (ko) => ko.kayttajatunnus === hlo
+          );
+          if (!yhteysHenkiloTietoineen) {
+            return {} as ProjektiKayttaja;
+          }
+          return yhteysHenkiloTietoineen as ProjektiKayttaja;
+        })
+        .filter((pk) => pk.nimi)
+    : [];
 
   // const getPdft = (kieli: Kieli | undefined | null) => {
   //   if (!hyvaksymisPaatosJulkaisu || !hyvaksymisPaatosJulkaisu.hyvaksymisPaatosPDFt || !kieli) {
@@ -96,15 +96,15 @@ export default function AloituskuulutusLukunakyma({ hyvaksymisPaatosVaiheJulkais
               )
             </p>
           ))}
-          {/* {vuorovaikutusYhteysHenkilot.map((yhteystieto, index) => (
+          {vuorovaikutusYhteysHenkilot.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
               {yhteystieto.nimi}, puh. {yhteystieto.puhelinnumero},{" "}
               {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} ({yhteystieto.organisaatio})
             </p>
-          ))} */}
+          ))}
         </SectionContent>
         <SectionContent>
-          <p className="vayla-label mb-5">Kuulutuksen yhteyshenkilöt</p>
+          <p className="vayla-label mb-5">Kuulutus julkisella puolella</p>
           {!published && (
             <p>Linkki julkiselle puolelle muodostetaan kuulutuspäivänä. Kuulutuspäivä on {kuulutusPaiva}.</p>
           )}

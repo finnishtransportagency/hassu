@@ -1,6 +1,6 @@
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
-import { HyvaksymisPaatosVaiheTila, Projekti, ProjektiRooli, YhteystietoInput } from "@services/api";
+import { HyvaksymisPaatosVaiheTila, Projekti, ProjektiRooli, ProjektiKayttaja, YhteystietoInput } from "@services/api";
 import Section from "@components/layout/Section";
 import { Fragment, ReactElement } from "react";
 import Button from "@components/button/Button";
@@ -11,8 +11,8 @@ import TextInput from "@components/form/TextInput";
 import HassuGrid from "@components/HassuGrid";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
 import IconButton from "@components/button/IconButton";
-// import capitalize from "lodash/capitalize";
-// import replace from "lodash/replace";
+import capitalize from "lodash/capitalize";
+import replace from "lodash/replace";
 import { useProjekti } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./index";
 
@@ -28,8 +28,11 @@ interface Props {}
 
 function hasHyvaksyttyHyvaksymisPaatosVaiheJulkaisu(projekti: Projekti | null | undefined) {
   return (
-    (projekti?.hyvaksymisPaatosVaiheJulkaisut?.filter((julkaisu) => julkaisu.tila == HyvaksymisPaatosVaiheTila.HYVAKSYTTY) || [])
-      .length > 0
+    (
+      projekti?.hyvaksymisPaatosVaiheJulkaisut?.filter(
+        (julkaisu) => julkaisu.tila == HyvaksymisPaatosVaiheTila.HYVAKSYTTY
+      ) || []
+    ).length > 0
   );
 }
 
@@ -49,26 +52,25 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
     name: "hyvaksymisPaatosVaihe.kuulutusYhteystiedot",
   });
 
-  // // TODO: tyypityksestä puuttuu vielä kuulutusYhteysHenkilot
-  // const vuorovaikutusYhteysHenkilot: ProjektiKayttaja[] = projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteysHenkilot
-  //   ? projekti.hyvaksymisPaatosVaihe.kuulutusYhteysHenkilot
-  //       .map((hlo) => {
-  //         const yhteysHenkiloTietoineen: ProjektiKayttaja | undefined = (projekti?.kayttoOikeudet || []).find(
-  //           (ko) => ko.kayttajatunnus === hlo
-  //         );
-  //         if (!yhteysHenkiloTietoineen) {
-  //           return {} as ProjektiKayttaja;
-  //         }
-  //         return yhteysHenkiloTietoineen as ProjektiKayttaja;
-  //       })
-  //       .filter((pk) => pk.nimi)
-  //   : ([] as ProjektiKayttaja[]);
+  const kuulutusYhteysHenkilot: ProjektiKayttaja[] = projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteysHenkilot
+    ? projekti.hyvaksymisPaatosVaihe.kuulutusYhteysHenkilot
+        .map((hlo) => {
+          const yhteysHenkiloTietoineen: ProjektiKayttaja | undefined = (projekti?.kayttoOikeudet || []).find(
+            (ko) => ko.kayttajatunnus === hlo
+          );
+          if (!yhteysHenkiloTietoineen) {
+            return {} as ProjektiKayttaja;
+          }
+          return yhteysHenkiloTietoineen as ProjektiKayttaja;
+        })
+        .filter((pk) => pk.nimi)
+    : ([] as ProjektiKayttaja[]);
 
   if (eiVoiMuokata) {
     return (
       <Section>
         <SectionContent>
-          {/* <p className="vayla-label mb-5">Vuorovaikuttamisen yhteyshenkilöt</p>
+          <p className="vayla-label mb-5">Vuorovaikuttamisen yhteyshenkilöt</p>
           {projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
               {capitalize(yhteystieto.etunimi)} {capitalize(yhteystieto.sukunimi)}, puh. {yhteystieto.puhelinnumero},{" "}
@@ -76,12 +78,12 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
               )
             </p>
           ))}
-          {vuorovaikutusYhteysHenkilot.map((yhteystieto, index) => (
+          {kuulutusYhteysHenkilot.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
               {yhteystieto.nimi}, puh. {yhteystieto.puhelinnumero},{" "}
               {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} ({yhteystieto.organisaatio})
             </p>
-          ))} */}
+          ))}
         </SectionContent>
       </Section>
     );

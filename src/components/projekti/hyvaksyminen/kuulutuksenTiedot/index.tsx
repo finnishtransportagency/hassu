@@ -12,7 +12,7 @@ import KuulutusJaJulkaisuPaiva from "./KuulutusJaJulkaisuPaiva";
 import PaatoksenPaiva from "./PaatoksenPaiva";
 import MuutoksenHaku from "./MuutoksenHaku";
 import IlmoituksenVastaanottajatKomponentti from "./IlmoituksenVastaanottajat";
-// import Lukunakyma from "./Lukunakyma";
+import Lukunakyma from "./Lukunakyma";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import { removeTypeName } from "src/util/removeTypeName";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
@@ -31,6 +31,12 @@ function defaultValues(
       kuulutusYhteystiedot: projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot
         ? projekti.hyvaksymisPaatosVaihe.kuulutusYhteystiedot.map((yhteystieto) => removeTypeName(yhteystieto))
         : [],
+      kuulutusYhteysHenkilot:
+        projekti?.kayttoOikeudet
+          ?.filter(({ kayttajatunnus }) =>
+            projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteysHenkilot?.includes(kayttajatunnus)
+          )
+          .map(({ kayttajatunnus }) => kayttajatunnus) || [],
       ilmoituksenVastaanottajat: defaultVastaanottajat(
         projekti,
         projekti.hyvaksymisPaatosVaihe?.ilmoituksenVastaanottajat,
@@ -87,7 +93,7 @@ export default function KuulutuksenTiedot() {
           <FormProvider {...useFormReturn}>
             <form>
               <KuulutusJaJulkaisuPaiva />
-              <PaatoksenPaiva />
+              <PaatoksenPaiva projekti={projekti} />
               <MuutoksenHaku />
               <KuulutuksessaEsitettavatYhteystiedot />
               <IlmoituksenVastaanottajatKomponentti hyvaksymisPaatosVaihe={projekti?.hyvaksymisPaatosVaihe} />
@@ -101,15 +107,19 @@ export default function KuulutuksenTiedot() {
           <PdfPreviewForm ref={pdfFormRef} />
         </>
       )}
-      {!voiMuokata && projekti && projekti.hyvaksymisPaatosVaiheJulkaisut?.[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1] && (
-        <FormProvider {...useFormReturn}>
-          {/* <Lukunakyma
-            projekti={projekti}
-            hyvaksymisPaatosVaiheJulkaisu={projekti.hyvaksymisPaatosVaiheJulkaisut[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1]}
-          />
-          <Painikkeet projekti={projekti} /> */}
-        </FormProvider>
-      )}
+      {!voiMuokata &&
+        projekti &&
+        projekti.hyvaksymisPaatosVaiheJulkaisut?.[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1] && (
+          <FormProvider {...useFormReturn}>
+            <Lukunakyma
+              projekti={projekti}
+              hyvaksymisPaatosVaiheJulkaisu={
+                projekti.hyvaksymisPaatosVaiheJulkaisut[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1]
+              }
+            />
+            <Painikkeet projekti={projekti} />
+          </FormProvider>
+        )}
     </>
   );
 }

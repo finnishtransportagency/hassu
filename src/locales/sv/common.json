@@ -17,6 +17,14 @@
     "tutki_suunnitelmaa": "RUOTSIKSI Tutki suunnitelmaa",
     "virhe": "RUOTSIKSI Virhe"
   },
+  "hallinto-oikeus": {
+    "HELSINKI": "RUOTSIKSI Helsingin hallinto-oikeus",
+    "HAMEENLINNA": "RUOTSIKSI Hämeenlinnan hallinto-oikeus",
+    "ITA_SUOMI": "RUOTSIKSI Itä-Suomen hallinto-oikeus",
+    "POHJOIS_SUOMI": "RUOTSIKSI Pohjois-Suomen hallinto-oikeus",
+    "TURKU": "RUOTSIKSI Turun hallinto-oikeus",
+    "VAASA": "RUOTSIKSI Vaasan hallinto-oikeus"
+  },
   "sivustonimi": "Planering av statens trafikleder",
   "vaylavirasto": "Trafikledsverket",
   "ely-keskus": "NTM-centralen",

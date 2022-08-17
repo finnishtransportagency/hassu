@@ -9,6 +9,7 @@ import Hyvaksymispaatos from "./Hyvaksymispaatos";
 import SuunnitelmatJaAineistot from "../../common/SuunnitelmatJaAineistot";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { aineistoKategoriat } from "common/aineistoKategoriat";
+import Notification, { NotificationType } from "@components/notification/Notification";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
@@ -72,7 +73,14 @@ export default function Muokkausnakyma() {
 
   return (
     <FormProvider {...useFormReturn}>
-      Tekstiä tähän
+      <h3 className="vayla-small-title">Päätös ja päätöksen liitteenä olevat aineistot</h3>
+      <p>
+        Liitä Liikenne- ja viestintäviraston päätös. Liitettävä päätös haetaan Projektivelhosta. Päätös ja sen liitteenä
+        oleva aineisto julkaistaan palvelun julkisella puolella kuulutuksen julkaisupäivänä.
+      </p>
+      <Notification type={NotificationType.INFO_GRAY}>
+        Huomioithan, että suunnitelma-aineistojen tulee täyttää saavutettavuusvaatimukset.
+      </Notification>
       <form>
         <Hyvaksymispaatos />
         <SuunnitelmatJaAineistot />
