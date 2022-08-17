@@ -48,7 +48,7 @@ export default function Hyvaksymispaatos(): ReactElement {
     kuulutus?.kuulutusYhteystiedot?.map((yhteystieto) => t("common:yhteystieto", yhteystieto)) || [];
 
   return (
-    <ProjektiJulkinenPageLayout selectedStep={4} title="Kuulutus suunnitelman hyväksymisestä">
+    <ProjektiJulkinenPageLayout selectedStep={4} title={t("projekti:ui-otsikot.kuulutus_suunnitelman_hyvaksymisesta")}>
       <Section noDivider>
         <KeyValueTable rows={keyValueData}></KeyValueTable>
       </Section>
@@ -90,7 +90,7 @@ export default function Hyvaksymispaatos(): ReactElement {
         </div>
       </Section>
       <Section noDivider>
-        <h4 className="vayla-small-title">Asianosaisen oikeudet</h4>
+        <h4 className="vayla-small-title">{t("projetki:ui-otsikot.asianosaisen_oikeudet")}</h4>
         <Notification hideIcon type={NotificationType.INFO}>
           <p>
             <Trans
@@ -112,7 +112,7 @@ export default function Hyvaksymispaatos(): ReactElement {
         </p>
       </Section>
       <Section noDivider>
-        <h4 className="vayla-small-title">Yhteystiedot</h4>
+        <h4 className="vayla-small-title">{t("projekti:ui-otsikot.yhteystiedot")}</h4>
         <p>
           {t("common:lisatietoja_antavat", {
             yhteystiedot: yhteystiedotListana.join(", "),
@@ -121,14 +121,14 @@ export default function Hyvaksymispaatos(): ReactElement {
         </p>
       </Section>
       <Section noDivider>
-        <h5 className="vayla-smallest-title">Päätös</h5>
+        <h5 className="vayla-smallest-title">{t("projekti:ui-otsikot.paatos")}</h5>
         <p>TODO (käytä hyväksi viranomaispuolen lukunäkymää, refaktoroi se omaksi komponentikseen, ja käytä täällä)</p>
       </Section>
       <Section noDivider>
         <KansalaisenAineistoNakyma projekti={projekti} kuulutus={kuulutus} />
       </Section>
       <Section noDivider>
-        <h5 className="vayla-smallest-title">Ladattava kuulutus</h5>
+        <h5 className="vayla-smallest-title">{t("projekti:ui-otsikot.ladattava_kuulutus")}</h5>
         TODO (toteuta kun pdf on toteutettu bäkissä)
       </Section>
       <Section>TODO (eu-logo, jos eu osallistuu rahoitukseen)</Section>

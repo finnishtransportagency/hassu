@@ -93,6 +93,7 @@
   },
   "ui-otsikot": {
     "kuulutus_suunnitelman_alkamisesta": "RUOTSIKSI Kuulutus suunnittelun aloittamisesta",
+    "kuulutus_suunnitelman_hyvaksymisesta": "RUOTSIKSI Kuulutus suunnitelman hyväksymisestä",
     "nahtavillaoloaika": "RUOTSIKSI Nähtävilläoloaika",
     "hankkeen_sijainti": "RUOTSIKSI Hankkeen sijainti",
     "suunnitelman_tyyppi": "RUOTSIKSI Suunnitelman tyyppi",
@@ -117,6 +118,7 @@
     "esittelyaineisto_ja_suunnitelmaluonnokset": "RUOTSIKSI Esittelyaineisto ja suunnitelmaluonnokset",
     "muut_materiaalit": "RUOTSIKSI Muut esittelymateriaalit",
     "video_materiaalit": "RUOTSIKSI Enakkoon kuvattu videoesittely",
+    "paatos": "RUOTSIKSI Päätös",
     "nahtavillaolo": {
       "suunnitteluhankkeen_kuvaus": "RUOTSIKSI Suunnitteluhankkeen kuvaus",
       "asianosaisen_oikeudet": "RUOTSIKSI Asianosaisen oikeudet",
