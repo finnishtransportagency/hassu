@@ -32,6 +32,7 @@ const defaultLabels: RouteLabels = {
   "/suunnitelma/[oid]/aloituskuulutus": { label: "aloituskuulutus", translate: true },
   "/suunnitelma/[oid]/suunnittelu": { label: "suunnittelu", translate: true },
   "/suunnitelma/[oid]/nahtavillaolo": { label: "nahtavillaolo", translate: true },
+  "/suunnitelma/[oid]/hyvaksymismenettelyssa": { label: "hyvaksymismenettelyssa", translate: true },
   "/suunnitelma/[...all]": { label: "tutki_suunnitelmaa", translate: true },
   "/_error": { label: "virhe", translate: true },
 };

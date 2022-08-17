@@ -17,7 +17,6 @@ interface Props {
   vertical?: true;
 }
 export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep, vertical }: Props): ReactElement {
-
   const { t } = useTranslation("projekti");
 
   const HassuStep = styled(Step)(() => ({
@@ -104,7 +103,7 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
     t(`projekti-vaiheet.suunnittelun_kaynnistaminen`),
     t(`projekti-vaiheet.suunnittelussa`),
     t(`projekti-vaiheet.suunnitteluaineisto_nahtavilla`),
-    t(`projekti-vaiheet.hyvaksynnassa`),
+    t(`projekti-vaiheet.hyvaksymismenettelyssa`),
     t(`projekti-vaiheet.paatos`),
     t(`projekti-vaiheet.lainvoimaisuus`),
   ];
@@ -113,7 +112,7 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
     `/suunnitelma/${oid}/aloituskuulutus`,
     `/suunnitelma/${oid}/suunnittelu`,
     `/suunnitelma/${oid}/nahtavillaolo`,
-    `/suunnitelma/${oid}/hyvaksynnassa`,
+    `/suunnitelma/${oid}/hyvaksymismenettelyssa`,
     `/suunnitelma/${oid}/hyvaksymispaatos`,
     `/suunnitelma/${oid}/lainvoima`,
   ];
