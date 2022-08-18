@@ -217,6 +217,7 @@ async function main() {
     SONARQUBE_HOST_URL: variables.SonarQubeHostURL,
     SONARQUBE_ACCESS_TOKEN: variables.SonarQubeAccessToken,
     SEARCH_DOMAIN: searchStackOutputs.SearchDomainEndpointOutput,
+    TABLE_PROJEKTI: Config.projektiTableName
   });
 
   const testUsers = await readParametersByPath("/testusers/", Region.EU_WEST_1);

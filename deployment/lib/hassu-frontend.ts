@@ -43,6 +43,7 @@ import {
 } from "../bin/setupEnvironment";
 import { IOriginAccessIdentity } from "@aws-cdk/aws-cloudfront/lib/origin-access-identity";
 import { getOpenSearchDomain } from "./common";
+import { Table } from "@aws-cdk/aws-dynamodb";
 
 // These should correspond to CfnOutputs produced by this stack
 export type FrontendStackOutputs = {
@@ -53,6 +54,7 @@ export type FrontendStackOutputs = {
 
 interface HassuFrontendStackProps {
   internalBucket: Bucket;
+  projektiTable: Table;
 }
 
 export class HassuFrontendStack extends cdk.Stack {
@@ -93,6 +95,7 @@ export class HassuFrontendStack extends cdk.Stack {
       env: {
         FRONTEND_DOMAIN_NAME: config.frontendDomainName,
         REACT_APP_API_KEY: this.appSyncAPIKey,
+        TABLE_PROJEKTI: Config.projektiTableName
       },
     }).build();
 
@@ -164,6 +167,10 @@ export class HassuFrontendStack extends cdk.Stack {
     const searchDomain = await getOpenSearchDomain(this, accountStackOutputs);
     if (nextJSLambdaEdge.nextApiLambda) {
       searchDomain.grantIndexReadWrite("projekti-" + Config.env + "-*", nextJSLambdaEdge.nextApiLambda);
+      if (env !== "prod") {
+        const projektiTable = this.props.projektiTable;
+        projektiTable.grantReadWriteData(nextJSLambdaEdge.nextApiLambda);
+      }
     }
 
     const distribution: cloudfront.Distribution = nextJSLambdaEdge.distribution;

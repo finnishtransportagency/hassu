@@ -30,7 +30,7 @@ async function createProjekti(projekti: DBProjekti): Promise<DocumentClient.PutI
   return getDynamoDBDocumentClient().put(params).promise();
 }
 
-async function scanProjektit(startKey?: string): Promise<{ startKey: string; projektis: DBProjekti[] }> {
+async function scanProjektit(startKey?: string): Promise<{ startKey: string | undefined; projektis: DBProjekti[] }> {
   try {
     const params: DocumentClient.ScanInput = {
       TableName: projektiTableName,
@@ -68,7 +68,7 @@ async function loadProjektiByOid(oid: string, stronglyConsistentRead = true): Pr
     projekti.oid = oid;
     return projekti;
   } catch (e) {
-    if (e.code === "ResourceNotFoundException") {
+    if ((e as { code: string }).code === "ResourceNotFoundException") {
       log.warn("projektia ei löydy", { oid });
       return undefined;
     }
@@ -97,8 +97,8 @@ async function saveProjekti(dbProjekti: Partial<DBProjekti>): Promise<DocumentCl
   }
   const setExpression: string[] = [];
   const removeExpression: string[] = [];
-  const ExpressionAttributeNames = {};
-  const ExpressionAttributeValues = {};
+  const ExpressionAttributeNames: DocumentClient.ExpressionAttributeNameMap = {};
+  const ExpressionAttributeValues: DocumentClient.ExpressionAttributeValueMap = {};
 
   dbProjekti.paivitetty = dayjs().format();
 
@@ -106,7 +106,7 @@ async function saveProjekti(dbProjekti: Partial<DBProjekti>): Promise<DocumentCl
     if (skipAutomaticUpdateFields.indexOf(property) >= 0) {
       continue;
     }
-    const value = dbProjekti[property];
+    const value = dbProjekti[property as keyof DBProjekti];
     if (value === undefined) {
       continue;
     }
@@ -220,7 +220,7 @@ function insertJulkaisuToList(oid: string, listFieldName: string, julkaisu: unkn
 async function deleteJulkaisuFromList(
   oid: string,
   listFieldName: string,
-  julkaisut: JulkaisuWithId[],
+  julkaisut: JulkaisuWithId[] | undefined | null,
   julkaisuIdToDelete: number,
   description: string
 ) {
@@ -252,7 +252,7 @@ type JulkaisuWithId = { id: number } & unknown;
 async function updateJulkaisuToList(
   oid: string,
   listFieldName: string,
-  julkaisut: JulkaisuWithId[],
+  julkaisut: JulkaisuWithId[] | undefined | null,
   julkaisu: JulkaisuWithId,
   description: string
 ) {
@@ -355,33 +355,35 @@ export const projektiDatabase = {
     await getDynamoDBDocumentClient().update(params).promise();
   },
 
-  async markFeedbackIsBeingHandled(projekti: DBProjekti, id: string): Promise<string> {
-    const oid = projekti.oid;
-    log.info("markFeedbackIsBeingHandled", { oid, id });
-    const palauteIndex = projekti.palautteet.findIndex((value) => value.id === id);
-    if (palauteIndex < 0) {
-      throw new NotFoundError("Palautetta ei löydy: " + oid + " " + id);
+  async markFeedbackIsBeingHandled(projekti: DBProjekti, id: string): Promise<string | undefined> {
+    if (projekti.palautteet) {
+      const oid = projekti.oid;
+      log.info("markFeedbackIsBeingHandled", { oid, id });
+      const palauteIndex = projekti.palautteet.findIndex((value) => value.id === id);
+      if (palauteIndex < 0) {
+        throw new NotFoundError("Palautetta ei löydy: " + oid + " " + id);
+      }
+      const params = {
+        TableName: projektiTableName,
+        Key: {
+          oid,
+        },
+        UpdateExpression: "SET #palautteet[" + palauteIndex + "].otettuKasittelyyn = :flag",
+        ExpressionAttributeNames: {
+          "#palautteet": "palautteet",
+        },
+        ExpressionAttributeValues: {
+          ":flag": true,
+        },
+      };
+      log.info("markFeedbackIsBeingHandled", { params });
+      await getDynamoDBDocumentClient().update(params).promise();
+      return id;
     }
-    const params = {
-      TableName: projektiTableName,
-      Key: {
-        oid,
-      },
-      UpdateExpression: "SET #palautteet[" + palauteIndex + "].otettuKasittelyyn = :flag",
-      ExpressionAttributeNames: {
-        "#palautteet": "palautteet",
-      },
-      ExpressionAttributeValues: {
-        ":flag": true,
-      },
-    };
-    log.info("markFeedbackIsBeingHandled", { params });
-    await getDynamoDBDocumentClient().update(params).promise();
-    return id;
   },
 
   async findProjektiOidsWithNewFeedback(): Promise<string[]> {
-    const result = [];
+    const result: string[] = [];
 
     try {
       let lastEvaluatedKey = undefined;
@@ -393,6 +395,9 @@ export const projektiDatabase = {
           ExclusiveStartKey: lastEvaluatedKey,
         };
         const data: DocumentClient.ScanOutput = await getDynamoDBDocumentClient().scan(params).promise();
+        if (!data?.Items) {
+          break;
+        }
         data.Items.forEach((item) => result.push(item.oid));
         lastEvaluatedKey = data.LastEvaluatedKey;
       } while (lastEvaluatedKey);

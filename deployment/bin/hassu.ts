@@ -26,7 +26,10 @@ async function main() {
     console.log("Deployment of HassuBackendStack failed:", e);
     process.exit(1);
   });
-  const hassuFrontendStack = new HassuFrontendStack(app, { internalBucket: hassuDatabaseStack.internalBucket });
+  const hassuFrontendStack = new HassuFrontendStack(app, {
+    internalBucket: hassuDatabaseStack.internalBucket,
+    projektiTable: hassuDatabaseStack.projektiTable,
+  });
   await hassuFrontendStack.process().catch((e) => {
     console.log("Deployment of HassuFrontendStack failed:", e);
     process.exit(1);
