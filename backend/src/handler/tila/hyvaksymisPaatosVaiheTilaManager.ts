@@ -3,6 +3,7 @@ import { TilaManager } from "./TilaManager";
 import { DBProjekti, HyvaksymisPaatosVaihe } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
+import { aineistoService } from "../../aineisto/aineistoService";
 
 function getHyvaksymisPaatosVaihe(projekti: DBProjekti): HyvaksymisPaatosVaihe {
   const hyvaksymisPaatosVaihe = projekti.hyvaksymisPaatosVaihe;
@@ -32,7 +33,6 @@ class HyvaksymisPaatosVaiheTilaManager extends TilaManager {
     julkaisu.tila = HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA;
     julkaisu.muokkaaja = muokkaaja.uid;
     await projektiDatabase.insertHyvaksymisPaatosVaiheJulkaisu(projekti.oid, julkaisu);
-    // TODO await aineistoService.publishHyvaksymisPaatosVaihe(projekti.oid, julkaisu.id);
   }
 
   async approve(projekti: DBProjekti, projektiPaallikko: NykyinenKayttaja): Promise<void> {
@@ -48,6 +48,7 @@ class HyvaksymisPaatosVaiheTilaManager extends TilaManager {
     // TODO: generoi PDFt
 
     await projektiDatabase.updateHyvaksymisPaatosVaiheJulkaisu(projekti, julkaisu);
+    await aineistoService.publishHyvaksymisPaatosVaihe(projekti.oid, julkaisu.id);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

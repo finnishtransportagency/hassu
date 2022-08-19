@@ -12,6 +12,7 @@ import { aineistoService } from "./aineistoService";
 import {
   Aineisto,
   HyvaksymisPaatosVaihe,
+  HyvaksymisPaatosVaiheJulkaisu,
   NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
   Vuorovaikutus
@@ -135,6 +136,19 @@ async function handleNahtavillaoloVaihe(
   }
 }
 
+async function handleHyvaksymisPaatosVaihe(
+  oid: string,
+  julkaisut: HyvaksymisPaatosVaiheJulkaisu[],
+  publishJulkaisuWithId: number
+) {
+  const julkaisu = julkaisut
+    ?.filter((j) => j.id == publishJulkaisuWithId)
+    .pop();
+  if (julkaisu) {
+    await aineistoService.synchronizeHyvaksymisPaatosVaiheJulkaisuAineistoToPublic(oid, julkaisu);
+  }
+}
+
 export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   setupLambdaMonitoring();
   return AWSXRay.captureAsyncFunc("handler", async (subsegment) => {
@@ -180,6 +194,15 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
             oid,
             projekti.nahtavillaoloVaiheJulkaisut,
             aineistoEvent.publishNahtavillaoloWithId
+          );
+        } else if (
+          aineistoEvent.type == ImportAineistoEventType.PUBLISH_HYVAKSYMISPAATOS &&
+          aineistoEvent.publishHyvaksymisPaatosWithId
+        ) {
+          await handleHyvaksymisPaatosVaihe(
+            oid,
+            projekti.hyvaksymisPaatosVaiheJulkaisut,
+            aineistoEvent.publishHyvaksymisPaatosWithId
           );
         }
       }

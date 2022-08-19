@@ -1,6 +1,7 @@
 export enum ImportAineistoEventType {
   IMPORT = "IMPORT",
   PUBLISH_NAHTAVILLAOLO = "PUBLISH_NAHTAVILLAOLO",
+  PUBLISH_HYVAKSYMISPAATOS = "PUBLISH_HYVAKSYMISPAATOS",
 }
 
 export type ImportAineistoEvent = {
@@ -8,4 +9,5 @@ export type ImportAineistoEvent = {
   oid: string;
   publishVuorovaikutusWithNumero?: number;
   publishNahtavillaoloWithId?: number;
+  publishHyvaksymisPaatosWithId?: number;
 };

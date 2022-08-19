@@ -38,7 +38,7 @@ import {
   verifyEmailsSent,
   verifyVuorovaikutusSnapshot,
 } from "./testUtil/tests";
-import { takeS3Snapshot, takeYllapitoS3Snapshot } from "./testUtil/util";
+import { takePublicS3Snapshot, takeS3Snapshot, takeYllapitoS3Snapshot } from "./testUtil/util";
 import {
   testImportNahtavillaoloAineistot,
   testNahtavillaolo,
@@ -162,6 +162,8 @@ describe("Api", () => {
     await takeYllapitoS3Snapshot(oid, "Hyvaksymispaatos created", "hyvaksymispaatos");
 
     await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture);
+    await processQueue(fakeAineistoImportQueue);
+    await takePublicS3Snapshot(oid, "Hyvaksymispaatos approved", "hyvaksymispaatos");
 
   });
 
