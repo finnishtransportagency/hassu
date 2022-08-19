@@ -1,9 +1,10 @@
 import get from "lodash/get";
-import { Kayttaja } from "../../../common/graphql/apiModel";
+import { Kayttaja, Viranomainen } from "../../../common/graphql/apiModel";
 import { config } from "../config";
 import { DBProjekti } from "../database/model/projekti";
 import { EmailOptions } from "./email";
 import { linkSuunnitteluVaihe } from "../../../common/links";
+import { Muistutus } from "../database/model";
 
 function template(strs: TemplateStringsArray, ...exprs: string[]) {
   return function (obj: unknown) {
@@ -50,6 +51,30 @@ Voit tarkastella aloituskuulutusta osoitteessa https://${"domain"}/yllapito/proj
 
 Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 const hyvaksyttyPDFVastaanottajat = template`${"velho.vastuuhenkilonEmail"}`;
+const muistutusTeksti = template`
+Muistutus vastaanotettu
+${"vastaanotettu"}
+
+Nimi
+${"etunimi"} ${"sukunimi"}
+
+Postiosoite
+${"katuosoite"} ${"postinumeroJaPostitoimipaikka"}
+
+Sähköposti
+${"sahkoposti"}
+
+Puhelinnumero
+${"puhelinnumero"}
+
+Suunnitelman asiatunnus
+${"asiatunnus"}
+
+Muistutus
+${"muistutus"}
+`;
+const muistutusOtsikko = template`Muistutus - ${"id"}`;
+const muistuttajanOtsikko = template`Vahvistus muistutuksen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta`;
 
 export function createPerustamisEmail(projekti: DBProjekti): EmailOptions {
   return {
@@ -88,5 +113,29 @@ export function createNewFeedbackAvailableEmail(oid: string, recipient: string):
     subject: "Suunnitelmaan on tullut palautetta",
     text: "Suunnitelmaan on tullut palautetta: " + linkSuunnitteluVaihe(oid),
     to: recipient,
+  };
+}
+
+export function createMuistutusKirjaamolleEmail(projekti: DBProjekti, muistutus: Muistutus, sahkoposti: string): EmailOptions {
+  const asiatunnus =
+    projekti.velho.suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO
+      ? projekti.velho.asiatunnusELY
+      : projekti.velho.asiatunnusVayla;
+  return {
+    subject: muistutusOtsikko(muistutus),
+    text: muistutusTeksti({asiatunnus, ...muistutus }),
+    to: sahkoposti,
+  };
+}
+
+export function createKuittausMuistuttajalleEmail(projekti: DBProjekti, muistutus: Muistutus): EmailOptions {
+  const asiatunnus =
+    projekti.velho.suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO
+      ? projekti.velho.asiatunnusELY
+      : projekti.velho.asiatunnusVayla;
+  return {
+    subject: muistuttajanOtsikko(muistutus),
+    text: muistutusTeksti({asiatunnus, ...muistutus }),
+    to: muistutus.sahkoposti,
   };
 }
