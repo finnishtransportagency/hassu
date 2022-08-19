@@ -5,6 +5,7 @@ import { AsiakirjanMuoto } from "../asiakirjaService";
 import { translate } from "../../util/localization";
 import { formatList, KutsuAdapter } from "./KutsuAdapter";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
+import { formatDate } from "../asiakirjaUtil";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
@@ -24,10 +25,6 @@ function createFileName(kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto, projekti
   }
   const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
   return translate("tiedostonimi." + key, language);
-}
-
-function formatDate(date: string) {
-  return date ? new Date(date).toLocaleDateString("fi") : "DD.MM.YYYY";
 }
 
 export class Kuulutus30 extends CommonPdf {
@@ -59,7 +56,7 @@ export class Kuulutus30 extends CommonPdf {
       kayttoOikeudet: projekti.kayttoOikeudet,
     });
     const fileName = createFileName(kieli, asiakirjanMuoto, velho.tyyppi);
-    super(headers[language], kieli, kutsuAdapter, fileName);
+    super(kieli, kutsuAdapter);
     this.velho = velho;
     this.kieli = kieli;
 
@@ -67,6 +64,7 @@ export class Kuulutus30 extends CommonPdf {
     this.asiakirjanMuoto = asiakirjanMuoto;
     this.kirjaamoOsoitteet = kirjaamoOsoitteet;
     this.header = headers[language];
+    super.setupPDF(this.header, kutsuAdapter.nimi, fileName);
   }
 
   protected addContent(): void {
@@ -141,12 +139,7 @@ export class Kuulutus30 extends CommonPdf {
   }
 
   protected get tilaajaGenetiivi(): string {
-    const tilaajaOrganisaatio = this.velho?.tilaajaOrganisaatio;
-    if (tilaajaOrganisaatio === "Väylävirasto") {
-      return tilaajaOrganisaatio ? "Väyläviraston" : "Tilaajaorganisaation";
-    } else {
-      return tilaajaOrganisaatio ? tilaajaOrganisaatio?.slice(0, -1) + "ksen" : "Tilaajaorganisaation";
-    }
+    return this.kutsuAdapter.tilaajaGenetiivi;
   }
 
   private pidetaanNahtavillaParagraph() {
@@ -191,14 +184,6 @@ export class Kuulutus30 extends CommonPdf {
     return this.paragraph(
       `Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa, on mahdollisuus muistutusten tekemiseen suunnitelmasta. Muistutukset on toimitettava ${this.kutsuAdapter.tilaajaOrganisaatiolle} ennen nähtävänäoloajan päättymistä (LjMTL 27 §) osoitteeseen ${this.kirjaamo}. Muistutukseen on liitettävä asian asianumero ${this.kutsuAdapter.asianumero}.`
     );
-  }
-
-  private tietosuojaParagraph() {
-    if (this.asiakirjanMuoto !== AsiakirjanMuoto.RATA) {
-      return this.viranomainenTietosuojaParagraph(this.velho);
-    } else {
-      return this.vaylavirastoTietosuojaParagraph();
-    }
   }
 
   get kirjaamo(): string {

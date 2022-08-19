@@ -1,5 +1,5 @@
 import { IlmoitusAsiakirjaTyyppi, IlmoitusParams, SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
-import { Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { AsiakirjanMuoto } from "../asiakirjaService";
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
@@ -16,24 +16,42 @@ const fileNameKeys: Record<IlmoitusAsiakirjaTyyppi, Partial<Record<ProjektiTyypp
     [ProjektiTyyppi.TIE]: "T414_1",
     [ProjektiTyyppi.YLEINEN]: "12YS_nahtavillaolo",
   },
+  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE: {
+    [ProjektiTyyppi.TIE]: "T431_2",
+    [ProjektiTyyppi.YLEINEN]: "12YS_hyvaksymispaatos",
+  },
 };
 
 export class Ilmoitus12T extends SuunnittelunAloitusPdf {
+  private asiakirjaTyyppi: IlmoitusAsiakirjaTyyppi;
+
   constructor(asiakirjaTyyppi: IlmoitusAsiakirjaTyyppi, params: IlmoitusParams) {
     super(
       params,
       headers[params.kieli == Kieli.SAAME ? Kieli.SUOMI : params.kieli],
       AsiakirjanMuoto.TIE,
       fileNameKeys[asiakirjaTyyppi]?.[params.velho.tyyppi]
-    ); //TODO lisää tuki Saamen eri muodoille
+    );
+    this.asiakirjaTyyppi = asiakirjaTyyppi;
+
+    this.kutsuAdapter.setTemplateResolver(this);
+  }
+
+  ilmoitus_vaihe(): string {
+    switch (this.asiakirjaTyyppi) {
+      case AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA:
+        return this.kutsuAdapter.text("asiakirja.ilmoitus.ilmoitus_tie_vaihe_aloituskuulutus");
+      case AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE:
+        return this.kutsuAdapter.text("asiakirja.ilmoitus.ilmoitus_tie_vaihe_suunnitelman_nahtaville_asettamista");
+      case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE:
+        return this.kutsuAdapter.text("asiakirja.ilmoitus.ilmoitus_tie_vaihe_suunnitelman_hyvaksymispaatosta");
+    }
+    return "";
   }
 
   protected addDocumentElements(): PDFKit.PDFStructureElementChild[] {
     return [
-      this.localizedParagraph([
-        `${this.params.velho.tilaajaOrganisaatio} julkaisee tietoverkossaan liikennejärjestelmästä ja maanteistä annetun lain (503/2005) sekä hallintolain 62 a §:n mukaisesti kuulutuksen, joka koskee otsikossa mainitun ${this.projektiTyyppi}n suunnittelun ja maastotöiden aloittamista. ${this.params.velho?.tilaajaOrganisaatio} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä. `,
-        `RUOTSIKSI ${this.params.velho.tilaajaOrganisaatio} julkaisee tietoverkossaan liikennejärjestelmästä ja maanteistä annetun lain (503/2005) sekä hallintolain 62 a §:n mukaisesti kuulutuksen, joka koskee otsikossa mainitun ${this.projektiTyyppi}n suunnittelun ja maastotöiden aloittamista. ${this.params.velho?.tilaajaOrganisaatio} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä. `,
-      ]),
+      this.paragraphFromKey("asiakirja.ilmoitus.tie_kappale1"),
 
       this.doc.struct("P", {}, [
         () => {

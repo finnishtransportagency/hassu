@@ -1,5 +1,10 @@
 import { AsiakirjaTyyppi, Kieli, PDF, ProjektiTyyppi } from "../../../common/graphql/apiModel";
-import { AloitusKuulutusJulkaisu, DBProjekti, NahtavillaoloVaiheJulkaisu } from "../database/model";
+import {
+  AloitusKuulutusJulkaisu,
+  DBProjekti,
+  HyvaksymisPaatosVaiheJulkaisu,
+  NahtavillaoloVaiheJulkaisu,
+} from "../database/model";
 import { AloitusKuulutus10T } from "./suunnittelunAloitus/aloitusKuulutus10T";
 import { AloitusKuulutus10R } from "./suunnittelunAloitus/aloitusKuulutus10R";
 import { Ilmoitus12T } from "./suunnittelunAloitus/ilmoitus12T";
@@ -12,6 +17,9 @@ import { Kuulutus30 } from "./suunnittelunAloitus/Kuulutus30";
 import { kirjaamoOsoitteetService } from "../kirjaamoOsoitteet/kirjaamoOsoitteetService";
 import { IlmoitusParams } from "./suunnittelunAloitus/suunnittelunAloitusPdf";
 import { Kuulutus31 } from "./suunnittelunAloitus/Kuulutus31";
+import { Kuulutus6263 } from "./suunnittelunAloitus/Kuulutus6263";
+import { Kuulutus60 } from "./suunnittelunAloitus/Kuulutus60";
+import { Kuulutus61 } from "./suunnittelunAloitus/Kuulutus61";
 
 export type NahtavillaoloKuulutusAsiakirjaTyyppi = Extract<
   AsiakirjaTyyppi,
@@ -42,6 +50,25 @@ interface AloituskuulutusPdfOptions {
   luonnos: boolean;
 }
 
+export type EnhancedPDF = PDF & { textContent: string };
+
+export type HyvaksymisPaatosKuulutusAsiakirjaTyyppi = Extract<
+  AsiakirjaTyyppi,
+  | AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS
+  | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE
+  | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE
+  | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE
+  | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
+>;
+
+interface CreateHyvaksymisPaatosKuulutusPdfOptions {
+  projekti: DBProjekti;
+  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
+  kieli: Kieli;
+  luonnos: boolean;
+  asiakirjaTyyppi: HyvaksymisPaatosKuulutusAsiakirjaTyyppi;
+}
+
 export enum AsiakirjanMuoto {
   TIE = "TIE",
   RATA = "RATA",
@@ -62,8 +89,8 @@ export class AsiakirjaService {
     aloitusKuulutusJulkaisu,
     kieli,
     luonnos,
-  }: AloituskuulutusPdfOptions): Promise<PDF> {
-    let pdf: Promise<PDF>;
+  }: AloituskuulutusPdfOptions): Promise<EnhancedPDF> {
+    let pdf: Promise<EnhancedPDF>;
     const asiakirjanMuoto: AsiakirjanMuoto | undefined = determineAsiakirjaMuoto(
       aloitusKuulutusJulkaisu.velho.tyyppi,
       aloitusKuulutusJulkaisu.velho.vaylamuoto
@@ -118,7 +145,7 @@ export class AsiakirjaService {
     vuorovaikutus,
     kieli,
     luonnos,
-  }: YleisotilaisuusKutsuPdfOptions): Promise<PDF> {
+  }: YleisotilaisuusKutsuPdfOptions): Promise<EnhancedPDF> {
     const asiakirjanMuoto = determineAsiakirjaMuoto(projekti?.velho?.tyyppi, projekti?.velho?.vaylamuoto);
     return new Kutsu20(projekti, vuorovaikutus, kieli, asiakirjanMuoto).pdf(luonnos);
   }
@@ -129,7 +156,7 @@ export class AsiakirjaService {
     kieli,
     luonnos,
     asiakirjaTyyppi,
-  }: CreateNahtavillaoloKuulutusPdfOptions): Promise<PDF> {
+  }: CreateNahtavillaoloKuulutusPdfOptions): Promise<EnhancedPDF> {
     const asiakirjanMuoto = determineAsiakirjaMuoto(projekti?.velho?.tyyppi, projekti?.velho?.vaylamuoto);
     const params: IlmoitusParams = {
       hankkeenKuvaus: nahtavillaoloVaihe.hankkeenKuvaus,
@@ -170,6 +197,59 @@ export class AsiakirjaService {
         await kirjaamoOsoitteetService.listKirjaamoOsoitteet()
       ).pdf(luonnos);
     }
+  }
+
+  async createHyvaksymisPaatosKuulutusPdf({
+    projekti,
+    kieli,
+    luonnos,
+    hyvaksymisPaatosVaihe,
+    asiakirjaTyyppi,
+  }: CreateHyvaksymisPaatosKuulutusPdfOptions): Promise<EnhancedPDF> {
+    const asiakirjanMuoto = determineAsiakirjaMuoto(projekti?.velho?.tyyppi, projekti?.velho?.vaylamuoto);
+    const params: IlmoitusParams = {
+      oid: projekti.oid,
+      kielitiedot: hyvaksymisPaatosVaihe.kielitiedot,
+      hankkeenKuvaus: { [Kieli.SUOMI]: "", [Kieli.RUOTSI]: "", [Kieli.SAAME]: "" },
+      kuulutusPaiva: hyvaksymisPaatosVaihe.kuulutusPaiva,
+      velho: hyvaksymisPaatosVaihe.velho,
+      yhteystiedot: hyvaksymisPaatosVaihe.kuulutusYhteystiedot,
+      yhteysHenkilot: hyvaksymisPaatosVaihe.kuulutusYhteysHenkilot,
+      kayttoOikeudet: projekti.kayttoOikeudet,
+      kieli,
+    };
+
+    if (
+      asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE ||
+      asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
+    ) {
+      return new Kuulutus6263(
+        asiakirjaTyyppi,
+        asiakirjanMuoto,
+        hyvaksymisPaatosVaihe,
+        projekti.kasittelynTila,
+        params
+      ).pdf(luonnos);
+    } else if (asiakirjaTyyppi == AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS) {
+      return new Kuulutus60(asiakirjanMuoto, hyvaksymisPaatosVaihe, projekti.kasittelynTila, params).pdf(luonnos);
+    } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE) {
+      return new Kuulutus61(asiakirjanMuoto, hyvaksymisPaatosVaihe, projekti.kasittelynTila, params).pdf(luonnos);
+    } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE) {
+      if (asiakirjanMuoto == AsiakirjanMuoto.TIE) {
+        return new Ilmoitus12T(
+          AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE,
+          params
+        ).pdf(luonnos);
+      } else if (asiakirjanMuoto == AsiakirjanMuoto.RATA) {
+        return new Ilmoitus12R(
+          AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE,
+          params
+        ).pdf(luonnos);
+      } else {
+        throw new Error("Asiakirjan muoto ei tuettu");
+      }
+    }
+    throw new Error("Not implemented");
   }
 
   createYleisotilaisuusKutsuEmail({ projekti, vuorovaikutus, kieli }: YleisotilaisuusKutsuPdfOptions): EmailOptions {

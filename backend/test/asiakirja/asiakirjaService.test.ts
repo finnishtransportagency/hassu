@@ -1,13 +1,25 @@
 /* tslint:disable:only-arrow-functions */
 import { describe, it } from "mocha";
-import { AsiakirjaService, NahtavillaoloKuulutusAsiakirjaTyyppi } from "../../src/asiakirja/asiakirjaService";
-import { AsiakirjaTyyppi, Kieli, KirjaamoOsoite, ProjektiTyyppi, Viranomainen } from "../../../common/graphql/apiModel";
+import {
+  AsiakirjaService,
+  HyvaksymisPaatosKuulutusAsiakirjaTyyppi,
+  NahtavillaoloKuulutusAsiakirjaTyyppi,
+} from "../../src/asiakirja/asiakirjaService";
+import {
+  AsiakirjaTyyppi,
+  Kieli,
+  KirjaamoOsoite,
+  PDF,
+  ProjektiTyyppi,
+  Viranomainen,
+} from "../../../common/graphql/apiModel";
 import fs from "fs";
 import { asiakirjaAdapter } from "../../src/handler/asiakirjaAdapter";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import {
   AloitusKuulutusJulkaisu,
   DBProjekti,
+  HyvaksymisPaatosVaihe,
   NahtavillaoloVaihe,
   SuunnitteluVaihe,
   Vuorovaikutus,
@@ -19,6 +31,19 @@ import sinon from "sinon";
 import { kirjaamoOsoitteetService } from "../../src/kirjaamoOsoitteet/kirjaamoOsoitteetService";
 
 const { assert, expect } = require("chai");
+
+async function runTestWithTypes(types: AsiakirjaTyyppi[], callback: (type) => Promise<void>) {
+  for (const type of types) {
+    await callback(type);
+  }
+}
+
+function expectPDF(prefix: string, pdf: PDF & { textContent: string }) {
+  fs.mkdirSync(".report", { recursive: true });
+  const fileName = prefix + pdf.nimi;
+  expect({ fileName, textContent: pdf.textContent }).toMatchSnapshot();
+  fs.writeFileSync(".report/" + fileName, Buffer.from(pdf.sisalto, "base64"));
+}
 
 describe("asiakirjaService", async () => {
   const projektiFixture = new ProjektiFixture();
@@ -34,8 +59,7 @@ describe("asiakirjaService", async () => {
   async function testKuulutusWithLanguage(
     aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu,
     kieli: Kieli,
-    asiakirjaTyyppi: AsiakirjaTyyppi,
-    expectedFilename: string
+    asiakirjaTyyppi: AsiakirjaTyyppi
   ) {
     const pdf = await new AsiakirjaService().createAloituskuulutusPdf({
       aloitusKuulutusJulkaisu,
@@ -44,45 +68,27 @@ describe("asiakirjaService", async () => {
       luonnos: true,
     });
     expect(pdf.sisalto.length).to.be.greaterThan(50000);
-    expect(pdf.nimi).to.eq(expectedFilename);
-    fs.mkdirSync(".report", { recursive: true });
-    fs.writeFileSync(
-      ".report/esikatselu_aloituskuulutus_" + kieli + "_" + pdf.nimi,
-      Buffer.from(pdf.sisalto, "base64")
-    );
+    expectPDF("esikatselu_aloituskuulutus_", pdf);
   }
 
   it("should generate kuulutus pdf succesfully", async () => {
     const projekti = projektiFixture.dbProjekti1; // Suomi+Ruotsi
     const aloitusKuulutusJulkaisu = asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projekti);
     expect(aloitusKuulutusJulkaisu).toMatchSnapshot();
+    const aloitusKuulutusTypes = [AsiakirjaTyyppi.ALOITUSKUULUTUS, AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA];
 
-    await testKuulutusWithLanguage(
-      aloitusKuulutusJulkaisu,
-      Kieli.SUOMI,
-      AsiakirjaTyyppi.ALOITUSKUULUTUS,
-      "T412 Aloituskuulutus.pdf"
+    await runTestWithTypes(
+      aloitusKuulutusTypes,
+      async (type) => await testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.SUOMI, type)
     );
-    await testKuulutusWithLanguage(
-      aloitusKuulutusJulkaisu,
-      Kieli.SUOMI,
-      AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA,
-      "T412_1 Ilmoitus aloituskuulutuksesta.pdf"
+
+    await runTestWithTypes(
+      aloitusKuulutusTypes,
+      async (type) => await testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.RUOTSI, type)
     );
-    await testKuulutusWithLanguage(
-      aloitusKuulutusJulkaisu,
-      Kieli.RUOTSI,
-      AsiakirjaTyyppi.ALOITUSKUULUTUS,
-      "T412 Aloituskuulutus RUOTSIKSI.pdf"
-    );
-    await testKuulutusWithLanguage(
-      aloitusKuulutusJulkaisu,
-      Kieli.RUOTSI,
-      AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA,
-      "T412_1 Ilmoitus aloituskuulutuksesta RUOTSIKSI.pdf"
-    );
+
     await assert.isRejected(
-      testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.SAAME, AsiakirjaTyyppi.ALOITUSKUULUTUS, "asd")
+      testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.SAAME, AsiakirjaTyyppi.ALOITUSKUULUTUS)
     );
   });
 
@@ -90,8 +96,7 @@ describe("asiakirjaService", async () => {
     projekti: DBProjekti,
     suunnitteluVaihe: SuunnitteluVaihe,
     vuorovaikutus: Vuorovaikutus,
-    kieli: Kieli,
-    expectedFilename: string
+    kieli: Kieli
   ) {
     const pdf = await new AsiakirjaService().createYleisotilaisuusKutsuPdf({
       projekti: { ...projekti, suunnitteluVaihe },
@@ -99,10 +104,7 @@ describe("asiakirjaService", async () => {
       kieli,
       luonnos: true,
     });
-    // expect(pdf.sisalto.length).to.be.greaterThan(50000);
-    expect(pdf.nimi).to.eq(expectedFilename);
-    fs.mkdirSync(".report", { recursive: true });
-    fs.writeFileSync(".report/" + pdf.nimi, Buffer.from(pdf.sisalto, "base64"));
+    expectPDF("", pdf);
 
     const email = await new AsiakirjaService().createYleisotilaisuusKutsuEmail({
       projekti: { ...projekti, suunnitteluVaihe },
@@ -123,16 +125,14 @@ describe("asiakirjaService", async () => {
       projekti,
       { hankkeenKuvaus: projektiFixture.hankkeenKuvausSuunnitteluVaiheessa },
       projektiFixture.vuorovaikutus,
-      Kieli.SUOMI,
-      "TS Tie Yleisotilaisuus kutsu.pdf"
+      Kieli.SUOMI
     );
     projekti.velho.nimi = originalNimi + " UUDENMAAN_ELY+TIE+RUOTSI";
     await testKutsuWithLanguage(
       projekti,
       { hankkeenKuvaus: projektiFixture.hankkeenKuvausSuunnitteluVaiheessa },
       projektiFixture.vuorovaikutus,
-      Kieli.RUOTSI,
-      "TS Tie INBJUDAN TILL DISKUSSION.pdf"
+      Kieli.RUOTSI
     );
 
     projekti.velho.suunnittelustaVastaavaViranomainen = Viranomainen.VAYLAVIRASTO;
@@ -143,16 +143,14 @@ describe("asiakirjaService", async () => {
       projekti,
       { hankkeenKuvaus: projektiFixture.hankkeenKuvausSuunnitteluVaiheessa },
       projektiFixture.vuorovaikutus,
-      Kieli.SUOMI,
-      "RS Rata Yleisotilaisuus kutsu.pdf"
+      Kieli.SUOMI
     );
     projekti.velho.nimi = originalNimi + " VAYLAVIRASTO+RATA+RUOTSI";
     await testKutsuWithLanguage(
       projekti,
       { hankkeenKuvaus: projektiFixture.hankkeenKuvausSuunnitteluVaiheessa },
       projektiFixture.vuorovaikutus,
-      Kieli.RUOTSI,
-      "RS Rata INBJUDAN TILL DISKUSSION.pdf"
+      Kieli.RUOTSI
     );
   });
 
@@ -160,8 +158,7 @@ describe("asiakirjaService", async () => {
     projekti: DBProjekti,
     nahtavillaoloVaihe: NahtavillaoloVaihe,
     kieli: Kieli,
-    asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
-    expectedFilename: string
+    asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi
   ) {
     const projektiToTestWith = { ...projekti, nahtavillaoloVaihe };
     const pdf = await new AsiakirjaService().createNahtavillaoloKuulutusPdf({
@@ -171,10 +168,7 @@ describe("asiakirjaService", async () => {
       luonnos: true,
       asiakirjaTyyppi,
     });
-    // expect(pdf.sisalto.length).to.be.greaterThan(50000);
-    expect(pdf.nimi).to.eq(expectedFilename);
-    fs.mkdirSync(".report", { recursive: true });
-    fs.writeFileSync(".report/esikatselu_nahtavillaolo_" + pdf.nimi, Buffer.from(pdf.sisalto, "base64"));
+    expectPDF("esikatselu_nahtavillaolo_", pdf);
   }
 
   it("should generate kuulutukset for Nahtavillaolo succesfully", async () => {
@@ -188,75 +182,91 @@ describe("asiakirjaService", async () => {
     const projekti: DBProjekti = cloneDeep(projektiFixture.dbProjekti2);
     projekti.velho.tyyppi = ProjektiTyyppi.TIE;
     projekti.velho.vaylamuoto = ["tie"];
-    await testNahtavillaoloKuulutusWithLanguage(
-      projekti,
-      projekti.nahtavillaoloVaihe,
-      Kieli.SUOMI,
+
+    const nahtavillaoloKuulutusTypes = [
       AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS,
-      "T414 Kuulutus suunnitelman nahtavillaolo.pdf"
-    );
-    await testNahtavillaoloKuulutusWithLanguage(
-      projekti,
-      projekti.nahtavillaoloVaihe,
-      Kieli.SUOMI,
       AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE,
-      "T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf"
-    );
-    await testNahtavillaoloKuulutusWithLanguage(
-      projekti,
-      projekti.nahtavillaoloVaihe,
-      Kieli.SUOMI,
       AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
-      "31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf"
+    ];
+
+    await runTestWithTypes(
+      nahtavillaoloKuulutusTypes,
+      async (type) =>
+        await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe, Kieli.SUOMI, type)
     );
 
     projekti.velho.tyyppi = ProjektiTyyppi.RATA;
     projekti.velho.vaylamuoto = ["rata"];
-    await testNahtavillaoloKuulutusWithLanguage(
-      projekti,
-      projekti.nahtavillaoloVaihe,
-      Kieli.SUOMI,
-      AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS,
-      "30R Kuulutus suunnitelman nahtavillaolo.pdf"
-    );
-    await testNahtavillaoloKuulutusWithLanguage(
-      projekti,
-      projekti.nahtavillaoloVaihe,
-      Kieli.SUOMI,
-      AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE,
-      "12R Ilmoitus suunnitelman nahtavillaolo.pdf"
-    );
-    await testNahtavillaoloKuulutusWithLanguage(
-      projekti,
-      projekti.nahtavillaoloVaihe,
-      Kieli.SUOMI,
-      AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
-      "31R Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf"
+    await runTestWithTypes(
+      nahtavillaoloKuulutusTypes,
+      async (type) =>
+        await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe, Kieli.SUOMI, type)
     );
 
     projekti.velho.tyyppi = ProjektiTyyppi.YLEINEN;
     projekti.velho.vaylamuoto = ["rata"];
-    await testNahtavillaoloKuulutusWithLanguage(
-      projekti,
-      projekti.nahtavillaoloVaihe,
-      Kieli.SUOMI,
-      AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS,
-      "30YS Kuulutus suunnitelman nahtavillaolo.pdf"
+    await runTestWithTypes(
+      nahtavillaoloKuulutusTypes,
+      async (type) =>
+        await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe, Kieli.SUOMI, type)
     );
-    await testNahtavillaoloKuulutusWithLanguage(
-      projekti,
-      projekti.nahtavillaoloVaihe,
-      Kieli.SUOMI,
-      AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE,
-      "12YS Ilmoitus suunnitelman nahtavillaolo.pdf"
-    );
-    await testNahtavillaoloKuulutusWithLanguage(
-      projekti,
-      projekti.nahtavillaoloVaihe,
-      Kieli.SUOMI,
-      AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
-      "31YS Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf"
-    );
+  });
+
+  async function testHyvaksymisPaatosKuulutusWithLanguage(
+    projekti: DBProjekti,
+    hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe,
+    kieli: Kieli,
+    asiakirjaTyyppi: HyvaksymisPaatosKuulutusAsiakirjaTyyppi
+  ) {
+    const projektiToTestWith = { ...projekti, hyvaksymisPaatosVaihe };
+    const pdf = await new AsiakirjaService().createHyvaksymisPaatosKuulutusPdf({
+      projekti: projektiToTestWith,
+      hyvaksymisPaatosVaihe: asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projekti),
+      kieli,
+      luonnos: true,
+      asiakirjaTyyppi,
+    });
+    expectPDF("esikatselu_hyvaksymispaatos_", pdf);
+  }
+
+  it("should generate kuulutukset for Hyvaksymispaatos succesfully", async () => {
+    const languages = [Kieli.SUOMI, Kieli.RUOTSI];
+    for (const kieli of languages) {
+      const projekti: DBProjekti = cloneDeep(projektiFixture.dbProjekti2);
+      // ----------
+      projekti.velho.tyyppi = ProjektiTyyppi.TIE;
+      projekti.velho.vaylamuoto = ["tie"];
+      const hyvaksymisPaatosTypes = [
+        AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS,
+        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE,
+        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE,
+        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE,
+        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE,
+      ];
+      await runTestWithTypes(
+        hyvaksymisPaatosTypes,
+        async (type) =>
+          await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe, kieli, type)
+      );
+
+      // ----------
+      projekti.velho.tyyppi = ProjektiTyyppi.RATA;
+      projekti.velho.vaylamuoto = ["rata"];
+      await runTestWithTypes(
+        hyvaksymisPaatosTypes,
+        async (type) =>
+          await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe, kieli, type)
+      );
+
+      // ----------
+      projekti.velho.tyyppi = ProjektiTyyppi.YLEINEN;
+      projekti.velho.vaylamuoto = ["rata"];
+      await runTestWithTypes(
+        hyvaksymisPaatosTypes,
+        async (type) =>
+          await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe, kieli, type)
+      );
+    }
   });
 
   it("should format list of words properly", () => {

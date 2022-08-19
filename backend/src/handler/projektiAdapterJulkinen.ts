@@ -524,7 +524,6 @@ export function adaptVelho(velho: Velho): API.VelhoJulkinen {
     asiatunnusVayla,
     asiatunnusELY,
     kuvaus,
-    tilaajaOrganisaatio,
     toteuttavaOrganisaatio,
   } = velho;
   return {
@@ -538,7 +537,6 @@ export function adaptVelho(velho: Velho): API.VelhoJulkinen {
     asiatunnusVayla,
     asiatunnusELY,
     kuvaus,
-    tilaajaOrganisaatio,
     toteuttavaOrganisaatio,
   };
 }

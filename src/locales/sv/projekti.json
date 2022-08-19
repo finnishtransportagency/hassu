@@ -174,6 +174,7 @@
     "12R_nahtavillaolo": "12R Ilmoitus suunnitelman nähtävilläolo RUOTSIKSI",
     "60R": "60R Kuulutus hyväksymispäätöksen nähtävilläolo RUOTSIKSI",
     "61R": "61R Ilmoitus hyväksymispäätöksestä kunnalle ja ELYlle RUOTSIKSI",
+    "62R": "62R Ilmoitus hyväksymispäätöksestä lausunnon antajille RUOTSIKSI",
     "12R_hyvaksymispaatos": "12R Ilmoitus hyväksymispäätöksen kuulutuksesta RUOTSIKSI",
     "70R": "70R Kuulutus hyväksymispäätöksen voimassaolon jatkamisesta RUOTSIKSI",
     "71R": "71R Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta kunnalle RUOTSIKSI",
@@ -201,5 +202,64 @@
     "olemme_vastaanottaneet_viestisi": "SV Olemme vastaanottaneet muistutuksesi onnistuneesti ja se välitetään  {{viranomainen}} Kirjaamoon.",
     "voit_antaa_muistutuksia": "SV Voit antaa muistutuksia suunnitteluhankkeesta {{pvm}} asti.",
     "jata_muistutus": "SV Jätä muistutus hankkeesta"
+  },
+  "asiakirja": {
+    "ilmoitus": {
+      "tie_kappale1": "RUOTSIKSI {{viranomainen}} julkaisee tietoverkossaan liikennejärjestelmästä ja maanteistä annetun lain (503/2005) sekä hallintolain 62 a §:n mukaisesti kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} {{ilmoitus_vaihe}}. {{viranomainen}} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.",
+      "rata_kappale1": "RUOTSIKSI {{viranomainen}} julkaisee tietoverkossaan kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} {{ilmoitus_vaihe}}. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §, HL 62 a §)",
+      "ilmoitus_vaihe_suunnittelun_ja_maastotoiden_aloittamista": "RUOTSIKSI suunnittelun ja maastotöiden aloittamista",
+      "ilmoitus_tie_vaihe_aloituskuulutus": "suunnittelun ja maastotöiden aloittamista",
+      "ilmoitus_tie_vaihe_suunnitelman_nahtaville_asettamista": "suunnitelman nähtäville asettamista",
+      "ilmoitus_tie_vaihe_suunnitelman_hyvaksymispaatosta": "suunnitelman hyväksymispäätöstä",
+      "ilmoitus_tie_vaihe_paatoksen_voimassaoloajan_pidentamisesta": "päätöksen voimassaoloajan pidentämisestä",
+      "ilmoitus_rata_vaihe_aloituskuulutus": "laatimisen aloittamista",
+      "ilmoitus_rata_vaihe_suunnitelman_nahtaville_asettamista": "nähtäville asettamista",
+      "ilmoitus_rata_vaihe_suunnitelman_hyvaksymispaatosta": "Liikenne- ja viestintäviraston (TRAFICOM) päätöksen ja sen perusteena olevien asiakirjojen nähtäville asettamista"
+    },
+    "hyvaksymispaatoksesta_ilmoittaminen": {
+      "hyvaksymispaatoksesta_ilmoittaminen": "Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI",
+      "muistuttajille": "muistuttajille RUOTSIKSI",
+      "lausunnonantajille": "lausunnonantajille RUOTSIKSI",
+      "muistutuksen_tehneille": "muistutuksen tehneille",
+      "tie_kappale1": "RUOTSIKSI {{viranomainen}} ilmoittaa {{ilmoituksen_vastaanottajille}}, että Liikenne- ja viestintävirasto on {{hyvaksymis_pvm}} hyväksynyt päätöksellään {{asianumero_traficom}} liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen {{suunnitelman}} {{suunnitelman_nimi}}.\n{{viranomainen}} lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).",
+      "tie_kappale2": "RUOTSIKSI {{viranomainen}} ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain 103 §:n sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee \"{{suunnitelman_nimi}}\" {{suunnitelman}} hyväksymispäätöksen nähtäville asettamista. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.",
+      "pyytaa_kuntia": "RUOTSIKSI {{viranomainen}} *pyytää kuntaa/kaupunkia julkaisemaan tietoverkossaan* (sähköinen ilmoitustaulu) *liitteenä olevan ilmoituksen kuuluttamisesta.* Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.",
+      "tie_kappale3": "RUOTSIKSI Kuulutus julkaistaan {{kuulutuspaiva}} ja se on nähtävillä {{kuulutuspaiva}} – {{kuulutusvaihepaattyypaiva}} {{viranomaisen}} tietoverkossa osoitteessa {{kuulutusosoite}}. Sähköiseen aineistoon on mahdollista tutustua {{kuulutusvaihepaattyypaiva}} asti liitteissä mainitun linkin kautta. Aikaisemmin mainitun päivämäärän jälkeen linkki ei ole enää käytössä.",
+      "rata_kappale1": "RUOTSIKSI Väylävirasto ilmoittaa {{ilmoituksen_vastaanottajille}}, että Liikenne- ja viestintävirasto on {{hyvaksymis_pvm}} hyväksynyt päätöksellään {{asianumero_traficom}} ratalain mukaisen {{suunnitelman}}: {{suunnitelman_nimi}}, {{kunnat}}. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). {{pyydamme_valittamaan_ilmoituksen}}",
+      "rata_kappale2": "RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä {{kuulutuspaiva}} – {{kuulutusvaihepaattyypaiva}} välisen ajan Väyläviraston verkko-sivuilla osoitteessa {{kuulutusosoite}}",
+      "rata_kunnille_elylle_kappale1": "RUOTSIKSI Väylävirasto ilmoittaa {{ilmoituksen_vastaanottajille}}, että Liikenne- ja viestintävirasto on {{hyvaksymis_pvm}} hyväksynyt päätöksellään {{asianumero_traficom}} ratalain mukaisen {{suunnitelman}}: {{suunnitelman_nimi}}. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91 § 2 mom)",
+      "rata_kunnille_elylle_kappale2": "RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä {{kuulutuspaiva}} – {{kuulutusvaihepaattyypaiva}} välisen ajan sähköisenä Väyläviraston verkkosivuilla {{kuulutusosoite}} (ratalaki 90 §).",
+      "rata_kunnille_elylle_kappale3": "RUOTSIKSI Väylävirasto ilmoittaa, että se julkaisee ratalain 90 §:n 1 momentin sekä hallintolain 62 a §:n nojalla tietoverkossaan kuulutuksen, joka koskee {{suunnitelman_nimi}} hyväksymispäätöksen tiedoksiantoa. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.",
+      "rata_kunnille_elylle_kappale4": "RUOTSIKSI Kuulutus on nähtävillä yllä mainittuna ajankohtana Väyläviraston verkkosivuilla.",
+      "rata_kunnille_elylle_kappale5": "RUOTSIKSI Väylävirasto pyytää kuntaa ja ELY-keskusta julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta (ratalaki 90 § 1 mom, kuntalaki 108 §). Ilmoituksen nähtävillä oloa ei kunnan tarvitse todentaa Väylävirastolle. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.",
+      "rata_kunnille_elylle_kappale6": "RUOTSIKSI Väylävirasto liittää oheen ilmoituksen, jota kunta voi käyttää sellaisenaan. Jos kunta laatii oman ilmoituksen, sitä pyydetään kuitenkin käyttämään oheisessa ilmoituksessa olevaa hankkeen nimeä sellaisenaan sekä käyttämään ilmoituksessa olevaa linkkiä.",
+      "henkilotiedot_poistettu": "RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
+      "pyydamme_valittamaan_ilmoituksen": "RUOTSIKSI Mikäli olet lähettänyt muistutuksen toisten henkilöiden puolesta tai tehnyt yhteismuistutuksen, pyydämme välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi.",
+      "toimivaltaisen_viranomaisen_kuulutuksesta_ilmoittaminen": "RUOTSIKSI Toimivaltaisen viranomaisen kuulutuksesta ilmoittaminen",
+      "vaylaviraston_kuulutuksesta_ilmoittaminen": "RUOTSIKSI Väyläviraston kuulutuksesta ilmoittaminen"
+    },
+    "kuulutus_hyvaksymispaatoksesta": {
+      "otsikko": "RUOTSIKSI Kuulutus suunnitelman hyväksymispäätöksestä",
+      "tie_kappale1": "RUOTSIKSI Liikenne- ja viestintävirasto on {{hyvaksymis_pvm}} päätöksellään {{asianumero_traficom}}, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen {{suunnitelman}} \"{{suunnitelman_nimi}}\"",
+      "tie_kappale2": "RUOTSIKSI Päätös (www-versio) ja sen perusteena olevat asiakirjat sekä valitusosoitus ovat nähtävillä sähköisessä muodossa {{viranomaisen}} tietoverkossa tämän kuulutuksen nähtävillä olon ajan {{kuulutuspaiva}} – {{kuulutusvaihepaattyypaiva}} {{kuulutusosoite}}.  (LjMTL 103 §).",
+      "tie_kappale3": "RUOTSIKSI Kuulutus on julkaistu tietoverkossa {{viranomaisen}} verkkosivuilla {{kuulutuspaiva}}.",
+      "tie_kappale4": "RUOTSIKSI Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä kuulutuksen julkaisemisajankohdasta (hallintolaki 62 a §), eli {{kuulutuspaiva}}",
+      "tie_kappale5": "RUOTSIKSI Päätökseen voi valittamalla hakea muutosta {{hallinto_oikeus_genetiivi}} hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
+      "rata_kappale1": "RUOTSIKSI Liikenne-, ja viestintävirasto on {{hyvaksymis_pvm}} päätöksellään {{asianumero_traficom}} hyväksynyt ratalain (110/2007) mukaisen {{suunnitelman}}: {{suunnitelman_nimi}}.",
+      "rata_kappale2": "RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä sähköisenä Väyläviraston verkkosivuilla osoitteessa {{linkki_hyvaksymispaatos}} yllä ilmoitetun ajan. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä päivänä kuulutuksen julkaisemisajankohdasta (hallintolaki 62 a §).",
+      "nahtavilla_oleva_aineisto": "RUOTSIKSI Nähtävillä oleva aineisto",
+      "rata_kappale3": "RUOTSIKSI Päätös (www-versio) ja sen perusteena olevat asiakirjat {{linkki_hyvaksymispaatos}} (aineisto poistetaan nähtävilläoloajan päätyttyä)",
+      "rata_kappale4": "RUOTSIKSI Nähtävillä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä."
+    },
+    "tietosuoja": "{{viranomainen}} behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen {{tietosuojaurl}}",
+    "lisatietoja_antavat": "Mer information om planen "
+  },
+  "hallinto_oikeus_genetiivi": {
+    "HELSINKI": "RUOTSIKSIHelsingin",
+    "HAMEENLINNA": "RUOTSIKSIHämeenlinnan",
+    "ITA_SUOMI": "RUOTSIKSIItä-Suomen",
+    "POHJOIS_SUOMI": "RUOTSIKSIPohjois-Suomen",
+    "TURKU": "RUOTSIKSITurun",
+    "VAASA": "RUOTSIKSIVaasan"
   }
 }

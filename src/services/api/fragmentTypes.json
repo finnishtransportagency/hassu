@@ -183,12 +183,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "HyvaksymisPaatosVaiheJulkinen",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
         "name": "HyvaksymisPaatosVaihePDF",
         "possibleTypes": null,
         "__typename": "__Type"

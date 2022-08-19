@@ -1105,7 +1105,6 @@ Object {
           ],
           "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
           "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-          "tilaajaOrganisaatio": "Väylävirasto",
           "toteuttavaOrganisaatio": undefined,
           "tyyppi": "TIE",
           "vaylamuoto": Array [
@@ -1172,7 +1171,6 @@ Object {
       ],
       "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
       "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-      "tilaajaOrganisaatio": "Väylävirasto",
       "toteuttavaOrganisaatio": undefined,
       "tyyppi": "TIE",
       "vaylamuoto": Array [
@@ -1811,7 +1809,7 @@ Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com",
         },
       ],
       "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
-      "text": "HASSU AUTOMAATTITESTIPROJEKTI1, Helsinki ja  Vantaa
+      "text": "HASSU AUTOMAATTITESTIPROJEKTI1
 
 Väylävirasto laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista tiesuunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1.
 
@@ -1842,7 +1840,7 @@ LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
         },
       ],
       "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
-      "text": "HASSU AUTOMAATTITESTIPROJEKTI1, Helsinki ja  Vantaa
+      "text": "HASSU AUTOMAATTITESTIPROJEKTI1
 
 Väylävirasto laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista tiesuunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1.
 
@@ -1873,7 +1871,7 @@ LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
         },
       ],
       "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
-      "text": "HASSU AUTOMAATTITESTIPROJEKTI1, Helsinki ja  Vantaa
+      "text": "HASSU AUTOMAATTITESTIPROJEKTI1
 
 Väylävirasto laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista tiesuunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1.
 
@@ -1904,7 +1902,7 @@ LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
         },
       ],
       "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
-      "text": "HASSU AUTOMAATTITESTIPROJEKTI1, Helsinki ja  Vantaa
+      "text": "HASSU AUTOMAATTITESTIPROJEKTI1
 
 Väylävirasto laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista tiesuunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1.
 
@@ -2490,7 +2488,6 @@ Object {
           ],
           "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
           "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-          "tilaajaOrganisaatio": "Väylävirasto",
           "tyyppi": "TIE",
           "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
           "vaylamuoto": Array [
@@ -2600,7 +2597,6 @@ Object {
       ],
       "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
       "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-      "tilaajaOrganisaatio": "Väylävirasto",
       "toteuttavaOrganisaatio": undefined,
       "tyyppi": "TIE",
       "vaylamuoto": Array [
@@ -2974,7 +2970,6 @@ Object {
           ],
           "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
           "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-          "tilaajaOrganisaatio": "Väylävirasto",
           "tyyppi": "TIE",
           "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
           "vaylamuoto": Array [
@@ -3040,7 +3035,6 @@ Object {
       ],
       "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
       "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-      "tilaajaOrganisaatio": "Väylävirasto",
       "toteuttavaOrganisaatio": undefined,
       "tyyppi": "TIE",
       "vaylamuoto": Array [

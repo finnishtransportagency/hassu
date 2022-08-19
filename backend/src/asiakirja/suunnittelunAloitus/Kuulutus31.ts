@@ -5,6 +5,7 @@ import { AsiakirjanMuoto } from "../asiakirjaService";
 import { translate } from "../../util/localization";
 import { formatList, KutsuAdapter } from "./KutsuAdapter";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
+import { formatDate } from "../asiakirjaUtil";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
@@ -24,10 +25,6 @@ function createFileName(kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto, projekti
   }
   const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
   return translate("tiedostonimi." + key, language);
-}
-
-function formatDate(date: string) {
-  return date ? new Date(date).toLocaleDateString("fi") : "DD.MM.YYYY";
 }
 
 export class Kuulutus31 extends CommonPdf {
@@ -58,7 +55,7 @@ export class Kuulutus31 extends CommonPdf {
       kayttoOikeudet: projekti.kayttoOikeudet,
     });
     const fileName = createFileName(kieli, asiakirjanMuoto, velho.tyyppi);
-    super(fileName, kieli, kutsuAdapter, fileName);
+    super(kieli, kutsuAdapter);
     this.velho = velho;
     const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
     this.header = headers[language];
@@ -67,6 +64,8 @@ export class Kuulutus31 extends CommonPdf {
     this.nahtavillaoloVaihe = nahtavillaoloVaihe;
     this.asiakirjanMuoto = asiakirjanMuoto;
     this.kirjaamoOsoitteet = kirjaamoOsoitteet;
+
+    this.setupPDF(this.header, kutsuAdapter.nimi, fileName);
   }
 
   protected addContent(): void {
@@ -141,12 +140,7 @@ export class Kuulutus31 extends CommonPdf {
   }
 
   protected get tilaajaGenetiivi(): string {
-    const tilaajaOrganisaatio = this.velho?.tilaajaOrganisaatio;
-    if (tilaajaOrganisaatio) {
-      return tilaajaOrganisaatio === "Väylävirasto" ? "Väyläviraston" : tilaajaOrganisaatio?.slice(0, -1) + "ksen";
-    } else {
-      return "Tilaajaorganisaation";
-    }
+    return this.kutsuAdapter.tilaajaGenetiivi;
   }
 
   private pidetaanNahtavillaParagraph() {
@@ -192,18 +186,8 @@ export class Kuulutus31 extends CommonPdf {
       : "https://www.ely-keskus.fi/kuulutukset";
   }
 
-  private tietosuojaParagraph() {
-    if (this.asiakirjanMuoto !== AsiakirjanMuoto.RATA) {
-      return this.viranomainenTietosuojaParagraph(this.velho);
-    } else {
-      return this.vaylavirastoTietosuojaParagraph();
-    }
-  }
-
   private addHeader() {
-    return this.headerElement(
-      this.kutsuAdapter.title + ", " + translate("projekti-tyyppi." + this.velho.tyyppi, this.kieli).toLowerCase()
-    );
+    return this.headerElement(this.kutsuAdapter.title);
   }
 
   get kirjaamo(): string {

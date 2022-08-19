@@ -7,10 +7,10 @@ import PDFStructureElement = PDFKit.PDFStructureElement;
 
 export abstract class CommonPdf extends AbstractPdf {
   protected kieli: Kieli;
-  protected readonly kutsuAdapter: KutsuAdapter;
+  protected kutsuAdapter: KutsuAdapter;
 
-  protected constructor(header: string, kieli: Kieli, kutsuAdapter: KutsuAdapter, fileName: string) {
-    super(header, kutsuAdapter.nimi, fileName);
+  constructor(kieli: Kieli, kutsuAdapter: KutsuAdapter) {
+    super();
     this.kieli = kieli;
     this.kutsuAdapter = kutsuAdapter;
   }
@@ -23,60 +23,11 @@ export abstract class CommonPdf extends AbstractPdf {
     } else if (this.kieli == Kieli.SAAME && suomiRuotsiSaameParagraphs.length > 2) {
       return suomiRuotsiSaameParagraphs[2];
     }
+    return suomiRuotsiSaameParagraphs[0];
   }
 
-  protected vaylavirastoTietosuojaParagraph(): PDFStructureElement {
-    const tietosuojaUrl = this.kutsuAdapter.tietosuojaUrl;
-    return this.doc.struct("P", {}, [
-      () => {
-        this.doc.text(
-          this.selectText([
-            `Väylävirasto käsittelee suunnitelmaan laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa `,
-            `Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen `,
-          ]),
-          { continued: true }
-        );
-      },
-      this.link(tietosuojaUrl),
-      () => {
-        this.doc.fillColor("black").text(".", { link: undefined, underline: false }).moveDown();
-      },
-    ]);
-  }
-
-  protected viranomainenTietosuojaParagraph(velho: Velho): PDFStructureElement {
-    const viranomainen = KutsuAdapter.tilaajaOrganisaatioForViranomainen(
-      velho.suunnittelustaVastaavaViranomainen,
-      this.kieli
-    );
-    const tietosuojaUrl = this.isVaylaTilaaja(velho)
-      ? "https://vayla.fi/tietosuoja"
-      : "https://www.ely-keskus.fi/tietosuoja";
-    return this.doc.struct("P", {}, [
-      () => {
-        this.doc.text(
-          this.selectText([
-            `${viranomainen} käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa `,
-            `${viranomainen} behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen `,
-          ]),
-          { continued: true }
-        );
-      },
-      this.link(tietosuojaUrl),
-      () => {
-        this.doc.fillColor("black").text(".", { link: undefined, underline: false }).moveDown();
-      },
-    ]);
-  }
-
-  private link(url) {
-    return this.doc.struct("Link", { alt: url }, () => {
-      this.doc.fillColor("blue").text(url, {
-        link: url,
-        continued: true,
-        underline: true,
-      });
-    });
+  protected tietosuojaParagraph(): PDFStructureElement {
+    return this.paragraph(this.kutsuAdapter.text("asiakirja.tietosuoja"));
   }
 
   protected isVaylaTilaaja(velho: Velho): boolean {
@@ -84,11 +35,15 @@ export abstract class CommonPdf extends AbstractPdf {
   }
 
   protected lisatietojaAntavatParagraph(): PDFStructureElement {
-    return this.localizedParagraph(["Lisätietoja antavat ", "Mer information om planen "]);
+    return this.paragraph(this.kutsuAdapter.text("asiakirja.lisatietoja_antavat"));
   }
 
   protected localizedParagraph(suomiRuotsiSaameParagraphs: string[]): PDFStructureElement {
     return this.paragraph(this.selectText(suomiRuotsiSaameParagraphs));
+  }
+
+  protected paragraphFromKey(key: string): PDFStructureElement {
+    return this.paragraph(this.kutsuAdapter.text(key));
   }
 
   protected localizedParagraphFromMap(localizations: { [key in Kieli]?: string }): PDFStructureElement {
@@ -100,9 +55,12 @@ export abstract class CommonPdf extends AbstractPdf {
     }
   }
 
-  protected headerElement(header: string): PDFStructureElement {
+  protected headerElement(header: string, spacingBefore = true): PDFStructureElement {
     return this.doc.struct("H1", {}, () => {
-      this.doc.moveDown(1).font("ArialMTBold").fontSize(10).text(header).font("ArialMT").moveDown(1);
+      if (spacingBefore) {
+        this.doc.moveDown(1);
+      }
+      this.doc.font("ArialMTBold").fontSize(10).text(header).font("ArialMT").moveDown(1);
     });
   }
 
@@ -124,7 +82,7 @@ export abstract class CommonPdf extends AbstractPdf {
       [
         () => {
           const fullFilePath = this.fileBasePath + filePath;
-          log.info(fullFilePath);
+          log.debug(fullFilePath);
           this.doc.image(fullFilePath, undefined, undefined, { height: 83 });
         },
       ]

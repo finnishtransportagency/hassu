@@ -86,7 +86,6 @@ Object {
       ],
       "nimi": "Testiprojekti 1",
       "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
-      "tilaajaOrganisaatio": "Uudenmaan ELY-keskus",
       "tyyppi": "TIE",
       "vaylamuoto": Array [
         "tie",
