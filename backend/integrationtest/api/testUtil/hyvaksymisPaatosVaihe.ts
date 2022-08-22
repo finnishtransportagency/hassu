@@ -74,8 +74,10 @@ export async function testImportHyvaksymisPaatosAineistot(
 
   const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA);
   const hyvaksymisPaatosVaihe = projekti.hyvaksymisPaatosVaihe;
+  const kasittelynTila = projekti.kasittelynTila;
   expectToMatchSnapshot("testImportHyvaksymisPaatosAineistot", {
     hyvaksymisPaatosVaihe,
+    kasittelynTila
   });
 }
 

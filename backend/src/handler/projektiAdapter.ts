@@ -124,8 +124,8 @@ export class ProjektiAdapter {
       suunnitteluVaihe: adaptSuunnitteluVaihe(suunnitteluVaihe, vuorovaikutukset, palautteet),
       nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe),
       nahtavillaoloVaiheJulkaisut: adaptNahtavillaoloVaiheJulkaisut(dbProjekti.oid, nahtavillaoloVaiheJulkaisut),
-      hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(dbProjekti, hyvaksymisPaatosVaihe),
-      hyvaksymisPaatosVaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(dbProjekti.oid, hyvaksymisPaatosVaiheJulkaisut),
+      hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(dbProjekti, hyvaksymisPaatosVaihe, dbProjekti.kasittelynTila?.hyvaksymispaatos),
+      hyvaksymisPaatosVaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(dbProjekti.oid, dbProjekti.kasittelynTila?.hyvaksymispaatos, hyvaksymisPaatosVaiheJulkaisut),
       virhetiedot,
       kasittelynTila: adaptKasittelynTila(kasittelynTila),
       ...fieldsToCopyAsIs,
@@ -471,13 +471,13 @@ function adaptNahtavillaoloVaiheToSave(
   } as NahtavillaoloVaihe);
 }
 
-function adaptHyvaksymisPaatosVaihe(dbProjekti: DBProjekti, hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe): API.HyvaksymisPaatosVaihe {
+function adaptHyvaksymisPaatosVaihe(dbProjekti: DBProjekti, hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe, hyvaksymisPaatos: Hyvaksymispaatos): API.HyvaksymisPaatosVaihe {
   if (!hyvaksymisPaatosVaihe) {
     return undefined;
   }
   const {
     aineistoNahtavilla,
-    hyvaksymisPaatos,
+    hyvaksymisPaatos: hyvaksymisPaatosAineisto,
     kuulutusYhteystiedot,
     ilmoituksenVastaanottajat,
     hyvaksymisPaatosVaihePDFt,
@@ -488,9 +488,11 @@ function adaptHyvaksymisPaatosVaihe(dbProjekti: DBProjekti, hyvaksymisPaatosVaih
     ...rest,
     hyvaksymisPaatosVaihePDFt: adaptHyvaksymisPaatosVaihePDFPaths(dbProjekti.oid, hyvaksymisPaatosVaihePDFt),
     aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
-    hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatos),
+    hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto),
     kuulutusYhteystiedot: adaptYhteystiedot(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
+    hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
+    hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero
   };
 }
 
@@ -1073,14 +1075,14 @@ export function adaptNahtavillaoloVaiheJulkaisut(
 }
 
 export function adaptHyvaksymisPaatosVaiheJulkaisut(
-  oid: string,
+  oid: string, hyvaksymisPaatos: Hyvaksymispaatos,
   julkaisut?: HyvaksymisPaatosVaiheJulkaisu[] | null
 ): API.HyvaksymisPaatosVaiheJulkaisu[] | undefined {
   if (julkaisut) {
     return julkaisut.map((julkaisu) => {
       const {
         aineistoNahtavilla,
-        hyvaksymisPaatos,
+        hyvaksymisPaatos: hyvaksymisPaatosAineisto,
         ilmoituksenVastaanottajat,
         kuulutusYhteystiedot,
         hyvaksymisPaatosVaihePDFt,
@@ -1095,7 +1097,9 @@ export function adaptHyvaksymisPaatosVaiheJulkaisut(
         kielitiedot: adaptKielitiedot(kielitiedot),
         hyvaksymisPaatosVaihePDFt: adaptHyvaksymisPaatosVaihePDFPaths(oid, hyvaksymisPaatosVaihePDFt),
         aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
-        hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatos),
+        hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto),
+        hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
+        hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,
         kuulutusYhteystiedot: adaptYhteystiedot(kuulutusYhteystiedot),
         ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
         velho: adaptVelho(velho),
