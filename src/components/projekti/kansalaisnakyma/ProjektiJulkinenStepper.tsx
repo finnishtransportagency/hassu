@@ -19,14 +19,16 @@ interface Props {
 export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep, vertical }: Props): ReactElement {
   const { t } = useTranslation("projekti");
 
-  const HassuStep = styled(Step)(() => ({
+  const HassuStep = styled(Step)({
     [`&.${stepClasses.root} > a span:hover`]: {
       textDecoration: "underline",
       color: "#0064AF",
     },
-  }));
+    flex: "1 1 0px",
+    width: "0",
+  });
 
-  const HassuLabel = styled(StepLabel)(() => ({
+  const HassuLabel = styled(StepLabel)({
     [`&.${stepLabelClasses.vertical}`]: {
       paddingTop: 0,
       paddingBottom: 0,
@@ -34,9 +36,10 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
         paddingRight: "2rem",
       },
     },
-  }));
+    hyphens: "auto",
+  });
 
-  const HassuConnector = styled(StepConnector)(() => ({
+  const HassuConnector = styled(StepConnector)({
     [`&.${stepConnectorClasses.root}`]: {
       left: "calc(-50%)",
       right: "calc(50%)",
@@ -68,7 +71,7 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
       borderRadius: 1,
       minHeight: 40,
     },
-  }));
+  });
 
   const HassuStepIconRoot = styled("div")<{
     ownerState: { completed?: boolean; active?: boolean; selected?: boolean };
