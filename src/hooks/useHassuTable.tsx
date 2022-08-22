@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
   TableOptions,
   PluginHook,
@@ -17,63 +17,84 @@ export type UseHassuTableProps<D extends object> = Omit<HassuTableProps<D>, "tab
 };
 
 export const useHassuTable = <D extends object>(props: UseHassuTableProps<D>): HassuTableProps<D> => {
-  const defaultTableOptions: Partial<TableOptions<D>> = {
-    defaultColumn: { Cell: ({ value }: CellProps<D>) => value || "-" },
-  };
+  const tableOptions: TableOptions<D> = useMemo(() => {
+    const defaultTableOptions = {
+      defaultColumn: { Cell: ({ value }: CellProps<D>) => value || "-" },
+    };
+    return { ...defaultTableOptions, ...props.tableOptions };
+  }, [props.tableOptions]);
 
-  const { tableOptions, ...tableProps } = props;
-  const tableHooks: PluginHook<D>[] = [useFlexLayout];
+  const tableHooks: PluginHook<D>[] = useMemo(() => {
+    const hooks: PluginHook<D>[] = [useFlexLayout];
 
-  if (props.useSortBy) {
-    tableHooks.push(useSortBy);
-  }
+    if (props.useSortBy) {
+      hooks.push(useSortBy);
+    }
 
-  if (props.usePagination) {
-    tableHooks.push(usePagination);
-  }
+    if (props.usePagination) {
+      hooks.push(usePagination);
+    }
 
-  if (props.useRowSelect) {
-    tableHooks.push(useRowSelect);
-    tableHooks.push((hooks) => {
-      hooks.visibleColumns.push((columns) => [
-        // Let's make a column for selection
-        ...columns,
-        {
-          id: "selection",
-          Header: function SelectHeader(header) {
-            return (
-              <Stack alignItems="center" rowGap="0">
-                <span>Valitse</span>
-                <span>
-                  {"( "}
-                  <IndeterminateCheckbox {...header.getToggleAllRowsSelectedProps()} />
-                  {" )"}
-                </span>
-              </Stack>
-            );
+    if (props.useRowSelect) {
+      hooks.push(useRowSelect);
+      hooks.push((hooks) => {
+        hooks.visibleColumns.push((columns) => [
+          // Let's make a column for selection
+          ...columns,
+          {
+            id: "selection",
+            Header: function SelectHeader(header) {
+              return (
+                <Stack alignItems="center" rowGap="0">
+                  <span>Valitse</span>
+                  <span>
+                    {"( "}
+                    <IndeterminateCheckbox {...header.getToggleAllRowsSelectedProps()} />
+                    {" )"}
+                  </span>
+                </Stack>
+              );
+            },
+            Cell: function SelectCell(cell: React.PropsWithChildren<CellProps<D>>) {
+              return (
+                <Stack alignItems="center" rowGap="0">
+                  <span>
+                    <IndeterminateCheckbox {...cell.row.getToggleRowSelectedProps()} />
+                  </span>
+                </Stack>
+              );
+            },
+            minWidth: 100,
+            width: 100,
           },
-          Cell: function SelectCell(cell: React.PropsWithChildren<CellProps<D>>) {
-            return (
-              <Stack alignItems="center" rowGap="0">
-                <span>
-                  <IndeterminateCheckbox {...cell.row.getToggleRowSelectedProps()} />
-                </span>
-              </Stack>
-            );
-          },
-          minWidth: 100,
-          width: 100,
-        },
-      ]);
-    });
-  }
+        ]);
+      });
+    }
+    return hooks;
+  }, [props.usePagination, props.useRowSelect, props.useSortBy]);
 
-  const tableInstance = useTable({ ...defaultTableOptions, ...props.tableOptions }, ...tableHooks);
+  const tableInstance = useTable(tableOptions, ...tableHooks);
 
-  return {
-    tableInstance,
-    ...tableProps,
-  };
+  return useMemo(
+    () => ({
+      tableInstance,
+      pageChanger: props.pageChanger,
+      rowLink: props.rowLink,
+      sortByChanger: props.sortByChanger,
+      usePagination: props.usePagination,
+      useRowSelect: props.useRowSelect,
+      useSortBy: props.useSortBy,
+    }),
+    [
+      props.pageChanger,
+      props.rowLink,
+      props.sortByChanger,
+      props.usePagination,
+      props.useRowSelect,
+      props.useSortBy,
+      tableInstance,
+    ]
+  );
 };
 
 const IndeterminateCheckbox = React.forwardRef<HTMLInputElement, { indeterminate?: boolean }>(
