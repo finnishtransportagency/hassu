@@ -71,6 +71,10 @@ export default function Muokkausnakyma() {
     }
   }, [projekti, reset]);
 
+  if (!projekti) {
+    return null;
+  }
+
   return (
     <FormProvider {...useFormReturn}>
       <h3 className="vayla-small-title">Päätös ja päätöksen liitteenä olevat aineistot</h3>
@@ -82,7 +86,7 @@ export default function Muokkausnakyma() {
         Huomioithan, että suunnitelma-aineistojen tulee täyttää saavutettavuusvaatimukset.
       </Notification>
       <form>
-        <Hyvaksymispaatos />
+        <Hyvaksymispaatos projekti={projekti} />
         <SuunnitelmatJaAineistot />
         <HyvaksymisPaatosVaihePainikkeet />
       </form>
