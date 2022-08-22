@@ -16,91 +16,92 @@ interface Props {
   selectedStep: number;
   vertical?: true;
 }
-export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep, vertical }: Props): ReactElement {
-  const { t } = useTranslation("projekti");
 
-  const HassuStep = styled(Step)({
-    [`&.${stepClasses.root} > a span:hover`]: {
-      textDecoration: "underline",
-      color: "#0064AF",
-    },
-    flex: "1 1 0px",
-    width: "0",
-  });
+const HassuStep = styled(Step)<Pick<Props, "vertical">>((vertical) => ({
+  [`&.${stepClasses.root} > a span:hover`]: {
+    textDecoration: "underline",
+    color: "#0064AF",
+  },
+  flex: vertical ? undefined : "1 1 0px",
+  width: vertical ? undefined : "0",
+}));
 
-  const HassuLabel = styled(StepLabel)({
-    [`&.${stepLabelClasses.vertical}`]: {
-      paddingTop: 0,
-      paddingBottom: 0,
-      [`& .${stepLabelClasses.iconContainer}`]: {
-        paddingRight: "2rem",
-      },
+const HassuLabel = styled(StepLabel)({
+  [`&.${stepLabelClasses.vertical}`]: {
+    paddingTop: 0,
+    paddingBottom: 0,
+    [`& .${stepLabelClasses.iconContainer}`]: {
+      paddingRight: "2rem",
     },
-    hyphens: "auto",
-  });
+  },
+  hyphens: "auto",
+});
 
-  const HassuConnector = styled(StepConnector)({
-    [`&.${stepConnectorClasses.root}`]: {
-      left: "calc(-50%)",
-      right: "calc(50%)",
-      [`&.${stepConnectorClasses.vertical}`]: {
-        marginLeft: 10,
-        minHeight: 40,
-      },
-    },
-    [`&.${stepConnectorClasses.active}`]: {
-      [`& .${stepConnectorClasses.line}`]: {
-        backgroundImage: "linear-gradient( 117deg, #009AE1, #009AE1)",
-      },
-    },
-    [`&.${stepConnectorClasses.completed}`]: {
-      [`& .${stepConnectorClasses.line}`]: {
-        backgroundImage: "linear-gradient(117deg, #009AE1, #009AE1)",
-      },
-    },
-    [`& .${stepConnectorClasses.line}`]: {
-      height: 10,
-      border: 0,
-      backgroundColor: "#D8D8D8",
-      borderRadius: 1,
-    },
-    [`& .${stepConnectorClasses.lineVertical}`]: {
-      width: 10,
-      border: 0,
-      backgroundColor: "#D8D8D8",
-      borderRadius: 1,
+const HassuConnector = styled(StepConnector)({
+  [`&.${stepConnectorClasses.root}`]: {
+    left: "calc(-50%)",
+    right: "calc(50%)",
+    [`&.${stepConnectorClasses.vertical}`]: {
+      marginLeft: 10,
       minHeight: 40,
     },
-  });
-
-  const HassuStepIconRoot = styled("div")<{
-    ownerState: { completed?: boolean; active?: boolean; selected?: boolean };
-  }>(({ ownerState }) => ({
-    backgroundColor: "#D8D8D8",
-    zIndex: 1,
-    color: "#fff",
-    width: 30,
-    height: 30,
-    display: "flex",
-    borderRadius: "50%",
-    justifyContent: "center",
-    alignItems: "center",
-    ...((ownerState.active || ownerState.completed) && {
+  },
+  [`&.${stepConnectorClasses.active}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      backgroundImage: "linear-gradient( 117deg, #009AE1, #009AE1)",
+    },
+  },
+  [`&.${stepConnectorClasses.completed}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
       backgroundImage: "linear-gradient(117deg, #009AE1, #009AE1)",
-    }),
-    ...(ownerState.selected && {
-      boxShadow: "0 0 0 10px #009AE1",
-      backgroundImage: "linear-gradient(117deg, #0064AF, #0064AF)",
-    }),
-  }));
+    },
+  },
+  [`& .${stepConnectorClasses.line}`]: {
+    height: 10,
+    border: 0,
+    backgroundColor: "#D8D8D8",
+    borderRadius: 1,
+  },
+  [`& .${stepConnectorClasses.lineVertical}`]: {
+    width: 10,
+    border: 0,
+    backgroundColor: "#D8D8D8",
+    borderRadius: 1,
+    minHeight: 40,
+  },
+});
 
-  function HassuStepIcon(props: StepIconProps) {
-    const { active, completed, className, property } = props;
+const HassuStepIconRoot = styled("div")<{
+  ownerState: { completed?: boolean; active?: boolean; selected?: boolean };
+}>(({ ownerState }) => ({
+  backgroundColor: "#D8D8D8",
+  zIndex: 1,
+  color: "#fff",
+  width: 30,
+  height: 30,
+  display: "flex",
+  borderRadius: "50%",
+  justifyContent: "center",
+  alignItems: "center",
+  ...((ownerState.active || ownerState.completed) && {
+    backgroundImage: "linear-gradient(117deg, #009AE1, #009AE1)",
+  }),
+  ...(ownerState.selected && {
+    boxShadow: "0 0 0 10px #009AE1",
+    backgroundImage: "linear-gradient(117deg, #0064AF, #0064AF)",
+  }),
+}));
 
-    const selected = property === "selected";
+function HassuStepIcon(props: StepIconProps) {
+  const { active, completed, className, property } = props;
 
-    return <HassuStepIconRoot ownerState={{ completed, active, selected }} className={className}></HassuStepIconRoot>;
-  }
+  const selected = property === "selected";
+
+  return <HassuStepIconRoot ownerState={{ completed, active, selected }} className={className}></HassuStepIconRoot>;
+}
+
+export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep, vertical }: Props): ReactElement {
+  const { t } = useTranslation("projekti");
 
   const steps = [
     t(`projekti-vaiheet.suunnittelun_kaynnistaminen`),
@@ -122,7 +123,7 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
 
   const createStep = (label: string, index: number) => {
     return (
-      <HassuStep key={label}>
+      <HassuStep vertical={vertical} key={label}>
         {index <= activeStep && (
           <HassuLink key={index} href={links[index]}>
             <HassuLabel
