@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import { phoneNumberRegex } from "./puhelinNumero";
 
 export const muistutusSchema = Yup.object().shape({
     etunimi: Yup.string().notRequired().max(100, "etunimi_max_100").nullable(),
@@ -11,6 +12,7 @@ export const muistutusSchema = Yup.object().shape({
       .nullable(),
     puhelinnumero: Yup.string()
       .notRequired()
+      .matches(new RegExp(phoneNumberRegex), "puh_vain_numerot")
       .max(20, "puh_max_20")
       .nullable(),
     muistutus: Yup.string().required("muistutus_on_jatettava").max(2000),

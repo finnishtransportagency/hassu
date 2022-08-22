@@ -81,7 +81,8 @@
     "puhelinnumero_pakollinen_jos": "Anna puhelinnumero, jos haluat yhteydenoton puhelimitse",
     "muistutus_on_jatettava": "Muistutus on pakollinen tieto",
     "katuosoite_max_100": "Katuosoite voi olla enintään 100 merkkiä",
-    "postinumero_ja_paikka_max_30": "Postinumero ja postitoimipaikka voivat olla enintään 30 merkkiä"
+    "postinumero_ja_paikka_max_30": "Postinumero ja postitoimipaikka voivat olla enintään 30 merkkiä",
+    "puh_vain_numerot": "Puhelinnumero voi sisältää vain numeroita"
   },
   "ilmoitukset": {
     "tallennus_onnistui": "Tallennus onnistui",
