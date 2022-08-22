@@ -184,7 +184,7 @@
     "72YS": "72YS Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta maakuntaliitolle"
   },
   "muistutuslomake": {
-    "voit_antaa_muistutuksen": "Voit antaa muistutuksen suunnitteluhankkeeseesta. Muistutukset tulee jättää {{pvm}} mennessä. Yhteystietonsa jättäneille muistutuksen tekijöille lähetetään myöhemmin tiedoksi Liikenne- ja viestintävirasto Traficomin tekemä hyväksymispäätös. Tieto hyväksymispäätöksestä toimitetaan ensisijaisesti alla annettuun sähköpostiosoitteeseen.",
+    "voit_antaa_muistutuksen": "Voit antaa muistutuksen suunnitteluhankkeesta. Muistutukset tulee jättää {{pvm}} mennessä. Yhteystietonsa jättäneille muistutuksen tekijöille lähetetään myöhemmin tiedoksi Liikenne- ja viestintävirasto Traficomin tekemä hyväksymispäätös. Tieto hyväksymispäätöksestä toimitetaan ensisijaisesti alla annettuun sähköpostiosoitteeseen.",
     "kasittelemme_henkilotietoja": "Käsittelemme henkilötietoja tietosuojasäännösten, muun lainsäädännön ja tietosuojaselosteen mukaisesti. Lue lisää Hassun tietosuojaselosteesta {{url}}",
     "kiitos_viestista": "Kiitos viestistä",
     "muistutus": "Muistutus",
