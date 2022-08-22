@@ -1,4 +1,5 @@
 /// <reference types="cypress" />
+import dayjs from "dayjs";
 
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
@@ -15,7 +16,7 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
 
     // Reject acceptance request and clear most of the data from nahtavillaolovaihe through API
     // to enable re-tunning this test as many times as needed
-    cy.get("#1_kuulutuksentiedot_tab").click();
+    cy.get("#kuulutuksentiedot_tab").click();
 
     cy.get("main").then((main) => {
       let rejectButton = main.find("#button_reject");
@@ -34,12 +35,12 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
         "x-api-key": Cypress.env("apiKey"),
       },
       body: {
-        operationName: "MyMutation",
+        operationName: "ClearNahtavillaolo",
         variables: {},
-        query: `mutation clearNahtavillaolo {
+        query: `mutation ClearNahtavillaolo {
             tallennaProjekti(
               projekti: {
-                oid: ${oid}
+                oid: "${oid}"
                 nahtavillaoloVaihe: {
                   kuulutusPaiva: null
                   kuulutusVaihePaattyyPaiva: null
@@ -61,9 +62,6 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
       waitForAnimations: true,
     });
 
-    cy.get('[name="aloitusKuulutus.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').clear().type("test@vayla.fi");
-    cy.get('[name="aloitusKuulutus.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').clear().type("test@vayla.fi");
-
     const selectorToTextMap = new Map([
       ['[name="nahtavillaoloVaihe.hankkeenKuvaus.SUOMI"]', "nahtavillaolovaiheen kuvaus Suomeksi"],
       ['[name="nahtavillaoloVaihe.hankkeenKuvaus.RUOTSI"]', "nahtavillaolovaiheen kuvaus Ruotsiksi"],
@@ -82,12 +80,13 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
         .type(text);
     });
 
-    cy.get("#save_nahtavillaolovaihe_kuulutustiedot_draft").click();
+    cy.get("#save_nahtavillaolovaihe_draft").click();
     cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank  page otherwise
 
     cy.reload();
 
     // Test saved values
+    cy.get("#kuulutuksentiedot_tab").click();
     cy.get('[name="nahtavillaoloVaihe.kuulutusPaiva"]').should("have.value", today);
 
     selectorToTextMap.forEach((text, selector) => {
@@ -109,11 +108,15 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
     });
   });
 
-  it.skip("Muokkaa ja julkaise suunnitteluvaiheen perustiedot", { scrollBehavior: "center" }, () => {
+  it("Muokkaa ja julkaise suunnitteluvaiheen perustiedot", { scrollBehavior: "center" }, () => {
+    // This test can not be run multiple times without first archiving projekti
+    // or manually deleting nahtavillaoloVaiheJulkaisut from DB
     cy.login("A1");
 
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/nahtavillaolo");
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/nahtavillaolo", { timeout: 30000 });
     cy.contains(projektiNimi);
+
+    cy.get("#kuulutuksentiedot_tab").click();
 
     const selectorToTextMap = new Map([
       ['[name="nahtavillaoloVaihe.hankkeenKuvaus.SUOMI"]', "Päivitetty hankkeen kuvaus Suomeksi"],
@@ -142,26 +145,14 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
     cy.contains("Hyväksyminen onnistui", { timeout: 15000 });
 
     cy.reload();
+    cy.get("#kuulutuksentiedot_tab").click();
 
-    selectorToTextMap.forEach((text, selector) => {
-      cy.get(selector, {
-        timeout: 10000,
-      }).should("have.value", text);
-    });
+    cy.contains("Kuulutus nähtäville asettamisesta on julkaistu");
 
     cy.visit(Cypress.env("host") + "/suunnitelma/" + oid + "/nahtavillaolo");
-
-    [...selectorToTextMap.values()]
-      .filter((text) => text !== "Päivitetty hankkeen kuvaus Ruotsiksi")
-      .forEach((text) => {
-        cy.contains(text);
-      });
+    cy.contains("Päivitetty hankkeen kuvaus Suomeksi");
 
     cy.visit(Cypress.env("host") + "/sv/suunnitelma/" + oid + "/nahtavillaolo");
-    [...selectorToTextMap.values()]
-      .filter((text) => text !== "Päivitetty hankkeen kuvaus Suomeksi")
-      .forEach((text) => {
-        cy.contains(text);
-      });
+    cy.contains("Päivitetty hankkeen kuvaus Ruotsiksi");
   });
 });

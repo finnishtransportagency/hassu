@@ -159,7 +159,7 @@ export default function Painikkeet({ projekti }: Props) {
         <>
           <Section noDivider>
             <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
-              <Button onClick={handleSubmit(saveDraft)}>Tallenna Luonnos</Button>
+              <Button id="save_nahtavillaolovaihe_draft" onClick={handleSubmit(saveDraft)}>Tallenna Luonnos</Button>
               <Button id="save_and_send_for_acceptance" primary onClick={handleSubmit(lahetaHyvaksyttavaksi)}>
                 Lähetä Hyväksyttäväksi
               </Button>

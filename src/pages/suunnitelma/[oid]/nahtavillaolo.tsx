@@ -7,7 +7,7 @@ import useTranslation from "next-translate/useTranslation";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import { formatDate } from "src/util/dateUtils";
 import SectionContent from "@components/layout/SectionContent";
-import { Kieli, ProjektiTyyppi, Viranomainen } from "@services/api";
+import { ProjektiTyyppi, Viranomainen } from "@services/api";
 import FormatDate from "@components/FormatDate";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
 import Notification, { NotificationType } from "@components/notification/Notification";
@@ -15,6 +15,7 @@ import MuistutusLomakeDialogi from "@components/projekti/kansalaisnakyma/Muistut
 import useProjektiBreadcrumbsJulkinen from "src/hooks/useProjektiBreadcrumbsJulkinen";
 import Trans from "next-translate/Trans";
 import KansalaisenAineistoNakyma from "@components/projekti/common/KansalaisenAineistoNakyma";
+import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 
 export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactElement {
   const { t } = useTranslation("projekti");
@@ -25,6 +26,7 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
   const [muistutusLomakeOpen, setMuistutusLomakeOpen] = useState(false);
 
   useProjektiBreadcrumbsJulkinen(setRouteLabels);
+  const kieli = useKansalaiskieli();
 
   if (!projekti || !kuulutus || !velho) {
     return <div />;
@@ -73,9 +75,7 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
           </SectionContent>
         )}
         <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.suunnitteluhankkeen_kuvaus`)}</h4>
-        <SectionContent>
-          {kuulutus.hankkeenKuvaus?.[projekti.kielitiedot?.ensisijainenKieli || Kieli.SUOMI]}
-        </SectionContent>
+        <SectionContent>{kuulutus.hankkeenKuvaus?.[kieli]}</SectionContent>
         <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.asianosaisen_oikeudet`)}</h4>
         <SectionContent>
           <Notification type={NotificationType.INFO} hideIcon>
