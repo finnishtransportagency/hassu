@@ -2,20 +2,25 @@ import HassuAccordion, { AccordionItem } from "@components/HassuAccordion";
 import Section from "@components/layout/Section";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import { Stack } from "@mui/material";
-import { HyvaksymisPaatosVaiheJulkaisu } from "@services/api";
+import { HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaiheTila } from "@services/api";
 import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory } from "common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
 import React, { FC, useMemo } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import { formatDate, formatDateTime } from "src/util/dateUtils";
+import { examineJulkaisuPaiva } from "../../../../util/dateUtils";
 
 export default function Lukunakyma() {
   const { data: projekti } = useProjekti();
 
   const julkaisu = useMemo(
-    () =>
-      projekti?.hyvaksymisPaatosVaihe || projekti?.hyvaksymisPaatosVaiheJulkaisut?.[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1],
+    () => projekti?.hyvaksymisPaatosVaiheJulkaisut?.[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1],
     [projekti]
+  );
+
+  const { published } = examineJulkaisuPaiva(
+    julkaisu?.tila === HyvaksymisPaatosVaiheTila.HYVAKSYTTY,
+    julkaisu?.kuulutusPaiva
   );
 
   if (!projekti || !julkaisu) {
@@ -25,14 +30,31 @@ export default function Lukunakyma() {
   return (
     <>
       <Section smallGaps>
-        <h4 className="vayla-smallest-title">Nähtäville asetettu aineisto</h4>
-        {julkaisu.kuulutusVaihePaattyyPaiva && (
+        <h4 className="vayla-smallest-title">Päätös ja sen liitteenä oleva aineisto</h4>
+        {published && (
           <p>
             Aineistot ovat nähtävillä palvelun julkisella puolella
             {" " + formatDate(julkaisu.kuulutusVaihePaattyyPaiva) + " "}
             saakka.
           </p>
         )}
+        <p>Päätös</p>
+        {julkaisu && julkaisu.hyvaksymisPaatos && (
+          <Stack direction="column" rowGap={2}>
+            {julkaisu.hyvaksymisPaatos.map((aineisto) => (
+              <span key={aineisto.dokumenttiOid}>
+                <HassuAineistoNimiExtLink
+                  tiedostoPolku={aineisto.tiedosto}
+                  aineistoNimi={aineisto.nimi}
+                  sx={{ mr: 3 }}
+                  target="_blank"
+                />
+                {aineisto.tuotu && formatDateTime(aineisto.tuotu)}
+              </span>
+            ))}
+          </Stack>
+        )}
+        <p className="mt-8">Päätöksen liitteenä oleva aineisto</p>
         <AineistoNahtavillaAccordion
           kategoriat={aineistoKategoriat.listKategoriat()}
           julkaisu={julkaisu as HyvaksymisPaatosVaiheJulkaisu}

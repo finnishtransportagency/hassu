@@ -32,6 +32,7 @@ export default function MuutoksenHaku({}: Props) {
           Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksiannosta.
           Valitse pudostusvalikosta hallinto-oikeus, johon muutoksenhaku osoitetaan tehtävän.
         </p>
+
         <div style={{ maxWidth: "30em" }}>
           <Controller
             control={control}

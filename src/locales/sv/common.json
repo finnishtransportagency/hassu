@@ -25,6 +25,14 @@
     "TURKU": "RUOTSIKSI Turun hallinto-oikeus",
     "VAASA": "RUOTSIKSI Vaasan hallinto-oikeus"
   },
+  "hallinto-oikeus-ablatiivi": {
+    "HELSINKI": "RUOTSIKSI Helsingin hallinto-oikeudelta",
+    "HAMEENLINNA": "RUOTSIKSI Hämeenlinnan hallinto-oikeudelta",
+    "ITA_SUOMI": "RUOTSIKSI Itä-Suomen hallinto-oikeudelta",
+    "POHJOIS_SUOMI": "RUOTSIKSI Pohjois-Suomen hallinto-oikeudelta",
+    "TURKU": "RUOTSIKSI Turun hallinto-oikeudelta",
+    "VAASA": "RUOTSIKSI Vaasan hallinto-oikeudelta"
+  },
   "sivustonimi": "Planering av statens trafikleder",
   "vaylavirasto": "Trafikledsverket",
   "ely-keskus": "NTM-centralen",
