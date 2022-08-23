@@ -127,7 +127,7 @@ const SuunnitelmaAineistoPaakategoriaContent = (props: SuunnitelmaAineistoPaakat
           expandedAineistoState={props.expandedAineistoState}
         />
       )}
-      <Button type="button" onClick={() => setAineistoDialogOpen(true)}>
+      <Button type="button" id={props.paakategoria.id + "_button"} onClick={() => setAineistoDialogOpen(true)}>
         Tuo Aineistoja
       </Button>
       <AineistojenValitseminenDialog

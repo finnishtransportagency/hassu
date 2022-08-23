@@ -4,6 +4,19 @@ import dayjs from "dayjs";
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
 
+function selectAllAineistotFromCategory(accordion) {
+  cy.get(accordion).click();
+  cy.get(accordion +
+    " input[type='checkbox']").should(($tr) => {
+    expect($tr).to.have.length.gte(2);
+  }).wait(1000);
+  cy.get(accordion).contains("Valitse").should("be.visible")
+    .parent()
+    .within(() => {
+      cy.get("input[type='checkbox']").click();
+    });
+}
+
 describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
   before(() => {
     cy.abortEarly();
@@ -108,7 +121,35 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
     });
   });
 
-  it("Muokkaa ja julkaise suunnitteluvaiheen perustiedot", { scrollBehavior: "center" }, () => {
+  it("Lisaa ainestoja", { scrollBehavior: "center" }, () => {
+    // This test had to be inserted here and can not be done
+    // after publishing test below
+    cy.login("A1");
+
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/nahtavillaolo", { timeout: 30000 });
+    cy.contains(projektiNimi);
+    cy.get("#aineisto_tab").click();
+
+    cy.get("#T1xx").click();
+    cy.get("#T1xx_button").click();
+    selectAllAineistotFromCategory("#aineisto_accordion_Tietomallinnus");
+    cy.get("#select_valitut_aineistot_button").click();
+
+    cy.get("#open_lisaaineisto_button").click();
+    selectAllAineistotFromCategory("#aineisto_accordion_Tietomallinnus");
+    cy.get("#select_valitut_aineistot_button").click();
+
+    cy.get("#save_nahtavillaolovaihe_draft").click();
+    cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank  page otherwise
+
+    cy.reload();
+
+    cy.get("#aineisto_tab").click();
+    // Test saved aineistot
+    cy.get('#aineisto_accordion_Tietomallinnus div[role=table]').children().should('have.length', 2)
+  });
+
+  it("Muokkaa ja julkaise nahtavillaolon kuulutus", { scrollBehavior: "center" }, () => {
     // This test can not be run multiple times without first archiving projekti
     // or manually deleting nahtavillaoloVaiheJulkaisut from DB
     cy.login("A1");

@@ -43,7 +43,7 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
         nähtäville asetetuista aineistoista sekä lausuntopyynnön lisäaineistosta.
       </p>
       {!!projekti?.oid && !!lisaAineisto?.length && <AineistoTable />}
-      <Button type="button" onClick={() => setAineistoDialogOpen(true)}>
+      <Button type="button" id="open_lisaaineisto_button" onClick={() => setAineistoDialogOpen(true)}>
         Tuo Aineistoja
       </Button>
       <AineistojenValitseminenDialog
