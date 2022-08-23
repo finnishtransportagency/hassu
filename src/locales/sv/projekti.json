@@ -19,6 +19,14 @@
       "valmistuttuaan_suunnitelma_asetetaan": "RUOTSIKSI Valmistuttuaan suunnitelma asetetaan yleisesti nähtäville, jolloin asianosaisilla on mahdollisuus tehdä kirjallinen muistutus suunnitelmasta. (ratalaki 22 §).",
       "vaylavirasto_kasittelee_suunnitelman": "RUOTSIKSI Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa www.vayla.fi/tietosuoja."
     },
+    "hyvaksytty": {
+      "liikenne_ja_viestintavirasto_on_paatoksellaan": "<p>RUOTSIKSI Liikenne- ja viestintävirasto on {{hyvaksymisPaiva}} päätöksellään {{paatosNumero}} hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisesti tiesuunnitelman {{suunnitelmanNimi}}, {{sijainti}}.</p>",
+      "paatos_ja_sen_perusteena_olevat": "<p>RUOTSIKSI Päätös (www-versio) ja sen perusteena olevat asiakirjat sekä valitusosoitus ovat nähtävillä sähköisessä muodossa tietoverkossa tämän kuulutuksen nähtävilläolon ajan <b>{{nahtavillaoloaikavali}}</b> <a>{{linkki}}</a> (sekä paperiaineisto osoitteessa {{osoite}}). (LjMTL 103 §).</p>",
+      "kuulutus_on_julkaistu": "<p>RUOTSIKSI Kuulutus on julkaistu tietoverkossa Väyläviraston verkkosivuilla {{julkaisupaiva}}.</p>",
+      "tiedoksisaannin_katsotaan_tapahtuneet": "<p>RUOTSIKSI Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä kuulutuksen julkaisemisajankohdasta (hallintolaki 62 a §), eli {{tiedoksiantopaiva}}.</p>",
+      "paatokseen_voi_valittamalla": "RUOTSIKSI Päätökseen voi valittamalla hakea muutosta {{hallintoOikeudelta}} 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
+      "vaylavirasto_kasittelee_suunnitelman": "RUOTSIKSI Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa <a>{{linkki}}</a>."
+    },
     "nahtavillaolo": {
       "ei-rata": {
         "on_laatinut": "RUOTSIKSI on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen",
@@ -85,6 +93,7 @@
   },
   "ui-otsikot": {
     "kuulutus_suunnitelman_alkamisesta": "RUOTSIKSI Kuulutus suunnittelun aloittamisesta",
+    "kuulutus_suunnitelman_hyvaksymisesta": "RUOTSIKSI Kuulutus suunnitelman hyväksymisestä",
     "nahtavillaoloaika": "RUOTSIKSI Nähtävilläoloaika",
     "hankkeen_sijainti": "RUOTSIKSI Hankkeen sijainti",
     "suunnitelman_tyyppi": "RUOTSIKSI Suunnitelman tyyppi",
@@ -109,6 +118,7 @@
     "esittelyaineisto_ja_suunnitelmaluonnokset": "RUOTSIKSI Esittelyaineisto ja suunnitelmaluonnokset",
     "muut_materiaalit": "RUOTSIKSI Muut esittelymateriaalit",
     "video_materiaalit": "RUOTSIKSI Enakkoon kuvattu videoesittely",
+    "paatos": "RUOTSIKSI Päätös",
     "nahtavillaolo": {
       "suunnitteluhankkeen_kuvaus": "RUOTSIKSI Suunnitteluhankkeen kuvaus",
       "asianosaisen_oikeudet": "RUOTSIKSI Asianosaisen oikeudet",
