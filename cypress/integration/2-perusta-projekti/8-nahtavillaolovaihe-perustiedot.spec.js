@@ -6,11 +6,14 @@ const oid = Cypress.env("oid");
 
 function selectAllAineistotFromCategory(accordion) {
   cy.get(accordion).click();
-  cy.get(accordion +
-    " input[type='checkbox']").should(($tr) => {
-    expect($tr).to.have.length.gte(2);
-  }).wait(1000);
-  cy.get(accordion).contains("Valitse").should("be.visible")
+  cy.get(accordion + " input[type='checkbox']")
+    .should(($tr) => {
+      expect($tr).to.have.length.gte(2);
+    })
+    .wait(1000);
+  cy.get(accordion)
+    .contains("Valitse")
+    .should("be.visible")
     .parent()
     .within(() => {
       cy.get("input[type='checkbox']").click();
@@ -60,8 +63,8 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
                   muistutusoikeusPaattyyPaiva: null
                   hankkeenKuvaus: { SUOMI: "" }
                   kuulutusYhteysHenkilot: null
-                  lisaAineisto:null
-                  aineistoNahtavilla:null
+                  lisaAineisto:[]
+                  aineistoNahtavilla:[]
                 }
               }
             )
@@ -146,7 +149,8 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
 
     cy.get("#aineisto_tab").click();
     // Test saved aineistot
-    cy.get('#aineisto_accordion_Tietomallinnus div[role=table]').children().should('have.length', 2)
+    cy.get("input[type='hidden'][name ^='aineistoNahtavilla.T1xx.']").should("exist");
+    cy.get("input[type='hidden'][name ^='lisaAineisto.']").should("exist");
   });
 
   it("Muokkaa ja julkaise nahtavillaolon kuulutus", { scrollBehavior: "center" }, () => {
@@ -195,5 +199,16 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
 
     cy.visit(Cypress.env("host") + "/sv/suunnitelma/" + oid + "/nahtavillaolo");
     cy.contains("Päivitetty hankkeen kuvaus Ruotsiksi");
+  });
+
+  it("Tarkista lisaaineiston lataussivu", { scrollBehavior: "center" }, () => {
+    cy.login("A1");
+
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/nahtavillaolo", { timeout: 30000 });
+    cy.contains(projektiNimi);
+    cy.get("#aineisto_tab").click();
+
+    cy.get("a[href*='lausuntopyyntoaineistot']").click();
+    cy.contains("Lausuntopyyntöön liitetty lisäaineisto");
   });
 });
