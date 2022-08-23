@@ -1,17 +1,19 @@
-import { HyvaksymisPaatosVaiheJulkaisu, ProjektiKayttaja } from "@services/api";
+import { HyvaksymisPaatosVaiheJulkaisu, ProjektiKayttaja, Kieli } from "@services/api";
 import React, { ReactElement } from "react";
 import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
-import lowerCase from "lodash/lowerCase";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import IlmoituksenVastaanottajatLukutila from "./IlmoituksenVastaanottajatLukutila";
 import ExtLink from "@components/ExtLink";
-// import { Link } from "@mui/material";
 import useTranslation from "next-translate/useTranslation";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { splitFilePath } from "../../../../util/fileUtil";
+import { Link } from "@mui/material";
+import lowerCase from "lodash/lowerCase";
+import IlmoituksenVastaanottajatLukutila from "./IlmoituksenVastaanottajatLukutila";
+
 interface Props {
   hyvaksymisPaatosVaiheJulkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
   projekti: ProjektiLisatiedolla;
@@ -19,20 +21,14 @@ interface Props {
 
 export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulkaisu, projekti }: Props): ReactElement {
   const { t } = useTranslation("common");
-
-  // const getPdft = (kieli: Kieli | undefined | null) => {
-  //   if (!hyvaksymisPaatosJulkaisu || !hyvaksymisPaatosJulkaisu.hyvaksymisPaatosPDFt || !kieli) {
-  //     return undefined;
-  //   }
-  //   return hyvaksymisPaatosVaiheJulkaisu.hyvaksymisPaatosVaihePDFt[kieli];
-  // };
-
-  // const parseFilename = (path: string) => {
-  //   return path.substring(path.lastIndexOf("/") + 1);
-  // };
-
-  // const ensisijaisetPDFt = getPdft(hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.ensisijainenKieli);
-  // const toissijaisetPDFt = getPdft(hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.toissijainenKieli);
+  const getPdft = (kieli: Kieli | undefined | null) => {
+    if (!hyvaksymisPaatosVaiheJulkaisu || !hyvaksymisPaatosVaiheJulkaisu.hyvaksymisPaatosVaihePDFt || !kieli) {
+      return undefined;
+    }
+    return hyvaksymisPaatosVaiheJulkaisu?.hyvaksymisPaatosVaihePDFt[kieli];
+  };
+  const ensisijaisetPDFt = getPdft(hyvaksymisPaatosVaiheJulkaisu?.kielitiedot?.ensisijainenKieli);
+  const toissijaisetPDFt = getPdft(hyvaksymisPaatosVaiheJulkaisu?.kielitiedot?.toissijainenKieli);
 
   if (!hyvaksymisPaatosVaiheJulkaisu || !projekti) {
     return <></>;
@@ -117,9 +113,88 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
             Kuulutus ja ilmoitus ensisijaisella kielellä (
             {lowerCase(hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.ensisijainenKieli)})
           </p>
+          {ensisijaisetPDFt && (
+            <div className="flex flex-col mb-4">
+              <div>
+                <Link underline="none" href={ensisijaisetPDFt.hyvaksymisKuulutusPDFPath} target="_blank">
+                  {splitFilePath(ensisijaisetPDFt.hyvaksymisKuulutusPDFPath).fileName}
+                </Link>
+              </div>
+              <div>
+                <Link underline="none" href={ensisijaisetPDFt.hyvaksymisIlmoitusPDFPath} target="_blank">
+                  {splitFilePath(ensisijaisetPDFt.hyvaksymisIlmoitusPDFPath).fileName}
+                </Link>
+              </div>
+              <div>
+                <Link underline="none" href={ensisijaisetPDFt.hyvaksymisLahetekirjePDFPath} target="_blank">
+                  {splitFilePath(ensisijaisetPDFt.hyvaksymisLahetekirjePDFPath).fileName}
+                </Link>
+              </div>
+              <div>
+                <Link
+                  underline="none"
+                  href={ensisijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath}
+                  target="_blank"
+                >
+                  {splitFilePath(ensisijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath).fileName}
+                </Link>
+              </div>
+              <div>
+                <Link underline="none" href={ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath} target="_blank">
+                  {splitFilePath(ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath).fileName}
+                </Link>
+              </div>
+            </div>
+          )}
+
+          {hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.toissijainenKieli && (
+            <div className="content mb-4">
+              <p>
+                Kuulutus ja ilmoitus toissijaisella kielellä (
+                {lowerCase(hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.toissijainenKieli)})
+              </p>
+              {toissijaisetPDFt && (
+                <div className="flex flex-col">
+                  <div>
+                    <Link underline="none" href={toissijaisetPDFt.hyvaksymisKuulutusPDFPath} target="_blank">
+                      {splitFilePath(toissijaisetPDFt.hyvaksymisKuulutusPDFPath).fileName}
+                    </Link>
+                  </div>
+                  <div>
+                    <Link underline="none" href={toissijaisetPDFt.hyvaksymisIlmoitusPDFPath} target="_blank">
+                      {splitFilePath(toissijaisetPDFt.hyvaksymisIlmoitusPDFPath).fileName}
+                    </Link>
+                  </div>
+                  <div>
+                    <Link underline="none" href={toissijaisetPDFt.hyvaksymisLahetekirjePDFPath} target="_blank">
+                      {splitFilePath(toissijaisetPDFt.hyvaksymisLahetekirjePDFPath).fileName}
+                    </Link>
+                  </div>
+                  <div>
+                    <Link
+                      underline="none"
+                      href={toissijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath}
+                      target="_blank"
+                    >
+                      {splitFilePath(toissijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath).fileName}
+                    </Link>
+                  </div>
+                  <div>
+                    <Link
+                      underline="none"
+                      href={toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath}
+                      target="_blank"
+                    >
+                      {splitFilePath(toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath).fileName}
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </SectionContent>
+        <IlmoituksenVastaanottajatLukutila hyvaksymisPaatosVaiheJulkaisu={hyvaksymisPaatosVaiheJulkaisu} />
       </Section>
-      <IlmoituksenVastaanottajatLukutila hyvaksymisPaatosVaiheJulkaisu={hyvaksymisPaatosVaiheJulkaisu} />
     </>
   );
 }

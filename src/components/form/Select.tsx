@@ -35,7 +35,7 @@ const Select = (
     <FormGroup label={label} className={className} errorMessage={hideErrorMessage ? undefined : error?.message}>
       <div className="select-wrapper">
         <select className={error && "error"} {...props} ref={ref}>
-          {addEmptyOption && <option />}
+          {addEmptyOption && <option value="" />}
           {options.map((option) => (
             <option key={option.value} value={option.value} disabled={option.disabled}>
               {option.label}

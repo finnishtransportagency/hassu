@@ -43,12 +43,12 @@ export default function MuutoksenHaku({}: Props) {
                 label="Hallinto-oikeus *"
                 options={Object.keys(HallintoOikeus).map((ho) => ({
                   label: ho ? t(`hallinto-oikeus.${ho}`) : "",
-                  value: ho,
+                  value: ho || "",
                 }))}
                 {...register(`hyvaksymisPaatosVaihe.hallintoOikeus`)}
                 error={errors?.hyvaksymisPaatosVaihe?.hallintoOikeus}
                 addEmptyOption
-                value={value}
+                value={value || ""}
                 onChange={(event) => onChange(event.target.value)}
                 {...field}
               />
