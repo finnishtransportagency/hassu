@@ -147,7 +147,7 @@ const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoria
                 <Link href={aineisto.tiedosto!} target="_blank" rel="noreferrer">
                   {aineisto.nimi}
                 </Link>
-                <span>({"pdf" || aineisto.nimi.split(".").pop()})</span>
+                <span>({aineisto.nimi.split(".").pop()})</span>
                 <a href={aineisto.tiedosto!} target="_blank" rel="noreferrer">
                   <FontAwesomeIcon icon="external-link-alt" size="lg" className="text-primary-dark" />
                 </a>
