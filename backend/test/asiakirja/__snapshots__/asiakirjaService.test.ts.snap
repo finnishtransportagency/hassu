@@ -30,9 +30,12 @@ Suunnitelmaluonnoksista voi kysyä lisätietoja tai antaa palautetta soittamalla
 05.04.2033 klo 12.00 - 13.00Etunimi Sukunimi, Projektipäällikkö, 0293121213Joku Jokunen, Konsultti, 02998765
 Lisätietoja antavat 
 Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Joku Jossain, puh. 123, Joku.Jossain(at)vayla.fi 
 Tervetuloa!
 Uudenmaan ELY-keskus
-LUONNOS",
+LUONNOSLUONNOS",
 }
 `;
 
@@ -90,6 +93,9 @@ För att få mer information om planutkasten eller för att ge respons ring plan
 05.04.2033 kl. 12.00 - 13.00Etunimi Sukunimi, Projektipäällikkö, 0293121213Joku Jokunen, Konsultti, 02998765
 Mer information om planen 
 Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
+Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen, tel. 123456789, Matti.Meikalainen(at)vayla.fi 
+Joku Jossain, tel. 123, Joku.Jossain(at)vayla.fi 
 Tervetuloa!
 RUOTSIKSI Uudenmaan ELY-keskus
 LUONNOSLUONNOS",
@@ -150,8 +156,11 @@ Suunnitelmaluonnoksista voi kysyä lisätietoja tai antaa palautetta soittamalla
 05.04.2033 klo 12.00 - 13.00Etunimi Sukunimi, Projektipäällikkö, 0293121213Joku Jokunen, Konsultti, 02998765
 Lisätietoja antavat 
 Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Joku Jossain, puh. 123, Joku.Jossain(at)vayla.fi 
 Väylävirasto
-LUONNOS",
+LUONNOSLUONNOS",
 }
 `;
 
@@ -209,8 +218,11 @@ För att få mer information om planutkasten eller för att ge respons ring plan
 05.04.2033 kl. 12.00 - 13.00Etunimi Sukunimi, Projektipäällikkö, 0293121213Joku Jokunen, Konsultti, 02998765
 Mer information om planen 
 Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
+Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen, tel. 123456789, Matti.Meikalainen(at)vayla.fi 
+Joku Jossain, tel. 123, Joku.Jossain(at)vayla.fi 
 Trafikledsverket
-LUONNOS",
+LUONNOSLUONNOS",
 }
 `;
 

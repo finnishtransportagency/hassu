@@ -359,10 +359,7 @@ export class ProjektiFixture {
       kuulutusPaiva: "2022-06-07",
       kuulutusVaihePaattyyPaiva: "2042-06-07",
       muistutusoikeusPaattyyPaiva: "2042-06-08",
-      kuulutusYhteysHenkilot: [
-        ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
-        ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
-      ],
+      kuulutusYhteysHenkilot: [ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus],
       ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
       kuulutusYhteystiedot: this.esitettavatYhteystiedot,
     },
@@ -379,7 +376,7 @@ export class ProjektiFixture {
       },
     ],
     kasittelynTila: {
-      hyvaksymispaatos: { paatoksenPvm: "2022-02-03", asianumero: "traficom-123" }
+      hyvaksymispaatos: { paatoksenPvm: "2022-02-03", asianumero: "traficom-123" },
     },
     hyvaksymisPaatosVaihe: {
       id: 1,
@@ -391,7 +388,7 @@ export class ProjektiFixture {
       kuulutusYhteysHenkilot: [
         ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
         ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
-      ]
+      ],
     },
     salt: "foo",
     paivitetty: "2022-03-15T14:30:00.000Z",

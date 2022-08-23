@@ -1,4 +1,11 @@
-import { DBProjekti, DBVaylaUser, SuunnitteluVaihe, Vuorovaikutus, VuorovaikutusTilaisuus } from "../../database/model";
+import {
+  DBProjekti,
+  DBVaylaUser,
+  SuunnitteluSopimus,
+  SuunnitteluVaihe,
+  Vuorovaikutus,
+  VuorovaikutusTilaisuus,
+} from "../../database/model";
 import {
   Kieli,
   ProjektiRooli,
@@ -47,6 +54,7 @@ export class Kutsu20 extends CommonPdf {
   protected header: string;
   private projekti: DBProjekti;
   protected kieli: Kieli;
+  private suunnitteluSopimus: SuunnitteluSopimus;
 
   constructor(projekti: DBProjekti, vuorovaikutus: Vuorovaikutus, kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto) {
     const fileName = createFileName(kieli, asiakirjanMuoto, projekti.velho.tyyppi);
@@ -57,17 +65,16 @@ export class Kutsu20 extends CommonPdf {
       kieli,
       asiakirjanMuoto,
       projektiTyyppi: projekti.velho.tyyppi,
+      kayttoOikeudet: projekti.kayttoOikeudet,
     });
-    super(
-      kieli,
-      kutsuAdapter,
-    );
+    super(kieli, kutsuAdapter);
     this.projekti = projekti;
     const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
     this.header = headers[language];
     this.kieli = kieli;
 
     this.kayttoOikeudet = projekti.kayttoOikeudet;
+    this.suunnitteluSopimus = projekti.suunnitteluSopimus;
     this.oid = projekti.oid;
     this.suunnitteluVaihe = projekti.suunnitteluVaihe;
     this.vuorovaikutus = vuorovaikutus;
@@ -138,8 +145,8 @@ export class Kutsu20 extends CommonPdf {
 
       this.localizedParagraph([
         "Kutsu on julkaistu tietoverkossa verkkosivuilla " +
-        dayjs(this.vuorovaikutus.vuorovaikutusJulkaisuPaiva).format("DD.MM.YYYY") +
-        ".",
+          dayjs(this.vuorovaikutus.vuorovaikutusJulkaisuPaiva).format("DD.MM.YYYY") +
+          ".",
       ]),
 
       this.soittoajat(this.vuorovaikutus.vuorovaikutusTilaisuudet),
@@ -148,7 +155,12 @@ export class Kutsu20 extends CommonPdf {
       this.doc.struct(
         "P",
         {},
-        this.moreInfoElements(this.vuorovaikutus.esitettavatYhteystiedot, undefined, undefined, false)
+        this.moreInfoElements(
+          this.vuorovaikutus.esitettavatYhteystiedot,
+          this.suunnitteluSopimus,
+          this.vuorovaikutus.vuorovaikutusYhteysHenkilot,
+          false
+        )
       ),
 
       this.tervetuloa(),

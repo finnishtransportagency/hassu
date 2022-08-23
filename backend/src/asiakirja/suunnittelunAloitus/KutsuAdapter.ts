@@ -4,6 +4,7 @@ import { AsiakirjanMuoto } from "../asiakirjaService";
 import { translate } from "../../util/localization";
 import { linkHyvaksymisPaatos, linkSuunnitteluVaihe } from "../../../../common/links";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
+import union from "lodash/union";
 
 export type KutsuAdapterProps = {
   oid?: string;
@@ -17,13 +18,13 @@ export type KutsuAdapterProps = {
 };
 
 const yhteystietoMapper = ({
-                             sukunimi,
-                             etunimi,
-                             organisaatio,
-                             puhelinnumero,
-                             sahkoposti,
-                             titteli,
-                           }): { organisaatio; etunimi; sukunimi; puhelinnumero; sahkoposti; titteli } => ({
+  sukunimi,
+  etunimi,
+  organisaatio,
+  puhelinnumero,
+  sahkoposti,
+  titteli,
+}): { organisaatio; etunimi; sukunimi; puhelinnumero; sahkoposti; titteli } => ({
   etunimi: formatProperNoun(etunimi),
   sukunimi: formatProperNoun(sukunimi),
   organisaatio: formatProperNoun(organisaatio),
@@ -45,15 +46,15 @@ export class KutsuAdapter {
   private templateResolver: unknown;
 
   constructor({
-                oid,
-                velho,
-                kielitiedot,
-                asiakirjanMuoto,
-                kieli,
-                projektiTyyppi,
-                vuorovaikutus,
-                kayttoOikeudet,
-              }: KutsuAdapterProps) {
+    oid,
+    velho,
+    kielitiedot,
+    asiakirjanMuoto,
+    kieli,
+    projektiTyyppi,
+    vuorovaikutus,
+    kayttoOikeudet,
+  }: KutsuAdapterProps) {
     this.oid = oid;
     this.velho = velho;
     this.kielitiedot = kielitiedot;
@@ -233,7 +234,13 @@ export class KutsuAdapter {
       if (!this.kayttoOikeudet) {
         throw new Error("BUG: Kayttöoikeudet pitää antaa jos yhteyshenkilöt on annettu.");
       }
-      this.getUsersForUsernames(yhteysHenkilot).forEach((user) => {
+      const yhteysHenkilotWithProjectManager = union(
+        this.kayttoOikeudet
+          .filter((user) => user.rooli == ProjektiRooli.PROJEKTIPAALLIKKO)
+          .map((user) => user.kayttajatunnus),
+        yhteysHenkilot
+      );
+      this.getUsersForUsernames(yhteysHenkilotWithProjectManager).forEach((user) => {
         const [sukunimi, etunimi] = user.nimi.split(/, /g);
         yt.push({
           etunimi,
@@ -262,31 +269,29 @@ export class KutsuAdapter {
     if (!translation) {
       throw new Error(this.kieli + " translation missing for key " + key);
     }
-    return translation
-      .replace(new RegExp(`{{(.+?)}}`, "g"), (_, part) => {
+    return translation.replace(new RegExp(`{{(.+?)}}`, "g"), (_, part) => {
+      // Function from given templateResolver
+      const func = this.templateResolver?.[part];
+      if (typeof func == "function") {
+        return func.bind(this.templateResolver)();
+      }
+      // Return text as it is if it was resolved
+      if (func) {
+        return func;
+      }
 
-        // Function from given templateResolver
-        const func = this.templateResolver?.[part];
-        if (typeof func == "function") {
-          return func.bind(this.templateResolver)();
-        }
-        // Return text as it is if it was resolved
-        if (func) {
-          return func;
-        }
+      // Function from this class
+      const resolvedText = this[part];
+      if (typeof resolvedText == "function") {
+        return resolvedText.bind(this)();
+      }
 
-        // Function from this class
-        const resolvedText = this[part];
-        if (typeof resolvedText == "function") {
-          return resolvedText.bind(this)();
-        }
-
-        // Return text as it is if it was resolved
-        if (resolvedText) {
-          return resolvedText;
-        }
-        return "{{" + part + "}}";
-      });
+      // Return text as it is if it was resolved
+      if (resolvedText) {
+        return resolvedText;
+      }
+      return "{{" + part + "}}";
+    });
   }
 
   get yhteystiedotVuorovaikutus(): { organisaatio; etunimi; sukunimi; puhelinnumero; sahkoposti }[] {
@@ -313,7 +318,6 @@ export class KutsuAdapter {
 function isKieliSupported(kieli: Kieli, kielitiedot: Kielitiedot) {
   return kielitiedot.ensisijainenKieli == kieli || kielitiedot.toissijainenKieli == kieli;
 }
-
 
 export const formatList = (words: string[], kieli: Kieli): string => {
   if (words.length == 1) {
