@@ -90,7 +90,7 @@ export default function Hyvaksymispaatos(): ReactElement {
         </div>
       </Section>
       <Section noDivider>
-        <h4 className="vayla-small-title">{t("projetki:ui-otsikot.asianosaisen_oikeudet")}</h4>
+        <h4 className="vayla-small-title">{t("projekti:ui-otsikot.asianosaisen_oikeudet")}</h4>
         <Notification hideIcon type={NotificationType.INFO}>
           <p>
             <Trans
