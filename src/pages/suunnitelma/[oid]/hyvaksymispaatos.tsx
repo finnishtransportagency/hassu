@@ -131,7 +131,6 @@ export default function Hyvaksymispaatos(): ReactElement {
         <h5 className="vayla-smallest-title">{t("projekti:ui-otsikot.ladattava_kuulutus")}</h5>
         TODO (toteuta kun pdf on toteutettu bäkissä)
       </Section>
-      <Section>TODO (eu-logo, jos eu osallistuu rahoitukseen)</Section>
     </ProjektiJulkinenPageLayout>
   );
 }
