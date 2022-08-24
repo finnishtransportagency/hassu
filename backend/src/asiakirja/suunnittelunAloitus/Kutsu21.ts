@@ -58,7 +58,7 @@ export class Kutsu21 {
         " käsittelee " +
         this.adapter.suunnitelman +
         " laatimiseen liittyen tarpeellisia henkilötietoja. Lisätietoja väyläsuunnittelun tietosuojakäytänteistä on saatavilla verkkosivujen tietosuojaosiossa osoitteessa " +
-        this.adapter.tietosuojaUrl +
+        this.adapter.tietosuojaurl +
         ".",
       "",
       "Lisätietoja antaa:",

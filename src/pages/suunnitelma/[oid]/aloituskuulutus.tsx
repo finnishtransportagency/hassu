@@ -102,9 +102,7 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
               {suunnittelusopimus && (
                 <p>
                   {suunnittelusopimus.kunta} ja{" "}
-                  {velho.suunnittelustaVastaavaViranomainen
-                    ? t(`vastaava-viranomainen.${velho.suunnittelustaVastaavaViranomainen}`)
-                    : velho.tilaajaOrganisaatio}{" "}
+                  { t(`vastaava-viranomainen.${velho.suunnittelustaVastaavaViranomainen}`)}{" "}
                   {t(`info.ei-rata.aloittavat_yleissuunnitelman_laatimisen`)}
                 </p>
               )}

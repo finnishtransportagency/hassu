@@ -1,11 +1,17 @@
-import { DBProjekti, DBVaylaUser } from "../../database/model/projekti";
+import {
+  DBProjekti,
+  DBVaylaUser,
+  SuunnitteluSopimus,
+  SuunnitteluVaihe,
+  Vuorovaikutus,
+  VuorovaikutusTilaisuus,
+} from "../../database/model";
 import {
   Kieli,
   ProjektiRooli,
   ProjektiTyyppi,
   VuorovaikutusTilaisuusTyyppi,
 } from "../../../../common/graphql/apiModel";
-import { SuunnitteluVaihe, Vuorovaikutus, VuorovaikutusTilaisuus } from "../../database/model/suunnitteluVaihe";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import dayjs from "dayjs";
 import { linkSuunnitteluVaihe } from "../../../../common/links";
@@ -48,32 +54,32 @@ export class Kutsu20 extends CommonPdf {
   protected header: string;
   private projekti: DBProjekti;
   protected kieli: Kieli;
+  private suunnitteluSopimus: SuunnitteluSopimus;
 
   constructor(projekti: DBProjekti, vuorovaikutus: Vuorovaikutus, kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto) {
     const fileName = createFileName(kieli, asiakirjanMuoto, projekti.velho.tyyppi);
-    super(
-      fileName,
+    const kutsuAdapter = new KutsuAdapter({
+      oid: projekti.oid,
+      kielitiedot: projekti.kielitiedot,
+      velho: projekti.velho,
       kieli,
-      new KutsuAdapter({
-        oid: projekti.oid,
-        kielitiedot: projekti.kielitiedot,
-        velho: projekti.velho,
-        kieli,
-        asiakirjanMuoto,
-        projektiTyyppi: projekti.velho.tyyppi,
-      }),
-      fileName
-    );
+      asiakirjanMuoto,
+      projektiTyyppi: projekti.velho.tyyppi,
+      kayttoOikeudet: projekti.kayttoOikeudet,
+    });
+    super(kieli, kutsuAdapter);
     this.projekti = projekti;
     const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
     this.header = headers[language];
     this.kieli = kieli;
 
     this.kayttoOikeudet = projekti.kayttoOikeudet;
+    this.suunnitteluSopimus = projekti.suunnitteluSopimus;
     this.oid = projekti.oid;
     this.suunnitteluVaihe = projekti.suunnitteluVaihe;
     this.vuorovaikutus = vuorovaikutus;
     this.asiakirjanMuoto = asiakirjanMuoto;
+    super.setupPDF(this.header, kutsuAdapter.nimi, fileName);
   }
 
   protected addContent(): void {
@@ -149,20 +155,17 @@ export class Kutsu20 extends CommonPdf {
       this.doc.struct(
         "P",
         {},
-        this.moreInfoElements(this.vuorovaikutus.esitettavatYhteystiedot, undefined, undefined, false)
+        this.moreInfoElements(
+          this.vuorovaikutus.esitettavatYhteystiedot,
+          this.suunnitteluSopimus,
+          this.vuorovaikutus.vuorovaikutusYhteysHenkilot,
+          false
+        )
       ),
 
       this.tervetuloa(),
       this.kutsuja(),
     ].filter((elem) => elem);
-  }
-
-  private tietosuojaParagraph() {
-    if (this.asiakirjanMuoto !== AsiakirjanMuoto.RATA) {
-      return this.viranomainenTietosuojaParagraph(this.projekti.velho);
-    } else {
-      return this.vaylavirastoTietosuojaParagraph();
-    }
   }
 
   private kutsuja() {
@@ -210,7 +213,7 @@ export class Kutsu20 extends CommonPdf {
     const elements = vuorovaikutusTilaisuudet.map((tilaisuus) => {
       const time = this.formatTilaisuusTime.call(this, tilaisuus);
 
-      const baseline = -7; // Tried with "aplhabetic", but doesn't work https://github.com/foliojs/pdfkit/issues/994
+      const baseline = -7; // Tried with "alphabetic", but doesn't work https://github.com/foliojs/pdfkit/issues/994
       if (tilaisuus.tyyppi == VuorovaikutusTilaisuusTyyppi.VERKOSSA) {
         return this.doc.struct("P", {}, [
           () => {

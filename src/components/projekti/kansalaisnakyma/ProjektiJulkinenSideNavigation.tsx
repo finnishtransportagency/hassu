@@ -30,7 +30,10 @@ export default function ProjektiSideNavigation(): ReactElement {
 
   const getTilaajaLogoImg = () => {
     const viranomainen = velho?.suunnittelustaVastaavaViranomainen;
-    if (Viranomainen.VAYLAVIRASTO === viranomainen || velho.tilaajaOrganisaatio === "Väylävirasto") {
+    if (
+      Viranomainen.VAYLAVIRASTO === viranomainen ||
+      velho.suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO
+    ) {
       return { src: "/vayla_sivussa_fi_sv_rgb.png", alt: t(`common:vaylavirasto`) + " logo" };
     } else {
       return { src: "/ely-logo-vaaka.png", alt: t(`common:ely-keskus`) + " logo" };

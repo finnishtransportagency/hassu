@@ -8,9 +8,12 @@ import PDFStructureElement = PDFKit.PDFStructureElement;
 
 export type IlmoitusAsiakirjaTyyppi = Extract<
   AsiakirjaTyyppi,
-  AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA | AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE
+  | AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA
+  | AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE
+  | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE
 >;
 export type IlmoitusParams = {
+  oid?: string;
   kieli: Kieli;
   velho: Velho;
   kielitiedot: Kielitiedot;
@@ -37,7 +40,8 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf {
       projektiTyyppi: params.velho.tyyppi,
       kayttoOikeudet: params.kayttoOikeudet,
     });
-    super(header, params.kieli, kutsuAdapter, translate("tiedostonimi." + fileNameKey, params.kieli));
+    super(params.kieli, kutsuAdapter);
+    super.setupPDF(header, kutsuAdapter.nimi, translate("tiedostonimi." + fileNameKey, params.kieli));
     this.header = header;
     this.params = params;
   }
@@ -77,12 +81,7 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf {
   }
 
   protected get tilaajaGenetiivi(): string {
-    const tilaajaOrganisaatio = this.params.velho?.tilaajaOrganisaatio;
-    if (tilaajaOrganisaatio === "Väylävirasto") {
-      return tilaajaOrganisaatio ? "Väyläviraston" : "Tilaajaorganisaation";
-    } else {
-      return tilaajaOrganisaatio ? tilaajaOrganisaatio?.slice(0, -1) + "ksen" : "Tilaajaorganisaation";
-    }
+    return this.kutsuAdapter.tilaajaGenetiivi;
   }
 
   protected hankkeenKuvaus(): PDFStructureElement {

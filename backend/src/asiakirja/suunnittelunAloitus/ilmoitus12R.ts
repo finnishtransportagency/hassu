@@ -1,5 +1,5 @@
 import { IlmoitusAsiakirjaTyyppi, IlmoitusParams, SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
-import { Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { AsiakirjanMuoto } from "../asiakirjaService";
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
@@ -16,10 +16,15 @@ const fileNameKeys: Record<IlmoitusAsiakirjaTyyppi, Partial<Record<ProjektiTyypp
     [ProjektiTyyppi.RATA]: "12R_nahtavillaolo",
     [ProjektiTyyppi.YLEINEN]: "12YS_nahtavillaolo",
   },
+  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE: {
+    [ProjektiTyyppi.RATA]: "12R_hyvaksymispaatos",
+    [ProjektiTyyppi.YLEINEN]: "12YS_hyvaksymispaatos",
+  },
 };
 
 export class Ilmoitus12R extends SuunnittelunAloitusPdf {
   private kuulutusOsoite = "https://www.vayla.fi/kuulutukset";
+  private asiakirjaTyyppi: IlmoitusAsiakirjaTyyppi;
 
   constructor(asiakirjaTyyppi: IlmoitusAsiakirjaTyyppi, params: IlmoitusParams) {
     super(
@@ -27,15 +32,27 @@ export class Ilmoitus12R extends SuunnittelunAloitusPdf {
       headers[params.kieli == Kieli.SAAME ? Kieli.SUOMI : params.kieli],
       AsiakirjanMuoto.RATA,
       fileNameKeys[asiakirjaTyyppi]?.[params.velho.tyyppi]
-    ); //TODO lisää tuki Saamen eri muodoille
+    );
+    this.asiakirjaTyyppi = asiakirjaTyyppi;
+
+    this.kutsuAdapter.setTemplateResolver(this);
+  }
+
+  ilmoitus_vaihe(): string {
+    switch (this.asiakirjaTyyppi) {
+      case AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA:
+        return this.kutsuAdapter.text("asiakirja.ilmoitus.ilmoitus_rata_vaihe_aloituskuulutus");
+      case AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE:
+        return this.kutsuAdapter.text("asiakirja.ilmoitus.ilmoitus_rata_vaihe_suunnitelman_nahtaville_asettamista");
+      case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE:
+        return this.kutsuAdapter.text("asiakirja.ilmoitus.ilmoitus_rata_vaihe_suunnitelman_hyvaksymispaatosta");
+    }
+    return "";
   }
 
   protected addDocumentElements(): PDFKit.PDFStructureElementChild[] {
     return [
-      this.localizedParagraph([
-        `Väylävirasto julkaisee tietoverkossaan kuulutuksen, joka koskee otsikossa mainitun ${this.projektiTyyppi}n laatimisen aloittamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §, HL 62 a §) `,
-        `RUOTSIKSI Väylävirasto julkaisee tietoverkossaan kuulutuksen, joka koskee otsikossa mainitun ${this.projektiTyyppi}n laatimisen aloittamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §, HL 62 a §) `,
-      ]),
+      this.paragraphFromKey("asiakirja.ilmoitus.rata_kappale1"),
       this.doc.struct("P", {}, [
         () => {
           this.doc.text(

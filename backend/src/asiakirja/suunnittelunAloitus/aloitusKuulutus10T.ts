@@ -52,7 +52,7 @@ export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
         "RUOTSIKSI Valmistuttuaan suunnitelmat asetetaan yleisesti nähtäville, jolloin asianosaisilla on mahdollisuus tehdä kirjallinen muistutus suunnitelmasta (LjMTL 27 §). ",
       ]),
 
-      this.viranomainenTietosuojaParagraph(this.params.velho),
+      this.tietosuojaParagraph(),
 
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.params.yhteystiedot, this.params.suunnitteluSopimus)),
@@ -68,7 +68,11 @@ export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
     if (suunnitteluSopimus?.kunta) {
       return formatProperNoun(suunnitteluSopimus.kunta);
     }
-    return this.params.velho?.tilaajaOrganisaatio || "Kuuluttaja";
+    return this.tilaajaOrganisaatio();
+  }
+
+  private tilaajaOrganisaatio() {
+    return this.kutsuAdapter.text("viranomainen." + this.params.velho?.suunnittelustaVastaavaViranomainen);
   }
 
   private get startOfPlanningPhrase() {
@@ -79,7 +83,7 @@ export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
         this.tilaajaGenetiivi
       } kanssa, käynnistää ${this.projektiTyyppi}n laatimisen tarpeellisine tutkimuksineen. `;
     } else {
-      const tilaajaOrganisaatio = this.params.velho?.tilaajaOrganisaatio || "Tilaajaorganisaatio";
+      const tilaajaOrganisaatio = this.tilaajaOrganisaatio();
       const kunnat = this.params.velho?.kunnat;
       const organisaatiot = kunnat ? [tilaajaOrganisaatio, ...kunnat] : [tilaajaOrganisaatio];
       const trimmattutOrganisaatiot = organisaatiot.map((organisaatio) => formatProperNoun(organisaatio));

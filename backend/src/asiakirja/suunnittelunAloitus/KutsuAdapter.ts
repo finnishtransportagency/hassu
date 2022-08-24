@@ -2,8 +2,9 @@ import { Kieli, ProjektiRooli, ProjektiTyyppi, Viranomainen } from "../../../../
 import { DBVaylaUser, Kielitiedot, SuunnitteluSopimus, Velho, Vuorovaikutus, Yhteystieto } from "../../database/model";
 import { AsiakirjanMuoto } from "../asiakirjaService";
 import { translate } from "../../util/localization";
-import { linkSuunnitteluVaihe } from "../../../../common/links";
+import { linkHyvaksymisPaatos, linkSuunnitteluVaihe } from "../../../../common/links";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
+import union from "lodash/union";
 
 export type KutsuAdapterProps = {
   oid?: string;
@@ -32,6 +33,7 @@ const yhteystietoMapper = ({
   titteli,
 });
 
+// noinspection JSUnusedGlobalSymbols
 export class KutsuAdapter {
   private readonly velho: Velho;
   private readonly kieli: Kieli;
@@ -39,8 +41,9 @@ export class KutsuAdapter {
   private readonly oid?: string;
   private readonly projektiTyyppi: ProjektiTyyppi;
   private readonly vuorovaikutus?: Vuorovaikutus;
-  private kayttoOikeudet?: DBVaylaUser[];
+  private readonly kayttoOikeudet?: DBVaylaUser[];
   private readonly kielitiedot: Kielitiedot;
+  private templateResolver: unknown;
 
   constructor({
     oid,
@@ -62,8 +65,12 @@ export class KutsuAdapter {
     this.kayttoOikeudet = kayttoOikeudet;
   }
 
+  setTemplateResolver(value: unknown): void {
+    this.templateResolver = value;
+  }
+
   get title(): string {
-    return [this.nimi + this.kuntaOrKunnat].join(", ");
+    return this.nimi;
   }
 
   get subject(): string {
@@ -79,6 +86,13 @@ export class KutsuAdapter {
       translate("viranomainen." + suunnittelustaVastaavaViranomainen, this.kieli) ||
       "<Suunnittelusta vastaavan viranomaisen tieto puuttuu>"
     );
+  }
+
+  get viranomainen(): string {
+    if (this.asiakirjanMuoto !== AsiakirjanMuoto.RATA) {
+      return translate("viranomainen.VAYLAVIRASTO", this.kieli);
+    }
+    return this.tilaajaOrganisaatio;
   }
 
   get tilaajaOrganisaatiota(): string {
@@ -99,6 +113,10 @@ export class KutsuAdapter {
     return translate("viranomainen." + viranomainen, kieli) || "<Tilaajaorganisaation tieto puuttuu>";
   }
 
+  viranomaisen(): string {
+    return this.tilaajaGenetiivi;
+  }
+
   get tilaajaGenetiivi(): string {
     const tilaajaOrganisaatio = this.tilaajaOrganisaatio;
     if (this.velho.suunnittelustaVastaavaViranomainen == Viranomainen.MUU) {
@@ -111,14 +129,6 @@ export class KutsuAdapter {
       return "trafikledsverkets";
     }
     return tilaajaOrganisaatio.replace("keskus", "keskuksen");
-  }
-
-  get kuntaOrKunnat(): string {
-    const kunnat = this.velho?.kunnat;
-    if (kunnat) {
-      return ", " + formatList(kunnat, this.kieli);
-    }
-    return "";
   }
 
   get kuntia(): string {
@@ -161,6 +171,10 @@ export class KutsuAdapter {
     }
   }
 
+  get suunnitelman_nimi(): string {
+    return this.nimi;
+  }
+
   get nimi(): string {
     if (isKieliSupported(this.kieli, this.kielitiedot)) {
       if (this.kieli == Kieli.SUOMI) {
@@ -180,7 +194,11 @@ export class KutsuAdapter {
     return linkSuunnitteluVaihe(this.oid);
   }
 
-  get tietosuojaUrl(): string {
+  get linkki_hyvaksymispaatos(): string {
+    return linkHyvaksymisPaatos(this.oid);
+  }
+
+  get tietosuojaurl(): string {
     return this.selectText(
       "https://www.vayla.fi/tietosuoja",
       "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy",
@@ -216,7 +234,13 @@ export class KutsuAdapter {
       if (!this.kayttoOikeudet) {
         throw new Error("BUG: Kayttöoikeudet pitää antaa jos yhteyshenkilöt on annettu.");
       }
-      this.getUsersForUsernames(yhteysHenkilot).forEach((user) => {
+      const yhteysHenkilotWithProjectManager = union(
+        this.kayttoOikeudet
+          .filter((user) => user.rooli == ProjektiRooli.PROJEKTIPAALLIKKO)
+          .map((user) => user.kayttajatunnus),
+        yhteysHenkilot
+      );
+      this.getUsersForUsernames(yhteysHenkilotWithProjectManager).forEach((user) => {
         const [sukunimi, etunimi] = user.nimi.split(/, /g);
         yt.push({
           etunimi,
@@ -238,6 +262,36 @@ export class KutsuAdapter {
       });
     }
     return yt.map(yhteystietoMapper);
+  }
+
+  text(key: string): string {
+    const translation = translate(key, this.kieli);
+    if (!translation) {
+      throw new Error(this.kieli + " translation missing for key " + key);
+    }
+    return translation.replace(new RegExp(`{{(.+?)}}`, "g"), (_, part) => {
+      // Function from given templateResolver
+      const func = this.templateResolver?.[part];
+      if (typeof func == "function") {
+        return func.bind(this.templateResolver)();
+      }
+      // Return text as it is if it was resolved
+      if (func) {
+        return func;
+      }
+
+      // Function from this class
+      const resolvedText = this[part];
+      if (typeof resolvedText == "function") {
+        return resolvedText.bind(this)();
+      }
+
+      // Return text as it is if it was resolved
+      if (resolvedText) {
+        return resolvedText;
+      }
+      return "{{" + part + "}}";
+    });
   }
 
   get yhteystiedotVuorovaikutus(): { organisaatio; etunimi; sukunimi; puhelinnumero; sahkoposti }[] {

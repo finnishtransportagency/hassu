@@ -50,9 +50,7 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
   const yhteystiedotListana =
     kuulutus.kuulutusYhteystiedot?.map((yhteystieto) => t("common:yhteystieto", yhteystieto)) || [];
 
-  const vastaavaViranomainen = velho.suunnittelustaVastaavaViranomainen
-    ? velho.suunnittelustaVastaavaViranomainen
-    : velho.tilaajaOrganisaatio;
+  const vastaavaViranomainen = velho.suunnittelustaVastaavaViranomainen;
 
   return (
     <ProjektiJulkinenPageLayout selectedStep={2} title="Kuulutus suunnitelman nähtäville asettamisesta">

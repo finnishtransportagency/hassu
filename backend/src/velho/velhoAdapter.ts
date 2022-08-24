@@ -159,10 +159,6 @@ export function adaptProjekti(data: ProjektiProjekti): { projekti: DBProjekti; v
       tyyppi: projektiTyyppi,
       vaylamuoto: adaptVaylamuoto(data.ominaisuudet.vaylamuoto),
       suunnittelustaVastaavaViranomainen: viranomainen,
-      // Tuodaan toistaiseksi suunnittelustaVastaavaViranomainen-tiedon lisäksi
-      // tilaajaorganisaatiotieto suomenkielisenä sillä sitä käytetään PDF-generoinnissa ja sähköposteissa
-      // TODO implementoi suomi-ruotsi -käännökset Viranomais-tiedolle backendissa
-      tilaajaOrganisaatio: metadata.organisaatiot[`${data.ominaisuudet.tilaajaorganisaatio}`].otsikko,
       linkki: data.ominaisuudet.linkki,
       kunnat: getKunnat(data),
       maakunnat: getMaakunnat(data),

@@ -1,7 +1,8 @@
 import log from "loglevel";
-import { ProjektiTyyppi } from "../../../../common/graphql/apiModel";
+import { Kieli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../../asiakirja/asiakirjaService";
 import { DBProjekti, Yhteystieto } from "../../database/model";
+import { translate } from "../../util/localization";
 
 type SuunnitelmaTyyppi = "tiesuunnitelma" | "ratasuunnitelma" | "yleissuunnitelma";
 
@@ -49,12 +50,13 @@ export class LahetekirjeAdapter {
   }
 
   protected get isVaylaTilaaja(): boolean {
-    return this.projekti?.velho?.tilaajaOrganisaatio === "Väylävirasto";
+    return this.projekti?.velho?.suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO;
   }
 
   protected get isElyTilaaja(): boolean {
     return (
-      this.projekti?.velho?.tilaajaOrganisaatio && this.projekti?.velho?.tilaajaOrganisaatio.endsWith("ELY-keskus")
+      this.projekti?.velho?.suunnittelustaVastaavaViranomainen &&
+      this.projekti?.velho?.suunnittelustaVastaavaViranomainen.endsWith("ELY")
     );
   }
 
@@ -80,12 +82,13 @@ export class LahetekirjeAdapter {
 
   private get tilaajaPitka() {
     let result = "<TILAAJA>";
-    const tilaajaOrganisaatio = this.projekti?.velho?.tilaajaOrganisaatio;
+    const viranomainen = this.projekti?.velho?.suunnittelustaVastaavaViranomainen;
     // if no tilaajaOrganisaatio return a placeholder
-    if (!tilaajaOrganisaatio) {
+    if (!viranomainen) {
       return result;
     }
 
+    const tilaajaOrganisaatio = translate("viranomainen." + viranomainen, Kieli.SUOMI);
     if (this.isElyTilaaja) {
       result = tilaajaOrganisaatio.replace("ELY-keskus", "elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)");
     } else {
@@ -121,9 +124,9 @@ export class LahetekirjeAdapter {
 
   private get tilaajaGenetiivi() {
     let result = "<TILAAJA>";
-    const tilaajaOrganisaatio = this.projekti?.velho?.tilaajaOrganisaatio;
+    const viranomainen = this.projekti?.velho?.suunnittelustaVastaavaViranomainen;
     // if no tilaajaOrganisaatio return a placeholder
-    if (!tilaajaOrganisaatio) {
+    if (!viranomainen) {
       return result;
     }
 
@@ -132,7 +135,7 @@ export class LahetekirjeAdapter {
     } else if (this.isElyTilaaja) {
       result = "ELY-keskuksen";
     } else {
-      result = tilaajaOrganisaatio;
+      result = translate("viranomainen." + viranomainen, Kieli.SUOMI);
     }
     return result;
   }
@@ -147,16 +150,16 @@ export class LahetekirjeAdapter {
 
   private get tilaajaLyhyt() {
     let result = "<TILAAJA>";
-    const tilaajaOrganisaatio = this.projekti?.velho?.tilaajaOrganisaatio;
+    const viranomainen = this.projekti?.velho?.suunnittelustaVastaavaViranomainen;
     // if no tilaajaOrganisaatio return a placeholder
-    if (!tilaajaOrganisaatio) {
+    if (!viranomainen) {
       return result;
     }
 
     if (this.isElyTilaaja) {
       result = "ELY-keskus";
     } else {
-      result = tilaajaOrganisaatio;
+      result = translate("viranomainen." + viranomainen, Kieli.SUOMI);
     }
     return result;
   }
@@ -167,9 +170,9 @@ export class LahetekirjeAdapter {
 
   private get tilaajaAllatiivi() {
     let result = "<TILAAJA>";
-    const tilaajaOrganisaatio = this.projekti?.velho?.tilaajaOrganisaatio;
+    const viranomainen = this.projekti?.velho?.suunnittelustaVastaavaViranomainen;
     // if no tilaajaOrganisaatio return a placeholder
-    if (!tilaajaOrganisaatio) {
+    if (!viranomainen) {
       return result;
     }
 
@@ -178,7 +181,7 @@ export class LahetekirjeAdapter {
     } else if (this.isElyTilaaja) {
       result = "ELY-keskukselle";
     } else {
-      result = tilaajaOrganisaatio;
+      result = translate("viranomainen." + viranomainen, Kieli.SUOMI);
     }
     return result;
   }

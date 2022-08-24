@@ -91,10 +91,6 @@ export type Velho = {
   vaylamuoto?: string[] | null;
   asiatunnusVayla?: string | null;
   asiatunnusELY?: string | null;
-  /**
-   * @deprecated suunnittelustaVastaavaViranomainen is the correct one
-   */
-  tilaajaOrganisaatio?: string | null;
   suunnittelustaVastaavaViranomainen?: Viranomainen | null;
   toteuttavaOrganisaatio?: string | null;
   vastuuhenkilonNimi?: string | null;

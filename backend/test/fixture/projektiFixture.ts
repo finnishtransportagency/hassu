@@ -1,6 +1,7 @@
 import {
   AloitusKuulutusInput,
   AloitusKuulutusTila,
+  HallintoOikeus,
   IlmoitettavaViranomainen,
   IlmoituksenVastaanottajat,
   KaytettavaPalvelu,
@@ -188,7 +189,6 @@ export class ProjektiFixture {
     velho: {
       nimi: this.PROJEKTI1_NIMI,
       tyyppi: ProjektiTyyppi.TIE,
-      tilaajaOrganisaatio: "Uudenmaan ELY-keskus",
       suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
       kunnat: ["Tampere", "Nokia"],
       maakunnat: ["Uusimaa", "Pirkanmaa"],
@@ -253,7 +253,6 @@ export class ProjektiFixture {
     velho: {
       nimi: this.PROJEKTI2_NIMI,
       tyyppi: ProjektiTyyppi.TIE,
-      tilaajaOrganisaatio: "Uudenmaan ELY-keskus",
       kunnat: ["Mikkeli", "Juva", "Savonlinna"],
       vaylamuoto: ["tie"],
       vastuuhenkilonEmail: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
@@ -301,7 +300,6 @@ export class ProjektiFixture {
           },
         ],
         velho: {
-          tilaajaOrganisaatio: "Väylävirasto",
           vaylamuoto: ["tie"],
           nimi: "Marikan testiprojekti",
           tyyppi: ProjektiTyyppi.YLEINEN,
@@ -361,10 +359,7 @@ export class ProjektiFixture {
       kuulutusPaiva: "2022-06-07",
       kuulutusVaihePaattyyPaiva: "2042-06-07",
       muistutusoikeusPaattyyPaiva: "2042-06-08",
-      kuulutusYhteysHenkilot: [
-        ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
-        ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
-      ],
+      kuulutusYhteysHenkilot: [ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus],
       ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
       kuulutusYhteystiedot: this.esitettavatYhteystiedot,
     },
@@ -380,6 +375,21 @@ export class ProjektiFixture {
         nimi: "Littyva suunnitelma 1 nimi",
       },
     ],
+    kasittelynTila: {
+      hyvaksymispaatos: { paatoksenPvm: "2022-02-03", asianumero: "traficom-123" },
+    },
+    hyvaksymisPaatosVaihe: {
+      id: 1,
+      hallintoOikeus: HallintoOikeus.HAMEENLINNA,
+      ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
+      kuulutusYhteystiedot: this.esitettavatYhteystiedot,
+      kuulutusPaiva: "2022-01-02",
+      kuulutusVaihePaattyyPaiva: "2022-01-03",
+      kuulutusYhteysHenkilot: [
+        ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
+        ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
+      ],
+    },
     salt: "foo",
     paivitetty: "2022-03-15T14:30:00.000Z",
   };
@@ -410,7 +420,6 @@ export class ProjektiFixture {
     velho: {
       nimi: this.PROJEKTI3_NIMI,
       tyyppi: ProjektiTyyppi.TIE,
-      tilaajaOrganisaatio: "Uudenmaan ELY-keskus",
       kunnat: ["Mikkeli", "Juva", "Savonlinna"],
       vaylamuoto: ["tie"],
       vastuuhenkilonEmail: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
@@ -458,7 +467,6 @@ export class ProjektiFixture {
           },
         ],
         velho: {
-          tilaajaOrganisaatio: "Väylävirasto",
           vaylamuoto: ["tie"],
           nimi: "Marikan testiprojekti",
           tyyppi: ProjektiTyyppi.YLEINEN,
@@ -590,7 +598,6 @@ export class ProjektiFixture {
           kunnat: ["Kerava"],
           linkki: null,
           nimi: "Mt 140 parantaminen Kaskelantien kohdalla, tiesuunnitelma, Kerava",
-          tilaajaOrganisaatio: "Uudenmaan ELY-keskus",
           tyyppi: ProjektiTyyppi.TIE,
           vastuuhenkilonEmail: "hanna.reuterhorn@ely-keskus.fi",
           vaylamuoto: ["tie"],

@@ -26,7 +26,6 @@ Object {
     ],
     "nimi": "Uusi nimi",
     "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
-    "tilaajaOrganisaatio": "Uudenmaan ELY-keskus",
     "tyyppi": "TIE",
     "vastuuhenkilonEmail": "uusi@vayla.fi",
     "vaylamuoto": Array [

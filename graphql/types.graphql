@@ -69,6 +69,12 @@ enum AsiakirjaTyyppi {
   NAHTAVILLAOLOKUULUTUS
   ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE
   ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE
+
+  HYVAKSYMISPAATOSKUULUTUS
+  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE
+  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE
+  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE
+  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
 }
 
 interface IProjekti {
@@ -432,7 +438,6 @@ type Velho {
   asiatunnusVayla: String
   asiatunnusELY: String
   suunnittelustaVastaavaViranomainen: Viranomainen
-  tilaajaOrganisaatio: String
   toteuttavaOrganisaatio: String
   vastuuhenkilonNimi: String
   vastuuhenkilonEmail: String
@@ -451,7 +456,6 @@ type VelhoJulkinen {
   asiatunnusVayla: String
   asiatunnusELY: String
   suunnittelustaVastaavaViranomainen: Viranomainen
-  tilaajaOrganisaatio: String
   toteuttavaOrganisaatio: String
   maakunnat: [String!]
   kunnat: [String!]
