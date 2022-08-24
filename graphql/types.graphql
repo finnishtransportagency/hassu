@@ -173,6 +173,7 @@ type Vuorovaikutus {
 
   esittelyaineistot: [Aineisto!]
   suunnitelmaluonnokset: [Aineisto!]
+  vuorovaikutusPDFt: VuorovaikutusPDFt
 }
 
 type VuorovaikutusJulkinen {
@@ -196,6 +197,7 @@ type VuorovaikutusJulkinen {
 
   esittelyaineistot: [Aineisto!]
   suunnitelmaluonnokset: [Aineisto!]
+  vuorovaikutusPDFt: VuorovaikutusPDFt
 }
 
 type NahtavillaoloVaihe {
@@ -303,6 +305,16 @@ type NahtavillaoloPDFt {
   SUOMI: NahtavillaoloPDF!
   RUOTSI: NahtavillaoloPDF
   SAAME: NahtavillaoloPDF
+}
+
+type VuorovaikutusPDFt {
+  SUOMI: VuorovaikutusPDF!
+  RUOTSI: VuorovaikutusPDF
+  SAAME: VuorovaikutusPDF
+}
+
+type VuorovaikutusPDF {
+  kutsuPDFPath: String!
 }
 
 type HyvaksymisPaatosVaihePDF {

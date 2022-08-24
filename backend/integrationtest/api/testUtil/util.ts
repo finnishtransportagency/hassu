@@ -5,19 +5,23 @@ import { AineistoInput, VelhoAineisto } from "../../../../common/graphql/apiMode
 const { expect } = require("chai");
 
 export async function takeS3Snapshot(oid: string, description: string, path?: string): Promise<void> {
-  takeYllapitoS3Snapshot(oid, description, path);
-  takePublicS3Snapshot(oid, description, path);
+  await takeYllapitoS3Snapshot(oid, description, path);
+  await takePublicS3Snapshot(oid, description, path);
 }
 
 export async function takeYllapitoS3Snapshot(oid: string, description: string, path?: string): Promise<void> {
   expect({
-    ["yllapito S3 files " + description]: cleanupGeneratedIds(await fileService.listYllapitoProjektiFiles(oid, path || "")),
+    ["yllapito S3 files " + description]: cleanupGeneratedIds(
+      await fileService.listYllapitoProjektiFiles(oid, path || "")
+    ),
   }).toMatchSnapshot(description);
 }
 
 export async function takePublicS3Snapshot(oid: string, description: string, path?: string): Promise<void> {
   expect({
-    ["public S3 files " + description]: cleanupGeneratedIds(await fileService.listPublicProjektiFiles(oid, path || "", true)),
+    ["public S3 files " + description]: cleanupGeneratedIds(
+      await fileService.listPublicProjektiFiles(oid, path || "", true)
+    ),
   }).toMatchSnapshot(description);
 }
 

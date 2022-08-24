@@ -1,6 +1,81 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Api should search, load and save a project 1`] = `
+Array [
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Uusi projekti perustettu ",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmään on tuotu Projektivelhosta projektisi:
+HASSU AUTOMAATTITESTIPROJEKTI1
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506
+Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": "mikko.haapamki@cgi.com",
+  },
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
+HASSU AUTOMAATTITESTIPROJEKTI1
+on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506
+Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": "mikko.haapamki@cgi.com",
+  },
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
+HASSU AUTOMAATTITESTIPROJEKTI1
+aloituskuulutus on hyväksytty.
+Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
+Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": "mikko.haapamki@cgi.com",
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T412 Aloituskuulutus.pdf",
+      },
+    ],
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
+HASSU AUTOMAATTITESTIPROJEKTI1
+aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
+
+Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
+
+Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": "mikko.haapamki@cgi.com",
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      },
+    ],
+    "subject": "TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA ILMOITTAMINEN - HASSU AUTOMAATTITESTIPROJEKTI1",
+    "text": "TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA ILMOITTAMINEN
+
+HASSU AUTOMAATTITESTIPROJEKTI1
+
+Väylävirasto ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee suunnittelun ja maastotöiden aloittamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
+
+Kuulutus julkaistaan 2.1.2022, Väyläviraston tietoverkossa osoitteessa https://vayla.fi/kuulutukset.
+
+Väylävirasto pyytää suunnittelualueen kuntia julkisemaan julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa Väylävirastolle.
+
+Lorem Ipsum
+
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa https://vayla.fi/tietosuoja.
+
+Lisätietoja antaa
+CGI Suomi Oy, A-tunnus1 Hassu, puh. 123, mikko.haapamki@cgi.com
+Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com",
+    "to": Array [],
+  },
+]
+`;
+
+exports[`Api should search, load and save a project 2`] = `
 Object {
   "description": "testSuunnitteluvaihePerustiedot",
   "obj": Object {
@@ -22,7 +97,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 2`] = `
+exports[`Api should search, load and save a project 3`] = `
 Object {
   "description": "testSuunnitteluvaiheVuorovaikutus",
   "obj": Object {
@@ -96,6 +171,7 @@ Object {
         ],
         "vuorovaikutusJulkaisuPaiva": "2022-03-23",
         "vuorovaikutusNumero": 1,
+        "vuorovaikutusPDFt": undefined,
         "vuorovaikutusTilaisuudet": Array [
           Object {
             "__typename": "VuorovaikutusTilaisuus",
@@ -242,6 +318,7 @@ Object {
         ],
         "vuorovaikutusJulkaisuPaiva": "2022-03-23",
         "vuorovaikutusNumero": 2,
+        "vuorovaikutusPDFt": undefined,
         "vuorovaikutusTilaisuudet": Array [
           Object {
             "__typename": "VuorovaikutusTilaisuus",
@@ -337,7 +414,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 3`] = `
+exports[`Api should search, load and save a project 4`] = `
 Object {
   "description": "added A000111 to vuorovaikutus and vuorovaikutustilaisuus",
   "obj": Object {
@@ -363,7 +440,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 4`] = `
+exports[`Api should search, load and save a project 5`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #initialSave",
   "obj": Object {
@@ -446,182 +523,7 @@ Object {
     ],
     "vuorovaikutusJulkaisuPaiva": "2022-03-23",
     "vuorovaikutusNumero": 1,
-    "vuorovaikutusTilaisuudet": Array [
-      Object {
-        "__typename": "VuorovaikutusTilaisuus",
-        "alkamisAika": "15:00",
-        "esitettavatYhteystiedot": undefined,
-        "kaytettavaPalvelu": "TEAMS",
-        "linkki": "https://linkki_tilaisuuteen",
-        "nimi": "Lorem ipsum 1",
-        "paattymisAika": "16:00",
-        "paivamaara": "2022-03-04",
-        "tyyppi": "VERKOSSA",
-      },
-      Object {
-        "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
-        "__typename": "VuorovaikutusTilaisuus",
-        "alkamisAika": "10:00",
-        "esitettavatYhteystiedot": undefined,
-        "nimi": "Lorem ipsum two 1",
-        "osoite": "Katu 123",
-        "paattymisAika": "11:00",
-        "paikka": "Kunnantalo",
-        "paivamaara": "2022-04-05",
-        "postinumero": "00100",
-        "postitoimipaikka": "Helsinki",
-        "tyyppi": "PAIKALLA",
-      },
-      Object {
-        "__typename": "VuorovaikutusTilaisuus",
-        "alkamisAika": "10:00",
-        "esitettavatYhteystiedot": Array [
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Etunimi",
-            "organisaatio": "",
-            "puhelinnumero": "0293121213",
-            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-            "sukunimi": "Sukunimi",
-            "titteli": "Projektipäällikkö",
-          },
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Joku",
-            "organisaatio": "",
-            "puhelinnumero": "02998765",
-            "sahkoposti": "Joku.Jokunen@vayla.fi",
-            "sukunimi": "Jokunen",
-            "titteli": "Konsultti",
-          },
-        ],
-        "nimi": "Soittoaikatilaisuuden nimi tässä",
-        "paattymisAika": "11:00",
-        "paivamaara": "2022-04-05",
-        "projektiYhteysHenkilot": Array [
-          "A000112",
-        ],
-        "tyyppi": "SOITTOAIKA",
-      },
-      Object {
-        "__typename": "VuorovaikutusTilaisuus",
-        "alkamisAika": "12:00",
-        "esitettavatYhteystiedot": Array [
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Etunimi",
-            "organisaatio": "",
-            "puhelinnumero": "0293121213",
-            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-            "sukunimi": "Sukunimi",
-            "titteli": "Projektipäällikkö",
-          },
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Joku",
-            "organisaatio": "",
-            "puhelinnumero": "02998765",
-            "sahkoposti": "Joku.Jokunen@vayla.fi",
-            "sukunimi": "Jokunen",
-            "titteli": "Konsultti",
-          },
-        ],
-        "nimi": "Toisen soittoaikatilaisuuden nimi tässä",
-        "paattymisAika": "13:00",
-        "paivamaara": "2033-04-05",
-        "tyyppi": "SOITTOAIKA",
-      },
-    ],
-    "vuorovaikutusYhteysHenkilot": Array [
-      "A000112",
-    ],
-  },
-}
-`;
-
-exports[`Api should search, load and save a project 5`] = `
-Object {
-  "description": "saveAndVerifyAineistoSave #updateNimiAndJarjestys",
-  "obj": Object {
-    "__typename": "Vuorovaikutus",
-    "esitettavatYhteystiedot": Array [
-      Object {
-        "__typename": "Yhteystieto",
-        "etunimi": "Marko",
-        "organisaatio": "Kajaani",
-        "puhelinnumero": "0293121213",
-        "sahkoposti": "markku.koi@koi.com",
-        "sukunimi": "Koi",
-      },
-    ],
-    "esittelyaineistot": Array [
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
-        "jarjestys": 11,
-        "nimi": "new tokatiedosto_toka.pdf",
-        "tila": "ODOTTAA_TUONTIA",
-      },
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
-        "jarjestys": 12,
-        "nimi": "new ekatiedosto_eka.pdf",
-        "tila": "ODOTTAA_TUONTIA",
-      },
-    ],
-    "ilmoituksenVastaanottajat": Object {
-      "__typename": "IlmoituksenVastaanottajat",
-      "kunnat": Array [
-        Object {
-          "__typename": "KuntaVastaanottaja",
-          "lahetetty": "2022-03-11T14:54",
-          "nimi": "Mikkeli",
-          "sahkoposti": "mikkeli@mikke.li",
-        },
-        Object {
-          "__typename": "KuntaVastaanottaja",
-          "lahetetty": "2022-03-11T14:54",
-          "nimi": " Juva",
-          "sahkoposti": "juva@ju.va",
-        },
-        Object {
-          "__typename": "KuntaVastaanottaja",
-          "lahetetty": "2022-03-11T14:54",
-          "nimi": " Savonlinna",
-          "sahkoposti": "savonlinna@savonlin.na",
-        },
-      ],
-      "viranomaiset": Array [
-        Object {
-          "__typename": "ViranomaisVastaanottaja",
-          "lahetetty": "2022-03-11T14:54",
-          "nimi": "ETELA_SAVO_ELY",
-          "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
-        },
-      ],
-    },
-    "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
-    "suunnitelmaluonnokset": Array [
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
-        "jarjestys": 11,
-        "kategoriaId": "T1xx",
-        "nimi": "new karttakuvalla_tiedosto.pdf",
-        "tila": "ODOTTAA_TUONTIA",
-      },
-    ],
-    "suunnittelumateriaali": undefined,
-    "videot": Array [
-      Object {
-        "__typename": "Linkki",
-        "nimi": "Esittely 1",
-        "url": "https://video",
-      },
-    ],
-    "vuorovaikutusJulkaisuPaiva": "2022-03-23",
-    "vuorovaikutusNumero": 1,
+    "vuorovaikutusPDFt": undefined,
     "vuorovaikutusTilaisuudet": Array [
       Object {
         "__typename": "VuorovaikutusTilaisuus",
@@ -717,7 +619,7 @@ Object {
 
 exports[`Api should search, load and save a project 6`] = `
 Object {
-  "description": "saveAndVerifyAineistoSave #esittelyAineistotWithoutFirst",
+  "description": "saveAndVerifyAineistoSave #updateNimiAndJarjestys",
   "obj": Object {
     "__typename": "Vuorovaikutus",
     "esitettavatYhteystiedot": Array [
@@ -731,6 +633,13 @@ Object {
       },
     ],
     "esittelyaineistot": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
+        "jarjestys": 11,
+        "nimi": "new tokatiedosto_toka.pdf",
+        "tila": "ODOTTAA_TUONTIA",
+      },
       Object {
         "__typename": "Aineisto",
         "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
@@ -791,6 +700,7 @@ Object {
     ],
     "vuorovaikutusJulkaisuPaiva": "2022-03-23",
     "vuorovaikutusNumero": 1,
+    "vuorovaikutusPDFt": undefined,
     "vuorovaikutusTilaisuudet": Array [
       Object {
         "__typename": "VuorovaikutusTilaisuus",
@@ -886,6 +796,176 @@ Object {
 
 exports[`Api should search, load and save a project 7`] = `
 Object {
+  "description": "saveAndVerifyAineistoSave #esittelyAineistotWithoutFirst",
+  "obj": Object {
+    "__typename": "Vuorovaikutus",
+    "esitettavatYhteystiedot": Array [
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Marko",
+        "organisaatio": "Kajaani",
+        "puhelinnumero": "0293121213",
+        "sahkoposti": "markku.koi@koi.com",
+        "sukunimi": "Koi",
+      },
+    ],
+    "esittelyaineistot": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
+        "jarjestys": 12,
+        "nimi": "new ekatiedosto_eka.pdf",
+        "tila": "ODOTTAA_TUONTIA",
+      },
+    ],
+    "ilmoituksenVastaanottajat": Object {
+      "__typename": "IlmoituksenVastaanottajat",
+      "kunnat": Array [
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "lahetetty": "2022-03-11T14:54",
+          "nimi": "Mikkeli",
+          "sahkoposti": "mikkeli@mikke.li",
+        },
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "lahetetty": "2022-03-11T14:54",
+          "nimi": " Juva",
+          "sahkoposti": "juva@ju.va",
+        },
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "lahetetty": "2022-03-11T14:54",
+          "nimi": " Savonlinna",
+          "sahkoposti": "savonlinna@savonlin.na",
+        },
+      ],
+      "viranomaiset": Array [
+        Object {
+          "__typename": "ViranomaisVastaanottaja",
+          "lahetetty": "2022-03-11T14:54",
+          "nimi": "ETELA_SAVO_ELY",
+          "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+        },
+      ],
+    },
+    "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+    "suunnitelmaluonnokset": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
+        "jarjestys": 11,
+        "kategoriaId": "T1xx",
+        "nimi": "new karttakuvalla_tiedosto.pdf",
+        "tila": "ODOTTAA_TUONTIA",
+      },
+    ],
+    "suunnittelumateriaali": undefined,
+    "videot": Array [
+      Object {
+        "__typename": "Linkki",
+        "nimi": "Esittely 1",
+        "url": "https://video",
+      },
+    ],
+    "vuorovaikutusJulkaisuPaiva": "2022-03-23",
+    "vuorovaikutusNumero": 1,
+    "vuorovaikutusPDFt": undefined,
+    "vuorovaikutusTilaisuudet": Array [
+      Object {
+        "__typename": "VuorovaikutusTilaisuus",
+        "alkamisAika": "15:00",
+        "esitettavatYhteystiedot": undefined,
+        "kaytettavaPalvelu": "TEAMS",
+        "linkki": "https://linkki_tilaisuuteen",
+        "nimi": "Lorem ipsum 1",
+        "paattymisAika": "16:00",
+        "paivamaara": "2022-03-04",
+        "tyyppi": "VERKOSSA",
+      },
+      Object {
+        "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
+        "__typename": "VuorovaikutusTilaisuus",
+        "alkamisAika": "10:00",
+        "esitettavatYhteystiedot": undefined,
+        "nimi": "Lorem ipsum two 1",
+        "osoite": "Katu 123",
+        "paattymisAika": "11:00",
+        "paikka": "Kunnantalo",
+        "paivamaara": "2022-04-05",
+        "postinumero": "00100",
+        "postitoimipaikka": "Helsinki",
+        "tyyppi": "PAIKALLA",
+      },
+      Object {
+        "__typename": "VuorovaikutusTilaisuus",
+        "alkamisAika": "10:00",
+        "esitettavatYhteystiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "organisaatio": "",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+            "titteli": "Projektipäällikkö",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "organisaatio": "",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+            "titteli": "Konsultti",
+          },
+        ],
+        "nimi": "Soittoaikatilaisuuden nimi tässä",
+        "paattymisAika": "11:00",
+        "paivamaara": "2022-04-05",
+        "projektiYhteysHenkilot": Array [
+          "A000112",
+        ],
+        "tyyppi": "SOITTOAIKA",
+      },
+      Object {
+        "__typename": "VuorovaikutusTilaisuus",
+        "alkamisAika": "12:00",
+        "esitettavatYhteystiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "organisaatio": "",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+            "titteli": "Projektipäällikkö",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "organisaatio": "",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+            "titteli": "Konsultti",
+          },
+        ],
+        "nimi": "Toisen soittoaikatilaisuuden nimi tässä",
+        "paattymisAika": "13:00",
+        "paivamaara": "2033-04-05",
+        "tyyppi": "SOITTOAIKA",
+      },
+    ],
+    "vuorovaikutusYhteysHenkilot": Array [
+      "A000112",
+    ],
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 8`] = `
+Object {
   "__typename": "Vuorovaikutus",
   "esitettavatYhteystiedot": Array [
     Object {
@@ -962,6 +1042,7 @@ Object {
   ],
   "vuorovaikutusJulkaisuPaiva": "2022-03-23",
   "vuorovaikutusNumero": 1,
+  "vuorovaikutusPDFt": undefined,
   "vuorovaikutusTilaisuudet": Array [
     Object {
       "__typename": "VuorovaikutusTilaisuus",
@@ -1054,7 +1135,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 8`] = `
+exports[`Api should search, load and save a project 9`] = `
 Object {
   "description": "publicProjekti ennen suunnitteluvaihetta",
   "obj": Object {
@@ -1181,7 +1262,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 9`] = `
+exports[`Api should search, load and save a project 10`] = `
 Object {
   "description": "projekti palaute lisätty",
   "obj": Array [
@@ -1202,7 +1283,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 10`] = `
+exports[`Api should search, load and save a project 11`] = `
 Object {
   "description": "projekti palaute otettu käsittelyyn",
   "obj": Array [
@@ -1224,7 +1305,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 11`] = `
+exports[`Api should search, load and save a project 12`] = `
 Object {
   "description": "publicProjekti suunnitteluvaihe",
   "obj": Object {
@@ -1314,6 +1395,13 @@ Object {
         ],
         "vuorovaikutusJulkaisuPaiva": "2022-03-23",
         "vuorovaikutusNumero": 1,
+        "vuorovaikutusPDFt": Object {
+          "SUOMI": Object {
+            "__typename": "VuorovaikutusPDF",
+            "kutsuPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf",
+          },
+          "__typename": "VuorovaikutusPDFt",
+        },
         "vuorovaikutusTilaisuudet": Array [
           Object {
             "__typename": "VuorovaikutusTilaisuus",
@@ -1481,6 +1569,7 @@ Object {
         ],
         "vuorovaikutusJulkaisuPaiva": "2022-03-23",
         "vuorovaikutusNumero": 2,
+        "vuorovaikutusPDFt": undefined,
         "vuorovaikutusTilaisuudet": Array [
           Object {
             "__typename": "VuorovaikutusTilaisuus",
@@ -1607,22 +1696,125 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 12`] = `
-Object {
-  "DistributionId": "unit-test-distribution-id",
-  "InvalidationBatch": Object {
-    "CallerReference": "***unittest***",
-    "Paths": Object {
-      "Items": Array [
-        "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/*",
-      ],
-      "Quantity": 1,
-    },
+exports[`Api should search, load and save a project 13`] = `
+Array [
+  Object {
+    "subject": "Suunnitelmaan on tullut palautetta",
+    "text": "Suunnitelmaan on tullut palautetta: https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu",
+    "to": "mikko.haapamaki@cgi.com",
   },
-}
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "TS Tie Yleisotilaisuus kutsu.pdf",
+      },
+    ],
+    "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
+    "text": "HASSU AUTOMAATTITESTIPROJEKTI1
+
+Väylävirasto laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista tiesuunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1.
+
+Väylävirasto ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun tiesuunnitelman yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
+
+Kutsu julkaistaan 23.3.2022 väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
+
+Väylävirasto pyytää Helsinki,  Vantaa ja Väylävirastoa julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa Väylävirastolle.
+
+Väylävirasto käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Lisätietoja väyläsuunnittelun tietosuojakäytänteistä on saatavilla verkkosivujen tietosuojaosiossa osoitteessa https://www.vayla.fi/tietosuoja.
+
+Lisätietoja antaa:
+Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
+CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
+
+LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
+    "to": "mikkeli@mikke.li",
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "TS Tie Yleisotilaisuus kutsu.pdf",
+      },
+    ],
+    "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
+    "text": "HASSU AUTOMAATTITESTIPROJEKTI1
+
+Väylävirasto laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista tiesuunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1.
+
+Väylävirasto ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun tiesuunnitelman yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
+
+Kutsu julkaistaan 23.3.2022 väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
+
+Väylävirasto pyytää Helsinki,  Vantaa ja Väylävirastoa julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa Väylävirastolle.
+
+Väylävirasto käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Lisätietoja väyläsuunnittelun tietosuojakäytänteistä on saatavilla verkkosivujen tietosuojaosiossa osoitteessa https://www.vayla.fi/tietosuoja.
+
+Lisätietoja antaa:
+Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
+CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
+
+LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
+    "to": "juva@ju.va",
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "TS Tie Yleisotilaisuus kutsu.pdf",
+      },
+    ],
+    "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
+    "text": "HASSU AUTOMAATTITESTIPROJEKTI1
+
+Väylävirasto laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista tiesuunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1.
+
+Väylävirasto ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun tiesuunnitelman yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
+
+Kutsu julkaistaan 23.3.2022 väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
+
+Väylävirasto pyytää Helsinki,  Vantaa ja Väylävirastoa julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa Väylävirastolle.
+
+Väylävirasto käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Lisätietoja väyläsuunnittelun tietosuojakäytänteistä on saatavilla verkkosivujen tietosuojaosiossa osoitteessa https://www.vayla.fi/tietosuoja.
+
+Lisätietoja antaa:
+Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
+CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
+
+LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
+    "to": "savonlinna@savonlin.na",
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "TS Tie Yleisotilaisuus kutsu.pdf",
+      },
+    ],
+    "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
+    "text": "HASSU AUTOMAATTITESTIPROJEKTI1
+
+Väylävirasto laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista tiesuunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1.
+
+Väylävirasto ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun tiesuunnitelman yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
+
+Kutsu julkaistaan 23.3.2022 väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
+
+Väylävirasto pyytää Helsinki,  Vantaa ja Väylävirastoa julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa Väylävirastolle.
+
+Väylävirasto käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Lisätietoja väyläsuunnittelun tietosuojakäytänteistä on saatavilla verkkosivujen tietosuojaosiossa osoitteessa https://www.vayla.fi/tietosuoja.
+
+Lisätietoja antaa:
+Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
+CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
+
+LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
+    "to": "kirjaamo.etela-savo@ely-keskus.fi",
+  },
+]
 `;
 
-exports[`Api should search, load and save a project 13`] = `
+exports[`Api should search, load and save a project 14`] = `
 Object {
   "yllapito S3 files just after vuorovaikutus published": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {},
@@ -1636,29 +1828,40 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 14`] = `
+exports[`Api should search, load and save a project 15`] = `
 Object {
   "public S3 files just after vuorovaikutus published": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
     "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": Object {
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "suunnittelusopimus/logo.png": Object {
+      "ContentType": "application/octet-stream",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {
+      "ContentType": "application/octet-stream",
       "publishDate": "2022-03-23T00:00:00+02:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf": Object {
+      "ContentType": "application/octet-stream",
       "publishDate": "2022-03-23T00:00:00+02:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {
+      "ContentType": "application/octet-stream",
       "publishDate": "2022-03-23T00:00:00+02:00",
     },
   },
 }
 `;
 
-exports[`Api should search, load and save a project 15`] = `
+exports[`Api should search, load and save a project 16`] = `
 Object {
   "DistributionId": "unit-test-distribution-id",
   "InvalidationBatch": Object {
@@ -1673,7 +1876,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 16`] = `
+exports[`Api should search, load and save a project 17`] = `
 Object {
   "yllapito S3 files vuorovaikutus publish date changed and last aineisto deleted": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {},
@@ -1686,136 +1889,67 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 17`] = `
+exports[`Api should search, load and save a project 18`] = `
 Object {
   "public S3 files vuorovaikutus publish date changed and last aineisto deleted": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
     "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": Object {
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "suunnittelusopimus/logo.png": Object {
+      "ContentType": "application/octet-stream",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {
+      "ContentType": "application/octet-stream",
       "publishDate": "2022-03-24T00:00:00+02:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {
+      "ContentType": "application/octet-stream",
       "publishDate": "2022-03-24T00:00:00+02:00",
     },
   },
 }
 `;
 
-exports[`Api should search, load and save a project 18`] = `
+exports[`Api should search, load and save a project 19`] = `
+Object {
+  "DistributionId": "unit-test-distribution-id",
+  "InvalidationBatch": Object {
+    "CallerReference": "***unittest***",
+    "Paths": Object {
+      "Items": Array [
+        "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/*",
+      ],
+      "Quantity": 1,
+    },
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 20`] = `
 Array [
   Object {
-    "emailOptions": Object {
-      "subject": "Valtion liikenneväylien suunnittelu: Uusi projekti perustettu ",
-      "text": "Valtion liikenneväylien suunnittelu -järjestelmään on tuotu Projektivelhosta projektisi:
-HASSU AUTOMAATTITESTIPROJEKTI1
-Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506
-Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
-      "to": "mikko.haapamki@cgi.com",
-    },
-  },
-  Object {
-    "emailOptions": Object {
-      "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ",
-      "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
-HASSU AUTOMAATTITESTIPROJEKTI1
-on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
-Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506
-Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
-      "to": "mikko.haapamki@cgi.com",
-    },
-  },
-  Object {
-    "emailOptions": Object {
-      "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ",
-      "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
-HASSU AUTOMAATTITESTIPROJEKTI1
-aloituskuulutus on hyväksytty.
-Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
-Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
-      "to": "mikko.haapamki@cgi.com",
-    },
-  },
-  Object {
-    "emailOptions": Object {
-      "attachments": Array [
-        Object {
-          "content": "***unittest***",
-          "contentDisposition": "attachment",
-          "contentType": "application/pdf",
-          "filename": "T412 Aloituskuulutus.pdf",
-        },
-      ],
-      "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ",
-      "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
-HASSU AUTOMAATTITESTIPROJEKTI1
-aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
-
-Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
-
-Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
-      "to": "mikko.haapamki@cgi.com",
-    },
-  },
-  Object {
-    "emailOptions": Object {
-      "attachments": Array [
-        Object {
-          "content": "***unittest***",
-          "contentDisposition": "attachment",
-          "contentType": "application/pdf",
-          "filename": "T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-        },
-      ],
-      "subject": "TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA ILMOITTAMINEN - HASSU AUTOMAATTITESTIPROJEKTI1",
-      "text": "TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA ILMOITTAMINEN
-
-HASSU AUTOMAATTITESTIPROJEKTI1
-
-Väylävirasto ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee suunnittelun ja maastotöiden aloittamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
-
-Kuulutus julkaistaan 2.1.2022, Väyläviraston tietoverkossa osoitteessa https://vayla.fi/kuulutukset.
-
-Väylävirasto pyytää suunnittelualueen kuntia julkisemaan julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa Väylävirastolle.
-
-Lorem Ipsum
-
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa https://vayla.fi/tietosuoja.
-
-Lisätietoja antaa
-CGI Suomi Oy, A-tunnus1 Hassu, puh. 123, mikko.haapamki@cgi.com
-Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com",
-      "to": Array [],
-    },
-  },
-  Object {
-    "emailOptions": Object {
-      "subject": "Suunnitelmaan on tullut palautetta",
-      "text": "Suunnitelmaan on tullut palautetta: https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu",
-      "to": "mikko.haapamaki@cgi.com",
-    },
-  },
-  Object {
-    "emailOptions": Object {
-      "attachments": Array [
-        Object {
-          "content": "***unittest***",
-          "contentDisposition": "attachment",
-          "contentType": "application/pdf",
-          "filename": "TS Tie Yleisotilaisuus kutsu.pdf",
-        },
-      ],
-      "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
-      "text": "HASSU AUTOMAATTITESTIPROJEKTI1
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "TS Tie Yleisotilaisuus kutsu.pdf",
+      },
+    ],
+    "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
+    "text": "HASSU AUTOMAATTITESTIPROJEKTI1
 
 Väylävirasto laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista tiesuunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1.
 
 Väylävirasto ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun tiesuunnitelman yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
 
-Kutsu julkaistaan 23.3.2022 väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
+Kutsu julkaistaan 24.3.2022 väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
 
 Väylävirasto pyytää Helsinki,  Vantaa ja Väylävirastoa julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa Väylävirastolle.
 
@@ -1826,27 +1960,23 @@ Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
 CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
 
 LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
-      "to": "mikkeli@mikke.li",
-    },
+    "to": "mikkeli@mikke.li",
   },
   Object {
-    "emailOptions": Object {
-      "attachments": Array [
-        Object {
-          "content": "***unittest***",
-          "contentDisposition": "attachment",
-          "contentType": "application/pdf",
-          "filename": "TS Tie Yleisotilaisuus kutsu.pdf",
-        },
-      ],
-      "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
-      "text": "HASSU AUTOMAATTITESTIPROJEKTI1
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "TS Tie Yleisotilaisuus kutsu.pdf",
+      },
+    ],
+    "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
+    "text": "HASSU AUTOMAATTITESTIPROJEKTI1
 
 Väylävirasto laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista tiesuunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1.
 
 Väylävirasto ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun tiesuunnitelman yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
 
-Kutsu julkaistaan 23.3.2022 väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
+Kutsu julkaistaan 24.3.2022 väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
 
 Väylävirasto pyytää Helsinki,  Vantaa ja Väylävirastoa julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa Väylävirastolle.
 
@@ -1857,27 +1987,23 @@ Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
 CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
 
 LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
-      "to": "juva@ju.va",
-    },
+    "to": "juva@ju.va",
   },
   Object {
-    "emailOptions": Object {
-      "attachments": Array [
-        Object {
-          "content": "***unittest***",
-          "contentDisposition": "attachment",
-          "contentType": "application/pdf",
-          "filename": "TS Tie Yleisotilaisuus kutsu.pdf",
-        },
-      ],
-      "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
-      "text": "HASSU AUTOMAATTITESTIPROJEKTI1
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "TS Tie Yleisotilaisuus kutsu.pdf",
+      },
+    ],
+    "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
+    "text": "HASSU AUTOMAATTITESTIPROJEKTI1
 
 Väylävirasto laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista tiesuunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1.
 
 Väylävirasto ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun tiesuunnitelman yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
 
-Kutsu julkaistaan 23.3.2022 väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
+Kutsu julkaistaan 24.3.2022 väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
 
 Väylävirasto pyytää Helsinki,  Vantaa ja Väylävirastoa julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa Väylävirastolle.
 
@@ -1888,27 +2014,23 @@ Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
 CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
 
 LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
-      "to": "savonlinna@savonlin.na",
-    },
+    "to": "savonlinna@savonlin.na",
   },
   Object {
-    "emailOptions": Object {
-      "attachments": Array [
-        Object {
-          "content": "***unittest***",
-          "contentDisposition": "attachment",
-          "contentType": "application/pdf",
-          "filename": "TS Tie Yleisotilaisuus kutsu.pdf",
-        },
-      ],
-      "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
-      "text": "HASSU AUTOMAATTITESTIPROJEKTI1
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "TS Tie Yleisotilaisuus kutsu.pdf",
+      },
+    ],
+    "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
+    "text": "HASSU AUTOMAATTITESTIPROJEKTI1
 
 Väylävirasto laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista tiesuunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1.
 
 Väylävirasto ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun tiesuunnitelman yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
 
-Kutsu julkaistaan 23.3.2022 väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
+Kutsu julkaistaan 24.3.2022 väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
 
 Väylävirasto pyytää Helsinki,  Vantaa ja Väylävirastoa julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa Väylävirastolle.
 
@@ -1919,20 +2041,17 @@ Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
 CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
 
 LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
-      "to": "kirjaamo.etela-savo@ely-keskus.fi",
-    },
+    "to": "kirjaamo.etela-savo@ely-keskus.fi",
   },
   Object {
-    "emailOptions": Object {
-      "subject": "Suunnitelmaan on tullut palautetta",
-      "text": "Suunnitelmaan on tullut palautetta: https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu",
-      "to": "mikko.haapamki@cgi.com",
-    },
+    "subject": "Suunnitelmaan on tullut palautetta",
+    "text": "Suunnitelmaan on tullut palautetta: https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu",
+    "to": "mikko.haapamki@cgi.com",
   },
 ]
 `;
 
-exports[`Api should search, load and save a project 19`] = `
+exports[`Api should search, load and save a project 21`] = `
 Object {
   "description": "testNahtavillaOloPerustiedot",
   "obj": Object {
@@ -2013,7 +2132,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 20`] = `
+exports[`Api should search, load and save a project 22`] = `
 Object {
   "description": "testImportNahtavillaoloAineistot",
   "obj": Object {
@@ -2145,7 +2264,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 21`] = `
+exports[`Api should search, load and save a project 23`] = `
 Object {
   "description": "lisaAineisto",
   "obj": Object {
@@ -2199,7 +2318,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 22`] = `
+exports[`Api should search, load and save a project 24`] = `
 Object {
   "description": "testNahtavillaOloAfterApproval",
   "obj": Object {
@@ -2474,7 +2593,14 @@ Object {
         ],
         "muistutusoikeusPaattyyPaiva": "2042-06-08",
         "muokkaaja": "A000112",
-        "nahtavillaoloPDFt": undefined,
+        "nahtavillaoloPDFt": Object {
+          "SUOMI": Object {
+            "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+            "nahtavillaoloIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
+            "nahtavillaoloPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
+          },
+          "__typename": "NahtavillaoloPDFt",
+        },
         "tila": "HYVAKSYTTY",
         "velho": Object {
           "__typename": "Velho",
@@ -2500,7 +2626,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 23`] = `
+exports[`Api should search, load and save a project 25`] = `
 Object {
   "description": "publicProjektiNahtavillaOloJulkinenAfterApproval",
   "obj": Object {
@@ -2607,7 +2733,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 24`] = `
+exports[`Api should search, load and save a project 26`] = `
 Object {
   "yllapito S3 files Nahtavillaolo published": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {},
@@ -2618,6 +2744,9 @@ Object {
     "nahtavillaolo/1/T222 Meluesteiden periaatekuvat.txt": Object {},
     "nahtavillaolo/1/T224 Siltataulukko.txt": Object {},
     "nahtavillaolo/1/tokatiedosto_toka.pdf": Object {},
+    "nahtavillaolo/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": Object {},
+    "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": Object {},
+    "nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": Object {},
     "palautteet/***unittest***/logo.png": Object {},
     "suunnittelusopimus/logo.png": Object {},
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {},
@@ -2626,44 +2755,142 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 25`] = `
+exports[`Api should search, load and save a project 27`] = `
 Object {
   "public S3 files Nahtavillaolo published": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
     "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": Object {
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "nahtavillaolo/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": Object {
+      "ContentDisposition": "inline; filename*=UTF-8''31T%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
+      "ContentType": "application/pdf",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
     "nahtavillaolo/T211 Piirustusmerkinnät.txt": Object {
+      "ContentType": "application/octet-stream",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "nahtavillaolo/T212 Yleiskartta.txt": Object {
+      "ContentType": "application/octet-stream",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "nahtavillaolo/T213 Teiden hallinnolsten järjestelyjen kartat.txt": Object {
+      "ContentType": "application/octet-stream",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "nahtavillaolo/T222 Meluesteiden periaatekuvat.txt": Object {
+      "ContentType": "application/octet-stream",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "nahtavillaolo/T224 Siltataulukko.txt": Object {
+      "ContentType": "application/octet-stream",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": Object {
+      "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
+      "ContentType": "application/pdf",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": Object {
+      "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
+      "ContentType": "application/pdf",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "nahtavillaolo/tokatiedosto_toka.pdf": Object {
+      "ContentType": "application/octet-stream",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
+    "suunnittelusopimus/logo.png": Object {
+      "ContentType": "application/octet-stream",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {
+      "ContentType": "application/octet-stream",
       "publishDate": "2022-03-24T00:00:00+02:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {
+      "ContentType": "application/octet-stream",
       "publishDate": "2022-03-24T00:00:00+02:00",
     },
   },
 }
 `;
 
-exports[`Api should search, load and save a project 26`] = `
+exports[`Api should search, load and save a project 28`] = `
+Array [
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
+HASSU AUTOMAATTITESTIPROJEKTI1
+on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506
+Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": "mikko.haapamki@cgi.com",
+  },
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
+HASSU AUTOMAATTITESTIPROJEKTI1
+aloituskuulutus on hyväksytty.
+Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
+Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": "mikko.haapamki@cgi.com",
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T412 Aloituskuulutus.pdf",
+      },
+    ],
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
+HASSU AUTOMAATTITESTIPROJEKTI1
+aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
+
+Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
+
+Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": "mikko.haapamki@cgi.com",
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      },
+    ],
+    "subject": "TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA ILMOITTAMINEN - HASSU AUTOMAATTITESTIPROJEKTI1",
+    "text": "TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA ILMOITTAMINEN
+
+HASSU AUTOMAATTITESTIPROJEKTI1
+
+Väylävirasto ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee suunnittelun ja maastotöiden aloittamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
+
+Kuulutus julkaistaan 2.1.2022, Väyläviraston tietoverkossa osoitteessa https://vayla.fi/kuulutukset.
+
+Väylävirasto pyytää suunnittelualueen kuntia julkisemaan julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa Väylävirastolle.
+
+Lorem Ipsum
+
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa https://vayla.fi/tietosuoja.
+
+Lisätietoja antaa
+CGI Suomi Oy, A-tunnus1 Hassu, puh. 123, mikko.haapamki@cgi.com
+Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com",
+    "to": Array [],
+  },
+]
+`;
+
+exports[`Api should search, load and save a project 29`] = `
 Object {
   "description": "testImportHyvaksymisPaatosAineistot",
   "obj": Object {
@@ -2764,7 +2991,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 27`] = `
+exports[`Api should search, load and save a project 30`] = `
 Object {
   "yllapito S3 files Hyvaksymispaatos created": Object {
     "/1/T113 TS Esite.txt": Object {},
@@ -2773,7 +3000,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 28`] = `
+exports[`Api should search, load and save a project 31`] = `
 Object {
   "description": "testHyvaksymisPaatosVaiheAfterApproval",
   "obj": Object {
@@ -2982,7 +3209,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 29`] = `
+exports[`Api should search, load and save a project 32`] = `
 Object {
   "description": "publicProjektiHyvaksymisPaatosVaiheJulkinenAfterApproval",
   "obj": Object {
@@ -3045,15 +3272,84 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 30`] = `
+exports[`Api should search, load and save a project 33`] = `
 Object {
   "public S3 files Hyvaksymispaatos approved": Object {
     "/T113 TS Esite.txt": Object {
+      "ContentType": "application/octet-stream",
       "publishDate": "2022-06-09T00:00:00+03:00",
     },
     "/paatos/TYHJÄ.txt": Object {
+      "ContentType": "application/octet-stream",
       "publishDate": "2022-06-09T00:00:00+03:00",
     },
   },
 }
+`;
+
+exports[`Api should search, load and save a project 34`] = `
+Array [
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
+HASSU AUTOMAATTITESTIPROJEKTI1
+on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506
+Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": "mikko.haapamki@cgi.com",
+  },
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
+HASSU AUTOMAATTITESTIPROJEKTI1
+aloituskuulutus on hyväksytty.
+Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
+Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": "mikko.haapamki@cgi.com",
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T412 Aloituskuulutus.pdf",
+      },
+    ],
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
+HASSU AUTOMAATTITESTIPROJEKTI1
+aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
+
+Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
+
+Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": "mikko.haapamki@cgi.com",
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      },
+    ],
+    "subject": "TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA ILMOITTAMINEN - HASSU AUTOMAATTITESTIPROJEKTI1",
+    "text": "TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA ILMOITTAMINEN
+
+HASSU AUTOMAATTITESTIPROJEKTI1
+
+Väylävirasto ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee suunnittelun ja maastotöiden aloittamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
+
+Kuulutus julkaistaan 2.1.2022, Väyläviraston tietoverkossa osoitteessa https://vayla.fi/kuulutukset.
+
+Väylävirasto pyytää suunnittelualueen kuntia julkisemaan julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa Väylävirastolle.
+
+Lorem Ipsum
+
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa https://vayla.fi/tietosuoja.
+
+Lisätietoja antaa
+CGI Suomi Oy, A-tunnus1 Hassu, puh. 123, mikko.haapamki@cgi.com
+Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com",
+    "to": Array [],
+  },
+]
 `;

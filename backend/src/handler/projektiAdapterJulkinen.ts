@@ -10,12 +10,13 @@ import {
   SuunnitteluSopimus,
   Velho,
   Vuorovaikutus,
+  VuorovaikutusPDF,
   VuorovaikutusTilaisuus,
 } from "../database/model";
 import * as API from "../../../common/graphql/apiModel";
 import {
   HyvaksymisPaatosVaiheJulkaisuJulkinen,
-  NahtavillaoloVaiheJulkaisuJulkinen
+  NahtavillaoloVaiheJulkaisuJulkinen,
 } from "../../../common/graphql/apiModel";
 import pickBy from "lodash/pickBy";
 import dayjs, { Dayjs } from "dayjs";
@@ -252,7 +253,7 @@ class ProjektiAdapterJulkinen {
 
   private static adaptHyvaksymisPaatosVaihe(
     dbProjekti: DBProjekti,
-    projektiHenkilot: ProjektiHenkilot,
+    projektiHenkilot: ProjektiHenkilot
   ): API.HyvaksymisPaatosVaiheJulkaisuJulkinen {
     const julkaisu = pickExactlyOneHyvaksymisPaatosVaihe(dbProjekti.hyvaksymisPaatosVaiheJulkaisut);
     if (julkaisu) {
@@ -307,7 +308,7 @@ function pickExactlyOneNahtavillaoloVaiheJulkaisu(
 }
 
 function pickExactlyOneHyvaksymisPaatosVaihe(
-  hyvaksymisPaatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[],
+  hyvaksymisPaatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[]
 ): HyvaksymisPaatosVaiheJulkaisu | undefined {
   const julkaisut = hyvaksymisPaatosVaiheJulkaisut?.filter(isHyvaksymisPaatosVaihePublic);
   if (julkaisut) {
@@ -327,7 +328,6 @@ function isHyvaksymisPaatosVaihePublic(vaihe: HyvaksymisPaatosVaiheJulkaisu): bo
   }
   return vaihe.tila === API.HyvaksymisPaatosVaiheTila.HYVAKSYTTY;
 }
-
 
 function isUnsetOrInPast(julkaisuPaiva: dayjs.Dayjs) {
   return !julkaisuPaiva || julkaisuPaiva.isBefore(dayjs());
@@ -400,6 +400,7 @@ function adaptVuorovaikutukset(
             ),
             vuorovaikutusYhteystiedot: adaptAndMergeYhteystiedot(dbProjekti, vuorovaikutus),
             vuorovaikutusYhteysHenkilot: adaptUsernamesToProjektiHenkiloIds(usernames, projektiHenkilot),
+            vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(dbProjekti.oid, vuorovaikutus.vuorovaikutusPDFt),
           } as API.VuorovaikutusJulkinen;
         }
         return undefined;
@@ -462,12 +463,34 @@ function isNahtavillaoloVaihePublic(nahtavillaoloVaihe: NahtavillaoloVaiheJulkai
 }
 
 function isKuulutusNahtavillaVaiheOver(
-  nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu | NahtavillaoloVaiheJulkaisuJulkinen | HyvaksymisPaatosVaiheJulkaisu | HyvaksymisPaatosVaiheJulkaisuJulkinen
+  nahtavillaoloVaihe:
+    | NahtavillaoloVaiheJulkaisu
+    | NahtavillaoloVaiheJulkaisuJulkinen
+    | HyvaksymisPaatosVaiheJulkaisu
+    | HyvaksymisPaatosVaiheJulkaisuJulkinen
 ): boolean {
   return (
     !nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva ||
     parseDate(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva).isBefore(dayjs())
   );
+}
+
+function adaptVuorovaikutusPDFPaths(
+  oid: string,
+  pdfs: LocalizedMap<VuorovaikutusPDF>
+): API.VuorovaikutusPDFt | undefined {
+  if (!pdfs) {
+    return undefined;
+  }
+
+  const result: { [Kieli: string]: API.VuorovaikutusPDF } = {};
+  for (const kieli in pdfs) {
+    result[kieli] = {
+      __typename: "VuorovaikutusPDF",
+      kutsuPDFPath: fileService.getPublicPathForProjektiFile(oid, pdfs[kieli].kutsuPDFPath),
+    };
+  }
+  return { __typename: "VuorovaikutusPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
 }
 
 function adaptAndMergeYhteystiedot(dbProjekti: DBProjekti, vuorovaikutus: Vuorovaikutus) {

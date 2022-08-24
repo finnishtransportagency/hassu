@@ -11,6 +11,7 @@ import IlmoituksenVastaanottajatLukutila from "./IlmoituksenVastaanottajatLukuti
 import ExtLink from "@components/ExtLink";
 import { Link } from "@mui/material";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { splitFilePath } from "../../../../util/fileUtil";
 interface Props {
   nahtavillaoloVaiheJulkaisu?: NahtavillaoloVaiheJulkaisu | null;
   projekti: ProjektiLisatiedolla;
@@ -46,10 +47,6 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
       return undefined;
     }
     return nahtavillaoloVaiheJulkaisu.nahtavillaoloPDFt[kieli];
-  };
-
-  const parseFilename = (path: string) => {
-    return path.substring(path.lastIndexOf("/") + 1);
   };
 
   const ensisijaisetPDFt = getPdft(nahtavillaoloVaiheJulkaisu.kielitiedot?.ensisijainenKieli);
@@ -125,12 +122,12 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
             <div className="flex flex-col mb-4">
               <div>
                 <Link underline="none" href={ensisijaisetPDFt.nahtavillaoloPDFPath} target="_blank">
-                  {parseFilename(ensisijaisetPDFt.nahtavillaoloPDFPath)}
+                  {splitFilePath(ensisijaisetPDFt.nahtavillaoloPDFPath).fileName}
                 </Link>
               </div>
               <div>
                 <Link underline="none" href={ensisijaisetPDFt.nahtavillaoloIlmoitusPDFPath} target="_blank">
-                  {parseFilename(ensisijaisetPDFt.nahtavillaoloIlmoitusPDFPath)}
+                  {splitFilePath(ensisijaisetPDFt.nahtavillaoloIlmoitusPDFPath).fileName}
                 </Link>
               </div>
               <div>
@@ -139,7 +136,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
                   href={ensisijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath}
                   target="_blank"
                 >
-                  {parseFilename(ensisijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath)}
+                  {splitFilePath(ensisijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath).fileName}
                 </Link>
               </div>
             </div>
@@ -155,12 +152,12 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
                 <div className="flex flex-col">
                   <div>
                     <Link underline="none" href={toissijaisetPDFt.nahtavillaoloPDFPath} target="_blank">
-                      {parseFilename(toissijaisetPDFt.nahtavillaoloPDFPath)}
+                      {splitFilePath(toissijaisetPDFt.nahtavillaoloPDFPath).fileName}
                     </Link>
                   </div>
                   <div>
                     <Link underline="none" href={toissijaisetPDFt.nahtavillaoloIlmoitusPDFPath} target="_blank">
-                      {parseFilename(toissijaisetPDFt.nahtavillaoloIlmoitusPDFPath)}
+                      {splitFilePath(toissijaisetPDFt.nahtavillaoloIlmoitusPDFPath).fileName}
                     </Link>
                   </div>
                   <div>
@@ -169,7 +166,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
                       href={toissijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath}
                       target="_blank"
                     >
-                      {parseFilename(toissijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath)}
+                      {splitFilePath(toissijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath).fileName}
                     </Link>
                   </div>
                 </div>

@@ -48,7 +48,7 @@ import {
 import {
   testHyvaksymisPaatosVaiheApproval,
   testHyvaksymisPaatosVaiheHyvaksymismenettelyssa,
-  testImportHyvaksymisPaatosAineistot
+  testImportHyvaksymisPaatosAineistot,
 } from "./testUtil/hyvaksymisPaatosVaihe";
 
 const sandbox = sinon.createSandbox();
@@ -66,7 +66,9 @@ describe("Api", () => {
   after(() => {
     userFixture.logout();
     sandbox.restore();
+    sandbox.reset();
     sinon.restore();
+    sinon.reset();
     AWSMock.restore();
   });
 
@@ -96,7 +98,7 @@ describe("Api", () => {
     AWSMock.mock("CloudFront", "createInvalidation", awsCloudfrontInvalidationStub);
     getCloudFront();
 
-    emailClientStub = sinon.stub(emailClient, "sendEmail");
+    emailClientStub = sandbox.stub(emailClient, "sendEmail");
 
     try {
       await archiveProjekti(oid);
@@ -105,7 +107,7 @@ describe("Api", () => {
     }
   });
 
-  it("should search, load and save a project", async function() {
+  it("should search, load and save a project", async function () {
     if (process.env.SKIP_VELHO_TESTS == "true") {
       this.skip();
     }
@@ -119,6 +121,7 @@ describe("Api", () => {
     await testAloitusKuulutusEsikatselu(oid);
     await testNullifyProjektiField(oid);
     await testAloituskuulutusApproval(oid, projektiPaallikko, userFixture);
+    verifyEmailsSent(emailClientStub);
 
     await testSuunnitteluvaihePerustiedot(oid);
     await testSuunnitteluvaiheVuorovaikutus(oid, projektiPaallikko);
@@ -131,11 +134,14 @@ describe("Api", () => {
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await julkaiseSuunnitteluvaihe(oid);
+    verifyEmailsSent(emailClientStub);
+    await processQueue(fakeAineistoImportQueue);
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
     await insertAndManageFeedback(oid);
 
     await julkaiseVuorovaikutus(oid, userFixture);
     await processQueue(fakeAineistoImportQueue);
+    verifyEmailsSent(emailClientStub);
     await takeS3Snapshot(oid, "just after vuorovaikutus published");
     verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub);
 
@@ -155,6 +161,7 @@ describe("Api", () => {
     await testNahtavillaoloApproval(oid, projektiPaallikko, userFixture);
     await processQueue(fakeAineistoImportQueue);
     await takeS3Snapshot(oid, "Nahtavillaolo published");
+    verifyEmailsSent(emailClientStub);
 
     await testHyvaksymisPaatosVaiheHyvaksymismenettelyssa(oid, userFixture);
     await testImportHyvaksymisPaatosAineistot(oid, velhoAineistoKategorias, projektiPaallikko.kayttajatunnus);
@@ -164,10 +171,10 @@ describe("Api", () => {
     await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture);
     await processQueue(fakeAineistoImportQueue);
     await takePublicS3Snapshot(oid, "Hyvaksymispaatos approved", "hyvaksymispaatos");
-
+    verifyEmailsSent(emailClientStub);
   });
 
-  it.skip("should archive projekti", async function() {
+  it.skip("should archive projekti", async function () {
     replaceAWSDynamoDBWithLocalstack();
     await archiveProjekti(oid);
   });

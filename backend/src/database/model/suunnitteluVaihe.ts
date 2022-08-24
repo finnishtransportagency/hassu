@@ -31,6 +31,11 @@ export type Vuorovaikutus = {
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   esittelyaineistot?: Aineisto[] | null;
   suunnitelmaluonnokset?: Aineisto[] | null;
+  vuorovaikutusPDFt?: LocalizedMap<VuorovaikutusPDF>;
+};
+
+export type VuorovaikutusPDF = {
+  kutsuPDFPath: string;
 };
 
 export type VuorovaikutusTilaisuus = {

@@ -9,7 +9,7 @@ import dayjs from "dayjs";
 import HeadphonesIcon from "@mui/icons-material/Headphones";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
-import { VuorovaikutusTilaisuus, VuorovaikutusTilaisuusTyyppi } from "@services/api";
+import { VuorovaikutusJulkinen, VuorovaikutusTilaisuus, VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import capitalize from "lodash/capitalize";
 import { SoittoajanYhteystieto } from "@components/projekti/suunnitteluvaihe/VuorovaikutusMahdollisuudet";
 import { PageProps } from "@pages/_app";
@@ -20,6 +20,8 @@ import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
 import { ProjektiKayttajaJulkinen } from "@services/api";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import useProjektiBreadcrumbsJulkinen from "src/hooks/useProjektiBreadcrumbsJulkinen";
+import FormatDate from "@components/FormatDate";
+import { splitFilePath } from "../../../util/fileUtil";
 
 export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
   const [palauteLomakeOpen, setPalauteLomakeOpen] = useState(false);
@@ -34,22 +36,27 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
   if (!projekti || !projekti.suunnitteluVaihe) {
     return <></>;
   }
-
-  const vuorovaikutus = projekti.suunnitteluVaihe.vuorovaikutukset?.[0];
-  const tulevatTilaisuudet = vuorovaikutus?.vuorovaikutusTilaisuudet?.filter((t) =>
+  const suunnitteluVaihe = projekti.suunnitteluVaihe;
+  const vuorovaikutus: VuorovaikutusJulkinen | undefined = suunnitteluVaihe.vuorovaikutukset?.[0];
+  if (!vuorovaikutus) {
+    return <></>;
+  }
+  const tulevatTilaisuudet = vuorovaikutus.vuorovaikutusTilaisuudet?.filter((t) =>
     dayjs(t.paivamaara).isAfter(today || dayjs(t.paivamaara).isSame(today))
   );
-  const menneetTilaisuudet = vuorovaikutus?.vuorovaikutusTilaisuudet?.filter((t) =>
+  const menneetTilaisuudet = vuorovaikutus.vuorovaikutusTilaisuudet?.filter((t) =>
     dayjs(t.paivamaara).isBefore(today)
   );
 
   const yhteystiedotListana =
-    vuorovaikutus?.vuorovaikutusYhteystiedot?.map((yhteystieto) => t("common:yhteystieto", yhteystieto)) || [];
+    vuorovaikutus.vuorovaikutusYhteystiedot?.map((yhteystieto) => t("common:yhteystieto", yhteystieto)) || [];
 
   const suunnittelusopimus = projekti?.aloitusKuulutusJulkaisut?.[0].suunnitteluSopimus;
 
-  const suunnitelmaluonnokset = vuorovaikutus?.suunnitelmaluonnokset;
-  const esittelyaineistot = vuorovaikutus?.esittelyaineistot;
+  const suunnitelmaluonnokset = vuorovaikutus.suunnitelmaluonnokset;
+  const esittelyaineistot = vuorovaikutus.esittelyaineistot;
+
+  const kutsuPDFPath = splitFilePath(vuorovaikutus.vuorovaikutusPDFt?.[kieli]?.kutsuPDFPath);
 
   return (
     <ProjektiJulkinenPageLayout selectedStep={1} title="Tutustu hankkeeseen ja vuorovaikuta">
@@ -57,15 +64,15 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
         <Section>
           <SectionContent>
             <h4 className="vayla-small-title">{t(`projekti:ui-otsikot.suunnitteluhankkeen_kuvaus`)}</h4>
-            <p>{projekti.suunnitteluVaihe.hankkeenKuvaus?.[kieli]}</p>
+            <p>{suunnitteluVaihe.hankkeenKuvaus?.[kieli]}</p>
           </SectionContent>
           <SectionContent>
             <h4 className="vayla-small-title">{t(`projekti:ui-otsikot.suunnittelun_eteneminen`)}</h4>
-            <p>{projekti.suunnitteluVaihe.suunnittelunEteneminenJaKesto}</p>
+            <p>{suunnitteluVaihe.suunnittelunEteneminenJaKesto}</p>
           </SectionContent>
           <SectionContent>
             <h4 className="vayla-small-title">{t(`projekti:ui-otsikot.arvio_seuraavan_vaiheen_alkamisesta`)}</h4>
-            <p>{projekti.suunnitteluVaihe.arvioSeuraavanVaiheenAlkamisesta}</p>
+            <p>{suunnitteluVaihe.arvioSeuraavanVaiheenAlkamisesta}</p>
           </SectionContent>
         </Section>
         <Section noDivider>
@@ -198,11 +205,11 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
                 )}
               </>
             )}
-            {vuorovaikutus?.videot && vuorovaikutus.videot.length > 0 && (
+            {vuorovaikutus.videot && vuorovaikutus.videot.length > 0 && (
               <>
                 <h5 className="vayla-smallest-title">{t(`projekti:ui-otsikot.video_materiaalit`)}</h5>
                 <p>Tutustu ennalta kuvattuun videoesittelyyn alta.</p>
-                {vuorovaikutus?.videot?.map((video, index) => {
+                {vuorovaikutus.videot?.map((video, index) => {
                   return (
                     <React.Fragment key={index}>
                       {(parseVideoURL(video.url) && (
@@ -213,7 +220,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
                 })}
               </>
             )}
-            {vuorovaikutus?.suunnittelumateriaali?.url && (
+            {vuorovaikutus.suunnittelumateriaali?.url && (
               <>
                 <h5 className="vayla-smallest-title">{t(`projekti:ui-otsikot.muut_materiaalit`)}</h5>
                 <p>{vuorovaikutus.suunnittelumateriaali.nimi}</p>
@@ -263,6 +270,11 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
             />
           </>
         )}
+        <h4 className="vayla-small-title">{t(`ui-otsikot.ladattava_kuulutus`)}</h4>
+        <SectionContent className="flex gap-4">
+          <ExtLink href={kutsuPDFPath.path}>{kutsuPDFPath.fileName}</ExtLink> ({kutsuPDFPath.fileExt})
+          (<FormatDate date={vuorovaikutus.vuorovaikutusJulkaisuPaiva} />)
+        </SectionContent>
       </>
     </ProjektiJulkinenPageLayout>
   );

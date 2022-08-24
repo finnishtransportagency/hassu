@@ -440,20 +440,23 @@ export async function sendEmailDigests(): Promise<void> {
 }
 
 export function verifyEmailsSent(emailClientStub: sinon.SinonStub<any[], any>): void {
-  expect(
-    emailClientStub.getCalls().map((call) => {
-      const arg = call.args[0];
-      if (arg.attachments) {
-        arg.attachments = arg.attachments.map((attachment) => {
-          attachment.content = "***unittest***";
-          return attachment;
-        });
-      }
-      return {
-        emailOptions: arg,
-      };
-    })
-  ).toMatchSnapshot();
+  if (emailClientStub.getCalls().length > 0) {
+    expect(
+      emailClientStub.getCalls().map((call) => {
+        const arg = call.args[0];
+        if (arg.attachments) {
+          arg.attachments = arg.attachments.map((attachment) => {
+            // Remove unnecessary data from snapshot
+            delete attachment.content;
+            delete attachment.contentDisposition;
+            return attachment;
+          });
+        }
+        return arg;
+      })
+    ).toMatchSnapshot();
+    emailClientStub.reset();
+  }
 }
 
 export async function processQueue(fakeAineistoImportQueue: SQSEvent[]): Promise<void> {

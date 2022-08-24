@@ -37,6 +37,8 @@ export type SimpleAineistoMap = { [fullFilePathInProjekti: string]: AineistoMeta
 export type AineistoMetadata = {
   publishDate?: Dayjs;
   expirationDate?: Dayjs;
+  ContentDisposition?: string;
+  ContentType?: string;
 };
 
 export type PersistFileProperties = { targetFilePathInProjekti: string; uploadedFileSource: string; oid: string };
@@ -265,19 +267,32 @@ export class FileService {
     const sourceBucket = config.yllapitoBucketName;
     const targetBucket = config.publicBucketName;
 
+    const yllapitoKey = `${FileService.getYllapitoProjektiDirectory(oid)}${yllapitoFilePathInProjekti}`;
+    const yllapitoMetaData = await FileService.getFileMetaData(sourceBucket, yllapitoKey);
+
     const metadata: { [key: string]: string } = {};
+    if (yllapitoMetaData) {
+      if (yllapitoMetaData.ContentDisposition) {
+        metadata["ContentDisposition"] = yllapitoMetaData.ContentDisposition;
+      }
+      if (yllapitoMetaData.ContentType) {
+        metadata["ContentType"] = yllapitoMetaData.ContentType;
+      }
+    } else {
+      log.warn(`Possibly file not found:${sourceBucket}${yllapitoKey}`);
+    }
+
     if (publishDate) {
       metadata[S3_METADATA_PUBLISH_TIMESTAMP] = publishDate.format();
     }
     if (expirationDate) {
       metadata[S3_METADATA_EXPIRATION_TIMESTAMP] = expirationDate.format();
     }
+
     const copyObjectParams = {
       Bucket: targetBucket,
       Key: `${FileService.getPublicProjektiDirectory(oid)}${publicFilePathInProjekti}`,
-      CopySource: uriEscapePath(
-        `${sourceBucket}/${FileService.getYllapitoProjektiDirectory(oid)}${yllapitoFilePathInProjekti}`
-      ),
+      CopySource: uriEscapePath(`${sourceBucket}/${yllapitoKey}`),
       MetadataDirective: "REPLACE",
       Metadata: metadata,
     };
@@ -368,6 +383,12 @@ export class FileService {
       const publishDate = metadata[S3_METADATA_PUBLISH_TIMESTAMP];
       const expirationDate = metadata[S3_METADATA_EXPIRATION_TIMESTAMP];
       const result: AineistoMetadata = {};
+      if (headObject.ContentDisposition) {
+        result.ContentDisposition = headObject.ContentDisposition;
+      }
+      if (headObject.ContentType) {
+        result.ContentType = headObject.ContentType;
+      }
 
       if (publishDate) {
         result.publishDate = parseDate(publishDate);

@@ -18,6 +18,7 @@ import SectionContent from "@components/layout/SectionContent";
 import { formatDate } from "src/util/dateUtils";
 import HassuStack from "@components/layout/HassuStack";
 import useProjektiBreadcrumbsJulkinen from "src/hooks/useProjektiBreadcrumbsJulkinen";
+import { splitFilePath } from "../../../util/fileUtil";
 
 function formatYhteystiedotText(kuulutus: AloitusKuulutusJulkaisuJulkinen) {
   const yhteystiedotList = kuulutus.yhteystiedot.map(
@@ -75,10 +76,8 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
     { header: t(`ui-otsikot.suunnitelman_tyyppi`), data: velho?.tyyppi && t(`projekti-tyyppi.${velho?.tyyppi}`) },
   ];
 
-  let aloituskuulutusPDFPath =
-    kuulutus.aloituskuulutusPDFt?.[kuulutus.kielitiedot?.ensisijainenKieli || Kieli.SUOMI]?.aloituskuulutusPDFPath;
-  let kuulutusFileName = aloituskuulutusPDFPath?.replace(/.*\//, "").replace(/\.\w+$/, "");
-  let kuulutusFileExt = aloituskuulutusPDFPath?.replace(/.*\./, "");
+  const aloituskuulutusPDFPath =
+    splitFilePath(kuulutus.aloituskuulutusPDFt?.[kuulutus.kielitiedot?.ensisijainenKieli || Kieli.SUOMI]?.aloituskuulutusPDFPath);
 
   if (kuulutus.tila == AloitusKuulutusTila.MIGROITU) {
     return (
@@ -158,7 +157,7 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
           </SectionContent>
           <h4 className="vayla-small-title">{t(`ui-otsikot.ladattava_kuulutus`)}</h4>
           <SectionContent className="flex gap-4">
-            <ExtLink href={aloituskuulutusPDFPath}>{kuulutusFileName}</ExtLink> ({kuulutusFileExt}) (
+            <ExtLink href={aloituskuulutusPDFPath.path}>{aloituskuulutusPDFPath.fileName}</ExtLink> ({aloituskuulutusPDFPath.fileExt}) (
             <FormatDate date={kuulutus.kuulutusPaiva} />-
             <FormatDate date={kuulutus.siirtyySuunnitteluVaiheeseen} />)
           </SectionContent>
