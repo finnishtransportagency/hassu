@@ -145,7 +145,13 @@ function App({ Component, pageProps }: AppProps<PageProps>) {
   );
 
   return (
-    <SWRConfig value={{ revalidateOnFocus: false }}>
+    <SWRConfig
+      value={{
+        revalidateIfStale: false,
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      }}
+    >
       <I18nProvider lang={lang} namespaces={{ commonFI, commonSV }}>
         <Head>
           <title>Hassu</title>
