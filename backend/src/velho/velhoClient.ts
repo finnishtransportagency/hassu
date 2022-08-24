@@ -181,11 +181,13 @@ export class VelhoClient {
           const aineistoArray: AineistoPalvelu.AineistoAineisto[] =
             aineistotResponse.data as AineistoPalvelu.AineistoAineisto[];
           const results = await resultPromise;
+
+          const kategoria = toimeksianto.ominaisuudet.nimi.trim();
+          if (!results[kategoria]) {
+            results[kategoria] = [];
+          }
           aineistoArray.forEach((aineisto) => {
-            const { dokumenttiTyyppi, kategoria } = adaptDokumenttiTyyppi(`${aineisto.metatiedot.dokumenttityyppi}`);
-            if (!results[kategoria]) {
-              results[kategoria] = [];
-            }
+            const { dokumenttiTyyppi } = adaptDokumenttiTyyppi(`${aineisto.metatiedot.dokumenttityyppi}`);
             const tiedostoNimi = aineisto["tuorein-versio"].nimi;
             results[kategoria].push({
               __typename: "VelhoAineisto",

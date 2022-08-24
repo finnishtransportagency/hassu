@@ -135,11 +135,11 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
 
     cy.get("#T1xx").click();
     cy.get("#T1xx_button").click();
-    selectAllAineistotFromCategory("#aineisto_accordion_Tietomallinnus");
+    selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
     cy.get("#select_valitut_aineistot_button").click();
 
     cy.get("#open_lisaaineisto_button").click();
-    selectAllAineistotFromCategory("#aineisto_accordion_Tietomallinnus");
+    selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
     cy.get("#select_valitut_aineistot_button").click();
 
     cy.get("#save_nahtavillaolovaihe_draft").click();
@@ -192,7 +192,7 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
     cy.reload();
     cy.get("#kuulutuksentiedot_tab").click();
 
-    cy.contains("Kuulutus nähtäville asettamisesta on julkaistu");
+    cy.contains("Kuulutus on julkaistu");
 
     cy.visit(Cypress.env("host") + "/suunnitelma/" + oid + "/nahtavillaolo");
     cy.contains("Päivitetty hankkeen kuvaus Suomeksi");

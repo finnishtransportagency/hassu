@@ -109,8 +109,8 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
           tabStyle="Underlined"
           defaultValue={0}
           tabs={[
-            { label: "Nähtäville asetettavat aineistot", content: <NahtavilleAsetettavatAineistot /> },
-            { label: "Kuulutuksen tiedot", content: <KuulutuksenTiedot /> },
+            { label: "Nähtäville asetettavat aineistot", content: <NahtavilleAsetettavatAineistot />, tabId: "aineisto_tab" },
+            { label: "Kuulutuksen tiedot", content: <KuulutuksenTiedot />, tabId: "kuulutuksentiedot_tab" },
           ]}
         />
       </SectionContent>

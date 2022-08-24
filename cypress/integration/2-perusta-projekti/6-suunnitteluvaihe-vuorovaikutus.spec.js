@@ -122,12 +122,12 @@ describe("Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
     cy.wait(2000).get("#save_vuorovaikutus_tilaisuudet").click();
 
     cy.get("#select_esittelyaineistot_button").click();
-    selectAllAineistotFromCategory("#aineisto_accordion_Tietomallinnus");
+    selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
 
     cy.get("#select_valitut_aineistot_button").click();
     cy.get("#select_suunnitelmaluonnokset_button").click();
 
-    selectAllAineistotFromCategory("#aineisto_accordion_Yleinen");
+    selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
     cy.get("#select_valitut_aineistot_button").click();
 
     cy.get("main").then((main) => {
@@ -277,10 +277,10 @@ describe("Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
     cy.get("#save_vuorovaikutus_tilaisuudet").click();
 
     cy.get("#select_esittelyaineistot_button").click();
-    selectAllAineistotFromCategory("#aineisto_accordion_Tietomallinnus");
+    selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
     cy.get("#select_valitut_aineistot_button").click();
     cy.get("#select_suunnitelmaluonnokset_button").click();
-    selectAllAineistotFromCategory("#aineisto_accordion_Yleinen");
+    selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
     cy.get("#select_valitut_aineistot_button").click();
 
     cy.get("main").then((main) => {
