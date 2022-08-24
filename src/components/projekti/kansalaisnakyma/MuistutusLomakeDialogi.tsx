@@ -106,7 +106,7 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
 
   return (
     <>
-      <HassuDialog scroll="body" open={open} title={t("projekti:jata_palaute_tai")} onClose={onClose} maxWidth={"md"}>
+      <HassuDialog scroll="body" open={open} title={t("projekti:muistutuslomake.jata_muistutus")} onClose={onClose} maxWidth={"md"}>
         <DialogContent>
           <p>
             {t("projekti:muistutuslomake.voit_antaa_muistutuksen", {
