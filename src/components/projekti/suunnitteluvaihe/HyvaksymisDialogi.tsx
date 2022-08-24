@@ -56,7 +56,7 @@ export default function HyvaksymisDialogi({
             <p>Ilmoitukset lähetetään automaattisesti painikkeen klikkaamisen jälkeen.</p>
           ) : (
             <p>
-              Klikkaamalla Tallenna ja lähetä -painiketta vahvistat vuorovaikutustiedot tarkastetuksi ja hyväksyt sen
+              Klikkaamalla Hyväksy ja lähetä -painiketta vahvistat vuorovaikutustiedot tarkastetuksi ja hyväksyt sen
               julkaisun asetettuna julkaisupäivänä sekä ilmoituksien lähettämisen. Ilmoitukset lähetetään
               automaattisesti painikkeen klikkaamisen jälkeen.
             </p>
