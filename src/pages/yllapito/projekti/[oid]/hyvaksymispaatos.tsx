@@ -67,12 +67,13 @@ export default function Hyvaksymispaatos({ setRouteLabels }: PageProps): ReactEl
             <FormatDate date={hyvaksymisPaatosVaiheJulkaisu.kuulutusVaihePaattyyPaiva} />.
           </Notification>
         )}
-        {hyvaksymisPaatosVaiheJulkaisu?.tila !== HyvaksymisPaatosVaiheTila.HYVAKSYTTY && (
-          <Notification type={NotificationType.WARN}>
-            Kuulutus nähtäville asettamisesta odottaa hyväksyntää. Tarkasta kuulutus ja a) hyväksy tai b) palaute
-            kuulutus korjattavaksi, jos havaitset puutteita tai virheen.
-          </Notification>
-        )}
+        {hyvaksymisPaatosVaiheJulkaisu &&
+          hyvaksymisPaatosVaiheJulkaisu?.tila === HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA && (
+            <Notification type={NotificationType.WARN}>
+              Kuulutus nähtäville asettamisesta odottaa hyväksyntää. Tarkasta kuulutus ja a) hyväksy tai b) palauta
+              kuulutus korjattavaksi, jos havaitset puutteita tai virheen.
+            </Notification>
+          )}
       </Section>
       <Tabs
         tabStyle="Underlined"
