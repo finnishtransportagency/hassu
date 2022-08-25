@@ -126,15 +126,16 @@ export default function Hyvaksymispaatos(): ReactElement {
       <Section noDivider>
         <h5 className="vayla-smallest-title">{t("projekti:ui-otsikot.paatos")}</h5>
         <Stack direction="column" rowGap={2}>
-          {kuulutus.hyvaksymisPaatos.map((aineisto) => (
-            <span key={aineisto.dokumenttiOid}>
-              <ExtLink href={aineisto.tiedosto || ""} sx={{ mr: 3 }}>
-                {aineisto.nimi}
-              </ExtLink>
+          {kuulutus?.hyvaksymisPaatos &&
+            kuulutus?.hyvaksymisPaatos.map((aineisto) => (
+              <span key={aineisto.dokumenttiOid}>
+                <ExtLink href={aineisto.tiedosto || ""} sx={{ mr: 3 }}>
+                  {aineisto.nimi}
+                </ExtLink>
 
-              {aineisto.tuotu && formatDateTime(aineisto.tuotu)}
-            </span>
-          ))}
+                {aineisto.tuotu && formatDateTime(aineisto.tuotu)}
+              </span>
+            ))}
         </Stack>
       </Section>
       <Section noDivider>
