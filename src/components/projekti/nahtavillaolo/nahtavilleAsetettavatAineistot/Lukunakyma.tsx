@@ -6,7 +6,11 @@ import Section from "@components/layout/Section";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import { Stack } from "@mui/material";
 import { NahtavillaoloVaiheJulkaisu } from "@services/api";
-import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory } from "common/aineistoKategoriat";
+import {
+  AineistoKategoria,
+  aineistoKategoriat,
+  kategorianAllaOlevienAineistojenMaara,
+} from "common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
 import React, { FC, useMemo } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
@@ -122,40 +126,46 @@ const AineistoNahtavillaAccordion: FC<AineistoNahtavillaAccordionProps> = ({ jul
   const accordionItems: AccordionItem[] = useMemo(
     () =>
       kategoriat
-        .filter((kategoria) => julkaisu.aineistoNahtavilla?.some((aineisto) => aineisto.kategoriaId === kategoria.id))
-        .map<AccordionItem>((kategoria) => ({
-          id: kategoria.id,
-          title: (
-            <span>
-              {t(`aineisto-kategoria-nimi.${kategoria.id}`)}
-              {" (" + getNestedAineistoMaaraForCategory(julkaisu.aineistoNahtavilla || [], kategoria) + ")"}
-            </span>
-          ),
-          content: (
-            <>
-              {julkaisu.aineistoNahtavilla && (
-                <Stack direction="column" rowGap={2}>
-                  {julkaisu.aineistoNahtavilla
-                    .filter((aineisto) => aineisto.kategoriaId === kategoria.id)
-                    .map((aineisto) => (
-                      <span key={aineisto.dokumenttiOid}>
-                        <HassuAineistoNimiExtLink
-                          tiedostoPolku={aineisto.tiedosto}
-                          aineistoNimi={aineisto.nimi}
-                          sx={{ mr: 3 }}
-                          target="_blank"
-                        />
-                        {aineisto.tuotu && formatDateTime(aineisto.tuotu)}
-                      </span>
-                    ))}
-                </Stack>
-              )}
-              {kategoria.alaKategoriat && (
-                <AineistoNahtavillaAccordion julkaisu={julkaisu} kategoriat={kategoria.alaKategoriat} />
-              )}
-            </>
-          ),
-        })),
+        .filter((kategoria) => {
+          return (
+            julkaisu.aineistoNahtavilla && kategorianAllaOlevienAineistojenMaara(julkaisu.aineistoNahtavilla, kategoria)
+          );
+        })
+        .map<AccordionItem>((kategoria) => {
+          return {
+            id: kategoria.id,
+            title: (
+              <span>
+                {t(`aineisto-kategoria-nimi.${kategoria.id}`)}
+                {" (" + kategorianAllaOlevienAineistojenMaara(julkaisu.aineistoNahtavilla || [], kategoria) + ")"}
+              </span>
+            ),
+            content: (
+              <>
+                {julkaisu.aineistoNahtavilla && (
+                  <Stack direction="column" rowGap={2}>
+                    {julkaisu.aineistoNahtavilla
+                      .filter((aineisto) => aineisto.kategoriaId === kategoria.id)
+                      .map((aineisto) => (
+                        <span key={aineisto.dokumenttiOid}>
+                          <HassuAineistoNimiExtLink
+                            tiedostoPolku={aineisto.tiedosto}
+                            aineistoNimi={aineisto.nimi}
+                            sx={{ mr: 3 }}
+                            target="_blank"
+                          />
+                          {aineisto.tuotu && formatDateTime(aineisto.tuotu)}
+                        </span>
+                      ))}
+                  </Stack>
+                )}
+                {kategoria.alaKategoriat && (
+                  <AineistoNahtavillaAccordion julkaisu={julkaisu} kategoriat={kategoria.alaKategoriat} />
+                )}
+              </>
+            ),
+          };
+        }),
     [t, julkaisu, kategoriat]
   );
   return !!accordionItems.length ? <HassuAccordion items={accordionItems} /> : null;
