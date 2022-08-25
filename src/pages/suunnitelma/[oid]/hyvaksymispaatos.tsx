@@ -9,7 +9,10 @@ import Trans from "next-translate/Trans";
 import { Link } from "@mui/material";
 import ExtLink from "@components/ExtLink";
 import Notification, { NotificationType } from "@components/notification/Notification";
+import { Stack } from "@mui/material";
 import KansalaisenAineistoNakyma from "../../../components/projekti/common/KansalaisenAineistoNakyma";
+import { formatDateTime } from "src/util/dateUtils";
+
 export default function Hyvaksymispaatos(): ReactElement {
   const { t } = useTranslation();
   const { data: projekti } = useProjektiJulkinen();
@@ -68,8 +71,8 @@ export default function Hyvaksymispaatos(): ReactElement {
             i18nKey="projekti:info.hyvaksytty.paatos_ja_sen_perusteena_olevat"
             values={{
               nahtavillaoloaikavali: aikavali,
-              linkki: "TODO",
-              osoite: "TODO",
+              linkki: "TODO linkki - missä?",
+              osoite: "TODO osoite - missä?",
             }}
             components={{ p: <p style={{ marginTop: "inherit" }} />, b: <b />, a: <Link href={"TODO"} /> }}
           />
@@ -122,7 +125,17 @@ export default function Hyvaksymispaatos(): ReactElement {
       </Section>
       <Section noDivider>
         <h5 className="vayla-smallest-title">{t("projekti:ui-otsikot.paatos")}</h5>
-        <p>TODO (käytä hyväksi viranomaispuolen lukunäkymää, refaktoroi se omaksi komponentikseen, ja käytä täällä)</p>
+        <Stack direction="column" rowGap={2}>
+          {kuulutus.hyvaksymisPaatos.map((aineisto) => (
+            <span key={aineisto.dokumenttiOid}>
+              <ExtLink href={aineisto.tiedosto || ""} sx={{ mr: 3 }}>
+                {aineisto.nimi}
+              </ExtLink>
+
+              {aineisto.tuotu && formatDateTime(aineisto.tuotu)}
+            </span>
+          ))}
+        </Stack>
       </Section>
       <Section noDivider>
         <KansalaisenAineistoNakyma projekti={projekti} kuulutus={kuulutus} />
