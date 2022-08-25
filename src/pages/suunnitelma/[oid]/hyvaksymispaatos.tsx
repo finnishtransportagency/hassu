@@ -57,8 +57,8 @@ export default function Hyvaksymispaatos(): ReactElement {
           <Trans
             i18nKey="projekti:info.hyvaksytty.liikenne_ja_viestintavirasto_on_paatoksellaan"
             values={{
-              hyvaksymisPaiva: "TODO",
-              paatosNumero: "TODO",
+              hyvaksymisPaiva: kuulutus.hyvaksymisPaatoksenPvm,
+              paatosNumero: kuulutus.hyvaksymisPaatoksenAsianumero,
               suunnitelmanNimi: velho.nimi,
               sijainti: sijainti,
             }}
