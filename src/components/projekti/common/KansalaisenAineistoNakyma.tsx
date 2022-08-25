@@ -10,7 +10,11 @@ import {
 } from "@services/api";
 import Trans from "next-translate/Trans";
 import HassuAccordion from "@components/HassuAccordion";
-import { AineistoKategoria, aineistoKategoriat } from "common/aineistoKategoriat";
+import {
+  AineistoKategoria,
+  aineistoKategoriat,
+  kategorianAllaOlevienAineistojenMaara,
+} from "common/aineistoKategoriat";
 import { Link, Stack } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ButtonFlat from "@components/button/ButtonFlat";
@@ -91,6 +95,7 @@ export default function KansalaisenAineistoNakyma({ projekti, kuulutus }: Props)
         aineistoKategoriat={aineistoKategoriat.listKategoriat()}
         aineistot={kuulutus.aineistoNahtavilla}
         expandedState={[expandedAineistoKategoriat, setExpandedAineistoKategoriat]}
+        paakategoria={true}
       />
     </SectionContent>
   );
@@ -100,30 +105,44 @@ interface AineistoKategoriaAccordionProps {
   aineistoKategoriat?: AineistoKategoria[];
   aineistot?: Aineisto[] | null;
   expandedState: [React.Key[], React.Dispatch<React.Key[]>];
+  paakategoria?: boolean;
 }
 
 const AineistoKategoriaAccordion = (props: AineistoKategoriaAccordionProps) => {
   const { t } = useTranslation("aineisto");
+
   return props.aineistoKategoriat ? (
     <HassuAccordion
-      items={props.aineistoKategoriat?.map((kategoria) => {
-        const aineistot = props.aineistot?.filter(
-          (aineisto) =>
-            kategoria.id === aineisto.kategoriaId ||
-            kategoria.alaKategoriat?.some((alakategoria) => alakategoria.id === aineisto.kategoriaId)
-        );
-        return {
-          title: `${t(`aineisto-kategoria-nimi.${kategoria.id}`)} (${aineistot?.length || 0})`,
-          content: (
-            <SuunnitelmaAineistoKategoriaContent
-              aineistot={aineistot}
-              kategoria={kategoria}
-              expandedState={props.expandedState}
-            />
-          ),
-          id: kategoria.id,
-        };
-      })}
+      items={props.aineistoKategoriat
+        ?.filter((kategoria) => {
+          if (props.paakategoria) {
+            return true;
+          }
+          const aineistot = props.aineistot?.filter(
+            (aineisto) =>
+              kategoria.id === aineisto.kategoriaId ||
+              kategoria.alaKategoriat?.some((alakategoria) => alakategoria.id === aineisto.kategoriaId)
+          );
+          return !!aineistot?.length;
+        })
+        .map((kategoria) => {
+          const aineistot = props.aineistot?.filter(
+            (aineisto) =>
+              kategoria.id === aineisto.kategoriaId ||
+              kategoria.alaKategoriat?.some((alakategoria) => alakategoria.id === aineisto.kategoriaId)
+          );
+          return {
+            title: `${t(`aineisto-kategoria-nimi.${kategoria.id}`)} (${aineistot?.length || 0})`,
+            content: (
+              <SuunnitelmaAineistoKategoriaContent
+                aineistot={aineistot}
+                kategoria={kategoria}
+                expandedState={props.expandedState}
+              />
+            ),
+            id: kategoria.id,
+          };
+        })}
       expandedState={props.expandedState}
     />
   ) : null;
@@ -157,11 +176,13 @@ const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoria
       ) : (
         <p>Kategoriassa ei ole aineistoa</p>
       )}
-      <AineistoKategoriaAccordion
-        aineistoKategoriat={props.kategoria.alaKategoriat}
-        aineistot={props.aineistot}
-        expandedState={props.expandedState}
-      />
+      {!!props.aineistot?.length && (
+        <AineistoKategoriaAccordion
+          aineistoKategoriat={props.kategoria.alaKategoriat}
+          aineistot={props.aineistot}
+          expandedState={props.expandedState}
+        />
+      )}
     </>
   );
 };
