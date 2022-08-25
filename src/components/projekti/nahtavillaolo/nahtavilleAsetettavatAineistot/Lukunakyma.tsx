@@ -54,6 +54,7 @@ export default function Lukunakyma() {
         <AineistoNahtavillaAccordion
           kategoriat={aineistoKategoriat.listKategoriat()}
           julkaisu={julkaisu as NahtavillaoloVaiheJulkaisu}
+          paakategoria={true}
         />
       </Section>
       <Section smallGaps>
@@ -119,16 +120,18 @@ export default function Lukunakyma() {
 interface AineistoNahtavillaAccordionProps {
   julkaisu: NahtavillaoloVaiheJulkaisu;
   kategoriat: AineistoKategoria[];
+  paakategoria?: boolean;
 }
 
-const AineistoNahtavillaAccordion: FC<AineistoNahtavillaAccordionProps> = ({ julkaisu, kategoriat }) => {
+const AineistoNahtavillaAccordion: FC<AineistoNahtavillaAccordionProps> = ({ julkaisu, kategoriat, paakategoria }) => {
   const { t } = useTranslation("aineisto");
   const accordionItems: AccordionItem[] = useMemo(
     () =>
       kategoriat
         .filter((kategoria) => {
           return (
-            julkaisu.aineistoNahtavilla && kategorianAllaOlevienAineistojenMaara(julkaisu.aineistoNahtavilla, kategoria)
+            julkaisu.aineistoNahtavilla &&
+            (paakategoria || kategorianAllaOlevienAineistojenMaara(julkaisu.aineistoNahtavilla, kategoria))
           );
         })
         .map<AccordionItem>((kategoria) => {
