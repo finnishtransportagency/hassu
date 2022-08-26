@@ -1,7 +1,9 @@
 import {
+  AineistoTila,
   AloitusKuulutusInput,
   AloitusKuulutusTila,
   HallintoOikeus,
+  HyvaksymisPaatosVaiheTila,
   IlmoitettavaViranomainen,
   IlmoituksenVastaanottajat,
   KaytettavaPalvelu,
@@ -18,6 +20,7 @@ import {
   Yhteystieto,
 } from "../../../common/graphql/apiModel";
 import { DBProjekti, Vuorovaikutus } from "../../src/database/model";
+import cloneDeep from "lodash/cloneDeep";
 
 export class ProjektiFixture {
   public PROJEKTI1_NIMI = "Testiprojekti 1";
@@ -27,8 +30,10 @@ export class ProjektiFixture {
   public PROJEKTI2_OID = "2";
   public PROJEKTI3_NIMI = "Testiprojekti 3";
   public PROJEKTI3_OID = "3";
+  public PROJEKTI4_NIMI = "Testiprojekti 4";
+  public PROJEKTI4_OID = "4";
 
-  esitettavatYhteystiedot = [
+  private esitettavatYhteystiedot = [
     {
       etunimi: "Marko",
       sukunimi: "Koi",
@@ -38,7 +43,7 @@ export class ProjektiFixture {
     },
   ];
 
-  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat = {
+  private ilmoituksenVastaanottajat: IlmoituksenVastaanottajat = {
     __typename: "IlmoituksenVastaanottajat",
     kunnat: [
       {
@@ -70,7 +75,7 @@ export class ProjektiFixture {
     ],
   };
 
-  esitettavatYhteystiedot2: Yhteystieto[] = [
+  private esitettavatYhteystiedot2: Yhteystieto[] = [
     {
       __typename: "Yhteystieto",
       etunimi: "Etunimi",
@@ -91,7 +96,7 @@ export class ProjektiFixture {
     },
   ];
 
-  static pekkaProjariProjektiKayttaja: ProjektiKayttaja = {
+  private static pekkaProjariProjektiKayttaja: ProjektiKayttaja = {
     __typename: "ProjektiKayttaja",
     kayttajatunnus: "A123",
     rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
@@ -102,7 +107,7 @@ export class ProjektiFixture {
     esitetaanKuulutuksessa: null,
   };
 
-  static mattiMeikalainenProjektiKayttaja: ProjektiKayttaja = {
+  private static mattiMeikalainenProjektiKayttaja: ProjektiKayttaja = {
     __typename: "ProjektiKayttaja",
     kayttajatunnus: "A000111",
     rooli: ProjektiRooli.MUOKKAAJA,
@@ -117,55 +122,59 @@ export class ProjektiFixture {
     oid: this.PROJEKTI1_OID,
   };
 
-  projekti1: Projekti = {
-    __typename: "Projekti",
-    oid: this.PROJEKTI1_OID,
-    velho: {
-      __typename: "Velho",
-      nimi: this.PROJEKTI1_NIMI,
-      tyyppi: ProjektiTyyppi.TIE,
-      maakunnat: ["Uusimaa", "Pirkanmaa"],
-    },
-    muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
-    status: Status.EI_JULKAISTU,
-    tallennettu: false,
-    kayttoOikeudet: [ProjektiFixture.pekkaProjariProjektiKayttaja],
-    kielitiedot: {
-      __typename: "Kielitiedot",
-      ensisijainenKieli: Kieli.SUOMI,
-      toissijainenKieli: Kieli.RUOTSI,
-      projektinNimiVieraskielella: "Heja sverige",
-    },
-    euRahoitus: false,
-    liittyvatSuunnitelmat: [
-      {
-        __typename: "Suunnitelma",
-        asiatunnus: "atunnus123",
-        nimi: "Littyva suunnitelma 1 nimi",
+  projekti1(): Projekti {
+    return {
+      __typename: "Projekti",
+      oid: this.PROJEKTI1_OID,
+      velho: {
+        __typename: "Velho",
+        nimi: this.PROJEKTI1_NIMI,
+        tyyppi: ProjektiTyyppi.TIE,
+        maakunnat: ["Uusimaa", "Pirkanmaa"],
       },
-    ],
-  };
+      muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
+      status: Status.EI_JULKAISTU,
+      tallennettu: false,
+      kayttoOikeudet: [ProjektiFixture.pekkaProjariProjektiKayttaja],
+      kielitiedot: {
+        __typename: "Kielitiedot",
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: Kieli.RUOTSI,
+        projektinNimiVieraskielella: "Heja sverige",
+      },
+      euRahoitus: false,
+      liittyvatSuunnitelmat: [
+        {
+          __typename: "Suunnitelma",
+          asiatunnus: "atunnus123",
+          nimi: "Littyva suunnitelma 1 nimi",
+        },
+      ],
+    };
+  }
 
-  velhoprojekti1: DBProjekti = {
-    oid: this.PROJEKTI1_OID,
-    velho: {
-      nimi: this.PROJEKTI1_NIMI,
-      tyyppi: ProjektiTyyppi.TIE,
-      vastuuhenkilonEmail: "pekka.projari@vayla.fi",
-    },
-    muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
-    kayttoOikeudet: [
-      {
-        kayttajatunnus: "A123",
-        rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
-        nimi: "Projari, Pekka",
-        email: "pekka.projari@vayla.fi",
-        organisaatio: "Väylävirasto",
-        puhelinnumero: "123456789",
-        esitetaanKuulutuksessa: null,
+  velhoprojekti1(): DBProjekti {
+    return {
+      oid: this.PROJEKTI1_OID,
+      velho: {
+        nimi: this.PROJEKTI1_NIMI,
+        tyyppi: ProjektiTyyppi.TIE,
+        vastuuhenkilonEmail: "pekka.projari@vayla.fi",
       },
-    ],
-  };
+      muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
+      kayttoOikeudet: [
+        {
+          kayttajatunnus: "A123",
+          rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
+          nimi: "Projari, Pekka",
+          email: "pekka.projari@vayla.fi",
+          organisaatio: "Väylävirasto",
+          puhelinnumero: "123456789",
+          esitetaanKuulutuksessa: null,
+        },
+      ],
+    };
+  }
 
   aloitusKuulutusInput: AloitusKuulutusInput = {
     kuulutusPaiva: "2022-01-02",
@@ -175,125 +184,158 @@ export class ProjektiFixture {
     esitettavatYhteystiedot: this.esitettavatYhteystiedot,
   };
 
-  dbProjekti1: DBProjekti = {
-    kayttoOikeudet: [
-      {
-        rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
-        email: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
-        kayttajatunnus: ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
-        nimi: ProjektiFixture.pekkaProjariProjektiKayttaja.nimi,
-        puhelinnumero: ProjektiFixture.pekkaProjariProjektiKayttaja.puhelinnumero || "",
-        organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio,
-        esitetaanKuulutuksessa: ProjektiFixture.pekkaProjariProjektiKayttaja.esitetaanKuulutuksessa,
+  dbProjekti1(): DBProjekti {
+    return {
+      kayttoOikeudet: [
+        {
+          rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
+          email: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
+          kayttajatunnus: ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
+          nimi: ProjektiFixture.pekkaProjariProjektiKayttaja.nimi,
+          puhelinnumero: ProjektiFixture.pekkaProjariProjektiKayttaja.puhelinnumero || "",
+          organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio,
+          esitetaanKuulutuksessa: ProjektiFixture.pekkaProjariProjektiKayttaja.esitetaanKuulutuksessa,
+        },
+        {
+          rooli: ProjektiRooli.MUOKKAAJA,
+          email: ProjektiFixture.mattiMeikalainenProjektiKayttaja.email,
+          kayttajatunnus: ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
+          nimi: ProjektiFixture.mattiMeikalainenProjektiKayttaja.nimi,
+          puhelinnumero: ProjektiFixture.mattiMeikalainenProjektiKayttaja.puhelinnumero || "",
+          organisaatio: ProjektiFixture.mattiMeikalainenProjektiKayttaja.organisaatio,
+          esitetaanKuulutuksessa: ProjektiFixture.mattiMeikalainenProjektiKayttaja.esitetaanKuulutuksessa,
+        },
+      ],
+      oid: this.PROJEKTI1_OID,
+      velho: {
+        nimi: this.PROJEKTI1_NIMI,
+        tyyppi: ProjektiTyyppi.TIE,
+        suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
+        kunnat: ["Tampere", "Nokia"],
+        maakunnat: ["Uusimaa", "Pirkanmaa"],
+        vaylamuoto: ["tie"],
+        asiatunnusVayla: "A" + this.PROJEKTI1_OID,
       },
-      {
-        rooli: ProjektiRooli.MUOKKAAJA,
-        email: ProjektiFixture.mattiMeikalainenProjektiKayttaja.email,
-        kayttajatunnus: ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
-        nimi: ProjektiFixture.mattiMeikalainenProjektiKayttaja.nimi,
-        puhelinnumero: ProjektiFixture.mattiMeikalainenProjektiKayttaja.puhelinnumero || "",
-        organisaatio: ProjektiFixture.mattiMeikalainenProjektiKayttaja.organisaatio,
-        esitetaanKuulutuksessa: ProjektiFixture.mattiMeikalainenProjektiKayttaja.esitetaanKuulutuksessa,
+      muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
+      suunnitteluSopimus: {
+        email: "Joku.Jossain@vayla.fi",
+        puhelinnumero: "123",
+        etunimi: "Joku",
+        sukunimi: "Jossain",
+        kunta: "Nokia",
       },
-    ],
-    oid: this.PROJEKTI1_OID,
-    velho: {
-      nimi: this.PROJEKTI1_NIMI,
-      tyyppi: ProjektiTyyppi.TIE,
-      suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
-      kunnat: ["Tampere", "Nokia"],
-      maakunnat: ["Uusimaa", "Pirkanmaa"],
-      vaylamuoto: ["tie"],
-      asiatunnusVayla: "A" + this.PROJEKTI1_OID,
-    },
-    muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
-    suunnitteluSopimus: {
-      email: "Joku.Jossain@vayla.fi",
-      puhelinnumero: "123",
-      etunimi: "Joku",
-      sukunimi: "Jossain",
-      kunta: "Nokia",
-    },
-    aloitusKuulutus: {
-      kuulutusPaiva: "2022-01-02",
-      hankkeenKuvaus: {
-        SUOMI: "Lorem Ipsum",
-        RUOTSI: "På svenska",
-        SAAME: "Saameksi",
+      aloitusKuulutus: {
+        kuulutusPaiva: "2022-01-02",
+        hankkeenKuvaus: {
+          SUOMI: "Lorem Ipsum",
+          RUOTSI: "På svenska",
+          SAAME: "Saameksi",
+        },
+        siirtyySuunnitteluVaiheeseen: "2022-01-01",
+        esitettavatYhteystiedot: this.esitettavatYhteystiedot,
       },
-      siirtyySuunnitteluVaiheeseen: "2022-01-01",
-      esitettavatYhteystiedot: this.esitettavatYhteystiedot,
-    },
-    kielitiedot: {
-      ensisijainenKieli: Kieli.SUOMI,
-      toissijainenKieli: Kieli.RUOTSI,
-      projektinNimiVieraskielella: "Namnet på svenska",
-    },
-    euRahoitus: false,
-    liittyvatSuunnitelmat: [
-      {
-        asiatunnus: "atunnus123",
-        nimi: "Littyva suunnitelma 1 nimi",
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: Kieli.RUOTSI,
+        projektinNimiVieraskielella: "Namnet på svenska",
       },
-    ],
-    paivitetty: "2022-03-15T13:00:00.000Z",
-  };
+      euRahoitus: false,
+      liittyvatSuunnitelmat: [
+        {
+          asiatunnus: "atunnus123",
+          nimi: "Littyva suunnitelma 1 nimi",
+        },
+      ],
+      paivitetty: "2022-03-15T13:00:00.000Z",
+    };
+  }
 
-  dbProjekti2: DBProjekti = {
-    kayttoOikeudet: [
-      {
-        rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
-        email: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
-        kayttajatunnus: ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
-        nimi: ProjektiFixture.pekkaProjariProjektiKayttaja.nimi,
-        puhelinnumero: ProjektiFixture.pekkaProjariProjektiKayttaja.puhelinnumero || "",
-        organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio,
-        esitetaanKuulutuksessa: ProjektiFixture.pekkaProjariProjektiKayttaja.esitetaanKuulutuksessa,
-      },
-      {
-        rooli: ProjektiRooli.MUOKKAAJA,
-        email: ProjektiFixture.mattiMeikalainenProjektiKayttaja.email,
-        kayttajatunnus: ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
-        nimi: ProjektiFixture.mattiMeikalainenProjektiKayttaja.nimi,
-        puhelinnumero: ProjektiFixture.mattiMeikalainenProjektiKayttaja.puhelinnumero || "",
-        organisaatio: ProjektiFixture.mattiMeikalainenProjektiKayttaja.organisaatio,
-        esitetaanKuulutuksessa: ProjektiFixture.mattiMeikalainenProjektiKayttaja.esitetaanKuulutuksessa,
-      },
-    ],
-    oid: this.PROJEKTI2_OID,
-    velho: {
-      nimi: this.PROJEKTI2_NIMI,
-      tyyppi: ProjektiTyyppi.TIE,
-      kunnat: ["Mikkeli", "Juva", "Savonlinna"],
-      vaylamuoto: ["tie"],
-      vastuuhenkilonEmail: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
-      maakunnat: ["Uusimaa", "Pirkanmaa"],
-      suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
-      asiatunnusVayla: "A" + this.PROJEKTI2_OID,
-    },
-    aloitusKuulutusJulkaisut: [
-      {
-        aloituskuulutusPDFt: {
-          SUOMI: {
-            aloituskuulutusIlmoitusPDFPath:
-              "/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
-            aloituskuulutusPDFPath: "/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
-          },
-          RUOTSI: {
-            aloituskuulutusIlmoitusPDFPath:
-              "/aloituskuulutus/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
-            aloituskuulutusPDFPath: "/aloituskuulutus/KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
-          },
+  dbProjekti2(): DBProjekti {
+    return {
+      kayttoOikeudet: [
+        {
+          rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
+          email: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
+          kayttajatunnus: ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
+          nimi: ProjektiFixture.pekkaProjariProjektiKayttaja.nimi,
+          puhelinnumero: ProjektiFixture.pekkaProjariProjektiKayttaja.puhelinnumero || "",
+          organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio,
+          esitetaanKuulutuksessa: ProjektiFixture.pekkaProjariProjektiKayttaja.esitetaanKuulutuksessa,
         },
-        kielitiedot: {
-          projektinNimiVieraskielella: "Marikas testprojekt",
-          toissijainenKieli: Kieli.RUOTSI,
-          ensisijainenKieli: Kieli.SUOMI,
+        {
+          rooli: ProjektiRooli.MUOKKAAJA,
+          email: ProjektiFixture.mattiMeikalainenProjektiKayttaja.email,
+          kayttajatunnus: ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
+          nimi: ProjektiFixture.mattiMeikalainenProjektiKayttaja.nimi,
+          puhelinnumero: ProjektiFixture.mattiMeikalainenProjektiKayttaja.puhelinnumero || "",
+          organisaatio: ProjektiFixture.mattiMeikalainenProjektiKayttaja.organisaatio,
+          esitetaanKuulutuksessa: ProjektiFixture.mattiMeikalainenProjektiKayttaja.esitetaanKuulutuksessa,
         },
-        ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
-        kuulutusPaiva: "2022-03-28T14:28",
-        muokkaaja: ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
-        hyvaksyja: ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
+      ],
+      oid: this.PROJEKTI2_OID,
+      velho: {
+        nimi: this.PROJEKTI2_NIMI,
+        tyyppi: ProjektiTyyppi.TIE,
+        kunnat: ["Mikkeli", "Juva", "Savonlinna"],
+        vaylamuoto: ["tie"],
+        vastuuhenkilonEmail: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
+        maakunnat: ["Uusimaa", "Pirkanmaa"],
+        suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
+        asiatunnusVayla: "A" + this.PROJEKTI2_OID,
+      },
+      aloitusKuulutusJulkaisut: [
+        {
+          aloituskuulutusPDFt: {
+            SUOMI: {
+              aloituskuulutusIlmoitusPDFPath:
+                "/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
+              aloituskuulutusPDFPath: "/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
+            },
+            RUOTSI: {
+              aloituskuulutusIlmoitusPDFPath:
+                "/aloituskuulutus/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
+              aloituskuulutusPDFPath:
+                "/aloituskuulutus/KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
+            },
+          },
+          kielitiedot: {
+            projektinNimiVieraskielella: "Marikas testprojekt",
+            toissijainenKieli: Kieli.RUOTSI,
+            ensisijainenKieli: Kieli.SUOMI,
+          },
+          ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
+          kuulutusPaiva: "2022-03-28T14:28",
+          muokkaaja: ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
+          hyvaksyja: ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
+          hankkeenKuvaus: {
+            SUOMI:
+              "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
+            RUOTSI:
+              "Designplatsen är en del av elektrifieringsprojektet Hyvinge-Hangö, som också kommer att genomföra plankorsningsåtgärder. I den fastställda spårplanen är borttagandet av tävlingsstoppet och Leksvallskorsningen genom förbättring av en ny plankorsning vid Helmströms plankorsning vid denna punkt godkänd som planlösning. En uppdatering av Spårplanen kommer nu att lanseras då och man planerar att ta bort alla tre plankorsningarna på den nya Leksvallsöverfarten.",
+            SAAME: null,
+          },
+          yhteystiedot: [
+            {
+              sukunimi: "Ojanen",
+              sahkoposti: "marika.ojanen@vayla.fi",
+              puhelinnumero: "0299878787",
+              organisaatio: "Väylävirasto",
+              etunimi: "Marika",
+            },
+          ],
+          velho: {
+            vaylamuoto: ["tie"],
+            nimi: "Marikan testiprojekti",
+            tyyppi: ProjektiTyyppi.YLEINEN,
+            kunnat: ["Mikkeli", " Juva", " Savonlinna"],
+            maakunnat: ["Uusimaa", "Pirkanmaa"],
+          },
+          id: 1,
+          tila: AloitusKuulutusTila.HYVAKSYTTY,
+          siirtyySuunnitteluVaiheeseen: "2022-04-28T14:28",
+        },
+      ],
+      aloitusKuulutus: {
         hankkeenKuvaus: {
           SUOMI:
             "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
@@ -301,109 +343,81 @@ export class ProjektiFixture {
             "Designplatsen är en del av elektrifieringsprojektet Hyvinge-Hangö, som också kommer att genomföra plankorsningsåtgärder. I den fastställda spårplanen är borttagandet av tävlingsstoppet och Leksvallskorsningen genom förbättring av en ny plankorsning vid Helmströms plankorsning vid denna punkt godkänd som planlösning. En uppdatering av Spårplanen kommer nu att lanseras då och man planerar att ta bort alla tre plankorsningarna på den nya Leksvallsöverfarten.",
           SAAME: null,
         },
-        yhteystiedot: [
-          {
-            sukunimi: "Ojanen",
-            sahkoposti: "marika.ojanen@vayla.fi",
-            puhelinnumero: "0299878787",
-            organisaatio: "Väylävirasto",
-            etunimi: "Marika",
-          },
-        ],
-        velho: {
-          vaylamuoto: ["tie"],
-          nimi: "Marikan testiprojekti",
-          tyyppi: ProjektiTyyppi.YLEINEN,
-          kunnat: ["Mikkeli", " Juva", " Savonlinna"],
-          maakunnat: ["Uusimaa", "Pirkanmaa"],
+        ilmoituksenVastaanottajat: {
+          __typename: "IlmoituksenVastaanottajat",
+          kunnat: [
+            {
+              nimi: "Mikkeli",
+              sahkoposti: "mikkeli@mikke.li",
+              __typename: "KuntaVastaanottaja",
+            },
+            {
+              nimi: " Juva",
+              sahkoposti: "juva@ju.va",
+              __typename: "KuntaVastaanottaja",
+            },
+            {
+              nimi: " Savonlinna",
+              sahkoposti: "savonlinna@savonlin.na",
+              __typename: "KuntaVastaanottaja",
+            },
+          ],
+          viranomaiset: [
+            {
+              nimi: IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+              sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+              __typename: "ViranomaisVastaanottaja",
+            },
+          ],
         },
-        id: 1,
-        tila: AloitusKuulutusTila.HYVAKSYTTY,
+        kuulutusPaiva: "2022-03-28T14:28",
         siirtyySuunnitteluVaiheeseen: "2022-04-28T14:28",
+        esitettavatYhteystiedot: [],
       },
-    ],
-    aloitusKuulutus: {
-      hankkeenKuvaus: {
-        SUOMI:
-          "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
-        RUOTSI:
-          "Designplatsen är en del av elektrifieringsprojektet Hyvinge-Hangö, som också kommer att genomföra plankorsningsåtgärder. I den fastställda spårplanen är borttagandet av tävlingsstoppet och Leksvallskorsningen genom förbättring av en ny plankorsning vid Helmströms plankorsning vid denna punkt godkänd som planlösning. En uppdatering av Spårplanen kommer nu att lanseras då och man planerar att ta bort alla tre plankorsningarna på den nya Leksvallsöverfarten.",
-        SAAME: null,
+      nahtavillaoloVaihe: {
+        id: 1,
+        hankkeenKuvaus: {
+          SUOMI: "Lorem Ipsum nahtavillaoloVaihe",
+          SAAME: "Saameksi nahtavillaoloVaihe",
+        },
+        kuulutusPaiva: "2022-06-07",
+        kuulutusVaihePaattyyPaiva: "2042-06-07",
+        muistutusoikeusPaattyyPaiva: "2042-06-08",
+        kuulutusYhteysHenkilot: [ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus],
+        ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
+        kuulutusYhteystiedot: this.esitettavatYhteystiedot,
       },
-      ilmoituksenVastaanottajat: {
-        __typename: "IlmoituksenVastaanottajat",
-        kunnat: [
-          {
-            nimi: "Mikkeli",
-            sahkoposti: "mikkeli@mikke.li",
-            __typename: "KuntaVastaanottaja",
-          },
-          {
-            nimi: " Juva",
-            sahkoposti: "juva@ju.va",
-            __typename: "KuntaVastaanottaja",
-          },
-          {
-            nimi: " Savonlinna",
-            sahkoposti: "savonlinna@savonlin.na",
-            __typename: "KuntaVastaanottaja",
-          },
-        ],
-        viranomaiset: [
-          {
-            nimi: IlmoitettavaViranomainen.ETELA_SAVO_ELY,
-            sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
-            __typename: "ViranomaisVastaanottaja",
-          },
-        ],
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: Kieli.RUOTSI,
+        projektinNimiVieraskielella: "Namnet på svenska",
       },
-      kuulutusPaiva: "2022-03-28T14:28",
-      siirtyySuunnitteluVaiheeseen: "2022-04-28T14:28",
-      esitettavatYhteystiedot: [],
-    },
-    nahtavillaoloVaihe: {
-      id: 1,
-      hankkeenKuvaus: {
-        SUOMI: "Lorem Ipsum nahtavillaoloVaihe",
-        SAAME: "Saameksi nahtavillaoloVaihe",
-      },
-      kuulutusPaiva: "2022-06-07",
-      kuulutusVaihePaattyyPaiva: "2042-06-07",
-      muistutusoikeusPaattyyPaiva: "2042-06-08",
-      kuulutusYhteysHenkilot: [ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus],
-      ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
-      kuulutusYhteystiedot: this.esitettavatYhteystiedot,
-    },
-    kielitiedot: {
-      ensisijainenKieli: Kieli.SUOMI,
-      toissijainenKieli: Kieli.RUOTSI,
-      projektinNimiVieraskielella: "Namnet på svenska",
-    },
-    euRahoitus: false,
-    liittyvatSuunnitelmat: [
-      {
-        asiatunnus: "atunnus123",
-        nimi: "Littyva suunnitelma 1 nimi",
-      },
-    ],
-    kasittelynTila: {
-      hyvaksymispaatos: { paatoksenPvm: "2022-02-03", asianumero: "traficom-123" },
-    },
-    hyvaksymisPaatosVaihe: {
-      id: 1,
-      hallintoOikeus: HallintoOikeus.HAMEENLINNA,
-      ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
-      kuulutusYhteystiedot: this.esitettavatYhteystiedot,
-      kuulutusPaiva: "2022-01-02",
-      kuulutusVaihePaattyyPaiva: "2022-01-03",
-      kuulutusYhteysHenkilot: [
-        ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
-        ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
+      euRahoitus: false,
+      liittyvatSuunnitelmat: [
+        {
+          asiatunnus: "atunnus123",
+          nimi: "Littyva suunnitelma 1 nimi",
+        },
       ],
-    },
-    salt: "foo",
-    paivitetty: "2022-03-15T14:30:00.000Z",
-  };
+      kasittelynTila: {
+        hyvaksymispaatos: { paatoksenPvm: "2022-02-03", asianumero: "traficom-123" },
+      },
+      hyvaksymisPaatosVaihe: {
+        id: 1,
+        hallintoOikeus: HallintoOikeus.HAMEENLINNA,
+        ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
+        kuulutusYhteystiedot: this.esitettavatYhteystiedot,
+        kuulutusPaiva: "2022-01-02",
+        kuulutusVaihePaattyyPaiva: "2022-01-03",
+        kuulutusYhteysHenkilot: [
+          ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
+          ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
+        ],
+      },
+      salt: "foo",
+      paivitetty: "2022-03-15T14:30:00.000Z",
+    };
+  }
 
   // Nahtavillaolovaihe julkinen
   dbProjekti3: DBProjekti = {
@@ -607,6 +621,7 @@ export class ProjektiFixture {
         tila: NahtavillaoloVaiheTila.HYVAKSYTTY,
         velho: {
           kunnat: ["Kerava"],
+          maakunnat: ["Uusimaa", "Pirkanmaa"],
           linkki: null,
           nimi: "Mt 140 parantaminen Kaskelantien kohdalla, tiesuunnitelma, Kerava",
           tyyppi: ProjektiTyyppi.TIE,
@@ -630,6 +645,112 @@ export class ProjektiFixture {
     salt: "foo",
     paivitetty: "2022-03-15T14:30:00.000Z",
   };
+
+  dbProjekti4(): DBProjekti {
+    const projekti = cloneDeep(this.dbProjekti3);
+    return {
+      ...projekti,
+      oid: this.PROJEKTI4_OID,
+      velho: { ...projekti.velho, nimi: this.PROJEKTI4_NIMI },
+      kasittelynTila: {
+        hyvaksymispaatos: { paatoksenPvm: "2022-02-03", asianumero: "traficom-123" },
+      },
+      hyvaksymisPaatosVaiheJulkaisut: [
+        {
+          aineistoNahtavilla: [
+            {
+              dokumenttiOid: "11",
+              jarjestys: 1,
+              kategoriaId: "T1xx",
+              nimi: "T113 TS Esite.txt",
+              tiedosto: "/hyvaksymispaatos/1/T113 TS Esite.txt",
+              tila: AineistoTila.VALMIS,
+              tuotu: "***unittest***",
+            },
+          ],
+          hallintoOikeus: HallintoOikeus.HAMEENLINNA,
+          hyvaksyja: "A000112",
+          hyvaksymisPaatos: [
+            {
+              dokumenttiOid: "12",
+              jarjestys: 1,
+              nimi: "TYHJÄ.txt",
+              tiedosto: "/hyvaksymispaatos/1/paatos/TYHJÄ.txt",
+              tila: AineistoTila.VALMIS,
+              tuotu: "***unittest***",
+            },
+          ],
+          hyvaksymisPaatosVaihePDFt: undefined,
+          id: 1,
+          ilmoituksenVastaanottajat: {
+            __typename: "IlmoituksenVastaanottajat",
+            kunnat: [
+              {
+                __typename: "KuntaVastaanottaja",
+                lahetetty: "2022-03-11T14:54",
+                nimi: "Mikkeli",
+                sahkoposti: "mikkeli@mikke.li",
+              },
+              {
+                __typename: "KuntaVastaanottaja",
+                lahetetty: "2022-03-11T14:54",
+                nimi: " Juva",
+                sahkoposti: "juva@ju.va",
+              },
+              {
+                __typename: "KuntaVastaanottaja",
+                lahetetty: "2022-03-11T14:54",
+                nimi: " Savonlinna",
+                sahkoposti: "savonlinna@savonlin.na",
+              },
+            ],
+            viranomaiset: [
+              {
+                __typename: "ViranomaisVastaanottaja",
+                lahetetty: "2022-03-11T14:54",
+                nimi: IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+                sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+              },
+            ],
+          },
+          kielitiedot: this.dbProjekti3.kielitiedot,
+          kuulutusPaiva: "2022-06-09",
+          kuulutusVaihePaattyyPaiva: "2100-01-01",
+          kuulutusYhteysHenkilot: [ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus],
+          kuulutusYhteystiedot: [
+            {
+              etunimi: "Etunimi",
+              organisaatio: "",
+              puhelinnumero: "0293121213",
+              sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+              sukunimi: "Sukunimi",
+              titteli: "Projektipäällikkö",
+            },
+            {
+              etunimi: "Joku",
+              organisaatio: "",
+              puhelinnumero: "02998765",
+              sahkoposti: "Joku.Jokunen@vayla.fi",
+              sukunimi: "Jokunen",
+              titteli: "Konsultti",
+            },
+          ],
+          muokkaaja: "A000112",
+          tila: HyvaksymisPaatosVaiheTila.HYVAKSYTTY,
+          velho: {
+            kunnat: ["Helsinki", " Vantaa"],
+            linkki: null,
+            maakunnat: ["Uusimaa"],
+            nimi: "HASSU AUTOMAATTITESTIPROJEKTI1",
+            suunnittelustaVastaavaViranomainen: Viranomainen.VAYLAVIRASTO,
+            tyyppi: ProjektiTyyppi.TIE,
+            vastuuhenkilonEmail: "mikko.haapamki@cgi.com",
+            vaylamuoto: ["tie"],
+          },
+        },
+      ],
+    };
+  }
 
   hankkeenKuvausSuunnitteluVaiheessa = {
     SUOMI: "Hankkeen kuvaus suunnitteluvaiheessa",

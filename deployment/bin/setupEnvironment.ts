@@ -112,6 +112,8 @@ export type HassuSSMParameters = {
 
   SonarQubeHostURL: string;
   SonarQubeAccessToken: string;
+
+  IlmoitustauluSyoteCredentials: string;
 };
 
 export async function readParametersByPath(path: string, region: Region): Promise<Record<string, string>> {
@@ -217,7 +219,7 @@ async function main() {
     SONARQUBE_HOST_URL: variables.SonarQubeHostURL,
     SONARQUBE_ACCESS_TOKEN: variables.SonarQubeAccessToken,
     SEARCH_DOMAIN: searchStackOutputs.SearchDomainEndpointOutput,
-    TABLE_PROJEKTI: Config.projektiTableName
+    TABLE_PROJEKTI: Config.projektiTableName,
   });
 
   const testUsers = await readParametersByPath("/testusers/", Region.EU_WEST_1);
@@ -241,6 +243,7 @@ async function main() {
         "@" +
         variables.FrontendDomainName,
       localServer: false,
+      IlmoitustauluSyoteCredentials: variables.IlmoitustauluSyoteCredentials,
       apiKey: backendStackOutputs.AppSyncAPIKey,
       ...testUsersConfig,
     });
@@ -248,6 +251,7 @@ async function main() {
     writeJSONFile("cypress.env.json", {
       host: "http://localhost:3000",
       localServer: true,
+      IlmoitustauluSyoteCredentials: variables.IlmoitustauluSyoteCredentials,
       ...testUsersConfig,
     });
   }

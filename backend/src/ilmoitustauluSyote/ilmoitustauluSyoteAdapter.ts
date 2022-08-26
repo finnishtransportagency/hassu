@@ -1,12 +1,14 @@
 import { IlmoitusKuulutus, IlmoitusKuulutusType } from "./ilmoitusKuulutus";
 import {
   AloitusKuulutusJulkaisuJulkinen,
+  HyvaksymisPaatosVaiheJulkaisuJulkinen,
   Kieli,
   Kielitiedot,
+  NahtavillaoloVaiheJulkaisuJulkinen,
   ProjektiJulkinen,
 } from "../../../common/graphql/apiModel";
 import { translate } from "../util/localization";
-import { linkAloituskuulutus } from "../../../common/links";
+import { linkAloituskuulutus, linkHyvaksymisPaatos, linkSuunnitteluVaihe } from "../../../common/links";
 import { parseDate } from "../util/dateUtil";
 
 class IlmoitustauluSyoteAdapter {
@@ -31,12 +33,62 @@ class IlmoitustauluSyoteAdapter {
     };
   }
 
+  adaptNahtavillaoloVaihe(
+    oid: string,
+    nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisuJulkinen,
+    kieli: Kieli
+  ): Omit<IlmoitusKuulutus, "key"> {
+    const velho = nahtavillaoloVaihe.velho;
+    const nimi = selectNimi(velho.nimi, nahtavillaoloVaihe.kielitiedot, kieli);
+    const url = linkSuunnitteluVaihe(oid);
+    return {
+      oid,
+      kunnat: velho.kunnat,
+      maakunnat: velho.maakunnat,
+      type: IlmoitusKuulutusType.KUULUTUS,
+      title: translate("ui-otsikot.kuulutus_suunnitelman_nahtaville_asettamisesta", kieli) + ": " + nimi,
+      kieli,
+      url,
+      vaylamuoto: velho.vaylamuoto,
+      date: parseDate(nahtavillaoloVaihe.kuulutusPaiva).format(),
+    };
+  }
+
+  adaptHyvaksymisPaatosVaihe(
+    oid: string,
+    hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen,
+    kieli: Kieli
+  ): Omit<IlmoitusKuulutus, "key"> {
+    const velho = hyvaksymisPaatosVaihe.velho;
+    const nimi = selectNimi(velho.nimi, hyvaksymisPaatosVaihe.kielitiedot, kieli);
+    const url = linkHyvaksymisPaatos(oid);
+    return {
+      oid,
+      kunnat: velho.kunnat,
+      maakunnat: velho.maakunnat,
+      type: IlmoitusKuulutusType.KUULUTUS,
+      title: translate("ui-otsikot.kuulutus_suunnitelman_hyvaksymispaatoksestä", kieli) + ": " + nimi,
+      kieli,
+      url,
+      vaylamuoto: velho.vaylamuoto,
+      date: parseDate(hyvaksymisPaatosVaihe.kuulutusPaiva).format(),
+    };
+  }
+
   createKeyForAloitusKuulutusJulkaisu(
     oid: string,
     aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisuJulkinen,
     kieli: Kieli
   ) {
     return [oid, "aloitusKuulutus", kieli, aloitusKuulutusJulkaisu.kuulutusPaiva].join("_");
+  }
+
+  createKeyForNahtavillaoloVaihe(oid: string, nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisuJulkinen, kieli: Kieli) {
+    return [oid, "nahtavillaoloVaihe", kieli, nahtavillaoloVaihe.kuulutusPaiva].join("_");
+  }
+
+  createKeyForHyvaksymisPaatosVaihe(oid: string, hyvaksymisPaatos: HyvaksymisPaatosVaiheJulkaisuJulkinen, kieli: Kieli) {
+    return [oid, "hyvaksymisPaatos", kieli, hyvaksymisPaatos.kuulutusPaiva].join("_");
   }
 
   public getProjektiKielet(projekti: ProjektiJulkinen): Kieli[] {

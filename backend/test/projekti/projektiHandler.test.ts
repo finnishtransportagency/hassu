@@ -4,7 +4,6 @@ import { ProjektiFixture } from "../fixture/projektiFixture";
 import * as sinon from "sinon";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { velho } from "../../src/velho/velhoClient";
-import cloneDeep from "lodash/cloneDeep";
 import { UserFixture } from "../fixture/userFixture";
 import { userService } from "../../src/user";
 
@@ -24,8 +23,8 @@ describe("projektiHandler", () => {
 
     userFixture = new UserFixture(userService);
     fixture = new ProjektiFixture();
-    loadProjektiByOidStub.resolves(fixture.dbProjekti1);
-    const updatedProjekti = cloneDeep(fixture.dbProjekti1);
+    loadProjektiByOidStub.resolves(fixture.dbProjekti1());
+    const updatedProjekti = fixture.dbProjekti1();
     const velhoData = updatedProjekti.velho;
     velhoData.nimi = "Uusi nimi";
     velhoData.vaylamuoto = ["rata"];

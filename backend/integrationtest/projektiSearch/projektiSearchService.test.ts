@@ -3,7 +3,6 @@ import { describe, it } from "mocha";
 import { ProjektiFixture } from "../../test/fixture/projektiFixture";
 import { projektiSearchService } from "../../src/projektiSearch/projektiSearchService";
 import { ListaaProjektitInput, ProjektiTyyppi, Status, Viranomainen } from "../../../common/graphql/apiModel";
-import cloneDeep from "lodash/cloneDeep";
 import { DBProjekti } from "../../src/database/model/projekti";
 import dayjs from "dayjs";
 import { UserFixture } from "../../test/fixture/userFixture";
@@ -78,7 +77,7 @@ describe.skip("ProjektiSearchService", () => {
   before(async () => {
     for (let i = 0; i < testData.length; i++) {
       const data = testData[i];
-      const projekti: DBProjekti = cloneDeep(projektiFixture.dbProjekti1);
+      const projekti: DBProjekti = projektiFixture.dbProjekti1();
       projekti.oid = data.oid;
       projekti.velho.tyyppi = data.projektiTyyppi;
       projekti.velho.vaylamuoto = data.vaylamuoto;

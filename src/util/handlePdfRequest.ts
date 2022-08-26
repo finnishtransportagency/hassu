@@ -1,18 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { api, AsiakirjaTyyppi, Kieli, TallennaProjektiInput } from "@services/api";
 import { setupLambdaMonitoring } from "../../backend/src/aws/monitoring";
-import { parameterStore } from "./parameterStore";
 import { createAuthorizationHeader } from "./basicAuthentication";
+import { getCredentials } from "./apiUtil";
 
 setupLambdaMonitoring();
-
-async function getCredentials() {
-  const username =
-    (await parameterStore.getParameter("/" + process.env.INFRA_ENVIRONMENT + "/basicAuthenticationUsername")) || "";
-  const password =
-    (await parameterStore.getParameter("/" + process.env.INFRA_ENVIRONMENT + "/basicAuthenticationPassword")) || "";
-  return { username, password };
-}
 
 interface PdfRequestProps {
   req: NextApiRequest;
@@ -32,12 +24,14 @@ export const handlePdfRequest = async ({ req, res }: PdfRequestProps) => {
   }
 
   try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     // Basic authentication header is added here because it is not present in NextApiRequest. The actual API call authenticates the user with cookies, so this is not a security issue
     const { username, password } = await getCredentials();
-    api.setOneTimeForwardHeaders({
+    await api.setOneTimeForwardHeaders({
       ...req.headers,
       authorization: createAuthorizationHeader(username, password),
     });
+
     let changes: TallennaProjektiInput;
     let tyyppi: AsiakirjaTyyppi;
     if (!asiakirjaTyyppi || !tallennaProjektiInput) {

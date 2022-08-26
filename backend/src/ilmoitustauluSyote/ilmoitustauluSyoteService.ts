@@ -1,4 +1,4 @@
-import { AloitusKuulutusTila, ProjektiJulkinen } from "../../../common/graphql/apiModel";
+import { AloitusKuulutusTila, Kieli, ProjektiJulkinen } from "../../../common/graphql/apiModel";
 import { openSearchClientIlmoitustauluSyote } from "../projektiSearch/openSearchClient";
 import { ilmoitusKuulutusAdapter } from "./ilmoitustauluSyoteAdapter";
 
@@ -6,7 +6,12 @@ class IlmoitustauluSyoteService {
   async index(projekti: ProjektiJulkinen) {
     const oid = projekti.oid;
     const kielet = ilmoitusKuulutusAdapter.getProjektiKielet(projekti);
+    await this.indexAloitusKuulutusJulkaisut(projekti, kielet, oid);
+    await this.indexNahtavillaoloVaihe(projekti, kielet, oid);
+    await this.indexHyvaksymisPaatosVaihe(projekti, kielet, oid);
+  }
 
+  private async indexAloitusKuulutusJulkaisut(projekti: ProjektiJulkinen, kielet: Kieli[], oid: string) {
     const aloitusKuulutusJulkaisut = projekti.aloitusKuulutusJulkaisut?.filter(
       (julkaisu) => julkaisu.tila == AloitusKuulutusTila.HYVAKSYTTY
     );
@@ -18,6 +23,30 @@ class IlmoitustauluSyoteService {
             ilmoitusKuulutusAdapter.adaptAloitusKuulutusJulkaisu(oid, aloitusKuulutusJulkaisu, kieli)
           );
         }
+      }
+    }
+  }
+
+  private async indexNahtavillaoloVaihe(projekti: ProjektiJulkinen, kielet: Kieli[], oid: string) {
+    const nahtavillaoloVaihe = projekti.nahtavillaoloVaihe;
+    if (nahtavillaoloVaihe) {
+      for (const kieli of kielet) {
+        await openSearchClientIlmoitustauluSyote.putDocument(
+          ilmoitusKuulutusAdapter.createKeyForNahtavillaoloVaihe(oid, nahtavillaoloVaihe, kieli),
+          ilmoitusKuulutusAdapter.adaptNahtavillaoloVaihe(oid, nahtavillaoloVaihe, kieli)
+        );
+      }
+    }
+  }
+
+  private async indexHyvaksymisPaatosVaihe(projekti: ProjektiJulkinen, kielet: Kieli[], oid: string) {
+    const nahtavillaoloVaihe = projekti.hyvaksymisPaatosVaihe;
+    if (nahtavillaoloVaihe) {
+      for (const kieli of kielet) {
+        await openSearchClientIlmoitustauluSyote.putDocument(
+          ilmoitusKuulutusAdapter.createKeyForHyvaksymisPaatosVaihe(oid, nahtavillaoloVaihe, kieli),
+          ilmoitusKuulutusAdapter.adaptHyvaksymisPaatosVaihe(oid, nahtavillaoloVaihe, kieli)
+        );
       }
     }
   }

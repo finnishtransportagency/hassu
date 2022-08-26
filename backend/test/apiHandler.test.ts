@@ -19,7 +19,6 @@ import {
 } from "../../common/graphql/apiModel";
 import { AloitusKuulutusJulkaisu, DBProjekti } from "../src/database/model";
 import * as log from "loglevel";
-import cloneDeep from "lodash/cloneDeep";
 import mergeWith from "lodash/mergeWith";
 import { PersonSearchFixture } from "./personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../src/personSearch/kayttajas";
@@ -102,7 +101,7 @@ describe("apiHandler", () => {
 
     function mockLataaProjektiFromVelho() {
       loadProjektiByOidStub.resolves();
-      const velhoProjekti = cloneDeep(fixture.velhoprojekti1);
+      const velhoProjekti = fixture.velhoprojekti1();
 
       loadVelhoProjektiByOidStub.callsFake(() => ({
         projekti: velhoProjekti,
@@ -117,7 +116,7 @@ describe("apiHandler", () => {
         userFixture.loginAs(UserFixture.mattiMeikalainen);
         mockLataaProjektiFromVelho();
 
-        const projekti = await api.lataaProjekti(fixture.projekti1.oid);
+        const projekti = await api.lataaProjekti(fixture.PROJEKTI1_OID);
         expect(projekti).toMatchSnapshot();
         sandbox.assert.calledOnce(loadProjektiByOidStub);
         sandbox.assert.calledOnce(loadVelhoProjektiByOidStub);
@@ -155,7 +154,7 @@ describe("apiHandler", () => {
             createProjektiStub.resetHistory();
           }
           // Load projekti and examine its permissions again
-          p = await api.lataaProjekti(fixture.projekti1.oid);
+          p = await api.lataaProjekti(fixture.PROJEKTI1_OID);
           expect(["Loaded projekti having " + description, p]).toMatchSnapshot();
           return p;
         }
@@ -235,7 +234,7 @@ describe("apiHandler", () => {
 
         // Load projekti and examine its permissions
         mockLataaProjektiFromVelho();
-        let projekti = await api.lataaProjekti(fixture.projekti1.oid);
+        let projekti = await api.lataaProjekti(fixture.PROJEKTI1_OID);
         expect(["Initial state with projektipaallikko and omistaja", projekti.kayttoOikeudet]).toMatchSnapshot();
 
         // Create stubs to keep state of the "database" so that it can be modified in the following steps
@@ -326,7 +325,7 @@ describe("apiHandler", () => {
 
         // Verify that projekti is not visible for anonymous users
         userFixture.logout();
-        await expect(api.lataaProjekti(fixture.projekti1.oid)).to.eventually.be.rejectedWith(NotFoundError);
+        await expect(api.lataaProjekti(fixture.PROJEKTI1_OID)).to.eventually.be.rejectedWith(NotFoundError);
         userFixture.loginAs(UserFixture.pekkaProjari);
 
         // Send aloituskuulutus to be approved

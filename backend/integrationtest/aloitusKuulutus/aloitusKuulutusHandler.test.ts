@@ -59,7 +59,7 @@ describe("AloitusKuulutus", () => {
 
   it("should create and manipulate projekti successfully", async function () {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    const projekti = new ProjektiFixture().dbProjekti1;
+    const projekti = new ProjektiFixture().dbProjekti1();
     const oid = projekti.oid;
     await projektiDatabase.createProjekti(projekti);
     await takeSnapshot(oid);
