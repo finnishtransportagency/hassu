@@ -6,7 +6,11 @@ import Section from "@components/layout/Section";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import { Stack } from "@mui/material";
 import { NahtavillaoloVaiheJulkaisu } from "@services/api";
-import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory } from "common/aineistoKategoriat";
+import {
+  AineistoKategoria,
+  aineistoKategoriat,
+  kategorianAllaOlevienAineistojenMaara,
+} from "common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
 import React, { FC, useMemo } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
@@ -50,6 +54,7 @@ export default function Lukunakyma() {
         <AineistoNahtavillaAccordion
           kategoriat={aineistoKategoriat.listKategoriat()}
           julkaisu={julkaisu as NahtavillaoloVaiheJulkaisu}
+          paakategoria={true}
         />
       </Section>
       <Section smallGaps>
@@ -115,48 +120,56 @@ export default function Lukunakyma() {
 interface AineistoNahtavillaAccordionProps {
   julkaisu: NahtavillaoloVaiheJulkaisu;
   kategoriat: AineistoKategoria[];
+  paakategoria?: boolean;
 }
 
-const AineistoNahtavillaAccordion: FC<AineistoNahtavillaAccordionProps> = ({ julkaisu, kategoriat }) => {
+const AineistoNahtavillaAccordion: FC<AineistoNahtavillaAccordionProps> = ({ julkaisu, kategoriat, paakategoria }) => {
   const { t } = useTranslation("aineisto");
   const accordionItems: AccordionItem[] = useMemo(
     () =>
       kategoriat
-        .filter((kategoria) => julkaisu.aineistoNahtavilla?.some((aineisto) => aineisto.kategoriaId === kategoria.id))
-        .map<AccordionItem>((kategoria) => ({
-          id: kategoria.id,
-          title: (
-            <span>
-              {t(`aineisto-kategoria-nimi.${kategoria.id}`)}
-              {" (" + getNestedAineistoMaaraForCategory(julkaisu.aineistoNahtavilla || [], kategoria) + ")"}
-            </span>
-          ),
-          content: (
-            <>
-              {julkaisu.aineistoNahtavilla && (
-                <Stack direction="column" rowGap={2}>
-                  {julkaisu.aineistoNahtavilla
-                    .filter((aineisto) => aineisto.kategoriaId === kategoria.id)
-                    .map((aineisto) => (
-                      <span key={aineisto.dokumenttiOid}>
-                        <HassuAineistoNimiExtLink
-                          tiedostoPolku={aineisto.tiedosto}
-                          aineistoNimi={aineisto.nimi}
-                          sx={{ mr: 3 }}
-                          target="_blank"
-                        />
-                        {aineisto.tuotu && formatDateTime(aineisto.tuotu)}
-                      </span>
-                    ))}
-                </Stack>
-              )}
-              {kategoria.alaKategoriat && (
-                <AineistoNahtavillaAccordion julkaisu={julkaisu} kategoriat={kategoria.alaKategoriat} />
-              )}
-            </>
-          ),
-        })),
-    [t, julkaisu, kategoriat]
+        .filter((kategoria) => {
+          return (
+            julkaisu.aineistoNahtavilla &&
+            (paakategoria || kategorianAllaOlevienAineistojenMaara(julkaisu.aineistoNahtavilla, kategoria))
+          );
+        })
+        .map<AccordionItem>((kategoria) => {
+          return {
+            id: kategoria.id,
+            title: (
+              <span>
+                {t(`aineisto-kategoria-nimi.${kategoria.id}`)}
+                {" (" + kategorianAllaOlevienAineistojenMaara(julkaisu.aineistoNahtavilla || [], kategoria) + ")"}
+              </span>
+            ),
+            content: (
+              <>
+                {julkaisu.aineistoNahtavilla && (
+                  <Stack direction="column" rowGap={2}>
+                    {julkaisu.aineistoNahtavilla
+                      .filter((aineisto) => aineisto.kategoriaId === kategoria.id)
+                      .map((aineisto) => (
+                        <span key={aineisto.dokumenttiOid}>
+                          <HassuAineistoNimiExtLink
+                            tiedostoPolku={aineisto.tiedosto}
+                            aineistoNimi={aineisto.nimi}
+                            sx={{ mr: 3 }}
+                            target="_blank"
+                          />
+                          {aineisto.tuotu && formatDateTime(aineisto.tuotu)}
+                        </span>
+                      ))}
+                  </Stack>
+                )}
+                {kategoria.alaKategoriat && (
+                  <AineistoNahtavillaAccordion julkaisu={julkaisu} kategoriat={kategoria.alaKategoriat} />
+                )}
+              </>
+            ),
+          };
+        }),
+    [t, julkaisu, kategoriat, paakategoria]
   );
   return !!accordionItems.length ? <HassuAccordion items={accordionItems} /> : null;
 };

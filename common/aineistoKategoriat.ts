@@ -94,6 +94,22 @@ export const getNestedCategoryIds: (kategoriat: AineistoKategoria[]) => string[]
   return kategoriaIds;
 };
 
+export function kategorianAllaOlevienAineistojenMaara(
+  aineistoNahtavilla: Aineisto[],
+  kategoria: AineistoKategoria
+): number {
+  const kategorianAineistojenMaara = aineistoNahtavilla.filter(
+    (aineisto) => aineisto.kategoriaId === kategoria.id
+  ).length;
+  if (!kategoria.alaKategoriat || kategoria.alaKategoriat.length === 0) {
+    return kategorianAineistojenMaara;
+  } else {
+    return kategoria.alaKategoriat.reduce((acc, kategoria) => {
+      return acc + kategorianAllaOlevienAineistojenMaara(aineistoNahtavilla, kategoria);
+    }, kategorianAineistojenMaara);
+  }
+}
+
 export const getNestedAineistoMaaraForCategory = (
   aineistot: (Aineisto | AineistoInput)[],
   kategoria: AineistoKategoria

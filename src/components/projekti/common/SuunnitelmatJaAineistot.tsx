@@ -157,6 +157,14 @@ const SuunnitelmaAineistoAlakategoriaAccordion = (props: SuunnitelmaAineistoAlak
   const { t } = useTranslation("aineisto");
   const aineistoNahtavilla = watch("aineistoNahtavilla");
   const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla || {}).flat();
+  const aineistojenMaara = props.alakategoriat.reduce((acc, cur) => {
+    return acc + getNestedAineistoMaaraForCategory(aineistoNahtavillaFlat, cur);
+  }, 0);
+
+  if (!aineistojenMaara) {
+    return null;
+  }
+
   return (
     <HassuAccordion
       expandedState={props.expandedAineistoState}
