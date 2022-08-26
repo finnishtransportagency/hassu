@@ -1,4 +1,4 @@
-import { findVuorovaikutusByNumber } from "../handler/projektiAdapter";
+import { findVuorovaikutusByNumber } from "../util/findVuorovaikutusByNumber";
 import { IlmoituksenVastaanottajat, Kieli } from "../../../common/graphql/apiModel";
 import { asiakirjaService } from "../asiakirja/asiakirjaService";
 import { fileService } from "../files/fileService";

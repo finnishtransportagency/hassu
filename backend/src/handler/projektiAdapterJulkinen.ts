@@ -21,7 +21,7 @@ import {
 } from "../../../common/graphql/apiModel";
 import pickBy from "lodash/pickBy";
 import dayjs, { Dayjs } from "dayjs";
-import { findJulkaisuByStatus, findPublishedAloitusKuulutusJulkaisu, isDateInThePast } from "./projektiAdapter";
+import { isDateInThePast } from "./projektiAdapter";
 import { fileService } from "../files/fileService";
 import { log } from "../logger";
 import { parseDate } from "../util/dateUtil";
@@ -33,6 +33,7 @@ import {
 } from "./commonAdapterUtil/lisaaTypename";
 import { adaptHankkeenKuvaus } from "./commonAdapterUtil/adaptHankkeenKuvaus";
 import { adaptYhteystiedot } from "./commonAdapterUtil/adaptYhteystiedot";
+import { findJulkaisuByStatus, findPublishedAloitusKuulutusJulkaisu } from "./commonAdapterUtil/util";
 
 class ProjektiAdapterJulkinen {
   private applyStatus(projekti: API.ProjektiJulkinen) {
