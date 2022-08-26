@@ -2,24 +2,11 @@ import {
   Aineisto,
   AloitusKuulutus,
   AloitusKuulutusJulkaisu,
-  AloitusKuulutusPDF,
   DBProjekti,
-  Hyvaksymispaatos,
   HyvaksymisPaatosVaihe,
-  HyvaksymisPaatosVaiheJulkaisu,
-  HyvaksymisPaatosVaihePDF,
-  KasittelynTila,
-  Kielitiedot,
-  Linkki,
   LocalizedMap,
-  NahtavillaoloPDF,
   NahtavillaoloVaihe,
-  NahtavillaoloVaiheJulkaisu,
-  Palaute,
-  Suunnitelma,
-  SuunnitteluSopimus,
   SuunnitteluVaihe,
-  Velho,
   Vuorovaikutus,
   VuorovaikutusTilaisuus,
   Yhteystieto,
@@ -31,15 +18,28 @@ import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import { personSearch } from "../personSearch/personSearchClient";
 import pickBy from "lodash/pickBy";
 import remove from "lodash/remove";
-import { fileService } from "../files/fileService";
 import { perustiedotValidationSchema } from "../../../src/schemas/perustiedot";
 import { ValidationError } from "yup";
 import { log } from "../logger";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { kayttoOikeudetSchema } from "../../../src/schemas/kayttoOikeudet";
 import { lisaAineistoService } from "../aineisto/lisaAineistoService";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { ISO_DATE_FORMAT, parseDate } from "../util/dateUtil";
+import adaptKasittelynTila from "./adaptProjektiUtil/adaptKasittelynTila";
+import {
+  adaptLiittyvatSuunnitelmat as lisaaSuunnitelmatTypename,
+  adaptKielitiedot as lisaaKielitiedotTypename,
+} from "./commonAdapterUtil/lisaaTypename";
+import adaptSuunnitteluVaihe from "./adaptProjektiUtil/adaptSuunnitteluVaihe";
+import { adaptNahtavillaoloVaihe, adaptNahtavillaoloVaiheJulkaisut } from "./adaptProjektiUtil/adaptNahtavillaoloVaihe";
+import {
+  adaptHyvaksymisPaatosVaihe,
+  adaptHyvaksymisPaatosVaiheJulkaisut,
+} from "./adaptProjektiUtil/adaptHyvaksymisPaatosVaihe";
+import { adaptHankkeenKuvaus } from "./commonAdapterUtil/adaptHankkeenKuvaus";
+import { adaptAloitusKuulutus, adaptAloitusKuulutusJulkaisut } from "./adaptProjektiUtil/adaptAloitusKuulutus";
+import { adaptSuunnitteluSopimus } from "./adaptProjektiUtil/adaptSuunitteluSopimus";
 
 export enum ProjektiEventType {
   VUOROVAIKUTUS_PUBLISHED = "VUOROVAIKUTUS_PUBLISHED",
@@ -124,7 +124,7 @@ export class ProjektiAdapter {
       tyyppi: velho?.tyyppi || dbProjekti.tyyppi, // remove usage of projekti.tyyppi after all data has been migrated to new format
       aloitusKuulutus: adaptAloitusKuulutus(projektiPaallikko, aloitusKuulutus),
       suunnitteluSopimus: adaptSuunnitteluSopimus(dbProjekti.oid, suunnitteluSopimus),
-      liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmat(liittyvatSuunnitelmat),
+      liittyvatSuunnitelmat: lisaaSuunnitelmatTypename(liittyvatSuunnitelmat),
       aloitusKuulutusJulkaisut: adaptAloitusKuulutusJulkaisut(
         projektiPaallikko,
         dbProjekti.oid,
@@ -134,7 +134,7 @@ export class ProjektiAdapter {
         __typename: "Velho",
         ...velho,
       },
-      kielitiedot: adaptKielitiedot(kielitiedot),
+      kielitiedot: lisaaKielitiedotTypename(kielitiedot),
       suunnitteluVaihe: adaptSuunnitteluVaihe(projektiPaallikko, suunnitteluVaihe, vuorovaikutukset, palautteet),
       nahtavillaoloVaihe: adaptNahtavillaoloVaihe(projektiPaallikko, dbProjekti, nahtavillaoloVaihe),
       nahtavillaoloVaiheJulkaisut: adaptNahtavillaoloVaiheJulkaisut(
@@ -308,76 +308,6 @@ export class ProjektiAdapter {
   }
 }
 
-function adaptKasittelynTila(kasittelynTila?: KasittelynTila | null): API.KasittelynTila | undefined | null {
-  if (kasittelynTila) {
-    const { hyvaksymispaatos, ensimmainenJatkopaatos, toinenJatkopaatos } = kasittelynTila;
-    return {
-      hyvaksymispaatos: adaptHyvaksymispaatos(hyvaksymispaatos),
-      ensimmainenJatkopaatos: adaptHyvaksymispaatos(ensimmainenJatkopaatos),
-      toinenJatkopaatos: adaptHyvaksymispaatos(toinenJatkopaatos),
-      __typename: "KasittelynTila",
-    };
-  }
-  return kasittelynTila as undefined;
-}
-
-function adaptHyvaksymispaatos(hyvaksymispaatos: Hyvaksymispaatos): API.Hyvaksymispaatos | undefined | null {
-  if (hyvaksymispaatos) {
-    return {
-      ...hyvaksymispaatos,
-      __typename: "Hyvaksymispaatos",
-    };
-  }
-  return hyvaksymispaatos as undefined;
-}
-
-function adaptLiittyvatSuunnitelmat(suunnitelmat?: Suunnitelma[] | null): API.Suunnitelma[] | undefined | null {
-  if (suunnitelmat) {
-    const liittyvatSuunnitelmat = suunnitelmat.map(
-      (suunnitelma) =>
-        ({
-          __typename: "Suunnitelma",
-          ...suunnitelma,
-        } as Suunnitelma)
-    );
-    return liittyvatSuunnitelmat as API.Suunnitelma[];
-  }
-  return suunnitelmat as undefined | null;
-}
-
-export function adaptKielitiedot(kielitiedot?: Kielitiedot | null): API.Kielitiedot | undefined | null {
-  if (kielitiedot) {
-    return {
-      ...kielitiedot,
-      __typename: "Kielitiedot",
-    };
-  }
-  return kielitiedot as undefined;
-}
-
-function adaptSuunnitteluVaihe(
-  projektiPaallikko: Yhteystieto,
-  suunnitteluVaihe: SuunnitteluVaihe,
-  vuorovaikutukset: Array<Vuorovaikutus>,
-  palautteet: Array<Palaute>
-): API.SuunnitteluVaihe {
-  if (suunnitteluVaihe) {
-    const { julkinen, arvioSeuraavanVaiheenAlkamisesta, suunnittelunEteneminenJaKesto, palautteidenVastaanottajat } =
-      suunnitteluVaihe;
-    return {
-      julkinen,
-      arvioSeuraavanVaiheenAlkamisesta,
-      suunnittelunEteneminenJaKesto,
-      hankkeenKuvaus: adaptHankkeenKuvaus(suunnitteluVaihe.hankkeenKuvaus),
-      vuorovaikutukset: adaptVuorovaikutukset(projektiPaallikko, vuorovaikutukset),
-      palautteet: palautteet ? palautteet.map((palaute) => ({ __typename: "Palaute", ...palaute })) : undefined,
-      palautteidenVastaanottajat,
-      __typename: "SuunnitteluVaihe",
-    };
-  }
-  return suunnitteluVaihe as undefined;
-}
-
 function adaptSuunnitteluVaiheToSave(
   dbProjekti: DBProjekti,
   suunnitteluVaihe: API.SuunnitteluVaiheInput
@@ -416,40 +346,6 @@ function adaptSuunnitteluVaiheToSave(
     };
   }
   return undefined;
-}
-
-function adaptNahtavillaoloVaihe(
-  projektiPaallikko: Yhteystieto,
-  dbProjekti: DBProjekti,
-  nahtavillaoloVaihe: NahtavillaoloVaihe
-): API.NahtavillaoloVaihe {
-  if (!nahtavillaoloVaihe) {
-    return undefined;
-  }
-  const {
-    aineistoNahtavilla,
-    lisaAineisto,
-    kuulutusYhteystiedot,
-    ilmoituksenVastaanottajat,
-    hankkeenKuvaus,
-    nahtavillaoloPDFt,
-    ...rest
-  } = nahtavillaoloVaihe;
-  return {
-    __typename: "NahtavillaoloVaihe",
-    ...rest,
-    nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(dbProjekti.oid, nahtavillaoloPDFt),
-    aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
-    lisaAineisto: adaptAineistot(lisaAineisto),
-    lisaAineistoParametrit: lisaAineistoService.generateListingParams(
-      dbProjekti.oid,
-      nahtavillaoloVaihe.id,
-      dbProjekti.salt
-    ),
-    kuulutusYhteystiedot: adaptYhteystiedot(projektiPaallikko, kuulutusYhteystiedot),
-    ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-    hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
-  };
 }
 
 function adaptNahtavillaoloVaiheToSave(
@@ -506,36 +402,6 @@ function adaptNahtavillaoloVaiheToSave(
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat),
     hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus),
   } as NahtavillaoloVaihe);
-}
-
-function adaptHyvaksymisPaatosVaihe(
-  projektiPaallikko: Yhteystieto,
-  dbProjekti: DBProjekti,
-  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe,
-  hyvaksymisPaatos: Hyvaksymispaatos
-): API.HyvaksymisPaatosVaihe {
-  if (!hyvaksymisPaatosVaihe) {
-    return undefined;
-  }
-  const {
-    aineistoNahtavilla,
-    hyvaksymisPaatos: hyvaksymisPaatosAineisto,
-    kuulutusYhteystiedot,
-    ilmoituksenVastaanottajat,
-    hyvaksymisPaatosVaihePDFt,
-    ...rest
-  } = hyvaksymisPaatosVaihe;
-  return {
-    __typename: "HyvaksymisPaatosVaihe",
-    ...rest,
-    hyvaksymisPaatosVaihePDFt: adaptHyvaksymisPaatosVaihePDFPaths(dbProjekti.oid, hyvaksymisPaatosVaihePDFt),
-    aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
-    hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto),
-    kuulutusYhteystiedot: adaptYhteystiedot(projektiPaallikko, kuulutusYhteystiedot),
-    ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-    hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
-    hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,
-  };
 }
 
 function adaptHyvaksymisPaatosVaiheToSave(
@@ -783,80 +649,6 @@ function adaptAineistotToSave(
   return resultAineistot;
 }
 
-export function adaptAineistot(aineistot?: Aineisto[] | null, julkaisuPaiva?: Dayjs): API.Aineisto[] | undefined {
-  if (julkaisuPaiva && julkaisuPaiva.isAfter(dayjs())) {
-    return undefined;
-  }
-  if (aineistot && aineistot.length > 0) {
-    return aineistot
-      .filter((aineisto) => aineisto.tila != API.AineistoTila.ODOTTAA_POISTOA)
-      .map((aineisto) => ({
-        __typename: "Aineisto",
-        dokumenttiOid: aineisto.dokumenttiOid,
-        ...aineisto,
-      }));
-  }
-  return undefined;
-}
-
-function adaptVuorovaikutukset(
-  projektiPaallikko: Yhteystieto,
-  vuorovaikutukset: Array<Vuorovaikutus>
-): API.Vuorovaikutus[] {
-  if (vuorovaikutukset && vuorovaikutukset.length > 0) {
-    return vuorovaikutukset.map(
-      (vuorovaikutus) =>
-        ({
-          ...vuorovaikutus,
-          vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(
-            projektiPaallikko,
-            vuorovaikutus.vuorovaikutusTilaisuudet
-          ),
-          suunnittelumateriaali: adaptLinkki(vuorovaikutus.suunnittelumateriaali),
-          videot: adaptLinkkiList(vuorovaikutus.videot),
-          esittelyaineistot: adaptAineistot(vuorovaikutus.esittelyaineistot),
-          suunnitelmaluonnokset: adaptAineistot(vuorovaikutus.suunnitelmaluonnokset),
-          __typename: "Vuorovaikutus",
-        } as API.Vuorovaikutus)
-    );
-  }
-  return vuorovaikutukset as undefined;
-}
-
-function adaptVuorovaikutusTilaisuudet(
-  projektiPaallikko: Yhteystieto,
-  vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus>
-): API.VuorovaikutusTilaisuus[] {
-  if (vuorovaikutusTilaisuudet) {
-    return vuorovaikutusTilaisuudet.map((vuorovaikutusTilaisuus) => ({
-      ...vuorovaikutusTilaisuus,
-      esitettavatYhteystiedot: adaptYhteystiedot(projektiPaallikko, vuorovaikutusTilaisuus.esitettavatYhteystiedot),
-      __typename: "VuorovaikutusTilaisuus",
-    }));
-  }
-  return vuorovaikutusTilaisuudet as undefined;
-}
-
-export function adaptLinkki(link: Linkki): API.Linkki {
-  if (link) {
-    return {
-      ...link,
-      __typename: "Linkki",
-    };
-  }
-  return link as undefined;
-}
-
-export function adaptLinkkiList(links: Array<Linkki>): API.Linkki[] {
-  if (links) {
-    return links.map((link) => ({
-      ...link,
-      __typename: "Linkki",
-    }));
-  }
-  return links as undefined;
-}
-
 function adaptSuunnitteluSopimusToSave(
   projekti: DBProjekti,
   suunnitteluSopimusInput?: API.SuunnitteluSopimusInput | null
@@ -894,22 +686,6 @@ function adaptIlmoituksenVastaanottajatToSave(
   return { __typename: "IlmoituksenVastaanottajat", kunnat, viranomaiset };
 }
 
-function adaptIlmoituksenVastaanottajat(
-  vastaanottajat: API.IlmoituksenVastaanottajat | null | undefined
-): API.IlmoituksenVastaanottajat {
-  if (!vastaanottajat) {
-    return vastaanottajat as null | undefined;
-  }
-  const kunnat: API.KuntaVastaanottaja[] =
-    vastaanottajat?.kunnat?.map((kunta) => ({ __typename: "KuntaVastaanottaja", ...kunta })) || null;
-  const viranomaiset: API.ViranomaisVastaanottaja[] =
-    vastaanottajat?.viranomaiset?.map((viranomainen) => ({
-      __typename: "ViranomaisVastaanottaja",
-      ...viranomainen,
-    })) || null;
-  return { __typename: "IlmoituksenVastaanottajat", kunnat, viranomaiset };
-}
-
 function adaptAloitusKuulutusToSave(aloitusKuulutus: API.AloitusKuulutusInput): AloitusKuulutus | null | undefined {
   if (aloitusKuulutus) {
     const { hankkeenKuvaus, ilmoituksenVastaanottajat, ...rest } = aloitusKuulutus;
@@ -922,251 +698,8 @@ function adaptAloitusKuulutusToSave(aloitusKuulutus: API.AloitusKuulutusInput): 
   return aloitusKuulutus as undefined;
 }
 
-function adaptAloitusKuulutus(
-  projektiPaallikko: Yhteystieto,
-  kuulutus?: AloitusKuulutus | null
-): API.AloitusKuulutus | undefined {
-  if (kuulutus) {
-    const { esitettavatYhteystiedot, ...otherKuulutusFields } = kuulutus;
-    const yhteystiedot = adaptYhteystiedot(projektiPaallikko, esitettavatYhteystiedot);
-    return {
-      __typename: "AloitusKuulutus",
-      ...otherKuulutusFields,
-      esitettavatYhteystiedot: yhteystiedot,
-      hankkeenKuvaus: adaptHankkeenKuvaus(kuulutus.hankkeenKuvaus),
-    };
-  }
-  return kuulutus as undefined;
-}
-
-function adaptSuunnitteluSopimus(
-  oid: string,
-  suunnitteluSopimus?: SuunnitteluSopimus | null
-): API.SuunnitteluSopimus | undefined | null {
-  if (suunnitteluSopimus) {
-    return {
-      __typename: "SuunnitteluSopimus",
-      ...suunnitteluSopimus,
-      logo: fileService.getYllapitoPathForProjektiFile(oid, suunnitteluSopimus.logo),
-    };
-  }
-  return suunnitteluSopimus as undefined | null;
-}
-
 function removeUndefinedFields(object: API.Projekti): Partial<API.Projekti> {
   return pickBy(object, (value) => value !== undefined);
-}
-
-export function adaptYhteystiedot(
-  projektiPaallikko: Yhteystieto,
-  yhteystiedot: Yhteystieto[]
-): API.Yhteystieto[] | undefined | null {
-  if (yhteystiedot) {
-    let yhteystiedotProjektiPaallikonKanssa = yhteystiedot;
-    if (!yhteystiedot.find((yt) => yt.sahkoposti === projektiPaallikko.sahkoposti)) {
-      yhteystiedotProjektiPaallikonKanssa = [projektiPaallikko].concat(yhteystiedot);
-    }
-    return yhteystiedotProjektiPaallikonKanssa.map((yt) => ({ __typename: "Yhteystieto", ...yt }));
-  }
-  return yhteystiedot as undefined | null;
-}
-
-export function adaptJulkaisuPDFPaths(
-  oid: string,
-  aloitusKuulutusPDFS: LocalizedMap<AloitusKuulutusPDF>
-): API.AloitusKuulutusPDFt | undefined {
-  if (!aloitusKuulutusPDFS) {
-    return undefined;
-  }
-
-  const result = {};
-  for (const kieli in aloitusKuulutusPDFS) {
-    result[kieli] = {
-      aloituskuulutusPDFPath: fileService.getYllapitoPathForProjektiFile(
-        oid,
-        aloitusKuulutusPDFS[kieli].aloituskuulutusPDFPath
-      ),
-      aloituskuulutusIlmoitusPDFPath: fileService.getYllapitoPathForProjektiFile(
-        oid,
-        aloitusKuulutusPDFS[kieli].aloituskuulutusIlmoitusPDFPath
-      ),
-    } as AloitusKuulutusPDF;
-  }
-  return { __typename: "AloitusKuulutusPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
-}
-
-export function adaptNahtavillaoloPDFPaths(
-  oid: string,
-  nahtavillaoloPDFs: LocalizedMap<NahtavillaoloPDF>
-): API.NahtavillaoloPDFt | undefined {
-  if (!nahtavillaoloPDFs) {
-    return undefined;
-  }
-
-  const result = {};
-  for (const kieli in nahtavillaoloPDFs) {
-    result[kieli] = {
-      nahtavillaoloPDFPath: fileService.getYllapitoPathForProjektiFile(
-        oid,
-        nahtavillaoloPDFs[kieli].nahtavillaoloPDFPath
-      ),
-      nahtavillaoloIlmoitusPDFPath: fileService.getYllapitoPathForProjektiFile(
-        oid,
-        nahtavillaoloPDFs[kieli].nahtavillaoloIlmoitusPDFPath
-      ),
-      nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: fileService.getYllapitoPathForProjektiFile(
-        oid,
-        nahtavillaoloPDFs[kieli].nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath
-      ),
-    } as NahtavillaoloPDF;
-  }
-  return { __typename: "NahtavillaoloPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
-}
-
-export function adaptHyvaksymisPaatosVaihePDFPaths(
-  oid: string,
-  hyvaksymisPaatosVaihePDFs: LocalizedMap<HyvaksymisPaatosVaihePDF>
-): API.HyvaksymisPaatosVaihePDFt | undefined {
-  if (!hyvaksymisPaatosVaihePDFs) {
-    return undefined;
-  }
-
-  const result = {};
-  for (const kieli in hyvaksymisPaatosVaihePDFs) {
-    result[kieli] = {
-      hyvaksymisKuulutusPDFPath: fileService.getYllapitoPathForProjektiFile(
-        oid,
-        hyvaksymisPaatosVaihePDFs[kieli].hyvaksymisKuulutusPDFPath
-      ),
-      hyvaksymisIlmoitusPDFPath: fileService.getYllapitoPathForProjektiFile(
-        oid,
-        hyvaksymisPaatosVaihePDFs[kieli].hyvaksymisIlmoitusPDFPath
-      ),
-      hyvaksymisLahetekirjePDFPath: fileService.getYllapitoPathForProjektiFile(
-        oid,
-        hyvaksymisPaatosVaihePDFs[kieli].hyvaksymisIlmoitusKiinteistonOmistajallePDFPath
-      ),
-      hyvaksymisIlmoitusMuistuttajillePDFPath: fileService.getYllapitoPathForProjektiFile(
-        oid,
-        hyvaksymisPaatosVaihePDFs[kieli].hyvaksymisIlmoitusKiinteistonOmistajallePDFPath
-      ),
-      hyvaksymisIlmoitusLausunnonantajillePDFPath: fileService.getYllapitoPathForProjektiFile(
-        oid,
-        hyvaksymisPaatosVaihePDFs[kieli].hyvaksymisIlmoitusKiinteistonOmistajallePDFPath
-      ),
-    } as HyvaksymisPaatosVaihePDF;
-  }
-  return { __typename: "HyvaksymisPaatosVaihePDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
-}
-
-export function adaptHankkeenKuvaus(hankkeenKuvaus: LocalizedMap<string>): API.HankkeenKuvaukset {
-  if (hankkeenKuvaus && Object.keys(hankkeenKuvaus).length > 0) {
-    return {
-      __typename: "HankkeenKuvaukset",
-      SUOMI: hankkeenKuvaus?.SUOMI,
-      ...hankkeenKuvaus,
-    };
-  }
-}
-
-export function adaptAloitusKuulutusJulkaisut(
-  projektiPaallikko: Yhteystieto,
-  oid: string,
-  aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null
-): API.AloitusKuulutusJulkaisu[] | undefined {
-  if (aloitusKuulutusJulkaisut) {
-    return aloitusKuulutusJulkaisut.map((julkaisu) => {
-      const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, ...fieldsToCopyAsIs } = julkaisu;
-      return {
-        ...fieldsToCopyAsIs,
-        __typename: "AloitusKuulutusJulkaisu",
-        hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
-        yhteystiedot: adaptYhteystiedot(projektiPaallikko, yhteystiedot),
-        velho: adaptVelho(velho),
-        suunnitteluSopimus: adaptSuunnitteluSopimus(oid, suunnitteluSopimus),
-        kielitiedot: adaptKielitiedot(kielitiedot),
-        aloituskuulutusPDFt: adaptJulkaisuPDFPaths(oid, julkaisu.aloituskuulutusPDFt),
-      };
-    });
-  }
-  return undefined;
-}
-
-export function adaptNahtavillaoloVaiheJulkaisut(
-  projektiPaallikko: Yhteystieto,
-  oid: string,
-  julkaisut?: NahtavillaoloVaiheJulkaisu[] | null
-): API.NahtavillaoloVaiheJulkaisu[] | undefined {
-  if (julkaisut) {
-    return julkaisut.map((julkaisu) => {
-      const {
-        aineistoNahtavilla,
-        lisaAineisto,
-        hankkeenKuvaus,
-        ilmoituksenVastaanottajat,
-        kuulutusYhteystiedot,
-        nahtavillaoloPDFt,
-        kielitiedot,
-        velho,
-        ...fieldsToCopyAsIs
-      } = julkaisu;
-
-      return {
-        ...fieldsToCopyAsIs,
-        __typename: "NahtavillaoloVaiheJulkaisu",
-        hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
-        kielitiedot: adaptKielitiedot(kielitiedot),
-        kuulutusYhteystiedot: adaptYhteystiedot(projektiPaallikko, kuulutusYhteystiedot),
-        ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-        aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
-        lisaAineisto: adaptAineistot(lisaAineisto),
-        nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(oid, nahtavillaoloPDFt),
-        velho: adaptVelho(velho),
-      };
-    });
-  }
-  return undefined;
-}
-
-export function adaptHyvaksymisPaatosVaiheJulkaisut(
-  projektiPaallikko: Yhteystieto,
-  oid: string,
-  hyvaksymisPaatos: Hyvaksymispaatos,
-  julkaisut?: HyvaksymisPaatosVaiheJulkaisu[] | null
-): API.HyvaksymisPaatosVaiheJulkaisu[] | undefined {
-  if (julkaisut) {
-    return julkaisut.map((julkaisu) => {
-      const {
-        aineistoNahtavilla,
-        hyvaksymisPaatos: hyvaksymisPaatosAineisto,
-        ilmoituksenVastaanottajat,
-        kuulutusYhteystiedot,
-        hyvaksymisPaatosVaihePDFt,
-        kielitiedot,
-        velho,
-        ...fieldsToCopyAsIs
-      } = julkaisu;
-
-      return {
-        ...fieldsToCopyAsIs,
-        __typename: "HyvaksymisPaatosVaiheJulkaisu",
-        kielitiedot: adaptKielitiedot(kielitiedot),
-        hyvaksymisPaatosVaihePDFt: adaptHyvaksymisPaatosVaihePDFPaths(oid, hyvaksymisPaatosVaihePDFt),
-        aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
-        hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto),
-        hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
-        hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,
-        kuulutusYhteystiedot: adaptYhteystiedot(projektiPaallikko, kuulutusYhteystiedot),
-        ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-        velho: adaptVelho(velho),
-      };
-    });
-  }
-  return undefined;
-}
-
-export function adaptVelho(velho: Velho): API.Velho {
-  return { __typename: "Velho", ...velho };
 }
 
 export function findVuorovaikutusByNumber(
