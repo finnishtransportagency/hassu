@@ -102,8 +102,10 @@ describe("apiHandler", () => {
 
     function mockLataaProjektiFromVelho() {
       loadProjektiByOidStub.resolves();
+      const syvaanKloonattu = cloneDeep(fixture.velhoprojekti1);
+
       loadVelhoProjektiByOidStub.callsFake(() => ({
-        projekti: cloneDeep(fixture.velhoprojekti1),
+        projekti: syvaanKloonattu,
         vastuuhenkilo: personSearchFixture.pekkaProjari.email,
         kayttoOikeudet: [],
       }));
