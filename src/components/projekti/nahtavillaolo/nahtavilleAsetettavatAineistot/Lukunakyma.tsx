@@ -169,7 +169,7 @@ const AineistoNahtavillaAccordion: FC<AineistoNahtavillaAccordionProps> = ({ jul
             ),
           };
         }),
-    [t, julkaisu, kategoriat]
+    [t, julkaisu, kategoriat, paakategoria]
   );
   return !!accordionItems.length ? <HassuAccordion items={accordionItems} /> : null;
 };
