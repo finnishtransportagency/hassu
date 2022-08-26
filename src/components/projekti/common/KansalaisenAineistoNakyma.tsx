@@ -10,11 +10,7 @@ import {
 } from "@services/api";
 import Trans from "next-translate/Trans";
 import HassuAccordion from "@components/HassuAccordion";
-import {
-  AineistoKategoria,
-  aineistoKategoriat,
-  kategorianAllaOlevienAineistojenMaara,
-} from "common/aineistoKategoriat";
+import { AineistoKategoria, aineistoKategoriat } from "common/aineistoKategoriat";
 import { Link, Stack } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ButtonFlat from "@components/button/ButtonFlat";
