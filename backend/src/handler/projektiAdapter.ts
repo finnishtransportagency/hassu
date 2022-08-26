@@ -108,30 +108,56 @@ export class ProjektiAdapter {
       ...fieldsToCopyAsIs
     } = dbProjekti;
 
+    // Määritä projektipäällikkö ja muotoile se Yhteystieto-objektiksi.
+    const projektiPaallikkoVaylaDBUserina = kayttoOikeudet.find((hlo) => hlo.email === velho.vastuuhenkilonEmail);
+    const { nimi, email, ...ppIlmanNimea } = projektiPaallikkoVaylaDBUserina;
+    const projektiPaallikko: Yhteystieto = {
+      ...ppIlmanNimea,
+      etunimi: nimi.split(",")[0].trim(),
+      sukunimi: nimi.split(",")[1].trim(),
+      sahkoposti: email,
+    };
+
     const apiProjekti = removeUndefinedFields({
       __typename: "Projekti",
       tallennettu: !!dbProjekti.tallennettu,
       kayttoOikeudet: KayttoOikeudetManager.adaptAPIKayttoOikeudet(kayttoOikeudet),
       tyyppi: velho?.tyyppi || dbProjekti.tyyppi, // remove usage of projekti.tyyppi after all data has been migrated to new format
-      aloitusKuulutus: adaptAloitusKuulutus(aloitusKuulutus),
+      aloitusKuulutus: adaptAloitusKuulutus(projektiPaallikko, aloitusKuulutus),
       suunnitteluSopimus: adaptSuunnitteluSopimus(dbProjekti.oid, suunnitteluSopimus),
       liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmat(liittyvatSuunnitelmat),
-      aloitusKuulutusJulkaisut: adaptAloitusKuulutusJulkaisut(dbProjekti.oid, aloitusKuulutusJulkaisut),
+      aloitusKuulutusJulkaisut: adaptAloitusKuulutusJulkaisut(
+        projektiPaallikko,
+        dbProjekti.oid,
+        aloitusKuulutusJulkaisut
+      ),
       velho: {
         __typename: "Velho",
         ...velho,
       },
       kielitiedot: adaptKielitiedot(kielitiedot),
-      suunnitteluVaihe: adaptSuunnitteluVaihe(dbProjekti.oid, suunnitteluVaihe, vuorovaikutukset, palautteet),
-      nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe),
-      nahtavillaoloVaiheJulkaisut: adaptNahtavillaoloVaiheJulkaisut(dbProjekti.oid, nahtavillaoloVaiheJulkaisut),
+      suunnitteluVaihe: adaptSuunnitteluVaihe(
+        dbProjekti.oid,
+        projektiPaallikko,
+        suunnitteluVaihe,
+        vuorovaikutukset,
+        palautteet
+      ),
+      nahtavillaoloVaihe: adaptNahtavillaoloVaihe(projektiPaallikko, dbProjekti, nahtavillaoloVaihe),
+      nahtavillaoloVaiheJulkaisut: adaptNahtavillaoloVaiheJulkaisut(
+        dbProjekti.oid,
+        projektiPaallikko,
+        nahtavillaoloVaiheJulkaisut
+      ),
       hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(
+        projektiPaallikko,
         dbProjekti,
         hyvaksymisPaatosVaihe,
         dbProjekti.kasittelynTila?.hyvaksymispaatos
       ),
       hyvaksymisPaatosVaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
         dbProjekti.oid,
+        projektiPaallikko,
         dbProjekti.kasittelynTila?.hyvaksymispaatos,
         hyvaksymisPaatosVaiheJulkaisut
       ),
@@ -338,6 +364,7 @@ export function adaptKielitiedot(kielitiedot?: Kielitiedot | null): API.Kielitie
 
 function adaptSuunnitteluVaihe(
   oid: string,
+  projektiPaallikko: Yhteystieto,
   suunnitteluVaihe: SuunnitteluVaihe,
   vuorovaikutukset: Array<Vuorovaikutus>,
   palautteet: Array<Palaute>
@@ -350,7 +377,7 @@ function adaptSuunnitteluVaihe(
       arvioSeuraavanVaiheenAlkamisesta,
       suunnittelunEteneminenJaKesto,
       hankkeenKuvaus: adaptHankkeenKuvaus(suunnitteluVaihe.hankkeenKuvaus),
-      vuorovaikutukset: adaptVuorovaikutukset(oid, vuorovaikutukset),
+      vuorovaikutukset: adaptVuorovaikutukset(oid, projektiPaallikko, vuorovaikutukset),
       palautteet: palautteet ? palautteet.map((palaute) => ({ __typename: "Palaute", ...palaute })) : undefined,
       palautteidenVastaanottajat,
       __typename: "SuunnitteluVaihe",
@@ -400,6 +427,7 @@ function adaptSuunnitteluVaiheToSave(
 }
 
 function adaptNahtavillaoloVaihe(
+  projektiPaallikko: Yhteystieto,
   dbProjekti: DBProjekti,
   nahtavillaoloVaihe: NahtavillaoloVaihe
 ): API.NahtavillaoloVaihe {
@@ -426,7 +454,7 @@ function adaptNahtavillaoloVaihe(
       nahtavillaoloVaihe.id,
       dbProjekti.salt
     ),
-    kuulutusYhteystiedot: adaptYhteystiedot(kuulutusYhteystiedot),
+    kuulutusYhteystiedot: adaptYhteystiedot(projektiPaallikko, kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
     hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
   };
@@ -489,6 +517,7 @@ function adaptNahtavillaoloVaiheToSave(
 }
 
 function adaptHyvaksymisPaatosVaihe(
+  projektiPaallikko: Yhteystieto,
   dbProjekti: DBProjekti,
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe,
   hyvaksymisPaatos: Hyvaksymispaatos
@@ -510,7 +539,7 @@ function adaptHyvaksymisPaatosVaihe(
     hyvaksymisPaatosVaihePDFt: adaptHyvaksymisPaatosVaihePDFPaths(dbProjekti.oid, hyvaksymisPaatosVaihePDFt),
     aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
     hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto),
-    kuulutusYhteystiedot: adaptYhteystiedot(kuulutusYhteystiedot),
+    kuulutusYhteystiedot: adaptYhteystiedot(projektiPaallikko, kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
     hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
     hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,
@@ -774,13 +803,20 @@ export function adaptAineistot(aineistot?: Aineisto[] | null, julkaisuPaiva?: Da
   return undefined;
 }
 
-function adaptVuorovaikutukset(oid: string, vuorovaikutukset: Array<Vuorovaikutus>): API.Vuorovaikutus[] {
+function adaptVuorovaikutukset(
+  oid: string,
+  projektiPaallikko: Yhteystieto,
+  vuorovaikutukset: Array<Vuorovaikutus>
+): API.Vuorovaikutus[] {
   if (vuorovaikutukset && vuorovaikutukset.length > 0) {
     return vuorovaikutukset.map(
       (vuorovaikutus) =>
         ({
           ...vuorovaikutus,
-          vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
+          vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(
+            projektiPaallikko,
+            vuorovaikutus.vuorovaikutusTilaisuudet
+          ),
           suunnittelumateriaali: adaptLinkki(vuorovaikutus.suunnittelumateriaali),
           videot: adaptLinkkiList(vuorovaikutus.videot),
           esittelyaineistot: adaptAineistot(vuorovaikutus.esittelyaineistot),
@@ -794,12 +830,13 @@ function adaptVuorovaikutukset(oid: string, vuorovaikutukset: Array<Vuorovaikutu
 }
 
 function adaptVuorovaikutusTilaisuudet(
+  projektiPaallikko: Yhteystieto,
   vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus>
 ): API.VuorovaikutusTilaisuus[] {
   if (vuorovaikutusTilaisuudet) {
     return vuorovaikutusTilaisuudet.map((vuorovaikutusTilaisuus) => ({
       ...vuorovaikutusTilaisuus,
-      esitettavatYhteystiedot: adaptYhteystiedot(vuorovaikutusTilaisuus.esitettavatYhteystiedot),
+      esitettavatYhteystiedot: adaptYhteystiedot(projektiPaallikko, vuorovaikutusTilaisuus.esitettavatYhteystiedot),
       __typename: "VuorovaikutusTilaisuus",
     }));
   }
@@ -891,16 +928,13 @@ function adaptAloitusKuulutusToSave(aloitusKuulutus: API.AloitusKuulutusInput): 
   return aloitusKuulutus as undefined;
 }
 
-function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.AloitusKuulutus | undefined {
+function adaptAloitusKuulutus(
+  projektiPaallikko: Yhteystieto,
+  kuulutus?: AloitusKuulutus | null
+): API.AloitusKuulutus | undefined {
   if (kuulutus) {
     const { esitettavatYhteystiedot, ...otherKuulutusFields } = kuulutus;
-    const yhteystiedot: API.Yhteystieto[] | undefined = esitettavatYhteystiedot?.map(
-      (yhteystieto) =>
-        ({
-          __typename: "Yhteystieto",
-          ...yhteystieto,
-        } as API.Yhteystieto)
-    );
+    const yhteystiedot = adaptYhteystiedot(projektiPaallikko, esitettavatYhteystiedot);
     return {
       __typename: "AloitusKuulutus",
       ...otherKuulutusFields,
@@ -929,9 +963,16 @@ function removeUndefinedFields(object: API.Projekti): Partial<API.Projekti> {
   return pickBy(object, (value) => value !== undefined);
 }
 
-export function adaptYhteystiedot(yhteystiedot: Yhteystieto[]): API.Yhteystieto[] | undefined | null {
+export function adaptYhteystiedot(
+  projektiPaallikko: Yhteystieto,
+  yhteystiedot: Yhteystieto[]
+): API.Yhteystieto[] | undefined | null {
   if (yhteystiedot) {
-    return yhteystiedot.map((yt) => ({ __typename: "Yhteystieto", ...yt }));
+    let yhteystiedotProjektiPaallikonKanssa = yhteystiedot;
+    if (!yhteystiedot.find((yt) => yt.sahkoposti === projektiPaallikko.sahkoposti)) {
+      yhteystiedotProjektiPaallikonKanssa = [projektiPaallikko].concat(yhteystiedot);
+    }
+    return yhteystiedotProjektiPaallikonKanssa.map((yt) => ({ __typename: "Yhteystieto", ...yt }));
   }
   return yhteystiedot as undefined | null;
 }
@@ -1053,18 +1094,18 @@ export function adaptHankkeenKuvaus(hankkeenKuvaus: LocalizedMap<string>): API.H
 }
 
 export function adaptAloitusKuulutusJulkaisut(
+  projektiPaallikko: Yhteystieto,
   oid: string,
   aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null
 ): API.AloitusKuulutusJulkaisu[] | undefined {
   if (aloitusKuulutusJulkaisut) {
     return aloitusKuulutusJulkaisut.map((julkaisu) => {
       const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, ...fieldsToCopyAsIs } = julkaisu;
-
       return {
         ...fieldsToCopyAsIs,
         __typename: "AloitusKuulutusJulkaisu",
         hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
-        yhteystiedot: adaptYhteystiedot(yhteystiedot),
+        yhteystiedot: adaptYhteystiedot(projektiPaallikko, yhteystiedot),
         velho: adaptVelho(velho),
         suunnitteluSopimus: adaptSuunnitteluSopimus(oid, suunnitteluSopimus),
         kielitiedot: adaptKielitiedot(kielitiedot),
@@ -1077,6 +1118,7 @@ export function adaptAloitusKuulutusJulkaisut(
 
 export function adaptNahtavillaoloVaiheJulkaisut(
   oid: string,
+  projektiPaallikko: Yhteystieto,
   julkaisut?: NahtavillaoloVaiheJulkaisu[] | null
 ): API.NahtavillaoloVaiheJulkaisu[] | undefined {
   if (julkaisut) {
@@ -1098,7 +1140,7 @@ export function adaptNahtavillaoloVaiheJulkaisut(
         __typename: "NahtavillaoloVaiheJulkaisu",
         hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
         kielitiedot: adaptKielitiedot(kielitiedot),
-        kuulutusYhteystiedot: adaptYhteystiedot(kuulutusYhteystiedot),
+        kuulutusYhteystiedot: adaptYhteystiedot(projektiPaallikko, kuulutusYhteystiedot),
         ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
         aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
         lisaAineisto: adaptAineistot(lisaAineisto),
@@ -1112,6 +1154,7 @@ export function adaptNahtavillaoloVaiheJulkaisut(
 
 export function adaptHyvaksymisPaatosVaiheJulkaisut(
   oid: string,
+  projektiPaallikko: Yhteystieto,
   hyvaksymisPaatos: Hyvaksymispaatos,
   julkaisut?: HyvaksymisPaatosVaiheJulkaisu[] | null
 ): API.HyvaksymisPaatosVaiheJulkaisu[] | undefined {
@@ -1137,7 +1180,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisut(
         hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto),
         hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
         hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,
-        kuulutusYhteystiedot: adaptYhteystiedot(kuulutusYhteystiedot),
+        kuulutusYhteystiedot: adaptYhteystiedot(projektiPaallikko, kuulutusYhteystiedot),
         ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
         velho: adaptVelho(velho),
       };
