@@ -374,14 +374,11 @@ Array [
       "esitettavatYhteystiedot": Array [
         Object {
           "__typename": "Yhteystieto",
-          "esitetaanKuulutuksessa": true,
-          "etunimi": "Projari",
-          "kayttajatunnus": "A123",
+          "etunimi": "Pekka",
           "organisaatio": "Väylävirasto",
           "puhelinnumero": "11",
-          "rooli": "PROJEKTIPAALLIKKO",
           "sahkoposti": "pekka.projari@vayla.fi",
-          "sukunimi": "Pekka",
+          "sukunimi": "Projari",
         },
         Object {
           "__typename": "Yhteystieto",
@@ -639,14 +636,11 @@ Object {
     "esitettavatYhteystiedot": Array [
       Object {
         "__typename": "Yhteystieto",
-        "esitetaanKuulutuksessa": true,
-        "etunimi": "Projari",
-        "kayttajatunnus": "A123",
+        "etunimi": "Pekka",
         "organisaatio": "Väylävirasto",
         "puhelinnumero": "11",
-        "rooli": "PROJEKTIPAALLIKKO",
         "sahkoposti": "pekka.projari@vayla.fi",
-        "sukunimi": "Pekka",
+        "sukunimi": "Projari",
       },
       Object {
         "__typename": "Yhteystieto",
