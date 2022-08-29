@@ -48,7 +48,7 @@ import {
 import {
   testHyvaksymisPaatosVaiheApproval,
   testHyvaksymisPaatosVaiheHyvaksymismenettelyssa,
-  testImportHyvaksymisPaatosAineistot
+  testImportHyvaksymisPaatosAineistot,
 } from "./testUtil/hyvaksymisPaatosVaihe";
 
 const sandbox = sinon.createSandbox();
@@ -105,7 +105,7 @@ describe("Api", () => {
     }
   });
 
-  it("should search, load and save a project", async function() {
+  it("should search, load and save a project", async function () {
     if (process.env.SKIP_VELHO_TESTS == "true") {
       this.skip();
     }
@@ -115,7 +115,7 @@ describe("Api", () => {
     expect(oid).to.eq(projekti.oid);
     await cleanProjektiS3Files(oid);
     const projektiPaallikko = await testProjektiHenkilot(projekti, oid);
-    await testProjektinTiedot(oid);
+    await testProjektinTiedot(oid, projektiPaallikko);
     await testAloitusKuulutusEsikatselu(oid);
     await testNullifyProjektiField(oid);
     await testAloituskuulutusApproval(oid, projektiPaallikko, userFixture);
@@ -164,10 +164,9 @@ describe("Api", () => {
     await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture);
     await processQueue(fakeAineistoImportQueue);
     await takePublicS3Snapshot(oid, "Hyvaksymispaatos approved", "hyvaksymispaatos");
-
   });
 
-  it.skip("should archive projekti", async function() {
+  it.skip("should archive projekti", async function () {
     replaceAWSDynamoDBWithLocalstack();
     await archiveProjekti(oid);
   });

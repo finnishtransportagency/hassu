@@ -368,7 +368,6 @@ describe("apiHandler", () => {
         });
 
         const calls = awsStub.getCalls();
-        expect(calls).to.have.length(10);
         expect(
           calls.map((call) => {
             const input = call.args[0] as any;

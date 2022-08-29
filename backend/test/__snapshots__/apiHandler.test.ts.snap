@@ -30,6 +30,7 @@ Object {
     "__typename": "Velho",
     "nimi": "Testiprojekti 1",
     "tyyppi": "TIE",
+    "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
   },
 }
 `;
@@ -89,6 +90,7 @@ Array [
     "velho": Object {
       "nimi": "Testiprojekti 1",
       "tyyppi": "TIE",
+      "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
     },
   },
 ]
@@ -130,6 +132,7 @@ Array [
       "__typename": "Velho",
       "nimi": "Testiprojekti 1",
       "tyyppi": "TIE",
+      "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
     },
   },
 ]
@@ -193,6 +196,7 @@ Array [
       "__typename": "Velho",
       "nimi": "Testiprojekti 1",
       "tyyppi": "TIE",
+      "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
     },
   },
 ]
@@ -275,6 +279,7 @@ Array [
       "__typename": "Velho",
       "nimi": "Testiprojekti 1",
       "tyyppi": "TIE",
+      "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
     },
   },
 ]
@@ -369,6 +374,17 @@ Array [
       "esitettavatYhteystiedot": Array [
         Object {
           "__typename": "Yhteystieto",
+          "esitetaanKuulutuksessa": true,
+          "etunimi": "Projari",
+          "kayttajatunnus": "A123",
+          "organisaatio": "Väylävirasto",
+          "puhelinnumero": "11",
+          "rooli": "PROJEKTIPAALLIKKO",
+          "sahkoposti": "pekka.projari@vayla.fi",
+          "sukunimi": "Pekka",
+        },
+        Object {
+          "__typename": "Yhteystieto",
           "etunimi": "Marko",
           "organisaatio": "Kajaani",
           "puhelinnumero": "0293121213",
@@ -443,6 +459,7 @@ Array [
       "__typename": "Velho",
       "nimi": "Testiprojekti 1",
       "tyyppi": "TIE",
+      "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
     },
   },
 ]
@@ -533,6 +550,10 @@ Array [
   },
   Object {
     "Bucket": "hassu-localstack-yllapito",
+    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+  },
+  Object {
+    "Bucket": "hassu-localstack-yllapito",
     "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
   },
 ]
@@ -544,6 +565,17 @@ Object {
   "aloitusKuulutus": Object {
     "__typename": "AloitusKuulutus",
     "esitettavatYhteystiedot": Array [
+      Object {
+        "__typename": "Yhteystieto",
+        "esitetaanKuulutuksessa": true,
+        "etunimi": "Projari",
+        "kayttajatunnus": "A123",
+        "organisaatio": "Väylävirasto",
+        "puhelinnumero": "11",
+        "rooli": "PROJEKTIPAALLIKKO",
+        "sahkoposti": "pekka.projari@vayla.fi",
+        "sukunimi": "Pekka",
+      },
       Object {
         "__typename": "Yhteystieto",
         "etunimi": "Marko",
@@ -610,6 +642,7 @@ Object {
         "__typename": "Velho",
         "nimi": "Testiprojekti 1",
         "tyyppi": "TIE",
+        "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
       },
       "yhteystiedot": Array [
         Object {
@@ -688,6 +721,7 @@ Object {
     "__typename": "Velho",
     "nimi": "Testiprojekti 1",
     "tyyppi": "TIE",
+    "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
   },
 }
 `;
