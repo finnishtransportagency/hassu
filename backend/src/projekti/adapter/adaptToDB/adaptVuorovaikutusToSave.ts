@@ -35,13 +35,19 @@ export function adaptVuorovaikutusToSave(
       projektiAdaptationResult
     );
 
+    const vuorovaikutusTilaisuudet = adaptVuorovaikutusTilaisuudetToSave(
+      projekti,
+      vuorovaikutusInput.vuorovaikutusTilaisuudet
+    );
+    // Vuorovaikutus must have at least one vuorovaikutustilaisuus
+    if (!vuorovaikutusTilaisuudet) {
+      throw new IllegalArgumentError("Vuorovaikutuksella pitää olla ainakin yksi vuorovaikutustilaisuus");
+    }
+
     const vuorovaikutusToSave: Vuorovaikutus = {
       ...vuorovaikutusInput,
       vuorovaikutusYhteysHenkilot: adaptKayttajatunnusList(projekti, vuorovaikutusInput.vuorovaikutusYhteysHenkilot),
-      vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudetToSave(
-        projekti,
-        vuorovaikutusInput.vuorovaikutusTilaisuudet
-      ),
+      vuorovaikutusTilaisuudet,
       // Jos vuorovaikutuksen ilmoituksella ei tarvitse olla viranomaisvastaanottajia, muokkaa adaptIlmoituksenVastaanottajatToSavea
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(vuorovaikutusInput.ilmoituksenVastaanottajat),
       esitettavatYhteystiedot: adaptYhteystiedotToSave(vuorovaikutusInput.esitettavatYhteystiedot),
