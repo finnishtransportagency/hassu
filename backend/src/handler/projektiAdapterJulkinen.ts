@@ -98,7 +98,7 @@ class ProjektiAdapterJulkinen {
   public adaptProjekti(dbProjekti: DBProjekti): API.ProjektiJulkinen | undefined {
     // Määritä projektipäällikkö ja muotoile se Yhteystieto-objektiksi.
     const projektiPaallikkoVaylaDBUserina = dbProjekti.kayttoOikeudet.find(
-      (hlo) => hlo.email === dbProjekti.velho.vastuuhenkilonEmail
+      (hlo) => hlo.rooli === API.ProjektiRooli.PROJEKTIPAALLIKKO
     );
     const projektiPaallikko: Yhteystieto = konvertoiPPVaylaUseristaYhteystiedoksi(projektiPaallikkoVaylaDBUserina);
     const aloitusKuulutusJulkaisut = this.adaptAloitusKuulutusJulkaisut(

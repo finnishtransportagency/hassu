@@ -99,7 +99,9 @@ export class ProjektiAdapter {
     } = dbProjekti;
 
     // Määritä projektipäällikkö ja muotoile se Yhteystieto-objektiksi.
-    const projektiPaallikkoVaylaDBUserina = kayttoOikeudet.find((hlo) => hlo.email === velho.vastuuhenkilonEmail);
+    const projektiPaallikkoVaylaDBUserina = kayttoOikeudet.find(
+      (hlo) => hlo.rooli === API.ProjektiRooli.PROJEKTIPAALLIKKO
+    );
     const projektiPaallikko: Yhteystieto = konvertoiPPVaylaUseristaYhteystiedoksi(projektiPaallikkoVaylaDBUserina);
 
     const apiProjekti = removeUndefinedFields({
