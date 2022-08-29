@@ -48,6 +48,7 @@ import HassuGrid from "@components/HassuGrid";
 import HassuSpinner from "@components/HassuSpinner";
 import { removeTypeName } from "src/util/removeTypeName";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
+import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
 type RequiredProjektiFields = Required<{
@@ -112,10 +113,12 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
     setValue,
   } = useFormReturn;
+
+  useLeaveConfirm(isDirty);
 
   const {
     register: register2,

@@ -20,6 +20,7 @@ import Section from "@components/layout/Section";
 import HassuStack from "@components/layout/HassuStack";
 import HassuSpinner from "@components/HassuSpinner";
 import useSnackbars from "src/hooks/useSnackbars";
+import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
@@ -59,7 +60,14 @@ export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
   };
 
   const useFormReturn = useForm<FormValues>(formOptions);
-  const { reset, handleSubmit } = useFormReturn;
+  const {
+    reset,
+    handleSubmit,
+    formState: { isDirty },
+  } = useFormReturn;
+
+  useLeaveConfirm(isDirty);
+
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
 
   const onSubmit = async (formData: FormValues) => {

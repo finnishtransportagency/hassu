@@ -33,6 +33,7 @@ import { useProjekti } from "src/hooks/useProjekti";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import PdfPreviewForm from "../PdfPreviewForm";
 import { lowerCase } from "lodash";
+import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 
@@ -160,6 +161,8 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
     formState: { isDirty },
     getValues,
   } = useFormReturn;
+
+  useLeaveConfirm(isDirty);
 
   const updateFormContext = useCallback(() => {
     setFormContext(getValues());

@@ -18,6 +18,7 @@ import log from "loglevel";
 import { removeTypeName } from "src/util/removeTypeName";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { kasittelynTilaSchema } from "src/schemas/kasittelynTila";
+import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 
 type FormValues = Pick<TallennaProjektiInput, "oid" | "kasittelynTila">;
 
@@ -41,9 +42,11 @@ export default function Kasittelyntila({ setRouteLabels }: PageProps): ReactElem
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
   } = useFormReturn;
+
+  useLeaveConfirm(isDirty);
 
   const onSubmit = useCallback(
     async (data: FormValues) => {

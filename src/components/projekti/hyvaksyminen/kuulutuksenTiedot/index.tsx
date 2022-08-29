@@ -17,6 +17,7 @@ import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import { removeTypeName } from "src/util/removeTypeName";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
+import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 
 function defaultValues(
   projekti: Projekti,
@@ -64,7 +65,12 @@ export default function KuulutuksenTiedot() {
   };
 
   const useFormReturn = useForm<KuulutuksenTiedotFormValues>(formOptions);
-  const { reset } = useFormReturn;
+  const {
+    reset,
+    formState: { isDirty },
+  } = useFormReturn;
+
+  useLeaveConfirm(isDirty);
 
   useEffect(() => {
     if (projekti?.oid) {

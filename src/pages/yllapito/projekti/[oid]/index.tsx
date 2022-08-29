@@ -28,6 +28,7 @@ import HassuStack from "@components/layout/HassuStack";
 import HassuSpinner from "@components/HassuSpinner";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import { Stack } from "@mui/material";
+import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -92,9 +93,11 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
   } = useFormReturn;
+
+  useLeaveConfirm(isDirty);
 
   const talletaLogo = useCallback(async (logoTiedosto: File) => {
     const contentType = (logoTiedosto as Blob).type || "application/octet-stream";

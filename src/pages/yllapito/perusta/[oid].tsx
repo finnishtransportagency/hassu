@@ -20,6 +20,7 @@ import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotific
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import Section from "@components/layout/Section";
 import HassuSpinner from "@components/HassuSpinner";
+import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
@@ -61,14 +62,20 @@ export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactEle
 
   const useFormReturn = useForm<FormValues>(formOptions);
 
-  const { reset, handleSubmit } = useFormReturn as unknown as UseFormReturn<FormValues>;
+  const {
+    reset,
+    handleSubmit,
+    formState: { isDirty },
+  } = useFormReturn as UseFormReturn<FormValues>;
+
+  useLeaveConfirm(isDirty);
 
   const submitCreateAnotherOne = async (formData: FormValues) => {
     deleteFieldArrayIds(formData?.kayttoOikeudet);
     setFormIsSubmitting(true);
     try {
       await api.tallennaProjekti(formData);
-      mutateProjekti();
+      await mutateProjekti();
       router.push(`/yllapito/perusta`);
     } catch (e) {
       log.log("OnSubmit Error", e);
@@ -81,7 +88,7 @@ export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactEle
     setFormIsSubmitting(true);
     try {
       await api.tallennaProjekti(formData);
-      mutateProjekti();
+      await mutateProjekti();
       router.push(`/yllapito/projekti/${oid}`);
     } catch (e) {
       log.log("OnSubmit Error", e);

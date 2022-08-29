@@ -18,6 +18,7 @@ import { removeTypeName } from "src/util/removeTypeName";
 import HassuDialog from "@components/HassuDialog";
 import SaapuneetKysymyksetJaPalautteet from "./SaapuneetKysymyksetJaPalautteet";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -63,6 +64,8 @@ export default function SuunnitteluvaiheenPerustiedot({ isDirtyHandler }: Props)
     handleSubmit,
     formState: { errors, isDirty },
   } = useFormReturn;
+
+  useLeaveConfirm(isDirty);
 
   const confirmPublish = () => {
     setOpenHyvaksy(true);

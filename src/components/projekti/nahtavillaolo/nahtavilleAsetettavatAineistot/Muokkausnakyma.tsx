@@ -9,6 +9,7 @@ import LausuntopyyntoonLiitettavaLisaaineisto from "./LausuntopyyntoonLiitettava
 import SuunnitelmatJaAineistot from "../../common/SuunnitelmatJaAineistot";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { aineistoKategoriat } from "common/aineistoKategoriat";
+import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
@@ -61,7 +62,12 @@ export default function Muokkausnakyma() {
   };
 
   const useFormReturn = useForm<NahtavilleAsetettavatAineistotFormValues>(formOptions);
-  const { reset } = useFormReturn;
+  const {
+    reset,
+    formState: { isDirty },
+  } = useFormReturn;
+
+  useLeaveConfirm(isDirty);
 
   useEffect(() => {
     if (projekti?.oid) {
