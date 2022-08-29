@@ -31,6 +31,7 @@ import { adaptSuunnitteluSopimusToSave } from "./adaptProjektiToSaveUtil/adaptSu
 import { adaptSuunnitteluVaiheToSave } from "./adaptProjektiToSaveUtil/adaptSuunnitteluVaiheToSave";
 import { adaptNahtavillaoloVaiheToSave } from "./adaptProjektiToSaveUtil/adaptNahtavillaoloVaiheToSave";
 import { adaptHyvaksymisPaatosVaiheToSave } from "./adaptProjektiToSaveUtil/adaptHyvaksymisPaatosVaiheToSave";
+import { konvertoiPPVaylaUseristaYhteystiedoksi } from "./commonAdapterUtil/konvertoiPPVaylaUseristaYhteystiedoksi";
 export enum ProjektiEventType {
   VUOROVAIKUTUS_PUBLISHED = "VUOROVAIKUTUS_PUBLISHED",
   AINEISTO_CHANGED = "AINEISTO_CHANGED",
@@ -99,13 +100,7 @@ export class ProjektiAdapter {
 
     // Määritä projektipäällikkö ja muotoile se Yhteystieto-objektiksi.
     const projektiPaallikkoVaylaDBUserina = kayttoOikeudet.find((hlo) => hlo.email === velho.vastuuhenkilonEmail);
-    const { nimi, email, ...ppIlmanNimea } = projektiPaallikkoVaylaDBUserina;
-    const projektiPaallikko: Yhteystieto = {
-      ...ppIlmanNimea,
-      etunimi: nimi.split(",")[0].trim(),
-      sukunimi: nimi.split(",")[1].trim(),
-      sahkoposti: email,
-    };
+    const projektiPaallikko: Yhteystieto = konvertoiPPVaylaUseristaYhteystiedoksi(projektiPaallikkoVaylaDBUserina);
 
     const apiProjekti = removeUndefinedFields({
       __typename: "Projekti",

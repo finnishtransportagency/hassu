@@ -34,6 +34,7 @@ import {
 import { adaptHankkeenKuvaus } from "./commonAdapterUtil/adaptHankkeenKuvaus";
 import { adaptYhteystiedot } from "./commonAdapterUtil/adaptYhteystiedot";
 import { findJulkaisuByStatus, findPublishedAloitusKuulutusJulkaisu } from "./commonAdapterUtil/util";
+import { konvertoiPPVaylaUseristaYhteystiedoksi } from "./commonAdapterUtil/konvertoiPPVaylaUseristaYhteystiedoksi";
 
 class ProjektiAdapterJulkinen {
   private applyStatus(projekti: API.ProjektiJulkinen) {
@@ -99,13 +100,7 @@ class ProjektiAdapterJulkinen {
     const projektiPaallikkoVaylaDBUserina = dbProjekti.kayttoOikeudet.find(
       (hlo) => hlo.email === dbProjekti.velho.vastuuhenkilonEmail
     );
-    const { nimi, email, ...ppIlmanNimea } = projektiPaallikkoVaylaDBUserina;
-    const projektiPaallikko: Yhteystieto = {
-      ...ppIlmanNimea,
-      etunimi: nimi.split(",")[0].trim(),
-      sukunimi: nimi.split(",")[1].trim(),
-      sahkoposti: email,
-    };
+    const projektiPaallikko: Yhteystieto = konvertoiPPVaylaUseristaYhteystiedoksi(projektiPaallikkoVaylaDBUserina);
     const aloitusKuulutusJulkaisut = this.adaptAloitusKuulutusJulkaisut(
       projektiPaallikko,
       dbProjekti.oid,
