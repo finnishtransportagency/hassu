@@ -1,6 +1,5 @@
 import {
   AineistoInput,
-  AloitusKuulutus,
   AsiakirjaTyyppi,
   Kieli,
   Projekti,
@@ -13,7 +12,6 @@ import {
   TilasiirtymaTyyppi,
   VelhoAineistoKategoria,
   Vuorovaikutus,
-  Yhteystieto,
 } from "../../../../common/graphql/apiModel";
 import { api } from "../apiClient";
 import axios from "axios";
@@ -97,7 +95,7 @@ export async function testProjektiHenkilot(projekti: Projekti, oid: string): Pro
   });
   await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU);
 
-  return projektiPaallikko;
+  return { ...projektiPaallikko, puhelinnumero: "123" };
 }
 
 async function tallennaLogo() {
@@ -116,7 +114,7 @@ async function tallennaLogo() {
   return uploadProperties.tiedostoPolku;
 }
 
-export async function testProjektinTiedot(oid: string, projari: ProjektiKayttaja): Promise<void> {
+export async function testProjektinTiedot(oid: string): Promise<void> {
   // Fill in information to projekti, including a file
   const uploadedFile = await tallennaLogo();
   await api.tallennaProjekti({
@@ -131,20 +129,7 @@ export async function testProjektinTiedot(oid: string, projari: ProjektiKayttaja
   // Check that the saved projekti is what it is supposed to be
   const updatedProjekti = await loadProjektiFromDatabase(oid, Status.ALOITUSKUULUTUS);
   expect(updatedProjekti.muistiinpano).to.be.equal(apiTestFixture.newNote);
-
-  const projariYhteystietona: Yhteystieto = {
-    __typename: "Yhteystieto",
-    etunimi: projari.nimi.split(",")[1].trim(),
-    sukunimi: projari.nimi.split(",")[0].trim(),
-    sahkoposti: projari.email,
-    organisaatio: projari.organisaatio,
-    puhelinnumero: projari.puhelinnumero,
-  };
-  const aloitusKuulutusProjariLisalla: AloitusKuulutus = {
-    ...apiTestFixture.aloitusKuulutus,
-    esitettavatYhteystiedot: [projariYhteystietona].concat(apiTestFixture.esitettavatYhteystiedot),
-  };
-  expect(updatedProjekti.aloitusKuulutus).eql(aloitusKuulutusProjariLisalla);
+  expect(updatedProjekti.aloitusKuulutus).eql(apiTestFixture.aloitusKuulutus);
   expect(updatedProjekti.suunnitteluSopimus).include(apiTestFixture.suunnitteluSopimus);
   expect(updatedProjekti.suunnitteluSopimus?.logo).contain("/suunnittelusopimus/logo.png");
   expect(updatedProjekti.kielitiedot).eql(apiTestFixture.kielitiedot);

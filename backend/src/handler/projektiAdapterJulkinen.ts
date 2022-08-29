@@ -12,7 +12,6 @@ import {
   Vuorovaikutus,
   VuorovaikutusPDF,
   VuorovaikutusTilaisuus,
-  Yhteystieto,
 } from "../database/model";
 import * as API from "../../../common/graphql/apiModel";
 import {
@@ -30,11 +29,10 @@ import {
   adaptKielitiedot as lisaaKielitiedotTypename,
   adaptLinkki as lisaaLinkkiTypename,
   adaptLinkkiList as lisaaLinkkiTypenameListaan,
+  adaptYhteystiedot as lisaaYhteystietoTypenameListaan,
 } from "./commonAdapterUtil/lisaaTypename";
 import { adaptHankkeenKuvaus } from "./commonAdapterUtil/adaptHankkeenKuvaus";
-import { adaptYhteystiedot } from "./commonAdapterUtil/adaptYhteystiedot";
 import { findJulkaisuByStatus, findPublishedAloitusKuulutusJulkaisu } from "./commonAdapterUtil/util";
-import { konvertoiPPVaylaUseristaYhteystiedoksi } from "./commonAdapterUtil/konvertoiPPVaylaUseristaYhteystiedoksi";
 
 class ProjektiAdapterJulkinen {
   private applyStatus(projekti: API.ProjektiJulkinen) {
@@ -96,13 +94,7 @@ class ProjektiAdapterJulkinen {
   }
 
   public adaptProjekti(dbProjekti: DBProjekti): API.ProjektiJulkinen | undefined {
-    // Määritä projektipäällikkö ja muotoile se Yhteystieto-objektiksi.
-    const projektiPaallikkoVaylaDBUserina = dbProjekti.kayttoOikeudet.find(
-      (hlo) => hlo.rooli === API.ProjektiRooli.PROJEKTIPAALLIKKO
-    );
-    const projektiPaallikko: Yhteystieto = konvertoiPPVaylaUseristaYhteystiedoksi(projektiPaallikkoVaylaDBUserina);
     const aloitusKuulutusJulkaisut = this.adaptAloitusKuulutusJulkaisut(
-      projektiPaallikko,
       dbProjekti.oid,
       dbProjekti.aloitusKuulutusJulkaisut
     );
@@ -115,19 +107,11 @@ class ProjektiAdapterJulkinen {
 
     let suunnitteluVaihe = undefined;
     if (dbProjekti.suunnitteluVaihe?.julkinen) {
-      suunnitteluVaihe = ProjektiAdapterJulkinen.adaptSuunnitteluVaihe(projektiPaallikko, dbProjekti, projektiHenkilot);
+      suunnitteluVaihe = ProjektiAdapterJulkinen.adaptSuunnitteluVaihe(dbProjekti, projektiHenkilot);
     }
 
-    const nahtavillaoloVaihe = ProjektiAdapterJulkinen.adaptNahtavillaoloVaiheJulkaisu(
-      projektiPaallikko,
-      dbProjekti,
-      projektiHenkilot
-    );
-    const hyvaksymisPaatosVaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
-      projektiPaallikko,
-      dbProjekti,
-      projektiHenkilot
-    );
+    const nahtavillaoloVaihe = ProjektiAdapterJulkinen.adaptNahtavillaoloVaiheJulkaisu(dbProjekti, projektiHenkilot);
+    const hyvaksymisPaatosVaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(dbProjekti, projektiHenkilot);
 
     const projekti: API.ProjektiJulkinen = {
       __typename: "ProjektiJulkinen",
@@ -147,7 +131,6 @@ class ProjektiAdapterJulkinen {
   }
 
   adaptAloitusKuulutusJulkaisut(
-    projektiPaallikko: Yhteystieto,
     oid: string,
     aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null
   ): API.AloitusKuulutusJulkaisuJulkinen[] | undefined {
@@ -165,7 +148,7 @@ class ProjektiAdapterJulkinen {
           kuulutusPaiva: julkaisu.kuulutusPaiva,
           siirtyySuunnitteluVaiheeseen: julkaisu.siirtyySuunnitteluVaiheeseen,
           hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
-          yhteystiedot: adaptYhteystiedot(projektiPaallikko, yhteystiedot),
+          yhteystiedot: lisaaYhteystietoTypenameListaan(yhteystiedot),
           velho: adaptVelho(velho),
           suunnitteluSopimus: this.adaptSuunnitteluSopimus(oid, suunnitteluSopimus),
           kielitiedot: lisaaKielitiedotTypename(kielitiedot),
@@ -216,7 +199,6 @@ class ProjektiAdapterJulkinen {
   }
 
   private static adaptSuunnitteluVaihe(
-    projektiPaallikko,
     dbProjekti: DBProjekti,
     projektiHenkilot: ProjektiHenkilot
   ): API.SuunnitteluVaiheJulkinen {
@@ -227,12 +209,11 @@ class ProjektiAdapterJulkinen {
       hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
       arvioSeuraavanVaiheenAlkamisesta,
       suunnittelunEteneminenJaKesto,
-      vuorovaikutukset: adaptVuorovaikutukset(projektiPaallikko, dbProjekti, projektiHenkilot),
+      vuorovaikutukset: adaptVuorovaikutukset(dbProjekti, projektiHenkilot),
     };
   }
 
   private static adaptNahtavillaoloVaiheJulkaisu(
-    projektiPaallikko: Yhteystieto,
     dbProjekti: DBProjekti,
     projektiHenkilot: ProjektiHenkilot
   ): API.NahtavillaoloVaiheJulkaisuJulkinen {
@@ -262,14 +243,13 @@ class ProjektiAdapterJulkinen {
         kuulutusVaihePaattyyPaiva,
         muistutusoikeusPaattyyPaiva,
         kuulutusYhteysHenkilot: adaptUsernamesToProjektiHenkiloIds(kuulutusYhteysHenkilot, projektiHenkilot),
-        kuulutusYhteystiedot: adaptYhteystiedot(projektiPaallikko, kuulutusYhteystiedot),
+        kuulutusYhteystiedot: lisaaYhteystietoTypenameListaan(kuulutusYhteystiedot),
         velho: adaptVelho(velho),
       };
     }
   }
 
   private static adaptHyvaksymisPaatosVaihe(
-    projektiPaallikko: Yhteystieto,
     dbProjekti: DBProjekti,
     projektiHenkilot: ProjektiHenkilot
   ): API.HyvaksymisPaatosVaiheJulkaisuJulkinen {
@@ -304,7 +284,7 @@ class ProjektiAdapterJulkinen {
         kuulutusPaiva,
         kuulutusVaihePaattyyPaiva,
         kuulutusYhteysHenkilot: adaptUsernamesToProjektiHenkiloIds(kuulutusYhteysHenkilot, projektiHenkilot),
-        kuulutusYhteystiedot: adaptYhteystiedot(projektiPaallikko, kuulutusYhteystiedot),
+        kuulutusYhteystiedot: lisaaYhteystietoTypenameListaan(kuulutusYhteystiedot),
         velho: adaptVelho(velho),
         kielitiedot: lisaaKielitiedotTypename(kielitiedot),
         hallintoOikeus,
@@ -385,7 +365,6 @@ function adaptUsernamesToProjektiHenkiloIds(usernames: Array<string>, projektiHe
 }
 
 function adaptVuorovaikutukset(
-  projektiPaallikko,
   dbProjekti: DBProjekti,
   projektiHenkilot: ProjektiHenkilot
 ): API.VuorovaikutusJulkinen[] {
@@ -400,7 +379,6 @@ function adaptVuorovaikutukset(
             ...vuorovaikutus,
             __typename: "VuorovaikutusJulkinen",
             vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(
-              projektiPaallikko,
               vuorovaikutus.vuorovaikutusTilaisuudet,
               projektiHenkilot
             ),
@@ -418,7 +396,7 @@ function adaptVuorovaikutukset(
               undefined,
               julkaisuPaiva
             ),
-            vuorovaikutusYhteystiedot: adaptAndMergeYhteystiedot(projektiPaallikko, dbProjekti, vuorovaikutus),
+            vuorovaikutusYhteystiedot: adaptAndMergeYhteystiedot(dbProjekti, vuorovaikutus),
             vuorovaikutusYhteysHenkilot: adaptUsernamesToProjektiHenkiloIds(usernames, projektiHenkilot),
             vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(dbProjekti.oid, vuorovaikutus.vuorovaikutusPDFt),
           } as API.VuorovaikutusJulkinen;
@@ -431,7 +409,6 @@ function adaptVuorovaikutukset(
 }
 
 function adaptVuorovaikutusTilaisuudet(
-  projektiPaallikko: Yhteystieto,
   vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus>,
   projektiHenkilot: ProjektiHenkilot
 ): VuorovaikutusTilaisuus[] {
@@ -442,7 +419,7 @@ function adaptVuorovaikutusTilaisuudet(
         vuorovaikutusTilaisuus.projektiYhteysHenkilot,
         projektiHenkilot
       ),
-      esitettavatYhteystiedot: adaptYhteystiedot(projektiPaallikko, vuorovaikutusTilaisuus.esitettavatYhteystiedot),
+      esitettavatYhteystiedot: lisaaYhteystietoTypenameListaan(vuorovaikutusTilaisuus.esitettavatYhteystiedot),
       __typename: "VuorovaikutusTilaisuus",
     }));
   }
@@ -514,16 +491,12 @@ function adaptVuorovaikutusPDFPaths(
   return { __typename: "VuorovaikutusPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
 }
 
-function adaptAndMergeYhteystiedot(
-  projektiPaallikko: Yhteystieto,
-  dbProjekti: DBProjekti,
-  vuorovaikutus: Vuorovaikutus
-) {
+function adaptAndMergeYhteystiedot(dbProjekti: DBProjekti, vuorovaikutus: Vuorovaikutus) {
   let vuorovaikutusYhteystiedot = adaptYhteystiedotFromUsernames(dbProjekti, vuorovaikutus.vuorovaikutusYhteysHenkilot);
   if (!vuorovaikutusYhteystiedot) {
     vuorovaikutusYhteystiedot = [];
   }
-  const yhteystiedot = adaptYhteystiedot(projektiPaallikko, vuorovaikutus.esitettavatYhteystiedot);
+  const yhteystiedot = lisaaYhteystietoTypenameListaan(vuorovaikutus.esitettavatYhteystiedot);
   if (yhteystiedot) {
     vuorovaikutusYhteystiedot = vuorovaikutusYhteystiedot.concat(yhteystiedot);
   }

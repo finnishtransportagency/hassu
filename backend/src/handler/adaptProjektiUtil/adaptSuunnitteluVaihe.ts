@@ -3,7 +3,6 @@ import {
   SuunnitteluVaihe,
   Vuorovaikutus,
   VuorovaikutusTilaisuus,
-  Yhteystieto,
   LocalizedMap,
   VuorovaikutusPDF,
 } from "../../database/model";
@@ -11,15 +10,14 @@ import * as API from "../../../../common/graphql/apiModel";
 import {
   adaptLinkki as lisaaLinkkiTypename,
   adaptLinkkiList as lisaaLinkkiTypenameListaan,
+  adaptYhteystiedot as lisaaYhteystietoTypenameListaan,
 } from "../commonAdapterUtil/lisaaTypename";
 import { adaptHankkeenKuvaus } from "../commonAdapterUtil/adaptHankkeenKuvaus";
 import { adaptAineistot } from "../commonAdapterUtil/adaptAineistot";
-import { adaptYhteystiedot } from "../commonAdapterUtil/adaptYhteystiedot";
 import { fileService } from "../../files/fileService";
 
 export default function adaptSuunnitteluVaihe(
   oid: string,
-  projektiPaallikko: Yhteystieto,
   suunnitteluVaihe: SuunnitteluVaihe,
   vuorovaikutukset: Array<Vuorovaikutus>,
   palautteet: Array<Palaute>
@@ -32,7 +30,7 @@ export default function adaptSuunnitteluVaihe(
       arvioSeuraavanVaiheenAlkamisesta,
       suunnittelunEteneminenJaKesto,
       hankkeenKuvaus: adaptHankkeenKuvaus(suunnitteluVaihe.hankkeenKuvaus),
-      vuorovaikutukset: adaptVuorovaikutukset(oid, projektiPaallikko, vuorovaikutukset),
+      vuorovaikutukset: adaptVuorovaikutukset(oid, vuorovaikutukset),
       palautteet: palautteet ? palautteet.map((palaute) => ({ __typename: "Palaute", ...palaute })) : undefined,
       palautteidenVastaanottajat,
       __typename: "SuunnitteluVaihe",
@@ -41,20 +39,13 @@ export default function adaptSuunnitteluVaihe(
   return suunnitteluVaihe as undefined;
 }
 
-function adaptVuorovaikutukset(
-  oid: string,
-  projektiPaallikko: Yhteystieto,
-  vuorovaikutukset: Array<Vuorovaikutus>
-): API.Vuorovaikutus[] {
+function adaptVuorovaikutukset(oid: string, vuorovaikutukset: Array<Vuorovaikutus>): API.Vuorovaikutus[] {
   if (vuorovaikutukset && vuorovaikutukset.length > 0) {
     return vuorovaikutukset.map(
       (vuorovaikutus) =>
         ({
           ...vuorovaikutus,
-          vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(
-            projektiPaallikko,
-            vuorovaikutus.vuorovaikutusTilaisuudet
-          ),
+          vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
           suunnittelumateriaali: lisaaLinkkiTypename(vuorovaikutus.suunnittelumateriaali),
           videot: lisaaLinkkiTypenameListaan(vuorovaikutus.videot),
           esittelyaineistot: adaptAineistot(vuorovaikutus.esittelyaineistot),
@@ -68,13 +59,12 @@ function adaptVuorovaikutukset(
 }
 
 function adaptVuorovaikutusTilaisuudet(
-  projektiPaallikko: Yhteystieto,
   vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus>
 ): API.VuorovaikutusTilaisuus[] {
   if (vuorovaikutusTilaisuudet) {
     return vuorovaikutusTilaisuudet.map((vuorovaikutusTilaisuus) => ({
       ...vuorovaikutusTilaisuus,
-      esitettavatYhteystiedot: adaptYhteystiedot(projektiPaallikko, vuorovaikutusTilaisuus.esitettavatYhteystiedot),
+      esitettavatYhteystiedot: lisaaYhteystietoTypenameListaan(vuorovaikutusTilaisuus.esitettavatYhteystiedot),
       __typename: "VuorovaikutusTilaisuus",
     }));
   }

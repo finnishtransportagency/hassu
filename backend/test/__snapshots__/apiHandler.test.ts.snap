@@ -374,14 +374,6 @@ Array [
       "esitettavatYhteystiedot": Array [
         Object {
           "__typename": "Yhteystieto",
-          "etunimi": "Pekka",
-          "organisaatio": "Väylävirasto",
-          "puhelinnumero": "11",
-          "sahkoposti": "pekka.projari@vayla.fi",
-          "sukunimi": "Projari",
-        },
-        Object {
-          "__typename": "Yhteystieto",
           "etunimi": "Marko",
           "organisaatio": "Kajaani",
           "puhelinnumero": "0293121213",
@@ -634,14 +626,6 @@ Object {
   "aloitusKuulutus": Object {
     "__typename": "AloitusKuulutus",
     "esitettavatYhteystiedot": Array [
-      Object {
-        "__typename": "Yhteystieto",
-        "etunimi": "Pekka",
-        "organisaatio": "Väylävirasto",
-        "puhelinnumero": "11",
-        "sahkoposti": "pekka.projari@vayla.fi",
-        "sukunimi": "Projari",
-      },
       Object {
         "__typename": "Yhteystieto",
         "etunimi": "Marko",

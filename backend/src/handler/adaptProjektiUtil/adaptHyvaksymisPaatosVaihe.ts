@@ -1,5 +1,4 @@
 import {
-  Yhteystieto,
   DBProjekti,
   HyvaksymisPaatosVaihe,
   Hyvaksymispaatos,
@@ -9,16 +8,15 @@ import {
 } from "../../database/model";
 import * as API from "../../../../common/graphql/apiModel";
 import { adaptAineistot } from "../commonAdapterUtil/adaptAineistot";
-import { adaptYhteystiedot } from "../commonAdapterUtil/adaptYhteystiedot";
 import { adaptIlmoituksenVastaanottajat } from "./common";
 import { fileService } from "../../files/fileService";
 import {
   adaptVelho as lisaaVelhoTypename,
   adaptKielitiedot as lisaaKielitiedotTypename,
+  adaptYhteystiedot as lisaaYhteystietoTypenameListaan,
 } from "../commonAdapterUtil/lisaaTypename";
 
 export function adaptHyvaksymisPaatosVaihe(
-  projektiPaallikko: Yhteystieto,
   dbProjekti: DBProjekti,
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe,
   hyvaksymisPaatos: Hyvaksymispaatos
@@ -40,7 +38,7 @@ export function adaptHyvaksymisPaatosVaihe(
     hyvaksymisPaatosVaihePDFt: adaptHyvaksymisPaatosVaihePDFPaths(dbProjekti.oid, hyvaksymisPaatosVaihePDFt),
     aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
     hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto),
-    kuulutusYhteystiedot: adaptYhteystiedot(projektiPaallikko, kuulutusYhteystiedot),
+    kuulutusYhteystiedot: lisaaYhteystietoTypenameListaan(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
     hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
     hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,
@@ -49,7 +47,6 @@ export function adaptHyvaksymisPaatosVaihe(
 
 export function adaptHyvaksymisPaatosVaiheJulkaisut(
   oid: string,
-  projektiPaallikko: Yhteystieto,
   hyvaksymisPaatos: Hyvaksymispaatos,
   julkaisut?: HyvaksymisPaatosVaiheJulkaisu[] | null
 ): API.HyvaksymisPaatosVaiheJulkaisu[] | undefined {
@@ -75,7 +72,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisut(
         hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto),
         hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
         hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,
-        kuulutusYhteystiedot: adaptYhteystiedot(projektiPaallikko, kuulutusYhteystiedot),
+        kuulutusYhteystiedot: lisaaYhteystietoTypenameListaan(kuulutusYhteystiedot),
         ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
         velho: lisaaVelhoTypename(velho),
       };

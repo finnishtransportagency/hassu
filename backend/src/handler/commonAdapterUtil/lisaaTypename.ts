@@ -1,4 +1,4 @@
-import { Kielitiedot, Linkki, Suunnitelma, Velho } from "../../database/model";
+import { Kielitiedot, Linkki, Suunnitelma, Velho, Yhteystieto } from "../../database/model";
 import * as API from "../../../../common/graphql/apiModel";
 
 export function adaptLiittyvatSuunnitelmat(suunnitelmat?: Suunnitelma[] | null): API.Suunnitelma[] | undefined | null {
@@ -47,4 +47,11 @@ export function adaptLinkkiList(links: Array<Linkki>): API.Linkki[] {
 
 export function adaptVelho(velho: Velho): API.Velho {
   return { __typename: "Velho", ...velho };
+}
+
+export function adaptYhteystiedot(yhteystiedot: Yhteystieto[]): API.Yhteystieto[] | undefined | null {
+  if (yhteystiedot) {
+    return yhteystiedot.map((yt) => ({ __typename: "Yhteystieto", ...yt }));
+  }
+  return yhteystiedot as undefined | null;
 }

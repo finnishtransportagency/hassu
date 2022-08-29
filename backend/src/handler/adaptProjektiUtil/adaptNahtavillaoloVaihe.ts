@@ -1,5 +1,4 @@
 import {
-  Yhteystieto,
   NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
   DBProjekti,
@@ -9,17 +8,16 @@ import {
 import * as API from "../../../../common/graphql/apiModel";
 import { adaptHankkeenKuvaus } from "../commonAdapterUtil/adaptHankkeenKuvaus";
 import { adaptAineistot } from "../commonAdapterUtil/adaptAineistot";
-import { adaptYhteystiedot } from "../commonAdapterUtil/adaptYhteystiedot";
 import { fileService } from "../../files/fileService";
 import { lisaAineistoService } from "../../aineisto/lisaAineistoService";
 import { adaptIlmoituksenVastaanottajat } from "./common";
 import {
   adaptKielitiedot as lisaaKielitiedotTypename,
   adaptVelho as lisaaVelhoTypename,
+  adaptYhteystiedot as lisaaYhteystietoTypenameListaan,
 } from "../commonAdapterUtil/lisaaTypename";
 
 export function adaptNahtavillaoloVaihe(
-  projektiPaallikko: Yhteystieto,
   dbProjekti: DBProjekti,
   nahtavillaoloVaihe: NahtavillaoloVaihe
 ): API.NahtavillaoloVaihe {
@@ -46,7 +44,7 @@ export function adaptNahtavillaoloVaihe(
       nahtavillaoloVaihe.id,
       dbProjekti.salt
     ),
-    kuulutusYhteystiedot: adaptYhteystiedot(projektiPaallikko, kuulutusYhteystiedot),
+    kuulutusYhteystiedot: lisaaYhteystietoTypenameListaan(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
     hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
   };
@@ -54,7 +52,6 @@ export function adaptNahtavillaoloVaihe(
 
 export function adaptNahtavillaoloVaiheJulkaisut(
   oid: string,
-  projektiPaallikko: Yhteystieto,
   julkaisut?: NahtavillaoloVaiheJulkaisu[] | null
 ): API.NahtavillaoloVaiheJulkaisu[] | undefined {
   if (julkaisut) {
@@ -76,7 +73,7 @@ export function adaptNahtavillaoloVaiheJulkaisut(
         __typename: "NahtavillaoloVaiheJulkaisu",
         hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
         kielitiedot: lisaaKielitiedotTypename(kielitiedot),
-        kuulutusYhteystiedot: adaptYhteystiedot(projektiPaallikko, kuulutusYhteystiedot),
+        kuulutusYhteystiedot: lisaaYhteystietoTypenameListaan(kuulutusYhteystiedot),
         ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
         aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
         lisaAineisto: adaptAineistot(lisaAineisto),

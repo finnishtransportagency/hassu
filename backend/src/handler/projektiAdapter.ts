@@ -1,4 +1,4 @@
-import { DBProjekti, Yhteystieto } from "../database/model";
+import { DBProjekti } from "../database/model";
 import * as API from "../../../common/graphql/apiModel";
 import { NahtavillaoloVaiheTila } from "../../../common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
@@ -31,7 +31,6 @@ import { adaptSuunnitteluSopimusToSave } from "./adaptProjektiToSaveUtil/adaptSu
 import { adaptSuunnitteluVaiheToSave } from "./adaptProjektiToSaveUtil/adaptSuunnitteluVaiheToSave";
 import { adaptNahtavillaoloVaiheToSave } from "./adaptProjektiToSaveUtil/adaptNahtavillaoloVaiheToSave";
 import { adaptHyvaksymisPaatosVaiheToSave } from "./adaptProjektiToSaveUtil/adaptHyvaksymisPaatosVaiheToSave";
-import { konvertoiPPVaylaUseristaYhteystiedoksi } from "./commonAdapterUtil/konvertoiPPVaylaUseristaYhteystiedoksi";
 export enum ProjektiEventType {
   VUOROVAIKUTUS_PUBLISHED = "VUOROVAIKUTUS_PUBLISHED",
   AINEISTO_CHANGED = "AINEISTO_CHANGED",
@@ -98,52 +97,30 @@ export class ProjektiAdapter {
       ...fieldsToCopyAsIs
     } = dbProjekti;
 
-    // Määritä projektipäällikkö ja muotoile se Yhteystieto-objektiksi.
-    const projektiPaallikkoVaylaDBUserina = kayttoOikeudet.find(
-      (hlo) => hlo.rooli === API.ProjektiRooli.PROJEKTIPAALLIKKO
-    );
-    const projektiPaallikko: Yhteystieto = konvertoiPPVaylaUseristaYhteystiedoksi(projektiPaallikkoVaylaDBUserina);
-
     const apiProjekti = removeUndefinedFields({
       __typename: "Projekti",
       tallennettu: !!dbProjekti.tallennettu,
       kayttoOikeudet: KayttoOikeudetManager.adaptAPIKayttoOikeudet(kayttoOikeudet),
       tyyppi: velho?.tyyppi || dbProjekti.tyyppi, // remove usage of projekti.tyyppi after all data has been migrated to new format
-      aloitusKuulutus: adaptAloitusKuulutus(projektiPaallikko, aloitusKuulutus),
+      aloitusKuulutus: adaptAloitusKuulutus(aloitusKuulutus),
       suunnitteluSopimus: adaptSuunnitteluSopimus(dbProjekti.oid, suunnitteluSopimus),
       liittyvatSuunnitelmat: lisaaSuunnitelmatTypename(liittyvatSuunnitelmat),
-      aloitusKuulutusJulkaisut: adaptAloitusKuulutusJulkaisut(
-        dbProjekti.oid,
-        projektiPaallikko,
-        aloitusKuulutusJulkaisut
-      ),
+      aloitusKuulutusJulkaisut: adaptAloitusKuulutusJulkaisut(dbProjekti.oid, aloitusKuulutusJulkaisut),
       velho: {
         __typename: "Velho",
         ...velho,
       },
       kielitiedot: lisaaKielitiedotTypename(kielitiedot),
-      suunnitteluVaihe: adaptSuunnitteluVaihe(
-        dbProjekti.oid,
-        projektiPaallikko,
-        suunnitteluVaihe,
-        vuorovaikutukset,
-        palautteet
-      ),
-      nahtavillaoloVaihe: adaptNahtavillaoloVaihe(projektiPaallikko, dbProjekti, nahtavillaoloVaihe),
-      nahtavillaoloVaiheJulkaisut: adaptNahtavillaoloVaiheJulkaisut(
-        dbProjekti.oid,
-        projektiPaallikko,
-        nahtavillaoloVaiheJulkaisut
-      ),
+      suunnitteluVaihe: adaptSuunnitteluVaihe(dbProjekti.oid, suunnitteluVaihe, vuorovaikutukset, palautteet),
+      nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe),
+      nahtavillaoloVaiheJulkaisut: adaptNahtavillaoloVaiheJulkaisut(dbProjekti.oid, nahtavillaoloVaiheJulkaisut),
       hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(
-        projektiPaallikko,
         dbProjekti,
         hyvaksymisPaatosVaihe,
         dbProjekti.kasittelynTila?.hyvaksymispaatos
       ),
       hyvaksymisPaatosVaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
         dbProjekti.oid,
-        projektiPaallikko,
         dbProjekti.kasittelynTila?.hyvaksymispaatos,
         hyvaksymisPaatosVaiheJulkaisut
       ),
