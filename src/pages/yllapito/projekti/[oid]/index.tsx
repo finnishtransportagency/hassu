@@ -58,7 +58,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
 
   const router = useRouter();
 
-  const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti();
+  const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
   const [statusBeforeSave, setStatusBeforeSave] = useState<Status | null | undefined>();
   const isLoadingProjekti = !projekti && !projektiLoadError;
 

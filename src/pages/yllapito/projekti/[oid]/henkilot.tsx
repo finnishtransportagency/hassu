@@ -1,8 +1,8 @@
 import { PageProps } from "@pages/_app";
-import React, { ReactElement, useEffect, useCallback } from "react";
-import { useProjekti } from "src/hooks/useProjekti";
+import React, { ReactElement, useCallback, useMemo } from "react";
+import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
-import KayttoOikeusHallinta, { defaultKayttaja } from "@components/projekti/KayttoOikeusHallinta";
+import KayttoOikeusHallinta from "@components/projekti/KayttoOikeusHallinta";
 import { api, TallennaProjektiInput, Kayttaja } from "@services/api";
 import * as Yup from "yup";
 import { useState } from "react";
@@ -21,6 +21,7 @@ import HassuStack from "@components/layout/HassuStack";
 import HassuSpinner from "@components/HassuSpinner";
 import useSnackbars from "src/hooks/useSnackbars";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
+import { KeyedMutator } from "swr";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
@@ -39,21 +40,51 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
   ProjektiTestType.PROJEKTI_IS_CREATED,
 ]);
 
-export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
+export default function HenkilotPage({ setRouteLabels }: PageProps): ReactElement {
+  const { data: projekti, error: projektiLoadError, mutate: mutateProjekti } = useProjekti({ revalidateOnMount: true });
+  useProjektiBreadcrumbs(setRouteLabels);
+
+  return (
+    <ProjektiPageLayout title="Projektin Henkilöt">
+      {projekti && (
+        <Henkilot projekti={projekti} projektiLoadError={projektiLoadError} mutateProjekti={mutateProjekti} />
+      )}
+    </ProjektiPageLayout>
+  );
+}
+
+interface HenkilotFormProps {
+  projekti: ProjektiLisatiedolla;
+  projektiLoadError: any;
+  mutateProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
+}
+
+function Henkilot({ projekti, projektiLoadError, mutateProjekti }: HenkilotFormProps): ReactElement {
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
   const [formContext, setFormContext] = useState<KayttoOikeudetSchemaContext>({ kayttajat: [] });
 
-  const { data: projekti, error: projektiLoadError, mutate: mutateProjekti } = useProjekti();
   const isLoadingProjekti = !projekti && !projektiLoadError;
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
   const disableFormEdit =
     !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden || projektiHasErrors || isLoadingProjekti || formIsSubmitting;
 
-  useProjektiBreadcrumbs(setRouteLabels);
+  const defaultValues: FormValues = useMemo(
+    () => ({
+      oid: projekti.oid,
+      kayttoOikeudet:
+        projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, rooli, esitetaanKuulutuksessa }) => ({
+          kayttajatunnus,
+          puhelinnumero: puhelinnumero || "",
+          rooli,
+          esitetaanKuulutuksessa,
+        })) || [],
+    }),
+    [projekti]
+  );
 
   const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(validationSchema, { abortEarly: false, recursive: true }),
-    defaultValues: { kayttoOikeudet: [defaultKayttaja] },
+    defaultValues,
     mode: "onChange",
     reValidateMode: "onChange",
     context: formContext,
@@ -61,9 +92,10 @@ export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
 
   const useFormReturn = useForm<FormValues>(formOptions);
   const {
-    reset,
     handleSubmit,
     formState: { isDirty },
+    reset,
+    register,
   } = useFormReturn;
 
   useLeaveConfirm(isDirty);
@@ -73,9 +105,10 @@ export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
   const onSubmit = async (formData: FormValues) => {
     deleteFieldArrayIds(formData?.kayttoOikeudet);
     setFormIsSubmitting(true);
+    reset(formData);
     try {
       await api.tallennaProjekti(formData);
-      mutateProjekti();
+      await mutateProjekti();
       showSuccessMessage("Henkilötietojen tallennus onnistui");
     } catch (e) {
       showErrorMessage("Tietojen tallennuksessa tapahtui virhe");
@@ -83,22 +116,6 @@ export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
     }
     setFormIsSubmitting(false);
   };
-
-  useEffect(() => {
-    if (projekti && projekti.oid) {
-      const tallentamisTiedot: FormValues = {
-        oid: projekti.oid,
-        kayttoOikeudet:
-          projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, rooli, esitetaanKuulutuksessa }) => ({
-            kayttajatunnus,
-            puhelinnumero: puhelinnumero || "",
-            rooli,
-            esitetaanKuulutuksessa,
-          })) || [],
-      };
-      reset(tallentamisTiedot);
-    }
-  }, [projekti, reset]);
 
   const onKayttajatUpdate = useCallback(
     (kayttajat: Kayttaja[]) => {
@@ -108,11 +125,11 @@ export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
   );
 
   return (
-    <ProjektiPageLayout title="Projektin Henkilöt">
+    <>
       <FormProvider {...useFormReturn}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
-            {(!formIsSubmitting || !isLoadingProjekti) && (
+            {!formIsSubmitting && !isLoadingProjekti && (
               <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />
             )}
             <KayttoOikeusHallinta disableFields={disableFormEdit} onKayttajatUpdate={onKayttajatUpdate} />
@@ -123,10 +140,11 @@ export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
                 </Button>
               </HassuStack>
             </Section>
+            <input type="hidden" {...register("oid")} />
           </fieldset>
         </form>
       </FormProvider>
       <HassuSpinner open={formIsSubmitting || isLoadingProjekti} />
-    </ProjektiPageLayout>
+    </>
   );
 }

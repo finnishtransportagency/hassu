@@ -1,16 +1,18 @@
-import useSWR from "swr";
+import useSWR, { Fetcher, SWRConfiguration } from "swr";
 import { api, apiConfig, NykyinenKayttaja, Projekti, ProjektiRooli } from "@services/api";
 import useCurrentUser from "./useCurrentUser";
 import { useRouter } from "next/router";
 
-export function useProjekti() {
+export function useProjekti(
+  config: SWRConfiguration<ProjektiLisatiedolla | null, any, Fetcher<ProjektiLisatiedolla | null>> | undefined = {}
+) {
   const router = useRouter();
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
   if (!router.route.startsWith("/yllapito")) {
     throw new Error("Inproper route for the use of useProjekti hook");
   }
   const { data: kayttaja } = useCurrentUser();
-  return useSWR([apiConfig.lataaProjekti.graphql, oid, kayttaja], projektiLoader);
+  return useSWR([apiConfig.lataaProjekti.graphql, oid, kayttaja], projektiLoader, config);
 }
 
 interface ProjektiLisatiedot {

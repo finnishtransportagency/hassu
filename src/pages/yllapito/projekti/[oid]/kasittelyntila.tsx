@@ -1,5 +1,5 @@
 import { PageProps } from "@pages/_app";
-import React, { ReactElement, useCallback, useState, useEffect } from "react";
+import React, { ReactElement, useCallback, useState, useMemo } from "react";
 import { api, TallennaProjektiInput } from "@services/api";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
@@ -10,7 +10,7 @@ import TextInput from "@components/form/TextInput";
 import DatePicker from "@components/form/DatePicker";
 import HassuGrid from "@components/HassuGrid";
 import HassuSpinner from "@components/HassuSpinner";
-import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import HassuStack from "@components/layout/HassuStack";
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
@@ -19,19 +19,52 @@ import { removeTypeName } from "src/util/removeTypeName";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { kasittelynTilaSchema } from "src/schemas/kasittelynTila";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
+import { KeyedMutator } from "swr";
 
 type FormValues = Pick<TallennaProjektiInput, "oid" | "kasittelynTila">;
 
-export default function Kasittelyntila({ setRouteLabels }: PageProps): ReactElement {
-  const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti();
+export default function KasittelyntilaSivu({ setRouteLabels }: PageProps): ReactElement {
+  useProjektiBreadcrumbs(setRouteLabels);
+  const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
+  return (
+    <ProjektiPageLayout title="Käsittelyn tila">
+      {projekti && (
+        <KasittelyntilaPageContent
+          projekti={projekti}
+          projektiLoadError={projektiLoadError}
+          reloadProjekti={reloadProjekti}
+        />
+      )}
+    </ProjektiPageLayout>
+  );
+}
+interface HenkilotFormProps {
+  projekti: ProjektiLisatiedolla;
+  projektiLoadError: any;
+  reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
+}
+
+function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormProps): ReactElement {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const isLoadingProjekti = !projekti && !projektiLoadError;
+  const defaultValues: FormValues = useMemo(
+    () => ({
+      oid: projekti.oid,
+      kasittelynTila: {
+        hyvaksymispaatos: removeTypeName(projekti.kasittelynTila?.hyvaksymispaatos),
+        ensimmainenJatkopaatos: removeTypeName(projekti.kasittelynTila?.ensimmainenJatkopaatos),
+        toinenJatkopaatos: removeTypeName(projekti.kasittelynTila?.toinenJatkopaatos),
+      },
+    }),
+    [projekti]
+  );
+
   const disableFormEdit =
     !projekti?.nykyinenKayttaja.onYllapitaja || projektiLoadError || isLoadingProjekti || isFormSubmitting;
-  useProjektiBreadcrumbs(setRouteLabels);
+
   const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(kasittelynTilaSchema, { abortEarly: false, recursive: true }),
-    defaultValues: { kasittelynTila: null },
+    defaultValues,
     mode: "onChange",
     reValidateMode: "onChange",
   };
@@ -51,6 +84,7 @@ export default function Kasittelyntila({ setRouteLabels }: PageProps): ReactElem
   const onSubmit = useCallback(
     async (data: FormValues) => {
       setIsFormSubmitting(true);
+      reset(data);
       try {
         await api.tallennaProjekti(data);
         await reloadProjekti();
@@ -61,27 +95,12 @@ export default function Kasittelyntila({ setRouteLabels }: PageProps): ReactElem
       }
       setIsFormSubmitting(false);
     },
-    [reloadProjekti, showErrorMessage, showSuccessMessage]
+    [reloadProjekti, reset, showErrorMessage, showSuccessMessage]
   );
-
-  useEffect(() => {
-    if (projekti && projekti.oid) {
-      const data: FormValues = {
-        oid: projekti.oid,
-        kasittelynTila: {
-          hyvaksymispaatos: removeTypeName(projekti.kasittelynTila?.hyvaksymispaatos),
-          ensimmainenJatkopaatos: removeTypeName(projekti.kasittelynTila?.ensimmainenJatkopaatos),
-          toinenJatkopaatos: removeTypeName(projekti.kasittelynTila?.toinenJatkopaatos),
-        },
-      };
-
-      reset(data);
-    }
-  }, [projekti, reset]);
 
   //TODO: lukutila, nyt valiaikaisesti ei-admineille disabled kentat ja painikkeet
   return (
-    <ProjektiPageLayout title="Käsittelyn tila">
+    <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Section>
           <p>
@@ -153,6 +172,6 @@ export default function Kasittelyntila({ setRouteLabels }: PageProps): ReactElem
         </Section>
       </form>
       <HassuSpinner open={isFormSubmitting || isLoadingProjekti} />
-    </ProjektiPageLayout>
+    </>
   );
 }

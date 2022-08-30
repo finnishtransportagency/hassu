@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FieldArrayWithId, useFieldArray, useFormContext } from "react-hook-form";
 import { api, apiConfig, Kayttaja, ProjektiKayttajaInput, ProjektiRooli, TallennaProjektiInput } from "@services/api";
 import Autocomplete from "@components/form/Autocomplete";
@@ -47,7 +47,7 @@ function KayttoOikeusHallinta({ disableFields, onKayttajatUpdate }: Props) {
 
   // fallbackKayttajat is stored in state because
   // SWR cache can return undefined if uidList is changed
-  const [fallbackKayttajat, setFallbackKayttajat] = useState<Kayttaja[]>([]);
+  const [fallbackKayttajat, setFallbackKayttajat] = useState<Kayttaja[]>();
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -81,11 +81,19 @@ function KayttoOikeusHallinta({ disableFields, onKayttajatUpdate }: Props) {
     [muutHenkilot, projektiPaallikot]
   );
 
+  const hasMounted = useRef(false);
+
+  useEffect(() => {
+    hasMounted.current = true;
+  }, []);
+
   const {
     data: kayttajat,
     error: kayttajatLoadError,
     mutate,
-  } = useSWR([apiConfig.listaaKayttajat.graphql, uidList], kayttajatLoader);
+  } = useSWR([apiConfig.listaaKayttajat.graphql, uidList], kayttajatLoader, {
+    fallbackData: hasMounted.current ? undefined : fallbackKayttajat,
+  });
 
   useEffect(() => {
     setFallbackKayttajat(kayttajat || []);

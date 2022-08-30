@@ -103,6 +103,7 @@ const PerustaProjektiForm: FC<PerustaProjektiFormProps> = ({ projekti, projektiL
   const {
     handleSubmit,
     formState: { isDirty },
+    register,
     reset,
   } = useFormReturn as UseFormReturn<FormValues>;
 
@@ -148,6 +149,7 @@ const PerustaProjektiForm: FC<PerustaProjektiFormProps> = ({ projekti, projektiL
       <FormProvider {...useFormReturn}>
         <form>
           <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
+            <input type="hidden" {...register("oid")} />
             <Section>
               {!formIsSubmitting && !isLoadingProjekti && (
                 <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />
