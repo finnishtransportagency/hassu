@@ -26,3 +26,8 @@ export type Aineisto = {
   jarjestys?: number | null;
   tila: AineistoTila;
 };
+
+export type KuulutusYhteystiedot = {
+  yhteysTiedot?: Yhteystieto[];
+  yhteysHenkilot?: string[];
+};

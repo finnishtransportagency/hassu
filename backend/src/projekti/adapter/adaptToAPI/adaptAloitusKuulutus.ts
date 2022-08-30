@@ -5,19 +5,21 @@ import {
   adaptKielitiedotByAddingTypename,
   adaptVelhoByAddingTypename,
   adaptYhteystiedotByAddingTypename,
+  adaptKuulutusYhteystiedotByAddingTypename,
 } from "../common";
 import { adaptSuunnitteluSopimus } from "./adaptSuunitteluSopimus";
 import { fileService } from "../../../files/fileService";
 
 export function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.AloitusKuulutus | undefined {
   if (kuulutus) {
-    const { esitettavatYhteystiedot, ...otherKuulutusFields } = kuulutus;
+    const { esitettavatYhteystiedot, kuulutusYhteystiedot, ...otherKuulutusFields } = kuulutus;
     const yhteystiedot = adaptYhteystiedotByAddingTypename(esitettavatYhteystiedot);
     return {
       __typename: "AloitusKuulutus",
       ...otherKuulutusFields,
       esitettavatYhteystiedot: yhteystiedot,
       hankkeenKuvaus: adaptHankkeenKuvaus(kuulutus.hankkeenKuvaus),
+      kuulutusYhteystiedot: adaptKuulutusYhteystiedotByAddingTypename(kuulutusYhteystiedot),
     };
   }
   return kuulutus as undefined;

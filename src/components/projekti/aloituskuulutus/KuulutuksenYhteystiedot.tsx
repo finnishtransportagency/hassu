@@ -7,18 +7,12 @@ import HassuGrid from "@components/HassuGrid";
 import HassuStack from "@components/layout/HassuStack";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import { AloitusKuulutusInput, Projekti, ProjektiRooli, TallennaProjektiInput, YhteystietoInput } from "@services/api";
-import React, { ReactElement } from "react";
-import { useFieldArray, UseFormReturn } from "react-hook-form";
+import { AloitusKuulutusInput, Projekti, ProjektiRooli, YhteystietoInput } from "@services/api";
+import React, { ReactElement, Fragment } from "react";
+import { Controller, useFieldArray, UseFormReturn } from "react-hook-form";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
 
-// Extend TallennaProjektiInput by making the field nonnullable and required
-type KayttoOikeudet = Pick<TallennaProjektiInput, "kayttoOikeudet">;
-type EsitettavatYhteystiedot = Pick<AloitusKuulutusInput, "esitettavatYhteystiedot">;
-
-type KayttoOikeudetRequired = Required<{
-  [K in keyof KayttoOikeudet]: NonNullable<KayttoOikeudet[K]>;
-}>;
+type KuulutusYhteystiedot = Pick<AloitusKuulutusInput, "kuulutusYhteystiedot">;
 
 const defaultYhteystieto: YhteystietoInput = {
   etunimi: "",
@@ -28,7 +22,7 @@ const defaultYhteystieto: YhteystietoInput = {
   sahkoposti: "",
 };
 
-type FormValues = KayttoOikeudetRequired & { aloitusKuulutus?: EsitettavatYhteystiedot };
+type FormValues = { aloitusKuulutus?: KuulutusYhteystiedot };
 
 interface Props<T> {
   projekti?: Projekti | null;
@@ -49,7 +43,7 @@ function KuulutuksenYhteystiedot<T extends FormValues>({
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "aloitusKuulutus.esitettavatYhteystiedot",
+    name: "aloitusKuulutus.kuulutusYhteystiedot.yhteysTiedot",
   });
 
   return (
@@ -62,19 +56,45 @@ function KuulutuksenYhteystiedot<T extends FormValues>({
           haetaan Projektin henkilöt -sivulle tallennetuista tiedoista.{" "}
         </p>
       </SectionContent>
-      {(projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0) || projekti?.suunnitteluSopimus ? (
-        <FormGroup label="Projektiin tallennetut henkilöt" inlineFlex>
-          {projekti?.kayttoOikeudet?.map(({ nimi, rooli }, index) =>
-            rooli === ProjektiRooli.PROJEKTIPAALLIKKO ? (
-              <CheckBox key={index} label={nimi} disabled defaultChecked />
-            ) : (
-              <CheckBox key={index} label={nimi} {...register(`kayttoOikeudet.${index}.esitetaanKuulutuksessa`)} />
-            )
+      {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
+        <Controller
+          control={control}
+          name={`aloitusKuulutus.kuulutusYhteystiedot.yhteysHenkilot`}
+          render={({ field: { onChange, value, ...field } }) => (
+            <FormGroup label="Projektiin tallennetut henkilöt" inlineFlex>
+              {projekti?.suunnitteluSopimus && (
+                <CheckBox
+                  label={`${projekti.suunnitteluSopimus.sukunimi}, ${projekti.suunnitteluSopimus.etunimi}`}
+                  disabled
+                  defaultChecked
+                />
+              )}
+              {projekti.kayttoOikeudet?.map(({ nimi, rooli, kayttajatunnus }, index) => {
+                const tunnuslista: string[] = value || [];
+                return (
+                  <Fragment key={index}>
+                    {rooli === ProjektiRooli.PROJEKTIPAALLIKKO ? (
+                      <CheckBox label={nimi} disabled checked {...field} />
+                    ) : (
+                      <CheckBox
+                        label={nimi}
+                        onChange={(event) => {
+                          if (!event.target.checked) {
+                            onChange(tunnuslista.filter((tunnus) => tunnus !== kayttajatunnus));
+                          } else {
+                            onChange([...tunnuslista, kayttajatunnus]);
+                          }
+                        }}
+                        checked={tunnuslista.includes(kayttajatunnus)}
+                        {...field}
+                      />
+                    )}
+                  </Fragment>
+                );
+              })}
+            </FormGroup>
           )}
-          {projekti?.suunnitteluSopimus &&
-            <CheckBox label={`${projekti.suunnitteluSopimus.sukunimi}, ${projekti.suunnitteluSopimus.etunimi}`} disabled defaultChecked />
-          }
-        </FormGroup>
+        />
       ) : (
         <p>Projektilla ei ole tallennettuja henkilöitä</p>
       )}
@@ -90,28 +110,28 @@ function KuulutuksenYhteystiedot<T extends FormValues>({
           <HassuGrid sx={{ width: "100%" }} cols={[1, 1, 3]}>
             <TextInput
               label="Etunimi *"
-              {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.etunimi`)}
+              {...register(`aloitusKuulutus.kuulutusYhteystiedot.yhteysTiedot.${index}.etunimi`)}
               error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.etunimi}
             />
             <TextInput
               label="Sukunimi *"
-              {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.sukunimi`)}
+              {...register(`aloitusKuulutus.kuulutusYhteystiedot.yhteysTiedot.${index}.sukunimi`)}
               error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.sukunimi}
             />
             <TextInput
               label="Organisaatio / kunta *"
-              {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.organisaatio`)}
+              {...register(`aloitusKuulutus.kuulutusYhteystiedot.yhteysTiedot.${index}.organisaatio`)}
               error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.organisaatio}
             />
             <TextInput
               label="Puhelinnumero *"
-              {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.puhelinnumero`)}
+              {...register(`aloitusKuulutus.kuulutusYhteystiedot.yhteysTiedot.${index}.puhelinnumero`)}
               error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.puhelinnumero}
               maxLength={maxPhoneLength}
             />
             <TextInput
               label="Sähköpostiosoite *"
-              {...register(`aloitusKuulutus.esitettavatYhteystiedot.${index}.sahkoposti`)}
+              {...register(`aloitusKuulutus.kuulutusYhteystiedot.yhteysTiedot.${index}.sahkoposti`)}
               error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.sahkoposti}
             />
           </HassuGrid>

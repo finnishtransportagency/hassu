@@ -290,15 +290,6 @@ Array [
   "Save projekti having while adding one muokkaaja more. There should be three persons in the projekti now",
   Object {
     "aloitusKuulutus": Object {
-      "esitettavatYhteystiedot": Array [
-        Object {
-          "etunimi": "Marko",
-          "organisaatio": "Kajaani",
-          "puhelinnumero": "0293121213",
-          "sahkoposti": "markku.koi@koi.com",
-          "sukunimi": "Koi",
-        },
-      ],
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
         "SAAME": "Saameksi",
@@ -306,6 +297,20 @@ Array [
       },
       "ilmoituksenVastaanottajat": undefined,
       "kuulutusPaiva": "2022-01-02",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "KuulutusYhteystiedot",
+        "yhteysHenkilot": undefined,
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "siirtyySuunnitteluVaiheeseen": "2999-01-01",
     },
     "euRahoitus": false,
@@ -371,16 +376,7 @@ Array [
     "__typename": "Projekti",
     "aloitusKuulutus": Object {
       "__typename": "AloitusKuulutus",
-      "esitettavatYhteystiedot": Array [
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "Marko",
-          "organisaatio": "Kajaani",
-          "puhelinnumero": "0293121213",
-          "sahkoposti": "markku.koi@koi.com",
-          "sukunimi": "Koi",
-        },
-      ],
+      "esitettavatYhteystiedot": undefined,
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
         "SAAME": "Saameksi",
@@ -389,6 +385,20 @@ Array [
       },
       "ilmoituksenVastaanottajat": undefined,
       "kuulutusPaiva": "2022-01-02",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "KuulutusYhteystiedot",
+        "yhteysHenkilot": undefined,
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "siirtyySuunnitteluVaiheeseen": "2999-01-01",
     },
     "euRahoitus": false,
@@ -625,16 +635,7 @@ Object {
   "__typename": "Projekti",
   "aloitusKuulutus": Object {
     "__typename": "AloitusKuulutus",
-    "esitettavatYhteystiedot": Array [
-      Object {
-        "__typename": "Yhteystieto",
-        "etunimi": "Marko",
-        "organisaatio": "Kajaani",
-        "puhelinnumero": "0293121213",
-        "sahkoposti": "markku.koi@koi.com",
-        "sukunimi": "Koi",
-      },
-    ],
+    "esitettavatYhteystiedot": undefined,
     "hankkeenKuvaus": Object {
       "RUOTSI": "På Svenska",
       "SAAME": "Saameksi",
@@ -643,6 +644,20 @@ Object {
     },
     "ilmoituksenVastaanottajat": undefined,
     "kuulutusPaiva": "2022-01-02",
+    "kuulutusYhteystiedot": Object {
+      "__typename": "KuulutusYhteystiedot",
+      "yhteysHenkilot": undefined,
+      "yhteysTiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
     "palautusSyy": null,
     "siirtyySuunnitteluVaiheeseen": "2999-01-01",
   },

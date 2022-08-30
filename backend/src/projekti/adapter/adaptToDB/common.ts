@@ -29,6 +29,19 @@ export function adaptYhteystiedotToSave(
   return yhteystietoInputs?.length > 0 ? yhteystietoInputs.map((yt) => ({ ...yt })) : undefined;
 }
 
+export function adaptYhteysHenkilotToSave(yhteystiedot: string[]): string[] {
+  return yhteystiedot.filter((yt, index) => yhteystiedot.indexOf(yt) === index);
+}
+
+export function adaptKuulutusYhteystiedot(
+  kuulutusYhteystiedot: API.KuulutusYhteystiedotInput
+): API.KuulutusYhteystiedotInput {
+  return {
+    yhteysTiedot: adaptYhteystiedotToSave(kuulutusYhteystiedot.yhteysTiedot),
+    yhteysHenkilot: adaptYhteysHenkilotToSave(kuulutusYhteystiedot.yhteysHenkilot),
+  };
+}
+
 export function adaptHankkeenKuvausToSave(hankkeenKuvaus: API.HankkeenKuvauksetInput): LocalizedMap<string> {
   if (!hankkeenKuvaus) {
     return undefined;

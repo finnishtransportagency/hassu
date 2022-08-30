@@ -3,6 +3,7 @@ import { Kieli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../../asiakirja/asiakirjaService";
 import { DBProjekti, Yhteystieto } from "../../database/model";
 import { translate } from "../../util/localization";
+import { vaylaUserToYhteystieto } from "../../util/vaylaUserToYhteystieto";
 
 type SuunnitelmaTyyppi = "tiesuunnitelma" | "ratasuunnitelma" | "yleissuunnitelma";
 
@@ -193,14 +194,7 @@ export class LahetekirjeAdapter {
     kayttoOikeudet
       ?.filter(({ esitetaanKuulutuksessa }) => !!esitetaanKuulutuksessa)
       ?.forEach((oikeus) => {
-        const [sukunimi, etunimi] = oikeus.nimi.split(/, /g);
-        yt.push({
-          etunimi,
-          sukunimi,
-          puhelinnumero: oikeus.puhelinnumero,
-          sahkoposti: oikeus.email,
-          organisaatio: oikeus.organisaatio,
-        });
+        yt.push(vaylaUserToYhteystieto(oikeus));
       });
     esitettavatYhteystiedot?.forEach((yhteystieto) => {
       yt.push(yhteystieto);

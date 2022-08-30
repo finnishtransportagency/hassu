@@ -3,21 +3,23 @@
 exports[`AloitusKuulutus should create and manipulate projekti successfully 1`] = `
 Object {
   "aloitusKuulutus": Object {
-    "esitettavatYhteystiedot": Array [
-      Object {
-        "etunimi": "Marko",
-        "organisaatio": "Kajaani",
-        "puhelinnumero": "0293121213",
-        "sahkoposti": "markku.koi@koi.com",
-        "sukunimi": "Koi",
-      },
-    ],
     "hankkeenKuvaus": Object {
       "RUOTSI": "På svenska",
       "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum",
     },
     "kuulutusPaiva": "2022-01-02",
+    "kuulutusYhteystiedot": Object {
+      "yhteysTiedot": Array [
+        Object {
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
     "siirtyySuunnitteluVaiheeseen": "2022-01-01",
   },
   "aloitusKuulutusJulkaisut": undefined,
@@ -27,21 +29,23 @@ Object {
 exports[`AloitusKuulutus should create and manipulate projekti successfully 2`] = `
 Object {
   "aloitusKuulutus": Object {
-    "esitettavatYhteystiedot": Array [
-      Object {
-        "etunimi": "Marko",
-        "organisaatio": "Kajaani",
-        "puhelinnumero": "0293121213",
-        "sahkoposti": "markku.koi@koi.com",
-        "sukunimi": "Koi",
-      },
-    ],
     "hankkeenKuvaus": Object {
       "RUOTSI": "På svenska",
       "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum",
     },
     "kuulutusPaiva": "2022-01-02",
+    "kuulutusYhteystiedot": Object {
+      "yhteysTiedot": Array [
+        Object {
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
     "siirtyySuunnitteluVaiheeseen": "2022-01-01",
   },
   "aloitusKuulutusJulkaisut": Array [
@@ -97,6 +101,13 @@ Object {
       },
       "yhteystiedot": Array [
         Object {
+          "etunimi": "Pekka",
+          "organisaatio": "Väylävirasto",
+          "puhelinnumero": "123456789",
+          "sahkoposti": "pekka.projari@vayla.fi",
+          "sukunimi": "Projari",
+        },
+        Object {
           "etunimi": "Marko",
           "organisaatio": "Kajaani",
           "puhelinnumero": "0293121213",
@@ -112,21 +123,23 @@ Object {
 exports[`AloitusKuulutus should create and manipulate projekti successfully 3`] = `
 Object {
   "aloitusKuulutus": Object {
-    "esitettavatYhteystiedot": Array [
-      Object {
-        "etunimi": "Marko",
-        "organisaatio": "Kajaani",
-        "puhelinnumero": "0293121213",
-        "sahkoposti": "markku.koi@koi.com",
-        "sukunimi": "Koi",
-      },
-    ],
     "hankkeenKuvaus": Object {
       "RUOTSI": "På svenska",
       "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum",
     },
     "kuulutusPaiva": "2022-01-02",
+    "kuulutusYhteystiedot": Object {
+      "yhteysTiedot": Array [
+        Object {
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
     "palautusSyy": "Korjaa teksti",
     "siirtyySuunnitteluVaiheeseen": "2022-01-01",
   },
@@ -137,21 +150,23 @@ Object {
 exports[`AloitusKuulutus should create and manipulate projekti successfully 4`] = `
 Object {
   "aloitusKuulutus": Object {
-    "esitettavatYhteystiedot": Array [
-      Object {
-        "etunimi": "Marko",
-        "organisaatio": "Kajaani",
-        "puhelinnumero": "0293121213",
-        "sahkoposti": "markku.koi@koi.com",
-        "sukunimi": "Koi",
-      },
-    ],
     "hankkeenKuvaus": Object {
       "RUOTSI": "På svenska",
       "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum",
     },
     "kuulutusPaiva": "2022-01-02",
+    "kuulutusYhteystiedot": Object {
+      "yhteysTiedot": Array [
+        Object {
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
     "palautusSyy": null,
     "siirtyySuunnitteluVaiheeseen": "2022-01-01",
   },
@@ -208,6 +223,13 @@ Object {
       },
       "yhteystiedot": Array [
         Object {
+          "etunimi": "Pekka",
+          "organisaatio": "Väylävirasto",
+          "puhelinnumero": "123456789",
+          "sahkoposti": "pekka.projari@vayla.fi",
+          "sukunimi": "Projari",
+        },
+        Object {
           "etunimi": "Marko",
           "organisaatio": "Kajaani",
           "puhelinnumero": "0293121213",
@@ -223,21 +245,23 @@ Object {
 exports[`AloitusKuulutus should create and manipulate projekti successfully 5`] = `
 Object {
   "aloitusKuulutus": Object {
-    "esitettavatYhteystiedot": Array [
-      Object {
-        "etunimi": "Marko",
-        "organisaatio": "Kajaani",
-        "puhelinnumero": "0293121213",
-        "sahkoposti": "markku.koi@koi.com",
-        "sukunimi": "Koi",
-      },
-    ],
     "hankkeenKuvaus": Object {
       "RUOTSI": "På svenska",
       "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum",
     },
     "kuulutusPaiva": "2022-01-02",
+    "kuulutusYhteystiedot": Object {
+      "yhteysTiedot": Array [
+        Object {
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
     "palautusSyy": null,
     "siirtyySuunnitteluVaiheeseen": "2022-01-01",
   },
@@ -294,6 +318,13 @@ Object {
         ],
       },
       "yhteystiedot": Array [
+        Object {
+          "etunimi": "Pekka",
+          "organisaatio": "Väylävirasto",
+          "puhelinnumero": "123456789",
+          "sahkoposti": "pekka.projari@vayla.fi",
+          "sukunimi": "Projari",
+        },
         Object {
           "etunimi": "Marko",
           "organisaatio": "Kajaani",

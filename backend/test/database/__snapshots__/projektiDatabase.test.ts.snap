@@ -15,21 +15,23 @@ Object {
   },
   "ExpressionAttributeValues": Object {
     ":aloitusKuulutus": Object {
-      "esitettavatYhteystiedot": Array [
-        Object {
-          "etunimi": "Marko",
-          "organisaatio": "Kajaani",
-          "puhelinnumero": "0293121213",
-          "sahkoposti": "markku.koi@koi.com",
-          "sukunimi": "Koi",
-        },
-      ],
       "hankkeenKuvaus": Object {
         "RUOTSI": "På svenska",
         "SAAME": "Saameksi",
         "SUOMI": "Lorem Ipsum",
       },
       "kuulutusPaiva": "2022-01-02",
+      "kuulutusYhteystiedot": Object {
+        "yhteysTiedot": Array [
+          Object {
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "siirtyySuunnitteluVaiheeseen": "2022-01-01",
     },
     ":emptyList": Array [],

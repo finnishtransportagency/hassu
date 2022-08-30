@@ -5,6 +5,7 @@ import { translate } from "../../util/localization";
 import { linkHyvaksymisPaatos, linkSuunnitteluVaihe } from "../../../../common/links";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import union from "lodash/union";
+import { vaylaUserToYhteystieto } from "../../util/vaylaUserToYhteystieto";
 
 export type KutsuAdapterProps = {
   oid?: string;
@@ -241,14 +242,7 @@ export class KutsuAdapter {
         yhteysHenkilot
       );
       this.getUsersForUsernames(yhteysHenkilotWithProjectManager).forEach((user) => {
-        const [sukunimi, etunimi] = user.nimi.split(/, /g);
-        yt.push({
-          etunimi,
-          sukunimi,
-          organisaatio: user.organisaatio,
-          sahkoposti: user.email,
-          puhelinnumero: user.puhelinnumero,
-        });
+        yt.push(vaylaUserToYhteystieto(user));
       });
     }
     if (suunnitteluSopimus) {
