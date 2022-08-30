@@ -2,14 +2,14 @@ import { DBProjekti, Vuorovaikutus, VuorovaikutusTilaisuus } from "../../databas
 import * as API from "../../../../common/graphql/apiModel";
 import { findVuorovaikutusByNumber } from "../../util/findVuorovaikutusByNumber";
 import {
-  ProjektiAdaptationResult,
-  VuorovaikutusPublishedEvent,
-  ProjektiEventType,
   AineistoChangedEvent,
+  ProjektiAdaptationResult,
+  ProjektiEventType,
+  VuorovaikutusPublishedEvent,
 } from "../projektiAdapter";
 import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import { adaptKayttajatunnusList } from "./adaptKayttajatunnusList";
-import { adaptIlmoituksenVastaanottajatToSave, adaptYhteystiedotToSave, adaptAineistotToSave } from "./common";
+import { adaptAineistotToSave, adaptIlmoituksenVastaanottajatToSave, adaptYhteystiedotToSave } from "./common";
 
 export function adaptVuorovaikutusToSave(
   projekti: DBProjekti,
@@ -42,7 +42,7 @@ export function adaptVuorovaikutusToSave(
         projekti,
         vuorovaikutusInput.vuorovaikutusTilaisuudet
       ),
-      //Jos vuorovaikutuksen ilmoituksella ei tarvitse olla viranomaisvastaanottajia, muokkaa adaptIlmoituksenVastaanottajatToSavea
+      // Jos vuorovaikutuksen ilmoituksella ei tarvitse olla viranomaisvastaanottajia, muokkaa adaptIlmoituksenVastaanottajatToSavea
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(vuorovaikutusInput.ilmoituksenVastaanottajat),
       esitettavatYhteystiedot: adaptYhteystiedotToSave(vuorovaikutusInput.esitettavatYhteystiedot),
       esittelyaineistot,
@@ -61,8 +61,8 @@ function checkIfAineistoJulkinenChanged(
   dbVuorovaikutus: Vuorovaikutus,
   projektiAdaptationResult: Partial<ProjektiAdaptationResult>
 ) {
-  function vuorovaikutusPublishedForTheFirstTime() {
-    return !dbVuorovaikutus?.julkinen && vuorovaikutusToSave.julkinen;
+  function vuorovaikutusPublished() {
+    return vuorovaikutusToSave.julkinen;
   }
 
   function vuorovaikutusNotPublicAnymore() {
@@ -76,18 +76,14 @@ function checkIfAineistoJulkinenChanged(
     );
   }
 
-  if (vuorovaikutusPublishedForTheFirstTime() || vuorovaikutusNotPublicAnymore()) {
+  if (vuorovaikutusPublished() || vuorovaikutusNotPublicAnymore()) {
     projektiAdaptationResult.pushEvent({
       eventType: ProjektiEventType.VUOROVAIKUTUS_PUBLISHED,
       vuorovaikutusNumero: vuorovaikutusToSave.vuorovaikutusNumero,
     } as VuorovaikutusPublishedEvent);
   }
 
-  if (
-    vuorovaikutusPublishedForTheFirstTime() ||
-    vuorovaikutusNotPublicAnymore() ||
-    vuorovaikutusJulkaisuPaivaChanged()
-  ) {
+  if (vuorovaikutusPublished() || vuorovaikutusNotPublicAnymore() || vuorovaikutusJulkaisuPaivaChanged()) {
     projektiAdaptationResult.pushEvent({
       eventType: ProjektiEventType.AINEISTO_CHANGED,
     } as AineistoChangedEvent);
