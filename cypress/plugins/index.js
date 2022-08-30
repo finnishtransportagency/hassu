@@ -27,4 +27,6 @@ module.exports = (on) => {
       return shouldSkip;
     },
   });
+
+  require('cypress-mochawesome-reporter/plugin')(on);
 };

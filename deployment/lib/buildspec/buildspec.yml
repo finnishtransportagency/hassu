@@ -3,6 +3,8 @@ version: 0.2
 env:
   parameter-store:
     SKIP_VELHO_TESTS: /SkipVelhoTests
+    ROCKET_CHAT_TOKEN: /RocketChatToken
+    ROCKET_CHAT_USER_ID: /RocketChatUserId
   secrets-manager:
     GITHUB_TOKEN: github-token
 
@@ -35,10 +37,11 @@ phases:
       - npm run deploy:backend
       - npm run deploy:frontend
       - npm run release
+      - aws codebuild start-build --project-name Hassu-e2etest-$ENVIRONMENT --source-version $CODEBUILD_SOURCE_VERSION
   post_build:
     on-failure: ABORT
     commands:
-      - aws codebuild start-build --project-name Hassu-e2etest-$ENVIRONMENT --source-version $CODEBUILD_SOURCE_VERSION
+      - ./deployment/bin/reportBuildStatus.sh -t "$ROCKET_CHAT_TOKEN" -u "$ROCKET_CHAT_USER_ID" -r "$CODEBUILD_BUILD_SUCCEEDING" -m "$ENVIRONMENT build" -d "CodeBuild $CODEBUILD_BUILD_URL"
 cache:
   paths:
     - "/root/.cache/**/*"

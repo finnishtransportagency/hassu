@@ -66,5 +66,6 @@ migration/~*
 
 cypress/videos
 cypress/screenshots
+cypress/report
 cypress.env.json
 cypress/downloads/downloads.html

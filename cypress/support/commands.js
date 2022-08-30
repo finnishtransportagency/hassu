@@ -102,4 +102,5 @@ Cypress.Commands.add("login", (testuser) => {
 Cypress.Commands.add("archiveProjekti", (oid) => {
   cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/arkistoi");
   cy.get("#result").should("contain", "Arkistoinnin tulos");
+  cy.wait(2000); // Give some time for search index to update
 });
