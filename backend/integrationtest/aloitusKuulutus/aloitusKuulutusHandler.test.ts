@@ -9,8 +9,12 @@ import { userService } from "../../src/user";
 import { personSearchUpdaterClient } from "../../src/personSearch/personSearchUpdaterClient";
 import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/personSearchUpdaterHandler";
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
+import { fileService } from "../../src/files/fileService";
+import { emailHandler } from "../../src/handler/emailHandler";
 
 const { expect } = require("chai");
+
+const sandbox = sinon.createSandbox();
 
 async function takeSnapshot(oid: string) {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
@@ -23,16 +27,26 @@ async function takeSnapshot(oid: string) {
 describe("AloitusKuulutus", () => {
   let userFixture: UserFixture;
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
+  let publishProjektiFileStub: sinon.SinonStub;
+  let sendEmailsByToimintoStub: sinon.SinonStub;
 
   before(async () => {
-    readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
+    readUsersFromSearchUpdaterLambda = sandbox.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
     readUsersFromSearchUpdaterLambda.callsFake(async () => {
       return await personSearchUpdaterHandler.handleEvent();
     });
+
+    publishProjektiFileStub = sandbox.stub(fileService, "publishProjektiFile");
+    publishProjektiFileStub.resolves();
+
+    sendEmailsByToimintoStub = sandbox.stub(emailHandler, "sendEmailsByToiminto");
+    sendEmailsByToimintoStub.resolves();
   });
 
   afterEach(() => {
     userFixture.logout();
+    sandbox.reset();
+    sandbox.restore();
     sinon.reset();
     sinon.restore();
   });

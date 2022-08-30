@@ -1,29 +1,16 @@
 /// <reference types="cypress" />
 import dayjs from "dayjs";
-import { capturePDFPreview, requestPDFs } from "../../support/util";
+import { capturePDFPreview, requestPDFs, selectAllAineistotFromCategory } from "../../support/util";
 
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
-
-function selectAllAineistotFromCategory(accordion) {
-  cy.get(accordion).click();
-  cy.get(accordion +
-    " input[type='checkbox']").should(($tr) => {
-    expect($tr).to.have.length.gte(2);
-  }).wait(1000);
-  cy.get(accordion).contains("Valitse").should("be.visible")
-    .parent()
-    .within(() => {
-      cy.get("input[type='checkbox']").click();
-    });
-}
 
 describe("Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
   before(() => {
     cy.abortEarly();
   });
 
-  it("Tallenna suunnitteluvaiheen vuorovaikutuksen tiedot", { scrollBehavior: "center" }, function() {
+  it("Tallenna suunnitteluvaiheen vuorovaikutuksen tiedot", { scrollBehavior: "center" }, function () {
     cy.login("A1");
     // Remove most of the data from vuorovaikutus to enable re-tunning this test as many times as needed
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu");
@@ -31,16 +18,15 @@ describe("Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
       method: "POST",
       url: Cypress.env("host") + "/yllapito/graphql",
       headers: {
-        "x-api-key": Cypress.env("apiKey")
+        "x-api-key": Cypress.env("apiKey"),
       },
-      body:
-        {
-          operationName: "MyMutation",
-          variables: {},
-          query: `mutation MyMutation {
+      body: {
+        operationName: "MyMutation",
+        variables: {},
+        query: `mutation MyMutation {
   tallennaProjekti(projekti: {oid: "${oid}", suunnitteluVaihe: {vuorovaikutus: {vuorovaikutusNumero: 1}}})
 }`,
-        }
+      },
     });
 
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu");
@@ -176,9 +162,9 @@ describe("Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
         timeout: 10000,
       }).should("have.value", text);
     });
-  })
+  });
 
-  it("Muokkaa ja julkaise suunnitteluvaiheen vuorovaikutuksen tiedot", { scrollBehavior: "center" }, function() {
+  it("Muokkaa ja julkaise suunnitteluvaiheen vuorovaikutuksen tiedot", { scrollBehavior: "center" }, function () {
     cy.login("A1");
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu");
     cy.contains(projektiNimi);

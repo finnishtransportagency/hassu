@@ -1,24 +1,9 @@
 /// <reference types="cypress" />
 import dayjs from "dayjs";
+import { selectAllAineistotFromCategory } from "../../support/util";
 
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
-
-function selectAllAineistotFromCategory(accordion) {
-  cy.get(accordion).click();
-  cy.get(accordion + " input[type='checkbox']")
-    .should(($tr) => {
-      expect($tr).to.have.length.gte(2);
-    })
-    .wait(1000);
-  cy.get(accordion)
-    .contains("Valitse")
-    .should("be.visible")
-    .parent()
-    .within(() => {
-      cy.get("input[type='checkbox']").click();
-    });
-}
 
 describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
   before(() => {

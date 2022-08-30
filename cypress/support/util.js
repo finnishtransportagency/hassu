@@ -30,3 +30,16 @@ export function requestPDFs(pdfs) {
       }
     });
 }
+
+export function selectAllAineistotFromCategory(accordion) {
+  cy.get(accordion).click();
+  cy.get(accordion +
+    " input[type='checkbox']").should(($tr) => {
+    expect($tr).to.have.length.gte(2);
+  }).wait(1000);
+  cy.get(accordion).contains("Valitse").should("be.visible")
+    .parent()
+    .within(() => {
+      cy.get("input[type='checkbox']").click();
+    });
+}

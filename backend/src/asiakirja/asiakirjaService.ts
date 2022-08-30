@@ -20,6 +20,7 @@ import { Kuulutus31 } from "./suunnittelunAloitus/Kuulutus31";
 import { Kuulutus6263 } from "./suunnittelunAloitus/Kuulutus6263";
 import { Kuulutus60 } from "./suunnittelunAloitus/Kuulutus60";
 import { Kuulutus61 } from "./suunnittelunAloitus/Kuulutus61";
+import { Attachment } from "nodemailer/lib/mailer";
 
 export type NahtavillaoloKuulutusAsiakirjaTyyppi = Extract<
   AsiakirjaTyyppi,
@@ -255,6 +256,15 @@ export class AsiakirjaService {
   createYleisotilaisuusKutsuEmail({ projekti, vuorovaikutus, kieli }: YleisotilaisuusKutsuPdfOptions): EmailOptions {
     const asiakirjanMuoto = determineAsiakirjaMuoto(projekti.velho.tyyppi, projekti.velho.vaylamuoto);
     return new Kutsu21(projekti, vuorovaikutus, kieli, asiakirjanMuoto).createEmail();
+  }
+
+  createPDFAttachment(pdf: PDF): Attachment {
+    return {
+      filename: pdf.nimi,
+      contentDisposition: "attachment",
+      contentType: "application/pdf",
+      content: Buffer.from(pdf.sisalto, "base64"),
+    };
   }
 }
 

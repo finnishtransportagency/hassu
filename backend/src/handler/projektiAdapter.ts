@@ -21,6 +21,7 @@ import {
   SuunnitteluVaihe,
   Velho,
   Vuorovaikutus,
+  VuorovaikutusPDF,
   VuorovaikutusTilaisuus,
   Yhteystieto,
 } from "../database/model";
@@ -121,11 +122,19 @@ export class ProjektiAdapter {
         ...velho,
       },
       kielitiedot: adaptKielitiedot(kielitiedot),
-      suunnitteluVaihe: adaptSuunnitteluVaihe(suunnitteluVaihe, vuorovaikutukset, palautteet),
+      suunnitteluVaihe: adaptSuunnitteluVaihe(dbProjekti.oid, suunnitteluVaihe, vuorovaikutukset, palautteet),
       nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe),
       nahtavillaoloVaiheJulkaisut: adaptNahtavillaoloVaiheJulkaisut(dbProjekti.oid, nahtavillaoloVaiheJulkaisut),
-      hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(dbProjekti, hyvaksymisPaatosVaihe, dbProjekti.kasittelynTila?.hyvaksymispaatos),
-      hyvaksymisPaatosVaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(dbProjekti.oid, dbProjekti.kasittelynTila?.hyvaksymispaatos, hyvaksymisPaatosVaiheJulkaisut),
+      hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(
+        dbProjekti,
+        hyvaksymisPaatosVaihe,
+        dbProjekti.kasittelynTila?.hyvaksymispaatos
+      ),
+      hyvaksymisPaatosVaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
+        dbProjekti.oid,
+        dbProjekti.kasittelynTila?.hyvaksymispaatos,
+        hyvaksymisPaatosVaiheJulkaisut
+      ),
       virhetiedot,
       kasittelynTila: adaptKasittelynTila(kasittelynTila),
       ...fieldsToCopyAsIs,
@@ -157,7 +166,7 @@ export class ProjektiAdapter {
       suunnitteluVaihe,
       nahtavillaoloVaihe,
       kasittelynTila,
-      hyvaksymisPaatosVaihe
+      hyvaksymisPaatosVaihe,
     } = changes;
     const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult();
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
@@ -183,7 +192,12 @@ export class ProjektiAdapter {
           projektiAdaptationResult,
           projekti.nahtavillaoloVaiheJulkaisut?.length
         ),
-        hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaiheToSave(projekti.hyvaksymisPaatosVaihe, hyvaksymisPaatosVaihe, projektiAdaptationResult, projekti.hyvaksymisPaatosVaiheJulkaisut?.length),
+        hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaiheToSave(
+          projekti.hyvaksymisPaatosVaihe,
+          hyvaksymisPaatosVaihe,
+          projektiAdaptationResult,
+          projekti.hyvaksymisPaatosVaiheJulkaisut?.length
+        ),
         kielitiedot,
         euRahoitus,
         liittyvatSuunnitelmat,
@@ -246,7 +260,9 @@ export class ProjektiAdapter {
       const hyvaksymisPaatos = projekti.kasittelynTila?.hyvaksymispaatos;
       const hasHyvaksymisPaatos = hyvaksymisPaatos && hyvaksymisPaatos.asianumero && hyvaksymisPaatos.paatoksenPvm;
 
-      const nahtavillaoloVaihe = projekti.nahtavillaoloVaiheJulkaisut?.filter(julkaisu => julkaisu.tila == NahtavillaoloVaiheTila.HYVAKSYTTY).pop();
+      const nahtavillaoloVaihe = projekti.nahtavillaoloVaiheJulkaisut
+        ?.filter((julkaisu) => julkaisu.tila == NahtavillaoloVaiheTila.HYVAKSYTTY)
+        .pop();
       const nahtavillaoloKuulutusPaattyyInThePast = isDateInThePast(nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva);
 
       if (hasHyvaksymisPaatos && nahtavillaoloKuulutusPaattyyInThePast) {
@@ -321,6 +337,7 @@ export function adaptKielitiedot(kielitiedot?: Kielitiedot | null): API.Kielitie
 }
 
 function adaptSuunnitteluVaihe(
+  oid: string,
   suunnitteluVaihe: SuunnitteluVaihe,
   vuorovaikutukset: Array<Vuorovaikutus>,
   palautteet: Array<Palaute>
@@ -333,7 +350,7 @@ function adaptSuunnitteluVaihe(
       arvioSeuraavanVaiheenAlkamisesta,
       suunnittelunEteneminenJaKesto,
       hankkeenKuvaus: adaptHankkeenKuvaus(suunnitteluVaihe.hankkeenKuvaus),
-      vuorovaikutukset: adaptVuorovaikutukset(vuorovaikutukset),
+      vuorovaikutukset: adaptVuorovaikutukset(oid, vuorovaikutukset),
       palautteet: palautteet ? palautteet.map((palaute) => ({ __typename: "Palaute", ...palaute })) : undefined,
       palautteidenVastaanottajat,
       __typename: "SuunnitteluVaihe",
@@ -471,7 +488,11 @@ function adaptNahtavillaoloVaiheToSave(
   } as NahtavillaoloVaihe);
 }
 
-function adaptHyvaksymisPaatosVaihe(dbProjekti: DBProjekti, hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe, hyvaksymisPaatos: Hyvaksymispaatos): API.HyvaksymisPaatosVaihe {
+function adaptHyvaksymisPaatosVaihe(
+  dbProjekti: DBProjekti,
+  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe,
+  hyvaksymisPaatos: Hyvaksymispaatos
+): API.HyvaksymisPaatosVaihe {
   if (!hyvaksymisPaatosVaihe) {
     return undefined;
   }
@@ -492,7 +513,7 @@ function adaptHyvaksymisPaatosVaihe(dbProjekti: DBProjekti, hyvaksymisPaatosVaih
     kuulutusYhteystiedot: adaptYhteystiedot(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
     hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
-    hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero
+    hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,
   };
 }
 
@@ -513,7 +534,7 @@ function adaptHyvaksymisPaatosVaiheToSave(
     kuulutusPaiva,
     kuulutusVaihePaattyyPaiva,
     kuulutusYhteysHenkilot,
-    hallintoOikeus
+    hallintoOikeus,
   } = hyvaksymisPaatosVaihe;
 
   const aineistoNahtavilla = adaptAineistotToSave(
@@ -546,7 +567,7 @@ function adaptHyvaksymisPaatosVaiheToSave(
     aineistoNahtavilla,
     kuulutusYhteystiedot: adaptYhteystiedotToSave(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat),
-    hallintoOikeus
+    hallintoOikeus,
   };
   return mergeWith({}, dbHyvaksymisPaatosVaihe, newChanges);
 }
@@ -592,10 +613,10 @@ function adaptVuorovaikutusTilaisuudetToSave(
 ): VuorovaikutusTilaisuus[] | undefined {
   return vuorovaikutusTilaisuudet?.length > 0
     ? vuorovaikutusTilaisuudet.map((vv) => ({
-      ...vv,
-      esitettavatYhteystiedot: adaptYhteystiedotToSave(vv.esitettavatYhteystiedot),
-      projektiYhteysHenkilot: adaptKayttajatunnusList(projekti, vv.projektiYhteysHenkilot, true),
-    }))
+        ...vv,
+        esitettavatYhteystiedot: adaptYhteystiedotToSave(vv.esitettavatYhteystiedot),
+        projektiYhteysHenkilot: adaptKayttajatunnusList(projekti, vv.projektiYhteysHenkilot, true),
+      }))
     : undefined;
 }
 
@@ -649,8 +670,8 @@ function checkIfAineistoJulkinenChanged(
   dbVuorovaikutus: Vuorovaikutus,
   projektiAdaptationResult: Partial<ProjektiAdaptationResult>
 ) {
-  function vuorovaikutusPublishedForTheFirstTime() {
-    return !dbVuorovaikutus?.julkinen && vuorovaikutusToSave.julkinen;
+  function vuorovaikutusPublished() {
+    return vuorovaikutusToSave.julkinen;
   }
 
   function vuorovaikutusNotPublicAnymore() {
@@ -664,18 +685,14 @@ function checkIfAineistoJulkinenChanged(
     );
   }
 
-  if (vuorovaikutusPublishedForTheFirstTime() || vuorovaikutusNotPublicAnymore()) {
+  if (vuorovaikutusPublished() || vuorovaikutusNotPublicAnymore()) {
     projektiAdaptationResult.pushEvent({
       eventType: ProjektiEventType.VUOROVAIKUTUS_PUBLISHED,
       vuorovaikutusNumero: vuorovaikutusToSave.vuorovaikutusNumero,
     } as VuorovaikutusPublishedEvent);
   }
 
-  if (
-    vuorovaikutusPublishedForTheFirstTime() ||
-    vuorovaikutusNotPublicAnymore() ||
-    vuorovaikutusJulkaisuPaivaChanged()
-  ) {
+  if (vuorovaikutusPublished() || vuorovaikutusNotPublicAnymore() || vuorovaikutusJulkaisuPaivaChanged()) {
     projektiAdaptationResult.pushEvent({
       eventType: ProjektiEventType.AINEISTO_CHANGED,
     } as AineistoChangedEvent);
@@ -757,7 +774,7 @@ export function adaptAineistot(aineistot?: Aineisto[] | null, julkaisuPaiva?: Da
   return undefined;
 }
 
-function adaptVuorovaikutukset(vuorovaikutukset: Array<Vuorovaikutus>): API.Vuorovaikutus[] {
+function adaptVuorovaikutukset(oid: string, vuorovaikutukset: Array<Vuorovaikutus>): API.Vuorovaikutus[] {
   if (vuorovaikutukset && vuorovaikutukset.length > 0) {
     return vuorovaikutukset.map(
       (vuorovaikutus) =>
@@ -768,6 +785,7 @@ function adaptVuorovaikutukset(vuorovaikutukset: Array<Vuorovaikutus>): API.Vuor
           videot: adaptLinkkiList(vuorovaikutus.videot),
           esittelyaineistot: adaptAineistot(vuorovaikutus.esittelyaineistot),
           suunnitelmaluonnokset: adaptAineistot(vuorovaikutus.suunnitelmaluonnokset),
+          vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(oid, vuorovaikutus.vuorovaikutusPDFt),
           __typename: "Vuorovaikutus",
         } as API.Vuorovaikutus)
     );
@@ -942,6 +960,24 @@ export function adaptJulkaisuPDFPaths(
   return { __typename: "AloitusKuulutusPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
 }
 
+function adaptVuorovaikutusPDFPaths(
+  oid: string,
+  pdfs: LocalizedMap<VuorovaikutusPDF>
+): API.VuorovaikutusPDFt | undefined {
+  if (!pdfs) {
+    return undefined;
+  }
+
+  const result: { [Kieli: string]: API.VuorovaikutusPDF } = {};
+  for (const kieli in pdfs) {
+    result[kieli] = {
+      __typename: "VuorovaikutusPDF",
+      kutsuPDFPath: fileService.getYllapitoPathForProjektiFile(oid, pdfs[kieli].kutsuPDFPath),
+    };
+  }
+  return { __typename: "VuorovaikutusPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
+}
+
 export function adaptNahtavillaoloPDFPaths(
   oid: string,
   nahtavillaoloPDFs: LocalizedMap<NahtavillaoloPDF>
@@ -1075,7 +1111,8 @@ export function adaptNahtavillaoloVaiheJulkaisut(
 }
 
 export function adaptHyvaksymisPaatosVaiheJulkaisut(
-  oid: string, hyvaksymisPaatos: Hyvaksymispaatos,
+  oid: string,
+  hyvaksymisPaatos: Hyvaksymispaatos,
   julkaisut?: HyvaksymisPaatosVaiheJulkaisu[] | null
 ): API.HyvaksymisPaatosVaiheJulkaisu[] | undefined {
   if (julkaisut) {

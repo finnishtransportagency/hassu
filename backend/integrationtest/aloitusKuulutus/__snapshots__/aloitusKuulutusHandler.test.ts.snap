@@ -46,6 +46,16 @@ Object {
   },
   "aloitusKuulutusJulkaisut": Array [
     Object {
+      "aloituskuulutusPDFt": Object {
+        "RUOTSI": Object {
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta RUOTSIKSI.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/T412 Aloituskuulutus RUOTSIKSI.pdf",
+        },
+        "SUOMI": Object {
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/T412 Aloituskuulutus.pdf",
+        },
+      },
       "hankkeenKuvaus": Object {
         "RUOTSI": "På svenska",
         "SAAME": "Saameksi",
@@ -147,6 +157,16 @@ Object {
   },
   "aloitusKuulutusJulkaisut": Array [
     Object {
+      "aloituskuulutusPDFt": Object {
+        "RUOTSI": Object {
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta RUOTSIKSI.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/T412 Aloituskuulutus RUOTSIKSI.pdf",
+        },
+        "SUOMI": Object {
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/T412 Aloituskuulutus.pdf",
+        },
+      },
       "hankkeenKuvaus": Object {
         "RUOTSI": "På svenska",
         "SAAME": "Saameksi",

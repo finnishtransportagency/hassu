@@ -1,5 +1,5 @@
 import { findVuorovaikutusByNumber } from "../handler/projektiAdapter";
-import { IlmoituksenVastaanottajat } from "../../../common/graphql/apiModel";
+import { IlmoituksenVastaanottajat, Kieli } from "../../../common/graphql/apiModel";
 import { asiakirjaService } from "../asiakirja/asiakirjaService";
 import { fileService } from "../files/fileService";
 import { projektiDatabase } from "../database/projektiDatabase";
@@ -11,23 +11,45 @@ class VuorovaikutusService {
     // Generate invitation PDF
     const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
     const vuorovaikutus = findVuorovaikutusByNumber(projektiInDB, vuorovaikutusNumero);
-    const pdf = await asiakirjaService.createYleisotilaisuusKutsuPdf({
-      projekti: projektiInDB,
-      vuorovaikutus,
-      kieli: projektiInDB.kielitiedot.ensisijainenKieli,
-      luonnos: false,
-    });
-
     const vuorovaikutusKutsuPath = new ProjektiPaths(oid).vuorovaikutus(vuorovaikutus).yllapitoPath + "/kutsu";
 
-    await fileService.createFileToProjekti({
-      oid,
-      filePathInProjekti: vuorovaikutusKutsuPath,
-      fileName: pdf.nimi,
-      contents: Buffer.from(pdf.sisalto, "base64"),
-      inline: true,
-      contentType: "application/pdf",
-    });
+    async function generateKutsuPDF(kieli: Kieli) {
+      const pdf = await asiakirjaService.createYleisotilaisuusKutsuPdf({
+        projekti: projektiInDB,
+        vuorovaikutus,
+        kieli,
+        luonnos: false,
+      });
+
+      const fullFilePathInProjekti = await fileService.createFileToProjekti({
+        oid,
+        filePathInProjekti: vuorovaikutusKutsuPath,
+        fileName: pdf.nimi,
+        contents: Buffer.from(pdf.sisalto, "base64"),
+        inline: true,
+        contentType: "application/pdf",
+      });
+      return { ...pdf, fullFilePathInProjekti };
+    }
+
+    const attachments = [];
+
+    const pdfEnsisijainen = await generateKutsuPDF(projektiInDB.kielitiedot.ensisijainenKieli);
+    vuorovaikutus.vuorovaikutusPDFt = {};
+    vuorovaikutus.vuorovaikutusPDFt[projektiInDB.kielitiedot.ensisijainenKieli] = {
+      kutsuPDFPath: pdfEnsisijainen.fullFilePathInProjekti,
+    };
+    attachments.push(asiakirjaService.createPDFAttachment(pdfEnsisijainen));
+
+    if (projektiInDB.kielitiedot.toissijainenKieli) {
+      const pdfToissijainen = await generateKutsuPDF(projektiInDB.kielitiedot.toissijainenKieli);
+      vuorovaikutus.vuorovaikutusPDFt[projektiInDB.kielitiedot.toissijainenKieli] = {
+        kutsuPDFPath: pdfToissijainen.fullFilePathInProjekti,
+      };
+      attachments.push(asiakirjaService.createPDFAttachment(pdfToissijainen));
+    }
+
+    await projektiDatabase.saveProjekti({ oid, vuorovaikutukset: [vuorovaikutus] });
 
     const emailOptions = asiakirjaService.createYleisotilaisuusKutsuEmail({
       projekti: projektiInDB,
@@ -35,14 +57,7 @@ class VuorovaikutusService {
       kieli: projektiInDB.kielitiedot.ensisijainenKieli,
       luonnos: false,
     });
-    emailOptions.attachments = [
-      {
-        filename: pdf.nimi,
-        contentDisposition: "attachment",
-        contentType: "application/pdf",
-        content: Buffer.from(pdf.sisalto, "base64"),
-      },
-    ];
+    emailOptions.attachments = attachments;
 
     const recipients = this.collectRecipients(vuorovaikutus.ilmoituksenVastaanottajat);
     for (const recipient of recipients) {

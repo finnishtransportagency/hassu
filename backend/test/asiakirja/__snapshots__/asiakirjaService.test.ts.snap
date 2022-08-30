@@ -686,7 +686,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 19`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille RUOTSIKSI.pdf",
   "textContent": "
 Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI muistuttajille RUOTSIKSI
 RUOTSIKSI RUOTSIKSI Väylävirasto ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen vägplanen Namnet på svenska.
@@ -710,7 +710,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 20`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille RUOTSIKSI.pdf",
   "textContent": "
 Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI lausunnonantajille RUOTSIKSI
 RUOTSIKSI RUOTSIKSI Väylävirasto ilmoittaa lausunnonantajille RUOTSIKSI, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen vägplanen Namnet på svenska.
@@ -809,7 +809,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 24`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_63R Ilmoitus hyvaksymispaatoksesta muistuttajille RUOTSIKSI.pdf",
   "textContent": "
 Namnet på svenska
 RUOTSIKSI Väylävirasto ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen järnvägsplanen: Namnet på svenska, {{kunnat}}. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). RUOTSIKSI Mikäli olet lähettänyt muistutuksen toisten henkilöiden puolesta tai tehnyt yhteismuistutuksen, pyydämme välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi.
@@ -930,7 +930,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 29`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_63YS Ilmoitus hyvaksymispaatoksesta muistuttajille RUOTSIKSI.pdf",
   "textContent": "
 Namnet på svenska
 RUOTSIKSI Väylävirasto ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen utredningsplanen: Namnet på svenska, {{kunnat}}. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). RUOTSIKSI Mikäli olet lähettänyt muistutuksen toisten henkilöiden puolesta tai tehnyt yhteismuistutuksen, pyydämme välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi.
@@ -953,7 +953,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 30`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_62YS Ilmoitus hyvaksymispaatoksesta lausunnon antajille RUOTSIKSI.pdf",
   "textContent": "
 Namnet på svenska
 RUOTSIKSI Väylävirasto ilmoittaa lausunnonantajille RUOTSIKSI, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen utredningsplanen: Namnet på svenska, {{kunnat}}. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). 

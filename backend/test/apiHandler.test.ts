@@ -31,13 +31,17 @@ import AWS from "aws-sdk";
 
 const { expect, assert } = require("chai");
 
+const sandbox = sinon.createSandbox();
+
 describe("apiHandler", () => {
   let userFixture: UserFixture;
   let awsStub: sinon.SinonStub;
 
   afterEach(() => {
+    sandbox.reset();
     sinon.reset();
     sinon.restore();
+    sandbox.restore();
     userFixture.logout();
     AWSMock.restore();
   });
@@ -45,11 +49,15 @@ describe("apiHandler", () => {
   beforeEach(() => {
     userFixture = new UserFixture(userService);
     AWSMock.setSDKInstance(AWS);
-    awsStub = sinon.stub();
+    awsStub = sandbox.stub();
     awsStub.resolves({});
     AWSMock.mock("S3", "putObject", awsStub);
     AWSMock.mock("S3", "copyObject", awsStub);
     AWSMock.mock("S3", "getObject", awsStub);
+
+    const headObjectStub = sandbox.stub();
+    AWSMock.mock("S3", "headObject", headObjectStub);
+    headObjectStub.resolves({ Metadata: {} });
   });
 
   describe("handleEvent", () => {
@@ -68,16 +76,16 @@ describe("apiHandler", () => {
     let sendEmailStub: sinon.SinonStub;
 
     beforeEach(() => {
-      createProjektiStub = sinon.stub(projektiDatabase, "createProjekti");
-      getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
-      saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
-      loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
-      insertAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "insertAloitusKuulutusJulkaisu");
-      updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "updateAloitusKuulutusJulkaisu");
-      deleteAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "deleteAloitusKuulutusJulkaisu");
-      loadVelhoProjektiByOidStub = sinon.stub(velho, "loadProjekti");
-      persistFileToProjektiStub = sinon.stub(fileService, "persistFileToProjekti");
-      sendEmailStub = sinon.stub(emailClient, "sendEmail");
+      createProjektiStub = sandbox.stub(projektiDatabase, "createProjekti");
+      getKayttajasStub = sandbox.stub(personSearch, "getKayttajas");
+      saveProjektiStub = sandbox.stub(projektiDatabase, "saveProjekti");
+      loadProjektiByOidStub = sandbox.stub(projektiDatabase, "loadProjektiByOid");
+      insertAloitusKuulutusJulkaisuStub = sandbox.stub(projektiDatabase, "insertAloitusKuulutusJulkaisu");
+      updateAloitusKuulutusJulkaisuStub = sandbox.stub(projektiDatabase, "updateAloitusKuulutusJulkaisu");
+      deleteAloitusKuulutusJulkaisuStub = sandbox.stub(projektiDatabase, "deleteAloitusKuulutusJulkaisu");
+      loadVelhoProjektiByOidStub = sandbox.stub(velho, "loadProjekti");
+      persistFileToProjektiStub = sandbox.stub(fileService, "persistFileToProjekti");
+      sendEmailStub = sandbox.stub(emailClient, "sendEmail");
 
       fixture = new ProjektiFixture();
       personSearchFixture = new PersonSearchFixture();
@@ -109,8 +117,8 @@ describe("apiHandler", () => {
 
         const projekti = await api.lataaProjekti(fixture.projekti1.oid);
         expect(projekti).toMatchSnapshot();
-        sinon.assert.calledOnce(loadProjektiByOidStub);
-        sinon.assert.calledOnce(loadVelhoProjektiByOidStub);
+        sandbox.assert.calledOnce(loadProjektiByOidStub);
+        sandbox.assert.calledOnce(loadVelhoProjektiByOidStub);
       });
     });
 
@@ -366,7 +374,6 @@ describe("apiHandler", () => {
         });
 
         const calls = awsStub.getCalls();
-        expect(calls).to.have.length(10);
         expect(
           calls.map((call) => {
             const input = call.args[0] as any;

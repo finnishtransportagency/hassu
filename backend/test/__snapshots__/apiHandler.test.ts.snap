@@ -523,6 +523,78 @@ Array [
     },
   },
   Object {
+    "Bucket": "hassu-localstack-yllapito",
+    "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+    "ContentType": "application/pdf",
+    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+    "Metadata": Object {
+      "publication-timestamp": "2022-01-02T00:00:00+02:00",
+    },
+  },
+  Object {
+    "Bucket": "hassu-localstack-public",
+    "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+    "ContentType": "application/pdf",
+    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+    "Metadata": Object {
+      "publication-timestamp": "2022-01-02T00:00:00+02:00",
+    },
+  },
+  Object {
+    "Bucket": "hassu-localstack-yllapito",
+    "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+    "ContentType": "application/pdf",
+    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+    "Metadata": Object {
+      "publication-timestamp": "2022-01-02T00:00:00+02:00",
+    },
+  },
+  Object {
+    "Bucket": "hassu-localstack-public",
+    "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+    "ContentType": "application/pdf",
+    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+    "Metadata": Object {
+      "publication-timestamp": "2022-01-02T00:00:00+02:00",
+    },
+  },
+  Object {
+    "Bucket": "hassu-localstack-yllapito",
+    "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+    "ContentType": "application/pdf",
+    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+    "Metadata": Object {
+      "publication-timestamp": "2022-01-02T00:00:00+02:00",
+    },
+  },
+  Object {
+    "Bucket": "hassu-localstack-public",
+    "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+    "ContentType": "application/pdf",
+    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+    "Metadata": Object {
+      "publication-timestamp": "2022-01-02T00:00:00+02:00",
+    },
+  },
+  Object {
+    "Bucket": "hassu-localstack-yllapito",
+    "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+    "ContentType": "application/pdf",
+    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+    "Metadata": Object {
+      "publication-timestamp": "2022-01-02T00:00:00+02:00",
+    },
+  },
+  Object {
+    "Bucket": "hassu-localstack-public",
+    "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+    "ContentType": "application/pdf",
+    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+    "Metadata": Object {
+      "publication-timestamp": "2022-01-02T00:00:00+02:00",
+    },
+  },
+  Object {
     "Bucket": "hassu-localstack-public",
     "CopySource": "hassu-localstack-yllapito/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
     "Key": "tiedostot/suunnitelma/1/suunnittelusopimus/logo.gif",

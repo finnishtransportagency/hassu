@@ -705,6 +705,18 @@
       },
       {
         "kind": "OBJECT",
+        "name": "VuorovaikutusPDF",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "VuorovaikutusPDFt",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "VuorovaikutusTilaisuus",
         "possibleTypes": null,
         "__typename": "__Type"

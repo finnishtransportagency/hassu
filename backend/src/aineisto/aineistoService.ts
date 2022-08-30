@@ -66,7 +66,6 @@ class AineistoService {
     });
   }
 
-
   /**
    * Copy aineisto to public S3 with proper publish and expiration dates
    */
@@ -102,11 +101,7 @@ class AineistoService {
     if (!publishDate) {
       throw new Error("HyvaksymisPaatosVaiheJulkaisua ei voi julkaista jos vuorovaikutusJulkaisuPaiva ei ole asetettu");
     }
-    await synchronizeAineistoToPublic(
-      oid,
-      new ProjektiPaths(oid).hyvaksymisPaatosVaihe(julkaisu),
-      publishDate
-    );
+    await synchronizeAineistoToPublic(oid, new ProjektiPaths(oid).hyvaksymisPaatosVaihe(julkaisu), publishDate);
   }
 
   async deleteAineisto(

@@ -1,7 +1,13 @@
 import { AloitusKuulutusTila, AsiakirjaTyyppi, Kieli, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
-import { AloitusKuulutus, AloitusKuulutusJulkaisu, AloitusKuulutusPDF, DBProjekti } from "../../database/model";
+import {
+  AloitusKuulutus,
+  AloitusKuulutusJulkaisu,
+  AloitusKuulutusPDF,
+  DBProjekti,
+  LocalizedMap,
+} from "../../database/model";
 import { asiakirjaService } from "../../asiakirja/asiakirjaService";
 import { fileService } from "../../files/fileService";
 import { parseDate } from "../../util/dateUtil";
@@ -58,6 +64,9 @@ class AloitusKuulutusTilaManager extends TilaManager {
     const aloitusKuulutusJulkaisu = asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projekti);
     aloitusKuulutusJulkaisu.tila = AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA;
     aloitusKuulutusJulkaisu.muokkaaja = muokkaaja.uid;
+
+    await this.generatePDFs(projekti, aloitusKuulutusJulkaisu);
+
     await projektiDatabase.insertAloitusKuulutusJulkaisu(projekti.oid, aloitusKuulutusJulkaisu);
   }
 
@@ -69,6 +78,7 @@ class AloitusKuulutusTilaManager extends TilaManager {
 
     const aloitusKuulutus = getAloitusKuulutus(projekti);
     aloitusKuulutus.palautusSyy = syy;
+    await this.deletePDFs(projekti.oid, julkaisuWaitingForApproval.aloituskuulutusPDFt);
     await projektiDatabase.saveProjekti({ oid: projekti.oid, aloitusKuulutus });
     await projektiDatabase.deleteAloitusKuulutusJulkaisu(projekti, julkaisuWaitingForApproval.id);
   }
@@ -83,6 +93,20 @@ class AloitusKuulutusTilaManager extends TilaManager {
     julkaisuWaitingForApproval.tila = AloitusKuulutusTila.HYVAKSYTTY;
     julkaisuWaitingForApproval.hyvaksyja = projektiPaallikko.uid;
 
+    const logoFilePath = projekti.suunnitteluSopimus?.logo;
+    if (logoFilePath) {
+      await fileService.publishProjektiFile(
+        projekti.oid,
+        logoFilePath,
+        logoFilePath,
+        parseDate(julkaisuWaitingForApproval.kuulutusPaiva)
+      );
+    }
+
+    await projektiDatabase.updateAloitusKuulutusJulkaisu(projekti, julkaisuWaitingForApproval);
+  }
+
+  private async generatePDFs(projekti: DBProjekti, julkaisuWaitingForApproval: AloitusKuulutusJulkaisu) {
     const kielitiedot = julkaisuWaitingForApproval.kielitiedot;
 
     async function generatePDFsForLanguage(
@@ -115,19 +139,21 @@ class AloitusKuulutusTilaManager extends TilaManager {
         kielitiedot.toissijainenKieli,
         julkaisuWaitingForApproval
       );
-
-      const logoFilePath = projekti.suunnitteluSopimus?.logo;
-      if (logoFilePath) {
-        await fileService.publishProjektiFile(
-          projekti.oid,
-          logoFilePath,
-          logoFilePath,
-          parseDate(julkaisuWaitingForApproval.kuulutusPaiva)
-        );
-      }
     }
+  }
 
-    await projektiDatabase.updateAloitusKuulutusJulkaisu(projekti, julkaisuWaitingForApproval);
+  private async deletePDFs(oid: string, localizedPDFs: LocalizedMap<AloitusKuulutusPDF>) {
+    for (const language in localizedPDFs) {
+      const pdfs: AloitusKuulutusPDF = localizedPDFs[language];
+      await fileService.deleteYllapitoFileFromProjekti({
+        oid,
+        filePathInProjekti: pdfs.aloituskuulutusPDFPath,
+      });
+      await fileService.deleteYllapitoFileFromProjekti({
+        oid,
+        filePathInProjekti: pdfs.aloituskuulutusIlmoitusPDFPath,
+      });
+    }
   }
 }
 

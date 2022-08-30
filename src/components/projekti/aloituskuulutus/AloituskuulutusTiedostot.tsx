@@ -4,6 +4,7 @@ import lowerCase from "lodash/lowerCase";
 import { ReactElement } from "react";
 import ExtLink from "@components/ExtLink";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
+import { splitFilePath } from "../../../util/fileUtil";
 
 interface Props {
   oid: string;
@@ -24,10 +25,6 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid 
   const ensisijaisetPDFt = getPdft(aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli);
   const toissijaisetPDFt = getPdft(aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli);
 
-  const parseFilename = (path: string) => {
-    return path.substring(path.lastIndexOf("/") + 1);
-  };
-
   let { kuulutusPaiva, published } = examineKuulutusPaiva(aloituskuulutusjulkaisu?.kuulutusPaiva);
 
   let aloitusKuulutusHref: string | undefined;
@@ -47,12 +44,12 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid 
           <div className="flex flex-col mb-4">
             <div>
               <Link underline="none" href={ensisijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
-                {parseFilename(ensisijaisetPDFt.aloituskuulutusPDFPath)}
+                {splitFilePath(ensisijaisetPDFt.aloituskuulutusPDFPath).fileName}
               </Link>
             </div>
             <div>
               <Link underline="none" href={ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath} target="_blank">
-                {parseFilename(ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath)}
+                {splitFilePath(ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
               </Link>
             </div>
           </div>
@@ -68,12 +65,12 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid 
               <div className="flex flex-col">
                 <div>
                   <Link underline="none" href={toissijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
-                    {parseFilename(toissijaisetPDFt.aloituskuulutusPDFPath)}
+                    {splitFilePath(toissijaisetPDFt.aloituskuulutusPDFPath).fileName}
                   </Link>
                 </div>
                 <div>
                   <Link underline="none" href={toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath} target="_blank">
-                    {parseFilename(toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath)}
+                    {splitFilePath(toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
                   </Link>
                 </div>
               </div>
