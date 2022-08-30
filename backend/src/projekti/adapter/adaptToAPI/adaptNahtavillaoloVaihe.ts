@@ -1,21 +1,21 @@
 import {
-  NahtavillaoloVaihe,
-  NahtavillaoloVaiheJulkaisu,
   DBProjekti,
   LocalizedMap,
   NahtavillaoloPDF,
-} from "../../database/model";
-import * as API from "../../../../common/graphql/apiModel";
-import { adaptHankkeenKuvaus } from "../commonAdapterUtil/adaptHankkeenKuvaus";
-import { adaptAineistot } from "../commonAdapterUtil/adaptAineistot";
-import { fileService } from "../../files/fileService";
-import { lisaAineistoService } from "../../aineisto/lisaAineistoService";
-import { adaptIlmoituksenVastaanottajat } from "./common";
+  NahtavillaoloVaihe,
+  NahtavillaoloVaiheJulkaisu,
+} from "../../../database/model";
+import * as API from "../../../../../common/graphql/apiModel";
 import {
-  adaptKielitiedot as lisaaKielitiedotTypename,
-  adaptVelho as lisaaVelhoTypename,
-  adaptYhteystiedot as lisaaYhteystietoTypenameListaan,
-} from "../commonAdapterUtil/lisaaTypename";
+  adaptAineistot,
+  adaptHankkeenKuvaus,
+  adaptIlmoituksenVastaanottajat,
+  adaptKielitiedotByAddingTypename,
+  adaptVelhoByAddingTypename,
+  adaptYhteystiedotByAddingTypename,
+} from "../common";
+import { fileService } from "../../../files/fileService";
+import { lisaAineistoService } from "../../../aineisto/lisaAineistoService";
 
 export function adaptNahtavillaoloVaihe(
   dbProjekti: DBProjekti,
@@ -44,7 +44,7 @@ export function adaptNahtavillaoloVaihe(
       nahtavillaoloVaihe.id,
       dbProjekti.salt
     ),
-    kuulutusYhteystiedot: lisaaYhteystietoTypenameListaan(kuulutusYhteystiedot),
+    kuulutusYhteystiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
     hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
   };
@@ -72,13 +72,13 @@ export function adaptNahtavillaoloVaiheJulkaisut(
         ...fieldsToCopyAsIs,
         __typename: "NahtavillaoloVaiheJulkaisu",
         hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
-        kielitiedot: lisaaKielitiedotTypename(kielitiedot),
-        kuulutusYhteystiedot: lisaaYhteystietoTypenameListaan(kuulutusYhteystiedot),
+        kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
+        kuulutusYhteystiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot),
         ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
         aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
         lisaAineisto: adaptAineistot(lisaAineisto),
         nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(oid, nahtavillaoloPDFt),
-        velho: lisaaVelhoTypename(velho),
+        velho: adaptVelhoByAddingTypename(velho),
       };
     });
   }

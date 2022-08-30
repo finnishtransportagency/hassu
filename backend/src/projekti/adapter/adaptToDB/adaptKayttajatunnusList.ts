@@ -1,5 +1,5 @@
-import { DBProjekti } from "../../database/model";
-import * as API from "../../../../common/graphql/apiModel";
+import { DBProjekti } from "../../../database/model";
+import * as API from "../../../../../common/graphql/apiModel";
 
 export function adaptKayttajatunnusList(
   projekti: DBProjekti,

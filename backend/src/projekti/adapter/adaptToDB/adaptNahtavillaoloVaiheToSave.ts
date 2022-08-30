@@ -1,11 +1,11 @@
-import { NahtavillaoloVaihe } from "../../database/model";
-import * as API from "../../../../common/graphql/apiModel";
+import { NahtavillaoloVaihe } from "../../../database/model";
+import * as API from "../../../../../common/graphql/apiModel";
 import { ProjektiAdaptationResult } from "../projektiAdapter";
 import {
-  adaptYhteystiedotToSave,
   adaptAineistotToSave,
-  adaptIlmoituksenVastaanottajatToSave,
   adaptHankkeenKuvausToSave,
+  adaptIlmoituksenVastaanottajatToSave,
+  adaptYhteystiedotToSave,
 } from "./common";
 import mergeWith from "lodash/mergeWith";
 

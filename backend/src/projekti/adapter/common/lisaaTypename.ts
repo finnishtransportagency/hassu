@@ -1,7 +1,9 @@
-import { Kielitiedot, Linkki, Suunnitelma, Velho, Yhteystieto } from "../../database/model";
-import * as API from "../../../../common/graphql/apiModel";
+import { Kielitiedot, Linkki, Suunnitelma, Velho, Yhteystieto } from "../../../database/model";
+import * as API from "../../../../../common/graphql/apiModel";
 
-export function adaptLiittyvatSuunnitelmat(suunnitelmat?: Suunnitelma[] | null): API.Suunnitelma[] | undefined | null {
+export function adaptLiittyvatSuunnitelmatByAddingTypename(
+  suunnitelmat?: Suunnitelma[] | null
+): API.Suunnitelma[] | undefined | null {
   if (suunnitelmat) {
     const liittyvatSuunnitelmat = suunnitelmat.map(
       (suunnitelma) =>
@@ -15,7 +17,7 @@ export function adaptLiittyvatSuunnitelmat(suunnitelmat?: Suunnitelma[] | null):
   return suunnitelmat as undefined | null;
 }
 
-export function adaptKielitiedot(kielitiedot?: Kielitiedot | null): API.Kielitiedot | undefined | null {
+export function adaptKielitiedotByAddingTypename(kielitiedot?: Kielitiedot | null): API.Kielitiedot | undefined | null {
   if (kielitiedot) {
     return {
       ...kielitiedot,
@@ -25,7 +27,7 @@ export function adaptKielitiedot(kielitiedot?: Kielitiedot | null): API.Kielitie
   return kielitiedot as undefined;
 }
 
-export function adaptLinkki(link: Linkki): API.Linkki {
+export function adaptLinkkiByAddingTypename(link: Linkki): API.Linkki {
   if (link) {
     return {
       ...link,
@@ -35,7 +37,7 @@ export function adaptLinkki(link: Linkki): API.Linkki {
   return link as undefined;
 }
 
-export function adaptLinkkiList(links: Array<Linkki>): API.Linkki[] {
+export function adaptLinkkiListByAddingTypename(links: Array<Linkki>): API.Linkki[] {
   if (links) {
     return links.map((link) => ({
       ...link,
@@ -45,11 +47,11 @@ export function adaptLinkkiList(links: Array<Linkki>): API.Linkki[] {
   return links as undefined;
 }
 
-export function adaptVelho(velho: Velho): API.Velho {
+export function adaptVelhoByAddingTypename(velho: Velho): API.Velho {
   return { __typename: "Velho", ...velho };
 }
 
-export function adaptYhteystiedot(yhteystiedot: Yhteystieto[]): API.Yhteystieto[] | undefined | null {
+export function adaptYhteystiedotByAddingTypename(yhteystiedot: Yhteystieto[]): API.Yhteystieto[] | undefined | null {
   if (yhteystiedot) {
     return yhteystiedot.map((yt) => ({ __typename: "Yhteystieto", ...yt }));
   }

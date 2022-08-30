@@ -1,6 +1,6 @@
 import dayjs, { Dayjs } from "dayjs";
-import { Aineisto } from "../../database/model";
-import * as API from "../../../../common/graphql/apiModel";
+import { Aineisto } from "../../../database/model";
+import * as API from "../../../../../common/graphql/apiModel";
 
 export function adaptAineistot(aineistot?: Aineisto[] | null, julkaisuPaiva?: Dayjs): API.Aineisto[] | undefined {
   if (julkaisuPaiva && julkaisuPaiva.isAfter(dayjs())) {

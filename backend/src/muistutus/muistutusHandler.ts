@@ -2,7 +2,7 @@ import { LisaaMuistutusMutationVariables, Status } from "../../../common/graphql
 import { NotFoundError } from "../error/NotFoundError";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { fileService } from "../files/fileService";
-import { projektiAdapterJulkinen } from "../handler/projektiAdapterJulkinen";
+import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
 import { muistutusEmailService } from "./muistutusEmailService";
 import { adaptMuistutusInput } from "./muistutusAdapter";
 import { isValidEmail } from "../util/emailUtil";

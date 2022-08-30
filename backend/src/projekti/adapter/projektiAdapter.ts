@@ -1,36 +1,38 @@
-import { DBProjekti } from "../database/model";
-import * as API from "../../../common/graphql/apiModel";
-import { NahtavillaoloVaiheTila } from "../../../common/graphql/apiModel";
+import { DBProjekti } from "../../database/model";
+import * as API from "../../../../common/graphql/apiModel";
+import { NahtavillaoloVaiheTila } from "../../../../common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
-import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
-import { personSearch } from "../personSearch/personSearchClient";
+import { KayttoOikeudetManager } from "../kayttoOikeudetManager";
+import { personSearch } from "../../personSearch/personSearchClient";
 import pickBy from "lodash/pickBy";
-import { perustiedotValidationSchema } from "../../../src/schemas/perustiedot";
+import { perustiedotValidationSchema } from "../../../../src/schemas/perustiedot";
 import { ValidationError } from "yup";
-import { log } from "../logger";
+import { log } from "../../logger";
 import dayjs from "dayjs";
-import { kayttoOikeudetSchema } from "../../../src/schemas/kayttoOikeudet";
-import { lisaAineistoService } from "../aineisto/lisaAineistoService";
-import { ISO_DATE_FORMAT, parseDate } from "../util/dateUtil";
-import adaptKasittelynTila from "./adaptProjektiUtil/adaptKasittelynTila";
+import { kayttoOikeudetSchema } from "../../../../src/schemas/kayttoOikeudet";
+import { lisaAineistoService } from "../../aineisto/lisaAineistoService";
+import { ISO_DATE_FORMAT, parseDate } from "../../util/dateUtil";
+import { adaptKielitiedotByAddingTypename, adaptLiittyvatSuunnitelmatByAddingTypename } from "./common";
 import {
-  adaptLiittyvatSuunnitelmat as lisaaSuunnitelmatTypename,
-  adaptKielitiedot as lisaaKielitiedotTypename,
-} from "./commonAdapterUtil/lisaaTypename";
-import adaptSuunnitteluVaihe from "./adaptProjektiUtil/adaptSuunnitteluVaihe";
-import { adaptNahtavillaoloVaihe, adaptNahtavillaoloVaiheJulkaisut } from "./adaptProjektiUtil/adaptNahtavillaoloVaihe";
-import {
+  adaptAloitusKuulutus,
+  adaptAloitusKuulutusJulkaisut,
   adaptHyvaksymisPaatosVaihe,
   adaptHyvaksymisPaatosVaiheJulkaisut,
-} from "./adaptProjektiUtil/adaptHyvaksymisPaatosVaihe";
-import { adaptAloitusKuulutus, adaptAloitusKuulutusJulkaisut } from "./adaptProjektiUtil/adaptAloitusKuulutus";
-import { adaptSuunnitteluSopimus } from "./adaptProjektiUtil/adaptSuunitteluSopimus";
-import { adaptVuorovaikutusToSave } from "./adaptProjektiToSaveUtil/adaptVuorovaikutusToSave";
-import { adaptAloitusKuulutusToSave } from "./adaptProjektiToSaveUtil/adaptAloitusKuulutusToSave";
-import { adaptSuunnitteluSopimusToSave } from "./adaptProjektiToSaveUtil/adaptSuunnitteluSopimusToSave";
-import { adaptSuunnitteluVaiheToSave } from "./adaptProjektiToSaveUtil/adaptSuunnitteluVaiheToSave";
-import { adaptNahtavillaoloVaiheToSave } from "./adaptProjektiToSaveUtil/adaptNahtavillaoloVaiheToSave";
-import { adaptHyvaksymisPaatosVaiheToSave } from "./adaptProjektiToSaveUtil/adaptHyvaksymisPaatosVaiheToSave";
+  adaptKasittelynTila,
+  adaptNahtavillaoloVaihe,
+  adaptNahtavillaoloVaiheJulkaisut,
+  adaptSuunnitteluSopimus,
+  adaptSuunnitteluVaihe,
+} from "./adaptToAPI";
+import {
+  adaptAloitusKuulutusToSave,
+  adaptHyvaksymisPaatosVaiheToSave,
+  adaptNahtavillaoloVaiheToSave,
+  adaptSuunnitteluSopimusToSave,
+  adaptSuunnitteluVaiheToSave,
+  adaptVuorovaikutusToSave,
+} from "./adaptToDB";
+
 export enum ProjektiEventType {
   VUOROVAIKUTUS_PUBLISHED = "VUOROVAIKUTUS_PUBLISHED",
   AINEISTO_CHANGED = "AINEISTO_CHANGED",
@@ -104,13 +106,13 @@ export class ProjektiAdapter {
       tyyppi: velho?.tyyppi || dbProjekti.tyyppi, // remove usage of projekti.tyyppi after all data has been migrated to new format
       aloitusKuulutus: adaptAloitusKuulutus(aloitusKuulutus),
       suunnitteluSopimus: adaptSuunnitteluSopimus(dbProjekti.oid, suunnitteluSopimus),
-      liittyvatSuunnitelmat: lisaaSuunnitelmatTypename(liittyvatSuunnitelmat),
+      liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmatByAddingTypename(liittyvatSuunnitelmat),
       aloitusKuulutusJulkaisut: adaptAloitusKuulutusJulkaisut(dbProjekti.oid, aloitusKuulutusJulkaisut),
       velho: {
         __typename: "Velho",
         ...velho,
       },
-      kielitiedot: lisaaKielitiedotTypename(kielitiedot),
+      kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
       suunnitteluVaihe: adaptSuunnitteluVaihe(dbProjekti.oid, suunnitteluVaihe, vuorovaikutukset, palautteet),
       nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe),
       nahtavillaoloVaiheJulkaisut: adaptNahtavillaoloVaiheJulkaisut(dbProjekti.oid, nahtavillaoloVaiheJulkaisut),

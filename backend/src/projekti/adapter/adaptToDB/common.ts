@@ -1,7 +1,7 @@
-import * as API from "../../../../common/graphql/apiModel";
-import { IllegalArgumentError } from "../../error/IllegalArgumentError";
-import { LocalizedMap, Aineisto } from "../../database/model";
-import { ProjektiAdaptationResult, ProjektiEventType, AineistoChangedEvent } from "../projektiAdapter";
+import * as API from "../../../../../common/graphql/apiModel";
+import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
+import { Aineisto, LocalizedMap } from "../../../database/model";
+import { AineistoChangedEvent, ProjektiAdaptationResult, ProjektiEventType } from "../projektiAdapter";
 import remove from "lodash/remove";
 
 export function adaptIlmoituksenVastaanottajatToSave(

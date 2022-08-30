@@ -1,8 +1,8 @@
 import { describe, it } from "mocha";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import cloneDeep from "lodash/cloneDeep";
-import { projektiAdapter } from "../../src/handler/projektiAdapter";
-import { findPublishedAloitusKuulutusJulkaisu } from "../../src/handler/commonAdapterUtil/util";
+import { projektiAdapter } from "../../src/projekti/adapter/projektiAdapter";
+import { findPublishedAloitusKuulutusJulkaisu } from "../../src/projekti/adapter/common";
 
 import { IllegalArgumentError } from "../../src/error/IllegalArgumentError";
 

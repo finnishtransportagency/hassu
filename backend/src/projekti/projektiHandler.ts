@@ -20,8 +20,8 @@ import {
   projektiAdapter,
   ProjektiEventType,
   VuorovaikutusPublishedEvent,
-} from "./projektiAdapter";
-import { adaptVelho as lisaaVelhoTypename } from "./commonAdapterUtil/lisaaTypename";
+} from "./adapter/projektiAdapter";
+import { adaptVelhoByAddingTypename } from "./adapter/common";
 import { auditLog, log } from "../logger";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import mergeWith from "lodash/mergeWith";
@@ -33,7 +33,7 @@ import { createPerustamisEmail } from "../email/emailTemplates";
 import { requireAdmin } from "../user/userService";
 import { projektiArchive } from "../archive/projektiArchiveService";
 import { NotFoundError } from "../error/NotFoundError";
-import { projektiAdapterJulkinen } from "./projektiAdapterJulkinen";
+import { projektiAdapterJulkinen } from "./adapter/projektiAdapterJulkinen";
 import { findUpdatedFields } from "../velho/velhoAdapter";
 import { DBProjekti } from "../database/model";
 import { vuorovaikutusService } from "../vuorovaikutus/vuorovaikutusService";
@@ -172,7 +172,7 @@ export async function findUpdatesFromVelho(oid: string): Promise<Velho> {
     log.info("Loading projekti from Velho", { oid });
     const { projekti } = await velho.loadProjekti(oid);
 
-    return lisaaVelhoTypename(findUpdatedFields(projektiFromDB.velho, projekti.velho));
+    return adaptVelhoByAddingTypename(findUpdatedFields(projektiFromDB.velho, projekti.velho));
   } catch (e) {
     log.error(e);
     throw e;
@@ -193,7 +193,7 @@ export async function synchronizeUpdatesFromVelho(oid: string): Promise<Velho> {
     if (updatedVelhoValues.length > 0) {
       log.info("Muutoksia projektiin löytynyt Velhosta", { oid, updatedFields });
       await projektiDatabase.saveProjekti({ oid, velho: projekti.velho });
-      return lisaaVelhoTypename(updatedFields);
+      return adaptVelhoByAddingTypename(updatedFields);
     } else {
       log.info("Muutoksia projektiin löytynyt Velhosta", { oid });
     }

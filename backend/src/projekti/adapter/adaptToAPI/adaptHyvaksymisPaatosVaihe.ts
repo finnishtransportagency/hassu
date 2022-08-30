@@ -1,20 +1,20 @@
 import {
   DBProjekti,
-  HyvaksymisPaatosVaihe,
   Hyvaksymispaatos,
-  LocalizedMap,
-  HyvaksymisPaatosVaihePDF,
+  HyvaksymisPaatosVaihe,
   HyvaksymisPaatosVaiheJulkaisu,
-} from "../../database/model";
-import * as API from "../../../../common/graphql/apiModel";
-import { adaptAineistot } from "../commonAdapterUtil/adaptAineistot";
-import { adaptIlmoituksenVastaanottajat } from "./common";
-import { fileService } from "../../files/fileService";
+  HyvaksymisPaatosVaihePDF,
+  LocalizedMap,
+} from "../../../database/model";
+import * as API from "../../../../../common/graphql/apiModel";
 import {
-  adaptVelho as lisaaVelhoTypename,
-  adaptKielitiedot as lisaaKielitiedotTypename,
-  adaptYhteystiedot as lisaaYhteystietoTypenameListaan,
-} from "../commonAdapterUtil/lisaaTypename";
+  adaptAineistot,
+  adaptIlmoituksenVastaanottajat,
+  adaptKielitiedotByAddingTypename,
+  adaptVelhoByAddingTypename,
+  adaptYhteystiedotByAddingTypename,
+} from "../common";
+import { fileService } from "../../../files/fileService";
 
 export function adaptHyvaksymisPaatosVaihe(
   dbProjekti: DBProjekti,
@@ -38,7 +38,7 @@ export function adaptHyvaksymisPaatosVaihe(
     hyvaksymisPaatosVaihePDFt: adaptHyvaksymisPaatosVaihePDFPaths(dbProjekti.oid, hyvaksymisPaatosVaihePDFt),
     aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
     hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto),
-    kuulutusYhteystiedot: lisaaYhteystietoTypenameListaan(kuulutusYhteystiedot),
+    kuulutusYhteystiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
     hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
     hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,
@@ -66,15 +66,15 @@ export function adaptHyvaksymisPaatosVaiheJulkaisut(
       return {
         ...fieldsToCopyAsIs,
         __typename: "HyvaksymisPaatosVaiheJulkaisu",
-        kielitiedot: lisaaKielitiedotTypename(kielitiedot),
+        kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
         hyvaksymisPaatosVaihePDFt: adaptHyvaksymisPaatosVaihePDFPaths(oid, hyvaksymisPaatosVaihePDFt),
         aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
         hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto),
         hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
         hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,
-        kuulutusYhteystiedot: lisaaYhteystietoTypenameListaan(kuulutusYhteystiedot),
+        kuulutusYhteystiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot),
         ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-        velho: lisaaVelhoTypename(velho),
+        velho: adaptVelhoByAddingTypename(velho),
       };
     });
   }

@@ -1,5 +1,5 @@
 import { describe, it } from "mocha";
-import { findUpdatesFromVelho, synchronizeUpdatesFromVelho } from "../../src/handler/projektiHandler";
+import { findUpdatesFromVelho, synchronizeUpdatesFromVelho } from "../../src/projekti/projektiHandler";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import * as sinon from "sinon";
 import { projektiDatabase } from "../../src/database/projektiDatabase";

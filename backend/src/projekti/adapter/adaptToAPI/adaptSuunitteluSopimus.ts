@@ -1,6 +1,6 @@
-import { SuunnitteluSopimus } from "../../database/model";
-import * as API from "../../../../common/graphql/apiModel";
-import { fileService } from "../../files/fileService";
+import { SuunnitteluSopimus } from "../../../database/model";
+import * as API from "../../../../../common/graphql/apiModel";
+import { fileService } from "../../../files/fileService";
 
 export function adaptSuunnitteluSopimus(
   oid: string,

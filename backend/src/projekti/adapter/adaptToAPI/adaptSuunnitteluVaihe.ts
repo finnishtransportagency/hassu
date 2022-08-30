@@ -1,22 +1,22 @@
 import {
+  LocalizedMap,
   Palaute,
   SuunnitteluVaihe,
   Vuorovaikutus,
-  VuorovaikutusTilaisuus,
-  LocalizedMap,
   VuorovaikutusPDF,
-} from "../../database/model";
-import * as API from "../../../../common/graphql/apiModel";
+  VuorovaikutusTilaisuus,
+} from "../../../database/model";
+import * as API from "../../../../../common/graphql/apiModel";
 import {
-  adaptLinkki as lisaaLinkkiTypename,
-  adaptLinkkiList as lisaaLinkkiTypenameListaan,
-  adaptYhteystiedot as lisaaYhteystietoTypenameListaan,
-} from "../commonAdapterUtil/lisaaTypename";
-import { adaptHankkeenKuvaus } from "../commonAdapterUtil/adaptHankkeenKuvaus";
-import { adaptAineistot } from "../commonAdapterUtil/adaptAineistot";
-import { fileService } from "../../files/fileService";
+  adaptAineistot,
+  adaptHankkeenKuvaus,
+  adaptLinkkiByAddingTypename,
+  adaptLinkkiListByAddingTypename,
+  adaptYhteystiedotByAddingTypename,
+} from "../common";
+import { fileService } from "../../../files/fileService";
 
-export default function adaptSuunnitteluVaihe(
+export function adaptSuunnitteluVaihe(
   oid: string,
   suunnitteluVaihe: SuunnitteluVaihe,
   vuorovaikutukset: Array<Vuorovaikutus>,
@@ -46,8 +46,8 @@ function adaptVuorovaikutukset(oid: string, vuorovaikutukset: Array<Vuorovaikutu
         ({
           ...vuorovaikutus,
           vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
-          suunnittelumateriaali: lisaaLinkkiTypename(vuorovaikutus.suunnittelumateriaali),
-          videot: lisaaLinkkiTypenameListaan(vuorovaikutus.videot),
+          suunnittelumateriaali: adaptLinkkiByAddingTypename(vuorovaikutus.suunnittelumateriaali),
+          videot: adaptLinkkiListByAddingTypename(vuorovaikutus.videot),
           esittelyaineistot: adaptAineistot(vuorovaikutus.esittelyaineistot),
           suunnitelmaluonnokset: adaptAineistot(vuorovaikutus.suunnitelmaluonnokset),
           vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(oid, vuorovaikutus.vuorovaikutusPDFt),
@@ -64,7 +64,7 @@ function adaptVuorovaikutusTilaisuudet(
   if (vuorovaikutusTilaisuudet) {
     return vuorovaikutusTilaisuudet.map((vuorovaikutusTilaisuus) => ({
       ...vuorovaikutusTilaisuus,
-      esitettavatYhteystiedot: lisaaYhteystietoTypenameListaan(vuorovaikutusTilaisuus.esitettavatYhteystiedot),
+      esitettavatYhteystiedot: adaptYhteystiedotByAddingTypename(vuorovaikutusTilaisuus.esitettavatYhteystiedot),
       __typename: "VuorovaikutusTilaisuus",
     }));
   }

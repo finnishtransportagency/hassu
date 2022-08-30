@@ -1,9 +1,7 @@
-import { KasittelynTila, Hyvaksymispaatos } from "../../database/model";
-import * as API from "../../../../common/graphql/apiModel";
+import { KasittelynTila, Hyvaksymispaatos } from "../../../database/model";
+import * as API from "../../../../../common/graphql/apiModel";
 
-export default function adaptKasittelynTila(
-  kasittelynTila?: KasittelynTila | null
-): API.KasittelynTila | undefined | null {
+export function adaptKasittelynTila(kasittelynTila?: KasittelynTila | null): API.KasittelynTila | undefined | null {
   if (kasittelynTila) {
     const { hyvaksymispaatos, ensimmainenJatkopaatos, toinenJatkopaatos } = kasittelynTila;
     return {

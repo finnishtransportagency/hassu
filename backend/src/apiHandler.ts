@@ -32,7 +32,7 @@ import {
   findUpdatesFromVelho,
   loadProjekti,
   synchronizeUpdatesFromVelho,
-} from "./handler/projektiHandler";
+} from "./projekti/projektiHandler";
 import { apiConfig } from "../../common/abstractApi";
 import { lataaAsiakirja } from "./handler/asiakirjaHandler";
 import { createUploadURLForFile } from "./handler/fileHandler";

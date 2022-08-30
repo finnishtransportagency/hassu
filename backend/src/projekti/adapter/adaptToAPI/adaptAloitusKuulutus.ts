@@ -1,18 +1,18 @@
-import { AloitusKuulutus, AloitusKuulutusJulkaisu, LocalizedMap, AloitusKuulutusPDF } from "../../database/model";
-import * as API from "../../../../common/graphql/apiModel";
-import { adaptHankkeenKuvaus } from "../commonAdapterUtil/adaptHankkeenKuvaus";
+import { AloitusKuulutus, AloitusKuulutusJulkaisu, AloitusKuulutusPDF, LocalizedMap } from "../../../database/model";
+import * as API from "../../../../../common/graphql/apiModel";
 import {
-  adaptVelho as lisaaVelhoTypename,
-  adaptKielitiedot as lisaaKielitiedotTypename,
-  adaptYhteystiedot as lisaaYhteystietoTypenameListaan,
-} from "../commonAdapterUtil/lisaaTypename";
+  adaptHankkeenKuvaus,
+  adaptKielitiedotByAddingTypename,
+  adaptVelhoByAddingTypename,
+  adaptYhteystiedotByAddingTypename,
+} from "../common";
 import { adaptSuunnitteluSopimus } from "./adaptSuunitteluSopimus";
-import { fileService } from "../../files/fileService";
+import { fileService } from "../../../files/fileService";
 
 export function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.AloitusKuulutus | undefined {
   if (kuulutus) {
     const { esitettavatYhteystiedot, ...otherKuulutusFields } = kuulutus;
-    const yhteystiedot = lisaaYhteystietoTypenameListaan(esitettavatYhteystiedot);
+    const yhteystiedot = adaptYhteystiedotByAddingTypename(esitettavatYhteystiedot);
     return {
       __typename: "AloitusKuulutus",
       ...otherKuulutusFields,
@@ -34,10 +34,10 @@ export function adaptAloitusKuulutusJulkaisut(
         ...fieldsToCopyAsIs,
         __typename: "AloitusKuulutusJulkaisu",
         hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
-        yhteystiedot: lisaaYhteystietoTypenameListaan(yhteystiedot),
-        velho: lisaaVelhoTypename(velho),
+        yhteystiedot: adaptYhteystiedotByAddingTypename(yhteystiedot),
+        velho: adaptVelhoByAddingTypename(velho),
         suunnitteluSopimus: adaptSuunnitteluSopimus(oid, suunnitteluSopimus),
-        kielitiedot: lisaaKielitiedotTypename(kielitiedot),
+        kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
         aloituskuulutusPDFt: adaptJulkaisuPDFPaths(oid, julkaisu.aloituskuulutusPDFt),
       };
     });

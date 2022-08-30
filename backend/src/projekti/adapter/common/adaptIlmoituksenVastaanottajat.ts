@@ -1,4 +1,4 @@
-import * as API from "../../../../common/graphql/apiModel";
+import * as API from "../../../../../common/graphql/apiModel";
 
 export function adaptIlmoituksenVastaanottajat(
   vastaanottajat: API.IlmoituksenVastaanottajat | null | undefined

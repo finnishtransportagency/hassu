@@ -1,13 +1,13 @@
-import { DBProjekti, Vuorovaikutus, VuorovaikutusTilaisuus } from "../../database/model";
-import * as API from "../../../../common/graphql/apiModel";
-import { findVuorovaikutusByNumber } from "../../util/findVuorovaikutusByNumber";
+import { DBProjekti, Vuorovaikutus, VuorovaikutusTilaisuus } from "../../../database/model";
+import * as API from "../../../../../common/graphql/apiModel";
+import { findVuorovaikutusByNumber } from "../../../util/findVuorovaikutusByNumber";
 import {
   AineistoChangedEvent,
   ProjektiAdaptationResult,
   ProjektiEventType,
   VuorovaikutusPublishedEvent,
 } from "../projektiAdapter";
-import { IllegalArgumentError } from "../../error/IllegalArgumentError";
+import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
 import { adaptKayttajatunnusList } from "./adaptKayttajatunnusList";
 import { adaptAineistotToSave, adaptIlmoituksenVastaanottajatToSave, adaptYhteystiedotToSave } from "./common";
 

@@ -1,8 +1,7 @@
-import { DBProjekti, SuunnitteluVaihe } from "../../database/model";
-import * as API from "../../../../common/graphql/apiModel";
-import { IllegalArgumentError } from "../../error/IllegalArgumentError";
-import { adaptHankkeenKuvaus } from "../commonAdapterUtil/adaptHankkeenKuvaus";
-import { findPublishedAloitusKuulutusJulkaisu } from "../commonAdapterUtil/util";
+import { DBProjekti, SuunnitteluVaihe } from "../../../database/model";
+import * as API from "../../../../../common/graphql/apiModel";
+import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
+import { adaptHankkeenKuvaus, findPublishedAloitusKuulutusJulkaisu } from "../common";
 
 export function adaptSuunnitteluVaiheToSave(
   dbProjekti: DBProjekti,

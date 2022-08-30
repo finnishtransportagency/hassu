@@ -1,5 +1,5 @@
-import * as API from "../../../../common/graphql/apiModel";
-import { AloitusKuulutus } from "../../database/model";
+import * as API from "../../../../../common/graphql/apiModel";
+import { AloitusKuulutus } from "../../../database/model";
 import { adaptHankkeenKuvausToSave, adaptIlmoituksenVastaanottajatToSave } from "./common";
 
 export function adaptAloitusKuulutusToSave(

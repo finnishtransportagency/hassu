@@ -1,5 +1,5 @@
-import { AloitusKuulutusJulkaisu } from "../../database/model";
-import * as API from "../../../../common/graphql/apiModel";
+import { AloitusKuulutusJulkaisu } from "../../../database/model";
+import * as API from "../../../../../common/graphql/apiModel";
 
 export function findPublishedAloitusKuulutusJulkaisu(
   aloitusKuulutusJulkaisut: AloitusKuulutusJulkaisu[]

@@ -12,27 +12,28 @@ import {
   Vuorovaikutus,
   VuorovaikutusPDF,
   VuorovaikutusTilaisuus,
-} from "../database/model";
-import * as API from "../../../common/graphql/apiModel";
+} from "../../database/model";
+import * as API from "../../../../common/graphql/apiModel";
 import {
   HyvaksymisPaatosVaiheJulkaisuJulkinen,
   NahtavillaoloVaiheJulkaisuJulkinen,
-} from "../../../common/graphql/apiModel";
+} from "../../../../common/graphql/apiModel";
 import pickBy from "lodash/pickBy";
 import dayjs, { Dayjs } from "dayjs";
 import { isDateInThePast } from "./projektiAdapter";
-import { fileService } from "../files/fileService";
-import { log } from "../logger";
-import { parseDate } from "../util/dateUtil";
-import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
+import { fileService } from "../../files/fileService";
+import { log } from "../../logger";
+import { parseDate } from "../../util/dateUtil";
+import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import {
-  adaptKielitiedot as lisaaKielitiedotTypename,
-  adaptLinkki as lisaaLinkkiTypename,
-  adaptLinkkiList as lisaaLinkkiTypenameListaan,
-  adaptYhteystiedot as lisaaYhteystietoTypenameListaan,
-} from "./commonAdapterUtil/lisaaTypename";
-import { adaptHankkeenKuvaus } from "./commonAdapterUtil/adaptHankkeenKuvaus";
-import { findJulkaisuByStatus, findPublishedAloitusKuulutusJulkaisu } from "./commonAdapterUtil/util";
+  adaptHankkeenKuvaus,
+  adaptKielitiedotByAddingTypename,
+  adaptLinkkiByAddingTypename,
+  adaptLinkkiListByAddingTypename,
+  adaptYhteystiedotByAddingTypename,
+  findJulkaisuByStatus,
+  findPublishedAloitusKuulutusJulkaisu,
+} from "./common";
 
 class ProjektiAdapterJulkinen {
   private applyStatus(projekti: API.ProjektiJulkinen) {
@@ -116,7 +117,7 @@ class ProjektiAdapterJulkinen {
     const projekti: API.ProjektiJulkinen = {
       __typename: "ProjektiJulkinen",
       oid: dbProjekti.oid,
-      kielitiedot: lisaaKielitiedotTypename(dbProjekti.kielitiedot),
+      kielitiedot: adaptKielitiedotByAddingTypename(dbProjekti.kielitiedot),
       velho: adaptVelho(dbProjekti.velho),
       euRahoitus: dbProjekti.euRahoitus,
       suunnitteluVaihe,
@@ -148,10 +149,10 @@ class ProjektiAdapterJulkinen {
           kuulutusPaiva: julkaisu.kuulutusPaiva,
           siirtyySuunnitteluVaiheeseen: julkaisu.siirtyySuunnitteluVaiheeseen,
           hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
-          yhteystiedot: lisaaYhteystietoTypenameListaan(yhteystiedot),
+          yhteystiedot: adaptYhteystiedotByAddingTypename(yhteystiedot),
           velho: adaptVelho(velho),
           suunnitteluSopimus: this.adaptSuunnitteluSopimus(oid, suunnitteluSopimus),
-          kielitiedot: lisaaKielitiedotTypename(kielitiedot),
+          kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
           aloituskuulutusPDFt: this.adaptJulkaisuPDFPaths(oid, julkaisu.aloituskuulutusPDFt),
           tila: julkaisu.tila,
         },
@@ -243,7 +244,7 @@ class ProjektiAdapterJulkinen {
         kuulutusVaihePaattyyPaiva,
         muistutusoikeusPaattyyPaiva,
         kuulutusYhteysHenkilot: adaptUsernamesToProjektiHenkiloIds(kuulutusYhteysHenkilot, projektiHenkilot),
-        kuulutusYhteystiedot: lisaaYhteystietoTypenameListaan(kuulutusYhteystiedot),
+        kuulutusYhteystiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot),
         velho: adaptVelho(velho),
       };
     }
@@ -284,9 +285,9 @@ class ProjektiAdapterJulkinen {
         kuulutusPaiva,
         kuulutusVaihePaattyyPaiva,
         kuulutusYhteysHenkilot: adaptUsernamesToProjektiHenkiloIds(kuulutusYhteysHenkilot, projektiHenkilot),
-        kuulutusYhteystiedot: lisaaYhteystietoTypenameListaan(kuulutusYhteystiedot),
+        kuulutusYhteystiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot),
         velho: adaptVelho(velho),
-        kielitiedot: lisaaKielitiedotTypename(kielitiedot),
+        kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
         hallintoOikeus,
       };
     }
@@ -382,8 +383,8 @@ function adaptVuorovaikutukset(
               vuorovaikutus.vuorovaikutusTilaisuudet,
               projektiHenkilot
             ),
-            videot: lisaaLinkkiTypenameListaan(vuorovaikutus.videot),
-            suunnittelumateriaali: lisaaLinkkiTypename(vuorovaikutus.suunnittelumateriaali),
+            videot: adaptLinkkiListByAddingTypename(vuorovaikutus.videot),
+            suunnittelumateriaali: adaptLinkkiByAddingTypename(vuorovaikutus.suunnittelumateriaali),
             esittelyaineistot: adaptAineistotJulkinen(
               dbProjekti.oid,
               vuorovaikutus.esittelyaineistot,
@@ -419,7 +420,7 @@ function adaptVuorovaikutusTilaisuudet(
         vuorovaikutusTilaisuus.projektiYhteysHenkilot,
         projektiHenkilot
       ),
-      esitettavatYhteystiedot: lisaaYhteystietoTypenameListaan(vuorovaikutusTilaisuus.esitettavatYhteystiedot),
+      esitettavatYhteystiedot: adaptYhteystiedotByAddingTypename(vuorovaikutusTilaisuus.esitettavatYhteystiedot),
       __typename: "VuorovaikutusTilaisuus",
     }));
   }
@@ -496,7 +497,7 @@ function adaptAndMergeYhteystiedot(dbProjekti: DBProjekti, vuorovaikutus: Vuorov
   if (!vuorovaikutusYhteystiedot) {
     vuorovaikutusYhteystiedot = [];
   }
-  const yhteystiedot = lisaaYhteystietoTypenameListaan(vuorovaikutus.esitettavatYhteystiedot);
+  const yhteystiedot = adaptYhteystiedotByAddingTypename(vuorovaikutus.esitettavatYhteystiedot);
   if (yhteystiedot) {
     vuorovaikutusYhteystiedot = vuorovaikutusYhteystiedot.concat(yhteystiedot);
   }
