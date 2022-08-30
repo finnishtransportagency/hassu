@@ -194,11 +194,9 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
           <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
             <input type="hidden" {...register("oid")} />
             <Section>
-              <ProjektiErrorNotification
-                disableValidation={isLoadingProjekti}
-                projekti={projekti}
-                validationSchema={loadedProjektiValidationSchema}
-              />
+              {!isLoadingProjekti && (
+                <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />
+              )}
               <ProjektiPerustiedot projekti={projekti} />
               <Stack direction="column">
                 {projekti?.velho?.linkki && <ExtLink href={projekti?.velho?.linkki}>Hankesivu</ExtLink>}

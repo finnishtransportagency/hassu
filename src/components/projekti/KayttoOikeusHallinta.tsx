@@ -54,30 +54,38 @@ function KayttoOikeusHallinta({ disableFields, onKayttajatUpdate }: Props) {
     name: "kayttoOikeudet",
   });
 
-  const { projektiPaallikot, muutHenkilot } = fields?.reduce<{
-    projektiPaallikot: FieldArrayWithId<RequiredInputValues, "kayttoOikeudet", "id">[];
-    muutHenkilot: FieldArrayWithId<RequiredInputValues, "kayttoOikeudet", "id">[];
-  }>(
-    (acc, kayttoOikeus) => {
-      if (kayttoOikeus.rooli === ProjektiRooli.PROJEKTIPAALLIKKO) {
-        acc.projektiPaallikot.push(kayttoOikeus);
-      } else {
-        acc.muutHenkilot.push(kayttoOikeus);
-      }
-      return acc;
-    },
-    { projektiPaallikot: [], muutHenkilot: [] }
-  ) || { projektiPaallikot: [], muutHenkilot: [] };
+  const { projektiPaallikot, muutHenkilot } = useMemo(
+    () =>
+      fields?.reduce<{
+        projektiPaallikot: FieldArrayWithId<RequiredInputValues, "kayttoOikeudet", "id">[];
+        muutHenkilot: FieldArrayWithId<RequiredInputValues, "kayttoOikeudet", "id">[];
+      }>(
+        (acc, kayttoOikeus) => {
+          if (kayttoOikeus.rooli === ProjektiRooli.PROJEKTIPAALLIKKO) {
+            acc.projektiPaallikot.push(kayttoOikeus);
+          } else {
+            acc.muutHenkilot.push(kayttoOikeus);
+          }
+          return acc;
+        },
+        { projektiPaallikot: [], muutHenkilot: [] }
+      ) || { projektiPaallikot: [], muutHenkilot: [] },
+    [fields]
+  );
 
-  const uidList = [...projektiPaallikot, ...muutHenkilot]
-    .map((kayttoOikeus) => kayttoOikeus.kayttajatunnus)
-    .filter((kayttajatunnus) => !!kayttajatunnus);
+  const uidList = useMemo(
+    () =>
+      [...projektiPaallikot, ...muutHenkilot]
+        .map((kayttoOikeus) => kayttoOikeus.kayttajatunnus)
+        .filter((kayttajatunnus) => !!kayttajatunnus),
+    [muutHenkilot, projektiPaallikot]
+  );
 
   const {
     data: kayttajat,
     error: kayttajatLoadError,
     mutate,
-  } = useSWR([apiConfig.listaaKayttajat.graphql, uidList], kayttajatLoader, { fallbackData: fallbackKayttajat });
+  } = useSWR([apiConfig.listaaKayttajat.graphql, uidList], kayttajatLoader);
 
   useEffect(() => {
     setFallbackKayttajat(kayttajat || []);

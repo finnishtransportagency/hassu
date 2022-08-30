@@ -1,9 +1,8 @@
-import React, { ReactElement, ReactNode, useState } from "react";
+import React, { ReactElement, ReactNode, useMemo } from "react";
 import { Projekti, ProjektiPaallikkoVirheTyyppi } from "../../../common/graphql/apiModel";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { ProjektiSchema, ProjektiTestType } from "src/schemas/projekti";
 import { ValidationError } from "yup";
-import { useEffect } from "react";
 import HassuLink from "@components/HassuLink";
 import ExtLink from "@components/ExtLink";
 
@@ -12,7 +11,6 @@ const velhobaseurl = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-";
 interface Props {
   validationSchema: ProjektiSchema;
   projekti?: Projekti | null;
-  disableValidation?: boolean;
 }
 
 type ErrorNotification = string | JSX.Element | ReactNode | null;
@@ -74,26 +72,18 @@ const projektiErrorToNotificationMap = new Map<ProjektiTestType, ErrorNotificati
   ],
 ]);
 
-export default function ProjektiErrorNotification({
-  validationSchema,
-  projekti,
-  disableValidation,
-}: Props): ReactElement {
-  const [notificationMessage, setNotificationMessage] = useState<ErrorNotification>(null);
-
-  useEffect(() => {
+export default function ProjektiErrorNotification({ validationSchema, projekti }: Props): ReactElement {
+  const notificationMessage = useMemo<ErrorNotification>(() => {
     try {
-      if (!disableValidation) {
-        validationSchema.validateSync(projekti);
-      }
-      setNotificationMessage(null);
+      validationSchema.validateSync(projekti);
+      return null;
     } catch (err) {
       let message: ErrorNotification = null;
       if (err instanceof ValidationError && Object.values(ProjektiTestType).includes(err.type as ProjektiTestType)) {
         message = projektiErrorToNotificationMap.get(err.type as ProjektiTestType)?.(projekti);
       }
-      setNotificationMessage(message || "Tuntematon virhe projektissa.");
+      return message || "Tuntematon virhe projektissa.";
     }
-  }, [disableValidation, validationSchema, projekti]);
+  }, [validationSchema, projekti]);
   return notificationMessage ? <Notification type={NotificationType.ERROR}>{notificationMessage}</Notification> : <></>;
 }

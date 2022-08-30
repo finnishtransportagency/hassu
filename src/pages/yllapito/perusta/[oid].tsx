@@ -1,10 +1,10 @@
 import { PageProps } from "@pages/_app";
-import React, { ReactElement, useEffect, useCallback } from "react";
-import { useProjekti } from "src/hooks/useProjekti";
+import React, { ReactElement, useCallback, FC, useMemo } from "react";
+import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { useRouter } from "next/router";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import ProjektiPerustiedot from "@components/projekti/ProjektiPerustiedot";
-import KayttoOikeusHallinta, { defaultKayttaja } from "@components/projekti/KayttoOikeusHallinta";
+import KayttoOikeusHallinta from "@components/projekti/KayttoOikeusHallinta";
 import { api, TallennaProjektiInput, Kayttaja } from "@services/api";
 import * as Yup from "yup";
 import { useState } from "react";
@@ -21,6 +21,7 @@ import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import Section from "@components/layout/Section";
 import HassuSpinner from "@components/HassuSpinner";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
+import { KeyedMutator } from "swr";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
@@ -40,21 +41,58 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
 ]);
 
 export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactElement {
+  useProjektiBreadcrumbs(setRouteLabels);
+
+  const { data: projekti, error: projektiLoadError, mutate: mutateProjekti } = useProjekti();
+
+  return (
+    <section>
+      <h1>Projektin Perustaminen</h1>
+      <h2>{projekti?.velho.nimi || "-"}</h2>
+      {projekti && (
+        <PerustaProjektiForm
+          projekti={projekti}
+          projektiLoadError={projektiLoadError}
+          reloadProjekti={mutateProjekti}
+        />
+      )}
+    </section>
+  );
+}
+
+interface PerustaProjektiFormProps {
+  projekti: ProjektiLisatiedolla;
+  reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
+  projektiLoadError: any;
+}
+
+const defaultFormValues = (projekti: ProjektiLisatiedolla) =>
+  ({
+    oid: projekti.oid,
+    kayttoOikeudet:
+      projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, rooli, esitetaanKuulutuksessa }) => ({
+        kayttajatunnus,
+        puhelinnumero: puhelinnumero || "",
+        rooli,
+        esitetaanKuulutuksessa,
+      })) || [],
+  } as FormValues);
+
+const PerustaProjektiForm: FC<PerustaProjektiFormProps> = ({ projekti, projektiLoadError, reloadProjekti }) => {
   const router = useRouter();
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
 
-  const [formContext, setFormContext] = useState<KayttoOikeudetSchemaContext>({ kayttajat: [] });
+  const defaultValues = useMemo(() => defaultFormValues(projekti), [projekti]);
 
-  const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
-  const { data: projekti, error: projektiLoadError, mutate: mutateProjekti } = useProjekti();
   const isLoadingProjekti = !projekti && !projektiLoadError;
   const projektiHasError = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
   const disableFormEdit = projektiHasError || isLoadingProjekti || formIsSubmitting;
-  useProjektiBreadcrumbs(setRouteLabels);
+
+  const [formContext, setFormContext] = useState<KayttoOikeudetSchemaContext>({ kayttajat: [] });
 
   const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(validationSchema, { abortEarly: false, recursive: true }),
-    defaultValues: { kayttoOikeudet: [defaultKayttaja] },
+    defaultValues,
     mode: "onChange",
     reValidateMode: "onChange",
     context: formContext,
@@ -63,19 +101,20 @@ export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactEle
   const useFormReturn = useForm<FormValues>(formOptions);
 
   const {
-    reset,
     handleSubmit,
     formState: { isDirty },
+    reset,
   } = useFormReturn as UseFormReturn<FormValues>;
 
-  useLeaveConfirm(isDirty);
+  useLeaveConfirm(isDirty && !formIsSubmitting);
 
   const submitCreateAnotherOne = async (formData: FormValues) => {
     deleteFieldArrayIds(formData?.kayttoOikeudet);
+    reset(formData);
     setFormIsSubmitting(true);
     try {
       await api.tallennaProjekti(formData);
-      await mutateProjekti();
+      await reloadProjekti();
       router.push(`/yllapito/perusta`);
     } catch (e) {
       log.log("OnSubmit Error", e);
@@ -85,32 +124,17 @@ export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactEle
 
   const submitMoveToProject = async (formData: FormValues) => {
     deleteFieldArrayIds(formData?.kayttoOikeudet);
+    reset(formData);
     setFormIsSubmitting(true);
     try {
       await api.tallennaProjekti(formData);
-      await mutateProjekti();
-      router.push(`/yllapito/projekti/${oid}`);
+      await reloadProjekti();
+      router.push(`/yllapito/projekti/${projekti.oid}`);
     } catch (e) {
       log.log("OnSubmit Error", e);
     }
     setFormIsSubmitting(false);
   };
-
-  useEffect(() => {
-    if (projekti && projekti.oid) {
-      const tallentamisTiedot: FormValues = {
-        oid: projekti.oid,
-        kayttoOikeudet:
-          projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, rooli, esitetaanKuulutuksessa }) => ({
-            kayttajatunnus,
-            puhelinnumero: puhelinnumero || "",
-            rooli,
-            esitetaanKuulutuksessa,
-          })) || [],
-      };
-      reset(tallentamisTiedot);
-    }
-  }, [projekti, reset]);
 
   const onKayttajatUpdate = useCallback(
     (kayttajat: Kayttaja[]) => {
@@ -120,18 +144,14 @@ export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactEle
   );
 
   return (
-    <section>
-      <h1>Projektin Perustaminen</h1>
-      <h2>{projekti?.velho.nimi || "-"}</h2>
+    <>
       <FormProvider {...useFormReturn}>
         <form>
           <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
             <Section>
-              <ProjektiErrorNotification
-                projekti={projekti}
-                validationSchema={loadedProjektiValidationSchema}
-                disableValidation={isLoadingProjekti}
-              />
+              {!formIsSubmitting && !isLoadingProjekti && (
+                <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />
+              )}
               <ProjektiPerustiedot projekti={projekti} />
             </Section>
             <KayttoOikeusHallinta disableFields={disableFormEdit} onKayttajatUpdate={onKayttajatUpdate} />
@@ -158,6 +178,6 @@ export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactEle
         </form>
       </FormProvider>
       <HassuSpinner open={formIsSubmitting || isLoadingProjekti} />
-    </section>
+    </>
   );
-}
+};

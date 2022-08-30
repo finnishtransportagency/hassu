@@ -112,11 +112,9 @@ export default function Henkilot({ setRouteLabels }: PageProps): ReactElement {
       <FormProvider {...useFormReturn}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
-            <ProjektiErrorNotification
-              projekti={projekti}
-              disableValidation={isLoadingProjekti}
-              validationSchema={loadedProjektiValidationSchema}
-            />
+            {(!formIsSubmitting || !isLoadingProjekti) && (
+              <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />
+            )}
             <KayttoOikeusHallinta disableFields={disableFormEdit} onKayttajatUpdate={onKayttajatUpdate} />
             <Section noDivider>
               <HassuStack alignItems="flex-end">

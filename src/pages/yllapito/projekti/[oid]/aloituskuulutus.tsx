@@ -353,11 +353,9 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
             <form>
               <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
                 <Section>
-                  <ProjektiErrorNotification
-                    projekti={projekti}
-                    validationSchema={loadedProjektiValidationSchema}
-                    disableValidation={isLoadingProjekti}
-                  />
+                  {!isLoadingProjekti && (
+                    <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />
+                  )}
                   {projekti.aloitusKuulutus?.palautusSyy && (
                     <Notification type={NotificationType.WARN}>
                       {"Aloituskuulutus on palautettu korjattavaksi. Palautuksen syy: " +
