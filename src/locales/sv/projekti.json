@@ -94,6 +94,10 @@
   "ui-otsikot": {
     "kuulutus_suunnitelman_alkamisesta": "RUOTSIKSI Kuulutus suunnittelun aloittamisesta",
     "kuulutus_suunnitelman_hyvaksymisesta": "RUOTSIKSI Kuulutus suunnitelman hyväksymisestä",
+    "kuulutus_suunnitelman_nahtaville_asettamisesta": "RUOTSIKSI Kuulutus suunnitelman nähtäville asettamisesta",
+    "kuulutus_suunnitelman_hyvaksymispaatoksestä": "RUOTSIKSI Kuulutus suunnitelman hyväksymispäätöksestä",
+    "kuulutus_jatkopaatoksesta": "RUOTSIKSI Kuulutus jatkopäätöksestä",
+    "kuulutus_suunnitelman_hyvaksymispaatoksen_voimassaoloajan_pidentamisesta": "RUOTSIKSI Kuulutus suunnitelman hyväksymispäätöksen voimassaoloajan pidentämisestä",
     "nahtavillaoloaika": "RUOTSIKSI Nähtävilläoloaika",
     "hankkeen_sijainti": "RUOTSIKSI Hankkeen sijainti",
     "suunnitelman_tyyppi": "RUOTSIKSI Suunnitelman tyyppi",

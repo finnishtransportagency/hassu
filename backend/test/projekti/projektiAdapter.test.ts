@@ -1,6 +1,5 @@
 import { describe, it } from "mocha";
 import { ProjektiFixture } from "../fixture/projektiFixture";
-import cloneDeep from "lodash/cloneDeep";
 import { projektiAdapter } from "../../src/projekti/adapter/projektiAdapter";
 import { findPublishedAloitusKuulutusJulkaisu } from "../../src/projekti/adapter/common";
 
@@ -16,7 +15,7 @@ describe("projektiAdapter", () => {
   });
 
   it("should prevent suunnitteluvaihe publishing without valid aloituskuulutusjulkaisu", async () => {
-    const projekti = cloneDeep(fixture.dbProjekti2);
+    const projekti = fixture.dbProjekti2();
 
     projekti.aloitusKuulutusJulkaisut = undefined;
     projekti.suunnitteluVaihe = undefined;
@@ -31,7 +30,7 @@ describe("projektiAdapter", () => {
   });
 
   it("should allow suunnitteluvaihe publishing with a valid aloituskuulutusjulkaisu", async () => {
-    const projekti = cloneDeep(fixture.dbProjekti2);
+    const projekti = fixture.dbProjekti2();
 
     expect(findPublishedAloitusKuulutusJulkaisu(projekti.aloitusKuulutusJulkaisut)).to.not.be.empty;
     expect(projekti.suunnitteluVaihe).to.be.undefined;
@@ -44,7 +43,7 @@ describe("projektiAdapter", () => {
   });
 
   it("should prevent saving vuorovaikutus without saved suunnitteluvaihe", async () => {
-    const projekti = cloneDeep(fixture.dbProjekti2);
+    const projekti = fixture.dbProjekti2();
     projekti.suunnitteluVaihe = undefined;
 
     // Validate that there is an error if trying to publish suunnitteluvaihe before there is a published aloituskuulutusjulkaisu
@@ -60,7 +59,7 @@ describe("projektiAdapter", () => {
   });
 
   it("should allow saving vuorovaikutus with saved suunnitteluvaihe", async () => {
-    const projekti = cloneDeep(fixture.dbProjekti2);
+    const projekti = fixture.dbProjekti2();
     projekti.suunnitteluVaihe = { hankkeenKuvaus: fixture.hankkeenKuvausSuunnitteluVaiheessa };
 
     const result = await projektiAdapter.adaptProjektiToSave(projekti, {

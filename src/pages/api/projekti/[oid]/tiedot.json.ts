@@ -1,9 +1,6 @@
+import { handleSuunnitelmaTiedotRequest } from "@services/syoteService";
 import { NextApiRequest, NextApiResponse } from "next";
-import handlePdfRequest from "src/util/handlePdfRequest";
 
 export default async function render(req: NextApiRequest, res: NextApiResponse) {
-  await handlePdfRequest({
-    req,
-    res,
-  });
+  await handleSuunnitelmaTiedotRequest(req, res);
 }

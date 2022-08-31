@@ -17,7 +17,7 @@ const { expect } = require("chai");
 describe("dynamoDBStreamHandler", () => {
   let fixture: ProjektiSearchFixture;
   const projektiFixture: ProjektiFixture = new ProjektiFixture();
-  const projekti = projektiFixture.dbProjekti2;
+  const projekti = projektiFixture.dbProjekti2();
   let indexProjektiStub: sinon.SinonStub;
   let removeProjektiStub: sinon.SinonStub;
   let indexProjektiSuomiStub: sinon.SinonStub;

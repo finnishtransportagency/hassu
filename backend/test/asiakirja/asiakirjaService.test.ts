@@ -24,7 +24,6 @@ import {
   SuunnitteluVaihe,
   Vuorovaikutus,
 } from "../../src/database/model";
-import cloneDeep from "lodash/cloneDeep";
 import { translate } from "../../src/util/localization";
 import { formatList } from "../../src/asiakirja/suunnittelunAloitus/KutsuAdapter";
 import sinon from "sinon";
@@ -72,7 +71,7 @@ describe("asiakirjaService", async () => {
   }
 
   it("should generate kuulutus pdf succesfully", async () => {
-    const projekti = projektiFixture.dbProjekti1; // Suomi+Ruotsi
+    const projekti = projektiFixture.dbProjekti1(); // Suomi+Ruotsi
     const aloitusKuulutusJulkaisu = asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projekti);
     expect(aloitusKuulutusJulkaisu).toMatchSnapshot();
     const aloitusKuulutusTypes = [AsiakirjaTyyppi.ALOITUSKUULUTUS, AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA];
@@ -116,7 +115,7 @@ describe("asiakirjaService", async () => {
   }
 
   it("should generate kutsu 20T/R pdf succesfully", async () => {
-    const projekti: DBProjekti = cloneDeep(projektiFixture.dbProjekti1); // Suomi+Ruotsi
+    const projekti: DBProjekti = projektiFixture.dbProjekti1(); // Suomi+Ruotsi
     projekti.velho.suunnittelustaVastaavaViranomainen = Viranomainen.UUDENMAAN_ELY;
     projekti.velho.tyyppi = ProjektiTyyppi.TIE;
     const originalNimi = projekti.velho.nimi;
@@ -179,7 +178,7 @@ describe("asiakirjaService", async () => {
         nimi: "UUDENMAAN_ELY",
       } as KirjaamoOsoite,
     ]);
-    const projekti: DBProjekti = cloneDeep(projektiFixture.dbProjekti2);
+    const projekti: DBProjekti = projektiFixture.dbProjekti2();
     projekti.velho.tyyppi = ProjektiTyyppi.TIE;
     projekti.velho.vaylamuoto = ["tie"];
 
@@ -232,7 +231,7 @@ describe("asiakirjaService", async () => {
   it("should generate kuulutukset for Hyvaksymispaatos succesfully", async () => {
     const languages = [Kieli.SUOMI, Kieli.RUOTSI];
     for (const kieli of languages) {
-      const projekti: DBProjekti = cloneDeep(projektiFixture.dbProjekti2);
+      const projekti: DBProjekti = projektiFixture.dbProjekti2();
       // ----------
       projekti.velho.tyyppi = ProjektiTyyppi.TIE;
       projekti.velho.vaylamuoto = ["tie"];

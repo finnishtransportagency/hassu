@@ -3,7 +3,7 @@ import * as sinon from "sinon";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import DynamoDB from "aws-sdk/clients/dynamodb";
-import { DBProjekti } from "../../src/database/model/projekti";
+import { DBProjekti } from "../../src/database/model";
 
 const { expect } = require("chai");
 
@@ -36,7 +36,7 @@ describe("apiHandler", () => {
           },
         });
 
-        await projektiDatabase.saveProjekti(fixture.dbProjekti1);
+        await projektiDatabase.saveProjekti(fixture.dbProjekti1());
 
         sinon.assert.calledOnce(updateStub);
         const updateCommand = updateStub.getCall(0).firstArg;
@@ -52,7 +52,7 @@ describe("apiHandler", () => {
         });
 
         const projekti: DBProjekti = {
-          oid: fixture.dbProjekti1.oid,
+          oid: fixture.PROJEKTI1_OID,
           muistiinpano: "foo",
           suunnitteluSopimus: null,
         } as DBProjekti;

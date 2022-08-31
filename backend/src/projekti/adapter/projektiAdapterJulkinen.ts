@@ -229,6 +229,7 @@ class ProjektiAdapterJulkinen {
         kuulutusYhteystiedot,
         muistutusoikeusPaattyyPaiva,
         velho,
+        kielitiedot,
       } = julkaisu;
       const paths = new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(julkaisu);
 
@@ -246,6 +247,7 @@ class ProjektiAdapterJulkinen {
         kuulutusYhteysHenkilot: adaptUsernamesToProjektiHenkiloIds(kuulutusYhteysHenkilot, projektiHenkilot),
         kuulutusYhteystiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot),
         velho: adaptVelho(velho),
+        kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
       };
     }
   }

@@ -2683,6 +2683,10 @@ Object {
       "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
       "__typename": "HankkeenKuvaukset",
     },
+    "kielitiedot": Object {
+      "__typename": "Kielitiedot",
+      "ensisijainenKieli": "SUOMI",
+    },
     "kuulutusPaiva": "2022-06-07",
     "kuulutusVaihePaattyyPaiva": "2042-06-07",
     "kuulutusYhteysHenkilot": Array [

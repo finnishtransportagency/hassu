@@ -50,7 +50,7 @@ describe("emailHandler", () => {
         ])
       );
       sendEmailStub.resolves();
-      loadProjektiByOidStub.resolves(fixture.dbProjekti2);
+      loadProjektiByOidStub.resolves(fixture.dbProjekti2());
     });
 
     describe("sendWaitingApprovalMail", () => {

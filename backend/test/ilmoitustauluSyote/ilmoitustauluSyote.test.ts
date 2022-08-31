@@ -17,7 +17,7 @@ describe("IlmoitustauluSyote", () => {
   beforeEach(() => {
     putDocumentStub = sandbox.stub(openSearchClientIlmoitustauluSyote, "putDocument");
     const projektiFixture = new ProjektiFixture();
-    projekti = projektiAdapterJulkinen.adaptProjekti(projektiFixture.dbProjekti2);
+    projekti = projektiAdapterJulkinen.adaptProjekti(projektiFixture.dbProjekti4());
     expect(projekti.aloitusKuulutusJulkaisut[0].tila).to.eql(AloitusKuulutusTila.HYVAKSYTTY);
   });
 
