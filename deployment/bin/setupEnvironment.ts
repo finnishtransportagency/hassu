@@ -1,11 +1,7 @@
 /* tslint:disable:no-console */
 // This script examines stack outputs and parameter store parameters, and writes .env.local and .env.test files
 
-import {
-  CloudFormationClient,
-  DescribeStacksCommand,
-  DescribeStacksCommandOutput,
-} from "@aws-sdk/client-cloudformation";
+import { CloudFormationClient, DescribeStacksCommand, DescribeStacksCommandOutput } from "@aws-sdk/client-cloudformation";
 import { GetParametersByPathCommand, GetParametersByPathCommandOutput, SSMClient } from "@aws-sdk/client-ssm";
 import { BaseConfig } from "../../common/BaseConfig";
 import * as fs from "fs";
@@ -62,9 +58,7 @@ async function readStackOutputsForRawStackName(stackName: string, region: Region
     cfClient = usEastCFClient;
   }
   try {
-    const output: DescribeStacksCommandOutput = await cfClient.send(
-      new DescribeStacksCommand({ StackName: stackName })
-    );
+    const output: DescribeStacksCommandOutput = await cfClient.send(new DescribeStacksCommand({ StackName: stackName }));
     return (
       output.Stacks?.[0].Outputs?.reduce((params, param) => {
         // Include only non-null values. Exclude automatically generated outputs by CDK
@@ -140,10 +134,7 @@ export async function readParametersByPath(path: string, region: Region): Promis
   return variables;
 }
 
-export async function readParametersForEnv<T extends Record<string, string>>(
-  environment: string,
-  region: Region
-): Promise<T> {
+export async function readParametersForEnv<T extends Record<string, string>>(environment: string, region: Region): Promise<T> {
   const results: Record<string, string> = {
     ...(await readParametersByPath("/", region)), // Read global parameters from root
     ...(await readParametersByPath("/" + environment + "/", region)), // Then override with environment specific ones if provided
@@ -212,18 +203,21 @@ async function main() {
     ...environmentVariables,
   });
 
-  writeEnvFile(".env.local", {
-    REACT_APP_API_URL: backendStackOutputs.AppSyncAPIURL,
-    INTERNAL_BUCKET_NAME: Config.internalBucketName,
-    ARCHIVE_BUCKET_NAME: Config.archiveBucketName,
-    FRONTEND_DOMAIN_NAME: frontendStackOutputs.CloudfrontPrivateDNSName,
-    SONARQUBE_HOST_URL: variables.SonarQubeHostURL,
-    SONARQUBE_ACCESS_TOKEN: variables.SonarQubeAccessToken,
-    SEARCH_DOMAIN: searchStackOutputs.SearchDomainEndpointOutput,
-    TABLE_PROJEKTI: Config.projektiTableName,
-    TABLE_FEEDBACK: Config.feedbackTableName,
-  });
-
+  if (BaseConfig.isPermanentEnvironment()) {
+    writeEnvFile(".env.local", {});
+  } else {
+    writeEnvFile(".env.local", {
+      REACT_APP_API_URL: backendStackOutputs.AppSyncAPIURL,
+      INTERNAL_BUCKET_NAME: Config.internalBucketName,
+      ARCHIVE_BUCKET_NAME: Config.archiveBucketName,
+      FRONTEND_DOMAIN_NAME: frontendStackOutputs.CloudfrontPrivateDNSName,
+      SONARQUBE_HOST_URL: variables.SonarQubeHostURL,
+      SONARQUBE_ACCESS_TOKEN: variables.SonarQubeAccessToken,
+      SEARCH_DOMAIN: searchStackOutputs.SearchDomainEndpointOutput,
+      TABLE_PROJEKTI: Config.projektiTableName,
+      TABLE_FEEDBACK: Config.feedbackTableName,
+    });
+  }
   const testUsers = await readParametersByPath("/testusers/", Region.EU_WEST_1);
   const testUsersConfig: { [key: string]: unknown } = {};
   for (const user in testUsers) {
