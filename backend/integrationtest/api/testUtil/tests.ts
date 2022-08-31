@@ -26,7 +26,7 @@ import Sinon from "sinon";
 import * as log from "loglevel";
 import { fail } from "assert";
 import { palauteEmailService } from "../../../src/palaute/palauteEmailService";
-import { expectToMatchSnapshot } from "./util";
+import { expectApiError, expectToMatchSnapshot } from "./util";
 import { handleEvent } from "../../../src/aineisto/aineistoImporterLambda";
 import { SQSEvent } from "aws-lambda/trigger/sqs";
 import cloneDeep from "lodash/cloneDeep";
@@ -198,10 +198,30 @@ async function doTestSuunnitteluvaiheVuorovaikutus(
   return (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe;
 }
 
+async function doTestSuunnitteluvaiheVuorovaikutusWithoutTilaisuus(
+  oid: string,
+  vuorovaikutusNumero: number,
+  vuorovaikutusYhteysHenkilot: string[],
+  julkinen?: boolean
+) {
+  const suunnitteluVaihe = apiTestFixture.suunnitteluVaihe(vuorovaikutusNumero, vuorovaikutusYhteysHenkilot, julkinen);
+  suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet = undefined;
+  try {
+    await api.tallennaProjekti({
+      oid,
+      suunnitteluVaihe,
+    });
+    fail("There must be a validation to force at least one vuorovaikutustilaisuus per vuorovaikutus");
+  } catch (e) {
+    expectApiError(e, "Vuorovaikutuksella pitää olla ainakin yksi vuorovaikutustilaisuus");
+  }
+}
+
 export async function testSuunnitteluvaiheVuorovaikutus(
   oid: string,
   projektiPaallikko: ProjektiKayttaja
 ): Promise<void> {
+  await doTestSuunnitteluvaiheVuorovaikutusWithoutTilaisuus(oid, 1, [projektiPaallikko.kayttajatunnus]);
   const suunnitteluVaihe1 = await doTestSuunnitteluvaiheVuorovaikutus(oid, 1, [projektiPaallikko.kayttajatunnus]);
   expect(suunnitteluVaihe1.vuorovaikutukset).to.have.length(1);
   const suunnitteluVaihe2 = await doTestSuunnitteluvaiheVuorovaikutus(oid, 2, [projektiPaallikko.kayttajatunnus]);

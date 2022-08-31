@@ -37,3 +37,8 @@ export function adaptAineistoToInput(aineistot: VelhoAineisto[]): AineistoInput[
     })
     .slice(0, 5); // Optimization: don't copy all files
 }
+
+export function expectApiError(e: Error, message: string): void {
+  const contents = JSON.parse(e.message);
+  expect(contents.message).to.eq(message);
+}
