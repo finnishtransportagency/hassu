@@ -11,9 +11,11 @@ import {
 import Trans from "next-translate/Trans";
 import HassuAccordion from "@components/HassuAccordion";
 import { AineistoKategoria, aineistoKategoriat } from "common/aineistoKategoriat";
-import { Link, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
+import ExtLink from "@components/ExtLink";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ButtonFlat from "@components/button/ButtonFlat";
+import { formatDateTime } from "src/util/dateUtils";
 
 type Props = {
   projekti: ProjektiJulkinen;
@@ -159,13 +161,12 @@ const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoria
             ?.filter((aineisto) => typeof aineisto.tiedosto === "string" && aineisto.kategoriaId === props.kategoria.id)
             .map((aineisto) => (
               <Stack direction="row" alignItems="flex-end" columnGap={2} key={aineisto.dokumenttiOid}>
-                <Link href={aineisto.tiedosto!} target="_blank" rel="noreferrer">
-                  {aineisto.nimi}
-                </Link>
-                <span>({aineisto.nimi.split(".").pop()})</span>
-                <a href={aineisto.tiedosto!} target="_blank" rel="noreferrer">
-                  <FontAwesomeIcon icon="external-link-alt" size="lg" className="text-primary-dark" />
-                </a>
+                <ExtLink href={aineisto.tiedosto!} target="_blank" rel="noreferrer">
+                  {aineisto.nimi}{" "}
+                  <span className="ml-2 text-black">
+                    ({aineisto.nimi.split(".").pop()}) {aineisto.tuotu && formatDateTime(aineisto.tuotu)}
+                  </span>
+                </ExtLink>
               </Stack>
             ))}
         </Stack>

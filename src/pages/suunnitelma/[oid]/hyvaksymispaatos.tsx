@@ -130,10 +130,11 @@ export default function Hyvaksymispaatos(): ReactElement {
             kuulutus?.hyvaksymisPaatos.map((aineisto) => (
               <span key={aineisto.dokumenttiOid}>
                 <ExtLink href={aineisto.tiedosto || ""} sx={{ mr: 3 }}>
-                  {aineisto.nimi}
+                  {aineisto.nimi}{" "}
+                  <span className="text-black ml-2">
+                    ({aineisto.nimi.split(".").pop()}) {aineisto.tuotu && formatDateTime(aineisto.tuotu)}
+                  </span>
                 </ExtLink>
-
-                {aineisto.tuotu && formatDateTime(aineisto.tuotu)}
               </span>
             ))}
         </Stack>
