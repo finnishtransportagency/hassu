@@ -90,27 +90,22 @@ function adaptHyvaksymisPaatosVaihePDFPaths(
   }
 
   const result = {};
+
+  function getYllapitoPathForFile(path: string) {
+    return fileService.getYllapitoPathForProjektiFile(oid, path);
+  }
+
   for (const kieli in hyvaksymisPaatosVaihePDFs) {
+    const pdfs = hyvaksymisPaatosVaihePDFs[kieli];
     result[kieli] = {
-      hyvaksymisKuulutusPDFPath: fileService.getYllapitoPathForProjektiFile(
-        oid,
-        hyvaksymisPaatosVaihePDFs[kieli].hyvaksymisKuulutusPDFPath
+      ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath: getYllapitoPathForFile(
+        pdfs.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath
       ),
-      hyvaksymisIlmoitusPDFPath: fileService.getYllapitoPathForProjektiFile(
-        oid,
-        hyvaksymisPaatosVaihePDFs[kieli].hyvaksymisIlmoitusPDFPath
-      ),
-      hyvaksymisLahetekirjePDFPath: fileService.getYllapitoPathForProjektiFile(
-        oid,
-        hyvaksymisPaatosVaihePDFs[kieli].hyvaksymisIlmoitusKiinteistonOmistajallePDFPath
-      ),
-      hyvaksymisIlmoitusMuistuttajillePDFPath: fileService.getYllapitoPathForProjektiFile(
-        oid,
-        hyvaksymisPaatosVaihePDFs[kieli].hyvaksymisIlmoitusKiinteistonOmistajallePDFPath
-      ),
-      hyvaksymisIlmoitusLausunnonantajillePDFPath: fileService.getYllapitoPathForProjektiFile(
-        oid,
-        hyvaksymisPaatosVaihePDFs[kieli].hyvaksymisIlmoitusKiinteistonOmistajallePDFPath
+      hyvaksymisKuulutusPDFPath: getYllapitoPathForFile(pdfs.hyvaksymisKuulutusPDFPath),
+      hyvaksymisIlmoitusMuistuttajillePDFPath: getYllapitoPathForFile(pdfs.hyvaksymisIlmoitusMuistuttajillePDFPath),
+      hyvaksymisIlmoitusLausunnonantajillePDFPath: getYllapitoPathForFile(pdfs.hyvaksymisIlmoitusLausunnonantajillePDFPath),
+      ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath: getYllapitoPathForFile(
+        pdfs.ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath
       ),
     } as HyvaksymisPaatosVaihePDF;
   }

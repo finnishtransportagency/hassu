@@ -1,18 +1,13 @@
 import { AsiakirjaTyyppi, Kieli, NahtavillaoloVaiheTila, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
 import { TilaManager } from "./TilaManager";
-import {
-  DBProjekti,
-  LocalizedMap,
-  NahtavillaoloPDF,
-  NahtavillaoloVaihe,
-  NahtavillaoloVaiheJulkaisu,
-} from "../../database/model";
+import { DBProjekti, LocalizedMap, NahtavillaoloPDF, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { aineistoService } from "../../aineisto/aineistoService";
 import { asiakirjaService, NahtavillaoloKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakirjaService";
 import { fileService } from "../../files/fileService";
 import { parseDate } from "../../util/dateUtil";
+import { ProjektiPaths } from "../../files/ProjektiPath";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -29,7 +24,7 @@ async function createNahtavillaoloVaihePDF(
   });
   return fileService.createFileToProjekti({
     oid: projekti.oid,
-    filePathInProjekti: "nahtavillaolo",
+    filePathInProjekti: ProjektiPaths.PATH_NAHTAVILLAOLO,
     fileName: pdf.nimi,
     contents: Buffer.from(pdf.sisalto, "base64"),
     inline: true,
@@ -107,16 +102,8 @@ class NahtavillaoloTilaManager extends TilaManager {
   ): Promise<LocalizedMap<NahtavillaoloPDF>> {
     const kielitiedot = julkaisuWaitingForApproval.kielitiedot;
 
-    async function generatePDFsForLanguage(
-      kieli: Kieli,
-      julkaisu: NahtavillaoloVaiheJulkaisu
-    ): Promise<NahtavillaoloPDF> {
-      const nahtavillaoloPDFPath = await createNahtavillaoloVaihePDF(
-        AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS,
-        julkaisu,
-        projekti,
-        kieli
-      );
+    async function generatePDFsForLanguage(kieli: Kieli, julkaisu: NahtavillaoloVaiheJulkaisu): Promise<NahtavillaoloPDF> {
+      const nahtavillaoloPDFPath = await createNahtavillaoloVaihePDF(AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS, julkaisu, projekti, kieli);
       const nahtavillaoloIlmoitusPDFPath = await createNahtavillaoloVaihePDF(
         AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE,
         julkaisu,
@@ -133,16 +120,10 @@ class NahtavillaoloTilaManager extends TilaManager {
     }
 
     const pdfs = {};
-    pdfs[kielitiedot.ensisijainenKieli] = await generatePDFsForLanguage(
-      kielitiedot.ensisijainenKieli,
-      julkaisuWaitingForApproval
-    );
+    pdfs[kielitiedot.ensisijainenKieli] = await generatePDFsForLanguage(kielitiedot.ensisijainenKieli, julkaisuWaitingForApproval);
 
     if (kielitiedot.toissijainenKieli) {
-      pdfs[kielitiedot.toissijainenKieli] = await generatePDFsForLanguage(
-        kielitiedot.toissijainenKieli,
-        julkaisuWaitingForApproval
-      );
+      pdfs[kielitiedot.toissijainenKieli] = await generatePDFsForLanguage(kielitiedot.toissijainenKieli, julkaisuWaitingForApproval);
     }
     return pdfs;
   }

@@ -3,7 +3,7 @@ import {
   HyvaksymisPaatosVaiheJulkaisu,
   NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
-  Vuorovaikutus
+  Vuorovaikutus,
 } from "../database/model";
 
 export abstract class PathTuple {
@@ -23,6 +23,8 @@ export abstract class PathTuple {
 }
 
 export class ProjektiPaths extends PathTuple {
+  static PATH_NAHTAVILLAOLO = "nahtavillaolo";
+  static PATH_HYVAKSYMISPAATOS = "hyvaksymispaatos";
   private readonly oid: string;
 
   public constructor(oid: string) {
@@ -51,7 +53,7 @@ export class ProjektiPaths extends PathTuple {
   }
 
   hyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | HyvaksymisPaatosVaiheJulkaisu): HyvaksymisPaatosVaihePaths {
-    return new HyvaksymisPaatosVaihePaths(this, "hyvaksymispaatos", hyvaksymisPaatosVaihe);
+    return new HyvaksymisPaatosVaihePaths(this, ProjektiPaths.PATH_HYVAKSYMISPAATOS, hyvaksymisPaatosVaihe);
   }
 }
 
@@ -103,11 +105,11 @@ class NahtavillaoloVaihePaths extends PathTuple {
   }
 
   get yllapitoPath(): string {
-    return "nahtavillaolo/" + this.nahtavillaoloVaiheId;
+    return ProjektiPaths.PATH_NAHTAVILLAOLO + "/" + this.nahtavillaoloVaiheId;
   }
 
   get publicPath(): string {
-    return "nahtavillaolo";
+    return ProjektiPaths.PATH_NAHTAVILLAOLO;
   }
 }
 
