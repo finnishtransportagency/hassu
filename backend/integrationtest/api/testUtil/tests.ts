@@ -128,8 +128,6 @@ export async function testProjektinTiedot(oid: string): Promise<void> {
 
   // Check that the saved projekti is what it is supposed to be
   const updatedProjekti = await loadProjektiFromDatabase(oid, Status.ALOITUSKUULUTUS);
-  delete updatedProjekti.aloitusKuulutus.esitettavatYhteystiedot;
-  //^ TODO: Korjaa siten, että DB:ssä ei edes ole esitettavatYhteystiedot-kenttää
   expect(updatedProjekti.muistiinpano).to.be.equal(apiTestFixture.newNote);
   expect(updatedProjekti.aloitusKuulutus).eql(apiTestFixture.aloitusKuulutus);
   expect(updatedProjekti.suunnitteluSopimus).include(apiTestFixture.suunnitteluSopimus);

@@ -528,10 +528,6 @@ type AloitusKuulutus {
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
   hankkeenKuvaus: HankkeenKuvaukset
-  """
-  Tama alla oleva poistuu kaytosta
-  """
-  esitettavatYhteystiedot: [Yhteystieto!]
   kuulutusYhteystiedot: KuulutusYhteystiedot
   palautusSyy: String
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat

@@ -12,12 +12,10 @@ import { fileService } from "../../../files/fileService";
 
 export function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.AloitusKuulutus | undefined {
   if (kuulutus) {
-    const { esitettavatYhteystiedot, kuulutusYhteystiedot, ...otherKuulutusFields } = kuulutus;
-    const yhteystiedot = adaptYhteystiedotByAddingTypename(esitettavatYhteystiedot);
+    const { kuulutusYhteystiedot, ...otherKuulutusFields } = kuulutus;
     return {
       __typename: "AloitusKuulutus",
       ...otherKuulutusFields,
-      esitettavatYhteystiedot: yhteystiedot,
       hankkeenKuvaus: adaptHankkeenKuvaus(kuulutus.hankkeenKuvaus),
       kuulutusYhteystiedot: adaptKuulutusYhteystiedotByAddingTypename(kuulutusYhteystiedot),
     };

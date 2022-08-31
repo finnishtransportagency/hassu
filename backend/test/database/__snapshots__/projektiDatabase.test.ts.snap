@@ -39,7 +39,6 @@ Object {
     ":kayttoOikeudet": Array [
       Object {
         "email": "pekka.projari@vayla.fi",
-        "esitetaanKuulutuksessa": null,
         "kayttajatunnus": "A123",
         "nimi": "Projari, Pekka",
         "organisaatio": "Väylävirasto",
@@ -48,7 +47,6 @@ Object {
       },
       Object {
         "email": "Matti.Meikalainen@vayla.fi",
-        "esitetaanKuulutuksessa": null,
         "kayttajatunnus": "A000111",
         "nimi": "Meikalainen, Matti",
         "organisaatio": "Väylävirasto",

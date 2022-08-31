@@ -1,5 +1,5 @@
 import log from "loglevel";
-import { Kieli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
+import { Kieli, ProjektiRooli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../../asiakirja/asiakirjaService";
 import { DBProjekti, Yhteystieto } from "../../database/model";
 import { translate } from "../../util/localization";
@@ -188,12 +188,18 @@ export class LahetekirjeAdapter {
   }
 
   private get yhteystiedot() {
-    const esitettavatYhteystiedot = this.projekti?.aloitusKuulutus?.esitettavatYhteystiedot;
+    const kuulutusYhteystiedot = this.projekti?.aloitusKuulutus?.kuulutusYhteystiedot;
+    const esitettavatYhteystiedot = kuulutusYhteystiedot?.yhteysTiedot;
     const kayttoOikeudet = this.projekti?.kayttoOikeudet;
     const yt: Yhteystieto[] = [];
+
     kayttoOikeudet
-      ?.filter(({ esitetaanKuulutuksessa }) => !!esitetaanKuulutuksessa)
-      ?.forEach((oikeus) => {
+      ?.filter(
+        ({ kayttajatunnus, rooli }) =>
+          rooli === ProjektiRooli.PROJEKTIPAALLIKKO ||
+          kuulutusYhteystiedot?.yhteysHenkilot?.find((yh) => yh === kayttajatunnus)
+      )
+      .forEach((oikeus) => {
         yt.push(vaylaUserToYhteystieto(oikeus));
       });
     esitettavatYhteystiedot?.forEach((yhteystieto) => {

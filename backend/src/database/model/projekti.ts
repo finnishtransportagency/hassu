@@ -19,14 +19,12 @@ export type DBVaylaUser = {
   puhelinnumero: string;
   organisaatio: string;
   nimi: string;
-  esitetaanKuulutuksessa?: boolean | null;
 };
 
 export type AloitusKuulutus = {
   kuulutusPaiva?: string | null;
   siirtyySuunnitteluVaiheeseen?: string | null;
   hankkeenKuvaus?: LocalizedMap<string>;
-  esitettavatYhteystiedot?: Yhteystieto[] | null; // deprikoituu
   kuulutusYhteystiedot?: KuulutusYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   palautusSyy?: string | null;

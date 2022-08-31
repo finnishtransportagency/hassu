@@ -104,7 +104,6 @@ export class ProjektiFixture {
     email: "pekka.projari@vayla.fi",
     organisaatio: "Väylävirasto",
     puhelinnumero: "123456789",
-    esitetaanKuulutuksessa: null,
   };
 
   private static mattiMeikalainenProjektiKayttaja: ProjektiKayttaja = {
@@ -115,7 +114,6 @@ export class ProjektiFixture {
     email: "Matti.Meikalainen@vayla.fi",
     organisaatio: "Väylävirasto",
     puhelinnumero: "123456789",
-    esitetaanKuulutuksessa: null,
   };
 
   tallennaProjektiInput: TallennaProjektiInput = {
@@ -170,7 +168,6 @@ export class ProjektiFixture {
           email: "pekka.projari@vayla.fi",
           organisaatio: "Väylävirasto",
           puhelinnumero: "123456789",
-          esitetaanKuulutuksessa: null,
         },
       ],
     };
@@ -196,7 +193,6 @@ export class ProjektiFixture {
           nimi: ProjektiFixture.pekkaProjariProjektiKayttaja.nimi,
           puhelinnumero: ProjektiFixture.pekkaProjariProjektiKayttaja.puhelinnumero || "",
           organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio,
-          esitetaanKuulutuksessa: ProjektiFixture.pekkaProjariProjektiKayttaja.esitetaanKuulutuksessa,
         },
         {
           rooli: ProjektiRooli.MUOKKAAJA,
@@ -205,7 +201,6 @@ export class ProjektiFixture {
           nimi: ProjektiFixture.mattiMeikalainenProjektiKayttaja.nimi,
           puhelinnumero: ProjektiFixture.mattiMeikalainenProjektiKayttaja.puhelinnumero || "",
           organisaatio: ProjektiFixture.mattiMeikalainenProjektiKayttaja.organisaatio,
-          esitetaanKuulutuksessa: ProjektiFixture.mattiMeikalainenProjektiKayttaja.esitetaanKuulutuksessa,
         },
       ],
       oid: this.PROJEKTI1_OID,
@@ -264,7 +259,6 @@ export class ProjektiFixture {
           nimi: ProjektiFixture.pekkaProjariProjektiKayttaja.nimi,
           puhelinnumero: ProjektiFixture.pekkaProjariProjektiKayttaja.puhelinnumero || "",
           organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio,
-          esitetaanKuulutuksessa: ProjektiFixture.pekkaProjariProjektiKayttaja.esitetaanKuulutuksessa,
         },
         {
           rooli: ProjektiRooli.MUOKKAAJA,
@@ -273,7 +267,6 @@ export class ProjektiFixture {
           nimi: ProjektiFixture.mattiMeikalainenProjektiKayttaja.nimi,
           puhelinnumero: ProjektiFixture.mattiMeikalainenProjektiKayttaja.puhelinnumero || "",
           organisaatio: ProjektiFixture.mattiMeikalainenProjektiKayttaja.organisaatio,
-          esitetaanKuulutuksessa: ProjektiFixture.mattiMeikalainenProjektiKayttaja.esitetaanKuulutuksessa,
         },
       ],
       oid: this.PROJEKTI2_OID,
@@ -376,7 +369,6 @@ export class ProjektiFixture {
         },
         kuulutusPaiva: "2022-03-28T14:28",
         siirtyySuunnitteluVaiheeseen: "2022-04-28T14:28",
-        esitettavatYhteystiedot: [],
       },
       nahtavillaoloVaihe: {
         id: 1,
@@ -433,7 +425,6 @@ export class ProjektiFixture {
         nimi: ProjektiFixture.pekkaProjariProjektiKayttaja.nimi,
         puhelinnumero: ProjektiFixture.pekkaProjariProjektiKayttaja.puhelinnumero || "",
         organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio,
-        esitetaanKuulutuksessa: ProjektiFixture.pekkaProjariProjektiKayttaja.esitetaanKuulutuksessa,
       },
       {
         rooli: ProjektiRooli.MUOKKAAJA,
@@ -442,7 +433,6 @@ export class ProjektiFixture {
         nimi: ProjektiFixture.mattiMeikalainenProjektiKayttaja.nimi,
         puhelinnumero: ProjektiFixture.mattiMeikalainenProjektiKayttaja.puhelinnumero || "",
         organisaatio: ProjektiFixture.mattiMeikalainenProjektiKayttaja.organisaatio,
-        esitetaanKuulutuksessa: ProjektiFixture.mattiMeikalainenProjektiKayttaja.esitetaanKuulutuksessa,
       },
     ],
     oid: this.PROJEKTI3_OID,
@@ -544,7 +534,6 @@ export class ProjektiFixture {
       },
       kuulutusPaiva: "2022-03-28T14:28",
       siirtyySuunnitteluVaiheeseen: "2022-04-28T14:28",
-      esitettavatYhteystiedot: [],
     },
     suunnitteluVaihe: {
       arvioSeuraavanVaiheenAlkamisesta: "Syksy 2024",

@@ -7,7 +7,6 @@ Object {
     Object {
       "__typename": "ProjektiKayttaja",
       "email": "pekka.projari@vayla.fi",
-      "esitetaanKuulutuksessa": true,
       "kayttajatunnus": "A123",
       "nimi": "Projari, Pekka",
       "organisaatio": "Väylävirasto",
@@ -42,7 +41,6 @@ Array [
     Object {
       "__typename": "ProjektiKayttaja",
       "email": "pekka.projari@vayla.fi",
-      "esitetaanKuulutuksessa": true,
       "kayttajatunnus": "A123",
       "nimi": "Projari, Pekka",
       "organisaatio": "Väylävirasto",
@@ -376,7 +374,6 @@ Array [
     "__typename": "Projekti",
     "aloitusKuulutus": Object {
       "__typename": "AloitusKuulutus",
-      "esitettavatYhteystiedot": undefined,
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
         "SAAME": "Saameksi",
@@ -635,7 +632,6 @@ Object {
   "__typename": "Projekti",
   "aloitusKuulutus": Object {
     "__typename": "AloitusKuulutus",
-    "esitettavatYhteystiedot": undefined,
     "hankkeenKuvaus": Object {
       "RUOTSI": "På Svenska",
       "SAAME": "Saameksi",
