@@ -11,7 +11,6 @@ import ExtLink from "@components/ExtLink";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { Stack } from "@mui/material";
 import KansalaisenAineistoNakyma from "../../../components/projekti/common/KansalaisenAineistoNakyma";
-import { formatDateTime } from "src/util/dateUtils";
 
 export default function Hyvaksymispaatos(): ReactElement {
   const { t } = useTranslation();
@@ -132,7 +131,7 @@ export default function Hyvaksymispaatos(): ReactElement {
                 <ExtLink href={aineisto.tiedosto || ""} sx={{ mr: 3 }}>
                   {aineisto.nimi}{" "}
                   <span className="text-black ml-2">
-                    ({aineisto.nimi.split(".").pop()}) {aineisto.tuotu && formatDateTime(aineisto.tuotu)}
+                    ({aineisto.nimi.split(".").pop()}) {formatDate(kuulutus?.kuulutusPaiva)}
                   </span>
                 </ExtLink>
               </span>
@@ -140,7 +139,11 @@ export default function Hyvaksymispaatos(): ReactElement {
         </Stack>
       </Section>
       <Section noDivider>
-        <KansalaisenAineistoNakyma projekti={projekti} kuulutus={kuulutus} />
+        <KansalaisenAineistoNakyma
+          projekti={projekti}
+          kuulutus={kuulutus}
+          naytaAineistoPaivanaKuulutuksenJulkaisuPaiva={true}
+        />
       </Section>
       <Section noDivider>
         <h5 className="vayla-smallest-title">{t("projekti:ui-otsikot.ladattava_kuulutus")}</h5>
