@@ -1,0 +1,10 @@
+{
+  "reporterEnabled": "list, cypress-mochawesome-reporter, xunit",
+  "cypressMochawesomeReporterReporterOptions": {
+    "reportDir": "cypress/report",
+    "charts": true
+  },
+  "xunitReporterOptions": {
+    "output": "cypress/report/xunit.xml"
+  }
+}
