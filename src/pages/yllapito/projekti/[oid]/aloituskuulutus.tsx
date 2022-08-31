@@ -1,8 +1,8 @@
 import Textarea from "@components/form/Textarea";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { useRouter } from "next/router";
-import React, { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
-import { useProjekti } from "src/hooks/useProjekti";
+import React, { ReactElement, useCallback, useMemo, useState } from "react";
+import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -16,7 +16,6 @@ import {
   Kieli,
   Kielitiedot,
   LaskuriTyyppi,
-  Projekti,
   Status,
   TallennaProjektiInput,
   TilasiirtymaToiminto,
@@ -49,8 +48,9 @@ import HassuSpinner from "@components/HassuSpinner";
 import { removeTypeName } from "src/util/removeTypeName";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
+import { KeyedMutator } from "swr";
 
-type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
+type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
   [K in keyof ProjektiFields]: NonNullable<ProjektiFields[K]>;
 }>;
@@ -58,11 +58,7 @@ type RequiredProjektiFields = Required<{
 type FormValues = RequiredProjektiFields & {
   aloitusKuulutus: Pick<
     AloitusKuulutusInput,
-    | "kuulutusYhteystiedot"
-    | "kuulutusPaiva"
-    | "hankkeenKuvaus"
-    | "siirtyySuunnitteluVaiheeseen"
-    | "ilmoituksenVastaanottajat"
+    "kuulutusYhteystiedot" | "kuulutusPaiva" | "hankkeenKuvaus" | "siirtyySuunnitteluVaiheeseen" | "ilmoituksenVastaanottajat"
   >;
 };
 
@@ -78,13 +74,67 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
   ProjektiTestType.PROJEKTI_IS_CREATED,
 ]);
 
-export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactElement {
+export default function AloituskuulutusPage({ setRouteLabels }: PageProps): ReactElement {
+  const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti();
+  useProjektiBreadcrumbs(setRouteLabels);
+
+  return (
+    <>{projekti && <AloituskuulutusForm projekti={projekti} projektiLoadError={projektiLoadError} reloadProjekti={reloadProjekti} />}</>
+  );
+}
+
+interface AloituskuulutusFormProps {
+  projekti: ProjektiLisatiedolla;
+  projektiLoadError: any;
+  reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
+}
+
+function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: AloituskuulutusFormProps): ReactElement {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const router = useRouter();
-  const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti();
   const isLoadingProjekti = !projekti && !projektiLoadError;
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
   const isIncorrectProjektiStatus = !projekti?.status || projekti?.status === Status.EI_JULKAISTU;
+
+  const defaultValues: FormValues = useMemo(() => {
+    const kuntaNimet: string[] = [
+      ...new Set([
+        ...(projekti.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.map(({ nimi }) => nimi) || []),
+        ...(projekti.velho.kunnat || []),
+      ]),
+    ];
+
+    const yhteysTiedot: Yhteystieto[] =
+      projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.filter((yt) => yt as Yhteystieto) || [];
+    const yhteysHenkilot: string[] = projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysHenkilot?.filter((yt) => yt) || [];
+
+    const tallentamisTiedot: FormValues = {
+      oid: projekti.oid,
+      aloitusKuulutus: {
+        ilmoituksenVastaanottajat: {
+          kunnat: kuntaNimet.map((nimi) => ({
+            nimi,
+            sahkoposti:
+              projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.find((kunta) => kunta.nimi === nimi)?.sahkoposti || "",
+          })),
+          viranomaiset:
+            projekti.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.map(({ nimi, sahkoposti }) => ({
+              nimi,
+              sahkoposti,
+            })) || [],
+        },
+        hankkeenKuvaus: removeTypeName(projekti?.aloitusKuulutus?.hankkeenKuvaus),
+        kuulutusPaiva: projekti?.aloitusKuulutus?.kuulutusPaiva,
+        siirtyySuunnitteluVaiheeseen: projekti?.aloitusKuulutus?.siirtyySuunnitteluVaiheeseen,
+        kuulutusYhteystiedot: {
+          yhteysTiedot,
+          yhteysHenkilot,
+        },
+      },
+    };
+    return tallentamisTiedot;
+  }, [projekti]);
+
   const disableFormEdit =
     !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden ||
     projektiHasErrors ||
@@ -92,21 +142,18 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
     isFormSubmitting ||
     isIncorrectProjektiStatus;
   const today = new Date().toISOString().split("T")[0];
-  const [formContext, setFormContext] = useState<Projekti | undefined>(undefined);
   const [open, setOpen] = useState(false);
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
   const { t } = useTranslation("commonFI");
 
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
 
-  useProjektiBreadcrumbs(setRouteLabels);
-
   const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(aloituskuulutusSchema, { abortEarly: false, recursive: true }),
-    defaultValues: { aloitusKuulutus: { hankkeenKuvaus: { SUOMI: "" } } },
+    defaultValues,
     mode: "onChange",
     reValidateMode: "onChange",
-    context: formContext,
+    context: projekti,
   };
 
   const useFormReturn = useForm<FormValues>(formOptions);
@@ -125,58 +172,6 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
     handleSubmit: handleSubmit2,
     formState: { errors: errors2 },
   } = useForm<PalautusValues>({ defaultValues: { syy: "" } });
-
-  useEffect(() => {
-    if (projekti?.oid) {
-      const kuntaNimet: string[] = [
-        ...new Set([
-          ...(projekti.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.map(({ nimi }) => nimi) || []),
-          ...(projekti.velho.kunnat || []),
-        ]),
-      ];
-
-      const yhteysTiedot: Yhteystieto[] =
-        projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.filter((yt) => yt as Yhteystieto) || [];
-      const yhteysHenkilot: string[] =
-        projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysHenkilot?.filter((yt) => yt) || [];
-
-      const tallentamisTiedot: FormValues = {
-        oid: projekti.oid,
-        kayttoOikeudet:
-          projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, rooli, esitetaanKuulutuksessa }) => ({
-            kayttajatunnus,
-            puhelinnumero: puhelinnumero || "",
-            rooli,
-            esitetaanKuulutuksessa,
-          })) || [],
-        aloitusKuulutus: {
-          ilmoituksenVastaanottajat: {
-            kunnat: kuntaNimet.map((nimi) => ({
-              nimi,
-              sahkoposti:
-                projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.find((kunta) => kunta.nimi === nimi)
-                  ?.sahkoposti || "",
-            })),
-            viranomaiset:
-              projekti.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.map(({ nimi, sahkoposti }) => ({
-                nimi,
-                sahkoposti,
-              })) || [],
-          },
-          hankkeenKuvaus: removeTypeName(projekti?.aloitusKuulutus?.hankkeenKuvaus),
-          kuulutusPaiva: projekti?.aloitusKuulutus?.kuulutusPaiva,
-          siirtyySuunnitteluVaiheeseen: projekti?.aloitusKuulutus?.siirtyySuunnitteluVaiheeseen,
-          kuulutusYhteystiedot: {
-            yhteysTiedot,
-            yhteysHenkilot,
-          },
-        },
-      };
-
-      setFormContext(projekti);
-      reset(tallentamisTiedot);
-    }
-  }, [projekti, reset]);
 
   const getAloituskuulutusjulkaisuByTila = useCallback(
     (tila: AloitusKuulutusTila): AloitusKuulutusJulkaisu | undefined => {
@@ -197,10 +192,11 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
       deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat);
       deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset);
       setIsFormSubmitting(true);
+      reset();
       await api.tallennaProjekti(formData);
       await reloadProjekti();
     },
-    [setIsFormSubmitting, reloadProjekti]
+    [reset, reloadProjekti]
   );
 
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
@@ -217,7 +213,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
       }
       setIsFormSubmitting(false);
     },
-    [setIsFormSubmitting, saveAloituskuulutus, showSuccessMessage, showErrorMessage]
+    [saveAloituskuulutus, showSuccessMessage, showErrorMessage]
   );
 
   const vaihdaAloituskuulutuksenTila = useCallback(
@@ -317,8 +313,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
   const kielitiedot: Kielitiedot | null | undefined = projekti?.kielitiedot;
   const voiMuokata = !projekti?.aloitusKuulutusJulkaisut || projekti.aloitusKuulutusJulkaisut.length < 1;
   const voiHyvaksya =
-    getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA) &&
-    projekti?.nykyinenKayttaja.onProjektipaallikko;
+    getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA) && projekti?.nykyinenKayttaja.onProjektipaallikko;
 
   const odottaaJulkaisua = useMemo(() => {
     const julkaisu = getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.HYVAKSYTTY);
@@ -358,8 +353,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
                   )}
                   {projekti.aloitusKuulutus?.palautusSyy && (
                     <Notification type={NotificationType.WARN}>
-                      {"Aloituskuulutus on palautettu korjattavaksi. Palautuksen syy: " +
-                        projekti.aloitusKuulutus.palautusSyy}
+                      {"Aloituskuulutus on palautettu korjattavaksi. Palautuksen syy: " + projekti.aloitusKuulutus.palautusSyy}
                     </Notification>
                   )}
                   {odottaaJulkaisua && (
@@ -371,14 +365,11 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
                     <div>
                       <h3 className="vayla-small-title">Ohjeet</h3>
                       <ul className="list-disc block pl-5">
+                        <li>Anna päivämäärä, jolloin suunnittelun aloittamisesta kuulutetaan tämän palvelun julkisella puolella.</li>
                         <li>
-                          Anna päivämäärä, jolloin suunnittelun aloittamisesta kuulutetaan tämän palvelun julkisella
-                          puolella.
-                        </li>
-                        <li>
-                          Kuvaa aloituskuulutuksessa esitettävään sisällönkuvauskenttään lyhyesti suunnittelukohteen
-                          alueellinen rajaus (maantiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja
-                          toimenpiteet pääpiirteittäin karkealla tasolla. Älä lisää tekstiin linkkejä.
+                          Kuvaa aloituskuulutuksessa esitettävään sisällönkuvauskenttään lyhyesti suunnittelukohteen alueellinen rajaus
+                          (maantiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet pääpiirteittäin karkealla
+                          tasolla. Älä lisää tekstiin linkkejä.
                         </li>
                       </ul>
                     </div>
@@ -407,16 +398,13 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
                   <SectionContent>
                     <h5 className="vayla-small-title">Hankkeen sisällönkuvaus</h5>
                     <p>
-                      Kirjoita aloituskuulutusta varten tiivistetty sisällönkuvaus hankkeesta. Kuvauksen on hyvä
-                      sisältää esimerkiksi tieto suunnittelukohteen alueellista rajauksesta (maantiealue ja
-                      vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet pääpiirteittäin karkealla
-                      tasolla. Älä lisää tekstiin linkkejä.{" "}
+                      Kirjoita aloituskuulutusta varten tiivistetty sisällönkuvaus hankkeesta. Kuvauksen on hyvä sisältää esimerkiksi tieto
+                      suunnittelukohteen alueellista rajauksesta (maantiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja
+                      toimenpiteet pääpiirteittäin karkealla tasolla. Älä lisää tekstiin linkkejä.{" "}
                     </p>
                   </SectionContent>
                   <Textarea
-                    label={`Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (${lowerCase(
-                      ensisijainenKieli
-                    )}) *`}
+                    label={`Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (${lowerCase(ensisijainenKieli)}) *`}
                     {...register(`aloitusKuulutus.hankkeenKuvaus.${ensisijainenKieli}`)}
                     error={(errors.aloitusKuulutus?.hankkeenKuvaus as any)?.[ensisijainenKieli]}
                     maxLength={maxAloituskuulutusLength}
@@ -426,9 +414,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
                 {toissijainenKieli && (
                   <Section>
                     <Textarea
-                      label={`Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä (${lowerCase(
-                        toissijainenKieli
-                      )}) *`}
+                      label={`Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä (${lowerCase(toissijainenKieli)}) *`}
                       {...register(`aloitusKuulutus.hankkeenKuvaus.${toissijainenKieli}`)}
                       error={(errors.aloitusKuulutus?.hankkeenKuvaus as any)?.[toissijainenKieli]}
                       maxLength={maxAloituskuulutusLength}
@@ -452,9 +438,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
                 <Button
                   id={"preview_kuulutus_pdf_" + ensisijainenKieli}
                   type="submit"
-                  onClick={handleSubmit((formData) =>
-                    esikatselePdf(formData, AsiakirjaTyyppi.ALOITUSKUULUTUS, ensisijainenKieli)
-                  )}
+                  onClick={handleSubmit((formData) => esikatselePdf(formData, AsiakirjaTyyppi.ALOITUSKUULUTUS, ensisijainenKieli))}
                   disabled={disableFormEdit}
                 >
                   Kuulutuksen esikatselu
@@ -462,9 +446,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
                 <Button
                   id={"preview_ilmoitus_pdf_" + ensisijainenKieli}
                   type="submit"
-                  onClick={handleSubmit((formData) =>
-                    esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, ensisijainenKieli)
-                  )}
+                  onClick={handleSubmit((formData) => esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, ensisijainenKieli))}
                   disabled={disableFormEdit}
                 >
                   Ilmoituksen esikatselu
@@ -477,9 +459,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
                     <Button
                       id={"preview_kuulutus_pdf_" + toissijainenKieli}
                       type="submit"
-                      onClick={handleSubmit((formData) =>
-                        esikatselePdf(formData, AsiakirjaTyyppi.ALOITUSKUULUTUS, toissijainenKieli)
-                      )}
+                      onClick={handleSubmit((formData) => esikatselePdf(formData, AsiakirjaTyyppi.ALOITUSKUULUTUS, toissijainenKieli))}
                       disabled={disableFormEdit}
                     >
                       Kuulutuksen esikatselu
@@ -541,9 +521,9 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
               <form>
                 <HassuStack>
                   <p>
-                    Olet palauttamassa kuulutuksen korjattavaksi. Kuulutuksen tekijä saa tiedon palautuksesta ja sen
-                    syystä. Saat ilmoituksen, kun kuulutus on taas valmis hyväksyttäväksi. Jos haluat itse muokata
-                    kuulutusta ja hyväksyä tehtyjen muutoksien jälkeen, valitse Palauta ja muokkaa.
+                    Olet palauttamassa kuulutuksen korjattavaksi. Kuulutuksen tekijä saa tiedon palautuksesta ja sen syystä. Saat
+                    ilmoituksen, kun kuulutus on taas valmis hyväksyttäväksi. Jos haluat itse muokata kuulutusta ja hyväksyä tehtyjen
+                    muutoksien jälkeen, valitse Palauta ja muokkaa.
                   </p>
                   <Textarea
                     label="Syy palautukselle *"
@@ -553,11 +533,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
                     hideLengthCounter={false}
                   ></Textarea>
                 </HassuStack>
-                <HassuStack
-                  direction={["column", "column", "row"]}
-                  justifyContent={[undefined, undefined, "flex-end"]}
-                  paddingTop={"1rem"}
-                >
+                <HassuStack direction={["column", "column", "row"]} justifyContent={[undefined, undefined, "flex-end"]} paddingTop={"1rem"}>
                   <Button primary onClick={handleSubmit2(palautaMuokattavaksiJaPoistu)}>
                     Palauta ja poistu
                   </Button>
@@ -586,8 +562,8 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
               <form style={{ display: "contents" }}>
                 <DialogContent>
                   <p>
-                    Olet hyväksymässä kuulutuksen ja käynnistämässä siihen liittyvän ilmoituksen automaattisen
-                    lähettämisen. Ilmoitus kuulutuksesta lähetetään seuraaville:
+                    Olet hyväksymässä kuulutuksen ja käynnistämässä siihen liittyvän ilmoituksen automaattisen lähettämisen. Ilmoitus
+                    kuulutuksesta lähetetään seuraaville:
                   </p>
                   <div>
                     <p>Viranomaiset</p>
@@ -608,14 +584,13 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
                     </ul>
                   </div>
                   <p>
-                    Jos aloituskuulutukseen pitää tehdä muutoksia hyväksymisen jälkeen, tulee aloituskuulutus avata
-                    uudelleen ja lähettää päivitetyt ilmoitukset asianosaisille. Kuulutuspäivän jälkeen tulevat
-                    muutostarpeet vaativat aloituksen uudelleen kuuluttamisen.
+                    Jos aloituskuulutukseen pitää tehdä muutoksia hyväksymisen jälkeen, tulee aloituskuulutus avata uudelleen ja lähettää
+                    päivitetyt ilmoitukset asianosaisille. Kuulutuspäivän jälkeen tulevat muutostarpeet vaativat aloituksen uudelleen
+                    kuuluttamisen.
                   </p>
                   <p>
-                    Klikkaamalla Hyväksy ja lähetä -painiketta vahvistat kuulutuksen tarkastetuksi ja hyväksyt sen
-                    julkaisun kuulutuspäivänä sekä ilmoituksien lähettämisen. Ilmoitukset lähetetään automaattisesti
-                    painikkeen klikkaamisen jälkeen.
+                    Klikkaamalla Hyväksy ja lähetä -painiketta vahvistat kuulutuksen tarkastetuksi ja hyväksyt sen julkaisun kuulutuspäivänä
+                    sekä ilmoituksien lähettämisen. Ilmoitukset lähetetään automaattisesti painikkeen klikkaamisen jälkeen.
                   </p>
                 </DialogContent>
                 <DialogActions>
