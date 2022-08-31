@@ -95,7 +95,7 @@ export async function testProjektiHenkilot(projekti: Projekti, oid: string): Pro
   });
   await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU);
 
-  return projektiPaallikko;
+  return { ...projektiPaallikko, puhelinnumero: "123" };
 }
 
 async function tallennaLogo() {

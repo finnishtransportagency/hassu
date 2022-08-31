@@ -1,4 +1,4 @@
-import { DBVaylaUser } from "../database/model/projekti";
+import { DBVaylaUser } from "../database/model";
 import { Kayttaja, ProjektiKayttaja, ProjektiKayttajaInput, ProjektiRooli } from "../../../common/graphql/apiModel";
 import { SearchMode } from "../personSearch/personSearchClient";
 import { log } from "../logger";

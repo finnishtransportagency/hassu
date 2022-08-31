@@ -18,7 +18,7 @@ import {
   Status,
 } from "../../../common/graphql/apiModel";
 import { getVaylaUser } from "../user";
-import { projektiAdapterJulkinen } from "../handler/projektiAdapterJulkinen";
+import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
 import { ilmoitustauluSyoteService } from "../ilmoitustauluSyote/ilmoitustauluSyoteService";
 
 const projektiSarakeToField: Record<ProjektiSarake, string> = {

@@ -151,9 +151,20 @@ export class ProjektiFixture {
     velho: {
       nimi: this.PROJEKTI1_NIMI,
       tyyppi: ProjektiTyyppi.TIE,
+      vastuuhenkilonEmail: "pekka.projari@vayla.fi",
     },
     muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
-    kayttoOikeudet: [],
+    kayttoOikeudet: [
+      {
+        kayttajatunnus: "A123",
+        rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
+        nimi: "Projari, Pekka",
+        email: "pekka.projari@vayla.fi",
+        organisaatio: "Väylävirasto",
+        puhelinnumero: "123456789",
+        esitetaanKuulutuksessa: null,
+      },
+    ],
   };
 
   aloitusKuulutusInput: AloitusKuulutusInput = {

@@ -14,7 +14,7 @@ import {
   HyvaksymisPaatosKuulutusAsiakirjaTyyppi,
   NahtavillaoloKuulutusAsiakirjaTyyppi,
 } from "../asiakirja/asiakirjaService";
-import { projektiAdapter } from "./projektiAdapter";
+import { projektiAdapter } from "../projekti/adapter/projektiAdapter";
 import { asiakirjaAdapter } from "./asiakirjaAdapter";
 import { DBProjekti, Vuorovaikutus } from "../database/model";
 

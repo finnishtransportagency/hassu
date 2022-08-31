@@ -1,7 +1,9 @@
 import { describe, it } from "mocha";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import cloneDeep from "lodash/cloneDeep";
-import { findPublishedAloitusKuulutusJulkaisu, projektiAdapter } from "../../src/handler/projektiAdapter";
+import { projektiAdapter } from "../../src/projekti/adapter/projektiAdapter";
+import { findPublishedAloitusKuulutusJulkaisu } from "../../src/projekti/adapter/common";
+
 import { IllegalArgumentError } from "../../src/error/IllegalArgumentError";
 
 const { expect } = require("chai");

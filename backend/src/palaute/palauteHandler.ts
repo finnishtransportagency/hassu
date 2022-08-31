@@ -4,11 +4,11 @@ import {
   Status,
 } from "../../../common/graphql/apiModel";
 import { NotFoundError } from "../error/NotFoundError";
-import { requirePermissionMuokkaaProjekti } from "../handler/projektiHandler";
+import { requirePermissionMuokkaaProjekti } from "../projekti/projektiHandler";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { adaptPalauteInput } from "./palauteAdapter";
 import { fileService } from "../files/fileService";
-import { projektiAdapterJulkinen } from "../handler/projektiAdapterJulkinen";
+import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
 import { palauteEmailService } from "./palauteEmailService";
 
 class PalauteHandler {

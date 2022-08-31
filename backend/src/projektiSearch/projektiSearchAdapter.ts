@@ -8,7 +8,7 @@ import {
   Status,
   Viranomainen,
 } from "../../../common/graphql/apiModel";
-import { projektiAdapter } from "../handler/projektiAdapter";
+import { projektiAdapter } from "../projekti/adapter/projektiAdapter";
 import dayjs from "dayjs";
 import { parseDate } from "../util/dateUtil";
 import { log } from "../logger";
