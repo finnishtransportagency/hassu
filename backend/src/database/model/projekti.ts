@@ -9,7 +9,7 @@ import {
 import { Palaute, SuunnitteluVaihe, Vuorovaikutus } from "./suunnitteluVaihe";
 import { NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "./nahtavillaoloVaihe";
 import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "./hyvaksymisPaatosVaihe";
-import { LocalizedMap, Yhteystieto } from "./common";
+import { LocalizedMap, Yhteystieto, KuulutusYhteystiedot } from "./common";
 
 export type DBVaylaUser = {
   rooli: ProjektiRooli;
@@ -19,14 +19,13 @@ export type DBVaylaUser = {
   puhelinnumero: string;
   organisaatio: string;
   nimi: string;
-  esitetaanKuulutuksessa?: boolean | null;
 };
 
 export type AloitusKuulutus = {
   kuulutusPaiva?: string | null;
   siirtyySuunnitteluVaiheeseen?: string | null;
   hankkeenKuvaus?: LocalizedMap<string>;
-  esitettavatYhteystiedot?: Yhteystieto[] | null;
+  kuulutusYhteystiedot?: KuulutusYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   palautusSyy?: string | null;
 };

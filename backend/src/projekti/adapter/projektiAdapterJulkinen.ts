@@ -97,6 +97,7 @@ class ProjektiAdapterJulkinen {
   public adaptProjekti(dbProjekti: DBProjekti): API.ProjektiJulkinen | undefined {
     const aloitusKuulutusJulkaisut = this.adaptAloitusKuulutusJulkaisut(
       dbProjekti.oid,
+      dbProjekti.kayttoOikeudet,
       dbProjekti.aloitusKuulutusJulkaisut
     );
 
@@ -133,6 +134,7 @@ class ProjektiAdapterJulkinen {
 
   adaptAloitusKuulutusJulkaisut(
     oid: string,
+    kayttoOikeudet: DBVaylaUser[],
     aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null
   ): API.AloitusKuulutusJulkaisuJulkinen[] | undefined {
     if (aloitusKuulutusJulkaisut) {

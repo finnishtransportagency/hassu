@@ -320,6 +320,18 @@
         "__typename": "__Type"
       },
       {
+        "kind": "OBJECT",
+        "name": "KuulutusYhteystiedot",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "KuulutusYhteystiedotInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "ENUM",
         "name": "LaskuriTyyppi",
         "possibleTypes": null,

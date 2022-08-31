@@ -8,7 +8,7 @@ import {
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
   VelhoAineisto,
-  VelhoAineistoKategoria
+  VelhoAineistoKategoria,
 } from "../../../../common/graphql/apiModel";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import { expect } from "chai";
@@ -17,10 +17,13 @@ import { adaptAineistoToInput, expectToMatchSnapshot } from "./util";
 import { apiTestFixture } from "../apiTestFixture";
 import {
   cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps,
-  cleanupHyvaksymisPaatosVaiheTimestamps
+  cleanupHyvaksymisPaatosVaiheTimestamps,
 } from "./cleanUpFunctions";
 
-export async function testHyvaksymisPaatosVaiheHyvaksymismenettelyssa(oid: string, userFixture: UserFixture): Promise<void> {
+export async function testHyvaksymisPaatosVaiheHyvaksymismenettelyssa(
+  oid: string,
+  userFixture: UserFixture
+): Promise<void> {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   const julkaisu = dbProjekti.nahtavillaoloVaiheJulkaisut[0];
   julkaisu.kuulutusVaihePaattyyPaiva = "2022-06-08";
@@ -30,7 +33,7 @@ export async function testHyvaksymisPaatosVaiheHyvaksymismenettelyssa(oid: strin
   await api.tallennaProjekti({
     oid,
     kasittelynTila: {
-      hyvaksymispaatos: { asianumero: "asianro123", paatoksenPvm: "2022-06-09" }
+      hyvaksymispaatos: { asianumero: "asianro123", paatoksenPvm: "2022-06-09" },
     },
   });
 
@@ -47,7 +50,8 @@ export async function testHyvaksymisPaatosVaiheHyvaksymismenettelyssa(oid: strin
 
 export async function testImportHyvaksymisPaatosAineistot(
   oid: string,
-  velhoAineistoKategorias: VelhoAineistoKategoria[], projektiPaallikko: string
+  velhoAineistoKategorias: VelhoAineistoKategoria[],
+  projektiPaallikko: string
 ): Promise<void> {
   const lisaAineisto = velhoAineistoKategorias
     .reduce((documents, aineistoKategoria) => {
@@ -63,7 +67,7 @@ export async function testImportHyvaksymisPaatosAineistot(
       aineistoNahtavilla: adaptAineistoToInput(lisaAineisto.slice(2, 3)),
 
       ilmoituksenVastaanottajat: apiTestFixture.ilmoituksenVastaanottajat,
-      kuulutusYhteystiedot: apiTestFixture.esitettavatYhteystiedotInput,
+      kuulutusYhteystiedot: apiTestFixture.yhteystietoInputLista,
       kuulutusYhteysHenkilot: [projektiPaallikko],
       hallintoOikeus: HallintoOikeus.HAMEENLINNA,
 
@@ -77,7 +81,7 @@ export async function testImportHyvaksymisPaatosAineistot(
   const kasittelynTila = projekti.kasittelynTila;
   expectToMatchSnapshot("testImportHyvaksymisPaatosAineistot", {
     hyvaksymisPaatosVaihe,
-    kasittelynTila
+    kasittelynTila,
   });
 }
 
@@ -95,12 +99,14 @@ export async function testHyvaksymisPaatosVaiheApproval(
 
   const projektiHyvaksyttavaksi = await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA);
   expect(projektiHyvaksyttavaksi.hyvaksymisPaatosVaiheJulkaisut).to.have.length(1);
-  expect(projektiHyvaksyttavaksi.hyvaksymisPaatosVaiheJulkaisut[0].tila).to.eq(HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA);
+  expect(projektiHyvaksyttavaksi.hyvaksymisPaatosVaiheJulkaisut[0].tila).to.eq(
+    HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA
+  );
 
   await api.siirraTila({
     oid,
     tyyppi: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
-    toiminto: TilasiirtymaToiminto.HYVAKSY
+    toiminto: TilasiirtymaToiminto.HYVAKSY,
   });
   const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA);
   expectToMatchSnapshot("testHyvaksymisPaatosVaiheAfterApproval", {

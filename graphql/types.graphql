@@ -528,9 +528,14 @@ type AloitusKuulutus {
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
   hankkeenKuvaus: HankkeenKuvaukset
-  esitettavatYhteystiedot: [Yhteystieto!]
+  kuulutusYhteystiedot: KuulutusYhteystiedot
   palautusSyy: String
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+}
+
+type KuulutusYhteystiedot {
+  yhteysTiedot: [Yhteystieto!]
+  yhteysHenkilot: [String!]
 }
 
 type AloitusKuulutusJulkaisu {

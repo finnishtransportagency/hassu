@@ -43,8 +43,13 @@ input AloitusKuulutusInput {
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
   hankkeenKuvaus: HankkeenKuvauksetInput
-  esitettavatYhteystiedot: [YhteystietoInput!]
+  kuulutusYhteystiedot: KuulutusYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
+}
+
+input KuulutusYhteystiedotInput {
+  yhteysTiedot: [YhteystietoInput!]
+  yhteysHenkilot: [String!]
 }
 
 input IlmoituksenVastaanottajatInput {

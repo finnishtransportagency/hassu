@@ -2,13 +2,20 @@ import {
   AloitusKuulutusJulkaisu,
   DBProjekti,
   HyvaksymisPaatosVaiheJulkaisu,
+  KuulutusYhteystiedot,
   NahtavillaoloVaiheJulkaisu,
   Velho,
-  Yhteystieto
+  Yhteystieto,
 } from "../database/model";
 import cloneDeep from "lodash/cloneDeep";
-import { AloitusKuulutusTila, HyvaksymisPaatosVaiheTila, NahtavillaoloVaiheTila } from "../../../common/graphql/apiModel";
+import {
+  AloitusKuulutusTila,
+  HyvaksymisPaatosVaiheTila,
+  NahtavillaoloVaiheTila,
+  ProjektiRooli,
+} from "../../../common/graphql/apiModel";
 import { deepClone } from "aws-cdk/lib/util";
+import { vaylaUserToYhteystieto } from "../util/vaylaUserToYhteystieto";
 
 function createNextAloitusKuulutusJulkaisuID(dbProjekti: DBProjekti) {
   if (!dbProjekti.aloitusKuulutusJulkaisut) {
@@ -20,11 +27,11 @@ function createNextAloitusKuulutusJulkaisuID(dbProjekti: DBProjekti) {
 export class AsiakirjaAdapter {
   adaptAloitusKuulutusJulkaisu(dbProjekti: DBProjekti): AloitusKuulutusJulkaisu {
     if (dbProjekti.aloitusKuulutus) {
-      const { esitettavatYhteystiedot, palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.aloitusKuulutus;
+      const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.aloitusKuulutus;
       return {
         ...includedFields,
         id: createNextAloitusKuulutusJulkaisuID(dbProjekti),
-        yhteystiedot: adaptYhteystiedot(dbProjekti, esitettavatYhteystiedot),
+        yhteystiedot: adaptKuulutusYhteystiedot(dbProjekti, kuulutusYhteystiedot),
         velho: adaptVelho(dbProjekti),
         suunnitteluSopimus: cloneDeep(dbProjekti.suunnitteluSopimus),
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
@@ -104,23 +111,29 @@ export class AsiakirjaAdapter {
   }
 }
 
-function adaptYhteystiedot(dbProjekti: DBProjekti, esitettavatYhteystiedot: Yhteystieto[] | null): Yhteystieto[] {
+function adaptKuulutusYhteystiedot(
+  dbProjekti: DBProjekti,
+  kuulutusYhteystiedot: KuulutusYhteystiedot | null
+): Yhteystieto[] {
   const yt: Yhteystieto[] = [];
+  const sahkopostit: string[] = [];
   dbProjekti.kayttoOikeudet
-    .filter(({ esitetaanKuulutuksessa }) => !!esitetaanKuulutuksessa)
+    .filter(
+      ({ kayttajatunnus, rooli }) =>
+        rooli === ProjektiRooli.PROJEKTIPAALLIKKO ||
+        kuulutusYhteystiedot?.yhteysHenkilot?.find((yh) => yh === kayttajatunnus)
+    )
     .forEach((oikeus) => {
-      const [sukunimi, etunimi] = oikeus.nimi.split(/, /g);
-      yt.push({
-        etunimi,
-        sukunimi,
-        puhelinnumero: oikeus.puhelinnumero,
-        sahkoposti: oikeus.email,
-        organisaatio: oikeus.organisaatio,
-      });
+      yt.push(vaylaUserToYhteystieto(oikeus));
+      sahkopostit.push(oikeus.email); //Kerää sähköpostit myöhempää duplikaattien tarkistusta varten.
     });
-  if (esitettavatYhteystiedot) {
-    esitettavatYhteystiedot.forEach((yhteystieto) => {
-      yt.push(yhteystieto);
+  if (kuulutusYhteystiedot.yhteysTiedot) {
+    kuulutusYhteystiedot.yhteysTiedot.forEach((yhteystieto) => {
+      if (!sahkopostit.find((email) => email === yhteystieto.sahkoposti)) {
+        //Varmista, ettei ole duplikaatteja
+        yt.push(yhteystieto);
+        sahkopostit.push(yhteystieto.sahkoposti);
+      }
     });
   }
   return yt;

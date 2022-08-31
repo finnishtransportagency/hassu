@@ -22,6 +22,7 @@ import {
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
   AsiakirjaTyyppi,
+  Yhteystieto,
 } from "@services/api";
 import log from "loglevel";
 import { PageProps } from "@pages/_app";
@@ -56,7 +57,7 @@ type RequiredProjektiFields = Required<{
 type FormValues = RequiredProjektiFields & {
   aloitusKuulutus: Pick<
     AloitusKuulutusInput,
-    | "esitettavatYhteystiedot"
+    | "kuulutusYhteystiedot"
     | "kuulutusPaiva"
     | "hankkeenKuvaus"
     | "siirtyySuunnitteluVaiheeseen"
@@ -131,6 +132,11 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
         ]),
       ];
 
+      const yhteysTiedot: Yhteystieto[] =
+        projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.filter((yt) => yt as Yhteystieto) || [];
+      const yhteysHenkilot: string[] =
+        projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysHenkilot?.filter((yt) => yt) || [];
+
       const tallentamisTiedot: FormValues = {
         oid: projekti.oid,
         kayttoOikeudet:
@@ -157,13 +163,10 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
           hankkeenKuvaus: removeTypeName(projekti?.aloitusKuulutus?.hankkeenKuvaus),
           kuulutusPaiva: projekti?.aloitusKuulutus?.kuulutusPaiva,
           siirtyySuunnitteluVaiheeseen: projekti?.aloitusKuulutus?.siirtyySuunnitteluVaiheeseen,
-          esitettavatYhteystiedot:
-            projekti?.aloitusKuulutus?.esitettavatYhteystiedot
-              ?.filter((yt) => yt)
-              .map((yhteystieto) => {
-                const { __typename, ...yhteystietoInput } = yhteystieto;
-                return yhteystietoInput;
-              }) || [],
+          kuulutusYhteystiedot: {
+            yhteysTiedot,
+            yhteysHenkilot,
+          },
         },
       };
 
@@ -186,7 +189,8 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
 
   const saveAloituskuulutus = useCallback(
     async (formData: FormValues) => {
-      deleteFieldArrayIds(formData?.aloitusKuulutus?.esitettavatYhteystiedot);
+      deleteFieldArrayIds(formData?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot);
+      deleteFieldArrayIds(formData?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysHenkilot);
       deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat);
       deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset);
       setIsFormSubmitting(true);
@@ -515,7 +519,7 @@ export default function Aloituskuulutus({ setRouteLabels }: PageProps): ReactEle
               getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA)
             }
             isLoadingProjekti={isLoadingProjekti}
-          ></AloituskuulutusLukunakyma>
+          />
         </FormProvider>
       )}
 

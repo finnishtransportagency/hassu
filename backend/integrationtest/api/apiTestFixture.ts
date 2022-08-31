@@ -37,7 +37,7 @@ class ApiTestFixture {
     kunta: "Nokia",
   };
 
-  esitettavatYhteystiedot: Yhteystieto[] = [
+  yhteystietoLista: Yhteystieto[] = [
     {
       __typename: "Yhteystieto",
       etunimi: "Marko",
@@ -48,7 +48,7 @@ class ApiTestFixture {
     },
   ];
 
-  esitettavatYhteystiedotInput: YhteystietoInput[] = [
+  yhteystietoInputLista: YhteystietoInput[] = [
     {
       etunimi: "Etunimi",
       sukunimi: "Sukunimi",
@@ -77,7 +77,11 @@ class ApiTestFixture {
       SAAME: "Saameksi",
     },
     siirtyySuunnitteluVaiheeseen: "2022-01-01",
-    esitettavatYhteystiedot: this.esitettavatYhteystiedot,
+    kuulutusYhteystiedot: {
+      __typename: "KuulutusYhteystiedot",
+      yhteysTiedot: this.yhteystietoLista,
+      yhteysHenkilot: [],
+    },
   };
 
   kielitiedotInput: KielitiedotInput = {
@@ -137,7 +141,7 @@ class ApiTestFixture {
       vuorovaikutusJulkaisuPaiva: "2022-03-23",
       videot: [{ nimi: "Esittely " + vuorovaikutusNumero, url: "https://video" }],
       kysymyksetJaPalautteetViimeistaan: "2022-03-23T23:48",
-      esitettavatYhteystiedot: apiTestFixture.esitettavatYhteystiedot,
+      esitettavatYhteystiedot: apiTestFixture.yhteystietoLista,
       ilmoituksenVastaanottajat: apiTestFixture.ilmoituksenVastaanottajat,
       vuorovaikutusYhteysHenkilot,
       vuorovaikutusTilaisuudet: [
@@ -169,7 +173,7 @@ class ApiTestFixture {
           alkamisAika: "10:00",
           paattymisAika: "11:00",
           projektiYhteysHenkilot: vuorovaikutusYhteysHenkilot,
-          esitettavatYhteystiedot: this.esitettavatYhteystiedotInput,
+          esitettavatYhteystiedot: this.yhteystietoInputLista,
         },
         {
           tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
@@ -177,7 +181,7 @@ class ApiTestFixture {
           paivamaara: "2033-04-05",
           alkamisAika: "12:00",
           paattymisAika: "13:00",
-          esitettavatYhteystiedot: this.esitettavatYhteystiedotInput,
+          esitettavatYhteystiedot: this.yhteystietoInputLista,
         },
       ],
     },
@@ -193,7 +197,7 @@ class ApiTestFixture {
     muistutusoikeusPaattyyPaiva: "2042-06-08",
     kuulutusYhteysHenkilot,
     ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
-    kuulutusYhteystiedot: this.esitettavatYhteystiedotInput,
+    kuulutusYhteystiedot: this.yhteystietoInputLista,
   });
 }
 
