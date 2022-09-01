@@ -76,7 +76,7 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
 ]);
 
 export default function AloituskuulutusPage({ setRouteLabels }: PageProps): ReactElement {
-  const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti();
+  const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
   useProjektiBreadcrumbs(setRouteLabels);
 
   return (

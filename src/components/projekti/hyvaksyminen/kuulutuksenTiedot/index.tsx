@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { TallennaProjektiInput, KirjaamoOsoite } from "@services/api";
+import { TallennaProjektiInput, KirjaamoOsoite, HyvaksymisPaatosVaiheInput } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import React, { ReactElement, useEffect, useMemo } from "react";
+import React, { ReactElement, useMemo } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { hyvaksymispaatosKuulutusSchema } from "src/schemas/hyvaksymispaatosKuulutus";
@@ -19,7 +19,11 @@ import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 
-export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid" | "hyvaksymisPaatosVaihe">;
+export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid"> & {
+  hyvaksymisPaatosVaihe: Omit<HyvaksymisPaatosVaiheInput, "hallintoOikeus"> & {
+    hallintoOikeus: HyvaksymisPaatosVaiheInput["hallintoOikeus"] | "";
+  };
+};
 
 export default function KuulutuksenTiedot(): ReactElement {
   const { data: projekti } = useProjekti({ revalidateOnMount: true });
@@ -36,12 +40,12 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
 
   const defaultValues: KuulutuksenTiedotFormValues = useMemo(() => {
-    const formValues = {
+    const formValues: KuulutuksenTiedotFormValues = {
       oid: projekti.oid,
       hyvaksymisPaatosVaihe: {
         kuulutusPaiva: projekti?.hyvaksymisPaatosVaihe?.kuulutusPaiva || "",
         kuulutusVaihePaattyyPaiva: projekti?.hyvaksymisPaatosVaihe?.kuulutusVaihePaattyyPaiva || "",
-        hallintoOikeus: projekti?.hyvaksymisPaatosVaihe?.hallintoOikeus,
+        hallintoOikeus: projekti?.hyvaksymisPaatosVaihe?.hallintoOikeus || "",
         kuulutusYhteystiedot: projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot
           ? projekti.hyvaksymisPaatosVaihe.kuulutusYhteystiedot.map((yhteystieto) => removeTypeName(yhteystieto))
           : [],
@@ -73,13 +77,7 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
 
   const {
     formState: { isDirty },
-    watch,
   } = useFormReturn;
-
-  const formData = watch();
-  useEffect(() => {
-    console.log({ formData, defaultValues });
-  }, [defaultValues, formData]);
 
   useLeaveConfirm(isDirty);
 

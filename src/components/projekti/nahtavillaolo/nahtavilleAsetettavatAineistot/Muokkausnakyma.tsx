@@ -38,7 +38,7 @@ const getDefaultValueForAineistoNahtavilla = (aineistot: Aineisto[] | undefined 
 };
 
 export default function Muokkausnakyma(): ReactElement {
-  const { data: projekti } = useProjekti();
+  const { data: projekti } = useProjekti({ revalidateOnMount: true });
   return <>{projekti && <MuokkausnakymaLomake projekti={projekti} />}</>;
 }
 
