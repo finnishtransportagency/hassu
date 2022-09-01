@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Aineisto, AineistoInput, TallennaProjektiInput } from "@services/api";
-import React, { useEffect } from "react";
+import React, { ReactElement, useEffect, useMemo } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot";
@@ -37,44 +37,51 @@ const getDefaultValueForAineistoNahtavilla = (aineistot: Aineisto[] | undefined 
   }, {});
 };
 
-function defaultValues(projekti: ProjektiLisatiedolla): NahtavilleAsetettavatAineistotFormValues {
-  const lisaAineisto: AineistoInput[] =
-    projekti.nahtavillaoloVaihe?.lisaAineisto?.map(({ dokumenttiOid, nimi, jarjestys }) => ({
-      dokumenttiOid,
-      jarjestys,
-      nimi,
-    })) || [];
-
-  return {
-    oid: projekti.oid,
-    aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(projekti.nahtavillaoloVaihe?.aineistoNahtavilla),
-    lisaAineisto,
-  };
+export default function Muokkausnakyma(): ReactElement {
+  const { data: projekti } = useProjekti();
+  return <>{projekti && <MuokkausnakymaLomake projekti={projekti} />}</>;
 }
 
-export default function Muokkausnakyma() {
-  const { data: projekti } = useProjekti();
+interface MuokkausnakymaLomakeProps {
+  projekti: ProjektiLisatiedolla;
+}
+
+function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
+  const defaultValues: NahtavilleAsetettavatAineistotFormValues = useMemo(() => {
+    const lisaAineisto: AineistoInput[] =
+      projekti.nahtavillaoloVaihe?.lisaAineisto?.map(({ dokumenttiOid, nimi, jarjestys }) => ({
+        dokumenttiOid,
+        jarjestys,
+        nimi,
+      })) || [];
+
+    return {
+      oid: projekti.oid,
+      aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(projekti.nahtavillaoloVaihe?.aineistoNahtavilla),
+      lisaAineisto,
+    };
+  }, [projekti]);
 
   const formOptions: UseFormProps<NahtavilleAsetettavatAineistotFormValues> = {
     resolver: yupResolver(nahtavillaoloAineistotSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
+    defaultValues,
   };
 
   const useFormReturn = useForm<NahtavilleAsetettavatAineistotFormValues>(formOptions);
   const {
-    reset,
     formState: { isDirty },
+    watch,
   } = useFormReturn;
 
-  useLeaveConfirm(isDirty);
+  const some = watch();
 
   useEffect(() => {
-    if (projekti?.oid) {
-      const tallentamisTiedot = defaultValues(projekti);
-      reset(tallentamisTiedot);
-    }
-  }, [projekti, reset]);
+    console.log({ some, defaultValues });
+  }, [defaultValues, some]);
+
+  useLeaveConfirm(isDirty);
 
   return (
     <FormProvider {...useFormReturn}>

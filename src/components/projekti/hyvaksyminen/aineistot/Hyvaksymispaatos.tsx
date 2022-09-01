@@ -49,7 +49,7 @@ export default function Hyvaksymispaatos({ projekti }: Props) {
               value.push({ ...aineisto, kategoriaId: null, jarjestys: value.length });
             }
           });
-          setValue("hyvaksymisPaatos", value);
+          setValue("hyvaksymisPaatos", value, { shouldDirty: true });
         }}
       />
     </>

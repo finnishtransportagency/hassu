@@ -56,7 +56,7 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
               value.push({ ...aineisto, jarjestys: value.length });
             }
           });
-          setValue("lisaAineisto", value);
+          setValue("lisaAineisto", value, { shouldDirty: true });
         }}
       />
       <h5 className="vayla-smallest-title">Lausuntopyyntöön liitettävä linkki</h5>

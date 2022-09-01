@@ -1,5 +1,5 @@
 import { PageProps } from "@pages/_app";
-import React, { ReactElement, useCallback, useState, useMemo, useEffect } from "react";
+import React, { ReactElement, useCallback, useState, useMemo } from "react";
 import { api, HyvaksymispaatosInput, TallennaProjektiInput } from "@services/api";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
