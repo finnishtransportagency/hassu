@@ -78,9 +78,8 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
       <Section>
         <h4 className="vayla-label">Muutoksenhaku</h4>
         <p>
-          Päätökseen voi valittamalla hakea muutosta{" "}
-          {t(`hallinto-oikeus-ablatiivi.${hyvaksymisPaatosVaiheJulkaisu.hallintoOikeus}`)} 30 päivän kuluessa päätöksen
-          tiedoksiannosta. Valitusosoituksen tiedosto löytyy Päätös ja sen liitteenä oleva aineisto -välilehdeltä.
+          Päätökseen voi valittamalla hakea muutosta {t(`hallinto-oikeus-ablatiivi.${hyvaksymisPaatosVaiheJulkaisu.hallintoOikeus}`)} 30
+          päivän kuluessa päätöksen tiedoksiannosta. Valitusosoituksen tiedosto löytyy Päätös ja sen liitteenä oleva aineisto -välilehdeltä.
         </p>
       </Section>
       <Section>
@@ -89,30 +88,24 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
           {hyvaksymisPaatosVaiheJulkaisu.kuulutusYhteystiedot?.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
               {capitalize(yhteystieto.etunimi)} {capitalize(yhteystieto.sukunimi)}, puh. {yhteystieto.puhelinnumero},{" "}
-              {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio}
-              )
+              {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio})
             </p>
           ))}
           {vuorovaikutusYhteysHenkilot.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
-              {yhteystieto.nimi}, puh. {yhteystieto.puhelinnumero},{" "}
-              {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} ({yhteystieto.organisaatio})
+              {yhteystieto.nimi}, puh. {yhteystieto.puhelinnumero}, {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} (
+              {yhteystieto.organisaatio})
             </p>
           ))}
         </SectionContent>
         <SectionContent>
           <p className="vayla-label mb-5">Kuulutus julkisella puolella</p>
-          {!published && (
-            <p>Linkki julkiselle puolelle muodostetaan kuulutuspäivänä. Kuulutuspäivä on {kuulutusPaiva}.</p>
-          )}
+          {!published && <p>Linkki julkiselle puolelle muodostetaan kuulutuspäivänä. Kuulutuspäivä on {kuulutusPaiva}.</p>}
           {published && <ExtLink href={hyvaksymisPaatosVaiheHref}>Kuulutus palvelun julkisella puolella</ExtLink>}
         </SectionContent>
         <SectionContent>
           <p className="vayla-label">Ladattavat kuulutukset ja ilmoitukset</p>
-          <p>
-            Kuulutus ja ilmoitus ensisijaisella kielellä (
-            {lowerCase(hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.ensisijainenKieli)})
-          </p>
+          <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({lowerCase(hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.ensisijainenKieli)})</p>
           {ensisijaisetPDFt && (
             <div className="flex flex-col mb-4">
               <div>
@@ -121,21 +114,21 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
                 </Link>
               </div>
               <div>
-                <Link underline="none" href={ensisijaisetPDFt.hyvaksymisIlmoitusPDFPath} target="_blank">
-                  {splitFilePath(ensisijaisetPDFt.hyvaksymisIlmoitusPDFPath).fileName}
-                </Link>
-              </div>
-              <div>
-                <Link underline="none" href={ensisijaisetPDFt.hyvaksymisLahetekirjePDFPath} target="_blank">
-                  {splitFilePath(ensisijaisetPDFt.hyvaksymisLahetekirjePDFPath).fileName}
+                <Link underline="none" href={ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath} target="_blank">
+                  {splitFilePath(ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath).fileName}
                 </Link>
               </div>
               <div>
                 <Link
                   underline="none"
-                  href={ensisijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath}
+                  href={ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath}
                   target="_blank"
                 >
+                  {splitFilePath(ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath).fileName}
+                </Link>
+              </div>
+              <div>
+                <Link underline="none" href={ensisijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath} target="_blank">
                   {splitFilePath(ensisijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath).fileName}
                 </Link>
               </div>
@@ -150,8 +143,7 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
           {hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.toissijainenKieli && (
             <div className="content mb-4">
               <p>
-                Kuulutus ja ilmoitus toissijaisella kielellä (
-                {lowerCase(hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.toissijainenKieli)})
+                Kuulutus ja ilmoitus toissijaisella kielellä ({lowerCase(hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.toissijainenKieli)})
               </p>
               {toissijaisetPDFt && (
                 <div className="flex flex-col">
@@ -161,30 +153,26 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
                     </Link>
                   </div>
                   <div>
-                    <Link underline="none" href={toissijaisetPDFt.hyvaksymisIlmoitusPDFPath} target="_blank">
-                      {splitFilePath(toissijaisetPDFt.hyvaksymisIlmoitusPDFPath).fileName}
-                    </Link>
-                  </div>
-                  <div>
-                    <Link underline="none" href={toissijaisetPDFt.hyvaksymisLahetekirjePDFPath} target="_blank">
-                      {splitFilePath(toissijaisetPDFt.hyvaksymisLahetekirjePDFPath).fileName}
+                    <Link underline="none" href={toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath} target="_blank">
+                      {splitFilePath(toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath).fileName}
                     </Link>
                   </div>
                   <div>
                     <Link
                       underline="none"
-                      href={toissijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath}
+                      href={toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath}
                       target="_blank"
                     >
+                      {splitFilePath(toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath).fileName}
+                    </Link>
+                  </div>
+                  <div>
+                    <Link underline="none" href={toissijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath} target="_blank">
                       {splitFilePath(toissijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath).fileName}
                     </Link>
                   </div>
                   <div>
-                    <Link
-                      underline="none"
-                      href={toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath}
-                      target="_blank"
-                    >
+                    <Link underline="none" href={toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath} target="_blank">
                       {splitFilePath(toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath).fileName}
                     </Link>
                   </div>

@@ -36,8 +36,8 @@ export type HyvaksymisPaatosVaiheJulkaisu = {
 
 export type HyvaksymisPaatosVaihePDF = {
   hyvaksymisKuulutusPDFPath: string;
-  ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath: string,
-  ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath: string,
+  ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath: string;
+  ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath: string;
   hyvaksymisIlmoitusLausunnonantajillePDFPath: string;
   hyvaksymisIlmoitusMuistuttajillePDFPath: string;
 };
