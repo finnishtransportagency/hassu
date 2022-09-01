@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Aineisto, AineistoInput, TallennaProjektiInput } from "@services/api";
-import React, { useEffect } from "react";
+import React, { ReactElement, useMemo } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot";
@@ -38,48 +38,45 @@ const getDefaultValueForAineistoNahtavilla = (aineistot: Aineisto[] | undefined 
   }, {});
 };
 
-function defaultValues(projekti: ProjektiLisatiedolla): HyvaksymisPaatosVaiheAineistotFormValues {
-  const hyvaksymisPaatos: AineistoInput[] =
-    projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos?.map(({ dokumenttiOid, nimi, jarjestys }) => ({
-      dokumenttiOid,
-      jarjestys,
-      nimi,
-    })) || [];
+export default function Muokkausnakyma(): ReactElement {
+  const { data: projekti } = useProjekti({ revalidateOnMount: true });
 
-  return {
-    oid: projekti.oid,
-    aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(projekti.hyvaksymisPaatosVaihe?.aineistoNahtavilla),
-    hyvaksymisPaatos,
-  };
+  return <>{projekti && <MuokkausnakymaForm projekti={projekti} />}</>;
 }
 
-export default function Muokkausnakyma() {
-  const { data: projekti } = useProjekti();
+interface MuokkausnakymaFormProps {
+  projekti: ProjektiLisatiedolla;
+}
+
+function MuokkausnakymaForm({ projekti }: MuokkausnakymaFormProps) {
+  const defaultValues: HyvaksymisPaatosVaiheAineistotFormValues = useMemo(() => {
+    const hyvaksymisPaatos: AineistoInput[] =
+      projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos?.map(({ dokumenttiOid, nimi, jarjestys }) => ({
+        dokumenttiOid,
+        jarjestys,
+        nimi,
+      })) || [];
+
+    return {
+      oid: projekti.oid,
+      aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(projekti.hyvaksymisPaatosVaihe?.aineistoNahtavilla),
+      hyvaksymisPaatos,
+    };
+  }, [projekti]);
 
   const formOptions: UseFormProps<HyvaksymisPaatosVaiheAineistotFormValues> = {
     resolver: yupResolver(nahtavillaoloAineistotSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
+    defaultValues,
   };
 
   const useFormReturn = useForm<HyvaksymisPaatosVaiheAineistotFormValues>(formOptions);
   const {
-    reset,
     formState: { isDirty },
   } = useFormReturn;
 
   useLeaveConfirm(isDirty);
-
-  useEffect(() => {
-    if (projekti?.oid) {
-      const tallentamisTiedot = defaultValues(projekti);
-      reset(tallentamisTiedot);
-    }
-  }, [projekti, reset]);
-
-  if (!projekti) {
-    return null;
-  }
 
   return (
     <FormProvider {...useFormReturn}>

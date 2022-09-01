@@ -4,7 +4,7 @@ import log from "loglevel";
 import { PageProps } from "@pages/_app";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import { api, Projekti, Status, TallennaProjektiInput } from "@services/api";
+import { api, Status, TallennaProjektiInput } from "@services/api";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, FormProvider, useForm, UseFormProps } from "react-hook-form";
 import Button from "@components/button/Button";
@@ -46,13 +46,6 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
   ProjektiTestType.PROJEKTI_HAS_PAALLIKKO,
   ProjektiTestType.PROJEKTI_IS_CREATED,
 ]);
-
-function booleanToString(value: any) {
-  if (typeof value === "boolean") {
-    return `${value}`;
-  }
-  return value;
-}
 
 export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   useProjektiBreadcrumbs(setRouteLabels);
@@ -176,18 +169,18 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
     [reset, projekti?.status, reloadProjekti, showSuccessMessage, talletaLogo, showErrorMessage]
   );
 
-  // useEffect(() => {
-  //   // Detect status change
-  //   if (statusBeforeSave && projekti.status) {
-  //     log.info("previous state:" + statusBeforeSave + ", current state:" + projekti.status);
-  //     if (statusBeforeSave === Status.EI_JULKAISTU && projekti.status === Status.ALOITUSKUULUTUS) {
-  //       const siirtymaTimer = setTimeout(() => {
-  //         router.push(`/yllapito/projekti/${projekti?.oid}/aloituskuulutus`);
-  //       }, 1500);
-  //       return () => clearTimeout(siirtymaTimer);
-  //     }
-  //   }
-  // }, [projekti, router, statusBeforeSave]);
+  useEffect(() => {
+    // Detect status change
+    if (statusBeforeSave && projekti.status) {
+      log.info("previous state:" + statusBeforeSave + ", current state:" + projekti.status);
+      if (statusBeforeSave === Status.EI_JULKAISTU && projekti.status === Status.ALOITUSKUULUTUS) {
+        const siirtymaTimer = setTimeout(() => {
+          router.push(`/yllapito/projekti/${projekti?.oid}/aloituskuulutus`);
+        }, 1500);
+        return () => clearTimeout(siirtymaTimer);
+      }
+    }
+  }, [projekti, router, statusBeforeSave]);
 
   return (
     <>
