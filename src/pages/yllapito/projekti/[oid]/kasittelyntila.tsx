@@ -1,6 +1,6 @@
 import { PageProps } from "@pages/_app";
-import React, { ReactElement, useCallback, useState, useMemo } from "react";
-import { api, TallennaProjektiInput } from "@services/api";
+import React, { ReactElement, useCallback, useState, useMemo, useEffect } from "react";
+import { api, HyvaksymispaatosInput, TallennaProjektiInput } from "@services/api";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
@@ -15,7 +15,6 @@ import HassuStack from "@components/layout/HassuStack";
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
-import { removeTypeName } from "src/util/removeTypeName";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { kasittelynTilaSchema } from "src/schemas/kasittelynTila";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
@@ -47,17 +46,32 @@ interface HenkilotFormProps {
 function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormProps): ReactElement {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const isLoadingProjekti = !projekti && !projektiLoadError;
-  const defaultValues: FormValues = useMemo(
-    () => ({
+  const defaultValues: FormValues = useMemo(() => {
+    const hyvaksymispaatos: HyvaksymispaatosInput = {
+      paatoksenPvm: projekti.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm || "",
+      asianumero: projekti.kasittelynTila?.hyvaksymispaatos?.asianumero || "",
+    };
+
+    //TODO When the input fields are enabled, the values should be strings not null or undefined
+    const ensimmainenJatkopaatos: HyvaksymispaatosInput = {
+      paatoksenPvm: undefined,
+      asianumero: undefined,
+    };
+    //TODO When the input fields are enabled, the values should be strings not null or undefined
+    const toinenJatkopaatos: HyvaksymispaatosInput = {
+      paatoksenPvm: undefined,
+      asianumero: undefined,
+    };
+    const formValues: FormValues = {
       oid: projekti.oid,
       kasittelynTila: {
-        hyvaksymispaatos: removeTypeName(projekti.kasittelynTila?.hyvaksymispaatos),
-        ensimmainenJatkopaatos: removeTypeName(projekti.kasittelynTila?.ensimmainenJatkopaatos),
-        toinenJatkopaatos: removeTypeName(projekti.kasittelynTila?.toinenJatkopaatos),
+        hyvaksymispaatos,
+        ensimmainenJatkopaatos,
+        toinenJatkopaatos,
       },
-    }),
-    [projekti]
-  );
+    };
+    return formValues;
+  }, [projekti]);
 
   const disableFormEdit =
     !projekti?.nykyinenKayttaja.onYllapitaja || projektiLoadError || isLoadingProjekti || isFormSubmitting;

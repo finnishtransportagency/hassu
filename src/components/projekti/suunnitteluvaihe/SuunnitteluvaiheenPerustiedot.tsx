@@ -6,7 +6,7 @@ import Textarea from "@components/form/Textarea";
 import { Kieli, SuunnitteluVaiheInput, TallennaProjektiInput, api, AloitusKuulutusTila } from "@services/api";
 import Section from "@components/layout/Section";
 import lowerCase from "lodash/lowerCase";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useMemo, useState } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import TextInput from "@components/form/TextInput";
 import { DialogActions, DialogContent, Stack } from "@mui/material";
@@ -14,11 +14,12 @@ import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
 import HassuSpinner from "@components/HassuSpinner";
-import { removeTypeName } from "src/util/removeTypeName";
 import HassuDialog from "@components/HassuDialog";
 import SaapuneetKysymyksetJaPalautteet from "./SaapuneetKysymyksetJaPalautteet";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
+import { KeyedMutator } from "swr";
+import { pickBy } from "lodash";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -37,24 +38,74 @@ interface Props {
 }
 
 export default function SuunnitteluvaiheenPerustiedot({ isDirtyHandler }: Props): ReactElement {
-  const { data: projekti, mutate: reloadProjekti } = useProjekti();
+  const { data: projekti, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
+  return <>{projekti && <SuunnitteluvaiheenPerustiedotForm {...{ projekti, reloadProjekti, isDirtyHandler }} />}</>;
+}
+
+type SuunnitteluvaiheenPerustiedotFormProps = {
+  projekti: ProjektiLisatiedolla;
+  reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
+} & Props;
+
+function SuunnitteluvaiheenPerustiedotForm({
+  projekti,
+  reloadProjekti,
+  isDirtyHandler,
+}: SuunnitteluvaiheenPerustiedotFormProps): ReactElement {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
+
+  const defaultValues: FormValues = useMemo(() => {
+    const { ensisijainenKieli, toissijainenKieli } = projekti.kielitiedot || {};
+
+    const hasRuotsinKieli = ensisijainenKieli === Kieli.RUOTSI || toissijainenKieli === Kieli.RUOTSI;
+    const hasSaamenKieli = ensisijainenKieli === Kieli.SAAME || toissijainenKieli === Kieli.SAAME;
+
+    const hankkeenKuvausHasBeenCreated: boolean = !!projekti.suunnitteluVaihe?.hankkeenKuvaus;
+
+    // SUOMI hankkeen kuvaus on aina lomakkeella, RUOTSI JA SAAME vain jos kyseinen kieli on projektin kielitiedoissa.
+    // Jos kieli ei ole kielitiedoissa kyseisen kielen kenttää ei tule lisätä hankkeenKuvaus olioon
+    // Tästä syystä pickBy:llä poistetaan undefined hankkeenkuvaus tiedot.
+    const hankkeenKuvaus: FormValues["suunnitteluVaihe"]["hankkeenKuvaus"] = hankkeenKuvausHasBeenCreated
+      ? {
+          SUOMI: projekti.suunnitteluVaihe?.hankkeenKuvaus?.SUOMI || "",
+          ...pickBy(
+            {
+              RUOTSI: hasRuotsinKieli ? projekti.suunnitteluVaihe?.hankkeenKuvaus?.RUOTSI || "" : undefined,
+              SAAME: hasSaamenKieli ? projekti.suunnitteluVaihe?.hankkeenKuvaus?.SAAME || "" : undefined,
+            },
+            (value) => value !== undefined
+          ),
+        }
+      : {
+          SUOMI: projekti.aloitusKuulutus?.hankkeenKuvaus?.SUOMI || "",
+          ...pickBy(
+            {
+              RUOTSI: hasRuotsinKieli ? projekti.aloitusKuulutus?.hankkeenKuvaus?.RUOTSI || "" : undefined,
+              SAAME: hasSaamenKieli ? projekti.aloitusKuulutus?.hankkeenKuvaus?.SAAME || "" : undefined,
+            },
+            (value) => value !== undefined
+          ),
+        };
+
+    const tallentamisTiedot: FormValues = {
+      oid: projekti.oid,
+      suunnitteluVaihe: {
+        arvioSeuraavanVaiheenAlkamisesta: projekti.suunnitteluVaihe?.arvioSeuraavanVaiheenAlkamisesta || "",
+        suunnittelunEteneminenJaKesto: projekti.suunnitteluVaihe?.suunnittelunEteneminenJaKesto || "",
+        hankkeenKuvaus: hankkeenKuvaus,
+        julkinen: !!projekti.suunnitteluVaihe?.julkinen,
+      },
+    };
+    return tallentamisTiedot;
+  }, [projekti]);
 
   const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(suunnittelunPerustiedotSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
-    defaultValues: {
-      suunnitteluVaihe: {
-        hankkeenKuvaus: {
-          SUOMI: projekti?.aloitusKuulutus?.hankkeenKuvaus?.SUOMI,
-          RUOTSI: projekti?.aloitusKuulutus?.hankkeenKuvaus?.RUOTSI,
-          SAAME: projekti?.aloitusKuulutus?.hankkeenKuvaus?.SAAME,
-        },
-      },
-    },
+    defaultValues,
   };
 
   const useFormReturn = useForm<FormValues>(formOptions);
@@ -98,6 +149,7 @@ export default function SuunnitteluvaiheenPerustiedot({ isDirtyHandler }: Props)
   };
 
   const saveSuunnitteluvaihe = async (formData: FormValues) => {
+    reset(formData);
     await api.tallennaProjekti(formData);
     if (reloadProjekti) await reloadProjekti();
   };
@@ -105,25 +157,6 @@ export default function SuunnitteluvaiheenPerustiedot({ isDirtyHandler }: Props)
   useEffect(() => {
     isDirtyHandler(isDirty);
   }, [isDirty, isDirtyHandler]);
-
-  useEffect(() => {
-    if (projekti?.oid) {
-      const tallentamisTiedot: FormValues = {
-        oid: projekti.oid,
-        suunnitteluVaihe: {
-          arvioSeuraavanVaiheenAlkamisesta: projekti.suunnitteluVaihe?.arvioSeuraavanVaiheenAlkamisesta,
-          suunnittelunEteneminenJaKesto: projekti.suunnitteluVaihe?.suunnittelunEteneminenJaKesto,
-          hankkeenKuvaus: removeTypeName(projekti.suunnitteluVaihe?.hankkeenKuvaus),
-          julkinen: projekti.suunnitteluVaihe?.julkinen,
-        },
-      };
-      reset(tallentamisTiedot);
-    }
-  }, [projekti, reset]);
-
-  if (!projekti) {
-    return <></>;
-  }
 
   const kielitiedot = projekti.kielitiedot;
   const ensisijainenKieli = projekti.kielitiedot ? projekti.kielitiedot.ensisijainenKieli : Kieli.SUOMI;
@@ -210,7 +243,7 @@ export default function SuunnitteluvaiheenPerustiedot({ isDirtyHandler }: Props)
             </SectionContent>
           </Section>
           {projekti && <SaapuneetKysymyksetJaPalautteet projekti={projekti} />}
-          <input type="hidden" {...register("suunnitteluVaihe.julkinen")} />
+          <input type="hidden" {...register("suunnitteluVaihe.julkinen", { setValueAs: (value) => !!value })} />
         </form>
       </FormProvider>
       <Section noDivider>

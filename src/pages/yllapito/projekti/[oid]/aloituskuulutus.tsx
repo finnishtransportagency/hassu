@@ -1,7 +1,7 @@
 import Textarea from "@components/form/Textarea";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { useRouter } from "next/router";
-import React, { ReactElement, useCallback, useMemo, useState } from "react";
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
@@ -22,6 +22,7 @@ import {
   TilasiirtymaTyyppi,
   AsiakirjaTyyppi,
   Yhteystieto,
+  HankkeenKuvauksetInput,
 } from "@services/api";
 import log from "loglevel";
 import { PageProps } from "@pages/_app";
@@ -45,10 +46,10 @@ import SectionContent from "@components/layout/SectionContent";
 import HassuStack from "@components/layout/HassuStack";
 import HassuGrid from "@components/HassuGrid";
 import HassuSpinner from "@components/HassuSpinner";
-import { removeTypeName } from "src/util/removeTypeName";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
+import { pickBy } from "lodash";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -107,6 +108,24 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     const yhteysTiedot: Yhteystieto[] =
       projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.filter((yt) => yt as Yhteystieto) || [];
     const yhteysHenkilot: string[] = projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysHenkilot?.filter((yt) => yt) || [];
+    const { ensisijainenKieli, toissijainenKieli } = projekti.kielitiedot || {};
+
+    const hasRuotsinKieli = ensisijainenKieli === Kieli.RUOTSI || toissijainenKieli === Kieli.RUOTSI;
+    const hasSaamenKieli = ensisijainenKieli === Kieli.SAAME || toissijainenKieli === Kieli.SAAME;
+
+    // SUOMI hankkeen kuvaus on aina lomakkeella, RUOTSI JA SAAME vain jos kyseinen kieli on projektin kielitiedoissa.
+    // Jos kieli ei ole kielitiedoissa kyseisen kielen kenttää ei tule lisätä hankkeenKuvaus olioon
+    // Tästä syystä pickBy:llä poistetaan undefined hankkeenkuvaus tiedot.
+    const hankkeenKuvaus: HankkeenKuvauksetInput = {
+      SUOMI: projekti.aloitusKuulutus?.hankkeenKuvaus?.SUOMI || "",
+      ...pickBy(
+        {
+          RUOTSI: hasRuotsinKieli ? projekti.aloitusKuulutus?.hankkeenKuvaus?.RUOTSI || "" : undefined,
+          SAAME: hasSaamenKieli ? projekti.aloitusKuulutus?.hankkeenKuvaus?.SAAME || "" : undefined,
+        },
+        (value) => value !== undefined
+      ),
+    };
 
     const tallentamisTiedot: FormValues = {
       oid: projekti.oid,
@@ -123,7 +142,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
               sahkoposti,
             })) || [],
         },
-        hankkeenKuvaus: removeTypeName(projekti?.aloitusKuulutus?.hankkeenKuvaus),
+        hankkeenKuvaus,
         kuulutusPaiva: projekti?.aloitusKuulutus?.kuulutusPaiva,
         siirtyySuunnitteluVaiheeseen: projekti?.aloitusKuulutus?.siirtyySuunnitteluVaiheeseen,
         kuulutusYhteystiedot: {
@@ -163,7 +182,14 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     formState: { errors, isDirty },
     reset,
     setValue,
+    watch,
   } = useFormReturn;
+
+  const formData = watch();
+
+  useEffect(() => {
+    console.log({ defaultValues, formData });
+  }, [defaultValues, formData]);
 
   useLeaveConfirm(isDirty);
 
@@ -192,7 +218,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat);
       deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset);
       setIsFormSubmitting(true);
-      reset();
+      reset(formData);
       await api.tallennaProjekti(formData);
       await reloadProjekti();
     },

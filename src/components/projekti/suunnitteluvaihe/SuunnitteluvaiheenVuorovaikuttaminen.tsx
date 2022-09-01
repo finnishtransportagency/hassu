@@ -29,11 +29,12 @@ import PaivamaaratJaTiedot from "./PaivamaaratJaTiedot";
 import LukutilaLinkkiJaKutsut from "./LukutilaLinkkiJaKutsut";
 import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
 import VuorovaikutustilaisuusDialog from "./VuorovaikutustilaisuusDialog";
-import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import PdfPreviewForm from "../PdfPreviewForm";
 import { lowerCase } from "lodash";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
+import { KeyedMutator } from "swr";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 
@@ -74,11 +75,22 @@ const defaultVuorovaikutus: Vuorovaikutus = {
   vuorovaikutusNumero: 1,
 };
 
-export default function SuunnitteluvaiheenVuorovaikuttaminen({
+export default function SuunnitteluvaiheenVuorovaikuttaminen(props: Props): ReactElement {
+  const { data: projekti, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
+  return <>{projekti && <SuunnitteluvaiheenVuorovaikuttaminenForm {...props} {...{ projekti, reloadProjekti }} />}</>;
+}
+
+type SuunnitteluvaiheenVuorovaikuttaminenFormProps = {
+  projekti: ProjektiLisatiedolla;
+  reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
+} & Props;
+
+function SuunnitteluvaiheenVuorovaikuttaminenForm({
   isDirtyHandler,
   vuorovaikutusnro,
-}: Props): ReactElement {
-  const { data: projekti, mutate: reloadProjekti } = useProjekti();
+  projekti,
+  reloadProjekti,
+}: SuunnitteluvaiheenVuorovaikuttaminenFormProps): ReactElement {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
   const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
@@ -96,8 +108,9 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
     [projekti, vuorovaikutusnro]
   );
 
-  const defaultValues: Omit<VuorovaikutusFormValues, "oid"> = useMemo(() => {
+  const defaultValues: VuorovaikutusFormValues = useMemo(() => {
     return {
+      oid: projekti.oid,
       suunnitteluVaihe: {
         vuorovaikutus: {
           esittelyaineistot:
@@ -111,8 +124,8 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
               nimi,
             })) || [],
           vuorovaikutusNumero: vuorovaikutusnro,
-          vuorovaikutusJulkaisuPaiva: vuorovaikutus?.vuorovaikutusJulkaisuPaiva,
-          kysymyksetJaPalautteetViimeistaan: vuorovaikutus?.kysymyksetJaPalautteetViimeistaan,
+          vuorovaikutusJulkaisuPaiva: vuorovaikutus?.vuorovaikutusJulkaisuPaiva || "",
+          kysymyksetJaPalautteetViimeistaan: vuorovaikutus?.kysymyksetJaPalautteetViimeistaan || "",
           vuorovaikutusYhteysHenkilot:
             projekti?.kayttoOikeudet
               ?.filter(({ kayttajatunnus }) => vuorovaikutus?.vuorovaikutusYhteysHenkilot?.includes(kayttajatunnus))
@@ -132,7 +145,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                 esitettavatYhteystiedot?.map((yt) => removeTypeName(yt)) || [];
               return vuorovaikutusTilaisuusInput;
             }) || [],
-          julkinen: vuorovaikutus?.julkinen,
+          julkinen: !!vuorovaikutus?.julkinen,
           videot: defaultListWithEmptyLink(vuorovaikutus?.videot as LinkkiInput[]),
           suunnittelumateriaali: (removeTypeName(vuorovaikutus?.suunnittelumateriaali) as LinkkiInput) || {
             nimi: "",
@@ -160,7 +173,14 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
     handleSubmit,
     formState: { isDirty },
     getValues,
+    watch,
   } = useFormReturn;
+
+  const data = watch();
+
+  useEffect(() => {
+    console.log({ data, defaultValues });
+  }, [data, defaultValues]);
 
   useLeaveConfirm(isDirty);
 
@@ -170,11 +190,12 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
 
   const saveSunnitteluvaihe = useCallback(
     async (formData: VuorovaikutusFormValues) => {
+      reset(formData);
       setIsFormSubmitting(true);
       await api.tallennaProjekti(formData);
       if (reloadProjekti) await reloadProjekti();
     },
-    [setIsFormSubmitting, reloadProjekti]
+    [reset, reloadProjekti]
   );
 
   const saveDraft = useCallback(
@@ -219,16 +240,6 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
     isDirtyHandler(isDirty);
   }, [isDirty, isDirtyHandler]);
 
-  useEffect(() => {
-    if (projekti && projekti.oid) {
-      const tallentamisTiedot: VuorovaikutusFormValues = {
-        oid: projekti.oid,
-        ...defaultValues,
-      };
-      reset(tallentamisTiedot, { keepDirty: true });
-    }
-  }, [projekti, defaultValues, reset]);
-
   const handleClickOpenHyvaksy = () => {
     setOpenHyvaksy(true);
   };
@@ -236,10 +247,6 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
   const handleClickCloseHyvaksy = () => {
     setOpenHyvaksy(false);
   };
-
-  if (!projekti) {
-    return <></>;
-  }
 
   const ilmoituksenVastaanottajat = getValues("suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat");
 
