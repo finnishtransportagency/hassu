@@ -3,7 +3,8 @@ import { useEffect, useRef } from "react";
 
 export const useLeaveConfirm = (shouldWarn: boolean) => {
   const router = useRouter();
-  const message = "Are you sure that you want to leave?";
+  const message =
+    "Olet tehnyt sivulle muutoksia, joita ei ole tallennettu. Tehdyt muutokset menetetään, jos poistut sivulta. \n\nHaluatko poistua tallentamatta?";
 
   const lastHistoryState = useRef(global.history?.state);
   useEffect(() => {
