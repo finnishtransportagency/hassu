@@ -319,8 +319,8 @@ type VuorovaikutusPDF {
 
 type HyvaksymisPaatosVaihePDF {
   hyvaksymisKuulutusPDFPath: String!
-  hyvaksymisIlmoitusPDFPath: String!
-  hyvaksymisLahetekirjePDFPath: String!
+  ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath: String!
+  ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath: String!
   hyvaksymisIlmoitusLausunnonantajillePDFPath: String!
   hyvaksymisIlmoitusMuistuttajillePDFPath: String!
 }
