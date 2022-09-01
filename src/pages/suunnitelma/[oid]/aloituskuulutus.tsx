@@ -19,6 +19,7 @@ import { formatDate } from "src/util/dateUtils";
 import HassuStack from "@components/layout/HassuStack";
 import useProjektiBreadcrumbsJulkinen from "src/hooks/useProjektiBreadcrumbsJulkinen";
 import { splitFilePath } from "../../../util/fileUtil";
+import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 
 function formatYhteystiedotText(kuulutus: AloitusKuulutusJulkaisuJulkinen) {
   const yhteystiedotList = kuulutus.yhteystiedot.map(
@@ -52,6 +53,7 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
   const kuulutus = projekti?.aloitusKuulutusJulkaisut?.[0];
   const velho = kuulutus?.velho;
   const suunnittelusopimus = kuulutus?.suunnitteluSopimus;
+  const kieli = useKansalaiskieli();
 
   useProjektiBreadcrumbsJulkinen(setRouteLabels);
 
@@ -76,8 +78,9 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
     { header: t(`ui-otsikot.suunnitelman_tyyppi`), data: velho?.tyyppi && t(`projekti-tyyppi.${velho?.tyyppi}`) },
   ];
 
-  const aloituskuulutusPDFPath =
-    splitFilePath(kuulutus.aloituskuulutusPDFt?.[kuulutus.kielitiedot?.ensisijainenKieli || Kieli.SUOMI]?.aloituskuulutusPDFPath);
+  const aloituskuulutusPDFPath = splitFilePath(
+    kuulutus.aloituskuulutusPDFt?.[kuulutus.kielitiedot?.ensisijainenKieli || Kieli.SUOMI]?.aloituskuulutusPDFPath
+  );
 
   if (kuulutus.tila == AloitusKuulutusTila.MIGROITU) {
     return (
@@ -100,8 +103,7 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
             <SectionContent>
               {suunnittelusopimus && (
                 <p>
-                  {suunnittelusopimus.kunta} ja{" "}
-                  { t(`vastaava-viranomainen.${velho.suunnittelustaVastaavaViranomainen}`)}{" "}
+                  {suunnittelusopimus.kunta} ja {t(`vastaava-viranomainen.${velho.suunnittelustaVastaavaViranomainen}`)}{" "}
                   {t(`info.ei-rata.aloittavat_yleissuunnitelman_laatimisen`)}
                 </p>
               )}
@@ -124,7 +126,7 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
 
           <h4 className="vayla-small-title">{t(`ui-otsikot.suunnitteluhankkeen_kuvaus`)}</h4>
           <SectionContent>
-            <p>{kuulutus.hankkeenKuvaus?.[kuulutus.kielitiedot?.ensisijainenKieli || Kieli.SUOMI]}</p>
+            <p>{kuulutus.hankkeenKuvaus?.[kieli]}</p>
           </SectionContent>
           <h4 className="vayla-small-title">{t(`ui-otsikot.asianosaisen_oikeudet`)}</h4>
           <Notification type={NotificationType.INFO} hideIcon>
@@ -157,7 +159,8 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
           </SectionContent>
           <h4 className="vayla-small-title">{t(`ui-otsikot.ladattava_kuulutus`)}</h4>
           <SectionContent className="flex gap-4">
-            <ExtLink href={aloituskuulutusPDFPath.path}>{aloituskuulutusPDFPath.fileName}</ExtLink> ({aloituskuulutusPDFPath.fileExt}) (
+            <ExtLink href={aloituskuulutusPDFPath.path}>{aloituskuulutusPDFPath.fileName}</ExtLink> (
+            {aloituskuulutusPDFPath.fileExt}) (
             <FormatDate date={kuulutus.kuulutusPaiva} />-
             <FormatDate date={kuulutus.siirtyySuunnitteluVaiheeseen} />)
           </SectionContent>

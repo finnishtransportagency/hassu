@@ -63,7 +63,7 @@ export default function ProjektiListaus() {
       initialState: { hiddenColumns: ["oid"] },
       data: hakutulos?.tulokset || [],
     },
-    rowLink: (projekti) => `/suunnitelma/${encodeURIComponent(projekti.oid)}`,
+    rowLink: (projekti) => `/suunnitelma/${encodeURIComponent(projekti.oid)}/aloituskuulutus`,
   });
 
   return (
