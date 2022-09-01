@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Aineisto, AineistoInput, TallennaProjektiInput } from "@services/api";
-import React, { ReactElement, useEffect, useMemo } from "react";
+import React, { ReactElement, useMemo } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot";
@@ -72,14 +72,7 @@ function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
   const useFormReturn = useForm<NahtavilleAsetettavatAineistotFormValues>(formOptions);
   const {
     formState: { isDirty },
-    watch,
   } = useFormReturn;
-
-  const some = watch();
-
-  useEffect(() => {
-    console.log({ some, defaultValues });
-  }, [defaultValues, some]);
 
   useLeaveConfirm(isDirty);
 
