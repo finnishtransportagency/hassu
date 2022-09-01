@@ -16,8 +16,8 @@ import useTranslation from "next-translate/useTranslation";
 import HassuSpinner from "@components/HassuSpinner";
 
 import { Column, SortingRule } from "react-table";
-import { experimental_sx as sx, styled } from "@mui/material";
 import Section from "@components/layout/Section";
+import SearchSection from "@components/layout/SearchSection";
 import HassuGrid from "@components/HassuGrid";
 import TextInput from "@components/form/TextInput";
 import CheckBox from "@components/form/CheckBox";
@@ -112,9 +112,7 @@ const mapListaaProjektiInputToQuery = (input: ListaaProjektitInput): ParsedUrlQu
 const omitUnnecessaryFields = <T extends object>(data: T) =>
   omitBy(
     data,
-    (value) =>
-      !value ||
-      (Array.isArray(value) && (value.length === 0 || (value.length === 1 && (value as string[]).includes(""))))
+    (value) => !value || (Array.isArray(value) && (value.length === 0 || (value.length === 1 && (value as string[]).includes(""))))
   );
 
 const defaultFormData: ListaaProjektitInput = {
@@ -266,10 +264,7 @@ const VirkamiesHomePage = () => {
               )}
             />
             <FormGroup style={{ marginTop: "auto" }} inlineFlex>
-              <CheckBox
-                label="Vain projektit, joihin muokkausoikeudet"
-                {...register("vainProjektitMuokkausOikeuksin")}
-              />
+              <CheckBox label="Vain projektit, joihin muokkausoikeudet" {...register("vainProjektitMuokkausOikeuksin")} />
             </FormGroup>
           </HassuGrid>
           <Button id="search" endIcon={"search"} primary type="submit">
@@ -287,24 +282,19 @@ const VirkamiesHomePage = () => {
           tabs={[
             {
               label:
-                "Tiesuunnitelmat" +
-                (hakutulos?.hasOwnProperty("tiesuunnitelmatMaara") ? ` (${tuloksienMaarat[ProjektiTyyppi.TIE]})` : ""),
+                "Tiesuunnitelmat" + (hakutulos?.hasOwnProperty("tiesuunnitelmatMaara") ? ` (${tuloksienMaarat[ProjektiTyyppi.TIE]})` : ""),
               value: ProjektiTyyppi.TIE,
             },
             {
               label:
                 "Ratasuunnitelmat" +
-                (hakutulos?.hasOwnProperty("ratasuunnitelmatMaara")
-                  ? ` (${tuloksienMaarat[ProjektiTyyppi.RATA]})`
-                  : ""),
+                (hakutulos?.hasOwnProperty("ratasuunnitelmatMaara") ? ` (${tuloksienMaarat[ProjektiTyyppi.RATA]})` : ""),
               value: ProjektiTyyppi.RATA,
             },
             {
               label:
                 "Yleissuunnitelmat" +
-                (hakutulos?.hasOwnProperty("yleissuunnitelmatMaara")
-                  ? ` (${tuloksienMaarat[ProjektiTyyppi.YLEINEN]})`
-                  : ""),
+                (hakutulos?.hasOwnProperty("yleissuunnitelmatMaara") ? ` (${tuloksienMaarat[ProjektiTyyppi.YLEINEN]})` : ""),
               value: ProjektiTyyppi.YLEINEN,
             },
           ]}
@@ -352,8 +342,7 @@ const FrontPageTable = (props: FrontPageTableProps) => {
       {
         Header: "Vastuuorganisaatio",
         accessor: (projekti) =>
-          projekti.suunnittelustaVastaavaViranomainen &&
-          t(`projekti:vastaava-viranomainen.${projekti.suunnittelustaVastaavaViranomainen}`),
+          projekti.suunnittelustaVastaavaViranomainen && t(`projekti:vastaava-viranomainen.${projekti.suunnittelustaVastaavaViranomainen}`),
         id: ProjektiSarake.VASTUUORGANISAATIO,
       },
       {
@@ -411,14 +400,5 @@ const FrontPageTable = (props: FrontPageTableProps) => {
   });
   return <HassuTable {...tableProps} />;
 };
-
-// Create a file for this styled component if used elsewhere
-const SearchSection = styled(Section)(
-  sx({
-    backgroundColor: "#F7F7F7",
-    borderBottom: "5px solid #0063AF",
-    padding: 7,
-  })
-);
 
 export default VirkamiesHomePage;
