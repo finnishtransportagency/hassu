@@ -1,9 +1,9 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { TallennaProjektiInput, KirjaamoOsoite, Projekti } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import React, { useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useMemo, useState } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
-import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { hyvaksymispaatosKuulutusSchema } from "src/schemas/hyvaksymispaatosKuulutus";
 import Painikkeet from "./Painikkeet";
 import KuulutuksenJaIlmoituksenEsikatselu from "./KuulutuksenJaIlmoituksenEsikatselu";
@@ -19,72 +19,71 @@ import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 
-function defaultValues(
-  projekti: Projekti,
-  kirjaamoOsoitteet: KirjaamoOsoite[] | undefined
-): KuulutuksenTiedotFormValues {
-  return {
-    oid: projekti.oid,
-    hyvaksymisPaatosVaihe: {
-      kuulutusPaiva: projekti?.hyvaksymisPaatosVaihe?.kuulutusPaiva,
-      kuulutusVaihePaattyyPaiva: projekti?.hyvaksymisPaatosVaihe?.kuulutusVaihePaattyyPaiva,
-      hallintoOikeus: projekti?.hyvaksymisPaatosVaihe?.hallintoOikeus,
-      kuulutusYhteystiedot: projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot
-        ? projekti.hyvaksymisPaatosVaihe.kuulutusYhteystiedot.map((yhteystieto) => removeTypeName(yhteystieto))
-        : [],
-      kuulutusYhteysHenkilot:
-        projekti?.kayttoOikeudet
-          ?.filter(({ kayttajatunnus }) =>
-            projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteysHenkilot?.includes(kayttajatunnus)
-          )
-          .map(({ kayttajatunnus }) => kayttajatunnus) || [],
-      ilmoituksenVastaanottajat: defaultVastaanottajat(
-        projekti,
-        projekti.hyvaksymisPaatosVaihe?.ilmoituksenVastaanottajat,
-        kirjaamoOsoitteet
-      ),
-    },
-  };
-}
-
 export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid" | "hyvaksymisPaatosVaihe">;
 
-export default function KuulutuksenTiedot() {
-  const { data: projekti } = useProjekti();
-  const [formContext, setFormContext] = useState<Projekti | undefined>(undefined);
+export default function KuulutuksenTiedot(): ReactElement {
+  const { data: projekti } = useProjekti({ revalidateOnMount: true });
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
+  return <>{projekti && kirjaamoOsoitteet && <KuulutuksenTiedotForm {...{ kirjaamoOsoitteet, projekti }} />}</>;
+}
 
+interface KuulutuksenTiedotFormProps {
+  projekti: ProjektiLisatiedolla;
+  kirjaamoOsoitteet: KirjaamoOsoite[];
+}
+
+function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedotFormProps) {
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
+
+  const defaultValues: KuulutuksenTiedotFormValues = useMemo(() => {
+    const formValues = {
+      oid: projekti.oid,
+      hyvaksymisPaatosVaihe: {
+        kuulutusPaiva: projekti?.hyvaksymisPaatosVaihe?.kuulutusPaiva || "",
+        kuulutusVaihePaattyyPaiva: projekti?.hyvaksymisPaatosVaihe?.kuulutusVaihePaattyyPaiva || "",
+        hallintoOikeus: projekti?.hyvaksymisPaatosVaihe?.hallintoOikeus,
+        kuulutusYhteystiedot: projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot
+          ? projekti.hyvaksymisPaatosVaihe.kuulutusYhteystiedot.map((yhteystieto) => removeTypeName(yhteystieto))
+          : [],
+        kuulutusYhteysHenkilot:
+          projekti?.kayttoOikeudet
+            ?.filter(({ kayttajatunnus }) =>
+              projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteysHenkilot?.includes(kayttajatunnus)
+            )
+            .map(({ kayttajatunnus }) => kayttajatunnus) || [],
+        ilmoituksenVastaanottajat: defaultVastaanottajat(
+          projekti,
+          projekti.hyvaksymisPaatosVaihe?.ilmoituksenVastaanottajat,
+          kirjaamoOsoitteet
+        ),
+      },
+    };
+    return formValues;
+  }, [projekti, kirjaamoOsoitteet]);
 
   const formOptions: UseFormProps<KuulutuksenTiedotFormValues> = {
     resolver: yupResolver(hyvaksymispaatosKuulutusSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
-    defaultValues: {},
-    context: formContext,
+    defaultValues,
+    context: projekti,
   };
 
   const useFormReturn = useForm<KuulutuksenTiedotFormValues>(formOptions);
+
   const {
-    reset,
     formState: { isDirty },
+    watch,
   } = useFormReturn;
+
+  const formData = watch();
+  useEffect(() => {
+    console.log({ formData, defaultValues });
+  }, [defaultValues, formData]);
 
   useLeaveConfirm(isDirty);
 
-  useEffect(() => {
-    if (projekti?.oid) {
-      const tallentamisTiedot: KuulutuksenTiedotFormValues = defaultValues(projekti, kirjaamoOsoitteet);
-      setFormContext(projekti);
-      reset(tallentamisTiedot);
-    }
-  }, [projekti, kirjaamoOsoitteet, reset]);
-
   const voiMuokata = !projekti?.hyvaksymisPaatosVaiheJulkaisut || projekti.hyvaksymisPaatosVaiheJulkaisut.length < 1;
-
-  if (!projekti) {
-    return null;
-  }
 
   return (
     <>
