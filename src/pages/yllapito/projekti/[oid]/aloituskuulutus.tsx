@@ -1,7 +1,7 @@
 import Textarea from "@components/form/Textarea";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { useRouter } from "next/router";
-import React, { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
+import React, { ReactElement, useCallback, useMemo, useState } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
@@ -21,8 +21,8 @@ import {
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
   AsiakirjaTyyppi,
-  Yhteystieto,
   HankkeenKuvauksetInput,
+  YhteystietoInput,
 } from "@services/api";
 import log from "loglevel";
 import { PageProps } from "@pages/_app";
@@ -50,6 +50,7 @@ import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
 import { pickBy } from "lodash";
+import { removeTypeName } from "src/util/removeTypeName";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -105,9 +106,10 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       ]),
     ];
 
-    const yhteysTiedot: Yhteystieto[] =
-      projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.filter((yt) => yt as Yhteystieto) || [];
-    const yhteysHenkilot: string[] = projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysHenkilot?.filter((yt) => yt) || [];
+    const yhteysTiedot: YhteystietoInput[] =
+      projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt)) || [];
+
+    const yhteysHenkilot: string[] = projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysHenkilot || [];
     const { ensisijainenKieli, toissijainenKieli } = projekti.kielitiedot || {};
 
     const hasRuotsinKieli = ensisijainenKieli === Kieli.RUOTSI || toissijainenKieli === Kieli.RUOTSI;
@@ -182,14 +184,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     formState: { errors, isDirty },
     reset,
     setValue,
-    watch,
   } = useFormReturn;
-
-  const formData = watch();
-
-  useEffect(() => {
-    console.log({ defaultValues, formData });
-  }, [defaultValues, formData]);
 
   useLeaveConfirm(isDirty);
 
