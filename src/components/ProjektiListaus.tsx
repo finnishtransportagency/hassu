@@ -31,7 +31,7 @@ export default function ProjektiListaus() {
     }
 
     fetchProjektit();
-  });
+  }, []);
 
   const columns = useMemo<Column<ProjektiHakutulosDokumentti>[]>(
     () => [
@@ -41,8 +41,7 @@ export default function ProjektiListaus() {
       {
         Header: t("projekti:ui-otsikot.vastuuorganisaatio") as string,
         accessor: (projekti) =>
-          projekti.suunnittelustaVastaavaViranomainen &&
-          t(`projekti:vastaava-viranomainen.${projekti.suunnittelustaVastaavaViranomainen}`),
+          projekti.suunnittelustaVastaavaViranomainen && t(`projekti:vastaava-viranomainen.${projekti.suunnittelustaVastaavaViranomainen}`),
       },
       {
         Header: t("projekti:ui-otsikot.vaihe") as string,
@@ -63,7 +62,7 @@ export default function ProjektiListaus() {
       initialState: { hiddenColumns: ["oid"] },
       data: hakutulos?.tulokset || [],
     },
-    rowLink: (projekti) => `/suunnitelma/${encodeURIComponent(projekti.oid)}`,
+    rowLink: (projekti) => `/suunnitelma/${encodeURIComponent(projekti.oid)}/aloituskuulutus`,
   });
 
   return (
