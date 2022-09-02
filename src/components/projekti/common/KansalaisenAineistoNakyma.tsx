@@ -11,16 +11,22 @@ import {
 import Trans from "next-translate/Trans";
 import HassuAccordion from "@components/HassuAccordion";
 import { AineistoKategoria, aineistoKategoriat } from "common/aineistoKategoriat";
-import { Link, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
+import ExtLink from "@components/ExtLink";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ButtonFlat from "@components/button/ButtonFlat";
 
 type Props = {
   projekti: ProjektiJulkinen;
   kuulutus: NahtavillaoloVaiheJulkaisuJulkinen | HyvaksymisPaatosVaiheJulkaisuJulkinen;
+  naytaAineistoPaivanaKuulutuksenJulkaisuPaiva?: boolean;
 };
 
-export default function KansalaisenAineistoNakyma({ projekti, kuulutus }: Props): ReactElement {
+export default function KansalaisenAineistoNakyma({
+  projekti,
+  kuulutus,
+  naytaAineistoPaivanaKuulutuksenJulkaisuPaiva,
+}: Props): ReactElement {
   const { t } = useTranslation("projekti");
 
   const [expandedAineistoKategoriat, setExpandedAineistoKategoriat] = useState<Key[]>([]);
@@ -92,6 +98,7 @@ export default function KansalaisenAineistoNakyma({ projekti, kuulutus }: Props)
         aineistot={kuulutus.aineistoNahtavilla}
         expandedState={[expandedAineistoKategoriat, setExpandedAineistoKategoriat]}
         paakategoria={true}
+        julkaisuPaiva={naytaAineistoPaivanaKuulutuksenJulkaisuPaiva ? kuulutus.kuulutusPaiva || undefined : undefined}
       />
     </SectionContent>
   );
@@ -102,6 +109,7 @@ interface AineistoKategoriaAccordionProps {
   aineistot?: Aineisto[] | null;
   expandedState: [React.Key[], React.Dispatch<React.Key[]>];
   paakategoria?: boolean;
+  julkaisuPaiva?: string | undefined;
 }
 
 const AineistoKategoriaAccordion = (props: AineistoKategoriaAccordionProps) => {
@@ -134,6 +142,7 @@ const AineistoKategoriaAccordion = (props: AineistoKategoriaAccordionProps) => {
                 aineistot={aineistot}
                 kategoria={kategoria}
                 expandedState={props.expandedState}
+                julkaisuPaiva={props.julkaisuPaiva}
               />
             ),
             id: kategoria.id,
@@ -148,6 +157,7 @@ interface SuunnitelmaAineistoKategoriaContentProps {
   aineistot?: Aineisto[];
   kategoria: AineistoKategoria;
   expandedState: [React.Key[], React.Dispatch<React.Key[]>];
+  julkaisuPaiva?: string | undefined;
 }
 
 const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoriaContentProps) => {
@@ -159,13 +169,15 @@ const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoria
             ?.filter((aineisto) => typeof aineisto.tiedosto === "string" && aineisto.kategoriaId === props.kategoria.id)
             .map((aineisto) => (
               <Stack direction="row" alignItems="flex-end" columnGap={2} key={aineisto.dokumenttiOid}>
-                <Link href={aineisto.tiedosto!} target="_blank" rel="noreferrer">
-                  {aineisto.nimi}
-                </Link>
-                <span>({aineisto.nimi.split(".").pop()})</span>
-                <a href={aineisto.tiedosto!} target="_blank" rel="noreferrer">
-                  <FontAwesomeIcon icon="external-link-alt" size="lg" className="text-primary-dark" />
-                </a>
+                <ExtLink href={aineisto.tiedosto!} target="_blank" rel="noreferrer">
+                  {aineisto.nimi}{" "}
+                  <span className="ml-2 text-black">
+                    ({aineisto.nimi.split(".").pop()})
+                    {props.julkaisuPaiva
+                      ? formatDate(props.julkaisuPaiva)
+                      : aineisto.tuotu && formatDate(aineisto.tuotu)}
+                  </span>
+                </ExtLink>
               </Stack>
             ))}
         </Stack>
