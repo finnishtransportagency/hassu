@@ -8,6 +8,7 @@ import {
   LinkkiInput,
   Vuorovaikutus,
   AsiakirjaTyyppi,
+  KirjaamoOsoite,
 } from "@services/api";
 import Section from "@components/layout/Section";
 import React, { ReactElement, useEffect, useState, useMemo, useCallback } from "react";
@@ -77,12 +78,20 @@ const defaultVuorovaikutus: Vuorovaikutus = {
 
 export default function SuunnitteluvaiheenVuorovaikuttaminen(props: Props): ReactElement {
   const { data: projekti, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
-  return <>{projekti && <SuunnitteluvaiheenVuorovaikuttaminenForm {...props} {...{ projekti, reloadProjekti }} />}</>;
+  const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
+  return (
+    <>
+      {projekti && kirjaamoOsoitteet && (
+        <SuunnitteluvaiheenVuorovaikuttaminenForm {...props} {...{ projekti, reloadProjekti, kirjaamoOsoitteet }} />
+      )}
+    </>
+  );
 }
 
 type SuunnitteluvaiheenVuorovaikuttaminenFormProps = {
   projekti: ProjektiLisatiedolla;
   reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
+  kirjaamoOsoitteet: KirjaamoOsoite[];
 } & Props;
 
 function SuunnitteluvaiheenVuorovaikuttaminenForm({
@@ -90,6 +99,7 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
   vuorovaikutusnro,
   projekti,
   reloadProjekti,
+  kirjaamoOsoitteet,
 }: SuunnitteluvaiheenVuorovaikuttaminenFormProps): ReactElement {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
@@ -98,7 +108,6 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
   const [formContext, setFormContext] = useState<VuorovaikutusFormValues>();
-  const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
   const vuorovaikutus = useMemo(
     () =>

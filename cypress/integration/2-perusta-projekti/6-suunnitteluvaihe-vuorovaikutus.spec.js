@@ -39,31 +39,17 @@ describe("Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
       let saveButton = main.find("#save_suunnitteluvaihe_vuorovaikutukset_draft");
       if (saveButton.length > 0) {
         cy.wrap(saveButton).click();
-      } else {
-        this.skip();
       }
     });
 
     const mainFormSelectorToTextMap = new Map([
       ['[name="suunnitteluVaihe.vuorovaikutus.vuorovaikutusJulkaisuPaiva"]', dayjs().format("YYYY-MM-DDTHH:mm")],
-      [
-        '[name="suunnitteluVaihe.vuorovaikutus.kysymyksetJaPalautteetViimeistaan"]',
-        dayjs().add(30, "day").format("YYYY-MM-DDTHH:mm"),
-      ],
+      ['[name="suunnitteluVaihe.vuorovaikutus.kysymyksetJaPalautteetViimeistaan"]', dayjs().add(30, "day").format("YYYY-MM-DDTHH:mm")],
       ['[name="suunnitteluVaihe.vuorovaikutus.videot.0.url"]', "https://www.testilinkki.vayla.fi"],
       ['[name="suunnitteluVaihe.vuorovaikutus.suunnittelumateriaali.nimi"]', "Esittelymateriaali 123"],
-      [
-        '[name="suunnitteluVaihe.vuorovaikutus.suunnittelumateriaali.url"]',
-        "https://www.linkkiesittelymateriaaleihin.fi",
-      ],
-      [
-        '[name="suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]',
-        "kunta@kunnan-sahkoposti.fi",
-      ],
-      [
-        '[name="suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]',
-        "kunta@kunnan-sahkoposti.fi",
-      ],
+      ['[name="suunnitteluVaihe.vuorovaikutus.suunnittelumateriaali.url"]', "https://www.linkkiesittelymateriaaleihin.fi"],
+      ['[name="suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]', "kunta@kunnan-sahkoposti.fi"],
+      ['[name="suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]', "kunta@kunnan-sahkoposti.fi"],
     ]);
 
     mainFormSelectorToTextMap.forEach((text, selector) => {
@@ -173,19 +159,10 @@ describe("Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
       let vuorovaikuttaminenTab = main.find("#1_vuorovaikuttaminen_tab");
       if (vuorovaikuttaminenTab.length > 0) {
         cy.wrap(vuorovaikuttaminenTab).click();
-      } else {
-        this.skip();
       }
     });
 
     cy.wait(2000);
-
-    cy.get("main").then((main) => {
-      let saveButton = main.find("#save_and_publish");
-      if (saveButton.length === 0) {
-        this.skip();
-      }
-    });
 
     const currentTime = dayjs();
     const timeWeekAhead = currentTime.add(7, "day");
@@ -202,18 +179,9 @@ describe("Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
       ],
       ['[name="suunnitteluVaihe.vuorovaikutus.videot.0.url"]', "https://www.uusitestilinkki.vayla.fi"],
       ['[name="suunnitteluVaihe.vuorovaikutus.suunnittelumateriaali.nimi"]', "Esittelymateriaali 12345"],
-      [
-        '[name="suunnitteluVaihe.vuorovaikutus.suunnittelumateriaali.url"]',
-        "https://www.uusilinkkiesittelymateriaaleihin.fi",
-      ],
-      [
-        '[name="suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]',
-        "kunta@kunnan-uusi-sahkoposti.fi",
-      ],
-      [
-        '[name="suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]',
-        "kunta@kunnan-uusi-sahkoposti.fi",
-      ],
+      ['[name="suunnitteluVaihe.vuorovaikutus.suunnittelumateriaali.url"]', "https://www.uusilinkkiesittelymateriaaleihin.fi"],
+      ['[name="suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]', "kunta@kunnan-uusi-sahkoposti.fi"],
+      ['[name="suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]', "kunta@kunnan-uusi-sahkoposti.fi"],
     ]);
 
     mainFormSelectorToTextMap.forEach((data, selector) => {
@@ -304,13 +272,11 @@ describe("Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
 
     cy.reload();
     cy.wait(2000).get("#1_vuorovaikuttaminen_tab").click();
-    [
-      ...mainFormSelectorToTextMap.values(),
-      ...yhteystietoSelectorToTextMap.values(),
-      ...tilaisuusSelectorToTextMap.values(),
-    ].forEach((data) => {
-      const text = typeof data === "string" ? data : data.expectedOutput;
-      cy.contains(text);
-    });
+    [...mainFormSelectorToTextMap.values(), ...yhteystietoSelectorToTextMap.values(), ...tilaisuusSelectorToTextMap.values()].forEach(
+      (data) => {
+        const text = typeof data === "string" ? data : data.expectedOutput;
+        cy.contains(text);
+      }
+    );
   });
 });

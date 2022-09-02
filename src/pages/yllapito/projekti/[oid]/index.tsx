@@ -207,7 +207,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
               <Controller
                 control={control}
                 name="euRahoitus"
-                render={({ field: { onChange, onBlur, value, ref } }) => (
+                render={({ field: { onChange, onBlur, value, ref, name } }) => (
                   <FormGroup
                     label="Rahoittaako EU suunnitteluhanketta? *"
                     errorMessage={errors?.euRahoitus?.message}
@@ -216,6 +216,8 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
                     <RadioButton
                       label="Kyllä"
                       onBlur={onBlur}
+                      name={name}
+                      value="true"
                       onChange={() => onChange(true)}
                       checked={value === true}
                       ref={ref}
@@ -223,6 +225,8 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
                     <RadioButton
                       label="Ei"
                       onBlur={onBlur}
+                      name={name}
+                      value="false"
                       onChange={() => onChange(false)}
                       checked={value === false}
                       ref={ref}
