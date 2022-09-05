@@ -16,7 +16,7 @@ const PdfPreviewForm: React.ForwardRefRenderFunction<PdfPreviewFormHandle, PdfPr
 
   const pdfFormRef = useRef<HTMLFormElement>(null);
   const [serializedFormData, setSerializedFormData] = useState("{}");
-  const [asiakirjaTyyppiFormData, setAsiakirjaTyyppiFormData] = useState<AsiakirjaTyyppi>();
+  const [asiakirjaTyyppiFormData, setAsiakirjaTyyppiFormData] = useState<AsiakirjaTyyppi | "">("");
 
   useImperativeHandle(
     ref,

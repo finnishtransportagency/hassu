@@ -15,7 +15,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
     { header: "Asiatunnus", data: velho?.asiatunnusELY },
     {
       header: "Suunnittelusta vastaava viranomainen",
-      data: t(`vastaava-viranomainen.${velho?.suunnittelustaVastaavaViranomainen}`),
+      data: velho?.suunnittelustaVastaavaViranomainen && t(`vastaava-viranomainen.${velho?.suunnittelustaVastaavaViranomainen}`),
     },
     {
       header: "Suunnitelman tyyppi",
