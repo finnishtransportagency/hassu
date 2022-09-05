@@ -89,7 +89,6 @@ export class ProjektiAdapter {
       kielitiedot,
       suunnitteluVaihe,
       vuorovaikutukset,
-      palautteet,
       nahtavillaoloVaihe,
       nahtavillaoloVaiheJulkaisut,
       hyvaksymisPaatosVaihe,
@@ -113,7 +112,7 @@ export class ProjektiAdapter {
         ...velho,
       },
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
-      suunnitteluVaihe: adaptSuunnitteluVaihe(dbProjekti.oid, suunnitteluVaihe, vuorovaikutukset, palautteet),
+      suunnitteluVaihe: adaptSuunnitteluVaihe(dbProjekti.oid, suunnitteluVaihe, vuorovaikutukset, undefined),
       nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe),
       nahtavillaoloVaiheJulkaisut: adaptNahtavillaoloVaiheJulkaisut(dbProjekti.oid, nahtavillaoloVaiheJulkaisut),
       hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(

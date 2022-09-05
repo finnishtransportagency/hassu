@@ -32,6 +32,7 @@ const path = require("path");
 
 export type HassuBackendStackProps = {
   projektiTable: Table;
+  feedbackTable: Table;
   projektiArchiveTable: Table;
   uploadBucket: Bucket;
   yllapitoBucket: Bucket;
@@ -390,6 +391,10 @@ export class HassuBackendStack extends cdk.Stack {
     const archiveTable = this.props.projektiTable;
     archiveTable.grantFullAccess(backendFn);
     backendFn.addEnvironment("TABLE_PROJEKTI_ARCHIVE", archiveTable.tableName);
+
+    const feedbackTable = this.props.feedbackTable;
+    feedbackTable.grantFullAccess(backendFn);
+    backendFn.addEnvironment("TABLE_FEEDBACK", feedbackTable.tableName);
   }
 
   private async getCommonEnvironmentVariables(config: Config, searchDomain: IDomain): Promise<Record<string, string>> {

@@ -15,6 +15,7 @@ async function main() {
   });
   const hassuBackendStack = new HassuBackendStack(app, {
     projektiTable: hassuDatabaseStack.projektiTable,
+    feedbackTable: hassuDatabaseStack.feedbackTable,
     projektiArchiveTable: hassuDatabaseStack.projektiArchiveTable,
     uploadBucket: hassuDatabaseStack.uploadBucket,
     yllapitoBucket: hassuDatabaseStack.yllapitoBucket,

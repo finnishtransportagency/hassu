@@ -31,7 +31,6 @@ export function adaptSuunnitteluVaihe(
       suunnittelunEteneminenJaKesto,
       hankkeenKuvaus: adaptHankkeenKuvaus(suunnitteluVaihe.hankkeenKuvaus),
       vuorovaikutukset: adaptVuorovaikutukset(oid, vuorovaikutukset),
-      palautteet: palautteet ? palautteet.map((palaute) => ({ __typename: "Palaute", ...palaute })) : undefined,
       palautteidenVastaanottajat,
       __typename: "SuunnitteluVaihe",
     };

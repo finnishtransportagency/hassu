@@ -133,7 +133,6 @@ type SuunnitteluVaihe {
 
   vuorovaikutukset: [Vuorovaikutus!]
 
-  palautteet: [Palaute!]
   """
   Palautteiden vastaanottajat. Lista kayttajatunnuksia
   """

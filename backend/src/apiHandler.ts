@@ -10,6 +10,7 @@ import {
   LisaaPalauteMutationVariables,
   ListaaKayttajatQueryVariables,
   ListaaLisaAineistoQueryVariables,
+  ListaaPalautteetQueryVariables,
   ListaaProjektitQueryVariables,
   ListaaVelhoProjektiAineistotQueryVariables,
   ListaaVelhoProjektitQueryVariables,
@@ -109,6 +110,8 @@ async function executeOperation(event: AppSyncResolverEvent<AppSyncEventArgument
       return muistutusHandler.kasitteleMuistutus(event.arguments as LisaaMuistutusMutationVariables);
     case apiConfig.listaaLisaAineisto.name:
       return lisaAineistoHandler.listaaLisaAineisto(event.arguments as ListaaLisaAineistoQueryVariables);
+    case apiConfig.listaaPalautteet.name:
+      return palauteHandler.listaaPalautteet((event.arguments as ListaaPalautteetQueryVariables).oid);
     default:
       return null;
   }

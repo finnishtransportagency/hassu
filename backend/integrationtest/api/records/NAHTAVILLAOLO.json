@@ -1,0 +1,459 @@
+{
+  "aloitusKuulutusJulkaisut": [
+    {
+      "aloituskuulutusPDFt": {
+        "SUOMI": {
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/T412 Aloituskuulutus.pdf"
+        }
+      },
+      "__typename": "AloitusKuulutus",
+      "hankkeenKuvaus": {
+        "SUOMI": "Lorem Ipsum",
+        "SAAME": "Saameksi",
+        "RUOTSI": "På Svenska",
+        "__typename": "HankkeenKuvaukset"
+      },
+      "velho": {
+        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+        "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+        "tyyppi": "TIE",
+        "maakunnat": [
+          "Uusimaa"
+        ],
+        "kunnat": [
+          "Helsinki",
+          " Vantaa"
+        ],
+        "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+        "vaylamuoto": [
+          "tie"
+        ],
+        "linkki": null
+      },
+      "suunnitteluSopimus": {
+        "sukunimi": "Jossain",
+        "logo": "/suunnittelusopimus/logo.png",
+        "kunta": "Nokia",
+        "puhelinnumero": "123",
+        "email": "Joku.Jossain@vayla.fi",
+        "etunimi": "Joku"
+      },
+      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "kielitiedot": {
+        "ensisijainenKieli": "SUOMI"
+      },
+      "kuulutusPaiva": "2022-01-02",
+      "muokkaaja": "A000112",
+      "hyvaksyja": "A000112",
+      "yhteystiedot": [
+        {
+          "sukunimi": "Hassu",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "puhelinnumero": "123",
+          "organisaatio": "CGI Suomi Oy",
+          "etunimi": "A-tunnus1"
+        },
+        {
+          "sukunimi": "Koi",
+          "sahkoposti": "markku.koi@koi.com",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "etunimi": "Marko",
+          "__typename": "Yhteystieto"
+        }
+      ],
+      "id": 1,
+      "tila": "HYVAKSYTTY"
+    }
+  ],
+  "salt": "salt123",
+  "tyyppi": "TIE",
+  "suunnitteluSopimus": {
+    "sukunimi": "Jossain",
+    "logo": "/suunnittelusopimus/logo.png",
+    "kunta": "Nokia",
+    "puhelinnumero": "123",
+    "email": "Joku.Jossain@vayla.fi",
+    "etunimi": "Joku"
+  },
+  "velho": {
+    "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+    "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+    "tyyppi": "TIE",
+    "maakunnat": [
+      "Uusimaa"
+    ],
+    "kunnat": [
+      "Helsinki",
+      " Vantaa"
+    ],
+    "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+    "vaylamuoto": [
+      "tie"
+    ],
+    "linkki": null
+  },
+  "oid": "1.2.246.578.5.1.2978288874.2711575506",
+  "euRahoitus": false,
+  "suunnitteluVaihe": {
+    "hankkeenKuvaus": {
+      "SUOMI": "Lorem Ipsum suunnitteluvaihe",
+      "__typename": "HankkeenKuvaukset",
+      "SAAME": "Saameksi suunnitteluvaihe"
+    },
+    "palautteidenVastaanottajat": [
+      "A000111"
+    ],
+    "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+    "julkinen": true,
+    "arvioSeuraavanVaiheenAlkamisesta": "huomenna"
+  },
+  "kielitiedot": {
+    "ensisijainenKieli": "SUOMI"
+  },
+  "paivitetty": "2020-01-01T00:00:00+03:00",
+  "kayttoOikeudet": [
+    {
+      "kayttajatunnus": "A000112",
+      "esitetaanKuulutuksessa": true,
+      "nimi": "Hassu, A-tunnus1",
+      "rooli": "PROJEKTIPAALLIKKO",
+      "organisaatio": "CGI Suomi Oy",
+      "puhelinnumero": "123",
+      "email": "mikko.haapamki@cgi.com"
+    },
+    {
+      "kayttajatunnus": "A000111",
+      "nimi": "Hassu, A-Tunnus",
+      "rooli": "OMISTAJA",
+      "organisaatio": "CGI Suomi Oy",
+      "puhelinnumero": "123",
+      "email": "mikko.haapamaki@cgi.com"
+    }
+  ],
+  "aloitusKuulutus": {
+    "hankkeenKuvaus": {
+      "SUOMI": "Lorem Ipsum",
+      "SAAME": "Saameksi",
+      "RUOTSI": "På Svenska",
+      "__typename": "HankkeenKuvaukset"
+    },
+    "kuulutusPaiva": "2022-01-02",
+    "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+    "kuulutusYhteystiedot": {
+      "yhteysHenkilot": [],
+      "yhteysTiedot": [
+        {
+          "sukunimi": "Koi",
+          "sahkoposti": "markku.koi@koi.com",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "etunimi": "Marko",
+          "__typename": "Yhteystieto"
+        }
+      ],
+      "__typename": "KuulutusYhteystiedot"
+    },
+    "__typename": "AloitusKuulutus"
+  },
+  "vuorovaikutukset": [
+    {
+      "ilmoituksenVastaanottajat": {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": [
+          {
+            "sahkoposti": "mikkeli@mikke.li",
+            "lahetetty": "2022-03-11T14:54",
+            "nimi": "Mikkeli",
+            "__typename": "KuntaVastaanottaja"
+          },
+          {
+            "sahkoposti": "juva@ju.va",
+            "lahetetty": "2022-03-11T14:54",
+            "nimi": " Juva",
+            "__typename": "KuntaVastaanottaja"
+          },
+          {
+            "sahkoposti": "savonlinna@savonlin.na",
+            "lahetetty": "2022-03-11T14:54",
+            "nimi": " Savonlinna",
+            "__typename": "KuntaVastaanottaja"
+          }
+        ],
+        "viranomaiset": [
+          {
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+            "lahetetty": "2022-03-11T14:54",
+            "nimi": "ETELA_SAVO_ELY",
+            "__typename": "ViranomaisVastaanottaja"
+          }
+        ]
+      },
+      "vuorovaikutusTilaisuudet": [
+        {
+          "alkamisAika": "15:00",
+          "nimi": "Lorem ipsum 1",
+          "paivamaara": "2022-03-04",
+          "paattymisAika": "16:00",
+          "tyyppi": "VERKOSSA",
+          "kaytettavaPalvelu": "TEAMS",
+          "__typename": "VuorovaikutusTilaisuus",
+          "linkki": "https://linkki_tilaisuuteen"
+        },
+        {
+          "alkamisAika": "10:00",
+          "nimi": "Lorem ipsum two 1",
+          "paivamaara": "2022-04-05",
+          "paattymisAika": "11:00",
+          "tyyppi": "PAIKALLA",
+          "postinumero": "00100",
+          "__typename": "VuorovaikutusTilaisuus",
+          "postitoimipaikka": "Helsinki",
+          "osoite": "Katu 123",
+          "paikka": "Kunnantalo",
+          "Saapumisohjeet": "Ensimmäinen ovi vasemmalla"
+        },
+        {
+          "projektiYhteysHenkilot": [
+            "A000112"
+          ],
+          "alkamisAika": "10:00",
+          "nimi": "Soittoaikatilaisuuden nimi tässä",
+          "paivamaara": "2022-04-05",
+          "paattymisAika": "11:00",
+          "tyyppi": "SOITTOAIKA",
+          "__typename": "VuorovaikutusTilaisuus",
+          "esitettavatYhteystiedot": [
+            {
+              "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+              "organisaatio": "",
+              "titteli": "Projektipäällikkö",
+              "etunimi": "Etunimi",
+              "__typename": "Yhteystieto",
+              "sukunimi": "Sukunimi",
+              "puhelinnumero": "0293121213"
+            },
+            {
+              "sahkoposti": "Joku.Jokunen@vayla.fi",
+              "organisaatio": "",
+              "titteli": "Konsultti",
+              "etunimi": "Joku",
+              "__typename": "Yhteystieto",
+              "sukunimi": "Jokunen",
+              "puhelinnumero": "02998765"
+            }
+          ]
+        },
+        {
+          "alkamisAika": "12:00",
+          "nimi": "Toisen soittoaikatilaisuuden nimi tässä",
+          "paivamaara": "2033-04-05",
+          "paattymisAika": "13:00",
+          "tyyppi": "SOITTOAIKA",
+          "__typename": "VuorovaikutusTilaisuus",
+          "esitettavatYhteystiedot": [
+            {
+              "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+              "organisaatio": "",
+              "titteli": "Projektipäällikkö",
+              "etunimi": "Etunimi",
+              "__typename": "Yhteystieto",
+              "sukunimi": "Sukunimi",
+              "puhelinnumero": "0293121213"
+            },
+            {
+              "sahkoposti": "Joku.Jokunen@vayla.fi",
+              "organisaatio": "",
+              "titteli": "Konsultti",
+              "etunimi": "Joku",
+              "__typename": "Yhteystieto",
+              "sukunimi": "Jokunen",
+              "puhelinnumero": "02998765"
+            }
+          ]
+        }
+      ],
+      "esittelyaineistot": [
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
+          "nimi": "new ekatiedosto_eka.pdf",
+          "jarjestys": 12,
+          "tila": "VALMIS",
+          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
+          "tuotu": "2020-01-01T00:00:00+03:00"
+        }
+      ],
+      "__typename": "Vuorovaikutus",
+      "suunnitelmaluonnokset": [
+        {
+          "kategoriaId": "T1xx",
+          "nimi": "new karttakuvalla_tiedosto.pdf",
+          "jarjestys": 11,
+          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
+          "tuotu": "2020-01-01T00:00:00+03:00",
+          "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
+          "tila": "VALMIS"
+        }
+      ],
+      "vuorovaikutusJulkaisuPaiva": "2022-03-23",
+      "videot": [
+        {
+          "nimi": "Esittely 1",
+          "url": "https://video",
+          "__typename": "Linkki"
+        }
+      ],
+      "vuorovaikutusNumero": 1,
+      "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+      "vuorovaikutusYhteysHenkilot": [
+        "A000112"
+      ],
+      "esitettavatYhteystiedot": [
+        {
+          "sukunimi": "Koi",
+          "sahkoposti": "markku.koi@koi.com",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "etunimi": "Marko",
+          "__typename": "Yhteystieto"
+        }
+      ]
+    },
+    {
+      "ilmoituksenVastaanottajat": {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": [
+          {
+            "sahkoposti": "mikkeli@mikke.li",
+            "lahetetty": "2022-03-11T14:54",
+            "nimi": "Mikkeli",
+            "__typename": "KuntaVastaanottaja"
+          },
+          {
+            "sahkoposti": "juva@ju.va",
+            "lahetetty": "2022-03-11T14:54",
+            "nimi": " Juva",
+            "__typename": "KuntaVastaanottaja"
+          },
+          {
+            "sahkoposti": "savonlinna@savonlin.na",
+            "lahetetty": "2022-03-11T14:54",
+            "nimi": " Savonlinna",
+            "__typename": "KuntaVastaanottaja"
+          }
+        ],
+        "viranomaiset": [
+          {
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+            "lahetetty": "2022-03-11T14:54",
+            "nimi": "ETELA_SAVO_ELY",
+            "__typename": "ViranomaisVastaanottaja"
+          }
+        ]
+      },
+      "vuorovaikutusTilaisuudet": [
+        {
+          "alkamisAika": "15:00",
+          "nimi": "Lorem ipsum 2",
+          "paivamaara": "2022-03-04",
+          "paattymisAika": "16:00",
+          "tyyppi": "VERKOSSA",
+          "kaytettavaPalvelu": "TEAMS",
+          "linkki": "https://linkki_tilaisuuteen"
+        },
+        {
+          "alkamisAika": "10:00",
+          "nimi": "Lorem ipsum two 2",
+          "paivamaara": "2022-04-05",
+          "paattymisAika": "11:00",
+          "tyyppi": "PAIKALLA",
+          "postinumero": "00100",
+          "postitoimipaikka": "Helsinki",
+          "osoite": "Katu 123",
+          "paikka": "Kunnantalo",
+          "Saapumisohjeet": "Ensimmäinen ovi vasemmalla"
+        },
+        {
+          "projektiYhteysHenkilot": [
+            "A000112",
+            "A000111"
+          ],
+          "alkamisAika": "10:00",
+          "nimi": "Soittoaikatilaisuuden nimi tässä",
+          "paivamaara": "2022-04-05",
+          "paattymisAika": "11:00",
+          "tyyppi": "SOITTOAIKA",
+          "esitettavatYhteystiedot": [
+            {
+              "sukunimi": "Sukunimi",
+              "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+              "organisaatio": "",
+              "puhelinnumero": "0293121213",
+              "titteli": "Projektipäällikkö",
+              "etunimi": "Etunimi"
+            },
+            {
+              "sukunimi": "Jokunen",
+              "sahkoposti": "Joku.Jokunen@vayla.fi",
+              "organisaatio": "",
+              "puhelinnumero": "02998765",
+              "titteli": "Konsultti",
+              "etunimi": "Joku"
+            }
+          ]
+        },
+        {
+          "alkamisAika": "12:00",
+          "nimi": "Toisen soittoaikatilaisuuden nimi tässä",
+          "paivamaara": "2033-04-05",
+          "paattymisAika": "13:00",
+          "tyyppi": "SOITTOAIKA",
+          "esitettavatYhteystiedot": [
+            {
+              "sukunimi": "Sukunimi",
+              "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+              "organisaatio": "",
+              "puhelinnumero": "0293121213",
+              "titteli": "Projektipäällikkö",
+              "etunimi": "Etunimi"
+            },
+            {
+              "sukunimi": "Jokunen",
+              "sahkoposti": "Joku.Jokunen@vayla.fi",
+              "organisaatio": "",
+              "puhelinnumero": "02998765",
+              "titteli": "Konsultti",
+              "etunimi": "Joku"
+            }
+          ]
+        }
+      ],
+      "esittelyaineistot": [],
+      "suunnitelmaluonnokset": [],
+      "vuorovaikutusJulkaisuPaiva": "2022-03-23",
+      "videot": [
+        {
+          "nimi": "Esittely 2",
+          "url": "https://video"
+        }
+      ],
+      "vuorovaikutusNumero": 2,
+      "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+      "vuorovaikutusYhteysHenkilot": [
+        "A000112",
+        "A000111"
+      ],
+      "esitettavatYhteystiedot": [
+        {
+          "sukunimi": "Koi",
+          "sahkoposti": "markku.koi@koi.com",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "etunimi": "Marko",
+          "__typename": "Yhteystieto"
+        }
+      ]
+    }
+  ]
+}

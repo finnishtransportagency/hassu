@@ -3,3 +3,4 @@ export * from "./projekti";
 export * from "./suunnitteluVaihe";
 export * from "./nahtavillaoloVaihe";
 export * from "./hyvaksymisPaatosVaihe";
+export * from "./palaute";

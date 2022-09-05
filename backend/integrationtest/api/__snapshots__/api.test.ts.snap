@@ -87,7 +87,6 @@ Object {
       "__typename": "HankkeenKuvaukset",
     },
     "julkinen": undefined,
-    "palautteet": undefined,
     "palautteidenVastaanottajat": Array [
       "A000111",
     ],
@@ -109,7 +108,6 @@ Object {
       "__typename": "HankkeenKuvaukset",
     },
     "julkinen": undefined,
-    "palautteet": undefined,
     "palautteidenVastaanottajat": Array [
       "A000111",
     ],
@@ -1264,49 +1262,6 @@ Object {
 
 exports[`Api should search, load and save a project 10`] = `
 Object {
-  "description": "projekti palaute lisätty",
-  "obj": Array [
-    Object {
-      "__typename": "Palaute",
-      "etunimi": "Matti",
-      "id": "***unittest***",
-      "kysymysTaiPalaute": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "liite": "/palautteet/***unittest***/logo.png",
-      "puhelinnumero": "123456",
-      "sahkoposti": "test@vayla.fi",
-      "sukunimi": "Meikalainen",
-      "vastaanotettu": "***unittest***",
-      "yhteydenottotapaEmail": false,
-      "yhteydenottotapaPuhelin": true,
-    },
-  ],
-}
-`;
-
-exports[`Api should search, load and save a project 11`] = `
-Object {
-  "description": "projekti palaute otettu käsittelyyn",
-  "obj": Array [
-    Object {
-      "__typename": "Palaute",
-      "etunimi": "Matti",
-      "id": "***unittest***",
-      "kysymysTaiPalaute": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "liite": "/palautteet/***unittest***/logo.png",
-      "otettuKasittelyyn": true,
-      "puhelinnumero": "123456",
-      "sahkoposti": "test@vayla.fi",
-      "sukunimi": "Meikalainen",
-      "vastaanotettu": "***unittest***",
-      "yhteydenottotapaEmail": false,
-      "yhteydenottotapaPuhelin": true,
-    },
-  ],
-}
-`;
-
-exports[`Api should search, load and save a project 12`] = `
-Object {
   "description": "publicProjekti suunnitteluvaihe",
   "obj": Object {
     "__typename": "SuunnitteluVaiheJulkinen",
@@ -1696,13 +1651,8 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 13`] = `
+exports[`Api should search, load and save a project 11`] = `
 Array [
-  Object {
-    "subject": "Suunnitelmaan on tullut palautetta",
-    "text": "Suunnitelmaan on tullut palautetta: https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu",
-    "to": "mikko.haapamaki@cgi.com",
-  },
   Object {
     "attachments": Array [
       Object {
@@ -1814,12 +1764,11 @@ LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
 ]
 `;
 
-exports[`Api should search, load and save a project 14`] = `
+exports[`Api should search, load and save a project 12`] = `
 Object {
   "yllapito S3 files just after vuorovaikutus published": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {},
     "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": Object {},
-    "palautteet/***unittest***/logo.png": Object {},
     "suunnittelusopimus/logo.png": Object {},
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {},
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf": Object {},
@@ -1828,7 +1777,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 15`] = `
+exports[`Api should search, load and save a project 13`] = `
 Object {
   "public S3 files just after vuorovaikutus published": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {
@@ -1861,7 +1810,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 16`] = `
+exports[`Api should search, load and save a project 14`] = `
 Object {
   "DistributionId": "unit-test-distribution-id",
   "InvalidationBatch": Object {
@@ -1876,12 +1825,11 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 17`] = `
+exports[`Api should search, load and save a project 15`] = `
 Object {
   "yllapito S3 files vuorovaikutus publish date changed and last aineisto deleted": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {},
     "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": Object {},
-    "palautteet/***unittest***/logo.png": Object {},
     "suunnittelusopimus/logo.png": Object {},
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {},
     "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {},
@@ -1889,7 +1837,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 18`] = `
+exports[`Api should search, load and save a project 16`] = `
 Object {
   "public S3 files vuorovaikutus publish date changed and last aineisto deleted": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {
@@ -1918,7 +1866,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 19`] = `
+exports[`Api should search, load and save a project 17`] = `
 Object {
   "DistributionId": "unit-test-distribution-id",
   "InvalidationBatch": Object {
@@ -1933,7 +1881,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 20`] = `
+exports[`Api should search, load and save a project 18`] = `
 Array [
   Object {
     "attachments": Array [
@@ -2043,15 +1991,10 @@ CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.co
 LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
     "to": "kirjaamo.etela-savo@ely-keskus.fi",
   },
-  Object {
-    "subject": "Suunnitelmaan on tullut palautetta",
-    "text": "Suunnitelmaan on tullut palautetta: https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu",
-    "to": "mikko.haapamki@cgi.com",
-  },
 ]
 `;
 
-exports[`Api should search, load and save a project 21`] = `
+exports[`Api should search, load and save a project 19`] = `
 Object {
   "description": "testNahtavillaOloPerustiedot",
   "obj": Object {
@@ -2132,7 +2075,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 22`] = `
+exports[`Api should search, load and save a project 20`] = `
 Object {
   "description": "testImportNahtavillaoloAineistot",
   "obj": Object {
@@ -2264,7 +2207,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 23`] = `
+exports[`Api should search, load and save a project 21`] = `
 Object {
   "description": "lisaAineisto",
   "obj": Object {
@@ -2318,7 +2261,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 24`] = `
+exports[`Api should search, load and save a project 22`] = `
 Object {
   "description": "testNahtavillaOloAfterApproval",
   "obj": Object {
@@ -2626,7 +2569,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 25`] = `
+exports[`Api should search, load and save a project 23`] = `
 Object {
   "description": "publicProjektiNahtavillaOloJulkinenAfterApproval",
   "obj": Object {
@@ -2737,7 +2680,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 26`] = `
+exports[`Api should search, load and save a project 24`] = `
 Object {
   "yllapito S3 files Nahtavillaolo published": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {},
@@ -2751,7 +2694,6 @@ Object {
     "nahtavillaolo/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": Object {},
     "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": Object {},
     "nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": Object {},
-    "palautteet/***unittest***/logo.png": Object {},
     "suunnittelusopimus/logo.png": Object {},
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {},
     "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {},
@@ -2759,7 +2701,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 27`] = `
+exports[`Api should search, load and save a project 25`] = `
 Object {
   "public S3 files Nahtavillaolo published": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {
@@ -2827,7 +2769,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 28`] = `
+exports[`Api should search, load and save a project 26`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ",
@@ -2894,7 +2836,7 @@ Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com",
 ]
 `;
 
-exports[`Api should search, load and save a project 29`] = `
+exports[`Api should search, load and save a project 27`] = `
 Object {
   "description": "testImportHyvaksymisPaatosAineistot",
   "obj": Object {
@@ -2995,7 +2937,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 30`] = `
+exports[`Api should search, load and save a project 28`] = `
 Object {
   "yllapito S3 files Hyvaksymispaatos created": Object {
     "/1/T113 TS Esite.txt": Object {},
@@ -3004,7 +2946,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 31`] = `
+exports[`Api should search, load and save a project 29`] = `
 Object {
   "description": "testHyvaksymisPaatosVaiheAfterApproval",
   "obj": Object {
@@ -3222,7 +3164,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 32`] = `
+exports[`Api should search, load and save a project 30`] = `
 Object {
   "description": "publicProjektiHyvaksymisPaatosVaiheJulkinenAfterApproval",
   "obj": Object {
@@ -3285,7 +3227,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 33`] = `
+exports[`Api should search, load and save a project 31`] = `
 Object {
   "public S3 files Hyvaksymispaatos approved": Object {
     "/T113 TS Esite.txt": Object {
@@ -3325,7 +3267,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 34`] = `
+exports[`Api should search, load and save a project 32`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ",

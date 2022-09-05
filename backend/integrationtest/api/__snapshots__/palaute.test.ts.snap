@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Palaute should insert and manage feedback 1`] = `
+Object {
+  "description": "projekti palaute lisätty",
+  "obj": Array [
+    Object {
+      "__typename": "Palaute",
+      "etunimi": "Matti",
+      "id": "***unittest***",
+      "kysymysTaiPalaute": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "liite": "/palautteet/***unittest***/logo.png",
+      "oid": "1.2.246.578.5.1.2978288874.2711575506",
+      "puhelinnumero": "123456",
+      "sahkoposti": "test@vayla.fi",
+      "sukunimi": "Meikalainen",
+      "vastaanotettu": "***unittest***",
+      "yhteydenottotapaEmail": false,
+      "yhteydenottotapaPuhelin": true,
+    },
+  ],
+}
+`;
+
+exports[`Palaute should insert and manage feedback 2`] = `
+Object {
+  "description": "projekti palaute otettu käsittelyyn",
+  "obj": Array [
+    Object {
+      "__typename": "Palaute",
+      "etunimi": "Matti",
+      "id": "***unittest***",
+      "kysymysTaiPalaute": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "liite": "/palautteet/***unittest***/logo.png",
+      "oid": "1.2.246.578.5.1.2978288874.2711575506",
+      "otettuKasittelyyn": true,
+      "puhelinnumero": "123456",
+      "sahkoposti": "test@vayla.fi",
+      "sukunimi": "Meikalainen",
+      "vastaanotettu": "***unittest***",
+      "yhteydenottotapaEmail": false,
+      "yhteydenottotapaPuhelin": true,
+    },
+  ],
+}
+`;
+
+exports[`Palaute should insert and manage feedback 3`] = `
+Array [
+  Object {
+    "subject": "Suunnitelmaan on tullut palautetta",
+    "text": "Suunnitelmaan on tullut palautetta: https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu",
+    "to": "mikko.haapamaki@cgi.com",
+  },
+]
+`;
+
+exports[`Palaute should insert and manage feedback 4`] = `
+Object {
+  "yllapito S3 files should insert and manage feedback": Object {
+    "/***unittest***/logo.png": Object {},
+  },
+}
+`;

@@ -3,6 +3,7 @@ import * as AWSXRay from "aws-xray-sdk-core";
 
 const config = {
   projektiTableName: process.env.TABLE_PROJEKTI,
+  feedbackTableName: process.env.TABLE_FEEDBACK,
   projektiArchiveTableName: process.env.TABLE_PROJEKTI_ARCHIVE,
   cognitoURL: process.env.COGNITO_URL,
   velhoAuthURL: process.env.VELHO_AUTH_URL,

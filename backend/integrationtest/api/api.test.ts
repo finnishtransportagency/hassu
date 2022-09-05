@@ -16,7 +16,6 @@ import { cleanProjektiS3Files } from "../util/s3Util";
 import { emailClient } from "../../src/email/email";
 import {
   archiveProjekti,
-  insertAndManageFeedback,
   julkaiseSuunnitteluvaihe,
   julkaiseVuorovaikutus,
   loadProjektiFromDatabase,
@@ -50,6 +49,7 @@ import {
   testHyvaksymisPaatosVaiheHyvaksymismenettelyssa,
   testImportHyvaksymisPaatosAineistot,
 } from "./testUtil/hyvaksymisPaatosVaihe";
+import { FixtureName, recordProjektiTestFixture } from "./testFixtureRecorder";
 
 const sandbox = sinon.createSandbox();
 const { expect } = require("chai");
@@ -137,7 +137,7 @@ describe("Api", () => {
     verifyEmailsSent(emailClientStub);
     await processQueue(fakeAineistoImportQueue);
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
-    await insertAndManageFeedback(oid);
+    await recordProjektiTestFixture(FixtureName.NAHTAVILLAOLO, oid);
 
     await julkaiseVuorovaikutus(oid, userFixture);
     await processQueue(fakeAineistoImportQueue);

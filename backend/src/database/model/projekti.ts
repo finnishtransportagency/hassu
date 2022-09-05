@@ -6,10 +6,10 @@ import {
   ProjektiTyyppi,
   Viranomainen,
 } from "../../../../common/graphql/apiModel";
-import { Palaute, SuunnitteluVaihe, Vuorovaikutus } from "./suunnitteluVaihe";
+import { SuunnitteluVaihe, Vuorovaikutus } from "./suunnitteluVaihe";
 import { NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "./nahtavillaoloVaihe";
 import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "./hyvaksymisPaatosVaihe";
-import { LocalizedMap, Yhteystieto, KuulutusYhteystiedot } from "./common";
+import { KuulutusYhteystiedot, LocalizedMap, Yhteystieto } from "./common";
 
 export type DBVaylaUser = {
   rooli: ProjektiRooli;
@@ -126,7 +126,6 @@ export type DBProjekti = {
   nahtavillaoloVaiheJulkaisut?: NahtavillaoloVaiheJulkaisu[] | null;
   hyvaksymisPaatosVaihe?: HyvaksymisPaatosVaihe | null;
   hyvaksymisPaatosVaiheJulkaisut?: HyvaksymisPaatosVaiheJulkaisu[] | null;
-  palautteet?: Array<Palaute> | null;
   uusiaPalautteita?: number;
 
   // false, jos projekti ladattiin Velhosta, mutta ei ole vielä tallennettu tietokantaan

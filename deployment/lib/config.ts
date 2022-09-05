@@ -34,6 +34,7 @@ export class Config extends BaseConfig {
   public frontendDomainName: string;
   public readonly cloudfrontCertificateArn?: string;
   public static readonly projektiTableName = "Projekti-" + getEnv("ENVIRONMENT");
+  public static readonly feedbackTableName = "Palaute-" + getEnv("ENVIRONMENT");
   public static readonly projektiArchiveTableName = "Projekti-arkisto-" + getEnv("ENVIRONMENT");
   public readonly velhoEnv;
   public readonly basicAuthenticationUsername: string;
