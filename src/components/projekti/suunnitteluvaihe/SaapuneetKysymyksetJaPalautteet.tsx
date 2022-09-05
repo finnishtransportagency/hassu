@@ -58,8 +58,6 @@ export default function SaapuneetKysymyksetJaPalautteet({ projekti }: Props): Re
     [paivitaPalautteet, projekti.oid]
   );
 
-  console.log("RENDER PARENT", { projekti });
-
   const palauteTableProps = useHassuTable<Palaute>({
     tableOptions: {
       data: palautteet || [],
