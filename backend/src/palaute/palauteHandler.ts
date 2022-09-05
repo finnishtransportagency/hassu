@@ -6,10 +6,12 @@ import {
 import { NotFoundError } from "../error/NotFoundError";
 import { requirePermissionMuokkaaProjekti } from "../projekti/projektiHandler";
 import { projektiDatabase } from "../database/projektiDatabase";
-import { adaptPalauteInput } from "./palauteAdapter";
+import { adaptPalauteInput, adaptPalautteetToAPI } from "./palauteAdapter";
 import { fileService } from "../files/fileService";
 import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
 import { palauteEmailService } from "./palauteEmailService";
+import { feedbackDatabase } from "../database/palauteDatabase";
+import { requirePermissionLuku } from "../user";
 
 class PalauteHandler {
   async lisaaPalaute({ oid, palaute: palauteInput }: LisaaPalauteMutationVariables) {
@@ -25,7 +27,7 @@ class PalauteHandler {
     if (julkinenProjekti.status !== Status.SUUNNITTELU) {
       throw new NotFoundError("Projekti ei ole suunnitteluvaiheessa, joten palautetta ei voi antaa");
     }
-    const palaute = adaptPalauteInput(palauteInput);
+    const palaute = adaptPalauteInput(oid, palauteInput);
     if (palaute.liite) {
       palaute.liite = await fileService.persistFileToProjekti({
         uploadedFileSource: palaute.liite,
@@ -33,15 +35,21 @@ class PalauteHandler {
         targetFilePathInProjekti: "palautteet/" + palaute.id,
       });
     }
-    const palauteId = await projektiDatabase.insertFeedback(oid, palaute);
+    const palauteId = await feedbackDatabase.insertFeedback(palaute);
     await palauteEmailService.sendEmailsToPalautteidenVastaanottajat(projektiFromDB);
     return palauteId;
   }
 
   async otaPalauteKasittelyyn({ oid, id }: OtaPalauteKasittelyynMutationVariables) {
-    const dbProjekti = await requirePermissionMuokkaaProjekti(oid);
-    await projektiDatabase.markFeedbackIsBeingHandled(dbProjekti, id);
+    await requirePermissionMuokkaaProjekti(oid);
+    await feedbackDatabase.markFeedbackIsBeingHandled(oid, id);
     return id;
+  }
+
+  async listaaPalautteet(oid: string) {
+    requirePermissionLuku();
+    const palautteet = await feedbackDatabase.listFeedback(oid);
+    return adaptPalautteetToAPI(palautteet);
   }
 }
 

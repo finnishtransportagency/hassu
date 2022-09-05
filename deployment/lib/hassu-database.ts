@@ -20,6 +20,7 @@ export type DatabaseStackOutputs = {
 export class HassuDatabaseStack extends cdk.Stack {
   public projektiTable!: ddb.Table;
   public projektiArchiveTable!: ddb.Table;
+  public feedbackTable!: ddb.Table;
   public uploadBucket!: Bucket;
   public yllapitoBucket!: Bucket;
   public internalBucket!: Bucket;
@@ -41,6 +42,7 @@ export class HassuDatabaseStack extends cdk.Stack {
     this.config = await Config.instance(this);
     this.projektiTable = this.createProjektiTable();
     this.projektiArchiveTable = this.createProjektiArchiveTable();
+    this.feedbackTable = this.createFeedbackTable();
 
     let oai;
     if (Config.env !== "localstack") {
@@ -78,6 +80,27 @@ export class HassuDatabaseStack extends cdk.Stack {
       partitionKey: { name: "oid", type: ddb.AttributeType.STRING },
       projectionType: ProjectionType.KEYS_ONLY,
     });
+
+    if (Config.isPermanentEnvironment()) {
+      table.applyRemovalPolicy(RemovalPolicy.RETAIN);
+    }
+    return table;
+  }
+
+  private createFeedbackTable() {
+    const table = new ddb.Table(this, "FeedbackTable", {
+      billingMode: ddb.BillingMode.PAY_PER_REQUEST,
+      tableName: Config.feedbackTableName,
+      partitionKey: {
+        name: "oid",
+        type: ddb.AttributeType.STRING,
+      },
+      sortKey: {
+        name: "id",
+        type: ddb.AttributeType.STRING,
+      },
+    });
+    HassuDatabaseStack.enableBackup(table);
 
     if (Config.isPermanentEnvironment()) {
       table.applyRemovalPolicy(RemovalPolicy.RETAIN);

@@ -4,7 +4,6 @@ import {
   DBProjekti,
   HyvaksymisPaatosVaiheJulkaisu,
   NahtavillaoloVaiheJulkaisu,
-  Palaute
 } from "./model";
 import { config } from "../config";
 import { getDynamoDBDocumentClient } from "./dynamoDB";
@@ -12,7 +11,6 @@ import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
 import { AWSError } from "aws-sdk";
 import { Response } from "aws-sdk/lib/response";
 import dayjs from "dayjs";
-import { NotFoundError } from "../error/NotFoundError";
 
 const projektiTableName: string = config.projektiTableName || "missing";
 const archiveTableName: string = config.projektiArchiveTableName || "missing";
@@ -317,31 +315,6 @@ export const projektiDatabase = {
     );
   },
 
-  async insertFeedback(oid: string, palaute: Palaute): Promise<string> {
-    log.info("insertFeedback", { oid, palaute });
-
-    const params = {
-      TableName: projektiTableName,
-      Key: {
-        oid,
-      },
-      UpdateExpression:
-        "SET #palautteet = list_append(if_not_exists(#palautteet, :empty_list), :palaute), #uusiaPalautteita = :uusiaPalautteita",
-      ExpressionAttributeNames: {
-        "#palautteet": "palautteet",
-        "#uusiaPalautteita": "uusiaPalautteita",
-      },
-      ExpressionAttributeValues: {
-        ":palaute": [palaute],
-        ":empty_list": [],
-        ":uusiaPalautteita": 1, // 1 meaning "true", because the dynamodb index allows only string, number, and binary types
-      },
-    };
-    log.info("Inserting palaute to projekti", { params });
-    await getDynamoDBDocumentClient().update(params).promise();
-    return palaute.id;
-  },
-
   async clearNewFeedbacksFlagOnProject(oid: string): Promise<void> {
     log.info("clearNewFeedbacksFlagOnProject", { oid });
 
@@ -353,33 +326,6 @@ export const projektiDatabase = {
       UpdateExpression: "REMOVE uusiaPalautteita",
     };
     await getDynamoDBDocumentClient().update(params).promise();
-  },
-
-  async markFeedbackIsBeingHandled(projekti: DBProjekti, id: string): Promise<string | undefined> {
-    if (projekti.palautteet) {
-      const oid = projekti.oid;
-      log.info("markFeedbackIsBeingHandled", { oid, id });
-      const palauteIndex = projekti.palautteet.findIndex((value) => value.id === id);
-      if (palauteIndex < 0) {
-        throw new NotFoundError("Palautetta ei löydy: " + oid + " " + id);
-      }
-      const params = {
-        TableName: projektiTableName,
-        Key: {
-          oid,
-        },
-        UpdateExpression: "SET #palautteet[" + palauteIndex + "].otettuKasittelyyn = :flag",
-        ExpressionAttributeNames: {
-          "#palautteet": "palautteet",
-        },
-        ExpressionAttributeValues: {
-          ":flag": true,
-        },
-      };
-      log.info("markFeedbackIsBeingHandled", { params });
-      await getDynamoDBDocumentClient().update(params).promise();
-      return id;
-    }
   },
 
   async findProjektiOidsWithNewFeedback(): Promise<string[]> {
@@ -453,7 +399,10 @@ export const projektiDatabase = {
     );
   },
 
-  async updateHyvaksymisPaatosVaiheJulkaisu(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu): Promise<void> {
+  async updateHyvaksymisPaatosVaiheJulkaisu(
+    projekti: DBProjekti,
+    julkaisu: HyvaksymisPaatosVaiheJulkaisu
+  ): Promise<void> {
     await updateJulkaisuToList(
       projekti.oid,
       "hyvaksymisPaatosVaiheJulkaisut",

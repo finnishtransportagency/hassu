@@ -21,7 +21,7 @@ import { UserFixture } from "../../../test/fixture/userFixture";
 import { detailedDiff } from "deep-object-diff";
 import { parseDate } from "../../../src/util/dateUtil";
 import { projektiArchive } from "../../../src/archive/projektiArchiveService";
-import { cleanupGeneratedIdAndTimestampFromFeedbacks, cleanupVuorovaikutusTimestamps } from "./cleanUpFunctions";
+import { cleanupVuorovaikutusTimestamps } from "./cleanUpFunctions";
 import Sinon from "sinon";
 import * as log from "loglevel";
 import { fail } from "assert";
@@ -98,7 +98,7 @@ export async function testProjektiHenkilot(projekti: Projekti, oid: string): Pro
   return { ...projektiPaallikko, puhelinnumero: "123" };
 }
 
-async function tallennaLogo() {
+export async function tallennaLogo() {
   const uploadProperties = await api.valmisteleTiedostonLataus("logo.png", "image/png");
   expect(uploadProperties).to.not.be.empty;
   expect(uploadProperties.latausLinkki).to.not.be.undefined;
@@ -359,33 +359,6 @@ export async function verifyVuorovaikutusSnapshot(oid: string, userFixture: User
   const vuorovaikutus = suunnitteluVaihe.vuorovaikutukset[0];
   cleanupVuorovaikutusTimestamps([vuorovaikutus]);
   expect(vuorovaikutus).toMatchSnapshot();
-}
-
-export async function insertAndManageFeedback(oid: string): Promise<void> {
-  const palauteId = await api.lisaaPalaute(oid, {
-    etunimi: "Matti",
-    sukunimi: "Meikalainen",
-    puhelinnumero: "123456",
-    sahkoposti: "test@vayla.fi",
-    yhteydenottotapaPuhelin: true,
-    yhteydenottotapaEmail: false,
-    kysymysTaiPalaute: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    liite: await tallennaLogo(),
-  });
-
-  const projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
-  const palautteet = projekti.suunnitteluVaihe.palautteet;
-
-  expectToMatchSnapshot("projekti palaute lisätty", cleanupGeneratedIdAndTimestampFromFeedbacks(palautteet));
-
-  await api.otaPalauteKasittelyyn(oid, palauteId);
-
-  const projektiAfterFeedbackBeingHandled = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
-  const palautteetAfterFeedbackBeingHandled = projektiAfterFeedbackBeingHandled.suunnitteluVaihe.palautteet;
-  expectToMatchSnapshot(
-    "projekti palaute otettu käsittelyyn",
-    cleanupGeneratedIdAndTimestampFromFeedbacks(palautteetAfterFeedbackBeingHandled)
-  );
 }
 
 export async function julkaiseSuunnitteluvaihe(oid: string): Promise<void> {

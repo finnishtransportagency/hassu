@@ -207,6 +207,7 @@ async function main() {
     SEARCH_DOMAIN: searchStackOutputs.SearchDomainEndpointOutput,
     FRONTEND_DOMAIN_NAME: frontendStackOutputs.CloudfrontPrivateDNSName,
     TABLE_PROJEKTI: Config.projektiTableName,
+    TABLE_FEEDBACK: Config.feedbackTableName,
 
     ...environmentVariables,
   });
@@ -220,6 +221,7 @@ async function main() {
     SONARQUBE_ACCESS_TOKEN: variables.SonarQubeAccessToken,
     SEARCH_DOMAIN: searchStackOutputs.SearchDomainEndpointOutput,
     TABLE_PROJEKTI: Config.projektiTableName,
+    TABLE_FEEDBACK: Config.feedbackTableName,
   });
 
   const testUsers = await readParametersByPath("/testusers/", Region.EU_WEST_1);

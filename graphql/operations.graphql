@@ -21,6 +21,8 @@ type Query {
   listKirjaamoOsoitteet: [KirjaamoOsoite!]
 
   listaaLisaAineisto(oid: String!, lisaAineistoTiedot: ListaaLisaAineistoInput): LisaAineistot!
+
+  listaaPalautteet(oid: String!): [Palaute!]
 }
 
 type Mutation {

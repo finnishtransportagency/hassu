@@ -18,6 +18,7 @@ import {
   ListaaKayttajatQueryVariables,
   ListaaLisaAineistoInput,
   ListaaLisaAineistoQueryVariables,
+  ListaaPalautteetQueryVariables,
   ListaaProjektitInput,
   ListaaProjektitQueryVariables,
   ListaaVelhoProjektiAineistotQueryVariables,
@@ -25,6 +26,7 @@ import {
   MuistutusInput,
   NykyinenKayttaja,
   OtaPalauteKasittelyynMutationVariables,
+  Palaute,
   PalauteInput,
   PDF,
   Projekti,
@@ -131,6 +133,11 @@ export const apiConfig: ApiConfig = {
     name: "lisaaPalaute",
     operationType: OperationType.Mutation,
     graphql: mutations.lisaaPalaute,
+  },
+  listaaPalautteet: {
+    name: "listaaPalautteet",
+    operationType: OperationType.Query,
+    graphql: queries.listaaPalautteet,
   },
   otaPalauteKasittelyyn: {
     name: "otaPalauteKasittelyyn",
@@ -274,6 +281,13 @@ export abstract class AbstractApi {
       oid,
       palaute,
     } as LisaaPalauteMutationVariables);
+  }
+
+  async listaaPalautteet(oid: string): Promise<Palaute[]> {
+    const variables: ListaaPalautteetQueryVariables = {
+      oid,
+    };
+    return await this.callYllapitoAPI(apiConfig.listaaPalautteet, variables);
   }
 
   async lisaaMuistutus(oid: string, muistutus: MuistutusInput): Promise<string> {

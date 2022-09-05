@@ -1,12 +1,10 @@
-import { ReactElement, useCallback, useState, useMemo } from "react";
-import { Projekti, Palaute, api } from "@services/api";
+import { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
+import { api, Palaute, Projekti } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuTable from "@components/HassuTable";
 import CheckBox from "@components/form/CheckBox";
 import useSnackbars from "src/hooks/useSnackbars";
-import { KeyedMutator } from "swr";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import HassuSpinner from "@components/HassuSpinner";
 import dayjs from "dayjs";
 import { Link } from "@mui/material";
@@ -14,10 +12,20 @@ import ButtonLink from "@components/button/ButtonLink";
 import { useHassuTable } from "src/hooks/useHassuTable";
 interface Props {
   projekti: Projekti;
-  reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null> | undefined;
 }
 
-export default function SaapuneetKysymyksetJaPalautteet({ projekti, reloadProjekti }: Props): ReactElement {
+export default function SaapuneetKysymyksetJaPalautteet({ projekti }: Props): ReactElement {
+  const [palautteet, setPalautteet] = useState<Palaute[]>();
+
+  const paivitaPalautteet = useCallback(async () => {
+    const palauteLista = await api.listaaPalautteet(projekti.oid);
+    setPalautteet(palauteLista);
+  }, [projekti.oid]);
+
+  useEffect(() => {
+    paivitaPalautteet();
+  }, [paivitaPalautteet]);
+
   const columns = useMemo(
     () => [
       {
@@ -41,18 +49,18 @@ export default function SaapuneetKysymyksetJaPalautteet({ projekti, reloadProjek
       {
         Header: "Otettu käsittelyyn",
         accessor: (palaute: Palaute) => (
-          <KasittelePalauteCheckbox reloadProjekti={reloadProjekti} oid={projekti.oid} palaute={palaute} />
+          <KasittelePalauteCheckbox paivitaPalautteet={paivitaPalautteet} oid={projekti.oid} palaute={palaute} />
         ),
         id: "otettuKasittelyyn",
         width: 40,
       },
     ],
-    [projekti, reloadProjekti]
+    [paivitaPalautteet, projekti.oid]
   );
 
   const palauteTableProps = useHassuTable<Palaute>({
     tableOptions: {
-      data: projekti.suunnitteluVaihe?.palautteet || [],
+      data: palautteet || [],
       columns,
     },
   });
@@ -61,10 +69,8 @@ export default function SaapuneetKysymyksetJaPalautteet({ projekti, reloadProjek
     <Section>
       <h5 className="vayla-small-title">Saapuneet kysymykset ja palautteet</h5>
       <SectionContent>
-        {(!projekti.suunnitteluVaihe?.palautteet || projekti.suunnitteluVaihe?.palautteet.length === 0) && (
-          <p>Ei saapuneita kysymyksiä tai palautteita</p>
-        )}
-        {projekti.suunnitteluVaihe?.palautteet && projekti.suunnitteluVaihe?.palautteet.length > 0 && (
+        {(!palautteet || palautteet.length === 0) && <p>Ei saapuneita kysymyksiä tai palautteita</p>}
+        {palautteet && palautteet.length > 0 && (
           <>
             <HassuTable {...palauteTableProps} />
             <ButtonLink href="">Lataa tiedostona</ButtonLink>
@@ -106,9 +112,9 @@ function KysymysTaiPalaute({ palaute, oid }: PalauteProps & { oid: string }): Re
 interface KasittelePalauteCheckboxProps {
   palaute: Palaute;
   oid: string;
-  reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null> | undefined;
+  paivitaPalautteet: () => Promise<void>;
 }
-function KasittelePalauteCheckbox({ palaute, oid, reloadProjekti }: KasittelePalauteCheckboxProps): ReactElement {
+function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: KasittelePalauteCheckboxProps): ReactElement {
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -122,17 +128,13 @@ function KasittelePalauteCheckbox({ palaute, oid, reloadProjekti }: KasittelePal
       return;
     }
     setIsSubmitting(false);
-    if (reloadProjekti) reloadProjekti();
+    if (paivitaPalautteet) paivitaPalautteet();
     showSuccessMessage("Palaute merkitty käsiteltäväksi.");
-  }, [reloadProjekti, palaute, oid, showErrorMessage, showSuccessMessage]);
+  }, [paivitaPalautteet, showSuccessMessage, oid, palaute.id, showErrorMessage]);
 
   return (
     <>
-      <CheckBox
-        onChange={merkitseKasittelyynOtetuksi}
-        checked={!!palaute.otettuKasittelyyn}
-        disabled={!!palaute.otettuKasittelyyn}
-      />
+      <CheckBox onChange={merkitseKasittelyynOtetuksi} checked={!!palaute.otettuKasittelyyn} disabled={!!palaute.otettuKasittelyyn} />
       <HassuSpinner open={isSubmitting} />
     </>
   );

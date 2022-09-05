@@ -14,7 +14,7 @@ const localDynamoDBParams = {
   region: "eu-west-1",
 };
 const localDynamoDB = new DynamoDB(localDynamoDBParams);
-const localDocumentClient = new DynamoDB.DocumentClient({
+export const localDocumentClient = new DynamoDB.DocumentClient({
   service: localDynamoDB,
   apiVersion: "2012-08-10",
   params: localDynamoDBParams,
@@ -39,13 +39,26 @@ export async function setupLocalDatabase(): Promise<void> {
 
 async function deleteAllItemsFromDatabase() {
   // Hard-code table name to prevent accidental deletion from AWS
-  log.info("Cleaning up database");
-  const items = (await localDocumentClient.scan({ TableName: "Projekti-localstack" }).promise()).Items;
+  log.info("Cleaning up database (Projekti-localstack)");
+  let items = (await localDocumentClient.scan({ TableName: "Projekti-localstack" }).promise()).Items;
   if (items) {
     await Promise.all(
       items.map(async (item) => {
         log.info("Deleting ", item);
         await localDocumentClient.delete({ TableName: "Projekti-localstack", Key: { oid: item.oid } }).promise();
+      })
+    );
+  }
+
+  log.info("Cleaning up database (Palaute-localstack)");
+  items = (await localDocumentClient.scan({ TableName: "Palaute-localstack" }).promise()).Items;
+  if (items) {
+    await Promise.all(
+      items.map(async (item) => {
+        log.info("Deleting ", item);
+        await localDocumentClient
+          .delete({ TableName: "Palaute-localstack", Key: { oid: item.oid, id: item.id } })
+          .promise();
       })
     );
   }
