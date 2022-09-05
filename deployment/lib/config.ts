@@ -48,7 +48,7 @@ export class Config extends BaseConfig {
 
     this.scope = scope;
     const env = Config.env;
-    if (Config.isPermanentEnvironment()) {
+    if (Config.isPermanentEnvironment() && !Config.isProdAccount()) { // TODO remove "&& !Config.isProdAccount()" after getting the cert for prod
       this.cloudfrontCertificateArn = this.getParameter(`/${env}/CloudfrontCertificateArn`);
     }
     this.dmzProxyEndpoint = this.getInfraParameter("DMZProxyEndpoint");
@@ -76,10 +76,7 @@ export class Config extends BaseConfig {
     if (Config.env === "localstack") {
       return "";
     }
-    return ssm.StringParameter.valueForStringParameter(
-      this.scope,
-      this.getInfraParameterPath(parameterName, infraEnvironment)
-    );
+    return ssm.StringParameter.valueForStringParameter(this.scope, this.getInfraParameterPath(parameterName, infraEnvironment));
   }
 
   public getInfraParameterPath(parameterName: string, infraEnvironment?: string) {
@@ -90,18 +87,11 @@ export class Config extends BaseConfig {
     return Config.getSecureInfraParameterInternal({ parameterName, infraEnvironment, ssm: ssmProvider });
   }
 
-  public async getGlobalSecureInfraParameter(
-    parameterName: string,
-    infraEnvironment: string = BaseConfig.infraEnvironment
-  ) {
+  public async getGlobalSecureInfraParameter(parameterName: string, infraEnvironment: string = BaseConfig.infraEnvironment) {
     return Config.getSecureInfraParameterInternal({ parameterName, infraEnvironment, ssm: globalSsmProvider });
   }
 
-  private static async getSecureInfraParameterInternal(params: {
-    parameterName: string;
-    infraEnvironment: string;
-    ssm: SSM;
-  }) {
+  private static async getSecureInfraParameterInternal(params: { parameterName: string; infraEnvironment: string; ssm: SSM }) {
     // Skip AWS API calls if running locally with localstack and cdklocal
     if (Config.env === "localstack") {
       return "dummy";
@@ -128,15 +118,15 @@ export class Config extends BaseConfig {
   }
 
   private init = async () => {
-    this.branch = process.env.BUILD_BRANCH
-      ? process.env.BUILD_BRANCH
-      : await execShellCommand("git rev-parse --abbrev-ref HEAD");
+    this.branch = process.env.BUILD_BRANCH ? process.env.BUILD_BRANCH : await execShellCommand("git rev-parse --abbrev-ref HEAD");
 
     if (Config.isDeveloperEnvironment()) {
-      this.frontendDomainName =
-        (await readFrontendStackOutputs()).CloudfrontPrivateDNSName || "please-re-run-backend-deployment";
+      this.frontendDomainName = (await readFrontendStackOutputs()).CloudfrontPrivateDNSName || "please-re-run-backend-deployment";
     } else {
       this.frontendDomainName = await this.getSecureInfraParameter("FrontendDomainName");
+      if (!this.frontendDomainName) {
+        throw new Error("/" + Config.env + "/FrontendDomainName SSM Parameter not found! Maybe logged in to wrong account?");
+      }
     }
     log.info("frontendDomainName", this.frontendDomainName);
   };

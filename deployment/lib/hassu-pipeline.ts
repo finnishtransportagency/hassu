@@ -6,7 +6,7 @@ import * as codebuild from "@aws-cdk/aws-codebuild";
 import { BuildEnvironmentVariableType, ComputeType, LocalCacheMode } from "@aws-cdk/aws-codebuild";
 import { Config } from "./config";
 import { BuildSpec } from "@aws-cdk/aws-codebuild/lib/build-spec";
-import { LinuxBuildImage } from "@aws-cdk/aws-codebuild/lib/project";
+import { BuildEnvironmentVariable, LinuxBuildImage } from "@aws-cdk/aws-codebuild/lib/project";
 import { Effect, PolicyStatement } from "@aws-cdk/aws-iam";
 import { GitHubSourceProps } from "@aws-cdk/aws-codebuild/lib/source";
 import { Repository } from "@aws-cdk/aws-ecr/lib/repository";
@@ -42,7 +42,11 @@ export class HassuPipelineStack extends Stack {
     }
 
     if (Config.isPermanentEnvironment()) {
-      await this.createPipeline(env, config, "./deployment/lib/buildspec/buildspec.yml");
+      if (Config.isProdAccount()) {
+        await this.createPipeline(env, config, "./deployment/lib/buildspec/buildspec-prod.yml");
+      } else {
+        await this.createPipeline(env, config, "./deployment/lib/buildspec/buildspec.yml");
+      }
     } else {
       await this.createPipeline(env, config, "./deployment/lib/buildspec/buildspec-feature.yml");
     }
@@ -53,11 +57,13 @@ export class HassuPipelineStack extends Stack {
     let webhookFilters;
     let reportBuildStatus: boolean;
     const branch = config.getBranch();
-    if (branch === "main" && env == "dev") {
+    if ((branch === "main" && env == "dev") || (branch === "prod" && env == "prod")) {
       // GitHub creds only once per account
       new codebuild.GitHubSourceCredentials(this, "CodeBuildGitHubCreds", {
         accessToken: SecretValue.secretsManager("github-token"),
       });
+    }
+    if (branch === "main" && env == "dev") {
       // Common bucket for test reports
       const reportBucket = new Bucket(this, "reportbucket", { bucketName: Config.reportBucketName });
 
@@ -90,7 +96,72 @@ export class HassuPipelineStack extends Stack {
       cloneDepth: 0,
     };
     const gitHubSource = codebuild.Source.gitHub(sourceProps);
-    new codebuild.Project(this, "HassuProject", {
+    let environmentVariables: { [name: string]: BuildEnvironmentVariable } = {
+      ENVIRONMENT: { value: env },
+      VELHO_AUTH_URL: {
+        value: config.getInfraParameterPath("VelhoAuthenticationUrl", config.velhoEnv),
+        type: BuildEnvironmentVariableType.PARAMETER_STORE,
+      },
+      VELHO_API_URL: {
+        value: config.getInfraParameterPath("VelhoApiUrl", config.velhoEnv),
+        type: BuildEnvironmentVariableType.PARAMETER_STORE,
+      },
+      VELHO_USERNAME: { value: await config.getSecureInfraParameter("VelhoUsername", config.velhoEnv) },
+      VELHO_PASSWORD: { value: await config.getSecureInfraParameter("VelhoPassword", config.velhoEnv) },
+
+      PERSON_SEARCH_API_ACCOUNT_TYPES: {
+        value: config.getInfraParameterPath("PersonSearchApiAccountTypes"),
+        type: BuildEnvironmentVariableType.PARAMETER_STORE,
+      },
+      NEXT_PUBLIC_VAYLA_EXTRANET_URL: {
+        value: config.getInfraParameterPath("ExtranetHomePageUrl"),
+        type: BuildEnvironmentVariableType.PARAMETER_STORE,
+      },
+      NEXT_PUBLIC_VELHO_BASE_URL: {
+        value: config.getInfraParameterPath("VelhoBaseUrl", config.velhoEnv),
+        type: BuildEnvironmentVariableType.PARAMETER_STORE,
+      },
+      NODE_OPTIONS: {
+        value: "--max_old_space_size=4096 --max-old-space-size=4096",
+        type: BuildEnvironmentVariableType.PLAINTEXT,
+      },
+    };
+
+    if (env == "prod") {
+      environmentVariables = {
+        ...environmentVariables,
+        PERSON_SEARCH_API_URL_PROD: {
+          value: "/PersonSearchApiURLProd",
+          type: BuildEnvironmentVariableType.PARAMETER_STORE,
+        },
+        PERSON_SEARCH_API_USERNAME_PROD: {
+          value: "/PersonSearchApiUsernameProd",
+          type: BuildEnvironmentVariableType.PARAMETER_STORE,
+        },
+        PERSON_SEARCH_API_PASSWORD_PROD: {
+          value: "/PersonSearchApiPasswordProd",
+          type: BuildEnvironmentVariableType.PARAMETER_STORE,
+        },
+      };
+    } else {
+      environmentVariables = {
+        ...environmentVariables,
+        PERSON_SEARCH_API_URL: {
+          value: "/PersonSearchApiURL",
+          type: BuildEnvironmentVariableType.PARAMETER_STORE,
+        },
+        PERSON_SEARCH_API_USERNAME: {
+          value: "/PersonSearchApiUsername",
+          type: BuildEnvironmentVariableType.PARAMETER_STORE,
+        },
+        PERSON_SEARCH_API_PASSWORD: {
+          value: "/PersonSearchApiPassword",
+          type: BuildEnvironmentVariableType.PARAMETER_STORE,
+        },
+      };
+    }
+
+    const project = new codebuild.Project(this, "HassuProject", {
       projectName: "Hassu-" + env,
       buildSpec: BuildSpec.fromSourceFilename(buildspecFileName),
       source: gitHubSource,
@@ -99,76 +170,23 @@ export class HassuPipelineStack extends Stack {
         buildImage: LinuxBuildImage.STANDARD_5_0,
         privileged: true,
         computeType: ComputeType.MEDIUM,
-        environmentVariables: {
-          ENVIRONMENT: { value: env },
-          VELHO_AUTH_URL: {
-            value: config.getInfraParameterPath("VelhoAuthenticationUrl", config.velhoEnv),
-            type: BuildEnvironmentVariableType.PARAMETER_STORE,
-          },
-          VELHO_API_URL: {
-            value: config.getInfraParameterPath("VelhoApiUrl", config.velhoEnv),
-            type: BuildEnvironmentVariableType.PARAMETER_STORE,
-          },
-          VELHO_USERNAME: { value: await config.getSecureInfraParameter("VelhoUsername", config.velhoEnv) },
-          VELHO_PASSWORD: { value: await config.getSecureInfraParameter("VelhoPassword", config.velhoEnv) },
-
-          PERSON_SEARCH_API_URL: {
-            value: "/PersonSearchApiURL",
-            type: BuildEnvironmentVariableType.PARAMETER_STORE,
-          },
-          PERSON_SEARCH_API_URL_PROD: {
-            value: "/PersonSearchApiURLProd",
-            type: BuildEnvironmentVariableType.PARAMETER_STORE,
-          },
-          PERSON_SEARCH_API_USERNAME: {
-            value: "/PersonSearchApiUsername",
-            type: BuildEnvironmentVariableType.PARAMETER_STORE,
-          },
-          PERSON_SEARCH_API_PASSWORD: {
-            value: "/PersonSearchApiPassword",
-            type: BuildEnvironmentVariableType.PARAMETER_STORE,
-          },
-          PERSON_SEARCH_API_USERNAME_PROD: {
-            value: "/PersonSearchApiUsernameProd",
-            type: BuildEnvironmentVariableType.PARAMETER_STORE,
-          },
-          PERSON_SEARCH_API_PASSWORD_PROD: {
-            value: "/PersonSearchApiPasswordProd",
-            type: BuildEnvironmentVariableType.PARAMETER_STORE,
-          },
-          PERSON_SEARCH_API_ACCOUNT_TYPES: {
-            value: config.getInfraParameterPath("PersonSearchApiAccountTypes"),
-            type: BuildEnvironmentVariableType.PARAMETER_STORE,
-          },
-          NEXT_PUBLIC_VAYLA_EXTRANET_URL: {
-            value: config.getInfraParameterPath("ExtranetHomePageUrl"),
-            type: BuildEnvironmentVariableType.PARAMETER_STORE,
-          },
-          NEXT_PUBLIC_VELHO_BASE_URL: {
-            value: config.getInfraParameterPath("VelhoBaseUrl", config.velhoEnv),
-            type: BuildEnvironmentVariableType.PARAMETER_STORE,
-          },
-          NODE_OPTIONS: {
-            value: "--max_old_space_size=4096 --max-old-space-size=4096",
-            type: BuildEnvironmentVariableType.PLAINTEXT,
-          },
-        },
+        environmentVariables: environmentVariables,
       },
       grantReportGroupPermissions: true,
       badge: true,
-    }).addToRolePolicy(
+    });
+    project.addToRolePolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
-        actions: [
-          "s3:*",
-          "cloudformation:*",
-          "sts:*",
-          "ecr:*",
-          "ssm:*",
-          "secretsmanager:GetSecretValue",
-          "codebuild:StartBuild",
-        ],
+        actions: ["s3:*", "cloudformation:*", "sts:*", "ecr:*", "ssm:*", "secretsmanager:GetSecretValue", "codebuild:StartBuild"],
         resources: ["*"],
+      })
+    );
+    project.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["iam:CreateServiceLinkedRole"],
+        resources: ["arn:aws:iam::*:role/aws-service-role/*"],
       })
     );
   }
@@ -193,10 +211,7 @@ export class HassuPipelineStack extends Stack {
       source: gitHubSource,
       cache: codebuild.Cache.local(LocalCacheMode.CUSTOM, LocalCacheMode.SOURCE, LocalCacheMode.DOCKER_LAYER),
       environment: {
-        buildImage: LinuxBuildImage.fromEcrRepository(
-          Repository.fromRepositoryName(this, "RobotBuildImage", "hassu-buildimage"),
-          "1.0.3"
-        ),
+        buildImage: LinuxBuildImage.fromEcrRepository(Repository.fromRepositoryName(this, "RobotBuildImage", "hassu-buildimage"), "1.0.3"),
         privileged: true,
         computeType: ComputeType.MEDIUM,
         environmentVariables: {

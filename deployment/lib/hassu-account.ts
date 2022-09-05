@@ -34,7 +34,7 @@ export class HassuAccountStack extends cdk.Stack {
       enableVersionUpgrade: true,
       capacity: {
         masterNodes: 0,
-        dataNodes: 1,
+        dataNodes: 2,
         dataNodeInstanceType: "t3.small.search",
       },
       removalPolicy: RemovalPolicy.RETAIN,

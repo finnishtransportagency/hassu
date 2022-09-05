@@ -1,0 +1,41 @@
+version: 0.2
+
+env:
+  parameter-store:
+    ROCKET_CHAT_TOKEN: /RocketChatToken
+    ROCKET_CHAT_USER_ID: /RocketChatUserId
+  secrets-manager:
+    GITHUB_TOKEN: github-token
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto11
+      nodejs: 14
+    commands:
+      - ACCOUNT_ID=$(aws sts get-caller-identity --output text --query Account)
+      - aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin "$ACCOUNT_ID.dkr.ecr.eu-west-1.amazonaws.com"
+
+      - nohup docker pull "$ACCOUNT_ID.dkr.ecr.eu-west-1.amazonaws.com/hassu-buildimage:1.0.3" &
+
+      - npm install -g npm@8.1.3
+      - npm ci
+
+      - touch .env.test
+      - npm run generate
+  build:
+    commands:
+      - npm run get-next-version
+      - npm run deploy:database
+      - npm run deploy:backend
+      - npm run deploy:frontend
+      - npm run release
+  post_build:
+    on-failure: ABORT
+    commands:
+      - ./deployment/bin/reportBuildStatus.sh -t "$ROCKET_CHAT_TOKEN" -u "$ROCKET_CHAT_USER_ID" -r "$CODEBUILD_BUILD_SUCCEEDING" -m "$ENVIRONMENT build" -d "CodeBuild $CODEBUILD_BUILD_URL"
+cache:
+  paths:
+    - "/root/.cache/**/*"
+    - "/root/.npm/**/*"
+    - "/root/.gradle/**/*"
