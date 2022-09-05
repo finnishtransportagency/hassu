@@ -105,22 +105,26 @@ export default function KuulutuksenTiedot() {
               <Painikkeet projekti={projekti} />
             </form>
           </FormProvider>
-          <PdfPreviewForm ref={pdfFormRef} />
         </>
       )}
       {!voiMuokata &&
         projekti &&
         projekti.hyvaksymisPaatosVaiheJulkaisut?.[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1] && (
-          <FormProvider {...useFormReturn}>
-            <Lukunakyma
-              projekti={projekti}
-              hyvaksymisPaatosVaiheJulkaisu={
-                projekti.hyvaksymisPaatosVaiheJulkaisut[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1]
-              }
-            />
-            <Painikkeet projekti={projekti} />
-          </FormProvider>
+          <>
+            <FormProvider {...useFormReturn}>
+              <form>
+                <Lukunakyma
+                  projekti={projekti}
+                  hyvaksymisPaatosVaiheJulkaisu={
+                    projekti.hyvaksymisPaatosVaiheJulkaisut[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1]
+                  }
+                />
+                <Painikkeet projekti={projekti} />
+              </form>
+            </FormProvider>
+          </>
         )}
+      <PdfPreviewForm ref={pdfFormRef} />
     </>
   );
 }

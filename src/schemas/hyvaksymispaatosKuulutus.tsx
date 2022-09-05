@@ -19,7 +19,7 @@ export const hyvaksymispaatosKuulutusSchema = Yup.object().shape({
   hyvaksymisPaatosVaihe: Yup.object()
     .required()
     .shape({
-      hallintoOikeus: Yup.string().required("Hallinto-oikeus on valittava"),
+      hallintoOikeus: Yup.string().required("Hallinto-oikeus on annettava"),
       kuulutusYhteystiedot: Yup.array().notRequired().of(yhteystietoSchema),
       kuulutusYhteysHenkilot: Yup.array().notRequired().of(Yup.string()),
       kuulutusPaiva: Yup.string()
