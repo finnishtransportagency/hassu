@@ -75,8 +75,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
 
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
-  const disableFormEdit =
-    !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden || projektiHasErrors || isLoadingProjekti || formIsSubmitting;
+  const disableFormEdit = !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden || projektiHasErrors || isLoadingProjekti || formIsSubmitting;
 
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
 
@@ -90,10 +89,8 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
           const { __typename, ...suunnitelmaInput } = suunnitelma;
           return suunnitelmaInput;
         }) || [],
-      suunnittelusopimusprojekti:
-        projekti.status === Status.EI_JULKAISTU ? null : projekti.suunnitteluSopimus ? "true" : "false",
-      liittyviasuunnitelmia:
-        projekti.status === Status.EI_JULKAISTU ? null : projekti.liittyvatSuunnitelmat?.length ? "true" : "false",
+      suunnittelusopimusprojekti: projekti.status === Status.EI_JULKAISTU ? null : projekti.suunnitteluSopimus ? "true" : "false",
+      liittyviasuunnitelmia: projekti.status === Status.EI_JULKAISTU ? null : projekti.liittyvatSuunnitelmat?.length ? "true" : "false",
     };
     if (projekti.kielitiedot) {
       const { __typename, ...kielitiedotInput } = projekti.kielitiedot;
@@ -103,7 +100,6 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
       const { __typename, ...suunnitteluSopimusInput } = projekti.suunnitteluSopimus;
       tallentamisTiedot.suunnitteluSopimus = suunnitteluSopimusInput;
     }
-    console.log(tallentamisTiedot);
     return tallentamisTiedot;
   }, [projekti]);
 
@@ -144,7 +140,6 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
     async (data: FormValues) => {
       const { suunnittelusopimusprojekti, liittyviasuunnitelmia, ...persistentData } = data;
       deleteFieldArrayIds(persistentData.liittyvatSuunnitelmat);
-      reset(data);
       setFormIsSubmitting(true);
       try {
         const logoTiedosto = persistentData.suunnitteluSopimus?.logo as unknown as File | undefined | string;
@@ -159,6 +154,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
 
         await api.tallennaProjekti(persistentData);
         await reloadProjekti();
+        reset(data);
         showSuccessMessage("Tallennus onnistui!");
       } catch (e) {
         log.log("OnSubmit Error", e);
@@ -189,9 +185,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
           <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
             <input type="hidden" {...register("oid")} />
             <Section>
-              {!isLoadingProjekti && (
-                <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />
-              )}
+              {!isLoadingProjekti && <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />}
               <ProjektiPerustiedot projekti={projekti} />
               <Stack direction="column">
                 {projekti?.velho?.linkki && <ExtLink href={projekti?.velho?.linkki}>Hankesivu</ExtLink>}
@@ -208,11 +202,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
                 control={control}
                 name="euRahoitus"
                 render={({ field: { onChange, onBlur, value, ref, name } }) => (
-                  <FormGroup
-                    label="Rahoittaako EU suunnitteluhanketta? *"
-                    errorMessage={errors?.euRahoitus?.message}
-                    flexDirection="row"
-                  >
+                  <FormGroup label="Rahoittaako EU suunnitteluhanketta? *" errorMessage={errors?.euRahoitus?.message} flexDirection="row">
                     <RadioButton
                       label="Kyllä"
                       onBlur={onBlur}
@@ -238,9 +228,9 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
             <Section smallGaps>
               <h4 className="vayla-small-title">Muistiinpanot</h4>
               <p>
-                Voit kirjoittaa alla olevaan kenttään sisäisiä muistiinpanoja, jotka näkyvät kaikille projektiin
-                lisätyille henkilöille. Muistiinpanoa voi muokata ainoastaan henkilöt, joilla on projektiin
-                muokkausoikeudet. Vain viimeisimpänä tallennettu muistiinpano jää näkyviin.
+                Voit kirjoittaa alla olevaan kenttään sisäisiä muistiinpanoja, jotka näkyvät kaikille projektiin lisätyille henkilöille.
+                Muistiinpanoa voi muokata ainoastaan henkilöt, joilla on projektiin muokkausoikeudet. Vain viimeisimpänä tallennettu
+                muistiinpano jää näkyviin.
               </p>
               <Textarea
                 label="Muistiinpano"

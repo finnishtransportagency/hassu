@@ -36,10 +36,11 @@ export default function NahtavillaoloPainikkeet() {
   };
 
   const saveDraft = async (formData: HyvaksymisPaatosVaiheAineistotFormValues) => {
-    reset(formData);
     setIsFormSubmitting(true);
     try {
       await saveSuunnitteluvaihe(mapFormValuesToTallennaProjektiInput(formData));
+      reloadProjekti();
+      reset(formData);
       showSuccessMessage("Tallennus onnistui!");
     } catch (e) {
       log.error("OnSubmit Error", e);

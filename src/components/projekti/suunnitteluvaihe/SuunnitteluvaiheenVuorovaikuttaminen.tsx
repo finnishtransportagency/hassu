@@ -1,15 +1,7 @@
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
-import {
-  TallennaProjektiInput,
-  api,
-  VuorovaikutusInput,
-  LinkkiInput,
-  Vuorovaikutus,
-  AsiakirjaTyyppi,
-  KirjaamoOsoite,
-} from "@services/api";
+import { TallennaProjektiInput, api, VuorovaikutusInput, LinkkiInput, Vuorovaikutus, AsiakirjaTyyppi, KirjaamoOsoite } from "@services/api";
 import Section from "@components/layout/Section";
 import React, { ReactElement, useEffect, useState, useMemo, useCallback } from "react";
 import Button from "@components/button/Button";
@@ -139,19 +131,13 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
             projekti?.kayttoOikeudet
               ?.filter(({ kayttajatunnus }) => vuorovaikutus?.vuorovaikutusYhteysHenkilot?.includes(kayttajatunnus))
               .map(({ kayttajatunnus }) => kayttajatunnus) || [],
-          esitettavatYhteystiedot:
-            vuorovaikutus?.esitettavatYhteystiedot?.map((yhteystieto) => removeTypeName(yhteystieto)) || [],
-          ilmoituksenVastaanottajat: defaultVastaanottajat(
-            projekti,
-            vuorovaikutus?.ilmoituksenVastaanottajat,
-            kirjaamoOsoitteet
-          ),
+          esitettavatYhteystiedot: vuorovaikutus?.esitettavatYhteystiedot?.map((yhteystieto) => removeTypeName(yhteystieto)) || [],
+          ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, vuorovaikutus?.ilmoituksenVastaanottajat, kirjaamoOsoitteet),
           vuorovaikutusTilaisuudet:
             vuorovaikutus?.vuorovaikutusTilaisuudet?.map((tilaisuus) => {
               const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
               const { esitettavatYhteystiedot } = vuorovaikutusTilaisuusInput;
-              vuorovaikutusTilaisuusInput.esitettavatYhteystiedot =
-                esitettavatYhteystiedot?.map((yt) => removeTypeName(yt)) || [];
+              vuorovaikutusTilaisuusInput.esitettavatYhteystiedot = esitettavatYhteystiedot?.map((yt) => removeTypeName(yt)) || [];
               return vuorovaikutusTilaisuusInput;
             }) || [],
           julkinen: !!vuorovaikutus?.julkinen,
@@ -182,14 +168,7 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
     handleSubmit,
     formState: { isDirty },
     getValues,
-    watch,
   } = useFormReturn;
-
-  const data = watch();
-
-  useEffect(() => {
-    console.log({ data, defaultValues });
-  }, [data, defaultValues]);
 
   useLeaveConfirm(isDirty);
 
@@ -199,10 +178,10 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
 
   const saveSunnitteluvaihe = useCallback(
     async (formData: VuorovaikutusFormValues) => {
-      reset(formData);
       setIsFormSubmitting(true);
       await api.tallennaProjekti(formData);
       if (reloadProjekti) await reloadProjekti();
+      reset(formData);
     },
     [reset, reloadProjekti]
   );

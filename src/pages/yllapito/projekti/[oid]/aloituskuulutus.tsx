@@ -213,9 +213,9 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat);
       deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset);
       setIsFormSubmitting(true);
-      reset(formData);
       await api.tallennaProjekti(formData);
       await reloadProjekti();
+      reset(formData);
     },
     [reset, reloadProjekti]
   );

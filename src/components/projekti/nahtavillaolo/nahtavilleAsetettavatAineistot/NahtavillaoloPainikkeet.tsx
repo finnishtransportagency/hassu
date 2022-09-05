@@ -36,11 +36,11 @@ export default function NahtavillaoloPainikkeet() {
   const saveSuunnitteluvaihe = async (formData: TallennaProjektiInput) => {
     await api.tallennaProjekti(formData);
     if (reloadProjekti) await reloadProjekti();
+    reset(formData);
   };
 
   const saveDraft = async (formData: NahtavilleAsetettavatAineistotFormValues) => {
     setIsFormSubmitting(true);
-    reset(formData);
     try {
       const tallennaProjektiInput: TallennaProjektiInput = mapFormValuesToTallennaProjektiInput(formData);
       await saveSuunnitteluvaihe(tallennaProjektiInput);

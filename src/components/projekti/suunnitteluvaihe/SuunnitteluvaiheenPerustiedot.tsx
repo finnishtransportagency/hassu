@@ -149,9 +149,9 @@ function SuunnitteluvaiheenPerustiedotForm({
   };
 
   const saveSuunnitteluvaihe = async (formData: FormValues) => {
-    reset(formData);
     await api.tallennaProjekti(formData);
     if (reloadProjekti) await reloadProjekti();
+    reset(formData);
   };
 
   useEffect(() => {

@@ -42,9 +42,9 @@ export default function Painikkeet({ projekti }: Props) {
 
   const saveHyvaksymisPaatosVaihe = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
-      reset(formData);
       await api.tallennaProjekti(formData);
       if (reloadProjekti) await reloadProjekti();
+      reset(formData);
     },
     [reloadProjekti, reset]
   );

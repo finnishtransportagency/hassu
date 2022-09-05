@@ -49,13 +49,7 @@ export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactEle
     <section>
       <h1>Projektin Perustaminen</h1>
       <h2>{projekti?.velho.nimi || "-"}</h2>
-      {projekti && (
-        <PerustaProjektiForm
-          projekti={projekti}
-          projektiLoadError={projektiLoadError}
-          reloadProjekti={mutateProjekti}
-        />
-      )}
+      {projekti && <PerustaProjektiForm projekti={projekti} projektiLoadError={projektiLoadError} reloadProjekti={mutateProjekti} />}
     </section>
   );
 }
@@ -109,32 +103,26 @@ const PerustaProjektiForm: FC<PerustaProjektiFormProps> = ({ projekti, projektiL
 
   useLeaveConfirm(isDirty && !formIsSubmitting);
 
-  const submitCreateAnotherOne = async (formData: FormValues) => {
+  const submitAndMoveToNewRoute = async (formData: FormValues, newRoute: string) => {
     deleteFieldArrayIds(formData?.kayttoOikeudet);
-    reset(formData);
     setFormIsSubmitting(true);
     try {
       await api.tallennaProjekti(formData);
       await reloadProjekti();
-      router.push(`/yllapito/perusta`);
+      reset(formData);
+      router.push(newRoute);
     } catch (e) {
       log.log("OnSubmit Error", e);
     }
     setFormIsSubmitting(false);
   };
 
+  const submitCreateAnotherOne = async (formData: FormValues) => {
+    submitAndMoveToNewRoute(formData, "/yllapito/perusta");
+  };
+
   const submitMoveToProject = async (formData: FormValues) => {
-    deleteFieldArrayIds(formData?.kayttoOikeudet);
-    reset(formData);
-    setFormIsSubmitting(true);
-    try {
-      await api.tallennaProjekti(formData);
-      await reloadProjekti();
-      router.push(`/yllapito/projekti/${projekti.oid}`);
-    } catch (e) {
-      log.log("OnSubmit Error", e);
-    }
-    setFormIsSubmitting(false);
+    submitAndMoveToNewRoute(formData, `/yllapito/projekti/${projekti.oid}`);
   };
 
   const onKayttajatUpdate = useCallback(

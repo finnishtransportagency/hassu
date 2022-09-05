@@ -41,14 +41,12 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
 ]);
 
 export default function HenkilotPage({ setRouteLabels }: PageProps): ReactElement {
-  const { data: projekti, error: projektiLoadError, mutate: mutateProjekti } = useProjekti({ revalidateOnMount: true });
+  const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
   useProjektiBreadcrumbs(setRouteLabels);
 
   return (
     <ProjektiPageLayout title="Projektin Henkilöt">
-      {projekti && (
-        <Henkilot projekti={projekti} projektiLoadError={projektiLoadError} mutateProjekti={mutateProjekti} />
-      )}
+      {projekti && <Henkilot {...{ projekti, projektiLoadError, reloadProjekti }} />}
     </ProjektiPageLayout>
   );
 }
@@ -56,17 +54,16 @@ export default function HenkilotPage({ setRouteLabels }: PageProps): ReactElemen
 interface HenkilotFormProps {
   projekti: ProjektiLisatiedolla;
   projektiLoadError: any;
-  mutateProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
+  reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
 }
 
-function Henkilot({ projekti, projektiLoadError, mutateProjekti }: HenkilotFormProps): ReactElement {
+function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormProps): ReactElement {
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
   const [formContext, setFormContext] = useState<KayttoOikeudetSchemaContext>({ kayttajat: [] });
 
   const isLoadingProjekti = !projekti && !projektiLoadError;
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
-  const disableFormEdit =
-    !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden || projektiHasErrors || isLoadingProjekti || formIsSubmitting;
+  const disableFormEdit = !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden || projektiHasErrors || isLoadingProjekti || formIsSubmitting;
 
   const defaultValues: FormValues = useMemo(
     () => ({
@@ -105,10 +102,10 @@ function Henkilot({ projekti, projektiLoadError, mutateProjekti }: HenkilotFormP
   const onSubmit = async (formData: FormValues) => {
     deleteFieldArrayIds(formData?.kayttoOikeudet);
     setFormIsSubmitting(true);
-    reset(formData);
     try {
       await api.tallennaProjekti(formData);
-      await mutateProjekti();
+      await reloadProjekti();
+      reset(formData);
       showSuccessMessage("Henkilötietojen tallennus onnistui");
     } catch (e) {
       showErrorMessage("Tietojen tallennuksessa tapahtui virhe");

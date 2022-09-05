@@ -27,13 +27,7 @@ export default function KasittelyntilaSivu({ setRouteLabels }: PageProps): React
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
   return (
     <ProjektiPageLayout title="Käsittelyn tila">
-      {projekti && (
-        <KasittelyntilaPageContent
-          projekti={projekti}
-          projektiLoadError={projektiLoadError}
-          reloadProjekti={reloadProjekti}
-        />
-      )}
+      {projekti && <KasittelyntilaPageContent projekti={projekti} projektiLoadError={projektiLoadError} reloadProjekti={reloadProjekti} />}
     </ProjektiPageLayout>
   );
 }
@@ -73,8 +67,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     return formValues;
   }, [projekti]);
 
-  const disableFormEdit =
-    !projekti?.nykyinenKayttaja.onYllapitaja || projektiLoadError || isLoadingProjekti || isFormSubmitting;
+  const disableFormEdit = !projekti?.nykyinenKayttaja.onYllapitaja || projektiLoadError || isLoadingProjekti || isFormSubmitting;
 
   const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(kasittelynTilaSchema, { abortEarly: false, recursive: true }),
@@ -98,10 +91,10 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   const onSubmit = useCallback(
     async (data: FormValues) => {
       setIsFormSubmitting(true);
-      reset(data);
       try {
         await api.tallennaProjekti(data);
         await reloadProjekti();
+        reset(data);
         showSuccessMessage("Tallennus onnistui!");
       } catch (e) {
         log.log("OnSubmit Error", e);
@@ -118,14 +111,14 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
       <form onSubmit={handleSubmit(onSubmit)}>
         <Section>
           <p>
-            Pääkäyttäjä lisää sivulle tietoa suunnitelman hallinnollisellisen käsittelyn tiloista, jotka ovat nähtävissä
-            lukutilassa muille järjestelmän käyttäjille. Tiedot siirtyvät Käsittelyn tila -sivulta Projektivelhoon.
+            Pääkäyttäjä lisää sivulle tietoa suunnitelman hallinnollisellisen käsittelyn tiloista, jotka ovat nähtävissä lukutilassa muille
+            järjestelmän käyttäjille. Tiedot siirtyvät Käsittelyn tila -sivulta Projektivelhoon.
           </p>
           <SectionContent>
             <h5 className="vayla-small-title">Hyväksymispäätös</h5>
             <p>
-              Anna päivämäärä, jolloin suunnitelma on saanut hyväksymispäätöksen sekä päätöksen asianumeron. Päätöksen
-              päivä ja asianumero siirtyvät suunnitelman hyväksymispäätöksen kuulutukselle.
+              Anna päivämäärä, jolloin suunnitelma on saanut hyväksymispäätöksen sekä päätöksen asianumeron. Päätöksen päivä ja asianumero
+              siirtyvät suunnitelman hyväksymispäätöksen kuulutukselle.
             </p>
             <HassuGrid cols={{ lg: 3 }}>
               <DatePicker
