@@ -133,9 +133,8 @@ export default function SuunnitteluvaiheenPerustiedot({ isDirtyHandler }: Props)
     <>
       {julkinen && (
         <Notification type={NotificationType.INFO_GREEN}>
-          Suunnitteluvaiheen perustiedot on julkaistu palvelun julkisella puolella. Voit muokata kuvausta, sekä tietoja
-          etenemisestä ja kestosta. Muutokset päivittyvät palvelun julkiselle puolella Tallenna ja päivitä -painikkeen
-          painamisen jälkeen.
+          Suunnitteluvaiheen perustiedot on julkaistu palvelun julkisella puolella. Voit muokata kuvausta, sekä tietoja etenemisestä ja
+          kestosta. Muutokset päivittyvät palvelun julkiselle puolella Tallenna ja päivitä -painikkeen painamisen jälkeen.
         </Notification>
       )}
       <FormProvider {...useFormReturn}>
@@ -144,23 +143,20 @@ export default function SuunnitteluvaiheenPerustiedot({ isDirtyHandler }: Props)
             <SectionContent largeGaps>
               <h5 className="vayla-small-title">Hankkeen sisällönkuvaus</h5>
               <p>
-                Kirjoita kenttään tiivistetty sisällönkuvaus hankkeesta. Kuvauksen on hyvä sisältää esimerkiksi tieto
-                suunnittelukohteen alueellista rajauksesta (maantiealue ja vaikutusalue), suunnittelun tavoitteet,
-                vaikutukset ja toimenpiteet pääpiirteittäin karkealla tasolla. Älä lisää tekstiin linkkejä.
+                Kirjoita kenttään tiivistetty sisällönkuvaus hankkeesta. Kuvauksen on hyvä sisältää esimerkiksi tieto suunnittelukohteen
+                alueellista rajauksesta (maantiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet pääpiirteittäin
+                karkealla tasolla. Älä lisää tekstiin linkkejä.
               </p>
             </SectionContent>
             {!julkinen && (
               <Notification type={NotificationType.INFO_GRAY}>
-                Tiivistetty hankkeen sisällönkuvaus on noudettu aloituskuulutusvaiheesta. Voit muokata kuvausta.
-                Muutokset tulevat näkyviin palvelun julkiselle puolella Tallenna ja julkaise -painikkeen painamisen
-                jälkeen.
+                Tiivistetty hankkeen sisällönkuvaus on noudettu aloituskuulutusvaiheesta. Voit muokata kuvausta. Muutokset tulevat näkyviin
+                palvelun julkiselle puolella Tallenna ja julkaise -painikkeen painamisen jälkeen.
               </Notification>
             )}
 
             <Textarea
-              label={`Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (${lowerCase(
-                kielitiedot?.ensisijainenKieli
-              )}) *`}
+              label={`Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (${lowerCase(kielitiedot?.ensisijainenKieli)}) *`}
               {...register(`suunnitteluVaihe.hankkeenKuvaus.${ensisijainenKieli}`)}
               error={
                 (errors.suunnitteluVaihe?.hankkeenKuvaus as any)?.[
@@ -171,9 +167,7 @@ export default function SuunnitteluvaiheenPerustiedot({ isDirtyHandler }: Props)
             />
             {toissijainenKieli && (
               <Textarea
-                label={`Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä (${lowerCase(
-                  toissijainenKieli
-                )}) *`}
+                label={`Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä (${lowerCase(toissijainenKieli)}) *`}
                 {...register(`suunnitteluVaihe.hankkeenKuvaus.${toissijainenKieli}`)}
                 error={(errors.suunnitteluVaihe?.hankkeenKuvaus as any)?.[toissijainenKieli]}
                 maxLength={maxHankkeenkuvausLength}
@@ -185,8 +179,8 @@ export default function SuunnitteluvaiheenPerustiedot({ isDirtyHandler }: Props)
             <h5 className="vayla-small-title">Suunnittelun eteneminen ja arvio kestosta</h5>
             <SectionContent>
               <p>
-                Kuvaa kansalaiselle suunnittelun etenemistä ja sen tilaa. Voit käyttää alla olevaan kenttään tuotua
-                vakiotekstiä tai kertoa omin sanoin.{" "}
+                Kuvaa kansalaiselle suunnittelun etenemistä ja sen tilaa. Voit käyttää alla olevaan kenttään tuotua vakiotekstiä tai kertoa
+                omin sanoin.{" "}
               </p>
               <Textarea
                 label="Julkisella puolella esitettävä suunnittelun etenemisen kuvaus"
@@ -195,8 +189,8 @@ export default function SuunnitteluvaiheenPerustiedot({ isDirtyHandler }: Props)
                 error={errors.suunnitteluVaihe?.suunnittelunEteneminenJaKesto}
               />
               <p>
-                Anna arvio hallinnollisen käsittelyn seuraavan vaiheen alkamisesta. Seuraava vaihe on nähtävillä olo,
-                jossa kansalaisilla on mahdollisuus jättää muistutuksia tehtyihin suunnitelmiin.
+                Anna arvio hallinnollisen käsittelyn seuraavan vaiheen alkamisesta. Seuraava vaihe on nähtävillä olo, jossa kansalaisilla on
+                mahdollisuus jättää muistutuksia tehtyihin suunnitelmiin.
               </p>
 
               <p>
@@ -212,18 +206,14 @@ export default function SuunnitteluvaiheenPerustiedot({ isDirtyHandler }: Props)
               ></TextInput>
             </SectionContent>
           </Section>
-          {projekti && <SaapuneetKysymyksetJaPalautteet projekti={projekti} reloadProjekti={reloadProjekti} />}
+          {projekti && <SaapuneetKysymyksetJaPalautteet projekti={projekti} />}
           <input type="hidden" {...register("suunnitteluVaihe.julkinen")} />
         </form>
       </FormProvider>
       <Section noDivider>
         <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
           {!julkinen && (
-            <Button
-              id="save_suunnitteluvaihe_perustiedot_draft"
-              onClick={handleSubmit(saveDraft)}
-              disabled={isFormSubmitting}
-            >
+            <Button id="save_suunnitteluvaihe_perustiedot_draft" onClick={handleSubmit(saveDraft)} disabled={isFormSubmitting}>
               Tallenna luonnos
             </Button>
           )}
@@ -238,23 +228,16 @@ export default function SuunnitteluvaiheenPerustiedot({ isDirtyHandler }: Props)
           <Button disabled>Nähtävilläolon kuuluttaminen</Button>
         </Stack>
       </Section>
-      <HassuDialog
-        open={openHyvaksy}
-        title="Suunnitteluvaiheen perustietojen julkaisu"
-        onClose={() => setOpenHyvaksy(false)}
-      >
+      <HassuDialog open={openHyvaksy} title="Suunnitteluvaiheen perustietojen julkaisu" onClose={() => setOpenHyvaksy(false)}>
         <form style={{ display: "contents" }}>
           <DialogContent>
             <p>Olet julkaisemassa suunnitteluvaiheen perustiedot kansalaispuolelle.</p>
             <div className="content">
               <p>
-                Jos perustietoihin pitää tehdä muutoksia julkaisun jälkeen, tulee perustiedot avata uudelleen ja tehdä
-                tallennus ja julkaisun päivitys.
+                Jos perustietoihin pitää tehdä muutoksia julkaisun jälkeen, tulee perustiedot avata uudelleen ja tehdä tallennus ja
+                julkaisun päivitys.
               </p>
-              <p>
-                Klikkaamalla Hyväksy ja julkaise -painiketta vahvistat perustiedot tarkastetuksi ja hyväksyt sen
-                julkaisun.
-              </p>
+              <p>Klikkaamalla Hyväksy ja julkaise -painiketta vahvistat perustiedot tarkastetuksi ja hyväksyt sen julkaisun.</p>
             </div>
           </DialogContent>
           <DialogActions>
@@ -284,6 +267,5 @@ function canProjektiBePublished(projekti: ProjektiLisatiedolla): boolean {
 
 const projektiHasPublishedAloituskuulutusJulkaisu: (projekti: ProjektiLisatiedolla) => boolean = (projekti) =>
   !!projekti.aloitusKuulutusJulkaisut?.some(
-    (julkaisu) =>
-      julkaisu.tila && [AloitusKuulutusTila.HYVAKSYTTY, AloitusKuulutusTila.MIGROITU].includes(julkaisu.tila)
+    (julkaisu) => julkaisu.tila && [AloitusKuulutusTila.HYVAKSYTTY, AloitusKuulutusTila.MIGROITU].includes(julkaisu.tila)
   );
