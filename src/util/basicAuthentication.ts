@@ -1,3 +1,4 @@
+import { getCredentials } from "./apiUtil";
 import { parameterStore } from "./parameterStore";
 
 export function createAuthorizationHeader(username: string, password: string) {
@@ -5,9 +6,7 @@ export function createAuthorizationHeader(username: string, password: string) {
 }
 
 export async function validateCredentials(authorization: string | undefined): Promise<boolean> {
-  let configuredCredentials: string[] | undefined = (
-    await parameterStore.getParameter("/IlmoitustauluSyoteCredentials")
-  )?.split("\n");
+  let configuredCredentials: string[] | undefined = (await parameterStore.getParameter("/IlmoitustauluSyoteCredentials"))?.split("\n");
   if (!configuredCredentials || !authorization) {
     return false;
   }
@@ -22,4 +21,12 @@ export async function validateCredentials(authorization: string | undefined): Pr
     }
   }
   return false;
+}
+
+export async function validateApiCredentials(authorization: string | undefined): Promise<boolean> {
+  let configuredCredentials: { username: string; password: string } = await getCredentials();
+  if (!configuredCredentials || !authorization) {
+    return false;
+  }
+  return authorization == createAuthorizationHeader(configuredCredentials.username, configuredCredentials.password);
 }
