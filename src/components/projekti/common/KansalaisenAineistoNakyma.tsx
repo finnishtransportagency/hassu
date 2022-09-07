@@ -2,12 +2,7 @@ import React, { Key, ReactElement, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { formatDate } from "src/util/dateUtils";
 import SectionContent from "@components/layout/SectionContent";
-import {
-  Aineisto,
-  ProjektiJulkinen,
-  NahtavillaoloVaiheJulkaisuJulkinen,
-  HyvaksymisPaatosVaiheJulkaisuJulkinen,
-} from "@services/api";
+import { Aineisto, ProjektiJulkinen, NahtavillaoloVaiheJulkaisuJulkinen, HyvaksymisPaatosVaiheJulkaisuJulkinen } from "@services/api";
 import Trans from "next-translate/Trans";
 import HassuAccordion from "@components/HassuAccordion";
 import { AineistoKategoria, aineistoKategoriat } from "common/aineistoKategoriat";
@@ -59,7 +54,7 @@ export default function KansalaisenAineistoNakyma({
 
   return (
     <SectionContent>
-      <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.esittelyaineisto_ja_suunnitelmat`)}</h4>
+      <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.nahtavilla_oleva_aineisto`)}</h4>
       <Trans
         i18nKey="projekti:info.nahtavillaolo.ei-rata.suunnitelmiin_on_mahdollista"
         values={{
@@ -78,16 +73,8 @@ export default function KansalaisenAineistoNakyma({
         }}
         iconComponent={
           <span className="fa-layers">
-            <FontAwesomeIcon
-              icon="chevron-down"
-              transform={`down-6`}
-              flip={areAineistoKategoriesExpanded ? "vertical" : undefined}
-            />
-            <FontAwesomeIcon
-              icon="chevron-up"
-              transform={`up-6`}
-              flip={areAineistoKategoriesExpanded ? "vertical" : undefined}
-            />
+            <FontAwesomeIcon icon="chevron-down" transform={`down-6`} flip={areAineistoKategoriesExpanded ? "vertical" : undefined} />
+            <FontAwesomeIcon icon="chevron-up" transform={`up-6`} flip={areAineistoKategoriesExpanded ? "vertical" : undefined} />
           </span>
         }
       >
@@ -173,9 +160,7 @@ const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoria
                   {aineisto.nimi}{" "}
                   <span className="ml-2 text-black">
                     ({aineisto.nimi.split(".").pop()})
-                    {props.julkaisuPaiva
-                      ? formatDate(props.julkaisuPaiva)
-                      : aineisto.tuotu && formatDate(aineisto.tuotu)}
+                    {props.julkaisuPaiva ? formatDate(props.julkaisuPaiva) : aineisto.tuotu && formatDate(aineisto.tuotu)}
                   </span>
                 </ExtLink>
               </Stack>
