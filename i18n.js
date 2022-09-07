@@ -7,6 +7,7 @@ module.exports = {
     "/suunnitelma/[oid]/nahtavillaolo": ["aineisto"],
     "/suunnitelma/[oid]/lausuntopyyntoaineistot": ["aineisto"],
     "/yllapito/projekti/[oid]/nahtavillaolo": ["aineisto"],
+    "/yllapito/projekti/[oid]/hyvaksymispaatos": ["aineisto"],
     "/suunnitelma/[oid]/hyvaksymismenettelyssa": ["hyvaksymismenettelyssa"],
   },
   loadLocaleFrom: (lang, ns) =>

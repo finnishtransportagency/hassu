@@ -3,10 +3,10 @@ import React, { useEffect, useState, useCallback, useMemo } from "react";
 import log from "loglevel";
 import { PageProps } from "@pages/_app";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
-import { useProjekti } from "src/hooks/useProjekti";
-import { api, Projekti, Status, TallennaProjektiInput } from "@services/api";
+import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { api, Status, TallennaProjektiInput } from "@services/api";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FormProvider, useForm, UseFormProps } from "react-hook-form";
+import { Controller, FormProvider, useForm, UseFormProps } from "react-hook-form";
 import Button from "@components/button/Button";
 import Textarea from "@components/form/Textarea";
 import ProjektiPerustiedot from "@components/projekti/ProjektiPerustiedot";
@@ -28,6 +28,8 @@ import HassuStack from "@components/layout/HassuStack";
 import HassuSpinner from "@components/HassuSpinner";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import { Stack } from "@mui/material";
+import useLeaveConfirm from "src/hooks/useLeaveConfirm";
+import { KeyedMutator } from "swr";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -45,56 +47,83 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
   ProjektiTestType.PROJEKTI_IS_CREATED,
 ]);
 
-function booleanToString(value: any) {
-  if (typeof value === "boolean") {
-    return `${value}`;
-  }
-  return value;
+export default function ProjektiSivu({ setRouteLabels }: PageProps) {
+  useProjektiBreadcrumbs(setRouteLabels);
+  const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
+
+  return (
+    <ProjektiPageLayout title={"Projektin tiedot"} showUpdateButton>
+      {projekti && <ProjektiSivuLomake {...{ projekti, projektiLoadError, reloadProjekti }} />}
+    </ProjektiPageLayout>
+  );
 }
 
-export default function ProjektiSivu({ setRouteLabels }: PageProps) {
-  const velhobaseurl = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-";
+interface ProjektiSivuLomakeProps {
+  projekti: ProjektiLisatiedolla;
+  projektiLoadError: any;
+  reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
+}
+
+function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: ProjektiSivuLomakeProps) {
+  const velhoURL = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + projekti.oid;
 
   const router = useRouter();
 
-  const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti();
   const [statusBeforeSave, setStatusBeforeSave] = useState<Status | null | undefined>();
   const isLoadingProjekti = !projekti && !projektiLoadError;
 
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
 
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
-  const disableFormEdit =
-    !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden || projektiHasErrors || isLoadingProjekti || formIsSubmitting;
-  const [formContext, setFormContext] = useState<Projekti | undefined>(undefined);
+  const disableFormEdit = !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden || projektiHasErrors || isLoadingProjekti || formIsSubmitting;
 
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
+
+  const defaultValues: FormValues = useMemo(() => {
+    const tallentamisTiedot: FormValues = {
+      oid: projekti.oid,
+      muistiinpano: projekti.muistiinpano || "",
+      euRahoitus: projekti.euRahoitus,
+      liittyvatSuunnitelmat:
+        projekti?.liittyvatSuunnitelmat?.map((suunnitelma) => {
+          const { __typename, ...suunnitelmaInput } = suunnitelma;
+          return suunnitelmaInput;
+        }) || [],
+      suunnittelusopimusprojekti: projekti.status === Status.EI_JULKAISTU ? null : projekti.suunnitteluSopimus ? "true" : "false",
+      liittyviasuunnitelmia: projekti.status === Status.EI_JULKAISTU ? null : projekti.liittyvatSuunnitelmat?.length ? "true" : "false",
+    };
+    if (projekti.kielitiedot) {
+      const { __typename, ...kielitiedotInput } = projekti.kielitiedot;
+      tallentamisTiedot.kielitiedot = kielitiedotInput;
+    }
+    if (projekti.suunnitteluSopimus) {
+      const { __typename, ...suunnitteluSopimusInput } = projekti.suunnitteluSopimus;
+      tallentamisTiedot.suunnitteluSopimus = suunnitteluSopimusInput;
+    }
+    return tallentamisTiedot;
+  }, [projekti]);
 
   const formOptions: UseFormProps<FormValues> = useMemo(() => {
     return {
       resolver: yupResolver(perustiedotValidationSchema.concat(UIValuesSchema), { abortEarly: false, recursive: true }),
-      defaultValues: {
-        muistiinpano: "",
-        euRahoitus: null,
-        liittyvatSuunnitelmat: [],
-        kielitiedot: null,
-        suunnittelusopimusprojekti: null,
-        liittyviasuunnitelmia: null,
-      },
+      defaultValues,
       mode: "onChange",
       reValidateMode: "onChange",
-      context: { ...formContext },
+      context: projekti,
     };
-  }, [formContext]);
+  }, [defaultValues, projekti]);
 
   const useFormReturn = useForm<FormValues>(formOptions);
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
+    control,
   } = useFormReturn;
+
+  useLeaveConfirm(isDirty);
 
   const talletaLogo = useCallback(async (logoTiedosto: File) => {
     const contentType = (logoTiedosto as Blob).type || "application/octet-stream";
@@ -122,8 +151,10 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
           delete persistentData.suunnitteluSopimus.logo;
         }
         setStatusBeforeSave(projekti?.status);
+
         await api.tallennaProjekti(persistentData);
         await reloadProjekti();
+        reset(data);
         showSuccessMessage("Tallennus onnistui!");
       } catch (e) {
         log.log("OnSubmit Error", e);
@@ -131,75 +162,34 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
       }
       setFormIsSubmitting(false);
     },
-    [
-      setFormIsSubmitting,
-      setStatusBeforeSave,
-      reloadProjekti,
-      showSuccessMessage,
-      showErrorMessage,
-      projekti,
-      talletaLogo,
-    ]
+    [reset, projekti?.status, reloadProjekti, showSuccessMessage, talletaLogo, showErrorMessage]
   );
 
   useEffect(() => {
-    if (projekti && projekti.oid) {
-      // Detect status change
-      if (statusBeforeSave && projekti.status) {
-        log.info("previous state:" + statusBeforeSave + ", current state:" + projekti.status);
-        if (statusBeforeSave === Status.EI_JULKAISTU && projekti.status === Status.ALOITUSKUULUTUS) {
-          const siirtymaTimer = setTimeout(() => {
-            router.push(`/yllapito/projekti/${projekti?.oid}/aloituskuulutus`);
-          }, 1500);
-          return () => clearTimeout(siirtymaTimer);
-        }
+    // Detect status change
+    if (statusBeforeSave && projekti.status) {
+      log.info("previous state:" + statusBeforeSave + ", current state:" + projekti.status);
+      if (statusBeforeSave === Status.EI_JULKAISTU && projekti.status === Status.ALOITUSKUULUTUS) {
+        const siirtymaTimer = setTimeout(() => {
+          router.push(`/yllapito/projekti/${projekti?.oid}/aloituskuulutus`);
+        }, 1500);
+        return () => clearTimeout(siirtymaTimer);
       }
-
-      const tallentamisTiedot: FormValues = {
-        oid: projekti.oid,
-        muistiinpano: projekti.muistiinpano || "",
-        euRahoitus: projekti.euRahoitus,
-        liittyvatSuunnitelmat:
-          projekti?.liittyvatSuunnitelmat?.map((suunnitelma) => {
-            const { __typename, ...suunnitelmaInput } = suunnitelma;
-            return suunnitelmaInput;
-          }) || [],
-        suunnittelusopimusprojekti:
-          projekti.status === Status.EI_JULKAISTU ? null : projekti.suunnitteluSopimus ? "true" : "false",
-        liittyviasuunnitelmia:
-          projekti.status === Status.EI_JULKAISTU ? null : projekti.liittyvatSuunnitelmat?.length ? "true" : "false",
-      };
-      if (projekti.kielitiedot) {
-        const { __typename, ...kielitiedotInput } = projekti.kielitiedot;
-        tallentamisTiedot.kielitiedot = kielitiedotInput;
-      }
-      if (projekti.suunnitteluSopimus) {
-        const { __typename, ...suunnitteluSopimusInput } = projekti.suunnitteluSopimus;
-        tallentamisTiedot.suunnitteluSopimus = suunnitteluSopimusInput;
-      }
-      reset(tallentamisTiedot);
-      setFormContext(projekti);
     }
-  }, [projekti, reset, router, statusBeforeSave]);
-
-  useProjektiBreadcrumbs(setRouteLabels);
+  }, [projekti, router, statusBeforeSave]);
 
   return (
-    <ProjektiPageLayout title={"Projektin tiedot"} showUpdateButton>
+    <>
       <FormProvider {...useFormReturn}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
             <input type="hidden" {...register("oid")} />
             <Section>
-              <ProjektiErrorNotification
-                disableValidation={isLoadingProjekti}
-                projekti={projekti}
-                validationSchema={loadedProjektiValidationSchema}
-              />
+              {!isLoadingProjekti && <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />}
               <ProjektiPerustiedot projekti={projekti} />
               <Stack direction="column">
                 {projekti?.velho?.linkki && <ExtLink href={projekti?.velho?.linkki}>Hankesivu</ExtLink>}
-                <ExtLink href={velhobaseurl + projekti?.oid}>Projektin sivu Projektivelhossa</ExtLink>
+                <ExtLink href={velhoURL}>Projektin sivu Projektivelhossa</ExtLink>
               </Stack>
             </Section>
             <ProjektiKuntatiedot projekti={projekti} />
@@ -208,29 +198,39 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
             <ProjektiSuunnittelusopimusTiedot projekti={projekti} />
             <Section smallGaps>
               <h4 className="vayla-small-title">EU-rahoitus</h4>
-              <FormGroup
-                label="Rahoittaako EU suunnitteluhanketta? *"
-                errorMessage={errors?.euRahoitus?.message}
-                flexDirection="row"
-              >
-                <RadioButton
-                  label="Kyllä"
-                  value="true"
-                  {...register("euRahoitus", { setValueAs: booleanToString })}
-                ></RadioButton>
-                <RadioButton
-                  label="Ei"
-                  value="false"
-                  {...register("euRahoitus", { setValueAs: booleanToString })}
-                ></RadioButton>
-              </FormGroup>
+              <Controller
+                control={control}
+                name="euRahoitus"
+                render={({ field: { onChange, onBlur, value, ref, name } }) => (
+                  <FormGroup label="Rahoittaako EU suunnitteluhanketta? *" errorMessage={errors?.euRahoitus?.message} flexDirection="row">
+                    <RadioButton
+                      label="Kyllä"
+                      onBlur={onBlur}
+                      name={name}
+                      value="true"
+                      onChange={() => onChange(true)}
+                      checked={value === true}
+                      ref={ref}
+                    />
+                    <RadioButton
+                      label="Ei"
+                      onBlur={onBlur}
+                      name={name}
+                      value="false"
+                      onChange={() => onChange(false)}
+                      checked={value === false}
+                      ref={ref}
+                    />
+                  </FormGroup>
+                )}
+              />
             </Section>
             <Section smallGaps>
               <h4 className="vayla-small-title">Muistiinpanot</h4>
               <p>
-                Voit kirjoittaa alla olevaan kenttään sisäisiä muistiinpanoja, jotka näkyvät kaikille projektiin
-                lisätyille henkilöille. Muistiinpanoa voi muokata ainoastaan henkilöt, joilla on projektiin
-                muokkausoikeudet. Vain viimeisimpänä tallennettu muistiinpano jää näkyviin.
+                Voit kirjoittaa alla olevaan kenttään sisäisiä muistiinpanoja, jotka näkyvät kaikille projektiin lisätyille henkilöille.
+                Muistiinpanoa voi muokata ainoastaan henkilöt, joilla on projektiin muokkausoikeudet. Vain viimeisimpänä tallennettu
+                muistiinpano jää näkyviin.
               </p>
               <Textarea
                 label="Muistiinpano"
@@ -251,6 +251,6 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
         </form>
       </FormProvider>
       <HassuSpinner open={formIsSubmitting || isLoadingProjekti} />
-    </ProjektiPageLayout>
+    </>
   );
 }

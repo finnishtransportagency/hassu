@@ -19,8 +19,11 @@ const mapFormValuesToTallennaProjektiInput = ({
   const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla).flat();
   deleteFieldArrayIds(aineistoNahtavillaFlat);
   deleteFieldArrayIds(lisaAineisto);
-
-  return { oid, nahtavillaoloVaihe: { aineistoNahtavilla: aineistoNahtavillaFlat, lisaAineisto: lisaAineisto } };
+  const result: TallennaProjektiInput = {
+    oid,
+    nahtavillaoloVaihe: { aineistoNahtavilla: aineistoNahtavillaFlat, lisaAineisto: lisaAineisto },
+  };
+  return result;
 };
 
 export default function NahtavillaoloPainikkeet() {
@@ -28,17 +31,19 @@ export default function NahtavillaoloPainikkeet() {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
 
-  const { handleSubmit } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
+  const { handleSubmit, reset } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
 
   const saveSuunnitteluvaihe = async (formData: TallennaProjektiInput) => {
     await api.tallennaProjekti(formData);
     if (reloadProjekti) await reloadProjekti();
+    reset(formData);
   };
 
   const saveDraft = async (formData: NahtavilleAsetettavatAineistotFormValues) => {
     setIsFormSubmitting(true);
     try {
-      await saveSuunnitteluvaihe(mapFormValuesToTallennaProjektiInput(formData));
+      const tallennaProjektiInput: TallennaProjektiInput = mapFormValuesToTallennaProjektiInput(formData);
+      await saveSuunnitteluvaihe(tallennaProjektiInput);
       showSuccessMessage("Tallennus onnistui!");
     } catch (e) {
       log.error("OnSubmit Error", e);

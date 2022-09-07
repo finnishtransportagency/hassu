@@ -242,7 +242,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden, updateFo
             }
           });
           updateFormContext();
-          setValue("suunnitteluVaihe.vuorovaikutus.esittelyaineistot", value);
+          setValue("suunnitteluVaihe.vuorovaikutus.esittelyaineistot", value, { shouldDirty: true });
         }}
       />
       <AineistojenValitseminenDialog
@@ -256,7 +256,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden, updateFo
             }
           });
           updateFormContext();
-          setValue("suunnitteluVaihe.vuorovaikutus.suunnitelmaluonnokset", value);
+          setValue("suunnitteluVaihe.vuorovaikutus.suunnitelmaluonnokset", value, { shouldDirty: true });
         }}
       />
     </SectionContent>

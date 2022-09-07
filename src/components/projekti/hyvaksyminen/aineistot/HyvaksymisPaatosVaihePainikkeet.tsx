@@ -28,7 +28,7 @@ export default function NahtavillaoloPainikkeet() {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
 
-  const { handleSubmit } = useFormContext<HyvaksymisPaatosVaiheAineistotFormValues>();
+  const { handleSubmit, reset } = useFormContext<HyvaksymisPaatosVaiheAineistotFormValues>();
 
   const saveSuunnitteluvaihe = async (formData: TallennaProjektiInput) => {
     await api.tallennaProjekti(formData);
@@ -39,6 +39,8 @@ export default function NahtavillaoloPainikkeet() {
     setIsFormSubmitting(true);
     try {
       await saveSuunnitteluvaihe(mapFormValuesToTallennaProjektiInput(formData));
+      reloadProjekti();
+      reset(formData);
       showSuccessMessage("Tallennus onnistui!");
     } catch (e) {
       log.error("OnSubmit Error", e);

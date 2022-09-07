@@ -39,18 +39,14 @@ describe("Projektin aloituskuulutus", () => {
 
     cy.get("#add_new_contact").click();
 
-    cy.get('[name="aloitusKuulutus.esitettavatYhteystiedot.0.etunimi"]').type("Yhteystietoetunimi");
-    cy.get('[name="aloitusKuulutus.esitettavatYhteystiedot.0.sukunimi"]').type("Yhteystietosukunimi");
-    cy.get('[name="aloitusKuulutus.esitettavatYhteystiedot.0.organisaatio"]').type("Minun Organisaationi");
-    cy.get('[name="aloitusKuulutus.esitettavatYhteystiedot.0.puhelinnumero"]').type("0293333333");
-    cy.get('[name="aloitusKuulutus.esitettavatYhteystiedot.0.sahkoposti"]').type("test@vayla.fi");
+    cy.get('[name="aloitusKuulutus.kuulutusYhteystiedot.yhteysTiedot.0.etunimi"]').type("Yhteystietoetunimi");
+    cy.get('[name="aloitusKuulutus.kuulutusYhteystiedot.yhteysTiedot.0.sukunimi"]').type("Yhteystietosukunimi");
+    cy.get('[name="aloitusKuulutus.kuulutusYhteystiedot.yhteysTiedot.0.organisaatio"]').type("Minun Organisaationi");
+    cy.get('[name="aloitusKuulutus.kuulutusYhteystiedot.yhteysTiedot.0.puhelinnumero"]').type("0293333333");
+    cy.get('[name="aloitusKuulutus.kuulutusYhteystiedot.yhteysTiedot.0.sahkoposti"]').type("test@vayla.fi");
 
-    cy.get('[name="aloitusKuulutus.hankkeenKuvaus.SUOMI"]')
-      .clear({ scrollBehavior: "center" })
-      .type("Hankkeen kuvaus Suomeksi");
-    cy.get('[name="aloitusKuulutus.hankkeenKuvaus.RUOTSI"]')
-      .clear({ scrollBehavior: "center" })
-      .type("Hankkeen kuvaus Ruotsiksi");
+    cy.get('[name="aloitusKuulutus.hankkeenKuvaus.SUOMI"]').clear({ scrollBehavior: "center" }).type("Hankkeen kuvaus Suomeksi");
+    cy.get('[name="aloitusKuulutus.hankkeenKuvaus.RUOTSI"]').clear({ scrollBehavior: "center" }).type("Hankkeen kuvaus Ruotsiksi");
 
     cy.get("main").then((elem) => {
       let htmlElements = elem.find('[name="viranomainen_trash_button"]');

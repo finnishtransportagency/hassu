@@ -38,14 +38,15 @@ export default function Painikkeet({ projekti }: Props) {
     }; // ... and to false on unmount
   }, []);
 
-  const { handleSubmit } = useFormContext<KuulutuksenTiedotFormValues>();
+  const { handleSubmit, reset } = useFormContext<KuulutuksenTiedotFormValues>();
 
   const saveHyvaksymisPaatosVaihe = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
       await api.tallennaProjekti(formData);
       if (reloadProjekti) await reloadProjekti();
+      reset(formData);
     },
-    [reloadProjekti]
+    [reloadProjekti, reset]
   );
 
   const saveDraft = async (formData: KuulutuksenTiedotFormValues) => {

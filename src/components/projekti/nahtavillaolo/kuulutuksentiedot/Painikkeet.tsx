@@ -38,14 +38,15 @@ export default function Painikkeet({ projekti }: Props) {
     }; // ... and to false on unmount
   }, []);
 
-  const { handleSubmit } = useFormContext<KuulutuksenTiedotFormValues>();
+  const { handleSubmit, reset } = useFormContext<KuulutuksenTiedotFormValues>();
 
   const saveSuunnitteluvaihe = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
       await api.tallennaProjekti(formData);
       if (reloadProjekti) await reloadProjekti();
+      reset(formData);
     },
-    [reloadProjekti]
+    [reloadProjekti, reset]
   );
 
   const saveDraft = async (formData: KuulutuksenTiedotFormValues) => {
@@ -159,7 +160,9 @@ export default function Painikkeet({ projekti }: Props) {
         <>
           <Section noDivider>
             <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
-              <Button id="save_nahtavillaolovaihe_draft" onClick={handleSubmit(saveDraft)}>Tallenna Luonnos</Button>
+              <Button id="save_nahtavillaolovaihe_draft" onClick={handleSubmit(saveDraft)}>
+                Tallenna Luonnos
+              </Button>
               <Button id="save_and_send_for_acceptance" primary onClick={handleSubmit(lahetaHyvaksyttavaksi)}>
                 Lähetä Hyväksyttäväksi
               </Button>

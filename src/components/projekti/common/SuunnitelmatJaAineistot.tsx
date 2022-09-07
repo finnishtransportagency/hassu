@@ -140,7 +140,7 @@ const SuunnitelmaAineistoPaakategoriaContent = (props: SuunnitelmaAineistoPaakat
               value.push({ ...aineisto, kategoriaId: props.paakategoria.id, jarjestys: value.length });
             }
           });
-          setValue(aineistoRoute, value);
+          setValue(aineistoRoute, value, { shouldDirty: true });
         }}
       />
     </>

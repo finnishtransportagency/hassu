@@ -9,7 +9,7 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import { AloitusKuulutusInput, Projekti, ProjektiRooli, YhteystietoInput } from "@services/api";
 import React, { ReactElement, Fragment } from "react";
-import { Controller, useFieldArray, UseFormReturn } from "react-hook-form";
+import { Controller, useFieldArray, useFormContext, UseFormReturn } from "react-hook-form";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
 
 type KuulutusYhteystiedot = Pick<AloitusKuulutusInput, "kuulutusYhteystiedot">;
@@ -30,16 +30,12 @@ interface Props<T> {
   disableFields?: boolean;
 }
 
-function KuulutuksenYhteystiedot<T extends FormValues>({
-  projekti,
-  useFormReturn,
-  disableFields,
-}: Props<T>): ReactElement {
+function KuulutuksenYhteystiedot<T extends FormValues>({ projekti, disableFields }: Props<T>): ReactElement {
   const {
     control,
     register,
     formState: { errors },
-  } = useFormReturn as unknown as UseFormReturn<FormValues>;
+  } = useFormContext<FormValues>();
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -51,9 +47,9 @@ function KuulutuksenYhteystiedot<T extends FormValues>({
       <SectionContent>
         <h5 className="vayla-small-title">Kuulutuksessa esitettävät yhteystiedot</h5>
         <p>
-          Voit valita kuulutuksessa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden
-          yhteystiedon. Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot
-          haetaan Projektin henkilöt -sivulle tallennetuista tiedoista.{" "}
+          Voit valita kuulutuksessa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden yhteystiedon.
+          Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot haetaan Projektin henkilöt -sivulle
+          tallennetuista tiedoista.{" "}
         </p>
       </SectionContent>
       {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
@@ -101,8 +97,8 @@ function KuulutuksenYhteystiedot<T extends FormValues>({
       <SectionContent>
         <p>Uusi yhteystieto</p>
         <p>
-          Lisää uudelle yhteystiedolle rivi Lisää uusi-painikkeella. Huomioi, että uusi yhteystieto ei tallennu
-          Projektin henkilöt -sivulle eikä henkilölle tule käyttöoikeuksia projektiin.{" "}
+          Lisää uudelle yhteystiedolle rivi Lisää uusi-painikkeella. Huomioi, että uusi yhteystieto ei tallennu Projektin henkilöt -sivulle
+          eikä henkilölle tule käyttöoikeuksia projektiin.{" "}
         </p>
       </SectionContent>
       {fields.map((field, index) => (
@@ -111,28 +107,28 @@ function KuulutuksenYhteystiedot<T extends FormValues>({
             <TextInput
               label="Etunimi *"
               {...register(`aloitusKuulutus.kuulutusYhteystiedot.yhteysTiedot.${index}.etunimi`)}
-              error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.etunimi}
+              error={(errors as any)?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.[index]?.etunimi}
             />
             <TextInput
               label="Sukunimi *"
               {...register(`aloitusKuulutus.kuulutusYhteystiedot.yhteysTiedot.${index}.sukunimi`)}
-              error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.sukunimi}
+              error={(errors as any)?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.[index]?.sukunimi}
             />
             <TextInput
               label="Organisaatio / kunta *"
               {...register(`aloitusKuulutus.kuulutusYhteystiedot.yhteysTiedot.${index}.organisaatio`)}
-              error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.organisaatio}
+              error={(errors as any)?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.[index]?.organisaatio}
             />
             <TextInput
               label="Puhelinnumero *"
               {...register(`aloitusKuulutus.kuulutusYhteystiedot.yhteysTiedot.${index}.puhelinnumero`)}
-              error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.puhelinnumero}
+              error={(errors as any)?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.[index]?.puhelinnumero}
               maxLength={maxPhoneLength}
             />
             <TextInput
               label="Sähköpostiosoite *"
               {...register(`aloitusKuulutus.kuulutusYhteystiedot.yhteysTiedot.${index}.sahkoposti`)}
-              error={(errors as any)?.aloitusKuulutus?.esitettavatYhteystiedot?.[index]?.sahkoposti}
+              error={(errors as any)?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.[index]?.sahkoposti}
             />
           </HassuGrid>
           <div>
