@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Kieli, KirjaamoOsoite, TallennaProjektiInput } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { nahtavillaoloKuulutusSchema } from "src/schemas/nahtavillaoloKuulutus";
@@ -25,14 +25,18 @@ export type KuulutuksenTiedotFormValues = Required<{
   [K in keyof PickedTallennaProjektiInput]: NonNullable<PickedTallennaProjektiInput[K]>;
 }>;
 
-export default function KuulutuksenTiedot() {
+interface Props {
+  setIsDirty: (value: React.SetStateAction<boolean>) => void;
+}
+
+export default function KuulutuksenTiedot({ setIsDirty }: Props) {
   const { data: projekti } = useProjekti({ revalidateOnMount: true });
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
   return (
     <>
       {projekti && kirjaamoOsoitteet && (
-        <KuulutuksenTiedotForm projekti={projekti} kirjaamoOsoitteet={kirjaamoOsoitteet} />
+        <KuulutuksenTiedotForm setIsDirty={setIsDirty} projekti={projekti} kirjaamoOsoitteet={kirjaamoOsoitteet} />
       )}
     </>
   );
@@ -43,7 +47,7 @@ interface KuulutuksenTiedotFormProps {
   kirjaamoOsoitteet: KirjaamoOsoite[];
 }
 
-function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedotFormProps) {
+function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet, setIsDirty }: KuulutuksenTiedotFormProps & Props) {
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
 
   const defaultValues: KuulutuksenTiedotFormValues = useMemo(() => {
@@ -55,28 +59,27 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
     // Jos kieli ei ole kielitiedoissa kyseisen kielen kenttää ei tule lisätä hankkeenKuvaus olioon
     // Tästä syystä pickBy:llä poistetaan undefined hankkeenkuvaus tiedot.
     const nahtavillaOloHankkeenKuvaus = projekti.nahtavillaoloVaihe?.hankkeenKuvaus;
-    const hankkeenKuvaus: KuulutuksenTiedotFormValues["nahtavillaoloVaihe"]["hankkeenKuvaus"] =
-      !!nahtavillaOloHankkeenKuvaus
-        ? {
-            SUOMI: nahtavillaOloHankkeenKuvaus.SUOMI || "",
-            ...pickBy(
-              {
-                RUOTSI: hasRuotsinKieli ? nahtavillaOloHankkeenKuvaus.RUOTSI || "" : undefined,
-                SAAME: hasSaamenKieli ? nahtavillaOloHankkeenKuvaus.SAAME || "" : undefined,
-              },
-              (value) => value !== undefined
-            ),
-          }
-        : {
-            SUOMI: projekti.suunnitteluVaihe?.hankkeenKuvaus?.SUOMI || "",
-            ...pickBy(
-              {
-                RUOTSI: hasRuotsinKieli ? projekti.suunnitteluVaihe?.hankkeenKuvaus?.RUOTSI || "" : undefined,
-                SAAME: hasSaamenKieli ? projekti.suunnitteluVaihe?.hankkeenKuvaus?.SAAME || "" : undefined,
-              },
-              (value) => value !== undefined
-            ),
-          };
+    const hankkeenKuvaus: KuulutuksenTiedotFormValues["nahtavillaoloVaihe"]["hankkeenKuvaus"] = !!nahtavillaOloHankkeenKuvaus
+      ? {
+          SUOMI: nahtavillaOloHankkeenKuvaus.SUOMI || "",
+          ...pickBy(
+            {
+              RUOTSI: hasRuotsinKieli ? nahtavillaOloHankkeenKuvaus.RUOTSI || "" : undefined,
+              SAAME: hasSaamenKieli ? nahtavillaOloHankkeenKuvaus.SAAME || "" : undefined,
+            },
+            (value) => value !== undefined
+          ),
+        }
+      : {
+          SUOMI: projekti.suunnitteluVaihe?.hankkeenKuvaus?.SUOMI || "",
+          ...pickBy(
+            {
+              RUOTSI: hasRuotsinKieli ? projekti.suunnitteluVaihe?.hankkeenKuvaus?.RUOTSI || "" : undefined,
+              SAAME: hasSaamenKieli ? projekti.suunnitteluVaihe?.hankkeenKuvaus?.SAAME || "" : undefined,
+            },
+            (value) => value !== undefined
+          ),
+        };
 
     return {
       oid: projekti.oid,
@@ -90,9 +93,7 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
           : [],
         kuulutusYhteysHenkilot:
           projekti?.kayttoOikeudet
-            ?.filter(({ kayttajatunnus }) =>
-              projekti?.nahtavillaoloVaihe?.kuulutusYhteysHenkilot?.includes(kayttajatunnus)
-            )
+            ?.filter(({ kayttajatunnus }) => projekti?.nahtavillaoloVaihe?.kuulutusYhteysHenkilot?.includes(kayttajatunnus))
             .map(({ kayttajatunnus }) => kayttajatunnus) || [],
         ilmoituksenVastaanottajat: defaultVastaanottajat(
           projekti,
@@ -116,6 +117,10 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
     formState: { isDirty },
   } = useFormReturn;
 
+  useEffect(() => {
+    setIsDirty(isDirty);
+  }, [isDirty, setIsDirty]);
+
   useLeaveConfirm(isDirty);
 
   const voiMuokata = !projekti?.nahtavillaoloVaiheJulkaisut || projekti.nahtavillaoloVaiheJulkaisut.length < 1;
@@ -124,8 +129,7 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
     <>
       {projekti.nahtavillaoloVaihe?.palautusSyy && (
         <Notification type={NotificationType.WARN}>
-          {"Nahtävilläolovaihejulkaisu on palautettu korjattavaksi. Palautuksen syy: " +
-            projekti.nahtavillaoloVaihe.palautusSyy}
+          {"Nahtävilläolovaihejulkaisu on palautettu korjattavaksi. Palautuksen syy: " + projekti.nahtavillaoloVaihe.palautusSyy}
         </Notification>
       )}
       {voiMuokata && (
@@ -145,19 +149,15 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
           <PdfPreviewForm ref={pdfFormRef} />
         </>
       )}
-      {!voiMuokata &&
-        projekti &&
-        projekti.nahtavillaoloVaiheJulkaisut?.[projekti.nahtavillaoloVaiheJulkaisut.length - 1] && (
-          <FormProvider {...useFormReturn}>
-            <Lukunakyma
-              projekti={projekti}
-              nahtavillaoloVaiheJulkaisu={
-                projekti.nahtavillaoloVaiheJulkaisut[projekti.nahtavillaoloVaiheJulkaisut.length - 1]
-              }
-            />
-            <Painikkeet projekti={projekti} />
-          </FormProvider>
-        )}
+      {!voiMuokata && projekti && projekti.nahtavillaoloVaiheJulkaisut?.[projekti.nahtavillaoloVaiheJulkaisut.length - 1] && (
+        <FormProvider {...useFormReturn}>
+          <Lukunakyma
+            projekti={projekti}
+            nahtavillaoloVaiheJulkaisu={projekti.nahtavillaoloVaiheJulkaisut[projekti.nahtavillaoloVaiheJulkaisut.length - 1]}
+          />
+          <Painikkeet projekti={projekti} />
+        </FormProvider>
+      )}
     </>
   );
 }

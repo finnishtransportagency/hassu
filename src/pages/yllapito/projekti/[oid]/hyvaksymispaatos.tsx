@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useCallback, useState } from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { PageProps } from "@pages/_app";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
@@ -12,9 +12,35 @@ import { HyvaksymisPaatosVaiheTila } from "@services/api";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
 import Section from "@components/layout/Section";
+import TallentamattomiaMuutoksiaDialog from "@components/TallentamattomiaMuutoksiaDialog";
 
 export default function Hyvaksymispaatos({ setRouteLabels }: PageProps): ReactElement {
   useProjektiBreadcrumbs(setRouteLabels);
+  const [currentTab, setCurrentTab] = useState<number | string>(0);
+  const [open, setOpen] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
+  const [selectedValue, setSelectedValue] = useState<number | string>(0);
+
+  const handleClickClose = () => {
+    setOpen(false);
+  };
+
+  const handleClickOk = useCallback(() => {
+    setIsDirty(false);
+    setCurrentTab(selectedValue);
+    setOpen(false);
+  }, [selectedValue, setIsDirty]);
+
+  const handleChange = (_event: React.SyntheticEvent<Element, Event>, value: string | number) => {
+    if (isDirty) {
+      setOpen(true);
+      setSelectedValue(value);
+    } else {
+      setOpen(false);
+      setCurrentTab(value);
+    }
+  };
+
   const { data: projekti } = useProjekti();
 
   const kertaalleenLahetettyHyvaksyttavaksi =
@@ -32,13 +58,11 @@ export default function Hyvaksymispaatos({ setRouteLabels }: PageProps): ReactEl
           <div>
             <h3 className="vayla-small-title">Ohjeet</h3>
             <ul className="list-disc block pl-5">
-              <li>
-                Aloita lisäämällä päätös ja sen liitteenä olevat aineistot kuulutuksen ensimmäiseltä välilehdeltä.
-              </li>
+              <li>Aloita lisäämällä päätös ja sen liitteenä olevat aineistot kuulutuksen ensimmäiseltä välilehdeltä.</li>
               <li>Jatka täyttämään kuulutuksen perustiedot valitsemalla &quot;Tallenna luonnos&quot;.</li>
               <li>
-                Anna päivämäärä, jolloin suunnitelman hyväksymispäätöksestä kuulutetaan. Kuulutus julkaistaan samana
-                päivänä Valtion liikenneväylien suunnittelu -palvelun kansalaispuolella.
+                Anna päivämäärä, jolloin suunnitelman hyväksymispäätöksestä kuulutetaan. Kuulutus julkaistaan samana päivänä Valtion
+                liikenneväylien suunnittelu -palvelun kansalaispuolella.
               </li>
               <li>
                 Pääkäyttäjä lisää projektille Liikenne- ja viestintäviraston päätöksen ja asianumeron{" "}
@@ -56,40 +80,39 @@ export default function Hyvaksymispaatos({ setRouteLabels }: PageProps): ReactEl
       )}
       <Section noDivider>
         {!published && hyvaksymisPaatosVaiheJulkaisu?.tila === HyvaksymisPaatosVaiheTila.HYVAKSYTTY && (
-          <Notification type={NotificationType.WARN}>
-            Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä {kuulutusPaiva}.
-          </Notification>
+          <Notification type={NotificationType.WARN}>Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä {kuulutusPaiva}.</Notification>
         )}
         {published && hyvaksymisPaatosVaiheJulkaisu?.tila === HyvaksymisPaatosVaiheTila.HYVAKSYTTY && (
           <Notification type={NotificationType.INFO_GREEN}>
-            Kuulutus nähtäville asettamisesta on julkaistu {kuulutusPaiva}. Projekti näytetään kuulutuspäivästä lasketun
-            määräajan jälkeen palvelun julkisella puolella suunnittelussa olevana. Kuulutusvaihe päättyy{" "}
+            Kuulutus nähtäville asettamisesta on julkaistu {kuulutusPaiva}. Projekti näytetään kuulutuspäivästä lasketun määräajan jälkeen
+            palvelun julkisella puolella suunnittelussa olevana. Kuulutusvaihe päättyy{" "}
             <FormatDate date={hyvaksymisPaatosVaiheJulkaisu.kuulutusVaihePaattyyPaiva} />.
           </Notification>
         )}
-        {hyvaksymisPaatosVaiheJulkaisu &&
-          hyvaksymisPaatosVaiheJulkaisu?.tila === HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA && (
-            <Notification type={NotificationType.WARN}>
-              Kuulutus nähtäville asettamisesta odottaa hyväksyntää. Tarkasta kuulutus ja a) hyväksy tai b) palauta
-              kuulutus korjattavaksi, jos havaitset puutteita tai virheen.
-            </Notification>
-          )}
+        {hyvaksymisPaatosVaiheJulkaisu && hyvaksymisPaatosVaiheJulkaisu?.tila === HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA && (
+          <Notification type={NotificationType.WARN}>
+            Kuulutus nähtäville asettamisesta odottaa hyväksyntää. Tarkasta kuulutus ja a) hyväksy tai b) palauta kuulutus korjattavaksi,
+            jos havaitset puutteita tai virheen.
+          </Notification>
+        )}
       </Section>
       <Tabs
         tabStyle="Underlined"
-        defaultValue={0}
+        value={currentTab}
+        onChange={handleChange}
         tabs={
           kertaalleenLahetettyHyvaksyttavaksi
             ? [
-                { label: "Kuulutuksen tiedot", content: <KuulutuksenTiedot /> },
-                { label: "Päätös ja liitteenä oleva aineisto", content: <PaatosAineistot /> },
+                { label: "Kuulutuksen tiedot", content: <KuulutuksenTiedot setIsDirty={setIsDirty} /> },
+                { label: "Päätös ja liitteenä oleva aineisto", content: <PaatosAineistot setIsDirty={setIsDirty} /> },
               ]
             : [
-                { label: "Päätös ja liitteenä oleva aineisto", content: <PaatosAineistot /> },
-                { label: "Kuulutuksen tiedot", content: <KuulutuksenTiedot /> },
+                { label: "Päätös ja liitteenä oleva aineisto", content: <PaatosAineistot setIsDirty={setIsDirty} /> },
+                { label: "Kuulutuksen tiedot", content: <KuulutuksenTiedot setIsDirty={setIsDirty} /> },
               ]
         }
       />
+      <TallentamattomiaMuutoksiaDialog open={open} handleClickClose={handleClickClose} handleClickOk={handleClickOk} />
     </ProjektiPageLayout>
   );
 }
