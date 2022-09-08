@@ -1,7 +1,7 @@
 import { experimental_sx as sx, styled } from "@mui/material";
 import Link from "@components/HassuLink";
 
-const Tagi = styled('div')(
+const Tagi = styled("div")(
   sx({
     backgroundColor: "white",
     color: "#0063AF",
@@ -10,35 +10,35 @@ const Tagi = styled('div')(
     display: "inline-block",
     padding: "5 5 10 10",
     marginTop: "1em",
-    marginRight: "1em"
+    marginRight: "1em",
   })
-)
+);
 
 export const Suunnitelmatyyppi = styled(Tagi)(
   sx({
-    width: "150px"
+    width: "150px",
   })
-)
+);
 
 export const ProjektinTila = styled(Tagi)(
   sx({
-    width: "200px"
+    width: "200px",
   })
-)
+);
 
-export const ProjektinTilaMobiili = styled('div')(
+export const ProjektinTilaMobiili = styled("div")(
   sx({
     fontWeight: "bold",
     marginTop: "1em",
-    paddingBottom: "1em"
+    paddingBottom: "1em",
   })
-)
+);
 
 export const VuorovaikutusTilaisuus = styled(Tagi)(
   sx({
-    width: "200px"
+    width: "200px",
   })
-)
+);
 
 export const OtsikkoLinkki = styled(Link)(
   sx({
@@ -49,9 +49,9 @@ export const OtsikkoLinkki = styled(Link)(
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
     position: "relative",
-    display: "block"
+    display: "block",
   })
-)
+);
 
 export const OtsikkoLinkkiMobiili = styled(Link)(
   sx({
@@ -59,9 +59,9 @@ export const OtsikkoLinkkiMobiili = styled(Link)(
     fontWeight: "bold",
     fontSize: 24,
     position: "relative",
-    display: "block"
+    display: "block",
   })
-)
+);
 
 export const HakutulosLista = styled("ol")(
   sx({
@@ -89,10 +89,10 @@ export const Kuvaus = styled("div")(
   sx({
     marginTop: "1em",
     marginBottom: "1em",
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    display: '-webkit-box',
-    WebkitLineClamp: '2',
-    WebkitBoxOrient: 'vertical',
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    display: "-webkit-box",
+    WebkitLineClamp: "2",
+    WebkitBoxOrient: "vertical",
   })
-)
+);
