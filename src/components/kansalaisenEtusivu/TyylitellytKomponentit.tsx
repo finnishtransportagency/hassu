@@ -26,14 +26,6 @@ export const ProjektinTila = styled(Tagi)(
   })
 );
 
-export const ProjektinTilaMobiili = styled("div")(
-  sx({
-    fontWeight: "bold",
-    marginTop: "1em",
-    paddingBottom: "1em",
-  })
-);
-
 export const VuorovaikutusTilaisuus = styled(Tagi)(
   sx({
     width: "200px",
@@ -48,16 +40,6 @@ export const OtsikkoLinkki = styled(Link)(
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
-    position: "relative",
-    display: "block",
-  })
-);
-
-export const OtsikkoLinkkiMobiili = styled(Link)(
-  sx({
-    color: "#0063AF",
-    fontWeight: "bold",
-    fontSize: 24,
     position: "relative",
     display: "block",
   })
