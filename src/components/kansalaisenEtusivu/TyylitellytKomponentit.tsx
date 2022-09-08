@@ -34,14 +34,6 @@ export const ProjektinTilaMobiili = styled("div")(
   })
 );
 
-export const ProjektinTilaMobiili = styled('div')(
-  sx({
-    fontWeight: "bold",
-    marginTop: "1em",
-    paddingBottom: "1em"
-  })
-)
-
 export const VuorovaikutusTilaisuus = styled(Tagi)(
   sx({
     width: "200px",
@@ -70,16 +62,6 @@ export const OtsikkoLinkkiMobiili = styled(Link)(
     display: "block",
   })
 );
-
-export const OtsikkoLinkkiMobiili = styled(Link)(
-  sx({
-    color: "#0063AF",
-    fontWeight: "bold",
-    fontSize: 24,
-    position: "relative",
-    display: "block"
-  })
-)
 
 export const HakutulosLista = styled("ol")(
   sx({
@@ -112,5 +94,56 @@ export const Kuvaus = styled("div")(
     display: "-webkit-box",
     WebkitLineClamp: "2",
     WebkitBoxOrient: "vertical",
+  })
+);
+
+export const SivunumeroLista = styled("div")(
+  sx({
+    marginTop: "1em",
+    display: "inline-block",
+  })
+);
+
+export const SivunumeroLinkki = styled("a")(
+  sx({
+    marginLeft: "0.6em",
+    display: "inline-block",
+    "&:hover": {
+      textDecoration: "underline",
+    },
+  })
+);
+
+export const SivunumeroNykyinen = styled("div")(
+  sx({
+    marginLeft: "0.75em",
+    display: "inline-block",
+    fontWeight: "bold",
+  })
+);
+
+export const NavigointiNapit = styled("div")(
+  sx({
+    display: "inline-block",
+    float: "right",
+    marginTop: "1em",
+  })
+);
+
+export const NavigointiNappi = styled("a")(
+  sx({
+    border: "1px solid rgb(216, 216, 216)",
+    boxSizing: "border-box",
+    textAlign: "center",
+    borderRadius: 15,
+    paddingLeft: "14px",
+    paddingRight: "14px",
+    paddingTop: "5px",
+    paddingBottom: "5px",
+    cursor: "pointer",
+    marginLeft: "0.3em",
+    "&.disabled": {
+      cursor: "not-allowed",
+    },
   })
 );

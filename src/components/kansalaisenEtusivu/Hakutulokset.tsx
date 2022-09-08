@@ -44,7 +44,6 @@ function getSivuTilanPerusteella(tila: Status | null | undefined) {
 export default function Hakutulokset({ hakutulos, ladataan }: Props) {
   const theme = useTheme();
   const desktop = useMediaQuery(theme.breakpoints.up("lg"));
-
   const { t } = useTranslation();
 
   if (!hakutulos && ladataan) {
@@ -54,18 +53,6 @@ export default function Hakutulokset({ hakutulos, ladataan }: Props) {
   return (
     <HakutulosLista className="Hakutulokset">
       {hakutulos?.tulokset?.map((tulos) => {
-        if (desktop) {
-          return (
-            <HakutulosListaItem key={tulos.oid}>
-              <OtsikkoLinkki href={`suunnitelma/${tulos.oid}/${getSivuTilanPerusteella(tulos.vaihe)}`}>{tulos.nimi}</OtsikkoLinkki>
-              <Suunnitelmatyyppi>{t(`projekti:projekti-tyyppi.${tulos.projektiTyyppi}`)}</Suunnitelmatyyppi>
-              <ProjektinTila>{t(`projekti:projekti-status.${tulos.vaihe}`)}</ProjektinTila>
-              <Kuvaus>{tulos.hankkeenKuvaus}</Kuvaus>
-              {t("projekti:ui-otsikot.paivitetty")} {formatDate(tulos.paivitetty)}
-            </HakutulosListaItem>
-          );
-        }
-
         if (desktop) {
           return (
             <HakutulosListaItem key={tulos.oid}>
