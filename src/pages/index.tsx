@@ -4,8 +4,7 @@ import useTranslation from "next-translate/useTranslation";
 import Hakulomake from "@components/kansalaisenEtusivu/Hakulomake";
 import Hakutulokset from "@components/kansalaisenEtusivu/Hakutulokset";
 import log from "loglevel";
-import HassuGrid from "@components/HassuGrid";
-import HassuGridItem from "@components/HassuGridItem";
+import { Grid } from "@mui/material";
 import OikeaLaita from "@components/kansalaisenEtusivu/OikeaLaita";
 
 const App = () => {
@@ -41,17 +40,17 @@ const App = () => {
   }, [setLadataan, setHakutulos]);
 
   return (
-    <HassuGrid cols={{ lg: 4 }}>
-      <HassuGridItem colSpan={{ lg: 3 }}>
+    <Grid container spacing={0}>
+      <Grid className="pr-4" item lg={9} md={12}>
         <h2 className="mt-4">{t("common:valtion_liikennevaylien_suunnittelu")}</h2>
         <p>Tekstiä</p>
         <Hakulomake /> {/* TODO/Toteuta: Insertoidaan hakulomakkeelle sen lähtöarvot */}
         <Hakutulokset hakutulos={hakutulos} ladataan={ladataan} />
-      </HassuGridItem>
-      <HassuGridItem>
+      </Grid>
+      <Grid item lg={3} md={12}>
         <OikeaLaita />
-      </HassuGridItem>
-    </HassuGrid>
+      </Grid>
+    </Grid>
   );
 };
 

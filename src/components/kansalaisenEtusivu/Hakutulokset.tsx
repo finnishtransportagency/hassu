@@ -1,7 +1,9 @@
 import { ProjektiHakutulosJulkinen, Status } from "@services/api";
-import { ProjektinTila, Suunnitelmatyyppi, OtsikkoLinkki, HakutulosListaItem, HakutulosLista, Kuvaus } from "./TyylitellytKomponentit";
+import { ProjektinTila, Suunnitelmatyyppi, OtsikkoLinkki, OtsikkoLinkkiMobiili, HakutulosListaItem, HakutulosLista, ProjektinTilaMobiili, Kuvaus } from "./TyylitellytKomponentit";
 import useTranslation from "next-translate/useTranslation";
 import { formatDate } from "../../util/dateUtils";
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 type Props = {
   hakutulos: ProjektiHakutulosJulkinen | undefined;
@@ -24,16 +26,15 @@ function getSivuTilanPerusteella(tila: Status | null | undefined) {
     case Status.HYVAKSYMISMENETTELYSSA:
       return "hyvaksymismenettelyssa";
     case Status.HYVAKSYTTY:
-      return ""; //todo
-    case Status.LAINVOIMA:
-      return "lainvoima";
+      return "hyvaksymispaatos";
     default:
       return "";
   }
 }
 
 export default function Hakutulokset({ hakutulos, ladataan }: Props) {
-
+  const theme = useTheme();
+  const desktop = useMediaQuery(theme.breakpoints.up('lg'));
   const { t } = useTranslation();
 
   if (!hakutulos && ladataan) {
@@ -44,12 +45,22 @@ export default function Hakutulokset({ hakutulos, ladataan }: Props) {
     <HakutulosLista className="Hakutulokset">
       {hakutulos?.tulokset?.map((tulos) => {
 
+        if (desktop) {
+          return (
+            <HakutulosListaItem key={tulos.oid}>
+              <OtsikkoLinkki href={`suunnitelma/${tulos.oid}/${getSivuTilanPerusteella(tulos.vaihe)}`}>{tulos.nimi}</OtsikkoLinkki>
+              <Suunnitelmatyyppi>{t(`projekti:projekti-tyyppi.${tulos.projektiTyyppi}`)}</Suunnitelmatyyppi>
+              <ProjektinTila>{t(`projekti:projekti-status.${tulos.vaihe}`)}</ProjektinTila>
+              <Kuvaus>{tulos.hankkeenKuvaus}</Kuvaus>
+              {t("projekti:ui-otsikot.paivitetty")}{" "}{formatDate(tulos.paivitetty)}
+            </HakutulosListaItem>
+          );
+        }
+
         return (
           <HakutulosListaItem key={tulos.oid}>
-            <OtsikkoLinkki href={`suunnitelma/${tulos.oid}/${getSivuTilanPerusteella(tulos.vaihe)}`}>{tulos.nimi}</OtsikkoLinkki>
-            <Suunnitelmatyyppi>{t(`projekti:projekti-tyyppi.${tulos.projektiTyyppi}`)}</Suunnitelmatyyppi>
-            <ProjektinTila>{t(`projekti:projekti-status.${tulos.vaihe}`)}</ProjektinTila>
-            <Kuvaus>{tulos.hankkeenKuvaus}</Kuvaus>
+            <OtsikkoLinkkiMobiili href={`suunnitelma/${tulos.oid}/${getSivuTilanPerusteella(tulos.vaihe)}`}>{tulos.nimi}</OtsikkoLinkkiMobiili>
+            <ProjektinTilaMobiili>{t(`projekti:projekti-status.${tulos.vaihe}`)}</ProjektinTilaMobiili>
             {t("projekti:ui-otsikot.paivitetty")}{" "}{formatDate(tulos.paivitetty)}
           </HakutulosListaItem>
         ); 
