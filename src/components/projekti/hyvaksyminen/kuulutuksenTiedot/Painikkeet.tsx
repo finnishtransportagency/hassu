@@ -147,7 +147,13 @@ export default function Painikkeet({ projekti }: Props) {
       {!!voiHyvaksya && (
         <Section noDivider>
           <Stack direction={["column", "column", "row"]} justifyContent={[undefined, undefined, "flex-end"]}>
-            <Button id="button_reject" onClick={() => setOpen(true)}>
+            <Button
+              id="button_reject"
+              onClick={(e) => {
+                e.preventDefault();
+                setOpen(true);
+              }}
+            >
               Palauta
             </Button>
             <Button id="button_open_acceptance_dialog" primary onClick={() => setOpenHyvaksy(true)}>
