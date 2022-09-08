@@ -77,6 +77,14 @@
     "LAINVOIMA": "Lainvoima",
     "ARKISTOITU": "Arkistoitu"
   },
+  "projekti-status-kansalaiselle": {
+    "ALOITUSKUULUTUS": "Aloituskuulutus",
+    "SUUNNITTELU": "Suunnittelussa",
+    "NAHTAVILLAOLO": "Suunnitelmat nähtävillä",
+    "HYVAKSYTTY": "Suunnitelma hyväksytty",
+    "HYVAKSYMISMENETTELYSSA": "Hyväksymismenettelyssä",
+    "LAINVOIMA": "Lainvoimainen"
+  },
   "ui-kuvatekstit": {
     "eu_aluerahoitus": "EU aluerahoitus"
   },

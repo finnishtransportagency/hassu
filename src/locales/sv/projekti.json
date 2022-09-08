@@ -77,6 +77,14 @@
     "LAINVOIMA": "RUOTSIKSI Lainvoima",
     "ARKISTOITU": "RUOTSIKSI Arkistoitu"
   },
+  "projekti-status-kansalaiselle": {
+    "ALOITUSKUULUTUS": "RUOTSIKSI Aloituskuulutus",
+    "SUUNNITTELU": "RUOTSIKSI Suunnittelussa",
+    "NAHTAVILLAOLO": "RUOTSIKSI Suunnitelmat nähtävillä",
+    "HYVAKSYTTY": "RUOTSIKSI Suunnitelma hyväksytty",
+    "HYVAKSYMISMENETTELYSSA": "RUOTSIKSI Hyväksymismenettelyssä",
+    "LAINVOIMA": "RUOTSIKSI Lainvoimainen"
+  },
   "ui-kuvatekstit": {
     "eu_aluerahoitus": "RUOTSIKSI EU aluerahoitus"
   },
