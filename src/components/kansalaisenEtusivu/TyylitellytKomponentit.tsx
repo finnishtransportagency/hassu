@@ -34,14 +34,6 @@ export const ProjektinTilaMobiili = styled("div")(
   })
 );
 
-export const ProjektinTilaMobiili = styled('div')(
-  sx({
-    fontWeight: "bold",
-    marginTop: "1em",
-    paddingBottom: "1em"
-  })
-)
-
 export const VuorovaikutusTilaisuus = styled(Tagi)(
   sx({
     width: "200px",
@@ -70,16 +62,6 @@ export const OtsikkoLinkkiMobiili = styled(Link)(
     display: "block",
   })
 );
-
-export const OtsikkoLinkkiMobiili = styled(Link)(
-  sx({
-    color: "#0063AF",
-    fontWeight: "bold",
-    fontSize: 24,
-    position: "relative",
-    display: "block"
-  })
-)
 
 export const HakutulosLista = styled("ol")(
   sx({
