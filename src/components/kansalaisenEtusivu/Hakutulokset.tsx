@@ -65,18 +65,6 @@ export default function Hakutulokset({ hakutulos, ladataan }: Props) {
           );
         }
 
-        if (desktop) {
-          return (
-            <HakutulosListaItem key={tulos.oid}>
-              <OtsikkoLinkki href={`suunnitelma/${tulos.oid}/${getSivuTilanPerusteella(tulos.vaihe)}`}>{tulos.nimi}</OtsikkoLinkki>
-              <Suunnitelmatyyppi>{t(`projekti:projekti-tyyppi.${tulos.projektiTyyppi}`)}</Suunnitelmatyyppi>
-              <ProjektinTila>{t(`projekti:projekti-status.${tulos.vaihe}`)}</ProjektinTila>
-              <Kuvaus>{tulos.hankkeenKuvaus}</Kuvaus>
-              {t("projekti:ui-otsikot.paivitetty")} {formatDate(tulos.paivitetty)}
-            </HakutulosListaItem>
-          );
-        }
-
         return (
           <HakutulosListaItem key={tulos.oid}>
             <OtsikkoLinkkiMobiili href={`suunnitelma/${tulos.oid}/${getSivuTilanPerusteella(tulos.vaihe)}`}>
