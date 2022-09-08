@@ -42,7 +42,7 @@ const App = () => {
   return (
     <Grid container spacing={0}>
       <Grid className="pr-4" item lg={9} md={12}>
-        <h2 className="mt-4">{t("common:valtion_liikennevaylien_suunnittelu")}</h2>
+        <h2 className="mt-4">{t("projekti:ui-otsikot.valtion_liikennevaylien_suunnittelu")}</h2>
         <p>Tekstiä</p>
         <Hakulomake /> {/* TODO/Toteuta: Insertoidaan hakulomakkeelle sen lähtöarvot */}
         <Hakutulokset hakutulos={hakutulos} ladataan={ladataan} />
