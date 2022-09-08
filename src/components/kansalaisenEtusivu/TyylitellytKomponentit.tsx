@@ -130,20 +130,45 @@ export const NavigointiNapit = styled("div")(
   })
 );
 
+export const NavigointiNapitMobiili = styled("div")(
+  sx({
+    display: "flex",
+    marginTop: "2em",
+    justifyContent: "center",
+  })
+);
+
 export const NavigointiNappi = styled("a")(
   sx({
     border: "1px solid rgb(216, 216, 216)",
     boxSizing: "border-box",
     textAlign: "center",
-    borderRadius: 15,
-    paddingLeft: "14px",
-    paddingRight: "14px",
-    paddingTop: "5px",
-    paddingBottom: "5px",
+    borderRadius: "15px",
     cursor: "pointer",
     marginLeft: "0.3em",
     "&.disabled": {
       cursor: "not-allowed",
     },
+  })
+);
+
+export const NavigointiNappiDesktop = styled(NavigointiNappi)(
+  sx({
+    paddingLeft: "14px",
+    paddingRight: "14px",
+    paddingTop: "5px",
+    paddingBottom: "5px",
+  })
+);
+
+export const NavigointiNappiMobiili = styled(NavigointiNappi)(
+  sx({
+    paddingLeft: "19px",
+    paddingRight: "19px",
+    paddingTop: "11px",
+    paddingBottom: "11px",
+    color: "#0063AF",
+    marginRight: "auto",
+    marginLeft: "auto",
   })
 );
