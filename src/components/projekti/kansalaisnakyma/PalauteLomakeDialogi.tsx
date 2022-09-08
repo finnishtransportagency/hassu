@@ -8,7 +8,7 @@ import { FormProvider, useForm, UseFormProps, Controller, FieldError } from "rea
 import { palauteSchema } from "src/schemas/vuorovaikutus";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useTranslation from "next-translate/useTranslation";
-import { VuorovaikutusJulkinen, ProjektiJulkinen, PalauteInput, api } from "@services/api";
+import { VuorovaikutusJulkinen, PalauteInput, api } from "@services/api";
 import { formatDate } from "src/util/dateUtils";
 import TextInput from "@components/form/TextInput";
 import Textarea from "@components/form/Textarea";
@@ -24,7 +24,7 @@ interface Props {
   open: boolean;
   onClose: () => void;
   vuorovaikutus: VuorovaikutusJulkinen;
-  projekti: ProjektiJulkinen;
+  projektiOid: string;
 }
 
 interface PalauteFormInput {
@@ -45,7 +45,7 @@ const defaultValues = {
   liite: null,
 };
 
-export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovaikutus }: Props): ReactElement {
+export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuorovaikutus }: Props): ReactElement {
   const { t } = useTranslation();
   const [tiedosto, setTiedosto] = useState<File | undefined>(undefined);
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
@@ -92,7 +92,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
         (Object.keys(palauteFinalValues) as Array<keyof PalauteInput>).forEach((key) => {
           if (!palauteFinalValues[key]) delete palauteFinalValues[key];
         });
-        await api.lisaaPalaute(projekti.oid, palauteFinalValues);
+        await api.lisaaPalaute(projektiOid, palauteFinalValues);
         showSuccessMessage(t("common:ilmoitukset.tallennus_onnistui"));
         onClose();
         setKiitosDialogiOpen(true);
@@ -103,7 +103,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
       }
       setFormIsSubmitting(false);
     },
-    [talletaTiedosto, projekti, onClose, showErrorMessage, showSuccessMessage, reset, t, tiedosto]
+    [tiedosto, projektiOid, showSuccessMessage, t, onClose, reset, talletaTiedosto, showErrorMessage]
   );
 
   return (
@@ -112,10 +112,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
         <DialogContent>
           <p>{t("projekti:voit_jattaa_palautetta")}</p>
           <p style={{ fontWeight: "bold" }}>
-            {t("projekti:kysymykset_ja_palautteet").replace(
-              "xx.xx.xxxx",
-              formatDate(vuorovaikutus.kysymyksetJaPalautteetViimeistaan)
-            )}
+            {t("projekti:kysymykset_ja_palautteet").replace("xx.xx.xxxx", formatDate(vuorovaikutus.kysymyksetJaPalautteetViimeistaan))}
           </p>
           <FormProvider {...useFormReturn}>
             <form>
@@ -125,18 +122,14 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
                     label={t("common:etunimi")}
                     {...register("etunimi")}
                     error={
-                      errors?.etunimi?.message
-                        ? ({ message: t(`common:virheet.${errors.etunimi.message}`) } as FieldError)
-                        : undefined
+                      errors?.etunimi?.message ? ({ message: t(`common:virheet.${errors.etunimi.message}`) } as FieldError) : undefined
                     }
                   />
                   <TextInput
                     label={t("common:sukunimi")}
                     {...register("sukunimi")}
                     error={
-                      errors?.sukunimi?.message
-                        ? ({ message: t(`common:virheet.${errors.sukunimi.message}`) } as FieldError)
-                        : undefined
+                      errors?.sukunimi?.message ? ({ message: t(`common:virheet.${errors.sukunimi.message}`) } as FieldError) : undefined
                     }
                   />
                   <TextInput
@@ -178,10 +171,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projekti, vuorovai
                   <CheckBox label={t("common:sahkoposti")} {...register("yhteydenottotapaEmail")} />
                 </div>
                 <div>
-                  <CheckBox
-                    label={t("projekti:palautelomake.puhelinsoitto")}
-                    {...register("yhteydenottotapaPuhelin")}
-                  />
+                  <CheckBox label={t("projekti:palautelomake.puhelinsoitto")} {...register("yhteydenottotapaPuhelin")} />
                 </div>
               </div>
               <div className="mt-3">
@@ -275,13 +265,7 @@ interface KiitosProps {
 export function KiitosDialogi({ open, onClose }: KiitosProps): ReactElement {
   const { t } = useTranslation();
   return (
-    <HassuDialog
-      scroll="body"
-      open={open}
-      title={t("projekti:palautelomake.kiitos_viestista")}
-      onClose={onClose}
-      maxWidth={"sm"}
-    >
+    <HassuDialog scroll="body" open={open} title={t("projekti:palautelomake.kiitos_viestista")} onClose={onClose} maxWidth={"sm"}>
       <DialogContent>
         <p>{t("projekti:palautelomake.olemme_vastaanottaneet_viestisi")}</p>
         <p>{t("projekti:palautelomake.kaikki_viestit_kasitellaan")}</p>

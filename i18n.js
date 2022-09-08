@@ -9,6 +9,7 @@ module.exports = {
     "/yllapito/projekti/[oid]/nahtavillaolo": ["aineisto"],
     "/yllapito/projekti/[oid]/hyvaksymispaatos": ["aineisto"],
     "/suunnitelma/[oid]/hyvaksymismenettelyssa": ["hyvaksymismenettelyssa"],
+    "/suunnitelma/[oid]/suunnittelu": ["suunnittelu"],
   },
   loadLocaleFrom: (lang, ns) =>
     // You can use a dynamic import, fetch, whatever. You should
