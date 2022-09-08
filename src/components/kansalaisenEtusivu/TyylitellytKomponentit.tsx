@@ -26,13 +26,13 @@ export const ProjektinTila = styled(Tagi)(
   })
 );
 
-export const ProjektinTilaMobiili = styled('div')(
+export const ProjektinTilaMobiili = styled("div")(
   sx({
     fontWeight: "bold",
     marginTop: "1em",
-    paddingBottom: "1em"
+    paddingBottom: "1em",
   })
-)
+);
 
 export const VuorovaikutusTilaisuus = styled(Tagi)(
   sx({
@@ -59,9 +59,9 @@ export const OtsikkoLinkkiMobiili = styled(Link)(
     fontWeight: "bold",
     fontSize: 24,
     position: "relative",
-    display: "block"
+    display: "block",
   })
-)
+);
 
 export const HakutulosLista = styled("ol")(
   sx({
