@@ -6,30 +6,39 @@ import {
   NavigointiNappiDesktop,
   NavigointiNapitMobiili,
   NavigointiNappiMobiili,
+  NavigointiNappiDesktopDisabled,
+  NavigointiNappiMobiiliDisabled,
 } from "./TyylitellytKomponentit";
 import useTranslation from "next-translate/useTranslation";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { NextRouter, useRouter } from "next/router";
 
 type Props = {
   sivuMaara: number;
 };
+
+function getPageLink(router: NextRouter, pageNumber: number) {
+  router.pathname;
+  const newQuery = { ...router.query, page: pageNumber.toString() };
+  return `${router.pathname}?${new URLSearchParams(newQuery).toString()}`;
+}
+
 export default function Sivutus({ sivuMaara }: Props) {
   const theme = useTheme();
   const desktop = useMediaQuery(theme.breakpoints.up("lg"));
   const { t } = useTranslation();
+  const router = useRouter();
 
   if (sivuMaara <= 1) {
     return null;
   }
 
-  sivuMaara = 26;
-
-  const nykyinenSivu = 1; //TODO lue query parametreista
+  const nykyinenSivu = typeof router.query.page === "string" ? parseInt(router.query.page) : 1;
 
   return (
     <>
-      {desktop && (
+      {desktop && ( // näytä sivunumerolista vain desktopissa
         <SivunumeroLista>
           {t("common:sivut")}
           {": "}
@@ -37,22 +46,46 @@ export default function Sivutus({ sivuMaara }: Props) {
             sivuNumero === nykyinenSivu ? (
               <SivunumeroNykyinen key={sivuNumero}>{sivuNumero}</SivunumeroNykyinen>
             ) : (
-              <SivunumeroLinkki href="TODO" key={sivuNumero}>
+              <SivunumeroLinkki href={getPageLink(router, sivuNumero)} key={sivuNumero}>
                 {sivuNumero}
               </SivunumeroLinkki>
             )
           )}
         </SivunumeroLista>
       )}
-      {desktop ? (
+      {desktop ? ( // desktopissa ja mobiilissa näkyy erilailla tyylitellyt napit
         <NavigointiNapit>
-          <NavigointiNappiDesktop className={nykyinenSivu === 1 ? "disabled" : ""}>{t("common:edellinen")}</NavigointiNappiDesktop>
-          <NavigointiNappiDesktop className={nykyinenSivu === sivuMaara ? "disabled" : ""}>{t("common:seuraava")}</NavigointiNappiDesktop>
+          {nykyinenSivu === 1 ? ( // epäaktiivinen nappi ei ole linkki vaan div
+            <NavigointiNappiDesktopDisabled>{t("common:edellinen")}</NavigointiNappiDesktopDisabled>
+          ) : (
+            <NavigointiNappiDesktop href={getPageLink(router, Math.max(1, nykyinenSivu - 1))}>
+              {t("common:edellinen")}
+            </NavigointiNappiDesktop>
+          )}
+          {nykyinenSivu === sivuMaara ? ( // epäaktiivinen nappi ei ole linkki vaan div
+            <NavigointiNappiDesktopDisabled>{t("common:seuraava")}</NavigointiNappiDesktopDisabled>
+          ) : (
+            <NavigointiNappiDesktop href={getPageLink(router, Math.min(sivuMaara, nykyinenSivu + 1))}>
+              {t("common:seuraava")}
+            </NavigointiNappiDesktop>
+          )}
         </NavigointiNapit>
       ) : (
         <NavigointiNapitMobiili>
-          <NavigointiNappiMobiili className={nykyinenSivu === 1 ? "disabled" : ""}>{t("common:edellinen")}</NavigointiNappiMobiili>
-          <NavigointiNappiMobiili className={nykyinenSivu === sivuMaara ? "disabled" : ""}>{t("common:seuraava")}</NavigointiNappiMobiili>
+          {nykyinenSivu === 1 ? ( // epäaktiivinen nappi ei ole linkki vaan div
+            <NavigointiNappiMobiiliDisabled>{t("common:edellinen")}</NavigointiNappiMobiiliDisabled>
+          ) : (
+            <NavigointiNappiMobiili href={getPageLink(router, Math.max(1, nykyinenSivu - 1))}>
+              {t("common:edellinen")}
+            </NavigointiNappiMobiili>
+          )}
+          {nykyinenSivu === sivuMaara ? ( // epäaktiivinen nappi ei ole linkki vaan div
+            <NavigointiNappiMobiiliDisabled>{t("common:seuraava")}</NavigointiNappiMobiiliDisabled>
+          ) : (
+            <NavigointiNappiMobiili href={getPageLink(router, Math.min(sivuMaara, nykyinenSivu + 1))}>
+              {t("common:seuraava")}
+            </NavigointiNappiMobiili>
+          )}
         </NavigointiNapitMobiili>
       )}
     </>

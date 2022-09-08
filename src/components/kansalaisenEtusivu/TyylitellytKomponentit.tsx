@@ -146,29 +146,43 @@ export const NavigointiNappi = styled("a")(
     borderRadius: "15px",
     cursor: "pointer",
     marginLeft: "0.3em",
-    "&.disabled": {
-      cursor: "not-allowed",
-    },
+    display: "inline-block",
   })
 );
 
-export const NavigointiNappiDesktop = styled(NavigointiNappi)(
+export const NavigointiNappiDisabled = styled("div")(
   sx({
-    paddingLeft: "14px",
-    paddingRight: "14px",
-    paddingTop: "5px",
-    paddingBottom: "5px",
+    border: "1px solid rgb(216, 216, 216)",
+    boxSizing: "border-box",
+    textAlign: "center",
+    borderRadius: "15px",
+    marginLeft: "0.3em",
+    display: "inline-block",
+    cursor: "not-allowed",
   })
 );
 
-export const NavigointiNappiMobiili = styled(NavigointiNappi)(
-  sx({
-    paddingLeft: "19px",
-    paddingRight: "19px",
-    paddingTop: "11px",
-    paddingBottom: "11px",
-    color: "#0063AF",
-    marginRight: "auto",
-    marginLeft: "auto",
-  })
-);
+const NavigointiNappiDesktopTyylit = sx({
+  paddingLeft: "14px",
+  paddingRight: "14px",
+  paddingTop: "5px",
+  paddingBottom: "5px",
+});
+
+export const NavigointiNappiDesktop = styled(NavigointiNappi)(NavigointiNappiDesktopTyylit);
+export const NavigointiNappiDesktopDisabled = styled(NavigointiNappiDisabled)(NavigointiNappiDesktopTyylit);
+
+const NavigointiNappiMobiiliTyylit = sx({
+  paddingLeft: "19px",
+  paddingRight: "19px",
+  paddingTop: "11px",
+  paddingBottom: "11px",
+  color: "#0063AF",
+  marginRight: "auto",
+  marginLeft: "auto",
+  display: "inline-block",
+});
+
+export const NavigointiNappiMobiili = styled(NavigointiNappi)(NavigointiNappiMobiiliTyylit);
+
+export const NavigointiNappiMobiiliDisabled = styled(NavigointiNappiDisabled)(NavigointiNappiMobiiliTyylit);
