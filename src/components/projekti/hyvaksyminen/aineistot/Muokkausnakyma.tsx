@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Aineisto, AineistoInput, TallennaProjektiInput } from "@services/api";
-import React, { ReactElement, useMemo } from "react";
+import React, { ReactElement, useEffect, useMemo } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot";
@@ -38,17 +38,21 @@ const getDefaultValueForAineistoNahtavilla = (aineistot: Aineisto[] | undefined 
   }, {});
 };
 
-export default function Muokkausnakyma(): ReactElement {
+interface Props {
+  setIsDirty: (value: React.SetStateAction<boolean>) => void;
+}
+
+export default function Muokkausnakyma({ setIsDirty }: Props): ReactElement {
   const { data: projekti } = useProjekti({ revalidateOnMount: true });
 
-  return <>{projekti && <MuokkausnakymaForm projekti={projekti} />}</>;
+  return <>{projekti && <MuokkausnakymaForm projekti={projekti} setIsDirty={setIsDirty} />}</>;
 }
 
 interface MuokkausnakymaFormProps {
   projekti: ProjektiLisatiedolla;
 }
 
-function MuokkausnakymaForm({ projekti }: MuokkausnakymaFormProps) {
+function MuokkausnakymaForm({ projekti, setIsDirty }: MuokkausnakymaFormProps & Props) {
   const defaultValues: HyvaksymisPaatosVaiheAineistotFormValues = useMemo(() => {
     const hyvaksymisPaatos: AineistoInput[] =
       projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos?.map(({ dokumenttiOid, nimi, jarjestys }) => ({
@@ -76,14 +80,18 @@ function MuokkausnakymaForm({ projekti }: MuokkausnakymaFormProps) {
     formState: { isDirty },
   } = useFormReturn;
 
+  useEffect(() => {
+    setIsDirty(isDirty);
+  }, [isDirty, setIsDirty]);
+
   useLeaveConfirm(isDirty);
 
   return (
     <FormProvider {...useFormReturn}>
       <h3 className="vayla-small-title">Päätös ja päätöksen liitteenä olevat aineistot</h3>
       <p>
-        Liitä Liikenne- ja viestintäviraston päätös. Liitettävä päätös haetaan Projektivelhosta. Päätös ja sen liitteenä
-        oleva aineisto julkaistaan palvelun julkisella puolella kuulutuksen julkaisupäivänä.
+        Liitä Liikenne- ja viestintäviraston päätös. Liitettävä päätös haetaan Projektivelhosta. Päätös ja sen liitteenä oleva aineisto
+        julkaistaan palvelun julkisella puolella kuulutuksen julkaisupäivänä.
       </p>
       <Notification type={NotificationType.INFO_GRAY}>
         Huomioithan, että suunnitelma-aineistojen tulee täyttää saavutettavuusvaatimukset.

@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { TallennaProjektiInput, KirjaamoOsoite, HyvaksymisPaatosVaiheInput } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import React, { ReactElement, useMemo } from "react";
+import React, { ReactElement, useEffect, useMemo } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { hyvaksymispaatosKuulutusSchema } from "src/schemas/hyvaksymispaatosKuulutus";
@@ -25,10 +25,14 @@ export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid"> & {
   };
 };
 
-export default function KuulutuksenTiedot(): ReactElement {
+interface Props {
+  setIsDirty: (value: React.SetStateAction<boolean>) => void;
+}
+
+export default function KuulutuksenTiedot({ setIsDirty }: Props): ReactElement {
   const { data: projekti } = useProjekti({ revalidateOnMount: true });
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
-  return <>{projekti && kirjaamoOsoitteet && <KuulutuksenTiedotForm {...{ kirjaamoOsoitteet, projekti }} />}</>;
+  return <>{projekti && kirjaamoOsoitteet && <KuulutuksenTiedotForm {...{ kirjaamoOsoitteet, projekti, setIsDirty }} />}</>;
 }
 
 interface KuulutuksenTiedotFormProps {
@@ -36,7 +40,7 @@ interface KuulutuksenTiedotFormProps {
   kirjaamoOsoitteet: KirjaamoOsoite[];
 }
 
-function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedotFormProps) {
+function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet, setIsDirty }: KuulutuksenTiedotFormProps & Props) {
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
 
   const defaultValues: KuulutuksenTiedotFormValues = useMemo(() => {
@@ -51,9 +55,7 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
           : [],
         kuulutusYhteysHenkilot:
           projekti?.kayttoOikeudet
-            ?.filter(({ kayttajatunnus }) =>
-              projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteysHenkilot?.includes(kayttajatunnus)
-            )
+            ?.filter(({ kayttajatunnus }) => projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteysHenkilot?.includes(kayttajatunnus))
             .map(({ kayttajatunnus }) => kayttajatunnus) || [],
         ilmoituksenVastaanottajat: defaultVastaanottajat(
           projekti,
@@ -79,6 +81,10 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
     formState: { isDirty },
   } = useFormReturn;
 
+  useEffect(() => {
+    setIsDirty(isDirty);
+  }, [isDirty, setIsDirty]);
+
   useLeaveConfirm(isDirty);
 
   const voiMuokata = !projekti?.hyvaksymisPaatosVaiheJulkaisut || projekti.hyvaksymisPaatosVaiheJulkaisut.length < 1;
@@ -87,8 +93,7 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
     <>
       {projekti.hyvaksymisPaatosVaihe?.palautusSyy && (
         <Notification type={NotificationType.WARN}>
-          {"Hyväksymisvaihejulkaisu on palautettu korjattavaksi. Palautuksen syy: " +
-            projekti.hyvaksymisPaatosVaihe.palautusSyy}
+          {"Hyväksymisvaihejulkaisu on palautettu korjattavaksi. Palautuksen syy: " + projekti.hyvaksymisPaatosVaihe.palautusSyy}
         </Notification>
       )}
 
@@ -110,23 +115,19 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
           </FormProvider>
         </>
       )}
-      {!voiMuokata &&
-        projekti &&
-        projekti.hyvaksymisPaatosVaiheJulkaisut?.[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1] && (
-          <>
-            <FormProvider {...useFormReturn}>
-              <form>
-                <Lukunakyma
-                  projekti={projekti}
-                  hyvaksymisPaatosVaiheJulkaisu={
-                    projekti.hyvaksymisPaatosVaiheJulkaisut[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1]
-                  }
-                />
-                <Painikkeet projekti={projekti} />
-              </form>
-            </FormProvider>
-          </>
-        )}
+      {!voiMuokata && projekti && projekti.hyvaksymisPaatosVaiheJulkaisut?.[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1] && (
+        <>
+          <FormProvider {...useFormReturn}>
+            <form>
+              <Lukunakyma
+                projekti={projekti}
+                hyvaksymisPaatosVaiheJulkaisu={projekti.hyvaksymisPaatosVaiheJulkaisut[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1]}
+              />
+              <Painikkeet projekti={projekti} />
+            </form>
+          </FormProvider>
+        </>
+      )}
       <PdfPreviewForm ref={pdfFormRef} />
     </>
   );

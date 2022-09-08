@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from "react";
+import React, { FC, ReactElement, useCallback, useState } from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { PageProps } from "@pages/_app";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
@@ -11,6 +11,7 @@ import { NahtavillaoloVaiheTila } from "@services/api";
 import dayjs from "dayjs";
 import SectionContent from "@components/layout/SectionContent";
 import FormatDate from "@components/FormatDate";
+import TallentamattomiaMuutoksiaDialog from "@components/TallentamattomiaMuutoksiaDialog";
 
 const InfoElement: FC = () => {
   const { data: projekti } = useProjekti();
@@ -31,9 +32,8 @@ const InfoElement: FC = () => {
     } else {
       return (
         <Notification type={NotificationType.INFO_GREEN}>
-          Kuulutus on julkaistu {julkaisupvm.format("DD.MM.YYYY")}. Projekti näytetään kuulutuspäivästä lasketun
-          määräajan jälkeen palvelun julkisella puolella suunnittelussa olevana. Kuulutusvaihe päättyy{" "}
-          <FormatDate date={julkaisu.kuulutusVaihePaattyyPaiva} />.
+          Kuulutus on julkaistu {julkaisupvm.format("DD.MM.YYYY")}. Projekti näytetään kuulutuspäivästä lasketun määräajan jälkeen palvelun
+          julkisella puolella suunnittelussa olevana. Kuulutusvaihe päättyy <FormatDate date={julkaisu.kuulutusVaihePaattyyPaiva} />.
         </Notification>
       );
     }
@@ -49,8 +49,7 @@ const InfoElement: FC = () => {
     } else {
       return (
         <Notification type={NotificationType.WARN}>
-          Kuulutus on hyväksyttävänä projektipäälliköllä. Jos kuulutusta tarvitsee muokata, ota yhteys
-          projektipäällikköön.
+          Kuulutus on hyväksyttävänä projektipäälliköllä. Jos kuulutusta tarvitsee muokata, ota yhteys projektipäällikköön.
         </Notification>
       );
     }
@@ -71,6 +70,30 @@ const InfoElement: FC = () => {
 
 export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactElement {
   useProjektiBreadcrumbs(setRouteLabels);
+  const [currentTab, setCurrentTab] = useState<number | string>(0);
+  const [open, setOpen] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
+  const [selectedValue, setSelectedValue] = useState<number | string>(0);
+
+  const handleClickClose = () => {
+    setOpen(false);
+  };
+
+  const handleClickOk = useCallback(() => {
+    setIsDirty(false);
+    setCurrentTab(selectedValue);
+    setOpen(false);
+  }, [selectedValue, setIsDirty]);
+
+  const handleChange = (_event: React.SyntheticEvent<Element, Event>, value: string | number) => {
+    if (isDirty) {
+      setOpen(true);
+      setSelectedValue(value);
+    } else {
+      setOpen(false);
+      setCurrentTab(value);
+    }
+  };
 
   return (
     <ProjektiPageLayout title="Nähtävilläolovaihe">
@@ -80,20 +103,15 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
           <div>
             <h3 className="vayla-small-title">Ohjeet</h3>
             <ul className="list-disc block pl-5">
-              <li>
-                Lisää nähtäville asetettavat aineistot sekä lausuntopyynnön lisäaineistot kuulutuksen ensimmäiseltä
-                välilehdeltä.
-              </li>
+              <li>Lisää nähtäville asetettavat aineistot sekä lausuntopyynnön lisäaineistot kuulutuksen ensimmäiseltä välilehdeltä.</li>
               <li>Siirry Kuulutuksen tiedot-välilehdelle täyttämään kuulutuksen perustiedot.</li>
               <li>
-                Anna päivämäärä, jolloin suunnittelun nähtäville asettamisesta kuulutetaan. Projekti ja sen
-                nähtävilläolon kuulutus julkaistaan samana päivänä Valtion liikenneväylien suunnittelu -palvelun
-                kansalaispuolella.
+                Anna päivämäärä, jolloin suunnittelun nähtäville asettamisesta kuulutetaan. Projekti ja sen nähtävilläolon kuulutus
+                julkaistaan samana päivänä Valtion liikenneväylien suunnittelu -palvelun kansalaispuolella.
               </li>
               <li>
-                Muokkaa tai täydennä halutessasi tiivistetty sisällönkuvaus hankkeesta. Jos projektista tulee tehdä
-                kuulutus suomen lisäksi toisella kielellä, eikä tälle ole kenttää, tarkista projektin tiedot -sivulta
-                projektin kieliasetus.
+                Muokkaa tai täydennä halutessasi tiivistetty sisällönkuvaus hankkeesta. Jos projektista tulee tehdä kuulutus suomen lisäksi
+                toisella kielellä, eikä tälle ole kenttää, tarkista projektin tiedot -sivulta projektin kieliasetus.
               </li>
               <li>Valitse kuulutuksessa esitettävät yhteystiedot.</li>
               <li>Lähetä nähtäville asettamisen kuulutus projektipäällikölle hyväksyttäväksi.</li>
@@ -107,13 +125,19 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
         </Notification>
         <Tabs
           tabStyle="Underlined"
-          defaultValue={0}
+          value={currentTab}
+          onChange={handleChange}
           tabs={[
-            { label: "Nähtäville asetettavat aineistot", content: <NahtavilleAsetettavatAineistot />, tabId: "aineisto_tab" },
-            { label: "Kuulutuksen tiedot", content: <KuulutuksenTiedot />, tabId: "kuulutuksentiedot_tab" },
+            {
+              label: "Nähtäville asetettavat aineistot",
+              content: <NahtavilleAsetettavatAineistot setIsDirty={setIsDirty} />,
+              tabId: "aineisto_tab",
+            },
+            { label: "Kuulutuksen tiedot", content: <KuulutuksenTiedot setIsDirty={setIsDirty} />, tabId: "kuulutuksentiedot_tab" },
           ]}
         />
       </SectionContent>
+      <TallentamattomiaMuutoksiaDialog open={open} handleClickClose={handleClickClose} handleClickOk={handleClickOk} />
     </ProjektiPageLayout>
   );
 }

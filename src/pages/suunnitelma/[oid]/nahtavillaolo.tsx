@@ -49,8 +49,7 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
     { header: t(`ui-otsikot.suunnitelman_tyyppi`), data: velho?.tyyppi && t(`projekti-tyyppi.${velho?.tyyppi}`) },
   ];
 
-  const yhteystiedotListana =
-    kuulutus.kuulutusYhteystiedot?.map((yhteystieto) => t("common:yhteystieto", yhteystieto)) || [];
+  const yhteystiedotListana = kuulutus.kuulutusYhteystiedot?.map((yhteystieto) => t("common:yhteystieto", yhteystieto)) || [];
 
   const vastaavaViranomainen = velho.suunnittelustaVastaavaViranomainen;
 
@@ -85,9 +84,7 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
                   <li>
                     {t(`info.nahtavillaolo.ei-rata.kiinteiston_omistajilla_ja`, {
                       viranomainen:
-                        vastaavaViranomainen === Viranomainen.VAYLAVIRASTO
-                          ? t(`common:vaylavirastolle`)
-                          : t(`common:ely-keskukselle`),
+                        vastaavaViranomainen === Viranomainen.VAYLAVIRASTO ? t(`common:vaylavirastolle`) : t(`common:ely-keskukselle`),
                       url: window.location.href,
                     })}{" "}
                     {t(`info.nahtavillaolo.ei-rata.sahkopostilla_muistutus`)}
@@ -100,10 +97,7 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
         <KansalaisenAineistoNakyma projekti={projekti} kuulutus={kuulutus} />
         <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.muistutuksen_jattaminen`)}</h4>
         <SectionContent>
-          <JataPalautettaNappi
-            teksti={t("muistutuslomake.jata_muistutus")}
-            onClick={() => setMuistutusLomakeOpen(true)}
-          />
+          <JataPalautettaNappi teksti={t("muistutuslomake.jata_muistutus")} onClick={() => setMuistutusLomakeOpen(true)} />
           <MuistutusLomakeDialogi
             nahtavillaolo={kuulutus}
             open={muistutusLomakeOpen}

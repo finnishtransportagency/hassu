@@ -1,44 +1,39 @@
-import React, { ReactElement, useState, useMemo } from "react";
+import React, { ReactElement, useState, useMemo, useCallback } from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { PageProps } from "@pages/_app";
 import Section from "@components/layout/Section";
 import Tabs, { HassuTabProps } from "@components/layout/tabs/Tabs";
 import SuunnitteluvaiheenPerustiedot from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenPerustiedot";
-import HassuDialog from "@components/HassuDialog";
-import HassuStack from "@components/layout/HassuStack";
-import Button from "@components/button/Button";
 import SuunnitteluvaiheenVuorovaikuttaminen from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
-import { DialogActions, DialogContent } from "@mui/material";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import { useProjekti } from "src/hooks/useProjekti";
+import TallentamattomiaMuutoksiaDialog from "@components/TallentamattomiaMuutoksiaDialog";
 
 export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
+  useProjektiBreadcrumbs(setRouteLabels);
   const { data: projekti } = useProjekti();
-  const [isChildDirty, setIsChildDirty] = useState(false);
-  const [currentTab, setCurrentTab] = useState(0);
+  const [currentTab, setCurrentTab] = useState<number | string>(0);
   const [open, setOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(0);
+  const [isDirty, setIsDirty] = useState(false);
+  const [selectedValue, setSelectedValue] = useState<number | string>(0);
 
   const handleClickClose = () => {
     setOpen(false);
   };
 
-  const handleClickOk = () => {
-    setIsChildDirty(false);
+  const handleClickOk = useCallback(() => {
+    setIsDirty(false);
     setCurrentTab(selectedValue);
     setOpen(false);
-  };
+  }, [selectedValue, setIsDirty]);
 
-  useProjektiBreadcrumbs(setRouteLabels);
-
-  const handleChange = (event: React.SyntheticEvent<Element, Event>, value: string | number) => {
-    if (isChildDirty) {
+  const handleChange = (_event: React.SyntheticEvent<Element, Event>, value: string | number) => {
+    if (isDirty) {
       setOpen(true);
-      setSelectedValue(value as number);
-      event.preventDefault();
+      setSelectedValue(value);
     } else {
       setOpen(false);
-      setCurrentTab(value as number);
+      setCurrentTab(value);
     }
   };
 
@@ -47,7 +42,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
       {
         label: "Suunnitteluvaiheen perustiedot",
         tabId: "perustiedot_tab",
-        content: <SuunnitteluvaiheenPerustiedot isDirtyHandler={setIsChildDirty} />,
+        content: <SuunnitteluvaiheenPerustiedot isDirtyHandler={setIsDirty} />,
       },
     ];
     if (!projekti) {
@@ -59,7 +54,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
         label: "1. Vuorovaikuttaminen",
         tabId: "1_vuorovaikuttaminen_tab",
         disabled: !projekti.suunnitteluVaihe,
-        content: <SuunnitteluvaiheenVuorovaikuttaminen isDirtyHandler={setIsChildDirty} vuorovaikutusnro={1} />,
+        content: <SuunnitteluvaiheenVuorovaikuttaminen isDirtyHandler={setIsDirty} vuorovaikutusnro={1} />,
       });
     } else {
       projekti?.suunnitteluVaihe?.vuorovaikutukset?.forEach((vuorovaikutus) => {
@@ -68,10 +63,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
           tabId: `${vuorovaikutus.vuorovaikutusNumero}_vuorovaikuttaminen_tab`,
           disabled: !projekti.suunnitteluVaihe,
           content: (
-            <SuunnitteluvaiheenVuorovaikuttaminen
-              isDirtyHandler={setIsChildDirty}
-              vuorovaikutusnro={vuorovaikutus.vuorovaikutusNumero}
-            />
+            <SuunnitteluvaiheenVuorovaikuttaminen vuorovaikutusnro={vuorovaikutus.vuorovaikutusNumero} isDirtyHandler={setIsDirty} />
           ),
         };
         tabs.push(tab);
@@ -85,22 +77,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
       <Section noDivider>
         <Tabs tabStyle={"Underlined"} value={currentTab} onChange={handleChange} tabs={vuorovaikutusTabs} />
       </Section>
-      <HassuDialog title="Tallentamattomia muutoksia" open={open} onClose={handleClickClose}>
-        <DialogContent>
-          <HassuStack>
-            <p>
-              Olet tehnyt sivulle muutoksia, joita ei ole tallennettu. Tehdyt muutokset menetetään, jos poistut sivulta.
-              Haluatko poistua tallentamatta?
-            </p>
-          </HassuStack>
-        </DialogContent>
-        <DialogActions>
-          <Button primary onClick={handleClickOk}>
-            Hylkää muutokset ja siirry
-          </Button>
-          <Button onClick={handleClickClose}>Peruuta</Button>
-        </DialogActions>
-      </HassuDialog>
+      <TallentamattomiaMuutoksiaDialog open={open} handleClickClose={handleClickClose} handleClickOk={handleClickOk} />
     </ProjektiPageLayout>
   );
 }
