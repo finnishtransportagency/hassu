@@ -7,6 +7,7 @@ import log from "loglevel";
 import { Grid } from "@mui/material";
 import OikeaLaita from "@components/kansalaisenEtusivu/OikeaLaita";
 import Sivutus from "@components/kansalaisenEtusivu/Sivutus";
+import { useRouter } from "next/router";
 
 const SIVUN_KOKO = 10;
 
@@ -14,18 +15,18 @@ const App = () => {
   const [hakutulos, setHakutulos] = useState<ProjektiHakutulosJulkinen>();
   const [ladataan, setLadataan] = useState<boolean>(false);
   const { t } = useTranslation();
+  const router = useRouter();
+  const nykyinenSivu = typeof router.query.page === "string" ? parseInt(router.query.page) : 1;
 
   const sivuMaara = useMemo(() => {
     return Math.ceil((hakutulos?.hakutulosMaara || 0) / SIVUN_KOKO);
   }, [hakutulos]);
 
-  // Tässä jossain kohtaan luetaan URL:n query parametreista dataa
-
   useEffect(() => {
     async function fetchProjektit() {
       try {
         setLadataan(true);
-        const result = await api.listProjektitJulkinen({ kieli: Kieli.SUOMI });
+        const result = await api.listProjektitJulkinen({ kieli: Kieli.SUOMI, sivunumero: Math.max(0, nykyinenSivu - 1) });
         log.info("listProjektit:", result);
         setHakutulos(result);
         setLadataan(false);
@@ -44,7 +45,7 @@ const App = () => {
     }
 
     fetchProjektit();
-  }, [setLadataan, setHakutulos]);
+  }, [setLadataan, setHakutulos, nykyinenSivu]);
 
   return (
     <Grid container spacing={0}>
