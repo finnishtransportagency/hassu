@@ -138,7 +138,7 @@ export const NavigointiNapitMobiili = styled("div")(
   })
 );
 
-export const NavigointiNappi = styled("a")(
+export const NavigointiNappi = styled(Link)(
   sx({
     border: "1px solid rgb(216, 216, 216)",
     boxSizing: "border-box",
