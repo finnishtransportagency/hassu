@@ -124,22 +124,6 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, query }: Props) {
     [router, pienennaHakuState, lisaaHakuehtojaState]
   );
 
-  useEffect(() => {
-    setPienennaHakuState(pienennaHaku);
-    setLisaaHakuehtojaState(lisaaHakuehtoja);
-  }, [lisaaHakuehtoja, pienennaHaku]);
-
-  const nollaaHakuehdot = useCallback(
-    (e) => {
-      e.preventDefault();
-      router.push({
-        pathname: router.pathname,
-        query: {},
-      });
-    },
-    [router]
-  );
-
   return (
     <div className="mb-6 pb-8">
       {!desktop && ( // Vain mobiilissa näkyvöä sininen palkki, josta voi avata ja sulkea hakukentät
