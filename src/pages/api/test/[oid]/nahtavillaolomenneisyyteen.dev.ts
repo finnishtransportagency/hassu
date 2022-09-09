@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { projektiDatabase } from "../../../../../backend/src/database/projektiDatabase";
-import { validateCredentials } from "../../../../util/basicAuthentication";
+import { validateApiCredentials } from "../../../../util/basicAuthentication";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   let environment = process.env.ENVIRONMENT;
-  if ((environment == "dev" || environment == "test") && !(await validateCredentials(req.headers.authorization))) {
+  if ((environment == "dev" || environment == "test") && !(await validateApiCredentials(req.headers.authorization))) {
     res.status(401);
     res.setHeader("www-authenticate", "Basic");
 
