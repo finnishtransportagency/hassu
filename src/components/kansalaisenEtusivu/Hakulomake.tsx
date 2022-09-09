@@ -120,7 +120,7 @@ export default function Hakulomake({ hakutulostenMaara, kuntaOptions }: Props) {
 
   return (
     <div className="mb-6 pb-8">
-      {!desktop && (
+      {!desktop && ( // Vain mobiilissa näkyvöä sininen palkki, josta voi avata ja sulkea hakukentät
         <MobiiliBlokki
           onClick={(e) => {
             e.preventDefault();
@@ -173,37 +173,26 @@ export default function Hakulomake({ hakutulostenMaara, kuntaOptions }: Props) {
                   {...register("kunta", { shouldUnregister: false })}
                 />
               </HassuGrid>
-              {desktop &&
-                (lisaaHakuehtojaState ? (
-                  <HakuehtoNappi
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setLisaaHakuehtojaState(false);
-                    }}
-                  >
-                    Vähemmän hakuehtoja
-                    <FontAwesomeIcon
-                      icon="chevron-up"
-                      className={classNames("ml-3 pointer-events-none text-primary-dark")}
-                      style={{ top: `calc(50% - 0.5rem)` }}
-                    />
-                  </HakuehtoNappi>
-                ) : (
-                  <HakuehtoNappi
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setLisaaHakuehtojaState(true);
-                    }}
-                  >
-                    Lisää hakuehtoja
-                    <FontAwesomeIcon
-                      icon="chevron-down"
-                      className={classNames("ml-3 pointer-events-none text-primary-dark")}
-                      style={{ top: `calc(50% - 0.5rem)` }}
-                    />
-                  </HakuehtoNappi>
-                ))}
+              {desktop && (
+                // Desktop-näkymässä on mahdollista piilottaa tai paljastaa kaksi vikaa hakukenttää.
+                // Tässä on nappi sitä varten.
+                <HakuehtoNappi
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setLisaaHakuehtojaState(!lisaaHakuehtojaState);
+                  }}
+                >
+                  {lisaaHakuehtojaState ? "Vähemmän hakuehtoja" : "Lisää hakuehtoja"}
+                  <FontAwesomeIcon
+                    icon={`chevron-${lisaaHakuehtojaState ? "up" : "down"}`}
+                    className={classNames("ml-3 pointer-events-none text-primary-dark")}
+                    style={{ top: `calc(50% - 0.5rem)` }}
+                  />
+                </HakuehtoNappi>
+              )}
               {(!desktop || (desktop && lisaaHakuehtojaState)) && (
+                //Desktop-näkymässä nämä hakukentät näkyvät vain, jos käyttäjä on avannut ne näkyviin
+
                 <HassuGrid className="mt-4 mb-6" cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>
                   <HassuGridItem colSpan={{ xs: 1, lg: 1 }}>
                     <Select
@@ -226,7 +215,7 @@ export default function Hakulomake({ hakutulostenMaara, kuntaOptions }: Props) {
                 </HassuGrid>
               )}
 
-              {!desktop && (
+              {!desktop && ( // Mobiilinäkymässä vinkkiteksti onkin täällä alhaalla
                 <VinkkiTeksti>
                   Vinkki: kokeile &apos;valtatie&apos;-sanan sijaan &apos;vt&apos;, joko yhteen tai erikseen kirjoitettuna tien numeron
                   kanssa. Katso lisää{" "}
