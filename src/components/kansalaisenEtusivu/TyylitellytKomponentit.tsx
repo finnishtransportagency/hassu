@@ -40,6 +40,12 @@ export const VuorovaikutusTilaisuus = styled(Tagi)(
   })
 );
 
+export const HakulomakeOtsikko = styled("h3")(
+  sx({
+    fontWeight: "bold",
+  })
+);
+
 export const OtsikkoLinkki = styled(Link)(
   sx({
     color: "#0063AF",
