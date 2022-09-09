@@ -12,6 +12,7 @@ import ExtLink from "@components/ExtLink";
 import { Link } from "@mui/material";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { splitFilePath } from "../../../../util/fileUtil";
+import ButtonFlatWithIcon from "@components/button/ButtonFlat";
 interface Props {
   nahtavillaoloVaiheJulkaisu?: NahtavillaoloVaiheJulkaisu | null;
   projekti: ProjektiLisatiedolla;
@@ -25,8 +26,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
   let { kuulutusPaiva, published } = examineKuulutusPaiva(nahtavillaoloVaiheJulkaisu.kuulutusPaiva);
   let nahtavillaoloVaiheHref: string | undefined;
   if (published) {
-    nahtavillaoloVaiheHref =
-      window.location.protocol + "//" + window.location.host + "/suunnitelma/" + projekti.oid + "/nahtavillaolo";
+    nahtavillaoloVaiheHref = window.location.protocol + "//" + window.location.host + "/suunnitelma/" + projekti.oid + "/nahtavillaolo";
   }
   const vuorovaikutusYhteysHenkilot: ProjektiKayttaja[] = nahtavillaoloVaiheJulkaisu.kuulutusYhteysHenkilot
     ? nahtavillaoloVaiheJulkaisu.kuulutusYhteysHenkilot
@@ -59,9 +59,20 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
           <p className="vayla-label md:col-span-1">Kuulutuspäivä</p>
           <p className="vayla-label md:col-span-3">Kuulutusvaihe päättyy</p>
           <p className="md:col-span-1 mb-0">{kuulutusPaiva}</p>
-          <p className="md:col-span-3 mb-0">
+          <p className="md:col-span-1 mb-0">
             <FormatDate date={nahtavillaoloVaiheJulkaisu.kuulutusVaihePaattyyPaiva} />
           </p>
+          {process.env.NODE_ENV != "production" && (
+            <ButtonFlatWithIcon
+              icon="history"
+              className="md:col-span-2 mb-0"
+              onClick={() => {
+                window.location.assign(`/api/test/${projekti.oid}/nahtavillaolomenneisyyteen`);
+              }}
+            >
+              Siirrä menneisyyteen (TESTAAJILLE)
+            </ButtonFlatWithIcon>
+          )}
         </div>
         <div>
           <p className="vayla-label">
@@ -94,30 +105,24 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
           {nahtavillaoloVaiheJulkaisu.kuulutusYhteystiedot?.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
               {capitalize(yhteystieto.etunimi)} {capitalize(yhteystieto.sukunimi)}, puh. {yhteystieto.puhelinnumero},{" "}
-              {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio}
-              )
+              {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio})
             </p>
           ))}
           {vuorovaikutusYhteysHenkilot.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
-              {yhteystieto.nimi}, puh. {yhteystieto.puhelinnumero},{" "}
-              {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} ({yhteystieto.organisaatio})
+              {yhteystieto.nimi}, puh. {yhteystieto.puhelinnumero}, {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} (
+              {yhteystieto.organisaatio})
             </p>
           ))}
         </SectionContent>
         <SectionContent>
           <p className="vayla-label mb-5">Kuulutuksen yhteyshenkilöt</p>
-          {!published && (
-            <p>Linkki julkiselle puolelle muodostetaan kuulutuspäivänä. Kuulutuspäivä on {kuulutusPaiva}.</p>
-          )}
+          {!published && <p>Linkki julkiselle puolelle muodostetaan kuulutuspäivänä. Kuulutuspäivä on {kuulutusPaiva}.</p>}
           {published && <ExtLink href={nahtavillaoloVaiheHref}>Kuulutus palvelun julkisella puolella</ExtLink>}
         </SectionContent>
         <SectionContent>
           <p className="vayla-label">Ladattavat kuulutukset ja ilmoitukset</p>
-          <p>
-            Kuulutus ja ilmoitus ensisijaisella kielellä (
-            {lowerCase(nahtavillaoloVaiheJulkaisu.kielitiedot?.ensisijainenKieli)})
-          </p>
+          <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({lowerCase(nahtavillaoloVaiheJulkaisu.kielitiedot?.ensisijainenKieli)})</p>
           {ensisijaisetPDFt && (
             <div className="flex flex-col mb-4">
               <div>
@@ -131,11 +136,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
                 </Link>
               </div>
               <div>
-                <Link
-                  underline="none"
-                  href={ensisijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath}
-                  target="_blank"
-                >
+                <Link underline="none" href={ensisijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath} target="_blank">
                   {splitFilePath(ensisijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath).fileName}
                 </Link>
               </div>
@@ -144,10 +145,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
 
           {nahtavillaoloVaiheJulkaisu.kielitiedot?.toissijainenKieli && (
             <div className="content mb-4">
-              <p>
-                Kuulutus ja ilmoitus toissijaisella kielellä (
-                {lowerCase(nahtavillaoloVaiheJulkaisu.kielitiedot?.toissijainenKieli)})
-              </p>
+              <p>Kuulutus ja ilmoitus toissijaisella kielellä ({lowerCase(nahtavillaoloVaiheJulkaisu.kielitiedot?.toissijainenKieli)})</p>
               {toissijaisetPDFt && (
                 <div className="flex flex-col">
                   <div>
@@ -161,11 +159,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
                     </Link>
                   </div>
                   <div>
-                    <Link
-                      underline="none"
-                      href={toissijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath}
-                      target="_blank"
-                    >
+                    <Link underline="none" href={toissijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath} target="_blank">
                       {splitFilePath(toissijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath).fileName}
                     </Link>
                   </div>

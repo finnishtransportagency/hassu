@@ -163,7 +163,7 @@
     "clean": "rimraf .cdk-* .next .nyc_output .report .serverless .serverless_nextjs build cdk.out out schema.graphql common/graphql/*",
     "cdk": "cdk",
     "prepare": "husky install",
-    "dev": "next dev",
+    "dev": "VERSION=`git rev-parse --abbrev-ref HEAD` next dev",
     "build": "next build",
     "start": "next start",
     "cypress": "cypress",
