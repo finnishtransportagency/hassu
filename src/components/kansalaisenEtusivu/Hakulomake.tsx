@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useMemo } from "react";
 import SearchSection from "@components/layout/SearchSection";
-import { HakulomakeOtsikko, HakuehtoNappi, VinkkiTeksti, VinkkiLinkki } from "./TyylitellytKomponentit";
+import { HakulomakeOtsikko, HakuehtoNappi, VinkkiTeksti, VinkkiLinkki, MobiiliBlokki } from "./TyylitellytKomponentit";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import TextInput from "@components/form/TextInput";
 import Select, { SelectOption } from "@components/form/Select";
@@ -92,12 +92,36 @@ export default function Hakulomake() {
   }, [lisaaHakuehtoja, pienennaHaku]);
 
   return (
-    <SearchSection noDivider>
-      <HakulomakeOtsikko>Suunnitelmien haku</HakulomakeOtsikko>
-      <FormProvider {...useFormReturn}>
-        <form>
-          {(desktop || (!desktop && !pienennaHakuState)) && (
-            <>
+    <div className="mb-6 pb-8">
+      {!desktop && (
+        <MobiiliBlokki
+          onClick={(e) => {
+            e.preventDefault();
+            setPienennaHakuState(!pienennaHakuState);
+          }}
+        >
+          Suunnitelmien haku
+          {pienennaHakuState ? (
+            <FontAwesomeIcon
+              icon="chevron-down"
+              className={classNames("float-right mt-1 pointer-events-none text-white")}
+              style={{ top: `calc(50% - 0.5rem)` }}
+            />
+          ) : (
+            <FontAwesomeIcon
+              icon="chevron-up"
+              className={classNames("float-right mt-1 pointer-events-none text-white")}
+              style={{ top: `calc(50% - 0.5rem)` }}
+            />
+          )}
+        </MobiiliBlokki>
+      )}
+
+      {(desktop || (!desktop && !pienennaHakuState)) && (
+        <SearchSection noDivider>
+          <HakulomakeOtsikko>Suunnitelmien haku</HakulomakeOtsikko>
+          <FormProvider {...useFormReturn}>
+            <form>
               <HassuGrid cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>
                 {" "}
                 <HassuGridItem colSpan={{ xs: 1, lg: 2 }}>
@@ -152,8 +176,8 @@ export default function Hakulomake() {
                     />
                   </HakuehtoNappi>
                 ))}
-              {lisaaHakuehtojaState && (
-                <HassuGrid className="mt-4" cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>
+              {(!desktop || (desktop && lisaaHakuehtojaState)) && (
+                <HassuGrid className="mt-4 mb-6" cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>
                   <HassuGridItem colSpan={{ xs: 1, lg: 1 }}>
                     <Select
                       id="maakunta"
@@ -174,20 +198,31 @@ export default function Hakulomake() {
                   </HassuGridItem>
                 </HassuGrid>
               )}
-            </>
-          )}
 
-          <Button
-            primary
-            style={{ marginRight: "auto", marginTop: "1em", marginBottom: "1.5em" }}
-            endIcon="search"
-            id="hae"
-            disabled={false}
-          >
-            Hae
-          </Button>
-        </form>
-      </FormProvider>
-    </SearchSection>
+              {!desktop && (
+                <VinkkiTeksti>
+                  Vinkki: kokeile &apos;valtatie&apos;-sanan sijaan &apos;vt&apos;, joko yhteen tai erikseen kirjoitettuna tien numeron
+                  kanssa. Katso lisää{" "}
+                  <VinkkiLinkki className="skaalaa" href="">
+                    hakuohjeista
+                  </VinkkiLinkki>
+                  .
+                </VinkkiTeksti>
+              )}
+
+              <Button
+                primary
+                style={{ marginRight: "auto", marginTop: "1em", marginBottom: "1.5em" }}
+                endIcon="search"
+                id="hae"
+                disabled={false}
+              >
+                Hae
+              </Button>
+            </form>
+          </FormProvider>
+        </SearchSection>
+      )}
+    </div>
   );
 }

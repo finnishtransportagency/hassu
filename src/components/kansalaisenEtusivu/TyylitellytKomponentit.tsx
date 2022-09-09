@@ -1,4 +1,4 @@
-import { experimental_sx as sx, styled } from "@mui/material";
+import { experimental_sx as sx, styled, makeStyles } from "@mui/material";
 import Link from "@components/HassuLink";
 
 const Tagi = styled("div")(
@@ -206,6 +206,7 @@ export const VinkkiTeksti = styled("p")(
     color: "rgb(150, 150, 150)",
     fontSize: "15px",
     marginTop: "8px",
+    marginBottom: "1.5em",
   })
 );
 
@@ -219,5 +220,20 @@ export const VinkkiLinkki = styled(Link)(
       cursor: "pointer",
       textDecoration: "underline",
     },
+  })
+);
+
+export const MobiiliBlokki = styled("button")(
+  sx({
+    width: "100%",
+    display: "block",
+    backgroundColor: "#0063AF",
+    textAlign: "left",
+    paddingLeft: "28px",
+    paddingRight: "28px",
+    paddingTop: "20px",
+    paddingBottom: "20px",
+    color: "white",
+    marginBottom: "-1.75rem",
   })
 );
