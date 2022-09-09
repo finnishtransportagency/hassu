@@ -237,3 +237,20 @@ export const MobiiliBlokki = styled("button")(
     marginBottom: "-1.75rem",
   })
 );
+
+export const HakutulosInfo = styled("div")(
+  sx({
+    " h2": { fontWeight: "bold" },
+    "&.mobiili": {
+      textAlign: "center",
+      alignContent: "center",
+    },
+    " button": {
+      fontSize: "1.2em",
+      color: "#0063AF",
+      "&:hover": {
+        textDecoration: "underline",
+      },
+    },
+  })
+);

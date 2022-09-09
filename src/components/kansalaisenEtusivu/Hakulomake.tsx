@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useMemo } from "react";
 import SearchSection from "@components/layout/SearchSection";
-import { HakulomakeOtsikko, HakuehtoNappi, VinkkiTeksti, VinkkiLinkki, MobiiliBlokki } from "./TyylitellytKomponentit";
+import { HakulomakeOtsikko, HakuehtoNappi, VinkkiTeksti, VinkkiLinkki, MobiiliBlokki, HakutulosInfo } from "./TyylitellytKomponentit";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import TextInput from "@components/form/TextInput";
 import Select, { SelectOption } from "@components/form/Select";
@@ -21,7 +21,11 @@ type HakulomakeFormValues = {
   vaylamuoto: string;
 };
 
-export default function Hakulomake() {
+type Props = {
+  hakutulostenMaara: number | null | undefined;
+};
+
+export default function Hakulomake({ hakutulostenMaara }: Props) {
   const theme = useTheme();
   const desktop = useMediaQuery(theme.breakpoints.up("lg"));
   const [kuntaOptions, setKuntaOptions] = useState<SelectOption[]>([]);
@@ -90,6 +94,17 @@ export default function Hakulomake() {
     setPienennaHakuState(pienennaHaku);
     setLisaaHakuehtojaState(lisaaHakuehtoja);
   }, [lisaaHakuehtoja, pienennaHaku]);
+
+  const nollaaHakuehdot = useCallback(
+    (e) => {
+      e.preventDefault();
+      router.push({
+        pathname: router.pathname,
+        query: {},
+      });
+    },
+    [router]
+  );
 
   return (
     <div className="mb-6 pb-8">
@@ -223,6 +238,11 @@ export default function Hakulomake() {
           </FormProvider>
         </SearchSection>
       )}
+
+      <HakutulosInfo className={desktop ? "" : "mobiili"}>
+        <h2>Löytyi {hakutulostenMaara} suunnitelmaa</h2>
+        <button onClick={nollaaHakuehdot}>Nollaa hakuehdot</button>
+      </HakutulosInfo>
     </div>
   );
 }

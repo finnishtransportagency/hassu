@@ -8,7 +8,6 @@ import { Grid } from "@mui/material";
 import OikeaLaita from "@components/kansalaisenEtusivu/OikeaLaita";
 import Sivutus from "@components/kansalaisenEtusivu/Sivutus";
 import { useRouter } from "next/router";
-
 const SIVUN_KOKO = 10;
 
 const App = () => {
@@ -52,7 +51,8 @@ const App = () => {
       <Grid className="pr-4" item lg={9} md={12}>
         <h2 className="mt-4">{t("projekti:ui-otsikot.valtion_liikennevaylien_suunnittelu")}</h2>
         <p>Tekstiä</p>
-        <Hakulomake /> {/* TODO/Toteuta: Insertoidaan hakulomakkeelle sen lähtöarvot */}
+        <Hakulomake hakutulostenMaara={hakutulos?.hakutulosMaara} />
+        <h1>Suunnitelmat</h1>
         <Hakutulokset hakutulos={hakutulos} ladataan={ladataan} />
         <Sivutus sivuMaara={sivuMaara} />
       </Grid>
