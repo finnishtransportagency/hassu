@@ -6,13 +6,14 @@ import TextInput from "@components/form/TextInput";
 import Select, { SelectOption } from "@components/form/Select";
 import Button from "@components/button/Button";
 import { ProjektiTyyppi } from "../../../common/graphql/apiModel";
-import { useRouter } from "next/router";
+import { useHaunQueryparametrit } from "@pages/index";
 import HassuGrid from "@components/HassuGrid";
 import HassuGridItem from "@components/HassuGridItem";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
+import { useRouter } from "next/router";
 
 type HakulomakeFormValues = {
   vapaasanahaku: string;
@@ -23,40 +24,17 @@ type HakulomakeFormValues = {
 
 type Props = {
   hakutulostenMaara: number | null | undefined;
+  kuntaOptions: SelectOption[];
 };
 
-export default function Hakulomake({ hakutulostenMaara }: Props) {
+export default function Hakulomake({ hakutulostenMaara, kuntaOptions }: Props) {
   const theme = useTheme();
   const desktop = useMediaQuery(theme.breakpoints.up("lg"));
-  const [kuntaOptions, setKuntaOptions] = useState<SelectOption[]>([]);
   const [pienennaHakuState, setPienennaHakuState] = useState<boolean>(false);
   const [lisaaHakuehtojaState, setLisaaHakuehtojaState] = useState<boolean>(false);
-
-  const getKuntaLista = useCallback(async () => {
-    const list = await (await fetch("/api/kuntalista.json")).json();
-    setKuntaOptions(list);
-  }, [setKuntaOptions]);
-
-  useEffect(() => {
-    getKuntaLista();
-  }, [getKuntaLista]);
-
   const router = useRouter();
-  const vapaasanahaku = typeof router.query?.vapaasanahaku === "string" ? router.query.vapaasanahaku : "";
-  const kunta =
-    kuntaOptions.find((option) => router.query?.kunta === option.value) && typeof router.query?.kunta === "string"
-      ? router.query.kunta
-      : "";
-  const maakunta =
-    ([] as SelectOption[]).find((option) => router.query?.maakunta === option.value) && typeof router.query?.maakunta === "string"
-      ? router.query.maakunta
-      : "";
-  const vaylamuoto =
-    Object.keys(ProjektiTyyppi).find((option) => router.query?.vaylamuoto === option) && typeof router.query?.vaylamuoto === "string"
-      ? router.query.vaylamuoto
-      : "";
-  const pienennaHaku = router.query?.pienennahaku === "true" ? true : false;
-  const lisaaHakuehtoja = router.query?.lisaahakuehtoja === "true" ? true : false;
+
+  const { vapaasanahaku, kunta, maakunta, vaylamuoto, pienennaHaku, lisaaHakuehtoja } = useHaunQueryparametrit({ kuntaOptions });
 
   const defaultValues: HakulomakeFormValues = useMemo(
     () => ({
@@ -81,16 +59,16 @@ export default function Hakulomake({ hakutulostenMaara }: Props) {
     watch,
   } = useFormReturn;
 
-  const nykKuntaArvo = watch("kunta");
-
   useEffect(() => {
+    // Alustaa hakulomakkeen url query parametrien perusteella
     setValue("vapaasanahaku", defaultValues.vapaasanahaku);
     setValue("kunta", defaultValues.kunta);
     setValue("maakunta", defaultValues.maakunta);
     setValue("vaylamuoto", defaultValues.vaylamuoto);
-  }, [setValue, defaultValues, kuntaOptions, nykKuntaArvo]);
+  }, [setValue, defaultValues, kuntaOptions]);
 
   useEffect(() => {
+    // Asettaa sisäisen auki/kiinni-tilan url query parametrien perusteella
     setPienennaHakuState(pienennaHaku);
     setLisaaHakuehtojaState(lisaaHakuehtoja);
   }, [lisaaHakuehtoja, pienennaHaku]);
@@ -98,12 +76,46 @@ export default function Hakulomake({ hakutulostenMaara }: Props) {
   const nollaaHakuehdot = useCallback(
     (e) => {
       e.preventDefault();
-      router.push({
-        pathname: router.pathname,
-        query: {},
-      });
+      router.push(
+        {
+          pathname: router.pathname,
+          query: {},
+        },
+        undefined,
+        { shallow: true }
+      );
     },
     [router]
+  );
+
+  const vapaasanahakuInput = watch("vapaasanahaku");
+  const kuntaInput = watch("kunta");
+  const maakuntaInput = watch("maakunta");
+  const vaylamuotoInput = watch("vaylamuoto");
+
+  const haeSuunnitelmat = useCallback(
+    // Asettaa url queryparametrit, jotka myös säästävät auki/kiinni-tilan.
+    // Varsinainen haku tapahtuu sivun pääkomponentissa niiden perusteella
+    (e) => {
+      e.preventDefault();
+      router.push(
+        {
+          pathname: router.pathname,
+          query: {
+            vapaasanahaku: vapaasanahakuInput,
+            kunta: kuntaInput,
+            maakunta: maakuntaInput,
+            vaylamuoto: vaylamuotoInput,
+            pienennahaku: pienennaHakuState,
+            lisaahakuehtoja: lisaaHakuehtojaState,
+            page: router.query.page || 1,
+          },
+        },
+        undefined,
+        { shallow: true }
+      );
+    },
+    [router, vapaasanahakuInput, kuntaInput, maakuntaInput, vaylamuotoInput, pienennaHakuState, lisaaHakuehtojaState]
   );
 
   return (
@@ -226,6 +238,7 @@ export default function Hakulomake({ hakutulostenMaara }: Props) {
               )}
 
               <Button
+                onClick={haeSuunnitelmat}
                 primary
                 style={{ marginRight: "auto", marginTop: "1em", marginBottom: "1.5em" }}
                 endIcon="search"
