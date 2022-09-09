@@ -47,7 +47,7 @@ const App = () => {
           //hakusana: vapaasanahaku,
           //kunta,
           //maakunta,
-          vaylamuoto: [vaylamuoto],
+          //vaylamuoto: [vaylamuoto],
         });
         log.info("listProjektit:", result);
         setHakutulos(result);

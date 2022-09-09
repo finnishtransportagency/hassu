@@ -1,4 +1,4 @@
-import { experimental_sx as sx, styled, makeStyles } from "@mui/material";
+import { experimental_sx as sx, styled } from "@mui/material";
 import Link from "@components/HassuLink";
 
 const Tagi = styled("div")(
