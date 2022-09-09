@@ -46,7 +46,8 @@
   "projekti-tyyppi": {
     "RATA": "Ratasuunnitelma",
     "TIE": "Tiesuunnitelma",
-    "YLEINEN": "Yleissuunnitelma"
+    "YLEINEN": "Yleissuunnitelma",
+    "null": "Ei tiedossa"
   },
   "projekti-tyyppi-genetiivi": {
     "RATA": "Ratasuunnitelman",

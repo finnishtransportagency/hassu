@@ -46,7 +46,8 @@
   "projekti-tyyppi": {
     "RATA": "Vägplan",
     "TIE": "Spårplan",
-    "YLEINEN": "Översiktsplan"
+    "YLEINEN": "Översiktsplan",
+    "null": "RUOTSIKSI Ei tiedossa"
   },
   "projekti-tyyppi-genetiivi": {
     "RATA": "RUOTSIKSI Ratasuunnitelman",
