@@ -1,4 +1,4 @@
-import { experimental_sx as sx, styled, makeStyles } from "@mui/material";
+import { experimental_sx as sx, styled } from "@mui/material";
 import Link from "@components/HassuLink";
 
 const Tagi = styled("div")(
@@ -237,7 +237,6 @@ export const MobiiliBlokki = styled("button")(
     marginBottom: "-1.75rem",
   })
 );
-<<<<<<< HEAD
 
 export const HakutulosInfo = styled("div")(
   sx({
@@ -255,5 +254,3 @@ export const HakutulosInfo = styled("div")(
     },
   })
 );
-=======
->>>>>>> 7d5ec37 (Nappi joka piilottaa ja näyttää mobiilissa hakulomakkeen)
