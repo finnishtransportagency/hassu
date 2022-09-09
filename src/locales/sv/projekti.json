@@ -46,7 +46,8 @@
   "projekti-tyyppi": {
     "RATA": "Vägplan",
     "TIE": "Spårplan",
-    "YLEINEN": "Översiktsplan"
+    "YLEINEN": "Översiktsplan",
+    "null": "RUOTSIKSI Ei tiedossa"
   },
   "projekti-tyyppi-genetiivi": {
     "RATA": "RUOTSIKSI Ratasuunnitelman",
@@ -77,6 +78,14 @@
     "LAINVOIMA": "RUOTSIKSI Lainvoima",
     "ARKISTOITU": "RUOTSIKSI Arkistoitu"
   },
+  "projekti-status-kansalaiselle": {
+    "ALOITUSKUULUTUS": "RUOTSIKSI Aloituskuulutus",
+    "SUUNNITTELU": "RUOTSIKSI Suunnittelussa",
+    "NAHTAVILLAOLO": "RUOTSIKSI Suunnitelmat nähtävillä",
+    "HYVAKSYTTY": "RUOTSIKSI Suunnitelma hyväksytty",
+    "HYVAKSYMISMENETTELYSSA": "RUOTSIKSI Hyväksymismenettelyssä",
+    "LAINVOIMA": "RUOTSIKSI Lainvoimainen"
+  },
   "ui-kuvatekstit": {
     "eu_aluerahoitus": "RUOTSIKSI EU aluerahoitus"
   },
@@ -92,6 +101,7 @@
     "palautelomake": "RUOTSIKSI Palautelomake"
   },
   "ui-otsikot": {
+    "valtion_liikennevaylien_suunnittelu": "RUOTSIKSI Valtion liikenneväylien suunnittelu",
     "kuulutus_suunnitelman_alkamisesta": "RUOTSIKSI Kuulutus suunnittelun aloittamisesta",
     "kuulutus_suunnitelman_hyvaksymisesta": "RUOTSIKSI Kuulutus suunnitelman hyväksymisestä",
     "kuulutus_suunnitelman_nahtaville_asettamisesta": "RUOTSIKSI Kuulutus suunnitelman nähtäville asettamisesta",

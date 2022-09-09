@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  localstack:
+    image: localstack/localstack:0.14.1
+    ports:
+      - "4566-4584:4566-4584"
+      - "${PORT_WEB_UI-8080}:${PORT_WEB_UI-8080}"
+    environment:
+      - SERVICES=dynamodb,sts,cloudformation,ssm,s3,iam,kms,events,lambda
+      - DEFAULT_REGION=eu-west-1
+      - DEBUG=1
+      - DATA_DIR=${DATA_DIR- }
+      - PORT_WEB_UI=${PORT_WEB_UI- }
+      - DOCKER_HOST="unix:///var/run/docker.sock"

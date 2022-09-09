@@ -46,7 +46,8 @@
   "projekti-tyyppi": {
     "RATA": "Ratasuunnitelma",
     "TIE": "Tiesuunnitelma",
-    "YLEINEN": "Yleissuunnitelma"
+    "YLEINEN": "Yleissuunnitelma",
+    "null": "Ei tiedossa"
   },
   "projekti-tyyppi-genetiivi": {
     "RATA": "Ratasuunnitelman",
@@ -77,6 +78,14 @@
     "LAINVOIMA": "Lainvoima",
     "ARKISTOITU": "Arkistoitu"
   },
+  "projekti-status-kansalaiselle": {
+    "ALOITUSKUULUTUS": "Aloituskuulutus",
+    "SUUNNITTELU": "Suunnittelussa",
+    "NAHTAVILLAOLO": "Suunnitelmat nähtävillä",
+    "HYVAKSYTTY": "Suunnitelma hyväksytty",
+    "HYVAKSYMISMENETTELYSSA": "Hyväksymismenettelyssä",
+    "LAINVOIMA": "Lainvoimainen"
+  },
   "ui-kuvatekstit": {
     "eu_aluerahoitus": "EU aluerahoitus"
   },
@@ -92,6 +101,7 @@
     "palautelomake": "Palautelomake"
   },
   "ui-otsikot": {
+    "valtion_liikennevaylien_suunnittelu": "Valtion liikenneväylien suunnittelu",
     "kuulutus_suunnitelman_alkamisesta": "Kuulutus suunnittelun aloittamisesta",
     "kuulutus_suunnitelman_hyvaksymisesta": "Kuulutus suunnitelman hyväksymisestä",
     "kuulutus_suunnitelman_nahtaville_asettamisesta": "Kuulutus suunnitelman nähtäville asettamisesta",

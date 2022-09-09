@@ -177,6 +177,7 @@
     "lint:tsc": "tsc --project tsconfig.json",
     "lint": "npm-run-all --aggregate-output --parallel lint:*",
     "localstack": "docker-compose -f deployment/localstack/docker-compose.yml up -d && cross-env ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" cdklocal bootstrap --template deployment/localstack/localstack-bootstrap.yml && cross-env HASSU_HOTSWAP=true ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" cdklocal deploy database --require-approval never",
+    "localstack-m1": "docker-compose -f deployment/localstack/docker-compose-m1.yml up -d && cross-env ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" cdklocal bootstrap --template deployment/localstack/localstack-bootstrap.yml && cross-env HASSU_HOTSWAP=true ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" cdklocal deploy database --require-approval never",
     "postlocalstack": "./deployment/bin/setupLocalStack.sh",
     "localstack:stop": "docker-compose -f deployment/localstack/docker-compose.yml down",
     "setupenvironment": "ts-node --project=tsconfig.cdk.json deployment/bin/setupEnvironment.ts",
