@@ -192,3 +192,32 @@ const NavigointiNappiMobiiliTyylit = sx({
 export const NavigointiNappiMobiili = styled(NavigointiNappi)(NavigointiNappiMobiiliTyylit);
 
 export const NavigointiNappiMobiiliDisabled = styled(NavigointiNappiDisabled)(NavigointiNappiMobiiliTyylit);
+
+export const HakuehtoNappi = styled("button")(
+  sx({
+    color: "#0063AF",
+    fontSize: "1.1em",
+    marginTop: "0.5em",
+  })
+);
+
+export const VinkkiTeksti = styled("p")(
+  sx({
+    color: "rgb(150, 150, 150)",
+    fontSize: "15px",
+    marginTop: "8px",
+  })
+);
+
+export const VinkkiLinkki = styled(Link)(
+  sx({
+    color: "#0063AF",
+    "&.skaalaa": {
+      fontSize: "15px!important",
+    },
+    "&:hover": {
+      cursor: "pointer",
+      textDecoration: "underline",
+    },
+  })
+);
