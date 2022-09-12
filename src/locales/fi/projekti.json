@@ -41,7 +41,7 @@
         "on_laatinut": "on laatinut ratalain (110/2007) mukaisen"
       }
     },
-    "hankesuunnitelmista": "Hankesuunnitelmista lorem ipsum-teksti tähän, joka kertoo lyhyesti mitä tämä sivusto pitää sisällään. Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam dicta voluptatem fugit quos praesentium architecto accusamus non earum fuga veritatis, quia facilis est repellendus et iste similique beatae perferendis totam?"
+    "hankesuunnitelmista": "Valtion väylien suunnittelu on kansalaisten, sidosryhmien ja viranomaisten välinen maanteiden ja rautateiden lakisääteisten suunnitelmien vuorovaikutuskanava."
   },
   "projekti-tyyppi": {
     "RATA": "Ratasuunnitelma",
@@ -98,7 +98,8 @@
     "saavutettavuus": "Saavutettavuus",
     "tietoa_sivustosta": "Tietoa sivustosta",
     "tietosuoja": "Tietosuoja",
-    "palautelomake": "Palautelomake"
+    "palautelomake": "Palautelomake",
+    "valtion-vaylien-suunnittelu": "Valtion väylien suunnittelu"
   },
   "ui-otsikot": {
     "valtion_liikennevaylien_suunnittelu": "Valtion liikenneväylien suunnittelu",
