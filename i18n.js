@@ -3,6 +3,7 @@ module.exports = {
   defaultLocale: "fi",
   pages: {
     "*": ["common", "projekti", "footer"],
+    "/": ["etusivu"],
     "/yllapito/perusta": ["velho-haku"],
     "/suunnitelma/[oid]/nahtavillaolo": ["aineisto"],
     "/suunnitelma/[oid]/lausuntopyyntoaineistot": ["aineisto"],

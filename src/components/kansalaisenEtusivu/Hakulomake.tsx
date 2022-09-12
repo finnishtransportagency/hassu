@@ -14,6 +14,8 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
 import { useRouter } from "next/router";
+import useTranslation from "next-translate/useTranslation";
+import Trans from "next-translate/Trans";
 
 type HakulomakeFormValues = {
   vapaasanahaku: string;
@@ -33,6 +35,7 @@ export default function Hakulomake({ hakutulostenMaara, kuntaOptions }: Props) {
   const [pienennaHakuState, setPienennaHakuState] = useState<boolean>(false);
   const [lisaaHakuehtojaState, setLisaaHakuehtojaState] = useState<boolean>(false);
   const router = useRouter();
+  const { t } = useTranslation("etusivu");
 
   const { vapaasanahaku, kunta, maakunta, vaylamuoto, pienennaHaku, lisaaHakuehtoja } = useHaunQueryparametrit({ kuntaOptions });
 
@@ -127,7 +130,7 @@ export default function Hakulomake({ hakutulostenMaara, kuntaOptions }: Props) {
             setPienennaHakuState(!pienennaHakuState);
           }}
         >
-          Suunnitelmien haku
+          {t("suunnitelmien-haku")}
           {pienennaHakuState ? (
             <FontAwesomeIcon
               icon="chevron-down"
@@ -146,28 +149,23 @@ export default function Hakulomake({ hakutulostenMaara, kuntaOptions }: Props) {
 
       {(desktop || (!desktop && !pienennaHakuState)) && (
         <SearchSection noDivider>
-          <HakulomakeOtsikko>Suunnitelmien haku</HakulomakeOtsikko>
+          <HakulomakeOtsikko>{t("suunnitelmien-haku")}</HakulomakeOtsikko>
           <FormProvider {...useFormReturn}>
             <form>
               <HassuGrid cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>
                 {" "}
                 <HassuGridItem colSpan={{ xs: 1, lg: 2 }}>
-                  <TextInput label="Vapaasanahaku" {...register("vapaasanahaku")} error={errors?.vapaasanahaku} />
+                  <TextInput label={t("vapaasanahaku")} {...register("vapaasanahaku")} error={errors?.vapaasanahaku} />
                   {desktop && (
                     <VinkkiTeksti>
-                      Vinkki: kokeile &apos;valtatie&apos;-sanan sijaan &apos;vt&apos;, joko yhteen tai erikseen kirjoitettuna tien numeron
-                      kanssa. Katso lisää{" "}
-                      <VinkkiLinkki className="skaalaa" href="">
-                        hakuohjeista
-                      </VinkkiLinkki>
-                      .
+                      <Trans i18nKey="etusivu:hakuvinkki" components={{ a: <VinkkiLinkki className="skaalaa" href="TODO" /> }} />
                     </VinkkiTeksti>
                   )}
                 </HassuGridItem>
                 <Select
                   className="w-100"
                   id="kunta"
-                  label="Kunta"
+                  label={t("kunta")}
                   options={kuntaOptions ? kuntaOptions : [{ label: "", value: "" }]}
                   error={errors?.kunta}
                   {...register("kunta", { shouldUnregister: false })}
@@ -182,7 +180,7 @@ export default function Hakulomake({ hakutulostenMaara, kuntaOptions }: Props) {
                     setLisaaHakuehtojaState(!lisaaHakuehtojaState);
                   }}
                 >
-                  {lisaaHakuehtojaState ? "Vähemmän hakuehtoja" : "Lisää hakuehtoja"}
+                  {lisaaHakuehtojaState ? t("vahemman-hakuehtoja") : t("lisaa-hakuehtoja")}
                   <FontAwesomeIcon
                     icon={`chevron-${lisaaHakuehtojaState ? "up" : "down"}`}
                     className={classNames("ml-3 pointer-events-none text-primary-dark")}
@@ -197,7 +195,7 @@ export default function Hakulomake({ hakutulostenMaara, kuntaOptions }: Props) {
                   <HassuGridItem colSpan={{ xs: 1, lg: 1 }}>
                     <Select
                       id="maakunta"
-                      label="Maakunta"
+                      label={t("maakunta")}
                       options={[{ label: "", value: "" }]}
                       error={errors?.maakunta}
                       {...register("maakunta", { shouldUnregister: true })}
@@ -206,7 +204,7 @@ export default function Hakulomake({ hakutulostenMaara, kuntaOptions }: Props) {
                   <HassuGridItem colSpan={{ xs: 1, lg: 1 }}>
                     <Select
                       id="vaylamuoto"
-                      label="Väylämuoto"
+                      label={t("vaylamuoto")}
                       options={Object.keys(ProjektiTyyppi).map((tyyppi) => ({ label: tyyppi, value: tyyppi }))}
                       error={errors?.vaylamuoto}
                       {...register("vaylamuoto", { shouldUnregister: false })}
@@ -217,12 +215,7 @@ export default function Hakulomake({ hakutulostenMaara, kuntaOptions }: Props) {
 
               {!desktop && ( // Mobiilinäkymässä vinkkiteksti onkin täällä alhaalla
                 <VinkkiTeksti>
-                  Vinkki: kokeile &apos;valtatie&apos;-sanan sijaan &apos;vt&apos;, joko yhteen tai erikseen kirjoitettuna tien numeron
-                  kanssa. Katso lisää{" "}
-                  <VinkkiLinkki className="skaalaa" href="">
-                    hakuohjeista
-                  </VinkkiLinkki>
-                  .
+                  <Trans i18nKey="etusivu:hakuvinkki" components={{ a: <VinkkiLinkki className="skaalaa" href="TODO" /> }} />
                 </VinkkiTeksti>
               )}
 
@@ -234,7 +227,7 @@ export default function Hakulomake({ hakutulostenMaara, kuntaOptions }: Props) {
                 id="hae"
                 disabled={false}
               >
-                Hae
+                {t("hae")}
               </Button>
             </form>
           </FormProvider>
@@ -242,8 +235,10 @@ export default function Hakulomake({ hakutulostenMaara, kuntaOptions }: Props) {
       )}
 
       <HakutulosInfo className={desktop ? "" : "mobiili"}>
-        <h2>Löytyi {hakutulostenMaara} suunnitelmaa</h2>
-        <button onClick={nollaaHakuehdot}>Nollaa hakuehdot</button>
+        <h2>
+          <Trans i18nKey="etusivu:loytyi-n-suunnitelmaa" values={{ lkm: hakutulostenMaara }} />
+        </h2>
+        <button onClick={nollaaHakuehdot}>{t("nollaa-hakuehdot")}</button>
       </HakutulosInfo>
     </div>
   );

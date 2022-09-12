@@ -1,0 +1,13 @@
+{
+  "suunnitelmien-haku": "Suunnitelmien haku",
+  "vapaasanahaku": "Vapaasanahaku",
+  "kunta": "Kunta",
+  "maakunta": "Maakunta",
+  "vaylamuoto": "Väylämuoto",
+  "vahemman-hakuehtoja": "Vähemmän hakuehtoja",
+  "lisaa-hakuehtoja": "Lisää hakuehtoja",
+  "hakuvinkki": "Vinkki: kokeile 'valtatie'-sanan sijaan 'vt', joko yhteen tai erikseen kirjoitettuna tien numeron kanssa. Katso lisää <a>hakuohjeista</a>.",
+  "hae": "Hae",
+  "loytyi-n-suunnitelmaa": "Löytyi {{lkm}} suunnitelmaa",
+  "nollaa-hakuehdot": "Nollaa hakuehdot"
+}
