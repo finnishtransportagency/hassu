@@ -23,6 +23,7 @@ export type ProjektiDocument = {
   vaylamuoto?: string[];
   suunnittelustaVastaavaViranomainen?: Viranomainen;
   vaihe?: Status;
+  onVuorovaikutusTilaisuus?: boolean;
   projektiTyyppi?: ProjektiTyyppi;
   paivitetty?: string;
   projektipaallikko?: string;
@@ -51,10 +52,7 @@ export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocu
   } as Partial<ProjektiDocument>;
 }
 
-export function adaptProjektiToJulkinenIndex(
-  projekti: ProjektiJulkinen,
-  kieli: Kieli
-): Omit<ProjektiDocument, "oid"> | undefined {
+export function adaptProjektiToJulkinenIndex(projekti: ProjektiJulkinen, kieli: Kieli): Omit<ProjektiDocument, "oid"> | undefined {
   if (projekti) {
     // Use texts from suunnitteluvaihe or from published aloituskuulutus
     const suunnitteluVaihe = projekti.suunnitteluVaihe;
@@ -81,6 +79,34 @@ export function adaptProjektiToJulkinenIndex(
       publishTimestamp = dayjs(0).format();
     }
 
+    let onVuorovaikutusTilaisuus = false;
+
+    if (projekti.status === Status.SUUNNITTELU) {
+      // Tutki, onko aktiivisia tai tulevia vuorovaikutustilaisuuksia
+      if (
+        projekti.suunnitteluVaihe?.vuorovaikutukset &&
+        projekti.suunnitteluVaihe.vuorovaikutukset[projekti.suunnitteluVaihe.vuorovaikutukset.length - 1]
+      ) {
+        const vuorovaikutusTilaisuus = projekti.suunnitteluVaihe.vuorovaikutukset[projekti.suunnitteluVaihe.vuorovaikutukset.length - 1];
+        vuorovaikutusTilaisuus.vuorovaikutusTilaisuudet.find((tilaisuus) => {
+          const alkamisPaiva = new Date(tilaisuus.paivamaara);
+          const nykyhetki = new Date();
+          if (alkamisPaiva > nykyhetki) {
+            //tilaisuus on tulevaisuudessa
+            return true;
+          } else {
+            const loppumisHetki = new Date(Date.parse(tilaisuus.paattymisAika) - 60000 * 5);
+            //Onko tilaisuutta vielä 5 min jäljellä? Indeksi päivitetään 5 min välein.
+            if (nykyhetki < loppumisHetki) {
+              return true;
+            }
+          }
+          return false;
+        });
+      }
+      onVuorovaikutusTilaisuus = true;
+    }
+
     return {
       nimi: safeTrim(nimi),
       hankkeenKuvaus,
@@ -88,6 +114,7 @@ export function adaptProjektiToJulkinenIndex(
       kunnat: projekti.velho.kunnat?.map(safeTrim),
       maakunnat: projekti.velho.maakunnat?.map(safeTrim),
       vaihe: projekti.status,
+      onVuorovaikutusTilaisuus,
       vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
       paivitetty: projekti.paivitetty || dayjs().format(),
       publishTimestamp,
