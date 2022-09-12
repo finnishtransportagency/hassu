@@ -13,24 +13,18 @@ interface Props {
   julkinen: boolean;
 }
 
-export default function HyvaksymisDialogi({
-  ilmoituksenVastaanottajat,
-  dialogiOnAuki,
-  onClose,
-  tallenna,
-  julkinen,
-}: Props): ReactElement {
+export default function HyvaksymisDialogi({ ilmoituksenVastaanottajat, dialogiOnAuki, onClose, tallenna, julkinen }: Props): ReactElement {
   const { t } = useTranslation();
 
   return (
-    <HassuDialog open={dialogiOnAuki} title="Kuulutuksen hyväksyminen ja ilmoituksen lähettäminen" onClose={onClose}>
+    <HassuDialog open={dialogiOnAuki} title="Vuorovaikutustietojen tallentaminen ja ilmoituksen lähettäminen" onClose={onClose}>
       <DialogContent>
         {julkinen ? (
           <p>Olet päivittämässä vuorovaikutustietoja. Ilmoitus päivitetyistä tiedoista lähetetään seuraaville:</p>
         ) : (
           <p>
-            Olet tallentamassa vuorovaikutustiedot ja käynnistämässä siihen liittyvän ilmoituksen automaattisen
-            lähettämisen. Ilmoitus vuorovaikutuksesta lähetetään seuraaville:
+            Olet tallentamassa vuorovaikutustiedot ja käynnistämässä siihen liittyvän ilmoituksen automaattisen lähettämisen. Ilmoitus
+            vuorovaikutuksesta lähetetään seuraaville:
           </p>
         )}
         <div>
@@ -56,9 +50,8 @@ export default function HyvaksymisDialogi({
             <p>Ilmoitukset lähetetään automaattisesti painikkeen klikkaamisen jälkeen.</p>
           ) : (
             <p>
-              Klikkaamalla Hyväksy ja lähetä -painiketta vahvistat vuorovaikutustiedot tarkastetuksi ja hyväksyt sen
-              julkaisun asetettuna julkaisupäivänä sekä ilmoituksien lähettämisen. Ilmoitukset lähetetään
-              automaattisesti painikkeen klikkaamisen jälkeen.
+              Klikkaamalla Hyväksy ja lähetä -painiketta vahvistat vuorovaikutustiedot tarkastetuksi ja hyväksyt sen julkaisun asetettuna
+              julkaisupäivänä sekä ilmoituksien lähettämisen. Ilmoitukset lähetetään automaattisesti painikkeen klikkaamisen jälkeen.
             </p>
           )}
         </div>

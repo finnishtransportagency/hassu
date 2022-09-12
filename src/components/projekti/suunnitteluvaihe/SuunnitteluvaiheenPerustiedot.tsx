@@ -261,7 +261,6 @@ function SuunnitteluvaiheenPerustiedotForm({
           >
             {julkinen ? "Tallenna ja päivitä julkaisua" : "Tallenna ja julkaise perustiedot"}
           </Button>
-          <Button disabled>Nähtävilläolon kuuluttaminen</Button>
         </Stack>
       </Section>
       <HassuDialog open={openHyvaksy} title="Suunnitteluvaiheen perustietojen julkaisu" onClose={() => setOpenHyvaksy(false)}>
