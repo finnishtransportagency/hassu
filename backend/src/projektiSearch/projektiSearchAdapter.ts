@@ -23,7 +23,7 @@ export type ProjektiDocument = {
   vaylamuoto?: string[];
   suunnittelustaVastaavaViranomainen?: Viranomainen;
   vaihe?: Status;
-  onVuorovaikutusTilaisuus?: boolean;
+  viimeinenTilaisuusPaattyy?: string;
   projektiTyyppi?: ProjektiTyyppi;
   paivitetty?: string;
   projektipaallikko?: string;
@@ -79,7 +79,7 @@ export function adaptProjektiToJulkinenIndex(projekti: ProjektiJulkinen, kieli: 
       publishTimestamp = dayjs(0).format();
     }
 
-    let onVuorovaikutusTilaisuus = false;
+    let viimeinenTilaisuusPaattyy;
 
     if (projekti.status === Status.SUUNNITTELU) {
       // Tutki, onko aktiivisia tai tulevia vuorovaikutustilaisuuksia
@@ -87,24 +87,21 @@ export function adaptProjektiToJulkinenIndex(projekti: ProjektiJulkinen, kieli: 
         projekti.suunnitteluVaihe?.vuorovaikutukset &&
         projekti.suunnitteluVaihe.vuorovaikutukset[projekti.suunnitteluVaihe.vuorovaikutukset.length - 1]
       ) {
-        const vuorovaikutusTilaisuus = projekti.suunnitteluVaihe.vuorovaikutukset[projekti.suunnitteluVaihe.vuorovaikutukset.length - 1];
-        vuorovaikutusTilaisuus.vuorovaikutusTilaisuudet.find((tilaisuus) => {
-          const alkamisPaiva = new Date(tilaisuus.paivamaara);
-          const nykyhetki = new Date();
-          if (alkamisPaiva > nykyhetki) {
-            //tilaisuus on tulevaisuudessa
-            return true;
+        const vuorovaikutus = projekti.suunnitteluVaihe.vuorovaikutukset[projekti.suunnitteluVaihe.vuorovaikutukset.length - 1];
+        let viimeinenTilaisuusNumerona;
+        vuorovaikutus.vuorovaikutusTilaisuudet.forEach((tilaisuus) => {
+          const paattyy = Date.parse(tilaisuus.paattymisAika);
+          if (!viimeinenTilaisuusPaattyy) {
+            viimeinenTilaisuusPaattyy = tilaisuus.paattymisAika;
+            viimeinenTilaisuusNumerona = paattyy;
           } else {
-            const loppumisHetki = new Date(Date.parse(tilaisuus.paattymisAika) - 60000 * 5);
-            //Onko tilaisuutta vielä 5 min jäljellä? Indeksi päivitetään 5 min välein.
-            if (nykyhetki < loppumisHetki) {
-              return true;
+            if (paattyy > viimeinenTilaisuusNumerona) {
+              viimeinenTilaisuusPaattyy = tilaisuus.paattymisAika;
+              viimeinenTilaisuusNumerona = paattyy;
             }
           }
-          return false;
         });
       }
-      onVuorovaikutusTilaisuus = true;
     }
 
     return {
@@ -114,7 +111,7 @@ export function adaptProjektiToJulkinenIndex(projekti: ProjektiJulkinen, kieli: 
       kunnat: projekti.velho.kunnat?.map(safeTrim),
       maakunnat: projekti.velho.maakunnat?.map(safeTrim),
       vaihe: projekti.status,
-      onVuorovaikutusTilaisuus,
+      viimeinenTilaisuusPaattyy,
       vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
       paivitetty: projekti.paivitetty || dayjs().format(),
       publishTimestamp,

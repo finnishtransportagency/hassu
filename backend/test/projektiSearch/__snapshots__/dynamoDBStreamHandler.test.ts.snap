@@ -36,7 +36,6 @@ Object {
     "Pirkanmaa",
   ],
   "nimi": "Marikan testiprojekti",
-  "onVuorovaikutusTilaisuus": false,
   "paivitetty": "2022-03-15T14:30:00.000Z",
   "projektiTyyppi": "TIE",
   "publishTimestamp": "2022-03-28T14:28:00+03:00",
@@ -44,6 +43,7 @@ Object {
   "vaylamuoto": Array [
     "tie",
   ],
+  "viimeinenTilaisuusPaattyy": undefined,
 }
 `;
 
@@ -60,7 +60,6 @@ Object {
     "Pirkanmaa",
   ],
   "nimi": "Marikas testprojekt",
-  "onVuorovaikutusTilaisuus": false,
   "paivitetty": "2022-03-15T14:30:00.000Z",
   "projektiTyyppi": "TIE",
   "publishTimestamp": "2022-03-28T14:28:00+03:00",
@@ -68,6 +67,7 @@ Object {
   "vaylamuoto": Array [
     "tie",
   ],
+  "viimeinenTilaisuusPaattyy": undefined,
 }
 `;
 
