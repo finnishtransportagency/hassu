@@ -28,17 +28,18 @@ type HakulomakeFormValues = {
 type Props = {
   hakutulostenMaara: number | null | undefined;
   kuntaOptions: SelectOption[];
+  maakuntaOptions: SelectOption[];
   query: HookReturnType;
 };
 
-export default function HakulomakeWrapper({ hakutulostenMaara, kuntaOptions, query }: Props) {
+export default function HakulomakeWrapper({ hakutulostenMaara, maakuntaOptions, kuntaOptions, query }: Props) {
   if (!query) {
     return null;
   }
-  return <Hakulomake hakutulostenMaara={hakutulostenMaara} kuntaOptions={kuntaOptions} query={query} />;
+  return <Hakulomake hakutulostenMaara={hakutulostenMaara} maakuntaOptions={maakuntaOptions} kuntaOptions={kuntaOptions} query={query} />;
 }
 
-function Hakulomake({ hakutulostenMaara, kuntaOptions, query }: Props) {
+function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }: Props) {
   const theme = useTheme();
   const desktop = useMediaQuery(theme.breakpoints.up("lg"));
   const [pienennaHakuState, setPienennaHakuState] = useState<boolean>(false);
@@ -201,7 +202,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, query }: Props) {
                       id="maakunta"
                       disabled
                       label={t("maakunta")}
-                      options={[{ label: "", value: "" }]}
+                      options={maakuntaOptions ? maakuntaOptions : [{ label: "", value: "" }]}
                       error={errors?.maakunta}
                       {...register("maakunta", { shouldUnregister: true })}
                     />

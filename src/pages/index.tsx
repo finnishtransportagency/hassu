@@ -15,30 +15,38 @@ const SIVUN_KOKO = 10;
 
 const App = () => {
   const [kuntaOptions, setKuntaOptions] = useState<SelectOption[]>([]);
+  const [maakuntaOptions, setMaakuntaOptions] = useState<SelectOption[]>([]);
 
   const getKuntaLista = useCallback(async () => {
     const list = await (await fetch("/api/kuntalista.json")).json();
     setKuntaOptions(list);
   }, [setKuntaOptions]);
 
+  const getMaakuntaLista = useCallback(async () => {
+    const list = await (await fetch("/api/maakuntalista.json")).json();
+    setMaakuntaOptions(list);
+  }, [setMaakuntaOptions]);
+
   useEffect(() => {
     getKuntaLista();
-  }, [getKuntaLista]);
+    getMaakuntaLista();
+  }, [getKuntaLista, getMaakuntaLista]);
 
   const query = useHaunQueryparametrit({ kuntaOptions });
 
   if (!query) {
     return null;
   }
-  return <Etusivu query={query} kuntaOptions={kuntaOptions} />;
+  return <Etusivu query={query} maakuntaOptions={maakuntaOptions} kuntaOptions={kuntaOptions} />;
 };
 
 type Props = {
   query: HookReturnType;
   kuntaOptions: SelectOption[];
+  maakuntaOptions: SelectOption[];
 };
 
-function Etusivu({ query, kuntaOptions }: Props) {
+function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
   const { t } = useTranslation();
 
   const { vapaasanahaku, kunta, maakunta, vaylamuoto, sivu } = query;
@@ -86,7 +94,12 @@ function Etusivu({ query, kuntaOptions }: Props) {
       <Grid item lg={9} md={12}>
         <h2 className="mt-4">{t("projekti:ui-otsikot.valtion_liikennevaylien_suunnittelu")}</h2>
         <p>Tekstiä</p>
-        <Hakulomake hakutulostenMaara={hakutulos?.hakutulosMaara} kuntaOptions={kuntaOptions} query={query} />
+        <Hakulomake
+          hakutulostenMaara={hakutulos?.hakutulosMaara}
+          kuntaOptions={kuntaOptions}
+          maakuntaOptions={maakuntaOptions}
+          query={query}
+        />
         <h1>Suunnitelmat</h1>
         <Hakutulokset hakutulos={hakutulos} ladataan={ladataan} />
         <Sivutus sivuMaara={sivuMaara} nykyinenSivu={sivu} />
