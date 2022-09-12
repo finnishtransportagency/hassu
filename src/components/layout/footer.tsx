@@ -19,12 +19,13 @@ export const Footer = ({}) => {
     <div className="bg-gray-lightest w-full self-start mt-auto">
       <Container sx={{ marginTop: 4, paddingBottom: 4 }} component="footer">
         <Grid container spacing={2} style={{ paddingBottom: "4em", paddingTop: "4em" }}>
-          <Grid item lg={6} md={12}>
+          <Grid item lg={6} md={12} style={desktop ? { width: "100%" } : { width: "100%", paddingLeft: "2em" }}>
             <div style={{ maxWidth: "23em" }}>
               <KuvaContainer>
                 <Image src="/vayla-600px.jpg" alt="Väylä" width="100" height="100" />
                 <Image src="/ely-400px.png" alt="ELY" width="100" height="100" />
               </KuvaContainer>
+              <p>{t("info.hankesuunnitelmista")}</p>
               <Linkkilista1>
                 <FooterLinkkiEl href="TODO" teksti={t("ui-linkkitekstit.valtion-vaylien-suunnittelu")} />
                 <br />
@@ -99,6 +100,8 @@ const FooterLinkki = styled("a")(
 const Linkkilista2 = styled("ul")(
   sx({
     width: "100%",
+    marginTop: "0.5em",
+    marginBottom: "0.5em",
     "&.mobiili": {
       textAlign: "center",
     },
@@ -110,7 +113,7 @@ const Linkkilista2 = styled("ul")(
       },
     },
     " li": {
-      margin: "0.5em",
+      marginRight: "0.75em",
     },
     " a": {
       color: "#0063AF",
