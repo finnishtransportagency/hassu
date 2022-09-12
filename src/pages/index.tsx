@@ -10,6 +10,17 @@ import Sivutus from "@components/kansalaisenEtusivu/Sivutus";
 import { useRouter } from "next/router";
 import { SelectOption } from "@components/form/Select";
 import { ProjektiTyyppi } from "../../common/graphql/apiModel";
+import { MaakuntaListaOption } from "./api/maakuntalista.json";
+import { KuntaListaOption } from "./api/kuntalista.json";
+
+function jarjestaOptionit(a: SelectOption, b: SelectOption) {
+  if (!a.label) {
+    return 1;
+  } else if (!b.label) {
+    return 0;
+  }
+  return a.label.localeCompare(b.label);
+}
 
 const SIVUN_KOKO = 10;
 
@@ -17,20 +28,36 @@ const App = () => {
   const [kuntaOptions, setKuntaOptions] = useState<SelectOption[]>([]);
   const [maakuntaOptions, setMaakuntaOptions] = useState<SelectOption[]>([]);
 
-  const getKuntaLista = useCallback(async () => {
-    const list = await (await fetch("/api/kuntalista.json")).json();
-    setKuntaOptions(list);
-  }, [setKuntaOptions]);
+  const { lang } = useTranslation();
 
-  const getMaakuntaLista = useCallback(async () => {
-    const list = await (await fetch("/api/maakuntalista.json")).json();
-    setMaakuntaOptions(list);
-  }, [setMaakuntaOptions]);
+  const getKuntaLista = useCallback(
+    async (lang: string) => {
+      const list: KuntaListaOption[] = await (await fetch("/api/kuntalista.json")).json();
+      if (lang === "sv") {
+        setKuntaOptions(list.map((option) => ({ ...option, label: option.labelRuo })).sort(jarjestaOptionit));
+      } else {
+        setKuntaOptions(list);
+      }
+    },
+    [setKuntaOptions]
+  );
+
+  const getMaakuntaLista = useCallback(
+    async (lang: string) => {
+      const list: MaakuntaListaOption[] = await (await fetch("/api/maakuntalista.json")).json();
+      if (lang === "sv") {
+        setMaakuntaOptions(list.map((option) => ({ ...option, label: option.labelRuo })).sort(jarjestaOptionit));
+      } else {
+        setMaakuntaOptions(list);
+      }
+    },
+    [setMaakuntaOptions]
+  );
 
   useEffect(() => {
-    getKuntaLista();
-    getMaakuntaLista();
-  }, [getKuntaLista, getMaakuntaLista]);
+    getKuntaLista(lang);
+    getMaakuntaLista(lang);
+  }, [getKuntaLista, getMaakuntaLista, lang]);
 
   const query = useHaunQueryparametrit({ kuntaOptions });
 

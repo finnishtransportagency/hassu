@@ -5,12 +5,18 @@ import { setupLambdaMonitoring, wrapXrayAsync } from "../../../backend/src/aws/m
 
 const KUNTALISTA_TTL_SECONDS = 24 * 3 * 60 * 60;
 
+export type KuntaListaOption = {
+  label: string;
+  labelRuo: string;
+  value: string;
+};
+
 async function fetchKuntaLista() {
   const response = await fetch("http://rajapinnat.ymparisto.fi/api/Hakemistorajapinta/1.0/odata/Kunta");
 
   const data: any = await response.json();
   const list = data?.value?.map((kunta: any) => {
-    return { label: kunta.Nimi, value: kunta.Nimi.toUpperCase() };
+    return { label: kunta.Nimi, labelRuo: kunta.NimiRuo, value: kunta.Nimi.toUpperCase() };
   });
   list.unshift({ label: "", value: "" });
   return list;

@@ -5,12 +5,18 @@ import { setupLambdaMonitoring, wrapXrayAsync } from "../../../backend/src/aws/m
 
 const MAAKUNTALISTA_TTL_SECONDS = 24 * 3 * 60 * 60;
 
+export type MaakuntaListaOption = {
+  label: string;
+  labelRuo: string;
+  value: string;
+};
+
 async function fetchMaakuntaLista() {
   const response = await fetch("http://rajapinnat.ymparisto.fi/api/Hakemistorajapinta/1.0/odata/Maakunta");
 
   const data: any = await response.json();
   const list = data?.value?.map((maakunta: any) => {
-    return { label: maakunta.Nimi, value: maakunta.Nimi.toUpperCase() };
+    return { label: maakunta.Nimi, labelRuo: maakunta.NimiRuo, value: maakunta.Nimi.toUpperCase() };
   });
   list.unshift({ label: "", value: "" });
   return list;

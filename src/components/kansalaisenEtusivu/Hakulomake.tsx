@@ -213,7 +213,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
                       addEmptyOption
                       id="vaylamuoto"
                       label={t("vaylamuoto")}
-                      options={Object.keys(ProjektiTyyppi).map((tyyppi) => ({ label: tyyppi, value: tyyppi }))}
+                      options={Object.keys(ProjektiTyyppi).map((tyyppi) => ({ label: t(`vaylamuodot.${tyyppi}`), value: tyyppi }))}
                       error={errors?.vaylamuoto}
                       {...register("vaylamuoto", { shouldUnregister: false })}
                     />
