@@ -156,7 +156,14 @@ export default function Painikkeet({ projekti }: Props) {
             >
               Palauta
             </Button>
-            <Button id="button_open_acceptance_dialog" primary onClick={() => setOpenHyvaksy(true)}>
+            <Button
+              id="button_open_acceptance_dialog"
+              primary
+              onClick={(e) => {
+                e.preventDefault();
+                setOpenHyvaksy(true);
+              }}
+            >
               Hyväksy ja lähetä
             </Button>
           </Stack>
@@ -166,8 +173,10 @@ export default function Painikkeet({ projekti }: Props) {
         <>
           <Section noDivider>
             <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
-              <Button onClick={handleSubmit(saveDraft)}>Tallenna Luonnos</Button>
-              <Button primary onClick={handleSubmit(lahetaHyvaksyttavaksi)}>
+              <Button id="save_hyvaksymispaatosvaihe_draft" onClick={handleSubmit(saveDraft)}>
+                Tallenna Luonnos
+              </Button>
+              <Button id="save_and_send_for_acceptance" primary onClick={handleSubmit(lahetaHyvaksyttavaksi)}>
                 Lähetä Hyväksyttäväksi
               </Button>
             </Stack>

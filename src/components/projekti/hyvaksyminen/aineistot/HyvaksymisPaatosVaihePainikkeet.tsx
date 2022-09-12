@@ -53,8 +53,8 @@ export default function NahtavillaoloPainikkeet() {
     <>
       <Section noDivider>
         <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
-          <Button onClick={handleSubmit(saveDraft)}>Tallenna Luonnos</Button>
-          <Button primary disabled onClick={undefined}>
+          <Button id="save_hyvaksymispaatosvaihe_draft" onClick={handleSubmit(saveDraft)}>Tallenna Luonnos</Button>
+          <Button id="save_and_send_for_acceptance" primary disabled onClick={undefined}>
             Lähetä Hyväksyttäväksi
           </Button>
         </Stack>

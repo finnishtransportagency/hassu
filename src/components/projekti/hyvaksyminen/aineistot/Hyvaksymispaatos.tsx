@@ -36,7 +36,7 @@ export default function Hyvaksymispaatos({ projekti }: Props) {
         <HyvaksymisPaatosTiedostot />
       </div>
 
-      <Button type="button" onClick={() => setAineistoDialogOpen(true)}>
+      <Button type="button" onClick={() => setAineistoDialogOpen(true)} id="tuo_paatos_button">
         Tuo päätös
       </Button>
       <AineistojenValitseminenDialog
