@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { api, Kieli, ProjektiHakutulosJulkinen } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 import Hakulomake from "@components/kansalaisenEtusivu/Hakulomake";
@@ -6,19 +6,27 @@ import Hakutulokset from "@components/kansalaisenEtusivu/Hakutulokset";
 import log from "loglevel";
 import { Grid } from "@mui/material";
 import OikeaLaita from "@components/kansalaisenEtusivu/OikeaLaita";
+import Sivutus from "@components/kansalaisenEtusivu/Sivutus";
+import { useRouter } from "next/router";
+
+const SIVUN_KOKO = 10;
 
 const App = () => {
   const [hakutulos, setHakutulos] = useState<ProjektiHakutulosJulkinen>();
   const [ladataan, setLadataan] = useState<boolean>(false);
   const { t } = useTranslation();
+  const router = useRouter();
+  const nykyinenSivu = typeof router.query.page === "string" ? parseInt(router.query.page) : 1;
 
-  // Tässä jossain kohtaan luetaan URL:n query parametreista dataa
+  const sivuMaara = useMemo(() => {
+    return Math.ceil((hakutulos?.hakutulosMaara || 0) / SIVUN_KOKO);
+  }, [hakutulos]);
 
   useEffect(() => {
     async function fetchProjektit() {
       try {
         setLadataan(true);
-        const result = await api.listProjektitJulkinen({ kieli: Kieli.SUOMI });
+        const result = await api.listProjektitJulkinen({ kieli: Kieli.SUOMI, sivunumero: Math.max(0, nykyinenSivu - 1) });
         log.info("listProjektit:", result);
         setHakutulos(result);
         setLadataan(false);
@@ -37,7 +45,7 @@ const App = () => {
     }
 
     fetchProjektit();
-  }, [setLadataan, setHakutulos]);
+  }, [setLadataan, setHakutulos, nykyinenSivu]);
 
   return (
     <Grid container spacing={0}>
@@ -46,6 +54,7 @@ const App = () => {
         <p>Tekstiä</p>
         <Hakulomake /> {/* TODO/Toteuta: Insertoidaan hakulomakkeelle sen lähtöarvot */}
         <Hakutulokset hakutulos={hakutulos} ladataan={ladataan} />
+        <Sivutus sivuMaara={sivuMaara} />
       </Grid>
       <Grid item lg={3} md={12}>
         <OikeaLaita />

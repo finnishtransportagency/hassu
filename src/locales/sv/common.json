@@ -107,5 +107,8 @@
   "hae_tiedosto": "RUOTSIKSI Hae tiedosto",
   "sulje": "RUOTSIKSI Sulje",
   "liite": "RUOTSIKSI Liite",
-  "klo": "RUOTSIKSI klo"
+  "klo": "RUOTSIKSI klo",
+  "sivut": "RUOTSIKSI Sivut",
+  "edellinen": "RUOTSIKSI Edellinen",
+  "seuraava": "RUOTSIKSI Seuraava"
 }
