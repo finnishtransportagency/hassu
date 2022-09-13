@@ -195,6 +195,7 @@ export default function Hakulomake({ hakutulostenMaara, kuntaOptions }: Props) {
                   <HassuGridItem colSpan={{ xs: 1, lg: 1 }}>
                     <Select
                       id="maakunta"
+                      disabled
                       label={t("maakunta")}
                       options={[{ label: "", value: "" }]}
                       error={errors?.maakunta}
