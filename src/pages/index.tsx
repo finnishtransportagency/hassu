@@ -14,17 +14,7 @@ import { ProjektiTyyppi } from "../../common/graphql/apiModel";
 const SIVUN_KOKO = 10;
 
 const App = () => {
-  const [hakutulos, setHakutulos] = useState<ProjektiHakutulosJulkinen>();
-  const [ladataan, setLadataan] = useState<boolean>(false);
   const [kuntaOptions, setKuntaOptions] = useState<SelectOption[]>([]);
-
-  const { t } = useTranslation();
-  const router = useRouter();
-  const nykyinenSivu = typeof router.query.page === "string" ? parseInt(router.query.page) : 1;
-
-  const sivuMaara = useMemo(() => {
-    return Math.ceil((hakutulos?.hakutulosMaara || 0) / SIVUN_KOKO);
-  }, [hakutulos]);
 
   const getKuntaLista = useCallback(async () => {
     const list = await (await fetch("/api/kuntalista.json")).json();
@@ -35,7 +25,29 @@ const App = () => {
     getKuntaLista();
   }, [getKuntaLista]);
 
-  const { vapaasanahaku, kunta, maakunta, vaylamuoto } = useHaunQueryparametrit({ kuntaOptions });
+  const query = useHaunQueryparametrit({ kuntaOptions });
+
+  if (!query) {
+    return null;
+  }
+  return <Etusivu query={query} kuntaOptions={kuntaOptions} />;
+};
+
+type Props = {
+  query: HookReturnType;
+  kuntaOptions: SelectOption[];
+};
+
+function Etusivu({ query, kuntaOptions }: Props) {
+  const { t } = useTranslation();
+
+  const { vapaasanahaku, kunta, maakunta, vaylamuoto, sivu } = query;
+  const [ladataan, setLadataan] = useState<boolean>(false);
+  const [hakutulos, setHakutulos] = useState<ProjektiHakutulosJulkinen>();
+
+  const sivuMaara = useMemo(() => {
+    return Math.ceil((hakutulos?.hakutulosMaara || 0) / SIVUN_KOKO);
+  }, [hakutulos]);
 
   useEffect(() => {
     async function fetchProjektit() {
@@ -43,7 +55,7 @@ const App = () => {
         setLadataan(true);
         const result = await api.listProjektitJulkinen({
           kieli: Kieli.SUOMI,
-          sivunumero: Math.max(0, nykyinenSivu - 1),
+          sivunumero: Math.max(0, sivu - 1),
           //hakusana: vapaasanahaku,
           //kunta,
           //maakunta,
@@ -67,14 +79,14 @@ const App = () => {
     }
 
     fetchProjektit();
-  }, [setLadataan, setHakutulos, nykyinenSivu, vapaasanahaku, kunta, maakunta, vaylamuoto]);
+  }, [setLadataan, setHakutulos, sivu, vapaasanahaku, kunta, maakunta, vaylamuoto]);
 
   return (
     <Grid container rowSpacing={4} columnSpacing={4}>
       <Grid item lg={9} md={12}>
         <h2 className="mt-4">{t("projekti:ui-otsikot.valtion_liikennevaylien_suunnittelu")}</h2>
         <p>Tekstiä</p>
-        <Hakulomake hakutulostenMaara={hakutulos?.hakutulosMaara} kuntaOptions={kuntaOptions} />
+        <Hakulomake hakutulostenMaara={hakutulos?.hakutulosMaara} kuntaOptions={kuntaOptions} query={query} />
         <h1>Suunnitelmat</h1>
         <Hakutulokset hakutulos={hakutulos} ladataan={ladataan} />
         <Sivutus sivuMaara={sivuMaara} />
@@ -84,42 +96,61 @@ const App = () => {
       </Grid>
     </Grid>
   );
-};
+}
 
 export default App;
 
 type HookProps = { kuntaOptions: SelectOption[] };
-type HookReturnType = {
+export type HookReturnType = {
   vapaasanahaku: string;
   kunta: string;
   maakunta: string;
   vaylamuoto: string;
+  sivu: number;
   pienennaHaku: boolean;
   lisaaHakuehtoja: boolean;
 };
-export function useHaunQueryparametrit({ kuntaOptions }: HookProps): HookReturnType {
+export function useHaunQueryparametrit({ kuntaOptions }: HookProps): HookReturnType | null {
   const router = useRouter();
-  const vapaasanahaku = typeof router.query?.vapaasanahaku === "string" ? router.query.vapaasanahaku : "";
-  const kunta =
-    kuntaOptions.find((option) => router.query?.kunta === option.value) && typeof router.query?.kunta === "string"
-      ? router.query.kunta
-      : "";
-  const maakunta =
-    ([] as SelectOption[]).find((option) => router.query?.maakunta === option.value) && typeof router.query?.maakunta === "string"
-      ? router.query.maakunta
-      : "";
-  const vaylamuoto =
-    Object.keys(ProjektiTyyppi).find((option) => router.query?.vaylamuoto === option) && typeof router.query?.vaylamuoto === "string"
-      ? router.query.vaylamuoto
-      : "";
-  const pienennaHaku = router.query?.pienennahaku === "true" ? true : false;
-  const lisaaHakuehtoja = router.query?.lisaahakuehtoja === "true" ? true : false;
-  return {
-    vapaasanahaku,
-    kunta,
-    maakunta,
-    vaylamuoto,
-    pienennaHaku,
-    lisaaHakuehtoja,
-  };
+
+  return useMemo(() => {
+    if (!router.isReady) {
+      return null;
+    }
+    const vapaasanahaku = typeof router.query?.vapaasanahaku === "string" ? router.query.vapaasanahaku : "";
+    const kunta =
+      kuntaOptions.find((option) => router.query?.kunta === option.value) && typeof router.query?.kunta === "string"
+        ? router.query.kunta
+        : "";
+    const maakunta =
+      ([] as SelectOption[]).find((option) => router.query?.maakunta === option.value) && typeof router.query?.maakunta === "string"
+        ? router.query.maakunta
+        : "";
+    const vaylamuoto =
+      Object.keys(ProjektiTyyppi).find((option) => router.query?.vaylamuoto === option) && typeof router.query?.vaylamuoto === "string"
+        ? router.query.vaylamuoto
+        : "";
+    const sivu = typeof router.query.sivu === "string" ? parseInt(router.query.sivu) : 1;
+    const pienennaHaku = router.query?.pienennahaku === "true" ? true : false;
+    const lisaaHakuehtoja = router.query?.lisaahakuehtoja === "true" ? true : false;
+    return {
+      vapaasanahaku,
+      kunta,
+      maakunta,
+      vaylamuoto,
+      sivu,
+      pienennaHaku,
+      lisaaHakuehtoja,
+    };
+  }, [
+    kuntaOptions,
+    router.isReady,
+    router.query?.kunta,
+    router.query?.lisaahakuehtoja,
+    router.query?.maakunta,
+    router.query?.sivu,
+    router.query?.pienennahaku,
+    router.query?.vapaasanahaku,
+    router.query?.vaylamuoto,
+  ]);
 }

@@ -6,7 +6,7 @@ import TextInput from "@components/form/TextInput";
 import Select, { SelectOption } from "@components/form/Select";
 import Button from "@components/button/Button";
 import { ProjektiTyyppi } from "../../../common/graphql/apiModel";
-import { useHaunQueryparametrit } from "@pages/index";
+import { useHaunQueryparametrit, HookReturnType } from "@pages/index";
 import HassuGrid from "@components/HassuGrid";
 import HassuGridItem from "@components/HassuGridItem";
 import { useTheme } from "@mui/material/styles";
@@ -27,9 +27,18 @@ type HakulomakeFormValues = {
 type Props = {
   hakutulostenMaara: number | null | undefined;
   kuntaOptions: SelectOption[];
+  query: HookReturnType;
 };
 
-export default function Hakulomake({ hakutulostenMaara, kuntaOptions }: Props) {
+export default function HakulomakeWrapper({ hakutulostenMaara, kuntaOptions }: Props) {
+  const query = useHaunQueryparametrit({ kuntaOptions });
+  if (!query) {
+    return null;
+  }
+  return <Hakulomake hakutulostenMaara={hakutulostenMaara} kuntaOptions={kuntaOptions} query={query} />;
+}
+
+function Hakulomake({ hakutulostenMaara, kuntaOptions, query }: Props) {
   const theme = useTheme();
   const desktop = useMediaQuery(theme.breakpoints.up("lg"));
   const [pienennaHakuState, setPienennaHakuState] = useState<boolean>(false);
@@ -37,7 +46,7 @@ export default function Hakulomake({ hakutulostenMaara, kuntaOptions }: Props) {
   const router = useRouter();
   const { t } = useTranslation("etusivu");
 
-  const { vapaasanahaku, kunta, maakunta, vaylamuoto, pienennaHaku, lisaaHakuehtoja } = useHaunQueryparametrit({ kuntaOptions });
+  const { vapaasanahaku, kunta, maakunta, vaylamuoto, pienennaHaku, lisaaHakuehtoja } = query;
 
   const defaultValues: HakulomakeFormValues = useMemo(
     () => ({
@@ -105,7 +114,7 @@ export default function Hakulomake({ hakutulostenMaara, kuntaOptions }: Props) {
             vaylamuoto: data.vaylamuoto,
             pienennahaku: pienennaHakuState,
             lisaahakuehtoja: lisaaHakuehtojaState,
-            page: router.query.page || 1,
+            sivu: 1,
           },
         },
         undefined,
