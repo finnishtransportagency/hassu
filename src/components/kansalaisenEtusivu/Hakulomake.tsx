@@ -59,7 +59,7 @@ export default function Hakulomake({ hakutulostenMaara, kuntaOptions }: Props) {
     register,
     formState: { errors },
     setValue,
-    watch,
+    handleSubmit,
   } = useFormReturn;
 
   useEffect(() => {
@@ -91,24 +91,18 @@ export default function Hakulomake({ hakutulostenMaara, kuntaOptions }: Props) {
     [router]
   );
 
-  const vapaasanahakuInput = watch("vapaasanahaku");
-  const kuntaInput = watch("kunta");
-  const maakuntaInput = watch("maakunta");
-  const vaylamuotoInput = watch("vaylamuoto");
-
   const haeSuunnitelmat = useCallback(
     // Asettaa url queryparametrit, jotka myös säästävät auki/kiinni-tilan.
     // Varsinainen haku tapahtuu sivun pääkomponentissa niiden perusteella
-    (e) => {
-      e.preventDefault();
+    (data: HakulomakeFormValues) => {
       router.push(
         {
           pathname: router.pathname,
           query: {
-            vapaasanahaku: vapaasanahakuInput,
-            kunta: kuntaInput,
-            maakunta: maakuntaInput,
-            vaylamuoto: vaylamuotoInput,
+            vapaasanahaku: data.vapaasanahaku,
+            kunta: data.kunta,
+            maakunta: data.maakunta,
+            vaylamuoto: data.vaylamuoto,
             pienennahaku: pienennaHakuState,
             lisaahakuehtoja: lisaaHakuehtojaState,
             page: router.query.page || 1,
@@ -118,7 +112,7 @@ export default function Hakulomake({ hakutulostenMaara, kuntaOptions }: Props) {
         { shallow: true }
       );
     },
-    [router, vapaasanahakuInput, kuntaInput, maakuntaInput, vaylamuotoInput, pienennaHakuState, lisaaHakuehtojaState]
+    [router, pienennaHakuState, lisaaHakuehtojaState]
   );
 
   return (
@@ -221,7 +215,8 @@ export default function Hakulomake({ hakutulostenMaara, kuntaOptions }: Props) {
               )}
 
               <Button
-                onClick={haeSuunnitelmat}
+                type="submit"
+                onClick={handleSubmit(haeSuunnitelmat)}
                 primary
                 style={{ marginRight: "auto", marginTop: "1em", marginBottom: "1.5em" }}
                 endIcon="search"
