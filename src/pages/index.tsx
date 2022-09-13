@@ -70,8 +70,8 @@ const App = () => {
   }, [setLadataan, setHakutulos, nykyinenSivu, vapaasanahaku, kunta, maakunta, vaylamuoto]);
 
   return (
-    <Grid container spacing={0}>
-      <Grid className="pr-4" item lg={9} md={12}>
+    <Grid container rowSpacing={4} columnSpacing={4}>
+      <Grid item lg={9} md={12}>
         <h2 className="mt-4">{t("projekti:ui-otsikot.valtion_liikennevaylien_suunnittelu")}</h2>
         <p>Tekstiä</p>
         <Hakulomake hakutulostenMaara={hakutulos?.hakutulosMaara} kuntaOptions={kuntaOptions} />
