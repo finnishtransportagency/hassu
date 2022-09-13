@@ -20,7 +20,7 @@ type Props = {
 
 function getPageLink(router: NextRouter, pageNumber: number) {
   router.pathname;
-  const newQuery = { ...router.query, page: pageNumber.toString() };
+  const newQuery = { ...router.query, sivu: pageNumber.toString() };
   return `${router.pathname}?${new URLSearchParams(newQuery).toString()}`;
 }
 
@@ -34,7 +34,7 @@ export default function Sivutus({ sivuMaara }: Props) {
     return null;
   }
 
-  const nykyinenSivu = typeof router.query.page === "string" ? parseInt(router.query.page) : 1;
+  const nykyinenSivu = typeof router.query.sivu === "string" ? parseInt(router.query.sivu) : 1;
 
   return (
     <>
