@@ -215,6 +215,7 @@ input ListaaProjektitInput {
   kieli: Kieli
   asiatunnus: String
   maakunta: [String!]
+  kunta: [String!]
   vaylamuoto: [String!]
   suunnittelustaVastaavaViranomainen: [Viranomainen!]
   vaihe: [Status!]

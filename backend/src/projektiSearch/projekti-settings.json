@@ -2,7 +2,7 @@
   "analysis": {
     "analyzer": {
       "sortable": {
-        "tokenizer": "keyword",
+        "tokenizer": "StandardTokenizer",
         "filter": [
           "lowercase"
         ]

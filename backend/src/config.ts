@@ -1,6 +1,8 @@
 import { log } from "./logger";
 import * as AWSXRay from "aws-xray-sdk-core";
 
+const BaseConfig = require("../../common/BaseConfig.js").BaseConfig;
+
 const config = {
   projektiTableName: process.env.TABLE_PROJEKTI,
   feedbackTableName: process.env.TABLE_FEEDBACK,
@@ -56,8 +58,8 @@ AWSXRay.setLogger({
     log.warn(message, { meta });
   },
   info: (message, meta) => {
-    // Reduce unnecessary logging in local development
-    if (process.env.NODE_ENV !== "development") {
+    // Reduce unnecessary logging in development
+    if (BaseConfig.isPermanentEnvironment()) {
       log.info(message, { meta });
     }
   },
