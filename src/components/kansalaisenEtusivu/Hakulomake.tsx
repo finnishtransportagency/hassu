@@ -238,13 +238,14 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, query }: Props) {
           </FormProvider>
         </SearchSection>
       )}
-
-      <HakutulosInfo className={desktop ? "" : "mobiili"}>
-        <h2>
-          <Trans i18nKey="etusivu:loytyi-n-suunnitelmaa" values={{ lkm: hakutulostenMaara }} />
-        </h2>
-        <button onClick={nollaaHakuehdot}>{t("nollaa-hakuehdot")}</button>
-      </HakutulosInfo>
+      {hakutulostenMaara && (
+        <HakutulosInfo className={desktop ? "" : "mobiili"}>
+          <h2>
+            <Trans i18nKey="etusivu:loytyi-n-suunnitelmaa" values={{ lkm: hakutulostenMaara }} />
+          </h2>
+          <button onClick={nollaaHakuehdot}>{t("nollaa-hakuehdot")}</button>
+        </HakutulosInfo>
+      )}
     </div>
   );
 }
