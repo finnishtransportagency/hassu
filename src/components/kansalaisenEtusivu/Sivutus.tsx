@@ -16,6 +16,7 @@ import { NextRouter, useRouter } from "next/router";
 
 type Props = {
   sivuMaara: number;
+  nykyinenSivu: number;
 };
 
 function getPageLink(router: NextRouter, pageNumber: number) {
@@ -24,7 +25,7 @@ function getPageLink(router: NextRouter, pageNumber: number) {
   return `${router.pathname}?${new URLSearchParams(newQuery).toString()}`;
 }
 
-export default function Sivutus({ sivuMaara }: Props) {
+export default function Sivutus({ sivuMaara, nykyinenSivu }: Props) {
   const theme = useTheme();
   const desktop = useMediaQuery(theme.breakpoints.up("lg"));
   const { t } = useTranslation();
@@ -33,8 +34,6 @@ export default function Sivutus({ sivuMaara }: Props) {
   if (sivuMaara <= 1) {
     return null;
   }
-
-  const nykyinenSivu = typeof router.query.sivu === "string" ? parseInt(router.query.sivu) : 1;
 
   return (
     <>

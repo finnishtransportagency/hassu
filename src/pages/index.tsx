@@ -89,7 +89,7 @@ function Etusivu({ query, kuntaOptions }: Props) {
         <Hakulomake hakutulostenMaara={hakutulos?.hakutulosMaara} kuntaOptions={kuntaOptions} query={query} />
         <h1>Suunnitelmat</h1>
         <Hakutulokset hakutulos={hakutulos} ladataan={ladataan} />
-        <Sivutus sivuMaara={sivuMaara} />
+        <Sivutus sivuMaara={sivuMaara} nykyinenSivu={sivu} />
       </Grid>
       <Grid item lg={3} md={12}>
         <OikeaLaita />
