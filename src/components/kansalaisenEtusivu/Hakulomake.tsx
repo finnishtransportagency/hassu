@@ -6,7 +6,7 @@ import TextInput from "@components/form/TextInput";
 import Select, { SelectOption } from "@components/form/Select";
 import Button from "@components/button/Button";
 import { ProjektiTyyppi } from "../../../common/graphql/apiModel";
-import { useHaunQueryparametrit, HookReturnType } from "@pages/index";
+import { HookReturnType } from "@pages/index";
 import HassuGrid from "@components/HassuGrid";
 import HassuGridItem from "@components/HassuGridItem";
 import { useTheme } from "@mui/material/styles";
@@ -30,8 +30,7 @@ type Props = {
   query: HookReturnType;
 };
 
-export default function HakulomakeWrapper({ hakutulostenMaara, kuntaOptions }: Props) {
-  const query = useHaunQueryparametrit({ kuntaOptions });
+export default function HakulomakeWrapper({ hakutulostenMaara, kuntaOptions, query }: Props) {
   if (!query) {
     return null;
   }
