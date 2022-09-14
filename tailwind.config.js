@@ -1,12 +1,10 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
+  content: ["./src/pages/**/*.{js,ts,jsx,tsx}", "./src/components/**/*.{js,ts,jsx,tsx}"],
   corePlugins: {
     fontSize: false,
   },
-  purge: ["./src/pages/**/*.{js,ts,jsx,tsx}", "./src/components/**/*.{js,ts,jsx,tsx}"],
-  darkMode: false, // or 'media' or 'class'
-  mode: "jit",
   theme: {
     extend: {
       fontFamily: {
@@ -60,13 +58,6 @@ module.exports = {
       },
       white: "#FFFFFF",
       transparent: "transparent",
-    },
-  },
-  variants: {
-    backgroundColor: ["odd", "even", "responsive", "dark", "group-hover", "focus-within", "hover", "focus"],
-    extend: {
-      opacity: ["disabled"],
-      cursor: ["disabled"],
     },
   },
   plugins: [],
