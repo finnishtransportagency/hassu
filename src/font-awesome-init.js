@@ -31,6 +31,7 @@ import {
   faChevronDown,
   faWindowClose,
   faCopy,
+  faHistory
 } from "@fortawesome/free-solid-svg-icons";
 library.add(
   faAngleDown,
@@ -63,7 +64,8 @@ library.add(
   faSearch,
   faTrash,
   faWindowClose,
-  faCopy
+  faCopy,
+  faHistory
 );
 
 import {

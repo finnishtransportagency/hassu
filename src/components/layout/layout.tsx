@@ -3,6 +3,7 @@ import Breadcrumbs, { RouteLabels } from "./Breadcrumbs";
 import Header from "./header/header";
 import { Footer } from "./footer";
 import { Container } from "@mui/material";
+import NotificationBar from "@components/notification/NotificationBar";
 
 interface Props {
   children: ReactNode;
@@ -25,6 +26,7 @@ export default function Layout({ children, routeLabels }: Props): ReactElement {
 
   return (
     <div className="min-h-screen relative flex flex-col">
+      {process.env.NODE_ENV !== "production" && <NotificationBar />}
       <Header scrolledPastOffset={toTopEnabled} />
       <Breadcrumbs routeLabels={routeLabels} />
       <Container sx={{ marginBottom: "110px" }}>
