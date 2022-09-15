@@ -26,12 +26,12 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
       async () => {
         log.info("Updating kuntalista, it has been expired");
         const list = await fetchKuntaLista();
-        s3Cache.put("kuntalista", list);
+        await s3Cache.put("kuntalista", list);
       },
       async () => {
         log.info("Updating kuntalista, it is missing");
         const list = await fetchKuntaLista();
-        s3Cache.put("kuntalista", list);
+        await s3Cache.put("kuntalista", list);
         return list;
       }
     );

@@ -13,7 +13,7 @@ import {
   OriginRequestPolicy,
   OriginSslPolicy,
   PriceClass,
-  ViewerProtocolPolicy
+  ViewerProtocolPolicy,
 } from "@aws-cdk/aws-cloudfront";
 import { Config } from "./config";
 import { HttpOrigin } from "@aws-cdk/aws-cloudfront-origins/lib/http-origin";
@@ -21,15 +21,7 @@ import { BehaviorOptions } from "@aws-cdk/aws-cloudfront/lib/distribution";
 import { Builder } from "@sls-next/lambda-at-edge";
 import { NextJSLambdaEdge } from "@sls-next/cdk-construct";
 import { Code, Runtime } from "@aws-cdk/aws-lambda";
-import {
-  CompositePrincipal,
-  Effect,
-  ManagedPolicy,
-  PolicyDocument,
-  PolicyStatement,
-  Role,
-  ServicePrincipal
-} from "@aws-cdk/aws-iam";
+import { CompositePrincipal, Effect, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "@aws-cdk/aws-iam";
 import * as fs from "fs";
 import { EdgeFunction } from "@aws-cdk/aws-cloudfront/lib/experimental";
 import { S3Origin } from "@aws-cdk/aws-cloudfront-origins";
@@ -39,7 +31,7 @@ import {
   readAccountStackOutputs,
   readBackendStackOutputs,
   readDatabaseStackOutputs,
-  readPipelineStackOutputs
+  readPipelineStackOutputs,
 } from "../bin/setupEnvironment";
 import { IOriginAccessIdentity } from "@aws-cdk/aws-cloudfront/lib/origin-access-identity";
 import { getOpenSearchDomain } from "./common";
@@ -85,8 +77,9 @@ export class HassuFrontendStack extends cdk.Stack {
 
     this.appSyncAPIKey = (await readBackendStackOutputs()).AppSyncAPIKey;
     this.cloudFrontOriginAccessIdentity = (await readDatabaseStackOutputs()).CloudFrontOriginAccessIdentity || ""; // Empty default string for localstack deployment
-    this.cloudFrontOriginAccessIdentityReportBucket =
-      (await readPipelineStackOutputs()).CloudfrontOriginAccessIdentityReportBucket || ""; // Empty default string for localstack deployment
+    this.cloudFrontOriginAccessIdentityReportBucket = (await readPipelineStackOutputs()).CloudfrontOriginAccessIdentityReportBucket || ""; // Empty default string for localstack deployment
+
+    const accountStackOutputs = await readAccountStackOutputs();
 
     await new Builder(".", "./build", {
       enableHTTPCompression: true,
@@ -95,7 +88,9 @@ export class HassuFrontendStack extends cdk.Stack {
       env: {
         FRONTEND_DOMAIN_NAME: config.frontendDomainName,
         REACT_APP_API_KEY: this.appSyncAPIKey,
-        TABLE_PROJEKTI: Config.projektiTableName
+        TABLE_PROJEKTI: Config.projektiTableName,
+        SEARCH_DOMAIN: accountStackOutputs.SearchDomainEndpointOutput,
+        INTERNAL_BUCKET_NAME: Config.internalBucketName,
       },
     }).build();
 
@@ -108,10 +103,7 @@ export class HassuFrontendStack extends cdk.Stack {
       edgeFunctionRole
     );
 
-    const dmzProxyBehaviorWithLambda = HassuFrontendStack.createDmzProxyBehavior(
-      config.dmzProxyEndpoint,
-      frontendRequestFunction
-    );
+    const dmzProxyBehaviorWithLambda = HassuFrontendStack.createDmzProxyBehavior(config.dmzProxyEndpoint, frontendRequestFunction);
 
     const dmzProxyBehavior = HassuFrontendStack.createDmzProxyBehavior(config.dmzProxyEndpoint);
     const behaviours: Record<string, BehaviorOptions> = await this.createDistributionProperties(
@@ -163,7 +155,6 @@ export class HassuFrontendStack extends cdk.Stack {
     this.configureNextJSAWSPermissions(nextJSLambdaEdge);
     HassuFrontendStack.configureNextJSRequestHeaders(nextJSLambdaEdge);
 
-    const accountStackOutputs = await readAccountStackOutputs();
     const searchDomain = await getOpenSearchDomain(this, accountStackOutputs);
     if (nextJSLambdaEdge.nextApiLambda) {
       searchDomain.grantIndexReadWrite("projekti-" + Config.env + "-*", nextJSLambdaEdge.nextApiLambda);
@@ -234,11 +225,7 @@ export class HassuFrontendStack extends cdk.Stack {
         new ServicePrincipal("logger.cloudfront.amazonaws.com")
       ),
       managedPolicies: [
-        ManagedPolicy.fromManagedPolicyArn(
-          this,
-          "NextApiLambdaPolicy",
-          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-        ),
+        ManagedPolicy.fromManagedPolicyArn(this, "NextApiLambdaPolicy", "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"),
       ],
       inlinePolicies: {
         xray: new PolicyDocument({
@@ -273,9 +260,7 @@ export class HassuFrontendStack extends cdk.Stack {
     dmzProxyBehavior: BehaviorOptions,
     edgeFunctionRole: Role
   ): Promise<Record<string, BehaviorOptions>> {
-    let { keyGroups, originAccessIdentity, originAccessIdentityReportBucket } = await this.createTrustedKeyGroupsAndOAI(
-      config
-    );
+    let { keyGroups, originAccessIdentity, originAccessIdentityReportBucket } = await this.createTrustedKeyGroupsAndOAI(config);
     let props: Record<string, any> = {
       "/oauth2/*": dmzProxyBehaviorWithLambda,
       "/graphql": dmzProxyBehaviorWithLambda,
@@ -301,19 +286,11 @@ export class HassuFrontendStack extends cdk.Stack {
     return props;
   }
 
-  private static createDmzProxyBehavior(
-    dmzProxyEndpoint: string,
-    frontendRequestFunction?: cloudfront.experimental.EdgeFunction
-  ) {
+  private static createDmzProxyBehavior(dmzProxyEndpoint: string, frontendRequestFunction?: cloudfront.experimental.EdgeFunction) {
     const dmzBehavior: BehaviorOptions = {
       compress: true,
       origin: new HttpOrigin(dmzProxyEndpoint, {
-        originSslProtocols: [
-          OriginSslPolicy.TLS_V1_2,
-          OriginSslPolicy.TLS_V1_2,
-          OriginSslPolicy.TLS_V1,
-          OriginSslPolicy.SSL_V3,
-        ],
+        originSslProtocols: [OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1, OriginSslPolicy.SSL_V3],
       }),
       cachePolicy: CachePolicy.CACHING_DISABLED,
       originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
