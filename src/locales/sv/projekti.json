@@ -40,8 +40,7 @@
       "rata": {
         "on_laatinut": "RUOTSIKSI on laatinut ratalain (110/2007) mukaisen"
       }
-    },
-    "hankesuunnitelmista": "RUOTSIKSI Valtion väylien suunnittelu on kansalaisten, sidosryhmien ja viranomaisten välinen maanteiden ja rautateiden lakisääteisten suunnitelmien vuorovaikutuskanava."
+    }
   },
   "projekti-tyyppi": {
     "RATA": "Vägplan",
@@ -94,12 +93,7 @@
     "tutustu_hankesuunnitteluun": "RUOTSIKSI Tutustu hankesuunnitteluun",
     "takaisin_listaukseen": "RUOTSIKSI Takaisin listaukseen",
     "hankesuunnittelusivu": "RUOTSIKSI Hankesuunnittelusivu",
-    "etakaytto": "RUOTSIKSI Etäkäyttö (Extranet-palvelut, VPN-etäyhteys, intra)",
-    "saavutettavuus": "RUOTSIKSI Saavutettavuus",
-    "tietoa_sivustosta": "RUOTSIKSI Tietoa sivustosta",
-    "tietosuoja": "RUOTSIKSI Tietosuoja",
-    "palautelomake": "RUOTSIKSI Palautelomake",
-    "valtion-vaylien-suunnittelu": "RUOTSIKSI Valtion väylien suunnittelu"
+    "etakaytto": "RUOTSIKSI Etäkäyttö (Extranet-palvelut, VPN-etäyhteys, intra)"
   },
   "ui-otsikot": {
     "valtion_liikennevaylien_suunnittelu": "RUOTSIKSI Valtion liikenneväylien suunnittelu",

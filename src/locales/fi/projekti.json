@@ -40,8 +40,7 @@
       "rata": {
         "on_laatinut": "on laatinut ratalain (110/2007) mukaisen"
       }
-    },
-    "hankesuunnitelmista": "Valtion väylien suunnittelu on kansalaisten, sidosryhmien ja viranomaisten välinen maanteiden ja rautateiden lakisääteisten suunnitelmien vuorovaikutuskanava."
+    }
   },
   "projekti-tyyppi": {
     "RATA": "Ratasuunnitelma",
@@ -94,12 +93,7 @@
     "tutustu_hankesuunnitteluun": "Tutustu hankesuunnitteluun",
     "takaisin_listaukseen": "Takaisin listaukseen",
     "hankesuunnittelusivu": "Hankesuunnittelusivu",
-    "etakaytto": "Etäkäyttö (Extranet-palvelut, VPN-etäyhteys, intra)",
-    "saavutettavuus": "Saavutettavuus",
-    "tietoa_sivustosta": "Tietoa sivustosta",
-    "tietosuoja": "Tietosuoja",
-    "palautelomake": "Palautelomake",
-    "valtion-vaylien-suunnittelu": "Valtion väylien suunnittelu"
+    "etakaytto": "Etäkäyttö (Extranet-palvelut, VPN-etäyhteys, intra)"
   },
   "ui-otsikot": {
     "valtion_liikennevaylien_suunnittelu": "Valtion liikenneväylien suunnittelu",

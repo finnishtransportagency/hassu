@@ -7,7 +7,7 @@ import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const Footer = ({}) => {
-  const { t } = useTranslation("projekti");
+  const { t } = useTranslation("footer");
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
@@ -21,34 +21,34 @@ export const Footer = ({}) => {
           <div className="flex">
             <KuvaContainer className="justify-center">
               <div className="my-auto text-center">
-                <Image src="/vayla_alla_fi_sv_rgb.png" alt="Väylä" width="140.4" height="117" />
+                <Image src="/vayla_alla_fi_sv_rgb.png" alt={t("vayla_logo_alt")} width="140.4" height="117" />
               </div>
               <div className="my-auto text-center">
-                <Image src="/ely_alla_fi_sv_rgb.png" alt="Ely" width="170.61" height="91" />
+                <Image src="/ely_alla_fi_sv_rgb.png" alt={t("ely_logo_alt")} width="170.61" height="91" />
               </div>
             </KuvaContainer>
           </div>
-          <p className="mt-5">{t("info.hankesuunnitelmista")}</p>
+          <p className="mt-5">{t("hankesuunnitelmista")}</p>
           <ul>
-            <FooterLinkkiEl href="/TODO" teksti={t("ui-linkkitekstit.valtion-vaylien-suunnittelu")} />
-            <FooterLinkkiEl href={"http://väylävirasto.fi"} teksti={"Väylävirasto.fi"} />
-            <FooterLinkkiEl href={"http://ely-keskus.fi"} teksti={"Ely-keskus.fi"} />
+            <FooterLinkkiEl href="/TODO" teksti={t("common:sivustonimi")} />
+            <FooterLinkkiEl href={t("linkki.vayla.linkki")} teksti={t("linkki.vayla.teksti")} />
+            <FooterLinkkiEl href={t("linkki.ely.linkki")} teksti={t("linkki.ely.teksti")} />
           </ul>
         </div>
       </div>
       <div>
         <Linkkilista2>
           <li>
-            <Link href="#">{t("ui-linkkitekstit.saavutettavuus")}</Link>
+            <Link href="#">{t("linkki.saavutettavuus")}</Link>
           </li>
           <li>
-            <Link href="#">{t("ui-linkkitekstit.tietoa_sivustosta")}</Link>
+            <Link href="#">{t("linkki.tietoa_sivustosta")}</Link>
           </li>
           <li>
-            <Link href="#">{t("ui-linkkitekstit.tietosuoja")}</Link>
+            <Link href="#">{t("linkki.tietosuoja")}</Link>
           </li>
           <li>
-            <Link href="#">{t("ui-linkkitekstit.palautelomake")}</Link>
+            <Link href="#">{t("linkki.palautelomake")}</Link>
           </li>
         </Linkkilista2>
       </div>
