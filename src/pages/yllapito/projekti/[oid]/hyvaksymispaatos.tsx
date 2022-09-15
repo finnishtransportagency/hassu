@@ -103,12 +103,24 @@ export default function Hyvaksymispaatos({ setRouteLabels }: PageProps): ReactEl
         tabs={
           kertaalleenLahetettyHyvaksyttavaksi
             ? [
-                { label: "Kuulutuksen tiedot", content: <KuulutuksenTiedot setIsDirty={setIsDirty} /> },
-                { label: "Päätös ja liitteenä oleva aineisto", content: <PaatosAineistot setIsDirty={setIsDirty} /> },
+                {
+                  label: "Kuulutuksen tiedot",
+                  content: <KuulutuksenTiedot setIsDirty={setIsDirty} />,
+                  tabId: "kuulutuksentiedot_luku_tab",
+                },
+                {
+                  label: "Päätös ja liitteenä oleva aineisto",
+                  content: <PaatosAineistot setIsDirty={setIsDirty} />,
+                  tabId: "aineisto_luku_tab",
+                },
               ]
             : [
-                { label: "Päätös ja liitteenä oleva aineisto", content: <PaatosAineistot setIsDirty={setIsDirty} /> },
-                { label: "Kuulutuksen tiedot", content: <KuulutuksenTiedot setIsDirty={setIsDirty} /> },
+                {
+                  label: "Päätös ja liitteenä oleva aineisto",
+                  content: <PaatosAineistot setIsDirty={setIsDirty} />,
+                  tabId: "aineisto_tab",
+                },
+                { label: "Kuulutuksen tiedot", content: <KuulutuksenTiedot setIsDirty={setIsDirty} />, tabId: "kuulutuksentiedot_tab" },
               ]
         }
       />
