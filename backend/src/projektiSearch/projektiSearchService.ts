@@ -33,7 +33,7 @@ const projektiSarakeToField: Record<ProjektiSarake, string> = {
 class ProjektiSearchService {
   async indexProjekti(projekti: DBProjekti) {
     const projektiToIndex = adaptProjektiToIndex(projekti);
-    log.info("Index projekti", { oid: projekti.oid, projektiToIndex });
+    log.info("Index projekti", { oid: projekti.oid });
     await openSearchClientYllapito.putDocument(projekti.oid, projektiToIndex);
 
     projekti.tallennettu = true;
@@ -42,7 +42,7 @@ class ProjektiSearchService {
       for (const kieli of Object.values(Kieli)) {
         const projektiJulkinenToIndex = adaptProjektiToJulkinenIndex(apiProjekti, kieli);
         if (projektiJulkinenToIndex) {
-          log.info("Index julkinen projekti", { oid: projekti.oid, kieli, projektiJulkinenToIndex });
+          log.info("Index julkinen projekti", { oid: projekti.oid, kieli });
           await openSearchClientJulkinen[kieli].putDocument(projekti.oid, projektiJulkinenToIndex);
         }
       }
@@ -123,7 +123,7 @@ class ProjektiSearchService {
     const searchResultDocuments = adaptSearchResultsToProjektiHakutulosDokumenttis(searchResult);
     const resultCount = searchResult.hits.total.value;
 
-    log.info(resultCount + " " + projektiTyyppi + " search results from OpenSearch", { searchResult });
+    log.info(resultCount + " " + projektiTyyppi + " search results from OpenSearch");
     const result: ProjektiHakutulos = {
       __typename: "ProjektiHakutulos",
       tulokset: searchResultDocuments,
@@ -178,7 +178,7 @@ class ProjektiSearchService {
     const searchResultDocuments = adaptSearchResultsToProjektiHakutulosDokumenttis(searchResult);
 
     const resultCount = searchResult.hits.total.value;
-    log.info(resultCount + " search results from OpenSearch", { searchResult });
+    log.info(resultCount + " search results from OpenSearch");
     return {
       __typename: "ProjektiHakutulosJulkinen",
       tulokset: searchResultDocuments,
@@ -228,6 +228,11 @@ class ProjektiSearchService {
     if (params.maakunta) {
       queries.push({
         terms: { "maakunnat.keyword": params.maakunta },
+      });
+    }
+    if (params.kunta) {
+      queries.push({
+        terms: { "kunnat.keyword": params.kunta },
       });
     }
     if (params.vaylamuoto) {

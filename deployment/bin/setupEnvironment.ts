@@ -189,13 +189,13 @@ export async function getEnvironmentVariablesFromSSM(variables?: HassuSSMParamet
 }
 
 async function main() {
-  const searchStackOutputs = await readAccountStackOutputs();
+  const accountStackOutputs = await readAccountStackOutputs();
   const backendStackOutputs = await readBackendStackOutputs();
   const frontendStackOutputs = await readFrontendStackOutputs();
   const variables = await readParametersForEnv<HassuSSMParameters>(BaseConfig.infraEnvironment, Region.EU_WEST_1);
   const environmentVariables = await getEnvironmentVariablesFromSSM(variables);
   writeEnvFile(".env.test", {
-    SEARCH_DOMAIN: searchStackOutputs.SearchDomainEndpointOutput,
+    SEARCH_DOMAIN: accountStackOutputs.SearchDomainEndpointOutput,
     FRONTEND_DOMAIN_NAME: frontendStackOutputs.CloudfrontPrivateDNSName,
     TABLE_PROJEKTI: Config.projektiTableName,
     TABLE_FEEDBACK: Config.feedbackTableName,
@@ -213,7 +213,7 @@ async function main() {
       FRONTEND_DOMAIN_NAME: frontendStackOutputs.CloudfrontPrivateDNSName,
       SONARQUBE_HOST_URL: variables.SonarQubeHostURL,
       SONARQUBE_ACCESS_TOKEN: variables.SonarQubeAccessToken,
-      SEARCH_DOMAIN: searchStackOutputs.SearchDomainEndpointOutput,
+      SEARCH_DOMAIN: accountStackOutputs.SearchDomainEndpointOutput,
       TABLE_PROJEKTI: Config.projektiTableName,
       TABLE_FEEDBACK: Config.feedbackTableName,
     });

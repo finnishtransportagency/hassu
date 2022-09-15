@@ -2,7 +2,7 @@
 import { describe, it } from "mocha";
 import { ProjektiFixture } from "../../test/fixture/projektiFixture";
 import { projektiSearchService } from "../../src/projektiSearch/projektiSearchService";
-import { ListaaProjektitInput, ProjektiTyyppi, Status, Viranomainen } from "../../../common/graphql/apiModel";
+import { Kieli, ListaaProjektitInput, ProjektiTyyppi, Status, Viranomainen } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../../src/database/model/projekti";
 import dayjs from "dayjs";
 import { UserFixture } from "../../test/fixture/userFixture";
@@ -17,6 +17,7 @@ type ProjektiVariation = {
   oid: string;
   suunnittelustaVastaavaViranomainen: Viranomainen;
   maakunnat: string[];
+  kunnat: string[];
 } & Omit<ListaaProjektitInput, "vaihe" | "suunnittelustaVastaavaViranomainen">;
 
 const testData: ProjektiVariation[] = [
@@ -25,6 +26,7 @@ const testData: ProjektiVariation[] = [
     projektiTyyppi: ProjektiTyyppi.TIE,
     vaylamuoto: ["tie"],
     maakunnat: ["Pohjanmaa"],
+    kunnat: ["Tampere", "Nokia"],
     asiatunnus: "A1",
     suunnittelustaVastaavaViranomainen: Viranomainen.POHJOIS_POHJANMAAN_ELY,
   },
@@ -33,6 +35,7 @@ const testData: ProjektiVariation[] = [
     projektiTyyppi: ProjektiTyyppi.TIE,
     vaylamuoto: ["tie"],
     maakunnat: ["Uusimaa", "Pirkanmaa"],
+    kunnat: ["Tampere", "Helsinki"],
     asiatunnus: "A2",
     suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
   },
@@ -41,6 +44,7 @@ const testData: ProjektiVariation[] = [
     projektiTyyppi: ProjektiTyyppi.RATA,
     vaylamuoto: ["rata"],
     maakunnat: ["Ahvenanmaa"],
+    kunnat: ["Maarianhamina"],
     asiatunnus: "A3",
     suunnittelustaVastaavaViranomainen: Viranomainen.VAYLAVIRASTO,
   },
@@ -49,6 +53,7 @@ const testData: ProjektiVariation[] = [
     projektiTyyppi: ProjektiTyyppi.RATA,
     vaylamuoto: ["tie", "rata"],
     maakunnat: ["Uusimaa", "Ahvenanmaa"],
+    kunnat: ["Maarianhamina", "Helsinki"],
     asiatunnus: "A4",
     suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
   },
@@ -57,6 +62,7 @@ const testData: ProjektiVariation[] = [
     projektiTyyppi: ProjektiTyyppi.YLEINEN,
     vaylamuoto: ["tie"],
     maakunnat: ["Pirkanmaa"],
+    kunnat: ["Tampere"],
     asiatunnus: "A5",
     suunnittelustaVastaavaViranomainen: Viranomainen.PIRKANMAAN_ELY,
   },
@@ -65,6 +71,7 @@ const testData: ProjektiVariation[] = [
     projektiTyyppi: ProjektiTyyppi.YLEINEN,
     vaylamuoto: ["tie", "rata"],
     maakunnat: ["Kanta-Häme"],
+    kunnat: ["Hämeenlinna"],
     asiatunnus: "A6",
     suunnittelustaVastaavaViranomainen: Viranomainen.KESKI_SUOMEN_ELY,
   },
@@ -77,25 +84,28 @@ describe.skip("ProjektiSearchService", () => {
   before(async () => {
     for (let i = 0; i < testData.length; i++) {
       const data = testData[i];
-      const projekti: DBProjekti = projektiFixture.dbProjekti1();
+      const projekti: DBProjekti = projektiFixture.dbProjekti2();
       projekti.oid = data.oid;
       projekti.velho.tyyppi = data.projektiTyyppi;
       projekti.velho.vaylamuoto = data.vaylamuoto;
       projekti.velho.nimi = "unittest" + data.oid;
+      projekti.velho.kunnat = data.kunnat;
       projekti.velho.maakunnat = data.maakunnat;
       projekti.velho.asiatunnusELY = data.asiatunnus;
       projekti.suunnittelustaVastaavaViranomainen = data.suunnittelustaVastaavaViranomainen;
       projekti.paivitetty = dayjs("2020-01-01T23:00:00+02:00").add(-i, "hours").format();
+      projekti.aloitusKuulutusJulkaisut[0].kuulutusPaiva = "2000-02-02";
+      projekti.aloitusKuulutusJulkaisut[0].siirtyySuunnitteluVaiheeseen = "2222-02-02";
       await projektiSearchService.indexProjekti(projekti);
     }
     await delay(500);
   });
 
-  after(async () => {
-    for (const data of testData) {
-      await projektiSearchService.removeProjekti(data.oid);
-    }
-  });
+  // after(async () => {
+  //   for (const data of testData) {
+  //     await projektiSearchService.removeProjekti(data.oid);
+  //   }
+  // });
 
   beforeEach(() => {
     userFixture = new UserFixture(userService);
@@ -118,18 +128,18 @@ describe.skip("ProjektiSearchService", () => {
         projektiTyyppi: ProjektiTyyppi.RATA,
       })
     ).tulokset;
-    expect(results).to.have.length(1);
-    expect(results[0].oid).to.eq("3");
+
+    expect(results.map((result) => result.oid)).to.contain("3");
   });
 
   it("should search by vaihe successfully", async () => {
     const results = (
       await projektiSearchService.searchYllapito({
-        vaihe: [Status.EI_JULKAISTU],
+        vaihe: [Status.SUUNNITTELU],
       })
     ).tulokset;
     for (const result of results) {
-      expect(result.vaihe).to.eq(Status.EI_JULKAISTU, JSON.stringify(result));
+      expect(result.vaihe).to.eq(Status.SUUNNITTELU, JSON.stringify(result));
     }
   });
 
@@ -140,10 +150,7 @@ describe.skip("ProjektiSearchService", () => {
       })
     ).tulokset;
     for (const result of results) {
-      expect(result.suunnittelustaVastaavaViranomainen).to.be.oneOf([
-        Viranomainen.KESKI_SUOMEN_ELY,
-        Viranomainen.UUDENMAAN_ELY,
-      ]);
+      expect(result.suunnittelustaVastaavaViranomainen).to.be.oneOf([Viranomainen.KESKI_SUOMEN_ELY, Viranomainen.UUDENMAAN_ELY]);
     }
   });
 
@@ -152,11 +159,10 @@ describe.skip("ProjektiSearchService", () => {
       await projektiSearchService.searchYllapito({
         nimi: "unittest3",
         projektiTyyppi: ProjektiTyyppi.RATA,
-        vaihe: [Status.EI_JULKAISTU],
+        vaihe: [Status.SUUNNITTELU],
       })
     ).tulokset;
-    expect(results).to.have.length(1);
-    expect(results[0].oid).to.eq("3");
+    expect(results.map((result) => result.oid)).to.contain("3");
   });
 
   it("should not include results if name and vaihe don't match at the same time", async () => {
@@ -164,7 +170,7 @@ describe.skip("ProjektiSearchService", () => {
       await projektiSearchService.searchYllapito({
         nimi: "unittest3",
         projektiTyyppi: ProjektiTyyppi.RATA,
-        vaihe: [Status.NAHTAVILLAOLO],
+        vaihe: [Status.EI_JULKAISTU],
       })
     ).tulokset;
     expect(results).to.have.length(0);
@@ -193,6 +199,7 @@ describe.skip("ProjektiSearchService", () => {
   });
 
   it("should search by maakunta", async () => {
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
     const results = (
       await projektiSearchService.searchYllapito({
         maakunta: ["Uusimaa", "Pirkanmaa"],
@@ -219,5 +226,42 @@ describe.skip("ProjektiSearchService", () => {
       })
     ).tulokset;
     expect(results2).to.have.length(0);
+  });
+
+  it("should search by maakunta as kansalainen", async () => {
+    const results = (
+      await projektiSearchService.searchJulkinen({
+        kieli: Kieli.SUOMI,
+        maakunta: ["Uusimaa", "Pirkanmaa"],
+      })
+    ).tulokset;
+    for (const result of results) {
+      expect(result.maakunnat).to.contain.oneOf(["Uusimaa", "Pirkanmaa"]);
+    }
+  });
+
+  it("should search by kunta as kansalainen", async () => {
+    const results = (
+      await projektiSearchService.searchJulkinen({
+        kieli: Kieli.SUOMI,
+        kunta: ["Maarianhamina"],
+      })
+    ).tulokset;
+    for (const result of results) {
+      expect(result.kunnat).to.contain("Maarianhamina");
+    }
+  });
+
+  it("should search by nimi as kansalainen", async () => {
+    const results = (
+      await projektiSearchService.searchJulkinen({
+        kieli: Kieli.SUOMI,
+        nimi: "testiprojekti",
+        vaihe: [Status.ALOITUSKUULUTUS],
+      })
+    ).tulokset;
+    for (const result of results) {
+      expect(result.nimi).to.contain("testiprojekti");
+    }
   });
 });
