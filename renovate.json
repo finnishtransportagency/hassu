@@ -1,8 +1,13 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    ":dependencyDashboard",
+    ":semanticPrefixFixDepsChoreOthers",
+    ":ignoreModulesAndTests",
+    ":autodetectPinVersions",
+    "workarounds:all"
   ],
+  "ignorePresets": ["group:monorepos"],
   "timezone": "Europe/Helsinki",
   "schedule": "after 6am and before 7am",
   "updateNotScheduled": false,
@@ -17,6 +22,21 @@
   "packageRules": [
     {
       "matchPackagePatterns": [
+        "*"
+      ],
+      "excludePackagePatterns": [
+        "^@aws-cdk",
+        "^aws-cdk"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch"
+    },
+    {
+      "matchPackagePatterns": [
         "^@aws-cdk",
         "^aws-cdk"
       ],
@@ -26,17 +46,6 @@
       ],
       "groupName": "AWS CDK",
       "groupSlug": "aws-cdk"
-    },
-    {
-      "matchPackagePatterns": [
-        "*"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
-      "groupName": "all non-major dependencies",
-      "groupSlug": "all-minor-patch"
     }
   ]
 }
