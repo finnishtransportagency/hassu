@@ -2,7 +2,7 @@ module.exports = {
   locales: ["fi", "sv"],
   defaultLocale: "fi",
   pages: {
-    "*": ["common", "projekti"],
+    "*": ["common", "projekti", "footer"],
     "/yllapito/perusta": ["velho-haku"],
     "/suunnitelma/[oid]/nahtavillaolo": ["aineisto"],
     "/suunnitelma/[oid]/lausuntopyyntoaineistot": ["aineisto"],

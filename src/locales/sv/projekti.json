@@ -40,8 +40,7 @@
       "rata": {
         "on_laatinut": "RUOTSIKSI on laatinut ratalain (110/2007) mukaisen"
       }
-    },
-    "hankesuunnitelmista": "RUOTSIKSI Hankesuunnitelmista lorem ipsum-teksti tähän, joka kertoo lyhyesti mitä tämä sivusto pitää sisällään. Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam dicta voluptatem fugit quos praesentium architecto accusamus non earum fuga veritatis, quia facilis est repellendus et iste similique beatae perferendis totam?"
+    }
   },
   "projekti-tyyppi": {
     "RATA": "Vägplan",
@@ -94,11 +93,7 @@
     "tutustu_hankesuunnitteluun": "RUOTSIKSI Tutustu hankesuunnitteluun",
     "takaisin_listaukseen": "RUOTSIKSI Takaisin listaukseen",
     "hankesuunnittelusivu": "RUOTSIKSI Hankesuunnittelusivu",
-    "etakaytto": "RUOTSIKSI Etäkäyttö (Extranet-palvelut, VPN-etäyhteys, intra)",
-    "saavutettavuus": "RUOTSIKSI Saavutettavuus",
-    "tietoa_sivustosta": "RUOTSIKSI Tietoa sivustosta",
-    "tietosuoja": "RUOTSIKSI Tietosuoja",
-    "palautelomake": "RUOTSIKSI Palautelomake"
+    "etakaytto": "RUOTSIKSI Etäkäyttö (Extranet-palvelut, VPN-etäyhteys, intra)"
   },
   "ui-otsikot": {
     "valtion_liikennevaylien_suunnittelu": "RUOTSIKSI Valtion liikenneväylien suunnittelu",

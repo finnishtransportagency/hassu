@@ -1,0 +1,19 @@
+{
+  "vayla_logo_alt": "RUOTSIKSI Väylävirasto logo",
+  "ely_logo_alt": "RUOTSIKSI Ely logo",
+  "hankesuunnitelmista": "RUOTSIKSI Valtion väylien suunnittelu on kansalaisten, sidosryhmien ja viranomaisten välinen maanteiden ja rautateiden lakisääteisten suunnitelmien vuorovaikutuskanava.",
+  "linkki": {
+    "vayla": {
+      "teksti": "Trafikledsverket.fi",
+      "linkki": "https://trafikledsverket.fi"
+    },
+    "ely": {
+      "teksti": "RUOTSIKSI Ely-keskus.fi?",
+      "linkki": "https://ely-keskus.fi/sv"
+    },
+    "saavutettavuus": "RUOTSIKSI Saavutettavuus",
+    "tietoa_sivustosta": "RUOTSIKSI Tietoa sivustosta",
+    "tietosuoja": "RUOTSIKSI Tietosuoja",
+    "palautelomake": "RUOTSIKSI Palautelomake"
+  }
+}
