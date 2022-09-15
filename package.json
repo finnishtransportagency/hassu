@@ -93,7 +93,7 @@
     "@testing-library/react": "11.1.0",
     "@testing-library/user-event": "13.2.1",
     "@types/aws-lambda": "8.10.92",
-    "@types/chai": "4.3.0",
+    "@types/chai": "4.3.3",
     "@types/chai-as-promised": "7.1.4",
     "@types/jsonwebtoken": "8.5.8",
     "@types/jwk-to-pem": "2.0.1",
