@@ -12,47 +12,46 @@ export const Footer = ({}) => {
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
   return (
-    <Container
-      component="footer"
-      className="py-16 bg-gray-lightest w-full self-start mt-auto gap-x-6 flex flex-col md:flex-row justify-center md:justify-between md:items-end"
-    >
-      <div>
-        <div style={{ width: isDesktop ? "20em" : undefined }}>
-          <div className="flex">
-            <KuvaContainer className="justify-center">
-              <div className="my-auto text-center">
-                <Image src="/vayla_alla_fi_sv_rgb.png" alt={t("vayla_logo_alt")} width="140.4" height="117" />
-              </div>
-              <div className="my-auto text-center">
-                <Image src="/ely_alla_fi_sv_rgb.png" alt={t("ely_logo_alt")} width="170.61" height="91" />
-              </div>
-            </KuvaContainer>
+    <footer className="py-16 bg-gray-lightest w-full">
+      <Container className="self-start mt-auto gap-x-6 flex flex-col md:flex-row justify-center md:justify-between md:items-end">
+        <div>
+          <div style={{ width: isDesktop ? "20em" : undefined }}>
+            <div className="flex">
+              <KuvaContainer className="justify-center">
+                <div className="my-auto text-center">
+                  <Image src="/vayla_alla_fi_sv_rgb.png" alt={t("vayla_logo_alt")} width="140.4" height="117" />
+                </div>
+                <div className="my-auto text-center">
+                  <Image src="/ely_alla_fi_sv_rgb.png" alt={t("ely_logo_alt")} width="170.61" height="91" />
+                </div>
+              </KuvaContainer>
+            </div>
+            <p className="mt-5">{t("hankesuunnitelmista")}</p>
+            <ul>
+              <FooterLinkkiEl href="/TODO" teksti={t("common:sivustonimi")} />
+              <FooterLinkkiEl href={t("linkki.vayla.linkki")} teksti={t("linkki.vayla.teksti")} />
+              <FooterLinkkiEl href={t("linkki.ely.linkki")} teksti={t("linkki.ely.teksti")} />
+            </ul>
           </div>
-          <p className="mt-5">{t("hankesuunnitelmista")}</p>
-          <ul>
-            <FooterLinkkiEl href="/TODO" teksti={t("common:sivustonimi")} />
-            <FooterLinkkiEl href={t("linkki.vayla.linkki")} teksti={t("linkki.vayla.teksti")} />
-            <FooterLinkkiEl href={t("linkki.ely.linkki")} teksti={t("linkki.ely.teksti")} />
-          </ul>
         </div>
-      </div>
-      <div>
-        <Linkkilista2>
-          <li>
-            <Link href="#">{t("linkki.saavutettavuus")}</Link>
-          </li>
-          <li>
-            <Link href="#">{t("linkki.tietoa_sivustosta")}</Link>
-          </li>
-          <li>
-            <Link href="#">{t("linkki.tietosuoja")}</Link>
-          </li>
-          <li>
-            <Link href="#">{t("linkki.palautelomake")}</Link>
-          </li>
-        </Linkkilista2>
-      </div>
-    </Container>
+        <div>
+          <Linkkilista2>
+            <li>
+              <Link href="#">{t("linkki.saavutettavuus")}</Link>
+            </li>
+            <li>
+              <Link href="#">{t("linkki.tietoa_sivustosta")}</Link>
+            </li>
+            <li>
+              <Link href="#">{t("linkki.tietosuoja")}</Link>
+            </li>
+            <li>
+              <Link href="#">{t("linkki.palautelomake")}</Link>
+            </li>
+          </Linkkilista2>
+        </div>
+      </Container>
+    </footer>
   );
 };
 
