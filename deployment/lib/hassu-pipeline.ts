@@ -72,7 +72,10 @@ export class HassuPipelineStack extends Stack {
       reportBucket.grantRead(oai);
     }
     if (config.isFeatureBranch() && !Config.isDeveloperEnvironment()) {
-      webhookFilters = [codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs("feature/*")];
+      webhookFilters = [
+        codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs("feature/*"),
+        codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs("renovate/*"),
+      ];
       reportBuildStatus = true;
     } else {
       webhookFilters = [codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs(branch)];
@@ -159,15 +162,7 @@ export class HassuPipelineStack extends Stack {
     }).addToRolePolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
-        actions: [
-          "s3:*",
-          "cloudformation:*",
-          "sts:*",
-          "ecr:*",
-          "ssm:*",
-          "secretsmanager:GetSecretValue",
-          "codebuild:StartBuild",
-        ],
+        actions: ["s3:*", "cloudformation:*", "sts:*", "ecr:*", "ssm:*", "secretsmanager:GetSecretValue", "codebuild:StartBuild"],
         resources: ["*"],
       })
     );
@@ -193,10 +188,7 @@ export class HassuPipelineStack extends Stack {
       source: gitHubSource,
       cache: codebuild.Cache.local(LocalCacheMode.CUSTOM, LocalCacheMode.SOURCE, LocalCacheMode.DOCKER_LAYER),
       environment: {
-        buildImage: LinuxBuildImage.fromEcrRepository(
-          Repository.fromRepositoryName(this, "RobotBuildImage", "hassu-buildimage"),
-          "1.0.3"
-        ),
+        buildImage: LinuxBuildImage.fromEcrRepository(Repository.fromRepositoryName(this, "RobotBuildImage", "hassu-buildimage"), "1.0.3"),
         privileged: true,
         computeType: ComputeType.MEDIUM,
         environmentVariables: {

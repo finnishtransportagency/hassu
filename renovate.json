@@ -7,7 +7,6 @@
     ":autodetectPinVersions",
     "workarounds:all"
   ],
-  "ignorePresets": ["group:monorepos"],
   "timezone": "Europe/Helsinki",
   "schedule": "after 6am and before 7am",
   "updateNotScheduled": false,
@@ -19,6 +18,12 @@
   "major": {
     "enabled": false
   },
+  "gradle": {
+    "enabled": false
+  },
+  "dockerfile": {
+    "enabled": false
+  },
   "packageRules": [
     {
       "matchPackagePatterns": [
@@ -26,7 +31,15 @@
       ],
       "excludePackagePatterns": [
         "^@aws-cdk",
-        "^aws-cdk"
+        "^aws-cdk",
+        "^@aws-sdk",
+        "^aws-sdk",
+        "^@sls-next/cdk-construct"
+      ],
+      "excludePackageNames": [
+        "next",
+        "eslint-config-next",
+        "localstack/localstack"
       ],
       "matchUpdateTypes": [
         "minor",
@@ -36,16 +49,48 @@
       "groupSlug": "all-minor-patch"
     },
     {
+      "description": "AppSync-tuki puuttuu cdkv2:sta, joten @sls-next/cdk-construct=3.6.0 => aws-cdk=1.132.0, next=11.1.2",
       "matchPackagePatterns": [
         "^@aws-cdk",
         "^aws-cdk"
+      ],
+      "allowedVersions": "1.132.0",
+      "groupName": "AWS CDK",
+      "groupSlug": "aws-cdk"
+    },
+    {
+      "description": "AppSync-tuki puuttuu cdkv2:sta, joten @sls-next/cdk-construct=3.6.0 => aws-cdk=1.132.0, next=11.1.2",
+      "matchPackagePatterns": [
+        "^@sls-next/cdk-construct"
+      ],
+      "allowedVersions": "3.6.0",
+      "groupName": "sls-next/cdk-construct"
+    },
+    {
+      "matchPackageNames": [
+        "next",
+        "eslint-config-next"
+      ],
+      "allowedVersions": "11.1.2",
+      "groupName": "nextjs"
+    },
+    {
+      "matchPackagePatterns": [
+        "^@aws-sdk",
+        "^aws-sdk"
       ],
       "matchUpdateTypes": [
         "minor",
         "patch"
       ],
-      "groupName": "AWS CDK",
-      "groupSlug": "aws-cdk"
+      "groupName": "aws-sdk"
+    },
+    {
+      "matchPackageNames": [
+        "localstack/localstack"
+      ],
+      "allowedVersions": "0.14.1",
+      "groupName": "localstack"
     }
   ]
 }
