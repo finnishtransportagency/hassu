@@ -23,6 +23,7 @@ export type ProjektiDocument = {
   vaylamuoto?: string[];
   suunnittelustaVastaavaViranomainen?: Viranomainen;
   vaihe?: Status;
+  viimeinenTilaisuusPaattyy?: string;
   projektiTyyppi?: ProjektiTyyppi;
   paivitetty?: string;
   projektipaallikko?: string;
@@ -51,10 +52,7 @@ export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocu
   } as Partial<ProjektiDocument>;
 }
 
-export function adaptProjektiToJulkinenIndex(
-  projekti: ProjektiJulkinen,
-  kieli: Kieli
-): Omit<ProjektiDocument, "oid"> | undefined {
+export function adaptProjektiToJulkinenIndex(projekti: ProjektiJulkinen, kieli: Kieli): Omit<ProjektiDocument, "oid"> | undefined {
   if (projekti) {
     // Use texts from suunnitteluvaihe or from published aloituskuulutus
     const suunnitteluVaihe = projekti.suunnitteluVaihe;
@@ -81,6 +79,22 @@ export function adaptProjektiToJulkinenIndex(
       publishTimestamp = dayjs(0).format();
     }
 
+    let viimeinenTilaisuusPaattyy: string | undefined;
+
+    const vuorovaikutukset = projekti?.suunnitteluVaihe?.vuorovaikutukset;
+    const viimeisinVuorovaikutusKierros = vuorovaikutukset?.[vuorovaikutukset?.length - 1];
+
+    if (viimeisinVuorovaikutusKierros) {
+      viimeisinVuorovaikutusKierros?.vuorovaikutusTilaisuudet?.forEach((tilaisuus) => {
+        if (tilaisuus.paivamaara || tilaisuus.paattymisAika) {
+          const tilaisuusPaattyy = dayjs(tilaisuus.paivamaara).format(`YYYY-MM-DD[T${tilaisuus.paattymisAika}]`);
+          if (tilaisuusPaattyy && (!viimeinenTilaisuusPaattyy || tilaisuusPaattyy > viimeinenTilaisuusPaattyy)) {
+            viimeinenTilaisuusPaattyy = tilaisuusPaattyy;
+          }
+        }
+      });
+    }
+
     return {
       nimi: safeTrim(nimi),
       hankkeenKuvaus,
@@ -88,6 +102,7 @@ export function adaptProjektiToJulkinenIndex(
       kunnat: projekti.velho.kunnat?.map(safeTrim),
       maakunnat: projekti.velho.maakunnat?.map(safeTrim),
       vaihe: projekti.status,
+      viimeinenTilaisuusPaattyy,
       vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
       paivitetty: projekti.paivitetty || dayjs().format(),
       publishTimestamp,
