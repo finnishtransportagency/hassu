@@ -1,22 +1,18 @@
-import React from "react";
-import Link from "next/link";
+import React, { ComponentProps } from "react";
+import Link, { LinkProps } from "next/link";
 
 interface Props {
   useNextLink?: boolean;
+  nextLinkOptions?: Omit<LinkProps, "href">;
 }
 
 const HassuLink = (
-  {
-    href,
-    children,
-    useNextLink = true,
-    ...props
-  }: Props & Omit<React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "ref">,
+  { href, useNextLink = true, nextLinkOptions = {}, children, ...props }: Props & ComponentProps<"a">,
   ref: React.ForwardedRef<HTMLAnchorElement>
 ) => {
   if (href && useNextLink) {
     return (
-      <Link href={href}>
+      <Link href={href} {...nextLinkOptions}>
         <a ref={ref} {...props}>
           {children}
         </a>

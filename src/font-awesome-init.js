@@ -31,7 +31,9 @@ import {
   faChevronDown,
   faWindowClose,
   faCopy,
-  faHistory
+  faHistory,
+  faBars,
+  faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 library.add(
   faAngleDown,
@@ -65,15 +67,10 @@ library.add(
   faTrash,
   faWindowClose,
   faCopy,
-  faHistory
+  faHistory,
+  faBars,
+  faTimes
 );
 
-import {
-  faFacebook,
-  faFlickr,
-  faTwitter,
-  faLinkedin,
-  faInstagram,
-  faYoutube,
-} from "@fortawesome/free-brands-svg-icons";
+import { faFacebook, faFlickr, faTwitter, faLinkedin, faInstagram, faYoutube } from "@fortawesome/free-brands-svg-icons";
 library.add(faFacebook, faFlickr, faTwitter, faLinkedin, faInstagram, faYoutube);
