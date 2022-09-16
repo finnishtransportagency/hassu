@@ -5,6 +5,11 @@
 @layer base {
   body {
     @apply vayla-body-text;
+    overflow-wrap: break-word;
+    /* For legacy support */
+    word-wrap: break-word;
+    -ms-word-break: break-all;
+    word-break: normal;
   }
   body hr {
     @apply border-gray;

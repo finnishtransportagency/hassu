@@ -12,8 +12,16 @@ export const Footer = ({}) => {
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
   return (
-    <footer className="py-16 bg-gray-lightest w-full">
-      <Container className="self-start mt-auto gap-x-6 flex flex-col md:flex-row justify-center md:justify-between md:items-end">
+    <footer className="py-16 bg-gray-lightest w-full mt-auto">
+      <Container
+        sx={{
+          columnGap: 6,
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          justifyContent: { xs: "center", md: "space-between" },
+          alignItems: { md: "end" },
+        }}
+      >
         <div>
           <div style={{ width: isDesktop ? "20em" : undefined }}>
             <div className="flex">

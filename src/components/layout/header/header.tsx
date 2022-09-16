@@ -222,7 +222,7 @@ const SivustoLogo = styled(({ className, href }: { className?: string; href: str
   const { t } = useTranslation();
   return (
     <Link href={href}>
-      <a className={classNames(className, "flex flex-col uppercase hassu-header-text")}>
+      <a className={classNames(className, "flex flex-col uppercase hassu-header-text hover:cursor-pointer")}>
         <span className="font-bold">{t("commonFI:sivustonimi")}</span>
         <span>{t("commonSV:sivustonimi")}</span>
       </a>
