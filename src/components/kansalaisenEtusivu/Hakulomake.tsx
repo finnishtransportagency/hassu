@@ -158,7 +158,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, query }: Props) {
               <HassuGrid cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>
                 {" "}
                 <HassuGridItem colSpan={{ xs: 1, lg: 2 }}>
-                  <TextInput label={t("vapaasanahaku")} {...register("vapaasanahaku")} error={errors?.vapaasanahaku} />
+                  <TextInput disabled label={t("vapaasanahaku")} {...register("vapaasanahaku")} error={errors?.vapaasanahaku} />
                   {desktop && (
                     <VinkkiTeksti>
                       <Trans i18nKey="etusivu:hakuvinkki" components={{ a: <VinkkiLinkki className="skaalaa" href="TODO" /> }} />
@@ -166,6 +166,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, query }: Props) {
                   )}
                 </HassuGridItem>
                 <Select
+                  disabled
                   className="w-100"
                   id="kunta"
                   label={t("kunta")}
@@ -207,6 +208,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, query }: Props) {
                   </HassuGridItem>
                   <HassuGridItem colSpan={{ xs: 1, lg: 1 }}>
                     <Select
+                      disabled
                       addEmptyOption
                       id="vaylamuoto"
                       label={t("vaylamuoto")}
