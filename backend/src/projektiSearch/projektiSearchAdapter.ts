@@ -79,29 +79,20 @@ export function adaptProjektiToJulkinenIndex(projekti: ProjektiJulkinen, kieli: 
       publishTimestamp = dayjs(0).format();
     }
 
-    let viimeinenTilaisuusPaattyy;
+    let viimeinenTilaisuusPaattyy: string | undefined;
 
-    if (projekti.status === Status.SUUNNITTELU) {
-      // Tutki, onko aktiivisia tai tulevia vuorovaikutustilaisuuksia
-      if (
-        projekti.suunnitteluVaihe?.vuorovaikutukset &&
-        projekti.suunnitteluVaihe.vuorovaikutukset[projekti.suunnitteluVaihe.vuorovaikutukset.length - 1]
-      ) {
-        const vuorovaikutus = projekti.suunnitteluVaihe.vuorovaikutukset[projekti.suunnitteluVaihe.vuorovaikutukset.length - 1];
-        let viimeinenTilaisuusNumerona;
-        vuorovaikutus.vuorovaikutusTilaisuudet.forEach((tilaisuus) => {
-          const paattyy = Date.parse(tilaisuus.paattymisAika);
-          if (!viimeinenTilaisuusPaattyy) {
-            viimeinenTilaisuusPaattyy = tilaisuus.paattymisAika;
-            viimeinenTilaisuusNumerona = paattyy;
-          } else {
-            if (paattyy > viimeinenTilaisuusNumerona) {
-              viimeinenTilaisuusPaattyy = tilaisuus.paattymisAika;
-              viimeinenTilaisuusNumerona = paattyy;
-            }
+    const vuorovaikutukset = projekti?.suunnitteluVaihe?.vuorovaikutukset;
+    const viimeisinVuorovaikutusKierros = vuorovaikutukset?.[vuorovaikutukset?.length - 1];
+
+    if (viimeisinVuorovaikutusKierros) {
+      viimeisinVuorovaikutusKierros?.vuorovaikutusTilaisuudet?.forEach((tilaisuus) => {
+        if (tilaisuus.paivamaara || tilaisuus.paattymisAika) {
+          const tilaisuusPaattyy = dayjs(tilaisuus.paivamaara).format(`YYYY-MM-DD[T${tilaisuus.paattymisAika}]`);
+          if (tilaisuusPaattyy && (!viimeinenTilaisuusPaattyy || tilaisuusPaattyy > viimeinenTilaisuusPaattyy)) {
+            viimeinenTilaisuusPaattyy = tilaisuusPaattyy;
           }
-        });
-      }
+        }
+      });
     }
 
     return {

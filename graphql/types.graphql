@@ -730,6 +730,7 @@ type ProjektiHakutulosDokumentti {
   projektiTyyppi: ProjektiTyyppi
   paivitetty: String
   projektipaallikko: String
+  viimeinenTilaisuusPaattyy: String
 }
 
 type LisaAineistot {
