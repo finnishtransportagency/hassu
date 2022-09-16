@@ -207,6 +207,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, query }: Props) {
                   </HassuGridItem>
                   <HassuGridItem colSpan={{ xs: 1, lg: 1 }}>
                     <Select
+                      addEmptyOption
                       id="vaylamuoto"
                       label={t("vaylamuoto")}
                       options={Object.keys(ProjektiTyyppi).map((tyyppi) => ({ label: tyyppi, value: tyyppi }))}
