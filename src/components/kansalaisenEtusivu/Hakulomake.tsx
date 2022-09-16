@@ -1,11 +1,10 @@
-import React, { useState, useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import SearchSection from "@components/layout/SearchSection";
-import { HakulomakeOtsikko, HakuehtoNappi, VinkkiTeksti, VinkkiLinkki, MobiiliBlokki, HakutulosInfo } from "./TyylitellytKomponentit";
-import { UseFormProps, useForm, FormProvider } from "react-hook-form";
+import { HakuehtoNappi, HakulomakeOtsikko, HakutulosInfo, MobiiliBlokki, VinkkiLinkki, VinkkiTeksti } from "./TyylitellytKomponentit";
+import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import TextInput from "@components/form/TextInput";
 import Select, { SelectOption } from "@components/form/Select";
 import Button from "@components/button/Button";
-import { ProjektiTyyppi } from "../../../common/graphql/apiModel";
 import { HookReturnType } from "@pages/index";
 import HassuGrid from "@components/HassuGrid";
 import HassuGridItem from "@components/HassuGridItem";
@@ -159,7 +158,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
               <HassuGrid cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>
                 {" "}
                 <HassuGridItem colSpan={{ xs: 1, lg: 2 }}>
-                  <TextInput disabled label={t("vapaasanahaku")} {...register("vapaasanahaku")} error={errors?.vapaasanahaku} />
+                  <TextInput label={t("vapaasanahaku")} {...register("vapaasanahaku")} error={errors?.vapaasanahaku} />
                   {desktop && (
                     <VinkkiTeksti>
                       <Trans i18nKey="etusivu:hakuvinkki" components={{ a: <VinkkiLinkki className="skaalaa" href="TODO" /> }} />
@@ -167,7 +166,6 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
                   )}
                 </HassuGridItem>
                 <Select
-                  disabled
                   className="w-100"
                   id="kunta"
                   label={t("kunta")}
@@ -200,7 +198,6 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
                   <HassuGridItem colSpan={{ xs: 1, lg: 1 }}>
                     <Select
                       id="maakunta"
-                      disabled
                       label={t("maakunta")}
                       options={maakuntaOptions ? maakuntaOptions : [{ label: "", value: "" }]}
                       error={errors?.maakunta}
@@ -209,11 +206,13 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
                   </HassuGridItem>
                   <HassuGridItem colSpan={{ xs: 1, lg: 1 }}>
                     <Select
-                      disabled
                       addEmptyOption
                       id="vaylamuoto"
                       label={t("vaylamuoto")}
-                      options={Object.keys(ProjektiTyyppi).map((tyyppi) => ({ label: t(`vaylamuodot.${tyyppi}`), value: tyyppi }))}
+                      options={["tie", "rata"].map((muoto) => ({
+                        label: t(`projekti:projekti-vayla-muoto.${muoto}`),
+                        value: muoto,
+                      }))}
                       error={errors?.vaylamuoto}
                       {...register("vaylamuoto", { shouldUnregister: false })}
                     />
@@ -242,7 +241,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
           </FormProvider>
         </SearchSection>
       )}
-      {hakutulostenMaara && (
+      {hakutulostenMaara != undefined && (
         <HakutulosInfo className={desktop ? "" : "mobiili"}>
           <h2>
             <Trans i18nKey="etusivu:loytyi-n-suunnitelmaa" values={{ lkm: hakutulostenMaara }} />
@@ -250,6 +249,6 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
           <button onClick={nollaaHakuehdot}>{t("nollaa-hakuehdot")}</button>
         </HakutulosInfo>
       )}
-    </div>
+      </div>
   );
 }

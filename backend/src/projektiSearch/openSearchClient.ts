@@ -64,7 +64,7 @@ export abstract class OpenSearchClient {
 
   async query(query: SearchOpts): Promise<any> {
     const body = JSON.stringify(query);
-    log.info("query " + this.index);
+    log.info("query " + this.index, { query });
     const request = new HttpRequest({
       body,
       headers: {
