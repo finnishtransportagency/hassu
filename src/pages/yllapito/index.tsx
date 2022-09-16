@@ -26,7 +26,7 @@ import FormGroup from "@components/form/FormGroup";
 import Select from "@components/form/Select";
 import { Controller, useForm } from "react-hook-form";
 import { ParsedUrlQuery } from "querystring";
-import { omitBy } from "lodash";
+import omitUnnecessaryFields from "src/util/omitUnnecessaryFields";
 import { formatDate } from "src/util/dateUtils";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import HassuTable from "@components/HassuTable";
@@ -108,12 +108,6 @@ const mapListaaProjektiInputToQuery = (input: ListaaProjektitInput): ParsedUrlQu
   }
   return result;
 };
-
-const omitUnnecessaryFields = <T extends object>(data: T) =>
-  omitBy(
-    data,
-    (value) => !value || (Array.isArray(value) && (value.length === 0 || (value.length === 1 && (value as string[]).includes(""))))
-  );
 
 const defaultFormData: ListaaProjektitInput = {
   nimi: "",

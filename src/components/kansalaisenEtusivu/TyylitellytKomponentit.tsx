@@ -40,6 +40,12 @@ export const VuorovaikutusTilaisuus = styled(Tagi)(
   })
 );
 
+export const HakulomakeOtsikko = styled("h3")(
+  sx({
+    fontWeight: "bold",
+  })
+);
+
 export const OtsikkoLinkki = styled(Link)(
   sx({
     color: "#0063AF",
@@ -186,3 +192,65 @@ const NavigointiNappiMobiiliTyylit = sx({
 export const NavigointiNappiMobiili = styled(NavigointiNappi)(NavigointiNappiMobiiliTyylit);
 
 export const NavigointiNappiMobiiliDisabled = styled(NavigointiNappiDisabled)(NavigointiNappiMobiiliTyylit);
+
+export const HakuehtoNappi = styled("button")(
+  sx({
+    color: "#0063AF",
+    fontSize: "1.1em",
+    marginTop: "0.5em",
+  })
+);
+
+export const VinkkiTeksti = styled("p")(
+  sx({
+    color: "rgb(150, 150, 150)",
+    fontSize: "15px",
+    marginTop: "8px",
+    marginBottom: "1.5em",
+  })
+);
+
+export const VinkkiLinkki = styled(Link)(
+  sx({
+    color: "#0063AF",
+    "&.skaalaa": {
+      fontSize: "15px!important",
+    },
+    "&:hover": {
+      cursor: "pointer",
+      textDecoration: "underline",
+    },
+  })
+);
+
+export const MobiiliBlokki = styled("button")(
+  sx({
+    width: "100%",
+    display: "block",
+    backgroundColor: "#0063AF",
+    textAlign: "left",
+    paddingLeft: "28px",
+    paddingRight: "28px",
+    paddingTop: "20px",
+    paddingBottom: "20px",
+    color: "white",
+    marginBottom: "-1.75rem",
+  })
+);
+
+export const HakutulosInfo = styled("div")(
+  sx({
+    " h2": { fontWeight: "bold" },
+    "&.mobiili": {
+      textAlign: "center",
+      alignContent: "center",
+    },
+    " button": {
+      fontSize: "1.2em",
+      color: "#0063AF",
+      "&:hover": {
+        textDecoration: "underline",
+      },
+    },
+  })
+);
