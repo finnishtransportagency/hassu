@@ -16,6 +16,7 @@ import classNames from "classnames";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import Trans from "next-translate/Trans";
+import omitUnnecessaryFields from "src/util/omitUnnecessaryFields";
 
 type HakulomakeFormValues = {
   vapaasanahaku: string;
@@ -106,7 +107,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, query }: Props) {
       router.push(
         {
           pathname: router.pathname,
-          query: {
+          query: omitUnnecessaryFields({
             vapaasanahaku: data.vapaasanahaku,
             kunta: data.kunta,
             maakunta: data.maakunta,
@@ -114,7 +115,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, query }: Props) {
             pienennahaku: pienennaHakuState,
             lisaahakuehtoja: lisaaHakuehtojaState,
             sivu: 1,
-          },
+          }),
         },
         undefined,
         { shallow: true }
