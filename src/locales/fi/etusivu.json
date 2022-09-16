@@ -9,5 +9,10 @@
   "hakuvinkki": "Vinkki: kokeile 'valtatie'-sanan sijaan 'vt', joko yhteen tai erikseen kirjoitettuna tien numeron kanssa. Katso lisää <a>hakuohjeista</a>.",
   "hae": "Hae",
   "loytyi-n-suunnitelmaa": "Löytyi {{lkm}} suunnitelmaa",
-  "nollaa-hakuehdot": "Nollaa hakuehdot"
+  "nollaa-hakuehdot": "Nollaa hakuehdot",
+  "vaylamuodot": {
+    "RATA": "Ratasuunnitelma",
+    "TIE": "Tiesuunnitelma",
+    "YLEINEN": "Yleissuunnitelma"
+  }
 }

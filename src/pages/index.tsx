@@ -10,35 +10,70 @@ import Sivutus from "@components/kansalaisenEtusivu/Sivutus";
 import { useRouter } from "next/router";
 import { SelectOption } from "@components/form/Select";
 import { ProjektiTyyppi } from "../../common/graphql/apiModel";
+import { MaakuntaListaOption } from "./api/maakuntalista.json";
+import { KuntaListaOption } from "./api/kuntalista.json";
+
+function jarjestaOptionit(a: SelectOption, b: SelectOption) {
+  if (!a.label) {
+    return 1;
+  } else if (!b.label) {
+    return 0;
+  }
+  return a.label.localeCompare(b.label);
+}
 
 const SIVUN_KOKO = 10;
 
 const App = () => {
   const [kuntaOptions, setKuntaOptions] = useState<SelectOption[]>([]);
+  const [maakuntaOptions, setMaakuntaOptions] = useState<SelectOption[]>([]);
 
-  const getKuntaLista = useCallback(async () => {
-    const list = await (await fetch("/api/kuntalista.json")).json();
-    setKuntaOptions(list);
-  }, [setKuntaOptions]);
+  const { lang } = useTranslation();
+
+  const getKuntaLista = useCallback(
+    async (lang: string) => {
+      const list: KuntaListaOption[] = await (await fetch("/api/kuntalista.json")).json();
+      if (lang === "sv") {
+        setKuntaOptions(list.map((option) => ({ ...option, label: option.labelRuo })).sort(jarjestaOptionit));
+      } else {
+        setKuntaOptions(list);
+      }
+    },
+    [setKuntaOptions]
+  );
+
+  const getMaakuntaLista = useCallback(
+    async (lang: string) => {
+      const list: MaakuntaListaOption[] = await (await fetch("/api/maakuntalista.json")).json();
+      if (lang === "sv") {
+        setMaakuntaOptions(list.map((option) => ({ ...option, label: option.labelRuo })).sort(jarjestaOptionit));
+      } else {
+        setMaakuntaOptions(list);
+      }
+    },
+    [setMaakuntaOptions]
+  );
 
   useEffect(() => {
-    getKuntaLista();
-  }, [getKuntaLista]);
+    getKuntaLista(lang);
+    getMaakuntaLista(lang);
+  }, [getKuntaLista, getMaakuntaLista, lang]);
 
   const query = useHaunQueryparametrit({ kuntaOptions });
 
   if (!query) {
     return null;
   }
-  return <Etusivu query={query} kuntaOptions={kuntaOptions} />;
+  return <Etusivu query={query} maakuntaOptions={maakuntaOptions} kuntaOptions={kuntaOptions} />;
 };
 
 type Props = {
   query: HookReturnType;
   kuntaOptions: SelectOption[];
+  maakuntaOptions: SelectOption[];
 };
 
-function Etusivu({ query, kuntaOptions }: Props) {
+function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
   const { t } = useTranslation();
 
   const { vapaasanahaku, kunta, maakunta, vaylamuoto, sivu } = query;
@@ -86,7 +121,12 @@ function Etusivu({ query, kuntaOptions }: Props) {
       <Grid item lg={9} md={12}>
         <h2 className="mt-4">{t("projekti:ui-otsikot.valtion_liikennevaylien_suunnittelu")}</h2>
         <p>Tekstiä</p>
-        <Hakulomake hakutulostenMaara={hakutulos?.hakutulosMaara} kuntaOptions={kuntaOptions} query={query} />
+        <Hakulomake
+          hakutulostenMaara={hakutulos?.hakutulosMaara}
+          kuntaOptions={kuntaOptions}
+          maakuntaOptions={maakuntaOptions}
+          query={query}
+        />
         <h1>Suunnitelmat</h1>
         <Hakutulokset hakutulos={hakutulos} ladataan={ladataan} />
         <Sivutus sivuMaara={sivuMaara} nykyinenSivu={sivu} />

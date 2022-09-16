@@ -3,20 +3,20 @@ import { S3Cache } from "../../../backend/src/cache/s3Cache";
 import log from "loglevel";
 import { setupLambdaMonitoring, wrapXrayAsync } from "../../../backend/src/aws/monitoring";
 
-const KUNTALISTA_TTL_SECONDS = 24 * 3 * 60 * 60;
+const MAAKUNTALISTA_TTL_SECONDS = 24 * 3 * 60 * 60;
 
-export type KuntaListaOption = {
+export type MaakuntaListaOption = {
   label: string;
   labelRuo: string;
   value: string;
 };
 
-async function fetchKuntaLista() {
-  const response = await fetch("http://rajapinnat.ymparisto.fi/api/Hakemistorajapinta/1.0/odata/Kunta");
+async function fetchMaakuntaLista() {
+  const response = await fetch("http://rajapinnat.ymparisto.fi/api/Hakemistorajapinta/1.0/odata/Maakunta");
 
   const data: any = await response.json();
-  const list = data?.value?.map((kunta: any) => {
-    return { label: kunta.Nimi, labelRuo: kunta.NimiRuo, value: kunta.Nimi.toUpperCase() };
+  const list = data?.value?.map((maakunta: any) => {
+    return { label: maakunta.Nimi, labelRuo: maakunta.NimiRuo, value: maakunta.Nimi.toUpperCase() };
   });
   list.unshift({ label: "", value: "" });
   return list;
@@ -27,16 +27,16 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
   return await wrapXrayAsync("handler", async () => {
     const s3Cache = new S3Cache();
     const kuntaList: Record<string, string> = await s3Cache.get(
-      "kuntalista",
-      KUNTALISTA_TTL_SECONDS * 1000,
+      "maakuntalista",
+      MAAKUNTALISTA_TTL_SECONDS * 1000,
       async () => {
-        log.info("Updating kuntalista, it has been expired");
-        const list = await fetchKuntaLista();
+        log.info("Updating maakuntalista, it has been expired");
+        const list = await fetchMaakuntaLista();
         s3Cache.put("kuntalista", list);
       },
       async () => {
-        log.info("Updating kuntalista, it is missing");
-        const list = await fetchKuntaLista();
+        log.info("Updating maakuntalista, it is missing");
+        const list = await fetchMaakuntaLista();
         s3Cache.put("kuntalista", list);
         return list;
       }
@@ -44,7 +44,7 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
 
     res.setHeader(
       "Cache-Control",
-      "public, s-maxage=" + KUNTALISTA_TTL_SECONDS + ", stale-while-revalidate=" + (KUNTALISTA_TTL_SECONDS - 30)
+      "public, s-maxage=" + MAAKUNTALISTA_TTL_SECONDS + ", stale-while-revalidate=" + (MAAKUNTALISTA_TTL_SECONDS - 30)
     );
     res.status(200).json(kuntaList);
   });
