@@ -14,7 +14,7 @@ interface Props {
 export default function Layout({ children, routeLabels }: Props): ReactElement {
   return (
     <div className="min-h-screen relative flex flex-col">
-      {process.env.NODE_ENV !== "production" && <NotificationBar />}
+      {process.env.ENVIRONMENT !== "prod" && <NotificationBar />}
       <Header />
       <Breadcrumbs routeLabels={routeLabels} />
       <Container sx={{ marginBottom: "110px" }}>
