@@ -296,7 +296,7 @@ Array [
       "ilmoituksenVastaanottajat": undefined,
       "kuulutusPaiva": "2022-01-02",
       "kuulutusYhteystiedot": Object {
-        "__typename": "KuulutusYhteystiedot",
+        "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": undefined,
         "yhteysTiedot": Array [
           Object {
@@ -383,7 +383,7 @@ Array [
       "ilmoituksenVastaanottajat": undefined,
       "kuulutusPaiva": "2022-01-02",
       "kuulutusYhteystiedot": Object {
-        "__typename": "KuulutusYhteystiedot",
+        "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": undefined,
         "yhteysTiedot": Array [
           Object {
@@ -641,7 +641,7 @@ Object {
     "ilmoituksenVastaanottajat": undefined,
     "kuulutusPaiva": "2022-01-02",
     "kuulutusYhteystiedot": Object {
-      "__typename": "KuulutusYhteystiedot",
+      "__typename": "StandardiYhteystiedot",
       "yhteysHenkilot": undefined,
       "yhteysTiedot": Array [
         Object {

@@ -78,7 +78,7 @@ class ApiTestFixture {
     },
     siirtyySuunnitteluVaiheeseen: "2022-01-01",
     kuulutusYhteystiedot: {
-      __typename: "KuulutusYhteystiedot",
+      __typename: "StandardiYhteystiedot",
       yhteysTiedot: this.yhteystietoLista,
       yhteysHenkilot: [],
     },
@@ -130,11 +130,7 @@ class ApiTestFixture {
     ],
   };
 
-  suunnitteluVaihe = (
-    vuorovaikutusNumero: number,
-    vuorovaikutusYhteysHenkilot?: string[],
-    julkinen?: boolean
-  ): SuunnitteluVaiheInput => ({
+  suunnitteluVaihe = (vuorovaikutusNumero: number, vuorovaikutusYhteysHenkilot?: string[], julkinen?: boolean): SuunnitteluVaiheInput => ({
     vuorovaikutus: {
       vuorovaikutusNumero,
       julkinen,

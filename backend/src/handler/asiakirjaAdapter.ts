@@ -2,8 +2,8 @@ import { AloitusKuulutusJulkaisu, DBProjekti, HyvaksymisPaatosVaiheJulkaisu, Nah
 import cloneDeep from "lodash/cloneDeep";
 import { AloitusKuulutusTila, HyvaksymisPaatosVaiheTila, NahtavillaoloVaiheTila } from "../../../common/graphql/apiModel";
 import { deepClone } from "aws-cdk/lib/util";
+import adaptStandardiYhteystiedot from "../util/adaptStandardiYhteystiedot";
 import { findJulkaisuWithTila } from "../projekti/projektiUtil";
-import adaptKuulutusYhteystiedot from "../util/adaptStandardiYhteystiedot";
 
 function createNextAloitusKuulutusJulkaisuID(dbProjekti: DBProjekti) {
   if (!dbProjekti.aloitusKuulutusJulkaisut) {
@@ -19,7 +19,7 @@ export class AsiakirjaAdapter {
       return {
         ...includedFields,
         id: createNextAloitusKuulutusJulkaisuID(dbProjekti),
-        yhteystiedot: adaptKuulutusYhteystiedot(dbProjekti, kuulutusYhteystiedot),
+        yhteystiedot: adaptStandardiYhteystiedot(dbProjekti, kuulutusYhteystiedot),
         velho: adaptVelho(dbProjekti),
         suunnitteluSopimus: cloneDeep(dbProjekti.suunnitteluSopimus),
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),

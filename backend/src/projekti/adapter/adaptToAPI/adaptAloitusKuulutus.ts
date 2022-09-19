@@ -5,7 +5,7 @@ import {
   adaptKielitiedotByAddingTypename,
   adaptVelhoByAddingTypename,
   adaptYhteystiedotByAddingTypename,
-  adaptKuulutusYhteystiedotByAddingTypename,
+  adaptStandardiYhteystiedotByAddingTypename,
 } from "../common";
 import { adaptSuunnitteluSopimus } from "./adaptSuunitteluSopimus";
 import { fileService } from "../../../files/fileService";
@@ -17,7 +17,7 @@ export function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.Alo
       __typename: "AloitusKuulutus",
       ...otherKuulutusFields,
       hankkeenKuvaus: adaptHankkeenKuvaus(kuulutus.hankkeenKuvaus),
-      kuulutusYhteystiedot: adaptKuulutusYhteystiedotByAddingTypename(kuulutusYhteystiedot),
+      kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kuulutusYhteystiedot),
     };
   }
   return kuulutus as undefined;

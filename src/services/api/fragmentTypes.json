@@ -315,13 +315,13 @@
       },
       {
         "kind": "OBJECT",
-        "name": "KuulutusYhteystiedot",
+        "name": "StandardiYhteystiedot",
         "possibleTypes": null,
         "__typename": "__Type"
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "KuulutusYhteystiedotInput",
+        "name": "StandardiYhteystiedotInput",
         "possibleTypes": null,
         "__typename": "__Type"
       },

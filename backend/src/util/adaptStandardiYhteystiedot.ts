@@ -1,10 +1,10 @@
-import { DBProjekti, KuulutusYhteystiedot, Yhteystieto } from "../database/model";
+import { DBProjekti, StandardiYhteystiedot, Yhteystieto } from "../database/model";
 import { ProjektiRooli } from "../../../common/graphql/apiModel";
 import { vaylaUserToYhteystieto } from "../util/vaylaUserToYhteystieto";
 
-export default function adaptKuulutusYhteystiedot(
+export default function adaptStandardiYhteystiedot(
   dbProjekti: DBProjekti,
-  kuulutusYhteystiedot: KuulutusYhteystiedot | null
+  kuulutusYhteystiedot: StandardiYhteystiedot | null
 ): Yhteystieto[] {
   const yt: Yhteystieto[] = [];
   const sahkopostit: string[] = [];
