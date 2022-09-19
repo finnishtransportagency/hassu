@@ -209,7 +209,6 @@ async function main() {
     writeEnvFile(".env.local", {
       REACT_APP_API_URL: backendStackOutputs.AppSyncAPIURL,
       INTERNAL_BUCKET_NAME: Config.internalBucketName,
-      ARCHIVE_BUCKET_NAME: Config.archiveBucketName,
       FRONTEND_DOMAIN_NAME: frontendStackOutputs.CloudfrontPrivateDNSName,
       SONARQUBE_HOST_URL: variables.SonarQubeHostURL,
       SONARQUBE_ACCESS_TOKEN: variables.SonarQubeAccessToken,

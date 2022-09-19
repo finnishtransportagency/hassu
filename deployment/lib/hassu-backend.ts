@@ -18,11 +18,7 @@ import * as events from "@aws-cdk/aws-events";
 import { IDomain } from "@aws-cdk/aws-opensearchservice";
 import { Effect, ManagedPolicy, PolicyStatement } from "@aws-cdk/aws-iam";
 import { Bucket } from "@aws-cdk/aws-s3";
-import {
-  getEnvironmentVariablesFromSSM,
-  readAccountStackOutputs,
-  readFrontendStackOutputs
-} from "../bin/setupEnvironment";
+import { getEnvironmentVariablesFromSSM, readAccountStackOutputs, readFrontendStackOutputs } from "../bin/setupEnvironment";
 import { LambdaInsightsVersion } from "@aws-cdk/aws-lambda/lib/lambda-insights";
 import { RuleTargetInput } from "@aws-cdk/aws-events/lib/input";
 import { EmailEventType } from "../../backend/src/email/emailEvent";
@@ -37,7 +33,6 @@ export type HassuBackendStackProps = {
   uploadBucket: Bucket;
   yllapitoBucket: Bucket;
   internalBucket: Bucket;
-  archiveBucket: Bucket;
   publicBucket: Bucket;
 };
 
@@ -72,11 +67,7 @@ export class HassuBackendStack extends cdk.Stack {
     const personSearchUpdaterLambda = await this.createPersonSearchUpdaterLambda(commonEnvironmentVariables);
     const aineistoSQS = await this.createAineistoImporterQueue();
     const emailSQS = await this.createEmailQueueSystem();
-    const backendLambda = await this.createBackendLambda(
-      commonEnvironmentVariables,
-      personSearchUpdaterLambda,
-      aineistoSQS
-    );
+    const backendLambda = await this.createBackendLambda(commonEnvironmentVariables, personSearchUpdaterLambda, aineistoSQS);
     this.attachDatabaseToLambda(backendLambda);
     HassuBackendStack.mapApiResolversToLambda(api, backendLambda);
 
@@ -100,11 +91,7 @@ export class HassuBackendStack extends cdk.Stack {
     }
   }
 
-  private static configureOpenSearchAccess(
-    projektiSearchIndexer: NodejsFunction,
-    backendLambda: NodejsFunction,
-    searchDomain: IDomain
-  ) {
+  private static configureOpenSearchAccess(projektiSearchIndexer: NodejsFunction, backendLambda: NodejsFunction, searchDomain: IDomain) {
     // Grant write access to the app-search index
     searchDomain.grantIndexWrite("projekti-" + Config.env + "-*", projektiSearchIndexer);
     searchDomain.grantIndexReadWrite("projekti-" + Config.env + "-*", backendLambda);
@@ -225,9 +212,7 @@ export class HassuBackendStack extends cdk.Stack {
         commandHooks: {
           beforeBundling(inputDir: string, outputDir: string): string[] {
             return [
-              `${path.normalize(
-                "./node_modules/.bin/copyfiles"
-              )} -f -u 1 ${inputDir}/backend/src/asiakirja/files/* ${outputDir}/files`,
+              `${path.normalize("./node_modules/.bin/copyfiles")} -f -u 1 ${inputDir}/backend/src/asiakirja/files/* ${outputDir}/files`,
             ];
           },
           afterBundling(): string[] {
@@ -247,9 +232,7 @@ export class HassuBackendStack extends cdk.Stack {
       tracing: Tracing.PASS_THROUGH,
       insightsVersion: LambdaInsightsVersion.VERSION_1_0_98_0,
     });
-    backendLambda.addToRolePolicy(
-      new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] })
-    );
+    backendLambda.addToRolePolicy(new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] }));
     backendLambda.addToRolePolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
@@ -257,9 +240,7 @@ export class HassuBackendStack extends cdk.Stack {
         resources: [personSearchUpdaterLambda.functionArn],
       })
     );
-    backendLambda.role?.addManagedPolicy(
-      ManagedPolicy.fromAwsManagedPolicyName("CloudWatchLambdaInsightsExecutionRolePolicy")
-    );
+    backendLambda.role?.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("CloudWatchLambdaInsightsExecutionRolePolicy"));
 
     aineistoSQS.grantSendMessages(backendLambda);
 
@@ -268,7 +249,6 @@ export class HassuBackendStack extends cdk.Stack {
     this.props.yllapitoBucket.grantReadWrite(backendLambda);
     this.props.internalBucket.grantReadWrite(backendLambda);
     this.props.publicBucket.grantReadWrite(backendLambda);
-    this.props.archiveBucket.grantReadWrite(backendLambda);
     return backendLambda;
   }
 
@@ -327,12 +307,7 @@ export class HassuBackendStack extends cdk.Stack {
         new PolicyStatement({
           effect: Effect.ALLOW,
           actions: ["cloudfront:CreateInvalidation"],
-          resources: [
-            "arn:aws:cloudfront::" +
-              cdk.Aws.ACCOUNT_ID +
-              ":distribution/" +
-              frontendStackOutputs?.CloudfrontDistributionId,
-          ],
+          resources: ["arn:aws:cloudfront::" + cdk.Aws.ACCOUNT_ID + ":distribution/" + frontendStackOutputs?.CloudfrontDistributionId],
         })
       );
     }
@@ -342,10 +317,7 @@ export class HassuBackendStack extends cdk.Stack {
     return importer;
   }
 
-  private async createEmailQueueLambda(
-    commonEnvironmentVariables: Record<string, string>,
-    emailSQS: Queue
-  ): Promise<NodejsFunction> {
+  private async createEmailQueueLambda(commonEnvironmentVariables: Record<string, string>, emailSQS: Queue): Promise<NodejsFunction> {
     const importer = new NodejsFunction(this, "EmailQueueLambda", {
       functionName: "hassu-email-" + Config.env,
       runtime: lambda.Runtime.NODEJS_14_X,
@@ -388,10 +360,6 @@ export class HassuBackendStack extends cdk.Stack {
     projektiTable.grantFullAccess(backendFn);
     backendFn.addEnvironment("TABLE_PROJEKTI", projektiTable.tableName);
 
-    const archiveTable = this.props.projektiTable;
-    archiveTable.grantFullAccess(backendFn);
-    backendFn.addEnvironment("TABLE_PROJEKTI_ARCHIVE", archiveTable.tableName);
-
     const feedbackTable = this.props.feedbackTable;
     feedbackTable.grantFullAccess(backendFn);
     backendFn.addEnvironment("TABLE_FEEDBACK", feedbackTable.tableName);
@@ -413,7 +381,6 @@ export class HassuBackendStack extends cdk.Stack {
       YLLAPITO_BUCKET_NAME: this.props.yllapitoBucket.bucketName,
       PUBLIC_BUCKET_NAME: this.props.publicBucket.bucketName,
       INTERNAL_BUCKET_NAME: this.props.internalBucket.bucketName,
-      ARCHIVE_BUCKET_NAME: this.props.archiveBucket.bucketName,
     };
   }
 

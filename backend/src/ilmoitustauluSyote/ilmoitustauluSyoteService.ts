@@ -1,6 +1,7 @@
 import { AloitusKuulutusTila, Kieli, ProjektiJulkinen } from "../../../common/graphql/apiModel";
 import { openSearchClientIlmoitustauluSyote } from "../projektiSearch/openSearchClient";
 import { ilmoitusKuulutusAdapter } from "./ilmoitustauluSyoteAdapter";
+import { findJulkaisutWithTila } from "../projekti/projektiUtil";
 
 class IlmoitustauluSyoteService {
   async index(projekti: ProjektiJulkinen) {
@@ -12,9 +13,7 @@ class IlmoitustauluSyoteService {
   }
 
   private async indexAloitusKuulutusJulkaisut(projekti: ProjektiJulkinen, kielet: Kieli[], oid: string) {
-    const aloitusKuulutusJulkaisut = projekti.aloitusKuulutusJulkaisut?.filter(
-      (julkaisu) => julkaisu.tila == AloitusKuulutusTila.HYVAKSYTTY
-    );
+    const aloitusKuulutusJulkaisut = findJulkaisutWithTila(projekti.aloitusKuulutusJulkaisut, AloitusKuulutusTila.HYVAKSYTTY);
     if (aloitusKuulutusJulkaisut) {
       for (const aloitusKuulutusJulkaisu of aloitusKuulutusJulkaisut) {
         for (const kieli of kielet) {

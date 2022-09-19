@@ -6,8 +6,7 @@ export function adaptIlmoituksenVastaanottajat(
   if (!vastaanottajat) {
     return vastaanottajat as null | undefined;
   }
-  const kunnat: API.KuntaVastaanottaja[] =
-    vastaanottajat?.kunnat?.map((kunta) => ({ __typename: "KuntaVastaanottaja", ...kunta })) || null;
+  const kunnat: API.KuntaVastaanottaja[] = vastaanottajat?.kunnat?.map((kunta) => ({ __typename: "KuntaVastaanottaja", ...kunta })) || null;
   const viranomaiset: API.ViranomaisVastaanottaja[] =
     vastaanottajat?.viranomaiset?.map((viranomainen) => ({
       __typename: "ViranomaisVastaanottaja",

@@ -1,10 +1,5 @@
 import { log } from "../logger";
-import {
-  AloitusKuulutusJulkaisu,
-  DBProjekti,
-  HyvaksymisPaatosVaiheJulkaisu,
-  NahtavillaoloVaiheJulkaisu,
-} from "./model";
+import { AloitusKuulutusJulkaisu, DBProjekti, HyvaksymisPaatosVaiheJulkaisu, NahtavillaoloVaiheJulkaisu } from "./model";
 import { config } from "../config";
 import { getDynamoDBDocumentClient } from "./dynamoDB";
 import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
@@ -13,12 +8,6 @@ import { Response } from "aws-sdk/lib/response";
 import dayjs from "dayjs";
 
 const projektiTableName: string = config.projektiTableName || "missing";
-const archiveTableName: string = config.projektiArchiveTableName || "missing";
-
-export type ArchivedProjektiKey = {
-  oid: string;
-  timestamp: string;
-};
 
 async function createProjekti(projekti: DBProjekti): Promise<DocumentClient.PutItemOutput> {
   const params: DocumentClient.PutItemInput = {
@@ -149,43 +138,23 @@ async function saveProjekti(dbProjekti: Partial<DBProjekti>): Promise<DocumentCl
   return getDynamoDBDocumentClient().update(params).promise();
 }
 
-async function archiveProjektiByOid({ oid, timestamp }: ArchivedProjektiKey): Promise<void> {
-  const client = getDynamoDBDocumentClient();
+/**
+ * Only for integration testing
+ */
+async function deleteProjektiByOid(oid: string): Promise<void> {
+  if (config.env !== "prod") {
+    const client = getDynamoDBDocumentClient();
 
-  // Load projekti to be archived
-  const data: DocumentClient.GetItemOutput = await client
-    .get({
-      TableName: projektiTableName,
-      Key: { oid },
-      ConsistentRead: true,
-    })
-    .promise();
-  const item = data.Item as ArchivedProjektiKey;
-  if (!item) {
-    throw new Error("Arkistointi ei onnistunut, koska arkistoitavaa projektia ei löytynyt tietokannasta.");
+    const removeResult = await client
+      .delete({
+        TableName: projektiTableName,
+        Key: {
+          oid,
+        },
+      })
+      .promise();
+    checkAndRaiseError(removeResult.$response, "Arkistointi ei onnistunut");
   }
-
-  // Assign sort key
-  item.timestamp = timestamp;
-
-  // Write the copied projekti to archive table
-  const putParams: DocumentClient.PutItemInput = {
-    TableName: archiveTableName,
-    Item: item,
-  };
-  const putResult = await client.put(putParams).promise();
-  checkAndRaiseError(putResult.$response, "Arkistointi ei onnistunut");
-
-  // Delete the archived projekti
-  const removeResult = await client
-    .delete({
-      TableName: projektiTableName,
-      Key: {
-        oid,
-      },
-    })
-    .promise();
-  checkAndRaiseError(removeResult.$response, "Arkistointi ei onnistunut");
 }
 
 function checkAndRaiseError<T>(response: Response<T, AWSError>, msg: string) {
@@ -286,12 +255,9 @@ export const projektiDatabase = {
   saveProjekti,
   scanProjektit,
   loadProjektiByOid,
-  archiveProjektiByOid,
+  deleteProjektiByOid,
 
-  async insertAloitusKuulutusJulkaisu(
-    oid: string,
-    julkaisu: AloitusKuulutusJulkaisu
-  ): Promise<DocumentClient.UpdateItemOutput> {
+  async insertAloitusKuulutusJulkaisu(oid: string, julkaisu: AloitusKuulutusJulkaisu): Promise<DocumentClient.UpdateItemOutput> {
     return insertJulkaisuToList(oid, "aloitusKuulutusJulkaisut", julkaisu, "AloitusKuulutusJulkaisu");
   },
 
@@ -355,10 +321,7 @@ export const projektiDatabase = {
     return result;
   },
 
-  async insertNahtavillaoloVaiheJulkaisu(
-    oid: string,
-    julkaisu: NahtavillaoloVaiheJulkaisu
-  ): Promise<DocumentClient.UpdateItemOutput> {
+  async insertNahtavillaoloVaiheJulkaisu(oid: string, julkaisu: NahtavillaoloVaiheJulkaisu): Promise<DocumentClient.UpdateItemOutput> {
     return insertJulkaisuToList(oid, "nahtavillaoloVaiheJulkaisut", julkaisu, "NahtavillaoloVaiheJulkaisu");
   },
 
@@ -399,10 +362,7 @@ export const projektiDatabase = {
     );
   },
 
-  async updateHyvaksymisPaatosVaiheJulkaisu(
-    projekti: DBProjekti,
-    julkaisu: HyvaksymisPaatosVaiheJulkaisu
-  ): Promise<void> {
+  async updateHyvaksymisPaatosVaiheJulkaisu(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu): Promise<void> {
     await updateJulkaisuToList(
       projekti.oid,
       "hyvaksymisPaatosVaiheJulkaisut",

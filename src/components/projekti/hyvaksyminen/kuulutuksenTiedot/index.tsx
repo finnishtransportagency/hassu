@@ -1,8 +1,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { TallennaProjektiInput, KirjaamoOsoite, HyvaksymisPaatosVaiheInput } from "@services/api";
+import { HyvaksymisPaatosVaiheInput, KirjaamoOsoite, TallennaProjektiInput } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import React, { ReactElement, useEffect, useMemo } from "react";
-import { UseFormProps, useForm, FormProvider } from "react-hook-form";
+import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { hyvaksymispaatosKuulutusSchema } from "src/schemas/hyvaksymispaatosKuulutus";
 import Painikkeet from "./Painikkeet";

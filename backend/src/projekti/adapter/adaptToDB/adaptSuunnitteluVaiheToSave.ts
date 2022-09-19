@@ -3,10 +3,7 @@ import * as API from "../../../../../common/graphql/apiModel";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
 import { adaptHankkeenKuvaus, findPublishedAloitusKuulutusJulkaisu } from "../common";
 
-export function adaptSuunnitteluVaiheToSave(
-  dbProjekti: DBProjekti,
-  suunnitteluVaihe: API.SuunnitteluVaiheInput
-): SuunnitteluVaihe {
+export function adaptSuunnitteluVaiheToSave(dbProjekti: DBProjekti, suunnitteluVaihe: API.SuunnitteluVaiheInput): SuunnitteluVaihe {
   function validateSuunnitteluVaihePublishing() {
     const isSuunnitteluVaiheBeingPublished = !dbProjekti.suunnitteluVaihe?.julkinen && suunnitteluVaihe.julkinen;
     if (isSuunnitteluVaiheBeingPublished) {
@@ -19,19 +16,12 @@ export function adaptSuunnitteluVaiheToSave(
 
   if (
     suunnitteluVaihe &&
-    (suunnitteluVaihe.arvioSeuraavanVaiheenAlkamisesta ||
-      suunnitteluVaihe.hankkeenKuvaus ||
-      suunnitteluVaihe.suunnittelunEteneminenJaKesto)
+    (suunnitteluVaihe.arvioSeuraavanVaiheenAlkamisesta || suunnitteluVaihe.hankkeenKuvaus || suunnitteluVaihe.suunnittelunEteneminenJaKesto)
   ) {
     validateSuunnitteluVaihePublishing();
 
-    const {
-      arvioSeuraavanVaiheenAlkamisesta,
-      suunnittelunEteneminenJaKesto,
-      hankkeenKuvaus,
-      julkinen,
-      palautteidenVastaanottajat,
-    } = suunnitteluVaihe;
+    const { arvioSeuraavanVaiheenAlkamisesta, suunnittelunEteneminenJaKesto, hankkeenKuvaus, julkinen, palautteidenVastaanottajat } =
+      suunnitteluVaihe;
     return {
       arvioSeuraavanVaiheenAlkamisesta,
       suunnittelunEteneminenJaKesto,

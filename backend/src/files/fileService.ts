@@ -2,7 +2,6 @@ import { config } from "../config";
 import { log } from "../logger";
 import { NotFoundError } from "../error/NotFoundError";
 import { uuid } from "../util/uuid";
-import { ArchivedProjektiKey } from "../database/projektiDatabase";
 import { Dayjs } from "dayjs";
 import { uriEscapePath } from "aws-sdk/lib/util";
 import { ListObjectsV2Output } from "aws-sdk/clients/s3";
@@ -84,9 +83,7 @@ export class FileService {
           MetadataDirective: "REPLACE",
         })
         .promise();
-      log.info(
-        `Copied uploaded file (${sourceFileProperties.ContentType}) ${sourceFileProperties.CopySource} to ${targetBucketPath}`
-      );
+      log.info(`Copied uploaded file (${sourceFileProperties.ContentType}) ${sourceFileProperties.CopySource} to ${targetBucketPath}`);
       return targetPath;
     } catch (e) {
       log.error(e);
@@ -127,12 +124,7 @@ export class FileService {
     }
   }
 
-  private static async putFile(
-    bucket: string,
-    param: CreateFileProperties,
-    targetPath: string,
-    metadata: { [p: string]: string }
-  ) {
+  private static async putFile(bucket: string, param: CreateFileProperties, targetPath: string, metadata: { [p: string]: string }) {
     await getS3()
       .putObject({
         Body: param.contents,
@@ -154,13 +146,9 @@ export class FileService {
     return new ProjektiPaths(oid).publicPath;
   }
 
-  async getUploadedSourceFileInformation(
-    uploadedFileSource: string
-  ): Promise<{ ContentType: string; CopySource: string }> {
+  async getUploadedSourceFileInformation(uploadedFileSource: string): Promise<{ ContentType: string; CopySource: string }> {
     try {
-      const headObject = await getS3()
-        .headObject({ Bucket: config.uploadBucketName, Key: uploadedFileSource })
-        .promise();
+      const headObject = await getS3().headObject({ Bucket: config.uploadBucketName, Key: uploadedFileSource }).promise();
       return {
         ContentType: headObject.ContentType,
         CopySource: uriEscapePath(config.uploadBucketName + "/" + uploadedFileSource),
@@ -179,25 +167,20 @@ export class FileService {
     return uploadedFileSource;
   }
 
-  async archiveProjekti({ oid, timestamp }: ArchivedProjektiKey): Promise<void> {
-    const yllapitoProjektiDirectory = FileService.getYllapitoProjektiDirectory(oid);
-    await this.moveFilesRecursively(
-      config.yllapitoBucketName,
-      yllapitoProjektiDirectory,
-      config.archiveBucketName,
-      yllapitoProjektiDirectory + "/" + timestamp
-    );
+  /**
+   * Only for integration testing
+   */
+  async deleteProjekti(oid: string): Promise<void> {
+    if (config.env == "localstack") {
+      const yllapitoProjektiDirectory = FileService.getYllapitoProjektiDirectory(oid);
+      await this.deleteFilesRecursively(config.yllapitoBucketName, yllapitoProjektiDirectory);
 
-    const publicProjektiDirectory = FileService.getPublicProjektiDirectory(oid);
-    await this.moveFilesRecursively(
-      config.publicBucketName,
-      publicProjektiDirectory,
-      config.archiveBucketName,
-      publicProjektiDirectory + "/" + timestamp
-    );
+      const publicProjektiDirectory = FileService.getPublicProjektiDirectory(oid);
+      await this.deleteFilesRecursively(config.publicBucketName, publicProjektiDirectory);
+    }
   }
 
-  private async moveFilesRecursively(sourceBucket: string, sourcePrefix: string, targetBucket, targetPrefix: string) {
+  private async deleteFilesRecursively(sourceBucket: string, sourcePrefix: string) {
     const s3 = getS3();
     let ContinuationToken = undefined;
     do {
@@ -216,7 +199,7 @@ export class FileService {
           while (sourceKeys.length) {
             const key = sourceKeys.pop();
             if (key) {
-              await FileService.moveFile(sourceBucket, key, targetBucket, key.replace(sourcePrefix, targetPrefix));
+              await FileService.deleteFile(sourceBucket, key);
             }
           }
         })
@@ -226,17 +209,8 @@ export class FileService {
     } while (ContinuationToken);
   }
 
-  private static async moveFile(sourceBucket: string, sourceKey: string, targetBucket: string, targetKey: string) {
+  private static async deleteFile(sourceBucket: string, sourceKey: string) {
     const s3 = getS3();
-
-    await s3
-      .copyObject({
-        Bucket: targetBucket,
-        Key: targetKey,
-        CopySource: uriEscapePath(`${sourceBucket}/${sourceKey}`),
-        MetadataDirective: "REPLACE",
-      })
-      .promise();
 
     await s3
       .deleteObject({

@@ -10,8 +10,7 @@ export function adaptIlmoituksenVastaanottajatToSave(
   if (!vastaanottajat) {
     return vastaanottajat as null | undefined;
   }
-  const kunnat: API.KuntaVastaanottaja[] =
-    vastaanottajat?.kunnat?.map((kunta) => ({ __typename: "KuntaVastaanottaja", ...kunta })) || null;
+  const kunnat: API.KuntaVastaanottaja[] = vastaanottajat?.kunnat?.map((kunta) => ({ __typename: "KuntaVastaanottaja", ...kunta })) || null;
   if (!vastaanottajat?.viranomaiset || vastaanottajat.viranomaiset.length === 0) {
     throw new IllegalArgumentError("Viranomaisvastaanottajia pitää olla vähintään yksi.");
   }
@@ -23,9 +22,7 @@ export function adaptIlmoituksenVastaanottajatToSave(
   return { __typename: "IlmoituksenVastaanottajat", kunnat, viranomaiset };
 }
 
-export function adaptYhteystiedotToSave(
-  yhteystietoInputs: Array<API.YhteystietoInput>
-): API.YhteystietoInput[] | undefined {
+export function adaptYhteystiedotToSave(yhteystietoInputs: Array<API.YhteystietoInput>): API.YhteystietoInput[] | undefined {
   return yhteystietoInputs?.length > 0 ? yhteystietoInputs.map((yt) => ({ ...yt })) : undefined;
 }
 
@@ -33,9 +30,7 @@ export function adaptYhteysHenkilotToSave(yhteystiedot: string[]): string[] {
   return yhteystiedot.filter((yt, index) => yhteystiedot.indexOf(yt) === index);
 }
 
-export function adaptKuulutusYhteystiedot(
-  kuulutusYhteystiedot: API.KuulutusYhteystiedotInput
-): API.KuulutusYhteystiedotInput {
+export function adaptKuulutusYhteystiedot(kuulutusYhteystiedot: API.KuulutusYhteystiedotInput): API.KuulutusYhteystiedotInput {
   return {
     yhteysTiedot: adaptYhteystiedotToSave(kuulutusYhteystiedot.yhteysTiedot),
     yhteysHenkilot: adaptYhteysHenkilotToSave(kuulutusYhteystiedot.yhteysHenkilot),

@@ -1,12 +1,7 @@
 import { NahtavillaoloVaihe } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { ProjektiAdaptationResult } from "../projektiAdapter";
-import {
-  adaptAineistotToSave,
-  adaptHankkeenKuvausToSave,
-  adaptIlmoituksenVastaanottajatToSave,
-  adaptYhteystiedotToSave,
-} from "./common";
+import { adaptAineistotToSave, adaptHankkeenKuvausToSave, adaptIlmoituksenVastaanottajatToSave, adaptYhteystiedotToSave } from "./common";
 import mergeWith from "lodash/mergeWith";
 
 export function adaptNahtavillaoloVaiheToSave(
@@ -36,11 +31,7 @@ export function adaptNahtavillaoloVaiheToSave(
     projektiAdaptationResult
   );
 
-  const lisaAineisto = adaptAineistotToSave(
-    dbNahtavillaoloVaihe?.lisaAineisto,
-    lisaAineistoInput,
-    projektiAdaptationResult
-  );
+  const lisaAineisto = adaptAineistotToSave(dbNahtavillaoloVaihe?.lisaAineisto, lisaAineistoInput, projektiAdaptationResult);
 
   let id = dbNahtavillaoloVaihe?.id;
   if (!id) {

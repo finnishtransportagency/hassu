@@ -85,7 +85,7 @@ export class API extends AbstractApi {
           fetchResults: true,
         });
         const data = queryResponse.data?.[operation.name];
-        if (queryResponse.errors && !data) {
+        if (queryResponse.errors) {
           for (const error of queryResponse.errors) {
             if (error.message === ERROR_MESSAGE_NOT_AUTHENTICATED) {
               window.location.assign("/yllapito/kirjaudu");

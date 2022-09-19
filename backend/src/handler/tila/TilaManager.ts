@@ -1,4 +1,4 @@
-import { NykyinenKayttaja, TilaSiirtymaInput, TilasiirtymaToiminto } from "../../../../common/graphql/apiModel";
+import { NykyinenKayttaja, TilaSiirtymaInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
 import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { emailHandler } from "../emailHandler";
@@ -6,8 +6,11 @@ import { DBProjekti } from "../../database/model";
 import { requireProjektiPaallikko } from "../../user/userService";
 
 export abstract class TilaManager {
-  public async siirraTila({ oid, syy, toiminto }: TilaSiirtymaInput): Promise<void> {
+  protected tyyppi: TilasiirtymaTyyppi;
+
+  public async siirraTila({ oid, syy, toiminto, tyyppi }: TilaSiirtymaInput): Promise<void> {
     requirePermissionLuku();
+    this.tyyppi = tyyppi;
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
 
     if (toiminto == TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI) {

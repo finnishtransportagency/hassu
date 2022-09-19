@@ -1,11 +1,4 @@
-import {
-  LocalizedMap,
-  Palaute,
-  SuunnitteluVaihe,
-  Vuorovaikutus,
-  VuorovaikutusPDF,
-  VuorovaikutusTilaisuus,
-} from "../../../database/model";
+import { LocalizedMap, Palaute, SuunnitteluVaihe, Vuorovaikutus, VuorovaikutusPDF, VuorovaikutusTilaisuus } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import {
   adaptAineistot,
@@ -23,8 +16,7 @@ export function adaptSuunnitteluVaihe(
   palautteet: Array<Palaute>
 ): API.SuunnitteluVaihe {
   if (suunnitteluVaihe) {
-    const { julkinen, arvioSeuraavanVaiheenAlkamisesta, suunnittelunEteneminenJaKesto, palautteidenVastaanottajat } =
-      suunnitteluVaihe;
+    const { julkinen, arvioSeuraavanVaiheenAlkamisesta, suunnittelunEteneminenJaKesto, palautteidenVastaanottajat } = suunnitteluVaihe;
     return {
       julkinen,
       arvioSeuraavanVaiheenAlkamisesta,
@@ -57,9 +49,7 @@ function adaptVuorovaikutukset(oid: string, vuorovaikutukset: Array<Vuorovaikutu
   return vuorovaikutukset as undefined;
 }
 
-function adaptVuorovaikutusTilaisuudet(
-  vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus>
-): API.VuorovaikutusTilaisuus[] {
+function adaptVuorovaikutusTilaisuudet(vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus>): API.VuorovaikutusTilaisuus[] {
   if (vuorovaikutusTilaisuudet) {
     return vuorovaikutusTilaisuudet.map((vuorovaikutusTilaisuus) => ({
       ...vuorovaikutusTilaisuus,
@@ -70,10 +60,7 @@ function adaptVuorovaikutusTilaisuudet(
   return vuorovaikutusTilaisuudet as undefined;
 }
 
-function adaptVuorovaikutusPDFPaths(
-  oid: string,
-  pdfs: LocalizedMap<VuorovaikutusPDF>
-): API.VuorovaikutusPDFt | undefined {
+function adaptVuorovaikutusPDFPaths(oid: string, pdfs: LocalizedMap<VuorovaikutusPDF>): API.VuorovaikutusPDFt | undefined {
   if (!pdfs) {
     return undefined;
   }

@@ -3,11 +3,11 @@ import { describe, it } from "mocha";
 import { ProjektiFixture } from "../../test/fixture/projektiFixture";
 import { projektiSearchService } from "../../src/projektiSearch/projektiSearchService";
 import { Kieli, ListaaProjektitInput, ProjektiTyyppi, Status, Viranomainen } from "../../../common/graphql/apiModel";
-import { DBProjekti } from "../../src/database/model/projekti";
+import { DBProjekti } from "../../src/database/model";
 import dayjs from "dayjs";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
-import * as sinon from "sinon";
+import sinon from "sinon";
 
 const { expect } = require("chai");
 

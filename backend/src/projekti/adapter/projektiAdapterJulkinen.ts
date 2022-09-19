@@ -14,13 +14,9 @@ import {
   VuorovaikutusTilaisuus,
 } from "../../database/model";
 import * as API from "../../../../common/graphql/apiModel";
-import {
-  HyvaksymisPaatosVaiheJulkaisuJulkinen,
-  NahtavillaoloVaiheJulkaisuJulkinen,
-} from "../../../../common/graphql/apiModel";
+import { HyvaksymisPaatosVaiheJulkaisuJulkinen, NahtavillaoloVaiheJulkaisuJulkinen, Status } from "../../../../common/graphql/apiModel";
 import pickBy from "lodash/pickBy";
 import dayjs, { Dayjs } from "dayjs";
-import { isDateInThePast } from "./projektiAdapter";
 import { fileService } from "../../files/fileService";
 import { log } from "../../logger";
 import { parseDate } from "../../util/dateUtil";
@@ -31,69 +27,12 @@ import {
   adaptLinkkiByAddingTypename,
   adaptLinkkiListByAddingTypename,
   adaptYhteystiedotByAddingTypename,
-  findJulkaisuByStatus,
   findPublishedAloitusKuulutusJulkaisu,
 } from "./common";
+import { findJulkaisuWithTila } from "../projektiUtil";
+import { applyProjektiJulkinenStatus } from "../status/projektiJulkinenStatusHandler";
 
 class ProjektiAdapterJulkinen {
-  private applyStatus(projekti: API.ProjektiJulkinen) {
-    function checkAloituskuulutus() {
-      if (projekti.aloitusKuulutusJulkaisut) {
-        const julkisetAloituskuulutukset = projekti.aloitusKuulutusJulkaisut.filter((julkaisu) => {
-          return julkaisu.kuulutusPaiva && parseDate(julkaisu.kuulutusPaiva).isBefore(dayjs());
-        });
-
-        if (julkisetAloituskuulutukset?.length > 0) {
-          projekti.status = API.Status.ALOITUSKUULUTUS;
-        }
-      }
-    }
-
-    function checkSuunnittelu() {
-      // Valiaikainen ui kehitysta varten, kunnes suunnitteluvaihe tietomallissa
-      if (projekti.suunnitteluVaihe) {
-        projekti.status = API.Status.SUUNNITTELU;
-      }
-    }
-
-    function checkNahtavillaolo() {
-      const kuulutusPaiva = projekti.nahtavillaoloVaihe?.kuulutusPaiva;
-      if (kuulutusPaiva && parseDate(kuulutusPaiva).isBefore(dayjs())) {
-        projekti.status = API.Status.NAHTAVILLAOLO;
-      }
-    }
-
-    function checkHyvaksymisMenettelyssa() {
-      const nahtavillaoloVaihe = projekti.nahtavillaoloVaihe;
-      if (isDateInThePast(nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva)) {
-        projekti.status = API.Status.HYVAKSYMISMENETTELYSSA;
-      }
-    }
-
-    function checkHyvaksytty() {
-      const hyvaksymisPaatosVaihe = projekti.hyvaksymisPaatosVaihe;
-      if (isDateInThePast(hyvaksymisPaatosVaihe?.kuulutusPaiva)) {
-        projekti.status = API.Status.HYVAKSYTTY;
-      }
-    }
-
-    projekti.status = API.Status.EI_JULKAISTU;
-
-    checkAloituskuulutus();
-
-    checkSuunnittelu();
-
-    checkNahtavillaolo();
-
-    checkHyvaksymisMenettelyssa();
-
-    checkHyvaksytty();
-
-    // checkLainvoima();
-
-    return projekti;
-  }
-
   public adaptProjekti(dbProjekti: DBProjekti): API.ProjektiJulkinen | undefined {
     const aloitusKuulutusJulkaisut = this.adaptAloitusKuulutusJulkaisut(
       dbProjekti.oid,
@@ -113,7 +52,21 @@ class ProjektiAdapterJulkinen {
     }
 
     const nahtavillaoloVaihe = ProjektiAdapterJulkinen.adaptNahtavillaoloVaiheJulkaisu(dbProjekti, projektiHenkilot);
-    const hyvaksymisPaatosVaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(dbProjekti, projektiHenkilot);
+    const hyvaksymisPaatosVaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
+      dbProjekti,
+      projektiHenkilot,
+      dbProjekti.hyvaksymisPaatosVaiheJulkaisut
+    );
+    const jatkoPaatos1Vaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
+      dbProjekti,
+      projektiHenkilot,
+      dbProjekti.jatkoPaatos1VaiheJulkaisut
+    );
+    const jatkoPaatos2Vaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
+      dbProjekti,
+      projektiHenkilot,
+      dbProjekti.jatkoPaatos2VaiheJulkaisut
+    );
 
     const projekti: API.ProjektiJulkinen = {
       __typename: "ProjektiJulkinen",
@@ -127,9 +80,14 @@ class ProjektiAdapterJulkinen {
       projektiHenkilot: Object.values(projektiHenkilot),
       nahtavillaoloVaihe,
       hyvaksymisPaatosVaihe,
+      jatkoPaatos1Vaihe,
+      jatkoPaatos2Vaihe,
     };
     const projektiJulkinen = removeUndefinedFields(projekti) as API.ProjektiJulkinen;
-    return this.applyStatus(projektiJulkinen);
+    applyProjektiJulkinenStatus(projektiJulkinen);
+    if (projektiJulkinen.status != Status.EI_JULKAISTU && projektiJulkinen.status != Status.EPAAKTIIVINEN) {
+      return projektiJulkinen;
+    }
   }
 
   adaptAloitusKuulutusJulkaisut(
@@ -163,10 +121,7 @@ class ProjektiAdapterJulkinen {
     return undefined;
   }
 
-  adaptSuunnitteluSopimus(
-    oid: string,
-    suunnitteluSopimus?: SuunnitteluSopimus | null
-  ): API.SuunnitteluSopimus | undefined | null {
+  adaptSuunnitteluSopimus(oid: string, suunnitteluSopimus?: SuunnitteluSopimus | null): API.SuunnitteluSopimus | undefined | null {
     if (suunnitteluSopimus) {
       return {
         __typename: "SuunnitteluSopimus",
@@ -177,10 +132,7 @@ class ProjektiAdapterJulkinen {
     return suunnitteluSopimus as undefined | null;
   }
 
-  adaptJulkaisuPDFPaths(
-    oid: string,
-    aloitusKuulutusPDFS: LocalizedMap<AloitusKuulutusPDF>
-  ): API.AloitusKuulutusPDFt | undefined {
+  adaptJulkaisuPDFPaths(oid: string, aloitusKuulutusPDFS: LocalizedMap<AloitusKuulutusPDF>): API.AloitusKuulutusPDFt | undefined {
     if (!aloitusKuulutusPDFS) {
       return undefined;
     }
@@ -188,10 +140,7 @@ class ProjektiAdapterJulkinen {
     const result = {};
     for (const kieli in aloitusKuulutusPDFS) {
       result[kieli] = {
-        aloituskuulutusPDFPath: fileService.getPublicPathForProjektiFile(
-          oid,
-          aloitusKuulutusPDFS[kieli].aloituskuulutusPDFPath
-        ),
+        aloituskuulutusPDFPath: fileService.getPublicPathForProjektiFile(oid, aloitusKuulutusPDFS[kieli].aloituskuulutusPDFPath),
         aloituskuulutusIlmoitusPDFPath: fileService.getPublicPathForProjektiFile(
           oid,
           aloitusKuulutusPDFS[kieli].aloituskuulutusIlmoitusPDFPath
@@ -201,12 +150,8 @@ class ProjektiAdapterJulkinen {
     return { __typename: "AloitusKuulutusPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
   }
 
-  private static adaptSuunnitteluVaihe(
-    dbProjekti: DBProjekti,
-    projektiHenkilot: ProjektiHenkilot
-  ): API.SuunnitteluVaiheJulkinen {
-    const { hankkeenKuvaus, arvioSeuraavanVaiheenAlkamisesta, suunnittelunEteneminenJaKesto } =
-      dbProjekti.suunnitteluVaihe;
+  private static adaptSuunnitteluVaihe(dbProjekti: DBProjekti, projektiHenkilot: ProjektiHenkilot): API.SuunnitteluVaiheJulkinen {
+    const { hankkeenKuvaus, arvioSeuraavanVaiheenAlkamisesta, suunnittelunEteneminenJaKesto } = dbProjekti.suunnitteluVaihe;
     return {
       __typename: "SuunnitteluVaiheJulkinen",
       hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
@@ -256,9 +201,10 @@ class ProjektiAdapterJulkinen {
 
   private static adaptHyvaksymisPaatosVaihe(
     dbProjekti: DBProjekti,
-    projektiHenkilot: ProjektiHenkilot
+    projektiHenkilot: ProjektiHenkilot,
+    paatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[]
   ): API.HyvaksymisPaatosVaiheJulkaisuJulkinen {
-    const julkaisu = pickExactlyOneHyvaksymisPaatosVaihe(dbProjekti.hyvaksymisPaatosVaiheJulkaisut);
+    const julkaisu = findApprovedHyvaksymisPaatosVaihe(paatosVaiheJulkaisut);
     if (julkaisu) {
       const {
         hyvaksymisPaatos,
@@ -310,13 +256,13 @@ function pickExactlyOneNahtavillaoloVaiheJulkaisu(
   }
 }
 
-function pickExactlyOneHyvaksymisPaatosVaihe(
+function findApprovedHyvaksymisPaatosVaihe(
   hyvaksymisPaatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[]
 ): HyvaksymisPaatosVaiheJulkaisu | undefined {
   const julkaisut = hyvaksymisPaatosVaiheJulkaisut?.filter(isHyvaksymisPaatosVaihePublic);
   if (julkaisut) {
     if (julkaisut.length > 1) {
-      throw new Error("Bug: vain yksi HyvaksymisPaatosVaiheJulkaisu voi olla julkinen kerrallaan");
+      throw new Error("Bug: löytyi liian monta julkaisua");
     }
     return julkaisut.pop();
   }
@@ -369,10 +315,7 @@ function adaptUsernamesToProjektiHenkiloIds(usernames: Array<string>, projektiHe
   return usernames?.map((username) => projektiHenkilot[username].id);
 }
 
-function adaptVuorovaikutukset(
-  dbProjekti: DBProjekti,
-  projektiHenkilot: ProjektiHenkilot
-): API.VuorovaikutusJulkinen[] {
+function adaptVuorovaikutukset(dbProjekti: DBProjekti, projektiHenkilot: ProjektiHenkilot): API.VuorovaikutusJulkinen[] {
   const vuorovaikutukset = dbProjekti.vuorovaikutukset;
   if (vuorovaikutukset && vuorovaikutukset.length > 0) {
     return vuorovaikutukset
@@ -383,24 +326,11 @@ function adaptVuorovaikutukset(
           return {
             ...vuorovaikutus,
             __typename: "VuorovaikutusJulkinen",
-            vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(
-              vuorovaikutus.vuorovaikutusTilaisuudet,
-              projektiHenkilot
-            ),
+            vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet, projektiHenkilot),
             videot: adaptLinkkiListByAddingTypename(vuorovaikutus.videot),
             suunnittelumateriaali: adaptLinkkiByAddingTypename(vuorovaikutus.suunnittelumateriaali),
-            esittelyaineistot: adaptAineistotJulkinen(
-              dbProjekti.oid,
-              vuorovaikutus.esittelyaineistot,
-              undefined,
-              julkaisuPaiva
-            ),
-            suunnitelmaluonnokset: adaptAineistotJulkinen(
-              dbProjekti.oid,
-              vuorovaikutus.suunnitelmaluonnokset,
-              undefined,
-              julkaisuPaiva
-            ),
+            esittelyaineistot: adaptAineistotJulkinen(dbProjekti.oid, vuorovaikutus.esittelyaineistot, undefined, julkaisuPaiva),
+            suunnitelmaluonnokset: adaptAineistotJulkinen(dbProjekti.oid, vuorovaikutus.suunnitelmaluonnokset, undefined, julkaisuPaiva),
             vuorovaikutusYhteystiedot: adaptAndMergeYhteystiedot(dbProjekti, vuorovaikutus),
             vuorovaikutusYhteysHenkilot: adaptUsernamesToProjektiHenkiloIds(usernames, projektiHenkilot),
             vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(dbProjekti.oid, vuorovaikutus.vuorovaikutusPDFt),
@@ -420,10 +350,7 @@ function adaptVuorovaikutusTilaisuudet(
   if (vuorovaikutusTilaisuudet) {
     return vuorovaikutusTilaisuudet.map((vuorovaikutusTilaisuus) => ({
       ...vuorovaikutusTilaisuus,
-      projektiYhteysHenkilot: adaptUsernamesToProjektiHenkiloIds(
-        vuorovaikutusTilaisuus.projektiYhteysHenkilot,
-        projektiHenkilot
-      ),
+      projektiYhteysHenkilot: adaptUsernamesToProjektiHenkiloIds(vuorovaikutusTilaisuus.projektiYhteysHenkilot, projektiHenkilot),
       esitettavatYhteystiedot: adaptYhteystiedotByAddingTypename(vuorovaikutusTilaisuus.esitettavatYhteystiedot),
       __typename: "VuorovaikutusTilaisuus",
     }));
@@ -431,15 +358,13 @@ function adaptVuorovaikutusTilaisuudet(
   return vuorovaikutusTilaisuudet as undefined;
 }
 
-function checkIfAloitusKuulutusJulkaisutIsPublic(
-  aloitusKuulutusJulkaisut: API.AloitusKuulutusJulkaisuJulkinen[]
-): boolean {
+function checkIfAloitusKuulutusJulkaisutIsPublic(aloitusKuulutusJulkaisut: API.AloitusKuulutusJulkaisuJulkinen[]): boolean {
   if (!(aloitusKuulutusJulkaisut && aloitusKuulutusJulkaisut.length == 1)) {
     log.info("Projektilla ei ole hyväksyttyä aloituskuulutusta");
     return false;
   }
 
-  const hyvaksyttyJulkaisu = findJulkaisuByStatus(aloitusKuulutusJulkaisut, API.AloitusKuulutusTila.HYVAKSYTTY);
+  const hyvaksyttyJulkaisu = findJulkaisuWithTila(aloitusKuulutusJulkaisut, API.AloitusKuulutusTila.HYVAKSYTTY);
   if (hyvaksyttyJulkaisu) {
     if (hyvaksyttyJulkaisu.kuulutusPaiva && parseDate(hyvaksyttyJulkaisu.kuulutusPaiva).isAfter(dayjs())) {
       log.info("Projektin aloituskuulutuksen kuulutuspäivä on tulevaisuudessa", {
@@ -448,7 +373,7 @@ function checkIfAloitusKuulutusJulkaisutIsPublic(
       });
       return false;
     }
-  } else if (!findJulkaisuByStatus(aloitusKuulutusJulkaisut, API.AloitusKuulutusTila.MIGROITU)) {
+  } else if (!findJulkaisuWithTila(aloitusKuulutusJulkaisut, API.AloitusKuulutusTila.MIGROITU)) {
     // If there are no HYVAKSYTTY or MIGROITU aloitusKuulutusJulkaisu, hide projekti
     return false;
   }
@@ -472,16 +397,10 @@ function isKuulutusNahtavillaVaiheOver(
     | HyvaksymisPaatosVaiheJulkaisu
     | HyvaksymisPaatosVaiheJulkaisuJulkinen
 ): boolean {
-  return (
-    !nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva ||
-    parseDate(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva).isBefore(dayjs())
-  );
+  return !nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva || parseDate(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva).isBefore(dayjs());
 }
 
-function adaptVuorovaikutusPDFPaths(
-  oid: string,
-  pdfs: LocalizedMap<VuorovaikutusPDF>
-): API.VuorovaikutusPDFt | undefined {
+function adaptVuorovaikutusPDFPaths(oid: string, pdfs: LocalizedMap<VuorovaikutusPDF>): API.VuorovaikutusPDFt | undefined {
   if (!pdfs) {
     return undefined;
   }
@@ -508,10 +427,7 @@ function adaptAndMergeYhteystiedot(dbProjekti: DBProjekti, vuorovaikutus: Vuorov
   return vuorovaikutusYhteystiedot;
 }
 
-function adaptYhteystiedotFromUsernames(
-  dbProjekti: DBProjekti,
-  usernames?: Array<string>
-): API.Yhteystieto[] | undefined {
+function adaptYhteystiedotFromUsernames(dbProjekti: DBProjekti, usernames?: Array<string>): API.Yhteystieto[] | undefined {
   if (!usernames || usernames.length == 0) {
     return undefined;
   }

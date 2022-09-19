@@ -45,10 +45,7 @@ export function adaptAloitusKuulutusJulkaisut(
   return undefined;
 }
 
-function adaptJulkaisuPDFPaths(
-  oid: string,
-  aloitusKuulutusPDFS: LocalizedMap<AloitusKuulutusPDF>
-): API.AloitusKuulutusPDFt | undefined {
+function adaptJulkaisuPDFPaths(oid: string, aloitusKuulutusPDFS: LocalizedMap<AloitusKuulutusPDF>): API.AloitusKuulutusPDFt | undefined {
   if (!aloitusKuulutusPDFS) {
     return undefined;
   }
@@ -56,10 +53,7 @@ function adaptJulkaisuPDFPaths(
   const result = {};
   for (const kieli in aloitusKuulutusPDFS) {
     result[kieli] = {
-      aloituskuulutusPDFPath: fileService.getYllapitoPathForProjektiFile(
-        oid,
-        aloitusKuulutusPDFS[kieli].aloituskuulutusPDFPath
-      ),
+      aloituskuulutusPDFPath: fileService.getYllapitoPathForProjektiFile(oid, aloitusKuulutusPDFS[kieli].aloituskuulutusPDFPath),
       aloituskuulutusIlmoitusPDFPath: fileService.getYllapitoPathForProjektiFile(
         oid,
         aloitusKuulutusPDFS[kieli].aloituskuulutusIlmoitusPDFPath

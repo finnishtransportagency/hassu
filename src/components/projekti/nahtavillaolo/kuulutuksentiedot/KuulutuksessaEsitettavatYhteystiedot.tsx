@@ -15,6 +15,7 @@ import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
 import { useProjekti } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./KuulutuksenTiedot";
+import { findJulkaisutWithTila } from "../../../../../backend/src/projekti/projektiUtil";
 
 const defaultYhteystieto: YhteystietoInput = {
   etunimi: "",
@@ -27,12 +28,7 @@ const defaultYhteystieto: YhteystietoInput = {
 interface Props {}
 
 function hasHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti: Projekti | null | undefined) {
-  return (
-    (
-      projekti?.nahtavillaoloVaiheJulkaisut?.filter((julkaisu) => julkaisu.tila == NahtavillaoloVaiheTila.HYVAKSYTTY) ||
-      []
-    ).length > 0
-  );
+  return (findJulkaisutWithTila(projekti?.nahtavillaoloVaiheJulkaisut, NahtavillaoloVaiheTila.HYVAKSYTTY) || []).length > 0;
 }
 
 export default function EsitettavatYhteystiedot({}: Props): ReactElement {

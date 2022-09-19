@@ -14,8 +14,6 @@ import { emailHandler } from "../../src/handler/emailHandler";
 
 const { expect } = require("chai");
 
-const sandbox = sinon.createSandbox();
-
 async function takeSnapshot(oid: string) {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   expect({
@@ -31,29 +29,25 @@ describe("AloitusKuulutus", () => {
   let sendEmailsByToimintoStub: sinon.SinonStub;
 
   before(async () => {
-    readUsersFromSearchUpdaterLambda = sandbox.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
+    readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
     readUsersFromSearchUpdaterLambda.callsFake(async () => {
       return await personSearchUpdaterHandler.handleEvent();
     });
 
-    publishProjektiFileStub = sandbox.stub(fileService, "publishProjektiFile");
+    publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
     publishProjektiFileStub.resolves();
 
-    sendEmailsByToimintoStub = sandbox.stub(emailHandler, "sendEmailsByToiminto");
+    sendEmailsByToimintoStub = sinon.stub(emailHandler, "sendEmailsByToiminto");
     sendEmailsByToimintoStub.resolves();
   });
 
   afterEach(() => {
     userFixture.logout();
-    sandbox.reset();
-    sandbox.restore();
-    sinon.reset();
     sinon.restore();
   });
 
-  beforeEach("Initialize test database!", async () => await setupLocalDatabase());
-
-  beforeEach(() => {
+  beforeEach(async () => {
+    await setupLocalDatabase();
     userFixture = new UserFixture(userService);
   });
 

@@ -2,7 +2,7 @@
 import { describe, it } from "mocha";
 import { FixtureName, useProjektiTestFixture } from "./testFixtureRecorder";
 import { setupLocalDatabase } from "../util/databaseUtil";
-import { tallennaLogo, verifyEmailsSent } from "./testUtil/tests";
+import { deleteProjekti, tallennaLogo, verifyEmailsSent } from "./testUtil/tests";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { api } from "./apiClient";
@@ -10,9 +10,7 @@ import { expectToMatchSnapshot, takeYllapitoS3Snapshot } from "./testUtil/util";
 import { cleanupGeneratedIdAndTimestampFromFeedbacks } from "./testUtil/cleanUpFunctions";
 import * as sinon from "sinon";
 import { emailClient } from "../../src/email/email";
-import { projektiArchive } from "../../src/archive/projektiArchiveService";
 
-const sandbox = sinon.createSandbox();
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
 describe("Palaute", () => {
@@ -21,11 +19,11 @@ describe("Palaute", () => {
 
   before(async () => {
     userFixture = new UserFixture(userService);
-    emailClientStub = sandbox.stub(emailClient, "sendEmail");
+    emailClientStub = sinon.stub(emailClient, "sendEmail");
 
     await setupLocalDatabase();
     try {
-      await projektiArchive.archiveProjekti(oid);
+      await deleteProjekti(oid);
     } catch (_ignore) {
       // ignore
     }
@@ -34,8 +32,7 @@ describe("Palaute", () => {
 
   after(() => {
     userFixture.logout();
-    sandbox.restore();
-    sandbox.reset();
+    sinon.restore();
   });
 
   it("should insert and manage feedback", async () => {

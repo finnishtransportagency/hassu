@@ -1,5 +1,5 @@
 import { describe, it } from "mocha";
-import { replaceAWSDynamoDBWithLocalstack, setupLocalDatabase } from "../util/databaseUtil";
+import { setupLocalDatabase } from "../util/databaseUtil";
 import { Status } from "../../../common/graphql/apiModel";
 import * as sinon from "sinon";
 import { personSearchUpdaterClient } from "../../src/personSearch/personSearchUpdaterClient";
@@ -15,7 +15,7 @@ import { getCloudFront, produce } from "../../src/aws/client";
 import { cleanProjektiS3Files } from "../util/s3Util";
 import { emailClient } from "../../src/email/email";
 import {
-  archiveProjekti,
+  deleteProjekti,
   julkaiseSuunnitteluvaihe,
   julkaiseVuorovaikutus,
   loadProjektiFromDatabase,
@@ -51,7 +51,6 @@ import {
 } from "./testUtil/hyvaksymisPaatosVaihe";
 import { FixtureName, recordProjektiTestFixture } from "./testFixtureRecorder";
 
-const sandbox = sinon.createSandbox();
 const { expect } = require("chai");
 
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
@@ -65,10 +64,7 @@ describe("Api", () => {
 
   after(() => {
     userFixture.logout();
-    sandbox.restore();
-    sandbox.reset();
     sinon.restore();
-    sinon.reset();
     AWSMock.restore();
   });
 
@@ -77,31 +73,31 @@ describe("Api", () => {
   before(async () => {
     await setupLocalDatabase();
     userFixture = new UserFixture(userService);
-    readUsersFromSearchUpdaterLambda = sandbox.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
+    readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
     readUsersFromSearchUpdaterLambda.callsFake(async () => {
       return await personSearchUpdaterHandler.handleEvent();
     });
 
-    sandbox.stub(openSearchClientYllapito, "query").resolves({ status: 200 });
-    sandbox.stub(openSearchClientYllapito, "deleteDocument");
-    sandbox.stub(openSearchClientYllapito, "putDocument");
+    sinon.stub(openSearchClientYllapito, "query").resolves({ status: 200 });
+    sinon.stub(openSearchClientYllapito, "deleteDocument");
+    sinon.stub(openSearchClientYllapito, "putDocument");
 
-    importAineistoStub = sandbox.stub(aineistoImporterClient, "importAineisto");
+    importAineistoStub = sinon.stub(aineistoImporterClient, "importAineisto");
     importAineistoStub.callsFake(async (event) => {
       fakeAineistoImportQueue.push({ Records: [{ body: JSON.stringify(event) } as SQSRecord] });
     });
 
-    awsCloudfrontInvalidationStub = sandbox.stub();
+    awsCloudfrontInvalidationStub = sinon.stub();
     awsCloudfrontInvalidationStub.resolves({});
     AWSMock.setSDKInstance(AWS);
     produce<AWS.CloudFront>("cloudfront", () => undefined, true);
     AWSMock.mock("CloudFront", "createInvalidation", awsCloudfrontInvalidationStub);
     getCloudFront();
 
-    emailClientStub = sandbox.stub(emailClient, "sendEmail");
+    emailClientStub = sinon.stub(emailClient, "sendEmail");
 
     try {
-      await archiveProjekti(oid);
+      await deleteProjekti(oid);
     } catch (ignored) {
       // ignored
     }
@@ -172,10 +168,7 @@ describe("Api", () => {
     await processQueue(fakeAineistoImportQueue);
     await takePublicS3Snapshot(oid, "Hyvaksymispaatos approved", "hyvaksymispaatos");
     verifyEmailsSent(emailClientStub);
-  });
 
-  it.skip("should archive projekti", async function () {
-    replaceAWSDynamoDBWithLocalstack();
-    await archiveProjekti(oid);
+    await recordProjektiTestFixture(FixtureName.HYVAKSYMISPAATOS_APPROVED, oid);
   });
 });

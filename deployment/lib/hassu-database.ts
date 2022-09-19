@@ -122,14 +122,7 @@ export class HassuDatabaseStack extends cdk.Stack {
       },
     });
 
-    // TODO: uncomment after cdk-construct+aws-cdk version upgrade
-    // const cfnTable = table.node.defaultChild as CfnTable;
-    // cfnTable.tableClass = "STANDARD_INFREQUENT_ACCESS";
-
-    if (Config.isPermanentEnvironment()) {
-      HassuDatabaseStack.enableBackup(table);
-      table.applyRemovalPolicy(RemovalPolicy.RETAIN);
-    }
+    table.applyRemovalPolicy(RemovalPolicy.DESTROY);
     return table;
   }
 
@@ -161,15 +154,16 @@ export class HassuDatabaseStack extends cdk.Stack {
     const bucket = new Bucket(this, "ArchiveBucket", {
       bucketName: Config.archiveBucketName,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-      removalPolicy: RemovalPolicy.RETAIN,
+      removalPolicy: RemovalPolicy.DESTROY,
       versioned: true,
     });
-    if (Config.isPermanentEnvironment()) {
-      HassuDatabaseStack.enableBackup(bucket);
-    } else {
-      // Do not keep archived data in developer environments
-      bucket.addLifecycleRule({ id: this.stackName + "-upload-delete-after-48h", expiration: Duration.hours(48) });
-    }
+
+    // These exports added here so that the references from backend stack can be removed first. This code and archive bucket can be deleted after this code has been deployed once to every environment
+    this.exportValue(bucket.bucketArn);
+    this.exportValue(bucket.bucketName);
+
+    // Do not keep archived data in developer environments
+    bucket.addLifecycleRule({ id: this.stackName + "-upload-delete-after-48h", expiration: Duration.hours(24) });
 
     return bucket;
   }

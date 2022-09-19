@@ -126,12 +126,17 @@ export type DBProjekti = {
   nahtavillaoloVaiheJulkaisut?: NahtavillaoloVaiheJulkaisu[] | null;
   hyvaksymisPaatosVaihe?: HyvaksymisPaatosVaihe | null;
   hyvaksymisPaatosVaiheJulkaisut?: HyvaksymisPaatosVaiheJulkaisu[] | null;
+  jatkoPaatos1Vaihe?: HyvaksymisPaatosVaihe | null;
+  jatkoPaatos1VaiheJulkaisut?: HyvaksymisPaatosVaiheJulkaisu[] | null;
+  jatkoPaatos2Vaihe?: HyvaksymisPaatosVaihe | null;
+  jatkoPaatos2VaiheJulkaisut?: HyvaksymisPaatosVaiheJulkaisu[] | null;
   uusiaPalautteita?: number;
 
   // false, jos projekti ladattiin Velhosta, mutta ei ole vielä tallennettu tietokantaan
   tallennettu?: boolean;
   kayttoOikeudet: DBVaylaUser[];
   paivitetty?: string;
+  ajastettuTarkistus?: string;
   // Secret salt to use when generating lisaaineisto links within this projekti
   salt?: string;
   kasittelynTila?: KasittelynTila | null;
