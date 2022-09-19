@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { api, Kieli, ProjektiHakutulosJulkinen } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 import Hakulomake from "@components/kansalaisenEtusivu/Hakulomake";
@@ -9,7 +9,6 @@ import OikeaLaita from "@components/kansalaisenEtusivu/OikeaLaita";
 import Sivutus from "@components/kansalaisenEtusivu/Sivutus";
 import { useRouter } from "next/router";
 import { SelectOption } from "@components/form/Select";
-import { ProjektiTyyppi } from "../../common/graphql/apiModel";
 import { MaakuntaListaOption } from "./api/maakuntalista.json";
 import { KuntaListaOption } from "./api/kuntalista.json";
 
@@ -59,7 +58,7 @@ const App = () => {
     getMaakuntaLista(lang);
   }, [getKuntaLista, getMaakuntaLista, lang]);
 
-  const query = useHaunQueryparametrit({ kuntaOptions });
+  const query = useHaunQueryparametrit({ kuntaOptions, maakuntaOptions });
 
   if (!query) {
     return null;
@@ -91,10 +90,10 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
         const result = await api.listProjektitJulkinen({
           kieli: Kieli.SUOMI,
           sivunumero: Math.max(0, sivu - 1),
-          //hakusana: vapaasanahaku,
-          //kunta,
-          //maakunta,
-          //vaylamuoto: [vaylamuoto],
+          nimi: vapaasanahaku,
+          kunta: keywordToKey(kunta, kuntaOptions),
+          maakunta: keywordToKey(maakunta, maakuntaOptions),
+          vaylamuoto: vaylamuoto ? [vaylamuoto] : undefined,
         });
         log.info("listProjektit:", result);
         setHakutulos(result);
@@ -114,7 +113,7 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
     }
 
     fetchProjektit();
-  }, [setLadataan, setHakutulos, sivu, vapaasanahaku, kunta, maakunta, vaylamuoto]);
+  }, [setLadataan, setHakutulos, sivu, vapaasanahaku, kunta, maakunta, vaylamuoto, maakuntaOptions, kuntaOptions]);
 
   return (
     <Grid container rowSpacing={4} columnSpacing={4}>
@@ -140,7 +139,7 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
 
 export default App;
 
-type HookProps = { kuntaOptions: SelectOption[] };
+type HookProps = { kuntaOptions: SelectOption[]; maakuntaOptions: SelectOption[] };
 export type HookReturnType = {
   vapaasanahaku: string;
   kunta: string;
@@ -150,11 +149,12 @@ export type HookReturnType = {
   pienennaHaku: boolean;
   lisaaHakuehtoja: boolean;
 };
-export function useHaunQueryparametrit({ kuntaOptions }: HookProps): HookReturnType | null {
+
+export function useHaunQueryparametrit({ kuntaOptions, maakuntaOptions }: HookProps): HookReturnType | null {
   const router = useRouter();
 
   return useMemo(() => {
-    if (!router.isReady) {
+    if (!router.isReady || kuntaOptions.length == 0 || maakuntaOptions.length == 0) {
       return null;
     }
     const vapaasanahaku = typeof router.query?.vapaasanahaku === "string" ? router.query.vapaasanahaku : "";
@@ -163,11 +163,11 @@ export function useHaunQueryparametrit({ kuntaOptions }: HookProps): HookReturnT
         ? router.query.kunta
         : "";
     const maakunta =
-      ([] as SelectOption[]).find((option) => router.query?.maakunta === option.value) && typeof router.query?.maakunta === "string"
+      maakuntaOptions.find((option) => router.query?.maakunta === option.value) && typeof router.query?.maakunta === "string"
         ? router.query.maakunta
         : "";
     const vaylamuoto =
-      Object.keys(ProjektiTyyppi).find((option) => router.query?.vaylamuoto === option) && typeof router.query?.vaylamuoto === "string"
+      ["tie", "rata"].find((option) => router.query?.vaylamuoto === option) && typeof router.query?.vaylamuoto === "string"
         ? router.query.vaylamuoto
         : "";
     const sivu = typeof router.query.sivu === "string" ? parseInt(router.query.sivu) : 1;
@@ -184,6 +184,7 @@ export function useHaunQueryparametrit({ kuntaOptions }: HookProps): HookReturnT
     };
   }, [
     kuntaOptions,
+    maakuntaOptions,
     router.isReady,
     router.query?.kunta,
     router.query?.lisaahakuehtoja,
@@ -193,4 +194,10 @@ export function useHaunQueryparametrit({ kuntaOptions }: HookProps): HookReturnT
     router.query?.vapaasanahaku,
     router.query?.vaylamuoto,
   ]);
+}
+
+function keywordToKey(keyword: string, options: SelectOption[]) : string[] | undefined{
+  if (! keyword) return undefined;
+  const label = options.find((option) => keyword === option.value)?.label;
+  return label ? [label] : undefined;
 }
