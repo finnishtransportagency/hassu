@@ -45,7 +45,6 @@ export type VuorovaikutusFormValues = ProjektiFields & {
       | "vuorovaikutusJulkaisuPaiva"
       | "vuorovaikutusNumero"
       | "vuorovaikutusTilaisuudet"
-      | "vuorovaikutusYhteysHenkilot"
       | "julkinen"
     >;
   };
@@ -127,11 +126,10 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
           vuorovaikutusNumero: vuorovaikutusnro,
           vuorovaikutusJulkaisuPaiva: vuorovaikutus?.vuorovaikutusJulkaisuPaiva || "",
           kysymyksetJaPalautteetViimeistaan: vuorovaikutus?.kysymyksetJaPalautteetViimeistaan || "",
-          vuorovaikutusYhteysHenkilot:
-            projekti?.kayttoOikeudet
-              ?.filter(({ kayttajatunnus }) => vuorovaikutus?.vuorovaikutusYhteysHenkilot?.includes(kayttajatunnus))
-              .map(({ kayttajatunnus }) => kayttajatunnus) || [],
-          esitettavatYhteystiedot: vuorovaikutus?.esitettavatYhteystiedot?.map((yhteystieto) => removeTypeName(yhteystieto)) || [],
+          esitettavatYhteystiedot: {
+            yhteysTiedot: vuorovaikutus?.esitettavatYhteystiedot?.yhteysTiedot?.map((yhteystieto) => removeTypeName(yhteystieto)) || [],
+            yhteysHenkilot: vuorovaikutus?.esitettavatYhteystiedot?.yhteysHenkilot,
+          },
           ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, vuorovaikutus?.ilmoituksenVastaanottajat, kirjaamoOsoitteet),
           vuorovaikutusTilaisuudet:
             vuorovaikutus?.vuorovaikutusTilaisuudet?.map((tilaisuus) => {

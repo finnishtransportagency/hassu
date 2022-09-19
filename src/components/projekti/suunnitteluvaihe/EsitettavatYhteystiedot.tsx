@@ -47,11 +47,11 @@ export default function EsitettavatYhteystiedot({ vuorovaikutusnro }: Props): Re
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot",
+    name: "suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot",
   });
 
-  const vuorovaikutusYhteysHenkilot: ProjektiKayttaja[] = v?.vuorovaikutusYhteysHenkilot
-    ? v?.vuorovaikutusYhteysHenkilot
+  const vuorovaikutusYhteysHenkilot: ProjektiKayttaja[] = v?.esitettavatYhteystiedot?.yhteysHenkilot
+    ? v?.esitettavatYhteystiedot?.yhteysHenkilot
         .map((hlo) => {
           const yhteysHenkiloTietoineen: ProjektiKayttaja | undefined = (projekti?.kayttoOikeudet || []).find(
             (ko) => ko.kayttajatunnus === hlo
@@ -69,17 +69,16 @@ export default function EsitettavatYhteystiedot({ vuorovaikutusnro }: Props): Re
       <Section>
         <SectionContent>
           <p className="vayla-label mb-5">Vuorovaikuttamisen yhteyshenkilöt</p>
-          {v?.esitettavatYhteystiedot?.map((yhteystieto, index) => (
+          {v?.esitettavatYhteystiedot?.yhteysTiedot?.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
               {capitalize(yhteystieto.etunimi)} {capitalize(yhteystieto.sukunimi)}, puh. {yhteystieto.puhelinnumero},{" "}
-              {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio}
-              )
+              {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio})
             </p>
           ))}
           {vuorovaikutusYhteysHenkilot.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
-              {yhteystieto.nimi}, puh. {yhteystieto.puhelinnumero},{" "}
-              {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} ({yhteystieto.organisaatio})
+              {yhteystieto.nimi}, puh. {yhteystieto.puhelinnumero}, {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} (
+              {yhteystieto.organisaatio})
             </p>
           ))}
         </SectionContent>
@@ -92,14 +91,14 @@ export default function EsitettavatYhteystiedot({ vuorovaikutusnro }: Props): Re
       <SectionContent>
         <h4 className="vayla-small-title">Vuorovaikuttamisen yhteyshenkilöt</h4>
         <p>
-          Voit valita kutsussa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden
-          yhteystiedon. Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot
-          haetaan Projektin henkilöt -sivulle tallennetuista tiedoista.
+          Voit valita kutsussa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden yhteystiedon. Projektipäällikön
+          tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot haetaan Projektin henkilöt -sivulle tallennetuista
+          tiedoista.
         </p>
         {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
           <Controller
             control={control}
-            name={`suunnitteluVaihe.vuorovaikutus.vuorovaikutusYhteysHenkilot`}
+            name={`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysHenkilot`}
             render={({ field: { onChange, value, ...field } }) => (
               <FormGroup label="Projektiin tallennetut henkilöt" inlineFlex>
                 {projekti.kayttoOikeudet?.map(({ nimi, rooli, kayttajatunnus }, index) => {
@@ -142,8 +141,8 @@ export default function EsitettavatYhteystiedot({ vuorovaikutusnro }: Props): Re
       <SectionContent>
         <p>Uusi yhteystieto</p>
         <p>
-          Lisää uudelle yhteystiedolle rivi Lisää uusi-painikkeella. Huomioi, että uusi yhteystieto ei tallennu
-          Projektin henkilöt -sivulle eikä henkilölle tule käyttöoikeuksia projektiin.
+          Lisää uudelle yhteystiedolle rivi Lisää uusi-painikkeella. Huomioi, että uusi yhteystieto ei tallennu Projektin henkilöt -sivulle
+          eikä henkilölle tule käyttöoikeuksia projektiin.
         </p>
       </SectionContent>
       {fields.map((field, index) => (
@@ -151,28 +150,28 @@ export default function EsitettavatYhteystiedot({ vuorovaikutusnro }: Props): Re
           <HassuGrid sx={{ width: "100%" }} cols={[1, 1, 3]}>
             <TextInput
               label="Etunimi *"
-              {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.etunimi`)}
+              {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.${index}.etunimi`)}
               error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.etunimi}
             />
             <TextInput
               label="Sukunimi *"
-              {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.sukunimi`)}
+              {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.${index}.sukunimi`)}
               error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.sukunimi}
             />
             <TextInput
               label="Organisaatio / kunta *"
-              {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.organisaatio`)}
+              {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.${index}.organisaatio`)}
               error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.organisaatio}
             />
             <TextInput
               label="Puhelinnumero *"
-              {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.puhelinnumero`)}
+              {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.${index}.puhelinnumero`)}
               error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.puhelinnumero}
               maxLength={maxPhoneLength}
             />
             <TextInput
               label="Sähköpostiosoite *"
-              {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.${index}.sahkoposti`)}
+              {...register(`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.${index}.sahkoposti`)}
               error={(errors as any)?.suunnitteluVaihe?.vuorovaikutus?.esitettavatYhteystiedot?.[index]?.sahkoposti}
             />
           </HassuGrid>

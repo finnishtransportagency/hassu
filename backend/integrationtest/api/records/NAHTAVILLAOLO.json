@@ -18,10 +18,17 @@
         "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
         "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
         "tyyppi": "TIE",
-        "maakunnat": ["Uusimaa"],
-        "kunnat": ["Helsinki", " Vantaa"],
+        "maakunnat": [
+          "Uusimaa"
+        ],
+        "kunnat": [
+          "Helsinki",
+          " Vantaa"
+        ],
         "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-        "vaylamuoto": ["tie"],
+        "vaylamuoto": [
+          "tie"
+        ],
         "linkki": null
       },
       "suunnitteluSopimus": {
@@ -74,10 +81,17 @@
     "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
     "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
     "tyyppi": "TIE",
-    "maakunnat": ["Uusimaa"],
-    "kunnat": ["Helsinki", " Vantaa"],
+    "maakunnat": [
+      "Uusimaa"
+    ],
+    "kunnat": [
+      "Helsinki",
+      " Vantaa"
+    ],
     "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-    "vaylamuoto": ["tie"],
+    "vaylamuoto": [
+      "tie"
+    ],
     "linkki": null
   },
   "oid": "1.2.246.578.5.1.2978288874.2711575506",
@@ -88,7 +102,9 @@
       "__typename": "HankkeenKuvaukset",
       "SAAME": "Saameksi suunnitteluvaihe"
     },
-    "palautteidenVastaanottajat": ["A000111"],
+    "palautteidenVastaanottajat": [
+      "A000111"
+    ],
     "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
     "julkinen": true,
     "arvioSeuraavanVaiheenAlkamisesta": "huomenna"
@@ -199,7 +215,9 @@
           "Saapumisohjeet": "Ensimmäinen ovi vasemmalla"
         },
         {
-          "projektiYhteysHenkilot": ["A000112"],
+          "projektiYhteysHenkilot": [
+            "A000112"
+          ],
           "alkamisAika": "10:00",
           "nimi": "Soittoaikatilaisuuden nimi tässä",
           "paivamaara": "2022-04-05",
@@ -288,17 +306,22 @@
       ],
       "vuorovaikutusNumero": 1,
       "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
-      "vuorovaikutusYhteysHenkilot": ["A000112"],
-      "esitettavatYhteystiedot": [
-        {
-          "sukunimi": "Koi",
-          "sahkoposti": "markku.koi@koi.com",
-          "organisaatio": "Kajaani",
-          "puhelinnumero": "0293121213",
-          "etunimi": "Marko",
-          "__typename": "Yhteystieto"
-        }
-      ]
+      "esitettavatYhteystiedot": {
+        "yhteysHenkilot": [
+          "A000112"
+        ],
+        "yhteysTiedot": [
+          {
+            "sukunimi": "Koi",
+            "sahkoposti": "markku.koi@koi.com",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "etunimi": "Marko",
+            "__typename": "Yhteystieto"
+          }
+        ],
+        "__typename": "StandardiYhteystiedot"
+      }
     },
     {
       "ilmoituksenVastaanottajat": {
@@ -355,7 +378,10 @@
           "Saapumisohjeet": "Ensimmäinen ovi vasemmalla"
         },
         {
-          "projektiYhteysHenkilot": ["A000112", "A000111"],
+          "projektiYhteysHenkilot": [
+            "A000112",
+            "A000111"
+          ],
           "alkamisAika": "10:00",
           "nimi": "Soittoaikatilaisuuden nimi tässä",
           "paivamaara": "2022-04-05",
@@ -417,17 +443,23 @@
       ],
       "vuorovaikutusNumero": 2,
       "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
-      "vuorovaikutusYhteysHenkilot": ["A000112", "A000111"],
-      "esitettavatYhteystiedot": [
-        {
-          "sukunimi": "Koi",
-          "sahkoposti": "markku.koi@koi.com",
-          "organisaatio": "Kajaani",
-          "puhelinnumero": "0293121213",
-          "etunimi": "Marko",
-          "__typename": "Yhteystieto"
-        }
-      ]
+      "esitettavatYhteystiedot": {
+        "yhteysHenkilot": [
+          "A000112",
+          "A000111"
+        ],
+        "yhteysTiedot": [
+          {
+            "sukunimi": "Koi",
+            "sahkoposti": "markku.koi@koi.com",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "etunimi": "Marko",
+            "__typename": "Yhteystieto"
+          }
+        ],
+        "__typename": "StandardiYhteystiedot"
+      }
     }
   ]
 }

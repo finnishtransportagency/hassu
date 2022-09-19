@@ -57,7 +57,7 @@ export function adaptYhteystiedotByAddingTypename(yhteystiedot: Yhteystieto[]): 
 }
 
 export function adaptStandardiYhteystiedotByAddingTypename(
-  kuulutusYhteystiedot: StandardiYhteystiedot
+  kuulutusYhteystiedot: StandardiYhteystiedot | API.StandardiYhteystiedotInput
 ): API.StandardiYhteystiedot | undefined | null {
   if (kuulutusYhteystiedot) {
     return {

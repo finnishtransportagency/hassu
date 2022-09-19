@@ -137,9 +137,11 @@ class ApiTestFixture {
       vuorovaikutusJulkaisuPaiva: "2022-03-23",
       videot: [{ nimi: "Esittely " + vuorovaikutusNumero, url: "https://video" }],
       kysymyksetJaPalautteetViimeistaan: "2022-03-23T23:48",
-      esitettavatYhteystiedot: apiTestFixture.yhteystietoLista,
+      esitettavatYhteystiedot: {
+        yhteysTiedot: apiTestFixture.yhteystietoLista,
+        yhteysHenkilot: vuorovaikutusYhteysHenkilot,
+      },
       ilmoituksenVastaanottajat: apiTestFixture.ilmoituksenVastaanottajat,
-      vuorovaikutusYhteysHenkilot,
       vuorovaikutusTilaisuudet: [
         {
           tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,

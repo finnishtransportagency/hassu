@@ -166,11 +166,7 @@ type Vuorovaikutus {
   kysymyksetJaPalautteetViimeistaan: String
   videot: [Linkki!]
   suunnittelumateriaali: Linkki
-  esitettavatYhteystiedot: [Yhteystieto!]
-  """
-  Lista kayttajatunnuksia
-  """
-  vuorovaikutusYhteysHenkilot: [String!]
+  esitettavatYhteystiedot: StandardiYhteystiedot
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
 
   esittelyaineistot: [Aineisto!]
@@ -194,9 +190,7 @@ type VuorovaikutusJulkinen {
   kysymyksetJaPalautteetViimeistaan: String
   videot: [Linkki!]
   suunnittelumateriaali: Linkki
-  vuorovaikutusYhteystiedot: [Yhteystieto!]
-  vuorovaikutusYhteysHenkilot: [String!]
-
+  yhteystiedot: [Yhteystieto!]!
   esittelyaineistot: [Aineisto!]
   suunnitelmaluonnokset: [Aineisto!]
   vuorovaikutusPDFt: VuorovaikutusPDFt

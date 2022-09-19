@@ -314,18 +314,6 @@
         "__typename": "__Type"
       },
       {
-        "kind": "OBJECT",
-        "name": "StandardiYhteystiedot",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "StandardiYhteystiedotInput",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
         "kind": "ENUM",
         "name": "LaskuriTyyppi",
         "possibleTypes": null,
@@ -556,6 +544,18 @@
       {
         "kind": "OBJECT",
         "name": "Query",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "StandardiYhteystiedot",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "StandardiYhteystiedotInput",
         "possibleTypes": null,
         "__typename": "__Type"
       },

@@ -509,7 +509,7 @@
           "__typename": "Yhteystieto"
         }
       ],
-      "__typename": "KuulutusYhteystiedot"
+      "__typename": "StandardiYhteystiedot"
     },
     "__typename": "AloitusKuulutus"
   },
@@ -628,39 +628,6 @@
   ],
   "vuorovaikutukset": [
     {
-      "esittelyaineistot": [
-        {
-          "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
-          "nimi": "new ekatiedosto_eka.pdf",
-          "jarjestys": 12,
-          "tila": "VALMIS",
-          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
-          "tuotu": "2020-01-01T00:00:00+02:00"
-        }
-      ],
-      "__typename": "Vuorovaikutus",
-      "videot": [
-        {
-          "nimi": "Esittely 1",
-          "url": "https://video",
-          "__typename": "Linkki"
-        }
-      ],
-      "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
-      "vuorovaikutusYhteysHenkilot": [
-        "A000112"
-      ],
-      "julkinen": true,
-      "esitettavatYhteystiedot": [
-        {
-          "sukunimi": "Koi",
-          "sahkoposti": "markku.koi@koi.com",
-          "organisaatio": "Kajaani",
-          "puhelinnumero": "0293121213",
-          "etunimi": "Marko",
-          "__typename": "Yhteystieto"
-        }
-      ],
       "ilmoituksenVastaanottajat": {
         "__typename": "IlmoituksenVastaanottajat",
         "kunnat": [
@@ -776,6 +743,17 @@
           ]
         }
       ],
+      "esittelyaineistot": [
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
+          "nimi": "new ekatiedosto_eka.pdf",
+          "jarjestys": 12,
+          "tila": "VALMIS",
+          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
+          "tuotu": "2020-01-01T00:00:00+02:00"
+        }
+      ],
+      "__typename": "Vuorovaikutus",
       "vuorovaikutusPDFt": {
         "SUOMI": {
           "kutsuPDFPath": "/suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf"
@@ -783,7 +761,32 @@
       },
       "suunnitelmaluonnokset": [],
       "vuorovaikutusJulkaisuPaiva": "2022-03-24",
-      "vuorovaikutusNumero": 1
+      "videot": [
+        {
+          "nimi": "Esittely 1",
+          "url": "https://video",
+          "__typename": "Linkki"
+        }
+      ],
+      "vuorovaikutusNumero": 1,
+      "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+      "julkinen": true,
+      "esitettavatYhteystiedot": {
+        "yhteysHenkilot": [
+          "A000112"
+        ],
+        "yhteysTiedot": [
+          {
+            "sukunimi": "Koi",
+            "sahkoposti": "markku.koi@koi.com",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "etunimi": "Marko",
+            "__typename": "Yhteystieto"
+          }
+        ],
+        "__typename": "StandardiYhteystiedot"
+      }
     },
     {
       "ilmoituksenVastaanottajat": {
@@ -905,20 +908,23 @@
       ],
       "vuorovaikutusNumero": 2,
       "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
-      "vuorovaikutusYhteysHenkilot": [
-        "A000112",
-        "A000111"
-      ],
-      "esitettavatYhteystiedot": [
-        {
-          "sukunimi": "Koi",
-          "sahkoposti": "markku.koi@koi.com",
-          "organisaatio": "Kajaani",
-          "puhelinnumero": "0293121213",
-          "etunimi": "Marko",
-          "__typename": "Yhteystieto"
-        }
-      ]
+      "esitettavatYhteystiedot": {
+        "yhteysHenkilot": [
+          "A000112",
+          "A000111"
+        ],
+        "yhteysTiedot": [
+          {
+            "sukunimi": "Koi",
+            "sahkoposti": "markku.koi@koi.com",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "etunimi": "Marko",
+            "__typename": "Yhteystieto"
+          }
+        ],
+        "__typename": "StandardiYhteystiedot"
+      }
     }
   ]
 }
