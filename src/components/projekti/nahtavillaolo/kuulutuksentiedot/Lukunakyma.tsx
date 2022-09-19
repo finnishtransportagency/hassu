@@ -62,7 +62,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
           <p className="md:col-span-1 mb-0">
             <FormatDate date={nahtavillaoloVaiheJulkaisu.kuulutusVaihePaattyyPaiva} />
           </p>
-          {process.env.NODE_ENV != "production" && (
+          {process.env.ENVIRONMENT != "prod" && (
             <ButtonFlatWithIcon
               icon="history"
               className="md:col-span-2 mb-0"
