@@ -31,7 +31,7 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
     NAHTAVILLAOLO: 2,
     HYVAKSYMISMENETTELYSSA: 3,
     HYVAKSYTTY: 4,
-    LAINVOIMA: 5,
+    LAINVOIMA: 4, // Lainvoima-vaihetta ei kansalaisella. Poistuu samalla kun Statuksesta, jos ei tarvetta virkamiespuolellakaan
     ARKISTOITU: -1,
   };
 

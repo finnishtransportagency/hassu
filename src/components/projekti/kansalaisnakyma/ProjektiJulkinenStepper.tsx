@@ -109,7 +109,6 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
     t(`projekti-vaiheet.suunnitteluaineisto_nahtavilla`),
     t(`projekti-vaiheet.hyvaksymismenettelyssa`),
     t(`projekti-vaiheet.paatos`),
-    t(`projekti-vaiheet.lainvoimaisuus`),
   ];
 
   const links = [
@@ -118,7 +117,6 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
     `/suunnitelma/${oid}/nahtavillaolo`,
     `/suunnitelma/${oid}/hyvaksymismenettelyssa`,
     `/suunnitelma/${oid}/hyvaksymispaatos`,
-    `/suunnitelma/${oid}/lainvoima`,
   ];
 
   const createStep = (label: string, index: number) => {
