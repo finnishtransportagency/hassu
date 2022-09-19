@@ -1,14 +1,8 @@
-function getEnv(name) {
-  const value = process.env[name];
-  if (!value) {
-    throw new Error(name + "-ympäristömuuttujaa ei ole asetettu");
-  }
-  return value;
-}
-
 class BaseConfig {
-  static env = getEnv("ENVIRONMENT");
+  static env = process.env.ENVIRONMENT || "ENVIRONMENT-ympäristömuuttujaa ei ole asetettu!";
   static infraEnvironment = BaseConfig.isPermanentEnvironment() ? BaseConfig.env : "dev";
+  static projektiTableName = "Projekti-" + process.env.ENVIRONMENT;
+  static internalBucketName = `hassu-${process.env.ENVIRONMENT}-internal`;
 
   static isPermanentEnvironment() {
     return ["dev", "test", "prod"].indexOf(BaseConfig.env) >= 0;
@@ -26,4 +20,4 @@ class BaseConfig {
   }
 }
 
-module.exports = { BaseConfig, getEnv };
+module.exports = { BaseConfig };

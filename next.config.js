@@ -87,6 +87,8 @@ module.exports = (phase) => {
     NEXT_PUBLIC_VELHO_BASE_URL: process.env.NEXT_PUBLIC_VELHO_BASE_URL,
     INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
     ENVIRONMENT: BaseConfig.env,
+    TABLE_PROJEKTI: BaseConfig.projektiTableName,
+    INTERNAL_BUCKET_NAME: BaseConfig.internalBucketName,
   };
   /**
    * @type {import("next").NextConfig}
