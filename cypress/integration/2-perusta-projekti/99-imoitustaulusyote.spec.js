@@ -35,7 +35,6 @@ describe("Projektin kuulutus", () => {
       cy.log(response.body);
       expect(response.body.nimi.SUOMI).to.eq(projektiNimi);
       expect(response.body.nimi.RUOTSI).to.eq(projektiNimi + " ruotsiksi");
-      expect(response.body.status).to.eq(Status.NAHTAVILLAOLO);
     });
   });
 });
