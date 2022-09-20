@@ -18,7 +18,6 @@ describe("apiHandler", () => {
   let userFixture: UserFixture;
 
   afterEach(() => {
-    sinon.reset();
     sinon.restore();
     userFixture.logout();
   });

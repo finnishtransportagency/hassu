@@ -57,8 +57,9 @@ enum Status {
   NAHTAVILLAOLO
   HYVAKSYMISMENETTELYSSA
   HYVAKSYTTY
-  LAINVOIMA
-  ARKISTOITU
+  EPAAKTIIVINEN
+  JATKOPAATOS_1
+  JATKOPAATOS_2
 }
 
 enum AsiakirjaTyyppi {
@@ -109,6 +110,10 @@ type Projekti implements IProjekti {
   nahtavillaoloVaiheJulkaisut: [NahtavillaoloVaiheJulkaisu!]
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe
   hyvaksymisPaatosVaiheJulkaisut: [HyvaksymisPaatosVaiheJulkaisu!]
+  jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe
+  jatkoPaatos1VaiheJulkaisut: [HyvaksymisPaatosVaiheJulkaisu!]
+  jatkoPaatos2Vaihe: HyvaksymisPaatosVaihe
+  jatkoPaatos2VaiheJulkaisut: [HyvaksymisPaatosVaiheJulkaisu!]
   velho: Velho!
   kayttoOikeudet: [ProjektiKayttaja!]
   """
@@ -482,6 +487,8 @@ type ProjektiJulkinen implements IProjekti {
   paivitetty: String
   nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisuJulkinen
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
+  jatkoPaatos1Vaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
+  jatkoPaatos2Vaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
 }
 
 type Suunnitelma {
@@ -694,11 +701,6 @@ type Kielitiedot {
   ensisijainenKieli: Kieli!
   toissijainenKieli: Kieli
   projektinNimiVieraskielella: String
-}
-
-type ArkistointiTunnus {
-  oid: String!
-  timestamp: String!
 }
 
 interface IProjektiHakutulos {

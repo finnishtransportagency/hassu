@@ -7,10 +7,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!dbProjekti) {
     return;
   }
-  if (dbProjekti?.nahtavillaoloVaiheJulkaisut) {
-    for (const julkaisu of dbProjekti.nahtavillaoloVaiheJulkaisut) {
-      julkaisu.kuulutusVaihePaattyyPaiva = "2022-01-01";
-      await projektiDatabase.updateNahtavillaoloVaiheJulkaisu(dbProjekti, julkaisu);
+  if (dbProjekti?.hyvaksymisPaatosVaiheJulkaisut) {
+    for (const julkaisu of dbProjekti.hyvaksymisPaatosVaiheJulkaisut) {
+      julkaisu.kuulutusVaihePaattyyPaiva = "2020-01-01";
+      await projektiDatabase.updateHyvaksymisPaatosVaiheJulkaisu(dbProjekti, julkaisu);
     }
   }
   res.send("OK");

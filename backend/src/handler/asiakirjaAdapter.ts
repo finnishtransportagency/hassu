@@ -16,6 +16,7 @@ import {
 } from "../../../common/graphql/apiModel";
 import { deepClone } from "aws-cdk/lib/util";
 import { vaylaUserToYhteystieto } from "../util/vaylaUserToYhteystieto";
+import { findJulkaisuWithTila } from "../projekti/projektiUtil";
 
 function createNextAloitusKuulutusJulkaisuID(dbProjekti: DBProjekti) {
   if (!dbProjekti.aloitusKuulutusJulkaisut) {
@@ -80,33 +81,25 @@ export class AsiakirjaAdapter {
 
   findAloitusKuulutusWaitingForApproval(projekti: DBProjekti): AloitusKuulutusJulkaisu | undefined {
     if (projekti.aloitusKuulutusJulkaisut) {
-      return projekti.aloitusKuulutusJulkaisut
-        .filter((julkaisu) => julkaisu.tila == AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA)
-        .pop();
+      return findJulkaisuWithTila(projekti.aloitusKuulutusJulkaisut, AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA);
     }
   }
 
   findNahtavillaoloWaitingForApproval(projekti: DBProjekti): NahtavillaoloVaiheJulkaisu | undefined {
     if (projekti.nahtavillaoloVaiheJulkaisut) {
-      return projekti.nahtavillaoloVaiheJulkaisut
-        .filter((julkaisu) => julkaisu.tila == NahtavillaoloVaiheTila.ODOTTAA_HYVAKSYNTAA)
-        .pop();
+      return findJulkaisuWithTila(projekti.nahtavillaoloVaiheJulkaisut, NahtavillaoloVaiheTila.ODOTTAA_HYVAKSYNTAA);
     }
   }
 
   findHyvaksymisPaatosVaiheWaitingForApproval(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
     if (projekti.hyvaksymisPaatosVaiheJulkaisut) {
-      return projekti.hyvaksymisPaatosVaiheJulkaisut
-        .filter((julkaisu) => julkaisu.tila == HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA)
-        .pop();
+      return findJulkaisuWithTila(projekti.hyvaksymisPaatosVaiheJulkaisut, HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA);
     }
   }
 
   findAloitusKuulutusLastApproved(projekti: DBProjekti): AloitusKuulutusJulkaisu | undefined {
     if (projekti.aloitusKuulutusJulkaisut) {
-      return projekti.aloitusKuulutusJulkaisut
-        .filter((julkaisu) => julkaisu.tila == AloitusKuulutusTila.HYVAKSYTTY)
-        .pop();
+      return findJulkaisuWithTila(projekti.aloitusKuulutusJulkaisut, AloitusKuulutusTila.HYVAKSYTTY);
     }
   }
 }

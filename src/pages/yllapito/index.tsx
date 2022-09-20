@@ -193,7 +193,6 @@ const VirkamiesHomePage = () => {
     Status.NAHTAVILLAOLO,
     Status.HYVAKSYMISMENETTELYSSA,
     Status.HYVAKSYTTY,
-    Status.LAINVOIMA,
   ];
 
   return (

@@ -6,7 +6,6 @@ const BaseConfig = require("../../common/BaseConfig.js").BaseConfig;
 const config = {
   projektiTableName: process.env.TABLE_PROJEKTI,
   feedbackTableName: process.env.TABLE_FEEDBACK,
-  projektiArchiveTableName: process.env.TABLE_PROJEKTI_ARCHIVE,
   cognitoURL: process.env.COGNITO_URL,
   velhoAuthURL: process.env.VELHO_AUTH_URL,
   velhoApiURL: process.env.VELHO_API_URL,
@@ -34,7 +33,6 @@ const config = {
   yllapitoBucketName: process.env.YLLAPITO_BUCKET_NAME,
   publicBucketName: process.env.PUBLIC_BUCKET_NAME,
   internalBucketName: process.env.INTERNAL_BUCKET_NAME || "unset",
-  archiveBucketName: process.env.ARCHIVE_BUCKET_NAME,
 
   smtpKeyId: process.env.SMTP_KEY_ID,
   smtpSecret: process.env.SMTP_SECRET,

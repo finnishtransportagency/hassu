@@ -10,6 +10,8 @@ input TallennaProjektiInput {
   suunnitteluVaihe: SuunnitteluVaiheInput
   nahtavillaoloVaihe: NahtavillaoloVaiheInput
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheInput
+  jatkoPaatos1Vaihe: HyvaksymisPaatosVaiheInput
+  jatkoPaatos2Vaihe: HyvaksymisPaatosVaiheInput
   kasittelynTila: KasittelyntilaInput
 }
 

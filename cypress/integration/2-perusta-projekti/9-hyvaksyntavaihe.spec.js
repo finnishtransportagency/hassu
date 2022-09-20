@@ -19,10 +19,10 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
 
     const today = dayjs().format("YYYY-MM-DDTHH:mm");
 
-    cy.get('[name="kasittelynTila.hyvaksymispaatos.paatoksenPvm"]').should("be.enabled").type(today, {
+    cy.get('[name="kasittelynTila.hyvaksymispaatos.paatoksenPvm"]').should("be.enabled").clear().type(today, {
       waitForAnimations: true,
     });
-    cy.get('[name="kasittelynTila.hyvaksymispaatos.asianumero"]').type(asianumero);
+    cy.get('[name="kasittelynTila.hyvaksymispaatos.asianumero"]').clear().type(asianumero);
     cy.get("#save").click();
     cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank  page otherwise
 

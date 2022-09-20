@@ -74,7 +74,10 @@
     "HYVAKSYTTY": "Hyväksymispäätös",
     "HYVAKSYMISMENETTELYSSA": "Hyväksynnässä",
     "LAINVOIMA": "Lainvoima",
-    "ARKISTOITU": "Arkistoitu"
+    "ARKISTOITU": "Arkistoitu",
+    "EPAAKTIIVINEN" : "Epäaktiivinen",
+    "JATKOPAATOS_1" : "1. jatkopäätös",
+    "JATKOPAATOS_2" : "2. jatkopäätös"
   },
   "projekti-status-kansalaiselle": {
     "ALOITUSKUULUTUS": "Aloituskuulutus",
@@ -82,7 +85,9 @@
     "NAHTAVILLAOLO": "Suunnitelmat nähtävillä",
     "HYVAKSYTTY": "Suunnitelma hyväksytty",
     "HYVAKSYMISMENETTELYSSA": "Hyväksymismenettelyssä",
-    "LAINVOIMA": "Lainvoimainen"
+    "LAINVOIMA": "Lainvoimainen",
+    "JATKOPAATOS_1" : "1. jatkopäätös",
+    "JATKOPAATOS_2" : "2. jatkopäätös"
   },
   "ui-kuvatekstit": {
     "eu_aluerahoitus": "EU aluerahoitus"

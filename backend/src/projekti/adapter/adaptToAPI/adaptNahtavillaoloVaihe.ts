@@ -1,10 +1,4 @@
-import {
-  DBProjekti,
-  LocalizedMap,
-  NahtavillaoloPDF,
-  NahtavillaoloVaihe,
-  NahtavillaoloVaiheJulkaisu,
-} from "../../../database/model";
+import { DBProjekti, LocalizedMap, NahtavillaoloPDF, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import {
   adaptAineistot,
@@ -17,33 +11,19 @@ import {
 import { fileService } from "../../../files/fileService";
 import { lisaAineistoService } from "../../../aineisto/lisaAineistoService";
 
-export function adaptNahtavillaoloVaihe(
-  dbProjekti: DBProjekti,
-  nahtavillaoloVaihe: NahtavillaoloVaihe
-): API.NahtavillaoloVaihe {
+export function adaptNahtavillaoloVaihe(dbProjekti: DBProjekti, nahtavillaoloVaihe: NahtavillaoloVaihe): API.NahtavillaoloVaihe {
   if (!nahtavillaoloVaihe) {
     return undefined;
   }
-  const {
-    aineistoNahtavilla,
-    lisaAineisto,
-    kuulutusYhteystiedot,
-    ilmoituksenVastaanottajat,
-    hankkeenKuvaus,
-    nahtavillaoloPDFt,
-    ...rest
-  } = nahtavillaoloVaihe;
+  const { aineistoNahtavilla, lisaAineisto, kuulutusYhteystiedot, ilmoituksenVastaanottajat, hankkeenKuvaus, nahtavillaoloPDFt, ...rest } =
+    nahtavillaoloVaihe;
   return {
     __typename: "NahtavillaoloVaihe",
     ...rest,
     nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(dbProjekti.oid, nahtavillaoloPDFt),
     aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
     lisaAineisto: adaptAineistot(lisaAineisto),
-    lisaAineistoParametrit: lisaAineistoService.generateListingParams(
-      dbProjekti.oid,
-      nahtavillaoloVaihe.id,
-      dbProjekti.salt
-    ),
+    lisaAineistoParametrit: lisaAineistoService.generateListingParams(dbProjekti.oid, nahtavillaoloVaihe.id, dbProjekti.salt),
     kuulutusYhteystiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
     hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
@@ -85,10 +65,7 @@ export function adaptNahtavillaoloVaiheJulkaisut(
   return undefined;
 }
 
-function adaptNahtavillaoloPDFPaths(
-  oid: string,
-  nahtavillaoloPDFs: LocalizedMap<NahtavillaoloPDF>
-): API.NahtavillaoloPDFt | undefined {
+function adaptNahtavillaoloPDFPaths(oid: string, nahtavillaoloPDFs: LocalizedMap<NahtavillaoloPDF>): API.NahtavillaoloPDFt | undefined {
   if (!nahtavillaoloPDFs) {
     return undefined;
   }
@@ -96,14 +73,8 @@ function adaptNahtavillaoloPDFPaths(
   const result = {};
   for (const kieli in nahtavillaoloPDFs) {
     result[kieli] = {
-      nahtavillaoloPDFPath: fileService.getYllapitoPathForProjektiFile(
-        oid,
-        nahtavillaoloPDFs[kieli].nahtavillaoloPDFPath
-      ),
-      nahtavillaoloIlmoitusPDFPath: fileService.getYllapitoPathForProjektiFile(
-        oid,
-        nahtavillaoloPDFs[kieli].nahtavillaoloIlmoitusPDFPath
-      ),
+      nahtavillaoloPDFPath: fileService.getYllapitoPathForProjektiFile(oid, nahtavillaoloPDFs[kieli].nahtavillaoloPDFPath),
+      nahtavillaoloIlmoitusPDFPath: fileService.getYllapitoPathForProjektiFile(oid, nahtavillaoloPDFs[kieli].nahtavillaoloIlmoitusPDFPath),
       nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: fileService.getYllapitoPathForProjektiFile(
         oid,
         nahtavillaoloPDFs[kieli].nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath

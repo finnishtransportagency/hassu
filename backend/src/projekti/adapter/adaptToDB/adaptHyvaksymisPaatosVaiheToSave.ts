@@ -30,11 +30,7 @@ export function adaptHyvaksymisPaatosVaiheToSave(
     projektiAdaptationResult
   );
 
-  const hyvaksymisPaatos = adaptAineistotToSave(
-    dbHyvaksymisPaatosVaihe?.hyvaksymisPaatos,
-    hyvaksymisPaatosInput,
-    projektiAdaptationResult
-  );
+  const hyvaksymisPaatos = adaptAineistotToSave(dbHyvaksymisPaatosVaihe?.hyvaksymisPaatos, hyvaksymisPaatosInput, projektiAdaptationResult);
 
   let id = dbHyvaksymisPaatosVaihe?.id;
   if (!id) {

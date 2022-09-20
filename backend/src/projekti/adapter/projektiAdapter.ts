@@ -1,17 +1,10 @@
 import { DBProjekti } from "../../database/model";
 import * as API from "../../../../common/graphql/apiModel";
-import { NahtavillaoloVaiheTila } from "../../../../common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
 import { KayttoOikeudetManager } from "../kayttoOikeudetManager";
 import { personSearch } from "../../personSearch/personSearchClient";
 import pickBy from "lodash/pickBy";
-import { perustiedotValidationSchema } from "../../../../src/schemas/perustiedot";
-import { ValidationError } from "yup";
-import { log } from "../../logger";
-import dayjs from "dayjs";
-import { kayttoOikeudetSchema } from "../../../../src/schemas/kayttoOikeudet";
 import { lisaAineistoService } from "../../aineisto/lisaAineistoService";
-import { ISO_DATE_FORMAT, parseDate } from "../../util/dateUtil";
 import { adaptKielitiedotByAddingTypename, adaptLiittyvatSuunnitelmatByAddingTypename } from "./common";
 import {
   adaptAloitusKuulutus,
@@ -32,6 +25,7 @@ import {
   adaptSuunnitteluVaiheToSave,
   adaptVuorovaikutusToSave,
 } from "./adaptToDB";
+import { applyProjektiStatus } from "../status/projektiStatusHandler";
 
 export enum ProjektiEventType {
   VUOROVAIKUTUS_PUBLISHED = "VUOROVAIKUTUS_PUBLISHED",
@@ -65,10 +59,7 @@ export class ProjektiAdaptationResult {
     return this.dbProjekti;
   }
 
-  async onEvent(
-    eventType: ProjektiEventType,
-    eventHandler: (event: ProjektiEvent, projekti: DBProjekti) => Promise<void>
-  ): Promise<void> {
+  async onEvent(eventType: ProjektiEventType, eventHandler: (event: ProjektiEvent, projekti: DBProjekti) => Promise<void>): Promise<void> {
     for (const event of this.events) {
       if (event.eventType == eventType) {
         await eventHandler(event, this.projekti);
@@ -93,6 +84,10 @@ export class ProjektiAdapter {
       nahtavillaoloVaiheJulkaisut,
       hyvaksymisPaatosVaihe,
       hyvaksymisPaatosVaiheJulkaisut,
+      jatkoPaatos1Vaihe,
+      jatkoPaatos1VaiheJulkaisut,
+      jatkoPaatos2Vaihe,
+      jatkoPaatos2VaiheJulkaisut,
       salt: _salt,
       kasittelynTila,
       ...fieldsToCopyAsIs
@@ -115,22 +110,30 @@ export class ProjektiAdapter {
       suunnitteluVaihe: adaptSuunnitteluVaihe(dbProjekti.oid, suunnitteluVaihe, vuorovaikutukset, undefined),
       nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe),
       nahtavillaoloVaiheJulkaisut: adaptNahtavillaoloVaiheJulkaisut(dbProjekti.oid, nahtavillaoloVaiheJulkaisut),
-      hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(
-        dbProjekti,
-        hyvaksymisPaatosVaihe,
-        dbProjekti.kasittelynTila?.hyvaksymispaatos
-      ),
+      hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(dbProjekti, hyvaksymisPaatosVaihe, dbProjekti.kasittelynTila?.hyvaksymispaatos),
       hyvaksymisPaatosVaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
         dbProjekti.oid,
         dbProjekti.kasittelynTila?.hyvaksymispaatos,
         hyvaksymisPaatosVaiheJulkaisut
+      ),
+      jatkoPaatos1Vaihe: adaptHyvaksymisPaatosVaihe(dbProjekti, jatkoPaatos1Vaihe, dbProjekti.kasittelynTila?.ensimmainenJatkopaatos),
+      jatkoPaatos1VaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
+        dbProjekti.oid,
+        dbProjekti.kasittelynTila?.ensimmainenJatkopaatos,
+        jatkoPaatos1VaiheJulkaisut
+      ),
+      jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaihe(dbProjekti, jatkoPaatos2Vaihe, dbProjekti.kasittelynTila?.toinenJatkopaatos),
+      jatkoPaatos2VaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
+        dbProjekti.oid,
+        dbProjekti.kasittelynTila?.toinenJatkopaatos,
+        jatkoPaatos2VaiheJulkaisut
       ),
       virhetiedot,
       kasittelynTila: adaptKasittelynTila(kasittelynTila),
       ...fieldsToCopyAsIs,
     }) as API.Projekti;
     if (apiProjekti.tallennettu) {
-      this.applyStatus(apiProjekti);
+      applyProjektiStatus(apiProjekti);
     }
     return apiProjekti;
   }
@@ -139,10 +142,7 @@ export class ProjektiAdapter {
     return mergeWith(projekti, (await this.adaptProjektiToSave(projekti, changes)).projekti);
   }
 
-  async adaptProjektiToSave(
-    projekti: DBProjekti,
-    changes: API.TallennaProjektiInput
-  ): Promise<ProjektiAdaptationResult> {
+  async adaptProjektiToSave(projekti: DBProjekti, changes: API.TallennaProjektiInput): Promise<ProjektiAdaptationResult> {
     // Pick only fields that are relevant to DB
     const {
       oid,
@@ -161,11 +161,7 @@ export class ProjektiAdapter {
     const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult();
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
     kayttoOikeudetManager.applyChanges(kayttoOikeudet);
-    const vuorovaikutukset = adaptVuorovaikutusToSave(
-      projekti,
-      projektiAdaptationResult,
-      suunnitteluVaihe?.vuorovaikutus
-    );
+    const vuorovaikutukset = adaptVuorovaikutusToSave(projekti, projektiAdaptationResult, suunnitteluVaihe?.vuorovaikutus);
     const aloitusKuulutusToSave = adaptAloitusKuulutusToSave(aloitusKuulutus);
     const dbProjekti = mergeWith(
       {},
@@ -199,100 +195,10 @@ export class ProjektiAdapter {
     projektiAdaptationResult.setProjekti(dbProjekti);
     return projektiAdaptationResult;
   }
-
-  /**
-   * Function to determine the status of the projekti
-   * @param projekti
-   */
-  private applyStatus(projekti: API.Projekti): API.Projekti {
-    function checkPerustiedot() {
-      try {
-        kayttoOikeudetSchema.validateSync(projekti.kayttoOikeudet);
-      } catch (e) {
-        if (e instanceof ValidationError) {
-          log.info("Käyttöoikeudet puutteelliset", e);
-          projekti.status = API.Status.EI_JULKAISTU_PROJEKTIN_HENKILOT;
-          return true; // This is the final status
-        } else {
-          throw e;
-        }
-      }
-      try {
-        perustiedotValidationSchema.validateSync(projekti);
-      } catch (e) {
-        if (e instanceof ValidationError) {
-          log.info("Perustiedot puutteelliset", e.errors);
-          return true; // This is the final status
-        } else {
-          throw e;
-        }
-      }
-
-      if (!projekti.aloitusKuulutus) {
-        projekti.aloitusKuulutus = { __typename: "AloitusKuulutus" };
-      }
-      projekti.status = API.Status.ALOITUSKUULUTUS;
-    }
-
-    function checkSuunnittelu() {
-      if (projekti.aloitusKuulutusJulkaisut) {
-        projekti.status = API.Status.SUUNNITTELU;
-      }
-    }
-
-    function checkNahtavillaolo() {
-      if (projekti.suunnitteluVaihe?.julkinen) {
-        projekti.status = API.Status.NAHTAVILLAOLO;
-      }
-    }
-
-    function checkHyvaksymisMenettelyssa() {
-      const hyvaksymisPaatos = projekti.kasittelynTila?.hyvaksymispaatos;
-      const hasHyvaksymisPaatos = hyvaksymisPaatos && hyvaksymisPaatos.asianumero && hyvaksymisPaatos.paatoksenPvm;
-
-      const nahtavillaoloVaihe = projekti.nahtavillaoloVaiheJulkaisut
-        ?.filter((julkaisu) => julkaisu.tila == NahtavillaoloVaiheTila.HYVAKSYTTY)
-        .pop();
-      const nahtavillaoloKuulutusPaattyyInThePast = isDateInThePast(nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva);
-
-      if (hasHyvaksymisPaatos && nahtavillaoloKuulutusPaattyyInThePast) {
-        projekti.status = API.Status.HYVAKSYMISMENETTELYSSA;
-      }
-    }
-
-    // Perustiedot is available if the projekti has been saved
-    projekti.tallennettu = true;
-    projekti.status = API.Status.EI_JULKAISTU;
-
-    // Aloituskuulutus is available, if projekti has all basic information set
-    if (checkPerustiedot()) {
-      return projekti;
-    }
-
-    checkSuunnittelu();
-
-    checkNahtavillaolo();
-
-    checkHyvaksymisMenettelyssa();
-
-    return projekti;
-  }
 }
 
 function removeUndefinedFields(object: API.Projekti): Partial<API.Projekti> {
   return pickBy(object, (value) => value !== undefined);
-}
-
-export function isDateInThePast(kuulutusVaihePaattyyPaiva: string | undefined): boolean {
-  if (kuulutusVaihePaattyyPaiva) {
-    // Support times as well for testing, so do not set the time if it was already provided
-    let date = parseDate(kuulutusVaihePaattyyPaiva);
-    if (kuulutusVaihePaattyyPaiva.length == ISO_DATE_FORMAT.length) {
-      date = date.set("hour", 23).set("minute", 59);
-    }
-    return date.isBefore(dayjs());
-  }
-  return false;
 }
 
 export const projektiAdapter = new ProjektiAdapter();

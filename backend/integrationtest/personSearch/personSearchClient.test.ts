@@ -5,10 +5,8 @@ import { personSearch } from "../../src/personSearch/personSearchClient";
 import { Kayttaja } from "../../../common/graphql/apiModel";
 import { personSearchUpdaterClient } from "../../src/personSearch/personSearchUpdaterClient";
 import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/personSearchUpdaterHandler";
-import * as sinon from "sinon";
 import log from "loglevel";
-
-const sandbox = sinon.createSandbox();
+import sinon from "sinon";
 
 export function expectNotEmptyKayttaja(kayttaja: Kayttaja): void {
   expect(kayttaja.vaylaKayttajaTyyppi).to.not.be.empty;
@@ -24,14 +22,14 @@ describe("PersonSearchClient", () => {
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
 
   beforeEach(() => {
-    readUsersFromSearchUpdaterLambda = sandbox.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
+    readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
     readUsersFromSearchUpdaterLambda.callsFake(async () => {
       return await personSearchUpdaterHandler.handleEvent();
     });
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   it("should list users", async function () {

@@ -112,7 +112,7 @@
   "kielitiedot": {
     "ensisijainenKieli": "SUOMI"
   },
-  "paivitetty": "2020-01-01T00:00:00+03:00",
+  "paivitetty": "2020-01-01T00:00:00+02:00",
   "kayttoOikeudet": [
     {
       "kayttajatunnus": "A000112",
@@ -281,7 +281,7 @@
           "jarjestys": 12,
           "tila": "VALMIS",
           "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
-          "tuotu": "2020-01-01T00:00:00+03:00"
+          "tuotu": "2020-01-01T00:00:00+02:00"
         }
       ],
       "__typename": "Vuorovaikutus",
@@ -291,7 +291,7 @@
           "nimi": "new karttakuvalla_tiedosto.pdf",
           "jarjestys": 11,
           "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
-          "tuotu": "2020-01-01T00:00:00+03:00",
+          "tuotu": "2020-01-01T00:00:00+02:00",
           "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
           "tila": "VALMIS"
         }

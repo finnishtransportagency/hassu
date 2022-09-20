@@ -110,12 +110,6 @@
         "__typename": "__Type"
       },
       {
-        "kind": "OBJECT",
-        "name": "ArkistointiTunnus",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
         "kind": "ENUM",
         "name": "AsiakirjaTyyppi",
         "possibleTypes": null,

@@ -20,7 +20,6 @@ async function main() {
     uploadBucket: hassuDatabaseStack.uploadBucket,
     yllapitoBucket: hassuDatabaseStack.yllapitoBucket,
     internalBucket: hassuDatabaseStack.internalBucket,
-    archiveBucket: hassuDatabaseStack.archiveBucket,
     publicBucket: hassuDatabaseStack.publicBucket,
   });
   await hassuBackendStack.process().catch((e) => {

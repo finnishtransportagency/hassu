@@ -12,8 +12,14 @@ import { projektiDatabase } from "../../database/projektiDatabase";
 import { aineistoService } from "../../aineisto/aineistoService";
 import { fileService } from "../../files/fileService";
 import { asiakirjaService, HyvaksymisPaatosKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakirjaService";
-import { parseDate } from "../../util/dateUtil";
+import { parseAndAddDate, parseDate } from "../../util/dateUtil";
 import { ProjektiPaths } from "../../files/ProjektiPath";
+import {
+  HYVAKSYMISPAATOS_DURATION_UNIT,
+  HYVAKSYMISPAATOS_DURATION_VALUE,
+  JATKOPAATOS_DURATION_UNIT,
+  JATKOPAATOS_DURATION_VALUE,
+} from "../../projekti/status/statusHandler";
 
 async function createPDF(
   asiakirjaTyyppi: HyvaksymisPaatosKuulutusAsiakirjaTyyppi,
@@ -83,8 +89,17 @@ class HyvaksymisPaatosVaiheTilaManager extends TilaManager {
     julkaisu.tila = HyvaksymisPaatosVaiheTila.HYVAKSYTTY;
     julkaisu.hyvaksyja = projektiPaallikko.uid;
 
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, ajastettuTarkistus: this.getNextAjastettuTarkistus(julkaisu, true) });
+
     await projektiDatabase.updateHyvaksymisPaatosVaiheJulkaisu(projekti, julkaisu);
     await aineistoService.publishHyvaksymisPaatosVaihe(projekti.oid, julkaisu.id);
+  }
+
+  private getNextAjastettuTarkistus(julkaisu: HyvaksymisPaatosVaiheJulkaisu, isHyvaksymisPaatos) {
+    if (isHyvaksymisPaatos) {
+      return parseAndAddDate(julkaisu.kuulutusVaihePaattyyPaiva, HYVAKSYMISPAATOS_DURATION_VALUE, HYVAKSYMISPAATOS_DURATION_UNIT).format();
+    }
+    return parseAndAddDate(julkaisu.kuulutusVaihePaattyyPaiva, JATKOPAATOS_DURATION_VALUE, JATKOPAATOS_DURATION_UNIT).format();
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

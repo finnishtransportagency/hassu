@@ -1,9 +1,7 @@
 import { Kielitiedot, KuulutusYhteystiedot, Linkki, Suunnitelma, Velho, Yhteystieto } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 
-export function adaptLiittyvatSuunnitelmatByAddingTypename(
-  suunnitelmat?: Suunnitelma[] | null
-): API.Suunnitelma[] | undefined | null {
+export function adaptLiittyvatSuunnitelmatByAddingTypename(suunnitelmat?: Suunnitelma[] | null): API.Suunnitelma[] | undefined | null {
   if (suunnitelmat) {
     const liittyvatSuunnitelmat = suunnitelmat.map(
       (suunnitelma) =>

@@ -15,18 +15,14 @@ import { expect } from "chai";
 import { api } from "../apiClient";
 import { adaptAineistoToInput, expectToMatchSnapshot } from "./util";
 import { apiTestFixture } from "../apiTestFixture";
-import {
-  cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps,
-  cleanupHyvaksymisPaatosVaiheTimestamps,
-} from "./cleanUpFunctions";
+import { cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps, cleanupHyvaksymisPaatosVaiheTimestamps } from "./cleanUpFunctions";
+import dayjs from "dayjs";
 
-export async function testHyvaksymisPaatosVaiheHyvaksymismenettelyssa(
-  oid: string,
-  userFixture: UserFixture
-): Promise<void> {
+export async function testHyvaksymisPaatosVaiheHyvaksymismenettelyssa(oid: string, userFixture: UserFixture): Promise<void> {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   const julkaisu = dbProjekti.nahtavillaoloVaiheJulkaisut[0];
-  julkaisu.kuulutusVaihePaattyyPaiva = "2022-06-08";
+  // Päättymispäivä alle vuosi menneisyyteen, jottei projekti mene epäaktiiviseksi
+  julkaisu.kuulutusVaihePaattyyPaiva = dayjs().add(-2, "day").format();
   await projektiDatabase.updateNahtavillaoloVaiheJulkaisu(dbProjekti, julkaisu);
 
   userFixture.loginAsAdmin();
@@ -99,9 +95,7 @@ export async function testHyvaksymisPaatosVaiheApproval(
 
   const projektiHyvaksyttavaksi = await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA);
   expect(projektiHyvaksyttavaksi.hyvaksymisPaatosVaiheJulkaisut).to.have.length(1);
-  expect(projektiHyvaksyttavaksi.hyvaksymisPaatosVaiheJulkaisut[0].tila).to.eq(
-    HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA
-  );
+  expect(projektiHyvaksyttavaksi.hyvaksymisPaatosVaiheJulkaisut[0].tila).to.eq(HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA);
 
   await api.siirraTila({
     oid,

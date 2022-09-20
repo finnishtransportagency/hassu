@@ -1,26 +1,9 @@
 import { projektiDatabase } from "../database/projektiDatabase";
-import {
-  getVaylaUser,
-  requirePermissionLuku,
-  requirePermissionLuonti,
-  requirePermissionMuokkaa,
-  requireVaylaUser,
-} from "../user";
+import { getVaylaUser, requirePermissionLuku, requirePermissionLuonti, requirePermissionMuokkaa, requireVaylaUser } from "../user";
 import { velho } from "../velho/velhoClient";
 import * as API from "../../../common/graphql/apiModel";
-import {
-  ArkistointiTunnus,
-  NykyinenKayttaja,
-  ProjektiRooli,
-  TallennaProjektiInput,
-  Velho,
-} from "../../../common/graphql/apiModel";
-import {
-  ProjektiAdaptationResult,
-  projektiAdapter,
-  ProjektiEventType,
-  VuorovaikutusPublishedEvent,
-} from "./adapter/projektiAdapter";
+import { NykyinenKayttaja, ProjektiRooli, TallennaProjektiInput, Velho } from "../../../common/graphql/apiModel";
+import { ProjektiAdaptationResult, projektiAdapter, ProjektiEventType, VuorovaikutusPublishedEvent } from "./adapter/projektiAdapter";
 import { adaptVelhoByAddingTypename } from "./adapter/common";
 import { auditLog, log } from "../logger";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
@@ -80,9 +63,9 @@ export async function loadProjektiJulkinen(oid: string): Promise<API.ProjektiJul
   throw new NotFoundError("Projektia ei löydy: " + oid);
 }
 
-export async function arkistoiProjekti(oid: string): Promise<ArkistointiTunnus> {
+export async function arkistoiProjekti(oid: string): Promise<string> {
   requireAdmin();
-  return { __typename: "ArkistointiTunnus", ...(await projektiArchive.archiveProjekti(oid)) };
+  return projektiArchive.archiveProjekti(oid);
 }
 
 export async function createOrUpdateProjekti(input: TallennaProjektiInput): Promise<string> {

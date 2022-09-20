@@ -34,8 +34,6 @@ function getSivuTilanPerusteella(tila: Status | null | undefined) {
       return "hyvaksymismenettelyssa";
     case Status.HYVAKSYTTY:
       return "hyvaksymispaatos";
-    case Status.LAINVOIMA:
-      return "lainvoima";
     default:
       return "";
   }

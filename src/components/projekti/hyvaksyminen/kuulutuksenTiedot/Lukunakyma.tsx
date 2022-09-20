@@ -13,6 +13,7 @@ import { splitFilePath } from "../../../../util/fileUtil";
 import { Link } from "@mui/material";
 import lowerCase from "lodash/lowerCase";
 import IlmoituksenVastaanottajatLukutila from "./IlmoituksenVastaanottajatLukutila";
+import ButtonFlatWithIcon from "@components/button/ButtonFlat";
 
 interface Props {
   hyvaksymisPaatosVaiheJulkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
@@ -61,9 +62,21 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
           <p className="vayla-label md:col-span-1">Kuulutuspäivä</p>
           <p className="vayla-label md:col-span-3">Kuulutusvaihe päättyy</p>
           <p className="md:col-span-1 mb-0">{kuulutusPaiva}</p>
-          <p className="md:col-span-3 mb-0">
+          <p className="md:col-span-1 mb-0">
             <FormatDate date={hyvaksymisPaatosVaiheJulkaisu.kuulutusVaihePaattyyPaiva} />
           </p>
+          {process.env.ENVIRONMENT != "prod" && (
+            <ButtonFlatWithIcon
+              icon="history"
+              className="md:col-span-2 mb-0"
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.assign(`/api/test/${projekti.oid}/hyvaksymispaatosmenneisyyteen`);
+              }}
+            >
+              Siirrä menneisyyteen (TESTAAJILLE)
+            </ButtonFlatWithIcon>
+          )}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4">
           <p className="vayla-label md:col-span-1">Päätöksen päivä</p>

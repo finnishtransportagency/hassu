@@ -27,34 +27,30 @@ import { NotFoundError } from "../src/error/NotFoundError";
 import { emailClient } from "../src/email/email";
 import AWSMock from "aws-sdk-mock";
 import AWS from "aws-sdk";
+import { findJulkaisuWithTila } from "../src/projekti/projektiUtil";
 
 const { expect, assert } = require("chai");
-
-const sandbox = sinon.createSandbox();
 
 describe("apiHandler", () => {
   let userFixture: UserFixture;
   let awsStub: sinon.SinonStub;
 
   afterEach(() => {
-    sandbox.reset();
-    sinon.reset();
-    sinon.restore();
-    sandbox.restore();
     userFixture.logout();
+    sinon.restore();
     AWSMock.restore();
   });
 
   beforeEach(() => {
     userFixture = new UserFixture(userService);
     AWSMock.setSDKInstance(AWS);
-    awsStub = sandbox.stub();
+    awsStub = sinon.stub();
     awsStub.resolves({});
     AWSMock.mock("S3", "putObject", awsStub);
     AWSMock.mock("S3", "copyObject", awsStub);
     AWSMock.mock("S3", "getObject", awsStub);
 
-    const headObjectStub = sandbox.stub();
+    const headObjectStub = sinon.stub();
     AWSMock.mock("S3", "headObject", headObjectStub);
     headObjectStub.resolves({ Metadata: {} });
   });
@@ -75,16 +71,16 @@ describe("apiHandler", () => {
     let sendEmailStub: sinon.SinonStub;
 
     beforeEach(() => {
-      createProjektiStub = sandbox.stub(projektiDatabase, "createProjekti");
-      getKayttajasStub = sandbox.stub(personSearch, "getKayttajas");
-      saveProjektiStub = sandbox.stub(projektiDatabase, "saveProjekti");
-      loadProjektiByOidStub = sandbox.stub(projektiDatabase, "loadProjektiByOid");
-      insertAloitusKuulutusJulkaisuStub = sandbox.stub(projektiDatabase, "insertAloitusKuulutusJulkaisu");
-      updateAloitusKuulutusJulkaisuStub = sandbox.stub(projektiDatabase, "updateAloitusKuulutusJulkaisu");
-      deleteAloitusKuulutusJulkaisuStub = sandbox.stub(projektiDatabase, "deleteAloitusKuulutusJulkaisu");
-      loadVelhoProjektiByOidStub = sandbox.stub(velho, "loadProjekti");
-      persistFileToProjektiStub = sandbox.stub(fileService, "persistFileToProjekti");
-      sendEmailStub = sandbox.stub(emailClient, "sendEmail");
+      createProjektiStub = sinon.stub(projektiDatabase, "createProjekti");
+      getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
+      saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
+      loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
+      insertAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "insertAloitusKuulutusJulkaisu");
+      updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "updateAloitusKuulutusJulkaisu");
+      deleteAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "deleteAloitusKuulutusJulkaisu");
+      loadVelhoProjektiByOidStub = sinon.stub(velho, "loadProjekti");
+      persistFileToProjektiStub = sinon.stub(fileService, "persistFileToProjekti");
+      sendEmailStub = sinon.stub(emailClient, "sendEmail");
 
       fixture = new ProjektiFixture();
       personSearchFixture = new PersonSearchFixture();
@@ -118,8 +114,8 @@ describe("apiHandler", () => {
 
         const projekti = await api.lataaProjekti(fixture.PROJEKTI1_OID);
         expect(projekti).toMatchSnapshot();
-        sandbox.assert.calledOnce(loadProjektiByOidStub);
-        sandbox.assert.calledOnce(loadVelhoProjektiByOidStub);
+        sinon.assert.calledOnce(loadProjektiByOidStub);
+        sinon.assert.calledOnce(loadVelhoProjektiByOidStub);
       });
     });
 
@@ -212,17 +208,17 @@ describe("apiHandler", () => {
           const p = await api.lataaProjekti(oid);
           if (expectedState == AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA) {
             expect(p.aloitusKuulutusJulkaisut).not.be.empty;
-            const julkaisu = findAloitusKuulutusJulkaisuByState(p, AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA);
+            const julkaisu = findJulkaisuWithTila(p.aloitusKuulutusJulkaisut, AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA);
             expect(julkaisu).to.not.be.empty;
             expect(!!p.aloitusKuulutus?.palautusSyy); // null or undefined
           } else if (expectedState == AloitusKuulutusTila.HYVAKSYTTY) {
             expect(p.aloitusKuulutusJulkaisut).not.be.empty;
-            const julkaisu = findAloitusKuulutusJulkaisuByState(p, AloitusKuulutusTila.HYVAKSYTTY);
+            const julkaisu = findJulkaisuWithTila(p.aloitusKuulutusJulkaisut, AloitusKuulutusTila.HYVAKSYTTY);
             expect(julkaisu).to.not.be.empty;
             expect(!!p.aloitusKuulutus?.palautusSyy); // null or undefined
           } else {
             // Either rejected or inital state
-            const julkaisu = findAloitusKuulutusJulkaisuByState(p, AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA);
+            const julkaisu = findJulkaisuWithTila(p.aloitusKuulutusJulkaisut, AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA);
             expect(julkaisu).to.be.undefined;
             if (syy) {
               expect(p.aloitusKuulutus?.palautusSyy).to.eq(syy);
@@ -407,7 +403,3 @@ describe("apiHandler", () => {
     });
   });
 });
-
-function findAloitusKuulutusJulkaisuByState(p: Projekti, tila: AloitusKuulutusTila) {
-  return p.aloitusKuulutusJulkaisut?.filter((j) => j.tila == tila).pop();
-}

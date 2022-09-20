@@ -20,7 +20,6 @@ import fs from "fs";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import { detailedDiff } from "deep-object-diff";
 import { parseDate } from "../../../src/util/dateUtil";
-import { projektiArchive } from "../../../src/archive/projektiArchiveService";
 import { cleanupVuorovaikutusTimestamps } from "./cleanUpFunctions";
 import Sinon from "sinon";
 import * as log from "loglevel";
@@ -30,6 +29,8 @@ import { expectApiError, expectToMatchSnapshot } from "./util";
 import { handleEvent } from "../../../src/aineisto/aineistoImporterLambda";
 import { SQSEvent } from "aws-lambda/trigger/sqs";
 import cloneDeep from "lodash/cloneDeep";
+import { projektiDatabase } from "../../../src/database/projektiDatabase";
+import { fileService } from "../../../src/files/fileService";
 
 const { expect } = require("chai");
 
@@ -404,10 +405,6 @@ export async function testPublicAccessToProjekti(
   expectToMatchSnapshot("publicProjekti" + (description || ""), actual);
 }
 
-export async function archiveProjekti(oid: string): Promise<void> {
-  await projektiArchive.archiveProjekti(oid);
-}
-
 export async function searchProjectsFromVelhoAndPickFirst(): Promise<string> {
   const searchResult = await api.getVelhoSuunnitelmasByName("HASSU AUTOMAATTITESTIPROJEKTI1");
   // tslint:disable-next-line:no-unused-expression
@@ -457,4 +454,10 @@ export async function processQueue(fakeAineistoImportQueue: SQSEvent[]): Promise
     await handleEvent(event, null, null);
   }
   fakeAineistoImportQueue.splice(0, fakeAineistoImportQueue.length); // Clear the queue
+}
+
+export async function deleteProjekti(oid: string): Promise<void> {
+  await projektiDatabase.deleteProjektiByOid(oid);
+
+  await fileService.deleteProjekti(oid);
 }

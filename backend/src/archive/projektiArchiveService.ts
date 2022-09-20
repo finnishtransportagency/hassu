@@ -1,16 +1,12 @@
-import dayjs from "dayjs";
-import { ArchivedProjektiKey, projektiDatabase } from "../database/projektiDatabase";
+import { projektiDatabase } from "../database/projektiDatabase";
 import { fileService } from "../files/fileService";
 
 class ProjektiArchiveService {
-  async archiveProjekti(oid: string): Promise<ArchivedProjektiKey> {
-    const timestamp = dayjs().format();
-    const archivedProjektiKey = { oid, timestamp };
-    await projektiDatabase.archiveProjektiByOid(archivedProjektiKey);
+  async archiveProjekti(oid: string): Promise<string> {
+    await projektiDatabase.deleteProjektiByOid(oid);
+    await fileService.deleteProjekti(oid);
 
-    await fileService.archiveProjekti(archivedProjektiKey);
-
-    return archivedProjektiKey;
+    return oid;
   }
 }
 

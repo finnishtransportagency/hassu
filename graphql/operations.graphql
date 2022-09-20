@@ -36,5 +36,5 @@ type Mutation {
 
   synkronoiProjektiMuutoksetVelhosta(oid: String!): Velho
 
-  arkistoiProjekti(oid: String!): ArkistointiTunnus
+  arkistoiProjekti(oid: String!): String
 }

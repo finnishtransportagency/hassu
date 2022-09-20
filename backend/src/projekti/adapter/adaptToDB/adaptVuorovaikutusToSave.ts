@@ -1,12 +1,7 @@
 import { DBProjekti, Vuorovaikutus, VuorovaikutusTilaisuus } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { findVuorovaikutusByNumber } from "../../../util/findVuorovaikutusByNumber";
-import {
-  AineistoChangedEvent,
-  ProjektiAdaptationResult,
-  ProjektiEventType,
-  VuorovaikutusPublishedEvent,
-} from "../projektiAdapter";
+import { AineistoChangedEvent, ProjektiAdaptationResult, ProjektiEventType, VuorovaikutusPublishedEvent } from "../projektiAdapter";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
 import { adaptKayttajatunnusList } from "./adaptKayttajatunnusList";
 import { adaptAineistotToSave, adaptIlmoituksenVastaanottajatToSave, adaptYhteystiedotToSave } from "./common";
@@ -35,10 +30,7 @@ export function adaptVuorovaikutusToSave(
       projektiAdaptationResult
     );
 
-    const vuorovaikutusTilaisuudet = adaptVuorovaikutusTilaisuudetToSave(
-      projekti,
-      vuorovaikutusInput.vuorovaikutusTilaisuudet
-    );
+    const vuorovaikutusTilaisuudet = adaptVuorovaikutusTilaisuudetToSave(projekti, vuorovaikutusInput.vuorovaikutusTilaisuudet);
     // Vuorovaikutus must have at least one vuorovaikutustilaisuus
     if (!vuorovaikutusTilaisuudet) {
       throw new IllegalArgumentError("Vuorovaikutuksella pitää olla ainakin yksi vuorovaikutustilaisuus");
