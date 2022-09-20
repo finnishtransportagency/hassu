@@ -2,12 +2,7 @@ import React, { ReactElement } from "react";
 import { useProjektiJulkinen } from "../../../hooks/useProjektiJulkinen";
 import FormatDate from "@components/FormatDate";
 import useTranslation from "next-translate/useTranslation";
-import {
-  AloitusKuulutusJulkaisuJulkinen,
-  AloitusKuulutusTila,
-  Kieli,
-  ProjektiTyyppi,
-} from "../../../../common/graphql/apiModel";
+import { AloitusKuulutusTila, Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import ExtLink from "@components/ExtLink";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section";
@@ -20,32 +15,7 @@ import HassuStack from "@components/layout/HassuStack";
 import useProjektiBreadcrumbsJulkinen from "src/hooks/useProjektiBreadcrumbsJulkinen";
 import { splitFilePath } from "../../../util/fileUtil";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
-
-function formatYhteystiedotText(kuulutus: AloitusKuulutusJulkaisuJulkinen) {
-  const yhteystiedotList = kuulutus.yhteystiedot.map(
-    (yt) =>
-      yt.etunimi +
-      " " +
-      yt.sukunimi +
-      ", puh. " +
-      yt.puhelinnumero +
-      ", " +
-      yt.sahkoposti +
-      " (" +
-      yt.organisaatio +
-      ")"
-  );
-
-  if (yhteystiedotList.length == 1) {
-    return yhteystiedotList[0];
-  } else {
-    return (
-      yhteystiedotList.slice(0, yhteystiedotList.length - 1).join(", ") +
-      " ja " +
-      yhteystiedotList[yhteystiedotList.length - 1]
-    );
-  }
-}
+import formatYhteystiedotText from "src/util/formatYhteystiedotText";
 
 export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): ReactElement {
   const { t } = useTranslation("projekti");
@@ -68,7 +38,7 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
   if (velho.kunnat) {
     sijainti = sijainti + velho.kunnat.join(", ");
   }
-  const yhteystiedot = formatYhteystiedotText(kuulutus);
+  const yhteystiedot = formatYhteystiedotText(kuulutus.yhteystiedot);
   const keyValueData: KeyValueData[] = [
     {
       header: t(`ui-otsikot.nahtavillaoloaika`),
@@ -159,8 +129,7 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
           </SectionContent>
           <h4 className="vayla-small-title">{t(`ui-otsikot.ladattava_kuulutus`)}</h4>
           <SectionContent className="flex gap-4">
-            <ExtLink href={aloituskuulutusPDFPath.path}>{aloituskuulutusPDFPath.fileName}</ExtLink> (
-            {aloituskuulutusPDFPath.fileExt}) (
+            <ExtLink href={aloituskuulutusPDFPath.path}>{aloituskuulutusPDFPath.fileName}</ExtLink> ({aloituskuulutusPDFPath.fileExt}) (
             <FormatDate date={kuulutus.kuulutusPaiva} />-
             <FormatDate date={kuulutus.siirtyySuunnitteluVaiheeseen} />)
           </SectionContent>
