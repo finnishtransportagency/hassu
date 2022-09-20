@@ -34,8 +34,7 @@ export type ProjektiDocument = {
 export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocument> {
   projekti.tallennettu = true;
   const apiProjekti = projektiAdapter.adaptProjekti(projekti);
-
-  return {
+  const partialDoc: Partial<ProjektiDocument> = {
     nimi: safeTrim(projekti.velho.nimi),
     asiatunnus: safeTrim(projekti.velho.asiatunnusELY || projekti.velho.asiatunnusVayla || ""),
     projektiTyyppi: projekti.velho.tyyppi,
@@ -49,7 +48,9 @@ export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocu
       .pop(),
     paivitetty: projekti.paivitetty || dayjs().format(),
     muokkaajat: projekti.kayttoOikeudet.map((value) => value.kayttajatunnus),
-  } as Partial<ProjektiDocument>;
+  };
+
+  return partialDoc;
 }
 
 export function adaptProjektiToJulkinenIndex(projekti: ProjektiJulkinen, kieli: Kieli): Omit<ProjektiDocument, "oid"> | undefined {
@@ -95,7 +96,7 @@ export function adaptProjektiToJulkinenIndex(projekti: ProjektiJulkinen, kieli: 
       });
     }
 
-    return {
+    const docWihtoutOid: Omit<ProjektiDocument, "oid"> = {
       nimi: safeTrim(nimi),
       hankkeenKuvaus,
       projektiTyyppi: projekti.velho.tyyppi,
@@ -106,7 +107,8 @@ export function adaptProjektiToJulkinenIndex(projekti: ProjektiJulkinen, kieli: 
       vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
       paivitetty: projekti.paivitetty || dayjs().format(),
       publishTimestamp,
-    } as Omit<ProjektiDocument, "oid">;
+    };
+    return docWihtoutOid;
   }
 }
 
@@ -115,6 +117,7 @@ export function adaptSearchResultsToProjektiDocuments(results: any): ProjektiDoc
     return [];
   }
   return results.hits.hits.map((hit: any) => {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     return { ...hit._source, oid: hit._id } as ProjektiDocument;
   });
 }
@@ -126,15 +129,14 @@ export function adaptSearchResultsToProjektiHakutulosDokumenttis(results: any): 
   }
   return (
     results.hits?.hits?.map((hit: any) => {
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       return { ...hit._source, oid: hit._id, __typename: "ProjektiHakutulosDokumentti" } as ProjektiHakutulosDokumentti;
     }) || []
   );
 }
 
-function safeTrim(s: string): string | unknown {
-  if (s) {
-    return s.trim();
-  }
+function safeTrim(s: string): string {
+  return s.trim();
 }
 
 function selectNimi(nimi: string, kielitiedot: Kielitiedot, kieli: Kieli): string {

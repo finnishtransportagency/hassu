@@ -50,13 +50,11 @@ export class KayttoOikeudetManager {
     // Add new users
     const newUsers = differenceWith(changes, resultUsers, (u1, u2) => u1.kayttajatunnus === u2.kayttajatunnus);
     newUsers.map((newUser) => {
-      const userToAdd = {
+      const userToAdd: Partial<DBVaylaUser> = {
         puhelinnumero: newUser.puhelinnumero,
         kayttajatunnus: newUser.kayttajatunnus,
         rooli: newUser.rooli,
-        esitetaanKuulutuksessa:
-          newUser.rooli === ProjektiRooli.PROJEKTIPAALLIKKO ? true : newUser.esitetaanKuulutuksessa,
-      } as Partial<DBVaylaUser>;
+      };
       try {
         const userWithAllInfo = this.fillInUserInfoFromUserManagement({
           user: userToAdd,
@@ -104,8 +102,9 @@ export class KayttoOikeudetManager {
   }
 
   addUserByKayttajatunnus(kayttajatunnus: string, rooli: ProjektiRooli): DBVaylaUser | undefined {
+    const partialUser: Partial<DBVaylaUser> = { kayttajatunnus, rooli };
     const user = this.fillInUserInfoFromUserManagement({
-      user: { kayttajatunnus, rooli } as Partial<DBVaylaUser>,
+      user: partialUser,
       searchMode: SearchMode.UID,
     });
     if (user) {

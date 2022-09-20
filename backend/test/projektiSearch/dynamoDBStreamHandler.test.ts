@@ -52,6 +52,7 @@ describe("dynamoDBStreamHandler", () => {
     sandbox.restore();
   });
 
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   const context = { functionName: "myFunction" } as Context;
   it("should index new projektis successfully", async () => {
     await handleDynamoDBEvents(fixture.createNewProjektiEvent(projekti), context);

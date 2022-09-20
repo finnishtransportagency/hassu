@@ -41,10 +41,11 @@ export class Kayttajas {
     return new Kayttajas(
       kayttajas.reduce((map, kayttaja) => {
         if (kayttaja.uid) {
-          map[kayttaja.uid] = {
+          const person: Person = {
             ...kayttaja,
             email: [kayttaja.email],
-          } as Person;
+          };
+          map[kayttaja.uid] = person;
         }
         return map;
       }, {} as Record<string, Person>)

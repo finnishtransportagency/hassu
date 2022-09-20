@@ -97,7 +97,7 @@ function adaptHyvaksymisPaatosVaihePDFPaths(
 
   for (const kieli in hyvaksymisPaatosVaihePDFs) {
     const pdfs = hyvaksymisPaatosVaihePDFs[kieli];
-    result[kieli] = {
+    const hyvaksymisPaatosVaihePdf: HyvaksymisPaatosVaihePDF = {
       ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath: getYllapitoPathForFile(
         pdfs.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath
       ),
@@ -107,7 +107,8 @@ function adaptHyvaksymisPaatosVaihePDFPaths(
       ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath: getYllapitoPathForFile(
         pdfs.ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath
       ),
-    } as HyvaksymisPaatosVaihePDF;
+    };
+    result[kieli] = hyvaksymisPaatosVaihePdf;
   }
   return { __typename: "HyvaksymisPaatosVaihePDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
 }

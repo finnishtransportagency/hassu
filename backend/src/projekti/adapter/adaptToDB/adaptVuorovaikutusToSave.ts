@@ -73,16 +73,18 @@ function checkIfAineistoJulkinenChanged(
   }
 
   if (vuorovaikutusPublished() || vuorovaikutusNotPublicAnymore()) {
-    projektiAdaptationResult.pushEvent({
+    const newEvent: VuorovaikutusPublishedEvent = {
       eventType: ProjektiEventType.VUOROVAIKUTUS_PUBLISHED,
       vuorovaikutusNumero: vuorovaikutusToSave.vuorovaikutusNumero,
-    } as VuorovaikutusPublishedEvent);
+    };
+    projektiAdaptationResult.pushEvent(newEvent);
   }
 
   if (vuorovaikutusPublished() || vuorovaikutusNotPublicAnymore() || vuorovaikutusJulkaisuPaivaChanged()) {
-    projektiAdaptationResult.pushEvent({
+    const newEvent: AineistoChangedEvent = {
       eventType: ProjektiEventType.AINEISTO_CHANGED,
-    } as AineistoChangedEvent);
+    };
+    projektiAdaptationResult.pushEvent(newEvent);
   }
 }
 

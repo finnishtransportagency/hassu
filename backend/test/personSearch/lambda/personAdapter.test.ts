@@ -17,30 +17,32 @@ describe("personAdapter", () => {
   it("should adapt person search result succesfully", () => {
     const kayttajas = {};
     adaptPersonSearchResult(searchResultFixture.pekkaProjariSearchResult, kayttajas);
+    const person: Person = {
+      email: ["pekka.projari@vayla.fi"],
+      etuNimi: "Pekka",
+      organisaatio: "Väylävirasto",
+      puhelinnumero: "123456789",
+      sukuNimi: "Projari",
+      vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.A_TUNNUS,
+    };
     expect(kayttajas).to.eql({
-      A123: {
-        email: ["pekka.projari@vayla.fi"],
-        etuNimi: "Pekka",
-        organisaatio: "Väylävirasto",
-        puhelinnumero: "123456789",
-        sukuNimi: "Projari",
-        vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.A_TUNNUS,
-      } as Person,
+      A123: person,
     });
   });
 
   it("should adapt person search result succesfully", () => {
     const kayttajas = {};
     adaptPersonSearchResult(searchResultFixture.mattiMeikalainenSearchResult, kayttajas);
+    const person: Person = {
+      email: ["matti.meikalainen@vayla.fi"],
+      etuNimi: "Matti",
+      organisaatio: "ELY",
+      puhelinnumero: "123456789",
+      sukuNimi: "Meikäläinen",
+      vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.A_TUNNUS,
+    };
     expect(kayttajas).to.eql({
-      A000111: {
-        email: ["matti.meikalainen@vayla.fi"],
-        etuNimi: "Matti",
-        organisaatio: "ELY",
-        puhelinnumero: "123456789",
-        sukuNimi: "Meikäläinen",
-        vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.A_TUNNUS,
-      } as Person,
+      A000111: person,
     });
   });
 });

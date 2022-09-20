@@ -55,13 +55,14 @@ function adaptJulkaisuPDFPaths(oid: string, aloitusKuulutusPDFS: LocalizedMap<Al
 
   const result = {};
   for (const kieli in aloitusKuulutusPDFS) {
-    result[kieli] = {
+    const aloitusKuulutusPdf: AloitusKuulutusPDF = {
       aloituskuulutusPDFPath: fileService.getYllapitoPathForProjektiFile(oid, aloitusKuulutusPDFS[kieli].aloituskuulutusPDFPath),
       aloituskuulutusIlmoitusPDFPath: fileService.getYllapitoPathForProjektiFile(
         oid,
         aloitusKuulutusPDFS[kieli].aloituskuulutusIlmoitusPDFPath
       ),
-    } as AloitusKuulutusPDF;
+    };
+    result[kieli] = aloitusKuulutusPdf;
   }
   return { __typename: "AloitusKuulutusPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
 }

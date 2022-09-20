@@ -93,7 +93,7 @@ export class ProjektiAdapter {
       ...fieldsToCopyAsIs
     } = dbProjekti;
 
-    const apiProjekti = removeUndefinedFields({
+    const apiProjekti: API.Projekti = removeUndefinedFields({
       __typename: "Projekti",
       tallennettu: !!dbProjekti.tallennettu,
       kayttoOikeudet: KayttoOikeudetManager.adaptAPIKayttoOikeudet(kayttoOikeudet),
@@ -131,7 +131,7 @@ export class ProjektiAdapter {
       virhetiedot,
       kasittelynTila: adaptKasittelynTila(kasittelynTila),
       ...fieldsToCopyAsIs,
-    }) as API.Projekti;
+    });
     if (apiProjekti.tallennettu) {
       applyProjektiStatus(apiProjekti);
     }
@@ -163,7 +163,7 @@ export class ProjektiAdapter {
     kayttoOikeudetManager.applyChanges(kayttoOikeudet);
     const vuorovaikutukset = adaptVuorovaikutusToSave(projekti, projektiAdaptationResult, suunnitteluVaihe?.vuorovaikutus);
     const aloitusKuulutusToSave = adaptAloitusKuulutusToSave(aloitusKuulutus);
-    const dbProjekti = mergeWith(
+    const dbProjekti: DBProjekti = mergeWith(
       {},
       {
         oid,
@@ -191,7 +191,7 @@ export class ProjektiAdapter {
         salt: projekti.salt || lisaAineistoService.generateSalt(),
         kasittelynTila,
       }
-    ) as DBProjekti;
+    );
     projektiAdaptationResult.setProjekti(dbProjekti);
     return projektiAdaptationResult;
   }

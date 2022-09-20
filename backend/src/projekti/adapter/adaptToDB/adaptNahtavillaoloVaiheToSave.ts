@@ -42,7 +42,7 @@ export function adaptNahtavillaoloVaiheToSave(
     }
   }
 
-  return mergeWith({}, dbNahtavillaoloVaihe, {
+  const uusiNahtavillaolovaihe: NahtavillaoloVaihe = {
     kuulutusPaiva,
     kuulutusVaihePaattyyPaiva,
     muistutusoikeusPaattyyPaiva,
@@ -53,5 +53,7 @@ export function adaptNahtavillaoloVaiheToSave(
     kuulutusYhteystiedot: adaptYhteystiedotToSave(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat),
     hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus),
-  } as NahtavillaoloVaihe);
+  };
+
+  return mergeWith({}, dbNahtavillaoloVaihe, uusiNahtavillaolovaihe);
 }

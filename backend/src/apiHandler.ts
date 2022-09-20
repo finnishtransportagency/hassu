@@ -70,13 +70,9 @@ async function executeOperation(event: AppSyncResolverEvent<AppSyncEventArgument
     case apiConfig.listaaVelhoProjektit.name:
       return listaaVelhoProjektit(event.arguments as ListaaVelhoProjektitQueryVariables);
     case apiConfig.listaaVelhoProjektiAineistot.name:
-      return velhoDocumentHandler.listaaVelhoProjektiAineistot(
-        (event.arguments as ListaaVelhoProjektiAineistotQueryVariables).oid
-      );
+      return velhoDocumentHandler.listaaVelhoProjektiAineistot((event.arguments as ListaaVelhoProjektiAineistotQueryVariables).oid);
     case apiConfig.haeVelhoProjektiAineistoLinkki.name:
-      return velhoDocumentHandler.haeVelhoProjektiAineistoLinkki(
-        event.arguments as HaeVelhoProjektiAineistoLinkkiQueryVariables
-      );
+      return velhoDocumentHandler.haeVelhoProjektiAineistoLinkki(event.arguments as HaeVelhoProjektiAineistoLinkkiQueryVariables);
     case apiConfig.haeProjektiMuutoksetVelhosta.name:
       return findUpdatesFromVelho((event.arguments as HaeProjektiMuutoksetVelhostaQueryVariables).oid);
     case apiConfig.synkronoiProjektiMuutoksetVelhosta.name:
@@ -130,7 +126,8 @@ export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArgume
       try {
         await identifyUser(event);
         const data = await executeOperation(event);
-        return { data, correlationId: getCorrelationId() } as LambdaResult;
+        const lambdaResult: LambdaResult = { data, correlationId: getCorrelationId() };
+        return lambdaResult;
       } catch (e: unknown) {
         log.error(e);
         if (e instanceof Error) {
