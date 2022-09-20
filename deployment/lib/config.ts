@@ -2,7 +2,7 @@ import { ExecException } from "child_process";
 import * as ssm from "@aws-cdk/aws-ssm";
 import { SSM } from "aws-sdk";
 import log from "loglevel";
-import { BaseConfig, getEnv } from "../../common/BaseConfig";
+import { BaseConfig } from "../../common/BaseConfig";
 import { readFrontendStackOutputs } from "../bin/setupEnvironment";
 import { Construct } from "@aws-cdk/core";
 
@@ -22,18 +22,24 @@ function execShellCommand(cmd: string): Promise<string> {
   });
 }
 
+function getEnv(name: string) {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(name + "-ympäristömuuttujaa ei ole asetettu");
+  }
+  return value;
+}
+
 export class Config extends BaseConfig {
   public static readonly uploadBucketName = `hassu-${BaseConfig.env}-upload`;
   public static readonly yllapitoBucketName = `hassu-${Config.env}-yllapito`;
   public static readonly publicBucketName = `hassu-${Config.env}-public`;
-  public static readonly internalBucketName = `hassu-${Config.env}-internal`;
   public static readonly archiveBucketName = `hassu-${Config.env}-archive`;
   public static readonly reportBucketName = `hassu-report`;
   public readonly dmzProxyEndpoint: string;
   // @ts-ignore
   public frontendDomainName: string;
   public readonly cloudfrontCertificateArn?: string;
-  public static readonly projektiTableName = "Projekti-" + getEnv("ENVIRONMENT");
   public static readonly feedbackTableName = "Palaute-" + getEnv("ENVIRONMENT");
   public static readonly projektiArchiveTableName = "Projekti-arkisto-" + getEnv("ENVIRONMENT");
   public readonly velhoEnv;
@@ -67,7 +73,7 @@ export class Config extends BaseConfig {
   }
 
   private getParameter(parameterName: string) {
-    if (Config.env === "localstack") {
+    if (BaseConfig.env === "localstack") {
       return "";
     }
     return ssm.StringParameter.valueForStringParameter(this.scope, parameterName);
@@ -77,10 +83,7 @@ export class Config extends BaseConfig {
     if (Config.env === "localstack") {
       return "";
     }
-    return ssm.StringParameter.valueForStringParameter(
-      this.scope,
-      this.getInfraParameterPath(parameterName, infraEnvironment)
-    );
+    return ssm.StringParameter.valueForStringParameter(this.scope, this.getInfraParameterPath(parameterName, infraEnvironment));
   }
 
   public getInfraParameterPath(parameterName: string, infraEnvironment?: string) {
@@ -91,18 +94,11 @@ export class Config extends BaseConfig {
     return Config.getSecureInfraParameterInternal({ parameterName, infraEnvironment, ssm: ssmProvider });
   }
 
-  public async getGlobalSecureInfraParameter(
-    parameterName: string,
-    infraEnvironment: string = BaseConfig.infraEnvironment
-  ) {
+  public async getGlobalSecureInfraParameter(parameterName: string, infraEnvironment: string = BaseConfig.infraEnvironment) {
     return Config.getSecureInfraParameterInternal({ parameterName, infraEnvironment, ssm: globalSsmProvider });
   }
 
-  private static async getSecureInfraParameterInternal(params: {
-    parameterName: string;
-    infraEnvironment: string;
-    ssm: SSM;
-  }) {
+  private static async getSecureInfraParameterInternal(params: { parameterName: string; infraEnvironment: string; ssm: SSM }) {
     // Skip AWS API calls if running locally with localstack and cdklocal
     if (Config.env === "localstack") {
       return "dummy";
@@ -129,13 +125,10 @@ export class Config extends BaseConfig {
   }
 
   private init = async () => {
-    this.branch = process.env.BUILD_BRANCH
-      ? process.env.BUILD_BRANCH
-      : await execShellCommand("git rev-parse --abbrev-ref HEAD");
+    this.branch = process.env.BUILD_BRANCH ? process.env.BUILD_BRANCH : await execShellCommand("git rev-parse --abbrev-ref HEAD");
 
     if (Config.isDeveloperEnvironment()) {
-      this.frontendDomainName =
-        (await readFrontendStackOutputs()).CloudfrontPrivateDNSName || "please-re-run-backend-deployment";
+      this.frontendDomainName = (await readFrontendStackOutputs()).CloudfrontPrivateDNSName || "please-re-run-backend-deployment";
     } else {
       this.frontendDomainName = await this.getSecureInfraParameter("FrontendDomainName");
     }

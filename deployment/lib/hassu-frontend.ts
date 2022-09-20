@@ -86,6 +86,7 @@ export class HassuFrontendStack extends cdk.Stack {
       minifyHandlers: true,
       args: ["build"],
       env: {
+        // Nämä muuttujat pitää välittää toteutukselle next.config.js:n kautta
         ENVIRONMENT: Config.env,
         FRONTEND_DOMAIN_NAME: config.frontendDomainName,
         REACT_APP_API_KEY: this.appSyncAPIKey,
