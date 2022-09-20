@@ -65,8 +65,20 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
 
   const hyvaksymisMenettelyssa = new (class extends StatusHandler<API.Projekti> {
     handle(p: API.Projekti) {
+      const nahtavillaoloVaihe = findJulkaisuWithTila(p.nahtavillaoloVaiheJulkaisut, NahtavillaoloVaiheTila.HYVAKSYTTY);
+      const nahtavillaoloKuulutusPaattyyInThePast = isDateInThePast(nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva);
+
+      if (nahtavillaoloKuulutusPaattyyInThePast) {
+        p.status = API.Status.HYVAKSYMISMENETTELYSSA;
+        super.handle(p); // Continue evaluating next rules
+      }
+    }
+  })();
+
+  const hyvaksytty = new (class extends StatusHandler<API.Projekti> {
+    handle(p: API.Projekti) {
       const hyvaksymisPaatos = p.kasittelynTila?.hyvaksymispaatos;
-      const hasHyvaksymisPaatos = hyvaksymisPaatos && hyvaksymisPaatos.asianumero && hyvaksymisPaatos.paatoksenPvm;
+      const hasHyvaksymisPaatos = hyvaksymisPaatos?.asianumero && hyvaksymisPaatos?.paatoksenPvm;
 
       const nahtavillaoloVaihe = findJulkaisuWithTila(p.nahtavillaoloVaiheJulkaisut, NahtavillaoloVaiheTila.HYVAKSYTTY);
       const nahtavillaoloKuulutusPaattyyInThePast = isDateInThePast(nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva);
@@ -135,6 +147,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
     .setNext(suunnittelu)
     .setNext(nahtavillaOlo)
     .setNext(hyvaksymisMenettelyssa)
+    .setNext(hyvaksytty)
     .setNext(epaAktiivinen1)
     .setNext(jatkoPaatos1)
     .setNext(epaAktiivinen2)

@@ -1,130 +1,109 @@
-import React, { ReactElement } from "react";
+import React, { FC, ReactElement, useEffect } from "react";
 import HassuLink from "../HassuLink";
 import styles from "@styles/projekti/ProjektiSideNavigation.module.css";
 import classNames from "classnames";
 import { useRouter } from "next/router";
-import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { Status } from "@services/api";
 import ProjektiKortti from "./ProjektiKortti";
-
 interface Route {
   title: string;
-  status: Status;
-  href?: string;
-  disabled?: boolean;
+  requiredStatus: Status;
+  pathname?: string;
 }
 
 function statusOrdinal(status: Status): number {
   return Object.values(Status).indexOf(status);
 }
 
-export default function ProjektiSideNavigation(): ReactElement {
-  const router = useRouter();
+export default function ProjektiSideNavigationWrapper(): ReactElement {
   const { data: projekti } = useProjekti();
-  const oid = projekti?.oid;
-
-  const routes: Route[] = [
-    {
-      title: "Projektin henkilöt",
-      status: Status.EI_JULKAISTU_PROJEKTIN_HENKILOT,
-      href: oid && `/yllapito/projekti/${oid}/henkilot`,
-      disabled: !projekti?.tallennettu,
-    },
-    {
-      title: "Projektin tiedot",
-      status: Status.EI_JULKAISTU,
-      href: oid && `/yllapito/projekti/${oid}`,
-      disabled: !projekti?.tallennettu,
-    },
-    {
-      title: "Käsittelyn tila",
-      status: Status.ALOITUSKUULUTUS, //TODO: avataan nyt samaan aikaan kuin aloituskuulutus lahinna esteettisista syista, ei ole speksattu tarkasti avautumista? Muutettava myohemmin, ettei sotke automaattista ohjausta (ordinal) tietyn vaiheen tayttamisen
-      href: oid && `/yllapito/projekti/${oid}/kasittelyntila`,
-      disabled: !projekti?.tallennettu, //pidetaanko tama alusta asti auki, kun vain adminille kaytossa, vai seuraako vaiheita
-    },
-    {
-      title: "Aloituskuulutus",
-      status: Status.ALOITUSKUULUTUS,
-      href: oid && `/yllapito/projekti/${oid}/aloituskuulutus`,
-      disabled: !projekti?.status || projekti?.status === Status.EI_JULKAISTU,
-    },
-    {
-      title: "Suunnitteluvaihe",
-      status: Status.SUUNNITTELU,
-      href: oid && `/yllapito/projekti/${oid}/suunnittelu`,
-      disabled: !projekti?.status || !projekti?.aloitusKuulutusJulkaisut,
-    },
-    {
-      title: "Nähtävilläolovaihe",
-      status: Status.NAHTAVILLAOLO,
-      href: oid && `/yllapito/projekti/${oid}/nahtavillaolo`,
-      disabled: !projekti?.status || !projekti?.suunnitteluVaihe || !projekti.suunnitteluVaihe.julkinen,
-    },
-    {
-      title: "Hyväksyminen",
-      status: Status.HYVAKSYMISMENETTELYSSA,
-      href: oid && `/yllapito/projekti/${oid}/hyvaksymispaatos`,
-      disabled: !projekti?.status || !projekti.nahtavillaoloVaiheJulkaisut,
-    },
-  ];
-
-  // Use router.asPath to find out which step is open in browser
-  let currentRoute = routes.filter((route) => router.asPath === route.href).pop();
-  if (!currentRoute) {
-    if (routes[0].href) {
-      router.push(routes[0].href);
-      return <></>;
-    }
-  } else {
-    const currentStepNumber = statusOrdinal(currentRoute.status);
-
-    if (projekti && projekti.status) {
-      const projektiStepNumber = statusOrdinal(projekti.status);
-
-      // Disable steps that are not allowed by the current projekti.status
-      routes.forEach((route) => {
-        const routeStepNumber = statusOrdinal(route.status);
-        if (routeStepNumber > projektiStepNumber) {
-          route.disabled = true;
-        }
-      });
-
-      // Verify that current page is among the allowed states and that there are no earlier states missing data.
-      // Redirect user to fill the data in the missing steps
-      if (projektiStepNumber < currentStepNumber) {
-        let currentProjektiRoute = routes.filter((route) => route.status == projekti.status).pop();
-        if (currentProjektiRoute?.href) {
-          router.push(currentProjektiRoute.href);
-        }
-      }
-    }
-  }
 
   if (!projekti) {
     return <></>;
   }
 
+  return <ProjektiSideNavigation projekti={projekti} />;
+}
+
+const routes: Route[] = [
+  {
+    title: "Projektin henkilöt",
+    requiredStatus: Status.EI_JULKAISTU_PROJEKTIN_HENKILOT,
+    pathname: `/yllapito/projekti/[oid]/henkilot`,
+  },
+  {
+    title: "Projektin tiedot",
+    requiredStatus: Status.EI_JULKAISTU,
+    pathname: `/yllapito/projekti/[oid]`,
+  },
+  {
+    title: "Käsittelyn tila",
+    requiredStatus: Status.ALOITUSKUULUTUS, //TODO: avataan nyt samaan aikaan kuin aloituskuulutus lahinna esteettisista syista, ei ole speksattu tarkasti avautumista? Muutettava myohemmin, ettei sotke automaattista ohjausta (ordinal) tietyn vaiheen tayttamisen
+    pathname: `/yllapito/projekti/[oid]/kasittelyntila`,
+  },
+  {
+    title: "Aloituskuulutus",
+    requiredStatus: Status.ALOITUSKUULUTUS,
+    pathname: `/yllapito/projekti/[oid]/aloituskuulutus`,
+  },
+  {
+    title: "Suunnitteluvaihe",
+    requiredStatus: Status.SUUNNITTELU,
+    pathname: `/yllapito/projekti/[oid]/suunnittelu`,
+  },
+  {
+    title: "Nähtävilläolovaihe",
+    requiredStatus: Status.NAHTAVILLAOLO,
+    pathname: `/yllapito/projekti/[oid]/nahtavillaolo`,
+  },
+  {
+    title: "Hyväksyminen",
+    requiredStatus: Status.HYVAKSYMISMENETTELYSSA, //Avataan kun nähtävilläolovaihe on päättynyt
+    pathname: `/yllapito/projekti/[oid]/hyvaksymispaatos`,
+  },
+];
+
+const ProjektiSideNavigation: FC<{ projekti: ProjektiLisatiedolla }> = ({ projekti }) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    const requiredStatusForCurrentPath = routes.find((route) => route.pathname === router.pathname)?.requiredStatus;
+
+    const isOnDisallowedRoute =
+      !projekti.status || (requiredStatusForCurrentPath && statusOrdinal(projekti.status) < statusOrdinal(requiredStatusForCurrentPath));
+    const pathnameForAllowedRoute = routes.reduce<string | undefined>((allowedPathname, route) => {
+      if (projekti.status && statusOrdinal(projekti.status) >= statusOrdinal(route.requiredStatus)) {
+        allowedPathname = route.pathname;
+      }
+      return allowedPathname;
+    }, undefined);
+
+    if (isOnDisallowedRoute && pathnameForAllowedRoute) {
+      router.push({ pathname: pathnameForAllowedRoute, query: { oid: projekti.oid } });
+    }
+  }, [projekti, router]);
+
   return (
     <>
       <ProjektiKortti projekti={projekti}></ProjektiKortti>
-
       <div role="navigation" className={styles["side-nav"]}>
         <ul>
-          {routes.map((route, index) => (
-            <li key={index}>
-              <HassuLink
-                href={!route.disabled ? route.href : undefined}
-                className={classNames(
-                  route.disabled && styles.disabled,
-                  router.asPath === route.href && styles.selected
-                )}
-              >
-                {route.title}
-              </HassuLink>
-            </li>
-          ))}
+          {routes.map((route, index) => {
+            const statusDisabled = !projekti.status || statusOrdinal(projekti.status) < statusOrdinal(route.requiredStatus);
+            return (
+              <li key={index}>
+                <HassuLink
+                  href={!statusDisabled ? { pathname: route.pathname, query: { oid: projekti.oid } } : undefined}
+                  className={classNames(statusDisabled && styles.disabled, router.pathname === route.pathname && styles.selected)}
+                >
+                  {route.title}
+                </HassuLink>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </>
   );
-}
+};
