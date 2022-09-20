@@ -1,17 +1,5 @@
-import {
-  DBProjekti,
-  DBVaylaUser,
-  SuunnitteluSopimus,
-  SuunnitteluVaihe,
-  Vuorovaikutus,
-  VuorovaikutusTilaisuus,
-} from "../../database/model";
-import {
-  Kieli,
-  ProjektiRooli,
-  ProjektiTyyppi,
-  VuorovaikutusTilaisuusTyyppi,
-} from "../../../../common/graphql/apiModel";
+import { DBProjekti, DBVaylaUser, SuunnitteluSopimus, SuunnitteluVaihe, Vuorovaikutus, VuorovaikutusTilaisuus } from "../../database/model";
+import { Kieli, ProjektiRooli, ProjektiTyyppi, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import dayjs from "dayjs";
 import { linkSuunnitteluVaihe } from "../../../../common/links";
@@ -137,9 +125,7 @@ export class Kutsu20 extends CommonPdf {
         },
       ]),
 
-      this.localizedParagraph([
-        "Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.",
-      ]),
+      this.localizedParagraph(["Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille."]),
 
       this.tietosuojaParagraph(),
 
@@ -156,9 +142,9 @@ export class Kutsu20 extends CommonPdf {
         "P",
         {},
         this.moreInfoElements(
-          this.vuorovaikutus.esitettavatYhteystiedot,
+          this.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot,
           this.suunnitteluSopimus,
-          this.vuorovaikutus.vuorovaikutusYhteysHenkilot,
+          this.vuorovaikutus.esitettavatYhteystiedot.yhteysHenkilot,
           false
         )
       ),
@@ -246,10 +232,7 @@ export class Kutsu20 extends CommonPdf {
               continued: true,
               underline: true,
             });
-            this.doc
-              .fillColor("black")
-              .text("", { baseline, link: undefined, underline: false, continued: false })
-              .moveDown(3);
+            this.doc.fillColor("black").text("", { baseline, link: undefined, underline: false, continued: false }).moveDown(3);
           }),
         ]);
       } else if (tilaisuus.tyyppi == VuorovaikutusTilaisuusTyyppi.PAIKALLA) {
@@ -273,9 +256,7 @@ export class Kutsu20 extends CommonPdf {
             this.doc.font("ArialMT");
             const place = safeConcatStrings(", ", [
               tilaisuus.paikka,
-              [tilaisuus.osoite, safeConcatStrings(" ", [tilaisuus.postinumero, tilaisuus.postitoimipaikka])].join(
-                ", "
-              ),
+              [tilaisuus.osoite, safeConcatStrings(" ", [tilaisuus.postinumero, tilaisuus.postitoimipaikka])].join(", "),
             ]);
             this.doc
               .text(place, {
@@ -318,10 +299,7 @@ export class Kutsu20 extends CommonPdf {
           if (tilaisuus.projektiYhteysHenkilot) {
             tilaisuus.projektiYhteysHenkilot.forEach((kayttajatunnus) => {
               const user = this.kayttoOikeudet
-                .filter(
-                  (kayttaja) =>
-                    kayttaja.kayttajatunnus == kayttajatunnus || kayttaja.rooli == ProjektiRooli.PROJEKTIPAALLIKKO
-                )
+                .filter((kayttaja) => kayttaja.kayttajatunnus == kayttajatunnus || kayttaja.rooli == ProjektiRooli.PROJEKTIPAALLIKKO)
                 .pop();
               if (user) {
                 const role = translate("rooli." + user.rooli, this.kieli);
@@ -333,11 +311,7 @@ export class Kutsu20 extends CommonPdf {
           if (tilaisuus.esitettavatYhteystiedot) {
             tilaisuus.esitettavatYhteystiedot.forEach((yhteystieto) => {
               this.doc.text(
-                safeConcatStrings(", ", [
-                  `${yhteystieto.etunimi} ${yhteystieto.sukunimi}`,
-                  yhteystieto.titteli,
-                  yhteystieto.puhelinnumero,
-                ])
+                safeConcatStrings(", ", [`${yhteystieto.etunimi} ${yhteystieto.sukunimi}`, yhteystieto.titteli, yhteystieto.puhelinnumero])
               );
             });
             this.doc.text("").moveDown();
@@ -348,9 +322,9 @@ export class Kutsu20 extends CommonPdf {
   }
 
   private formatTilaisuusTime(tilaisuus: VuorovaikutusTilaisuus) {
-    return `${dayjs(tilaisuus.paivamaara).format("DD.MM.YYYY")} ${this.localizedKlo} ${formatTime(
-      tilaisuus.alkamisAika
-    )} - ${formatTime(tilaisuus.paattymisAika)}`;
+    return `${dayjs(tilaisuus.paivamaara).format("DD.MM.YYYY")} ${this.localizedKlo} ${formatTime(tilaisuus.alkamisAika)} - ${formatTime(
+      tilaisuus.paattymisAika
+    )}`;
   }
 }
 

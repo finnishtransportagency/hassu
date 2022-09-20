@@ -1,21 +1,8 @@
-import {
-  AloitusKuulutusJulkaisu,
-  DBProjekti,
-  HyvaksymisPaatosVaiheJulkaisu,
-  KuulutusYhteystiedot,
-  NahtavillaoloVaiheJulkaisu,
-  Velho,
-  Yhteystieto,
-} from "../database/model";
+import { AloitusKuulutusJulkaisu, DBProjekti, HyvaksymisPaatosVaiheJulkaisu, NahtavillaoloVaiheJulkaisu, Velho } from "../database/model";
 import cloneDeep from "lodash/cloneDeep";
-import {
-  AloitusKuulutusTila,
-  HyvaksymisPaatosVaiheTila,
-  NahtavillaoloVaiheTila,
-  ProjektiRooli,
-} from "../../../common/graphql/apiModel";
+import { AloitusKuulutusTila, HyvaksymisPaatosVaiheTila, NahtavillaoloVaiheTila } from "../../../common/graphql/apiModel";
 import { deepClone } from "aws-cdk/lib/util";
-import { vaylaUserToYhteystieto } from "../util/vaylaUserToYhteystieto";
+import adaptStandardiYhteystiedot from "../util/adaptStandardiYhteystiedot";
 import { findJulkaisuWithTila } from "../projekti/projektiUtil";
 
 function createNextAloitusKuulutusJulkaisuID(dbProjekti: DBProjekti) {
@@ -32,7 +19,7 @@ export class AsiakirjaAdapter {
       return {
         ...includedFields,
         id: createNextAloitusKuulutusJulkaisuID(dbProjekti),
-        yhteystiedot: adaptKuulutusYhteystiedot(dbProjekti, kuulutusYhteystiedot),
+        yhteystiedot: adaptStandardiYhteystiedot(dbProjekti, kuulutusYhteystiedot),
         velho: adaptVelho(dbProjekti),
         suunnitteluSopimus: cloneDeep(dbProjekti.suunnitteluSopimus),
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
@@ -102,34 +89,6 @@ export class AsiakirjaAdapter {
       return findJulkaisuWithTila(projekti.aloitusKuulutusJulkaisut, AloitusKuulutusTila.HYVAKSYTTY);
     }
   }
-}
-
-function adaptKuulutusYhteystiedot(
-  dbProjekti: DBProjekti,
-  kuulutusYhteystiedot: KuulutusYhteystiedot | null
-): Yhteystieto[] {
-  const yt: Yhteystieto[] = [];
-  const sahkopostit: string[] = [];
-  dbProjekti.kayttoOikeudet
-    .filter(
-      ({ kayttajatunnus, rooli }) =>
-        rooli === ProjektiRooli.PROJEKTIPAALLIKKO ||
-        kuulutusYhteystiedot?.yhteysHenkilot?.find((yh) => yh === kayttajatunnus)
-    )
-    .forEach((oikeus) => {
-      yt.push(vaylaUserToYhteystieto(oikeus));
-      sahkopostit.push(oikeus.email); //Kerää sähköpostit myöhempää duplikaattien tarkistusta varten.
-    });
-  if (kuulutusYhteystiedot.yhteysTiedot) {
-    kuulutusYhteystiedot.yhteysTiedot.forEach((yhteystieto) => {
-      if (!sahkopostit.find((email) => email === yhteystieto.sahkoposti)) {
-        //Varmista, ettei ole duplikaatteja
-        yt.push(yhteystieto);
-        sahkopostit.push(yhteystieto.sahkoposti);
-      }
-    });
-  }
-  return yt;
 }
 
 function adaptVelho(dbProjekti: DBProjekti): Velho {

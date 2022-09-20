@@ -153,7 +153,7 @@
           "__typename": "Yhteystieto"
         }
       ],
-      "__typename": "KuulutusYhteystiedot"
+      "__typename": "StandardiYhteystiedot"
     },
     "__typename": "AloitusKuulutus"
   },
@@ -306,19 +306,22 @@
       ],
       "vuorovaikutusNumero": 1,
       "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
-      "vuorovaikutusYhteysHenkilot": [
-        "A000112"
-      ],
-      "esitettavatYhteystiedot": [
-        {
-          "sukunimi": "Koi",
-          "sahkoposti": "markku.koi@koi.com",
-          "organisaatio": "Kajaani",
-          "puhelinnumero": "0293121213",
-          "etunimi": "Marko",
-          "__typename": "Yhteystieto"
-        }
-      ]
+      "esitettavatYhteystiedot": {
+        "yhteysHenkilot": [
+          "A000112"
+        ],
+        "yhteysTiedot": [
+          {
+            "sukunimi": "Koi",
+            "sahkoposti": "markku.koi@koi.com",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "etunimi": "Marko",
+            "__typename": "Yhteystieto"
+          }
+        ],
+        "__typename": "StandardiYhteystiedot"
+      }
     },
     {
       "ilmoituksenVastaanottajat": {
@@ -440,20 +443,23 @@
       ],
       "vuorovaikutusNumero": 2,
       "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
-      "vuorovaikutusYhteysHenkilot": [
-        "A000112",
-        "A000111"
-      ],
-      "esitettavatYhteystiedot": [
-        {
-          "sukunimi": "Koi",
-          "sahkoposti": "markku.koi@koi.com",
-          "organisaatio": "Kajaani",
-          "puhelinnumero": "0293121213",
-          "etunimi": "Marko",
-          "__typename": "Yhteystieto"
-        }
-      ]
+      "esitettavatYhteystiedot": {
+        "yhteysHenkilot": [
+          "A000112",
+          "A000111"
+        ],
+        "yhteysTiedot": [
+          {
+            "sukunimi": "Koi",
+            "sahkoposti": "markku.koi@koi.com",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "etunimi": "Marko",
+            "__typename": "Yhteystieto"
+          }
+        ],
+        "__typename": "StandardiYhteystiedot"
+      }
     }
   ]
 }

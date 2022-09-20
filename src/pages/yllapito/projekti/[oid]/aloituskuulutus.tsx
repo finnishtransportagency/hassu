@@ -443,7 +443,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                     />
                   </Section>
                 )}
-                <KuulutuksenYhteystiedot projekti={projekti} useFormReturn={useFormReturn} />
+                <KuulutuksenYhteystiedot projekti={projekti} />
                 <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} />
               </fieldset>
             </form>

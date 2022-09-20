@@ -1,4 +1,4 @@
-import { Kielitiedot, KuulutusYhteystiedot, Linkki, Suunnitelma, Velho, Yhteystieto } from "../../../database/model";
+import { Kielitiedot, StandardiYhteystiedot, Linkki, Suunnitelma, Velho, Yhteystieto } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 
 export function adaptLiittyvatSuunnitelmatByAddingTypename(suunnitelmat?: Suunnitelma[] | null): API.Suunnitelma[] | undefined | null {
@@ -56,12 +56,12 @@ export function adaptYhteystiedotByAddingTypename(yhteystiedot: Yhteystieto[]): 
   return yhteystiedot as undefined | null;
 }
 
-export function adaptKuulutusYhteystiedotByAddingTypename(
-  kuulutusYhteystiedot: KuulutusYhteystiedot
-): API.KuulutusYhteystiedot | undefined | null {
+export function adaptStandardiYhteystiedotByAddingTypename(
+  kuulutusYhteystiedot: StandardiYhteystiedot | API.StandardiYhteystiedotInput
+): API.StandardiYhteystiedot | undefined | null {
   if (kuulutusYhteystiedot) {
     return {
-      __typename: "KuulutusYhteystiedot",
+      __typename: "StandardiYhteystiedot",
       yhteysHenkilot: kuulutusYhteystiedot.yhteysHenkilot,
       yhteysTiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot.yhteysTiedot),
     };

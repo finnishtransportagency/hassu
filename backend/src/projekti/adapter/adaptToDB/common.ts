@@ -30,7 +30,7 @@ export function adaptYhteysHenkilotToSave(yhteystiedot: string[]): string[] {
   return yhteystiedot.filter((yt, index) => yhteystiedot.indexOf(yt) === index);
 }
 
-export function adaptKuulutusYhteystiedot(kuulutusYhteystiedot: API.KuulutusYhteystiedotInput): API.KuulutusYhteystiedotInput {
+export function adaptStandardiYhteystiedot(kuulutusYhteystiedot: API.StandardiYhteystiedotInput): API.StandardiYhteystiedotInput {
   return {
     yhteysTiedot: adaptYhteystiedotToSave(kuulutusYhteystiedot.yhteysTiedot),
     yhteysHenkilot: adaptYhteysHenkilotToSave(kuulutusYhteystiedot.yhteysHenkilot),

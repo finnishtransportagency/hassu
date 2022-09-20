@@ -107,7 +107,7 @@ export class ProjektiAdapter {
         ...velho,
       },
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
-      suunnitteluVaihe: adaptSuunnitteluVaihe(dbProjekti.oid, suunnitteluVaihe, vuorovaikutukset, undefined),
+      suunnitteluVaihe: adaptSuunnitteluVaihe(dbProjekti.oid, kayttoOikeudet, suunnitteluVaihe, vuorovaikutukset),
       nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe),
       nahtavillaoloVaiheJulkaisut: adaptNahtavillaoloVaiheJulkaisut(dbProjekti.oid, nahtavillaoloVaiheJulkaisut),
       hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(dbProjekti, hyvaksymisPaatosVaihe, dbProjekti.kasittelynTila?.hyvaksymispaatos),

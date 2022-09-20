@@ -289,10 +289,8 @@ export class ProjektiFixture {
               aloituskuulutusPDFPath: "/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
             },
             RUOTSI: {
-              aloituskuulutusIlmoitusPDFPath:
-                "/aloituskuulutus/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
-              aloituskuulutusPDFPath:
-                "/aloituskuulutus/KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
+              aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
+              aloituskuulutusPDFPath: "/aloituskuulutus/KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
             },
           },
           kielitiedot: {
@@ -450,13 +448,11 @@ export class ProjektiFixture {
       {
         aloituskuulutusPDFt: {
           SUOMI: {
-            aloituskuulutusIlmoitusPDFPath:
-              "/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
+            aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
             aloituskuulutusPDFPath: "/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
           },
           RUOTSI: {
-            aloituskuulutusIlmoitusPDFPath:
-              "/aloituskuulutus/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
+            aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
             aloituskuulutusPDFPath: "/aloituskuulutus/KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
           },
         },
@@ -757,20 +753,22 @@ export class ProjektiFixture {
     vuorovaikutusJulkaisuPaiva: "2022-03-23",
     videot: [{ nimi: "Esittely", url: "https://video" }],
     kysymyksetJaPalautteetViimeistaan: "2022-03-23T23:48",
-    esitettavatYhteystiedot: [
-      {
-        etunimi: "Marko",
-        sukunimi: "Koi",
-        sahkoposti: "markku.koi@koi.com",
-        organisaatio: "Kajaani",
-        puhelinnumero: "0293121213",
-      },
-    ],
+    esitettavatYhteystiedot: {
+      yhteysTiedot: [
+        {
+          etunimi: "Marko",
+          sukunimi: "Koi",
+          sahkoposti: "markku.koi@koi.com",
+          organisaatio: "Kajaani",
+          puhelinnumero: "0293121213",
+        },
+      ],
+      yhteysHenkilot: [
+        ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
+        ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
+      ],
+    },
     ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
-    vuorovaikutusYhteysHenkilot: [
-      ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
-      ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
-    ],
     vuorovaikutusTilaisuudet: [
       {
         tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,

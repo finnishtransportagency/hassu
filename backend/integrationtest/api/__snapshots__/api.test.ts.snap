@@ -115,16 +115,22 @@ Object {
     "vuorovaikutukset": Array [
       Object {
         "__typename": "Vuorovaikutus",
-        "esitettavatYhteystiedot": Array [
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Marko",
-            "organisaatio": "Kajaani",
-            "puhelinnumero": "0293121213",
-            "sahkoposti": "markku.koi@koi.com",
-            "sukunimi": "Koi",
-          },
-        ],
+        "esitettavatYhteystiedot": Object {
+          "__typename": "StandardiYhteystiedot",
+          "yhteysHenkilot": Array [
+            "A000112",
+          ],
+          "yhteysTiedot": Array [
+            Object {
+              "__typename": "Yhteystieto",
+              "etunimi": "Marko",
+              "organisaatio": "Kajaani",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "markku.koi@koi.com",
+              "sukunimi": "Koi",
+            },
+          ],
+        },
         "esittelyaineistot": undefined,
         "ilmoituksenVastaanottajat": Object {
           "__typename": "IlmoituksenVastaanottajat",
@@ -256,22 +262,25 @@ Object {
             "tyyppi": "SOITTOAIKA",
           },
         ],
-        "vuorovaikutusYhteysHenkilot": Array [
-          "A000112",
-        ],
       },
       Object {
         "__typename": "Vuorovaikutus",
-        "esitettavatYhteystiedot": Array [
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Marko",
-            "organisaatio": "Kajaani",
-            "puhelinnumero": "0293121213",
-            "sahkoposti": "markku.koi@koi.com",
-            "sukunimi": "Koi",
-          },
-        ],
+        "esitettavatYhteystiedot": Object {
+          "__typename": "StandardiYhteystiedot",
+          "yhteysHenkilot": Array [
+            "A000112",
+          ],
+          "yhteysTiedot": Array [
+            Object {
+              "__typename": "Yhteystieto",
+              "etunimi": "Marko",
+              "organisaatio": "Kajaani",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "markku.koi@koi.com",
+              "sukunimi": "Koi",
+            },
+          ],
+        },
         "esittelyaineistot": undefined,
         "ilmoituksenVastaanottajat": Object {
           "__typename": "IlmoituksenVastaanottajat",
@@ -403,9 +412,6 @@ Object {
             "tyyppi": "SOITTOAIKA",
           },
         ],
-        "vuorovaikutusYhteysHenkilot": Array [
-          "A000112",
-        ],
       },
     ],
   },
@@ -419,15 +425,17 @@ Object {
     "added": Object {
       "vuorovaikutukset": Object {
         "1": Object {
+          "esitettavatYhteystiedot": Object {
+            "yhteysHenkilot": Object {
+              "1": "A000111",
+            },
+          },
           "vuorovaikutusTilaisuudet": Object {
             "2": Object {
               "projektiYhteysHenkilot": Object {
                 "1": "A000111",
               },
             },
-          },
-          "vuorovaikutusYhteysHenkilot": Object {
-            "1": "A000111",
           },
         },
       },
@@ -443,16 +451,22 @@ Object {
   "description": "saveAndVerifyAineistoSave #initialSave",
   "obj": Object {
     "__typename": "Vuorovaikutus",
-    "esitettavatYhteystiedot": Array [
-      Object {
-        "__typename": "Yhteystieto",
-        "etunimi": "Marko",
-        "organisaatio": "Kajaani",
-        "puhelinnumero": "0293121213",
-        "sahkoposti": "markku.koi@koi.com",
-        "sukunimi": "Koi",
-      },
-    ],
+    "esitettavatYhteystiedot": Object {
+      "__typename": "StandardiYhteystiedot",
+      "yhteysHenkilot": Array [
+        "A000112",
+      ],
+      "yhteysTiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
     "esittelyaineistot": Array [
       Object {
         "__typename": "Aineisto",
@@ -608,9 +622,6 @@ Object {
         "tyyppi": "SOITTOAIKA",
       },
     ],
-    "vuorovaikutusYhteysHenkilot": Array [
-      "A000112",
-    ],
   },
 }
 `;
@@ -620,16 +631,22 @@ Object {
   "description": "saveAndVerifyAineistoSave #updateNimiAndJarjestys",
   "obj": Object {
     "__typename": "Vuorovaikutus",
-    "esitettavatYhteystiedot": Array [
-      Object {
-        "__typename": "Yhteystieto",
-        "etunimi": "Marko",
-        "organisaatio": "Kajaani",
-        "puhelinnumero": "0293121213",
-        "sahkoposti": "markku.koi@koi.com",
-        "sukunimi": "Koi",
-      },
-    ],
+    "esitettavatYhteystiedot": Object {
+      "__typename": "StandardiYhteystiedot",
+      "yhteysHenkilot": Array [
+        "A000112",
+      ],
+      "yhteysTiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
     "esittelyaineistot": Array [
       Object {
         "__typename": "Aineisto",
@@ -785,9 +802,6 @@ Object {
         "tyyppi": "SOITTOAIKA",
       },
     ],
-    "vuorovaikutusYhteysHenkilot": Array [
-      "A000112",
-    ],
   },
 }
 `;
@@ -797,16 +811,22 @@ Object {
   "description": "saveAndVerifyAineistoSave #esittelyAineistotWithoutFirst",
   "obj": Object {
     "__typename": "Vuorovaikutus",
-    "esitettavatYhteystiedot": Array [
-      Object {
-        "__typename": "Yhteystieto",
-        "etunimi": "Marko",
-        "organisaatio": "Kajaani",
-        "puhelinnumero": "0293121213",
-        "sahkoposti": "markku.koi@koi.com",
-        "sukunimi": "Koi",
-      },
-    ],
+    "esitettavatYhteystiedot": Object {
+      "__typename": "StandardiYhteystiedot",
+      "yhteysHenkilot": Array [
+        "A000112",
+      ],
+      "yhteysTiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
     "esittelyaineistot": Array [
       Object {
         "__typename": "Aineisto",
@@ -955,9 +975,6 @@ Object {
         "tyyppi": "SOITTOAIKA",
       },
     ],
-    "vuorovaikutusYhteysHenkilot": Array [
-      "A000112",
-    ],
   },
 }
 `;
@@ -965,16 +982,22 @@ Object {
 exports[`Api should search, load and save a project 8`] = `
 Object {
   "__typename": "Vuorovaikutus",
-  "esitettavatYhteystiedot": Array [
-    Object {
-      "__typename": "Yhteystieto",
-      "etunimi": "Marko",
-      "organisaatio": "Kajaani",
-      "puhelinnumero": "0293121213",
-      "sahkoposti": "markku.koi@koi.com",
-      "sukunimi": "Koi",
-    },
-  ],
+  "esitettavatYhteystiedot": Object {
+    "__typename": "StandardiYhteystiedot",
+    "yhteysHenkilot": Array [
+      "A000112",
+    ],
+    "yhteysTiedot": Array [
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Marko",
+        "organisaatio": "Kajaani",
+        "puhelinnumero": "0293121213",
+        "sahkoposti": "markku.koi@koi.com",
+        "sukunimi": "Koi",
+      },
+    ],
+  },
   "esittelyaineistot": Array [
     Object {
       "__typename": "Aineisto",
@@ -1127,9 +1150,6 @@ Object {
       "tyyppi": "SOITTOAIKA",
     },
   ],
-  "vuorovaikutusYhteysHenkilot": Array [
-    "A000112",
-  ],
 }
 `;
 
@@ -1275,16 +1295,6 @@ Object {
     "vuorovaikutukset": Array [
       Object {
         "__typename": "VuorovaikutusJulkinen",
-        "esitettavatYhteystiedot": Array [
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Marko",
-            "organisaatio": "Kajaani",
-            "puhelinnumero": "0293121213",
-            "sahkoposti": "markku.koi@koi.com",
-            "sukunimi": "Koi",
-          },
-        ],
         "esittelyaineistot": Array [
           Object {
             "__typename": "Aineisto",
@@ -1296,38 +1306,6 @@ Object {
             "tuotu": "***unittest***",
           },
         ],
-        "ilmoituksenVastaanottajat": Object {
-          "__typename": "IlmoituksenVastaanottajat",
-          "kunnat": Array [
-            Object {
-              "__typename": "KuntaVastaanottaja",
-              "lahetetty": "2022-03-11T14:54",
-              "nimi": "Mikkeli",
-              "sahkoposti": "mikkeli@mikke.li",
-            },
-            Object {
-              "__typename": "KuntaVastaanottaja",
-              "lahetetty": "2022-03-11T14:54",
-              "nimi": " Juva",
-              "sahkoposti": "juva@ju.va",
-            },
-            Object {
-              "__typename": "KuntaVastaanottaja",
-              "lahetetty": "2022-03-11T14:54",
-              "nimi": " Savonlinna",
-              "sahkoposti": "savonlinna@savonlin.na",
-            },
-          ],
-          "viranomaiset": Array [
-            Object {
-              "__typename": "ViranomaisVastaanottaja",
-              "lahetetty": "2022-03-11T14:54",
-              "nimi": "ETELA_SAVO_ELY",
-              "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
-            },
-          ],
-        },
-        "julkinen": true,
         "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
         "suunnitelmaluonnokset": Array [
           Object {
@@ -1446,12 +1424,8 @@ Object {
             "tyyppi": "SOITTOAIKA",
           },
         ],
-        "vuorovaikutusYhteysHenkilot": Array [
-          "0",
-        ],
-        "vuorovaikutusYhteystiedot": Array [
+        "yhteystiedot": Array [
           Object {
-            "__typename": "Yhteystieto",
             "etunimi": "A-tunnus1",
             "organisaatio": "CGI Suomi Oy",
             "puhelinnumero": "123",
@@ -1470,48 +1444,7 @@ Object {
       },
       Object {
         "__typename": "VuorovaikutusJulkinen",
-        "esitettavatYhteystiedot": Array [
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Marko",
-            "organisaatio": "Kajaani",
-            "puhelinnumero": "0293121213",
-            "sahkoposti": "markku.koi@koi.com",
-            "sukunimi": "Koi",
-          },
-        ],
         "esittelyaineistot": undefined,
-        "ilmoituksenVastaanottajat": Object {
-          "__typename": "IlmoituksenVastaanottajat",
-          "kunnat": Array [
-            Object {
-              "__typename": "KuntaVastaanottaja",
-              "lahetetty": "2022-03-11T14:54",
-              "nimi": "Mikkeli",
-              "sahkoposti": "mikkeli@mikke.li",
-            },
-            Object {
-              "__typename": "KuntaVastaanottaja",
-              "lahetetty": "2022-03-11T14:54",
-              "nimi": " Juva",
-              "sahkoposti": "juva@ju.va",
-            },
-            Object {
-              "__typename": "KuntaVastaanottaja",
-              "lahetetty": "2022-03-11T14:54",
-              "nimi": " Savonlinna",
-              "sahkoposti": "savonlinna@savonlin.na",
-            },
-          ],
-          "viranomaiset": Array [
-            Object {
-              "__typename": "ViranomaisVastaanottaja",
-              "lahetetty": "2022-03-11T14:54",
-              "nimi": "ETELA_SAVO_ELY",
-              "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
-            },
-          ],
-        },
         "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
         "suunnitelmaluonnokset": undefined,
         "suunnittelumateriaali": undefined,
@@ -1615,13 +1548,8 @@ Object {
             "tyyppi": "SOITTOAIKA",
           },
         ],
-        "vuorovaikutusYhteysHenkilot": Array [
-          "0",
-          "1",
-        ],
-        "vuorovaikutusYhteystiedot": Array [
+        "yhteystiedot": Array [
           Object {
-            "__typename": "Yhteystieto",
             "etunimi": "A-tunnus1",
             "organisaatio": "CGI Suomi Oy",
             "puhelinnumero": "123",
@@ -1629,7 +1557,6 @@ Object {
             "sukunimi": "Hassu",
           },
           Object {
-            "__typename": "Yhteystieto",
             "etunimi": "A-Tunnus",
             "organisaatio": "CGI Suomi Oy",
             "puhelinnumero": "123",

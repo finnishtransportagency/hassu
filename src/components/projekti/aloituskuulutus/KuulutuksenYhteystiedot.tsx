@@ -9,7 +9,7 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import { AloitusKuulutusInput, Projekti, ProjektiRooli, YhteystietoInput } from "@services/api";
 import React, { ReactElement, Fragment } from "react";
-import { Controller, useFieldArray, useFormContext, UseFormReturn } from "react-hook-form";
+import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
 
 type KuulutusYhteystiedot = Pick<AloitusKuulutusInput, "kuulutusYhteystiedot">;
@@ -24,13 +24,12 @@ const defaultYhteystieto: YhteystietoInput = {
 
 type FormValues = { aloitusKuulutus?: KuulutusYhteystiedot };
 
-interface Props<T> {
+interface Props {
   projekti?: Projekti | null;
-  useFormReturn: UseFormReturn<T>;
   disableFields?: boolean;
 }
 
-function KuulutuksenYhteystiedot<T extends FormValues>({ projekti, disableFields }: Props<T>): ReactElement {
+function KuulutuksenYhteystiedot({ projekti, disableFields }: Props): ReactElement {
   const {
     control,
     register,

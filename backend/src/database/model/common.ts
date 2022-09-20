@@ -27,7 +27,7 @@ export type Aineisto = {
   tila: AineistoTila;
 };
 
-export type KuulutusYhteystiedot = {
+export type StandardiYhteystiedot = {
   yhteysTiedot?: Yhteystieto[];
   yhteysHenkilot?: string[];
 };

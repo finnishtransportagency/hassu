@@ -45,11 +45,11 @@ input AloitusKuulutusInput {
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
   hankkeenKuvaus: HankkeenKuvauksetInput
-  kuulutusYhteystiedot: KuulutusYhteystiedotInput
+  kuulutusYhteystiedot: StandardiYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
 }
 
-input KuulutusYhteystiedotInput {
+input StandardiYhteystiedotInput {
   yhteysTiedot: [YhteystietoInput!]
   yhteysHenkilot: [String!]
 }
@@ -110,11 +110,7 @@ input VuorovaikutusInput {
   kysymyksetJaPalautteetViimeistaan: String
   videot: [LinkkiInput!]
   suunnittelumateriaali: LinkkiInput
-  esitettavatYhteystiedot: [YhteystietoInput!]
-  """
-  Lista kayttajatunnuksia
-  """
-  vuorovaikutusYhteysHenkilot: [String!]
+  esitettavatYhteystiedot: StandardiYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
   esittelyaineistot: [AineistoInput!]
   suunnitelmaluonnokset: [AineistoInput!]

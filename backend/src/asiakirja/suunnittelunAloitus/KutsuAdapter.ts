@@ -46,16 +46,7 @@ export class KutsuAdapter {
   private readonly kielitiedot: Kielitiedot;
   private templateResolver: unknown;
 
-  constructor({
-    oid,
-    velho,
-    kielitiedot,
-    asiakirjanMuoto,
-    kieli,
-    projektiTyyppi,
-    vuorovaikutus,
-    kayttoOikeudet,
-  }: KutsuAdapterProps) {
+  constructor({ oid, velho, kielitiedot, asiakirjanMuoto, kieli, projektiTyyppi, vuorovaikutus, kayttoOikeudet }: KutsuAdapterProps) {
     this.oid = oid;
     this.velho = velho;
     this.kielitiedot = kielitiedot;
@@ -84,8 +75,7 @@ export class KutsuAdapter {
   get tilaajaOrganisaatio(): string {
     const suunnittelustaVastaavaViranomainen = this.velho.suunnittelustaVastaavaViranomainen;
     return (
-      translate("viranomainen." + suunnittelustaVastaavaViranomainen, this.kieli) ||
-      "<Suunnittelusta vastaavan viranomaisen tieto puuttuu>"
+      translate("viranomainen." + suunnittelustaVastaavaViranomainen, this.kieli) || "<Suunnittelusta vastaavan viranomaisen tieto puuttuu>"
     );
   }
 
@@ -236,9 +226,7 @@ export class KutsuAdapter {
         throw new Error("BUG: Kayttöoikeudet pitää antaa jos yhteyshenkilöt on annettu.");
       }
       const yhteysHenkilotWithProjectManager = union(
-        this.kayttoOikeudet
-          .filter((user) => user.rooli == ProjektiRooli.PROJEKTIPAALLIKKO)
-          .map((user) => user.kayttajatunnus),
+        this.kayttoOikeudet.filter((user) => user.rooli == ProjektiRooli.PROJEKTIPAALLIKKO).map((user) => user.kayttajatunnus),
         yhteysHenkilot
       );
       this.getUsersForUsernames(yhteysHenkilotWithProjectManager).forEach((user) => {
@@ -290,9 +278,9 @@ export class KutsuAdapter {
 
   get yhteystiedotVuorovaikutus(): { organisaatio; etunimi; sukunimi; puhelinnumero; sahkoposti }[] {
     return this.yhteystiedot(
-      this.vuorovaikutus?.esitettavatYhteystiedot || [],
+      this.vuorovaikutus?.esitettavatYhteystiedot.yhteysTiedot || [],
       undefined,
-      this.vuorovaikutus?.vuorovaikutusYhteysHenkilot
+      this.vuorovaikutus?.esitettavatYhteystiedot.yhteysHenkilot
     );
   }
 
@@ -300,9 +288,7 @@ export class KutsuAdapter {
     return usernames
       ?.map((kayttajatunnus) =>
         this.kayttoOikeudet
-          .filter(
-            (kayttaja) => kayttaja.kayttajatunnus == kayttajatunnus || kayttaja.rooli == ProjektiRooli.PROJEKTIPAALLIKKO
-          )
+          .filter((kayttaja) => kayttaja.kayttajatunnus == kayttajatunnus || kayttaja.rooli == ProjektiRooli.PROJEKTIPAALLIKKO)
           .pop()
       )
       .filter((o) => o);

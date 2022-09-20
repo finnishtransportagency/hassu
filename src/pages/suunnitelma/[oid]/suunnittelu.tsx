@@ -98,7 +98,7 @@ const VuorovaikutusTiedot: FC<{
   );
   const menneetTilaisuudet = vuorovaikutus?.vuorovaikutusTilaisuudet?.filter((t) => dayjs(t.paivamaara).isBefore(today));
 
-  const yhteystiedotListana = vuorovaikutus?.vuorovaikutusYhteystiedot?.map((yhteystieto) => t("common:yhteystieto", yhteystieto)) || [];
+  const yhteystiedotListana = vuorovaikutus?.yhteystiedot?.map((yhteystieto) => t("common:yhteystieto", yhteystieto)) || [];
 
   const suunnitelmaluonnokset = vuorovaikutus?.suunnitelmaluonnokset;
   const esittelyaineistot = vuorovaikutus?.esittelyaineistot;
@@ -206,7 +206,7 @@ const VuorovaikutusTiedot: FC<{
           )}
         </SectionContent>
       </Section>
-      {!!vuorovaikutus?.vuorovaikutusYhteystiedot?.length && (
+      {!!vuorovaikutus?.yhteystiedot?.length && (
         <Section>
           <SectionContent>
             <h5 className="vayla-small-title">{t("common:yhteystiedot")}</h5>

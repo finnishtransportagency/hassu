@@ -78,7 +78,7 @@ class ApiTestFixture {
     },
     siirtyySuunnitteluVaiheeseen: "2022-01-01",
     kuulutusYhteystiedot: {
-      __typename: "KuulutusYhteystiedot",
+      __typename: "StandardiYhteystiedot",
       yhteysTiedot: this.yhteystietoLista,
       yhteysHenkilot: [],
     },
@@ -130,20 +130,18 @@ class ApiTestFixture {
     ],
   };
 
-  suunnitteluVaihe = (
-    vuorovaikutusNumero: number,
-    vuorovaikutusYhteysHenkilot?: string[],
-    julkinen?: boolean
-  ): SuunnitteluVaiheInput => ({
+  suunnitteluVaihe = (vuorovaikutusNumero: number, vuorovaikutusYhteysHenkilot?: string[], julkinen?: boolean): SuunnitteluVaiheInput => ({
     vuorovaikutus: {
       vuorovaikutusNumero,
       julkinen,
       vuorovaikutusJulkaisuPaiva: "2022-03-23",
       videot: [{ nimi: "Esittely " + vuorovaikutusNumero, url: "https://video" }],
       kysymyksetJaPalautteetViimeistaan: "2022-03-23T23:48",
-      esitettavatYhteystiedot: apiTestFixture.yhteystietoLista,
+      esitettavatYhteystiedot: {
+        yhteysTiedot: apiTestFixture.yhteystietoLista,
+        yhteysHenkilot: vuorovaikutusYhteysHenkilot,
+      },
       ilmoituksenVastaanottajat: apiTestFixture.ilmoituksenVastaanottajat,
-      vuorovaikutusYhteysHenkilot,
       vuorovaikutusTilaisuudet: [
         {
           tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,

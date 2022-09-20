@@ -9,7 +9,6 @@ import {
   NahtavillaoloVaiheJulkaisu,
   SuunnitteluSopimus,
   Velho,
-  Vuorovaikutus,
   VuorovaikutusPDF,
   VuorovaikutusTilaisuus,
 } from "../../database/model";
@@ -31,6 +30,7 @@ import {
 } from "./common";
 import { findJulkaisuWithTila } from "../projektiUtil";
 import { applyProjektiJulkinenStatus } from "../status/projektiJulkinenStatusHandler";
+import adaptStandardiYhteystiedot from "../../util/adaptStandardiYhteystiedot";
 
 class ProjektiAdapterJulkinen {
   public adaptProjekti(dbProjekti: DBProjekti): API.ProjektiJulkinen | undefined {
@@ -322,17 +322,17 @@ function adaptVuorovaikutukset(dbProjekti: DBProjekti, projektiHenkilot: Projekt
       .map((vuorovaikutus) => {
         const julkaisuPaiva = parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva);
         if (julkaisuPaiva.isBefore(dayjs())) {
-          const usernames = vuorovaikutus.vuorovaikutusYhteysHenkilot;
           return {
-            ...vuorovaikutus,
             __typename: "VuorovaikutusJulkinen",
+            vuorovaikutusNumero: vuorovaikutus.vuorovaikutusNumero,
+            vuorovaikutusJulkaisuPaiva: vuorovaikutus.vuorovaikutusJulkaisuPaiva,
+            kysymyksetJaPalautteetViimeistaan: vuorovaikutus.kysymyksetJaPalautteetViimeistaan,
             vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet, projektiHenkilot),
             videot: adaptLinkkiListByAddingTypename(vuorovaikutus.videot),
             suunnittelumateriaali: adaptLinkkiByAddingTypename(vuorovaikutus.suunnittelumateriaali),
             esittelyaineistot: adaptAineistotJulkinen(dbProjekti.oid, vuorovaikutus.esittelyaineistot, undefined, julkaisuPaiva),
             suunnitelmaluonnokset: adaptAineistotJulkinen(dbProjekti.oid, vuorovaikutus.suunnitelmaluonnokset, undefined, julkaisuPaiva),
-            vuorovaikutusYhteystiedot: adaptAndMergeYhteystiedot(dbProjekti, vuorovaikutus),
-            vuorovaikutusYhteysHenkilot: adaptUsernamesToProjektiHenkiloIds(usernames, projektiHenkilot),
+            yhteystiedot: adaptStandardiYhteystiedot(dbProjekti, vuorovaikutus.esitettavatYhteystiedot),
             vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(dbProjekti.oid, vuorovaikutus.vuorovaikutusPDFt),
           } as API.VuorovaikutusJulkinen;
         }
@@ -413,42 +413,6 @@ function adaptVuorovaikutusPDFPaths(oid: string, pdfs: LocalizedMap<Vuorovaikutu
     };
   }
   return { __typename: "VuorovaikutusPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
-}
-
-function adaptAndMergeYhteystiedot(dbProjekti: DBProjekti, vuorovaikutus: Vuorovaikutus) {
-  let vuorovaikutusYhteystiedot = adaptYhteystiedotFromUsernames(dbProjekti, vuorovaikutus.vuorovaikutusYhteysHenkilot);
-  if (!vuorovaikutusYhteystiedot) {
-    vuorovaikutusYhteystiedot = [];
-  }
-  const yhteystiedot = adaptYhteystiedotByAddingTypename(vuorovaikutus.esitettavatYhteystiedot);
-  if (yhteystiedot) {
-    vuorovaikutusYhteystiedot = vuorovaikutusYhteystiedot.concat(yhteystiedot);
-  }
-  return vuorovaikutusYhteystiedot;
-}
-
-function adaptYhteystiedotFromUsernames(dbProjekti: DBProjekti, usernames?: Array<string>): API.Yhteystieto[] | undefined {
-  if (!usernames || usernames.length == 0) {
-    return undefined;
-  }
-  const kayttoOikeudet = dbProjekti.kayttoOikeudet;
-  return usernames
-    .map((username) => {
-      const user = kayttoOikeudet.find((projektiUser) => projektiUser.kayttajatunnus == username);
-      if (!user) {
-        return undefined;
-      }
-      const lastnameFirstname = user.nimi.split(",");
-      return {
-        __typename: "Yhteystieto",
-        etunimi: lastnameFirstname[1]?.trim(),
-        sukunimi: lastnameFirstname[0]?.trim(),
-        organisaatio: user.organisaatio,
-        puhelinnumero: user.puhelinnumero,
-        sahkoposti: user.email,
-      } as API.Yhteystieto;
-    })
-    .filter((obj) => obj);
 }
 
 function removeUndefinedFields(object: API.ProjektiJulkinen): Partial<API.ProjektiJulkinen> {

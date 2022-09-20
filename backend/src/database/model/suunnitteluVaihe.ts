@@ -1,9 +1,5 @@
-import {
-  IlmoituksenVastaanottajat,
-  KaytettavaPalvelu,
-  VuorovaikutusTilaisuusTyyppi,
-} from "../../../../common/graphql/apiModel";
-import { Aineisto, LocalizedMap, Yhteystieto } from "./common";
+import { IlmoituksenVastaanottajat, KaytettavaPalvelu, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
+import { Aineisto, LocalizedMap, Yhteystieto, StandardiYhteystiedot } from "./common";
 
 export type SuunnitteluVaihe = {
   hankkeenKuvaus?: LocalizedMap<string>;
@@ -25,9 +21,7 @@ export type Vuorovaikutus = {
   kysymyksetJaPalautteetViimeistaan?: string | null;
   videot?: Array<Linkki> | null;
   suunnittelumateriaali?: Linkki | null;
-  esitettavatYhteystiedot?: Array<Yhteystieto | null> | null;
-  // Lista kayttajatunnuksia
-  vuorovaikutusYhteysHenkilot?: Array<string> | null;
+  esitettavatYhteystiedot?: StandardiYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   esittelyaineistot?: Aineisto[] | null;
   suunnitelmaluonnokset?: Aineisto[] | null;
