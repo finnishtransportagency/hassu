@@ -6,6 +6,7 @@ import {
   adaptVelhoByAddingTypename,
   adaptYhteystiedotByAddingTypename,
   adaptStandardiYhteystiedotByAddingTypename,
+  adaptIlmoituksenVastaanottajat,
 } from "../common";
 import { adaptSuunnitteluSopimus } from "./adaptSuunitteluSopimus";
 import { fileService } from "../../../files/fileService";
@@ -16,6 +17,7 @@ export function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.Alo
     return {
       __typename: "AloitusKuulutus",
       ...otherKuulutusFields,
+      ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(kuulutus.ilmoituksenVastaanottajat),
       hankkeenKuvaus: adaptHankkeenKuvaus(kuulutus.hankkeenKuvaus),
       kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kuulutusYhteystiedot),
     };
@@ -33,6 +35,7 @@ export function adaptAloitusKuulutusJulkaisut(
       return {
         ...fieldsToCopyAsIs,
         __typename: "AloitusKuulutusJulkaisu",
+        ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(julkaisu.ilmoituksenVastaanottajat),
         hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
         yhteystiedot: adaptYhteystiedotByAddingTypename(yhteystiedot),
         velho: adaptVelhoByAddingTypename(velho),

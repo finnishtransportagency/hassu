@@ -1,10 +1,12 @@
+import * as API from "../../../../../common/graphql/apiModel";
 import { ProjektiRooli } from "../../../../../common/graphql/apiModel";
 import { StandardiYhteystiedot, DBVaylaUser } from "../../../database/model";
+import { adaptYhteystiedotByAddingTypename } from "./lisaaTypename";
 
 export function adaptStandardiYhteystiedotByAddingProjari(
   kayttoOikeudet: DBVaylaUser[],
   yhteystiedot: StandardiYhteystiedot
-): StandardiYhteystiedot {
+): API.StandardiYhteystiedot {
   if (yhteystiedot) {
     const yhteysHenkilot = yhteystiedot.yhteysHenkilot;
     const projari = kayttoOikeudet.find(({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO);
@@ -12,7 +14,8 @@ export function adaptStandardiYhteystiedotByAddingProjari(
       yhteysHenkilot.push(projari.kayttajatunnus);
     }
     return {
-      ...yhteystiedot,
+      __typename: "StandardiYhteystiedot",
+      yhteysTiedot: adaptYhteystiedotByAddingTypename(yhteystiedot.yhteysTiedot),
       yhteysHenkilot,
     };
   }

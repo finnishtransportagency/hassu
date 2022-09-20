@@ -1,5 +1,5 @@
-import { IlmoituksenVastaanottajat, KaytettavaPalvelu, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
-import { Aineisto, LocalizedMap, Yhteystieto, StandardiYhteystiedot } from "./common";
+import { KaytettavaPalvelu, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
+import { Aineisto, LocalizedMap, Yhteystieto, StandardiYhteystiedot, IlmoituksenVastaanottajat } from "./common";
 
 export type SuunnitteluVaihe = {
   hankkeenKuvaus?: LocalizedMap<string>;

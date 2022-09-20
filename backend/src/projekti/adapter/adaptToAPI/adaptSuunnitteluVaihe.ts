@@ -10,6 +10,7 @@ import * as API from "../../../../../common/graphql/apiModel";
 import {
   adaptAineistot,
   adaptHankkeenKuvaus,
+  adaptIlmoituksenVastaanottajat,
   adaptLinkkiByAddingTypename,
   adaptLinkkiListByAddingTypename,
   adaptStandardiYhteystiedotByAddingProjari,
@@ -44,6 +45,7 @@ function adaptVuorovaikutukset(oid: string, kayttoOikeudet: DBVaylaUser[], vuoro
       (vuorovaikutus) =>
         ({
           ...vuorovaikutus,
+          ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(vuorovaikutus.ilmoituksenVastaanottajat),
           esitettavatYhteystiedot: adaptStandardiYhteystiedotByAddingProjari(kayttoOikeudet, vuorovaikutus.esitettavatYhteystiedot),
           vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
           suunnittelumateriaali: adaptLinkkiByAddingTypename(vuorovaikutus.suunnittelumateriaali),

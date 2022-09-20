@@ -83,7 +83,7 @@ class ProjektiAdapterJulkinen {
       jatkoPaatos1Vaihe,
       jatkoPaatos2Vaihe,
     };
-    const projektiJulkinen = removeUndefinedFields(projekti) as API.ProjektiJulkinen;
+    const projektiJulkinen: API.ProjektiJulkinen = removeUndefinedFields(projekti);
     applyProjektiJulkinenStatus(projektiJulkinen);
     if (projektiJulkinen.status != Status.EI_JULKAISTU && projektiJulkinen.status != Status.EPAAKTIIVINEN) {
       return projektiJulkinen;
@@ -346,7 +346,7 @@ function adaptVuorovaikutukset(dbProjekti: DBProjekti, projektiHenkilot: Projekt
 function adaptVuorovaikutusTilaisuudet(
   vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus>,
   projektiHenkilot: ProjektiHenkilot
-): VuorovaikutusTilaisuus[] {
+): API.VuorovaikutusTilaisuus[] {
   if (vuorovaikutusTilaisuudet) {
     return vuorovaikutusTilaisuudet.map((vuorovaikutusTilaisuus) => ({
       ...vuorovaikutusTilaisuus,
@@ -415,8 +415,8 @@ function adaptVuorovaikutusPDFPaths(oid: string, pdfs: LocalizedMap<Vuorovaikutu
   return { __typename: "VuorovaikutusPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
 }
 
-function removeUndefinedFields(object: API.ProjektiJulkinen): Partial<API.ProjektiJulkinen> {
-  return pickBy(object, (value) => value !== undefined);
+function removeUndefinedFields(object: API.ProjektiJulkinen): API.ProjektiJulkinen {
+  return { __typename: "ProjektiJulkinen", oid: object.oid, velho: object.velho, ...pickBy(object, (value) => value !== undefined) };
 }
 
 export function adaptVelho(velho: Velho): API.VelhoJulkinen {

@@ -70,7 +70,12 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 Lisätietoja antaa
 CGI Suomi Oy, A-tunnus1 Hassu, puh. 123, mikko.haapamki@cgi.com
 Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com",
-    "to": Array [],
+    "to": Array [
+      "mikkeli@mikke.li",
+      "juva@ju.va",
+      "savonlinna@savonlin.na",
+      "kirjaamo.etela-savo@ely-keskus.fi",
+    ],
   },
 ]
 `;
@@ -1426,6 +1431,7 @@ Object {
         ],
         "yhteystiedot": Array [
           Object {
+            "__typename": "Yhteystieto",
             "etunimi": "A-tunnus1",
             "organisaatio": "CGI Suomi Oy",
             "puhelinnumero": "123",
@@ -1550,6 +1556,7 @@ Object {
         ],
         "yhteystiedot": Array [
           Object {
+            "__typename": "Yhteystieto",
             "etunimi": "A-tunnus1",
             "organisaatio": "CGI Suomi Oy",
             "puhelinnumero": "123",
@@ -1557,6 +1564,7 @@ Object {
             "sukunimi": "Hassu",
           },
           Object {
+            "__typename": "Yhteystieto",
             "etunimi": "A-Tunnus",
             "organisaatio": "CGI Suomi Oy",
             "puhelinnumero": "123",
@@ -2758,7 +2766,12 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 Lisätietoja antaa
 CGI Suomi Oy, A-tunnus1 Hassu, puh. 123, mikko.haapamki@cgi.com
 Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com",
-    "to": Array [],
+    "to": Array [
+      "mikkeli@mikke.li",
+      "juva@ju.va",
+      "savonlinna@savonlin.na",
+      "kirjaamo.etela-savo@ely-keskus.fi",
+    ],
   },
 ]
 `;
@@ -3256,7 +3269,12 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 Lisätietoja antaa
 CGI Suomi Oy, A-tunnus1 Hassu, puh. 123, mikko.haapamki@cgi.com
 Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com",
-    "to": Array [],
+    "to": Array [
+      "mikkeli@mikke.li",
+      "juva@ju.va",
+      "savonlinna@savonlin.na",
+      "kirjaamo.etela-savo@ely-keskus.fi",
+    ],
   },
 ]
 `;

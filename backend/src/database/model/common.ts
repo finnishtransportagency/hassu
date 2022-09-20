@@ -1,4 +1,4 @@
-import { AineistoTila, Kieli } from "../../../../common/graphql/apiModel";
+import { AineistoTila, Kieli, IlmoitettavaViranomainen } from "../../../../common/graphql/apiModel";
 
 export type LocalizedMap<T> = { [key in Kieli]?: T } | null;
 
@@ -30,4 +30,21 @@ export type Aineisto = {
 export type StandardiYhteystiedot = {
   yhteysTiedot?: Yhteystieto[];
   yhteysHenkilot?: string[];
+};
+
+export type IlmoituksenVastaanottajat = {
+  kunnat?: Array<KuntaVastaanottaja> | null;
+  viranomaiset?: Array<ViranomaisVastaanottaja> | null;
+};
+
+export type KuntaVastaanottaja = {
+  nimi: string;
+  sahkoposti: string;
+  lahetetty?: string | null;
+};
+
+export type ViranomaisVastaanottaja = {
+  nimi: IlmoitettavaViranomainen;
+  sahkoposti: string;
+  lahetetty?: string | null;
 };

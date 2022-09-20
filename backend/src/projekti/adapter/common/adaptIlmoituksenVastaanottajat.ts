@@ -1,7 +1,8 @@
+import { IlmoituksenVastaanottajat } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 
 export function adaptIlmoituksenVastaanottajat(
-  vastaanottajat: API.IlmoituksenVastaanottajat | null | undefined
+  vastaanottajat: IlmoituksenVastaanottajat | null | undefined
 ): API.IlmoituksenVastaanottajat {
   if (!vastaanottajat) {
     return vastaanottajat as null | undefined;

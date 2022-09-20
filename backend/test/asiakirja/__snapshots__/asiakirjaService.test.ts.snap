@@ -1205,6 +1205,7 @@ Object {
   },
   "yhteystiedot": Array [
     Object {
+      "__typename": "Yhteystieto",
       "etunimi": "Pekka",
       "organisaatio": "Väylävirasto",
       "puhelinnumero": "123456789",
@@ -1212,6 +1213,7 @@ Object {
       "sukunimi": "Projari",
     },
     Object {
+      "__typename": "Yhteystieto",
       "etunimi": "Marko",
       "organisaatio": "Kajaani",
       "puhelinnumero": "0293121213",

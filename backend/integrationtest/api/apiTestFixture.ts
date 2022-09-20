@@ -48,6 +48,16 @@ class ApiTestFixture {
     },
   ];
 
+  yhteytietoInputLista2: YhteystietoInput[] = [
+    {
+      etunimi: "Marko",
+      sukunimi: "Koi",
+      sahkoposti: "markku.koi@koi.com",
+      organisaatio: "Kajaani",
+      puhelinnumero: "0293121213",
+    },
+  ];
+
   yhteystietoInputLista: YhteystietoInput[] = [
     {
       etunimi: "Etunimi",
@@ -67,36 +77,15 @@ class ApiTestFixture {
     },
   ];
 
-  aloitusKuulutus: AloitusKuulutus = {
-    __typename: "AloitusKuulutus",
-    kuulutusPaiva: "2022-01-02",
-    hankkeenKuvaus: {
-      __typename: "HankkeenKuvaukset",
-      SUOMI: "Lorem Ipsum",
-      RUOTSI: "På Svenska",
-      SAAME: "Saameksi",
+  yhteystietoInputLista3: YhteystietoInput[] = [
+    {
+      etunimi: "Marko",
+      sukunimi: "Koi",
+      sahkoposti: "markku.koi@koi.com",
+      organisaatio: "Kajaani",
+      puhelinnumero: "0293121213",
     },
-    siirtyySuunnitteluVaiheeseen: "2022-01-01",
-    kuulutusYhteystiedot: {
-      __typename: "StandardiYhteystiedot",
-      yhteysTiedot: this.yhteystietoLista,
-      yhteysHenkilot: [],
-    },
-  };
-
-  kielitiedotInput: KielitiedotInput = {
-    ensisijainenKieli: Kieli.SUOMI,
-  };
-
-  kielitiedot: Kielitiedot = {
-    __typename: "Kielitiedot",
-    ensisijainenKieli: Kieli.SUOMI,
-  };
-
-  hankkeenKuvausSuunnittelu: HankkeenKuvauksetInput = {
-    SUOMI: "Lorem Ipsum suunnitteluvaihe",
-    SAAME: "Saameksi suunnitteluvaihe",
-  };
+  ];
 
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat = {
     __typename: "IlmoituksenVastaanottajat",
@@ -130,6 +119,38 @@ class ApiTestFixture {
     ],
   };
 
+  aloitusKuulutus: AloitusKuulutus = {
+    __typename: "AloitusKuulutus",
+    kuulutusPaiva: "2022-01-02",
+    hankkeenKuvaus: {
+      __typename: "HankkeenKuvaukset",
+      SUOMI: "Lorem Ipsum",
+      RUOTSI: "På Svenska",
+      SAAME: "Saameksi",
+    },
+    siirtyySuunnitteluVaiheeseen: "2022-01-01",
+    kuulutusYhteystiedot: {
+      __typename: "StandardiYhteystiedot",
+      yhteysTiedot: this.yhteystietoLista,
+      yhteysHenkilot: [],
+    },
+    ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
+  };
+
+  kielitiedotInput: KielitiedotInput = {
+    ensisijainenKieli: Kieli.SUOMI,
+  };
+
+  kielitiedot: Kielitiedot = {
+    __typename: "Kielitiedot",
+    ensisijainenKieli: Kieli.SUOMI,
+  };
+
+  hankkeenKuvausSuunnittelu: HankkeenKuvauksetInput = {
+    SUOMI: "Lorem Ipsum suunnitteluvaihe",
+    SAAME: "Saameksi suunnitteluvaihe",
+  };
+
   suunnitteluVaihe = (vuorovaikutusNumero: number, vuorovaikutusYhteysHenkilot?: string[], julkinen?: boolean): SuunnitteluVaiheInput => ({
     vuorovaikutus: {
       vuorovaikutusNumero,
@@ -138,7 +159,7 @@ class ApiTestFixture {
       videot: [{ nimi: "Esittely " + vuorovaikutusNumero, url: "https://video" }],
       kysymyksetJaPalautteetViimeistaan: "2022-03-23T23:48",
       esitettavatYhteystiedot: {
-        yhteysTiedot: apiTestFixture.yhteystietoLista,
+        yhteysTiedot: apiTestFixture.yhteystietoInputLista3,
         yhteysHenkilot: vuorovaikutusYhteysHenkilot,
       },
       ilmoituksenVastaanottajat: apiTestFixture.ilmoituksenVastaanottajat,

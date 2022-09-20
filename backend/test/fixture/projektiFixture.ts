@@ -339,29 +339,24 @@ export class ProjektiFixture {
           SAAME: null,
         },
         ilmoituksenVastaanottajat: {
-          __typename: "IlmoituksenVastaanottajat",
           kunnat: [
             {
               nimi: "Mikkeli",
               sahkoposti: "mikkeli@mikke.li",
-              __typename: "KuntaVastaanottaja",
             },
             {
               nimi: " Juva",
               sahkoposti: "juva@ju.va",
-              __typename: "KuntaVastaanottaja",
             },
             {
               nimi: " Savonlinna",
               sahkoposti: "savonlinna@savonlin.na",
-              __typename: "KuntaVastaanottaja",
             },
           ],
           viranomaiset: [
             {
               nimi: IlmoitettavaViranomainen.ETELA_SAVO_ELY,
               sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
-              __typename: "ViranomaisVastaanottaja",
             },
           ],
         },
@@ -502,29 +497,24 @@ export class ProjektiFixture {
         SAAME: null,
       },
       ilmoituksenVastaanottajat: {
-        __typename: "IlmoituksenVastaanottajat",
         kunnat: [
           {
             nimi: "Mikkeli",
             sahkoposti: "mikkeli@mikke.li",
-            __typename: "KuntaVastaanottaja",
           },
           {
             nimi: " Juva",
             sahkoposti: "juva@ju.va",
-            __typename: "KuntaVastaanottaja",
           },
           {
             nimi: " Savonlinna",
             sahkoposti: "savonlinna@savonlin.na",
-            __typename: "KuntaVastaanottaja",
           },
         ],
         viranomaiset: [
           {
             nimi: IlmoitettavaViranomainen.ETELA_SAVO_ELY,
             sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
-            __typename: "ViranomaisVastaanottaja",
           },
         ],
       },
@@ -575,17 +565,14 @@ export class ProjektiFixture {
             {
               nimi: "Kerava",
               sahkoposti: "email@email.email",
-              __typename: "KuntaVastaanottaja",
             },
           ],
           viranomaiset: [
             {
               nimi: IlmoitettavaViranomainen.VAYLAVIRASTO,
               sahkoposti: "kirjaamo@vayla.fi",
-              __typename: "ViranomaisVastaanottaja",
             },
           ],
-          __typename: "IlmoituksenVastaanottajat",
         },
         kielitiedot: {
           ensisijainenKieli: Kieli.RUOTSI,
@@ -672,22 +659,18 @@ export class ProjektiFixture {
           hyvaksymisPaatosVaihePDFt: undefined,
           id: 1,
           ilmoituksenVastaanottajat: {
-            __typename: "IlmoituksenVastaanottajat",
             kunnat: [
               {
-                __typename: "KuntaVastaanottaja",
                 lahetetty: "2022-03-11T14:54",
                 nimi: "Mikkeli",
                 sahkoposti: "mikkeli@mikke.li",
               },
               {
-                __typename: "KuntaVastaanottaja",
                 lahetetty: "2022-03-11T14:54",
                 nimi: " Juva",
                 sahkoposti: "juva@ju.va",
               },
               {
-                __typename: "KuntaVastaanottaja",
                 lahetetty: "2022-03-11T14:54",
                 nimi: " Savonlinna",
                 sahkoposti: "savonlinna@savonlin.na",
@@ -695,7 +678,6 @@ export class ProjektiFixture {
             ],
             viranomaiset: [
               {
-                __typename: "ViranomaisVastaanottaja",
                 lahetetty: "2022-03-11T14:54",
                 nimi: IlmoitettavaViranomainen.ETELA_SAVO_ELY,
                 sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",

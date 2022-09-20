@@ -5,7 +5,6 @@ import { AineistoChangedEvent, ProjektiAdaptationResult, ProjektiEventType, Vuor
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
 import { adaptKayttajatunnusList } from "./adaptKayttajatunnusList";
 import { adaptAineistotToSave, adaptIlmoituksenVastaanottajatToSave, adaptYhteystiedotToSave } from "./common";
-import { adaptStandardiYhteystiedotByAddingTypename } from "../common";
 
 export function adaptVuorovaikutusToSave(
   projekti: DBProjekti,
@@ -42,7 +41,6 @@ export function adaptVuorovaikutusToSave(
       vuorovaikutusTilaisuudet,
       // Jos vuorovaikutuksen ilmoituksella ei tarvitse olla viranomaisvastaanottajia, muokkaa adaptIlmoituksenVastaanottajatToSavea
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(vuorovaikutusInput.ilmoituksenVastaanottajat),
-      esitettavatYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(vuorovaikutusInput.esitettavatYhteystiedot),
       esittelyaineistot,
       suunnitelmaluonnokset,
     };

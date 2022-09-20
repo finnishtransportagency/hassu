@@ -43,6 +43,36 @@
       "kielitiedot": {
         "ensisijainenKieli": "SUOMI"
       },
+      "ilmoituksenVastaanottajat": {
+        "kunnat": [
+          {
+            "sahkoposti": "mikkeli@mikke.li",
+            "lahetetty": "2022-09-21T13:11",
+            "nimi": "Mikkeli",
+            "__typename": "KuntaVastaanottaja"
+          },
+          {
+            "sahkoposti": "juva@ju.va",
+            "lahetetty": "2022-09-21T13:11",
+            "nimi": " Juva",
+            "__typename": "KuntaVastaanottaja"
+          },
+          {
+            "sahkoposti": "savonlinna@savonlin.na",
+            "lahetetty": "2022-09-21T13:11",
+            "nimi": " Savonlinna",
+            "__typename": "KuntaVastaanottaja"
+          }
+        ],
+        "viranomaiset": [
+          {
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+            "lahetetty": "2022-09-21T13:11",
+            "nimi": "ETELA_SAVO_ELY",
+            "__typename": "ViranomaisVastaanottaja"
+          }
+        ]
+      },
       "kuulutusPaiva": "2022-01-02",
       "muokkaaja": "A000112",
       "hyvaksyja": "A000112",
@@ -52,7 +82,8 @@
           "sahkoposti": "mikko.haapamki@cgi.com",
           "puhelinnumero": "123",
           "organisaatio": "CGI Suomi Oy",
-          "etunimi": "A-tunnus1"
+          "etunimi": "A-tunnus1",
+          "__typename": "Yhteystieto"
         },
         {
           "sukunimi": "Koi",
@@ -197,7 +228,6 @@
         "ensisijainenKieli": "SUOMI"
       },
       "ilmoituksenVastaanottajat": {
-        "__typename": "IlmoituksenVastaanottajat",
         "kunnat": [
           {
             "sahkoposti": "mikkeli@mikke.li",
@@ -266,7 +296,6 @@
   },
   "hyvaksymisPaatosVaihe": {
     "ilmoituksenVastaanottajat": {
-      "__typename": "IlmoituksenVastaanottajat",
       "kunnat": [
         {
           "sahkoposti": "mikkeli@mikke.li",
@@ -345,7 +374,6 @@
   },
   "nahtavillaoloVaihe": {
     "ilmoituksenVastaanottajat": {
-      "__typename": "IlmoituksenVastaanottajat",
       "kunnat": [
         {
           "sahkoposti": "mikkeli@mikke.li",
@@ -466,7 +494,6 @@
   "kayttoOikeudet": [
     {
       "kayttajatunnus": "A000112",
-      "esitetaanKuulutuksessa": true,
       "nimi": "Hassu, A-tunnus1",
       "rooli": "PROJEKTIPAALLIKKO",
       "organisaatio": "CGI Suomi Oy",
@@ -494,6 +521,36 @@
       "SAAME": "Saameksi",
       "RUOTSI": "På Svenska",
       "__typename": "HankkeenKuvaukset"
+    },
+    "ilmoituksenVastaanottajat": {
+      "kunnat": [
+        {
+          "sahkoposti": "mikkeli@mikke.li",
+          "lahetetty": "2022-03-11T14:54",
+          "nimi": "Mikkeli",
+          "__typename": "KuntaVastaanottaja"
+        },
+        {
+          "sahkoposti": "juva@ju.va",
+          "lahetetty": "2022-03-11T14:54",
+          "nimi": " Juva",
+          "__typename": "KuntaVastaanottaja"
+        },
+        {
+          "sahkoposti": "savonlinna@savonlin.na",
+          "lahetetty": "2022-03-11T14:54",
+          "nimi": " Savonlinna",
+          "__typename": "KuntaVastaanottaja"
+        }
+      ],
+      "viranomaiset": [
+        {
+          "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          "lahetetty": "2022-03-11T14:54",
+          "nimi": "ETELA_SAVO_ELY",
+          "__typename": "ViranomaisVastaanottaja"
+        }
+      ]
     },
     "kuulutusPaiva": "2022-01-02",
     "siirtyySuunnitteluVaiheeseen": "2022-01-01",
@@ -568,7 +625,6 @@
         "ensisijainenKieli": "SUOMI"
       },
       "ilmoituksenVastaanottajat": {
-        "__typename": "IlmoituksenVastaanottajat",
         "kunnat": [
           {
             "sahkoposti": "mikkeli@mikke.li",
@@ -629,7 +685,6 @@
   "vuorovaikutukset": [
     {
       "ilmoituksenVastaanottajat": {
-        "__typename": "IlmoituksenVastaanottajat",
         "kunnat": [
           {
             "sahkoposti": "mikkeli@mikke.li",
@@ -772,9 +827,6 @@
       "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
       "julkinen": true,
       "esitettavatYhteystiedot": {
-        "yhteysHenkilot": [
-          "A000112"
-        ],
         "yhteysTiedot": [
           {
             "sukunimi": "Koi",
@@ -785,12 +837,14 @@
             "__typename": "Yhteystieto"
           }
         ],
+        "yhteysHenkilot": [
+          "A000112"
+        ],
         "__typename": "StandardiYhteystiedot"
       }
     },
     {
       "ilmoituksenVastaanottajat": {
-        "__typename": "IlmoituksenVastaanottajat",
         "kunnat": [
           {
             "sahkoposti": "mikkeli@mikke.li",
@@ -909,21 +963,19 @@
       "vuorovaikutusNumero": 2,
       "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
       "esitettavatYhteystiedot": {
-        "yhteysHenkilot": [
-          "A000112",
-          "A000111"
-        ],
         "yhteysTiedot": [
           {
             "sukunimi": "Koi",
             "sahkoposti": "markku.koi@koi.com",
             "organisaatio": "Kajaani",
             "puhelinnumero": "0293121213",
-            "etunimi": "Marko",
-            "__typename": "Yhteystieto"
+            "etunimi": "Marko"
           }
         ],
-        "__typename": "StandardiYhteystiedot"
+        "yhteysHenkilot": [
+          "A000112",
+          "A000111"
+        ]
       }
     }
   ]

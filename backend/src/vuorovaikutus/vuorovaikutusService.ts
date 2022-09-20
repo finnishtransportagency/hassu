@@ -1,5 +1,6 @@
 import { findVuorovaikutusByNumber } from "../util/findVuorovaikutusByNumber";
-import { IlmoituksenVastaanottajat, Kieli } from "../../../common/graphql/apiModel";
+import * as API from "../../../common/graphql/apiModel";
+import { IlmoituksenVastaanottajat } from "../database/model";
 import { asiakirjaService } from "../asiakirja/asiakirjaService";
 import { fileService } from "../files/fileService";
 import { projektiDatabase } from "../database/projektiDatabase";
@@ -13,7 +14,7 @@ class VuorovaikutusService {
     const vuorovaikutus = findVuorovaikutusByNumber(projektiInDB, vuorovaikutusNumero);
     const vuorovaikutusKutsuPath = new ProjektiPaths(oid).vuorovaikutus(vuorovaikutus).yllapitoPath + "/kutsu";
 
-    async function generateKutsuPDF(kieli: Kieli) {
+    async function generateKutsuPDF(kieli: API.Kieli) {
       const pdf = await asiakirjaService.createYleisotilaisuusKutsuPdf({
         projekti: projektiInDB,
         vuorovaikutus,

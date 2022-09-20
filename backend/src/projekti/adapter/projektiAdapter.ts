@@ -197,8 +197,8 @@ export class ProjektiAdapter {
   }
 }
 
-function removeUndefinedFields(object: API.Projekti): Partial<API.Projekti> {
-  return pickBy(object, (value) => value !== undefined);
+function removeUndefinedFields(object: API.Projekti): API.Projekti {
+  return { __typename: "Projekti", oid: object.oid, velho: object.velho, ...pickBy(object, (value) => value !== undefined) };
 }
 
 export const projektiAdapter = new ProjektiAdapter();
