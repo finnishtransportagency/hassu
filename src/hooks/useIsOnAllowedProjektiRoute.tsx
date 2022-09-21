@@ -62,19 +62,21 @@ interface isAllowedOnRouteResponse {
 export const useIsAllowedOnCurrentProjektiRoute: () => isAllowedOnRouteResponse = () => {
   const { data: projekti } = useProjekti();
   const router = useRouter();
-  const requiredStatusForCurrentPath = routes.find((route) => route.pathname === router.pathname)?.requiredStatus;
-  const isAllowedOnRoute = !requiredStatusForCurrentPath || projektiHasMinimumStatus(projekti, requiredStatusForCurrentPath);
 
-  const pathnameForAllowedRoute = isAllowedOnRoute
-    ? undefined
-    : routes.reduce<string | undefined>((allowedPathname, route) => {
-        if (projektiHasMinimumStatus(projekti, route.requiredStatus)) {
-          allowedPathname = route.pathname;
-        }
-        return allowedPathname;
-      }, undefined);
+  return useMemo(() => {
+    const requiredStatusForCurrentPath = routes.find((route) => route.pathname === router.pathname)?.requiredStatus;
+    const isAllowedOnRoute = !requiredStatusForCurrentPath || projektiHasMinimumStatus(projekti, requiredStatusForCurrentPath);
 
-  return useMemo(() => ({ isAllowedOnRoute, pathnameForAllowedRoute }), [isAllowedOnRoute, pathnameForAllowedRoute]);
+    const pathnameForAllowedRoute = isAllowedOnRoute
+      ? undefined
+      : routes.reduce<string | undefined>((allowedPathname, route) => {
+          if (projektiHasMinimumStatus(projekti, route.requiredStatus)) {
+            allowedPathname = route.pathname;
+          }
+          return allowedPathname;
+        }, undefined);
+    return { isAllowedOnRoute, pathnameForAllowedRoute };
+  }, [projekti, router.pathname]);
 };
 
 export default useIsAllowedOnCurrentProjektiRoute;
