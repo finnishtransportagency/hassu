@@ -84,6 +84,7 @@ describe("Api", () => {
 
     importAineistoStub = sinon.stub(aineistoImporterClient, "importAineisto");
     importAineistoStub.callsFake(async (event) => {
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       fakeAineistoImportQueue.push({ Records: [{ body: JSON.stringify(event) } as SQSRecord] });
     });
 

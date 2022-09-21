@@ -26,11 +26,11 @@ function parseRoles(roles: string): string[] | undefined {
 }
 
 function adaptKayttajaTyyppi(roolit: string[] | null | undefined): VaylaKayttajaTyyppi | undefined {
-  const roleToTypeMap = {
+  const roleToTypeMap: Record<string, VaylaKayttajaTyyppi> = {
     Atunnukset: VaylaKayttajaTyyppi.A_TUNNUS,
     Ltunnukset: VaylaKayttajaTyyppi.L_TUNNUS,
     LXtunnukset: VaylaKayttajaTyyppi.LX_TUNNUS,
-  } as Record<string, VaylaKayttajaTyyppi>;
+  };
   if (roolit) {
     for (const role of roolit) {
       const type = roleToTypeMap[role];
@@ -164,7 +164,7 @@ export function requirePermissionMuokkaa(projekti: DBProjekti): NykyinenKayttaja
   return kayttaja;
 }
 
-export function requireAdmin(description?:string): NykyinenKayttaja {
+export function requireAdmin(description?: string): NykyinenKayttaja {
   const kayttaja = requireVaylaUser();
   if (isHassuAdmin(kayttaja)) {
     return kayttaja;
@@ -182,9 +182,7 @@ export function requireProjektiPaallikko(projekti: DBProjekti): NykyinenKayttaja
     .filter((user) => user.kayttajatunnus === kayttaja.uid && user.rooli == ProjektiRooli.PROJEKTIPAALLIKKO)
     .pop();
   if (!projektiUser) {
-    throw new IllegalAccessError(
-      "Sinulla ei ole käyttöoikeutta muokata projektia, koska et ole projektin projektipäällikkö."
-    );
+    throw new IllegalAccessError("Sinulla ei ole käyttöoikeutta muokata projektia, koska et ole projektin projektipäällikkö.");
   }
   return kayttaja;
 }

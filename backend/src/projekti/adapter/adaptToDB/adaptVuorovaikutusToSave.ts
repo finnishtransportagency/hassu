@@ -5,7 +5,6 @@ import { AineistoChangedEvent, ProjektiAdaptationResult, ProjektiEventType, Vuor
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
 import { adaptKayttajatunnusList } from "./adaptKayttajatunnusList";
 import { adaptAineistotToSave, adaptIlmoituksenVastaanottajatToSave, adaptYhteystiedotToSave } from "./common";
-import { adaptStandardiYhteystiedotByAddingTypename } from "../common";
 
 export function adaptVuorovaikutusToSave(
   projekti: DBProjekti,
@@ -42,7 +41,6 @@ export function adaptVuorovaikutusToSave(
       vuorovaikutusTilaisuudet,
       // Jos vuorovaikutuksen ilmoituksella ei tarvitse olla viranomaisvastaanottajia, muokkaa adaptIlmoituksenVastaanottajatToSavea
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(vuorovaikutusInput.ilmoituksenVastaanottajat),
-      esitettavatYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(vuorovaikutusInput.esitettavatYhteystiedot),
       esittelyaineistot,
       suunnitelmaluonnokset,
     };
@@ -75,16 +73,18 @@ function checkIfAineistoJulkinenChanged(
   }
 
   if (vuorovaikutusPublished() || vuorovaikutusNotPublicAnymore()) {
-    projektiAdaptationResult.pushEvent({
+    const newEvent: VuorovaikutusPublishedEvent = {
       eventType: ProjektiEventType.VUOROVAIKUTUS_PUBLISHED,
       vuorovaikutusNumero: vuorovaikutusToSave.vuorovaikutusNumero,
-    } as VuorovaikutusPublishedEvent);
+    };
+    projektiAdaptationResult.pushEvent(newEvent);
   }
 
   if (vuorovaikutusPublished() || vuorovaikutusNotPublicAnymore() || vuorovaikutusJulkaisuPaivaChanged()) {
-    projektiAdaptationResult.pushEvent({
+    const newEvent: AineistoChangedEvent = {
       eventType: ProjektiEventType.AINEISTO_CHANGED,
-    } as AineistoChangedEvent);
+    };
+    projektiAdaptationResult.pushEvent(newEvent);
   }
 }
 

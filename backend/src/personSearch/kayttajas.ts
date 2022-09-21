@@ -37,14 +37,15 @@ export class Kayttajas {
   /**
    * For test usage
    */
-  static fromKayttajaList(kayttajas: Kayttaja[]) {
+  static fromKayttajaList(kayttajas: Kayttaja[]): Kayttajas {
     return new Kayttajas(
       kayttajas.reduce((map, kayttaja) => {
         if (kayttaja.uid) {
-          map[kayttaja.uid] = {
+          const person: Person = {
             ...kayttaja,
             email: [kayttaja.email],
-          } as Person;
+          };
+          map[kayttaja.uid] = person;
         }
         return map;
       }, {} as Record<string, Person>)
@@ -59,7 +60,7 @@ export class Kayttajas {
     return list;
   }
 
-  asMap() {
+  asMap(): Record<string, Person> {
     return this.personMap;
   }
 

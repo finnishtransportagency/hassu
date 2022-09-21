@@ -1,15 +1,8 @@
-import {
-  AloitusKuulutusTila,
-  IlmoituksenVastaanottajat,
-  Kieli,
-  ProjektiRooli,
-  ProjektiTyyppi,
-  Viranomainen,
-} from "../../../../common/graphql/apiModel";
+import { AloitusKuulutusTila, Kieli, ProjektiRooli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
 import { SuunnitteluVaihe, Vuorovaikutus } from "./suunnitteluVaihe";
 import { NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "./nahtavillaoloVaihe";
 import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "./hyvaksymisPaatosVaihe";
-import { StandardiYhteystiedot, LocalizedMap, Yhteystieto } from "./common";
+import { StandardiYhteystiedot, LocalizedMap, Yhteystieto, IlmoituksenVastaanottajat } from "./common";
 
 export type DBVaylaUser = {
   rooli: ProjektiRooli;

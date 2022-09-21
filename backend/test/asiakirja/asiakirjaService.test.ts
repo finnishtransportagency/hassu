@@ -7,6 +7,7 @@ import {
 } from "../../src/asiakirja/asiakirjaService";
 import {
   AsiakirjaTyyppi,
+  IlmoitettavaViranomainen,
   Kieli,
   KirjaamoOsoite,
   PDF,
@@ -86,9 +87,7 @@ describe("asiakirjaService", async () => {
       async (type) => await testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.RUOTSI, type)
     );
 
-    await assert.isRejected(
-      testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.SAAME, AsiakirjaTyyppi.ALOITUSKUULUTUS)
-    );
+    await assert.isRejected(testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.SAAME, AsiakirjaTyyppi.ALOITUSKUULUTUS));
   });
 
   async function testKutsuWithLanguage(
@@ -171,13 +170,12 @@ describe("asiakirjaService", async () => {
   }
 
   it("should generate kuulutukset for Nahtavillaolo succesfully", async () => {
-    kirjaamoOsoitteetStub.resolves([
-      {
-        __typename: "KirjaamoOsoite",
-        sahkoposti: "uudenmaan_kirjaamo@uudenmaan.ely",
-        nimi: "UUDENMAAN_ELY",
-      } as KirjaamoOsoite,
-    ]);
+    const osoite: KirjaamoOsoite = {
+      __typename: "KirjaamoOsoite",
+      sahkoposti: "uudenmaan_kirjaamo@uudenmaan.ely",
+      nimi: IlmoitettavaViranomainen.UUDENMAAN_ELY,
+    };
+    kirjaamoOsoitteetStub.resolves([osoite]);
     const projekti: DBProjekti = projektiFixture.dbProjekti2();
     projekti.velho.tyyppi = ProjektiTyyppi.TIE;
     projekti.velho.vaylamuoto = ["tie"];
@@ -190,24 +188,21 @@ describe("asiakirjaService", async () => {
 
     await runTestWithTypes(
       nahtavillaoloKuulutusTypes,
-      async (type) =>
-        await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe, Kieli.SUOMI, type)
+      async (type) => await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe, Kieli.SUOMI, type)
     );
 
     projekti.velho.tyyppi = ProjektiTyyppi.RATA;
     projekti.velho.vaylamuoto = ["rata"];
     await runTestWithTypes(
       nahtavillaoloKuulutusTypes,
-      async (type) =>
-        await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe, Kieli.SUOMI, type)
+      async (type) => await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe, Kieli.SUOMI, type)
     );
 
     projekti.velho.tyyppi = ProjektiTyyppi.YLEINEN;
     projekti.velho.vaylamuoto = ["rata"];
     await runTestWithTypes(
       nahtavillaoloKuulutusTypes,
-      async (type) =>
-        await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe, Kieli.SUOMI, type)
+      async (type) => await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe, Kieli.SUOMI, type)
     );
   });
 
@@ -244,8 +239,7 @@ describe("asiakirjaService", async () => {
       ];
       await runTestWithTypes(
         hyvaksymisPaatosTypes,
-        async (type) =>
-          await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe, kieli, type)
+        async (type) => await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe, kieli, type)
       );
 
       // ----------
@@ -253,8 +247,7 @@ describe("asiakirjaService", async () => {
       projekti.velho.vaylamuoto = ["rata"];
       await runTestWithTypes(
         hyvaksymisPaatosTypes,
-        async (type) =>
-          await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe, kieli, type)
+        async (type) => await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe, kieli, type)
       );
 
       // ----------
@@ -262,8 +255,7 @@ describe("asiakirjaService", async () => {
       projekti.velho.vaylamuoto = ["rata"];
       await runTestWithTypes(
         hyvaksymisPaatosTypes,
-        async (type) =>
-          await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe, kieli, type)
+        async (type) => await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe, kieli, type)
       );
     }
   });

@@ -72,14 +72,15 @@ function adaptNahtavillaoloPDFPaths(oid: string, nahtavillaoloPDFs: LocalizedMap
 
   const result = {};
   for (const kieli in nahtavillaoloPDFs) {
-    result[kieli] = {
+    const nahtavillaoloPdf: NahtavillaoloPDF = {
       nahtavillaoloPDFPath: fileService.getYllapitoPathForProjektiFile(oid, nahtavillaoloPDFs[kieli].nahtavillaoloPDFPath),
       nahtavillaoloIlmoitusPDFPath: fileService.getYllapitoPathForProjektiFile(oid, nahtavillaoloPDFs[kieli].nahtavillaoloIlmoitusPDFPath),
       nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: fileService.getYllapitoPathForProjektiFile(
         oid,
         nahtavillaoloPDFs[kieli].nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath
       ),
-    } as NahtavillaoloPDF;
+    };
+    result[kieli] = nahtavillaoloPdf;
   }
   return { __typename: "NahtavillaoloPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
 }

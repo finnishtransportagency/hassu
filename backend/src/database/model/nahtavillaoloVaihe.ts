@@ -1,5 +1,5 @@
-import { Aineisto, LocalizedMap, Yhteystieto } from "./common";
-import { IlmoituksenVastaanottajat, NahtavillaoloVaiheTila } from "../../../../common/graphql/apiModel";
+import { Aineisto, LocalizedMap, Yhteystieto, IlmoituksenVastaanottajat } from "./common";
+import { NahtavillaoloVaiheTila } from "../../../../common/graphql/apiModel";
 import { Kielitiedot, Velho } from "./projekti";
 
 export type NahtavillaoloVaihe = {

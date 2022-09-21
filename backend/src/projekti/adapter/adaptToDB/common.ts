@@ -3,23 +3,20 @@ import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
 import { Aineisto, LocalizedMap } from "../../../database/model";
 import { AineistoChangedEvent, ProjektiAdaptationResult, ProjektiEventType } from "../projektiAdapter";
 import remove from "lodash/remove";
+import { IlmoituksenVastaanottajat, ViranomaisVastaanottaja, KuntaVastaanottaja } from "../../../database/model";
 
 export function adaptIlmoituksenVastaanottajatToSave(
   vastaanottajat: API.IlmoituksenVastaanottajatInput | null | undefined
-): API.IlmoituksenVastaanottajat {
+): IlmoituksenVastaanottajat {
   if (!vastaanottajat) {
     return vastaanottajat as null | undefined;
   }
-  const kunnat: API.KuntaVastaanottaja[] = vastaanottajat?.kunnat?.map((kunta) => ({ __typename: "KuntaVastaanottaja", ...kunta })) || null;
+  const kunnat: KuntaVastaanottaja[] = vastaanottajat?.kunnat;
   if (!vastaanottajat?.viranomaiset || vastaanottajat.viranomaiset.length === 0) {
     throw new IllegalArgumentError("Viranomaisvastaanottajia pitää olla vähintään yksi.");
   }
-  const viranomaiset: API.ViranomaisVastaanottaja[] =
-    vastaanottajat?.viranomaiset?.map((viranomainen) => ({
-      __typename: "ViranomaisVastaanottaja",
-      ...viranomainen,
-    })) || null;
-  return { __typename: "IlmoituksenVastaanottajat", kunnat, viranomaiset };
+  const viranomaiset: ViranomaisVastaanottaja[] = vastaanottajat?.viranomaiset;
+  return { kunnat, viranomaiset };
 }
 
 export function adaptYhteystiedotToSave(yhteystietoInputs: Array<API.YhteystietoInput>): API.YhteystietoInput[] | undefined {
@@ -101,4 +98,15 @@ function pickAineistoFromInputByDocumenttiOid(aineistotInput: API.AineistoInput[
     return matchedElements[0];
   }
   return undefined;
+}
+
+type General<T> = { __typename: string } & T;
+
+export function removeTypeName<Type>(o: General<Type> | null | undefined): Type | null | undefined {
+  if (!o) {
+    return o;
+  }
+  const result = { ...o };
+  delete result["__typename"];
+  return result;
 }

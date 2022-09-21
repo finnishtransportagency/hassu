@@ -15,20 +15,20 @@ describe("kayttajas", () => {
     };
     const kayttajas = new Kayttajas(kayttajaMap);
     expect(kayttajas.getKayttajaByUid(undefined)).to.eql(undefined);
-    const a1Kayttaja = {
+    const a1Kayttaja: Kayttaja = {
       __typename: "Kayttaja",
       uid: "A1",
       etuNimi: "Matti",
       sukuNimi: "Meikäläinen",
       email: "e1",
-    } as Kayttaja;
-    const a2Kayttaja = {
+    };
+    const a2Kayttaja: Kayttaja = {
       __typename: "Kayttaja",
       uid: "A2",
       etuNimi: "Minna",
       sukuNimi: "Esimerkkinen",
       email: "e2",
-    } as Kayttaja;
+    };
     expect(kayttajas.getKayttajaByUid("A1")).to.eql(a1Kayttaja);
     expect(kayttajas.findByText("nen").sort(sortByUidFn)).to.eql([a1Kayttaja, a2Kayttaja]);
     expect(kayttajas.findByText("")).to.eql([]);

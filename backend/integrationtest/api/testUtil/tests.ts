@@ -52,10 +52,7 @@ export async function loadProjektiFromDatabase(oid: string, expectedStatus?: Sta
   return savedProjekti;
 }
 
-export async function loadProjektiJulkinenFromDatabase(
-  oid: string,
-  expectedStatus?: Status
-): Promise<ProjektiJulkinen> {
+export async function loadProjektiJulkinenFromDatabase(oid: string, expectedStatus?: Status): Promise<ProjektiJulkinen> {
   const savedProjekti = await api.lataaProjektiJulkinen(oid);
   if (expectedStatus) {
     expect(savedProjekti.status).to.be.eq(expectedStatus);
@@ -68,6 +65,7 @@ export async function testProjektiHenkilot(projekti: Projekti, oid: string): Pro
     oid,
     kayttoOikeudet: projekti.kayttoOikeudet?.map(
       (value) =>
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         ({
           rooli: value.rooli,
           kayttajatunnus: value.kayttajatunnus,
@@ -104,13 +102,9 @@ export async function tallennaLogo() {
   expect(uploadProperties).to.not.be.empty;
   expect(uploadProperties.latausLinkki).to.not.be.undefined;
   expect(uploadProperties.tiedostoPolku).to.not.be.undefined;
-  const putResponse = await axios.put(
-    uploadProperties.latausLinkki,
-    fs.readFileSync(__dirname + "/../../files/logo.png"),
-    {
-      headers: { "content-type": "image/png" },
-    }
-  );
+  const putResponse = await axios.put(uploadProperties.latausLinkki, fs.readFileSync(__dirname + "/../../files/logo.png"), {
+    headers: { "content-type": "image/png" },
+  });
   expect(putResponse.status).to.be.eq(200);
   return uploadProperties.tiedostoPolku;
 }
@@ -218,10 +212,7 @@ async function doTestSuunnitteluvaiheVuorovaikutusWithoutTilaisuus(
   }
 }
 
-export async function testSuunnitteluvaiheVuorovaikutus(
-  oid: string,
-  projektiPaallikko: ProjektiKayttaja
-): Promise<void> {
+export async function testSuunnitteluvaiheVuorovaikutus(oid: string, projektiPaallikko: ProjektiKayttaja): Promise<void> {
   await doTestSuunnitteluvaiheVuorovaikutusWithoutTilaisuus(oid, 1, [projektiPaallikko.kayttajatunnus]);
   const suunnitteluVaihe1 = await doTestSuunnitteluvaiheVuorovaikutus(oid, 1, [projektiPaallikko.kayttajatunnus]);
   expect(suunnitteluVaihe1.vuorovaikutukset).to.have.length(1);
@@ -234,10 +225,7 @@ export async function testSuunnitteluvaiheVuorovaikutus(
     UserFixture.mattiMeikalainen.uid,
   ]);
   const difference = detailedDiff(suunnitteluVaihe2, suunnitteluVaihe3);
-  expectToMatchSnapshot(
-    "added " + UserFixture.mattiMeikalainen.uid + " to vuorovaikutus and vuorovaikutustilaisuus",
-    difference
-  );
+  expectToMatchSnapshot("added " + UserFixture.mattiMeikalainen.uid + " to vuorovaikutus and vuorovaikutustilaisuus", difference);
 }
 
 export async function testListDocumentsToImport(oid: string): Promise<VelhoAineistoKategoria[]> {
@@ -272,20 +260,14 @@ export async function saveAndVerifyAineistoSave(
   expectToMatchSnapshot(description, vuorovaikutus);
 }
 
-export async function testImportAineistot(
-  oid: string,
-  velhoAineistoKategorias: VelhoAineistoKategoria[]
-): Promise<void> {
-  const originalVuorovaikutus = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe
-    .vuorovaikutukset[0];
+export async function testImportAineistot(oid: string, velhoAineistoKategorias: VelhoAineistoKategoria[]): Promise<void> {
+  const originalVuorovaikutus = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe.vuorovaikutukset[0];
 
   const aineistot = velhoAineistoKategorias
     .reduce((documents, aineistoKategoria) => {
       return documents.concat(
         aineistoKategoria.aineistot.filter(
-          (aineisto) =>
-            ["ekatiedosto_eka.pdf", "tokatiedosto_toka.pdf", "karttakuvalla_tiedosto.pdf"].indexOf(aineisto.tiedosto) >=
-            0
+          (aineisto) => ["ekatiedosto_eka.pdf", "tokatiedosto_toka.pdf", "karttakuvalla_tiedosto.pdf"].indexOf(aineisto.tiedosto) >= 0
         )
       );
     }, [])
@@ -336,12 +318,9 @@ export async function testImportAineistot(
 
 export async function testUpdatePublishDateAndDeleteAineisto(oid: string, userFixture: UserFixture): Promise<void> {
   userFixture.loginAs(UserFixture.mattiMeikalainen);
-  const vuorovaikutus = (await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO)).suunnitteluVaihe
-    .vuorovaikutukset[0];
+  const vuorovaikutus = (await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO)).suunnitteluVaihe.vuorovaikutukset[0];
   vuorovaikutus.suunnitelmaluonnokset?.pop();
-  const updatedVuorovaikutusJulkaisuPaiva = parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva)
-    .add(1, "day")
-    .format("YYYY-MM-DD");
+  const updatedVuorovaikutusJulkaisuPaiva = parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva).add(1, "day").format("YYYY-MM-DD");
   const input = {
     oid,
     suunnitteluVaihe: {

@@ -10,6 +10,7 @@ import * as API from "../../../../../common/graphql/apiModel";
 import {
   adaptAineistot,
   adaptHankkeenKuvaus,
+  adaptIlmoituksenVastaanottajat,
   adaptLinkkiByAddingTypename,
   adaptLinkkiListByAddingTypename,
   adaptStandardiYhteystiedotByAddingProjari,
@@ -40,20 +41,21 @@ export function adaptSuunnitteluVaihe(
 
 function adaptVuorovaikutukset(oid: string, kayttoOikeudet: DBVaylaUser[], vuorovaikutukset: Array<Vuorovaikutus>): API.Vuorovaikutus[] {
   if (vuorovaikutukset && vuorovaikutukset.length > 0) {
-    return vuorovaikutukset.map(
-      (vuorovaikutus) =>
-        ({
-          ...vuorovaikutus,
-          esitettavatYhteystiedot: adaptStandardiYhteystiedotByAddingProjari(kayttoOikeudet, vuorovaikutus.esitettavatYhteystiedot),
-          vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
-          suunnittelumateriaali: adaptLinkkiByAddingTypename(vuorovaikutus.suunnittelumateriaali),
-          videot: adaptLinkkiListByAddingTypename(vuorovaikutus.videot),
-          esittelyaineistot: adaptAineistot(vuorovaikutus.esittelyaineistot),
-          suunnitelmaluonnokset: adaptAineistot(vuorovaikutus.suunnitelmaluonnokset),
-          vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(oid, vuorovaikutus.vuorovaikutusPDFt),
-          __typename: "Vuorovaikutus",
-        } as API.Vuorovaikutus)
-    );
+    return vuorovaikutukset.map((vuorovaikutus) => {
+      const apiVuorovaikutus: API.Vuorovaikutus = {
+        ...vuorovaikutus,
+        ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(vuorovaikutus.ilmoituksenVastaanottajat),
+        esitettavatYhteystiedot: adaptStandardiYhteystiedotByAddingProjari(kayttoOikeudet, vuorovaikutus.esitettavatYhteystiedot),
+        vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
+        suunnittelumateriaali: adaptLinkkiByAddingTypename(vuorovaikutus.suunnittelumateriaali),
+        videot: adaptLinkkiListByAddingTypename(vuorovaikutus.videot),
+        esittelyaineistot: adaptAineistot(vuorovaikutus.esittelyaineistot),
+        suunnitelmaluonnokset: adaptAineistot(vuorovaikutus.suunnitelmaluonnokset),
+        vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(oid, vuorovaikutus.vuorovaikutusPDFt),
+        __typename: "Vuorovaikutus",
+      };
+      return apiVuorovaikutus;
+    });
   }
   return vuorovaikutukset as undefined;
 }

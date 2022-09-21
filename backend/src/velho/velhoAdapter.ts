@@ -110,16 +110,16 @@ export function adaptSearchResults(searchResults: ProjektiSearchResult[], kaytta
     return searchResults.map((result) => {
       const projektiPaallikko = kayttajas.findByEmail(getVastuuhenkiloEmail(result.ominaisuudet.vastuuhenkilo));
       const projektiPaallikkoNimi =
-        projektiPaallikko && userService.hasPermissionLuonti(projektiPaallikko)
-          ? adaptKayttaja(projektiPaallikko).nimi
-          : undefined;
+        projektiPaallikko && userService.hasPermissionLuonti(projektiPaallikko) ? adaptKayttaja(projektiPaallikko).nimi : undefined;
       const tyyppi = getProjektiTyyppi(result.ominaisuudet.vaihe);
-      return {
+      const hakutulos: VelhoHakuTulos = {
+        __typename: "VelhoHakuTulos",
         oid: result.oid,
         nimi: result.ominaisuudet.nimi,
         tyyppi,
         projektiPaallikko: projektiPaallikkoNimi,
-      } as VelhoHakuTulos;
+      };
+      return hakutulos;
     });
   }
   return [];

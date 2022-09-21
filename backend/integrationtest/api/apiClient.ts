@@ -13,6 +13,7 @@ class API extends AbstractApi {
   }
 
   async callYllapitoAPI(operation: OperationConfig, variables?: unknown): Promise<unknown> {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     const payload = {
       info: { fieldName: operation.name },
       arguments: variables,

@@ -83,7 +83,7 @@ class ProjektiAdapterJulkinen {
       jatkoPaatos1Vaihe,
       jatkoPaatos2Vaihe,
     };
-    const projektiJulkinen = removeUndefinedFields(projekti) as API.ProjektiJulkinen;
+    const projektiJulkinen: API.ProjektiJulkinen = removeUndefinedFields(projekti);
     applyProjektiJulkinenStatus(projektiJulkinen);
     if (projektiJulkinen.status != Status.EI_JULKAISTU && projektiJulkinen.status != Status.EPAAKTIIVINEN) {
       return projektiJulkinen;
@@ -139,13 +139,14 @@ class ProjektiAdapterJulkinen {
 
     const result = {};
     for (const kieli in aloitusKuulutusPDFS) {
-      result[kieli] = {
+      const aloituskuulutusPdf: AloitusKuulutusPDF = {
         aloituskuulutusPDFPath: fileService.getPublicPathForProjektiFile(oid, aloitusKuulutusPDFS[kieli].aloituskuulutusPDFPath),
         aloituskuulutusIlmoitusPDFPath: fileService.getPublicPathForProjektiFile(
           oid,
           aloitusKuulutusPDFS[kieli].aloituskuulutusIlmoitusPDFPath
         ),
-      } as AloitusKuulutusPDF;
+      };
+      result[kieli] = aloituskuulutusPdf;
     }
     return { __typename: "AloitusKuulutusPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
   }
@@ -322,7 +323,7 @@ function adaptVuorovaikutukset(dbProjekti: DBProjekti, projektiHenkilot: Projekt
       .map((vuorovaikutus) => {
         const julkaisuPaiva = parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva);
         if (julkaisuPaiva.isBefore(dayjs())) {
-          return {
+          const vuorovaikutusJulkinen: API.VuorovaikutusJulkinen = {
             __typename: "VuorovaikutusJulkinen",
             vuorovaikutusNumero: vuorovaikutus.vuorovaikutusNumero,
             vuorovaikutusJulkaisuPaiva: vuorovaikutus.vuorovaikutusJulkaisuPaiva,
@@ -334,7 +335,8 @@ function adaptVuorovaikutukset(dbProjekti: DBProjekti, projektiHenkilot: Projekt
             suunnitelmaluonnokset: adaptAineistotJulkinen(dbProjekti.oid, vuorovaikutus.suunnitelmaluonnokset, undefined, julkaisuPaiva),
             yhteystiedot: adaptStandardiYhteystiedot(dbProjekti, vuorovaikutus.esitettavatYhteystiedot),
             vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(dbProjekti.oid, vuorovaikutus.vuorovaikutusPDFt),
-          } as API.VuorovaikutusJulkinen;
+          };
+          return vuorovaikutusJulkinen;
         }
         return undefined;
       })
@@ -346,7 +348,7 @@ function adaptVuorovaikutukset(dbProjekti: DBProjekti, projektiHenkilot: Projekt
 function adaptVuorovaikutusTilaisuudet(
   vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus>,
   projektiHenkilot: ProjektiHenkilot
-): VuorovaikutusTilaisuus[] {
+): API.VuorovaikutusTilaisuus[] {
   if (vuorovaikutusTilaisuudet) {
     return vuorovaikutusTilaisuudet.map((vuorovaikutusTilaisuus) => ({
       ...vuorovaikutusTilaisuus,
@@ -415,8 +417,8 @@ function adaptVuorovaikutusPDFPaths(oid: string, pdfs: LocalizedMap<Vuorovaikutu
   return { __typename: "VuorovaikutusPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
 }
 
-function removeUndefinedFields(object: API.ProjektiJulkinen): Partial<API.ProjektiJulkinen> {
-  return pickBy(object, (value) => value !== undefined);
+function removeUndefinedFields(object: API.ProjektiJulkinen): API.ProjektiJulkinen {
+  return { __typename: "ProjektiJulkinen", oid: object.oid, velho: object.velho, ...pickBy(object, (value) => value !== undefined) };
 }
 
 export function adaptVelho(velho: Velho): API.VelhoJulkinen {

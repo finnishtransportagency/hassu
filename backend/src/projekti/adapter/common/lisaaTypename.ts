@@ -3,13 +3,13 @@ import * as API from "../../../../../common/graphql/apiModel";
 
 export function adaptLiittyvatSuunnitelmatByAddingTypename(suunnitelmat?: Suunnitelma[] | null): API.Suunnitelma[] | undefined | null {
   if (suunnitelmat) {
-    const liittyvatSuunnitelmat = suunnitelmat.map(
-      (suunnitelma) =>
-        ({
-          __typename: "Suunnitelma",
-          ...suunnitelma,
-        } as Suunnitelma)
-    );
+    const liittyvatSuunnitelmat = suunnitelmat.map((suunnitelma) => {
+      const s: API.Suunnitelma = {
+        __typename: "Suunnitelma",
+        ...suunnitelma,
+      };
+      return s;
+    });
     return liittyvatSuunnitelmat as API.Suunnitelma[];
   }
   return suunnitelmat as undefined | null;
