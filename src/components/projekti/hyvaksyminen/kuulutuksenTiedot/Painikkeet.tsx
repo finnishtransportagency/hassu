@@ -2,7 +2,7 @@ import Button from "@components/button/Button";
 import HassuSpinner from "@components/HassuSpinner";
 import Section from "@components/layout/Section";
 import { Stack } from "@mui/material";
-import { api } from "@services/api";
+import { api, Status } from "@services/api";
 import log from "loglevel";
 import { useRouter } from "next/router";
 import React, { useState, useCallback, useRef, useEffect } from "react";
@@ -13,6 +13,7 @@ import { TilasiirtymaToiminto, TilasiirtymaTyyppi, HyvaksymisPaatosVaiheTila, Pr
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./index";
 import Modaalit from "./Modaalit";
+import { projektiHasMinimumStatus } from "src/hooks/useIsOnAllowedProjektiRoute";
 
 type PalautusValues = {
   syy: string;
@@ -176,7 +177,12 @@ export default function Painikkeet({ projekti }: Props) {
               <Button id="save_hyvaksymispaatosvaihe_draft" onClick={handleSubmit(saveDraft)}>
                 Tallenna Luonnos
               </Button>
-              <Button id="save_and_send_for_acceptance" primary onClick={handleSubmit(lahetaHyvaksyttavaksi)}>
+              <Button
+                id="save_and_send_for_acceptance"
+                primary
+                disabled={!projektiHasMinimumStatus(projekti, Status.HYVAKSYTTY)}
+                onClick={handleSubmit(lahetaHyvaksyttavaksi)}
+              >
                 Lähetä Hyväksyttäväksi
               </Button>
             </Stack>

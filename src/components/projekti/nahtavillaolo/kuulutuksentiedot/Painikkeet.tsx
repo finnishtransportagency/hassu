@@ -70,7 +70,6 @@ export default function Painikkeet({ projekti }: Props) {
       }
       setIsFormSubmitting(true);
       try {
-        console.log({ oid: projekti.oid, toiminto, syy, tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO });
         await api.siirraTila({ oid: projekti.oid, toiminto, syy, tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO });
         await reloadProjekti();
         showSuccessMessage(`${viesti} onnistui`);

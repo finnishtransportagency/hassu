@@ -229,8 +229,8 @@ class ProjektiAdapterJulkinen {
       return {
         __typename: "HyvaksymisPaatosVaiheJulkaisuJulkinen",
         hyvaksymisPaatos: apiHyvaksymisPaatosAineisto,
-        hyvaksymisPaatoksenPvm: hyvaksymispaatos.paatoksenPvm,
-        hyvaksymisPaatoksenAsianumero: hyvaksymispaatos.asianumero,
+        hyvaksymisPaatoksenPvm: hyvaksymispaatos?.paatoksenPvm,
+        hyvaksymisPaatoksenAsianumero: hyvaksymispaatos?.asianumero,
         aineistoNahtavilla: apiAineistoNahtavilla,
         kuulutusPaiva,
         kuulutusVaihePaattyyPaiva,

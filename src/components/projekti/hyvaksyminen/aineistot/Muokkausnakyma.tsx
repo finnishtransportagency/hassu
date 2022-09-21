@@ -11,6 +11,7 @@ import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { aineistoKategoriat } from "common/aineistoKategoriat";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
+import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
@@ -80,6 +81,8 @@ function MuokkausnakymaForm({ projekti, setIsDirty }: MuokkausnakymaFormProps & 
     formState: { isDirty },
   } = useFormReturn;
 
+  const { isAllowedOnRoute } = useIsAllowedOnCurrentProjektiRoute();
+
   useEffect(() => {
     setIsDirty(isDirty);
   }, [isDirty, setIsDirty]);
@@ -97,9 +100,11 @@ function MuokkausnakymaForm({ projekti, setIsDirty }: MuokkausnakymaFormProps & 
         Huomioithan, että suunnitelma-aineistojen tulee täyttää saavutettavuusvaatimukset.
       </Notification>
       <form>
-        <Hyvaksymispaatos projekti={projekti} />
-        <SuunnitelmatJaAineistot />
-        <HyvaksymisPaatosVaihePainikkeet />
+        <fieldset disabled={!isAllowedOnRoute || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden}>
+          <Hyvaksymispaatos projekti={projekti} />
+          <SuunnitelmatJaAineistot />
+          <HyvaksymisPaatosVaihePainikkeet />
+        </fieldset>
       </form>
     </FormProvider>
   );
