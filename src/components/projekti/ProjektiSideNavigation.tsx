@@ -22,7 +22,7 @@ const ProjektiSideNavigation: FC<{ projekti: ProjektiLisatiedolla }> = ({ projek
 
   useEffect(() => {
     if (pathnameForAllowedRoute) {
-      // router.push({ pathname: pathnameForAllowedRoute, query: { oid: projekti.oid } });
+      router.push({ pathname: pathnameForAllowedRoute, query: { oid: projekti.oid } });
     }
   }, [pathnameForAllowedRoute, projekti.oid, router]);
 
