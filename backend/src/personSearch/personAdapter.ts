@@ -4,14 +4,14 @@ import mergeWith from "lodash/mergeWith";
 import { Person } from "./kayttajas";
 import pickBy from "lodash/pickBy";
 
-export function mergeKayttaja(user: Partial<DBVaylaUser>, account: Kayttaja) {
+export function mergeKayttaja(user: Partial<DBVaylaUser>, account: Kayttaja): void {
   const { organisaatio, email } = account;
   const nimi = account.sukuNimi + ", " + account.etuNimi;
   const kayttajatunnus = account.uid;
   mergeWith(user, { organisaatio, email, nimi, kayttajatunnus });
 }
 
-export function adaptKayttaja(account: Kayttaja) {
+export function adaptKayttaja(account: Kayttaja): DBVaylaUser {
   const vaylaUser: DBVaylaUser = {} as any;
   mergeKayttaja(vaylaUser, account);
   return vaylaUser;

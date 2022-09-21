@@ -10,7 +10,7 @@ import { setupLambdaMonitoring, setupLambdaMonitoringMetaData } from "../../aws/
  * Hassu backend for the user lookups.
  * This Lambda is triggered by the Hassu backend if the cached list is considered outdated.
  */
-export async function handleEvent() {
+export async function handleEvent(): Promise<unknown> {
   setupLambdaMonitoring();
 
   return await AWSXRay.captureAsyncFunc("personSearchUpdaterHandler", async (subsegment) => {

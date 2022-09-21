@@ -37,7 +37,7 @@ export class Kayttajas {
   /**
    * For test usage
    */
-  static fromKayttajaList(kayttajas: Kayttaja[]) {
+  static fromKayttajaList(kayttajas: Kayttaja[]): Kayttajas {
     return new Kayttajas(
       kayttajas.reduce((map, kayttaja) => {
         if (kayttaja.uid) {
@@ -60,7 +60,7 @@ export class Kayttajas {
     return list;
   }
 
-  asMap() {
+  asMap(): Record<string, Person> {
     return this.personMap;
   }
 

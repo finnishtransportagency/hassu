@@ -9,7 +9,7 @@ function adaptAccounttype(accountType: string) {
   }[accountType];
 }
 
-export function adaptPersonSearchResult(responseJson: any, kayttajas: Record<string, Person>) {
+export function adaptPersonSearchResult(responseJson: any, kayttajas: Record<string, Person>): void {
   responseJson.person?.person?.forEach(
     (person: {
       FirstName: string[];
