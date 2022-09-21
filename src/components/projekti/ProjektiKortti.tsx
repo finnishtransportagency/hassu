@@ -1,6 +1,5 @@
 import { Projekti } from "@services/api";
 import React, { ReactElement } from "react";
-import styles from "@styles/projekti/ProjektiSideNavigation.module.css";
 import MuiAccordion, { AccordionProps, accordionClasses } from "@mui/material/Accordion";
 import { Typography } from "@mui/material";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -33,22 +32,13 @@ export default function ProjektiKortti(props: Props): ReactElement {
   const julkinen =
     props.projekti?.aloitusKuulutusJulkaisut?.[0] &&
     examineKuulutusPaiva(props.projekti.aloitusKuulutusJulkaisut[0]?.kuulutusPaiva).published;
-  const julkinenURL =
-    window.location.protocol + "//" + window.location.host + "/suunnitelma/" + props.projekti.oid + "/aloituskuulutus";
+  const julkinenURL = window.location.protocol + "//" + window.location.host + "/suunnitelma/" + props.projekti.oid + "/aloituskuulutus";
 
   return (
-    <div role="navigation" className={styles["side-nav"]} style={{ marginBottom: "1rem" }}>
+    <div role="navigation" className="bg-gray-lightest" style={{ marginBottom: "1rem" }}>
       <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon sx={{ color: "#0064AF" }} />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <img
-            style={{ display: "inline", marginLeft: "1rem", marginRight: "1rem" }}
-            src="/projektikortin-ikoni.svg"
-            alt="maapallo"
-          />
+        <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: "#0064AF" }} />} aria-controls="panel1a-content" id="panel1a-header">
+          <img style={{ display: "inline", marginLeft: "1rem", marginRight: "1rem" }} src="/projektikortin-ikoni.svg" alt="maapallo" />
           {/* TODO: Poista placeholder kun asiatunnus saadaan velhosta varmasti, eika ole tyhja */}
           <Typography>VÄYLÄ/1234/xx.xx.xx/2022</Typography>
         </AccordionSummary>

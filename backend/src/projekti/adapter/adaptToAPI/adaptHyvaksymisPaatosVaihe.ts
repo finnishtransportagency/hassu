@@ -40,8 +40,8 @@ export function adaptHyvaksymisPaatosVaihe(
     hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto),
     kuulutusYhteystiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-    hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
-    hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,
+    hyvaksymisPaatoksenPvm: hyvaksymisPaatos?.paatoksenPvm,
+    hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos?.asianumero,
   };
 }
 
@@ -70,8 +70,8 @@ export function adaptHyvaksymisPaatosVaiheJulkaisut(
         hyvaksymisPaatosVaihePDFt: adaptHyvaksymisPaatosVaihePDFPaths(oid, hyvaksymisPaatosVaihePDFt),
         aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
         hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto),
-        hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
-        hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,
+        hyvaksymisPaatoksenPvm: hyvaksymisPaatos?.paatoksenPvm,
+        hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos?.asianumero,
         kuulutusYhteystiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot),
         ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
         velho: adaptVelhoByAddingTypename(velho),

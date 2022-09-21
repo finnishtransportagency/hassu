@@ -18,6 +18,7 @@ import { removeTypeName } from "src/util/removeTypeName";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
+import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 
 export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid"> & {
   hyvaksymisPaatosVaihe: Omit<HyvaksymisPaatosVaiheInput, "hallintoOikeus"> & {
@@ -76,6 +77,7 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet, setIsDirty }: Kuul
   };
 
   const useFormReturn = useForm<KuulutuksenTiedotFormValues>(formOptions);
+  const { isAllowedOnRoute } = useIsAllowedOnCurrentProjektiRoute();
 
   const {
     formState: { isDirty },
@@ -101,16 +103,18 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet, setIsDirty }: Kuul
         <>
           <FormProvider {...useFormReturn}>
             <form>
-              <KuulutusJaJulkaisuPaiva />
-              <PaatoksenPaiva projekti={projekti} />
-              <MuutoksenHaku />
-              <KuulutuksessaEsitettavatYhteystiedot />
-              <IlmoituksenVastaanottajatKomponentti hyvaksymisPaatosVaihe={projekti?.hyvaksymisPaatosVaihe} />
+              <fieldset disabled={!isAllowedOnRoute || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden}>
+                <KuulutusJaJulkaisuPaiva />
+                <PaatoksenPaiva projekti={projekti} />
+                <MuutoksenHaku />
+                <KuulutuksessaEsitettavatYhteystiedot />
+                <IlmoituksenVastaanottajatKomponentti hyvaksymisPaatosVaihe={projekti?.hyvaksymisPaatosVaihe} />
 
-              {pdfFormRef.current?.esikatselePdf && (
-                <KuulutuksenJaIlmoituksenEsikatselu esikatselePdf={pdfFormRef.current?.esikatselePdf} />
-              )}
-              <Painikkeet projekti={projekti} />
+                {pdfFormRef.current?.esikatselePdf && (
+                  <KuulutuksenJaIlmoituksenEsikatselu esikatselePdf={pdfFormRef.current?.esikatselePdf} />
+                )}
+                <Painikkeet projekti={projekti} />
+              </fieldset>
             </form>
           </FormProvider>
         </>
