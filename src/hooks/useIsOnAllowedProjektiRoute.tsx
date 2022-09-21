@@ -51,7 +51,7 @@ export function statusOrdinal(status: Status): number {
   return Object.values(Status).indexOf(status);
 }
 
-export const projektiHasMinimumStatus = (projekti: ProjektiLisatiedolla | null | undefined, minimumStatus: Status) =>
+export const projektiMeetsMinimumStatus = (projekti: ProjektiLisatiedolla | null | undefined, minimumStatus: Status) =>
   !!projekti?.status && statusOrdinal(projekti.status) >= statusOrdinal(minimumStatus);
 
 interface isAllowedOnRouteResponse {
@@ -65,12 +65,12 @@ export const useIsAllowedOnCurrentProjektiRoute: () => isAllowedOnRouteResponse 
 
   return useMemo(() => {
     const requiredStatusForCurrentPath = routes.find((route) => route.pathname === router.pathname)?.requiredStatus;
-    const isAllowedOnRoute = !requiredStatusForCurrentPath || projektiHasMinimumStatus(projekti, requiredStatusForCurrentPath);
+    const isAllowedOnRoute = !requiredStatusForCurrentPath || projektiMeetsMinimumStatus(projekti, requiredStatusForCurrentPath);
 
     const pathnameForAllowedRoute = isAllowedOnRoute
       ? undefined
       : routes.reduce<string | undefined>((allowedPathname, route) => {
-          if (projektiHasMinimumStatus(projekti, route.requiredStatus)) {
+          if (projektiMeetsMinimumStatus(projekti, route.requiredStatus)) {
             allowedPathname = route.pathname;
           }
           return allowedPathname;

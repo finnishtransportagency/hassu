@@ -13,7 +13,7 @@ import { TilasiirtymaToiminto, TilasiirtymaTyyppi, HyvaksymisPaatosVaiheTila, Pr
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./index";
 import Modaalit from "./Modaalit";
-import { projektiHasMinimumStatus } from "src/hooks/useIsOnAllowedProjektiRoute";
+import { projektiMeetsMinimumStatus } from "src/hooks/useIsOnAllowedProjektiRoute";
 
 type PalautusValues = {
   syy: string;
@@ -180,7 +180,7 @@ export default function Painikkeet({ projekti }: Props) {
               <Button
                 id="save_and_send_for_acceptance"
                 primary
-                disabled={!projektiHasMinimumStatus(projekti, Status.HYVAKSYTTY)}
+                disabled={!projektiMeetsMinimumStatus(projekti, Status.HYVAKSYTTY)}
                 onClick={handleSubmit(lahetaHyvaksyttavaksi)}
               >
                 Lähetä Hyväksyttäväksi
