@@ -3,8 +3,7 @@ import * as API from "../../../../../common/graphql/apiModel";
 import { findVuorovaikutusByNumber } from "../../../util/findVuorovaikutusByNumber";
 import { AineistoChangedEvent, ProjektiAdaptationResult, ProjektiEventType, VuorovaikutusPublishedEvent } from "../projektiAdapter";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
-import { adaptKayttajatunnusList } from "./adaptKayttajatunnusList";
-import { adaptAineistotToSave, adaptIlmoituksenVastaanottajatToSave, adaptYhteystiedotToSave } from "./common";
+import { adaptAineistotToSave, adaptIlmoituksenVastaanottajatToSave, adaptStandardiYhteystiedot } from "./common";
 
 export function adaptVuorovaikutusToSave(
   projekti: DBProjekti,
@@ -30,7 +29,7 @@ export function adaptVuorovaikutusToSave(
       projektiAdaptationResult
     );
 
-    const vuorovaikutusTilaisuudet = adaptVuorovaikutusTilaisuudetToSave(projekti, vuorovaikutusInput.vuorovaikutusTilaisuudet);
+    const vuorovaikutusTilaisuudet = adaptVuorovaikutusTilaisuudetToSave(vuorovaikutusInput.vuorovaikutusTilaisuudet);
     // Vuorovaikutus must have at least one vuorovaikutustilaisuus
     if (!vuorovaikutusTilaisuudet) {
       throw new IllegalArgumentError("Vuorovaikutuksella pitää olla ainakin yksi vuorovaikutustilaisuus");
@@ -89,14 +88,14 @@ function checkIfAineistoJulkinenChanged(
 }
 
 function adaptVuorovaikutusTilaisuudetToSave(
-  projekti: DBProjekti,
   vuorovaikutusTilaisuudet: Array<API.VuorovaikutusTilaisuusInput>
 ): VuorovaikutusTilaisuus[] | undefined {
   return vuorovaikutusTilaisuudet?.length > 0
-    ? vuorovaikutusTilaisuudet.map((vv) => ({
-        ...vv,
-        esitettavatYhteystiedot: adaptYhteystiedotToSave(vv.esitettavatYhteystiedot),
-        projektiYhteysHenkilot: adaptKayttajatunnusList(projekti, vv.projektiYhteysHenkilot, true),
-      }))
+    ? vuorovaikutusTilaisuudet.map((vv) => {
+        if (vv.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
+          vv.esitettavatYhteystiedot = adaptStandardiYhteystiedot(vv.esitettavatYhteystiedot);
+        }
+        return vv;
+      })
     : undefined;
 }

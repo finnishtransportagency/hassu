@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import { IlmoitettavaViranomainen } from "@services/api";
 import filter from "lodash/filter";
+import { yhteystietoSchema } from "./yhteystieto";
 
 export const ilmoituksenVastaanottajat = () =>
   Yup.object()
@@ -10,9 +11,7 @@ export const ilmoituksenVastaanottajat = () =>
           Yup.object()
             .shape({
               nimi: Yup.string().required(),
-              sahkoposti: Yup.string()
-                .email("Virheellinen sähköpostiosoite")
-                .required("Sähköpostiosoite on pakollinen"),
+              sahkoposti: Yup.string().email("Virheellinen sähköpostiosoite").required("Sähköpostiosoite on pakollinen"),
             })
             .required()
         )
@@ -25,9 +24,7 @@ export const ilmoituksenVastaanottajat = () =>
           Yup.object()
             .shape({
               nimi: Yup.mixed().oneOf(Object.values(IlmoitettavaViranomainen), "Viranomaistieto on pakollinen"),
-              sahkoposti: Yup.string()
-                .email("Virheellinen sähköpostiosoite")
-                .required("Sähköpostiosoite on pakollinen"),
+              sahkoposti: Yup.string().email("Virheellinen sähköpostiosoite").required("Sähköpostiosoite on pakollinen"),
             })
             .test("unique", "Vastaanottaja on jo lisätty", (value, testContext) => {
               const duplikaatit = filter(testContext.parent, value);
@@ -55,3 +52,9 @@ export const ilmoituksenVastaanottajat = () =>
         }),
     })
     .required();
+
+export const standardiYhteystiedot = () =>
+  Yup.object().shape({
+    yhteysTiedot: Yup.array().of(yhteystietoSchema),
+    yhteysHenkilot: Yup.array().of(Yup.string()),
+  });

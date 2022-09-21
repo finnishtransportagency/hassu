@@ -16,6 +16,7 @@ import dayjs from "dayjs";
 import { formatDate } from "src/util/dateUtils";
 import capitalize from "lodash/capitalize";
 import useTranslation from "next-translate/useTranslation";
+import StandardiYhteystiedotListana from "../common/StandardiYhteystiedotListana";
 
 interface Props {
   projekti: Projekti;
@@ -31,11 +32,7 @@ type FormFields = {
   };
 };
 
-export default function SuunnitteluvaiheenVuorovaikuttaminen({
-  projekti,
-  vuorovaikutus,
-  setOpenVuorovaikutustilaisuus,
-}: Props): ReactElement {
+export default function VuorovaikutusMahdollisuudet({ projekti, vuorovaikutus, setOpenVuorovaikutustilaisuus }: Props): ReactElement {
   const { t } = useTranslation();
 
   const { getValues, getFieldState } = useFormContext<FormFields>();
@@ -48,12 +45,8 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
     ? vuorovaikutus.vuorovaikutusTilaisuudet
     : getValues("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet");
 
-  const isVerkkotilaisuuksia = !!vuorovaikutusTilaisuudet?.find(
-    (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA
-  );
-  const isFyysisiatilaisuuksia = !!vuorovaikutusTilaisuudet?.find(
-    (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA
-  );
+  const isVerkkotilaisuuksia = !!vuorovaikutusTilaisuudet?.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA);
+  const isFyysisiatilaisuuksia = !!vuorovaikutusTilaisuudet?.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA);
   const isSoittoaikoja = !!vuorovaikutusTilaisuudet?.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA);
 
   const tilaisuudetError = getFieldState("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet").error;
@@ -75,8 +68,8 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
             <div className="pt-6">
               <p className="vayla-label">Vuorovaikutusmahdollisuudet palautteiden ja kysymyksien lisäksi</p>
               <p>
-                Verkossa jaettavien tilaisuuksien liittymislinkit julkaistaan palvelun julkisella puolella kaksi (2)
-                tuntia ennen tilaisuuden alkua.
+                Verkossa jaettavien tilaisuuksien liittymislinkit julkaistaan palvelun julkisella puolella kaksi (2) tuntia ennen
+                tilaisuuden alkua.
               </p>
             </div>
           </>
@@ -99,9 +92,8 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                     <div key={index}>
                       <p>
                         {tilaisuus.nimi ? capitalize(tilaisuus.nimi) : "Verkkotilaisuus"},{" "}
-                        {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)}{" "}
-                        {formatDate(tilaisuus.paivamaara)} klo {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, Linkki
-                        tilaisuuteen: {tilaisuus.linkki}
+                        {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)} {formatDate(tilaisuus.paivamaara)} klo{" "}
+                        {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, Linkki tilaisuuteen: {tilaisuus.linkki}
                       </p>
                     </div>
                   );
@@ -120,9 +112,8 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                     <div key={index}>
                       <p>
                         {tilaisuus.nimi ? capitalize(tilaisuus.nimi) : "Fyysinen tilaisuus"},{" "}
-                        {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)}{" "}
-                        {formatDate(tilaisuus.paivamaara)} klo {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika},
-                        Osoite: {tilaisuus.paikka ? `${tilaisuus.paikka}, ` : ""}
+                        {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)} {formatDate(tilaisuus.paivamaara)} klo{" "}
+                        {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, Osoite: {tilaisuus.paikka ? `${tilaisuus.paikka}, ` : ""}
                         {tilaisuus.osoite}, {tilaisuus.postinumero} {tilaisuus.postitoimipaikka}
                         {tilaisuus.Saapumisohjeet && <>, Saapumisohjeet: {tilaisuus.Saapumisohjeet}</>}
                       </p>
@@ -141,15 +132,15 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
                 .map((tilaisuus, index) => {
                   return (
                     <div key={index}>
-                      <p>
+                      <p className="mb-0">
                         {tilaisuus.nimi ? capitalize(tilaisuus.nimi) : "Soittoaika"},{" "}
-                        {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)}{" "}
-                        {formatDate(tilaisuus.paivamaara)} klo {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}
+                        {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)} {formatDate(tilaisuus.paivamaara)} klo{" "}
+                        {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}
                       </p>
-                      <div>
-                        {tilaisuus.esitettavatYhteystiedot?.map((yhteystieto, index) => {
-                          return <SoittoajanYhteystieto key={index} yhteystieto={yhteystieto} />;
-                        })}
+                      <div className="pl-2">
+                        {tilaisuus.esitettavatYhteystiedot && (
+                          <StandardiYhteystiedotListana standardiYhteystiedot={tilaisuus.esitettavatYhteystiedot} />
+                        )}
                       </div>
                     </div>
                   );
@@ -164,9 +155,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({
               }}
               id="add_or_edit_tilaisuus"
             >
-              {isFyysisiatilaisuuksia || isVerkkotilaisuuksia || isSoittoaikoja
-                ? "Muokkaa tilaisuuksia"
-                : "Lisää tilaisuus"}
+              {isFyysisiatilaisuuksia || isVerkkotilaisuuksia || isSoittoaikoja ? "Muokkaa tilaisuuksia" : "Lisää tilaisuus"}
             </Button>
           )}
         </SectionContent>
@@ -180,8 +169,7 @@ export const SoittoajanYhteystieto = React.memo((props: { yhteystieto: Yhteystie
       <p>
         {props.yhteystieto.etunimi} {props.yhteystieto.sukunimi}
         {props.yhteystieto.titteli ? `, ${props.yhteystieto.titteli}` : null}
-        {props.yhteystieto.organisaatio ? ` (${props.yhteystieto.organisaatio})` : null}:{" "}
-        {props.yhteystieto.puhelinnumero}
+        {props.yhteystieto.organisaatio ? ` (${props.yhteystieto.organisaatio})` : null}: {props.yhteystieto.puhelinnumero}
       </p>
     </>
   );

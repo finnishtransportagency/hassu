@@ -8,7 +8,7 @@ export function adaptStandardiYhteystiedotByAddingProjari(
   yhteystiedot: StandardiYhteystiedot
 ): API.StandardiYhteystiedot {
   if (yhteystiedot) {
-    const yhteysHenkilot = yhteystiedot.yhteysHenkilot;
+    const yhteysHenkilot = yhteystiedot.yhteysHenkilot || [];
     const projari = kayttoOikeudet.find(({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO);
     if (!yhteysHenkilot.find((kayttajatunnus) => kayttajatunnus === projari.kayttajatunnus)) {
       yhteysHenkilot.push(projari.kayttajatunnus);

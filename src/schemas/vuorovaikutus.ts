@@ -1,8 +1,7 @@
 import { VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import { isValidDate } from "src/util/dateUtils";
 import * as Yup from "yup";
-import { yhteystietoSchema } from "./yhteystieto";
-import { ilmoituksenVastaanottajat } from "./common";
+import { ilmoituksenVastaanottajat, standardiYhteystiedot } from "./common";
 
 const validTimeRegexp = /^([0-1]?[0-9]|2[0-4]):([0-5]?[0-9])$/;
 
@@ -87,22 +86,16 @@ export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
           then: Yup.string().required("Tilaisuuden postinumero täytyy antaa"),
         })
         .nullable(),
-      esitettavatYhteystiedot: Yup.array()
-        .when("tyyppi", {
-          is: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
-          then: Yup.array().of(yhteystietoSchema),
-        })
-        .nullable(),
-      projektiYhteysHenkilot: Yup.array()
-        .when("tyyppi", {
-          is: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
-          then: Yup.array()
-            .of(Yup.string())
-            .required("Vähintään yksi yhteyshenkilö pitää valita")
-            .min(1, "Vähintään yksi yhteyshenkilö pitää valita")
-            .nullable(),
-        })
-        .nullable(),
+      esitettavatYhteystiedot: standardiYhteystiedot().test(
+        "at-least-one-contact",
+        "Vähintään yksi yhteyshenkilö on annettava",
+        (objekti) => {
+          if ((objekti.yhteysHenkilot?.length || 0) + (objekti.yhteysTiedot?.length || 0) === 0) {
+            return false;
+          }
+          return true;
+        }
+      ),
     })
   ),
 });
@@ -133,10 +126,7 @@ export const vuorovaikutusSchema = Yup.object().shape({
         .test("valid-date", "Virheellinen päivämäärä", (date) => {
           return isValidDate(date);
         }),
-      esitettavatYhteystiedot: Yup.object().shape({
-        yhteysTiedot: Yup.array().of(yhteystietoSchema),
-        yhteysHenkilot: Yup.array().of(Yup.string()),
-      }),
+      esitettavatYhteystiedot: standardiYhteystiedot(),
       vuorovaikutusTilaisuudet: Yup.array()
         .of(vuorovaikutustilaisuudetSchema)
         .required("Vähintään yksi tilaisuus täytyy antaa")

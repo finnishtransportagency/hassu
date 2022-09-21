@@ -1,6 +1,6 @@
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
-import { ProjektiRooli, YhteystietoInput, ProjektiKayttaja } from "@services/api";
+import { ProjektiRooli, YhteystietoInput } from "@services/api";
 import Section from "@components/layout/Section";
 import { ReactElement, useMemo, Fragment } from "react";
 import Button from "@components/button/Button";
@@ -11,8 +11,7 @@ import TextInput from "@components/form/TextInput";
 import HassuGrid from "@components/HassuGrid";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
 import IconButton from "@components/button/IconButton";
-import capitalize from "lodash/capitalize";
-import replace from "lodash/replace";
+import StandardiYhteystiedotListana from "../common/StandardiYhteystiedotListana";
 import { useProjekti } from "src/hooks/useProjekti";
 import { VuorovaikutusFormValues } from "./SuunnitteluvaiheenVuorovaikuttaminen";
 
@@ -50,37 +49,12 @@ export default function EsitettavatYhteystiedot({ vuorovaikutusnro }: Props): Re
     name: "suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot",
   });
 
-  const vuorovaikutusYhteysHenkilot: ProjektiKayttaja[] = v?.esitettavatYhteystiedot?.yhteysHenkilot
-    ? v?.esitettavatYhteystiedot?.yhteysHenkilot
-        .map((hlo) => {
-          const yhteysHenkiloTietoineen: ProjektiKayttaja | undefined = (projekti?.kayttoOikeudet || []).find(
-            (ko) => ko.kayttajatunnus === hlo
-          );
-          if (!yhteysHenkiloTietoineen) {
-            return {} as ProjektiKayttaja;
-          }
-          return yhteysHenkiloTietoineen as ProjektiKayttaja;
-        })
-        .filter((pk) => pk.nimi)
-    : [];
-
-  if (julkinen) {
+  if (julkinen && v.esitettavatYhteystiedot) {
     return (
       <Section>
         <SectionContent>
           <p className="vayla-label mb-5">Vuorovaikuttamisen yhteyshenkilöt</p>
-          {v?.esitettavatYhteystiedot?.yhteysTiedot?.map((yhteystieto, index) => (
-            <p style={{ margin: 0 }} key={index}>
-              {capitalize(yhteystieto.etunimi)} {capitalize(yhteystieto.sukunimi)}, puh. {yhteystieto.puhelinnumero},{" "}
-              {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio})
-            </p>
-          ))}
-          {vuorovaikutusYhteysHenkilot.map((yhteystieto, index) => (
-            <p style={{ margin: 0 }} key={index}>
-              {yhteystieto.nimi}, puh. {yhteystieto.puhelinnumero}, {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} (
-              {yhteystieto.organisaatio})
-            </p>
-          ))}
+          <StandardiYhteystiedotListana standardiYhteystiedot={v.esitettavatYhteystiedot} />
         </SectionContent>
       </Section>
     );

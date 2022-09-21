@@ -139,8 +139,7 @@ input VuorovaikutusTilaisuusInput {
   postinumero: String
   postitoimipaikka: String
   Saapumisohjeet: String
-  projektiYhteysHenkilot: [String!]
-  esitettavatYhteystiedot: [YhteystietoInput!]
+  esitettavatYhteystiedot: StandardiYhteystiedotInput
 }
 
 input NahtavillaoloVaiheInput {

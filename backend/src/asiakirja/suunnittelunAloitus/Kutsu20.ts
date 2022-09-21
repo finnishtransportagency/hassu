@@ -1,5 +1,5 @@
 import { DBProjekti, DBVaylaUser, SuunnitteluSopimus, SuunnitteluVaihe, Vuorovaikutus, VuorovaikutusTilaisuus } from "../../database/model";
-import { Kieli, ProjektiRooli, ProjektiTyyppi, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
+import { Kieli, ProjektiTyyppi, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import dayjs from "dayjs";
 import { linkSuunnitteluVaihe } from "../../../../common/links";
@@ -296,11 +296,9 @@ export class Kutsu20 extends CommonPdf {
           const time = this.formatTilaisuusTime(tilaisuus);
           this.doc.text(time);
 
-          if (tilaisuus.projektiYhteysHenkilot) {
-            tilaisuus.projektiYhteysHenkilot.forEach((kayttajatunnus) => {
-              const user = this.kayttoOikeudet
-                .filter((kayttaja) => kayttaja.kayttajatunnus == kayttajatunnus || kayttaja.rooli == ProjektiRooli.PROJEKTIPAALLIKKO)
-                .pop();
+          if (tilaisuus.esitettavatYhteystiedot?.yhteysHenkilot) {
+            tilaisuus.esitettavatYhteystiedot?.yhteysHenkilot.forEach((kayttajatunnus) => {
+              const user = this.kayttoOikeudet.filter((kayttaja) => kayttaja.kayttajatunnus == kayttajatunnus).pop();
               if (user) {
                 const role = translate("rooli." + user.rooli, this.kieli);
                 this.doc.text(safeConcatStrings(", ", [user.nimi, role, user.puhelinnumero]));
@@ -308,8 +306,8 @@ export class Kutsu20 extends CommonPdf {
             });
           }
 
-          if (tilaisuus.esitettavatYhteystiedot) {
-            tilaisuus.esitettavatYhteystiedot.forEach((yhteystieto) => {
+          if (tilaisuus.esitettavatYhteystiedot?.yhteysTiedot) {
+            tilaisuus.esitettavatYhteystiedot.yhteysTiedot.forEach((yhteystieto) => {
               this.doc.text(
                 safeConcatStrings(", ", [`${yhteystieto.etunimi} ${yhteystieto.sukunimi}`, yhteystieto.titteli, yhteystieto.puhelinnumero])
               );

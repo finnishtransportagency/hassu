@@ -13,7 +13,7 @@ export const MOCKED_TIMESTAMP = "2020-01-01T00:00:00+02:00";
 
 export async function recordProjektiTestFixture(fixtureName: string | FixtureName, oid: string): Promise<void> {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
-  replaceFieldsByName(dbProjekti, MOCKED_TIMESTAMP, "tuotu", "paivitetty", "kuulutusVaihePaattyyPaiva");
+  replaceFieldsByName(dbProjekti, MOCKED_TIMESTAMP, "tuotu", "paivitetty", "kuulutusVaihePaattyyPaiva", "lahetetty");
   replaceFieldsByName(dbProjekti, "salt123", "salt");
 
   const oldValue = readRecord(fixtureName);

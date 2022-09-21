@@ -734,6 +734,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "OBJECT",
+        "name": "VuorovaikutusTilaisuusJulkinen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "ENUM",
         "name": "VuorovaikutusTilaisuusTyyppi",
         "possibleTypes": null,

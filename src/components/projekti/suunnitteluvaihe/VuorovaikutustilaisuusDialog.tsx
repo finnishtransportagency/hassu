@@ -30,7 +30,6 @@ import FormGroup from "@components/form/FormGroup";
 import CheckBox from "@components/form/CheckBox";
 import SoittoajanYhteyshenkilot from "./SoittoajanYhteyshenkilot";
 import dayjs from "dayjs";
-import { removeTypeName } from "src/util/removeTypeName";
 
 const defaultTilaisuus = {
   nimi: "",
@@ -100,14 +99,7 @@ export default function VuorovaikutusDialog({
   useEffect(() => {
     if (tilaisuudet) {
       const tilaisuuksienTiedot = {
-        vuorovaikutusTilaisuudet:
-          tilaisuudet.map((tilaisuus) => {
-            const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
-            const { esitettavatYhteystiedot } = vuorovaikutusTilaisuusInput;
-            vuorovaikutusTilaisuusInput.esitettavatYhteystiedot =
-              esitettavatYhteystiedot?.map((yt) => removeTypeName(yt)) || [];
-            return vuorovaikutusTilaisuusInput;
-          }) || [],
+        vuorovaikutusTilaisuudet: tilaisuudet,
       };
       reset(tilaisuuksienTiedot);
     }
@@ -163,13 +155,7 @@ export default function VuorovaikutusDialog({
   const isSoittoaikoja = !!fields.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA);
 
   return (
-    <HassuDialog
-      scroll="body"
-      open={open}
-      title="Vuorovaikutustilaisuuden lisääminen"
-      onClose={onClose}
-      maxWidth={"lg"}
-    >
+    <HassuDialog scroll="body" open={open} title="Vuorovaikutustilaisuuden lisääminen" onClose={onClose} maxWidth={"lg"}>
       <DialogContent>
         <FormProvider {...useFormReturn}>
           <form>
@@ -189,12 +175,7 @@ export default function VuorovaikutusDialog({
                   onDelete={() => {
                     append(defaultOnlineTilaisuus);
                   }}
-                  deleteIcon={
-                    <HassuBadge
-                      badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.VERKOSSA)}
-                      color={"primary"}
-                    />
-                  }
+                  deleteIcon={<HassuBadge badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.VERKOSSA)} color={"primary"} />}
                 />
                 <HassuChip
                   icon={<LocationCityIcon />}
@@ -209,12 +190,7 @@ export default function VuorovaikutusDialog({
                   onDelete={() => {
                     append(defaultFyysinenTilaisuus);
                   }}
-                  deleteIcon={
-                    <HassuBadge
-                      badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.PAIKALLA)}
-                      color={"primary"}
-                    />
-                  }
+                  deleteIcon={<HassuBadge badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.PAIKALLA)} color={"primary"} />}
                 />
                 <HassuChip
                   icon={<LocalPhoneIcon />}
@@ -229,12 +205,7 @@ export default function VuorovaikutusDialog({
                   onDelete={() => {
                     append(defaultSoittoaikaTilaisuus);
                   }}
-                  deleteIcon={
-                    <HassuBadge
-                      badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.SOITTOAIKA)}
-                      color={"primary"}
-                    />
-                  }
+                  deleteIcon={<HassuBadge badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.SOITTOAIKA)} color={"primary"} />}
                 />
               </HassuStack>
               {isVerkkotilaisuuksia && (
@@ -262,10 +233,7 @@ export default function VuorovaikutusDialog({
                           {...register(`vuorovaikutusTilaisuudet.${index}.linkki`)}
                           error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.linkki}
                         ></TextInput>
-                        <p>
-                          Linkki tilaisuuteen julkaistaan palvelun julkisella puolella kaksi (2) tuntia ennen
-                          tilaisuuden alkamista.
-                        </p>
+                        <p>Linkki tilaisuuteen julkaistaan palvelun julkisella puolella kaksi (2) tuntia ennen tilaisuuden alkamista.</p>
                         <Button
                           className="btn-remove-red"
                           onClick={(event) => {
@@ -350,21 +318,19 @@ export default function VuorovaikutusDialog({
                         <SectionContent>
                           <h4 className="vayla-smallest-title">Soittoajassa esitettävät yhteyshenkilöt</h4>
                           <p>
-                            Voit valita soittoajassa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai
-                            lisätä uuden yhteystiedon. Projektiin tallennettujen henkilöiden yhteystiedot haetaan
-                            Projektin henkilöt -sivulle tallennetuista tiedoista.
+                            Voit valita soittoajassa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden
+                            yhteystiedon. Projektiin tallennettujen henkilöiden yhteystiedot haetaan Projektin henkilöt -sivulle
+                            tallennetuista tiedoista.
                           </p>
                           {kayttoOikeudet && kayttoOikeudet.length > 0 ? (
                             <Controller
                               control={control}
-                              name={`vuorovaikutusTilaisuudet.${index}.projektiYhteysHenkilot`}
+                              name={`vuorovaikutusTilaisuudet.${index}.esitettavatYhteystiedot.yhteysHenkilot`}
                               render={({ field: { onChange, value, ...field } }) => (
                                 <FormGroup
                                   label="Projektiin tallennetut henkilöt"
                                   inlineFlex
-                                  errorMessage={
-                                    (errors as any)?.vuorovaikutusTilaisuudet?.[index]?.projektiYhteysHenkilot?.message
-                                  }
+                                  errorMessage={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.esitettavatYhteystiedot?.message}
                                 >
                                   {kayttoOikeudet?.map(({ nimi, kayttajatunnus }, index) => {
                                     const tunnuslista = value || [];
