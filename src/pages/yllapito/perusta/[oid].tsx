@@ -64,11 +64,11 @@ const defaultFormValues = (projekti: ProjektiLisatiedolla) =>
   ({
     oid: projekti.oid,
     kayttoOikeudet:
-      projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, rooli, esitetaanKuulutuksessa }) => ({
+      projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi, muokattavissa }) => ({
         kayttajatunnus,
         puhelinnumero: puhelinnumero || "",
-        rooli,
-        esitetaanKuulutuksessa,
+        tyyppi,
+        muokattavissa,
       })) || [],
   } as FormValues);
 
@@ -131,7 +131,7 @@ const PerustaProjektiForm: FC<PerustaProjektiFormProps> = ({ projekti, projektiL
     },
     [setFormContext]
   );
-
+  console.log(projekti);
   return (
     <>
       <FormProvider {...useFormReturn}>

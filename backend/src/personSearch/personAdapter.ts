@@ -1,14 +1,14 @@
-import { DBVaylaUser } from "../database/model/projekti";
+import { DBVaylaUser } from "../database/model";
 import { Kayttaja } from "../../../common/graphql/apiModel";
-import mergeWith from "lodash/mergeWith";
+import merge from "lodash/merge";
 import { Person } from "./kayttajas";
 import pickBy from "lodash/pickBy";
 
-export function mergeKayttaja(user: Partial<DBVaylaUser>, account: Kayttaja): void {
+export function mergeKayttaja(user: Partial<DBVaylaUser>, account: Kayttaja): DBVaylaUser {
   const { organisaatio, email } = account;
   const nimi = account.sukuNimi + ", " + account.etuNimi;
   const kayttajatunnus = account.uid;
-  mergeWith(user, { organisaatio, email, nimi, kayttajatunnus });
+  return merge(user, { organisaatio, email, nimi, kayttajatunnus });
 }
 
 export function adaptKayttaja(account: Kayttaja): DBVaylaUser {
@@ -26,7 +26,6 @@ export function adaptPerson(uid: string, person: Person): Kayttaja {
     puhelinnumero: person.puhelinnumero,
     sukuNimi: person.sukuNimi,
     uid,
-    vaylaKayttajaTyyppi: person.vaylaKayttajaTyyppi,
   }) as Kayttaja;
 }
 

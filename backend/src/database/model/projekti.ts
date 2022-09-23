@@ -1,17 +1,18 @@
-import { AloitusKuulutusTila, Kieli, ProjektiRooli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
+import { AloitusKuulutusTila, KayttajaTyyppi, Kieli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
 import { SuunnitteluVaihe, Vuorovaikutus } from "./suunnitteluVaihe";
 import { NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "./nahtavillaoloVaihe";
 import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "./hyvaksymisPaatosVaihe";
-import { StandardiYhteystiedot, LocalizedMap, Yhteystieto, IlmoituksenVastaanottajat } from "./common";
+import { IlmoituksenVastaanottajat, LocalizedMap, StandardiYhteystiedot, Yhteystieto } from "./common";
 
 export type DBVaylaUser = {
-  rooli: ProjektiRooli;
   email: string;
   kayttajatunnus: string;
 
-  puhelinnumero: string;
+  puhelinnumero?: string;
   organisaatio: string;
   nimi: string;
+  tyyppi?: KayttajaTyyppi;
+  muokattavissa?: boolean;
 };
 
 export type AloitusKuulutus = {
@@ -87,8 +88,8 @@ export type Velho = {
   toteuttavaOrganisaatio?: string | null;
   vastuuhenkilonNimi?: string | null;
   vastuuhenkilonEmail?: string | null;
-  varahenkiloNimi?: string | null;
-  varahenkiloEmail?: string | null;
+  varahenkilonNimi?: string | null;
+  varahenkilonEmail?: string | null;
   maakunnat?: string[] | null;
   kunnat?: string[] | null;
   linkki?: string | null;

@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FieldArrayWithId, useFieldArray, useFormContext } from "react-hook-form";
-import { api, apiConfig, Kayttaja, ProjektiKayttajaInput, ProjektiRooli, TallennaProjektiInput } from "@services/api";
+import { api, apiConfig, Kayttaja, KayttajaTyyppi, ProjektiKayttajaInput, TallennaProjektiInput } from "@services/api";
 import Autocomplete from "@components/form/Autocomplete";
 import TextInput from "@components/form/TextInput";
-import Select from "@components/form/Select";
 import IconButton from "@components/button/IconButton";
 import Button from "@components/button/Button";
 import useSWR, { KeyedMutator } from "swr";
@@ -26,17 +25,10 @@ interface Props {
 }
 
 export const defaultKayttaja: ProjektiKayttajaInput = {
-  // @ts-ignore By default rooli should be 'undefined'
-  rooli: "",
+  tyyppi: undefined,
   puhelinnumero: "",
   kayttajatunnus: "",
 };
-
-const rooliOptions = [
-  { label: "Projektipäällikkö", value: "PROJEKTIPAALLIKKO", disabled: true },
-  { label: "Omistaja", value: "OMISTAJA" },
-  { label: "Muokkaaja", value: "MUOKKAAJA" },
-];
 
 function KayttoOikeusHallinta({ disableFields, onKayttajatUpdate }: Props) {
   const {
@@ -61,7 +53,9 @@ function KayttoOikeusHallinta({ disableFields, onKayttajatUpdate }: Props) {
         muutHenkilot: FieldArrayWithId<RequiredInputValues, "kayttoOikeudet", "id">[];
       }>(
         (acc, kayttoOikeus) => {
-          if (kayttoOikeus.rooli === ProjektiRooli.PROJEKTIPAALLIKKO) {
+          if (kayttoOikeus.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO) {
+            acc.projektiPaallikot.push(kayttoOikeus);
+          } else if (kayttoOikeus.tyyppi === KayttajaTyyppi.VARAHENKILO /* TODO: && kayttoOikeus.muokattavissa === false*/) {
             acc.projektiPaallikot.push(kayttoOikeus);
           } else {
             acc.muutHenkilot.push(kayttoOikeus);
@@ -184,7 +178,7 @@ const UserFields = ({
   removeable,
 }: UserFieldProps) => {
   const kayttoOikeus = useMemo(() => kayttoOikeudet[index], [kayttoOikeudet, index]);
-  const isProjektiPaallikko = kayttoOikeus.rooli === ProjektiRooli.PROJEKTIPAALLIKKO;
+  const isProjektiPaallikko = kayttoOikeus.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO;
   const kayttaja = kayttajat?.find(({ uid }) => uid === kayttoOikeus.kayttajatunnus);
   const getKayttajaNimi = useCallback((k: Kayttaja | null | undefined) => {
     return (k && `${k.sukuNimi}, ${k.etuNimi}`) || "";
@@ -236,18 +230,6 @@ const UserFields = ({
           />
         )}
         <TextInput label="Organisaatio" value={kayttaja?.organisaatio || ""} disabled />
-        {isProjektiPaallikko ? (
-          <Select label="Rooli *" value={kayttoOikeus.rooli || ""} options={rooliOptions} disabled />
-        ) : (
-          <Select
-            label="Rooli *"
-            {...register(`kayttoOikeudet.${index}.rooli`)}
-            error={errors.kayttoOikeudet?.[index]?.rooli}
-            options={rooliOptions.filter((rooli) => rooli.value !== ProjektiRooli.PROJEKTIPAALLIKKO)}
-            disabled={disableFields || isProjektiPaallikko}
-            addEmptyOption
-          />
-        )}
         <TextInput
           label="Puhelinnumero *"
           {...register(`kayttoOikeudet.${index}.puhelinnumero`)}

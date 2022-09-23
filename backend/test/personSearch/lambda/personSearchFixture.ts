@@ -1,4 +1,4 @@
-import { Kayttaja, VaylaKayttajaTyyppi } from "../../../../common/graphql/apiModel";
+import { Kayttaja } from "../../../../common/graphql/apiModel";
 
 export class PersonSearchFixture {
   pekkaProjariSearchResult = {
@@ -29,7 +29,6 @@ export class PersonSearchFixture {
     email: "pekka.projari@vayla.fi",
     organisaatio: "Väylävirasto",
     puhelinnumero: "123456789",
-    vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.A_TUNNUS,
   };
 
   mattiMeikalainenSearchResult = {
@@ -60,7 +59,6 @@ export class PersonSearchFixture {
     organisaatio: "ELY",
     puhelinnumero: "123456789",
     uid: "A000111",
-    vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.A_TUNNUS,
   };
 
   manuMuokkaaja: Kayttaja = {
@@ -71,19 +69,17 @@ export class PersonSearchFixture {
     organisaatio: "Väylävirasto",
     puhelinnumero: "123456789",
     uid: "LX1",
-    vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.LX_TUNNUS,
   };
 
   createKayttaja(uid: string): Kayttaja {
     return {
       __typename: "Kayttaja",
-      email: uid + "@vayla.fi",
+      email: (uid + "@vayla.fi").toLowerCase(),
       etuNimi: "Etunimi" + uid,
       sukuNimi: "Sukunimi" + uid,
       organisaatio: "Väylävirasto",
       puhelinnumero: "123456789",
       uid,
-      vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.L_TUNNUS,
     };
   }
 }

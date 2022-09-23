@@ -1,5 +1,5 @@
 import sinon from "sinon";
-import { NykyinenKayttaja, ProjektiKayttaja, VaylaKayttajaTyyppi } from "../../../common/graphql/apiModel";
+import { NykyinenKayttaja, ProjektiKayttaja } from "../../../common/graphql/apiModel";
 
 export class UserFixture {
   private sinonStub: sinon.SinonStub;
@@ -20,7 +20,6 @@ export class UserFixture {
       __typename: "NykyinenKayttaja",
       uid: projektiKayttaja.kayttajatunnus,
       roolit: ["hassu_kayttaja", "Atunnukset"],
-      vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.A_TUNNUS,
     });
   }
 
@@ -29,7 +28,6 @@ export class UserFixture {
       __typename: "NykyinenKayttaja",
       uid: "theadminuid",
       roolit: ["hassu_kayttaja", "hassu_admin"],
-      vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.A_TUNNUS,
     });
   }
 
@@ -43,7 +41,6 @@ export class UserFixture {
     sukuNimi: "Projari",
     uid: "A123",
     roolit: ["Atunnukset", "role2"],
-    vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.A_TUNNUS,
   };
 
   static mattiMeikalainen: NykyinenKayttaja = {
@@ -52,7 +49,6 @@ export class UserFixture {
     sukuNimi: "Meikalainen",
     uid: "A000111",
     roolit: ["hassu_kayttaja", "Atunnukset"],
-    vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.A_TUNNUS,
   };
 
   static manuMuokkaaja: NykyinenKayttaja = {
@@ -61,6 +57,13 @@ export class UserFixture {
     sukuNimi: "Muokkaaja",
     uid: "LX1",
     roolit: ["role1", "role2"],
-    vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.LX_TUNNUS,
+  };
+
+  static testi1Kayttaja: NykyinenKayttaja = {
+    __typename: "NykyinenKayttaja",
+    etuNimi: "Testi1",
+    sukuNimi: "Hassu",
+    uid: "LX581241",
+    roolit: ["hassu_kayttaja"],
   };
 }

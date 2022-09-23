@@ -1,11 +1,11 @@
 import { ProjektiTyyppi, VelhoHakuTulos, Viranomainen } from "../../../common/graphql/apiModel";
-import { DBProjekti, Velho } from "../database/model/projekti";
+import { DBProjekti, Velho } from "../database/model";
 import { adaptKayttaja } from "../personSearch/personAdapter";
-import { userService } from "../user";
 import { Kayttajas } from "../personSearch/kayttajas";
 import {
   ProjektiProjekti,
   ProjektirekisteriApiV2ProjektiOminaisuudet,
+  ProjektirekisteriApiV2ProjektiOminaisuudetVarahenkilo,
   ProjektirekisteriApiV2ProjektiOminaisuudetVastuuhenkilo,
   ProjektirekisteriApiV2ProjektiOminaisuudetVaylamuotoEnum,
 } from "./projektirekisteri";
@@ -109,8 +109,7 @@ export function adaptSearchResults(searchResults: ProjektiSearchResult[], kaytta
   if (searchResults) {
     return searchResults.map((result) => {
       const projektiPaallikko = kayttajas.findByEmail(getVastuuhenkiloEmail(result.ominaisuudet.vastuuhenkilo));
-      const projektiPaallikkoNimi =
-        projektiPaallikko && userService.hasPermissionLuonti(projektiPaallikko) ? adaptKayttaja(projektiPaallikko).nimi : undefined;
+      const projektiPaallikkoNimi = projektiPaallikko ? adaptKayttaja(projektiPaallikko).nimi : undefined;
       const tyyppi = getProjektiTyyppi(result.ominaisuudet.vaihe);
       const hakutulos: VelhoHakuTulos = {
         __typename: "VelhoHakuTulos",
@@ -125,7 +124,9 @@ export function adaptSearchResults(searchResults: ProjektiSearchResult[], kaytta
   return [];
 }
 
-function getVastuuhenkiloEmail(vastuuhenkilo: ProjektirekisteriApiV2ProjektiOminaisuudetVastuuhenkilo): string {
+function getVastuuhenkiloEmail(
+  vastuuhenkilo: ProjektirekisteriApiV2ProjektiOminaisuudetVastuuhenkilo | ProjektirekisteriApiV2ProjektiOminaisuudetVarahenkilo
+): string {
   if (vastuuhenkilo?.sahkoposti) {
     return vastuuhenkilo?.sahkoposti;
   }
@@ -147,11 +148,12 @@ function getMaakunnat(data: ProjektiProjekti) {
   return data.ominaisuudet["muu-maakunta"]?.split(",");
 }
 
-export function adaptProjekti(data: ProjektiProjekti): { projekti: DBProjekti; vastuuhenkilo: string } {
+export function adaptProjekti(data: ProjektiProjekti): DBProjekti {
   const projektiTyyppi = getProjektiTyyppi(data.ominaisuudet.vaihe as any);
   const viranomainen = getViranomainen(data.ominaisuudet.tilaajaorganisaatio as any);
-  const vastuuhenkiloEmail = getVastuuhenkiloEmail(data.ominaisuudet.vastuuhenkilo);
-  const projekti: DBProjekti = {
+  const vastuuhenkilonEmail = getVastuuhenkiloEmail(data.ominaisuudet.vastuuhenkilo);
+  const varahenkilonEmail = getVastuuhenkiloEmail(data.ominaisuudet.varahenkilo);
+  return {
     oid: "" + data.oid,
     tyyppi: projektiTyyppi,
     velho: {
@@ -162,16 +164,12 @@ export function adaptProjekti(data: ProjektiProjekti): { projekti: DBProjekti; v
       linkki: data.ominaisuudet.linkki,
       kunnat: getKunnat(data),
       maakunnat: getMaakunnat(data),
-      vastuuhenkilonEmail: vastuuhenkiloEmail,
+      vastuuhenkilonEmail,
+      varahenkilonEmail,
       asiatunnusVayla: data.ominaisuudet["asiatunnus-vaylavirasto"],
       asiatunnusELY: data.ominaisuudet["asiatunnus-ely"],
     },
     kayttoOikeudet: [],
-  };
-
-  return {
-    projekti,
-    vastuuhenkilo: vastuuhenkiloEmail,
   };
 }
 

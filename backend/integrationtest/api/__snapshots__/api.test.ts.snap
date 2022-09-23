@@ -1297,9 +1297,25 @@ Object {
       },
       Object {
         "__typename": "ProjektiKayttajaJulkinen",
-        "email": "mikko.haapamaki@cgi.com",
+        "email": "mikko.haapamaki02@cgi.com",
         "id": "1",
+        "nimi": "Hassu, A-tunnus3",
+        "organisaatio": "CGI Suomi Oy",
+        "puhelinnumero": "123",
+      },
+      Object {
+        "__typename": "ProjektiKayttajaJulkinen",
+        "email": "mikko.haapamaki@cgi.com",
+        "id": "2",
         "nimi": "Hassu, A-Tunnus",
+        "organisaatio": "CGI Suomi Oy",
+        "puhelinnumero": "123",
+      },
+      Object {
+        "__typename": "ProjektiKayttajaJulkinen",
+        "email": "mikko.haapamaki@cgi.com",
+        "id": "3",
+        "nimi": "Hassu, Testi1",
         "organisaatio": "CGI Suomi Oy",
         "puhelinnumero": "123",
       },
@@ -2544,6 +2560,7 @@ Object {
           "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
           "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
           "tyyppi": "TIE",
+          "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
           "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
           "vaylamuoto": Array [
             "tie",
@@ -3144,6 +3161,7 @@ Object {
           "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
           "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
           "tyyppi": "TIE",
+          "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
           "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
           "vaylamuoto": Array [
             "tie",

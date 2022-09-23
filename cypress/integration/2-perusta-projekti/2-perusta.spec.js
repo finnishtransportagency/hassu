@@ -13,6 +13,7 @@ describe("Perusta projekti", () => {
   it("Perusta projekti", () => {
     cy.visit(Cypress.env("host") + "/yllapito/perusta/" + oid).get("main");
     cy.get('input[name="kayttoOikeudet.0.puhelinnumero"').should("be.enabled").type("0291111111");
+    cy.get('input[name="kayttoOikeudet.1.puhelinnumero"').should("be.enabled").type("0291111111");
     cy.get("#save_and_open_projekti").click();
     cy.url().should("contain", "/yllapito/projekti/");
   });

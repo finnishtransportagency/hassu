@@ -22,7 +22,7 @@ export function adaptKayttajatunnusList(
   // Users with PROJEKTIPAALLIKKO role should always be in the kayttajaTunnusList
   // Push PROJEKTIPAALLIKKO into the list if not there already
   const projektipaallikkonTunnus = projekti.kayttoOikeudet?.find(
-    ({ rooli }) => rooli === API.ProjektiRooli.PROJEKTIPAALLIKKO
+    ({ tyyppi }) => tyyppi === API.KayttajaTyyppi.PROJEKTIPAALLIKKO
   )?.kayttajatunnus;
   if (!doNotForceProjektipaallikko && !unfilteredList.includes(projektipaallikkonTunnus)) {
     unfilteredList.push(projektipaallikkonTunnus);

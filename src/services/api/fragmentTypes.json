@@ -279,6 +279,12 @@
       },
       {
         "kind": "ENUM",
+        "name": "KayttajaTyyppi",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
         "name": "Kieli",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -519,12 +525,6 @@
       },
       {
         "kind": "ENUM",
-        "name": "ProjektiRooli",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "ENUM",
         "name": "ProjektiSarake",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -634,12 +634,6 @@
       {
         "kind": "ENUM",
         "name": "TilasiirtymaTyyppi",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "ENUM",
-        "name": "VaylaKayttajaTyyppi",
         "possibleTypes": null,
         "__typename": "__Type"
       },

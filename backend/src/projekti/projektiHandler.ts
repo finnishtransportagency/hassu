@@ -2,7 +2,7 @@ import { projektiDatabase } from "../database/projektiDatabase";
 import { getVaylaUser, requirePermissionLuku, requirePermissionLuonti, requirePermissionMuokkaa, requireVaylaUser } from "../user";
 import { velho } from "../velho/velhoClient";
 import * as API from "../../../common/graphql/apiModel";
-import { NykyinenKayttaja, ProjektiRooli, TallennaProjektiInput, Velho } from "../../../common/graphql/apiModel";
+import { KayttajaTyyppi, NykyinenKayttaja, TallennaProjektiInput, Velho } from "../../../common/graphql/apiModel";
 import { ProjektiAdaptationResult, projektiAdapter, ProjektiEventType, VuorovaikutusPublishedEvent } from "./adapter/projektiAdapter";
 import { adaptVelhoByAddingTypename } from "./adapter/common";
 import { auditLog, log } from "../logger";
@@ -13,7 +13,7 @@ import { fileService } from "../files/fileService";
 import { personSearch } from "../personSearch/personSearchClient";
 import { emailClient } from "../email/email";
 import { createPerustamisEmail } from "../email/emailTemplates";
-import { requireAdmin } from "../user/userService";
+import { requireAdmin, requireOmistaja } from "../user/userService";
 import { projektiArchive } from "../archive/projektiArchiveService";
 import { NotFoundError } from "../error/NotFoundError";
 import { projektiAdapterJulkinen } from "./adapter/projektiAdapterJulkinen";
@@ -68,16 +68,35 @@ export async function arkistoiProjekti(oid: string): Promise<string> {
   return projektiArchive.archiveProjekti(oid);
 }
 
-export async function createOrUpdateProjekti(input: TallennaProjektiInput): Promise<string> {
+function verifyTallennaProjektiPermissions(projektiInDB: DBProjekti, input: TallennaProjektiInput) {
+  requirePermissionMuokkaa(projektiInDB);
   if (input.kasittelynTila) {
-    requireAdmin("Hyvaksymispaatoksia voi tallentaa vain Hasssun yllapitaja");
+    requireAdmin("Hyvaksymispaatoksia voi tallentaa vain Hassun yllapitaja");
   }
+
+  // Vain omistaja voi muokata projektiPaallikonVarahenkilo-kenttää
+  if (
+    // Etsi kentät, joita yritetään muokata
+    input.kayttoOikeudet
+      ?.filter((kayttoOikeus) => kayttoOikeus.tyyppi === null || kayttoOikeus.tyyppi === KayttajaTyyppi.VARAHENKILO)
+      // Suodata vain muokattavissa olevat käyttäjät
+      .filter((kayttoOikeus) => {
+        const dbVaylaUser = projektiInDB.kayttoOikeudet.filter((kayttaja) => kayttaja.kayttajatunnus == kayttoOikeus.kayttajatunnus).pop();
+        return dbVaylaUser.muokattavissa === true;
+      })
+      .pop()
+  ) {
+    requireOmistaja(projektiInDB);
+  }
+}
+
+export async function createOrUpdateProjekti(input: TallennaProjektiInput): Promise<string> {
   requirePermissionLuku();
   const oid = input.oid;
   const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
   if (projektiInDB) {
     // Save over existing one
-    requirePermissionMuokkaa(projektiInDB);
+    verifyTallennaProjektiPermissions(projektiInDB, input);
     auditLog.info("Tallenna projekti", { input });
     await handleFiles(input);
     const projektiAdaptationResult = await projektiAdapter.adaptProjektiToSave(projektiInDB, input);
@@ -86,6 +105,7 @@ export async function createOrUpdateProjekti(input: TallennaProjektiInput): Prom
   } else {
     requirePermissionLuonti();
     const { projekti } = await createProjektiFromVelho(input.oid, requireVaylaUser(), input);
+    verifyTallennaProjektiPermissions(projekti, input);
     log.info("Creating projekti to Hassu", { oid });
     await projektiDatabase.createProjekti(projekti);
     log.info("Created projekti to Hassu", { projekti });
@@ -107,11 +127,15 @@ export async function createProjektiFromVelho(
 ): Promise<{ projekti: DBProjekti; virhetiedot?: API.ProjektipaallikkoVirhe }> {
   try {
     log.info("Loading projekti from Velho", { oid });
-    const { projekti, vastuuhenkilo } = await velho.loadProjekti(oid);
-    const result: { projekti: DBProjekti; virhetiedot?: API.ProjektipaallikkoVirhe } = { projekti };
+    const projekti = await velho.loadProjekti(oid);
+    const vastuuhenkilonEmail = projekti.velho.vastuuhenkilonEmail;
+    const varahenkilonEmail = projekti.velho.varahenkilonEmail;
 
     const kayttoOikeudet = new KayttoOikeudetManager([], await personSearch.getKayttajas());
+    const projektiPaallikko = kayttoOikeudet.addProjektiPaallikkoFromEmail(vastuuhenkilonEmail);
+    kayttoOikeudet.addVarahenkiloFromEmail(varahenkilonEmail);
 
+    const result: { projekti: DBProjekti; virhetiedot?: API.ProjektipaallikkoVirhe } = { projekti };
     if (input) {
       // Saving a new projekti, so adjusting data based on the input
       const { muistiinpano } = input;
@@ -119,22 +143,19 @@ export async function createProjektiFromVelho(
       // Add new users given as inputs
       kayttoOikeudet.applyChanges(input.kayttoOikeudet);
     } else {
-      // Loading a projekti from Velho for a first time
-      const projektiPaallikko = kayttoOikeudet.addProjektiPaallikkoFromEmail(vastuuhenkilo);
-
-      if (!vastuuhenkilo) {
+      if (!vastuuhenkilonEmail) {
         result.virhetiedot = { __typename: "ProjektipaallikkoVirhe", tyyppi: API.ProjektiPaallikkoVirheTyyppi.PUUTTUU };
       } else if (!projektiPaallikko) {
         result.virhetiedot = {
           __typename: "ProjektipaallikkoVirhe",
           tyyppi: API.ProjektiPaallikkoVirheTyyppi.EI_LOYDY,
-          sahkoposti: vastuuhenkilo,
+          sahkoposti: vastuuhenkilonEmail,
         };
       }
 
-      // Prefill current user as sihteeri if it is different from project manager
+      // Prefill current user as varahenkilo if it is different from project manager
       if ((!projektiPaallikko || projektiPaallikko.kayttajatunnus !== vaylaUser.uid) && vaylaUser.uid) {
-        kayttoOikeudet.addUserByKayttajatunnus(vaylaUser.uid, ProjektiRooli.OMISTAJA);
+        kayttoOikeudet.addUser({ kayttajatunnus: vaylaUser.uid, muokattavissa: true, tyyppi: KayttajaTyyppi.VARAHENKILO });
       }
     }
 
@@ -153,7 +174,7 @@ export async function findUpdatesFromVelho(oid: string): Promise<Velho> {
     requirePermissionMuokkaa(projektiFromDB);
 
     log.info("Loading projekti from Velho", { oid });
-    const { projekti } = await velho.loadProjekti(oid);
+    const projekti = await velho.loadProjekti(oid);
 
     return adaptVelhoByAddingTypename(findUpdatedFields(projektiFromDB.velho, projekti.velho));
   } catch (e) {
@@ -169,13 +190,16 @@ export async function synchronizeUpdatesFromVelho(oid: string): Promise<Velho> {
     requirePermissionMuokkaa(projektiFromDB);
 
     log.info("Loading projekti from Velho", { oid });
-    const { projekti } = await velho.loadProjekti(oid);
+    const projekti = await velho.loadProjekti(oid);
 
+    const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
+    kayttoOikeudetManager.addProjektiPaallikkoFromEmail(projekti.velho.vastuuhenkilonEmail);
+    kayttoOikeudetManager.addVarahenkiloFromEmail(projekti.velho.varahenkilonEmail);
     const updatedFields = findUpdatedFields(projektiFromDB.velho, projekti.velho);
     const updatedVelhoValues = values(updatedFields);
     if (updatedVelhoValues.length > 0) {
       log.info("Muutoksia projektiin löytynyt Velhosta", { oid, updatedFields });
-      await projektiDatabase.saveProjekti({ oid, velho: projekti.velho });
+      await projektiDatabase.saveProjekti({ oid, velho: projekti.velho, kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet() });
       return adaptVelhoByAddingTypename(updatedFields);
     } else {
       log.info("Muutoksia projektiin löytynyt Velhosta", { oid });

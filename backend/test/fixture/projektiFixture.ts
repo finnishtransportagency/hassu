@@ -7,11 +7,11 @@ import {
   IlmoitettavaViranomainen,
   IlmoituksenVastaanottajat,
   KaytettavaPalvelu,
+  KayttajaTyyppi,
   Kieli,
   NahtavillaoloVaiheTila,
   Projekti,
   ProjektiKayttaja,
-  ProjektiRooli,
   ProjektiTyyppi,
   Status,
   TallennaProjektiInput,
@@ -99,7 +99,8 @@ export class ProjektiFixture {
   private static pekkaProjariProjektiKayttaja: ProjektiKayttaja = {
     __typename: "ProjektiKayttaja",
     kayttajatunnus: "A123",
-    rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
+    tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
+    muokattavissa: false,
     nimi: "Projari, Pekka",
     email: "pekka.projari@vayla.fi",
     organisaatio: "Väylävirasto",
@@ -109,7 +110,7 @@ export class ProjektiFixture {
   private static mattiMeikalainenProjektiKayttaja: ProjektiKayttaja = {
     __typename: "ProjektiKayttaja",
     kayttajatunnus: "A000111",
-    rooli: ProjektiRooli.MUOKKAAJA,
+    muokattavissa: true,
     nimi: "Meikalainen, Matti",
     email: "Matti.Meikalainen@vayla.fi",
     organisaatio: "Väylävirasto",
@@ -163,7 +164,8 @@ export class ProjektiFixture {
       kayttoOikeudet: [
         {
           kayttajatunnus: "A123",
-          rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
+          tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
+          muokattavissa: false,
           nimi: "Projari, Pekka",
           email: "pekka.projari@vayla.fi",
           organisaatio: "Väylävirasto",
@@ -187,7 +189,7 @@ export class ProjektiFixture {
     return {
       kayttoOikeudet: [
         {
-          rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
+          tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
           email: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
           kayttajatunnus: ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
           nimi: ProjektiFixture.pekkaProjariProjektiKayttaja.nimi,
@@ -195,7 +197,6 @@ export class ProjektiFixture {
           organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio,
         },
         {
-          rooli: ProjektiRooli.MUOKKAAJA,
           email: ProjektiFixture.mattiMeikalainenProjektiKayttaja.email,
           kayttajatunnus: ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
           nimi: ProjektiFixture.mattiMeikalainenProjektiKayttaja.nimi,
@@ -253,7 +254,7 @@ export class ProjektiFixture {
     return {
       kayttoOikeudet: [
         {
-          rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
+          tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
           email: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
           kayttajatunnus: ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
           nimi: ProjektiFixture.pekkaProjariProjektiKayttaja.nimi,
@@ -261,7 +262,6 @@ export class ProjektiFixture {
           organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio,
         },
         {
-          rooli: ProjektiRooli.MUOKKAAJA,
           email: ProjektiFixture.mattiMeikalainenProjektiKayttaja.email,
           kayttajatunnus: ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
           nimi: ProjektiFixture.mattiMeikalainenProjektiKayttaja.nimi,
@@ -412,7 +412,8 @@ export class ProjektiFixture {
   dbProjekti3: DBProjekti = {
     kayttoOikeudet: [
       {
-        rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
+        tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
+        muokattavissa: false,
         email: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
         kayttajatunnus: ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
         nimi: ProjektiFixture.pekkaProjariProjektiKayttaja.nimi,
@@ -420,7 +421,6 @@ export class ProjektiFixture {
         organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio,
       },
       {
-        rooli: ProjektiRooli.MUOKKAAJA,
         email: ProjektiFixture.mattiMeikalainenProjektiKayttaja.email,
         kayttajatunnus: ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
         nimi: ProjektiFixture.mattiMeikalainenProjektiKayttaja.nimi,

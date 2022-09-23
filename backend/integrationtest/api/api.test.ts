@@ -113,7 +113,7 @@ describe("Api", () => {
     const projekti = await readProjektiFromVelho();
     expect(oid).to.eq(projekti.oid);
     await cleanProjektiS3Files(oid);
-    const projektiPaallikko = await testProjektiHenkilot(projekti, oid);
+    const projektiPaallikko = await testProjektiHenkilot(projekti, oid, userFixture);
     await testProjektinTiedot(oid);
     await testAloitusKuulutusEsikatselu(oid);
     await testNullifyProjektiField(oid);

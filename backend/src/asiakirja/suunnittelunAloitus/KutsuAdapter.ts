@@ -1,4 +1,4 @@
-import { Kieli, ProjektiRooli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
+import { KayttajaTyyppi, Kieli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
 import { DBVaylaUser, Kielitiedot, SuunnitteluSopimus, Velho, Vuorovaikutus, Yhteystieto } from "../../database/model";
 import { AsiakirjanMuoto } from "../asiakirjaService";
 import { translate } from "../../util/localization";
@@ -226,7 +226,7 @@ export class KutsuAdapter {
         throw new Error("BUG: Kayttöoikeudet pitää antaa jos yhteyshenkilöt on annettu.");
       }
       const yhteysHenkilotWithProjectManager = union(
-        this.kayttoOikeudet.filter((user) => user.rooli == ProjektiRooli.PROJEKTIPAALLIKKO).map((user) => user.kayttajatunnus),
+        this.kayttoOikeudet.filter((user) => user.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO).map((user) => user.kayttajatunnus),
         yhteysHenkilot
       );
       this.getUsersForUsernames(yhteysHenkilotWithProjectManager).forEach((user) => {
@@ -288,7 +288,7 @@ export class KutsuAdapter {
     return usernames
       ?.map((kayttajatunnus) =>
         this.kayttoOikeudet
-          .filter((kayttaja) => kayttaja.kayttajatunnus == kayttajatunnus || kayttaja.rooli == ProjektiRooli.PROJEKTIPAALLIKKO)
+          .filter((kayttaja) => kayttaja.kayttajatunnus == kayttajatunnus || kayttaja.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO)
           .pop()
       )
       .filter((o) => o);

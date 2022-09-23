@@ -43,7 +43,7 @@ Object {
         "nimi": "Projari, Pekka",
         "organisaatio": "Väylävirasto",
         "puhelinnumero": "123456789",
-        "rooli": "PROJEKTIPAALLIKKO",
+        "tyyppi": "PROJEKTIPAALLIKKO",
       },
       Object {
         "email": "Matti.Meikalainen@vayla.fi",
@@ -51,7 +51,6 @@ Object {
         "nimi": "Meikalainen, Matti",
         "organisaatio": "Väylävirasto",
         "puhelinnumero": "123456789",
-        "rooli": "MUOKKAAJA",
       },
     ],
     ":kielitiedot": Object {

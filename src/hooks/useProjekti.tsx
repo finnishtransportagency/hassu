@@ -1,5 +1,5 @@
 import useSWR, { Fetcher, SWRConfiguration } from "swr";
-import { api, apiConfig, NykyinenKayttaja, Projekti, ProjektiRooli } from "@services/api";
+import { api, apiConfig, NykyinenKayttaja, Projekti, KayttajaTyyppi } from "@services/api";
 import useCurrentUser from "./useCurrentUser";
 import { useRouter } from "next/router";
 
@@ -45,5 +45,5 @@ const userHasAccessToProjekti = ({ kayttaja, projekti }: { kayttaja?: NykyinenKa
 const userIsProjectManager = ({ kayttaja, projekti }: { kayttaja?: NykyinenKayttaja; projekti?: Projekti }) =>
   !!kayttaja?.uid &&
   !!projekti?.kayttoOikeudet?.find(
-    ({ kayttajatunnus, rooli }) => kayttaja.uid === kayttajatunnus && rooli === ProjektiRooli.PROJEKTIPAALLIKKO
+    ({ kayttajatunnus, tyyppi }) => kayttaja.uid === kayttajatunnus && tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO
   );

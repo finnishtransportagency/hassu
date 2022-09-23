@@ -3,7 +3,6 @@ import { describe, it } from "mocha";
 import { PersonSearchFixture } from "./personSearchFixture";
 import { adaptPersonSearchResult } from "../../../src/personSearch/lambda/personSearchAdapter";
 import { Person } from "../../../src/personSearch/kayttajas";
-import { VaylaKayttajaTyyppi } from "../../../../common/graphql/apiModel";
 
 const { expect } = require("chai");
 
@@ -23,7 +22,6 @@ describe("personAdapter", () => {
       organisaatio: "Väylävirasto",
       puhelinnumero: "123456789",
       sukuNimi: "Projari",
-      vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.A_TUNNUS,
     };
     expect(kayttajas).to.eql({
       A123: person,
@@ -39,7 +37,6 @@ describe("personAdapter", () => {
       organisaatio: "ELY",
       puhelinnumero: "123456789",
       sukuNimi: "Meikäläinen",
-      vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.A_TUNNUS,
     };
     expect(kayttajas).to.eql({
       A000111: person,

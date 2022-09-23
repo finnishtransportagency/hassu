@@ -1,13 +1,4 @@
-import { VaylaKayttajaTyyppi } from "../../../../common/graphql/apiModel";
 import { Person } from "../kayttajas";
-
-function adaptAccounttype(accountType: string) {
-  return {
-    "A-tunnus": VaylaKayttajaTyyppi.A_TUNNUS,
-    "L-tunnus": VaylaKayttajaTyyppi.L_TUNNUS,
-    "LX-tunnus": VaylaKayttajaTyyppi.LX_TUNNUS,
-  }[accountType];
-}
 
 export function adaptPersonSearchResult(responseJson: any, kayttajas: Record<string, Person>): void {
   responseJson.person?.person?.forEach(
@@ -31,7 +22,6 @@ export function adaptPersonSearchResult(responseJson: any, kayttajas: Record<str
           return;
         }
         kayttajas[uid] = {
-          vaylaKayttajaTyyppi: adaptAccounttype(getFirstElementFromArrayOrEmpty(person.Accounttype)),
           etuNimi: getFirstElementFromArrayOrEmpty(person.FirstName),
           sukuNimi: getFirstElementFromArrayOrEmpty(person.LastName),
           organisaatio: getFirstElementFromArrayOrEmpty(person.Company),

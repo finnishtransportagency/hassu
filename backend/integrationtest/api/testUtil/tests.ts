@@ -1,12 +1,12 @@
 import {
   AineistoInput,
   AsiakirjaTyyppi,
+  KayttajaTyyppi,
   Kieli,
   Projekti,
   ProjektiJulkinen,
   ProjektiKayttaja,
   ProjektiKayttajaInput,
-  ProjektiRooli,
   Status,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
@@ -60,32 +60,38 @@ export async function loadProjektiJulkinenFromDatabase(oid: string, expectedStat
   return savedProjekti;
 }
 
-export async function testProjektiHenkilot(projekti: Projekti, oid: string): Promise<ProjektiKayttaja> {
+export async function testProjektiHenkilot(projekti: Projekti, oid: string, userFixture: UserFixture): Promise<ProjektiKayttaja> {
   await api.tallennaProjekti({
     oid,
-    kayttoOikeudet: projekti.kayttoOikeudet?.map(
-      (value) =>
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-        ({
-          rooli: value.rooli,
-          kayttajatunnus: value.kayttajatunnus,
-          // Emulate migration where the phone number may be empty
-        } as ProjektiKayttajaInput)
-    ),
+    kayttoOikeudet: projekti.kayttoOikeudet?.map((value) => {
+      const input: ProjektiKayttajaInput = {
+        kayttajatunnus: value.kayttajatunnus,
+        // Emulate migration where the phone number may be empty
+        puhelinnumero: undefined,
+      };
+      return input;
+    }),
   });
   const p = await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
 
   // Expect that projektipaallikko is found
   const projektiPaallikko = p.kayttoOikeudet
-    ?.filter((kayttaja) => kayttaja.rooli === ProjektiRooli.PROJEKTIPAALLIKKO && kayttaja.email)
+    ?.filter((kayttaja) => kayttaja.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO && kayttaja.email && kayttaja.muokattavissa === false)
     .pop();
   expect(projektiPaallikko).is.not.empty;
 
-  const kayttoOikeudet = p.kayttoOikeudet?.map((value) => ({
-    rooli: value.rooli,
-    kayttajatunnus: value.kayttajatunnus,
+  // Expect that varahenkilo from Velho is found
+  const varahenkilo = p.kayttoOikeudet
+    ?.filter((kayttaja) => kayttaja.tyyppi == KayttajaTyyppi.VARAHENKILO && kayttaja.muokattavissa === false)
+    .pop();
+  expect(varahenkilo).is.not.empty;
+
+  const kayttoOikeudet: ProjektiKayttajaInput[] = p.kayttoOikeudet?.map((value) => ({
+    ...value,
     puhelinnumero: "123",
   }));
+
+  kayttoOikeudet.push({ kayttajatunnus: UserFixture.testi1Kayttaja.uid, puhelinnumero: "123" });
 
   // Save and load projekti
   await api.tallennaProjekti({
@@ -94,10 +100,26 @@ export async function testProjektiHenkilot(projekti: Projekti, oid: string): Pro
   });
   await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU);
 
+  // Verify only omistaja can modify varahenkilo-field
+  try {
+    userFixture.loginAs(UserFixture.testi1Kayttaja);
+    const kayttoOikeudetWithVarahenkiloChanges = cloneDeep(kayttoOikeudet);
+    kayttoOikeudetWithVarahenkiloChanges
+      .filter((user) => user.kayttajatunnus == UserFixture.testi1Kayttaja.uid)
+      .forEach((user) => (user.tyyppi = KayttajaTyyppi.VARAHENKILO));
+    await api.tallennaProjekti({
+      oid,
+      kayttoOikeudet: kayttoOikeudetWithVarahenkiloChanges,
+    });
+    fail("Vain omistajan pitää pystyä muokkaamaan varahenkilöyttä");
+  } catch (e) {
+    expect(e.className).to.eq("IllegalAccessError");
+  }
+
   return { ...projektiPaallikko, puhelinnumero: "123" };
 }
 
-export async function tallennaLogo() {
+export async function tallennaLogo(): Promise<string> {
   const uploadProperties = await api.valmisteleTiedostonLataus("logo.png", "image/png");
   expect(uploadProperties).to.not.be.empty;
   expect(uploadProperties.latausLinkki).to.not.be.undefined;

@@ -4,7 +4,7 @@ import * as sinon from "sinon";
 import { getCurrentUser } from "../../src/handler/getCurrentUser";
 import { userService } from "../../src/user";
 import { UserFixture } from "../fixture/userFixture";
-import { NykyinenKayttaja, VaylaKayttajaTyyppi } from "../../../common/graphql/apiModel";
+import { NykyinenKayttaja } from "../../../common/graphql/apiModel";
 
 const { expect } = require("chai");
 
@@ -28,7 +28,6 @@ describe("getCurrentUser", () => {
       etuNimi: "Matti",
       sukuNimi: "Meikalainen",
       uid: "A000111",
-      vaylaKayttajaTyyppi: VaylaKayttajaTyyppi.A_TUNNUS,
       roolit: ["hassu_kayttaja", "Atunnukset"],
     } as NykyinenKayttaja);
   });

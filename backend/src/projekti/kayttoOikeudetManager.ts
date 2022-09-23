@@ -1,9 +1,9 @@
 import { DBVaylaUser } from "../database/model";
-import { Kayttaja, ProjektiKayttaja, ProjektiKayttajaInput, ProjektiRooli } from "../../../common/graphql/apiModel";
+import { Kayttaja, KayttajaTyyppi, ProjektiKayttaja, ProjektiKayttajaInput } from "../../../common/graphql/apiModel";
 import { SearchMode } from "../personSearch/personSearchClient";
 import { log } from "../logger";
 import differenceWith from "lodash/differenceWith";
-import { isAorL } from "../user";
+import remove from "lodash/remove";
 import { mergeKayttaja } from "../personSearch/personAdapter";
 import { Kayttajas } from "../personSearch/kayttajas";
 
@@ -20,18 +20,32 @@ export class KayttoOikeudetManager {
     if (!changes) {
       return;
     }
-    // Go through all users in database projekti and the input.
-    // Update existing ones, remove those that are missing in input, and add those that exist only in input.
-    const resultUsers: DBVaylaUser[] = this.users.reduce((resultingUsers: DBVaylaUser[], currentUser) => {
+    const resultUsers = this.modifyExistingUsers(changes);
+
+    // Add new users
+    this.addNewUsers(changes, resultUsers);
+    this.users = resultUsers;
+  }
+
+  /**
+   * Go through all users in database projekti and the input.
+   * Update existing ones, remove those that are missing in input, and add those that exist only in input.   * @param changes
+   */
+  private modifyExistingUsers(changes: ProjektiKayttajaInput[]) {
+    return this.users.reduce((resultingUsers: DBVaylaUser[], currentUser) => {
       const inputUser = changes.find((user) => user.kayttajatunnus === currentUser.kayttajatunnus);
       if (inputUser) {
-        // Update only puhelinnumero if projektipaallikko
-        if (inputUser.rooli === ProjektiRooli.PROJEKTIPAALLIKKO) {
+        if (currentUser.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO || currentUser.muokattavissa === false) {
+          // Update only puhelinnumero if projektipaallikko or varahenkilö
           resultingUsers.push({
             ...currentUser,
             puhelinnumero: inputUser.puhelinnumero,
           });
         } else {
+          if (inputUser.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO) {
+            // Tyyppiä ei voi vaihtaa projektipäälliköksi
+            delete inputUser.tyyppi;
+          }
           // Update rest of fields
           resultingUsers.push({
             ...currentUser,
@@ -39,21 +53,23 @@ export class KayttoOikeudetManager {
           });
         }
       } else {
-        // Remove user because it doesn't exist in input, except projektipaallikko which cannot be removed
-        if (currentUser.rooli === ProjektiRooli.PROJEKTIPAALLIKKO) {
+        // Remove user because it doesn't exist in input, except if muokattavissa===false
+        if (currentUser.muokattavissa === false) {
           resultingUsers.push(currentUser);
         }
       }
       return resultingUsers;
     }, []);
+  }
 
-    // Add new users
+  private addNewUsers(changes: ProjektiKayttajaInput[], resultUsers: DBVaylaUser[]) {
     const newUsers = differenceWith(changes, resultUsers, (u1, u2) => u1.kayttajatunnus === u2.kayttajatunnus);
-    newUsers.map((newUser) => {
+    newUsers.forEach((newUser) => {
       const userToAdd: Partial<DBVaylaUser> = {
         puhelinnumero: newUser.puhelinnumero,
         kayttajatunnus: newUser.kayttajatunnus,
-        rooli: newUser.rooli,
+        muokattavissa: true,
+        tyyppi: newUser.tyyppi == KayttajaTyyppi.VARAHENKILO ? KayttajaTyyppi.VARAHENKILO : undefined,
       };
       try {
         const userWithAllInfo = this.fillInUserInfoFromUserManagement({
@@ -67,7 +83,6 @@ export class KayttoOikeudetManager {
         log.error(e);
       }
     });
-    this.users = resultUsers;
   }
 
   getKayttoOikeudet(): DBVaylaUser[] {
@@ -81,28 +96,40 @@ export class KayttoOikeudetManager {
     }));
   }
 
-  addProjektiPaallikkoFromEmail(vastuuhenkiloEmail: string): DBVaylaUser | undefined {
-    return this.resolveProjektiPaallikkoFromVelhoVastuuhenkilo(vastuuhenkiloEmail);
-  }
-
-  resolveProjektiPaallikkoFromVelhoVastuuhenkilo(vastuuhenkiloEmail: string): DBVaylaUser | undefined {
+  addProjektiPaallikkoFromEmail(email: string): DBVaylaUser | undefined {
     // Replace or create new projektipaallikko
-    this.removeProjektiPaallikko();
     const projektiPaallikko = this.fillInUserInfoFromUserManagement({
       user: {
-        rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
-        email: vastuuhenkiloEmail,
+        tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
+        email: email.toLowerCase(),
+        muokattavissa: false,
       },
       searchMode: SearchMode.EMAIL,
     });
     if (projektiPaallikko) {
+      // Remove existing PROJEKTIPAALLIKKO
+      remove(this.users, (aUser) => aUser.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO && !aUser.muokattavissa);
       this.users.push(projektiPaallikko);
       return projektiPaallikko;
     }
   }
 
-  addUserByKayttajatunnus(kayttajatunnus: string, rooli: ProjektiRooli): DBVaylaUser | undefined {
-    const partialUser: Partial<DBVaylaUser> = { kayttajatunnus, rooli };
+  addVarahenkiloFromEmail(email: string | undefined): void {
+    if (email) {
+      const kayttajas = this.kayttajas;
+      const account: Kayttaja = kayttajas.findByEmail(email);
+      if (account) {
+        const user = mergeKayttaja({ tyyppi: KayttajaTyyppi.VARAHENKILO, muokattavissa: false }, account);
+        if (user) {
+          // Remove existing varahenkilo
+          remove(this.users, (aUser) => aUser.tyyppi == KayttajaTyyppi.VARAHENKILO && !aUser.muokattavissa);
+          this.users.push(user);
+        }
+      }
+    }
+  }
+
+  addUser(partialUser: Partial<DBVaylaUser>): DBVaylaUser | undefined {
     const user = this.fillInUserInfoFromUserManagement({
       user: partialUser,
       searchMode: SearchMode.UID,
@@ -129,16 +156,7 @@ export class KayttoOikeudetManager {
       account = kayttajas.findByEmail(user.email);
     }
     if (account) {
-      // Projektipaallikko must be either L or A account
-      if (user.rooli === ProjektiRooli.PROJEKTIPAALLIKKO && !isAorL(account)) {
-        return;
-      }
-      mergeKayttaja(user, account);
-      return user as DBVaylaUser;
+      return mergeKayttaja({ ...user }, account);
     }
-  }
-
-  private removeProjektiPaallikko() {
-    this.users = this.users.filter((user) => user.rooli === ProjektiRooli.PROJEKTIPAALLIKKO);
   }
 }

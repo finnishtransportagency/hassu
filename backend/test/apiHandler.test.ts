@@ -10,9 +10,9 @@ import { personSearch } from "../src/personSearch/personSearchClient";
 import { userService } from "../src/user";
 import {
   AloitusKuulutusTila,
+  KayttajaTyyppi,
   Kieli,
   Projekti,
-  ProjektiRooli,
   TallennaProjektiInput,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
@@ -98,13 +98,9 @@ describe("apiHandler", () => {
     function mockLataaProjektiFromVelho() {
       loadProjektiByOidStub.resolves();
       const velhoProjekti = fixture.velhoprojekti1();
+      velhoProjekti.velho.vastuuhenkilonEmail = personSearchFixture.pekkaProjari.email;
 
-      loadVelhoProjektiByOidStub.callsFake(() => ({
-        projekti: velhoProjekti,
-        vastuuhenkilo: personSearchFixture.pekkaProjari.email,
-        kayttoOikeudet: [],
-      }));
-      createProjektiStub.resolves();
+      loadVelhoProjektiByOidStub.resolves(velhoProjekti);
     }
 
     describe("lataaProjekti", () => {
@@ -123,11 +119,7 @@ describe("apiHandler", () => {
       it("should modify permissions from a project successfully", async () => {
         let mockedDatabaseProjekti: DBProjekti | undefined;
 
-        async function saveAndLoadProjekti(
-          p: Projekti,
-          description: string,
-          updatedValues: Partial<TallennaProjektiInput>
-        ) {
+        async function saveAndLoadProjekti(p: Projekti, description: string, updatedValues: Partial<TallennaProjektiInput>) {
           await api.tallennaProjekti({
             oid: fixture.PROJEKTI1_OID,
             ...updatedValues,
@@ -235,27 +227,26 @@ describe("apiHandler", () => {
 
         // Create stubs to keep state of the "database" so that it can be modified in the following steps
         mockDatabase();
-        // Save projekti with the defaults. It should have both projektipaallikko and the current user as omistaja
+        // Save projekti with the defaults. It should have both projektipaallikko and the current user
         projekti = await saveAndLoadProjekti(projekti, "having both projektipaallikko and omistaja", {
           kayttoOikeudet: [
             {
-              rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
+              tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
               kayttajatunnus: "A123",
               puhelinnumero: "11",
             },
             {
               kayttajatunnus: "A000111",
-              rooli: ProjektiRooli.OMISTAJA,
               puhelinnumero: "22",
             },
           ],
         });
 
-        // Remove omistaja and save
+        // Remove the other user and save
         projekti = await saveAndLoadProjekti(projekti, "only projektipaallikko", {
           kayttoOikeudet: [
             {
-              rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
+              tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
               kayttajatunnus: "A123",
               puhelinnumero: "11",
             },
@@ -266,13 +257,12 @@ describe("apiHandler", () => {
         userFixture.loginAs(UserFixture.pekkaProjari);
         projekti = await saveAndLoadProjekti(
           projekti,
-          "while adding omistaja back. There should be projektipaallikko and omistaja in the projekti now. Projektipaallikko cannot be removed, so it always stays there.",
+          "while adding other user back. There should be projektipaallikko and one user in the projekti now. Projektipaallikko cannot be removed, so it always stays there.",
           {
             kayttoOikeudet: [
               {
                 kayttajatunnus: "A000111",
                 puhelinnumero: "123456789",
-                rooli: ProjektiRooli.OMISTAJA,
               },
             ],
           }
@@ -280,44 +270,38 @@ describe("apiHandler", () => {
 
         // Add one muokkaaja more and examine the results. Also test that fields can be removed from database
         persistFileToProjektiStub.resolves("/suunnittelusopimus/logo.gif");
-        await saveAndLoadProjekti(
-          projekti,
-          "while adding one muokkaaja more. There should be three persons in the projekti now",
-          {
-            kayttoOikeudet: [
-              {
-                rooli: ProjektiRooli.PROJEKTIPAALLIKKO,
-                kayttajatunnus: "A123",
-                puhelinnumero: "11",
-              },
-              {
-                rooli: ProjektiRooli.OMISTAJA,
-                kayttajatunnus: "A000111",
-                puhelinnumero: "123456789",
-              },
-              {
-                kayttajatunnus: "A2",
-                puhelinnumero: "123456789",
-                rooli: ProjektiRooli.OMISTAJA,
-              },
-            ],
-            suunnitteluSopimus: {
-              email: "a@b.com",
-              puhelinnumero: "0291111",
-              kunta: "Nokia",
-              logo: "/suunnittelusopimus/logo.gif",
-              etunimi: "Etunimi",
-              sukunimi: "Sukunimi",
+        await saveAndLoadProjekti(projekti, "while adding one muokkaaja more. There should be three persons in the projekti now", {
+          kayttoOikeudet: [
+            {
+              tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
+              kayttajatunnus: "A123",
+              puhelinnumero: "11",
             },
-            euRahoitus: false, // mandatory field for perustiedot
-            aloitusKuulutus: fixture.aloitusKuulutusInput,
-            kielitiedot: {
-              ensisijainenKieli: Kieli.SUOMI,
-              toissijainenKieli: Kieli.SAAME,
-              projektinNimiVieraskielella: "Projektin nimi saameksi",
+            {
+              kayttajatunnus: "A000111",
+              puhelinnumero: "123456789",
             },
-          }
-        );
+            {
+              kayttajatunnus: "A2",
+              puhelinnumero: "123456789",
+            },
+          ],
+          suunnitteluSopimus: {
+            email: "a@b.com",
+            puhelinnumero: "0291111",
+            kunta: "Nokia",
+            logo: "/suunnittelusopimus/logo.gif",
+            etunimi: "Etunimi",
+            sukunimi: "Sukunimi",
+          },
+          euRahoitus: false, // mandatory field for perustiedot
+          aloitusKuulutus: fixture.aloitusKuulutusInput,
+          kielitiedot: {
+            ensisijainenKieli: Kieli.SUOMI,
+            toissijainenKieli: Kieli.SAAME,
+            projektinNimiVieraskielella: "Projektin nimi saameksi",
+          },
+        });
 
         // Verify that projekti is not visible for anonymous users
         userFixture.logout();

@@ -1,6 +1,6 @@
 import { DBProjekti, StandardiYhteystiedot } from "../database/model";
 import * as API from "../../../common/graphql/apiModel";
-import { vaylaUserToYhteystieto } from "../util/vaylaUserToYhteystieto";
+import { vaylaUserToYhteystieto } from "./vaylaUserToYhteystieto";
 
 export default function adaptStandardiYhteystiedot(
   dbProjekti: DBProjekti,
@@ -10,8 +10,8 @@ export default function adaptStandardiYhteystiedot(
   const sahkopostit: string[] = [];
   dbProjekti.kayttoOikeudet
     .filter(
-      ({ kayttajatunnus, rooli }) =>
-        rooli === API.ProjektiRooli.PROJEKTIPAALLIKKO || kuulutusYhteystiedot?.yhteysHenkilot?.find((yh) => yh === kayttajatunnus)
+      ({ kayttajatunnus, tyyppi }) =>
+        tyyppi === API.KayttajaTyyppi.PROJEKTIPAALLIKKO || kuulutusYhteystiedot?.yhteysHenkilot?.find((yh) => yh === kayttajatunnus)
     )
     .forEach((oikeus) => {
       yt.push({ __typename: "Yhteystieto", ...vaylaUserToYhteystieto(oikeus) });

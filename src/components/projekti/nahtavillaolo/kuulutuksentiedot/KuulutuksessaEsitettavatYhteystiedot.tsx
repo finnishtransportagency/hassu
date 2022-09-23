@@ -1,6 +1,6 @@
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
-import { NahtavillaoloVaiheTila, Projekti, ProjektiKayttaja, ProjektiRooli, YhteystietoInput } from "@services/api";
+import { KayttajaTyyppi, NahtavillaoloVaiheTila, Projekti, ProjektiKayttaja, YhteystietoInput } from "@services/api";
 import Section from "@components/layout/Section";
 import { Fragment, ReactElement } from "react";
 import Button from "@components/button/Button";
@@ -106,11 +106,11 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
                     defaultChecked
                   />
                 )}
-                {projekti.kayttoOikeudet?.map(({ nimi, rooli, kayttajatunnus }, index) => {
+                {projekti.kayttoOikeudet?.map(({ nimi, tyyppi, kayttajatunnus }, index) => {
                   const tunnuslista: string[] = value || [];
                   return (
                     <Fragment key={index}>
-                      {rooli === ProjektiRooli.PROJEKTIPAALLIKKO ? (
+                      {tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO ? (
                         <CheckBox label={nimi} disabled checked {...field} />
                       ) : (
                         <CheckBox

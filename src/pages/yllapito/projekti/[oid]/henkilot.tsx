@@ -69,11 +69,11 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
     () => ({
       oid: projekti.oid,
       kayttoOikeudet:
-        projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, rooli, esitetaanKuulutuksessa }) => ({
+        projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi, muokattavissa }) => ({
           kayttajatunnus,
           puhelinnumero: puhelinnumero || "",
-          rooli,
-          esitetaanKuulutuksessa,
+          tyyppi,
+          muokattavissa,
         })) || [],
     }),
     [projekti]
@@ -101,6 +101,7 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
 
   const onSubmit = async (formData: FormValues) => {
     deleteFieldArrayIds(formData?.kayttoOikeudet);
+    // TODO: formData?.kayttoOikeudet.forEach(oikeus => delete oikeus.muokattavissa);
     setFormIsSubmitting(true);
     try {
       await api.tallennaProjekti(formData);
