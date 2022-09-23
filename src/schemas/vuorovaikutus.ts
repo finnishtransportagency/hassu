@@ -86,16 +86,15 @@ export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
           then: Yup.string().required("Tilaisuuden postinumero täytyy antaa"),
         })
         .nullable(),
-      esitettavatYhteystiedot: standardiYhteystiedot().test(
-        "at-least-one-contact",
-        "Vähintään yksi yhteyshenkilö on annettava",
-        (objekti) => {
+      esitettavatYhteystiedot: Yup.object().when("tyyppi", {
+        is: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+        then: standardiYhteystiedot().test("at-least-one-contact", "Vähintään yksi yhteyshenkilö on annettava", (objekti) => {
           if ((objekti.yhteysHenkilot?.length || 0) + (objekti.yhteysTiedot?.length || 0) === 0) {
             return false;
           }
           return true;
-        }
-      ),
+        }),
+      }),
     })
   ),
 });
