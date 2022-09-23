@@ -2,7 +2,7 @@ import { IlmoitettavaViranomainen } from "@services/api";
 import * as Yup from "yup";
 import { isDevEnvironment } from "@services/config";
 import filter from "lodash/filter";
-import { yhteystietoSchema } from "./yhteystieto";
+import { standardiYhteystiedot } from "./common";
 
 const maxAloituskuulutusLength = 2000;
 
@@ -26,10 +26,7 @@ function validateDate(dateString: string) {
 export const aloituskuulutusSchema = Yup.object().shape({
   oid: Yup.string().required(),
   aloitusKuulutus: Yup.object().shape({
-    kuulutusYhteystiedot: Yup.object().shape({
-      yhteysTiedot: Yup.array().of(yhteystietoSchema),
-      yhteysHenkilot: Yup.array().of(Yup.string()),
-    }),
+    kuulutusYhteystiedot: standardiYhteystiedot(),
     hankkeenKuvaus: Yup.object().shape({ SUOMI: hankkeenKuvaus }),
     kuulutusPaiva: Yup.string()
       .required("Kuulutuspäivä ei voi olla tyhjä")

@@ -191,8 +191,10 @@ class ApiTestFixture {
           paivamaara: "2022-04-05",
           alkamisAika: "10:00",
           paattymisAika: "11:00",
-          projektiYhteysHenkilot: vuorovaikutusYhteysHenkilot,
-          esitettavatYhteystiedot: this.yhteystietoInputLista,
+          esitettavatYhteystiedot: {
+            yhteysTiedot: this.yhteystietoInputLista,
+            yhteysHenkilot: vuorovaikutusYhteysHenkilot,
+          },
         },
         {
           tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
@@ -200,7 +202,10 @@ class ApiTestFixture {
           paivamaara: "2033-04-05",
           alkamisAika: "12:00",
           paattymisAika: "13:00",
-          esitettavatYhteystiedot: this.yhteystietoInputLista,
+          esitettavatYhteystiedot: {
+            yhteysTiedot: this.yhteystietoInputLista,
+            yhteysHenkilot: [],
+          },
         },
       ],
     },

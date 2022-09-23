@@ -28,7 +28,7 @@ export default function SoittoajanYhteyshenkilot({ tilaisuusIndex }: Props): Rea
   } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: `vuorovaikutusTilaisuudet.${tilaisuusIndex}.esitettavatYhteystiedot`,
+    name: `vuorovaikutusTilaisuudet.${tilaisuusIndex}.esitettavatYhteystiedot.yhteysTiedot`,
   });
 
   return (
@@ -38,8 +38,8 @@ export default function SoittoajanYhteyshenkilot({ tilaisuusIndex }: Props): Rea
           <b>Uusi yhteystieto</b>
         </p>
         <p>
-          Lisää uudelle yhteystiedolle rivi Lisää uusi-painikkeella. Huomioi, että uusi yhteystieto ei tallennu
-          Projektin henkilöt -sivulle eikä henkilölle tule käyttöoikeuksia projektiin.
+          Lisää uudelle yhteystiedolle rivi Lisää uusi-painikkeella. Huomioi, että uusi yhteystieto ei tallennu Projektin henkilöt -sivulle
+          eikä henkilölle tule käyttöoikeuksia projektiin.
         </p>
       </SectionContent>
       {fields.map((field, index) => (
@@ -47,42 +47,29 @@ export default function SoittoajanYhteyshenkilot({ tilaisuusIndex }: Props): Rea
           <HassuGrid sx={{ width: "100%" }} cols={[1, 1, 3]}>
             <TextInput
               label="Etunimi *"
-              {...register(`vuorovaikutusTilaisuudet.${tilaisuusIndex}.esitettavatYhteystiedot.${index}.etunimi`)}
-              error={
-                (errors as any)?.vuorovaikutusTilaisuudet?.[tilaisuusIndex]?.esitettavatYhteystiedot?.[index]?.etunimi
-              }
+              {...register(`vuorovaikutusTilaisuudet.${tilaisuusIndex}.esitettavatYhteystiedot.yhteysTiedot.${index}.etunimi`)}
+              error={(errors as any)?.vuorovaikutusTilaisuudet?.[tilaisuusIndex]?.esitettavatYhteystiedot?.[index]?.etunimi}
             />
             <TextInput
               label="Sukunimi *"
-              {...register(`vuorovaikutusTilaisuudet.${tilaisuusIndex}.esitettavatYhteystiedot.${index}.sukunimi`)}
-              error={
-                (errors as any)?.vuorovaikutusTilaisuudet?.[tilaisuusIndex]?.esitettavatYhteystiedot?.[index]?.sukunimi
-              }
+              {...register(`vuorovaikutusTilaisuudet.${tilaisuusIndex}.esitettavatYhteystiedot.yhteysTiedot.${index}.sukunimi`)}
+              error={(errors as any)?.vuorovaikutusTilaisuudet?.[tilaisuusIndex]?.esitettavatYhteystiedot?.[index]?.sukunimi}
             />
             <TextInput
               label="Organisaatio / kunta *"
-              {...register(`vuorovaikutusTilaisuudet.${tilaisuusIndex}.esitettavatYhteystiedot.${index}.organisaatio`)}
-              error={
-                (errors as any)?.vuorovaikutusTilaisuudet?.[tilaisuusIndex]?.esitettavatYhteystiedot?.[index]
-                  ?.organisaatio
-              }
+              {...register(`vuorovaikutusTilaisuudet.${tilaisuusIndex}.esitettavatYhteystiedot.yhteysTiedot.${index}.organisaatio`)}
+              error={(errors as any)?.vuorovaikutusTilaisuudet?.[tilaisuusIndex]?.esitettavatYhteystiedot?.[index]?.organisaatio}
             />
             <TextInput
               label="Puhelinnumero *"
-              {...register(`vuorovaikutusTilaisuudet.${tilaisuusIndex}.esitettavatYhteystiedot.${index}.puhelinnumero`)}
-              error={
-                (errors as any)?.vuorovaikutusTilaisuudet?.[tilaisuusIndex]?.esitettavatYhteystiedot?.[index]
-                  ?.puhelinnumero
-              }
+              {...register(`vuorovaikutusTilaisuudet.${tilaisuusIndex}.esitettavatYhteystiedot.yhteysTiedot.${index}.puhelinnumero`)}
+              error={(errors as any)?.vuorovaikutusTilaisuudet?.[tilaisuusIndex]?.esitettavatYhteystiedot?.[index]?.puhelinnumero}
               maxLength={maxPhoneLength}
             />
             <TextInput
               label="Sähköpostiosoite *"
-              {...register(`vuorovaikutusTilaisuudet.${tilaisuusIndex}.esitettavatYhteystiedot.${index}.sahkoposti`)}
-              error={
-                (errors as any)?.vuorovaikutusTilaisuudet?.[tilaisuusIndex]?.esitettavatYhteystiedot?.[index]
-                  ?.sahkoposti
-              }
+              {...register(`vuorovaikutusTilaisuudet.${tilaisuusIndex}.esitettavatYhteystiedot.yhteysTiedot.${index}.sahkoposti`)}
+              error={(errors as any)?.vuorovaikutusTilaisuudet?.[tilaisuusIndex]?.esitettavatYhteystiedot?.[index]?.sahkoposti}
             />
           </HassuGrid>
           <div>

@@ -14,7 +14,7 @@ import {
   SuunnitteluSopimus,
   SuunnitteluVaiheJulkinen,
   VuorovaikutusJulkinen,
-  VuorovaikutusTilaisuus,
+  VuorovaikutusTilaisuusJulkinen,
   VuorovaikutusTilaisuusTyyppi,
 } from "@services/api";
 import capitalize from "lodash/capitalize";
@@ -24,7 +24,6 @@ import ExtLink from "@components/ExtLink";
 import { parseVideoURL } from "src/util/videoParser";
 import PalauteLomakeDialogi from "src/components/projekti/kansalaisnakyma/PalauteLomakeDialogi";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
-import { ProjektiKayttajaJulkinen } from "@services/api";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import useProjektiBreadcrumbsJulkinen from "src/hooks/useProjektiBreadcrumbsJulkinen";
 import FormatDate from "@components/FormatDate";
@@ -49,7 +48,6 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
         suunnitteluVaihe={projekti.suunnitteluVaihe}
         vuorovaikutus={projekti.suunnitteluVaihe.vuorovaikutukset?.[0]}
         suunnittelusopimus={projekti?.aloitusKuulutusJulkaisut?.[0].suunnitteluSopimus}
-        projektiHenkilot={projekti.projektiHenkilot}
         projektiOid={projekti.oid}
       />
     </ProjektiJulkinenPageLayout>
@@ -84,9 +82,8 @@ const VuorovaikutusTiedot: FC<{
   projekti: ProjektiJulkinen;
   suunnitteluVaihe: SuunnitteluVaiheJulkinen;
   suunnittelusopimus: SuunnitteluSopimus | null | undefined;
-  projektiHenkilot: ProjektiKayttajaJulkinen[] | null | undefined;
   projektiOid: string;
-}> = ({ suunnittelusopimus, vuorovaikutus, projektiHenkilot, projektiOid }) => {
+}> = ({ suunnittelusopimus, vuorovaikutus, projektiOid }) => {
   const [palauteLomakeOpen, setPalauteLomakeOpen] = useState(false);
   const { t } = useTranslation("suunnittelu");
   const kieli = useKansalaiskieli();
@@ -124,16 +121,12 @@ const VuorovaikutusTiedot: FC<{
         </SectionContent>
         <SectionContent>
           <h4 className="vayla-small-title">{t("tilaisuudet.tulevat_tilaisuudet")}</h4>
-          {!!tulevatTilaisuudet?.length && !!projektiHenkilot ? (
-            <TilaisuusLista tilaisuudet={tulevatTilaisuudet} projektiHenkilot={projektiHenkilot} />
-          ) : (
-            <p>{t("tilaisuudet.julkaistaan_pian")}</p>
-          )}
+          {!!tulevatTilaisuudet?.length ? <TilaisuusLista tilaisuudet={tulevatTilaisuudet} /> : <p>{t("tilaisuudet.julkaistaan_pian")}</p>}
         </SectionContent>
-        {!!menneetTilaisuudet?.length && !!projektiHenkilot && (
+        {!!menneetTilaisuudet?.length && (
           <SectionContent>
             <h4 className="vayla-small-title">{t("tilaisuudet.menneet_tilaisuudet")}</h4>
-            <TilaisuusLista tilaisuudet={menneetTilaisuudet} projektiHenkilot={projektiHenkilot} inaktiivinen />
+            <TilaisuusLista tilaisuudet={menneetTilaisuudet} inaktiivinen />
           </SectionContent>
         )}
         <SectionContent>
@@ -247,11 +240,10 @@ const VuorovaikutusTiedot: FC<{
   );
 };
 
-const TilaisuusLista: FC<{ tilaisuudet: VuorovaikutusTilaisuus[]; projektiHenkilot: ProjektiKayttajaJulkinen[]; inaktiivinen?: true }> = ({
-  tilaisuudet,
-  projektiHenkilot,
-  inaktiivinen,
-}) => {
+const TilaisuusLista: FC<{
+  tilaisuudet: VuorovaikutusTilaisuusJulkinen[];
+  inaktiivinen?: true;
+}> = ({ tilaisuudet, inaktiivinen }) => {
   const sortTilaisuudet = useCallback((a, b) => {
     if (dayjs(a.paivamaara).isBefore(dayjs(b.paivamaara))) {
       return -1;
@@ -271,7 +263,7 @@ const TilaisuusLista: FC<{ tilaisuudet: VuorovaikutusTilaisuus[]; projektiHenkil
               <TilaisuusIcon tyyppi={tilaisuus.tyyppi} inactive={inaktiivinen} />
               <TilaisuusTitle tilaisuus={tilaisuus} />
             </div>
-            <TilaisuusContent tilaisuus={tilaisuus} projektiHenkilot={projektiHenkilot} />
+            <TilaisuusContent tilaisuus={tilaisuus} />
           </div>
         );
       })}
@@ -279,54 +271,39 @@ const TilaisuusLista: FC<{ tilaisuudet: VuorovaikutusTilaisuus[]; projektiHenkil
   );
 };
 
-function TilaisuusContent({
-  tilaisuus,
-  projektiHenkilot,
-}: {
-  tilaisuus: VuorovaikutusTilaisuus;
-  projektiHenkilot: ProjektiKayttajaJulkinen[] | null | undefined;
-}) {
+function TilaisuusContent({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulkinen }) {
   const { t } = useTranslation("suunnittelu");
   return (
     <>
       {tilaisuus && tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA && (
         <div>
           <p>
-            {t("tilaisuus_paikalla.osoite", {
+            {t("tilaisuudet.paikalla.osoite", {
               osoite: tilaisuus.osoite,
               postinumero: tilaisuus.postinumero,
               postitoimipaikka: tilaisuus.postitoimipaikka,
             })}
           </p>
           <p>
-            {t("tilaisuus_paikalla.yleisotilaisuus_jarjestetaan")}
+            {t("tilaisuudet.paikalla.yleisotilaisuus_jarjestetaan")}
             {tilaisuus.Saapumisohjeet && capitalize(" " + tilaisuus.Saapumisohjeet)}
           </p>
         </div>
       )}
       {tilaisuus && tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA && (
         <div>
-          <p>{t("tilaisuus_soittoaika.voit_soittaa")}</p>
-          {tilaisuus.projektiYhteysHenkilot
-            ?.map((yhteyshenkilo) => projektiHenkilot?.find((hlo) => yhteyshenkilo === hlo.id) as ProjektiKayttajaJulkinen)
-            .map((yhteystieto: ProjektiKayttajaJulkinen) => {
-              return (
-                <p key={yhteystieto.id}>
-                  {yhteystieto.nimi}
-                  {yhteystieto.organisaatio ? ` (${yhteystieto.organisaatio})` : null}: {yhteystieto.puhelinnumero}
-                </p>
-              );
-            })}
-          {tilaisuus.esitettavatYhteystiedot?.map((yhteystieto, index) => {
+          <p>{t("tilaisuudet.soittoaika.voit_soittaa")}</p>
+
+          {tilaisuus.yhteystiedot?.map((yhteystieto, index) => {
             return <SoittoajanYhteystieto key={index} yhteystieto={yhteystieto} />;
           })}
         </div>
       )}
       {tilaisuus && tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA && (
         <div>
-          <p>{t("tilaisuus_verkossa.yleisotilaisuus_jarjestetaan_verkkotapahtumana")}</p>
-          <p>{t("tilaisuus_verkossa.tilaisuus_toteutetaan_teamsin")}</p>
-          <p>{t("tilaisuus_verkossa.liity_tilaisuuteen")}</p>
+          <p>{t("tilaisuudet.verkossa.yleisotilaisuus_jarjestetaan_verkkotapahtumana")}</p>
+          <p>{t("tilaisuudet.verkossa.tilaisuus_toteutetaan_teamsin")}</p>
+          <p>{t("tilaisuudet.verkossa.liity_tilaisuuteen")}</p>
         </div>
       )}
     </>
@@ -343,7 +320,7 @@ function TilaisuusIcon({ tyyppi, inactive }: { tyyppi: VuorovaikutusTilaisuusTyy
   );
 }
 
-function TilaisuusTitle({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuus }) {
+function TilaisuusTitle({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulkinen }) {
   const { t } = useTranslation();
 
   return (

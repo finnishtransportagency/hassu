@@ -14,7 +14,7 @@ import {
   adaptLinkkiByAddingTypename,
   adaptLinkkiListByAddingTypename,
   adaptStandardiYhteystiedotByAddingProjari,
-  adaptYhteystiedotByAddingTypename,
+  adaptStandardiYhteystiedotByAddingTypename,
 } from "../common";
 import { fileService } from "../../../files/fileService";
 
@@ -64,7 +64,7 @@ function adaptVuorovaikutusTilaisuudet(vuorovaikutusTilaisuudet: Array<Vuorovaik
   if (vuorovaikutusTilaisuudet) {
     return vuorovaikutusTilaisuudet.map((vuorovaikutusTilaisuus) => ({
       ...vuorovaikutusTilaisuus,
-      esitettavatYhteystiedot: adaptYhteystiedotByAddingTypename(vuorovaikutusTilaisuus.esitettavatYhteystiedot),
+      esitettavatYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(vuorovaikutusTilaisuus.esitettavatYhteystiedot),
       __typename: "VuorovaikutusTilaisuus",
     }));
   }

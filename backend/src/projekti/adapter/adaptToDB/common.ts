@@ -19,12 +19,12 @@ export function adaptIlmoituksenVastaanottajatToSave(
   return { kunnat, viranomaiset };
 }
 
-export function adaptYhteystiedotToSave(yhteystietoInputs: Array<API.YhteystietoInput>): API.YhteystietoInput[] | undefined {
+export function adaptYhteystiedotToSave(yhteystietoInputs: Array<API.YhteystietoInput> | undefined): API.YhteystietoInput[] | undefined {
   return yhteystietoInputs?.length > 0 ? yhteystietoInputs.map((yt) => ({ ...yt })) : undefined;
 }
 
-export function adaptYhteysHenkilotToSave(yhteystiedot: string[]): string[] {
-  return yhteystiedot.filter((yt, index) => yhteystiedot.indexOf(yt) === index);
+export function adaptYhteysHenkilotToSave(yhteystiedot: string[] | undefined): string[] | undefined {
+  return yhteystiedot?.filter((yt, index) => yhteystiedot.indexOf(yt) === index);
 }
 
 export function adaptStandardiYhteystiedot(kuulutusYhteystiedot: API.StandardiYhteystiedotInput): API.StandardiYhteystiedotInput {

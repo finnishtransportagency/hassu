@@ -779,11 +779,13 @@ export class ProjektiFixture {
         paivamaara: "2022-04-05",
         alkamisAika: "10:00",
         paattymisAika: "11:00",
-        esitettavatYhteystiedot: this.yhteystietoLista2,
-        projektiYhteysHenkilot: [
-          ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
-          ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
-        ],
+        esitettavatYhteystiedot: {
+          yhteysTiedot: this.yhteystietoLista2,
+          yhteysHenkilot: [
+            ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
+            ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
+          ],
+        },
       },
       {
         tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
@@ -791,7 +793,9 @@ export class ProjektiFixture {
         paivamaara: "2033-04-05",
         alkamisAika: "12:00",
         paattymisAika: "13:00",
-        esitettavatYhteystiedot: this.yhteystietoLista2,
+        esitettavatYhteystiedot: {
+          yhteysTiedot: this.yhteystietoLista2,
+        },
       },
     ],
   };

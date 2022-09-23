@@ -127,7 +127,7 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
           vuorovaikutusJulkaisuPaiva: vuorovaikutus?.vuorovaikutusJulkaisuPaiva || "",
           kysymyksetJaPalautteetViimeistaan: vuorovaikutus?.kysymyksetJaPalautteetViimeistaan || "",
           esitettavatYhteystiedot: {
-            yhteysTiedot: vuorovaikutus?.esitettavatYhteystiedot?.yhteysTiedot?.map((yhteystieto) => removeTypeName(yhteystieto)) || [],
+            yhteysTiedot: vuorovaikutus?.esitettavatYhteystiedot?.yhteysTiedot || [],
             yhteysHenkilot: vuorovaikutus?.esitettavatYhteystiedot?.yhteysHenkilot,
           },
           ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, vuorovaikutus?.ilmoituksenVastaanottajat, kirjaamoOsoitteet),
@@ -135,7 +135,11 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
             vuorovaikutus?.vuorovaikutusTilaisuudet?.map((tilaisuus) => {
               const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
               const { esitettavatYhteystiedot } = vuorovaikutusTilaisuusInput;
-              vuorovaikutusTilaisuusInput.esitettavatYhteystiedot = esitettavatYhteystiedot?.map((yt) => removeTypeName(yt)) || [];
+              vuorovaikutusTilaisuusInput.esitettavatYhteystiedot = {
+                __typename: "StandardiYhteystiedot",
+                yhteysHenkilot: vuorovaikutusTilaisuusInput.esitettavatYhteystiedot?.yhteysHenkilot || [],
+                yhteysTiedot: esitettavatYhteystiedot?.yhteysTiedot || [],
+              };
               return vuorovaikutusTilaisuusInput;
             }) || [],
           julkinen: !!vuorovaikutus?.julkinen,

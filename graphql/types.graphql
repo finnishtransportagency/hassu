@@ -179,7 +179,7 @@ type VuorovaikutusJulkinen {
   Vuorovaikutuksen jarjestysnumero
   """
   vuorovaikutusNumero: Int!
-  vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuus!]
+  vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusJulkinen!]
   """
   yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
   """
@@ -434,8 +434,33 @@ type VuorovaikutusTilaisuus {
   postinumero: String
   postitoimipaikka: String
   Saapumisohjeet: String
-  projektiYhteysHenkilot: [String!]
-  esitettavatYhteystiedot: [Yhteystieto!]
+  esitettavatYhteystiedot: StandardiYhteystiedot
+}
+
+type VuorovaikutusTilaisuusJulkinen {
+  tyyppi: VuorovaikutusTilaisuusTyyppi!
+  nimi: String
+  """
+  yyyy-MM-dd
+  """
+  paivamaara: String!
+  """
+  HH:mm
+  """
+  alkamisAika: String!
+  """
+  HH:mm
+  """
+  paattymisAika: String!
+  kaytettavaPalvelu: KaytettavaPalvelu
+  linkki: String
+
+  paikka: String
+  osoite: String
+  postinumero: String
+  postitoimipaikka: String
+  Saapumisohjeet: String
+  yhteystiedot: [Yhteystieto!]
 }
 
 type Velho {
