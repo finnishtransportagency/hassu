@@ -128,6 +128,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
     <div className="mb-6 pb-8">
       {!desktop && ( // Vain mobiilissa näkyvöä sininen palkki, josta voi avata ja sulkea hakukentät
         <MobiiliBlokki
+          id="pienenna_hakulomake_button"
           onClick={(e) => {
             e.preventDefault();
             setPienennaHakuState(!pienennaHakuState);
@@ -178,6 +179,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
                 // Desktop-näkymässä on mahdollista piilottaa tai paljastaa kaksi vikaa hakukenttää.
                 // Tässä on nappi sitä varten.
                 <HakuehtoNappi
+                  id="lisaa_hakuehtoja_button"
                   onClick={(e) => {
                     e.preventDefault();
                     setLisaaHakuehtojaState(!lisaaHakuehtojaState);
@@ -246,9 +248,11 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
           <h2>
             <Trans i18nKey="etusivu:loytyi-n-suunnitelmaa" values={{ lkm: hakutulostenMaara }} />
           </h2>
-          <button onClick={nollaaHakuehdot}>{t("nollaa-hakuehdot")}</button>
+          <button id="nollaa_hakuehdot_button" onClick={nollaaHakuehdot}>
+            {t("nollaa-hakuehdot")}
+          </button>
         </HakutulosInfo>
       )}
-      </div>
+    </div>
   );
 }
