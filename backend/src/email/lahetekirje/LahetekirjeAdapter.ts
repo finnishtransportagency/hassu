@@ -46,6 +46,8 @@ export class LahetekirjeAdapter {
       yhteystiedot: this.yhteystiedot,
       vastaanottajat: this.vastaanottajat,
       suunnitelmaTyyppi: this.suunnitelmaTyyppi,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       asiakirjanMuoto: determineAsiakirjaMuoto(this.projekti.velho.tyyppi, this.projekti.velho.vaylamuoto),
     };
   }
@@ -56,7 +58,7 @@ export class LahetekirjeAdapter {
 
   protected get isElyTilaaja(): boolean {
     return (
-      this.projekti?.velho?.suunnittelustaVastaavaViranomainen && this.projekti?.velho?.suunnittelustaVastaavaViranomainen.endsWith("ELY")
+      !!this.projekti?.velho?.suunnittelustaVastaavaViranomainen && this.projekti?.velho?.suunnittelustaVastaavaViranomainen.endsWith("ELY")
     );
   }
 
@@ -88,7 +90,10 @@ export class LahetekirjeAdapter {
       return result;
     }
 
-    const tilaajaOrganisaatio = translate("viranomainen." + viranomainen, Kieli.SUOMI);
+    const tilaajaOrganisaatio: string = translate("viranomainen." + viranomainen, Kieli.SUOMI) || "";
+    if (!tilaajaOrganisaatio) {
+      throw new Error(`Ei kaannosta viranomainen.${viranomainen}:lle`);
+    }
     if (this.isElyTilaaja) {
       result = tilaajaOrganisaatio.replace("ELY-keskus", "elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)");
     } else {
@@ -135,7 +140,11 @@ export class LahetekirjeAdapter {
     } else if (this.isElyTilaaja) {
       result = "ELY-keskuksen";
     } else {
-      result = translate("viranomainen." + viranomainen, Kieli.SUOMI);
+      const kaannos: string = translate("viranomainen." + viranomainen, Kieli.SUOMI) || "";
+      if (!kaannos) {
+        throw new Error(`Ei kaannosta viranomainen.${viranomainen}:lle`);
+      }
+      result = kaannos;
     }
     return result;
   }
@@ -159,7 +168,11 @@ export class LahetekirjeAdapter {
     if (this.isElyTilaaja) {
       result = "ELY-keskus";
     } else {
-      result = translate("viranomainen." + viranomainen, Kieli.SUOMI);
+      const kaannos: string = translate("viranomainen." + viranomainen, Kieli.SUOMI) || "";
+      if (!kaannos) {
+        throw new Error(`Ei kaannosta viranomainen.${viranomainen}:lle`);
+      }
+      result = kaannos;
     }
     return result;
   }
@@ -181,7 +194,11 @@ export class LahetekirjeAdapter {
     } else if (this.isElyTilaaja) {
       result = "ELY-keskukselle";
     } else {
-      result = translate("viranomainen." + viranomainen, Kieli.SUOMI);
+      const kaannos: string = translate("viranomainen." + viranomainen, Kieli.SUOMI) || "";
+      if (!kaannos) {
+        throw new Error(`Ei kaannosta viranomainen.${viranomainen}:lle`);
+      }
+      result = kaannos;
     }
     return result;
   }
@@ -206,8 +223,8 @@ export class LahetekirjeAdapter {
     return yt.map((y) => `${y.organisaatio}, ${y.etunimi} ${y.sukunimi}, puh. ${y.puhelinnumero}, ${y.sahkoposti}`);
   }
 
-  private get vastaanottajat() {
-    const result = [];
+  private get vastaanottajat(): string[] {
+    const result: string[] = [];
     const kunnat = this.projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat;
     const viranomaiset = this.projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset;
     kunnat?.forEach(({ sahkoposti }) => {

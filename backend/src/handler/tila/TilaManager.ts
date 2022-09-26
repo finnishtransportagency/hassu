@@ -6,16 +6,25 @@ import { DBProjekti } from "../../database/model";
 import { requireOmistaja } from "../../user/userService";
 
 export abstract class TilaManager {
+  // TODO: tarkista. Virheen tyyppi on Property 'tyyppi' has no initializer and is not definitely assigned in the constructor.ts(2564)
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   protected tyyppi: TilasiirtymaTyyppi;
 
   public async siirraTila({ oid, syy, toiminto, tyyppi }: TilaSiirtymaInput): Promise<void> {
     requirePermissionLuku();
     this.tyyppi = tyyppi;
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
+    if (!projekti) {
+      throw new Error("Ei voi sirtää projektin tilaa, koska projektia ei löydy");
+    }
 
     if (toiminto == TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI) {
       await this.sendForApprovalInternal(projekti);
     } else if (toiminto == TilasiirtymaToiminto.HYLKAA) {
+      if (!syy) {
+        throw new Error("Hylkäämiseltä puuttuu syy!");
+      }
       await this.rejectInternal(projekti, syy);
     } else if (toiminto == TilasiirtymaToiminto.HYVAKSY) {
       await this.approveInternal(projekti);
@@ -45,7 +54,7 @@ export abstract class TilaManager {
 
   abstract sendForApproval(projekti: DBProjekti, projektipaallikko: NykyinenKayttaja): Promise<void>;
 
-  abstract reject(projekti: DBProjekti, syy: string): Promise<void>;
+  abstract reject(projekti: DBProjekti, syy: string | null | undefined): Promise<void>;
 
   abstract approve(projekti: DBProjekti, projektiPaallikko: NykyinenKayttaja): Promise<void>;
 }

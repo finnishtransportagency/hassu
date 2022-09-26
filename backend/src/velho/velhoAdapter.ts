@@ -175,12 +175,13 @@ export function adaptProjekti(data: ProjektiProjekti): DBProjekti {
 
 export function adaptDokumenttiTyyppi(dokumenttiTyyppi: string): { dokumenttiTyyppi: string; kategoria: string } {
   const type = metadata.dokumenttiTyypit[dokumenttiTyyppi];
-  if (type) {
-    return {
-      dokumenttiTyyppi: type.otsikko,
-      kategoria: type.kategoria,
-    };
+  if (!type) {
+    throw new Error("adaptDokumenttiTyyppi: tyyppiä ${dokumenttiTyyppi} ei löydy metadata.dokumenttiTyypit avaimista.");
   }
+  return {
+    dokumenttiTyyppi: type.otsikko,
+    kategoria: type.kategoria,
+  };
 }
 
 export function findUpdatedFields(oldVelho: Velho, newVelho: Velho): Velho {

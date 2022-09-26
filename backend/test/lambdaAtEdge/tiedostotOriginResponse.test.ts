@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { describe } from "mocha";
 
 const handler = require("../../../deployment/lib/lambda/tiedostotOriginResponse").handler;

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { describe, it } from "mocha";
 import { adaptProjekti, findUpdatedFields } from "../../src/velho/velhoAdapter";
 import { default as velhoTieProjecti } from "./fixture/velhoTieProjekti.json";

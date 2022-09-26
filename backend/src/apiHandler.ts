@@ -126,7 +126,8 @@ export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArgume
       try {
         await identifyUser(event);
         const data = await executeOperation(event);
-        const lambdaResult: LambdaResult = { data, correlationId: getCorrelationId() };
+        const corId = getCorrelationId();
+        const lambdaResult: LambdaResult = { data, correlationId: corId || "" };
         return lambdaResult;
       } catch (e: unknown) {
         log.error(e);
@@ -136,7 +137,7 @@ export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArgume
           // in deployment/lib/template/response.vtl
 
           let errorType = "Error";
-          let errorSubType: string;
+          let errorSubType = "(no subtype)";
           if (e instanceof ClientError) {
             errorType = "ClientError";
             errorSubType = e.className;

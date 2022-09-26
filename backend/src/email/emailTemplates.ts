@@ -118,24 +118,36 @@ export function createNewFeedbackAvailableEmail(oid: string, recipient: string):
 
 export function createMuistutusKirjaamolleEmail(projekti: DBProjekti, muistutus: Muistutus, sahkoposti: string): EmailOptions {
   const asiatunnus =
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     projekti.velho.suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO
-      ? projekti.velho.asiatunnusELY
-      : projekti.velho.asiatunnusVayla;
+      ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        projekti.velho.asiatunnusELY
+      : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        projekti.velho.asiatunnusVayla;
   return {
     subject: muistutusOtsikko(muistutus),
-    text: muistutusTeksti({asiatunnus, ...muistutus }),
+    text: muistutusTeksti({ asiatunnus, ...muistutus }),
     to: sahkoposti,
   };
 }
 
 export function createKuittausMuistuttajalleEmail(projekti: DBProjekti, muistutus: Muistutus): EmailOptions {
   const asiatunnus =
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     projekti.velho.suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO
-      ? projekti.velho.asiatunnusELY
-      : projekti.velho.asiatunnusVayla;
+      ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        projekti.velho.asiatunnusELY
+      : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        projekti.velho.asiatunnusVayla;
   return {
     subject: muistuttajanOtsikko(muistutus),
-    text: muistutusTeksti({asiatunnus, ...muistutus }),
-    to: muistutus.sahkoposti,
+    text: muistutusTeksti({ asiatunnus, ...muistutus }),
+    to: muistutus.sahkoposti || undefined,
   };
 }

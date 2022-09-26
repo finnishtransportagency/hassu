@@ -7,7 +7,8 @@ const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
   RUOTSI: "MEDDELANDE OM KUNGÖRELSE FRÅN BEHÖRIG MYNDIGHET",
 };
 
-const fileNameKeys: Record<IlmoitusAsiakirjaTyyppi, Partial<Record<ProjektiTyyppi, string>>> = {
+type PartialProjektiTyyppi = ProjektiTyyppi.TIE | ProjektiTyyppi.YLEINEN;
+const fileNameKeys: Record<IlmoitusAsiakirjaTyyppi, Record<PartialProjektiTyyppi, string>> = {
   ILMOITUS_KUULUTUKSESTA: {
     [ProjektiTyyppi.TIE]: "T412_1",
     [ProjektiTyyppi.YLEINEN]: "12YS_aloituskuulutus",
@@ -30,7 +31,7 @@ export class Ilmoitus12T extends SuunnittelunAloitusPdf {
       params,
       headers[params.kieli == Kieli.SAAME ? Kieli.SUOMI : params.kieli],
       AsiakirjanMuoto.TIE,
-      fileNameKeys[asiakirjaTyyppi]?.[params.velho.tyyppi]
+      fileNameKeys[asiakirjaTyyppi][params.velho.tyyppi === ProjektiTyyppi.TIE ? ProjektiTyyppi.TIE : ProjektiTyyppi.YLEINEN]
     );
     this.asiakirjaTyyppi = asiakirjaTyyppi;
 
@@ -77,17 +78,11 @@ export class Ilmoitus12T extends SuunnittelunAloitusPdf {
         },
       ]),
       this.lisatietojaAntavatParagraph(),
-      this.doc.struct(
-        "P",
-        {},
-        this.moreInfoElements(this.params.yhteystiedot, this.params.suunnitteluSopimus, this.params.yhteysHenkilot)
-      ),
+      this.doc.struct("P", {}, this.moreInfoElements(this.params.yhteystiedot, this.params.suunnitteluSopimus, this.params.yhteysHenkilot)),
     ];
   }
 
   private get kuulutusOsoite() {
-    return this.isVaylaTilaaja(this.params.velho)
-      ? "https://www.vayla.fi/kuulutukset"
-      : "https://www.ely-keskus.fi/kuulutukset";
+    return this.isVaylaTilaaja(this.params.velho) ? "https://www.vayla.fi/kuulutukset" : "https://www.ely-keskus.fi/kuulutukset";
   }
 }

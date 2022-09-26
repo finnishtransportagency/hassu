@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 const AWSXRay = require("aws-xray-sdk-core");
 const mocha = require("mocha");
 

@@ -152,7 +152,7 @@ export class KayttoOikeudetManager {
 
     if (searchMode === SearchMode.UID) {
       account = kayttajas.getKayttajaByUid(user.kayttajatunnus);
-    } else {
+    } else if (user.email) {
       account = kayttajas.findByEmail(user.email);
     }
     if (account) {

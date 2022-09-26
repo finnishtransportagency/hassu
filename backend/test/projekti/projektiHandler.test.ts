@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { describe, it } from "mocha";
 import { findUpdatesFromVelho, synchronizeUpdatesFromVelho } from "../../src/projekti/projektiHandler";
 import { ProjektiFixture } from "../fixture/projektiFixture";

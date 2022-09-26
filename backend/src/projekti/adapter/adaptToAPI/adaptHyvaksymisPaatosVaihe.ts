@@ -18,9 +18,9 @@ import { fileService } from "../../../files/fileService";
 
 export function adaptHyvaksymisPaatosVaihe(
   dbProjekti: DBProjekti,
-  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe,
-  hyvaksymisPaatos: Hyvaksymispaatos
-): API.HyvaksymisPaatosVaihe {
+  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | null | undefined,
+  hyvaksymisPaatos: Hyvaksymispaatos | null | undefined
+): API.HyvaksymisPaatosVaihe | undefined {
   if (!hyvaksymisPaatosVaihe) {
     return undefined;
   }
@@ -29,26 +29,42 @@ export function adaptHyvaksymisPaatosVaihe(
     hyvaksymisPaatos: hyvaksymisPaatosAineisto,
     kuulutusYhteystiedot,
     ilmoituksenVastaanottajat,
-    hyvaksymisPaatosVaihePDFt,
     ...rest
   } = hyvaksymisPaatosVaihe;
+  if (!kuulutusYhteystiedot) {
+    throw new Error("adaptHyvaksymisPaatosVaihe: hyvaksymisPaatosVaihe.kuulutusYhteystiedot määrittelemättä");
+  }
+  if (!hyvaksymisPaatos) {
+    throw new Error("adaptHyvaksymisPaatosVaihe: hyvaksymisPaatos puuttuu");
+  }
+  if (!hyvaksymisPaatos.paatoksenPvm) {
+    throw new Error("adaptHyvaksymisPaatosVaihe: hyvaksymisPaatos.paatoksenPvm määrittelemättä");
+  }
+  if (!hyvaksymisPaatos.paatoksenPvm) {
+    throw new Error("adaptHyvaksymisPaatosVaihe: hyvaksymisPaatos.paatoksenPvm määrittelemättä");
+  }
+  if (!hyvaksymisPaatos.asianumero) {
+    throw new Error("adaptHyvaksymisPaatosVaihe: hyvaksymisPaatos.asianumero määrittelemättä");
+  }
+  if (!ilmoituksenVastaanottajat) {
+    throw new Error("adaptHyvaksymisPaatosVaihe: hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat määrittelemättä");
+  }
   return {
     __typename: "HyvaksymisPaatosVaihe",
     ...rest,
-    hyvaksymisPaatosVaihePDFt: adaptHyvaksymisPaatosVaihePDFPaths(dbProjekti.oid, hyvaksymisPaatosVaihePDFt),
     aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
     hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto),
     kuulutusYhteystiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-    hyvaksymisPaatoksenPvm: hyvaksymisPaatos?.paatoksenPvm,
-    hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos?.asianumero,
+    hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
+    hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,
   };
 }
 
 export function adaptHyvaksymisPaatosVaiheJulkaisut(
   oid: string,
-  hyvaksymisPaatos: Hyvaksymispaatos,
-  julkaisut?: HyvaksymisPaatosVaiheJulkaisu[] | null
+  hyvaksymisPaatos: Hyvaksymispaatos | null | undefined,
+  julkaisut?: HyvaksymisPaatosVaiheJulkaisu[] | null | undefined
 ): API.HyvaksymisPaatosVaiheJulkaisu[] | undefined {
   if (julkaisut) {
     return julkaisut.map((julkaisu) => {
@@ -63,19 +79,45 @@ export function adaptHyvaksymisPaatosVaiheJulkaisut(
         ...fieldsToCopyAsIs
       } = julkaisu;
 
-      return {
+      if (!aineistoNahtavilla) {
+        throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: julkaisu.aineistoNahtavilla määrittelemättä");
+      }
+      if (!hyvaksymisPaatosVaihePDFt) {
+        throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: julkaisu.hyvaksymisPaatosVaihePDFt määrittelemättä");
+      }
+      if (!kuulutusYhteystiedot) {
+        throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: julkaisu.kuulutusYhteystiedot määrittelemättä");
+      }
+      if (!hyvaksymisPaatos) {
+        throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatos puuttuu");
+      }
+      if (!hyvaksymisPaatos.paatoksenPvm) {
+        throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatos.paatoksenPvm määrittelemättä");
+      }
+      if (!hyvaksymisPaatos.asianumero) {
+        throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatos.asianumero määrittelemättä");
+      }
+      if (!ilmoituksenVastaanottajat) {
+        throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatos.ilmoituksenVastaanottajat määrittelemättä");
+      }
+      if (!kielitiedot) {
+        throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatos.kielitiedot määrittelemättä");
+      }
+
+      const apijulkaisu: API.HyvaksymisPaatosVaiheJulkaisu = {
         ...fieldsToCopyAsIs,
         __typename: "HyvaksymisPaatosVaiheJulkaisu",
         kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
         hyvaksymisPaatosVaihePDFt: adaptHyvaksymisPaatosVaihePDFPaths(oid, hyvaksymisPaatosVaihePDFt),
         aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
         hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto),
-        hyvaksymisPaatoksenPvm: hyvaksymisPaatos?.paatoksenPvm,
-        hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos?.asianumero,
+        hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
+        hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,
         kuulutusYhteystiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot),
         ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
         velho: adaptVelhoByAddingTypename(velho),
       };
+      return apijulkaisu;
     });
   }
   return undefined;
@@ -89,15 +131,22 @@ function adaptHyvaksymisPaatosVaihePDFPaths(
     return undefined;
   }
 
-  const result = {};
+  const result: Partial<API.HyvaksymisPaatosVaihePDFt> = {};
 
-  function getYllapitoPathForFile(path: string) {
+  function getYllapitoPathForFile(path: string): string {
+    // getYllapitoPathForProjektiFile palauttaa stringin, koska oid ja path on määritelty
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return fileService.getYllapitoPathForProjektiFile(oid, path);
   }
 
   for (const kieli in hyvaksymisPaatosVaihePDFs) {
-    const pdfs = hyvaksymisPaatosVaihePDFs[kieli];
-    const hyvaksymisPaatosVaihePdf: HyvaksymisPaatosVaihePDF = {
+    const pdfs = hyvaksymisPaatosVaihePDFs[kieli as API.Kieli];
+    if (!pdfs) {
+      throw new Error(`adaptHyvaksymisPaatosVaihePDFPaths: hyvaksymisPaatosVaihePDFs[${kieli}] määrittelemättä`);
+    }
+    const hyvaksymisPaatosVaihePdf: API.HyvaksymisPaatosVaihePDF = {
+      __typename: "HyvaksymisPaatosVaihePDF",
       ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath: getYllapitoPathForFile(
         pdfs.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath
       ),
@@ -108,7 +157,7 @@ function adaptHyvaksymisPaatosVaihePDFPaths(
         pdfs.ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath
       ),
     };
-    result[kieli] = hyvaksymisPaatosVaihePdf;
+    result[kieli as API.Kieli] = hyvaksymisPaatosVaihePdf;
   }
-  return { __typename: "HyvaksymisPaatosVaihePDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
+  return { __typename: "HyvaksymisPaatosVaihePDFt", [API.Kieli.SUOMI]: result[API.Kieli.SUOMI] as API.HyvaksymisPaatosVaihePDF, ...result };
 }

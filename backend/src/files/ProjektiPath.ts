@@ -10,6 +10,9 @@ export abstract class PathTuple {
   protected readonly parent: PathTuple;
 
   constructor(parent?: PathTuple) {
+    // TODO Varmista että tämä on ok
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     this.parent = parent;
   }
 

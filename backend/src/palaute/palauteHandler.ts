@@ -1,8 +1,4 @@
-import {
-  LisaaPalauteMutationVariables,
-  OtaPalauteKasittelyynMutationVariables,
-  Status,
-} from "../../../common/graphql/apiModel";
+import { LisaaPalauteMutationVariables, OtaPalauteKasittelyynMutationVariables, Status } from "../../../common/graphql/apiModel";
 import { NotFoundError } from "../error/NotFoundError";
 import { requirePermissionMuokkaaProjekti } from "../projekti/projektiHandler";
 import { projektiDatabase } from "../database/projektiDatabase";
@@ -48,7 +44,7 @@ class PalauteHandler {
 
   async listaaPalautteet(oid: string) {
     requirePermissionLuku();
-    const palautteet = await feedbackDatabase.listFeedback(oid);
+    const palautteet = (await feedbackDatabase.listFeedback(oid)) || [];
     return adaptPalautteetToAPI(palautteet);
   }
 }

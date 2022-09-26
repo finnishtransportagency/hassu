@@ -140,7 +140,7 @@ export class VelhoClient {
         log.info(resultCount + " Velho search results for term: " + term);
       }
       return adaptSearchResults(data.osumat as ProjektiSearchResult[], await personSearch.getKayttajas());
-    } catch (e) {
+    } catch (e: any) {
       log.error(e.message, e);
       throw new VelhoError(e.message, e);
     }
@@ -151,7 +151,7 @@ export class VelhoClient {
     let response;
     try {
       response = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidGet(oid);
-    } catch (e) {
+    } catch (e: any) {
       log.error(e);
       return adaptProjekti(e.response.data.value); // TODO temporary hack, remove after velho has been fixed
       // throw new VelhoError(e.message, e);
@@ -165,32 +165,41 @@ export class VelhoClient {
       const toimeksiannot = await this.listToimeksiannot(oid);
       const hakuApi = await this.createHakuApi();
       const aineistot: Record<string, VelhoAineisto[]> = await toimeksiannot.reduce(
-        async (resultPromise: Promise<Record<string, VelhoAineisto[]>>, toimeksianto) => {
-          // List aineistot belonging to one toimeksianto
-          const aineistotResponse = await hakuApi.hakupalveluApiV1HakuAineistotLinkitOidGet(toimeksianto.oid);
-          checkResponseIsOK(aineistotResponse, "hakuApi.hakupalveluApiV1HakuAineistotLinkitOidGet " + toimeksianto.oid);
-          const aineistoArray: AineistoPalvelu.AineistoAineisto[] = aineistotResponse.data as AineistoPalvelu.AineistoAineisto[];
-          const results = await resultPromise;
-
-          const kategoria = toimeksianto.ominaisuudet.nimi.trim();
-          if (!results[kategoria]) {
-            results[kategoria] = [];
-          }
-          aineistoArray.forEach((aineisto) => {
-            const { dokumenttiTyyppi } = adaptDokumenttiTyyppi(`${aineisto.metatiedot.dokumenttityyppi}`);
-            const tiedostoNimi = aineisto["tuorein-versio"].nimi;
-            results[kategoria].push({
-              __typename: "VelhoAineisto",
-              oid: aineisto.oid,
-              tiedosto: tiedostoNimi,
-              kategoriaId: aineistoKategoriat.findKategoria(aineisto.metatiedot.kuvaus, tiedostoNimi)?.id,
-              dokumenttiTyyppi,
-              muokattu: dayjs(aineisto["tuorein-versio"].muokattu).format(),
-            } as VelhoAineisto);
+        (resultPromise: Promise<Record<string, VelhoAineisto[]>>, toimeksianto) => {
+          return resultPromise.then((results) => {
+            return hakuApi.hakupalveluApiV1HakuAineistotLinkitOidGet(toimeksianto.oid).then((aineistotResponse) => {
+              checkResponseIsOK(aineistotResponse, "hakuApi.hakupalveluApiV1HakuAineistotLinkitOidGet " + toimeksianto.oid);
+              const aineistoArray: AineistoPalvelu.AineistoAineisto[] = aineistotResponse.data as AineistoPalvelu.AineistoAineisto[];
+              const kategoria: string = toimeksianto.ominaisuudet.nimi.trim();
+              if (!results[kategoria]) {
+                results[kategoria] = [];
+              }
+              aineistoArray.forEach((aineisto) => {
+                const { dokumenttiTyyppi } = adaptDokumenttiTyyppi(`${aineisto.metatiedot.dokumenttityyppi}`);
+                const tiedostoNimi = aineisto["tuorein-versio"]?.nimi;
+                if (!aineisto.metatiedot.kuvaus) {
+                  throw new Error("loadProjektiAineistot: aineisto.metatiedot.kuvaus puuttuu");
+                }
+                if (!tiedostoNimi) {
+                  throw new Error("loadProjektiAineistot: aineisto['tuorein-versio']?.nimi puuttuu");
+                }
+                if (!aineisto["tuorein-versio"]?.muokattu) {
+                  throw new Error("loadProjektiAineistot: aineisto['tuorein-versio']?.muokattu puuttuu");
+                }
+                return results[kategoria].push({
+                  __typename: "VelhoAineisto",
+                  oid: aineisto.oid,
+                  tiedosto: tiedostoNimi,
+                  kategoriaId: aineistoKategoriat.findKategoria(aineisto.metatiedot.kuvaus, tiedostoNimi)?.id,
+                  dokumenttiTyyppi,
+                  muokattu: dayjs(aineisto["tuorein-versio"].muokattu).format(),
+                } as VelhoAineisto);
+              });
+              return results;
+            });
           });
-          return results;
         },
-        {} as Record<string, VelhoAineisto[]>
+        Promise.resolve({} as Record<string, VelhoAineisto[]>)
       );
 
       // Convert map to a list of kategoria->aineistot pairs
@@ -199,7 +208,7 @@ export class VelhoClient {
         result.push({ __typename: "VelhoAineistoKategoria", kategoria, aineistot: aineistot[kategoria] });
       }
       return result;
-    } catch (e) {
+    } catch (e: any) {
       log.error(e);
       throw new VelhoError(e.message, e);
     }
@@ -216,10 +225,10 @@ export class VelhoClient {
     return dokumenttiResponse.headers.location;
   }
 
-  private async listToimeksiannot(oid: string) {
+  private async listToimeksiannot(oid: string): Promise<ProjektiRekisteri.InlineResponse2001[]> {
     const projektiApi = await this.createProjektiRekisteriApi();
     const toimeksiannotResponse = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidToimeksiannotGet(oid);
-    const toimeksiannot = [];
+    const toimeksiannot: ProjektiRekisteri.InlineResponse2001[] = [];
     toimeksiannotResponse.data.forEach((toimeksianto) => toimeksiannot.push(toimeksianto));
     return toimeksiannot;
   }
@@ -251,7 +260,7 @@ export class VelhoClient {
     let response;
     try {
       response = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidDelete(oid);
-    } catch (e) {
+    } catch (e: any) {
       throw new VelhoError(e.message, e);
     }
     checkResponseIsOK(response, "Delete projekti for testing");

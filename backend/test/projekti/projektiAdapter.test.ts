@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { describe, it } from "mocha";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import { projektiAdapter } from "../../src/projekti/adapter/projektiAdapter";

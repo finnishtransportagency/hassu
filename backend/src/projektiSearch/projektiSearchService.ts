@@ -77,7 +77,7 @@ class ProjektiSearchService {
     const pageNumber = params.sivunumero || 0;
     const queries: unknown[] = [];
 
-    let projektiTyyppi: ProjektiTyyppi = params.projektiTyyppi;
+    let projektiTyyppi: ProjektiTyyppi | null | undefined = params.projektiTyyppi;
     if (!projektiTyyppi) {
       // Default projektiTyyppi for yllapito search
       projektiTyyppi = ProjektiTyyppi.TIE;
@@ -130,7 +130,7 @@ class ProjektiSearchService {
       hakutulosProjektiTyyppi: projektiTyyppi,
     };
 
-    buckets.aggregations.projektiTyypit.buckets.forEach((bucket) => {
+    buckets.aggregations.projektiTyypit.buckets.forEach((bucket: any) => {
       if (bucket.key == ProjektiTyyppi.TIE) {
         result.tiesuunnitelmatMaara = bucket.doc_count;
       } else if (bucket.key == ProjektiTyyppi.RATA) {
@@ -156,7 +156,7 @@ class ProjektiSearchService {
       },
     });
 
-    const projektiTyyppi: ProjektiTyyppi = params.projektiTyyppi;
+    const projektiTyyppi: ProjektiTyyppi | null | undefined = params.projektiTyyppi;
     if (projektiTyyppi) {
       queries.push({ term: { "projektiTyyppi.keyword": projektiTyyppi } });
     }
@@ -197,6 +197,9 @@ class ProjektiSearchService {
     }
     if (params.vainProjektitMuokkausOikeuksin) {
       const user = getVaylaUser();
+      if (!user) {
+        throw new Error("addYllapitoQueries: unable to get user");
+      }
       queries.push({ term: { "muokkaajat.keyword": user.uid } });
     }
   }
@@ -263,8 +266,8 @@ class ProjektiSearchService {
   }
 
   public static adaptSort(
-    jarjestysSarake?: ProjektiSarake,
-    jarjestysKasvava?: boolean
+    jarjestysSarake?: ProjektiSarake | null,
+    jarjestysKasvava?: boolean | null
   ): Partial<Record<keyof ProjektiDocument, SortOrder>>[] {
     const sort: Partial<Record<string, SortOrder>>[] = jarjestysSarake
       ? [{ [projektiSarakeToField[jarjestysSarake]]: { order: jarjestysKasvava ? "asc" : "desc" } }]

@@ -17,7 +17,7 @@ export default function adaptStandardiYhteystiedot(
       yt.push({ __typename: "Yhteystieto", ...vaylaUserToYhteystieto(oikeus) });
       sahkopostit.push(oikeus.email); //Kerää sähköpostit myöhempää duplikaattien tarkistusta varten.
     });
-  if (kuulutusYhteystiedot.yhteysTiedot) {
+  if (kuulutusYhteystiedot?.yhteysTiedot) {
     kuulutusYhteystiedot.yhteysTiedot?.forEach((yhteystieto) => {
       if (!sahkopostit.find((email) => email === yhteystieto.sahkoposti)) {
         //Varmista, ettei ole duplikaatteja
@@ -41,7 +41,7 @@ export function adaptStandardiYhteystiedotLisaamattaProjaria(
       yt.push({ __typename: "Yhteystieto", ...vaylaUserToYhteystieto(oikeus) });
       sahkopostit.push(oikeus.email); //Kerää sähköpostit myöhempää duplikaattien tarkistusta varten.
     });
-  if (kuulutusYhteystiedot.yhteysTiedot) {
+  if (kuulutusYhteystiedot?.yhteysTiedot) {
     kuulutusYhteystiedot.yhteysTiedot?.forEach((yhteystieto) => {
       if (!sahkopostit.find((email) => email === yhteystieto.sahkoposti)) {
         //Varmista, ettei ole duplikaatteja

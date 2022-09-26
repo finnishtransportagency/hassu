@@ -3,13 +3,14 @@ import * as API from "../../../../../common/graphql/apiModel";
 import { ProjektiAdaptationResult } from "../projektiAdapter";
 import { adaptAineistotToSave, adaptHankkeenKuvausToSave, adaptIlmoituksenVastaanottajatToSave, adaptYhteystiedotToSave } from "./common";
 import mergeWith from "lodash/mergeWith";
+import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
 
 export function adaptNahtavillaoloVaiheToSave(
-  dbNahtavillaoloVaihe: NahtavillaoloVaihe,
-  nahtavillaoloVaihe: API.NahtavillaoloVaiheInput,
+  dbNahtavillaoloVaihe: NahtavillaoloVaihe | undefined | null,
+  nahtavillaoloVaihe: API.NahtavillaoloVaiheInput | undefined | null,
   projektiAdaptationResult: ProjektiAdaptationResult,
   nahtavillaoloVaiheJulkaisutCount: number | undefined
-): NahtavillaoloVaihe {
+): NahtavillaoloVaihe | undefined {
   if (!nahtavillaoloVaihe) {
     return undefined;
   }
@@ -25,13 +26,25 @@ export function adaptNahtavillaoloVaiheToSave(
     kuulutusYhteysHenkilot,
   } = nahtavillaoloVaihe;
 
+  if (!hankkeenKuvaus) {
+    throw new IllegalArgumentError("Nähtävilläolovaiheella tulee olla hankkeenKuvaus!");
+  }
+  if (!ilmoituksenVastaanottajat) {
+    throw new IllegalArgumentError("Nähtävilläolovaiheella on oltava ilmoituksenVastaanottajat!");
+  }
+  if (!aineistoNahtavillaInput) {
+    throw new IllegalArgumentError("Nähtävilläolovaiheella on oltava aineistoNahtavilla!");
+  }
+
   const aineistoNahtavilla = adaptAineistotToSave(
     dbNahtavillaoloVaihe?.aineistoNahtavilla,
     aineistoNahtavillaInput,
     projektiAdaptationResult
   );
 
-  const lisaAineisto = adaptAineistotToSave(dbNahtavillaoloVaihe?.lisaAineisto, lisaAineistoInput, projektiAdaptationResult);
+  const lisaAineisto = lisaAineistoInput
+    ? adaptAineistotToSave(dbNahtavillaoloVaihe?.lisaAineisto, lisaAineistoInput, projektiAdaptationResult)
+    : undefined;
 
   let id = dbNahtavillaoloVaihe?.id;
   if (!id) {
@@ -49,11 +62,14 @@ export function adaptNahtavillaoloVaiheToSave(
     kuulutusYhteysHenkilot,
     id,
     aineistoNahtavilla,
-    lisaAineisto,
     kuulutusYhteystiedot: adaptYhteystiedotToSave(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat),
     hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus),
   };
+
+  if (lisaAineisto) {
+    uusiNahtavillaolovaihe.lisaAineisto = lisaAineisto;
+  }
 
   return mergeWith({}, dbNahtavillaoloVaihe, uusiNahtavillaolovaihe);
 }

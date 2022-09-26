@@ -19,7 +19,7 @@ import {
 class ApiTestFixture {
   newNote = "uusi muistiinpano";
 
-  createSuunnitteluSopimusInput = (uploadedFile): SuunnitteluSopimusInput => ({
+  createSuunnitteluSopimusInput = (uploadedFile: string): SuunnitteluSopimusInput => ({
     email: "Joku.Jossain@vayla.fi",
     puhelinnumero: "123",
     etunimi: "Joku",
@@ -162,6 +162,8 @@ class ApiTestFixture {
         yhteysTiedot: apiTestFixture.yhteystietoInputLista3,
         yhteysHenkilot: vuorovaikutusYhteysHenkilot,
       },
+      esittelyaineistot: [],
+      suunnitelmaluonnokset: [],
       ilmoituksenVastaanottajat: apiTestFixture.ilmoituksenVastaanottajat,
       vuorovaikutusTilaisuudet: [
         {

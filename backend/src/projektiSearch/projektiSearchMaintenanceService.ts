@@ -1,8 +1,4 @@
-import {
-  openSearchClientIlmoitustauluSyote,
-  openSearchClientJulkinen,
-  openSearchClientYllapito,
-} from "./openSearchClient";
+import { openSearchClientIlmoitustauluSyote, openSearchClientJulkinen, openSearchClientYllapito } from "./openSearchClient";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { projektiSearchService } from "./projektiSearchService";
 import projektiSettings from "./projekti-settings.json";
@@ -32,7 +28,7 @@ export class ProjektiSearchMaintenanceService {
     log.info(await openSearchClientIlmoitustauluSyote.deleteIndex());
   }
 
-  async index(event: MaintenanceEvent): Promise<string> {
+  async index(event: MaintenanceEvent): Promise<string | undefined> {
     const scanResult = await projektiDatabase.scanProjektit(event.startKey);
     for (const projekti of scanResult.projektis) {
       await projektiSearchService.indexProjekti(projekti);

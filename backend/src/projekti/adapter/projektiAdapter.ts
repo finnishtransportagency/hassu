@@ -45,6 +45,10 @@ export class ProjektiAdaptationResult {
   private dbProjekti: DBProjekti;
   private events: ProjektiEvent[] = [];
 
+  constructor(dbProjekti: DBProjekti) {
+    this.dbProjekti = dbProjekti;
+  }
+
   setProjekti(dbProjekti: DBProjekti): void {
     this.dbProjekti = dbProjekti;
   }
@@ -106,7 +110,7 @@ export class ProjektiAdapter {
         __typename: "Velho",
         ...velho,
       },
-      kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
+      kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot, true),
       suunnitteluVaihe: adaptSuunnitteluVaihe(dbProjekti.oid, kayttoOikeudet, suunnitteluVaihe, vuorovaikutukset),
       nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe),
       nahtavillaoloVaiheJulkaisut: adaptNahtavillaoloVaiheJulkaisut(dbProjekti.oid, nahtavillaoloVaiheJulkaisut),
@@ -158,7 +162,7 @@ export class ProjektiAdapter {
       kasittelynTila,
       hyvaksymisPaatosVaihe,
     } = changes;
-    const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult();
+    const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult(projekti);
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
     kayttoOikeudetManager.applyChanges(kayttoOikeudet);
     const vuorovaikutukset = adaptVuorovaikutusToSave(projekti, projektiAdaptationResult, suunnitteluVaihe?.vuorovaikutus);

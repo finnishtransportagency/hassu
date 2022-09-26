@@ -12,6 +12,7 @@ import {
   Velho,
   VuorovaikutusPDF,
   VuorovaikutusTilaisuus,
+  Vuorovaikutus,
 } from "../../database/model";
 import * as API from "../../../../common/graphql/apiModel";
 import { HyvaksymisPaatosVaiheJulkaisuJulkinen, NahtavillaoloVaiheJulkaisuJulkinen, Status } from "../../../../common/graphql/apiModel";
@@ -35,6 +36,9 @@ import adaptStandardiYhteystiedot, { adaptStandardiYhteystiedotLisaamattaProjari
 
 class ProjektiAdapterJulkinen {
   public adaptProjekti(dbProjekti: DBProjekti): API.ProjektiJulkinen | undefined {
+    if (!dbProjekti.velho) {
+      throw new Error("adaptProjekti: dbProjekti.velho määrittelemättä");
+    }
     const aloitusKuulutusJulkaisut = this.adaptAloitusKuulutusJulkaisut(dbProjekti.oid, dbProjekti.aloitusKuulutusJulkaisut);
 
     if (!checkIfAloitusKuulutusJulkaisutIsPublic(aloitusKuulutusJulkaisut)) {
@@ -97,6 +101,12 @@ class ProjektiAdapterJulkinen {
       if (!julkaisu) {
         return undefined;
       }
+      if (!julkaisu.hankkeenKuvaus) {
+        throw new Error("adaptAloitusKuulutusJulkaisut: julkaisu.hankkeenKuvaus määrittelemättä");
+      }
+      if (!julkaisu.aloituskuulutusPDFt) {
+        throw new Error("adaptAloitusKuulutusJulkaisut: julkaisu.aloituskuulutusPDFt määrittelemättä");
+      }
       const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot } = julkaisu;
 
       return [
@@ -119,6 +129,9 @@ class ProjektiAdapterJulkinen {
 
   adaptSuunnitteluSopimus(oid: string, suunnitteluSopimus?: SuunnitteluSopimus | null): API.SuunnitteluSopimus | undefined | null {
     if (suunnitteluSopimus) {
+      if (!suunnitteluSopimus.logo) {
+        throw new Error("adaptSuunnitteluSopimus: suunnittelusopimus.logo määrittelemättä");
+      }
       return {
         __typename: "SuunnitteluSopimus",
         ...suunnitteluSopimus,
@@ -133,22 +146,33 @@ class ProjektiAdapterJulkinen {
       return undefined;
     }
 
-    const result = {};
-    for (const kieli in aloitusKuulutusPDFS) {
-      const aloituskuulutusPdf: AloitusKuulutusPDF = {
-        aloituskuulutusPDFPath: fileService.getPublicPathForProjektiFile(oid, aloitusKuulutusPDFS[kieli].aloituskuulutusPDFPath),
-        aloituskuulutusIlmoitusPDFPath: fileService.getPublicPathForProjektiFile(
-          oid,
-          aloitusKuulutusPDFS[kieli].aloituskuulutusIlmoitusPDFPath
-        ),
-      };
-      result[kieli] = aloituskuulutusPdf;
+    if (!aloitusKuulutusPDFS[API.Kieli.SUOMI]) {
+      throw new Error(`adaptJulkaisuPDFPaths: aloitusKuulutusPDFS.${API.Kieli.SUOMI} määrittelemättä`);
     }
-    return { __typename: "AloitusKuulutusPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
+
+    const result: Partial<API.AloitusKuulutusPDFt> = {};
+    for (const kieli in aloitusKuulutusPDFS) {
+      const pdfs = aloitusKuulutusPDFS[kieli as API.Kieli];
+      if (pdfs) {
+        const aloituskuulutusPdf: API.AloitusKuulutusPDF = {
+          __typename: "AloitusKuulutusPDF",
+          aloituskuulutusPDFPath: fileService.getPublicPathForProjektiFile(oid, pdfs.aloituskuulutusPDFPath),
+          aloituskuulutusIlmoitusPDFPath: fileService.getPublicPathForProjektiFile(oid, pdfs.aloituskuulutusIlmoitusPDFPath),
+        };
+        result[kieli as API.Kieli] = aloituskuulutusPdf;
+      }
+    }
+    return { __typename: "AloitusKuulutusPDFt", [API.Kieli.SUOMI]: result[API.Kieli.SUOMI] as API.AloitusKuulutusPDF, ...result };
   }
 
-  private static adaptSuunnitteluVaihe(dbProjekti: DBProjekti): API.SuunnitteluVaiheJulkinen {
+  private static adaptSuunnitteluVaihe(dbProjekti: DBProjekti): API.SuunnitteluVaiheJulkinen | undefined {
+    if (!dbProjekti.suunnitteluVaihe) {
+      return undefined;
+    }
     const { hankkeenKuvaus, arvioSeuraavanVaiheenAlkamisesta, suunnittelunEteneminenJaKesto } = dbProjekti.suunnitteluVaihe;
+    if (!hankkeenKuvaus) {
+      throw new Error("adaptSuunnitteluVaihe: suunnitteluvaihe.hankkeenKuvaus määrittelemättä");
+    }
     return {
       __typename: "SuunnitteluVaiheJulkinen",
       hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
@@ -161,7 +185,10 @@ class ProjektiAdapterJulkinen {
   private static adaptNahtavillaoloVaiheJulkaisu(
     dbProjekti: DBProjekti,
     projektiHenkilot: ProjektiHenkilot
-  ): API.NahtavillaoloVaiheJulkaisuJulkinen {
+  ): API.NahtavillaoloVaiheJulkaisuJulkinen | undefined {
+    if (!dbProjekti.nahtavillaoloVaiheJulkaisut) {
+      return undefined;
+    }
     const julkaisu = pickExactlyOneNahtavillaoloVaiheJulkaisu(dbProjekti.nahtavillaoloVaiheJulkaisut);
     if (julkaisu) {
       const {
@@ -177,13 +204,26 @@ class ProjektiAdapterJulkinen {
       } = julkaisu;
       const paths = new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(julkaisu);
 
-      let apiAineistoNahtavilla: API.Aineisto[];
+      if (!aineistoNahtavilla) {
+        throw new Error("adaptNahtavillaoloVaiheJulkaisu: julkaisu.aineistoNahtavilla määrittelemättä");
+      }
+      if (!kuulutusYhteysHenkilot) {
+        throw new Error("adaptNahtavillaoloVaiheJulkaisu: julkaisu.kuulutusYhteysHenkilot määrittelemättä");
+      }
+      if (!hankkeenKuvaus) {
+        throw new Error("adaptNahtavillaoloVaiheJulkaisu: julkaisu.hankkeenKuvaus määrittelemättä");
+      }
+      if (!kuulutusYhteystiedot) {
+        throw new Error("adaptNahtavillaoloVaiheJulkaisu: julkaisu.kuulutusYhteystiedot määrittelemättä");
+      }
+
+      let apiAineistoNahtavilla: API.Aineisto[] | undefined = undefined;
       if (!isKuulutusNahtavillaVaiheOver(julkaisu)) {
         apiAineistoNahtavilla = adaptAineistotJulkinen(dbProjekti.oid, aineistoNahtavilla, paths);
       }
-      return {
+
+      const julkaisuJulkinen: API.NahtavillaoloVaiheJulkaisuJulkinen = {
         __typename: "NahtavillaoloVaiheJulkaisuJulkinen",
-        aineistoNahtavilla: apiAineistoNahtavilla,
         hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
         kuulutusPaiva,
         kuulutusVaihePaattyyPaiva,
@@ -193,14 +233,18 @@ class ProjektiAdapterJulkinen {
         velho: adaptVelho(velho),
         kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
       };
+      if (apiAineistoNahtavilla) {
+        julkaisuJulkinen.aineistoNahtavilla = apiAineistoNahtavilla;
+      }
+      return julkaisuJulkinen;
     }
   }
 
   private static adaptHyvaksymisPaatosVaihe(
     dbProjekti: DBProjekti,
     projektiHenkilot: ProjektiHenkilot,
-    paatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[]
-  ): API.HyvaksymisPaatosVaiheJulkaisuJulkinen {
+    paatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[] | undefined | null
+  ): API.HyvaksymisPaatosVaiheJulkaisuJulkinen | undefined {
     const julkaisu = findApprovedHyvaksymisPaatosVaihe(paatosVaiheJulkaisut);
     if (julkaisu) {
       const {
@@ -214,20 +258,40 @@ class ProjektiAdapterJulkinen {
         kielitiedot,
         hallintoOikeus,
       } = julkaisu;
+
+      const hyvaksymispaatos = dbProjekti.kasittelynTila?.hyvaksymispaatos;
+
+      if (!hyvaksymispaatos) {
+        throw new Error("adaptHyvaksymisPaatosVaihe: dbProjekti.kasittelynTila?.hyvaksymispaatos määrittelemättä");
+      }
+      if (!hyvaksymispaatos.paatoksenPvm) {
+        throw new Error("adaptHyvaksymisPaatosVaihe: dbProjekti.kasittelynTila?.hyvaksymispaatos.paatoksenPvm määrittelemättä");
+      }
+      if (!hyvaksymispaatos.asianumero) {
+        throw new Error("adaptHyvaksymisPaatosVaihe: dbProjekti.kasittelynTila?.hyvaksymispaatos.asianumero määrittelemättä");
+      }
+      if (!hyvaksymisPaatos) {
+        throw new Error("adaptHyvaksymisPaatosVaihe: julkaisu.hyvaksymisPaatos määrittelemättä");
+      }
+      if (!kuulutusYhteysHenkilot) {
+        throw new Error("adaptHyvaksymisPaatosVaihe: julkaisu.kuulutusYhteysHenkilot määrittelemättä");
+      }
+      if (!kuulutusYhteystiedot) {
+        throw new Error("adaptHyvaksymisPaatosVaihe: julkaisu.kuulutusYhteystiedot määrittelemättä");
+      }
       const paths = new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(julkaisu);
 
-      let apiHyvaksymisPaatosAineisto: API.Aineisto[];
-      let apiAineistoNahtavilla: API.Aineisto[];
+      let apiHyvaksymisPaatosAineisto: API.Aineisto[] | undefined = undefined;
+      let apiAineistoNahtavilla: API.Aineisto[] | undefined = undefined;
       if (!isKuulutusNahtavillaVaiheOver(julkaisu)) {
         apiHyvaksymisPaatosAineisto = adaptAineistotJulkinen(dbProjekti.oid, hyvaksymisPaatos, paths);
         apiAineistoNahtavilla = adaptAineistotJulkinen(dbProjekti.oid, aineistoNahtavilla, paths);
       }
-      const hyvaksymispaatos = dbProjekti.kasittelynTila.hyvaksymispaatos;
       return {
         __typename: "HyvaksymisPaatosVaiheJulkaisuJulkinen",
         hyvaksymisPaatos: apiHyvaksymisPaatosAineisto,
-        hyvaksymisPaatoksenPvm: hyvaksymispaatos?.paatoksenPvm,
-        hyvaksymisPaatoksenAsianumero: hyvaksymispaatos?.asianumero,
+        hyvaksymisPaatoksenPvm: hyvaksymispaatos.paatoksenPvm,
+        hyvaksymisPaatoksenAsianumero: hyvaksymispaatos.asianumero,
         aineistoNahtavilla: apiAineistoNahtavilla,
         kuulutusPaiva,
         kuulutusVaihePaattyyPaiva,
@@ -254,7 +318,7 @@ function pickExactlyOneNahtavillaoloVaiheJulkaisu(
 }
 
 function findApprovedHyvaksymisPaatosVaihe(
-  hyvaksymisPaatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[]
+  hyvaksymisPaatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[] | undefined | null
 ): HyvaksymisPaatosVaiheJulkaisu | undefined {
   const julkaisut = hyvaksymisPaatosVaiheJulkaisut?.filter(isHyvaksymisPaatosVaihePublic);
   if (julkaisut) {
@@ -281,14 +345,17 @@ function isUnsetOrInPast(julkaisuPaiva: dayjs.Dayjs) {
 
 function adaptAineistotJulkinen(
   oid: string,
-  aineistot: Aineisto[] | null,
+  aineistot: Aineisto[] | null | undefined,
   paths: PathTuple | undefined,
   julkaisuPaiva?: Dayjs
 ): API.Aineisto[] | undefined {
-  if (isUnsetOrInPast(julkaisuPaiva) && aineistot && aineistot.length > 0) {
+  if (julkaisuPaiva && isUnsetOrInPast(julkaisuPaiva) && aineistot && aineistot.length > 0) {
     return aineistot
       .filter((aineisto) => aineisto.tila == API.AineistoTila.VALMIS && aineisto.tiedosto)
       .map((aineisto) => {
+        if (!aineisto.tiedosto) {
+          throw new Error("adaptAineistotJulkinen: aineisto.tiedosto määrittelemättä");
+        }
         const { nimi, dokumenttiOid, jarjestys, kategoriaId } = aineisto;
         let publicFilePath = aineisto.tiedosto;
         if (paths) {
@@ -312,31 +379,42 @@ function adaptUsernamesToProjektiHenkiloIds(usernames: Array<string>, projektiHe
   return usernames?.map((username) => projektiHenkilot[username].id);
 }
 
-function adaptVuorovaikutukset(dbProjekti: DBProjekti): API.VuorovaikutusJulkinen[] {
+function adaptVuorovaikutukset(dbProjekti: DBProjekti): API.VuorovaikutusJulkinen[] | undefined {
   const vuorovaikutukset = dbProjekti.vuorovaikutukset;
   if (vuorovaikutukset && vuorovaikutukset.length > 0) {
-    return vuorovaikutukset
-      .map((vuorovaikutus) => {
-        const julkaisuPaiva = parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva);
-        if (julkaisuPaiva.isBefore(dayjs())) {
-          const vuorovaikutusJulkinen: API.VuorovaikutusJulkinen = {
-            __typename: "VuorovaikutusJulkinen",
-            vuorovaikutusNumero: vuorovaikutus.vuorovaikutusNumero,
-            vuorovaikutusJulkaisuPaiva: vuorovaikutus.vuorovaikutusJulkaisuPaiva,
-            kysymyksetJaPalautteetViimeistaan: vuorovaikutus.kysymyksetJaPalautteetViimeistaan,
-            vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet, dbProjekti),
-            videot: adaptLinkkiListByAddingTypename(vuorovaikutus.videot),
-            suunnittelumateriaali: adaptLinkkiByAddingTypename(vuorovaikutus.suunnittelumateriaali),
-            esittelyaineistot: adaptAineistotJulkinen(dbProjekti.oid, vuorovaikutus.esittelyaineistot, undefined, julkaisuPaiva),
-            suunnitelmaluonnokset: adaptAineistotJulkinen(dbProjekti.oid, vuorovaikutus.suunnitelmaluonnokset, undefined, julkaisuPaiva),
-            yhteystiedot: adaptStandardiYhteystiedot(dbProjekti, vuorovaikutus.esitettavatYhteystiedot),
-            vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(dbProjekti.oid, vuorovaikutus.vuorovaikutusPDFt),
-          };
-          return vuorovaikutusJulkinen;
-        }
-        return undefined;
-      })
-      .filter((obj) => obj);
+    const julkaistutVuorovaikutukset: Vuorovaikutus[] = vuorovaikutukset.filter(
+      (v) => v.vuorovaikutusJulkaisuPaiva && parseDate(v.vuorovaikutusJulkaisuPaiva).isBefore(dayjs())
+    );
+
+    return julkaistutVuorovaikutukset.map((vuorovaikutus) => {
+      if (!vuorovaikutus.vuorovaikutusTilaisuudet) {
+        throw new Error("adaptVuorovaikutukset: vuorovaikutus.vuorovaikutusTilaisuudet määrittelmättä");
+      }
+      if (!vuorovaikutus.esitettavatYhteystiedot) {
+        throw new Error("adaptVuorovaikutukset: vuorovaikutus.esitettavatYhteystiedot määrittelmättä");
+      }
+      if (!vuorovaikutus.vuorovaikutusPDFt) {
+        throw new Error("adaptVuorovaikutukset: vuorovaikutus.vuorovaikutusPDFt määrittelmättä");
+      }
+      // tarkistettu jo, että vuorovaikutusJulkaisuPaiva määritelty
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const julkaisuPaiva = parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva);
+      const vuorovaikutusJulkinen: API.VuorovaikutusJulkinen = {
+        __typename: "VuorovaikutusJulkinen",
+        vuorovaikutusNumero: vuorovaikutus.vuorovaikutusNumero,
+        vuorovaikutusJulkaisuPaiva: vuorovaikutus.vuorovaikutusJulkaisuPaiva,
+        kysymyksetJaPalautteetViimeistaan: vuorovaikutus.kysymyksetJaPalautteetViimeistaan,
+        vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet, dbProjekti),
+        videot: adaptLinkkiListByAddingTypename(vuorovaikutus.videot),
+        suunnittelumateriaali: adaptLinkkiByAddingTypename(vuorovaikutus.suunnittelumateriaali),
+        esittelyaineistot: adaptAineistotJulkinen(dbProjekti.oid, vuorovaikutus.esittelyaineistot, undefined, julkaisuPaiva),
+        suunnitelmaluonnokset: adaptAineistotJulkinen(dbProjekti.oid, vuorovaikutus.suunnitelmaluonnokset, undefined, julkaisuPaiva),
+        yhteystiedot: adaptStandardiYhteystiedot(dbProjekti, vuorovaikutus.esitettavatYhteystiedot),
+        vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(dbProjekti.oid, vuorovaikutus.vuorovaikutusPDFt),
+      };
+      return vuorovaikutusJulkinen;
+    });
   }
   return vuorovaikutukset as undefined;
 }
@@ -345,25 +423,27 @@ function adaptVuorovaikutusTilaisuudet(
   vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus>,
   dbProjekti: DBProjekti
 ): API.VuorovaikutusTilaisuusJulkinen[] {
-  if (vuorovaikutusTilaisuudet) {
-    return vuorovaikutusTilaisuudet.map((vuorovaikutusTilaisuus) => {
-      const esitettavatYhteystiedot: StandardiYhteystiedot = vuorovaikutusTilaisuus.esitettavatYhteystiedot;
-      delete vuorovaikutusTilaisuus.esitettavatYhteystiedot;
-      const tilaisuus: API.VuorovaikutusTilaisuusJulkinen = {
-        __typename: "VuorovaikutusTilaisuusJulkinen",
-        ...vuorovaikutusTilaisuus,
-      };
-      if (vuorovaikutusTilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
-        const yhteystiedot: API.Yhteystieto[] = adaptStandardiYhteystiedotLisaamattaProjaria(dbProjekti, esitettavatYhteystiedot);
-        tilaisuus.yhteystiedot = yhteystiedot;
-      }
-      return tilaisuus;
-    });
-  }
-  return vuorovaikutusTilaisuudet as undefined;
+  return vuorovaikutusTilaisuudet.map((vuorovaikutusTilaisuus) => {
+    if (!vuorovaikutusTilaisuus.esitettavatYhteystiedot) {
+      throw new Error("adaptVuorovaikutusTilaisuudet: vuorovaikutusTilaisuus.esitettavatYhteystiedot määrittelmättä");
+    }
+    const esitettavatYhteystiedot: StandardiYhteystiedot = vuorovaikutusTilaisuus.esitettavatYhteystiedot;
+    delete vuorovaikutusTilaisuus.esitettavatYhteystiedot;
+    const tilaisuus: API.VuorovaikutusTilaisuusJulkinen = {
+      __typename: "VuorovaikutusTilaisuusJulkinen",
+      ...vuorovaikutusTilaisuus,
+    };
+    if (vuorovaikutusTilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
+      const yhteystiedot: API.Yhteystieto[] = adaptStandardiYhteystiedotLisaamattaProjaria(dbProjekti, esitettavatYhteystiedot);
+      tilaisuus.yhteystiedot = yhteystiedot;
+    }
+    return tilaisuus;
+  });
 }
 
-function checkIfAloitusKuulutusJulkaisutIsPublic(aloitusKuulutusJulkaisut: API.AloitusKuulutusJulkaisuJulkinen[]): boolean {
+function checkIfAloitusKuulutusJulkaisutIsPublic(
+  aloitusKuulutusJulkaisut: API.AloitusKuulutusJulkaisuJulkinen[] | null | undefined
+): boolean {
   if (!(aloitusKuulutusJulkaisut && aloitusKuulutusJulkaisut.length == 1)) {
     log.info("Projektilla ei ole hyväksyttyä aloituskuulutusta");
     return false;
@@ -405,19 +485,21 @@ function isKuulutusNahtavillaVaiheOver(
   return !nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva || parseDate(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva).isBefore(dayjs());
 }
 
-function adaptVuorovaikutusPDFPaths(oid: string, pdfs: LocalizedMap<VuorovaikutusPDF>): API.VuorovaikutusPDFt | undefined {
-  if (!pdfs) {
-    return undefined;
+function adaptVuorovaikutusPDFPaths(oid: string, vuorovaikutuspdfs: LocalizedMap<VuorovaikutusPDF>): API.VuorovaikutusPDFt {
+  const result: Partial<API.VuorovaikutusPDFt> = {};
+  if (!vuorovaikutuspdfs || !vuorovaikutuspdfs[API.Kieli.SUOMI]) {
+    throw new Error(`adaptVuorovaikutusPDFPaths: vuorovaikutuspdfs.${API.Kieli.SUOMI} määrittelemättä`);
   }
-
-  const result: { [Kieli: string]: API.VuorovaikutusPDF } = {};
-  for (const kieli in pdfs) {
-    result[kieli] = {
-      __typename: "VuorovaikutusPDF",
-      kutsuPDFPath: fileService.getPublicPathForProjektiFile(oid, pdfs[kieli].kutsuPDFPath),
-    };
+  for (const kieli in vuorovaikutuspdfs) {
+    const pdfs = vuorovaikutuspdfs[kieli as API.Kieli];
+    if (pdfs) {
+      result[kieli as API.Kieli] = {
+        __typename: "VuorovaikutusPDF",
+        kutsuPDFPath: fileService.getPublicPathForProjektiFile(oid, pdfs.kutsuPDFPath),
+      };
+    }
   }
-  return { __typename: "VuorovaikutusPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
+  return { __typename: "VuorovaikutusPDFt", [API.Kieli.SUOMI]: result[API.Kieli.SUOMI] as API.VuorovaikutusPDF, ...result };
 }
 
 function removeUndefinedFields(object: API.ProjektiJulkinen): API.ProjektiJulkinen {

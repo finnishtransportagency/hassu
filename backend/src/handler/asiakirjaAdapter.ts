@@ -19,6 +19,9 @@ export class AsiakirjaAdapter {
       return {
         ...includedFields,
         id: createNextAloitusKuulutusJulkaisuID(dbProjekti),
+        // Tässä vaiheessa kuulutusYhteystiedot on oltava olemassa
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         yhteystiedot: adaptStandardiYhteystiedot(dbProjekti, kuulutusYhteystiedot),
         velho: adaptVelho(dbProjekti),
         suunnitteluSopimus: cloneDeep(dbProjekti.suunnitteluSopimus),
@@ -34,6 +37,9 @@ export class AsiakirjaAdapter {
       return {
         ...includedFields,
         velho: adaptVelho(dbProjekti),
+        // dbProjekti.kielitiedot on oltava olemassa
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
       };
     }
@@ -46,6 +52,9 @@ export class AsiakirjaAdapter {
       return {
         ...includedFields,
         velho: adaptVelho(dbProjekti),
+        // dbProjekti.kielitiedot on oltava olemassa
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
       };
     }

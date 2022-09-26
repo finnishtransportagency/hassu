@@ -19,9 +19,13 @@ const pdfTypeKeys: Record<AsiakirjaTyyppi6263, Record<AsiakirjanMuoto, Record<ne
   },
 };
 
-function createFileName(kieli: Kieli, pdfType: string) {
+function createFileName(kieli: Kieli, pdfType: string): string {
   const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
-  return translate("tiedostonimi." + pdfType, language);
+  const kaannos: string = translate("tiedostonimi." + pdfType, language) || "";
+  if (!kaannos) {
+    throw new Error(`Puuttu käännös tiedostonimi.${pdfType}:lle`);
+  }
+  return kaannos;
 }
 
 type AsiakirjaTyyppi6263 = Extract<
@@ -51,6 +55,48 @@ export class Kuulutus6263 extends CommonPdf {
   ) {
     const velho = params.velho;
     const kieli = params.kieli;
+    if (!velho.tyyppi) {
+      throw new Error("velho.tyyppi ei ole määritelty");
+    }
+    if (!velho.kunnat) {
+      throw new Error("velho.kunnat ei ole määritelty");
+    }
+    if (!velho.suunnittelustaVastaavaViranomainen) {
+      throw new Error("velho.suunnittelustaVastaavaViranomainen ei ole määritelty");
+    }
+    if (!hyvaksymisPaatosVaihe) {
+      throw new Error("hyvaksymisPaatosVaihe ei ole määritelty");
+    }
+    if (!hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat) {
+      throw new Error("hyvaksymisPaatosVaihe.ilmoituksenVastanottajat ei ole määritelty");
+    }
+    if (!hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat.kunnat) {
+      throw new Error("hyvaksymisPaatosVaihe.ilmoituksenVastanottajat.kunnat ei ole määritelty");
+    }
+    if (!hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat.viranomaiset) {
+      throw new Error("hyvaksymisPaatosVaihe.ilmoituksenVastanottajat.viranomaiset ei ole määritelty");
+    }
+    if (!hyvaksymisPaatosVaihe.kuulutusPaiva) {
+      throw new Error("hyvaksymisPaatosVaihe.kuulutusPaiva ei ole määritelty");
+    }
+    if (!hyvaksymisPaatosVaihe.hallintoOikeus) {
+      throw new Error("hyvaksymisPaatosVaihe.hallintoOikeus ei ole määritelty");
+    }
+    if (!hyvaksymisPaatosVaihe.kuulutusVaihePaattyyPaiva) {
+      throw new Error("hyvaksymisPaatosVaihe.kuulutusVaihePaattyyPaiva ei ole määritelty");
+    }
+    if (!hyvaksymisPaatosVaihe.kuulutusYhteystiedot) {
+      throw new Error("hyvaksymisPaatosVaihe.kuulutusYhteystiedot ei ole määritelty");
+    }
+    if (!kasittelynTila) {
+      throw new Error("kasittelynTila ei ole määritelty");
+    }
+    if (!kasittelynTila.hyvaksymispaatos) {
+      throw new Error("kasittelynTila.hyvaksymispaatos ei ole määritelty");
+    }
+    if (!kasittelynTila.hyvaksymispaatos.paatoksenPvm) {
+      throw new Error("kasittelynTila.hyvaksymispaatos.paatoksenPvm ei ole määritelty");
+    }
     const kutsuAdapter = new KutsuAdapter({
       kielitiedot: params.kielitiedot,
       velho,
@@ -60,7 +106,7 @@ export class Kuulutus6263 extends CommonPdf {
       kayttoOikeudet: params.kayttoOikeudet,
     });
     super(kieli, kutsuAdapter);
-
+    this.kieli = kieli;
     this.velho = velho;
     this.asiakirjaTyyppi = asiakirjaTyyppi;
     this.asiakirjanMuoto = asiakirjanMuoto;
@@ -69,6 +115,14 @@ export class Kuulutus6263 extends CommonPdf {
 
     this.kutsuAdapter.setTemplateResolver(this);
 
+    if (
+      (asiakirjanMuoto === AsiakirjanMuoto.RATA && velho.tyyppi === ProjektiTyyppi.TIE) ||
+      (asiakirjanMuoto === AsiakirjanMuoto.TIE && velho.tyyppi === ProjektiTyyppi.RATA)
+    ) {
+      throw new Error(`Asiakirjan tyyppi ja projektityyppi ristiriidassa!`);
+    }
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const pdfType = pdfTypeKeys[asiakirjaTyyppi][asiakirjanMuoto]?.[velho.tyyppi];
     const fileName = createFileName(kieli, pdfType);
     if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
@@ -102,6 +156,8 @@ export class Kuulutus6263 extends CommonPdf {
   }
 
   hyvaksymis_pvm(): string {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return formatDate(this.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm);
   }
 
@@ -110,17 +166,19 @@ export class Kuulutus6263 extends CommonPdf {
   }
 
   kuulutuspaiva(): string {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return formatDate(this.hyvaksymisPaatosVaihe.kuulutusPaiva);
   }
 
   kuulutusvaihepaattyypaiva(): string {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return formatDate(this.hyvaksymisPaatosVaihe.kuulutusVaihePaattyyPaiva);
   }
 
   kuulutusosoite(): string {
-    return this.isVaylaTilaaja(this.velho)
-      ? "https://www.vayla.fi/kuulutukset"
-      : "https://www.ely-keskus.fi/kuulutukset";
+    return this.isVaylaTilaaja(this.velho) ? "https://www.vayla.fi/kuulutukset" : "https://www.ely-keskus.fi/kuulutukset";
   }
 
   protected addContent(): void {
@@ -152,6 +210,8 @@ export class Kuulutus6263 extends CommonPdf {
           "P",
           {},
           this.moreInfoElements(
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             this.hyvaksymisPaatosVaihe.kuulutusYhteystiedot,
             undefined,
             this.hyvaksymisPaatosVaihe.kuulutusYhteysHenkilot,
@@ -170,6 +230,8 @@ export class Kuulutus6263 extends CommonPdf {
           "P",
           {},
           this.moreInfoElements(
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             this.hyvaksymisPaatosVaihe.kuulutusYhteystiedot,
             undefined,
             this.hyvaksymisPaatosVaihe.kuulutusYhteysHenkilot,

@@ -7,17 +7,20 @@ export function adaptStandardiYhteystiedotByAddingProjari(
   kayttoOikeudet: DBVaylaUser[],
   yhteystiedot: StandardiYhteystiedot
 ): API.StandardiYhteystiedot {
-  if (yhteystiedot) {
-    const yhteysHenkilot = yhteystiedot.yhteysHenkilot || [];
-    const projari = kayttoOikeudet.find(({ tyyppi }) => tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO);
-    if (!yhteysHenkilot.find((kayttajatunnus) => kayttajatunnus === projari.kayttajatunnus)) {
-      yhteysHenkilot.push(projari.kayttajatunnus);
-    }
-    return {
-      __typename: "StandardiYhteystiedot",
-      yhteysTiedot: adaptYhteystiedotByAddingTypename(yhteystiedot.yhteysTiedot),
-      yhteysHenkilot,
-    };
+  if (!yhteystiedot.yhteysTiedot) {
+    throw new Error("adaptStandardiYhteystiedotByAddingProjari: yhteystiedot.yhteysTiedot on määrittelemättä");
   }
-  return yhteystiedot as undefined;
+  const yhteysHenkilot = yhteystiedot.yhteysHenkilot || [];
+  const projari = kayttoOikeudet.find(({ tyyppi }) => tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO);
+  if (!projari) {
+    throw new Error("Jotain on pahasti pielessä: Projektin kayttiOikeuksista puuttui projektipäällikkö");
+  }
+  if (!yhteysHenkilot.find((kayttajatunnus) => kayttajatunnus === projari.kayttajatunnus)) {
+    yhteysHenkilot.push(projari.kayttajatunnus);
+  }
+  return {
+    __typename: "StandardiYhteystiedot",
+    yhteysTiedot: adaptYhteystiedotByAddingTypename(yhteystiedot.yhteysTiedot),
+    yhteysHenkilot,
+  };
 }

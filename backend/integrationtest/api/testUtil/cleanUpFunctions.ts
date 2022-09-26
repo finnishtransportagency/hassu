@@ -10,14 +10,14 @@ import {
   Vuorovaikutus,
 } from "../../../../common/graphql/apiModel";
 
-export function cleanupGeneratedIdAndTimestampFromFeedbacks(feedbacks?: Palaute[]): Palaute[] {
+export function cleanupGeneratedIdAndTimestampFromFeedbacks(feedbacks?: Palaute[]): Palaute[] | undefined {
   return feedbacks
     ? feedbacks.map((palaute) => {
-      palaute.liite = palaute.liite.replace(palaute.id, "***unittest***");
-      palaute.id = "***unittest***";
-      palaute.vastaanotettu = "***unittest***";
-      return palaute;
-    })
+        palaute.liite = palaute?.liite?.replace(palaute.id, "***unittest***");
+        palaute.id = "***unittest***";
+        palaute.vastaanotettu = "***unittest***";
+        return palaute;
+      })
     : undefined;
 }
 
@@ -39,9 +39,11 @@ export function cleanupNahtavillaoloTimestamps(
 ): NahtavillaoloVaiheJulkaisu | NahtavillaoloVaihe {
   nahtavillaoloVaihe.aineistoNahtavilla?.forEach(aineistoCleanupFunc);
   nahtavillaoloVaihe.lisaAineisto?.forEach(aineistoCleanupFunc);
-  if ((nahtavillaoloVaihe as NahtavillaoloVaihe).lisaAineistoParametrit) {
-    (nahtavillaoloVaihe as NahtavillaoloVaihe).lisaAineistoParametrit.hash = "***unittest***";
-    (nahtavillaoloVaihe as NahtavillaoloVaihe).lisaAineistoParametrit.poistumisPaiva = "***unittest***";
+  const lisaAineistoParametrit = (nahtavillaoloVaihe as NahtavillaoloVaihe).lisaAineistoParametrit;
+  if (lisaAineistoParametrit) {
+    lisaAineistoParametrit.hash = "***unittest***";
+    lisaAineistoParametrit.poistumisPaiva = "***unittest***";
+    (nahtavillaoloVaihe as NahtavillaoloVaihe)["lisaAineistoParametrit"] = lisaAineistoParametrit;
   }
   return nahtavillaoloVaihe;
 }
@@ -63,7 +65,7 @@ export function cleanupHyvaksymisPaatosVaiheTimestamps(
 
 export function cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
-): HyvaksymisPaatosVaiheJulkaisuJulkinen {
+): HyvaksymisPaatosVaiheJulkaisuJulkinen | undefined {
   if (!hyvaksymisPaatosVaihe) {
     return undefined;
   }
@@ -72,11 +74,10 @@ export function cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
   return hyvaksymisPaatosVaihe;
 }
 
-
-export function cleanupGeneratedIds(obj: unknown): unknown {
-  return Object.keys(obj).reduce((cleanObj, key) => {
-    const cleanedUpKey = key.replace(/[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}/g, "***unittest***");
+export function cleanupGeneratedIds(obj: Record<string, any>): unknown {
+  return Object.keys(obj).reduce((cleanObj, key: string) => {
+    const cleanedUpKey: string = key.replace(/[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}/g, "***unittest***");
     cleanObj[cleanedUpKey] = obj[key];
     return cleanObj;
-  }, {});
+  }, {} as Record<string, any>);
 }

@@ -15,31 +15,31 @@ import {
   HyvaksymisPaatosVaiheJulkaisu,
   NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
-  Vuorovaikutus
+  Vuorovaikutus,
 } from "../database/model";
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import * as mime from "mime-types";
+import { AxiosStatic } from "axios";
 
-let axios;
+let axios: AxiosStatic;
 
 async function handleVuorovaikutusAineisto(oid: string, vuorovaikutus: Vuorovaikutus): Promise<boolean> {
   const filePathInProjekti = new ProjektiPaths(oid).vuorovaikutus(vuorovaikutus).aineisto;
-  const hasEsittelyAineistotChanges = await handleAineistot(oid, vuorovaikutus.esittelyaineistot, filePathInProjekti);
-  const hasSuunnitelmaluonnoksetChanges = await handleAineistot(
-    oid,
-    vuorovaikutus.suunnitelmaluonnokset,
-    filePathInProjekti
-  );
+  let hasEsittelyAineistotChanges = false;
+  let hasSuunnitelmaluonnoksetChanges = false;
+  if (vuorovaikutus.esittelyaineistot) {
+    hasEsittelyAineistotChanges = await handleAineistot(oid, vuorovaikutus.esittelyaineistot, filePathInProjekti);
+  }
+  if (vuorovaikutus.suunnitelmaluonnokset) {
+    hasSuunnitelmaluonnoksetChanges = await handleAineistot(oid, vuorovaikutus.suunnitelmaluonnokset, filePathInProjekti);
+  }
   return hasEsittelyAineistotChanges || hasSuunnitelmaluonnoksetChanges;
 }
 
-async function handleNahtavillaoloVaiheAineistot(
-  oid: string,
-  nahtavillaoloVaihe: NahtavillaoloVaihe
-): Promise<boolean> {
+async function handleNahtavillaoloVaiheAineistot(oid: string, nahtavillaoloVaihe: NahtavillaoloVaihe): Promise<boolean> {
   const paths = new ProjektiPaths(oid).nahtavillaoloVaihe(nahtavillaoloVaihe);
-  let aineistoNahtavillaChanges;
-  let lisaAineistoChanges;
+  let aineistoNahtavillaChanges = false;
+  let lisaAineistoChanges = false;
 
   if (nahtavillaoloVaihe.aineistoNahtavilla) {
     aineistoNahtavillaChanges = await handleAineistot(oid, nahtavillaoloVaihe.aineistoNahtavilla, paths);
@@ -51,12 +51,9 @@ async function handleNahtavillaoloVaiheAineistot(
   return aineistoNahtavillaChanges || lisaAineistoChanges;
 }
 
-async function handleHyvaksymisPaatosVaiheAineistot(
-  oid: string,
-  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe
-): Promise<boolean> {
-  let aineistoNahtavillaChanges;
-  let hyvaksymisPaatosChanges;
+async function handleHyvaksymisPaatosVaiheAineistot(oid: string, hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe): Promise<boolean> {
+  let aineistoNahtavillaChanges = false;
+  let hyvaksymisPaatosChanges = false;
   const hyvaksymisPaatosVaihePaths = new ProjektiPaths(oid).hyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe);
 
   if (hyvaksymisPaatosVaihe.aineistoNahtavilla) {
@@ -94,7 +91,11 @@ async function handleAineistot(oid: string, aineistot: Aineisto[] | undefined, p
 async function importAineisto(aineisto: Aineisto, oid: string, filePathInProjekti: string) {
   const sourceURL = await velho.getLinkForDocument(aineisto.dokumenttiOid);
   const axiosResponse = await axios.get(sourceURL);
-  const fileName = parseFilenameFromContentDisposition(axiosResponse.headers["content-disposition"]);
+  const disposition: string = axiosResponse.headers["content-disposition"];
+  const fileName = parseFilenameFromContentDisposition(disposition);
+  if (!fileName) {
+    throw new Error("Tiedoston nimeä ei pystytty päättelemään");
+  }
   const contentType = mime.lookup(fileName);
   aineisto.tiedosto = await fileService.createFileToProjekti({
     oid,
@@ -128,22 +129,14 @@ async function handleNahtavillaoloVaihe(
   nahtavillaoloVaiheJulkaisut: NahtavillaoloVaiheJulkaisu[],
   publishNahtavillaoloWithId: number
 ) {
-  const nahtavillaoloVaiheJulkaisu = nahtavillaoloVaiheJulkaisut
-    ?.filter((julkaisu) => julkaisu.id == publishNahtavillaoloWithId)
-    .pop();
+  const nahtavillaoloVaiheJulkaisu = nahtavillaoloVaiheJulkaisut?.filter((julkaisu) => julkaisu.id == publishNahtavillaoloWithId).pop();
   if (nahtavillaoloVaiheJulkaisu) {
     await aineistoService.synchronizeNahtavillaoloVaiheJulkaisuAineistoToPublic(oid, nahtavillaoloVaiheJulkaisu);
   }
 }
 
-async function handleHyvaksymisPaatosVaihe(
-  oid: string,
-  julkaisut: HyvaksymisPaatosVaiheJulkaisu[],
-  publishJulkaisuWithId: number
-) {
-  const julkaisu = julkaisut
-    ?.filter((j) => j.id == publishJulkaisuWithId)
-    .pop();
+async function handleHyvaksymisPaatosVaihe(oid: string, julkaisut: HyvaksymisPaatosVaiheJulkaisu[], publishJulkaisuWithId: number) {
+  const julkaisu = julkaisut?.filter((j) => j.id == publishJulkaisuWithId).pop();
   if (julkaisu) {
     await aineistoService.synchronizeHyvaksymisPaatosVaiheJulkaisuAineistoToPublic(oid, julkaisu);
   }
@@ -166,7 +159,9 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
         }
 
         if (aineistoEvent.type == ImportAineistoEventType.IMPORT) {
-          await handleVuorovaikutukset(oid, projekti.vuorovaikutukset);
+          if (projekti.vuorovaikutukset) {
+            await handleVuorovaikutukset(oid, projekti.vuorovaikutukset);
+          }
 
           const nahtavillaoloVaihe = projekti.nahtavillaoloVaihe;
           if (nahtavillaoloVaihe) {
@@ -188,22 +183,16 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
           }
         } else if (
           aineistoEvent.type == ImportAineistoEventType.PUBLISH_NAHTAVILLAOLO &&
-          aineistoEvent.publishNahtavillaoloWithId
+          aineistoEvent.publishNahtavillaoloWithId &&
+          projekti.nahtavillaoloVaiheJulkaisut
         ) {
-          await handleNahtavillaoloVaihe(
-            oid,
-            projekti.nahtavillaoloVaiheJulkaisut,
-            aineistoEvent.publishNahtavillaoloWithId
-          );
+          await handleNahtavillaoloVaihe(oid, projekti.nahtavillaoloVaiheJulkaisut, aineistoEvent.publishNahtavillaoloWithId);
         } else if (
           aineistoEvent.type == ImportAineistoEventType.PUBLISH_HYVAKSYMISPAATOS &&
-          aineistoEvent.publishHyvaksymisPaatosWithId
+          aineistoEvent.publishHyvaksymisPaatosWithId &&
+          projekti.hyvaksymisPaatosVaiheJulkaisut
         ) {
-          await handleHyvaksymisPaatosVaihe(
-            oid,
-            projekti.hyvaksymisPaatosVaiheJulkaisut,
-            aineistoEvent.publishHyvaksymisPaatosWithId
-          );
+          await handleHyvaksymisPaatosVaihe(oid, projekti.hyvaksymisPaatosVaiheJulkaisut, aineistoEvent.publishHyvaksymisPaatosWithId);
         }
       }
     } finally {
@@ -214,13 +203,16 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   });
 };
 
-function parseFilenameFromContentDisposition(disposition?: string) {
+function parseFilenameFromContentDisposition(disposition: string): string | null {
   const utf8FilenameRegex = /filename\*=UTF-8''([\w%\-\\.]+)(?:; ?|$)/i;
   const asciiFilenameRegex = /filename=(["']?)(.*?[^\\])\1(?:; ?|$)/i;
 
-  let fileName: string = null;
+  let fileName: string | null = null;
   if (utf8FilenameRegex.test(disposition)) {
-    fileName = decodeURIComponent(utf8FilenameRegex.exec(disposition)[1]);
+    const regexResult = utf8FilenameRegex.exec(disposition);
+    if (regexResult) {
+      fileName = decodeURIComponent(regexResult[1]);
+    }
   } else {
     const matches = asciiFilenameRegex.exec(disposition);
     if (matches != null && matches[2]) {

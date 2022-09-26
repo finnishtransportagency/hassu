@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { describe, it } from "mocha";
 import { handleDynamoDBEvents } from "../../src/projektiSearch/dynamoDBStreamHandler";
 import { ProjektiSearchFixture } from "./projektiSearchFixture";

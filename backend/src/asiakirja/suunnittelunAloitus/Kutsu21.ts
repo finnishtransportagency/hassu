@@ -9,6 +9,9 @@ export class Kutsu21 {
   private readonly kieli: Kieli;
 
   constructor(projekti: DBProjekti, vuorovaikutus: Vuorovaikutus, kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto) {
+    if (!(projekti.velho && projekti.velho.tyyppi && projekti.kielitiedot && projekti.suunnitteluSopimus && projekti.suunnitteluVaihe)) {
+      throw new Error("Projektilta puuttuu tietoja!");
+    }
     this.kieli = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
     this.adapter = new KutsuAdapter({
       oid: projekti.oid,
@@ -28,9 +31,7 @@ export class Kutsu21 {
       "",
 
       this.adapter.tilaajaOrganisaatio +
-        this.adapter.selectText(
-          " laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista "
-        ) +
+        this.adapter.selectText(" laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista ") +
         this.adapter.suunnitelmaa +
         " " +
         this.adapter.nimi +

@@ -13,9 +13,6 @@ const languageBundles = {
 
 export function translate(key: string, kieli: Kieli): string | undefined {
   const bundles = languageBundles[kieli];
-  if (!bundles) {
-    return undefined;
-  }
   for (const bundle of bundles) {
     const translation = get(bundle, key);
     if (translation) {

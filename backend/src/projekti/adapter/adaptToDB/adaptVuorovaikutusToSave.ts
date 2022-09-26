@@ -3,17 +3,30 @@ import * as API from "../../../../../common/graphql/apiModel";
 import { findVuorovaikutusByNumber } from "../../../util/findVuorovaikutusByNumber";
 import { AineistoChangedEvent, ProjektiAdaptationResult, ProjektiEventType, VuorovaikutusPublishedEvent } from "../projektiAdapter";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
-import { adaptAineistotToSave, adaptIlmoituksenVastaanottajatToSave, adaptStandardiYhteystiedot } from "./common";
+import { adaptAineistotToSave, adaptIlmoituksenVastaanottajatToSave, adaptStandardiYhteystiedotToSave } from "./common";
 
 export function adaptVuorovaikutusToSave(
   projekti: DBProjekti,
-  projektiAdaptationResult: Partial<ProjektiAdaptationResult>,
+  projektiAdaptationResult: ProjektiAdaptationResult,
   vuorovaikutusInput?: API.VuorovaikutusInput | null
-): Vuorovaikutus[] {
+): Vuorovaikutus[] | undefined {
   if (vuorovaikutusInput) {
     // Prevent saving vuorovaikutus if suunnitteluvaihe is not yet saved
     if (!projekti.suunnitteluVaihe) {
       throw new IllegalArgumentError("Vuorovaikutusta ei voi lisätä ennen kuin suunnitteluvaihe on tallennettu");
+    }
+
+    if (!vuorovaikutusInput.vuorovaikutusTilaisuudet) {
+      throw new IllegalArgumentError("Vuorovaikutuksella pitää olla ainakin yksi vuorovaikutustilaisuus");
+    }
+    if (!vuorovaikutusInput.ilmoituksenVastaanottajat) {
+      throw new IllegalArgumentError("Vuorovaikutuksella on oltava ilmoituksenVastaanottajat!");
+    }
+    if (!vuorovaikutusInput.esittelyaineistot) {
+      throw new IllegalArgumentError("Vuorovaikutuksella on oltava esittelyaineistot!");
+    }
+    if (!vuorovaikutusInput.suunnitelmaluonnokset) {
+      throw new IllegalArgumentError("Vuorovaikutuksella on oltava suunnitelmaluonnokset!");
     }
 
     const dbVuorovaikutus = findVuorovaikutusByNumber(projekti, vuorovaikutusInput.vuorovaikutusNumero);
@@ -32,11 +45,15 @@ export function adaptVuorovaikutusToSave(
     const vuorovaikutusTilaisuudet = adaptVuorovaikutusTilaisuudetToSave(vuorovaikutusInput.vuorovaikutusTilaisuudet);
     // Vuorovaikutus must have at least one vuorovaikutustilaisuus
     if (!vuorovaikutusTilaisuudet) {
-      throw new IllegalArgumentError("Vuorovaikutuksella pitää olla ainakin yksi vuorovaikutustilaisuus");
+      throw new IllegalArgumentError("Vuorovaikutuksella pitää olla ainakin yksi vuorovaikutustilaisuus!");
+    }
+    if (!vuorovaikutusInput.esitettavatYhteystiedot) {
+      throw new IllegalArgumentError("Vuorovaikutuksella pitää olla esitettavatYhteystiedot!");
     }
 
     const vuorovaikutusToSave: Vuorovaikutus = {
-      ...vuorovaikutusInput,
+      vuorovaikutusNumero: vuorovaikutusInput.vuorovaikutusNumero,
+      esitettavatYhteystiedot: adaptStandardiYhteystiedotToSave(vuorovaikutusInput.esitettavatYhteystiedot),
       vuorovaikutusTilaisuudet,
       // Jos vuorovaikutuksen ilmoituksella ei tarvitse olla viranomaisvastaanottajia, muokkaa adaptIlmoituksenVastaanottajatToSavea
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(vuorovaikutusInput.ilmoituksenVastaanottajat),
@@ -53,8 +70,8 @@ export function adaptVuorovaikutusToSave(
 
 function checkIfAineistoJulkinenChanged(
   vuorovaikutusToSave: Vuorovaikutus,
-  dbVuorovaikutus: Vuorovaikutus,
-  projektiAdaptationResult: Partial<ProjektiAdaptationResult>
+  dbVuorovaikutus: Vuorovaikutus | undefined | null,
+  projektiAdaptationResult: ProjektiAdaptationResult
 ) {
   function vuorovaikutusPublished() {
     return vuorovaikutusToSave.julkinen;
@@ -87,15 +104,50 @@ function checkIfAineistoJulkinenChanged(
   }
 }
 
-function adaptVuorovaikutusTilaisuudetToSave(
-  vuorovaikutusTilaisuudet: Array<API.VuorovaikutusTilaisuusInput>
-): VuorovaikutusTilaisuus[] | undefined {
-  return vuorovaikutusTilaisuudet?.length > 0
-    ? vuorovaikutusTilaisuudet.map((vv) => {
-        if (vv.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
-          vv.esitettavatYhteystiedot = adaptStandardiYhteystiedot(vv.esitettavatYhteystiedot);
-        }
-        return vv;
-      })
-    : undefined;
+function adaptVuorovaikutusTilaisuudetToSave(vuorovaikutusTilaisuudet: Array<API.VuorovaikutusTilaisuusInput>): VuorovaikutusTilaisuus[] {
+  return vuorovaikutusTilaisuudet.map((vv) => {
+    const vvToSave: VuorovaikutusTilaisuus = {
+      paivamaara: vv.paivamaara,
+      alkamisAika: vv.alkamisAika,
+      paattymisAika: vv.paattymisAika,
+      tyyppi: vv.tyyppi,
+    };
+    if (vv.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
+      if (!vv.esitettavatYhteystiedot) {
+        throw new IllegalArgumentError("Soittoajalla on oltava esitettavatYhteystiedot!");
+      }
+      vvToSave.esitettavatYhteystiedot = adaptStandardiYhteystiedotToSave(vv.esitettavatYhteystiedot, true);
+    } else if (vv.tyyppi === API.VuorovaikutusTilaisuusTyyppi.PAIKALLA) {
+      if (!vv.osoite) {
+        throw new IllegalArgumentError("Fyysisellä tilaisuudella on oltava osoite!");
+      }
+      if (!vv.postinumero) {
+        throw new IllegalArgumentError("Fyysisellä tilaisuudella on oltava postinumero!");
+      }
+      vvToSave.osoite = vv.osoite;
+      vvToSave.postinumero = vv.postinumero;
+      if (vv.Saapumisohjeet) {
+        vvToSave.Saapumisohjeet = vv.Saapumisohjeet;
+      }
+      if (vv.paikka) {
+        vvToSave.paikka = vv.paikka;
+      }
+      if (vv.postitoimipaikka) {
+        vvToSave.postitoimipaikka = vv.postitoimipaikka;
+      }
+    } else {
+      if (!vv.linkki) {
+        throw new IllegalArgumentError("Online-tilaisuudella on oltava linkki!");
+      }
+      if (!vv.kaytettavaPalvelu) {
+        throw new IllegalArgumentError("Online-tilaisuudella on oltava kaytettavaPalvelu!");
+      }
+      vvToSave.linkki = vv.linkki;
+      vvToSave.kaytettavaPalvelu = vv.kaytettavaPalvelu;
+    }
+    if (vv.nimi) {
+      vvToSave.nimi = vv.nimi;
+    }
+    return vvToSave;
+  });
 }

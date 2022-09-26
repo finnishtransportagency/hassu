@@ -1,13 +1,7 @@
 import { AloitusKuulutusTila, AsiakirjaTyyppi, Kieli, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
-import {
-  AloitusKuulutus,
-  AloitusKuulutusJulkaisu,
-  AloitusKuulutusPDF,
-  DBProjekti,
-  LocalizedMap,
-} from "../../database/model";
+import { AloitusKuulutus, AloitusKuulutusJulkaisu, AloitusKuulutusPDF, DBProjekti, LocalizedMap, Kielitiedot } from "../../database/model";
 import { asiakirjaService } from "../../asiakirja/asiakirjaService";
 import { fileService } from "../../files/fileService";
 import { parseDate } from "../../util/dateUtil";
@@ -19,6 +13,9 @@ async function createAloituskuulutusPDF(
   projekti: DBProjekti,
   kieli: Kieli
 ) {
+  if (!julkaisuWaitingForApproval.kuulutusPaiva) {
+    throw new Error("julkaisuWaitingForApproval.kuulutusPaiva ei määritelty");
+  }
   const pdf = await asiakirjaService.createAloituskuulutusPdf({
     asiakirjaTyyppi,
     aloitusKuulutusJulkaisu: julkaisuWaitingForApproval,
@@ -71,13 +68,17 @@ class AloitusKuulutusTilaManager extends TilaManager {
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {
-    const julkaisuWaitingForApproval = asiakirjaAdapter.findAloitusKuulutusWaitingForApproval(projekti);
+    const julkaisuWaitingForApproval: AloitusKuulutusJulkaisu | undefined =
+      asiakirjaAdapter.findAloitusKuulutusWaitingForApproval(projekti);
     if (!julkaisuWaitingForApproval) {
       throw new Error("Ei aloituskuulutusta odottamassa hyväksyntää");
     }
 
     const aloitusKuulutus = getAloitusKuulutus(projekti);
     aloitusKuulutus.palautusSyy = syy;
+    // aloituskuulutusPDF:t on määritelty kyllä tässä kohtaa
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     await this.deletePDFs(projekti.oid, julkaisuWaitingForApproval.aloituskuulutusPDFt);
     await projektiDatabase.saveProjekti({ oid: projekti.oid, aloitusKuulutus });
     await projektiDatabase.deleteAloitusKuulutusJulkaisu(projekti, julkaisuWaitingForApproval.id);
@@ -95,30 +96,23 @@ class AloitusKuulutusTilaManager extends TilaManager {
 
     const logoFilePath = projekti.suunnitteluSopimus?.logo;
     if (logoFilePath) {
-      await fileService.publishProjektiFile(
-        projekti.oid,
-        logoFilePath,
-        logoFilePath,
-        parseDate(julkaisuWaitingForApproval.kuulutusPaiva)
-      );
+      // kuulutusPaiva on oltava tässä kohtaa
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      await fileService.publishProjektiFile(projekti.oid, logoFilePath, logoFilePath, parseDate(julkaisuWaitingForApproval.kuulutusPaiva));
     }
 
     await projektiDatabase.updateAloitusKuulutusJulkaisu(projekti, julkaisuWaitingForApproval);
   }
 
   private async generatePDFs(projekti: DBProjekti, julkaisuWaitingForApproval: AloitusKuulutusJulkaisu) {
-    const kielitiedot = julkaisuWaitingForApproval.kielitiedot;
+    // kielitiedot on oltava
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const kielitiedot: Kielitiedot = julkaisuWaitingForApproval.kielitiedot;
 
-    async function generatePDFsForLanguage(
-      kieli: Kieli,
-      julkaisu: AloitusKuulutusJulkaisu
-    ): Promise<AloitusKuulutusPDF> {
-      const aloituskuulutusPDFPath = await createAloituskuulutusPDF(
-        AsiakirjaTyyppi.ALOITUSKUULUTUS,
-        julkaisu,
-        projekti,
-        kieli
-      );
+    async function generatePDFsForLanguage(kieli: Kieli, julkaisu: AloitusKuulutusJulkaisu): Promise<AloitusKuulutusPDF> {
+      const aloituskuulutusPDFPath = await createAloituskuulutusPDF(AsiakirjaTyyppi.ALOITUSKUULUTUS, julkaisu, projekti, kieli);
       const aloituskuulutusIlmoitusPDFPath = await createAloituskuulutusPDF(
         AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA,
         julkaisu,
@@ -144,6 +138,9 @@ class AloitusKuulutusTilaManager extends TilaManager {
 
   private async deletePDFs(oid: string, localizedPDFs: LocalizedMap<AloitusKuulutusPDF>) {
     for (const language in localizedPDFs) {
+      // localizedPDFs ei ole null, ja language on tyyppiä Kieli, joka on localizedPDFs:n avain
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       const pdfs: AloitusKuulutusPDF = localizedPDFs[language];
       await fileService.deleteYllapitoFileFromProjekti({
         oid,

@@ -7,7 +7,8 @@ const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
   RUOTSI: "TILLKÄNNAGIVANDE OM TRAFIKLEDSVERKETS KUNGÖRELSE",
 };
 
-const fileNameKeys: Record<IlmoitusAsiakirjaTyyppi, Partial<Record<ProjektiTyyppi, string>>> = {
+type PartialProjektiTyyppi = ProjektiTyyppi.RATA | ProjektiTyyppi.YLEINEN;
+const fileNameKeys: Record<IlmoitusAsiakirjaTyyppi, Record<PartialProjektiTyyppi, string>> = {
   ILMOITUS_KUULUTUKSESTA: {
     [ProjektiTyyppi.RATA]: "12R_aloituskuulutus",
     [ProjektiTyyppi.YLEINEN]: "12YS_aloituskuulutus",
@@ -31,8 +32,9 @@ export class Ilmoitus12R extends SuunnittelunAloitusPdf {
       params,
       headers[params.kieli == Kieli.SAAME ? Kieli.SUOMI : params.kieli],
       AsiakirjanMuoto.RATA,
-      fileNameKeys[asiakirjaTyyppi]?.[params.velho.tyyppi]
+      fileNameKeys[asiakirjaTyyppi][params.velho.tyyppi === ProjektiTyyppi.RATA ? ProjektiTyyppi.RATA : ProjektiTyyppi.YLEINEN]
     );
+
     this.asiakirjaTyyppi = asiakirjaTyyppi;
 
     this.kutsuAdapter.setTemplateResolver(this);
@@ -77,11 +79,7 @@ export class Ilmoitus12R extends SuunnittelunAloitusPdf {
         },
       ]),
       this.lisatietojaAntavatParagraph(),
-      this.doc.struct(
-        "P",
-        {},
-        this.moreInfoElements(this.params.yhteystiedot, this.params.suunnitteluSopimus, this.params.yhteysHenkilot)
-      ),
+      this.doc.struct("P", {}, this.moreInfoElements(this.params.yhteystiedot, this.params.suunnitteluSopimus, this.params.yhteysHenkilot)),
     ];
   }
 }

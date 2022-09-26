@@ -66,7 +66,8 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
   const hyvaksymisMenettelyssa = new (class extends StatusHandler<API.Projekti> {
     handle(p: API.Projekti) {
       const nahtavillaoloVaihe = findJulkaisuWithTila(p.nahtavillaoloVaiheJulkaisut, NahtavillaoloVaiheTila.HYVAKSYTTY);
-      const nahtavillaoloKuulutusPaattyyInThePast = isDateInThePast(nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva);
+      const nahtavillaoloKuulutusPaattyyInThePast =
+        nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva && isDateInThePast(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva);
 
       if (nahtavillaoloKuulutusPaattyyInThePast) {
         p.status = API.Status.HYVAKSYMISMENETTELYSSA;
@@ -81,7 +82,8 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
       const hasHyvaksymisPaatos = hyvaksymisPaatos?.asianumero && hyvaksymisPaatos?.paatoksenPvm;
 
       const nahtavillaoloVaihe = findJulkaisuWithTila(p.nahtavillaoloVaiheJulkaisut, NahtavillaoloVaiheTila.HYVAKSYTTY);
-      const nahtavillaoloKuulutusPaattyyInThePast = isDateInThePast(nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva);
+      const nahtavillaoloKuulutusPaattyyInThePast =
+        nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva && isDateInThePast(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva);
 
       if (hasHyvaksymisPaatos && nahtavillaoloKuulutusPaattyyInThePast) {
         p.status = API.Status.HYVAKSYMISMENETTELYSSA;
@@ -94,7 +96,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
    * Jos hyväksymispäätöskuulutuksen päättymispäivästä on kulunut vuosi, niin tila on epäaktiivinen
    */
   const epaAktiivinen1 = new (class extends AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<API.Projekti> {
-    getPaatosVaihe(p: API.Projekti): { kuulutusVaihePaattyyPaiva?: string | null } {
+    getPaatosVaihe(p: API.Projekti): { kuulutusVaihePaattyyPaiva?: string | null } | null | undefined {
       return findJulkaisutWithTila(p.hyvaksymisPaatosVaiheJulkaisut, HyvaksymisPaatosVaiheTila.HYVAKSYTTY)?.pop();
     }
   })(true);
@@ -116,7 +118,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
    * Jos jatkopäätöksen kuulutuksen päättymispäivästä on 6kk, niin tila on epäaktiivinen
    */
   const epaAktiivinen2 = new (class extends AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<API.Projekti> {
-    getPaatosVaihe(p: API.Projekti): { kuulutusVaihePaattyyPaiva?: string | null } {
+    getPaatosVaihe(p: API.Projekti): { kuulutusVaihePaattyyPaiva?: string | null } | null | undefined {
       return findJulkaisutWithTila(p.jatkoPaatos1VaiheJulkaisut, HyvaksymisPaatosVaiheTila.HYVAKSYTTY)?.pop();
     }
   })(false);
@@ -138,8 +140,8 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
    * Jos toisen jatkopäätöksen kuulutuksen päättymispäivästä on 6kk, niin tila on epäaktiivinen
    */
   const epaAktiivinen3 = new (class extends AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<API.Projekti> {
-    getPaatosVaihe(p: API.Projekti): { kuulutusVaihePaattyyPaiva?: string | null } {
-      return findJulkaisutWithTila(p.jatkoPaatos2VaiheJulkaisut, HyvaksymisPaatosVaiheTila.HYVAKSYTTY).pop();
+    getPaatosVaihe(p: API.Projekti): { kuulutusVaihePaattyyPaiva?: string | null } | null | undefined {
+      return findJulkaisutWithTila(p.jatkoPaatos2VaiheJulkaisut, HyvaksymisPaatosVaiheTila.HYVAKSYTTY)?.pop();
     }
   })(false);
 

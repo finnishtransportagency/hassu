@@ -28,6 +28,7 @@ import { emailClient } from "../src/email/email";
 import AWSMock from "aws-sdk-mock";
 import AWS from "aws-sdk";
 import { findJulkaisuWithTila } from "../src/projekti/projektiUtil";
+import { Readable } from "stream";
 
 const { expect, assert } = require("chai");
 
@@ -48,7 +49,9 @@ describe("apiHandler", () => {
     awsStub.resolves({});
     AWSMock.mock("S3", "putObject", awsStub);
     AWSMock.mock("S3", "copyObject", awsStub);
-    AWSMock.mock("S3", "getObject", awsStub);
+    AWSMock.mock("S3", "getObject", {
+      Body: new Readable(),
+    });
 
     const headObjectStub = sinon.stub();
     AWSMock.mock("S3", "headObject", headObjectStub);
@@ -177,7 +180,17 @@ describe("apiHandler", () => {
           updateAloitusKuulutusJulkaisuStub.callsFake((_oid: string, julkaisu: AloitusKuulutusJulkaisu) => {
             if (mockedDatabaseProjekti) {
               // Just a simple mock to support only one julkaisu
-              mockedDatabaseProjekti.aloitusKuulutusJulkaisut = [julkaisu];
+              mockedDatabaseProjekti.aloitusKuulutusJulkaisut = [
+                {
+                  ...julkaisu,
+                  aloituskuulutusPDFt: {
+                    SUOMI: {
+                      aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+                      aloituskuulutusPDFPath: "/aloituskuulutus/T412 Aloituskuulutus.pdf",
+                    },
+                  },
+                },
+              ];
             }
           });
           deleteAloitusKuulutusJulkaisuStub.callsFake(() => {
@@ -222,6 +235,7 @@ describe("apiHandler", () => {
 
         // Load projekti and examine its permissions
         mockLataaProjektiFromVelho();
+
         let projekti = await api.lataaProjekti(fixture.PROJEKTI1_OID);
         expect(["Initial state with projektipaallikko and omistaja", projekti.kayttoOikeudet]).toMatchSnapshot();
 
@@ -278,12 +292,14 @@ describe("apiHandler", () => {
               puhelinnumero: "11",
             },
             {
+
               kayttajatunnus: "A000111",
               puhelinnumero: "123456789",
             },
             {
               kayttajatunnus: "A2",
               puhelinnumero: "123456789",
+
             },
           ],
           suunnitteluSopimus: {

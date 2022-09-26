@@ -27,6 +27,9 @@ async function createPDF(
   projekti: DBProjekti,
   kieli: Kieli
 ) {
+  if (!julkaisu.kuulutusPaiva) {
+    throw new Error("julkaisulta puuttuu kuulutuspäivä");
+  }
   const pdf = await asiakirjaService.createHyvaksymisPaatosKuulutusPdf({
     asiakirjaTyyppi,
     projekti,
@@ -95,11 +98,14 @@ class HyvaksymisPaatosVaiheTilaManager extends TilaManager {
     await aineistoService.publishHyvaksymisPaatosVaihe(projekti.oid, julkaisu.id);
   }
 
-  private getNextAjastettuTarkistus(julkaisu: HyvaksymisPaatosVaiheJulkaisu, isHyvaksymisPaatos) {
-    if (isHyvaksymisPaatos) {
-      return parseAndAddDate(julkaisu.kuulutusVaihePaattyyPaiva, HYVAKSYMISPAATOS_DURATION_VALUE, HYVAKSYMISPAATOS_DURATION_UNIT).format();
+  private getNextAjastettuTarkistus(julkaisu: HyvaksymisPaatosVaiheJulkaisu, isHyvaksymisPaatos: boolean) {
+    if (!julkaisu.kuulutusVaihePaattyyPaiva) {
+      throw new Error("julkaisulta.kuulutusVaihePaattyyPaiva puuttuu");
     }
-    return parseAndAddDate(julkaisu.kuulutusVaihePaattyyPaiva, JATKOPAATOS_DURATION_VALUE, JATKOPAATOS_DURATION_UNIT).format();
+    if (isHyvaksymisPaatos) {
+      return parseAndAddDate(julkaisu.kuulutusVaihePaattyyPaiva, HYVAKSYMISPAATOS_DURATION_VALUE, HYVAKSYMISPAATOS_DURATION_UNIT)?.format();
+    }
+    return parseAndAddDate(julkaisu.kuulutusVaihePaattyyPaiva, JATKOPAATOS_DURATION_VALUE, JATKOPAATOS_DURATION_UNIT)?.format();
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {
@@ -110,8 +116,10 @@ class HyvaksymisPaatosVaiheTilaManager extends TilaManager {
 
     const hyvaksymisPaatosVaihe = getHyvaksymisPaatosVaihe(projekti);
     hyvaksymisPaatosVaihe.palautusSyy = syy;
-
-    await this.deletePDFs(projekti.oid, hyvaksymisPaatosVaihe.hyvaksymisPaatosVaihePDFt);
+    if (!julkaisu.hyvaksymisPaatosVaihePDFt) {
+      throw new Error("julkaisu.hyvaksymisPaatosVaihePDFt puuttuu");
+    }
+    await this.deletePDFs(projekti.oid, julkaisu.hyvaksymisPaatosVaihePDFt);
 
     await projektiDatabase.saveProjekti({ oid: projekti.oid, hyvaksymisPaatosVaihe });
     await projektiDatabase.deleteHyvaksymisPaatosVaiheJulkaisu(projekti, julkaisu.id);
@@ -145,7 +153,7 @@ class HyvaksymisPaatosVaiheTilaManager extends TilaManager {
       };
     }
 
-    const pdfs = {};
+    const pdfs: LocalizedMap<HyvaksymisPaatosVaihePDF> = {};
     pdfs[kielitiedot.ensisijainenKieli] = await generatePDFsForLanguage(kielitiedot.ensisijainenKieli, julkaisuWaitingForApproval);
 
     if (kielitiedot.toissijainenKieli) {
@@ -156,6 +164,9 @@ class HyvaksymisPaatosVaiheTilaManager extends TilaManager {
 
   private async deletePDFs(oid: string, pdft: LocalizedMap<HyvaksymisPaatosVaihePDF>) {
     for (const language in pdft) {
+      // pdft ei ole null, ja language on tyyppiä Kieli, joka on pft:n avain
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       const pdfs: HyvaksymisPaatosVaihePDF = pdft[language];
       for (const path of [
         pdfs.hyvaksymisKuulutusPDFPath,

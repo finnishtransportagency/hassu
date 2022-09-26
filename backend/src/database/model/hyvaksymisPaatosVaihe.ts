@@ -12,7 +12,6 @@ export type HyvaksymisPaatosVaihe = {
   kuulutusYhteystiedot?: Array<Yhteystieto> | null;
   kuulutusYhteysHenkilot?: Array<string> | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
-  hyvaksymisPaatosVaihePDFt?: LocalizedMap<HyvaksymisPaatosVaihePDF>;
   palautusSyy?: string | null;
 };
 

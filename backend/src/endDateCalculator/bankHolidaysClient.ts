@@ -3,7 +3,7 @@ import { s3Cache } from "../cache/s3Cache";
 import { log } from "../logger";
 import { BankHolidays } from "./bankHolidays";
 import dayjs from "dayjs";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { dateToString } from "../util/dateUtil";
 
 export const BANK_HOLIDAYS_CACHE_KEY = "bankHolidays.json";
@@ -47,14 +47,11 @@ async function fetchBankHolidaysFromAPI() {
         params: { pageSize: 100, year },
         method: "GET",
       });
-      dates.push(
-        ...response.data.specialDates.map((specialDate: SpecialDate) =>
-          dateToString(dayjs(specialDate.date, "DD.MM.YYYY"))
-        )
-      );
+      dates.push(...response.data.specialDates.map((specialDate: SpecialDate) => dateToString(dayjs(specialDate.date, "DD.MM.YYYY"))));
     } catch (e) {
-      if (e.isAxiosError) {
-        log.error(e.status + " " + e.statusText, { data: e.response?.data });
+      const error = e as AxiosError;
+      if (error.isAxiosError) {
+        log.error(error.response?.status + " " + error.response?.statusText, { data: error.response?.data });
       }
       throw e;
     }

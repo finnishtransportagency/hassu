@@ -41,7 +41,7 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
   const hyvaksymisMenettelyssa = new (class extends StatusHandler<API.ProjektiJulkinen> {
     handle(p: API.ProjektiJulkinen) {
       const nahtavillaoloVaihe = projekti.nahtavillaoloVaihe;
-      if (isDateInThePast(nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva)) {
+      if (nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva && isDateInThePast(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva)) {
         projekti.status = API.Status.HYVAKSYMISMENETTELYSSA;
         super.handle(p); // Continue evaluating next rules
       }
@@ -51,7 +51,7 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
   const hyvaksytty = new (class extends StatusHandler<API.ProjektiJulkinen> {
     handle(p: API.ProjektiJulkinen) {
       const hyvaksymisPaatosVaihe = projekti.hyvaksymisPaatosVaihe;
-      if (isDateInThePast(hyvaksymisPaatosVaihe?.kuulutusPaiva)) {
+      if (hyvaksymisPaatosVaihe?.kuulutusPaiva && isDateInThePast(hyvaksymisPaatosVaihe.kuulutusPaiva)) {
         projekti.status = API.Status.HYVAKSYTTY;
         super.handle(p); // Continue evaluating next rules
       }
@@ -59,7 +59,7 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
   })();
 
   const epaAktiivinen1 = new (class extends AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<API.ProjektiJulkinen> {
-    getPaatosVaihe(p: API.ProjektiJulkinen): { kuulutusVaihePaattyyPaiva?: string | null } {
+    getPaatosVaihe(p: API.ProjektiJulkinen): { kuulutusVaihePaattyyPaiva?: string | null } | null | undefined {
       return p.hyvaksymisPaatosVaihe;
     }
   })(true);

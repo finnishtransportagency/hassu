@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 /* tslint:disable:only-arrow-functions no-unused-expression */
 import { describe, it } from "mocha";
 import { FixtureName, MOCKED_TIMESTAMP, useProjektiTestFixture } from "./testFixtureRecorder";

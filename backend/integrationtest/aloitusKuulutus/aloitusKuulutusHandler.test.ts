@@ -17,8 +17,8 @@ const { expect } = require("chai");
 async function takeSnapshot(oid: string) {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   expect({
-    aloitusKuulutus: dbProjekti.aloitusKuulutus,
-    aloitusKuulutusJulkaisut: dbProjekti.aloitusKuulutusJulkaisut,
+    aloitusKuulutus: dbProjekti?.aloitusKuulutus,
+    aloitusKuulutusJulkaisut: dbProjekti?.aloitusKuulutusJulkaisut,
   }).toMatchSnapshot();
 }
 

@@ -11,8 +11,8 @@ export function adaptAineistot(aineistot?: Aineisto[] | null, julkaisuPaiva?: Da
       .filter((aineisto) => aineisto.tila != API.AineistoTila.ODOTTAA_POISTOA)
       .map((aineisto) => ({
         __typename: "Aineisto",
-        dokumenttiOid: aineisto.dokumenttiOid,
         ...aineisto,
+        dokumenttiOid: aineisto.dokumenttiOid,
       }));
   }
   return undefined;

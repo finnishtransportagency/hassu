@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* tslint:disable:no-unused-expression */
 import { describe, it } from "mocha";
 import { ProjektiFixture } from "../../test/fixture/projektiFixture";

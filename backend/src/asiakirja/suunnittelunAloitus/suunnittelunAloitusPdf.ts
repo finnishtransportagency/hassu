@@ -32,6 +32,12 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf {
   protected params: IlmoitusParams;
 
   constructor(params: IlmoitusParams, header: string, asiakirjanMuoto: AsiakirjanMuoto, fileNameKey: string) {
+    if (!params.velho.tyyppi) {
+      throw new Error("params.velho.tyyppi puuttuu");
+    }
+    if (!params.hankkeenKuvaus) {
+      throw new Error("params.hankkeenKuvaus puuttuu");
+    }
     const kutsuAdapter = new KutsuAdapter({
       velho: params.velho,
       asiakirjanMuoto,
@@ -41,7 +47,11 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf {
       kayttoOikeudet: params.kayttoOikeudet,
     });
     super(params.kieli, kutsuAdapter);
-    super.setupPDF(header, kutsuAdapter.nimi, translate("tiedostonimi." + fileNameKey, params.kieli));
+    const kaannos: string = translate("tiedostonimi." + fileNameKey, params.kieli) || "";
+    if (!kaannos) {
+      throw new Error(`Käännos puutuu tiedostonimi.${fileNameKey}:lle`);
+    }
+    super.setupPDF(header, kutsuAdapter.nimi, kaannos);
     this.header = header;
     this.params = params;
   }
@@ -85,6 +95,8 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf {
   }
 
   protected hankkeenKuvaus(): PDFStructureElement {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return this.localizedParagraphFromMap(this.params.hankkeenKuvaus);
   }
 }
