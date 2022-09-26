@@ -38,7 +38,7 @@ export default function Sivutus({ sivuMaara, nykyinenSivu }: Props) {
   return (
     <>
       {desktop && ( // näytä sivunumerolista vain desktopissa
-        <SivunumeroLista>
+        <SivunumeroLista id="sivunumerolista">
           {t("common:sivut")}
           {": "}
           {Array.from({ length: sivuMaara }, (_, i) => i + 1).map((sivuNumero) =>
@@ -53,7 +53,7 @@ export default function Sivutus({ sivuMaara, nykyinenSivu }: Props) {
         </SivunumeroLista>
       )}
       {desktop ? ( // desktopissa ja mobiilissa näkyy erilailla tyylitellyt napit
-        <NavigointiNapit>
+        <NavigointiNapit id="navigointinapit_desktop">
           {nykyinenSivu === 1 ? ( // epäaktiivinen nappi ei ole linkki vaan div
             <NavigointiNappiDesktopDisabled>{t("common:edellinen")}</NavigointiNappiDesktopDisabled>
           ) : (
@@ -70,7 +70,7 @@ export default function Sivutus({ sivuMaara, nykyinenSivu }: Props) {
           )}
         </NavigointiNapit>
       ) : (
-        <NavigointiNapitMobiili>
+        <NavigointiNapitMobiili id="navigointinapit_mobiili">
           {nykyinenSivu === 1 ? ( // epäaktiivinen nappi ei ole linkki vaan div
             <NavigointiNappiMobiiliDisabled>{t("common:edellinen")}</NavigointiNappiMobiiliDisabled>
           ) : (

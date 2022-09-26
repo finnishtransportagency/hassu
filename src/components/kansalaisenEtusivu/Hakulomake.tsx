@@ -245,7 +245,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
       )}
       {hakutulostenMaara != undefined && (
         <HakutulosInfo className={desktop ? "" : "mobiili"}>
-          <h2>
+          <h2 id="hakutulosmaara">
             <Trans i18nKey="etusivu:loytyi-n-suunnitelmaa" values={{ lkm: hakutulostenMaara }} />
           </h2>
           <button id="nollaa_hakuehdot_button" onClick={nollaaHakuehdot}>
