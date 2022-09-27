@@ -6,8 +6,6 @@ import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
 import { useForm, UseFormProps } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
-import TextInput from "@components/form/TextInput";
-import DatePicker from "@components/form/DatePicker";
 import HassuGrid from "@components/HassuGrid";
 import HassuSpinner from "@components/HassuSpinner";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
@@ -19,6 +17,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { kasittelynTilaSchema } from "src/schemas/kasittelynTila";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
+import { TextField } from "@mui/material";
+import ControlledMuiDatePicker from "@components/form/ControlledMuiDatePicker";
 
 type FormValues = Pick<TallennaProjektiInput, "oid" | "kasittelynTila">;
 
@@ -42,18 +42,18 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   const isLoadingProjekti = !projekti && !projektiLoadError;
   const defaultValues: FormValues = useMemo(() => {
     const hyvaksymispaatos: HyvaksymispaatosInput = {
-      paatoksenPvm: projekti.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm || "",
+      paatoksenPvm: projekti.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm || null,
       asianumero: projekti.kasittelynTila?.hyvaksymispaatos?.asianumero || "",
     };
 
     //TODO When the input fields are enabled, the values should be strings not null or undefined
     const ensimmainenJatkopaatos: HyvaksymispaatosInput = {
-      paatoksenPvm: undefined,
+      paatoksenPvm: null,
       asianumero: undefined,
     };
     //TODO When the input fields are enabled, the values should be strings not null or undefined
     const toinenJatkopaatos: HyvaksymispaatosInput = {
-      paatoksenPvm: undefined,
+      paatoksenPvm: null,
       asianumero: undefined,
     };
     const formValues: FormValues = {
@@ -83,6 +83,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     register,
     handleSubmit,
     formState: { errors, isDirty },
+    control,
     reset,
   } = useFormReturn;
 
@@ -121,52 +122,46 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               siirtyvät suunnitelman hyväksymispäätöksen kuulutukselle.
             </p>
             <HassuGrid cols={{ lg: 3 }}>
-              <DatePicker
-                label="Päätöksen päivä"
-                className="md:max-w-min"
-                {...register("kasittelynTila.hyvaksymispaatos.paatoksenPvm")}
-                error={(errors as any).kasittelynTila?.hyvaksymispaatos?.paatoksenPvm}
-                disabled={disableFormEdit}
+              <ControlledMuiDatePicker
+                datePickerProps={{ label: "Päätöksen päivä", disabled: disableFormEdit }}
+                control={control}
+                name="kasittelynTila.hyvaksymispaatos.paatoksenPvm"
               />
-              <TextInput
+              <TextField
                 label="Asianumero"
                 {...register("kasittelynTila.hyvaksymispaatos.asianumero")}
                 disabled={disableFormEdit}
                 error={(errors as any).kasittelynTila?.hyvaksymispaatos?.asianumero}
-              ></TextInput>
+              />
             </HassuGrid>
           </SectionContent>
           <SectionContent>
             <h5 className="vayla-small-title">Jatkopäätös</h5>
             <HassuGrid cols={{ lg: 3 }}>
-              <DatePicker
-                label="1. jatkopäätös annettu"
-                className="md:max-w-min"
-                {...register("kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm")}
-                error={(errors as any).kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm}
-                disabled
+              <ControlledMuiDatePicker
+                datePickerProps={{ label: "1. jatkopäätös annettu", disabled: true }}
+                control={control}
+                name="kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm"
               />
-              <TextInput
+              <TextField
                 label="Asianumero"
                 {...register("kasittelynTila.ensimmainenJatkopaatos.asianumero")}
                 error={(errors as any).kasittelynTila?.ensimmainenJatkopaatos?.asianumero}
                 disabled
-              ></TextInput>
+              ></TextField>
             </HassuGrid>
             <HassuGrid cols={{ lg: 3 }}>
-              <DatePicker
-                label="2. jatkopäätös annettu"
-                className="md:max-w-min"
-                {...register("kasittelynTila.toinenJatkopaatos.paatoksenPvm")}
-                error={(errors as any).kasittelynTila?.toinenJatkopaatos?.paatoksenPvm}
-                disabled
+              <ControlledMuiDatePicker
+                datePickerProps={{ label: "2. jatkopäätös annettu", disabled: true }}
+                control={control}
+                name="kasittelynTila.toinenJatkopaatos.paatoksenPvm"
               />
-              <TextInput
+              <TextField
                 label="Asianumero"
                 {...register("kasittelynTila.toinenJatkopaatos.asianumero")}
                 error={(errors as any).kasittelynTila?.toinenJatkopaatos?.asianumero}
                 disabled
-              ></TextInput>
+              ></TextField>
             </HassuGrid>
           </SectionContent>
         </Section>

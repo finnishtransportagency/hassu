@@ -27,14 +27,13 @@ const Select = (
     addEmptyOption,
     className,
     ...props
-  }: Props &
-    Omit<React.DetailedHTMLProps<React.SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement>, "ref" | "children">,
+  }: Props & Omit<React.DetailedHTMLProps<React.SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement>, "ref" | "children">,
   ref: React.ForwardedRef<HTMLSelectElement>
 ) => {
   return (
     <FormGroup label={label} className={className} errorMessage={hideErrorMessage ? undefined : error?.message}>
       <div className="select-wrapper">
-        <select className={error && "error"} {...props} ref={ref}>
+        <select className={classNames("hassu-input", error && "error")} {...props} ref={ref}>
           {addEmptyOption && <option value="" />}
           {options.map((option) => (
             <option key={option.value} value={option.value} disabled={option.disabled}>

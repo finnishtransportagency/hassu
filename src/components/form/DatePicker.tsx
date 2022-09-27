@@ -25,17 +25,13 @@ const DatePicker = (
   ref: React.ForwardedRef<HTMLInputElement>
 ) => {
   return (
-    <FormGroup
-      label={label}
-      errorMessage={hideErrorMessage ? undefined : error?.message}
-      className={formGroupClassName}
-    >
+    <FormGroup label={label} errorMessage={hideErrorMessage ? undefined : error?.message} className={formGroupClassName}>
       <input
         type={isDevEnvironment ? "datetime-local" : "date"}
         maxLength={maxLength}
         {...props}
         ref={ref}
-        className={classNames(className, error && "error")}
+        className={classNames("hassu-input", className, error && "error")}
       />
     </FormGroup>
   );

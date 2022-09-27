@@ -52,7 +52,7 @@ const Textarea = (
         maxLength={maxLength}
         maxRows={maxRows}
         minRows={minRows}
-        className={classNames(error && "error")}
+        className={classNames("hassu-input", error && "error")}
       />
     </FormGroup>
   );

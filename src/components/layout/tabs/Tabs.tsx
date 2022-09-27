@@ -31,17 +31,25 @@ export interface HassuTabProps {
   disabled?: boolean;
 }
 
-interface Props {
+export interface TabProps {
   tabs: HassuTabProps[];
   onChange?: ((event: React.SyntheticEvent<Element, Event>, value: string | number) => void) | undefined;
-  value?: string | number | false;
-  defaultValue?: string | number | false;
+  value?: string | number;
+  defaultValue?: string | number;
   tabStyle?: TabStyle;
 }
 
-export default function TabbedContent(props: Props) {
+export default function Tabs(props: TabProps) {
   return (
-    <TabsUnstyled onChange={props.onChange} value={props.value} defaultValue={props.defaultValue}>
+    <TabsUnstyled
+      onChange={(event, value) => {
+        if (typeof value !== "boolean") {
+          props.onChange?.(event, value);
+        }
+      }}
+      value={props.value}
+      defaultValue={props.defaultValue}
+    >
       <TabsList>
         {props.tabs.map((tab, index) => (
           <Tab

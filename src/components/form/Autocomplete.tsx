@@ -2,6 +2,8 @@ import FormGroup from "./FormGroup";
 import React, { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { FieldError } from "react-hook-form";
 import useOutsideClickDetection from "../../hooks/useOutsideClickDetection";
+import classNames from "classnames";
+
 export interface Props<T> {
   error?: FieldError;
   label?: string;
@@ -73,7 +75,7 @@ const Autocomplete = <T extends unknown>({
 
   // Set timer to fetch options if options is not given
   useEffect(() => {
-    let myTimer : NodeJS.Timeout | null = null;
+    let myTimer: NodeJS.Timeout | null = null;
     if (!Array.isArray(propOptions)) {
       setFetchingUsers(true);
       myTimer = setTimeout(async () => {
@@ -84,15 +86,13 @@ const Autocomplete = <T extends unknown>({
     }
     return () => {
       if (myTimer) clearTimeout(myTimer);
-    }
+    };
   }, [textValue, propOptions, setFetchingUsers, setFilteredOptions, onTextChangeDelay]);
 
   // Set filteredOptions if options is given
   useEffect(() => {
     if (Array.isArray(propOptions)) {
-      setFilteredOptions(
-        propOptions.filter((option) => getOptionLabel(option).toLowerCase().includes(textValue.toLowerCase()))
-      );
+      setFilteredOptions(propOptions.filter((option) => getOptionLabel(option).toLowerCase().includes(textValue.toLowerCase())));
     }
   }, [propOptions, setFilteredOptions, getOptionLabel, textValue]);
 
@@ -147,8 +147,7 @@ const Autocomplete = <T extends unknown>({
     // Where is the child
     const childRect = child.getBoundingClientRect();
     // Is the child viewable?
-    const isViewable =
-      childRect.top >= parentRect.top && childRect.bottom <= parentRect.top + parentViewableArea.height;
+    const isViewable = childRect.top >= parentRect.top && childRect.bottom <= parentRect.top + parentViewableArea.height;
 
     // if you can't see the child try to scroll parent
     if (!isViewable) {
@@ -170,7 +169,7 @@ const Autocomplete = <T extends unknown>({
           type="text"
           value={textValue}
           disabled={disabled}
-          className={error && "error"}
+          className={classNames("hassu-input", error && "error")}
           onChange={inputChanged}
           onKeyDown={(event) => {
             switch (event.key) {
@@ -223,9 +222,7 @@ const Autocomplete = <T extends unknown>({
                   <li
                     key={index}
                     ref={(el) => (optionsRef.current[index] = el)}
-                    className={`cursor-default px-2 truncate-ellipsis ${
-                      index === currentIndex ? "bg-primary text-white" : ""
-                    }`}
+                    className={`cursor-default px-2 truncate-ellipsis ${index === currentIndex ? "bg-primary text-white" : ""}`}
                     onMouseDown={(event) => {
                       event.preventDefault();
                     }}

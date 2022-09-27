@@ -3,7 +3,7 @@ import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { PageProps } from "@pages/_app";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import Tabs from "@components/layout/tabs/Tabs";
+import Tabs, { TabProps } from "@components/layout/tabs/Tabs";
 import KuulutuksenTiedot from "@components/projekti/hyvaksyminen/kuulutuksenTiedot/index";
 import PaatosAineistot from "@components/projekti/hyvaksyminen/aineistot/index";
 import { useProjekti } from "src/hooks/useProjekti";
@@ -31,7 +31,7 @@ export default function Hyvaksymispaatos({ setRouteLabels }: PageProps): ReactEl
     setOpen(false);
   }, [selectedValue, setIsDirty]);
 
-  const handleChange = (_event: React.SyntheticEvent<Element, Event>, value: string | number) => {
+  const handleChange: TabProps["onChange"] = (_event, value) => {
     if (isDirty) {
       setOpen(true);
       setSelectedValue(value);
