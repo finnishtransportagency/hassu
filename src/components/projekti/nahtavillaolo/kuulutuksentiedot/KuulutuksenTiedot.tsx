@@ -84,9 +84,9 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet, setIsDirty }: Kuul
     return {
       oid: projekti.oid,
       nahtavillaoloVaihe: {
-        kuulutusPaiva: projekti?.nahtavillaoloVaihe?.kuulutusPaiva || "",
-        kuulutusVaihePaattyyPaiva: projekti?.nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva || "",
-        muistutusoikeusPaattyyPaiva: projekti?.nahtavillaoloVaihe?.muistutusoikeusPaattyyPaiva || "",
+        kuulutusPaiva: projekti?.nahtavillaoloVaihe?.kuulutusPaiva || null,
+        kuulutusVaihePaattyyPaiva: projekti?.nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva || null,
+        muistutusoikeusPaattyyPaiva: projekti?.nahtavillaoloVaihe?.muistutusoikeusPaattyyPaiva || null,
         hankkeenKuvaus: hankkeenKuvaus,
         kuulutusYhteystiedot: projekti?.nahtavillaoloVaihe?.kuulutusYhteystiedot
           ? projekti.nahtavillaoloVaihe.kuulutusYhteystiedot.map((yhteystieto) => removeTypeName(yhteystieto))

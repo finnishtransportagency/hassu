@@ -75,7 +75,7 @@ export default function KuulutusJaJulkaisuPaiva({}: Props) {
             controllerProps={{
               name: "nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva",
             }}
-            readOnly
+            disabled
           />
         </HassuGrid>
       </SectionContent>
@@ -91,16 +91,7 @@ export default function KuulutusJaJulkaisuPaiva({}: Props) {
             name: "nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva",
           }}
           minDate={today()}
-          readOnly
-        />
-        <HassuDatePickerWithController
-          label="Muistutusoikeus päättyy"
-          controllerProps={{ name: "nahtavillaoloVaihe.muistutusoikeusPaattyyPaiva" }}
-          onChange={(date) => {
-            if (date?.isValid()) {
-              getPaattymispaiva(date.format("YYYY-MM-DD"));
-            }
-          }}
+          disabled
         />
       </SectionContent>
     </Section>

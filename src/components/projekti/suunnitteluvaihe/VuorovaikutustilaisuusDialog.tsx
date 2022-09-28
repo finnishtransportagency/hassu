@@ -16,7 +16,6 @@ import TimePicker from "@components/form/TimePicker";
 import {
   KaytettavaPalvelu,
   ProjektiKayttaja,
-  VuorovaikutusTilaisuus,
   VuorovaikutusTilaisuusInput,
   VuorovaikutusTilaisuusTyyppi,
   YhteystietoInput,
@@ -33,9 +32,11 @@ import { removeTypeName } from "src/util/removeTypeName";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { today } from "src/util/dateUtils";
 
-const defaultTilaisuus = {
+const defaultTilaisuus: Omit<VuorovaikutusTilaisuusInput, "tyyppi"> = {
   nimi: "",
-  paivamaara: "",
+  // paivamaara value is supposed to be entered by user
+  //@ts-ignore
+  paivamaara: null,
   alkamisAika: "",
   paattymisAika: "",
 };
@@ -61,7 +62,7 @@ export type VuorovaikutustilaisuusFormValues = {
 interface Props {
   open: boolean;
   windowHandler: (isOpen: boolean) => void;
-  tilaisuudet: VuorovaikutusTilaisuus[] | null | undefined;
+  tilaisuudet: VuorovaikutusTilaisuusInput[] | null | undefined;
   kayttoOikeudet: ProjektiKayttaja[] | null | undefined;
   julkinen: boolean;
   avaaHyvaksymisDialogi: () => void;
@@ -102,6 +103,7 @@ export default function VuorovaikutusDialog({
     if (tilaisuudet) {
       const tilaisuuksienTiedot = {
         vuorovaikutusTilaisuudet: tilaisuudet.map((tilaisuus) => {
+          console.log(tilaisuus);
           const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
           const { esitettavatYhteystiedot } = vuorovaikutusTilaisuusInput;
           const input: VuorovaikutusTilaisuusInput = vuorovaikutusTilaisuusInput;

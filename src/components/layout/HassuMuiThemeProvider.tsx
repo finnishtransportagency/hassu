@@ -166,6 +166,7 @@ export const createLocalizedTheme = (locale: Localization) =>
               marginBottom: "5px",
               position: "initial",
               transform: "initial",
+              overflow: "visible",
               width: "initial",
               "&.Mui-focused": {
                 color: "#333333",

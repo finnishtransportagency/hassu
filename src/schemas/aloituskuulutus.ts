@@ -16,7 +16,7 @@ export const aloituskuulutusSchema = Yup.object().shape({
   aloitusKuulutus: Yup.object().shape({
     kuulutusYhteystiedot: standardiYhteystiedot(),
     hankkeenKuvaus: Yup.object().shape({ SUOMI: hankkeenKuvaus }),
-    kuulutusPaiva: paivamaara().required("Kuulutuspäivä ei voi olla tyhjä"),
+    kuulutusPaiva: paivamaara({ preventPast: "Kuulutuspäivää ei voida asettaa menneisyyteen" }).required("Kuulutuspäivä ei voi olla tyhjä"),
     siirtyySuunnitteluVaiheeseen: paivamaara(),
     ilmoituksenVastaanottajat: Yup.object()
       .shape({

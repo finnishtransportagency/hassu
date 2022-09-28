@@ -58,7 +58,7 @@ export default function KuulutusJaJulkaisuPaiva({}: Props) {
           <HassuDatePickerWithController
             controllerProps={{ name: "hyvaksymisPaatosVaihe.kuulutusVaihePaattyyPaiva" }}
             label="Kuulutusvaihe päättyy"
-            disabled={true}
+            disabled
           />
         </HassuGrid>
       </SectionContent>

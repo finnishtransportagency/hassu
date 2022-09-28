@@ -80,6 +80,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({ projekti, vuorova
           minDate={today()}
           textFieldProps={{
             required: true,
+            sx: { maxWidth: { md: "min-content" } },
           }}
           controllerProps={{ name: "suunnitteluVaihe.vuorovaikutus.kysymyksetJaPalautteetViimeistaan" }}
         />

@@ -146,8 +146,8 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
             })) || [],
         },
         hankkeenKuvaus,
-        kuulutusPaiva: projekti?.aloitusKuulutus?.kuulutusPaiva,
-        siirtyySuunnitteluVaiheeseen: projekti?.aloitusKuulutus?.siirtyySuunnitteluVaiheeseen,
+        kuulutusPaiva: projekti?.aloitusKuulutus?.kuulutusPaiva || null,
+        siirtyySuunnitteluVaiheeseen: projekti?.aloitusKuulutus?.siirtyySuunnitteluVaiheeseen || null,
         kuulutusYhteystiedot: {
           yhteysTiedot,
           yhteysHenkilot,
