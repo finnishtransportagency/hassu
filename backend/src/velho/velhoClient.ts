@@ -187,7 +187,7 @@ export class VelhoClient {
                   __typename: "VelhoAineisto",
                   oid: aineisto.oid,
                   tiedosto: tiedostoNimi,
-                  kategoriaId: aineistoKategoriat.findKategoria(aineisto.metatiedot.kuvaus, tiedostoNimi)?.id,
+                  kategoriaId: aineistoKategoriat.findKategoria(aineisto.metatiedot?.kuvaus, tiedostoNimi)?.id,
                   dokumenttiTyyppi,
                   muokattu: dayjs(aineisto["tuorein-versio"].muokattu).format(),
                 } as VelhoAineisto);
