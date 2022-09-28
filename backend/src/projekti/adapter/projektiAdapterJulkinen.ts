@@ -424,19 +424,19 @@ function adaptVuorovaikutusTilaisuudet(
   dbProjekti: DBProjekti
 ): API.VuorovaikutusTilaisuusJulkinen[] {
   return vuorovaikutusTilaisuudet.map((vuorovaikutusTilaisuus) => {
-    if (!vuorovaikutusTilaisuus.esitettavatYhteystiedot) {
-      throw new Error("adaptVuorovaikutusTilaisuudet: vuorovaikutusTilaisuus.esitettavatYhteystiedot määrittelmättä");
-    }
-    const esitettavatYhteystiedot: StandardiYhteystiedot = vuorovaikutusTilaisuus.esitettavatYhteystiedot;
+    const esitettavatYhteystiedot: StandardiYhteystiedot | undefined = vuorovaikutusTilaisuus.esitettavatYhteystiedot;
     delete vuorovaikutusTilaisuus.esitettavatYhteystiedot;
     const tilaisuus: API.VuorovaikutusTilaisuusJulkinen = {
       __typename: "VuorovaikutusTilaisuusJulkinen",
       ...vuorovaikutusTilaisuus,
     };
     if (vuorovaikutusTilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
-      const yhteystiedot: API.Yhteystieto[] = adaptStandardiYhteystiedotLisaamattaProjaria(dbProjekti, esitettavatYhteystiedot);
-      tilaisuus.yhteystiedot = yhteystiedot;
+      if (!esitettavatYhteystiedot) {
+        throw new Error("adaptVuorovaikutusTilaisuudet: vuorovaikutusTilaisuus.esitettavatYhteystiedot määrittelmättä");
+      }
+      tilaisuus.yhteystiedot = adaptStandardiYhteystiedotLisaamattaProjaria(dbProjekti, esitettavatYhteystiedot);
     }
+
     return tilaisuus;
   });
 }
