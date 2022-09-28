@@ -126,6 +126,8 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                 label="Päätöksen päivä"
                 disabled={disableFormEdit}
                 controllerProps={{ control: control, name: "kasittelynTila.hyvaksymispaatos.paatoksenPvm" }}
+                disableFuture
+                textFieldProps={{ required: true }}
               />
               <TextField
                 label="Asianumero"

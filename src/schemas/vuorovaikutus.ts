@@ -2,6 +2,7 @@ import { VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import { isValidDate } from "src/util/dateUtils";
 import * as Yup from "yup";
 import { ilmoituksenVastaanottajat, standardiYhteystiedot } from "./common";
+import { paivamaara } from "./paivamaaraSchema";
 
 const validTimeRegexp = /^([0-1]?[0-9]|2[0-4]):([0-5]?[0-9])$/;
 
@@ -55,11 +56,7 @@ export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
     Yup.object().shape({
       tyyppi: Yup.mixed<VuorovaikutusTilaisuusTyyppi>().oneOf(Object.values(VuorovaikutusTilaisuusTyyppi)).required(),
       nimi: Yup.string().nullable(),
-      paivamaara: Yup.string()
-        .required("Vuorovaikutustilaisuuden päivämäärä täytyy antaa")
-        .test("valid-date", "Virheellinen päivämäärä", (date) => {
-          return isValidDate(date);
-        }),
+      paivamaara: paivamaara().required("Vuorovaikutustilaisuuden päivämäärä täytyy antaa"),
       alkamisAika: Yup.string().required("Tilaisuuden alkamisaika täytyy antaa").matches(validTimeRegexp),
       paattymisAika: Yup.string().required("Tilaisuuden päättymisaika täytyy antaa").matches(validTimeRegexp),
       kaytettavaPalvelu: Yup.string()
@@ -117,11 +114,7 @@ export const vuorovaikutusSchema = Yup.object().shape({
       vuorovaikutusNumero: Yup.number().required(),
       esittelyaineisto: getAineistotSchema(),
       suunnitelmaluonnokset: getAineistotSchema(),
-      vuorovaikutusJulkaisuPaiva: Yup.string()
-        .required("Julkaisupäivä täytyy antaa")
-        .test("valid-date", "Virheellinen päivämäärä", (date) => {
-          return isValidDate(date);
-        }),
+      vuorovaikutusJulkaisuPaiva: paivamaara().required("Julkaisupäivä täytyy antaa"),
       kysymyksetJaPalautteetViimeistaan: Yup.string()
         .required("Toivottu palautepäivämäärä täytyy antaa")
         .test("valid-date", "Virheellinen päivämäärä", (date) => {

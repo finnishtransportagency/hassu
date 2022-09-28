@@ -1,24 +1,9 @@
-import { is2100Century, isValidDate } from "src/util/dateUtils";
 import * as Yup from "yup";
+import { paivamaara } from "./paivamaaraSchema";
 
 const hyvaksymispaatosSchema = Yup.object()
   .shape({
-    paatoksenPvm: Yup.string()
-      .notRequired()
-      .test("valid-date", "Virheellinen päivämäärä", (date) => {
-        if (!date) {
-          return true;
-        }
-        return isValidDate(date);
-      })
-      .test("valid-century", "Virheellinen päivämäärä", (date) => {
-        if (!date || !isValidDate(date)) {
-          return true;
-        }
-        return is2100Century(date);
-      })
-      .nullable()
-      .default(null),
+    paatoksenPvm: paivamaara({ preventFuture: true }),
     asianumero: Yup.string().max(30, "Asianumero voi olla maksimissaan 30 merkkiä pitkä").notRequired().nullable().default(null),
   })
   .notRequired()

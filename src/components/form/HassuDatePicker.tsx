@@ -15,29 +15,25 @@ type HassuDatePickerProps = {
 } & Partial<DatePickerProps<InputDate, OutputDate>>;
 
 export const HassuDatePicker = React.forwardRef(function HassuDatePickerForwardRef(
-  {
-    textFieldProps = {},
-    value = null,
-    onChange = () => {},
-    renderInput = ({ error, helperText, ...params }) => {
-      const props: TextFieldProps = {
-        ...params,
-        ...textFieldProps,
-        error: error || textFieldProps.error,
-        helperText: helperText || textFieldProps.helperText,
-      };
-      return <TextField {...props} />;
-    },
-    ...datePickerProps
-  }: HassuDatePickerProps,
-  ref: React.ForwardedRef<HTMLDivElement>
+  { textFieldProps = {}, value = null, onChange = () => {}, renderInput, ...datePickerProps }: HassuDatePickerProps,
+  ref: React.ForwardedRef<HTMLInputElement>
 ) {
+  const defaultRenderInput: DatePickerProps<InputDate, OutputDate>["renderInput"] = ({ error, helperText, inputProps = {}, ...params }) => {
+    const props: TextFieldProps = {
+      ...params,
+      ...textFieldProps,
+      error: error || textFieldProps.error,
+      helperText: helperText || textFieldProps.helperText,
+      inputProps: { ref, ...inputProps },
+    };
+    return <TextField {...props} />;
+  };
   const props: DatePickerProps<InputDate, OutputDate> = {
     minDate: dayjs("2000-01-01"),
     maxDate: dayjs("2099-01-01").endOf("year"),
     value,
     onChange,
-    renderInput,
+    renderInput: renderInput || defaultRenderInput,
     components: {
       ActionBar: CustomActionBar,
     },
@@ -50,7 +46,7 @@ export const HassuDatePicker = React.forwardRef(function HassuDatePickerForwardR
     },
     ...datePickerProps,
   };
-  return <MuiDatePicker<InputDate, OutputDate> ref={ref} {...props} />;
+  return <MuiDatePicker<InputDate, OutputDate> {...props} />;
 });
 
 export const HassuDatePickerWithController = <TFieldValues extends FieldValues>({

@@ -139,6 +139,22 @@ export const createLocalizedTheme = (locale: Localization) =>
             },
           },
         },
+        MuiFormLabel: {
+          styleOverrides: {
+            asterisk: {
+              color: "#333333",
+              "&.Mui-focused": {
+                color: "#333333",
+              },
+              "&.Mui-error": {
+                color: "#333333",
+              },
+              "&.Mui-disabled": {
+                color: "#333333",
+              },
+            },
+          },
+        },
         MuiInputLabel: {
           defaultProps: {
             shrink: false,
