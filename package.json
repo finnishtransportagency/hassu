@@ -6,6 +6,7 @@
     "@aws-sdk/lib-dynamodb": "3.172.0",
     "@aws-sdk/types": "3.171.0",
     "@date-io/dayjs": "2.16.0",
+    "@emotion/is-prop-valid": "1.2.0",
     "@emotion/react": "11.10.4",
     "@emotion/styled": "11.10.4",
     "@fortawesome/fontawesome-svg-core": "1.2.36",
