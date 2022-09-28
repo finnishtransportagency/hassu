@@ -1,35 +1,18 @@
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
-import { useFormContext } from "react-hook-form";
 import { Projekti, Kieli } from "@services/api";
 import React, { ReactElement, useMemo } from "react";
-import DatePicker from "@components/form/DatePicker";
-import { formatDate } from "src/util/dateUtils";
-import dayjs from "dayjs";
+import { formatDate, today } from "src/util/dateUtils";
 import lowerCase from "lodash/lowerCase";
+import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
+import { VuorovaikutusFormValues } from "./SuunnitteluvaiheenVuorovaikuttaminen";
 
 interface Props {
   projekti?: Projekti | null;
   vuorovaikutusnro: number | null | undefined;
 }
 
-type FormFields = {
-  suunnitteluVaihe: {
-    vuorovaikutus: {
-      vuorovaikutusJulkaisuPaiva: string | null;
-      kysymyksetJaPalautteetViimeistaan: string | null;
-    };
-  };
-};
-
 export default function SuunnitteluvaiheenVuorovaikuttaminen({ projekti, vuorovaikutusnro }: Props): ReactElement {
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext<FormFields>();
-
-  const today = dayjs().format();
-
   const v = useMemo(() => {
     return projekti?.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
       return v.vuorovaikutusNumero === vuorovaikutusnro;
@@ -57,25 +40,18 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({ projekti, vuorova
           <p>{formatDate(v?.vuorovaikutusJulkaisuPaiva)}</p>
         </SectionContent>
         <SectionContent>
-          <p className="vayla-label">
-            Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä ({lowerCase(ensisijainenKieli)})
-          </p>
+          <p className="vayla-label">Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä ({lowerCase(ensisijainenKieli)})</p>
           <p>{projekti?.aloitusKuulutus?.hankkeenKuvaus?.[ensisijainenKieli]}</p>
         </SectionContent>
         {aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli && (
           <SectionContent className="content">
-            <p className="vayla-label">
-              Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(toissijainenKieli)})
-            </p>
+            <p className="vayla-label">Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(toissijainenKieli)})</p>
             <p>{projekti?.aloitusKuulutus?.hankkeenKuvaus?.[toissijainenKieli]}</p>
           </SectionContent>
         )}
         <SectionContent className="pb-7">
           <p className="vayla-label">Kysymykset ja palautteet</p>
-          <p>
-            Kansalaisia pyydetään esittämään kysymykset ja palautteet viimeistään{" "}
-            {formatDate(v?.kysymyksetJaPalautteetViimeistaan)}.
-          </p>
+          <p>Kansalaisia pyydetään esittämään kysymykset ja palautteet viimeistään {formatDate(v?.kysymyksetJaPalautteetViimeistaan)}.</p>
         </SectionContent>
       </Section>
     );
@@ -86,26 +62,26 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({ projekti, vuorova
       <SectionContent>
         <h4 className="vayla-small-title">Julkaisupäivä</h4>
         <p>
-          Anna päivämäärä, jolloin vuorovaikutusosio palvelun julkisella puolella ja kutsu vuorovaikutukseen muilla
-          ilmoituskanavilla julkaistaan.
+          Anna päivämäärä, jolloin vuorovaikutusosio palvelun julkisella puolella ja kutsu vuorovaikutukseen muilla ilmoituskanavilla
+          julkaistaan.
         </p>
-        <DatePicker
-          label="Julkaisupäivä *"
-          className="md:max-w-min"
-          {...register("suunnitteluVaihe.vuorovaikutus.vuorovaikutusJulkaisuPaiva")}
-          min={today}
-          error={errors.suunnitteluVaihe?.vuorovaikutus?.vuorovaikutusJulkaisuPaiva}
+        <HassuDatePickerWithController<VuorovaikutusFormValues>
+          label="Julkaisupäivä"
+          minDate={today()}
+          textFieldProps={{ required: true }}
+          controllerProps={{ name: "suunnitteluVaihe.vuorovaikutus.vuorovaikutusJulkaisuPaiva" }}
         />
       </SectionContent>
       <SectionContent>
         <h4 className="vayla-small-title">Kysymyksien esittäminen ja palautteiden antaminen</h4>
         <p>Anna päivämäärä, johon mennessä kansalaisten toivotaan esittävän kysymykset ja palautteet.</p>
-        <DatePicker
-          label="Kysymykset ja palautteet viimeistään *"
-          className="md:max-w-min"
-          {...register("suunnitteluVaihe.vuorovaikutus.kysymyksetJaPalautteetViimeistaan")}
-          min={today}
-          error={errors.suunnitteluVaihe?.vuorovaikutus?.kysymyksetJaPalautteetViimeistaan}
+        <HassuDatePickerWithController<VuorovaikutusFormValues>
+          label="Kysymykset ja palautteet viimeistään"
+          minDate={today()}
+          textFieldProps={{
+            required: true,
+          }}
+          controllerProps={{ name: "suunnitteluVaihe.vuorovaikutus.kysymyksetJaPalautteetViimeistaan" }}
         />
       </SectionContent>
     </>

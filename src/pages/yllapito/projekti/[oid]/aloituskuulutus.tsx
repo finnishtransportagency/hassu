@@ -26,7 +26,6 @@ import {
 } from "@services/api";
 import log from "loglevel";
 import { PageProps } from "@pages/_app";
-import DatePicker from "@components/form/DatePicker";
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 import KuulutuksenYhteystiedot from "@components/projekti/aloituskuulutus/KuulutuksenYhteystiedot";
@@ -51,6 +50,8 @@ import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
 import { pickBy } from "lodash";
 import { removeTypeName } from "src/util/removeTypeName";
+import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
+import { today } from "src/util/dateUtils";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -162,7 +163,6 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     isLoadingProjekti ||
     isFormSubmitting ||
     isIncorrectProjektiStatus;
-  const today = new Date().toISOString().split("T")[0];
   const [open, setOpen] = useState(false);
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
   const { t } = useTranslation("commonFI");
@@ -396,22 +396,23 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                     </div>
                   </Notification>
                   <HassuGrid cols={{ lg: 3 }}>
-                    <DatePicker
-                      label="Kuulutuspäivä *"
-                      className="md:max-w-min"
-                      {...register("aloitusKuulutus.kuulutusPaiva")}
-                      disabled={disableFormEdit}
-                      min={today}
-                      error={errors.aloitusKuulutus?.kuulutusPaiva}
-                      onChange={(event) => {
-                        getPaattymispaiva(event.target.value);
+                    <HassuDatePickerWithController
+                      label="Kuulutuspäivä"
+                      minDate={today()}
+                      onChange={(date) => {
+                        if (date?.isValid()) {
+                          getPaattymispaiva(date.format("YYYY-MM-DD"));
+                        }
+                      }}
+                      textFieldProps={{ required: true }}
+                      controllerProps={{
+                        name: "aloitusKuulutus.kuulutusPaiva",
                       }}
                     />
-                    <DatePicker
-                      className="md:max-w-min"
+                    <HassuDatePickerWithController
                       label="Kuulutusvaihe päättyy"
-                      readOnly
-                      {...register("aloitusKuulutus.siirtyySuunnitteluVaiheeseen")}
+                      disabled={true}
+                      controllerProps={{ name: "aloitusKuulutus.siirtyySuunnitteluVaiheeseen" }}
                     />
                   </HassuGrid>
                 </Section>

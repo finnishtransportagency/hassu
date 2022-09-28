@@ -1,5 +1,7 @@
 import dayjs, { ConfigType } from "dayjs";
 
+export const today = () => dayjs().startOf("day");
+
 export const is2100Century = (date?: ConfigType) => {
   const year = dayjs(date).year();
   return year >= 2000 && year < 2100;

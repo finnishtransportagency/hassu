@@ -18,7 +18,7 @@ import { kasittelynTilaSchema } from "src/schemas/kasittelynTila";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
 import { TextField } from "@mui/material";
-import ControlledMuiDatePicker from "@components/form/ControlledMuiDatePicker";
+import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 
 type FormValues = Pick<TallennaProjektiInput, "oid" | "kasittelynTila">;
 
@@ -122,10 +122,10 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               siirtyvät suunnitelman hyväksymispäätöksen kuulutukselle.
             </p>
             <HassuGrid cols={{ lg: 3 }}>
-              <ControlledMuiDatePicker
-                datePickerProps={{ label: "Päätöksen päivä", disabled: disableFormEdit }}
-                control={control}
-                name="kasittelynTila.hyvaksymispaatos.paatoksenPvm"
+              <HassuDatePickerWithController
+                label="Päätöksen päivä"
+                disabled={disableFormEdit}
+                controllerProps={{ control: control, name: "kasittelynTila.hyvaksymispaatos.paatoksenPvm" }}
               />
               <TextField
                 label="Asianumero"
@@ -138,10 +138,10 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
           <SectionContent>
             <h5 className="vayla-small-title">Jatkopäätös</h5>
             <HassuGrid cols={{ lg: 3 }}>
-              <ControlledMuiDatePicker
-                datePickerProps={{ label: "1. jatkopäätös annettu", disabled: true }}
-                control={control}
-                name="kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm"
+              <HassuDatePickerWithController
+                label="1. jatkopäätös annettu"
+                disabled
+                controllerProps={{ control: control, name: "kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm" }}
               />
               <TextField
                 label="Asianumero"
@@ -151,10 +151,10 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               ></TextField>
             </HassuGrid>
             <HassuGrid cols={{ lg: 3 }}>
-              <ControlledMuiDatePicker
-                datePickerProps={{ label: "2. jatkopäätös annettu", disabled: true }}
-                control={control}
-                name="kasittelynTila.toinenJatkopaatos.paatoksenPvm"
+              <HassuDatePickerWithController
+                label="2. jatkopäätös annettu"
+                disabled
+                controllerProps={{ control: control, name: "kasittelynTila.toinenJatkopaatos.paatoksenPvm" }}
               />
               <TextField
                 label="Asianumero"

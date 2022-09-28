@@ -4,7 +4,6 @@ import { Badge, Chip, chipClasses, DialogActions, DialogContent } from "@mui/mat
 import React, { Fragment, ReactElement, useCallback, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Button from "@components/button/Button";
-import DatePicker from "@components/form/DatePicker";
 import HassuStack from "@components/layout/HassuStack";
 import HassuDialog from "@components/HassuDialog";
 import HeadphonesIcon from "@mui/icons-material/Headphones";
@@ -30,8 +29,9 @@ import { vuorovaikutustilaisuudetSchema } from "src/schemas/vuorovaikutus";
 import FormGroup from "@components/form/FormGroup";
 import CheckBox from "@components/form/CheckBox";
 import SoittoajanYhteyshenkilot from "./SoittoajanYhteyshenkilot";
-import dayjs from "dayjs";
 import { removeTypeName } from "src/util/removeTypeName";
+import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
+import { today } from "src/util/dateUtils";
 
 const defaultTilaisuus = {
   nimi: "",
@@ -411,8 +411,6 @@ function TilaisuudenNimiJaAika(props: { index: number }) {
     register,
     formState: { errors },
   } = useFormContext<VuorovaikutustilaisuusFormValues>();
-  const today = dayjs().format();
-
   return (
     <>
       <TextInput
@@ -422,12 +420,12 @@ function TilaisuudenNimiJaAika(props: { index: number }) {
         maxLength={200}
       />
       <HassuStack direction={["column", "column", "row"]}>
-        <DatePicker
-          label="Päivämäärä *"
-          {...register(`vuorovaikutusTilaisuudet.${props.index}.paivamaara`)}
-          error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.paivamaara}
-          min={today}
-        ></DatePicker>
+        <HassuDatePickerWithController
+          label="Päivämäärä"
+          minDate={today()}
+          textFieldProps={{ required: true }}
+          controllerProps={{ name: `vuorovaikutusTilaisuudet.${props.index}.paivamaara` }}
+        />
         <TimePicker
           label="Alkaa *"
           {...register(`vuorovaikutusTilaisuudet.${props.index}.alkamisAika`)}
