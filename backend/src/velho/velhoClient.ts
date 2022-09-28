@@ -177,9 +177,6 @@ export class VelhoClient {
               aineistoArray.forEach((aineisto) => {
                 const { dokumenttiTyyppi } = adaptDokumenttiTyyppi(`${aineisto.metatiedot.dokumenttityyppi}`);
                 const tiedostoNimi = aineisto["tuorein-versio"]?.nimi;
-                if (!aineisto.metatiedot.kuvaus) {
-                  throw new Error("loadProjektiAineistot: aineisto.metatiedot.kuvaus puuttuu");
-                }
                 if (!tiedostoNimi) {
                   throw new Error("loadProjektiAineistot: aineisto['tuorein-versio']?.nimi puuttuu");
                 }

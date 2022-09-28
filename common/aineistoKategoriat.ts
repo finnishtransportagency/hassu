@@ -54,7 +54,7 @@ export class AineistoKategoriat {
     return getNestedCategoryIds(this.ylaKategoriat);
   }
 
-  public findKategoria(aineistoKuvaus: string, tiedostoNimi: string): AineistoKategoria | undefined {
+  public findKategoria(aineistoKuvaus: string | undefined, tiedostoNimi: string): AineistoKategoria | undefined {
     const ylakategoria = findMatchingCategory(this.ylaKategoriat, aineistoKuvaus);
     if (ylakategoria) {
       let alakategoria = findMatchingCategory(ylakategoria.alaKategoriat, aineistoKuvaus);
@@ -129,7 +129,7 @@ function isMatchingToHakulauseet(hakulauseet: string[] | undefined, keyword: str
 
 function findMatchingCategory(
   kategoriat: AineistoKategoria[] | undefined,
-  keyword: string
+  keyword?: string
 ): AineistoKategoria | undefined {
   if (!keyword) {
     return undefined;
