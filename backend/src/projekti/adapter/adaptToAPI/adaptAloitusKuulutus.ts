@@ -2,11 +2,11 @@ import { AloitusKuulutus, AloitusKuulutusJulkaisu, AloitusKuulutusPDF, Localized
 import * as API from "../../../../../common/graphql/apiModel";
 import {
   adaptHankkeenKuvaus,
-  adaptKielitiedotByAddingTypename,
-  adaptVelhoByAddingTypename,
-  adaptYhteystiedotByAddingTypename,
-  adaptStandardiYhteystiedotByAddingTypename,
   adaptIlmoituksenVastaanottajat,
+  adaptKielitiedotByAddingTypename,
+  adaptMandatoryYhteystiedotByAddingTypename,
+  adaptStandardiYhteystiedotByAddingTypename,
+  adaptVelhoByAddingTypename,
 } from "../common";
 import { adaptSuunnitteluSopimus } from "./adaptSuunitteluSopimus";
 import { fileService } from "../../../files/fileService";
@@ -20,9 +20,6 @@ export function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.Alo
       throw new Error("adaptAloituskuulutus: kuulutus.ilmoituksenVastaanottajat puuttuu");
     }
     const { kuulutusYhteystiedot, ...otherKuulutusFields } = kuulutus;
-    if (!kuulutusYhteystiedot) {
-      throw new Error("adaptAloituskuulutus: kuulutus.kuulutusYhteystiedot puuttuu");
-    }
     return {
       __typename: "AloitusKuulutus",
       ...otherKuulutusFields,
@@ -58,7 +55,7 @@ export function adaptAloitusKuulutusJulkaisut(
         __typename: "AloitusKuulutusJulkaisu",
         ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(julkaisu.ilmoituksenVastaanottajat),
         hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
-        yhteystiedot: adaptYhteystiedotByAddingTypename(yhteystiedot),
+        yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
         velho: adaptVelhoByAddingTypename(velho),
         suunnitteluSopimus: adaptSuunnitteluSopimus(oid, suunnitteluSopimus),
         kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),

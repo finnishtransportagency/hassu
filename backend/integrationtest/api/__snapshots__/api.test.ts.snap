@@ -180,12 +180,10 @@ Object {
         ],
         "vuorovaikutusJulkaisuPaiva": "2022-03-23",
         "vuorovaikutusNumero": 1,
-        "vuorovaikutusPDFt": undefined,
         "vuorovaikutusTilaisuudet": Array [
           Object {
             "__typename": "VuorovaikutusTilaisuus",
             "alkamisAika": "15:00",
-            "esitettavatYhteystiedot": undefined,
             "kaytettavaPalvelu": "TEAMS",
             "linkki": "https://linkki_tilaisuuteen",
             "nimi": "Lorem ipsum 1",
@@ -197,7 +195,6 @@ Object {
             "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
             "__typename": "VuorovaikutusTilaisuus",
             "alkamisAika": "10:00",
-            "esitettavatYhteystiedot": undefined,
             "nimi": "Lorem ipsum two 1",
             "osoite": "Katu 123",
             "paattymisAika": "11:00",
@@ -223,7 +220,6 @@ Object {
                   "puhelinnumero": "0293121213",
                   "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
                   "sukunimi": "Sukunimi",
-                  "titteli": "Projektipäällikkö",
                 },
                 Object {
                   "__typename": "Yhteystieto",
@@ -232,7 +228,6 @@ Object {
                   "puhelinnumero": "02998765",
                   "sahkoposti": "Joku.Jokunen@vayla.fi",
                   "sukunimi": "Jokunen",
-                  "titteli": "Konsultti",
                 },
               ],
             },
@@ -255,7 +250,6 @@ Object {
                   "puhelinnumero": "0293121213",
                   "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
                   "sukunimi": "Sukunimi",
-                  "titteli": "Projektipäällikkö",
                 },
                 Object {
                   "__typename": "Yhteystieto",
@@ -264,7 +258,6 @@ Object {
                   "puhelinnumero": "02998765",
                   "sahkoposti": "Joku.Jokunen@vayla.fi",
                   "sukunimi": "Jokunen",
-                  "titteli": "Konsultti",
                 },
               ],
             },
@@ -337,12 +330,10 @@ Object {
         ],
         "vuorovaikutusJulkaisuPaiva": "2022-03-23",
         "vuorovaikutusNumero": 2,
-        "vuorovaikutusPDFt": undefined,
         "vuorovaikutusTilaisuudet": Array [
           Object {
             "__typename": "VuorovaikutusTilaisuus",
             "alkamisAika": "15:00",
-            "esitettavatYhteystiedot": undefined,
             "kaytettavaPalvelu": "TEAMS",
             "linkki": "https://linkki_tilaisuuteen",
             "nimi": "Lorem ipsum 2",
@@ -354,7 +345,6 @@ Object {
             "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
             "__typename": "VuorovaikutusTilaisuus",
             "alkamisAika": "10:00",
-            "esitettavatYhteystiedot": undefined,
             "nimi": "Lorem ipsum two 2",
             "osoite": "Katu 123",
             "paattymisAika": "11:00",
@@ -380,7 +370,6 @@ Object {
                   "puhelinnumero": "0293121213",
                   "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
                   "sukunimi": "Sukunimi",
-                  "titteli": "Projektipäällikkö",
                 },
                 Object {
                   "__typename": "Yhteystieto",
@@ -389,7 +378,6 @@ Object {
                   "puhelinnumero": "02998765",
                   "sahkoposti": "Joku.Jokunen@vayla.fi",
                   "sukunimi": "Jokunen",
-                  "titteli": "Konsultti",
                 },
               ],
             },
@@ -412,7 +400,6 @@ Object {
                   "puhelinnumero": "0293121213",
                   "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
                   "sukunimi": "Sukunimi",
-                  "titteli": "Projektipäällikkö",
                 },
                 Object {
                   "__typename": "Yhteystieto",
@@ -421,7 +408,6 @@ Object {
                   "puhelinnumero": "02998765",
                   "sahkoposti": "Joku.Jokunen@vayla.fi",
                   "sukunimi": "Jokunen",
-                  "titteli": "Konsultti",
                 },
               ],
             },
@@ -556,12 +542,10 @@ Object {
     ],
     "vuorovaikutusJulkaisuPaiva": "2022-03-23",
     "vuorovaikutusNumero": 1,
-    "vuorovaikutusPDFt": undefined,
     "vuorovaikutusTilaisuudet": Array [
       Object {
         "__typename": "VuorovaikutusTilaisuus",
         "alkamisAika": "15:00",
-        "esitettavatYhteystiedot": undefined,
         "kaytettavaPalvelu": "TEAMS",
         "linkki": "https://linkki_tilaisuuteen",
         "nimi": "Lorem ipsum 1",
@@ -573,7 +557,6 @@ Object {
         "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
         "__typename": "VuorovaikutusTilaisuus",
         "alkamisAika": "10:00",
-        "esitettavatYhteystiedot": undefined,
         "nimi": "Lorem ipsum two 1",
         "osoite": "Katu 123",
         "paattymisAika": "11:00",
@@ -599,7 +582,6 @@ Object {
               "puhelinnumero": "0293121213",
               "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
               "sukunimi": "Sukunimi",
-              "titteli": "Projektipäällikkö",
             },
             Object {
               "__typename": "Yhteystieto",
@@ -608,7 +590,6 @@ Object {
               "puhelinnumero": "02998765",
               "sahkoposti": "Joku.Jokunen@vayla.fi",
               "sukunimi": "Jokunen",
-              "titteli": "Konsultti",
             },
           ],
         },
@@ -631,7 +612,6 @@ Object {
               "puhelinnumero": "0293121213",
               "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
               "sukunimi": "Sukunimi",
-              "titteli": "Projektipäällikkö",
             },
             Object {
               "__typename": "Yhteystieto",
@@ -640,7 +620,6 @@ Object {
               "puhelinnumero": "02998765",
               "sahkoposti": "Joku.Jokunen@vayla.fi",
               "sukunimi": "Jokunen",
-              "titteli": "Konsultti",
             },
           ],
         },
@@ -743,12 +722,10 @@ Object {
     ],
     "vuorovaikutusJulkaisuPaiva": "2022-03-23",
     "vuorovaikutusNumero": 1,
-    "vuorovaikutusPDFt": undefined,
     "vuorovaikutusTilaisuudet": Array [
       Object {
         "__typename": "VuorovaikutusTilaisuus",
         "alkamisAika": "15:00",
-        "esitettavatYhteystiedot": undefined,
         "kaytettavaPalvelu": "TEAMS",
         "linkki": "https://linkki_tilaisuuteen",
         "nimi": "Lorem ipsum 1",
@@ -760,7 +737,6 @@ Object {
         "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
         "__typename": "VuorovaikutusTilaisuus",
         "alkamisAika": "10:00",
-        "esitettavatYhteystiedot": undefined,
         "nimi": "Lorem ipsum two 1",
         "osoite": "Katu 123",
         "paattymisAika": "11:00",
@@ -786,7 +762,6 @@ Object {
               "puhelinnumero": "0293121213",
               "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
               "sukunimi": "Sukunimi",
-              "titteli": "Projektipäällikkö",
             },
             Object {
               "__typename": "Yhteystieto",
@@ -795,7 +770,6 @@ Object {
               "puhelinnumero": "02998765",
               "sahkoposti": "Joku.Jokunen@vayla.fi",
               "sukunimi": "Jokunen",
-              "titteli": "Konsultti",
             },
           ],
         },
@@ -818,7 +792,6 @@ Object {
               "puhelinnumero": "0293121213",
               "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
               "sukunimi": "Sukunimi",
-              "titteli": "Projektipäällikkö",
             },
             Object {
               "__typename": "Yhteystieto",
@@ -827,7 +800,6 @@ Object {
               "puhelinnumero": "02998765",
               "sahkoposti": "Joku.Jokunen@vayla.fi",
               "sukunimi": "Jokunen",
-              "titteli": "Konsultti",
             },
           ],
         },
@@ -923,12 +895,10 @@ Object {
     ],
     "vuorovaikutusJulkaisuPaiva": "2022-03-23",
     "vuorovaikutusNumero": 1,
-    "vuorovaikutusPDFt": undefined,
     "vuorovaikutusTilaisuudet": Array [
       Object {
         "__typename": "VuorovaikutusTilaisuus",
         "alkamisAika": "15:00",
-        "esitettavatYhteystiedot": undefined,
         "kaytettavaPalvelu": "TEAMS",
         "linkki": "https://linkki_tilaisuuteen",
         "nimi": "Lorem ipsum 1",
@@ -940,7 +910,6 @@ Object {
         "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
         "__typename": "VuorovaikutusTilaisuus",
         "alkamisAika": "10:00",
-        "esitettavatYhteystiedot": undefined,
         "nimi": "Lorem ipsum two 1",
         "osoite": "Katu 123",
         "paattymisAika": "11:00",
@@ -966,7 +935,6 @@ Object {
               "puhelinnumero": "0293121213",
               "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
               "sukunimi": "Sukunimi",
-              "titteli": "Projektipäällikkö",
             },
             Object {
               "__typename": "Yhteystieto",
@@ -975,7 +943,6 @@ Object {
               "puhelinnumero": "02998765",
               "sahkoposti": "Joku.Jokunen@vayla.fi",
               "sukunimi": "Jokunen",
-              "titteli": "Konsultti",
             },
           ],
         },
@@ -998,7 +965,6 @@ Object {
               "puhelinnumero": "0293121213",
               "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
               "sukunimi": "Sukunimi",
-              "titteli": "Projektipäällikkö",
             },
             Object {
               "__typename": "Yhteystieto",
@@ -1007,7 +973,6 @@ Object {
               "puhelinnumero": "02998765",
               "sahkoposti": "Joku.Jokunen@vayla.fi",
               "sukunimi": "Jokunen",
-              "titteli": "Konsultti",
             },
           ],
         },
@@ -1105,12 +1070,10 @@ Object {
   ],
   "vuorovaikutusJulkaisuPaiva": "2022-03-23",
   "vuorovaikutusNumero": 1,
-  "vuorovaikutusPDFt": undefined,
   "vuorovaikutusTilaisuudet": Array [
     Object {
       "__typename": "VuorovaikutusTilaisuus",
       "alkamisAika": "15:00",
-      "esitettavatYhteystiedot": undefined,
       "kaytettavaPalvelu": "TEAMS",
       "linkki": "https://linkki_tilaisuuteen",
       "nimi": "Lorem ipsum 1",
@@ -1122,7 +1085,6 @@ Object {
       "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
       "__typename": "VuorovaikutusTilaisuus",
       "alkamisAika": "10:00",
-      "esitettavatYhteystiedot": undefined,
       "nimi": "Lorem ipsum two 1",
       "osoite": "Katu 123",
       "paattymisAika": "11:00",
@@ -1148,7 +1110,6 @@ Object {
             "puhelinnumero": "0293121213",
             "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
             "sukunimi": "Sukunimi",
-            "titteli": "Projektipäällikkö",
           },
           Object {
             "__typename": "Yhteystieto",
@@ -1157,7 +1118,6 @@ Object {
             "puhelinnumero": "02998765",
             "sahkoposti": "Joku.Jokunen@vayla.fi",
             "sukunimi": "Jokunen",
-            "titteli": "Konsultti",
           },
         ],
       },
@@ -1180,7 +1140,6 @@ Object {
             "puhelinnumero": "0293121213",
             "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
             "sukunimi": "Sukunimi",
-            "titteli": "Projektipäällikkö",
           },
           Object {
             "__typename": "Yhteystieto",
@@ -1189,7 +1148,6 @@ Object {
             "puhelinnumero": "02998765",
             "sahkoposti": "Joku.Jokunen@vayla.fi",
             "sukunimi": "Jokunen",
-            "titteli": "Konsultti",
           },
         ],
       },
@@ -1212,6 +1170,7 @@ Object {
         "__typename": "AloitusKuulutusJulkaisuJulkinen",
         "aloituskuulutusPDFt": Object {
           "SUOMI": Object {
+            "__typename": "AloitusKuulutusPDF",
             "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
             "aloituskuulutusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412 Aloituskuulutus.pdf",
           },
@@ -1402,7 +1361,7 @@ Object {
         },
         "vuorovaikutusTilaisuudet": Array [
           Object {
-            "__typename": "VuorovaikutusTilaisuus",
+            "__typename": "VuorovaikutusTilaisuusJulkinen",
             "alkamisAika": "15:00",
             "kaytettavaPalvelu": "TEAMS",
             "linkki": "https://linkki_tilaisuuteen",
@@ -1413,7 +1372,7 @@ Object {
           },
           Object {
             "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
-            "__typename": "VuorovaikutusTilaisuus",
+            "__typename": "VuorovaikutusTilaisuusJulkinen",
             "alkamisAika": "10:00",
             "nimi": "Lorem ipsum two 1",
             "osoite": "Katu 123",
@@ -1425,130 +1384,6 @@ Object {
             "tyyppi": "PAIKALLA",
           },
           Object {
-            "__typename": "VuorovaikutusTilaisuus",
-            "alkamisAika": "10:00",
-            "nimi": "Soittoaikatilaisuuden nimi tässä",
-            "paattymisAika": "11:00",
-            "paivamaara": "2022-04-05",
-            "tyyppi": "SOITTOAIKA",
-            "yhteystiedot": Array [
-              Object {
-                "__typename": "Yhteystieto",
-                "etunimi": "A-tunnus1",
-                "organisaatio": "CGI Suomi Oy",
-                "puhelinnumero": "123",
-                "sahkoposti": "mikko.haapamki@cgi.com",
-                "sukunimi": "Hassu",
-              },
-              Object {
-                "__typename": "Yhteystieto",
-                "etunimi": "Etunimi",
-                "organisaatio": "",
-                "puhelinnumero": "0293121213",
-                "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-                "sukunimi": "Sukunimi",
-                "titteli": "Projektipäällikkö",
-              },
-              Object {
-                "__typename": "Yhteystieto",
-                "etunimi": "Joku",
-                "organisaatio": "",
-                "puhelinnumero": "02998765",
-                "sahkoposti": "Joku.Jokunen@vayla.fi",
-                "sukunimi": "Jokunen",
-                "titteli": "Konsultti",
-              },
-            ],
-          },
-          Object {
-            "__typename": "VuorovaikutusTilaisuus",
-            "alkamisAika": "12:00",
-            "nimi": "Toisen soittoaikatilaisuuden nimi tässä",
-            "paattymisAika": "13:00",
-            "paivamaara": "2033-04-05",
-            "tyyppi": "SOITTOAIKA",
-            "yhteystiedot": Array [
-              Object {
-                "__typename": "Yhteystieto",
-                "etunimi": "Etunimi",
-                "organisaatio": "",
-                "puhelinnumero": "0293121213",
-                "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-                "sukunimi": "Sukunimi",
-                "titteli": "Projektipäällikkö",
-              },
-              Object {
-                "__typename": "Yhteystieto",
-                "etunimi": "Joku",
-                "organisaatio": "",
-                "puhelinnumero": "02998765",
-                "sahkoposti": "Joku.Jokunen@vayla.fi",
-                "sukunimi": "Jokunen",
-                "titteli": "Konsultti",
-              },
-            ],
-          },
-        ],
-        "yhteystiedot": Array [
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "A-tunnus1",
-            "organisaatio": "CGI Suomi Oy",
-            "puhelinnumero": "123",
-            "sahkoposti": "mikko.haapamki@cgi.com",
-            "sukunimi": "Hassu",
-          },
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Marko",
-            "organisaatio": "Kajaani",
-            "puhelinnumero": "0293121213",
-            "sahkoposti": "markku.koi@koi.com",
-            "sukunimi": "Koi",
-          },
-        ],
-      },
-      Object {
-        "__typename": "VuorovaikutusJulkinen",
-        "esittelyaineistot": undefined,
-        "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
-        "suunnitelmaluonnokset": undefined,
-        "suunnittelumateriaali": undefined,
-        "videot": Array [
-          Object {
-            "__typename": "Linkki",
-            "nimi": "Esittely 2",
-            "url": "https://video",
-          },
-        ],
-        "vuorovaikutusJulkaisuPaiva": "2022-03-23",
-        "vuorovaikutusNumero": 2,
-        "vuorovaikutusPDFt": undefined,
-        "vuorovaikutusTilaisuudet": Array [
-          Object {
-            "__typename": "VuorovaikutusTilaisuusJulkinen",
-            "alkamisAika": "15:00",
-            "kaytettavaPalvelu": "TEAMS",
-            "linkki": "https://linkki_tilaisuuteen",
-            "nimi": "Lorem ipsum 2",
-            "paattymisAika": "16:00",
-            "paivamaara": "2022-03-04",
-            "tyyppi": "VERKOSSA",
-          },
-          Object {
-            "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
-            "__typename": "VuorovaikutusTilaisuusJulkinen",
-            "alkamisAika": "10:00",
-            "nimi": "Lorem ipsum two 2",
-            "osoite": "Katu 123",
-            "paattymisAika": "11:00",
-            "paikka": "Kunnantalo",
-            "paivamaara": "2022-04-05",
-            "postinumero": "00100",
-            "postitoimipaikka": "Helsinki",
-            "tyyppi": "PAIKALLA",
-          },
-          Object {
             "__typename": "VuorovaikutusTilaisuusJulkinen",
             "alkamisAika": "10:00",
             "nimi": "Soittoaikatilaisuuden nimi tässä",
@@ -1566,20 +1401,11 @@ Object {
               },
               Object {
                 "__typename": "Yhteystieto",
-                "etunimi": "A-Tunnus",
-                "organisaatio": "CGI Suomi Oy",
-                "puhelinnumero": "123",
-                "sahkoposti": "mikko.haapamaki@cgi.com",
-                "sukunimi": "Hassu",
-              },
-              Object {
-                "__typename": "Yhteystieto",
                 "etunimi": "Etunimi",
                 "organisaatio": "",
                 "puhelinnumero": "0293121213",
                 "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
                 "sukunimi": "Sukunimi",
-                "titteli": "Projektipäällikkö",
               },
               Object {
                 "__typename": "Yhteystieto",
@@ -1588,7 +1414,6 @@ Object {
                 "puhelinnumero": "02998765",
                 "sahkoposti": "Joku.Jokunen@vayla.fi",
                 "sukunimi": "Jokunen",
-                "titteli": "Konsultti",
               },
             ],
           },
@@ -1607,7 +1432,6 @@ Object {
                 "puhelinnumero": "0293121213",
                 "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
                 "sukunimi": "Sukunimi",
-                "titteli": "Projektipäällikkö",
               },
               Object {
                 "__typename": "Yhteystieto",
@@ -1616,7 +1440,6 @@ Object {
                 "puhelinnumero": "02998765",
                 "sahkoposti": "Joku.Jokunen@vayla.fi",
                 "sukunimi": "Jokunen",
-                "titteli": "Konsultti",
               },
             ],
           },
@@ -1628,14 +1451,6 @@ Object {
             "organisaatio": "CGI Suomi Oy",
             "puhelinnumero": "123",
             "sahkoposti": "mikko.haapamki@cgi.com",
-            "sukunimi": "Hassu",
-          },
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "A-Tunnus",
-            "organisaatio": "CGI Suomi Oy",
-            "puhelinnumero": "123",
-            "sahkoposti": "mikko.haapamaki@cgi.com",
             "sukunimi": "Hassu",
           },
           Object {
@@ -2052,7 +1867,6 @@ Object {
         "puhelinnumero": "0293121213",
         "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
         "sukunimi": "Sukunimi",
-        "titteli": "Projektipäällikkö",
       },
       Object {
         "__typename": "Yhteystieto",
@@ -2061,7 +1875,6 @@ Object {
         "puhelinnumero": "02998765",
         "sahkoposti": "Joku.Jokunen@vayla.fi",
         "sukunimi": "Jokunen",
-        "titteli": "Konsultti",
       },
     ],
     "lisaAineisto": undefined,
@@ -2072,7 +1885,6 @@ Object {
       "poistumisPaiva": "***unittest***",
     },
     "muistutusoikeusPaattyyPaiva": "2042-06-08",
-    "nahtavillaoloPDFt": undefined,
   },
 }
 `;
@@ -2175,7 +1987,6 @@ Object {
           "puhelinnumero": "0293121213",
           "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
           "sukunimi": "Sukunimi",
-          "titteli": "Projektipäällikkö",
         },
         Object {
           "__typename": "Yhteystieto",
@@ -2184,7 +1995,6 @@ Object {
           "puhelinnumero": "02998765",
           "sahkoposti": "Joku.Jokunen@vayla.fi",
           "sukunimi": "Jokunen",
-          "titteli": "Konsultti",
         },
       ],
       "lisaAineisto": Array [
@@ -2203,7 +2013,6 @@ Object {
         "poistumisPaiva": "***unittest***",
       },
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
-      "nahtavillaoloPDFt": undefined,
     },
   },
 }
@@ -2371,7 +2180,6 @@ Object {
           "puhelinnumero": "0293121213",
           "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
           "sukunimi": "Sukunimi",
-          "titteli": "Projektipäällikkö",
         },
         Object {
           "__typename": "Yhteystieto",
@@ -2380,7 +2188,6 @@ Object {
           "puhelinnumero": "02998765",
           "sahkoposti": "Joku.Jokunen@vayla.fi",
           "sukunimi": "Jokunen",
-          "titteli": "Konsultti",
         },
       ],
       "lisaAineisto": Array [
@@ -2401,7 +2208,6 @@ Object {
         "poistumisPaiva": "***unittest***",
       },
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
-      "nahtavillaoloPDFt": undefined,
     },
     "nahtavillaoloVaiheJulkaisut": Array [
       Object {
@@ -2513,7 +2319,6 @@ Object {
             "puhelinnumero": "0293121213",
             "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
             "sukunimi": "Sukunimi",
-            "titteli": "Projektipäällikkö",
           },
           Object {
             "__typename": "Yhteystieto",
@@ -2522,7 +2327,6 @@ Object {
             "puhelinnumero": "02998765",
             "sahkoposti": "Joku.Jokunen@vayla.fi",
             "sukunimi": "Jokunen",
-            "titteli": "Konsultti",
           },
         ],
         "lisaAineisto": Array [
@@ -2540,6 +2344,7 @@ Object {
         "muokkaaja": "A000112",
         "nahtavillaoloPDFt": Object {
           "SUOMI": Object {
+            "__typename": "NahtavillaoloPDF",
             "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
             "nahtavillaoloIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
             "nahtavillaoloPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
@@ -2646,7 +2451,6 @@ Object {
         "puhelinnumero": "0293121213",
         "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
         "sukunimi": "Sukunimi",
-        "titteli": "Projektipäällikkö",
       },
       Object {
         "__typename": "Yhteystieto",
@@ -2655,7 +2459,6 @@ Object {
         "puhelinnumero": "02998765",
         "sahkoposti": "Joku.Jokunen@vayla.fi",
         "sukunimi": "Jokunen",
-        "titteli": "Konsultti",
       },
     ],
     "muistutusoikeusPaattyyPaiva": "2042-06-08",
@@ -2872,7 +2675,6 @@ Object {
           "tila": "ODOTTAA_TUONTIA",
         },
       ],
-      "hyvaksymisPaatosVaihePDFt": undefined,
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -2918,7 +2720,6 @@ Object {
           "puhelinnumero": "0293121213",
           "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
           "sukunimi": "Sukunimi",
-          "titteli": "Projektipäällikkö",
         },
         Object {
           "__typename": "Yhteystieto",
@@ -2927,7 +2728,6 @@ Object {
           "puhelinnumero": "02998765",
           "sahkoposti": "Joku.Jokunen@vayla.fi",
           "sukunimi": "Jokunen",
-          "titteli": "Konsultti",
         },
       ],
     },
@@ -2986,7 +2786,6 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
-      "hyvaksymisPaatosVaihePDFt": undefined,
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -3032,7 +2831,6 @@ Object {
           "puhelinnumero": "0293121213",
           "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
           "sukunimi": "Sukunimi",
-          "titteli": "Projektipäällikkö",
         },
         Object {
           "__typename": "Yhteystieto",
@@ -3041,7 +2839,6 @@ Object {
           "puhelinnumero": "02998765",
           "sahkoposti": "Joku.Jokunen@vayla.fi",
           "sukunimi": "Jokunen",
-          "titteli": "Konsultti",
         },
       ],
     },
@@ -3077,6 +2874,7 @@ Object {
         ],
         "hyvaksymisPaatosVaihePDFt": Object {
           "SUOMI": Object {
+            "__typename": "HyvaksymisPaatosVaihePDF",
             "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
             "hyvaksymisIlmoitusMuistuttajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
             "hyvaksymisKuulutusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
@@ -3134,7 +2932,6 @@ Object {
             "puhelinnumero": "0293121213",
             "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
             "sukunimi": "Sukunimi",
-            "titteli": "Projektipäällikkö",
           },
           Object {
             "__typename": "Yhteystieto",
@@ -3143,7 +2940,6 @@ Object {
             "puhelinnumero": "02998765",
             "sahkoposti": "Joku.Jokunen@vayla.fi",
             "sukunimi": "Jokunen",
-            "titteli": "Konsultti",
           },
         ],
         "muokkaaja": "A000112",
@@ -3200,7 +2996,6 @@ Object {
         "puhelinnumero": "0293121213",
         "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
         "sukunimi": "Sukunimi",
-        "titteli": "Projektipäällikkö",
       },
       Object {
         "__typename": "Yhteystieto",
@@ -3209,7 +3004,6 @@ Object {
         "puhelinnumero": "02998765",
         "sahkoposti": "Joku.Jokunen@vayla.fi",
         "sukunimi": "Jokunen",
-        "titteli": "Konsultti",
       },
     ],
     "velho": Object {

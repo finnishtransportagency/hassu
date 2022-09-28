@@ -22,12 +22,6 @@ export function adaptVuorovaikutusToSave(
     if (!vuorovaikutusInput.ilmoituksenVastaanottajat) {
       throw new IllegalArgumentError("Vuorovaikutuksella on oltava ilmoituksenVastaanottajat!");
     }
-    if (!vuorovaikutusInput.esittelyaineistot) {
-      throw new IllegalArgumentError("Vuorovaikutuksella on oltava esittelyaineistot!");
-    }
-    if (!vuorovaikutusInput.suunnitelmaluonnokset) {
-      throw new IllegalArgumentError("Vuorovaikutuksella on oltava suunnitelmaluonnokset!");
-    }
 
     const dbVuorovaikutus = findVuorovaikutusByNumber(projekti, vuorovaikutusInput.vuorovaikutusNumero);
 
@@ -53,7 +47,7 @@ export function adaptVuorovaikutusToSave(
 
     const vuorovaikutusToSave: Vuorovaikutus = {
       vuorovaikutusNumero: vuorovaikutusInput.vuorovaikutusNumero,
-      esitettavatYhteystiedot: adaptStandardiYhteystiedotToSave(vuorovaikutusInput.esitettavatYhteystiedot),
+      esitettavatYhteystiedot: adaptStandardiYhteystiedotToSave(vuorovaikutusInput.esitettavatYhteystiedot, true),
       vuorovaikutusTilaisuudet,
       // Jos vuorovaikutuksen ilmoituksella ei tarvitse olla viranomaisvastaanottajia, muokkaa adaptIlmoituksenVastaanottajatToSavea
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(vuorovaikutusInput.ilmoituksenVastaanottajat),

@@ -20,6 +20,7 @@ import {
   JATKOPAATOS_DURATION_UNIT,
   JATKOPAATOS_DURATION_VALUE,
 } from "../../projekti/status/statusHandler";
+import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 
 async function createPDF(
   asiakirjaTyyppi: HyvaksymisPaatosKuulutusAsiakirjaTyyppi,
@@ -74,6 +75,13 @@ class HyvaksymisPaatosVaiheTilaManager extends TilaManager {
     await removeRejectionReasonIfExists(projekti, getHyvaksymisPaatosVaihe(projekti));
 
     const julkaisu = asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projekti);
+    if (!julkaisu.ilmoituksenVastaanottajat) {
+      throw new IllegalArgumentError("Hyväksymispäätösvaiheelle on oltava ilmoituksenVastaanottajat!");
+    }
+    if (!julkaisu.hyvaksymisPaatos) {
+      throw new IllegalArgumentError("Hyväksymispäätösvaiheella on oltava hyvaksymisPaatos!");
+    }
+
     julkaisu.tila = HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA;
     julkaisu.muokkaaja = muokkaaja.uid;
 

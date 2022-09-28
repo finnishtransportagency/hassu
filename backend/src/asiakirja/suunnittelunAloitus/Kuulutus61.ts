@@ -71,9 +71,6 @@ export class Kuulutus61 extends CommonPdf {
     if (!hyvaksymisPaatosVaihe.kuulutusVaihePaattyyPaiva) {
       throw new Error("hyvaksymisPaatosVaihe.kuulutusVaihePaattyyPaiva ei ole määritelty");
     }
-    if (!hyvaksymisPaatosVaihe.kuulutusYhteystiedot) {
-      throw new Error("hyvaksymisPaatosVaihe.kuulutusYhteystiedot ei ole määritelty");
-    }
     if (!kasittelynTila) {
       throw new Error("kasittelynTila ei ole määritelty");
     }
@@ -220,8 +217,6 @@ export class Kuulutus61 extends CommonPdf {
           "P",
           {},
           this.moreInfoElements(
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
             this.hyvaksymisPaatosVaihe.kuulutusYhteystiedot,
             undefined,
             this.hyvaksymisPaatosVaihe.kuulutusYhteysHenkilot,

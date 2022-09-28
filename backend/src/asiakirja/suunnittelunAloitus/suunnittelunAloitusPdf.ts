@@ -19,7 +19,7 @@ export type IlmoitusParams = {
   kielitiedot: Kielitiedot;
   hankkeenKuvaus: LocalizedMap<string>;
   kuulutusPaiva: string;
-  yhteystiedot: Yhteystieto[];
+  yhteystiedot?: Yhteystieto[];
   suunnitteluSopimus?: SuunnitteluSopimus;
 
   // kayttoOikeudet must be set if yhteysHenkilot is set

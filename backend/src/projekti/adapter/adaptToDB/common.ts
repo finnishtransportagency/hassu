@@ -1,11 +1,23 @@
 import * as API from "../../../../../common/graphql/apiModel";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
-import { Aineisto, LocalizedMap, StandardiYhteystiedot, Yhteystieto } from "../../../database/model";
+import {
+  Aineisto,
+  IlmoituksenVastaanottajat,
+  KuntaVastaanottaja,
+  LocalizedMap,
+  StandardiYhteystiedot,
+  ViranomaisVastaanottaja,
+  Yhteystieto,
+} from "../../../database/model";
 import { AineistoChangedEvent, ProjektiAdaptationResult, ProjektiEventType } from "../projektiAdapter";
 import remove from "lodash/remove";
-import { IlmoituksenVastaanottajat, ViranomaisVastaanottaja, KuntaVastaanottaja } from "../../../database/model";
 
-export function adaptIlmoituksenVastaanottajatToSave(vastaanottajat: API.IlmoituksenVastaanottajatInput): IlmoituksenVastaanottajat {
+export function adaptIlmoituksenVastaanottajatToSave(
+  vastaanottajat: API.IlmoituksenVastaanottajatInput | null | undefined
+): IlmoituksenVastaanottajat | null | undefined {
+  if (!vastaanottajat) {
+    return vastaanottajat as null | undefined;
+  }
   if (!vastaanottajat.kunnat) {
     throw new IllegalArgumentError("Ilmoituksen vastaanottajissa tulee olla kunnat mukana!");
   }
@@ -49,9 +61,13 @@ export function adaptYhteysHenkilotToSave(yhteystiedot: string[] | undefined | n
 export function adaptStandardiYhteystiedotToSave(
   kuulutusYhteystiedot: API.StandardiYhteystiedotInput,
   tyhjaEiOk?: boolean
-): StandardiYhteystiedot {
-  if (!tyhjaEiOk && (kuulutusYhteystiedot?.yhteysTiedot || []).length + (kuulutusYhteystiedot?.yhteysHenkilot || []).length === 0) {
-    throw new IllegalArgumentError("Standardiyhteystietojen on sisällettävä vähintään yksi yhteystieto!");
+): StandardiYhteystiedot | undefined {
+  if ((kuulutusYhteystiedot?.yhteysTiedot || []).length + (kuulutusYhteystiedot?.yhteysHenkilot || []).length === 0) {
+    if (tyhjaEiOk) {
+      return undefined;
+    } else {
+      throw new IllegalArgumentError("Standardiyhteystietojen on sisällettävä vähintään yksi yhteystieto!");
+    }
   }
   return {
     yhteysTiedot: adaptYhteystiedotToSave(kuulutusYhteystiedot.yhteysTiedot),
@@ -59,7 +75,10 @@ export function adaptStandardiYhteystiedotToSave(
   };
 }
 
-export function adaptHankkeenKuvausToSave(hankkeenKuvaus: API.HankkeenKuvauksetInput): LocalizedMap<string> {
+export function adaptHankkeenKuvausToSave(hankkeenKuvaus: API.HankkeenKuvauksetInput | undefined | null): LocalizedMap<string> | undefined {
+  if (!hankkeenKuvaus) {
+    return undefined;
+  }
   const kuvaus: LocalizedMap<string> = { [API.Kieli.SUOMI]: hankkeenKuvaus[API.Kieli.SUOMI] };
   Object.keys(API.Kieli).forEach((kieli) => {
     if (hankkeenKuvaus[kieli as API.Kieli]) {
@@ -71,11 +90,15 @@ export function adaptHankkeenKuvausToSave(hankkeenKuvaus: API.HankkeenKuvauksetI
 
 export function adaptAineistotToSave(
   dbAineistot: Aineisto[] | undefined | null,
-  aineistotInput: API.AineistoInput[],
+  aineistotInput: API.AineistoInput[] | undefined | null,
   projektiAdaptationResult: ProjektiAdaptationResult
 ): Aineisto[] | undefined {
   const resultAineistot = [];
   let hasPendingChanges = undefined;
+
+  if (!aineistotInput) {
+    return;
+  }
 
   // Examine and update existing documents
   if (dbAineistot) {

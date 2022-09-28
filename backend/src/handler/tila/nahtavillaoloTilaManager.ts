@@ -8,6 +8,7 @@ import { asiakirjaService, NahtavillaoloKuulutusAsiakirjaTyyppi } from "../../as
 import { fileService } from "../../files/fileService";
 import { parseDate } from "../../util/dateUtil";
 import { ProjektiPaths } from "../../files/ProjektiPath";
+import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -62,6 +63,16 @@ class NahtavillaoloTilaManager extends TilaManager {
     await removeRejectionReasonIfExists(projekti, getNahtavillaoloVaihe(projekti));
 
     const nahtavillaoloVaiheJulkaisu = asiakirjaAdapter.adaptNahtavillaoloVaiheJulkaisu(projekti);
+    if (!nahtavillaoloVaiheJulkaisu.aineistoNahtavilla) {
+      throw new IllegalArgumentError("Nähtävilläolovaiheella on oltava aineistoNahtavilla!");
+    }
+    if (!nahtavillaoloVaiheJulkaisu.hankkeenKuvaus) {
+      throw new IllegalArgumentError("Nähtävilläolovaiheella tulee olla hankkeenKuvaus!");
+    }
+    if (!nahtavillaoloVaiheJulkaisu.ilmoituksenVastaanottajat) {
+      throw new IllegalArgumentError("Nähtävilläolovaiheella on oltava ilmoituksenVastaanottajat!");
+    }
+
     nahtavillaoloVaiheJulkaisu.tila = NahtavillaoloVaiheTila.ODOTTAA_HYVAKSYNTAA;
     nahtavillaoloVaiheJulkaisu.muokkaaja = muokkaaja.uid;
 

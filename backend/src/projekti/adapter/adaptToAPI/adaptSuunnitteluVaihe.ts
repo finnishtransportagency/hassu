@@ -54,9 +54,6 @@ function adaptVuorovaikutukset(
       if (!vuorovaikutus.ilmoituksenVastaanottajat) {
         throw new Error("adaptVuorovaikutukset: vuorovaikutus.ilmoituksenVastaanottajat määrittelemättä");
       }
-      if (!vuorovaikutus.esitettavatYhteystiedot) {
-        throw new Error("adaptVuorovaikutukset: vuorovaikutus.esitettavatYhteystiedot määrittelemättä");
-      }
       if (!vuorovaikutus.vuorovaikutusTilaisuudet) {
         throw new Error("adaptVuorovaikutukset: vuorovaikutus.vuorovaikutusTilaisuudet määrittelemättä");
       }
@@ -95,9 +92,6 @@ function adaptVuorovaikutusTilaisuudet(
         __typename: "VuorovaikutusTilaisuus",
       };
       if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
-        if (!esitettavatYhteystiedot) {
-          throw new Error("adaptVuorovaikutusTilaisuudet: vuorovaikutusTilaisuus.esitettavatYhteystiedot määrittelemättä soittoajalle");
-        }
         tilaisuus.esitettavatYhteystiedot = adaptStandardiYhteystiedotByAddingTypename(esitettavatYhteystiedot);
       }
       return tilaisuus;

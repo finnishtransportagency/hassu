@@ -3,7 +3,6 @@ import { HyvaksymisPaatosVaihe } from "../../../database/model";
 import { ProjektiAdaptationResult } from "../projektiAdapter";
 import { adaptAineistotToSave, adaptIlmoituksenVastaanottajatToSave, adaptYhteystiedotToSave } from "./common";
 import mergeWith from "lodash/mergeWith";
-import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
 
 export function adaptHyvaksymisPaatosVaiheToSave(
   dbHyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | null | undefined,
@@ -24,19 +23,6 @@ export function adaptHyvaksymisPaatosVaiheToSave(
     kuulutusYhteysHenkilot,
     hallintoOikeus,
   } = hyvaksymisPaatosVaihe;
-
-  if (!kuulutusYhteystiedot) {
-    throw new IllegalArgumentError("Hyväksymispäätösvaiheelle on annettava kuulutusYhteystiedot!");
-  }
-  if (!ilmoituksenVastaanottajat) {
-    throw new IllegalArgumentError("Hyväksymispäätösvaiheelle on oltava ilmoituksenVastaanottajat!");
-  }
-  if (!aineistoNahtavillaInput) {
-    throw new IllegalArgumentError("Hyväksymispäätösvaiheella on oltava aineistoNahtavilla!");
-  }
-  if (!hyvaksymisPaatosInput) {
-    throw new IllegalArgumentError("Hyväksymispäätösvaiheella on oltava hyvaksymisPaatos!");
-  }
 
   const aineistoNahtavilla = adaptAineistotToSave(
     dbHyvaksymisPaatosVaihe?.aineistoNahtavilla,

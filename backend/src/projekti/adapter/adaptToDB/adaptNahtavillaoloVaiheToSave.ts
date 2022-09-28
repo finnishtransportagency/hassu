@@ -3,7 +3,6 @@ import * as API from "../../../../../common/graphql/apiModel";
 import { ProjektiAdaptationResult } from "../projektiAdapter";
 import { adaptAineistotToSave, adaptHankkeenKuvausToSave, adaptIlmoituksenVastaanottajatToSave, adaptYhteystiedotToSave } from "./common";
 import mergeWith from "lodash/mergeWith";
-import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
 
 export function adaptNahtavillaoloVaiheToSave(
   dbNahtavillaoloVaihe: NahtavillaoloVaihe | undefined | null,
@@ -25,16 +24,6 @@ export function adaptNahtavillaoloVaiheToSave(
     muistutusoikeusPaattyyPaiva,
     kuulutusYhteysHenkilot,
   } = nahtavillaoloVaihe;
-
-  if (!hankkeenKuvaus) {
-    throw new IllegalArgumentError("Nähtävilläolovaiheella tulee olla hankkeenKuvaus!");
-  }
-  if (!ilmoituksenVastaanottajat) {
-    throw new IllegalArgumentError("Nähtävilläolovaiheella on oltava ilmoituksenVastaanottajat!");
-  }
-  if (!aineistoNahtavillaInput) {
-    throw new IllegalArgumentError("Nähtävilläolovaiheella on oltava aineistoNahtavilla!");
-  }
 
   const aineistoNahtavilla = adaptAineistotToSave(
     dbNahtavillaoloVaihe?.aineistoNahtavilla,

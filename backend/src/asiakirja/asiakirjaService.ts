@@ -182,9 +182,6 @@ export class AsiakirjaService {
     if (!nahtavillaoloVaihe.kuulutusPaiva) {
       throw new Error("nahtavillaoloVaihe.kuulutusPaiva puuttuu");
     }
-    if (!nahtavillaoloVaihe.kuulutusYhteystiedot) {
-      throw new Error("nahtavillaoloVaihe.kuulutusYhteystiedot puuttuu");
-    }
     if (!nahtavillaoloVaihe.kuulutusYhteysHenkilot) {
       throw new Error("nahtavillaoloVaihe.kuulutusYhteysHenkilot puuttuu");
     }
@@ -194,7 +191,7 @@ export class AsiakirjaService {
       kielitiedot: nahtavillaoloVaihe.kielitiedot,
       kuulutusPaiva: nahtavillaoloVaihe.kuulutusPaiva,
       velho: nahtavillaoloVaihe.velho,
-      yhteystiedot: nahtavillaoloVaihe.kuulutusYhteystiedot,
+      yhteystiedot: nahtavillaoloVaihe.kuulutusYhteystiedot || [],
       yhteysHenkilot: nahtavillaoloVaihe.kuulutusYhteysHenkilot,
       kayttoOikeudet: projekti.kayttoOikeudet,
       kieli,
@@ -246,12 +243,6 @@ export class AsiakirjaService {
     if (!hyvaksymisPaatosVaihe.kuulutusPaiva) {
       throw new Error("hyvaksymisPaatosVaihe.kuulutusPaiva puuttuu");
     }
-    if (!hyvaksymisPaatosVaihe.kuulutusYhteystiedot) {
-      throw new Error("hyvaksymisPaatosVaihe.kuulutusYhteystiedot puuttuu");
-    }
-    if (!hyvaksymisPaatosVaihe.kuulutusYhteysHenkilot) {
-      throw new Error("hyvaksymisPaatosVaihe.kuulutusYhteysHenkilot puuttuu");
-    }
     if (!projekti.kasittelynTila) {
       throw new Error("projekti.kasitteolynTila puuttuu");
     }
@@ -262,8 +253,8 @@ export class AsiakirjaService {
       hankkeenKuvaus: { [Kieli.SUOMI]: "", [Kieli.RUOTSI]: "", [Kieli.SAAME]: "" },
       kuulutusPaiva: hyvaksymisPaatosVaihe.kuulutusPaiva,
       velho: hyvaksymisPaatosVaihe.velho,
-      yhteystiedot: hyvaksymisPaatosVaihe.kuulutusYhteystiedot,
-      yhteysHenkilot: hyvaksymisPaatosVaihe.kuulutusYhteysHenkilot,
+      yhteystiedot: hyvaksymisPaatosVaihe.kuulutusYhteystiedot || undefined,
+      yhteysHenkilot: hyvaksymisPaatosVaihe.kuulutusYhteysHenkilot || undefined,
       kayttoOikeudet: projekti.kayttoOikeudet,
       kieli,
     };

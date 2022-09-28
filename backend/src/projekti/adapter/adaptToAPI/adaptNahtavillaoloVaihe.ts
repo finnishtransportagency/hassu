@@ -19,9 +19,6 @@ export function adaptNahtavillaoloVaihe(
     return undefined;
   }
   const { aineistoNahtavilla, lisaAineisto, kuulutusYhteystiedot, ilmoituksenVastaanottajat, hankkeenKuvaus, ...rest } = nahtavillaoloVaihe;
-  if (!kuulutusYhteystiedot) {
-    throw new Error("adaptNahtavillaoloVaihe: nahtavillaoloVaihe.kuulutusYhteystiedot määrittelemättä");
-  }
   if (!hankkeenKuvaus) {
     throw new Error("adaptNahtavillaoloVaihe: nahtavillaoloVaihe.hankkeenKuvaus määrittelemättä");
   }
@@ -62,9 +59,6 @@ export function adaptNahtavillaoloVaiheJulkaisut(
       } = julkaisu;
       if (!nahtavillaoloPDFt) {
         throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.nahtavillaoloPDFt määrittelemättä");
-      }
-      if (!kuulutusYhteystiedot) {
-        throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.kuulutusYhteystiedot määrittelemättä");
       }
       if (!hankkeenKuvaus) {
         throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.hankkeenKuvaus määrittelemättä");

@@ -5,12 +5,9 @@ import { adaptYhteystiedotByAddingTypename } from "./lisaaTypename";
 
 export function adaptStandardiYhteystiedotByAddingProjari(
   kayttoOikeudet: DBVaylaUser[],
-  yhteystiedot: StandardiYhteystiedot
+  yhteystiedot: StandardiYhteystiedot | undefined
 ): API.StandardiYhteystiedot {
-  if (!yhteystiedot.yhteysTiedot) {
-    throw new Error("adaptStandardiYhteystiedotByAddingProjari: yhteystiedot.yhteysTiedot on määrittelemättä");
-  }
-  const yhteysHenkilot = yhteystiedot.yhteysHenkilot || [];
+  const yhteysHenkilot = yhteystiedot?.yhteysHenkilot || [];
   const projari = kayttoOikeudet.find(({ tyyppi }) => tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO);
   if (!projari) {
     throw new Error("Jotain on pahasti pielessä: Projektin kayttiOikeuksista puuttui projektipäällikkö");
@@ -20,7 +17,7 @@ export function adaptStandardiYhteystiedotByAddingProjari(
   }
   return {
     __typename: "StandardiYhteystiedot",
-    yhteysTiedot: adaptYhteystiedotByAddingTypename(yhteystiedot.yhteysTiedot),
+    yhteysTiedot: adaptYhteystiedotByAddingTypename(yhteystiedot?.yhteysTiedot),
     yhteysHenkilot,
   };
 }

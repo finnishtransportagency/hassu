@@ -8,18 +8,10 @@ import PDFKitReference = PDFKit.PDFKitReference;
 const INDENTATION_BODY = 186;
 
 export abstract class AbstractPdf {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  private title: string;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  private fileName: string;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  protected fileBasePath: string;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  protected doc: PDFKit.PDFDocument;
+  private title!: string;
+  private fileName!: string;
+  protected fileBasePath!: string;
+  protected doc!: PDFKit.PDFDocument;
   private textContent = "";
 
   setupPDF(header: string, nimi: string, fileName: string): void {

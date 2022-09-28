@@ -10,9 +10,9 @@ import {
   StandardiYhteystiedot,
   SuunnitteluSopimus,
   Velho,
+  Vuorovaikutus,
   VuorovaikutusPDF,
   VuorovaikutusTilaisuus,
-  Vuorovaikutus,
 } from "../../database/model";
 import * as API from "../../../../common/graphql/apiModel";
 import { HyvaksymisPaatosVaiheJulkaisuJulkinen, NahtavillaoloVaiheJulkaisuJulkinen, Status } from "../../../../common/graphql/apiModel";
@@ -27,6 +27,7 @@ import {
   adaptKielitiedotByAddingTypename,
   adaptLinkkiByAddingTypename,
   adaptLinkkiListByAddingTypename,
+  adaptMandatoryYhteystiedotByAddingTypename,
   adaptYhteystiedotByAddingTypename,
   findPublishedAloitusKuulutusJulkaisu,
 } from "./common";
@@ -115,7 +116,7 @@ class ProjektiAdapterJulkinen {
           kuulutusPaiva: julkaisu.kuulutusPaiva,
           siirtyySuunnitteluVaiheeseen: julkaisu.siirtyySuunnitteluVaiheeseen,
           hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
-          yhteystiedot: adaptYhteystiedotByAddingTypename(yhteystiedot),
+          yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
           velho: adaptVelho(velho),
           suunnitteluSopimus: this.adaptSuunnitteluSopimus(oid, suunnitteluSopimus),
           kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
@@ -138,7 +139,7 @@ class ProjektiAdapterJulkinen {
         logo: fileService.getPublicPathForProjektiFile(oid, suunnitteluSopimus.logo),
       };
     }
-    return suunnitteluSopimus as undefined | null;
+    return suunnitteluSopimus;
   }
 
   adaptJulkaisuPDFPaths(oid: string, aloitusKuulutusPDFS: LocalizedMap<AloitusKuulutusPDF>): API.AloitusKuulutusPDFt | undefined {
@@ -213,9 +214,6 @@ class ProjektiAdapterJulkinen {
       if (!hankkeenKuvaus) {
         throw new Error("adaptNahtavillaoloVaiheJulkaisu: julkaisu.hankkeenKuvaus määrittelemättä");
       }
-      if (!kuulutusYhteystiedot) {
-        throw new Error("adaptNahtavillaoloVaiheJulkaisu: julkaisu.kuulutusYhteystiedot määrittelemättä");
-      }
 
       let apiAineistoNahtavilla: API.Aineisto[] | undefined = undefined;
       if (!isKuulutusNahtavillaVaiheOver(julkaisu)) {
@@ -275,9 +273,6 @@ class ProjektiAdapterJulkinen {
       }
       if (!kuulutusYhteysHenkilot) {
         throw new Error("adaptHyvaksymisPaatosVaihe: julkaisu.kuulutusYhteysHenkilot määrittelemättä");
-      }
-      if (!kuulutusYhteystiedot) {
-        throw new Error("adaptHyvaksymisPaatosVaihe: julkaisu.kuulutusYhteystiedot määrittelemättä");
       }
       const paths = new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(julkaisu);
 
@@ -339,17 +334,24 @@ function isHyvaksymisPaatosVaihePublic(vaihe: HyvaksymisPaatosVaiheJulkaisu): bo
   return vaihe.tila === API.HyvaksymisPaatosVaiheTila.HYVAKSYTTY;
 }
 
-function isUnsetOrInPast(julkaisuPaiva: dayjs.Dayjs) {
+function isUnsetOrInPast(julkaisuPaiva?: dayjs.Dayjs) {
   return !julkaisuPaiva || julkaisuPaiva.isBefore(dayjs());
 }
 
+/**
+ *
+ * @param oid
+ * @param aineistot
+ * @param paths
+ * @param julkaisuPaiva Jos ei asetettu, aineistolla ei ole ajastettua julkaisua, joten se on aina julkista
+ */
 function adaptAineistotJulkinen(
   oid: string,
   aineistot: Aineisto[] | null | undefined,
   paths: PathTuple | undefined,
   julkaisuPaiva?: Dayjs
 ): API.Aineisto[] | undefined {
-  if (julkaisuPaiva && isUnsetOrInPast(julkaisuPaiva) && aineistot && aineistot.length > 0) {
+  if (isUnsetOrInPast(julkaisuPaiva) && aineistot && aineistot.length > 0) {
     return aineistot
       .filter((aineisto) => aineisto.tila == API.AineistoTila.VALMIS && aineisto.tiedosto)
       .map((aineisto) => {
@@ -383,7 +385,7 @@ function adaptVuorovaikutukset(dbProjekti: DBProjekti): API.VuorovaikutusJulkine
   const vuorovaikutukset = dbProjekti.vuorovaikutukset;
   if (vuorovaikutukset && vuorovaikutukset.length > 0) {
     const julkaistutVuorovaikutukset: Vuorovaikutus[] = vuorovaikutukset.filter(
-      (v) => v.vuorovaikutusJulkaisuPaiva && parseDate(v.vuorovaikutusJulkaisuPaiva).isBefore(dayjs())
+      (v) => v.vuorovaikutusJulkaisuPaiva && parseDate(v.vuorovaikutusJulkaisuPaiva).isBefore(dayjs()) && v.julkinen
     );
 
     return julkaistutVuorovaikutukset.map((vuorovaikutus) => {

@@ -64,12 +64,6 @@ export class Kuulutus31 extends CommonPdf {
     if (!projekti.kielitiedot) {
       throw new Error("projekti.kielitiedot ei ole määritelty");
     }
-    if (!nahtavillaoloVaihe.kuulutusYhteystiedot) {
-      throw new Error("nahtavillaoloVaihe.kuulutusYhteystiedot ei ole määritelty");
-    }
-    if (!nahtavillaoloVaihe.kuulutusYhteysHenkilot) {
-      throw new Error("nahtavillaoloVaihe.kuulutusYhteysHenkilot ei ole määritelty");
-    }
     if (!nahtavillaoloVaihe.kuulutusPaiva) {
       throw new Error("nahtavillaoloVaihe.kuulutusPaiva ei ole määritelty");
     }
@@ -121,8 +115,6 @@ export class Kuulutus31 extends CommonPdf {
       this.doc.struct(
         "P",
         {},
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         this.moreInfoElements(this.nahtavillaoloVaihe.kuulutusYhteystiedot, undefined, this.nahtavillaoloVaihe.kuulutusYhteysHenkilot, true)
       ),
       this.kutsuja(),

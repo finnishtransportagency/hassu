@@ -19,10 +19,7 @@ export function adaptAloitusKuulutusToSave(aloitusKuulutus: API.AloitusKuulutusI
       ...rest,
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat), //pakko tukea vielä tätä
       hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus),
-      // Koska kuulutusYhteystiedot on määritelty, adaptStandardiYhteystiedotByAddingTypename palauttaa ei-undefined arvon
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      kuulutusYhteystiedot: adaptStandardiYhteystiedotToSave(kuulutusYhteystiedot),
+      kuulutusYhteystiedot: adaptStandardiYhteystiedotToSave(kuulutusYhteystiedot, true),
     };
   }
   return aloitusKuulutus as undefined;

@@ -1,4 +1,4 @@
-import { Kielitiedot, StandardiYhteystiedot, Linkki, Suunnitelma, Velho, Yhteystieto } from "../../../database/model";
+import { Kielitiedot, Linkki, StandardiYhteystiedot, Suunnitelma, Velho, Yhteystieto } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
 
@@ -57,14 +57,26 @@ export function adaptVelhoByAddingTypename(velho: Velho): API.Velho {
   return { __typename: "Velho", ...velho };
 }
 
-export function adaptYhteystiedotByAddingTypename(yhteystiedot: Yhteystieto[]): API.Yhteystieto[] {
+export function adaptYhteystiedotByAddingTypename(yhteystiedot: Yhteystieto[] | undefined | null): API.Yhteystieto[] | undefined | null {
+  if (yhteystiedot) {
+    return yhteystiedot.map((yt) => ({ __typename: "Yhteystieto", ...yt }));
+  }
+  return yhteystiedot;
+}
+
+export function adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot: Yhteystieto[]): API.Yhteystieto[] {
   return yhteystiedot.map((yt) => ({ __typename: "Yhteystieto", ...yt }));
 }
 
-export function adaptStandardiYhteystiedotByAddingTypename(kuulutusYhteystiedot: StandardiYhteystiedot): API.StandardiYhteystiedot {
+export function adaptStandardiYhteystiedotByAddingTypename(
+  kuulutusYhteystiedot: StandardiYhteystiedot | undefined
+): API.StandardiYhteystiedot | undefined {
+  if (!kuulutusYhteystiedot) {
+    return undefined;
+  }
   return {
     __typename: "StandardiYhteystiedot",
     yhteysHenkilot: kuulutusYhteystiedot.yhteysHenkilot,
-    yhteysTiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot.yhteysTiedot || []),
+    yhteysTiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot.yhteysTiedot),
   };
 }

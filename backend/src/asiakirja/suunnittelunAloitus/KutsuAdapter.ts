@@ -234,7 +234,11 @@ export class KutsuAdapter {
     return "<" + this.kieli + suomi + this.kieli + ">";
   }
 
-  yhteystiedot(yhteystiedot: Yhteystieto[], suunnitteluSopimus?: SuunnitteluSopimus, yhteysHenkilot?: string[]): Yhteystieto[] {
+  yhteystiedot(
+    yhteystiedot: Yhteystieto[] | null | undefined,
+    suunnitteluSopimus?: SuunnitteluSopimus,
+    yhteysHenkilot?: string[] | null
+  ): Yhteystieto[] {
     let yt: Yhteystieto[] = [];
     if (yhteystiedot) {
       yt = yt.concat(yhteystiedot);
