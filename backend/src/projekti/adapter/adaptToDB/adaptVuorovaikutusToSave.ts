@@ -59,6 +59,11 @@ export function adaptVuorovaikutusToSave(
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(vuorovaikutusInput.ilmoituksenVastaanottajat),
       esittelyaineistot,
       suunnitelmaluonnokset,
+      kysymyksetJaPalautteetViimeistaan: vuorovaikutusInput.kysymyksetJaPalautteetViimeistaan,
+      vuorovaikutusJulkaisuPaiva: vuorovaikutusInput.vuorovaikutusJulkaisuPaiva,
+      videot: vuorovaikutusInput.videot,
+      suunnittelumateriaali: vuorovaikutusInput.suunnittelumateriaali,
+      julkinen: vuorovaikutusInput.julkinen,
     };
 
     checkIfAineistoJulkinenChanged(vuorovaikutusToSave, dbVuorovaikutus, projektiAdaptationResult);
