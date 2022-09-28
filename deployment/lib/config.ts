@@ -48,7 +48,7 @@ export class Config extends BaseConfig {
 
     this.scope = scope;
     const env = Config.env;
-    if (Config.isPermanentEnvironment() && !Config.isProdAccount()) { // TODO remove "&& !Config.isProdAccount()" after getting the cert for prod
+    if (Config.isPermanentEnvironment()) {
       this.cloudfrontCertificateArn = this.getParameter(`/${env}/CloudfrontCertificateArn`);
     }
     this.dmzProxyEndpoint = this.getInfraParameter("DMZProxyEndpoint");
