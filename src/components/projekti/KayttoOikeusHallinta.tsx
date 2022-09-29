@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { FieldArrayWithId, useFieldArray, useFormContext } from "react-hook-form";
+import { Controller, FieldArrayWithId, useFieldArray, useFormContext } from "react-hook-form";
 import { api, apiConfig, Kayttaja, KayttajaTyyppi, ProjektiKayttaja, ProjektiKayttajaInput, TallennaProjektiInput } from "@services/api";
 import Autocomplete from "@components/form/Autocomplete";
 import TextInput from "@components/form/TextInput";
@@ -12,6 +12,8 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuStack from "@components/layout/HassuStack";
 import HassuGrid from "@components/HassuGrid";
+import CheckBox from "@components/form/CheckBox";
+import FormGroup from "@components/form/FormGroup";
 
 // Extend TallennaProjektiInput by making the field nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "kayttoOikeudet">;
@@ -188,6 +190,7 @@ const UserFields = ({ isLoadingKayttajat, kayttajat, index, disableFields, remov
   const kayttoOikeus = useMemo(() => kayttoOikeudet[index], [kayttoOikeudet, index]);
   const muokattavissa = kayttoOikeus.muokattavissa;
   const kayttaja = kayttajat?.find(({ uid }) => uid === kayttoOikeus.kayttajatunnus);
+  const isProjektiPaallikko = kayttoOikeus.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO;
 
   const {
     register,
@@ -210,7 +213,7 @@ const UserFields = ({ isLoadingKayttajat, kayttajat, index, disableFields, remov
 
   return (
     <HassuStack direction={["column", "column", "row"]}>
-      <HassuGrid sx={{ width: "100%" }} cols={[1, 1, 3]}>
+      <HassuGrid sx={{ width: "100%" }} cols={{ xs: 1, lg: 3 }}>
         {!muokattavissa ? (
           <TextInput label="Nimi *" value={getKayttajaNimi(kayttaja) || ""} disabled />
         ) : (
@@ -243,6 +246,27 @@ const UserFields = ({ isLoadingKayttajat, kayttajat, index, disableFields, remov
           disabled={disableFields}
         />
         <TextInput label="Sähköpostiosoite *" value={kayttaja?.email || ""} disabled />
+        {!isProjektiPaallikko && (
+          <Controller
+            name={`kayttoOikeudet.${index}.tyyppi`}
+            render={({ field: { value, onChange, ...field } }) => (
+              <FormGroup style={{ marginTop: "auto" }} inlineFlex>
+                <CheckBox
+                  checked={value === KayttajaTyyppi.VARAHENKILO}
+                  // Poista disabloinnista true kun backendista saadaan tieto onko käyttäjä validi VARAHENKILO:ksi
+                  disabled={true || !muokattavissa}
+                  onChange={(event) => {
+                    const checked = event.target.checked;
+                    const tyyppi: KayttajaTyyppi | undefined = checked ? KayttajaTyyppi.VARAHENKILO : undefined;
+                    onChange(tyyppi);
+                  }}
+                  label="Projektipäällikön varahenkilö"
+                  {...field}
+                />
+              </FormGroup>
+            )}
+          />
+        )}
       </HassuGrid>
       <div className={classNames(!!muokattavissa ? "hidden md:block mt-8" : "invisible")}>
         <IconButton
