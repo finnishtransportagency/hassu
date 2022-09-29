@@ -138,7 +138,6 @@ function KayttoOikeusHallinta({ disableFields, onKayttajatUpdate, projektiKaytta
               mutate={mutate}
               remove={remove}
               key={paallikko.id}
-              removeable={false}
             />
           ))}
         </SectionContent>
@@ -157,7 +156,6 @@ function KayttoOikeusHallinta({ disableFields, onKayttajatUpdate, projektiKaytta
               mutate={mutate}
               remove={remove}
               key={user.id}
-              removeable
             />
           );
         })}
@@ -184,21 +182,10 @@ interface UserFieldProps {
   remove: (index?: number | number[] | undefined) => void;
   mutate: KeyedMutator<Kayttaja[]>;
   kayttoOikeudet: ProjektiKayttaja[];
-  removeable?: boolean;
 }
 
-const UserFields = ({
-  isLoadingKayttajat,
-  kayttajat,
-  index,
-  disableFields,
-  remove,
-  mutate,
-  kayttoOikeudet,
-  removeable,
-}: UserFieldProps) => {
+const UserFields = ({ isLoadingKayttajat, kayttajat, index, disableFields, remove, mutate, kayttoOikeudet }: UserFieldProps) => {
   const kayttoOikeus = useMemo(() => kayttoOikeudet[index], [kayttoOikeudet, index]);
-  const isProjektiPaallikko = kayttoOikeus.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO;
   const muokattavissa = kayttoOikeus.muokattavissa;
   const kayttaja = kayttajat?.find(({ uid }) => uid === kayttoOikeus.kayttajatunnus);
 
@@ -224,7 +211,7 @@ const UserFields = ({
   return (
     <HassuStack direction={["column", "column", "row"]}>
       <HassuGrid sx={{ width: "100%" }} cols={[1, 1, 3]}>
-        {isProjektiPaallikko ? (
+        {!muokattavissa ? (
           <TextInput label="Nimi *" value={getKayttajaNimi(kayttaja) || ""} disabled />
         ) : (
           <Autocomplete
@@ -244,7 +231,7 @@ const UserFields = ({
                 shouldValidate: true,
               });
             }}
-            disabled={disableFields || !muokattavissa}
+            disabled={disableFields}
           />
         )}
         <TextInput label="Organisaatio" value={kayttaja?.organisaatio || ""} disabled />
@@ -257,29 +244,29 @@ const UserFields = ({
         />
         <TextInput label="Sähköpostiosoite *" value={kayttaja?.email || ""} disabled />
       </HassuGrid>
-      <div className={classNames(removeable ? "hidden md:block mt-8" : "invisible")}>
+      <div className={classNames(!!muokattavissa ? "hidden md:block mt-8" : "invisible")}>
         <IconButton
           icon="trash"
           onClick={(event) => {
             event.preventDefault();
-            if (removeable) {
+            if (muokattavissa) {
               remove(index);
             }
           }}
-          disabled={disableFields}
+          disabled={disableFields || !muokattavissa}
         />
       </div>
-      {removeable && (
+      {!!muokattavissa && (
         <div className="block md:hidden">
           <Button
             onClick={(event) => {
               event.preventDefault();
-              if (removeable) {
+              if (muokattavissa) {
                 remove(index);
               }
             }}
             endIcon="trash"
-            disabled={disableFields}
+            disabled={disableFields || !muokattavissa}
           >
             Poista
           </Button>
