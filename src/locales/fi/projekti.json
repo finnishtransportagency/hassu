@@ -1,4 +1,5 @@
 {
+  "vuorovaikutus": "Vuorovaikutus",
   "info": {
     "ei-rata": {
       "aloittavat_yleissuunnitelman_laatimisen": "aloittavat yleissuunnitelman laatimisen tarpeellisine tutkimuksineen.",
@@ -75,9 +76,9 @@
     "HYVAKSYMISMENETTELYSSA": "Hyväksynnässä",
     "LAINVOIMA": "Lainvoima",
     "ARKISTOITU": "Arkistoitu",
-    "EPAAKTIIVINEN" : "Epäaktiivinen",
-    "JATKOPAATOS_1" : "1. jatkopäätös",
-    "JATKOPAATOS_2" : "2. jatkopäätös"
+    "EPAAKTIIVINEN": "Epäaktiivinen",
+    "JATKOPAATOS_1": "1. jatkopäätös",
+    "JATKOPAATOS_2": "2. jatkopäätös"
   },
   "projekti-status-kansalaiselle": {
     "ALOITUSKUULUTUS": "Aloituskuulutus",
@@ -86,8 +87,8 @@
     "HYVAKSYTTY": "Suunnitelma hyväksytty",
     "HYVAKSYMISMENETTELYSSA": "Hyväksymismenettelyssä",
     "LAINVOIMA": "Lainvoimainen",
-    "JATKOPAATOS_1" : "1. jatkopäätös",
-    "JATKOPAATOS_2" : "2. jatkopäätös"
+    "JATKOPAATOS_1": "1. jatkopäätös",
+    "JATKOPAATOS_2": "2. jatkopäätös"
   },
   "ui-kuvatekstit": {
     "eu_aluerahoitus": "EU aluerahoitus"

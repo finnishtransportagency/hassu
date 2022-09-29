@@ -17,6 +17,14 @@ export const isValidDate = (date: string | number | Date | dayjs.Dayjs | null | 
   return dayjs(date).isValid();
 };
 
+export function onTulevaisuudessa(date: string | null | undefined): boolean {
+  if (!date) {
+    return false;
+  }
+  let parsedDate = dayjs(date);
+  return parsedDate.isBefore(dayjs());
+}
+
 export function examineJulkaisuPaiva(published: boolean, date: string | null | undefined) {
   let julkaisuPaiva: string | undefined;
   if (date) {

@@ -26,6 +26,12 @@ export const ProjektinTila = styled(Tagi)(
   })
 );
 
+export const VuorovaikutusTagi = styled(Tagi)(
+  sx({
+    width: "200px",
+  })
+);
+
 export const ProjektinTilaMobiili = styled("div")(
   sx({
     fontWeight: "bold",
