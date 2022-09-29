@@ -20,13 +20,23 @@ import { apiTestFixture } from "../apiTestFixture";
 import { cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps, cleanupHyvaksymisPaatosVaiheTimestamps } from "./cleanUpFunctions";
 import dayjs from "dayjs";
 
-export async function testHyvaksymisPaatosVaiheHyvaksymismenettelyssa(oid: string, userFixture: UserFixture): Promise<void> {
+export async function testHyvaksymismenettelyssa(oid: string, userFixture: UserFixture): Promise<void> {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   const julkaisu = dbProjekti.nahtavillaoloVaiheJulkaisut[0];
   // Päättymispäivä alle vuosi menneisyyteen, jottei projekti mene epäaktiiviseksi
   julkaisu.kuulutusVaihePaattyyPaiva = dayjs().add(-2, "day").format();
   await projektiDatabase.updateNahtavillaoloVaiheJulkaisu(dbProjekti, julkaisu);
 
+  await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA); // Verify status in yllapito
+
+  // Verify status in public
+  const publicProjekti = await loadProjektiJulkinenFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA);
+  expect(publicProjekti.nahtavillaoloVaihe).not.to.be.undefined;
+  expect(publicProjekti.nahtavillaoloVaihe.aineistoNahtavilla).to.be.undefined;
+  userFixture.loginAs(UserFixture.mattiMeikalainen);
+}
+
+export async function testHyvaksymisPaatosVaihe(oid: string, userFixture: UserFixture): Promise<void> {
   userFixture.loginAsAdmin();
   await api.tallennaProjekti({
     oid,
@@ -36,14 +46,7 @@ export async function testHyvaksymisPaatosVaiheHyvaksymismenettelyssa(oid: strin
   });
 
   userFixture.loginAs(UserFixture.mattiMeikalainen);
-  await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA); // Verify status in yllapito
-
-  // Verify status in public
-  userFixture.logout();
-  const publicProjekti = await loadProjektiJulkinenFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA);
-  expect(publicProjekti.nahtavillaoloVaihe).not.to.be.undefined;
-  expect(publicProjekti.nahtavillaoloVaihe.aineistoNahtavilla).to.be.undefined;
-  userFixture.loginAs(UserFixture.mattiMeikalainen);
+  await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY); // Verify status in yllapito
 }
 
 export async function testImportHyvaksymisPaatosAineistot(
@@ -74,7 +77,7 @@ export async function testImportHyvaksymisPaatosAineistot(
     },
   });
 
-  const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA);
+  const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
   const hyvaksymisPaatosVaihe = projekti.hyvaksymisPaatosVaihe;
   const kasittelynTila = projekti.kasittelynTila;
   expectToMatchSnapshot("testImportHyvaksymisPaatosAineistot", {
@@ -95,7 +98,7 @@ export async function testHyvaksymisPaatosVaiheApproval(
     toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
   });
 
-  const projektiHyvaksyttavaksi = await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA);
+  const projektiHyvaksyttavaksi = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
   expect(projektiHyvaksyttavaksi.hyvaksymisPaatosVaiheJulkaisut).to.have.length(1);
   expect(projektiHyvaksyttavaksi.hyvaksymisPaatosVaiheJulkaisut[0].tila).to.eq(HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA);
 
@@ -104,7 +107,7 @@ export async function testHyvaksymisPaatosVaiheApproval(
     tyyppi: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
     toiminto: TilasiirtymaToiminto.HYVAKSY,
   });
-  const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA);
+  const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
   expectToMatchSnapshot("testHyvaksymisPaatosVaiheAfterApproval", {
     hyvaksymisPaatosVaihe: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.hyvaksymisPaatosVaihe),
     hyvaksymisPaatosVaiheJulkaisut: projekti.hyvaksymisPaatosVaiheJulkaisut.map(cleanupHyvaksymisPaatosVaiheTimestamps),

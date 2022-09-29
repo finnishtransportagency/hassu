@@ -48,8 +48,9 @@ import {
 } from "./testUtil/nahtavillaolo";
 import {
   testHyvaksymisPaatosVaiheApproval,
-  testHyvaksymisPaatosVaiheHyvaksymismenettelyssa,
+  testHyvaksymismenettelyssa,
   testImportHyvaksymisPaatosAineistot,
+  testHyvaksymisPaatosVaihe,
 } from "./testUtil/hyvaksymisPaatosVaihe";
 import { FixtureName, recordProjektiTestFixture } from "./testFixtureRecorder";
 
@@ -162,7 +163,8 @@ describe("Api", () => {
     await takeS3Snapshot(oid, "Nahtavillaolo published");
     verifyEmailsSent(emailClientStub);
 
-    await testHyvaksymisPaatosVaiheHyvaksymismenettelyssa(oid, userFixture);
+    await testHyvaksymismenettelyssa(oid, userFixture);
+    await testHyvaksymisPaatosVaihe(oid, userFixture);
     await testImportHyvaksymisPaatosAineistot(oid, velhoAineistoKategorias, projektiPaallikko.kayttajatunnus);
     await processQueue(fakeAineistoImportQueue);
     await takeYllapitoS3Snapshot(oid, "Hyvaksymispaatos created", "hyvaksymispaatos");
