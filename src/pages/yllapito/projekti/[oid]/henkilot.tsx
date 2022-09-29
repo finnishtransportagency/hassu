@@ -130,7 +130,11 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
             {!formIsSubmitting && !isLoadingProjekti && (
               <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />
             )}
-            <KayttoOikeusHallinta disableFields={disableFormEdit} onKayttajatUpdate={onKayttajatUpdate} />
+            <KayttoOikeusHallinta
+              disableFields={disableFormEdit}
+              projektiKayttajat={projekti.kayttoOikeudet || []}
+              onKayttajatUpdate={onKayttajatUpdate}
+            />
             <Section noDivider>
               <HassuStack alignItems="flex-end">
                 <Button className="ml-auto" primary disabled={disableFormEdit}>

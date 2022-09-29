@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FieldArrayWithId, useFieldArray, useFormContext } from "react-hook-form";
-import { api, apiConfig, Kayttaja, KayttajaTyyppi, ProjektiKayttajaInput, TallennaProjektiInput } from "@services/api";
+import { api, apiConfig, Kayttaja, KayttajaTyyppi, ProjektiKayttaja, ProjektiKayttajaInput, TallennaProjektiInput } from "@services/api";
 import Autocomplete from "@components/form/Autocomplete";
 import TextInput from "@components/form/TextInput";
 import IconButton from "@components/button/IconButton";
@@ -22,7 +22,12 @@ type RequiredInputValues = Required<{
 interface Props {
   disableFields?: boolean;
   onKayttajatUpdate: (kayttajat: Kayttaja[]) => void;
+  projektiKayttajat: ProjektiKayttaja[];
 }
+
+const getKayttajaNimi = (k: Kayttaja | null | undefined) => {
+  return (k && `${k.sukuNimi}, ${k.etuNimi}`) || "";
+};
 
 export const defaultKayttaja: ProjektiKayttajaInput = {
   tyyppi: undefined,
@@ -30,7 +35,7 @@ export const defaultKayttaja: ProjektiKayttajaInput = {
   kayttajatunnus: "",
 };
 
-function KayttoOikeusHallinta({ disableFields, onKayttajatUpdate }: Props) {
+function KayttoOikeusHallinta({ disableFields, onKayttajatUpdate, projektiKayttajat: projektiKayttajatFromApi }: Props) {
   const {
     control,
     watch,
@@ -54,8 +59,6 @@ function KayttoOikeusHallinta({ disableFields, onKayttajatUpdate }: Props) {
       }>(
         (acc, kayttoOikeus) => {
           if (kayttoOikeus.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO) {
-            acc.projektiPaallikot.push(kayttoOikeus);
-          } else if (kayttoOikeus.tyyppi === KayttajaTyyppi.VARAHENKILO /* TODO: && kayttoOikeus.muokattavissa === false*/) {
             acc.projektiPaallikot.push(kayttoOikeus);
           } else {
             acc.muutHenkilot.push(kayttoOikeus);
@@ -97,14 +100,33 @@ function KayttoOikeusHallinta({ disableFields, onKayttajatUpdate }: Props) {
   const isLoadingKayttajat = !kayttajat && !kayttajatLoadError;
   const kayttoOikeudet = watch("kayttoOikeudet");
 
+  const watchedProjektiKayttajat: ProjektiKayttaja[] = useMemo(() => {
+    const projektiKayttajat = kayttoOikeudet.map((kayttoOikeus) => {
+      const kayttaja = kayttajat?.find(({ uid }) => uid === kayttoOikeus.kayttajatunnus);
+      const kayttajaFromApi = projektiKayttajatFromApi.find(({ kayttajatunnus }) => kayttajatunnus === kayttoOikeus.kayttajatunnus);
+      const projektiKayttaja: ProjektiKayttaja = {
+        ...kayttoOikeus,
+        __typename: "ProjektiKayttaja",
+        email: kayttaja?.email || "",
+        nimi: getKayttajaNimi(kayttaja),
+        organisaatio: kayttaja?.organisaatio || "",
+        muokattavissa: kayttajaFromApi?.muokattavissa === false ? false : true,
+      };
+      return projektiKayttaja;
+    });
+    return projektiKayttajat;
+  }, [kayttoOikeudet, kayttajat, projektiKayttajatFromApi]);
+
+  console.log({ watchedProjektiKayttajat });
+
   return (
     <Section>
       {projektiPaallikot.length > 0 && (
         <SectionContent>
           <h5 className="vayla-paragraph">Projektipäällikkö (hallinnollisen käsittelyn vastuuhenkilö)</h5>
           <p>
-            Projektipäällikön lähtötietona on projekti-VELHOon tallennettu projektipäällikkö. Jos haluat vaihtaa
-            projektipäällikön, tulee tieto vaihtaa projekti-VELHOssa.
+            Projektipäällikön lähtötietona on projekti-VELHOon tallennettu projektipäällikkö. Jos haluat vaihtaa projektipäällikön, tulee
+            tieto vaihtaa projekti-VELHOssa.
           </p>
           {projektiPaallikot.map((paallikko, index) => (
             <UserFields
@@ -112,7 +134,7 @@ function KayttoOikeusHallinta({ disableFields, onKayttajatUpdate }: Props) {
               index={index}
               isLoadingKayttajat={isLoadingKayttajat}
               kayttajat={kayttajat || []}
-              kayttoOikeudet={kayttoOikeudet}
+              kayttoOikeudet={watchedProjektiKayttajat}
               mutate={mutate}
               remove={remove}
               key={paallikko.id}
@@ -131,7 +153,7 @@ function KayttoOikeusHallinta({ disableFields, onKayttajatUpdate }: Props) {
               index={index}
               isLoadingKayttajat={isLoadingKayttajat}
               kayttajat={kayttajat || []}
-              kayttoOikeudet={kayttoOikeudet}
+              kayttoOikeudet={watchedProjektiKayttajat}
               mutate={mutate}
               remove={remove}
               key={user.id}
@@ -149,9 +171,7 @@ function KayttoOikeusHallinta({ disableFields, onKayttajatUpdate }: Props) {
       >
         Lisää uusi +
       </Button>
-      {(errors.kayttoOikeudet as any)?.message && (
-        <p className="text-red pt-3">{(errors.kayttoOikeudet as any)?.message}</p>
-      )}
+      {(errors.kayttoOikeudet as any)?.message && <p className="text-red pt-3">{(errors.kayttoOikeudet as any)?.message}</p>}
     </Section>
   );
 }
@@ -163,7 +183,7 @@ interface UserFieldProps {
   index: number;
   remove: (index?: number | number[] | undefined) => void;
   mutate: KeyedMutator<Kayttaja[]>;
-  kayttoOikeudet: ProjektiKayttajaInput[];
+  kayttoOikeudet: ProjektiKayttaja[];
   removeable?: boolean;
 }
 
@@ -179,10 +199,8 @@ const UserFields = ({
 }: UserFieldProps) => {
   const kayttoOikeus = useMemo(() => kayttoOikeudet[index], [kayttoOikeudet, index]);
   const isProjektiPaallikko = kayttoOikeus.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO;
+  const muokattavissa = kayttoOikeus.muokattavissa;
   const kayttaja = kayttajat?.find(({ uid }) => uid === kayttoOikeus.kayttajatunnus);
-  const getKayttajaNimi = useCallback((k: Kayttaja | null | undefined) => {
-    return (k && `${k.sukuNimi}, ${k.etuNimi}`) || "";
-  }, []);
 
   const {
     register,
@@ -200,7 +218,7 @@ const UserFields = ({
       }
       return Promise.resolve([]);
     },
-    [getKayttajaNimi, disableFields, minSearchLength, kayttaja]
+    [disableFields, minSearchLength, kayttaja]
   );
 
   return (
@@ -226,7 +244,7 @@ const UserFields = ({
                 shouldValidate: true,
               });
             }}
-            disabled={disableFields || isProjektiPaallikko}
+            disabled={disableFields || !muokattavissa}
           />
         )}
         <TextInput label="Organisaatio" value={kayttaja?.organisaatio || ""} disabled />
