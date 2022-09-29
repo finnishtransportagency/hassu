@@ -28,7 +28,7 @@ function getSivuTilanPerusteella(tila: Status | null | undefined) {
     case Status.ALOITUSKUULUTUS:
       return "aloituskuulutus";
     case Status.SUUNNITTELU:
-      return "suunnitteluvaihe";
+      return "suunnittelu";
     case Status.NAHTAVILLAOLO:
       return "nahtavillaolo";
     case Status.HYVAKSYMISMENETTELYSSA:
