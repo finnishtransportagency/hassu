@@ -1,7 +1,17 @@
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
-import { TallennaProjektiInput, api, VuorovaikutusInput, LinkkiInput, Vuorovaikutus, AsiakirjaTyyppi, KirjaamoOsoite } from "@services/api";
+import {
+  TallennaProjektiInput,
+  api,
+  VuorovaikutusInput,
+  VuorovaikutusTilaisuusInput,
+  LinkkiInput,
+  Vuorovaikutus,
+  AsiakirjaTyyppi,
+  KirjaamoOsoite,
+  YhteystietoInput,
+} from "@services/api";
 import Section from "@components/layout/Section";
 import React, { ReactElement, useEffect, useState, useMemo, useCallback } from "react";
 import Button from "@components/button/Button";
@@ -127,20 +137,20 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
           vuorovaikutusJulkaisuPaiva: vuorovaikutus?.vuorovaikutusJulkaisuPaiva || "",
           kysymyksetJaPalautteetViimeistaan: vuorovaikutus?.kysymyksetJaPalautteetViimeistaan || "",
           esitettavatYhteystiedot: {
-            yhteysTiedot: vuorovaikutus?.esitettavatYhteystiedot?.yhteysTiedot || [],
-            yhteysHenkilot: vuorovaikutus?.esitettavatYhteystiedot?.yhteysHenkilot,
+            yhteysTiedot: vuorovaikutus?.esitettavatYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt as YhteystietoInput)) || [],
+            yhteysHenkilot: vuorovaikutus?.esitettavatYhteystiedot?.yhteysHenkilot || [],
           },
           ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, vuorovaikutus?.ilmoituksenVastaanottajat, kirjaamoOsoitteet),
           vuorovaikutusTilaisuudet:
             vuorovaikutus?.vuorovaikutusTilaisuudet?.map((tilaisuus) => {
               const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
               const { esitettavatYhteystiedot } = vuorovaikutusTilaisuusInput;
-              vuorovaikutusTilaisuusInput.esitettavatYhteystiedot = {
-                __typename: "StandardiYhteystiedot",
-                yhteysHenkilot: vuorovaikutusTilaisuusInput.esitettavatYhteystiedot?.yhteysHenkilot || [],
-                yhteysTiedot: esitettavatYhteystiedot?.yhteysTiedot || [],
+              const input: VuorovaikutusTilaisuusInput = vuorovaikutusTilaisuusInput;
+              input.esitettavatYhteystiedot = {
+                yhteysHenkilot: esitettavatYhteystiedot?.yhteysHenkilot || [],
+                yhteysTiedot: esitettavatYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt) as YhteystietoInput) || [],
               };
-              return vuorovaikutusTilaisuusInput;
+              return input;
             }) || [],
           julkinen: !!vuorovaikutus?.julkinen,
           videot: defaultListWithEmptyLink(vuorovaikutus?.videot as LinkkiInput[]),
