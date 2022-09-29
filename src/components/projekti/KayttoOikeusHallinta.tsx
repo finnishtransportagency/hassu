@@ -119,8 +119,6 @@ function KayttoOikeusHallinta({ disableFields, onKayttajatUpdate, projektiKaytta
     return projektiKayttajat;
   }, [kayttoOikeudet, kayttajat, projektiKayttajatFromApi]);
 
-  console.log({ watchedProjektiKayttajat });
-
   return (
     <Section>
       {projektiPaallikot.length > 0 && (
