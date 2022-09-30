@@ -8,7 +8,7 @@ describe("Kansalaisen haut", () => {
     cy.abortEarly();
   });
 
-  it.skip("Tarkista desktop hakulomakkeen osat", { scrollBehavior: "center" }, function () {
+  it("Tarkista desktop hakulomakkeen osat", { scrollBehavior: "center" }, function () {
     cy.viewport("macbook-13");
     cy.visit(Cypress.env("host"));
     cy.get('[name="vapaasanahaku"]').should("be.visible");
@@ -24,7 +24,7 @@ describe("Kansalaisen haut", () => {
     cy.get("#hae").should("be.visible");
   });
 
-  it.skip("Tarkista mobiilin hakulomakkeen osat", { scrollBehavior: "center" }, function () {
+  it("Tarkista mobiilin hakulomakkeen osat", { scrollBehavior: "center" }, function () {
     cy.viewport("iphone-x");
     cy.visit(Cypress.env("host"));
 
