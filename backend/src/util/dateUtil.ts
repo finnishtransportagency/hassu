@@ -48,7 +48,7 @@ export function isDateInThePast(dateString: string | undefined, value?: number, 
   return false;
 }
 
-export function parseAndAddDate(dateString: string | undefined, value?: number, unit?: ManipulateType): Dayjs {
+export function parseAndAddDate(dateString: string | undefined, value?: number, unit?: ManipulateType): Dayjs | undefined {
   if (dateString) {
     // Support times as well for testing, so do not set the time if it was already provided
     let date = parseDate(dateString);

@@ -7,7 +7,7 @@ const argv = yargs(hideBin(process.argv)).describe("oid", "Projekti oid to delet
 };
 
 (async () => {
-  if (process.env.ENVIRONMENT === "prod" && !process.env.VELHO_API_URL.includes("stg")) {
+  if (process.env.ENVIRONMENT === "prod" && process.env.VELHO_API_URL && !process.env.VELHO_API_URL.includes("stg")) {
     throw new Error("Not allowed in production!");
   }
   return await velho.deleteProjektiForTesting(argv.oid);

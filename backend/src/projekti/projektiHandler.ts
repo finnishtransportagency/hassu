@@ -3,7 +3,13 @@ import { getVaylaUser, requirePermissionLuku, requirePermissionLuonti, requirePe
 import { velho } from "../velho/velhoClient";
 import * as API from "../../../common/graphql/apiModel";
 import { KayttajaTyyppi, NykyinenKayttaja, TallennaProjektiInput, Velho } from "../../../common/graphql/apiModel";
-import { ProjektiAdaptationResult, projektiAdapter, ProjektiEventType, VuorovaikutusPublishedEvent } from "./adapter/projektiAdapter";
+import {
+  ProjektiAdaptationResult,
+  projektiAdapter,
+  ProjektiEventType,
+  ProjektiEvent,
+  VuorovaikutusPublishedEvent,
+} from "./adapter/projektiAdapter";
 import { adaptVelhoByAddingTypename } from "./adapter/common";
 import { auditLog, log } from "../logger";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
@@ -82,7 +88,7 @@ function verifyTallennaProjektiPermissions(projektiInDB: DBProjekti, input: Tall
       // Suodata vain muokattavissa olevat käyttäjät
       .filter((kayttoOikeus) => {
         const dbVaylaUser = projektiInDB.kayttoOikeudet.filter((kayttaja) => kayttaja.kayttajatunnus == kayttoOikeus.kayttajatunnus).pop();
-        return dbVaylaUser.muokattavissa === true;
+        return dbVaylaUser && dbVaylaUser.muokattavissa === true;
       })
       .pop()
   ) {
@@ -128,6 +134,9 @@ export async function createProjektiFromVelho(
   try {
     log.info("Loading projekti from Velho", { oid });
     const projekti = await velho.loadProjekti(oid);
+    if (!projekti.velho) {
+      throw new Error("projekti.velho ei ole määritelty");
+    }
     const vastuuhenkilonEmail = projekti.velho.vastuuhenkilonEmail;
     const varahenkilonEmail = projekti.velho.varahenkilonEmail;
 
@@ -171,11 +180,20 @@ export async function findUpdatesFromVelho(oid: string): Promise<Velho> {
   try {
     log.info("Loading projekti", { oid });
     const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
+    if (!projektiFromDB) {
+      throw new Error(`Projektia oid:lla ${oid} ei löydy`);
+    }
     requirePermissionMuokkaa(projektiFromDB);
 
     log.info("Loading projekti from Velho", { oid });
     const projekti = await velho.loadProjekti(oid);
 
+    if (!projekti.velho) {
+      throw new Error(`Projektille oid ${oid} ei löydy velhosta projekti.velho-tietoa.`);
+    }
+    if (!projektiFromDB.velho) {
+      throw new Error(`Projektille oid ${oid} ei löydy hassusta projekti.velho-tietoa.`);
+    }
     return adaptVelhoByAddingTypename(findUpdatedFields(projektiFromDB.velho, projekti.velho));
   } catch (e) {
     log.error(e);
@@ -183,14 +201,23 @@ export async function findUpdatesFromVelho(oid: string): Promise<Velho> {
   }
 }
 
-export async function synchronizeUpdatesFromVelho(oid: string): Promise<Velho> {
+export async function synchronizeUpdatesFromVelho(oid: string): Promise<Velho | undefined> {
   try {
     log.info("Loading projekti", { oid });
     const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
+    if (!projektiFromDB) {
+      throw new Error(`Projektia oid:lla ${oid} ei löydy`);
+    }
     requirePermissionMuokkaa(projektiFromDB);
 
     log.info("Loading projekti from Velho", { oid });
     const projekti = await velho.loadProjekti(oid);
+    if (!projekti.velho) {
+      throw new Error(`Projektille oid ${oid} ei löydy velhosta projekti.velho-tietoa.`);
+    }
+    if (!projektiFromDB.velho) {
+      throw new Error(`Projektille oid ${oid} ei löydy hassusta projekti.velho-tietoa.`);
+    }
 
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
     kayttoOikeudetManager.addProjektiPaallikkoFromEmail(projekti.velho.vastuuhenkilonEmail);
@@ -236,12 +263,12 @@ export async function requirePermissionMuokkaaProjekti(oid: string): Promise<DBP
 }
 
 async function handleEvents(projektiAdaptationResult: ProjektiAdaptationResult) {
-  await projektiAdaptationResult.onEvent(
-    ProjektiEventType.VUOROVAIKUTUS_PUBLISHED,
-    async (event: VuorovaikutusPublishedEvent, projekti: DBProjekti) => {
-      return vuorovaikutusService.handleVuorovaikutusKutsu(projekti.oid, event.vuorovaikutusNumero);
+  await projektiAdaptationResult.onEvent(ProjektiEventType.VUOROVAIKUTUS_PUBLISHED, async (event: ProjektiEvent, projekti: DBProjekti) => {
+    if (!(event as VuorovaikutusPublishedEvent).vuorovaikutusNumero) {
+      throw new Error("handleEvents: event is missing vuorovaikutusNumero");
     }
-  );
+    return vuorovaikutusService.handleVuorovaikutusKutsu(projekti.oid, (event as VuorovaikutusPublishedEvent).vuorovaikutusNumero);
+  });
   await projektiAdaptationResult.onEvent(ProjektiEventType.AINEISTO_CHANGED, async (_event, projekti) => {
     return aineistoService.importAineisto(projekti.oid);
   });

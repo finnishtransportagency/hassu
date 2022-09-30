@@ -99,7 +99,10 @@ export default function VuorovaikutusDialog({
   useEffect(() => {
     if (tilaisuudet) {
       const tilaisuuksienTiedot = {
-        vuorovaikutusTilaisuudet: tilaisuudet,
+        vuorovaikutusTilaisuudet: tilaisuudet.map(tilaisuus=>{
+        const { __typename, ...input } = tilaisuus ;
+        return input;
+      }),
       };
       reset(tilaisuuksienTiedot);
     }

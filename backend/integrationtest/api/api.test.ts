@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { describe, it } from "mocha";
 import { setupLocalDatabase } from "../util/databaseUtil";
 import { Status } from "../../../common/graphql/apiModel";

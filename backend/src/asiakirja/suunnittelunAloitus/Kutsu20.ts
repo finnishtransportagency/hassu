@@ -19,7 +19,7 @@ const fileNamePrefix: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
   RUOTSI: "INBJUDAN TILL DISKUSSION",
 };
 
-function safeConcatStrings(separator, strings: string[]) {
+function safeConcatStrings(separator: string, strings: (string | undefined)[]): string {
   return strings.filter((s) => s).join(separator);
 }
 
@@ -45,6 +45,9 @@ export class Kutsu20 extends CommonPdf {
   private suunnitteluSopimus: SuunnitteluSopimus;
 
   constructor(projekti: DBProjekti, vuorovaikutus: Vuorovaikutus, kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto) {
+    if (!(projekti.velho && projekti.velho.tyyppi && projekti.kielitiedot && projekti.suunnitteluSopimus && projekti.suunnitteluVaihe)) {
+      throw new Error("Projektilta puuttuu tietoja!");
+    }
     const fileName = createFileName(kieli, asiakirjanMuoto, projekti.velho.tyyppi);
     const kutsuAdapter = new KutsuAdapter({
       oid: projekti.oid,
@@ -71,6 +74,9 @@ export class Kutsu20 extends CommonPdf {
   }
 
   protected addContent(): void {
+    // tässä vaiheessa projektilla on velho-tieto
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const vaylaTilaaja = this.isVaylaTilaaja(this.projekti.velho);
     const elements: PDFKit.PDFStructureElementChild[] = [
       this.logo(vaylaTilaaja),
@@ -99,8 +105,14 @@ export class Kutsu20 extends CommonPdf {
     const suunnitteluvaihePublicLink = linkSuunnitteluVaihe(this.oid);
     return [
       this.paragraph(this.startOfPlanningPhrase),
+      // tässä vaiheessa hankkenKuvaus on oltava
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       this.localizedParagraphFromMap(this.suunnitteluVaihe.hankkeenKuvaus),
       this.localizedParagraph([`Yleisötilaisuus järjestetään:`, "", ""]),
+      // vuorovaikutuksella on oltava vuorovaikutusTilaisuudet
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       ...this.vuorovaikutusTilaisuudet(this.vuorovaikutus.vuorovaikutusTilaisuudet),
 
       this.doc.struct("P", {}, [
@@ -134,7 +146,9 @@ export class Kutsu20 extends CommonPdf {
           dayjs(this.vuorovaikutus.vuorovaikutusJulkaisuPaiva).format("DD.MM.YYYY") +
           ".",
       ]),
-
+      // vuorovaikutuksella on oltava vuorovaikutusTilaisuudet
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       this.soittoajat(this.vuorovaikutus.vuorovaikutusTilaisuudet),
 
       this.lisatietojaAntavatParagraph(),
@@ -142,9 +156,9 @@ export class Kutsu20 extends CommonPdf {
         "P",
         {},
         this.moreInfoElements(
-          this.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot,
+          this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysTiedot,
           this.suunnitteluSopimus,
-          this.vuorovaikutus.esitettavatYhteystiedot.yhteysHenkilot,
+          this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysHenkilot,
           false
         )
       ),
@@ -158,6 +172,8 @@ export class Kutsu20 extends CommonPdf {
     if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
       return this.paragraph(this.kutsuAdapter.tilaajaOrganisaatio);
     } else {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       return this.paragraph(translate("vaylavirasto", this.kieli));
     }
   }
@@ -185,7 +201,10 @@ export class Kutsu20 extends CommonPdf {
         laatii = "utarbetar";
       }
     } else {
-      organisaatiotText = translate("vaylavirasto", this.kieli);
+      organisaatiotText = translate("vaylavirasto", this.kieli) || "";
+      if (!organisaatiotText) {
+        throw new Error("Käännös puuttuu!");
+      }
       if (this.kieli == Kieli.SUOMI) {
         laatii = "laatii";
       } else {
@@ -224,6 +243,9 @@ export class Kutsu20 extends CommonPdf {
               continued: true,
             });
           },
+          // tilaisuus.linkki on oltava, koska tilaisuustyyppi on VERKOSSA
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           this.doc.struct("Link", { alt: tilaisuus.linkki }, () => {
             const link = linkSuunnitteluVaihe(this.oid);
             this.doc.fillColor("blue").text(link, {
@@ -254,8 +276,15 @@ export class Kutsu20 extends CommonPdf {
               continued: true,
             });
             this.doc.font("ArialMT");
+
             const place = safeConcatStrings(", ", [
+              // tilaisuus.paikka on oltava, koska tilaisuustyyppi on PAIKALLA
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
               tilaisuus.paikka,
+              // tilaisuus.osoite, tilaisuus.postinumero on oltava, koska tilaisuustyyppi on PAIKALLA
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
               [tilaisuus.osoite, safeConcatStrings(" ", [tilaisuus.postinumero, tilaisuus.postitoimipaikka])].join(", "),
             ]);
             this.doc
@@ -273,7 +302,7 @@ export class Kutsu20 extends CommonPdf {
     return elements;
   }
 
-  protected soittoajat(vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus>): PDFStructureElement {
+  protected soittoajat(vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus>): PDFStructureElement | undefined {
     const soittoaikaTilaisuudet = vuorovaikutusTilaisuudet.filter(
       (tilaisuus) => tilaisuus.tyyppi == VuorovaikutusTilaisuusTyyppi.SOITTOAIKA
     );

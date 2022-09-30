@@ -27,7 +27,7 @@ describe("KayttoOikeudetManager", () => {
       .filter((user) => user.kayttajatunnus == uid)
       .pop();
     expect(projektiPaallikko).to.exist;
-    expect(projektiPaallikko.muokattavissa).to.be.false;
+    expect(projektiPaallikko!.muokattavissa).to.be.false;
   }
 
   function expectVarahenkilo(manager: KayttoOikeudetManager, uid: string, muokattavissa: boolean) {
@@ -37,7 +37,7 @@ describe("KayttoOikeudetManager", () => {
       .filter((user) => user.kayttajatunnus == uid)
       .pop();
     expect(varahenkilo, "varahenkilöä ei löydy: " + [uid, muokattavissa, JSON.stringify(manager.getKayttoOikeudet())].join(", ")).to.exist;
-    expect(varahenkilo.muokattavissa).to.eq(muokattavissa);
+    expect(varahenkilo!.muokattavissa).to.eq(muokattavissa);
   }
 
   function expectKayttaja(manager: KayttoOikeudetManager, uid: string, data: Partial<DBVaylaUser>) {
@@ -62,7 +62,7 @@ describe("KayttoOikeudetManager", () => {
     expectVarahenkilo(manager, "A2", false);
 
     // Lisää nykyinen käyttäjä varahenkilöksi
-    manager.addUser({ kayttajatunnus: kayttajaA3.uid, muokattavissa: true, tyyppi: KayttajaTyyppi.VARAHENKILO });
+    manager.addUser({ kayttajatunnus: kayttajaA3.uid!, muokattavissa: true, tyyppi: KayttajaTyyppi.VARAHENKILO });
     expectProjektiPaallikko(manager, "A1");
     expectVarahenkilo(manager, "A2", false);
     expectVarahenkilo(manager, "A3", true);
@@ -71,47 +71,47 @@ describe("KayttoOikeudetManager", () => {
     expect(manager.getKayttoOikeudet()).toMatchSnapshot();
     manager.applyChanges([
       {
-        kayttajatunnus: kayttajaA1.uid,
-        puhelinnumero: kayttajaA1.puhelinnumero,
+        kayttajatunnus: kayttajaA1.uid!,
+        puhelinnumero: kayttajaA1.puhelinnumero!,
       },
       {
-        kayttajatunnus: kayttajaA2.uid,
-        puhelinnumero: kayttajaA2.puhelinnumero,
+        kayttajatunnus: kayttajaA2.uid!,
+        puhelinnumero: kayttajaA2.puhelinnumero!,
       },
       {
-        kayttajatunnus: kayttajaA3.uid,
-        puhelinnumero: kayttajaA3.puhelinnumero,
+        kayttajatunnus: kayttajaA3.uid!,
+        puhelinnumero: kayttajaA3.puhelinnumero!,
       },
       {
-        kayttajatunnus: kayttajaA4.uid,
-        puhelinnumero: kayttajaA4.puhelinnumero,
+        kayttajatunnus: kayttajaA4.uid!,
+        puhelinnumero: kayttajaA4.puhelinnumero!,
       },
     ]);
 
-    expectKayttaja(manager, "A1", { puhelinnumero: kayttajaA1.puhelinnumero });
-    expectKayttaja(manager, "A2", { puhelinnumero: kayttajaA2.puhelinnumero });
-    expectKayttaja(manager, "A3", { puhelinnumero: kayttajaA3.puhelinnumero });
-    expectKayttaja(manager, "A4", { puhelinnumero: kayttajaA4.puhelinnumero });
+    expectKayttaja(manager, "A1", { puhelinnumero: kayttajaA1.puhelinnumero! });
+    expectKayttaja(manager, "A2", { puhelinnumero: kayttajaA2.puhelinnumero! });
+    expectKayttaja(manager, "A3", { puhelinnumero: kayttajaA3.puhelinnumero! });
+    expectKayttaja(manager, "A4", { puhelinnumero: kayttajaA4.puhelinnumero! });
     expect(manager.getKayttoOikeudet()).to.have.length(4);
     expect(manager.getKayttoOikeudet()).toMatchSnapshot();
 
     // Vaihda käyttäjäA4 varahenkilöksi
     manager.applyChanges([
       {
-        kayttajatunnus: kayttajaA1.uid,
-        puhelinnumero: kayttajaA1.puhelinnumero,
+        kayttajatunnus: kayttajaA1.uid!,
+        puhelinnumero: kayttajaA1.puhelinnumero!,
       },
       {
-        kayttajatunnus: kayttajaA2.uid,
-        puhelinnumero: kayttajaA2.puhelinnumero,
+        kayttajatunnus: kayttajaA2.uid!,
+        puhelinnumero: kayttajaA2.puhelinnumero!,
       },
       {
-        kayttajatunnus: kayttajaA3.uid,
-        puhelinnumero: kayttajaA3.puhelinnumero,
+        kayttajatunnus: kayttajaA3.uid!,
+        puhelinnumero: kayttajaA3.puhelinnumero!,
       },
       {
-        kayttajatunnus: kayttajaA4.uid,
-        puhelinnumero: kayttajaA4.puhelinnumero,
+        kayttajatunnus: kayttajaA4.uid!,
+        puhelinnumero: kayttajaA4.puhelinnumero!,
         tyyppi: KayttajaTyyppi.VARAHENKILO,
       },
     ]);
@@ -123,20 +123,20 @@ describe("KayttoOikeudetManager", () => {
     // Yritä vaihtaa käyttäjäA4 projektipäälliköksi
     manager.applyChanges([
       {
-        kayttajatunnus: kayttajaA1.uid,
-        puhelinnumero: kayttajaA1.puhelinnumero,
+        kayttajatunnus: kayttajaA1.uid!,
+        puhelinnumero: kayttajaA1.puhelinnumero!,
       },
       {
-        kayttajatunnus: kayttajaA2.uid,
-        puhelinnumero: kayttajaA2.puhelinnumero,
+        kayttajatunnus: kayttajaA2.uid!,
+        puhelinnumero: kayttajaA2.puhelinnumero!,
       },
       {
-        kayttajatunnus: kayttajaA3.uid,
-        puhelinnumero: kayttajaA3.puhelinnumero,
+        kayttajatunnus: kayttajaA3.uid!,
+        puhelinnumero: kayttajaA3.puhelinnumero!,
       },
       {
-        kayttajatunnus: kayttajaA4.uid,
-        puhelinnumero: kayttajaA4.puhelinnumero,
+        kayttajatunnus: kayttajaA4.uid!,
+        puhelinnumero: kayttajaA4.puhelinnumero!,
         tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
       },
     ]);
@@ -148,12 +148,12 @@ describe("KayttoOikeudetManager", () => {
     // Yritä poistaa projektipäällikkö ja varahenkilö
     manager.applyChanges([
       {
-        kayttajatunnus: kayttajaA3.uid,
-        puhelinnumero: kayttajaA3.puhelinnumero,
+        kayttajatunnus: kayttajaA3.uid!,
+        puhelinnumero: kayttajaA3.puhelinnumero!,
       },
       {
-        kayttajatunnus: kayttajaA4.uid,
-        puhelinnumero: kayttajaA4.puhelinnumero,
+        kayttajatunnus: kayttajaA4.uid!,
+        puhelinnumero: kayttajaA4.puhelinnumero!,
         tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
       },
     ]);

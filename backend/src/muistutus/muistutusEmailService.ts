@@ -14,6 +14,12 @@ class MuistutusEmailService {
   }
 
   async sendEmailToKirjaamo(projekti: DBProjekti, muistutus: Muistutus) {
+    if (!projekti.velho) {
+      throw new Error("projekti.velho ei määritelty");
+    }
+    if (!projekti.velho.suunnittelustaVastaavaViranomainen) {
+      throw new Error("projekti.velho.suunnittelustaVastaavaViranomainen ei määritelty");
+    }
     const vastaavaViranomainen = projekti.velho.suunnittelustaVastaavaViranomainen;
     const kirjaamot = await kirjaamoOsoitteetService.listKirjaamoOsoitteet();
     // Hassussa on kahden tyyppista Viranomais -enumia, jotka eivat ole kuitenkaan taysin yhtenaisia kattavuudeltaan
@@ -30,12 +36,15 @@ class MuistutusEmailService {
     if (muistutus.liite) {
       log.info("haetaan muistutuksen liite: ", muistutus.liite);
       const liite = await getFileAttachment(projekti.oid, muistutus.liite);
+      if (!liite) {
+        throw new Error("Liitetiedostoa ei saatu");
+      }
       emailOptions.attachments = [liite];
-      emailOptions.text.toString().concat(`
+      emailOptions.text = (emailOptions.text || "").toString().concat(`
       
       Muistutukseen on lisätty liite`);
     } else {
-      emailOptions.text.toString().concat(`
+      emailOptions.text = (emailOptions.text || "").toString().concat(`
       
       Muistutukseen ei ole lisätty liitettä`);
     }

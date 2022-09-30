@@ -96,28 +96,30 @@ export class KayttoOikeudetManager {
     }));
   }
 
-  addProjektiPaallikkoFromEmail(email: string): DBVaylaUser | undefined {
-    // Replace or create new projektipaallikko
-    const projektiPaallikko = this.fillInUserInfoFromUserManagement({
-      user: {
-        tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
-        email: email.toLowerCase(),
-        muokattavissa: false,
-      },
-      searchMode: SearchMode.EMAIL,
-    });
-    if (projektiPaallikko) {
-      // Remove existing PROJEKTIPAALLIKKO
-      remove(this.users, (aUser) => aUser.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO && !aUser.muokattavissa);
-      this.users.push(projektiPaallikko);
-      return projektiPaallikko;
+  addProjektiPaallikkoFromEmail(email: string | null | undefined): DBVaylaUser | undefined {
+    if (email) {
+      // Replace or create new projektipaallikko
+      const projektiPaallikko = this.fillInUserInfoFromUserManagement({
+        user: {
+          tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
+          email: email.toLowerCase(),
+          muokattavissa: false,
+        },
+        searchMode: SearchMode.EMAIL,
+      });
+      if (projektiPaallikko) {
+        // Remove existing PROJEKTIPAALLIKKO
+        remove(this.users, (aUser) => aUser.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO && !aUser.muokattavissa);
+        this.users.push(projektiPaallikko);
+        return projektiPaallikko;
+      }
     }
   }
 
-  addVarahenkiloFromEmail(email: string | undefined): void {
+  addVarahenkiloFromEmail(email: string | null | undefined): void {
     if (email) {
       const kayttajas = this.kayttajas;
-      const account: Kayttaja = kayttajas.findByEmail(email);
+      const account: Kayttaja | undefined = kayttajas.findByEmail(email);
       if (account) {
         const user = mergeKayttaja({ tyyppi: KayttajaTyyppi.VARAHENKILO, muokattavissa: false }, account);
         if (user) {
@@ -152,7 +154,7 @@ export class KayttoOikeudetManager {
 
     if (searchMode === SearchMode.UID) {
       account = kayttajas.getKayttajaByUid(user.kayttajatunnus);
-    } else {
+    } else if (user.email) {
       account = kayttajas.findByEmail(user.email);
     }
     if (account) {

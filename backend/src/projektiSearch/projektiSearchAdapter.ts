@@ -1,13 +1,5 @@
-import { DBProjekti, Kielitiedot } from "../database/model";
-import {
-  KayttajaTyyppi,
-  Kieli,
-  ProjektiHakutulosDokumentti,
-  ProjektiJulkinen,
-  ProjektiTyyppi,
-  Status,
-  Viranomainen,
-} from "../../../common/graphql/apiModel";
+import { DBProjekti } from "../database/model";
+import * as API from "../../../common/graphql/apiModel";
 import { projektiAdapter } from "../projekti/adapter/projektiAdapter";
 import dayjs from "dayjs";
 import { parseDate } from "../util/dateUtil";
@@ -21,10 +13,10 @@ export type ProjektiDocument = {
   maakunnat?: string[];
   kunnat?: string[];
   vaylamuoto?: string[];
-  suunnittelustaVastaavaViranomainen?: Viranomainen;
-  vaihe?: Status;
+  suunnittelustaVastaavaViranomainen?: API.Viranomainen;
+  vaihe?: API.Status;
   viimeinenTilaisuusPaattyy?: string;
-  projektiTyyppi?: ProjektiTyyppi;
+  projektiTyyppi?: API.ProjektiTyyppi;
   paivitetty?: string;
   projektipaallikko?: string;
   muokkaajat?: string[];
@@ -34,16 +26,19 @@ export type ProjektiDocument = {
 export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocument> {
   projekti.tallennettu = true;
   const apiProjekti = projektiAdapter.adaptProjekti(projekti);
+  if (!projekti.velho) {
+    throw new Error("adaptProjektiToIndex: projekti.velho määrittelemättä");
+  }
   const partialDoc: Partial<ProjektiDocument> = {
     nimi: safeTrim(projekti.velho.nimi),
     asiatunnus: safeTrim(projekti.velho.asiatunnusELY || projekti.velho.asiatunnusVayla || ""),
-    projektiTyyppi: projekti.velho.tyyppi,
-    suunnittelustaVastaavaViranomainen: projekti.velho.suunnittelustaVastaavaViranomainen,
+    projektiTyyppi: projekti.velho.tyyppi || undefined,
+    suunnittelustaVastaavaViranomainen: projekti.velho.suunnittelustaVastaavaViranomainen || undefined,
     maakunnat: projekti.velho.maakunnat?.map(safeTrim),
-    vaihe: apiProjekti.status,
+    vaihe: apiProjekti.status || undefined,
     vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
     projektipaallikko: projekti.kayttoOikeudet
-      .filter((value) => value.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO)
+      .filter((value) => value.tyyppi == API.KayttajaTyyppi.PROJEKTIPAALLIKKO)
       .map((value) => safeTrim(value.nimi))
       .pop(),
     paivitetty: projekti.paivitetty || dayjs().format(),
@@ -53,21 +48,36 @@ export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocu
   return partialDoc;
 }
 
-export function adaptProjektiToJulkinenIndex(projekti: ProjektiJulkinen, kieli: Kieli): Omit<ProjektiDocument, "oid"> | undefined {
+export function adaptProjektiToJulkinenIndex(projekti: API.ProjektiJulkinen, kieli: API.Kieli): Omit<ProjektiDocument, "oid"> | undefined {
   if (projekti) {
     // Use texts from suunnitteluvaihe or from published aloituskuulutus
     const suunnitteluVaihe = projekti.suunnitteluVaihe;
     const aloitusKuulutusJulkaisuJulkinen = projekti.aloitusKuulutusJulkaisut?.[0];
-    let nimi: string;
+    let nimi: string | undefined;
     let hankkeenKuvaus: string | undefined;
     let publishTimestamp;
     if (suunnitteluVaihe) {
+      if (!projekti.kielitiedot) {
+        throw new Error("adaptProjektiToJulkinenIndex: projekti.kielitiedot määrittelemättä");
+      }
       // Use texts from projekti
-      hankkeenKuvaus = suunnitteluVaihe?.hankkeenKuvaus?.[kieli];
+      hankkeenKuvaus = suunnitteluVaihe?.hankkeenKuvaus?.[kieli] || undefined;
       nimi = selectNimi(projekti.velho.nimi, projekti.kielitiedot, kieli);
+      if (!nimi) {
+        throw new Error(`adaptProjektiToJulkinenIndex: projektilta puuttuu nimi kielellä ${kieli}`);
+      }
     } else if (aloitusKuulutusJulkaisuJulkinen) {
+      if (!aloitusKuulutusJulkaisuJulkinen.hankkeenKuvaus) {
+        throw new Error("adaptProjektiToJulkinenIndex: aloitusKuulutusJulkaisuJulkinen.hankkeenKuvaus puuttuu");
+      }
+      if (!aloitusKuulutusJulkaisuJulkinen.kielitiedot) {
+        throw new Error("adaptProjektiToJulkinenIndex: aloitusKuulutusJulkaisuJulkinen.kielitiedot puuttuu");
+      }
+      if (!aloitusKuulutusJulkaisuJulkinen.kuulutusPaiva) {
+        throw new Error("adaptProjektiToJulkinenIndex: aloitusKuulutusJulkaisuJulkinen.kuulutusPaiva puuttuu");
+      }
       // Use texts from aloituskuulutusjulkaisu
-      hankkeenKuvaus = aloitusKuulutusJulkaisuJulkinen.hankkeenKuvaus?.[kieli];
+      hankkeenKuvaus = aloitusKuulutusJulkaisuJulkinen.hankkeenKuvaus[kieli] || undefined;
       nimi = selectNimi(aloitusKuulutusJulkaisuJulkinen.velho.nimi, aloitusKuulutusJulkaisuJulkinen.kielitiedot, kieli);
       publishTimestamp = parseDate(aloitusKuulutusJulkaisuJulkinen.kuulutusPaiva).format();
     }
@@ -99,10 +109,10 @@ export function adaptProjektiToJulkinenIndex(projekti: ProjektiJulkinen, kieli: 
     const docWihtoutOid: Omit<ProjektiDocument, "oid"> = {
       nimi: safeTrim(nimi),
       hankkeenKuvaus,
-      projektiTyyppi: projekti.velho.tyyppi,
+      projektiTyyppi: projekti.velho.tyyppi || undefined,
       kunnat: projekti.velho.kunnat?.map(safeTrim),
       maakunnat: projekti.velho.maakunnat?.map(safeTrim),
-      vaihe: projekti.status,
+      vaihe: projekti.status || undefined,
       viimeinenTilaisuusPaattyy,
       vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
       paivitetty: projekti.paivitetty || dayjs().format(),
@@ -122,7 +132,7 @@ export function adaptSearchResultsToProjektiDocuments(results: any): ProjektiDoc
   });
 }
 
-export function adaptSearchResultsToProjektiHakutulosDokumenttis(results: any): ProjektiHakutulosDokumentti[] {
+export function adaptSearchResultsToProjektiHakutulosDokumenttis(results: any): API.ProjektiHakutulosDokumentti[] {
   if (results.status && results.status >= 400) {
     log.error(results);
     throw new Error("Projektihaussa tapahtui virhe");
@@ -130,7 +140,7 @@ export function adaptSearchResultsToProjektiHakutulosDokumenttis(results: any): 
   return (
     results.hits?.hits?.map((hit: any) => {
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      return { ...hit._source, oid: hit._id, __typename: "ProjektiHakutulosDokumentti" } as ProjektiHakutulosDokumentti;
+      return { ...hit._source, oid: hit._id, __typename: "ProjektiHakutulosDokumentti" } as API.ProjektiHakutulosDokumentti;
     }) || []
   );
 }
@@ -139,12 +149,12 @@ function safeTrim(s: string): string {
   return s.trim();
 }
 
-function selectNimi(nimi: string, kielitiedot: Kielitiedot, kieli: Kieli): string {
-  if (kielitiedot.ensisijainenKieli == kieli || kielitiedot.toissijainenKieli == kieli) {
-    if (kieli == Kieli.SUOMI) {
-      return nimi;
+function selectNimi(nimi: string | null | undefined, kielitiedot: API.Kielitiedot, kieli: API.Kieli): string | undefined {
+  if (nimi && (kielitiedot.ensisijainenKieli == kieli || kielitiedot.toissijainenKieli == kieli)) {
+    if (kieli == API.Kieli.SUOMI) {
+      return nimi || undefined;
     } else {
-      return kielitiedot.projektinNimiVieraskielella;
+      return kielitiedot.projektinNimiVieraskielella || undefined;
     }
   }
 }

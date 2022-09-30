@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { api } from "../apiClient";
 import { apiTestFixture } from "../apiTestFixture";
 import {
@@ -29,11 +31,7 @@ export async function testNahtavillaolo(oid: string, projektiPaallikko: string):
   expectToMatchSnapshot("testNahtavillaOloPerustiedot", cleanupNahtavillaoloTimestamps(projekti.nahtavillaoloVaihe));
 }
 
-export async function testNahtavillaoloApproval(
-  oid: string,
-  projektiPaallikko: ProjektiKayttaja,
-  userFixture: UserFixture
-): Promise<void> {
+export async function testNahtavillaoloApproval(oid: string, projektiPaallikko: ProjektiKayttaja, userFixture: UserFixture): Promise<void> {
   userFixture.loginAsProjektiKayttaja(projektiPaallikko);
   await api.siirraTila({
     oid,
@@ -58,9 +56,7 @@ export async function testNahtavillaoloApproval(
     userFixture,
     "NahtavillaOloJulkinenAfterApproval",
     (projektiJulkinen) =>
-      (projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenTimestamps(
-        projektiJulkinen.nahtavillaoloVaihe
-      ))
+      (projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenTimestamps(projektiJulkinen.nahtavillaoloVaihe))
   );
 }
 
@@ -70,9 +66,7 @@ export async function testImportNahtavillaoloAineistot(
 ): Promise<NahtavillaoloVaihe> {
   const t2xx = velhoAineistoKategorias
     .reduce((documents, aineistoKategoria) => {
-      aineistoKategoria.aineistot
-        .filter((aineisto) => aineisto.kategoriaId == "T2xx")
-        .forEach((aineisto) => documents.push(aineisto));
+      aineistoKategoria.aineistot.filter((aineisto) => aineisto.kategoriaId == "T2xx").forEach((aineisto) => documents.push(aineisto));
       return documents;
     }, [] as VelhoAineisto[])
     .sort((a, b) => a.oid.localeCompare(b.oid));
@@ -113,10 +107,7 @@ async function validateFileIsDownloadable(aineistoURL: string) {
   }
 }
 
-export async function testNahtavillaoloLisaAineisto(
-  oid: string,
-  lisaAineistoParametrit: LisaAineistoParametrit
-): Promise<void> {
+export async function testNahtavillaoloLisaAineisto(oid: string, lisaAineistoParametrit: LisaAineistoParametrit): Promise<void> {
   expect(lisaAineistoParametrit).to.not.be.empty;
   const lisaAineistot = await api.listaaLisaAineisto(oid, lisaAineistoParametrit);
   expectToMatchSnapshot("lisaAineisto", {

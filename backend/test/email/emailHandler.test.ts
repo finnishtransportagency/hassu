@@ -10,6 +10,7 @@ import { ProjektiFixture } from "../fixture/projektiFixture";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import AWSMock from "aws-sdk-mock";
 import AWS from "aws-sdk";
+import { Readable } from "stream";
 
 const { expect } = require("chai");
 
@@ -75,7 +76,9 @@ describe("emailHandler", () => {
       it("should send emails and attachments succesfully", async () => {
         updateAloitusKuulutusJulkaisuStub.resolves();
         AWSMock.mock("S3", "getObject", s3Stub);
-        s3Stub.resolves({});
+        s3Stub.resolves({
+          Body: new Readable(),
+        });
 
         await emailHandler.sendEmailsByToiminto(TilasiirtymaToiminto.HYVAKSY, fixture.PROJEKTI2_OID);
 

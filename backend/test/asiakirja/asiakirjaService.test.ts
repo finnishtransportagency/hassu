@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* tslint:disable:only-arrow-functions */
 import { describe, it } from "mocha";
 import {

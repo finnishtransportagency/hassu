@@ -8,10 +8,10 @@ import PDFKitReference = PDFKit.PDFKitReference;
 const INDENTATION_BODY = 186;
 
 export abstract class AbstractPdf {
-  private title: string;
-  private fileName: string;
-  protected fileBasePath: string;
-  protected doc: PDFKit.PDFDocument;
+  private title!: string;
+  private fileName!: string;
+  protected fileBasePath!: string;
+  protected doc!: PDFKit.PDFDocument;
   private textContent = "";
 
   setupPDF(header: string, nimi: string, fileName: string): void {
@@ -194,13 +194,19 @@ export abstract class AbstractPdf {
     const originalTextFunc = doc.text;
     doc.text = (...args) => {
       this.textContent = this.textContent + args[0];
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       if (args.length > 1 && args?.[1]?.continued !== undefined && args[1]?.continued === false) {
         this.textContent = this.textContent + "\n";
       }
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       return originalTextFunc.apply(doc, args);
     };
     const originalMoveDownFunc = doc.moveDown;
     doc.moveDown = (...args) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       this.textContent = this.textContent + "\n".repeat(args[0] | 1);
       return originalMoveDownFunc.apply(doc, args);
     };

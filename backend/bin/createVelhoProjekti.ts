@@ -3,13 +3,12 @@ import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { velho } from "../src/velho/velhoClient";
 
-const argv = yargs(hideBin(process.argv))
-  .describe("templateName", "Projekti template name")
-  .demandOption(["templateName"])
-  .parse() as { templateName: string };
+const argv = yargs(hideBin(process.argv)).describe("templateName", "Projekti template name").demandOption(["templateName"]).parse() as {
+  templateName: string;
+};
 
 (async () => {
-  if (process.env.ENVIRONMENT === "prod" && !process.env.VELHO_API_URL.includes("stg")) {
+  if (process.env.ENVIRONMENT === "prod" && process.env.VELHO_API_URL && !process.env.VELHO_API_URL.includes("stg")) {
     throw new Error("Not allowed in production!");
   }
 

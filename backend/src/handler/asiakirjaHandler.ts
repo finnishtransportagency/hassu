@@ -1,12 +1,6 @@
 import { projektiDatabase } from "../database/projektiDatabase";
 import { requirePermissionLuku } from "../user";
-import {
-  AsiakirjaTyyppi,
-  EsikatseleAsiakirjaPDFQueryVariables,
-  Kieli,
-  PDF,
-  TallennaProjektiInput,
-} from "../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, EsikatseleAsiakirjaPDFQueryVariables, Kieli, PDF, TallennaProjektiInput } from "../../../common/graphql/apiModel";
 import { log } from "../logger";
 import { NotFoundError } from "../error/NotFoundError";
 import {
@@ -107,12 +101,7 @@ async function handleHyvaksymisPaatosKuulutus(
   });
 }
 
-export async function lataaAsiakirja({
-  oid,
-  asiakirjaTyyppi,
-  kieli,
-  muutokset,
-}: EsikatseleAsiakirjaPDFQueryVariables): Promise<PDF> {
+export async function lataaAsiakirja({ oid, asiakirjaTyyppi, kieli, muutokset }: EsikatseleAsiakirjaPDFQueryVariables): Promise<PDF> {
   const vaylaUser = requirePermissionLuku();
   if (vaylaUser) {
     log.info("Loading projekti", { oid });
@@ -121,19 +110,19 @@ export async function lataaAsiakirja({
       switch (asiakirjaTyyppi) {
         case AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA:
         case AsiakirjaTyyppi.ALOITUSKUULUTUS:
-          return handleAloitusKuulutus(projekti, asiakirjaTyyppi, kieli, muutokset);
+          return handleAloitusKuulutus(projekti, asiakirjaTyyppi, kieli || Kieli.SUOMI, muutokset);
         case AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU:
-          return handleYleisotilaisuusKutsu(projekti, asiakirjaTyyppi, kieli, muutokset);
+          return handleYleisotilaisuusKutsu(projekti, asiakirjaTyyppi, kieli || Kieli.SUOMI, muutokset);
         case AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS:
         case AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE:
         case AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE:
-          return handleNahtavillaoloKuulutus(projekti, kieli, muutokset, asiakirjaTyyppi);
+          return handleNahtavillaoloKuulutus(projekti, kieli || Kieli.SUOMI, muutokset, asiakirjaTyyppi);
         case AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS:
         case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE:
         case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE:
         case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE:
         case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE:
-          return handleHyvaksymisPaatosKuulutus(projekti, kieli, muutokset, asiakirjaTyyppi);
+          return handleHyvaksymisPaatosKuulutus(projekti, kieli || Kieli.SUOMI, muutokset, asiakirjaTyyppi);
         default:
           throw new Error("Not implemented");
       }

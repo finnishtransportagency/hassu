@@ -17,9 +17,9 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
     cy.reload(); // extra reload to avoid white page
     cy.contains(projektiNimi);
 
-    const today = dayjs().format("YYYY-MM-DDTHH:mm");
+    const paatosPvm = dayjs().add(-1, "hour").format("YYYY-MM-DDTHH:mm");
 
-    cy.get('[name="kasittelynTila.hyvaksymispaatos.paatoksenPvm"]').should("be.enabled").clear().type(today, {
+    cy.get('[name="kasittelynTila.hyvaksymispaatos.paatoksenPvm"]').should("be.enabled").clear().type(paatosPvm, {
       waitForAnimations: true,
     });
     cy.get('[name="kasittelynTila.hyvaksymispaatos.asianumero"]').clear().type(asianumero);
@@ -29,7 +29,7 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
     cy.reload();
 
     // Test saved values
-    cy.get('[name="kasittelynTila.hyvaksymispaatos.paatoksenPvm"]').should("have.value", today);
+    cy.get('[name="kasittelynTila.hyvaksymispaatos.paatoksenPvm"]').should("have.value", paatosPvm);
     cy.get('[name="kasittelynTila.hyvaksymispaatos.asianumero"]').should("have.value", asianumero);
 
     // Move to past
@@ -83,8 +83,8 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
 
     cy.get("#kuulutuksentiedot_tab").click();
 
-    const today = dayjs().format("YYYY-MM-DDTHH:mm");
-    cy.get('[name="hyvaksymisPaatosVaihe.kuulutusPaiva"]').should("be.enabled").type(today, {
+    const kuulutusPaiva = dayjs().format("YYYY-MM-DDTHH:mm");
+    cy.get('[name="hyvaksymisPaatosVaihe.kuulutusPaiva"]').should("be.enabled").type(kuulutusPaiva, {
       waitForAnimations: true,
     });
 

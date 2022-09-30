@@ -4,16 +4,20 @@ import { Person } from "./kayttajas";
 
 class PersonSearchUpdaterClient {
   async readUsersFromSearchUpdaterLambda(): Promise<Record<string, Person>> {
-    let json: string;
-    if (config.personSearchUpdaterLambdaArn) {
-      json = await invokeLambda(config.personSearchUpdaterLambdaArn, true);
+    if (!config.personSearchUpdaterLambdaArn) {
+      throw new Error("config.personSearchUpdaterLambdaArn määrittelemättä");
     }
+    const json = await invokeLambda(config.personSearchUpdaterLambdaArn, true);
     if (!json) {
       throw new Error("Could not read list of users");
     }
+
+    if (!json) {
+      throw new Error("");
+    }
     const users = JSON.parse(json);
     if (users.length <= 0) {
-      throw new Error("Could not read list of users");
+      throw new Error("Could not read list of users (no users)");
     }
     return users;
   }

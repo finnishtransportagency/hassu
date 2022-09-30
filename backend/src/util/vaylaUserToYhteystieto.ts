@@ -6,7 +6,7 @@ export function vaylaUserToYhteystieto(vaylaUser: DBVaylaUser): Yhteystieto {
   return {
     etunimi,
     sukunimi,
-    puhelinnumero: vaylaUser.puhelinnumero,
+    puhelinnumero: vaylaUser.puhelinnumero || "",
     sahkoposti: vaylaUser.email,
     organisaatio: vaylaUser.organisaatio,
   };

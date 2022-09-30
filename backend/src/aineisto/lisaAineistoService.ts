@@ -1,14 +1,9 @@
-import {
-  LisaAineisto,
-  LisaAineistoParametrit,
-  LisaAineistot,
-  ListaaLisaAineistoInput,
-} from "../../../common/graphql/apiModel";
+import { LisaAineisto, LisaAineistoParametrit, LisaAineistot, ListaaLisaAineistoInput } from "../../../common/graphql/apiModel";
 
 import crypto from "crypto";
 import dayjs from "dayjs";
 import { IllegalAccessError } from "../error/IllegalAccessError";
-import { DBProjekti, NahtavillaoloVaiheJulkaisu } from "../database/model";
+import { Aineisto, DBProjekti, NahtavillaoloVaiheJulkaisu, NahtavillaoloVaihe } from "../database/model";
 import { NotFoundError } from "../error/NotFoundError";
 import { fileService } from "../files/fileService";
 
@@ -16,14 +11,19 @@ class LisaAineistoService {
   listaaLisaAineisto(projekti: DBProjekti, params: ListaaLisaAineistoInput): LisaAineistot {
     const nahtavillaolo = findNahtavillaoloVaiheById(projekti, params.nahtavillaoloVaiheId);
 
-    function adaptLisaAineisto(aineisto): LisaAineisto {
+    function adaptLisaAineisto(aineisto: Aineisto): LisaAineisto {
       const { nimi, jarjestys, kategoriaId } = aineisto;
+      if (!aineisto.tiedosto) {
+        throw new Error(
+          `Virhe lisäaineiston listaamisessa: Aineistolta (nimi: ${nimi}, dokumenttiOid: ${aineisto.dokumenttiOid}) puuttuu tiedosto!`
+        );
+      }
       const linkki = fileService.createYllapitoSignedDownloadLink(projekti.oid, aineisto.tiedosto);
       return { __typename: "LisaAineisto", nimi, jarjestys, kategoriaId, linkki };
     }
 
-    const aineistot = nahtavillaolo.aineistoNahtavilla?.map(adaptLisaAineisto) || [];
-    const lisaAineistot = nahtavillaolo.lisaAineisto?.map(adaptLisaAineisto) || [];
+    const aineistot = nahtavillaolo?.aineistoNahtavilla?.map(adaptLisaAineisto) || [];
+    const lisaAineistot = nahtavillaolo?.lisaAineisto?.map(adaptLisaAineisto) || [];
     return { __typename: "LisaAineistot", aineistot, lisaAineistot };
   }
 
@@ -31,6 +31,8 @@ class LisaAineistoService {
     const expires = dayjs().add(180, "day").format("YYYY-MM-DD");
     if (!salt) {
       // Should not happen after going to production because salt is generated in the first save to DB
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       return;
     }
     const hash = LisaAineistoService.createHash(oid, { nahtavillaoloVaiheId, poistumisPaiva: expires }, salt);
@@ -58,11 +60,7 @@ class LisaAineistoService {
     }
   }
 
-  private static createHash(
-    oid: string,
-    params: Omit<ListaaLisaAineistoInput, "hash">,
-    salt: string | undefined
-  ): string {
+  private static createHash(oid: string, params: Omit<ListaaLisaAineistoInput, "hash">, salt: string | undefined): string {
     if (!salt) {
       throw new Error("Salt missing");
     }
@@ -76,12 +74,17 @@ class LisaAineistoService {
 function findNahtavillaoloVaiheById(
   projekti: DBProjekti,
   nahtavillaoloVaiheId: number
-): NahtavillaoloVaiheJulkaisu | undefined {
-  return []
-    .concat(projekti.nahtavillaoloVaiheJulkaisut)
-    .concat(projekti.nahtavillaoloVaihe)
-    .filter((nahtavillaolo) => nahtavillaolo?.id == nahtavillaoloVaiheId)
-    .pop();
+): NahtavillaoloVaiheJulkaisu | NahtavillaoloVaihe | undefined {
+  let lista: (NahtavillaoloVaiheJulkaisu | NahtavillaoloVaihe | undefined)[] = [];
+  if (projekti.nahtavillaoloVaiheJulkaisut) {
+    lista = lista.concat(projekti.nahtavillaoloVaiheJulkaisut);
+  }
+  if (projekti.nahtavillaoloVaihe) {
+    lista = lista.concat(projekti.nahtavillaoloVaihe);
+  }
+  lista = lista.filter((nahtavillaolo) => nahtavillaolo?.id == nahtavillaoloVaiheId);
+
+  return lista.pop();
 }
 
 export const lisaAineistoService = new LisaAineistoService();

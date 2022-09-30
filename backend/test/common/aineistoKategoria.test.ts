@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { describe, it } from "mocha";
 import { aineistoKategoriat } from "../../../common/aineistoKategoriat";
 

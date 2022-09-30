@@ -7,6 +7,9 @@ export function adaptSuunnitteluSopimus(
   suunnitteluSopimus?: SuunnitteluSopimus | null
 ): API.SuunnitteluSopimus | undefined | null {
   if (suunnitteluSopimus) {
+    if (!suunnitteluSopimus.logo) {
+      throw new Error("adaptSuunnitteluSopimus: suunnitteluSopimus.logo määrittelemättä");
+    }
     return {
       __typename: "SuunnitteluSopimus",
       ...suunnitteluSopimus,

@@ -6,7 +6,7 @@ import { log } from "../logger";
 
 class PalauteEmailService {
   async sendEmailsToPalautteidenVastaanottajat(projekti: DBProjekti) {
-    if (projekti.suunnitteluVaihe.palautteidenVastaanottajat) {
+    if (projekti.suunnitteluVaihe?.palautteidenVastaanottajat) {
       for (const username of projekti.suunnitteluVaihe.palautteidenVastaanottajat) {
         const recipient = projekti.kayttoOikeudet.find((user) => user.kayttajatunnus == username);
         if (recipient) {
@@ -25,12 +25,18 @@ class PalauteEmailService {
     log.info("Projekteja, joissa uusia palautteita " + oids.length + " kpl.");
     for (const oid of oids) {
       const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
+      if (!dbProjekti) {
+        throw new Error(`Projektia oid:lla ${oid} ei löytynyt tietokannasta`);
+      }
 
       let recipients;
       // Send digest email to everybody else than the ones listed in palautteidenVastaanottajat. They already got the emails immediately when feedback was given
-      if (dbProjekti.suunnitteluVaihe.palautteidenVastaanottajat) {
+      if (dbProjekti.suunnitteluVaihe?.palautteidenVastaanottajat) {
         recipients = dbProjekti.kayttoOikeudet.filter(
-          (user) => dbProjekti.suunnitteluVaihe.palautteidenVastaanottajat.indexOf(user.kayttajatunnus) < 0
+          // varmistettu jo, että palautteidenVastaanottajat on olemassa
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          (user) => dbProjekti.suunnitteluVaihe?.palautteidenVastaanottajat.indexOf(user.kayttajatunnus) < 0
         );
       } else {
         recipients = dbProjekti.kayttoOikeudet;

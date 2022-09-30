@@ -3,8 +3,18 @@
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint", "mocha-no-only"],
   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
-  "ignorePatterns": ["**/bin/*"],
+  "ignorePatterns": [
+    "**/bin/*",
+    "**/node_modules/**",
+    "**/testUtil/hyvaksymisPaatosVaihe.ts",
+    "**/testUtil/nahtavillaolo.ts",
+    "**/testUtil/tests.ts",
+    "**/*.test.ts",
+    "**/testFixtureRecorder.ts",
+    "**/test/setup.js"
+  ],
   "rules": {
+    "strict": "error",
     "@typescript-eslint/no-var-requires": "warn",
     "object-shorthand": "warn",
     "@typescript-eslint/no-unused-vars": [

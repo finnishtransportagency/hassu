@@ -13,24 +13,24 @@ export const MOCKED_TIMESTAMP = "2020-01-01T00:00:00+02:00";
 
 export async function recordProjektiTestFixture(fixtureName: string | FixtureName, oid: string): Promise<void> {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
-  replaceFieldsByName(dbProjekti, MOCKED_TIMESTAMP, "tuotu", "paivitetty", "kuulutusVaihePaattyyPaiva", "lahetetty");
-  replaceFieldsByName(dbProjekti, "salt123", "salt");
+  if (dbProjekti) {
+    replaceFieldsByName(dbProjekti, MOCKED_TIMESTAMP, "tuotu", "paivitetty", "kuulutusVaihePaattyyPaiva", "lahetetty");
+    replaceFieldsByName(dbProjekti, "salt123", "salt");
 
-  const oldValue = readRecord(fixtureName);
-  const currentValue = JSON.stringify(dbProjekti, null, 2);
-  // Prevent updating file timestamp so that running tests with "watch" don't get into infinite loop
-  if (!oldValue || oldValue !== currentValue) {
-    fs.writeFileSync(createRecordFileName(fixtureName), currentValue);
+    const oldValue = readRecord(fixtureName);
+    const currentValue = JSON.stringify(dbProjekti, null, 2);
+    // Prevent updating file timestamp so that running tests with "watch" don't get into infinite loop
+    if (!oldValue || oldValue !== currentValue) {
+      fs.writeFileSync(createRecordFileName(fixtureName), currentValue);
+    }
+  } else {
+    throw new Error(`Projektia oid ${oid} ei löytynyt!`);
   }
 }
 
 function readRecord(fixtureName: string | FixtureName) {
-  try {
-    const buffer = fs.readFileSync(createRecordFileName(fixtureName));
-    return buffer.toString("utf-8");
-  } catch (e) {
-    // ignored
-  }
+  const buffer = fs.readFileSync(createRecordFileName(fixtureName));
+  return buffer.toString("utf-8");
 }
 
 function createRecordFileName(fixtureName: string | FixtureName) {
@@ -38,10 +38,10 @@ function createRecordFileName(fixtureName: string | FixtureName) {
 }
 
 export async function useProjektiTestFixture(fixtureName: string | FixtureName): Promise<string> {
-  const dbProjekti: Partial<DBProjekti> = JSON.parse(readRecord(fixtureName));
+  const dbProjekti: DBProjekti = JSON.parse(readRecord(fixtureName));
   // Write the copied projekti to archive table
   const putParams: DocumentClient.PutItemInput = {
-    TableName: process.env.TABLE_PROJEKTI,
+    TableName: process.env.TABLE_PROJEKTI || "",
     Item: dbProjekti,
   };
   await localDocumentClient.put(putParams).promise();
@@ -49,7 +49,7 @@ export async function useProjektiTestFixture(fixtureName: string | FixtureName):
   return dbProjekti.oid;
 }
 
-export function replaceFieldsByName(obj: unknown, value: unknown, ...fieldNames: string[]): void {
+export function replaceFieldsByName(obj: Record<string, any>, value: unknown, ...fieldNames: string[]): void {
   Object.keys(obj).forEach(function (prop) {
     if (typeof obj[prop] == "object" && obj[prop] !== null) {
       replaceFieldsByName(obj[prop], value, ...fieldNames);

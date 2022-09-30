@@ -297,14 +297,37 @@ Array [
         "SAAME": "Saameksi",
         "SUOMI": "Lorem Ipsum",
       },
-      "ilmoituksenVastaanottajat": undefined,
+      "ilmoituksenVastaanottajat": Object {
+        "kunnat": Array [
+          Object {
+            "lahetetty": "2022-09-28T00:00",
+            "nimi": "Mikkeli",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "lahetetty": "2022-09-28T00:00",
+            "nimi": " Juva",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "lahetetty": "2022-09-28T00:00",
+            "nimi": " Savonlinna",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "lahetetty": "2022-09-28T00:00",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
       "kuulutusPaiva": "2022-01-02",
       "kuulutusYhteystiedot": Object {
-        "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": undefined,
         "yhteysTiedot": Array [
           Object {
-            "__typename": "Yhteystieto",
             "etunimi": "Marko",
             "organisaatio": "Kajaani",
             "puhelinnumero": "0293121213",
@@ -384,7 +407,37 @@ Array [
         "SUOMI": "Lorem Ipsum",
         "__typename": "HankkeenKuvaukset",
       },
-      "ilmoituksenVastaanottajat": undefined,
+      "ilmoituksenVastaanottajat": Object {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": Array [
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "lahetetty": "2022-09-28T00:00",
+            "nimi": "Mikkeli",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "lahetetty": "2022-09-28T00:00",
+            "nimi": " Juva",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "lahetetty": "2022-09-28T00:00",
+            "nimi": " Savonlinna",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "__typename": "ViranomaisVastaanottaja",
+            "lahetetty": "2022-09-28T00:00",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
       "kuulutusPaiva": "2022-01-02",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
@@ -620,14 +673,6 @@ Array [
     },
     "MetadataDirective": "REPLACE",
   },
-  Object {
-    "Bucket": "hassu-localstack-yllapito",
-    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
-  },
-  Object {
-    "Bucket": "hassu-localstack-yllapito",
-    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-  },
 ]
 `;
 
@@ -642,7 +687,37 @@ Object {
       "SUOMI": "Lorem Ipsum",
       "__typename": "HankkeenKuvaukset",
     },
-    "ilmoituksenVastaanottajat": undefined,
+    "ilmoituksenVastaanottajat": Object {
+      "__typename": "IlmoituksenVastaanottajat",
+      "kunnat": Array [
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "lahetetty": "2022-09-28T00:00",
+          "nimi": "Mikkeli",
+          "sahkoposti": "mikkeli@mikke.li",
+        },
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "lahetetty": "2022-09-28T00:00",
+          "nimi": " Juva",
+          "sahkoposti": "juva@ju.va",
+        },
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "lahetetty": "2022-09-28T00:00",
+          "nimi": " Savonlinna",
+          "sahkoposti": "savonlinna@savonlin.na",
+        },
+      ],
+      "viranomaiset": Array [
+        Object {
+          "__typename": "ViranomaisVastaanottaja",
+          "lahetetty": "2022-09-28T00:00",
+          "nimi": "ETELA_SAVO_ELY",
+          "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+        },
+      ],
+    },
     "kuulutusPaiva": "2022-01-02",
     "kuulutusYhteystiedot": Object {
       "__typename": "StandardiYhteystiedot",
@@ -665,11 +740,8 @@ Object {
     Object {
       "__typename": "AloitusKuulutusJulkaisu",
       "aloituskuulutusPDFt": Object {
-        "SAAME": Object {
-          "aloituskuulutusIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-          "aloituskuulutusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
-        },
         "SUOMI": Object {
+          "__typename": "AloitusKuulutusPDF",
           "aloituskuulutusIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
           "aloituskuulutusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
         },
@@ -683,7 +755,37 @@ Object {
       },
       "hyvaksyja": "A123",
       "id": 1,
-      "ilmoituksenVastaanottajat": undefined,
+      "ilmoituksenVastaanottajat": Object {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": Array [
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "lahetetty": "2022-09-28T00:00",
+            "nimi": "Mikkeli",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "lahetetty": "2022-09-28T00:00",
+            "nimi": " Juva",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "lahetetty": "2022-09-28T00:00",
+            "nimi": " Savonlinna",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "__typename": "ViranomaisVastaanottaja",
+            "lahetetty": "2022-09-28T00:00",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
       "kielitiedot": Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
@@ -800,11 +902,8 @@ Object {
       Object {
         "__typename": "AloitusKuulutusJulkaisuJulkinen",
         "aloituskuulutusPDFt": Object {
-          "SAAME": Object {
-            "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-            "aloituskuulutusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
-          },
           "SUOMI": Object {
+            "__typename": "AloitusKuulutusPDF",
             "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
             "aloituskuulutusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
           },

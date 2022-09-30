@@ -5,7 +5,7 @@ import { capturePDFPreview, requestPDFs, selectAllAineistotFromCategory } from "
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
 
-describe("Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
+describe("6 - Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
   before(() => {
     cy.abortEarly();
   });
@@ -103,18 +103,18 @@ describe("Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
     cy.get("#select_valitut_aineistot_button").click();
 
     cy.get("main").then((main) => {
-      let nimikentta = main.find('[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.0.etunimi"]');
+      let nimikentta = main.find('[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.etunimi"]');
       if (nimikentta.length === 0) {
         cy.get("#append_vuorovaikuttamisen_yhteystiedot_button").click();
       }
     });
 
     const yhteystietoSelectorToTextMap = new Map([
-      ['[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.0.etunimi"]', "Henkilöetunimi"],
-      ['[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.0.sukunimi"]', "Henkilösukunimi"],
-      ['[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.0.organisaatio"]', "Henkilöorganisaatio"],
-      ['[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.0.puhelinnumero"]', "0294444444"],
-      ['[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.0.sahkoposti"]', "henkilo@sahkoposti.fi"],
+      ['[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.etunimi"]', "Henkilöetunimi"],
+      ['[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.sukunimi"]', "Henkilösukunimi"],
+      ['[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.organisaatio"]', "Henkilöorganisaatio"],
+      ['[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.puhelinnumero"]', "0294444444"],
+      ['[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.sahkoposti"]', "henkilo@sahkoposti.fi"],
     ]);
 
     yhteystietoSelectorToTextMap.forEach((text, selector) => {
@@ -238,19 +238,19 @@ describe("Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
     cy.get("#select_valitut_aineistot_button").click();
 
     cy.get("main").then((main) => {
-      let nimikentta = main.find('[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.0.etunimi"]');
+      let nimikentta = main.find('[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.etunimi"]');
       if (nimikentta.length === 0) {
         cy.get("#append_vuorovaikuttamisen_yhteystiedot_button").click();
       }
     });
 
     const yhteystietoSelectorToTextMap = new Map([
-      ['[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.0.etunimi"]', "Henkilöetunimi"],
-      ['[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.0.sukunimi"]', "Henkilösukunimi"],
-      ['[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.0.organisaatio"]', "Henkilöorganisaatio"],
-      ['[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.0.puhelinnumero"]', "0294444444"],
+      ['[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.etunimi"]', "Henkilöetunimi"],
+      ['[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.sukunimi"]', "Henkilösukunimi"],
+      ['[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.organisaatio"]', "Henkilöorganisaatio"],
+      ['[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.puhelinnumero"]', "0294444444"],
       [
-        '[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.0.sahkoposti"]',
+        '[name="suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.sahkoposti"]',
         { input: "henkilo@sahkoposti.fi", expectedOutput: "henkilo[at]sahkoposti.fi" },
       ],
     ]);

@@ -4,7 +4,10 @@ import { nahtavillaoloTilaManager } from "./nahtavillaoloTilaManager";
 import { hyvaksymisPaatosVaiheTilaManager } from "./hyvaksymisPaatosVaiheTilaManager";
 
 class TilaHandler {
-  async siirraTila(input: TilaSiirtymaInput) {
+  async siirraTila(input: TilaSiirtymaInput | undefined | null) {
+    if (!input) {
+      throw new Error("siirraTila: input ei määritelty");
+    }
     switch (input.tyyppi) {
       case TilasiirtymaTyyppi.ALOITUSKUULUTUS:
         return aloitusKuulutusTilaManager.siirraTila(input);

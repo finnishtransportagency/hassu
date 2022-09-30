@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { loadProjektiFromDatabase, loadProjektiJulkinenFromDatabase, testPublicAccessToProjekti } from "./tests";
 import {

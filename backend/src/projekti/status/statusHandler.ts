@@ -8,7 +8,7 @@ export const JATKOPAATOS_DURATION_UNIT = "year";
 
 // Chain of responsibilites pattern to determine projekti status
 export abstract class StatusHandler<T> {
-  private nextHandler: StatusHandler<T>;
+  private nextHandler: StatusHandler<T> | undefined;
 
   public setNext(handler: StatusHandler<T>): StatusHandler<T> {
     this.nextHandler = handler;
@@ -35,7 +35,7 @@ export abstract class AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<
     this.isHyvaksymisPaatos = isHyvaksymisPaatos;
   }
 
-  abstract getPaatosVaihe(p: T): { kuulutusVaihePaattyyPaiva?: string | null };
+  abstract getPaatosVaihe(p: T): { kuulutusVaihePaattyyPaiva?: string | null } | null | undefined;
 
   handle(p: T): void {
     const hyvaksymisPaatosVaihe = this.getPaatosVaihe(p);

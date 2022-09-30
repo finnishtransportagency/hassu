@@ -9,7 +9,7 @@ import { projektiDatabase } from "./projektiDatabase";
 const feedbackTableName: string = config.feedbackTableName || "missing";
 
 class FeedbackDatabase {
-  async insertFeedback(palaute: Palaute): Promise<string> {
+  async insertFeedback(palaute: Palaute): Promise<string | undefined> {
     log.info("insertFeedback", { palaute });
 
     try {
@@ -22,7 +22,7 @@ class FeedbackDatabase {
 
       return palaute.id;
     } catch (e) {
-      handleAWSError("insertFeedback", e);
+      handleAWSError("insertFeedback", e as Error);
     }
   }
 
@@ -47,11 +47,11 @@ class FeedbackDatabase {
       log.info("markFeedbackIsBeingHandled", { params });
       await getDynamoDBDocumentClient().update(params).promise();
     } catch (e) {
-      handleAWSError("markFeedbackIsBeingHandled", e);
+      handleAWSError("markFeedbackIsBeingHandled", e as Error);
     }
   }
 
-  async listFeedback(oid: string): Promise<Palaute[]> {
+  async listFeedback(oid: string): Promise<Palaute[] | undefined> {
     log.info("listFeedback", { oid });
 
     try {
@@ -68,12 +68,12 @@ class FeedbackDatabase {
       const data = await getDynamoDBDocumentClient().query(params).promise();
       return data.Items as Palaute[];
     } catch (e) {
-      handleAWSError("listFeedback", e);
+      handleAWSError("listFeedback", e as Error);
     }
   }
 }
 
-function handleAWSError(message, cause: Error) {
+function handleAWSError(message: string, cause: Error) {
   log.error(cause);
   throw new SystemError("FeedbackDatabase", message);
 }

@@ -18,13 +18,17 @@ const fileNameKeys: Record<AsiakirjanMuoto, Partial<Record<ProjektiTyyppi, strin
   RATA: { [ProjektiTyyppi.RATA]: "31R", [ProjektiTyyppi.YLEINEN]: "31YS" },
 };
 
-function createFileName(kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto, projektiTyyppi: ProjektiTyyppi) {
+function createFileName(kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto, projektiTyyppi: ProjektiTyyppi): string {
   const key = fileNameKeys[asiakirjanMuoto]?.[projektiTyyppi];
   if (!key) {
     throw new Error("Unsupported operation");
   }
   const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
-  return translate("tiedostonimi." + key, language);
+  const kaannos: string = translate("tiedostonimi." + key, language) || "";
+  if (!kaannos) {
+    throw new Error(`Ei löydy käännöstä tiedostonimi.${key}:lle`);
+  }
+  return kaannos;
 }
 
 export class Kuulutus31 extends CommonPdf {
@@ -45,6 +49,27 @@ export class Kuulutus31 extends CommonPdf {
     kirjaamoOsoitteet: KirjaamoOsoite[]
   ) {
     const velho = projekti.velho;
+    if (!velho) {
+      throw new Error("projekti.velho ei ole määritelty");
+    }
+    if (!velho.tyyppi) {
+      throw new Error("velho.tyyppi ei ole määritelty");
+    }
+    if (!velho.kunnat) {
+      throw new Error("velho.kunnat ei ole määritelty");
+    }
+    if (!velho.suunnittelustaVastaavaViranomainen) {
+      throw new Error("velho.suunnittelustaVastaavaViranomainen ei ole määritelty");
+    }
+    if (!projekti.kielitiedot) {
+      throw new Error("projekti.kielitiedot ei ole määritelty");
+    }
+    if (!nahtavillaoloVaihe.kuulutusPaiva) {
+      throw new Error("nahtavillaoloVaihe.kuulutusPaiva ei ole määritelty");
+    }
+    if (!nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva) {
+      throw new Error("nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva ei ole määritelty");
+    }
     const kutsuAdapter = new KutsuAdapter({
       oid: projekti.oid,
       kielitiedot: projekti.kielitiedot,
@@ -70,11 +95,9 @@ export class Kuulutus31 extends CommonPdf {
 
   protected addContent(): void {
     const vaylaTilaaja = this.isVaylaTilaaja(this.velho);
-    const elements: PDFKit.PDFStructureElementChild[] = [
-      this.logo(vaylaTilaaja),
-      this.addHeader(),
-      ...this.addDocumentElements(),
-    ].filter((element) => element);
+    const elements: PDFKit.PDFStructureElementChild[] = [this.logo(vaylaTilaaja), this.addHeader(), ...this.addDocumentElements()].filter(
+      (element) => element
+    );
     this.doc.addStructure(this.doc.struct("Document", {}, elements));
   }
 
@@ -92,12 +115,7 @@ export class Kuulutus31 extends CommonPdf {
       this.doc.struct(
         "P",
         {},
-        this.moreInfoElements(
-          this.nahtavillaoloVaihe.kuulutusYhteystiedot,
-          undefined,
-          this.nahtavillaoloVaihe.kuulutusYhteysHenkilot,
-          true
-        )
+        this.moreInfoElements(this.nahtavillaoloVaihe.kuulutusYhteystiedot, undefined, this.nahtavillaoloVaihe.kuulutusYhteysHenkilot, true)
       ),
       this.kutsuja(),
     ].filter((elem) => elem);
@@ -107,16 +125,26 @@ export class Kuulutus31 extends CommonPdf {
     if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
       return this.paragraph(this.kutsuAdapter.tilaajaOrganisaatio);
     } else {
-      return this.paragraph(translate("vaylavirasto", this.kieli));
+      const kaannos: string = translate("vaylavirasto", this.kieli) || "";
+      if (!kaannos) {
+        throw new Error("Käännös puuttuu vaylavirasto:lle!");
+      }
+      return this.paragraph(kaannos);
     }
   }
 
   private get startOfPlanningPhrase() {
     let organisaatiotText: string;
     if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
-      organisaatiotText = translate("info.nahtavillaolo.rata.on_laatinut", this.kieli);
+      organisaatiotText = translate("info.nahtavillaolo.rata.on_laatinut", this.kieli) || "";
+      if (!organisaatiotText) {
+        throw new Error("Käännös puuttuu info.nahtavillaolo.rata.on_laatinut:lle!");
+      }
     } else {
-      organisaatiotText = translate("info.nahtavillaolo.ei-rata.on_laatinut", this.kieli);
+      organisaatiotText = translate("info.nahtavillaolo.ei-rata.on_laatinut", this.kieli) || "";
+      if (!organisaatiotText) {
+        throw new Error("Käännös puuttuu info.nahtavillaolo.ei-rata.on_laatinut:lle!");
+      }
     }
     return `${this.kutsuAdapter.tilaajaOrganisaatio} ${organisaatiotText} ${this.kutsuAdapter.suunnitelman} ${
       this.kutsuAdapter.nimi
@@ -124,7 +152,9 @@ export class Kuulutus31 extends CommonPdf {
   }
 
   private getKunnatString() {
-    const organisaatiot = this.velho?.kunnat;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const organisaatiot: string[] = this.velho?.kunnat;
     const trimmattutOrganisaatiot = organisaatiot.map((organisaatio) => formatProperNoun(organisaatio));
     const viimeinenOrganisaatio = trimmattutOrganisaatiot.slice(-1);
     const muut = trimmattutOrganisaatiot.slice(0, -1);
@@ -132,10 +162,14 @@ export class Kuulutus31 extends CommonPdf {
   }
 
   protected get kuulutusPaiva(): string {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return formatDate(this.nahtavillaoloVaihe?.kuulutusPaiva);
   }
 
   protected get kuulutusVaihePaattyyPaiva(): string {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return formatDate(this.nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva);
   }
 
@@ -148,14 +182,20 @@ export class Kuulutus31 extends CommonPdf {
       () => {
         this.doc.text(
           this.selectText([
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             `Suunnitelma pidetään yleisesti nähtävänä ${formatDate(this.nahtavillaoloVaihe.kuulutusPaiva)}-${formatDate(
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
               this.nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva
             )} välisen ajan ${this.tilaajaGenetiivi} tietoverkossa `,
-            `RUOTSIKSI Suunnitelma pidetään yleisesti nähtävänä ${formatDate(
-              this.nahtavillaoloVaihe.kuulutusPaiva
-            )}-${formatDate(this.nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva)} välisen ajan ${
-              this.tilaajaGenetiivi
-            } tietoverkossa `,
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            `RUOTSIKSI Suunnitelma pidetään yleisesti nähtävänä ${formatDate(this.nahtavillaoloVaihe.kuulutusPaiva)}-${formatDate(
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              this.nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva
+            )} välisen ajan ${this.tilaajaGenetiivi} tietoverkossa `,
           ]),
           {
             continued: true,
@@ -181,9 +221,7 @@ export class Kuulutus31 extends CommonPdf {
   }
 
   private get kuulutusOsoite() {
-    return this.isVaylaTilaaja(this.velho)
-      ? "https://www.vayla.fi/kuulutukset"
-      : "https://www.ely-keskus.fi/kuulutukset";
+    return this.isVaylaTilaaja(this.velho) ? "https://www.vayla.fi/kuulutukset" : "https://www.ely-keskus.fi/kuulutukset";
   }
 
   private addHeader() {
@@ -192,6 +230,8 @@ export class Kuulutus31 extends CommonPdf {
 
   get kirjaamo(): string {
     const kirjaamoOsoite = this.kirjaamoOsoitteet
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       .filter((osoite) => osoite.nimi == this.velho.suunnittelustaVastaavaViranomainen.toString())
       .pop();
     if (kirjaamoOsoite) {

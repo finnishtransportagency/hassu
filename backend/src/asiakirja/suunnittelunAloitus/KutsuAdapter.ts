@@ -18,14 +18,7 @@ export type KutsuAdapterProps = {
   kayttoOikeudet?: DBVaylaUser[];
 };
 
-const yhteystietoMapper = ({
-  sukunimi,
-  etunimi,
-  organisaatio,
-  puhelinnumero,
-  sahkoposti,
-  titteli,
-}): { organisaatio; etunimi; sukunimi; puhelinnumero; sahkoposti; titteli } => ({
+const yhteystietoMapper = ({ sukunimi, etunimi, organisaatio, puhelinnumero, sahkoposti, titteli }: Yhteystieto): Yhteystieto => ({
   etunimi: formatProperNoun(etunimi),
   sukunimi: formatProperNoun(sukunimi),
   organisaatio: formatProperNoun(organisaatio),
@@ -81,23 +74,31 @@ export class KutsuAdapter {
 
   get viranomainen(): string {
     if (this.asiakirjanMuoto !== AsiakirjanMuoto.RATA) {
-      return translate("viranomainen.VAYLAVIRASTO", this.kieli);
+      const kaannos: string = translate("viranomainen.VAYLAVIRASTO", this.kieli) || "";
+      if (!kaannos) {
+        throw new Error("Käännös puuttuu VAYLAVIRASTO:lle!");
+      }
+      return kaannos;
     }
     return this.tilaajaOrganisaatio;
   }
 
   get tilaajaOrganisaatiota(): string {
     const suunnittelustaVastaavaViranomainen = this.velho.suunnittelustaVastaavaViranomainen;
-    return translate("viranomainen." + suunnittelustaVastaavaViranomainen, this.kieli)
-      .replace("keskus", "keskusta")
-      .replace("virasto", "virastoa");
+    const kaannos: string = translate("viranomainen." + suunnittelustaVastaavaViranomainen, this.kieli) || "";
+    if (!kaannos) {
+      throw new Error(`Käänbös puuttuu viranomainen.${suunnittelustaVastaavaViranomainen}:lle!`);
+    }
+    return kaannos.replace("keskus", "keskusta").replace("virasto", "virastoa");
   }
 
   get tilaajaOrganisaatiolle(): string {
     const suunnittelustaVastaavaViranomainen = this.velho.suunnittelustaVastaavaViranomainen;
-    return translate("viranomainen." + suunnittelustaVastaavaViranomainen, this.kieli)
-      .replace("keskus", "keskukselle")
-      .replace("virasto", "virastolle");
+    const kaannos: string = translate("viranomainen." + suunnittelustaVastaavaViranomainen, this.kieli) || "";
+    if (!kaannos) {
+      throw new Error(`Käänbös puuttuu viranomainen.${suunnittelustaVastaavaViranomainen}:lle!`);
+    }
+    return kaannos.replace("keskus", "keskukselle").replace("virasto", "virastolle");
   }
 
   static tilaajaOrganisaatioForViranomainen(viranomainen: Viranomainen | null, kieli: Kieli): string {
@@ -130,6 +131,9 @@ export class KutsuAdapter {
     return "";
   }
 
+  // Kieli on joko SUOMI tai RUOTSI
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   get suunnitelmaa(): string {
     if (this.kieli == Kieli.SUOMI) {
       return {
@@ -146,6 +150,9 @@ export class KutsuAdapter {
     }
   }
 
+  // Kieli on joko SUOMI tai RUOTSI
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   get suunnitelman(): string {
     if (this.kieli == Kieli.SUOMI) {
       return {
@@ -171,6 +178,9 @@ export class KutsuAdapter {
       if (this.kieli == Kieli.SUOMI) {
         return this.velho.nimi;
       } else {
+        // projektinNimiVieranskielella on oltava
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         return this.kielitiedot.projektinNimiVieraskielella;
       }
     }
@@ -178,14 +188,23 @@ export class KutsuAdapter {
   }
 
   get vuorovaikutusJulkaisuPvm(): string {
+    // vuorovaikutusJulkaisuPaiva on oltava
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return new Date(this.vuorovaikutus.vuorovaikutusJulkaisuPaiva).toLocaleDateString("fi");
   }
 
   get kutsuUrl(): string {
+    // oid on oltava
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return linkSuunnitteluVaihe(this.oid);
   }
 
   get linkki_hyvaksymispaatos(): string {
+    // oid on oltava
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return linkHyvaksymisPaatos(this.oid);
   }
 
@@ -198,6 +217,9 @@ export class KutsuAdapter {
   }
 
   get asianumero(): string {
+    // asiatunnusVayla tai asiatunnutELY on oltava
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return this.velho.asiatunnusVayla || this.velho.asiatunnusELY;
   }
 
@@ -213,10 +235,10 @@ export class KutsuAdapter {
   }
 
   yhteystiedot(
-    yhteystiedot: Yhteystieto[],
+    yhteystiedot: Yhteystieto[] | null | undefined,
     suunnitteluSopimus?: SuunnitteluSopimus,
-    yhteysHenkilot?: string[]
-  ): { organisaatio; etunimi; sukunimi; puhelinnumero; sahkoposti; titteli }[] {
+    yhteysHenkilot?: string[] | null
+  ): Yhteystieto[] {
     let yt: Yhteystieto[] = [];
     if (yhteystiedot) {
       yt = yt.concat(yhteystiedot);
@@ -225,7 +247,7 @@ export class KutsuAdapter {
       if (!this.kayttoOikeudet) {
         throw new Error("BUG: Kayttöoikeudet pitää antaa jos yhteyshenkilöt on annettu.");
       }
-      const yhteysHenkilotWithProjectManager = union(
+      const yhteysHenkilotWithProjectManager: string[] = union(
         this.kayttoOikeudet.filter((user) => user.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO).map((user) => user.kayttajatunnus),
         yhteysHenkilot
       );
@@ -253,6 +275,8 @@ export class KutsuAdapter {
     }
     return translation.replace(new RegExp(`{{(.+?)}}`, "g"), (_, part) => {
       // Function from given templateResolver
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       const func = this.templateResolver?.[part];
       if (typeof func == "function") {
         return func.bind(this.templateResolver)();
@@ -263,6 +287,8 @@ export class KutsuAdapter {
       }
 
       // Function from this class
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       const resolvedText = this[part];
       if (typeof resolvedText == "function") {
         return resolvedText.bind(this)();
@@ -276,17 +302,28 @@ export class KutsuAdapter {
     });
   }
 
-  get yhteystiedotVuorovaikutus(): { organisaatio; etunimi; sukunimi; puhelinnumero; sahkoposti }[] {
+  get yhteystiedotVuorovaikutus(): Yhteystieto[] {
     return this.yhteystiedot(
+      // esitettavatYhteystiedot on oltava
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       this.vuorovaikutus?.esitettavatYhteystiedot.yhteysTiedot || [],
       undefined,
+      // esitettavatYhteystiedot on oltava
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       this.vuorovaikutus?.esitettavatYhteystiedot.yhteysHenkilot
     );
   }
 
-  private getUsersForUsernames(usernames?: string[]): DBVaylaUser[] | undefined {
+  private getUsersForUsernames(usernames: string[]): DBVaylaUser[] {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return usernames
-      ?.map((kayttajatunnus) =>
+      .map((kayttajatunnus) =>
+        // kayttoOikeudet on oltava
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         this.kayttoOikeudet
           .filter((kayttaja) => kayttaja.kayttajatunnus == kayttajatunnus || kayttaja.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO)
           .pop()

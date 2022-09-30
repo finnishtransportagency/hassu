@@ -13,7 +13,6 @@ export type NahtavillaoloVaihe = {
   kuulutusYhteysHenkilot?: Array<string> | null;
   kuulutusYhteystiedot?: Array<Yhteystieto> | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
-  nahtavillaoloPDFt?: LocalizedMap<NahtavillaoloPDF>;
   palautusSyy?: string | null;
 };
 

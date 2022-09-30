@@ -8,6 +8,7 @@ import { asiakirjaService, NahtavillaoloKuulutusAsiakirjaTyyppi } from "../../as
 import { fileService } from "../../files/fileService";
 import { parseDate } from "../../util/dateUtil";
 import { ProjektiPaths } from "../../files/ProjektiPath";
+import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -15,6 +16,9 @@ async function createNahtavillaoloVaihePDF(
   projekti: DBProjekti,
   kieli: Kieli
 ) {
+  if (!julkaisu.kuulutusPaiva) {
+    throw new Error("julkaisu.kuulutusPaiva puuttuu");
+  }
   const pdf = await asiakirjaService.createNahtavillaoloKuulutusPdf({
     asiakirjaTyyppi,
     projekti,
@@ -59,6 +63,16 @@ class NahtavillaoloTilaManager extends TilaManager {
     await removeRejectionReasonIfExists(projekti, getNahtavillaoloVaihe(projekti));
 
     const nahtavillaoloVaiheJulkaisu = asiakirjaAdapter.adaptNahtavillaoloVaiheJulkaisu(projekti);
+    if (!nahtavillaoloVaiheJulkaisu.aineistoNahtavilla) {
+      throw new IllegalArgumentError("Nähtävilläolovaiheella on oltava aineistoNahtavilla!");
+    }
+    if (!nahtavillaoloVaiheJulkaisu.hankkeenKuvaus) {
+      throw new IllegalArgumentError("Nähtävilläolovaiheella tulee olla hankkeenKuvaus!");
+    }
+    if (!nahtavillaoloVaiheJulkaisu.ilmoituksenVastaanottajat) {
+      throw new IllegalArgumentError("Nähtävilläolovaiheella on oltava ilmoituksenVastaanottajat!");
+    }
+
     nahtavillaoloVaiheJulkaisu.tila = NahtavillaoloVaiheTila.ODOTTAA_HYVAKSYNTAA;
     nahtavillaoloVaiheJulkaisu.muokkaaja = muokkaaja.uid;
 
@@ -89,8 +103,10 @@ class NahtavillaoloTilaManager extends TilaManager {
 
     const nahtavillaoloVaihe = getNahtavillaoloVaihe(projekti);
     nahtavillaoloVaihe.palautusSyy = syy;
-
-    await this.deletePDFs(projekti.oid, nahtavillaoloVaihe.nahtavillaoloPDFt);
+    if (!julkaisuWaitingForApproval.nahtavillaoloPDFt) {
+      throw new Error("julkaisuWaitingForApproval.nahtavillaoloPDFt puuttuu");
+    }
+    await this.deletePDFs(projekti.oid, julkaisuWaitingForApproval.nahtavillaoloPDFt);
 
     await projektiDatabase.saveProjekti({ oid: projekti.oid, nahtavillaoloVaihe });
     await projektiDatabase.deleteNahtavillaoloVaiheJulkaisu(projekti, julkaisuWaitingForApproval.id);
@@ -119,7 +135,7 @@ class NahtavillaoloTilaManager extends TilaManager {
       return { nahtavillaoloPDFPath, nahtavillaoloIlmoitusPDFPath, nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath };
     }
 
-    const pdfs = {};
+    const pdfs: LocalizedMap<NahtavillaoloPDF> = {};
     pdfs[kielitiedot.ensisijainenKieli] = await generatePDFsForLanguage(kielitiedot.ensisijainenKieli, julkaisuWaitingForApproval);
 
     if (kielitiedot.toissijainenKieli) {
@@ -130,6 +146,9 @@ class NahtavillaoloTilaManager extends TilaManager {
 
   private async deletePDFs(oid: string, nahtavillaoloPDFt: LocalizedMap<NahtavillaoloPDF>) {
     for (const language in nahtavillaoloPDFt) {
+      // nahtavillaoloPDFt ei ole null, ja language on tyyppiä Kieli, joka on nahtavillaoloPDFt:n avain
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       const pdfs: NahtavillaoloPDF = nahtavillaoloPDFt[language];
       await fileService.deleteYllapitoFileFromProjekti({
         oid,

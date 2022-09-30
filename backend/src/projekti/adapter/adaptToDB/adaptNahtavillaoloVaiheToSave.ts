@@ -5,11 +5,11 @@ import { adaptAineistotToSave, adaptHankkeenKuvausToSave, adaptIlmoituksenVastaa
 import mergeWith from "lodash/mergeWith";
 
 export function adaptNahtavillaoloVaiheToSave(
-  dbNahtavillaoloVaihe: NahtavillaoloVaihe,
-  nahtavillaoloVaihe: API.NahtavillaoloVaiheInput,
+  dbNahtavillaoloVaihe: NahtavillaoloVaihe | undefined | null,
+  nahtavillaoloVaihe: API.NahtavillaoloVaiheInput | undefined | null,
   projektiAdaptationResult: ProjektiAdaptationResult,
   nahtavillaoloVaiheJulkaisutCount: number | undefined
-): NahtavillaoloVaihe {
+): NahtavillaoloVaihe | undefined {
   if (!nahtavillaoloVaihe) {
     return undefined;
   }
@@ -31,7 +31,9 @@ export function adaptNahtavillaoloVaiheToSave(
     projektiAdaptationResult
   );
 
-  const lisaAineisto = adaptAineistotToSave(dbNahtavillaoloVaihe?.lisaAineisto, lisaAineistoInput, projektiAdaptationResult);
+  const lisaAineisto = lisaAineistoInput
+    ? adaptAineistotToSave(dbNahtavillaoloVaihe?.lisaAineisto, lisaAineistoInput, projektiAdaptationResult)
+    : undefined;
 
   let id = dbNahtavillaoloVaihe?.id;
   if (!id) {
@@ -49,11 +51,14 @@ export function adaptNahtavillaoloVaiheToSave(
     kuulutusYhteysHenkilot,
     id,
     aineistoNahtavilla,
-    lisaAineisto,
     kuulutusYhteystiedot: adaptYhteystiedotToSave(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat),
     hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus),
   };
+
+  if (lisaAineisto) {
+    uusiNahtavillaolovaihe.lisaAineisto = lisaAineisto;
+  }
 
   return mergeWith({}, dbNahtavillaoloVaihe, uusiNahtavillaolovaihe);
 }

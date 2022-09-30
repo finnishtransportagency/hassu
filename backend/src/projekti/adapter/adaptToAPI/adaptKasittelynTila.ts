@@ -14,7 +14,7 @@ export function adaptKasittelynTila(kasittelynTila?: KasittelynTila | null): API
   return kasittelynTila as undefined;
 }
 
-function adaptHyvaksymispaatos(hyvaksymispaatos: Hyvaksymispaatos): API.Hyvaksymispaatos | undefined | null {
+function adaptHyvaksymispaatos(hyvaksymispaatos: Hyvaksymispaatos | undefined): API.Hyvaksymispaatos | undefined | null {
   if (hyvaksymispaatos) {
     return {
       ...hyvaksymispaatos,

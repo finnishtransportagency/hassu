@@ -90,9 +90,9 @@ export abstract class CommonPdf extends AbstractPdf {
   }
 
   protected moreInfoElements(
-    yhteystiedot: Yhteystieto[],
+    yhteystiedot: Yhteystieto[] | null | undefined,
     suunnitteluSopimus?: SuunnitteluSopimus,
-    yhteysHenkilot?: string[],
+    yhteysHenkilot?: string[] | undefined | null,
     showOrganization = true
   ): PDFKit.PDFStructureElementChild[] {
     return this.kutsuAdapter
@@ -103,9 +103,7 @@ export abstract class CommonPdf extends AbstractPdf {
           const organization = showOrganization ? `${organisaatio}, ` : "";
           const title = titteli ? `${titteli}, ` : "";
           this.doc
-            .text(
-              `${organization}${title}${etunimi} ${sukunimi}, ${this.localizedPuh} ${puhelinnumero}, ${noSpamSahkoposti} `
-            )
+            .text(`${organization}${title}${etunimi} ${sukunimi}, ${this.localizedPuh} ${puhelinnumero}, ${noSpamSahkoposti} `)
             .moveDown();
         };
       });

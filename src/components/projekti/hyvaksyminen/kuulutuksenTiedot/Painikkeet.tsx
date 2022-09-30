@@ -180,7 +180,7 @@ export default function Painikkeet({ projekti }: Props) {
               <Button
                 id="save_and_send_for_acceptance"
                 primary
-                disabled={!projektiMeetsMinimumStatus(projekti, Status.HYVAKSYTTY)}
+                disabled={!projektiMeetsMinimumStatus(projekti, Status.HYVAKSYMISMENETTELYSSA)}
                 onClick={handleSubmit(lahetaHyvaksyttavaksi)}
               >
                 Lähetä Hyväksyttäväksi

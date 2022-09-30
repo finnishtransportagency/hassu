@@ -18,6 +18,24 @@ class IlmoitustauluSyoteAdapter {
     kieli: Kieli
   ): Omit<IlmoitusKuulutus, "key"> {
     const velho = aloitusKuulutusJulkaisu.velho;
+    if (!velho.nimi) {
+      throw new Error("velho.nimi puuttuu");
+    }
+    if (!velho.kunnat) {
+      throw new Error("velho.kunnat puuttuu");
+    }
+    if (!velho.maakunnat) {
+      throw new Error("velho.maakunnat puuttuu");
+    }
+    if (!velho.vaylamuoto) {
+      throw new Error("velho.vaylamuoto puuttuu");
+    }
+    if (!aloitusKuulutusJulkaisu.kielitiedot) {
+      throw new Error("aloitusKuulutusJulkaisu.kielitiedot puuttuu");
+    }
+    if (!aloitusKuulutusJulkaisu.kuulutusPaiva) {
+      throw new Error("aloitusKuulutusJulkaisu.kuulutusPaiva puuttuu");
+    }
     const nimi = selectNimi(velho.nimi, aloitusKuulutusJulkaisu.kielitiedot, kieli);
     const url = linkAloituskuulutus(oid);
     return {
@@ -39,6 +57,24 @@ class IlmoitustauluSyoteAdapter {
     kieli: Kieli
   ): Omit<IlmoitusKuulutus, "key"> {
     const velho = nahtavillaoloVaihe.velho;
+    if (!velho.nimi) {
+      throw new Error("velho.nimi puuttuu");
+    }
+    if (!velho.kunnat) {
+      throw new Error("velho.kunnat puuttuu");
+    }
+    if (!velho.maakunnat) {
+      throw new Error("velho.maakunnat puuttuu");
+    }
+    if (!velho.vaylamuoto) {
+      throw new Error("velho.vaylamuoto puuttuu");
+    }
+    if (!nahtavillaoloVaihe.kielitiedot) {
+      throw new Error("nahtavillaoloVaihe.kielitiedot puuttuu");
+    }
+    if (!nahtavillaoloVaihe.kuulutusPaiva) {
+      throw new Error("nahtavillaoloVaihe.kuulutusPaiva puuttuu");
+    }
     const nimi = selectNimi(velho.nimi, nahtavillaoloVaihe.kielitiedot, kieli);
     const url = linkSuunnitteluVaihe(oid);
     return {
@@ -60,6 +96,24 @@ class IlmoitustauluSyoteAdapter {
     kieli: Kieli
   ): Omit<IlmoitusKuulutus, "key"> {
     const velho = hyvaksymisPaatosVaihe.velho;
+    if (!velho.nimi) {
+      throw new Error("velho.nimi puuttuu");
+    }
+    if (!velho.kunnat) {
+      throw new Error("velho.kunnat puuttuu");
+    }
+    if (!velho.maakunnat) {
+      throw new Error("velho.maakunnat puuttuu");
+    }
+    if (!velho.vaylamuoto) {
+      throw new Error("velho.vaylamuoto puuttuu");
+    }
+    if (!hyvaksymisPaatosVaihe.kielitiedot) {
+      throw new Error("hyvaksymisPaatosVaihe.kielitiedot puuttuu");
+    }
+    if (!hyvaksymisPaatosVaihe.kuulutusPaiva) {
+      throw new Error("hyvaksymisPaatosVaihe.kuulutusPaiva puuttuu");
+    }
     const nimi = selectNimi(velho.nimi, hyvaksymisPaatosVaihe.kielitiedot, kieli);
     const url = linkHyvaksymisPaatos(oid);
     return {
@@ -75,11 +129,7 @@ class IlmoitustauluSyoteAdapter {
     };
   }
 
-  createKeyForAloitusKuulutusJulkaisu(
-    oid: string,
-    aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisuJulkinen,
-    kieli: Kieli
-  ) {
+  createKeyForAloitusKuulutusJulkaisu(oid: string, aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisuJulkinen, kieli: Kieli) {
     return [oid, "aloitusKuulutus", kieli, aloitusKuulutusJulkaisu.kuulutusPaiva].join("_");
   }
 
@@ -93,6 +143,9 @@ class IlmoitustauluSyoteAdapter {
 
   public getProjektiKielet(projekti: ProjektiJulkinen): Kieli[] {
     const kielitiedot = projekti.kielitiedot;
+    if (!kielitiedot) {
+      throw new Error("projekti.kielitiedot puuttuu!");
+    }
     const kielet = [kielitiedot.ensisijainenKieli];
     if (kielitiedot.toissijainenKieli) {
       kielet.push(kielitiedot.toissijainenKieli);
@@ -106,9 +159,14 @@ function selectNimi(nimi: string, kielitiedot: Kielitiedot, kieli: Kieli): strin
     if (kieli == Kieli.SUOMI) {
       return nimi;
     } else {
-      return kielitiedot.projektinNimiVieraskielella;
+      const vieraskielinenNimi = kielitiedot.projektinNimiVieraskielella;
+      if (!vieraskielinenNimi) {
+        throw new Error("kielitiedot.projektinNimiVieraskielella puuttuu");
+      }
+      return vieraskielinenNimi;
     }
   }
+  throw new Error("Valittu kieli ei ole ensisijainen tai toissijainen kieli projektissa!");
 }
 
 export const ilmoitusKuulutusAdapter = new IlmoitustauluSyoteAdapter();

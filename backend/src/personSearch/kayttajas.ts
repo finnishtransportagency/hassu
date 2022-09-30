@@ -40,9 +40,14 @@ export class Kayttajas {
   static fromKayttajaList(kayttajas: Kayttaja[]): Kayttajas {
     return new Kayttajas(
       kayttajas.reduce((map, kayttaja) => {
+        if (!kayttaja.email) {
+          throw new Error("fromKayttajaList: kayttaja.email puuttuu");
+        }
         if (kayttaja.uid) {
           map[kayttaja.uid] = {
             ...kayttaja,
+            organisaatio: kayttaja.organisaatio || undefined,
+            puhelinnumero: kayttaja.puhelinnumero || undefined,
             email: [kayttaja.email],
           };
         }

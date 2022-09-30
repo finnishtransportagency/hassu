@@ -3,11 +3,16 @@ import { Kayttaja } from "../../../common/graphql/apiModel";
 import merge from "lodash/merge";
 import { Person } from "./kayttajas";
 import pickBy from "lodash/pickBy";
+import { log } from "../logger";
 
-export function mergeKayttaja(user: Partial<DBVaylaUser>, account: Kayttaja): DBVaylaUser {
+export function mergeKayttaja(user: Partial<DBVaylaUser>, account: Kayttaja): DBVaylaUser | undefined {
   const { organisaatio, email } = account;
   const nimi = account.sukuNimi + ", " + account.etuNimi;
   const kayttajatunnus = account.uid;
+  if (!organisaatio || !email || !kayttajatunnus) {
+    log.warn("Käyttäjältä puuttuu organisaatio, email tai kayttajatunnus", { kayttaja: account });
+    return undefined;
+  }
   return merge(user, { organisaatio, email, nimi, kayttajatunnus });
 }
 

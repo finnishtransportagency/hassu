@@ -5,11 +5,11 @@ import { adaptAineistotToSave, adaptIlmoituksenVastaanottajatToSave, adaptYhteys
 import mergeWith from "lodash/mergeWith";
 
 export function adaptHyvaksymisPaatosVaiheToSave(
-  dbHyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe,
-  hyvaksymisPaatosVaihe: API.HyvaksymisPaatosVaiheInput,
+  dbHyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | null | undefined,
+  hyvaksymisPaatosVaihe: API.HyvaksymisPaatosVaiheInput | null | undefined,
   projektiAdaptationResult: ProjektiAdaptationResult,
   hyvaksymisPaatosVaiheJulkaisutCount: number | undefined
-): HyvaksymisPaatosVaihe {
+): HyvaksymisPaatosVaihe | undefined {
   if (!hyvaksymisPaatosVaihe) {
     return undefined;
   }

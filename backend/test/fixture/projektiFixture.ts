@@ -178,7 +178,7 @@ export class ProjektiFixture {
   aloitusKuulutusInput: AloitusKuulutusInput = {
     kuulutusPaiva: "2022-01-02",
     hankkeenKuvaus: { SUOMI: "Lorem Ipsum", RUOTSI: "På Svenska", SAAME: "Saameksi" },
-
+    ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
     siirtyySuunnitteluVaiheeseen: "2999-01-01",
     kuulutusYhteystiedot: {
       yhteysTiedot: this.yhteystietoLista,
@@ -307,7 +307,7 @@ export class ProjektiFixture {
               "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
             RUOTSI:
               "Designplatsen är en del av elektrifieringsprojektet Hyvinge-Hangö, som också kommer att genomföra plankorsningsåtgärder. I den fastställda spårplanen är borttagandet av tävlingsstoppet och Leksvallskorsningen genom förbättring av en ny plankorsning vid Helmströms plankorsning vid denna punkt godkänd som planlösning. En uppdatering av Spårplanen kommer nu att lanseras då och man planerar att ta bort alla tre plankorsningarna på den nya Leksvallsöverfarten.",
-            SAAME: null,
+            SAAME: undefined,
           },
           yhteystiedot: [
             {
@@ -336,7 +336,7 @@ export class ProjektiFixture {
             "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
           RUOTSI:
             "Designplatsen är en del av elektrifieringsprojektet Hyvinge-Hangö, som också kommer att genomföra plankorsningsåtgärder. I den fastställda spårplanen är borttagandet av tävlingsstoppet och Leksvallskorsningen genom förbättring av en ny plankorsning vid Helmströms plankorsning vid denna punkt godkänd som planlösning. En uppdatering av Spårplanen kommer nu att lanseras då och man planerar att ta bort alla tre plankorsningarna på den nya Leksvallsöverfarten.",
-          SAAME: null,
+          SAAME: undefined,
         },
         ilmoituksenVastaanottajat: {
           kunnat: [
@@ -362,6 +362,21 @@ export class ProjektiFixture {
         },
         kuulutusPaiva: "2022-03-28T14:28",
         siirtyySuunnitteluVaiheeseen: "2022-04-28T14:28",
+        kuulutusYhteystiedot: {
+          yhteysTiedot: [
+            {
+              etunimi: "Marko",
+              sukunimi: "Koi",
+              sahkoposti: "markku.koi@koi.com",
+              organisaatio: "Kajaani",
+              puhelinnumero: "0293121213",
+            },
+          ],
+          yhteysHenkilot: [
+            ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
+            ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
+          ],
+        },
       },
       nahtavillaoloVaihe: {
         id: 1,
@@ -465,7 +480,7 @@ export class ProjektiFixture {
             "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
           RUOTSI:
             "Designplatsen är en del av elektrifieringsprojektet Hyvinge-Hangö, som också kommer att genomföra plankorsningsåtgärder. I den fastställda spårplanen är borttagandet av tävlingsstoppet och Leksvallskorsningen genom förbättring av en ny plankorsning vid Helmströms plankorsning vid denna punkt godkänd som planlösning. En uppdatering av Spårplanen kommer nu att lanseras då och man planerar att ta bort alla tre plankorsningarna på den nya Leksvallsöverfarten.",
-          SAAME: null,
+          SAAME: undefined,
         },
         yhteystiedot: [
           {
@@ -494,7 +509,7 @@ export class ProjektiFixture {
           "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
         RUOTSI:
           "Designplatsen är en del av elektrifieringsprojektet Hyvinge-Hangö, som också kommer att genomföra plankorsningsåtgärder. I den fastställda spårplanen är borttagandet av tävlingsstoppet och Leksvallskorsningen genom förbättring av en ny plankorsning vid Helmströms plankorsning vid denna punkt godkänd som planlösning. En uppdatering av Spårplanen kommer nu att lanseras då och man planerar att ta bort alla tre plankorsningarna på den nya Leksvallsöverfarten.",
-        SAAME: null,
+        SAAME: undefined,
       },
       ilmoituksenVastaanottajat: {
         kunnat: [
@@ -525,7 +540,7 @@ export class ProjektiFixture {
       arvioSeuraavanVaiheenAlkamisesta: "Syksy 2024",
       hankkeenKuvaus: {
         RUOTSI: "svenska",
-        SAAME: null,
+        SAAME: undefined,
         SUOMI:
           "Tavoitteena on nykyisen ja tulevan maankäytön liittäminen\nluontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen\nsujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn\nyhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös\nyksi tavoitteista.",
       },
@@ -551,10 +566,11 @@ export class ProjektiFixture {
     },
     nahtavillaoloVaiheJulkaisut: [
       {
+        aineistoNahtavilla: [],
         hankkeenKuvaus: {
           RUOTSI:
             "Syftet med fasen är att på ett naturligt sätt koppla nuvarande och framtida markanvändning till Tavastehusvägen, att ta hänsyn till områdets bullerskydd, att förbättra flödet och säkerheten för passagerare och kollektivtrafik samt att göra gång- och cykelförbindelserna smidiga. och säker. Att förbättra flödet av tung trafik och förutsägbarheten i restid är också ett av målen.",
-          SAAME: null,
+          SAAME: undefined,
           SUOMI:
             "Nähtävilläolovaiheen tavoitteena on nykyisen ja tulevan maankäytön liittäminen luontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen sujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn yhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös yksi tavoitteista.",
         },
@@ -684,6 +700,9 @@ export class ProjektiFixture {
               },
             ],
           },
+          // kielitiedot on ihan oikein
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           kielitiedot: this.dbProjekti3.kielitiedot,
           kuulutusPaiva: "2022-06-09",
           kuulutusVaihePaattyyPaiva: "2100-01-01",
@@ -735,6 +754,8 @@ export class ProjektiFixture {
     vuorovaikutusJulkaisuPaiva: "2022-03-23",
     videot: [{ nimi: "Esittely", url: "https://video" }],
     kysymyksetJaPalautteetViimeistaan: "2022-03-23T23:48",
+    esittelyaineistot: [],
+    suunnitelmaluonnokset: [],
     esitettavatYhteystiedot: {
       yhteysTiedot: [
         {
@@ -780,6 +801,9 @@ export class ProjektiFixture {
         alkamisAika: "10:00",
         paattymisAika: "11:00",
         esitettavatYhteystiedot: {
+          // yhteystietoLista2 on ihan oikein
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           yhteysTiedot: this.yhteystietoLista2,
           yhteysHenkilot: [
             ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
@@ -794,6 +818,9 @@ export class ProjektiFixture {
         alkamisAika: "12:00",
         paattymisAika: "13:00",
         esitettavatYhteystiedot: {
+          // yhteystietoLista2 on ihan oikein
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           yhteysTiedot: this.yhteystietoLista2,
         },
       },
