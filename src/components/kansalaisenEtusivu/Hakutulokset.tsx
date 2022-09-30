@@ -49,7 +49,7 @@ export default function Hakutulokset({ hakutulos, ladataan }: Props) {
   }
 
   return (
-    <HakutulosLista className="Hakutulokset">
+    <HakutulosLista id="hakutuloslista" className="Hakutulokset">
       {hakutulos?.tulokset?.map((tulos) => {
         if (desktop) {
           return (
