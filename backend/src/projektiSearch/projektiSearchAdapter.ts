@@ -1,13 +1,5 @@
-import { DBProjekti, Kielitiedot } from "../database/model";
-import {
-  KayttajaTyyppi,
-  Kieli,
-  ProjektiHakutulosDokumentti,
-  ProjektiJulkinen,
-  ProjektiTyyppi,
-  Status,
-  Viranomainen,
-} from "../../../common/graphql/apiModel";
+import { DBProjekti } from "../database/model";
+import * as API from "../../../common/graphql/apiModel";
 import { projektiAdapter } from "../projekti/adapter/projektiAdapter";
 import dayjs from "dayjs";
 import { parseDate } from "../util/dateUtil";
@@ -46,7 +38,7 @@ export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocu
     vaihe: apiProjekti.status || undefined,
     vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
     projektipaallikko: projekti.kayttoOikeudet
-      .filter((value) => value.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO)
+      .filter((value) => value.tyyppi == API.KayttajaTyyppi.PROJEKTIPAALLIKKO)
       .map((value) => safeTrim(value.nimi))
       .pop(),
     paivitetty: projekti.paivitetty || dayjs().format(),

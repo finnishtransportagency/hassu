@@ -20,6 +20,7 @@
         "maakunnat": [
           "Uusimaa"
         ],
+        "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
         "kunnat": [
           "Helsinki",
           " Vantaa"
@@ -110,6 +111,7 @@
     "maakunnat": [
       "Uusimaa"
     ],
+    "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
     "kunnat": [
       "Helsinki",
       " Vantaa"
@@ -142,18 +144,37 @@
     {
       "kayttajatunnus": "A000112",
       "nimi": "Hassu, A-tunnus1",
-      "rooli": "PROJEKTIPAALLIKKO",
       "organisaatio": "CGI Suomi Oy",
+      "tyyppi": "PROJEKTIPAALLIKKO",
       "puhelinnumero": "123",
-      "email": "mikko.haapamki@cgi.com"
+      "email": "mikko.haapamki@cgi.com",
+      "muokattavissa": false
+    },
+    {
+      "kayttajatunnus": "A000114",
+      "nimi": "Hassu, A-tunnus3",
+      "organisaatio": "CGI Suomi Oy",
+      "tyyppi": "VARAHENKILO",
+      "puhelinnumero": "123",
+      "email": "mikko.haapamaki02@cgi.com",
+      "muokattavissa": false
     },
     {
       "kayttajatunnus": "A000111",
       "nimi": "Hassu, A-Tunnus",
-      "rooli": "OMISTAJA",
       "organisaatio": "CGI Suomi Oy",
+      "__typename": "ProjektiKayttaja",
       "puhelinnumero": "123",
-      "email": "mikko.haapamaki@cgi.com"
+      "email": "mikko.haapamaki@cgi.com",
+      "muokattavissa": true
+    },
+    {
+      "kayttajatunnus": "LX581241",
+      "nimi": "Hassu, Testi1",
+      "puhelinnumero": "123",
+      "organisaatio": "CGI Suomi Oy",
+      "email": "mikko.haapamaki@cgi.com",
+      "muokattavissa": true
     }
   ],
   "aloitusKuulutus": {

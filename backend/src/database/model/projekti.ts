@@ -11,7 +11,7 @@ export type DBVaylaUser = {
   puhelinnumero?: string;
   organisaatio: string;
   nimi: string;
-  tyyppi?: KayttajaTyyppi;
+  tyyppi?: KayttajaTyyppi | null;
   muokattavissa?: boolean;
 };
 

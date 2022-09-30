@@ -101,7 +101,7 @@ describe("apiHandler", () => {
     function mockLataaProjektiFromVelho() {
       loadProjektiByOidStub.resolves();
       const velhoProjekti = fixture.velhoprojekti1();
-      velhoProjekti.velho.vastuuhenkilonEmail = personSearchFixture.pekkaProjari.email;
+      velhoProjekti.velho!.vastuuhenkilonEmail = personSearchFixture.pekkaProjari.email;
 
       loadVelhoProjektiByOidStub.resolves(velhoProjekti);
     }

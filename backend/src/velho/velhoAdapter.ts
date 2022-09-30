@@ -125,7 +125,7 @@ export function adaptSearchResults(searchResults: ProjektiSearchResult[], kaytta
 }
 
 function getVastuuhenkiloEmail(
-  vastuuhenkilo: ProjektirekisteriApiV2ProjektiOminaisuudetVastuuhenkilo | ProjektirekisteriApiV2ProjektiOminaisuudetVarahenkilo
+  vastuuhenkilo: ProjektirekisteriApiV2ProjektiOminaisuudetVastuuhenkilo | ProjektirekisteriApiV2ProjektiOminaisuudetVarahenkilo | null
 ): string {
   if (vastuuhenkilo?.sahkoposti) {
     return vastuuhenkilo?.sahkoposti;

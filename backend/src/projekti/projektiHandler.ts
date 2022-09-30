@@ -88,7 +88,7 @@ function verifyTallennaProjektiPermissions(projektiInDB: DBProjekti, input: Tall
       // Suodata vain muokattavissa olevat käyttäjät
       .filter((kayttoOikeus) => {
         const dbVaylaUser = projektiInDB.kayttoOikeudet.filter((kayttaja) => kayttaja.kayttajatunnus == kayttoOikeus.kayttajatunnus).pop();
-        return dbVaylaUser.muokattavissa === true;
+        return dbVaylaUser && dbVaylaUser.muokattavissa === true;
       })
       .pop()
   ) {
@@ -134,6 +134,9 @@ export async function createProjektiFromVelho(
   try {
     log.info("Loading projekti from Velho", { oid });
     const projekti = await velho.loadProjekti(oid);
+    if (!projekti.velho) {
+      throw new Error("projekti.velho ei ole määritelty");
+    }
     const vastuuhenkilonEmail = projekti.velho.vastuuhenkilonEmail;
     const varahenkilonEmail = projekti.velho.varahenkilonEmail;
 
