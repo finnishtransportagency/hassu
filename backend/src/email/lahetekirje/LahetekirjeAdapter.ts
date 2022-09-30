@@ -1,5 +1,5 @@
 import log from "loglevel";
-import { Kieli, ProjektiRooli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
+import { KayttajaTyyppi, Kieli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../../asiakirja/asiakirjaService";
 import { DBProjekti, Yhteystieto } from "../../database/model";
 import { translate } from "../../util/localization";
@@ -56,8 +56,7 @@ export class LahetekirjeAdapter {
 
   protected get isElyTilaaja(): boolean {
     return (
-      this.projekti?.velho?.suunnittelustaVastaavaViranomainen &&
-      this.projekti?.velho?.suunnittelustaVastaavaViranomainen.endsWith("ELY")
+      this.projekti?.velho?.suunnittelustaVastaavaViranomainen && this.projekti?.velho?.suunnittelustaVastaavaViranomainen.endsWith("ELY")
     );
   }
 
@@ -195,9 +194,8 @@ export class LahetekirjeAdapter {
 
     kayttoOikeudet
       ?.filter(
-        ({ kayttajatunnus, rooli }) =>
-          rooli === ProjektiRooli.PROJEKTIPAALLIKKO ||
-          kuulutusYhteystiedot?.yhteysHenkilot?.find((yh) => yh === kayttajatunnus)
+        ({ kayttajatunnus, tyyppi }) =>
+          tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO || kuulutusYhteystiedot?.yhteysHenkilot?.find((yh) => yh === kayttajatunnus)
       )
       .forEach((oikeus) => {
         yt.push(vaylaUserToYhteystieto(oikeus));

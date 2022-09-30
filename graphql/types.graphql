@@ -1,9 +1,8 @@
 # Huom: ala kayta skandinaavisia merkkeja tassa tiedostossa, koska muutoin CDK-asennus luulee joka kerta skeeman muuttuneen
 
-enum ProjektiRooli {
+enum KayttajaTyyppi {
   PROJEKTIPAALLIKKO
-  OMISTAJA
-  MUOKKAAJA
+  VARAHENKILO
 }
 
 enum Viranomainen {
@@ -474,8 +473,8 @@ type Velho {
   toteuttavaOrganisaatio: String
   vastuuhenkilonNimi: String
   vastuuhenkilonEmail: String
-  varahenkiloNimi: String
-  varahenkiloEmail: String
+  varahenkilonNimi: String
+  varahenkilonEmail: String
   maakunnat: [String!]
   kunnat: [String!]
   linkki: String
@@ -620,13 +619,13 @@ type SuunnitteluSopimus {
 }
 
 type ProjektiKayttaja {
-  rooli: ProjektiRooli!
+  tyyppi: KayttajaTyyppi
   kayttajatunnus: String!
   puhelinnumero: String
   email: String!
   organisaatio: String!
   nimi: String!
-  esitetaanKuulutuksessa: Boolean
+  muokattavissa: Boolean
 }
 
 type ProjektiKayttajaJulkinen {
@@ -669,7 +668,6 @@ type VelhoAineisto {
 
 type NykyinenKayttaja {
   uid: String
-  vaylaKayttajaTyyppi: VaylaKayttajaTyyppi
   etuNimi: String!
   sukuNimi: String!
   roolit: [String!]
@@ -678,7 +676,6 @@ type NykyinenKayttaja {
 
 type Kayttaja {
   uid: String
-  vaylaKayttajaTyyppi: VaylaKayttajaTyyppi
   suomiFiKayttaja: Boolean
   etuNimi: String!
   sukuNimi: String!
@@ -686,12 +683,6 @@ type Kayttaja {
   email: String
   puhelinnumero: String
   roolit: [String!]
-}
-
-enum VaylaKayttajaTyyppi {
-  A_TUNNUS
-  L_TUNNUS
-  LX_TUNNUS
 }
 
 type PDF {

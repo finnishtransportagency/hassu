@@ -1,9 +1,8 @@
-import { Kayttaja, VaylaKayttajaTyyppi } from "../../../common/graphql/apiModel";
+import { Kayttaja } from "../../../common/graphql/apiModel";
 import { adaptPerson } from "./personAdapter";
 import { log } from "../logger";
 
 export type Person = {
-  vaylaKayttajaTyyppi?: VaylaKayttajaTyyppi | null;
   etuNimi: string;
   sukuNimi: string;
   organisaatio?: string;
@@ -27,8 +26,9 @@ export class Kayttajas {
   }
 
   findByEmail(email: string): Kayttaja | undefined {
+    const lowercaseEmail = email.toLowerCase().trim();
     for (const [uid, person] of Object.entries(this.personMap)) {
-      if (person.email.includes(email.toLowerCase().trim())) {
+      if (person.email.includes(lowercaseEmail)) {
         return adaptPerson(uid, person);
       }
     }
@@ -41,11 +41,10 @@ export class Kayttajas {
     return new Kayttajas(
       kayttajas.reduce((map, kayttaja) => {
         if (kayttaja.uid) {
-          const person: Person = {
+          map[kayttaja.uid] = {
             ...kayttaja,
             email: [kayttaja.email],
           };
-          map[kayttaja.uid] = person;
         }
         return map;
       }, {} as Record<string, Person>)

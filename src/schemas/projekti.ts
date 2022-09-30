@@ -1,5 +1,5 @@
-import { ProjektiRooli } from "@services/api";
 import * as yup from "yup";
+import { KayttajaTyyppi } from "../../common/graphql/apiModel";
 
 export enum ProjektiTestType {
   PROJEKTI_IS_LOADED = "PROJEKTI_IS_LOADED",
@@ -14,9 +14,7 @@ const projektiSchema = yup
   .shape({
     tallennettu: yup.boolean().nullable(),
     kayttoOikeudet: yup.array().of(
-      yup.object().shape({
-        rooli: yup.mixed().oneOf(Object.values(ProjektiRooli)),
-      })
+      yup.object()
     ),
   });
 
@@ -41,7 +39,7 @@ const projektiTestMap = new Map<ProjektiTestType, TestFunction>([
         ProjektiTestType.PROJEKTI_HAS_PAALLIKKO,
         "Projektille ei ole asetettu projektipäällikköä",
         (projekti) =>
-          !projekti?.oid || !!projekti?.kayttoOikeudet?.some(({ rooli }) => rooli === ProjektiRooli.PROJEKTIPAALLIKKO)
+          !projekti?.oid || !!projekti?.kayttoOikeudet?.some(({ tyyppi }) => tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO)
       ),
   ],
   [

@@ -7,7 +7,7 @@ import HassuGrid from "@components/HassuGrid";
 import HassuStack from "@components/layout/HassuStack";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import { AloitusKuulutusInput, Projekti, ProjektiRooli, YhteystietoInput } from "@services/api";
+import { AloitusKuulutusInput, KayttajaTyyppi, Projekti, YhteystietoInput } from "@services/api";
 import React, { ReactElement, Fragment } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
@@ -64,11 +64,11 @@ function KuulutuksenYhteystiedot({ projekti, disableFields }: Props): ReactEleme
                   defaultChecked
                 />
               )}
-              {projekti.kayttoOikeudet?.map(({ nimi, rooli, kayttajatunnus }, index) => {
+              {projekti.kayttoOikeudet?.map(({ nimi, tyyppi, kayttajatunnus }, index) => {
                 const tunnuslista: string[] = value || [];
                 return (
                   <Fragment key={index}>
-                    {rooli === ProjektiRooli.PROJEKTIPAALLIKKO ? (
+                    {tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO ? (
                       <CheckBox label={nimi} disabled checked {...field} />
                     ) : (
                       <CheckBox

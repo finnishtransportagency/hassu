@@ -3,7 +3,7 @@ import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { emailHandler } from "../emailHandler";
 import { DBProjekti } from "../../database/model";
-import { requireProjektiPaallikko } from "../../user/userService";
+import { requireOmistaja } from "../../user/userService";
 
 export abstract class TilaManager {
   protected tyyppi: TilasiirtymaTyyppi;
@@ -34,12 +34,12 @@ export abstract class TilaManager {
   }
 
   private async rejectInternal(projekti: DBProjekti, syy: string) {
-    requireProjektiPaallikko(projekti);
+    requireOmistaja(projekti);
     await this.reject(projekti, syy);
   }
 
   private async approveInternal(projekti: DBProjekti) {
-    const projektiPaallikko = requireProjektiPaallikko(projekti);
+    const projektiPaallikko = requireOmistaja(projekti);
     await this.approve(projekti, projektiPaallikko);
   }
 

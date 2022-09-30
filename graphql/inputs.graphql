@@ -187,10 +187,9 @@ input AineistoInput {
 }
 
 input ProjektiKayttajaInput {
-  rooli: ProjektiRooli!
+  tyyppi: KayttajaTyyppi
   kayttajatunnus: String!
   puhelinnumero: String!
-  esitetaanKuulutuksessa: Boolean
 }
 
 input ListaaKayttajatInput {

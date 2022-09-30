@@ -1,6 +1,6 @@
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
-import { ProjektiRooli, YhteystietoInput } from "@services/api";
+import { KayttajaTyyppi, YhteystietoInput } from "@services/api";
 import Section from "@components/layout/Section";
 import { ReactElement, useMemo, Fragment } from "react";
 import Button from "@components/button/Button";
@@ -75,11 +75,11 @@ export default function EsitettavatYhteystiedot({ vuorovaikutusnro }: Props): Re
             name={`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysHenkilot`}
             render={({ field: { onChange, value, ...field } }) => (
               <FormGroup label="Projektiin tallennetut henkilöt" inlineFlex>
-                {projekti.kayttoOikeudet?.map(({ nimi, rooli, kayttajatunnus }, index) => {
+                {projekti.kayttoOikeudet?.map(({ nimi, tyyppi, kayttajatunnus }, index) => {
                   const tunnuslista = value || [];
                   return (
                     <Fragment key={index}>
-                      {rooli === ProjektiRooli.PROJEKTIPAALLIKKO ? (
+                      {tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO ? (
                         <CheckBox label={nimi} disabled checked {...field} />
                       ) : (
                         <CheckBox

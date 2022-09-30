@@ -7,7 +7,7 @@ import { VelhoAineisto, VelhoAineistoKategoria, VelhoHakuTulos } from "../../../
 import { adaptDokumenttiTyyppi, adaptProjekti, adaptSearchResults, ProjektiSearchResult } from "./velhoAdapter";
 import { VelhoError } from "../error/velhoError";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
-import { DBProjekti } from "../database/model/projekti";
+import { DBProjekti } from "../database/model";
 import { personSearch } from "../personSearch/personSearchClient";
 import dayjs from "dayjs";
 import { aineistoKategoriat } from "../../../common/aineistoKategoriat";
@@ -74,12 +74,7 @@ axios.defaults.timeout = 28000;
 function checkResponseIsOK(response: AxiosResponse, message: string) {
   if (response.status >= 400) {
     throw new VelhoError(
-      "Error while communicating with Velho: " +
-        message +
-        " StatusCode:" +
-        response.status +
-        " Status:" +
-        response?.statusText
+      "Error while communicating with Velho: " + message + " StatusCode:" + response.status + " Status:" + response?.statusText
     );
   }
 }
@@ -130,11 +125,7 @@ export class VelhoClient {
         },
         lauseke: [
           "ja",
-          [
-            "joukossa",
-            ["projekti/projekti", "ominaisuudet", "vaihe"],
-            ["vaihe/vaihe04", "vaihe/vaihe10", "vaihe/vaihe12"],
-          ],
+          ["joukossa", ["projekti/projekti", "ominaisuudet", "vaihe"], ["vaihe/vaihe04", "vaihe/vaihe10", "vaihe/vaihe12"]],
           ["yhtasuuri", ["projekti/projekti", "ominaisuudet", "tila"], "tila/tila15"],
           searchClause,
         ],
@@ -155,7 +146,7 @@ export class VelhoClient {
     }
   }
 
-  public async loadProjekti(oid: string): Promise<{ projekti: DBProjekti; vastuuhenkilo: string }> {
+  public async loadProjekti(oid: string): Promise<DBProjekti> {
     const projektiApi = await this.createProjektiRekisteriApi();
     let response;
     try {
@@ -178,8 +169,7 @@ export class VelhoClient {
           // List aineistot belonging to one toimeksianto
           const aineistotResponse = await hakuApi.hakupalveluApiV1HakuAineistotLinkitOidGet(toimeksianto.oid);
           checkResponseIsOK(aineistotResponse, "hakuApi.hakupalveluApiV1HakuAineistotLinkitOidGet " + toimeksianto.oid);
-          const aineistoArray: AineistoPalvelu.AineistoAineisto[] =
-            aineistotResponse.data as AineistoPalvelu.AineistoAineisto[];
+          const aineistoArray: AineistoPalvelu.AineistoAineisto[] = aineistotResponse.data as AineistoPalvelu.AineistoAineisto[];
           const results = await resultPromise;
 
           const kategoria = toimeksianto.ominaisuudet.nimi.trim();
@@ -217,16 +207,12 @@ export class VelhoClient {
 
   public async getLinkForDocument(dokumenttiOid: string): Promise<string> {
     const dokumenttiApi = await this.createDokumenttiApi();
-    const dokumenttiResponse = await dokumenttiApi.aineistopalveluApiV1AineistoOidDokumenttiGet(
-      dokumenttiOid,
-      undefined,
-      {
-        maxRedirects: 0,
-        validateStatus(status) {
-          return status >= 200 && status < 400;
-        },
-      }
-    );
+    const dokumenttiResponse = await dokumenttiApi.aineistopalveluApiV1AineistoOidDokumenttiGet(dokumenttiOid, undefined, {
+      maxRedirects: 0,
+      validateStatus(status) {
+        return status >= 200 && status < 400;
+      },
+    });
     return dokumenttiResponse.headers.location;
   }
 
@@ -277,9 +263,7 @@ export class VelhoClient {
   }
 
   private async createProjektiRekisteriApi() {
-    return new ProjektiRekisteri.ProjektiApi(
-      new ProjektiRekisteri.Configuration(await this.getVelhoApiConfiguration())
-    );
+    return new ProjektiRekisteri.ProjektiApi(new ProjektiRekisteri.Configuration(await this.getVelhoApiConfiguration()));
   }
 
   // private async createAineistoApi() {

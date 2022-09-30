@@ -1,5 +1,5 @@
 import { DBProjekti, DBVaylaUser, SuunnitteluSopimus, SuunnitteluVaihe, Vuorovaikutus, VuorovaikutusTilaisuus } from "../../database/model";
-import { Kieli, ProjektiTyyppi, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
+import { KayttajaTyyppi, Kieli, ProjektiTyyppi, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import dayjs from "dayjs";
 import { linkSuunnitteluVaihe } from "../../../../common/links";
@@ -300,7 +300,7 @@ export class Kutsu20 extends CommonPdf {
             tilaisuus.esitettavatYhteystiedot?.yhteysHenkilot.forEach((kayttajatunnus) => {
               const user = this.kayttoOikeudet.filter((kayttaja) => kayttaja.kayttajatunnus == kayttajatunnus).pop();
               if (user) {
-                const role = translate("rooli." + user.rooli, this.kieli);
+                const role = user.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO ?  translate("rooli.PROJEKTIPAALLIKKO", this.kieli) : undefined;
                 this.doc.text(safeConcatStrings(", ", [user.nimi, role, user.puhelinnumero]));
               }
             });

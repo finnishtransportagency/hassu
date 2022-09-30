@@ -4,7 +4,8 @@ exports[`projektiHandler should detect Velho changes successfully 1`] = `
 Object {
   "__typename": "Velho",
   "nimi": "Uusi nimi",
-  "vastuuhenkilonEmail": "uusi@vayla.fi",
+  "varahenkilonEmail": "a2@vayla.fi",
+  "vastuuhenkilonEmail": "a1@vayla.fi",
   "vaylamuoto": Array [
     "rata",
   ],
@@ -13,6 +14,31 @@ Object {
 
 exports[`projektiHandler should update Velho changes successfully 1`] = `
 Object {
+  "kayttoOikeudet": Array [
+    Object {
+      "email": "Matti.Meikalainen@vayla.fi",
+      "kayttajatunnus": "A000111",
+      "nimi": "Meikalainen, Matti",
+      "organisaatio": "Väylävirasto",
+      "puhelinnumero": "123456789",
+    },
+    Object {
+      "email": "a1@vayla.fi",
+      "kayttajatunnus": "A1",
+      "muokattavissa": false,
+      "nimi": "SukunimiA1, EtunimiA1",
+      "organisaatio": "Väylävirasto",
+      "tyyppi": "PROJEKTIPAALLIKKO",
+    },
+    Object {
+      "email": "a2@vayla.fi",
+      "kayttajatunnus": "A2",
+      "muokattavissa": false,
+      "nimi": "SukunimiA2, EtunimiA2",
+      "organisaatio": "Väylävirasto",
+      "tyyppi": "VARAHENKILO",
+    },
+  ],
   "oid": "1",
   "velho": Object {
     "asiatunnusVayla": "A1",
@@ -27,7 +53,8 @@ Object {
     "nimi": "Uusi nimi",
     "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
     "tyyppi": "TIE",
-    "vastuuhenkilonEmail": "uusi@vayla.fi",
+    "varahenkilonEmail": "a2@vayla.fi",
+    "vastuuhenkilonEmail": "a1@vayla.fi",
     "vaylamuoto": Array [
       "rata",
     ],

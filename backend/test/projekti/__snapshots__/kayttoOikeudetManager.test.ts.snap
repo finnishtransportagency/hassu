@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`KayttoOikeudetManager should manager projekti users successfully 1`] = `
+Array [
+  Object {
+    "email": "a1@vayla.fi",
+    "kayttajatunnus": "A1",
+    "muokattavissa": false,
+    "nimi": "SukunimiA1, EtunimiA1",
+    "organisaatio": "Väylävirasto",
+    "tyyppi": "PROJEKTIPAALLIKKO",
+  },
+  Object {
+    "email": "a2@vayla.fi",
+    "kayttajatunnus": "A2",
+    "muokattavissa": false,
+    "nimi": "SukunimiA2, EtunimiA2",
+    "organisaatio": "Väylävirasto",
+    "tyyppi": "VARAHENKILO",
+  },
+  Object {
+    "email": "a3@vayla.fi",
+    "kayttajatunnus": "A3",
+    "muokattavissa": true,
+    "nimi": "SukunimiA3, EtunimiA3",
+    "organisaatio": "Väylävirasto",
+    "tyyppi": "VARAHENKILO",
+  },
+]
+`;
+
+exports[`KayttoOikeudetManager should manager projekti users successfully 2`] = `
+Array [
+  Object {
+    "email": "a1@vayla.fi",
+    "kayttajatunnus": "A1",
+    "muokattavissa": false,
+    "nimi": "SukunimiA1, EtunimiA1",
+    "organisaatio": "Väylävirasto",
+    "puhelinnumero": "123456789",
+    "tyyppi": "PROJEKTIPAALLIKKO",
+  },
+  Object {
+    "email": "a2@vayla.fi",
+    "kayttajatunnus": "A2",
+    "muokattavissa": false,
+    "nimi": "SukunimiA2, EtunimiA2",
+    "organisaatio": "Väylävirasto",
+    "puhelinnumero": "123456789",
+    "tyyppi": "VARAHENKILO",
+  },
+  Object {
+    "email": "a3@vayla.fi",
+    "kayttajatunnus": "A3",
+    "muokattavissa": true,
+    "nimi": "SukunimiA3, EtunimiA3",
+    "organisaatio": "Väylävirasto",
+    "puhelinnumero": "123456789",
+    "tyyppi": "VARAHENKILO",
+  },
+  Object {
+    "email": "a4@vayla.fi",
+    "kayttajatunnus": "A4",
+    "muokattavissa": true,
+    "nimi": "SukunimiA4, EtunimiA4",
+    "organisaatio": "Väylävirasto",
+    "puhelinnumero": "123456789",
+    "tyyppi": undefined,
+  },
+]
+`;

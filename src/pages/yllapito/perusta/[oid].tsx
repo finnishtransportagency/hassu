@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import ProjektiPerustiedot from "@components/projekti/ProjektiPerustiedot";
 import KayttoOikeusHallinta from "@components/projekti/KayttoOikeusHallinta";
-import { api, TallennaProjektiInput, Kayttaja } from "@services/api";
+import { api, TallennaProjektiInput, Kayttaja, ProjektiKayttajaInput } from "@services/api";
 import * as Yup from "yup";
 import { useState } from "react";
 import { FormProvider, useForm, UseFormReturn } from "react-hook-form";
@@ -60,17 +60,18 @@ interface PerustaProjektiFormProps {
   projektiLoadError: any;
 }
 
-const defaultFormValues = (projekti: ProjektiLisatiedolla) =>
-  ({
-    oid: projekti.oid,
-    kayttoOikeudet:
-      projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, rooli, esitetaanKuulutuksessa }) => ({
+const defaultFormValues: (projekti: ProjektiLisatiedolla) => FormValues = (projekti: ProjektiLisatiedolla) => ({
+  oid: projekti.oid,
+  kayttoOikeudet:
+    projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi }) => {
+      const formValues: ProjektiKayttajaInput = {
         kayttajatunnus,
         puhelinnumero: puhelinnumero || "",
-        rooli,
-        esitetaanKuulutuksessa,
-      })) || [],
-  } as FormValues);
+        tyyppi,
+      };
+      return formValues;
+    }) || [],
+});
 
 const PerustaProjektiForm: FC<PerustaProjektiFormProps> = ({ projekti, projektiLoadError, reloadProjekti }) => {
   const router = useRouter();
@@ -131,7 +132,7 @@ const PerustaProjektiForm: FC<PerustaProjektiFormProps> = ({ projekti, projektiL
     },
     [setFormContext]
   );
-
+  console.log(projekti);
   return (
     <>
       <FormProvider {...useFormReturn}>
@@ -144,7 +145,11 @@ const PerustaProjektiForm: FC<PerustaProjektiFormProps> = ({ projekti, projektiL
               )}
               <ProjektiPerustiedot projekti={projekti} />
             </Section>
-            <KayttoOikeusHallinta disableFields={disableFormEdit} onKayttajatUpdate={onKayttajatUpdate} />
+            <KayttoOikeusHallinta
+              disableFields={disableFormEdit}
+              projektiKayttajat={projekti.kayttoOikeudet || []}
+              onKayttajatUpdate={onKayttajatUpdate}
+            />
             <Section noDivider>
               <div className="flex gap-6 flex-col md:flex-row">
                 <ButtonLink className="mr-auto" href="/yllapito/perusta">

@@ -3,10 +3,11 @@ import { validateJwtToken } from "./validatejwttoken";
 import { config } from "../config";
 import { log } from "../logger";
 import { IllegalAccessError } from "../error/IllegalAccessError";
-import { NykyinenKayttaja, ProjektiRooli, VaylaKayttajaTyyppi } from "../../../common/graphql/apiModel";
-import { DBProjekti } from "../database/model/projekti";
+import { KayttajaTyyppi, NykyinenKayttaja } from "../../../common/graphql/apiModel";
+import { DBProjekti } from "../database/model";
 import { createSignedCookies } from "./signedCookie";
 import { apiConfig } from "../../../common/abstractApi";
+import { isAorL } from "../util/userUtil";
 
 function parseRoles(roles: string): string[] | undefined {
   return roles
@@ -25,24 +26,7 @@ function parseRoles(roles: string): string[] | undefined {
     : undefined;
 }
 
-function adaptKayttajaTyyppi(roolit: string[] | null | undefined): VaylaKayttajaTyyppi | undefined {
-  const roleToTypeMap: Record<string, VaylaKayttajaTyyppi> = {
-    Atunnukset: VaylaKayttajaTyyppi.A_TUNNUS,
-    Ltunnukset: VaylaKayttajaTyyppi.L_TUNNUS,
-    LXtunnukset: VaylaKayttajaTyyppi.LX_TUNNUS,
-  };
-  if (roolit) {
-    for (const role of roolit) {
-      const type = roleToTypeMap[role];
-      if (type) {
-        return type;
-      }
-    }
-  }
-}
-
 export type KayttajaPermissions = {
-  vaylaKayttajaTyyppi?: VaylaKayttajaTyyppi | null;
   roolit?: string[] | null;
 };
 
@@ -81,7 +65,6 @@ export const identifyUser = async (event: AppSyncResolverEvent<unknown>): Promis
   for (const identifyUserFunction of identifyUserFunctions) {
     const user = await identifyUserFunction(event);
     if (user) {
-      user.vaylaKayttajaTyyppi = adaptKayttajaTyyppi(user.roolit);
       (globalThis as any).currentUser = user;
       return;
     }
@@ -130,10 +113,6 @@ function isHassuKayttaja(kayttaja: KayttajaPermissions) {
   return kayttaja.roolit?.includes("hassu_kayttaja") || isHassuAdmin(kayttaja);
 }
 
-export function isAorL(account: KayttajaPermissions): boolean {
-  return isATunnus(account) || isLTunnus(account);
-}
-
 export function requirePermissionLuku(): NykyinenKayttaja {
   return requireVaylaUser();
 }
@@ -144,8 +123,8 @@ export function requirePermissionLuonti(): void {
   }
 }
 
-export function hasPermissionLuonti(kayttaja: KayttajaPermissions = requireVaylaUser()): boolean {
-  return isHassuAdmin(kayttaja) || isAorL(kayttaja);
+export function hasPermissionLuonti(kayttaja = requireVaylaUser()): boolean {
+  return !!kayttaja;
 }
 
 export function requirePermissionMuokkaa(projekti: DBProjekti): NykyinenKayttaja {
@@ -153,15 +132,12 @@ export function requirePermissionMuokkaa(projekti: DBProjekti): NykyinenKayttaja
   if (isHassuAdmin(kayttaja)) {
     return kayttaja;
   }
-  if (!isAorL(kayttaja)) {
-    throw new IllegalAccessError("Vain L ja A tunnuksella voi muokata projekteja");
-  }
-  // Current user must be added into the projekti with any role
-  const projektiUser = projekti.kayttoOikeudet.filter((user) => user.kayttajatunnus === kayttaja.uid).pop();
-  if (!projektiUser) {
+  // Current user must be added into the projekti
+  if (projekti.kayttoOikeudet.filter((user) => user.kayttajatunnus === kayttaja.uid).pop()) {
+    return kayttaja;
+  } else {
     throw new IllegalAccessError("Sinulla ei ole käyttöoikeutta muokata projektia");
   }
-  return kayttaja;
 }
 
 export function requireAdmin(description?: string): NykyinenKayttaja {
@@ -172,25 +148,21 @@ export function requireAdmin(description?: string): NykyinenKayttaja {
   throw new IllegalAccessError("Sinulla ei ole admin-oikeuksia" + (description ? " (" + description + ")" : ""));
 }
 
-export function requireProjektiPaallikko(projekti: DBProjekti): NykyinenKayttaja {
+function isCurrentUserVirkamiesAndTypeOf(projekti: DBProjekti, tyyppi: KayttajaTyyppi): boolean {
   const kayttaja = requireVaylaUser();
   if (isHassuAdmin(kayttaja)) {
-    return kayttaja;
+    return true;
   }
-  // Current user must be added into the projekti with projektipaallikko role
-  const projektiUser = projekti.kayttoOikeudet
-    .filter((user) => user.kayttajatunnus === kayttaja.uid && user.rooli == ProjektiRooli.PROJEKTIPAALLIKKO)
-    .pop();
-  if (!projektiUser) {
-    throw new IllegalAccessError("Sinulla ei ole käyttöoikeutta muokata projektia, koska et ole projektin projektipäällikkö.");
-  }
-  return kayttaja;
+  const projektiUser = projekti.kayttoOikeudet.filter((user) => user.kayttajatunnus === kayttaja.uid && user.tyyppi == tyyppi).pop();
+  return !!projektiUser && isAorL(projektiUser.kayttajatunnus);
 }
 
-function isATunnus(account: KayttajaPermissions) {
-  return account?.vaylaKayttajaTyyppi === VaylaKayttajaTyyppi.A_TUNNUS;
-}
-
-function isLTunnus(account: KayttajaPermissions) {
-  return account?.vaylaKayttajaTyyppi === VaylaKayttajaTyyppi.L_TUNNUS;
+export function requireOmistaja(projekti: DBProjekti): NykyinenKayttaja {
+  const isOmistaja =
+    isCurrentUserVirkamiesAndTypeOf(projekti, KayttajaTyyppi.PROJEKTIPAALLIKKO) ||
+    isCurrentUserVirkamiesAndTypeOf(projekti, KayttajaTyyppi.VARAHENKILO);
+  if (isOmistaja) {
+    return requireVaylaUser();
+  }
+  throw new IllegalAccessError("Et ole projektin omistaja");
 }

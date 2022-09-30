@@ -9,7 +9,6 @@ import log from "loglevel";
 import sinon from "sinon";
 
 export function expectNotEmptyKayttaja(kayttaja: Kayttaja): void {
-  expect(kayttaja.vaylaKayttajaTyyppi).to.not.be.empty;
   expect(kayttaja.etuNimi).to.not.be.empty;
   expect(kayttaja.sukuNimi).to.not.be.empty;
   expect(kayttaja.uid).to.not.be.empty;
