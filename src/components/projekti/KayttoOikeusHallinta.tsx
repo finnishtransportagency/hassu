@@ -14,6 +14,7 @@ import HassuStack from "@components/layout/HassuStack";
 import HassuGrid from "@components/HassuGrid";
 import CheckBox from "@components/form/CheckBox";
 import FormGroup from "@components/form/FormGroup";
+import { isAorL } from "backend/src/util/userUtil";
 
 // Extend TallennaProjektiInput by making the field nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "kayttoOikeudet">;
@@ -128,30 +129,38 @@ function KayttoOikeusHallinta({ disableFields, onKayttajatUpdate, projektiKaytta
             Projektipäällikön lähtötietona on projekti-VELHOon tallennettu projektipäällikkö. Jos haluat vaihtaa projektipäällikön, tulee
             tieto vaihtaa projekti-VELHOssa.
           </p>
-          {projektiPaallikot.map((paallikko, index) => (
-            <UserFields
-              disableFields={disableFields}
-              index={index}
-              isLoadingKayttajat={isLoadingKayttajat}
-              kayttajat={kayttajat || []}
-              kayttoOikeudet={watchedProjektiKayttajat}
-              mutate={mutate}
-              remove={remove}
-              key={paallikko.id}
-            />
-          ))}
+          {projektiPaallikot.map((paallikko, index) => {
+            const kayttoOikeus = kayttoOikeudet[index];
+            const kayttaja = kayttajat?.find(({ uid }) => uid === kayttoOikeus.kayttajatunnus);
+            return (
+              <UserFields
+                disableFields={disableFields}
+                index={index}
+                isLoadingKayttajat={isLoadingKayttajat}
+                kayttaja={kayttaja}
+                kayttajat={kayttajat || []}
+                kayttoOikeudet={watchedProjektiKayttajat}
+                mutate={mutate}
+                remove={remove}
+                key={paallikko.id}
+              />
+            );
+          })}
         </SectionContent>
       )}
       <SectionContent>
         <h5 className="vayla-paragraph">Muut henkilöt</h5>
         {muutHenkilot.map((user, i) => {
           const index = i + projektiPaallikot.length;
+          const kayttoOikeus = kayttoOikeudet[index];
+          const kayttaja = kayttajat?.find(({ uid }) => uid === kayttoOikeus.kayttajatunnus);
           return (
             <UserFields
               disableFields={disableFields}
               index={index}
               isLoadingKayttajat={isLoadingKayttajat}
               kayttajat={kayttajat || []}
+              kayttaja={kayttaja}
               kayttoOikeudet={watchedProjektiKayttajat}
               mutate={mutate}
               remove={remove}
@@ -178,16 +187,16 @@ interface UserFieldProps {
   isLoadingKayttajat: boolean;
   disableFields?: boolean;
   kayttajat: Kayttaja[];
+  kayttaja?: Kayttaja;
   index: number;
   remove: (index?: number | number[] | undefined) => void;
   mutate: KeyedMutator<Kayttaja[]>;
   kayttoOikeudet: ProjektiKayttaja[];
 }
 
-const UserFields = ({ isLoadingKayttajat, kayttajat, index, disableFields, remove, mutate, kayttoOikeudet }: UserFieldProps) => {
-  const kayttoOikeus = useMemo(() => kayttoOikeudet[index], [kayttoOikeudet, index]);
+const UserFields = ({ isLoadingKayttajat, kayttajat, index, disableFields, remove, mutate, kayttoOikeudet, kayttaja }: UserFieldProps) => {
+  const kayttoOikeus = kayttoOikeudet[index];
   const muokattavissa = kayttoOikeus.muokattavissa;
-  const kayttaja = kayttajat?.find(({ uid }) => uid === kayttoOikeus.kayttajatunnus);
   const isProjektiPaallikko = kayttoOikeus.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO;
 
   const {
@@ -244,15 +253,15 @@ const UserFields = ({ isLoadingKayttajat, kayttajat, index, disableFields, remov
           disabled={disableFields}
         />
         <TextInput label="Sähköpostiosoite *" value={kayttaja?.email || ""} disabled />
-        {!isProjektiPaallikko && (
+        {!isProjektiPaallikko && kayttaja?.uid && isAorL(kayttaja?.uid) && (
           <Controller
             name={`kayttoOikeudet.${index}.tyyppi`}
+            shouldUnregister
             render={({ field: { value, onChange, ...field } }) => (
               <FormGroup style={{ marginTop: "auto" }} inlineFlex>
                 <CheckBox
                   checked={value === KayttajaTyyppi.VARAHENKILO}
-                  // Poista disabloinnista true kun backendista saadaan tieto onko käyttäjä validi VARAHENKILO:ksi
-                  disabled={true || !muokattavissa}
+                  disabled={!muokattavissa}
                   onChange={(event) => {
                     const checked = event.target.checked;
                     const tyyppi: KayttajaTyyppi | undefined = checked ? KayttajaTyyppi.VARAHENKILO : undefined;
