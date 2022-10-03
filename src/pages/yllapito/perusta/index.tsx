@@ -172,7 +172,7 @@ const PerustaTable = ({ hakuTulos }: PerustaTableProps) => {
   const { t } = useTranslation("velho-haku");
   const columns: Column<VelhoHakuTulos>[] = useMemo(
     () => [
-      { Header: "Asiatunnus", accessor: "asianumero" },
+      { Header: "Asiatunnus", accessor: "asiatunnus" },
       { Header: "Nimi", accessor: "nimi", minWidth: 400 },
       {
         Header: "Tyyppi",
