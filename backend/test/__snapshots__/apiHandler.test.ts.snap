@@ -64,7 +64,7 @@ Array [
 
 exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 2`] = `
 Array [
-  "Create projekti having having both projektipaallikko and omistaja",
+  "Create projekti having both projektipaallikko and omistaja",
   Object {
     "kayttoOikeudet": Array [
       Object {
@@ -84,6 +84,7 @@ Array [
         "organisaatio": "ELY",
         "puhelinnumero": "22",
         "tyyppi": undefined,
+        "yleinenYhteystieto": true,
       },
     ],
     "muistiinpano": "Testiprojekti 1:n muistiinpano",
@@ -100,7 +101,7 @@ Array [
 
 exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 3`] = `
 Array [
-  "Loaded projekti having having both projektipaallikko and omistaja",
+  "Loaded projekti having both projektipaallikko and omistaja",
   Object {
     "__typename": "Projekti",
     "kayttoOikeudet": Array [
@@ -123,6 +124,7 @@ Array [
         "organisaatio": "ELY",
         "puhelinnumero": "22",
         "tyyppi": undefined,
+        "yleinenYhteystieto": true,
       },
     ],
     "muistiinpano": "Testiprojekti 1:n muistiinpano",
@@ -230,6 +232,7 @@ Array [
         "organisaatio": "ELY",
         "puhelinnumero": "123456789",
         "tyyppi": undefined,
+        "yleinenYhteystieto": undefined,
       },
     ],
     "kielitiedot": undefined,
@@ -270,6 +273,7 @@ Array [
         "organisaatio": "ELY",
         "puhelinnumero": "123456789",
         "tyyppi": undefined,
+        "yleinenYhteystieto": undefined,
       },
     ],
     "muistiinpano": "Testiprojekti 1:n muistiinpano",
@@ -359,6 +363,7 @@ Array [
         "organisaatio": "ELY",
         "puhelinnumero": "123456789",
         "tyyppi": undefined,
+        "yleinenYhteystieto": undefined,
       },
       Object {
         "email": "a2@vayla.fi",
@@ -368,6 +373,7 @@ Array [
         "organisaatio": "Väylävirasto",
         "puhelinnumero": "123456789",
         "tyyppi": undefined,
+        "yleinenYhteystieto": undefined,
       },
     ],
     "kielitiedot": Object {
@@ -473,6 +479,7 @@ Array [
         "organisaatio": "ELY",
         "puhelinnumero": "123456789",
         "tyyppi": undefined,
+        "yleinenYhteystieto": undefined,
       },
       Object {
         "__typename": "ProjektiKayttaja",
@@ -483,6 +490,7 @@ Array [
         "organisaatio": "Väylävirasto",
         "puhelinnumero": "123456789",
         "tyyppi": undefined,
+        "yleinenYhteystieto": undefined,
       },
     ],
     "kielitiedot": Object {
@@ -846,6 +854,7 @@ Object {
       "organisaatio": "ELY",
       "puhelinnumero": "123456789",
       "tyyppi": undefined,
+      "yleinenYhteystieto": undefined,
     },
     Object {
       "__typename": "ProjektiKayttaja",
@@ -856,6 +865,7 @@ Object {
       "organisaatio": "Väylävirasto",
       "puhelinnumero": "123456789",
       "tyyppi": undefined,
+      "yleinenYhteystieto": undefined,
     },
   ],
   "kielitiedot": Object {
@@ -973,6 +983,7 @@ Object {
         "nimi": "Projari, Pekka",
         "organisaatio": "Väylävirasto",
         "puhelinnumero": "11",
+        "yleinenYhteystieto": undefined,
       },
       Object {
         "__typename": "ProjektiKayttajaJulkinen",
@@ -981,6 +992,7 @@ Object {
         "nimi": "Meikäläinen, Matti",
         "organisaatio": "ELY",
         "puhelinnumero": "123456789",
+        "yleinenYhteystieto": undefined,
       },
       Object {
         "__typename": "ProjektiKayttajaJulkinen",
@@ -989,6 +1001,7 @@ Object {
         "nimi": "SukunimiA2, EtunimiA2",
         "organisaatio": "Väylävirasto",
         "puhelinnumero": "123456789",
+        "yleinenYhteystieto": undefined,
       },
     ],
     "status": "ALOITUSKUULUTUS",

@@ -20,6 +20,7 @@ export const kayttoOikeudetSchema = Yup.array().of(
       kayttajatunnus: Yup.string().required("Aseta käyttäjä"),
       id: Yup.string().nullable().notRequired(),
       tyyppi: Yup.mixed<KayttajaTyyppi>().oneOf([KayttajaTyyppi.PROJEKTIPAALLIKKO, KayttajaTyyppi.VARAHENKILO]).notRequired(),
+      yleinenYhteystieto: Yup.boolean().notRequired(),
     })
     .test("uniikki-kayttajatunnus", "Käyttäjä voi olla vain yhteen kertaan käyttöoikeuslistalla", function (current) {
       const currentKayttaja = current as ProjektiKayttajaInput;

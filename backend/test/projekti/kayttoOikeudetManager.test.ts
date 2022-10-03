@@ -85,6 +85,7 @@ describe("KayttoOikeudetManager", () => {
       {
         kayttajatunnus: kayttajaA4.uid!,
         puhelinnumero: kayttajaA4.puhelinnumero!,
+        yleinenYhteystieto: true,
       },
     ]);
 

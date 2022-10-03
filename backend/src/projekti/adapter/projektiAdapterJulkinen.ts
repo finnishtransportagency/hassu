@@ -533,6 +533,7 @@ function adaptProjektiHenkilot(kayttoOikeudet: DBVaylaUser[]): ProjektiHenkilot 
       email: user.email,
       puhelinnumero: user.puhelinnumero,
       organisaatio: user.organisaatio,
+      yleinenYhteystieto: user.yleinenYhteystieto,
     };
     return result;
   }, {});

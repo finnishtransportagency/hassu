@@ -630,6 +630,7 @@ type ProjektiKayttaja {
   organisaatio: String!
   nimi: String!
   muokattavissa: Boolean
+  yleinenYhteystieto: Boolean
 }
 
 type ProjektiKayttajaJulkinen {
@@ -638,6 +639,7 @@ type ProjektiKayttajaJulkinen {
   email: String!
   organisaatio: String!
   nimi: String!
+  yleinenYhteystieto: Boolean
 }
 
 enum ProjektiTyyppi {
