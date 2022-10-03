@@ -67,7 +67,7 @@ describe("emailHandler", () => {
             "on luotu aloituskuulutus, joka odottaa hyväksyntääsi.\n" +
             "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/2\n" +
             "Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
-          to: "pekka.projari@vayla.fi",
+          to: ["pekka.projari@vayla.fi"],
         });
       });
     });
