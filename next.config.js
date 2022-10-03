@@ -110,13 +110,12 @@ module.exports = (phase) => {
   if (phase === PHASE_DEVELOPMENT_SERVER) {
     config = setupLocalDevelopmentMode(config, env);
   } else {
+    env.VERSION = process.env.CODEBUILD_SOURCE_VERSION; // default version info, overriden in test&prod by semantic version
     try {
       const fs = require("fs");
       let buffer = fs.readFileSync(__dirname + "/.version");
       if (buffer) {
         env.VERSION = buffer.toString("UTF-8");
-      } else {
-        env.VERSION = process.env.CODEBUILD_SOURCE_VERSION;
       }
     } catch (e) {
       // Ignore
