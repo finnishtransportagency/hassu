@@ -22,7 +22,7 @@ export function onTulevaisuudessa(date: string | null | undefined): boolean {
     return false;
   }
   let parsedDate = dayjs(date);
-  return parsedDate.isBefore(dayjs());
+  return parsedDate.isAfter(dayjs());
 }
 
 export function examineJulkaisuPaiva(published: boolean, date: string | null | undefined) {
