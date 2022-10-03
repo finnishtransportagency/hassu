@@ -4,8 +4,9 @@ import { DialogActions, TextField, TextFieldProps } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
 import { FieldValues, useController, UseControllerProps } from "react-hook-form";
 import { PickersActionBarProps } from "@mui/x-date-pickers/PickersActionBar";
-import useTranslation from "next-translate/useTranslation";
 import Button from "@components/button/Button";
+import { PickersActionBarAction } from "@mui/x-date-pickers/PickersActionBar/PickersActionBar";
+import { useLocaleText, WrapperVariantContext } from "@mui/x-date-pickers/internals";
 
 type InputDate = Dayjs | null;
 type OutputDate = Dayjs | null;
@@ -37,10 +38,17 @@ export const HassuDatePicker = React.forwardRef(function HassuDatePickerForwardR
     components: {
       ActionBar: CustomActionBar,
     },
+    componentsProps: { actionBar: { sx: { padding: 14 } } },
     DialogProps: {
       sx: {
         "& .MuiDialogContent-root": {
           marginBottom: 0,
+        },
+        "& .MuiPickersToolbar-root": {
+          paddingTop: 4,
+          paddingBottom: 4,
+          paddingRight: 6,
+          paddingLeft: 6,
         },
       },
     },
@@ -74,16 +82,31 @@ export const HassuDatePickerWithController = <TFieldValues extends FieldValues>(
   return <HassuDatePicker ref={ref} {...controlledDatePickerProps} />;
 };
 
-const CustomActionBar = ({ onAccept, onCancel }: PickersActionBarProps) => {
-  const { t } = useTranslation("common");
+const CustomActionBar = (props: PickersActionBarProps) => {
+  const wrapperVariant = React.useContext(WrapperVariantContext);
+  const actionArray: PickersActionBarAction[] | undefined =
+    typeof props.actions === "function" ? props.actions(wrapperVariant) : props.actions;
+  const showOKButton = !!actionArray?.includes("accept");
+  const showCancelButton = !!actionArray?.includes("cancel");
+  const localeText = useLocaleText();
+  localeText.okButtonLabel;
+
+  if (!showCancelButton && !showOKButton) {
+    return <></>;
+  }
+
   return (
-    <DialogActions sx={{ flexDirection: { xs: "row" }, padding: 2 }}>
-      <Button type="button" primary onClick={onAccept}>
-        {t("OK")}
-      </Button>
-      <Button type="button" onClick={onCancel}>
-        {t("peruuta")}
-      </Button>
+    <DialogActions sx={{ flexDirection: { xs: "row" }, padding: 2, paddingLeft: 4, paddingRight: 4, paddingBottom: 4 }}>
+      {showOKButton && (
+        <Button type="button" primary onClick={props.onAccept}>
+          {localeText.okButtonLabel}
+        </Button>
+      )}
+      {showCancelButton && (
+        <Button type="button" onClick={props.onCancel}>
+          {localeText.cancelButtonLabel}
+        </Button>
+      )}
     </DialogActions>
   );
 };

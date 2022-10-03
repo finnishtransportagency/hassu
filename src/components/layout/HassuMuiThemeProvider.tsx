@@ -86,13 +86,12 @@ export const createLocalizedTheme = (locale: Localization) =>
         MuiDialogActions: {
           styleOverrides: {
             root: {
-              [defaultTheme.breakpoints.up("xs")]: { flexDirection: "column" },
-              [defaultTheme.breakpoints.up("md")]: { flexDirection: "row" },
+              [defaultTheme.breakpoints.up("xs")]: { flexDirection: "column", columnGap: defaultTheme.spacing(4) },
+              [defaultTheme.breakpoints.up("md")]: { flexDirection: "row", columnGap: defaultTheme.spacing(7.5) },
               paddingBottom: defaultTheme.spacing(0),
               paddingLeft: defaultTheme.spacing(0),
               paddingRight: defaultTheme.spacing(0),
               paddingTop: defaultTheme.spacing(0),
-              columnGap: defaultTheme.spacing(7.5),
               rowGap: defaultTheme.spacing(4),
               alignItems: "flex-end",
             },
@@ -162,6 +161,9 @@ export const createLocalizedTheme = (locale: Localization) =>
           },
           styleOverrides: {
             root: {
+              whiteSpace: "normal",
+              overflowWrap: "anywhere",
+              maxWidth: "fit-content",
               lineHeight: "1.25rem",
               marginBottom: "5px",
               position: "initial",

@@ -395,7 +395,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                       </ul>
                     </div>
                   </Notification>
-                  <HassuGrid cols={{ lg: 3 }}>
+                  <div className="flex flex-col md:flex-row gap-y-4 gap-x-7">
                     <HassuDatePickerWithController
                       label="Kuulutuspäivä"
                       minDate={today()}
@@ -414,7 +414,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                       disabled={true}
                       controllerProps={{ name: "aloitusKuulutus.siirtyySuunnitteluVaiheeseen" }}
                     />
-                  </HassuGrid>
+                  </div>
                 </Section>
                 <Section noDivider={!!toissijainenKieli}>
                   <SectionContent>

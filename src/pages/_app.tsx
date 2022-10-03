@@ -34,7 +34,7 @@ export interface PageProps {
 }
 
 function App({ Component, pageProps }: AppProps<PageProps>) {
-  const { lang } = useTranslation();
+  const { lang, t } = useTranslation("common");
   const [routeLabels, setRouteLabels] = useState<RouteLabels>({});
 
   pageProps.setRouteLabels = useCallback(
@@ -46,7 +46,11 @@ function App({ Component, pageProps }: AppProps<PageProps>) {
 
   return (
     <SWRConfig value={{ revalidateOnFocus: false, revalidateIfStale: false, revalidateOnReconnect: false }}>
-      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={lang}>
+      <LocalizationProvider
+        dateAdapter={AdapterDayjs}
+        adapterLocale={lang}
+        localeText={{ okButtonLabel: t("OK"), cancelButtonLabel: t("peruuta") }}
+      >
         <I18nProvider lang={lang} namespaces={{ commonFI, commonSV }}>
           <Head>
             <title>Hassu</title>
