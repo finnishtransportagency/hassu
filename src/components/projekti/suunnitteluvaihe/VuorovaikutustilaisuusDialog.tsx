@@ -20,6 +20,7 @@ import {
   VuorovaikutusTilaisuus,
   VuorovaikutusTilaisuusInput,
   VuorovaikutusTilaisuusTyyppi,
+  YhteystietoInput,
 } from "@services/api";
 import capitalize from "lodash/capitalize";
 import { VuorovaikutusFormValues } from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
@@ -30,6 +31,7 @@ import FormGroup from "@components/form/FormGroup";
 import CheckBox from "@components/form/CheckBox";
 import SoittoajanYhteyshenkilot from "./SoittoajanYhteyshenkilot";
 import dayjs from "dayjs";
+import { removeTypeName } from "src/util/removeTypeName";
 
 const defaultTilaisuus = {
   nimi: "",
@@ -99,10 +101,16 @@ export default function VuorovaikutusDialog({
   useEffect(() => {
     if (tilaisuudet) {
       const tilaisuuksienTiedot = {
-        vuorovaikutusTilaisuudet: tilaisuudet.map(tilaisuus=>{
-        const { __typename, ...input } = tilaisuus ;
-        return input;
-      }),
+        vuorovaikutusTilaisuudet: tilaisuudet.map((tilaisuus) => {
+          const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
+          const { esitettavatYhteystiedot } = vuorovaikutusTilaisuusInput;
+          const input: VuorovaikutusTilaisuusInput = vuorovaikutusTilaisuusInput;
+          input.esitettavatYhteystiedot = {
+            yhteysHenkilot: esitettavatYhteystiedot?.yhteysHenkilot || [],
+            yhteysTiedot: esitettavatYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt) as YhteystietoInput) || [],
+          };
+          return input;
+        }),
       };
       reset(tilaisuuksienTiedot);
     }
