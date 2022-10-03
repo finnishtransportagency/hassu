@@ -131,6 +131,9 @@ export class Config extends BaseConfig {
       this.frontendDomainName = (await readFrontendStackOutputs()).CloudfrontPrivateDNSName || "please-re-run-backend-deployment";
     } else {
       this.frontendDomainName = await this.getSecureInfraParameter("FrontendDomainName");
+      if (!this.frontendDomainName) {
+        throw new Error("/" + Config.env + "/FrontendDomainName SSM Parameter not found! Maybe logged in to wrong account?");
+      }
     }
     log.info("frontendDomainName", this.frontendDomainName);
   };
