@@ -11,7 +11,8 @@
     "**/testUtil/tests.ts",
     "**/*.test.ts",
     "**/testFixtureRecorder.ts",
-    "**/test/setup.js"
+    "**/test/setup.js",
+    "**/integrationtest/util/**"
   ],
   "rules": {
     "strict": "error",

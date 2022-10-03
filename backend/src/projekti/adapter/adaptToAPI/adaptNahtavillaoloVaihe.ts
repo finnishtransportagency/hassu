@@ -6,7 +6,8 @@ import {
   adaptIlmoituksenVastaanottajat,
   adaptKielitiedotByAddingTypename,
   adaptVelhoByAddingTypename,
-  adaptYhteystiedotByAddingTypename,
+  adaptMandatoryYhteystiedotByAddingTypename,
+  adaptStandardiYhteystiedotByAddingTypename,
 } from "../common";
 import { fileService } from "../../../files/fileService";
 import { lisaAineistoService } from "../../../aineisto/lisaAineistoService";
@@ -34,7 +35,7 @@ export function adaptNahtavillaoloVaihe(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     lisaAineistoParametrit: lisaAineistoService.generateListingParams(dbProjekti.oid, nahtavillaoloVaihe.id, dbProjekti.salt),
-    kuulutusYhteystiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot),
+    kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
     hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
   };
@@ -45,18 +46,19 @@ export function adaptNahtavillaoloVaiheJulkaisut(
   julkaisut?: NahtavillaoloVaiheJulkaisu[] | null
 ): API.NahtavillaoloVaiheJulkaisu[] | undefined {
   if (julkaisut) {
-    return julkaisut.map((julkaisu) => {
+    const adaptoitu: API.NahtavillaoloVaiheJulkaisu[] = julkaisut.map((julkaisu) => {
       const {
         aineistoNahtavilla,
         lisaAineisto,
         hankkeenKuvaus,
         ilmoituksenVastaanottajat,
-        kuulutusYhteystiedot,
+        yhteystiedot,
         nahtavillaoloPDFt,
         kielitiedot,
         velho,
         ...fieldsToCopyAsIs
       } = julkaisu;
+
       if (!nahtavillaoloPDFt) {
         throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.nahtavillaoloPDFt määrittelemättä");
       }
@@ -69,19 +71,25 @@ export function adaptNahtavillaoloVaiheJulkaisut(
       if (!kielitiedot) {
         throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.kielitiedot määrittelemättä");
       }
-      return {
+      if (!yhteystiedot) {
+        throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.yhteystiedot määrittelemättä");
+      }
+
+      const palautetaan: API.NahtavillaoloVaiheJulkaisu = {
         ...fieldsToCopyAsIs,
         __typename: "NahtavillaoloVaiheJulkaisu",
         hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
         kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
-        kuulutusYhteystiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot),
+        yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
         ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
         aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
         lisaAineisto: adaptAineistot(lisaAineisto),
         nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(oid, nahtavillaoloPDFt),
         velho: adaptVelhoByAddingTypename(velho),
       };
+      return palautetaan;
     });
+    return adaptoitu;
   }
   return undefined;
 }

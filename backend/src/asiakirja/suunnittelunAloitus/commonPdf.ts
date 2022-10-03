@@ -109,6 +109,22 @@ export abstract class CommonPdf extends AbstractPdf {
       });
   }
 
+  protected moreInfoElementsStandardoiduillaYhteystiedoilla(
+    yhteystiedot: Yhteystieto[],
+    showOrganization = true
+  ): PDFKit.PDFStructureElementChild[] {
+    return yhteystiedot.map(({ organisaatio, etunimi, sukunimi, puhelinnumero, sahkoposti, titteli }) => {
+      return () => {
+        const noSpamSahkoposti = sahkoposti.replace(/@/g, "(at)");
+        const organization = showOrganization ? `${organisaatio}, ` : "";
+        const title = titteli ? `${titteli}, ` : "";
+        this.doc
+          .text(`${organization}${title}${etunimi} ${sukunimi}, ${this.localizedPuh} ${puhelinnumero}, ${noSpamSahkoposti} `)
+          .moveDown();
+      };
+    });
+  }
+
   private get localizedPuh(): string {
     if (this.kieli == Kieli.SUOMI) {
       return "puh.";

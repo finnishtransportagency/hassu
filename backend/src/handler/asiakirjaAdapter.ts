@@ -38,13 +38,17 @@ export class AsiakirjaAdapter {
 
   adaptNahtavillaoloVaiheJulkaisu(dbProjekti: DBProjekti): NahtavillaoloVaiheJulkaisu {
     if (dbProjekti.nahtavillaoloVaihe) {
-      const { palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.nahtavillaoloVaihe;
+      const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.nahtavillaoloVaihe;
+      if (!dbProjekti.kielitiedot) {
+        throw new Error("adaptNahtavillaoloVaiheJulkaisu: dbProjekti.kielitiedot puuttuu");
+      }
       return {
         ...includedFields,
         velho: adaptVelho(dbProjekti),
         // dbProjekti.kielitiedot on oltava olemassa
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
+        yhteystiedot: adaptStandardiYhteystiedot(dbProjekti, kuulutusYhteystiedot),
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
       };
     }

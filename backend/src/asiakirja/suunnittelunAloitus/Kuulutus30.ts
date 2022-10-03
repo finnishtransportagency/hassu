@@ -128,16 +128,7 @@ export class Kuulutus30 extends CommonPdf {
       this.muistutuksetParagraph(),
       this.tietosuojaParagraph(),
       this.lisatietojaAntavatParagraph(),
-      this.doc.struct(
-        "P",
-        {},
-        this.moreInfoElements(
-          this.nahtavillaoloVaihe?.kuulutusYhteystiedot,
-          undefined,
-          this.nahtavillaoloVaihe?.kuulutusYhteysHenkilot,
-          true
-        )
-      ),
+      this.doc.struct("P", {}, this.moreInfoElementsStandardoiduillaYhteystiedoilla(this.nahtavillaoloVaihe?.yhteystiedot, true)),
       this.kutsuja(),
     ].filter((elem) => elem);
   }

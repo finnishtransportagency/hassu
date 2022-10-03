@@ -146,8 +146,7 @@ input NahtavillaoloVaiheInput {
   kuulutusVaihePaattyyPaiva: String
   muistutusoikeusPaattyyPaiva: String
   hankkeenKuvaus: HankkeenKuvauksetInput
-  kuulutusYhteysHenkilot: [String!]
-  kuulutusYhteystiedot: [YhteystietoInput!]
+  kuulutusYhteystiedot: StandardiYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
 }
 

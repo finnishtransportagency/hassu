@@ -1,6 +1,5 @@
 import * as Yup from "yup";
-import { yhteystietoSchema } from "./yhteystieto";
-import { ilmoituksenVastaanottajat } from "./common";
+import { ilmoituksenVastaanottajat, standardiYhteystiedot } from "./common";
 import { paivamaara } from "./paivamaaraSchema";
 
 const maxNahtavillaoloLength = 2000;
@@ -15,8 +14,7 @@ export const nahtavillaoloKuulutusSchema = Yup.object().shape({
   nahtavillaoloVaihe: Yup.object()
     .required()
     .shape({
-      kuulutusYhteystiedot: Yup.array().notRequired().of(yhteystietoSchema),
-      kuulutusYhteysHenkilot: Yup.array().notRequired().of(Yup.string()),
+      kuulutusYhteystiedot: standardiYhteystiedot(),
       hankkeenKuvaus: Yup.object().shape({ SUOMI: hankkeenKuvaus }),
       kuulutusPaiva: paivamaara({ preventPast: "Kuulutuspäivää ei voida asettaa menneisyyteen" }).required(
         "Kuulutuspäivä ei voi olla tyhjä"

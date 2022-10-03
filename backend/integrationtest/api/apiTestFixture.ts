@@ -215,9 +215,11 @@ class ApiTestFixture {
     kuulutusPaiva: "2022-06-07",
     kuulutusVaihePaattyyPaiva: "2042-06-07",
     muistutusoikeusPaattyyPaiva: "2042-06-08",
-    kuulutusYhteysHenkilot,
     ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
-    kuulutusYhteystiedot: this.yhteystietoInputLista,
+    kuulutusYhteystiedot: {
+      yhteysHenkilot: kuulutusYhteysHenkilot,
+      yhteysTiedot: this.yhteystietoInputLista,
+    },
   });
 }
 

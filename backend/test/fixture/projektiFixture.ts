@@ -411,9 +411,11 @@ export class ProjektiFixture {
         kuulutusPaiva: "2022-06-07",
         kuulutusVaihePaattyyPaiva: "2042-06-07",
         muistutusoikeusPaattyyPaiva: "2042-06-08",
-        kuulutusYhteysHenkilot: [ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus],
         ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
-        kuulutusYhteystiedot: this.yhteystietoLista,
+        kuulutusYhteystiedot: {
+          yhteysTiedot: this.yhteystietoLista,
+          yhteysHenkilot: [ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus],
+        },
       },
       kielitiedot: {
         ensisijainenKieli: Kieli.SUOMI,
@@ -582,12 +584,14 @@ export class ProjektiFixture {
       kuulutusPaiva: "2022-06-07",
       kuulutusVaihePaattyyPaiva: "2022-06-07",
       muistutusoikeusPaattyyPaiva: "2022-06-08",
-      kuulutusYhteysHenkilot: [
-        ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
-        ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
-      ],
       ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
-      kuulutusYhteystiedot: this.yhteystietoLista,
+      kuulutusYhteystiedot: {
+        yhteysTiedot: this.yhteystietoLista,
+        yhteysHenkilot: [
+          ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
+          ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
+        ],
+      },
     },
     nahtavillaoloVaiheJulkaisut: [
       {
@@ -622,8 +626,7 @@ export class ProjektiFixture {
         },
         kuulutusPaiva: "2022-06-20T11:54",
         kuulutusVaihePaattyyPaiva: "2042-07-21T11:54",
-        kuulutusYhteysHenkilot: ["A123", "A000111"],
-        kuulutusYhteystiedot: [
+        yhteystiedot: [
           {
             etunimi: "Ulla",
             organisaatio: "Ramboll",
@@ -631,6 +634,20 @@ export class ProjektiFixture {
             sahkoposti: "ulla.uusi@rambo.ll",
             sukunimi: "Uusi",
             titteli: "DI",
+          },
+          {
+            etunimi: "Pekka",
+            organisaatio: "Väylävirasto",
+            puhelinnumero: "123456789",
+            sukunimi: "Pojari",
+            sahkoposti: "pekka.projari@vayla.fi",
+          },
+          {
+            etunimi: "Matti",
+            organisaatio: "Väylävirasto",
+            puhelinnumero: "123456789",
+            sahkoposti: "Matti.Meikalainen@vayla.fi",
+            sukunimi: "Meikäläinen",
           },
         ],
         muistutusoikeusPaattyyPaiva: "2042-07-21T11:54",

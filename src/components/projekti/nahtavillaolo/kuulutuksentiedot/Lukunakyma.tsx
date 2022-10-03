@@ -1,4 +1,4 @@
-import { Kieli, NahtavillaoloVaiheJulkaisu, ProjektiKayttaja } from "@services/api";
+import { NahtavillaoloVaiheJulkaisu, Kieli } from "@services/api";
 import React, { ReactElement } from "react";
 import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
@@ -30,19 +30,6 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
   if (published) {
     nahtavillaoloVaiheHref = window.location.protocol + "//" + window.location.host + "/suunnitelma/" + projekti.oid + "/nahtavillaolo";
   }
-  const vuorovaikutusYhteysHenkilot: ProjektiKayttaja[] = nahtavillaoloVaiheJulkaisu.kuulutusYhteysHenkilot
-    ? nahtavillaoloVaiheJulkaisu.kuulutusYhteysHenkilot
-        .map((hlo) => {
-          const yhteysHenkiloTietoineen: ProjektiKayttaja | undefined = (projekti?.kayttoOikeudet || []).find(
-            (ko) => ko.kayttajatunnus === hlo
-          );
-          if (!yhteysHenkiloTietoineen) {
-            return {} as ProjektiKayttaja;
-          }
-          return yhteysHenkiloTietoineen as ProjektiKayttaja;
-        })
-        .filter((pk) => pk.nimi)
-    : [];
 
   const getPdft = (kieli: Kieli | undefined | null) => {
     if (!nahtavillaoloVaiheJulkaisu || !nahtavillaoloVaiheJulkaisu.nahtavillaoloPDFt || !kieli) {
@@ -103,17 +90,11 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
       </Section>
       <Section>
         <SectionContent>
-          <p className="vayla-label mb-5">Kuulutuksen yhteyshenkilöt</p>
-          {nahtavillaoloVaiheJulkaisu.kuulutusYhteystiedot?.map((yhteystieto, index) => (
+          <p className="vayla-label">Kuulutuksen yhteyshenkilöt</p>
+          {nahtavillaoloVaiheJulkaisu.yhteystiedot?.map((yhteistieto, index) => (
             <p style={{ margin: 0 }} key={index}>
-              {capitalize(yhteystieto.etunimi)} {capitalize(yhteystieto.sukunimi)}, puh. {yhteystieto.puhelinnumero},{" "}
-              {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio})
-            </p>
-          ))}
-          {vuorovaikutusYhteysHenkilot.map((yhteystieto, index) => (
-            <p style={{ margin: 0 }} key={index}>
-              {yhteystieto.nimi}, puh. {yhteystieto.puhelinnumero}, {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} (
-              {yhteystieto.organisaatio})
+              {capitalize(yhteistieto?.etunimi)} {capitalize(yhteistieto?.sukunimi)}, puh. {yhteistieto?.puhelinnumero},{" "}
+              {yhteistieto?.sahkoposti ? replace(yhteistieto?.sahkoposti, "@", "[at]") : ""}
             </p>
           ))}
         </SectionContent>

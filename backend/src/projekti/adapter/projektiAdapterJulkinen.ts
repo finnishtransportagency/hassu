@@ -183,8 +183,7 @@ class ProjektiAdapterJulkinen {
         hankkeenKuvaus,
         kuulutusPaiva,
         kuulutusVaihePaattyyPaiva,
-        kuulutusYhteysHenkilot,
-        kuulutusYhteystiedot,
+        yhteystiedot,
         muistutusoikeusPaattyyPaiva,
         velho,
         kielitiedot,
@@ -194,8 +193,8 @@ class ProjektiAdapterJulkinen {
       if (!aineistoNahtavilla) {
         throw new Error("adaptNahtavillaoloVaiheJulkaisu: julkaisu.aineistoNahtavilla määrittelemättä");
       }
-      if (!kuulutusYhteysHenkilot) {
-        throw new Error("adaptNahtavillaoloVaiheJulkaisu: julkaisu.kuulutusYhteysHenkilot määrittelemättä");
+      if (!yhteystiedot) {
+        throw new Error("adaptNahtavillaoloVaiheJulkaisu: julkaisu.yhteystiedot määrittelemättä");
       }
       if (!hankkeenKuvaus) {
         throw new Error("adaptNahtavillaoloVaiheJulkaisu: julkaisu.hankkeenKuvaus määrittelemättä");
@@ -212,8 +211,7 @@ class ProjektiAdapterJulkinen {
         kuulutusPaiva,
         kuulutusVaihePaattyyPaiva,
         muistutusoikeusPaattyyPaiva,
-        kuulutusYhteysHenkilot: adaptUsernamesToProjektiHenkiloIds(kuulutusYhteysHenkilot, projektiHenkilot),
-        kuulutusYhteystiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot),
+        yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
         velho: adaptVelho(velho),
         kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
       };

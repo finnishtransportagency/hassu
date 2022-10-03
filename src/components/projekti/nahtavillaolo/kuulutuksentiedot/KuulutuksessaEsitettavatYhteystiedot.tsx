@@ -44,11 +44,11 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "nahtavillaoloVaihe.kuulutusYhteystiedot",
+    name: "nahtavillaoloVaihe.kuulutusYhteystiedot.yhteysTiedot",
   });
 
-  const vuorovaikutusYhteysHenkilot: ProjektiKayttaja[] = projekti?.nahtavillaoloVaihe?.kuulutusYhteysHenkilot
-    ? projekti.nahtavillaoloVaihe.kuulutusYhteysHenkilot
+  const vuorovaikutusYhteysHenkilot: ProjektiKayttaja[] = projekti?.nahtavillaoloVaihe?.kuulutusYhteystiedot?.yhteysHenkilot
+    ? projekti.nahtavillaoloVaihe.kuulutusYhteystiedot.yhteysHenkilot
         .map((hlo) => {
           const yhteysHenkiloTietoineen: ProjektiKayttaja | undefined = (projekti?.kayttoOikeudet || []).find(
             (ko) => ko.kayttajatunnus === hlo
@@ -66,17 +66,16 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
       <Section>
         <SectionContent>
           <p className="vayla-label mb-5">Vuorovaikuttamisen yhteyshenkilöt</p>
-          {projekti?.nahtavillaoloVaihe?.kuulutusYhteystiedot?.map((yhteystieto, index) => (
+          {projekti?.nahtavillaoloVaihe?.kuulutusYhteystiedot?.yhteysTiedot?.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
               {capitalize(yhteystieto.etunimi)} {capitalize(yhteystieto.sukunimi)}, puh. {yhteystieto.puhelinnumero},{" "}
-              {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio}
-              )
+              {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio})
             </p>
           ))}
           {vuorovaikutusYhteysHenkilot.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
-              {yhteystieto.nimi}, puh. {yhteystieto.puhelinnumero},{" "}
-              {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} ({yhteystieto.organisaatio})
+              {yhteystieto.nimi}, puh. {yhteystieto.puhelinnumero}, {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} (
+              {yhteystieto.organisaatio})
             </p>
           ))}
         </SectionContent>
@@ -87,19 +86,19 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
   return (
     <Section>
       <SectionContent>
-        <h4 className="vayla-small-title">Kuulutuksessa esitettävät yhteystiedot</h4>
+        <h5 className="vayla-small-title">Kuulutuksessa esitettävät yhteystiedot</h5>
         <p>
-          Voit valita kutsussa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden
-          yhteystiedon. Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot
-          haetaan Projektin henkilöt -sivulle tallennetuista tiedoista.
+          Voit valita kuulutuksessa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden yhteystiedon.
+          Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot haetaan Projektin henkilöt -sivulle
+          tallennetuista tiedoista.{" "}
         </p>
         {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
           <Controller
             control={control}
-            name={`nahtavillaoloVaihe.kuulutusYhteysHenkilot`}
+            name={`nahtavillaoloVaihe.kuulutusYhteystiedot.yhteysHenkilot`}
             render={({ field: { onChange, value, ...field } }) => (
               <FormGroup label="Projektiin tallennetut henkilöt" inlineFlex>
-                {projekti.kayttoOikeudet?.map(({ nimi, tyyppi, kayttajatunnus }, index) => {
+                {(projekti as Projekti).kayttoOikeudet?.map(({ nimi, tyyppi, kayttajatunnus }, index) => {
                   const tunnuslista: string[] = value || [];
                   return (
                     <Fragment key={index}>
@@ -132,8 +131,8 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
       <SectionContent>
         <p>Uusi yhteystieto</p>
         <p>
-          Lisää uudelle yhteystiedolle rivi Lisää uusi-painikkeella. Huomioi, että uusi yhteystieto ei tallennu
-          Projektin henkilöt -sivulle eikä henkilölle tule käyttöoikeuksia projektiin.
+          Lisää uudelle yhteystiedolle rivi Lisää uusi-painikkeella. Huomioi, että uusi yhteystieto ei tallennu Projektin henkilöt -sivulle
+          eikä henkilölle tule käyttöoikeuksia projektiin.{" "}
         </p>
       </SectionContent>
       {fields.map((field, index) => (
@@ -141,39 +140,41 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
           <HassuGrid sx={{ width: "100%" }} cols={[1, 1, 3]}>
             <TextInput
               label="Etunimi *"
-              {...register(`nahtavillaoloVaihe.kuulutusYhteystiedot.${index}.etunimi`)}
-              error={(errors as any).nahtavillaoloVaihe?.kuulutusYhteystiedot?.[index]?.etunimi}
+              {...register(`nahtavillaoloVaihe.kuulutusYhteystiedot.yhteysTiedot.${index}.etunimi`)}
+              error={(errors as any)?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.[index]?.etunimi}
             />
             <TextInput
               label="Sukunimi *"
-              {...register(`nahtavillaoloVaihe.kuulutusYhteystiedot.${index}.sukunimi`)}
-              error={(errors as any).nahtavillaoloVaihe?.kuulutusYhteystiedot?.[index]?.sukunimi}
+              {...register(`nahtavillaoloVaihe.kuulutusYhteystiedot.yhteysTiedot.${index}.sukunimi`)}
+              error={(errors as any)?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.[index]?.sukunimi}
             />
             <TextInput
               label="Organisaatio / kunta *"
-              {...register(`nahtavillaoloVaihe.kuulutusYhteystiedot.${index}.organisaatio`)}
-              error={(errors as any).nahtavillaoloVaihe?.kuulutusYhteystiedot?.[index]?.organisaatio}
+              {...register(`nahtavillaoloVaihe.kuulutusYhteystiedot.yhteysTiedot.${index}.organisaatio`)}
+              error={(errors as any)?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.[index]?.organisaatio}
             />
             <TextInput
               label="Puhelinnumero *"
-              {...register(`nahtavillaoloVaihe.kuulutusYhteystiedot.${index}.puhelinnumero`)}
-              error={(errors as any).nahtavillaoloVaihe?.kuulutusYhteystiedot?.[index]?.puhelinnumero}
+              {...register(`nahtavillaoloVaihe.kuulutusYhteystiedot.yhteysTiedot.${index}.puhelinnumero`)}
+              error={(errors as any)?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.[index]?.puhelinnumero}
               maxLength={maxPhoneLength}
             />
             <TextInput
               label="Sähköpostiosoite *"
-              {...register(`nahtavillaoloVaihe.kuulutusYhteystiedot.${index}.sahkoposti`)}
-              error={(errors as any).nahtavillaoloVaihe?.kuulutusYhteystiedot?.[index]?.sahkoposti}
+              {...register(`nahtavillaoloVaihe.kuulutusYhteystiedot.yhteysTiedot.${index}.sahkoposti`)}
+              error={(errors as any)?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.[index]?.sahkoposti}
             />
           </HassuGrid>
           <div>
             <div className="hidden lg:block lg:mt-8">
               <IconButton
+                name="contact_info_trash_button"
                 icon="trash"
                 onClick={(event) => {
                   event.preventDefault();
                   remove(index);
                 }}
+                disabled={false}
               />
             </div>
             <div className="block lg:hidden">
@@ -183,6 +184,7 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
                   remove(index);
                 }}
                 endIcon="trash"
+                disabled={false}
               >
                 Poista
               </Button>
@@ -191,10 +193,12 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
         </HassuStack>
       ))}
       <Button
+        id="add_new_contact"
         onClick={(event) => {
           event.preventDefault();
           append(defaultYhteystieto);
         }}
+        disabled={false}
       >
         Lisää uusi +
       </Button>

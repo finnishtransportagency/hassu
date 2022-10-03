@@ -1,9 +1,13 @@
 import { NahtavillaoloVaihe } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { ProjektiAdaptationResult } from "../projektiAdapter";
-import { adaptAineistotToSave, adaptIlmoituksenVastaanottajatToSave, adaptYhteystiedotToSave } from "./common";
+import {
+  adaptAineistotToSave,
+  adaptHankkeenKuvausToSave,
+  adaptIlmoituksenVastaanottajatToSave,
+  adaptStandardiYhteystiedotToSave,
+} from "./common";
 import mergeWith from "lodash/mergeWith";
-import { adaptHankkeenKuvausToSave } from "../common";
 
 export function adaptNahtavillaoloVaiheToSave(
   dbNahtavillaoloVaihe: NahtavillaoloVaihe | undefined | null,
@@ -23,7 +27,6 @@ export function adaptNahtavillaoloVaiheToSave(
     kuulutusPaiva,
     kuulutusVaihePaattyyPaiva,
     muistutusoikeusPaattyyPaiva,
-    kuulutusYhteysHenkilot,
   } = nahtavillaoloVaihe;
 
   const aineistoNahtavilla = adaptAineistotToSave(
@@ -49,13 +52,19 @@ export function adaptNahtavillaoloVaiheToSave(
     kuulutusPaiva,
     kuulutusVaihePaattyyPaiva,
     muistutusoikeusPaattyyPaiva,
-    kuulutusYhteysHenkilot,
     id,
     aineistoNahtavilla,
-    kuulutusYhteystiedot: adaptYhteystiedotToSave(kuulutusYhteystiedot),
-    ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat),
-    hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus),
   };
+
+  if (kuulutusYhteystiedot) {
+    uusiNahtavillaolovaihe.kuulutusYhteystiedot = adaptStandardiYhteystiedotToSave(kuulutusYhteystiedot, true);
+  }
+  if (ilmoituksenVastaanottajat) {
+    uusiNahtavillaolovaihe.ilmoituksenVastaanottajat = adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat);
+  }
+  if (hankkeenKuvaus) {
+    uusiNahtavillaolovaihe.hankkeenKuvaus = adaptHankkeenKuvausToSave(hankkeenKuvaus);
+  }
 
   if (lisaAineisto) {
     uusiNahtavillaolovaihe.lisaAineisto = lisaAineisto;
