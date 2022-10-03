@@ -115,6 +115,8 @@ module.exports = (phase) => {
       let buffer = fs.readFileSync(__dirname + "/.version");
       if (buffer) {
         env.VERSION = buffer.toString("UTF-8");
+      } else {
+        env.VERSION = process.env.CODEBUILD_SOURCE_VERSION;
       }
     } catch (e) {
       // Ignore
