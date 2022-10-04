@@ -6,15 +6,14 @@ import { KayttajaTyyppi, NykyinenKayttaja, TallennaProjektiInput, Velho } from "
 import {
   ProjektiAdaptationResult,
   projektiAdapter,
-  ProjektiEventType,
   ProjektiEvent,
+  ProjektiEventType,
   VuorovaikutusPublishedEvent,
 } from "./adapter/projektiAdapter";
 import { adaptVelhoByAddingTypename } from "./adapter/common";
 import { auditLog, log } from "../logger";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import mergeWith from "lodash/mergeWith";
-import values from "lodash/values";
 import { fileService } from "../files/fileService";
 import { personSearch } from "../personSearch/personSearchClient";
 import { emailClient } from "../email/email";
@@ -211,26 +210,22 @@ export async function synchronizeUpdatesFromVelho(oid: string): Promise<Velho | 
     requirePermissionMuokkaa(projektiFromDB);
 
     log.info("Loading projekti from Velho", { oid });
-    const projekti = await velho.loadProjekti(oid);
-    if (!projekti.velho) {
+    const projektiFromVelho = await velho.loadProjekti(oid);
+    if (!projektiFromVelho.velho) {
       throw new Error(`Projektille oid ${oid} ei löydy velhosta projekti.velho-tietoa.`);
     }
     if (!projektiFromDB.velho) {
       throw new Error(`Projektille oid ${oid} ei löydy hassusta projekti.velho-tietoa.`);
     }
 
-    const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
-    kayttoOikeudetManager.addProjektiPaallikkoFromEmail(projekti.velho.vastuuhenkilonEmail);
-    kayttoOikeudetManager.addVarahenkiloFromEmail(projekti.velho.varahenkilonEmail);
-    const updatedFields = findUpdatedFields(projektiFromDB.velho, projekti.velho);
-    const updatedVelhoValues = values(updatedFields);
-    if (updatedVelhoValues.length > 0) {
-      log.info("Muutoksia projektiin löytynyt Velhosta", { oid, updatedFields });
-      await projektiDatabase.saveProjekti({ oid, velho: projekti.velho, kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet() });
-      return adaptVelhoByAddingTypename(updatedFields);
-    } else {
-      log.info("Muutoksia projektiin löytynyt Velhosta", { oid });
-    }
+    const kayttoOikeudetManager = new KayttoOikeudetManager(projektiFromDB.kayttoOikeudet, await personSearch.getKayttajas());
+    kayttoOikeudetManager.addProjektiPaallikkoFromEmail(projektiFromVelho.velho.vastuuhenkilonEmail);
+    kayttoOikeudetManager.addVarahenkiloFromEmail(projektiFromVelho.velho.varahenkilonEmail);
+    const kayttoOikeudetNew = kayttoOikeudetManager.getKayttoOikeudet();
+
+    const updatedFields = findUpdatedFields(projektiFromDB.velho, projektiFromVelho.velho);
+    await projektiDatabase.saveProjekti({ oid, velho: projektiFromVelho.velho, kayttoOikeudet: kayttoOikeudetNew });
+    return adaptVelhoByAddingTypename(updatedFields);
   } catch (e) {
     log.error(e);
     throw e;

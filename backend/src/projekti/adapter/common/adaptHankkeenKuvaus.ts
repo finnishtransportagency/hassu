@@ -3,19 +3,22 @@ import * as API from "../../../../../common/graphql/apiModel";
 
 export function adaptHankkeenKuvaus(hankkeenKuvaus: LocalizedMap<string>): API.HankkeenKuvaukset | undefined {
   if (hankkeenKuvaus && Object.keys(hankkeenKuvaus).length > 0) {
-    const kuvausSuomi = hankkeenKuvaus[API.Kieli.SUOMI];
-    if (!kuvausSuomi) {
-      throw new Error(`adaptHankkeenKuvaus: hankkeenKuvaus.${API.Kieli.SUOMI} puuttuu`);
-    }
     return {
       __typename: "HankkeenKuvaukset",
-      [API.Kieli.SUOMI]: kuvausSuomi,
+      [API.Kieli.SUOMI]: hankkeenKuvaus[API.Kieli.SUOMI] || "",
       ...hankkeenKuvaus,
     };
   }
 }
 
-export function adaptHankkeenKuvausToSave(hankkeenKuvaus: API.HankkeenKuvauksetInput): LocalizedMap<string> {
+export function adaptHankkeenKuvausToSave(hankkeenKuvaus: API.HankkeenKuvauksetInput | undefined | null): LocalizedMap<string> | undefined | null {
+  if (!hankkeenKuvaus) {
+    return hankkeenKuvaus;
+  }
+  const kuvausSuomi = hankkeenKuvaus[API.Kieli.SUOMI];
+  if (!kuvausSuomi) {
+    throw new Error(`adaptHankkeenKuvaus: hankkeenKuvaus.${API.Kieli.SUOMI} puuttuu`);
+  }
   const kuvaus: LocalizedMap<string> = { [API.Kieli.SUOMI]: hankkeenKuvaus[API.Kieli.SUOMI] };
   Object.keys(API.Kieli).forEach((kieli) => {
     if (hankkeenKuvaus[kieli as API.Kieli]) {

@@ -101,7 +101,9 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
 
   const onSubmit = async (formData: FormValues) => {
     deleteFieldArrayIds(formData?.kayttoOikeudet);
-    // TODO: formData?.kayttoOikeudet.forEach(oikeus => delete oikeus.muokattavissa);
+    // noinspection TypeScriptUnresolvedVariable
+    // @ts-ignore
+    formData?.kayttoOikeudet.forEach(oikeus => delete oikeus.muokattavissa);
     setFormIsSubmitting(true);
     try {
       await api.tallennaProjekti(formData);

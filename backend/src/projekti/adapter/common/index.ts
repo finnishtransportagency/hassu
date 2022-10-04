@@ -3,4 +3,4 @@ export * from "./adaptIlmoituksenVastaanottajat";
 export * from "./util";
 export * from "./lisaaTypename";
 export * from "./adaptHankkeenKuvaus";
-export * from "./adaptStandardiYhteystiedotByAddingProjari";
+export * from "./adaptStandardiYhteystiedotByAddingProjektiPaallikko";
