@@ -7,6 +7,8 @@ import { PickersActionBarProps } from "@mui/x-date-pickers/PickersActionBar";
 import Button from "@components/button/Button";
 import { PickersActionBarAction } from "@mui/x-date-pickers/PickersActionBar/PickersActionBar";
 import { useLocaleText, WrapperVariantContext } from "@mui/x-date-pickers/internals";
+import { faCalendarAlt } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 type InputDate = Dayjs | null;
 type OutputDate = Dayjs | null;
@@ -37,6 +39,7 @@ export const HassuDatePicker = React.forwardRef(function HassuDatePickerForwardR
     renderInput: renderInput || defaultRenderInput,
     components: {
       ActionBar: CustomActionBar,
+      OpenPickerIcon: CalendarIcon,
     },
     componentsProps: { actionBar: { sx: { padding: 14 } } },
     DialogProps: {
@@ -81,6 +84,12 @@ export const HassuDatePickerWithController = <TFieldValues extends FieldValues>(
 
   return <HassuDatePicker ref={ref} {...controlledDatePickerProps} />;
 };
+
+const CalendarIcon = () => (
+  <span style={{ display: "block", height: "24px", width: "24px" }}>
+    <FontAwesomeIcon icon={faCalendarAlt} height="24px" />
+  </span>
+);
 
 const CustomActionBar = (props: PickersActionBarProps) => {
   const wrapperVariant = React.useContext(WrapperVariantContext);

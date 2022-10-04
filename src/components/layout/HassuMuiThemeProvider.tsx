@@ -108,14 +108,21 @@ export const createLocalizedTheme = (locale: Localization) =>
             lineHeight: 1.222,
           },
         },
+
         MuiOutlinedInput: {
-          defaultProps: {},
+          defaultProps: {
+            componentsProps: { input: { size: 15 } },
+          },
           styleOverrides: {
             root: {
               borderRadius: "0px",
+              minWidth: "200px",
+              "& .MuiIconButton-root": {
+                color: "#242222",
+              },
               "& input.MuiOutlinedInput-input": {
-                paddingTop: "13px",
-                paddingBottom: "13px",
+                paddingTop: "11px",
+                paddingBottom: "11px",
                 "&:-webkit-autofill": {
                   WebkitBoxShadow: "0 0 0 30px white inset",
                 },
@@ -124,15 +131,43 @@ export const createLocalizedTheme = (locale: Localization) =>
                 borderColor: "#333333",
                 top: 0,
               },
-              "&:hover:not(.Mui-error, .Mui-disabled) fieldset.MuiOutlinedInput-notchedOutline": {
-                borderColor: "#333333",
+              "&:hover:not(.Mui-error, .Mui-disabled)": {
+                "& fieldset.MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#333333",
+                },
+                "& .MuiIconButton-root": {
+                  color: "#333333",
+                },
               },
-              "&.Mui-focused:not(.Mui-error) fieldset.MuiOutlinedInput-notchedOutline": {
-                borderColor: "#009ae0",
-                borderImage: "linear-gradient(117deg, #009ae0, #49c2f1) 2",
+              "&.Mui-focused:not(.Mui-error)": {
+                "& fieldset.MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#0064AF",
+                  borderImage: "linear-gradient(117deg, #009ae0, #49c2f1) 2",
+                },
+                "& .MuiIconButton-root": {
+                  color: "#0064AF",
+                },
               },
-              "&.Mui-error fieldset.MuiOutlinedInput-notchedOutline": {
-                borderColor: "#F10E0E",
+              "&.Mui-error": {
+                "& fieldset.MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#F10E0E",
+                },
+                "& .MuiIconButton-root": {
+                  color: "#F10E0E",
+                },
+              },
+              "&.Mui-disabled": {
+                backgroundColor: "#E5E5E5",
+                "& .MuiInputBase-input.Mui-disabled": {
+                  "-webkit-text-fill-color": "#242222",
+                  color: "#242222",
+                },
+                "& fieldset.MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#333333",
+                },
+                "& .MuiIconButton-root": {
+                  color: "#333333",
+                },
               },
               "& legend": { display: "none" },
             },

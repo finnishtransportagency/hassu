@@ -395,7 +395,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                       </ul>
                     </div>
                   </Notification>
-                  <div className="flex flex-col md:flex-row gap-y-4 gap-x-7">
+                  <div className="flex flex-col flex-wrap md:flex-row gap-y-4 gap-x-7">
                     <HassuDatePickerWithController
                       label="Kuulutuspäivä"
                       minDate={today()}
