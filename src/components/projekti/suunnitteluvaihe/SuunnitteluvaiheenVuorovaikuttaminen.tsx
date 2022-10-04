@@ -10,7 +10,6 @@ import {
   Vuorovaikutus,
   AsiakirjaTyyppi,
   KirjaamoOsoite,
-  YhteystietoInput,
 } from "@services/api";
 import Section from "@components/layout/Section";
 import React, { ReactElement, useEffect, useState, useMemo, useCallback } from "react";
@@ -25,7 +24,7 @@ import HyvaksymisDialogi from "./HyvaksymisDialogi";
 import EsitettavatYhteystiedot from "./EsitettavatYhteystiedot";
 import LuonnoksetJaAineistot from "./LuonnoksetJaAineistot/LuonnoksetJaAineistot";
 import IlmoituksenVastaanottajat from "./IlmoituksenVastaanottajat";
-import { removeTypeName } from "src/util/removeTypeName";
+import { removeTypeName, removeTypeNamesFromArray } from "src/util/removeTypeName";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import VuorovaikuttamisenInfo from "./VuorovaikuttamisenInfo";
 import PaivamaaratJaTiedot from "./PaivamaaratJaTiedot";
@@ -134,23 +133,24 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
               nimi,
             })) || [],
           vuorovaikutusNumero: vuorovaikutusnro,
-          vuorovaikutusJulkaisuPaiva: vuorovaikutus?.vuorovaikutusJulkaisuPaiva || "",
-          kysymyksetJaPalautteetViimeistaan: vuorovaikutus?.kysymyksetJaPalautteetViimeistaan || "",
+          vuorovaikutusJulkaisuPaiva: vuorovaikutus?.vuorovaikutusJulkaisuPaiva || null,
+          kysymyksetJaPalautteetViimeistaan: vuorovaikutus?.kysymyksetJaPalautteetViimeistaan || null,
           esitettavatYhteystiedot: {
-            yhteysTiedot: vuorovaikutus?.esitettavatYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt as YhteystietoInput)) || [],
+            yhteysTiedot: removeTypeNamesFromArray(vuorovaikutus?.esitettavatYhteystiedot?.yhteysTiedot) || [],
             yhteysHenkilot: vuorovaikutus?.esitettavatYhteystiedot?.yhteysHenkilot || [],
           },
           ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, vuorovaikutus?.ilmoituksenVastaanottajat, kirjaamoOsoitteet),
           vuorovaikutusTilaisuudet:
             vuorovaikutus?.vuorovaikutusTilaisuudet?.map((tilaisuus) => {
-              const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
-              const { esitettavatYhteystiedot } = vuorovaikutusTilaisuusInput;
-              const input: VuorovaikutusTilaisuusInput = vuorovaikutusTilaisuusInput;
-              input.esitettavatYhteystiedot = {
-                yhteysHenkilot: esitettavatYhteystiedot?.yhteysHenkilot || [],
-                yhteysTiedot: esitettavatYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt) as YhteystietoInput) || [],
+              const { __typename, esitettavatYhteystiedot, ...rest } = tilaisuus;
+              const vuorovaikutusTilaisuusInput: VuorovaikutusTilaisuusInput = {
+                ...rest,
+                esitettavatYhteystiedot: {
+                  yhteysHenkilot: esitettavatYhteystiedot?.yhteysHenkilot || [],
+                  yhteysTiedot: removeTypeNamesFromArray(esitettavatYhteystiedot?.yhteysTiedot) || [],
+                },
               };
-              return input;
+              return vuorovaikutusTilaisuusInput;
             }) || [],
           julkinen: !!vuorovaikutus?.julkinen,
           videot: defaultListWithEmptyLink(vuorovaikutus?.videot as LinkkiInput[]),
@@ -180,7 +180,10 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
     handleSubmit,
     formState: { isDirty },
     getValues,
+    watch,
   } = useFormReturn;
+
+  const vuorovaikutustilaisuudet = watch("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet");
 
   useLeaveConfirm(isDirty);
 
@@ -276,7 +279,7 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
               windowHandler={(t: boolean) => {
                 setOpenVuorovaikutustilaisuus(t);
               }}
-              tilaisuudet={vuorovaikutus?.vuorovaikutusTilaisuudet}
+              tilaisuudet={vuorovaikutustilaisuudet}
               kayttoOikeudet={projekti.kayttoOikeudet}
               julkinen={vuorovaikutus?.julkinen || false}
               avaaHyvaksymisDialogi={() => setOpenHyvaksy(true)}

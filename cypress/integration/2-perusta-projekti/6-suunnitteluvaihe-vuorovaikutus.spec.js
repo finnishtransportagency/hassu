@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 import dayjs from "dayjs";
 import { capturePDFPreview, requestPDFs, selectAllAineistotFromCategory } from "../../support/util";
+import { formatDate } from "../../../src/util/dateUtils";
 
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
@@ -43,8 +44,8 @@ describe("6 - Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
     });
 
     const mainFormSelectorToTextMap = new Map([
-      ['[name="suunnitteluVaihe.vuorovaikutus.vuorovaikutusJulkaisuPaiva"]', dayjs().format("YYYY-MM-DDTHH:mm")],
-      ['[name="suunnitteluVaihe.vuorovaikutus.kysymyksetJaPalautteetViimeistaan"]', dayjs().add(30, "day").format("YYYY-MM-DDTHH:mm")],
+      ['[name="suunnitteluVaihe.vuorovaikutus.vuorovaikutusJulkaisuPaiva"]', formatDate(dayjs())],
+      ['[name="suunnitteluVaihe.vuorovaikutus.kysymyksetJaPalautteetViimeistaan"]', formatDate(dayjs().add(30, "day"))],
       ['[name="suunnitteluVaihe.vuorovaikutus.videot.0.url"]', "https://www.testilinkki.vayla.fi"],
       ['[name="suunnitteluVaihe.vuorovaikutus.suunnittelumateriaali.nimi"]', "Esittelymateriaali 123"],
       ['[name="suunnitteluVaihe.vuorovaikutus.suunnittelumateriaali.url"]', "https://www.linkkiesittelymateriaaleihin.fi"],
@@ -72,7 +73,7 @@ describe("6 - Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
 
     const tilaisuusSelectorToTextMap = new Map([
       ['[name="vuorovaikutusTilaisuudet.0.nimi"]', "Fyysinen tilaisuus 123"],
-      ['[name="vuorovaikutusTilaisuudet.0.paivamaara"]', dayjs().add(7, "day").format("YYYY-MM-DDTHH:mm")],
+      ['[name="vuorovaikutusTilaisuudet.0.paivamaara"]', formatDate(dayjs().add(7, "day"))],
       ['[name="vuorovaikutusTilaisuudet.0.alkamisAika"]', "14:00"],
       ['[name="vuorovaikutusTilaisuudet.0.paattymisAika"]', "15:00"],
       ['[name="vuorovaikutusTilaisuudet.0.paikka"]', "Taistelurata"],
@@ -169,14 +170,8 @@ describe("6 - Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
     const timeMonthAhead = currentTime.add(30, "day");
 
     const mainFormSelectorToTextMap = new Map([
-      [
-        '[name="suunnitteluVaihe.vuorovaikutus.vuorovaikutusJulkaisuPaiva"]',
-        { input: currentTime.format("YYYY-MM-DDTHH:mm"), expectedOutput: currentTime.format("DD.MM.YYYY") },
-      ],
-      [
-        '[name="suunnitteluVaihe.vuorovaikutus.kysymyksetJaPalautteetViimeistaan"]',
-        { input: timeMonthAhead.format("YYYY-MM-DDTHH:mm"), expectedOutput: timeMonthAhead.format("DD.MM.YYYY") },
-      ],
+      ['[name="suunnitteluVaihe.vuorovaikutus.vuorovaikutusJulkaisuPaiva"]', formatDate(currentTime)],
+      ['[name="suunnitteluVaihe.vuorovaikutus.kysymyksetJaPalautteetViimeistaan"]', formatDate(timeMonthAhead)],
       ['[name="suunnitteluVaihe.vuorovaikutus.videot.0.url"]', "https://www.uusitestilinkki.vayla.fi"],
       ['[name="suunnitteluVaihe.vuorovaikutus.suunnittelumateriaali.nimi"]', "Esittelymateriaali 12345"],
       ['[name="suunnitteluVaihe.vuorovaikutus.suunnittelumateriaali.url"]', "https://www.uusilinkkiesittelymateriaaleihin.fi"],
@@ -205,10 +200,7 @@ describe("6 - Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
 
     const tilaisuusSelectorToTextMap = new Map([
       ['[name="vuorovaikutusTilaisuudet.0.nimi"]', "Fyysinen tilaisuus 12345"],
-      [
-        '[name="vuorovaikutusTilaisuudet.0.paivamaara"]',
-        { input: timeWeekAhead.format("YYYY-MM-DDTHH:mm"), expectedOutput: timeWeekAhead.format("DD.MM.YYYY") },
-      ],
+      ['[name="vuorovaikutusTilaisuudet.0.paivamaara"]', formatDate(timeWeekAhead)],
       ['[name="vuorovaikutusTilaisuudet.0.alkamisAika"]', "14:00"],
       ['[name="vuorovaikutusTilaisuudet.0.paattymisAika"]', "16:00"],
       ['[name="vuorovaikutusTilaisuudet.0.paikka"]', "Taistelurata"],

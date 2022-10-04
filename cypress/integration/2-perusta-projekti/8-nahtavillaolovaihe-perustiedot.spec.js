@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 import dayjs from "dayjs";
 import { selectAllAineistotFromCategory } from "../../support/util";
+import { formatDate } from "../../../src/util/dateUtils";
 
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
@@ -57,7 +58,7 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
       },
     });
 
-    const today = dayjs().format("YYYY-MM-DDTHH:mm");
+    const today = formatDate(dayjs());
 
     cy.get('[name="nahtavillaoloVaihe.kuulutusPaiva"]').should("be.enabled").type(today, {
       waitForAnimations: true,

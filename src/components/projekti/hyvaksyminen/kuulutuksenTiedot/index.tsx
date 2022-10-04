@@ -48,8 +48,8 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet, setIsDirty }: Kuul
     const formValues: KuulutuksenTiedotFormValues = {
       oid: projekti.oid,
       hyvaksymisPaatosVaihe: {
-        kuulutusPaiva: projekti?.hyvaksymisPaatosVaihe?.kuulutusPaiva || "",
-        kuulutusVaihePaattyyPaiva: projekti?.hyvaksymisPaatosVaihe?.kuulutusVaihePaattyyPaiva || "",
+        kuulutusPaiva: projekti?.hyvaksymisPaatosVaihe?.kuulutusPaiva || null,
+        kuulutusVaihePaattyyPaiva: projekti?.hyvaksymisPaatosVaihe?.kuulutusVaihePaattyyPaiva || null,
         hallintoOikeus: projekti?.hyvaksymisPaatosVaihe?.hallintoOikeus || "",
         kuulutusYhteystiedot: projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot
           ? projekti.hyvaksymisPaatosVaihe.kuulutusYhteystiedot.map((yhteystieto) => removeTypeName(yhteystieto))

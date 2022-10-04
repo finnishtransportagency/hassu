@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 import dayjs from "dayjs";
 import { selectAllAineistotFromCategory } from "../../support/util";
+import { formatDate } from "../../../src/util/dateUtils";
 
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
@@ -17,7 +18,7 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
     cy.reload(); // extra reload to avoid white page
     cy.contains(projektiNimi);
 
-    const paatosPvm = dayjs().add(-1, "hour").format("YYYY-MM-DDTHH:mm");
+    const paatosPvm = formatDate(dayjs().subtract(1, "hour"));
 
     cy.get('[name="kasittelynTila.hyvaksymispaatos.paatoksenPvm"]').should("be.enabled").clear().type(paatosPvm, {
       waitForAnimations: true,
@@ -83,8 +84,8 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
 
     cy.get("#kuulutuksentiedot_tab").click();
 
-    const kuulutusPaiva = dayjs().format("YYYY-MM-DDTHH:mm");
-    cy.get('[name="hyvaksymisPaatosVaihe.kuulutusPaiva"]').should("be.enabled").type(kuulutusPaiva, {
+    const today = formatDate(dayjs());
+    cy.get('[name="hyvaksymisPaatosVaihe.kuulutusPaiva"]').should("be.enabled").type(today, {
       waitForAnimations: true,
     });
 

@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 import dayjs from "dayjs";
 import { capturePDFPreview, requestPDFs } from "../../support/util";
+import { formatDate } from "../../../src/util/dateUtils";
 
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
@@ -26,7 +27,7 @@ describe("Projektin aloituskuulutus", () => {
       }
     });
 
-    cy.get('[name="aloitusKuulutus.kuulutusPaiva"]').should("be.enabled").type(dayjs().format("YYYY-MM-DDTHH:mm"), {
+    cy.get('[name="aloitusKuulutus.kuulutusPaiva"]').should("be.enabled").type(formatDate(), {
       waitForAnimations: true,
     });
 

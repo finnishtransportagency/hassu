@@ -4,7 +4,6 @@ import { Badge, Chip, chipClasses, DialogActions, DialogContent } from "@mui/mat
 import React, { Fragment, ReactElement, useCallback, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Button from "@components/button/Button";
-import DatePicker from "@components/form/DatePicker";
 import HassuStack from "@components/layout/HassuStack";
 import HassuDialog from "@components/HassuDialog";
 import HeadphonesIcon from "@mui/icons-material/Headphones";
@@ -14,14 +13,7 @@ import TextInput from "@components/form/TextInput";
 import Select from "@components/form/Select";
 import HassuGrid from "@components/HassuGrid";
 import TimePicker from "@components/form/TimePicker";
-import {
-  KaytettavaPalvelu,
-  ProjektiKayttaja,
-  VuorovaikutusTilaisuus,
-  VuorovaikutusTilaisuusInput,
-  VuorovaikutusTilaisuusTyyppi,
-  YhteystietoInput,
-} from "@services/api";
+import { KaytettavaPalvelu, ProjektiKayttaja, VuorovaikutusTilaisuusInput, VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import capitalize from "lodash/capitalize";
 import { VuorovaikutusFormValues } from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
 import { Controller, FormProvider, useFieldArray, useForm, useFormContext, UseFormProps } from "react-hook-form";
@@ -30,12 +22,14 @@ import { vuorovaikutustilaisuudetSchema } from "src/schemas/vuorovaikutus";
 import FormGroup from "@components/form/FormGroup";
 import CheckBox from "@components/form/CheckBox";
 import SoittoajanYhteyshenkilot from "./SoittoajanYhteyshenkilot";
-import dayjs from "dayjs";
-import { removeTypeName } from "src/util/removeTypeName";
+import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
+import { today } from "src/util/dateUtils";
 
-const defaultTilaisuus = {
+const defaultTilaisuus: Omit<VuorovaikutusTilaisuusInput, "tyyppi"> = {
   nimi: "",
-  paivamaara: "",
+  // paivamaara value is supposed to be entered by user
+  //@ts-ignore
+  paivamaara: null,
   alkamisAika: "",
   paattymisAika: "",
 };
@@ -61,7 +55,7 @@ export type VuorovaikutustilaisuusFormValues = {
 interface Props {
   open: boolean;
   windowHandler: (isOpen: boolean) => void;
-  tilaisuudet: VuorovaikutusTilaisuus[] | null | undefined;
+  tilaisuudet: VuorovaikutusTilaisuusInput[] | null | undefined;
   kayttoOikeudet: ProjektiKayttaja[] | null | undefined;
   julkinen: boolean;
   avaaHyvaksymisDialogi: () => void;
@@ -100,19 +94,9 @@ export default function VuorovaikutusDialog({
 
   useEffect(() => {
     if (tilaisuudet) {
-      const tilaisuuksienTiedot = {
-        vuorovaikutusTilaisuudet: tilaisuudet.map((tilaisuus) => {
-          const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
-          const { esitettavatYhteystiedot } = vuorovaikutusTilaisuusInput;
-          const input: VuorovaikutusTilaisuusInput = vuorovaikutusTilaisuusInput;
-          input.esitettavatYhteystiedot = {
-            yhteysHenkilot: esitettavatYhteystiedot?.yhteysHenkilot || [],
-            yhteysTiedot: esitettavatYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt) as YhteystietoInput) || [],
-          };
-          return input;
-        }),
-      };
-      reset(tilaisuuksienTiedot);
+      reset({
+        vuorovaikutusTilaisuudet: tilaisuudet,
+      });
     }
   }, [tilaisuudet, reset]);
 
@@ -411,8 +395,6 @@ function TilaisuudenNimiJaAika(props: { index: number }) {
     register,
     formState: { errors },
   } = useFormContext<VuorovaikutustilaisuusFormValues>();
-  const today = dayjs().format();
-
   return (
     <>
       <TextInput
@@ -422,12 +404,12 @@ function TilaisuudenNimiJaAika(props: { index: number }) {
         maxLength={200}
       />
       <HassuStack direction={["column", "column", "row"]}>
-        <DatePicker
-          label="Päivämäärä *"
-          {...register(`vuorovaikutusTilaisuudet.${props.index}.paivamaara`)}
-          error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.paivamaara}
-          min={today}
-        ></DatePicker>
+        <HassuDatePickerWithController
+          label="Päivämäärä"
+          minDate={today()}
+          textFieldProps={{ required: true }}
+          controllerProps={{ name: `vuorovaikutusTilaisuudet.${props.index}.paivamaara` }}
+        />
         <TimePicker
           label="Alkaa *"
           {...register(`vuorovaikutusTilaisuudet.${props.index}.alkamisAika`)}

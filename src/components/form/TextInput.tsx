@@ -49,7 +49,7 @@ const TextInput = (
           props?.onChange?.(event);
           setLength(event.target.value.length);
         }}
-        className={classNames(error && "error")}
+        className={classNames("hassu-input", error && "error")}
       />
     </FormGroup>
   );

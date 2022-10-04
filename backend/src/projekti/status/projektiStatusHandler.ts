@@ -81,11 +81,11 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
       const hyvaksymisPaatos = p.kasittelynTila?.hyvaksymispaatos;
       const hasHyvaksymisPaatos = hyvaksymisPaatos?.asianumero && hyvaksymisPaatos?.paatoksenPvm;
 
-      const hyvaksymisPaatosVaihe = findJulkaisuWithTila(p.hyvaksymisPaatosVaiheJulkaisut, HyvaksymisPaatosVaiheTila.HYVAKSYTTY);
-      const hyvaksymisPaatosKuulutusPaattyyInThePast =
-        hyvaksymisPaatosVaihe?.kuulutusVaihePaattyyPaiva && isDateInThePast(hyvaksymisPaatosVaihe.kuulutusVaihePaattyyPaiva);
+      const nahtavillaoloVaihe = findJulkaisuWithTila(p.nahtavillaoloVaiheJulkaisut, NahtavillaoloVaiheTila.HYVAKSYTTY);
+      const nahtavillaoloKuulutusPaattyyInThePast =
+        nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva && isDateInThePast(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva);
 
-      if (hasHyvaksymisPaatos && hyvaksymisPaatosKuulutusPaattyyInThePast) {
+      if (hasHyvaksymisPaatos && nahtavillaoloKuulutusPaattyyInThePast) {
         p.status = API.Status.HYVAKSYTTY;
         super.handle(p); // Continue evaluating next rules
       }

@@ -2,10 +2,10 @@ import React from "react";
 import { styled, experimental_sx as sx, Pagination, useMediaQuery } from "@mui/material";
 import SectionContent from "@components/layout/SectionContent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { breakpoints } from "@pages/_app";
 import Link from "next/link";
 import Select from "@components/form/Select";
 import { SortingRule, TableInstance } from "react-table";
+import { breakpoints } from "./layout/HassuMuiThemeProvider";
 
 export interface HassuTableProps<D extends object> {
   tableInstance: TableInstance<D>;
@@ -123,15 +123,9 @@ export const HassuTable = <D extends object>(props: HassuTableProps<D>) => {
                     : undefined
                 );
                 return (
-                  <HeaderCell
-                    as={useSortBy && !column.disableSortBy ? "button" : undefined}
-                    {...headerProps}
-                    key={headerKey}
-                  >
+                  <HeaderCell as={useSortBy && !column.disableSortBy ? "button" : undefined} {...headerProps} key={headerKey}>
                     {column.render("Header")}
-                    {column.isSorted && (
-                      <FontAwesomeIcon className="ml-4" icon={column.isSortedDesc ? "arrow-down" : "arrow-up"} />
-                    )}
+                    {column.isSorted && <FontAwesomeIcon className="ml-4" icon={column.isSortedDesc ? "arrow-down" : "arrow-up"} />}
                   </HeaderCell>
                 );
               })}

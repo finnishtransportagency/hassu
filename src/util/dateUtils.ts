@@ -1,19 +1,29 @@
-import dayjs from "dayjs";
+import dayjs, { ConfigType } from "dayjs";
 
-export const formatDate = (date: string | number | Date | dayjs.Dayjs | null | undefined) => {
+export const isInPast = (date?: ConfigType, unit?: dayjs.OpUnitType | undefined) => dayjs(date).isBefore(today(), unit);
+export const isInFuture = (date?: ConfigType, unit?: dayjs.OpUnitType | undefined) => dayjs(date).isAfter(today(), unit);
+
+export const today = () => dayjs().startOf("day");
+
+export const is2100Century = (date?: ConfigType) => {
+  const year = dayjs(date).year();
+  return year >= 2000 && year < 2100;
+};
+
+export const formatDate = (date?: ConfigType) => {
   return dayjs(date).format("DD.MM.YYYY");
 };
 
-export const formatDayOfWeek = (date: string | number | Date | dayjs.Dayjs | null | undefined) => {
+export const formatDayOfWeek = (date?: ConfigType) => {
   return dayjs(date).format("dddd");
 };
 
 // TODO i18n, koska käytössä myös kansalaispuolella
-export const formatDateTime = (date: string | number | Date | dayjs.Dayjs | null | undefined) => {
+export const formatDateTime = (date?: ConfigType) => {
   return dayjs(date).format("DD.MM.YYYY [klo] HH:mm");
 };
 
-export const isValidDate = (date: string | number | Date | dayjs.Dayjs | null | undefined) => {
+export const isValidDate = (date?: ConfigType) => {
   return dayjs(date).isValid();
 };
 

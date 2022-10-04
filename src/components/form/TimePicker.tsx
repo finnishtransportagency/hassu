@@ -24,18 +24,8 @@ const TimePicker = (
   ref: React.ForwardedRef<HTMLInputElement>
 ) => {
   return (
-    <FormGroup
-      label={label}
-      errorMessage={hideErrorMessage ? undefined : error?.message}
-      className={formGroupClassName}
-    >
-      <input
-        type={"time"}
-        maxLength={maxLength}
-        {...props}
-        ref={ref}
-        className={classNames(className, error && "error")}
-      />
+    <FormGroup label={label} errorMessage={hideErrorMessage ? undefined : error?.message} className={formGroupClassName}>
+      <input type={"time"} maxLength={maxLength} {...props} ref={ref} className={classNames("hassu-input", className, error && "error")} />
     </FormGroup>
   );
 };
