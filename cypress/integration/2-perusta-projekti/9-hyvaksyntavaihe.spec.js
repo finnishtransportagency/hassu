@@ -18,7 +18,7 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
     cy.reload(); // extra reload to avoid white page
     cy.contains(projektiNimi);
 
-    const paatosPvm = dayjs().add(-1, "hour").format("YYYY-MM-DDTHH:mm");
+    const paatosPvm = formatDate(dayjs().subtract(1, "hour"));
 
     cy.get('[name="kasittelynTila.hyvaksymispaatos.paatoksenPvm"]').should("be.enabled").clear().type(paatosPvm, {
       waitForAnimations: true,

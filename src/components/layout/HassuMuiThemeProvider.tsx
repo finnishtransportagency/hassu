@@ -159,7 +159,7 @@ export const createLocalizedTheme = (locale: Localization) =>
               "&.Mui-disabled": {
                 backgroundColor: "#E5E5E5",
                 "& .MuiInputBase-input.Mui-disabled": {
-                  "-webkit-text-fill-color": "#242222",
+                  WebkitTextFillColor: "#242222",
                   color: "#242222",
                 },
                 "& fieldset.MuiOutlinedInput-notchedOutline": {

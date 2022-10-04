@@ -13,13 +13,7 @@ import TextInput from "@components/form/TextInput";
 import Select from "@components/form/Select";
 import HassuGrid from "@components/HassuGrid";
 import TimePicker from "@components/form/TimePicker";
-import {
-  KaytettavaPalvelu,
-  ProjektiKayttaja,
-  VuorovaikutusTilaisuusInput,
-  VuorovaikutusTilaisuusTyyppi,
-  YhteystietoInput,
-} from "@services/api";
+import { KaytettavaPalvelu, ProjektiKayttaja, VuorovaikutusTilaisuusInput, VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import capitalize from "lodash/capitalize";
 import { VuorovaikutusFormValues } from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
 import { Controller, FormProvider, useFieldArray, useForm, useFormContext, UseFormProps } from "react-hook-form";
@@ -28,7 +22,6 @@ import { vuorovaikutustilaisuudetSchema } from "src/schemas/vuorovaikutus";
 import FormGroup from "@components/form/FormGroup";
 import CheckBox from "@components/form/CheckBox";
 import SoittoajanYhteyshenkilot from "./SoittoajanYhteyshenkilot";
-import { removeTypeName } from "src/util/removeTypeName";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { today } from "src/util/dateUtils";
 
@@ -101,20 +94,9 @@ export default function VuorovaikutusDialog({
 
   useEffect(() => {
     if (tilaisuudet) {
-      const tilaisuuksienTiedot = {
-        vuorovaikutusTilaisuudet: tilaisuudet.map((tilaisuus) => {
-          console.log(tilaisuus);
-          const { __typename, ...vuorovaikutusTilaisuusInput } = tilaisuus;
-          const { esitettavatYhteystiedot } = vuorovaikutusTilaisuusInput;
-          const input: VuorovaikutusTilaisuusInput = vuorovaikutusTilaisuusInput;
-          input.esitettavatYhteystiedot = {
-            yhteysHenkilot: esitettavatYhteystiedot?.yhteysHenkilot || [],
-            yhteysTiedot: esitettavatYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt) as YhteystietoInput) || [],
-          };
-          return input;
-        }),
-      };
-      reset(tilaisuuksienTiedot);
+      reset({
+        vuorovaikutusTilaisuudet: tilaisuudet,
+      });
     }
   }, [tilaisuudet, reset]);
 

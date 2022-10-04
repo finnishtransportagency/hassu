@@ -137,7 +137,7 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
           kysymyksetJaPalautteetViimeistaan: vuorovaikutus?.kysymyksetJaPalautteetViimeistaan || null,
           esitettavatYhteystiedot: {
             yhteysTiedot: removeTypeNamesFromArray(vuorovaikutus?.esitettavatYhteystiedot?.yhteysTiedot) || [],
-            yhteysHenkilot: vuorovaikutus?.esitettavatYhteystiedot?.yhteysHenkilot,
+            yhteysHenkilot: vuorovaikutus?.esitettavatYhteystiedot?.yhteysHenkilot || [],
           },
           ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, vuorovaikutus?.ilmoituksenVastaanottajat, kirjaamoOsoitteet),
           vuorovaikutusTilaisuudet:
@@ -146,7 +146,7 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
               const vuorovaikutusTilaisuusInput: VuorovaikutusTilaisuusInput = {
                 ...rest,
                 esitettavatYhteystiedot: {
-                  yhteysHenkilot: removeTypeNamesFromArray(esitettavatYhteystiedot?.yhteysHenkilot) || [],
+                  yhteysHenkilot: esitettavatYhteystiedot?.yhteysHenkilot || [],
                   yhteysTiedot: removeTypeNamesFromArray(esitettavatYhteystiedot?.yhteysTiedot) || [],
                 },
               };

@@ -1,5 +1,5 @@
 export const removeTypeName = (o: any | null | undefined) => {
-  if (!o) {
+  if (!o || typeof o !== "object") {
     return o;
   }
   let result = { ...o };
@@ -8,7 +8,7 @@ export const removeTypeName = (o: any | null | undefined) => {
 };
 
 export const removeTypeNamesFromArray = (array: (any | null | undefined)[] | null | undefined) => {
-  if (!Array.isArray(array)) {
+  if (!Array.isArray(array) || typeof array === "string") {
     return array;
   }
   return array.map((o) => removeTypeName(o));
