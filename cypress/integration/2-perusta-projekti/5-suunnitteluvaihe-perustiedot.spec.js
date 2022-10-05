@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
 
+import { ProjektiTestCommand } from '../../../common/testUtil.dev';
+
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
 
@@ -14,24 +16,7 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu", { timeout: 30000 });
     cy.contains(projektiNimi);
 
-    cy.request({
-      method: "POST",
-      url: Cypress.env("host") + "/yllapito/graphql",
-      headers: {
-        "x-api-key": Cypress.env("apiKey")
-      },
-      body:
-        {
-          operationName: "MyMutation",
-          variables: {},
-          query: `mutation MyMutation {
-  tallennaProjekti(projekti: {oid: "${oid}", suunnitteluVaihe: {arvioSeuraavanVaiheenAlkamisesta: "-"}, vuorovaikutukset: null})
-}`,
-        }
-    });
-
-
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu", { timeout: 30000 });
+    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).resetSuunnitteluVaihe(), { timeout: 30000 });
     cy.contains(projektiNimi);
     cy.wait(2000);
 

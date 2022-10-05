@@ -2,6 +2,7 @@
 import dayjs from "dayjs";
 import { selectAllAineistotFromCategory } from "../../support/util";
 import { formatDate } from "../../../src/util/dateUtils";
+import { ProjektiTestCommand } from "../../../common/testUtil.dev";
 
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
@@ -13,7 +14,9 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
 
   it("Tallenna nahtavillaolon kuulutustiedot", { scrollBehavior: "center" }, function () {
     cy.login("A1");
+
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/nahtavillaolo", { timeout: 30000 });
+    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).resetNahtavillaolo(), { timeout: 30000 });
     cy.contains(projektiNimi);
 
     // Reject acceptance request and clear most of the data from nahtavillaolovaihe through API
@@ -28,34 +31,6 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
         cy.get("#reject_and_edit").click();
         cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/nahtavillaolo");
       }
-    });
-
-    cy.request({
-      method: "POST",
-      url: Cypress.env("host") + "/yllapito/graphql",
-      headers: {
-        "x-api-key": Cypress.env("apiKey"),
-      },
-      body: {
-        operationName: "ClearNahtavillaolo",
-        variables: {},
-        query: `mutation ClearNahtavillaolo {
-            tallennaProjekti(
-              projekti: {
-                oid: "${oid}"
-                nahtavillaoloVaihe: {
-                  kuulutusPaiva: null
-                  kuulutusVaihePaattyyPaiva: null
-                  muistutusoikeusPaattyyPaiva: null
-                  hankkeenKuvaus: { SUOMI: "" }
-                  kuulutusYhteysHenkilot: null
-                  lisaAineisto:[]
-                  aineistoNahtavilla:[]
-                }
-              }
-            )
-          }`,
-      },
     });
 
     const today = formatDate(dayjs());

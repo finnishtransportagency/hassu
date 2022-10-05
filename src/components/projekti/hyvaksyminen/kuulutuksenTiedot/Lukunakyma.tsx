@@ -1,4 +1,4 @@
-import { HyvaksymisPaatosVaiheJulkaisu, ProjektiKayttaja, Kieli } from "@services/api";
+import { HyvaksymisPaatosVaiheJulkaisu, Kieli, ProjektiKayttaja } from "@services/api";
 import React, { ReactElement } from "react";
 import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
@@ -14,6 +14,7 @@ import { Link } from "@mui/material";
 import lowerCase from "lodash/lowerCase";
 import IlmoituksenVastaanottajatLukutila from "./IlmoituksenVastaanottajatLukutila";
 import ButtonFlatWithIcon from "@components/button/ButtonFlat";
+import { ProjektiTestCommand } from "../../../../../common/testUtil.dev";
 
 interface Props {
   hyvaksymisPaatosVaiheJulkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
@@ -66,16 +67,26 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
             <FormatDate date={hyvaksymisPaatosVaiheJulkaisu.kuulutusVaihePaattyyPaiva} />
           </p>
           {process.env.ENVIRONMENT != "prod" && (
-            <ButtonFlatWithIcon
-              icon="history"
-              className="md:col-span-2 mb-0"
-              onClick={(e) => {
-                e.preventDefault();
-                window.location.assign(`/api/test/${projekti.oid}/hyvaksymispaatosmenneisyyteen`);
-              }}
-            >
-              Siirrä menneisyyteen (TESTAAJILLE)
-            </ButtonFlatWithIcon>
+            <div className="md:col-span-2 mb-0">
+              <ButtonFlatWithIcon
+                icon="history"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.location.assign(ProjektiTestCommand.oid(projekti.oid).hyvaksymispaatosMenneisyyteen());
+                }}
+              >
+                Siirrä päivän verran menneisyyteen (TESTAAJILLE)
+              </ButtonFlatWithIcon>
+              <ButtonFlatWithIcon
+                icon="history"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.location.assign(ProjektiTestCommand.oid(projekti.oid).hyvaksymispaatosVuosiMenneisyyteen());
+                }}
+              >
+                Siirrä vuoden verran menneisyyteen (TESTAAJILLE)
+              </ButtonFlatWithIcon>
+            </div>
           )}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4">

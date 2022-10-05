@@ -7,292 +7,196 @@ import { AWSError } from "aws-sdk";
 import { Response } from "aws-sdk/lib/response";
 import dayjs from "dayjs";
 
-const projektiTableName: string = config.projektiTableName || "missing";
-
-async function createProjekti(projekti: DBProjekti): Promise<DocumentClient.PutItemOutput> {
-  const params: DocumentClient.PutItemInput = {
-    TableName: projektiTableName,
-    Item: projekti,
-  };
-  return getDynamoDBDocumentClient().put(params).promise();
-}
-
-async function scanProjektit(startKey?: string): Promise<{ startKey: string | undefined; projektis: DBProjekti[] }> {
-  try {
-    const params: DocumentClient.ScanInput = {
-      TableName: projektiTableName,
-      Limit: 10,
-      ExclusiveStartKey: startKey ? JSON.parse(startKey) : undefined,
-    };
-    const data: DocumentClient.ScanOutput = await getDynamoDBDocumentClient().scan(params).promise();
-    return {
-      projektis: data.Items as DBProjekti[],
-      startKey: data.LastEvaluatedKey ? JSON.stringify(data.LastEvaluatedKey) : undefined,
-    };
-  } catch (e) {
-    log.error(e);
-    throw e;
-  }
-}
-
-/**
- * Load projekti from DynamoDB
- * @param oid Projekti oid
- * @param stronglyConsistentRead Use stringly consistent read operation to DynamoDB. Set "false" in public website to save database capacity.
- */
-async function loadProjektiByOid(oid: string, stronglyConsistentRead = true): Promise<DBProjekti | undefined> {
-  try {
-    const params: DocumentClient.GetItemInput = {
-      TableName: projektiTableName,
-      Key: { oid },
-      ConsistentRead: stronglyConsistentRead,
-    };
-    const data = await getDynamoDBDocumentClient().get(params).promise();
-    if (!data.Item) {
-      return;
-    }
-    const projekti = data.Item as DBProjekti;
-    projekti.oid = oid;
-    return projekti;
-  } catch (e) {
-    if ((e as { code: string }).code === "ResourceNotFoundException") {
-      log.warn("projektia ei löydy", { oid });
-      return undefined;
-    }
-    log.error(e);
-    throw e;
-  }
-}
-
+const specialFields = ["oid", "tallennettu", "vuorovaikutukset"];
 const skipAutomaticUpdateFields = [
-  "oid",
-  "tallennettu",
   "aloitusKuulutusJulkaisut",
-  "vuorovaikutukset",
   "nahtavillaoloVaiheJulkaisut",
+  "hyvaksymisPaatosVaiheJulkaisut",
 ] as (keyof DBProjekti)[] as string[];
 
 function createExpression(expression: string, properties: string[]) {
   return properties.length > 0 ? expression + " " + properties.join(" , ") : "";
 }
 
-async function saveProjekti(dbProjekti: Partial<DBProjekti>): Promise<DocumentClient.UpdateItemOutput> {
-  if (log.isLevelEnabled("debug")) {
-    log.debug("Updating projekti to Hassu ", { projekti: dbProjekti });
-  } else {
-    log.info("Updating projekti to Hassu ", { oid: dbProjekti.oid });
-  }
-  const setExpression: string[] = [];
-  const removeExpression: string[] = [];
-  const ExpressionAttributeNames: DocumentClient.ExpressionAttributeNameMap = {};
-  const ExpressionAttributeValues: DocumentClient.ExpressionAttributeValueMap = {};
-
-  dbProjekti.paivitetty = dayjs().format();
-
-  for (const property in dbProjekti) {
-    if (skipAutomaticUpdateFields.indexOf(property) >= 0) {
-      continue;
-    }
-    const value = dbProjekti[property as keyof DBProjekti];
-    if (value === undefined) {
-      continue;
-    }
-    if (value === null) {
-      removeExpression.push(property);
-    } else {
-      setExpression.push(`#${property} = :${property}`);
-      ExpressionAttributeNames["#" + property] = property;
-      ExpressionAttributeValues[":" + property] = value;
-    }
-  }
-
-  if (dbProjekti.vuorovaikutukset && dbProjekti.vuorovaikutukset.length > 0) {
-    if (dbProjekti.vuorovaikutukset.length > 1) {
-      throw new Error("Voit tallentaa vain yhden vuorovaikutuksen kerrallaan");
-    }
-    const vuorovaikutus = dbProjekti.vuorovaikutukset[0];
-    setExpression.push(`#vuorovaikutukset[${vuorovaikutus.vuorovaikutusNumero - 1}] = :vuorovaikutus`);
-    ExpressionAttributeNames["#vuorovaikutukset"] = "vuorovaikutukset";
-    ExpressionAttributeValues[":vuorovaikutus"] = vuorovaikutus;
-  } else {
-    setExpression.push("vuorovaikutukset = if_not_exists(vuorovaikutukset, :emptyList)");
-    ExpressionAttributeValues[":emptyList"] = [];
-  }
-
-  const updateExpression = createExpression("SET", setExpression) + " " + createExpression("REMOVE", removeExpression);
-
-  const params = {
-    TableName: projektiTableName,
-    Key: {
-      oid: dbProjekti.oid,
-    },
-    UpdateExpression: updateExpression,
-    ExpressionAttributeNames,
-    ExpressionAttributeValues,
-  };
-
-  if (log.isLevelEnabled("debug")) {
-    log.debug("Updating projekti to Hassu ", { params });
-  }
-
-  return getDynamoDBDocumentClient().update(params).promise();
-}
-
-/**
- * Only for integration testing
- */
-async function deleteProjektiByOid(oid: string): Promise<void> {
-  if (config.env !== "prod") {
-    const client = getDynamoDBDocumentClient();
-
-    const removeResult = await client
-      .delete({
-        TableName: projektiTableName,
-        Key: {
-          oid,
-        },
-      })
-      .promise();
-    checkAndRaiseError(removeResult.$response, "Arkistointi ei onnistunut");
-  }
-}
-
-function checkAndRaiseError<T>(response: Response<T, AWSError>, msg: string) {
-  if (response.error) {
-    log.error(msg, { error: response.error });
-    throw new Error(msg);
-  }
-}
-
-function insertJulkaisuToList(oid: string, listFieldName: string, julkaisu: unknown, description: string) {
-  log.info("Insert " + description, { oid, julkaisu });
-  const params = {
-    TableName: projektiTableName,
-    Key: {
-      oid,
-    },
-    UpdateExpression: `SET #${listFieldName} = list_append(if_not_exists(#${listFieldName}, :empty_list), :julkaisu)`,
-    ExpressionAttributeNames: {
-      [`#${listFieldName}`]: listFieldName,
-    },
-    ExpressionAttributeValues: {
-      ":julkaisu": [julkaisu],
-      ":empty_list": [],
-    },
-  };
-  log.info("Inserting " + description + " to projekti", { params });
-  return getDynamoDBDocumentClient().update(params).promise();
-}
-
-async function deleteJulkaisuFromList(
-  oid: string,
-  listFieldName: string,
-  julkaisut: JulkaisuWithId[] | undefined | null,
-  julkaisuIdToDelete: number,
-  description: string
-) {
-  if (!julkaisut) {
-    return;
-  }
-  for (let idx = 0; idx < julkaisut.length; idx++) {
-    if (julkaisut[idx].id == julkaisuIdToDelete) {
-      log.info("delete " + description, { idx, julkaisuIdToDelete });
-
-      const params = {
-        TableName: projektiTableName,
-        Key: {
-          oid,
-        },
-        UpdateExpression: "REMOVE #" + listFieldName + "[" + idx + "]",
-        ExpressionAttributeNames: {
-          ["#" + listFieldName]: listFieldName,
-        },
-      };
-      await getDynamoDBDocumentClient().update(params).promise();
-      break;
-    }
-  }
-}
-
 type JulkaisuWithId = { id: number } & unknown;
 
-async function updateJulkaisuToList(
-  oid: string,
-  listFieldName: string,
-  julkaisut: JulkaisuWithId[] | undefined | null,
-  julkaisu: JulkaisuWithId,
-  description: string
-) {
-  if (!julkaisut) {
-    return;
-  }
-  for (let idx = 0; idx < julkaisut.length; idx++) {
-    if (julkaisut[idx].id == julkaisu.id) {
-      log.info("update " + description, { idx, julkaisu });
+export class ProjektiDatabase {
+  projektiTableName: string = config.projektiTableName || "missing";
 
-      const params = {
-        TableName: projektiTableName,
-        Key: {
-          oid,
-        },
-        UpdateExpression: "SET #" + listFieldName + "[" + idx + "] = :julkaisu",
-        ExpressionAttributeNames: {
-          ["#" + listFieldName]: listFieldName,
-        },
-        ExpressionAttributeValues: {
-          ":julkaisu": julkaisu,
-        },
+  /**
+   * Load projekti from DynamoDB
+   * @param oid Projekti oid
+   * @param stronglyConsistentRead Use stringly consistent read operation to DynamoDB. Set "false" in public website to save database capacity.
+   */
+  async loadProjektiByOid(oid: string, stronglyConsistentRead = true): Promise<DBProjekti | undefined> {
+    try {
+      const params: DocumentClient.GetItemInput = {
+        TableName: this.projektiTableName,
+        Key: { oid },
+        ConsistentRead: stronglyConsistentRead,
       };
-      log.info("Updating " + description + " to projekti", { params });
-      await getDynamoDBDocumentClient().update(params).promise();
-      break;
+      const data = await getDynamoDBDocumentClient().get(params).promise();
+      if (!data.Item) {
+        return;
+      }
+      const projekti = data.Item as DBProjekti;
+      projekti.oid = oid;
+      return projekti;
+    } catch (e) {
+      if ((e as { code: string }).code === "ResourceNotFoundException") {
+        log.warn("projektia ei löydy", { oid });
+        return undefined;
+      }
+      log.error(e);
+      throw e;
     }
   }
-}
 
-export const projektiDatabase = {
-  createProjekti,
-  saveProjekti,
-  scanProjektit,
-  loadProjektiByOid,
-  deleteProjektiByOid,
+  async saveProjekti(dbProjekti: Partial<DBProjekti>): Promise<DocumentClient.UpdateItemOutput> {
+    return this.saveProjektiInternal(dbProjekti);
+  }
+
+  /**
+   *
+   * @param dbProjekti Projekti, joka päivitetään tietokantaan
+   * @param forceUpdateInTests Salli kaikkien kenttien päivittäminen. Sallittua käyttää vain testeissä.
+   */
+  protected async saveProjektiInternal(
+    dbProjekti: Partial<DBProjekti>,
+    forceUpdateInTests = false
+  ): Promise<DocumentClient.UpdateItemOutput> {
+    if (log.isLevelEnabled("debug")) {
+      log.debug("Updating projekti to Hassu", { projekti: dbProjekti });
+    } else {
+      log.info("Updating projekti to Hassu", { oid: dbProjekti.oid });
+    }
+    const setExpression: string[] = [];
+    const removeExpression: string[] = [];
+    const ExpressionAttributeNames: DocumentClient.ExpressionAttributeNameMap = {};
+    const ExpressionAttributeValues: DocumentClient.ExpressionAttributeValueMap = {};
+
+    dbProjekti.paivitetty = dayjs().format();
+
+    for (const property in dbProjekti) {
+      if (specialFields.includes(property) || (skipAutomaticUpdateFields.includes(property) && !forceUpdateInTests)) {
+        continue;
+      }
+      const value = dbProjekti[property as keyof DBProjekti];
+      if (value === undefined) {
+        continue;
+      }
+      if (value === null) {
+        removeExpression.push(property);
+      } else {
+        setExpression.push(`#${property} = :${property}`);
+        ExpressionAttributeNames["#" + property] = property;
+        ExpressionAttributeValues[":" + property] = value;
+      }
+    }
+
+    if (dbProjekti.vuorovaikutukset === null) {
+      // For testing purposes
+      setExpression.push("vuorovaikutukset = :emptyList");
+      ExpressionAttributeValues[":emptyList"] = [];
+    } else if (dbProjekti.vuorovaikutukset && dbProjekti.vuorovaikutukset.length > 0) {
+      if (dbProjekti.vuorovaikutukset.length > 1) {
+        throw new Error("Voit tallentaa vain yhden vuorovaikutuksen kerrallaan");
+      }
+      const vuorovaikutus = dbProjekti.vuorovaikutukset[0];
+      setExpression.push(`#vuorovaikutukset[${vuorovaikutus.vuorovaikutusNumero - 1}] = :vuorovaikutus`);
+      ExpressionAttributeNames["#vuorovaikutukset"] = "vuorovaikutukset";
+      ExpressionAttributeValues[":vuorovaikutus"] = vuorovaikutus;
+    } else {
+      setExpression.push("vuorovaikutukset = if_not_exists(vuorovaikutukset, :emptyList)");
+      ExpressionAttributeValues[":emptyList"] = [];
+    }
+
+    const updateExpression = createExpression("SET", setExpression) + " " + createExpression("REMOVE", removeExpression);
+
+    const params = {
+      TableName: this.projektiTableName,
+      Key: {
+        oid: dbProjekti.oid,
+      },
+      UpdateExpression: updateExpression,
+      ExpressionAttributeNames,
+      ExpressionAttributeValues,
+    };
+
+    if (log.isLevelEnabled("debug")) {
+      log.debug("Updating projekti to Hassu with params", { params });
+    }
+
+    try {
+      return await getDynamoDBDocumentClient().update(params).promise();
+    } catch (e) {
+      log.error(e instanceof Error ? e.message : String(e), { params });
+      throw e;
+    }
+  }
+
+  async createProjekti(projekti: DBProjekti): Promise<DocumentClient.PutItemOutput> {
+    const params: DocumentClient.PutItemInput = {
+      TableName: this.projektiTableName,
+      Item: projekti,
+    };
+    return getDynamoDBDocumentClient().put(params).promise();
+  }
+
+  async scanProjektit(startKey?: string): Promise<{ startKey: string | undefined; projektis: DBProjekti[] }> {
+    try {
+      const params: DocumentClient.ScanInput = {
+        TableName: this.projektiTableName,
+        Limit: 10,
+        ExclusiveStartKey: startKey ? JSON.parse(startKey) : undefined,
+      };
+      const data: DocumentClient.ScanOutput = await getDynamoDBDocumentClient().scan(params).promise();
+      return {
+        projektis: data.Items as DBProjekti[],
+        startKey: data.LastEvaluatedKey ? JSON.stringify(data.LastEvaluatedKey) : undefined,
+      };
+    } catch (e) {
+      log.error(e);
+      throw e;
+    }
+  }
 
   async insertAloitusKuulutusJulkaisu(oid: string, julkaisu: AloitusKuulutusJulkaisu): Promise<DocumentClient.UpdateItemOutput> {
-    return insertJulkaisuToList(oid, "aloitusKuulutusJulkaisut", julkaisu, "AloitusKuulutusJulkaisu");
-  },
+    return this.insertJulkaisuToList(oid, "aloitusKuulutusJulkaisut", julkaisu, "AloitusKuulutusJulkaisu");
+  }
 
   async deleteAloitusKuulutusJulkaisu(projekti: DBProjekti, julkaisuIdToDelete: number): Promise<void> {
-    return deleteJulkaisuFromList(
+    return this.deleteJulkaisuFromList(
       projekti.oid,
       "aloitusKuulutusJulkaisut",
       projekti.aloitusKuulutusJulkaisut,
       julkaisuIdToDelete,
       "AloitusKuulutusJulkaisu"
     );
-  },
+  }
 
   async updateAloitusKuulutusJulkaisu(projekti: DBProjekti, julkaisu: AloitusKuulutusJulkaisu): Promise<void> {
-    await updateJulkaisuToList(
+    await this.updateJulkaisuToList(
       projekti.oid,
       "aloitusKuulutusJulkaisut",
       projekti.aloitusKuulutusJulkaisut,
       julkaisu,
       "AloitusKuulutusJulkaisu"
     );
-  },
+  }
 
   async clearNewFeedbacksFlagOnProject(oid: string): Promise<void> {
     log.info("clearNewFeedbacksFlagOnProject", { oid });
 
     const params = {
-      TableName: projektiTableName,
+      TableName: this.projektiTableName,
       Key: {
         oid,
       },
       UpdateExpression: "REMOVE uusiaPalautteita",
     };
     await getDynamoDBDocumentClient().update(params).promise();
-  },
+  }
 
   async findProjektiOidsWithNewFeedback(): Promise<string[]> {
     const result: string[] = [];
@@ -301,7 +205,7 @@ export const projektiDatabase = {
       let lastEvaluatedKey = undefined;
       do {
         const params: DocumentClient.ScanInput = {
-          TableName: projektiTableName,
+          TableName: this.projektiTableName,
           IndexName: "UusiaPalautteitaIndex",
           Limit: 10,
           ExclusiveStartKey: lastEvaluatedKey,
@@ -319,56 +223,149 @@ export const projektiDatabase = {
     }
 
     return result;
-  },
+  }
 
   async insertNahtavillaoloVaiheJulkaisu(oid: string, julkaisu: NahtavillaoloVaiheJulkaisu): Promise<DocumentClient.UpdateItemOutput> {
-    return insertJulkaisuToList(oid, "nahtavillaoloVaiheJulkaisut", julkaisu, "NahtavillaoloVaiheJulkaisu");
-  },
+    return this.insertJulkaisuToList(oid, "nahtavillaoloVaiheJulkaisut", julkaisu, "NahtavillaoloVaiheJulkaisu");
+  }
 
   async deleteNahtavillaoloVaiheJulkaisu(projekti: DBProjekti, julkaisuIdToDelete: number): Promise<void> {
-    return deleteJulkaisuFromList(
+    return this.deleteJulkaisuFromList(
       projekti.oid,
       "nahtavillaoloVaiheJulkaisut",
       projekti.nahtavillaoloVaiheJulkaisut,
       julkaisuIdToDelete,
       "NahtavillaoloVaiheJulkaisu"
     );
-  },
+  }
 
   async updateNahtavillaoloVaiheJulkaisu(projekti: DBProjekti, julkaisu: NahtavillaoloVaiheJulkaisu): Promise<void> {
-    await updateJulkaisuToList(
+    await this.updateJulkaisuToList(
       projekti.oid,
       "nahtavillaoloVaiheJulkaisut",
       projekti.nahtavillaoloVaiheJulkaisut,
       julkaisu,
       "NahtavillaoloVaiheJulkaisu"
     );
-  },
+  }
 
   async insertHyvaksymisPaatosVaiheJulkaisu(
     oid: string,
     julkaisu: HyvaksymisPaatosVaiheJulkaisu
   ): Promise<DocumentClient.UpdateItemOutput> {
-    return insertJulkaisuToList(oid, "hyvaksymisPaatosVaiheJulkaisut", julkaisu, "HyvaksymisPaatosVaiheJulkaisu");
-  },
+    return this.insertJulkaisuToList(oid, "hyvaksymisPaatosVaiheJulkaisut", julkaisu, "HyvaksymisPaatosVaiheJulkaisu");
+  }
 
   async deleteHyvaksymisPaatosVaiheJulkaisu(projekti: DBProjekti, julkaisuIdToDelete: number): Promise<void> {
-    return deleteJulkaisuFromList(
+    return this.deleteJulkaisuFromList(
       projekti.oid,
       "hyvaksymisPaatosVaiheJulkaisut",
       projekti.hyvaksymisPaatosVaiheJulkaisut,
       julkaisuIdToDelete,
       "HyvaksymisPaatosVaiheJulkaisu"
     );
-  },
+  }
 
   async updateHyvaksymisPaatosVaiheJulkaisu(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu): Promise<void> {
-    await updateJulkaisuToList(
+    await this.updateJulkaisuToList(
       projekti.oid,
       "hyvaksymisPaatosVaiheJulkaisut",
       projekti.hyvaksymisPaatosVaiheJulkaisut,
       julkaisu,
       "HyvaksymisPaatosVaiheJulkaisu"
     );
-  },
-};
+  }
+
+  private async insertJulkaisuToList(oid: string, listFieldName: string, julkaisu: unknown, description: string) {
+    log.info("Insert " + description, { oid, julkaisu });
+    const params = {
+      TableName: this.projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression: `SET #${listFieldName} = list_append(if_not_exists(#${listFieldName}, :empty_list), :julkaisu)`,
+      ExpressionAttributeNames: {
+        [`#${listFieldName}`]: listFieldName,
+      },
+      ExpressionAttributeValues: {
+        ":julkaisu": [julkaisu],
+        ":empty_list": [],
+      },
+    };
+    log.info("Inserting " + description + " to projekti", { params });
+    return getDynamoDBDocumentClient().update(params).promise();
+  }
+
+  private async updateJulkaisuToList(
+    oid: string,
+    listFieldName: string,
+    julkaisut: JulkaisuWithId[] | undefined | null,
+    julkaisu: JulkaisuWithId,
+    description: string
+  ) {
+    if (!julkaisut) {
+      return;
+    }
+    for (let idx = 0; idx < julkaisut.length; idx++) {
+      if (julkaisut[idx].id == julkaisu.id) {
+        log.info("update " + description, { idx, julkaisu });
+
+        const params = {
+          TableName: this.projektiTableName,
+          Key: {
+            oid,
+          },
+          UpdateExpression: "SET #" + listFieldName + "[" + idx + "] = :julkaisu",
+          ExpressionAttributeNames: {
+            ["#" + listFieldName]: listFieldName,
+          },
+          ExpressionAttributeValues: {
+            ":julkaisu": julkaisu,
+          },
+        };
+        log.info("Updating " + description + " to projekti", { params });
+        await getDynamoDBDocumentClient().update(params).promise();
+        break;
+      }
+    }
+  }
+
+  private async deleteJulkaisuFromList(
+    oid: string,
+    listFieldName: string,
+    julkaisut: JulkaisuWithId[] | undefined | null,
+    julkaisuIdToDelete: number,
+    description: string
+  ) {
+    if (!julkaisut) {
+      return;
+    }
+    for (let idx = 0; idx < julkaisut.length; idx++) {
+      if (julkaisut[idx].id == julkaisuIdToDelete) {
+        log.info("delete " + description, { idx, julkaisuIdToDelete });
+
+        const params = {
+          TableName: this.projektiTableName,
+          Key: {
+            oid,
+          },
+          UpdateExpression: "REMOVE #" + listFieldName + "[" + idx + "]",
+          ExpressionAttributeNames: {
+            ["#" + listFieldName]: listFieldName,
+          },
+        };
+        await getDynamoDBDocumentClient().update(params).promise();
+        break;
+      }
+    }
+  }
+
+  protected checkAndRaiseError<T>(response: Response<T, AWSError>, msg: string): void {
+    if (response.error) {
+      log.error(msg, { error: response.error });
+      throw new Error(msg);
+    }
+  }
+}
+
+export const projektiDatabase = new ProjektiDatabase();

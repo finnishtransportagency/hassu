@@ -2,6 +2,7 @@
 import dayjs from "dayjs";
 import { selectAllAineistotFromCategory } from "../../support/util";
 import { formatDate } from "../../../src/util/dateUtils";
+import { ProjektiTestCommand } from "../../../common/testUtil.dev";
 
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
@@ -14,6 +15,7 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
 
   it("Tallenna kasittelyn tila ja siirra menneisyyteen", { scrollBehavior: "center" }, function () {
     cy.login("A1");
+    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).resetHyvaksymisvaihe(), { timeout: 30000 });
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/kasittelyntila", { timeout: 30000 });
     cy.reload(); // extra reload to avoid white page
     cy.contains(projektiNimi);
@@ -33,11 +35,11 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
     cy.get('[name="kasittelynTila.hyvaksymispaatos.paatoksenPvm"]').should("have.value", paatosPvm);
     cy.get('[name="kasittelynTila.hyvaksymispaatos.asianumero"]').should("have.value", asianumero);
 
-    // Move to past
-    cy.request(Cypress.env("host") + "/api/test/" + oid + "/nahtavillaolomenneisyyteen", { timeout: 30000 });
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/hyvaksymispaatos", { timeout: 30000 }).reload();
 
-    //
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/hyvaksymispaatos", { timeout: 30000 });
+    // Move to past
+    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).nahtavillaoloMenneisyyteen(), { timeout: 30000 });
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/hyvaksymispaatos", { timeout: 30000 }).reload();
     cy.contains("Kuulutus hyväksymispäätöksestä");
 
     cy.visit(Cypress.env("host") + "/suunnitelma/" + oid + "/hyvaksymismenettelyssa");

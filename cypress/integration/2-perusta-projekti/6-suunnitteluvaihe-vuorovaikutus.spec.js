@@ -2,6 +2,7 @@
 import dayjs from "dayjs";
 import { capturePDFPreview, requestPDFs, selectAllAineistotFromCategory } from "../../support/util";
 import { formatDate } from "../../../src/util/dateUtils";
+import { ProjektiTestCommand } from '../../../common/testUtil.dev';
 
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
@@ -15,22 +16,7 @@ describe("6 - Projektin suunnitteluvaihe (vuorovaikutukset)", () => {
     cy.login("A1");
     // Remove most of the data from vuorovaikutus to enable re-tunning this test as many times as needed
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu");
-    cy.request({
-      method: "POST",
-      url: Cypress.env("host") + "/yllapito/graphql",
-      headers: {
-        "x-api-key": Cypress.env("apiKey"),
-      },
-      body: {
-        operationName: "MyMutation",
-        variables: {},
-        query: `mutation MyMutation {
-  tallennaProjekti(projekti: {oid: "${oid}", suunnitteluVaihe: {vuorovaikutus: {vuorovaikutusNumero: 1}}})
-}`,
-      },
-    });
-
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu");
+    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).resetVuorovaikutukset(), { timeout: 30000 });
     cy.contains(projektiNimi);
     cy.wait(2000);
 
