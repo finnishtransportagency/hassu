@@ -57,13 +57,6 @@ function KuulutuksenYhteystiedot({ projekti, disableFields }: Props): ReactEleme
           name={`aloitusKuulutus.kuulutusYhteystiedot.yhteysHenkilot`}
           render={({ field: { onChange, value, ...field } }) => (
             <FormGroup label="Projektiin tallennetut henkilöt" inlineFlex>
-              {projekti?.suunnitteluSopimus && (
-                <CheckBox
-                  label={`${projekti.suunnitteluSopimus.sukunimi}, ${projekti.suunnitteluSopimus.etunimi}`}
-                  disabled
-                  defaultChecked
-                />
-              )}
               {projekti.kayttoOikeudet?.map(({ nimi, tyyppi, kayttajatunnus }, index) => {
                 const tunnuslista: string[] = value || [];
                 return (

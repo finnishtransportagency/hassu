@@ -11,7 +11,7 @@ import LocationCityIcon from "@mui/icons-material/LocationCity";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import {
   ProjektiJulkinen,
-  SuunnitteluSopimus,
+  SuunnitteluSopimusJulkaisu,
   SuunnitteluVaiheJulkinen,
   VuorovaikutusJulkinen,
   VuorovaikutusTilaisuusJulkinen,
@@ -81,7 +81,7 @@ const VuorovaikutusTiedot: FC<{
   vuorovaikutus: VuorovaikutusJulkinen | undefined;
   projekti: ProjektiJulkinen;
   suunnitteluVaihe: SuunnitteluVaiheJulkinen;
-  suunnittelusopimus: SuunnitteluSopimus | null | undefined;
+  suunnittelusopimus: SuunnitteluSopimusJulkaisu | null | undefined;
   projektiOid: string;
 }> = ({ suunnittelusopimus, vuorovaikutus, projektiOid }) => {
   const [palauteLomakeOpen, setPalauteLomakeOpen] = useState(false);

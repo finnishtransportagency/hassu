@@ -1,5 +1,5 @@
 import { KayttajaTyyppi, Kieli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
-import { DBVaylaUser, Kielitiedot, SuunnitteluSopimus, Velho, Vuorovaikutus, Yhteystieto } from "../../database/model";
+import { DBVaylaUser, Kielitiedot, SuunnitteluSopimusJulkaisu, Velho, Vuorovaikutus, Yhteystieto } from "../../database/model";
 import { AsiakirjanMuoto } from "../asiakirjaService";
 import { translate } from "../../util/localization";
 import { linkHyvaksymisPaatos, linkSuunnitteluVaihe } from "../../../../common/links";
@@ -236,7 +236,7 @@ export class KutsuAdapter {
 
   yhteystiedot(
     yhteystiedot: Yhteystieto[] | null | undefined,
-    suunnitteluSopimus?: SuunnitteluSopimus,
+    suunnitteluSopimus?: SuunnitteluSopimusJulkaisu,
     yhteysHenkilot?: string[] | null
   ): Yhteystieto[] {
     let yt: Yhteystieto[] = [];
@@ -317,14 +317,15 @@ export class KutsuAdapter {
   }
 
   private getUsersForUsernames(usernames: string[]): DBVaylaUser[] {
+    const kayttoOikeudet = this.kayttoOikeudet;
+    if (!kayttoOikeudet) {
+      throw new Error("this.kayttooikeudet puuttuu");
+    }
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return usernames
       .map((kayttajatunnus) =>
-        // kayttoOikeudet on oltava
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        this.kayttoOikeudet
+        kayttoOikeudet
           .filter((kayttaja) => kayttaja.kayttajatunnus == kayttajatunnus || kayttaja.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO)
           .pop()
       )

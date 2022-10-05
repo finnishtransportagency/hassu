@@ -1,5 +1,5 @@
 import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
-import { DBVaylaUser, Kielitiedot, LocalizedMap, SuunnitteluSopimus, Velho, Yhteystieto } from "../../database/model";
+import { DBVaylaUser, Kielitiedot, LocalizedMap, SuunnitteluSopimusJulkaisu, Velho, Yhteystieto } from "../../database/model";
 import { CommonPdf } from "./commonPdf";
 import { KutsuAdapter } from "./KutsuAdapter";
 import { AsiakirjanMuoto } from "../asiakirjaService";
@@ -20,7 +20,7 @@ export type IlmoitusParams = {
   hankkeenKuvaus: LocalizedMap<string>;
   kuulutusPaiva: string;
   yhteystiedot?: Yhteystieto[];
-  suunnitteluSopimus?: SuunnitteluSopimus;
+  suunnitteluSopimus?: SuunnitteluSopimusJulkaisu;
 
   // kayttoOikeudet must be set if yhteysHenkilot is set
   yhteysHenkilot?: string[];

@@ -564,7 +564,7 @@ type AloitusKuulutusJulkaisu {
   hankkeenKuvaus: HankkeenKuvaukset
   yhteystiedot: [Yhteystieto!]!
   velho: Velho!
-  suunnitteluSopimus: SuunnitteluSopimus
+  suunnitteluSopimus: SuunnitteluSopimusJulkaisu
   kielitiedot: Kielitiedot
   aloituskuulutusPDFt: AloitusKuulutusPDFt
   tila: AloitusKuulutusTila
@@ -579,7 +579,7 @@ type AloitusKuulutusJulkaisuJulkinen {
   hankkeenKuvaus: HankkeenKuvaukset
   yhteystiedot: [Yhteystieto!]!
   velho: VelhoJulkinen!
-  suunnitteluSopimus: SuunnitteluSopimus
+  suunnitteluSopimus: SuunnitteluSopimusJulkaisu
   kielitiedot: Kielitiedot
   aloituskuulutusPDFt: AloitusKuulutusPDFt
   tila: AloitusKuulutusTila
@@ -608,6 +608,12 @@ type KuntaVastaanottaja {
 }
 
 type SuunnitteluSopimus {
+  kunta: String!
+  logo: String
+  yhteysHenkilo: String!
+}
+
+type SuunnitteluSopimusJulkaisu {
   kunta: String!
   logo: String
   etunimi: String!

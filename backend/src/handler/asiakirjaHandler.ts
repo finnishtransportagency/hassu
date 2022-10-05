@@ -26,6 +26,7 @@ async function handleAloitusKuulutus(
       asiakirjaTyyppi,
       kieli,
       luonnos: true,
+      kayttoOikeudet: projekti.kayttoOikeudet
     });
   } else {
     // Previewing projekti with unsaved changes. adaptProjektiToPreview combines database content with the user provided changes
@@ -38,6 +39,7 @@ async function handleAloitusKuulutus(
       asiakirjaTyyppi,
       kieli,
       luonnos: true,
+      kayttoOikeudet: projekti.kayttoOikeudet
     });
   }
 }

@@ -37,10 +37,7 @@ describe("Projektin perustiedot", () => {
 
     cy.get('input[name="suunnittelusopimusprojekti"][value="true"]').check();
     cy.get("#suunnittelusopimus_kunta").select("ALAJÄRVI");
-    cy.get("#suunnittelusopimus_etunimi").clear().type("Etunimialajärvi");
-    cy.get("#suunnittelusopimus_sukunimi").clear().type("Sukunimialajärvi");
-    cy.get("#suunnittelusopimus_puhelinnumero").clear().type("029222222222222");
-    cy.get("#suunnittelusopimus_sahkoposti").clear().type("test@vayla.fi");
+    cy.get("#suunnittelusopimus_yhteyshenkilo").select(1);
 
     cy.get("main").then((elem) => {
       let htmlElements = elem.find('[name="suunnittelusopimus_logo_trash_button"]');

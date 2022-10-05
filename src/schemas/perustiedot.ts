@@ -1,5 +1,4 @@
 import * as Yup from "yup";
-import { puhelinNumeroSchema } from "./puhelinNumero";
 
 export const maxNoteLength = 2000;
 
@@ -30,17 +29,11 @@ export const perustiedotValidationSchema = Yup.object().shape({
     .nullable()
     .default(null),
   euRahoitus: Yup.boolean().nullable().required("EU-rahoitustieto on pakollinen"),
-  muistiinpano: Yup.string().max(
-    maxNoteLength,
-    `Muistiinpanoon voidaan kirjoittaa maksimissaan ${maxNoteLength} merkkiä.`
-  ),
+  muistiinpano: Yup.string().max(maxNoteLength, `Muistiinpanoon voidaan kirjoittaa maksimissaan ${maxNoteLength} merkkiä.`),
   suunnitteluSopimus: Yup.object()
     .shape({
       kunta: Yup.string().required("Kunta on pakollinen"),
-      etunimi: Yup.string().required("Etunimi on pakollinen"),
-      sukunimi: Yup.string().required("Sukunimi on pakollinen"),
-      puhelinnumero: puhelinNumeroSchema,
-      email: Yup.string().email("Virheellinen sähköpostiosoite").required("Sähköpostiosoite on pakollinen"),
+      yhteysHenkilo: Yup.string().required("Yhteyshenkilö on pakollinen").min(1),
       logo: Yup.mixed().required("Logo on pakollinen."),
     })
     .notRequired()

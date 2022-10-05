@@ -1,5 +1,11 @@
 import { AsiakirjaTyyppi, Kieli, PDF, ProjektiTyyppi } from "../../../common/graphql/apiModel";
-import { AloitusKuulutusJulkaisu, DBProjekti, HyvaksymisPaatosVaiheJulkaisu, NahtavillaoloVaiheJulkaisu } from "../database/model";
+import {
+  AloitusKuulutusJulkaisu,
+  DBProjekti,
+  DBVaylaUser,
+  HyvaksymisPaatosVaiheJulkaisu,
+  NahtavillaoloVaiheJulkaisu,
+} from "../database/model";
 import { AloitusKuulutus10T } from "./suunnittelunAloitus/aloitusKuulutus10T";
 import { AloitusKuulutus10R } from "./suunnittelunAloitus/aloitusKuulutus10R";
 import { Ilmoitus12T } from "./suunnittelunAloitus/ilmoitus12T";
@@ -32,19 +38,20 @@ interface CreateNahtavillaoloKuulutusPdfOptions {
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi;
 }
 
-interface YleisotilaisuusKutsuPdfOptions {
+export type YleisotilaisuusKutsuPdfOptions = {
   projekti: DBProjekti;
   vuorovaikutus: Vuorovaikutus;
   kieli: Kieli;
   luonnos: boolean;
-}
+};
 
-interface AloituskuulutusPdfOptions {
+export type AloituskuulutusPdfOptions = {
   aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu;
   asiakirjaTyyppi: AsiakirjaTyyppi;
   kieli: Kieli;
   luonnos: boolean;
-}
+  kayttoOikeudet: DBVaylaUser[];
+};
 
 export type EnhancedPDF = PDF & { textContent: string };
 
@@ -57,13 +64,13 @@ export type HyvaksymisPaatosKuulutusAsiakirjaTyyppi = Extract<
   | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
 >;
 
-interface CreateHyvaksymisPaatosKuulutusPdfOptions {
+type CreateHyvaksymisPaatosKuulutusPdfOptions = {
   projekti: DBProjekti;
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
   kieli: Kieli;
   luonnos: boolean;
   asiakirjaTyyppi: HyvaksymisPaatosKuulutusAsiakirjaTyyppi;
-}
+};
 
 export enum AsiakirjanMuoto {
   TIE = "TIE",
@@ -80,7 +87,13 @@ export function determineAsiakirjaMuoto(tyyppi: ProjektiTyyppi, vaylamuoto: stri
 }
 
 export class AsiakirjaService {
-  createAloituskuulutusPdf({ asiakirjaTyyppi, aloitusKuulutusJulkaisu, kieli, luonnos }: AloituskuulutusPdfOptions): Promise<EnhancedPDF> {
+  createAloituskuulutusPdf({
+    asiakirjaTyyppi,
+    aloitusKuulutusJulkaisu,
+    kieli,
+    luonnos,
+    kayttoOikeudet,
+  }: AloituskuulutusPdfOptions): Promise<EnhancedPDF> {
     let pdf: Promise<EnhancedPDF>;
     if (!aloitusKuulutusJulkaisu.velho.tyyppi) {
       throw new Error("aloitusKuulutusJulkaisu.velho.tyyppi puuttuu");
@@ -109,6 +122,7 @@ export class AsiakirjaService {
       velho: aloitusKuulutusJulkaisu.velho,
       yhteystiedot: aloitusKuulutusJulkaisu.yhteystiedot,
       suunnitteluSopimus: aloitusKuulutusJulkaisu.suunnitteluSopimus,
+      kayttoOikeudet,
     };
 
     switch (asiakirjaTyyppi) {

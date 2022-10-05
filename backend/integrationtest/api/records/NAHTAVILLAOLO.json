@@ -32,12 +32,13 @@
         "linkki": null
       },
       "suunnitteluSopimus": {
-        "sukunimi": "Jossain",
+        "etunimi": "Testi1",
+        "__typename": "SuunnitteluSopimusJulkaisu",
+        "sukunimi": "Hassu",
         "logo": "/suunnittelusopimus/logo.png",
         "kunta": "Nokia",
         "puhelinnumero": "123",
-        "email": "Joku.Jossain@vayla.fi",
-        "etunimi": "Joku"
+        "email": "mikko.haapamaki@cgi.com"
       },
       "siirtyySuunnitteluVaiheeseen": "2022-01-01",
       "kielitiedot": {
@@ -97,12 +98,9 @@
   "salt": "salt123",
   "tyyppi": "TIE",
   "suunnitteluSopimus": {
-    "sukunimi": "Jossain",
+    "yhteysHenkilo": "LX581241",
     "logo": "/suunnittelusopimus/logo.png",
-    "kunta": "Nokia",
-    "puhelinnumero": "123",
-    "email": "Joku.Jossain@vayla.fi",
-    "etunimi": "Joku"
+    "kunta": "Nokia"
   },
   "velho": {
     "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",

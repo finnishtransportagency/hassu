@@ -1,6 +1,6 @@
 import { AbstractPdf } from "../abstractPdf";
 import { Kieli, Viranomainen } from "../../../../common/graphql/apiModel";
-import { SuunnitteluSopimus, Velho, Yhteystieto } from "../../database/model";
+import { SuunnitteluSopimusJulkaisu, Velho, Yhteystieto } from "../../database/model";
 import { KutsuAdapter } from "./KutsuAdapter";
 import { log } from "../../logger";
 import PDFStructureElement = PDFKit.PDFStructureElement;
@@ -91,7 +91,7 @@ export abstract class CommonPdf extends AbstractPdf {
 
   protected moreInfoElements(
     yhteystiedot: Yhteystieto[] | null | undefined,
-    suunnitteluSopimus?: SuunnitteluSopimus,
+    suunnitteluSopimus?: SuunnitteluSopimusJulkaisu,
     yhteysHenkilot?: string[] | undefined | null,
     showOrganization = true
   ): PDFKit.PDFStructureElementChild[] {

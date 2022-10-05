@@ -52,6 +52,20 @@ Object {
         "organisaatio": "Väylävirasto",
         "puhelinnumero": "123456789",
       },
+      Object {
+        "email": "Matti.Meikalainen@vayla.fi",
+        "kayttajatunnus": "A000111",
+        "nimi": "Meikalainen, Matti",
+        "organisaatio": "Väylävirasto",
+        "puhelinnumero": "123456789",
+      },
+      Object {
+        "email": "Kunta.Kuntalainen@vayla.fi",
+        "kayttajatunnus": "A000123",
+        "nimi": "Kuntalainen, Kunta",
+        "organisaatio": "Nokia",
+        "puhelinnumero": "123456789",
+      },
     ],
     ":kielitiedot": Object {
       "ensisijainenKieli": "SUOMI",
@@ -67,11 +81,9 @@ Object {
     ":muistiinpano": "Testiprojekti 1:n muistiinpano",
     ":paivitetty": "2022-03-15T14:29:48.845Z",
     ":suunnitteluSopimus": Object {
-      "email": "Joku.Jossain@vayla.fi",
-      "etunimi": "Joku",
       "kunta": "Nokia",
-      "puhelinnumero": "123",
-      "sukunimi": "Jossain",
+      "logo": "logo.gif",
+      "yhteysHenkilo": "A000123",
     },
     ":velho": Object {
       "asiatunnusVayla": "A1",

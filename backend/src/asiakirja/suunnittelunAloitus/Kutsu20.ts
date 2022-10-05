@@ -1,4 +1,11 @@
-import { DBProjekti, DBVaylaUser, SuunnitteluSopimus, SuunnitteluVaihe, Vuorovaikutus, VuorovaikutusTilaisuus } from "../../database/model";
+import {
+  DBProjekti,
+  DBVaylaUser,
+  SuunnitteluSopimusJulkaisu,
+  SuunnitteluVaihe,
+  Vuorovaikutus,
+  VuorovaikutusTilaisuus,
+} from "../../database/model";
 import { KayttajaTyyppi, Kieli, ProjektiTyyppi, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import dayjs from "dayjs";
@@ -7,6 +14,8 @@ import { CommonPdf } from "./commonPdf";
 import { AsiakirjanMuoto } from "../asiakirjaService";
 import { translate } from "../../util/localization";
 import { formatList, KutsuAdapter } from "./KutsuAdapter";
+import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../../projekti/adapter/adaptToAPI";
+import { findUserByKayttajatunnus } from "../../projekti/projektiUtil";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
@@ -42,7 +51,7 @@ export class Kutsu20 extends CommonPdf {
   protected header: string;
   private projekti: DBProjekti;
   protected kieli: Kieli;
-  private suunnitteluSopimus: SuunnitteluSopimus;
+  private suunnitteluSopimus: SuunnitteluSopimusJulkaisu;
 
   constructor(projekti: DBProjekti, vuorovaikutus: Vuorovaikutus, kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto) {
     if (!(projekti.velho && projekti.velho.tyyppi && projekti.kielitiedot && projekti.suunnitteluSopimus && projekti.suunnitteluVaihe)) {
@@ -65,7 +74,15 @@ export class Kutsu20 extends CommonPdf {
     this.kieli = kieli;
 
     this.kayttoOikeudet = projekti.kayttoOikeudet;
-    this.suunnitteluSopimus = projekti.suunnitteluSopimus;
+    const suunnitteluSopimus = adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
+      projekti.oid,
+      projekti.suunnitteluSopimus,
+      findUserByKayttajatunnus(projekti.kayttoOikeudet, projekti.suunnitteluSopimus?.yhteysHenkilo)
+    );
+    if (!suunnitteluSopimus) {
+      throw new Error("Suunnittelusopimus puuttuu");
+    }
+    this.suunnitteluSopimus = suunnitteluSopimus;
     this.oid = projekti.oid;
     this.suunnitteluVaihe = projekti.suunnitteluVaihe;
     this.vuorovaikutus = vuorovaikutus;
@@ -329,7 +346,7 @@ export class Kutsu20 extends CommonPdf {
             tilaisuus.esitettavatYhteystiedot?.yhteysHenkilot.forEach((kayttajatunnus) => {
               const user = this.kayttoOikeudet.filter((kayttaja) => kayttaja.kayttajatunnus == kayttajatunnus).pop();
               if (user) {
-                const role = user.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO ?  translate("rooli.PROJEKTIPAALLIKKO", this.kieli) : undefined;
+                const role = user.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO ? translate("rooli.PROJEKTIPAALLIKKO", this.kieli) : undefined;
                 this.doc.text(safeConcatStrings(", ", [user.nimi, role, user.puhelinnumero]));
               }
             });

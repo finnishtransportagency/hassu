@@ -104,13 +104,6 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
             name={`hyvaksymisPaatosVaihe.kuulutusYhteysHenkilot`}
             render={({ field: { onChange, value, ...field } }) => (
               <FormGroup label="Projektiin tallennetut henkilöt" inlineFlex>
-                {projekti?.suunnitteluSopimus && (
-                  <CheckBox
-                    label={`${projekti.suunnitteluSopimus.sukunimi}, ${projekti.suunnitteluSopimus.etunimi}`}
-                    disabled
-                    defaultChecked
-                  />
-                )}
                 {projekti.kayttoOikeudet?.map(({ nimi, tyyppi, kayttajatunnus }, index) => {
                   const tunnuslista: string[] = value || [];
                   return (

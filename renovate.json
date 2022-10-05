@@ -8,7 +8,7 @@
     "workarounds:all"
   ],
   "timezone": "Europe/Helsinki",
-  "schedule": "after 6am and before 7am",
+  "schedule": "after 9pm on sunday",
   "updateNotScheduled": false,
   "branchConcurrentLimit": 5,
   "prConcurrentLimit": 5,

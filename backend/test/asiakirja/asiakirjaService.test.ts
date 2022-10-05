@@ -2,6 +2,7 @@
 /* tslint:disable:only-arrow-functions */
 import { describe, it } from "mocha";
 import {
+  AloituskuulutusPdfOptions,
   AsiakirjaService,
   HyvaksymisPaatosKuulutusAsiakirjaTyyppi,
   NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -21,6 +22,7 @@ import { ProjektiFixture } from "../fixture/projektiFixture";
 import {
   AloitusKuulutusJulkaisu,
   DBProjekti,
+  DBVaylaUser,
   HyvaksymisPaatosVaihe,
   NahtavillaoloVaihe,
   SuunnitteluVaihe,
@@ -60,14 +62,17 @@ describe("asiakirjaService", async () => {
   async function testKuulutusWithLanguage(
     aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu,
     kieli: Kieli,
+    kayttoOikeudet: DBVaylaUser[],
     asiakirjaTyyppi: AsiakirjaTyyppi
   ) {
-    const pdf = await new AsiakirjaService().createAloituskuulutusPdf({
+    let aloituskuulutusPdfOptions: AloituskuulutusPdfOptions = {
       aloitusKuulutusJulkaisu,
       asiakirjaTyyppi,
       kieli,
       luonnos: true,
-    });
+      kayttoOikeudet,
+    };
+    const pdf = await new AsiakirjaService().createAloituskuulutusPdf(aloituskuulutusPdfOptions);
     expect(pdf.sisalto.length).to.be.greaterThan(50000);
     expectPDF("esikatselu_aloituskuulutus_", pdf);
   }
@@ -80,15 +85,17 @@ describe("asiakirjaService", async () => {
 
     await runTestWithTypes(
       aloitusKuulutusTypes,
-      async (type) => await testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.SUOMI, type)
+      async (type) => await testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.SUOMI, projekti.kayttoOikeudet, type)
     );
 
     await runTestWithTypes(
       aloitusKuulutusTypes,
-      async (type) => await testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.RUOTSI, type)
+      async (type) => await testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.RUOTSI, projekti.kayttoOikeudet, type)
     );
 
-    await assert.isRejected(testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.SAAME, AsiakirjaTyyppi.ALOITUSKUULUTUS));
+    await assert.isRejected(
+      testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.SAAME, projekti.kayttoOikeudet, AsiakirjaTyyppi.ALOITUSKUULUTUS)
+    );
   });
 
   async function testKutsuWithLanguage(

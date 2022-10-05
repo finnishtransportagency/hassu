@@ -37,7 +37,7 @@ export type AloitusKuulutusJulkaisu = {
   elyKeskus?: string | null;
   yhteystiedot: Yhteystieto[];
   velho: Velho;
-  suunnitteluSopimus?: SuunnitteluSopimus | null;
+  suunnitteluSopimus?: SuunnitteluSopimusJulkaisu | null;
   kielitiedot?: Kielitiedot | null;
   aloituskuulutusPDFt?: LocalizedMap<AloitusKuulutusPDF>;
   tila?: AloitusKuulutusTila | null;
@@ -49,10 +49,16 @@ export type AloitusKuulutusJulkaisu = {
 export type SuunnitteluSopimus = {
   kunta: string;
   logo?: string;
-  etunimi: string;
-  sukunimi: string;
-  puhelinnumero: string;
-  email: string;
+  yhteysHenkilo: string;
+};
+
+export type SuunnitteluSopimusJulkaisu = {
+  kunta: string,
+  logo?: string | null,
+  etunimi: string,
+  sukunimi: string,
+  puhelinnumero: string,
+  email: string,
 };
 
 export type Suunnitelma = {

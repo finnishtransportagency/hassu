@@ -1,7 +1,7 @@
 import { AloitusKuulutusTila, AsiakirjaTyyppi, Kieli, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
-import { AloitusKuulutus, AloitusKuulutusJulkaisu, AloitusKuulutusPDF, DBProjekti, LocalizedMap, Kielitiedot } from "../../database/model";
+import { AloitusKuulutus, AloitusKuulutusJulkaisu, AloitusKuulutusPDF, DBProjekti, Kielitiedot, LocalizedMap } from "../../database/model";
 import { asiakirjaService } from "../../asiakirja/asiakirjaService";
 import { fileService } from "../../files/fileService";
 import { parseDate } from "../../util/dateUtil";
@@ -21,6 +21,7 @@ async function createAloituskuulutusPDF(
     aloitusKuulutusJulkaisu: julkaisuWaitingForApproval,
     kieli,
     luonnos: false,
+    kayttoOikeudet: projekti.kayttoOikeudet,
   });
   return fileService.createFileToProjekti({
     oid: projekti.oid,
