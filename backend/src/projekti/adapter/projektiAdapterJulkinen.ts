@@ -8,7 +8,6 @@ import {
   LocalizedMap,
   NahtavillaoloVaiheJulkaisu,
   StandardiYhteystiedot,
-  SuunnitteluSopimus,
   Velho,
   Vuorovaikutus,
   VuorovaikutusPDF,
@@ -34,6 +33,7 @@ import {
 import { findJulkaisuWithTila } from "../projektiUtil";
 import { applyProjektiJulkinenStatus } from "../status/projektiJulkinenStatusHandler";
 import adaptStandardiYhteystiedot, { adaptStandardiYhteystiedotLisaamattaProjaria } from "../../util/adaptStandardiYhteystiedot";
+import { adaptSuunnitteluSopimusJulkaisuJulkinen } from "./adaptToAPI";
 
 class ProjektiAdapterJulkinen {
   public adaptProjekti(dbProjekti: DBProjekti): API.ProjektiJulkinen | undefined {
@@ -118,7 +118,7 @@ class ProjektiAdapterJulkinen {
           hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
           yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
           velho: adaptVelho(velho),
-          suunnitteluSopimus: this.adaptSuunnitteluSopimus(oid, suunnitteluSopimus),
+          suunnitteluSopimus: adaptSuunnitteluSopimusJulkaisuJulkinen(oid, suunnitteluSopimus),
           kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
           aloituskuulutusPDFt: this.adaptJulkaisuPDFPaths(oid, julkaisu.aloituskuulutusPDFt),
           tila: julkaisu.tila,
@@ -126,20 +126,6 @@ class ProjektiAdapterJulkinen {
       ];
     }
     return undefined;
-  }
-
-  adaptSuunnitteluSopimus(oid: string, suunnitteluSopimus?: SuunnitteluSopimus | null): API.SuunnitteluSopimus | undefined | null {
-    if (suunnitteluSopimus) {
-      if (!suunnitteluSopimus.logo) {
-        throw new Error("adaptSuunnitteluSopimus: suunnittelusopimus.logo määrittelemättä");
-      }
-      return {
-        __typename: "SuunnitteluSopimus",
-        ...suunnitteluSopimus,
-        logo: fileService.getPublicPathForProjektiFile(oid, suunnitteluSopimus.logo),
-      };
-    }
-    return suunnitteluSopimus;
   }
 
   adaptJulkaisuPDFPaths(oid: string, aloitusKuulutusPDFS: LocalizedMap<AloitusKuulutusPDF>): API.AloitusKuulutusPDFt | undefined {

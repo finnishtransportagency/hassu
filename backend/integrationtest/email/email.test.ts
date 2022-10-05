@@ -29,6 +29,7 @@ describe.skip("Email", () => {
       asiakirjaTyyppi: AsiakirjaTyyppi.ALOITUSKUULUTUS,
       kieli: Kieli.SUOMI,
       luonnos: false,
+      kayttoOikeudet: projekti.kayttoOikeudet,
     });
 
     await emailClient.sendEmail({

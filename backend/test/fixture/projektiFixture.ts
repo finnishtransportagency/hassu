@@ -117,6 +117,16 @@ export class ProjektiFixture {
     puhelinnumero: "123456789",
   };
 
+  private static kunnanYhteysHenkiloProjektiKayttaja: ProjektiKayttaja = {
+    __typename: "ProjektiKayttaja",
+    kayttajatunnus: "A000123",
+    muokattavissa: true,
+    nimi: "Kuntalainen, Kunta",
+    email: "Kunta.Kuntalainen@vayla.fi",
+    organisaatio: "Nokia",
+    puhelinnumero: "123456789",
+  };
+
   tallennaProjektiInput: TallennaProjektiInput = {
     oid: this.PROJEKTI1_OID,
   };
@@ -203,6 +213,20 @@ export class ProjektiFixture {
           puhelinnumero: ProjektiFixture.mattiMeikalainenProjektiKayttaja.puhelinnumero || "",
           organisaatio: ProjektiFixture.mattiMeikalainenProjektiKayttaja.organisaatio,
         },
+        {
+          email: ProjektiFixture.mattiMeikalainenProjektiKayttaja.email,
+          kayttajatunnus: ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
+          nimi: ProjektiFixture.mattiMeikalainenProjektiKayttaja.nimi,
+          puhelinnumero: ProjektiFixture.mattiMeikalainenProjektiKayttaja.puhelinnumero || "",
+          organisaatio: ProjektiFixture.mattiMeikalainenProjektiKayttaja.organisaatio,
+        },
+        {
+          email: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.email,
+          kayttajatunnus: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.kayttajatunnus,
+          nimi: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.nimi,
+          puhelinnumero: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.puhelinnumero || "",
+          organisaatio: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.organisaatio,
+        },
       ],
       oid: this.PROJEKTI1_OID,
       velho: {
@@ -216,11 +240,9 @@ export class ProjektiFixture {
       },
       muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
       suunnitteluSopimus: {
-        email: "Joku.Jossain@vayla.fi",
-        puhelinnumero: "123",
-        etunimi: "Joku",
-        sukunimi: "Jossain",
         kunta: "Nokia",
+        yhteysHenkilo: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.kayttajatunnus,
+        logo: "logo.gif",
       },
       aloitusKuulutus: {
         kuulutusPaiva: "2022-01-02",

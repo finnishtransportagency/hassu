@@ -1198,13 +1198,13 @@ Object {
         "kuulutusPaiva": "2022-01-02",
         "siirtyySuunnitteluVaiheeseen": "2022-01-01",
         "suunnitteluSopimus": Object {
-          "__typename": "SuunnitteluSopimus",
-          "email": "Joku.Jossain@vayla.fi",
-          "etunimi": "Joku",
+          "__typename": "SuunnitteluSopimusJulkaisu",
+          "email": "mikko.haapamaki@cgi.com",
+          "etunimi": "Testi1",
           "kunta": "Nokia",
           "logo": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/logo.png",
           "puhelinnumero": "123",
-          "sukunimi": "Jossain",
+          "sukunimi": "Hassu",
         },
         "tila": "HYVAKSYTTY",
         "velho": Object {

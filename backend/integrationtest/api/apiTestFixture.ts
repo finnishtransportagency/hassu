@@ -19,23 +19,17 @@ import {
 class ApiTestFixture {
   newNote = "uusi muistiinpano";
 
-  createSuunnitteluSopimusInput = (uploadedFile: string): SuunnitteluSopimusInput => ({
-    email: "Joku.Jossain@vayla.fi",
-    puhelinnumero: "123",
-    etunimi: "Joku",
-    sukunimi: "Jossain",
+  createSuunnitteluSopimusInput = (uploadedFile: string, yhteysHenkilo:string): SuunnitteluSopimusInput => ({
+    yhteysHenkilo,
     kunta: "Nokia",
     logo: uploadedFile,
   });
 
-  suunnitteluSopimus: SuunnitteluSopimus = {
+  suunnitteluSopimus = (yhteysHenkilo:string): SuunnitteluSopimus => ({
     __typename: "SuunnitteluSopimus",
-    email: "Joku.Jossain@vayla.fi",
-    puhelinnumero: "123",
-    etunimi: "Joku",
-    sukunimi: "Jossain",
+    yhteysHenkilo,
     kunta: "Nokia",
-  };
+  });
 
   yhteystietoLista: Yhteystieto[] = [
     {
@@ -48,7 +42,7 @@ class ApiTestFixture {
     },
   ];
 
-  yhteytietoInputLista2: YhteystietoInput[] = [
+  yhteystietoInputLista2: YhteystietoInput[] = [
     {
       etunimi: "Marko",
       sukunimi: "Koi",

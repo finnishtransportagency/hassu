@@ -140,7 +140,7 @@ export async function testProjektinTiedot(oid: string): Promise<void> {
     oid,
     muistiinpano: apiTestFixture.newNote,
     aloitusKuulutus: apiTestFixture.aloitusKuulutus,
-    suunnitteluSopimus: apiTestFixture.createSuunnitteluSopimusInput(uploadedFile),
+    suunnitteluSopimus: apiTestFixture.createSuunnitteluSopimusInput(uploadedFile, UserFixture.testi1Kayttaja.uid),
     kielitiedot: apiTestFixture.kielitiedotInput,
     euRahoitus: false,
   });

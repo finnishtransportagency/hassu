@@ -79,9 +79,9 @@ export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
     let phrase: string;
     const suunnitteluSopimus = this.params.suunnitteluSopimus;
     if (suunnitteluSopimus) {
-      phrase = `${formatProperNoun(suunnitteluSopimus?.kunta || "Kunta")}, sovittuaan asiasta ${
-        this.tilaajaGenetiivi
-      } kanssa, käynnistää ${this.projektiTyyppi}n laatimisen tarpeellisine tutkimuksineen. `;
+      phrase = `${formatProperNoun(suunnitteluSopimus?.kunta || "Kunta")}, sovittuaan asiasta ${this.tilaajaGenetiivi} kanssa, käynnistää ${
+        this.projektiTyyppi
+      }n laatimisen tarpeellisine tutkimuksineen. `;
     } else {
       const tilaajaOrganisaatio = this.tilaajaOrganisaatio();
       const kunnat = this.params.velho?.kunnat;

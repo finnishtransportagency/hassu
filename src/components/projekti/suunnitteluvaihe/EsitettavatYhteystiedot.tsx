@@ -2,7 +2,7 @@ import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
 import { KayttajaTyyppi, YhteystietoInput } from "@services/api";
 import Section from "@components/layout/Section";
-import { ReactElement, useMemo, Fragment } from "react";
+import { Fragment, ReactElement, useMemo } from "react";
 import Button from "@components/button/Button";
 import HassuStack from "@components/layout/HassuStack";
 import CheckBox from "@components/form/CheckBox";
@@ -98,13 +98,6 @@ export default function EsitettavatYhteystiedot({ vuorovaikutusnro }: Props): Re
                     </Fragment>
                   );
                 })}
-                {projekti?.suunnitteluSopimus && (
-                  <CheckBox
-                    label={`${projekti.suunnitteluSopimus.sukunimi}, ${projekti.suunnitteluSopimus.etunimi}`}
-                    disabled
-                    defaultChecked
-                  />
-                )}
               </FormGroup>
             )}
           />

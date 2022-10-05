@@ -23,6 +23,20 @@ Object {
       "puhelinnumero": "123456789",
     },
     Object {
+      "email": "Matti.Meikalainen@vayla.fi",
+      "kayttajatunnus": "A000111",
+      "nimi": "Meikalainen, Matti",
+      "organisaatio": "Väylävirasto",
+      "puhelinnumero": "123456789",
+    },
+    Object {
+      "email": "Kunta.Kuntalainen@vayla.fi",
+      "kayttajatunnus": "A000123",
+      "nimi": "Kuntalainen, Kunta",
+      "organisaatio": "Nokia",
+      "puhelinnumero": "123456789",
+    },
+    Object {
       "email": "a1@vayla.fi",
       "kayttajatunnus": "A1",
       "muokattavissa": false,

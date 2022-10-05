@@ -1,14 +1,12 @@
-import React, { ReactElement, useEffect, useState, useCallback } from "react";
+import React, { ReactElement, useCallback, useEffect, useState } from "react";
 import { Projekti } from "@services/api";
 import RadioButton from "@components/form/RadioButton";
-import TextInput from "@components/form/TextInput";
 import Select from "@components/form/Select";
 import { Controller, useFormContext } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import FileInput from "@components/form/FileInput";
 import IconButton from "@components/button/IconButton";
 import FormGroup from "@components/form/FormGroup";
-import { maxPhoneLength } from "src/schemas/puhelinNumero";
 import Section from "@components/layout/Section";
 import HassuGrid from "@components/HassuGrid";
 import SectionContent from "@components/layout/SectionContent";
@@ -27,7 +25,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
     setValue,
   } = useFormContext<FormValues>();
 
-  const [hasSuunnittaluSopimus, setHasSuunnitteluSopimus] = useState(false);
+  const [hasSuunnitteluSopimus, setHasSuunnitteluSopimus] = useState(false);
   const [logoUrl, setLogoUrl] = useState<string | undefined>(undefined);
   const [kuntaOptions, setKuntaOptions] = useState([]);
 
@@ -44,6 +42,10 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
     setHasSuunnitteluSopimus(!!projekti?.suunnitteluSopimus);
     setLogoUrl(projekti?.suunnitteluSopimus?.logo || undefined);
   }, [projekti, setHasSuunnitteluSopimus, setLogoUrl]);
+
+  if (!kuntaOptions || kuntaOptions.length == 0) {
+    return <></>;
+  }
 
   return (
     <Section smallGaps>
@@ -70,11 +72,24 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
           }}
         />
       </FormGroup>
-      {hasSuunnittaluSopimus && (
+      {hasSuunnitteluSopimus && (
         <SectionContent largeGaps sx={{ marginLeft: 4 }}>
           <SectionContent>
             <p>Kunnan projektipäällikön tiedot</p>
             <HassuGrid cols={{ lg: 3 }}>
+              <Select
+                id="suunnittelusopimus_yhteyshenkilo"
+                label="Henkilö *"
+                options={
+                  projekti?.kayttoOikeudet?.map((kayttaja) => ({
+                    label: kayttaja.nimi,
+                    value: kayttaja.kayttajatunnus,
+                  })) || []
+                }
+                addEmptyOption
+                error={(errors as any).suunnitteluSopimus?.yhteysHenkilo}
+                {...register("suunnitteluSopimus.yhteysHenkilo", { shouldUnregister: true })}
+              />
               <Select
                 id="suunnittelusopimus_kunta"
                 label="Kunta *"
@@ -82,47 +97,15 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
                 error={(errors as any).suunnitteluSopimus?.kunta}
                 {...register("suunnitteluSopimus.kunta", { shouldUnregister: true })}
               />
-              <TextInput
-                id="suunnittelusopimus_etunimi"
-                label="Etunimi *"
-                error={(errors as any).suunnitteluSopimus?.etunimi}
-                {...register("suunnitteluSopimus.etunimi", { shouldUnregister: true })}
-              />
-              <TextInput
-                id="suunnittelusopimus_sukunimi"
-                label="Sukunimi *"
-                error={(errors as any).suunnitteluSopimus?.sukunimi}
-                {...register("suunnitteluSopimus.sukunimi", { shouldUnregister: true })}
-              />
-              <TextInput
-                id="suunnittelusopimus_puhelinnumero"
-                label="Puhelinnumero *"
-                maxLength={maxPhoneLength}
-                error={(errors as any).suunnitteluSopimus?.puhelinnumero}
-                {...register("suunnitteluSopimus.puhelinnumero", { shouldUnregister: true })}
-              />
-              <TextInput
-                id="suunnittelusopimus_sahkoposti"
-                label="Sähköposti *"
-                error={(errors as any).suunnitteluSopimus?.email}
-                {...register("suunnitteluSopimus.email", { shouldUnregister: true })}
-              />
             </HassuGrid>
           </SectionContent>
           <SectionContent>
             <Controller
               render={({ field }) =>
                 logoUrl ? (
-                  <FormGroup
-                    label="Virallinen, kunnalta saatu logo. *"
-                    errorMessage={(errors as any).suunnitteluSopimus?.logo?.message}
-                  >
+                  <FormGroup label="Virallinen, kunnalta saatu logo. *" errorMessage={(errors as any).suunnitteluSopimus?.logo?.message}>
                     <HassuStack direction="row">
-                      <img
-                        className="h-11 border-gray border mb-3.5 py-2 px-3"
-                        src={logoUrl}
-                        alt="Suunnittelu sopimus logo"
-                      />
+                      <img className="h-11 border-gray border mb-3.5 py-2 px-3" src={logoUrl} alt="Suunnittelu sopimus logo" />
                       <IconButton
                         name="suunnittelusopimus_logo_trash_button"
                         icon="trash"

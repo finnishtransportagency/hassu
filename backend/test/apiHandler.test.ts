@@ -303,12 +303,9 @@ describe("apiHandler", () => {
             },
           ],
           suunnitteluSopimus: {
-            email: "a@b.com",
-            puhelinnumero: "0291111",
             kunta: "Nokia",
             logo: "/suunnittelusopimus/logo.gif",
-            etunimi: "Etunimi",
-            sukunimi: "Sukunimi",
+            yhteysHenkilo: "A2",
           },
           euRahoitus: false, // mandatory field for perustiedot
           aloitusKuulutus: fixture.aloitusKuulutusInput,

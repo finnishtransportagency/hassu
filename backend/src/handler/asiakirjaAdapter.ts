@@ -3,7 +3,8 @@ import cloneDeep from "lodash/cloneDeep";
 import { AloitusKuulutusTila, HyvaksymisPaatosVaiheTila, NahtavillaoloVaiheTila } from "../../../common/graphql/apiModel";
 import { deepClone } from "aws-cdk/lib/util";
 import adaptStandardiYhteystiedot from "../util/adaptStandardiYhteystiedot";
-import { findJulkaisuWithTila } from "../projekti/projektiUtil";
+import { findJulkaisuWithTila, findUserByKayttajatunnus } from "../projekti/projektiUtil";
+import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../projekti/adapter/adaptToAPI";
 
 function createNextAloitusKuulutusJulkaisuID(dbProjekti: DBProjekti) {
   if (!dbProjekti.aloitusKuulutusJulkaisut) {
@@ -24,7 +25,11 @@ export class AsiakirjaAdapter {
         // @ts-ignore
         yhteystiedot: adaptStandardiYhteystiedot(dbProjekti, kuulutusYhteystiedot),
         velho: adaptVelho(dbProjekti),
-        suunnitteluSopimus: cloneDeep(dbProjekti.suunnitteluSopimus),
+        suunnitteluSopimus: adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
+          dbProjekti.oid,
+          dbProjekti.suunnitteluSopimus,
+          findUserByKayttajatunnus(dbProjekti.kayttoOikeudet, dbProjekti.suunnitteluSopimus?.yhteysHenkilo)
+        ),
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
       };
     }

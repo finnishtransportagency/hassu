@@ -32,7 +32,7 @@ Lisätietoja antavat
 Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
 Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
 Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Joku Jossain, puh. 123, Joku.Jossain(at)vayla.fi 
+Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Tervetuloa!
 Uudenmaan ELY-keskus
 LUONNOSLUONNOS",
@@ -95,7 +95,7 @@ Mer information om planen
 Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
 Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
 Matti Meikalainen, tel. 123456789, Matti.Meikalainen(at)vayla.fi 
-Joku Jossain, tel. 123, Joku.Jossain(at)vayla.fi 
+Kunta Kuntalainen, tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Tervetuloa!
 RUOTSIKSI Uudenmaan ELY-keskus
 LUONNOSLUONNOS",
@@ -158,7 +158,7 @@ Lisätietoja antavat
 Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
 Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
 Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Joku Jossain, puh. 123, Joku.Jossain(at)vayla.fi 
+Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Väylävirasto
 LUONNOSLUONNOS",
 }
@@ -220,7 +220,7 @@ Mer information om planen
 Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
 Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
 Matti Meikalainen, tel. 123456789, Matti.Meikalainen(at)vayla.fi 
-Joku Jossain, tel. 123, Joku.Jossain(at)vayla.fi 
+Kunta Kuntalainen, tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Trafikledsverket
 LUONNOSLUONNOS",
 }
@@ -1180,11 +1180,13 @@ Object {
   "kuulutusPaiva": "2022-01-02",
   "siirtyySuunnitteluVaiheeseen": "2022-01-01",
   "suunnitteluSopimus": Object {
-    "email": "Joku.Jossain@vayla.fi",
-    "etunimi": "Joku",
+    "__typename": "SuunnitteluSopimusJulkaisu",
+    "email": "Kunta.Kuntalainen@vayla.fi",
+    "etunimi": "Kunta",
     "kunta": "Nokia",
-    "puhelinnumero": "123",
-    "sukunimi": "Jossain",
+    "logo": "logo.gif",
+    "puhelinnumero": "123456789",
+    "sukunimi": "Kuntalainen",
   },
   "velho": Object {
     "asiatunnusVayla": "A1",
@@ -1245,7 +1247,7 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 Lisätietoja antavat 
 Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
 Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
-Nokia, Joku Jossain, puh. 123, Joku.Jossain(at)vayla.fi 
+Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Nokia
 LUONNOS",
 }
@@ -1262,7 +1264,7 @@ Kuulutus julkaistaan 2.1.2022, Uudenmaan ELY-keskuksen tietoverkossa osoitteessa
 Lisätietoja antavat 
 Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
 Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
-Nokia, Joku Jossain, puh. 123, Joku.Jossain(at)vayla.fi 
+Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 LUONNOS",
 }
 `;
@@ -1288,7 +1290,7 @@ RUOTSIKSI Väylävirasto behandlar personuppgifter som är nödvändiga för uta
 Mer information om planen 
 Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
 Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
-Nokia, Joku Jossain, tel. 123, Joku.Jossain(at)vayla.fi 
+Nokia, Kunta Kuntalainen, tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Nokia
 LUONNOS",
 }
@@ -1305,7 +1307,7 @@ RUOTSIKSI Kuulutus julkaistaan 2.1.2022, RUOTSIKSI Uudenmaan ELY-keskuksen tieto
 Mer information om planen 
 Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
 Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
-Nokia, Joku Jossain, tel. 123, Joku.Jossain(at)vayla.fi 
+Nokia, Kunta Kuntalainen, tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 LUONNOS",
 }
 `;
