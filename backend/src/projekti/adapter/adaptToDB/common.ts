@@ -4,7 +4,6 @@ import {
   Aineisto,
   IlmoituksenVastaanottajat,
   KuntaVastaanottaja,
-  LocalizedMap,
   StandardiYhteystiedot,
   ViranomaisVastaanottaja,
   Yhteystieto,
@@ -73,19 +72,6 @@ export function adaptStandardiYhteystiedotToSave(
     yhteysTiedot: adaptYhteystiedotToSave(kuulutusYhteystiedot.yhteysTiedot),
     yhteysHenkilot: adaptYhteysHenkilotToSave(kuulutusYhteystiedot.yhteysHenkilot),
   };
-}
-
-export function adaptHankkeenKuvausToSave(hankkeenKuvaus: API.HankkeenKuvauksetInput | undefined | null): LocalizedMap<string> | undefined {
-  if (!hankkeenKuvaus) {
-    return undefined;
-  }
-  const kuvaus: LocalizedMap<string> = { [API.Kieli.SUOMI]: hankkeenKuvaus[API.Kieli.SUOMI] };
-  Object.keys(API.Kieli).forEach((kieli) => {
-    if (hankkeenKuvaus[kieli as API.Kieli]) {
-      kuvaus[kieli as API.Kieli] = hankkeenKuvaus[kieli as API.Kieli] || undefined;
-    }
-  });
-  return kuvaus;
 }
 
 export function adaptAineistotToSave(

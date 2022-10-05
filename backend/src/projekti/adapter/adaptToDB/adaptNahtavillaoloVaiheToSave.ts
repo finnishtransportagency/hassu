@@ -1,8 +1,9 @@
 import { NahtavillaoloVaihe } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { ProjektiAdaptationResult } from "../projektiAdapter";
-import { adaptAineistotToSave, adaptHankkeenKuvausToSave, adaptIlmoituksenVastaanottajatToSave, adaptYhteystiedotToSave } from "./common";
+import { adaptAineistotToSave, adaptIlmoituksenVastaanottajatToSave, adaptYhteystiedotToSave } from "./common";
 import mergeWith from "lodash/mergeWith";
+import { adaptHankkeenKuvausToSave } from "../common";
 
 export function adaptNahtavillaoloVaiheToSave(
   dbNahtavillaoloVaihe: NahtavillaoloVaihe | undefined | null,

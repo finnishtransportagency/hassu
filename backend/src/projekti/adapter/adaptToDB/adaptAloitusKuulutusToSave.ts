@@ -1,7 +1,8 @@
 import * as API from "../../../../../common/graphql/apiModel";
 import { AloitusKuulutus } from "../../../database/model";
-import { adaptHankkeenKuvausToSave, adaptIlmoituksenVastaanottajatToSave, adaptStandardiYhteystiedotToSave } from "./common";
+import { adaptIlmoituksenVastaanottajatToSave, adaptStandardiYhteystiedotToSave } from "./common";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
+import { adaptHankkeenKuvausToSave } from "../common";
 
 export function adaptAloitusKuulutusToSave(aloitusKuulutus: API.AloitusKuulutusInput | undefined | null): AloitusKuulutus | undefined {
   if (aloitusKuulutus) {

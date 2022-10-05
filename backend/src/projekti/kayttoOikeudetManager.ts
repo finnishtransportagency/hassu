@@ -78,6 +78,8 @@ export class KayttoOikeudetManager {
         });
         if (userWithAllInfo) {
           resultUsers.push(userWithAllInfo);
+        } else {
+          log.warn("Käyttäjää ei löytynyt käyttäjähallinnasta", { userToAdd });
         }
       } catch (e) {
         log.error(e);
@@ -108,11 +110,22 @@ export class KayttoOikeudetManager {
         searchMode: SearchMode.EMAIL,
       });
       if (projektiPaallikko) {
-        // Remove existing PROJEKTIPAALLIKKO
-        remove(this.users, (aUser) => aUser.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO && !aUser.muokattavissa);
-        this.users.push(projektiPaallikko);
+        // Remove existing PROJEKTIPAALLIKKO if it's defferent from the new one
+        const currentProjektiPaallikko = this.users.filter((aUser) => aUser.email == email).pop();
+        if (currentProjektiPaallikko?.kayttajatunnus == projektiPaallikko.kayttajatunnus) {
+          log.warn("Projektipäällikkö on jo oikea", { projektiPaallikko });
+          return currentProjektiPaallikko;
+        } else {
+          log.warn("Projektipäällikkö ei ole oikea", { current: currentProjektiPaallikko?.kayttajatunnus, theNew: projektiPaallikko });
+          remove(this.users, (aUser) => aUser.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO && !aUser.muokattavissa);
+          this.users.push(projektiPaallikko);
+          log.warn("Projektipäällikkö lisätty", { projektiPaallikko });
+        }
         return projektiPaallikko;
       }
+      log.warn("Projektipäällikköä ei löytynyt", { projektiPaallikko });
+    } else {
+      log.warn("Projektipäälliköllä ei ole sähköpostiosoitetta");
     }
   }
 
@@ -123,9 +136,12 @@ export class KayttoOikeudetManager {
       if (account) {
         const user = mergeKayttaja({ tyyppi: KayttajaTyyppi.VARAHENKILO, muokattavissa: false }, account);
         if (user) {
-          // Remove existing varahenkilo
-          remove(this.users, (aUser) => aUser.tyyppi == KayttajaTyyppi.VARAHENKILO && !aUser.muokattavissa);
-          this.users.push(user);
+          // Remove existing varahenkilo if it's different
+          const currentVarahenkilo = this.users.filter((aUser) => aUser.tyyppi == KayttajaTyyppi.VARAHENKILO && !aUser.muokattavissa).pop();
+          if (currentVarahenkilo?.email !== email) {
+            remove(this.users, (aUser) => aUser == currentVarahenkilo);
+            this.users.push(user);
+          }
         }
       }
     }

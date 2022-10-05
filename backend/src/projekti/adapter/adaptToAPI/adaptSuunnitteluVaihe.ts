@@ -14,7 +14,7 @@ import {
   adaptIlmoituksenVastaanottajat,
   adaptLinkkiByAddingTypename,
   adaptLinkkiListByAddingTypename,
-  adaptStandardiYhteystiedotByAddingProjari,
+  adaptStandardiYhteystiedotByAddingProjektiPaallikko,
   adaptStandardiYhteystiedotByAddingTypename,
 } from "../common";
 import { fileService } from "../../../files/fileService";
@@ -62,7 +62,7 @@ function adaptVuorovaikutukset(
       const apiVuorovaikutus: API.Vuorovaikutus = {
         ...(vuorovaikutus as Omit<Vuorovaikutus, "vuorovaikutusPDFt">),
         ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(vuorovaikutus.ilmoituksenVastaanottajat),
-        esitettavatYhteystiedot: adaptStandardiYhteystiedotByAddingProjari(kayttoOikeudet, vuorovaikutus.esitettavatYhteystiedot),
+        esitettavatYhteystiedot: adaptStandardiYhteystiedotByAddingProjektiPaallikko(kayttoOikeudet, vuorovaikutus.esitettavatYhteystiedot),
         vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
         suunnittelumateriaali: adaptLinkkiByAddingTypename(vuorovaikutus.suunnittelumateriaali),
         videot: adaptLinkkiListByAddingTypename(vuorovaikutus.videot),
