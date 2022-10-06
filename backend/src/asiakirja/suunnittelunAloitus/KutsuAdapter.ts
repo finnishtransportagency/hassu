@@ -304,14 +304,8 @@ export class KutsuAdapter {
 
   get yhteystiedotVuorovaikutus(): Yhteystieto[] {
     return this.yhteystiedot(
-      // esitettavatYhteystiedot on oltava
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysTiedot || [],
       undefined,
-      // esitettavatYhteystiedot on oltava
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysHenkilot
     );
   }
