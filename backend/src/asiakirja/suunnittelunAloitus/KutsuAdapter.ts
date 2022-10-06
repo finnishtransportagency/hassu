@@ -307,12 +307,12 @@ export class KutsuAdapter {
       // esitettavatYhteystiedot on oltava
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      this.vuorovaikutus?.esitettavatYhteystiedot.yhteysTiedot || [],
+      this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysTiedot || [],
       undefined,
       // esitettavatYhteystiedot on oltava
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      this.vuorovaikutus?.esitettavatYhteystiedot.yhteysHenkilot
+      this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysHenkilot
     );
   }
 
