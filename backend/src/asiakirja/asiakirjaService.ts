@@ -107,9 +107,7 @@ export class AsiakirjaService {
     if (!aloitusKuulutusJulkaisu.kuulutusPaiva) {
       throw new Error("aloitusKuulutusJulkaisu.kuulutusPaiva puuttuu");
     }
-    if (!aloitusKuulutusJulkaisu.suunnitteluSopimus) {
-      throw new Error("aloitusKuulutusJulkaisu.suunnitteluSopimus puuttuu");
-    }
+
     const asiakirjanMuoto: AsiakirjanMuoto | undefined = determineAsiakirjaMuoto(
       aloitusKuulutusJulkaisu.velho.tyyppi,
       aloitusKuulutusJulkaisu.velho.vaylamuoto
@@ -121,7 +119,7 @@ export class AsiakirjaService {
       kuulutusPaiva: aloitusKuulutusJulkaisu.kuulutusPaiva,
       velho: aloitusKuulutusJulkaisu.velho,
       yhteystiedot: aloitusKuulutusJulkaisu.yhteystiedot,
-      suunnitteluSopimus: aloitusKuulutusJulkaisu.suunnitteluSopimus,
+      suunnitteluSopimus: aloitusKuulutusJulkaisu.suunnitteluSopimus || undefined,
       kayttoOikeudet,
     };
 
