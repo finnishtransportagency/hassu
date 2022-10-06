@@ -187,6 +187,7 @@ input ProjektiKayttajaInput {
   tyyppi: KayttajaTyyppi
   kayttajatunnus: String!
   puhelinnumero: String!
+  yleinenYhteystieto: Boolean
 }
 
 input ListaaKayttajatInput {

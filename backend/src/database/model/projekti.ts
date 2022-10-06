@@ -13,6 +13,7 @@ export type DBVaylaUser = {
   nimi: string;
   tyyppi?: KayttajaTyyppi | null;
   muokattavissa?: boolean;
+  yleinenYhteystieto?: boolean;
 };
 
 export type AloitusKuulutus = {

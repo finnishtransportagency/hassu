@@ -6,6 +6,7 @@ import differenceWith from "lodash/differenceWith";
 import remove from "lodash/remove";
 import { mergeKayttaja } from "../personSearch/personAdapter";
 import { Kayttajas } from "../personSearch/kayttajas";
+import merge from "lodash/merge";
 
 export class KayttoOikeudetManager {
   private users: DBVaylaUser[];
@@ -47,10 +48,7 @@ export class KayttoOikeudetManager {
             delete inputUser.tyyppi;
           }
           // Update rest of fields
-          resultingUsers.push({
-            ...currentUser,
-            ...inputUser,
-          });
+          resultingUsers.push(merge({}, currentUser, inputUser));
         }
       } else {
         // Remove user because it doesn't exist in input, except if muokattavissa===false
@@ -70,6 +68,7 @@ export class KayttoOikeudetManager {
         kayttajatunnus: newUser.kayttajatunnus,
         muokattavissa: true,
         tyyppi: newUser.tyyppi == KayttajaTyyppi.VARAHENKILO ? KayttajaTyyppi.VARAHENKILO : undefined,
+        yleinenYhteystieto: newUser.yleinenYhteystieto || undefined,
       };
       try {
         const userWithAllInfo = this.fillInUserInfoFromUserManagement({

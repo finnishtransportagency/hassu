@@ -498,9 +498,10 @@
     },
     {
       "kayttajatunnus": "LX581241",
+      "yleinenYhteystieto": true,
       "nimi": "Hassu, Testi1",
-      "puhelinnumero": "123",
       "organisaatio": "CGI Suomi Oy",
+      "puhelinnumero": "123",
       "email": "mikko.haapamaki@cgi.com",
       "muokattavissa": true
     }

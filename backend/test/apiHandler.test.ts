@@ -242,7 +242,7 @@ describe("apiHandler", () => {
         // Create stubs to keep state of the "database" so that it can be modified in the following steps
         mockDatabase();
         // Save projekti with the defaults. It should have both projektipaallikko and the current user
-        projekti = await saveAndLoadProjekti(projekti, "having both projektipaallikko and omistaja", {
+        projekti = await saveAndLoadProjekti(projekti, "both projektipaallikko and omistaja", {
           kayttoOikeudet: [
             {
               tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
@@ -252,6 +252,7 @@ describe("apiHandler", () => {
             {
               kayttajatunnus: "A000111",
               puhelinnumero: "22",
+              yleinenYhteystieto: true,
             },
           ],
         });
@@ -292,14 +293,12 @@ describe("apiHandler", () => {
               puhelinnumero: "11",
             },
             {
-
               kayttajatunnus: "A000111",
               puhelinnumero: "123456789",
             },
             {
               kayttajatunnus: "A2",
               puhelinnumero: "123456789",
-
             },
           ],
           suunnitteluSopimus: {

@@ -93,7 +93,7 @@ export async function testProjektiHenkilot(projekti: Projekti, oid: string, user
     puhelinnumero: "123",
   }));
 
-  kayttoOikeudet.push({ kayttajatunnus: UserFixture.testi1Kayttaja.uid, puhelinnumero: "123" });
+  kayttoOikeudet.push({ kayttajatunnus: UserFixture.testi1Kayttaja.uid, puhelinnumero: "123", yleinenYhteystieto: true });
 
   // Save and load projekti
   await api.tallennaProjekti({
