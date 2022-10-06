@@ -8,6 +8,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExtLink from "@components/ExtLink";
 import { styled } from "@mui/material/styles";
 import { examineKuulutusPaiva } from "../../util/aloitusKuulutusUtil";
+import getAsiatunnus from "src/util/getAsiatunnus";
 
 const Accordion = styled((props: AccordionProps) => <MuiAccordion disableGutters elevation={0} square {...props} />)({
   paddingTop: "0.5rem",
@@ -32,19 +33,23 @@ export default function ProjektiKortti(props: Props): ReactElement {
   const julkinen =
     props.projekti?.aloitusKuulutusJulkaisut?.[0] &&
     examineKuulutusPaiva(props.projekti.aloitusKuulutusJulkaisut[0]?.kuulutusPaiva).published;
-  const julkinenURL = window.location.protocol + "//" + window.location.host + "/suunnitelma/" + props.projekti.oid + "/aloituskuulutus";
+  const julkinenURL = window.location.protocol + "//" + window.location.host + "/suunnitelma/" + props.projekti.oid;
+  const asiatunnus = getAsiatunnus(props.projekti) || "-/0000/00.00.00/0000"; //TODO: ensisijaisen asiatunnuksen maaraytyminen, vai molemmat?
 
   return (
     <div role="navigation" className="bg-gray-lightest" style={{ marginBottom: "1rem" }}>
       <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: "#0064AF" }} />} aria-controls="panel1a-content" id="panel1a-header">
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon sx={{ color: "#0064AF" }} />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+          style={{ wordBreak: "break-word" }}
+        >
           <img style={{ display: "inline", marginLeft: "1rem", marginRight: "1rem" }} src="/projektikortin-ikoni.svg" alt="maapallo" />
-          {/* TODO: Poista placeholder kun asiatunnus saadaan velhosta varmasti, eika ole tyhja */}
-          <Typography>VÄYLÄ/1234/xx.xx.xx/2022</Typography>
+          <Typography>{asiatunnus}</Typography>
         </AccordionSummary>
         {julkinen && (
           <AccordionDetails>
-            {/* TODO: vaihda kun saadaan projektin perusosoiteelle nakyma, tai ohjaamaan aktiiviseen vaiheeseen */}
             <ExtLink href={julkinenURL}>Suunnitelma julkisella puolella</ExtLink>
           </AccordionDetails>
         )}

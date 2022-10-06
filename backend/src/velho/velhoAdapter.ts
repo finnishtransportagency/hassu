@@ -52,7 +52,10 @@ function adaptVaylamuoto(vaylamuodot: Set<ProjektirekisteriApiV2ProjektiOminaisu
 }
 
 export type ProjektiSearchResult = Pick<ProjektiProjekti, "oid"> & {
-  ominaisuudet: Pick<ProjektirekisteriApiV2ProjektiOminaisuudet, "nimi" | "vastuuhenkilo"> & { vaihe: ProjektiVaihe };
+  ominaisuudet: Pick<
+    ProjektirekisteriApiV2ProjektiOminaisuudet,
+    "nimi" | "vastuuhenkilo" | "asiatunnus-vaylavirasto" | "asiatunnus-ely" | "tilaajaorganisaatio"
+  > & { vaihe: ProjektiVaihe };
 };
 
 type ProjektiVaihe = "vaihe/vaihe04" | "vaihe/vaihe10" | "vaihe/vaihe12";
@@ -105,18 +108,27 @@ function getViranomainen(organisaatio: Organisaatio) {
   return organisaatioToViranomainen[organisaatio];
 }
 
+function getAsiatunnus(hakutulos: ProjektiSearchResult) {
+  const suunnittelustaVastaavaViranomainen = getViranomainen(hakutulos.ominaisuudet.tilaajaorganisaatio as any);
+  const asiatunnusELY = hakutulos.ominaisuudet["asiatunnus-ely"];
+  const asiatunnusVayla = hakutulos.ominaisuudet["asiatunnus-vaylavirasto"];
+  return suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO ? asiatunnusVayla : asiatunnusELY;
+}
+
 export function adaptSearchResults(searchResults: ProjektiSearchResult[], kayttajas: Kayttajas): VelhoHakuTulos[] {
   if (searchResults) {
     return searchResults.map((result) => {
       const projektiPaallikko = kayttajas.findByEmail(getVastuuhenkiloEmail(result.ominaisuudet.vastuuhenkilo));
       const projektiPaallikkoNimi = projektiPaallikko ? adaptKayttaja(projektiPaallikko).nimi : undefined;
       const tyyppi = getProjektiTyyppi(result.ominaisuudet.vaihe);
+      const asiatunnus = getAsiatunnus(result);
       const hakutulos: VelhoHakuTulos = {
         __typename: "VelhoHakuTulos",
         oid: result.oid,
         nimi: result.ominaisuudet.nimi,
         tyyppi,
         projektiPaallikko: projektiPaallikkoNimi,
+        asiatunnus,
       };
       return hakutulos;
     });

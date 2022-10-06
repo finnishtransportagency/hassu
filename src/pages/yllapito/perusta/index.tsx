@@ -108,9 +108,8 @@ export default function Perusta(props: Props) {
         <Section>
           <SectionContent>
             <p>
-              Hae projekti-VELHOon viety suunnitelma, jonka haluat tuoda {t("commonFI:sivustonimi")} -palveluun. Voit
-              käyttää hakuehtona projekti-VELHOon tallennettua asiatunnusta tai suunnitelman / projektin nimeä, tai
-              näiden osaa.
+              Hae projekti-VELHOon viety suunnitelma, jonka haluat tuoda {t("commonFI:sivustonimi")} -palveluun. Voit käyttää hakuehtona
+              projekti-VELHOon tallennettua asiatunnusta tai suunnitelman / projektin nimeä, tai näiden osaa.
             </p>
             <TextInput className="md:max-w-xs" label="Asiatunnus" disabled />
             <TextInput
@@ -135,13 +134,13 @@ export default function Perusta(props: Props) {
               <h3 className="vayla-small-title">Ohjeet</h3>
               <ul className="list-disc block pl-5">
                 <li>
-                  Valitse listasta se suunnitelma, jonka haluat tallentaa {t("commonFI:sivustonimi")} -palveluun uudeksi
-                  projektiksi. Jos etsimääsi suunnitelmaa ei näy listassa, varmista, että se on tallennettu
-                  projekti-VELHOon, ja hakuehdot ovat oikein. Ota tarvittaessa yhteys pääkäyttäjään.
+                  Valitse listasta se suunnitelma, jonka haluat tallentaa {t("commonFI:sivustonimi")} -palveluun uudeksi projektiksi. Jos
+                  etsimääsi suunnitelmaa ei näy listassa, varmista, että se on tallennettu projekti-VELHOon, ja hakuehdot ovat oikein. Ota
+                  tarvittaessa yhteys pääkäyttäjään.
                 </li>
                 <li>
-                  Huomioi, että hakutuloksissa näytetään ainoastaan ne suunnitelmat / projektit, joita ei ole vielä
-                  perustettu palveluun. Käytä etusivun projektihakua etsiäksesi jo perustettuja projekteja.
+                  Huomioi, että hakutuloksissa näytetään ainoastaan ne suunnitelmat / projektit, joita ei ole vielä perustettu palveluun.
+                  Käytä etusivun projektihakua etsiäksesi jo perustettuja projekteja.
                 </li>
               </ul>
             </div>
@@ -172,7 +171,7 @@ const PerustaTable = ({ hakuTulos }: PerustaTableProps) => {
   const { t } = useTranslation("velho-haku");
   const columns: Column<VelhoHakuTulos>[] = useMemo(
     () => [
-      { Header: "Asiatunnus", accessor: "asianumero" },
+      { Header: "Asiatunnus", accessor: "asiatunnus" },
       { Header: "Nimi", accessor: "nimi", minWidth: 400 },
       {
         Header: "Tyyppi",

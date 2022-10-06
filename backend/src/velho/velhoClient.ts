@@ -118,6 +118,10 @@ export class VelhoClient {
             ["projekti/projekti", "ominaisuudet", "nimi"],
             ["projekti/projekti", "ominaisuudet", "vaihe"],
             ["projekti/projekti", "ominaisuudet", "vastuuhenkilo"],
+            ["projekti/projekti", "ominaisuudet", "asiatunnus-vaylavirasto"],
+            ["projekti/projekti", "ominaisuudet", "asiatunnus-ely"],
+            ["projekti/projekti", "ominaisuudet", "asiatunnus-traficom"],
+            ["projekti/projekti", "ominaisuudet", "tilaajaorganisaatio"]
           ],
           tyyppi: HakuPalvelu.HakulausekeAsetuksetTyyppiEnum.Kohdeluokkahaku,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any

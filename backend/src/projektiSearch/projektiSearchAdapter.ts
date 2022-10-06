@@ -31,9 +31,9 @@ export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocu
   }
   const partialDoc: Partial<ProjektiDocument> = {
     nimi: safeTrim(projekti.velho.nimi),
-    asiatunnus: safeTrim(projekti.velho.asiatunnusELY || projekti.velho.asiatunnusVayla || ""),
     projektiTyyppi: projekti.velho.tyyppi || undefined,
     suunnittelustaVastaavaViranomainen: projekti.velho.suunnittelustaVastaavaViranomainen || undefined,
+    asiatunnus: safeTrim(getAsiatunnus(projekti) || ""), //TODO: asiatunnuksen maaraytyminen, jos yhdistelmakentta
     maakunnat: projekti.velho.maakunnat?.map(safeTrim),
     vaihe: apiProjekti.status || undefined,
     vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
@@ -143,6 +143,12 @@ export function adaptSearchResultsToProjektiHakutulosDokumenttis(results: any): 
       return { ...hit._source, oid: hit._id, __typename: "ProjektiHakutulosDokumentti" } as API.ProjektiHakutulosDokumentti;
     }) || []
   );
+}
+
+export function getAsiatunnus(projekti: DBProjekti): string | null | undefined {
+  return projekti.velho?.suunnittelustaVastaavaViranomainen === API.Viranomainen.VAYLAVIRASTO
+    ? projekti.velho?.asiatunnusVayla
+    : projekti.velho?.asiatunnusELY;
 }
 
 function safeTrim(s: string): string {

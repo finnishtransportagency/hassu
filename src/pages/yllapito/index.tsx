@@ -326,7 +326,7 @@ const FrontPageTable = (props: FrontPageTableProps) => {
   const columns: Column<ProjektiHakutulosDokumentti>[] = useMemo(
     () => [
       { Header: "Nimi", accessor: "nimi", minWidth: 400, id: ProjektiSarake.NIMI },
-      { Header: "Asiatunnus", accessor: "asiatunnus", id: ProjektiSarake.ASIATUNNUS },
+      { Header: "Asiatunnus", accessor: "asiatunnus", id: ProjektiSarake.ASIATUNNUS }, //TODO: kumman viraston asiatunnus 
       {
         Header: "Projektipäällikkö",
         accessor: "projektipaallikko",

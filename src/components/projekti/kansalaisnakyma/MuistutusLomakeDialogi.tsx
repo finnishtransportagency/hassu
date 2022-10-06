@@ -19,6 +19,7 @@ import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
 import Section from "@components/layout/Section";
 import { muistutusSchema } from "src/schemas/nahtavillaoloMuistutus";
+import getAsiatunnus from "src/util/getAsiatunnus";
 
 interface Props {
   open: boolean;
@@ -187,7 +188,7 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
                 <HassuGrid sx={{ width: "100%" }} cols={[1, 1, 2]}>
                   <Label style={{ fontWeight: "bold" }}>{t("projekti:muistutuslomake.suunnitelman_asiatunnus")}</Label>
                   <Label style={{ fontWeight: "bold" }}>{t("projekti:muistutuslomake.suunnitelman_nimi")}</Label>
-                  <Label>{projekti.velho.asiatunnusVayla || "<Asiatunnus puuttuu>"}</Label>
+                  <Label>{getAsiatunnus(projekti) || "<Asiatunnus puuttuu>"}</Label>
                   <Label>{projekti.velho.nimi}</Label>
                 </HassuGrid>
               </HassuStack>

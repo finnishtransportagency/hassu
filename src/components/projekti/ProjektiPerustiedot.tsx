@@ -3,6 +3,7 @@ import { Projekti } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 import SectionContent from "@components/layout/SectionContent";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
+import getAsiatunnus from "src/util/getAsiatunnus";
 
 interface Props {
   projekti?: Projekti | null;
@@ -12,7 +13,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
   const { t } = useTranslation("projekti");
   const velho = projekti?.velho;
   const perustiedot: KeyValueData[] = [
-    { header: "Asiatunnus", data: velho?.asiatunnusELY },
+    { header: "Asiatunnus", data: getAsiatunnus(projekti) },
     {
       header: "Suunnittelusta vastaava viranomainen",
       data: velho?.suunnittelustaVastaavaViranomainen && t(`vastaava-viranomainen.${velho?.suunnittelustaVastaavaViranomainen}`),

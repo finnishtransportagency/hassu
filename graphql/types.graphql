@@ -651,7 +651,7 @@ enum ProjektiTyyppi {
 type VelhoHakuTulos {
   oid: String!
   nimi: String!
-  asianumero: String
+  asiatunnus: String
   tyyppi: ProjektiTyyppi
   projektiPaallikko: String
 }
@@ -741,6 +741,8 @@ type ProjektiHakutulosDokumentti {
   nimi: String
   hankkeenKuvaus: String
   asiatunnus: String
+  asiatunnusVayla: String
+  asiatunnusELY: String
   maakunnat: [String!]
   kunnat: [String!]
   vaylamuoto: [String!]
