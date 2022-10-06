@@ -34,7 +34,7 @@ export default function ProjektiKortti(props: Props): ReactElement {
     props.projekti?.aloitusKuulutusJulkaisut?.[0] &&
     examineKuulutusPaiva(props.projekti.aloitusKuulutusJulkaisut[0]?.kuulutusPaiva).published;
   const julkinenURL = window.location.protocol + "//" + window.location.host + "/suunnitelma/" + props.projekti.oid;
-  const asiatunnus = getAsiatunnus(props.projekti) || "-/0000/00.00.00/0000"; //TODO: ensisijaisen asiatunnuksen maaraytyminen, vai molemmat?
+  const asiatunnus = getAsiatunnus(props.projekti) || "-/0000/00.00.00/0000";
 
   return (
     <div role="navigation" className="bg-gray-lightest" style={{ marginBottom: "1rem" }}>

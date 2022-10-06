@@ -81,8 +81,8 @@ function projektiPaallikkoJaVarahenkilotEmails(kayttoOikeudet: DBVaylaUser[]): s
 export function createPerustamisEmail(projekti: DBProjekti): EmailOptions {
   const asiatunnus = getAsiatunnus(projekti);
   return {
-    subject: perustamisOtsikko(projekti),
     to: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
+    subject: perustamisOtsikko({ asiatunnus, ...projekti }),
     text: perustamisTeksti({ domain, asiatunnus, ...projekti }),
   };
 }

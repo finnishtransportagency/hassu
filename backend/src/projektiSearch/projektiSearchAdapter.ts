@@ -33,7 +33,7 @@ export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocu
     nimi: safeTrim(projekti.velho.nimi),
     projektiTyyppi: projekti.velho.tyyppi || undefined,
     suunnittelustaVastaavaViranomainen: projekti.velho.suunnittelustaVastaavaViranomainen || undefined,
-    asiatunnus: safeTrim(getAsiatunnus(projekti) || ""), //TODO: asiatunnuksen maaraytyminen, jos yhdistelmakentta
+    asiatunnus: safeTrim(getAsiatunnus(projekti) || ""),
     maakunnat: projekti.velho.maakunnat?.map(safeTrim),
     vaihe: apiProjekti.status || undefined,
     vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
