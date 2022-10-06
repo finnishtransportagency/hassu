@@ -816,6 +816,14 @@ Object {
         },
         Object {
           "__typename": "Yhteystieto",
+          "etunimi": "EtunimiA2",
+          "organisaatio": "Väylävirasto",
+          "puhelinnumero": "123456789",
+          "sahkoposti": "a2@vayla.fi",
+          "sukunimi": "SukunimiA2",
+        },
+        Object {
+          "__typename": "Yhteystieto",
           "etunimi": "Marko",
           "organisaatio": "Kajaani",
           "puhelinnumero": "0293121213",
@@ -945,6 +953,14 @@ Object {
             "puhelinnumero": "11",
             "sahkoposti": "pekka.projari@vayla.fi",
             "sukunimi": "Projari",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "EtunimiA2",
+            "organisaatio": "Väylävirasto",
+            "puhelinnumero": "123456789",
+            "sahkoposti": "a2@vayla.fi",
+            "sukunimi": "SukunimiA2",
           },
           Object {
             "__typename": "Yhteystieto",

@@ -112,6 +112,14 @@ Object {
         },
         Object {
           "__typename": "Yhteystieto",
+          "etunimi": "Kunta",
+          "organisaatio": "Nokia",
+          "puhelinnumero": "123456789",
+          "sahkoposti": "Kunta.Kuntalainen@vayla.fi",
+          "sukunimi": "Kuntalainen",
+        },
+        Object {
+          "__typename": "Yhteystieto",
           "etunimi": "Marko",
           "organisaatio": "Kajaani",
           "puhelinnumero": "0293121213",
@@ -238,6 +246,14 @@ Object {
         },
         Object {
           "__typename": "Yhteystieto",
+          "etunimi": "Kunta",
+          "organisaatio": "Nokia",
+          "puhelinnumero": "123456789",
+          "sahkoposti": "Kunta.Kuntalainen@vayla.fi",
+          "sukunimi": "Kuntalainen",
+        },
+        Object {
+          "__typename": "Yhteystieto",
           "etunimi": "Marko",
           "organisaatio": "Kajaani",
           "puhelinnumero": "0293121213",
@@ -335,6 +351,14 @@ Object {
           "puhelinnumero": "123456789",
           "sahkoposti": "pekka.projari@vayla.fi",
           "sukunimi": "Projari",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Kunta",
+          "organisaatio": "Nokia",
+          "puhelinnumero": "123456789",
+          "sahkoposti": "Kunta.Kuntalainen@vayla.fi",
+          "sukunimi": "Kuntalainen",
         },
         Object {
           "__typename": "Yhteystieto",

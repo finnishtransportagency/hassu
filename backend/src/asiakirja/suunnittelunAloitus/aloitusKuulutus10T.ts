@@ -55,7 +55,7 @@ export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
       this.tietosuojaParagraph(),
 
       this.lisatietojaAntavatParagraph(),
-      this.doc.struct("P", {}, this.moreInfoElements(this.params.yhteystiedot, this.params.suunnitteluSopimus)),
+      this.doc.struct("P", {}, this.moreInfoElements(this.params.yhteystiedot)),
       () => {
         this.doc.font("ArialMTBold");
         this.doc.text(this.kuuluttaja).moveDown();

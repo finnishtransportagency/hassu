@@ -48,7 +48,7 @@ export class AloitusKuulutus10R extends SuunnittelunAloitusPdf {
 
       this.tietosuojaParagraph(),
       this.lisatietojaAntavatParagraph(),
-      this.doc.struct("P", {}, this.moreInfoElements(this.params.yhteystiedot, this.params.suunnitteluSopimus)),
+      this.doc.struct("P", {}, this.moreInfoElements(this.params.yhteystiedot)),
     ];
   }
 }

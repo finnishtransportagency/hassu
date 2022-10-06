@@ -11,7 +11,9 @@ export default function adaptStandardiYhteystiedot(
   dbProjekti.kayttoOikeudet
     .filter(
       ({ kayttajatunnus, tyyppi }) =>
-        tyyppi === API.KayttajaTyyppi.PROJEKTIPAALLIKKO || kuulutusYhteystiedot?.yhteysHenkilot?.find((yh) => yh === kayttajatunnus)
+        tyyppi === API.KayttajaTyyppi.PROJEKTIPAALLIKKO ||
+        kuulutusYhteystiedot?.yhteysHenkilot?.find((yh) => yh === kayttajatunnus) ||
+        kayttajatunnus === dbProjekti.suunnitteluSopimus?.yhteysHenkilo
     )
     .forEach((oikeus) => {
       yt.push({ __typename: "Yhteystieto", ...vaylaUserToYhteystieto(oikeus) });

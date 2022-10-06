@@ -83,6 +83,14 @@
           "__typename": "Yhteystieto"
         },
         {
+          "sukunimi": "Hassu",
+          "sahkoposti": "mikko.haapamaki@cgi.com",
+          "puhelinnumero": "123",
+          "organisaatio": "CGI Suomi Oy",
+          "etunimi": "Testi1",
+          "__typename": "Yhteystieto"
+        },
+        {
           "sukunimi": "Koi",
           "sahkoposti": "markku.koi@koi.com",
           "organisaatio": "Kajaani",

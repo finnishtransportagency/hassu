@@ -1238,6 +1238,14 @@ Object {
           },
           Object {
             "__typename": "Yhteystieto",
+            "etunimi": "Testi1",
+            "organisaatio": "CGI Suomi Oy",
+            "puhelinnumero": "123",
+            "sahkoposti": "mikko.haapamaki@cgi.com",
+            "sukunimi": "Hassu",
+          },
+          Object {
+            "__typename": "Yhteystieto",
             "etunimi": "Marko",
             "organisaatio": "Kajaani",
             "puhelinnumero": "0293121213",
@@ -1460,6 +1468,14 @@ Object {
             "organisaatio": "CGI Suomi Oy",
             "puhelinnumero": "123",
             "sahkoposti": "mikko.haapamki@cgi.com",
+            "sukunimi": "Hassu",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Testi1",
+            "organisaatio": "CGI Suomi Oy",
+            "puhelinnumero": "123",
+            "sahkoposti": "mikko.haapamaki@cgi.com",
             "sukunimi": "Hassu",
           },
           Object {

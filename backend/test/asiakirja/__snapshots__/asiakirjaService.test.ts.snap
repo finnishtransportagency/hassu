@@ -1216,6 +1216,14 @@ Object {
     },
     Object {
       "__typename": "Yhteystieto",
+      "etunimi": "Kunta",
+      "organisaatio": "Nokia",
+      "puhelinnumero": "123456789",
+      "sahkoposti": "Kunta.Kuntalainen@vayla.fi",
+      "sukunimi": "Kuntalainen",
+    },
+    Object {
+      "__typename": "Yhteystieto",
       "etunimi": "Marko",
       "organisaatio": "Kajaani",
       "puhelinnumero": "0293121213",
@@ -1246,8 +1254,8 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 
 Lisätietoja antavat 
 Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
 Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
+Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
 Nokia
 LUONNOS",
 }
@@ -1263,6 +1271,7 @@ Väylävirasto julkaisee tietoverkossaan liikennejärjestelmästä ja maanteist�
 Kuulutus julkaistaan 2.1.2022, Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://www.ely-keskus.fi/kuulutukset. 
 Lisätietoja antavat 
 Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
+Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
 Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 LUONNOS",
@@ -1289,8 +1298,8 @@ RUOTSIKSI Väylävirasto behandlar personuppgifter som är nödvändiga för uta
 
 Mer information om planen 
 Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
-Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
 Nokia, Kunta Kuntalainen, tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
+Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
 Nokia
 LUONNOS",
 }
@@ -1306,6 +1315,7 @@ RUOTSIKSI RUOTSIKSI Väylävirasto julkaisee tietoverkossaan liikennejärjestelm
 RUOTSIKSI Kuulutus julkaistaan 2.1.2022, RUOTSIKSI Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://www.ely-keskus.fi/kuulutukset. 
 Mer information om planen 
 Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
+Nokia, Kunta Kuntalainen, tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
 Nokia, Kunta Kuntalainen, tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 LUONNOS",
