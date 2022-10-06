@@ -31,18 +31,7 @@ export function adaptHyvaksymisPaatosVaihe(
     ilmoituksenVastaanottajat,
     ...rest
   } = hyvaksymisPaatosVaihe;
-  if (!hyvaksymisPaatos) {
-    throw new Error("adaptHyvaksymisPaatosVaihe: hyvaksymisPaatos puuttuu");
-  }
-  if (!hyvaksymisPaatos.paatoksenPvm) {
-    throw new Error("adaptHyvaksymisPaatosVaihe: hyvaksymisPaatos.paatoksenPvm määrittelemättä");
-  }
-  if (!hyvaksymisPaatos.paatoksenPvm) {
-    throw new Error("adaptHyvaksymisPaatosVaihe: hyvaksymisPaatos.paatoksenPvm määrittelemättä");
-  }
-  if (!hyvaksymisPaatos.asianumero) {
-    throw new Error("adaptHyvaksymisPaatosVaihe: hyvaksymisPaatos.asianumero määrittelemättä");
-  }
+
   return {
     __typename: "HyvaksymisPaatosVaihe",
     ...rest,
@@ -50,8 +39,8 @@ export function adaptHyvaksymisPaatosVaihe(
     hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto),
     kuulutusYhteystiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-    hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
-    hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,
+    hyvaksymisPaatoksenPvm: hyvaksymisPaatos?.paatoksenPvm || undefined,
+    hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos?.asianumero || undefined,
   };
 }
 

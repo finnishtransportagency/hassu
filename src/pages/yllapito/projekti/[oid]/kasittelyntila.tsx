@@ -67,7 +67,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     return formValues;
   }, [projekti]);
 
-  const disableFormEdit = !projekti?.nykyinenKayttaja.onYllapitaja || projektiLoadError || isLoadingProjekti || isFormSubmitting;
+  const disableFormEdit = !projekti?.nykyinenKayttaja.onYllapitaja || !!projektiLoadError || isLoadingProjekti || isFormSubmitting;
 
   const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(kasittelynTilaSchema, { abortEarly: false, recursive: true }),
