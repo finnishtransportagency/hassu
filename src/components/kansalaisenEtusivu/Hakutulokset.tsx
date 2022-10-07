@@ -46,7 +46,7 @@ export default function Hakutulokset({ hakutulos, ladataan }: Props) {
   const { t } = useTranslation();
 
   if (!hakutulos && ladataan) {
-    return <>Ladataan...</>;
+    return <>{t("common:ladataan")}</>;
   }
 
   return (

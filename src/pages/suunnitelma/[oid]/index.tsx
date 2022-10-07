@@ -18,7 +18,7 @@ function ProjektiPage({ setRouteLabels }: PageProps) {
   }, [projekti, router]);
 
   if (error) {
-    return <></>;
+    return <>{t("common:projektin_lataamisessa_virhe")}</>;
   }
 
   if (!projekti) {
