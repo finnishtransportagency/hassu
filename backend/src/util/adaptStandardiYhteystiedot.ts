@@ -4,7 +4,7 @@ import { vaylaUserToYhteystieto } from "./vaylaUserToYhteystieto";
 
 export default function adaptStandardiYhteystiedot(
   dbProjekti: DBProjekti,
-  kuulutusYhteystiedot: StandardiYhteystiedot | null
+  kuulutusYhteystiedot: StandardiYhteystiedot | null | undefined
 ): API.Yhteystieto[] {
   const yt: API.Yhteystieto[] = [];
   const sahkopostit: string[] = [];
