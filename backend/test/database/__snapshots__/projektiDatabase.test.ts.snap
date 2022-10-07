@@ -86,7 +86,8 @@ Object {
       "yhteysHenkilo": "A000123",
     },
     ":velho": Object {
-      "asiatunnusVayla": "A1",
+      "asiatunnusELY": "ELY/1/2022",
+      "asiatunnusVayla": "VAYLA/1/2022",
       "kunnat": Array [
         "Tampere",
         "Nokia",

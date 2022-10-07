@@ -4,6 +4,7 @@ import { config } from "../config";
 import { DBProjekti, DBVaylaUser, Muistutus } from "../database/model";
 import { EmailOptions } from "./email";
 import { linkSuunnitteluVaihe } from "../../../common/links";
+import { getAsiatunnus } from "../projektiSearch/projektiSearchAdapter";
 
 function template(strs: TemplateStringsArray, ...exprs: string[]) {
   return function (obj: unknown) {
@@ -18,27 +19,27 @@ function template(strs: TemplateStringsArray, ...exprs: string[]) {
 
 const domain = config.frontendDomainName || "vayliensuunnittelu.fi";
 // Projektin perustaminen
-const perustamisOtsikko = template`Valtion liikenneväylien suunnittelu: Uusi projekti perustettu ${"velho.asiatunnusVayla"}`;
+const perustamisOtsikko = template`Valtion liikenneväylien suunnittelu: Uusi projekti perustettu ${"asiatunnus"}`;
 const perustamisTeksti = template`Valtion liikenneväylien suunnittelu -järjestelmään on tuotu Projektivelhosta projektisi:
 ${"velho.nimi"}
 Voit tarkastella projektia osoitteessa https://${"domain"}/yllapito/projekti/${"oid"}
 Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 // Aloituskuulutuksen hyvaksymispyynto
-const hyvaksyttavanaOtsikko = template`Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ${"velho.asiatunnusVayla"}`;
+const hyvaksyttavanaOtsikko = template`Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ${"asiatunnus"}`;
 const hyvaksyttavanaTeksti = template`Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
 ${"velho.nimi"}
 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
 Voit tarkastella projektia osoitteessa https://${"domain"}/yllapito/projekti/${"oid"}
 Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 // Aloituskuulutuksen hyvksyminen ilmoitus laatijalle
-const hyvaksyttyOtsikko = template`Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ${"velho.asiatunnusVayla"}`;
+const hyvaksyttyOtsikko = template`Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ${"asiatunnus"}`;
 const hyvaksyttyTeksti = template`Valtion liikenneväylien suunnittelu -järjestelmän projektin
 ${"velho.nimi"}
 aloituskuulutus on hyväksytty.
 Voit tarkastella aloituskuulutusta osoitteessa https://${"domain"}/yllapito/projekti/${"oid"}/aloituskuulutus
 Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 // Aloituskuulutuksen hyvksyminen pdf projektipaallikolle
-const hyvaksyttyPDFOtsikko = template`Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ${"velho.asiatunnusVayla"}`;
+const hyvaksyttyPDFOtsikko = template`Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ${"asiatunnus"}`;
 const hyvaksyttyPDFTeksti = template`Valtion liikenneväylien suunnittelu -järjestelmän projektin
 ${"velho.nimi"}
 aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
@@ -78,32 +79,36 @@ function projektiPaallikkoJaVarahenkilotEmails(kayttoOikeudet: DBVaylaUser[]): s
 }
 
 export function createPerustamisEmail(projekti: DBProjekti): EmailOptions {
+  const asiatunnus = getAsiatunnus(projekti);
   return {
-    subject: perustamisOtsikko(projekti),
-    text: perustamisTeksti({ domain, ...projekti }),
     to: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
+    subject: perustamisOtsikko({ asiatunnus, ...projekti }),
+    text: perustamisTeksti({ domain, asiatunnus, ...projekti }),
   };
 }
 
 export function createHyvaksyttavanaEmail(projekti: DBProjekti): EmailOptions {
+  const asiatunnus = getAsiatunnus(projekti);
   return {
-    subject: hyvaksyttavanaOtsikko(projekti),
+    subject: hyvaksyttavanaOtsikko({ asiatunnus, ...projekti }),
     text: hyvaksyttavanaTeksti({ domain, ...projekti }),
     to: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
   };
 }
 
 export function createAloituskuulutusHyvaksyttyEmail(projekti: DBProjekti, muokkaaja: Kayttaja): EmailOptions {
+  const asiatunnus = getAsiatunnus(projekti);
   return {
-    subject: hyvaksyttyOtsikko(projekti),
+    subject: hyvaksyttyOtsikko({ asiatunnus, ...projekti }),
     text: hyvaksyttyTeksti({ domain, ...projekti }),
     to: muokkaaja.email || undefined,
   };
 }
 
 export function createAloituskuulutusHyvaksyttyPDFEmail(projekti: DBProjekti): EmailOptions {
+  const asiatunnus = getAsiatunnus(projekti);
   return {
-    subject: hyvaksyttyPDFOtsikko(projekti),
+    subject: hyvaksyttyPDFOtsikko({ asiatunnus, ...projekti }),
     text: hyvaksyttyPDFTeksti({ domain, ...projekti }),
     to: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
   };

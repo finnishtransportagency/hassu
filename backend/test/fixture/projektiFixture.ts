@@ -236,7 +236,8 @@ export class ProjektiFixture {
         kunnat: ["Tampere", "Nokia"],
         maakunnat: ["Uusimaa", "Pirkanmaa"],
         vaylamuoto: ["tie"],
-        asiatunnusVayla: "A" + this.PROJEKTI1_OID,
+        asiatunnusVayla: "VAYLA/" + this.PROJEKTI1_OID + "/2022",
+        asiatunnusELY: "ELY/" + this.PROJEKTI1_OID + "/2022",
       },
       muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
       suunnitteluSopimus: {
@@ -300,7 +301,8 @@ export class ProjektiFixture {
         vastuuhenkilonEmail: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
         maakunnat: ["Uusimaa", "Pirkanmaa"],
         suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
-        asiatunnusVayla: "A" + this.PROJEKTI2_OID,
+        asiatunnusVayla: "VAYLA/" + this.PROJEKTI2_OID + "/2022",
+        asiatunnusELY: "ELY/" + this.PROJEKTI2_OID + "/2022",
       },
       aloitusKuulutusJulkaisut: [
         {
@@ -474,7 +476,8 @@ export class ProjektiFixture {
       vastuuhenkilonEmail: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
       maakunnat: ["Uusimaa", "Pirkanmaa"],
       suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
-      asiatunnusVayla: "A" + this.PROJEKTI2_OID,
+      asiatunnusVayla: "VAYLA/" + this.PROJEKTI3_OID + "/2022",
+      asiatunnusELY: "ELY/" + this.PROJEKTI3_OID + "/2022",
     },
     aloitusKuulutusJulkaisut: [
       {

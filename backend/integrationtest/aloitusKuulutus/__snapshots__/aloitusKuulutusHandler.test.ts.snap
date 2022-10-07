@@ -85,7 +85,8 @@ Object {
       },
       "tila": "ODOTTAA_HYVAKSYNTAA",
       "velho": Object {
-        "asiatunnusVayla": "A1",
+        "asiatunnusELY": "ELY/1/2022",
+        "asiatunnusVayla": "VAYLA/1/2022",
         "kunnat": Array [
           "Tampere",
           "Nokia",
@@ -211,7 +212,8 @@ Object {
       },
       "tila": "ODOTTAA_HYVAKSYNTAA",
       "velho": Object {
-        "asiatunnusVayla": "A1",
+        "asiatunnusELY": "ELY/1/2022",
+        "asiatunnusVayla": "VAYLA/1/2022",
         "kunnat": Array [
           "Tampere",
           "Nokia",
@@ -311,7 +313,8 @@ Object {
       },
       "tila": "HYVAKSYTTY",
       "velho": Object {
-        "asiatunnusVayla": "A1",
+        "asiatunnusELY": "ELY/1/2022",
+        "asiatunnusVayla": "VAYLA/1/2022",
         "kunnat": Array [
           "Tampere",
           "Nokia",

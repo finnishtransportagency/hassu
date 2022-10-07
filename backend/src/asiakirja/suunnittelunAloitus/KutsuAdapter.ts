@@ -220,7 +220,9 @@ export class KutsuAdapter {
     // asiatunnusVayla tai asiatunnutELY on oltava
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    return this.velho.asiatunnusVayla || this.velho.asiatunnusELY;
+    return this.velho.suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO
+      ? this.velho.asiatunnusVayla
+      : this.velho.asiatunnusELY;
   }
 
   selectText(suomi: string, ruotsi?: string, saame?: string): string {
