@@ -51,7 +51,7 @@ export class Kutsu20 extends CommonPdf {
   protected header: string;
   private projekti: DBProjekti;
   protected kieli: Kieli;
-  private suunnitteluSopimus: SuunnitteluSopimusJulkaisu;
+  private suunnitteluSopimus: SuunnitteluSopimusJulkaisu | undefined;
 
   constructor(projekti: DBProjekti, vuorovaikutus: Vuorovaikutus, kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto) {
     if (!(projekti.velho && projekti.velho.tyyppi && projekti.kielitiedot && projekti.suunnitteluVaihe)) {
@@ -79,10 +79,7 @@ export class Kutsu20 extends CommonPdf {
       projekti.suunnitteluSopimus,
       findUserByKayttajatunnus(projekti.kayttoOikeudet, projekti.suunnitteluSopimus?.yhteysHenkilo)
     );
-    if (!suunnitteluSopimus) {
-      throw new Error("Suunnittelusopimus puuttuu");
-    }
-    this.suunnitteluSopimus = suunnitteluSopimus;
+    this.suunnitteluSopimus = suunnitteluSopimus || undefined;
     this.oid = projekti.oid;
     this.suunnitteluVaihe = projekti.suunnitteluVaihe;
     this.vuorovaikutus = vuorovaikutus;
