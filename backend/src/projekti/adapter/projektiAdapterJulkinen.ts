@@ -378,9 +378,6 @@ function adaptVuorovaikutukset(dbProjekti: DBProjekti): API.VuorovaikutusJulkine
       if (!vuorovaikutus.vuorovaikutusTilaisuudet) {
         throw new Error("adaptVuorovaikutukset: vuorovaikutus.vuorovaikutusTilaisuudet määrittelmättä");
       }
-      if (!vuorovaikutus.esitettavatYhteystiedot) {
-        throw new Error("adaptVuorovaikutukset: vuorovaikutus.esitettavatYhteystiedot määrittelmättä");
-      }
       if (!vuorovaikutus.vuorovaikutusPDFt) {
         throw new Error("adaptVuorovaikutukset: vuorovaikutus.vuorovaikutusPDFt määrittelmättä");
       }
