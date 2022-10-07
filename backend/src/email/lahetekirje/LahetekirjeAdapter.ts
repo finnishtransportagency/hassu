@@ -1,9 +1,10 @@
 import log from "loglevel";
 import { KayttajaTyyppi, Kieli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
-import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../../asiakirja/asiakirjaService";
 import { DBProjekti, Yhteystieto } from "../../database/model";
 import { translate } from "../../util/localization";
 import { vaylaUserToYhteystieto } from "../../util/vaylaUserToYhteystieto";
+import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../../asiakirja/asiakirjaTypes";
+import assert from "assert";
 
 type SuunnitelmaTyyppi = "tiesuunnitelma" | "ratasuunnitelma" | "yleissuunnitelma";
 
@@ -32,6 +33,8 @@ export class LahetekirjeAdapter {
   }
 
   public get lahetekirjeTiedot(): LahetekirjeTiedot {
+    const velho = this.projekti.velho;
+    assert(velho);
     return {
       nimi: this.nimi,
       tilaajaPitka: this.tilaajaPitka,
@@ -46,9 +49,7 @@ export class LahetekirjeAdapter {
       yhteystiedot: this.yhteystiedot,
       vastaanottajat: this.vastaanottajat,
       suunnitelmaTyyppi: this.suunnitelmaTyyppi,
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      asiakirjanMuoto: determineAsiakirjaMuoto(this.projekti.velho.tyyppi, this.projekti.velho.vaylamuoto),
+      asiakirjanMuoto: determineAsiakirjaMuoto(velho.tyyppi, velho.vaylamuoto),
     };
   }
 

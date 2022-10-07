@@ -1,6 +1,6 @@
 import { IlmoitusAsiakirjaTyyppi, IlmoitusParams, SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
 import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
-import { AsiakirjanMuoto } from "../asiakirjaService";
+import { AsiakirjanMuoto } from "../asiakirjaTypes";
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
   SUOMI: "ILMOITUS VÄYLÄVIRASTON KUULUTUKSESTA",

@@ -28,6 +28,8 @@ import { emailClient } from "../src/email/email";
 import AWS from "aws-sdk";
 import { findJulkaisuWithTila } from "../src/projekti/projektiUtil";
 import { Readable } from "stream";
+import { pdfGeneratorClient } from "../src/asiakirja/lambda/pdfGeneratorClient";
+import { handleEvent as pdfGenerator } from "../src/asiakirja/lambda/pdfGeneratorHandler";
 import { getS3 } from "../src/aws/client";
 import { awsMockResolves, expectAwsCalls } from "./aws/awsMock";
 
@@ -57,6 +59,7 @@ describe("apiHandler", () => {
   let deleteAloitusKuulutusJulkaisuStub: sinon.SinonStub;
   let persistFileToProjektiStub: sinon.SinonStub;
   let sendEmailStub: sinon.SinonStub;
+  let pdfGeneratorLambdaStub: sinon.SinonStub;
 
   before(() => {
     userFixture = new UserFixture(userService);
@@ -79,6 +82,8 @@ describe("apiHandler", () => {
     sendEmailStub = sinon.stub(emailClient, "sendEmail");
 
     sendEmailStub.resolves();
+
+    pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
   });
 
   after(() => {
@@ -105,6 +110,10 @@ describe("apiHandler", () => {
         personSearchFixture.createKayttaja("A2"),
       ])
     );
+
+    pdfGeneratorLambdaStub.callsFake(async (event) => {
+      return await pdfGenerator(event);
+    });
   });
 
   afterEach(() => {

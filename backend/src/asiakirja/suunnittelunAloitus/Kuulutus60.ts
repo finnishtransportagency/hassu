@@ -1,7 +1,7 @@
 import { HyvaksymisPaatosVaiheJulkaisu, KasittelynTila, Velho } from "../../database/model/";
 import { Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
-import { AsiakirjanMuoto } from "../asiakirjaService";
+import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { translate } from "../../util/localization";
 import { KutsuAdapter } from "./KutsuAdapter";
 import { IlmoitusParams } from "./suunnittelunAloitusPdf";
@@ -101,8 +101,6 @@ export class Kuulutus60 extends CommonPdf {
   }
 
   hyvaksymis_pvm(): string {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     return formatDate(this.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm);
   }
 
@@ -111,14 +109,10 @@ export class Kuulutus60 extends CommonPdf {
   }
 
   kuulutuspaiva(): string {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     return formatDate(this.hyvaksymisPaatosVaihe.kuulutusPaiva);
   }
 
   kuulutusvaihepaattyypaiva(): string {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     return formatDate(this.hyvaksymisPaatosVaihe.kuulutusVaihePaattyyPaiva);
   }
 
@@ -192,8 +186,6 @@ export class Kuulutus60 extends CommonPdf {
         this.doc.font("ArialMT");
         this.doc
           .text(
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
             formatDate(this.hyvaksymisPaatosVaihe.kuulutusPaiva) + " - " + formatDate(this.hyvaksymisPaatosVaihe.kuulutusVaihePaattyyPaiva),
             { baseline }
           )

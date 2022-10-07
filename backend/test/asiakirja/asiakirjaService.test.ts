@@ -3,9 +3,11 @@
 import { describe, it } from "mocha";
 import {
   AloituskuulutusPdfOptions,
+  AsiakirjanMuoto,
   AsiakirjaService,
   HyvaksymisPaatosKuulutusAsiakirjaTyyppi,
   NahtavillaoloKuulutusAsiakirjaTyyppi,
+  YleisotilaisuusKutsuPdfOptions,
 } from "../../src/asiakirja/asiakirjaService";
 import {
   AsiakirjaTyyppi,
@@ -32,6 +34,8 @@ import { translate } from "../../src/util/localization";
 import { formatList } from "../../src/asiakirja/suunnittelunAloitus/KutsuAdapter";
 import sinon from "sinon";
 import { kirjaamoOsoitteetService } from "../../src/kirjaamoOsoitteet/kirjaamoOsoitteetService";
+import { determineAsiakirjaMuoto } from "../../src/asiakirja/asiakirjaTypes";
+import { AsiakirjaEmailService } from "../../src/asiakirja/asiakirjaEmailService";
 
 const { assert, expect } = require("chai");
 
@@ -65,7 +69,7 @@ describe("asiakirjaService", async () => {
     kayttoOikeudet: DBVaylaUser[],
     asiakirjaTyyppi: AsiakirjaTyyppi
   ) {
-    let aloituskuulutusPdfOptions: AloituskuulutusPdfOptions = {
+    const aloituskuulutusPdfOptions: AloituskuulutusPdfOptions = {
       aloitusKuulutusJulkaisu,
       asiakirjaTyyppi,
       kieli,
@@ -104,20 +108,25 @@ describe("asiakirjaService", async () => {
     vuorovaikutus: Vuorovaikutus,
     kieli: Kieli
   ) {
-    const pdf = await new AsiakirjaService().createYleisotilaisuusKutsuPdf({
-      projekti: { ...projekti, suunnitteluVaihe },
+    const velho = projekti.velho;
+    const asiakirjanMuoto: AsiakirjanMuoto | undefined = determineAsiakirjaMuoto(velho.tyyppi, velho.vaylamuoto);
+
+    const options: YleisotilaisuusKutsuPdfOptions = {
+      oid: projekti.oid,
+      kayttoOikeudet: projekti.kayttoOikeudet,
+      suunnitteluVaihe,
+      velho,
+      kielitiedot: projekti.kielitiedot,
+      suunnitteluSopimus: projekti.suunnitteluSopimus,
+      asiakirjanMuoto,
       vuorovaikutus,
       kieli,
       luonnos: true,
-    });
+    };
+    const pdf = await new AsiakirjaService().createYleisotilaisuusKutsuPdf(options);
     expectPDF("", pdf);
 
-    const email = await new AsiakirjaService().createYleisotilaisuusKutsuEmail({
-      projekti: { ...projekti, suunnitteluVaihe },
-      vuorovaikutus,
-      kieli,
-      luonnos: true,
-    });
+    const email = await new AsiakirjaEmailService().createYleisotilaisuusKutsuEmail(options);
     expect(email).toMatchSnapshot();
   }
 
@@ -168,7 +177,9 @@ describe("asiakirjaService", async () => {
   ) {
     const projektiToTestWith = { ...projekti, nahtavillaoloVaihe };
     const pdf = await new AsiakirjaService().createNahtavillaoloKuulutusPdf({
-      projekti: projektiToTestWith,
+      velho: projektiToTestWith.velho,
+      kayttoOikeudet: projektiToTestWith.kayttoOikeudet,
+      suunnitteluSopimus: projektiToTestWith.suunnitteluSopimus,
       nahtavillaoloVaihe: asiakirjaAdapter.adaptNahtavillaoloVaiheJulkaisu(projektiToTestWith),
       kieli,
       luonnos: true,
@@ -222,7 +233,10 @@ describe("asiakirjaService", async () => {
   ) {
     const projektiToTestWith = { ...projekti, hyvaksymisPaatosVaihe };
     const pdf = await new AsiakirjaService().createHyvaksymisPaatosKuulutusPdf({
-      projekti: projektiToTestWith,
+      oid: projektiToTestWith.oid,
+      kayttoOikeudet: projektiToTestWith.kayttoOikeudet,
+      suunnitteluSopimus: projektiToTestWith.suunnitteluSopimus,
+      kasittelynTila: projektiToTestWith.kasittelynTila,
       hyvaksymisPaatosVaihe: asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projekti),
       kieli,
       luonnos: true,

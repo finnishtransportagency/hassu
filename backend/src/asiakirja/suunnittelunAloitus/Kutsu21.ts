@@ -1,27 +1,35 @@
-import { DBProjekti, Vuorovaikutus } from "../../database/model";
 import { Kieli } from "../../../../common/graphql/apiModel";
-import { AsiakirjanMuoto } from "../asiakirjaService";
 import { EmailOptions } from "../../email/email";
+import { YleisotilaisuusKutsuPdfOptions } from "../asiakirjaTypes";
 import { KutsuAdapter } from "./KutsuAdapter";
 
 export class Kutsu21 {
   private readonly adapter: KutsuAdapter;
   private readonly kieli: Kieli;
 
-  constructor(projekti: DBProjekti, vuorovaikutus: Vuorovaikutus, kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto) {
-    if (!(projekti.velho && projekti.velho.tyyppi && projekti.kielitiedot && projekti.suunnitteluVaihe)) {
+  constructor({
+    oid,
+    velho,
+    kayttoOikeudet,
+    kielitiedot,
+    suunnitteluVaihe,
+    vuorovaikutus,
+    kieli,
+    asiakirjanMuoto,
+  }: YleisotilaisuusKutsuPdfOptions) {
+    if (!(velho && velho.tyyppi && kielitiedot && suunnitteluVaihe)) {
       throw new Error("Projektilta puuttuu tietoja!");
     }
     this.kieli = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
     this.adapter = new KutsuAdapter({
-      oid: projekti.oid,
-      kielitiedot: projekti.kielitiedot,
-      velho: projekti.velho,
+      oid,
+      kielitiedot,
+      velho,
       kieli: this.kieli,
       asiakirjanMuoto,
-      projektiTyyppi: projekti.velho.tyyppi,
+      projektiTyyppi: velho.tyyppi,
       vuorovaikutus,
-      kayttoOikeudet: projekti.kayttoOikeudet,
+      kayttoOikeudet,
     });
   }
 

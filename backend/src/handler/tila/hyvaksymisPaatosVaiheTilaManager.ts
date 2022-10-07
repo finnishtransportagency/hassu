@@ -11,7 +11,6 @@ import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { aineistoService } from "../../aineisto/aineistoService";
 import { fileService } from "../../files/fileService";
-import { asiakirjaService, HyvaksymisPaatosKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakirjaService";
 import { parseAndAddDate, parseDate } from "../../util/dateUtil";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import {
@@ -21,6 +20,9 @@ import {
   JATKOPAATOS_DURATION_VALUE,
 } from "../../projekti/status/statusHandler";
 import { IllegalArgumentError } from "../../error/IllegalArgumentError";
+import assert from "assert";
+import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
+import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakirjaTypes";
 
 async function createPDF(
   asiakirjaTyyppi: HyvaksymisPaatosKuulutusAsiakirjaTyyppi,
@@ -28,12 +30,14 @@ async function createPDF(
   projekti: DBProjekti,
   kieli: Kieli
 ) {
-  if (!julkaisu.kuulutusPaiva) {
-    throw new Error("julkaisulta puuttuu kuulutuspäivä");
-  }
-  const pdf = await asiakirjaService.createHyvaksymisPaatosKuulutusPdf({
+  assert(julkaisu.kuulutusPaiva, "julkaisulta puuttuu kuulutuspäivä");
+  assert(projekti.kasittelynTila, "kasittelynTila puuttuu");
+  const pdf = await pdfGeneratorClient.createHyvaksymisPaatosKuulutusPdf({
     asiakirjaTyyppi,
-    projekti,
+    oid: projekti.oid,
+    kayttoOikeudet: projekti.kayttoOikeudet,
+    kasittelynTila: projekti.kasittelynTila,
+    suunnitteluSopimus: projekti.suunnitteluSopimus || undefined,
     hyvaksymisPaatosVaihe: julkaisu,
     kieli,
     luonnos: false,

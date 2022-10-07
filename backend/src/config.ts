@@ -42,6 +42,8 @@ const config = {
   isProd: (): boolean => process.env.ENVIRONMENT == "prod",
 
   aineistoImportSqsUrl: process.env.AINEISTO_IMPORT_SQS_URL || "",
+
+  pdfGeneratorLambdaArn: process.env.PDF_GENERATOR_LAMBDA_ARN || "",
 };
 
 process.env.AWS_XRAY_CONTEXT_MISSING = "LOG_ERROR";

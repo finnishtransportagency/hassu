@@ -1,14 +1,14 @@
 import { HyvaksymisPaatosVaiheJulkaisu, KasittelynTila, Velho } from "../../database/model/";
 import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
-import { AsiakirjanMuoto } from "../asiakirjaService";
 import { translate } from "../../util/localization";
 import { KutsuAdapter } from "./KutsuAdapter";
 import { IlmoitusParams } from "./suunnittelunAloitusPdf";
 import { formatDate } from "../asiakirjaUtil";
 import PDFStructureElement = PDFKit.PDFStructureElement;
+import { AsiakirjanMuoto } from "../asiakirjaTypes";
 
-const pdfTypeKeys: Record<AsiakirjaTyyppi6263, Record<AsiakirjanMuoto, Record<never, string>>> = {
+const pdfTypeKeys: Record<AsiakirjaTyyppi6263, Record<AsiakirjanMuoto, Partial<Record<ProjektiTyyppi, string>>>> = {
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE: {
     TIE: { [ProjektiTyyppi.TIE]: "T431_3", [ProjektiTyyppi.YLEINEN]: "62YS" },
     RATA: { [ProjektiTyyppi.RATA]: "62R", [ProjektiTyyppi.YLEINEN]: "62YS" },
@@ -48,7 +48,6 @@ export class Kuulutus6263 extends CommonPdf {
 
   constructor(
     asiakirjaTyyppi: AsiakirjaTyyppi6263,
-    asiakirjanMuoto: AsiakirjanMuoto,
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
     kasittelynTila: KasittelynTila,
     params: IlmoitusParams
@@ -98,7 +97,7 @@ export class Kuulutus6263 extends CommonPdf {
       kielitiedot: params.kielitiedot,
       velho,
       kieli,
-      asiakirjanMuoto,
+      asiakirjanMuoto: params.asiakirjanMuoto,
       projektiTyyppi: velho.tyyppi,
       kayttoOikeudet: params.kayttoOikeudet,
     });
@@ -106,21 +105,22 @@ export class Kuulutus6263 extends CommonPdf {
     this.kieli = kieli;
     this.velho = velho;
     this.asiakirjaTyyppi = asiakirjaTyyppi;
-    this.asiakirjanMuoto = asiakirjanMuoto;
+    this.asiakirjanMuoto = params.asiakirjanMuoto;
     this.hyvaksymisPaatosVaihe = hyvaksymisPaatosVaihe;
     this.kasittelynTila = kasittelynTila;
 
     this.kutsuAdapter.setTemplateResolver(this);
 
     if (
-      (asiakirjanMuoto === AsiakirjanMuoto.RATA && velho.tyyppi === ProjektiTyyppi.TIE) ||
-      (asiakirjanMuoto === AsiakirjanMuoto.TIE && velho.tyyppi === ProjektiTyyppi.RATA)
+      (params.asiakirjanMuoto === AsiakirjanMuoto.RATA && velho.tyyppi === ProjektiTyyppi.TIE) ||
+      (params.asiakirjanMuoto === AsiakirjanMuoto.TIE && velho.tyyppi === ProjektiTyyppi.RATA)
     ) {
       throw new Error(`Asiakirjan tyyppi ja projektityyppi ristiriidassa!`);
     }
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const pdfType = pdfTypeKeys[asiakirjaTyyppi][asiakirjanMuoto]?.[velho.tyyppi];
+    const pdfType = pdfTypeKeys[asiakirjaTyyppi][params.asiakirjanMuoto]?.[velho.tyyppi];
+    if (!pdfType) {
+      throw new Error(`pdfTypeä ei löydy`);
+    }
     const fileName = createFileName(kieli, pdfType);
     if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
       this.header =
@@ -153,8 +153,6 @@ export class Kuulutus6263 extends CommonPdf {
   }
 
   hyvaksymis_pvm(): string {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     return formatDate(this.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm);
   }
 
@@ -163,14 +161,10 @@ export class Kuulutus6263 extends CommonPdf {
   }
 
   kuulutuspaiva(): string {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     return formatDate(this.hyvaksymisPaatosVaihe.kuulutusPaiva);
   }
 
   kuulutusvaihepaattyypaiva(): string {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     return formatDate(this.hyvaksymisPaatosVaihe.kuulutusVaihePaattyyPaiva);
   }
 

@@ -2,8 +2,8 @@ import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi } from "../../../../common/graph
 import { DBVaylaUser, Kielitiedot, LocalizedMap, SuunnitteluSopimusJulkaisu, Velho, Yhteystieto } from "../../database/model";
 import { CommonPdf } from "./commonPdf";
 import { KutsuAdapter } from "./KutsuAdapter";
-import { AsiakirjanMuoto } from "../asiakirjaService";
 import { translate } from "../../util/localization";
+import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
 export type IlmoitusAsiakirjaTyyppi = Extract<
@@ -13,6 +13,7 @@ export type IlmoitusAsiakirjaTyyppi = Extract<
   | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE
 >;
 export type IlmoitusParams = {
+  asiakirjanMuoto: AsiakirjanMuoto;
   oid?: string;
   kieli: Kieli;
   velho: Velho;

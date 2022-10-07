@@ -1,7 +1,7 @@
 import deburr from "lodash/deburr";
 
 import PDFDocument from "pdfkit";
-import { EnhancedPDF } from "./asiakirjaService";
+import { EnhancedPDF } from "./asiakirjaTypes";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 import PDFKitReference = PDFKit.PDFKitReference;
 

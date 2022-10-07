@@ -1,6 +1,6 @@
 import Mail from "nodemailer/lib/mailer";
-import { AsiakirjanMuoto } from "../../asiakirja/asiakirjaService";
-import { DBProjekti } from "../../database/model/projekti";
+import { AsiakirjanMuoto } from "../../asiakirja/asiakirjaTypes";
+import { DBProjekti } from "../../database/model";
 import { EmailOptions } from "../email";
 import { LahetekirjeAdapter, LahetekirjeTiedot } from "./LahetekirjeAdapter";
 

@@ -1,11 +1,14 @@
 import { findVuorovaikutusByNumber } from "../util/findVuorovaikutusByNumber";
 import * as API from "../../../common/graphql/apiModel";
-import { IlmoituksenVastaanottajat, DBProjekti, Vuorovaikutus } from "../database/model";
-import { asiakirjaService } from "../asiakirja/asiakirjaService";
+import { DBProjekti, IlmoituksenVastaanottajat, Vuorovaikutus } from "../database/model";
 import { fileService } from "../files/fileService";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { emailClient } from "../email/email";
 import { ProjektiPaths } from "../files/ProjektiPath";
+import assert from "assert";
+import { pdfGeneratorClient } from "../asiakirja/lambda/pdfGeneratorClient";
+import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../asiakirja/asiakirjaTypes";
+import { asiakirjaEmailService } from "../asiakirja/asiakirjaEmailService";
 
 async function generateKutsuPDF(
   oid: string,
@@ -14,8 +17,20 @@ async function generateKutsuPDF(
   kieli: API.Kieli,
   vuorovaikutusKutsuPath: string
 ) {
-  const pdf = await asiakirjaService.createYleisotilaisuusKutsuPdf({
-    projekti: projektiInDB,
+  const velho = projektiInDB.velho;
+  const kielitiedot = projektiInDB.kielitiedot;
+  const suunnitteluVaihe = projektiInDB.suunnitteluVaihe;
+  assert(velho && kielitiedot && suunnitteluVaihe);
+
+  const asiakirjanMuoto: AsiakirjanMuoto | undefined = determineAsiakirjaMuoto(velho.tyyppi, velho.vaylamuoto);
+  const pdf = await pdfGeneratorClient.createYleisotilaisuusKutsuPdf({
+    oid: projektiInDB.oid,
+    kayttoOikeudet: projektiInDB.kayttoOikeudet,
+    velho,
+    suunnitteluSopimus: projektiInDB.suunnitteluSopimus || undefined,
+    kielitiedot,
+    suunnitteluVaihe,
+    asiakirjanMuoto,
     vuorovaikutus,
     kieli,
     luonnos: false,
@@ -31,6 +46,7 @@ async function generateKutsuPDF(
   });
   return { ...pdf, fullFilePathInProjekti };
 }
+
 class VuorovaikutusService {
   async handleVuorovaikutusKutsu(oid: string, vuorovaikutusNumero: number) {
     // Generate invitation PDF
@@ -65,7 +81,7 @@ class VuorovaikutusService {
     vuorovaikutus.vuorovaikutusPDFt[projektiInDB.kielitiedot.ensisijainenKieli] = {
       kutsuPDFPath: pdfEnsisijainen.fullFilePathInProjekti,
     };
-    attachments.push(asiakirjaService.createPDFAttachment(pdfEnsisijainen));
+    attachments.push(asiakirjaEmailService.createPDFAttachment(pdfEnsisijainen));
 
     if (projektiInDB.kielitiedot.toissijainenKieli) {
       const pdfToissijainen = await generateKutsuPDF(
@@ -78,13 +94,28 @@ class VuorovaikutusService {
       vuorovaikutus.vuorovaikutusPDFt[projektiInDB.kielitiedot.toissijainenKieli] = {
         kutsuPDFPath: pdfToissijainen.fullFilePathInProjekti,
       };
-      attachments.push(asiakirjaService.createPDFAttachment(pdfToissijainen));
+      attachments.push(asiakirjaEmailService.createPDFAttachment(pdfToissijainen));
     }
 
     await projektiDatabase.saveProjekti({ oid, vuorovaikutukset: [vuorovaikutus] });
 
-    const emailOptions = asiakirjaService.createYleisotilaisuusKutsuEmail({
-      projekti: projektiInDB,
+    const suunnitteluSopimus = projektiInDB.suunnitteluSopimus;
+    if (!suunnitteluSopimus) {
+      throw new Error("suunnitteluSopimus puuttuu");
+    }
+    const velho = projektiInDB.velho;
+    const kielitiedot = projektiInDB.kielitiedot;
+    const suunnitteluVaihe = projektiInDB.suunnitteluVaihe;
+    assert(velho && kielitiedot && suunnitteluVaihe);
+    const asiakirjanMuoto: AsiakirjanMuoto | undefined = determineAsiakirjaMuoto(velho.tyyppi, velho.vaylamuoto);
+    const emailOptions = asiakirjaEmailService.createYleisotilaisuusKutsuEmail({
+      oid,
+      kayttoOikeudet: projektiInDB.kayttoOikeudet,
+      asiakirjanMuoto,
+      kielitiedot,
+      velho,
+      suunnitteluSopimus,
+      suunnitteluVaihe,
       vuorovaikutus,
       kieli: projektiInDB.kielitiedot.ensisijainenKieli,
       luonnos: false,

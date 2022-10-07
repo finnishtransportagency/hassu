@@ -1,8 +1,8 @@
 import {
-  DBProjekti,
   DBVaylaUser,
   SuunnitteluSopimusJulkaisu,
   SuunnitteluVaihe,
+  Velho,
   Vuorovaikutus,
   VuorovaikutusTilaisuus,
 } from "../../database/model";
@@ -11,12 +11,12 @@ import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import dayjs from "dayjs";
 import { linkSuunnitteluVaihe } from "../../../../common/links";
 import { CommonPdf } from "./commonPdf";
-import { AsiakirjanMuoto } from "../asiakirjaService";
 import { translate } from "../../util/localization";
 import { formatList, KutsuAdapter } from "./KutsuAdapter";
 import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../../projekti/adapter/adaptToAPI";
 import { findUserByKayttajatunnus } from "../../projekti/projektiUtil";
 import PDFStructureElement = PDFKit.PDFStructureElement;
+import { AsiakirjanMuoto, YleisotilaisuusKutsuPdfOptions } from "../asiakirjaTypes";
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
   SUOMI: "KUTSU TIEDOTUS- / YLEISÖTILAISUUTEEN",
@@ -49,49 +49,56 @@ export class Kutsu20 extends CommonPdf {
   private readonly vuorovaikutus: Vuorovaikutus;
   private readonly kayttoOikeudet: DBVaylaUser[];
   protected header: string;
-  private projekti: DBProjekti;
   protected kieli: Kieli;
   private suunnitteluSopimus: SuunnitteluSopimusJulkaisu | undefined;
+  private readonly velho: Velho;
 
-  constructor(projekti: DBProjekti, vuorovaikutus: Vuorovaikutus, kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto) {
-    if (!(projekti.velho && projekti.velho.tyyppi && projekti.kielitiedot && projekti.suunnitteluVaihe)) {
+  constructor({
+    oid,
+    velho,
+    vuorovaikutus,
+    kieli,
+    kayttoOikeudet,
+    asiakirjanMuoto,
+    kielitiedot,
+    suunnitteluSopimus,
+    suunnitteluVaihe,
+  }: YleisotilaisuusKutsuPdfOptions) {
+    if (!(velho && velho.tyyppi && kielitiedot && suunnitteluVaihe)) {
       throw new Error("Projektilta puuttuu tietoja!");
     }
-    const fileName = createFileName(kieli, asiakirjanMuoto, projekti.velho.tyyppi);
+    const fileName = createFileName(kieli, asiakirjanMuoto, velho.tyyppi);
     const kutsuAdapter = new KutsuAdapter({
-      oid: projekti.oid,
-      kielitiedot: projekti.kielitiedot,
-      velho: projekti.velho,
+      oid,
+      kielitiedot,
+      velho,
       kieli,
       asiakirjanMuoto,
-      projektiTyyppi: projekti.velho.tyyppi,
-      kayttoOikeudet: projekti.kayttoOikeudet,
+      projektiTyyppi: velho.tyyppi,
+      kayttoOikeudet,
     });
     super(kieli, kutsuAdapter);
-    this.projekti = projekti;
     const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
     this.header = headers[language];
     this.kieli = kieli;
+    this.velho = velho;
 
-    this.kayttoOikeudet = projekti.kayttoOikeudet;
-    const suunnitteluSopimus = adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
-      projekti.oid,
-      projekti.suunnitteluSopimus,
-      findUserByKayttajatunnus(projekti.kayttoOikeudet, projekti.suunnitteluSopimus?.yhteysHenkilo)
+    this.kayttoOikeudet = kayttoOikeudet;
+    const suunnitteluSopimusJulkaisu = adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
+      oid,
+      suunnitteluSopimus,
+      findUserByKayttajatunnus(kayttoOikeudet, suunnitteluSopimus?.yhteysHenkilo)
     );
-    this.suunnitteluSopimus = suunnitteluSopimus || undefined;
-    this.oid = projekti.oid;
-    this.suunnitteluVaihe = projekti.suunnitteluVaihe;
+    this.suunnitteluSopimus = suunnitteluSopimusJulkaisu || undefined;
+    this.oid = oid;
+    this.suunnitteluVaihe = suunnitteluVaihe;
     this.vuorovaikutus = vuorovaikutus;
     this.asiakirjanMuoto = asiakirjanMuoto;
     super.setupPDF(this.header, kutsuAdapter.nimi, fileName);
   }
 
   protected addContent(): void {
-    // tässä vaiheessa projektilla on velho-tieto
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const vaylaTilaaja = this.isVaylaTilaaja(this.projekti.velho);
+    const vaylaTilaaja = this.isVaylaTilaaja(this.velho);
     const elements: PDFKit.PDFStructureElementChild[] = [
       this.logo(vaylaTilaaja),
       this.headerElement(this.header),
@@ -203,7 +210,7 @@ export class Kutsu20 extends CommonPdf {
     let laatii: string;
     if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
       const tilaajaOrganisaatio = this.kutsuAdapter.tilaajaOrganisaatio;
-      const kunnat = this.projekti.velho?.kunnat;
+      const kunnat = this.velho?.kunnat;
       const organisaatiot = kunnat ? [tilaajaOrganisaatio, ...kunnat] : [tilaajaOrganisaatio];
       const trimmattutOrganisaatiot = organisaatiot.map((organisaatio) => formatProperNoun(organisaatio));
       const viimeinenOrganisaatio = trimmattutOrganisaatiot.slice(-1);

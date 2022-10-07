@@ -2,10 +2,10 @@ import { AloitusKuulutusTila, AsiakirjaTyyppi, Kieli, NykyinenKayttaja } from ".
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { AloitusKuulutus, AloitusKuulutusJulkaisu, AloitusKuulutusPDF, DBProjekti, Kielitiedot, LocalizedMap } from "../../database/model";
-import { asiakirjaService } from "../../asiakirja/asiakirjaService";
 import { fileService } from "../../files/fileService";
 import { parseDate } from "../../util/dateUtil";
 import { TilaManager } from "./TilaManager";
+import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -16,7 +16,7 @@ async function createAloituskuulutusPDF(
   if (!julkaisuWaitingForApproval.kuulutusPaiva) {
     throw new Error("julkaisuWaitingForApproval.kuulutusPaiva ei määritelty");
   }
-  const pdf = await asiakirjaService.createAloituskuulutusPdf({
+  const pdf = await pdfGeneratorClient.createAloituskuulutusPdf({
     asiakirjaTyyppi,
     aloitusKuulutusJulkaisu: julkaisuWaitingForApproval,
     kieli,

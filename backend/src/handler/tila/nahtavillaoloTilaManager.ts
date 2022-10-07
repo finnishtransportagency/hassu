@@ -4,11 +4,13 @@ import { DBProjekti, LocalizedMap, NahtavillaoloPDF, NahtavillaoloVaihe, Nahtavi
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { aineistoService } from "../../aineisto/aineistoService";
-import { asiakirjaService, NahtavillaoloKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakirjaService";
 import { fileService } from "../../files/fileService";
 import { parseDate } from "../../util/dateUtil";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { IllegalArgumentError } from "../../error/IllegalArgumentError";
+import assert from "assert";
+import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
+import { NahtavillaoloKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakirjaTypes";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -19,9 +21,13 @@ async function createNahtavillaoloVaihePDF(
   if (!julkaisu.kuulutusPaiva) {
     throw new Error("julkaisu.kuulutusPaiva puuttuu");
   }
-  const pdf = await asiakirjaService.createNahtavillaoloKuulutusPdf({
+  const velho = projekti.velho;
+  assert(velho);
+  const pdf = await pdfGeneratorClient.createNahtavillaoloKuulutusPdf({
     asiakirjaTyyppi,
-    projekti,
+    velho,
+    suunnitteluSopimus: projekti.suunnitteluSopimus || undefined,
+    kayttoOikeudet: projekti.kayttoOikeudet,
     nahtavillaoloVaihe: julkaisu,
     kieli,
     luonnos: false,
