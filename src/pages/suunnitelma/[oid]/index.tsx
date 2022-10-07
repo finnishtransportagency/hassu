@@ -25,14 +25,14 @@ function ProjektiPage({ setRouteLabels }: PageProps) {
     log.info("loading");
     return (
       <>
-        <p>{t("sivua-ei-loydy") + ". " + t("siirrytaan-aktiiviseen-vaiheeseen")}</p>
+        <p>{t("siirrytaan-aktiiviseen-vaiheeseen")}</p>
       </>
     );
   }
 
   return (
     <>
-      <p>{t("sivua-ei-loydy") + ". " + t("siirrytaan-aktiiviseen-vaiheeseen")}</p>
+      <p>{t("siirrytaan-aktiiviseen-vaiheeseen")}</p>
     </>
   );
 }

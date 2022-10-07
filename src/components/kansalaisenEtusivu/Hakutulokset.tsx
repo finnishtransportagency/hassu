@@ -20,7 +20,7 @@ type Props = {
   ladataan: boolean | undefined | null;
 };
 
-function getSivuTilanPerusteella(tila: Status | null | undefined) {
+export function getSivuTilanPerusteella(tila: Status | null | undefined) {
   if (!tila) {
     return "";
   }
@@ -46,7 +46,7 @@ export default function Hakutulokset({ hakutulos, ladataan }: Props) {
   const { t } = useTranslation();
 
   if (!hakutulos && ladataan) {
-    return <>Ladataan...</>;
+    return <>{t("common:ladataan")}</>;
   }
 
   return (
