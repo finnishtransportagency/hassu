@@ -54,7 +54,7 @@ export class Kutsu20 extends CommonPdf {
   private suunnitteluSopimus: SuunnitteluSopimusJulkaisu;
 
   constructor(projekti: DBProjekti, vuorovaikutus: Vuorovaikutus, kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto) {
-    if (!(projekti.velho && projekti.velho.tyyppi && projekti.kielitiedot && projekti.suunnitteluSopimus && projekti.suunnitteluVaihe)) {
+    if (!(projekti.velho && projekti.velho.tyyppi && projekti.kielitiedot && projekti.suunnitteluVaihe)) {
       throw new Error("Projektilta puuttuu tietoja!");
     }
     const fileName = createFileName(kieli, asiakirjanMuoto, projekti.velho.tyyppi);

@@ -9,7 +9,7 @@ export class Kutsu21 {
   private readonly kieli: Kieli;
 
   constructor(projekti: DBProjekti, vuorovaikutus: Vuorovaikutus, kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto) {
-    if (!(projekti.velho && projekti.velho.tyyppi && projekti.kielitiedot && projekti.suunnitteluSopimus && projekti.suunnitteluVaihe)) {
+    if (!(projekti.velho && projekti.velho.tyyppi && projekti.kielitiedot && projekti.suunnitteluVaihe)) {
       throw new Error("Projektilta puuttuu tietoja!");
     }
     this.kieli = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
