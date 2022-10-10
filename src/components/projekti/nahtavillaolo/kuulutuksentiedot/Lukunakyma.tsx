@@ -1,4 +1,4 @@
-import { NahtavillaoloVaiheJulkaisu, Kieli, ProjektiKayttaja } from "@services/api";
+import { Kieli, NahtavillaoloVaiheJulkaisu, ProjektiKayttaja } from "@services/api";
 import React, { ReactElement } from "react";
 import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
@@ -13,6 +13,8 @@ import { Link } from "@mui/material";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { splitFilePath } from "../../../../util/fileUtil";
 import ButtonFlatWithIcon from "@components/button/ButtonFlat";
+import { ProjektiTestCommand } from "../../../../../common/testUtil.dev";
+
 interface Props {
   nahtavillaoloVaiheJulkaisu?: NahtavillaoloVaiheJulkaisu | null;
   projekti: ProjektiLisatiedolla;
@@ -67,7 +69,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
               icon="history"
               className="md:col-span-2 mb-0"
               onClick={() => {
-                window.location.assign(`/api/test/${projekti.oid}/nahtavillaolomenneisyyteen`);
+                window.location.assign(ProjektiTestCommand.oid(projekti.oid).nahtavillaoloMenneisyyteen());
               }}
             >
               Siirrä menneisyyteen (TESTAAJILLE)

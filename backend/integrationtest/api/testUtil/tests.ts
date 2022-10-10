@@ -33,6 +33,7 @@ import { SQSEvent } from "aws-lambda/trigger/sqs";
 import cloneDeep from "lodash/cloneDeep";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { fileService } from "../../../src/files/fileService";
+import { testProjektiDatabase } from "../../../src/database/testProjektiDatabase";
 
 const { expect } = require("chai");
 
@@ -460,7 +461,7 @@ export async function processQueue(fakeAineistoImportQueue: SQSEvent[]): Promise
 }
 
 export async function deleteProjekti(oid: string): Promise<void> {
-  await projektiDatabase.deleteProjektiByOid(oid);
+  await testProjektiDatabase.deleteProjektiByOid(oid);
 
   await fileService.deleteProjekti(oid);
 }
