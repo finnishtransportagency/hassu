@@ -1,7 +1,5 @@
 /// <reference types="cypress" />
 
-import { Status } from "../../../common/graphql/apiModel";
-
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
 
