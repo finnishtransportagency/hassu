@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import ProjektiPerustiedot from "@components/projekti/ProjektiPerustiedot";
 import KayttoOikeusHallinta from "@components/projekti/KayttoOikeusHallinta";
-import { api, TallennaProjektiInput, Kayttaja, ProjektiKayttajaInput } from "@services/api";
+import { api, TallennaProjektiInput, ProjektiKayttajaInput } from "@services/api";
 import * as Yup from "yup";
 import { useState } from "react";
 import { FormProvider, useForm, UseFormReturn } from "react-hook-form";
@@ -127,12 +127,12 @@ const PerustaProjektiForm: FC<PerustaProjektiFormProps> = ({ projekti, projektiL
   };
 
   const onKayttajatUpdate = useCallback(
-    (kayttajat: Kayttaja[]) => {
+    (kayttajat: ProjektiKayttajaInput[]) => {
       setFormContext({ kayttajat });
     },
     [setFormContext]
   );
-  console.log(projekti);
+
   return (
     <>
       <FormProvider {...useFormReturn}>
