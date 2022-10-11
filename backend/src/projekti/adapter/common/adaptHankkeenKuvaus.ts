@@ -10,20 +10,3 @@ export function adaptHankkeenKuvaus(hankkeenKuvaus: LocalizedMap<string>): API.H
     };
   }
 }
-
-export function adaptHankkeenKuvausToSave(hankkeenKuvaus: API.HankkeenKuvauksetInput | undefined | null): LocalizedMap<string> | undefined | null {
-  if (!hankkeenKuvaus) {
-    return hankkeenKuvaus;
-  }
-  const kuvausSuomi = hankkeenKuvaus[API.Kieli.SUOMI];
-  if (!kuvausSuomi) {
-    throw new Error(`adaptHankkeenKuvaus: hankkeenKuvaus.${API.Kieli.SUOMI} puuttuu`);
-  }
-  const kuvaus: LocalizedMap<string> = { [API.Kieli.SUOMI]: hankkeenKuvaus[API.Kieli.SUOMI] };
-  Object.keys(API.Kieli).forEach((kieli) => {
-    if (hankkeenKuvaus[kieli as API.Kieli]) {
-      kuvaus[kieli as API.Kieli] = hankkeenKuvaus[kieli as API.Kieli] || undefined;
-    }
-  });
-  return kuvaus;
-}

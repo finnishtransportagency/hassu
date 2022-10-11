@@ -49,7 +49,7 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
     { header: t(`ui-otsikot.suunnitelman_tyyppi`), data: velho?.tyyppi && t(`projekti-tyyppi.${velho?.tyyppi}`) },
   ];
 
-  const yhteystiedotListana = kuulutus.kuulutusYhteystiedot?.map((yhteystieto) => t("common:yhteystieto", yhteystieto)) || [];
+  const yhteystiedotListana = kuulutus.yhteystiedot?.map((yhteystieto) => t("common:yhteystieto", yhteystieto)) || [];
 
   const vastaavaViranomainen = velho.suunnittelustaVastaavaViranomainen;
 
@@ -108,22 +108,10 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
         <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.yhteystiedot`)}</h4>
         <SectionContent>
           <p>
-            {/* {t(yhteystiedotListana.length > 1 ? "common:lisatietoja_antavat" : "common:lisatietoja_antaa", {
-                yhteystiedot: yhteystiedotListana.join(", "),
-              })} */}
             {t("common:lisatietoja_antavat", {
               yhteystiedot: yhteystiedotListana.join(", "),
               count: yhteystiedotListana.length,
             })}
-            {/* TODO hae projektin suunnittelusopimustiedoista kun saatavilla julkisessa rajapinnassa
-              {suunnittelusopimus && (
-                <>
-                  {` ${t("common:ja")} `}
-                  {suunnittelusopimus.etunimi} {suunnittelusopimus.sukunimi} puh. {suunnittelusopimus.puhelinnumero}{" "}
-                  {suunnittelusopimus.email} ({capitalize(suunnittelusopimus.kunta)}).
-                </>
-              )}
-              */}
           </p>
         </SectionContent>
       </Section>

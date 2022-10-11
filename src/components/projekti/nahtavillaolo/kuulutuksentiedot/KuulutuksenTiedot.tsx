@@ -88,13 +88,10 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet, setIsDirty }: Kuul
         kuulutusVaihePaattyyPaiva: projekti?.nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva || null,
         muistutusoikeusPaattyyPaiva: projekti?.nahtavillaoloVaihe?.muistutusoikeusPaattyyPaiva || null,
         hankkeenKuvaus: hankkeenKuvaus,
-        kuulutusYhteystiedot: projekti?.nahtavillaoloVaihe?.kuulutusYhteystiedot
-          ? projekti.nahtavillaoloVaihe.kuulutusYhteystiedot.map((yhteystieto) => removeTypeName(yhteystieto))
-          : [],
-        kuulutusYhteysHenkilot:
-          projekti?.kayttoOikeudet
-            ?.filter(({ kayttajatunnus }) => projekti?.nahtavillaoloVaihe?.kuulutusYhteysHenkilot?.includes(kayttajatunnus))
-            .map(({ kayttajatunnus }) => kayttajatunnus) || [],
+        kuulutusYhteystiedot: {
+          yhteysTiedot: projekti?.nahtavillaoloVaihe?.kuulutusYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt)) || [],
+          yhteysHenkilot: projekti?.nahtavillaoloVaihe?.kuulutusYhteystiedot?.yhteysHenkilot || [],
+        },
         ilmoituksenVastaanottajat: defaultVastaanottajat(
           projekti,
           projekti.nahtavillaoloVaihe?.ilmoituksenVastaanottajat,

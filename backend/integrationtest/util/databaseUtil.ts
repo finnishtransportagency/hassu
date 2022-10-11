@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import * as log from "loglevel";
 
 import * as sinon from "sinon";
@@ -56,9 +58,7 @@ async function deleteAllItemsFromDatabase() {
     await Promise.all(
       items.map(async (item) => {
         log.info("Deleting ", item);
-        await localDocumentClient
-          .delete({ TableName: "Palaute-localstack", Key: { oid: item.oid, id: item.id } })
-          .promise();
+        await localDocumentClient.delete({ TableName: "Palaute-localstack", Key: { oid: item.oid, id: item.id } }).promise();
       })
     );
   }

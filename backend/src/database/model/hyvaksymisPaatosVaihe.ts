@@ -1,6 +1,5 @@
-import { Aineisto, LocalizedMap, Yhteystieto, IlmoituksenVastaanottajat } from "./common";
+import { Aineisto, LocalizedMap, Yhteystieto, IlmoituksenVastaanottajat, Velho, Kielitiedot } from "./common";
 import { HyvaksymisPaatosVaiheTila, HallintoOikeus } from "../../../../common/graphql/apiModel";
-import { Kielitiedot, Velho } from "./projekti";
 
 export type HyvaksymisPaatosVaihe = {
   id: number;

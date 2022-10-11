@@ -194,8 +194,8 @@ export class AsiakirjaService {
     if (!nahtavillaoloVaihe.kuulutusPaiva) {
       throw new Error("nahtavillaoloVaihe.kuulutusPaiva puuttuu");
     }
-    if (!nahtavillaoloVaihe.kuulutusYhteysHenkilot) {
-      throw new Error("nahtavillaoloVaihe.kuulutusYhteysHenkilot puuttuu");
+    if (!nahtavillaoloVaihe.yhteystiedot) {
+      throw new Error("nahtavillaoloVaihe.yhteystiedot puuttuu");
     }
     const asiakirjanMuoto = determineAsiakirjaMuoto(projekti?.velho?.tyyppi, projekti?.velho?.vaylamuoto);
     const params: IlmoitusParams = {
@@ -203,8 +203,7 @@ export class AsiakirjaService {
       kielitiedot: nahtavillaoloVaihe.kielitiedot,
       kuulutusPaiva: nahtavillaoloVaihe.kuulutusPaiva,
       velho: nahtavillaoloVaihe.velho,
-      yhteystiedot: nahtavillaoloVaihe.kuulutusYhteystiedot || [],
-      yhteysHenkilot: nahtavillaoloVaihe.kuulutusYhteysHenkilot,
+      yhteystiedot: nahtavillaoloVaihe.yhteystiedot || [],
       kayttoOikeudet: projekti.kayttoOikeudet,
       kieli,
     };

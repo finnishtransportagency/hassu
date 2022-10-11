@@ -203,8 +203,7 @@ type NahtavillaoloVaihe {
   kuulutusVaihePaattyyPaiva: String
   muistutusoikeusPaattyyPaiva: String
   hankkeenKuvaus: HankkeenKuvaukset
-  kuulutusYhteysHenkilot: [String!]
-  kuulutusYhteystiedot: [Yhteystieto!]
+  kuulutusYhteystiedot: StandardiYhteystiedot
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   palautusSyy: String
 }
@@ -232,8 +231,7 @@ type NahtavillaoloVaiheJulkaisu {
   hankkeenKuvaus: HankkeenKuvaukset
   velho: Velho!
   kielitiedot: Kielitiedot
-  kuulutusYhteysHenkilot: [String!]
-  kuulutusYhteystiedot: [Yhteystieto!]
+  yhteystiedot: [Yhteystieto!]!
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   nahtavillaoloPDFt: NahtavillaoloPDFt
   tila: NahtavillaoloVaiheTila
@@ -268,8 +266,7 @@ type NahtavillaoloVaiheJulkaisuJulkinen {
   hankkeenKuvaus: HankkeenKuvaukset
   velho: VelhoJulkinen!
   kielitiedot: Kielitiedot
-  kuulutusYhteysHenkilot: [String!]
-  kuulutusYhteystiedot: [Yhteystieto!]
+  yhteystiedot: [Yhteystieto!]!
   nahtavillaoloPDFt: NahtavillaoloPDFt
 }
 

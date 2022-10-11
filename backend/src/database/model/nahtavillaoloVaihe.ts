@@ -1,6 +1,5 @@
-import { Aineisto, LocalizedMap, Yhteystieto, IlmoituksenVastaanottajat } from "./common";
+import { Aineisto, LocalizedMap, Yhteystieto, IlmoituksenVastaanottajat, StandardiYhteystiedot, Kielitiedot, Velho } from "./common";
 import { NahtavillaoloVaiheTila } from "../../../../common/graphql/apiModel";
-import { Kielitiedot, Velho } from "./projekti";
 
 export type NahtavillaoloVaihe = {
   id: number;
@@ -10,8 +9,7 @@ export type NahtavillaoloVaihe = {
   kuulutusVaihePaattyyPaiva?: string | null;
   muistutusoikeusPaattyyPaiva?: string | null;
   hankkeenKuvaus?: LocalizedMap<string>;
-  kuulutusYhteysHenkilot?: Array<string> | null;
-  kuulutusYhteystiedot?: Array<Yhteystieto> | null;
+  kuulutusYhteystiedot?: StandardiYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   palautusSyy?: string | null;
 };
@@ -26,8 +24,7 @@ export type NahtavillaoloVaiheJulkaisu = {
   hankkeenKuvaus?: LocalizedMap<string>;
   velho: Velho;
   kielitiedot: Kielitiedot;
-  kuulutusYhteysHenkilot?: Array<string> | null;
-  kuulutusYhteystiedot?: Array<Yhteystieto> | null;
+  yhteystiedot: Yhteystieto[];
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   nahtavillaoloPDFt?: LocalizedMap<NahtavillaoloPDF>;
   tila?: NahtavillaoloVaiheTila | null;

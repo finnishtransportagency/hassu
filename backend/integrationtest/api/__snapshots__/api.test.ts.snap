@@ -1869,27 +1869,30 @@ Object {
     },
     "kuulutusPaiva": "2022-06-07",
     "kuulutusVaihePaattyyPaiva": "2042-06-07",
-    "kuulutusYhteysHenkilot": Array [
-      "A000112",
-    ],
-    "kuulutusYhteystiedot": Array [
-      Object {
-        "__typename": "Yhteystieto",
-        "etunimi": "Etunimi",
-        "organisaatio": "",
-        "puhelinnumero": "0293121213",
-        "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-        "sukunimi": "Sukunimi",
-      },
-      Object {
-        "__typename": "Yhteystieto",
-        "etunimi": "Joku",
-        "organisaatio": "",
-        "puhelinnumero": "02998765",
-        "sahkoposti": "Joku.Jokunen@vayla.fi",
-        "sukunimi": "Jokunen",
-      },
-    ],
+    "kuulutusYhteystiedot": Object {
+      "__typename": "StandardiYhteystiedot",
+      "yhteysHenkilot": Array [
+        "A000112",
+      ],
+      "yhteysTiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Etunimi",
+          "organisaatio": "",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "sukunimi": "Sukunimi",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Joku",
+          "organisaatio": "",
+          "puhelinnumero": "02998765",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "sukunimi": "Jokunen",
+        },
+      ],
+    },
     "lisaAineisto": undefined,
     "lisaAineistoParametrit": Object {
       "__typename": "LisaAineistoParametrit",
@@ -1989,27 +1992,30 @@ Object {
       },
       "kuulutusPaiva": "2022-06-07",
       "kuulutusVaihePaattyyPaiva": "2042-06-07",
-      "kuulutusYhteysHenkilot": Array [
-        "A000112",
-      ],
-      "kuulutusYhteystiedot": Array [
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "Etunimi",
-          "organisaatio": "",
-          "puhelinnumero": "0293121213",
-          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-          "sukunimi": "Sukunimi",
-        },
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "Joku",
-          "organisaatio": "",
-          "puhelinnumero": "02998765",
-          "sahkoposti": "Joku.Jokunen@vayla.fi",
-          "sukunimi": "Jokunen",
-        },
-      ],
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "organisaatio": "",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "organisaatio": "",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
       "lisaAineisto": Array [
         Object {
           "__typename": "Aineisto",
@@ -2182,27 +2188,30 @@ Object {
       },
       "kuulutusPaiva": "2022-06-07",
       "kuulutusVaihePaattyyPaiva": "2042-06-07",
-      "kuulutusYhteysHenkilot": Array [
-        "A000112",
-      ],
-      "kuulutusYhteystiedot": Array [
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "Etunimi",
-          "organisaatio": "",
-          "puhelinnumero": "0293121213",
-          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-          "sukunimi": "Sukunimi",
-        },
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "Joku",
-          "organisaatio": "",
-          "puhelinnumero": "02998765",
-          "sahkoposti": "Joku.Jokunen@vayla.fi",
-          "sukunimi": "Jokunen",
-        },
-      ],
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "organisaatio": "",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "organisaatio": "",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
       "lisaAineisto": Array [
         Object {
           "__typename": "Aineisto",
@@ -2321,27 +2330,6 @@ Object {
         },
         "kuulutusPaiva": "2022-06-07",
         "kuulutusVaihePaattyyPaiva": "2042-06-07",
-        "kuulutusYhteysHenkilot": Array [
-          "A000112",
-        ],
-        "kuulutusYhteystiedot": Array [
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Etunimi",
-            "organisaatio": "",
-            "puhelinnumero": "0293121213",
-            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-            "sukunimi": "Sukunimi",
-          },
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Joku",
-            "organisaatio": "",
-            "puhelinnumero": "02998765",
-            "sahkoposti": "Joku.Jokunen@vayla.fi",
-            "sukunimi": "Jokunen",
-          },
-        ],
         "lisaAineisto": Array [
           Object {
             "__typename": "Aineisto",
@@ -2384,6 +2372,32 @@ Object {
             "tie",
           ],
         },
+        "yhteystiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "A-tunnus1",
+            "organisaatio": "CGI Suomi Oy",
+            "puhelinnumero": "123",
+            "sahkoposti": "mikko.haapamki@cgi.com",
+            "sukunimi": "Hassu",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "organisaatio": "",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "organisaatio": "",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
       },
     ],
   },
@@ -2453,27 +2467,6 @@ Object {
     },
     "kuulutusPaiva": "2022-06-07",
     "kuulutusVaihePaattyyPaiva": "2042-06-07",
-    "kuulutusYhteysHenkilot": Array [
-      "0",
-    ],
-    "kuulutusYhteystiedot": Array [
-      Object {
-        "__typename": "Yhteystieto",
-        "etunimi": "Etunimi",
-        "organisaatio": "",
-        "puhelinnumero": "0293121213",
-        "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-        "sukunimi": "Sukunimi",
-      },
-      Object {
-        "__typename": "Yhteystieto",
-        "etunimi": "Joku",
-        "organisaatio": "",
-        "puhelinnumero": "02998765",
-        "sahkoposti": "Joku.Jokunen@vayla.fi",
-        "sukunimi": "Jokunen",
-      },
-    ],
     "muistutusoikeusPaattyyPaiva": "2042-06-08",
     "velho": Object {
       "__typename": "VelhoJulkinen",
@@ -2495,6 +2488,32 @@ Object {
         "tie",
       ],
     },
+    "yhteystiedot": Array [
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "A-tunnus1",
+        "organisaatio": "CGI Suomi Oy",
+        "puhelinnumero": "123",
+        "sahkoposti": "mikko.haapamki@cgi.com",
+        "sukunimi": "Hassu",
+      },
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Etunimi",
+        "organisaatio": "",
+        "puhelinnumero": "0293121213",
+        "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+        "sukunimi": "Sukunimi",
+      },
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Joku",
+        "organisaatio": "",
+        "puhelinnumero": "02998765",
+        "sahkoposti": "Joku.Jokunen@vayla.fi",
+        "sukunimi": "Jokunen",
+      },
+    ],
   },
 }
 `;

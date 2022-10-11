@@ -1,13 +1,12 @@
-import { AloitusKuulutusTila, KayttajaTyyppi, Kieli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
+import { AloitusKuulutusTila, KayttajaTyyppi, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
 import { SuunnitteluVaihe, Vuorovaikutus } from "./suunnitteluVaihe";
 import { NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "./nahtavillaoloVaihe";
 import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "./hyvaksymisPaatosVaihe";
-import { IlmoituksenVastaanottajat, LocalizedMap, StandardiYhteystiedot, Yhteystieto } from "./common";
+import { IlmoituksenVastaanottajat, LocalizedMap, StandardiYhteystiedot, Yhteystieto, Kielitiedot, Velho } from "./common";
 
 export type DBVaylaUser = {
   email: string;
   kayttajatunnus: string;
-
   puhelinnumero?: string;
   organisaatio: string;
   nimi: string;
@@ -67,12 +66,6 @@ export type Suunnitelma = {
   nimi: string;
 };
 
-export type Kielitiedot = {
-  ensisijainenKieli: Kieli;
-  toissijainenKieli?: Kieli;
-  projektinNimiVieraskielella?: string;
-};
-
 export type KasittelynTila = {
   hyvaksymispaatos: Hyvaksymispaatos;
   ensimmainenJatkopaatos?: Hyvaksymispaatos;
@@ -82,24 +75,6 @@ export type KasittelynTila = {
 export type Hyvaksymispaatos = {
   paatoksenPvm?: string;
   asianumero?: string;
-};
-
-export type Velho = {
-  nimi: string;
-  tyyppi?: ProjektiTyyppi | null;
-  kuvaus?: string | null;
-  vaylamuoto?: string[] | null;
-  asiatunnusVayla?: string | null;
-  asiatunnusELY?: string | null;
-  suunnittelustaVastaavaViranomainen?: Viranomainen | null;
-  toteuttavaOrganisaatio?: string | null;
-  vastuuhenkilonNimi?: string | null;
-  vastuuhenkilonEmail?: string | null;
-  varahenkilonNimi?: string | null;
-  varahenkilonEmail?: string | null;
-  maakunnat?: string[] | null;
-  kunnat?: string[] | null;
-  linkki?: string | null;
 };
 
 export type DBProjekti = {

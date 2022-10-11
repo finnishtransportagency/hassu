@@ -123,9 +123,6 @@
   "oid": "1.2.246.578.5.1.2978288874.2711575506",
   "nahtavillaoloVaiheJulkaisut": [
     {
-      "kuulutusYhteysHenkilot": [
-        "A000112"
-      ],
       "hankkeenKuvaus": {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "SAAME": "Saameksi nahtavillaoloVaihe"
@@ -148,22 +145,6 @@
         ],
         "linkki": null
       },
-      "kuulutusYhteystiedot": [
-        {
-          "sukunimi": "Sukunimi",
-          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-          "organisaatio": "",
-          "puhelinnumero": "0293121213",
-          "etunimi": "Etunimi"
-        },
-        {
-          "sukunimi": "Jokunen",
-          "sahkoposti": "Joku.Jokunen@vayla.fi",
-          "organisaatio": "",
-          "puhelinnumero": "02998765",
-          "etunimi": "Joku"
-        }
-      ],
       "aineistoNahtavilla": [
         {
           "kategoriaId": "T2xx",
@@ -260,6 +241,32 @@
       "kuulutusPaiva": "2022-06-07",
       "muokkaaja": "A000112",
       "hyvaksyja": "A000112",
+      "yhteystiedot": [
+        {
+          "sukunimi": "Hassu",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "puhelinnumero": "123",
+          "organisaatio": "CGI Suomi Oy",
+          "etunimi": "A-tunnus1",
+          "__typename": "Yhteystieto"
+        },
+        {
+          "sukunimi": "Sukunimi",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "organisaatio": "",
+          "puhelinnumero": "0293121213",
+          "etunimi": "Etunimi",
+          "__typename": "Yhteystieto"
+        },
+        {
+          "sukunimi": "Jokunen",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "organisaatio": "",
+          "puhelinnumero": "02998765",
+          "etunimi": "Joku",
+          "__typename": "Yhteystieto"
+        }
+      ],
       "kuulutusVaihePaattyyPaiva": "2020-01-01T00:00:00+02:00",
       "id": 1,
       "tila": "HYVAKSYTTY",
@@ -393,31 +400,33 @@
       }
     ],
     "kuulutusPaiva": "2022-06-07",
-    "kuulutusYhteysHenkilot": [
-      "A000112"
-    ],
     "hankkeenKuvaus": {
       "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
       "SAAME": "Saameksi nahtavillaoloVaihe"
     },
     "kuulutusVaihePaattyyPaiva": "2020-01-01T00:00:00+02:00",
     "id": 1,
-    "kuulutusYhteystiedot": [
-      {
-        "sukunimi": "Sukunimi",
-        "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-        "organisaatio": "",
-        "puhelinnumero": "0293121213",
-        "etunimi": "Etunimi"
-      },
-      {
-        "sukunimi": "Jokunen",
-        "sahkoposti": "Joku.Jokunen@vayla.fi",
-        "organisaatio": "",
-        "puhelinnumero": "02998765",
-        "etunimi": "Joku"
-      }
-    ],
+    "kuulutusYhteystiedot": {
+      "yhteysTiedot": [
+        {
+          "sukunimi": "Sukunimi",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "organisaatio": "",
+          "puhelinnumero": "0293121213",
+          "etunimi": "Etunimi"
+        },
+        {
+          "sukunimi": "Jokunen",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "organisaatio": "",
+          "puhelinnumero": "02998765",
+          "etunimi": "Joku"
+        }
+      ],
+      "yhteysHenkilot": [
+        "A000112"
+      ]
+    },
     "aineistoNahtavilla": [
       {
         "kategoriaId": "T2xx",

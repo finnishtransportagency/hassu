@@ -7,6 +7,7 @@ import {
   StandardiYhteystiedot,
   ViranomaisVastaanottaja,
   Yhteystieto,
+  LocalizedMap,
 } from "../../../database/model";
 import { AineistoChangedEvent, ProjektiAdaptationResult, ProjektiEventType } from "../projektiAdapter";
 import remove from "lodash/remove";
@@ -146,4 +147,23 @@ export function removeTypeName<Type>(o: General<Type> | null | undefined): Type 
   const result: Partial<General<Type>> = { ...o };
   delete result.__typename;
   return result as Type;
+}
+
+export function adaptHankkeenKuvausToSave(
+  hankkeenKuvaus: API.HankkeenKuvauksetInput | undefined | null
+): LocalizedMap<string> | undefined | null {
+  if (!hankkeenKuvaus) {
+    return hankkeenKuvaus;
+  }
+  const kuvausSuomi = hankkeenKuvaus[API.Kieli.SUOMI];
+  if (!kuvausSuomi) {
+    throw new Error(`adaptHankkeenKuvaus: hankkeenKuvaus.${API.Kieli.SUOMI} puuttuu`);
+  }
+  const kuvaus: LocalizedMap<string> = { [API.Kieli.SUOMI]: hankkeenKuvaus[API.Kieli.SUOMI] };
+  Object.keys(API.Kieli).forEach((kieli) => {
+    if (hankkeenKuvaus[kieli as API.Kieli]) {
+      kuvaus[kieli as API.Kieli] = hankkeenKuvaus[kieli as API.Kieli] || undefined;
+    }
+  });
+  return kuvaus;
 }
