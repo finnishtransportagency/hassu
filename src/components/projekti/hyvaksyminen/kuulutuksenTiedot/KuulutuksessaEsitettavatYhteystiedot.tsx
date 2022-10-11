@@ -28,11 +28,7 @@ interface Props {}
 
 function hasHyvaksyttyHyvaksymisPaatosVaiheJulkaisu(projekti: Projekti | null | undefined) {
   return (
-    (
-      projekti?.hyvaksymisPaatosVaiheJulkaisut?.filter(
-        (julkaisu) => julkaisu.tila == HyvaksymisPaatosVaiheTila.HYVAKSYTTY
-      ) || []
-    ).length > 0
+    (projekti?.hyvaksymisPaatosVaiheJulkaisut?.filter((julkaisu) => julkaisu.tila == HyvaksymisPaatosVaiheTila.HYVAKSYTTY) || []).length > 0
   );
 }
 
@@ -49,11 +45,11 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "hyvaksymisPaatosVaihe.kuulutusYhteystiedot",
+    name: "hyvaksymisPaatosVaihe.kuulutusYhteystiedot.yhteysTiedot",
   });
 
-  const kuulutusYhteysHenkilot: ProjektiKayttaja[] = projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteysHenkilot
-    ? projekti.hyvaksymisPaatosVaihe.kuulutusYhteysHenkilot
+  const kuulutusYhteysHenkilot: ProjektiKayttaja[] = projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.yhteysHenkilot
+    ? projekti.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.yhteysHenkilot
         .map((hlo) => {
           const yhteysHenkiloTietoineen: ProjektiKayttaja | undefined = (projekti?.kayttoOikeudet || []).find(
             (ko) => ko.kayttajatunnus === hlo
@@ -71,17 +67,16 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
       <Section>
         <SectionContent>
           <p className="vayla-label mb-5">Vuorovaikuttamisen yhteyshenkilöt</p>
-          {projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.map((yhteystieto, index) => (
+          {projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.yhteysTiedot?.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
               {capitalize(yhteystieto.etunimi)} {capitalize(yhteystieto.sukunimi)}, puh. {yhteystieto.puhelinnumero},{" "}
-              {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio}
-              )
+              {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio})
             </p>
           ))}
           {kuulutusYhteysHenkilot.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
-              {yhteystieto.nimi}, puh. {yhteystieto.puhelinnumero},{" "}
-              {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} ({yhteystieto.organisaatio})
+              {yhteystieto.nimi}, puh. {yhteystieto.puhelinnumero}, {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} (
+              {yhteystieto.organisaatio})
             </p>
           ))}
         </SectionContent>
@@ -94,14 +89,14 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
       <SectionContent>
         <h4 className="vayla-small-title">Kuulutuksessa esitettävät yhteystiedot</h4>
         <p>
-          Voit valita kutsussa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden
-          yhteystiedon. Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot
-          haetaan Projektin henkilöt -sivulle tallennetuista tiedoista.
+          Voit valita kutsussa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden yhteystiedon. Projektipäällikön
+          tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot haetaan Projektin henkilöt -sivulle tallennetuista
+          tiedoista.
         </p>
         {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
           <Controller
             control={control}
-            name={`hyvaksymisPaatosVaihe.kuulutusYhteysHenkilot`}
+            name={`hyvaksymisPaatosVaihe.kuulutusYhteystiedot.yhteysHenkilot`}
             render={({ field: { onChange, value, ...field } }) => (
               <FormGroup label="Projektiin tallennetut henkilöt" inlineFlex>
                 {projekti.kayttoOikeudet?.map(({ nimi, tyyppi, kayttajatunnus }, index) => {
@@ -137,8 +132,8 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
       <SectionContent>
         <p>Uusi yhteystieto</p>
         <p>
-          Lisää uudelle yhteystiedolle rivi Lisää uusi-painikkeella. Huomioi, että uusi yhteystieto ei tallennu
-          Projektin henkilöt -sivulle eikä henkilölle tule käyttöoikeuksia projektiin.
+          Lisää uudelle yhteystiedolle rivi Lisää uusi-painikkeella. Huomioi, että uusi yhteystieto ei tallennu Projektin henkilöt -sivulle
+          eikä henkilölle tule käyttöoikeuksia projektiin.
         </p>
       </SectionContent>
       {fields.map((field, index) => (
@@ -146,28 +141,28 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
           <HassuGrid sx={{ width: "100%" }} cols={[1, 1, 3]}>
             <TextInput
               label="Etunimi *"
-              {...register(`hyvaksymisPaatosVaihe.kuulutusYhteystiedot.${index}.etunimi`)}
+              {...register(`hyvaksymisPaatosVaihe.kuulutusYhteystiedot.yhteysTiedot.${index}.etunimi`)}
               error={(errors as any).hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.[index]?.etunimi}
             />
             <TextInput
               label="Sukunimi *"
-              {...register(`hyvaksymisPaatosVaihe.kuulutusYhteystiedot.${index}.sukunimi`)}
+              {...register(`hyvaksymisPaatosVaihe.kuulutusYhteystiedot.yhteysTiedot.${index}.sukunimi`)}
               error={(errors as any).hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.[index]?.sukunimi}
             />
             <TextInput
               label="Organisaatio / kunta *"
-              {...register(`hyvaksymisPaatosVaihe.kuulutusYhteystiedot.${index}.organisaatio`)}
+              {...register(`hyvaksymisPaatosVaihe.kuulutusYhteystiedot.yhteysTiedot.${index}.organisaatio`)}
               error={(errors as any).hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.[index]?.organisaatio}
             />
             <TextInput
               label="Puhelinnumero *"
-              {...register(`hyvaksymisPaatosVaihe.kuulutusYhteystiedot.${index}.puhelinnumero`)}
+              {...register(`hyvaksymisPaatosVaihe.kuulutusYhteystiedot.yhteysTiedot.${index}.puhelinnumero`)}
               error={(errors as any).hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.[index]?.puhelinnumero}
               maxLength={maxPhoneLength}
             />
             <TextInput
               label="Sähköpostiosoite *"
-              {...register(`hyvaksymisPaatosVaihe.kuulutusYhteystiedot.${index}.sahkoposti`)}
+              {...register(`hyvaksymisPaatosVaihe.kuulutusYhteystiedot.yhteysTiedot.${index}.sahkoposti`)}
               error={(errors as any).hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.[index]?.sahkoposti}
             />
           </HassuGrid>

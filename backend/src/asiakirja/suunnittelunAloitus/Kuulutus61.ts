@@ -1,4 +1,4 @@
-import { HyvaksymisPaatosVaihe, KasittelynTila, Velho } from "../../database/model/";
+import { HyvaksymisPaatosVaiheJulkaisu, KasittelynTila, Velho } from "../../database/model/";
 import { Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { AsiakirjanMuoto } from "../asiakirjaService";
@@ -28,14 +28,14 @@ export class Kuulutus61 extends CommonPdf {
   protected header: string;
   protected kieli: Kieli;
   private readonly velho: Velho;
-  private hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe;
+  private hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
   private kasittelynTila: KasittelynTila;
 
   // private kirjaamoOsoitteet: KirjaamoOsoite[];
 
   constructor(
     asiakirjanMuoto: AsiakirjanMuoto,
-    hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe,
+    hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
     kasittelynTila: KasittelynTila,
     params: IlmoitusParams
   ) {
@@ -192,9 +192,9 @@ export class Kuulutus61 extends CommonPdf {
           this.moreInfoElements(
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            this.hyvaksymisPaatosVaihe.kuulutusYhteystiedot,
+            this.hyvaksymisPaatosVaihe.yhteystiedot,
             undefined,
-            this.hyvaksymisPaatosVaihe.kuulutusYhteysHenkilot,
+            null,
             true
           )
         ),
@@ -213,16 +213,7 @@ export class Kuulutus61 extends CommonPdf {
         this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.rata_kunnille_elylle_kappale6"),
         this.tietosuojaParagraph(),
         this.lisatietojaAntavatParagraph(),
-        this.doc.struct(
-          "P",
-          {},
-          this.moreInfoElements(
-            this.hyvaksymisPaatosVaihe.kuulutusYhteystiedot,
-            undefined,
-            this.hyvaksymisPaatosVaihe.kuulutusYhteysHenkilot,
-            true
-          )
-        ),
+        this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, undefined, null, true)),
       ];
     }
 

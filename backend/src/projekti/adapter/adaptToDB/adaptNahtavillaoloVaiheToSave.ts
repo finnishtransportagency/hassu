@@ -57,7 +57,7 @@ export function adaptNahtavillaoloVaiheToSave(
   };
 
   if (kuulutusYhteystiedot) {
-    uusiNahtavillaolovaihe.kuulutusYhteystiedot = adaptStandardiYhteystiedotToSave(kuulutusYhteystiedot, true);
+    uusiNahtavillaolovaihe.kuulutusYhteystiedot = adaptStandardiYhteystiedotToSave(kuulutusYhteystiedot);
   }
   if (ilmoituksenVastaanottajat) {
     uusiNahtavillaolovaihe.ilmoituksenVastaanottajat = adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat);

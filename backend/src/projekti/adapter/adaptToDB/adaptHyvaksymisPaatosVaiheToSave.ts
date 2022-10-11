@@ -1,7 +1,7 @@
 import * as API from "../../../../../common/graphql/apiModel";
 import { HyvaksymisPaatosVaihe } from "../../../database/model";
 import { ProjektiAdaptationResult } from "../projektiAdapter";
-import { adaptAineistotToSave, adaptIlmoituksenVastaanottajatToSave, adaptYhteystiedotToSave } from "./common";
+import { adaptAineistotToSave, adaptIlmoituksenVastaanottajatToSave, adaptStandardiYhteystiedotToSave } from "./common";
 import mergeWith from "lodash/mergeWith";
 
 export function adaptHyvaksymisPaatosVaiheToSave(
@@ -20,7 +20,6 @@ export function adaptHyvaksymisPaatosVaiheToSave(
     ilmoituksenVastaanottajat,
     kuulutusPaiva,
     kuulutusVaihePaattyyPaiva,
-    kuulutusYhteysHenkilot,
     hallintoOikeus,
   } = hyvaksymisPaatosVaihe;
 
@@ -44,11 +43,10 @@ export function adaptHyvaksymisPaatosVaiheToSave(
   const newChanges: HyvaksymisPaatosVaihe = {
     kuulutusPaiva,
     kuulutusVaihePaattyyPaiva,
-    kuulutusYhteysHenkilot,
     id,
     hyvaksymisPaatos,
     aineistoNahtavilla,
-    kuulutusYhteystiedot: adaptYhteystiedotToSave(kuulutusYhteystiedot),
+    kuulutusYhteystiedot: adaptStandardiYhteystiedotToSave(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat),
     hallintoOikeus,
   };

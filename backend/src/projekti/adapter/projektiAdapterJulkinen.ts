@@ -32,7 +32,10 @@ import {
 } from "./common";
 import { findJulkaisuWithTila } from "../projektiUtil";
 import { applyProjektiJulkinenStatus } from "../status/projektiJulkinenStatusHandler";
-import adaptStandardiYhteystiedot, { adaptStandardiYhteystiedotLisaamattaProjaria } from "../../util/adaptStandardiYhteystiedot";
+import {
+  adaptStandardiYhteystiedotToAPIYhteystiedot,
+  adaptStandardiYhteystiedotLisaamattaProjaria,
+} from "../../util/adaptStandardiYhteystiedot";
 import { adaptSuunnitteluSopimusJulkaisuJulkinen } from "./adaptToAPI";
 
 class ProjektiAdapterJulkinen {
@@ -53,7 +56,7 @@ class ProjektiAdapterJulkinen {
       suunnitteluVaihe = ProjektiAdapterJulkinen.adaptSuunnitteluVaihe(dbProjekti);
     }
 
-    const nahtavillaoloVaihe = ProjektiAdapterJulkinen.adaptNahtavillaoloVaiheJulkaisu(dbProjekti, projektiHenkilot);
+    const nahtavillaoloVaihe = ProjektiAdapterJulkinen.adaptNahtavillaoloVaiheJulkaisu(dbProjekti);
     const hyvaksymisPaatosVaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
       dbProjekti,
       projektiHenkilot,
@@ -169,10 +172,7 @@ class ProjektiAdapterJulkinen {
     };
   }
 
-  private static adaptNahtavillaoloVaiheJulkaisu(
-    dbProjekti: DBProjekti,
-    projektiHenkilot: ProjektiHenkilot
-  ): API.NahtavillaoloVaiheJulkaisuJulkinen | undefined {
+  private static adaptNahtavillaoloVaiheJulkaisu(dbProjekti: DBProjekti): API.NahtavillaoloVaiheJulkaisuJulkinen | undefined {
     if (!dbProjekti.nahtavillaoloVaiheJulkaisut) {
       return undefined;
     }
@@ -234,8 +234,7 @@ class ProjektiAdapterJulkinen {
         aineistoNahtavilla,
         kuulutusPaiva,
         kuulutusVaihePaattyyPaiva,
-        kuulutusYhteysHenkilot,
-        kuulutusYhteystiedot,
+        yhteystiedot,
         velho,
         kielitiedot,
         hallintoOikeus,
@@ -255,8 +254,8 @@ class ProjektiAdapterJulkinen {
       if (!hyvaksymisPaatos) {
         throw new Error("adaptHyvaksymisPaatosVaihe: julkaisu.hyvaksymisPaatos määrittelemättä");
       }
-      if (!kuulutusYhteysHenkilot) {
-        throw new Error("adaptHyvaksymisPaatosVaihe: julkaisu.kuulutusYhteysHenkilot määrittelemättä");
+      if (!yhteystiedot) {
+        throw new Error("adaptHyvaksymisPaatosVaihe: julkaisu.yhteystiedot määrittelemättä");
       }
       const paths = new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(julkaisu);
 
@@ -274,8 +273,7 @@ class ProjektiAdapterJulkinen {
         aineistoNahtavilla: apiAineistoNahtavilla,
         kuulutusPaiva,
         kuulutusVaihePaattyyPaiva,
-        kuulutusYhteysHenkilot: adaptUsernamesToProjektiHenkiloIds(kuulutusYhteysHenkilot, projektiHenkilot),
-        kuulutusYhteystiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot),
+        yhteystiedot: adaptYhteystiedotByAddingTypename(yhteystiedot),
         velho: adaptVelho(velho),
         kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
         hallintoOikeus,
@@ -361,10 +359,6 @@ function adaptAineistotJulkinen(
   return undefined;
 }
 
-function adaptUsernamesToProjektiHenkiloIds(usernames: Array<string>, projektiHenkilot: ProjektiHenkilot) {
-  return usernames?.map((username) => projektiHenkilot[username].id);
-}
-
 function adaptVuorovaikutukset(dbProjekti: DBProjekti): API.VuorovaikutusJulkinen[] | undefined {
   const vuorovaikutukset = dbProjekti.vuorovaikutukset;
   if (vuorovaikutukset && vuorovaikutukset.length > 0) {
@@ -393,7 +387,7 @@ function adaptVuorovaikutukset(dbProjekti: DBProjekti): API.VuorovaikutusJulkine
         suunnittelumateriaali: adaptLinkkiByAddingTypename(vuorovaikutus.suunnittelumateriaali),
         esittelyaineistot: adaptAineistotJulkinen(dbProjekti.oid, vuorovaikutus.esittelyaineistot, undefined, julkaisuPaiva),
         suunnitelmaluonnokset: adaptAineistotJulkinen(dbProjekti.oid, vuorovaikutus.suunnitelmaluonnokset, undefined, julkaisuPaiva),
-        yhteystiedot: adaptStandardiYhteystiedot(dbProjekti, vuorovaikutus.esitettavatYhteystiedot),
+        yhteystiedot: adaptStandardiYhteystiedotToAPIYhteystiedot(dbProjekti, vuorovaikutus.esitettavatYhteystiedot),
         vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(dbProjekti.oid, vuorovaikutus.vuorovaikutusPDFt),
       };
       return vuorovaikutusJulkinen;

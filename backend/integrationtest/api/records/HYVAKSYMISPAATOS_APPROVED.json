@@ -79,16 +79,14 @@
           "sahkoposti": "mikko.haapamki@cgi.com",
           "puhelinnumero": "123",
           "organisaatio": "CGI Suomi Oy",
-          "etunimi": "A-tunnus1",
-          "__typename": "Yhteystieto"
+          "etunimi": "A-tunnus1"
         },
         {
           "sukunimi": "Koi",
           "sahkoposti": "markku.koi@koi.com",
           "organisaatio": "Kajaani",
           "puhelinnumero": "0293121213",
-          "etunimi": "Marko",
-          "__typename": "Yhteystieto"
+          "etunimi": "Marko"
         }
       ],
       "id": 1,
@@ -247,24 +245,21 @@
           "sahkoposti": "mikko.haapamki@cgi.com",
           "puhelinnumero": "123",
           "organisaatio": "CGI Suomi Oy",
-          "etunimi": "A-tunnus1",
-          "__typename": "Yhteystieto"
+          "etunimi": "A-tunnus1"
         },
         {
           "sukunimi": "Sukunimi",
           "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
           "organisaatio": "",
           "puhelinnumero": "0293121213",
-          "etunimi": "Etunimi",
-          "__typename": "Yhteystieto"
+          "etunimi": "Etunimi"
         },
         {
           "sukunimi": "Jokunen",
           "sahkoposti": "Joku.Jokunen@vayla.fi",
           "organisaatio": "",
           "puhelinnumero": "02998765",
-          "etunimi": "Joku",
-          "__typename": "Yhteystieto"
+          "etunimi": "Joku"
         }
       ],
       "kuulutusVaihePaattyyPaiva": "2020-01-01T00:00:00+02:00",
@@ -329,9 +324,6 @@
       }
     ],
     "kuulutusPaiva": "2022-06-09",
-    "kuulutusYhteysHenkilot": [
-      "A000112"
-    ],
     "kuulutusVaihePaattyyPaiva": "2020-01-01T00:00:00+02:00",
     "id": 1,
     "aineistoNahtavilla": [
@@ -345,22 +337,27 @@
         "tila": "VALMIS"
       }
     ],
-    "kuulutusYhteystiedot": [
-      {
-        "sukunimi": "Sukunimi",
-        "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-        "organisaatio": "",
-        "puhelinnumero": "0293121213",
-        "etunimi": "Etunimi"
-      },
-      {
-        "sukunimi": "Jokunen",
-        "sahkoposti": "Joku.Jokunen@vayla.fi",
-        "organisaatio": "",
-        "puhelinnumero": "02998765",
-        "etunimi": "Joku"
-      }
-    ]
+    "kuulutusYhteystiedot": {
+      "yhteysTiedot": [
+        {
+          "sukunimi": "Sukunimi",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "organisaatio": "",
+          "puhelinnumero": "0293121213",
+          "etunimi": "Etunimi"
+        },
+        {
+          "sukunimi": "Jokunen",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "organisaatio": "",
+          "puhelinnumero": "02998765",
+          "etunimi": "Joku"
+        }
+      ],
+      "yhteysHenkilot": [
+        "A000112"
+      ]
+    }
   },
   "nahtavillaoloVaihe": {
     "ilmoituksenVastaanottajat": {
@@ -571,9 +568,6 @@
   },
   "hyvaksymisPaatosVaiheJulkaisut": [
     {
-      "kuulutusYhteysHenkilot": [
-        "A000112"
-      ],
       "velho": {
         "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
         "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
@@ -601,22 +595,6 @@
           "tuotu": "2020-01-01T00:00:00+02:00",
           "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
           "tila": "VALMIS"
-        }
-      ],
-      "kuulutusYhteystiedot": [
-        {
-          "sukunimi": "Sukunimi",
-          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-          "organisaatio": "",
-          "puhelinnumero": "0293121213",
-          "etunimi": "Etunimi"
-        },
-        {
-          "sukunimi": "Jokunen",
-          "sahkoposti": "Joku.Jokunen@vayla.fi",
-          "organisaatio": "",
-          "puhelinnumero": "02998765",
-          "etunimi": "Joku"
         }
       ],
       "kielitiedot": {
@@ -662,6 +640,29 @@
       "kuulutusPaiva": "2022-06-09",
       "muokkaaja": "A000112",
       "hyvaksyja": "A000112",
+      "yhteystiedot": [
+        {
+          "sukunimi": "Hassu",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "puhelinnumero": "123",
+          "organisaatio": "CGI Suomi Oy",
+          "etunimi": "A-tunnus1"
+        },
+        {
+          "sukunimi": "Sukunimi",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "organisaatio": "",
+          "puhelinnumero": "0293121213",
+          "etunimi": "Etunimi"
+        },
+        {
+          "sukunimi": "Jokunen",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "organisaatio": "",
+          "puhelinnumero": "02998765",
+          "etunimi": "Joku"
+        }
+      ],
       "kuulutusVaihePaattyyPaiva": "2020-01-01T00:00:00+02:00",
       "id": 1,
       "tila": "HYVAKSYTTY",

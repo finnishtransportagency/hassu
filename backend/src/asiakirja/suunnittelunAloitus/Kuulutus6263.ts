@@ -1,4 +1,4 @@
-import { HyvaksymisPaatosVaihe, KasittelynTila, Velho } from "../../database/model/";
+import { HyvaksymisPaatosVaiheJulkaisu, KasittelynTila, Velho } from "../../database/model/";
 import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { AsiakirjanMuoto } from "../asiakirjaService";
@@ -41,7 +41,7 @@ export class Kuulutus6263 extends CommonPdf {
   protected kieli: Kieli;
   private readonly velho: Velho;
   private readonly asiakirjaTyyppi: AsiakirjaTyyppi6263;
-  private hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe;
+  private hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
   private kasittelynTila: KasittelynTila;
 
   // private kirjaamoOsoitteet: KirjaamoOsoite[];
@@ -49,7 +49,7 @@ export class Kuulutus6263 extends CommonPdf {
   constructor(
     asiakirjaTyyppi: AsiakirjaTyyppi6263,
     asiakirjanMuoto: AsiakirjanMuoto,
-    hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe,
+    hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
     kasittelynTila: KasittelynTila,
     params: IlmoitusParams
   ) {
@@ -203,16 +203,7 @@ export class Kuulutus6263 extends CommonPdf {
         this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.tie_kappale3"),
         this.tietosuojaParagraph(),
         this.lisatietojaAntavatParagraph(),
-        this.doc.struct(
-          "P",
-          {},
-          this.moreInfoElements(
-            this.hyvaksymisPaatosVaihe.kuulutusYhteystiedot,
-            undefined,
-            this.hyvaksymisPaatosVaihe.kuulutusYhteysHenkilot,
-            true
-          )
-        ),
+        this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, undefined, null, true)),
       ];
     } else if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       return [
@@ -221,16 +212,7 @@ export class Kuulutus6263 extends CommonPdf {
         this.tietosuojaParagraph(),
         this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.henkilotiedot_poistettu"),
         this.lisatietojaAntavatParagraph(),
-        this.doc.struct(
-          "P",
-          {},
-          this.moreInfoElements(
-            this.hyvaksymisPaatosVaihe.kuulutusYhteystiedot,
-            undefined,
-            this.hyvaksymisPaatosVaihe.kuulutusYhteysHenkilot,
-            true
-          )
-        ),
+        this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, undefined, null, true)),
       ];
     }
 

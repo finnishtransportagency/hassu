@@ -264,8 +264,7 @@ export class AsiakirjaService {
       hankkeenKuvaus: { [Kieli.SUOMI]: "", [Kieli.RUOTSI]: "", [Kieli.SAAME]: "" },
       kuulutusPaiva: hyvaksymisPaatosVaihe.kuulutusPaiva,
       velho: hyvaksymisPaatosVaihe.velho,
-      yhteystiedot: hyvaksymisPaatosVaihe.kuulutusYhteystiedot || undefined,
-      yhteysHenkilot: hyvaksymisPaatosVaihe.kuulutusYhteysHenkilot || undefined,
+      yhteystiedot: hyvaksymisPaatosVaihe.yhteystiedot,
       kayttoOikeudet: projekti.kayttoOikeudet,
       kieli,
     };

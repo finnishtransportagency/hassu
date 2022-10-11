@@ -436,13 +436,15 @@ export class ProjektiFixture {
         id: 1,
         hallintoOikeus: HallintoOikeus.HAMEENLINNA,
         ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
-        kuulutusYhteystiedot: this.yhteystietoLista,
+        kuulutusYhteystiedot: {
+          yhteysTiedot: this.yhteystietoLista,
+          yhteysHenkilot: [
+            ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
+            ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
+          ],
+        },
         kuulutusPaiva: "2022-01-02",
         kuulutusVaihePaattyyPaiva: "2022-01-03",
-        kuulutusYhteysHenkilot: [
-          ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
-          ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
-        ],
       },
       salt: "foo",
       paivitetty: "2022-03-15T14:30:00.000Z",
@@ -749,7 +751,14 @@ export class ProjektiFixture {
           kuulutusPaiva: "2022-06-09",
           kuulutusVaihePaattyyPaiva: "2100-01-01",
           kuulutusYhteysHenkilot: [ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus],
-          kuulutusYhteystiedot: [
+          yhteystiedot: [
+            {
+              etunimi: "Pekka",
+              organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio,
+              sahkoposti: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
+              puhelinnumero: ProjektiFixture.pekkaProjariProjektiKayttaja.puhelinnumero || "",
+              sukunimi: "Projari",
+            },
             {
               etunimi: "Etunimi",
               organisaatio: "",

@@ -216,8 +216,7 @@ type HyvaksymisPaatosVaihe {
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
   hallintoOikeus: HallintoOikeus
-  kuulutusYhteystiedot: [Yhteystieto!]
-  kuulutusYhteysHenkilot: [String!]
+  kuulutusYhteystiedot: StandardiYhteystiedot
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   palautusSyy: String
 }
@@ -248,8 +247,7 @@ type HyvaksymisPaatosVaiheJulkaisu {
   kuulutusVaihePaattyyPaiva: String
   velho: Velho!
   kielitiedot: Kielitiedot
-  kuulutusYhteystiedot: [Yhteystieto!]
-  kuulutusYhteysHenkilot: [String!]
+  yhteystiedot: [Yhteystieto!]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   hallintoOikeus: HallintoOikeus
   hyvaksymisPaatosVaihePDFt: HyvaksymisPaatosVaihePDFt
@@ -280,8 +278,7 @@ type HyvaksymisPaatosVaiheJulkaisuJulkinen {
   velho: VelhoJulkinen!
   kielitiedot: Kielitiedot
   hallintoOikeus: HallintoOikeus
-  kuulutusYhteystiedot: [Yhteystieto!]
-  kuulutusYhteysHenkilot: [String!]
+  yhteystiedot: [Yhteystieto!]
   hyvaksymisPaatosVaihePDFt: HyvaksymisPaatosVaihePDFt
 }
 

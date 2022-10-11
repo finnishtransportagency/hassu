@@ -114,19 +114,19 @@ export class ProjektiAdapter {
       suunnitteluVaihe: adaptSuunnitteluVaihe(dbProjekti.oid, kayttoOikeudet, suunnitteluVaihe, vuorovaikutukset),
       nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe),
       nahtavillaoloVaiheJulkaisut: adaptNahtavillaoloVaiheJulkaisut(dbProjekti.oid, nahtavillaoloVaiheJulkaisut),
-      hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(dbProjekti, hyvaksymisPaatosVaihe, dbProjekti.kasittelynTila?.hyvaksymispaatos),
+      hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe, dbProjekti.kasittelynTila?.hyvaksymispaatos),
       hyvaksymisPaatosVaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
         dbProjekti.oid,
         dbProjekti.kasittelynTila?.hyvaksymispaatos,
         hyvaksymisPaatosVaiheJulkaisut
       ),
-      jatkoPaatos1Vaihe: adaptHyvaksymisPaatosVaihe(dbProjekti, jatkoPaatos1Vaihe, dbProjekti.kasittelynTila?.ensimmainenJatkopaatos),
+      jatkoPaatos1Vaihe: adaptHyvaksymisPaatosVaihe(jatkoPaatos1Vaihe, dbProjekti.kasittelynTila?.ensimmainenJatkopaatos),
       jatkoPaatos1VaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
         dbProjekti.oid,
         dbProjekti.kasittelynTila?.ensimmainenJatkopaatos,
         jatkoPaatos1VaiheJulkaisut
       ),
-      jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaihe(dbProjekti, jatkoPaatos2Vaihe, dbProjekti.kasittelynTila?.toinenJatkopaatos),
+      jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaihe(jatkoPaatos2Vaihe, dbProjekti.kasittelynTila?.toinenJatkopaatos),
       jatkoPaatos2VaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
         dbProjekti.oid,
         dbProjekti.kasittelynTila?.toinenJatkopaatos,

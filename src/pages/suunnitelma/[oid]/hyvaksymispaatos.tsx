@@ -46,8 +46,7 @@ export default function Hyvaksymispaatos(): ReactElement {
   const kuulutuspaiva = kuulutus.kuulutusPaiva ? new Date(kuulutus.kuulutusPaiva) : null;
   const tiedoksiantopaiva = kuulutuspaiva ? kuulutuspaiva.setDate(kuulutuspaiva.getDate() + 7) : null;
 
-  const yhteystiedotListana =
-    kuulutus?.kuulutusYhteystiedot?.map((yhteystieto) => t("common:yhteystieto", yhteystieto)) || [];
+  const yhteystiedotListana = kuulutus?.yhteystiedot?.map((yhteystieto) => t("common:yhteystieto", yhteystieto)) || [];
 
   return (
     <ProjektiJulkinenPageLayout selectedStep={4} title={t("projekti:ui-otsikot.kuulutus_suunnitelman_hyvaksymisesta")}>
@@ -139,11 +138,7 @@ export default function Hyvaksymispaatos(): ReactElement {
         </Stack>
       </Section>
       <Section noDivider>
-        <KansalaisenAineistoNakyma
-          projekti={projekti}
-          kuulutus={kuulutus}
-          naytaAineistoPaivanaKuulutuksenJulkaisuPaiva={true}
-        />
+        <KansalaisenAineistoNakyma projekti={projekti} kuulutus={kuulutus} naytaAineistoPaivanaKuulutuksenJulkaisuPaiva={true} />
       </Section>
       <Section noDivider>
         <h5 className="vayla-smallest-title">{t("projekti:ui-otsikot.ladattava_kuulutus")}</h5>

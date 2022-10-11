@@ -79,16 +79,14 @@
           "sahkoposti": "mikko.haapamki@cgi.com",
           "puhelinnumero": "123",
           "organisaatio": "CGI Suomi Oy",
-          "etunimi": "A-tunnus1",
-          "__typename": "Yhteystieto"
+          "etunimi": "A-tunnus1"
         },
         {
           "sukunimi": "Koi",
           "sahkoposti": "markku.koi@koi.com",
           "organisaatio": "Kajaani",
           "puhelinnumero": "0293121213",
-          "etunimi": "Marko",
-          "__typename": "Yhteystieto"
+          "etunimi": "Marko"
         }
       ],
       "id": 1,

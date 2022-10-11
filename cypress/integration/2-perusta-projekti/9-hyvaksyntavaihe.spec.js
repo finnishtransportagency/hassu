@@ -97,7 +97,7 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
 
     cy.get("#save_and_send_for_acceptance").click();
     cy.contains("Lähetys onnistui");
-
+    cy.wait(9999);
     cy.get("#kuulutuksentiedot_luku_tab").click();
     cy.get("#button_open_acceptance_dialog")
       .should("be.enabled")
