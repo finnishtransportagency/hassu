@@ -8,38 +8,38 @@ import { Kayttajas } from "../../src/personSearch/kayttajas";
 import { personSearch } from "../../src/personSearch/personSearchClient";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
-import AWSMock from "aws-sdk-mock";
-import AWS from "aws-sdk";
 import { Readable } from "stream";
-
-const { expect } = require("chai");
+import { awsMockResolves, expectAwsCalls } from "../aws/awsMock";
+import { getS3 } from "../../src/aws/client";
 
 describe("emailHandler", () => {
-  afterEach(() => {
-    sinon.reset();
-    sinon.restore();
-    AWSMock.restore();
+  let getObjectStub: sinon.SinonStub;
+  let sendEmailStub: sinon.SinonStub;
+  let getKayttajasStub: sinon.SinonStub;
+  let loadProjektiByOidStub: sinon.SinonStub;
+  let updateAloitusKuulutusJulkaisuStub: sinon.SinonStub;
+
+  before(() => {
+    getObjectStub = sinon.stub(getS3(), "getObject");
+    sendEmailStub = sinon.stub(emailClient, "sendEmail");
+    getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
+    loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
+    updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "updateAloitusKuulutusJulkaisu");
   });
 
-  beforeEach(() => {
-    AWSMock.setSDKInstance(AWS);
+  afterEach(() => {
+    sinon.reset();
+  });
+
+  after(() => {
+    sinon.restore();
   });
 
   describe("sendEmailsByToiminto", () => {
-    let s3Stub: sinon.SinonStub;
-    let sendEmailStub: sinon.SinonStub;
-    let getKayttajasStub: sinon.SinonStub;
-    let loadProjektiByOidStub: sinon.SinonStub;
-    let updateAloitusKuulutusJulkaisuStub: sinon.SinonStub;
     let fixture: ProjektiFixture;
     let personSearchFixture: PersonSearchFixture;
 
     beforeEach(() => {
-      s3Stub = sinon.stub();
-      sendEmailStub = sinon.stub(emailClient, "sendEmail");
-      getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
-      loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
-      updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "updateAloitusKuulutusJulkaisu");
       fixture = new ProjektiFixture();
       personSearchFixture = new PersonSearchFixture();
 
@@ -52,6 +52,10 @@ describe("emailHandler", () => {
       );
       sendEmailStub.resolves();
       loadProjektiByOidStub.resolves(fixture.dbProjekti2());
+
+      awsMockResolves(getObjectStub, {
+        Body: new Readable(),
+      });
     });
 
     describe("sendWaitingApprovalMail", () => {
@@ -75,20 +79,13 @@ describe("emailHandler", () => {
     describe("sendApprovalMailsAndAttachments", () => {
       it("should send emails and attachments succesfully", async () => {
         updateAloitusKuulutusJulkaisuStub.resolves();
-        AWSMock.mock("S3", "getObject", s3Stub);
-        s3Stub.resolves({
+        awsMockResolves(getObjectStub, {
           Body: new Readable(),
         });
 
         await emailHandler.sendEmailsByToiminto(TilasiirtymaToiminto.HYVAKSY, fixture.PROJEKTI2_OID);
 
-        const calls = s3Stub.getCalls();
-        expect(calls).to.have.length(2);
-        expect(
-          calls.map((call) => {
-            return { ...call.args[0] };
-          })
-        ).toMatchSnapshot();
+        expectAwsCalls(getObjectStub);
         sinon.assert.callCount(sendEmailStub, 3);
       });
     });

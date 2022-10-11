@@ -1,5 +1,5 @@
 import { config } from "../config";
-import AWS from "aws-sdk";
+import Cloudfront from "aws-sdk/clients/cloudfront";
 import { getUSEast1ssm } from "../aws/client";
 
 export async function createSignedCookies(): Promise<string[]> {
@@ -39,12 +39,12 @@ async function getCloudFrontSigner() {
       if (!publicKeyId.Parameter?.Value) {
         throw new Error("Configuration error: SSM parameter " + parameterKey + " not found");
       }
-      (globalThis as any).cloudFrontSigner = new AWS.CloudFront.Signer(
+      (globalThis as any).cloudFrontSigner = new Cloudfront.Signer(
         publicKeyId.Parameter.Value,
         config.frontendPrivateKey || ""
       );
     } else {
-      (globalThis as any).cloudFrontSigner = new AWS.CloudFront.Signer(
+      (globalThis as any).cloudFrontSigner = new Cloudfront.Signer(
         config.frontendPublicKeyId,
         config.frontendPrivateKey || ""
       );

@@ -109,7 +109,6 @@
     "aws-amplify": "4.3.6",
     "aws-cdk": "1.132.0",
     "aws-cdk-local": "1.65.8",
-    "aws-sdk-mock": "5.7.0",
     "axios-logger": "2.5.0",
     "babel-jest": "27.2.4",
     "babel-loader": "8.2.3",

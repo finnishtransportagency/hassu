@@ -3,7 +3,7 @@ import { AloitusKuulutusJulkaisu, DBProjekti, HyvaksymisPaatosVaiheJulkaisu, Nah
 import { config } from "../config";
 import { getDynamoDBDocumentClient } from "./dynamoDB";
 import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
-import { AWSError } from "aws-sdk";
+import { AWSError } from "aws-sdk/lib/error";
 import { Response } from "aws-sdk/lib/response";
 import dayjs from "dayjs";
 

@@ -2,7 +2,7 @@ import { ImportAineistoEvent } from "./importAineistoEvent";
 import { getSQS } from "../aws/client";
 import { config } from "../config";
 import { log } from "../logger";
-import { SQS } from "aws-sdk";
+import SQS from "aws-sdk/clients/sqs";
 
 class AineistoImporterClient {
   async importAineisto(params: ImportAineistoEvent) {

@@ -25,79 +25,94 @@ import { Kayttajas } from "../src/personSearch/kayttajas";
 import { fileService } from "../src/files/fileService";
 import { NotFoundError } from "../src/error/NotFoundError";
 import { emailClient } from "../src/email/email";
-import AWSMock from "aws-sdk-mock";
 import AWS from "aws-sdk";
 import { findJulkaisuWithTila } from "../src/projekti/projektiUtil";
 import { Readable } from "stream";
+import { getS3 } from "../src/aws/client";
+import { awsMockResolves, expectAwsCalls } from "./aws/awsMock";
 
 const { expect, assert } = require("chai");
 
+AWS.config.logger = console;
+
 describe("apiHandler", () => {
   let userFixture: UserFixture;
-  let awsStub: sinon.SinonStub;
+  let fixture: ProjektiFixture;
+  let personSearchFixture: PersonSearchFixture;
 
-  afterEach(() => {
-    userFixture.logout();
+  let putObjectStub: sinon.SinonStub;
+  let copyObjectStub: sinon.SinonStub;
+  let getObjectStub: sinon.SinonStub;
+  let headObjectStub: sinon.SinonStub;
+  let deleteObjectStub: sinon.SinonStub;
+
+  let createProjektiStub: sinon.SinonStub;
+
+  let saveProjektiStub: sinon.SinonStub;
+  let loadProjektiByOidStub: sinon.SinonStub;
+  let getKayttajasStub: sinon.SinonStub;
+  let loadVelhoProjektiByOidStub: sinon.SinonStub;
+  let insertAloitusKuulutusJulkaisuStub: sinon.SinonStub;
+  let updateAloitusKuulutusJulkaisuStub: sinon.SinonStub;
+  let deleteAloitusKuulutusJulkaisuStub: sinon.SinonStub;
+  let persistFileToProjektiStub: sinon.SinonStub;
+  let sendEmailStub: sinon.SinonStub;
+
+  before(() => {
+    userFixture = new UserFixture(userService);
+    let s3 = getS3();
+    putObjectStub = sinon.stub(s3, "putObject");
+    copyObjectStub = sinon.stub(s3, "copyObject");
+    getObjectStub = sinon.stub(s3, "getObject");
+    headObjectStub = sinon.stub(s3, "headObject");
+    deleteObjectStub = sinon.stub(s3, "deleteObject");
+
+    createProjektiStub = sinon.stub(projektiDatabase, "createProjekti");
+    getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
+    saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
+    loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
+    insertAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "insertAloitusKuulutusJulkaisu");
+    updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "updateAloitusKuulutusJulkaisu");
+    deleteAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "deleteAloitusKuulutusJulkaisu");
+    loadVelhoProjektiByOidStub = sinon.stub(velho, "loadProjekti");
+    persistFileToProjektiStub = sinon.stub(fileService, "persistFileToProjekti");
+    sendEmailStub = sinon.stub(emailClient, "sendEmail");
+
+    sendEmailStub.resolves();
+  });
+
+  after(() => {
     sinon.restore();
-    AWSMock.restore();
   });
 
   beforeEach(() => {
-    userFixture = new UserFixture(userService);
-    AWSMock.setSDKInstance(AWS);
-    awsStub = sinon.stub();
-    awsStub.resolves({});
-    AWSMock.mock("S3", "putObject", awsStub);
-    AWSMock.mock("S3", "copyObject", awsStub);
-    AWSMock.mock("S3", "getObject", {
+    awsMockResolves(getObjectStub, {
       Body: new Readable(),
     });
 
-    const headObjectStub = sinon.stub();
-    AWSMock.mock("S3", "headObject", headObjectStub);
-    headObjectStub.resolves({ Metadata: {} });
+    awsMockResolves(headObjectStub, { Metadata: {} });
+    awsMockResolves(putObjectStub);
+    awsMockResolves(deleteObjectStub);
+    awsMockResolves(copyObjectStub);
+
+    fixture = new ProjektiFixture();
+    personSearchFixture = new PersonSearchFixture();
+    getKayttajasStub.resolves(
+      Kayttajas.fromKayttajaList([
+        personSearchFixture.pekkaProjari,
+        personSearchFixture.mattiMeikalainen,
+        personSearchFixture.manuMuokkaaja,
+        personSearchFixture.createKayttaja("A2"),
+      ])
+    );
+  });
+
+  afterEach(() => {
+    userFixture.logout();
+    sinon.reset();
   });
 
   describe("handleEvent", () => {
-    let fixture: ProjektiFixture;
-    let personSearchFixture: PersonSearchFixture;
-
-    let createProjektiStub: sinon.SinonStub;
-    let saveProjektiStub: sinon.SinonStub;
-    let loadProjektiByOidStub: sinon.SinonStub;
-    let getKayttajasStub: sinon.SinonStub;
-    let loadVelhoProjektiByOidStub: sinon.SinonStub;
-    let insertAloitusKuulutusJulkaisuStub: sinon.SinonStub;
-    let updateAloitusKuulutusJulkaisuStub: sinon.SinonStub;
-    let deleteAloitusKuulutusJulkaisuStub: sinon.SinonStub;
-    let persistFileToProjektiStub: sinon.SinonStub;
-    let sendEmailStub: sinon.SinonStub;
-
-    beforeEach(() => {
-      createProjektiStub = sinon.stub(projektiDatabase, "createProjekti");
-      getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
-      saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
-      loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
-      insertAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "insertAloitusKuulutusJulkaisu");
-      updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "updateAloitusKuulutusJulkaisu");
-      deleteAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "deleteAloitusKuulutusJulkaisu");
-      loadVelhoProjektiByOidStub = sinon.stub(velho, "loadProjekti");
-      persistFileToProjektiStub = sinon.stub(fileService, "persistFileToProjekti");
-      sendEmailStub = sinon.stub(emailClient, "sendEmail");
-
-      fixture = new ProjektiFixture();
-      personSearchFixture = new PersonSearchFixture();
-      getKayttajasStub.resolves(
-        Kayttajas.fromKayttajaList([
-          personSearchFixture.pekkaProjari,
-          personSearchFixture.mattiMeikalainen,
-          personSearchFixture.manuMuokkaaja,
-          personSearchFixture.createKayttaja("A2"),
-        ])
-      );
-      sendEmailStub.resolves();
-    });
-
     function mockLataaProjektiFromVelho() {
       loadProjektiByOidStub.resolves();
       const velhoProjekti = fixture.velhoprojekti1();
@@ -366,14 +381,11 @@ describe("apiHandler", () => {
           toiminto: TilasiirtymaToiminto.HYVAKSY,
         });
 
-        const calls = awsStub.getCalls();
-        expect(
-          calls.map((call) => {
-            const input = call.args[0] as any;
-            const { Body: _Body, ...otherArgs } = input;
-            return { ...otherArgs };
-          })
-        ).toMatchSnapshot();
+        expectAwsCalls(putObjectStub);
+        expectAwsCalls(copyObjectStub);
+        expectAwsCalls(getObjectStub);
+        expectAwsCalls(headObjectStub);
+        expectAwsCalls(deleteObjectStub);
 
         // Verify that the accepted aloituskuulutus is available
         await validateAloitusKuulutusState({ oid, expectedState: AloitusKuulutusTila.HYVAKSYTTY });

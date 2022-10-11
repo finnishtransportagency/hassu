@@ -5,14 +5,40 @@ import { projektiAdapter } from "../../src/projekti/adapter/projektiAdapter";
 import { findPublishedAloitusKuulutusJulkaisu } from "../../src/projekti/adapter/common";
 
 import { IllegalArgumentError } from "../../src/error/IllegalArgumentError";
+import * as sinon from "sinon";
+import { personSearch } from "../../src/personSearch/personSearchClient";
+import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
+import { Kayttajas } from "../../src/personSearch/kayttajas";
 
 const { expect } = require("chai");
 
 describe("projektiAdapter", () => {
   let fixture: ProjektiFixture;
 
+  let getKayttajasStub: sinon.SinonStub;
+
+  before(() => {
+    getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
+  });
+
   beforeEach(() => {
     fixture = new ProjektiFixture();
+    const personSearchFixture = new PersonSearchFixture();
+    getKayttajasStub.resolves(
+      Kayttajas.fromKayttajaList([
+        personSearchFixture.pekkaProjari,
+        personSearchFixture.mattiMeikalainen,
+        personSearchFixture.manuMuokkaaja,
+      ])
+    );
+  });
+
+  afterEach(() => {
+    sinon.reset();
+  });
+
+  after(() => {
+    sinon.restore();
   });
 
   it("should prevent suunnitteluvaihe publishing without valid aloituskuulutusjulkaisu", async () => {

@@ -11,7 +11,7 @@ import S3, { ListObjectsV2Output } from "aws-sdk/clients/s3";
 import { getS3 } from "../aws/client";
 import { parseDate } from "../util/dateUtil";
 import { ProjektiPaths } from "./ProjektiPath";
-import { AWSError } from "aws-sdk";
+import { AWSError } from "aws-sdk/lib/error";
 
 export type UploadFileProperties = {
   fileNameWithPath: string;
