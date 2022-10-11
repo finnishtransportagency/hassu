@@ -31,18 +31,14 @@ import { expectApiError, expectToMatchSnapshot } from "./util";
 import { handleEvent } from "../../../src/aineisto/aineistoImporterLambda";
 import { SQSEvent } from "aws-lambda/trigger/sqs";
 import cloneDeep from "lodash/cloneDeep";
-import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { fileService } from "../../../src/files/fileService";
 import { testProjektiDatabase } from "../../../src/database/testProjektiDatabase";
+import { expectAwsCalls } from "../../../test/aws/awsMock";
 
 const { expect } = require("chai");
 
 export function verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub: Sinon.SinonStub): void {
-  expect(awsCloudfrontInvalidationStub.getCalls()).to.have.length(1, "verifyCloudfrontWasInvalidated");
-  expect(awsCloudfrontInvalidationStub.getCalls()[0].args).to.have.length(2, "verifyCloudfrontWasInvalidated");
-  const invalidationParams = awsCloudfrontInvalidationStub.getCalls()[0].args[0];
-  invalidationParams.InvalidationBatch.CallerReference = "***unittest***";
-  expect(invalidationParams).toMatchSnapshot();
+  expectAwsCalls(awsCloudfrontInvalidationStub, "CallerReference");
   awsCloudfrontInvalidationStub.resetHistory();
 }
 

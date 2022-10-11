@@ -1,10 +1,10 @@
 import { AloitusKuulutusJulkaisu, DBProjekti, HyvaksymisPaatosVaiheJulkaisu, NahtavillaoloVaiheJulkaisu, Velho } from "../database/model";
 import cloneDeep from "lodash/cloneDeep";
 import { AloitusKuulutusTila, HyvaksymisPaatosVaiheTila, NahtavillaoloVaiheTila } from "../../../common/graphql/apiModel";
-import { deepClone } from "aws-cdk/lib/util";
 import adaptStandardiYhteystiedot from "../util/adaptStandardiYhteystiedot";
 import { findJulkaisuWithTila, findUserByKayttajatunnus } from "../projekti/projektiUtil";
 import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../projekti/adapter/adaptToAPI";
+import assert from "assert";
 
 function createNextAloitusKuulutusJulkaisuID(dbProjekti: DBProjekti) {
   if (!dbProjekti.aloitusKuulutusJulkaisut) {
@@ -110,7 +110,8 @@ export class AsiakirjaAdapter {
 }
 
 function adaptVelho(dbProjekti: DBProjekti): Velho {
-  return deepClone(dbProjekti.velho);
+  assert(dbProjekti.velho);
+  return cloneDeep(dbProjekti.velho);
 }
 
 export const asiakirjaAdapter = new AsiakirjaAdapter();

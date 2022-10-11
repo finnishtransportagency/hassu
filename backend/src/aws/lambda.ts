@@ -1,13 +1,9 @@
-import AWS from "aws-sdk";
+import Lambda from "aws-sdk/clients/lambda";
 import { log } from "../logger";
 
-const lambda = new AWS.Lambda();
+const lambda = new Lambda();
 
-export async function invokeLambda(
-  functionName: string,
-  synchronousCall: boolean,
-  payload?: string
-): Promise<string | undefined> {
+export async function invokeLambda(functionName: string, synchronousCall: boolean, payload?: string): Promise<string | undefined> {
   try {
     if (synchronousCall) {
       const output = await lambda
@@ -16,7 +12,11 @@ export async function invokeLambda(
           Payload: payload || "{}",
         })
         .promise();
-      return new TextDecoder().decode(output.Payload as Buffer);
+      const outputPayload = output.Payload;
+      if (typeof outputPayload === "string") {
+        return outputPayload;
+      }
+      return new TextDecoder().decode(outputPayload as Buffer);
     } else {
       await lambda
         .invokeAsync({

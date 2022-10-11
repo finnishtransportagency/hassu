@@ -11,9 +11,7 @@ import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { aineistoImporterClient } from "../../src/aineisto/aineistoImporterClient";
 import { SQSEvent, SQSRecord } from "aws-lambda/trigger/sqs";
-import AWSMock from "aws-sdk-mock";
-import AWS from "aws-sdk";
-import { getCloudFront, produce } from "../../src/aws/client";
+import { getCloudFront } from "../../src/aws/client";
 import { cleanProjektiS3Files } from "../util/s3Util";
 import { emailClient } from "../../src/email/email";
 import {
@@ -47,12 +45,13 @@ import {
   testNahtavillaoloLisaAineisto,
 } from "./testUtil/nahtavillaolo";
 import {
-  testHyvaksymisPaatosVaiheApproval,
   testHyvaksymismenettelyssa,
-  testImportHyvaksymisPaatosAineistot,
   testHyvaksymisPaatosVaihe,
+  testHyvaksymisPaatosVaiheApproval,
+  testImportHyvaksymisPaatosAineistot,
 } from "./testUtil/hyvaksymisPaatosVaihe";
 import { FixtureName, recordProjektiTestFixture } from "./testFixtureRecorder";
+import { awsMockResolves } from "../../test/aws/awsMock";
 
 const { expect } = require("chai");
 
@@ -64,12 +63,6 @@ describe("Api", () => {
   let userFixture: UserFixture;
   let awsCloudfrontInvalidationStub: sinon.SinonStub;
   let emailClientStub: sinon.SinonStub;
-
-  after(() => {
-    userFixture.logout();
-    sinon.restore();
-    AWSMock.restore();
-  });
 
   const fakeAineistoImportQueue: SQSEvent[] = [];
 
@@ -91,12 +84,8 @@ describe("Api", () => {
       fakeAineistoImportQueue.push({ Records: [{ body: JSON.stringify(event) } as SQSRecord] });
     });
 
-    awsCloudfrontInvalidationStub = sinon.stub();
-    awsCloudfrontInvalidationStub.resolves({});
-    AWSMock.setSDKInstance(AWS);
-    produce<AWS.CloudFront>("cloudfront", () => undefined, true);
-    AWSMock.mock("CloudFront", "createInvalidation", awsCloudfrontInvalidationStub);
-    getCloudFront();
+    awsCloudfrontInvalidationStub = sinon.stub(getCloudFront(), "createInvalidation");
+    awsMockResolves(awsCloudfrontInvalidationStub, {});
 
     emailClientStub = sinon.stub(emailClient, "sendEmail");
 
@@ -105,6 +94,11 @@ describe("Api", () => {
     } catch (ignored) {
       // ignored
     }
+  });
+
+  after(() => {
+    userFixture.logout();
+    sinon.restore();
   });
 
   it("should search, load and save a project", async function () {

@@ -1,35 +1,36 @@
-/* tslint:disable:only-arrow-functions */
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { userService } from "../../src/user";
 import * as tokenvalidator from "../../src/user/validatejwttoken";
 import { UserFixture } from "../fixture/userFixture";
 import { apiConfig } from "../../../common/abstractApi";
-import AWSMock from "aws-sdk-mock";
-import AWS from "aws-sdk";
 import { GetParameterResult } from "aws-sdk/clients/ssm";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { AppSyncEventArguments } from "../../src/apiHandler";
+import { getUSEast1ssm } from "../../src/aws/client";
+import { awsMockResolves } from "../aws/awsMock";
 
 const { expect } = require("chai");
 
-const sandbox = sinon.createSandbox();
-
 describe("userService", () => {
   let validateTokenStub: sinon.SinonStub;
+  let getParameterStub: sinon.SinonStub;
 
-  afterEach(() => {
-    sandbox.reset();
-    sandbox.restore();
-    AWSMock.restore();
+  before(() => {
+    validateTokenStub = sinon.stub(tokenvalidator, "validateJwtToken");
+    getParameterStub = sinon.stub(getUSEast1ssm(), "getParameter");
   });
 
   beforeEach(() => {
-    validateTokenStub = sandbox.stub(tokenvalidator, "validateJwtToken");
-    AWSMock.setSDKInstance(AWS);
-    const getParameterStub = sinon.stub();
-    AWSMock.mock("SSM", "getParameter", getParameterStub);
-    getParameterStub.resolves({ Parameter: { Value: "ASDF1234" } } as GetParameterResult);
+    awsMockResolves(getParameterStub, { Parameter: { Value: "ASDF1234" } } as GetParameterResult);
+  });
+
+  afterEach(() => {
+    sinon.reset();
+  });
+
+  after(() => {
+    sinon.restore();
   });
 
   it("should identify user succesfully", async function () {

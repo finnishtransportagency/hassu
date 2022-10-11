@@ -1,14 +1,11 @@
 import { HttpRequest } from "@aws-sdk/protocol-http";
 import { SignatureV4 } from "@aws-sdk/signature-v4";
-import AWS from "aws-sdk";
+import AWS from "aws-sdk/global";
 import { Sha256 } from "@aws-crypto/sha256-browser";
 import { HttpRequest as IHttpRequest } from "@aws-sdk/types/dist-types/http";
 import { NodeHttpHandler } from "@aws-sdk/node-http-handler";
 
-export async function sendSignedRequest(
-  request: HttpRequest,
-  service: string
-): Promise<{ body: unknown; statusCode: number }> {
+export async function sendSignedRequest(request: HttpRequest, service: string): Promise<{ body: unknown; statusCode: number }> {
   // Sign the request
   if (!AWS.config.credentials) {
     throw new Error("No AWS credentials available");
