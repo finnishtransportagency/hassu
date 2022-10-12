@@ -3,13 +3,7 @@ import { getVaylaUser, requirePermissionLuku, requirePermissionLuonti, requirePe
 import { velho } from "../velho/velhoClient";
 import * as API from "../../../common/graphql/apiModel";
 import { KayttajaTyyppi, NykyinenKayttaja, TallennaProjektiInput, Velho } from "../../../common/graphql/apiModel";
-import {
-  ProjektiAdaptationResult,
-  projektiAdapter,
-  ProjektiEvent,
-  ProjektiEventType,
-  VuorovaikutusPublishedEvent,
-} from "./adapter/projektiAdapter";
+import { projektiAdapter } from "./adapter/projektiAdapter";
 import { adaptVelhoByAddingTypename } from "./adapter/common";
 import { auditLog, log } from "../logger";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
@@ -26,6 +20,8 @@ import { findUpdatedFields } from "../velho/velhoAdapter";
 import { DBProjekti } from "../database/model";
 import { vuorovaikutusService } from "../vuorovaikutus/vuorovaikutusService";
 import { aineistoService } from "../aineisto/aineistoService";
+import { ProjektiAdaptationResult, ProjektiEventType, VuorovaikutusPublishedEvent } from "./adapter/projektiAdaptationResult";
+import remove from "lodash/remove";
 
 export async function loadProjekti(oid: string): Promise<API.Projekti | API.ProjektiJulkinen> {
   const vaylaUser = getVaylaUser();
@@ -200,7 +196,7 @@ export async function findUpdatesFromVelho(oid: string): Promise<Velho> {
   }
 }
 
-export async function synchronizeUpdatesFromVelho(oid: string): Promise<Velho | undefined> {
+export async function synchronizeUpdatesFromVelho(oid: string, reset = false): Promise<Velho | undefined> {
   try {
     log.info("Loading projekti", { oid });
     const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -218,9 +214,17 @@ export async function synchronizeUpdatesFromVelho(oid: string): Promise<Velho | 
       throw new Error(`Projektille oid ${oid} ei löydy hassusta projekti.velho-tietoa.`);
     }
 
-    const kayttoOikeudetManager = new KayttoOikeudetManager(projektiFromDB.kayttoOikeudet, await personSearch.getKayttajas());
-    kayttoOikeudetManager.addProjektiPaallikkoFromEmail(projektiFromVelho.velho.vastuuhenkilonEmail);
-    kayttoOikeudetManager.addVarahenkiloFromEmail(projektiFromVelho.velho.varahenkilonEmail);
+    const vastuuhenkilonEmail = projektiFromVelho.velho.vastuuhenkilonEmail;
+    const varahenkilonEmail = projektiFromVelho.velho.varahenkilonEmail;
+
+    const kayttoOikeudet = projektiFromDB.kayttoOikeudet;
+    if (reset) {
+      // Poista kaikki muut paitsi tuleva projektipäällikkö ja vastuuhenkilö
+      remove(kayttoOikeudet, (user) => user.email !== vastuuhenkilonEmail && user.email !== varahenkilonEmail);
+    }
+    const kayttoOikeudetManager = new KayttoOikeudetManager(kayttoOikeudet, await personSearch.getKayttajas());
+    kayttoOikeudetManager.addProjektiPaallikkoFromEmail(vastuuhenkilonEmail);
+    kayttoOikeudetManager.addVarahenkiloFromEmail(varahenkilonEmail);
     const kayttoOikeudetNew = kayttoOikeudetManager.getKayttoOikeudet();
 
     const updatedFields = findUpdatedFields(projektiFromDB.velho, projektiFromVelho.velho);
@@ -258,13 +262,18 @@ export async function requirePermissionMuokkaaProjekti(oid: string): Promise<DBP
 }
 
 async function handleEvents(projektiAdaptationResult: ProjektiAdaptationResult) {
-  await projektiAdaptationResult.onEvent(ProjektiEventType.VUOROVAIKUTUS_PUBLISHED, async (event: ProjektiEvent, projekti: DBProjekti) => {
+  await projektiAdaptationResult.onEvent(ProjektiEventType.VUOROVAIKUTUS_PUBLISHED, async (event, oid) => {
     if (!(event as VuorovaikutusPublishedEvent).vuorovaikutusNumero) {
       throw new Error("handleEvents: event is missing vuorovaikutusNumero");
     }
-    return vuorovaikutusService.handleVuorovaikutusKutsu(projekti.oid, (event as VuorovaikutusPublishedEvent).vuorovaikutusNumero);
+    await vuorovaikutusService.handleVuorovaikutusKutsu(oid, (event as VuorovaikutusPublishedEvent).vuorovaikutusNumero);
   });
-  await projektiAdaptationResult.onEvent(ProjektiEventType.AINEISTO_CHANGED, async (_event, projekti) => {
-    return aineistoService.importAineisto(projekti.oid);
+
+  await projektiAdaptationResult.onEvent(ProjektiEventType.RESET_KAYTTOOIKEUDET, async (_event, oid) => {
+    await synchronizeUpdatesFromVelho(oid, true);
+  });
+
+  await projektiAdaptationResult.onEvent(ProjektiEventType.AINEISTO_CHANGED, async (_event, oid) => {
+    return aineistoService.importAineisto(oid);
   });
 }

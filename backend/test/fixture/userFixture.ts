@@ -66,4 +66,12 @@ export class UserFixture {
     uid: "LX581241",
     roolit: ["hassu_kayttaja"],
   };
+
+  static hassuAdmin: NykyinenKayttaja = {
+    __typename: "NykyinenKayttaja",
+    etuNimi: "Admin",
+    sukuNimi: "Hassu",
+    uid: "A123456",
+    roolit: ["hassu_admin"],
+  };
 }

@@ -4,12 +4,12 @@ import {
   Aineisto,
   IlmoituksenVastaanottajat,
   KuntaVastaanottaja,
+  LocalizedMap,
   StandardiYhteystiedot,
   ViranomaisVastaanottaja,
   Yhteystieto,
-  LocalizedMap,
 } from "../../../database/model";
-import { AineistoChangedEvent, ProjektiAdaptationResult, ProjektiEventType } from "../projektiAdapter";
+import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import remove from "lodash/remove";
 
 export function adaptIlmoituksenVastaanottajatToSave(
@@ -125,7 +125,7 @@ export function adaptAineistotToSave(
   }
 
   if (hasPendingChanges) {
-    projektiAdaptationResult.pushEvent({ eventType: ProjektiEventType.AINEISTO_CHANGED } as AineistoChangedEvent);
+    projektiAdaptationResult.aineistoChanged();
   }
   return resultAineistot;
 }

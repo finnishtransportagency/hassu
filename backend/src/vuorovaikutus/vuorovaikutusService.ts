@@ -48,7 +48,7 @@ async function generateKutsuPDF(
 }
 
 class VuorovaikutusService {
-  async handleVuorovaikutusKutsu(oid: string, vuorovaikutusNumero: number) {
+  async handleVuorovaikutusKutsu(oid: string, vuorovaikutusNumero: number): Promise<void> {
     // Generate invitation PDF
     const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
     if (!projektiInDB) {

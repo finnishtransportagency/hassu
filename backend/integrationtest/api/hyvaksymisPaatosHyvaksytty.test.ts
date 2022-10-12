@@ -13,6 +13,9 @@ import dayjs from "dayjs";
 import { Status } from "../../../common/graphql/apiModel";
 import { assert, expect } from "chai";
 import { ISO_DATE_FORMAT } from "../../src/util/dateUtil";
+import { api } from "./apiClient";
+import { IllegalAccessError } from "../../src/error/IllegalAccessError";
+import { expectToMatchSnapshot } from "./testUtil/util";
 
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
@@ -54,7 +57,7 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
 
   async function expectYllapitoProjektiStatus(expectedStatus: Status) {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    await loadProjektiFromDatabase(oid, expectedStatus); // Verify status in yllapito
+    return await loadProjektiFromDatabase(oid, expectedStatus); // Verify status in yllapito
   }
 
   async function expectJulkinenProjektiStatus(expectedStatus: Status) {
@@ -79,6 +82,30 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
   }
 
+  async function lisaaKasittelynTilaJatkopaatos1(projektiWithJatkopaatos1: {
+    kasittelynTila: { ensimmainenJatkopaatos: { asianumero: string; paatoksenPvm: string } };
+    oid: string;
+  }) {
+    try {
+      await api.tallennaProjekti(projektiWithJatkopaatos1);
+      assert.fail("Admin-oikeudet pitää vaatia!");
+    } catch (e) {
+      expect(e instanceof IllegalAccessError);
+    }
+
+    // Tallenna jatkopäätös admin-käyttäjänä
+    userFixture.loginAs(UserFixture.hassuAdmin);
+    await api.tallennaProjekti(projektiWithJatkopaatos1);
+
+    // Tallennuksen tulos:
+    // * jatkopäätöksen tallennus resetoi projektin henkilöt TODO: suunnittelusopimuksen henkilöviittaus pitäisi toteuttaa pois, jotta ko. henkilön voi poistaa
+    // * Projekti on jatkopäätösvaiheessa
+    let jatkopaatosProjekti = await expectYllapitoProjektiStatus(Status.JATKOPAATOS_1);
+    jatkopaatosProjekti.paivitetty = "***unit test***";
+    expectToMatchSnapshot("jatkopaatosProjekti käyttöoikeudet resetoinnin jälkeen", jatkopaatosProjekti.kayttoOikeudet);
+    await expectJulkinenNotFound();
+  }
+
   it("should get epäaktiivinen and jatkopäätös1 statuses successfully", async () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await setKuulutusVaihePaattyyPaivaToYesterday();
@@ -89,18 +116,17 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
 
     const epaAktiivinenProjekti1 = await projektiDatabase.loadProjektiByOid(oid);
     expect(epaAktiivinenProjekti1.ajastettuTarkistus).to.eql("2101-01-01T23:59:00+02:00"); // MOCKED_TIMESTAMP + 1 year
-    // TODO aineistojen ajastettu poisto tässä kohtaa
+    // TODO Aineistot poistetaan vuosi epäaktiivisen olon jälkeen
 
-    await projektiDatabase.saveProjekti({
+    const projektiWithJatkopaatos1 = {
       oid,
       kasittelynTila: {
-        ...epaAktiivinenProjekti1.kasittelynTila,
+        // ...epaAktiivinenProjekti1.kasittelynTila,
         ensimmainenJatkopaatos: { paatoksenPvm: MOCKED_TIMESTAMP, asianumero: "jatkopaatos1_asianumero" },
       },
-    });
+    };
 
-    await expectYllapitoProjektiStatus(Status.JATKOPAATOS_1);
-    await expectJulkinenNotFound();
+    await lisaaKasittelynTilaJatkopaatos1(projektiWithJatkopaatos1);
 
     // TODO hyväksytty jatkopäätös1
     // TODO hyväksytty epäaktiivinen2

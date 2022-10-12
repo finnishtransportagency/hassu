@@ -7,6 +7,7 @@ import { localDocumentClient } from "../util/databaseUtil";
 export enum FixtureName {
   NAHTAVILLAOLO = "NAHTAVILLAOLO",
   HYVAKSYMISPAATOS_APPROVED = "HYVAKSYMISPAATOS_APPROVED",
+  EPAAKTIIVINEN_1 = "EPAAKTIIVINEN_1",
 }
 
 export const MOCKED_TIMESTAMP = "2020-01-01T00:00:00+02:00";

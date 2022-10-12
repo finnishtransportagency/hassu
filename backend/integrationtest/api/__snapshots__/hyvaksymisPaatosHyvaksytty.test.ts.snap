@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Hyväksytyn hyväksymispäätöskuulutuksen jälkeen should get epäaktiivinen and jatkopäätös1 statuses successfully 1`] = `
+Object {
+  "description": "jatkopaatosProjekti käyttöoikeudet resetoinnin jälkeen",
+  "obj": Array [
+    Object {
+      "__typename": "ProjektiKayttaja",
+      "email": "mikko.haapamki@cgi.com",
+      "kayttajatunnus": "A000112",
+      "muokattavissa": false,
+      "nimi": "Hassu, A-tunnus1",
+      "organisaatio": "CGI Suomi Oy",
+      "puhelinnumero": "123",
+      "tyyppi": "PROJEKTIPAALLIKKO",
+    },
+    Object {
+      "__typename": "ProjektiKayttaja",
+      "email": "mikko.haapamaki02@cgi.com",
+      "kayttajatunnus": "A000114",
+      "muokattavissa": false,
+      "nimi": "Hassu, A-tunnus3",
+      "organisaatio": "CGI Suomi Oy",
+      "puhelinnumero": "123",
+      "tyyppi": "VARAHENKILO",
+    },
+  ],
+}
+`;

@@ -1,7 +1,7 @@
 import { DBProjekti, Vuorovaikutus, VuorovaikutusTilaisuus } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { findVuorovaikutusByNumber } from "../../../util/findVuorovaikutusByNumber";
-import { AineistoChangedEvent, ProjektiAdaptationResult, ProjektiEventType, VuorovaikutusPublishedEvent } from "../projektiAdapter";
+import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
 import { adaptAineistotToSave, adaptIlmoituksenVastaanottajatToSave, adaptStandardiYhteystiedotToSave } from "./common";
 
@@ -88,18 +88,11 @@ function checkIfAineistoJulkinenChanged(
   }
 
   if (vuorovaikutusPublished() || vuorovaikutusNotPublicAnymore()) {
-    const newEvent: VuorovaikutusPublishedEvent = {
-      eventType: ProjektiEventType.VUOROVAIKUTUS_PUBLISHED,
-      vuorovaikutusNumero: vuorovaikutusToSave.vuorovaikutusNumero,
-    };
-    projektiAdaptationResult.pushEvent(newEvent);
+    projektiAdaptationResult.vuorovaikutusPublished(vuorovaikutusToSave.vuorovaikutusNumero);
   }
 
   if (vuorovaikutusPublished() || vuorovaikutusNotPublicAnymore() || vuorovaikutusJulkaisuPaivaChanged()) {
-    const newEvent: AineistoChangedEvent = {
-      eventType: ProjektiEventType.AINEISTO_CHANGED,
-    };
-    projektiAdaptationResult.pushEvent(newEvent);
+    projektiAdaptationResult.aineistoChanged();
   }
 }
 

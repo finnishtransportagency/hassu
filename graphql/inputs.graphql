@@ -229,6 +229,8 @@ enum TilasiirtymaTyyppi {
   ALOITUSKUULUTUS
   NAHTAVILLAOLO
   HYVAKSYMISPAATOSVAIHE
+  JATKOPAATOS_1
+  JATKOPAATOS_2
 }
 
 input TilaSiirtymaInput {
