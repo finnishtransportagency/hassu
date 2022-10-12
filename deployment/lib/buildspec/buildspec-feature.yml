@@ -27,7 +27,6 @@ phases:
       - npm run setupenvironment
       - npm run test
       - npm run localstack:stop&
-      - npm run sonar
       - npm run build
 cache:
   paths:

@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { loadProjektiFromDatabase, loadProjektiJulkinenFromDatabase, testPublicAccessToProjekti } from "./tests";
 import {
@@ -7,6 +5,7 @@ import {
   HyvaksymisPaatosVaiheTila,
   ProjektiKayttaja,
   Status,
+  TallennaProjektiInput,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
   VelhoAineisto,
@@ -19,20 +18,21 @@ import { adaptAineistoToInput, expectToMatchSnapshot } from "./util";
 import { apiTestFixture } from "../apiTestFixture";
 import { cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps, cleanupHyvaksymisPaatosVaiheTimestamps } from "./cleanUpFunctions";
 import dayjs from "dayjs";
+import capitalize from "lodash/capitalize";
 
 export async function testHyvaksymismenettelyssa(oid: string, userFixture: UserFixture): Promise<void> {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
-  const julkaisu = dbProjekti.nahtavillaoloVaiheJulkaisut[0];
+  const julkaisu = dbProjekti!.nahtavillaoloVaiheJulkaisut![0];
   // Päättymispäivä alle vuosi menneisyyteen, jottei projekti mene epäaktiiviseksi
   julkaisu.kuulutusVaihePaattyyPaiva = dayjs().add(-2, "day").format();
-  await projektiDatabase.updateNahtavillaoloVaiheJulkaisu(dbProjekti, julkaisu);
+  await projektiDatabase.nahtavillaoloVaiheJulkaisut.update(dbProjekti!, julkaisu);
 
   await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA); // Verify status in yllapito
 
   // Verify status in public
   const publicProjekti = await loadProjektiJulkinenFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA);
   expect(publicProjekti.nahtavillaoloVaihe).not.to.be.undefined;
-  expect(publicProjekti.nahtavillaoloVaihe.aineistoNahtavilla).to.be.undefined;
+  expect(publicProjekti.nahtavillaoloVaihe!.aineistoNahtavilla).to.be.undefined;
   userFixture.loginAs(UserFixture.mattiMeikalainen);
 }
 
@@ -49,10 +49,12 @@ export async function testHyvaksymisPaatosVaihe(oid: string, userFixture: UserFi
   await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY); // Verify status in yllapito
 }
 
-export async function testImportHyvaksymisPaatosAineistot(
+export async function testCreateHyvaksymisPaatosWithAineistot(
   oid: string,
+  vaihe: keyof Pick<TallennaProjektiInput, "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe">,
   velhoAineistoKategorias: VelhoAineistoKategoria[],
-  projektiPaallikko: string
+  projektiPaallikko: string,
+  expectedStatus: Status
 ): Promise<void> {
   const lisaAineisto = velhoAineistoKategorias
     .reduce((documents, aineistoKategoria) => {
@@ -61,28 +63,30 @@ export async function testImportHyvaksymisPaatosAineistot(
     }, [] as VelhoAineisto[])
     .sort((a, b) => a.oid.localeCompare(b.oid));
 
-  await api.tallennaProjekti({
-    oid,
-    hyvaksymisPaatosVaihe: {
-      hyvaksymisPaatos: adaptAineistoToInput([lisaAineisto[0]]),
-      aineistoNahtavilla: adaptAineistoToInput(lisaAineisto.slice(2, 3)),
+  let vaiheContents = {
+    hyvaksymisPaatos: adaptAineistoToInput([lisaAineisto[0]]),
+    aineistoNahtavilla: adaptAineistoToInput(lisaAineisto.slice(2, 3)),
 
-      ilmoituksenVastaanottajat: apiTestFixture.ilmoituksenVastaanottajat,
-      kuulutusYhteystiedot: {
-        yhteysTiedot: apiTestFixture.yhteystietoInputLista,
-        yhteysHenkilot: [projektiPaallikko],
-      },
-      hallintoOikeus: HallintoOikeus.HAMEENLINNA,
-
-      kuulutusPaiva: "2022-06-09",
-      kuulutusVaihePaattyyPaiva: "2100-01-01",
+    ilmoituksenVastaanottajat: apiTestFixture.ilmoituksenVastaanottajat,
+    kuulutusYhteystiedot: {
+      yhteysTiedot: apiTestFixture.yhteystietoInputLista,
+      yhteysHenkilot: [projektiPaallikko],
     },
-  });
+    hallintoOikeus: HallintoOikeus.HAMEENLINNA,
 
-  const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
-  const hyvaksymisPaatosVaihe = projekti.hyvaksymisPaatosVaihe;
+    kuulutusPaiva: "2022-06-09",
+    kuulutusVaihePaattyyPaiva: "2100-01-01",
+  };
+  let input: TallennaProjektiInput = {
+    oid,
+  };
+  input[vaihe] = vaiheContents;
+  await api.tallennaProjekti(input);
+
+  const projekti = await loadProjektiFromDatabase(oid, expectedStatus);
+  const hyvaksymisPaatosVaihe = projekti[vaihe];
   const kasittelynTila = projekti.kasittelynTila;
-  expectToMatchSnapshot("testImportHyvaksymisPaatosAineistot", {
+  expectToMatchSnapshot("testImport" + capitalize(vaihe) + "Aineistot", {
     hyvaksymisPaatosVaihe,
     kasittelynTila,
   });
@@ -102,7 +106,7 @@ export async function testHyvaksymisPaatosVaiheApproval(
 
   const projektiHyvaksyttavaksi = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
   expect(projektiHyvaksyttavaksi.hyvaksymisPaatosVaiheJulkaisut).to.have.length(1);
-  expect(projektiHyvaksyttavaksi.hyvaksymisPaatosVaiheJulkaisut[0].tila).to.eq(HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA);
+  expect(projektiHyvaksyttavaksi.hyvaksymisPaatosVaiheJulkaisut![0].tila).to.eq(HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA);
 
   await api.siirraTila({
     oid,
@@ -111,15 +115,15 @@ export async function testHyvaksymisPaatosVaiheApproval(
   });
   const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
   expectToMatchSnapshot("testHyvaksymisPaatosVaiheAfterApproval", {
-    hyvaksymisPaatosVaihe: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.hyvaksymisPaatosVaihe),
-    hyvaksymisPaatosVaiheJulkaisut: projekti.hyvaksymisPaatosVaiheJulkaisut.map(cleanupHyvaksymisPaatosVaiheTimestamps),
+    hyvaksymisPaatosVaihe: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.hyvaksymisPaatosVaihe!),
+    hyvaksymisPaatosVaiheJulkaisut: projekti.hyvaksymisPaatosVaiheJulkaisut!.map(cleanupHyvaksymisPaatosVaiheTimestamps),
   });
 
   // Move hyvaksymisPaatosVaiheJulkaisu into the past
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
-  const julkaisu = dbProjekti.hyvaksymisPaatosVaiheJulkaisut[0];
+  const julkaisu = dbProjekti!.hyvaksymisPaatosVaiheJulkaisut![0];
   julkaisu.kuulutusVaihePaattyyPaiva = "2022-06-08";
-  await projektiDatabase.updateHyvaksymisPaatosVaiheJulkaisu(dbProjekti, julkaisu);
+  await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(dbProjekti!, julkaisu);
 
   await testPublicAccessToProjekti(
     oid,
@@ -128,7 +132,7 @@ export async function testHyvaksymisPaatosVaiheApproval(
     "HyvaksymisPaatosVaiheJulkinenAfterApproval",
     (projektiJulkinen) =>
       (projektiJulkinen.hyvaksymisPaatosVaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
-        projektiJulkinen.hyvaksymisPaatosVaihe
+        projektiJulkinen.hyvaksymisPaatosVaihe!
       ))
   );
 }

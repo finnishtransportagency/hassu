@@ -1,6 +1,9 @@
 import { cleanupGeneratedIds } from "./cleanUpFunctions";
 import { fileService } from "../../../src/files/fileService";
 import { AineistoInput, VelhoAineisto } from "../../../../common/graphql/apiModel";
+import { loadProjektiJulkinenFromDatabase } from "./tests";
+import { UserFixture } from "../../../test/fixture/userFixture";
+import { IllegalAccessError } from "../../../src/error/IllegalAccessError";
 
 const { expect } = require("chai");
 
@@ -11,17 +14,13 @@ export async function takeS3Snapshot(oid: string, description: string, path?: st
 
 export async function takeYllapitoS3Snapshot(oid: string, description: string, path?: string): Promise<void> {
   expect({
-    ["yllapito S3 files " + description]: cleanupGeneratedIds(
-      await fileService.listYllapitoProjektiFiles(oid, path || "")
-    ),
+    ["yllapito S3 files " + description]: cleanupGeneratedIds(await fileService.listYllapitoProjektiFiles(oid, path || "")),
   }).toMatchSnapshot(description);
 }
 
 export async function takePublicS3Snapshot(oid: string, description: string, path?: string): Promise<void> {
   expect({
-    ["public S3 files " + description]: cleanupGeneratedIds(
-      await fileService.listPublicProjektiFiles(oid, path || "", true)
-    ),
+    ["public S3 files " + description]: cleanupGeneratedIds(await fileService.listPublicProjektiFiles(oid, path || "", true)),
   }).toMatchSnapshot(description);
 }
 
@@ -41,4 +40,10 @@ export function adaptAineistoToInput(aineistot: VelhoAineisto[]): AineistoInput[
 export function expectApiError(e: Error, message: string): void {
   const contents = JSON.parse(e.message);
   expect(contents.message).to.eq(message);
+}
+
+export async function expectJulkinenNotFound(oid: string, userFixture: UserFixture) {
+  userFixture.logout();
+  expect(loadProjektiJulkinenFromDatabase(oid)).to.eventually.be.rejectedWith(IllegalAccessError);
+  userFixture.loginAs(UserFixture.mattiMeikalainen);
 }

@@ -1,6 +1,6 @@
 /* tslint:disable:only-arrow-functions no-unused-expression */
 import { describe, it } from "mocha";
-import { FixtureName, MOCKED_TIMESTAMP, useProjektiTestFixture } from "./testFixtureRecorder";
+import { FixtureName, MOCKED_TIMESTAMP, recordProjektiTestFixture, useProjektiTestFixture } from "./testFixtureRecorder";
 import { setupLocalDatabase } from "../util/databaseUtil";
 import { deleteProjekti, loadProjektiFromDatabase, loadProjektiJulkinenFromDatabase } from "./testUtil/tests";
 import { UserFixture } from "../../test/fixture/userFixture";
@@ -12,7 +12,8 @@ import { Status } from "../../../common/graphql/apiModel";
 import { ISO_DATE_FORMAT } from "../../src/util/dateUtil";
 import { api } from "./apiClient";
 import { IllegalAccessError } from "../../src/error/IllegalAccessError";
-import { expectToMatchSnapshot } from "./testUtil/util";
+import { expectJulkinenNotFound, expectToMatchSnapshot } from "./testUtil/util";
+import { assertIsDefined } from "../../src/util/assertions";
 import assert from "assert";
 
 const chai = require("chai");
@@ -42,22 +43,20 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
 
   async function setKuulutusVaihePaattyyPaivaToYesterday() {
     const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
-    assert(dbProjekti);
-    assert(dbProjekti.hyvaksymisPaatosVaiheJulkaisut);
+    assertIsDefined(dbProjekti?.hyvaksymisPaatosVaiheJulkaisut);
     const julkaisu = dbProjekti.hyvaksymisPaatosVaiheJulkaisut[0];
     // Päättymispäivä yli vuosi menneisyyteen, jotta projekti menee epäaktiiviseksi
     julkaisu.kuulutusVaihePaattyyPaiva = dayjs().add(-1, "day").format(ISO_DATE_FORMAT);
-    await projektiDatabase.updateHyvaksymisPaatosVaiheJulkaisu(dbProjekti, julkaisu);
+    await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(dbProjekti, julkaisu);
   }
 
   async function setKuulutusVaihePaattyyPaivaToOverOneYearAgo() {
     const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
-    assert(dbProjekti);
-    assert(dbProjekti.hyvaksymisPaatosVaiheJulkaisut);
+    assertIsDefined(dbProjekti?.hyvaksymisPaatosVaiheJulkaisut);
     const julkaisu = dbProjekti.hyvaksymisPaatosVaiheJulkaisut[0];
     // Päättymispäivä yli vuosi menneisyyteen, jotta projekti menee epäaktiiviseksi
     julkaisu.kuulutusVaihePaattyyPaiva = dayjs().add(-1, "year").add(-1, "day").format(ISO_DATE_FORMAT);
-    await projektiDatabase.updateHyvaksymisPaatosVaiheJulkaisu(dbProjekti, julkaisu);
+    await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(dbProjekti, julkaisu);
   }
 
   async function expectYllapitoProjektiStatus(expectedStatus: Status) {
@@ -73,12 +72,6 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
       console.log(e);
       assert.fail("Could not load julkinen projekti from API");
     }
-    userFixture.loginAs(UserFixture.mattiMeikalainen);
-  }
-
-  async function expectJulkinenNotFound() {
-    userFixture.logout();
-    expect(loadProjektiJulkinenFromDatabase(oid)).to.eventually.be.rejectedWith(IllegalAccessError);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
   }
 
@@ -101,7 +94,9 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
     let jatkopaatosProjekti = await expectYllapitoProjektiStatus(Status.JATKOPAATOS_1);
     jatkopaatosProjekti.paivitetty = "***unit test***";
     expectToMatchSnapshot("jatkopaatosProjekti käyttöoikeudet resetoinnin jälkeen", jatkopaatosProjekti.kayttoOikeudet);
-    await expectJulkinenNotFound();
+    await expectJulkinenNotFound(oid, userFixture);
+
+    await recordProjektiTestFixture(FixtureName.JATKOPAATOS_1_ALKU, oid);
   }
 
   it("should get epäaktiivinen and jatkopäätös1 statuses successfully", async () => {
@@ -111,9 +106,10 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
     await expectJulkinenProjektiStatus(Status.HYVAKSYTTY);
     await setKuulutusVaihePaattyyPaivaToOverOneYearAgo();
     await expectYllapitoProjektiStatus(Status.EPAAKTIIVINEN_1);
-    await expectJulkinenNotFound();
+    await expectJulkinenNotFound(oid, userFixture);
 
     const epaAktiivinenProjekti1 = await projektiDatabase.loadProjektiByOid(oid);
+    assertIsDefined(epaAktiivinenProjekti1);
     expect(epaAktiivinenProjekti1!.ajastettuTarkistus).to.eql("2101-01-01T23:59:00+02:00"); // MOCKED_TIMESTAMP + 1 year
     // TODO Aineistot poistetaan vuosi epäaktiivisen olon jälkeen
 
@@ -123,10 +119,5 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
         ensimmainenJatkopaatos: { paatoksenPvm: MOCKED_TIMESTAMP, asianumero: "jatkopaatos1_asianumero" },
       },
     });
-
-    // TODO hyväksytty jatkopäätös1
-    // TODO hyväksytty epäaktiivinen2
-    // TODO hyväksytty jatkopäätös2
-    // TODO hyväksytty epäaktiivinen2
   });
 });

@@ -7,7 +7,7 @@ import { config } from "../config";
 import { parseDate } from "../util/dateUtil";
 import { Dayjs } from "dayjs";
 import { ImportAineistoEventType } from "./importAineistoEvent";
-import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
+import { HyvaksymisPaatosVaihePaths, PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 
 async function synchronizeAineistoToPublic(oid: string, paths: PathTuple, publishDate: Dayjs) {
   let hasChanges = false;
@@ -69,6 +69,22 @@ class AineistoService {
     });
   }
 
+  async publishJatkoPaatos1Vaihe(oid: string, hyvaksymisPaatosId: number) {
+    await aineistoImporterClient.importAineisto({
+      type: ImportAineistoEventType.PUBLISH_HYVAKSYMISPAATOS,
+      oid,
+      publishJatkoPaatos1WithId: hyvaksymisPaatosId,
+    });
+  }
+
+  async publishJatkoPaatos2Vaihe(oid: string, hyvaksymisPaatosId: number) {
+    await aineistoImporterClient.importAineisto({
+      type: ImportAineistoEventType.PUBLISH_HYVAKSYMISPAATOS,
+      oid,
+      publishJatkoPaatos2WithId: hyvaksymisPaatosId,
+    });
+  }
+
   /**
    * Copy aineisto to public S3 with proper publish and expiration dates
    */
@@ -98,7 +114,7 @@ class AineistoService {
     await synchronizeAineistoToPublic(oid, new ProjektiPaths(oid).nahtavillaoloVaihe(nahtavillaoloVaiheJulkaisu), publishDate);
   }
 
-  async synchronizeHyvaksymisPaatosVaiheJulkaisuAineistoToPublic(oid: string, julkaisu: HyvaksymisPaatosVaiheJulkaisu): Promise<void> {
+  async synchronizeHyvaksymisPaatosVaiheJulkaisuAineistoToPublic(oid: string, julkaisu: HyvaksymisPaatosVaiheJulkaisu, hyvaksymisPaatosVaihePaths: HyvaksymisPaatosVaihePaths): Promise<void> {
     if (!julkaisu.kuulutusPaiva) {
       throw new Error("HyvaksymisPaatosVaiheJulkaisua ei voi julkaista jos vuorovaikutusJulkaisuPaiva ei ole asetettu");
     }
@@ -106,7 +122,7 @@ class AineistoService {
     if (!publishDate) {
       throw new Error("HyvaksymisPaatosVaiheJulkaisua ei voi julkaista jos vuorovaikutusJulkaisuPaiva ei ole asetettu");
     }
-    await synchronizeAineistoToPublic(oid, new ProjektiPaths(oid).hyvaksymisPaatosVaihe(julkaisu), publishDate);
+    await synchronizeAineistoToPublic(oid, hyvaksymisPaatosVaihePaths, publishDate);
   }
 
   async deleteAineisto(oid: string, aineisto: Aineisto, yllapitoFilePathInProjekti: string, publicFilePathInProjekti: string) {

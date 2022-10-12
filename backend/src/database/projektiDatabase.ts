@@ -20,8 +20,63 @@ function createExpression(expression: string, properties: string[]) {
 
 type JulkaisuWithId = { id: number } & unknown;
 
+type JulkaisutFieldName = keyof Pick<
+  DBProjekti,
+  | "aloitusKuulutusJulkaisut"
+  | "nahtavillaoloVaiheJulkaisut"
+  | "hyvaksymisPaatosVaiheJulkaisut"
+  | "jatkoPaatos1VaiheJulkaisut"
+  | "jatkoPaatos2VaiheJulkaisut"
+>;
+
+export class JulkaisuFunctions<T extends AloitusKuulutusJulkaisu | HyvaksymisPaatosVaiheJulkaisu | NahtavillaoloVaiheJulkaisu> {
+  private julkaisutFieldName: JulkaisutFieldName;
+  private description: string;
+  private projektiDatabase: ProjektiDatabase;
+
+  constructor(projektiDatabase: ProjektiDatabase, julkaisutFieldName: JulkaisutFieldName, description: string) {
+    this.projektiDatabase = projektiDatabase;
+    this.julkaisutFieldName = julkaisutFieldName;
+    this.description = description;
+  }
+
+  async insert(oid: string, julkaisu: T): Promise<DocumentClient.UpdateItemOutput> {
+    return this.projektiDatabase.insertJulkaisuToList(oid, julkaisu, this.julkaisutFieldName, this.description);
+  }
+
+  async update(projekti: DBProjekti, julkaisu: T): Promise<void> {
+    await this.projektiDatabase.updateJulkaisuToList(projekti, julkaisu, this.julkaisutFieldName, this.description);
+  }
+
+  async delete(projekti: DBProjekti, julkaisuIdToDelete: number): Promise<void> {
+    return this.projektiDatabase.deleteJulkaisuFromList(projekti, julkaisuIdToDelete, this.julkaisutFieldName, this.description);
+  }
+}
+
 export class ProjektiDatabase {
   projektiTableName: string = config.projektiTableName || "missing";
+
+  aloitusKuulutusJulkaisut = new JulkaisuFunctions<AloitusKuulutusJulkaisu>(this, "aloitusKuulutusJulkaisut", "AloitusKuulutusJulkaisu");
+  nahtavillaoloVaiheJulkaisut = new JulkaisuFunctions<NahtavillaoloVaiheJulkaisu>(
+    this,
+    "nahtavillaoloVaiheJulkaisut",
+    "NahtavillaoloVaiheJulkaisu"
+  );
+  hyvaksymisPaatosVaiheJulkaisut = new JulkaisuFunctions<HyvaksymisPaatosVaiheJulkaisu>(
+    this,
+    "hyvaksymisPaatosVaiheJulkaisut",
+    "HyvaksymisPaatosVaiheJulkaisu"
+  );
+  jatkoPaatos1VaiheJulkaisut = new JulkaisuFunctions<HyvaksymisPaatosVaiheJulkaisu>(
+    this,
+    "jatkoPaatos1VaiheJulkaisut",
+    "JatkoPaatos1VaiheJulkaisu"
+  );
+  jatkoPaatos2VaiheJulkaisut = new JulkaisuFunctions<HyvaksymisPaatosVaiheJulkaisu>(
+    this,
+    "jatkoPaatos2VaiheJulkaisut",
+    "JatkoPaatos2VaiheJulkaisu"
+  );
 
   /**
    * Load projekti from DynamoDB
@@ -162,30 +217,6 @@ export class ProjektiDatabase {
     }
   }
 
-  async insertAloitusKuulutusJulkaisu(oid: string, julkaisu: AloitusKuulutusJulkaisu): Promise<DocumentClient.UpdateItemOutput> {
-    return this.insertJulkaisuToList(oid, "aloitusKuulutusJulkaisut", julkaisu, "AloitusKuulutusJulkaisu");
-  }
-
-  async deleteAloitusKuulutusJulkaisu(projekti: DBProjekti, julkaisuIdToDelete: number): Promise<void> {
-    return this.deleteJulkaisuFromList(
-      projekti.oid,
-      "aloitusKuulutusJulkaisut",
-      projekti.aloitusKuulutusJulkaisut,
-      julkaisuIdToDelete,
-      "AloitusKuulutusJulkaisu"
-    );
-  }
-
-  async updateAloitusKuulutusJulkaisu(projekti: DBProjekti, julkaisu: AloitusKuulutusJulkaisu): Promise<void> {
-    await this.updateJulkaisuToList(
-      projekti.oid,
-      "aloitusKuulutusJulkaisut",
-      projekti.aloitusKuulutusJulkaisut,
-      julkaisu,
-      "AloitusKuulutusJulkaisu"
-    );
-  }
-
   async clearNewFeedbacksFlagOnProject(oid: string): Promise<void> {
     log.info("clearNewFeedbacksFlagOnProject", { oid });
 
@@ -226,58 +257,7 @@ export class ProjektiDatabase {
     return result;
   }
 
-  async insertNahtavillaoloVaiheJulkaisu(oid: string, julkaisu: NahtavillaoloVaiheJulkaisu): Promise<DocumentClient.UpdateItemOutput> {
-    return this.insertJulkaisuToList(oid, "nahtavillaoloVaiheJulkaisut", julkaisu, "NahtavillaoloVaiheJulkaisu");
-  }
-
-  async deleteNahtavillaoloVaiheJulkaisu(projekti: DBProjekti, julkaisuIdToDelete: number): Promise<void> {
-    return this.deleteJulkaisuFromList(
-      projekti.oid,
-      "nahtavillaoloVaiheJulkaisut",
-      projekti.nahtavillaoloVaiheJulkaisut,
-      julkaisuIdToDelete,
-      "NahtavillaoloVaiheJulkaisu"
-    );
-  }
-
-  async updateNahtavillaoloVaiheJulkaisu(projekti: DBProjekti, julkaisu: NahtavillaoloVaiheJulkaisu): Promise<void> {
-    await this.updateJulkaisuToList(
-      projekti.oid,
-      "nahtavillaoloVaiheJulkaisut",
-      projekti.nahtavillaoloVaiheJulkaisut,
-      julkaisu,
-      "NahtavillaoloVaiheJulkaisu"
-    );
-  }
-
-  async insertHyvaksymisPaatosVaiheJulkaisu(
-    oid: string,
-    julkaisu: HyvaksymisPaatosVaiheJulkaisu
-  ): Promise<DocumentClient.UpdateItemOutput> {
-    return this.insertJulkaisuToList(oid, "hyvaksymisPaatosVaiheJulkaisut", julkaisu, "HyvaksymisPaatosVaiheJulkaisu");
-  }
-
-  async deleteHyvaksymisPaatosVaiheJulkaisu(projekti: DBProjekti, julkaisuIdToDelete: number): Promise<void> {
-    return this.deleteJulkaisuFromList(
-      projekti.oid,
-      "hyvaksymisPaatosVaiheJulkaisut",
-      projekti.hyvaksymisPaatosVaiheJulkaisut,
-      julkaisuIdToDelete,
-      "HyvaksymisPaatosVaiheJulkaisu"
-    );
-  }
-
-  async updateHyvaksymisPaatosVaiheJulkaisu(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu): Promise<void> {
-    await this.updateJulkaisuToList(
-      projekti.oid,
-      "hyvaksymisPaatosVaiheJulkaisut",
-      projekti.hyvaksymisPaatosVaiheJulkaisut,
-      julkaisu,
-      "HyvaksymisPaatosVaiheJulkaisu"
-    );
-  }
-
-  private async insertJulkaisuToList(oid: string, listFieldName: string, julkaisu: unknown, description: string) {
+  async insertJulkaisuToList(oid: string, julkaisu: unknown, listFieldName: JulkaisutFieldName, description: string) {
     log.info("Insert " + description, { oid, julkaisu });
     const params = {
       TableName: this.projektiTableName,
@@ -297,16 +277,12 @@ export class ProjektiDatabase {
     return getDynamoDBDocumentClient().update(params).promise();
   }
 
-  private async updateJulkaisuToList(
-    oid: string,
-    listFieldName: string,
-    julkaisut: JulkaisuWithId[] | undefined | null,
-    julkaisu: JulkaisuWithId,
-    description: string
-  ) {
+  async updateJulkaisuToList(projekti: DBProjekti, julkaisu: JulkaisuWithId, listFieldName: JulkaisutFieldName, description: string) {
+    const julkaisut = projekti[listFieldName];
     if (!julkaisut) {
       return;
     }
+    const oid = projekti.oid;
     for (let idx = 0; idx < julkaisut.length; idx++) {
       if (julkaisut[idx].id == julkaisu.id) {
         log.info("update " + description, { idx, julkaisu });
@@ -331,16 +307,12 @@ export class ProjektiDatabase {
     }
   }
 
-  private async deleteJulkaisuFromList(
-    oid: string,
-    listFieldName: string,
-    julkaisut: JulkaisuWithId[] | undefined | null,
-    julkaisuIdToDelete: number,
-    description: string
-  ) {
+  async deleteJulkaisuFromList(projekti: DBProjekti, julkaisuIdToDelete: number, listFieldName: JulkaisutFieldName, description: string) {
+    const julkaisut = projekti[listFieldName];
     if (!julkaisut) {
       return;
     }
+    const oid = projekti.oid;
     for (let idx = 0; idx < julkaisut.length; idx++) {
       if (julkaisut[idx].id == julkaisuIdToDelete) {
         log.info("delete " + description, { idx, julkaisuIdToDelete });

@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (dbProjekti?.nahtavillaoloVaiheJulkaisut) {
       for (const julkaisu of dbProjekti.nahtavillaoloVaiheJulkaisut) {
         julkaisu.kuulutusVaihePaattyyPaiva = "2022-01-01";
-        await projektiDatabase.updateNahtavillaoloVaiheJulkaisu(dbProjekti, julkaisu);
+        await projektiDatabase.nahtavillaoloVaiheJulkaisut.update(dbProjekti, julkaisu);
       }
     }
   });
@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         let yesterday = dayjs().add(-1, "day").format("YYYY-MM-DD");
         julkaisu.kuulutusPaiva = yesterday;
         julkaisu.kuulutusVaihePaattyyPaiva = yesterday;
-        await projektiDatabase.updateHyvaksymisPaatosVaiheJulkaisu(dbProjekti, julkaisu);
+        await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(dbProjekti, julkaisu);
       }
     }
   });
@@ -39,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         let yearAgo = dayjs().add(-1, "year").add(-1, "day").format("YYYY-MM-DD");
         julkaisu.kuulutusPaiva = yearAgo;
         julkaisu.kuulutusVaihePaattyyPaiva = yearAgo;
-        await projektiDatabase.updateHyvaksymisPaatosVaiheJulkaisu(dbProjekti, julkaisu);
+        await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(dbProjekti, julkaisu);
       }
     }
   });

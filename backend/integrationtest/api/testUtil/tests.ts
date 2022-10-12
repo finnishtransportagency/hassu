@@ -27,15 +27,11 @@ import * as log from "loglevel";
 import { fail } from "assert";
 import { palauteEmailService } from "../../../src/palaute/palauteEmailService";
 import { expectApiError, expectToMatchSnapshot } from "./util";
-import { handleEvent } from "../../../src/aineisto/aineistoImporterLambda";
-import { SQSEvent } from "aws-lambda/trigger/sqs";
 import cloneDeep from "lodash/cloneDeep";
 import { fileService } from "../../../src/files/fileService";
 import { testProjektiDatabase } from "../../../src/database/testProjektiDatabase";
 import { expectAwsCalls } from "../../../test/aws/awsMock";
 import { Attachment } from "nodemailer/lib/mailer";
-import { Context } from "aws-lambda";
-import { Callback } from "aws-lambda/handler";
 
 const { expect } = require("chai");
 
@@ -447,13 +443,6 @@ export function verifyEmailsSent(emailClientStub: Sinon.SinonStub): void {
     ).toMatchSnapshot();
     emailClientStub.reset();
   }
-}
-
-export async function processQueue(fakeAineistoImportQueue: SQSEvent[]): Promise<void> {
-  for (const event of fakeAineistoImportQueue) {
-    await handleEvent(event, null as unknown as Context, null as unknown as Callback);
-  }
-  fakeAineistoImportQueue.splice(0, fakeAineistoImportQueue.length); // Clear the queue
 }
 
 export async function deleteProjekti(oid: string): Promise<void> {

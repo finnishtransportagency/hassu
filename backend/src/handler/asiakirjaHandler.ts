@@ -121,7 +121,7 @@ async function handleHyvaksymisPaatosKuulutus(
     kayttoOikeudet: projektiWithChanges.kayttoOikeudet,
     kasittelynTila,
     suunnitteluSopimus,
-    hyvaksymisPaatosVaihe: asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projektiWithChanges),
+    hyvaksymisPaatosVaihe: asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projektiWithChanges, projektiWithChanges.hyvaksymisPaatosVaihe),
     kieli,
     luonnos: true,
     asiakirjaTyyppi,

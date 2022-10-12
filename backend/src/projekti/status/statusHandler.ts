@@ -3,8 +3,8 @@ import { isDateInThePast } from "../../util/dateUtil";
 
 export const HYVAKSYMISPAATOS_DURATION_VALUE = 1;
 export const HYVAKSYMISPAATOS_DURATION_UNIT = "year";
-export const JATKOPAATOS_DURATION_VALUE = 1;
-export const JATKOPAATOS_DURATION_UNIT = "year";
+export const JATKOPAATOS_DURATION_VALUE = 6;
+export const JATKOPAATOS_DURATION_UNIT = "months";
 
 // Chain of responsibilites pattern to determine projekti status
 export abstract class StatusHandler<T> {

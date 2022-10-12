@@ -149,6 +149,8 @@ Array [
     "aloitusKuulutus": undefined,
     "euRahoitus": undefined,
     "hyvaksymisPaatosVaihe": undefined,
+    "jatkoPaatos1Vaihe": undefined,
+    "jatkoPaatos2Vaihe": undefined,
     "kasittelynTila": undefined,
     "kayttoOikeudet": Array [
       Object {
@@ -213,6 +215,8 @@ Array [
     "aloitusKuulutus": undefined,
     "euRahoitus": undefined,
     "hyvaksymisPaatosVaihe": undefined,
+    "jatkoPaatos1Vaihe": undefined,
+    "jatkoPaatos2Vaihe": undefined,
     "kasittelynTila": undefined,
     "kayttoOikeudet": Array [
       Object {
@@ -344,6 +348,8 @@ Array [
     },
     "euRahoitus": false,
     "hyvaksymisPaatosVaihe": undefined,
+    "jatkoPaatos1Vaihe": undefined,
+    "jatkoPaatos2Vaihe": undefined,
     "kasittelynTila": undefined,
     "kayttoOikeudet": Array [
       Object {

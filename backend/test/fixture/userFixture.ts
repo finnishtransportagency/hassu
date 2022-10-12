@@ -51,6 +51,14 @@ export class UserFixture {
     roolit: ["hassu_kayttaja", "Atunnukset"],
   };
 
+  static projari112: NykyinenKayttaja = {
+    __typename: "NykyinenKayttaja",
+    etuNimi: "Pertti",
+    sukuNimi: "Projektipäällikkö",
+    uid: "A000112",
+    roolit: ["hassu_kayttaja"],
+  };
+
   static hassuATunnus1: NykyinenKayttaja = {
     __typename: "NykyinenKayttaja",
     etuNimi: "A-tunnus1",

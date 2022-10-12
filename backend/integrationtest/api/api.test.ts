@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { describe, it } from "mocha";
 import { setupLocalDatabase } from "../util/databaseUtil";
 import { Status } from "../../../common/graphql/apiModel";
@@ -9,8 +7,6 @@ import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/perso
 import { openSearchClientYllapito } from "../../src/projektiSearch/openSearchClient";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
-import { aineistoImporterClient } from "../../src/aineisto/aineistoImporterClient";
-import { SQSEvent, SQSRecord } from "aws-lambda/trigger/sqs";
 import { getCloudFront } from "../../src/aws/client";
 import { cleanProjektiS3Files } from "../util/s3Util";
 import { emailClient } from "../../src/email/email";
@@ -19,7 +15,6 @@ import {
   julkaiseSuunnitteluvaihe,
   julkaiseVuorovaikutus,
   loadProjektiFromDatabase,
-  processQueue,
   readProjektiFromVelho,
   sendEmailDigests,
   testAloituskuulutusApproval,
@@ -45,15 +40,16 @@ import {
   testNahtavillaoloLisaAineisto,
 } from "./testUtil/nahtavillaolo";
 import {
+  testCreateHyvaksymisPaatosWithAineistot,
   testHyvaksymismenettelyssa,
   testHyvaksymisPaatosVaihe,
   testHyvaksymisPaatosVaiheApproval,
-  testImportHyvaksymisPaatosAineistot,
 } from "./testUtil/hyvaksymisPaatosVaihe";
 import { FixtureName, recordProjektiTestFixture } from "./testFixtureRecorder";
 import { pdfGeneratorClient } from "../../src/asiakirja/lambda/pdfGeneratorClient";
 import { handleEvent as pdfGenerator } from "../../src/asiakirja/lambda/pdfGeneratorHandler";
 import { awsMockResolves } from "../../test/aws/awsMock";
+import { ImportAineistoMock } from "./testUtil/importAineistoMock";
 
 const { expect } = require("chai");
 
@@ -61,12 +57,11 @@ const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
 describe("Api", () => {
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
-  let importAineistoStub: sinon.SinonStub;
   let userFixture: UserFixture;
   let awsCloudfrontInvalidationStub: sinon.SinonStub;
   let emailClientStub: sinon.SinonStub;
 
-  const fakeAineistoImportQueue: SQSEvent[] = [];
+  const importAineistoMock = new ImportAineistoMock();
 
   before(async () => {
     await setupLocalDatabase();
@@ -80,15 +75,10 @@ describe("Api", () => {
     sinon.stub(openSearchClientYllapito, "deleteDocument");
     sinon.stub(openSearchClientYllapito, "putDocument");
 
+    importAineistoMock.initStub();
     const pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
     pdfGeneratorLambdaStub.callsFake(async (event) => {
       return await pdfGenerator(event);
-    });
-
-    importAineistoStub = sinon.stub(aineistoImporterClient, "importAineisto");
-    importAineistoStub.callsFake(async (event) => {
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      fakeAineistoImportQueue.push({ Records: [{ body: JSON.stringify(event) } as SQSRecord] });
     });
 
     awsCloudfrontInvalidationStub = sinon.stub(getCloudFront(), "createInvalidation");
@@ -128,7 +118,7 @@ describe("Api", () => {
     await testSuunnitteluvaiheVuorovaikutus(oid, projektiPaallikko);
     const velhoAineistoKategorias = await testListDocumentsToImport(oid);
     await testImportAineistot(oid, velhoAineistoKategorias);
-    await processQueue(fakeAineistoImportQueue);
+    await importAineistoMock.processQueue();
     await verifyVuorovaikutusSnapshot(oid, userFixture);
 
     await testPublicAccessToProjekti(oid, Status.ALOITUSKUULUTUS, userFixture, " ennen suunnitteluvaihetta");
@@ -136,18 +126,18 @@ describe("Api", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await julkaiseSuunnitteluvaihe(oid);
     verifyEmailsSent(emailClientStub);
-    await processQueue(fakeAineistoImportQueue);
+    await importAineistoMock.processQueue();
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
     await recordProjektiTestFixture(FixtureName.NAHTAVILLAOLO, oid);
 
     await julkaiseVuorovaikutus(oid, userFixture);
-    await processQueue(fakeAineistoImportQueue);
+    await importAineistoMock.processQueue();
     verifyEmailsSent(emailClientStub);
     await takeS3Snapshot(oid, "just after vuorovaikutus published");
     verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub);
 
     await testUpdatePublishDateAndDeleteAineisto(oid, userFixture);
-    await processQueue(fakeAineistoImportQueue);
+    await importAineistoMock.processQueue();
     await takeS3Snapshot(oid, "vuorovaikutus publish date changed and last aineisto deleted");
     verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub);
 
@@ -157,21 +147,27 @@ describe("Api", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await testNahtavillaolo(oid, projektiPaallikko.kayttajatunnus);
     const nahtavillaoloVaihe = await testImportNahtavillaoloAineistot(oid, velhoAineistoKategorias);
-    await processQueue(fakeAineistoImportQueue);
-    await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit);
+    await importAineistoMock.processQueue();
+    await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit!);
     await testNahtavillaoloApproval(oid, projektiPaallikko, userFixture);
-    await processQueue(fakeAineistoImportQueue);
+    await importAineistoMock.processQueue();
     await takeS3Snapshot(oid, "Nahtavillaolo published");
     verifyEmailsSent(emailClientStub);
 
     await testHyvaksymismenettelyssa(oid, userFixture);
     await testHyvaksymisPaatosVaihe(oid, userFixture);
-    await testImportHyvaksymisPaatosAineistot(oid, velhoAineistoKategorias, projektiPaallikko.kayttajatunnus);
-    await processQueue(fakeAineistoImportQueue);
+    await testCreateHyvaksymisPaatosWithAineistot(
+      oid,
+      "hyvaksymisPaatosVaihe",
+      velhoAineistoKategorias,
+      projektiPaallikko.kayttajatunnus,
+      Status.HYVAKSYTTY
+    );
+    await importAineistoMock.processQueue();
     await takeYllapitoS3Snapshot(oid, "Hyvaksymispaatos created", "hyvaksymispaatos");
 
     await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture);
-    await processQueue(fakeAineistoImportQueue);
+    await importAineistoMock.processQueue();
     await takePublicS3Snapshot(oid, "Hyvaksymispaatos approved", "hyvaksymispaatos");
     verifyEmailsSent(emailClientStub);
 
