@@ -68,8 +68,10 @@ export async function testImportHyvaksymisPaatosAineistot(
       aineistoNahtavilla: adaptAineistoToInput(lisaAineisto.slice(2, 3)),
 
       ilmoituksenVastaanottajat: apiTestFixture.ilmoituksenVastaanottajat,
-      kuulutusYhteystiedot: apiTestFixture.yhteystietoInputLista,
-      kuulutusYhteysHenkilot: [projektiPaallikko],
+      kuulutusYhteystiedot: {
+        yhteysTiedot: apiTestFixture.yhteystietoInputLista,
+        yhteysHenkilot: [projektiPaallikko],
+      },
       hallintoOikeus: HallintoOikeus.HAMEENLINNA,
 
       kuulutusPaiva: "2022-06-09",

@@ -1,4 +1,4 @@
-import { HyvaksymisPaatosVaiheJulkaisu, Kieli, ProjektiKayttaja } from "@services/api";
+import { HyvaksymisPaatosVaiheJulkaisu, Kieli } from "@services/api";
 import React, { ReactElement } from "react";
 import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
@@ -42,19 +42,6 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
     hyvaksymisPaatosVaiheHref =
       window.location.protocol + "//" + window.location.host + "/suunnitelma/" + projekti.oid + "/hyvaksymispaatos";
   }
-  const vuorovaikutusYhteysHenkilot: ProjektiKayttaja[] = hyvaksymisPaatosVaiheJulkaisu.kuulutusYhteysHenkilot
-    ? hyvaksymisPaatosVaiheJulkaisu.kuulutusYhteysHenkilot
-        .map((hlo) => {
-          const yhteysHenkiloTietoineen: ProjektiKayttaja | undefined = (projekti?.kayttoOikeudet || []).find(
-            (ko) => ko.kayttajatunnus === hlo
-          );
-          if (!yhteysHenkiloTietoineen) {
-            return {} as ProjektiKayttaja;
-          }
-          return yhteysHenkiloTietoineen as ProjektiKayttaja;
-        })
-        .filter((pk) => pk.nimi)
-    : [];
 
   return (
     <>
@@ -109,16 +96,10 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
       <Section>
         <SectionContent>
           <p className="vayla-label mb-5">Kuulutuksen yhteyshenkilöt</p>
-          {hyvaksymisPaatosVaiheJulkaisu.kuulutusYhteystiedot?.map((yhteystieto, index) => (
+          {hyvaksymisPaatosVaiheJulkaisu.yhteystiedot?.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
               {capitalize(yhteystieto.etunimi)} {capitalize(yhteystieto.sukunimi)}, puh. {yhteystieto.puhelinnumero},{" "}
               {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio})
-            </p>
-          ))}
-          {vuorovaikutusYhteysHenkilot.map((yhteystieto, index) => (
-            <p style={{ margin: 0 }} key={index}>
-              {yhteystieto.nimi}, puh. {yhteystieto.puhelinnumero}, {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} (
-              {yhteystieto.organisaatio})
             </p>
           ))}
         </SectionContent>

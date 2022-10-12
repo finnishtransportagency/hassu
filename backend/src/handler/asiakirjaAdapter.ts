@@ -1,7 +1,7 @@
 import { AloitusKuulutusJulkaisu, DBProjekti, HyvaksymisPaatosVaiheJulkaisu, NahtavillaoloVaiheJulkaisu, Velho } from "../database/model";
 import cloneDeep from "lodash/cloneDeep";
 import { AloitusKuulutusTila, HyvaksymisPaatosVaiheTila, NahtavillaoloVaiheTila } from "../../../common/graphql/apiModel";
-import adaptStandardiYhteystiedot from "../util/adaptStandardiYhteystiedot";
+import { adaptStandardiYhteystiedotToYhteystiedot } from "../util/adaptStandardiYhteystiedot";
 import { findJulkaisuWithTila, findUserByKayttajatunnus } from "../projekti/projektiUtil";
 import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../projekti/adapter/adaptToAPI";
 import assert from "assert";
@@ -23,7 +23,7 @@ export class AsiakirjaAdapter {
         // Tässä vaiheessa kuulutusYhteystiedot on oltava olemassa
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        yhteystiedot: adaptStandardiYhteystiedot(dbProjekti, kuulutusYhteystiedot),
+        yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot),
         velho: adaptVelho(dbProjekti),
         suunnitteluSopimus: adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
           dbProjekti.oid,
@@ -45,10 +45,10 @@ export class AsiakirjaAdapter {
       return {
         ...includedFields,
         velho: adaptVelho(dbProjekti),
+        yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot),
         // dbProjekti.kielitiedot on oltava olemassa
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        yhteystiedot: adaptStandardiYhteystiedot(dbProjekti, kuulutusYhteystiedot),
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
       };
     }
@@ -57,10 +57,11 @@ export class AsiakirjaAdapter {
 
   adaptHyvaksymisPaatosVaiheJulkaisu(dbProjekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu {
     if (dbProjekti.hyvaksymisPaatosVaihe) {
-      const { palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.hyvaksymisPaatosVaihe;
+      const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.hyvaksymisPaatosVaihe;
       return {
         ...includedFields,
         velho: adaptVelho(dbProjekti),
+        yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot),
         // dbProjekti.kielitiedot on oltava olemassa
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore

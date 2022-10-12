@@ -1,4 +1,4 @@
-import { Aineisto, LocalizedMap, Yhteystieto, IlmoituksenVastaanottajat, Velho, Kielitiedot } from "./common";
+import { Aineisto, LocalizedMap, Yhteystieto, IlmoituksenVastaanottajat, Velho, Kielitiedot, StandardiYhteystiedot } from "./common";
 import { HyvaksymisPaatosVaiheTila, HallintoOikeus } from "../../../../common/graphql/apiModel";
 
 export type HyvaksymisPaatosVaihe = {
@@ -8,8 +8,7 @@ export type HyvaksymisPaatosVaihe = {
   kuulutusPaiva?: string | null;
   kuulutusVaihePaattyyPaiva?: string | null;
   hallintoOikeus?: HallintoOikeus | null;
-  kuulutusYhteystiedot?: Array<Yhteystieto> | null;
-  kuulutusYhteysHenkilot?: Array<string> | null;
+  kuulutusYhteystiedot?: StandardiYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   palautusSyy?: string | null;
 };
@@ -23,8 +22,7 @@ export type HyvaksymisPaatosVaiheJulkaisu = {
   velho: Velho;
   kielitiedot: Kielitiedot;
   hallintoOikeus?: HallintoOikeus | null;
-  kuulutusYhteystiedot?: Array<Yhteystieto> | null;
-  kuulutusYhteysHenkilot?: Array<string> | null;
+  yhteystiedot: Yhteystieto[];
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   hyvaksymisPaatosVaihePDFt?: LocalizedMap<HyvaksymisPaatosVaihePDF>;
   tila?: HyvaksymisPaatosVaiheTila | null;

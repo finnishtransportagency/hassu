@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { HyvaksymisPaatosVaiheInput, KirjaamoOsoite, TallennaProjektiInput } from "@services/api";
+import { HyvaksymisPaatosVaiheInput, KirjaamoOsoite, TallennaProjektiInput, YhteystietoInput } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import React, { ReactElement, useEffect, useMemo } from "react";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
@@ -45,19 +45,21 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet, setIsDirty }: Kuul
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
 
   const defaultValues: KuulutuksenTiedotFormValues = useMemo(() => {
+    const yhteysTiedot: YhteystietoInput[] =
+      projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt)) || [];
+
+    const yhteysHenkilot: string[] = projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysHenkilot || [];
+
     const formValues: KuulutuksenTiedotFormValues = {
       oid: projekti.oid,
       hyvaksymisPaatosVaihe: {
         kuulutusPaiva: projekti?.hyvaksymisPaatosVaihe?.kuulutusPaiva || null,
         kuulutusVaihePaattyyPaiva: projekti?.hyvaksymisPaatosVaihe?.kuulutusVaihePaattyyPaiva || null,
         hallintoOikeus: projekti?.hyvaksymisPaatosVaihe?.hallintoOikeus || "",
-        kuulutusYhteystiedot: projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot
-          ? projekti.hyvaksymisPaatosVaihe.kuulutusYhteystiedot.map((yhteystieto) => removeTypeName(yhteystieto))
-          : [],
-        kuulutusYhteysHenkilot:
-          projekti?.kayttoOikeudet
-            ?.filter(({ kayttajatunnus }) => projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteysHenkilot?.includes(kayttajatunnus))
-            .map(({ kayttajatunnus }) => kayttajatunnus) || [],
+        kuulutusYhteystiedot: {
+          yhteysTiedot,
+          yhteysHenkilot,
+        },
         ilmoituksenVastaanottajat: defaultVastaanottajat(
           projekti,
           projekti.hyvaksymisPaatosVaihe?.ilmoituksenVastaanottajat,

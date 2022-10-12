@@ -20,12 +20,7 @@ export function adaptNahtavillaoloVaihe(
     return undefined;
   }
   const { aineistoNahtavilla, lisaAineisto, kuulutusYhteystiedot, ilmoituksenVastaanottajat, hankkeenKuvaus, ...rest } = nahtavillaoloVaihe;
-  if (!hankkeenKuvaus) {
-    throw new Error("adaptNahtavillaoloVaihe: nahtavillaoloVaihe.hankkeenKuvaus määrittelemättä");
-  }
-  if (!ilmoituksenVastaanottajat) {
-    throw new Error("adaptNahtavillaoloVaihe: nahtavillaoloVaihe.ilmoituksenVastaanottajat määrittelemättä");
-  }
+
   return {
     __typename: "NahtavillaoloVaihe",
     ...rest,
@@ -37,7 +32,7 @@ export function adaptNahtavillaoloVaihe(
     lisaAineistoParametrit: lisaAineistoService.generateListingParams(dbProjekti.oid, nahtavillaoloVaihe.id, dbProjekti.salt),
     kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-    hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
+    hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus || undefined),
   };
 }
 

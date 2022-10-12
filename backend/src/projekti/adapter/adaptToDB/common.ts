@@ -59,19 +59,19 @@ export function adaptYhteysHenkilotToSave(yhteystiedot: string[] | undefined | n
 }
 
 export function adaptStandardiYhteystiedotToSave(
-  kuulutusYhteystiedot: API.StandardiYhteystiedotInput,
+  kuulutusYhteystiedot: API.StandardiYhteystiedotInput | null | undefined,
   tyhjaEiOk?: boolean
 ): StandardiYhteystiedot | undefined {
   if ((kuulutusYhteystiedot?.yhteysTiedot || []).length + (kuulutusYhteystiedot?.yhteysHenkilot || []).length === 0) {
-    if (tyhjaEiOk) {
+    if (!tyhjaEiOk) {
       return undefined;
     } else {
       throw new IllegalArgumentError("Standardiyhteystietojen on sisällettävä vähintään yksi yhteystieto!");
     }
   }
   return {
-    yhteysTiedot: adaptYhteystiedotToSave(kuulutusYhteystiedot.yhteysTiedot),
-    yhteysHenkilot: adaptYhteysHenkilotToSave(kuulutusYhteystiedot.yhteysHenkilot),
+    yhteysTiedot: adaptYhteystiedotToSave(kuulutusYhteystiedot?.yhteysTiedot),
+    yhteysHenkilot: adaptYhteysHenkilotToSave(kuulutusYhteystiedot?.yhteysHenkilot),
   };
 }
 

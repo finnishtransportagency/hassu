@@ -1,5 +1,4 @@
 import {
-  DBProjekti,
   Hyvaksymispaatos,
   HyvaksymisPaatosVaihe,
   HyvaksymisPaatosVaiheJulkaisu,
@@ -12,12 +11,12 @@ import {
   adaptIlmoituksenVastaanottajat,
   adaptKielitiedotByAddingTypename,
   adaptVelhoByAddingTypename,
-  adaptYhteystiedotByAddingTypename,
+  adaptMandatoryYhteystiedotByAddingTypename,
+  adaptStandardiYhteystiedotByAddingTypename,
 } from "../common";
 import { fileService } from "../../../files/fileService";
 
 export function adaptHyvaksymisPaatosVaihe(
-  dbProjekti: DBProjekti,
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | null | undefined,
   hyvaksymisPaatos: Hyvaksymispaatos | null | undefined
 ): API.HyvaksymisPaatosVaihe | undefined {
@@ -37,7 +36,7 @@ export function adaptHyvaksymisPaatosVaihe(
     ...rest,
     aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
     hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto),
-    kuulutusYhteystiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot),
+    kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
     hyvaksymisPaatoksenPvm: hyvaksymisPaatos?.paatoksenPvm || undefined,
     hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos?.asianumero || undefined,
@@ -55,7 +54,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisut(
         aineistoNahtavilla,
         hyvaksymisPaatos: hyvaksymisPaatosAineisto,
         ilmoituksenVastaanottajat,
-        kuulutusYhteystiedot,
+        yhteystiedot,
         hyvaksymisPaatosVaihePDFt,
         kielitiedot,
         velho,
@@ -93,7 +92,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisut(
         hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto),
         hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
         hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,
-        kuulutusYhteystiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot),
+        yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
         ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
         velho: adaptVelhoByAddingTypename(velho),
       };
