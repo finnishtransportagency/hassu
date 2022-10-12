@@ -161,4 +161,46 @@ describe("KayttoOikeudetManager", () => {
     // Tarkista, ettei mitään muuttunut
     expect(manager.getKayttoOikeudet()).to.eql(kayttoOikeudetbefore);
   });
+
+  it("should promote existing user to projektipäällikkö successfully", async () => {
+    const manager = new KayttoOikeudetManager([], kayttajas);
+
+    // Lisää nykyinen käyttäjä
+    manager.addUser({ kayttajatunnus: kayttajaA3.uid!, muokattavissa: true });
+    // Lisää sama käyttäjä Velhosta projektipäälliköksi
+    manager.addProjektiPaallikkoFromEmail(kayttajaA3.email);
+
+    let kayttoOikeudet = manager.getKayttoOikeudet();
+    expect(kayttoOikeudet).to.have.length(1);
+    let resultUser = kayttoOikeudet[0];
+    expect(resultUser).to.eql({
+      tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
+      kayttajatunnus: "A3",
+      muokattavissa: false,
+      organisaatio: "Väylävirasto",
+      email: "a3@vayla.fi",
+      nimi: "SukunimiA3, EtunimiA3",
+    });
+  });
+
+  it("should promote existing user to varahenkilö successfully", async () => {
+    const manager = new KayttoOikeudetManager([], kayttajas);
+
+    // Lisää nykyinen käyttäjä
+    manager.addUser({ kayttajatunnus: kayttajaA3.uid!, muokattavissa: true });
+    // Lisää sama käyttäjä Velhosta varahenkilöksi
+    manager.addVarahenkiloFromEmail(kayttajaA3.email);
+
+    let kayttoOikeudet = manager.getKayttoOikeudet();
+    expect(kayttoOikeudet).to.have.length(1, JSON.stringify(kayttoOikeudet, null, 2));
+    let resultUser = kayttoOikeudet[0];
+    expect(resultUser).to.eql({
+      tyyppi: KayttajaTyyppi.VARAHENKILO,
+      kayttajatunnus: "A3",
+      muokattavissa: false,
+      organisaatio: "Väylävirasto",
+      email: "a3@vayla.fi",
+      nimi: "SukunimiA3, EtunimiA3",
+    });
+  });
 });

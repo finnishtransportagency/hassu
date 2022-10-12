@@ -45,7 +45,7 @@ export default function HenkilotPage({ setRouteLabels }: PageProps): ReactElemen
   useProjektiBreadcrumbs(setRouteLabels);
 
   return (
-    <ProjektiPageLayout title="Projektin Henkilöt">
+    <ProjektiPageLayout title="Projektin Henkilöt" showUpdateButton={true}>
       {projekti && <Henkilot {...{ projekti, projektiLoadError, reloadProjekti }} />}
     </ProjektiPageLayout>
   );
