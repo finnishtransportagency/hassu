@@ -47,7 +47,7 @@ export function adaptVuorovaikutusToSave(
 
     const vuorovaikutusToSave: Vuorovaikutus = {
       vuorovaikutusNumero: vuorovaikutusInput.vuorovaikutusNumero,
-      esitettavatYhteystiedot: adaptStandardiYhteystiedotToSave(vuorovaikutusInput.esitettavatYhteystiedot, true),
+      esitettavatYhteystiedot: adaptStandardiYhteystiedotToSave(vuorovaikutusInput.esitettavatYhteystiedot),
       vuorovaikutusTilaisuudet,
       // Jos vuorovaikutuksen ilmoituksella ei tarvitse olla viranomaisvastaanottajia, muokkaa adaptIlmoituksenVastaanottajatToSavea
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(vuorovaikutusInput.ilmoituksenVastaanottajat),
