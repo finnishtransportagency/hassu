@@ -108,16 +108,15 @@ function adaptVuorovaikutusPDFPaths(oid: string, vuorovaikutusPdfs: LocalizedMap
   const result: { [Kieli: string]: API.VuorovaikutusPDF } = {};
   for (const kieli in vuorovaikutusPdfs) {
     const pdfs = vuorovaikutusPdfs[kieli as API.Kieli];
-    if (!pdfs) {
-      throw new Error(`adaptVuorovaikutusPDFPaths: vuorovaikutusPdfs[${kieli}] määrittelemättä`);
+    if (pdfs) {
+      result[kieli] = {
+        __typename: "VuorovaikutusPDF",
+        // getYllapitoPathForProjektiFile molemmat argumentit on määritelty, joten funktio palauttaa ei-undefined arvon
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        kutsuPDFPath: fileService.getYllapitoPathForProjektiFile(oid, pdfs.kutsuPDFPath),
+      };
     }
-    result[kieli] = {
-      __typename: "VuorovaikutusPDF",
-      // getYllapitoPathForProjektiFile molemmat argumentit on määritelty, joten funktio palauttaa ei-undefined arvon
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      kutsuPDFPath: fileService.getYllapitoPathForProjektiFile(oid, pdfs.kutsuPDFPath),
-    };
   }
   return { __typename: "VuorovaikutusPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
 }

@@ -76,7 +76,8 @@ function adaptJulkaisuPDFPaths(oid: string, aloitusKuulutusPDFS: LocalizedMap<Al
   for (const kieli in aloitusKuulutusPDFS) {
     const pdfs = aloitusKuulutusPDFS[kieli as API.Kieli];
     if (!pdfs) {
-      throw new Error(`adaptJulkaisuPDFPaths: aloitusKuulutusPDFS[${kieli}] määrittelemättä`);
+      result[kieli as API.Kieli] = undefined;
+      continue;
     }
     const aloitusKuulutusPdf: API.AloitusKuulutusPDF = {
       __typename: "AloitusKuulutusPDF",

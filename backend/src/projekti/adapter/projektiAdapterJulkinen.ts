@@ -370,9 +370,6 @@ function adaptVuorovaikutukset(dbProjekti: DBProjekti): API.VuorovaikutusJulkine
       if (!vuorovaikutus.vuorovaikutusTilaisuudet) {
         throw new Error("adaptVuorovaikutukset: vuorovaikutus.vuorovaikutusTilaisuudet määrittelmättä");
       }
-      if (!vuorovaikutus.vuorovaikutusPDFt) {
-        throw new Error("adaptVuorovaikutukset: vuorovaikutus.vuorovaikutusPDFt määrittelmättä");
-      }
       // tarkistettu jo, että vuorovaikutusJulkaisuPaiva määritelty
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -462,9 +459,15 @@ function isKuulutusNahtavillaVaiheOver(
   return !nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva || parseDate(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva).isBefore(dayjs());
 }
 
-function adaptVuorovaikutusPDFPaths(oid: string, vuorovaikutuspdfs: LocalizedMap<VuorovaikutusPDF>): API.VuorovaikutusPDFt {
+function adaptVuorovaikutusPDFPaths(
+  oid: string,
+  vuorovaikutuspdfs: LocalizedMap<VuorovaikutusPDF> | undefined
+): API.VuorovaikutusPDFt | undefined {
+  if (!vuorovaikutuspdfs) {
+    return undefined;
+  }
   const result: Partial<API.VuorovaikutusPDFt> = {};
-  if (!vuorovaikutuspdfs || !vuorovaikutuspdfs[API.Kieli.SUOMI]) {
+  if (vuorovaikutuspdfs && !vuorovaikutuspdfs[API.Kieli.SUOMI]) {
     throw new Error(`adaptVuorovaikutusPDFPaths: vuorovaikutuspdfs.${API.Kieli.SUOMI} määrittelemättä`);
   }
   for (const kieli in vuorovaikutuspdfs) {

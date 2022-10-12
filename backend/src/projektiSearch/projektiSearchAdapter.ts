@@ -63,9 +63,6 @@ export function adaptProjektiToJulkinenIndex(projekti: API.ProjektiJulkinen, kie
       // Use texts from projekti
       hankkeenKuvaus = suunnitteluVaihe?.hankkeenKuvaus?.[kieli] || undefined;
       nimi = selectNimi(projekti.velho.nimi, projekti.kielitiedot, kieli);
-      if (!nimi) {
-        throw new Error(`adaptProjektiToJulkinenIndex: projektilta puuttuu nimi kielellä ${kieli}`);
-      }
     } else if (aloitusKuulutusJulkaisuJulkinen) {
       if (!aloitusKuulutusJulkaisuJulkinen.hankkeenKuvaus) {
         throw new Error("adaptProjektiToJulkinenIndex: aloitusKuulutusJulkaisuJulkinen.hankkeenKuvaus puuttuu");
@@ -90,17 +87,20 @@ export function adaptProjektiToJulkinenIndex(projekti: API.ProjektiJulkinen, kie
       publishTimestamp = dayjs(0).format();
     }
 
-    let viimeinenTilaisuusPaattyy: string | undefined;
+    let viimeinenTilaisuusPaattyyString: string | undefined;
+    let viimeinenTilaisuusPaattyyNumber: number | undefined;
 
     const vuorovaikutukset = projekti?.suunnitteluVaihe?.vuorovaikutukset;
     const viimeisinVuorovaikutusKierros = vuorovaikutukset?.[vuorovaikutukset?.length - 1];
 
     if (viimeisinVuorovaikutusKierros) {
       viimeisinVuorovaikutusKierros?.vuorovaikutusTilaisuudet?.forEach((tilaisuus) => {
-        if (tilaisuus.paivamaara || tilaisuus.paattymisAika) {
-          const tilaisuusPaattyy = dayjs(tilaisuus.paivamaara).format(`YYYY-MM-DD[T${tilaisuus.paattymisAika}]`);
-          if (tilaisuusPaattyy && (!viimeinenTilaisuusPaattyy || tilaisuusPaattyy > viimeinenTilaisuusPaattyy)) {
-            viimeinenTilaisuusPaattyy = tilaisuusPaattyy;
+        if (tilaisuus.paivamaara && tilaisuus.paattymisAika) {
+          const tilaisuusPaattyyNumber = Date.parse(tilaisuus.paivamaara + " " + tilaisuus.paattymisAika);
+
+          if (tilaisuusPaattyyNumber && (!viimeinenTilaisuusPaattyyNumber || tilaisuusPaattyyNumber > viimeinenTilaisuusPaattyyNumber)) {
+            viimeinenTilaisuusPaattyyString = tilaisuus.paivamaara + " " + tilaisuus.paattymisAika;
+            viimeinenTilaisuusPaattyyNumber = tilaisuusPaattyyNumber;
           }
         }
       });
@@ -113,7 +113,7 @@ export function adaptProjektiToJulkinenIndex(projekti: API.ProjektiJulkinen, kie
       kunnat: projekti.velho.kunnat?.map(safeTrim),
       maakunnat: projekti.velho.maakunnat?.map(safeTrim),
       vaihe: projekti.status || undefined,
-      viimeinenTilaisuusPaattyy,
+      viimeinenTilaisuusPaattyy: viimeinenTilaisuusPaattyyString,
       vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
       paivitetty: projekti.paivitetty || dayjs().format(),
       publishTimestamp,
