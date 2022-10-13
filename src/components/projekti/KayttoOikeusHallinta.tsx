@@ -181,7 +181,7 @@ const UserFields = ({ index, disableFields, remove, initialKayttaja, muokattavis
       setLoadingKayttajaResults(true);
       users = await api.listUsers({ hakusana });
     }
-    if (true) {
+    if (mounted) {
       setOptions(users);
       setLoadingKayttajaResults(false);
     }
