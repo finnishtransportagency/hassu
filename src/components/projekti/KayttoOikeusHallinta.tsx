@@ -175,13 +175,17 @@ const UserFields = ({ index, disableFields, remove, initialKayttaja, muokattavis
   const [options, setOptions] = useState<Kayttaja[]>(initialKayttaja ? [initialKayttaja] : []);
 
   const searchAndUpdateKayttajat = useCallback(async (hakusana: string) => {
+    let mounted = true;
     let users: Kayttaja[] = [];
     if (hakusana.length >= 3) {
       setLoadingKayttajaResults(true);
       users = await api.listUsers({ hakusana });
     }
-    setOptions(users);
-    setLoadingKayttajaResults(false);
+    if (true) {
+      setOptions(users);
+      setLoadingKayttajaResults(false);
+    }
+    return () => (mounted = false);
   }, []);
 
   const debouncedSearchKayttajat = useDebounceCallback(searchAndUpdateKayttajat, 200);
