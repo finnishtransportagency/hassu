@@ -30,6 +30,7 @@ import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import { Stack } from "@mui/material";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
+import ProjektinTiedotLukutila from "@components/projekti/lukutila/ProjektinTiedotLukutila";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -53,7 +54,12 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
 
   return (
     <ProjektiPageLayout title={"Projektin tiedot"} showUpdateButton>
-      {projekti && <ProjektiSivuLomake {...{ projekti, projektiLoadError, reloadProjekti }} />}
+      {projekti &&
+        (projekti.status === Status.EPAAKTIIVINEN ? (
+          <ProjektinTiedotLukutila projekti={projekti} />
+        ) : (
+          <ProjektiSivuLomake {...{ projekti, projektiLoadError, reloadProjekti }} />
+        ))}
     </ProjektiPageLayout>
   );
 }
