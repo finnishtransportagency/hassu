@@ -3,7 +3,7 @@ import React, { ReactElement, useCallback, useMemo } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import KayttoOikeusHallinta from "@components/projekti/KayttoOikeusHallinta";
-import { api, TallennaProjektiInput, Kayttaja } from "@services/api";
+import { api, TallennaProjektiInput, ProjektiKayttajaInput } from "@services/api";
 import * as Yup from "yup";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -69,11 +69,10 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
     () => ({
       oid: projekti.oid,
       kayttoOikeudet:
-        projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi, muokattavissa }) => ({
+        projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi }) => ({
           kayttajatunnus,
           puhelinnumero: puhelinnumero || "",
           tyyppi,
-          muokattavissa,
         })) || [],
     }),
     [projekti]
@@ -101,9 +100,6 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
 
   const onSubmit = async (formData: FormValues) => {
     deleteFieldArrayIds(formData?.kayttoOikeudet);
-    // noinspection TypeScriptUnresolvedVariable
-    // @ts-ignore
-    formData?.kayttoOikeudet.forEach(oikeus => delete oikeus.muokattavissa);
     setFormIsSubmitting(true);
     try {
       await api.tallennaProjekti(formData);
@@ -118,7 +114,7 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
   };
 
   const onKayttajatUpdate = useCallback(
-    (kayttajat: Kayttaja[]) => {
+    (kayttajat: ProjektiKayttajaInput[]) => {
       setFormContext({ kayttajat });
     },
     [setFormContext]

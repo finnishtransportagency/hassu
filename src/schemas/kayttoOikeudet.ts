@@ -1,14 +1,16 @@
 import * as Yup from "yup";
-import { Kayttaja, KayttajaTyyppi, ProjektiKayttajaInput } from "../../common/graphql/apiModel";
+import { KayttajaTyyppi, ProjektiKayttajaInput } from "../../common/graphql/apiModel";
 import { addAgencyNumberTests, puhelinNumeroSchema } from "./puhelinNumero";
 import { isAorL } from "../../backend/src/util/userUtil";
 
 export interface KayttoOikeudetSchemaContext {
-  kayttajat: Kayttaja[];
+  kayttajat: ProjektiKayttajaInput[];
 }
 
-const kayttajaIsAorL = (kayttajat?: Kayttaja[] | null, kayttajatunnus?: string | null) =>
-  kayttajat?.find(({ uid }) => uid && uid === kayttajatunnus && isAorL(uid));
+const kayttajaIsAorL = (projektiKayttajat?: ProjektiKayttajaInput[] | null, kayttajatunnus?: string | null) =>
+  projektiKayttajat?.find(
+    (projektiKayttaja) => projektiKayttaja.kayttajatunnus && projektiKayttaja.kayttajatunnus === kayttajatunnus && isAorL(kayttajatunnus)
+  );
 
 export const kayttoOikeudetSchema = Yup.array().of(
   Yup.object()
@@ -19,7 +21,7 @@ export const kayttoOikeudetSchema = Yup.array().of(
       }),
       kayttajatunnus: Yup.string().required("Aseta käyttäjä"),
       id: Yup.string().nullable().notRequired(),
-      tyyppi: Yup.mixed<KayttajaTyyppi>().oneOf([KayttajaTyyppi.PROJEKTIPAALLIKKO, KayttajaTyyppi.VARAHENKILO]).notRequired(),
+      tyyppi: Yup.mixed<KayttajaTyyppi>().oneOf([KayttajaTyyppi.PROJEKTIPAALLIKKO, KayttajaTyyppi.VARAHENKILO]).notRequired().nullable(),
       yleinenYhteystieto: Yup.boolean().notRequired(),
     })
     .test("uniikki-kayttajatunnus", "Käyttäjä voi olla vain yhteen kertaan käyttöoikeuslistalla", function (current) {

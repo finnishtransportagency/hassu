@@ -60,11 +60,15 @@ export const HassuDatePicker = React.forwardRef(function HassuDatePickerForwardR
   return <MuiDatePicker<InputDate, OutputDate> {...props} />;
 });
 
+export type HassuDatePickerWithControllerProps<TFieldValues> = Partial<HassuDatePickerProps> & {
+  controllerProps: UseControllerProps<TFieldValues>;
+};
+
 export const HassuDatePickerWithController = <TFieldValues extends FieldValues>({
   controllerProps,
   textFieldProps,
   ...datePickerProps
-}: Partial<HassuDatePickerProps> & { controllerProps: UseControllerProps<TFieldValues> }) => {
+}: HassuDatePickerWithControllerProps<TFieldValues>) => {
   const {
     field: { onChange, onBlur, name, value, ref },
     fieldState,

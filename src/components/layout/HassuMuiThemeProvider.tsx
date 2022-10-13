@@ -108,7 +108,53 @@ export const createLocalizedTheme = (locale: Localization) =>
             lineHeight: 1.222,
           },
         },
-
+        MuiAutocomplete: {
+          defaultProps: {
+            forcePopupIcon: false,
+            disablePortal: true,
+          },
+          styleOverrides: {
+            popper: {
+              margin: 0,
+            },
+            option: {
+              "&[aria-selected='true']": {
+                backgroundColor: "rgba(60,210,255,0.10)",
+                "&.Mui-focused": {
+                  backgroundColor: "rgba(60,210,255,0.20)",
+                },
+                "&:hover": {
+                  backgroundColor: "rgba(60,210,255,0.15)",
+                },
+              },
+            },
+            inputRoot: {
+              padding: 0,
+              "& .MuiAutocomplete-input": {
+                paddingLeft: "14px",
+                paddingRight: "14px",
+                paddingBottom: "11px",
+                paddingTop: "11px",
+              },
+            },
+          },
+        },
+        MuiMenuItem: {
+          defaultProps: { disableRipple: true },
+          styleOverrides: {
+            root: {
+              "&.Mui-selected": {
+                backgroundColor: "rgba(60,210,255,0.10)",
+                "&:hover": {
+                  backgroundColor: "rgba(60,210,255,0.15)",
+                },
+                "&.Mui-focusVisible": {
+                  backgroundColor: "rgba(60,210,255,0.20)",
+                },
+              },
+            },
+          },
+        },
         MuiOutlinedInput: {
           defaultProps: {
             componentsProps: { input: { size: 15 } },
@@ -120,7 +166,7 @@ export const createLocalizedTheme = (locale: Localization) =>
               "& .MuiIconButton-root": {
                 color: "#242222",
               },
-              "& input.MuiOutlinedInput-input": {
+              "& .MuiOutlinedInput-input": {
                 paddingTop: "11px",
                 paddingBottom: "11px",
                 "&:-webkit-autofill": {
