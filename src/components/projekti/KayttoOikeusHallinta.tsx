@@ -41,11 +41,17 @@ export const defaultKayttaja: ProjektiKayttajaInput = {
 function KayttoOikeusHallinta(props: Props) {
   const [initialKayttajat, setInitialKayttajat] = useState<Kayttaja[]>();
   useEffect(() => {
+    let mounted = true;
     const getInitialKayttajat = async () => {
       const kayttajat = await loadKayttajat(props.projektiKayttajat.map((kayttaja) => kayttaja.kayttajatunnus));
-      setInitialKayttajat(kayttajat);
+      if (mounted) {
+        setInitialKayttajat(kayttajat);
+      }
     };
     getInitialKayttajat();
+    return () => {
+      mounted = false;
+    };
   }, [props.projektiKayttajat]);
 
   if (!initialKayttajat) {
