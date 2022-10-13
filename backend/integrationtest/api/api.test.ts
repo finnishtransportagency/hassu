@@ -51,6 +51,8 @@ import {
   testImportHyvaksymisPaatosAineistot,
 } from "./testUtil/hyvaksymisPaatosVaihe";
 import { FixtureName, recordProjektiTestFixture } from "./testFixtureRecorder";
+import { pdfGeneratorClient } from "../../src/asiakirja/lambda/pdfGeneratorClient";
+import { handleEvent as pdfGenerator } from "../../src/asiakirja/lambda/pdfGeneratorHandler";
 import { awsMockResolves } from "../../test/aws/awsMock";
 
 const { expect } = require("chai");
@@ -77,6 +79,11 @@ describe("Api", () => {
     sinon.stub(openSearchClientYllapito, "query").resolves({ status: 200 });
     sinon.stub(openSearchClientYllapito, "deleteDocument");
     sinon.stub(openSearchClientYllapito, "putDocument");
+
+    const pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
+    pdfGeneratorLambdaStub.callsFake(async (event) => {
+      return await pdfGenerator(event);
+    });
 
     importAineistoStub = sinon.stub(aineistoImporterClient, "importAineisto");
     importAineistoStub.callsFake(async (event) => {

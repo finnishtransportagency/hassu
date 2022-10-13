@@ -1,11 +1,11 @@
 import { KayttajaTyyppi, Kieli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
 import { DBVaylaUser, Kielitiedot, SuunnitteluSopimusJulkaisu, Velho, Vuorovaikutus, Yhteystieto } from "../../database/model";
-import { AsiakirjanMuoto } from "../asiakirjaService";
 import { translate } from "../../util/localization";
 import { linkHyvaksymisPaatos, linkSuunnitteluVaihe } from "../../../../common/links";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import union from "lodash/union";
 import { vaylaUserToYhteystieto } from "../../util/vaylaUserToYhteystieto";
+import { AsiakirjanMuoto } from "../asiakirjaTypes";
 
 export type KutsuAdapterProps = {
   oid?: string;

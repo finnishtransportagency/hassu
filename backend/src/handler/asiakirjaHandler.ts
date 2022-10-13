@@ -3,14 +3,16 @@ import { requirePermissionLuku } from "../user";
 import { AsiakirjaTyyppi, EsikatseleAsiakirjaPDFQueryVariables, Kieli, PDF, TallennaProjektiInput } from "../../../common/graphql/apiModel";
 import { log } from "../logger";
 import { NotFoundError } from "../error/NotFoundError";
-import {
-  asiakirjaService,
-  HyvaksymisPaatosKuulutusAsiakirjaTyyppi,
-  NahtavillaoloKuulutusAsiakirjaTyyppi,
-} from "../asiakirja/asiakirjaService";
 import { projektiAdapter } from "../projekti/adapter/projektiAdapter";
 import { asiakirjaAdapter } from "./asiakirjaAdapter";
 import { DBProjekti, Vuorovaikutus } from "../database/model";
+import assert from "assert";
+import { pdfGeneratorClient } from "../asiakirja/lambda/pdfGeneratorClient";
+import {
+  determineAsiakirjaMuoto,
+  HyvaksymisPaatosKuulutusAsiakirjaTyyppi,
+  NahtavillaoloKuulutusAsiakirjaTyyppi
+} from "../asiakirja/asiakirjaTypes";
 
 async function handleAloitusKuulutus(
   projekti: DBProjekti,
@@ -21,12 +23,12 @@ async function handleAloitusKuulutus(
   // AloitusKuulutusJulkaisu is waiting for approval, so that is the version to preview
   const aloitusKuulutusJulkaisu = asiakirjaAdapter.findAloitusKuulutusWaitingForApproval(projekti);
   if (aloitusKuulutusJulkaisu) {
-    return asiakirjaService.createAloituskuulutusPdf({
+    return pdfGeneratorClient.createAloituskuulutusPdf({
       aloitusKuulutusJulkaisu,
       asiakirjaTyyppi,
       kieli,
       luonnos: true,
-      kayttoOikeudet: projekti.kayttoOikeudet
+      kayttoOikeudet: projekti.kayttoOikeudet,
     });
   } else {
     // Previewing projekti with unsaved changes. adaptProjektiToPreview combines database content with the user provided changes
@@ -34,12 +36,12 @@ async function handleAloitusKuulutus(
     projektiWithChanges.velho = projekti.velho; // Restore read-only velho data which was removed by adaptProjektiToSave
     projektiWithChanges.suunnitteluSopimus = projekti.suunnitteluSopimus;
 
-    return asiakirjaService.createAloituskuulutusPdf({
+    return pdfGeneratorClient.createAloituskuulutusPdf({
       aloitusKuulutusJulkaisu: asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projektiWithChanges),
       asiakirjaTyyppi,
       kieli,
       luonnos: true,
-      kayttoOikeudet: projekti.kayttoOikeudet
+      kayttoOikeudet: projekti.kayttoOikeudet,
     });
   }
 }
@@ -55,9 +57,21 @@ async function handleYleisotilaisuusKutsu(
   projektiWithChanges.velho = projekti.velho; // Restore read-only velho data which was removed by adaptProjektiToSave
   projektiWithChanges.suunnitteluSopimus = projekti.suunnitteluSopimus;
 
-  return asiakirjaService.createYleisotilaisuusKutsuPdf({
-    projekti: projektiWithChanges,
+  const velho = projektiWithChanges.velho;
+  assert(velho, "Velho puuttuu");
+  const suunnitteluVaihe = projektiWithChanges.suunnitteluVaihe;
+  const kielitiedot = projektiWithChanges.kielitiedot;
+  const suunnitteluSopimus = projektiWithChanges.suunnitteluSopimus || undefined;
+  assert(suunnitteluVaihe && kielitiedot);
+  return pdfGeneratorClient.createYleisotilaisuusKutsuPdf({
+    oid: projektiWithChanges.oid,
+    asiakirjanMuoto: determineAsiakirjaMuoto(velho.tyyppi, velho.vaylamuoto),
+    velho,
+    kayttoOikeudet: projektiWithChanges.kayttoOikeudet,
     vuorovaikutus: (muutokset.suunnitteluVaihe?.vuorovaikutus as Vuorovaikutus) || null,
+    suunnitteluVaihe,
+    kielitiedot,
+    suunnitteluSopimus,
     kieli,
     luonnos: true,
   });
@@ -71,11 +85,15 @@ async function handleNahtavillaoloKuulutus(
 ) {
   // Previewing projekti with unsaved changes. adaptProjektiToPreview combines database content with the user provided changes
   const projektiWithChanges = await projektiAdapter.adaptProjektiToPreview(projekti, muutokset);
-  projektiWithChanges.velho = projekti.velho; // Restore read-only velho data which was removed by adaptProjektiToSave
-  projektiWithChanges.suunnitteluSopimus = projekti.suunnitteluSopimus;
-
-  return asiakirjaService.createNahtavillaoloKuulutusPdf({
-    projekti: projektiWithChanges,
+  const velho = projekti.velho;
+  assert(velho);
+  projektiWithChanges.velho = velho; // Restore read-only velho data which was removed by adaptProjektiToSave
+  const suunnitteluSopimus = projekti.suunnitteluSopimus || undefined;
+  projektiWithChanges.suunnitteluSopimus = suunnitteluSopimus;
+  return pdfGeneratorClient.createNahtavillaoloKuulutusPdf({
+    velho: projektiWithChanges.velho,
+    kayttoOikeudet: projektiWithChanges.kayttoOikeudet,
+    suunnitteluSopimus,
     nahtavillaoloVaihe: asiakirjaAdapter.adaptNahtavillaoloVaiheJulkaisu(projektiWithChanges),
     kieli,
     luonnos: true,
@@ -91,11 +109,18 @@ async function handleHyvaksymisPaatosKuulutus(
 ) {
   // Previewing projekti with unsaved changes. adaptProjektiToPreview combines database content with the user provided changes
   const projektiWithChanges = await projektiAdapter.adaptProjektiToPreview(projekti, muutokset);
-  projektiWithChanges.velho = projekti.velho; // Restore read-only velho data which was removed by adaptProjektiToSave
-  projektiWithChanges.suunnitteluSopimus = projekti.suunnitteluSopimus;
+  const velho = projekti.velho;
+  assert(velho);
+  projektiWithChanges.velho = velho; // Restore read-only velho data which was removed by adaptProjektiToSave
+  const suunnitteluSopimus = projekti.suunnitteluSopimus || undefined;
 
-  return asiakirjaService.createHyvaksymisPaatosKuulutusPdf({
-    projekti: projektiWithChanges,
+  const kasittelynTila = projektiWithChanges.kasittelynTila;
+  assert(kasittelynTila);
+  return pdfGeneratorClient.createHyvaksymisPaatosKuulutusPdf({
+    oid: projekti.oid,
+    kayttoOikeudet: projektiWithChanges.kayttoOikeudet,
+    kasittelynTila,
+    suunnitteluSopimus,
     hyvaksymisPaatosVaihe: asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projektiWithChanges),
     kieli,
     luonnos: true,

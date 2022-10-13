@@ -67,7 +67,13 @@ export class HassuBackendStack extends cdk.Stack {
     const personSearchUpdaterLambda = await this.createPersonSearchUpdaterLambda(commonEnvironmentVariables);
     const aineistoSQS = await this.createAineistoImporterQueue();
     const emailSQS = await this.createEmailQueueSystem();
-    const backendLambda = await this.createBackendLambda(commonEnvironmentVariables, personSearchUpdaterLambda, aineistoSQS);
+    const pdfGeneratorLambda = await this.createPdfGeneratorLambda();
+    const backendLambda = await this.createBackendLambda(
+      commonEnvironmentVariables,
+      personSearchUpdaterLambda,
+      aineistoSQS,
+      pdfGeneratorLambda
+    );
     this.attachDatabaseToLambda(backendLambda);
     HassuBackendStack.mapApiResolversToLambda(api, backendLambda);
 
@@ -186,7 +192,8 @@ export class HassuBackendStack extends cdk.Stack {
   private async createBackendLambda(
     commonEnvironmentVariables: Record<string, string>,
     personSearchUpdaterLambda: NodejsFunction,
-    aineistoSQS: Queue
+    aineistoSQS: Queue,
+    pdfGeneratorLambda: NodejsFunction
   ) {
     let define;
     if (Config.isDeveloperEnvironment()) {
@@ -207,25 +214,12 @@ export class HassuBackendStack extends cdk.Stack {
       bundling: {
         define,
         minify: true,
-        nodeModules: ["pdfkit"],
         metafile: false,
-        commandHooks: {
-          beforeBundling(inputDir: string, outputDir: string): string[] {
-            return [
-              `${path.normalize("./node_modules/.bin/copyfiles")} -f -u 1 ${inputDir}/backend/src/asiakirja/files/* ${outputDir}/files`,
-            ];
-          },
-          afterBundling(): string[] {
-            return [];
-          },
-          beforeInstall() {
-            return [];
-          },
-        },
       },
       environment: {
         ...commonEnvironmentVariables,
         PERSON_SEARCH_UPDATER_LAMBDA_ARN: personSearchUpdaterLambda.functionArn,
+        PDF_GENERATOR_LAMBDA_ARN: pdfGeneratorLambda.functionArn,
         FRONTEND_PUBLIC_KEY_ID: frontendStackOutputs?.FrontendPublicKeyIdOutput,
         AINEISTO_IMPORT_SQS_URL: aineistoSQS.queueUrl,
       },
@@ -240,6 +234,13 @@ export class HassuBackendStack extends cdk.Stack {
         resources: [personSearchUpdaterLambda.functionArn],
       })
     );
+    backendLambda.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: [pdfGeneratorLambda.functionArn],
+      })
+    );
     backendLambda.role?.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("CloudWatchLambdaInsightsExecutionRolePolicy"));
 
     aineistoSQS.grantSendMessages(backendLambda);
@@ -250,6 +251,39 @@ export class HassuBackendStack extends cdk.Stack {
     this.props.internalBucket.grantReadWrite(backendLambda);
     this.props.publicBucket.grantReadWrite(backendLambda);
     return backendLambda;
+  }
+
+  private async createPdfGeneratorLambda() {
+    const pdfGeneratorLambda = new NodejsFunction(this, "PDFGeneratorLambda", {
+      functionName: "hassu-pdf-generator-" + Config.env,
+      runtime: lambda.Runtime.NODEJS_14_X,
+      entry: `${__dirname}/../../backend/src/asiakirja/lambda/pdfGeneratorHandler.ts`,
+      handler: "handleEvent",
+      memorySize: 1769,
+      timeout: Duration.seconds(29),
+      bundling: {
+        minify: true,
+        nodeModules: ["pdfkit"],
+        metafile: true,
+        commandHooks: {
+          beforeBundling(inputDir: string, outputDir: string): string[] {
+            return [
+              `${path.normalize("./node_modules/.bin/copyfiles")} -f -u 1 ${inputDir}/backend/src/asiakirja/files/* ${outputDir}/files`,
+            ];
+          },
+          afterBundling(): string[] {
+            return [];
+          },
+          beforeInstall() {
+            return [];
+          },
+        },
+      },
+      tracing: Tracing.PASS_THROUGH,
+      insightsVersion: LambdaInsightsVersion.VERSION_1_0_98_0,
+    });
+    pdfGeneratorLambda.role?.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("CloudWatchLambdaInsightsExecutionRolePolicy"));
+    return pdfGeneratorLambda;
   }
 
   private async createPersonSearchUpdaterLambda(commonEnvironmentVariables: Record<string, string>) {

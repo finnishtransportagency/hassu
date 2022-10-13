@@ -1,11 +1,12 @@
-import { DBProjekti, NahtavillaoloVaiheJulkaisu, Velho } from "../../database/model/";
+import { NahtavillaoloVaiheJulkaisu, Velho } from "../../database/model/";
 import { Kieli, KirjaamoOsoite, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
-import { AsiakirjanMuoto } from "../asiakirjaService";
+import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { translate } from "../../util/localization";
 import { formatList, KutsuAdapter } from "./KutsuAdapter";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import { formatDate } from "../asiakirjaUtil";
+import { IlmoitusParams } from "./suunnittelunAloitusPdf";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
@@ -38,19 +39,13 @@ export class Kuulutus31 extends CommonPdf {
   // private readonly kayttoOikeudet: DBVaylaUser[];
   protected header: string;
   protected kieli: Kieli;
-  private velho: Velho;
+  private readonly velho: Velho;
   private kirjaamoOsoitteet: KirjaamoOsoite[];
 
-  constructor(
-    projekti: DBProjekti,
-    nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu,
-    kieli: Kieli,
-    asiakirjanMuoto: AsiakirjanMuoto,
-    kirjaamoOsoitteet: KirjaamoOsoite[]
-  ) {
-    const velho = projekti.velho;
+  constructor(params: IlmoitusParams, nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu, kirjaamoOsoitteet: KirjaamoOsoite[]) {
+    const velho = params.velho;
     if (!velho) {
-      throw new Error("projekti.velho ei ole määritelty");
+      throw new Error("params.velho ei ole määritelty");
     }
     if (!velho.tyyppi) {
       throw new Error("velho.tyyppi ei ole määritelty");
@@ -61,8 +56,8 @@ export class Kuulutus31 extends CommonPdf {
     if (!velho.suunnittelustaVastaavaViranomainen) {
       throw new Error("velho.suunnittelustaVastaavaViranomainen ei ole määritelty");
     }
-    if (!projekti.kielitiedot) {
-      throw new Error("projekti.kielitiedot ei ole määritelty");
+    if (!params.kielitiedot) {
+      throw new Error("params.kielitiedot ei ole määritelty");
     }
     if (!nahtavillaoloVaihe.kuulutusPaiva) {
       throw new Error("nahtavillaoloVaihe.kuulutusPaiva ei ole määritelty");
@@ -71,23 +66,23 @@ export class Kuulutus31 extends CommonPdf {
       throw new Error("nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva ei ole määritelty");
     }
     const kutsuAdapter = new KutsuAdapter({
-      oid: projekti.oid,
-      kielitiedot: projekti.kielitiedot,
+      oid: params.oid,
+      kielitiedot: params.kielitiedot,
       velho,
-      kieli,
-      asiakirjanMuoto,
+      kieli: params.kieli,
+      asiakirjanMuoto: params.asiakirjanMuoto,
       projektiTyyppi: velho.tyyppi,
-      kayttoOikeudet: projekti.kayttoOikeudet,
+      kayttoOikeudet: params.kayttoOikeudet,
     });
-    const fileName = createFileName(kieli, asiakirjanMuoto, velho.tyyppi);
-    super(kieli, kutsuAdapter);
+    const fileName = createFileName(params.kieli, params.asiakirjanMuoto, velho.tyyppi);
+    super(params.kieli, kutsuAdapter);
     this.velho = velho;
-    const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
+    const language = params.kieli == Kieli.SAAME ? Kieli.SUOMI : params.kieli;
     this.header = headers[language];
-    this.kieli = kieli;
+    this.kieli = params.kieli;
 
     this.nahtavillaoloVaihe = nahtavillaoloVaihe;
-    this.asiakirjanMuoto = asiakirjanMuoto;
+    this.asiakirjanMuoto = params.asiakirjanMuoto;
     this.kirjaamoOsoitteet = kirjaamoOsoitteet;
 
     this.setupPDF(this.header, kutsuAdapter.nimi, fileName);
@@ -158,14 +153,10 @@ export class Kuulutus31 extends CommonPdf {
   }
 
   protected get kuulutusPaiva(): string {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     return formatDate(this.nahtavillaoloVaihe?.kuulutusPaiva);
   }
 
   protected get kuulutusVaihePaattyyPaiva(): string {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     return formatDate(this.nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva);
   }
 
@@ -178,18 +169,10 @@ export class Kuulutus31 extends CommonPdf {
       () => {
         this.doc.text(
           this.selectText([
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
             `Suunnitelma pidetään yleisesti nähtävänä ${formatDate(this.nahtavillaoloVaihe.kuulutusPaiva)}-${formatDate(
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
               this.nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva
             )} välisen ajan ${this.tilaajaGenetiivi} tietoverkossa `,
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
             `RUOTSIKSI Suunnitelma pidetään yleisesti nähtävänä ${formatDate(this.nahtavillaoloVaihe.kuulutusPaiva)}-${formatDate(
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
               this.nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva
             )} välisen ajan ${this.tilaajaGenetiivi} tietoverkossa `,
           ]),
