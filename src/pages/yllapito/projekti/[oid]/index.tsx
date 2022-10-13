@@ -53,7 +53,7 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
 
   return (
-    <ProjektiPageLayout title={"Projektin tiedot"} showUpdateButton>
+    <ProjektiPageLayout title={"Projektin tiedot"} showUpdateButton={projekti?.status !== Status.EPAAKTIIVINEN}>
       {projekti &&
         (projekti.status === Status.EPAAKTIIVINEN ? (
           <ProjektinTiedotLukutila projekti={projekti} />

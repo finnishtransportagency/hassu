@@ -1,5 +1,5 @@
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { api } from "@services/api";
+import { api, Status } from "@services/api";
 import Button from "@components/button/Button";
 import React, { useState, ReactElement, ReactNode } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
@@ -55,11 +55,19 @@ export default function ProjektiPageLayout({ children, title, showUpdateButton }
             {showUpdateButton && <Button onClick={uudelleenLataaProjekit}>Päivitä tiedot</Button>}
           </Stack>
           <h2>{projekti?.velho?.nimi || "-"}</h2>
-          {projekti && !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden && (
-            <Notification type={NotificationType.WARN}>
-              Sinulla on projektiin vain lukuoikeudet. Voit tarkastella projektin tietoja, mutta et voi tehdä siihen
-              muutoksia. Jos tarvitset oikeudet projektiin, ota yhteys projektin projektipäällikköön.
+          {projekti && projekti.status === Status.EPAAKTIIVINEN ? (
+            <Notification type={NotificationType.INFO_GRAY}>
+              Projekti on siirtynyt epäaktiiviseen tilaan. Projektille voi luoda jatkokuulutuksen, kun pääkäyttäjä on palauttanut projektin
+              aktiiviseen tilaan. Voit seurata suunnitelman käsittelyä Käsittelyn tila -sivulta. Jos sinulla on kysyttävää, ota yhteys
+              järjestelmän pääkäyttäjään.
             </Notification>
+          ) : (
+            !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden && (
+              <Notification type={NotificationType.WARN}>
+                Sinulla on projektiin vain lukuoikeudet. Voit tarkastella projektin tietoja, mutta et voi tehdä siihen muutoksia. Jos
+                tarvitset oikeudet projektiin, ota yhteys projektin projektipäällikköön.
+              </Notification>
+            )
           )}
           {children}
         </div>
