@@ -72,6 +72,7 @@ function KayttoOikeusHallintaFormElements({
     watch,
     formState: { errors },
   } = useFormContext<RequiredInputValues>();
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "kayttoOikeudet",
@@ -108,17 +109,17 @@ function KayttoOikeusHallintaFormElements({
         <SectionContent>
           <h5 className="vayla-paragraph">Projektipäällikkö</h5>
           <p>Projektipäällikö on haettu Projektivelhosta. Jos haluat vaihtaa projektipäällikön, muutos pitää tehdä Projektivelhoon.</p>
-          {projektiPaallikot.map((paallikko, index) => {
-            const kayttoOikeus = kayttoOikeudet[index];
-            const initialKayttaja = initialKayttajat?.find(({ uid }) => uid === kayttoOikeus.kayttajatunnus) || null;
-            const kayttajaFromApi = projektiKayttajatFromApi.find(({ kayttajatunnus }) => kayttajatunnus === kayttoOikeus.kayttajatunnus);
+          {projektiPaallikot.map((paallikko) => {
+            const initialKayttaja = initialKayttajat?.find(({ uid }) => uid === paallikko.kayttajatunnus) || null;
+            const kayttajaFromApi = projektiKayttajatFromApi.find(({ kayttajatunnus }) => kayttajatunnus === paallikko.kayttajatunnus);
             const muokattavissa = kayttajaFromApi?.muokattavissa === false ? false : true;
+            const index = kayttoOikeudet.findIndex((oikeus) => oikeus.kayttajatunnus === paallikko.kayttajatunnus);
             return (
               <UserFields
                 disableFields={disableFields}
                 index={index}
                 initialKayttaja={initialKayttaja}
-                remove={remove}
+                removeUser={() => remove(index)}
                 key={paallikko.id}
                 muokattavissa={muokattavissa}
                 isProjektiPaallikko
@@ -130,18 +131,17 @@ function KayttoOikeusHallintaFormElements({
       <SectionContent>
         <h5 className="vayla-paragraph">Muut henkilöt</h5>
         <SectionContent largeGaps>
-          {muutHenkilot.map((user, i) => {
-            const index = i + projektiPaallikot.length;
-            const kayttoOikeus = kayttoOikeudet[index];
-            const initialKayttaja = initialKayttajat?.find(({ uid }) => uid === kayttoOikeus.kayttajatunnus) || null;
-            const kayttajaFromApi = projektiKayttajatFromApi.find(({ kayttajatunnus }) => kayttajatunnus === kayttoOikeus.kayttajatunnus);
+          {muutHenkilot.map((user) => {
+            const initialKayttaja = initialKayttajat?.find(({ uid }) => uid === user.kayttajatunnus) || null;
+            const kayttajaFromApi = projektiKayttajatFromApi.find(({ kayttajatunnus }) => kayttajatunnus === user.kayttajatunnus);
             const muokattavissa = kayttajaFromApi?.muokattavissa === false ? false : true;
+            const index = kayttoOikeudet.findIndex((oikeus) => oikeus.kayttajatunnus === user.kayttajatunnus);
             return (
               <UserFields
                 disableFields={disableFields}
                 index={index}
                 initialKayttaja={initialKayttaja}
-                remove={remove}
+                removeUser={() => remove(index)}
                 key={user.id}
                 muokattavissa={muokattavissa}
               />
@@ -167,13 +167,18 @@ interface UserFieldProps {
   disableFields?: boolean;
   initialKayttaja: Kayttaja | null;
   index: number;
-  remove: (index?: number | number[] | undefined) => void;
+  removeUser: () => void;
   muokattavissa: boolean;
   isProjektiPaallikko?: boolean;
 }
 
-const UserFields = ({ index, disableFields, remove, initialKayttaja, muokattavissa, isProjektiPaallikko }: UserFieldProps) => {
+const UserFields = ({ index, disableFields, removeUser, initialKayttaja, muokattavissa, isProjektiPaallikko }: UserFieldProps) => {
   const [kayttaja, setKayttaja] = useState<Kayttaja | null>(initialKayttaja);
+
+  useEffect(() => {
+    setKayttaja(initialKayttaja);
+  }, [initialKayttaja]);
+
   const [loadingKayttajaResults, setLoadingKayttajaResults] = useState(false);
 
   // Prevent onInputChange's first search from happening when initialKayttaja is given as prop
@@ -279,7 +284,7 @@ const UserFields = ({ index, disableFields, remove, initialKayttaja, muokattavis
             onClick={(event) => {
               event.preventDefault();
               if (muokattavissa) {
-                remove(index);
+                removeUser();
               }
             }}
             disabled={disableFields || !muokattavissa}
@@ -291,7 +296,7 @@ const UserFields = ({ index, disableFields, remove, initialKayttaja, muokattavis
               onClick={(event) => {
                 event.preventDefault();
                 if (muokattavissa) {
-                  remove(index);
+                  removeUser();
                 }
               }}
               endIcon="trash"
