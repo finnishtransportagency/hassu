@@ -40,6 +40,12 @@ import { adaptSuunnitteluSopimusJulkaisuJulkinen } from "./adaptToAPI";
 
 class ProjektiAdapterJulkinen {
   public adaptProjekti(dbProjekti: DBProjekti): API.ProjektiJulkinen | undefined {
+    console.log();
+    console.log("adaptProjekti (julkinen)");
+    dbProjekti.vuorovaikutukset?.map((vv) => {
+      console.log(vv.vuorovaikutusTilaisuudet);
+    });
+    console.log();
     if (!dbProjekti.velho) {
       throw new Error("adaptProjekti: dbProjekti.velho määrittelemättä");
     }
