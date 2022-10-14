@@ -7,6 +7,7 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import { Stack } from "@mui/material";
 import HassuGrid from "@components/HassuGrid";
+import lowerCase from "lodash/lowerCase";
 
 interface Props {
   projekti: ProjektiLisatiedolla;
@@ -30,30 +31,39 @@ export default function ProjektinTiedotLukutila({ projekti }: Props) {
           <h4 className="vayla-small-title">Projektin kuulutusten kielet</h4>
           <HassuGrid cols={{ lg: 3 }}>
             <div>
-              <h5>Ensisijainen kieli</h5>
-              {projekti.kielitiedot?.ensisijainenKieli}
+              <h5 style={{ fontWeight: "bold" }}>Ensisijainen kieli</h5>
+              {lowerCase(projekti.kielitiedot?.ensisijainenKieli)}
             </div>
-            <div>
-              <h5>Toissijainen kieli</h5>
-              {projekti.kielitiedot?.toissijainenKieli || "-"}
-            </div>
+            {projekti.kielitiedot?.toissijainenKieli && (
+              <div>
+                <h5 style={{ fontWeight: "bold" }}>Toissijainen kieli</h5>
+                {lowerCase(projekti.kielitiedot.toissijainenKieli)}
+              </div>
+            )}
           </HassuGrid>
         </SectionContent>
-        <h5>Projektin nimi ruotsiksi</h5>
-        <p>{projekti.kielitiedot?.projektinNimiVieraskielella}</p>
+        {projekti.kielitiedot?.projektinNimiVieraskielella && (
+          <div>
+            <h5 style={{ fontWeight: "bold" }}>Projektin nimi ruotsiksi</h5>
+            <p>{projekti.kielitiedot.projektinNimiVieraskielella}</p>
+          </div>
+        )}
       </Section>
       <Section>
-        <h4>Projektiin linkittyvät suunnitelmat</h4>
-        <p>{projekti.liittyvatSuunnitelmat}</p>
+        <h4 style={{ fontWeight: "bold" }}>Projektiin linkittyvät suunnitelmat</h4>
+        {projekti.liittyvatSuunnitelmat?.map((suunnitelma) => (
+          <p key={suunnitelma.asiatunnus}>{suunnitelma.asiatunnus}</p>
+        ))}
+        {(!projekti.liittyvatSuunnitelmat || projekti.liittyvatSuunnitelmat.length === 0) && <p>-</p>}
       </Section>
       <Section>
         <SectionContent>
-          <h4>Suunnittelusopimus</h4>
-          {projekti.suunnitteluSopimus ? "Kyllä" : "Ei"}
+          <h4 style={{ fontWeight: "bold" }}>Suunnittelusopimus</h4>
+          <p>{projekti.suunnitteluSopimus ? "Kyllä" : "Ei"}</p>
         </SectionContent>
         <SectionContent>
-          <h4>Kunnan projektipäällikön tiedot</h4>
-          {projekti.suunnitteluSopimus?.yhteysHenkilo}
+          <h4 style={{ fontWeight: "bold" }}>Kunnan projektipäällikön tiedot</h4>
+          <p>{projekti.suunnitteluSopimus?.yhteysHenkilo}</p> {/* TODO */}
         </SectionContent>
       </Section>
       <Section smallGaps>
