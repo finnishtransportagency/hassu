@@ -8,6 +8,8 @@ import SuunnitteluvaiheenVuorovaikuttaminen from "@components/projekti/suunnitte
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import { useProjekti } from "src/hooks/useProjekti";
 import TallentamattomiaMuutoksiaDialog from "@components/TallentamattomiaMuutoksiaDialog";
+import { Status } from "@services/api";
+import SuunnitteluvaiheenPerustiedotLukutila from "@components/projekti/lukutila/SuunnitteluvaiheenPerustiedotLukutila";
 
 export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
   useProjektiBreadcrumbs(setRouteLabels);
@@ -42,7 +44,12 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
       {
         label: "Suunnitteluvaiheen perustiedot",
         tabId: "perustiedot_tab",
-        content: <SuunnitteluvaiheenPerustiedot isDirtyHandler={setIsDirty} />,
+        content:
+          projekti?.status === Status.EPAAKTIIVINEN ? (
+            <SuunnitteluvaiheenPerustiedotLukutila />
+          ) : (
+            <SuunnitteluvaiheenPerustiedot isDirtyHandler={setIsDirty} />
+          ),
       },
     ];
     if (!projekti) {
