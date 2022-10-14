@@ -94,6 +94,7 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
     register,
   } = useFormReturn;
 
+  // Lomakkeen resetointi Velhosynkronointia varten
   useEffect(() => {
     reset(defaultValues);
   }, [defaultValues, reset]);
