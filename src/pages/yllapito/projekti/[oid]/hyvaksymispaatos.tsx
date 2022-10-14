@@ -14,6 +14,7 @@ import FormatDate from "@components/FormatDate";
 import Section from "@components/layout/Section";
 import TallentamattomiaMuutoksiaDialog from "@components/TallentamattomiaMuutoksiaDialog";
 import HyvaksymisVaiheAineistotLukutila from "@components/projekti/lukutila/HyvakysmisVaiheAineistotLukutila";
+import Lukunakyma from "@components/projekti/hyvaksyminen/kuulutuksenTiedot/Lukunakyma";
 
 export default function Hyvaksymispaatos({ setRouteLabels }: PageProps): ReactElement {
   useProjektiBreadcrumbs(setRouteLabels);
@@ -115,7 +116,12 @@ export default function Hyvaksymispaatos({ setRouteLabels }: PageProps): ReactEl
             ? [
                 {
                   label: "Kuulutuksen tiedot",
-                  content: <KuulutuksenTiedot setIsDirty={setIsDirty} />,
+                  content:
+                    epaaktiivinen && hyvaksymisPaatosVaiheJulkaisu ? (
+                      <Lukunakyma projekti={projekti} hyvaksymisPaatosVaiheJulkaisu={hyvaksymisPaatosVaiheJulkaisu} />
+                    ) : (
+                      <KuulutuksenTiedot setIsDirty={setIsDirty} />
+                    ),
                   tabId: "kuulutuksentiedot_luku_tab",
                 },
                 {
@@ -135,7 +141,16 @@ export default function Hyvaksymispaatos({ setRouteLabels }: PageProps): ReactEl
                   content: <PaatosAineistot setIsDirty={setIsDirty} />,
                   tabId: "aineisto_tab",
                 },
-                { label: "Kuulutuksen tiedot", content: <KuulutuksenTiedot setIsDirty={setIsDirty} />, tabId: "kuulutuksentiedot_tab" },
+                {
+                  label: "Kuulutuksen tiedot",
+                  content:
+                    epaaktiivinen && hyvaksymisPaatosVaiheJulkaisu ? (
+                      <Lukunakyma projekti={projekti} hyvaksymisPaatosVaiheJulkaisu={hyvaksymisPaatosVaiheJulkaisu} />
+                    ) : (
+                      <KuulutuksenTiedot setIsDirty={setIsDirty} />
+                    ),
+                  tabId: "kuulutuksentiedot_tab",
+                },
               ]
         }
       />
