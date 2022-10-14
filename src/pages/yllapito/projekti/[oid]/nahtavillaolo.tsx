@@ -13,6 +13,7 @@ import SectionContent from "@components/layout/SectionContent";
 import FormatDate from "@components/FormatDate";
 import TallentamattomiaMuutoksiaDialog from "@components/TallentamattomiaMuutoksiaDialog";
 import NahtavillaoloAineistotLukutila from "@components/projekti/lukutila/NahtavillaoloAineistotLukutila";
+import Lukunakyma from "@components/projekti/nahtavillaolo/kuulutuksentiedot/Lukunakyma";
 
 type Props2 = {
   projekti: ProjektiLisatiedolla;
@@ -104,6 +105,8 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
 
   const epaaktiivinen = projekti.status === Status.EPAAKTIIVINEN;
 
+  const nahtavillaolovaiheJulkaisu = projekti.nahtavillaoloVaiheJulkaisut?.[projekti.nahtavillaoloVaiheJulkaisut.length - 1];
+
   return (
     <ProjektiPageLayout title="Nähtävilläolovaihe">
       <SectionContent largeGaps>
@@ -144,16 +147,23 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
             {
               label: "Nähtäville asetettavat aineistot",
               content:
-                epaaktiivinen && projekti.nahtavillaoloVaiheJulkaisut?.[projekti.nahtavillaoloVaiheJulkaisut.length - 1] ? (
-                  <NahtavillaoloAineistotLukutila
-                    nahtavillaoloVaiheJulkaisu={projekti.nahtavillaoloVaiheJulkaisut[projekti.nahtavillaoloVaiheJulkaisut.length - 1]}
-                  />
+                epaaktiivinen && nahtavillaolovaiheJulkaisu ? (
+                  <NahtavillaoloAineistotLukutila nahtavillaoloVaiheJulkaisu={nahtavillaolovaiheJulkaisu} />
                 ) : (
                   <NahtavilleAsetettavatAineistot setIsDirty={setIsDirty} />
                 ),
               tabId: "aineisto_tab",
             },
-            { label: "Kuulutuksen tiedot", content: <KuulutuksenTiedot setIsDirty={setIsDirty} />, tabId: "kuulutuksentiedot_tab" },
+            {
+              label: "Kuulutuksen tiedot",
+              content:
+                epaaktiivinen && nahtavillaolovaiheJulkaisu ? (
+                  <Lukunakyma projekti={projekti} nahtavillaoloVaiheJulkaisu={nahtavillaolovaiheJulkaisu} />
+                ) : (
+                  <KuulutuksenTiedot setIsDirty={setIsDirty} />
+                ),
+              tabId: "kuulutuksentiedot_tab",
+            },
           ]}
         />
       </SectionContent>
