@@ -28,7 +28,7 @@ export default function ProjektinTiedotLukutila({ projekti }: Props) {
       <ProjektiKuntatiedot projekti={projekti} />
       <Section>
         <SectionContent>
-          <h4 className="vayla-small-title">Projektin kuulutusten kielet</h4>
+          <p className="vayla-label">Projektin kuulutusten kielet</p>
           <HassuGrid cols={{ lg: 3 }}>
             <div>
               <h5 style={{ fontWeight: "bold" }}>Ensisijainen kieli</h5>
@@ -44,13 +44,13 @@ export default function ProjektinTiedotLukutila({ projekti }: Props) {
         </SectionContent>
         {projekti.kielitiedot?.projektinNimiVieraskielella && (
           <div>
-            <h5 style={{ fontWeight: "bold" }}>Projektin nimi ruotsiksi</h5>
+            <p className="vayla-label">Projektin nimi ruotsiksi</p>
             <p>{projekti.kielitiedot.projektinNimiVieraskielella}</p>
           </div>
         )}
       </Section>
       <Section>
-        <h4 style={{ fontWeight: "bold" }}>Projektiin linkittyvät suunnitelmat</h4>
+        <p className="vayla-label">Projektiin linkittyvät suunnitelmat</p>
         {projekti.liittyvatSuunnitelmat?.map((suunnitelma) => (
           <p key={suunnitelma.asiatunnus}>{suunnitelma.asiatunnus}</p>
         ))}
@@ -58,20 +58,20 @@ export default function ProjektinTiedotLukutila({ projekti }: Props) {
       </Section>
       <Section>
         <SectionContent>
-          <h4 style={{ fontWeight: "bold" }}>Suunnittelusopimus</h4>
+          <p className="vayla-label">Suunnittelusopimus</p>
           <p>{projekti.suunnitteluSopimus ? "Kyllä" : "Ei"}</p>
         </SectionContent>
         <SectionContent>
-          <h4 style={{ fontWeight: "bold" }}>Kunnan projektipäällikön tiedot</h4>
+          <p className="vayla-label">Kunnan projektipäällikön tiedot</p>
           <p>{projekti.suunnitteluSopimus?.yhteysHenkilo}</p> {/* TODO */}
         </SectionContent>
       </Section>
       <Section smallGaps>
-        <h4 className="vayla-small-title">EU-rahoitus</h4>
+        <p className="vayla-label">EU-rahoitus</p>
         <p>{projekti.euRahoitus ? "Kyllä" : "Ei"}</p>
       </Section>
       <Section smallGaps>
-        <h4 className="vayla-small-title">Muistiinpanot</h4>
+        <p className="vayla-label">Muistiinpanot</p>
         <p>{projekti.muistiinpano}</p>
       </Section>
       <Section>
