@@ -18,11 +18,11 @@ export default function KasittelyntilaPageContent({ projekti }: Props): ReactEle
         <h5 className="vayla-small-title mb-10">Hyväksymispäätös</h5>
         <HassuGrid cols={{ lg: 3 }}>
           <div>
-            <h5 style={{ fontWeight: "bold" }}>Päätöksen päivä</h5>
+            <p className="vayla-label">Päätöksen päivä</p>
             <p>{projekti.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm}</p>
           </div>
           <div>
-            <h5 style={{ fontWeight: "bold" }}>Asiatunnus</h5>
+            <p className="vayla-label">Asiatunnus</p>
             <p>{projekti.kasittelynTila?.hyvaksymispaatos?.asianumero}</p>
           </div>
         </HassuGrid>
@@ -31,21 +31,21 @@ export default function KasittelyntilaPageContent({ projekti }: Props): ReactEle
         <h5 className="vayla-small-title mb-10">Jatkopäätös</h5>
         <HassuGrid cols={{ lg: 3 }}>
           <div>
-            <h5 style={{ fontWeight: "bold" }}>1. jatkopäätöksen päivä</h5>
+            <p className="vayla-label">1. jatkopäätöksen päivä</p>
             <p>{projekti.kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm || "-"}</p>
           </div>
           <div>
-            <h5 style={{ fontWeight: "bold" }}>Asiatunnus</h5>
+            <p className="vayla-label">Asiatunnus</p>
             <p>{projekti.kasittelynTila?.ensimmainenJatkopaatos?.asianumero || "-"}</p>
           </div>
         </HassuGrid>
         <HassuGrid cols={{ lg: 3 }}>
           <div>
-            <h5 style={{ fontWeight: "bold" }}>2. jatkopäätöksen päivä</h5>
+            <p className="vayla-label">2. jatkopäätöksen päivä</p>
             <p>{projekti.kasittelynTila?.toinenJatkopaatos?.paatoksenPvm || "-"}</p>
           </div>
           <div>
-            <h5 style={{ fontWeight: "bold" }}>Asiatunnus</h5>
+            <p className="vayla-label">Asiatunnus</p>
             <p>{projekti.kasittelynTila?.toinenJatkopaatos?.asianumero || "-"}</p>
           </div>
         </HassuGrid>
