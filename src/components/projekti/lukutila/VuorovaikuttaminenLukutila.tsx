@@ -8,6 +8,7 @@ import VuorovaikutusPaivamaaraJaTiedotLukutila from "./komponentit/Vuorovaikutus
 import VuorovaikutusMahdollisuudetLukutila from "./komponentit/VuorovaikutusMahdollisuudetLukutila";
 import IlmoituksenVastaanottajatLukutila from "./komponentit/VuorovaikutusIlmoituksenVastaanottajatLukutila";
 import StandardiYhteystiedotListana from "../common/StandardiYhteystiedotListana";
+import ExtLink from "@components/ExtLink";
 
 interface Props {
   vuorovaikutusnro: number;
@@ -50,6 +51,8 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
     return <></>;
   }
 
+  const velhoURL = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + projekti.oid;
+
   return (
     <>
       <Section className="mb-4">
@@ -61,7 +64,9 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
       <VuorovaikutusMahdollisuudetLukutila projekti={projekti} vuorovaikutus={vuorovaikutus} />
       <Section>
         <p className="vayla-label">Suunnitelmaluonnokset ja esittelyaineistot</p>
-        <p>Suunnitelmaluonnokset ja esittelyaineistot löytyvät Projektivelhosta.</p>
+        <p>
+          Suunnitelmaluonnokset ja esittelyaineistot löytyvät <ExtLink href={velhoURL}>Projektivelhosta</ExtLink>.
+        </p>
       </Section>
       <Section>
         <SectionContent>

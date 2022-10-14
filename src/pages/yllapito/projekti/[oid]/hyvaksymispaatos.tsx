@@ -128,7 +128,7 @@ export default function Hyvaksymispaatos({ setRouteLabels }: PageProps): ReactEl
                   label: "Päätös ja liitteenä oleva aineisto",
                   content:
                     epaaktiivinen && hyvaksymisPaatosVaiheJulkaisu ? (
-                      <HyvaksymisVaiheAineistotLukutila hyvaksymisPaatosVaiheJulkaisu={hyvaksymisPaatosVaiheJulkaisu} />
+                      <HyvaksymisVaiheAineistotLukutila oid={projekti.oid} hyvaksymisPaatosVaiheJulkaisu={hyvaksymisPaatosVaiheJulkaisu} />
                     ) : (
                       <PaatosAineistot setIsDirty={setIsDirty} />
                     ),

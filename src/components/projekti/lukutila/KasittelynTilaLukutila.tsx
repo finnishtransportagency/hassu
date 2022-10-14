@@ -2,17 +2,20 @@ import React, { ReactElement } from "react";
 import Section from "@components/layout/Section";
 import HassuGrid from "@components/HassuGrid";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import ExtLink from "@components/ExtLink";
 
 interface Props {
   projekti: ProjektiLisatiedolla;
 }
 
 export default function KasittelyntilaPageContent({ projekti }: Props): ReactElement {
+  const velhoURL = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + projekti.oid;
+
   return (
     <Section noDivider>
       <p>
         Pääkäyttäjä lisää sivulle tietoa suunnitelman hallinnollisellisen käsittelyn tiloista, jotka ovat nähtävissä lukutilassa muille
-        järjestelmän käyttäjille. Tiedot siirtyvät Käsittelyn tila -sivulta Projektivelhoon.
+        järjestelmän käyttäjille. Tiedot siirtyvät Käsittelyn tila -sivulta <ExtLink href={velhoURL}>Projektivelhoon</ExtLink>.
       </p>
       <Section>
         <h5 className="vayla-small-title mb-10">Hyväksymispäätös</h5>

@@ -12,7 +12,7 @@ import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { splitFilePath } from "../../../../util/fileUtil";
 import { Link } from "@mui/material";
 import lowerCase from "lodash/lowerCase";
-import IlmoituksenVastaanottajatLukutila from "./IlmoituksenVastaanottajatLukutila";
+import IlmoituksenVastaanottajatLukutila from "../../common/IlmoituksenVastaanottajatLukutila";
 import ButtonFlatWithIcon from "@components/button/ButtonFlat";
 import { ProjektiTestCommand } from "../../../../../common/testUtil.dev";
 import { formatDate } from "src/util/dateUtils";
@@ -213,7 +213,11 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
         )}
       </Section>
       <Section>
-        <IlmoituksenVastaanottajatLukutila hyvaksymisPaatosVaiheJulkaisu={hyvaksymisPaatosVaiheJulkaisu} />
+        <IlmoituksenVastaanottajatLukutila
+          ilmoituksenVastaanottajat={hyvaksymisPaatosVaiheJulkaisu.ilmoituksenVastaanottajat}
+          julkaisunTila={hyvaksymisPaatosVaiheJulkaisu.tila}
+          epaaktiivinen={epaaktiivinen}
+        />
       </Section>
     </>
   );

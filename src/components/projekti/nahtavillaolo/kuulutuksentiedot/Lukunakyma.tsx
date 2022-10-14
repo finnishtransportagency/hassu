@@ -7,7 +7,7 @@ import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import IlmoituksenVastaanottajatLukutila from "./IlmoituksenVastaanottajatLukutila";
+import IlmoituksenVastaanottajatLukutila from "../../common/IlmoituksenVastaanottajatLukutila";
 import ExtLink from "@components/ExtLink";
 import { Link } from "@mui/material";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
@@ -176,12 +176,11 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
           </SectionContent>
         )}
       </Section>
-      <IlmoituksenVastaanottajatLukutila nahtavillaoloVaiheJulkaisu={nahtavillaoloVaiheJulkaisu} />
-      <Section>
-        {/* {nahtavillaoloVaiheJulkaisu.tila !== NahtavillaoloVaiheTila.HYVAKSYTTY && (
-          <NahtavillaoloPDFEsikatselu oid={oid} nahtavillaoloVaihe={nahtavillaoloVaihe} />
-        )} */}
-      </Section>
+      <IlmoituksenVastaanottajatLukutila
+        epaaktiivinen={epaaktiivinen}
+        julkaisunTila={nahtavillaoloVaiheJulkaisu.tila}
+        ilmoituksenVastaanottajat={nahtavillaoloVaiheJulkaisu.ilmoituksenVastaanottajat}
+      />
     </>
   );
 }

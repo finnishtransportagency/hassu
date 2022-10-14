@@ -22,6 +22,7 @@ import { HassuDatePickerWithController } from "@components/form/HassuDatePicker"
 import cloneDeep from "lodash/cloneDeep";
 import assert from "assert";
 import KasittelynTilaLukutila from "@components/projekti/lukutila/KasittelynTilaLukutila";
+import ExtLink from "@components/ExtLink";
 
 type FormValues = Pick<TallennaProjektiInput, "oid" | "kasittelynTila">;
 
@@ -128,14 +129,15 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     [reloadProjekti, reset, showErrorMessage, showSuccessMessage]
   );
 
-  //TODO: lukutila, nyt valiaikaisesti ei-admineille disabled kentat ja painikkeet
+  const velhoURL = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + projekti.oid;
+
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Section>
           <p>
             Pääkäyttäjä lisää sivulle tietoa suunnitelman hallinnollisellisen käsittelyn tiloista, jotka ovat nähtävissä lukutilassa muille
-            järjestelmän käyttäjille. Tiedot siirtyvät Käsittelyn tila -sivulta Projektivelhoon.
+            järjestelmän käyttäjille. Tiedot siirtyvät Käsittelyn tila -sivulta <ExtLink href={velhoURL}>Projektivelhosta</ExtLink>.
           </p>
           <SectionContent>
             <h5 className="vayla-small-title">Hyväksymispäätös</h5>

@@ -148,7 +148,7 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
               label: "Nähtäville asetettavat aineistot",
               content:
                 epaaktiivinen && nahtavillaolovaiheJulkaisu ? (
-                  <NahtavillaoloAineistotLukutila nahtavillaoloVaiheJulkaisu={nahtavillaolovaiheJulkaisu} />
+                  <NahtavillaoloAineistotLukutila oid={projekti.oid} nahtavillaoloVaiheJulkaisu={nahtavillaolovaiheJulkaisu} />
                 ) : (
                   <NahtavilleAsetettavatAineistot setIsDirty={setIsDirty} />
                 ),
