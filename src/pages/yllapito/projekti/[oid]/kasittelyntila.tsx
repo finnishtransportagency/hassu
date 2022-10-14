@@ -1,6 +1,6 @@
 import { PageProps } from "@pages/_app";
-import React, { ReactElement, useCallback, useMemo, useState } from "react";
-import { api, HyvaksymispaatosInput, TallennaProjektiInput } from "@services/api";
+import React, { ReactElement, useCallback, useState, useMemo } from "react";
+import { api, HyvaksymispaatosInput, Status, TallennaProjektiInput } from "@services/api";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
@@ -21,6 +21,7 @@ import { TextField } from "@mui/material";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import cloneDeep from "lodash/cloneDeep";
 import assert from "assert";
+import KasittelynTilaLukutila from "@components/projekti/lukutila/KasittelynTilaLukutila";
 
 type FormValues = Pick<TallennaProjektiInput, "oid" | "kasittelynTila">;
 
@@ -29,7 +30,12 @@ export default function KasittelyntilaSivu({ setRouteLabels }: PageProps): React
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
   return (
     <ProjektiPageLayout title="Käsittelyn tila">
-      {projekti && <KasittelyntilaPageContent projekti={projekti} projektiLoadError={projektiLoadError} reloadProjekti={reloadProjekti} />}
+      {projekti &&
+        (projekti.status === Status.EPAAKTIIVINEN || !projekti?.nykyinenKayttaja.onYllapitaja ? (
+          <KasittelynTilaLukutila projekti={projekti} />
+        ) : (
+          <KasittelyntilaPageContent projekti={projekti} projektiLoadError={projektiLoadError} reloadProjekti={reloadProjekti} />
+        ))}
     </ProjektiPageLayout>
   );
 }
