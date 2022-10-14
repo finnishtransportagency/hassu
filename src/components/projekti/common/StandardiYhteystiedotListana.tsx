@@ -1,16 +1,15 @@
-import { ProjektiKayttaja, StandardiYhteystiedot, StandardiYhteystiedotInput } from "@services/api";
+import { ProjektiKayttaja, StandardiYhteystiedot, StandardiYhteystiedotInput, Projekti } from "@services/api";
 import React, { ReactElement } from "react";
 import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
-import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 
 interface Props {
-  standardiYhteystiedot: StandardiYhteystiedot | StandardiYhteystiedotInput;
+  standardiYhteystiedot: StandardiYhteystiedot | StandardiYhteystiedotInput | null | undefined;
+  projekti: ProjektiLisatiedolla | Projekti | null | undefined;
 }
 
-export default function StandardiYhteystiedotListana({ standardiYhteystiedot }: Props): ReactElement {
-  const { data: projekti } = useProjekti();
-
+export default function StandardiYhteystiedotListana({ standardiYhteystiedot, projekti }: Props): ReactElement {
   const vuorovaikutusYhteysHenkilot: ProjektiKayttaja[] = standardiYhteystiedot?.yhteysHenkilot
     ? standardiYhteystiedot?.yhteysHenkilot
         .map((hlo) => {

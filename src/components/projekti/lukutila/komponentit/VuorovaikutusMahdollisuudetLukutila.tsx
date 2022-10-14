@@ -1,84 +1,41 @@
-import { useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
-import {
-  Projekti,
-  VuorovaikutusTilaisuusTyyppi,
-  Yhteystieto,
-  YhteystietoInput,
-  VuorovaikutusTilaisuusInput,
-  Vuorovaikutus,
-} from "@services/api";
+import { Projekti, VuorovaikutusTilaisuusTyyppi, Vuorovaikutus } from "@services/api";
 import Section from "@components/layout/Section";
-import React, { ReactElement, Dispatch, SetStateAction } from "react";
-import Button from "@components/button/Button";
-
+import React, { ReactElement } from "react";
 import dayjs from "dayjs";
 import { formatDate } from "src/util/dateUtils";
 import capitalize from "lodash/capitalize";
 import useTranslation from "next-translate/useTranslation";
-import StandardiYhteystiedotListana from "../common/StandardiYhteystiedotListana";
+import StandardiYhteystiedotListana from "../../common/StandardiYhteystiedotListana";
 
 interface Props {
   projekti: Projekti;
   vuorovaikutus: Vuorovaikutus;
-  setOpenVuorovaikutustilaisuus: Dispatch<SetStateAction<boolean>>;
 }
 
-type FormFields = {
-  suunnitteluVaihe: {
-    vuorovaikutus: {
-      vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuusInput> | null;
-    };
-  };
-};
-
-export default function VuorovaikutusMahdollisuudet({ projekti, vuorovaikutus, setOpenVuorovaikutustilaisuus }: Props): ReactElement {
+export default function VuorovaikutusMahdollisuudet({ projekti, vuorovaikutus }: Props): ReactElement {
   const { t } = useTranslation();
-
-  const { getValues, getFieldState } = useFormContext<FormFields>();
 
   if (!projekti) {
     return <></>;
   }
 
-  const vuorovaikutusTilaisuudet = vuorovaikutus.julkinen
-    ? vuorovaikutus.vuorovaikutusTilaisuudet
-    : getValues("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet");
+  const vuorovaikutusTilaisuudet = vuorovaikutus.vuorovaikutusTilaisuudet;
 
   const isVerkkotilaisuuksia = !!vuorovaikutusTilaisuudet?.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA);
   const isFyysisiatilaisuuksia = !!vuorovaikutusTilaisuudet?.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA);
   const isSoittoaikoja = !!vuorovaikutusTilaisuudet?.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA);
 
-  const tilaisuudetError = getFieldState("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet").error;
-
   return (
     <>
       <Section>
-        {vuorovaikutus.julkinen ? (
-          <>
-            <Button
-              style={{ float: "right" }}
-              onClick={(e) => {
-                setOpenVuorovaikutustilaisuus(true);
-                e.preventDefault();
-              }}
-            >
-              Muokkaa
-            </Button>
-            <div className="pt-6">
-              <p className="vayla-label">Vuorovaikutusmahdollisuudet palautteiden ja kysymyksien lisäksi</p>
-              <p>
-                Verkossa jaettavien tilaisuuksien liittymislinkit julkaistaan palvelun julkisella puolella kaksi (2) tuntia ennen
-                tilaisuuden alkua.
-              </p>
-            </div>
-          </>
-        ) : (
-          <>
-            <h4 className="vayla-small-title">Vuorovaikutusmahdollisuudet palautteiden ja kysymyksien lisäksi</h4>
-            {tilaisuudetError && <p className="text-red">{tilaisuudetError.message}</p>}
-          </>
-        )}
+        <div className="pt-6">
+          <p className="vayla-label">Vuorovaikutusmahdollisuudet palautteiden ja kysymyksien lisäksi</p>
+          <p>
+            Verkossa jaettavien tilaisuuksien liittymislinkit julkaistaan palvelun julkisella puolella kaksi (2) tuntia ennen tilaisuuden
+            alkua.
+          </p>
+        </div>
         <SectionContent>
           {isVerkkotilaisuuksia && (
             <>
@@ -147,31 +104,8 @@ export default function VuorovaikutusMahdollisuudet({ projekti, vuorovaikutus, s
                 })}
             </>
           )}
-          {!vuorovaikutus.julkinen && (
-            <Button
-              onClick={(e) => {
-                setOpenVuorovaikutustilaisuus(true);
-                e.preventDefault();
-              }}
-              id="add_or_edit_tilaisuus"
-            >
-              {isFyysisiatilaisuuksia || isVerkkotilaisuuksia || isSoittoaikoja ? "Muokkaa tilaisuuksia" : "Lisää tilaisuus"}
-            </Button>
-          )}
         </SectionContent>
       </Section>
     </>
   );
 }
-export const SoittoajanYhteystieto = React.memo((props: { yhteystieto: Yhteystieto | YhteystietoInput }) => {
-  return (
-    <>
-      <p>
-        {props.yhteystieto.etunimi} {props.yhteystieto.sukunimi}
-        {props.yhteystieto.titteli ? `, ${props.yhteystieto.titteli}` : null}
-        {props.yhteystieto.organisaatio ? ` (${props.yhteystieto.organisaatio})` : null}: {props.yhteystieto.puhelinnumero}
-      </p>
-    </>
-  );
-});
-SoittoajanYhteystieto.displayName = "SoittoajanYhteystieto";

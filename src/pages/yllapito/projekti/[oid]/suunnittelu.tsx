@@ -10,6 +10,7 @@ import { useProjekti } from "src/hooks/useProjekti";
 import TallentamattomiaMuutoksiaDialog from "@components/TallentamattomiaMuutoksiaDialog";
 import { Status } from "@services/api";
 import SuunnitteluvaiheenPerustiedotLukutila from "@components/projekti/lukutila/SuunnitteluvaiheenPerustiedotLukutila";
+import VuorovaikuttaminenLukutila from "@components/projekti/lukutila/VuorovaikuttaminenLukutila";
 
 export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
   useProjektiBreadcrumbs(setRouteLabels);
@@ -56,7 +57,16 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
       return tabs;
     }
 
-    if (!projekti.suunnitteluVaihe?.vuorovaikutukset?.length) {
+    if (projekti.status === Status.EPAAKTIIVINEN) {
+      projekti?.suunnitteluVaihe?.vuorovaikutukset?.forEach((vuorovaikutus) => {
+        tabs.push({
+          label: "1. Vuorovaikuttaminen",
+          tabId: "1_vuorovaikuttaminen_tab",
+          disabled: false,
+          content: <VuorovaikuttaminenLukutila vuorovaikutusnro={vuorovaikutus.vuorovaikutusNumero} />,
+        });
+      });
+    } else if (!projekti.suunnitteluVaihe?.vuorovaikutukset?.length) {
       tabs.push({
         label: "1. Vuorovaikuttaminen",
         tabId: "1_vuorovaikuttaminen_tab",

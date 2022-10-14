@@ -1,7 +1,7 @@
 import Button from "@components/button/Button";
 import Select from "@components/form/Select";
 import TextInput from "@components/form/TextInput";
-import React, { ReactElement, Fragment } from "react";
+import React, { ReactElement } from "react";
 import { Controller, FieldError, useFieldArray, useFormContext } from "react-hook-form";
 import { formatProperNoun } from "common/util/formatProperNoun";
 import useTranslation from "next-translate/useTranslation";
@@ -10,8 +10,8 @@ import { IlmoitettavaViranomainen, KuntaVastaanottajaInput, Vuorovaikutus } from
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
-import dayjs from "dayjs";
 import { useProjekti } from "src/hooks/useProjekti";
+import IlmoituksenVastaanottajatLukutila from "../lukutila/komponentit/VuorovaikutusIlmoituksenVastaanottajatLukutila";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -66,64 +66,15 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet, vuorovaik
 
   return (
     <>
-      {julkinen && (
-        <Section>
-          <h4 className="vayla-small-title">Ilmoituksen vastaanottajat</h4>
-          <SectionContent>
-            <p>
-              Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Ei
-              lähetetty’, tarkasta sähköpostiosoite. Ota tarvittaessa yhteys pääkäyttäjään.
-            </p>
-          </SectionContent>
-          <SectionContent>
-            <div className="grid grid-cols-4 gap-x-6 mb-4">
-              <h6 className="font-bold">Viranomaiset</h6>
-              <p></p>
-              <p style={{ color: "#7A7A7A" }}>Ilmoituksen tila</p>
-              <p style={{ color: "#7A7A7A" }}>Lähetysaika</p>
-
-              {vuorovaikutus?.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen, index) => (
-                <React.Fragment key={index}>
-                  <p className="odd:bg-white even:bg-grey col-span-2">
-                    {t(`viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
-                  </p>
-                  <p className="odd:bg-white even:bg-grey">{viranomainen.lahetetty ? "Lähetetty" : "Ei lähetetty"}</p>
-                  <p className="odd:bg-white even:bg-grey">
-                    {viranomainen.lahetetty ? dayjs(viranomainen.lahetetty).format("DD.MM.YYYY HH:mm") : null}
-                  </p>
-                </React.Fragment>
-              ))}
-            </div>
-          </SectionContent>
-          <SectionContent>
-            <h6 className="font-bold">Kunnat</h6>
-            <div className="content grid grid-cols-4 mb-4">
-              <p className="vayla-table-header">Kunta</p>
-              <p className="vayla-table-header">Sähköpostiosoite</p>
-              <p className="vayla-table-header">Ilmoituksen tila</p>
-              <p className="vayla-table-header">Lähetysaika</p>
-              {vuorovaikutus?.ilmoituksenVastaanottajat?.kunnat?.map((kunta, index) => (
-                <Fragment key={index}>
-                  <p className={getStyleForRow(index)}>{kunta.nimi}</p>
-                  <p className={getStyleForRow(index)}>{kunta.sahkoposti}</p>
-                  <p className={getStyleForRow(index)}>{kunta.lahetetty ? "Lahetetty" : "Ei lähetetty"}</p>
-                  <p className={getStyleForRow(index)}>
-                    {kunta.lahetetty ? dayjs(kunta.lahetetty).format("DD.MM.YYYY HH:mm") : null}
-                  </p>
-                </Fragment>
-              ))}
-            </div>
-          </SectionContent>
-        </Section>
-      )}
+      {julkinen && <IlmoituksenVastaanottajatLukutila vuorovaikutus={vuorovaikutus} />}
       <div style={julkinen ? { display: "none" } : {}}>
         <Section>
           <h4 className="vayla-small-title">Ilmoituksen vastaanottajat</h4>
           <SectionContent>
             <p>
-              Vuorovaikuttamisesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille.
-              Kunnat on haettu Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle
-              viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi -painikkeella
+              Vuorovaikuttamisesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on haettu
+              Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi
+              -painikkeella
             </p>
             <p>Jos kuntatiedoissa on virhe, tee korjaus Projektivelhoon.</p>
           </SectionContent>
@@ -133,10 +84,7 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet, vuorovaik
               <h6 className="font-bold">Viranomaiset</h6>
               {(errors.suunnitteluVaihe?.vuorovaikutus?.ilmoituksenVastaanottajat as HelperType)?.viranomaiset && (
                 <p className="text-red">
-                  {
-                    (errors.suunnitteluVaihe?.vuorovaikutus?.ilmoituksenVastaanottajat as HelperType).viranomaiset
-                      ?.message
-                  }
+                  {(errors.suunnitteluVaihe?.vuorovaikutus?.ilmoituksenVastaanottajat as HelperType).viranomaiset?.message}
                 </p>
               )}
               {viranomaisFields.map((viranomainen, index) => (
@@ -147,23 +95,16 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet, vuorovaik
                       label: nimi ? t(`viranomainen.${nimi}`) : "",
                       value: nimi,
                     }))}
-                    {...register(
-                      `suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.viranomaiset.${index}.nimi`,
-                      {
-                        onChange: (event) => {
-                          const sahkoposti = kirjaamoOsoitteet?.find(
-                            ({ nimi }) => nimi === event.target.value
-                          )?.sahkoposti;
-                          setValue(
-                            `suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`,
-                            sahkoposti || ""
-                          );
-                        },
-                      }
-                    )}
-                    error={
-                      errors?.suunnitteluVaihe?.vuorovaikutus?.ilmoituksenVastaanottajat?.viranomaiset?.[index]?.nimi
-                    }
+                    {...register(`suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.viranomaiset.${index}.nimi`, {
+                      onChange: (event) => {
+                        const sahkoposti = kirjaamoOsoitteet?.find(({ nimi }) => nimi === event.target.value)?.sahkoposti;
+                        setValue(
+                          `suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`,
+                          sahkoposti || ""
+                        );
+                      },
+                    })}
+                    error={errors?.suunnitteluVaihe?.vuorovaikutus?.ilmoituksenVastaanottajat?.viranomaiset?.[index]?.nimi}
                     addEmptyOption
                   />
                   <Controller
@@ -223,16 +164,10 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet, vuorovaik
                   {...register(`suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.kunnat.${index}.nimi`)}
                   readOnly
                 />
-                <TextInput
-                  label="Kunta *"
-                  value={formatProperNoun((projekti?.velho?.kunnat || [])[index] || "")}
-                  disabled
-                />
+                <TextInput label="Kunta *" value={formatProperNoun((projekti?.velho?.kunnat || [])[index] || "")} disabled />
                 <TextInput
                   label="Sähköpostiosoite *"
-                  error={
-                    errors?.suunnitteluVaihe?.vuorovaikutus?.ilmoituksenVastaanottajat?.kunnat?.[index]?.sahkoposti
-                  }
+                  error={errors?.suunnitteluVaihe?.vuorovaikutus?.ilmoituksenVastaanottajat?.kunnat?.[index]?.sahkoposti}
                   {...register(`suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.kunnat.${index}.sahkoposti`)}
                 />
               </HassuGrid>
@@ -242,11 +177,4 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet, vuorovaik
       </div>
     </>
   );
-}
-
-function getStyleForRow(index: number): string | undefined {
-  if (index % 2 == 0) {
-    return "vayla-table-even";
-  }
-  return "vayla-table-odd";
 }

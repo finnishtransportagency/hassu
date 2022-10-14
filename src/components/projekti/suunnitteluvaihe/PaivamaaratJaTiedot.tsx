@@ -1,11 +1,10 @@
 import SectionContent from "@components/layout/SectionContent";
-import Section from "@components/layout/Section";
-import { Projekti, Kieli } from "@services/api";
+import { Projekti } from "@services/api";
 import React, { ReactElement, useMemo } from "react";
-import { formatDate, today } from "src/util/dateUtils";
-import lowerCase from "lodash/lowerCase";
+import { today } from "src/util/dateUtils";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { VuorovaikutusFormValues } from "./SuunnitteluvaiheenVuorovaikuttaminen";
+import VuorovaikutusPaivamaaraJaTiedotLukutila from "../lukutila/komponentit/VuorovaikutusPaivamaaraJaTiedotLukutila";
 
 interface Props {
   projekti?: Projekti | null;
@@ -23,9 +22,6 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({ projekti, vuorova
     return projekti?.aloitusKuulutusJulkaisut?.[projekti?.aloitusKuulutusJulkaisut?.length - 1 || 0];
   }, [projekti]);
 
-  const ensisijainenKieli = aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli || Kieli.SUOMI;
-  const toissijainenKieli = aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli || Kieli.RUOTSI;
-
   const julkinen = v?.julkinen;
 
   if (!projekti) {
@@ -33,28 +29,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({ projekti, vuorova
   }
 
   if (julkinen && aloituskuulutusjulkaisu) {
-    return (
-      <Section noDivider>
-        <SectionContent>
-          <p className="vayla-label">Julkaisupäivä</p>
-          <p>{formatDate(v?.vuorovaikutusJulkaisuPaiva)}</p>
-        </SectionContent>
-        <SectionContent>
-          <p className="vayla-label">Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä ({lowerCase(ensisijainenKieli)})</p>
-          <p>{projekti?.aloitusKuulutus?.hankkeenKuvaus?.[ensisijainenKieli]}</p>
-        </SectionContent>
-        {aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli && (
-          <SectionContent className="content">
-            <p className="vayla-label">Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(toissijainenKieli)})</p>
-            <p>{projekti?.aloitusKuulutus?.hankkeenKuvaus?.[toissijainenKieli]}</p>
-          </SectionContent>
-        )}
-        <SectionContent className="pb-7">
-          <p className="vayla-label">Kysymykset ja palautteet</p>
-          <p>Kansalaisia pyydetään esittämään kysymykset ja palautteet viimeistään {formatDate(v?.kysymyksetJaPalautteetViimeistaan)}.</p>
-        </SectionContent>
-      </Section>
-    );
+    return <VuorovaikutusPaivamaaraJaTiedotLukutila aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} vuorovaikutus={v} />;
   }
 
   return (
