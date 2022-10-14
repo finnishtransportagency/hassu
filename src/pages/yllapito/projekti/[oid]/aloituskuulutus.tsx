@@ -515,7 +515,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       {!voiMuokata && (
         <FormProvider {...useFormReturn}>
           <AloituskuulutusLukunakyma
-            oid={projekti?.oid}
+            projekti={projekti}
             aloituskuulutusjulkaisu={
               getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.HYVAKSYTTY) ||
               getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA)
