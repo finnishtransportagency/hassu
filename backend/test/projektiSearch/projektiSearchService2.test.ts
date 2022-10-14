@@ -33,7 +33,7 @@ describe("ProjektiSearchService", () => {
     sandbox.restore();
   });
 
-  it("should index projekti correctly", async () => {
+  it.only("should index projekti correctly", async () => {
     await projektiSearchService.indexProjekti(projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi);
     expect(openSearchClientJulkinenSuomiStub.calledWith("1.2.246.578.5.1.2724991921.3534113206", julkinenIndeksi));
     expect(openSearchClientYllapitoStub.called);
@@ -169,6 +169,24 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
           postitoimipaikka: undefined,
           Saapumisohjeet: undefined,
           esitettavatYhteystiedot: undefined,
+        },
+        {
+          tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+          nimi: undefined,
+          paivamaara: "2022-10-27",
+          alkamisAika: "16:18",
+          paattymisAika: "17:18",
+          kaytettavaPalvelu: undefined,
+          linkki: undefined,
+          paikka: undefined,
+          osoite: undefined,
+          postinumero: undefined,
+          postitoimipaikka: undefined,
+          Saapumisohjeet: undefined,
+          esitettavatYhteystiedot: {
+            yhteysHenkilot: ["L036511"],
+            yhteysTiedot: [],
+          },
         },
       ],
       vuorovaikutusJulkaisuPaiva: "2022-10-12",
