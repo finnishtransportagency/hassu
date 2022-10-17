@@ -89,6 +89,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   await executor.onResetHyvaksymisvaihe(async (oid: string) => {
     await testProjektiDatabase.saveProjekti({
       oid,
+      kasittelynTila: null,
       ...hyvaksymisPaatosVaiheFields,
     });
   });
