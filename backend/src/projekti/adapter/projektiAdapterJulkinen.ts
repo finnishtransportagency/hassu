@@ -37,6 +37,7 @@ import {
   adaptStandardiYhteystiedotLisaamattaProjaria,
 } from "../../util/adaptStandardiYhteystiedot";
 import { adaptSuunnitteluSopimusJulkaisuJulkinen } from "./adaptToAPI";
+import { cloneDeep } from "lodash";
 
 class ProjektiAdapterJulkinen {
   public adaptProjekti(dbProjekti: DBProjekti): API.ProjektiJulkinen | undefined {
@@ -403,7 +404,8 @@ function adaptVuorovaikutusTilaisuudet(
   vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus>,
   dbProjekti: DBProjekti
 ): API.VuorovaikutusTilaisuusJulkinen[] {
-  return vuorovaikutusTilaisuudet.map((vuorovaikutusTilaisuus) => {
+  const vuorovaikutusTilaisuudetCopy = cloneDeep(vuorovaikutusTilaisuudet);
+  return vuorovaikutusTilaisuudetCopy.map((vuorovaikutusTilaisuus) => {
     const esitettavatYhteystiedot: StandardiYhteystiedot | undefined = vuorovaikutusTilaisuus.esitettavatYhteystiedot;
     delete vuorovaikutusTilaisuus.esitettavatYhteystiedot;
     const tilaisuus: API.VuorovaikutusTilaisuusJulkinen = {

@@ -18,6 +18,7 @@ import {
   adaptStandardiYhteystiedotByAddingTypename,
 } from "../common";
 import { fileService } from "../../../files/fileService";
+import { cloneDeep } from "lodash";
 
 export function adaptSuunnitteluVaihe(
   oid: string,
@@ -50,7 +51,8 @@ function adaptVuorovaikutukset(
   vuorovaikutukset: Array<Vuorovaikutus> | undefined | null
 ): API.Vuorovaikutus[] | undefined {
   if (vuorovaikutukset && vuorovaikutukset.length > 0) {
-    return vuorovaikutukset.map((vuorovaikutus) => {
+    const vuorovaikutuksetCopy = cloneDeep(vuorovaikutukset);
+    return vuorovaikutuksetCopy.map((vuorovaikutus) => {
       if (!vuorovaikutus.ilmoituksenVastaanottajat) {
         throw new Error("adaptVuorovaikutukset: vuorovaikutus.ilmoituksenVastaanottajat määrittelemättä");
       }
@@ -84,7 +86,8 @@ function adaptVuorovaikutusTilaisuudet(
   vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus> | null | undefined
 ): API.VuorovaikutusTilaisuus[] | undefined {
   if (vuorovaikutusTilaisuudet) {
-    return vuorovaikutusTilaisuudet.map((vuorovaikutusTilaisuus) => {
+    const vuorovaikutusTilaisuudetCopy = cloneDeep(vuorovaikutusTilaisuudet);
+    return vuorovaikutusTilaisuudetCopy.map((vuorovaikutusTilaisuus) => {
       const esitettavatYhteystiedot: StandardiYhteystiedot | undefined = vuorovaikutusTilaisuus.esitettavatYhteystiedot;
       delete vuorovaikutusTilaisuus.esitettavatYhteystiedot;
       const tilaisuus: API.VuorovaikutusTilaisuus = {

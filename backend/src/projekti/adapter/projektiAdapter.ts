@@ -97,13 +97,6 @@ export class ProjektiAdapter {
       ...fieldsToCopyAsIs
     } = dbProjekti;
 
-    console.log();
-    console.log("adaptProjekti normaali");
-    dbProjekti.vuorovaikutukset?.map((vv) => {
-      console.log(vv.vuorovaikutusTilaisuudet);
-    });
-    console.log();
-
     const apiProjekti: API.Projekti = removeUndefinedFields({
       __typename: "Projekti",
       tallennettu: !!dbProjekti.tallennettu,
@@ -143,12 +136,7 @@ export class ProjektiAdapter {
       kasittelynTila: adaptKasittelynTila(kasittelynTila),
       ...fieldsToCopyAsIs,
     });
-    console.log();
-    console.log("adaptProjekti normaali, after removeUndefinedFields");
-    dbProjekti.vuorovaikutukset?.map((vv) => {
-      console.log(vv.vuorovaikutusTilaisuudet);
-    });
-    console.log();
+
     if (apiProjekti.tallennettu) {
       applyProjektiStatus(apiProjekti);
     }

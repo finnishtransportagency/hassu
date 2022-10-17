@@ -32,32 +32,14 @@ const projektiSarakeToField: Record<ProjektiSarake, string> = {
 
 class ProjektiSearchService {
   async indexProjekti(projekti: DBProjekti) {
-    console.log();
-    console.log("indexProjektiALKU");
-    projekti.vuorovaikutukset?.map((vv) => {
-      console.log(vv.vuorovaikutusTilaisuudet);
-    });
-    console.log();
     const projektiToIndex = adaptProjektiToIndex(projekti);
     log.info("Index projekti", { oid: projekti.oid });
     await openSearchClientYllapito.putDocument(projekti.oid, projektiToIndex);
 
     projekti.tallennettu = true;
-    console.log();
-    console.log("indexProjekti");
-    projekti.vuorovaikutukset?.map((vv) => {
-      console.log(vv.vuorovaikutusTilaisuudet);
-    });
-    console.log();
+
     const apiProjekti = projektiAdapterJulkinen.adaptProjekti(projekti);
-    console.log();
-    console.log("afterAdapting Projekti (julkinen)");
-    console.log(
-      apiProjekti?.suunnitteluVaihe?.vuorovaikutukset?.map((vv) => {
-        console.log(vv.vuorovaikutusTilaisuudet);
-      })
-    );
-    console.log();
+
     if (apiProjekti) {
       for (const kieli of Object.values(Kieli)) {
         const projektiJulkinenToIndex = adaptProjektiToJulkinenIndex(apiProjekti, kieli);

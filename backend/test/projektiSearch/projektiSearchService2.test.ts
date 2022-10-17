@@ -33,7 +33,7 @@ describe("ProjektiSearchService", () => {
     sandbox.restore();
   });
 
-  it.only("should index projekti correctly", async () => {
+  it("should index projekti correctly", async () => {
     await projektiSearchService.indexProjekti(projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi);
     expect(openSearchClientJulkinenSuomiStub.calledWith("1.2.246.578.5.1.2724991921.3534113206", julkinenIndeksi));
     expect(openSearchClientYllapitoStub.called);
@@ -41,7 +41,7 @@ describe("ProjektiSearchService", () => {
 });
 
 const julkinenIndeksi: Omit<ProjektiDocument, "oid"> = {
-  nimi: "Elinan testiprojekti 0709",
+  nimi: "Vastuun testiprojekti 0709",
   hankkeenKuvaus: "asdgdrgh",
   projektiTyyppi: ProjektiTyyppi.TIE,
   kunnat: ["Ilmajoki", " Seinäjoki"],
@@ -75,7 +75,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
       viranomaiset: [
         {
           nimi: IlmoitettavaViranomainen.VAYLAVIRASTO,
-          sahkoposti: "kirjaamo@vayla.fi",
+          sahkoposti: "email@vayla.fi",
           lahetetty: undefined,
         },
       ],
@@ -93,16 +93,16 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
       },
       yhteystiedot: [
         {
-          etunimi: "Elina",
-          sukunimi: "Manninen",
+          etunimi: "Vastuu",
+          sukunimi: "Henkilo",
           organisaatio: "Väylävirasto",
           puhelinnumero: "0291234567",
-          sahkoposti: "elina.manninen@vayla.fi",
+          sahkoposti: "vastuu.henkilo@vayla.fi",
           titteli: undefined,
         },
       ],
       velho: {
-        nimi: "Elinan testiprojekti 0709",
+        nimi: "Vastuun testiprojekti 0709",
         tyyppi: ProjektiTyyppi.TIE,
         kuvaus: undefined,
         vaylamuoto: ["tie"],
@@ -111,9 +111,9 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
         suunnittelustaVastaavaViranomainen: Viranomainen.VAYLAVIRASTO,
         toteuttavaOrganisaatio: undefined,
         vastuuhenkilonNimi: undefined,
-        vastuuhenkilonEmail: "elina.manninen@vayla.fi",
+        vastuuhenkilonEmail: "vastuu.henkilo@vayla.fi",
         varahenkilonNimi: undefined,
-        varahenkilonEmail: "marika.ojanen@vayla.fi",
+        varahenkilonEmail: "vara.tyyppi@vayla.fi",
         kunnat: ["Ilmajoki", " Seinäjoki"],
         maakunnat: ["Uusimaa"],
         linkki: undefined,
@@ -142,7 +142,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
         viranomaiset: [
           {
             nimi: IlmoitettavaViranomainen.VAYLAVIRASTO,
-            sahkoposti: "kirjaamo@vayla.fi",
+            sahkoposti: "email@vayla.fi",
             lahetetty: "2022-10-11T16:17",
           },
         ],
@@ -205,7 +205,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
         viranomaiset: [
           {
             nimi: IlmoitettavaViranomainen.VAYLAVIRASTO,
-            sahkoposti: "kirjaamo@vayla.fi",
+            sahkoposti: "email@vayla.fi",
             lahetetty: undefined,
           },
         ],
@@ -242,7 +242,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
   jatkoPaatos2Vaihe: undefined,
   jatkoPaatos2VaiheJulkaisut: undefined,
   velho: {
-    nimi: "Elinan testiprojekti 0709",
+    nimi: "Vastuun testiprojekti 0709",
     tyyppi: ProjektiTyyppi.TIE,
     kuvaus: undefined,
     vaylamuoto: ["tie"],
@@ -251,9 +251,9 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
     suunnittelustaVastaavaViranomainen: Viranomainen.VAYLAVIRASTO,
     toteuttavaOrganisaatio: undefined,
     vastuuhenkilonNimi: undefined,
-    vastuuhenkilonEmail: "elina.manninen@vayla.fi",
+    vastuuhenkilonEmail: "vastuu.henkilo@vayla.fi",
     varahenkilonNimi: undefined,
-    varahenkilonEmail: "marika.ojanen@vayla.fi",
+    varahenkilonEmail: "vara.tyyppi@vayla.fi",
     kunnat: ["Ilmajoki", " Seinäjoki"],
     maakunnat: ["Uusimaa"],
     linkki: undefined,
@@ -263,9 +263,9 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
       tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
       kayttajatunnus: "L036511",
       puhelinnumero: "0291234567",
-      email: "elina.manninen@vayla.fi",
+      email: "vastuu.henkilo@vayla.fi",
       organisaatio: "Väylävirasto",
-      nimi: "Manninen, Elina",
+      nimi: "Henkilo, Vastuu",
       muokattavissa: false,
       yleinenYhteystieto: undefined,
     },
@@ -273,9 +273,9 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
       tyyppi: KayttajaTyyppi.VARAHENKILO,
       kayttajatunnus: "L658321",
       puhelinnumero: "0291234567",
-      email: "marika.ojanen@vayla.fi",
+      email: "vara.tyyppi@vayla.fi",
       organisaatio: "Väylävirasto",
-      nimi: "Ojanen, Marika",
+      nimi: "Tyyppi, Vara",
       muokattavissa: false,
       yleinenYhteystieto: undefined,
     },
@@ -283,7 +283,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
       tyyppi: KayttajaTyyppi.VARAHENKILO,
       kayttajatunnus: "A000112",
       puhelinnumero: "0299879867876",
-      email: "mikko.haapamki@cgi.com",
+      email: "joku.hlo@cgi.com",
       organisaatio: "CGI Suomi Oy",
       nimi: "Hassu, A-tunnus1",
       muokattavissa: true,
