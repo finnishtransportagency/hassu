@@ -37,7 +37,9 @@ class ProjektiSearchService {
     await openSearchClientYllapito.putDocument(projekti.oid, projektiToIndex);
 
     projekti.tallennettu = true;
+
     const apiProjekti = projektiAdapterJulkinen.adaptProjekti(projekti);
+
     if (apiProjekti) {
       for (const kieli of Object.values(Kieli)) {
         const projektiJulkinenToIndex = adaptProjektiToJulkinenIndex(apiProjekti, kieli);

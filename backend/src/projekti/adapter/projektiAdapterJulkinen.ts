@@ -37,6 +37,7 @@ import {
   adaptStandardiYhteystiedotLisaamattaProjaria,
 } from "../../util/adaptStandardiYhteystiedot";
 import { adaptSuunnitteluSopimusJulkaisuJulkinen } from "./adaptToAPI";
+import { cloneDeep } from "lodash";
 
 class ProjektiAdapterJulkinen {
   public adaptProjekti(dbProjekti: DBProjekti): API.ProjektiJulkinen | undefined {
@@ -370,9 +371,6 @@ function adaptVuorovaikutukset(dbProjekti: DBProjekti): API.VuorovaikutusJulkine
       if (!vuorovaikutus.vuorovaikutusTilaisuudet) {
         throw new Error("adaptVuorovaikutukset: vuorovaikutus.vuorovaikutusTilaisuudet määrittelmättä");
       }
-      if (!vuorovaikutus.vuorovaikutusPDFt) {
-        throw new Error("adaptVuorovaikutukset: vuorovaikutus.vuorovaikutusPDFt määrittelmättä");
-      }
       // tarkistettu jo, että vuorovaikutusJulkaisuPaiva määritelty
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -400,7 +398,8 @@ function adaptVuorovaikutusTilaisuudet(
   vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus>,
   dbProjekti: DBProjekti
 ): API.VuorovaikutusTilaisuusJulkinen[] {
-  return vuorovaikutusTilaisuudet.map((vuorovaikutusTilaisuus) => {
+  const vuorovaikutusTilaisuudetCopy = cloneDeep(vuorovaikutusTilaisuudet);
+  return vuorovaikutusTilaisuudetCopy.map((vuorovaikutusTilaisuus) => {
     const esitettavatYhteystiedot: StandardiYhteystiedot | undefined = vuorovaikutusTilaisuus.esitettavatYhteystiedot;
     delete vuorovaikutusTilaisuus.esitettavatYhteystiedot;
     const tilaisuus: API.VuorovaikutusTilaisuusJulkinen = {
@@ -462,9 +461,15 @@ function isKuulutusNahtavillaVaiheOver(
   return !nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva || parseDate(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva).isBefore(dayjs());
 }
 
-function adaptVuorovaikutusPDFPaths(oid: string, vuorovaikutuspdfs: LocalizedMap<VuorovaikutusPDF>): API.VuorovaikutusPDFt {
+function adaptVuorovaikutusPDFPaths(
+  oid: string,
+  vuorovaikutuspdfs: LocalizedMap<VuorovaikutusPDF> | undefined
+): API.VuorovaikutusPDFt | undefined {
+  if (!vuorovaikutuspdfs) {
+    return undefined;
+  }
   const result: Partial<API.VuorovaikutusPDFt> = {};
-  if (!vuorovaikutuspdfs || !vuorovaikutuspdfs[API.Kieli.SUOMI]) {
+  if (vuorovaikutuspdfs && !vuorovaikutuspdfs[API.Kieli.SUOMI]) {
     throw new Error(`adaptVuorovaikutusPDFPaths: vuorovaikutuspdfs.${API.Kieli.SUOMI} määrittelemättä`);
   }
   for (const kieli in vuorovaikutuspdfs) {

@@ -136,6 +136,7 @@ export class ProjektiAdapter {
       kasittelynTila: adaptKasittelynTila(kasittelynTila),
       ...fieldsToCopyAsIs,
     });
+
     if (apiProjekti.tallennettu) {
       applyProjektiStatus(apiProjekti);
     }
