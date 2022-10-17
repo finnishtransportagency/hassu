@@ -7,7 +7,7 @@ import { ProjektiTestCommand } from "../../../common/testUtil.dev";
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
 
-describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
+describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
   before(() => {
     cy.abortEarly();
   });

@@ -7,6 +7,7 @@ import { localDocumentClient } from "../util/databaseUtil";
 export enum FixtureName {
   NAHTAVILLAOLO = "NAHTAVILLAOLO",
   HYVAKSYMISPAATOS_APPROVED = "HYVAKSYMISPAATOS_APPROVED",
+  EPAAKTIIVINEN_1 = "EPAAKTIIVINEN_1",
 }
 
 export const MOCKED_TIMESTAMP = "2020-01-01T00:00:00+02:00";
@@ -18,6 +19,7 @@ export async function recordProjektiTestFixture(fixtureName: string | FixtureNam
     replaceFieldsByName(dbProjekti, "salt123", "salt");
 
     const oldValue = readRecord(fixtureName);
+    delete dbProjekti.tallennettu;
     const currentValue = JSON.stringify(dbProjekti, null, 2);
     // Prevent updating file timestamp so that running tests with "watch" don't get into infinite loop
     if (!oldValue || oldValue !== currentValue) {

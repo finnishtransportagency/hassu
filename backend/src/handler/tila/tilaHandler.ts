@@ -15,6 +15,8 @@ class TilaHandler {
         return nahtavillaoloTilaManager.siirraTila(input);
       case TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE:
         return hyvaksymisPaatosVaiheTilaManager.siirraTila(input);
+      case TilasiirtymaTyyppi.JATKOPAATOS_1:
+        return hyvaksymisPaatosVaiheTilaManager.siirraTila(input);
     }
   }
 }

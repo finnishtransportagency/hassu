@@ -33,7 +33,9 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
     HYVAKSYTTY: 4,
     JATKOPAATOS_1: 5,
     JATKOPAATOS_2: 6,
-    EPAAKTIIVINEN: -1,
+    EPAAKTIIVINEN_1: -1,
+    EPAAKTIIVINEN_2: -1,
+    EPAAKTIIVINEN_3: -1,
   };
 
   return (

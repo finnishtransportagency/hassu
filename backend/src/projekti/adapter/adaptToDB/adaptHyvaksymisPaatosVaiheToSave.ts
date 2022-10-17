@@ -1,6 +1,6 @@
 import * as API from "../../../../../common/graphql/apiModel";
 import { HyvaksymisPaatosVaihe } from "../../../database/model";
-import { ProjektiAdaptationResult } from "../projektiAdapter";
+import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import { adaptAineistotToSave, adaptIlmoituksenVastaanottajatToSave, adaptStandardiYhteystiedotToSave } from "./common";
 import mergeWith from "lodash/mergeWith";
 

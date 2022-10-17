@@ -1,5 +1,5 @@
 import * as API from "../../../../common/graphql/apiModel";
-import { HyvaksymisPaatosVaiheTila, NahtavillaoloVaiheTila } from "../../../../common/graphql/apiModel";
+import { HyvaksymisPaatosVaiheTila, NahtavillaoloVaiheTila, Status } from "../../../../common/graphql/apiModel";
 import { kayttoOikeudetSchema } from "../../../../src/schemas/kayttoOikeudet";
 import { ValidationError } from "yup";
 import { log } from "../../logger";
@@ -99,7 +99,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
     getPaatosVaihe(p: API.Projekti): { kuulutusVaihePaattyyPaiva?: string | null } | null | undefined {
       return findJulkaisutWithTila(p.hyvaksymisPaatosVaiheJulkaisut, HyvaksymisPaatosVaiheTila.HYVAKSYTTY)?.pop();
     }
-  })(true);
+  })(true, Status.EPAAKTIIVINEN_1);
 
   /**
    * Ensimmäisen jatkopäätöksen päivämäärä ja asiatunnus annettu
@@ -121,7 +121,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
     getPaatosVaihe(p: API.Projekti): { kuulutusVaihePaattyyPaiva?: string | null } | null | undefined {
       return findJulkaisutWithTila(p.jatkoPaatos1VaiheJulkaisut, HyvaksymisPaatosVaiheTila.HYVAKSYTTY)?.pop();
     }
-  })(false);
+  })(false, Status.EPAAKTIIVINEN_2);
 
   /**
    * Ensimmäisen jatkopäätöksen päivämäärä ja asiatunnus annettu
@@ -143,7 +143,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
     getPaatosVaihe(p: API.Projekti): { kuulutusVaihePaattyyPaiva?: string | null } | null | undefined {
       return findJulkaisutWithTila(p.jatkoPaatos2VaiheJulkaisut, HyvaksymisPaatosVaiheTila.HYVAKSYTTY)?.pop();
     }
-  })(false);
+  })(false, Status.EPAAKTIIVINEN_3);
 
   perustiedot
     .setNext(suunnittelu)

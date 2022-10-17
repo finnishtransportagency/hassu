@@ -86,9 +86,9 @@ if (process.env.USER_IDENTIFIER_FUNCTIONS) {
 export function identifyMockUser(kayttaja?: NykyinenKayttaja): void {
   (globalThis as any).currentUser = kayttaja;
   if ((globalThis as any).currentUser) {
-    log.info("Mock user", { user: (globalThis as any).currentUser });
+    log.debug("Mock user", { user: (globalThis as any).currentUser });
   } else {
-    log.info("Anonymous user");
+    log.debug("Anonymous user");
   }
 }
 

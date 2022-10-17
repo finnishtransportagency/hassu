@@ -1,5 +1,5 @@
 import { PageProps } from "@pages/_app";
-import React, { ReactElement, useCallback, useState, useMemo } from "react";
+import React, { ReactElement, useCallback, useMemo, useState } from "react";
 import { api, HyvaksymispaatosInput, TallennaProjektiInput } from "@services/api";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
@@ -19,6 +19,8 @@ import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
 import { TextField } from "@mui/material";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
+import cloneDeep from "lodash/cloneDeep";
+import assert from "assert";
 
 type FormValues = Pick<TallennaProjektiInput, "oid" | "kasittelynTila">;
 
@@ -31,6 +33,7 @@ export default function KasittelyntilaSivu({ setRouteLabels }: PageProps): React
     </ProjektiPageLayout>
   );
 }
+
 interface HenkilotFormProps {
   projekti: ProjektiLisatiedolla;
   projektiLoadError: any;
@@ -92,8 +95,21 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   const onSubmit = useCallback(
     async (data: FormValues) => {
       setIsFormSubmitting(true);
+
+      function cleanupHyvaksymisPaatos(paatos: HyvaksymispaatosInput | null | undefined): HyvaksymispaatosInput | undefined {
+        if (!paatos || (!paatos.paatoksenPvm && !paatos.asianumero)) {
+          return undefined;
+        }
+        return { ...paatos };
+      }
+
       try {
-        await api.tallennaProjekti(data);
+        const cleanedUpData = cloneDeep(data);
+        assert(cleanedUpData.kasittelynTila);
+        cleanedUpData.kasittelynTila.hyvaksymispaatos = cleanupHyvaksymisPaatos(cleanedUpData.kasittelynTila?.hyvaksymispaatos);
+        cleanedUpData.kasittelynTila.ensimmainenJatkopaatos = cleanupHyvaksymisPaatos(cleanedUpData.kasittelynTila?.ensimmainenJatkopaatos);
+        cleanedUpData.kasittelynTila.toinenJatkopaatos = cleanupHyvaksymisPaatos(cleanedUpData.kasittelynTila?.toinenJatkopaatos);
+        await api.tallennaProjekti(cleanedUpData);
         await reloadProjekti();
         reset(data);
         showSuccessMessage("Tallennus onnistui!");

@@ -8,16 +8,31 @@ const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
 const asianumero = "VÄYLÄ/1234/01.02.03/2022";
 
-describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
+describe("9 - Projektin nahtavillaolovaiheen kuulutustiedot", () => {
   before(() => {
     cy.abortEarly();
   });
 
+  it("Siirra nähtävilläolovaihe menneisyyteen", { scrollBehavior: "center" }, function () {
+    // Move nähtävilläolo to past
+    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).nahtavillaoloMenneisyyteen(), { timeout: 30000 });
+  });
+
   it("Tallenna kasittelyn tila ja siirra menneisyyteen", { scrollBehavior: "center" }, function () {
     cy.login("A1");
+
     cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).resetHyvaksymisvaihe(), { timeout: 30000 });
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/kasittelyntila", { timeout: 30000 });
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/kasittelyntila", {
+      timeout: 30000,
+      retryOnNetworkFailure: true,
+      retryOnStatusCodeFailure: true,
+    });
     cy.reload(); // extra reload to avoid white page
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/kasittelyntila", {
+      timeout: 30000,
+      retryOnNetworkFailure: true,
+      retryOnStatusCodeFailure: true,
+    });
     cy.contains(projektiNimi);
 
     const paatosPvm = formatDate(dayjs().subtract(1, "hour"));
@@ -35,10 +50,6 @@ describe("Projektin nahtavillaolovaiheen kuulutustiedot", () => {
     cy.get('[name="kasittelynTila.hyvaksymispaatos.paatoksenPvm"]').should("have.value", paatosPvm);
     cy.get('[name="kasittelynTila.hyvaksymispaatos.asianumero"]').should("have.value", asianumero);
 
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/hyvaksymispaatos", { timeout: 30000 }).reload();
-
-    // Move to past
-    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).nahtavillaoloMenneisyyteen(), { timeout: 30000 });
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/hyvaksymispaatos", { timeout: 30000 }).reload();
     cy.contains("Kuulutus hyväksymispäätöksestä");
 

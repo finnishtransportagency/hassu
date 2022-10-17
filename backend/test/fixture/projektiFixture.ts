@@ -19,7 +19,7 @@ import {
   VuorovaikutusTilaisuusTyyppi,
   Yhteystieto,
 } from "../../../common/graphql/apiModel";
-import { DBProjekti, Vuorovaikutus } from "../../src/database/model";
+import { DBProjekti, DBVaylaUser, Vuorovaikutus } from "../../src/database/model";
 import cloneDeep from "lodash/cloneDeep";
 
 export class ProjektiFixture {
@@ -206,27 +206,8 @@ export class ProjektiFixture {
           puhelinnumero: ProjektiFixture.pekkaProjariProjektiKayttaja.puhelinnumero || "",
           organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio,
         },
-        {
-          email: ProjektiFixture.mattiMeikalainenProjektiKayttaja.email,
-          kayttajatunnus: ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
-          nimi: ProjektiFixture.mattiMeikalainenProjektiKayttaja.nimi,
-          puhelinnumero: ProjektiFixture.mattiMeikalainenProjektiKayttaja.puhelinnumero || "",
-          organisaatio: ProjektiFixture.mattiMeikalainenProjektiKayttaja.organisaatio,
-        },
-        {
-          email: ProjektiFixture.mattiMeikalainenProjektiKayttaja.email,
-          kayttajatunnus: ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
-          nimi: ProjektiFixture.mattiMeikalainenProjektiKayttaja.nimi,
-          puhelinnumero: ProjektiFixture.mattiMeikalainenProjektiKayttaja.puhelinnumero || "",
-          organisaatio: ProjektiFixture.mattiMeikalainenProjektiKayttaja.organisaatio,
-        },
-        {
-          email: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.email,
-          kayttajatunnus: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.kayttajatunnus,
-          nimi: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.nimi,
-          puhelinnumero: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.puhelinnumero || "",
-          organisaatio: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.organisaatio,
-        },
+        this.mattiMeikalainenDBVaylaUser(),
+        this.kunnanYhteysHenkiloDBVaylaUser(),
       ],
       oid: this.PROJEKTI1_OID,
       velho: {
@@ -273,6 +254,26 @@ export class ProjektiFixture {
     };
   }
 
+  mattiMeikalainenDBVaylaUser(): DBVaylaUser {
+    return {
+      email: ProjektiFixture.mattiMeikalainenProjektiKayttaja.email,
+      kayttajatunnus: ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
+      nimi: ProjektiFixture.mattiMeikalainenProjektiKayttaja.nimi,
+      puhelinnumero: ProjektiFixture.mattiMeikalainenProjektiKayttaja.puhelinnumero || "",
+      organisaatio: ProjektiFixture.mattiMeikalainenProjektiKayttaja.organisaatio,
+    };
+  }
+
+  kunnanYhteysHenkiloDBVaylaUser(): DBVaylaUser {
+    return {
+      email: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.email,
+      kayttajatunnus: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.kayttajatunnus,
+      nimi: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.nimi,
+      puhelinnumero: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.puhelinnumero || "",
+      organisaatio: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.organisaatio,
+    };
+  }
+
   dbProjekti2(): DBProjekti {
     return {
       kayttoOikeudet: [
@@ -284,13 +285,7 @@ export class ProjektiFixture {
           puhelinnumero: ProjektiFixture.pekkaProjariProjektiKayttaja.puhelinnumero || "",
           organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio,
         },
-        {
-          email: ProjektiFixture.mattiMeikalainenProjektiKayttaja.email,
-          kayttajatunnus: ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
-          nimi: ProjektiFixture.mattiMeikalainenProjektiKayttaja.nimi,
-          puhelinnumero: ProjektiFixture.mattiMeikalainenProjektiKayttaja.puhelinnumero || "",
-          organisaatio: ProjektiFixture.mattiMeikalainenProjektiKayttaja.organisaatio,
-        },
+        this.mattiMeikalainenDBVaylaUser(),
       ],
       oid: this.PROJEKTI2_OID,
       velho: {
@@ -448,6 +443,7 @@ export class ProjektiFixture {
       },
       salt: "foo",
       paivitetty: "2022-03-15T14:30:00.000Z",
+      tallennettu: true,
     };
   }
 
@@ -463,13 +459,7 @@ export class ProjektiFixture {
         puhelinnumero: ProjektiFixture.pekkaProjariProjektiKayttaja.puhelinnumero || "",
         organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio,
       },
-      {
-        email: ProjektiFixture.mattiMeikalainenProjektiKayttaja.email,
-        kayttajatunnus: ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
-        nimi: ProjektiFixture.mattiMeikalainenProjektiKayttaja.nimi,
-        puhelinnumero: ProjektiFixture.mattiMeikalainenProjektiKayttaja.puhelinnumero || "",
-        organisaatio: ProjektiFixture.mattiMeikalainenProjektiKayttaja.organisaatio,
-      },
+      this.mattiMeikalainenDBVaylaUser(),
     ],
     oid: this.PROJEKTI3_OID,
     velho: {
@@ -664,6 +654,13 @@ export class ProjektiFixture {
           vastuuhenkilonEmail: "hanna.reuterhorn@ely-keskus.fi",
           vaylamuoto: ["tie"],
         },
+        nahtavillaoloPDFt: {
+          SUOMI: {
+            nahtavillaoloIlmoitusPDFPath: "1.pdf",
+            nahtavillaoloPDFPath: "2.pdf",
+            nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "3.pdf",
+          },
+        },
       },
     ],
     kielitiedot: {
@@ -680,6 +677,7 @@ export class ProjektiFixture {
     ],
     salt: "foo",
     paivitetty: "2022-03-15T14:30:00.000Z",
+    tallennettu: true,
   };
 
   dbProjekti4(): DBProjekti {
@@ -716,7 +714,15 @@ export class ProjektiFixture {
               tuotu: "***unittest***",
             },
           ],
-          hyvaksymisPaatosVaihePDFt: undefined,
+          hyvaksymisPaatosVaihePDFt: {
+            SUOMI: {
+              hyvaksymisIlmoitusLausunnonantajillePDFPath: "1.pdf",
+              hyvaksymisIlmoitusMuistuttajillePDFPath: "2.pdf",
+              ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath: "3.pdf",
+              hyvaksymisKuulutusPDFPath: "4.pdf",
+              ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath: "5.pdf",
+            },
+          },
           id: 1,
           ilmoituksenVastaanottajat: {
             kunnat: [

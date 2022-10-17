@@ -29,10 +29,15 @@ export abstract class AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<
   T extends API.Projekti | API.ProjektiJulkinen
 > extends StatusHandler<T> {
   private isHyvaksymisPaatos: boolean;
+  private epaAktiivisuusStatus: API.Status.EPAAKTIIVINEN_1 | API.Status.EPAAKTIIVINEN_2 | API.Status.EPAAKTIIVINEN_3;
 
-  constructor(isHyvaksymisPaatos: boolean) {
+  constructor(
+    isHyvaksymisPaatos: boolean,
+    epaAktiivisuusStatus: API.Status.EPAAKTIIVINEN_1 | API.Status.EPAAKTIIVINEN_2 | API.Status.EPAAKTIIVINEN_3
+  ) {
     super();
     this.isHyvaksymisPaatos = isHyvaksymisPaatos;
+    this.epaAktiivisuusStatus = epaAktiivisuusStatus;
   }
 
   abstract getPaatosVaihe(p: T): { kuulutusVaihePaattyyPaiva?: string | null } | null | undefined;
@@ -59,7 +64,7 @@ export abstract class AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<
       }
 
       if (hyvaksymisPaatosKuulutusPaattyyInThePast) {
-        p.status = API.Status.EPAAKTIIVINEN;
+        p.status = this.epaAktiivisuusStatus;
       }
       super.handle(p); // Continue evaluating next rules
     }

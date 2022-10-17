@@ -51,6 +51,14 @@ export class UserFixture {
     roolit: ["hassu_kayttaja", "Atunnukset"],
   };
 
+  static hassuATunnus1: NykyinenKayttaja = {
+    __typename: "NykyinenKayttaja",
+    etuNimi: "A-tunnus1",
+    sukuNimi: "Hassu",
+    uid: "A000112",
+    roolit: ["hassu_kayttaja"],
+  };
+
   static manuMuokkaaja: NykyinenKayttaja = {
     __typename: "NykyinenKayttaja",
     etuNimi: "Manu",
@@ -64,6 +72,22 @@ export class UserFixture {
     etuNimi: "Testi1",
     sukuNimi: "Hassu",
     uid: "LX581241",
+    roolit: ["hassu_kayttaja"],
+  };
+
+  static hassuAdmin: NykyinenKayttaja = {
+    __typename: "NykyinenKayttaja",
+    etuNimi: "Admin",
+    sukuNimi: "Hassu",
+    uid: "A123456",
+    roolit: ["hassu_admin"],
+  };
+
+  static kunnanYhteysHenkiloProjektiKayttaja: NykyinenKayttaja = {
+    __typename: "NykyinenKayttaja",
+    etuNimi: "Kunta",
+    sukuNimi: "Kuntalainen",
+    uid: "A000123",
     roolit: ["hassu_kayttaja"],
   };
 }
