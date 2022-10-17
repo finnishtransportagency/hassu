@@ -89,8 +89,10 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
           const { __typename, ...suunnitelmaInput } = suunnitelma;
           return suunnitelmaInput;
         }) || [],
-      suunnittelusopimusprojekti: projekti.status === Status.EI_JULKAISTU_PROJEKTIN_HENKILOT ? null : projekti.suunnitteluSopimus ? "true" : "false",
-      liittyviasuunnitelmia: projekti.status === Status.EI_JULKAISTU_PROJEKTIN_HENKILOT ? null : projekti.liittyvatSuunnitelmat?.length ? "true" : "false",
+      suunnittelusopimusprojekti:
+        projekti.status === Status.EI_JULKAISTU_PROJEKTIN_HENKILOT ? null : projekti.suunnitteluSopimus ? "true" : "false",
+      liittyviasuunnitelmia:
+        projekti.status === Status.EI_JULKAISTU_PROJEKTIN_HENKILOT ? null : projekti.liittyvatSuunnitelmat?.length ? "true" : "false",
     };
     if (projekti.kielitiedot) {
       const { __typename, ...kielitiedotInput } = projekti.kielitiedot;
@@ -122,6 +124,11 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
     reset,
     control,
   } = useFormReturn;
+
+  // Lomakkeen resetointi Velhosynkronointia varten
+  useEffect(() => {
+    reset(defaultValues);
+  }, [defaultValues, reset]);
 
   useLeaveConfirm(isDirty);
 

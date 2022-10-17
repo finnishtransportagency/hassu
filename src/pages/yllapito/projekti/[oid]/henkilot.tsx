@@ -1,5 +1,5 @@
 import { PageProps } from "@pages/_app";
-import React, { ReactElement, useCallback, useMemo } from "react";
+import React, { ReactElement, useCallback, useEffect, useMemo } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import KayttoOikeusHallinta from "@components/projekti/KayttoOikeusHallinta";
@@ -94,6 +94,11 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
     register,
   } = useFormReturn;
 
+  // Lomakkeen resetointi Velhosynkronointia varten
+  useEffect(() => {
+    reset(defaultValues);
+  }, [defaultValues, reset]);
+
   useLeaveConfirm(isDirty);
 
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
@@ -119,7 +124,6 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
     },
     [setFormContext]
   );
-
   return (
     <>
       <FormProvider {...useFormReturn}>

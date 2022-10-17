@@ -21,7 +21,10 @@ export const kayttoOikeudetSchema = Yup.array().of(
       }),
       kayttajatunnus: Yup.string().required("Aseta käyttäjä"),
       id: Yup.string().nullable().notRequired(),
-      tyyppi: Yup.mixed<KayttajaTyyppi>().oneOf([KayttajaTyyppi.PROJEKTIPAALLIKKO, KayttajaTyyppi.VARAHENKILO]).notRequired().nullable(),
+      tyyppi: Yup.mixed<KayttajaTyyppi>()
+        .oneOf([KayttajaTyyppi.PROJEKTIPAALLIKKO, KayttajaTyyppi.VARAHENKILO, null])
+        .notRequired()
+        .nullable(true),
       yleinenYhteystieto: Yup.boolean().notRequired(),
     })
     .test("uniikki-kayttajatunnus", "Käyttäjä voi olla vain yhteen kertaan käyttöoikeuslistalla", function (current) {
