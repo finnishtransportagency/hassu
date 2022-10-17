@@ -17,7 +17,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { kasittelynTilaSchema } from "src/schemas/kasittelynTila";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
-import { TextField } from "@mui/material";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import cloneDeep from "lodash/cloneDeep";
 import assert from "assert";
@@ -28,6 +27,7 @@ import HassuGridItem from "@components/HassuGridItem";
 import LuoJatkopaatosDialog from "@components/projekti/kasittelyntila/LuoJatkopaatosDialog";
 import { useRouter } from "next/router";
 import KasittelyntilaLukutila from "@components/projekti/kasittelyntila/Lukutila";
+import TextInput from "@components/form/TextInput";
 
 type FormValues = Pick<TallennaProjektiInput, "oid" | "kasittelynTila">;
 
@@ -195,7 +195,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                   disableFuture
                   textFieldProps={{ required: true }}
                 />
-                <TextField
+                <TextInput
                   label="Asiatunnus"
                   {...register("kasittelynTila.hyvaksymispaatos.asianumero")}
                   disabled={disableFormEdit}
@@ -218,11 +218,11 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                   label="1. jatkopäätöksen päivä"
                   controllerProps={{ control: control, name: "kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm" }}
                 />
-                <TextField
+                <TextInput
                   label="Asiatunnus"
                   {...register("kasittelynTila.ensimmainenJatkopaatos.asianumero")}
                   error={(errors as any).kasittelynTila?.ensimmainenJatkopaatos?.asianumero}
-                ></TextField>
+                ></TextInput>
                 <HassuGridItem sx={{ alignSelf: "end" }}>
                   <Button onClick={handleSubmit(handleClickOpenTallenna)} disabled={lisaaDisabled}>
                     Lisää jatkopäätös
@@ -236,12 +236,12 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                   disabled
                   controllerProps={{ control: control, name: "kasittelynTila.toinenJatkopaatos.paatoksenPvm" }}
                 />
-                <TextField
+                <TextInput
                   label="Asiatunnus"
                   {...register("kasittelynTila.toinenJatkopaatos.asianumero")}
                   error={(errors as any).kasittelynTila?.toinenJatkopaatos?.asianumero}
                   disabled
-                ></TextField>
+                ></TextInput>
               </HassuGrid>
             </SectionContent>
           </Section>
