@@ -275,5 +275,10 @@
     "POHJOIS_SUOMI": "RUOTSIKSIPohjois-Suomen",
     "TURKU": "RUOTSIKSITurun",
     "VAASA": "RUOTSIKSIVaasan"
+  },
+  "kasittelyn_tila": {
+    "luo-jatkopaatos": "Luo jatkopäätös",
+    "jatkopaatosohjeet": "Olet avaamassa suunnitelmalle jatkopäätöksen kuulutuksen lomakkeen. Painamalla Tallenna ja luo jatkopäätös -painiketta tallennat tiedot ja siirryt Projektin henkilöt -sivulle.",
+    "jatkopaatosohjeet-paivita-projektipaallikko": "Päivitä Projektivelhosta projektipäällikkö ajantasalle ja päivitä sen jälkeen Projektin henkilöt -sivu."
   }
 }

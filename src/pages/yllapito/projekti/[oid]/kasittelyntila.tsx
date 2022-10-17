@@ -24,6 +24,10 @@ import assert from "assert";
 import KasittelynTilaLukutila from "@components/projekti/lukutila/KasittelynTilaLukutila";
 import ExtLink from "@components/ExtLink";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
+import HassuGridItem from "@components/HassuGridItem";
+import LuoJatkopaatosDialog from "@components/projekti/kasittelyntila/LuoJatkopaatosDialog";
+import { useRouter } from "next/router";
+import KasittelyntilaLukutila from "@components/projekti/kasittelyntila/Lukutila";
 
 type FormValues = Pick<TallennaProjektiInput, "oid" | "kasittelynTila">;
 
@@ -49,6 +53,8 @@ interface HenkilotFormProps {
 }
 
 function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormProps): ReactElement {
+  const router = useRouter();
+  const [openTallenna, setOpenTallenna] = useState(false);
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const isLoadingProjekti = !projekti && !projektiLoadError;
   const defaultValues: FormValues = useMemo(() => {
@@ -59,8 +65,8 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
 
     //TODO When the input fields are enabled, the values should be strings not null or undefined
     const ensimmainenJatkopaatos: HyvaksymispaatosInput = {
-      paatoksenPvm: null,
-      asianumero: undefined,
+      paatoksenPvm: projekti.kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm || null,
+      asianumero: projekti.kasittelynTila?.ensimmainenJatkopaatos?.asianumero || "",
     };
     //TODO When the input fields are enabled, the values should be strings not null or undefined
     const toinenJatkopaatos: HyvaksymispaatosInput = {
@@ -96,6 +102,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     formState: { errors, isDirty },
     control,
     reset,
+    watch,
   } = useFormReturn;
 
   useLeaveConfirm(isDirty);
@@ -130,76 +137,123 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     [reloadProjekti, reset, showErrorMessage, showSuccessMessage]
   );
 
+  const avaaJatkopaatos = useCallback(
+    async (data: FormValues) => {
+      setIsFormSubmitting(true);
+      try {
+        await onSubmit(data);
+        // TOOD: avaa jatkopaatos1 kuulutus mahdolliseksi, ei ilmeisesti omaa tilasiirtymaa kuitenkaan
+        showSuccessMessage("Jatkopäätös lisätty!");
+      } catch (e) {
+        log.log("OnSubmit Error", e);
+        showErrorMessage("Tallennuksessa tapahtui virhe!");
+      }
+      setIsFormSubmitting(false);
+      setOpenTallenna(false);
+      router.push(`/yllapito/projekti/${projekti.oid}/henkilot`);
+    },
+    [onSubmit, router, showErrorMessage, showSuccessMessage, projekti]
+  );
+
+  const handleClickOpenTallenna = () => {
+    setOpenTallenna(true);
+  };
+  const handleClickCloseTallenna = () => {
+    setOpenTallenna(false);
+  };
+
+  const handleClickTallennaJaAvaa = useMemo(() => {
+    return handleSubmit(avaaJatkopaatos);
+  }, [avaaJatkopaatos, handleSubmit]);
+
+  const jatkopaatos1Pvm = watch("kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm");
+  const jatkopaatos1Asiatunnus = watch("kasittelynTila.ensimmainenJatkopaatos.asianumero");
+  const lisaaDisabled = !!!jatkopaatos1Pvm || !!!jatkopaatos1Asiatunnus;
   const velhoURL = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + projekti.oid;
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Section>
-          <p>
-            Pääkäyttäjä lisää sivulle tietoa suunnitelman hallinnollisellisen käsittelyn tiloista, jotka ovat nähtävissä lukutilassa muille
-            järjestelmän käyttäjille. Tiedot siirtyvät Käsittelyn tila -sivulta <ExtLink href={velhoURL}>Projektivelhosta</ExtLink>.
-          </p>
-          <SectionContent>
-            <h5 className="vayla-small-title">Hyväksymispäätös</h5>
+      {!projekti.nykyinenKayttaja.onYllapitaja && <KasittelyntilaLukutila projekti={projekti} />}
+      {projekti.nykyinenKayttaja.onYllapitaja && (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Section>
             <p>
-              Anna päivämäärä, jolloin suunnitelma on saanut hyväksymispäätöksen sekä päätöksen asianumeron. Päätöksen päivä ja asianumero
-              siirtyvät suunnitelman hyväksymispäätöksen kuulutukselle.
+              Pääkäyttäjä lisää sivulle tietoa suunnitelman hallinnollisellisen käsittelyn tiloista, jotka ovat nähtävissä lukutilassa
+              muille järjestelmän käyttäjille. Tiedot siirtyvät Käsittelyn tila -sivulta <ExtLink href={velhoURL}>Projektivelhoon</ExtLink>.
             </p>
-            <HassuGrid cols={{ lg: 3 }}>
-              <HassuDatePickerWithController
-                label="Päätöksen päivä"
-                disabled={disableFormEdit}
-                controllerProps={{ control: control, name: "kasittelynTila.hyvaksymispaatos.paatoksenPvm" }}
-                disableFuture
-                textFieldProps={{ required: true }}
-              />
-              <TextField
-                label="Asianumero"
-                {...register("kasittelynTila.hyvaksymispaatos.asianumero")}
-                disabled={disableFormEdit}
-                error={(errors as any).kasittelynTila?.hyvaksymispaatos?.asianumero}
-              />
-            </HassuGrid>
-          </SectionContent>
-          <SectionContent>
-            <h5 className="vayla-small-title">Jatkopäätös</h5>
-            <HassuGrid cols={{ lg: 3 }}>
-              <HassuDatePickerWithController
-                label="1. jatkopäätös annettu"
-                disabled
-                controllerProps={{ control: control, name: "kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm" }}
-              />
-              <TextField
-                label="Asianumero"
-                {...register("kasittelynTila.ensimmainenJatkopaatos.asianumero")}
-                error={(errors as any).kasittelynTila?.ensimmainenJatkopaatos?.asianumero}
-                disabled
-              ></TextField>
-            </HassuGrid>
-            <HassuGrid cols={{ lg: 3 }}>
-              <HassuDatePickerWithController
-                label="2. jatkopäätös annettu"
-                disabled
-                controllerProps={{ control: control, name: "kasittelynTila.toinenJatkopaatos.paatoksenPvm" }}
-              />
-              <TextField
-                label="Asianumero"
-                {...register("kasittelynTila.toinenJatkopaatos.asianumero")}
-                error={(errors as any).kasittelynTila?.toinenJatkopaatos?.asianumero}
-                disabled
-              ></TextField>
-            </HassuGrid>
-          </SectionContent>
-        </Section>
-        <Section noDivider>
-          <HassuStack alignItems="flex-end">
-            <Button id="save" primary={true} disabled={disableFormEdit}>
-              Tallenna
-            </Button>
-          </HassuStack>
-        </Section>
-      </form>
+            <SectionContent>
+              <h5 className="vayla-small-title">Hyväksymispäätös</h5>
+              <p>
+                Anna päivämäärä, jolloin suunnitelma on saanut hyväksymispäätöksen sekä päätöksen asianumeron. Päätöksen päivä ja asianumero
+                siirtyvät suunnitelman hyväksymispäätöksen kuulutukselle.
+              </p>
+              <HassuGrid cols={{ lg: 3 }}>
+                <HassuDatePickerWithController
+                  label="Päätöksen päivä"
+                  disabled={disableFormEdit}
+                  controllerProps={{ control: control, name: "kasittelynTila.hyvaksymispaatos.paatoksenPvm" }}
+                  disableFuture
+                  textFieldProps={{ required: true }}
+                />
+                <TextField
+                  label="Asiatunnus"
+                  {...register("kasittelynTila.hyvaksymispaatos.asianumero")}
+                  disabled={disableFormEdit}
+                  error={(errors as any).kasittelynTila?.hyvaksymispaatos?.asianumero}
+                />
+              </HassuGrid>
+            </SectionContent>
+          </Section>
+          <Section>
+            <SectionContent>
+              <h5 className="vayla-small-title">Jatkopäätös</h5>
+              <p>
+                Anna päivämäärä, jolloin suunnitelma on saanut jatkopäätöksen sekä päätöksen asianumeron ja lisää suunnitelmalle
+                jatkopäätös. “Lisää jatkopäätös” -toiminto avaa suunnitelmalle jatkopäätöksen kuulutuksen. Tarkasta jatkopäätöksen
+                lisäämisen jälkeen Projektivelhosta suunnitelman projektipäällikon tiedot ajantasalle.
+              </p>
+              <p>Toisen jatkopäätöksen päivämäärä ja asiatunnus avautuvat, kun ensimmäisen jatkopäätöksen kuulutusaika on päättynyt.</p>
+              <HassuGrid cols={{ lg: 3 }}>
+                <HassuDatePickerWithController
+                  label="1. jatkopäätöksen päivä"
+                  controllerProps={{ control: control, name: "kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm" }}
+                />
+                <TextField
+                  label="Asiatunnus"
+                  {...register("kasittelynTila.ensimmainenJatkopaatos.asianumero")}
+                  error={(errors as any).kasittelynTila?.ensimmainenJatkopaatos?.asianumero}
+                ></TextField>
+                <HassuGridItem sx={{ alignSelf: "end" }}>
+                  <Button onClick={handleSubmit(handleClickOpenTallenna)} disabled={lisaaDisabled}>
+                    Lisää jatkopäätös
+                  </Button>
+                </HassuGridItem>
+                <LuoJatkopaatosDialog isOpen={openTallenna} onClose={handleClickCloseTallenna} tallenna={handleClickTallennaJaAvaa} />
+              </HassuGrid>
+              <HassuGrid cols={{ lg: 3 }}>
+                <HassuDatePickerWithController
+                  label="2. jatkopäätöksen päivä"
+                  disabled
+                  controllerProps={{ control: control, name: "kasittelynTila.toinenJatkopaatos.paatoksenPvm" }}
+                />
+                <TextField
+                  label="Asiatunnus"
+                  {...register("kasittelynTila.toinenJatkopaatos.asianumero")}
+                  error={(errors as any).kasittelynTila?.toinenJatkopaatos?.asianumero}
+                  disabled
+                ></TextField>
+              </HassuGrid>
+            </SectionContent>
+          </Section>
+          <Section noDivider>
+            <HassuStack alignItems="flex-end">
+              <Button id="save" primary={true} disabled={disableFormEdit}>
+                Tallenna
+              </Button>
+            </HassuStack>
+          </Section>
+        </form>
+      )}
       <HassuSpinner open={isFormSubmitting || isLoadingProjekti} />
     </>
   );

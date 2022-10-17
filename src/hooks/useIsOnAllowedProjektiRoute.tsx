@@ -45,6 +45,11 @@ export const routes: Route[] = [
     requiredStatus: Status.HYVAKSYMISMENETTELYSSA, //Avataan kun nähtävilläolovaihe on päättynyt
     pathname: `/yllapito/projekti/[oid]/hyvaksymispaatos`,
   },
+  {
+    title: "1. jatkopäätös",
+    pathname: `/yllapito/projekti/[oid]/jatkopaatos1`,
+    requiredStatus: Status.JATKOPAATOS_1,
+  },
 ];
 
 export function statusOrdinal(status: Status): number {
