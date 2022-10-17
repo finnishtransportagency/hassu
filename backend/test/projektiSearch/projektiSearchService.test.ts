@@ -141,6 +141,9 @@ describe("ProjektiSearchService", () => {
     openSearchQueryStub.onSecondCall().returns({
       aggregations: { projektiTyypit: { buckets: [{ key: ProjektiTyyppi.TIE, doc_count: 2 }] } },
     });
+    openSearchQueryStub.onThirdCall().returns({
+      aggregations: { statukset: { buckets: [{ key: "EI_JULKAISTU", doc_count: 2 }] } },
+    });
 
     await projektiSearchService.searchYllapito({
       projektiTyyppi: ProjektiTyyppi.TIE,
