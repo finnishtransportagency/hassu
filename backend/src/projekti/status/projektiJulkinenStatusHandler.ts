@@ -62,7 +62,7 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
     getPaatosVaihe(p: API.ProjektiJulkinen): { kuulutusVaihePaattyyPaiva?: string | null } | null | undefined {
       return p.hyvaksymisPaatosVaihe;
     }
-  })(true);
+  })(true, API.Status.EPAAKTIIVINEN_1);
 
   projekti.status = API.Status.EI_JULKAISTU;
   aloituskuulutus.setNext(suunnittelu).setNext(nahtavillaOlo).setNext(hyvaksymisMenettelyssa).setNext(hyvaksytty).setNext(epaAktiivinen1);

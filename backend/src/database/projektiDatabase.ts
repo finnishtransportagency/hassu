@@ -41,6 +41,7 @@ export class ProjektiDatabase {
       }
       const projekti = data.Item as DBProjekti;
       projekti.oid = oid;
+      projekti.tallennettu = true;
       return projekti;
     } catch (e) {
       if ((e as { code: string }).code === "ResourceNotFoundException") {

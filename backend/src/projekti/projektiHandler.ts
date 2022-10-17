@@ -12,7 +12,7 @@ import { fileService } from "../files/fileService";
 import { personSearch } from "../personSearch/personSearchClient";
 import { emailClient } from "../email/email";
 import { createPerustamisEmail } from "../email/emailTemplates";
-import { requireAdmin, requireOmistaja } from "../user/userService";
+import { requireAdmin } from "../user/userService";
 import { projektiArchive } from "../archive/projektiArchiveService";
 import { NotFoundError } from "../error/NotFoundError";
 import { projektiAdapterJulkinen } from "./adapter/projektiAdapterJulkinen";
@@ -22,6 +22,7 @@ import { vuorovaikutusService } from "../vuorovaikutus/vuorovaikutusService";
 import { aineistoService } from "../aineisto/aineistoService";
 import { ProjektiAdaptationResult, ProjektiEventType, VuorovaikutusPublishedEvent } from "./adapter/projektiAdaptationResult";
 import remove from "lodash/remove";
+import { validateTallennaProjekti } from "./projektiValidator";
 
 export async function loadProjekti(oid: string): Promise<API.Projekti | API.ProjektiJulkinen> {
   const vaylaUser = getVaylaUser();
@@ -37,7 +38,6 @@ async function loadProjektiYllapito(oid: string, vaylaUser: NykyinenKayttaja): P
   log.info("Loading projekti", { oid });
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
   if (projektiFromDB) {
-    projektiFromDB.tallennettu = true;
     return projektiAdapter.adaptProjekti(projektiFromDB);
   } else {
     requirePermissionLuonti();
@@ -69,35 +69,13 @@ export async function arkistoiProjekti(oid: string): Promise<string> {
   return projektiArchive.archiveProjekti(oid);
 }
 
-function verifyTallennaProjektiPermissions(projektiInDB: DBProjekti, input: TallennaProjektiInput) {
-  requirePermissionMuokkaa(projektiInDB);
-  if (input.kasittelynTila) {
-    requireAdmin("Hyvaksymispaatoksia voi tallentaa vain Hassun yllapitaja");
-  }
-
-  // Vain omistaja voi muokata projektiPaallikonVarahenkilo-kenttää
-  if (
-    // Etsi kentät, joita yritetään muokata
-    input.kayttoOikeudet
-      ?.filter((kayttoOikeus) => kayttoOikeus.tyyppi === null || kayttoOikeus.tyyppi === KayttajaTyyppi.VARAHENKILO)
-      // Suodata vain muokattavissa olevat käyttäjät
-      .filter((kayttoOikeus) => {
-        const dbVaylaUser = projektiInDB.kayttoOikeudet.filter((kayttaja) => kayttaja.kayttajatunnus == kayttoOikeus.kayttajatunnus).pop();
-        return dbVaylaUser && dbVaylaUser.muokattavissa === true;
-      })
-      .pop()
-  ) {
-    requireOmistaja(projektiInDB);
-  }
-}
-
 export async function createOrUpdateProjekti(input: TallennaProjektiInput): Promise<string> {
   requirePermissionLuku();
   const oid = input.oid;
   const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
   if (projektiInDB) {
     // Save over existing one
-    verifyTallennaProjektiPermissions(projektiInDB, input);
+    validateTallennaProjekti(projektiInDB, input);
     auditLog.info("Tallenna projekti", { input });
     await handleFiles(input);
     const projektiAdaptationResult = await projektiAdapter.adaptProjektiToSave(projektiInDB, input);
@@ -106,7 +84,6 @@ export async function createOrUpdateProjekti(input: TallennaProjektiInput): Prom
   } else {
     requirePermissionLuonti();
     const { projekti } = await createProjektiFromVelho(input.oid, requireVaylaUser(), input);
-    verifyTallennaProjektiPermissions(projekti, input);
     log.info("Creating projekti to Hassu", { oid });
     await projektiDatabase.createProjekti(projekti);
     log.info("Created projekti to Hassu", { projekti });

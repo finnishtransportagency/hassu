@@ -19,6 +19,7 @@ export async function recordProjektiTestFixture(fixtureName: string | FixtureNam
     replaceFieldsByName(dbProjekti, "salt123", "salt");
 
     const oldValue = readRecord(fixtureName);
+    delete dbProjekti.tallennettu;
     const currentValue = JSON.stringify(dbProjekti, null, 2);
     // Prevent updating file timestamp so that running tests with "watch" don't get into infinite loop
     if (!oldValue || oldValue !== currentValue) {

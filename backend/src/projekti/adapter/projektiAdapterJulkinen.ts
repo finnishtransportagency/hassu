@@ -33,8 +33,8 @@ import {
 import { findJulkaisuWithTila } from "../projektiUtil";
 import { applyProjektiJulkinenStatus } from "../status/projektiJulkinenStatusHandler";
 import {
-  adaptStandardiYhteystiedotToAPIYhteystiedot,
   adaptStandardiYhteystiedotLisaamattaProjaria,
+  adaptStandardiYhteystiedotToAPIYhteystiedot,
 } from "../../util/adaptStandardiYhteystiedot";
 import { adaptSuunnitteluSopimusJulkaisuJulkinen } from "./adaptToAPI";
 
@@ -90,9 +90,14 @@ class ProjektiAdapterJulkinen {
     };
     const projektiJulkinen: API.ProjektiJulkinen = removeUndefinedFields(projekti);
     applyProjektiJulkinenStatus(projektiJulkinen);
-    if (projektiJulkinen.status != Status.EI_JULKAISTU && projektiJulkinen.status != Status.EPAAKTIIVINEN) {
+    if (!projektiJulkinen.status || this.isStatusPublic(projektiJulkinen.status)) {
       return projektiJulkinen;
     }
+  }
+
+  private isStatusPublic(status: Status) {
+    const notPublicStatuses = [Status.EI_JULKAISTU, Status.EPAAKTIIVINEN_1, Status.EPAAKTIIVINEN_2, Status.EPAAKTIIVINEN_3];
+    return !notPublicStatuses.includes(status);
   }
 
   adaptAloitusKuulutusJulkaisut(

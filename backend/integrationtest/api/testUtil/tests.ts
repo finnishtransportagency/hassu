@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import {
   AineistoInput,
   AsiakirjaTyyppi,
@@ -12,6 +10,7 @@ import {
   Status,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
+  VelhoAineisto,
   VelhoAineistoKategoria,
   Vuorovaikutus,
 } from "../../../../common/graphql/apiModel";
@@ -34,6 +33,9 @@ import cloneDeep from "lodash/cloneDeep";
 import { fileService } from "../../../src/files/fileService";
 import { testProjektiDatabase } from "../../../src/database/testProjektiDatabase";
 import { expectAwsCalls } from "../../../test/aws/awsMock";
+import { Attachment } from "nodemailer/lib/mailer";
+import { Context } from "aws-lambda";
+import { Callback } from "aws-lambda/handler";
 
 const { expect } = require("chai");
 
@@ -66,7 +68,7 @@ export async function testProjektiHenkilot(projekti: Projekti, oid: string, user
       const input: ProjektiKayttajaInput = {
         kayttajatunnus: value.kayttajatunnus,
         // Emulate migration where the phone number may be empty
-        puhelinnumero: undefined,
+        puhelinnumero: undefined!,
       };
       return input;
     }),
@@ -88,9 +90,9 @@ export async function testProjektiHenkilot(projekti: Projekti, oid: string, user
   const kayttoOikeudet: ProjektiKayttajaInput[] = p.kayttoOikeudet?.map((value) => ({
     ...value,
     puhelinnumero: "123",
-  }));
+  }))!;
 
-  kayttoOikeudet.push({ kayttajatunnus: UserFixture.testi1Kayttaja.uid, puhelinnumero: "123", yleinenYhteystieto: true });
+  kayttoOikeudet.push({ kayttajatunnus: UserFixture.testi1Kayttaja.uid!, puhelinnumero: "123", yleinenYhteystieto: true });
 
   // Save and load projekti
   await api.tallennaProjekti({
@@ -100,22 +102,20 @@ export async function testProjektiHenkilot(projekti: Projekti, oid: string, user
   await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU);
 
   // Verify only omistaja can modify varahenkilo-field
-  try {
-    userFixture.loginAs(UserFixture.testi1Kayttaja);
-    const kayttoOikeudetWithVarahenkiloChanges = cloneDeep(kayttoOikeudet);
-    kayttoOikeudetWithVarahenkiloChanges
-      .filter((user) => user.kayttajatunnus == UserFixture.testi1Kayttaja.uid)
-      .forEach((user) => (user.tyyppi = KayttajaTyyppi.VARAHENKILO));
-    await api.tallennaProjekti({
+  userFixture.loginAs(UserFixture.testi1Kayttaja);
+  const kayttoOikeudetWithVarahenkiloChanges = cloneDeep(kayttoOikeudet);
+  kayttoOikeudetWithVarahenkiloChanges
+    .filter((user) => user.kayttajatunnus == UserFixture.testi1Kayttaja.uid)
+    .forEach((user) => (user.tyyppi = KayttajaTyyppi.VARAHENKILO));
+
+  expect(
+    api.tallennaProjekti({
       oid,
       kayttoOikeudet: kayttoOikeudetWithVarahenkiloChanges,
-    });
-    fail("Vain omistajan pitää pystyä muokkaamaan varahenkilöyttä");
-  } catch (e) {
-    expect(e.className).to.eq("IllegalAccessError");
-  }
+    })
+  ).to.eventually.rejectedWith("IllegalAccessError");
 
-  return { ...projektiPaallikko, puhelinnumero: "123" };
+  return { ...projektiPaallikko!, puhelinnumero: "123" };
 }
 
 export async function tallennaLogo(): Promise<string> {
@@ -137,7 +137,7 @@ export async function testProjektinTiedot(oid: string): Promise<void> {
     oid,
     muistiinpano: apiTestFixture.newNote,
     aloitusKuulutus: apiTestFixture.aloitusKuulutus,
-    suunnitteluSopimus: apiTestFixture.createSuunnitteluSopimusInput(uploadedFile, UserFixture.testi1Kayttaja.uid),
+    suunnitteluSopimus: apiTestFixture.createSuunnitteluSopimusInput(uploadedFile, UserFixture.testi1Kayttaja.uid!),
     kielitiedot: apiTestFixture.kielitiedotInput,
     euRahoitus: false,
   });
@@ -194,7 +194,7 @@ export async function testSuunnitteluvaihePerustiedot(oid: string): Promise<void
       hankkeenKuvaus: apiTestFixture.hankkeenKuvausSuunnittelu,
       arvioSeuraavanVaiheenAlkamisesta: "huomenna",
       suunnittelunEteneminenJaKesto: "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
-      palautteidenVastaanottajat: [UserFixture.mattiMeikalainen.uid],
+      palautteidenVastaanottajat: [UserFixture.mattiMeikalainen.uid!],
     },
   });
   const projekti = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
@@ -221,7 +221,7 @@ async function doTestSuunnitteluvaiheVuorovaikutusWithoutTilaisuus(
   julkinen?: boolean
 ) {
   const suunnitteluVaihe = apiTestFixture.suunnitteluVaihe(vuorovaikutusNumero, vuorovaikutusYhteysHenkilot, julkinen);
-  suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet = undefined;
+  suunnitteluVaihe.vuorovaikutus!.vuorovaikutusTilaisuudet = undefined;
   try {
     await api.tallennaProjekti({
       oid,
@@ -229,23 +229,23 @@ async function doTestSuunnitteluvaiheVuorovaikutusWithoutTilaisuus(
     });
     fail("There must be a validation to force at least one vuorovaikutustilaisuus per vuorovaikutus");
   } catch (e) {
-    expectApiError(e, "Vuorovaikutuksella pitää olla ainakin yksi vuorovaikutustilaisuus");
+    expectApiError(e as Error, "Vuorovaikutuksella pitää olla ainakin yksi vuorovaikutustilaisuus");
   }
 }
 
 export async function testSuunnitteluvaiheVuorovaikutus(oid: string, projektiPaallikko: ProjektiKayttaja): Promise<void> {
   await doTestSuunnitteluvaiheVuorovaikutusWithoutTilaisuus(oid, 1, [projektiPaallikko.kayttajatunnus]);
   const suunnitteluVaihe1 = await doTestSuunnitteluvaiheVuorovaikutus(oid, 1, [projektiPaallikko.kayttajatunnus]);
-  expect(suunnitteluVaihe1.vuorovaikutukset).to.have.length(1);
+  expect(suunnitteluVaihe1!.vuorovaikutukset).to.have.length(1);
   const suunnitteluVaihe2 = await doTestSuunnitteluvaiheVuorovaikutus(oid, 2, [projektiPaallikko.kayttajatunnus]);
   expectToMatchSnapshot("testSuunnitteluvaiheVuorovaikutus", suunnitteluVaihe2);
 
   // Verify that it's possible to update one vuorovaikutus at the time
   const suunnitteluVaihe3 = await doTestSuunnitteluvaiheVuorovaikutus(oid, 2, [
     projektiPaallikko.kayttajatunnus,
-    UserFixture.mattiMeikalainen.uid,
+    UserFixture.mattiMeikalainen.uid!,
   ]);
-  const difference = detailedDiff(suunnitteluVaihe2, suunnitteluVaihe3);
+  const difference = detailedDiff(suunnitteluVaihe2!, suunnitteluVaihe3!);
   expectToMatchSnapshot("added " + UserFixture.mattiMeikalainen.uid + " to vuorovaikutus and vuorovaikutustilaisuus", difference);
 }
 
@@ -276,13 +276,13 @@ export async function saveAndVerifyAineistoSave(
       },
     },
   });
-  const vuorovaikutus = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe.vuorovaikutukset[0];
+  const vuorovaikutus = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU))!.suunnitteluVaihe!.vuorovaikutukset![0];
   const description = "saveAndVerifyAineistoSave" + (identifier !== undefined ? ` #${identifier}` : "");
   expectToMatchSnapshot(description, vuorovaikutus);
 }
 
 export async function testImportAineistot(oid: string, velhoAineistoKategorias: VelhoAineistoKategoria[]): Promise<void> {
-  const originalVuorovaikutus = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe.vuorovaikutukset[0];
+  const originalVuorovaikutus = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU))!.suunnitteluVaihe!.vuorovaikutukset![0];
 
   const aineistot = velhoAineistoKategorias
     .reduce((documents, aineistoKategoria) => {
@@ -291,7 +291,7 @@ export async function testImportAineistot(oid: string, velhoAineistoKategorias: 
           (aineisto) => ["ekatiedosto_eka.pdf", "tokatiedosto_toka.pdf", "karttakuvalla_tiedosto.pdf"].indexOf(aineisto.tiedosto) >= 0
         )
       );
-    }, [])
+    }, [] as VelhoAineisto[])
     .sort((a, b) => b.tiedosto.localeCompare(a.tiedosto));
 
   let index = 1;
@@ -339,9 +339,9 @@ export async function testImportAineistot(oid: string, velhoAineistoKategorias: 
 
 export async function testUpdatePublishDateAndDeleteAineisto(oid: string, userFixture: UserFixture): Promise<void> {
   userFixture.loginAs(UserFixture.mattiMeikalainen);
-  const vuorovaikutus = (await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO)).suunnitteluVaihe.vuorovaikutukset[0];
+  const vuorovaikutus = (await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO))!.suunnitteluVaihe!.vuorovaikutukset![0];
   vuorovaikutus.suunnitelmaluonnokset?.pop();
-  const updatedVuorovaikutusJulkaisuPaiva = parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva).add(1, "day").format("YYYY-MM-DD");
+  const updatedVuorovaikutusJulkaisuPaiva = parseDate(vuorovaikutus!.vuorovaikutusJulkaisuPaiva!).add(1, "day").format("YYYY-MM-DD");
   const input = {
     oid,
     suunnitteluVaihe: {
@@ -357,7 +357,7 @@ export async function testUpdatePublishDateAndDeleteAineisto(oid: string, userFi
 export async function verifyVuorovaikutusSnapshot(oid: string, userFixture: UserFixture): Promise<void> {
   userFixture.loginAs(UserFixture.mattiMeikalainen);
   const suunnitteluVaihe = (await loadProjektiFromDatabase(oid)).suunnitteluVaihe;
-  const vuorovaikutus = suunnitteluVaihe.vuorovaikutukset[0];
+  const vuorovaikutus = suunnitteluVaihe!.vuorovaikutukset![0];
   cleanupVuorovaikutusTimestamps([vuorovaikutus]);
   expect(vuorovaikutus).toMatchSnapshot();
 }
@@ -378,12 +378,12 @@ export async function julkaiseVuorovaikutus(oid: string, userFixture: UserFixtur
   await api.tallennaProjekti({
     oid,
     suunnitteluVaihe: {
-      vuorovaikutus: { ...unpublishedVuorovaikutusProjekti.suunnitteluVaihe.vuorovaikutukset[0], julkinen: true },
+      vuorovaikutus: { ...unpublishedVuorovaikutusProjekti!.suunnitteluVaihe!.vuorovaikutukset![0], julkinen: true },
     },
   });
   userFixture.logout();
   const suunnitteluVaihe = (await loadProjektiFromDatabase(oid, Status.SUUNNITTELU)).suunnitteluVaihe;
-  cleanupVuorovaikutusTimestamps(suunnitteluVaihe.vuorovaikutukset);
+  cleanupVuorovaikutusTimestamps(suunnitteluVaihe!.vuorovaikutukset!);
   expectToMatchSnapshot("publicProjekti" + (" suunnitteluvaihe" || ""), suunnitteluVaihe);
 }
 
@@ -429,13 +429,13 @@ export async function sendEmailDigests(): Promise<void> {
   await palauteEmailService.sendNewFeedbackDigest();
 }
 
-export function verifyEmailsSent(emailClientStub: sinon.SinonStub<any[], any>): void {
+export function verifyEmailsSent(emailClientStub: Sinon.SinonStub): void {
   if (emailClientStub.getCalls().length > 0) {
     expect(
       emailClientStub.getCalls().map((call) => {
         const arg = call.args[0];
         if (arg.attachments) {
-          arg.attachments = arg.attachments.map((attachment) => {
+          arg.attachments = arg.attachments.map((attachment: Attachment) => {
             // Remove unnecessary data from snapshot
             delete attachment.content;
             delete attachment.contentDisposition;
@@ -451,7 +451,7 @@ export function verifyEmailsSent(emailClientStub: sinon.SinonStub<any[], any>): 
 
 export async function processQueue(fakeAineistoImportQueue: SQSEvent[]): Promise<void> {
   for (const event of fakeAineistoImportQueue) {
-    await handleEvent(event, null, null);
+    await handleEvent(event, null as unknown as Context, null as unknown as Callback);
   }
   fakeAineistoImportQueue.splice(0, fakeAineistoImportQueue.length); // Clear the queue
 }
