@@ -3,7 +3,7 @@ import React, { ReactElement, useCallback, useEffect, useMemo } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import KayttoOikeusHallinta from "@components/projekti/KayttoOikeusHallinta";
-import { api, TallennaProjektiInput, ProjektiKayttajaInput } from "@services/api";
+import { api, TallennaProjektiInput, ProjektiKayttajaInput, Status } from "@services/api";
 import * as Yup from "yup";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -22,6 +22,7 @@ import HassuSpinner from "@components/HassuSpinner";
 import useSnackbars from "src/hooks/useSnackbars";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
+import HenkilotLukutila from "@components/projekti/lukutila/HenkilotLukutila";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
@@ -44,9 +45,16 @@ export default function HenkilotPage({ setRouteLabels }: PageProps): ReactElemen
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
   useProjektiBreadcrumbs(setRouteLabels);
 
+  const epaaktiivinen = projekti?.status === Status.EPAAKTIIVINEN;
+
   return (
     <ProjektiPageLayout title="Projektin Henkilöt" showUpdateButton={true}>
-      {projekti && <Henkilot {...{ projekti, projektiLoadError, reloadProjekti }} />}
+      {projekti &&
+        (epaaktiivinen && projekti.kayttoOikeudet ? (
+          <HenkilotLukutila kayttoOikeudet={projekti.kayttoOikeudet} />
+        ) : (
+          <Henkilot {...{ projekti, projektiLoadError, reloadProjekti }} />
+        ))}
     </ProjektiPageLayout>
   );
 }
