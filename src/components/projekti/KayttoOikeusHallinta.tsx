@@ -8,17 +8,7 @@ import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
 import { isAorL } from "backend/src/util/userUtil";
 import { TextFieldWithController } from "@components/form/TextFieldWithController";
-import {
-  Autocomplete,
-  TextField,
-  Checkbox,
-  FormGroup,
-  FormControlLabel,
-  useTheme,
-  useMediaQuery,
-  IconButton,
-  SvgIcon,
-} from "@mui/material";
+import { Autocomplete, TextField, Checkbox, FormControlLabel, useTheme, useMediaQuery, IconButton, SvgIcon, Stack } from "@mui/material";
 import useDebounceCallback from "src/hooks/useDebounceCallback";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -262,7 +252,7 @@ const UserFields = ({ index, disableFields, remove, initialKayttaja, muokattavis
             disabled={disableFields}
           />
         ) : (
-          <div>
+          <Stack direction="row" columnGap={4.5}>
             <TextFieldWithController
               label="Puhelinnumero *"
               controllerProps={{ name: `kayttoOikeudet.${index}.puhelinnumero` }}
@@ -270,23 +260,25 @@ const UserFields = ({ index, disableFields, remove, initialKayttaja, muokattavis
               disabled={disableFields}
             />
             {muokattavissa && (
-              <IconButton
-                sx={{ color: "#0064AF", margin: 4.5 }}
-                onClick={(event) => {
-                  event.preventDefault();
-                  if (muokattavissa) {
-                    remove(index);
-                  }
-                }}
-                disabled={disableFields || !muokattavissa}
-                size="large"
-              >
-                <SvgIcon>
-                  <FontAwesomeIcon icon="trash" />
-                </SvgIcon>
-              </IconButton>
+              <div>
+                <IconButton
+                  sx={{ color: "#0064AF", marginTop: 5.5 }}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    if (muokattavissa) {
+                      remove(index);
+                    }
+                  }}
+                  disabled={disableFields || !muokattavissa}
+                  size="large"
+                >
+                  <SvgIcon>
+                    <FontAwesomeIcon icon="trash" />
+                  </SvgIcon>
+                </IconButton>
+              </div>
             )}
-          </div>
+          </Stack>
         )}
         <TextField label="Sähköpostiosoite *" value={kayttaja?.email || ""} disabled />
         {!isProjektiPaallikko && kayttaja?.uid && isAorL(kayttaja?.uid) && (
@@ -294,8 +286,9 @@ const UserFields = ({ index, disableFields, remove, initialKayttaja, muokattavis
             name={`kayttoOikeudet.${index}.tyyppi`}
             shouldUnregister
             render={({ field: { value, onChange, ...field } }) => (
-              <FormGroup className="col-span-1 lg:col-span-2">
+              <div className="col-span-1 lg:col-span-2">
                 <FormControlLabel
+                  sx={{ marginTop: { lg: 6.5 } }}
                   disabled={!muokattavissa}
                   label="Projektipäällikön varahenkilö"
                   control={
@@ -310,11 +303,34 @@ const UserFields = ({ index, disableFields, remove, initialKayttaja, muokattavis
                     />
                   }
                 />
-              </FormGroup>
+              </div>
             )}
           />
         )}
       </HassuGrid>
+      {!muokattavissa && !isProjektiPaallikko && (
+        <p>Tämän henkilön tiedot on haettu Projektivelhosta. Jos haluat poistaa tämän henkilön, muutos pitää tehdä Projektivelhoon.</p>
+      )}
+      <Controller<RequiredInputValues>
+        name={`kayttoOikeudet.${index}.yleinenYhteystieto`}
+        shouldUnregister
+        render={({ field: { value, onChange, ...field } }) => (
+          <FormControlLabel
+            disabled={isProjektiPaallikko}
+            label="Yhteystiedot näytetään julkisella puolella projektin yleisissä yhteystiedoissa."
+            control={
+              <Checkbox
+                checked={isProjektiPaallikko ? true : !!value}
+                onChange={(event) => {
+                  const checked = event.target.checked;
+                  onChange(!!checked);
+                }}
+                {...field}
+              />
+            }
+          />
+        )}
+      />
       {!!muokattavissa && isMobile && (
         <Button
           onClick={(event) => {
@@ -328,9 +344,6 @@ const UserFields = ({ index, disableFields, remove, initialKayttaja, muokattavis
         >
           Poista
         </Button>
-      )}
-      {!muokattavissa && !isProjektiPaallikko && (
-        <p>Tämän henkilön tiedot on haettu Projektivelhosta. Jos haluat poistaa tämän henkilön, muutos pitää tehdä Projektivelhoon.</p>
       )}
     </SectionContent>
   );

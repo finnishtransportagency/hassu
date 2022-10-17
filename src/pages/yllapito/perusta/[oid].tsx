@@ -63,11 +63,12 @@ interface PerustaProjektiFormProps {
 const defaultFormValues: (projekti: ProjektiLisatiedolla) => FormValues = (projekti: ProjektiLisatiedolla) => ({
   oid: projekti.oid,
   kayttoOikeudet:
-    projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi }) => {
+    projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto }) => {
       const formValues: ProjektiKayttajaInput = {
         kayttajatunnus,
         puhelinnumero: puhelinnumero || "",
         tyyppi,
+        yleinenYhteystieto: !!yleinenYhteystieto,
       };
       return formValues;
     }) || [],

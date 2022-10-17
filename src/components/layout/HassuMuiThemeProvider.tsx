@@ -105,6 +105,7 @@ export const createLocalizedTheme = (locale: Localization) =>
                 borderRadius: "4px",
                 position: "relative",
                 zIndex: 2,
+                margin: "2px",
               },
               "& .hassu-checkbox-icon-unchecked": {
                 background: "#FFFFFF",
@@ -359,6 +360,9 @@ export const createLocalizedTheme = (locale: Localization) =>
         MuiFormHelperText: {
           styleOverrides: {
             root: {
+              whiteSpace: "normal",
+              overflowWrap: "anywhere",
+              maxWidth: "fit-content",
               lineHeight: "0.75rem",
               fontSize: "0.75rem",
               marginTop: "8px",

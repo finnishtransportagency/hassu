@@ -78,10 +78,11 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
     () => ({
       oid: projekti.oid,
       kayttoOikeudet:
-        projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi }) => ({
+        projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto }) => ({
           kayttajatunnus,
           puhelinnumero: puhelinnumero || "",
           tyyppi,
+          yleinenYhteystieto: !!yleinenYhteystieto,
         })) || [],
     }),
     [projekti]
