@@ -32,7 +32,8 @@ export default function KasittelyntilaSivu({ setRouteLabels }: PageProps): React
   return (
     <ProjektiPageLayout title="Käsittelyn tila">
       {projekti &&
-        (projekti.status === Status.EPAAKTIIVINEN || !projekti?.nykyinenKayttaja.onYllapitaja ? (
+        ((projekti.status === Status.EPAAKTIIVINEN && !projekti.nykyinenKayttaja.onYllapitaja) ||
+        !projekti?.nykyinenKayttaja.onYllapitaja ? (
           <KasittelynTilaLukutila projekti={projekti} />
         ) : (
           <KasittelyntilaPageContent projekti={projekti} projektiLoadError={projektiLoadError} reloadProjekti={reloadProjekti} />
