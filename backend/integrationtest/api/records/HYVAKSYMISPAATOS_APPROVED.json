@@ -477,6 +477,7 @@
   "kayttoOikeudet": [
     {
       "kayttajatunnus": "A000112",
+      "yleinenYhteystieto": true,
       "nimi": "Hassu, A-tunnus1",
       "organisaatio": "CGI Suomi Oy",
       "tyyppi": "PROJEKTIPAALLIKKO",
@@ -486,6 +487,7 @@
     },
     {
       "kayttajatunnus": "A000114",
+      "yleinenYhteystieto": false,
       "nimi": "Hassu, A-tunnus3",
       "organisaatio": "CGI Suomi Oy",
       "tyyppi": "VARAHENKILO",

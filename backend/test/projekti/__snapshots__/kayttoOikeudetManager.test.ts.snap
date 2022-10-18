@@ -39,6 +39,7 @@ Array [
     "organisaatio": "Väylävirasto",
     "puhelinnumero": "123456789",
     "tyyppi": "PROJEKTIPAALLIKKO",
+    "yleinenYhteystieto": true,
   },
   Object {
     "email": "a2@vayla.fi",
@@ -48,6 +49,7 @@ Array [
     "organisaatio": "Väylävirasto",
     "puhelinnumero": "123456789",
     "tyyppi": "VARAHENKILO",
+    "yleinenYhteystieto": false,
   },
   Object {
     "email": "a3@vayla.fi",

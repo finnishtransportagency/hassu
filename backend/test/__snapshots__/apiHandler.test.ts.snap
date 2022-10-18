@@ -75,6 +75,7 @@ Array [
         "organisaatio": "Väylävirasto",
         "puhelinnumero": "11",
         "tyyppi": "PROJEKTIPAALLIKKO",
+        "yleinenYhteystieto": true,
       },
       Object {
         "email": "matti.meikalainen@vayla.fi",
@@ -114,6 +115,7 @@ Array [
         "organisaatio": "Väylävirasto",
         "puhelinnumero": "11",
         "tyyppi": "PROJEKTIPAALLIKKO",
+        "yleinenYhteystieto": true,
       },
       Object {
         "__typename": "ProjektiKayttaja",
@@ -161,6 +163,7 @@ Array [
         "organisaatio": "Väylävirasto",
         "puhelinnumero": "11",
         "tyyppi": "PROJEKTIPAALLIKKO",
+        "yleinenYhteystieto": true,
       },
     ],
     "kielitiedot": undefined,
@@ -191,6 +194,7 @@ Array [
         "organisaatio": "Väylävirasto",
         "puhelinnumero": "11",
         "tyyppi": "PROJEKTIPAALLIKKO",
+        "yleinenYhteystieto": true,
       },
     ],
     "muistiinpano": "Testiprojekti 1:n muistiinpano",
@@ -227,6 +231,7 @@ Array [
         "organisaatio": "Väylävirasto",
         "puhelinnumero": "11",
         "tyyppi": "PROJEKTIPAALLIKKO",
+        "yleinenYhteystieto": true,
       },
       Object {
         "email": "matti.meikalainen@vayla.fi",
@@ -267,6 +272,7 @@ Array [
         "organisaatio": "Väylävirasto",
         "puhelinnumero": "11",
         "tyyppi": "PROJEKTIPAALLIKKO",
+        "yleinenYhteystieto": true,
       },
       Object {
         "__typename": "ProjektiKayttaja",
@@ -360,6 +366,7 @@ Array [
         "organisaatio": "Väylävirasto",
         "puhelinnumero": "11",
         "tyyppi": "PROJEKTIPAALLIKKO",
+        "yleinenYhteystieto": true,
       },
       Object {
         "email": "matti.meikalainen@vayla.fi",
@@ -475,6 +482,7 @@ Array [
         "organisaatio": "Väylävirasto",
         "puhelinnumero": "11",
         "tyyppi": "PROJEKTIPAALLIKKO",
+        "yleinenYhteystieto": true,
       },
       Object {
         "__typename": "ProjektiKayttaja",
@@ -1017,6 +1025,7 @@ Object {
       "organisaatio": "Väylävirasto",
       "puhelinnumero": "11",
       "tyyppi": "PROJEKTIPAALLIKKO",
+      "yleinenYhteystieto": true,
     },
     Object {
       "__typename": "ProjektiKayttaja",
@@ -1156,7 +1165,7 @@ Object {
         "nimi": "Projari, Pekka",
         "organisaatio": "Väylävirasto",
         "puhelinnumero": "11",
-        "yleinenYhteystieto": undefined,
+        "yleinenYhteystieto": true,
       },
       Object {
         "__typename": "ProjektiKayttajaJulkinen",

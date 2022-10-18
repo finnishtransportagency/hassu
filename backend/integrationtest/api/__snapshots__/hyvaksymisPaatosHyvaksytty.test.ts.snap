@@ -13,6 +13,7 @@ Object {
       "organisaatio": "CGI Suomi Oy",
       "puhelinnumero": "123",
       "tyyppi": "PROJEKTIPAALLIKKO",
+      "yleinenYhteystieto": true,
     },
     Object {
       "__typename": "ProjektiKayttaja",
@@ -23,6 +24,7 @@ Object {
       "organisaatio": "CGI Suomi Oy",
       "puhelinnumero": "123",
       "tyyppi": "VARAHENKILO",
+      "yleinenYhteystieto": false,
     },
   ],
 }

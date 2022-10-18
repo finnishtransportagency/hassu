@@ -1262,7 +1262,7 @@ Object {
         "nimi": "Hassu, A-tunnus1",
         "organisaatio": "CGI Suomi Oy",
         "puhelinnumero": "123",
-        "yleinenYhteystieto": undefined,
+        "yleinenYhteystieto": true,
       },
       Object {
         "__typename": "ProjektiKayttajaJulkinen",
@@ -1271,7 +1271,7 @@ Object {
         "nimi": "Hassu, A-tunnus3",
         "organisaatio": "CGI Suomi Oy",
         "puhelinnumero": "123",
-        "yleinenYhteystieto": undefined,
+        "yleinenYhteystieto": false,
       },
       Object {
         "__typename": "ProjektiKayttajaJulkinen",
