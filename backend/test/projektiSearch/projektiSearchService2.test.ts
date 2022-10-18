@@ -1,5 +1,9 @@
 import { describe, it } from "mocha";
-import { openSearchClientJulkinen, openSearchClientYllapito } from "../../src/projektiSearch/openSearchClient";
+import {
+  openSearchClientIlmoitustauluSyote,
+  openSearchClientJulkinen,
+  openSearchClientYllapito,
+} from "../../src/projektiSearch/openSearchClient";
 import { projektiSearchService } from "../../src/projektiSearch/projektiSearchService";
 import * as sinon from "sinon";
 import {
@@ -24,12 +28,18 @@ const { expect } = require("chai");
 describe("ProjektiSearchService", () => {
   let openSearchClientYllapitoStub: sinon.SinonStub;
   let openSearchClientJulkinenSuomiStub: sinon.SinonStub;
-  beforeEach(() => {
+
+  before(() => {
     openSearchClientYllapitoStub = sandbox.stub(openSearchClientYllapito, "putDocument");
+    sandbox.stub(openSearchClientIlmoitustauluSyote, "putDocument");
     openSearchClientJulkinenSuomiStub = sandbox.stub(openSearchClientJulkinen["SUOMI"], "putDocument");
   });
+
   afterEach(() => {
     sandbox.reset();
+  });
+
+  after(() => {
     sandbox.restore();
   });
 
