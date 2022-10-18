@@ -24,6 +24,8 @@ import {
   cleanupHyvaksymisPaatosVaiheTimestamps,
 } from "./testUtil/cleanUpFunctions";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
+import { pdfGeneratorClient } from "../../src/asiakirja/lambda/pdfGeneratorClient";
+import { handleEvent as pdfGenerator } from "../../src/asiakirja/lambda/pdfGeneratorHandler";
 
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
@@ -35,6 +37,11 @@ describe("Jatkopäätökset", () => {
   before(async () => {
     userFixture = new UserFixture(userService);
     importAineistoMock.initStub();
+
+    const pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
+    pdfGeneratorLambdaStub.callsFake(async (event) => {
+      return await pdfGenerator(event);
+    });
 
     await setupLocalDatabase();
     await deleteProjekti(oid);

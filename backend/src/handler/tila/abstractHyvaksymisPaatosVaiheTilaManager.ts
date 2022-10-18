@@ -14,12 +14,12 @@ import {
   JATKOPAATOS_DURATION_VALUE,
 } from "../../projekti/status/statusHandler";
 import { AsiakirjaTyyppi, Kieli } from "../../../../common/graphql/apiModel";
-import { asiakirjaService } from "../../asiakirja/asiakirjaService";
 import { fileService } from "../../files/fileService";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import assert from "assert";
 import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakirjaTypes";
+import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
 
 export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends TilaManager {
   async removeRejectionReasonIfExists(projekti: DBProjekti, jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe): Promise<void> {
@@ -108,7 +108,7 @@ async function createPDF(
 ) {
   assert(julkaisu.kuulutusPaiva, "julkaisulta puuttuu kuulutuspäivä");
   assert(projekti.kasittelynTila, "kasittelynTila puuttuu");
-  const pdf = await asiakirjaService.createHyvaksymisPaatosKuulutusPdf({
+  const pdf = await pdfGeneratorClient.createHyvaksymisPaatosKuulutusPdf({
     asiakirjaTyyppi,
     oid: projekti.oid,
     kayttoOikeudet: projekti.kayttoOikeudet,
