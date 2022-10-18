@@ -3,14 +3,14 @@ import { Controller, FieldArrayWithId, useFieldArray, UseFieldArrayRemove, useFo
 import { api, Kayttaja, KayttajaTyyppi, ProjektiKayttaja, ProjektiKayttajaInput, TallennaProjektiInput } from "@services/api";
 import Button from "@components/button/Button";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
-import Section from "@components/layout/Section";
-import SectionContent from "@components/layout/SectionContent";
+import Section from "@components/layout/Section2";
 import { isAorL } from "backend/src/util/userUtil";
 import { TextFieldWithController } from "@components/form/TextFieldWithController";
 import { Autocomplete, TextField, Checkbox, FormControlLabel, useTheme, useMediaQuery, IconButton, SvgIcon, Stack } from "@mui/material";
 import useDebounceCallback from "src/hooks/useDebounceCallback";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import HassuGrid from "@components/HassuGrid";
+import ContentSpacer from "@components/layout/ContentSpacer";
 
 // Extend TallennaProjektiInput by making the field nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "kayttoOikeudet">;
@@ -100,11 +100,13 @@ function KayttoOikeusHallintaFormElements({
   }, [kayttoOikeudet, onKayttajatUpdate]);
 
   return (
-    <Section>
+    <Section gap={8}>
       {projektiPaallikot.length > 0 && (
-        <SectionContent>
-          <h5 className="vayla-paragraph">Projektipäällikkö</h5>
-          <p>Projektipäällikö on haettu Projektivelhosta. Jos haluat vaihtaa projektipäällikön, muutos pitää tehdä Projektivelhoon.</p>
+        <ContentSpacer gap={8}>
+          <ContentSpacer>
+            <h5 className="vayla-subtitle">Projektipäällikkö</h5>
+            <p>Projektipäällikö on haettu Projektivelhosta. Jos haluat vaihtaa projektipäällikön, muutos pitää tehdä Projektivelhoon.</p>
+          </ContentSpacer>
           {projektiPaallikot.map((paallikko, index) => {
             const initialKayttaja = initialKayttajat?.find(({ uid }) => uid === paallikko.kayttajatunnus) || null;
             const kayttajaFromApi = projektiKayttajatFromApi.find(({ kayttajatunnus }) => kayttajatunnus === paallikko.kayttajatunnus);
@@ -121,12 +123,12 @@ function KayttoOikeusHallintaFormElements({
               />
             );
           })}
-        </SectionContent>
+        </ContentSpacer>
       )}
-      <SectionContent largeGaps>
-        <SectionContent>
+      <ContentSpacer gap={8}>
+        <ContentSpacer>
           <h5 className="vayla-subtitle">Muut henkilöt</h5>
-        </SectionContent>
+        </ContentSpacer>
         {muutHenkilot.map((user, index) => {
           const initialKayttaja = initialKayttajat?.find(({ uid }) => uid === user.kayttajatunnus) || null;
           const kayttajaFromApi = projektiKayttajatFromApi.find(({ kayttajatunnus }) => kayttajatunnus === user.kayttajatunnus);
@@ -142,7 +144,7 @@ function KayttoOikeusHallintaFormElements({
             />
           );
         })}
-      </SectionContent>
+      </ContentSpacer>
       <Button
         onClick={(event) => {
           event.preventDefault();
@@ -198,7 +200,7 @@ const UserFields = ({ index, disableFields, remove, initialKayttaja, muokattavis
   const debouncedSearchKayttajat = useDebounceCallback(searchAndUpdateKayttajat, 200);
 
   return (
-    <SectionContent>
+    <ContentSpacer>
       <HassuGrid
         sx={{
           gridTemplateColumns: { width: "100%", xs: "1fr", lg: "repeat(3, minmax(max-content, 1fr))" },
@@ -348,7 +350,7 @@ const UserFields = ({ index, disableFields, remove, initialKayttaja, muokattavis
           Poista
         </Button>
       )}
-    </SectionContent>
+    </ContentSpacer>
   );
 };
 

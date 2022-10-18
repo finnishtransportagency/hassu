@@ -229,8 +229,10 @@ export const createLocalizedTheme = (locale: Localization) =>
         MuiFormControlLabel: {
           styleOverrides: {
             root: {
+              alignItems: "start",
               ".MuiFormControlLabel-label": {
                 padding: "2px",
+                paddingTop: "9px",
                 "&.Mui-disabled": {
                   color: "#999999",
                 },
