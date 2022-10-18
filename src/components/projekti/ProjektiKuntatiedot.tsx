@@ -1,7 +1,8 @@
 import React, { ReactElement } from "react";
-import { Projekti } from "@services/api";
+import { Kieli, Projekti } from "@services/api";
 import Section from "@components/layout/Section";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
+import { kuntametadata } from "../../../common/kuntametadata";
 
 interface Props {
   projekti?: Projekti | null;
@@ -9,10 +10,10 @@ interface Props {
 
 export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
   const kuntatiedot: KeyValueData[] = [
-    { header: "Maakunnat", data: projekti?.velho?.maakunnat?.toString() },
+    { header: "Maakunnat", data: kuntametadata.namesForMaakuntaIds(projekti?.velho?.maakunnat, Kieli.SUOMI).join(", ") },
     {
       header: "Kunnat",
-      data: projekti?.velho?.kunnat?.toString(),
+      data: kuntametadata.namesForKuntaIds(projekti?.velho?.kunnat, Kieli.SUOMI).join(", "),
     },
   ];
 

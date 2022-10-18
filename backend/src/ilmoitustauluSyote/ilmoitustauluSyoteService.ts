@@ -2,14 +2,19 @@ import { AloitusKuulutusTila, Kieli, ProjektiJulkinen } from "../../../common/gr
 import { openSearchClientIlmoitustauluSyote } from "../projektiSearch/openSearchClient";
 import { ilmoitusKuulutusAdapter } from "./ilmoitustauluSyoteAdapter";
 import { findJulkaisutWithTila } from "../projekti/projektiUtil";
+import { log } from "../logger";
 
 class IlmoitustauluSyoteService {
   async index(projekti: ProjektiJulkinen) {
     const oid = projekti.oid;
-    const kielet = ilmoitusKuulutusAdapter.getProjektiKielet(projekti);
-    await this.indexAloitusKuulutusJulkaisut(projekti, kielet, oid);
-    await this.indexNahtavillaoloVaihe(projekti, kielet, oid);
-    await this.indexHyvaksymisPaatosVaihe(projekti, kielet, oid);
+    try {
+      const kielet = ilmoitusKuulutusAdapter.getProjektiKielet(projekti);
+      await this.indexAloitusKuulutusJulkaisut(projekti, kielet, oid);
+      await this.indexNahtavillaoloVaihe(projekti, kielet, oid);
+      await this.indexHyvaksymisPaatosVaihe(projekti, kielet, oid);
+    } catch (e) {
+      log.error("IlmoitustauluSyoteService.index failed.", { oid, e });
+    }
   }
 
   private async indexAloitusKuulutusJulkaisut(projekti: ProjektiJulkinen, kielet: Kieli[], oid: string) {

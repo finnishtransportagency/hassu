@@ -10,6 +10,7 @@ import {
 import { translate } from "../util/localization";
 import { linkAloituskuulutus, linkHyvaksymisPaatos, linkSuunnitteluVaihe } from "../../../common/links";
 import { parseDate } from "../util/dateUtil";
+import { kuntametadata } from "../../../common/kuntametadata";
 
 class IlmoitustauluSyoteAdapter {
   adaptAloitusKuulutusJulkaisu(
@@ -40,8 +41,12 @@ class IlmoitustauluSyoteAdapter {
     const url = linkAloituskuulutus(oid);
     return {
       oid,
-      kunnat: velho.kunnat,
-      maakunnat: velho.maakunnat,
+      kunnat: velho.kunnat.map(function (id: number): string {
+        return kuntametadata.nameForKuntaId(id, Kieli.SUOMI);
+      }),
+      maakunnat: velho.maakunnat.map(function (id: number): string {
+        return kuntametadata.nameForMaakuntaId(id, Kieli.SUOMI);
+      }),
       type: IlmoitusKuulutusType.KUULUTUS,
       title: translate("ui-otsikot.kuulutus_suunnitelman_alkamisesta", kieli) + ": " + nimi,
       kieli,
@@ -79,8 +84,12 @@ class IlmoitustauluSyoteAdapter {
     const url = linkSuunnitteluVaihe(oid);
     return {
       oid,
-      kunnat: velho.kunnat,
-      maakunnat: velho.maakunnat,
+      kunnat: velho.kunnat.map(function (id: number): string {
+        return kuntametadata.nameForKuntaId(id, Kieli.SUOMI);
+      }),
+      maakunnat: velho.maakunnat.map(function (id: number): string {
+        return kuntametadata.nameForMaakuntaId(id, Kieli.SUOMI);
+      }),
       type: IlmoitusKuulutusType.KUULUTUS,
       title: translate("ui-otsikot.kuulutus_suunnitelman_nahtaville_asettamisesta", kieli) + ": " + nimi,
       kieli,
@@ -118,8 +127,12 @@ class IlmoitustauluSyoteAdapter {
     const url = linkHyvaksymisPaatos(oid);
     return {
       oid,
-      kunnat: velho.kunnat,
-      maakunnat: velho.maakunnat,
+      kunnat: velho.kunnat.map(function (id: number): string {
+        return kuntametadata.nameForKuntaId(id, Kieli.SUOMI);
+      }),
+      maakunnat: velho.maakunnat.map(function (id: number): string {
+        return kuntametadata.nameForMaakuntaId(id, Kieli.SUOMI);
+      }),
       type: IlmoitusKuulutusType.KUULUTUS,
       title: translate("ui-otsikot.kuulutus_suunnitelman_hyvaksymispaatoksestä", kieli) + ": " + nimi,
       kieli,

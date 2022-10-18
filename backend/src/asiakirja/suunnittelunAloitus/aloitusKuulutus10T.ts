@@ -2,6 +2,7 @@ import { IlmoitusParams, SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf
 import { Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
+import { kuntametadata } from "../../../../common/kuntametadata";
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
   SUOMI: "KUULUTUS SUUNNITTELUN ALOITTAMISESTA",
@@ -66,7 +67,7 @@ export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
   private get kuuluttaja() {
     const suunnitteluSopimus = this.params.suunnitteluSopimus;
     if (suunnitteluSopimus?.kunta) {
-      return formatProperNoun(suunnitteluSopimus.kunta);
+      return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
     }
     return this.tilaajaOrganisaatio();
   }
@@ -79,12 +80,12 @@ export class AloitusKuulutus10T extends SuunnittelunAloitusPdf {
     let phrase: string;
     const suunnitteluSopimus = this.params.suunnitteluSopimus;
     if (suunnitteluSopimus) {
-      phrase = `${formatProperNoun(suunnitteluSopimus?.kunta || "Kunta")}, sovittuaan asiasta ${this.tilaajaGenetiivi} kanssa, käynnistää ${
-        this.projektiTyyppi
-      }n laatimisen tarpeellisine tutkimuksineen. `;
+      phrase = `${formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus?.kunta, this.kieli) || "Kunta")}, sovittuaan asiasta ${
+        this.tilaajaGenetiivi
+      } kanssa, käynnistää ${this.projektiTyyppi}n laatimisen tarpeellisine tutkimuksineen. `;
     } else {
       const tilaajaOrganisaatio = this.tilaajaOrganisaatio();
-      const kunnat = this.params.velho?.kunnat;
+      const kunnat = this.params.velho?.kunnat?.map((kuntaId) => kuntametadata.nameForKuntaId(kuntaId, this.kieli));
       const organisaatiot = kunnat ? [tilaajaOrganisaatio, ...kunnat] : [tilaajaOrganisaatio];
       const trimmattutOrganisaatiot = organisaatiot.map((organisaatio) => formatProperNoun(organisaatio));
       const viimeinenOrganisaatio = trimmattutOrganisaatiot.slice(-1);

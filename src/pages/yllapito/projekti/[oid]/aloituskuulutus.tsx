@@ -51,6 +51,7 @@ import { pickBy } from "lodash";
 import { removeTypeName } from "src/util/removeTypeName";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { today } from "src/util/dateUtils";
+import { kuntametadata } from "../../../../../common/kuntametadata";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -102,7 +103,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     const kuntaNimet: string[] = [
       ...new Set([
         ...(projekti.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.map(({ nimi }) => nimi) || []),
-        ...(projekti.velho.kunnat || []),
+        ...(kuntametadata.namesForKuntaIds(projekti.velho.kunnat, Kieli.SUOMI) || []),
       ]),
     ];
 

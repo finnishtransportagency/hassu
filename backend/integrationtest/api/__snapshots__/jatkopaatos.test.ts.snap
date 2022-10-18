@@ -290,12 +290,12 @@ Object {
         "velho": Object {
           "__typename": "Velho",
           "kunnat": Array [
-            "Helsinki",
-            " Vantaa",
+            91,
+            92,
           ],
           "linkki": null,
           "maakunnat": Array [
-            "Uusimaa",
+            1,
           ],
           "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
           "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
@@ -379,12 +379,12 @@ Object {
       "asiatunnusELY": undefined,
       "asiatunnusVayla": undefined,
       "kunnat": Array [
-        "Helsinki",
-        "Vantaa",
+        91,
+        92,
       ],
       "kuvaus": undefined,
       "maakunnat": Array [
-        "Uusimaa",
+        1,
       ],
       "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
       "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
@@ -718,12 +718,12 @@ Object {
         "velho": Object {
           "__typename": "Velho",
           "kunnat": Array [
-            "Helsinki",
-            " Vantaa",
+            91,
+            92,
           ],
           "linkki": null,
           "maakunnat": Array [
-            "Uusimaa",
+            1,
           ],
           "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
           "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
@@ -807,12 +807,12 @@ Object {
       "asiatunnusELY": undefined,
       "asiatunnusVayla": undefined,
       "kunnat": Array [
-        "Helsinki",
-        "Vantaa",
+        91,
+        92,
       ],
       "kuvaus": undefined,
       "maakunnat": Array [
-        "Uusimaa",
+        1,
       ],
       "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
       "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",

@@ -30,7 +30,7 @@ Object {
         Object {
           "terms": Object {
             "maakunnat.keyword": Array [
-              "Pirkanmaa",
+              6,
             ],
           },
         },
@@ -119,7 +119,7 @@ Object {
         Object {
           "terms": Object {
             "maakunnat.keyword": Array [
-              "Pirkanmaa",
+              6,
             ],
           },
         },

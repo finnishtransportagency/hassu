@@ -32,6 +32,7 @@ import { pdfGeneratorClient } from "../src/asiakirja/lambda/pdfGeneratorClient";
 import { handleEvent as pdfGenerator } from "../src/asiakirja/lambda/pdfGeneratorHandler";
 import { getS3 } from "../src/aws/client";
 import { awsMockResolves, expectAwsCalls } from "./aws/awsMock";
+import { kuntametadata } from "../../common/kuntametadata";
 
 const { expect, assert } = require("chai");
 
@@ -309,7 +310,7 @@ describe("apiHandler", () => {
 
         // Add one muokkaaja more and examine the results. Also test that fields can be removed from database
         persistFileToProjektiStub.resolves("/suunnittelusopimus/logo.gif");
-        await saveAndLoadProjekti(projekti, "while adding one muokkaaja more. There should be three persons in the projekti now", {
+        let updatedValues: Partial<TallennaProjektiInput> = {
           kayttoOikeudet: [
             {
               tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
@@ -326,7 +327,7 @@ describe("apiHandler", () => {
             },
           ],
           suunnitteluSopimus: {
-            kunta: "Nokia",
+            kunta: kuntametadata.idForKuntaName("Nokia"),
             logo: "/suunnittelusopimus/logo.gif",
             yhteysHenkilo: "A2",
           },
@@ -337,7 +338,12 @@ describe("apiHandler", () => {
             toissijainenKieli: Kieli.SAAME,
             projektinNimiVieraskielella: "Projektin nimi saameksi",
           },
-        });
+        };
+        await saveAndLoadProjekti(
+          projekti,
+          "while adding one muokkaaja more. There should be three persons in the projekti now",
+          updatedValues
+        );
 
         // Verify that projekti is not visible for anonymous users
         userFixture.logout();

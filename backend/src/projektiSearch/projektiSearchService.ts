@@ -32,23 +32,28 @@ const projektiSarakeToField: Record<ProjektiSarake, string> = {
 
 class ProjektiSearchService {
   async indexProjekti(projekti: DBProjekti) {
-    const projektiToIndex = adaptProjektiToIndex(projekti);
-    log.info("Index projekti", { oid: projekti.oid });
-    await openSearchClientYllapito.putDocument(projekti.oid, projektiToIndex);
+    try {
+      const projektiToIndex = adaptProjektiToIndex(projekti);
+      log.info("Index projekti", { oid: projekti.oid });
+      await openSearchClientYllapito.putDocument(projekti.oid, projektiToIndex);
 
-    projekti.tallennettu = true;
+      projekti.tallennettu = true;
 
-    const apiProjekti = projektiAdapterJulkinen.adaptProjekti(projekti);
+      const apiProjekti = projektiAdapterJulkinen.adaptProjekti(projekti);
 
-    if (apiProjekti) {
-      for (const kieli of Object.values(Kieli)) {
-        const projektiJulkinenToIndex = adaptProjektiToJulkinenIndex(apiProjekti, kieli);
-        if (projektiJulkinenToIndex) {
-          log.info("Index julkinen projekti", { oid: projekti.oid, kieli });
-          await openSearchClientJulkinen[kieli].putDocument(projekti.oid, projektiJulkinenToIndex);
+      if (apiProjekti) {
+        for (const kieli of Object.values(Kieli)) {
+          const projektiJulkinenToIndex = adaptProjektiToJulkinenIndex(apiProjekti, kieli);
+          if (projektiJulkinenToIndex) {
+            log.info("Index julkinen projekti", { oid: projekti.oid, kieli });
+            await openSearchClientJulkinen[kieli].putDocument(projekti.oid, projektiJulkinenToIndex);
+          }
         }
+        await ilmoitustauluSyoteService.index(apiProjekti);
       }
-      await ilmoitustauluSyoteService.index(apiProjekti);
+    } catch (e) {
+      log.error(e);
+      log.error("ProjektiSearchService.indexProjekti failed.", { oid: projekti.oid });
     }
   }
 

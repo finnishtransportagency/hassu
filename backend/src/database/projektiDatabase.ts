@@ -6,6 +6,7 @@ import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
 import { AWSError } from "aws-sdk/lib/error";
 import { Response } from "aws-sdk/lib/response";
 import dayjs from "dayjs";
+import { migrateFromOldSchema } from "./schemaUpgrade";
 
 const specialFields = ["oid", "tallennettu", "vuorovaikutukset"];
 const skipAutomaticUpdateFields = [
@@ -97,7 +98,8 @@ export class ProjektiDatabase {
       const projekti = data.Item as DBProjekti;
       projekti.oid = oid;
       projekti.tallennettu = true;
-      return projekti;
+
+      return migrateFromOldSchema(projekti);
     } catch (e) {
       if ((e as { code: string }).code === "ResourceNotFoundException") {
         log.warn("projektia ei löydy", { oid });

@@ -21,6 +21,10 @@ import {
 } from "../../../common/graphql/apiModel";
 import { DBProjekti, DBVaylaUser, Vuorovaikutus } from "../../src/database/model";
 import cloneDeep from "lodash/cloneDeep";
+import { kuntametadata } from "../../../common/kuntametadata";
+
+const mikkeliJuvaSavonlinna = kuntametadata.idsForKuntaNames(["Mikkeli", "Juva", "Savonlinna"]);
+const uusimaaPirkanmaa = kuntametadata.idsForMaakuntaNames(["Uusimaa", "Pirkanmaa"]);
 
 export class ProjektiFixture {
   public PROJEKTI1_NIMI = "Testiprojekti 1";
@@ -139,7 +143,7 @@ export class ProjektiFixture {
         __typename: "Velho",
         nimi: this.PROJEKTI1_NIMI,
         tyyppi: ProjektiTyyppi.TIE,
-        maakunnat: ["Uusimaa", "Pirkanmaa"],
+        maakunnat: [kuntametadata.idForMaakuntaName("Uusimaa"), kuntametadata.idForMaakuntaName("Pirkanmaa")],
       },
       muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
       status: Status.EI_JULKAISTU,
@@ -214,15 +218,15 @@ export class ProjektiFixture {
         nimi: this.PROJEKTI1_NIMI,
         tyyppi: ProjektiTyyppi.TIE,
         suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
-        kunnat: ["Tampere", "Nokia"],
-        maakunnat: ["Uusimaa", "Pirkanmaa"],
+        kunnat: kuntametadata.idsForKuntaNames(["Tampere", "Nokia"]),
+        maakunnat: kuntametadata.idsForMaakuntaNames(["Uusimaa", "Pirkanmaa"]),
         vaylamuoto: ["tie"],
         asiatunnusVayla: "VAYLA/" + this.PROJEKTI1_OID + "/2022",
         asiatunnusELY: "ELY/" + this.PROJEKTI1_OID + "/2022",
       },
       muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
       suunnitteluSopimus: {
-        kunta: "Nokia",
+        kunta: kuntametadata.idForKuntaName("Nokia"),
         yhteysHenkilo: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.kayttajatunnus,
         logo: "logo.gif",
       },
@@ -291,10 +295,10 @@ export class ProjektiFixture {
       velho: {
         nimi: this.PROJEKTI2_NIMI,
         tyyppi: ProjektiTyyppi.TIE,
-        kunnat: ["Mikkeli", "Juva", "Savonlinna"],
+        kunnat: mikkeliJuvaSavonlinna,
         vaylamuoto: ["tie"],
         vastuuhenkilonEmail: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
-        maakunnat: ["Uusimaa", "Pirkanmaa"],
+        maakunnat: uusimaaPirkanmaa,
         suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
         asiatunnusVayla: "VAYLA/" + this.PROJEKTI2_OID + "/2022",
         asiatunnusELY: "ELY/" + this.PROJEKTI2_OID + "/2022",
@@ -341,8 +345,8 @@ export class ProjektiFixture {
             vaylamuoto: ["tie"],
             nimi: "Marikan testiprojekti",
             tyyppi: ProjektiTyyppi.YLEINEN,
-            kunnat: ["Mikkeli", " Juva", " Savonlinna"],
-            maakunnat: ["Uusimaa", "Pirkanmaa"],
+            kunnat: kuntametadata.idsForKuntaNames(["Mikkeli", " Juva", " Savonlinna"]),
+            maakunnat: uusimaaPirkanmaa,
           },
           id: 1,
           tila: AloitusKuulutusTila.HYVAKSYTTY,
@@ -465,10 +469,10 @@ export class ProjektiFixture {
     velho: {
       nimi: this.PROJEKTI3_NIMI,
       tyyppi: ProjektiTyyppi.TIE,
-      kunnat: ["Mikkeli", "Juva", "Savonlinna"],
+      kunnat: mikkeliJuvaSavonlinna,
       vaylamuoto: ["tie"],
       vastuuhenkilonEmail: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
-      maakunnat: ["Uusimaa", "Pirkanmaa"],
+      maakunnat: uusimaaPirkanmaa,
       suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
       asiatunnusVayla: "VAYLA/" + this.PROJEKTI3_OID + "/2022",
       asiatunnusELY: "ELY/" + this.PROJEKTI3_OID + "/2022",
@@ -514,8 +518,8 @@ export class ProjektiFixture {
           vaylamuoto: ["tie"],
           nimi: "Marikan testiprojekti",
           tyyppi: ProjektiTyyppi.YLEINEN,
-          kunnat: ["Mikkeli", " Juva", " Savonlinna"],
-          maakunnat: ["Uusimaa", "Pirkanmaa"],
+          kunnat: mikkeliJuvaSavonlinna,
+          maakunnat: uusimaaPirkanmaa,
         },
         id: 1,
         tila: AloitusKuulutusTila.HYVAKSYTTY,
@@ -646,8 +650,8 @@ export class ProjektiFixture {
         muokkaaja: "A000111",
         tila: NahtavillaoloVaiheTila.HYVAKSYTTY,
         velho: {
-          kunnat: ["Kerava"],
-          maakunnat: ["Uusimaa", "Pirkanmaa"],
+          kunnat: [kuntametadata.idForKuntaName("Kerava")],
+          maakunnat: uusimaaPirkanmaa,
           linkki: null,
           nimi: "Mt 140 parantaminen Kaskelantien kohdalla, tiesuunnitelma, Kerava",
           tyyppi: ProjektiTyyppi.TIE,
@@ -785,9 +789,9 @@ export class ProjektiFixture {
           muokkaaja: "A000112",
           tila: HyvaksymisPaatosVaiheTila.HYVAKSYTTY,
           velho: {
-            kunnat: ["Helsinki", " Vantaa"],
+            kunnat: kuntametadata.idsForKuntaNames(["Helsinki", " Vantaa"]),
             linkki: null,
-            maakunnat: ["Uusimaa"],
+            maakunnat: kuntametadata.idsForMaakuntaNames(["Uusimaa"]),
             nimi: "HASSU AUTOMAATTITESTIPROJEKTI1",
             suunnittelustaVastaavaViranomainen: Viranomainen.VAYLAVIRASTO,
             tyyppi: ProjektiTyyppi.TIE,

@@ -45,6 +45,18 @@ task downloadSwaggers {
   }
 }
 
+task downloadKuntaList(type: Download) {
+  src 'http://rajapinnat.ymparisto.fi/api/Hakemistorajapinta/1.0/odata/Kunta'
+  dest "${buildDir}/../../../common/generated/kunnat.json".toString()
+  overwrite false
+}
+
+task downloadMaakuntaList(type: Download) {
+  src 'http://rajapinnat.ymparisto.fi/api/Hakemistorajapinta/1.0/odata/Maakunta'
+  dest "${buildDir}/../../../common/generated/maakunnat.json".toString()
+  overwrite false
+}
+
 // This is a workaround for duplicate enum values in hakupalvelu. Remove this code after Velho has been fixed.
 task fixSwagger(type: Copy) {
   from("${buildDir}") {
@@ -80,3 +92,6 @@ apiNames.each { name ->
 generateApis.dependsOn downloadMetaData
 generateApis.dependsOn fixSwagger
 fixSwagger.dependsOn downloadSwaggers
+
+generateApis.dependsOn downloadKuntaList
+generateApis.dependsOn downloadMaakuntaList

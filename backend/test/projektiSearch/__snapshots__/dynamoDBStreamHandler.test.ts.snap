@@ -4,8 +4,8 @@ exports[`dynamoDBStreamHandler should index new projektis successfully 1`] = `
 Object {
   "asiatunnus": "ELY/2/2022",
   "maakunnat": Array [
-    "Uusimaa",
-    "Pirkanmaa",
+    1,
+    6,
   ],
   "muokkaajat": Array [
     "A123",
@@ -27,13 +27,13 @@ exports[`dynamoDBStreamHandler should index new projektis successfully 2`] = `
 Object {
   "hankkeenKuvaus": "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
   "kunnat": Array [
-    "Mikkeli",
-    "Juva",
-    "Savonlinna",
+    491,
+    178,
+    740,
   ],
   "maakunnat": Array [
-    "Uusimaa",
-    "Pirkanmaa",
+    1,
+    6,
   ],
   "nimi": "Marikan testiprojekti",
   "paivitetty": "2022-03-15T14:30:00.000Z",
@@ -51,13 +51,13 @@ exports[`dynamoDBStreamHandler should index new projektis successfully 3`] = `
 Object {
   "hankkeenKuvaus": "Designplatsen är en del av elektrifieringsprojektet Hyvinge-Hangö, som också kommer att genomföra plankorsningsåtgärder. I den fastställda spårplanen är borttagandet av tävlingsstoppet och Leksvallskorsningen genom förbättring av en ny plankorsning vid Helmströms plankorsning vid denna punkt godkänd som planlösning. En uppdatering av Spårplanen kommer nu att lanseras då och man planerar att ta bort alla tre plankorsningarna på den nya Leksvallsöverfarten.",
   "kunnat": Array [
-    "Mikkeli",
-    "Juva",
-    "Savonlinna",
+    491,
+    178,
+    740,
   ],
   "maakunnat": Array [
-    "Uusimaa",
-    "Pirkanmaa",
+    1,
+    6,
   ],
   "nimi": "Marikas testprojekt",
   "paivitetty": "2022-03-15T14:30:00.000Z",
@@ -75,8 +75,8 @@ exports[`dynamoDBStreamHandler should index projekti updates successfully 1`] = 
 Object {
   "asiatunnus": "ELY/2/2022",
   "maakunnat": Array [
-    "Uusimaa",
-    "Pirkanmaa",
+    1,
+    6,
   ],
   "muokkaajat": Array [
     "A123",

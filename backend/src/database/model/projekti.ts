@@ -2,7 +2,7 @@ import { AloitusKuulutusTila, KayttajaTyyppi, ProjektiTyyppi, Viranomainen } fro
 import { SuunnitteluVaihe, Vuorovaikutus } from "./suunnitteluVaihe";
 import { NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "./nahtavillaoloVaihe";
 import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "./hyvaksymisPaatosVaihe";
-import { IlmoituksenVastaanottajat, LocalizedMap, StandardiYhteystiedot, Yhteystieto, Kielitiedot, Velho } from "./common";
+import { IlmoituksenVastaanottajat, Kielitiedot, LocalizedMap, StandardiYhteystiedot, Velho, Yhteystieto } from "./common";
 
 export type DBVaylaUser = {
   email: string;
@@ -47,13 +47,13 @@ export type AloitusKuulutusJulkaisu = {
 };
 
 export type SuunnitteluSopimus = {
-  kunta: string;
+  kunta: number;
   logo?: string;
   yhteysHenkilo: string;
 };
 
 export type SuunnitteluSopimusJulkaisu = {
-  kunta: string;
+  kunta: number;
   logo?: string | null;
   etunimi: string;
   sukunimi: string;

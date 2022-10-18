@@ -38,6 +38,7 @@ import {
 } from "../../util/adaptStandardiYhteystiedot";
 import { adaptSuunnitteluSopimusJulkaisuJulkinen } from "./adaptToAPI";
 import { cloneDeep } from "lodash";
+import { kuntametadata } from "../../../../common/kuntametadata";
 
 class ProjektiAdapterJulkinen {
   public adaptProjekti(dbProjekti: DBProjekti): API.ProjektiJulkinen | undefined {
@@ -114,9 +115,6 @@ class ProjektiAdapterJulkinen {
       if (!julkaisu.hankkeenKuvaus) {
         throw new Error("adaptAloitusKuulutusJulkaisut: julkaisu.hankkeenKuvaus määrittelemättä");
       }
-      if (!julkaisu.aloituskuulutusPDFt) {
-        throw new Error("adaptAloitusKuulutusJulkaisut: julkaisu.aloituskuulutusPDFt määrittelemättä");
-      }
       const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot } = julkaisu;
 
       return [
@@ -137,7 +135,10 @@ class ProjektiAdapterJulkinen {
     return undefined;
   }
 
-  adaptJulkaisuPDFPaths(oid: string, aloitusKuulutusPDFS: LocalizedMap<AloitusKuulutusPDF>): API.AloitusKuulutusPDFt | undefined {
+  adaptJulkaisuPDFPaths(
+    oid: string,
+    aloitusKuulutusPDFS: LocalizedMap<AloitusKuulutusPDF> | null | undefined
+  ): API.AloitusKuulutusPDFt | undefined {
     if (!aloitusKuulutusPDFS) {
       return undefined;
     }
@@ -510,8 +511,8 @@ export function adaptVelho(velho: Velho): API.VelhoJulkinen {
     __typename: "VelhoJulkinen",
     nimi,
     tyyppi,
-    kunnat: kunnat?.map((s) => s.trim()),
-    maakunnat: maakunnat?.map((s) => s.trim()),
+    kunnat: kunnat?.map(kuntametadata.idForKuntaName),
+    maakunnat: maakunnat?.map(kuntametadata.idForMaakuntaName),
     suunnittelustaVastaavaViranomainen,
     vaylamuoto,
     asiatunnusVayla,

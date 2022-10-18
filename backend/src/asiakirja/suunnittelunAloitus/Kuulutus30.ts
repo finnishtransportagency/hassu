@@ -8,6 +8,7 @@ import { formatDate } from "../asiakirjaUtil";
 import { IlmoitusParams } from "./suunnittelunAloitusPdf";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import PDFStructureElement = PDFKit.PDFStructureElement;
+import { kuntametadata } from "../../../../common/kuntametadata";
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
   SUOMI: "KUULUTUS SUUNNITELMAN NÄHTÄVILLE ASETTAMISESTA",
@@ -161,7 +162,7 @@ export class Kuulutus30 extends CommonPdf {
   private getKunnatString() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const organisaatiot: string[] = this.velho?.kunnat;
+    const organisaatiot: string[] = this.velho?.kunnat?.map((kuntaId) => kuntametadata.nameForKuntaId(kuntaId, this.kieli));
     const trimmattutOrganisaatiot = organisaatiot.map((organisaatio) => formatProperNoun(organisaatio));
     const viimeinenOrganisaatio = trimmattutOrganisaatiot.slice(-1);
     const muut = trimmattutOrganisaatiot.slice(0, -1);

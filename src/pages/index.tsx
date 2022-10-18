@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { api, Kieli, ProjektiHakutulosJulkinen } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 import Hakulomake from "@components/kansalaisenEtusivu/Hakulomake";
@@ -9,17 +9,7 @@ import OikeaLaita from "@components/kansalaisenEtusivu/OikeaLaita";
 import Sivutus from "@components/kansalaisenEtusivu/Sivutus";
 import { useRouter } from "next/router";
 import { SelectOption } from "@components/form/Select";
-import { MaakuntaListaOption } from "./api/maakuntalista.json";
-import { KuntaListaOption } from "./api/kuntalista.json";
-
-function jarjestaOptionit(a: SelectOption, b: SelectOption) {
-  if (!a.label) {
-    return 1;
-  } else if (!b.label) {
-    return 0;
-  }
-  return a.label.localeCompare(b.label);
-}
+import { kuntametadata } from "../../common/kuntametadata";
 
 const SIVUN_KOKO = 10;
 
@@ -29,34 +19,10 @@ const App = () => {
 
   const { lang } = useTranslation();
 
-  const getKuntaLista = useCallback(
-    async (lang: string) => {
-      const list: KuntaListaOption[] = await (await fetch("/api/kuntalista.json")).json();
-      if (lang === "sv") {
-        setKuntaOptions(list.map((option) => ({ ...option, label: option.labelRuo })).sort(jarjestaOptionit));
-      } else {
-        setKuntaOptions(list);
-      }
-    },
-    [setKuntaOptions]
-  );
-
-  const getMaakuntaLista = useCallback(
-    async (lang: string) => {
-      const list: MaakuntaListaOption[] = await (await fetch("/api/maakuntalista.json")).json();
-      if (lang === "sv") {
-        setMaakuntaOptions(list.map((option) => ({ ...option, label: option.labelRuo })).sort(jarjestaOptionit));
-      } else {
-        setMaakuntaOptions(list);
-      }
-    },
-    [setMaakuntaOptions]
-  );
-
   useEffect(() => {
-    getKuntaLista(lang);
-    getMaakuntaLista(lang);
-  }, [getKuntaLista, getMaakuntaLista, lang]);
+    setKuntaOptions(kuntametadata.kuntaOptions(lang));
+    setMaakuntaOptions(kuntametadata.maakuntaOptions(lang));
+  }, [lang]);
 
   const query = useHaunQueryparametrit({ kuntaOptions, maakuntaOptions });
 
@@ -91,8 +57,8 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
           kieli: Kieli.SUOMI,
           sivunumero: Math.max(0, sivu - 1),
           nimi: vapaasanahaku,
-          kunta: keywordToKey(kunta, kuntaOptions),
-          maakunta: keywordToKey(maakunta, maakuntaOptions),
+          kunta: [Number(kunta)],
+          maakunta: [Number(maakunta)],
           vaylamuoto: vaylamuoto ? [vaylamuoto] : undefined,
         });
         log.info("listProjektit:", result);
@@ -171,8 +137,8 @@ export function useHaunQueryparametrit({ kuntaOptions, maakuntaOptions }: HookPr
         ? router.query.vaylamuoto
         : "";
     const sivu = typeof router.query.sivu === "string" ? parseInt(router.query.sivu) : 1;
-    const pienennaHaku = router.query?.pienennahaku === "true" ? true : false;
-    const lisaaHakuehtoja = router.query?.lisaahakuehtoja === "true" ? true : false;
+    const pienennaHaku = router.query?.pienennahaku === "true";
+    const lisaaHakuehtoja = router.query?.lisaahakuehtoja === "true";
     return {
       vapaasanahaku,
       kunta,
@@ -194,10 +160,4 @@ export function useHaunQueryparametrit({ kuntaOptions, maakuntaOptions }: HookPr
     router.query?.vapaasanahaku,
     router.query?.vaylamuoto,
   ]);
-}
-
-function keywordToKey(keyword: string, options: SelectOption[]) : string[] | undefined{
-  if (! keyword) return undefined;
-  const label = options.find((option) => keyword === option.value)?.label;
-  return label ? [label] : undefined;
 }

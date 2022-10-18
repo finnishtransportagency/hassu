@@ -70,7 +70,7 @@ input KuntaVastaanottajaInput {
 }
 
 input SuunnitteluSopimusInput {
-  kunta: String!
+  kunta: Int!
   logo: String
   yhteysHenkilo: String!
 }
@@ -206,8 +206,8 @@ input ListaaProjektitInput {
   nimi: String
   kieli: Kieli
   asiatunnus: String
-  maakunta: [String!]
-  kunta: [String!]
+  maakunta: [Int!]
+  kunta: [Int!]
   vaylamuoto: [String!]
   suunnittelustaVastaavaViranomainen: [Viranomainen!]
   vaihe: [Status!]

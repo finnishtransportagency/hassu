@@ -30,6 +30,8 @@ Object {
   "tyyppi": "TIE",
   "velho": Object {
     "__typename": "Velho",
+    "kunnat": undefined,
+    "maakunnat": undefined,
     "nimi": "Testiprojekti 1",
     "tyyppi": "TIE",
     "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
@@ -138,6 +140,8 @@ Array [
     "tyyppi": "TIE",
     "velho": Object {
       "__typename": "Velho",
+      "kunnat": undefined,
+      "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
       "tyyppi": "TIE",
       "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
@@ -206,6 +210,8 @@ Array [
     "tyyppi": "TIE",
     "velho": Object {
       "__typename": "Velho",
+      "kunnat": undefined,
+      "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
       "tyyppi": "TIE",
       "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
@@ -295,6 +301,8 @@ Array [
     "tyyppi": "TIE",
     "velho": Object {
       "__typename": "Velho",
+      "kunnat": undefined,
+      "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
       "tyyppi": "TIE",
       "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
@@ -402,7 +410,7 @@ Array [
     "oid": "1",
     "salt": "***unittest***",
     "suunnitteluSopimus": Object {
-      "kunta": "Nokia",
+      "kunta": 536,
       "logo": "/suunnittelusopimus/logo.gif",
       "yhteysHenkilo": "A2",
     },
@@ -520,7 +528,7 @@ Array [
     "status": "ALOITUSKUULUTUS",
     "suunnitteluSopimus": Object {
       "__typename": "SuunnitteluSopimus",
-      "kunta": "Nokia",
+      "kunta": 536,
       "logo": "/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
       "yhteysHenkilo": "A2",
     },
@@ -528,6 +536,8 @@ Array [
     "tyyppi": "TIE",
     "velho": Object {
       "__typename": "Velho",
+      "kunnat": undefined,
+      "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
       "tyyppi": "TIE",
       "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
@@ -984,7 +994,7 @@ Object {
         "__typename": "SuunnitteluSopimusJulkaisu",
         "email": "a2@vayla.fi",
         "etunimi": "EtunimiA2",
-        "kunta": "Nokia",
+        "kunta": 536,
         "logo": "/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
         "puhelinnumero": "123456789",
         "sukunimi": "SukunimiA2",
@@ -992,6 +1002,8 @@ Object {
       "tila": "HYVAKSYTTY",
       "velho": Object {
         "__typename": "Velho",
+        "kunnat": undefined,
+        "maakunnat": undefined,
         "nimi": "Testiprojekti 1",
         "tyyppi": "TIE",
         "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
@@ -1063,7 +1075,7 @@ Object {
   "status": "SUUNNITTELU",
   "suunnitteluSopimus": Object {
     "__typename": "SuunnitteluSopimus",
-    "kunta": "Nokia",
+    "kunta": 536,
     "logo": "/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
     "yhteysHenkilo": "A2",
   },
@@ -1071,6 +1083,8 @@ Object {
   "tyyppi": "TIE",
   "velho": Object {
     "__typename": "Velho",
+    "kunnat": undefined,
+    "maakunnat": undefined,
     "nimi": "Testiprojekti 1",
     "tyyppi": "TIE",
     "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
@@ -1112,7 +1126,7 @@ Object {
           "__typename": "SuunnitteluSopimusJulkaisu",
           "email": "a2@vayla.fi",
           "etunimi": "EtunimiA2",
-          "kunta": "Nokia",
+          "kunta": 536,
           "logo": "/tiedostot/suunnitelma/1/suunnittelusopimus/logo.gif",
           "puhelinnumero": "123456789",
           "sukunimi": "SukunimiA2",

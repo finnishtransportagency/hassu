@@ -11,6 +11,7 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
 import { useProjekti } from "src/hooks/useProjekti";
+import { kuntametadata } from "../../../../common/kuntametadata";
 import IlmoituksenVastaanottajatLukutila from "../lukutila/komponentit/VuorovaikutusIlmoituksenVastaanottajatLukutila";
 
 interface HelperType {
@@ -36,6 +37,7 @@ type FormFields = {
 export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet, vuorovaikutus }: Props): ReactElement {
   const { t } = useTranslation("commonFI");
   const { data: projekti } = useProjekti();
+  const { lang } = useTranslation();
 
   const julkinen = !!vuorovaikutus?.julkinen;
 
@@ -164,7 +166,7 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet, vuorovaik
                   {...register(`suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.kunnat.${index}.nimi`)}
                   readOnly
                 />
-                <TextInput label="Kunta *" value={formatProperNoun((projekti?.velho?.kunnat || [])[index] || "")} disabled />
+                <TextInput label="Kunta *" value={formatProperNoun((kuntametadata.namesForKuntaIds(projekti?.velho?.kunnat, lang) || [])[index] || "")} disabled />
                 <TextInput
                   label="Sähköpostiosoite *"
                   error={errors?.suunnitteluVaihe?.vuorovaikutus?.ilmoituksenVastaanottajat?.kunnat?.[index]?.sahkoposti}

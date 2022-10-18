@@ -3,6 +3,7 @@ import { openSearchClientJulkinen, openSearchClientYllapito } from "../../src/pr
 import { projektiSearchService } from "../../src/projektiSearch/projektiSearchService";
 import * as sinon from "sinon";
 import { Kieli, ProjektiTyyppi, Status, Viranomainen } from "../../../common/graphql/apiModel";
+import { kuntametadata } from "../../../common/kuntametadata";
 
 const sandbox = require("sinon").createSandbox();
 
@@ -145,7 +146,7 @@ describe("ProjektiSearchService", () => {
       projektiTyyppi: ProjektiTyyppi.TIE,
       nimi: "foo",
       vaylamuoto: ["tie"],
-      maakunta: ["Pirkanmaa"],
+      maakunta: kuntametadata.idsForMaakuntaNames(["Pirkanmaa"]),
       suunnittelustaVastaavaViranomainen: [Viranomainen.VAYLAVIRASTO, Viranomainen.UUDENMAAN_ELY],
       vaihe: [Status.EI_JULKAISTU, Status.SUUNNITTELU],
     });

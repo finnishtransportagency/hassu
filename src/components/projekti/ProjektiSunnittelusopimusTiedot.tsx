@@ -1,7 +1,7 @@
-import React, { ReactElement, useCallback, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { Projekti } from "@services/api";
 import RadioButton from "@components/form/RadioButton";
-import Select from "@components/form/Select";
+import Select, { SelectOption } from "@components/form/Select";
 import { Controller, useFormContext } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import FileInput from "@components/form/FileInput";
@@ -11,6 +11,8 @@ import Section from "@components/layout/Section";
 import HassuGrid from "@components/HassuGrid";
 import SectionContent from "@components/layout/SectionContent";
 import HassuStack from "@components/layout/HassuStack";
+import useTranslation from "next-translate/useTranslation";
+import { kuntametadata } from "../../../common/kuntametadata";
 
 interface Props {
   projekti?: Projekti | null;
@@ -27,16 +29,12 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
 
   const [hasSuunnitteluSopimus, setHasSuunnitteluSopimus] = useState(false);
   const [logoUrl, setLogoUrl] = useState<string | undefined>(undefined);
-  const [kuntaOptions, setKuntaOptions] = useState([]);
-
-  const getKuntaLista = useCallback(async () => {
-    const list = await (await fetch("/api/kuntalista.json")).json();
-    setKuntaOptions(list);
-  }, [setKuntaOptions]);
+  const [kuntaOptions, setKuntaOptions] = useState<SelectOption[]>([]);
+  const { lang } = useTranslation();
 
   useEffect(() => {
-    getKuntaLista();
-  }, [getKuntaLista]);
+    setKuntaOptions(kuntametadata.kuntaOptions(lang));
+  }, [lang]);
 
   useEffect(() => {
     setHasSuunnitteluSopimus(!!projekti?.suunnitteluSopimus);

@@ -36,7 +36,7 @@ describe("Projektin perustiedot", () => {
     cy.get('input[name="liittyvatSuunnitelmat.1.nimi"]').clear().type("Toisen nimi");
 
     cy.get('input[name="suunnittelusopimusprojekti"][value="true"]').check();
-    cy.get("#suunnittelusopimus_kunta").select("ALAJÄRVI");
+    cy.get("#suunnittelusopimus_kunta").select("Alajärvi");
     cy.get("#suunnittelusopimus_yhteyshenkilo").select(1);
 
     cy.get("main").then((elem) => {

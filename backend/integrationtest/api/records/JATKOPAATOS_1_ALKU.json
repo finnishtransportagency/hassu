@@ -18,12 +18,12 @@
         "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
         "tyyppi": "TIE",
         "maakunnat": [
-          "Uusimaa"
+          1
         ],
         "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
         "kunnat": [
-          "Helsinki",
-          " Vantaa"
+          91,
+          92
         ],
         "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
         "vaylamuoto": [
@@ -36,7 +36,7 @@
         "__typename": "SuunnitteluSopimusJulkaisu",
         "sukunimi": "Hassu",
         "logo": "/suunnittelusopimus/logo.png",
-        "kunta": "Nokia",
+        "kunta": 536,
         "puhelinnumero": "123",
         "email": "mikko.haapamaki@cgi.com"
       },
@@ -98,19 +98,19 @@
   "suunnitteluSopimus": {
     "yhteysHenkilo": "LX581241",
     "logo": "/suunnittelusopimus/logo.png",
-    "kunta": "Nokia"
+    "kunta": 536
   },
   "velho": {
     "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
     "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
     "tyyppi": "TIE",
     "maakunnat": [
-      "Uusimaa"
+      1
     ],
     "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
     "kunnat": [
-      "Helsinki",
-      " Vantaa"
+      91,
+      92
     ],
     "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
     "vaylamuoto": [
@@ -130,12 +130,12 @@
         "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
         "tyyppi": "TIE",
         "maakunnat": [
-          "Uusimaa"
+          1
         ],
         "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
         "kunnat": [
-          "Helsinki",
-          " Vantaa"
+          91,
+          92
         ],
         "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
         "vaylamuoto": [
@@ -562,12 +562,12 @@
         "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
         "tyyppi": "TIE",
         "maakunnat": [
-          "Uusimaa"
+          1
         ],
         "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
         "kunnat": [
-          "Helsinki",
-          " Vantaa"
+          91,
+          92
         ],
         "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
         "vaylamuoto": [

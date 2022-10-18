@@ -3,6 +3,8 @@
 exports[`projektiHandler should detect Velho changes successfully 1`] = `
 Object {
   "__typename": "Velho",
+  "kunnat": undefined,
+  "maakunnat": undefined,
   "nimi": "Uusi nimi",
   "varahenkilonEmail": "a2@vayla.fi",
   "vastuuhenkilonEmail": "a1@vayla.fi",
@@ -52,12 +54,12 @@ Object {
     "asiatunnusELY": "ELY/1/2022",
     "asiatunnusVayla": "VAYLA/1/2022",
     "kunnat": Array [
-      "Tampere",
-      "Nokia",
+      837,
+      536,
     ],
     "maakunnat": Array [
-      "Uusimaa",
-      "Pirkanmaa",
+      1,
+      6,
     ],
     "nimi": "Uusi nimi",
     "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",

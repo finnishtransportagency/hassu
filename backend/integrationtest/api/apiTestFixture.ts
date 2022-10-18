@@ -15,20 +15,23 @@ import {
   Yhteystieto,
   YhteystietoInput,
 } from "../../../common/graphql/apiModel";
+import { kuntametadata } from "../../../common/kuntametadata";
+
+const nokia = kuntametadata.idForKuntaName("Nokia");
 
 class ApiTestFixture {
   newNote = "uusi muistiinpano";
 
-  createSuunnitteluSopimusInput = (uploadedFile: string, yhteysHenkilo:string): SuunnitteluSopimusInput => ({
+  createSuunnitteluSopimusInput = (uploadedFile: string, yhteysHenkilo: string): SuunnitteluSopimusInput => ({
     yhteysHenkilo,
-    kunta: "Nokia",
+    kunta: nokia,
     logo: uploadedFile,
   });
 
-  suunnitteluSopimus = (yhteysHenkilo:string): SuunnitteluSopimus => ({
+  suunnitteluSopimus = (yhteysHenkilo: string): SuunnitteluSopimus => ({
     __typename: "SuunnitteluSopimus",
     yhteysHenkilo,
-    kunta: "Nokia",
+    kunta: nokia,
   });
 
   yhteystietoLista: Yhteystieto[] = [
