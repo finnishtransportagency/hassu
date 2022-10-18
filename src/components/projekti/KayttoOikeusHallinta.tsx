@@ -5,12 +5,12 @@ import Button from "@components/button/Button";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import HassuGrid from "@components/HassuGrid";
 import { isAorL } from "backend/src/util/userUtil";
 import { TextFieldWithController } from "@components/form/TextFieldWithController";
 import { Autocomplete, TextField, Checkbox, FormControlLabel, useTheme, useMediaQuery, IconButton, SvgIcon, Stack } from "@mui/material";
 import useDebounceCallback from "src/hooks/useDebounceCallback";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import HassuGrid from "@components/HassuGrid";
 
 // Extend TallennaProjektiInput by making the field nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "kayttoOikeudet">;
@@ -199,7 +199,11 @@ const UserFields = ({ index, disableFields, remove, initialKayttaja, muokattavis
 
   return (
     <SectionContent>
-      <HassuGrid sx={{ width: "100%" }} cols={{ xs: 1, lg: 3 }}>
+      <HassuGrid
+        sx={{
+          gridTemplateColumns: { width: "100%", xs: "1fr", lg: "repeat(3, minmax(max-content, 1fr))" },
+        }}
+      >
         <Controller
           name={`kayttoOikeudet.${index}.kayttajatunnus`}
           render={({ field: { onChange, name, onBlur, ref }, fieldState }) => (
@@ -262,9 +266,8 @@ const UserFields = ({ index, disableFields, remove, initialKayttaja, muokattavis
             {muokattavissa && (
               <div>
                 <IconButton
-                  sx={{ color: "#0064AF", marginTop: 5.5 }}
-                  onClick={(event) => {
-                    event.preventDefault();
+                  sx={{ marginTop: 5.5 }}
+                  onClick={() => {
                     if (muokattavissa) {
                       remove(index);
                     }

@@ -63,17 +63,6 @@ export const createLocalizedTheme = (locale: Localization) =>
             columnGap: 7,
           },
         },
-        MuiTouchRipple: {
-          styleOverrides: {
-            root: {},
-            child: {
-              color: "rgba(0, 100, 175, 0.2)",
-            },
-            ripple: {
-              color: "rgba(0, 100, 175, 0.2)",
-            },
-          },
-        },
         MuiCheckbox: {
           defaultProps: {
             checkedIcon: (
@@ -245,6 +234,28 @@ export const createLocalizedTheme = (locale: Localization) =>
                 "&.Mui-disabled": {
                   color: "#999999",
                 },
+              },
+            },
+          },
+        },
+        MuiIconButton: {
+          styleOverrides: {
+            root: {
+              color: "#0064AF",
+              "&:hover": {
+                backgroundColor: "rgba(0, 153, 255, 0.08)",
+              },
+              "& .MuiTouchRipple-child": {
+                color: "rgba(0, 153, 255, 1)",
+              },
+            },
+            colorPrimary: {
+              color: "#0064AF",
+              "&:hover": {
+                backgroundColor: "rgba(0, 153, 255, 0.08)",
+              },
+              "& .MuiTouchRipple-child": {
+                color: "rgba(0, 153, 255, 1)",
               },
             },
           },
