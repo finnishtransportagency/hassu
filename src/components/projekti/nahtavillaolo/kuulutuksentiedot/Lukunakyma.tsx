@@ -1,4 +1,4 @@
-import { NahtavillaoloVaiheJulkaisu, Kieli, Status } from "@services/api";
+import { NahtavillaoloVaiheJulkaisu, Kieli } from "@services/api";
 import React, { ReactElement } from "react";
 import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
@@ -15,6 +15,7 @@ import { splitFilePath } from "../../../../util/fileUtil";
 import ButtonFlatWithIcon from "@components/button/ButtonFlat";
 import { ProjektiTestCommand } from "../../../../../common/testUtil.dev";
 import { formatDate } from "src/util/dateUtils";
+import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 
 interface Props {
   nahtavillaoloVaiheJulkaisu?: NahtavillaoloVaiheJulkaisu | null;
@@ -42,7 +43,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
   const ensisijaisetPDFt = getPdft(nahtavillaoloVaiheJulkaisu.kielitiedot?.ensisijainenKieli);
   const toissijaisetPDFt = getPdft(nahtavillaoloVaiheJulkaisu.kielitiedot?.toissijainenKieli);
 
-  const epaaktiivinen = projekti.status === Status.EPAAKTIIVINEN;
+  const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
   return (
     <>

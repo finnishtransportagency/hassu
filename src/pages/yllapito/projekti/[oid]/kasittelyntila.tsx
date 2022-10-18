@@ -1,6 +1,6 @@
 import { PageProps } from "@pages/_app";
 import React, { ReactElement, useCallback, useState, useMemo } from "react";
-import { api, HyvaksymispaatosInput, Status, TallennaProjektiInput } from "@services/api";
+import { api, HyvaksymispaatosInput, TallennaProjektiInput } from "@services/api";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
@@ -23,6 +23,7 @@ import cloneDeep from "lodash/cloneDeep";
 import assert from "assert";
 import KasittelynTilaLukutila from "@components/projekti/lukutila/KasittelynTilaLukutila";
 import ExtLink from "@components/ExtLink";
+import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 
 type FormValues = Pick<TallennaProjektiInput, "oid" | "kasittelynTila">;
 
@@ -32,8 +33,7 @@ export default function KasittelyntilaSivu({ setRouteLabels }: PageProps): React
   return (
     <ProjektiPageLayout title="Käsittelyn tila">
       {projekti &&
-        ((projekti.status === Status.EPAAKTIIVINEN && !projekti.nykyinenKayttaja.onYllapitaja) ||
-        !projekti?.nykyinenKayttaja.onYllapitaja ? (
+        ((projektiOnEpaaktiivinen(projekti) && !projekti.nykyinenKayttaja.onYllapitaja) || !projekti?.nykyinenKayttaja.onYllapitaja ? (
           <KasittelynTilaLukutila projekti={projekti} />
         ) : (
           <KasittelyntilaPageContent projekti={projekti} projektiLoadError={projektiLoadError} reloadProjekti={reloadProjekti} />

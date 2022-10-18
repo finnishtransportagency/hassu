@@ -8,13 +8,14 @@ import KuulutuksenTiedot from "@components/projekti/hyvaksyminen/kuulutuksenTied
 import PaatosAineistot from "@components/projekti/hyvaksyminen/aineistot/index";
 import { useProjekti } from "src/hooks/useProjekti";
 import { Link } from "@mui/material";
-import { HyvaksymisPaatosVaiheTila, Status } from "@services/api";
+import { HyvaksymisPaatosVaiheTila } from "@services/api";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
 import Section from "@components/layout/Section";
 import TallentamattomiaMuutoksiaDialog from "@components/TallentamattomiaMuutoksiaDialog";
 import HyvaksymisVaiheAineistotLukutila from "@components/projekti/lukutila/HyvakysmisVaiheAineistotLukutila";
 import Lukunakyma from "@components/projekti/hyvaksyminen/kuulutuksenTiedot/Lukunakyma";
+import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 
 export default function Hyvaksymispaatos({ setRouteLabels }: PageProps): ReactElement {
   useProjektiBreadcrumbs(setRouteLabels);
@@ -58,7 +59,7 @@ export default function Hyvaksymispaatos({ setRouteLabels }: PageProps): ReactEl
     return <></>;
   }
 
-  const epaaktiivinen = projekti.status === Status.EPAAKTIIVINEN;
+  const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
   return (
     <ProjektiPageLayout title="Kuulutus hyväksymispäätöksestä">

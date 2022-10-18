@@ -1,4 +1,4 @@
-import { AloitusKuulutusJulkaisu, AloitusKuulutusTila, Kieli, Status } from "@services/api";
+import { AloitusKuulutusJulkaisu, AloitusKuulutusTila, Kieli } from "@services/api";
 import React, { ReactElement } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import capitalize from "lodash/capitalize";
@@ -14,6 +14,7 @@ import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import ExtLink from "@components/ExtLink";
 import SectionContent from "@components/layout/SectionContent";
 import { formatDate } from "../../../util/dateUtils";
+import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 
 interface Props {
   projekti?: ProjektiLisatiedolla;
@@ -33,7 +34,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
     aloitusKuulutusHref = window.location.protocol + "//" + window.location.host + "/suunnitelma/" + projekti.oid + "/aloituskuulutus";
   }
 
-  const epaaktiivinen = projekti.status === Status.EPAAKTIIVINEN;
+  const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
   return (
     <>
@@ -121,7 +122,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
         )}
         <SectionContent>
           <p className="vayla-label">Kuulutus julkisella puolella</p>
-          {projekti.status === Status.EPAAKTIIVINEN ? (
+          {epaaktiivinen ? (
             <p>
               Kuulutus on ollut nähtävillä palvelun julkisella puolella {formatDate(aloituskuulutusjulkaisu.kuulutusPaiva)}—
               {formatDate(aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen)} välisen ajan.

@@ -7,13 +7,14 @@ import Tabs from "@components/layout/tabs/Tabs";
 import KuulutuksenTiedot from "@components/projekti/nahtavillaolo/kuulutuksentiedot/KuulutuksenTiedot";
 import NahtavilleAsetettavatAineistot from "@components/projekti/nahtavillaolo/nahtavilleAsetettavatAineistot/NahtavilleAsetettavatAineistot";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import { NahtavillaoloVaiheTila, Status } from "@services/api";
+import { NahtavillaoloVaiheTila } from "@services/api";
 import dayjs from "dayjs";
 import SectionContent from "@components/layout/SectionContent";
 import FormatDate from "@components/FormatDate";
 import TallentamattomiaMuutoksiaDialog from "@components/TallentamattomiaMuutoksiaDialog";
 import NahtavillaoloAineistotLukutila from "@components/projekti/lukutila/NahtavillaoloAineistotLukutila";
 import Lukunakyma from "@components/projekti/nahtavillaolo/kuulutuksentiedot/Lukunakyma";
+import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 
 type Props2 = {
   projekti: ProjektiLisatiedolla;
@@ -103,7 +104,7 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
     return <></>;
   }
 
-  const epaaktiivinen = projekti.status === Status.EPAAKTIIVINEN;
+  const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
   const nahtavillaolovaiheJulkaisu = projekti.nahtavillaoloVaiheJulkaisut?.[projekti.nahtavillaoloVaiheJulkaisut.length - 1];
 

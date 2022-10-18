@@ -8,9 +8,9 @@ import SuunnitteluvaiheenVuorovaikuttaminen from "@components/projekti/suunnitte
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import { useProjekti } from "src/hooks/useProjekti";
 import TallentamattomiaMuutoksiaDialog from "@components/TallentamattomiaMuutoksiaDialog";
-import { Status } from "@services/api";
 import SuunnitteluvaiheenPerustiedotLukutila from "@components/projekti/lukutila/SuunnitteluvaiheenPerustiedotLukutila";
 import VuorovaikuttaminenLukutila from "@components/projekti/lukutila/VuorovaikuttaminenLukutila";
+import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 
 export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
   useProjektiBreadcrumbs(setRouteLabels);
@@ -45,19 +45,18 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
       {
         label: "Suunnitteluvaiheen perustiedot",
         tabId: "perustiedot_tab",
-        content:
-          projekti?.status === Status.EPAAKTIIVINEN ? (
-            <SuunnitteluvaiheenPerustiedotLukutila />
-          ) : (
-            <SuunnitteluvaiheenPerustiedot isDirtyHandler={setIsDirty} />
-          ),
+        content: projektiOnEpaaktiivinen(projekti) ? (
+          <SuunnitteluvaiheenPerustiedotLukutila />
+        ) : (
+          <SuunnitteluvaiheenPerustiedot isDirtyHandler={setIsDirty} />
+        ),
       },
     ];
     if (!projekti) {
       return tabs;
     }
 
-    if (projekti.status === Status.EPAAKTIIVINEN) {
+    if (projektiOnEpaaktiivinen(projekti)) {
       projekti?.suunnitteluVaihe?.vuorovaikutukset?.forEach((vuorovaikutus) => {
         tabs.push({
           label: "1. Vuorovaikuttaminen",

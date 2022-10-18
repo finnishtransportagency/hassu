@@ -1,5 +1,5 @@
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { api, Status } from "@services/api";
+import { api } from "@services/api";
 import Button from "@components/button/Button";
 import React, { useState, ReactElement, ReactNode } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
@@ -8,6 +8,7 @@ import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
 import { Stack } from "@mui/material";
 import HassuSpinner from "@components/HassuSpinner";
+import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 
 interface Props {
   children: ReactNode;
@@ -55,7 +56,7 @@ export default function ProjektiPageLayout({ children, title, showUpdateButton }
             {showUpdateButton && <Button onClick={uudelleenLataaProjekit}>Päivitä tiedot</Button>}
           </Stack>
           <h2>{projekti?.velho?.nimi || "-"}</h2>
-          {projekti && projekti.status === Status.EPAAKTIIVINEN ? (
+          {projekti && projektiOnEpaaktiivinen(projekti) ? (
             <Notification type={NotificationType.INFO_GRAY}>
               Projekti on siirtynyt epäaktiiviseen tilaan. Projektille voi luoda jatkokuulutuksen, kun pääkäyttäjä on palauttanut projektin
               aktiiviseen tilaan. Voit seurata suunnitelman käsittelyä Käsittelyn tila -sivulta. Jos sinulla on kysyttävää, ota yhteys
