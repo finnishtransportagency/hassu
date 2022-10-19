@@ -4,7 +4,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { Status } from "@services/api";
 import React, { ReactElement, ReactNode } from "react";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
-import ProjektiJulkinenSideNavigation from "./ProjektiJulkinenSideNavigation";
+import ProjektiJulkinenSideNavigation from "./ProjektiJulkinenSideBar";
 import ProjektiJulkinenStepper from "./ProjektiJulkinenStepper";
 
 interface Props {

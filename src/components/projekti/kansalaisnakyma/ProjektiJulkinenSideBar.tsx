@@ -9,7 +9,7 @@ import useTranslation from "next-translate/useTranslation";
 import { kuntametadata } from "../../../../common/kuntametadata";
 
 export default function ProjektiSideNavigation(): ReactElement {
-  const { t, lang } = useTranslation("projekti");
+  const { t, lang } = useTranslation("projekti-side-navigation");
   const { data: projekti } = useProjektiJulkinen();
   if (!projekti) {
     return <div />;
@@ -31,10 +31,7 @@ export default function ProjektiSideNavigation(): ReactElement {
 
   const getTilaajaLogoImg = () => {
     const viranomainen = velho?.suunnittelustaVastaavaViranomainen;
-    if (
-      Viranomainen.VAYLAVIRASTO === viranomainen ||
-      velho.suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO
-    ) {
+    if (Viranomainen.VAYLAVIRASTO === viranomainen || velho.suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO) {
       return { src: "/vayla_sivussa_fi_sv_rgb.png", alt: t(`common:vaylavirasto`) + " logo" };
     } else {
       return { src: "/ely-logo-vaaka.png", alt: t(`common:ely-keskus`) + " logo" };
@@ -54,33 +51,33 @@ export default function ProjektiSideNavigation(): ReactElement {
             fontWeight: "700",
           }}
         >
-          <h4 className="vayla-title-small mb-0">Suunnitteluhankkeen yhteyshenkilöt</h4>
+          <h4 className="vayla-title-small mb-0">{t("suunnitteluhankkeen_yhteystiedot")}</h4>
         </div>
         <SectionContent className={styles["side-nav-content"]}>
           <HassuStack>
             <img {...getTilaajaLogoImg()} />
-            {kuulutus.yhteystiedot.map((yt, index) => (
-              <div key={yt.etunimi + yt.sukunimi} className="vayla-calling-card">
+            {projekti.projektiHenkilot?.map((yt) => (
+              <div key={yt.nimi} className="vayla-calling-card">
                 <p>{yt.organisaatio}</p>
-                {index == 0 && <p>PROJEKTIPÄÄLLIKKÖ</p> /* yhteystiedoilta puuttuu tittelitieto */}
+                {
+                  !!yt.projektiPaallikko && (
+                    <p className="uppercase">{t("common:rooli.PROJEKTIPAALLIKKO")}</p>
+                  ) /* yhteystiedoilta puuttuu tittelitieto */
+                }
                 <p>
-                  <b>
-                    {yt.etunimi} {yt.sukunimi}
-                  </b>
+                  <b>{yt.nimi}</b>
                 </p>
                 <p>{yt.puhelinnumero}</p>
-                <p>{yt.sahkoposti}</p>
+                <p>{yt.email}</p>
               </div>
             ))}
           </HassuStack>
           {suunnitteluSopimus && (
             <HassuStack>
-              {suunnitteluSopimus.logo && (
-                <img src={suunnitteluSopimus.logo} alt={`${kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, lang)} logo`} />
-              )}
+              {suunnitteluSopimus.logo && <img src={suunnitteluSopimus.logo} alt={`${suunnitteluSopimus.kunta} logo`} />}
               <div className="vayla-calling-card">
                 <p>{kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, lang)}</p>
-                <p>PROJEKTIPÄÄLLIKKÖ</p>
+                <p className="uppercase">{t("common:rooli.PROJEKTIPAALLIKKO")}</p>
                 <p>
                   <b>
                     {suunnitteluSopimus.etunimi} {suunnitteluSopimus.sukunimi}

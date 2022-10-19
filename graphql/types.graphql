@@ -631,12 +631,11 @@ type ProjektiKayttaja {
 }
 
 type ProjektiKayttajaJulkinen {
-  id: String!
   puhelinnumero: String
   email: String!
   organisaatio: String!
   nimi: String!
-  yleinenYhteystieto: Boolean
+  projektiPaallikko: Boolean
 }
 
 enum ProjektiTyyppi {
