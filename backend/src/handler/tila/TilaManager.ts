@@ -32,7 +32,7 @@ export abstract class TilaManager {
       throw new Error("Tuntematon toiminto");
     }
 
-    await emailHandler.sendEmailsByToiminto(toiminto, oid);
+    await emailHandler.sendEmailsByToiminto(toiminto, oid, tyyppi);
 
     return Promise.resolve(undefined);
   }

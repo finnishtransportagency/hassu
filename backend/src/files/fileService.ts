@@ -195,7 +195,8 @@ export class FileService {
    * Only for integration testing
    */
   async deleteProjekti(oid: string): Promise<void> {
-    if (config.env == "localstack") {
+    // Allow only in unit/integration tests
+    if (process.env.S3_ENDPOINT && process.env.S3_ENDPOINT.includes("localhost")) {
       const yllapitoProjektiDirectory = FileService.getYllapitoProjektiDirectory(oid);
       if (!config.yllapitoBucketName) {
         throw new Error("config.yllapitoBucketName määrittelemättä");

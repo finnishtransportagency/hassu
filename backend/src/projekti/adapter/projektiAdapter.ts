@@ -119,6 +119,8 @@ export class ProjektiAdapter {
       nahtavillaoloVaihe,
       kasittelynTila,
       hyvaksymisPaatosVaihe,
+      jatkoPaatos1Vaihe,
+      jatkoPaatos2Vaihe,
     } = changes;
     const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult(projekti);
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
@@ -145,6 +147,18 @@ export class ProjektiAdapter {
           hyvaksymisPaatosVaihe,
           projektiAdaptationResult,
           projekti.hyvaksymisPaatosVaiheJulkaisut?.length
+        ),
+        jatkoPaatos1Vaihe: adaptHyvaksymisPaatosVaiheToSave(
+          projekti.jatkoPaatos1Vaihe,
+          jatkoPaatos1Vaihe,
+          projektiAdaptationResult,
+          projekti.jatkoPaatos1VaiheJulkaisut?.length
+        ),
+        jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaiheToSave(
+          projekti.jatkoPaatos2Vaihe,
+          jatkoPaatos2Vaihe,
+          projektiAdaptationResult,
+          projekti.jatkoPaatos2VaiheJulkaisut?.length
         ),
         kielitiedot,
         euRahoitus,

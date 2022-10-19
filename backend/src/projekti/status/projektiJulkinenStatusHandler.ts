@@ -1,4 +1,5 @@
 import * as API from "../../../../common/graphql/apiModel";
+import { Status } from "../../../../common/graphql/apiModel";
 import { isDateInThePast, parseDate } from "../../util/dateUtil";
 import dayjs from "dayjs";
 import { AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler, StatusHandler } from "./statusHandler";
@@ -64,8 +65,49 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
     }
   })(true, API.Status.EPAAKTIIVINEN_1);
 
+  const jatkoPaatos1 = new (class extends StatusHandler<API.ProjektiJulkinen> {
+    handle(p: API.ProjektiJulkinen) {
+      const jatkoPaatos1Vaihe = projekti.jatkoPaatos1Vaihe;
+      if (jatkoPaatos1Vaihe?.kuulutusPaiva && isDateInThePast(jatkoPaatos1Vaihe.kuulutusPaiva)) {
+        projekti.status = API.Status.JATKOPAATOS_1;
+        super.handle(p); // Continue evaluating next rules
+      }
+    }
+  })();
+
+  const epaAktiivinen2 = new (class extends AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<API.ProjektiJulkinen> {
+    getPaatosVaihe(p: API.ProjektiJulkinen): { kuulutusVaihePaattyyPaiva?: string | null } | null | undefined {
+      return p.jatkoPaatos1Vaihe;
+    }
+  })(false, Status.EPAAKTIIVINEN_2);
+
+  const jatkoPaatos2 = new (class extends StatusHandler<API.ProjektiJulkinen> {
+    handle(p: API.ProjektiJulkinen) {
+      const jatkoPaatos2Vaihe = projekti.jatkoPaatos2Vaihe;
+      if (jatkoPaatos2Vaihe?.kuulutusPaiva && isDateInThePast(jatkoPaatos2Vaihe.kuulutusPaiva)) {
+        projekti.status = API.Status.JATKOPAATOS_2;
+        super.handle(p); // Continue evaluating next rules
+      }
+    }
+  })();
+
+  const epaAktiivinen3 = new (class extends AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<API.ProjektiJulkinen> {
+    getPaatosVaihe(p: API.ProjektiJulkinen): { kuulutusVaihePaattyyPaiva?: string | null } | null | undefined {
+      return p.jatkoPaatos2Vaihe;
+    }
+  })(false, Status.EPAAKTIIVINEN_3);
+
   projekti.status = API.Status.EI_JULKAISTU;
-  aloituskuulutus.setNext(suunnittelu).setNext(nahtavillaOlo).setNext(hyvaksymisMenettelyssa).setNext(hyvaksytty).setNext(epaAktiivinen1);
+  aloituskuulutus
+    .setNext(suunnittelu)
+    .setNext(nahtavillaOlo)
+    .setNext(hyvaksymisMenettelyssa)
+    .setNext(hyvaksytty)
+    .setNext(epaAktiivinen1)
+    .setNext(jatkoPaatos1)
+    .setNext(epaAktiivinen2)
+    .setNext(jatkoPaatos2)
+    .setNext(epaAktiivinen3);
 
   aloituskuulutus.handle(projekti);
 }

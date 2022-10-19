@@ -8,9 +8,9 @@ import {
 } from "../email/emailTemplates";
 import { log } from "../logger";
 import { personSearch } from "../personSearch/personSearchClient";
-import { Kayttaja, Kieli, TilasiirtymaToiminto } from "../../../common/graphql/apiModel";
+import { Kayttaja, Kieli, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
 import Mail from "nodemailer/lib/mailer";
-import { DBProjekti, AloitusKuulutusJulkaisu } from "../database/model";
+import { AloitusKuulutusJulkaisu, DBProjekti } from "../database/model";
 import { createLahetekirjeEmail } from "../email/lahetekirje/lahetekirjeEmailTemplate";
 import { config } from "../config";
 import { Readable } from "stream";
@@ -67,7 +67,7 @@ async function sendWaitingApprovalMail(projekti: DBProjekti): Promise<void> {
   }
 }
 
-async function sendApprovalMailsAndAttachments(projekti: DBProjekti): Promise<void> {
+async function sendAloitusKuulutusApprovalMailsAndAttachments(projekti: DBProjekti): Promise<void> {
   // aloituskuulutusjulkaisu kyllä löytyy
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -123,14 +123,14 @@ async function sendApprovalMailsAndAttachments(projekti: DBProjekti): Promise<vo
     aloituskuulutus.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => {
       viranomainen.lahetetty = aikaleima;
     });
-    await projektiDatabase.updateAloitusKuulutusJulkaisu(projekti, aloituskuulutus);
+    await projektiDatabase.aloitusKuulutusJulkaisut.update(projekti, aloituskuulutus);
   } else {
     log.error("Ilmoitus aloituskuulutuksesta sahkopostin vastaanottajia ei loytynyt");
   }
 }
 
 class EmailHandler {
-  async sendEmailsByToiminto(toiminto: TilasiirtymaToiminto, oid: string): Promise<void> {
+  async sendEmailsByToiminto(toiminto: TilasiirtymaToiminto, oid: string, tyyppi: TilasiirtymaTyyppi): Promise<void> {
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     if (!projekti) {
       throw new Error("Projekti on poistettu tietokannasta!");
@@ -140,7 +140,14 @@ class EmailHandler {
     } else if (toiminto == TilasiirtymaToiminto.HYLKAA) {
       // ei viela maaritelty
     } else if (toiminto == TilasiirtymaToiminto.HYVAKSY) {
-      await sendApprovalMailsAndAttachments(projekti);
+      switch (tyyppi) {
+        case TilasiirtymaTyyppi.ALOITUSKUULUTUS:
+          return await sendAloitusKuulutusApprovalMailsAndAttachments(projekti);
+        case TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE:
+        case TilasiirtymaTyyppi.JATKOPAATOS_1:
+        case TilasiirtymaTyyppi.JATKOPAATOS_2:
+        // TODO lähetä sähköpostit
+      }
     } else {
       throw new Error("Tuntematon toiminto");
     }

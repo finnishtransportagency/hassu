@@ -84,7 +84,7 @@ class NahtavillaoloTilaManager extends TilaManager {
 
     nahtavillaoloVaiheJulkaisu.nahtavillaoloPDFt = await this.generatePDFs(projekti, nahtavillaoloVaiheJulkaisu);
 
-    await projektiDatabase.insertNahtavillaoloVaiheJulkaisu(projekti.oid, nahtavillaoloVaiheJulkaisu);
+    await projektiDatabase.nahtavillaoloVaiheJulkaisut.insert(projekti.oid, nahtavillaoloVaiheJulkaisu);
   }
 
   async approve(projekti: DBProjekti, projektiPaallikko: NykyinenKayttaja): Promise<void> {
@@ -97,7 +97,7 @@ class NahtavillaoloTilaManager extends TilaManager {
     julkaisuWaitingForApproval.tila = NahtavillaoloVaiheTila.HYVAKSYTTY;
     julkaisuWaitingForApproval.hyvaksyja = projektiPaallikko.uid;
 
-    await projektiDatabase.updateNahtavillaoloVaiheJulkaisu(projekti, julkaisuWaitingForApproval);
+    await projektiDatabase.nahtavillaoloVaiheJulkaisut.update(projekti, julkaisuWaitingForApproval);
     await aineistoService.publishNahtavillaolo(projekti.oid, julkaisuWaitingForApproval.id);
   }
 
@@ -115,7 +115,7 @@ class NahtavillaoloTilaManager extends TilaManager {
     await this.deletePDFs(projekti.oid, julkaisuWaitingForApproval.nahtavillaoloPDFt);
 
     await projektiDatabase.saveProjekti({ oid: projekti.oid, nahtavillaoloVaihe });
-    await projektiDatabase.deleteNahtavillaoloVaiheJulkaisu(projekti, julkaisuWaitingForApproval.id);
+    await projektiDatabase.nahtavillaoloVaiheJulkaisut.delete(projekti, julkaisuWaitingForApproval.id);
   }
 
   private async generatePDFs(

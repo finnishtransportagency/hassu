@@ -7,7 +7,7 @@ import { localDocumentClient } from "../util/databaseUtil";
 export enum FixtureName {
   NAHTAVILLAOLO = "NAHTAVILLAOLO",
   HYVAKSYMISPAATOS_APPROVED = "HYVAKSYMISPAATOS_APPROVED",
-  EPAAKTIIVINEN_1 = "EPAAKTIIVINEN_1",
+  "JATKOPAATOS_1_ALKU" = "JATKOPAATOS_1_ALKU",
 }
 
 export const MOCKED_TIMESTAMP = "2020-01-01T00:00:00+02:00";
@@ -18,7 +18,12 @@ export async function recordProjektiTestFixture(fixtureName: string | FixtureNam
     replaceFieldsByName(dbProjekti, MOCKED_TIMESTAMP, "tuotu", "paivitetty", "kuulutusVaihePaattyyPaiva", "lahetetty");
     replaceFieldsByName(dbProjekti, "salt123", "salt");
 
-    const oldValue = readRecord(fixtureName);
+    let oldValue: string | undefined;
+    try {
+      oldValue = readRecord(fixtureName);
+    } catch (e) {
+      // ignore
+    }
     delete dbProjekti.tallennettu;
     const currentValue = JSON.stringify(dbProjekti, null, 2);
     // Prevent updating file timestamp so that running tests with "watch" don't get into infinite loop
@@ -30,7 +35,7 @@ export async function recordProjektiTestFixture(fixtureName: string | FixtureNam
   }
 }
 
-function readRecord(fixtureName: string | FixtureName) {
+function readRecord(fixtureName: string | FixtureName): string {
   const buffer = fs.readFileSync(createRecordFileName(fixtureName));
   return buffer.toString("utf-8");
 }

@@ -237,7 +237,7 @@ describe("asiakirjaService", async () => {
       kayttoOikeudet: projektiToTestWith.kayttoOikeudet,
       suunnitteluSopimus: projektiToTestWith.suunnitteluSopimus,
       kasittelynTila: projektiToTestWith.kasittelynTila,
-      hyvaksymisPaatosVaihe: asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projekti),
+      hyvaksymisPaatosVaihe: asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projekti, projekti.hyvaksymisPaatosVaihe),
       kieli,
       luonnos: true,
       asiakirjaTyyppi,

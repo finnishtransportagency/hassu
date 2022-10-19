@@ -1,10 +1,17 @@
-import { AloitusKuulutusJulkaisu, DBProjekti, HyvaksymisPaatosVaiheJulkaisu, NahtavillaoloVaiheJulkaisu, Velho } from "../database/model";
+import {
+  AloitusKuulutusJulkaisu,
+  DBProjekti,
+  HyvaksymisPaatosVaihe,
+  HyvaksymisPaatosVaiheJulkaisu,
+  NahtavillaoloVaiheJulkaisu,
+  Velho,
+} from "../database/model";
 import cloneDeep from "lodash/cloneDeep";
 import { AloitusKuulutusTila, HyvaksymisPaatosVaiheTila, NahtavillaoloVaiheTila } from "../../../common/graphql/apiModel";
 import { adaptStandardiYhteystiedotToYhteystiedot } from "../util/adaptStandardiYhteystiedot";
 import { findJulkaisuWithTila, findUserByKayttajatunnus } from "../projekti/projektiUtil";
 import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../projekti/adapter/adaptToAPI";
-import assert from "assert";
+import { assertIsDefined } from "../util/assertions";
 
 function createNextAloitusKuulutusJulkaisuID(dbProjekti: DBProjekti) {
   if (!dbProjekti.aloitusKuulutusJulkaisut) {
@@ -55,9 +62,12 @@ export class AsiakirjaAdapter {
     throw new Error("NahtavillaoloVaihe puuttuu");
   }
 
-  adaptHyvaksymisPaatosVaiheJulkaisu(dbProjekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu {
-    if (dbProjekti.hyvaksymisPaatosVaihe) {
-      const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.hyvaksymisPaatosVaihe;
+  adaptHyvaksymisPaatosVaiheJulkaisu(
+    dbProjekti: DBProjekti,
+    hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | null | undefined
+  ): HyvaksymisPaatosVaiheJulkaisu {
+    if (hyvaksymisPaatosVaihe) {
+      const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, ...includedFields } = hyvaksymisPaatosVaihe;
       return {
         ...includedFields,
         velho: adaptVelho(dbProjekti),
@@ -68,7 +78,7 @@ export class AsiakirjaAdapter {
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
       };
     }
-    throw new Error("NahtavillaoloVaihe puuttuu");
+    throw new Error("HyvaksymisPaatosVaihe puuttuu");
   }
 
   migrateAloitusKuulutusJulkaisu(dbProjekti: DBProjekti): AloitusKuulutusJulkaisu {
@@ -103,6 +113,18 @@ export class AsiakirjaAdapter {
     }
   }
 
+  findJatkoPaatos1VaiheWaitingForApproval(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
+    if (projekti.jatkoPaatos1VaiheJulkaisut) {
+      return findJulkaisuWithTila(projekti.jatkoPaatos1VaiheJulkaisut, HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA);
+    }
+  }
+
+  findJatkoPaatos2VaiheWaitingForApproval(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
+    if (projekti.jatkoPaatos2VaiheJulkaisut) {
+      return findJulkaisuWithTila(projekti.jatkoPaatos2VaiheJulkaisut, HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA);
+    }
+  }
+
   findAloitusKuulutusLastApproved(projekti: DBProjekti): AloitusKuulutusJulkaisu | undefined {
     if (projekti.aloitusKuulutusJulkaisut) {
       return findJulkaisuWithTila(projekti.aloitusKuulutusJulkaisut, AloitusKuulutusTila.HYVAKSYTTY);
@@ -111,7 +133,7 @@ export class AsiakirjaAdapter {
 }
 
 function adaptVelho(dbProjekti: DBProjekti): Velho {
-  assert(dbProjekti.velho);
+  assertIsDefined(dbProjekti.velho);
   return cloneDeep(dbProjekti.velho);
 }
 

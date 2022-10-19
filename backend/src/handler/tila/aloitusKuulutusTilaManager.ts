@@ -65,7 +65,7 @@ class AloitusKuulutusTilaManager extends TilaManager {
 
     await this.generatePDFs(projekti, aloitusKuulutusJulkaisu);
 
-    await projektiDatabase.insertAloitusKuulutusJulkaisu(projekti.oid, aloitusKuulutusJulkaisu);
+    await projektiDatabase.aloitusKuulutusJulkaisut.insert(projekti.oid, aloitusKuulutusJulkaisu);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {
@@ -82,7 +82,7 @@ class AloitusKuulutusTilaManager extends TilaManager {
     // @ts-ignore
     await this.deletePDFs(projekti.oid, julkaisuWaitingForApproval.aloituskuulutusPDFt);
     await projektiDatabase.saveProjekti({ oid: projekti.oid, aloitusKuulutus });
-    await projektiDatabase.deleteAloitusKuulutusJulkaisu(projekti, julkaisuWaitingForApproval.id);
+    await projektiDatabase.aloitusKuulutusJulkaisut.delete(projekti, julkaisuWaitingForApproval.id);
   }
 
   async approve(projekti: DBProjekti, projektiPaallikko: NykyinenKayttaja): Promise<void> {
@@ -103,7 +103,7 @@ class AloitusKuulutusTilaManager extends TilaManager {
       await fileService.publishProjektiFile(projekti.oid, logoFilePath, logoFilePath, parseDate(julkaisuWaitingForApproval.kuulutusPaiva));
     }
 
-    await projektiDatabase.updateAloitusKuulutusJulkaisu(projekti, julkaisuWaitingForApproval);
+    await projektiDatabase.aloitusKuulutusJulkaisut.update(projekti, julkaisuWaitingForApproval);
   }
 
   private async generatePDFs(projekti: DBProjekti, julkaisuWaitingForApproval: AloitusKuulutusJulkaisu) {

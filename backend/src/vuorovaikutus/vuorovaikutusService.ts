@@ -100,9 +100,6 @@ class VuorovaikutusService {
     await projektiDatabase.saveProjekti({ oid, vuorovaikutukset: [vuorovaikutus] });
 
     const suunnitteluSopimus = projektiInDB.suunnitteluSopimus;
-    if (!suunnitteluSopimus) {
-      throw new Error("suunnitteluSopimus puuttuu");
-    }
     const velho = projektiInDB.velho;
     const kielitiedot = projektiInDB.kielitiedot;
     const suunnitteluVaihe = projektiInDB.suunnitteluVaihe;
@@ -114,7 +111,7 @@ class VuorovaikutusService {
       asiakirjanMuoto,
       kielitiedot,
       velho,
-      suunnitteluSopimus,
+      suunnitteluSopimus: suunnitteluSopimus || undefined,
       suunnitteluVaihe,
       vuorovaikutus,
       kieli: projektiInDB.kielitiedot.ensisijainenKieli,

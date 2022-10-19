@@ -28,6 +28,9 @@ export abstract class PathTuple {
 export class ProjektiPaths extends PathTuple {
   static PATH_NAHTAVILLAOLO = "nahtavillaolo";
   static PATH_HYVAKSYMISPAATOS = "hyvaksymispaatos";
+  static PATH_JATKOPAATOS1 = "jatkopaatos1";
+  static PATH_JATKOPAATOS2 = "jatkopaatos2";
+
   private readonly oid: string;
 
   public constructor(oid: string) {
@@ -57,6 +60,14 @@ export class ProjektiPaths extends PathTuple {
 
   hyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | HyvaksymisPaatosVaiheJulkaisu): HyvaksymisPaatosVaihePaths {
     return new HyvaksymisPaatosVaihePaths(this, ProjektiPaths.PATH_HYVAKSYMISPAATOS, hyvaksymisPaatosVaihe);
+  }
+
+  jatkoPaatos1Vaihe(hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | HyvaksymisPaatosVaiheJulkaisu): HyvaksymisPaatosVaihePaths {
+    return new HyvaksymisPaatosVaihePaths(this, ProjektiPaths.PATH_JATKOPAATOS1, hyvaksymisPaatosVaihe);
+  }
+
+  jatkoPaatos2Vaihe(hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | HyvaksymisPaatosVaiheJulkaisu): HyvaksymisPaatosVaihePaths {
+    return new HyvaksymisPaatosVaihePaths(this, ProjektiPaths.PATH_JATKOPAATOS2, hyvaksymisPaatosVaihe);
   }
 }
 
@@ -135,7 +146,7 @@ class VersionedPaths<T extends { id: number }> extends PathTuple {
   }
 }
 
-class HyvaksymisPaatosVaihePaths extends VersionedPaths<HyvaksymisPaatosVaihe | HyvaksymisPaatosVaiheJulkaisu> {
+export class HyvaksymisPaatosVaihePaths extends VersionedPaths<HyvaksymisPaatosVaihe | HyvaksymisPaatosVaiheJulkaisu> {
   get paatos(): PathTuple {
     return new (class extends PathTuple {
       get publicPath(): string {

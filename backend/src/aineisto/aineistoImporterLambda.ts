@@ -11,6 +11,7 @@ import * as AWSXRay from "aws-xray-sdk-core";
 import { aineistoService } from "./aineistoService";
 import {
   Aineisto,
+  DBProjekti,
   HyvaksymisPaatosVaihe,
   HyvaksymisPaatosVaiheJulkaisu,
   NahtavillaoloVaihe,
@@ -20,53 +21,50 @@ import {
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import * as mime from "mime-types";
 import { AxiosStatic } from "axios";
+import { findJulkaisuWithId } from "../projekti/projektiUtil";
 
 let axios: AxiosStatic;
 
 async function handleVuorovaikutusAineisto(oid: string, vuorovaikutus: Vuorovaikutus): Promise<boolean> {
   const filePathInProjekti = new ProjektiPaths(oid).vuorovaikutus(vuorovaikutus).aineisto;
-  let hasEsittelyAineistotChanges = false;
-  let hasSuunnitelmaluonnoksetChanges = false;
-  if (vuorovaikutus.esittelyaineistot) {
-    hasEsittelyAineistotChanges = await handleAineistot(oid, vuorovaikutus.esittelyaineistot, filePathInProjekti);
-  }
-  if (vuorovaikutus.suunnitelmaluonnokset) {
-    hasSuunnitelmaluonnoksetChanges = await handleAineistot(oid, vuorovaikutus.suunnitelmaluonnokset, filePathInProjekti);
-  }
+  const hasEsittelyAineistotChanges = await handleAineistot(oid, vuorovaikutus.esittelyaineistot, filePathInProjekti);
+  const hasSuunnitelmaluonnoksetChanges = await handleAineistot(oid, vuorovaikutus.suunnitelmaluonnokset, filePathInProjekti);
   return hasEsittelyAineistotChanges || hasSuunnitelmaluonnoksetChanges;
 }
 
-async function handleNahtavillaoloVaiheAineistot(oid: string, nahtavillaoloVaihe: NahtavillaoloVaihe): Promise<boolean> {
+async function handleNahtavillaoloVaiheAineistot(
+  oid: string,
+  nahtavillaoloVaihe: NahtavillaoloVaihe | null | undefined
+): Promise<NahtavillaoloVaihe | undefined> {
+  if (!nahtavillaoloVaihe) {
+    return undefined;
+  }
   const paths = new ProjektiPaths(oid).nahtavillaoloVaihe(nahtavillaoloVaihe);
-  let aineistoNahtavillaChanges = false;
-  let lisaAineistoChanges = false;
-
-  if (nahtavillaoloVaihe.aineistoNahtavilla) {
-    aineistoNahtavillaChanges = await handleAineistot(oid, nahtavillaoloVaihe.aineistoNahtavilla, paths);
+  const aineistoNahtavillaChanges = await handleAineistot(oid, nahtavillaoloVaihe.aineistoNahtavilla, paths);
+  const lisaAineistoChanges = await handleAineistot(oid, nahtavillaoloVaihe.lisaAineisto, paths);
+  if (aineistoNahtavillaChanges || lisaAineistoChanges) {
+    return nahtavillaoloVaihe;
   }
-
-  if (nahtavillaoloVaihe.lisaAineisto) {
-    lisaAineistoChanges = await handleAineistot(oid, nahtavillaoloVaihe.lisaAineisto, paths);
-  }
-  return aineistoNahtavillaChanges || lisaAineistoChanges;
 }
 
-async function handleHyvaksymisPaatosVaiheAineistot(oid: string, hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe): Promise<boolean> {
-  let aineistoNahtavillaChanges = false;
-  let hyvaksymisPaatosChanges = false;
-  const hyvaksymisPaatosVaihePaths = new ProjektiPaths(oid).hyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe);
-
-  if (hyvaksymisPaatosVaihe.aineistoNahtavilla) {
-    aineistoNahtavillaChanges = await handleAineistot(oid, hyvaksymisPaatosVaihe.aineistoNahtavilla, hyvaksymisPaatosVaihePaths);
+async function handleHyvaksymisPaatosVaiheAineistot(
+  projekti: DBProjekti,
+  fieldName: keyof Pick<DBProjekti, "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe">
+): Promise<HyvaksymisPaatosVaihe | undefined> {
+  const hyvaksymisPaatosVaihe = projekti[fieldName];
+  if (!hyvaksymisPaatosVaihe) {
+    return undefined;
   }
-
-  if (hyvaksymisPaatosVaihe.hyvaksymisPaatos) {
-    hyvaksymisPaatosChanges = await handleAineistot(oid, hyvaksymisPaatosVaihe.hyvaksymisPaatos, hyvaksymisPaatosVaihePaths.paatos);
+  const oid = projekti.oid;
+  const hyvaksymisPaatosVaihePaths = new ProjektiPaths(oid)[fieldName](hyvaksymisPaatosVaihe);
+  const aineistoNahtavillaChanges = await handleAineistot(oid, hyvaksymisPaatosVaihe.aineistoNahtavilla, hyvaksymisPaatosVaihePaths);
+  const hyvaksymisPaatosChanges = await handleAineistot(oid, hyvaksymisPaatosVaihe.hyvaksymisPaatos, hyvaksymisPaatosVaihePaths.paatos);
+  if (hyvaksymisPaatosChanges || aineistoNahtavillaChanges) {
+    return hyvaksymisPaatosVaihe;
   }
-  return hyvaksymisPaatosChanges || aineistoNahtavillaChanges;
 }
 
-async function handleAineistot(oid: string, aineistot: Aineisto[] | undefined, paths: PathTuple): Promise<boolean> {
+async function handleAineistot(oid: string, aineistot: Aineisto[] | null | undefined, paths: PathTuple): Promise<boolean> {
   if (!aineistot) {
     return false;
   }
@@ -129,16 +127,91 @@ async function handleNahtavillaoloVaihe(
   nahtavillaoloVaiheJulkaisut: NahtavillaoloVaiheJulkaisu[],
   publishNahtavillaoloWithId: number
 ) {
-  const nahtavillaoloVaiheJulkaisu = nahtavillaoloVaiheJulkaisut?.filter((julkaisu) => julkaisu.id == publishNahtavillaoloWithId).pop();
+  const nahtavillaoloVaiheJulkaisu = findJulkaisuWithId(nahtavillaoloVaiheJulkaisut, publishNahtavillaoloWithId);
   if (nahtavillaoloVaiheJulkaisu) {
     await aineistoService.synchronizeNahtavillaoloVaiheJulkaisuAineistoToPublic(oid, nahtavillaoloVaiheJulkaisu);
   }
 }
 
 async function handleHyvaksymisPaatosVaihe(oid: string, julkaisut: HyvaksymisPaatosVaiheJulkaisu[], publishJulkaisuWithId: number) {
-  const julkaisu = julkaisut?.filter((j) => j.id == publishJulkaisuWithId).pop();
+  const julkaisu = findJulkaisuWithId(julkaisut, publishJulkaisuWithId);
   if (julkaisu) {
-    await aineistoService.synchronizeHyvaksymisPaatosVaiheJulkaisuAineistoToPublic(oid, julkaisu);
+    await aineistoService.synchronizeHyvaksymisPaatosVaiheJulkaisuAineistoToPublic(
+      oid,
+      julkaisu,
+      new ProjektiPaths(oid).hyvaksymisPaatosVaihe(julkaisu)
+    );
+  }
+}
+
+async function handleJatkoPaatos1Vaihe(oid: string, julkaisut: HyvaksymisPaatosVaiheJulkaisu[], publishJulkaisuWithId: number) {
+  const julkaisu = findJulkaisuWithId(julkaisut, publishJulkaisuWithId);
+  if (julkaisu) {
+    await aineistoService.synchronizeHyvaksymisPaatosVaiheJulkaisuAineistoToPublic(
+      oid,
+      julkaisu,
+      new ProjektiPaths(oid).jatkoPaatos1Vaihe(julkaisu)
+    );
+  }
+}
+
+async function handleJatkoPaatos2Vaihe(oid: string, julkaisut: HyvaksymisPaatosVaiheJulkaisu[], publishJulkaisuWithId: number) {
+  const julkaisu = findJulkaisuWithId(julkaisut, publishJulkaisuWithId);
+  if (julkaisu) {
+    await aineistoService.synchronizeHyvaksymisPaatosVaiheJulkaisuAineistoToPublic(
+      oid,
+      julkaisu,
+      new ProjektiPaths(oid).jatkoPaatos2Vaihe(julkaisu)
+    );
+  }
+}
+
+async function handleImport(projekti: DBProjekti) {
+  const oid = projekti.oid;
+  if (projekti.vuorovaikutukset) {
+    await handleVuorovaikutukset(oid, projekti.vuorovaikutukset);
+  }
+
+  const nahtavillaoloVaihe = await handleNahtavillaoloVaiheAineistot(projekti.oid, projekti.nahtavillaoloVaihe);
+  const hyvaksymisPaatosVaihe = await handleHyvaksymisPaatosVaiheAineistot(projekti, "hyvaksymisPaatosVaihe");
+  const jatkoPaatos1Vaihe = await handleHyvaksymisPaatosVaiheAineistot(projekti, "jatkoPaatos1Vaihe");
+  const jatkoPaatos2Vaihe = await handleHyvaksymisPaatosVaiheAineistot(projekti, "jatkoPaatos2Vaihe");
+
+  await projektiDatabase.saveProjekti({
+    oid,
+    nahtavillaoloVaihe,
+    hyvaksymisPaatosVaihe,
+    jatkoPaatos1Vaihe,
+    jatkoPaatos2Vaihe,
+  });
+}
+
+async function handlePublish(aineistoEvent: ImportAineistoEvent, projekti: DBProjekti) {
+  const oid = projekti.oid;
+  if (
+    aineistoEvent.type == ImportAineistoEventType.PUBLISH_NAHTAVILLAOLO &&
+    aineistoEvent.publishNahtavillaoloWithId &&
+    projekti.nahtavillaoloVaiheJulkaisut
+  ) {
+    await handleNahtavillaoloVaihe(oid, projekti.nahtavillaoloVaiheJulkaisut, aineistoEvent.publishNahtavillaoloWithId);
+  } else if (
+    aineistoEvent.type == ImportAineistoEventType.PUBLISH_HYVAKSYMISPAATOS &&
+    aineistoEvent.publishHyvaksymisPaatosWithId &&
+    projekti.hyvaksymisPaatosVaiheJulkaisut
+  ) {
+    await handleHyvaksymisPaatosVaihe(oid, projekti.hyvaksymisPaatosVaiheJulkaisut, aineistoEvent.publishHyvaksymisPaatosWithId);
+  } else if (
+    aineistoEvent.type == ImportAineistoEventType.PUBLISH_JATKOPAATOS1 &&
+    aineistoEvent.publishJatkoPaatos1WithId &&
+    projekti.jatkoPaatos1VaiheJulkaisut
+  ) {
+    await handleJatkoPaatos1Vaihe(oid, projekti.jatkoPaatos1VaiheJulkaisut, aineistoEvent.publishJatkoPaatos1WithId);
+  } else if (
+    aineistoEvent.type == ImportAineistoEventType.PUBLISH_JATKOPAATOS2 &&
+    aineistoEvent.publishJatkoPaatos2WithId &&
+    projekti.jatkoPaatos2VaiheJulkaisut
+  ) {
+    await handleJatkoPaatos2Vaihe(oid, projekti.jatkoPaatos2VaiheJulkaisut, aineistoEvent.publishJatkoPaatos2WithId);
   }
 }
 
@@ -159,40 +232,9 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
         }
 
         if (aineistoEvent.type == ImportAineistoEventType.IMPORT) {
-          if (projekti.vuorovaikutukset) {
-            await handleVuorovaikutukset(oid, projekti.vuorovaikutukset);
-          }
-
-          const nahtavillaoloVaihe = projekti.nahtavillaoloVaihe;
-          if (nahtavillaoloVaihe) {
-            if (await handleNahtavillaoloVaiheAineistot(projekti.oid, nahtavillaoloVaihe)) {
-              await projektiDatabase.saveProjekti({
-                oid,
-                nahtavillaoloVaihe,
-              });
-            }
-          }
-          const hyvaksymisPaatosVaihe = projekti.hyvaksymisPaatosVaihe;
-          if (hyvaksymisPaatosVaihe) {
-            if (await handleHyvaksymisPaatosVaiheAineistot(projekti.oid, hyvaksymisPaatosVaihe)) {
-              await projektiDatabase.saveProjekti({
-                oid,
-                hyvaksymisPaatosVaihe,
-              });
-            }
-          }
-        } else if (
-          aineistoEvent.type == ImportAineistoEventType.PUBLISH_NAHTAVILLAOLO &&
-          aineistoEvent.publishNahtavillaoloWithId &&
-          projekti.nahtavillaoloVaiheJulkaisut
-        ) {
-          await handleNahtavillaoloVaihe(oid, projekti.nahtavillaoloVaiheJulkaisut, aineistoEvent.publishNahtavillaoloWithId);
-        } else if (
-          aineistoEvent.type == ImportAineistoEventType.PUBLISH_HYVAKSYMISPAATOS &&
-          aineistoEvent.publishHyvaksymisPaatosWithId &&
-          projekti.hyvaksymisPaatosVaiheJulkaisut
-        ) {
-          await handleHyvaksymisPaatosVaihe(oid, projekti.hyvaksymisPaatosVaiheJulkaisut, aineistoEvent.publishHyvaksymisPaatosWithId);
+          await handleImport(projekti);
+        } else {
+          await handlePublish(aineistoEvent, projekti);
         }
       }
     } finally {

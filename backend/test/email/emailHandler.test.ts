@@ -1,6 +1,6 @@
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
-import { TilasiirtymaToiminto } from "../../../common/graphql/apiModel";
+import { TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { emailClient } from "../../src/email/email";
 import { emailHandler } from "../../src/handler/emailHandler";
@@ -24,7 +24,7 @@ describe("emailHandler", () => {
     sendEmailStub = sinon.stub(emailClient, "sendEmail");
     getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
     loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
-    updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase, "updateAloitusKuulutusJulkaisu");
+    updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
   });
 
   afterEach(() => {
@@ -60,7 +60,11 @@ describe("emailHandler", () => {
 
     describe("sendWaitingApprovalMail", () => {
       it("should send email to projektipaallikko succesfully", async () => {
-        await emailHandler.sendEmailsByToiminto(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, fixture.PROJEKTI2_OID);
+        await emailHandler.sendEmailsByToiminto(
+          TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+          fixture.PROJEKTI2_OID,
+          TilasiirtymaTyyppi.ALOITUSKUULUTUS
+        );
 
         sinon.assert.calledOnce(sendEmailStub);
         sinon.assert.calledWith(sendEmailStub, {
@@ -83,7 +87,7 @@ describe("emailHandler", () => {
           Body: new Readable(),
         });
 
-        await emailHandler.sendEmailsByToiminto(TilasiirtymaToiminto.HYVAKSY, fixture.PROJEKTI2_OID);
+        await emailHandler.sendEmailsByToiminto(TilasiirtymaToiminto.HYVAKSY, fixture.PROJEKTI2_OID, TilasiirtymaTyyppi.ALOITUSKUULUTUS);
 
         expectAwsCalls(getObjectStub);
         sinon.assert.callCount(sendEmailStub, 3);
