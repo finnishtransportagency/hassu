@@ -2,7 +2,9 @@ import { TextField, TextFieldProps } from "@mui/material";
 import React from "react";
 import { FieldValues, UseControllerProps, useController } from "react-hook-form";
 
-type TextFieldWithControllerProps<TFieldValues> = TextFieldProps & { controllerProps: UseControllerProps<TFieldValues> };
+type TextFieldWithControllerProps<TFieldValues extends FieldValues> = TextFieldProps & {
+  controllerProps: UseControllerProps<TFieldValues>;
+};
 
 export const TextFieldWithController = <TFieldValues extends FieldValues>({
   controllerProps,
