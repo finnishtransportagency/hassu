@@ -22,10 +22,14 @@ import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakir
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
 
 export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends TilaManager {
-  async removeRejectionReasonIfExists(projekti: DBProjekti, jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe): Promise<void> {
-    if (jatkoPaatos1Vaihe.palautusSyy) {
-      jatkoPaatos1Vaihe.palautusSyy = null;
-      await projektiDatabase.saveProjekti({ oid: projekti.oid, jatkoPaatos1Vaihe });
+  async removeRejectionReasonIfExists(
+    projekti: DBProjekti,
+    key: "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe" | "hyvaksymisPaatosVaihe",
+    hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe
+  ): Promise<void> {
+    if (hyvaksymisPaatosVaihe.palautusSyy) {
+      hyvaksymisPaatosVaihe.palautusSyy = null;
+      await projektiDatabase.saveProjekti({ oid: projekti.oid, [key]: hyvaksymisPaatosVaihe });
     }
   }
 

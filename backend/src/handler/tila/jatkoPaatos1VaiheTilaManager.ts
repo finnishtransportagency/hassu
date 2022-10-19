@@ -13,7 +13,7 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
       throw new Error("JatkoPaatos1Vaihe on jo olemassa odottamassa hyväksyntää");
     }
 
-    await this.removeRejectionReasonIfExists(projekti, this.getHyvaksymisPaatosVaihe(projekti));
+    await this.removeRejectionReasonIfExists(projekti, "jatkoPaatos1Vaihe", this.getHyvaksymisPaatosVaihe(projekti));
 
     const julkaisu = asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projekti, projekti.jatkoPaatos1Vaihe);
     if (!julkaisu.ilmoituksenVastaanottajat) {
@@ -37,7 +37,7 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     if (!julkaisu) {
       throw new Error("Ei JatkoPaatos1Vaihetta odottamassa hyväksyntää");
     }
-    await this.removeRejectionReasonIfExists(projekti, hyvaksymisPaatosVaihe);
+    await this.removeRejectionReasonIfExists(projekti, "jatkoPaatos1Vaihe", hyvaksymisPaatosVaihe);
     julkaisu.tila = HyvaksymisPaatosVaiheTila.HYVAKSYTTY;
     julkaisu.hyvaksyja = projektiPaallikko.uid;
 
