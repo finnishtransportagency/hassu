@@ -7,7 +7,7 @@ import SectionContent from "@components/layout/SectionContent";
 import { Viranomainen } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 
-export default function ProjektiSideNavigation(): ReactElement {
+export default function ProjektiJulkinenSideBar(): ReactElement {
   const { t } = useTranslation("projekti");
   const { data: projekti } = useProjektiJulkinen();
   if (!projekti) {
@@ -30,10 +30,7 @@ export default function ProjektiSideNavigation(): ReactElement {
 
   const getTilaajaLogoImg = () => {
     const viranomainen = velho?.suunnittelustaVastaavaViranomainen;
-    if (
-      Viranomainen.VAYLAVIRASTO === viranomainen ||
-      velho.suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO
-    ) {
+    if (Viranomainen.VAYLAVIRASTO === viranomainen || velho.suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO) {
       return { src: "/vayla_sivussa_fi_sv_rgb.png", alt: t(`common:vaylavirasto`) + " logo" };
     } else {
       return { src: "/ely-logo-vaaka.png", alt: t(`common:ely-keskus`) + " logo" };
@@ -58,28 +55,28 @@ export default function ProjektiSideNavigation(): ReactElement {
         <SectionContent className={styles["side-nav-content"]}>
           <HassuStack>
             <img {...getTilaajaLogoImg()} />
-            {kuulutus.yhteystiedot.map((yt, index) => (
-              <div key={yt.etunimi + yt.sukunimi} className="vayla-calling-card">
+            {projekti.projektiHenkilot?.map((yt) => (
+              <div key={yt.nimi} className="vayla-calling-card">
                 <p>{yt.organisaatio}</p>
-                {index == 0 && <p>PROJEKTIPÄÄLLIKKÖ</p> /* yhteystiedoilta puuttuu tittelitieto */}
+                {
+                  !!yt.projektiPaallikko && (
+                    <p className="uppercase">{t("common:rooli.PROJEKTIPAALLIKKO")}</p>
+                  ) /* yhteystiedoilta puuttuu tittelitieto */
+                }
                 <p>
-                  <b>
-                    {yt.etunimi} {yt.sukunimi}
-                  </b>
+                  <b>{yt.nimi}</b>
                 </p>
                 <p>{yt.puhelinnumero}</p>
-                <p>{yt.sahkoposti}</p>
+                <p>{yt.email}</p>
               </div>
             ))}
           </HassuStack>
           {suunnitteluSopimus && (
             <HassuStack>
-              {suunnitteluSopimus.logo && (
-                <img src={suunnitteluSopimus.logo} alt={`${suunnitteluSopimus.kunta} logo`} />
-              )}
+              {suunnitteluSopimus.logo && <img src={suunnitteluSopimus.logo} alt={`${suunnitteluSopimus.kunta} logo`} />}
               <div className="vayla-calling-card">
                 <p>{suunnitteluSopimus.kunta}</p>
-                <p>PROJEKTIPÄÄLLIKKÖ</p>
+                <p className="uppercase">{t("common:rooli.PROJEKTIPAALLIKKO")}</p>
                 <p>
                   <b>
                     {suunnitteluSopimus.etunimi} {suunnitteluSopimus.sukunimi}
