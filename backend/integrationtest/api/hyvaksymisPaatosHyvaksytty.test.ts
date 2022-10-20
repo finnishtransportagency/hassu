@@ -110,7 +110,7 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
 
     const epaAktiivinenProjekti1 = await projektiDatabase.loadProjektiByOid(oid);
     assertIsDefined(epaAktiivinenProjekti1);
-    expect(epaAktiivinenProjekti1!.ajastettuTarkistus).to.eql("2101-01-01T23:59:00+02:00"); // MOCKED_TIMESTAMP + 1 year
+    expect(epaAktiivinenProjekti1!.ajastettuTarkistus).to.eql("2101-01-01T23:59:59+02:00"); // MOCKED_TIMESTAMP + 1 year
     // TODO Aineistot poistetaan vuosi epäaktiivisen olon jälkeen
 
     await lisaaKasittelynTilaJatkopaatos1({

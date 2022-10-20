@@ -10,22 +10,30 @@ const DEFAULT_TIMEZONE = "Europe/Helsinki";
 process.env.TZ = DEFAULT_TIMEZONE;
 dayjs.tz.setDefault(DEFAULT_TIMEZONE);
 
+export type DateAddTuple = [number, ManipulateType];
+export type DefaultTimeTo = "end-of-day" | "start-of-day";
+
 export const ISO_DATE_FORMAT = "YYYY-MM-DD";
+
+export function isDateStringLackingTimeElement(dateString: string): boolean {
+  return dateString.length === ISO_DATE_FORMAT.length;
+}
+
 const DATE_TIME_FORMAT = "YYYY-MM-DDTHH:mm";
 
-export function parseDate(date: string): Dayjs {
-  let d: Dayjs;
-  if (date.length == ISO_DATE_FORMAT.length) {
-    d = dayjs(date, ISO_DATE_FORMAT, true).tz(DEFAULT_TIMEZONE, true);
-    if (d.isValid()) {
-      return d;
+export function parseDate(dateString: string): Dayjs {
+  let date: Dayjs;
+  if (isDateStringLackingTimeElement(dateString)) {
+    date = dayjs(dateString, ISO_DATE_FORMAT, true).tz(DEFAULT_TIMEZONE, true);
+    if (date.isValid()) {
+      return date;
     }
   }
-  d = dayjs(date, DATE_TIME_FORMAT, true).tz(DEFAULT_TIMEZONE, true);
-  if (d.isValid()) {
-    return d;
+  date = dayjs(dateString, DATE_TIME_FORMAT, true).tz(DEFAULT_TIMEZONE, true);
+  if (date.isValid()) {
+    return date;
   }
-  return dayjs(date).tz(DEFAULT_TIMEZONE, true);
+  return dayjs(dateString).tz(DEFAULT_TIMEZONE, true);
 }
 
 export function dateToString(date: Dayjs): string {
@@ -40,23 +48,30 @@ export function localDateTimeString(): string {
   return dayjs().tz().format(DATE_TIME_FORMAT);
 }
 
-export function isDateInThePast(dateString: string | undefined, value?: number, unit?: ManipulateType): boolean {
-  const date = parseAndAddDate(dateString, value, unit);
+export function isDateTimeInThePast(
+  dateString: string | undefined,
+  defaultTimeToEndOfDay?: DefaultTimeTo | undefined,
+  ...dateAddTuples: DateAddTuple[]
+): boolean {
+  const date = parseAndAddDateTime(dateString, defaultTimeToEndOfDay, ...dateAddTuples);
   if (date) {
     return date.isBefore(dayjs());
   }
   return false;
 }
 
-export function parseAndAddDate(dateString: string | undefined, value?: number, unit?: ManipulateType): Dayjs | undefined {
+export function parseAndAddDateTime(
+  dateString: string | undefined,
+  defaultTimeToEndOfDay?: DefaultTimeTo | undefined,
+  ...dateAddTuples: DateAddTuple[]
+): Dayjs | undefined {
   if (dateString) {
-    // Support times as well for testing, so do not set the time if it was already provided
     let date = parseDate(dateString);
-    if (value && unit) {
+    dateAddTuples.forEach(([value, unit]) => {
       date = date.add(value, unit);
-    }
-    if (dateString.length == ISO_DATE_FORMAT.length) {
-      date = date.set("hour", 23).set("minute", 59);
+    });
+    if (defaultTimeToEndOfDay === "end-of-day" && isDateStringLackingTimeElement(dateString)) {
+      date = date.endOf("day");
     }
     return date;
   }

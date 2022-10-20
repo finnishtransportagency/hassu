@@ -6,7 +6,7 @@ import { log } from "../../logger";
 import { perustiedotValidationSchema } from "../../../../src/schemas/perustiedot";
 import { findJulkaisutWithTila, findJulkaisuWithTila } from "../projektiUtil";
 import { AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler, StatusHandler } from "./statusHandler";
-import { isDateInThePast } from "../../util/dateUtil";
+import { isDateTimeInThePast } from "../../util/dateUtil";
 
 export function applyProjektiStatus(projekti: API.Projekti): void {
   const perustiedot = new (class extends StatusHandler<API.Projekti> {
@@ -67,7 +67,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
     handle(p: API.Projekti) {
       const nahtavillaoloVaihe = findJulkaisuWithTila(p.nahtavillaoloVaiheJulkaisut, NahtavillaoloVaiheTila.HYVAKSYTTY);
       const nahtavillaoloKuulutusPaattyyInThePast =
-        nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva && isDateInThePast(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva);
+        nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva && isDateTimeInThePast(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva);
 
       if (nahtavillaoloKuulutusPaattyyInThePast) {
         p.status = API.Status.HYVAKSYMISMENETTELYSSA;
@@ -83,7 +83,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
 
       const nahtavillaoloVaihe = findJulkaisuWithTila(p.nahtavillaoloVaiheJulkaisut, NahtavillaoloVaiheTila.HYVAKSYTTY);
       const nahtavillaoloKuulutusPaattyyInThePast =
-        nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva && isDateInThePast(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva);
+        nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva && isDateTimeInThePast(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva);
 
       if (hasHyvaksymisPaatos && nahtavillaoloKuulutusPaattyyInThePast) {
         p.status = API.Status.HYVAKSYTTY;
