@@ -29,4 +29,9 @@ describe("Metadata", () => {
 
     expect(tampere!.maakuntaId).to.eq(pirkanmaa!.id);
   });
+
+  it("should tolerate upper-, and lowercase variations", () => {
+    const joroinen = kuntametadata.idForKuntaName("JOROINEN");
+    expect(joroinen).to.eq(171);
+  });
 });

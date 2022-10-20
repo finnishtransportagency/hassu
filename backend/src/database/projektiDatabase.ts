@@ -309,7 +309,12 @@ export class ProjektiDatabase {
     }
   }
 
-  async deleteJulkaisuFromList(projekti: DBProjekti, julkaisuIdToDelete: number, listFieldName: JulkaisutFieldName, description: string) {
+  async deleteJulkaisuFromList(
+    projekti: DBProjekti,
+    julkaisuIdToDelete: number,
+    listFieldName: JulkaisutFieldName,
+    description: string
+  ): Promise<void> {
     const julkaisut = projekti[listFieldName];
     if (!julkaisut) {
       return;

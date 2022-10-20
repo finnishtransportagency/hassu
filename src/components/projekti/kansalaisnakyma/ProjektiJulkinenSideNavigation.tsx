@@ -6,9 +6,10 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import { Viranomainen } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
+import { kuntametadata } from "../../../../common/kuntametadata";
 
 export default function ProjektiSideNavigation(): ReactElement {
-  const { t } = useTranslation("projekti");
+  const { t, lang } = useTranslation("projekti");
   const { data: projekti } = useProjektiJulkinen();
   if (!projekti) {
     return <div />;
@@ -22,10 +23,10 @@ export default function ProjektiSideNavigation(): ReactElement {
 
   let sijainti = "";
   if (velho.maakunnat) {
-    sijainti = sijainti + velho.maakunnat.join(", ") + "; ";
+    sijainti = sijainti + kuntametadata.namesForMaakuntaIds(velho.maakunnat, lang).join(", ") + "; ";
   }
   if (velho.kunnat) {
-    sijainti = sijainti + velho.kunnat.join(", ");
+    sijainti = sijainti + kuntametadata.namesForKuntaIds(velho.kunnat, lang).join(", ");
   }
 
   const getTilaajaLogoImg = () => {
@@ -75,10 +76,10 @@ export default function ProjektiSideNavigation(): ReactElement {
           {suunnitteluSopimus && (
             <HassuStack>
               {suunnitteluSopimus.logo && (
-                <img src={suunnitteluSopimus.logo} alt={`${suunnitteluSopimus.kunta} logo`} />
+                <img src={suunnitteluSopimus.logo} alt={`${kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, lang)} logo`} />
               )}
               <div className="vayla-calling-card">
-                <p>{suunnitteluSopimus.kunta}</p>
+                <p>{kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, lang)}</p>
                 <p>PROJEKTIPÄÄLLIKKÖ</p>
                 <p>
                   <b>

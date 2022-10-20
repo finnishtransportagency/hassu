@@ -57,8 +57,8 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
           kieli: Kieli.SUOMI,
           sivunumero: Math.max(0, sivu - 1),
           nimi: vapaasanahaku,
-          kunta: [Number(kunta)],
-          maakunta: [Number(maakunta)],
+          kunta: kunta ? [Number(kunta)] : undefined,
+          maakunta: maakunta ? [Number(maakunta)] : undefined,
           vaylamuoto: vaylamuoto ? [vaylamuoto] : undefined,
         });
         log.info("listProjektit:", result);

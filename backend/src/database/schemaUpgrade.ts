@@ -13,18 +13,30 @@ function isValueArrayOfStringsOrNumbers(value: unknown) {
 export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
   return cloneDeepWith(projekti, (value, key) => {
     if (key == "kunta") {
-      return kuntametadata.idForKuntaName(value);
+      try {
+        return kuntametadata.idForKuntaName(value);
+      } catch (e) {
+        return 0;
+      }
     }
     if (key == "kunnat") {
       if (isValueArrayOfStringsOrNumbers(value)) {
-        return kuntametadata.idsForKuntaNames(value);
+        try {
+          return kuntametadata.idsForKuntaNames(value);
+        } catch (e) {
+          return [];
+        }
       }
     }
     if (key == "maakunnat") {
       if (isValueArrayOfStringsOrNumbers(value)) {
-        return kuntametadata.idsForMaakuntaNames(value);
+        try {
+          return kuntametadata.idsForMaakuntaNames(value);
+        } catch (e) {
+          return [];
+        }
       }
     }
-    return value;
+    return undefined;
   });
 }

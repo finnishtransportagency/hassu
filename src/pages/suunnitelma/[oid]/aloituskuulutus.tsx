@@ -16,9 +16,10 @@ import useProjektiBreadcrumbsJulkinen from "src/hooks/useProjektiBreadcrumbsJulk
 import { splitFilePath } from "../../../util/fileUtil";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import formatYhteystiedotText from "src/util/formatYhteystiedotText";
+import { kuntametadata } from "../../../../common/kuntametadata";
 
 export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): ReactElement {
-  const { t } = useTranslation("projekti");
+  const { t, lang } = useTranslation("projekti");
   const { data: projekti } = useProjektiJulkinen();
   const kuulutus = projekti?.aloitusKuulutusJulkaisut?.[0];
   const velho = kuulutus?.velho;
@@ -33,10 +34,10 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
 
   let sijainti = "";
   if (velho.maakunnat) {
-    sijainti = sijainti + velho.maakunnat.join(", ") + "; ";
+    sijainti = sijainti + kuntametadata.namesForMaakuntaIds(velho.maakunnat, lang).join(", ") + "; ";
   }
   if (velho.kunnat) {
-    sijainti = sijainti + velho.kunnat.join(", ");
+    sijainti = sijainti + kuntametadata.namesForKuntaIds(velho.kunnat, lang).join(", ");
   }
   const yhteystiedot = formatYhteystiedotText(kuulutus.yhteystiedot);
   const keyValueData: KeyValueData[] = [
@@ -73,7 +74,7 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
             <SectionContent>
               {suunnittelusopimus && (
                 <p>
-                  {suunnittelusopimus.kunta} ja {t(`vastaava-viranomainen.${velho.suunnittelustaVastaavaViranomainen}`)}{" "}
+                  {kuntametadata.nameForKuntaId(suunnittelusopimus.kunta, lang)} ja {t(`vastaava-viranomainen.${velho.suunnittelustaVastaavaViranomainen}`)}{" "}
                   {t(`info.ei-rata.aloittavat_yleissuunnitelman_laatimisen`)}
                 </p>
               )}

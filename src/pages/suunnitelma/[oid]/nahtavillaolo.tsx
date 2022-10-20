@@ -16,9 +16,10 @@ import useProjektiBreadcrumbsJulkinen from "src/hooks/useProjektiBreadcrumbsJulk
 import Trans from "next-translate/Trans";
 import KansalaisenAineistoNakyma from "@components/projekti/common/KansalaisenAineistoNakyma";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
+import { kuntametadata } from "../../../../common/kuntametadata";
 
 export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactElement {
-  const { t } = useTranslation("projekti");
+  const { t, lang } = useTranslation("projekti");
   const { data: projekti } = useProjektiJulkinen();
   const kuulutus = projekti?.nahtavillaoloVaihe;
 
@@ -34,10 +35,10 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
 
   let sijainti = "";
   if (velho.maakunnat) {
-    sijainti = sijainti + velho.maakunnat.join(", ") + "; ";
+    sijainti = sijainti + kuntametadata.namesForMaakuntaIds(velho.maakunnat, lang).join(", ") + "; ";
   }
   if (velho.kunnat) {
-    sijainti = sijainti + velho.kunnat.join(", ");
+    sijainti = sijainti + kuntametadata.namesForKuntaIds(velho.kunnat, lang).join(", ");
   }
 
   const keyValueData: KeyValueData[] = [

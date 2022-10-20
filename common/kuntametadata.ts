@@ -37,24 +37,26 @@ export type Maakunta = {
   nimi: RequiredLocalizedMap<string>;
 };
 
-const sykeKuntaIdToLocalizedNimi = ()=> sykeKunnat.value.reduce((kunnat, kunta) => {
-  kunnat[kunta.Kunta_Id] = {
-    [Kieli.SUOMI]: kunta.Nimi,
-    [Kieli.RUOTSI]: kunta.NimiRuo,
-  };
-  return kunnat;
-}, {} as Record<number, RequiredLocalizedMap<string>>);
+const sykeKuntaIdToLocalizedNimi = () =>
+  sykeKunnat.value.reduce((kunnat, kunta) => {
+    kunnat[kunta.Kunta_Id] = {
+      [Kieli.SUOMI]: kunta.Nimi,
+      [Kieli.RUOTSI]: kunta.NimiRuo,
+    };
+    return kunnat;
+  }, {} as Record<number, RequiredLocalizedMap<string>>);
 
-const sykeMaakuntaIdToMaakunta = ()=> sykeMaakunnat.value.reduce((maakunnat, maakunta) => {
-  maakunnat[maakunta.Maakunta_Id] = {
-    nimi: {
-      [Kieli.SUOMI]: maakunta.Nimi,
-      [Kieli.RUOTSI]: maakunta.NimiRuo,
-    },
-    elyId: maakunta.Ely_Id,
-  };
-  return maakunnat;
-}, {} as Record<number, { nimi: RequiredLocalizedMap<string>; elyId: number }>);
+const sykeMaakuntaIdToMaakunta = () =>
+  sykeMaakunnat.value.reduce((maakunnat, maakunta) => {
+    maakunnat[maakunta.Maakunta_Id] = {
+      nimi: {
+        [Kieli.SUOMI]: maakunta.Nimi,
+        [Kieli.RUOTSI]: maakunta.NimiRuo,
+      },
+      elyId: maakunta.Ely_Id,
+    };
+    return maakunnat;
+  }, {} as Record<number, { nimi: RequiredLocalizedMap<string>; elyId: number }>);
 
 abstract class AbstractLocalCache<T> {
   private readonly mapCacheKey: string;
@@ -177,8 +179,8 @@ class KuntaMetadata {
     if (typeof name == "number") {
       return name;
     }
-    let trimmedName = name.trim();
-    let kunta = kuntametadata.kunnat.list.find((kunta) => kunta.nimi.SUOMI == trimmedName);
+    let trimmedName = name.trim().toLowerCase();
+    let kunta = kuntametadata.kunnat.list.find((kunta) => kunta.nimi.SUOMI.toLowerCase() == trimmedName);
     if (kunta) {
       return kunta.id;
     }
@@ -283,16 +285,15 @@ class KuntaMetadata {
 }
 
 function normalizeKieli(kieli: Kieli | string): Kieli {
-  if (typeof kieli == "string") {
-    if (kieli == "sv") {
+  switch (kieli) {
+    case Kieli.RUOTSI:
+    case "sv":
       return Kieli.RUOTSI;
-    }
-    if (kieli == "se") {
+    case Kieli.SAAME:
+    case "se":
       return Kieli.SAAME;
-    }
-    return Kieli.SUOMI;
-  } else {
-    return kieli;
+    default:
+      return Kieli.SUOMI;
   }
 }
 

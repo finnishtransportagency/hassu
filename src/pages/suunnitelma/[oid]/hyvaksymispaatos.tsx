@@ -11,9 +11,10 @@ import ExtLink from "@components/ExtLink";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { Stack } from "@mui/material";
 import KansalaisenAineistoNakyma from "../../../components/projekti/common/KansalaisenAineistoNakyma";
+import { kuntametadata } from "../../../../common/kuntametadata";
 
 export default function Hyvaksymispaatos(): ReactElement {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const { data: projekti } = useProjektiJulkinen();
   const kuulutus = projekti?.hyvaksymisPaatosVaihe;
   const velho = kuulutus?.velho;
@@ -23,10 +24,10 @@ export default function Hyvaksymispaatos(): ReactElement {
 
   let sijainti = "";
   if (velho.maakunnat) {
-    sijainti = sijainti + velho.maakunnat.join(", ") + "; ";
+    sijainti = sijainti + kuntametadata.namesForMaakuntaIds(velho.maakunnat, lang).join(", ") + "; ";
   }
   if (velho.kunnat) {
-    sijainti = sijainti + velho.kunnat.join(", ");
+    sijainti = sijainti + kuntametadata.namesForKuntaIds(velho.kunnat, lang).join(", ");
   }
 
   const aikavali = `${formatDate(kuulutus.kuulutusPaiva)} - ${formatDate(kuulutus.kuulutusVaihePaattyyPaiva)}`;
