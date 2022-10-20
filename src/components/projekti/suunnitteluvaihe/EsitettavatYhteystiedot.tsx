@@ -54,7 +54,7 @@ export default function EsitettavatYhteystiedot({ vuorovaikutusnro }: Props): Re
       <Section>
         <SectionContent>
           <p className="vayla-label mb-5">Vuorovaikuttamisen yhteyshenkilöt</p>
-          <StandardiYhteystiedotListana standardiYhteystiedot={v.esitettavatYhteystiedot} />
+          <StandardiYhteystiedotListana projekti={projekti} standardiYhteystiedot={v.esitettavatYhteystiedot} />
         </SectionContent>
       </Section>
     );

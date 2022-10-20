@@ -1,5 +1,5 @@
 import { PageProps } from "@pages/_app";
-import React, { ReactElement, useCallback, useMemo, useState } from "react";
+import React, { ReactElement, useCallback, useState, useMemo } from "react";
 import { api, HyvaksymispaatosInput, TallennaProjektiInput } from "@services/api";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
@@ -21,6 +21,9 @@ import { TextField } from "@mui/material";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import cloneDeep from "lodash/cloneDeep";
 import assert from "assert";
+import KasittelynTilaLukutila from "@components/projekti/lukutila/KasittelynTilaLukutila";
+import ExtLink from "@components/ExtLink";
+import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 
 type FormValues = Pick<TallennaProjektiInput, "oid" | "kasittelynTila">;
 
@@ -29,7 +32,12 @@ export default function KasittelyntilaSivu({ setRouteLabels }: PageProps): React
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
   return (
     <ProjektiPageLayout title="Käsittelyn tila">
-      {projekti && <KasittelyntilaPageContent projekti={projekti} projektiLoadError={projektiLoadError} reloadProjekti={reloadProjekti} />}
+      {projekti &&
+        ((projektiOnEpaaktiivinen(projekti) && !projekti.nykyinenKayttaja.onYllapitaja) || !projekti?.nykyinenKayttaja.onYllapitaja ? (
+          <KasittelynTilaLukutila projekti={projekti} />
+        ) : (
+          <KasittelyntilaPageContent projekti={projekti} projektiLoadError={projektiLoadError} reloadProjekti={reloadProjekti} />
+        ))}
     </ProjektiPageLayout>
   );
 }
@@ -122,14 +130,15 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     [reloadProjekti, reset, showErrorMessage, showSuccessMessage]
   );
 
-  //TODO: lukutila, nyt valiaikaisesti ei-admineille disabled kentat ja painikkeet
+  const velhoURL = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + projekti.oid;
+
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Section>
           <p>
             Pääkäyttäjä lisää sivulle tietoa suunnitelman hallinnollisellisen käsittelyn tiloista, jotka ovat nähtävissä lukutilassa muille
-            järjestelmän käyttäjille. Tiedot siirtyvät Käsittelyn tila -sivulta Projektivelhoon.
+            järjestelmän käyttäjille. Tiedot siirtyvät Käsittelyn tila -sivulta <ExtLink href={velhoURL}>Projektivelhosta</ExtLink>.
           </p>
           <SectionContent>
             <h5 className="vayla-small-title">Hyväksymispäätös</h5>

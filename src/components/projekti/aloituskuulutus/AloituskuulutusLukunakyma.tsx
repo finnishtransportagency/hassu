@@ -10,44 +10,53 @@ import IlmoituksenVastaanottajat from "./IlmoituksenVastaanottajat";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
 import Section from "@components/layout/Section";
+import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import ExtLink from "@components/ExtLink";
+import SectionContent from "@components/layout/SectionContent";
+import { formatDate } from "../../../util/dateUtils";
+import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 
 interface Props {
-  oid?: string;
+  projekti?: ProjektiLisatiedolla;
   aloituskuulutusjulkaisu?: AloitusKuulutusJulkaisu | null;
   isLoadingProjekti: boolean;
 }
 
-export default function AloituskuulutusLukunakyma({
-  aloituskuulutusjulkaisu,
-  oid,
-  isLoadingProjekti,
-}: Props): ReactElement {
-  if (!aloituskuulutusjulkaisu || !oid) {
+export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, projekti, isLoadingProjekti }: Props): ReactElement {
+  if (!aloituskuulutusjulkaisu || !projekti) {
     return <></>;
   }
 
   let { kuulutusPaiva, published } = examineKuulutusPaiva(aloituskuulutusjulkaisu?.kuulutusPaiva);
 
+  let aloitusKuulutusHref: string | undefined;
+  if (published) {
+    aloitusKuulutusHref = window.location.protocol + "//" + window.location.host + "/suunnitelma/" + projekti.oid + "/aloituskuulutus";
+  }
+
+  const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
+
   return (
     <>
       <Section>
-        {!published && aloituskuulutusjulkaisu.tila === AloitusKuulutusTila.HYVAKSYTTY && (
-          <Notification type={NotificationType.WARN}>
-            Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä {kuulutusPaiva}
-          </Notification>
-        )}
-        {published && aloituskuulutusjulkaisu.tila === AloitusKuulutusTila.HYVAKSYTTY && (
-          <Notification type={NotificationType.INFO_GREEN}>
-            Aloituskuulutus on julkaistu {kuulutusPaiva}. Projekti näytetään kuulutuspäivästä lasketun määräajan jälkeen
-            palvelun julkisella puolella suunnittelussa olevana. Kuulutusvaihe päättyy{" "}
-            <FormatDate date={aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen} />.
-          </Notification>
-        )}
-        {aloituskuulutusjulkaisu.tila !== AloitusKuulutusTila.HYVAKSYTTY && (
-          <Notification type={NotificationType.WARN}>
-            Aloituskuulutus on hyväksyttävänä projektipäälliköllä. Jos kuulutusta tarvitsee muokata, ota yhteys
-            projektipäällikköön.
-          </Notification>
+        {!epaaktiivinen && (
+          <>
+            {!published && aloituskuulutusjulkaisu.tila === AloitusKuulutusTila.HYVAKSYTTY && (
+              <Notification type={NotificationType.WARN}>Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä {kuulutusPaiva}</Notification>
+            )}
+            {published && aloituskuulutusjulkaisu.tila === AloitusKuulutusTila.HYVAKSYTTY && (
+              <Notification type={NotificationType.INFO_GREEN}>
+                Aloituskuulutus on julkaistu {kuulutusPaiva}. Projekti näytetään kuulutuspäivästä lasketun määräajan jälkeen palvelun
+                julkisella puolella suunnittelussa olevana. Kuulutusvaihe päättyy{" "}
+                <FormatDate date={aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen} />.
+              </Notification>
+            )}
+            {aloituskuulutusjulkaisu.tila !== AloitusKuulutusTila.HYVAKSYTTY && (
+              <Notification type={NotificationType.WARN}>
+                Aloituskuulutus on hyväksyttävänä projektipäälliköllä. Jos kuulutusta tarvitsee muokata, ota yhteys projektipäällikköön.
+              </Notification>
+            )}
+          </>
         )}
         {aloituskuulutusjulkaisu.suunnitteluSopimus && (
           <Notification type={NotificationType.INFO_GRAY}>
@@ -59,9 +68,7 @@ export default function AloituskuulutusLukunakyma({
             {capitalize(aloituskuulutusjulkaisu.suunnitteluSopimus.etunimi)}{" "}
             {capitalize(aloituskuulutusjulkaisu.suunnitteluSopimus.sukunimi)}, puh.{" "}
             {aloituskuulutusjulkaisu.suunnitteluSopimus.puhelinnumero},{" "}
-            {aloituskuulutusjulkaisu.suunnitteluSopimus.email
-              ? replace(aloituskuulutusjulkaisu.suunnitteluSopimus.email, "@", "[at]")
-              : ""}
+            {aloituskuulutusjulkaisu.suunnitteluSopimus.email ? replace(aloituskuulutusjulkaisu.suunnitteluSopimus.email, "@", "[at]") : ""}
           </Notification>
         )}
         <div className="grid grid-cols-1 md:grid-cols-4">
@@ -74,8 +81,8 @@ export default function AloituskuulutusLukunakyma({
         </div>
         <div>
           <p className="vayla-label">
-            Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (
-            {lowerCase(aloituskuulutusjulkaisu.kielitiedot?.ensisijainenKieli)})
+            Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä ({lowerCase(aloituskuulutusjulkaisu.kielitiedot?.ensisijainenKieli)}
+            )
           </p>
           <p>
             {aloituskuulutusjulkaisu.kielitiedot?.ensisijainenKieli === Kieli.SUOMI
@@ -106,15 +113,34 @@ export default function AloituskuulutusLukunakyma({
           ))}
         </div>
       </Section>
-      <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} />
       <Section>
         {aloituskuulutusjulkaisu.tila !== AloitusKuulutusTila.HYVAKSYTTY && (
-          <AloituskuulutusPDFEsikatselu oid={oid} aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} />
+          <AloituskuulutusPDFEsikatselu oid={projekti.oid} aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} />
         )}
         {aloituskuulutusjulkaisu.tila === AloitusKuulutusTila.HYVAKSYTTY && (
-          <AloituskuulutusTiedostot aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} oid={oid} />
+          <AloituskuulutusTiedostot aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} oid={projekti.oid} epaaktiivinen={epaaktiivinen} />
         )}
+        <SectionContent>
+          <p className="vayla-label">Kuulutus julkisella puolella</p>
+          {epaaktiivinen ? (
+            <p>
+              Kuulutus on ollut nähtävillä palvelun julkisella puolella {formatDate(aloituskuulutusjulkaisu.kuulutusPaiva)}—
+              {formatDate(aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen)} välisen ajan.
+            </p>
+          ) : (
+            <>
+              {!published && <p>Linkki julkiselle puolelle muodostetaan kuulutuspäivänä. Kuulutuspäivä on {kuulutusPaiva}.</p>}
+              {published && (
+                <p>
+                  <ExtLink href={aloitusKuulutusHref}>Kuulutus palvelun julkisella puolella</ExtLink>
+                </p>
+              )}
+            </>
+          )}
+        </SectionContent>
       </Section>
+
+      <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} />
     </>
   );
 }

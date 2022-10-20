@@ -30,6 +30,8 @@ import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import { Stack } from "@mui/material";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
+import ProjektinTiedotLukutila from "@components/projekti/lukutila/ProjektinTiedotLukutila";
+import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -51,9 +53,15 @@ export default function ProjektiSivu({ setRouteLabels }: PageProps) {
   useProjektiBreadcrumbs(setRouteLabels);
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
 
+  const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
   return (
-    <ProjektiPageLayout title={"Projektin tiedot"} showUpdateButton>
-      {projekti && <ProjektiSivuLomake {...{ projekti, projektiLoadError, reloadProjekti }} />}
+    <ProjektiPageLayout title={"Projektin tiedot"} showUpdateButton={!epaaktiivinen}>
+      {projekti &&
+        (epaaktiivinen ? (
+          <ProjektinTiedotLukutila projekti={projekti} />
+        ) : (
+          <ProjektiSivuLomake {...{ projekti, projektiLoadError, reloadProjekti }} />
+        ))}
     </ProjektiPageLayout>
   );
 }

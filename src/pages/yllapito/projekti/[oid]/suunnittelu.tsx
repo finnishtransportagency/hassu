@@ -8,6 +8,9 @@ import SuunnitteluvaiheenVuorovaikuttaminen from "@components/projekti/suunnitte
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import { useProjekti } from "src/hooks/useProjekti";
 import TallentamattomiaMuutoksiaDialog from "@components/TallentamattomiaMuutoksiaDialog";
+import SuunnitteluvaiheenPerustiedotLukutila from "@components/projekti/lukutila/SuunnitteluvaiheenPerustiedotLukutila";
+import VuorovaikuttaminenLukutila from "@components/projekti/lukutila/VuorovaikuttaminenLukutila";
+import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 
 export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
   useProjektiBreadcrumbs(setRouteLabels);
@@ -42,14 +45,27 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
       {
         label: "Suunnitteluvaiheen perustiedot",
         tabId: "perustiedot_tab",
-        content: <SuunnitteluvaiheenPerustiedot isDirtyHandler={setIsDirty} />,
+        content: projektiOnEpaaktiivinen(projekti) ? (
+          <SuunnitteluvaiheenPerustiedotLukutila />
+        ) : (
+          <SuunnitteluvaiheenPerustiedot isDirtyHandler={setIsDirty} />
+        ),
       },
     ];
     if (!projekti) {
       return tabs;
     }
 
-    if (!projekti.suunnitteluVaihe?.vuorovaikutukset?.length) {
+    if (projektiOnEpaaktiivinen(projekti)) {
+      projekti?.suunnitteluVaihe?.vuorovaikutukset?.forEach((vuorovaikutus) => {
+        tabs.push({
+          label: "1. Vuorovaikuttaminen",
+          tabId: "1_vuorovaikuttaminen_tab",
+          disabled: false,
+          content: <VuorovaikuttaminenLukutila vuorovaikutusnro={vuorovaikutus.vuorovaikutusNumero} />,
+        });
+      });
+    } else if (!projekti.suunnitteluVaihe?.vuorovaikutukset?.length) {
       tabs.push({
         label: "1. Vuorovaikuttaminen",
         tabId: "1_vuorovaikuttaminen_tab",

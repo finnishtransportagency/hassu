@@ -12,9 +12,11 @@ import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { splitFilePath } from "../../../../util/fileUtil";
 import { Link } from "@mui/material";
 import lowerCase from "lodash/lowerCase";
-import IlmoituksenVastaanottajatLukutila from "./IlmoituksenVastaanottajatLukutila";
+import IlmoituksenVastaanottajatLukutila from "../../common/IlmoituksenVastaanottajatLukutila";
 import ButtonFlatWithIcon from "@components/button/ButtonFlat";
 import { ProjektiTestCommand } from "../../../../../common/testUtil.dev";
+import { formatDate } from "src/util/dateUtils";
+import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 
 interface Props {
   hyvaksymisPaatosVaiheJulkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
@@ -35,6 +37,8 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
   if (!hyvaksymisPaatosVaiheJulkaisu || !projekti) {
     return <></>;
   }
+
+  const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
   let { kuulutusPaiva, published } = examineKuulutusPaiva(hyvaksymisPaatosVaiheJulkaisu.kuulutusPaiva);
   let hyvaksymisPaatosVaiheHref: string | undefined;
@@ -95,7 +99,8 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
       </Section>
       <Section>
         <SectionContent>
-          <p className="vayla-label mb-5">Kuulutuksen yhteyshenkilöt</p>
+          <p className="vayla-label">Kuulutuksen yhteyshenkilöt</p>
+          <p></p>
           {hyvaksymisPaatosVaiheJulkaisu.yhteystiedot?.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
               {capitalize(yhteystieto.etunimi)} {capitalize(yhteystieto.sukunimi)}, puh. {yhteystieto.puhelinnumero},{" "}
@@ -103,90 +108,117 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
             </p>
           ))}
         </SectionContent>
-        <SectionContent>
-          <p className="vayla-label mb-5">Kuulutus julkisella puolella</p>
-          {!published && <p>Linkki julkiselle puolelle muodostetaan kuulutuspäivänä. Kuulutuspäivä on {kuulutusPaiva}.</p>}
-          {published && <ExtLink href={hyvaksymisPaatosVaiheHref}>Kuulutus palvelun julkisella puolella</ExtLink>}
-        </SectionContent>
-        <SectionContent>
-          <p className="vayla-label">Ladattavat kuulutukset ja ilmoitukset</p>
-          <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({lowerCase(hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.ensisijainenKieli)})</p>
-          {ensisijaisetPDFt && (
-            <div className="flex flex-col mb-4">
-              <div>
-                <Link underline="none" href={ensisijaisetPDFt.hyvaksymisKuulutusPDFPath} target="_blank">
-                  {splitFilePath(ensisijaisetPDFt.hyvaksymisKuulutusPDFPath).fileName}
-                </Link>
-              </div>
-              <div>
-                <Link underline="none" href={ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath} target="_blank">
-                  {splitFilePath(ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath).fileName}
-                </Link>
-              </div>
-              <div>
-                <Link
-                  underline="none"
-                  href={ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath}
-                  target="_blank"
-                >
-                  {splitFilePath(ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath).fileName}
-                </Link>
-              </div>
-              <div>
-                <Link underline="none" href={ensisijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath} target="_blank">
-                  {splitFilePath(ensisijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath).fileName}
-                </Link>
-              </div>
-              <div>
-                <Link underline="none" href={ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath} target="_blank">
-                  {splitFilePath(ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath).fileName}
-                </Link>
-              </div>
-            </div>
-          )}
-
-          {hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.toissijainenKieli && (
-            <div className="content mb-4">
+        {epaaktiivinen ? (
+          <SectionContent>
+            <p className="vayla-label">Kuulutus julkisella puolella</p>
+            <p>
+              Kuulutus on ollut nähtävillä julkisella puolella {formatDate(hyvaksymisPaatosVaiheJulkaisu.kuulutusPaiva)}—
+              {formatDate(hyvaksymisPaatosVaiheJulkaisu.kuulutusVaihePaattyyPaiva)} välisen ajan.
+            </p>
+          </SectionContent>
+        ) : (
+          <SectionContent>
+            <p className="vayla-label">Kuulutus julkisella puolella</p>
+            {!published && <p>Linkki julkiselle puolelle muodostetaan kuulutuspäivänä. Kuulutuspäivä on {kuulutusPaiva}.</p>}
+            {published && (
               <p>
-                Kuulutus ja ilmoitus toissijaisella kielellä ({lowerCase(hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.toissijainenKieli)})
+                <ExtLink href={hyvaksymisPaatosVaiheHref}>Kuulutus palvelun julkisella puolella</ExtLink>
               </p>
-              {toissijaisetPDFt && (
-                <div className="flex flex-col">
-                  <div>
-                    <Link underline="none" href={toissijaisetPDFt.hyvaksymisKuulutusPDFPath} target="_blank">
-                      {splitFilePath(toissijaisetPDFt.hyvaksymisKuulutusPDFPath).fileName}
-                    </Link>
-                  </div>
-                  <div>
-                    <Link underline="none" href={toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath} target="_blank">
-                      {splitFilePath(toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath).fileName}
-                    </Link>
-                  </div>
-                  <div>
-                    <Link
-                      underline="none"
-                      href={toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath}
-                      target="_blank"
-                    >
-                      {splitFilePath(toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath).fileName}
-                    </Link>
-                  </div>
-                  <div>
-                    <Link underline="none" href={toissijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath} target="_blank">
-                      {splitFilePath(toissijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath).fileName}
-                    </Link>
-                  </div>
-                  <div>
-                    <Link underline="none" href={toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath} target="_blank">
-                      {splitFilePath(toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath).fileName}
-                    </Link>
-                  </div>
+            )}
+          </SectionContent>
+        )}
+        {epaaktiivinen ? (
+          <SectionContent>
+            <p className="vayla-label">Ladattavat kuulutukset ja julkaisut</p>
+            <p>Kuulutukset löytyvät asianhallinnasta.</p>
+          </SectionContent>
+        ) : (
+          <SectionContent>
+            <p className="vayla-label">Ladattavat kuulutukset ja ilmoitukset</p>
+            <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({lowerCase(hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.ensisijainenKieli)})</p>
+            {ensisijaisetPDFt && (
+              <div className="flex flex-col mb-4">
+                <div>
+                  <Link underline="none" href={ensisijaisetPDFt.hyvaksymisKuulutusPDFPath} target="_blank">
+                    {splitFilePath(ensisijaisetPDFt.hyvaksymisKuulutusPDFPath).fileName}
+                  </Link>
                 </div>
-              )}
-            </div>
-          )}
-        </SectionContent>
-        <IlmoituksenVastaanottajatLukutila hyvaksymisPaatosVaiheJulkaisu={hyvaksymisPaatosVaiheJulkaisu} />
+                <div>
+                  <Link underline="none" href={ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath} target="_blank">
+                    {splitFilePath(ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath).fileName}
+                  </Link>
+                </div>
+                <div>
+                  <Link
+                    underline="none"
+                    href={ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath}
+                    target="_blank"
+                  >
+                    {splitFilePath(ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath).fileName}
+                  </Link>
+                </div>
+                <div>
+                  <Link underline="none" href={ensisijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath} target="_blank">
+                    {splitFilePath(ensisijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath).fileName}
+                  </Link>
+                </div>
+                <div>
+                  <Link underline="none" href={ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath} target="_blank">
+                    {splitFilePath(ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath).fileName}
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.toissijainenKieli && (
+              <div className="content mb-4">
+                <p>
+                  Kuulutus ja ilmoitus toissijaisella kielellä ({lowerCase(hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.toissijainenKieli)})
+                </p>
+                {toissijaisetPDFt && (
+                  <div className="flex flex-col">
+                    <div>
+                      <Link underline="none" href={toissijaisetPDFt.hyvaksymisKuulutusPDFPath} target="_blank">
+                        {splitFilePath(toissijaisetPDFt.hyvaksymisKuulutusPDFPath).fileName}
+                      </Link>
+                    </div>
+                    <div>
+                      <Link underline="none" href={toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath} target="_blank">
+                        {splitFilePath(toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath).fileName}
+                      </Link>
+                    </div>
+                    <div>
+                      <Link
+                        underline="none"
+                        href={toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath}
+                        target="_blank"
+                      >
+                        {splitFilePath(toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath).fileName}
+                      </Link>
+                    </div>
+                    <div>
+                      <Link underline="none" href={toissijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath} target="_blank">
+                        {splitFilePath(toissijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath).fileName}
+                      </Link>
+                    </div>
+                    <div>
+                      <Link underline="none" href={toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath} target="_blank">
+                        {splitFilePath(toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath).fileName}
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </SectionContent>
+        )}
+      </Section>
+      <Section>
+        <IlmoituksenVastaanottajatLukutila
+          ilmoituksenVastaanottajat={hyvaksymisPaatosVaiheJulkaisu.ilmoituksenVastaanottajat}
+          julkaisunTila={hyvaksymisPaatosVaiheJulkaisu.tila}
+          epaaktiivinen={epaaktiivinen}
+        />
       </Section>
     </>
   );

@@ -8,6 +8,7 @@ import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
 import { Stack } from "@mui/material";
 import HassuSpinner from "@components/HassuSpinner";
+import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 
 interface Props {
   children: ReactNode;
@@ -55,11 +56,19 @@ export default function ProjektiPageLayout({ children, title, showUpdateButton }
             {showUpdateButton && <Button onClick={uudelleenLataaProjekit}>Päivitä tiedot</Button>}
           </Stack>
           <h2>{projekti?.velho?.nimi || "-"}</h2>
-          {projekti && !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden && (
-            <Notification type={NotificationType.WARN}>
-              Sinulla on projektiin vain lukuoikeudet. Voit tarkastella projektin tietoja, mutta et voi tehdä siihen
-              muutoksia. Jos tarvitset oikeudet projektiin, ota yhteys projektin projektipäällikköön.
+          {projekti && projektiOnEpaaktiivinen(projekti) ? (
+            <Notification type={NotificationType.INFO_GRAY}>
+              Projekti on siirtynyt epäaktiiviseen tilaan. Projektille voi luoda jatkokuulutuksen, kun pääkäyttäjä on palauttanut projektin
+              aktiiviseen tilaan. Voit seurata suunnitelman käsittelyä Käsittelyn tila -sivulta. Jos sinulla on kysyttävää, ota yhteys
+              järjestelmän pääkäyttäjään.
             </Notification>
+          ) : (
+            !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden && (
+              <Notification type={NotificationType.WARN}>
+                Sinulla on projektiin vain lukuoikeudet. Voit tarkastella projektin tietoja, mutta et voi tehdä siihen muutoksia. Jos
+                tarvitset oikeudet projektiin, ota yhteys projektin projektipäällikköön.
+              </Notification>
+            )
           )}
           {children}
         </div>
