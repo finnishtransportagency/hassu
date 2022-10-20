@@ -43,6 +43,15 @@ Object {
         },
         Object {
           "terms": Object {
+            "vaihe.keyword": Array [
+              "EI_JULKAISTU",
+              "SUUNNITTELU",
+              "EI_JULKAISTU_PROJEKTIN_HENKILOT",
+            ],
+          },
+        },
+        Object {
+          "terms": Object {
             "suunnittelustaVastaavaViranomainen.keyword": Array [
               "VAYLAVIRASTO",
               "UUDENMAAN_ELY",
@@ -59,7 +68,9 @@ Object {
         Object {
           "terms": Object {
             "vaihe.keyword": Array [
-              "EPAAKTIIVINEN",
+              "EPAAKTIIVINEN_1",
+              "EPAAKTIIVINEN_2",
+              "EPAAKTIIVINEN_3",
             ],
           },
         },
@@ -132,6 +143,15 @@ Object {
         },
         Object {
           "terms": Object {
+            "vaihe.keyword": Array [
+              "EI_JULKAISTU",
+              "SUUNNITTELU",
+              "EI_JULKAISTU_PROJEKTIN_HENKILOT",
+            ],
+          },
+        },
+        Object {
+          "terms": Object {
             "suunnittelustaVastaavaViranomainen.keyword": Array [
               "VAYLAVIRASTO",
               "UUDENMAAN_ELY",
@@ -141,7 +161,9 @@ Object {
         Object {
           "terms": Object {
             "vaihe.keyword": Array [
-              "EPAAKTIIVINEN",
+              "EPAAKTIIVINEN_1",
+              "EPAAKTIIVINEN_2",
+              "EPAAKTIIVINEN_3",
             ],
           },
         },
@@ -150,7 +172,9 @@ Object {
         Object {
           "terms": Object {
             "vaihe.keyword": Array [
-              "EPAAKTIIVINEN",
+              "EPAAKTIIVINEN_1",
+              "EPAAKTIIVINEN_2",
+              "EPAAKTIIVINEN_3",
             ],
           },
         },
@@ -179,7 +203,9 @@ Object {
         Object {
           "terms": Object {
             "vaihe.keyword": Array [
-              "EPAAKTIIVINEN",
+              "EPAAKTIIVINEN_1",
+              "EPAAKTIIVINEN_2",
+              "EPAAKTIIVINEN_3",
             ],
           },
         },
