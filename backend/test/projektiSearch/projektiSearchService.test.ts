@@ -139,10 +139,31 @@ describe("ProjektiSearchService", () => {
   it("should handle query parameters successfully", async () => {
     openSearchQueryStub.onFirstCall().returns(fakeSearchResponse);
     openSearchQueryStub.onSecondCall().returns({
-      aggregations: { projektiTyypit: { buckets: [{ key: ProjektiTyyppi.TIE, doc_count: 2 }] } },
-    });
-    openSearchQueryStub.onThirdCall().returns({
-      aggregations: { statukset: { buckets: [{ key: "EI_JULKAISTU", doc_count: 2 }] } },
+      aggregations: {
+        aktiivinen: {
+          buckets: [
+            {
+              key: 0,
+              doc_count: 0,
+              projektiTyyppi: {
+                buckets: [],
+              },
+            },
+            {
+              key: 1,
+              doc_count: 1,
+              projektiTyyppi: {
+                buckets: [
+                  {
+                    key: ProjektiTyyppi.TIE,
+                    doc_count: 1,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
     });
 
     await projektiSearchService.searchYllapito({

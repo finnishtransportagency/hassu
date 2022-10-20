@@ -76,9 +76,11 @@
     "HYVAKSYMISMENETTELYSSA": "RUOTSIKSI Hyväksynnässä",
     "LAINVOIMA": "RUOTSIKSI Lainvoima",
     "ARKISTOITU": "RUOTSIKSI Arkistoitu",
-    "EPAAKTIIVINEN": "RUOTSIKSI Epäaktiivinen",
+    "EPAAKTIIVINEN_1": "RUOTSIKSI Epäaktiivinen",
     "JATKOPAATOS_1": "RUOTSIKSI 1. jatkopäätös",
-    "JATKOPAATOS_2": "RUOTSIKSI 2. jatkopäätös"
+    "EPAAKTIIVINEN_2": "RUOTSIKSI Epäaktiivinen",
+    "JATKOPAATOS_2": "RUOTSIKSI 2. jatkopäätös",
+    "EPAAKTIIVINEN_3": "RUOTSIKSI Epäaktiivinen"
   },
   "projekti-status-kansalaiselle": {
     "ALOITUSKUULUTUS": "RUOTSIKSI Aloituskuulutus",
