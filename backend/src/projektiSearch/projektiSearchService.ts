@@ -179,7 +179,7 @@ class ProjektiSearchService {
     let maara = 0;
     log.info("epäaktiiviset " + epaaktiiviset);
     epaaktiiviset.aggregations.statukset.buckets.forEach((bucket: any) => {
-      if (bucket.key == Status.EPAAKTIIVINEN) {
+      if ([Status.EPAAKTIIVINEN_1, Status.EPAAKTIIVINEN_2, Status.EPAAKTIIVINEN_3].includes(bucket.key)) {
         maara = maara + bucket.doc_count;
       }
     });
@@ -293,7 +293,9 @@ class ProjektiSearchService {
       if (vaiheParam.indexOf(Status.EI_JULKAISTU) >= 0) {
         vaiheParam.push(Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
       }
-      const eiEpaaktiivisiaTiloja = vaiheParam.filter((tila) => tila === Status.EPAAKTIIVINEN);
+      const eiEpaaktiivisiaTiloja = vaiheParam.filter(
+        (tila) => ![Status.EPAAKTIIVINEN_1, Status.EPAAKTIIVINEN_2, Status.EPAAKTIIVINEN_3].includes(tila)
+      );
       if (eiEpaaktiivisiaTiloja.length > 0) {
         queries.push({ terms: { "vaihe.keyword": vaiheParam } });
       }
@@ -305,7 +307,7 @@ class ProjektiSearchService {
     if (epaaktiiviset) {
       allQueries.push({
         terms: {
-          "vaihe.keyword": [Status.EPAAKTIIVINEN],
+          "vaihe.keyword": [Status.EPAAKTIIVINEN_1, Status.EPAAKTIIVINEN_2, Status.EPAAKTIIVINEN_3],
         },
       });
     }
@@ -318,7 +320,7 @@ class ProjektiSearchService {
       obj.bool.must_not = [
         {
           terms: {
-            "vaihe.keyword": [Status.EPAAKTIIVINEN],
+            "vaihe.keyword": [Status.EPAAKTIIVINEN_1, Status.EPAAKTIIVINEN_2, Status.EPAAKTIIVINEN_3],
           },
         },
       ];
