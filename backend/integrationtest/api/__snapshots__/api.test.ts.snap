@@ -1230,10 +1230,10 @@ Object {
         "yhteystiedot": Array [
           Object {
             "__typename": "Yhteystieto",
-            "etunimi": "A-tunnus1",
-            "organisaatio": "CGI Suomi Oy",
+            "etunimi": "Testi1",
+            "organisaatio": "Nokia",
             "puhelinnumero": "123",
-            "sahkoposti": "mikko.haapamki@cgi.com",
+            "sahkoposti": "mikko.haapamaki@cgi.com",
             "sukunimi": "Hassu",
           },
           Object {

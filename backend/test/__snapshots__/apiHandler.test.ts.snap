@@ -999,11 +999,11 @@ Object {
       "yhteystiedot": Array [
         Object {
           "__typename": "Yhteystieto",
-          "etunimi": "Pekka",
-          "organisaatio": "Väylävirasto",
-          "puhelinnumero": "11",
-          "sahkoposti": "pekka.projari@vayla.fi",
-          "sukunimi": "Projari",
+          "etunimi": "EtunimiA2",
+          "organisaatio": "Nokia",
+          "puhelinnumero": "123456789",
+          "sahkoposti": "a2@vayla.fi",
+          "sukunimi": "SukunimiA2",
         },
         Object {
           "__typename": "Yhteystieto",
@@ -1134,11 +1134,11 @@ Object {
         "yhteystiedot": Array [
           Object {
             "__typename": "Yhteystieto",
-            "etunimi": "Pekka",
-            "organisaatio": "Väylävirasto",
-            "puhelinnumero": "11",
-            "sahkoposti": "pekka.projari@vayla.fi",
-            "sukunimi": "Projari",
+            "etunimi": "EtunimiA2",
+            "organisaatio": "Nokia",
+            "puhelinnumero": "123456789",
+            "sahkoposti": "a2@vayla.fi",
+            "sukunimi": "SukunimiA2",
           },
           Object {
             "__typename": "Yhteystieto",

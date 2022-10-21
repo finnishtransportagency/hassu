@@ -22,6 +22,7 @@ function createNextAloitusKuulutusJulkaisuID(dbProjekti: DBProjekti) {
 
 export class AsiakirjaAdapter {
   adaptAloitusKuulutusJulkaisu(dbProjekti: DBProjekti): AloitusKuulutusJulkaisu {
+    const pakotaKunnanEdustaja = true;
     if (dbProjekti.aloitusKuulutus) {
       const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.aloitusKuulutus;
       return {
@@ -30,7 +31,7 @@ export class AsiakirjaAdapter {
         // Tässä vaiheessa kuulutusYhteystiedot on oltava olemassa
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot),
+        yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, pakotaKunnanEdustaja),
         velho: adaptVelho(dbProjekti),
         suunnitteluSopimus: adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
           dbProjekti.oid,

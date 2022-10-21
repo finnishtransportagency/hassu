@@ -76,10 +76,10 @@
       "yhteystiedot": [
         {
           "sukunimi": "Hassu",
-          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sahkoposti": "mikko.haapamaki@cgi.com",
           "puhelinnumero": "123",
-          "organisaatio": "CGI Suomi Oy",
-          "etunimi": "A-tunnus1"
+          "organisaatio": "Nokia",
+          "etunimi": "Testi1"
         },
         {
           "sukunimi": "Koi",

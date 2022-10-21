@@ -1208,11 +1208,11 @@ Object {
   },
   "yhteystiedot": Array [
     Object {
-      "etunimi": "Pekka",
-      "organisaatio": "Väylävirasto",
+      "etunimi": "Kunta",
+      "organisaatio": "Nokia",
       "puhelinnumero": "123456789",
-      "sahkoposti": "pekka.projari@vayla.fi",
-      "sukunimi": "Projari",
+      "sahkoposti": "Kunta.Kuntalainen@vayla.fi",
+      "sukunimi": "Kuntalainen",
     },
     Object {
       "etunimi": "Marko",
@@ -1244,7 +1244,7 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 
 
 Lisätietoja antavat 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
+Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
 Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Nokia
@@ -1261,7 +1261,7 @@ Testiprojekti 1
 Väylävirasto julkaisee tietoverkossaan liikennejärjestelmästä ja maanteistä annetun lain (503/2005) sekä hallintolain 62 a §:n mukaisesti kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman suunnittelun ja maastotöiden aloittamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
 Kuulutus julkaistaan 2.1.2022, Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://www.ely-keskus.fi/kuulutukset. 
 Lisätietoja antavat 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
+Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
 Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 LUONNOS",
@@ -1287,7 +1287,7 @@ RUOTSIKSI Väylävirasto behandlar personuppgifter som är nödvändiga för uta
 
 
 Mer information om planen 
-Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
+Nokia, Kunta Kuntalainen, tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
 Nokia, Kunta Kuntalainen, tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Nokia
@@ -1304,7 +1304,7 @@ Namnet på svenska
 RUOTSIKSI RUOTSIKSI Väylävirasto julkaisee tietoverkossaan liikennejärjestelmästä ja maanteistä annetun lain (503/2005) sekä hallintolain 62 a §:n mukaisesti kuulutuksen, joka koskee otsikossa mainitun vägplanen suunnittelun ja maastotöiden aloittamista. RUOTSIKSI Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
 RUOTSIKSI Kuulutus julkaistaan 2.1.2022, RUOTSIKSI Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://www.ely-keskus.fi/kuulutukset. 
 Mer information om planen 
-Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
+Nokia, Kunta Kuntalainen, tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
 Nokia, Kunta Kuntalainen, tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 LUONNOS",
