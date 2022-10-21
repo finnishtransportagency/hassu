@@ -151,20 +151,20 @@ Object {
           "kunnat": Array [
             Object {
               "__typename": "KuntaVastaanottaja",
+              "id": 491,
               "lahetetty": "2022-03-11T14:54",
-              "nimi": "Mikkeli",
               "sahkoposti": "mikkeli@mikke.li",
             },
             Object {
               "__typename": "KuntaVastaanottaja",
+              "id": 178,
               "lahetetty": "2022-03-11T14:54",
-              "nimi": " Juva",
               "sahkoposti": "juva@ju.va",
             },
             Object {
               "__typename": "KuntaVastaanottaja",
+              "id": 740,
               "lahetetty": "2022-03-11T14:54",
-              "nimi": " Savonlinna",
               "sahkoposti": "savonlinna@savonlin.na",
             },
           ],
@@ -301,20 +301,20 @@ Object {
           "kunnat": Array [
             Object {
               "__typename": "KuntaVastaanottaja",
+              "id": 491,
               "lahetetty": "2022-03-11T14:54",
-              "nimi": "Mikkeli",
               "sahkoposti": "mikkeli@mikke.li",
             },
             Object {
               "__typename": "KuntaVastaanottaja",
+              "id": 178,
               "lahetetty": "2022-03-11T14:54",
-              "nimi": " Juva",
               "sahkoposti": "juva@ju.va",
             },
             Object {
               "__typename": "KuntaVastaanottaja",
+              "id": 740,
               "lahetetty": "2022-03-11T14:54",
-              "nimi": " Savonlinna",
               "sahkoposti": "savonlinna@savonlin.na",
             },
           ],
@@ -504,20 +504,20 @@ Object {
       "kunnat": Array [
         Object {
           "__typename": "KuntaVastaanottaja",
+          "id": 491,
           "lahetetty": "2022-03-11T14:54",
-          "nimi": "Mikkeli",
           "sahkoposti": "mikkeli@mikke.li",
         },
         Object {
           "__typename": "KuntaVastaanottaja",
+          "id": 178,
           "lahetetty": "2022-03-11T14:54",
-          "nimi": " Juva",
           "sahkoposti": "juva@ju.va",
         },
         Object {
           "__typename": "KuntaVastaanottaja",
+          "id": 740,
           "lahetetty": "2022-03-11T14:54",
-          "nimi": " Savonlinna",
           "sahkoposti": "savonlinna@savonlin.na",
         },
       ],
@@ -684,20 +684,20 @@ Object {
       "kunnat": Array [
         Object {
           "__typename": "KuntaVastaanottaja",
+          "id": 491,
           "lahetetty": "2022-03-11T14:54",
-          "nimi": "Mikkeli",
           "sahkoposti": "mikkeli@mikke.li",
         },
         Object {
           "__typename": "KuntaVastaanottaja",
+          "id": 178,
           "lahetetty": "2022-03-11T14:54",
-          "nimi": " Juva",
           "sahkoposti": "juva@ju.va",
         },
         Object {
           "__typename": "KuntaVastaanottaja",
+          "id": 740,
           "lahetetty": "2022-03-11T14:54",
-          "nimi": " Savonlinna",
           "sahkoposti": "savonlinna@savonlin.na",
         },
       ],
@@ -857,20 +857,20 @@ Object {
       "kunnat": Array [
         Object {
           "__typename": "KuntaVastaanottaja",
+          "id": 491,
           "lahetetty": "2022-03-11T14:54",
-          "nimi": "Mikkeli",
           "sahkoposti": "mikkeli@mikke.li",
         },
         Object {
           "__typename": "KuntaVastaanottaja",
+          "id": 178,
           "lahetetty": "2022-03-11T14:54",
-          "nimi": " Juva",
           "sahkoposti": "juva@ju.va",
         },
         Object {
           "__typename": "KuntaVastaanottaja",
+          "id": 740,
           "lahetetty": "2022-03-11T14:54",
-          "nimi": " Savonlinna",
           "sahkoposti": "savonlinna@savonlin.na",
         },
       ],
@@ -1030,20 +1030,20 @@ Object {
     "kunnat": Array [
       Object {
         "__typename": "KuntaVastaanottaja",
+        "id": 491,
         "lahetetty": "2022-03-11T14:54",
-        "nimi": "Mikkeli",
         "sahkoposti": "mikkeli@mikke.li",
       },
       Object {
         "__typename": "KuntaVastaanottaja",
+        "id": 178,
         "lahetetty": "2022-03-11T14:54",
-        "nimi": " Juva",
         "sahkoposti": "juva@ju.va",
       },
       Object {
         "__typename": "KuntaVastaanottaja",
+        "id": 740,
         "lahetetty": "2022-03-11T14:54",
-        "nimi": " Savonlinna",
         "sahkoposti": "savonlinna@savonlin.na",
       },
     ],
@@ -1847,20 +1847,20 @@ Object {
       "kunnat": Array [
         Object {
           "__typename": "KuntaVastaanottaja",
+          "id": 491,
           "lahetetty": "2022-03-11T14:54",
-          "nimi": "Mikkeli",
           "sahkoposti": "mikkeli@mikke.li",
         },
         Object {
           "__typename": "KuntaVastaanottaja",
+          "id": 178,
           "lahetetty": "2022-03-11T14:54",
-          "nimi": " Juva",
           "sahkoposti": "juva@ju.va",
         },
         Object {
           "__typename": "KuntaVastaanottaja",
+          "id": 740,
           "lahetetty": "2022-03-11T14:54",
-          "nimi": " Savonlinna",
           "sahkoposti": "savonlinna@savonlin.na",
         },
       ],
@@ -1970,20 +1970,20 @@ Object {
         "kunnat": Array [
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 491,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": "Mikkeli",
             "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 178,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": " Juva",
             "sahkoposti": "juva@ju.va",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 740,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": " Savonlinna",
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
@@ -2166,20 +2166,20 @@ Object {
         "kunnat": Array [
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 491,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": "Mikkeli",
             "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 178,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": " Juva",
             "sahkoposti": "juva@ju.va",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 740,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": " Savonlinna",
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
@@ -2304,20 +2304,20 @@ Object {
           "kunnat": Array [
             Object {
               "__typename": "KuntaVastaanottaja",
+              "id": 491,
               "lahetetty": "2022-03-11T14:54",
-              "nimi": "Mikkeli",
               "sahkoposti": "mikkeli@mikke.li",
             },
             Object {
               "__typename": "KuntaVastaanottaja",
+              "id": 178,
               "lahetetty": "2022-03-11T14:54",
-              "nimi": " Juva",
               "sahkoposti": "juva@ju.va",
             },
             Object {
               "__typename": "KuntaVastaanottaja",
+              "id": 740,
               "lahetetty": "2022-03-11T14:54",
-              "nimi": " Savonlinna",
               "sahkoposti": "savonlinna@savonlin.na",
             },
           ],
@@ -2664,20 +2664,20 @@ Object {
         "kunnat": Array [
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 491,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": "Mikkeli",
             "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 178,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": " Juva",
             "sahkoposti": "juva@ju.va",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 740,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": " Savonlinna",
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
@@ -2778,20 +2778,20 @@ Object {
         "kunnat": Array [
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 491,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": "Mikkeli",
             "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 178,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": " Juva",
             "sahkoposti": "juva@ju.va",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 740,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": " Savonlinna",
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
@@ -2878,20 +2878,20 @@ Object {
           "kunnat": Array [
             Object {
               "__typename": "KuntaVastaanottaja",
+              "id": 491,
               "lahetetty": "2022-03-11T14:54",
-              "nimi": "Mikkeli",
               "sahkoposti": "mikkeli@mikke.li",
             },
             Object {
               "__typename": "KuntaVastaanottaja",
+              "id": 178,
               "lahetetty": "2022-03-11T14:54",
-              "nimi": " Juva",
               "sahkoposti": "juva@ju.va",
             },
             Object {
               "__typename": "KuntaVastaanottaja",
+              "id": 740,
               "lahetetty": "2022-03-11T14:54",
-              "nimi": " Savonlinna",
               "sahkoposti": "savonlinna@savonlin.na",
             },
           ],

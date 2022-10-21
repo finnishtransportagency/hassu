@@ -12,6 +12,7 @@ import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
 import dayjs from "dayjs";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
+import { kuntametadata } from "../../../../../common/kuntametadata";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -32,7 +33,7 @@ type FormFields = {
 };
 
 export default function IlmoituksenVastaanottajat({ hyvaksymisPaatosVaihe }: Props): ReactElement {
-  const { t } = useTranslation("commonFI");
+  const { t, lang } = useTranslation("commonFI");
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
   const julkinen = false; //hyvaksymisPaatosVaihe?.tila === HyvaksymisPaatosVaiheTila.HYVAKSYTTY;
@@ -62,7 +63,7 @@ export default function IlmoituksenVastaanottajat({ hyvaksymisPaatosVaihe }: Pro
   });
 
   const getKuntanimi = (index: number) => {
-    const nimi = ilmoituksenVastaanottajat?.kunnat?.[index].nimi;
+    const nimi = kuntametadata.nameForKuntaId(ilmoituksenVastaanottajat?.kunnat?.[index].id, lang);
     if (!nimi) {
       return;
     }
@@ -114,7 +115,7 @@ export default function IlmoituksenVastaanottajat({ hyvaksymisPaatosVaihe }: Pro
               <p className="vayla-table-header">Lähetysaika</p>
               {hyvaksymisPaatosVaihe?.ilmoituksenVastaanottajat?.kunnat?.map((kunta, index) => (
                 <Fragment key={index}>
-                  <p className={getStyleForRow(index)}>{kunta.nimi}</p>
+                  <p className={getStyleForRow(index)}>{kuntametadata.nameForKuntaId(kunta.id, lang)}</p>
                   <p className={getStyleForRow(index)}>{kunta.sahkoposti}</p>
                   <p className={getStyleForRow(index)}>{kunta.lahetetty ? "Lahetetty" : "Ei lähetetty"}</p>
                   <p className={getStyleForRow(index)}>
@@ -222,7 +223,7 @@ export default function IlmoituksenVastaanottajat({ hyvaksymisPaatosVaihe }: Pro
               <HassuGrid key={kunta.id} cols={{ lg: 3 }}>
                 <input
                   type="hidden"
-                  {...register(`hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat.kunnat.${index}.nimi`)}
+                  {...register(`hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat.kunnat.${index}.id`)}
                   readOnly
                 />
                 <TextInput label="Kunta *" value={getKuntanimi(index)} disabled />

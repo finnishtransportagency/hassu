@@ -23,7 +23,12 @@ import { DBProjekti, DBVaylaUser, Vuorovaikutus } from "../../src/database/model
 import cloneDeep from "lodash/cloneDeep";
 import { kuntametadata } from "../../../common/kuntametadata";
 
-const mikkeliJuvaSavonlinna = kuntametadata.idsForKuntaNames(["Mikkeli", "Juva", "Savonlinna"]);
+const mikkeli = kuntametadata.idForKuntaName("Mikkeli");
+const juva = kuntametadata.idForKuntaName("Juva");
+const savonlinna = kuntametadata.idForKuntaName("Savonlinna");
+const kerava = kuntametadata.idForKuntaName("Kerava");
+
+const mikkeliJuvaSavonlinna = [mikkeli, juva, savonlinna];
 const uusimaaPirkanmaa = kuntametadata.idsForMaakuntaNames(["Uusimaa", "Pirkanmaa"]);
 
 export class ProjektiFixture {
@@ -53,19 +58,19 @@ export class ProjektiFixture {
       {
         sahkoposti: "mikkeli@mikke.li",
         lahetetty: "2022-03-11T14:54",
-        nimi: "Mikkeli",
+        id: mikkeli,
         __typename: "KuntaVastaanottaja",
       },
       {
         sahkoposti: "juva@ju.va",
         lahetetty: "2022-03-11T14:54",
-        nimi: " Juva",
+        id: juva,
         __typename: "KuntaVastaanottaja",
       },
       {
         sahkoposti: "savonlinna@savonlin.na",
         lahetetty: "2022-03-11T14:54",
-        nimi: " Savonlinna",
+        id: savonlinna,
         __typename: "KuntaVastaanottaja",
       },
     ],
@@ -345,7 +350,7 @@ export class ProjektiFixture {
             vaylamuoto: ["tie"],
             nimi: "Marikan testiprojekti",
             tyyppi: ProjektiTyyppi.YLEINEN,
-            kunnat: kuntametadata.idsForKuntaNames(["Mikkeli", " Juva", " Savonlinna"]),
+            kunnat: mikkeliJuvaSavonlinna,
             maakunnat: uusimaaPirkanmaa,
           },
           id: 1,
@@ -364,15 +369,15 @@ export class ProjektiFixture {
         ilmoituksenVastaanottajat: {
           kunnat: [
             {
-              nimi: "Mikkeli",
+              id: mikkeli,
               sahkoposti: "mikkeli@mikke.li",
             },
             {
-              nimi: " Juva",
+              id: juva,
               sahkoposti: "juva@ju.va",
             },
             {
-              nimi: " Savonlinna",
+              id: savonlinna,
               sahkoposti: "savonlinna@savonlin.na",
             },
           ],
@@ -537,15 +542,15 @@ export class ProjektiFixture {
       ilmoituksenVastaanottajat: {
         kunnat: [
           {
-            nimi: "Mikkeli",
+            id: mikkeli,
             sahkoposti: "mikkeli@mikke.li",
           },
           {
-            nimi: " Juva",
+            id: juva,
             sahkoposti: "juva@ju.va",
           },
           {
-            nimi: " Savonlinna",
+            id: savonlinna,
             sahkoposti: "savonlinna@savonlin.na",
           },
         ],
@@ -604,7 +609,7 @@ export class ProjektiFixture {
         ilmoituksenVastaanottajat: {
           kunnat: [
             {
-              nimi: "Kerava",
+              id: kerava,
               sahkoposti: "email@email.email",
             },
           ],
@@ -650,7 +655,7 @@ export class ProjektiFixture {
         muokkaaja: "A000111",
         tila: NahtavillaoloVaiheTila.HYVAKSYTTY,
         velho: {
-          kunnat: [kuntametadata.idForKuntaName("Kerava")],
+          kunnat: [kerava],
           maakunnat: uusimaaPirkanmaa,
           linkki: null,
           nimi: "Mt 140 parantaminen Kaskelantien kohdalla, tiesuunnitelma, Kerava",
@@ -732,17 +737,17 @@ export class ProjektiFixture {
             kunnat: [
               {
                 lahetetty: "2022-03-11T14:54",
-                nimi: "Mikkeli",
+                id: mikkeli,
                 sahkoposti: "mikkeli@mikke.li",
               },
               {
                 lahetetty: "2022-03-11T14:54",
-                nimi: " Juva",
+                id: juva,
                 sahkoposti: "juva@ju.va",
               },
               {
                 lahetetty: "2022-03-11T14:54",
-                nimi: " Savonlinna",
+                id: savonlinna,
                 sahkoposti: "savonlinna@savonlin.na",
               },
             ],

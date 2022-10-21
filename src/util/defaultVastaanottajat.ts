@@ -28,9 +28,9 @@ export default function defaultVastaanottajat(
   } else {
     // tapaus, jossa lomake alustetaan ensimmäistä kertaa
     kunnat =
-      projekti?.velho?.kunnat?.map((s) => {
+      projekti?.velho?.kunnat?.map((kuntaId) => {
         return {
-          nimi: kuntametadata.nameForKuntaId(s, Kieli.SUOMI),
+          id: kuntaId,
           sahkoposti: "",
         } as KuntaVastaanottajaInput;
       }) || [];

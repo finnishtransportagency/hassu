@@ -49,7 +49,7 @@ export type IlmoituksenVastaanottajat = {
 };
 
 export type KuntaVastaanottaja = {
-  nimi: string;
+  id: number;
   sahkoposti: string;
   lahetetty?: string | null;
 };

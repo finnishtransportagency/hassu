@@ -182,7 +182,7 @@
     "setupenvironment": "ts-node --project=tsconfig.cdk.json deployment/bin/setupEnvironment.ts",
     "graphQLIntrospection": "ts-node $NODE_DEBUG_OPTION --project=tsconfig.cdk.json -r dotenv/config deployment/bin/runGraphQLIntrospection.ts dotenv_config_path=.env.local",
     "test": "npm-run-all --aggregate-output --parallel test:frontend test:coverage test:integration:coverage",
-    "husky:test": "npm-run-all --aggregate-output --parallel \"test:!(backend|integration)\"",
+    "husky:test": "cross-env LOG_LEVEL=silent npm-run-all --aggregate-output --parallel \"test:!(backend|integration)\"",
     "test:frontend": "jest --config \"./jest.frontend.config.js\"",
     "test:backend": "cross-env AWS_PROFILE=nonexistent TS_NODE_PROJECT=\"./backend/tsconfig.json\" mocha -r ts-node/register \"backend/test/**/*.test.ts\" \"common/**/*.test.ts\" --reporter mocha-multi-reporters --reporter-options configFile=mocha_reporter_config.json",
     "test:coverage": "nyc --report-dir .report/coverage --reporter text-summary --reporter lcov --reporter json --reporter clover npm run test:backend",

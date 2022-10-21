@@ -24,7 +24,7 @@ export const aloituskuulutusSchema = Yup.object().shape({
           .of(
             Yup.object()
               .shape({
-                nimi: Yup.string().required(),
+                id: Yup.number().required(),
                 sahkoposti: Yup.string().email("Virheellinen sähköpostiosoite").required("Sähköpostiosoite on pakollinen"),
               })
               .required()

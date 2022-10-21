@@ -265,7 +265,7 @@ export class KutsuAdapter {
         sukunimi,
         puhelinnumero,
         sahkoposti: email,
-        organisaatio: kuntametadata.nameForKuntaId(kunta, Kieli.SUOMI),
+        organisaatio: kuntametadata.nameForKuntaId(kunta, this.kieli),
       });
     }
     return yt.map(yhteystietoMapper);

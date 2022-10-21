@@ -3,10 +3,9 @@ import Select from "@components/form/Select";
 import TextInput from "@components/form/TextInput";
 import React, { ReactElement } from "react";
 import { Controller, FieldError, useFieldArray, useFormContext } from "react-hook-form";
-import { formatProperNoun } from "common/util/formatProperNoun";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
-import { IlmoitettavaViranomainen, KuntaVastaanottajaInput, Vuorovaikutus } from "@services/api";
+import { IlmoitettavaViranomainen, KirjaamoOsoite, Vuorovaikutus } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
@@ -18,8 +17,9 @@ interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
   viranomaiset?: FieldError | null | undefined;
 }
+
 interface Props {
-  kirjaamoOsoitteet: KuntaVastaanottajaInput[] | undefined;
+  kirjaamoOsoitteet: KirjaamoOsoite[] | undefined;
   vuorovaikutus: Vuorovaikutus | undefined;
 }
 
@@ -27,7 +27,7 @@ type FormFields = {
   suunnitteluVaihe: {
     vuorovaikutus: {
       ilmoituksenVastaanottajat: {
-        kunnat: { nimi: string; sahkoposti: string }[];
+        kunnat: { id: number; sahkoposti: string }[];
         viranomaiset: { nimi: IlmoitettavaViranomainen; sahkoposti: string }[];
       };
     };
@@ -163,10 +163,14 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet, vuorovaik
               <HassuGrid key={kunta.id} cols={{ lg: 3 }}>
                 <input
                   type="hidden"
-                  {...register(`suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.kunnat.${index}.nimi`)}
+                  {...register(`suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat.kunnat.${index}.id`)}
                   readOnly
                 />
-                <TextInput label="Kunta *" value={formatProperNoun((kuntametadata.namesForKuntaIds(projekti?.velho?.kunnat, lang) || [])[index] || "")} disabled />
+                <TextInput
+                  label="Kunta *"
+                  value={(kuntametadata.namesForKuntaIds(projekti?.velho?.kunnat, lang) || [])[index] || ""}
+                  disabled
+                />
                 <TextInput
                   label="Sähköpostiosoite *"
                   error={errors?.suunnitteluVaihe?.vuorovaikutus?.ilmoituksenVastaanottajat?.kunnat?.[index]?.sahkoposti}

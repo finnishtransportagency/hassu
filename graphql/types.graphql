@@ -599,7 +599,7 @@ type ViranomaisVastaanottaja {
 }
 
 type KuntaVastaanottaja {
-  nimi: String!
+  id: Int!
   sahkoposti: String!
   lahetetty: String
 }

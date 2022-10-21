@@ -65,7 +65,7 @@ input ViranomaisVastaanottajaInput {
 }
 
 input KuntaVastaanottajaInput {
-  nimi: String!
+  id: Int!
   sahkoposti: String!
 }
 

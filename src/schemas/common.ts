@@ -10,13 +10,13 @@ export const ilmoituksenVastaanottajat = () =>
         .of(
           Yup.object()
             .shape({
-              nimi: Yup.string().required(),
+              id: Yup.number().required(),
               sahkoposti: Yup.string().email("Virheellinen sähköpostiosoite").required("Sähköpostiosoite on pakollinen"),
             })
             .required()
         )
         .compact(function (kunta) {
-          return !kunta.nimi && !kunta.sahkoposti;
+          return !kunta.id && !kunta.sahkoposti;
         })
         .notRequired(),
       viranomaiset: Yup.array()
