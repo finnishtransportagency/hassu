@@ -213,6 +213,8 @@ const UserFields = ({
 
   const debouncedSearchKayttajat = useDebounceCallback(searchAndUpdateKayttajat, 200);
 
+  const isCurrentKayttajaMissingFromOptions = kayttaja && !options.some((o) => o.uid === kayttaja.uid);
+
   return (
     <ContentSpacer>
       <HassuGrid
@@ -224,7 +226,7 @@ const UserFields = ({
           name={`kayttoOikeudet.${index}.kayttajatunnus`}
           render={({ field: { onChange, name, onBlur, ref }, fieldState }) => (
             <Autocomplete
-              options={options}
+              options={isCurrentKayttajaMissingFromOptions ? [...options, kayttaja] : options}
               renderInput={(params) => (
                 <TextField
                   {...params}
