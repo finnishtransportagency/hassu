@@ -19,7 +19,7 @@ export function adaptAloitusKuulutusToSave(aloitusKuulutus: API.AloitusKuulutusI
       ...rest,
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat), //pakko tukea vielä tätä
       hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus),
-      kuulutusYhteystiedot: adaptStandardiYhteystiedotToSave(kuulutusYhteystiedot, true),
+      kuulutusYhteystiedot: adaptStandardiYhteystiedotToSave(kuulutusYhteystiedot),
     };
   }
   return aloitusKuulutus as undefined;
