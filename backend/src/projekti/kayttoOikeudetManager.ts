@@ -112,6 +112,7 @@ export class KayttoOikeudetManager {
         user: {
           tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
           email: email.toLowerCase(),
+          yleinenYhteystieto: true,
           muokattavissa: false,
         },
         searchMode: SearchMode.EMAIL,
