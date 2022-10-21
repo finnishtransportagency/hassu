@@ -277,4 +277,5 @@ input KasittelyntilaInput {
 input HyvaksymispaatosInput {
   paatoksenPvm: String
   asianumero: String
+  aktiivinen: Boolean
 }

@@ -91,7 +91,7 @@ function KasittelyntilaLukutila({ projekti }: Props): ReactElement {
       <Section>
         <h5 className="vayla-small-title">Lisätietoa käsittelyn tilasta</h5>
         <div className="grid grid-cols-1 md:grid-cols-4">
-          <p className="md:col-span-4">Lisätietoa tulossa...</p>
+          <p className="md:col-span-4">-</p>
         </div>
       </Section>
     </>
