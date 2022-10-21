@@ -28,7 +28,7 @@ import log from "loglevel";
 import { PageProps } from "@pages/_app";
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
-import KuulutuksenYhteystiedot from "@components/projekti/aloituskuulutus/KuulutuksenYhteystiedot";
+import FormStandardiYhteystiedot from "@components/projekti/common/StandardiYhteystiedotLomake";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import find from "lodash/find";
 import lowerCase from "lodash/lowerCase";
@@ -443,7 +443,12 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                     />
                   </Section>
                 )}
-                <KuulutuksenYhteystiedot projekti={projekti} />
+                <FormStandardiYhteystiedot
+                  vaiheAvainsana="aloitusKuulutus"
+                  yhteystiedotAvainsana="kuulutusYhteystiedot"
+                  kunnanEdustajaPakotetaan={true}
+                  projekti={projekti}
+                />
                 <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} />
               </fieldset>
             </form>
