@@ -1246,7 +1246,6 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 Lisätietoja antavat 
 Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
-Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Nokia
 LUONNOS",
 }
@@ -1263,7 +1262,6 @@ Kuulutus julkaistaan 2.1.2022, Uudenmaan ELY-keskuksen tietoverkossa osoitteessa
 Lisätietoja antavat 
 Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
-Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 LUONNOS",
 }
 `;
@@ -1289,7 +1287,6 @@ RUOTSIKSI Väylävirasto behandlar personuppgifter som är nödvändiga för uta
 Mer information om planen 
 Nokia, Kunta Kuntalainen, tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
-Nokia, Kunta Kuntalainen, tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Nokia
 LUONNOS",
 }
@@ -1306,7 +1303,6 @@ RUOTSIKSI Kuulutus julkaistaan 2.1.2022, RUOTSIKSI Uudenmaan ELY-keskuksen tieto
 Mer information om planen 
 Nokia, Kunta Kuntalainen, tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
-Nokia, Kunta Kuntalainen, tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 LUONNOS",
 }
 `;
