@@ -36,6 +36,7 @@ Object {
       "nimi": "SukunimiA1, EtunimiA1",
       "organisaatio": "Väylävirasto",
       "tyyppi": "PROJEKTIPAALLIKKO",
+      "yleinenYhteystieto": true,
     },
     Object {
       "email": "a2@vayla.fi",

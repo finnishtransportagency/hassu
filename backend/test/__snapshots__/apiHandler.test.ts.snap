@@ -12,6 +12,7 @@ Object {
       "nimi": "Projari, Pekka",
       "organisaatio": "Väylävirasto",
       "tyyppi": "PROJEKTIPAALLIKKO",
+      "yleinenYhteystieto": true,
     },
     Object {
       "__typename": "ProjektiKayttaja",
@@ -48,6 +49,7 @@ Array [
       "nimi": "Projari, Pekka",
       "organisaatio": "Väylävirasto",
       "tyyppi": "PROJEKTIPAALLIKKO",
+      "yleinenYhteystieto": true,
     },
     Object {
       "__typename": "ProjektiKayttaja",
