@@ -84,11 +84,11 @@ function KayttoOikeusHallintaFormElements({
         projektiPaallikot: FieldArrayWithId<RequiredInputValues, "kayttoOikeudet", "id">[];
         muutHenkilot: FieldArrayWithId<RequiredInputValues, "kayttoOikeudet", "id">[];
       }>(
-        (acc, kayttoOikeus) => {
+        (acc, kayttoOikeus, index) => {
           if (kayttoOikeus.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO) {
-            acc.projektiPaallikot.push(kayttoOikeus);
+            acc.projektiPaallikot[index] = kayttoOikeus;
           } else {
-            acc.muutHenkilot.push(kayttoOikeus);
+            acc.muutHenkilot[index] = kayttoOikeus;
           }
           return acc;
         },
@@ -109,11 +109,10 @@ function KayttoOikeusHallintaFormElements({
         <SectionContent>
           <h5 className="vayla-paragraph">Projektipäällikkö</h5>
           <p>Projektipäällikö on haettu Projektivelhosta. Jos haluat vaihtaa projektipäällikön, muutos pitää tehdä Projektivelhoon.</p>
-          {projektiPaallikot.map((paallikko) => {
+          {projektiPaallikot.map((paallikko, index) => {
             const initialKayttaja = initialKayttajat?.find(({ uid }) => uid === paallikko.kayttajatunnus) || null;
             const kayttajaFromApi = projektiKayttajatFromApi.find(({ kayttajatunnus }) => kayttajatunnus === paallikko.kayttajatunnus);
             const muokattavissa = kayttajaFromApi?.muokattavissa === false ? false : true;
-            const index = kayttoOikeudet.findIndex((oikeus) => oikeus.kayttajatunnus === paallikko.kayttajatunnus);
             return (
               <UserFields
                 disableFields={disableFields}
@@ -131,11 +130,10 @@ function KayttoOikeusHallintaFormElements({
       <SectionContent>
         <h5 className="vayla-paragraph">Muut henkilöt</h5>
         <SectionContent largeGaps>
-          {muutHenkilot.map((user) => {
+          {muutHenkilot.map((user, index) => {
             const initialKayttaja = initialKayttajat?.find(({ uid }) => uid === user.kayttajatunnus) || null;
             const kayttajaFromApi = projektiKayttajatFromApi.find(({ kayttajatunnus }) => kayttajatunnus === user.kayttajatunnus);
             const muokattavissa = kayttajaFromApi?.muokattavissa === false ? false : true;
-            const index = kayttoOikeudet.findIndex((oikeus) => oikeus.kayttajatunnus === user.kayttajatunnus);
             return (
               <UserFields
                 disableFields={disableFields}
