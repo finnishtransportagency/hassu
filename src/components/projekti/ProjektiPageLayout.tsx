@@ -40,11 +40,11 @@ export default function ProjektiPageLayout({ children, title, showUpdateButton }
 
   return (
     <section>
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-3">
-        <div className="md:col-span-6 lg:col-span-4 xl:col-span-3">
+      <div className="flex flex-col md:flex-row gap-8 mb-3">
+        <div style={{ minWidth: "345px" }}>
           <ProjektiSideNavigation />
         </div>
-        <div className="md:col-span-6 lg:col-span-8 xl:col-span-9">
+        <div className="grow">
           <Stack
             sx={{ marginBottom: { xs: 3, sm: 0 } }}
             alignItems="flex-start"

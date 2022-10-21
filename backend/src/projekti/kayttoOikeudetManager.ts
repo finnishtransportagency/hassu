@@ -36,10 +36,18 @@ export class KayttoOikeudetManager {
     return this.users.reduce((resultingUsers: DBVaylaUser[], currentUser) => {
       const inputUser = changes.find((user) => user.kayttajatunnus === currentUser.kayttajatunnus);
       if (inputUser) {
-        if (currentUser.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO || currentUser.muokattavissa === false) {
-          // Update only puhelinnumero if projektipaallikko or varahenkilö
+        if (currentUser.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO) {
+          // Update only puhelinnumero if projektipaallikko
           resultingUsers.push({
             ...currentUser,
+            yleinenYhteystieto: true,
+            puhelinnumero: inputUser.puhelinnumero,
+          });
+        } else if (currentUser.muokattavissa === false) {
+          // Update only puhelinnumero and yleinenYhteystieto if varahenkilö from Projektivelho
+          resultingUsers.push({
+            ...currentUser,
+            yleinenYhteystieto: !!inputUser.yleinenYhteystieto,
             puhelinnumero: inputUser.puhelinnumero,
           });
         } else {
@@ -104,6 +112,7 @@ export class KayttoOikeudetManager {
         user: {
           tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
           email: email.toLowerCase(),
+          yleinenYhteystieto: true,
           muokattavissa: false,
         },
         searchMode: SearchMode.EMAIL,

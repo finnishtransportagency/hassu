@@ -138,6 +138,7 @@
   "paivitetty": "2020-01-01T00:00:00+02:00",
   "kayttoOikeudet": [
     {
+      "yleinenYhteystieto": true,
       "kayttajatunnus": "A000112",
       "nimi": "Hassu, A-tunnus1",
       "organisaatio": "CGI Suomi Oy",
@@ -148,6 +149,7 @@
     },
     {
       "kayttajatunnus": "A000114",
+      "yleinenYhteystieto": false,
       "nimi": "Hassu, A-tunnus3",
       "organisaatio": "CGI Suomi Oy",
       "tyyppi": "VARAHENKILO",

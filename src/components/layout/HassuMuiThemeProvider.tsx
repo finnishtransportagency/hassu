@@ -1,3 +1,5 @@
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BreakpointsOptions, createTheme, ThemeProvider } from "@mui/material";
 import { fiFI, Localization, svSE } from "@mui/material/locale";
 import { ThemeProviderProps } from "@mui/material/styles/ThemeProvider";
@@ -59,6 +61,75 @@ export const createLocalizedTheme = (locale: Localization) =>
           defaultProps: {
             rowGap: 4,
             columnGap: 7,
+          },
+        },
+        MuiCheckbox: {
+          defaultProps: {
+            checkedIcon: (
+              <span className="hassu-checkbox-icon hassu-checkbox-icon-checked">
+                <FontAwesomeIcon
+                  icon={faCheck}
+                  color="#FFFFFF"
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    fontSize: "12px",
+                  }}
+                />
+              </span>
+            ),
+            icon: <span className="hassu-checkbox-icon hassu-checkbox-icon-unchecked" />,
+          },
+          styleOverrides: {
+            root: {
+              "&:hover": {
+                backgroundColor: "rgba(0, 153, 255, 0.08)",
+              },
+              color: "rgba(0, 153, 255, 0.6)",
+              "& .hassu-checkbox-icon": {
+                width: "20px",
+                height: "20px",
+                borderRadius: "4px",
+                position: "relative",
+                zIndex: 2,
+                margin: "2px",
+              },
+              "& .hassu-checkbox-icon-unchecked": {
+                background: "#FFFFFF",
+                borderColor: "#333333",
+                border: "1px solid",
+                boxShadow: "inset 0 2px 6px rgb(153, 153, 153, 0.4)",
+                color: "#333333",
+              },
+              "& .hassu-checkbox-icon-checked": {
+                background: "#0064AF",
+              },
+              "&.Mui-focusVisible .hassu-checkbox-icon-unchecked": {
+                border: "2px solid transparent",
+                backgroundClip: "padding-box",
+                transformStyle: "preserve-3d",
+              },
+              "&.Mui-focusVisible .hassu-checkbox-icon-unchecked::after": {
+                position: "absolute",
+                top: "-2px",
+                bottom: "-2px",
+                left: "-2px",
+                right: "-2px",
+                background: "linear-gradient(117deg, #0064AF, #49c2f1)",
+                content: '""',
+                transform: "translateZ(-1px)",
+                borderRadius: "4px",
+              },
+              "&.Mui-disabled .hassu-checkbox-icon": {
+                background: "#C7C7C7",
+                boxShadow: "none",
+              },
+              "&.Mui-focusVisible .hassu-checkbox-icon-checked": {
+                background: "linear-gradient(117deg, #0064AF, #49c2f1)",
+              },
+            },
           },
         },
         MuiDialogTitle: {
@@ -151,6 +222,42 @@ export const createLocalizedTheme = (locale: Localization) =>
                 "&.Mui-focusVisible": {
                   backgroundColor: "rgba(60,210,255,0.20)",
                 },
+              },
+            },
+          },
+        },
+        MuiFormControlLabel: {
+          styleOverrides: {
+            root: {
+              alignItems: "start",
+              ".MuiFormControlLabel-label": {
+                padding: "2px",
+                paddingTop: "9px",
+                "&.Mui-disabled": {
+                  color: "#999999",
+                },
+              },
+            },
+          },
+        },
+        MuiIconButton: {
+          styleOverrides: {
+            root: {
+              color: "#0064AF",
+              "&:hover": {
+                backgroundColor: "rgba(0, 153, 255, 0.08)",
+              },
+              "& .MuiTouchRipple-child": {
+                color: "rgba(0, 153, 255, 1)",
+              },
+            },
+            colorPrimary: {
+              color: "#0064AF",
+              "&:hover": {
+                backgroundColor: "rgba(0, 153, 255, 0.08)",
+              },
+              "& .MuiTouchRipple-child": {
+                color: "rgba(0, 153, 255, 1)",
               },
             },
           },
@@ -266,6 +373,9 @@ export const createLocalizedTheme = (locale: Localization) =>
         MuiFormHelperText: {
           styleOverrides: {
             root: {
+              whiteSpace: "normal",
+              overflowWrap: "anywhere",
+              maxWidth: "fit-content",
               lineHeight: "0.75rem",
               fontSize: "0.75rem",
               marginTop: "8px",
