@@ -22,6 +22,7 @@ interface Props {
   disableFields?: boolean;
   onKayttajatUpdate: (kayttajat: ProjektiKayttajaInput[]) => void;
   projektiKayttajat: ProjektiKayttaja[];
+  suunnitteluSopimusYhteysHenkilo?: string | undefined;
 }
 
 const getKayttajaNimi = (k: Kayttaja | null | undefined) => {
@@ -62,6 +63,7 @@ function KayttoOikeusHallintaFormElements({
   onKayttajatUpdate,
   projektiKayttajat: projektiKayttajatFromApi,
   initialKayttajat,
+  suunnitteluSopimusYhteysHenkilo,
 }: Props & { initialKayttajat: Kayttaja[] }) {
   const {
     control,
@@ -133,6 +135,8 @@ function KayttoOikeusHallintaFormElements({
           const initialKayttaja = initialKayttajat?.find(({ uid }) => uid === user.kayttajatunnus) || null;
           const kayttajaFromApi = projektiKayttajatFromApi.find(({ kayttajatunnus }) => kayttajatunnus === user.kayttajatunnus);
           const muokattavissa = kayttajaFromApi?.muokattavissa === false ? false : true;
+          const isSuunnitteluSopimusYhteysHenkilo =
+            !!suunnitteluSopimusYhteysHenkilo && user.kayttajatunnus === suunnitteluSopimusYhteysHenkilo;
           return (
             <UserFields
               disableFields={disableFields}
@@ -141,6 +145,7 @@ function KayttoOikeusHallintaFormElements({
               remove={remove}
               key={user.id}
               muokattavissa={muokattavissa}
+              isSuunnitteluSopimusYhteysHenkilo={isSuunnitteluSopimusYhteysHenkilo}
             />
           );
         })}
@@ -166,9 +171,18 @@ interface UserFieldProps {
   remove: UseFieldArrayRemove;
   muokattavissa: boolean;
   isProjektiPaallikko?: boolean;
+  isSuunnitteluSopimusYhteysHenkilo?: boolean;
 }
 
-const UserFields = ({ index, disableFields, remove, initialKayttaja, muokattavissa, isProjektiPaallikko }: UserFieldProps) => {
+const UserFields = ({
+  index,
+  disableFields,
+  remove,
+  initialKayttaja,
+  muokattavissa,
+  isProjektiPaallikko,
+  isSuunnitteluSopimusYhteysHenkilo,
+}: UserFieldProps) => {
   const [kayttaja, setKayttaja] = useState<Kayttaja | null>(initialKayttaja);
 
   useEffect(() => {
@@ -321,11 +335,11 @@ const UserFields = ({ index, disableFields, remove, initialKayttaja, muokattavis
         shouldUnregister
         render={({ field: { value, onChange, ...field } }) => (
           <FormControlLabel
-            disabled={isProjektiPaallikko}
+            disabled={isProjektiPaallikko || isSuunnitteluSopimusYhteysHenkilo}
             label="Yhteystiedot näytetään julkisella puolella projektin yleisissä yhteystiedoissa."
             control={
               <Checkbox
-                checked={isProjektiPaallikko ? true : !!value}
+                checked={isProjektiPaallikko || isSuunnitteluSopimusYhteysHenkilo ? true : !!value}
                 onChange={(event) => {
                   const checked = event.target.checked;
                   onChange(!!checked);

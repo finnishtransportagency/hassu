@@ -146,6 +146,7 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
               disableFields={disableFormEdit}
               projektiKayttajat={projekti.kayttoOikeudet || []}
               onKayttajatUpdate={onKayttajatUpdate}
+              suunnitteluSopimusYhteysHenkilo={projekti.suunnitteluSopimus?.yhteysHenkilo}
             />
             <Section noDivider>
               <HassuStack alignItems="flex-end">
