@@ -7,13 +7,15 @@ interface Props {
 }
 
 // TODO: projektin tilan tietojen nayttaminen, nyt paaosin placeholdereita
-export default function KasittelyntilaPageContent({ projekti }: Props): ReactElement {
+export default function KasittelynTilaLukutila({ projekti }: Props): ReactElement {
   return (
     <>
-      <p>
-        Pääkäyttäjä lisää sivulle tietoa hallinnollisen käsittelyn tiloista, jotka ovat nähtävissä lukutilassa muille järjestelmän
-        käyttäjille
-      </p>
+      <Section noDivider>
+        <p>
+          Pääkäyttäjä lisää sivulle tietoa hallinnollisen käsittelyn tiloista, jotka ovat nähtävissä lukutilassa muille järjestelmän
+          käyttäjille
+        </p>
+      </Section>
       <Section>
         <h5 className="vayla-small-title">Suunnitelman tila</h5>
         <p>Suunnitelman tilatieto siirtyy automaattisesti Projektivelhoon</p>

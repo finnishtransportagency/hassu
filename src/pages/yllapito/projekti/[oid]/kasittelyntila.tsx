@@ -1,6 +1,6 @@
 import { PageProps } from "@pages/_app";
 import React, { ReactElement, useCallback, useState, useMemo } from "react";
-import { api, HyvaksymispaatosInput, TallennaProjektiInput } from "@services/api";
+import { api, HyvaksymispaatosInput, Status, TallennaProjektiInput } from "@services/api";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
@@ -26,7 +26,7 @@ import HassuGridItem from "@components/HassuGridItem";
 import LuoJatkopaatosDialog from "@components/projekti/kasittelyntila/LuoJatkopaatosDialog";
 import { useRouter } from "next/router";
 import TextInput from "@components/form/TextInput";
-import KasittelyntilaLukutila from "@components/projekti/kasittelyntila/Lukutila";
+import KasittelyntilaLukutila from "@components/projekti/lukutila/KasittelynTilaLukutila";
 
 type FormValues = Pick<TallennaProjektiInput, "oid" | "kasittelynTila">;
 
@@ -172,7 +172,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
 
   const jatkopaatos1Pvm = watch("kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm");
   const jatkopaatos1Asiatunnus = watch("kasittelynTila.ensimmainenJatkopaatos.asianumero");
-  const lisaaDisabled = !!!jatkopaatos1Pvm || !!!jatkopaatos1Asiatunnus;
+  const lisaaDisabled = !!!jatkopaatos1Pvm || !!!jatkopaatos1Asiatunnus || projekti.status !== Status.EPAAKTIIVINEN_1;
   const velhoURL = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + projekti.oid;
 
   return (
@@ -219,11 +219,13 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               <HassuDatePickerWithController
                 label="1. jatkopäätöksen päivä"
                 controllerProps={{ control: control, name: "kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm" }}
+                disabled={projekti.status !== Status.EPAAKTIIVINEN_1}
               />
               <TextInput
                 label="Asiatunnus"
                 {...register("kasittelynTila.ensimmainenJatkopaatos.asianumero")}
                 error={(errors as any).kasittelynTila?.ensimmainenJatkopaatos?.asianumero}
+                disabled={projekti.status !== Status.EPAAKTIIVINEN_1}
               ></TextInput>
               <input type="hidden" {...register("kasittelynTila.ensimmainenJatkopaatos.aktiivinen")} />
               <HassuGridItem sx={{ alignSelf: "end" }}>

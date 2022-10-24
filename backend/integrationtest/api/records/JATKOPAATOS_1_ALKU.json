@@ -499,7 +499,8 @@
   "kasittelynTila": {
     "ensimmainenJatkopaatos": {
       "paatoksenPvm": "2020-01-01T00:00:00+02:00",
-      "asianumero": "jatkopaatos1_asianumero"
+      "asianumero": "jatkopaatos1_asianumero",
+      "aktiivinen": true
     },
     "hyvaksymispaatos": {
       "asianumero": "asianro123",
