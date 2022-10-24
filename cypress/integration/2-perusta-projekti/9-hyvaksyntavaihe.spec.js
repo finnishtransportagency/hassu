@@ -107,8 +107,8 @@ describe("9 - Projektin nahtavillaolovaiheen kuulutustiedot", () => {
     cy.get('[name="hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').clear().type("test@vayla.fi");
 
     cy.get("#save_and_send_for_acceptance").click();
-    cy.contains("Lähetys onnistui");
-    cy.wait(9999);
+    cy.contains("Lähetys onnistui", { timeout: 30000 });
+
     cy.get("#kuulutuksentiedot_luku_tab").click();
     cy.get("#button_open_acceptance_dialog")
       .should("be.enabled")

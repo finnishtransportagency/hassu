@@ -91,6 +91,7 @@ Object {
       "__typename": "KasittelynTila",
       "ensimmainenJatkopaatos": Object {
         "__typename": "Hyvaksymispaatos",
+        "aktiivinen": true,
         "asianumero": "jatkopaatos1_asianumero",
         "paatoksenPvm": "2020-01-01T00:00:00+02:00",
       },
@@ -514,6 +515,7 @@ Object {
       "__typename": "KasittelynTila",
       "ensimmainenJatkopaatos": Object {
         "__typename": "Hyvaksymispaatos",
+        "aktiivinen": true,
         "asianumero": "jatkopaatos1_asianumero",
         "paatoksenPvm": "2020-01-01T00:00:00+02:00",
       },

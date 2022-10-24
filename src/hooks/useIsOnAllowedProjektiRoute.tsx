@@ -7,6 +7,7 @@ export interface Route {
   title: string;
   requiredStatus: Status;
   pathname?: string;
+  visible?: (projekti: ProjektiLisatiedolla | null | undefined) => Boolean;
 }
 
 export const routes: Route[] = [
@@ -45,7 +46,24 @@ export const routes: Route[] = [
     requiredStatus: Status.HYVAKSYMISMENETTELYSSA, //Avataan kun nähtävilläolovaihe on päättynyt
     pathname: `/yllapito/projekti/[oid]/hyvaksymispaatos`,
   },
+  {
+    title: "1. jatkopäätös",
+    pathname: `/yllapito/projekti/[oid]/jatkopaatos1`,
+    requiredStatus: Status.JATKOPAATOS_1,
+    visible: isJatkopaatos1Visible,
+  },
 ];
+
+function isJatkopaatos1Visible(projekti: ProjektiLisatiedolla | null | undefined): Boolean {
+  return projekti?.status === Status.JATKOPAATOS_1;
+}
+
+export function isVisible(projekti: ProjektiLisatiedolla | null | undefined, route: Route) {
+  if (!route.visible) {
+    return true;
+  }
+  return route.visible(projekti);
+}
 
 export function statusOrdinal(status: Status): number {
   return Object.values(Status).indexOf(status);

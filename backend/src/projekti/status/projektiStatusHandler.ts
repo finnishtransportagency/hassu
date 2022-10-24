@@ -107,7 +107,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
   const jatkoPaatos1 = new (class extends StatusHandler<API.Projekti> {
     handle(p: API.Projekti) {
       const jatkoPaatos = p.kasittelynTila?.ensimmainenJatkopaatos;
-      if (jatkoPaatos && jatkoPaatos.asianumero && jatkoPaatos.paatoksenPvm) {
+      if (jatkoPaatos && jatkoPaatos.asianumero && jatkoPaatos.paatoksenPvm && jatkoPaatos.aktiivinen) {
         p.status = API.Status.JATKOPAATOS_1;
         super.handle(p); // Continue evaluating next rules
       }
