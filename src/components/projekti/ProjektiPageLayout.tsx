@@ -1,7 +1,7 @@
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { api } from "@services/api";
 import Button from "@components/button/Button";
-import React, { useState, ReactElement, ReactNode } from "react";
+import React, { ReactElement, ReactNode, useState } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import ProjektiSideNavigation from "./ProjektiSideNavigation";
 import useSnackbars from "src/hooks/useSnackbars";
@@ -37,6 +37,10 @@ export default function ProjektiPageLayout({ children, title, showUpdateButton }
       }
     }
   };
+
+  if (!projekti) {
+    return <></>;
+  }
 
   return (
     <section>
