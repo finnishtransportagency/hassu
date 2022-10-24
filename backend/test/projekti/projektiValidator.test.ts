@@ -138,7 +138,7 @@ describe("projektiValidator", () => {
     projekti.jatkoPaatos1VaiheJulkaisut = projekti.hyvaksymisPaatosVaiheJulkaisut;
     projekti.kasittelynTila = {
       hyvaksymispaatos: { asianumero: "1", paatoksenPvm: "2000-01-01" },
-      ensimmainenJatkopaatos: { asianumero: "1", paatoksenPvm: "2000-01-01" },
+      ensimmainenJatkopaatos: { asianumero: "1", paatoksenPvm: "2000-01-01", aktiivinen: true },
     };
     validateTallennaProjekti(projekti, { oid: projekti.oid, kasittelynTila: { toinenJatkopaatos: {} } });
   });

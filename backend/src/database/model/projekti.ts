@@ -53,12 +53,12 @@ export type SuunnitteluSopimus = {
 };
 
 export type SuunnitteluSopimusJulkaisu = {
-  kunta: string,
-  logo?: string | null,
-  etunimi: string,
-  sukunimi: string,
-  puhelinnumero: string,
-  email: string,
+  kunta: string;
+  logo?: string | null;
+  etunimi: string;
+  sukunimi: string;
+  puhelinnumero: string;
+  email: string;
 };
 
 export type Suunnitelma = {
@@ -75,6 +75,7 @@ export type KasittelynTila = {
 export type Hyvaksymispaatos = {
   paatoksenPvm?: string;
   asianumero?: string;
+  aktiivinen?: boolean;
 };
 
 export type DBProjekti = {
