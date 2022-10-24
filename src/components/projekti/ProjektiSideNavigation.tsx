@@ -3,7 +3,7 @@ import HassuLink from "../HassuLink";
 import classNames from "classnames";
 import { useRouter } from "next/router";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import { useIsAllowedOnCurrentProjektiRoute, routes, projektiMeetsMinimumStatus } from "src/hooks/useIsOnAllowedProjektiRoute";
+import { useIsAllowedOnCurrentProjektiRoute, routes, projektiMeetsMinimumStatus, isVisible } from "src/hooks/useIsOnAllowedProjektiRoute";
 import ProjektiKortti from "./ProjektiKortti";
 
 export default function ProjektiSideNavigationWrapper(): ReactElement {
@@ -31,23 +31,25 @@ const ProjektiSideNavigation: FC<{ projekti: ProjektiLisatiedolla }> = ({ projek
       <ProjektiKortti projekti={projekti}></ProjektiKortti>
       <div role="navigation" className="bg-gray-lightest">
         <ul>
-          {routes.map((route, index) => {
-            const statusDisabled = !projektiMeetsMinimumStatus(projekti, route.requiredStatus);
-            return (
-              <li key={index}>
-                <HassuLink
-                  href={!statusDisabled ? { pathname: route.pathname, query: { oid: projekti.oid } } : undefined}
-                  className={classNames(
-                    "block pr-12 p-4 border-l-4",
-                    router.pathname === route.pathname ? "border-primary bg-gray-light" : "border-transparent",
-                    statusDisabled ? "text-gray" : "hover:bg-gray-light"
-                  )}
-                >
-                  {route.title}
-                </HassuLink>
-              </li>
-            );
-          })}
+          {routes
+            .filter((route) => isVisible(projekti, route))
+            .map((route, index) => {
+              const statusDisabled = !projektiMeetsMinimumStatus(projekti, route.requiredStatus);
+              return (
+                <li key={index}>
+                  <HassuLink
+                    href={!statusDisabled ? { pathname: route.pathname, query: { oid: projekti.oid } } : undefined}
+                    className={classNames(
+                      "block pr-12 p-4 border-l-4",
+                      router.pathname === route.pathname ? "border-primary bg-gray-light" : "border-transparent",
+                      statusDisabled ? "text-gray" : "hover:bg-gray-light"
+                    )}
+                  >
+                    {route.title}
+                  </HassuLink>
+                </li>
+              );
+            })}
         </ul>
       </div>
     </>

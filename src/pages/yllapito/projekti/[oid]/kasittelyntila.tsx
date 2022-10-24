@@ -151,7 +151,10 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
       }
       setIsFormSubmitting(false);
       setOpenTallenna(false);
-      router.push(`/yllapito/projekti/${projekti.oid}/henkilot`);
+      const siirtymaTimer = setTimeout(() => {
+        router.push(`/yllapito/projekti/${projekti.oid}/henkilot`);
+      }, 1500);
+      return () => clearTimeout(siirtymaTimer);
     },
     [router, projekti.oid, setValue, onSubmit, showSuccessMessage, showErrorMessage]
   );
