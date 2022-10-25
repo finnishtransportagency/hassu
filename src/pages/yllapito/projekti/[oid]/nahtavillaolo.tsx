@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useState } from "react";
+import React, { ReactElement, useCallback, useMemo, useState } from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { PageProps } from "@pages/_app";
 import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
@@ -72,9 +72,17 @@ function InfoElement({ projekti }: Props2) {
   }
 }
 
-export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactElement {
+export default function NahtavillaoloWrapper({ setRouteLabels }: PageProps): ReactElement {
   const { data: projekti } = useProjekti();
   useProjektiBreadcrumbs(setRouteLabels);
+
+  if (!projekti) {
+    return <></>;
+  }
+  return <Nahtavillaolo projekti={projekti} />;
+}
+
+function Nahtavillaolo({ projekti }: { projekti: ProjektiLisatiedolla }): ReactElement {
   const [currentTab, setCurrentTab] = useState<number | string>(0);
   const [open, setOpen] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
@@ -90,23 +98,48 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
     setOpen(false);
   }, [selectedValue, setIsDirty]);
 
-  const handleChange = (_event: React.SyntheticEvent<Element, Event>, value: string | number) => {
-    if (isDirty) {
-      setOpen(true);
-      setSelectedValue(value);
-    } else {
-      setOpen(false);
-      setCurrentTab(value);
-    }
-  };
-
-  if (!projekti) {
-    return <></>;
-  }
+  const handleChange = useCallback(
+    (_event: React.SyntheticEvent<Element, Event>, value: string | number) => {
+      if (isDirty) {
+        setOpen(true);
+        setSelectedValue(value);
+      } else {
+        setOpen(false);
+        setCurrentTab(value);
+      }
+    },
+    [isDirty]
+  );
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
   const nahtavillaolovaiheJulkaisu = projekti.nahtavillaoloVaiheJulkaisut?.[projekti.nahtavillaoloVaiheJulkaisut.length - 1];
+
+  const tabs = useMemo(
+    () => [
+      {
+        label: "Nähtäville asetettavat aineistot",
+        content:
+          epaaktiivinen && nahtavillaolovaiheJulkaisu ? (
+            <NahtavillaoloAineistotLukutila oid={projekti.oid} nahtavillaoloVaiheJulkaisu={nahtavillaolovaiheJulkaisu} />
+          ) : (
+            <NahtavilleAsetettavatAineistot setIsDirty={setIsDirty} />
+          ),
+        tabId: "aineisto_tab",
+      },
+      {
+        label: "Kuulutuksen tiedot",
+        content:
+          epaaktiivinen && nahtavillaolovaiheJulkaisu ? (
+            <Lukunakyma projekti={projekti} nahtavillaoloVaiheJulkaisu={nahtavillaolovaiheJulkaisu} />
+          ) : (
+            <KuulutuksenTiedot setIsDirty={setIsDirty} />
+          ),
+        tabId: "kuulutuksentiedot_tab",
+      },
+    ],
+    [epaaktiivinen, nahtavillaolovaiheJulkaisu, projekti]
+  );
 
   return (
     <ProjektiPageLayout title="Nähtävilläolovaihe">
@@ -140,33 +173,7 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
             </Notification>
           </>
         )}
-        <Tabs
-          tabStyle="Underlined"
-          value={currentTab}
-          onChange={handleChange}
-          tabs={[
-            {
-              label: "Nähtäville asetettavat aineistot",
-              content:
-                epaaktiivinen && nahtavillaolovaiheJulkaisu ? (
-                  <NahtavillaoloAineistotLukutila oid={projekti.oid} nahtavillaoloVaiheJulkaisu={nahtavillaolovaiheJulkaisu} />
-                ) : (
-                  <NahtavilleAsetettavatAineistot setIsDirty={setIsDirty} />
-                ),
-              tabId: "aineisto_tab",
-            },
-            {
-              label: "Kuulutuksen tiedot",
-              content:
-                epaaktiivinen && nahtavillaolovaiheJulkaisu ? (
-                  <Lukunakyma projekti={projekti} nahtavillaoloVaiheJulkaisu={nahtavillaolovaiheJulkaisu} />
-                ) : (
-                  <KuulutuksenTiedot setIsDirty={setIsDirty} />
-                ),
-              tabId: "kuulutuksentiedot_tab",
-            },
-          ]}
-        />
+        <Tabs tabStyle="Underlined" value={currentTab} onChange={handleChange} tabs={tabs} />
       </SectionContent>
       <TallentamattomiaMuutoksiaDialog open={open} handleClickClose={handleClickClose} handleClickOk={handleClickOk} />
     </ProjektiPageLayout>
