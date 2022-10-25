@@ -25,7 +25,7 @@ export default function MuutoksenHaku({}: Props) {
   const { t } = useTranslation("common");
 
   return (
-    <Section noDivider>
+    <Section>
       <SectionContent>
         <h4 className="vayla-small-title">Muutoksen haku</h4>
         <p>

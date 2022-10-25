@@ -93,15 +93,16 @@ function MuokkausnakymaForm({ projekti, setIsDirty }: MuokkausnakymaFormProps & 
     <FormProvider {...useFormReturn}>
       <h3 className="vayla-small-title">Päätös ja päätöksen liitteenä olevat aineistot</h3>
       <p>
-        Liitä Liikenne- ja viestintäviraston päätös. Liitettävä päätös haetaan Projektivelhosta. Päätös ja sen liitteenä oleva aineisto
-        julkaistaan palvelun julkisella puolella kuulutuksen julkaisupäivänä.
+        Liitä kuulutukselle Liikenne- ja viestintäviraston päätös sekä jatkopäätös. Liitettävät päätökset sekä päätösten liitteenä olevat
+        aineistot haetaan Projektivelhosta. Päätökset ja sen liitteenä oleva aineisto julkaistaan palvelun julkisella puolella kuulutuksen
+        julkaisupäivänä.
       </p>
       <Notification type={NotificationType.INFO_GRAY}>
         Huomioithan, että suunnitelma-aineistojen tulee täyttää saavutettavuusvaatimukset.
       </Notification>
       <form>
         <fieldset disabled={!isAllowedOnRoute || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden}>
-          <Jatkopaatos1 projekti={projekti} />
+          <Jatkopaatos1 />
           <SuunnitelmatJaAineistot />
           <Jatkopaatos1VaihePainikkeet />
         </fieldset>

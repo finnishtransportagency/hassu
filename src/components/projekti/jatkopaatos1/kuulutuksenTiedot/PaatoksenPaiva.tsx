@@ -26,10 +26,9 @@ export default function PaatoksenPaiva({ projekti }: Props) {
   return (
     <Section noDivider>
       <SectionContent>
-        <h4 className="vayla-small-title">Liikenne- ja viestintäviraston päätöksen päivä ja asianumero</h4>
+        <h4 className="vayla-small-title">Liikenne- ja viestintäviraston jatkopäätöksen päivä ja asiatunnus</h4>
         <p>
-          Järjestelmän pääkäyttäjä lisää Liikenne- ja viestintäviraston päätöksen päivämäärän ja asianumeron. Kuulutus on mahdollista
-          julkaista vasta kun hyväksymispäätös on annettu. Käsittelyn tilaa voi seurata{" "}
+          Liikenne- ja viestintäviraston jatkopäätöksen päivämäärän ja asiantunnus tulee automaattisesti{" "}
           <Link underline="none" href={`/yllapito/projekti/${projekti.oid}/kasittelyntila`}>
             Käsittelyn tila
           </Link>{" "}
