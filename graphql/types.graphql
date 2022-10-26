@@ -222,6 +222,7 @@ type HyvaksymisPaatosVaihe {
   kuulutusYhteystiedot: StandardiYhteystiedot
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   palautusSyy: String
+  viimeinenVoimassaolovuosi: String
 }
 
 type NahtavillaoloVaiheJulkaisu {
@@ -257,6 +258,7 @@ type HyvaksymisPaatosVaiheJulkaisu {
   tila: HyvaksymisPaatosVaiheTila
   muokkaaja: String
   hyvaksyja: String
+  viimeinenVoimassaolovuosi: String
 }
 
 type NahtavillaoloVaiheJulkaisuJulkinen {
@@ -283,6 +285,7 @@ type HyvaksymisPaatosVaiheJulkaisuJulkinen {
   hallintoOikeus: HallintoOikeus
   yhteystiedot: [Yhteystieto!]
   hyvaksymisPaatosVaihePDFt: HyvaksymisPaatosVaihePDFt
+  viimeinenVoimassaolovuosi: String
 }
 
 type NahtavillaoloPDF {

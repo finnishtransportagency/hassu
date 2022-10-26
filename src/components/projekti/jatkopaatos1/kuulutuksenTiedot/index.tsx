@@ -19,7 +19,7 @@ import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 import { jatkopaatos1KuulutusSchema } from "src/schemas/jatkopaatos1Kuulutus";
-import Voimassaoloaika from "./Voimassaoloaika";
+import Voimassaolovuosi from "./Voimassaolovuosi";
 
 export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid"> & {
   jatkoPaatos1Vaihe: Omit<HyvaksymisPaatosVaiheInput, "hallintoOikeus"> & {
@@ -66,6 +66,7 @@ function JatkoKuulutuksetTiedotForm({ projekti, kirjaamoOsoitteet, setIsDirty }:
           projekti.jatkoPaatos1Vaihe?.ilmoituksenVastaanottajat,
           kirjaamoOsoitteet
         ),
+        viimeinenVoimassaolovuosi: projekti?.jatkoPaatos1Vaihe?.viimeinenVoimassaolovuosi || "",
       },
     };
     return formValues;
@@ -109,7 +110,7 @@ function JatkoKuulutuksetTiedotForm({ projekti, kirjaamoOsoitteet, setIsDirty }:
               <fieldset disabled={!isAllowedOnRoute || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden}>
                 <KuulutusJaJulkaisuPaiva />
                 <PaatoksenPaiva projekti={projekti} />
-                <Voimassaoloaika />
+                <Voimassaolovuosi />
                 <MuutoksenHaku />
                 <KuulutuksessaEsitettavatYhteystiedot />
                 <IlmoituksenVastaanottajatKomponentti jatkoPaatos1Vaihe={projekti?.jatkoPaatos1Vaihe} />

@@ -11,6 +11,7 @@ export type HyvaksymisPaatosVaihe = {
   kuulutusYhteystiedot?: StandardiYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   palautusSyy?: string | null;
+  viimeinenVoimassaolovuosi?: string | null;
 };
 
 export type HyvaksymisPaatosVaiheJulkaisu = {

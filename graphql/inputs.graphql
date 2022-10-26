@@ -158,6 +158,7 @@ input HyvaksymisPaatosVaiheInput {
   hallintoOikeus: HallintoOikeus
   kuulutusYhteystiedot: StandardiYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
+  viimeinenVoimassaolovuosi: String
 }
 
 input LinkkiInput {

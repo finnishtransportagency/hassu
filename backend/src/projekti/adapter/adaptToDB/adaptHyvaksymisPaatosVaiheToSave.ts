@@ -21,6 +21,7 @@ export function adaptHyvaksymisPaatosVaiheToSave(
     kuulutusPaiva,
     kuulutusVaihePaattyyPaiva,
     hallintoOikeus,
+    viimeinenVoimassaolovuosi,
   } = hyvaksymisPaatosVaihe;
 
   const aineistoNahtavilla = adaptAineistotToSave(
@@ -49,6 +50,7 @@ export function adaptHyvaksymisPaatosVaiheToSave(
     kuulutusYhteystiedot: adaptStandardiYhteystiedotToSave(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat),
     hallintoOikeus,
+    viimeinenVoimassaolovuosi,
   };
   return mergeWith({}, dbHyvaksymisPaatosVaihe, newChanges);
 }
