@@ -237,12 +237,12 @@ class ProjektiSearchService {
     }
     if (params.maakunta) {
       queries.push({
-        terms: { "maakunnat.keyword": params.maakunta },
+        terms: { "maakunnat": params.maakunta },
       });
     }
     if (params.kunta) {
       queries.push({
-        terms: { "kunnat.keyword": params.kunta },
+        terms: { "kunnat": params.kunta },
       });
     }
     if (params.vaylamuoto) {

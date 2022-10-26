@@ -29,7 +29,7 @@ Object {
         },
         Object {
           "terms": Object {
-            "maakunnat.keyword": Array [
+            "maakunnat": Array [
               6,
             ],
           },
@@ -118,7 +118,7 @@ Object {
         },
         Object {
           "terms": Object {
-            "maakunnat.keyword": Array [
+            "maakunnat": Array [
               6,
             ],
           },

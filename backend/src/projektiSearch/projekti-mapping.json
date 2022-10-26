@@ -10,13 +10,7 @@
       }
     },
     "maakunnat": {
-      "type": "text",
-      "fields": {
-        "keyword": {
-          "type": "keyword",
-          "ignore_above": 256
-        }
-      }
+      "type": "integer"
     },
     "muokkaajat": {
       "type": "text",
