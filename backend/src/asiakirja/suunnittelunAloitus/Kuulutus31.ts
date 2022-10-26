@@ -7,6 +7,7 @@ import { formatList, KutsuAdapter } from "./KutsuAdapter";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import { formatDate } from "../asiakirjaUtil";
 import { IlmoitusParams } from "./suunnittelunAloitusPdf";
+import { kuntametadata } from "../../../../common/kuntametadata";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
@@ -143,13 +144,13 @@ export class Kuulutus31 extends CommonPdf {
   }
 
   private getKunnatString() {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const organisaatiot: string[] = this.velho?.kunnat;
-    const trimmattutOrganisaatiot = organisaatiot.map((organisaatio) => formatProperNoun(organisaatio));
-    const viimeinenOrganisaatio = trimmattutOrganisaatiot.slice(-1);
-    const muut = trimmattutOrganisaatiot.slice(0, -1);
-    return formatList([...muut, ...viimeinenOrganisaatio], this.kieli);
+    const organisaatiot: string[] | undefined = this.velho?.kunnat?.map((kuntaId) => kuntametadata.nameForKuntaId(kuntaId, this.kieli));
+    if (organisaatiot) {
+      const trimmattutOrganisaatiot = organisaatiot.map((organisaatio) => formatProperNoun(organisaatio));
+      const viimeinenOrganisaatio = trimmattutOrganisaatiot.slice(-1);
+      const muut = trimmattutOrganisaatiot.slice(0, -1);
+      return formatList([...muut, ...viimeinenOrganisaatio], this.kieli);
+    }
   }
 
   protected get kuulutusPaiva(): string {
@@ -209,9 +210,7 @@ export class Kuulutus31 extends CommonPdf {
 
   get kirjaamo(): string {
     const kirjaamoOsoite = this.kirjaamoOsoitteet
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      .filter((osoite) => osoite.nimi == this.velho.suunnittelustaVastaavaViranomainen.toString())
+      .filter((osoite) => osoite.nimi == this.velho.suunnittelustaVastaavaViranomainen?.toString())
       .pop();
     if (kirjaamoOsoite) {
       return kirjaamoOsoite.sahkoposti;

@@ -30,6 +30,7 @@ import FormatDate from "@components/FormatDate";
 import { splitFilePath } from "../../../util/fileUtil";
 import classNames from "classnames";
 import Trans from "next-translate/Trans";
+import { kuntametadata } from "../../../../common/kuntametadata";
 
 export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
   const { t } = useTranslation("suunnittelu");
@@ -85,7 +86,7 @@ const VuorovaikutusTiedot: FC<{
   projektiOid: string;
 }> = ({ suunnittelusopimus, vuorovaikutus, projektiOid }) => {
   const [palauteLomakeOpen, setPalauteLomakeOpen] = useState(false);
-  const { t } = useTranslation("suunnittelu");
+  const { t, lang } = useTranslation("suunnittelu");
   const kieli = useKansalaiskieli();
 
   const today = dayjs();
@@ -213,7 +214,7 @@ const VuorovaikutusTiedot: FC<{
                 <>
                   {` ${t("common:ja")} `}
                   {suunnittelusopimus.etunimi} {suunnittelusopimus.sukunimi} puh. {suunnittelusopimus.puhelinnumero}{" "}
-                  {suunnittelusopimus.email} ({capitalize(suunnittelusopimus.kunta)}).
+                  {suunnittelusopimus.email} ({capitalize(kuntametadata.nameForKuntaId(suunnittelusopimus.kunta, lang))}).
                 </>
               )}
             </p>

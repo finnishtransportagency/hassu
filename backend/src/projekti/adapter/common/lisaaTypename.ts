@@ -1,6 +1,7 @@
 import { Kielitiedot, Linkki, StandardiYhteystiedot, Suunnitelma, Velho, Yhteystieto } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
+import { kuntametadata } from "../../../../../common/kuntametadata";
 
 export function adaptLiittyvatSuunnitelmatByAddingTypename(suunnitelmat?: Suunnitelma[] | null): API.Suunnitelma[] | undefined | null {
   if (suunnitelmat) {
@@ -53,8 +54,13 @@ export function adaptLinkkiListByAddingTypename(links: Array<Linkki> | null | un
   return links as undefined;
 }
 
-export function adaptVelhoByAddingTypename(velho: Velho): API.Velho {
-  return { __typename: "Velho", ...velho };
+export function adaptVelho(velho: Velho | null | undefined): API.Velho {
+  return {
+    __typename: "Velho",
+    ...velho,
+    kunnat: velho?.kunnat?.map(kuntametadata.idForKuntaName),
+    maakunnat: velho?.maakunnat?.map(kuntametadata.idForMaakuntaName),
+  };
 }
 
 export function adaptYhteystiedotByAddingTypename(yhteystiedot: Yhteystieto[] | undefined | null): API.Yhteystieto[] | undefined | null {

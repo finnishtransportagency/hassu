@@ -5,7 +5,7 @@ import {
   adaptHankkeenKuvaus,
   adaptIlmoituksenVastaanottajat,
   adaptKielitiedotByAddingTypename,
-  adaptVelhoByAddingTypename,
+  adaptVelho,
   adaptMandatoryYhteystiedotByAddingTypename,
   adaptStandardiYhteystiedotByAddingTypename,
 } from "../common";
@@ -80,7 +80,7 @@ export function adaptNahtavillaoloVaiheJulkaisut(
         aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
         lisaAineisto: adaptAineistot(lisaAineisto),
         nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(oid, nahtavillaoloPDFt),
-        velho: adaptVelhoByAddingTypename(velho),
+        velho: adaptVelho(velho),
       };
       return palautetaan;
     });

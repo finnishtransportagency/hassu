@@ -15,6 +15,7 @@ import identity from "lodash/identity";
 import isArray from "lodash/isArray";
 import cloneDeep from "lodash/cloneDeep";
 import difference from "lodash/difference";
+import { kuntametadata } from "../../../common/kuntametadata";
 import { log } from "../logger";
 
 let metaDataJSON: any;
@@ -26,7 +27,7 @@ function getMetadataJSON() {
   return metaDataJSON;
 }
 
-function extractValuesIntoMap(field: string) {
+function extractVelhoValuesIntoMap(field: string) {
   const values: any = {};
   const definition: any = (getMetadataJSON().info["x-velho-nimikkeistot"] as any)[field];
   const keyTitleMap = definition.nimikkeistoversiot[definition["uusin-nimikkeistoversio"]];
@@ -37,11 +38,11 @@ function extractValuesIntoMap(field: string) {
 }
 
 const metadata = (() => {
-  const tilat = extractValuesIntoMap("projekti/tila");
-  const vaiheet = extractValuesIntoMap("projekti/vaihe");
-  const organisaatiot = extractValuesIntoMap("projekti/organisaatio");
-  const toteutusAjankohdat = extractValuesIntoMap("projekti/arvioitu-toteutusajankohta");
-  const dokumenttiTyypit = extractValuesIntoMap("aineisto/dokumenttityyppi");
+  const tilat = extractVelhoValuesIntoMap("projekti/tila");
+  const vaiheet = extractVelhoValuesIntoMap("projekti/vaihe");
+  const organisaatiot = extractVelhoValuesIntoMap("projekti/organisaatio");
+  const toteutusAjankohdat = extractVelhoValuesIntoMap("projekti/arvioitu-toteutusajankohta");
+  const dokumenttiTyypit = extractVelhoValuesIntoMap("aineisto/dokumenttityyppi");
   return { tilat, vaiheet, organisaatiot, toteutusAjankohdat, dokumenttiTyypit };
 })();
 
@@ -146,18 +147,36 @@ function getVastuuhenkiloEmail(
   return vastuuhenkilo as unknown as string;
 }
 
-function getKunnat(data: ProjektiProjekti) {
+function getKunnat(data: ProjektiProjekti): number[] | undefined {
   if (data.ominaisuudet.kunta) {
-    log.info({ kunta: data.ominaisuudet.kunta }); // TODO add support for object type when we have test data available
+    const kunnat: number[] = [];
+    data.ominaisuudet.kunta.forEach((kuntaVelhoKey) => {
+      const kuntaId = kuntametadata.parseNumberIdFromVelhoKey(kuntaVelhoKey as unknown as string);
+      if (!kuntametadata.kuntaForKuntaId(kuntaId)) {
+        log.warn("Velhosta saatua kuntaa ei löydy: " + kuntaId);
+      } else {
+        kunnat.push(kuntaId);
+      }
+    });
+    return kunnat.sort();
   }
-  return data.ominaisuudet["muu-kunta"]?.split(",");
+  return data.ominaisuudet["muu-kunta"]?.split(",").map(kuntametadata.idForKuntaName).sort();
 }
 
 function getMaakunnat(data: ProjektiProjekti) {
   if (data.ominaisuudet.maakunta) {
-    log.info({ maakunta: data.ominaisuudet.maakunta }); // TODO add support for object type when we have test data available
+    const maakunnat: number[] = [];
+    data.ominaisuudet.maakunta.forEach((maakuntaVelhoKey) => {
+      const maakuntaId = kuntametadata.parseNumberIdFromVelhoKey(maakuntaVelhoKey as unknown as string);
+      if (!kuntametadata.maakuntaForMaakuntaId(maakuntaId)) {
+        log.warn("Velhosta saatua maakuntaa ei löydy: " + maakuntaId);
+      } else {
+        maakunnat.push(maakuntaId);
+      }
+    });
+    return maakunnat.sort();
   }
-  return data.ominaisuudet["muu-maakunta"]?.split(",");
+  return data.ominaisuudet["muu-maakunta"]?.split(",").map(kuntametadata.idForMaakuntaName).sort();
 }
 
 export function adaptProjekti(data: ProjektiProjekti): DBProjekti {

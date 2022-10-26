@@ -20,6 +20,7 @@ import {
 import { DBProjekti } from "../../src/database/model";
 import { ProjektiDocument } from "../../src/projektiSearch/projektiSearchAdapter";
 import { parseDate } from "../../src/util/dateUtil";
+import { kuntametadata } from "../../../common/kuntametadata";
 
 const sandbox = require("sinon").createSandbox();
 
@@ -50,12 +51,15 @@ describe("ProjektiSearchService", () => {
   });
 });
 
+let ilmajokiSeinajoki = kuntametadata.idsForKuntaNames(["Ilmajoki", " Seinäjoki"]);
+let uusimaa = kuntametadata.idsForMaakuntaNames(["Uusimaa"]);
+
 const julkinenIndeksi: Omit<ProjektiDocument, "oid"> = {
   nimi: "Vastuun testiprojekti 0709",
   hankkeenKuvaus: "asdgdrgh",
   projektiTyyppi: ProjektiTyyppi.TIE,
-  kunnat: ["Ilmajoki", " Seinäjoki"],
-  maakunnat: ["Uusimaa"],
+  kunnat: ilmajokiSeinajoki,
+  maakunnat: uusimaa,
   vaihe: Status.SUUNNITTELU,
   viimeinenTilaisuusPaattyy: "2022-10-28 17:18",
   vaylamuoto: ["tie"],
@@ -124,8 +128,8 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
         vastuuhenkilonEmail: "vastuu.henkilo@vayla.fi",
         varahenkilonNimi: undefined,
         varahenkilonEmail: "vara.tyyppi@vayla.fi",
-        kunnat: ["Ilmajoki", " Seinäjoki"],
-        maakunnat: ["Uusimaa"],
+        kunnat: ilmajokiSeinajoki,
+        maakunnat: uusimaa,
         linkki: undefined,
       },
       suunnitteluSopimus: undefined,
@@ -172,7 +176,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
           alkamisAika: "16:18",
           paattymisAika: "17:18",
           kaytettavaPalvelu: KaytettavaPalvelu.TEAMS,
-          linkki: "http://www.fi",
+          linkki: "https://www.fi",
           paikka: undefined,
           osoite: undefined,
           postinumero: undefined,
@@ -264,8 +268,8 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
     vastuuhenkilonEmail: "vastuu.henkilo@vayla.fi",
     varahenkilonNimi: undefined,
     varahenkilonEmail: "vara.tyyppi@vayla.fi",
-    kunnat: ["Ilmajoki", " Seinäjoki"],
-    maakunnat: ["Uusimaa"],
+    kunnat: ilmajokiSeinajoki,
+    maakunnat: uusimaa,
     linkki: undefined,
   },
   kayttoOikeudet: [

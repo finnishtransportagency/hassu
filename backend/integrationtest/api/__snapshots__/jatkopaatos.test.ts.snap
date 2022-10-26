@@ -34,20 +34,20 @@ Object {
         "kunnat": Array [
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 491,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": "Mikkeli",
             "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 178,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": " Juva",
             "sahkoposti": "juva@ju.va",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 740,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": " Savonlinna",
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
@@ -153,20 +153,20 @@ Object {
         "kunnat": Array [
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 491,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": "Mikkeli",
             "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 178,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": " Juva",
             "sahkoposti": "juva@ju.va",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 740,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": " Savonlinna",
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
@@ -253,20 +253,20 @@ Object {
           "kunnat": Array [
             Object {
               "__typename": "KuntaVastaanottaja",
+              "id": 491,
               "lahetetty": "2022-03-11T14:54",
-              "nimi": "Mikkeli",
               "sahkoposti": "mikkeli@mikke.li",
             },
             Object {
               "__typename": "KuntaVastaanottaja",
+              "id": 178,
               "lahetetty": "2022-03-11T14:54",
-              "nimi": " Juva",
               "sahkoposti": "juva@ju.va",
             },
             Object {
               "__typename": "KuntaVastaanottaja",
+              "id": 740,
               "lahetetty": "2022-03-11T14:54",
-              "nimi": " Savonlinna",
               "sahkoposti": "savonlinna@savonlin.na",
             },
           ],
@@ -290,12 +290,12 @@ Object {
         "velho": Object {
           "__typename": "Velho",
           "kunnat": Array [
-            "Helsinki",
-            " Vantaa",
+            91,
+            92,
           ],
           "linkki": null,
           "maakunnat": Array [
-            "Uusimaa",
+            1,
           ],
           "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
           "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
@@ -379,12 +379,12 @@ Object {
       "asiatunnusELY": undefined,
       "asiatunnusVayla": undefined,
       "kunnat": Array [
-        "Helsinki",
-        "Vantaa",
+        91,
+        92,
       ],
       "kuvaus": undefined,
       "maakunnat": Array [
-        "Uusimaa",
+        1,
       ],
       "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
       "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
@@ -458,20 +458,20 @@ Object {
         "kunnat": Array [
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 491,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": "Mikkeli",
             "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 178,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": " Juva",
             "sahkoposti": "juva@ju.va",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 740,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": " Savonlinna",
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
@@ -581,20 +581,20 @@ Object {
         "kunnat": Array [
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 491,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": "Mikkeli",
             "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 178,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": " Juva",
             "sahkoposti": "juva@ju.va",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 740,
             "lahetetty": "2022-03-11T14:54",
-            "nimi": " Savonlinna",
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
@@ -681,20 +681,20 @@ Object {
           "kunnat": Array [
             Object {
               "__typename": "KuntaVastaanottaja",
+              "id": 491,
               "lahetetty": "2022-03-11T14:54",
-              "nimi": "Mikkeli",
               "sahkoposti": "mikkeli@mikke.li",
             },
             Object {
               "__typename": "KuntaVastaanottaja",
+              "id": 178,
               "lahetetty": "2022-03-11T14:54",
-              "nimi": " Juva",
               "sahkoposti": "juva@ju.va",
             },
             Object {
               "__typename": "KuntaVastaanottaja",
+              "id": 740,
               "lahetetty": "2022-03-11T14:54",
-              "nimi": " Savonlinna",
               "sahkoposti": "savonlinna@savonlin.na",
             },
           ],
@@ -718,12 +718,12 @@ Object {
         "velho": Object {
           "__typename": "Velho",
           "kunnat": Array [
-            "Helsinki",
-            " Vantaa",
+            91,
+            92,
           ],
           "linkki": null,
           "maakunnat": Array [
-            "Uusimaa",
+            1,
           ],
           "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
           "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
@@ -807,12 +807,12 @@ Object {
       "asiatunnusELY": undefined,
       "asiatunnusVayla": undefined,
       "kunnat": Array [
-        "Helsinki",
-        "Vantaa",
+        91,
+        92,
       ],
       "kuvaus": undefined,
       "maakunnat": Array [
-        "Uusimaa",
+        1,
       ],
       "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
       "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",

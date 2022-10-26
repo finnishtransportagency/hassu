@@ -17,6 +17,7 @@ import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../../proje
 import { findUserByKayttajatunnus } from "../../projekti/projektiUtil";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 import { AsiakirjanMuoto, YleisotilaisuusKutsuPdfOptions } from "../asiakirjaTypes";
+import { kuntametadata } from "../../../../common/kuntametadata";
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
   SUOMI: "KUTSU TIEDOTUS- / YLEISÖTILAISUUTEEN",
@@ -210,7 +211,7 @@ export class Kutsu20 extends CommonPdf {
     let laatii: string;
     if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
       const tilaajaOrganisaatio = this.kutsuAdapter.tilaajaOrganisaatio;
-      const kunnat = this.velho?.kunnat;
+      const kunnat = this.velho?.kunnat?.map((kuntaId) => kuntametadata.nameForKuntaId(kuntaId, this.kieli));
       const organisaatiot = kunnat ? [tilaajaOrganisaatio, ...kunnat] : [tilaajaOrganisaatio];
       const trimmattutOrganisaatiot = organisaatiot.map((organisaatio) => formatProperNoun(organisaatio));
       const viimeinenOrganisaatio = trimmattutOrganisaatiot.slice(-1);

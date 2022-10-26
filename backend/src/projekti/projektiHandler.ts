@@ -4,7 +4,7 @@ import { velho } from "../velho/velhoClient";
 import * as API from "../../../common/graphql/apiModel";
 import { KayttajaTyyppi, NykyinenKayttaja, TallennaProjektiInput, Velho } from "../../../common/graphql/apiModel";
 import { projektiAdapter } from "./adapter/projektiAdapter";
-import { adaptVelhoByAddingTypename } from "./adapter/common";
+import { adaptVelho } from "./adapter/common";
 import { auditLog, log } from "../logger";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import mergeWith from "lodash/mergeWith";
@@ -166,7 +166,7 @@ export async function findUpdatesFromVelho(oid: string): Promise<Velho> {
     if (!projektiFromDB.velho) {
       throw new Error(`Projektille oid ${oid} ei löydy hassusta projekti.velho-tietoa.`);
     }
-    return adaptVelhoByAddingTypename(findUpdatedFields(projektiFromDB.velho, projekti.velho));
+    return adaptVelho(findUpdatedFields(projektiFromDB.velho, projekti.velho));
   } catch (e) {
     log.error(e);
     throw e;
@@ -206,7 +206,7 @@ export async function synchronizeUpdatesFromVelho(oid: string, reset = false): P
 
     const updatedFields = findUpdatedFields(projektiFromDB.velho, projektiFromVelho.velho);
     await projektiDatabase.saveProjekti({ oid, velho: projektiFromVelho.velho, kayttoOikeudet: kayttoOikeudetNew });
-    return adaptVelhoByAddingTypename(updatedFields);
+    return adaptVelho(updatedFields);
   } catch (e) {
     log.error(e);
     throw e;

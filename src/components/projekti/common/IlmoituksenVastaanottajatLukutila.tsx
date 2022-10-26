@@ -8,6 +8,7 @@ import {
 import dayjs from "dayjs";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
+import { kuntametadata } from "../../../../common/kuntametadata";
 
 interface Props {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatType | null | undefined;
@@ -20,7 +21,7 @@ export default function IlmoituksenVastaanottajat({
   ilmoituksenVastaanottajat,
   julkaisunTila,
 }: Props): ReactElement {
-  const { t } = useTranslation("commonFI");
+  const { t, lang } = useTranslation("commonFI");
   const isKuntia = !!ilmoituksenVastaanottajat?.kunnat;
   const isViranomaisia = !!ilmoituksenVastaanottajat?.viranomaiset;
 
@@ -82,7 +83,7 @@ export default function IlmoituksenVastaanottajat({
             <>
               {ilmoituksenVastaanottajat?.kunnat?.map((kunta, index) => (
                 <React.Fragment key={index}>
-                  <p className={getStyleForRow(index)}>{kunta.nimi}</p>
+                  <p className={getStyleForRow(index)}>{kuntametadata.nameForKuntaId(kunta.id, lang)}</p>
                   <p className={getStyleForRow(index)}>{kunta.sahkoposti}</p>
                   <p className={getStyleForRow(index)}>{kunta.lahetetty ? "Lahetetty" : "Ei lähetetty"}</p>
                   <p className={getStyleForRow(index)}>{kunta.lahetetty ? dayjs(kunta.lahetetty).format("DD.MM.YYYY HH:mm") : null}</p>

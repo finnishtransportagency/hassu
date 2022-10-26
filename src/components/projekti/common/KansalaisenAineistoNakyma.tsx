@@ -10,6 +10,7 @@ import { Stack } from "@mui/material";
 import ExtLink from "@components/ExtLink";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ButtonFlat from "@components/button/ButtonFlat";
+import { kuntametadata } from "../../../../common/kuntametadata";
 
 type Props = {
   projekti: ProjektiJulkinen;
@@ -22,7 +23,7 @@ export default function KansalaisenAineistoNakyma({
   kuulutus,
   naytaAineistoPaivanaKuulutuksenJulkaisuPaiva,
 }: Props): ReactElement {
-  const { t } = useTranslation("projekti");
+  const { t, lang } = useTranslation("projekti");
 
   const [expandedAineistoKategoriat, setExpandedAineistoKategoriat] = useState<Key[]>([]);
   const areAineistoKategoriesExpanded = !!expandedAineistoKategoriat.length;
@@ -35,10 +36,10 @@ export default function KansalaisenAineistoNakyma({
 
   let sijainti = "";
   if (velho.maakunnat) {
-    sijainti = sijainti + velho.maakunnat.join(", ") + "; ";
+    sijainti = sijainti + kuntametadata.namesForMaakuntaIds(velho.maakunnat, lang).join(", ") + "; ";
   }
   if (velho.kunnat) {
-    sijainti = sijainti + velho.kunnat.join(", ");
+    sijainti = sijainti + kuntametadata.namesForKuntaIds(velho.kunnat, lang).join(", ");
   }
 
   const getAlaKategoryIds = (aineistoKategoriat: AineistoKategoria[]) => {

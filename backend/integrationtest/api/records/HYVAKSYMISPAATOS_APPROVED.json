@@ -18,12 +18,12 @@
         "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
         "tyyppi": "TIE",
         "maakunnat": [
-          "Uusimaa"
+          1
         ],
         "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
         "kunnat": [
-          "Helsinki",
-          " Vantaa"
+          91,
+          92
         ],
         "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
         "vaylamuoto": [
@@ -36,7 +36,7 @@
         "__typename": "SuunnitteluSopimusJulkaisu",
         "sukunimi": "Hassu",
         "logo": "/suunnittelusopimus/logo.png",
-        "kunta": "Nokia",
+        "kunta": 536,
         "puhelinnumero": "123",
         "email": "mikko.haapamaki@cgi.com"
       },
@@ -47,19 +47,19 @@
       "ilmoituksenVastaanottajat": {
         "kunnat": [
           {
-            "nimi": "Mikkeli",
             "sahkoposti": "mikkeli@mikke.li",
-            "lahetetty": "2020-01-01T00:00:00+02:00"
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "id": 491
           },
           {
-            "nimi": " Juva",
             "sahkoposti": "juva@ju.va",
-            "lahetetty": "2020-01-01T00:00:00+02:00"
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "id": 178
           },
           {
-            "nimi": " Savonlinna",
             "sahkoposti": "savonlinna@savonlin.na",
-            "lahetetty": "2020-01-01T00:00:00+02:00"
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "id": 740
           }
         ],
         "viranomaiset": [
@@ -98,19 +98,19 @@
   "suunnitteluSopimus": {
     "yhteysHenkilo": "LX581241",
     "logo": "/suunnittelusopimus/logo.png",
-    "kunta": "Nokia"
+    "kunta": 536
   },
   "velho": {
     "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
     "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
     "tyyppi": "TIE",
     "maakunnat": [
-      "Uusimaa"
+      1
     ],
     "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
     "kunnat": [
-      "Helsinki",
-      " Vantaa"
+      91,
+      92
     ],
     "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
     "vaylamuoto": [
@@ -130,12 +130,12 @@
         "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
         "tyyppi": "TIE",
         "maakunnat": [
-          "Uusimaa"
+          1
         ],
         "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
         "kunnat": [
-          "Helsinki",
-          " Vantaa"
+          91,
+          92
         ],
         "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
         "vaylamuoto": [
@@ -203,19 +203,19 @@
       "ilmoituksenVastaanottajat": {
         "kunnat": [
           {
-            "nimi": "Mikkeli",
             "sahkoposti": "mikkeli@mikke.li",
-            "lahetetty": "2020-01-01T00:00:00+02:00"
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "id": 491
           },
           {
-            "nimi": " Juva",
             "sahkoposti": "juva@ju.va",
-            "lahetetty": "2020-01-01T00:00:00+02:00"
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "id": 178
           },
           {
-            "nimi": " Savonlinna",
             "sahkoposti": "savonlinna@savonlin.na",
-            "lahetetty": "2020-01-01T00:00:00+02:00"
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "id": 740
           }
         ],
         "viranomaiset": [
@@ -289,19 +289,19 @@
     "ilmoituksenVastaanottajat": {
       "kunnat": [
         {
-          "nimi": "Mikkeli",
           "sahkoposti": "mikkeli@mikke.li",
-          "lahetetty": "2020-01-01T00:00:00+02:00"
+          "lahetetty": "2020-01-01T00:00:00+02:00",
+          "id": 491
         },
         {
-          "nimi": " Juva",
           "sahkoposti": "juva@ju.va",
-          "lahetetty": "2020-01-01T00:00:00+02:00"
+          "lahetetty": "2020-01-01T00:00:00+02:00",
+          "id": 178
         },
         {
-          "nimi": " Savonlinna",
           "sahkoposti": "savonlinna@savonlin.na",
-          "lahetetty": "2020-01-01T00:00:00+02:00"
+          "lahetetty": "2020-01-01T00:00:00+02:00",
+          "id": 740
         }
       ],
       "viranomaiset": [
@@ -363,19 +363,19 @@
     "ilmoituksenVastaanottajat": {
       "kunnat": [
         {
-          "nimi": "Mikkeli",
           "sahkoposti": "mikkeli@mikke.li",
-          "lahetetty": "2020-01-01T00:00:00+02:00"
+          "lahetetty": "2020-01-01T00:00:00+02:00",
+          "id": 491
         },
         {
-          "nimi": " Juva",
           "sahkoposti": "juva@ju.va",
-          "lahetetty": "2020-01-01T00:00:00+02:00"
+          "lahetetty": "2020-01-01T00:00:00+02:00",
+          "id": 178
         },
         {
-          "nimi": " Savonlinna",
           "sahkoposti": "savonlinna@savonlin.na",
-          "lahetetty": "2020-01-01T00:00:00+02:00"
+          "lahetetty": "2020-01-01T00:00:00+02:00",
+          "id": 740
         }
       ],
       "viranomaiset": [
@@ -529,19 +529,19 @@
     "ilmoituksenVastaanottajat": {
       "kunnat": [
         {
-          "nimi": "Mikkeli",
           "sahkoposti": "mikkeli@mikke.li",
-          "lahetetty": "2020-01-01T00:00:00+02:00"
+          "lahetetty": "2020-01-01T00:00:00+02:00",
+          "id": 491
         },
         {
-          "nimi": " Juva",
           "sahkoposti": "juva@ju.va",
-          "lahetetty": "2020-01-01T00:00:00+02:00"
+          "lahetetty": "2020-01-01T00:00:00+02:00",
+          "id": 178
         },
         {
-          "nimi": " Savonlinna",
           "sahkoposti": "savonlinna@savonlin.na",
-          "lahetetty": "2020-01-01T00:00:00+02:00"
+          "lahetetty": "2020-01-01T00:00:00+02:00",
+          "id": 740
         }
       ],
       "viranomaiset": [
@@ -575,12 +575,12 @@
         "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
         "tyyppi": "TIE",
         "maakunnat": [
-          "Uusimaa"
+          1
         ],
         "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
         "kunnat": [
-          "Helsinki",
-          " Vantaa"
+          91,
+          92
         ],
         "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
         "vaylamuoto": [
@@ -605,19 +605,19 @@
       "ilmoituksenVastaanottajat": {
         "kunnat": [
           {
-            "nimi": "Mikkeli",
             "sahkoposti": "mikkeli@mikke.li",
-            "lahetetty": "2020-01-01T00:00:00+02:00"
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "id": 491
           },
           {
-            "nimi": " Juva",
             "sahkoposti": "juva@ju.va",
-            "lahetetty": "2020-01-01T00:00:00+02:00"
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "id": 178
           },
           {
-            "nimi": " Savonlinna",
             "sahkoposti": "savonlinna@savonlin.na",
-            "lahetetty": "2020-01-01T00:00:00+02:00"
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "id": 740
           }
         ],
         "viranomaiset": [
@@ -684,19 +684,19 @@
       "ilmoituksenVastaanottajat": {
         "kunnat": [
           {
-            "nimi": "Mikkeli",
             "sahkoposti": "mikkeli@mikke.li",
-            "lahetetty": "2020-01-01T00:00:00+02:00"
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "id": 491
           },
           {
-            "nimi": " Juva",
             "sahkoposti": "juva@ju.va",
-            "lahetetty": "2020-01-01T00:00:00+02:00"
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "id": 178
           },
           {
-            "nimi": " Savonlinna",
             "sahkoposti": "savonlinna@savonlin.na",
-            "lahetetty": "2020-01-01T00:00:00+02:00"
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "id": 740
           }
         ],
         "viranomaiset": [
@@ -830,19 +830,19 @@
       "ilmoituksenVastaanottajat": {
         "kunnat": [
           {
-            "nimi": "Mikkeli",
             "sahkoposti": "mikkeli@mikke.li",
-            "lahetetty": "2020-01-01T00:00:00+02:00"
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "id": 491
           },
           {
-            "nimi": " Juva",
             "sahkoposti": "juva@ju.va",
-            "lahetetty": "2020-01-01T00:00:00+02:00"
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "id": 178
           },
           {
-            "nimi": " Savonlinna",
             "sahkoposti": "savonlinna@savonlin.na",
-            "lahetetty": "2020-01-01T00:00:00+02:00"
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "id": 740
           }
         ],
         "viranomaiset": [

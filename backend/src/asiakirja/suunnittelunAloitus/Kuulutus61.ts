@@ -6,6 +6,7 @@ import { translate } from "../../util/localization";
 import { formatList, KutsuAdapter } from "./KutsuAdapter";
 import { IlmoitusParams } from "./suunnittelunAloitusPdf";
 import { formatDate } from "../asiakirjaUtil";
+import { kuntametadata } from "../../../../common/kuntametadata";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
 const pdfTypeKeys: Record<AsiakirjanMuoto, Record<never, string>> = {
@@ -152,16 +153,17 @@ export class Kuulutus61 extends CommonPdf {
 
   ilmoituksen_vastaanottajille(): string {
     return formatList(
-      []
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        .concat(this.hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat.kunnat.map((kunta) => kunta.nimi.trim()))
+      ([] as string[])
         .concat(
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          this.hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat.viranomaiset.map((viranomainen) =>
-            this.kutsuAdapter.text("viranomainen." + viranomainen.nimi)
+          kuntametadata.namesForKuntaIds(
+            this.hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => kunta.id),
+            this.kieli
           )
+        )
+        .concat(
+          this.hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) =>
+            this.kutsuAdapter.text("viranomainen." + viranomainen.nimi)
+          ) || []
         ),
       this.kieli
     );
@@ -180,18 +182,7 @@ export class Kuulutus61 extends CommonPdf {
         this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.pyytaa_kuntia"),
         this.tietosuojaParagraph(),
         this.lisatietojaAntavatParagraph(),
-        this.doc.struct(
-          "P",
-          {},
-          this.moreInfoElements(
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            this.hyvaksymisPaatosVaihe.yhteystiedot,
-            undefined,
-            null,
-            true
-          )
-        ),
+        this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, undefined, null, true)),
       ];
     } else if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       return [

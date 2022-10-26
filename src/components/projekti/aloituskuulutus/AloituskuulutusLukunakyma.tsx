@@ -10,6 +10,8 @@ import IlmoituksenVastaanottajat from "./IlmoituksenVastaanottajat";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
 import Section from "@components/layout/Section";
+import { kuntametadata } from "../../../../common/kuntametadata";
+import useTranslation from "next-translate/useTranslation";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import ExtLink from "@components/ExtLink";
 import SectionContent from "@components/layout/SectionContent";
@@ -23,6 +25,7 @@ interface Props {
 }
 
 export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, projekti, isLoadingProjekti }: Props): ReactElement {
+  const { lang } = useTranslation();
   if (!aloituskuulutusjulkaisu || !projekti) {
     return <></>;
   }
@@ -63,7 +66,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
             Hankkeesta on tehty suunnittelusopimus kunnan kanssa
             <br />
             <br />
-            {capitalize(aloituskuulutusjulkaisu.suunnitteluSopimus.kunta)}
+            {capitalize(kuntametadata.nameForKuntaId(aloituskuulutusjulkaisu.suunnitteluSopimus.kunta, lang))}
             <br />
             {capitalize(aloituskuulutusjulkaisu.suunnitteluSopimus.etunimi)}{" "}
             {capitalize(aloituskuulutusjulkaisu.suunnitteluSopimus.sukunimi)}, puh.{" "}

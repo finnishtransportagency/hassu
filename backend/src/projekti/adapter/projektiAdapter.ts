@@ -5,7 +5,7 @@ import { KayttoOikeudetManager } from "../kayttoOikeudetManager";
 import { personSearch } from "../../personSearch/personSearchClient";
 import pickBy from "lodash/pickBy";
 import { lisaAineistoService } from "../../aineisto/lisaAineistoService";
-import { adaptKielitiedotByAddingTypename, adaptLiittyvatSuunnitelmatByAddingTypename } from "./common";
+import { adaptKielitiedotByAddingTypename, adaptLiittyvatSuunnitelmatByAddingTypename, adaptVelho } from "./common";
 import {
   adaptAloitusKuulutus,
   adaptAloitusKuulutusJulkaisut,
@@ -63,10 +63,7 @@ export class ProjektiAdapter {
       suunnitteluSopimus: adaptSuunnitteluSopimus(dbProjekti.oid, suunnitteluSopimus),
       liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmatByAddingTypename(liittyvatSuunnitelmat),
       aloitusKuulutusJulkaisut: adaptAloitusKuulutusJulkaisut(dbProjekti.oid, aloitusKuulutusJulkaisut),
-      velho: {
-        __typename: "Velho",
-        ...velho,
-      },
+      velho: adaptVelho(velho),
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot, true),
       suunnitteluVaihe: adaptSuunnitteluVaihe(dbProjekti.oid, kayttoOikeudet, suunnitteluVaihe, vuorovaikutukset),
       nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe),

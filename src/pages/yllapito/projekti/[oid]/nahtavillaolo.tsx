@@ -88,9 +88,9 @@ function Nahtavillaolo({ projekti }: { projekti: ProjektiLisatiedolla }): ReactE
   const [isDirty, setIsDirty] = useState(false);
   const [selectedValue, setSelectedValue] = useState<number | string>(0);
 
-  const handleClickClose = () => {
+  const handleClickClose = useCallback(() => {
     setOpen(false);
-  };
+  }, []);
 
   const handleClickOk = useCallback(() => {
     setIsDirty(false);

@@ -13,6 +13,8 @@ import {
   AloitusKuulutusJulkaisu,
   AloitusKuulutusTila,
   api,
+  AsiakirjaTyyppi,
+  HankkeenKuvauksetInput,
   Kieli,
   Kielitiedot,
   LaskuriTyyppi,
@@ -20,8 +22,6 @@ import {
   TallennaProjektiInput,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
-  AsiakirjaTyyppi,
-  HankkeenKuvauksetInput,
   YhteystietoInput,
 } from "@services/api";
 import log from "loglevel";
@@ -51,6 +51,7 @@ import { pickBy } from "lodash";
 import { removeTypeName } from "src/util/removeTypeName";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { today } from "src/util/dateUtils";
+import { kuntametadata } from "../../../../../common/kuntametadata";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -99,9 +100,9 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
   const isIncorrectProjektiStatus = !projekti?.status || projekti?.status === Status.EI_JULKAISTU;
 
   const defaultValues: FormValues = useMemo(() => {
-    const kuntaNimet: string[] = [
+    const kuntaIds: number[] = [
       ...new Set([
-        ...(projekti.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.map(({ nimi }) => nimi) || []),
+        ...(projekti.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => kunta.id) || []),
         ...(projekti.velho.kunnat || []),
       ]),
     ];
@@ -133,10 +134,9 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       oid: projekti.oid,
       aloitusKuulutus: {
         ilmoituksenVastaanottajat: {
-          kunnat: kuntaNimet.map((nimi) => ({
-            nimi,
-            sahkoposti:
-              projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.find((kunta) => kunta.nimi === nimi)?.sahkoposti || "",
+          kunnat: kuntaIds.map((id) => ({
+            id,
+            sahkoposti: projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.find((kunta) => kunta.id === id)?.sahkoposti || "",
           })),
           viranomaiset:
             projekti.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.map(({ nimi, sahkoposti }) => ({
@@ -164,7 +164,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     isIncorrectProjektiStatus;
   const [open, setOpen] = useState(false);
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
-  const { t } = useTranslation("commonFI");
+  const { t, lang } = useTranslation("commonFI");
 
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
 
@@ -209,7 +209,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     async (formData: FormValues) => {
       deleteFieldArrayIds(formData?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot);
       deleteFieldArrayIds(formData?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysHenkilot);
-      deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat);
+      // kunta.id on oikea kunnan id-kenttä, joten se pitää lähettää deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat);
       deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset);
       setIsFormSubmitting(true);
       await api.tallennaProjekti(formData);
@@ -598,8 +598,8 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                     <p>Kunnat</p>
                     <ul className="vayla-dialog-list">
                       {projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => (
-                        <li key={kunta.nimi}>
-                          {kunta.nimi}, {kunta.sahkoposti}
+                        <li key={kunta.id}>
+                          {kuntametadata.nameForKuntaId(kunta.id, lang)}, {kunta.sahkoposti}
                         </li>
                       ))}
                     </ul>

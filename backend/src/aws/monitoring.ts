@@ -1,4 +1,5 @@
 import * as AWSXRay from "aws-xray-sdk-core";
+import { Subsegment } from "aws-xray-sdk-core";
 import { config } from "../config";
 
 import http from "http";
@@ -22,7 +23,12 @@ export const getCorrelationId = (): string | undefined => {
 export const reportError = (error: Error): void => {
   const segment = AWSXRay.getSegment();
   try {
-    segment?.addError(error);
+    // Verify that the segment is a subsegment
+    if (segment instanceof Subsegment) {
+      segment?.addError(error);
+    } else if (segment) {
+      segment.addNewSubsegment("Error").addError(error);
+    }
   } catch (e) {
     // Using pino logger here causes a recursive loop
     console.warn(e); // https://github.com/aws/aws-xray-sdk-node/issues/448

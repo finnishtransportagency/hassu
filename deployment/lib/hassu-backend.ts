@@ -283,6 +283,7 @@ export class HassuBackendStack extends cdk.Stack {
       insightsVersion: LambdaInsightsVersion.VERSION_1_0_98_0,
     });
     pdfGeneratorLambda.role?.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("CloudWatchLambdaInsightsExecutionRolePolicy"));
+    pdfGeneratorLambda.addToRolePolicy(new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] })); // listKirjaamoOsoitteet requires this
     return pdfGeneratorLambda;
   }
 

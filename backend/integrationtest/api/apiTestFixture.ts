@@ -15,20 +15,26 @@ import {
   Yhteystieto,
   YhteystietoInput,
 } from "../../../common/graphql/apiModel";
+import { kuntametadata } from "../../../common/kuntametadata";
+
+const nokia = kuntametadata.idForKuntaName("Nokia");
+const mikkeli = kuntametadata.idForKuntaName("Mikkeli");
+const juva = kuntametadata.idForKuntaName("Juva");
+const savonlinna = kuntametadata.idForKuntaName("Savonlinna");
 
 class ApiTestFixture {
   newNote = "uusi muistiinpano";
 
-  createSuunnitteluSopimusInput = (uploadedFile: string, yhteysHenkilo:string): SuunnitteluSopimusInput => ({
+  createSuunnitteluSopimusInput = (uploadedFile: string, yhteysHenkilo: string): SuunnitteluSopimusInput => ({
     yhteysHenkilo,
-    kunta: "Nokia",
+    kunta: nokia,
     logo: uploadedFile,
   });
 
-  suunnitteluSopimus = (yhteysHenkilo:string): SuunnitteluSopimus => ({
+  suunnitteluSopimus = (yhteysHenkilo: string): SuunnitteluSopimus => ({
     __typename: "SuunnitteluSopimus",
     yhteysHenkilo,
-    kunta: "Nokia",
+    kunta: nokia,
   });
 
   yhteystietoLista: Yhteystieto[] = [
@@ -87,19 +93,19 @@ class ApiTestFixture {
       {
         sahkoposti: "mikkeli@mikke.li",
         lahetetty: "2022-03-11T14:54",
-        nimi: "Mikkeli",
+        id: mikkeli,
         __typename: "KuntaVastaanottaja",
       },
       {
         sahkoposti: "juva@ju.va",
         lahetetty: "2022-03-11T14:54",
-        nimi: " Juva",
+        id: juva,
         __typename: "KuntaVastaanottaja",
       },
       {
         sahkoposti: "savonlinna@savonlin.na",
         lahetetty: "2022-03-11T14:54",
-        nimi: " Savonlinna",
+        id: savonlinna,
         __typename: "KuntaVastaanottaja",
       },
     ],

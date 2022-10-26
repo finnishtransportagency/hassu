@@ -6,6 +6,7 @@ import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import union from "lodash/union";
 import { vaylaUserToYhteystieto } from "../../util/vaylaUserToYhteystieto";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
+import { kuntametadata } from "../../../../common/kuntametadata";
 
 export type KutsuAdapterProps = {
   oid?: string;
@@ -124,7 +125,7 @@ export class KutsuAdapter {
   }
 
   get kuntia(): string {
-    const kunnat = this.velho?.kunnat;
+    const kunnat =this.velho?.kunnat?.map((kuntaId) => kuntametadata.nameForKuntaId(kuntaId, this.kieli));
     if (kunnat) {
       return kunnat.join(", ");
     }
@@ -264,7 +265,7 @@ export class KutsuAdapter {
         sukunimi,
         puhelinnumero,
         sahkoposti: email,
-        organisaatio: kunta,
+        organisaatio: kuntametadata.nameForKuntaId(kunta, this.kieli),
       });
     }
     return yt.map(yhteystietoMapper);

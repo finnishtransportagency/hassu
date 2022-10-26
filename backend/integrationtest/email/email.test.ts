@@ -4,17 +4,18 @@ import { emailClient } from "../../src/email/email";
 import { AsiakirjaTyyppi, Kieli } from "../../../common/graphql/apiModel";
 import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
 import { asiakirjaAdapter } from "../../src/handler/asiakirjaAdapter";
+import { DBProjekti } from "../../src/database/model";
+import { kuntametadata } from "../../../common/kuntametadata";
 
 describe.skip("Email", () => {
   it("should send test email successfully", async function () {
-    const projekti = {
+    const projekti: DBProjekti = {
       velho: {
         nimi: "Valtatie 11 parantaminen välillä Murhasaari–Mustikkakangas",
-        kunnat: ["Nokia"],
+        kunnat: kuntametadata.idsForKuntaNames(["Nokia"]),
       },
       oid: "123",
       aloitusKuulutus: {
-        elyKeskus: "Pirkanmaan",
         kuulutusPaiva: "2022-01-01",
         hankkeenKuvaus: {
           SUOMI:

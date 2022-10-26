@@ -10,7 +10,7 @@ import {
   adaptAineistot,
   adaptIlmoituksenVastaanottajat,
   adaptKielitiedotByAddingTypename,
-  adaptVelhoByAddingTypename,
+  adaptVelho,
   adaptMandatoryYhteystiedotByAddingTypename,
   adaptStandardiYhteystiedotByAddingTypename,
 } from "../common";
@@ -94,7 +94,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisut(
         hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,
         yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
         ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-        velho: adaptVelhoByAddingTypename(velho),
+        velho: adaptVelho(velho),
       };
       return apijulkaisu;
     });

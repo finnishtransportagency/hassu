@@ -30,6 +30,8 @@ Object {
   "tyyppi": "TIE",
   "velho": Object {
     "__typename": "Velho",
+    "kunnat": undefined,
+    "maakunnat": undefined,
     "nimi": "Testiprojekti 1",
     "tyyppi": "TIE",
     "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
@@ -138,6 +140,8 @@ Array [
     "tyyppi": "TIE",
     "velho": Object {
       "__typename": "Velho",
+      "kunnat": undefined,
+      "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
       "tyyppi": "TIE",
       "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
@@ -206,6 +210,8 @@ Array [
     "tyyppi": "TIE",
     "velho": Object {
       "__typename": "Velho",
+      "kunnat": undefined,
+      "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
       "tyyppi": "TIE",
       "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
@@ -295,6 +301,8 @@ Array [
     "tyyppi": "TIE",
     "velho": Object {
       "__typename": "Velho",
+      "kunnat": undefined,
+      "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
       "tyyppi": "TIE",
       "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
@@ -316,18 +324,18 @@ Array [
       "ilmoituksenVastaanottajat": Object {
         "kunnat": Array [
           Object {
+            "id": 491,
             "lahetetty": "2022-09-28T00:00",
-            "nimi": "Mikkeli",
             "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
+            "id": 178,
             "lahetetty": "2022-09-28T00:00",
-            "nimi": " Juva",
             "sahkoposti": "juva@ju.va",
           },
           Object {
+            "id": 740,
             "lahetetty": "2022-09-28T00:00",
-            "nimi": " Savonlinna",
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
@@ -402,7 +410,7 @@ Array [
     "oid": "1",
     "salt": "***unittest***",
     "suunnitteluSopimus": Object {
-      "kunta": "Nokia",
+      "kunta": 536,
       "logo": "/suunnittelusopimus/logo.gif",
       "yhteysHenkilo": "A2",
     },
@@ -430,20 +438,20 @@ Array [
         "kunnat": Array [
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 491,
             "lahetetty": "2022-09-28T00:00",
-            "nimi": "Mikkeli",
             "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 178,
             "lahetetty": "2022-09-28T00:00",
-            "nimi": " Juva",
             "sahkoposti": "juva@ju.va",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 740,
             "lahetetty": "2022-09-28T00:00",
-            "nimi": " Savonlinna",
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
@@ -520,7 +528,7 @@ Array [
     "status": "ALOITUSKUULUTUS",
     "suunnitteluSopimus": Object {
       "__typename": "SuunnitteluSopimus",
-      "kunta": "Nokia",
+      "kunta": 536,
       "logo": "/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
       "yhteysHenkilo": "A2",
     },
@@ -528,6 +536,8 @@ Array [
     "tyyppi": "TIE",
     "velho": Object {
       "__typename": "Velho",
+      "kunnat": undefined,
+      "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
       "tyyppi": "TIE",
       "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
@@ -877,20 +887,20 @@ Object {
       "kunnat": Array [
         Object {
           "__typename": "KuntaVastaanottaja",
+          "id": 491,
           "lahetetty": "2022-09-28T00:00",
-          "nimi": "Mikkeli",
           "sahkoposti": "mikkeli@mikke.li",
         },
         Object {
           "__typename": "KuntaVastaanottaja",
+          "id": 178,
           "lahetetty": "2022-09-28T00:00",
-          "nimi": " Juva",
           "sahkoposti": "juva@ju.va",
         },
         Object {
           "__typename": "KuntaVastaanottaja",
+          "id": 740,
           "lahetetty": "2022-09-28T00:00",
-          "nimi": " Savonlinna",
           "sahkoposti": "savonlinna@savonlin.na",
         },
       ],
@@ -945,20 +955,20 @@ Object {
         "kunnat": Array [
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 491,
             "lahetetty": "2022-09-28T00:00",
-            "nimi": "Mikkeli",
             "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 178,
             "lahetetty": "2022-09-28T00:00",
-            "nimi": " Juva",
             "sahkoposti": "juva@ju.va",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
+            "id": 740,
             "lahetetty": "2022-09-28T00:00",
-            "nimi": " Savonlinna",
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
@@ -984,7 +994,7 @@ Object {
         "__typename": "SuunnitteluSopimusJulkaisu",
         "email": "a2@vayla.fi",
         "etunimi": "EtunimiA2",
-        "kunta": "Nokia",
+        "kunta": 536,
         "logo": "/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
         "puhelinnumero": "123456789",
         "sukunimi": "SukunimiA2",
@@ -992,6 +1002,8 @@ Object {
       "tila": "HYVAKSYTTY",
       "velho": Object {
         "__typename": "Velho",
+        "kunnat": undefined,
+        "maakunnat": undefined,
         "nimi": "Testiprojekti 1",
         "tyyppi": "TIE",
         "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
@@ -1063,7 +1075,7 @@ Object {
   "status": "SUUNNITTELU",
   "suunnitteluSopimus": Object {
     "__typename": "SuunnitteluSopimus",
-    "kunta": "Nokia",
+    "kunta": 536,
     "logo": "/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
     "yhteysHenkilo": "A2",
   },
@@ -1071,6 +1083,8 @@ Object {
   "tyyppi": "TIE",
   "velho": Object {
     "__typename": "Velho",
+    "kunnat": undefined,
+    "maakunnat": undefined,
     "nimi": "Testiprojekti 1",
     "tyyppi": "TIE",
     "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
@@ -1112,7 +1126,7 @@ Object {
           "__typename": "SuunnitteluSopimusJulkaisu",
           "email": "a2@vayla.fi",
           "etunimi": "EtunimiA2",
-          "kunta": "Nokia",
+          "kunta": 536,
           "logo": "/tiedostot/suunnitelma/1/suunnittelusopimus/logo.gif",
           "puhelinnumero": "123456789",
           "sukunimi": "SukunimiA2",

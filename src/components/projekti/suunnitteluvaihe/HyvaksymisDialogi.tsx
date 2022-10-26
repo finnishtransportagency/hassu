@@ -4,6 +4,7 @@ import HassuDialog from "@components/HassuDialog";
 import useTranslation from "next-translate/useTranslation";
 import { IlmoituksenVastaanottajatInput } from "@services/api";
 import { DialogActions, DialogContent } from "@mui/material";
+import { kuntametadata } from "../../../../common/kuntametadata";
 
 interface Props {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput | null | undefined;
@@ -14,7 +15,7 @@ interface Props {
 }
 
 export default function HyvaksymisDialogi({ ilmoituksenVastaanottajat, dialogiOnAuki, onClose, tallenna, julkinen }: Props): ReactElement {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
 
   return (
     <HassuDialog open={dialogiOnAuki} title="Vuorovaikutustietojen tallentaminen ja ilmoituksen lähettäminen" onClose={onClose}>
@@ -39,8 +40,8 @@ export default function HyvaksymisDialogi({ ilmoituksenVastaanottajat, dialogiOn
           <p>Kunnat</p>
           <ul className="vayla-dialog-list">
             {ilmoituksenVastaanottajat?.kunnat?.map((kunta) => (
-              <li key={kunta.nimi}>
-                {kunta.nimi}, {kunta.sahkoposti}
+              <li key={kunta.id}>
+                {kuntametadata.nameForKuntaId(kunta.id, lang)}, {kunta.sahkoposti}
               </li>
             ))}
           </ul>

@@ -12,6 +12,7 @@ import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
 import dayjs from "dayjs";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
+import { kuntametadata } from "../../../../../common/kuntametadata";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -32,7 +33,7 @@ type FormFields = {
 };
 
 export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props): ReactElement {
-  const { t } = useTranslation("commonFI");
+  const { t, lang } = useTranslation("commonFI");
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
   const julkinen = false; //nahtavillaoloVaihe?.tila === NahtavillaoloVaiheTila.HYVAKSYTTY;
@@ -62,7 +63,7 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props)
   });
 
   const getKuntanimi = (index: number) => {
-    const nimi = ilmoituksenVastaanottajat?.kunnat?.[index].nimi;
+    const nimi = kuntametadata.nameForKuntaId(ilmoituksenVastaanottajat?.kunnat?.[index].id, lang);
     if (!nimi) {
       return;
     }
@@ -81,8 +82,8 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props)
           <h4 className="vayla-small-title">Ilmoituksen vastaanottajat</h4>
           <SectionContent>
             <p>
-              Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Ei
-              lähetetty’, tarkasta sähköpostiosoite. Ota tarvittaessa yhteys pääkäyttäjään.
+              Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Ei lähetetty’, tarkasta
+              sähköpostiosoite. Ota tarvittaessa yhteys pääkäyttäjään.
             </p>
           </SectionContent>
           <SectionContent>
@@ -114,12 +115,10 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props)
               <p className="vayla-table-header">Lähetysaika</p>
               {nahtavillaoloVaihe?.ilmoituksenVastaanottajat?.kunnat?.map((kunta, index) => (
                 <Fragment key={index}>
-                  <p className={getStyleForRow(index)}>{kunta.nimi}</p>
+                  <p className={getStyleForRow(index)}>{kuntametadata.nameForKuntaId(kunta.id, lang)}</p>
                   <p className={getStyleForRow(index)}>{kunta.sahkoposti}</p>
                   <p className={getStyleForRow(index)}>{kunta.lahetetty ? "Lahetetty" : "Ei lähetetty"}</p>
-                  <p className={getStyleForRow(index)}>
-                    {kunta.lahetetty ? dayjs(kunta.lahetetty).format("DD.MM.YYYY HH:mm") : null}
-                  </p>
+                  <p className={getStyleForRow(index)}>{kunta.lahetetty ? dayjs(kunta.lahetetty).format("DD.MM.YYYY HH:mm") : null}</p>
                 </Fragment>
               ))}
             </div>
@@ -131,9 +130,9 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props)
           <h4 className="vayla-small-title">Ilmoituksen vastaanottajat</h4>
           <SectionContent>
             <p>
-              Vuorovaikuttamisesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille.
-              Kunnat on haettu Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle
-              viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi -painikkeella
+              Vuorovaikuttamisesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on haettu
+              Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi
+              -painikkeella
             </p>
             <p>Jos kuntatiedoissa on virhe, tee korjaus Projektivelhoon.</p>
           </SectionContent>
@@ -142,9 +141,7 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props)
             <SectionContent>
               <h6 className="font-bold">Viranomaiset</h6>
               {(errors.nahtavillaoloVaihe?.ilmoituksenVastaanottajat as HelperType)?.viranomaiset && (
-                <p className="text-red">
-                  {(errors.nahtavillaoloVaihe?.ilmoituksenVastaanottajat as HelperType).viranomaiset?.message}
-                </p>
+                <p className="text-red">{(errors.nahtavillaoloVaihe?.ilmoituksenVastaanottajat as HelperType).viranomaiset?.message}</p>
               )}
               {viranomaisFields.map((viranomainen, index) => (
                 <HassuGrid key={viranomainen.id} cols={{ lg: 3 }}>
@@ -156,13 +153,8 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props)
                     }))}
                     {...register(`nahtavillaoloVaihe.ilmoituksenVastaanottajat.viranomaiset.${index}.nimi`, {
                       onChange: (event) => {
-                        const sahkoposti = kirjaamoOsoitteet?.find(
-                          ({ nimi }) => nimi === event.target.value
-                        )?.sahkoposti;
-                        setValue(
-                          `nahtavillaoloVaihe.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`,
-                          sahkoposti || ""
-                        );
+                        const sahkoposti = kirjaamoOsoitteet?.find(({ nimi }) => nimi === event.target.value)?.sahkoposti;
+                        setValue(`nahtavillaoloVaihe.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`, sahkoposti || "");
                       },
                     })}
                     error={errors?.nahtavillaoloVaihe?.ilmoituksenVastaanottajat?.viranomaiset?.[index]?.nimi}
@@ -220,11 +212,7 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props)
 
             {kuntaFields.map((kunta, index) => (
               <HassuGrid key={kunta.id} cols={{ lg: 3 }}>
-                <input
-                  type="hidden"
-                  {...register(`nahtavillaoloVaihe.ilmoituksenVastaanottajat.kunnat.${index}.nimi`)}
-                  readOnly
-                />
+                <input type="hidden" {...register(`nahtavillaoloVaihe.ilmoituksenVastaanottajat.kunnat.${index}.id`)} readOnly />
                 <TextInput label="Kunta *" value={getKuntanimi(index)} disabled />
                 <TextInput
                   label="Sähköpostiosoite *"

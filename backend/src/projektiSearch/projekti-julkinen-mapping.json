@@ -1,22 +1,10 @@
 {
   "properties": {
     "maakunnat": {
-      "type": "text",
-      "fields": {
-        "keyword": {
-          "type": "keyword",
-          "ignore_above": 256
-        }
-      }
+      "type": "integer"
     },
     "kunnat": {
-      "type": "text",
-      "fields": {
-        "keyword": {
-          "type": "keyword",
-          "ignore_above": 256
-        }
-      }
+      "type": "integer"
     },
     "nimi": {
       "type": "text",

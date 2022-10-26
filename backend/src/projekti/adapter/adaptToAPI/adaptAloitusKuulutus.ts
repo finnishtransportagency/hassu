@@ -6,7 +6,7 @@ import {
   adaptKielitiedotByAddingTypename,
   adaptMandatoryYhteystiedotByAddingTypename,
   adaptStandardiYhteystiedotByAddingTypename,
-  adaptVelhoByAddingTypename,
+  adaptVelho,
 } from "../common";
 import { adaptSuunnitteluSopimusJulkaisu } from "./adaptSuunitteluSopimus";
 import { fileService } from "../../../files/fileService";
@@ -15,9 +15,6 @@ export function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.Alo
   if (kuulutus) {
     if (!kuulutus.hankkeenKuvaus) {
       throw new Error("adaptAloituskuulutus: kuulutus.hankkeenKuvaus puuttuu");
-    }
-    if (!kuulutus.ilmoituksenVastaanottajat) {
-      throw new Error("adaptAloituskuulutus: kuulutus.ilmoituksenVastaanottajat puuttuu");
     }
     const { kuulutusYhteystiedot, ...otherKuulutusFields } = kuulutus;
     return {
@@ -41,22 +38,13 @@ export function adaptAloitusKuulutusJulkaisut(
       if (!julkaisu.hankkeenKuvaus) {
         throw new Error("adaptAloitusKuulutusJulkaisut: julkaisu.hankkeenKuvaus puuttuu");
       }
-      if (!julkaisu.aloituskuulutusPDFt) {
-        throw new Error("adaptAloitusKuulutusJulkaisut: julkaisu.aloituskuulutusPDFt puuttuu");
-      }
-      if (!julkaisu.ilmoituksenVastaanottajat) {
-        throw new Error("adaptAloitusKuulutusJulkaisut: julkaisu.ilmoituksenVastaanottajat puuttuu");
-      }
-      if (!kielitiedot) {
-        throw new Error("adaptAloitusKuulutusJulkaisut: julkaisu.kielitiedot puuttuu");
-      }
       const apiJulkaisu: API.AloitusKuulutusJulkaisu = {
         ...fieldsToCopyAsIs,
         __typename: "AloitusKuulutusJulkaisu",
         ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(julkaisu.ilmoituksenVastaanottajat),
         hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
         yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
-        velho: adaptVelhoByAddingTypename(velho),
+        velho: adaptVelho(velho),
         suunnitteluSopimus: adaptSuunnitteluSopimusJulkaisu(oid, suunnitteluSopimus),
         kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
         aloituskuulutusPDFt: adaptJulkaisuPDFPaths(oid, julkaisu.aloituskuulutusPDFt),
@@ -67,7 +55,10 @@ export function adaptAloitusKuulutusJulkaisut(
   return undefined;
 }
 
-function adaptJulkaisuPDFPaths(oid: string, aloitusKuulutusPDFS: LocalizedMap<AloitusKuulutusPDF>): API.AloitusKuulutusPDFt | undefined {
+function adaptJulkaisuPDFPaths(
+  oid: string,
+  aloitusKuulutusPDFS: LocalizedMap<AloitusKuulutusPDF> | null | undefined
+): API.AloitusKuulutusPDFt | undefined {
   if (!aloitusKuulutusPDFS) {
     return undefined;
   }

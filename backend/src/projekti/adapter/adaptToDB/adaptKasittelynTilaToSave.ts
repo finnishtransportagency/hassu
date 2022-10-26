@@ -9,7 +9,7 @@ export function adaptKasittelynTilaToSave(
   projektiAdaptationResult: ProjektiAdaptationResult
 ): KasittelynTila | undefined | null {
   if (!newKasittelynTila) {
-    return dbKasittelynTila;
+    return undefined;
   }
   // Tunnista jatkopäätöksen lisäys ja lisää event käyttöoikeuksien nollaamiseksi
   if (

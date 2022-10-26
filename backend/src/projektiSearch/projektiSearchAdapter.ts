@@ -4,14 +4,15 @@ import { projektiAdapter } from "../projekti/adapter/projektiAdapter";
 import dayjs from "dayjs";
 import { parseDate } from "../util/dateUtil";
 import { log } from "../logger";
+import { kuntametadata } from "../../../common/kuntametadata";
 
 export type ProjektiDocument = {
   oid: string;
   nimi?: string;
   hankkeenKuvaus?: string;
   asiatunnus?: string;
-  maakunnat?: string[];
-  kunnat?: string[];
+  maakunnat?: number[];
+  kunnat?: number[];
   vaylamuoto?: string[];
   suunnittelustaVastaavaViranomainen?: API.Viranomainen;
   vaihe?: API.Status;
@@ -34,7 +35,7 @@ export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocu
     projektiTyyppi: projekti.velho.tyyppi || undefined,
     suunnittelustaVastaavaViranomainen: projekti.velho.suunnittelustaVastaavaViranomainen || undefined,
     asiatunnus: safeTrim(getAsiatunnus(projekti) || ""),
-    maakunnat: projekti.velho.maakunnat?.map(safeTrim),
+    maakunnat: projekti.velho.maakunnat?.map(kuntametadata.idForMaakuntaName),
     vaihe: apiProjekti.status || undefined,
     vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
     projektipaallikko: projekti.kayttoOikeudet
@@ -110,8 +111,8 @@ export function adaptProjektiToJulkinenIndex(projekti: API.ProjektiJulkinen, kie
       nimi: safeTrim(nimi),
       hankkeenKuvaus,
       projektiTyyppi: projekti.velho.tyyppi || undefined,
-      kunnat: projekti.velho.kunnat?.map(safeTrim),
-      maakunnat: projekti.velho.maakunnat?.map(safeTrim),
+      kunnat: projekti.velho.kunnat?.map(kuntametadata.idForKuntaName),
+      maakunnat: projekti.velho.maakunnat?.map(kuntametadata.idForMaakuntaName),
       vaihe: projekti.status || undefined,
       viimeinenTilaisuusPaattyy: viimeinenTilaisuusPaattyyString,
       vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),

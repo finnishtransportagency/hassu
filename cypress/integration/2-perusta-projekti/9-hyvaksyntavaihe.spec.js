@@ -108,7 +108,6 @@ describe("9 - Projektin nahtavillaolovaiheen kuulutustiedot", () => {
 
     cy.get("#save_and_send_for_acceptance").click();
     cy.contains("Lähetys onnistui", { timeout: 30000 });
-
     cy.get("#kuulutuksentiedot_luku_tab").click();
     cy.get("#button_open_acceptance_dialog")
       .should("be.enabled")
@@ -116,7 +115,7 @@ describe("9 - Projektin nahtavillaolovaiheen kuulutustiedot", () => {
       .should("be.visible")
       .click({ force: true });
     cy.get("#accept_kuulutus").click();
-    cy.contains("Hyväksyminen onnistui", { timeout: 15000 });
+    cy.contains("Hyväksyminen onnistui", { timeout: 30000 });
 
     cy.reload();
     cy.get("#kuulutuksentiedot_luku_tab").click();
