@@ -1,8 +1,8 @@
 import { config } from "../config";
-import { getDynamoDBDocumentClient } from "./dynamoDB";
 import { ProjektiDatabase } from "./projektiDatabase";
 import { DBProjekti } from "./model";
 import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
+import { getDynamoDBDocumentClient } from "../aws/client";
 
 export class TestProjektiDatabase extends ProjektiDatabase {
   async saveProjekti(dbProjekti: Partial<DBProjekti>): Promise<DocumentClient.UpdateItemOutput> {

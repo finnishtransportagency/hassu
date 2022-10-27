@@ -15,10 +15,12 @@ import TallentamattomiaMuutoksiaDialog from "@components/TallentamattomiaMuutoks
 import NahtavillaoloAineistotLukutila from "@components/projekti/lukutila/NahtavillaoloAineistotLukutila";
 import Lukunakyma from "@components/projekti/nahtavillaolo/kuulutuksentiedot/Lukunakyma";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
+import Section from "@components/layout/Section";
 
 type Props2 = {
   projekti: ProjektiLisatiedolla;
 };
+
 function InfoElement({ projekti }: Props2) {
   const julkaisut = projekti?.nahtavillaoloVaiheJulkaisut;
 
@@ -141,41 +143,57 @@ function Nahtavillaolo({ projekti }: { projekti: ProjektiLisatiedolla }): ReactE
     [epaaktiivinen, nahtavillaolovaiheJulkaisu, projekti]
   );
 
+  const migroitu = nahtavillaolovaiheJulkaisu?.tila == NahtavillaoloVaiheTila.MIGROITU;
+
   return (
     <ProjektiPageLayout title="Nähtävilläolovaihe">
-      <SectionContent largeGaps>
-        {!epaaktiivinen && (
+      {!migroitu && (
+        <>
+          {" "}
+          <SectionContent largeGaps>
+            {!epaaktiivinen && (
+              <>
+                <InfoElement projekti={projekti} />
+                <Notification type={NotificationType.INFO} hideIcon>
+                  <div>
+                    <h3 className="vayla-small-title">Ohjeet</h3>
+                    <ul className="list-disc block pl-5">
+                      <li>
+                        Lisää nähtäville asetettavat aineistot sekä lausuntopyynnön lisäaineistot kuulutuksen ensimmäiseltä välilehdeltä.
+                      </li>
+                      <li>Siirry Kuulutuksen tiedot-välilehdelle täyttämään kuulutuksen perustiedot.</li>
+                      <li>
+                        Anna päivämäärä, jolloin suunnittelun nähtäville asettamisesta kuulutetaan. Projekti ja sen nähtävilläolon kuulutus
+                        julkaistaan samana päivänä Valtion liikenneväylien suunnittelu -palvelun kansalaispuolella.
+                      </li>
+                      <li>
+                        Muokkaa tai täydennä halutessasi tiivistetty sisällönkuvaus hankkeesta. Jos projektista tulee tehdä kuulutus suomen
+                        lisäksi toisella kielellä, eikä tälle ole kenttää, tarkista projektin tiedot -sivulta projektin kieliasetus.
+                      </li>
+                      <li>Valitse kuulutuksessa esitettävät yhteystiedot.</li>
+                      <li>Lähetä nähtäville asettamisen kuulutus projektipäällikölle hyväksyttäväksi.</li>
+                      <li>
+                        {
+                          "Projekti näytetään kuulutuspäivästä lasketun määräajan jälkeen palvelun julkisella puolella 'Hyväksyntämenettelyssä' -olevana."
+                        }
+                      </li>
+                    </ul>
+                  </div>
+                </Notification>
+              </>
+            )}
+            <Tabs tabStyle="Underlined" value={currentTab} onChange={handleChange} tabs={tabs} />
+          </SectionContent>
+          <TallentamattomiaMuutoksiaDialog open={open} handleClickClose={handleClickClose} handleClickOk={handleClickOk} />
+        </>
+      )}
+      {migroitu && (
+        <Section noDivider>
           <>
-            <InfoElement projekti={projekti} />
-            <Notification type={NotificationType.INFO} hideIcon>
-              <div>
-                <h3 className="vayla-small-title">Ohjeet</h3>
-                <ul className="list-disc block pl-5">
-                  <li>Lisää nähtäville asetettavat aineistot sekä lausuntopyynnön lisäaineistot kuulutuksen ensimmäiseltä välilehdeltä.</li>
-                  <li>Siirry Kuulutuksen tiedot-välilehdelle täyttämään kuulutuksen perustiedot.</li>
-                  <li>
-                    Anna päivämäärä, jolloin suunnittelun nähtäville asettamisesta kuulutetaan. Projekti ja sen nähtävilläolon kuulutus
-                    julkaistaan samana päivänä Valtion liikenneväylien suunnittelu -palvelun kansalaispuolella.
-                  </li>
-                  <li>
-                    Muokkaa tai täydennä halutessasi tiivistetty sisällönkuvaus hankkeesta. Jos projektista tulee tehdä kuulutus suomen
-                    lisäksi toisella kielellä, eikä tälle ole kenttää, tarkista projektin tiedot -sivulta projektin kieliasetus.
-                  </li>
-                  <li>Valitse kuulutuksessa esitettävät yhteystiedot.</li>
-                  <li>Lähetä nähtäville asettamisen kuulutus projektipäällikölle hyväksyttäväksi.</li>
-                  <li>
-                    {
-                      "Projekti näytetään kuulutuspäivästä lasketun määräajan jälkeen palvelun julkisella puolella 'Hyväksyntämenettelyssä' -olevana."
-                    }
-                  </li>
-                </ul>
-              </div>
-            </Notification>
+            <p>Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.</p>
           </>
-        )}
-        <Tabs tabStyle="Underlined" value={currentTab} onChange={handleChange} tabs={tabs} />
-      </SectionContent>
-      <TallentamattomiaMuutoksiaDialog open={open} handleClickClose={handleClickClose} handleClickOk={handleClickOk} />
+        </Section>
+      )}
     </ProjektiPageLayout>
   );
 }

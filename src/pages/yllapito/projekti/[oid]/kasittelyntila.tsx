@@ -229,7 +229,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               ></TextInput>
               <input type="hidden" {...register("kasittelynTila.ensimmainenJatkopaatos.aktiivinen")} />
               <HassuGridItem sx={{ alignSelf: "end" }}>
-                <Button onClick={handleSubmit(handleClickOpenTallenna)} disabled={lisaaDisabled}>
+                <Button id="lisaa_jatkopaatos" onClick={handleSubmit(handleClickOpenTallenna)} disabled={lisaaDisabled}>
                   Lisää jatkopäätös
                 </Button>
               </HassuGridItem>

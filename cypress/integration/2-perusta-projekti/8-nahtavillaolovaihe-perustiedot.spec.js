@@ -1,11 +1,10 @@
 /// <reference types="cypress" />
-import dayjs from "dayjs";
-import { selectAllAineistotFromCategory } from "../../support/util";
-import { formatDate } from "../../../src/util/dateUtils";
+import { typeIntoFields } from "../../support/util";
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
+import { hyvaksyNahtavillaoloKuulutus, lisaaNahtavillaoloAineistot, taytaNahtavillaoloPerustiedot } from './nahtavillaolo';
 
-const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
+const projektiNimi = Cypress.env("projektiNimi");
 
 describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
   before(() => {
@@ -19,58 +18,13 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
     cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).resetNahtavillaolo(), { timeout: 30000 });
     cy.contains(projektiNimi);
 
-    // Reject acceptance request and clear most of the data from nahtavillaolovaihe through API
-    // to enable re-tunning this test as many times as needed
-    cy.get("#kuulutuksentiedot_tab").click();
-
-    cy.get("main").then((main) => {
-      let rejectButton = main.find("#button_reject");
-      if (rejectButton.length > 0) {
-        cy.wrap(rejectButton).click();
-        cy.get('[name="syy"]').type("Palautussyy");
-        cy.get("#reject_and_edit").click();
-        cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/nahtavillaolo");
-      }
-    });
-
-    const today = formatDate(dayjs());
-
-    cy.get('[name="nahtavillaoloVaihe.kuulutusPaiva"]').should("be.enabled").type(today, {
-      waitForAnimations: true,
-    });
-
     const selectorToTextMap = new Map([
       ['[name="nahtavillaoloVaihe.hankkeenKuvaus.SUOMI"]', "nahtavillaolovaiheen kuvaus Suomeksi"],
       ['[name="nahtavillaoloVaihe.hankkeenKuvaus.RUOTSI"]', "nahtavillaolovaiheen kuvaus Ruotsiksi"],
       ['[name="nahtavillaoloVaihe.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]', "test@vayla.fi"],
       ['[name="nahtavillaoloVaihe.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]', "test@vayla.fi"],
     ]);
-
-    cy.wait(1000);
-
-    selectorToTextMap.forEach((text, selector) => {
-      cy.get(selector, {
-        timeout: 10000,
-      })
-        .should("be.enabled")
-        .clear()
-        .type(text);
-    });
-
-    cy.get("#save_nahtavillaolovaihe_draft").click();
-    cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank  page otherwise
-
-    cy.reload();
-
-    // Test saved values
-    cy.get("#kuulutuksentiedot_tab").click();
-    cy.get('[name="nahtavillaoloVaihe.kuulutusPaiva"]').should("have.value", today);
-
-    selectorToTextMap.forEach((text, selector) => {
-      cy.get(selector, {
-        timeout: 10000,
-      }).should("have.value", text);
-    });
+    taytaNahtavillaoloPerustiedot(oid, selectorToTextMap);
 
     // Not yet public
     cy.visit(Cypress.env("host") + "/suunnitelma/" + oid + "/nahtavillaolo");
@@ -86,26 +40,7 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
   });
 
   it("Lisaa ainestoja", { scrollBehavior: "center" }, () => {
-    // This test had to be inserted here and can not be done
-    // after publishing test below
-    cy.login("A1");
-
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/nahtavillaolo", { timeout: 30000 });
-    cy.contains(projektiNimi);
-    cy.get("#aineisto_tab").click();
-
-    cy.get("#T1xx").click();
-    cy.get("#T1xx_button").click();
-    selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
-    cy.get("#select_valitut_aineistot_button").click();
-
-    cy.get("#open_lisaaineisto_button").click();
-    selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
-    cy.get("#select_valitut_aineistot_button").click();
-
-    cy.get("#save_nahtavillaolovaihe_draft").click();
-    cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank  page otherwise
-
+    lisaaNahtavillaoloAineistot(oid);
     cy.reload();
 
     cy.get("#aineisto_tab").click();
@@ -131,29 +66,8 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
 
     cy.wait(1000);
 
-    selectorToTextMap.forEach((text, selector) => {
-      cy.get(selector, {
-        timeout: 10000,
-      })
-        .should("be.enabled")
-        .clear()
-        .type(text);
-    });
-
-    cy.get("#save_and_send_for_acceptance").click();
-    cy.contains("Lähetys onnistui");
-    cy.get("#button_open_acceptance_dialog")
-      .should("be.enabled")
-      .scrollIntoView({ offset: { top: 500, left: 0 } })
-      .should("be.visible")
-      .click({ force: true });
-    cy.get("#accept_kuulutus").click();
-    cy.contains("Hyväksyminen onnistui", { timeout: 15000 });
-
-    cy.reload();
-    cy.get("#kuulutuksentiedot_tab").click();
-
-    cy.contains("Kuulutus on julkaistu");
+    typeIntoFields(selectorToTextMap);
+    hyvaksyNahtavillaoloKuulutus();
 
     cy.visit(Cypress.env("host") + "/suunnitelma/" + oid + "/nahtavillaolo");
     cy.contains("Päivitetty hankkeen kuvaus Suomeksi");

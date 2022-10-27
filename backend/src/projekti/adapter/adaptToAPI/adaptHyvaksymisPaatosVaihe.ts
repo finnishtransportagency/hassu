@@ -6,13 +6,14 @@ import {
   LocalizedMap,
 } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
+import { HyvaksymisPaatosVaiheTila } from "../../../../../common/graphql/apiModel";
 import {
   adaptAineistot,
   adaptIlmoituksenVastaanottajat,
   adaptKielitiedotByAddingTypename,
-  adaptVelho,
   adaptMandatoryYhteystiedotByAddingTypename,
   adaptStandardiYhteystiedotByAddingTypename,
+  adaptVelho,
 } from "../common";
 import { fileService } from "../../../files/fileService";
 
@@ -58,8 +59,13 @@ export function adaptHyvaksymisPaatosVaiheJulkaisut(
         hyvaksymisPaatosVaihePDFt,
         kielitiedot,
         velho,
+        tila,
         ...fieldsToCopyAsIs
       } = julkaisu;
+
+      if (tila == HyvaksymisPaatosVaiheTila.MIGROITU) {
+        return { __typename: "HyvaksymisPaatosVaiheJulkaisu", tila, velho: adaptVelho(velho) };
+      }
 
       if (!aineistoNahtavilla) {
         throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: julkaisu.aineistoNahtavilla määrittelemättä");
@@ -95,6 +101,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisut(
         yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
         ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
         velho: adaptVelho(velho),
+        tila,
       };
       return apijulkaisu;
     });

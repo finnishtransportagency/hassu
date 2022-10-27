@@ -55,7 +55,7 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
 
   if (kuulutus.tila == AloitusKuulutusTila.MIGROITU) {
     return (
-      <ProjektiJulkinenPageLayout selectedStep={0} title={t(`ui-otsikot.kuulutus_suunnitelman_alkamisesta`)}>
+      <ProjektiJulkinenPageLayout selectedStep={0}>
         <>
           <Section noDivider>
             <p>Suunnitelma on tuotu toisesta järjestelmästä, joten tiedoissa voi olla puutteita.</p>
@@ -74,7 +74,8 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
             <SectionContent>
               {suunnittelusopimus && (
                 <p>
-                  {kuntametadata.nameForKuntaId(suunnittelusopimus.kunta, lang)} ja {t(`vastaava-viranomainen.${velho.suunnittelustaVastaavaViranomainen}`)}{" "}
+                  {kuntametadata.nameForKuntaId(suunnittelusopimus.kunta, lang)} ja{" "}
+                  {t(`vastaava-viranomainen.${velho.suunnittelustaVastaavaViranomainen}`)}{" "}
                   {t(`info.ei-rata.aloittavat_yleissuunnitelman_laatimisen`)}
                 </p>
               )}

@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useMemo, useCallback } from "react";
+import React, { ReactElement, useCallback, useMemo, useState } from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { PageProps } from "@pages/_app";
 import Section from "@components/layout/Section";
@@ -11,6 +11,7 @@ import TallentamattomiaMuutoksiaDialog from "@components/TallentamattomiaMuutoks
 import SuunnitteluvaiheenPerustiedotLukutila from "@components/projekti/lukutila/SuunnitteluvaiheenPerustiedotLukutila";
 import VuorovaikuttaminenLukutila from "@components/projekti/lukutila/VuorovaikuttaminenLukutila";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
+import { SuunnitteluVaiheTila } from "../../../../../common/graphql/apiModel";
 
 export default function SuunnitteluWrapper({ setRouteLabels }: PageProps) {
   useProjektiBreadcrumbs(setRouteLabels);
@@ -100,12 +101,25 @@ function Suunnittelu({ projekti }: { projekti: ProjektiLisatiedolla }): ReactEle
     return tabs;
   }, [projekti]);
 
+  const migroitu = projekti?.suunnitteluVaihe?.tila == SuunnitteluVaiheTila.MIGROITU;
+
   return (
     <ProjektiPageLayout title="Suunnittelu">
-      <Section noDivider>
-        <Tabs tabStyle="Underlined" value={currentTab} onChange={handleChange} tabs={vuorovaikutusTabs} />
-      </Section>
-      <TallentamattomiaMuutoksiaDialog open={open} handleClickClose={handleClickClose} handleClickOk={handleClickOk} />
+      {!migroitu && (
+        <>
+          <Section noDivider>
+            <Tabs tabStyle="Underlined" value={currentTab} onChange={handleChange} tabs={vuorovaikutusTabs} />
+          </Section>
+          <TallentamattomiaMuutoksiaDialog open={open} handleClickClose={handleClickClose} handleClickOk={handleClickOk} />
+        </>
+      )}
+      {migroitu && (
+        <Section noDivider>
+          <>
+            <p>Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.</p>
+          </>
+        </Section>
+      )}
     </ProjektiPageLayout>
   );
 }

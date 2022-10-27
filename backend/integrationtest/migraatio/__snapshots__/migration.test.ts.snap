@@ -1,0 +1,1190 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Migraatio hyväksymismenettelyyn migroitu projekti 1`] = `
+Object {
+  "description": "testImportHyvaksymispaatosvaiheAineistot",
+  "obj": Object {
+    "hyvaksymisPaatosVaihe": Object {
+      "__typename": "HyvaksymisPaatosVaihe",
+      "aineistoNahtavilla": undefined,
+      "hallintoOikeus": "HAMEENLINNA",
+      "hyvaksymisPaatoksenAsianumero": "asianro123",
+      "hyvaksymisPaatoksenPvm": "2022-06-09",
+      "hyvaksymisPaatos": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+          "jarjestys": 1,
+          "nimi": "T100 Kansilehti.txt",
+          "tila": "ODOTTAA_TUONTIA",
+        },
+      ],
+      "id": 1,
+      "ilmoituksenVastaanottajat": Object {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": Array [
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 491,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 178,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 740,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "__typename": "ViranomaisVastaanottaja",
+            "lahetetty": "2022-03-11T14:54",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "kuulutusPaiva": "2022-06-09",
+      "kuulutusVaihePaattyyPaiva": "2100-01-01",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "organisaatio": "",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "organisaatio": "",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
+    },
+    "kasittelynTila": Object {
+      "__typename": "KasittelynTila",
+      "ensimmainenJatkopaatos": undefined,
+      "hyvaksymispaatos": Object {
+        "__typename": "Hyvaksymispaatos",
+        "asianumero": "asianro123",
+        "paatoksenPvm": "2022-06-09",
+      },
+      "toinenJatkopaatos": undefined,
+    },
+  },
+}
+`;
+
+exports[`Migraatio hyväksymismenettelyyn migroitu projekti 2`] = `
+Object {
+  "description": "testHyvaksymisPaatosVaiheAfterApproval",
+  "obj": Object {
+    "hyvaksymisPaatosVaihe": Object {
+      "__typename": "HyvaksymisPaatosVaihe",
+      "aineistoNahtavilla": undefined,
+      "hallintoOikeus": "HAMEENLINNA",
+      "hyvaksymisPaatoksenAsianumero": "asianro123",
+      "hyvaksymisPaatoksenPvm": "2022-06-09",
+      "hyvaksymisPaatos": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+          "jarjestys": 1,
+          "nimi": "T100 Kansilehti.txt",
+          "tila": "ODOTTAA_TUONTIA",
+        },
+      ],
+      "id": 1,
+      "ilmoituksenVastaanottajat": Object {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": Array [
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 491,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 178,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 740,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "__typename": "ViranomaisVastaanottaja",
+            "lahetetty": "2022-03-11T14:54",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "kuulutusPaiva": "2022-06-09",
+      "kuulutusVaihePaattyyPaiva": "2100-01-01",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "organisaatio": "",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "organisaatio": "",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
+    },
+    "hyvaksymisPaatosVaiheJulkaisut": Array [
+      Object {
+        "__typename": "HyvaksymisPaatosVaiheJulkaisu",
+        "aineistoNahtavilla": undefined,
+        "hallintoOikeus": "HAMEENLINNA",
+        "hyvaksyja": "A000112",
+        "hyvaksymisPaatoksenAsianumero": "asianro123",
+        "hyvaksymisPaatoksenPvm": "2022-06-09",
+        "hyvaksymisPaatos": Array [
+          Object {
+            "__typename": "Aineisto",
+            "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+            "jarjestys": 1,
+            "nimi": "T100 Kansilehti.txt",
+            "tila": "ODOTTAA_TUONTIA",
+          },
+        ],
+        "hyvaksymisPaatosVaihePDFt": Object {
+          "SUOMI": Object {
+            "__typename": "HyvaksymisPaatosVaihePDF",
+            "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+            "hyvaksymisIlmoitusMuistuttajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+            "hyvaksymisKuulutusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+            "ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle.pdf",
+            "ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+          },
+          "__typename": "HyvaksymisPaatosVaihePDFt",
+        },
+        "id": 1,
+        "ilmoituksenVastaanottajat": Object {
+          "__typename": "IlmoituksenVastaanottajat",
+          "kunnat": Array [
+            Object {
+              "__typename": "KuntaVastaanottaja",
+              "id": 491,
+              "lahetetty": "2022-03-11T14:54",
+              "sahkoposti": "mikkeli@mikke.li",
+            },
+            Object {
+              "__typename": "KuntaVastaanottaja",
+              "id": 178,
+              "lahetetty": "2022-03-11T14:54",
+              "sahkoposti": "juva@ju.va",
+            },
+            Object {
+              "__typename": "KuntaVastaanottaja",
+              "id": 740,
+              "lahetetty": "2022-03-11T14:54",
+              "sahkoposti": "savonlinna@savonlin.na",
+            },
+          ],
+          "viranomaiset": Array [
+            Object {
+              "__typename": "ViranomaisVastaanottaja",
+              "lahetetty": "2022-03-11T14:54",
+              "nimi": "ETELA_SAVO_ELY",
+              "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+            },
+          ],
+        },
+        "kielitiedot": Object {
+          "__typename": "Kielitiedot",
+          "ensisijainenKieli": "SUOMI",
+        },
+        "kuulutusPaiva": "2022-06-09",
+        "kuulutusVaihePaattyyPaiva": "2100-01-01",
+        "muokkaaja": "A000112",
+        "tila": "HYVAKSYTTY",
+        "velho": Object {
+          "__typename": "Velho",
+          "kunnat": Array [
+            91,
+            92,
+          ],
+          "linkki": null,
+          "maakunnat": Array [
+            1,
+          ],
+          "nimi": "HASSU MIGRAATIOTESTIPROJEKTI HYVÄKSYMISMENETTELYSSÄ",
+          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+          "tyyppi": "TIE",
+          "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+          "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+          "vaylamuoto": Array [
+            "tie",
+          ],
+        },
+        "yhteystiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "A-tunnus1",
+            "organisaatio": "CGI Suomi Oy",
+            "puhelinnumero": "0291111111",
+            "sahkoposti": "mikko.haapamki@cgi.com",
+            "sukunimi": "Hassu",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "organisaatio": "",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "organisaatio": "",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
+    ],
+  },
+}
+`;
+
+exports[`Migraatio hyväksymismenettelyyn migroitu projekti 3`] = `
+Object {
+  "description": "publicProjektiHyvaksymisPaatosVaiheJulkinenAfterApproval",
+  "obj": Object {
+    "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
+    "aineistoNahtavilla": undefined,
+    "hallintoOikeus": "HAMEENLINNA",
+    "hyvaksymisPaatoksenAsianumero": "asianro123",
+    "hyvaksymisPaatoksenPvm": "2022-06-09",
+    "hyvaksymisPaatos": undefined,
+    "kielitiedot": Object {
+      "__typename": "Kielitiedot",
+      "ensisijainenKieli": "SUOMI",
+    },
+    "kuulutusPaiva": "2022-06-09",
+    "kuulutusVaihePaattyyPaiva": "2022-06-08",
+    "tila": "HYVAKSYTTY",
+    "velho": Object {
+      "__typename": "VelhoJulkinen",
+      "asiatunnusELY": undefined,
+      "asiatunnusVayla": undefined,
+      "kunnat": Array [
+        91,
+        92,
+      ],
+      "kuvaus": undefined,
+      "maakunnat": Array [
+        1,
+      ],
+      "nimi": "HASSU MIGRAATIOTESTIPROJEKTI HYVÄKSYMISMENETTELYSSÄ",
+      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+      "toteuttavaOrganisaatio": undefined,
+      "tyyppi": "TIE",
+      "vaylamuoto": Array [
+        "tie",
+      ],
+    },
+    "yhteystiedot": Array [
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "A-tunnus1",
+        "organisaatio": "CGI Suomi Oy",
+        "puhelinnumero": "0291111111",
+        "sahkoposti": "mikko.haapamki@cgi.com",
+        "sukunimi": "Hassu",
+      },
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Etunimi",
+        "organisaatio": "",
+        "puhelinnumero": "0293121213",
+        "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+        "sukunimi": "Sukunimi",
+      },
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Joku",
+        "organisaatio": "",
+        "puhelinnumero": "02998765",
+        "sahkoposti": "Joku.Jokunen@vayla.fi",
+        "sukunimi": "Jokunen",
+      },
+    ],
+  },
+}
+`;
+
+exports[`Migraatio hyväksymismenettelyyn migroitu projekti 4`] = `
+Object {
+  "description": "publicProjektihyväksymismenettelyyn migroitu julkinen projekti",
+  "obj": Object {
+    "__typename": "ProjektiJulkinen",
+    "aloitusKuulutusJulkaisut": Array [
+      Object {
+        "__typename": "AloitusKuulutusJulkaisuJulkinen",
+        "tila": "MIGROITU",
+        "velho": Object {
+          "__typename": "VelhoJulkinen",
+          "asiatunnusELY": undefined,
+          "asiatunnusVayla": undefined,
+          "kunnat": Array [
+            91,
+            92,
+          ],
+          "kuvaus": undefined,
+          "maakunnat": Array [
+            1,
+          ],
+          "nimi": "HASSU MIGRAATIOTESTIPROJEKTI HYVÄKSYMISMENETTELYSSÄ",
+          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+          "toteuttavaOrganisaatio": undefined,
+          "tyyppi": "TIE",
+          "vaylamuoto": Array [
+            "tie",
+          ],
+        },
+        "yhteystiedot": Array [],
+      },
+    ],
+    "euRahoitus": false,
+    "hyvaksymisPaatosVaihe": Object {
+      "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
+      "aineistoNahtavilla": undefined,
+      "hallintoOikeus": "HAMEENLINNA",
+      "hyvaksymisPaatoksenAsianumero": "asianro123",
+      "hyvaksymisPaatoksenPvm": "2022-06-09",
+      "hyvaksymisPaatos": undefined,
+      "kielitiedot": Object {
+        "__typename": "Kielitiedot",
+        "ensisijainenKieli": "SUOMI",
+      },
+      "kuulutusPaiva": "2022-06-09",
+      "kuulutusVaihePaattyyPaiva": "2022-06-08",
+      "tila": "HYVAKSYTTY",
+      "velho": Object {
+        "__typename": "VelhoJulkinen",
+        "asiatunnusELY": undefined,
+        "asiatunnusVayla": undefined,
+        "kunnat": Array [
+          91,
+          92,
+        ],
+        "kuvaus": undefined,
+        "maakunnat": Array [
+          1,
+        ],
+        "nimi": "HASSU MIGRAATIOTESTIPROJEKTI HYVÄKSYMISMENETTELYSSÄ",
+        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+        "toteuttavaOrganisaatio": undefined,
+        "tyyppi": "TIE",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "A-tunnus1",
+          "organisaatio": "CGI Suomi Oy",
+          "puhelinnumero": "0291111111",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sukunimi": "Hassu",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Etunimi",
+          "organisaatio": "",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "sukunimi": "Sukunimi",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Joku",
+          "organisaatio": "",
+          "puhelinnumero": "02998765",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "sukunimi": "Jokunen",
+        },
+      ],
+    },
+    "kielitiedot": Object {
+      "__typename": "Kielitiedot",
+      "ensisijainenKieli": "SUOMI",
+    },
+    "nahtavillaoloVaihe": Object {
+      "__typename": "NahtavillaoloVaiheJulkaisuJulkinen",
+      "tila": "MIGROITU",
+      "velho": Object {
+        "__typename": "VelhoJulkinen",
+        "asiatunnusELY": undefined,
+        "asiatunnusVayla": undefined,
+        "kunnat": Array [
+          91,
+          92,
+        ],
+        "kuvaus": undefined,
+        "maakunnat": Array [
+          1,
+        ],
+        "nimi": "HASSU MIGRAATIOTESTIPROJEKTI HYVÄKSYMISMENETTELYSSÄ",
+        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+        "toteuttavaOrganisaatio": undefined,
+        "tyyppi": "TIE",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [],
+    },
+    "oid": "1.2.246.578.5.1.2789861876.697619507",
+    "paivitetty": "***unit test***",
+    "projektiHenkilot": Array [
+      Object {
+        "__typename": "ProjektiKayttajaJulkinen",
+        "email": "mikko.haapamki@cgi.com",
+        "nimi": "Hassu, A-tunnus1",
+        "organisaatio": "CGI Suomi Oy",
+        "projektiPaallikko": true,
+        "puhelinnumero": "0291111111",
+      },
+    ],
+    "status": "HYVAKSYTTY",
+    "suunnitteluVaihe": Object {
+      "__typename": "SuunnitteluVaiheJulkinen",
+      "tila": "MIGROITU",
+    },
+    "velho": Object {
+      "__typename": "VelhoJulkinen",
+      "asiatunnusELY": undefined,
+      "asiatunnusVayla": undefined,
+      "kunnat": Array [
+        91,
+        92,
+      ],
+      "kuvaus": undefined,
+      "maakunnat": Array [
+        1,
+      ],
+      "nimi": "HASSU MIGRAATIOTESTIPROJEKTI HYVÄKSYMISMENETTELYSSÄ",
+      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+      "toteuttavaOrganisaatio": undefined,
+      "tyyppi": "TIE",
+      "vaylamuoto": Array [
+        "tie",
+      ],
+    },
+  },
+}
+`;
+
+exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 1`] = `
+Object {
+  "description": "testNahtavillaOloPerustiedot",
+  "obj": Object {
+    "__typename": "NahtavillaoloVaihe",
+    "aineistoNahtavilla": undefined,
+    "hankkeenKuvaus": Object {
+      "SAAME": "Saameksi nahtavillaoloVaihe",
+      "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
+      "__typename": "HankkeenKuvaukset",
+    },
+    "id": 1,
+    "ilmoituksenVastaanottajat": Object {
+      "__typename": "IlmoituksenVastaanottajat",
+      "kunnat": Array [
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "id": 491,
+          "lahetetty": "2022-03-11T14:54",
+          "sahkoposti": "mikkeli@mikke.li",
+        },
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "id": 178,
+          "lahetetty": "2022-03-11T14:54",
+          "sahkoposti": "juva@ju.va",
+        },
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "id": 740,
+          "lahetetty": "2022-03-11T14:54",
+          "sahkoposti": "savonlinna@savonlin.na",
+        },
+      ],
+      "viranomaiset": Array [
+        Object {
+          "__typename": "ViranomaisVastaanottaja",
+          "lahetetty": "2022-03-11T14:54",
+          "nimi": "ETELA_SAVO_ELY",
+          "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+        },
+      ],
+    },
+    "kuulutusPaiva": "2022-06-07",
+    "kuulutusVaihePaattyyPaiva": "2042-06-07",
+    "kuulutusYhteystiedot": Object {
+      "__typename": "StandardiYhteystiedot",
+      "yhteysHenkilot": Array [
+        "A000112",
+      ],
+      "yhteysTiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Etunimi",
+          "organisaatio": "",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "sukunimi": "Sukunimi",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Joku",
+          "organisaatio": "",
+          "puhelinnumero": "02998765",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "sukunimi": "Jokunen",
+        },
+      ],
+    },
+    "lisaAineisto": undefined,
+    "lisaAineistoParametrit": Object {
+      "__typename": "LisaAineistoParametrit",
+      "hash": "***unittest***",
+      "nahtavillaoloVaiheId": 1,
+      "poistumisPaiva": "***unittest***",
+    },
+    "muistutusoikeusPaattyyPaiva": "2042-06-08",
+  },
+}
+`;
+
+exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 2`] = `
+Object {
+  "description": "testImportNahtavillaoloAineistot",
+  "obj": Object {
+    "nahtavillaoloVaihe": Object {
+      "__typename": "NahtavillaoloVaihe",
+      "aineistoNahtavilla": undefined,
+      "hankkeenKuvaus": Object {
+        "SAAME": "Saameksi nahtavillaoloVaihe",
+        "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
+        "__typename": "HankkeenKuvaukset",
+      },
+      "id": 1,
+      "ilmoituksenVastaanottajat": Object {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": Array [
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 491,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 178,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 740,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "__typename": "ViranomaisVastaanottaja",
+            "lahetetty": "2022-03-11T14:54",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "kuulutusPaiva": "2022-06-07",
+      "kuulutusVaihePaattyyPaiva": "2042-06-07",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "organisaatio": "",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "organisaatio": "",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
+      "lisaAineisto": undefined,
+      "lisaAineistoParametrit": Object {
+        "__typename": "LisaAineistoParametrit",
+        "hash": "***unittest***",
+        "nahtavillaoloVaiheId": 1,
+        "poistumisPaiva": "***unittest***",
+      },
+      "muistutusoikeusPaattyyPaiva": "2042-06-08",
+    },
+  },
+}
+`;
+
+exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 3`] = `
+Object {
+  "description": "testNahtavillaOloAfterApproval",
+  "obj": Object {
+    "nahtavillaoloVaihe": Object {
+      "__typename": "NahtavillaoloVaihe",
+      "aineistoNahtavilla": undefined,
+      "hankkeenKuvaus": Object {
+        "SAAME": "Saameksi nahtavillaoloVaihe",
+        "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
+        "__typename": "HankkeenKuvaukset",
+      },
+      "id": 1,
+      "ilmoituksenVastaanottajat": Object {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": Array [
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 491,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 178,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 740,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "__typename": "ViranomaisVastaanottaja",
+            "lahetetty": "2022-03-11T14:54",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "kuulutusPaiva": "2022-06-07",
+      "kuulutusVaihePaattyyPaiva": "2042-06-07",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "organisaatio": "",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "organisaatio": "",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
+      "lisaAineisto": undefined,
+      "lisaAineistoParametrit": Object {
+        "__typename": "LisaAineistoParametrit",
+        "hash": "***unittest***",
+        "nahtavillaoloVaiheId": 1,
+        "poistumisPaiva": "***unittest***",
+      },
+      "muistutusoikeusPaattyyPaiva": "2042-06-08",
+    },
+    "nahtavillaoloVaiheJulkaisut": Array [
+      Object {
+        "__typename": "NahtavillaoloVaiheJulkaisu",
+        "aineistoNahtavilla": undefined,
+        "hankkeenKuvaus": Object {
+          "SAAME": "Saameksi nahtavillaoloVaihe",
+          "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
+          "__typename": "HankkeenKuvaukset",
+        },
+        "hyvaksyja": "A000112",
+        "id": 1,
+        "ilmoituksenVastaanottajat": Object {
+          "__typename": "IlmoituksenVastaanottajat",
+          "kunnat": Array [
+            Object {
+              "__typename": "KuntaVastaanottaja",
+              "id": 491,
+              "lahetetty": "2022-03-11T14:54",
+              "sahkoposti": "mikkeli@mikke.li",
+            },
+            Object {
+              "__typename": "KuntaVastaanottaja",
+              "id": 178,
+              "lahetetty": "2022-03-11T14:54",
+              "sahkoposti": "juva@ju.va",
+            },
+            Object {
+              "__typename": "KuntaVastaanottaja",
+              "id": 740,
+              "lahetetty": "2022-03-11T14:54",
+              "sahkoposti": "savonlinna@savonlin.na",
+            },
+          ],
+          "viranomaiset": Array [
+            Object {
+              "__typename": "ViranomaisVastaanottaja",
+              "lahetetty": "2022-03-11T14:54",
+              "nimi": "ETELA_SAVO_ELY",
+              "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+            },
+          ],
+        },
+        "kielitiedot": Object {
+          "__typename": "Kielitiedot",
+          "ensisijainenKieli": "SUOMI",
+        },
+        "kuulutusPaiva": "2022-06-07",
+        "kuulutusVaihePaattyyPaiva": "2042-06-07",
+        "lisaAineisto": undefined,
+        "muistutusoikeusPaattyyPaiva": "2042-06-08",
+        "muokkaaja": "A000112",
+        "nahtavillaoloPDFt": Object {
+          "SUOMI": Object {
+            "__typename": "NahtavillaoloPDF",
+            "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+            "nahtavillaoloIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
+            "nahtavillaoloPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
+          },
+          "__typename": "NahtavillaoloPDFt",
+        },
+        "tila": "HYVAKSYTTY",
+        "velho": Object {
+          "__typename": "Velho",
+          "kunnat": Array [
+            91,
+            92,
+          ],
+          "linkki": null,
+          "maakunnat": Array [
+            1,
+          ],
+          "nimi": "HASSU MIGRAATIOTESTIPROJEKTI NÄHTÄVILLÄOLO",
+          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+          "tyyppi": "TIE",
+          "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+          "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+          "vaylamuoto": Array [
+            "tie",
+          ],
+        },
+        "yhteystiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "A-tunnus1",
+            "organisaatio": "CGI Suomi Oy",
+            "puhelinnumero": "0291111111",
+            "sahkoposti": "mikko.haapamki@cgi.com",
+            "sukunimi": "Hassu",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "organisaatio": "",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "organisaatio": "",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
+    ],
+  },
+}
+`;
+
+exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 4`] = `
+Object {
+  "description": "publicProjektiNahtavillaOloJulkinenAfterApproval",
+  "obj": Object {
+    "__typename": "NahtavillaoloVaiheJulkaisuJulkinen",
+    "hankkeenKuvaus": Object {
+      "SAAME": "Saameksi nahtavillaoloVaihe",
+      "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
+      "__typename": "HankkeenKuvaukset",
+    },
+    "kielitiedot": Object {
+      "__typename": "Kielitiedot",
+      "ensisijainenKieli": "SUOMI",
+    },
+    "kuulutusPaiva": "2022-06-07",
+    "kuulutusVaihePaattyyPaiva": "2042-06-07",
+    "muistutusoikeusPaattyyPaiva": "2042-06-08",
+    "tila": "HYVAKSYTTY",
+    "velho": Object {
+      "__typename": "VelhoJulkinen",
+      "asiatunnusELY": undefined,
+      "asiatunnusVayla": undefined,
+      "kunnat": Array [
+        91,
+        92,
+      ],
+      "kuvaus": undefined,
+      "maakunnat": Array [
+        1,
+      ],
+      "nimi": "HASSU MIGRAATIOTESTIPROJEKTI NÄHTÄVILLÄOLO",
+      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+      "toteuttavaOrganisaatio": undefined,
+      "tyyppi": "TIE",
+      "vaylamuoto": Array [
+        "tie",
+      ],
+    },
+    "yhteystiedot": Array [
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "A-tunnus1",
+        "organisaatio": "CGI Suomi Oy",
+        "puhelinnumero": "0291111111",
+        "sahkoposti": "mikko.haapamki@cgi.com",
+        "sukunimi": "Hassu",
+      },
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Etunimi",
+        "organisaatio": "",
+        "puhelinnumero": "0293121213",
+        "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+        "sukunimi": "Sukunimi",
+      },
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Joku",
+        "organisaatio": "",
+        "puhelinnumero": "02998765",
+        "sahkoposti": "Joku.Jokunen@vayla.fi",
+        "sukunimi": "Jokunen",
+      },
+    ],
+  },
+}
+`;
+
+exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 5`] = `
+Object {
+  "description": "publicProjektinähtävilläolovaiheeseen migroitu julkinen projekti",
+  "obj": Object {
+    "__typename": "ProjektiJulkinen",
+    "aloitusKuulutusJulkaisut": Array [
+      Object {
+        "__typename": "AloitusKuulutusJulkaisuJulkinen",
+        "tila": "MIGROITU",
+        "velho": Object {
+          "__typename": "VelhoJulkinen",
+          "asiatunnusELY": undefined,
+          "asiatunnusVayla": undefined,
+          "kunnat": Array [
+            91,
+            92,
+          ],
+          "kuvaus": undefined,
+          "maakunnat": Array [
+            1,
+          ],
+          "nimi": "HASSU MIGRAATIOTESTIPROJEKTI NÄHTÄVILLÄOLO",
+          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+          "toteuttavaOrganisaatio": undefined,
+          "tyyppi": "TIE",
+          "vaylamuoto": Array [
+            "tie",
+          ],
+        },
+        "yhteystiedot": Array [],
+      },
+    ],
+    "euRahoitus": false,
+    "kielitiedot": Object {
+      "__typename": "Kielitiedot",
+      "ensisijainenKieli": "SUOMI",
+    },
+    "nahtavillaoloVaihe": Object {
+      "__typename": "NahtavillaoloVaiheJulkaisuJulkinen",
+      "hankkeenKuvaus": Object {
+        "SAAME": "Saameksi nahtavillaoloVaihe",
+        "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
+        "__typename": "HankkeenKuvaukset",
+      },
+      "kielitiedot": Object {
+        "__typename": "Kielitiedot",
+        "ensisijainenKieli": "SUOMI",
+      },
+      "kuulutusPaiva": "2022-06-07",
+      "kuulutusVaihePaattyyPaiva": "2042-06-07",
+      "muistutusoikeusPaattyyPaiva": "2042-06-08",
+      "tila": "HYVAKSYTTY",
+      "velho": Object {
+        "__typename": "VelhoJulkinen",
+        "asiatunnusELY": undefined,
+        "asiatunnusVayla": undefined,
+        "kunnat": Array [
+          91,
+          92,
+        ],
+        "kuvaus": undefined,
+        "maakunnat": Array [
+          1,
+        ],
+        "nimi": "HASSU MIGRAATIOTESTIPROJEKTI NÄHTÄVILLÄOLO",
+        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+        "toteuttavaOrganisaatio": undefined,
+        "tyyppi": "TIE",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "A-tunnus1",
+          "organisaatio": "CGI Suomi Oy",
+          "puhelinnumero": "0291111111",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sukunimi": "Hassu",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Etunimi",
+          "organisaatio": "",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "sukunimi": "Sukunimi",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Joku",
+          "organisaatio": "",
+          "puhelinnumero": "02998765",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "sukunimi": "Jokunen",
+        },
+      ],
+    },
+    "oid": "1.2.246.578.5.1.2574551391.2902330452",
+    "paivitetty": "***unit test***",
+    "projektiHenkilot": Array [
+      Object {
+        "__typename": "ProjektiKayttajaJulkinen",
+        "email": "mikko.haapamki@cgi.com",
+        "nimi": "Hassu, A-tunnus1",
+        "organisaatio": "CGI Suomi Oy",
+        "projektiPaallikko": true,
+        "puhelinnumero": "0291111111",
+      },
+    ],
+    "status": "NAHTAVILLAOLO",
+    "suunnitteluVaihe": Object {
+      "__typename": "SuunnitteluVaiheJulkinen",
+      "tila": "MIGROITU",
+    },
+    "velho": Object {
+      "__typename": "VelhoJulkinen",
+      "asiatunnusELY": undefined,
+      "asiatunnusVayla": undefined,
+      "kunnat": Array [
+        91,
+        92,
+      ],
+      "kuvaus": undefined,
+      "maakunnat": Array [
+        1,
+      ],
+      "nimi": "HASSU MIGRAATIOTESTIPROJEKTI NÄHTÄVILLÄOLO",
+      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+      "toteuttavaOrganisaatio": undefined,
+      "tyyppi": "TIE",
+      "vaylamuoto": Array [
+        "tie",
+      ],
+    },
+  },
+}
+`;
+
+exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 1`] = `
+Object {
+  "description": "testSuunnitteluvaihePerustiedot",
+  "obj": Object {
+    "__typename": "SuunnitteluVaihe",
+    "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
+    "hankkeenKuvaus": Object {
+      "SAAME": "Saameksi suunnitteluvaihe",
+      "SUOMI": "Lorem Ipsum suunnitteluvaihe",
+      "__typename": "HankkeenKuvaukset",
+    },
+    "palautteidenVastaanottajat": Array [
+      "A000111",
+    ],
+    "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+    "tila": undefined,
+    "vuorovaikutukset": Array [],
+  },
+}
+`;
+
+exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 2`] = `
+Object {
+  "description": "publicProjektisuunnitteluvaiheeseen migroitu julkinen projekti",
+  "obj": Object {
+    "__typename": "ProjektiJulkinen",
+    "aloitusKuulutusJulkaisut": Array [
+      Object {
+        "__typename": "AloitusKuulutusJulkaisuJulkinen",
+        "tila": "MIGROITU",
+        "velho": Object {
+          "__typename": "VelhoJulkinen",
+          "asiatunnusELY": undefined,
+          "asiatunnusVayla": undefined,
+          "kunnat": Array [
+            91,
+            92,
+          ],
+          "kuvaus": undefined,
+          "maakunnat": Array [
+            1,
+          ],
+          "nimi": "HASSU MIGRAATIOTESTIPROJEKTI SUUNNITTELU",
+          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+          "toteuttavaOrganisaatio": undefined,
+          "tyyppi": "TIE",
+          "vaylamuoto": Array [
+            "tie",
+          ],
+        },
+        "yhteystiedot": Array [],
+      },
+    ],
+    "euRahoitus": false,
+    "kielitiedot": Object {
+      "__typename": "Kielitiedot",
+      "ensisijainenKieli": "SUOMI",
+    },
+    "oid": "1.2.246.578.5.1.2983738467.1825323454",
+    "paivitetty": "***unit test***",
+    "projektiHenkilot": Array [
+      Object {
+        "__typename": "ProjektiKayttajaJulkinen",
+        "email": "mikko.haapamki@cgi.com",
+        "nimi": "Hassu, A-tunnus1",
+        "organisaatio": "CGI Suomi Oy",
+        "projektiPaallikko": true,
+        "puhelinnumero": "0291111111",
+      },
+    ],
+    "status": "SUUNNITTELU",
+    "suunnitteluVaihe": Object {
+      "__typename": "SuunnitteluVaiheJulkinen",
+      "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
+      "hankkeenKuvaus": Object {
+        "SAAME": "Saameksi suunnitteluvaihe",
+        "SUOMI": "Lorem Ipsum suunnitteluvaihe",
+        "__typename": "HankkeenKuvaukset",
+      },
+      "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+      "vuorovaikutukset": Array [],
+    },
+    "velho": Object {
+      "__typename": "VelhoJulkinen",
+      "asiatunnusELY": undefined,
+      "asiatunnusVayla": undefined,
+      "kunnat": Array [
+        91,
+        92,
+      ],
+      "kuvaus": undefined,
+      "maakunnat": Array [
+        1,
+      ],
+      "nimi": "HASSU MIGRAATIOTESTIPROJEKTI SUUNNITTELU",
+      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+      "toteuttavaOrganisaatio": undefined,
+      "tyyppi": "TIE",
+      "vaylamuoto": Array [
+        "tie",
+      ],
+    },
+  },
+}
+`;

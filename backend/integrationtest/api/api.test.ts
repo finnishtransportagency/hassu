@@ -32,7 +32,7 @@ import {
   verifyEmailsSent,
   verifyVuorovaikutusSnapshot,
 } from "./testUtil/tests";
-import { takePublicS3Snapshot, takeS3Snapshot, takeYllapitoS3Snapshot } from "./testUtil/util";
+import { stubPDFGenerator, takePublicS3Snapshot, takeS3Snapshot, takeYllapitoS3Snapshot } from "./testUtil/util";
 import {
   testImportNahtavillaoloAineistot,
   testNahtavillaolo,
@@ -46,8 +46,6 @@ import {
   testHyvaksymisPaatosVaiheApproval,
 } from "./testUtil/hyvaksymisPaatosVaihe";
 import { FixtureName, recordProjektiTestFixture } from "./testFixtureRecorder";
-import { pdfGeneratorClient } from "../../src/asiakirja/lambda/pdfGeneratorClient";
-import { handleEvent as pdfGenerator } from "../../src/asiakirja/lambda/pdfGeneratorHandler";
 import { awsMockResolves } from "../../test/aws/awsMock";
 import { ImportAineistoMock } from "./testUtil/importAineistoMock";
 
@@ -76,10 +74,7 @@ describe("Api", () => {
     sinon.stub(openSearchClientYllapito, "putDocument");
 
     importAineistoMock.initStub();
-    const pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
-    pdfGeneratorLambdaStub.callsFake(async (event) => {
-      return await pdfGenerator(event);
-    });
+    stubPDFGenerator();
 
     awsCloudfrontInvalidationStub = sinon.stub(getCloudFront(), "createInvalidation");
     awsMockResolves(awsCloudfrontInvalidationStub, {});

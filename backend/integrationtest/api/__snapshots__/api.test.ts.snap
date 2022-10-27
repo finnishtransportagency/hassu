@@ -100,11 +100,11 @@ Object {
       "SUOMI": "Lorem Ipsum suunnitteluvaihe",
       "__typename": "HankkeenKuvaukset",
     },
-    "julkinen": undefined,
     "palautteidenVastaanottajat": Array [
       "A000111",
     ],
     "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+    "tila": undefined,
     "vuorovaikutukset": Array [],
   },
 }
@@ -121,11 +121,11 @@ Object {
       "SUOMI": "Lorem Ipsum suunnitteluvaihe",
       "__typename": "HankkeenKuvaukset",
     },
-    "julkinen": undefined,
     "palautteidenVastaanottajat": Array [
       "A000111",
     ],
     "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+    "tila": undefined,
     "vuorovaikutukset": Array [
       Object {
         "__typename": "Vuorovaikutus",
@@ -2455,6 +2455,7 @@ Object {
     "kuulutusPaiva": "2022-06-07",
     "kuulutusVaihePaattyyPaiva": "2042-06-07",
     "muistutusoikeusPaattyyPaiva": "2042-06-08",
+    "tila": "HYVAKSYTTY",
     "velho": Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
@@ -2960,6 +2961,7 @@ Object {
     },
     "kuulutusPaiva": "2022-06-09",
     "kuulutusVaihePaattyyPaiva": "2022-06-08",
+    "tila": "HYVAKSYTTY",
     "velho": Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,

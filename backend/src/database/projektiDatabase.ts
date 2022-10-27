@@ -1,12 +1,12 @@
 import { log } from "../logger";
 import { AloitusKuulutusJulkaisu, DBProjekti, HyvaksymisPaatosVaiheJulkaisu, NahtavillaoloVaiheJulkaisu } from "./model";
 import { config } from "../config";
-import { getDynamoDBDocumentClient } from "./dynamoDB";
 import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
 import { AWSError } from "aws-sdk/lib/error";
 import { Response } from "aws-sdk/lib/response";
 import dayjs from "dayjs";
 import { migrateFromOldSchema } from "./schemaUpgrade";
+import { getDynamoDBDocumentClient } from "../aws/client";
 
 const specialFields = ["oid", "tallennettu", "vuorovaikutukset"];
 const skipAutomaticUpdateFields = [

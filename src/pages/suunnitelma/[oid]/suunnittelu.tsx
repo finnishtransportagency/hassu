@@ -13,6 +13,7 @@ import {
   ProjektiJulkinen,
   SuunnitteluSopimusJulkaisu,
   SuunnitteluVaiheJulkinen,
+  SuunnitteluVaiheTila,
   VuorovaikutusJulkinen,
   VuorovaikutusTilaisuusJulkinen,
   VuorovaikutusTilaisuusTyyppi,
@@ -40,18 +41,31 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
   if (!projekti?.suunnitteluVaihe) {
     return <></>;
   }
-
+  const migroitu = projekti.suunnitteluVaihe.tila == SuunnitteluVaiheTila.MIGROITU;
   return (
-    <ProjektiJulkinenPageLayout selectedStep={1} title={t("otsikko")}>
-      <Perustiedot suunnitteluVaihe={projekti.suunnitteluVaihe} />
-      <VuorovaikutusTiedot
-        projekti={projekti}
-        suunnitteluVaihe={projekti.suunnitteluVaihe}
-        vuorovaikutus={projekti.suunnitteluVaihe.vuorovaikutukset?.[0]}
-        suunnittelusopimus={projekti?.aloitusKuulutusJulkaisut?.[0].suunnitteluSopimus}
-        projektiOid={projekti.oid}
-      />
-    </ProjektiJulkinenPageLayout>
+    <>
+      {!migroitu && (
+        <ProjektiJulkinenPageLayout selectedStep={1} title={t("otsikko")}>
+          <Perustiedot suunnitteluVaihe={projekti.suunnitteluVaihe} />
+          <VuorovaikutusTiedot
+            projekti={projekti}
+            suunnitteluVaihe={projekti.suunnitteluVaihe}
+            vuorovaikutus={projekti.suunnitteluVaihe.vuorovaikutukset?.[0]}
+            suunnittelusopimus={projekti?.aloitusKuulutusJulkaisut?.[0].suunnitteluSopimus}
+            projektiOid={projekti.oid}
+          />
+        </ProjektiJulkinenPageLayout>
+      )}
+      {migroitu && (
+        <ProjektiJulkinenPageLayout selectedStep={1}>
+          <Section noDivider>
+            <>
+              <p>Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.</p>
+            </>
+          </Section>
+        </ProjektiJulkinenPageLayout>
+      )}
+    </>
   );
 }
 

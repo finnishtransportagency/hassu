@@ -8,6 +8,7 @@ import {
   VuorovaikutusTilaisuus,
 } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
+import { SuunnitteluVaiheTila } from "../../../../../common/graphql/apiModel";
 import {
   adaptAineistot,
   adaptHankkeenKuvaus,
@@ -27,13 +28,16 @@ export function adaptSuunnitteluVaihe(
   vuorovaikutukset: Array<Vuorovaikutus> | null | undefined
 ): API.SuunnitteluVaihe | undefined {
   if (suunnitteluVaihe) {
-    const { hankkeenKuvaus, julkinen, arvioSeuraavanVaiheenAlkamisesta, suunnittelunEteneminenJaKesto, palautteidenVastaanottajat } =
+    const { hankkeenKuvaus, tila, arvioSeuraavanVaiheenAlkamisesta, suunnittelunEteneminenJaKesto, palautteidenVastaanottajat } =
       suunnitteluVaihe;
+    if (tila == SuunnitteluVaiheTila.MIGROITU) {
+      return { __typename: "SuunnitteluVaihe", tila };
+    }
     if (!hankkeenKuvaus) {
       throw new Error("adaptSuunnitteluVaihe: suunnitteluvaihe.hankkeenKuvaus määrittelemättä");
     }
     return {
-      julkinen,
+      tila,
       arvioSeuraavanVaiheenAlkamisesta,
       suunnittelunEteneminenJaKesto,
       hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),

@@ -1,9 +1,9 @@
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { suunnittelunPerustiedotSchema, maxHankkeenkuvausLength } from "src/schemas/suunnittelunPerustiedot";
+import { maxHankkeenkuvausLength, suunnittelunPerustiedotSchema } from "src/schemas/suunnittelunPerustiedot";
 import SectionContent from "@components/layout/SectionContent";
 import Textarea from "@components/form/Textarea";
-import { Kieli, SuunnitteluVaiheInput, TallennaProjektiInput, api, AloitusKuulutusTila } from "@services/api";
+import { AloitusKuulutusTila, api, Kieli, SuunnitteluVaiheInput, SuunnitteluVaiheTila, TallennaProjektiInput } from "@services/api";
 import Section from "@components/layout/Section";
 import lowerCase from "lodash/lowerCase";
 import { ReactElement, useEffect, useMemo, useState } from "react";
@@ -29,7 +29,7 @@ type RequiredProjektiFields = Required<{
 type FormValues = RequiredProjektiFields & {
   suunnitteluVaihe: Pick<
     SuunnitteluVaiheInput,
-    "hankkeenKuvaus" | "arvioSeuraavanVaiheenAlkamisesta" | "suunnittelunEteneminenJaKesto" | "julkinen"
+    "hankkeenKuvaus" | "arvioSeuraavanVaiheenAlkamisesta" | "suunnittelunEteneminenJaKesto" | "tila"
   >;
 };
 
@@ -95,7 +95,7 @@ function SuunnitteluvaiheenPerustiedotForm({
         arvioSeuraavanVaiheenAlkamisesta: projekti.suunnitteluVaihe?.arvioSeuraavanVaiheenAlkamisesta || "",
         suunnittelunEteneminenJaKesto: projekti.suunnitteluVaihe?.suunnittelunEteneminenJaKesto || "",
         hankkeenKuvaus: hankkeenKuvaus,
-        julkinen: !!projekti.suunnitteluVaihe?.julkinen,
+        tila: projekti.suunnitteluVaihe?.tila,
       },
     };
     return tallentamisTiedot;
@@ -125,7 +125,7 @@ function SuunnitteluvaiheenPerustiedotForm({
   const saveAndPublish = async (formData: FormValues) => {
     setIsFormSubmitting(true);
     try {
-      formData.suunnitteluVaihe.julkinen = true;
+      formData.suunnitteluVaihe.tila = SuunnitteluVaiheTila.JULKINEN;
       await saveSuunnitteluvaihe(formData);
       showSuccessMessage("Tallennus ja julkaisu onnistui");
     } catch (e) {
@@ -161,7 +161,7 @@ function SuunnitteluvaiheenPerustiedotForm({
   const kielitiedot = projekti.kielitiedot;
   const ensisijainenKieli = projekti.kielitiedot ? projekti.kielitiedot.ensisijainenKieli : Kieli.SUOMI;
   const toissijainenKieli = kielitiedot?.toissijainenKieli;
-  const julkinen = projekti.suunnitteluVaihe?.julkinen;
+  const julkinen = !!projekti.suunnitteluVaihe?.tila;
 
   const suunnitteluVaiheCanBePublished = canProjektiBePublished(projekti);
 
@@ -243,7 +243,7 @@ function SuunnitteluvaiheenPerustiedotForm({
             </SectionContent>
           </Section>
           {projekti && <SaapuneetKysymyksetJaPalautteet projekti={projekti} />}
-          <input type="hidden" {...register("suunnitteluVaihe.julkinen", { setValueAs: (value) => !!value })} />
+          <input type="hidden" {...register("suunnitteluVaihe.tila", { setValueAs: (value) => value || null })} />
         </form>
       </FormProvider>
       <Section noDivider>

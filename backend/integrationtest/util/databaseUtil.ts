@@ -1,13 +1,10 @@
-// @ts-nocheck
-
 import * as log from "loglevel";
 
 import * as sinon from "sinon";
 import { SinonStub } from "sinon";
-import * as dynamoDB from "../../src/database/dynamoDB";
 
 import DynamoDB from "aws-sdk/clients/dynamodb";
-import { HookFunction } from "mocha";
+import * as awsClient from "../../src/aws/client";
 
 const localDynamoDBParams = {
   endpoint: "http://localhost:4566",
@@ -26,7 +23,7 @@ export const localDocumentClient = new DynamoDB.DocumentClient({
 let localDynamoDBDocumentClientStub: SinonStub;
 
 export function replaceAWSDynamoDBWithLocalstack(): void {
-  localDynamoDBDocumentClientStub = sinon.stub(dynamoDB, "getDynamoDBDocumentClient");
+  localDynamoDBDocumentClientStub = sinon.stub(awsClient, "getDynamoDBDocumentClient");
   localDynamoDBDocumentClientStub.returns(localDocumentClient);
 }
 
@@ -47,7 +44,7 @@ async function deleteAllItemsFromDatabase() {
     await Promise.all(
       items.map(async (item) => {
         log.info("Deleting ", item);
-        await localDocumentClient.delete({ TableName: "Projekti-localstack", Key: { oid: item.oid } }).promise();
+        return localDocumentClient.delete({ TableName: "Projekti-localstack", Key: { oid: item.oid } }).promise();
       })
     );
   }
@@ -58,14 +55,8 @@ async function deleteAllItemsFromDatabase() {
     await Promise.all(
       items.map(async (item) => {
         log.info("Deleting ", item);
-        await localDocumentClient.delete({ TableName: "Palaute-localstack", Key: { oid: item.oid, id: item.id } }).promise();
+        return localDocumentClient.delete({ TableName: "Palaute-localstack", Key: { oid: item.oid, id: item.id } }).promise();
       })
     );
   }
 }
-
-afterEach("Reset database stub", (() => {
-  if (localDynamoDBDocumentClientStub) {
-    return localDynamoDBDocumentClientStub.restore();
-  }
-}) as HookFunction);

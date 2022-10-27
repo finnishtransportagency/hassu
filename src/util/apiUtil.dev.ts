@@ -20,11 +20,10 @@ export async function authenticateAndLoadProjekti(req: NextApiRequest, res: Next
     return;
   }
 
-  res.setHeader("Content-Type", "text/plain; charset=UTF-8");
+  res.setHeader("Content-Type", "text/html; charset=UTF-8");
 
   let dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   if (dbProjekti) {
     return dbProjekti;
   }
-  res.send("Projektia ei löydy");
 }

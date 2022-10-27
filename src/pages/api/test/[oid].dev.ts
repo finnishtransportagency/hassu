@@ -5,15 +5,22 @@ import { projektiDatabase } from "../../../../backend/src/database/projektiDatab
 import dayjs from "dayjs";
 import { DBProjekti } from "../../../../backend/src/database/model";
 import { testProjektiDatabase } from "../../../../backend/src/database/testProjektiDatabase";
+import { importProjekti, TargetStatuses } from "../../../../backend/src/migraatio/migration";
+import { getVaylaUser } from "@services/userService";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const dbProjekti = await authenticateAndLoadProjekti(req, res);
-  if (!dbProjekti) {
-    return;
-  }
 
   let executor = new ProjektiTestCommandExecutor(req.query);
+
+  function requireProjekti() {
+    if (!dbProjekti) {
+      res.send("Projektia ei löydy.");
+    }
+  }
+
   await executor.onNahtavillaoloMenneisyyteen(async () => {
+    requireProjekti();
     if (dbProjekti?.nahtavillaoloVaiheJulkaisut) {
       for (const julkaisu of dbProjekti.nahtavillaoloVaiheJulkaisut) {
         julkaisu.kuulutusVaihePaattyyPaiva = "2022-01-01";
@@ -23,6 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   });
 
   await executor.onHyvaksymispaatosMenneisyyteen(async () => {
+    requireProjekti();
     if (dbProjekti?.hyvaksymisPaatosVaiheJulkaisut) {
       for (const julkaisu of dbProjekti.hyvaksymisPaatosVaiheJulkaisut) {
         let yesterday = dayjs().add(-1, "day").format("YYYY-MM-DD");
@@ -34,6 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   });
 
   await executor.onHyvaksymispaatosVuosiMenneisyyteen(async () => {
+    requireProjekti();
     if (dbProjekti?.hyvaksymisPaatosVaiheJulkaisut) {
       for (const julkaisu of dbProjekti.hyvaksymisPaatosVaiheJulkaisut) {
         let yearAgo = dayjs().add(-1, "year").add(-1, "day").format("YYYY-MM-DD");
@@ -66,6 +75,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   };
 
   await executor.onResetSuunnittelu(async (oid: string) => {
+    requireProjekti();
     await testProjektiDatabase.saveProjekti({
       oid,
       ...suunnitteluVaiheFields,
@@ -73,6 +83,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   });
 
   await executor.onResetVuorovaikutukset(async (oid: string) => {
+    requireProjekti();
     await testProjektiDatabase.saveProjekti({
       oid,
       ...vuorovaikutusFields,
@@ -80,6 +91,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   });
 
   await executor.onResetNahtavillaolo(async (oid: string) => {
+    requireProjekti();
     await testProjektiDatabase.saveProjekti({
       oid,
       ...nahtavillaoloVaiheFields,
@@ -87,6 +99,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   });
 
   await executor.onResetHyvaksymisvaihe(async (oid: string) => {
+    requireProjekti();
     await testProjektiDatabase.saveProjekti({
       oid,
       kasittelynTila: null,
@@ -94,7 +107,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   });
 
+  await executor.onMigraatio(
+    async (oid: string, targetStatus: TargetStatuses, hyvaksymispaatosPaivamaara?: string, hyvaksymispaatosAsianumero?: string) => {
+      let kayttaja = await getVaylaUser();
+      if (!kayttaja) {
+        throw new Error("Kirjautuminen puuttuu");
+      }
+      if (!targetStatus) {
+        throw new Error("targetStatus-parametri puuttuu");
+      }
+      await importProjekti({
+        oid: oid,
+        kayttaja: kayttaja,
+        targetStatus: targetStatus,
+        hyvaksymispaatosPaivamaara: dayjs(hyvaksymispaatosPaivamaara).toDate(),
+        hyvaksymispaatosAsianumero: hyvaksymispaatosAsianumero,
+      });
+    }
+  );
+
   // text/html jotta cypress toimii paremmin
   res.setHeader("Content-Type", "text/html");
-  res.send("<script>history.go(-1);</script>");
+  if (dbProjekti) {
+    res.send("<script>history.go(-1);</script>");
+  } else {
+    res.send("OK");
+  }
 }

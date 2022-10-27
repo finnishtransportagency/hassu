@@ -1,11 +1,11 @@
-import { KaytettavaPalvelu, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
+import { KaytettavaPalvelu, SuunnitteluVaiheTila, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
 import { Aineisto, LocalizedMap, StandardiYhteystiedot, IlmoituksenVastaanottajat } from "./common";
 
 export type SuunnitteluVaihe = {
   hankkeenKuvaus?: LocalizedMap<string>;
   arvioSeuraavanVaiheenAlkamisesta?: string | null;
   suunnittelunEteneminenJaKesto?: string | null;
-  julkinen?: boolean | null;
+  tila?: SuunnitteluVaiheTila | null;
   // Palautteiden vastaanottajat. Lista kayttajatunnuksia
   palautteidenVastaanottajat?: Array<string> | null;
 };

@@ -620,6 +620,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "ENUM",
+        "name": "SuunnitteluVaiheTila",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "INPUT_OBJECT",
         "name": "TallennaProjektiInput",
         "possibleTypes": null,

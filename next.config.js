@@ -4,6 +4,8 @@ const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
 const nextTranslate = require("next-translate");
 const { BaseConfig } = require("./common/BaseConfig");
 const CopyFilePlugin = require("copy-file-plugin");
+const dotenv = require("dotenv");
+const fs = require("fs");
 
 function setupLocalDevelopmentMode(config, env) {
   process.env.AWS_SDK_LOAD_CONFIG = "true";
@@ -90,6 +92,12 @@ module.exports = (phase) => {
     TABLE_PROJEKTI: BaseConfig.projektiTableName,
     INTERNAL_BUCKET_NAME: BaseConfig.internalBucketName,
   };
+
+  if (BaseConfig.env !== "prod") {
+    let envTest = dotenv.parse(fs.readFileSync("./.env.test").toString());
+    const { VELHO_AUTH_URL, VELHO_API_URL, VELHO_USERNAME, VELHO_PASSWORD } = envTest;
+    env = { ...env, VELHO_AUTH_URL, VELHO_API_URL, VELHO_USERNAME, VELHO_PASSWORD };
+  }
   /**
    * @type {import("next").NextConfig}
    */
@@ -112,7 +120,6 @@ module.exports = (phase) => {
   } else {
     env.VERSION = process.env.CODEBUILD_SOURCE_VERSION; // default version info, overriden in test&prod by semantic version
     try {
-      const fs = require("fs");
       let buffer = fs.readFileSync(__dirname + "/.version");
       if (buffer) {
         env.VERSION = buffer.toString("UTF-8");

@@ -1,6 +1,7 @@
-import { DBProjekti, IlmoituksenVastaanottajat } from "./model";
+import { DBProjekti, IlmoituksenVastaanottajat, SuunnitteluVaihe } from "./model";
 import { cloneDeepWith } from "lodash";
 import { kuntametadata } from "../../../common/kuntametadata";
+import { SuunnitteluVaiheTila } from "../../../common/graphql/apiModel";
 import { log } from "../logger";
 import isArray from "lodash/isArray";
 
@@ -14,6 +15,15 @@ function isValueArrayOfStrings(value: unknown) {
  */
 export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
   return cloneDeepWith(projekti, (value, key) => {
+    if (key == "suunnitteluVaihe" && value) {
+      // suunnitteluvaihe.julkinen on deprekoitu kenttä
+      const suunnitteluVaihe = value as SuunnitteluVaihe;
+      if ((suunnitteluVaihe as never)["julkinen"] && !suunnitteluVaihe.tila) {
+        suunnitteluVaihe.tila = SuunnitteluVaiheTila.JULKINEN;
+        delete (suunnitteluVaihe as never)["julkinen"];
+      }
+    }
+
     if (key == "kunta") {
       try {
         return kuntametadata.idForKuntaName(value);

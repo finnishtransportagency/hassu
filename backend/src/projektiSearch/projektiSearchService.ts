@@ -50,6 +50,12 @@ class ProjektiSearchService {
           }
         }
         await ilmoitustauluSyoteService.index(apiProjekti);
+      } else {
+        for (const kieli of Object.values(Kieli)) {
+          log.info("Remove julkinen projekti from index", { oid: projekti.oid, kieli });
+          await openSearchClientJulkinen[kieli].deleteDocument(projekti.oid);
+        }
+        await ilmoitustauluSyoteService.remove(projekti.oid);
       }
     } catch (e) {
       log.error(e);
@@ -237,12 +243,12 @@ class ProjektiSearchService {
     }
     if (params.maakunta) {
       queries.push({
-        terms: { "maakunnat": params.maakunta },
+        terms: { maakunnat: params.maakunta },
       });
     }
     if (params.kunta) {
       queries.push({
-        terms: { "kunnat": params.kunta },
+        terms: { kunnat: params.kunta },
       });
     }
     if (params.vaylamuoto) {

@@ -79,7 +79,7 @@ input SuunnitteluVaiheInput {
   hankkeenKuvaus: HankkeenKuvauksetInput
   arvioSeuraavanVaiheenAlkamisesta: String
   suunnittelunEteneminenJaKesto: String
-  julkinen: Boolean
+  tila: SuunnitteluVaiheTila
   """
   Yhden vuorovaikutuksen luonti/muokkaus
   """

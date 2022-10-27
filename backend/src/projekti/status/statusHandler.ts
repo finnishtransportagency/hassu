@@ -1,5 +1,7 @@
 import * as API from "../../../../common/graphql/apiModel";
+import { HyvaksymisPaatosVaiheTila } from "../../../../common/graphql/apiModel";
 import { DateAddTuple, isDateTimeInThePast } from "../../util/dateUtil";
+import { HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
 
 export const HYVAKSYMISPAATOS_DURATION: DateAddTuple = [1, "year"];
 export const JATKOPAATOS_DURATION: DateAddTuple = [6, "months"];
@@ -20,6 +22,8 @@ export abstract class StatusHandler<T> {
   }
 }
 
+export type HyvaksymisPaatosJulkaisuEndDateAndTila = Pick<HyvaksymisPaatosVaiheJulkaisu, "kuulutusVaihePaattyyPaiva" | "tila">;
+
 /*
  * Handler to determine if given hyväksymispäätöskuulutusvaihe ended a year or 6 months ago
  */
@@ -38,10 +42,16 @@ export abstract class AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<
     this.epaAktiivisuusStatus = epaAktiivisuusStatus;
   }
 
-  abstract getPaatosVaihe(p: T): { kuulutusVaihePaattyyPaiva?: string | null } | null | undefined;
+  abstract getPaatosVaihe(p: T): HyvaksymisPaatosJulkaisuEndDateAndTila | null | undefined;
 
   handle(p: T): void {
     const hyvaksymisPaatosVaihe = this.getPaatosVaihe(p);
+
+    if (hyvaksymisPaatosVaihe?.tila == HyvaksymisPaatosVaiheTila.MIGROITU) {
+      p.status = this.epaAktiivisuusStatus;
+      super.handle(p); // Continue evaluating next rules
+      return;
+    }
 
     // Kuulutusvaiheen päättymisestä pitää olla vuosi
     const kuulutusVaihePaattyyPaiva = hyvaksymisPaatosVaihe?.kuulutusVaihePaattyyPaiva;

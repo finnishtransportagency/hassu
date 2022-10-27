@@ -1,5 +1,6 @@
 import { DBProjekti, SuunnitteluVaihe } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
+import { SuunnitteluVaiheTila } from "../../../../../common/graphql/apiModel";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
 import { findPublishedAloitusKuulutusJulkaisu } from "../common";
 import { adaptHankkeenKuvausToSave } from "./common";
@@ -14,7 +15,7 @@ export function adaptSuunnitteluVaiheToSave(
   ) {
     validateSuunnitteluVaihePublishing(dbProjekti, suunnitteluVaihe);
 
-    const { arvioSeuraavanVaiheenAlkamisesta, suunnittelunEteneminenJaKesto, hankkeenKuvaus, julkinen, palautteidenVastaanottajat } =
+    const { arvioSeuraavanVaiheenAlkamisesta, suunnittelunEteneminenJaKesto, hankkeenKuvaus, tila, palautteidenVastaanottajat } =
       suunnitteluVaihe;
     if (!hankkeenKuvaus) {
       throw new IllegalArgumentError("Suunnitteluvaiheella on oltava hankkeenKuvaus!");
@@ -23,7 +24,7 @@ export function adaptSuunnitteluVaiheToSave(
       arvioSeuraavanVaiheenAlkamisesta,
       suunnittelunEteneminenJaKesto,
       hankkeenKuvaus: hankkeenKuvaus ? adaptHankkeenKuvausToSave(hankkeenKuvaus) : undefined,
-      julkinen,
+      tila,
       palautteidenVastaanottajat,
     };
   }
@@ -31,7 +32,9 @@ export function adaptSuunnitteluVaiheToSave(
 }
 
 function validateSuunnitteluVaihePublishing(dbProjekti: DBProjekti, suunnitteluVaihe: API.SuunnitteluVaiheInput) {
-  const isSuunnitteluVaiheBeingPublished = !dbProjekti.suunnitteluVaihe?.julkinen && suunnitteluVaihe.julkinen;
+  const previousState = dbProjekti.suunnitteluVaihe?.tila;
+  const newState = suunnitteluVaihe.tila;
+  const isSuunnitteluVaiheBeingPublished = previousState !== SuunnitteluVaiheTila.JULKINEN && newState == SuunnitteluVaiheTila.JULKINEN;
   if (isSuunnitteluVaiheBeingPublished) {
     // Publishing is allowed only if there is a published aloituskuulutusjulkaisu
     if (!(dbProjekti.aloitusKuulutusJulkaisut && findPublishedAloitusKuulutusJulkaisu(dbProjekti.aloitusKuulutusJulkaisut))) {

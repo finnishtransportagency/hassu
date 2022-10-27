@@ -1,0 +1,16 @@
+import { Status } from "./graphql/apiModel";
+
+export const statusOrder: Record<Status, number> = {
+  EI_JULKAISTU_PROJEKTIN_HENKILOT: 0,
+  EI_JULKAISTU: 1,
+  ALOITUSKUULUTUS: 2,
+  SUUNNITTELU: 3,
+  NAHTAVILLAOLO: 4,
+  HYVAKSYMISMENETTELYSSA: 5,
+  HYVAKSYTTY: 6,
+  EPAAKTIIVINEN_1: 7,
+  JATKOPAATOS_1: 8,
+  EPAAKTIIVINEN_2: 9,
+  JATKOPAATOS_2: 10,
+  EPAAKTIIVINEN_3: 11,
+};

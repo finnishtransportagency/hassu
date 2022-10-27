@@ -1,11 +1,11 @@
 import * as API from "../../../../common/graphql/apiModel";
-import { HyvaksymisPaatosVaiheTila, NahtavillaoloVaiheTila, Status } from "../../../../common/graphql/apiModel";
+import { HyvaksymisPaatosVaiheTila, NahtavillaoloVaiheTila, Status, SuunnitteluVaiheTila } from "../../../../common/graphql/apiModel";
 import { kayttoOikeudetSchema } from "../../../../src/schemas/kayttoOikeudet";
 import { ValidationError } from "yup";
 import { log } from "../../logger";
 import { perustiedotValidationSchema } from "../../../../src/schemas/perustiedot";
 import { findJulkaisutWithTila, findJulkaisuWithTila } from "../projektiUtil";
-import { AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler, StatusHandler } from "./statusHandler";
+import { AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler, HyvaksymisPaatosJulkaisuEndDateAndTila, StatusHandler } from "./statusHandler";
 import { isDateTimeInThePast } from "../../util/dateUtil";
 
 export function applyProjektiStatus(projekti: API.Projekti): void {
@@ -19,7 +19,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
         kayttoOikeudetSchema.validateSync(p.kayttoOikeudet);
       } catch (e) {
         if (e instanceof ValidationError) {
-          log.info("Käyttöoikeudet puutteelliset", e);
+          log.info("Käyttöoikeudet puutteelliset", e.message);
           p.status = API.Status.EI_JULKAISTU_PROJEKTIN_HENKILOT;
           return; // This is the final status
         } else {
@@ -56,7 +56,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
 
   const nahtavillaOlo = new (class extends StatusHandler<API.Projekti> {
     handle(p: API.Projekti) {
-      if (p.suunnitteluVaihe?.julkinen) {
+      if (p.suunnitteluVaihe?.tila == SuunnitteluVaiheTila.JULKINEN || p.suunnitteluVaihe?.tila == SuunnitteluVaiheTila.MIGROITU) {
         p.status = API.Status.NAHTAVILLAOLO;
         super.handle(p); // Continue evaluating next rules
       }
@@ -65,11 +65,12 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
 
   const hyvaksymisMenettelyssa = new (class extends StatusHandler<API.Projekti> {
     handle(p: API.Projekti) {
+      const migroituNahtavillaoloVaihe = findJulkaisuWithTila(p.nahtavillaoloVaiheJulkaisut, NahtavillaoloVaiheTila.MIGROITU);
       const nahtavillaoloVaihe = findJulkaisuWithTila(p.nahtavillaoloVaiheJulkaisut, NahtavillaoloVaiheTila.HYVAKSYTTY);
       const nahtavillaoloKuulutusPaattyyInThePast =
         nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva && isDateTimeInThePast(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva, "end-of-day");
 
-      if (nahtavillaoloKuulutusPaattyyInThePast) {
+      if (nahtavillaoloKuulutusPaattyyInThePast || migroituNahtavillaoloVaihe) {
         p.status = API.Status.HYVAKSYMISMENETTELYSSA;
         super.handle(p); // Continue evaluating next rules
       }
@@ -82,10 +83,11 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
       const hasHyvaksymisPaatos = hyvaksymisPaatos?.asianumero && hyvaksymisPaatos?.paatoksenPvm;
 
       const nahtavillaoloVaihe = findJulkaisuWithTila(p.nahtavillaoloVaiheJulkaisut, NahtavillaoloVaiheTila.HYVAKSYTTY);
+      const migroituNahtavillaoloVaihe = findJulkaisuWithTila(p.nahtavillaoloVaiheJulkaisut, NahtavillaoloVaiheTila.MIGROITU);
       const nahtavillaoloKuulutusPaattyyInThePast =
         nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva && isDateTimeInThePast(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva, "end-of-day");
 
-      if (hasHyvaksymisPaatos && nahtavillaoloKuulutusPaattyyInThePast) {
+      if (hasHyvaksymisPaatos && (migroituNahtavillaoloVaihe || nahtavillaoloKuulutusPaattyyInThePast)) {
         p.status = API.Status.HYVAKSYTTY;
         super.handle(p); // Continue evaluating next rules
       }
@@ -96,8 +98,11 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
    * Jos hyväksymispäätöskuulutuksen päättymispäivästä on kulunut vuosi, niin tila on epäaktiivinen
    */
   const epaAktiivinen1 = new (class extends AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<API.Projekti> {
-    getPaatosVaihe(p: API.Projekti): { kuulutusVaihePaattyyPaiva?: string | null } | null | undefined {
-      return findJulkaisutWithTila(p.hyvaksymisPaatosVaiheJulkaisut, HyvaksymisPaatosVaiheTila.HYVAKSYTTY)?.pop();
+    getPaatosVaihe(p: API.Projekti): HyvaksymisPaatosJulkaisuEndDateAndTila | null | undefined {
+      return (
+        findJulkaisuWithTila(p.hyvaksymisPaatosVaiheJulkaisut, HyvaksymisPaatosVaiheTila.HYVAKSYTTY) ||
+        findJulkaisuWithTila(p.hyvaksymisPaatosVaiheJulkaisut, HyvaksymisPaatosVaiheTila.MIGROITU)
+      );
     }
   })(true, Status.EPAAKTIIVINEN_1);
 

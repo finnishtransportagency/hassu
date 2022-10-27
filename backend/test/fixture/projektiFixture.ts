@@ -14,6 +14,7 @@ import {
   ProjektiKayttaja,
   ProjektiTyyppi,
   Status,
+  SuunnitteluVaiheTila,
   TallennaProjektiInput,
   Viranomainen,
   VuorovaikutusTilaisuusTyyppi,
@@ -572,7 +573,7 @@ export class ProjektiFixture {
         SUOMI:
           "Tavoitteena on nykyisen ja tulevan maankäytön liittäminen\nluontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen\nsujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn\nyhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös\nyksi tavoitteista.",
       },
-      julkinen: true,
+      tila: SuunnitteluVaiheTila.JULKINEN,
       suunnittelunEteneminenJaKesto:
         "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
     },

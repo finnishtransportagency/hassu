@@ -60,7 +60,18 @@ export default function Hyvaksymispaatos({ setRouteLabels }: PageProps): ReactEl
   }
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
-
+  const migroitu = hyvaksymisPaatosVaiheJulkaisu?.tila == HyvaksymisPaatosVaiheTila.MIGROITU;
+  if (migroitu) {
+    return (
+      <ProjektiPageLayout title="Kuulutus hyväksymispäätöksestä">
+        <Section noDivider>
+          <>
+            <p>Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.</p>
+          </>
+        </Section>
+      </ProjektiPageLayout>
+    );
+  }
   return (
     <ProjektiPageLayout title="Kuulutus hyväksymispäätöksestä">
       {!epaaktiivinen && !kertaalleenLahetettyHyvaksyttavaksi && (

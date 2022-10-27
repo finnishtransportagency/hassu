@@ -10,9 +10,13 @@ export const TestAction = {
   RESET_VUOROVAIKUTUKSET: "reset_vuorovaikutukset",
   RESET_NAHTAVILLAOLO: "reset_nahtavillaolo",
   RESET_HYVAKSYMISVAIHE: "reset_hyvaksymisvaihe",
+  MIGROI: "migroi",
 };
 
 const QUERYPARAM_ACTION = "action";
+const QUERYPARAM_TARGETSTATUS = "targetStatus";
+const QUERYPARAM_HYVAKSYMISPAATOSPAIVAMAARA = "hyvaksymispaatosPaivamaara";
+const QUERYPARAM_HYVAKSYMISPAATOSASIANUMERO = "hyvaksymispaatosAsianumero";
 
 export class ProjektiTestCommand {
   _oid;
@@ -53,10 +57,23 @@ export class ProjektiTestCommand {
     return this.createActionUrl(TestAction.RESET_HYVAKSYMISVAIHE);
   }
 
-  createActionUrl(action) {
+  migroi(targetStatus, hyvaksymispaatosPaivamaara, hyvaksymispaatosAsianumero) {
+    return this.createActionUrl(TestAction.MIGROI, {
+      [QUERYPARAM_TARGETSTATUS]: targetStatus,
+      hyvaksymispaatosPaivamaara,
+      hyvaksymispaatosAsianumero,
+    });
+  }
+
+  createActionUrl(action, queryParams) {
     let url = `/api/test/${this._oid}`;
     let params = new URLSearchParams();
     params.set(QUERYPARAM_ACTION, action);
+    if (queryParams) {
+      for (const key in queryParams) {
+        params.set(key, queryParams[key]);
+      }
+    }
     return url + "?" + params.toString();
   }
 }
@@ -64,6 +81,9 @@ export class ProjektiTestCommand {
 export class ProjektiTestCommandExecutor {
   _oid;
   _action;
+  _targetStatus;
+  _hyvaksymispaatosPaivamaara;
+  _hyvaksymispaatosAsianumero;
 
   constructor(query) {
     this._oid = query.oid;
@@ -74,6 +94,9 @@ export class ProjektiTestCommandExecutor {
     if (!this._action) {
       throw Error("action puuttuu");
     }
+    this._targetStatus = query[QUERYPARAM_TARGETSTATUS];
+    this._hyvaksymispaatosPaivamaara = query[QUERYPARAM_HYVAKSYMISPAATOSPAIVAMAARA];
+    this._hyvaksymispaatosAsianumero = query[QUERYPARAM_HYVAKSYMISPAATOSASIANUMERO];
   }
 
   onNahtavillaoloMenneisyyteen(callback) {
@@ -115,6 +138,12 @@ export class ProjektiTestCommandExecutor {
   onResetHyvaksymisvaihe(callback) {
     if (this._action === TestAction.RESET_HYVAKSYMISVAIHE) {
       return callback(this._oid);
+    }
+  }
+
+  onMigraatio(callback) {
+    if (this._action === TestAction.MIGROI) {
+      return callback(this._oid, this._targetStatus, this._hyvaksymispaatosPaivamaara, this._hyvaksymispaatosAsianumero);
     }
   }
 }
