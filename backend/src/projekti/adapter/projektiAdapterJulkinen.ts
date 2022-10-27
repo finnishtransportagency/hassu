@@ -30,13 +30,17 @@ import {
   adaptYhteystiedotByAddingTypename,
   findPublishedAloitusKuulutusJulkaisu,
 } from "./common";
-import { findJulkaisuWithTila } from "../projektiUtil";
+import { findJulkaisuWithTila, findUserByKayttajatunnus } from "../projektiUtil";
 import { applyProjektiJulkinenStatus } from "../status/projektiJulkinenStatusHandler";
 import {
   adaptStandardiYhteystiedotLisaamattaProjaria,
   adaptStandardiYhteystiedotToAPIYhteystiedot,
 } from "../../util/adaptStandardiYhteystiedot";
-import { adaptSuunnitteluSopimusJulkaisuJulkinen } from "./adaptToAPI";
+import {
+  adaptSuunnitteluSopimusJulkaisu,
+  adaptSuunnitteluSopimusJulkaisuJulkinen,
+  adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu,
+} from "./adaptToAPI";
 import { cloneDeep } from "lodash";
 import { kuntametadata } from "../../../../common/kuntametadata";
 
@@ -51,7 +55,10 @@ class ProjektiAdapterJulkinen {
       return undefined;
     }
 
-    const projektiHenkilot: API.ProjektiKayttajaJulkinen[] = adaptProjektiHenkilot(dbProjekti.kayttoOikeudet);
+    const projektiHenkilot: API.ProjektiKayttajaJulkinen[] = adaptProjektiHenkilot(
+      dbProjekti.kayttoOikeudet,
+      dbProjekti.suunnitteluSopimus?.yhteysHenkilo
+    );
 
     let suunnitteluVaihe = undefined;
     if (dbProjekti.suunnitteluVaihe?.julkinen) {
@@ -62,6 +69,13 @@ class ProjektiAdapterJulkinen {
     const hyvaksymisPaatosVaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(dbProjekti, dbProjekti.hyvaksymisPaatosVaiheJulkaisut);
     const jatkoPaatos1Vaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(dbProjekti, dbProjekti.jatkoPaatos1VaiheJulkaisut);
     const jatkoPaatos2Vaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(dbProjekti, dbProjekti.jatkoPaatos2VaiheJulkaisut);
+    const suunnitteluSopimus = adaptSuunnitteluSopimusJulkaisu(
+      dbProjekti.oid,
+      adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
+        dbProjekti.suunnitteluSopimus,
+        findUserByKayttajatunnus(dbProjekti.kayttoOikeudet, dbProjekti.suunnitteluSopimus?.yhteysHenkilo)
+      )
+    );
 
     const projekti: API.ProjektiJulkinen = {
       __typename: "ProjektiJulkinen",
@@ -70,6 +84,7 @@ class ProjektiAdapterJulkinen {
       velho: adaptVelho(dbProjekti.velho),
       euRahoitus: dbProjekti.euRahoitus,
       suunnitteluVaihe,
+      suunnitteluSopimus,
       aloitusKuulutusJulkaisut,
       paivitetty: dbProjekti.paivitetty,
       projektiHenkilot: Object.values(projektiHenkilot),
@@ -509,9 +524,13 @@ export function adaptVelho(velho: Velho): API.VelhoJulkinen {
   };
 }
 
-function adaptProjektiHenkilot(kayttoOikeudet: DBVaylaUser[]): API.ProjektiKayttajaJulkinen[] {
+function adaptProjektiHenkilot(
+  kayttoOikeudet: DBVaylaUser[],
+  suunnitteluSopimuksenKayttajaTunnus: string | undefined
+): API.ProjektiKayttajaJulkinen[] {
   return kayttoOikeudet
     ?.filter((kayttoOikeus) => kayttoOikeus.tyyppi === API.KayttajaTyyppi.PROJEKTIPAALLIKKO || !!kayttoOikeus.yleinenYhteystieto)
+    ?.filter((kayttoOikeus) => kayttoOikeus.kayttajatunnus !== suunnitteluSopimuksenKayttajaTunnus)
     ?.map((kayttoOikeus) => {
       const result: API.ProjektiKayttajaJulkinen = {
         __typename: "ProjektiKayttajaJulkinen",

@@ -12,26 +12,14 @@ export default function ProjektiSideNavigation(): ReactElement {
   const { t, lang } = useTranslation("projekti-side-navigation");
   const { data: projekti } = useProjektiJulkinen();
   if (!projekti) {
-    return <div />;
+    return <></>;
   }
-  if (!projekti.aloitusKuulutusJulkaisut || !projekti.aloitusKuulutusJulkaisut[0]) {
-    return <div />;
-  }
-  const kuulutus = projekti.aloitusKuulutusJulkaisut[0];
-  const velho = kuulutus.velho;
-  const suunnitteluSopimus = kuulutus.suunnitteluSopimus;
 
-  let sijainti = "";
-  if (velho.maakunnat) {
-    sijainti = sijainti + kuntametadata.namesForMaakuntaIds(velho.maakunnat, lang).join(", ") + "; ";
-  }
-  if (velho.kunnat) {
-    sijainti = sijainti + kuntametadata.namesForKuntaIds(velho.kunnat, lang).join(", ");
-  }
+  const suunnitteluSopimus = projekti.suunnitteluSopimus;
+  const viranomainen = projekti?.velho.suunnittelustaVastaavaViranomainen;
 
   const getTilaajaLogoImg = () => {
-    const viranomainen = velho?.suunnittelustaVastaavaViranomainen;
-    if (Viranomainen.VAYLAVIRASTO === viranomainen || velho.suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO) {
+    if (Viranomainen.VAYLAVIRASTO === viranomainen) {
       return { src: "/vayla_sivussa_fi_sv_rgb.png", alt: t(`common:vaylavirasto`) + " logo" };
     } else {
       return { src: "/ely-logo-vaaka.png", alt: t(`common:ely-keskus`) + " logo" };

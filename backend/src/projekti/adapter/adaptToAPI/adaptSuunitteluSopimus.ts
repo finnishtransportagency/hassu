@@ -66,7 +66,6 @@ export function adaptSuunnitteluSopimusJulkaisuJulkinen(
 }
 
 export function adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
-  oid: string,
   suunnitteluSopimus: SuunnitteluSopimus | null | undefined,
   yhteysHenkilo: DBVaylaUser | undefined
 ): API.SuunnitteluSopimusJulkaisu | undefined | null {
