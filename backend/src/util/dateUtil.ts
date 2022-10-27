@@ -50,10 +50,10 @@ export function localDateTimeString(): string {
 
 export function isDateTimeInThePast(
   dateString: string | undefined,
-  defaultTimeToEndOfDay?: DefaultTimeTo | undefined,
+  defaultTimeTo: DefaultTimeTo,
   ...dateAddTuples: DateAddTuple[]
 ): boolean {
-  const date = parseAndAddDateTime(dateString, defaultTimeToEndOfDay, ...dateAddTuples);
+  const date = parseAndAddDateTime(dateString, defaultTimeTo, ...dateAddTuples);
   if (date) {
     return date.isBefore(dayjs());
   }
@@ -62,7 +62,7 @@ export function isDateTimeInThePast(
 
 export function parseAndAddDateTime(
   dateString: string | undefined,
-  defaultTimeToEndOfDay?: DefaultTimeTo | undefined,
+  defaultTimeTo: DefaultTimeTo,
   ...dateAddTuples: DateAddTuple[]
 ): Dayjs | undefined {
   if (dateString) {
@@ -70,7 +70,7 @@ export function parseAndAddDateTime(
     dateAddTuples.forEach(([value, unit]) => {
       date = date.add(value, unit);
     });
-    if (defaultTimeToEndOfDay === "end-of-day" && isDateStringLackingTimeElement(dateString)) {
+    if (defaultTimeTo === "end-of-day" && isDateStringLackingTimeElement(dateString)) {
       date = date.endOf("day");
     }
     return date;

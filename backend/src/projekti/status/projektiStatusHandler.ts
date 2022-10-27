@@ -67,7 +67,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
     handle(p: API.Projekti) {
       const nahtavillaoloVaihe = findJulkaisuWithTila(p.nahtavillaoloVaiheJulkaisut, NahtavillaoloVaiheTila.HYVAKSYTTY);
       const nahtavillaoloKuulutusPaattyyInThePast =
-        nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva && isDateTimeInThePast(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva);
+        nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva && isDateTimeInThePast(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva, "start-of-day");
 
       if (nahtavillaoloKuulutusPaattyyInThePast) {
         p.status = API.Status.HYVAKSYMISMENETTELYSSA;
@@ -83,7 +83,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
 
       const nahtavillaoloVaihe = findJulkaisuWithTila(p.nahtavillaoloVaiheJulkaisut, NahtavillaoloVaiheTila.HYVAKSYTTY);
       const nahtavillaoloKuulutusPaattyyInThePast =
-        nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva && isDateTimeInThePast(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva);
+        nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva && isDateTimeInThePast(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva, "start-of-day");
 
       if (hasHyvaksymisPaatos && nahtavillaoloKuulutusPaattyyInThePast) {
         p.status = API.Status.HYVAKSYTTY;

@@ -32,7 +32,7 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
   const nahtavillaOlo = new (class extends StatusHandler<API.ProjektiJulkinen> {
     handle(p: API.ProjektiJulkinen) {
       const kuulutusPaiva = projekti.nahtavillaoloVaihe?.kuulutusPaiva;
-      if (kuulutusPaiva && isDateTimeInThePast(kuulutusPaiva)) {
+      if (kuulutusPaiva && isDateTimeInThePast(kuulutusPaiva, "start-of-day")) {
         projekti.status = API.Status.NAHTAVILLAOLO;
         super.handle(p); // Continue evaluating next rules
       }
@@ -42,7 +42,10 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
   const hyvaksymisMenettelyssa = new (class extends StatusHandler<API.ProjektiJulkinen> {
     handle(p: API.ProjektiJulkinen) {
       const nahtavillaoloVaihe = projekti.nahtavillaoloVaihe;
-      if (nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva && isDateTimeInThePast(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva)) {
+      if (
+        nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva &&
+        isDateTimeInThePast(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva, "start-of-day")
+      ) {
         projekti.status = API.Status.HYVAKSYMISMENETTELYSSA;
         super.handle(p); // Continue evaluating next rules
       }
@@ -52,7 +55,7 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
   const hyvaksytty = new (class extends StatusHandler<API.ProjektiJulkinen> {
     handle(p: API.ProjektiJulkinen) {
       const hyvaksymisPaatosVaihe = projekti.hyvaksymisPaatosVaihe;
-      if (hyvaksymisPaatosVaihe?.kuulutusPaiva && isDateTimeInThePast(hyvaksymisPaatosVaihe.kuulutusPaiva)) {
+      if (hyvaksymisPaatosVaihe?.kuulutusPaiva && isDateTimeInThePast(hyvaksymisPaatosVaihe.kuulutusPaiva, "start-of-day")) {
         projekti.status = API.Status.HYVAKSYTTY;
         super.handle(p); // Continue evaluating next rules
       }
@@ -68,7 +71,7 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
   const jatkoPaatos1 = new (class extends StatusHandler<API.ProjektiJulkinen> {
     handle(p: API.ProjektiJulkinen) {
       const jatkoPaatos1Vaihe = projekti.jatkoPaatos1Vaihe;
-      if (jatkoPaatos1Vaihe?.kuulutusPaiva && isDateTimeInThePast(jatkoPaatos1Vaihe.kuulutusPaiva)) {
+      if (jatkoPaatos1Vaihe?.kuulutusPaiva && isDateTimeInThePast(jatkoPaatos1Vaihe.kuulutusPaiva, "start-of-day")) {
         projekti.status = API.Status.JATKOPAATOS_1;
         super.handle(p); // Continue evaluating next rules
       }
@@ -84,7 +87,7 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
   const jatkoPaatos2 = new (class extends StatusHandler<API.ProjektiJulkinen> {
     handle(p: API.ProjektiJulkinen) {
       const jatkoPaatos2Vaihe = projekti.jatkoPaatos2Vaihe;
-      if (jatkoPaatos2Vaihe?.kuulutusPaiva && isDateTimeInThePast(jatkoPaatos2Vaihe.kuulutusPaiva)) {
+      if (jatkoPaatos2Vaihe?.kuulutusPaiva && isDateTimeInThePast(jatkoPaatos2Vaihe.kuulutusPaiva, "start-of-day")) {
         projekti.status = API.Status.JATKOPAATOS_2;
         super.handle(p); // Continue evaluating next rules
       }
