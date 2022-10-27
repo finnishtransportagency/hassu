@@ -28,9 +28,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
   return (
     <Section>
       <h4 className="vayla-small-title">Kuulutuksen ja ilmoituksen esikatselu</h4>
-      <Notification type={NotificationType.INFO_GRAY}>
-        Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.{" "}
-      </Notification>
+      <Notification type={NotificationType.INFO_GRAY}>Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä. </Notification>
       <div style={{ marginTop: "4em" }}>
         {ensisijainenKieli && (
           <div>
@@ -49,43 +47,10 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
               </Button>
               <Button
                 style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
-                id={"preview_ilmoitus_lausunnontajille_pdf_" + ensisijainenKieli}
-                type="button"
-                onClick={handleSubmit((formData) =>
-                  esikatselePdf(
-                    formData,
-                    AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE,
-                    ensisijainenKieli
-                  )
-                )}
-              >
-                Ilmoitus lausunnonantajille esikatselu
-              </Button>
-              <Button
-                style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
-                id={"preview_ilmoitus_muistuttajille_pdf_" + ensisijainenKieli}
-                type="button"
-                onClick={handleSubmit((formData) => {
-                  console.log(formData);
-                  esikatselePdf(
-                    formData,
-                    AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE,
-                    ensisijainenKieli
-                  );
-                })}
-              >
-                Ilmoitus muistuttajille esikatselu
-              </Button>
-              <Button
-                style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
                 id={"preview_ilmoitus_kunnille_pdf_" + ensisijainenKieli}
                 type="button"
                 onClick={handleSubmit((formData) =>
-                  esikatselePdf(
-                    formData,
-                    AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE,
-                    ensisijainenKieli
-                  )
+                  esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE, ensisijainenKieli)
                 )}
               >
                 Ilmoitus kunnille esikatselu
@@ -95,14 +60,21 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
                 id={"preview_ilmoitus_toiselle_viranomaiselle_pdf_" + ensisijainenKieli}
                 type="button"
                 onClick={handleSubmit((formData) =>
-                  esikatselePdf(
-                    formData,
-                    AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE,
-                    ensisijainenKieli
-                  )
+                  esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE, ensisijainenKieli)
                 )}
               >
-                Ilmoituksen toiselle viranomaiselle esikatselu
+                Lähetekirjeen esikatselu
+              </Button>
+              <Button
+                disabled
+                style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
+                id={"preview_ilmoitus_toiselle_viranomaiselle_pdf_" + toissijainenKieli}
+                type="button"
+                onClick={handleSubmit((formData) =>
+                  esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE, ensisijainenKieli)
+                )}
+              >
+                Ilmoitus maakuntaliitoille esikatselu
               </Button>
             </Box>
           </div>
@@ -115,50 +87,16 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
                 style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
                 id={"preview_kuulutus_pdf_" + toissijainenKieli}
                 type="button"
-                onClick={handleSubmit((formData) =>
-                  esikatselePdf(formData, AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS, toissijainenKieli)
-                )}
+                onClick={handleSubmit((formData) => esikatselePdf(formData, AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS, toissijainenKieli))}
               >
                 Kuulutuksen esikatselu
-              </Button>
-              <Button
-                style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
-                id={"preview_ilmoitus_lausunnonantajille_pdf_" + toissijainenKieli}
-                type="button"
-                onClick={handleSubmit((formData) =>
-                  esikatselePdf(
-                    formData,
-                    AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE,
-                    toissijainenKieli
-                  )
-                )}
-              >
-                Ilmoitus lausunnonantajille esikatselu
-              </Button>
-              <Button
-                style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
-                id={"preview_ilmoitus_muistuttajille_pdf_" + toissijainenKieli}
-                type="button"
-                onClick={handleSubmit((formData) =>
-                  esikatselePdf(
-                    formData,
-                    AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE,
-                    toissijainenKieli
-                  )
-                )}
-              >
-                Ilmoitus muistuttajille esikatselu
               </Button>
               <Button
                 style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
                 id={"preview_ilmoitus_kunnille_pdf_" + toissijainenKieli}
                 type="button"
                 onClick={handleSubmit((formData) =>
-                  esikatselePdf(
-                    formData,
-                    AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE,
-                    toissijainenKieli
-                  )
+                  esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE, toissijainenKieli)
                 )}
               >
                 Ilmoitus kunnille esikatselu
@@ -168,14 +106,21 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
                 id={"preview_ilmoitus_toiselle_viranomaiselle_pdf_" + toissijainenKieli}
                 type="button"
                 onClick={handleSubmit((formData) =>
-                  esikatselePdf(
-                    formData,
-                    AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE,
-                    toissijainenKieli
-                  )
+                  esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE, toissijainenKieli)
                 )}
               >
-                Ilmoituksen toiselle viranomaiselle esikatselu
+                Lähetekirjeen esikatselu
+              </Button>
+              <Button
+                disabled
+                style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
+                id={"preview_ilmoitus_toiselle_viranomaiselle_pdf_" + toissijainenKieli}
+                type="button"
+                onClick={handleSubmit((formData) =>
+                  esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE, toissijainenKieli)
+                )}
+              >
+                Ilmoitus maakuntaliitoille esikatselu
               </Button>
             </Box>
           </div>

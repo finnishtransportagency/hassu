@@ -44,11 +44,12 @@ export default function SuunnitelmatJaAineistot() {
   const { t } = useTranslation("aineisto");
 
   return (
+    // TODO: kaytetaan myos hyvaksymisessa ja jatkopaatoksissa
     <Section>
       <h4 className="vayla-small-title">Suunnitelmat ja aineistot</h4>
       <p>
-        Nähtäville asetettava aineisto sekä lausuntapyyntöön liitettävä aineisto tuodaan Projektivelhosta. Nähtäville
-        asetettu aineisto julkaistaan palvelun julkisella puolella kuulutuksen julkaisupäivänä.
+        Nähtäville asetettava aineisto sekä lausuntapyyntöön liitettävä aineisto tuodaan Projektivelhosta. Nähtäville asetettu aineisto
+        julkaistaan palvelun julkisella puolella kuulutuksen julkaisupäivänä.
       </p>
       <Notification type={NotificationType.INFO_GRAY}>
         Huomioithan, että suunnitelma-aineistojen tulee täyttää saavutettavuusvaatimukset.
@@ -65,16 +66,8 @@ export default function SuunnitelmatJaAineistot() {
         }}
         iconComponent={
           <span className="fa-layers">
-            <FontAwesomeIcon
-              icon="chevron-down"
-              transform={`down-6`}
-              flip={!!expandedAineisto.length ? "vertical" : undefined}
-            />
-            <FontAwesomeIcon
-              icon="chevron-up"
-              transform={`up-6`}
-              flip={!!expandedAineisto.length ? "vertical" : undefined}
-            />
+            <FontAwesomeIcon icon="chevron-down" transform={`down-6`} flip={!!expandedAineisto.length ? "vertical" : undefined} />
+            <FontAwesomeIcon icon="chevron-up" transform={`up-6`} flip={!!expandedAineisto.length ? "vertical" : undefined} />
           </span>
         }
       >
@@ -84,9 +77,10 @@ export default function SuunnitelmatJaAineistot() {
         expandedState={[expandedAineisto, setExpandedAineisto]}
         items={aineistoKategoriat.listKategoriat().map((paakategoria) => ({
           title: (
-            <span className="vayla-small-title">{`${t(
-              `aineisto-kategoria-nimi.${paakategoria.id}`
-            )} (${getNestedAineistoMaaraForCategory(aineistoNahtavillaFlat, paakategoria)})`}</span>
+            <span className="vayla-small-title">{`${t(`aineisto-kategoria-nimi.${paakategoria.id}`)} (${getNestedAineistoMaaraForCategory(
+              aineistoNahtavillaFlat,
+              paakategoria
+            )})`}</span>
           ),
           content: (
             <SectionContent largeGaps>
@@ -191,11 +185,7 @@ const AlakategoriaContent = (props: AlakategoriaContentProps) => {
   const aineistot = watch(aineistoRoute);
   return (
     <>
-      {!!aineistot?.length ? (
-        <AineistoTable kategoriaId={props.kategoria.id} />
-      ) : (
-        <p>Kategoriaan ei ole asetettu aineistoa.</p>
-      )}
+      {!!aineistot?.length ? <AineistoTable kategoriaId={props.kategoria.id} /> : <p>Kategoriaan ei ole asetettu aineistoa.</p>}
       {!!props.kategoria.alaKategoriat?.length && (
         <SuunnitelmaAineistoAlakategoriaAccordion
           expandedAineistoState={props.expandedAineistoState}
@@ -206,8 +196,7 @@ const AlakategoriaContent = (props: AlakategoriaContentProps) => {
   );
 };
 
-type FormAineisto = FieldArrayWithId<FormValues, `aineistoNahtavilla.${string}`, "id"> &
-  Pick<Aineisto, "tila" | "tuotu" | "tiedosto">;
+type FormAineisto = FieldArrayWithId<FormValues, `aineistoNahtavilla.${string}`, "id"> & Pick<Aineisto, "tila" | "tuotu" | "tiedosto">;
 
 interface AineistoTableProps {
   kategoriaId: string;
@@ -220,41 +209,33 @@ const AineistoTable = (props: AineistoTableProps) => {
   const { fields, remove } = useFieldArray({ name: aineistoRoute, control });
   const { t } = useTranslation("aineisto");
 
-  const getAllOptionsForKategoriat: (kategoriat: AineistoKategoria[], ylakategoriaNimi?: string) => SelectOption[] =
-    useCallback(
-      (kategoriat, ylakategoriaNimi) => {
-        const ylakategoriaPrefix = ylakategoriaNimi ? `${ylakategoriaNimi} - ` : "";
-        const kategoriaIds: SelectOption[] = [];
-        kategoriat.forEach((kategoria) => {
-          kategoriaIds.push({
-            label: ylakategoriaPrefix + t(`aineisto-kategoria-nimi.${kategoria.id}`),
-            value: kategoria.id,
-          });
-          if (kategoria.alaKategoriat) {
-            kategoriaIds.push(
-              ...getAllOptionsForKategoriat(
-                kategoria.alaKategoriat,
-                ylakategoriaPrefix + t(`aineisto-kategoria-nimi.${kategoria.id}`)
-              )
-            );
-          }
+  const getAllOptionsForKategoriat: (kategoriat: AineistoKategoria[], ylakategoriaNimi?: string) => SelectOption[] = useCallback(
+    (kategoriat, ylakategoriaNimi) => {
+      const ylakategoriaPrefix = ylakategoriaNimi ? `${ylakategoriaNimi} - ` : "";
+      const kategoriaIds: SelectOption[] = [];
+      kategoriat.forEach((kategoria) => {
+        kategoriaIds.push({
+          label: ylakategoriaPrefix + t(`aineisto-kategoria-nimi.${kategoria.id}`),
+          value: kategoria.id,
         });
-        return kategoriaIds;
-      },
-      [t]
-    );
-
-  const allOptions = useMemo(
-    () => getAllOptionsForKategoriat(aineistoKategoriat.listKategoriat()),
-    [getAllOptionsForKategoriat]
+        if (kategoria.alaKategoriat) {
+          kategoriaIds.push(
+            ...getAllOptionsForKategoriat(kategoria.alaKategoriat, ylakategoriaPrefix + t(`aineisto-kategoria-nimi.${kategoria.id}`))
+          );
+        }
+      });
+      return kategoriaIds;
+    },
+    [t]
   );
+
+  const allOptions = useMemo(() => getAllOptionsForKategoriat(aineistoKategoriat.listKategoriat()), [getAllOptionsForKategoriat]);
 
   const enrichedFields: FormAineisto[] = useMemo(
     () =>
       fields.map((field) => {
         const aineistoData = projekti?.hyvaksymisPaatosVaihe?.aineistoNahtavilla || []; //TODO: tarkista miksi tassa on hyvaksymispaatosvaihe
-        const { tila, tuotu, tiedosto } =
-          aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
+        const { tila, tuotu, tiedosto } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
 
         return { tila, tuotu, tiedosto, ...field };
       }),

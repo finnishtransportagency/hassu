@@ -6,12 +6,13 @@ import { Controller, FieldError, useFieldArray, useFormContext } from "react-hoo
 import { formatProperNoun } from "common/util/formatProperNoun";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
-import { KuntaVastaanottajaInput, HyvaksymisPaatosVaihe, ViranomaisVastaanottajaInput } from "@services/api";
+import { KuntaVastaanottajaInput, HyvaksymisPaatosVaihe, ViranomaisVastaanottajaInput, Projekti } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
 import dayjs from "dayjs";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
+import { Link } from "@mui/material";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -19,7 +20,8 @@ interface HelperType {
 }
 
 interface Props {
-  jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe | null | undefined;
+  jatkoPaatos1Vaihe?: HyvaksymisPaatosVaihe | null | undefined;
+  projekti: Projekti | null | undefined;
 }
 
 type FormFields = {
@@ -31,7 +33,7 @@ type FormFields = {
   };
 };
 
-export default function IlmoituksenVastaanottajat({ jatkoPaatos1Vaihe }: Props): ReactElement {
+export default function IlmoituksenVastaanottajat({ projekti }: Props): ReactElement {
   const { t } = useTranslation("commonFI");
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
@@ -70,6 +72,9 @@ export default function IlmoituksenVastaanottajat({ jatkoPaatos1Vaihe }: Props):
     return formatProperNoun(nimi);
   };
 
+  if (!projekti) {
+    return <></>;
+  }
   if (!kirjaamoOsoitteet) {
     return <></>;
   }
@@ -92,7 +97,7 @@ export default function IlmoituksenVastaanottajat({ jatkoPaatos1Vaihe }: Props):
               <p style={{ color: "#7A7A7A" }}>Ilmoituksen tila</p>
               <p style={{ color: "#7A7A7A" }}>Lähetysaika</p>
 
-              {jatkoPaatos1Vaihe?.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen, index) => (
+              {projekti.jatkoPaatos1Vaihe?.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen, index) => (
                 <React.Fragment key={index}>
                   <p className="odd:bg-white even:bg-grey col-span-2">
                     {t(`viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
@@ -112,7 +117,7 @@ export default function IlmoituksenVastaanottajat({ jatkoPaatos1Vaihe }: Props):
               <p className="vayla-table-header">Sähköpostiosoite</p>
               <p className="vayla-table-header">Ilmoituksen tila</p>
               <p className="vayla-table-header">Lähetysaika</p>
-              {jatkoPaatos1Vaihe?.ilmoituksenVastaanottajat?.kunnat?.map((kunta, index) => (
+              {projekti.jatkoPaatos1Vaihe?.ilmoituksenVastaanottajat?.kunnat?.map((kunta, index) => (
                 <Fragment key={index}>
                   <p className={getStyleForRow(index)}>{kunta.nimi}</p>
                   <p className={getStyleForRow(index)}>{kunta.sahkoposti}</p>
@@ -129,11 +134,17 @@ export default function IlmoituksenVastaanottajat({ jatkoPaatos1Vaihe }: Props):
           <h4 className="vayla-small-title">Ilmoituksen vastaanottajat</h4>
           <SectionContent>
             <p>
-              Vuorovaikuttamisesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on haettu
+              Kuulutuksesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on haettu
               Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi
-              -painikkeella
+              -painikkeella.
             </p>
-            <p>Jos kuntatiedoissa on virhe, tee korjaus Projektivelhoon.</p>
+            <p>
+              Jos kuntatiedoissa on virhe tai kuntia puuttuu, tee korjaus Projektivelhoon ja päivitä järjesteltämästä{" "}
+              <Link underline="none" href={`/yllapito/projekti/${projekti.oid}`}>
+                Projektin tiedot
+              </Link>{" "}
+              -sivu.
+            </p>
           </SectionContent>
 
           <>

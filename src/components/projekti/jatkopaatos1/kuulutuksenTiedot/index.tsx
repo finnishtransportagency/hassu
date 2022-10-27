@@ -113,7 +113,7 @@ function JatkoKuulutuksetTiedotForm({ projekti, kirjaamoOsoitteet, setIsDirty }:
                 <Voimassaolovuosi />
                 <MuutoksenHaku />
                 <KuulutuksessaEsitettavatYhteystiedot />
-                <IlmoituksenVastaanottajatKomponentti jatkoPaatos1Vaihe={projekti?.jatkoPaatos1Vaihe} />
+                <IlmoituksenVastaanottajatKomponentti projekti={projekti} />
 
                 {pdfFormRef.current?.esikatselePdf && (
                   <KuulutuksenJaIlmoituksenEsikatselu esikatselePdf={pdfFormRef.current?.esikatselePdf} />
