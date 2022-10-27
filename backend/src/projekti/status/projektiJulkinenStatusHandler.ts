@@ -44,7 +44,7 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
       const nahtavillaoloVaihe = projekti.nahtavillaoloVaihe;
       if (
         nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva &&
-        isDateTimeInThePast(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva, "start-of-day")
+        isDateTimeInThePast(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva, "end-of-day")
       ) {
         projekti.status = API.Status.HYVAKSYMISMENETTELYSSA;
         super.handle(p); // Continue evaluating next rules
