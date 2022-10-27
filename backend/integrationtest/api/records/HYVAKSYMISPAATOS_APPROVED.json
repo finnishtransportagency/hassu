@@ -268,7 +268,7 @@
       "muistutusoikeusPaattyyPaiva": "2042-06-08"
     }
   ],
-  "ajastettuTarkistus": "2101-01-01T23:59:00+02:00",
+  "ajastettuTarkistus": "2101-01-01T23:59:59+02:00",
   "euRahoitus": false,
   "suunnitteluVaihe": {
     "hankkeenKuvaus": {

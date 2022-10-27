@@ -6,13 +6,8 @@ import {
   HyvaksymisPaatosVaihePDF,
   LocalizedMap,
 } from "../../database/model";
-import { parseAndAddDate, parseDate } from "../../util/dateUtil";
-import {
-  HYVAKSYMISPAATOS_DURATION_UNIT,
-  HYVAKSYMISPAATOS_DURATION_VALUE,
-  JATKOPAATOS_DURATION_UNIT,
-  JATKOPAATOS_DURATION_VALUE,
-} from "../../projekti/status/statusHandler";
+import { parseAndAddDateTime, parseDate } from "../../util/dateUtil";
+import { HYVAKSYMISPAATOS_DURATION, JATKOPAATOS_DURATION } from "../../projekti/status/statusHandler";
 import { AsiakirjaTyyppi, Kieli } from "../../../../common/graphql/apiModel";
 import { fileService } from "../../files/fileService";
 import { ProjektiPaths } from "../../files/ProjektiPath";
@@ -37,10 +32,9 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends TilaManag
     if (!julkaisu.kuulutusVaihePaattyyPaiva) {
       throw new Error("julkaisulta.kuulutusVaihePaattyyPaiva puuttuu");
     }
-    if (isHyvaksymisPaatos) {
-      return parseAndAddDate(julkaisu.kuulutusVaihePaattyyPaiva, HYVAKSYMISPAATOS_DURATION_VALUE, HYVAKSYMISPAATOS_DURATION_UNIT)?.format();
-    }
-    return parseAndAddDate(julkaisu.kuulutusVaihePaattyyPaiva, JATKOPAATOS_DURATION_VALUE, JATKOPAATOS_DURATION_UNIT)?.format();
+    const paatosDuration = isHyvaksymisPaatos ? HYVAKSYMISPAATOS_DURATION : JATKOPAATOS_DURATION;
+
+    return parseAndAddDateTime(julkaisu.kuulutusVaihePaattyyPaiva, "end-of-day", paatosDuration)?.format();
   }
 
   protected async generatePDFs(

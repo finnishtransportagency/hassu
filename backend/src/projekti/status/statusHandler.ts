@@ -1,10 +1,8 @@
 import * as API from "../../../../common/graphql/apiModel";
-import { isDateInThePast } from "../../util/dateUtil";
+import { DateAddTuple, isDateTimeInThePast } from "../../util/dateUtil";
 
-export const HYVAKSYMISPAATOS_DURATION_VALUE = 1;
-export const HYVAKSYMISPAATOS_DURATION_UNIT = "year";
-export const JATKOPAATOS_DURATION_VALUE = 6;
-export const JATKOPAATOS_DURATION_UNIT = "months";
+export const HYVAKSYMISPAATOS_DURATION: DateAddTuple = [1, "year"];
+export const JATKOPAATOS_DURATION: DateAddTuple = [6, "months"];
 
 // Chain of responsibilites pattern to determine projekti status
 export abstract class StatusHandler<T> {
@@ -48,20 +46,8 @@ export abstract class AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<
     // Kuulutusvaiheen päättymisestä pitää olla vuosi
     const kuulutusVaihePaattyyPaiva = hyvaksymisPaatosVaihe?.kuulutusVaihePaattyyPaiva;
     if (kuulutusVaihePaattyyPaiva) {
-      let hyvaksymisPaatosKuulutusPaattyyInThePast: boolean;
-      if (this.isHyvaksymisPaatos) {
-        hyvaksymisPaatosKuulutusPaattyyInThePast = isDateInThePast(
-          kuulutusVaihePaattyyPaiva,
-          HYVAKSYMISPAATOS_DURATION_VALUE,
-          HYVAKSYMISPAATOS_DURATION_UNIT
-        );
-      } else {
-        hyvaksymisPaatosKuulutusPaattyyInThePast = isDateInThePast(
-          kuulutusVaihePaattyyPaiva,
-          JATKOPAATOS_DURATION_VALUE,
-          JATKOPAATOS_DURATION_UNIT
-        );
-      }
+      const paatosDuration = this.isHyvaksymisPaatos ? HYVAKSYMISPAATOS_DURATION : JATKOPAATOS_DURATION;
+      const hyvaksymisPaatosKuulutusPaattyyInThePast = isDateTimeInThePast(kuulutusVaihePaattyyPaiva, "end-of-day", paatosDuration);
 
       if (hyvaksymisPaatosKuulutusPaattyyInThePast) {
         p.status = this.epaAktiivisuusStatus;
