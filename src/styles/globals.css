@@ -7,7 +7,6 @@
     @apply vayla-body-text;
     overflow-wrap: anywhere;
     /* For legacy support */
-    word-wrap: break-word;
     -ms-word-break: break-all;
     word-break: normal;
   }

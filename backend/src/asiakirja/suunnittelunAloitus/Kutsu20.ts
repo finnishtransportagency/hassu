@@ -86,7 +86,6 @@ export class Kutsu20 extends CommonPdf {
 
     this.kayttoOikeudet = kayttoOikeudet;
     const suunnitteluSopimusJulkaisu = adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
-      oid,
       suunnitteluSopimus,
       findUserByKayttajatunnus(kayttoOikeudet, suunnitteluSopimus?.yhteysHenkilo)
     );

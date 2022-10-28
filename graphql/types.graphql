@@ -491,6 +491,7 @@ type VelhoJulkinen {
 type ProjektiJulkinen implements IProjekti {
   oid: String!
   aloitusKuulutusJulkaisut: [AloitusKuulutusJulkaisuJulkinen!]
+  suunnitteluSopimus: SuunnitteluSopimusJulkaisu
   suunnitteluVaihe: SuunnitteluVaiheJulkinen
   euRahoitus: Boolean
   status: Status
@@ -611,12 +612,12 @@ type SuunnitteluSopimus {
 }
 
 type SuunnitteluSopimusJulkaisu {
-  kunta: Int!
-  logo: String
   etunimi: String!
   sukunimi: String!
   puhelinnumero: String!
   email: String!
+  kunta: Int!
+  logo: String
 }
 
 type ProjektiKayttaja {
@@ -631,12 +632,11 @@ type ProjektiKayttaja {
 }
 
 type ProjektiKayttajaJulkinen {
-  id: String!
   puhelinnumero: String
   email: String!
   organisaatio: String!
   nimi: String!
-  yleinenYhteystieto: Boolean
+  projektiPaallikko: Boolean
 }
 
 enum ProjektiTyyppi {

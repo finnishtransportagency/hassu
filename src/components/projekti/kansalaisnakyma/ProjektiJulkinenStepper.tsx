@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 import { styled } from "@mui/material/styles";
 import Stepper from "@mui/material/Stepper";
-import Step, { stepClasses } from "@mui/material/Step";
+import Step, { stepClasses, StepProps } from "@mui/material/Step";
 import StepLabel, { stepLabelClasses } from "@mui/material/StepLabel";
 import useTranslation from "next-translate/useTranslation";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -17,14 +17,16 @@ interface Props {
   vertical?: true;
 }
 
-const HassuStep = styled(Step)<Pick<Props, "vertical">>((vertical) => ({
+const HassuStep = styled(Step)<StepProps>({
   [`&.${stepClasses.root} > a span:hover`]: {
     textDecoration: "underline",
     color: "#0064AF",
   },
-  flex: vertical ? undefined : "1 1 0px",
-  width: vertical ? undefined : "0",
-}));
+  [`&.${stepClasses.horizontal}`]: {
+    flex: "1 1 0px",
+    width: "0",
+  },
+});
 
 const HassuLabel = styled(StepLabel)({
   [`&.${stepLabelClasses.vertical}`]: {
@@ -121,7 +123,7 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
 
   const createStep = (label: string, index: number) => {
     return (
-      <HassuStep vertical={vertical} key={label}>
+      <HassuStep key={label}>
         {index <= activeStep && (
           <HassuLink key={index} href={links[index]}>
             <HassuLabel
@@ -150,7 +152,7 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
     <>
       {!vertical && (
         <div>
-          <Stepper alternativeLabel activeStep={activeStep} connector={<HassuConnector />}>
+          <Stepper alternativeLabel orientation="horizontal" activeStep={activeStep} connector={<HassuConnector />}>
             {steps.map((label, index) => createStep(label, index))}
           </Stepper>
         </div>

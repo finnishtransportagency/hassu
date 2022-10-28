@@ -21,19 +21,32 @@ export function adaptSuunnitteluSopimus(
   return suunnitteluSopimus;
 }
 
+export enum FileLocation {
+  PUBLIC,
+  YLLAPITO,
+}
+
 export function adaptSuunnitteluSopimusJulkaisu(
   oid: string,
-  suunnitteluSopimus: SuunnitteluSopimusJulkaisu | null | undefined
+  suunnitteluSopimus: SuunnitteluSopimusJulkaisu | null | undefined,
+  fileLocation: FileLocation
 ): API.SuunnitteluSopimusJulkaisu | undefined | null {
   if (suunnitteluSopimus) {
     if (!suunnitteluSopimus.logo) {
       throw new Error("adaptSuunnitteluSopimus: suunnitteluSopimus.logo määrittelemättä");
     }
 
+    let logo: SuunnitteluSopimusJulkaisu["logo"];
+    if (fileLocation === FileLocation.PUBLIC) {
+      logo = fileService.getPublicPathForProjektiFile(oid, suunnitteluSopimus.logo);
+    } else {
+      logo = fileService.getYllapitoPathForProjektiFile(oid, suunnitteluSopimus.logo);
+    }
+
     return {
       __typename: "SuunnitteluSopimusJulkaisu",
       kunta: suunnitteluSopimus.kunta,
-      logo: fileService.getYllapitoPathForProjektiFile(oid, suunnitteluSopimus.logo),
+      logo,
       email: suunnitteluSopimus.email,
       etunimi: suunnitteluSopimus.etunimi,
       sukunimi: suunnitteluSopimus.sukunimi,
@@ -66,7 +79,6 @@ export function adaptSuunnitteluSopimusJulkaisuJulkinen(
 }
 
 export function adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
-  oid: string,
   suunnitteluSopimus: SuunnitteluSopimus | null | undefined,
   yhteysHenkilo: DBVaylaUser | undefined
 ): API.SuunnitteluSopimusJulkaisu | undefined | null {

@@ -33,7 +33,6 @@ export class AsiakirjaAdapter {
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot),
         velho: adaptVelho(dbProjekti),
         suunnitteluSopimus: adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
-          dbProjekti.oid,
           dbProjekti.suunnitteluSopimus,
           findUserByKayttajatunnus(dbProjekti.kayttoOikeudet, dbProjekti.suunnitteluSopimus?.yhteysHenkilo)
         ),
