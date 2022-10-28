@@ -1184,6 +1184,15 @@ Object {
       },
     ],
     "status": "ALOITUSKUULUTUS",
+    "suunnitteluSopimus": Object {
+      "__typename": "SuunnitteluSopimusJulkaisu",
+      "email": "a2@vayla.fi",
+      "etunimi": "EtunimiA2",
+      "kunta": 536,
+      "logo": "/tiedostot/suunnitelma/1/suunnittelusopimus/logo.gif",
+      "puhelinnumero": "123456789",
+      "sukunimi": "SukunimiA2",
+    },
     "velho": Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
