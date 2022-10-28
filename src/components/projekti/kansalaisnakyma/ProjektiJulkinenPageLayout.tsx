@@ -41,8 +41,10 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
   return (
     <section>
       <div className="flex flex-col md:flex-row gap-8 mb-3">
-        <div style={{ minWidth: "345px", height: "400px", background: "green" }}>{/* <ProjektiJulkinenSideBar /> */}</div>
-        <div className="grow">
+        <div>
+          <ProjektiJulkinenSideBar sx={{ width: { md: "345px" } }} />
+        </div>
+        <div>
           <Section noDivider>
             <h1>{velho?.nimi}</h1>
             <ProjektiJulkinenStepper

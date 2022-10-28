@@ -40,6 +40,7 @@ import {
   adaptSuunnitteluSopimusJulkaisu,
   adaptSuunnitteluSopimusJulkaisuJulkinen,
   adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu,
+  FileLocation,
 } from "./adaptToAPI";
 import { cloneDeep } from "lodash";
 import { kuntametadata } from "../../../../common/kuntametadata";
@@ -69,13 +70,7 @@ class ProjektiAdapterJulkinen {
     const hyvaksymisPaatosVaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(dbProjekti, dbProjekti.hyvaksymisPaatosVaiheJulkaisut);
     const jatkoPaatos1Vaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(dbProjekti, dbProjekti.jatkoPaatos1VaiheJulkaisut);
     const jatkoPaatos2Vaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(dbProjekti, dbProjekti.jatkoPaatos2VaiheJulkaisut);
-    const suunnitteluSopimus = adaptSuunnitteluSopimusJulkaisu(
-      dbProjekti.oid,
-      adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
-        dbProjekti.suunnitteluSopimus,
-        findUserByKayttajatunnus(dbProjekti.kayttoOikeudet, dbProjekti.suunnitteluSopimus?.yhteysHenkilo)
-      )
-    );
+    const suunnitteluSopimus = adaptRootSuunnitteluSopimusJulkaisu(dbProjekti);
 
     const projekti: API.ProjektiJulkinen = {
       __typename: "ProjektiJulkinen",
@@ -543,6 +538,12 @@ function adaptProjektiHenkilot(
       return result;
     })
     ?.sort(sortByProjektiPaallikko);
+}
+
+function adaptRootSuunnitteluSopimusJulkaisu(dbProjekti: DBProjekti) {
+  const yhteysHenkilo = findUserByKayttajatunnus(dbProjekti.kayttoOikeudet, dbProjekti.suunnitteluSopimus?.yhteysHenkilo);
+  const suunnittelusopimusJulkaisu = adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(dbProjekti.suunnitteluSopimus, yhteysHenkilo);
+  return adaptSuunnitteluSopimusJulkaisu(dbProjekti.oid, suunnittelusopimusJulkaisu, FileLocation.PUBLIC);
 }
 
 type ProjektiKayttajaJulkinenSortFunction = (a: API.ProjektiKayttajaJulkinen, b: API.ProjektiKayttajaJulkinen) => number;

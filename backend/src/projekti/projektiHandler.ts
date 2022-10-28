@@ -77,7 +77,7 @@ export async function createOrUpdateProjekti(input: TallennaProjektiInput): Prom
     // Save over existing one
     validateTallennaProjekti(projektiInDB, input);
     auditLog.info("Tallenna projekti", { input });
-    await handleFiles(input);
+    await handleFiles(projektiInDB, input);
     const projektiAdaptationResult = await projektiAdapter.adaptProjektiToSave(projektiInDB, input);
     await projektiDatabase.saveProjekti(projektiAdaptationResult.projekti);
     await handleEvents(projektiAdaptationResult);
@@ -216,7 +216,7 @@ export async function synchronizeUpdatesFromVelho(oid: string, reset = false): P
 /**
  * If there are uploaded files in the input, persist them into the project
  */
-async function handleFiles(input: TallennaProjektiInput) {
+async function handleFiles(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
   const logo = input.suunnitteluSopimus?.logo;
   if (logo && input.suunnitteluSopimus) {
     input.suunnitteluSopimus.logo = await fileService.persistFileToProjekti({
@@ -224,6 +224,13 @@ async function handleFiles(input: TallennaProjektiInput) {
       oid: input.oid,
       targetFilePathInProjekti: "suunnittelusopimus",
     });
+
+    const julkinenStatus = projektiAdapterJulkinen.adaptProjekti(dbProjekti)?.status;
+
+    // Projekti status should at least be published (aloituskuulutus) until the logo is published to public
+    if (julkinenStatus && julkinenStatus !== API.Status.EI_JULKAISTU && julkinenStatus !== API.Status.EI_JULKAISTU_PROJEKTIN_HENKILOT) {
+      await fileService.publishProjektiFile(input.oid, input.suunnitteluSopimus.logo, input.suunnitteluSopimus.logo);
+    }
   }
 }
 

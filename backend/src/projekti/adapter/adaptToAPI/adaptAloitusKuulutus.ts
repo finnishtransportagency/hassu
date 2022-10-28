@@ -8,7 +8,7 @@ import {
   adaptStandardiYhteystiedotByAddingTypename,
   adaptVelho,
 } from "../common";
-import { adaptSuunnitteluSopimusJulkaisu } from "./adaptSuunitteluSopimus";
+import { adaptSuunnitteluSopimusJulkaisu, FileLocation } from "./adaptSuunitteluSopimus";
 import { fileService } from "../../../files/fileService";
 
 export function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.AloitusKuulutus | undefined {
@@ -45,7 +45,7 @@ export function adaptAloitusKuulutusJulkaisut(
         hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
         yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
         velho: adaptVelho(velho),
-        suunnitteluSopimus: adaptSuunnitteluSopimusJulkaisu(oid, suunnitteluSopimus),
+        suunnitteluSopimus: adaptSuunnitteluSopimusJulkaisu(oid, suunnitteluSopimus, FileLocation.YLLAPITO),
         kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
         aloituskuulutusPDFt: adaptJulkaisuPDFPaths(oid, julkaisu.aloituskuulutusPDFt),
       };

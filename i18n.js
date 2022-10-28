@@ -4,7 +4,7 @@ module.exports = {
   pages: {
     "*": ["common", "projekti", "footer"],
     "/": ["etusivu"],
-    "/suunnitelma/*": ["projekti-side-navigation"],
+    "rgx:^/suunnitelma/": ["projekti-side-bar"],
     "/yllapito/perusta": ["velho-haku"],
     "/suunnitelma/[oid]/nahtavillaolo": ["aineisto"],
     "/suunnitelma/[oid]/lausuntopyyntoaineistot": ["aineisto"],

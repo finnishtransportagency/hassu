@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ComponentProps } from "react";
 import styles from "@styles/projekti/ProjektiJulkinenSideNavigation.module.css";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import HassuStack from "@components/layout/HassuStack";
@@ -7,9 +7,10 @@ import SectionContent from "@components/layout/SectionContent";
 import { Viranomainen } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 import { kuntametadata } from "../../../../common/kuntametadata";
+import { styled } from "@mui/material";
 
-export default function ProjektiSideNavigation(): ReactElement {
-  const { t, lang } = useTranslation("projekti-side-navigation");
+const ProjektiSideNavigation = styled((props) => {
+  const { t, lang } = useTranslation("projekti-side-bar");
   const { data: projekti } = useProjektiJulkinen();
   if (!projekti) {
     return <></>;
@@ -27,7 +28,7 @@ export default function ProjektiSideNavigation(): ReactElement {
   };
 
   return (
-    <Section noDivider>
+    <Section noDivider {...props}>
       <div role="navigation" className={styles["side-nav"]}>
         <div
           className="flex justify-center"
@@ -80,4 +81,6 @@ export default function ProjektiSideNavigation(): ReactElement {
       </div>
     </Section>
   );
-}
+})<ComponentProps<typeof Section>>({});
+
+export default ProjektiSideNavigation;
