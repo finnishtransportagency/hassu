@@ -7,6 +7,8 @@ import HassuStack from "@components/layout/HassuStack";
 import { useForm } from "react-hook-form";
 import { Projekti } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
+import { kuntametadata } from "common/kuntametadata";
+import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 
 type PalautusValues = {
   syy: string;
@@ -41,6 +43,8 @@ export default function NahtavillaoloPainikkeet({
 
   const { t } = useTranslation("commonFI");
 
+  const kieli = useKansalaiskieli();
+
   return (
     <>
       <div>
@@ -48,9 +52,9 @@ export default function NahtavillaoloPainikkeet({
           <form>
             <HassuStack>
               <p>
-                Olet palauttamassa kuulutuksen korjattavaksi. Kuulutuksen tekijä saa tiedon palautuksesta ja sen syystä.
-                Saat ilmoituksen, kun kuulutus on taas valmis hyväksyttäväksi. Jos haluat itse muokata kuulutusta ja
-                hyväksyä tehtyjen muutoksien jälkeen, valitse Palauta ja muokkaa.
+                Olet palauttamassa kuulutuksen korjattavaksi. Kuulutuksen tekijä saa tiedon palautuksesta ja sen syystä. Saat ilmoituksen,
+                kun kuulutus on taas valmis hyväksyttäväksi. Jos haluat itse muokata kuulutusta ja hyväksyä tehtyjen muutoksien jälkeen,
+                valitse Palauta ja muokkaa.
               </p>
               <Textarea
                 label="Syy palautukselle *"
@@ -60,11 +64,7 @@ export default function NahtavillaoloPainikkeet({
                 hideLengthCounter={false}
               ></Textarea>
             </HassuStack>
-            <HassuStack
-              direction={["column", "column", "row"]}
-              justifyContent={[undefined, undefined, "flex-end"]}
-              paddingTop={"1rem"}
-            >
+            <HassuStack direction={["column", "column", "row"]} justifyContent={[undefined, undefined, "flex-end"]} paddingTop={"1rem"}>
               <Button primary onClick={handleSubmit(palautaMuokattavaksiJaPoistu)}>
                 Palauta ja poistu
               </Button>
@@ -93,8 +93,8 @@ export default function NahtavillaoloPainikkeet({
           <form style={{ display: "contents" }}>
             <DialogContent>
               <p>
-                Olet hyväksymässä kuulutuksen ja käynnistämässä siihen liittyvän ilmoituksen automaattisen lähettämisen.
-                Ilmoitus kuulutuksesta lähetetään seuraaville:
+                Olet hyväksymässä kuulutuksen ja käynnistämässä siihen liittyvän ilmoituksen automaattisen lähettämisen. Ilmoitus
+                kuulutuksesta lähetetään seuraaville:
               </p>
               <div>
                 <p>Viranomaiset</p>
@@ -108,21 +108,20 @@ export default function NahtavillaoloPainikkeet({
                 <p>Kunnat</p>
                 <ul className="vayla-dialog-list">
                   {projekti?.jatkoPaatos1Vaihe?.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => (
-                    <li key={kunta.nimi}>
-                      {kunta.nimi}, {kunta.sahkoposti}
+                    <li key={kunta.id}>
+                      {kuntametadata.nameForKuntaId(kunta.id, kieli)}, {kunta.sahkoposti}
                     </li>
                   ))}
                 </ul>
               </div>
               <p>
-                Jos hyväksymisvaiheen kuulutukseen pitää tehdä muutoksia hyväksymisen jälkeen, tulee
-                hyväksymisvaihekuulutus avata uudelleen ja lähettää päivitetyt ilmoitukset asianosaisille.
-                Kuulutuspäivän jälkeen tulevat muutostarpeet vaativat aloituksen uudelleen kuuluttamisen.
+                Jos hyväksymisvaiheen kuulutukseen pitää tehdä muutoksia hyväksymisen jälkeen, tulee hyväksymisvaihekuulutus avata uudelleen
+                ja lähettää päivitetyt ilmoitukset asianosaisille. Kuulutuspäivän jälkeen tulevat muutostarpeet vaativat aloituksen
+                uudelleen kuuluttamisen.
               </p>
               <p>
-                Klikkaamalla Hyväksy ja lähetä -painiketta vahvistat kuulutuksen tarkastetuksi ja hyväksyt sen julkaisun
-                kuulutuspäivänä sekä ilmoituksien lähettämisen. Ilmoitukset lähetetään automaattisesti painikkeen
-                klikkaamisen jälkeen.
+                Klikkaamalla Hyväksy ja lähetä -painiketta vahvistat kuulutuksen tarkastetuksi ja hyväksyt sen julkaisun kuulutuspäivänä
+                sekä ilmoituksien lähettämisen. Ilmoitukset lähetetään automaattisesti painikkeen klikkaamisen jälkeen.
               </p>
             </DialogContent>
             <DialogActions>

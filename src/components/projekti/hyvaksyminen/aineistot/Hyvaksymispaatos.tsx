@@ -24,8 +24,8 @@ export default function Hyvaksymispaatos({ projekti }: Props) {
     <>
       <h4 className="vayla-small-title mt-8 pt-8">Päätös *</h4>
       <p>
-        Liitä Liikenne- ja viestintäviraston päätös. Päätöksen päivämäärä sekä asianumero löytyvät Kuulutuksen tiedot
-        -välilehdeltä jos ne on lisätty{" "}
+        Liitä Liikenne- ja viestintäviraston päätös. Päätöksen päivämäärä sekä asianumero löytyvät Kuulutuksen tiedot -välilehdeltä jos ne
+        on lisätty{" "}
         <Link underline="none" href={`/yllapito/projekti/${projekti.oid}/kasittelyntila`}>
           Käsittelyn tila
         </Link>{" "}
@@ -41,6 +41,7 @@ export default function Hyvaksymispaatos({ projekti }: Props) {
       </Button>
       <AineistojenValitseminenDialog
         open={aineistoDialogOpen}
+        infoText="Valitse yksi tai useampi päätöstiedosto."
         onClose={() => setAineistoDialogOpen(false)}
         onSubmit={(newAineistot) => {
           const value = aineistot || [];

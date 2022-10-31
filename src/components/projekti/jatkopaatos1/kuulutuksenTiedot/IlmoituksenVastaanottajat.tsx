@@ -6,13 +6,15 @@ import { Controller, FieldError, useFieldArray, useFormContext } from "react-hoo
 import { formatProperNoun } from "common/util/formatProperNoun";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
-import { KuntaVastaanottajaInput, HyvaksymisPaatosVaihe, ViranomaisVastaanottajaInput, Projekti } from "@services/api";
+import { KuntaVastaanottajaInput, HyvaksymisPaatosVaihe, ViranomaisVastaanottajaInput, Projekti, Kieli } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
 import dayjs from "dayjs";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import { Link } from "@mui/material";
+import { kuntametadata } from "common/kuntametadata";
+import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -47,6 +49,8 @@ export default function IlmoituksenVastaanottajat({ projekti }: Props): ReactEle
     watch,
   } = useFormContext<FormFields>();
 
+  const kieli = useKansalaiskieli();
+
   const ilmoituksenVastaanottajat = watch("jatkoPaatos1Vaihe.ilmoituksenVastaanottajat");
 
   const { fields: kuntaFields } = useFieldArray({
@@ -63,8 +67,8 @@ export default function IlmoituksenVastaanottajat({ projekti }: Props): ReactEle
     name: "jatkoPaatos1Vaihe.ilmoituksenVastaanottajat.viranomaiset",
   });
 
-  const getKuntanimi = (index: number) => {
-    const nimi = ilmoituksenVastaanottajat?.kunnat?.[index].nimi;
+  const getKuntanimi = (index: number, lang: Kieli) => {
+    const nimi = kuntametadata.nameForKuntaId(ilmoituksenVastaanottajat?.kunnat?.[index].id, lang);
     if (!nimi) {
       return;
     }
@@ -119,7 +123,7 @@ export default function IlmoituksenVastaanottajat({ projekti }: Props): ReactEle
               <p className="vayla-table-header">Lähetysaika</p>
               {projekti.jatkoPaatos1Vaihe?.ilmoituksenVastaanottajat?.kunnat?.map((kunta, index) => (
                 <Fragment key={index}>
-                  <p className={getStyleForRow(index)}>{kunta.nimi}</p>
+                  <p className={getStyleForRow(index)}>{kuntametadata.nameForKuntaId(kunta.id, kieli)}</p>
                   <p className={getStyleForRow(index)}>{kunta.sahkoposti}</p>
                   <p className={getStyleForRow(index)}>{kunta.lahetetty ? "Lahetetty" : "Ei lähetetty"}</p>
                   <p className={getStyleForRow(index)}>{kunta.lahetetty ? dayjs(kunta.lahetetty).format("DD.MM.YYYY HH:mm") : null}</p>
@@ -222,8 +226,8 @@ export default function IlmoituksenVastaanottajat({ projekti }: Props): ReactEle
 
             {kuntaFields.map((kunta, index) => (
               <HassuGrid key={kunta.id} cols={{ lg: 3 }}>
-                <input type="hidden" {...register(`jatkoPaatos1Vaihe.ilmoituksenVastaanottajat.kunnat.${index}.nimi`)} readOnly />
-                <TextInput label="Kunta *" value={getKuntanimi(index)} disabled />
+                <input type="hidden" {...register(`jatkoPaatos1Vaihe.ilmoituksenVastaanottajat.kunnat.${index}.id`)} readOnly />
+                <TextInput label="Kunta *" value={getKuntanimi(index, kieli)} disabled />
                 <TextInput
                   label="Sähköpostiosoite *"
                   error={errors?.jatkoPaatos1Vaihe?.ilmoituksenVastaanottajat?.kunnat?.[index]?.sahkoposti}

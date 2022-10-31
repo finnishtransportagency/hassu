@@ -20,6 +20,7 @@ import { Column } from "react-table";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import { useProjekti } from "src/hooks/useProjekti";
 import { formatDateTime } from "src/util/dateUtils";
+import HyvaksymisPaatosTiedostot from "../hyvaksyminen/aineistot/HyvaksymisPaatosTiedostot";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
@@ -27,6 +28,7 @@ interface AineistoNahtavilla {
 
 interface FormValues {
   aineistoNahtavilla: AineistoNahtavilla;
+  hyvaksymisPaatos?: AineistoInput[];
 }
 
 const kategoriaInfoText: Record<string, string> = {
@@ -35,25 +37,73 @@ const kategoriaInfoText: Record<string, string> = {
   T3xx: "Informatiivisen aineiston alle tuodaan C- tai T300 -kansioiden aineistot.",
 };
 
-export default function SuunnitelmatJaAineistot() {
-  const { watch } = useFormContext<FormValues>();
+export interface PaatosAineistoTiedot {
+  paatosSubtitle: string;
+  paatosInfoText: string;
+}
+
+export interface SuunnitelmatJaAineistotProps {
+  dialogInfoText: string;
+  sectionTitle: string;
+  sectionInfoText: string;
+  sectionSubtitle?: string;
+  paatos?: PaatosAineistoTiedot;
+}
+
+export default function SuunnitelmatJaAineistot({
+  dialogInfoText,
+  sectionTitle,
+  sectionInfoText,
+  paatos,
+  sectionSubtitle,
+}: SuunnitelmatJaAineistotProps) {
+  const { watch, setValue } = useFormContext<FormValues>();
   const aineistoNahtavilla = watch("aineistoNahtavilla");
+  const hyvaksymisPaatos = watch("hyvaksymisPaatos");
 
   const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla || {}).flat();
   const [expandedAineisto, setExpandedAineisto] = useState<Key[]>([]);
   const { t } = useTranslation("aineisto");
 
+  const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
+
   return (
     // TODO: kaytetaan myos hyvaksymisessa ja jatkopaatoksissa
     <Section>
-      <h4 className="vayla-small-title">Suunnitelmat ja aineistot</h4>
-      <p>
-        Nähtäville asetettava aineisto sekä lausuntapyyntöön liitettävä aineisto tuodaan Projektivelhosta. Nähtäville asetettu aineisto
-        julkaistaan palvelun julkisella puolella kuulutuksen julkaisupäivänä.
-      </p>
+      <h4 className="vayla-subtitle">{sectionTitle}</h4>
+      <p>{sectionInfoText}</p>
       <Notification type={NotificationType.INFO_GRAY}>
         Huomioithan, että suunnitelma-aineistojen tulee täyttää saavutettavuusvaatimukset.
       </Notification>
+
+      {paatos && (
+        <>
+          <h5 className="vayla-small-title">{paatos.paatosSubtitle}</h5>
+          <p>{paatos.paatosInfoText}</p>
+
+          {!!hyvaksymisPaatos?.length && <HyvaksymisPaatosTiedostot />}
+
+          <Button type="button" onClick={() => setAineistoDialogOpen(true)} id="tuo_paatos_button">
+            Tuo päätös
+          </Button>
+          <AineistojenValitseminenDialog
+            open={aineistoDialogOpen}
+            infoText="Valitse yksi tai useampi päätöstiedosto."
+            onClose={() => setAineistoDialogOpen(false)}
+            onSubmit={(newAineistot) => {
+              const value = hyvaksymisPaatos || [];
+              newAineistot.forEach((aineisto) => {
+                if (!find(value, { dokumenttiOid: aineisto.dokumenttiOid })) {
+                  value.push({ ...aineisto, kategoriaId: null, jarjestys: value.length });
+                }
+              });
+              setValue("hyvaksymisPaatos", value, { shouldDirty: true });
+            }}
+          />
+        </>
+      )}
+
+      {sectionSubtitle && <h5 className="vayla-small-title">{sectionSubtitle}</h5>}
 
       <ButtonFlat
         type="button"
@@ -87,6 +137,7 @@ export default function SuunnitelmatJaAineistot() {
               <SuunnitelmaAineistoPaakategoriaContent
                 paakategoria={paakategoria}
                 expandedAineistoState={[expandedAineisto, setExpandedAineisto]}
+                dialogInfoText={dialogInfoText}
               />
             </SectionContent>
           ),
@@ -100,6 +151,7 @@ export default function SuunnitelmatJaAineistot() {
 interface SuunnitelmaAineistoPaakategoriaContentProps {
   paakategoria: AineistoKategoria;
   expandedAineistoState: [React.Key[], React.Dispatch<React.Key[]>];
+  dialogInfoText: string;
 }
 
 const SuunnitelmaAineistoPaakategoriaContent = (props: SuunnitelmaAineistoPaakategoriaContentProps) => {
@@ -126,6 +178,7 @@ const SuunnitelmaAineistoPaakategoriaContent = (props: SuunnitelmaAineistoPaakat
       </Button>
       <AineistojenValitseminenDialog
         open={aineistoDialogOpen}
+        infoText={props.dialogInfoText}
         onClose={() => setAineistoDialogOpen(false)}
         onSubmit={(newAineistot) => {
           const value = aineistot || [];

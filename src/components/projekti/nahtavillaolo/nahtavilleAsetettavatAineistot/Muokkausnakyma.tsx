@@ -87,7 +87,12 @@ function MuokkausnakymaLomake({ projekti, setIsDirty }: MuokkausnakymaLomakeProp
   return (
     <FormProvider {...useFormReturn}>
       <form>
-        <SuunnitelmatJaAineistot />
+        <SuunnitelmatJaAineistot
+          dialogInfoText="Valitse tiedostot,
+          jotka haluat tuoda nähtäville."
+          sectionTitle="Nähtäville asetettava aineisto"
+          sectionInfoText="Nähtäville asetettava aineisto sekä lausuntapyyntöön liitettävä aineisto tuodaan Projektivelhosta. Nähtäville asetettu aineisto julkaistaan palvelun julkisella puolella kuulutuksen julkaisupäivänä."
+        />
         <LausuntopyyntoonLiitettavaLisaaineisto />
         <NahtavillaoloPainikkeet />
       </form>

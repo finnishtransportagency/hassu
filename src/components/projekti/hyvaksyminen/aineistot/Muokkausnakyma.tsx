@@ -5,11 +5,9 @@ import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot";
 import HyvaksymisPaatosVaihePainikkeet from "./HyvaksymisPaatosVaihePainikkeet";
-import Hyvaksymispaatos from "./Hyvaksymispaatos";
 import SuunnitelmatJaAineistot from "../../common/SuunnitelmatJaAineistot";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { aineistoKategoriat } from "common/aineistoKategoriat";
-import Notification, { NotificationType } from "@components/notification/Notification";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 
@@ -91,18 +89,20 @@ function MuokkausnakymaForm({ projekti, setIsDirty }: MuokkausnakymaFormProps & 
 
   return (
     <FormProvider {...useFormReturn}>
-      <h3 className="vayla-small-title">Päätös ja päätöksen liitteenä olevat aineistot</h3>
-      <p>
-        Liitä Liikenne- ja viestintäviraston päätös. Liitettävä päätös haetaan Projektivelhosta. Päätös ja sen liitteenä oleva aineisto
-        julkaistaan palvelun julkisella puolella kuulutuksen julkaisupäivänä.
-      </p>
-      <Notification type={NotificationType.INFO_GRAY}>
-        Huomioithan, että suunnitelma-aineistojen tulee täyttää saavutettavuusvaatimukset.
-      </Notification>
       <form>
         <fieldset disabled={!isAllowedOnRoute || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden}>
-          <Hyvaksymispaatos projekti={projekti} />
-          <SuunnitelmatJaAineistot />
+          <SuunnitelmatJaAineistot
+            sectionTitle="Päätös ja päätöksen liitteenä oleva aineisto"
+            sectionInfoText="Liitä Liikenne- ja viestintäviraston päätös. Liitettävä päätös haetaan Projektivelhosta. Päätös ja sen liitteenä oleva aineisto julkaistaan palvelun julkisella puolella kuulutuksen julkaisupäivänä."
+            dialogInfoText="Valitse tiedostot,
+            jotka haluat tuoda päätöksen liitteeksi."
+            sectionSubtitle="Päätöksen liitteenä oleva aineisto"
+            paatos={{
+              paatosInfoText:
+                "Liitä Liikenne- ja viestintäviraston päätös. Päätöksen päivämäärä sekä asianumero löytyvät Kuulutuksen tiedot -välilehdellä jos ne on lisätty Käsittelyn tila -sivulle.",
+              paatosSubtitle: "Päätös *",
+            }}
+          />
           <HyvaksymisPaatosVaihePainikkeet />
         </fieldset>
       </form>

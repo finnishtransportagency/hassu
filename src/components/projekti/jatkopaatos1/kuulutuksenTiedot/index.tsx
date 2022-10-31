@@ -8,7 +8,7 @@ import JatkoPaatos1KuulutusPainikkeet from "./JatkoPaatos1KuulutusPainikkeet";
 import KuulutuksenJaIlmoituksenEsikatselu from "./KuulutuksenJaIlmoituksenEsikatselu";
 import KuulutuksessaEsitettavatYhteystiedot from "./KuulutuksessaEsitettavatYhteystiedot";
 import KuulutusJaJulkaisuPaiva from "./KuulutusJaJulkaisuPaiva";
-import PaatoksenPaiva from "./PaatoksenPaiva";
+import PaatoksenPaiva from "../../hyvaksyminen/kuulutuksenTiedot/PaatoksenPaiva";
 import MuutoksenHaku from "./MuutoksenHaku";
 import IlmoituksenVastaanottajatKomponentti from "./IlmoituksenVastaanottajat";
 import Lukunakyma from "./Lukunakyma";
@@ -109,7 +109,7 @@ function JatkoKuulutuksetTiedotForm({ projekti, kirjaamoOsoitteet, setIsDirty }:
             <form>
               <fieldset disabled={!isAllowedOnRoute || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden}>
                 <KuulutusJaJulkaisuPaiva />
-                <PaatoksenPaiva projekti={projekti} />
+                <PaatoksenPaiva paatos={projekti.kasittelynTila?.ensimmainenJatkopaatos} projektiOid={projekti.oid} />
                 <Voimassaolovuosi />
                 <MuutoksenHaku />
                 <KuulutuksessaEsitettavatYhteystiedot />

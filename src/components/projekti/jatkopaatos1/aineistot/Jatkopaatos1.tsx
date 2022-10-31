@@ -32,6 +32,7 @@ export default function Jatkopaatos1() {
       </Button>
       <AineistojenValitseminenDialog
         open={aineistoDialogOpen}
+        infoText="Valitse yksi tai useampi päätöstiedosto."
         onClose={() => setAineistoDialogOpen(false)}
         onSubmit={(newAineistot) => {
           const value = aineistot || [];

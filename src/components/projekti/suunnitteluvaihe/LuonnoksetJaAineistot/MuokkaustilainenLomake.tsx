@@ -73,8 +73,8 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden, updateFo
         <h5 className="vayla-smallest-title">Suunnitelmaluonnokset ja esittelyaineistot</h5>
         <p>Aineistoille tulee valita kategoria / otsikko, jonka alla ne esitetään palvelun julkisella puolella.</p>
         <p>
-          Aineistojen järjestys kunkin otsikon alla määräytyy listan järjestyksen mukaan. Voit vaihtaa järjestystä
-          tarttumalla hiirellä raahaus-ikonista ja siirtämällä rivin paikkaa.
+          Aineistojen järjestys kunkin otsikon alla määräytyy listan järjestyksen mukaan. Voit vaihtaa järjestystä tarttumalla hiirellä
+          raahaus-ikonista ja siirtämällä rivin paikkaa.
         </p>
         <ButtonFlat
           type="button"
@@ -89,16 +89,8 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden, updateFo
           }}
           iconComponent={
             <span className="fa-layers">
-              <FontAwesomeIcon
-                icon="chevron-down"
-                transform={`down-6`}
-                flip={areAineistoKategoriesExpanded ? "vertical" : undefined}
-              />
-              <FontAwesomeIcon
-                icon="chevron-up"
-                transform={`up-6`}
-                flip={areAineistoKategoriesExpanded ? "vertical" : undefined}
-              />
+              <FontAwesomeIcon icon="chevron-down" transform={`down-6`} flip={areAineistoKategoriesExpanded ? "vertical" : undefined} />
+              <FontAwesomeIcon icon="chevron-up" transform={`up-6`} flip={areAineistoKategoriesExpanded ? "vertical" : undefined} />
             </span>
           }
         >
@@ -157,11 +149,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden, updateFo
             },
           ]}
         />
-        <Button
-          type="button"
-          id="select_suunnitelmaluonnokset_button"
-          onClick={() => setSuunnitelmaLuonnoksetDialogOpen(true)}
-        >
+        <Button type="button" id="select_suunnitelmaluonnokset_button" onClick={() => setSuunnitelmaLuonnoksetDialogOpen(true)}>
           Tuo Aineistoja
         </Button>
       </SectionContent>
@@ -215,8 +203,8 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden, updateFo
       <SectionContent className="mt-8">
         <h5 className="vayla-smallest-title">Muut esittelymateriaalit</h5>
         <p>
-          Muu esittelymateraali on järjestelmän ulkopuolelle julkaistua suunnitelmaan liittyvää materiaalia. Muun
-          esittelymateriaalin lisääminen on vapaaehtoista.{" "}
+          Muu esittelymateraali on järjestelmän ulkopuolelle julkaistua suunnitelmaan liittyvää materiaalia. Muun esittelymateriaalin
+          lisääminen on vapaaehtoista.{" "}
         </p>
         <TextInput
           style={{ width: "100%" }}
@@ -233,6 +221,8 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden, updateFo
       </SectionContent>
       <AineistojenValitseminenDialog
         open={esittelyAineistoDialogOpen}
+        infoText="Valitse tiedostot,
+        jotka haluat tuoda suunnitteluvaiheeseen."
         onClose={() => setEsittelyAineistoDialogOpen(false)}
         onSubmit={(aineistot) => {
           const value = esittelyaineistot || [];
@@ -247,6 +237,8 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden, updateFo
       />
       <AineistojenValitseminenDialog
         open={suunnitelmaLuonnoksetDialogOpen}
+        infoText="Valitse tiedostot,
+        jotka haluat tuoda suunnitteluvaiheeseen."
         onClose={() => setSuunnitelmaLuonnoksetDialogOpen(false)}
         onSubmit={(aineistot) => {
           const value = suunnitelmaluonnokset || [];
@@ -268,20 +260,12 @@ enum SuunnitteluVaiheAineistoTyyppi {
   SUUNNITELMALUONNOKSET = "SUUNNITELMALUONNOKSET",
 }
 
-type FormAineisto = FieldArrayWithId<
-  VuorovaikutusFormValues,
-  "suunnitteluVaihe.vuorovaikutus.esittelyaineistot",
-  "id"
-> &
+type FormAineisto = FieldArrayWithId<VuorovaikutusFormValues, "suunnitteluVaihe.vuorovaikutus.esittelyaineistot", "id"> &
   Pick<Aineisto, "tila" | "tuotu" | "tiedosto">;
 
 interface AineistoTableProps {
   aineistoTyyppi: SuunnitteluVaiheAineistoTyyppi;
-  esittelyAineistotFieldArray: UseFieldArrayReturn<
-    VuorovaikutusFormValues,
-    "suunnitteluVaihe.vuorovaikutus.esittelyaineistot",
-    "id"
-  >;
+  esittelyAineistotFieldArray: UseFieldArrayReturn<VuorovaikutusFormValues, "suunnitteluVaihe.vuorovaikutus.esittelyaineistot", "id">;
   suunnitelmaLuonnoksetFieldArray: UseFieldArrayReturn<
     VuorovaikutusFormValues,
     "suunnitteluVaihe.vuorovaikutus.suunnitelmaluonnokset",
@@ -303,14 +287,10 @@ const AineistoTable = ({
   formState,
 }: AineistoTableProps) => {
   const { append: appendToOtherArray } =
-    aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT
-      ? suunnitelmaLuonnoksetFieldArray
-      : esittelyAineistotFieldArray;
+    aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT ? suunnitelmaLuonnoksetFieldArray : esittelyAineistotFieldArray;
 
   const { fields, remove } =
-    aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT
-      ? esittelyAineistotFieldArray
-      : suunnitelmaLuonnoksetFieldArray;
+    aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT ? esittelyAineistotFieldArray : suunnitelmaLuonnoksetFieldArray;
 
   const fieldArrayName =
     aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT
@@ -325,12 +305,8 @@ const AineistoTable = ({
   const enrichedFields = useMemo(
     () =>
       fields.map((field) => {
-        const aineistoData = [
-          ...(vuorovaikutus.esittelyaineistot || []),
-          ...(vuorovaikutus.suunnitelmaluonnokset || []),
-        ];
-        const { tila, tuotu, tiedosto } =
-          aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
+        const aineistoData = [...(vuorovaikutus.esittelyaineistot || []), ...(vuorovaikutus.suunnitelmaluonnokset || [])];
+        const { tila, tuotu, tiedosto } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
 
         return { tila, tuotu, tiedosto, ...field };
       }),
@@ -347,9 +323,7 @@ const AineistoTable = ({
         accessor: (aineisto) => {
           const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
           const errorpath =
-            aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT
-              ? "esittelyaineistot"
-              : "suunnitelmaluonnokset";
+            aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT ? "esittelyaineistot" : "suunnitelmaluonnokset";
           const errorMessage = (formState.errors as any).suunnitteluVaihe?.vuorovaikutus?.[errorpath]?.[index]?.message;
           return (
             <>
@@ -407,16 +381,7 @@ const AineistoTable = ({
       { Header: "id", accessor: "id" },
       { Header: "dokumenttiOid", accessor: "dokumenttiOid" },
     ],
-    [
-      aineistoTyyppi,
-      fieldArrayName,
-      enrichedFields,
-      register,
-      remove,
-      appendToOtherArray,
-      otherAineistoWatch,
-      formState,
-    ]
+    [aineistoTyyppi, fieldArrayName, enrichedFields, register, remove, appendToOtherArray, otherAineistoWatch, formState]
   );
   const tableProps = useHassuTable<FormAineisto>({
     tableOptions: { columns, data: enrichedFields, initialState: { hiddenColumns: ["dokumenttiOid", "id"] } },

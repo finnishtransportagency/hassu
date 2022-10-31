@@ -9,7 +9,6 @@ import Painikkeet from "./Painikkeet";
 import KuulutuksenJaIlmoituksenEsikatselu from "./KuulutuksenJaIlmoituksenEsikatselu";
 import KuulutuksessaEsitettavatYhteystiedot from "./KuulutuksessaEsitettavatYhteystiedot";
 import KuulutusJaJulkaisuPaiva from "./KuulutusJaJulkaisuPaiva";
-import PaatoksenPaiva from "./PaatoksenPaiva";
 import MuutoksenHaku from "./MuutoksenHaku";
 import IlmoituksenVastaanottajatKomponentti from "./IlmoituksenVastaanottajat";
 import Lukunakyma from "./Lukunakyma";
@@ -19,6 +18,7 @@ import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
+import PaatoksenPaiva from "@components/projekti/hyvaksyminen/kuulutuksenTiedot/PaatoksenPaiva";
 
 export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid"> & {
   hyvaksymisPaatosVaihe: Omit<HyvaksymisPaatosVaiheInput, "hallintoOikeus"> & {
@@ -107,7 +107,7 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet, setIsDirty }: Kuul
             <form>
               <fieldset disabled={!isAllowedOnRoute || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden}>
                 <KuulutusJaJulkaisuPaiva />
-                <PaatoksenPaiva projekti={projekti} />
+                <PaatoksenPaiva paatos={projekti.kasittelynTila?.hyvaksymispaatos} projektiOid={projekti.oid} />
                 <MuutoksenHaku />
                 <KuulutuksessaEsitettavatYhteystiedot />
                 <IlmoituksenVastaanottajatKomponentti hyvaksymisPaatosVaihe={projekti?.hyvaksymisPaatosVaihe} />

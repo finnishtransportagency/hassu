@@ -38,9 +38,9 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
     <Section>
       <h4 className="vayla-small-title">Lausuntopyyntöön liitettävä lisäaineisto</h4>
       <p>
-        Lausuntopyyntöön liitettävää lisäaineistoa ei julkaista palvelun julkisella puolelle. Linkki lausuntopyyntöön
-        liitettävään aineistoon muodostuu, kun aineisto on tuotu Velhosta. Linkin takana oleva sisältö muodostuu
-        nähtäville asetetuista aineistoista sekä lausuntopyynnön lisäaineistosta.
+        Lausuntopyyntöön liitettävää lisäaineistoa ei julkaista palvelun julkisella puolelle. Linkki lausuntopyyntöön liitettävään
+        aineistoon muodostuu, kun aineisto on tuotu Velhosta. Linkin takana oleva sisältö muodostuu nähtäville asetetuista aineistoista sekä
+        lausuntopyynnön lisäaineistosta.
       </p>
       {!!projekti?.oid && !!lisaAineisto?.length && <AineistoTable />}
       <Button type="button" id="open_lisaaineisto_button" onClick={() => setAineistoDialogOpen(true)}>
@@ -49,6 +49,8 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
       <AineistojenValitseminenDialog
         open={aineistoDialogOpen}
         onClose={() => setAineistoDialogOpen(false)}
+        infoText="Valitse tiedostot, jotka haluat tuoda
+        lisäaineistoksi."
         onSubmit={(newAineistot) => {
           const value = lisaAineisto || [];
           newAineistot.forEach((aineisto) => {
@@ -60,9 +62,7 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
         }}
       />
       <h5 className="vayla-smallest-title">Lausuntopyyntöön liitettävä linkki</h5>
-      <p>
-        Linkki tallentuu kuulutuksen tietoihin niin, että se on poimittavissa sieltä kuulutuksen täyttämisen jälkeen.
-      </p>
+      <p>Linkki tallentuu kuulutuksen tietoihin niin, että se on poimittavissa sieltä kuulutuksen täyttämisen jälkeen.</p>
       <Stack direction="row" alignItems="end">
         <TextInput
           label="Linkki lausuntopyyntöön liitettävään aineistoon"
@@ -90,11 +90,7 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
   );
 }
 
-type FormAineisto = FieldArrayWithId<
-  VuorovaikutusFormValues,
-  "suunnitteluVaihe.vuorovaikutus.esittelyaineistot",
-  "id"
-> &
+type FormAineisto = FieldArrayWithId<VuorovaikutusFormValues, "suunnitteluVaihe.vuorovaikutus.esittelyaineistot", "id"> &
   Pick<Aineisto, "tila" | "tuotu" | "tiedosto">;
 
 const AineistoTable = () => {
@@ -106,8 +102,7 @@ const AineistoTable = () => {
     () =>
       fields.map((field) => {
         const aineistoData = projekti?.nahtavillaoloVaihe?.lisaAineisto || [];
-        const { tila, tuotu, tiedosto } =
-          aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
+        const { tila, tuotu, tiedosto } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
 
         return { tila, tuotu, tiedosto, ...field };
       }),
