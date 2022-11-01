@@ -47,8 +47,8 @@ export const routes: Route[] = [
     pathname: `/yllapito/projekti/[oid]/hyvaksymispaatos`,
   },
   {
-    title: "1. jatkopäätös",
-    pathname: `/yllapito/projekti/[oid]/jatkopaatos1`,
+    title: "1. jatkaminen",
+    pathname: `/yllapito/projekti/[oid]/jatkaminen1`,
     requiredStatus: Status.JATKOPAATOS_1,
     visible: isJatkopaatos1Visible,
   },

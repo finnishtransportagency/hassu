@@ -20,12 +20,13 @@ interface FormData {
 }
 
 type Props = {
+  infoText?: string | undefined;
   onSubmit: (aineistot: AineistoInput[]) => void;
 } & Required<Pick<DialogProps, "onClose" | "open">>;
 
 const useFormOptions = { defaultValues: { aineistoKategoriat: [] } };
 
-export default function AineistojenValitseminenDialog({ onSubmit, ...muiDialogProps }: Props) {
+export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...muiDialogProps }: Props) {
   const { onClose, open } = muiDialogProps;
   const { data: projekti } = useProjekti();
   const [isLoading, setIsLoading] = useState(false);
@@ -95,10 +96,7 @@ export default function AineistojenValitseminenDialog({ onSubmit, ...muiDialogPr
       >
         <form style={{ display: "contents" }}>
           <DialogContent sx={{ display: "flex", flexDirection: "column", padding: 0, marginBottom: 7 }}>
-            <p>
-              Näet alla Projektivelhoon tehdyt toimeksiannot ja toimeksiantoihin ladatut tiedostot. Valitse tiedostot,
-              jotka haluat tuoda suunnitteluvaiheeseen.{" "}
-            </p>
+            <p>Näet alla Projektivelhoon tehdyt toimeksiannot ja toimeksiantoihin ladatut tiedostot. {infoText}</p>
             <Stack
               direction={{ xs: "column", lg: "row" }}
               style={{ flex: "1 1 auto" }}
@@ -137,23 +135,13 @@ export default function AineistojenValitseminenDialog({ onSubmit, ...muiDialogPr
                 <h5 className="vayla-smallest-title">{`Valitut tiedostot (${valitutAineistot.length})`}</h5>
                 {projekti?.oid &&
                   valitutAineistot.map((aineisto) => (
-                    <VelhoAineistoNimiExtLink
-                      key={aineisto.oid}
-                      aineistoOid={aineisto.oid}
-                      aineistoNimi={aineisto.tiedosto}
-                      addTopMargin
-                    />
+                    <VelhoAineistoNimiExtLink key={aineisto.oid} aineistoOid={aineisto.oid} aineistoNimi={aineisto.tiedosto} addTopMargin />
                   ))}
               </StyledDiv>
             </Stack>
           </DialogContent>
           <DialogActions>
-            <Button
-              primary
-              type="button"
-              id="select_valitut_aineistot_button"
-              onClick={handleSubmit(moveAineistoToMainForm)}
-            >
+            <Button primary type="button" id="select_valitut_aineistot_button" onClick={handleSubmit(moveAineistoToMainForm)}>
               Tuo valitut aineistot
             </Button>
             <Button type="button" onClick={() => onClose?.({}, "escapeKeyDown")}>
@@ -179,9 +167,7 @@ const AineistoTable = ({ data, setSelectedAineisto, kategoria }: AineistoTablePr
       {
         Header: "Tiedosto",
         minWidth: 250,
-        accessor: (aineisto) => (
-          <VelhoAineistoNimiExtLink aineistoOid={aineisto.oid} aineistoNimi={aineisto.tiedosto} />
-        ),
+        accessor: (aineisto) => <VelhoAineistoNimiExtLink aineistoOid={aineisto.oid} aineistoNimi={aineisto.tiedosto} />,
       },
       {
         Header: "Muokattu Projektivelhossa",

@@ -10,6 +10,7 @@ module.exports = {
     "/suunnitelma/[oid]/lausuntopyyntoaineistot": ["aineisto"],
     "/yllapito/projekti/[oid]/nahtavillaolo": ["aineisto"],
     "/yllapito/projekti/[oid]/hyvaksymispaatos": ["aineisto"],
+    "/yllapito/projekti/[oid]/jatkaminen1": ["aineisto"],
     "/suunnitelma/[oid]/hyvaksymismenettelyssa": ["hyvaksymismenettelyssa"],
     "/suunnitelma/[oid]/suunnittelu": ["suunnittelu"],
   },

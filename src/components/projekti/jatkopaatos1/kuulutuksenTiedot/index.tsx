@@ -4,11 +4,11 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import React, { ReactElement, useEffect, useMemo } from "react";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import { hyvaksymispaatosKuulutusSchema } from "src/schemas/hyvaksymispaatosKuulutus";
-import Painikkeet from "./Painikkeet";
+import JatkoPaatos1KuulutusPainikkeet from "./JatkoPaatos1KuulutusPainikkeet";
 import KuulutuksenJaIlmoituksenEsikatselu from "./KuulutuksenJaIlmoituksenEsikatselu";
 import KuulutuksessaEsitettavatYhteystiedot from "./KuulutuksessaEsitettavatYhteystiedot";
 import KuulutusJaJulkaisuPaiva from "./KuulutusJaJulkaisuPaiva";
+import PaatoksenPaiva from "../../hyvaksyminen/kuulutuksenTiedot/PaatoksenPaiva";
 import MuutoksenHaku from "./MuutoksenHaku";
 import IlmoituksenVastaanottajatKomponentti from "./IlmoituksenVastaanottajat";
 import Lukunakyma from "./Lukunakyma";
@@ -18,10 +18,11 @@ import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
-import PaatoksenPaiva from "@components/projekti/hyvaksyminen/kuulutuksenTiedot/PaatoksenPaiva";
+import { jatkopaatos1KuulutusSchema } from "src/schemas/jatkopaatos1Kuulutus";
+import Voimassaolovuosi from "./Voimassaolovuosi";
 
 export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid"> & {
-  hyvaksymisPaatosVaihe: Omit<HyvaksymisPaatosVaiheInput, "hallintoOikeus"> & {
+  jatkoPaatos1Vaihe: Omit<HyvaksymisPaatosVaiheInput, "hallintoOikeus"> & {
     hallintoOikeus: HyvaksymisPaatosVaiheInput["hallintoOikeus"] | "";
   };
 };
@@ -33,7 +34,7 @@ interface Props {
 export default function KuulutuksenTiedot({ setIsDirty }: Props): ReactElement {
   const { data: projekti } = useProjekti({ revalidateOnMount: true });
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
-  return <>{projekti && kirjaamoOsoitteet && <KuulutuksenTiedotForm {...{ kirjaamoOsoitteet, projekti, setIsDirty }} />}</>;
+  return <>{projekti && kirjaamoOsoitteet && <JatkoKuulutuksetTiedotForm {...{ kirjaamoOsoitteet, projekti, setIsDirty }} />}</>;
 }
 
 interface KuulutuksenTiedotFormProps {
@@ -41,37 +42,38 @@ interface KuulutuksenTiedotFormProps {
   kirjaamoOsoitteet: KirjaamoOsoite[];
 }
 
-function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet, setIsDirty }: KuulutuksenTiedotFormProps & Props) {
+function JatkoKuulutuksetTiedotForm({ projekti, kirjaamoOsoitteet, setIsDirty }: KuulutuksenTiedotFormProps & Props) {
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
 
   const defaultValues: KuulutuksenTiedotFormValues = useMemo(() => {
     const yhteysTiedot: YhteystietoInput[] =
-      projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt)) || [];
+      projekti?.jatkoPaatos1Vaihe?.kuulutusYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt)) || [];
 
-    const yhteysHenkilot: string[] = projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysHenkilot || [];
+    const yhteysHenkilot: string[] = projekti?.jatkoPaatos1Vaihe?.kuulutusYhteystiedot?.yhteysHenkilot || [];
 
     const formValues: KuulutuksenTiedotFormValues = {
       oid: projekti.oid,
-      hyvaksymisPaatosVaihe: {
-        kuulutusPaiva: projekti?.hyvaksymisPaatosVaihe?.kuulutusPaiva || null,
-        kuulutusVaihePaattyyPaiva: projekti?.hyvaksymisPaatosVaihe?.kuulutusVaihePaattyyPaiva || null,
-        hallintoOikeus: projekti?.hyvaksymisPaatosVaihe?.hallintoOikeus || "",
+      jatkoPaatos1Vaihe: {
+        kuulutusPaiva: projekti?.jatkoPaatos1Vaihe?.kuulutusPaiva || null,
+        kuulutusVaihePaattyyPaiva: projekti?.jatkoPaatos1Vaihe?.kuulutusVaihePaattyyPaiva || null,
+        hallintoOikeus: projekti?.jatkoPaatos1Vaihe?.hallintoOikeus || "",
         kuulutusYhteystiedot: {
           yhteysTiedot,
           yhteysHenkilot,
         },
         ilmoituksenVastaanottajat: defaultVastaanottajat(
           projekti,
-          projekti.hyvaksymisPaatosVaihe?.ilmoituksenVastaanottajat,
+          projekti.jatkoPaatos1Vaihe?.ilmoituksenVastaanottajat,
           kirjaamoOsoitteet
         ),
+        viimeinenVoimassaolovuosi: projekti?.jatkoPaatos1Vaihe?.viimeinenVoimassaolovuosi || "",
       },
     };
     return formValues;
   }, [projekti, kirjaamoOsoitteet]);
 
   const formOptions: UseFormProps<KuulutuksenTiedotFormValues> = {
-    resolver: yupResolver(hyvaksymispaatosKuulutusSchema, { abortEarly: false, recursive: true }),
+    resolver: yupResolver(jatkopaatos1KuulutusSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues,
@@ -91,13 +93,13 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet, setIsDirty }: Kuul
 
   useLeaveConfirm(isDirty);
 
-  const voiMuokata = !projekti?.hyvaksymisPaatosVaiheJulkaisut || projekti.hyvaksymisPaatosVaiheJulkaisut.length < 1;
+  const voiMuokata = !projekti?.jatkoPaatos1VaiheJulkaisut || projekti.jatkoPaatos1VaiheJulkaisut.length < 1;
 
   return (
     <>
-      {projekti.hyvaksymisPaatosVaihe?.palautusSyy && (
+      {projekti.jatkoPaatos1Vaihe?.palautusSyy && (
         <Notification type={NotificationType.WARN}>
-          {"Hyväksymisvaihejulkaisu on palautettu korjattavaksi. Palautuksen syy: " + projekti.hyvaksymisPaatosVaihe.palautusSyy}
+          {"Hyväksymisvaihejulkaisu on palautettu korjattavaksi. Palautuksen syy: " + projekti.jatkoPaatos1Vaihe.palautusSyy}
         </Notification>
       )}
 
@@ -107,29 +109,30 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet, setIsDirty }: Kuul
             <form>
               <fieldset disabled={!isAllowedOnRoute || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden}>
                 <KuulutusJaJulkaisuPaiva />
-                <PaatoksenPaiva paatos={projekti.kasittelynTila?.hyvaksymispaatos} projektiOid={projekti.oid} />
+                <PaatoksenPaiva paatos={projekti.kasittelynTila?.ensimmainenJatkopaatos} projektiOid={projekti.oid} />
+                <Voimassaolovuosi />
                 <MuutoksenHaku />
                 <KuulutuksessaEsitettavatYhteystiedot />
-                <IlmoituksenVastaanottajatKomponentti hyvaksymisPaatosVaihe={projekti?.hyvaksymisPaatosVaihe} />
+                <IlmoituksenVastaanottajatKomponentti projekti={projekti} />
 
                 {pdfFormRef.current?.esikatselePdf && (
                   <KuulutuksenJaIlmoituksenEsikatselu esikatselePdf={pdfFormRef.current?.esikatselePdf} />
                 )}
-                <Painikkeet projekti={projekti} />
+                <JatkoPaatos1KuulutusPainikkeet projekti={projekti} />
               </fieldset>
             </form>
           </FormProvider>
         </>
       )}
-      {!voiMuokata && projekti && projekti.hyvaksymisPaatosVaiheJulkaisut?.[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1] && (
+      {!voiMuokata && projekti && projekti.jatkoPaatos1VaiheJulkaisut?.[projekti.jatkoPaatos1VaiheJulkaisut.length - 1] && (
         <>
           <FormProvider {...useFormReturn}>
             <form>
               <Lukunakyma
                 projekti={projekti}
-                hyvaksymisPaatosVaiheJulkaisu={projekti.hyvaksymisPaatosVaiheJulkaisut[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1]}
+                jatkoPaatos1VaiheJulkaisu={projekti.jatkoPaatos1VaiheJulkaisut[projekti.jatkoPaatos1VaiheJulkaisut.length - 1]}
               />
-              <Painikkeet projekti={projekti} />
+              <JatkoPaatos1KuulutusPainikkeet projekti={projekti} />
             </form>
           </FormProvider>
         </>

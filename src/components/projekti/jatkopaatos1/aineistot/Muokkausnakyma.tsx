@@ -4,7 +4,7 @@ import React, { ReactElement, useEffect, useMemo } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot";
-import HyvaksymisPaatosVaihePainikkeet from "./HyvaksymisPaatosVaihePainikkeet";
+import Jatkopaatos1VaihePainikkeet from "./Jatkopaatos1VaihePainikkeet";
 import SuunnitelmatJaAineistot from "../../common/SuunnitelmatJaAineistot";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { aineistoKategoriat } from "common/aineistoKategoriat";
@@ -20,7 +20,7 @@ type FormData = {
   hyvaksymisPaatos: AineistoInput[];
 };
 
-export type HyvaksymisPaatosVaiheAineistotFormValues = Pick<TallennaProjektiInput, "oid"> & FormData;
+export type JatkoPaatos1VaiheAineistotFormValues = Pick<TallennaProjektiInput, "oid"> & FormData;
 
 const getDefaultValueForAineistoNahtavilla = (aineistot: Aineisto[] | undefined | null) => {
   return aineistoKategoriat.listKategoriaIds().reduce<AineistoNahtavilla>((aineistoNahtavilla, currentKategoriaId) => {
@@ -52,9 +52,9 @@ interface MuokkausnakymaFormProps {
 }
 
 function MuokkausnakymaForm({ projekti, setIsDirty }: MuokkausnakymaFormProps & Props) {
-  const defaultValues: HyvaksymisPaatosVaiheAineistotFormValues = useMemo(() => {
+  const defaultValues: JatkoPaatos1VaiheAineistotFormValues = useMemo(() => {
     const hyvaksymisPaatos: AineistoInput[] =
-      projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos?.map(({ dokumenttiOid, nimi, jarjestys }) => ({
+      projekti.jatkoPaatos1Vaihe?.hyvaksymisPaatos?.map(({ dokumenttiOid, nimi, jarjestys }) => ({
         dokumenttiOid,
         jarjestys,
         nimi,
@@ -62,19 +62,19 @@ function MuokkausnakymaForm({ projekti, setIsDirty }: MuokkausnakymaFormProps & 
 
     return {
       oid: projekti.oid,
-      aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(projekti.hyvaksymisPaatosVaihe?.aineistoNahtavilla),
+      aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(projekti.jatkoPaatos1Vaihe?.aineistoNahtavilla),
       hyvaksymisPaatos,
     };
   }, [projekti]);
 
-  const formOptions: UseFormProps<HyvaksymisPaatosVaiheAineistotFormValues> = {
+  const formOptions: UseFormProps<JatkoPaatos1VaiheAineistotFormValues> = {
     resolver: yupResolver(nahtavillaoloAineistotSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues,
   };
 
-  const useFormReturn = useForm<HyvaksymisPaatosVaiheAineistotFormValues>(formOptions);
+  const useFormReturn = useForm<JatkoPaatos1VaiheAineistotFormValues>(formOptions);
   const {
     formState: { isDirty },
   } = useFormReturn;
@@ -92,18 +92,18 @@ function MuokkausnakymaForm({ projekti, setIsDirty }: MuokkausnakymaFormProps & 
       <form>
         <fieldset disabled={!isAllowedOnRoute || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden}>
           <SuunnitelmatJaAineistot
-            sectionTitle="Päätös ja päätöksen liitteenä oleva aineisto"
-            sectionInfoText="Liitä Liikenne- ja viestintäviraston päätös. Liitettävä päätös haetaan Projektivelhosta. Päätös ja sen liitteenä oleva aineisto julkaistaan palvelun julkisella puolella kuulutuksen julkaisupäivänä."
+            sectionTitle="Päätös ja päätöksen liitteenä oleva aineistot"
+            sectionInfoText="Liitä kuulutukselle Liikenne- ja viestintäviraston päätös sekä jatkopäätös. Liitettävät päätökset sekä päätösten liitteenä olevat aineistot haetaan Projektivelhosta. Päätökset ja sen liitteenä oleva aineisto julkaistaan palvelun julkisella puolella kuulutuksen julkaisupäivänä."
             dialogInfoText="Valitse tiedostot,
             jotka haluat tuoda päätöksen liitteeksi."
             sectionSubtitle="Päätöksen liitteenä oleva aineisto"
             paatos={{
               paatosInfoText:
-                "Liitä Liikenne- ja viestintäviraston päätös. Päätöksen päivämäärä sekä asianumero löytyvät Kuulutuksen tiedot -välilehdellä jos ne on lisätty Käsittelyn tila -sivulle.",
-              paatosSubtitle: "Päätös *",
+                "Liitä Liikenne- ja viestintäviraston päätökset suunnitelman hyväksymisestä sekä päätös suunnitelman voimassaoloajan pidentämisestä. Jatkopäätöksen päivämäärä sekä asiatunnus löytyvät automaattisesti Kuulutuksen tiedot -välilehdeltä.",
+              paatosSubtitle: "Päätös ja jatkopäätös *",
             }}
           />
-          <HyvaksymisPaatosVaihePainikkeet />
+          <Jatkopaatos1VaihePainikkeet />
         </fieldset>
       </form>
     </FormProvider>

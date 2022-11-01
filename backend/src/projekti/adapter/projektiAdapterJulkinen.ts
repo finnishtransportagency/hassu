@@ -4,6 +4,7 @@ import {
   AloitusKuulutusPDF,
   DBProjekti,
   DBVaylaUser,
+  Hyvaksymispaatos,
   HyvaksymisPaatosVaiheJulkaisu,
   LocalizedMap,
   NahtavillaoloVaiheJulkaisu,
@@ -67,10 +68,22 @@ class ProjektiAdapterJulkinen {
     }
 
     const nahtavillaoloVaihe = ProjektiAdapterJulkinen.adaptNahtavillaoloVaiheJulkaisu(dbProjekti);
-    const hyvaksymisPaatosVaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(dbProjekti, dbProjekti.hyvaksymisPaatosVaiheJulkaisut);
-    const jatkoPaatos1Vaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(dbProjekti, dbProjekti.jatkoPaatos1VaiheJulkaisut);
-    const jatkoPaatos2Vaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(dbProjekti, dbProjekti.jatkoPaatos2VaiheJulkaisut);
     const suunnitteluSopimus = adaptRootSuunnitteluSopimusJulkaisu(dbProjekti);
+    const hyvaksymisPaatosVaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
+      dbProjekti,
+      dbProjekti.hyvaksymisPaatosVaiheJulkaisut,
+      dbProjekti.kasittelynTila?.hyvaksymispaatos
+    );
+    const jatkoPaatos1Vaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
+      dbProjekti,
+      dbProjekti.jatkoPaatos1VaiheJulkaisut,
+      dbProjekti.kasittelynTila?.ensimmainenJatkopaatos
+    );
+    const jatkoPaatos2Vaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
+      dbProjekti,
+      dbProjekti.jatkoPaatos2VaiheJulkaisut,
+      dbProjekti.kasittelynTila?.toinenJatkopaatos
+    );
 
     const projekti: API.ProjektiJulkinen = {
       __typename: "ProjektiJulkinen",
@@ -229,7 +242,8 @@ class ProjektiAdapterJulkinen {
 
   private static adaptHyvaksymisPaatosVaihe(
     dbProjekti: DBProjekti,
-    paatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[] | undefined | null
+    paatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[] | undefined | null,
+    hyvaksymispaatos: Hyvaksymispaatos | undefined | null
   ): API.HyvaksymisPaatosVaiheJulkaisuJulkinen | undefined {
     const julkaisu = findApprovedHyvaksymisPaatosVaihe(paatosVaiheJulkaisut);
     if (julkaisu) {
@@ -244,7 +258,7 @@ class ProjektiAdapterJulkinen {
         hallintoOikeus,
       } = julkaisu;
 
-      const hyvaksymispaatos = dbProjekti.kasittelynTila?.hyvaksymispaatos;
+      // const hyvaksymispaatos = dbProjekti.kasittelynTila?.hyvaksymispaatos; //TODO jatkopaatosten kohdalla eri tiedot, parametrina
 
       if (!hyvaksymispaatos) {
         throw new Error("adaptHyvaksymisPaatosVaihe: dbProjekti.kasittelynTila?.hyvaksymispaatos määrittelemättä");
