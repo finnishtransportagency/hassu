@@ -355,8 +355,8 @@ Object {
       },
     ],
     "hallintoOikeus": "HAMEENLINNA",
-    "hyvaksymisPaatoksenAsianumero": "asianro123",
-    "hyvaksymisPaatoksenPvm": "2022-06-09",
+    "hyvaksymisPaatoksenAsianumero": "jatkopaatos1_asianumero",
+    "hyvaksymisPaatoksenPvm": "2020-01-01T00:00:00+02:00",
     "hyvaksymisPaatos": Array [
       Object {
         "__typename": "Aineisto",
@@ -783,8 +783,8 @@ Object {
       },
     ],
     "hallintoOikeus": "HAMEENLINNA",
-    "hyvaksymisPaatoksenAsianumero": "asianro123",
-    "hyvaksymisPaatoksenPvm": "2022-06-09",
+    "hyvaksymisPaatoksenAsianumero": "jatkopaatos2_asianumero",
+    "hyvaksymisPaatoksenPvm": "2020-01-01T00:00:00+02:00",
     "hyvaksymisPaatos": Array [
       Object {
         "__typename": "Aineisto",
