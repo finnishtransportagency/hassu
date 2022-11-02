@@ -8,7 +8,7 @@ import HassuStack from "@components/layout/HassuStack";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import { AloitusKuulutusInput, KayttajaTyyppi, Projekti, YhteystietoInput } from "@services/api";
-import React, { ReactElement, Fragment } from "react";
+import React, { Fragment, ReactElement } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
 
@@ -57,8 +57,9 @@ function KuulutuksenYhteystiedot({ projekti, disableFields }: Props): ReactEleme
           name={`aloitusKuulutus.kuulutusYhteystiedot.yhteysHenkilot`}
           render={({ field: { onChange, value, ...field } }) => (
             <FormGroup label="Projektiin tallennetut henkilöt" inlineFlex>
-              {projekti.kayttoOikeudet?.map(({ nimi, tyyppi, kayttajatunnus }, index) => {
+              {projekti.kayttoOikeudet?.map(({ sukunimi, etunimi, tyyppi, kayttajatunnus }, index) => {
                 const tunnuslista: string[] = value || [];
+                const nimi = sukunimi + " " + etunimi;
                 return (
                   <Fragment key={index}>
                     {tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO ? (

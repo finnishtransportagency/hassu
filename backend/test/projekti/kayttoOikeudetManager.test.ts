@@ -179,7 +179,8 @@ describe("KayttoOikeudetManager", () => {
       muokattavissa: false,
       organisaatio: "Väylävirasto",
       email: "a3@vayla.fi",
-      nimi: "SukunimiA3, EtunimiA3",
+      etunimi: "EtunimiA3",
+      sukunimi: "SukunimiA3",
     });
   });
 
@@ -200,7 +201,8 @@ describe("KayttoOikeudetManager", () => {
       muokattavissa: false,
       organisaatio: "Väylävirasto",
       email: "a3@vayla.fi",
-      nimi: "SukunimiA3, EtunimiA3",
+      etunimi: "EtunimiA3",
+      sukunimi: "SukunimiA3",
     });
   });
 });

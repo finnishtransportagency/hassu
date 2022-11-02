@@ -75,8 +75,9 @@ export default function EsitettavatYhteystiedot({ vuorovaikutusnro }: Props): Re
             name={`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysHenkilot`}
             render={({ field: { onChange, value, ...field } }) => (
               <FormGroup label="Projektiin tallennetut henkilöt" inlineFlex>
-                {projekti.kayttoOikeudet?.map(({ nimi, tyyppi, kayttajatunnus }, index) => {
+                {projekti.kayttoOikeudet?.map(({ etunimi, sukunimi, tyyppi, kayttajatunnus }, index) => {
                   const tunnuslista = value || [];
+                  const nimi = sukunimi + " " + etunimi;
                   return (
                     <Fragment key={index}>
                       {tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO ? (

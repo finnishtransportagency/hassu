@@ -6,14 +6,13 @@ import pickBy from "lodash/pickBy";
 import { log } from "../logger";
 
 export function mergeKayttaja(user: Partial<DBVaylaUser>, account: Kayttaja): DBVaylaUser | undefined {
-  const { organisaatio, email } = account;
-  const nimi = account.sukuNimi + ", " + account.etuNimi;
+  const { organisaatio, email, etunimi, sukunimi } = account;
   const kayttajatunnus = account.uid;
   if (!organisaatio || !email || !kayttajatunnus) {
     log.warn("Käyttäjältä puuttuu organisaatio, email tai kayttajatunnus", { kayttaja: account });
     return undefined;
   }
-  return merge(user, { organisaatio, email, nimi, kayttajatunnus });
+  return merge(user, { organisaatio, email, etunimi, sukunimi, kayttajatunnus });
 }
 
 export function adaptKayttaja(account: Kayttaja): DBVaylaUser {
@@ -26,10 +25,10 @@ export function adaptPerson(uid: string, person: Person): Kayttaja {
   return removeUndefinedFields({
     __typename: "Kayttaja",
     email: person.email[0],
-    etuNimi: person.etuNimi,
+    etunimi: person.etuNimi,
     organisaatio: person.organisaatio,
     puhelinnumero: person.puhelinnumero,
-    sukuNimi: person.sukuNimi,
+    sukunimi: person.sukuNimi,
     uid,
   }) as Kayttaja;
 }

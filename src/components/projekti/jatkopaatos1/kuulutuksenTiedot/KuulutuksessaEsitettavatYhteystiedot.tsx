@@ -1,6 +1,6 @@
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
-import { HyvaksymisPaatosVaiheTila, Projekti, ProjektiKayttaja, YhteystietoInput, KayttajaTyyppi } from "@services/api";
+import { HyvaksymisPaatosVaiheTila, KayttajaTyyppi, Projekti, ProjektiKayttaja, YhteystietoInput } from "@services/api";
 import Section from "@components/layout/Section";
 import { Fragment, ReactElement } from "react";
 import Button from "@components/button/Button";
@@ -59,7 +59,7 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
           }
           return yhteysHenkiloTietoineen as ProjektiKayttaja;
         })
-        .filter((pk) => pk.nimi)
+        .filter((pk) => pk.etunimi && pk.sukunimi)
     : ([] as ProjektiKayttaja[]);
 
   if (eiVoiMuokata) {
@@ -75,8 +75,8 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
           ))}
           {kuulutusYhteysHenkilot.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
-              {yhteystieto.nimi}, puh. {yhteystieto.puhelinnumero}, {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} (
-              {yhteystieto.organisaatio})
+              {yhteystieto.sukunimi} {yhteystieto.etunimi}, puh. {yhteystieto.puhelinnumero},{" "}
+              {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} ({yhteystieto.organisaatio})
             </p>
           ))}
         </SectionContent>
@@ -99,8 +99,9 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
             name={`jatkoPaatos1Vaihe.kuulutusYhteystiedot.yhteysHenkilot`}
             render={({ field: { onChange, value, ...field } }) => (
               <FormGroup label="Projektiin tallennetut henkilöt" inlineFlex>
-                {projekti.kayttoOikeudet?.map(({ nimi, tyyppi, kayttajatunnus }, index) => {
+                {projekti.kayttoOikeudet?.map(({ etunimi, sukunimi, tyyppi, kayttajatunnus }, index) => {
                   const tunnuslista: string[] = value || [];
+                  const nimi = sukunimi + " " + etunimi;
                   return (
                     <Fragment key={index}>
                       {tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO ? (

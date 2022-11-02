@@ -351,7 +351,7 @@ export class Kutsu20 extends CommonPdf {
               const user = this.kayttoOikeudet.filter((kayttaja) => kayttaja.kayttajatunnus == kayttajatunnus).pop();
               if (user) {
                 const role = user.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO ? translate("rooli.PROJEKTIPAALLIKKO", this.kieli) : undefined;
-                this.doc.text(safeConcatStrings(", ", [user.nimi, role, user.puhelinnumero]));
+                this.doc.text(safeConcatStrings(", ", [user.sukunimi, user.etunimi, role, user.puhelinnumero]));
               }
             });
           }

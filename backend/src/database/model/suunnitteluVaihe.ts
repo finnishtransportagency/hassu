@@ -51,11 +51,6 @@ export type VuorovaikutusTilaisuus = {
   esitettavatYhteystiedot?: StandardiYhteystiedot;
 };
 
-export type NimiJaPuhelinnumero = {
-  nimi: string;
-  puhelinnumero: string;
-};
-
 export type Linkki = {
   nimi: string;
   url: string;

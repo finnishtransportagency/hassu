@@ -45,7 +45,8 @@ export class Kayttajas {
         }
         if (kayttaja.uid) {
           map[kayttaja.uid] = {
-            ...kayttaja,
+            etuNimi: kayttaja.etunimi,
+            sukuNimi: kayttaja.sukunimi,
             organisaatio: kayttaja.organisaatio || undefined,
             puhelinnumero: kayttaja.puhelinnumero || undefined,
             email: [kayttaja.email],

@@ -21,7 +21,7 @@ export default function StandardiYhteystiedotListana({ standardiYhteystiedot, pr
           }
           return yhteysHenkiloTietoineen as ProjektiKayttaja;
         })
-        .filter((pk) => pk.nimi)
+        .filter((pk) => pk.etunimi && pk.sukunimi)
     : [];
 
   return (
@@ -34,7 +34,7 @@ export default function StandardiYhteystiedotListana({ standardiYhteystiedot, pr
       ))}
       {vuorovaikutusYhteysHenkilot.map((yhteystieto, index) => (
         <p style={{ margin: 0 }} key={index}>
-          {yhteystieto.nimi}, puh. {yhteystieto.puhelinnumero}, {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} (
+          {yhteystieto.sukunimi} {yhteystieto.etunimi}, puh. {yhteystieto.puhelinnumero}, {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} (
           {yhteystieto.organisaatio})
         </p>
       ))}

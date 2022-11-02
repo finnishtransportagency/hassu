@@ -25,8 +25,8 @@ describe("getCurrentUser", () => {
     const user = await getCurrentUser();
     expect(user).to.deep.equal({
       __typename: "NykyinenKayttaja",
-      etuNimi: "Matti",
-      sukuNimi: "Meikalainen",
+      etunimi: "Matti",
+      sukunimi: "Meikalainen",
       uid: "A000111",
       roolit: ["hassu_kayttaja", "Atunnukset"],
     } as NykyinenKayttaja);

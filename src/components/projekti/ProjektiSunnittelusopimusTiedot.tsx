@@ -80,7 +80,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
                 label="Henkilö *"
                 options={
                   projekti?.kayttoOikeudet?.map((kayttaja) => ({
-                    label: kayttaja.nimi,
+                    label: kayttaja.sukunimi + " " + kayttaja.etunimi,
                     value: kayttaja.kayttajatunnus,
                   })) || []
                 }

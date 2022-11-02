@@ -40,7 +40,7 @@ export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocu
     vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
     projektipaallikko: projekti.kayttoOikeudet
       .filter((value) => value.tyyppi == API.KayttajaTyyppi.PROJEKTIPAALLIKKO)
-      .map((value) => safeTrim(value.nimi))
+      .map((value) => safeTrim(value.sukunimi + ", " + value.etunimi))
       .pop(),
     paivitetty: projekti.paivitetty || dayjs().format(),
     muokkaajat: projekti.kayttoOikeudet.map((value) => value.kayttajatunnus),

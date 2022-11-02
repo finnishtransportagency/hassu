@@ -120,7 +120,11 @@ export function adaptSearchResults(searchResults: ProjektiSearchResult[], kaytta
   if (searchResults) {
     return searchResults.map((result) => {
       const projektiPaallikko = kayttajas.findByEmail(getVastuuhenkiloEmail(result.ominaisuudet.vastuuhenkilo));
-      const projektiPaallikkoNimi = projektiPaallikko ? adaptKayttaja(projektiPaallikko).nimi : undefined;
+      let projektiPaallikkoNimi: string | undefined;
+      if (projektiPaallikko) {
+        const user = adaptKayttaja(projektiPaallikko);
+        projektiPaallikkoNimi = user.sukunimi + " " + user.etunimi;
+      }
       const tyyppi = getProjektiTyyppi(result.ominaisuudet.vaihe);
       const asiatunnus = getAsiatunnus(result);
       const hakutulos: VelhoHakuTulos = {

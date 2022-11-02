@@ -22,7 +22,8 @@ describe("EmailTemplating", () => {
       kayttoOikeudet: [
         {
           kayttajatunnus: "ABC123",
-          nimi: "Veikko Väyläläinen",
+          etunimi: "Veikko",
+          sukunimi: "Väyläläinen",
           organisaatio: "Väylä",
           tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
           email: "veikko.vaylalainen@vayla.fi",

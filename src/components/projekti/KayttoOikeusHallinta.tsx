@@ -26,7 +26,7 @@ interface Props {
 }
 
 const getKayttajaNimi = (k: Kayttaja | null | undefined) => {
-  return (k && `${k.sukuNimi}, ${k.etuNimi}`) || "";
+  return (k && `${k.sukunimi}, ${k.etunimi}`) || "";
 };
 
 export const defaultKayttaja: ProjektiKayttajaInput = {

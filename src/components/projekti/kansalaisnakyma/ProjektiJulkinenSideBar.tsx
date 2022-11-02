@@ -45,21 +45,24 @@ const ProjektiSideNavigation = styled((props) => {
         <SectionContent className={styles["side-nav-content"]}>
           <HassuStack>
             <img {...getTilaajaLogoImg()} />
-            {projekti.projektiHenkilot?.map((yt) => (
-              <div key={yt.nimi} className="vayla-calling-card">
-                <p>{yt.organisaatio}</p>
-                {
-                  !!yt.projektiPaallikko && (
-                    <p className="uppercase">{t("common:rooli.PROJEKTIPAALLIKKO")}</p>
-                  ) /* yhteystiedoilta puuttuu tittelitieto */
-                }
-                <p>
-                  <b>{yt.nimi}</b>
-                </p>
-                <p>{yt.puhelinnumero}</p>
-                <p>{yt.email}</p>
-              </div>
-            ))}
+            {projekti.projektiHenkilot?.map((yt) => {
+              const nimi = yt.sukunimi + " " + yt.etunimi;
+              return (
+                <div key={nimi} className="vayla-calling-card">
+                  <p>{yt.organisaatio}</p>
+                  {
+                    !!yt.projektiPaallikko && (
+                      <p className="uppercase">{t("common:rooli.PROJEKTIPAALLIKKO")}</p>
+                    ) /* yhteystiedoilta puuttuu tittelitieto */
+                  }
+                  <p>
+                    <b>{nimi}</b>
+                  </p>
+                  <p>{yt.puhelinnumero}</p>
+                  <p>{yt.email}</p>
+                </div>
+              );
+            })}
           </HassuStack>
           {suunnitteluSopimus && (
             <HassuStack>

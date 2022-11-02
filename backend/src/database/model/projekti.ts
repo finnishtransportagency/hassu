@@ -9,7 +9,8 @@ export type DBVaylaUser = {
   kayttajatunnus: string;
   puhelinnumero?: string;
   organisaatio: string;
-  nimi: string;
+  etunimi: string;
+  sukunimi: string;
   tyyppi?: KayttajaTyyppi | null;
   muokattavissa?: boolean;
   yleinenYhteystieto?: boolean;
