@@ -1,9 +1,11 @@
-import { DBProjekti } from "./model";
+import { DBProjekti, IlmoituksenVastaanottajat } from "./model";
 import { cloneDeepWith } from "lodash";
 import { kuntametadata } from "../../../common/kuntametadata";
+import { log } from "../logger";
+import isArray from "lodash/isArray";
 
-function isValueArrayOfStringsOrNumbers(value: unknown) {
-  return value instanceof Array && value.length > 0 && (typeof value[0] == "string" || typeof value[0] == "number");
+function isValueArrayOfStrings(value: unknown) {
+  return isArray(value) && value.length > 0 && typeof value[0] == "string";
 }
 
 /**
@@ -20,21 +22,33 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       }
     }
     if (key == "kunnat") {
-      if (isValueArrayOfStringsOrNumbers(value)) {
+      if (isValueArrayOfStrings(value)) {
         try {
           return kuntametadata.idsForKuntaNames(value);
         } catch (e) {
+          log.warn(e);
           return [];
         }
       }
     }
     if (key == "maakunnat") {
-      if (isValueArrayOfStringsOrNumbers(value)) {
+      if (isValueArrayOfStrings(value)) {
         try {
           return kuntametadata.idsForMaakuntaNames(value);
         } catch (e) {
           return [];
         }
+      }
+    }
+    if (key == "ilmoituksenVastaanottajat") {
+      const ilmoituksenVastaanottajat: IlmoituksenVastaanottajat = value;
+      if (ilmoituksenVastaanottajat.kunnat && ilmoituksenVastaanottajat.kunnat.length > 0) {
+        ilmoituksenVastaanottajat.kunnat.forEach((kunta) => {
+          if ("nimi" in kunta) {
+            kunta.id = kuntametadata.idForKuntaName((kunta as unknown as Record<string, string>).nimi);
+          }
+        });
+        return ilmoituksenVastaanottajat;
       }
     }
     return undefined;
