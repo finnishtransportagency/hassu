@@ -227,6 +227,8 @@
     "log:aineistoimporter:dev": "aws logs tail --follow --since 1h /aws/lambda/hassu-aineistoimporter-dev",
     "log:dynamodb-stream-handler": "aws logs tail --follow --since 1h /aws/lambda/hassu-dynamodb-stream-handler-$ENVIRONMENT",
     "log:dynamodb-stream-handler:dev": "aws logs tail --follow --since 1h /aws/lambda/hassu-dynamodb-stream-handler-dev",
+    "log:personsearchupdater": "aws logs tail --follow --since 1h /aws/lambda/hassu-personsearchupdater-$ENVIRONMENT",
+    "log:personsearchupdater:dev": "aws logs tail --follow --since 1h /aws/lambda/hassu-personsearchupdater-dev",
     "log:email": "aws logs tail --follow --since 1h /aws/lambda/hassu-email-$ENVIRONMENT",
     "log:frontend:nextjsapi": "cross-env AWS_REGION=eu-central-1 aws logs tail --follow --since 1h /aws/lambda/us-east-1.NextJsApp-${ENVIRONMENT}ApiV2",
     "log:frontend:nextjsapi:dev": "cross-env AWS_REGION=eu-central-1 aws logs tail --follow --since 1h /aws/lambda/us-east-1.NextJsApp-devApiV2",

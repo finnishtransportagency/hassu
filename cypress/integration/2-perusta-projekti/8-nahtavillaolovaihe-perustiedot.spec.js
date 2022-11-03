@@ -43,7 +43,7 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
     lisaaNahtavillaoloAineistot(oid);
     cy.reload();
 
-    cy.get("#aineisto_tab").click();
+    cy.get("#aineisto_tab").click({ force: true });
     // Test saved aineistot
     cy.get("input[type='hidden'][name ^='aineistoNahtavilla.T1xx.']").should("exist");
     cy.get("input[type='hidden'][name ^='lisaAineisto.']").should("exist");
@@ -57,7 +57,7 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/nahtavillaolo", { timeout: 30000 });
     cy.contains(projektiNimi);
 
-    cy.get("#kuulutuksentiedot_tab").click();
+    cy.get("#kuulutuksentiedot_tab").click({ force: true });
 
     const selectorToTextMap = new Map([
       ['[name="nahtavillaoloVaihe.hankkeenKuvaus.SUOMI"]', "Päivitetty hankkeen kuvaus Suomeksi"],
@@ -81,7 +81,7 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
 
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/nahtavillaolo", { timeout: 30000 });
     cy.contains(projektiNimi);
-    cy.get("#aineisto_tab").click();
+    cy.get("#aineisto_tab").click({ force: true });
 
     cy.get("a[href*='lausuntopyyntoaineistot']").click();
     cy.contains("Lausuntopyyntöön liitetty lisäaineisto");
