@@ -57,7 +57,7 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
   const migroitu = kuulutus.tila == NahtavillaoloVaiheTila.MIGROITU;
 
   return migroitu ? (
-    <ProjektiJulkinenPageLayout selectedStep={2}>
+    <ProjektiJulkinenPageLayout selectedStep={2} title="Kuulutus suunnitelman nähtäville asettamisesta">
       <>
         <Section noDivider>
           <p>Suunnitelma on tuotu toisesta järjestelmästä, joten tiedoissa voi olla puutteita.</p>

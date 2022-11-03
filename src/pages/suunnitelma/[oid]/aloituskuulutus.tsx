@@ -55,7 +55,7 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
 
   if (kuulutus.tila == AloitusKuulutusTila.MIGROITU) {
     return (
-      <ProjektiJulkinenPageLayout selectedStep={0}>
+      <ProjektiJulkinenPageLayout selectedStep={0} title={t(`ui-otsikot.kuulutus_suunnitelman_alkamisesta`)}>
         <>
           <Section noDivider>
             <p>Suunnitelma on tuotu toisesta järjestelmästä, joten tiedoissa voi olla puutteita.</p>

@@ -9,7 +9,7 @@ import ProjektiJulkinenStepper from "./ProjektiJulkinenStepper";
 
 interface Props {
   children: ReactNode;
-  title?: string;
+  title: string;
   selectedStep: number;
 }
 

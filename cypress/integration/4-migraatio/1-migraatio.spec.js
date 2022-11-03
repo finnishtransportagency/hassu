@@ -22,9 +22,15 @@ import dayjs from "dayjs";
 function syotaPuhelinnumerot(oid) {
   cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid);
   cy.contains("Projektin Henkilöt", { timeout: 30000 });
-  cy.get('input[name="kayttoOikeudet.0.puhelinnumero"').should("be.enabled").type("0291111111");
-  cy.get('input[name="kayttoOikeudet.1.puhelinnumero"').should("be.enabled").type("0291111111");
-  cy.get('input[name="kayttoOikeudet.2.puhelinnumero"').should("be.enabled").type("0291111111");
+  cy.get('input[name="kayttoOikeudet.0.puhelinnumero"]').should("be.enabled").type("0291111111");
+  cy.get('input[name="kayttoOikeudet.1.puhelinnumero"]').should("be.enabled").type("0291111111");
+
+  const fieldName = 'input[name="kayttoOikeudet.2.puhelinnumero"]';
+  cy.get("body").then((body) => {
+    if (body.find(fieldName).length > 0) {
+      cy.get(fieldName).should("be.enabled").type("0291111111");
+    }
+  });
   cy.get("#save_projekti").click();
   cy.contains("Henkilötietojen tallennus onnistui", { timeout: 30000 }).wait(2000);
 }
@@ -181,7 +187,7 @@ describe("Migraatio", () => {
 
   it("Migraatio hyväksymismenettelyssä-vaiheeseen kansalaisnäkymä", () => {
     const oid = "1.2.246.578.5.1.2789861876.697619507";
-    cy.visit(Cypress.env("host") + "/suunnitelma/" + oid);
+    cy.visit(Cypress.env("host") + "/suunnitelma/" + oid, { timeout: 30000 });
 
     cy.contains("Kuulutus suunnitelman hyväksymisestä");
 
