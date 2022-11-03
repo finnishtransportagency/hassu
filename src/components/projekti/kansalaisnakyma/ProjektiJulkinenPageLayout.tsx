@@ -55,7 +55,7 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
             />
           </Section>
           <Section noDivider>
-            <h2 className="vayla-title">{title}</h2>
+            {title && (<h2 className="vayla-title">{title}</h2>)}
             {children}
           </Section>
         </div>

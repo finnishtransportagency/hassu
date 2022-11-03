@@ -3,7 +3,7 @@ import HassuLink from "../HassuLink";
 import classNames from "classnames";
 import { useRouter } from "next/router";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import { useIsAllowedOnCurrentProjektiRoute, routes, projektiMeetsMinimumStatus, isVisible } from "src/hooks/useIsOnAllowedProjektiRoute";
+import { isVisible, projektiMeetsMinimumStatus, routes, useIsAllowedOnCurrentProjektiRoute } from "src/hooks/useIsOnAllowedProjektiRoute";
 import ProjektiKortti from "./ProjektiKortti";
 
 export default function ProjektiSideNavigationWrapper(): ReactElement {
@@ -38,6 +38,7 @@ const ProjektiSideNavigation: FC<{ projekti: ProjektiLisatiedolla }> = ({ projek
               return (
                 <li key={index}>
                   <HassuLink
+                    id={"sidenavi_" + route.id}
                     href={!statusDisabled ? { pathname: route.pathname, query: { oid: projekti.oid } } : undefined}
                     className={classNames(
                       "block pr-12 p-4 border-l-4",

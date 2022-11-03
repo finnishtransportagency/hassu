@@ -43,3 +43,15 @@ export function selectAllAineistotFromCategory(accordion) {
       cy.get("input[type='checkbox']").click();
     });
 }
+
+export function typeIntoFields(selectorToTextMap) {
+  selectorToTextMap.forEach((text, selector) => {
+    cy.get(selector, {
+      timeout: 10000,
+    })
+      .should("be.enabled")
+      .clear()
+      .type(text);
+  });
+}
+

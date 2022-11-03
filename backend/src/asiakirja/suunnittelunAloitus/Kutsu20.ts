@@ -15,9 +15,9 @@ import { translate } from "../../util/localization";
 import { formatList, KutsuAdapter } from "./KutsuAdapter";
 import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../../projekti/adapter/adaptToAPI";
 import { findUserByKayttajatunnus } from "../../projekti/projektiUtil";
-import PDFStructureElement = PDFKit.PDFStructureElement;
 import { AsiakirjanMuoto, YleisotilaisuusKutsuPdfOptions } from "../asiakirjaTypes";
 import { kuntametadata } from "../../../../common/kuntametadata";
+import PDFStructureElement = PDFKit.PDFStructureElement;
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
   SUOMI: "KUTSU TIEDOTUS- / YLEISÖTILAISUUTEEN",

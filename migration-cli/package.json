@@ -4,11 +4,12 @@
   "scripts": {
     "setup:dev": "cross-env ENVIRONMENT=dev ts-node --project=../tsconfig.cdk.json ../deployment/bin/setupEnvironment.ts",
     "setup": "cross-env ts-node --project=../tsconfig.cdk.json ../deployment/bin/setupEnvironment.ts",
-    "migration": "cross-env AWS_SDK_LOAD_CONFIG=1 ts-node $NODE_DEBUG_OPTION --project=tsconfig.json migration.ts"
+    "migration": "cross-env AWS_SDK_LOAD_CONFIG=1 USE_PINO_PRETTY=true ts-node --logError $NODE_DEBUG_OPTION --project=tsconfig.json ../backend/src/migraatio/migration.ts",
+    "test": "cross-env TS_NODE_PROJECT=\"./tsconfig.json\" mocha -r ts-node/register \"./**/*.test.ts\""
   },
   "dependencies": {
     "hassu": "file:..",
-    "read-excel-file": "5.2.28",
+    "read-excel-file": "5.2.29",
     "yargs": "17.4.1",
     "cross-env": "7.0.3",
     "aws-xray-sdk-core": "3.3.4"

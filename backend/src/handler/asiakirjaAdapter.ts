@@ -80,20 +80,6 @@ export class AsiakirjaAdapter {
     throw new Error("HyvaksymisPaatosVaihe puuttuu");
   }
 
-  migrateAloitusKuulutusJulkaisu(dbProjekti: DBProjekti): AloitusKuulutusJulkaisu {
-    if (dbProjekti.aloitusKuulutus) {
-      const { palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.aloitusKuulutus;
-      return {
-        ...includedFields,
-        id: createNextAloitusKuulutusJulkaisuID(dbProjekti),
-        yhteystiedot: [],
-        velho: adaptVelho(dbProjekti),
-        suunnitteluSopimus: null,
-      };
-    }
-    throw new Error("Aloituskuulutus puuttuu");
-  }
-
   findAloitusKuulutusWaitingForApproval(projekti: DBProjekti): AloitusKuulutusJulkaisu | undefined {
     if (projekti.aloitusKuulutusJulkaisut) {
       return findJulkaisuWithTila(projekti.aloitusKuulutusJulkaisut, AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA);

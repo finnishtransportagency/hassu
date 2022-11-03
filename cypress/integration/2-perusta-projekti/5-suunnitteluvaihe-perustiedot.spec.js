@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 
 import { ProjektiTestCommand } from '../../../common/testUtil.dev';
+import { typeIntoFields } from '../../support/util';
 
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
@@ -35,15 +36,7 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
     ]);
 
     cy.wait(1000);
-
-    selectorToTextMap.forEach((text, selector) => {
-      cy.get(selector, {
-        timeout: 10000,
-      })
-        .should("be.enabled")
-        .clear()
-        .type(text);
-    });
+    typeIntoFields(selectorToTextMap);
 
     cy.get("#save_suunnitteluvaihe_perustiedot_draft").click();
     cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank aloituskuulutus page otherwise
@@ -81,14 +74,7 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
 
     cy.wait(1000);
 
-    selectorToTextMap.forEach((text, selector) => {
-      cy.get(selector, {
-        timeout: 10000,
-      })
-        .should("be.enabled")
-        .clear()
-        .type(text);
-    });
+    typeIntoFields(selectorToTextMap);
 
     cy.get("#save_and_publish").click();
     cy.get("#accept_publish").click();

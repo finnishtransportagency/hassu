@@ -8,6 +8,7 @@ import {
   ProjektiKayttaja,
   ProjektiKayttajaInput,
   Status,
+  SuunnitteluVaiheTila,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
   VelhoAineisto,
@@ -246,12 +247,18 @@ export async function testSuunnitteluvaiheVuorovaikutus(oid: string, projektiPaa
 }
 
 export async function testListDocumentsToImport(oid: string): Promise<VelhoAineistoKategoria[]> {
+  const velhoAineistoKategories = await listDocumentsToImport(oid);
+  const aineistot = velhoAineistoKategories[0].aineistot;
+  const link = await api.haeVelhoProjektiAineistoLinkki(oid, aineistot[0].oid);
+  expect(link).to.contain("https://");
+  return velhoAineistoKategories;
+}
+
+export async function listDocumentsToImport(oid: string): Promise<VelhoAineistoKategoria[]> {
   const velhoAineistoKategories = await api.listaaVelhoProjektiAineistot(oid);
   expect(velhoAineistoKategories).not.be.empty;
   const aineistot = velhoAineistoKategories[0].aineistot;
   expect(aineistot).not.be.empty;
-  const link = await api.haeVelhoProjektiAineistoLinkki(oid, aineistot[0].oid);
-  expect(link).to.contain("https://");
   return velhoAineistoKategories;
 }
 
@@ -364,7 +371,7 @@ export async function julkaiseSuunnitteluvaihe(oid: string): Promise<void> {
     oid,
     suunnitteluVaihe: {
       ...projekti.suunnitteluVaihe,
-      julkinen: true,
+      tila: SuunnitteluVaiheTila.JULKINEN,
     },
   });
 }

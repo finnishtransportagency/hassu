@@ -1,10 +1,10 @@
 import { log } from "../logger";
 import { Palaute } from "./model";
 import { config } from "../config";
-import { getDynamoDBDocumentClient } from "./dynamoDB";
 import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
 import { SystemError } from "../error/SystemError";
 import { projektiDatabase } from "./projektiDatabase";
+import { getDynamoDBDocumentClient } from "../aws/client";
 
 const feedbackTableName: string = config.feedbackTableName || "missing";
 

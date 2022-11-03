@@ -4,6 +4,9 @@ import { AineistoInput, VelhoAineisto } from "../../../../common/graphql/apiMode
 import { loadProjektiJulkinenFromDatabase } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import { IllegalAccessError } from "../../../src/error/IllegalAccessError";
+import * as sinon from "sinon";
+import { pdfGeneratorClient } from "../../../src/asiakirja/lambda/pdfGeneratorClient";
+import { handleEvent as pdfGenerator } from "../../../src/asiakirja/lambda/pdfGeneratorHandler";
 
 const { expect } = require("chai");
 
@@ -42,8 +45,15 @@ export function expectApiError(e: Error, message: string): void {
   expect(contents.message).to.eq(message);
 }
 
-export async function expectJulkinenNotFound(oid: string, userFixture: UserFixture) {
+export async function expectJulkinenNotFound(oid: string, userFixture: UserFixture): Promise<void> {
   userFixture.logout();
   expect(loadProjektiJulkinenFromDatabase(oid)).to.eventually.be.rejectedWith(IllegalAccessError);
   userFixture.loginAs(UserFixture.mattiMeikalainen);
+}
+
+export function stubPDFGenerator(): void {
+  const pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
+  pdfGeneratorLambdaStub.callsFake(async (event) => {
+    return await pdfGenerator(event);
+  });
 }

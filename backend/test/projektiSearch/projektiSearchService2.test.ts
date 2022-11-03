@@ -14,6 +14,7 @@ import {
   Kieli,
   ProjektiTyyppi,
   Status,
+  SuunnitteluVaiheTila,
   Viranomainen,
   VuorovaikutusTilaisuusTyyppi,
 } from "../../../common/graphql/apiModel";
@@ -244,7 +245,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
     },
     arvioSeuraavanVaiheenAlkamisesta: "Pian",
     suunnittelunEteneminenJaKesto: "",
-    julkinen: true,
+    tila: SuunnitteluVaiheTila.JULKINEN,
     palautteidenVastaanottajat: undefined,
   },
   nahtavillaoloVaihe: undefined,

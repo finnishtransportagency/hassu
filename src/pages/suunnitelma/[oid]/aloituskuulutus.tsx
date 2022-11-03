@@ -74,7 +74,8 @@ export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): 
             <SectionContent>
               {suunnittelusopimus && (
                 <p>
-                  {kuntametadata.nameForKuntaId(suunnittelusopimus.kunta, lang)} ja {t(`vastaava-viranomainen.${velho.suunnittelustaVastaavaViranomainen}`)}{" "}
+                  {kuntametadata.nameForKuntaId(suunnittelusopimus.kunta, lang)} ja{" "}
+                  {t(`vastaava-viranomainen.${velho.suunnittelustaVastaavaViranomainen}`)}{" "}
                   {t(`info.ei-rata.aloittavat_yleissuunnitelman_laatimisen`)}
                 </p>
               )}

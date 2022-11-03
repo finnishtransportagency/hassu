@@ -59,10 +59,10 @@ build
 
 /.eslintcache
 .sonar
-migration/node_modules
-migration/~*
+migration-cli/node_modules
+migration-cli/~*
 
-/migration/.env.test
+/migration-cli/.env.test
 
 cypress/videos
 cypress/screenshots

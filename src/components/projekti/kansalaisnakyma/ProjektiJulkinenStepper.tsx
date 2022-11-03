@@ -125,7 +125,7 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
     return (
       <HassuStep key={label}>
         {index <= activeStep && (
-          <HassuLink key={index} href={links[index]}>
+          <HassuLink id={"sidenavi_" + index} key={index} href={links[index]}>
             <HassuLabel
               componentsProps={{ label: { style: { fontWeight: selectedStep === index ? 700 : 400 } } }}
               StepIconComponent={HassuStepIcon}

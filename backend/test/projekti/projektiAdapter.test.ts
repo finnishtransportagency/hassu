@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { describe, it } from "mocha";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import { projektiAdapter } from "../../src/projekti/adapter/projektiAdapter";
@@ -9,6 +8,7 @@ import * as sinon from "sinon";
 import { personSearch } from "../../src/personSearch/personSearchClient";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
+import { SuunnitteluVaiheTila } from "../../../common/graphql/apiModel";
 
 const { expect } = require("chai");
 
@@ -51,7 +51,7 @@ describe("projektiAdapter", () => {
     expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
-        suunnitteluVaihe: { hankkeenKuvaus: fixture.hankkeenKuvausSuunnitteluVaiheessa, julkinen: true },
+        suunnitteluVaihe: { hankkeenKuvaus: fixture.hankkeenKuvausSuunnitteluVaiheessa, tila: SuunnitteluVaiheTila.JULKINEN },
       })
     ).to.be.rejectedWith(IllegalArgumentError);
   });
@@ -59,14 +59,14 @@ describe("projektiAdapter", () => {
   it("should allow suunnitteluvaihe publishing with a valid aloituskuulutusjulkaisu", async () => {
     const projekti = fixture.dbProjekti2();
 
-    expect(findPublishedAloitusKuulutusJulkaisu(projekti.aloitusKuulutusJulkaisut)).to.not.be.empty;
+    expect(findPublishedAloitusKuulutusJulkaisu(projekti.aloitusKuulutusJulkaisut!)).to.not.be.empty;
     expect(projekti.suunnitteluVaihe).to.be.undefined;
 
     const result = await projektiAdapter.adaptProjektiToSave(projekti, {
       oid: projekti.oid,
-      suunnitteluVaihe: { hankkeenKuvaus: fixture.hankkeenKuvausSuunnitteluVaiheessa, julkinen: true },
+      suunnitteluVaihe: { hankkeenKuvaus: fixture.hankkeenKuvausSuunnitteluVaiheessa, tila: SuunnitteluVaiheTila.JULKINEN },
     });
-    expect(result.projekti.suunnitteluVaihe.julkinen).to.be.true;
+    expect(result.projekti.suunnitteluVaihe?.tila).eq(SuunnitteluVaiheTila.JULKINEN);
   });
 
   it("should prevent saving vuorovaikutus without saved suunnitteluvaihe", async () => {

@@ -7,7 +7,7 @@ import useTranslation from "next-translate/useTranslation";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import { formatDate } from "src/util/dateUtils";
 import SectionContent from "@components/layout/SectionContent";
-import { ProjektiTyyppi, Viranomainen } from "@services/api";
+import { NahtavillaoloVaiheTila, ProjektiTyyppi, Viranomainen } from "@services/api";
 import FormatDate from "@components/FormatDate";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
 import Notification, { NotificationType } from "@components/notification/Notification";
@@ -54,7 +54,17 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
 
   const vastaavaViranomainen = velho.suunnittelustaVastaavaViranomainen;
 
-  return (
+  const migroitu = kuulutus.tila == NahtavillaoloVaiheTila.MIGROITU;
+
+  return migroitu ? (
+    <ProjektiJulkinenPageLayout selectedStep={2} title="Kuulutus suunnitelman nähtäville asettamisesta">
+      <>
+        <Section noDivider>
+          <p>Suunnitelma on tuotu toisesta järjestelmästä, joten tiedoissa voi olla puutteita.</p>
+        </Section>
+      </>
+    </ProjektiJulkinenPageLayout>
+  ) : (
     <ProjektiJulkinenPageLayout selectedStep={2} title="Kuulutus suunnitelman nähtäville asettamisesta">
       <Section noDivider>
         <KeyValueTable rows={keyValueData}></KeyValueTable>

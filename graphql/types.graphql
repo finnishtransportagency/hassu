@@ -134,8 +134,7 @@ type SuunnitteluVaihe {
   hankkeenKuvaus: HankkeenKuvaukset
   arvioSeuraavanVaiheenAlkamisesta: String
   suunnittelunEteneminenJaKesto: String
-  julkinen: Boolean
-
+  tila: SuunnitteluVaiheTila
   vuorovaikutukset: [Vuorovaikutus!]
 
   """
@@ -145,6 +144,7 @@ type SuunnitteluVaihe {
 }
 
 type SuunnitteluVaiheJulkinen {
+  tila: SuunnitteluVaiheTila
   hankkeenKuvaus: HankkeenKuvaukset
   arvioSeuraavanVaiheenAlkamisesta: String
   suunnittelunEteneminenJaKesto: String
@@ -271,6 +271,7 @@ type NahtavillaoloVaiheJulkaisuJulkinen {
   kielitiedot: Kielitiedot
   yhteystiedot: [Yhteystieto!]!
   nahtavillaoloPDFt: NahtavillaoloPDFt
+  tila: NahtavillaoloVaiheTila
 }
 
 type HyvaksymisPaatosVaiheJulkaisuJulkinen {
@@ -285,6 +286,7 @@ type HyvaksymisPaatosVaiheJulkaisuJulkinen {
   hallintoOikeus: HallintoOikeus
   yhteystiedot: [Yhteystieto!]
   hyvaksymisPaatosVaihePDFt: HyvaksymisPaatosVaihePDFt
+  tila: HyvaksymisPaatosVaiheTila
   viimeinenVoimassaolovuosi: String
 }
 
@@ -333,16 +335,23 @@ type NahtavillaoloVaiheJulkinen {
   kuulutusYhteystiedot: [Yhteystieto!]
 }
 
+enum SuunnitteluVaiheTila {
+  JULKINEN
+  MIGROITU
+}
+
 enum NahtavillaoloVaiheTila {
   ODOTTAA_HYVAKSYNTAA
   HYVAKSYTTY
   PALAUTETTU
+  MIGROITU
 }
 
 enum HyvaksymisPaatosVaiheTila {
   ODOTTAA_HYVAKSYNTAA
   HYVAKSYTTY
   PALAUTETTU
+  MIGROITU
 }
 
 type Linkki {

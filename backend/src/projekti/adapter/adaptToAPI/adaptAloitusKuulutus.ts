@@ -1,5 +1,6 @@
 import { AloitusKuulutus, AloitusKuulutusJulkaisu, AloitusKuulutusPDF, LocalizedMap } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
+import { AloitusKuulutusTila } from "../../../../../common/graphql/apiModel";
 import {
   adaptHankkeenKuvaus,
   adaptIlmoituksenVastaanottajat,
@@ -34,13 +35,23 @@ export function adaptAloitusKuulutusJulkaisut(
 ): API.AloitusKuulutusJulkaisu[] | undefined {
   if (aloitusKuulutusJulkaisut) {
     return aloitusKuulutusJulkaisut.map((julkaisu) => {
-      const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, ...fieldsToCopyAsIs } = julkaisu;
+      const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, tila, ...fieldsToCopyAsIs } = julkaisu;
+      if (tila == AloitusKuulutusTila.MIGROITU) {
+        return {
+          __typename: "AloitusKuulutusJulkaisu",
+          tila,
+          kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
+          yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
+          velho: adaptVelho(velho),
+        };
+      }
       if (!julkaisu.hankkeenKuvaus) {
         throw new Error("adaptAloitusKuulutusJulkaisut: julkaisu.hankkeenKuvaus puuttuu");
       }
       const apiJulkaisu: API.AloitusKuulutusJulkaisu = {
         ...fieldsToCopyAsIs,
         __typename: "AloitusKuulutusJulkaisu",
+        tila,
         ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(julkaisu.ilmoituksenVastaanottajat),
         hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
         yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),

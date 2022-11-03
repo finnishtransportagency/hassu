@@ -1,13 +1,14 @@
 import { DBProjekti, LocalizedMap, NahtavillaoloPDF, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
+import { NahtavillaoloVaiheTila } from "../../../../../common/graphql/apiModel";
 import {
   adaptAineistot,
   adaptHankkeenKuvaus,
   adaptIlmoituksenVastaanottajat,
   adaptKielitiedotByAddingTypename,
-  adaptVelho,
   adaptMandatoryYhteystiedotByAddingTypename,
   adaptStandardiYhteystiedotByAddingTypename,
+  adaptVelho,
 } from "../common";
 import { fileService } from "../../../files/fileService";
 import { lisaAineistoService } from "../../../aineisto/lisaAineistoService";
@@ -41,7 +42,7 @@ export function adaptNahtavillaoloVaiheJulkaisut(
   julkaisut?: NahtavillaoloVaiheJulkaisu[] | null
 ): API.NahtavillaoloVaiheJulkaisu[] | undefined {
   if (julkaisut) {
-    const adaptoitu: API.NahtavillaoloVaiheJulkaisu[] = julkaisut.map((julkaisu) => {
+    return julkaisut.map((julkaisu) => {
       const {
         aineistoNahtavilla,
         lisaAineisto,
@@ -51,8 +52,18 @@ export function adaptNahtavillaoloVaiheJulkaisut(
         nahtavillaoloPDFt,
         kielitiedot,
         velho,
+        tila,
         ...fieldsToCopyAsIs
       } = julkaisu;
+
+      if (tila == NahtavillaoloVaiheTila.MIGROITU) {
+        return {
+          __typename: "NahtavillaoloVaiheJulkaisu",
+          tila,
+          velho: adaptVelho(velho),
+          yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
+        };
+      }
 
       if (!nahtavillaoloPDFt) {
         throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.nahtavillaoloPDFt määrittelemättä");
@@ -73,6 +84,7 @@ export function adaptNahtavillaoloVaiheJulkaisut(
       const palautetaan: API.NahtavillaoloVaiheJulkaisu = {
         ...fieldsToCopyAsIs,
         __typename: "NahtavillaoloVaiheJulkaisu",
+        tila,
         hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
         kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
         yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
@@ -84,7 +96,6 @@ export function adaptNahtavillaoloVaiheJulkaisut(
       };
       return palautetaan;
     });
-    return adaptoitu;
   }
   return undefined;
 }

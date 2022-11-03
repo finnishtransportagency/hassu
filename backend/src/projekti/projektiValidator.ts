@@ -1,25 +1,11 @@
 import { DBProjekti } from "../database/model";
-import { KayttajaTyyppi, Projekti, Status, TallennaProjektiInput } from "../../../common/graphql/apiModel";
+import { KayttajaTyyppi, Projekti, TallennaProjektiInput } from "../../../common/graphql/apiModel";
 import { requirePermissionMuokkaa } from "../user";
 import { requireAdmin, requireOmistaja } from "../user/userService";
 import { projektiAdapter } from "./adapter/projektiAdapter";
 import assert from "assert";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
-
-const statusOrder: Record<Status, number> = {
-  EI_JULKAISTU_PROJEKTIN_HENKILOT: 0,
-  EI_JULKAISTU: 1,
-  ALOITUSKUULUTUS: 2,
-  SUUNNITTELU: 3,
-  NAHTAVILLAOLO: 4,
-  HYVAKSYMISMENETTELYSSA: 5,
-  HYVAKSYTTY: 6,
-  EPAAKTIIVINEN_1: 7,
-  JATKOPAATOS_1: 8,
-  EPAAKTIIVINEN_2: 9,
-  JATKOPAATOS_2: 10,
-  EPAAKTIIVINEN_3: 11,
-};
+import { statusOrder } from "../../../common/statusOrder";
 
 function validateKasittelynTila(projekti: DBProjekti, apiProjekti: Projekti, input: TallennaProjektiInput) {
   if (input.kasittelynTila) {
@@ -63,7 +49,7 @@ function validateKasittelynTila(projekti: DBProjekti, apiProjekti: Projekti, inp
   }
 }
 
-function validateVarahenkiloModifyPermissions(projekti: DBProjekti, apiProjekti: Projekti, input: TallennaProjektiInput) {
+function validateVarahenkiloModifyPermissions(projekti: DBProjekti, input: TallennaProjektiInput) {
   // Vain omistaja voi muokata projektiPaallikonVarahenkilo-kenttää poistamalla varahenkilöyden
   projekti.kayttoOikeudet
     .filter((user) => user.tyyppi == KayttajaTyyppi.VARAHENKILO && user.muokattavissa === true)
@@ -95,5 +81,5 @@ export function validateTallennaProjekti(projekti: DBProjekti, input: TallennaPr
   requirePermissionMuokkaa(projekti);
   const apiProjekti = projektiAdapter.adaptProjekti(projekti);
   validateKasittelynTila(projekti, apiProjekti, input);
-  validateVarahenkiloModifyPermissions(projekti, apiProjekti, input);
+  validateVarahenkiloModifyPermissions(projekti, input);
 }
