@@ -1174,79 +1174,77 @@ Object {
   "description": "publicProjekti ennen suunnitteluvaihetta",
   "obj": Object {
     "__typename": "ProjektiJulkinen",
-    "aloitusKuulutusJulkaisut": Array [
-      Object {
-        "__typename": "AloitusKuulutusJulkaisuJulkinen",
-        "aloituskuulutusPDFt": Object {
-          "SUOMI": Object {
-            "__typename": "AloitusKuulutusPDF",
-            "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-            "aloituskuulutusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412 Aloituskuulutus.pdf",
-          },
-          "__typename": "AloitusKuulutusPDFt",
+    "aloitusKuulutusJulkaisu": Object {
+      "__typename": "AloitusKuulutusJulkaisuJulkinen",
+      "aloituskuulutusPDFt": Object {
+        "SUOMI": Object {
+          "__typename": "AloitusKuulutusPDF",
+          "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          "aloituskuulutusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412 Aloituskuulutus.pdf",
         },
-        "hankkeenKuvaus": Object {
-          "RUOTSI": "På Svenska",
-          "SAAME": "Saameksi",
-          "SUOMI": "Lorem Ipsum",
-          "__typename": "HankkeenKuvaukset",
-        },
-        "kielitiedot": Object {
-          "__typename": "Kielitiedot",
-          "ensisijainenKieli": "SUOMI",
-        },
-        "kuulutusPaiva": "2022-01-02",
-        "siirtyySuunnitteluVaiheeseen": "2022-01-01",
-        "suunnitteluSopimus": Object {
-          "__typename": "SuunnitteluSopimusJulkaisu",
-          "email": "mikko.haapamaki@cgi.com",
-          "etunimi": "Testi1",
-          "kunta": 536,
-          "logo": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/logo.png",
-          "puhelinnumero": "123",
-          "sukunimi": "Hassu",
-        },
-        "tila": "HYVAKSYTTY",
-        "velho": Object {
-          "__typename": "VelhoJulkinen",
-          "asiatunnusELY": undefined,
-          "asiatunnusVayla": undefined,
-          "kunnat": Array [
-            91,
-            92,
-          ],
-          "kuvaus": undefined,
-          "maakunnat": Array [
-            1,
-          ],
-          "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
-          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-          "toteuttavaOrganisaatio": undefined,
-          "tyyppi": "TIE",
-          "vaylamuoto": Array [
-            "tie",
-          ],
-        },
-        "yhteystiedot": Array [
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "A-tunnus1",
-            "organisaatio": "CGI Suomi Oy",
-            "puhelinnumero": "123",
-            "sahkoposti": "mikko.haapamki@cgi.com",
-            "sukunimi": "Hassu",
-          },
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Marko",
-            "organisaatio": "Kajaani",
-            "puhelinnumero": "0293121213",
-            "sahkoposti": "markku.koi@koi.com",
-            "sukunimi": "Koi",
-          },
+        "__typename": "AloitusKuulutusPDFt",
+      },
+      "hankkeenKuvaus": Object {
+        "RUOTSI": "På Svenska",
+        "SAAME": "Saameksi",
+        "SUOMI": "Lorem Ipsum",
+        "__typename": "HankkeenKuvaukset",
+      },
+      "kielitiedot": Object {
+        "__typename": "Kielitiedot",
+        "ensisijainenKieli": "SUOMI",
+      },
+      "kuulutusPaiva": "2022-01-02",
+      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "suunnitteluSopimus": Object {
+        "__typename": "SuunnitteluSopimusJulkaisu",
+        "email": "mikko.haapamaki@cgi.com",
+        "etunimi": "Testi1",
+        "kunta": 536,
+        "logo": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/logo.png",
+        "puhelinnumero": "123",
+        "sukunimi": "Hassu",
+      },
+      "tila": "HYVAKSYTTY",
+      "velho": Object {
+        "__typename": "VelhoJulkinen",
+        "asiatunnusELY": undefined,
+        "asiatunnusVayla": undefined,
+        "kunnat": Array [
+          91,
+          92,
+        ],
+        "kuvaus": undefined,
+        "maakunnat": Array [
+          1,
+        ],
+        "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+        "toteuttavaOrganisaatio": undefined,
+        "tyyppi": "TIE",
+        "vaylamuoto": Array [
+          "tie",
         ],
       },
-    ],
+      "yhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "A-tunnus1",
+          "organisaatio": "CGI Suomi Oy",
+          "puhelinnumero": "123",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sukunimi": "Hassu",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
     "euRahoitus": false,
     "kielitiedot": Object {
       "__typename": "Kielitiedot",

@@ -150,7 +150,9 @@ function SuunnitteluvaiheenPerustiedotForm({
 
   const saveSuunnitteluvaihe = async (formData: FormValues) => {
     await api.tallennaProjekti(formData);
-    if (reloadProjekti) await reloadProjekti();
+    if (reloadProjekti) {
+      await reloadProjekti();
+    }
     reset(formData);
   };
 
@@ -301,6 +303,7 @@ function canProjektiBePublished(projekti: ProjektiLisatiedolla): boolean {
 }
 
 const projektiHasPublishedAloituskuulutusJulkaisu: (projekti: ProjektiLisatiedolla) => boolean = (projekti) =>
-  !!projekti.aloitusKuulutusJulkaisut?.some(
-    (julkaisu) => julkaisu.tila && [AloitusKuulutusTila.HYVAKSYTTY, AloitusKuulutusTila.MIGROITU].includes(julkaisu.tila)
+  !!(
+    projekti.aloitusKuulutusJulkaisu?.tila &&
+    [AloitusKuulutusTila.HYVAKSYTTY, AloitusKuulutusTila.MIGROITU].includes(projekti.aloitusKuulutusJulkaisu.tila)
   );

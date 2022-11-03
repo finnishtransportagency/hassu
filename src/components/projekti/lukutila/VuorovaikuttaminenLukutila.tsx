@@ -44,7 +44,7 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
   );
 
   const aloituskuulutusjulkaisu = useMemo(() => {
-    return projekti?.aloitusKuulutusJulkaisut?.[projekti?.aloitusKuulutusJulkaisut?.length - 1 || 0];
+    return projekti?.aloitusKuulutusJulkaisu;
   }, [projekti]);
 
   if (!(aloituskuulutusjulkaisu && vuorovaikutus)) {

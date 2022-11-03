@@ -19,7 +19,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({ projekti, vuorova
   }, [projekti, vuorovaikutusnro]);
 
   const aloituskuulutusjulkaisu = useMemo(() => {
-    return projekti?.aloitusKuulutusJulkaisut?.[projekti?.aloitusKuulutusJulkaisut?.length - 1 || 0];
+    return projekti?.aloitusKuulutusJulkaisu;
   }, [projekti]);
 
   const julkinen = v?.julkinen;

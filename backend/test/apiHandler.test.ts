@@ -26,7 +26,6 @@ import { fileService } from "../src/files/fileService";
 import { NotFoundError } from "../src/error/NotFoundError";
 import { emailClient } from "../src/email/email";
 import AWS from "aws-sdk";
-import { findJulkaisuWithTila } from "../src/projekti/projektiUtil";
 import { Readable } from "stream";
 import { pdfGeneratorClient } from "../src/asiakirja/lambda/pdfGeneratorClient";
 import { handleEvent as pdfGenerator } from "../src/asiakirja/lambda/pdfGeneratorHandler";
@@ -237,19 +236,16 @@ describe("apiHandler", () => {
         }) {
           const p = await api.lataaProjekti(oid);
           if (expectedState == AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA) {
-            expect(p.aloitusKuulutusJulkaisut).not.be.empty;
-            const julkaisu = findJulkaisuWithTila(p.aloitusKuulutusJulkaisut, AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA);
-            expect(julkaisu).to.not.be.empty;
+            expect(p.aloitusKuulutusJulkaisu).not.be.undefined;
+            expect(p.aloitusKuulutusJulkaisu?.tila).to.eq(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA);
             expect(!!p.aloitusKuulutus?.palautusSyy); // null or undefined
           } else if (expectedState == AloitusKuulutusTila.HYVAKSYTTY) {
-            expect(p.aloitusKuulutusJulkaisut).not.be.empty;
-            const julkaisu = findJulkaisuWithTila(p.aloitusKuulutusJulkaisut, AloitusKuulutusTila.HYVAKSYTTY);
-            expect(julkaisu).to.not.be.empty;
+            expect(p.aloitusKuulutusJulkaisu).not.be.undefined;
+            expect(p.aloitusKuulutusJulkaisu?.tila).to.eq(AloitusKuulutusTila.HYVAKSYTTY);
             expect(!!p.aloitusKuulutus?.palautusSyy); // null or undefined
           } else {
             // Either rejected or inital state
-            const julkaisu = findJulkaisuWithTila(p.aloitusKuulutusJulkaisut, AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA);
-            expect(julkaisu).to.be.undefined;
+            expect(p.aloitusKuulutusJulkaisu?.tila).to.be.undefined;
             if (syy) {
               expect(p.aloitusKuulutus?.palautusSyy).to.eq(syy);
             }

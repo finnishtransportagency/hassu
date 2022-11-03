@@ -30,7 +30,6 @@ import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/proje
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 import KuulutuksenYhteystiedot from "@components/projekti/aloituskuulutus/KuulutuksenYhteystiedot";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
-import find from "lodash/find";
 import lowerCase from "lodash/lowerCase";
 import useSnackbars from "src/hooks/useSnackbars";
 import { aloituskuulutusSchema } from "src/schemas/aloituskuulutus";
@@ -195,12 +194,10 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
 
   const getAloituskuulutusjulkaisuByTila = useCallback(
     (tila: AloitusKuulutusTila): AloitusKuulutusJulkaisu | undefined => {
-      if (!projekti?.aloitusKuulutusJulkaisut) {
+      if (projekti?.aloitusKuulutusJulkaisu?.tila !== tila) {
         return undefined;
       }
-      return find(projekti.aloitusKuulutusJulkaisut, (julkaisu) => {
-        return julkaisu.tila === tila;
-      });
+      return projekti?.aloitusKuulutusJulkaisu;
     },
     [projekti]
   );
@@ -331,7 +328,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
   );
 
   const kielitiedot: Kielitiedot | null | undefined = projekti?.kielitiedot;
-  const voiMuokata = !projekti?.aloitusKuulutusJulkaisut || projekti.aloitusKuulutusJulkaisut.length < 1;
+  const voiMuokata = !projekti?.aloitusKuulutusJulkaisu;
   const voiHyvaksya =
     getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA) && projekti?.nykyinenKayttaja.onProjektipaallikko;
 

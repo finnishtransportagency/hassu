@@ -37,7 +37,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
         }
       }
 
-      if (!p.aloitusKuulutus) {
+      if (!p.aloitusKuulutus && !p.aloitusKuulutusJulkaisu) {
         p.aloitusKuulutus = { __typename: "AloitusKuulutus" };
       }
       p.status = API.Status.ALOITUSKUULUTUS;
@@ -47,7 +47,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
 
   const suunnittelu = new (class extends StatusHandler<API.Projekti> {
     handle(p: API.Projekti) {
-      if (p.aloitusKuulutusJulkaisut) {
+      if (p.aloitusKuulutusJulkaisu) {
         p.status = API.Status.SUUNNITTELU;
         super.handle(p); // Continue evaluating next rules
       }

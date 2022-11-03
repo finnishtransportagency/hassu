@@ -1,7 +1,6 @@
 import { AloitusKuulutusTila, Kieli, ProjektiJulkinen } from "../../../common/graphql/apiModel";
 import { openSearchClientIlmoitustauluSyote } from "../projektiSearch/openSearchClient";
 import { ilmoitusKuulutusAdapter } from "./ilmoitustauluSyoteAdapter";
-import { findJulkaisutWithTila } from "../projekti/projektiUtil";
 import { log } from "../logger";
 
 class IlmoitustauluSyoteService {
@@ -18,15 +17,13 @@ class IlmoitustauluSyoteService {
   }
 
   private async indexAloitusKuulutusJulkaisut(projekti: ProjektiJulkinen, kielet: Kieli[], oid: string) {
-    const aloitusKuulutusJulkaisut = findJulkaisutWithTila(projekti.aloitusKuulutusJulkaisut, AloitusKuulutusTila.HYVAKSYTTY);
-    if (aloitusKuulutusJulkaisut) {
-      for (const aloitusKuulutusJulkaisu of aloitusKuulutusJulkaisut) {
-        for (const kieli of kielet) {
-          await openSearchClientIlmoitustauluSyote.putDocument(
-            ilmoitusKuulutusAdapter.createKeyForAloitusKuulutusJulkaisu(oid, aloitusKuulutusJulkaisu, kieli),
-            ilmoitusKuulutusAdapter.adaptAloitusKuulutusJulkaisu(oid, aloitusKuulutusJulkaisu, kieli)
-          );
-        }
+    const aloitusKuulutusJulkaisu = projekti.aloitusKuulutusJulkaisu;
+    if (aloitusKuulutusJulkaisu?.tila == AloitusKuulutusTila.HYVAKSYTTY) {
+      for (const kieli of kielet) {
+        await openSearchClientIlmoitustauluSyote.putDocument(
+          ilmoitusKuulutusAdapter.createKeyForAloitusKuulutusJulkaisu(oid, aloitusKuulutusJulkaisu, kieli),
+          ilmoitusKuulutusAdapter.adaptAloitusKuulutusJulkaisu(oid, aloitusKuulutusJulkaisu, kieli)
+        );
       }
     }
   }

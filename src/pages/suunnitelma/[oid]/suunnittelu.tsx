@@ -51,7 +51,7 @@ export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement
             projekti={projekti}
             suunnitteluVaihe={projekti.suunnitteluVaihe}
             vuorovaikutus={projekti.suunnitteluVaihe.vuorovaikutukset?.[0]}
-            suunnittelusopimus={projekti?.aloitusKuulutusJulkaisut?.[0].suunnitteluSopimus}
+            suunnittelusopimus={projekti?.aloitusKuulutusJulkaisu?.suunnitteluSopimus}
             projektiOid={projekti.oid}
           />
         </>

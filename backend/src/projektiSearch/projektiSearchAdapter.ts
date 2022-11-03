@@ -53,7 +53,7 @@ export function adaptProjektiToJulkinenIndex(projekti: API.ProjektiJulkinen, kie
   if (projekti) {
     // Use texts from suunnitteluvaihe or from published aloituskuulutus
     const suunnitteluVaihe = projekti.suunnitteluVaihe;
-    const aloitusKuulutusJulkaisuJulkinen = projekti.aloitusKuulutusJulkaisut?.[0];
+    const aloitusKuulutusJulkaisuJulkinen = projekti.aloitusKuulutusJulkaisu;
     let nimi: string | undefined;
     let hankkeenKuvaus: string | undefined;
     let publishTimestamp;
