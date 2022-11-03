@@ -12,7 +12,7 @@ import {
   KirjaamoOsoite,
 } from "@services/api";
 import Section from "@components/layout/Section";
-import React, { ReactElement, useEffect, useState, useMemo, useCallback } from "react";
+import React, { ReactElement, useState, useMemo, useCallback } from "react";
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
@@ -60,7 +60,6 @@ export type VuorovaikutusFormValues = ProjektiFields & {
 };
 
 interface Props {
-  isDirtyHandler: (isDirty: boolean) => void;
   vuorovaikutusnro: number;
 }
 
@@ -95,7 +94,6 @@ type SuunnitteluvaiheenVuorovaikuttaminenFormProps = {
 } & Props;
 
 function SuunnitteluvaiheenVuorovaikuttaminenForm({
-  isDirtyHandler,
   vuorovaikutusnro,
   projekti,
   reloadProjekti,
@@ -238,10 +236,6 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
   const saveForm = useMemo(() => {
     return handleSubmit(saveAndPublish);
   }, [handleSubmit, saveAndPublish]);
-
-  useEffect(() => {
-    isDirtyHandler(isDirty);
-  }, [isDirty, isDirtyHandler]);
 
   const handleClickOpenHyvaksy = () => {
     setOpenHyvaksy(true);

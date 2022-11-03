@@ -19,7 +19,7 @@ const TabStyle = {
       color: "#999999",
     },
   },
-} as const;
+};
 
 export type TabStyle = keyof typeof TabStyle;
 

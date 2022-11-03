@@ -6,7 +6,7 @@ import Textarea from "@components/form/Textarea";
 import { AloitusKuulutusTila, api, Kieli, SuunnitteluVaiheInput, SuunnitteluVaiheTila, TallennaProjektiInput } from "@services/api";
 import Section from "@components/layout/Section";
 import lowerCase from "lodash/lowerCase";
-import { ReactElement, useEffect, useMemo, useState } from "react";
+import { ReactElement, useMemo, useState } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import TextInput from "@components/form/TextInput";
 import { DialogActions, DialogContent, Stack } from "@mui/material";
@@ -33,25 +33,17 @@ type FormValues = RequiredProjektiFields & {
   >;
 };
 
-interface Props {
-  isDirtyHandler: (isDirty: boolean) => void;
-}
-
-export default function SuunnitteluvaiheenPerustiedot({ isDirtyHandler }: Props): ReactElement {
+export default function SuunnitteluvaiheenPerustiedot(): ReactElement {
   const { data: projekti, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
-  return <>{projekti && <SuunnitteluvaiheenPerustiedotForm {...{ projekti, reloadProjekti, isDirtyHandler }} />}</>;
+  return <>{projekti && <SuunnitteluvaiheenPerustiedotForm {...{ projekti, reloadProjekti }} />}</>;
 }
 
 type SuunnitteluvaiheenPerustiedotFormProps = {
   projekti: ProjektiLisatiedolla;
   reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
-} & Props;
+};
 
-function SuunnitteluvaiheenPerustiedotForm({
-  projekti,
-  reloadProjekti,
-  isDirtyHandler,
-}: SuunnitteluvaiheenPerustiedotFormProps): ReactElement {
+function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: SuunnitteluvaiheenPerustiedotFormProps): ReactElement {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
@@ -155,10 +147,6 @@ function SuunnitteluvaiheenPerustiedotForm({
     }
     reset(formData);
   };
-
-  useEffect(() => {
-    isDirtyHandler(isDirty);
-  }, [isDirty, isDirtyHandler]);
 
   const kielitiedot = projekti.kielitiedot;
   const ensisijainenKieli = projekti.kielitiedot ? projekti.kielitiedot.ensisijainenKieli : Kieli.SUOMI;
