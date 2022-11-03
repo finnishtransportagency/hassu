@@ -2,7 +2,6 @@ import React, { ReactElement, useState } from "react";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
-import { PageProps } from "@pages/_app";
 import useTranslation from "next-translate/useTranslation";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import { formatDate } from "src/util/dateUtils";
@@ -12,13 +11,12 @@ import FormatDate from "@components/FormatDate";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import MuistutusLomakeDialogi from "@components/projekti/kansalaisnakyma/MuistutusLomakeDialogi";
-import useProjektiBreadcrumbsJulkinen from "src/hooks/useProjektiBreadcrumbsJulkinen";
 import Trans from "next-translate/Trans";
 import KansalaisenAineistoNakyma from "@components/projekti/common/KansalaisenAineistoNakyma";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { kuntametadata } from "../../../../common/kuntametadata";
 
-export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactElement {
+export default function Nahtavillaolo(): ReactElement {
   const { t, lang } = useTranslation("projekti");
   const { data: projekti } = useProjektiJulkinen();
   const kuulutus = projekti?.nahtavillaoloVaihe;
@@ -26,7 +24,6 @@ export default function Nahtavillaolo({ setRouteLabels }: PageProps): ReactEleme
   const velho = projekti?.velho;
   const [muistutusLomakeOpen, setMuistutusLomakeOpen] = useState(false);
 
-  useProjektiBreadcrumbsJulkinen(setRouteLabels);
   const kieli = useKansalaiskieli();
 
   if (!projekti || !kuulutus || !velho) {

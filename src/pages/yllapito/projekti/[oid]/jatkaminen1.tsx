@@ -1,7 +1,5 @@
 import React, { ReactElement, useCallback, useState } from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
-import { PageProps } from "@pages/_app";
-import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import Tabs, { TabProps } from "@components/layout/tabs/Tabs";
 import KuulutuksenTiedot from "@components/projekti/jatkopaatos1/kuulutuksenTiedot/index";
@@ -17,8 +15,7 @@ import Jatkopaatos1VaiheAineistotLukutila from "@components/projekti/lukutila/Ja
 import Lukunakyma from "@components/projekti/jatkopaatos1/kuulutuksenTiedot/Lukunakyma";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 
-export default function Jatkopaatos1({ setRouteLabels }: PageProps): ReactElement {
-  useProjektiBreadcrumbs(setRouteLabels);
+export default function Jatkopaatos1(): ReactElement {
   const [currentTab, setCurrentTab] = useState<number | string>(0);
   const [open, setOpen] = useState(false);
   const [isDirty, setIsDirty] = useState(false);

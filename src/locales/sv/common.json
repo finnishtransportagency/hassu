@@ -7,17 +7,10 @@
   "projekti_ei_ruotsin_kielella": "RUOTSIKSI Projekti ei ole saatavilla ruotsin kielellä",
   "polut": {
     "etusivu": "RUOTSIKSI Etusivu",
-    "projektin_perustaminen": "RUOTSIKSI Projektin perustaminen",
-    "...": "RUOTSIKSI ...",
-    "projektit": "RUOTSIKSI Projektit",
-    "aloituskuulutus": "RUOTSIKSI Aloituskuulutus",
-    "henkilot_ja_kayttooikeushallinta": "RUOTSIKSI Henkilöt ja käyttöoikeushallinta",
-    "suunnittelu_ja_vuorovaikutus": "RUOTSIKSI Suunnittelu ja vuorovaikutus",
-    "nahtavillaolovaihe": "RUOTSIKSI Nähtävilläolovaihe",
-    "ohjeet": "RUOTSIKSI Ohjeet",
     "suunnitelmat": "RUOTSIKSI Suunnitelmat",
     "suunnittelu": "RUOTSIKSI Suunnittelu",
     "nahtavillaolo": "RUOTSIKSI Nähtävilläolo",
+    "hyvaksymismenettelyssa": "RUOTSIKSI Hyväksymismenettelyssä",
     "tutki_suunnitelmaa": "RUOTSIKSI Tutki suunnitelmaa",
     "virhe": "RUOTSIKSI Virhe"
   },

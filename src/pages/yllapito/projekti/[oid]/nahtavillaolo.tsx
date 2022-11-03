@@ -1,7 +1,5 @@
 import React, { ReactElement, useCallback, useMemo, useState } from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
-import { PageProps } from "@pages/_app";
-import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import Tabs from "@components/layout/tabs/Tabs";
 import KuulutuksenTiedot from "@components/projekti/nahtavillaolo/kuulutuksentiedot/KuulutuksenTiedot";
@@ -74,9 +72,8 @@ function InfoElement({ projekti }: Props2) {
   }
 }
 
-export default function NahtavillaoloWrapper({ setRouteLabels }: PageProps): ReactElement {
+export default function NahtavillaoloWrapper(): ReactElement {
   const { data: projekti } = useProjekti();
-  useProjektiBreadcrumbs(setRouteLabels);
 
   if (!projekti) {
     return <></>;

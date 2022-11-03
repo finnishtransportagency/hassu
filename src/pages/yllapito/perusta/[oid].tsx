@@ -1,8 +1,6 @@
-import { PageProps } from "@pages/_app";
 import React, { ReactElement, useCallback, FC, useMemo } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { useRouter } from "next/router";
-import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import ProjektiPerustiedot from "@components/projekti/ProjektiPerustiedot";
 import KayttoOikeusHallinta from "@components/projekti/KayttoOikeusHallinta";
 import { api, TallennaProjektiInput, ProjektiKayttajaInput } from "@services/api";
@@ -40,9 +38,7 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
   ProjektiTestType.PROJEKTI_NOT_CREATED,
 ]);
 
-export default function PerustaProjekti({ setRouteLabels }: PageProps): ReactElement {
-  useProjektiBreadcrumbs(setRouteLabels);
-
+export default function PerustaProjekti(): ReactElement {
   const { data: projekti, error: projektiLoadError, mutate: mutateProjekti } = useProjekti();
 
   return (

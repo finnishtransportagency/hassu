@@ -7,26 +7,22 @@ import ExtLink from "@components/ExtLink";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
-import { PageProps } from "@pages/_app";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import SectionContent from "@components/layout/SectionContent";
 import { formatDate } from "src/util/dateUtils";
 import HassuStack from "@components/layout/HassuStack";
-import useProjektiBreadcrumbsJulkinen from "src/hooks/useProjektiBreadcrumbsJulkinen";
 import { splitFilePath } from "../../../util/fileUtil";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import formatYhteystiedotText from "src/util/formatYhteystiedotText";
 import { kuntametadata } from "../../../../common/kuntametadata";
 
-export default function AloituskuulutusJulkinen({ setRouteLabels }: PageProps): ReactElement {
+export default function AloituskuulutusJulkinen(): ReactElement {
   const { t, lang } = useTranslation("projekti");
   const { data: projekti } = useProjektiJulkinen();
   const kuulutus = projekti?.aloitusKuulutusJulkaisut?.[0];
   const velho = kuulutus?.velho;
   const suunnittelusopimus = kuulutus?.suunnitteluSopimus;
   const kieli = useKansalaiskieli();
-
-  useProjektiBreadcrumbsJulkinen(setRouteLabels);
 
   if (!projekti || !velho || !kuulutus) {
     return <div />;

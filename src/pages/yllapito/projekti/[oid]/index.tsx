@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import log from "loglevel";
-import { PageProps } from "@pages/_app";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { api, Status, TallennaProjektiInput } from "@services/api";
@@ -26,7 +25,6 @@ import ProjektiKuulutuskielet from "@components/projekti/ProjektiKuulutuskielet"
 import Section from "@components/layout/Section";
 import HassuStack from "@components/layout/HassuStack";
 import HassuSpinner from "@components/HassuSpinner";
-import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import { Stack } from "@mui/material";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
@@ -49,8 +47,7 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
   ProjektiTestType.PROJEKTI_IS_CREATED,
 ]);
 
-export default function ProjektiSivu({ setRouteLabels }: PageProps) {
-  useProjektiBreadcrumbs(setRouteLabels);
+export default function ProjektiSivu() {
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);

@@ -1,7 +1,5 @@
 import React, { ReactElement, useCallback, useState } from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
-import { PageProps } from "@pages/_app";
-import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import Tabs, { TabProps } from "@components/layout/tabs/Tabs";
 import KuulutuksenTiedot from "@components/projekti/hyvaksyminen/kuulutuksenTiedot/index";
@@ -17,8 +15,7 @@ import HyvaksymisVaiheAineistotLukutila from "@components/projekti/lukutila/Hyva
 import Lukunakyma from "@components/projekti/hyvaksyminen/kuulutuksenTiedot/Lukunakyma";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 
-export default function Hyvaksymispaatos({ setRouteLabels }: PageProps): ReactElement {
-  useProjektiBreadcrumbs(setRouteLabels);
+export default function Hyvaksymispaatos(): ReactElement {
   const [currentTab, setCurrentTab] = useState<number | string>(0);
   const [open, setOpen] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
