@@ -246,6 +246,10 @@ export const createLocalizedTheme = (locale: Localization) =>
           },
         },
         MuiTabs: {
+          defaultProps: {
+            variant: "scrollable",
+            scrollButtons: "auto",
+          },
           styleOverrides: {
             root: {
               borderBottom: "1px #979797 solid",

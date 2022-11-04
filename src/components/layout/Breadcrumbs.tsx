@@ -6,9 +6,18 @@ import { Container, styled } from "@mui/material";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { ProjektiJulkinen } from "@services/api";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
+import { getValidatedKierrosId } from "src/util/getValidatedKierrosId";
+import classNames from "classnames";
+import { ParsedUrlQueryInput } from "querystring";
 
 interface RouteLabels {
-  [key: string]: { label: string; hideWhenNotCurrentRoute?: boolean; preventTranslation?: boolean };
+  [key: string]: {
+    label: string;
+    hideWhenNotCurrentRoute?: boolean;
+    preventTranslation?: boolean;
+    disableRoute?: boolean;
+    queryParams?: ParsedUrlQueryInput;
+  };
 }
 
 const Breadcrumbs = () => {
@@ -40,7 +49,7 @@ function BreadcrumbsVirkamies(): ReactElement {
   const routeLabels: RouteLabels = useMemo(() => {
     let routes: RouteLabels = {};
     if (router.isReady) {
-      const routeLabels = getVirkamiesRouteLabels(projekti);
+      const routeLabels = getVirkamiesRouteLabels(router, projekti);
       routes = generateRoutes(router, routeLabels);
     }
     return routes;
@@ -49,23 +58,34 @@ function BreadcrumbsVirkamies(): ReactElement {
   return <BreadcrumbComponent isYllapito routeLabels={routeLabels} />;
 }
 
-const getVirkamiesRouteLabels: (projekti: ProjektiLisatiedolla | null | undefined) => RouteLabels = (projekti) => {
+const getVirkamiesRouteLabels: (router: NextRouter, projekti: ProjektiLisatiedolla | null | undefined) => RouteLabels = (
+  router,
+  projekti
+) => {
   const projektiLabel = projekti?.velho.nimi || projekti?.oid || "...";
+  const kierrosId = projekti && getValidatedKierrosId(router, projekti);
   return {
     "/yllapito": { label: "Etusivu", hideWhenNotCurrentRoute: true },
     "/yllapito/perusta": { label: "Projektin perustaminen" },
     "/yllapito/perusta/[oid]": { label: projektiLabel },
     "/yllapito/projekti": { label: "Projektit" },
-    "/yllapito/projekti/[oid]": { label: projektiLabel },
-    "/yllapito/projekti/[oid]/aloituskuulutus": { label: "Aloituskuulutus" },
-    "/yllapito/projekti/[oid]/kasittelyntila": { label: "Käsittelyn tila" },
-    "/yllapito/projekti/[oid]/henkilot": { label: "Henkilöt ja käyttöoikeushallinta" },
-    "/yllapito/projekti/[oid]/suunnittelu": { label: "Suunnittelu ja vuorovaikutus" },
-    "/yllapito/projekti/[oid]/suunnittelu/vuorovaikuttaminen": { label: "Vuorovaikutus" },
-    "/yllapito/projekti/[oid]/suunnittelu/vuorovaikuttaminen/[kierrosId]": { label: "Vuorovaikutus" },
-    "/yllapito/projekti/[oid]/nahtavillaolo": { label: "Nähtävilläolovaihe" },
-    "/yllapito/projekti/[oid]/hyvaksymispaatos": { label: "Hyväksymispäätös" },
-    "/yllapito/projekti/[oid]/jatkaminen1": { label: "1. jatkaminen" },
+    "/yllapito/projekti/[oid]": { label: projektiLabel, queryParams: { oid: projekti?.oid } },
+    "/yllapito/projekti/[oid]/aloituskuulutus": { label: "Aloituskuulutus", queryParams: { oid: projekti?.oid } },
+    "/yllapito/projekti/[oid]/kasittelyntila": { label: "Käsittelyn tila", queryParams: { oid: projekti?.oid } },
+    "/yllapito/projekti/[oid]/henkilot": { label: "Henkilöt ja käyttöoikeushallinta", queryParams: { oid: projekti?.oid } },
+    "/yllapito/projekti/[oid]/suunnittelu": { label: "Suunnittelu ja vuorovaikutus", queryParams: { oid: projekti?.oid } },
+    "/yllapito/projekti/[oid]/suunnittelu/vuorovaikuttaminen": {
+      label: "Vuorovaikutus",
+      disableRoute: true,
+      queryParams: { oid: projekti?.oid },
+    },
+    "/yllapito/projekti/[oid]/suunnittelu/vuorovaikuttaminen/[kierrosId]": {
+      label: kierrosId ? `${kierrosId}. vuorovaikuttaminen` : "Vuorovaikuttaminen",
+      queryParams: { oid: projekti?.oid, kierrosId },
+    },
+    "/yllapito/projekti/[oid]/nahtavillaolo": { label: "Nähtävilläolovaihe", queryParams: { oid: projekti?.oid } },
+    "/yllapito/projekti/[oid]/hyvaksymispaatos": { label: "Hyväksymispäätös", queryParams: { oid: projekti?.oid } },
+    "/yllapito/projekti/[oid]/jatkaminen1": { label: "1. jatkaminen", queryParams: { oid: projekti?.oid } },
     "/yllapito/ohjeet": { label: "Ohjeet" },
     "/_error": { label: "Virhe" },
   };
@@ -109,9 +129,8 @@ export const generateRoutes = (nextRouter: NextRouter, labels: RouteLabels): Rou
     const jointPathname = joinPath(pathnameSplitted, index);
     if (isRouteVisible(jointPathname)) {
       const routeLabel = labels[jointPathname];
-      const label = routeLabel?.label || pathname;
-      const preventTranslation = !!routeLabel ? routeLabel.preventTranslation : true;
-      reducer[jointPathname] = { label, preventTranslation };
+      const { label = pathname, preventTranslation = true, disableRoute, queryParams } = routeLabel || {};
+      reducer[jointPathname] = { label, preventTranslation, disableRoute, queryParams };
     }
     return reducer;
   }, {});
@@ -128,16 +147,18 @@ const BreadcrumbComponent: FC<{ routeLabels: RouteLabels; isYllapito?: boolean }
           <li className="mr-1 truncate-ellipsis max-w-xs">
             <Link href={isYllapito ? "/yllapito" : "/"}>{t("common:sivustonimi")}</Link>
           </li>
-          {Object.entries(routeLabels).map(([pathname, { label, preventTranslation }]) => (
+          {Object.entries(routeLabels).map(([pathname, { label, preventTranslation, disableRoute, queryParams }]) => (
             <ListItem className="mr-1 truncate-ellipsis max-w-xs" key={pathname}>
-              {!isCurrentRoute(pathname, router) ? (
-                <Link href={{ pathname, query: router.query }}>
+              {!isCurrentRoute(pathname, router) && !disableRoute ? (
+                <Link href={{ pathname, query: queryParams }}>
                   <a>
                     <span>{!isYllapito && !preventTranslation ? t(`common:polut.${label}`) : label}</span>
                   </a>
                 </Link>
               ) : (
-                <span className="font-bold">{!isYllapito && !preventTranslation ? t(`common:polut.${label}`) : label}</span>
+                <span className={classNames(isCurrentRoute(pathname, router) && "font-bold")}>
+                  {!isYllapito && !preventTranslation ? t(`common:polut.${label}`) : label}
+                </span>
               )}
             </ListItem>
           ))}

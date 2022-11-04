@@ -35,6 +35,7 @@ const ProjektiSideNavigation: FC<{ projekti: ProjektiLisatiedolla }> = ({ projek
             .filter((route) => isVisible(projekti, route))
             .map((route, index) => {
               const statusDisabled = !projektiMeetsMinimumStatus(projekti, route.requiredStatus);
+              const isSelected = route.requireExactMatch ? route.pathname === router.pathname : router.pathname.startsWith(route.pathname!);
               return (
                 <li key={index}>
                   <HassuLink
@@ -42,7 +43,7 @@ const ProjektiSideNavigation: FC<{ projekti: ProjektiLisatiedolla }> = ({ projek
                     href={!statusDisabled ? { pathname: route.pathname, query: { oid: projekti.oid } } : undefined}
                     className={classNames(
                       "block pr-12 p-4 border-l-4",
-                      router.pathname === route.pathname ? "border-primary bg-gray-light" : "border-transparent",
+                      isSelected ? "border-primary bg-gray-light" : "border-transparent",
                       statusDisabled ? "text-gray" : "hover:bg-gray-light"
                     )}
                   >

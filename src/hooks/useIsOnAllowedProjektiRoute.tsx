@@ -7,8 +7,9 @@ export interface Route {
   title: string;
   requiredStatus: Status;
   pathname?: string;
-  visible?: (projekti: ProjektiLisatiedolla | null | undefined) => Boolean;
+  visible?: (projekti: ProjektiLisatiedolla | null | undefined) => boolean;
   id: string;
+  requireExactMatch?: boolean;
 }
 
 export const routes: Route[] = [
@@ -23,6 +24,7 @@ export const routes: Route[] = [
     id: "projektin_tiedot",
     requiredStatus: Status.EI_JULKAISTU,
     pathname: `/yllapito/projekti/[oid]`,
+    requireExactMatch: true,
   },
   {
     title: "Käsittelyn tila",
@@ -63,7 +65,7 @@ export const routes: Route[] = [
   },
 ];
 
-function isJatkopaatos1Visible(projekti: ProjektiLisatiedolla | null | undefined): Boolean {
+function isJatkopaatos1Visible(projekti: ProjektiLisatiedolla | null | undefined): boolean {
   return projekti?.status === Status.JATKOPAATOS_1;
 }
 
@@ -97,11 +99,11 @@ export const useIsAllowedOnCurrentProjektiRoute: () => isAllowedOnRouteResponse 
     const pathnameForAllowedRoute = isAllowedOnRoute
       ? undefined
       : routes.reduce<string | undefined>((allowedPathname, route) => {
-        if (projektiMeetsMinimumStatus(projekti, route.requiredStatus)) {
-          allowedPathname = route.pathname;
-        }
-        return allowedPathname;
-      }, undefined);
+          if (projektiMeetsMinimumStatus(projekti, route.requiredStatus)) {
+            allowedPathname = route.pathname;
+          }
+          return allowedPathname;
+        }, undefined);
     return { isAllowedOnRoute, pathnameForAllowedRoute };
   }, [projekti, router.pathname]);
 };

@@ -70,14 +70,13 @@ function SuunnitteluPageLayout({
     ];
   }, [projektiOid, vuorovaikutusKierrosNumerot, disableTabs]);
 
-  const value = useMemo(
-    () =>
-      tabProps.findIndex((tProps) => {
-        const url = tProps.linkProps.href as UrlObject;
-        return url.pathname === router.pathname && (url.query as ParsedUrlQueryInput).kierrosId === router.query.kierrosId;
-      }),
-    [router.pathname, router.query.kierrosId, tabProps]
-  );
+  const value = useMemo(() => {
+    const indexOfTab = tabProps.findIndex((tProps) => {
+      const url = tProps.linkProps.href as UrlObject;
+      return url.pathname === router.pathname && (url.query as ParsedUrlQueryInput).kierrosId === router.query.kierrosId;
+    });
+    return indexOfTab === -1 ? false : indexOfTab;
+  }, [router.pathname, router.query.kierrosId, tabProps]);
 
   return (
     <ProjektiPageLayout title="Suunnittelu">
