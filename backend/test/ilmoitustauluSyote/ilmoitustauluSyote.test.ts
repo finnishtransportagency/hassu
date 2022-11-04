@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { describe, it } from "mocha";
 import sinon from "sinon";
 import { ilmoitustauluSyoteService } from "../../src/ilmoitustauluSyote/ilmoitustauluSyoteService";
@@ -18,8 +17,8 @@ describe("IlmoitustauluSyote", () => {
   beforeEach(() => {
     putDocumentStub = sandbox.stub(openSearchClientIlmoitustauluSyote, "putDocument");
     const projektiFixture = new ProjektiFixture();
-    projekti = projektiAdapterJulkinen.adaptProjekti(projektiFixture.dbProjekti4());
-    expect(projekti.aloitusKuulutusJulkaisut[0].tila).to.eql(AloitusKuulutusTila.HYVAKSYTTY);
+    projekti = projektiAdapterJulkinen.adaptProjekti(projektiFixture.dbProjekti4())!;
+    expect(projekti.aloitusKuulutusJulkaisu?.tila).to.eql(AloitusKuulutusTila.HYVAKSYTTY);
   });
 
   afterEach(() => {
@@ -34,7 +33,7 @@ describe("IlmoitustauluSyote", () => {
     await ilmoitustauluSyoteService.index(projekti);
     expect(putDocumentStub.getCalls().map((call) => call.lastArg)).toMatchSnapshot();
 
-    const indexedAloitusKuulutus = putDocumentStub.getCalls().slice(0, 1).pop().lastArg;
+    const indexedAloitusKuulutus = putDocumentStub!.getCalls()?.slice(0, 1)?.pop()?.lastArg;
     expect(ilmoitustauluSyoteHandler.getCategories(indexedAloitusKuulutus)).to.eql([
       "Kuulutukset ja ilmoitukset:Kuulutus",
       "Kunta:Mikkeli",

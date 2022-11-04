@@ -361,33 +361,31 @@ Object {
   "description": "publicProjektihyväksymismenettelyyn migroitu julkinen projekti",
   "obj": Object {
     "__typename": "ProjektiJulkinen",
-    "aloitusKuulutusJulkaisut": Array [
-      Object {
-        "__typename": "AloitusKuulutusJulkaisuJulkinen",
-        "tila": "MIGROITU",
-        "velho": Object {
-          "__typename": "VelhoJulkinen",
-          "asiatunnusELY": undefined,
-          "asiatunnusVayla": undefined,
-          "kunnat": Array [
-            91,
-            92,
-          ],
-          "kuvaus": undefined,
-          "maakunnat": Array [
-            1,
-          ],
-          "nimi": "HASSU MIGRAATIOTESTIPROJEKTI HYVÄKSYMISMENETTELYSSÄ",
-          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-          "toteuttavaOrganisaatio": undefined,
-          "tyyppi": "TIE",
-          "vaylamuoto": Array [
-            "tie",
-          ],
-        },
-        "yhteystiedot": Array [],
+    "aloitusKuulutusJulkaisu": Object {
+      "__typename": "AloitusKuulutusJulkaisuJulkinen",
+      "tila": "MIGROITU",
+      "velho": Object {
+        "__typename": "VelhoJulkinen",
+        "asiatunnusELY": undefined,
+        "asiatunnusVayla": undefined,
+        "kunnat": Array [
+          91,
+          92,
+        ],
+        "kuvaus": undefined,
+        "maakunnat": Array [
+          1,
+        ],
+        "nimi": "HASSU MIGRAATIOTESTIPROJEKTI HYVÄKSYMISMENETTELYSSÄ",
+        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+        "toteuttavaOrganisaatio": undefined,
+        "tyyppi": "TIE",
+        "vaylamuoto": Array [
+          "tie",
+        ],
       },
-    ],
+      "yhteystiedot": Array [],
+    },
     "euRahoitus": false,
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
@@ -948,33 +946,31 @@ Object {
   "description": "publicProjektinähtävilläolovaiheeseen migroitu julkinen projekti",
   "obj": Object {
     "__typename": "ProjektiJulkinen",
-    "aloitusKuulutusJulkaisut": Array [
-      Object {
-        "__typename": "AloitusKuulutusJulkaisuJulkinen",
-        "tila": "MIGROITU",
-        "velho": Object {
-          "__typename": "VelhoJulkinen",
-          "asiatunnusELY": undefined,
-          "asiatunnusVayla": undefined,
-          "kunnat": Array [
-            91,
-            92,
-          ],
-          "kuvaus": undefined,
-          "maakunnat": Array [
-            1,
-          ],
-          "nimi": "HASSU MIGRAATIOTESTIPROJEKTI NÄHTÄVILLÄOLO",
-          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-          "toteuttavaOrganisaatio": undefined,
-          "tyyppi": "TIE",
-          "vaylamuoto": Array [
-            "tie",
-          ],
-        },
-        "yhteystiedot": Array [],
+    "aloitusKuulutusJulkaisu": Object {
+      "__typename": "AloitusKuulutusJulkaisuJulkinen",
+      "tila": "MIGROITU",
+      "velho": Object {
+        "__typename": "VelhoJulkinen",
+        "asiatunnusELY": undefined,
+        "asiatunnusVayla": undefined,
+        "kunnat": Array [
+          91,
+          92,
+        ],
+        "kuvaus": undefined,
+        "maakunnat": Array [
+          1,
+        ],
+        "nimi": "HASSU MIGRAATIOTESTIPROJEKTI NÄHTÄVILLÄOLO",
+        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+        "toteuttavaOrganisaatio": undefined,
+        "tyyppi": "TIE",
+        "vaylamuoto": Array [
+          "tie",
+        ],
       },
-    ],
+      "yhteystiedot": Array [],
+    },
     "euRahoitus": false,
     "kielitiedot": Object {
       "__typename": "Kielitiedot",
@@ -1109,33 +1105,31 @@ Object {
   "description": "publicProjektisuunnitteluvaiheeseen migroitu julkinen projekti",
   "obj": Object {
     "__typename": "ProjektiJulkinen",
-    "aloitusKuulutusJulkaisut": Array [
-      Object {
-        "__typename": "AloitusKuulutusJulkaisuJulkinen",
-        "tila": "MIGROITU",
-        "velho": Object {
-          "__typename": "VelhoJulkinen",
-          "asiatunnusELY": undefined,
-          "asiatunnusVayla": undefined,
-          "kunnat": Array [
-            91,
-            92,
-          ],
-          "kuvaus": undefined,
-          "maakunnat": Array [
-            1,
-          ],
-          "nimi": "HASSU MIGRAATIOTESTIPROJEKTI SUUNNITTELU",
-          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-          "toteuttavaOrganisaatio": undefined,
-          "tyyppi": "TIE",
-          "vaylamuoto": Array [
-            "tie",
-          ],
-        },
-        "yhteystiedot": Array [],
+    "aloitusKuulutusJulkaisu": Object {
+      "__typename": "AloitusKuulutusJulkaisuJulkinen",
+      "tila": "MIGROITU",
+      "velho": Object {
+        "__typename": "VelhoJulkinen",
+        "asiatunnusELY": undefined,
+        "asiatunnusVayla": undefined,
+        "kunnat": Array [
+          91,
+          92,
+        ],
+        "kuvaus": undefined,
+        "maakunnat": Array [
+          1,
+        ],
+        "nimi": "HASSU MIGRAATIOTESTIPROJEKTI SUUNNITTELU",
+        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+        "toteuttavaOrganisaatio": undefined,
+        "tyyppi": "TIE",
+        "vaylamuoto": Array [
+          "tie",
+        ],
       },
-    ],
+      "yhteystiedot": Array [],
+    },
     "euRahoitus": false,
     "kielitiedot": Object {
       "__typename": "Kielitiedot",

@@ -48,29 +48,37 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends TilaManag
         return createPDF(type, julkaisu, projekti, kieli);
       }
 
+      // Create PDFs in parallel
+      const hyvaksymisKuulutusPDFPath = createPDFOfType(AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS);
+      const hyvaksymisIlmoitusLausunnonantajillePDFPath = createPDFOfType(
+        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE
+      );
+      const hyvaksymisIlmoitusMuistuttajillePDFPath = createPDFOfType(
+        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
+      );
+      const ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath = createPDFOfType(
+        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE
+      );
+      const ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath = createPDFOfType(
+        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE
+      );
       return {
-        hyvaksymisKuulutusPDFPath: await createPDFOfType(AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS),
-        hyvaksymisIlmoitusLausunnonantajillePDFPath: await createPDFOfType(
-          AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE
-        ),
-        hyvaksymisIlmoitusMuistuttajillePDFPath: await createPDFOfType(
-          AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
-        ),
-        ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath: await createPDFOfType(
-          AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE
-        ),
-        ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath: await createPDFOfType(
-          AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE
-        ),
+        hyvaksymisKuulutusPDFPath: await hyvaksymisKuulutusPDFPath,
+        hyvaksymisIlmoitusLausunnonantajillePDFPath: await hyvaksymisIlmoitusLausunnonantajillePDFPath,
+        hyvaksymisIlmoitusMuistuttajillePDFPath: await hyvaksymisIlmoitusMuistuttajillePDFPath,
+        ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath: await ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath,
+        ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath:
+          await ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath,
       };
     }
 
     const pdfs: LocalizedMap<HyvaksymisPaatosVaihePDF> = {};
-    pdfs[kielitiedot.ensisijainenKieli] = await generatePDFsForLanguage(kielitiedot.ensisijainenKieli, julkaisuWaitingForApproval);
-
+    // Generate PDFs in parallel
+    const hyvaksymisPaatosVaihePDFs = generatePDFsForLanguage(kielitiedot.ensisijainenKieli, julkaisuWaitingForApproval);
     if (kielitiedot.toissijainenKieli) {
       pdfs[kielitiedot.toissijainenKieli] = await generatePDFsForLanguage(kielitiedot.toissijainenKieli, julkaisuWaitingForApproval);
     }
+    pdfs[kielitiedot.ensisijainenKieli] = await hyvaksymisPaatosVaihePDFs;
     return pdfs;
   }
 

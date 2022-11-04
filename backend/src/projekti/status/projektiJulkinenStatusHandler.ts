@@ -9,20 +9,16 @@ import {
 import { isDateTimeInThePast, parseDate } from "../../util/dateUtil";
 import dayjs from "dayjs";
 import { AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler, HyvaksymisPaatosJulkaisuEndDateAndTila, StatusHandler } from "./statusHandler";
-import { findJulkaisuWithTila } from "../projektiUtil";
 
 export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): void {
   const aloituskuulutus = new (class extends StatusHandler<API.ProjektiJulkinen> {
     handle(p: API.ProjektiJulkinen) {
-      if (projekti.aloitusKuulutusJulkaisut) {
-        const julkisetAloituskuulutukset = projekti.aloitusKuulutusJulkaisut.filter((julkaisu) => {
-          return julkaisu.kuulutusPaiva && parseDate(julkaisu.kuulutusPaiva).isBefore(dayjs());
-        });
-
-        if (findJulkaisuWithTila(projekti.aloitusKuulutusJulkaisut, AloitusKuulutusTila.MIGROITU)) {
+      const julkaisu = projekti.aloitusKuulutusJulkaisu;
+      if (julkaisu) {
+        if (julkaisu.tila == AloitusKuulutusTila.MIGROITU) {
           // No status change, but continue searching for actual published content
           super.handle(p);
-        } else if (julkisetAloituskuulutukset?.length > 0) {
+        } else if (julkaisu.kuulutusPaiva && parseDate(julkaisu.kuulutusPaiva).isBefore(dayjs())) {
           projekti.status = API.Status.ALOITUSKUULUTUS;
           super.handle(p); // Continue evaluating next rules
         }

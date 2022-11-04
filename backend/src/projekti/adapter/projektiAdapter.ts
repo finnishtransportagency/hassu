@@ -8,7 +8,7 @@ import { lisaAineistoService } from "../../aineisto/lisaAineistoService";
 import { adaptKielitiedotByAddingTypename, adaptLiittyvatSuunnitelmatByAddingTypename, adaptVelho } from "./common";
 import {
   adaptAloitusKuulutus,
-  adaptAloitusKuulutusJulkaisut,
+  adaptAloitusKuulutusJulkaisu,
   adaptHyvaksymisPaatosVaihe,
   adaptHyvaksymisPaatosVaiheJulkaisut,
   adaptKasittelynTila,
@@ -60,9 +60,9 @@ export class ProjektiAdapter {
       kayttoOikeudet: KayttoOikeudetManager.adaptAPIKayttoOikeudet(kayttoOikeudet),
       tyyppi: velho?.tyyppi || dbProjekti.tyyppi, // remove usage of projekti.tyyppi after all data has been migrated to new format
       aloitusKuulutus: adaptAloitusKuulutus(aloitusKuulutus),
+      aloitusKuulutusJulkaisu: adaptAloitusKuulutusJulkaisu(dbProjekti.oid, aloitusKuulutusJulkaisut),
       suunnitteluSopimus: adaptSuunnitteluSopimus(dbProjekti.oid, suunnitteluSopimus),
       liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmatByAddingTypename(liittyvatSuunnitelmat),
-      aloitusKuulutusJulkaisut: adaptAloitusKuulutusJulkaisut(dbProjekti.oid, aloitusKuulutusJulkaisut),
       velho: adaptVelho(velho),
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot, true),
       suunnitteluVaihe: adaptSuunnitteluVaihe(dbProjekti.oid, kayttoOikeudet, suunnitteluVaihe, vuorovaikutukset),

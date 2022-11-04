@@ -19,7 +19,7 @@ import { kuntametadata } from "../../../../common/kuntametadata";
 export default function AloituskuulutusJulkinen(): ReactElement {
   const { t, lang } = useTranslation("projekti");
   const { data: projekti } = useProjektiJulkinen();
-  const kuulutus = projekti?.aloitusKuulutusJulkaisut?.[0];
+  const kuulutus = projekti?.aloitusKuulutusJulkaisu;
   const velho = kuulutus?.velho;
   const suunnittelusopimus = kuulutus?.suunnitteluSopimus;
   const kieli = useKansalaiskieli();

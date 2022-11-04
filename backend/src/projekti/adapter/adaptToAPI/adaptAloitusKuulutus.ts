@@ -11,6 +11,7 @@ import {
 } from "../common";
 import { adaptSuunnitteluSopimusJulkaisu, FileLocation } from "./adaptSuunitteluSopimus";
 import { fileService } from "../../../files/fileService";
+import { findJulkaisuWithTila } from "../../projektiUtil";
 
 export function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.AloitusKuulutus | undefined {
   if (kuulutus) {
@@ -29,12 +30,16 @@ export function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.Alo
   return kuulutus as undefined;
 }
 
-export function adaptAloitusKuulutusJulkaisut(
+export function adaptAloitusKuulutusJulkaisu(
   oid: string,
   aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null
-): API.AloitusKuulutusJulkaisu[] | undefined {
+): API.AloitusKuulutusJulkaisu | undefined {
   if (aloitusKuulutusJulkaisut) {
-    return aloitusKuulutusJulkaisut.map((julkaisu) => {
+    const julkaisu =
+      findJulkaisuWithTila(aloitusKuulutusJulkaisut, AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA) ||
+      findJulkaisuWithTila(aloitusKuulutusJulkaisut, AloitusKuulutusTila.HYVAKSYTTY) ||
+      findJulkaisuWithTila(aloitusKuulutusJulkaisut, AloitusKuulutusTila.MIGROITU);
+    if (julkaisu) {
       const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, tila, ...fieldsToCopyAsIs } = julkaisu;
       if (tila == AloitusKuulutusTila.MIGROITU) {
         return {
@@ -48,7 +53,7 @@ export function adaptAloitusKuulutusJulkaisut(
       if (!julkaisu.hankkeenKuvaus) {
         throw new Error("adaptAloitusKuulutusJulkaisut: julkaisu.hankkeenKuvaus puuttuu");
       }
-      const apiJulkaisu: API.AloitusKuulutusJulkaisu = {
+      return {
         ...fieldsToCopyAsIs,
         __typename: "AloitusKuulutusJulkaisu",
         tila,
@@ -60,10 +65,8 @@ export function adaptAloitusKuulutusJulkaisut(
         kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
         aloituskuulutusPDFt: adaptJulkaisuPDFPaths(oid, julkaisu.aloituskuulutusPDFt),
       };
-      return apiJulkaisu;
-    });
+    }
   }
-  return undefined;
 }
 
 function adaptJulkaisuPDFPaths(

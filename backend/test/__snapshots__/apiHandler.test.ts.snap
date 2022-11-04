@@ -548,245 +548,157 @@ Array [
 
 exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 10`] = `
 Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-yllapito",
-    "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
-    "ContentType": "application/pdf",
-    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
-    "Metadata": Object {
-      "publication-timestamp": "2022-01-02T00:00:00+02:00",
+  "args": Array [
+    Object {
+      "Bucket": "hassu-localstack-public",
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+      "Metadata": Object {
+        "publication-timestamp": "2022-01-02T00:00:00+02:00",
+      },
     },
-  },
+    Object {
+      "Bucket": "hassu-localstack-public",
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+      "Metadata": Object {
+        "publication-timestamp": "2022-01-02T00:00:00+02:00",
+      },
+    },
+    Object {
+      "Bucket": "hassu-localstack-public",
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+      "Metadata": Object {
+        "publication-timestamp": "2022-01-02T00:00:00+02:00",
+      },
+    },
+    Object {
+      "Bucket": "hassu-localstack-public",
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+      "Metadata": Object {
+        "publication-timestamp": "2022-01-02T00:00:00+02:00",
+      },
+    },
+    Object {
+      "Bucket": "hassu-localstack-public",
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      "Metadata": Object {
+        "publication-timestamp": "2022-01-02T00:00:00+02:00",
+      },
+    },
+    Object {
+      "Bucket": "hassu-localstack-public",
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      "Metadata": Object {
+        "publication-timestamp": "2022-01-02T00:00:00+02:00",
+      },
+    },
+    Object {
+      "Bucket": "hassu-localstack-public",
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      "Metadata": Object {
+        "publication-timestamp": "2022-01-02T00:00:00+02:00",
+      },
+    },
+    Object {
+      "Bucket": "hassu-localstack-public",
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      "Metadata": Object {
+        "publication-timestamp": "2022-01-02T00:00:00+02:00",
+      },
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+      "Metadata": Object {
+        "publication-timestamp": "2022-01-02T00:00:00+02:00",
+      },
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+      "Metadata": Object {
+        "publication-timestamp": "2022-01-02T00:00:00+02:00",
+      },
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+      "Metadata": Object {
+        "publication-timestamp": "2022-01-02T00:00:00+02:00",
+      },
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+      "Metadata": Object {
+        "publication-timestamp": "2022-01-02T00:00:00+02:00",
+      },
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      "Metadata": Object {
+        "publication-timestamp": "2022-01-02T00:00:00+02:00",
+      },
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      "Metadata": Object {
+        "publication-timestamp": "2022-01-02T00:00:00+02:00",
+      },
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      "Metadata": Object {
+        "publication-timestamp": "2022-01-02T00:00:00+02:00",
+      },
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      "Metadata": Object {
+        "publication-timestamp": "2022-01-02T00:00:00+02:00",
+      },
+    },
+  ],
   "stub": "putObject",
 }
 `;
 
 exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 11`] = `
-Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-public",
-    "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
-    "ContentType": "application/pdf",
-    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
-    "Metadata": Object {
-      "publication-timestamp": "2022-01-02T00:00:00+02:00",
-    },
-  },
-  "stub": "putObject",
-}
-`;
-
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 12`] = `
-Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-yllapito",
-    "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
-    "ContentType": "application/pdf",
-    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-    "Metadata": Object {
-      "publication-timestamp": "2022-01-02T00:00:00+02:00",
-    },
-  },
-  "stub": "putObject",
-}
-`;
-
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 13`] = `
-Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-public",
-    "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
-    "ContentType": "application/pdf",
-    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-    "Metadata": Object {
-      "publication-timestamp": "2022-01-02T00:00:00+02:00",
-    },
-  },
-  "stub": "putObject",
-}
-`;
-
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 14`] = `
-Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-yllapito",
-    "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
-    "ContentType": "application/pdf",
-    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
-    "Metadata": Object {
-      "publication-timestamp": "2022-01-02T00:00:00+02:00",
-    },
-  },
-  "stub": "putObject",
-}
-`;
-
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 15`] = `
-Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-public",
-    "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
-    "ContentType": "application/pdf",
-    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
-    "Metadata": Object {
-      "publication-timestamp": "2022-01-02T00:00:00+02:00",
-    },
-  },
-  "stub": "putObject",
-}
-`;
-
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 16`] = `
-Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-yllapito",
-    "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
-    "ContentType": "application/pdf",
-    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-    "Metadata": Object {
-      "publication-timestamp": "2022-01-02T00:00:00+02:00",
-    },
-  },
-  "stub": "putObject",
-}
-`;
-
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 17`] = `
-Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-public",
-    "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
-    "ContentType": "application/pdf",
-    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-    "Metadata": Object {
-      "publication-timestamp": "2022-01-02T00:00:00+02:00",
-    },
-  },
-  "stub": "putObject",
-}
-`;
-
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 18`] = `
-Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-yllapito",
-    "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
-    "ContentType": "application/pdf",
-    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
-    "Metadata": Object {
-      "publication-timestamp": "2022-01-02T00:00:00+02:00",
-    },
-  },
-  "stub": "putObject",
-}
-`;
-
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 19`] = `
-Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-public",
-    "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
-    "ContentType": "application/pdf",
-    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
-    "Metadata": Object {
-      "publication-timestamp": "2022-01-02T00:00:00+02:00",
-    },
-  },
-  "stub": "putObject",
-}
-`;
-
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 20`] = `
-Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-yllapito",
-    "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
-    "ContentType": "application/pdf",
-    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-    "Metadata": Object {
-      "publication-timestamp": "2022-01-02T00:00:00+02:00",
-    },
-  },
-  "stub": "putObject",
-}
-`;
-
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 21`] = `
-Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-public",
-    "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
-    "ContentType": "application/pdf",
-    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-    "Metadata": Object {
-      "publication-timestamp": "2022-01-02T00:00:00+02:00",
-    },
-  },
-  "stub": "putObject",
-}
-`;
-
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 22`] = `
-Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-yllapito",
-    "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
-    "ContentType": "application/pdf",
-    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
-    "Metadata": Object {
-      "publication-timestamp": "2022-01-02T00:00:00+02:00",
-    },
-  },
-  "stub": "putObject",
-}
-`;
-
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 23`] = `
-Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-public",
-    "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
-    "ContentType": "application/pdf",
-    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
-    "Metadata": Object {
-      "publication-timestamp": "2022-01-02T00:00:00+02:00",
-    },
-  },
-  "stub": "putObject",
-}
-`;
-
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 24`] = `
-Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-yllapito",
-    "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
-    "ContentType": "application/pdf",
-    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-    "Metadata": Object {
-      "publication-timestamp": "2022-01-02T00:00:00+02:00",
-    },
-  },
-  "stub": "putObject",
-}
-`;
-
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 25`] = `
-Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-public",
-    "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
-    "ContentType": "application/pdf",
-    "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-    "Metadata": Object {
-      "publication-timestamp": "2022-01-02T00:00:00+02:00",
-    },
-  },
-  "stub": "putObject",
-}
-`;
-
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 26`] = `
 Object {
   "args": Object {
     "Bucket": "hassu-localstack-public",
@@ -801,27 +713,23 @@ Object {
 }
 `;
 
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 27`] = `
+exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 12`] = `
 Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-yllapito",
-    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
-  },
+  "args": Array [
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+    },
+  ],
   "stub": "getObject",
 }
 `;
 
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 28`] = `
-Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-yllapito",
-    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-  },
-  "stub": "getObject",
-}
-`;
-
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 29`] = `
+exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 13`] = `
 Object {
   "args": Object {
     "Bucket": "hassu-localstack-yllapito",
@@ -831,47 +739,31 @@ Object {
 }
 `;
 
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 30`] = `
+exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 14`] = `
 Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-yllapito",
-    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
-  },
+  "args": Array [
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+    },
+  ],
   "stub": "deleteObject",
 }
 `;
 
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 31`] = `
-Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-yllapito",
-    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-  },
-  "stub": "deleteObject",
-}
-`;
-
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 32`] = `
-Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-yllapito",
-    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
-  },
-  "stub": "deleteObject",
-}
-`;
-
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 33`] = `
-Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-yllapito",
-    "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-  },
-  "stub": "deleteObject",
-}
-`;
-
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 34`] = `
+exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 15`] = `
 Object {
   "__typename": "Projekti",
   "aloitusKuulutus": Object {
@@ -931,103 +823,101 @@ Object {
     "palautusSyy": null,
     "siirtyySuunnitteluVaiheeseen": "2999-01-01",
   },
-  "aloitusKuulutusJulkaisut": Array [
-    Object {
-      "__typename": "AloitusKuulutusJulkaisu",
-      "aloituskuulutusPDFt": Object {
-        "SUOMI": Object {
-          "__typename": "AloitusKuulutusPDF",
-          "aloituskuulutusIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-          "aloituskuulutusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
-        },
-        "__typename": "AloitusKuulutusPDFt",
+  "aloitusKuulutusJulkaisu": Object {
+    "__typename": "AloitusKuulutusJulkaisu",
+    "aloituskuulutusPDFt": Object {
+      "SUOMI": Object {
+        "__typename": "AloitusKuulutusPDF",
+        "aloituskuulutusIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+        "aloituskuulutusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
       },
-      "hankkeenKuvaus": Object {
-        "RUOTSI": "På Svenska",
-        "SAAME": "Saameksi",
-        "SUOMI": "Lorem Ipsum",
-        "__typename": "HankkeenKuvaukset",
-      },
-      "hyvaksyja": "A123",
-      "id": 1,
-      "ilmoituksenVastaanottajat": Object {
-        "__typename": "IlmoituksenVastaanottajat",
-        "kunnat": Array [
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 491,
-            "lahetetty": "2022-09-28T00:00",
-            "sahkoposti": "mikkeli@mikke.li",
-          },
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 178,
-            "lahetetty": "2022-09-28T00:00",
-            "sahkoposti": "juva@ju.va",
-          },
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 740,
-            "lahetetty": "2022-09-28T00:00",
-            "sahkoposti": "savonlinna@savonlin.na",
-          },
-        ],
-        "viranomaiset": Array [
-          Object {
-            "__typename": "ViranomaisVastaanottaja",
-            "lahetetty": "2022-09-28T00:00",
-            "nimi": "ETELA_SAVO_ELY",
-            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
-          },
-        ],
-      },
-      "kielitiedot": Object {
-        "__typename": "Kielitiedot",
-        "ensisijainenKieli": "SUOMI",
-        "projektinNimiVieraskielella": "Projektin nimi saameksi",
-        "toissijainenKieli": "SAAME",
-      },
-      "kuulutusPaiva": "2022-01-02",
-      "muokkaaja": "A123",
-      "siirtyySuunnitteluVaiheeseen": "2999-01-01",
-      "suunnitteluSopimus": Object {
-        "__typename": "SuunnitteluSopimusJulkaisu",
-        "email": "a2@vayla.fi",
-        "etunimi": "EtunimiA2",
-        "kunta": 536,
-        "logo": "/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
-        "puhelinnumero": "123456789",
-        "sukunimi": "SukunimiA2",
-      },
-      "tila": "HYVAKSYTTY",
-      "velho": Object {
-        "__typename": "Velho",
-        "kunnat": undefined,
-        "maakunnat": undefined,
-        "nimi": "Testiprojekti 1",
-        "tyyppi": "TIE",
-        "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
-      },
-      "yhteystiedot": Array [
+      "__typename": "AloitusKuulutusPDFt",
+    },
+    "hankkeenKuvaus": Object {
+      "RUOTSI": "På Svenska",
+      "SAAME": "Saameksi",
+      "SUOMI": "Lorem Ipsum",
+      "__typename": "HankkeenKuvaukset",
+    },
+    "hyvaksyja": "A123",
+    "id": 1,
+    "ilmoituksenVastaanottajat": Object {
+      "__typename": "IlmoituksenVastaanottajat",
+      "kunnat": Array [
         Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "Pekka",
-          "organisaatio": "Väylävirasto",
-          "puhelinnumero": "11",
-          "sahkoposti": "pekka.projari@vayla.fi",
-          "sukunimi": "Projari",
+          "__typename": "KuntaVastaanottaja",
+          "id": 491,
+          "lahetetty": "2022-09-28T00:00",
+          "sahkoposti": "mikkeli@mikke.li",
         },
         Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "Marko",
-          "organisaatio": "Kajaani",
-          "puhelinnumero": "0293121213",
-          "sahkoposti": "markku.koi@koi.com",
-          "sukunimi": "Koi",
+          "__typename": "KuntaVastaanottaja",
+          "id": 178,
+          "lahetetty": "2022-09-28T00:00",
+          "sahkoposti": "juva@ju.va",
+        },
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "id": 740,
+          "lahetetty": "2022-09-28T00:00",
+          "sahkoposti": "savonlinna@savonlin.na",
+        },
+      ],
+      "viranomaiset": Array [
+        Object {
+          "__typename": "ViranomaisVastaanottaja",
+          "lahetetty": "2022-09-28T00:00",
+          "nimi": "ETELA_SAVO_ELY",
+          "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
         },
       ],
     },
-  ],
+    "kielitiedot": Object {
+      "__typename": "Kielitiedot",
+      "ensisijainenKieli": "SUOMI",
+      "projektinNimiVieraskielella": "Projektin nimi saameksi",
+      "toissijainenKieli": "SAAME",
+    },
+    "kuulutusPaiva": "2022-01-02",
+    "muokkaaja": "A123",
+    "siirtyySuunnitteluVaiheeseen": "2999-01-01",
+    "suunnitteluSopimus": Object {
+      "__typename": "SuunnitteluSopimusJulkaisu",
+      "email": "a2@vayla.fi",
+      "etunimi": "EtunimiA2",
+      "kunta": 536,
+      "logo": "/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
+      "puhelinnumero": "123456789",
+      "sukunimi": "SukunimiA2",
+    },
+    "tila": "HYVAKSYTTY",
+    "velho": Object {
+      "__typename": "Velho",
+      "kunnat": undefined,
+      "maakunnat": undefined,
+      "nimi": "Testiprojekti 1",
+      "tyyppi": "TIE",
+      "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
+    },
+    "yhteystiedot": Array [
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Pekka",
+        "organisaatio": "Väylävirasto",
+        "puhelinnumero": "11",
+        "sahkoposti": "pekka.projari@vayla.fi",
+        "sukunimi": "Projari",
+      },
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Marko",
+        "organisaatio": "Kajaani",
+        "puhelinnumero": "0293121213",
+        "sahkoposti": "markku.koi@koi.com",
+        "sukunimi": "Koi",
+      },
+    ],
+  },
   "euRahoitus": false,
   "kayttoOikeudet": Array [
     Object {
@@ -1092,79 +982,77 @@ Object {
 }
 `;
 
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 35`] = `
+exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 16`] = `
 Object {
   "description": "Public version of the projekti",
   "projekti": Object {
     "__typename": "ProjektiJulkinen",
-    "aloitusKuulutusJulkaisut": Array [
-      Object {
-        "__typename": "AloitusKuulutusJulkaisuJulkinen",
-        "aloituskuulutusPDFt": Object {
-          "SUOMI": Object {
-            "__typename": "AloitusKuulutusPDF",
-            "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-            "aloituskuulutusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
-          },
-          "__typename": "AloitusKuulutusPDFt",
+    "aloitusKuulutusJulkaisu": Object {
+      "__typename": "AloitusKuulutusJulkaisuJulkinen",
+      "aloituskuulutusPDFt": Object {
+        "SUOMI": Object {
+          "__typename": "AloitusKuulutusPDF",
+          "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          "aloituskuulutusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
         },
-        "hankkeenKuvaus": Object {
-          "RUOTSI": "På Svenska",
-          "SAAME": "Saameksi",
-          "SUOMI": "Lorem Ipsum",
-          "__typename": "HankkeenKuvaukset",
-        },
-        "kielitiedot": Object {
-          "__typename": "Kielitiedot",
-          "ensisijainenKieli": "SUOMI",
-          "projektinNimiVieraskielella": "Projektin nimi saameksi",
-          "toissijainenKieli": "SAAME",
-        },
-        "kuulutusPaiva": "2022-01-02",
-        "siirtyySuunnitteluVaiheeseen": "2999-01-01",
-        "suunnitteluSopimus": Object {
-          "__typename": "SuunnitteluSopimusJulkaisu",
-          "email": "a2@vayla.fi",
-          "etunimi": "EtunimiA2",
-          "kunta": 536,
-          "logo": "/tiedostot/suunnitelma/1/suunnittelusopimus/logo.gif",
-          "puhelinnumero": "123456789",
-          "sukunimi": "SukunimiA2",
-        },
-        "tila": "HYVAKSYTTY",
-        "velho": Object {
-          "__typename": "VelhoJulkinen",
-          "asiatunnusELY": undefined,
-          "asiatunnusVayla": undefined,
-          "kunnat": undefined,
-          "kuvaus": undefined,
-          "maakunnat": undefined,
-          "nimi": "Testiprojekti 1",
-          "suunnittelustaVastaavaViranomainen": undefined,
-          "toteuttavaOrganisaatio": undefined,
-          "tyyppi": "TIE",
-          "vaylamuoto": undefined,
-        },
-        "yhteystiedot": Array [
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Pekka",
-            "organisaatio": "Väylävirasto",
-            "puhelinnumero": "11",
-            "sahkoposti": "pekka.projari@vayla.fi",
-            "sukunimi": "Projari",
-          },
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Marko",
-            "organisaatio": "Kajaani",
-            "puhelinnumero": "0293121213",
-            "sahkoposti": "markku.koi@koi.com",
-            "sukunimi": "Koi",
-          },
-        ],
+        "__typename": "AloitusKuulutusPDFt",
       },
-    ],
+      "hankkeenKuvaus": Object {
+        "RUOTSI": "På Svenska",
+        "SAAME": "Saameksi",
+        "SUOMI": "Lorem Ipsum",
+        "__typename": "HankkeenKuvaukset",
+      },
+      "kielitiedot": Object {
+        "__typename": "Kielitiedot",
+        "ensisijainenKieli": "SUOMI",
+        "projektinNimiVieraskielella": "Projektin nimi saameksi",
+        "toissijainenKieli": "SAAME",
+      },
+      "kuulutusPaiva": "2022-01-02",
+      "siirtyySuunnitteluVaiheeseen": "2999-01-01",
+      "suunnitteluSopimus": Object {
+        "__typename": "SuunnitteluSopimusJulkaisu",
+        "email": "a2@vayla.fi",
+        "etunimi": "EtunimiA2",
+        "kunta": 536,
+        "logo": "/tiedostot/suunnitelma/1/suunnittelusopimus/logo.gif",
+        "puhelinnumero": "123456789",
+        "sukunimi": "SukunimiA2",
+      },
+      "tila": "HYVAKSYTTY",
+      "velho": Object {
+        "__typename": "VelhoJulkinen",
+        "asiatunnusELY": undefined,
+        "asiatunnusVayla": undefined,
+        "kunnat": undefined,
+        "kuvaus": undefined,
+        "maakunnat": undefined,
+        "nimi": "Testiprojekti 1",
+        "suunnittelustaVastaavaViranomainen": undefined,
+        "toteuttavaOrganisaatio": undefined,
+        "tyyppi": "TIE",
+        "vaylamuoto": undefined,
+      },
+      "yhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Pekka",
+          "organisaatio": "Väylävirasto",
+          "puhelinnumero": "11",
+          "sahkoposti": "pekka.projari@vayla.fi",
+          "sukunimi": "Projari",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
     "euRahoitus": false,
     "kielitiedot": Object {
       "__typename": "Kielitiedot",

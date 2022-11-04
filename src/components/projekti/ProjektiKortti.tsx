@@ -1,6 +1,6 @@
 import { Projekti } from "@services/api";
 import React, { ReactElement } from "react";
-import MuiAccordion, { AccordionProps, accordionClasses } from "@mui/material/Accordion";
+import MuiAccordion, { accordionClasses, AccordionProps } from "@mui/material/Accordion";
 import { Typography } from "@mui/material";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
@@ -30,9 +30,7 @@ interface Props {
 }
 
 export default function ProjektiKortti(props: Props): ReactElement {
-  const julkinen =
-    props.projekti?.aloitusKuulutusJulkaisut?.[0] &&
-    examineKuulutusPaiva(props.projekti.aloitusKuulutusJulkaisut[0]?.kuulutusPaiva).published;
+  const julkinen = examineKuulutusPaiva(props.projekti.aloitusKuulutusJulkaisu?.kuulutusPaiva).published;
   const julkinenURL = window.location.protocol + "//" + window.location.host + "/suunnitelma/" + props.projekti.oid;
   const asiatunnus = getAsiatunnus(props.projekti) || "-/0000/00.00.00/0000";
 

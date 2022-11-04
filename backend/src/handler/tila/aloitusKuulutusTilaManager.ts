@@ -113,14 +113,9 @@ class AloitusKuulutusTilaManager extends TilaManager {
     const kielitiedot: Kielitiedot = julkaisuWaitingForApproval.kielitiedot;
 
     async function generatePDFsForLanguage(kieli: Kieli, julkaisu: AloitusKuulutusJulkaisu): Promise<AloitusKuulutusPDF> {
-      const aloituskuulutusPDFPath = await createAloituskuulutusPDF(AsiakirjaTyyppi.ALOITUSKUULUTUS, julkaisu, projekti, kieli);
-      const aloituskuulutusIlmoitusPDFPath = await createAloituskuulutusPDF(
-        AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA,
-        julkaisu,
-        projekti,
-        kieli
-      );
-      return { aloituskuulutusPDFPath, aloituskuulutusIlmoitusPDFPath };
+      const aloituskuulutusPDFPath = createAloituskuulutusPDF(AsiakirjaTyyppi.ALOITUSKUULUTUS, julkaisu, projekti, kieli);
+      const aloituskuulutusIlmoitusPDFPath = createAloituskuulutusPDF(AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, julkaisu, projekti, kieli);
+      return { aloituskuulutusPDFPath: await aloituskuulutusPDFPath, aloituskuulutusIlmoitusPDFPath: await aloituskuulutusIlmoitusPDFPath };
     }
 
     julkaisuWaitingForApproval.aloituskuulutusPDFt = {};

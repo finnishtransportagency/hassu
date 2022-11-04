@@ -105,7 +105,7 @@ type Projekti implements IProjekti {
   status: Status
   suunnittelustaVastaavaViranomainen: Viranomainen
   aloitusKuulutus: AloitusKuulutus
-  aloitusKuulutusJulkaisut: [AloitusKuulutusJulkaisu!]
+  aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu
   suunnitteluSopimus: SuunnitteluSopimus
   suunnitteluVaihe: SuunnitteluVaihe
   nahtavillaoloVaihe: NahtavillaoloVaihe
@@ -502,7 +502,7 @@ type VelhoJulkinen {
 
 type ProjektiJulkinen implements IProjekti {
   oid: String!
-  aloitusKuulutusJulkaisut: [AloitusKuulutusJulkaisuJulkinen!]
+  aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisuJulkinen
   suunnitteluSopimus: SuunnitteluSopimusJulkaisu
   suunnitteluVaihe: SuunnitteluVaiheJulkinen
   euRahoitus: Boolean
