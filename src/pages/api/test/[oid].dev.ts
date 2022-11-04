@@ -53,6 +53,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   });
 
+  const jatkoPaatos1VaiheFields: Partial<DBProjekti> = {
+    jatkoPaatos1Vaihe: null,
+    jatkoPaatos1VaiheJulkaisut: null,
+  };
+
   const hyvaksymisPaatosVaiheFields: Partial<DBProjekti> = {
     hyvaksymisPaatosVaihe: null,
     hyvaksymisPaatosVaiheJulkaisut: null,
@@ -129,6 +134,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
   );
+  
+  await executor.onResetJatkopaatos1vaihe(async (oid: string) => {
+    requireProjekti();
+    const kasittelyntila = dbProjekti?.kasittelynTila;
+    await testProjektiDatabase.saveProjekti({
+      oid,
+      kasittelynTila: kasittelyntila?.hyvaksymispaatos
+        ? {
+            hyvaksymispaatos: kasittelyntila.hyvaksymispaatos,
+            ensimmainenJatkopaatos: { asianumero: "", paatoksenPvm: "" },
+            toinenJatkopaatos: { asianumero: "", paatoksenPvm: "" },
+          }
+        : null,
+      ...jatkoPaatos1VaiheFields,
+    });
+  });
 
   // text/html jotta cypress toimii paremmin
   res.setHeader("Content-Type", "text/html");
