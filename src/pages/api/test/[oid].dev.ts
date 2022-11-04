@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import { DBProjekti } from "../../../../backend/src/database/model";
 import { testProjektiDatabase } from "../../../../backend/src/database/testProjektiDatabase";
 import { importProjekti, TargetStatuses } from "../../../../backend/src/migraatio/migration";
-import { getVaylaUser } from "@services/userService";
+import { NykyinenKayttaja } from "../../../../common/graphql/apiModel";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const dbProjekti = await authenticateAndLoadProjekti(req, res);
@@ -109,16 +109,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   await executor.onMigraatio(
     async (oid: string, targetStatus: TargetStatuses, hyvaksymispaatosPaivamaara?: string, hyvaksymispaatosAsianumero?: string) => {
-      let kayttaja = await getVaylaUser();
-      if (!kayttaja) {
-        throw new Error("Kirjautuminen puuttuu");
-      }
       if (!targetStatus) {
         throw new Error("targetStatus-parametri puuttuu");
       }
+      const kayttaja: NykyinenKayttaja = {
+        __typename: "NykyinenKayttaja",
+        etuNimi: "migraatio",
+        sukuNimi: "migraatio",
+        roolit: ["hassu_admin"],
+        uid: "migraatio",
+      };
+
       await importProjekti({
         oid: oid,
-        kayttaja: kayttaja,
+        kayttaja,
         targetStatus: targetStatus,
         hyvaksymispaatosPaivamaara: dayjs(hyvaksymispaatosPaivamaara).toDate(),
         hyvaksymispaatosAsianumero: hyvaksymispaatosAsianumero,
