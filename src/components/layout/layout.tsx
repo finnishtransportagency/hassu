@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode } from "react";
-import Breadcrumbs, { RouteLabels } from "./Breadcrumbs";
+import Breadcrumbs from "./Breadcrumbs";
 import Header from "./header/header";
 import { Footer } from "./footer";
 import { Container } from "@mui/material";
@@ -8,15 +8,14 @@ import ScrollToTopButton from "./ScrollToTopButton";
 
 interface Props {
   children: ReactNode;
-  routeLabels: RouteLabels;
 }
 
-export default function Layout({ children, routeLabels }: Props): ReactElement {
+export default function Layout({ children }: Props): ReactElement {
   return (
     <div className="min-h-screen relative flex flex-col">
       {process.env.ENVIRONMENT !== "prod" && <NotificationBar />}
       <Header />
-      <Breadcrumbs routeLabels={routeLabels} />
+      <Breadcrumbs />
       <Container sx={{ marginBottom: "110px" }}>
         <main>{children}</main>
       </Container>

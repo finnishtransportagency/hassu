@@ -1,7 +1,5 @@
-import { PageProps } from "@pages/_app";
 import React, { ReactElement, useCallback, useState, useMemo } from "react";
 import { api, HyvaksymispaatosInput, Status, TallennaProjektiInput } from "@services/api";
-import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
 import { useForm, UseFormProps } from "react-hook-form";
@@ -30,8 +28,7 @@ import KasittelyntilaLukutila from "@components/projekti/lukutila/KasittelynTila
 
 type FormValues = Pick<TallennaProjektiInput, "oid" | "kasittelynTila">;
 
-export default function KasittelyntilaSivu({ setRouteLabels }: PageProps): ReactElement {
-  useProjektiBreadcrumbs(setRouteLabels);
+export default function KasittelyntilaSivu(): ReactElement {
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
   return (
     <ProjektiPageLayout title="Käsittelyn tila">

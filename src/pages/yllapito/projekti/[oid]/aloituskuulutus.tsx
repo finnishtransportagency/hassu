@@ -3,7 +3,6 @@ import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { useRouter } from "next/router";
 import React, { ReactElement, useCallback, useMemo, useState } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@components/button/Button";
@@ -25,7 +24,6 @@ import {
   YhteystietoInput,
 } from "@services/api";
 import log from "loglevel";
-import { PageProps } from "@pages/_app";
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 import KuulutuksenYhteystiedot from "@components/projekti/aloituskuulutus/KuulutuksenYhteystiedot";
@@ -77,10 +75,8 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
   ProjektiTestType.PROJEKTI_IS_CREATED,
 ]);
 
-export default function AloituskuulutusPage({ setRouteLabels }: PageProps): ReactElement {
+export default function AloituskuulutusPage(): ReactElement {
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
-  useProjektiBreadcrumbs(setRouteLabels);
-
   return (
     <>{projekti && <AloituskuulutusForm projekti={projekti} projektiLoadError={projektiLoadError} reloadProjekti={reloadProjekti} />}</>
   );

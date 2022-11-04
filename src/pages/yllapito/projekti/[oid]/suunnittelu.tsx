@@ -1,11 +1,9 @@
 import React, { ReactElement, useCallback, useMemo, useState } from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
-import { PageProps } from "@pages/_app";
 import Section from "@components/layout/Section";
 import Tabs, { HassuTabProps } from "@components/layout/tabs/Tabs";
 import SuunnitteluvaiheenPerustiedot from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenPerustiedot";
 import SuunnitteluvaiheenVuorovaikuttaminen from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
-import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import TallentamattomiaMuutoksiaDialog from "@components/TallentamattomiaMuutoksiaDialog";
 import SuunnitteluvaiheenPerustiedotLukutila from "@components/projekti/lukutila/SuunnitteluvaiheenPerustiedotLukutila";
@@ -13,8 +11,7 @@ import VuorovaikuttaminenLukutila from "@components/projekti/lukutila/Vuorovaiku
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { SuunnitteluVaiheTila } from "../../../../../common/graphql/apiModel";
 
-export default function SuunnitteluWrapper({ setRouteLabels }: PageProps) {
-  useProjektiBreadcrumbs(setRouteLabels);
+export default function SuunnitteluWrapper() {
   const { data: projekti } = useProjekti();
 
   if (!projekti) {

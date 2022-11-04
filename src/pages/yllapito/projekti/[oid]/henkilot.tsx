@@ -1,7 +1,5 @@
-import { PageProps } from "@pages/_app";
 import React, { ReactElement, useCallback, useEffect, useMemo } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import useProjektiBreadcrumbs from "src/hooks/useProjektiBreadcrumbs";
 import KayttoOikeusHallinta from "@components/projekti/KayttoOikeusHallinta";
 import { api, TallennaProjektiInput, ProjektiKayttajaInput } from "@services/api";
 import * as Yup from "yup";
@@ -42,9 +40,8 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
   ProjektiTestType.PROJEKTI_IS_CREATED,
 ]);
 
-export default function HenkilotPage({ setRouteLabels }: PageProps): ReactElement {
+export default function HenkilotPage(): ReactElement {
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
-  useProjektiBreadcrumbs(setRouteLabels);
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 

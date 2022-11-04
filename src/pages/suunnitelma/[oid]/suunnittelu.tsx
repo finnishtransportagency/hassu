@@ -20,22 +20,19 @@ import {
 } from "@services/api";
 import capitalize from "lodash/capitalize";
 import { SoittoajanYhteystieto } from "@components/projekti/suunnitteluvaihe/VuorovaikutusMahdollisuudet";
-import { PageProps } from "@pages/_app";
 import ExtLink from "@components/ExtLink";
 import { parseVideoURL } from "src/util/videoParser";
 import PalauteLomakeDialogi from "src/components/projekti/kansalaisnakyma/PalauteLomakeDialogi";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
-import useProjektiBreadcrumbsJulkinen from "src/hooks/useProjektiBreadcrumbsJulkinen";
 import FormatDate from "@components/FormatDate";
 import { splitFilePath } from "../../../util/fileUtil";
 import classNames from "classnames";
 import Trans from "next-translate/Trans";
 import { kuntametadata } from "../../../../common/kuntametadata";
 
-export default function Suunnittelu({ setRouteLabels }: PageProps): ReactElement {
+export default function Suunnittelu(): ReactElement {
   const { t } = useTranslation("suunnittelu");
-  useProjektiBreadcrumbsJulkinen(setRouteLabels);
   const { data: projekti } = useProjektiJulkinen();
 
   if (!projekti?.suunnitteluVaihe) {
