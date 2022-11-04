@@ -8,7 +8,6 @@
  */
 
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
-import { Status } from "../../../common/graphql/apiModel";
 import { typeIntoFields } from "../../support/util";
 import {
   hyvaksyNahtavillaoloKuulutus,
@@ -46,7 +45,7 @@ describe("Migraatio", () => {
     const oid = "1.2.246.578.5.1.2983738467.1825323454";
     cy.login("A1");
     cy.archiveProjekti(oid);
-    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).migroi(Status.SUUNNITTELU), { timeout: 30000 });
+    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).migroi("SUUNNITTELU"), { timeout: 30000 });
     cy.wait(2000);
     syotaPuhelinnumerot(oid);
     //
@@ -86,7 +85,7 @@ describe("Migraatio", () => {
     const oid = "1.2.246.578.5.1.2574551391.2902330452";
     cy.login("A1");
     cy.archiveProjekti(oid);
-    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).migroi(Status.NAHTAVILLAOLO), { timeout: 30000 });
+    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).migroi("NAHTAVILLAOLO"), { timeout: 30000 });
     cy.wait(2000);
     syotaPuhelinnumerot(oid);
 
@@ -129,7 +128,7 @@ describe("Migraatio", () => {
     const oid = "1.2.246.578.5.1.2789861876.697619507";
     cy.login("A1");
     cy.archiveProjekti(oid);
-    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).migroi(Status.HYVAKSYMISMENETTELYSSA), { timeout: 30000 });
+    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).migroi("HYVAKSYMISMENETTELYSSA"), { timeout: 30000 });
     cy.wait(2000);
     syotaPuhelinnumerot(oid);
 
@@ -211,7 +210,7 @@ describe("Migraatio", () => {
     const oid = "1.2.246.578.5.1.2572523015.2790590568";
     cy.login("A1");
     cy.archiveProjekti(oid);
-    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).migroi(Status.EPAAKTIIVINEN_1, "2022-10-01", "asianro123"), {
+    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).migroi("EPAAKTIIVINEN_1", "2022-10-01", "asianro123"), {
       timeout: 30000,
     });
     cy.wait(2000);
