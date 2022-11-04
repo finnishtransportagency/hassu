@@ -54,14 +54,13 @@ export class ProjektiAdapter {
       ...fieldsToCopyAsIs
     } = dbProjekti;
 
-    const aloitusKuulutusJulkaisu = adaptAloitusKuulutusJulkaisu(dbProjekti.oid, aloitusKuulutusJulkaisut);
     const apiProjekti: API.Projekti = removeUndefinedFields({
       __typename: "Projekti",
       tallennettu: !!dbProjekti.tallennettu,
       kayttoOikeudet: KayttoOikeudetManager.adaptAPIKayttoOikeudet(kayttoOikeudet),
       tyyppi: velho?.tyyppi || dbProjekti.tyyppi, // remove usage of projekti.tyyppi after all data has been migrated to new format
-      aloitusKuulutus: !aloitusKuulutusJulkaisu ? adaptAloitusKuulutus(aloitusKuulutus) : undefined,
-      aloitusKuulutusJulkaisu,
+      aloitusKuulutus: adaptAloitusKuulutus(aloitusKuulutus),
+      aloitusKuulutusJulkaisu: adaptAloitusKuulutusJulkaisu(dbProjekti.oid, aloitusKuulutusJulkaisut),
       suunnitteluSopimus: adaptSuunnitteluSopimus(dbProjekti.oid, suunnitteluSopimus),
       liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmatByAddingTypename(liittyvatSuunnitelmat),
       velho: adaptVelho(velho),

@@ -766,6 +766,63 @@ Object {
 exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 15`] = `
 Object {
   "__typename": "Projekti",
+  "aloitusKuulutus": Object {
+    "__typename": "AloitusKuulutus",
+    "hankkeenKuvaus": Object {
+      "RUOTSI": "På Svenska",
+      "SAAME": "Saameksi",
+      "SUOMI": "Lorem Ipsum",
+      "__typename": "HankkeenKuvaukset",
+    },
+    "ilmoituksenVastaanottajat": Object {
+      "__typename": "IlmoituksenVastaanottajat",
+      "kunnat": Array [
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "id": 491,
+          "lahetetty": "2022-09-28T00:00",
+          "sahkoposti": "mikkeli@mikke.li",
+        },
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "id": 178,
+          "lahetetty": "2022-09-28T00:00",
+          "sahkoposti": "juva@ju.va",
+        },
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "id": 740,
+          "lahetetty": "2022-09-28T00:00",
+          "sahkoposti": "savonlinna@savonlin.na",
+        },
+      ],
+      "viranomaiset": Array [
+        Object {
+          "__typename": "ViranomaisVastaanottaja",
+          "lahetetty": "2022-09-28T00:00",
+          "nimi": "ETELA_SAVO_ELY",
+          "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+        },
+      ],
+    },
+    "kuulutusPaiva": "2022-01-02",
+    "kuulutusYhteystiedot": Object {
+      "__typename": "StandardiYhteystiedot",
+      "yhteysHenkilot": undefined,
+      "yhteysTiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
+    "palautusSyy": null,
+    "siirtyySuunnitteluVaiheeseen": "2999-01-01",
+  },
   "aloitusKuulutusJulkaisu": Object {
     "__typename": "AloitusKuulutusJulkaisu",
     "aloituskuulutusPDFt": Object {
