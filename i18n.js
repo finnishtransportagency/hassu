@@ -8,7 +8,7 @@ module.exports = {
     "/yllapito/perusta": ["velho-haku"],
     "/suunnitelma/[oid]/nahtavillaolo": ["aineisto"],
     "/suunnitelma/[oid]/lausuntopyyntoaineistot": ["aineisto"],
-    "/yllapito/projekti/[oid]/nahtavillaolo": ["aineisto"],
+    "/yllapito/projekti/[oid]/nahtavillaolo/aineisto": ["aineisto"],
     "/yllapito/projekti/[oid]/hyvaksymispaatos": ["aineisto"],
     "/yllapito/projekti/[oid]/jatkaminen1": ["aineisto"],
     "/suunnitelma/[oid]/hyvaksymismenettelyssa": ["hyvaksymismenettelyssa"],

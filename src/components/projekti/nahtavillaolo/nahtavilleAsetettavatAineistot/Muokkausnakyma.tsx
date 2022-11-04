@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Aineisto, AineistoInput, TallennaProjektiInput } from "@services/api";
-import React, { ReactElement, useEffect, useMemo } from "react";
+import React, { ReactElement, useMemo } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot";
@@ -37,20 +37,16 @@ const getDefaultValueForAineistoNahtavilla = (aineistot: Aineisto[] | undefined 
   }, {});
 };
 
-interface Props {
-  setIsDirty: (value: React.SetStateAction<boolean>) => void;
-}
-
-export default function Muokkausnakyma({ setIsDirty }: Props): ReactElement {
+export default function Muokkausnakyma(): ReactElement {
   const { data: projekti } = useProjekti({ revalidateOnMount: true });
-  return <>{projekti && <MuokkausnakymaLomake setIsDirty={setIsDirty} projekti={projekti} />}</>;
+  return <>{projekti && <MuokkausnakymaLomake projekti={projekti} />}</>;
 }
 
 interface MuokkausnakymaLomakeProps {
   projekti: ProjektiLisatiedolla;
 }
 
-function MuokkausnakymaLomake({ projekti, setIsDirty }: MuokkausnakymaLomakeProps & Props) {
+function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
   const defaultValues: NahtavilleAsetettavatAineistotFormValues = useMemo(() => {
     const lisaAineisto: AineistoInput[] =
       projekti.nahtavillaoloVaihe?.lisaAineisto?.map(({ dokumenttiOid, nimi, jarjestys }) => ({
@@ -77,10 +73,6 @@ function MuokkausnakymaLomake({ projekti, setIsDirty }: MuokkausnakymaLomakeProp
   const {
     formState: { isDirty },
   } = useFormReturn;
-
-  useEffect(() => {
-    setIsDirty(isDirty);
-  }, [isDirty, setIsDirty]);
 
   useLeaveConfirm(isDirty);
 

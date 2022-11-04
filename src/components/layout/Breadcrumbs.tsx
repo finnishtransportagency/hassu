@@ -84,6 +84,7 @@ const getVirkamiesRouteLabels: (router: NextRouter, projekti: ProjektiLisatiedol
       queryParams: { oid: projekti?.oid, kierrosId },
     },
     "/yllapito/projekti/[oid]/nahtavillaolo": { label: "Nähtävilläolovaihe", queryParams: { oid: projekti?.oid } },
+    "/yllapito/projekti/[oid]/nahtavillaolo/aineisto": { label: "Aineisto", queryParams: { oid: projekti?.oid } },
     "/yllapito/projekti/[oid]/hyvaksymispaatos": { label: "Hyväksymispäätös", queryParams: { oid: projekti?.oid } },
     "/yllapito/projekti/[oid]/jatkaminen1": { label: "1. jatkaminen", queryParams: { oid: projekti?.oid } },
     "/yllapito/ohjeet": { label: "Ohjeet" },

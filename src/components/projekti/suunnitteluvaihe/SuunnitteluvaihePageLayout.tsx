@@ -1,44 +1,42 @@
-import React, { ReactElement, FC, useMemo, ReactNode } from "react";
+import React, { ReactElement, useMemo, ReactNode } from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
-import { useProjekti } from "src/hooks/useProjekti";
-import { TabProps, Tabs, Tab } from "@mui/material";
+import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { Tabs } from "@mui/material";
 import { useRouter } from "next/router";
-import Link, { LinkProps } from "next/link";
 import { UrlObject } from "url";
 import { ParsedUrlQueryInput } from "querystring";
+import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
+import ProjektiConsumer from "../ProjektiConsumer";
 
 export default function SuunnitteluPageLayoutWrapper({ children }: { children?: ReactNode }) {
-  const { data: projekti } = useProjekti();
-
-  const vuorovaikutusKierrosNumerot = useMemo(
-    () => projekti?.suunnitteluVaihe?.vuorovaikutukset?.map((vuorovaikutus) => vuorovaikutus.vuorovaikutusNumero) || [1],
-    [projekti?.suunnitteluVaihe?.vuorovaikutukset]
-  );
-
-  if (!projekti) {
-    return <></>;
-  }
-
   return (
-    <SuunnitteluPageLayout projektiOid={projekti.oid} vuorovaikutusKierrosNumerot={vuorovaikutusKierrosNumerot} disableTabs={!projekti}>
-      {children}
-    </SuunnitteluPageLayout>
+    <ProjektiConsumer>
+      {(projekti) => (
+        <SuunnitteluPageLayout projektiOid={projekti.oid} projekti={projekti} disableTabs={!projekti}>
+          {children}
+        </SuunnitteluPageLayout>
+      )}
+    </ProjektiConsumer>
   );
 }
 
 function SuunnitteluPageLayout({
   projektiOid,
-  vuorovaikutusKierrosNumerot,
+  projekti,
   disableTabs,
   children,
 }: {
   projektiOid: string;
-  vuorovaikutusKierrosNumerot: number[];
+  projekti: ProjektiLisatiedolla;
   disableTabs?: boolean;
   children?: ReactNode;
 }): ReactElement {
   const router = useRouter();
+  const vuorovaikutusKierrosNumerot = useMemo(
+    () => projekti?.suunnitteluVaihe?.vuorovaikutukset?.map((vuorovaikutus) => vuorovaikutus.vuorovaikutusNumero) || [1],
+    [projekti?.suunnitteluVaihe?.vuorovaikutukset]
+  );
 
   const tabProps: LinkTabProps[] = useMemo(() => {
     const vuorovaikutusTabs = vuorovaikutusKierrosNumerot.map<LinkTabProps>((kierrosId) => {
@@ -91,11 +89,3 @@ function SuunnitteluPageLayout({
     </ProjektiPageLayout>
   );
 }
-
-type LinkTabProps = TabProps & { linkProps: LinkProps };
-
-const LinkTab: FC<LinkTabProps> = ({ linkProps, ...tabProps }) => (
-  <Link {...linkProps} passHref>
-    <Tab {...tabProps} />
-  </Link>
-);

@@ -239,7 +239,7 @@ export const createLocalizedTheme = (locale: Localization) =>
               lineHeight: 1.5,
               color: "#242222",
               opacity: 1,
-              "&.Mui-selected": {
+              "&.Mui-selected:not(.Mui-disabled)": {
                 color: "#0064AF",
               },
             },
