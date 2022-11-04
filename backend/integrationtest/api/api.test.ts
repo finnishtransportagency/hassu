@@ -9,7 +9,6 @@ import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { getCloudFront } from "../../src/aws/client";
 import { cleanProjektiS3Files } from "../util/s3Util";
-import { emailClient } from "../../src/email/email";
 import {
   deleteProjekti,
   julkaiseSuunnitteluvaihe,
@@ -29,10 +28,16 @@ import {
   testSuunnitteluvaiheVuorovaikutus,
   testUpdatePublishDateAndDeleteAineisto,
   verifyCloudfrontWasInvalidated,
-  verifyEmailsSent,
   verifyVuorovaikutusSnapshot,
 } from "./testUtil/tests";
-import { mockSaveProjektiToVelho, stubPDFGenerator, takePublicS3Snapshot, takeS3Snapshot, takeYllapitoS3Snapshot } from "./testUtil/util";
+import {
+  EmailClientStub,
+  mockSaveProjektiToVelho,
+  PDFGeneratorStub,
+  takePublicS3Snapshot,
+  takeS3Snapshot,
+  takeYllapitoS3Snapshot,
+} from "./testUtil/util";
 import {
   testImportNahtavillaoloAineistot,
   testNahtavillaolo,
@@ -57,8 +62,8 @@ describe("Api", () => {
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
   let userFixture: UserFixture;
   let awsCloudfrontInvalidationStub: sinon.SinonStub;
-  let emailClientStub: sinon.SinonStub;
-
+  const emailClientStub = new EmailClientStub();
+  const pdfGeneratorStub = new PDFGeneratorStub();
   const importAineistoMock = new ImportAineistoMock();
 
   before(async () => {
@@ -75,12 +80,11 @@ describe("Api", () => {
     sinon.stub(openSearchClientYllapito, "putDocument");
 
     importAineistoMock.initStub();
-    stubPDFGenerator();
+    pdfGeneratorStub.init();
+    emailClientStub.init();
 
     awsCloudfrontInvalidationStub = sinon.stub(getCloudFront(), "createInvalidation");
     awsMockResolves(awsCloudfrontInvalidationStub, {});
-
-    emailClientStub = sinon.stub(emailClient, "sendEmail");
 
     try {
       await deleteProjekti(oid);
@@ -108,7 +112,8 @@ describe("Api", () => {
     await testAloitusKuulutusEsikatselu(oid);
     await testNullifyProjektiField(oid);
     await testAloituskuulutusApproval(oid, projektiPaallikko, userFixture);
-    verifyEmailsSent(emailClientStub);
+    emailClientStub.verifyEmailsSent();
+    await recordProjektiTestFixture(FixtureName.ALOITUSKUULUTUS, oid);
 
     await testSuunnitteluvaihePerustiedot(oid);
     await testSuunnitteluvaiheVuorovaikutus(oid, projektiPaallikko);
@@ -121,14 +126,14 @@ describe("Api", () => {
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await julkaiseSuunnitteluvaihe(oid);
-    verifyEmailsSent(emailClientStub);
+    emailClientStub.verifyEmailsSent();
     await importAineistoMock.processQueue();
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
     await recordProjektiTestFixture(FixtureName.NAHTAVILLAOLO, oid);
 
     await julkaiseVuorovaikutus(oid, userFixture);
     await importAineistoMock.processQueue();
-    verifyEmailsSent(emailClientStub);
+    emailClientStub.verifyEmailsSent();
     await takeS3Snapshot(oid, "just after vuorovaikutus published");
     verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub);
 
@@ -138,7 +143,7 @@ describe("Api", () => {
     verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub);
 
     await sendEmailDigests();
-    verifyEmailsSent(emailClientStub);
+    emailClientStub.verifyEmailsSent();
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await testNahtavillaolo(oid, projektiPaallikko.kayttajatunnus);
@@ -148,7 +153,7 @@ describe("Api", () => {
     await testNahtavillaoloApproval(oid, projektiPaallikko, userFixture);
     await importAineistoMock.processQueue();
     await takeS3Snapshot(oid, "Nahtavillaolo published");
-    verifyEmailsSent(emailClientStub);
+    emailClientStub.verifyEmailsSent();
 
     await testHyvaksymismenettelyssa(oid, userFixture);
     await testHyvaksymisPaatosVaihe(oid, userFixture);
@@ -165,7 +170,7 @@ describe("Api", () => {
     await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture);
     await importAineistoMock.processQueue();
     await takePublicS3Snapshot(oid, "Hyvaksymispaatos approved", "hyvaksymispaatos");
-    verifyEmailsSent(emailClientStub);
+    emailClientStub.verifyEmailsSent();
 
     await recordProjektiTestFixture(FixtureName.HYVAKSYMISPAATOS_APPROVED, oid);
   });

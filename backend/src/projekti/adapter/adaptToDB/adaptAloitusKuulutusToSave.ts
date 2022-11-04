@@ -1,11 +1,16 @@
 import * as API from "../../../../../common/graphql/apiModel";
-import { AloitusKuulutus } from "../../../database/model";
-import { adaptIlmoituksenVastaanottajatToSave, adaptStandardiYhteystiedotToSave, adaptHankkeenKuvausToSave } from "./common";
+import { UudelleenKuulutusInput } from "../../../../../common/graphql/apiModel";
+import { AloitusKuulutus, UudelleenKuulutus } from "../../../database/model";
+import { adaptHankkeenKuvausToSave, adaptIlmoituksenVastaanottajatToSave, adaptStandardiYhteystiedotToSave } from "./common";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
+import mergeWith from "lodash/mergeWith";
 
-export function adaptAloitusKuulutusToSave(aloitusKuulutus: API.AloitusKuulutusInput | undefined | null): AloitusKuulutus | undefined {
+export function adaptAloitusKuulutusToSave(
+  dbAloituskuulutus: AloitusKuulutus | undefined | null,
+  aloitusKuulutus: API.AloitusKuulutusInput | undefined | null
+): AloitusKuulutus | undefined {
   if (aloitusKuulutus) {
-    const { hankkeenKuvaus, ilmoituksenVastaanottajat, kuulutusYhteystiedot, ...rest } = aloitusKuulutus;
+    const { hankkeenKuvaus, ilmoituksenVastaanottajat, kuulutusYhteystiedot, uudelleenKuulutus, ...rest } = aloitusKuulutus;
     if (!hankkeenKuvaus) {
       throw new IllegalArgumentError("Aloituskuulutuksella on oltava hankkeenKuvaus!");
     }
@@ -20,7 +25,15 @@ export function adaptAloitusKuulutusToSave(aloitusKuulutus: API.AloitusKuulutusI
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat), //pakko tukea vielä tätä
       hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus),
       kuulutusYhteystiedot: adaptStandardiYhteystiedotToSave(kuulutusYhteystiedot, true),
+      uudelleenKuulutus: adaptUudelleenKuulutus(dbAloituskuulutus?.uudelleenKuulutus, uudelleenKuulutus),
     };
   }
   return aloitusKuulutus as undefined;
+}
+
+function adaptUudelleenKuulutus(uudelleenKuulutus: UudelleenKuulutus | null | undefined, input: UudelleenKuulutusInput | null | undefined) {
+  if (!input) {
+    return uudelleenKuulutus;
+  }
+  return mergeWith({}, uudelleenKuulutus, input);
 }

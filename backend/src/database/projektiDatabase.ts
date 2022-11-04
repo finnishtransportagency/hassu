@@ -186,7 +186,8 @@ export class ProjektiDatabase {
     }
 
     try {
-      return await getDynamoDBDocumentClient().update(params).promise();
+      const dynamoDBDocumentClient = getDynamoDBDocumentClient();
+      return await dynamoDBDocumentClient.update(params).promise();
     } catch (e) {
       log.error(e instanceof Error ? e.message : String(e), { params });
       throw e;

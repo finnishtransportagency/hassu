@@ -17,6 +17,7 @@ import { Readable } from "stream";
 import { localDateTimeString } from "../util/dateUtil";
 import { GetObjectOutput } from "aws-sdk/clients/s3";
 import { getS3 } from "../aws/client";
+import { assertIsDefined } from "../util/assertions";
 
 export async function getFileAttachment(oid: string, key: string): Promise<Mail.Attachment | undefined> {
   log.info("haetaan s3:sta liitetiedosto", key);
@@ -24,13 +25,12 @@ export async function getFileAttachment(oid: string, key: string): Promise<Mail.
   if (!config.yllapitoBucketName) {
     throw new Error("config.yllapitoBucketName määrittelemättä");
   }
+  const getObjectParams = {
+    Bucket: config.yllapitoBucketName,
+    Key: `yllapito/tiedostot/projekti/${oid}` + key,
+  };
   try {
-    const output: GetObjectOutput = await getS3()
-      .getObject({
-        Bucket: config.yllapitoBucketName,
-        Key: `yllapito/tiedostot/projekti/${oid}` + key,
-      })
-      .promise();
+    const output: GetObjectOutput = await getS3().getObject(getObjectParams).promise();
 
     if (output.Body instanceof Readable || output.Body instanceof Buffer) {
       return {
@@ -43,7 +43,7 @@ export async function getFileAttachment(oid: string, key: string): Promise<Mail.
       log.error("Liitetiedoston sisallossa ongelmia");
     }
   } catch (error) {
-    log.error("Virhe liitetiedostojen haussa", error);
+    log.error("Virhe liitetiedostojen haussa", { error, getObjectParams });
   }
 
   return Promise.resolve(undefined);
@@ -69,13 +69,12 @@ async function sendWaitingApprovalMail(projekti: DBProjekti): Promise<void> {
 
 async function sendAloitusKuulutusApprovalMailsAndAttachments(projekti: DBProjekti): Promise<void> {
   // aloituskuulutusjulkaisu kyllä löytyy
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const aloituskuulutus: AloitusKuulutusJulkaisu = asiakirjaAdapter.findAloitusKuulutusLastApproved(projekti);
+  const aloituskuulutus: AloitusKuulutusJulkaisu | undefined = asiakirjaAdapter.findAloitusKuulutusLastApproved(projekti);
+  assertIsDefined(aloituskuulutus);
   // aloituskuulutus.muokkaaja on määritelty
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const muokkaaja: Kayttaja = await getKayttaja(aloituskuulutus.muokkaaja);
+  assertIsDefined(aloituskuulutus.muokkaaja);
+  const muokkaaja: Kayttaja | undefined = await getKayttaja(aloituskuulutus.muokkaaja);
+  assertIsDefined(muokkaaja);
   const emailOptionsMuokkaaja = createAloituskuulutusHyvaksyttyEmail(projekti, muokkaaja);
   if (emailOptionsMuokkaaja.to) {
     await emailClient.sendEmail(emailOptionsMuokkaaja);
@@ -103,13 +102,10 @@ async function sendAloitusKuulutusApprovalMailsAndAttachments(projekti: DBProjek
 
   const emailOptionsLahetekirje = createLahetekirjeEmail(projekti);
   if (emailOptionsLahetekirje.to) {
-    const aloituskuulutusIlmoitusPDF = await getFileAttachment(
-      projekti.oid,
-      // PDFt on jo olemassa
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      aloituskuulutus.aloituskuulutusPDFt[Kieli.SUOMI].aloituskuulutusIlmoitusPDFPath
-    );
+    // PDFt on jo olemassa
+    const aloituskuulutusPDFtSUOMI = aloituskuulutus.aloituskuulutusPDFt?.[Kieli.SUOMI];
+    assertIsDefined(aloituskuulutusPDFtSUOMI);
+    const aloituskuulutusIlmoitusPDF = await getFileAttachment(projekti.oid, aloituskuulutusPDFtSUOMI.aloituskuulutusIlmoitusPDFPath);
     if (!aloituskuulutusIlmoitusPDF) {
       throw new Error("AloituskuulutusIlmoitusPDF:n saaminen epäonnistui");
     }
@@ -142,12 +138,14 @@ class EmailHandler {
     } else if (toiminto == TilasiirtymaToiminto.HYVAKSY) {
       switch (tyyppi) {
         case TilasiirtymaTyyppi.ALOITUSKUULUTUS:
-          return await sendAloitusKuulutusApprovalMailsAndAttachments(projekti);
+          return sendAloitusKuulutusApprovalMailsAndAttachments(projekti);
         case TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE:
         case TilasiirtymaTyyppi.JATKOPAATOS_1:
         case TilasiirtymaTyyppi.JATKOPAATOS_2:
         // TODO lähetä sähköpostit
       }
+    } else if (toiminto == TilasiirtymaToiminto.UUDELLEENKUULUTA) {
+      // Do nothing
     } else {
       throw new Error("Tuntematon toiminto");
     }

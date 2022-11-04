@@ -535,9 +535,28 @@ enum AloitusKuulutusTila {
   ODOTTAA_HYVAKSYNTAA
   HYVAKSYTTY
   MIGROITU
+  PERUUTETTU
+}
+
+enum UudelleenkuulutusTila {
+  PERUUTETTU
+  JULKAISTU_PERUUTETTU
+}
+
+type UudelleenKuulutus {
+  tila: UudelleenkuulutusTila!
+  selosteKuulutukselle: LokalisoituTeksti
+  selosteLahetekirjeeseen: LokalisoituTeksti
+  alkuperainenHyvaksymisPaiva: String
 }
 
 type HankkeenKuvaukset {
+  SUOMI: String!
+  RUOTSI: String
+  SAAME: String
+}
+
+type LokalisoituTeksti {
   SUOMI: String!
   RUOTSI: String
   SAAME: String
@@ -561,6 +580,7 @@ type AloitusKuulutus {
   kuulutusYhteystiedot: StandardiYhteystiedot
   palautusSyy: String
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+  uudelleenKuulutus: UudelleenKuulutus
 }
 
 type StandardiYhteystiedot {
@@ -581,6 +601,7 @@ type AloitusKuulutusJulkaisu {
   muokkaaja: String
   hyvaksyja: String
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+  uudelleenKuulutus: UudelleenKuulutus
 }
 
 type AloitusKuulutusJulkaisuJulkinen {
@@ -593,6 +614,7 @@ type AloitusKuulutusJulkaisuJulkinen {
   kielitiedot: Kielitiedot
   aloituskuulutusPDFt: AloitusKuulutusPDFt
   tila: AloitusKuulutusTila
+  uudelleenKuulutus: UudelleenKuulutus
 }
 
 type IlmoituksenVastaanottajat {

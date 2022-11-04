@@ -1,5 +1,5 @@
-import { DBProjekti } from "../database/model";
-import { KayttajaTyyppi, Projekti, TallennaProjektiInput } from "../../../common/graphql/apiModel";
+import { DBProjekti, UudelleenKuulutus } from "../database/model";
+import { KayttajaTyyppi, Projekti, TallennaProjektiInput, UudelleenKuulutusInput } from "../../../common/graphql/apiModel";
 import { requirePermissionMuokkaa } from "../user";
 import { requireAdmin, requireOmistaja } from "../user/userService";
 import { projektiAdapter } from "./adapter/projektiAdapter";
@@ -77,9 +77,22 @@ function validateVarahenkiloModifyPermissions(projekti: DBProjekti, input: Talle
     });
 }
 
+/**
+ * Validoi, että jos yritetään tallentaa uudelleenkuulutusta, sellainen on olemassa
+ */
+function validateUudelleenKuulutus(
+  uudelleenKuulutus: UudelleenKuulutus | null | undefined,
+  uudelleenKuulutusInput: UudelleenKuulutusInput | null | undefined
+) {
+  if (uudelleenKuulutusInput && !uudelleenKuulutus) {
+    throw new IllegalArgumentError("Uudelleenkuulutuksen tietoja ei voi tallentaa jos uudelleenkuulutusta ei ole vielä avattu");
+  }
+}
+
 export function validateTallennaProjekti(projekti: DBProjekti, input: TallennaProjektiInput): void {
   requirePermissionMuokkaa(projekti);
   const apiProjekti = projektiAdapter.adaptProjekti(projekti);
   validateKasittelynTila(projekti, apiProjekti, input);
   validateVarahenkiloModifyPermissions(projekti, input);
+  validateUudelleenKuulutus(projekti.aloitusKuulutus?.uudelleenKuulutus, input.aloitusKuulutus?.uudelleenKuulutus);
 }

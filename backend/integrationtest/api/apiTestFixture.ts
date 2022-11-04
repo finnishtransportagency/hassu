@@ -135,6 +135,7 @@ class ApiTestFixture {
       yhteysHenkilot: [],
     },
     ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
+    uudelleenKuulutus: undefined,
   };
 
   kielitiedotInput: KielitiedotInput = {

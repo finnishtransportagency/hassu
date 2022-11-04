@@ -1,6 +1,13 @@
-import { AloitusKuulutus, AloitusKuulutusJulkaisu, AloitusKuulutusPDF, LocalizedMap } from "../../../database/model";
+import {
+  AloitusKuulutus,
+  AloitusKuulutusJulkaisu,
+  AloitusKuulutusPDF,
+  LocalizedMap,
+  RequiredLocalizedMap,
+  UudelleenKuulutus,
+} from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
-import { AloitusKuulutusTila } from "../../../../../common/graphql/apiModel";
+import { AloitusKuulutusTila, LokalisoituTeksti } from "../../../../../common/graphql/apiModel";
 import {
   adaptHankkeenKuvaus,
   adaptIlmoituksenVastaanottajat,
@@ -18,13 +25,14 @@ export function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.Alo
     if (!kuulutus.hankkeenKuvaus) {
       throw new Error("adaptAloituskuulutus: kuulutus.hankkeenKuvaus puuttuu");
     }
-    const { kuulutusYhteystiedot, ...otherKuulutusFields } = kuulutus;
+    const { kuulutusYhteystiedot, uudelleenKuulutus: uudelleenKuulutus, ...otherKuulutusFields } = kuulutus;
     return {
       __typename: "AloitusKuulutus",
       ...otherKuulutusFields,
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(kuulutus.ilmoituksenVastaanottajat),
       hankkeenKuvaus: adaptHankkeenKuvaus(kuulutus.hankkeenKuvaus),
       kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kuulutusYhteystiedot),
+      uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
     };
   }
   return kuulutus as undefined;
@@ -40,7 +48,7 @@ export function adaptAloitusKuulutusJulkaisu(
       findJulkaisuWithTila(aloitusKuulutusJulkaisut, AloitusKuulutusTila.HYVAKSYTTY) ||
       findJulkaisuWithTila(aloitusKuulutusJulkaisut, AloitusKuulutusTila.MIGROITU);
     if (julkaisu) {
-      const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, tila, ...fieldsToCopyAsIs } = julkaisu;
+      const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, tila, uudelleenKuulutus, ...fieldsToCopyAsIs } = julkaisu;
       if (tila == AloitusKuulutusTila.MIGROITU) {
         return {
           __typename: "AloitusKuulutusJulkaisu",
@@ -64,6 +72,7 @@ export function adaptAloitusKuulutusJulkaisu(
         suunnitteluSopimus: adaptSuunnitteluSopimusJulkaisu(oid, suunnitteluSopimus, FileLocation.YLLAPITO),
         kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
         aloituskuulutusPDFt: adaptJulkaisuPDFPaths(oid, julkaisu.aloituskuulutusPDFt),
+        uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
       };
     }
   }
@@ -84,7 +93,7 @@ function adaptJulkaisuPDFPaths(
       result[kieli as API.Kieli] = undefined;
       continue;
     }
-    const aloitusKuulutusPdf: API.AloitusKuulutusPDF = {
+    result[kieli as API.Kieli] = {
       __typename: "AloitusKuulutusPDF",
       // getYllapitoPathForProjektiFile molemmat argumentit on määritelty, joten funktio palauttaa ei-undefined arvon
       // aloitusKuulutusPDFS[kieli].aloituskuulutusPDFPath on määritelty tässä vaiheessa
@@ -102,7 +111,29 @@ function adaptJulkaisuPDFPaths(
         pdfs.aloituskuulutusIlmoitusPDFPath
       ),
     };
-    result[kieli as API.Kieli] = aloitusKuulutusPdf;
   }
   return { __typename: "AloitusKuulutusPDFt", [API.Kieli.SUOMI]: result[API.Kieli.SUOMI] as API.AloitusKuulutusPDF, ...result };
+}
+
+export function adaptUudelleenKuulutus(uudelleenKuulutus: UudelleenKuulutus | null | undefined): API.UudelleenKuulutus | null | undefined {
+  if (!uudelleenKuulutus) {
+    return uudelleenKuulutus;
+  }
+  return {
+    __typename: "UudelleenKuulutus",
+    tila: uudelleenKuulutus.tila,
+    alkuperainenHyvaksymisPaiva: uudelleenKuulutus.alkuperainenHyvaksymisPaiva,
+    selosteKuulutukselle: adaptLokalisoituTeksti(uudelleenKuulutus.selosteKuulutukselle),
+    selosteLahetekirjeeseen: adaptLokalisoituTeksti(uudelleenKuulutus.selosteLahetekirjeeseen),
+  };
+}
+
+function adaptLokalisoituTeksti(localizedMap: RequiredLocalizedMap<string> | undefined): LokalisoituTeksti | null | undefined {
+  if (localizedMap && Object.keys(localizedMap).length > 0) {
+    return {
+      __typename: "LokalisoituTeksti",
+      ...localizedMap,
+      [API.Kieli.SUOMI]: localizedMap[API.Kieli.SUOMI] || "",
+    };
+  }
 }

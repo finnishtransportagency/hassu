@@ -425,10 +425,11 @@ describe("apiHandler", () => {
 
 function cleanup(obj: Record<string, any>) {
   replaceFieldsByName(obj, "2022-09-28T00:00", "lahetetty");
+  replaceFieldsByName(obj, "2022-09-28", "hyvaksymisPaiva");
   return obj;
 }
 
-function replaceFieldsByName(obj: Record<string, any>, value: unknown, ...fieldNames: string[]): void {
+export function replaceFieldsByName(obj: Record<string, any>, value: unknown, ...fieldNames: string[]): void {
   Object.keys(obj).forEach(function (prop) {
     if (typeof obj[prop] == "object" && obj[prop] !== null) {
       replaceFieldsByName(obj[prop], value, ...fieldNames);

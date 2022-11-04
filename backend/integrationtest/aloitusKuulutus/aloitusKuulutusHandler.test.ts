@@ -13,16 +13,19 @@ import { fileService } from "../../src/files/fileService";
 import { emailHandler } from "../../src/handler/emailHandler";
 import { pdfGeneratorClient } from "../../src/asiakirja/lambda/pdfGeneratorClient";
 import { handleEvent as pdfGenerator } from "../../src/asiakirja/lambda/pdfGeneratorHandler";
+import { replaceFieldsByName } from "../api/testFixtureRecorder";
 import { mockSaveProjektiToVelho } from "../api/testUtil/util";
 
 const { expect } = require("chai");
 
 async function takeSnapshot(oid: string) {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
-  expect({
+  let objs = {
     aloitusKuulutus: dbProjekti?.aloitusKuulutus,
     aloitusKuulutusJulkaisut: dbProjekti?.aloitusKuulutusJulkaisut,
-  }).toMatchSnapshot();
+  };
+  replaceFieldsByName(objs, "2022-11-04", "hyvaksymisPaiva");
+  expect(objs).toMatchSnapshot();
 }
 
 describe("AloitusKuulutus", () => {
@@ -47,7 +50,6 @@ describe("AloitusKuulutus", () => {
     pdfGeneratorLambdaStub.callsFake(async (event) => {
       return await pdfGenerator(event);
     });
-
   });
 
   afterEach(() => {

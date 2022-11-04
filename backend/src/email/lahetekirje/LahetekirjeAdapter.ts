@@ -24,6 +24,7 @@ export interface LahetekirjeTiedot {
   vastaanottajat: string[];
   suunnitelmaTyyppi: SuunnitelmaTyyppi;
   asiakirjanMuoto: AsiakirjanMuoto;
+  selosteLahetekirjeeseen?: string;
 }
 
 export class LahetekirjeAdapter {
@@ -51,6 +52,7 @@ export class LahetekirjeAdapter {
       vastaanottajat: this.vastaanottajat,
       suunnitelmaTyyppi: this.suunnitelmaTyyppi,
       asiakirjanMuoto: determineAsiakirjaMuoto(velho.tyyppi, velho.vaylamuoto),
+      selosteLahetekirjeeseen: this.projekti.aloitusKuulutus?.uudelleenKuulutus?.selosteLahetekirjeeseen?.SUOMI,
     };
   }
 

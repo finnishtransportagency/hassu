@@ -49,6 +49,7 @@ import {
   adaptSuunnitteluSopimusJulkaisu,
   adaptSuunnitteluSopimusJulkaisuJulkinen,
   adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu,
+  adaptUudelleenKuulutus,
   FileLocation,
 } from "./adaptToAPI";
 import { cloneDeep } from "lodash";
@@ -134,7 +135,7 @@ class ProjektiAdapterJulkinen {
       if (!julkaisu) {
         return undefined;
       }
-      const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, tila, kuulutusPaiva } = julkaisu;
+      const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, tila, kuulutusPaiva, uudelleenKuulutus } = julkaisu;
 
       if (julkaisu.tila == AloitusKuulutusTila.MIGROITU) {
         return {
@@ -160,6 +161,7 @@ class ProjektiAdapterJulkinen {
         kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
         aloituskuulutusPDFt: this.adaptJulkaisuPDFPaths(oid, julkaisu.aloituskuulutusPDFt),
         tila,
+        uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
       };
     }
     return undefined;

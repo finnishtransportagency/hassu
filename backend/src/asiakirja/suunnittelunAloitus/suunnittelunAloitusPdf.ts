@@ -1,9 +1,18 @@
 import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
-import { DBVaylaUser, Kielitiedot, LocalizedMap, SuunnitteluSopimusJulkaisu, Velho, Yhteystieto } from "../../database/model";
+import {
+  DBVaylaUser,
+  Kielitiedot,
+  LocalizedMap,
+  SuunnitteluSopimusJulkaisu,
+  UudelleenKuulutus,
+  Velho,
+  Yhteystieto,
+} from "../../database/model";
 import { CommonPdf } from "./commonPdf";
 import { KutsuAdapter } from "./KutsuAdapter";
 import { translate } from "../../util/localization";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
+import { assertIsDefined } from "../../util/assertions";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
 export type IlmoitusAsiakirjaTyyppi = Extract<
@@ -22,6 +31,7 @@ export type IlmoitusParams = {
   kuulutusPaiva: string;
   yhteystiedot?: Yhteystieto[];
   suunnitteluSopimus?: SuunnitteluSopimusJulkaisu;
+  uudelleenKuulutus?: UudelleenKuulutus;
 
   // kayttoOikeudet must be set if yhteysHenkilot is set
   yhteysHenkilot?: string[];
@@ -58,12 +68,13 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf {
   }
 
   protected addContent(): void {
-    const elements: PDFKit.PDFStructureElementChild[] = [
+    const elements: (PDFKit.PDFStructureElementChild | undefined)[] = [
       this.logo(this.isVaylaTilaaja(this.params.velho)),
       this.headerElement(this.header),
       this.titleElement(),
+      this.uudelleenKuulutusParagraph(),
       ...this.addDocumentElements(),
-    ];
+    ].filter((p) => p);
     this.doc.addStructure(this.doc.struct("Document", {}, elements));
   }
 
@@ -96,8 +107,13 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf {
   }
 
   protected hankkeenKuvaus(): PDFStructureElement {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    assertIsDefined(this.params.hankkeenKuvaus);
     return this.localizedParagraphFromMap(this.params.hankkeenKuvaus);
+  }
+
+  protected uudelleenKuulutusParagraph(): PDFStructureElement | undefined {
+    if (this.params.uudelleenKuulutus?.selosteKuulutukselle) {
+      return this.localizedParagraphFromMap(this.params.uudelleenKuulutus?.selosteKuulutukselle);
+    }
   }
 }

@@ -176,6 +176,10 @@ class NahtavillaoloTilaManager extends TilaManager {
       });
     }
   }
+
+  async uudelleenkuuluta(_projekti: DBProjekti): Promise<void> {
+    throw new Error("Not yet implemented");
+  }
 }
 
 export const nahtavillaoloTilaManager = new NahtavillaoloTilaManager();

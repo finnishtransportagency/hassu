@@ -123,7 +123,7 @@ export class ProjektiAdapter {
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
     kayttoOikeudetManager.applyChanges(kayttoOikeudet);
     const vuorovaikutukset = adaptVuorovaikutusToSave(projekti, projektiAdaptationResult, suunnitteluVaihe?.vuorovaikutus);
-    const aloitusKuulutusToSave = adaptAloitusKuulutusToSave(aloitusKuulutus);
+    const aloitusKuulutusToSave = adaptAloitusKuulutusToSave(projekti.aloitusKuulutus, aloitusKuulutus);
     const dbProjekti: DBProjekti = mergeWith(
       {},
       {

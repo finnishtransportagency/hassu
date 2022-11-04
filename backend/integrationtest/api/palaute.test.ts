@@ -2,24 +2,23 @@
 import { describe, it } from "mocha";
 import { FixtureName, useProjektiTestFixture } from "./testFixtureRecorder";
 import { setupLocalDatabase } from "../util/databaseUtil";
-import { deleteProjekti, tallennaLogo, verifyEmailsSent } from "./testUtil/tests";
+import { deleteProjekti, tallennaLogo } from "./testUtil/tests";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { api } from "./apiClient";
-import { expectToMatchSnapshot, takeYllapitoS3Snapshot } from "./testUtil/util";
+import { EmailClientStub, expectToMatchSnapshot, takeYllapitoS3Snapshot } from "./testUtil/util";
 import { cleanupGeneratedIdAndTimestampFromFeedbacks } from "./testUtil/cleanUpFunctions";
 import * as sinon from "sinon";
-import { emailClient } from "../../src/email/email";
 
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
 describe("Palaute", () => {
   let userFixture: UserFixture;
-  let emailClientStub: sinon.SinonStub;
+  const emailClientStub = new EmailClientStub();
 
   before(async () => {
     userFixture = new UserFixture(userService);
-    emailClientStub = sinon.stub(emailClient, "sendEmail");
+    emailClientStub.init();
 
     await setupLocalDatabase();
     try {
@@ -60,7 +59,7 @@ describe("Palaute", () => {
       "projekti palaute otettu käsittelyyn",
       cleanupGeneratedIdAndTimestampFromFeedbacks(palautteetAfterFeedbackBeingHandled)
     );
-    verifyEmailsSent(emailClientStub);
+    emailClientStub.verifyEmailsSent();
     await takeYllapitoS3Snapshot(oid, "should insert and manage feedback", "palautteet");
   });
 });

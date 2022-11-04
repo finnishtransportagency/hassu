@@ -375,6 +375,7 @@ Array [
         ],
       },
       "siirtyySuunnitteluVaiheeseen": "2999-01-01",
+      "uudelleenKuulutus": undefined,
     },
     "euRahoitus": false,
     "hyvaksymisPaatosVaihe": undefined,
@@ -497,6 +498,7 @@ Array [
         ],
       },
       "siirtyySuunnitteluVaiheeseen": "2999-01-01",
+      "uudelleenKuulutus": undefined,
     },
     "euRahoitus": false,
     "kayttoOikeudet": Array [
@@ -842,6 +844,7 @@ Object {
     },
     "palautusSyy": null,
     "siirtyySuunnitteluVaiheeseen": "2999-01-01",
+    "uudelleenKuulutus": undefined,
   },
   "aloitusKuulutusJulkaisu": Object {
     "__typename": "AloitusKuulutusJulkaisu",
@@ -860,6 +863,7 @@ Object {
       "__typename": "HankkeenKuvaukset",
     },
     "hyvaksyja": "A123",
+    "hyvaksymisPaiva": "2022-09-28",
     "id": 1,
     "ilmoituksenVastaanottajat": Object {
       "__typename": "IlmoituksenVastaanottajat",
@@ -911,6 +915,7 @@ Object {
       "sukunimi": "SukunimiA2",
     },
     "tila": "HYVAKSYTTY",
+    "uudelleenKuulutus": undefined,
     "velho": Object {
       "__typename": "Velho",
       "kunnat": undefined,
@@ -1044,6 +1049,7 @@ Object {
         "sukunimi": "SukunimiA2",
       },
       "tila": "HYVAKSYTTY",
+      "uudelleenKuulutus": undefined,
       "velho": Object {
         "__typename": "VelhoJulkinen",
         "asiatunnusELY": undefined,
