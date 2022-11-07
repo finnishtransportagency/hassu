@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Aineisto, AineistoInput, TallennaProjektiInput } from "@services/api";
-import React, { ReactElement, useEffect, useMemo } from "react";
+import React, { ReactElement, useMemo } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot";
@@ -37,21 +37,17 @@ const getDefaultValueForAineistoNahtavilla = (aineistot: Aineisto[] | undefined 
   }, {});
 };
 
-interface Props {
-  setIsDirty: (value: React.SetStateAction<boolean>) => void;
-}
-
-export default function Muokkausnakyma({ setIsDirty }: Props): ReactElement {
+export default function Muokkausnakyma(): ReactElement {
   const { data: projekti } = useProjekti({ revalidateOnMount: true });
 
-  return <>{projekti && <MuokkausnakymaForm projekti={projekti} setIsDirty={setIsDirty} />}</>;
+  return <>{projekti && <MuokkausnakymaForm projekti={projekti} />}</>;
 }
 
 interface MuokkausnakymaFormProps {
   projekti: ProjektiLisatiedolla;
 }
 
-function MuokkausnakymaForm({ projekti, setIsDirty }: MuokkausnakymaFormProps & Props) {
+function MuokkausnakymaForm({ projekti }: MuokkausnakymaFormProps) {
   const defaultValues: HyvaksymisPaatosVaiheAineistotFormValues = useMemo(() => {
     const hyvaksymisPaatos: AineistoInput[] =
       projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos?.map(({ dokumenttiOid, nimi, jarjestys }) => ({
@@ -80,10 +76,6 @@ function MuokkausnakymaForm({ projekti, setIsDirty }: MuokkausnakymaFormProps & 
   } = useFormReturn;
 
   const { isAllowedOnRoute } = useIsAllowedOnCurrentProjektiRoute();
-
-  useEffect(() => {
-    setIsDirty(isDirty);
-  }, [isDirty, setIsDirty]);
 
   useLeaveConfirm(isDirty);
 
