@@ -8,7 +8,7 @@ import JatkoPaatos1KuulutusPainikkeet from "./JatkoPaatos1KuulutusPainikkeet";
 import KuulutuksenJaIlmoituksenEsikatselu from "./KuulutuksenJaIlmoituksenEsikatselu";
 import KuulutuksessaEsitettavatYhteystiedot from "./KuulutuksessaEsitettavatYhteystiedot";
 import KuulutusJaJulkaisuPaiva from "./KuulutusJaJulkaisuPaiva";
-import PaatoksenPaiva from "../../hyvaksyminen/kuulutuksenTiedot/PaatoksenPaiva";
+import PaatoksenPaiva from "../../paatos/kuulutuksenTiedot/PaatoksenPaiva";
 import MuutoksenHaku from "./MuutoksenHaku";
 import IlmoituksenVastaanottajatKomponentti from "./IlmoituksenVastaanottajat";
 import Lukunakyma from "./Lukunakyma";

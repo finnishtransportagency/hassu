@@ -20,7 +20,7 @@ import { Column } from "react-table";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import { useProjekti } from "src/hooks/useProjekti";
 import { formatDateTime } from "src/util/dateUtils";
-import HyvaksymisPaatosTiedostot from "../hyvaksyminen/aineistot/HyvaksymisPaatosTiedostot";
+import HyvaksymisPaatosTiedostot from "../paatos/aineistot/HyvaksymisPaatosTiedostot";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];

@@ -18,7 +18,7 @@ import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
-import PaatoksenPaiva from "@components/projekti/hyvaksyminen/kuulutuksenTiedot/PaatoksenPaiva";
+import PaatoksenPaiva from "@components/projekti/paatos/kuulutuksenTiedot/PaatoksenPaiva";
 
 export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid"> & {
   hyvaksymisPaatosVaihe: Omit<HyvaksymisPaatosVaiheInput, "hallintoOikeus"> & {

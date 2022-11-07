@@ -1,10 +1,10 @@
-import React, { ReactElement, useCallback, useState } from "react";
+import React, { useCallback, useState, VFC } from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import Tabs, { TabProps } from "@components/layout/tabs/Tabs";
 import KuulutuksenTiedot from "@components/projekti/jatkopaatos1/kuulutuksenTiedot/index";
 import PaatosAineistot from "@components/projekti/jatkopaatos1/aineistot/index";
-import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { Link } from "@mui/material";
 import { HyvaksymisPaatosVaiheTila } from "@services/api";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
@@ -14,8 +14,13 @@ import TallentamattomiaMuutoksiaDialog from "@components/TallentamattomiaMuutoks
 import Jatkopaatos1VaiheAineistotLukutila from "@components/projekti/lukutila/JatkoPaatos1VaiheAineistotLukutila";
 import Lukunakyma from "@components/projekti/jatkopaatos1/kuulutuksenTiedot/Lukunakyma";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
+import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
 
-export default function Jatkopaatos1(): ReactElement {
+export default function Jatkopaatos1Wrapper() {
+  return <ProjektiConsumer>{(projekti) => <Jatkopaatos1 projekti={projekti} />}</ProjektiConsumer>;
+}
+
+const Jatkopaatos1: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti }) => {
   const [currentTab, setCurrentTab] = useState<number | string>(0);
   const [open, setOpen] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
@@ -40,8 +45,6 @@ export default function Jatkopaatos1(): ReactElement {
       setCurrentTab(value);
     }
   };
-
-  const { data: projekti } = useProjekti();
 
   const kertaalleenLahetettyHyvaksyttavaksi = projekti?.jatkoPaatos1VaiheJulkaisut && projekti.jatkoPaatos1VaiheJulkaisut.length >= 1;
 
@@ -154,4 +157,4 @@ export default function Jatkopaatos1(): ReactElement {
       <TallentamattomiaMuutoksiaDialog open={open} handleClickClose={handleClickClose} handleClickOk={handleClickOk} />
     </ProjektiPageLayout>
   );
-}
+};

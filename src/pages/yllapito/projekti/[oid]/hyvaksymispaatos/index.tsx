@@ -1,10 +1,10 @@
 import React, { VFC } from "react";
-import KuulutuksenTiedot from "@components/projekti/hyvaksyminen/kuulutuksenTiedot/index";
+import KuulutuksenTiedot from "@components/projekti/paatos/kuulutuksenTiedot/index";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
-import HyvaksyminenPageLayout from "@components/projekti/hyvaksyminen/HyvaksyminenPageLayout";
+import HyvaksyminenPageLayout from "@components/projekti/paatos/HyvaksyminenPageLayout";
 import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
-import Lukunakyma from "@components/projekti/hyvaksyminen/kuulutuksenTiedot/Lukunakyma";
+import Lukunakyma from "@components/projekti/paatos/kuulutuksenTiedot/Lukunakyma";
 
 export default function HyvaksymisPaatosWrapper() {
   return <ProjektiConsumer>{(projekti) => <Hyvaksymispaatos projekti={projekti} />}</ProjektiConsumer>;
