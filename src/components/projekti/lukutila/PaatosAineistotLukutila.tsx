@@ -5,10 +5,10 @@ import { formatDate } from "src/util/dateUtils";
 
 type Props = {
   oid: string;
-  hyvaksymisPaatosVaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu;
+  paatosJulkaisu: HyvaksymisPaatosVaiheJulkaisu;
 };
 
-export default function HyvaksymisVaiheAineistotLukutila({ oid, hyvaksymisPaatosVaiheJulkaisu }: Props): ReactElement {
+export default function PaatosAineistotLukutila({ oid, paatosJulkaisu: hyvaksymisPaatosVaiheJulkaisu }: Props): ReactElement {
   const velhoURL = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + oid;
   return (
     <>
