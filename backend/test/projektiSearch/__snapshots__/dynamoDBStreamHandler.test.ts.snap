@@ -102,15 +102,19 @@ Array [
     "2_aloitusKuulutus_SUOMI_2022-03-28T14:28",
     Object {
       "date": "2022-03-28T14:28:00+03:00",
+      "elyt": Array [
+        1001,
+        1019,
+      ],
       "kieli": "SUOMI",
       "kunnat": Array [
-        "Mikkeli",
-        "Juva",
-        "Savonlinna",
+        491,
+        178,
+        740,
       ],
       "maakunnat": Array [
-        "Uusimaa",
-        "Pirkanmaa",
+        1,
+        6,
       ],
       "oid": "2",
       "title": "Kuulutus suunnittelun aloittamisesta: Marikan testiprojekti",
@@ -125,15 +129,19 @@ Array [
     "2_aloitusKuulutus_RUOTSI_2022-03-28T14:28",
     Object {
       "date": "2022-03-28T14:28:00+03:00",
+      "elyt": Array [
+        1001,
+        1019,
+      ],
       "kieli": "RUOTSI",
       "kunnat": Array [
-        "Mikkeli",
-        "Juva",
-        "Savonlinna",
+        491,
+        178,
+        740,
       ],
       "maakunnat": Array [
-        "Uusimaa",
-        "Pirkanmaa",
+        1,
+        6,
       ],
       "oid": "2",
       "title": "RUOTSIKSI Kuulutus suunnittelun aloittamisesta: Marikas testprojekt",

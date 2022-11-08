@@ -1,6 +1,7 @@
 import velhometadata from "./generated/velhometadata.json";
 import sykeKunnat from "./generated/kunnat.json";
 import sykeMaakunnat from "./generated/maakunnat.json";
+import elyt from "./generated/ely.json";
 import { RequiredLocalizedMap } from "../backend/src/database/model";
 import { IlmoitettavaViranomainen, Kieli } from "./graphql/apiModel";
 import { IllegalArgumentError } from "../backend/src/error/IllegalArgumentError";
@@ -35,6 +36,7 @@ export type Kunta = {
 export type Maakunta = {
   id: number;
   nimi: RequiredLocalizedMap<string>;
+  ely: number;
 };
 
 const sykeKuntaIdToLocalizedNimi = () =>
@@ -82,7 +84,7 @@ abstract class AbstractLocalCache<T> {
   }
 
   private populateInternal() {
-    let { list, map } = this.populate();
+    const { list, map } = this.populate();
     metadataCache.set(this.listCacheKey, list);
     metadataCache.set(this.mapCacheKey, map);
   }
@@ -111,9 +113,9 @@ class Kunnat extends AbstractLocalCache<Kunta> {
         }
         nimi = { SUOMI: velhoKunta.otsikko };
       }
-      let kunta = {
+      const kunta = {
         id: kuntaId,
-        nimi: nimi,
+        nimi,
         elyId: kuntametadata.parseNumberIdFromVelhoKey(velhoKunta.ely),
         liikennevastuuElyId: kuntametadata.parseNumberIdFromVelhoKey(velhoKunta["liikennevastuu-ely"]),
         maakuntaId: kuntametadata.parseNumberIdFromVelhoKey(velhoKunta.maakunta),
@@ -140,9 +142,11 @@ class Maakunnat extends AbstractLocalCache<Maakunta> {
     for (const velhoMaakuntaId in velhoMaakunnat) {
       const velhoMaakunta = velhoMaakunnat[velhoMaakuntaId];
       const maakuntaId = Number.parseInt(velhoMaakunta.koodi);
-      let maakunta = {
+      const sykeMaakunta = sykeMaakuntaIdToMaakunta()[maakuntaId];
+      const maakunta = {
         id: maakuntaId,
-        nimi: sykeMaakuntaIdToMaakunta()[maakuntaId].nimi,
+        nimi: sykeMaakunta.nimi,
+        ely: sykeMaakunta.elyId,
       };
       maakuntaList.push(maakunta);
       maakuntaMap[maakuntaId] = maakunta;
@@ -161,7 +165,7 @@ class KuntaMetadata {
   }
 
   parseNumberIdFromVelhoKey(key: string): number {
-    let match = key.match(/\w+\/[a-z]+(\d+)/);
+    const match = key.match(/\w+\/[a-z]+(\d+)/);
     if (match && match.length == 2) {
       const val = Number.parseInt(match[1]);
       if (!isNaN(val)) {
@@ -179,8 +183,8 @@ class KuntaMetadata {
     if (typeof name == "number") {
       return name;
     }
-    let trimmedName = name.trim().toLowerCase();
-    let kunta = kuntametadata.kunnat.list.find((kunta) => kunta.nimi.SUOMI.toLowerCase() == trimmedName);
+    const trimmedName = name.trim().toLowerCase();
+    const kunta = kuntametadata.kunnat.list.find((kunta) => kunta.nimi.SUOMI.toLowerCase() == trimmedName);
     if (kunta) {
       return kunta.id;
     }
@@ -192,10 +196,10 @@ class KuntaMetadata {
   }
 
   idForMaakuntaName(name: string | number): number {
-    if (typeof name == "number") {
-      return name;
+    if (typeof name == "number" || !isNaN(Number(name))) {
+      return Number(name);
     }
-    let maakunta = kuntametadata.maakunnat.list.find((maakunta) => maakunta.nimi.SUOMI == name);
+    const maakunta = kuntametadata.maakunnat.list.find((maakunta) => maakunta.nimi.SUOMI == name);
     if (maakunta) {
       return maakunta.id;
     }
@@ -204,7 +208,7 @@ class KuntaMetadata {
 
   public kuntaOptions(lang: string): { value: string; label: string }[] {
     let options: { label: string; value: string }[];
-    let kuntaList = kuntametadata.kunnat.list;
+    const kuntaList = kuntametadata.kunnat.list;
     if (lang == "sv") {
       options = kuntaList.map((kunta) => ({ value: String(kunta.id), label: kunta.nimi.RUOTSI || kunta.nimi.SUOMI }));
     } else {
@@ -281,6 +285,14 @@ class KuntaMetadata {
 
   maakuntaForMaakuntaId(maakuntaId: number): Maakunta | undefined {
     return kuntametadata.maakunnat.getById(maakuntaId);
+  }
+
+  /**
+   * Käytetään ilmoitustaulusyötteen avaimen muuttamiseen numero-id:ksi
+   * @param key
+   */
+  elyIdFromKey(key: string) {
+    return elyt[key as keyof typeof elyt]?.id;
   }
 }
 

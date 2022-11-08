@@ -3,6 +3,7 @@ import { setupLambdaMonitoring, wrapXRayAsync } from "../../../backend/src/aws/m
 import { Kieli } from "../../../common/graphql/apiModel";
 import { ilmoitustauluSyoteHandler } from "../../../backend/src/ilmoitustauluSyote/ilmoitustauluSyoteHandler";
 import { validateCredentials } from "../../util/basicAuthentication";
+import { NotFoundError } from "../../../backend/src/error/NotFoundError";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   setupLambdaMonitoring();
@@ -22,8 +23,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return;
     }
 
-    const xml = await ilmoitustauluSyoteHandler.getFeed(kieli as Kieli);
-    res.setHeader("Content-Type", "application/rss+xml; charset=UTF-8");
-    res.send(xml);
+    const elyParam = req.query["ely"];
+    const ely = elyParam instanceof Array ? elyParam[0] : elyParam;
+
+    const maakuntaParam = req.query["maakunta"];
+    const maakunta = maakuntaParam instanceof Array ? maakuntaParam[0] : maakuntaParam;
+
+    try {
+      const xml = await ilmoitustauluSyoteHandler.getFeed(kieli as Kieli, ely, maakunta);
+      res.setHeader("Content-Type", "application/rss+xml; charset=UTF-8");
+      res.send(xml);
+    } catch (e) {
+      if (e instanceof NotFoundError) {
+        res.status(404);
+        res.send(e.message);
+      } else {
+        res.status(500);
+        res.send(e instanceof Error ? e.message : "Virhe.");
+      }
+    }
   });
 }

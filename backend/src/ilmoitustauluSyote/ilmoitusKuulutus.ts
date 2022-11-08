@@ -10,8 +10,9 @@ export type IlmoitusKuulutus = {
   kieli: string;
   url: string;
   type: IlmoitusKuulutusType;
-  kunnat?: string[];
-  maakunnat?: string[];
+  kunnat?: number[];
+  maakunnat?: number[];
   vaylamuoto?: string[];
   date: string;
+  elyt?: number[];
 };

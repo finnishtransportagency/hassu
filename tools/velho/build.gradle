@@ -57,6 +57,12 @@ task downloadMaakuntaList(type: Download) {
   overwrite false
 }
 
+task downloadElyList(type: Download) {
+  src 'http://rajapinnat.ymparisto.fi/api/Hakemistorajapinta/1.0/odata/Ely'
+  dest "build/ely.json".toString()
+  overwrite false
+}
+
 // This is a workaround for duplicate enum values in hakupalvelu. Remove this code after Velho has been fixed.
 task fixSwagger(type: Copy) {
   from("${buildDir}") {
@@ -95,3 +101,4 @@ fixSwagger.dependsOn downloadSwaggers
 
 generateApis.dependsOn downloadKuntaList
 generateApis.dependsOn downloadMaakuntaList
+generateApis.dependsOn downloadElyList

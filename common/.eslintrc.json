@@ -1,0 +1,42 @@
+{
+  "env": {
+    "node": true,
+    "commonjs": true
+  },
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint",
+    "mocha-no-only"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "ignorePatterns": [
+    "**/*.test.ts"
+  ],
+  "rules": {
+    "strict": "error",
+    "@typescript-eslint/no-var-requires": "warn",
+    "object-shorthand": "warn",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "varsIgnorePattern": "^_",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "mocha-no-only/mocha-no-only": [
+      "error"
+    ],
+    "@typescript-eslint/consistent-type-assertions": [
+      "error",
+      {
+        "assertionStyle": "as",
+        "objectLiteralTypeAssertions": "allow-as-parameter"
+      }
+    ]
+  }
+}

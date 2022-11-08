@@ -4,15 +4,19 @@ exports[`IlmoitustauluSyote Should index projekti into ilmoitustaulusyote index 
 Array [
   Object {
     "date": "2022-03-28T14:28:00+03:00",
+    "elyt": Array [
+      1001,
+      1019,
+    ],
     "kieli": "SUOMI",
     "kunnat": Array [
-      "Mikkeli",
-      "Juva",
-      "Savonlinna",
+      491,
+      178,
+      740,
     ],
     "maakunnat": Array [
-      "Uusimaa",
-      "Pirkanmaa",
+      1,
+      6,
     ],
     "oid": "4",
     "title": "Kuulutus suunnittelun aloittamisesta: Marikan testiprojekti",
@@ -24,15 +28,19 @@ Array [
   },
   Object {
     "date": "2022-03-28T14:28:00+03:00",
+    "elyt": Array [
+      1001,
+      1019,
+    ],
     "kieli": "RUOTSI",
     "kunnat": Array [
-      "Mikkeli",
-      "Juva",
-      "Savonlinna",
+      491,
+      178,
+      740,
     ],
     "maakunnat": Array [
-      "Uusimaa",
-      "Pirkanmaa",
+      1,
+      6,
     ],
     "oid": "4",
     "title": "RUOTSIKSI Kuulutus suunnittelun aloittamisesta: Marikas testprojekt",
@@ -44,13 +52,17 @@ Array [
   },
   Object {
     "date": "2022-06-20T11:54:00+03:00",
+    "elyt": Array [
+      1001,
+      1019,
+    ],
     "kieli": "SUOMI",
     "kunnat": Array [
-      "Kerava",
+      245,
     ],
     "maakunnat": Array [
-      "Uusimaa",
-      "Pirkanmaa",
+      1,
+      6,
     ],
     "oid": "4",
     "title": "Kuulutus suunnitelman nähtäville asettamisesta: Mt 140 parantaminen Kaskelantien kohdalla, tiesuunnitelma, Kerava",
@@ -62,13 +74,17 @@ Array [
   },
   Object {
     "date": "2022-06-20T11:54:00+03:00",
+    "elyt": Array [
+      1001,
+      1019,
+    ],
     "kieli": "RUOTSI",
     "kunnat": Array [
-      "Kerava",
+      245,
     ],
     "maakunnat": Array [
-      "Uusimaa",
-      "Pirkanmaa",
+      1,
+      6,
     ],
     "oid": "4",
     "title": "RUOTSIKSI Kuulutus suunnitelman nähtäville asettamisesta: sv",
@@ -80,13 +96,16 @@ Array [
   },
   Object {
     "date": "2022-06-09T00:00:00+03:00",
+    "elyt": Array [
+      1001,
+    ],
     "kieli": "SUOMI",
     "kunnat": Array [
-      "Helsinki",
-      "Vantaa",
+      91,
+      92,
     ],
     "maakunnat": Array [
-      "Uusimaa",
+      1,
     ],
     "oid": "4",
     "title": "Kuulutus suunnitelman hyväksymispäätöksestä: HASSU AUTOMAATTITESTIPROJEKTI1",
@@ -98,13 +117,16 @@ Array [
   },
   Object {
     "date": "2022-06-09T00:00:00+03:00",
+    "elyt": Array [
+      1001,
+    ],
     "kieli": "RUOTSI",
     "kunnat": Array [
-      "Helsinki",
-      "Vantaa",
+      91,
+      92,
     ],
     "maakunnat": Array [
-      "Uusimaa",
+      1,
     ],
     "oid": "4",
     "title": "RUOTSIKSI Kuulutus suunnitelman hyväksymispäätöksestä: Namnet på svenska",
