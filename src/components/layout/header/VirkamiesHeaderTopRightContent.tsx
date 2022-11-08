@@ -5,7 +5,7 @@ import StyledLink from "@components/StyledLink";
 
 const VirkamiesHeaderTopRightContent: FC<{ mobile?: true }> = ({ mobile }) => {
   const { data: kayttaja } = useCurrentUser();
-  const kayttajaNimi = kayttaja && kayttaja.etuNimi && kayttaja.sukuNimi && `${kayttaja.sukuNimi}, ${kayttaja.etuNimi}`;
+  const kayttajaNimi = kayttaja && kayttaja.etunimi && kayttaja.sukunimi && `${kayttaja.sukunimi}, ${kayttaja.etunimi}`;
   const logoutHref = process.env.NEXT_PUBLIC_VAYLA_EXTRANET_URL;
 
   return (

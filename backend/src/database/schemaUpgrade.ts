@@ -1,4 +1,4 @@
-import { DBProjekti, IlmoituksenVastaanottajat, SuunnitteluVaihe } from "./model";
+import { DBProjekti, DBVaylaUser, IlmoituksenVastaanottajat, SuunnitteluVaihe } from "./model";
 import { cloneDeepWith } from "lodash";
 import { kuntametadata } from "../../../common/kuntametadata";
 import { SuunnitteluVaiheTila } from "../../../common/graphql/apiModel";
@@ -49,6 +49,17 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
           return [];
         }
       }
+    }
+    if (key == "kayttoOikeudet" && value) {
+      const kayttoOikeudet: DBVaylaUser[] = value;
+      return kayttoOikeudet.map((user) => {
+        if ("nimi" in user) {
+          const nimi = (user as unknown as Record<string, string>)["nimi"];
+          const [sukunimi, etunimi] = nimi.split(/, /g);
+          return { ...user, etunimi, sukunimi };
+        }
+        return user;
+      });
     }
     if (key == "ilmoituksenVastaanottajat") {
       const ilmoituksenVastaanottajat: IlmoituksenVastaanottajat = value;

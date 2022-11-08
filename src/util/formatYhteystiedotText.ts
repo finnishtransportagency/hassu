@@ -1,8 +1,9 @@
 import { Yhteystieto } from "../../common/graphql/apiModel";
+import { formatNimi } from "./userUtil";
 
 export default function formatYhteystiedotText(yhteystiedot: Yhteystieto[]): string {
   const yhteystiedotList = yhteystiedot.map(
-    (yt) => yt.etunimi + " " + yt.sukunimi + ", puh. " + yt.puhelinnumero + ", " + yt.sahkoposti + " (" + yt.organisaatio + ")"
+    (yt) => formatNimi(yt) + ", puh. " + yt.puhelinnumero + ", " + yt.sahkoposti + " (" + yt.organisaatio + ")"
   );
 
   if (yhteystiedotList.length == 1) {

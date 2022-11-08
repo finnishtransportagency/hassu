@@ -1,6 +1,5 @@
 import { HyvaksymisPaatosVaiheJulkaisu, Kieli } from "@services/api";
 import React, { ReactElement } from "react";
-import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
@@ -17,6 +16,7 @@ import ButtonFlatWithIcon from "@components/button/ButtonFlat";
 import { ProjektiTestCommand } from "../../../../../common/testUtil.dev";
 import { formatDate } from "src/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
+import { formatNimi } from "../../../../util/userUtil";
 
 interface Props {
   hyvaksymisPaatosVaiheJulkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
@@ -103,7 +103,7 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
           <p></p>
           {hyvaksymisPaatosVaiheJulkaisu.yhteystiedot?.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
-              {capitalize(yhteystieto.etunimi)} {capitalize(yhteystieto.sukunimi)}, puh. {yhteystieto.puhelinnumero},{" "}
+              {formatNimi(yhteystieto)}, puh. {yhteystieto.puhelinnumero},{" "}
               {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio})
             </p>
           ))}

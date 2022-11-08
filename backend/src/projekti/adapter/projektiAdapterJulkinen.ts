@@ -583,7 +583,8 @@ function adaptProjektiHenkilot(
     ?.map((kayttoOikeus) => {
       const result: API.ProjektiKayttajaJulkinen = {
         __typename: "ProjektiKayttajaJulkinen",
-        nimi: kayttoOikeus.nimi,
+        etunimi: kayttoOikeus.etunimi,
+        sukunimi: kayttoOikeus.sukunimi,
         email: kayttoOikeus.email,
         puhelinnumero: kayttoOikeus.puhelinnumero,
         organisaatio: kayttoOikeus.organisaatio,

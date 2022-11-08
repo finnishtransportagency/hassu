@@ -24,6 +24,7 @@ import CheckBox from "@components/form/CheckBox";
 import SoittoajanYhteyshenkilot from "./SoittoajanYhteyshenkilot";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { today } from "src/util/dateUtils";
+import { formatNimi } from "../../../util/userUtil";
 
 const defaultTilaisuus: Omit<VuorovaikutusTilaisuusInput, "tyyppi"> = {
   nimi: "",
@@ -52,6 +53,7 @@ const defaultSoittoaikaTilaisuus: VuorovaikutusTilaisuusInput = {
 export type VuorovaikutustilaisuusFormValues = {
   vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[];
 };
+
 interface Props {
   open: boolean;
   windowHandler: (isOpen: boolean) => void;
@@ -207,7 +209,9 @@ export default function VuorovaikutusDialog({
                 <Section>
                   <h4 className="vayla-small-title">Live-tilaisuudet verkossa</h4>
                   {fields.map((tilaisuus, index) => {
-                    if (tilaisuus.tyyppi !== VuorovaikutusTilaisuusTyyppi.VERKOSSA) return;
+                    if (tilaisuus.tyyppi !== VuorovaikutusTilaisuusTyyppi.VERKOSSA) {
+                      return;
+                    }
                     return (
                       <SectionContent key={index}>
                         <TilaisuudenNimiJaAika index={index} />
@@ -247,7 +251,9 @@ export default function VuorovaikutusDialog({
                 <Section>
                   <h4 className="vayla-small-title">Fyysiset tilaisuudet</h4>
                   {fields.map((tilaisuus, index) => {
-                    if (tilaisuus.tyyppi !== VuorovaikutusTilaisuusTyyppi.PAIKALLA) return;
+                    if (tilaisuus.tyyppi !== VuorovaikutusTilaisuusTyyppi.PAIKALLA) {
+                      return;
+                    }
                     return (
                       <SectionContent key={index}>
                         <TilaisuudenNimiJaAika index={index} />
@@ -306,7 +312,9 @@ export default function VuorovaikutusDialog({
                 <Section>
                   <h4 className="vayla-small-title">Soittoajat</h4>
                   {fields.map((tilaisuus, index) => {
-                    if (tilaisuus.tyyppi !== VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) return;
+                    if (tilaisuus.tyyppi !== VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
+                      return;
+                    }
                     return (
                       <SectionContent key={index}>
                         <TilaisuudenNimiJaAika index={index} />
@@ -327,8 +335,9 @@ export default function VuorovaikutusDialog({
                                   inlineFlex
                                   errorMessage={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.esitettavatYhteystiedot?.message}
                                 >
-                                  {kayttoOikeudet?.map(({ nimi, kayttajatunnus }, index) => {
+                                  {kayttoOikeudet?.map(({ etunimi, sukunimi, kayttajatunnus }, index) => {
                                     const tunnuslista = value || [];
+                                    const nimi = formatNimi({ sukunimi, etunimi });
                                     return (
                                       <Fragment key={index}>
                                         <CheckBox

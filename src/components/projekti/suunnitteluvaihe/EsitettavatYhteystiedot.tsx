@@ -14,6 +14,7 @@ import IconButton from "@components/button/IconButton";
 import StandardiYhteystiedotListana from "../common/StandardiYhteystiedotListana";
 import { useProjekti } from "src/hooks/useProjekti";
 import { VuorovaikutusFormValues } from "./SuunnitteluvaiheenVuorovaikuttaminen";
+import { formatNimi } from "../../../util/userUtil";
 
 const defaultYhteystieto: YhteystietoInput = {
   etunimi: "",
@@ -75,8 +76,9 @@ export default function EsitettavatYhteystiedot({ vuorovaikutusnro }: Props): Re
             name={`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysHenkilot`}
             render={({ field: { onChange, value, ...field } }) => (
               <FormGroup label="Projektiin tallennetut henkilöt" inlineFlex>
-                {projekti.kayttoOikeudet?.map(({ nimi, tyyppi, kayttajatunnus }, index) => {
+                {projekti.kayttoOikeudet?.map(({ etunimi, sukunimi, tyyppi, kayttajatunnus }, index) => {
                   const tunnuslista = value || [];
+                  const nimi = formatNimi({ sukunimi, etunimi });
                   return (
                     <Fragment key={index}>
                       {tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO ? (

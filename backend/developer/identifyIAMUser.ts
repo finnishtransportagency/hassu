@@ -12,8 +12,8 @@ const identifyIAMUser: userService.IdentifyUserFunc = async (
     const devUserRoles = event.request?.headers?.["x-hassudev-roles"];
     return {
       __typename: "NykyinenKayttaja",
-      etuNimi: devUserUid,
-      sukuNimi: devUserUid,
+      etunimi: devUserUid,
+      sukunimi: devUserUid,
       uid: devUserUid,
       roolit: devUserRoles?.split(","),
       keksit: await createSignedCookies(),

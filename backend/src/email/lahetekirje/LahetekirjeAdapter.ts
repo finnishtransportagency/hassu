@@ -5,6 +5,7 @@ import { translate } from "../../util/localization";
 import { vaylaUserToYhteystieto } from "../../util/vaylaUserToYhteystieto";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../../asiakirja/asiakirjaTypes";
 import assert from "assert";
+import { formatNimi } from "../../util/userUtil";
 
 type SuunnitelmaTyyppi = "tiesuunnitelma" | "ratasuunnitelma" | "yleissuunnitelma";
 
@@ -221,7 +222,7 @@ export class LahetekirjeAdapter {
     esitettavatYhteystiedot?.forEach((yhteystieto) => {
       yt.push(yhteystieto);
     });
-    return yt.map((y) => `${y.organisaatio}, ${y.etunimi} ${y.sukunimi}, puh. ${y.puhelinnumero}, ${y.sahkoposti}`);
+    return yt.map((y) => `${y.organisaatio}, ${formatNimi(y)}, puh. ${y.puhelinnumero}, ${y.sahkoposti}`);
   }
 
   private get vastaanottajat(): string[] {

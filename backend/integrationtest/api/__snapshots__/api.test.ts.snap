@@ -1256,10 +1256,11 @@ Object {
       Object {
         "__typename": "ProjektiKayttajaJulkinen",
         "email": "mikko.haapamki@cgi.com",
-        "nimi": "Hassu, A-tunnus1",
+        "etunimi": "A-tunnus1",
         "organisaatio": "CGI Suomi Oy",
         "projektiPaallikko": true,
         "puhelinnumero": "123",
+        "sukunimi": "Hassu",
       },
     ],
     "status": "ALOITUSKUULUTUS",

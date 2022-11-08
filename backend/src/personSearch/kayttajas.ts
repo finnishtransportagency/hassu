@@ -1,6 +1,7 @@
 import { Kayttaja } from "../../../common/graphql/apiModel";
 import { adaptPerson } from "./personAdapter";
 import { log } from "../logger";
+import { formatNimi } from "../util/userUtil";
 
 export type Person = {
   etuNimi: string;
@@ -45,7 +46,8 @@ export class Kayttajas {
         }
         if (kayttaja.uid) {
           map[kayttaja.uid] = {
-            ...kayttaja,
+            etuNimi: kayttaja.etunimi,
+            sukuNimi: kayttaja.sukunimi,
             organisaatio: kayttaja.organisaatio || undefined,
             puhelinnumero: kayttaja.puhelinnumero || undefined,
             email: [kayttaja.email],
@@ -70,15 +72,17 @@ export class Kayttajas {
 
   findByText(hakusana: string): Kayttaja[] {
     if (hakusana.length >= 3) {
-      return Object.entries(this.personMap).reduce((list, [uid, person]) => {
-        if (
-          (person.sukuNimi.toLowerCase() + ", " + person.etuNimi.toLowerCase()).includes(hakusana.toLowerCase()) ||
-          (person.sukuNimi.toLowerCase() + " " + person.etuNimi.toLowerCase()).includes(hakusana.toLowerCase())
-        ) {
-          list.push(adaptPerson(uid, person));
-        }
-        return list;
-      }, [] as Kayttaja[]);
+      return Object.entries(this.personMap)
+        .reduce((list, [uid, person]) => {
+          if (
+            (person.etuNimi.toLowerCase() + ", " + person.sukuNimi.toLowerCase()).includes(hakusana.toLowerCase()) ||
+            (person.etuNimi.toLowerCase() + " " + person.sukuNimi.toLowerCase()).includes(hakusana.toLowerCase())
+          ) {
+            list.push(adaptPerson(uid, person));
+          }
+          return list;
+        }, [] as Kayttaja[])
+        .sort((person1, person2) => formatNimi(person1).localeCompare(formatNimi(person2)));
     }
     return [];
   }

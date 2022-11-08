@@ -17,6 +17,7 @@ import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../../proje
 import { findUserByKayttajatunnus } from "../../projekti/projektiUtil";
 import { AsiakirjanMuoto, YleisotilaisuusKutsuPdfOptions } from "../asiakirjaTypes";
 import { kuntametadata } from "../../../../common/kuntametadata";
+import { formatNimi } from "../../util/userUtil";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
@@ -351,16 +352,14 @@ export class Kutsu20 extends CommonPdf {
               const user = this.kayttoOikeudet.filter((kayttaja) => kayttaja.kayttajatunnus == kayttajatunnus).pop();
               if (user) {
                 const role = user.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO ? translate("rooli.PROJEKTIPAALLIKKO", this.kieli) : undefined;
-                this.doc.text(safeConcatStrings(", ", [user.nimi, role, user.puhelinnumero]));
+                this.doc.text(safeConcatStrings(", ", [formatNimi(user), role, user.puhelinnumero]));
               }
             });
           }
 
           if (tilaisuus.esitettavatYhteystiedot?.yhteysTiedot) {
             tilaisuus.esitettavatYhteystiedot.yhteysTiedot.forEach((yhteystieto) => {
-              this.doc.text(
-                safeConcatStrings(", ", [`${yhteystieto.etunimi} ${yhteystieto.sukunimi}`, yhteystieto.titteli, yhteystieto.puhelinnumero])
-              );
+              this.doc.text(safeConcatStrings(", ", [formatNimi(yhteystieto), yhteystieto.titteli, yhteystieto.puhelinnumero]));
             });
             this.doc.text("").moveDown();
           }

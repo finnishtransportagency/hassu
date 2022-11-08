@@ -1,6 +1,5 @@
-import { NahtavillaoloVaiheJulkaisu, Kieli } from "@services/api";
+import { Kieli, NahtavillaoloVaiheJulkaisu } from "@services/api";
 import React, { ReactElement } from "react";
-import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
 import lowerCase from "lodash/lowerCase";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
@@ -16,6 +15,7 @@ import ButtonFlatWithIcon from "@components/button/ButtonFlat";
 import { ProjektiTestCommand } from "../../../../../common/testUtil.dev";
 import { formatDate } from "src/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
+import { formatNimi } from "../../../../util/userUtil";
 
 interface Props {
   nahtavillaoloVaiheJulkaisu?: NahtavillaoloVaiheJulkaisu | null;
@@ -96,10 +96,10 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
         <SectionContent>
           <p className="vayla-label">Kuulutuksen yhteyshenkilöt</p>
           <p></p>
-          {nahtavillaoloVaiheJulkaisu.yhteystiedot?.map((yhteistieto, index) => (
+          {nahtavillaoloVaiheJulkaisu.yhteystiedot?.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
-              {capitalize(yhteistieto?.etunimi)} {capitalize(yhteistieto?.sukunimi)}, puh. {yhteistieto?.puhelinnumero},{" "}
-              {yhteistieto?.sahkoposti ? replace(yhteistieto?.sahkoposti, "@", "[at]") : ""}
+              {formatNimi(yhteystieto)}, puh. {yhteystieto?.puhelinnumero},{" "}
+              {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""}
             </p>
           ))}
         </SectionContent>

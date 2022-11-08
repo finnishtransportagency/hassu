@@ -23,6 +23,7 @@ import {
 import { DBProjekti, DBVaylaUser, Vuorovaikutus } from "../../src/database/model";
 import cloneDeep from "lodash/cloneDeep";
 import { kuntametadata } from "../../../common/kuntametadata";
+import pick from "lodash/pick";
 
 const mikkeli = kuntametadata.idForKuntaName("Mikkeli");
 const juva = kuntametadata.idForKuntaName("Juva");
@@ -111,7 +112,8 @@ export class ProjektiFixture {
     kayttajatunnus: "A123",
     tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
     muokattavissa: false,
-    nimi: "Projari, Pekka",
+    etunimi: "Pekka",
+    sukunimi: "Projari",
     email: "pekka.projari@vayla.fi",
     organisaatio: "Väylävirasto",
     puhelinnumero: "123456789",
@@ -121,7 +123,8 @@ export class ProjektiFixture {
     __typename: "ProjektiKayttaja",
     kayttajatunnus: "A000111",
     muokattavissa: true,
-    nimi: "Meikalainen, Matti",
+    etunimi: "Matti",
+    sukunimi: "Meikalainen",
     email: "Matti.Meikalainen@vayla.fi",
     organisaatio: "Väylävirasto",
     puhelinnumero: "123456789",
@@ -131,7 +134,8 @@ export class ProjektiFixture {
     __typename: "ProjektiKayttaja",
     kayttajatunnus: "A000123",
     muokattavissa: true,
-    nimi: "Kuntalainen, Kunta",
+    etunimi: "Kunta",
+    sukunimi: "Kuntalainen",
     email: "Kunta.Kuntalainen@vayla.fi",
     organisaatio: "Nokia",
     puhelinnumero: "123456789",
@@ -186,7 +190,8 @@ export class ProjektiFixture {
           kayttajatunnus: "A123",
           tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
           muokattavissa: false,
-          nimi: "Projari, Pekka",
+          etunimi: "Pekka",
+          sukunimi: "Projari",
           email: "pekka.projari@vayla.fi",
           organisaatio: "Väylävirasto",
           puhelinnumero: "123456789",
@@ -210,11 +215,8 @@ export class ProjektiFixture {
       kayttoOikeudet: [
         {
           tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
-          email: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
-          kayttajatunnus: ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
-          nimi: ProjektiFixture.pekkaProjariProjektiKayttaja.nimi,
+          ...pick(ProjektiFixture.pekkaProjariProjektiKayttaja, ["email", "kayttajatunnus", "etunimi", "sukunimi", "organisaatio"]),
           puhelinnumero: ProjektiFixture.pekkaProjariProjektiKayttaja.puhelinnumero || "",
-          organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio,
         },
         this.mattiMeikalainenDBVaylaUser(),
         this.kunnanYhteysHenkiloDBVaylaUser(),
@@ -265,23 +267,11 @@ export class ProjektiFixture {
   }
 
   mattiMeikalainenDBVaylaUser(): DBVaylaUser {
-    return {
-      email: ProjektiFixture.mattiMeikalainenProjektiKayttaja.email,
-      kayttajatunnus: ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
-      nimi: ProjektiFixture.mattiMeikalainenProjektiKayttaja.nimi,
-      puhelinnumero: ProjektiFixture.mattiMeikalainenProjektiKayttaja.puhelinnumero || "",
-      organisaatio: ProjektiFixture.mattiMeikalainenProjektiKayttaja.organisaatio,
-    };
+    return projektiKayttajaAsDBVaylaUser(ProjektiFixture.mattiMeikalainenProjektiKayttaja);
   }
 
   kunnanYhteysHenkiloDBVaylaUser(): DBVaylaUser {
-    return {
-      email: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.email,
-      kayttajatunnus: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.kayttajatunnus,
-      nimi: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.nimi,
-      puhelinnumero: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.puhelinnumero || "",
-      organisaatio: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.organisaatio,
-    };
+    return projektiKayttajaAsDBVaylaUser(ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja);
   }
 
   dbProjekti2(): DBProjekti {
@@ -289,11 +279,7 @@ export class ProjektiFixture {
       kayttoOikeudet: [
         {
           tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
-          email: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
-          kayttajatunnus: ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
-          nimi: ProjektiFixture.pekkaProjariProjektiKayttaja.nimi,
-          puhelinnumero: ProjektiFixture.pekkaProjariProjektiKayttaja.puhelinnumero || "",
-          organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio,
+          ...projektiKayttajaAsDBVaylaUser(ProjektiFixture.pekkaProjariProjektiKayttaja),
         },
         this.mattiMeikalainenDBVaylaUser(),
       ],
@@ -463,11 +449,7 @@ export class ProjektiFixture {
       {
         tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
         muokattavissa: false,
-        email: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
-        kayttajatunnus: ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
-        nimi: ProjektiFixture.pekkaProjariProjektiKayttaja.nimi,
-        puhelinnumero: ProjektiFixture.pekkaProjariProjektiKayttaja.puhelinnumero || "",
-        organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio,
+        ...projektiKayttajaAsDBVaylaUser(ProjektiFixture.pekkaProjariProjektiKayttaja),
       },
       this.mattiMeikalainenDBVaylaUser(),
     ],
@@ -892,5 +874,16 @@ export class ProjektiFixture {
         },
       },
     ],
+  };
+}
+
+function projektiKayttajaAsDBVaylaUser(kayttaja: ProjektiKayttaja): DBVaylaUser {
+  return {
+    email: kayttaja.email,
+    kayttajatunnus: kayttaja.kayttajatunnus,
+    etunimi: kayttaja.etunimi,
+    sukunimi: kayttaja.sukunimi,
+    puhelinnumero: kayttaja.puhelinnumero || "",
+    organisaatio: kayttaja.organisaatio,
   };
 }

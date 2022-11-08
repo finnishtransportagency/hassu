@@ -39,25 +39,28 @@ Object {
     ":kayttoOikeudet": Array [
       Object {
         "email": "pekka.projari@vayla.fi",
+        "etunimi": "Pekka",
         "kayttajatunnus": "A123",
-        "nimi": "Projari, Pekka",
         "organisaatio": "Väylävirasto",
         "puhelinnumero": "123456789",
+        "sukunimi": "Projari",
         "tyyppi": "PROJEKTIPAALLIKKO",
       },
       Object {
         "email": "Matti.Meikalainen@vayla.fi",
+        "etunimi": "Matti",
         "kayttajatunnus": "A000111",
-        "nimi": "Meikalainen, Matti",
         "organisaatio": "Väylävirasto",
         "puhelinnumero": "123456789",
+        "sukunimi": "Meikalainen",
       },
       Object {
         "email": "Kunta.Kuntalainen@vayla.fi",
+        "etunimi": "Kunta",
         "kayttajatunnus": "A000123",
-        "nimi": "Kuntalainen, Kunta",
         "organisaatio": "Nokia",
         "puhelinnumero": "123456789",
+        "sukunimi": "Kuntalainen",
       },
     ],
     ":kielitiedot": Object {

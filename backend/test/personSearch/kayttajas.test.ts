@@ -18,15 +18,15 @@ describe("kayttajas", () => {
     const a1Kayttaja: Kayttaja = {
       __typename: "Kayttaja",
       uid: "A1",
-      etuNimi: "Matti",
-      sukuNimi: "Meikäläinen",
+      etunimi: "Matti",
+      sukunimi: "Meikäläinen",
       email: "e1",
     };
     const a2Kayttaja: Kayttaja = {
       __typename: "Kayttaja",
       uid: "A2",
-      etuNimi: "Minna",
-      sukuNimi: "Esimerkkinen",
+      etunimi: "Minna",
+      sukunimi: "Esimerkkinen",
       email: "e2",
     };
     expect(kayttajas.getKayttajaByUid("A1")).to.eql(a1Kayttaja);

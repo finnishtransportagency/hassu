@@ -1,6 +1,5 @@
 import { HyvaksymisPaatosVaiheJulkaisu, Kieli } from "@services/api";
 import React, { ReactElement } from "react";
-import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
@@ -17,6 +16,7 @@ import ButtonFlatWithIcon from "@components/button/ButtonFlat";
 import { ProjektiTestCommand } from "../../../../../common/testUtil.dev";
 import { formatDate } from "src/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
+import { formatNimi } from "../../../../util/userUtil";
 
 interface Props {
   jatkoPaatos1VaiheJulkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
@@ -92,8 +92,8 @@ export default function HyvaksymisKuulutusLukunakyma({ jatkoPaatos1VaiheJulkaisu
       <Section>
         <h4 className="vayla-label">Muutoksenhaku</h4>
         <p>
-          Päätökseen voi valittamalla hakea muutosta {t(`hallinto-oikeus-ablatiivi.${jatkoPaatos1VaiheJulkaisu.hallintoOikeus}`)} 30
-          päivän kuluessa päätöksen tiedoksiannosta. Valitusosoituksen tiedosto löytyy Päätös ja sen liitteenä oleva aineisto -välilehdeltä.
+          Päätökseen voi valittamalla hakea muutosta {t(`hallinto-oikeus-ablatiivi.${jatkoPaatos1VaiheJulkaisu.hallintoOikeus}`)} 30 päivän
+          kuluessa päätöksen tiedoksiannosta. Valitusosoituksen tiedosto löytyy Päätös ja sen liitteenä oleva aineisto -välilehdeltä.
         </p>
       </Section>
       <Section>
@@ -102,7 +102,7 @@ export default function HyvaksymisKuulutusLukunakyma({ jatkoPaatos1VaiheJulkaisu
           <p></p>
           {jatkoPaatos1VaiheJulkaisu.yhteystiedot?.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
-              {capitalize(yhteystieto.etunimi)} {capitalize(yhteystieto.sukunimi)}, puh. {yhteystieto.puhelinnumero},{" "}
+              {formatNimi(yhteystieto)}, puh. {yhteystieto.puhelinnumero},{" "}
               {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio})
             </p>
           ))}
@@ -171,9 +171,7 @@ export default function HyvaksymisKuulutusLukunakyma({ jatkoPaatos1VaiheJulkaisu
 
             {jatkoPaatos1VaiheJulkaisu.kielitiedot?.toissijainenKieli && (
               <div className="content mb-4">
-                <p>
-                  Kuulutus ja ilmoitus toissijaisella kielellä ({lowerCase(jatkoPaatos1VaiheJulkaisu.kielitiedot?.toissijainenKieli)})
-                </p>
+                <p>Kuulutus ja ilmoitus toissijaisella kielellä ({lowerCase(jatkoPaatos1VaiheJulkaisu.kielitiedot?.toissijainenKieli)})</p>
                 {toissijaisetPDFt && (
                   <div className="flex flex-col">
                     <div>

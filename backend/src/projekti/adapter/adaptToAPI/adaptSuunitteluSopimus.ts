@@ -91,8 +91,8 @@ export function adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
       __typename: "SuunnitteluSopimusJulkaisu",
       kunta: suunnitteluSopimus.kunta,
       logo: suunnitteluSopimus.logo,
-      etunimi: yhteysHenkilo?.nimi.split(/, /g)[1] || "",
-      sukunimi: yhteysHenkilo?.nimi.split(/, /g)[0] || "",
+      etunimi: yhteysHenkilo?.etunimi || "",
+      sukunimi: yhteysHenkilo?.sukunimi || "",
       email: yhteysHenkilo?.email || "",
       puhelinnumero: yhteysHenkilo?.puhelinnumero || "",
     };

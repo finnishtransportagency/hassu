@@ -37,64 +37,64 @@ export class UserFixture {
 
   static pekkaProjari: NykyinenKayttaja = {
     __typename: "NykyinenKayttaja",
-    etuNimi: "Pekka",
-    sukuNimi: "Projari",
+    etunimi: "Pekka",
+    sukunimi: "Projari",
     uid: "A123",
     roolit: ["Atunnukset", "role2"],
   };
 
   static mattiMeikalainen: NykyinenKayttaja = {
     __typename: "NykyinenKayttaja",
-    etuNimi: "Matti",
-    sukuNimi: "Meikalainen",
+    etunimi: "Matti",
+    sukunimi: "Meikalainen",
     uid: "A000111",
     roolit: ["hassu_kayttaja", "Atunnukset"],
   };
 
   static projari112: NykyinenKayttaja = {
     __typename: "NykyinenKayttaja",
-    etuNimi: "Pertti",
-    sukuNimi: "Projektipäällikkö",
+    etunimi: "Pertti",
+    sukunimi: "Projektipäällikkö",
     uid: "A000112",
     roolit: ["hassu_kayttaja"],
   };
 
   static hassuATunnus1: NykyinenKayttaja = {
     __typename: "NykyinenKayttaja",
-    etuNimi: "A-tunnus1",
-    sukuNimi: "Hassu",
+    etunimi: "A-tunnus1",
+    sukunimi: "Hassu",
     uid: "A000112",
     roolit: ["hassu_kayttaja"],
   };
 
   static manuMuokkaaja: NykyinenKayttaja = {
     __typename: "NykyinenKayttaja",
-    etuNimi: "Manu",
-    sukuNimi: "Muokkaaja",
+    etunimi: "Manu",
+    sukunimi: "Muokkaaja",
     uid: "LX1",
     roolit: ["role1", "role2"],
   };
 
   static testi1Kayttaja: NykyinenKayttaja = {
     __typename: "NykyinenKayttaja",
-    etuNimi: "Testi1",
-    sukuNimi: "Hassu",
+    etunimi: "Testi1",
+    sukunimi: "Hassu",
     uid: "LX581241",
     roolit: ["hassu_kayttaja"],
   };
 
   static hassuAdmin: NykyinenKayttaja = {
     __typename: "NykyinenKayttaja",
-    etuNimi: "Admin",
-    sukuNimi: "Hassu",
+    etunimi: "Admin",
+    sukunimi: "Hassu",
     uid: "A123456",
     roolit: ["hassu_admin"],
   };
 
   static kunnanYhteysHenkiloProjektiKayttaja: NykyinenKayttaja = {
     __typename: "NykyinenKayttaja",
-    etuNimi: "Kunta",
-    sukuNimi: "Kuntalainen",
+    etunimi: "Kunta",
+    sukunimi: "Kuntalainen",
     uid: "A000123",
     roolit: ["hassu_kayttaja"],
   };

@@ -337,40 +337,44 @@
   "kayttoOikeudet": [
     {
       "email": "mikko.haapamki@cgi.com",
+      "etunimi": "A-tunnus1",
       "kayttajatunnus": "A000112",
       "muokattavissa": false,
-      "nimi": "Hassu, A-tunnus1",
       "organisaatio": "CGI Suomi Oy",
       "puhelinnumero": "123",
+      "sukunimi": "Hassu",
       "tyyppi": "PROJEKTIPAALLIKKO",
       "yleinenYhteystieto": true
     },
     {
       "email": "mikko.haapamaki02@cgi.com",
+      "etunimi": "A-tunnus3",
       "kayttajatunnus": "A000114",
       "muokattavissa": false,
-      "nimi": "Hassu, A-tunnus3",
       "organisaatio": "CGI Suomi Oy",
       "puhelinnumero": "123",
+      "sukunimi": "Hassu",
       "tyyppi": "VARAHENKILO",
       "yleinenYhteystieto": false
     },
     {
       "__typename": "ProjektiKayttaja",
       "email": "mikko.haapamaki@cgi.com",
+      "etunimi": "A-Tunnus",
       "kayttajatunnus": "A000111",
       "muokattavissa": true,
-      "nimi": "Hassu, A-Tunnus",
       "organisaatio": "CGI Suomi Oy",
-      "puhelinnumero": "123"
+      "puhelinnumero": "123",
+      "sukunimi": "Hassu"
     },
     {
       "email": "mikko.haapamaki@cgi.com",
+      "etunimi": "Testi1",
       "kayttajatunnus": "LX581241",
       "muokattavissa": true,
-      "nimi": "Hassu, Testi1",
       "organisaatio": "CGI Suomi Oy",
       "puhelinnumero": "123",
+      "sukunimi": "Hassu",
       "yleinenYhteystieto": true
     }
   ],

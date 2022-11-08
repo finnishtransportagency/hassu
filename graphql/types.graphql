@@ -638,7 +638,8 @@ type ProjektiKayttaja {
   puhelinnumero: String
   email: String!
   organisaatio: String!
-  nimi: String!
+  etunimi: String!
+  sukunimi: String!
   muokattavissa: Boolean
   yleinenYhteystieto: Boolean
 }
@@ -647,7 +648,8 @@ type ProjektiKayttajaJulkinen {
   puhelinnumero: String
   email: String!
   organisaatio: String!
-  nimi: String!
+  etunimi: String!
+  sukunimi: String!
   projektiPaallikko: Boolean
 }
 
@@ -683,8 +685,8 @@ type VelhoAineisto {
 
 type NykyinenKayttaja {
   uid: String
-  etuNimi: String!
-  sukuNimi: String!
+  etunimi: String!
+  sukunimi: String!
   roolit: [String!]
   keksit: [String!]
 }
@@ -692,8 +694,8 @@ type NykyinenKayttaja {
 type Kayttaja {
   uid: String
   suomiFiKayttaja: Boolean
-  etuNimi: String!
-  sukuNimi: String!
+  etunimi: String!
+  sukunimi: String!
   organisaatio: String
   email: String
   puhelinnumero: String

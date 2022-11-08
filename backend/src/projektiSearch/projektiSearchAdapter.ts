@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { parseDate } from "../util/dateUtil";
 import { log } from "../logger";
 import { kuntametadata } from "../../../common/kuntametadata";
+import { formatNimi } from "../util/userUtil";
 
 export type ProjektiDocument = {
   oid: string;
@@ -41,7 +42,7 @@ export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocu
     vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
     projektipaallikko: projekti.kayttoOikeudet
       .filter((value) => value.tyyppi == API.KayttajaTyyppi.PROJEKTIPAALLIKKO)
-      .map((value) => safeTrim(value.nimi))
+      .map((value) => safeTrim(formatNimi(value)))
       .pop(),
     aktiivinen: ![API.Status.EPAAKTIIVINEN_1, API.Status.EPAAKTIIVINEN_2, API.Status.EPAAKTIIVINEN_3].includes(
       apiProjekti.status as API.Status

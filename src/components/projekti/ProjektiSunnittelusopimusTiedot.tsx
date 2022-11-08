@@ -13,6 +13,7 @@ import SectionContent from "@components/layout/SectionContent";
 import HassuStack from "@components/layout/HassuStack";
 import useTranslation from "next-translate/useTranslation";
 import { kuntametadata } from "../../../common/kuntametadata";
+import { formatNimi } from "../../util/userUtil";
 
 interface Props {
   projekti?: Projekti | null;
@@ -80,7 +81,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
                 label="Henkilö *"
                 options={
                   projekti?.kayttoOikeudet?.map((kayttaja) => ({
-                    label: kayttaja.nimi,
+                    label: formatNimi(kayttaja),
                     value: kayttaja.kayttajatunnus,
                   })) || []
                 }

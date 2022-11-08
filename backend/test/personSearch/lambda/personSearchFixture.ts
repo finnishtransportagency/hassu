@@ -23,8 +23,8 @@ export class PersonSearchFixture {
 
   pekkaProjari: Kayttaja = {
     __typename: "Kayttaja",
-    etuNimi: "Pekka",
-    sukuNimi: "Projari",
+    etunimi: "Pekka",
+    sukunimi: "Projari",
     uid: "A123",
     email: "pekka.projari@vayla.fi",
     organisaatio: "Väylävirasto",
@@ -54,8 +54,8 @@ export class PersonSearchFixture {
   mattiMeikalainen: Kayttaja = {
     __typename: "Kayttaja",
     email: "matti.meikalainen@vayla.fi",
-    etuNimi: "Matti",
-    sukuNimi: "Meikäläinen",
+    etunimi: "Matti",
+    sukunimi: "Meikäläinen",
     organisaatio: "ELY",
     puhelinnumero: "123456789",
     uid: "A000111",
@@ -64,8 +64,8 @@ export class PersonSearchFixture {
   manuMuokkaaja: Kayttaja = {
     __typename: "Kayttaja",
     email: "namu.muokkaaja@vayla.fi",
-    etuNimi: "Manu",
-    sukuNimi: "Muokkaaja",
+    etunimi: "Manu",
+    sukunimi: "Muokkaaja",
     organisaatio: "Väylävirasto",
     puhelinnumero: "123456789",
     uid: "LX1",
@@ -75,8 +75,8 @@ export class PersonSearchFixture {
     return {
       __typename: "Kayttaja",
       email: (uid + "@vayla.fi").toLowerCase(),
-      etuNimi: "Etunimi" + uid,
-      sukuNimi: "Sukunimi" + uid,
+      etunimi: "Etunimi" + uid,
+      sukunimi: "Sukunimi" + uid,
       organisaatio: "Väylävirasto",
       puhelinnumero: "123456789",
       uid,

@@ -41,8 +41,8 @@ const identifyLoggedInVaylaUser: IdentifyUserFunc = async (event: AppSyncResolve
       const roolit = parseRoles(jwt["custom:rooli"]);
       const user: NykyinenKayttaja = {
         __typename: "NykyinenKayttaja",
-        etuNimi: jwt["custom:etunimi"],
-        sukuNimi: jwt["custom:sukunimi"],
+        etunimi: jwt["custom:etunimi"],
+        sukunimi: jwt["custom:sukunimi"],
         uid: jwt["custom:uid"],
         roolit,
       };
