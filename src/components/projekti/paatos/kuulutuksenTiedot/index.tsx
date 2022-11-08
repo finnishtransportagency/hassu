@@ -1,5 +1,13 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { HyvaksymisPaatosVaiheInput, KirjaamoOsoite, TallennaProjektiInput, YhteystietoInput } from "@services/api";
+import {
+  HyvaksymisPaatosVaihe,
+  HyvaksymisPaatosVaiheInput,
+  HyvaksymisPaatosVaiheJulkaisu,
+  KirjaamoOsoite,
+  Projekti,
+  TallennaProjektiInput,
+  YhteystietoInput,
+} from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import React, { ReactElement, useMemo } from "react";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
@@ -19,6 +27,7 @@ import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 import PaatoksenPaiva from "@components/projekti/paatos/kuulutuksenTiedot/PaatoksenPaiva";
+import { PaatosTyyppi } from "../PaatosPageLayout";
 
 export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid"> & {
   hyvaksymisPaatosVaihe: Omit<HyvaksymisPaatosVaiheInput, "hallintoOikeus"> & {
@@ -26,25 +35,33 @@ export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid"> & {
   };
 };
 
-export default function KuulutuksenTiedot(): ReactElement {
-  const { data: projekti } = useProjekti({ revalidateOnMount: true });
-  const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
-  return <>{projekti && kirjaamoOsoitteet && <KuulutuksenTiedotForm kirjaamoOsoitteet={kirjaamoOsoitteet} projekti={projekti} />}</>;
+interface Props {
+  paatosTyyppi: PaatosTyyppi;
+  paatosJulkaisut: HyvaksymisPaatosVaiheJulkaisu[] | null | undefined;
+  paatoksenTiedot: HyvaksymisPaatosVaihe | null | undefined;
 }
 
-interface KuulutuksenTiedotFormProps {
+export default function KuulutuksenTiedot(props: Props): ReactElement {
+  const { data: projekti } = useProjekti();
+  const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
+  return (
+    <>{projekti && kirjaamoOsoitteet && <KuulutuksenTiedotForm kirjaamoOsoitteet={kirjaamoOsoitteet} projekti={projekti} {...props} />}</>
+  );
+}
+
+type KuulutuksenTiedotFormProps = {
   projekti: ProjektiLisatiedolla;
   kirjaamoOsoitteet: KirjaamoOsoite[];
-}
+} & Props;
 
-function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedotFormProps) {
+function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet, paatosTyyppi }: KuulutuksenTiedotFormProps) {
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
 
   const defaultValues: KuulutuksenTiedotFormValues = useMemo(() => {
     const yhteysTiedot: YhteystietoInput[] =
-      projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt)) || [];
+      projekti?.nahtavillaoloVaihe?.kuulutusYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt)) || [];
 
-    const yhteysHenkilot: string[] = projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysHenkilot || [];
+    const yhteysHenkilot: string[] = projekti?.nahtavillaoloVaihe?.kuulutusYhteystiedot?.yhteysHenkilot || [];
 
     const formValues: KuulutuksenTiedotFormValues = {
       oid: projekti.oid,
@@ -119,6 +136,7 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
             <form>
               <Lukunakyma
                 projekti={projekti}
+                paatosTyyppi={paatosTyyppi}
                 hyvaksymisPaatosVaiheJulkaisu={projekti.hyvaksymisPaatosVaiheJulkaisut[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1]}
               />
               <Painikkeet projekti={projekti} />

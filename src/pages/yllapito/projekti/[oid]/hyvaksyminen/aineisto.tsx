@@ -1,13 +1,17 @@
 import React, { VFC } from "react";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
-import HyvaksyminenPageLayout from "@components/projekti/paatos/HyvaksyminenPageLayout";
+import HyvaksyminenPageLayout, { PaatosTyyppi } from "@components/projekti/paatos/PaatosPageLayout";
 import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import PaatosAineistotLukutila from "@components/projekti/lukutila/PaatosAineistotLukutila";
 import PaatosAineistot from "@components/projekti/paatos/aineistot/index";
 
 export default function HyvaksyminenAineistoWrapper() {
-  return <ProjektiConsumer>{(projekti) => <HyvaksyminenAineisto projekti={projekti} />}</ProjektiConsumer>;
+  return (
+    <ProjektiConsumer useProjektiOptions={{ revalidateOnMount: true }}>
+      {(projekti) => <HyvaksyminenAineisto projekti={projekti} />}
+    </ProjektiConsumer>
+  );
 }
 
 const HyvaksyminenAineisto: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti }) => {
@@ -16,7 +20,7 @@ const HyvaksyminenAineisto: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekt
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
   return (
-    <HyvaksyminenPageLayout>
+    <HyvaksyminenPageLayout paatosTyyppi={PaatosTyyppi.HYVAKSYMISPAATOS}>
       {epaaktiivinen && paatosJulkaisu ? (
         <PaatosAineistotLukutila oid={projekti.oid} paatosJulkaisu={paatosJulkaisu} />
       ) : (

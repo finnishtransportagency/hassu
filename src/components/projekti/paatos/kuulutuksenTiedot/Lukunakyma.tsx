@@ -1,5 +1,6 @@
-import { HyvaksymisPaatosVaiheJulkaisu, Kieli } from "@services/api";
-import React, { ReactElement } from "react";
+import React, { ReactElement, useMemo } from "react";
+import { HyvaksymisPaatosVaiheJulkaisu, KasittelynTila, Kieli } from "@services/api";
+import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
@@ -17,13 +18,17 @@ import { ProjektiTestCommand } from "../../../../../common/testUtil.dev";
 import { formatDate } from "src/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { formatNimi } from "../../../../util/userUtil";
+import { PaatosTyyppi } from "../PaatosPageLayout";
 
 interface Props {
   hyvaksymisPaatosVaiheJulkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
   projekti: ProjektiLisatiedolla;
+  paatosTyyppi: PaatosTyyppi;
 }
 
-export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulkaisu, projekti }: Props): ReactElement {
+type KasittelynTilaKey = keyof Omit<KasittelynTila, "__typename">;
+
+export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulkaisu, projekti, paatosTyyppi }: Props): ReactElement {
   const { t } = useTranslation("common");
   const getPdft = (kieli: Kieli | undefined | null) => {
     if (!hyvaksymisPaatosVaiheJulkaisu || !hyvaksymisPaatosVaiheJulkaisu.hyvaksymisPaatosVaihePDFt || !kieli) {
@@ -33,6 +38,8 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
   };
   const ensisijaisetPDFt = getPdft(hyvaksymisPaatosVaiheJulkaisu?.kielitiedot?.ensisijainenKieli);
   const toissijaisetPDFt = getPdft(hyvaksymisPaatosVaiheJulkaisu?.kielitiedot?.toissijainenKieli);
+
+  const paatosRoute = useMemo(() => paatosTyyppiToKasittelynTilaPaatosRouteMap[paatosTyyppi], [paatosTyyppi]);
 
   if (!hyvaksymisPaatosVaiheJulkaisu || !projekti) {
     return <></>;
@@ -84,9 +91,9 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
           <p className="vayla-label md:col-span-1">Päätöksen päivä</p>
           <p className="vayla-label md:col-span-3">Päätöksen asianumero</p>
           <p className="md:col-span-1 mb-0">
-            <FormatDate date={projekti.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm} />
+            <FormatDate date={projekti.kasittelynTila?.[paatosRoute]?.paatoksenPvm} />
           </p>
-          <p className="md:col-span-3 mb-0">{projekti.kasittelynTila?.hyvaksymispaatos?.asianumero}</p>
+          <p className="md:col-span-3 mb-0">{projekti.kasittelynTila?.[paatosRoute]?.asianumero}</p>
         </div>
         <p>Päätös ja sen liitteet löytyvät Päätös ja sen liitteenä oleva aineisto -välilehdeltä.</p>
       </Section>

@@ -13,32 +13,53 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
 
-export default function HyvaksyminenPageLayoutWrapper({ children }: { children?: ReactNode }) {
+export enum PaatosTyyppi {
+  HYVAKSYMISPAATOS = "HYVAKSYMISPAATOS",
+  JATKOPAATOS1 = "JATKOPAATOS1",
+  JATKOPAATOS2 = "JATKOPAATOS2",
+}
+
+interface PaatosTyyppiSpecificData {
+  paatosRoutePart: string;
+  pageTitle: string;
+}
+
+const paatosTyyppiSpecificContentMap: Record<PaatosTyyppi, PaatosTyyppiSpecificData> = {
+  HYVAKSYMISPAATOS: { paatosRoutePart: "hyvaksyminen", pageTitle: "Kuulutus hyväksymispäätöksestä" },
+  JATKOPAATOS1: { paatosRoutePart: "jatkaminen1", pageTitle: "Kuulutus hyväksymispäätöksen jatkamisesta" },
+  JATKOPAATOS2: { paatosRoutePart: "jatkaminen2", pageTitle: "Kuulutus hyväksymispäätöksen jatkamisesta" },
+};
+
+export default function PaatosPageLayoutWrapper({ children, paatosTyyppi }: { children?: ReactNode; paatosTyyppi: PaatosTyyppi }) {
   return (
     <ProjektiConsumer>
       {(projekti) => (
-        <HyvaksyminenPageLayout projekti={projekti} disableTabs={!projekti}>
+        <PaatosPageLayout projekti={projekti} disableTabs={!projekti} paatosTyyppi={paatosTyyppi}>
           {children}
-        </HyvaksyminenPageLayout>
+        </PaatosPageLayout>
       )}
     </ProjektiConsumer>
   );
 }
 
-function HyvaksyminenPageLayout({
+function PaatosPageLayout({
   projekti,
   disableTabs,
+  paatosTyyppi,
   children,
 }: {
   projekti: ProjektiLisatiedolla;
   disableTabs?: boolean;
   children?: ReactNode;
+  paatosTyyppi: PaatosTyyppi;
 }): ReactElement {
   const router = useRouter();
 
   const nahtavillaolovaiheJulkaisu = projekti.nahtavillaoloVaiheJulkaisut?.[projekti.nahtavillaoloVaiheJulkaisut.length - 1];
   const migroitu = nahtavillaolovaiheJulkaisu?.tila == NahtavillaoloVaiheTila.MIGROITU;
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
+
+  const { paatosRoutePart, pageTitle } = useMemo(() => paatosTyyppiSpecificContentMap[paatosTyyppi], [paatosTyyppi]);
 
   const kertaalleenLahetettyHyvaksyttavaksi = useMemo(
     () => projekti?.hyvaksymisPaatosVaiheJulkaisut && projekti.hyvaksymisPaatosVaiheJulkaisut.length >= 1,
@@ -52,11 +73,12 @@ function HyvaksyminenPageLayout({
   let { kuulutusPaiva, published } = examineKuulutusPaiva(hyvaksymisPaatosVaiheJulkaisu?.kuulutusPaiva);
 
   const tabProps: LinkTabProps[] = useMemo(() => {
+    const paatosRoute = paatosRoutePart;
     const result: LinkTabProps[] = [
       {
         linkProps: {
           href: {
-            pathname: `/yllapito/projekti/[oid]/hyvaksymispaatos/aineisto`,
+            pathname: `/yllapito/projekti/[oid]/${paatosRoute}/aineisto`,
             query: { oid: projekti.oid },
           },
         },
@@ -67,7 +89,7 @@ function HyvaksyminenPageLayout({
       {
         linkProps: {
           href: {
-            pathname: `/yllapito/projekti/[oid]/hyvaksymispaatos`,
+            pathname: `/yllapito/projekti/[oid]/${paatosRoute}`,
             query: { oid: projekti.oid },
           },
         },
@@ -81,7 +103,7 @@ function HyvaksyminenPageLayout({
     }
 
     return result;
-  }, [projekti.oid, disableTabs, kertaalleenLahetettyHyvaksyttavaksi]);
+  }, [paatosRoutePart, projekti.oid, disableTabs, kertaalleenLahetettyHyvaksyttavaksi]);
 
   const value = useMemo(() => {
     const indexOfTab = tabProps.findIndex((tProps) => {
@@ -92,7 +114,7 @@ function HyvaksyminenPageLayout({
   }, [router.pathname, tabProps]);
 
   return (
-    <ProjektiPageLayout title="Kuulutus hyväksymispäätöksestä">
+    <ProjektiPageLayout title={pageTitle}>
       <Section noDivider>
         {!migroitu && !epaaktiivinen && !kertaalleenLahetettyHyvaksyttavaksi && (
           <Notification closable type={NotificationType.INFO} hideIcon>
