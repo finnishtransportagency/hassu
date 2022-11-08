@@ -1,6 +1,6 @@
 import { AbstractPdf } from "../abstractPdf";
 import { Kieli, Viranomainen } from "../../../../common/graphql/apiModel";
-import { SuunnitteluSopimusJulkaisu, Velho, Yhteystieto } from "../../database/model";
+import { Velho, Yhteystieto } from "../../database/model";
 import { KutsuAdapter } from "./KutsuAdapter";
 import { log } from "../../logger";
 import { formatNimi } from "../../util/userUtil";
@@ -92,12 +92,11 @@ export abstract class CommonPdf extends AbstractPdf {
 
   protected moreInfoElements(
     yhteystiedot: Yhteystieto[] | null | undefined,
-    suunnitteluSopimus?: SuunnitteluSopimusJulkaisu | null | undefined,
     yhteysHenkilot?: string[] | undefined | null,
     showOrganization = true
   ): PDFKit.PDFStructureElementChild[] {
     return this.kutsuAdapter
-      .yhteystiedot(yhteystiedot, suunnitteluSopimus || undefined, yhteysHenkilot)
+      .yhteystiedot(this.kieli, yhteystiedot, yhteysHenkilot)
       .map(({ organisaatio, etunimi, sukunimi, puhelinnumero, sahkoposti, titteli }) => {
         return () => {
           const noSpamSahkoposti = sahkoposti.replace(/@/g, "(at)");

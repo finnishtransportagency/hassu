@@ -179,7 +179,6 @@ export class Kutsu20 extends CommonPdf {
         {},
         this.moreInfoElements(
           this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysTiedot,
-          this.suunnitteluSopimus,
           this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysHenkilot,
           false
         )

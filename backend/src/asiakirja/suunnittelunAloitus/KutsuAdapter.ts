@@ -4,7 +4,7 @@ import { translate } from "../../util/localization";
 import { linkHyvaksymisPaatos, linkSuunnitteluVaihe } from "../../../../common/links";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import union from "lodash/union";
-import { vaylaUserToYhteystieto } from "../../util/vaylaUserToYhteystieto";
+import { vaylaUserToYhteystieto2, yhteystietoPlusKunta } from "../../util/vaylaUserToYhteystieto";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { kuntametadata } from "../../../../common/kuntametadata";
 
@@ -17,12 +17,18 @@ export type KutsuAdapterProps = {
   projektiTyyppi: ProjektiTyyppi;
   vuorovaikutus?: Vuorovaikutus;
   kayttoOikeudet?: DBVaylaUser[];
+  suunnitteluSopimus?: SuunnitteluSopimusJulkaisu;
 };
 
-const yhteystietoMapper = ({ sukunimi, etunimi, organisaatio, puhelinnumero, sahkoposti, titteli }: Yhteystieto): Yhteystieto => ({
+type LokalisoituYhteystieto = Omit<Yhteystieto, "organisaatio" | "kunta"> & { organisaatio: string };
+
+const yhteystietoMapper = (
+  { sukunimi, etunimi, organisaatio, kunta, puhelinnumero, sahkoposti, titteli }: Yhteystieto,
+  kieli: Kieli
+): LokalisoituYhteystieto => ({
   etunimi: formatProperNoun(etunimi),
   sukunimi: formatProperNoun(sukunimi),
-  organisaatio: formatProperNoun(organisaatio),
+  organisaatio: kunta ? kuntametadata.nameForKuntaId(kunta as number, kieli) || "" : formatProperNoun(organisaatio || ""),
   puhelinnumero,
   sahkoposti,
   titteli,
@@ -37,10 +43,21 @@ export class KutsuAdapter {
   private readonly projektiTyyppi: ProjektiTyyppi;
   private readonly vuorovaikutus?: Vuorovaikutus;
   private readonly kayttoOikeudet?: DBVaylaUser[];
+  private readonly suunnitteluSopimus?: SuunnitteluSopimusJulkaisu;
   private readonly kielitiedot: Kielitiedot;
   private templateResolver: unknown;
 
-  constructor({ oid, velho, kielitiedot, asiakirjanMuoto, kieli, projektiTyyppi, vuorovaikutus, kayttoOikeudet }: KutsuAdapterProps) {
+  constructor({
+    oid,
+    velho,
+    kielitiedot,
+    asiakirjanMuoto,
+    kieli,
+    projektiTyyppi,
+    vuorovaikutus,
+    kayttoOikeudet,
+    suunnitteluSopimus,
+  }: KutsuAdapterProps) {
     this.oid = oid;
     this.velho = velho;
     this.kielitiedot = kielitiedot;
@@ -49,6 +66,7 @@ export class KutsuAdapter {
     this.projektiTyyppi = projektiTyyppi;
     this.vuorovaikutus = vuorovaikutus;
     this.kayttoOikeudet = kayttoOikeudet;
+    this.suunnitteluSopimus = suunnitteluSopimus;
   }
 
   setTemplateResolver(value: unknown): void {
@@ -125,7 +143,7 @@ export class KutsuAdapter {
   }
 
   get kuntia(): string {
-    const kunnat =this.velho?.kunnat?.map((kuntaId) => kuntametadata.nameForKuntaId(kuntaId, this.kieli));
+    const kunnat = this.velho?.kunnat?.map((kuntaId) => kuntametadata.nameForKuntaId(kuntaId, this.kieli));
     if (kunnat) {
       return kunnat.join(", ");
     }
@@ -237,38 +255,20 @@ export class KutsuAdapter {
     return "<" + this.kieli + suomi + this.kieli + ">";
   }
 
-  yhteystiedot(
-    yhteystiedot: Yhteystieto[] | null | undefined,
-    suunnitteluSopimus?: SuunnitteluSopimusJulkaisu,
-    yhteysHenkilot?: string[] | null
-  ): Yhteystieto[] {
+  yhteystiedot(kieli: Kieli, yhteystiedot: Yhteystieto[] | null | undefined, yhteysHenkilot?: string[] | null): LokalisoituYhteystieto[] {
     let yt: Yhteystieto[] = [];
     if (yhteystiedot) {
-      yt = yt.concat(yhteystiedot);
+      yt = yt.concat(yhteystiedot.map((yt) => yhteystietoPlusKunta(yt, this.suunnitteluSopimus)));
     }
     if (yhteysHenkilot) {
       if (!this.kayttoOikeudet) {
         throw new Error("BUG: Kayttöoikeudet pitää antaa jos yhteyshenkilöt on annettu.");
       }
-      const yhteysHenkilotWithProjectManager: string[] = union(
-        this.kayttoOikeudet.filter((user) => user.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO).map((user) => user.kayttajatunnus),
-        yhteysHenkilot
-      );
-      this.getUsersForUsernames(yhteysHenkilotWithProjectManager).forEach((user) => {
-        yt.push(vaylaUserToYhteystieto(user));
+      this.getUsersForUsernames(yhteysHenkilot || []).forEach((user) => {
+        yt.push(vaylaUserToYhteystieto2(user, this.suunnitteluSopimus));
       });
     }
-    if (suunnitteluSopimus) {
-      const { email, puhelinnumero, sukunimi, etunimi, kunta } = suunnitteluSopimus;
-      yt.push({
-        etunimi,
-        sukunimi,
-        puhelinnumero,
-        sahkoposti: email,
-        organisaatio: kuntametadata.nameForKuntaId(kunta, this.kieli),
-      });
-    }
-    return yt.map(yhteystietoMapper);
+    return yt.map((yt) => yhteystietoMapper(yt, kieli));
   }
 
   text(key: string): string {
@@ -305,10 +305,10 @@ export class KutsuAdapter {
     });
   }
 
-  get yhteystiedotVuorovaikutus(): Yhteystieto[] {
+  get yhteystiedotVuorovaikutus(): LokalisoituYhteystieto[] {
     return this.yhteystiedot(
+      this.kieli,
       this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysTiedot || [],
-      undefined,
       this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysHenkilot
     );
   }

@@ -24,7 +24,7 @@ export function adaptAloitusKuulutusToSave(
       ...rest,
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat), //pakko tukea vielä tätä
       hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus),
-      kuulutusYhteystiedot: adaptStandardiYhteystiedotToSave(kuulutusYhteystiedot, true),
+      kuulutusYhteystiedot: adaptStandardiYhteystiedotToSave(kuulutusYhteystiedot),
       uudelleenKuulutus: adaptUudelleenKuulutus(dbAloituskuulutus?.uudelleenKuulutus, uudelleenKuulutus),
     };
   }

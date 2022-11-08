@@ -56,6 +56,7 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf {
       kieli: params.kieli,
       projektiTyyppi: params.velho.tyyppi,
       kayttoOikeudet: params.kayttoOikeudet,
+      suunnitteluSopimus: params.suunnitteluSopimus,
     });
     super(params.kieli, kutsuAdapter);
     const kaannos: string = translate("tiedostonimi." + fileNameKey, params.kieli) || "";

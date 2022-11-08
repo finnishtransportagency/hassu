@@ -78,7 +78,7 @@ export class Ilmoitus12T extends SuunnittelunAloitusPdf {
         },
       ]),
       this.lisatietojaAntavatParagraph(),
-      this.doc.struct("P", {}, this.moreInfoElements(this.params.yhteystiedot, this.params.suunnitteluSopimus, this.params.yhteysHenkilot)),
+      this.doc.struct("P", {}, this.moreInfoElements(this.params.yhteystiedot, this.params.yhteysHenkilot)),
     ];
   }
 

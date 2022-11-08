@@ -159,7 +159,7 @@ export class Kuulutus60 extends CommonPdf {
         this.paragraphFromKey("asiakirja.kuulutus_hyvaksymispaatoksesta.tie_kappale5"),
         this.tietosuojaParagraph(),
         this.lisatietojaAntavatParagraph(),
-        this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, undefined, null, true)),
+        this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, null, true)),
       ];
     } else if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       return [
@@ -170,7 +170,7 @@ export class Kuulutus60 extends CommonPdf {
         this.paragraphFromKey("asiakirja.kuulutus_hyvaksymispaatoksesta.rata_kappale4"),
         this.tietosuojaParagraph(),
         this.lisatietojaAntavatParagraph(),
-        this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, undefined, null, true)),
+        this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, null, true)),
       ];
     }
 
