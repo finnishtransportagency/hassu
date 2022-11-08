@@ -37,9 +37,25 @@ describe("10 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     });
     cy.get('[name="kasittelynTila.ensimmainenJatkopaatos.asianumero"]').clear().type(asianumero);
     cy.get("#save").click();
-    cy.contains("Tallennus onnistui").wait(3000); // extra wait added because somehow the next test brings blank  page otherwise
+    // save draft of jatkopaatos 1
+    cy.contains("Tallennus onnistui").wait(1000); // extra wait added because somehow the next test brings blank  page otherwise
 
-    // TODO: check that user moved to projektin henkilot
+    cy.get("#lisaa_jatkopaatos").click(); // open dialog
+    cy.get("#accept_and_save_jatkopaatos").click(); // accept
+    cy.contains("Jatkopäätös lisätty!").wait(1000); // extra wait added because somehow the next test brings blank  page otherwise
+
+    // TODO: check that user moved itself to projektin henkilot
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot", {
+      timeout: 30000,
+      retryOnNetworkFailure: true,
+      retryOnStatusCodeFailure: true,
+    });
+    cy.get('input[name="kayttoOikeudet.0.puhelinnumero"').should("be.enabled").type("0291111111");
+    cy.get('input[name="kayttoOikeudet.1.puhelinnumero"').should("be.enabled").type("0291111112");
+    cy.get('input[name="kayttoOikeudet.2.puhelinnumero"').should("be.enabled").type("0291111113");
+
+    cy.get("#save_projekti").click();
+    cy.contains("Henkilötietojen tallennus onnistui").wait(1000); // extra wait added because somehow the next test brings blank  page otherwise
 
     // Test saved kasittelyntila values
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/kasittelyntila", {
@@ -53,11 +69,8 @@ describe("10 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
 
     // Test that navigation now has "1. jatkaminen" link
 
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/hyvaksymispaatos", { timeout: 30000 }).reload();
-    cy.contains("Kuulutus hyväksymispäätöksestä");
-
-    cy.visit(Cypress.env("host") + "/suunnitelma/" + oid + "/hyvaksymismenettelyssa");
-    cy.contains("Suunnitelma on siirtynyt viimeistelyyn ja hyväksymiseen");
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/jatkaminen1", { timeout: 30000 }).reload();
+    cy.contains("Päätös ja päätöksen liitteenä oleva aineistot");
   });
 
   it.skip("Lisaa paatos ja aineistot", { scrollBehavior: "center" }, () => {
@@ -90,7 +103,7 @@ describe("10 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     cy.get("input[type='hidden'][name ^='aineistoNahtavilla.T3xx.']").should("exist");
   });
 
-  it.skip ("Muokkaa ja julkaise hyvaksymispaatoksen kuulutus", { scrollBehavior: "center" }, () => {
+  it.skip("Muokkaa ja julkaise hyvaksymispaatoksen kuulutus", { scrollBehavior: "center" }, () => {
     // This test can not be run multiple times without first archiving projekti
     // or manually deleting hyvaksymisPaatosVaiheJulkaisut from DB
     cy.login("A1");
