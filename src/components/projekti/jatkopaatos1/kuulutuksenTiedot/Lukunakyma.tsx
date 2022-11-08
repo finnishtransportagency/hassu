@@ -62,7 +62,7 @@ export default function HyvaksymisKuulutusLukunakyma({ jatkoPaatos1VaiheJulkaisu
                 icon="history"
                 onClick={(e) => {
                   e.preventDefault();
-                  window.location.assign(ProjektiTestCommand.oid(projekti.oid).hyvaksymispaatosMenneisyyteen());
+                  window.location.assign(ProjektiTestCommand.oid(projekti.oid).jatkopaatos1Menneisyyteen());
                 }}
               >
                 Siirrä päivän verran menneisyyteen (TESTAAJILLE)
@@ -71,7 +71,7 @@ export default function HyvaksymisKuulutusLukunakyma({ jatkoPaatos1VaiheJulkaisu
                 icon="history"
                 onClick={(e) => {
                   e.preventDefault();
-                  window.location.assign(ProjektiTestCommand.oid(projekti.oid).hyvaksymispaatosVuosiMenneisyyteen());
+                  window.location.assign(ProjektiTestCommand.oid(projekti.oid).jatkopaatos1VuosiMenneisyyteen());
                 }}
               >
                 Siirrä vuoden verran menneisyyteen (TESTAAJILLE)

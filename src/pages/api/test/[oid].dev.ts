@@ -134,7 +134,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
   );
-  
+
   await executor.onResetJatkopaatos1vaihe(async (oid: string) => {
     requireProjekti();
     const kasittelyntila = dbProjekti?.kasittelynTila;
@@ -149,6 +149,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         : null,
       ...jatkoPaatos1VaiheFields,
     });
+  });
+
+  await executor.onJatkopaatos1Menneisyyteen(async () => {
+    requireProjekti();
+    if (dbProjekti?.jatkoPaatos1VaiheJulkaisut) {
+      for (const julkaisu of dbProjekti.jatkoPaatos1VaiheJulkaisut) {
+        let yesterday = dayjs().add(-1, "day").format("YYYY-MM-DD");
+        julkaisu.kuulutusPaiva = yesterday;
+        julkaisu.kuulutusVaihePaattyyPaiva = yesterday;
+        await projektiDatabase.jatkoPaatos1VaiheJulkaisut.update(dbProjekti, julkaisu);
+      }
+    }
+  });
+
+  await executor.onJatkopaatos1VuosiMenneisyyteen(async () => {
+    requireProjekti();
+    if (dbProjekti?.jatkoPaatos1VaiheJulkaisut) {
+      for (const julkaisu of dbProjekti.jatkoPaatos1VaiheJulkaisut) {
+        let yearAgo = dayjs().add(-1, "year").add(-1, "day").format("YYYY-MM-DD");
+        julkaisu.kuulutusPaiva = yearAgo;
+        julkaisu.kuulutusVaihePaattyyPaiva = yearAgo;
+        await projektiDatabase.jatkoPaatos1VaiheJulkaisut.update(dbProjekti, julkaisu);
+      }
+    }
   });
 
   // text/html jotta cypress toimii paremmin

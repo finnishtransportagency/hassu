@@ -50,9 +50,9 @@ describe("10 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
       retryOnNetworkFailure: true,
       retryOnStatusCodeFailure: true,
     });
-    cy.get('input[name="kayttoOikeudet.0.puhelinnumero"').should("be.enabled").type("0291111111");
-    cy.get('input[name="kayttoOikeudet.1.puhelinnumero"').should("be.enabled").type("0291111112");
-    cy.get('input[name="kayttoOikeudet.2.puhelinnumero"').should("be.enabled").type("0291111113");
+    cy.get('input[name="kayttoOikeudet.0.puhelinnumero"').should("be.enabled").clear().type("0291111111");
+    cy.get('input[name="kayttoOikeudet.1.puhelinnumero"').should("be.enabled").clear().type("0291111112");
+    cy.get('input[name="kayttoOikeudet.2.puhelinnumero"').should("be.enabled").clear().type("0291111113");
 
     cy.get("#save_projekti").click();
     cy.contains("Henkilötietojen tallennus onnistui").wait(1000); // extra wait added because somehow the next test brings blank  page otherwise
@@ -73,10 +73,10 @@ describe("10 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     cy.contains("Päätös ja päätöksen liitteenä oleva aineistot");
   });
 
-  it.skip("Lisaa paatos ja aineistot", { scrollBehavior: "center" }, () => {
+  it("Lisaa paatokset ja aineistot", { scrollBehavior: "center" }, () => {
     cy.login("A1");
 
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/hyvaksymispaatos", { timeout: 30000 });
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/jatkaminen1", { timeout: 30000 });
     cy.contains(projektiNimi);
     cy.get("#aineisto_tab").click();
 
@@ -89,7 +89,7 @@ describe("10 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
     cy.get("#select_valitut_aineistot_button").click();
 
-    cy.get("#save_hyvaksymispaatosvaihe_draft").click();
+    cy.get("#save_jatkopaatos1vaihe_draft").click();
     cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank  page otherwise
 
     cy.reload();
@@ -103,24 +103,27 @@ describe("10 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     cy.get("input[type='hidden'][name ^='aineistoNahtavilla.T3xx.']").should("exist");
   });
 
-  it.skip("Muokkaa ja julkaise hyvaksymispaatoksen kuulutus", { scrollBehavior: "center" }, () => {
+  it("Muokkaa ja julkaise jatkopaatos 1. kuulutus", { scrollBehavior: "center" }, () => {
     // This test can not be run multiple times without first archiving projekti
-    // or manually deleting hyvaksymisPaatosVaiheJulkaisut from DB
+    // or manually deleting jatkoPatos1VaiheJulkaisut from DB
     cy.login("A1");
 
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/hyvaksymispaatos", { timeout: 30000 });
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/jatkaminen1", { timeout: 30000 });
     cy.contains(projektiNimi);
 
     cy.get("#kuulutuksentiedot_tab").click();
 
     const today = formatDate(dayjs());
-    cy.get('[name="hyvaksymisPaatosVaihe.kuulutusPaiva"]').should("be.enabled").type(today, {
+    cy.get('[name="jatkoPaatos1Vaihe.kuulutusPaiva"]').should("be.enabled").type(today, {
       waitForAnimations: true,
     });
 
-    cy.get('[name="hyvaksymisPaatosVaihe.hallintoOikeus"]').select("HELSINKI");
-    cy.get('[name="hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').clear().type("test@vayla.fi");
-    cy.get('[name="hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').clear().type("test@vayla.fi");
+    const plus4years = dayjs().add(4, "year").year().toString();
+    cy.get("#voimassaolovuosi").select(plus4years);
+
+    cy.get('[name="jatkoPaatos1Vaihe.hallintoOikeus"]').select("HELSINKI");
+    cy.get('[name="jatkoPaatos1Vaihe.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').clear().type("test@vayla.fi");
+    cy.get('[name="jatkoPaatos1Vaihe.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').clear().type("test@vayla.fi");
 
     cy.get("#save_and_send_for_acceptance").click();
     cy.contains("Lähetys onnistui", { timeout: 30000 });
@@ -137,12 +140,13 @@ describe("10 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     cy.reload();
     cy.get("#kuulutuksentiedot_luku_tab").click();
 
-    cy.contains("Kuulutus nähtäville asettamisesta on julkaistu");
+    cy.contains("Kuulutus nähtäville asettamisesta on julkaistu"); //TODO: vaihda jatkovaiheen tekstit
 
     cy.visit(Cypress.env("host") + "/suunnitelma/" + oid + "/hyvaksymispaatos");
-    cy.contains(asianumero);
+    cy.get("#jatkopaatos_tab").click();
+    cy.contains("Kuulutus hyväksymispäätöksen jatkamisesta");
 
-    cy.visit(Cypress.env("host") + "/sv/suunnitelma/" + oid + "/hyvaksymispaatos");
-    cy.contains(asianumero);
+    // cy.visit(Cypress.env("host") + "/sv/suunnitelma/" + oid + "/hyvaksymispaatos");
+    // cy.contains(asianumero);
   });
 });
