@@ -63,6 +63,11 @@ Object {
             "projektiTyyppi.keyword": "TIE",
           },
         },
+        Object {
+          "term": Object {
+            "aktiivinen": true,
+          },
+        },
       ],
     },
   },
@@ -85,9 +90,17 @@ Object {
 exports[`ProjektiSearchService should handle query parameters successfully 2`] = `
 Object {
   "aggs": Object {
-    "projektiTyypit": Object {
+    "aktiivinen": Object {
+      "aggs": Object {
+        "projektiTyyppi": Object {
+          "terms": Object {
+            "field": "projektiTyyppi.keyword",
+            "size": 10,
+          },
+        },
+      },
       "terms": Object {
-        "field": "projektiTyyppi.keyword",
+        "field": "aktiivinen",
         "size": 10,
       },
     },
@@ -150,7 +163,6 @@ Object {
       ],
     },
   },
-  "size": 0,
 }
 `;
 

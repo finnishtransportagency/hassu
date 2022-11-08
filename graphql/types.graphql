@@ -736,6 +736,7 @@ type ProjektiHakutulos implements IProjektiHakutulos {
   tiesuunnitelmatMaara: Int
   ratasuunnitelmatMaara: Int
   yleissuunnitelmatMaara: Int
+  epaaktiivisetMaara: Int
   hakutulosProjektiTyyppi: ProjektiTyyppi
   tulokset: [ProjektiHakutulosDokumentti!]
 }

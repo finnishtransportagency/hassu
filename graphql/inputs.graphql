@@ -213,6 +213,7 @@ input ListaaProjektitInput {
   suunnittelustaVastaavaViranomainen: [Viranomainen!]
   vaihe: [Status!]
   vainProjektitMuokkausOikeuksin: Boolean
+  epaaktiivinen: Boolean
   projektiTyyppi: ProjektiTyyppi
   sivunumero: Int
   sivunKoko: Int

@@ -17,6 +17,7 @@ export type ProjektiDocument = {
   suunnittelustaVastaavaViranomainen?: API.Viranomainen;
   vaihe?: API.Status;
   viimeinenTilaisuusPaattyy?: string;
+  aktiivinen?: boolean;
   projektiTyyppi?: API.ProjektiTyyppi;
   paivitetty?: string;
   projektipaallikko?: string;
@@ -42,6 +43,9 @@ export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocu
       .filter((value) => value.tyyppi == API.KayttajaTyyppi.PROJEKTIPAALLIKKO)
       .map((value) => safeTrim(value.nimi))
       .pop(),
+    aktiivinen: ![API.Status.EPAAKTIIVINEN_1, API.Status.EPAAKTIIVINEN_2, API.Status.EPAAKTIIVINEN_3].includes(
+      apiProjekti.status as API.Status
+    ),
     paivitetty: projekti.paivitetty || dayjs().format(),
     muokkaajat: projekti.kayttoOikeudet.map((value) => value.kayttajatunnus),
   };

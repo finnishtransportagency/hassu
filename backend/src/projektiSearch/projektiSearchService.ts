@@ -107,32 +107,82 @@ class ProjektiSearchService {
         hakutulosProjektiTyyppi: projektiTyyppi,
       };
     }
+    // Lisää queries-arrayhyn paramsin mukaisia queryitä
     ProjektiSearchService.addCommonQueries(params, queries);
-
+    // Lisää queries-arrayhyn paramsin mukaisia queryitä
     ProjektiSearchService.addYllapitoQueries(params, queries);
     const client: OpenSearchClient = openSearchClientYllapito;
+    // Luodaan sort-array, jossa on paramsin mukaiset sorttausparametrit, mutta muokattuna haluttuun muotoon
     const sort = ProjektiSearchService.adaptSort(params.jarjestysSarake, params.jarjestysKasvava);
-    const resultsPromise = client.query({
-      query: ProjektiSearchService.buildQuery(queries, projektiTyyppiQuery),
+
+    // Tehdään varsinainen päähaku, jossa on mukana mahdollinen projektityyppirajaus.
+    // Tehdääns asynkronisesti, ja laitetaan await vasta myöhemmin, jotta haut voi tehdä mahdollisimman rinnakkain.
+    const searchResultPromise = client.query({
+      query: ProjektiSearchService.buildQuery(queries, !!params.epaaktiivinen, projektiTyyppiQuery),
       size: pageSize,
       from: pageSize * pageNumber,
       sort,
     });
 
+    // Tehdään erikseen aggregaatiohaku samoilla hakuehdoilla,
+    // mutta rajoittamatta projektityyppiä ja aktiivisuutta
+    // ja lasketaan, kuinka monta kunkin tyyppistä projektia on.
     const buckets = await client.query({
-      query: ProjektiSearchService.buildQuery(queries),
+      query: ProjektiSearchService.buildQuery(queries, null), // <- null tarkoittaa, ettei aktiivisuutta rajoiteta
       aggs: {
-        projektiTyypit: {
+        aktiivinen: {
           terms: {
-            field: "projektiTyyppi.keyword",
+            field: "aktiivinen",
             size: 10,
+          },
+          aggs: {
+            projektiTyyppi: {
+              terms: {
+                field: "projektiTyyppi.keyword",
+                size: 10,
+              },
+            },
           },
         },
       },
-      size: 0,
     });
 
-    const searchResult = await resultsPromise;
+    // Vastauksen muoto:
+    // {
+    //   "aggregations": {
+    //     "aktiivinen": {
+    //         "buckets": [
+    //             {
+    //                 "key": 0,
+    //                 "doc_count": 1,
+    //                 "projektiTyyppi": {
+    //                     "buckets": [
+    //                         {
+    //                             "key": "TIE",
+    //                             "doc_count": 1
+    //                         }
+    //                     ]
+    //                 }
+    //             },
+    //             {
+    //                 "key": 1,
+    //                 "doc_count": 1,
+    //                 "projektiTyyppi": {
+    //                     "buckets": [
+    //                         {
+    //                             "key": "TIE",
+    //                             "doc_count": 1
+    //                         }
+    //                     ]
+    //                 }
+    //             }
+    //         ]
+    //     }
+    // },
+
+    const searchResult = await searchResultPromise;
+
+    // Adaptoidaan hakutulos, ja samalla otetaan kiinni mahdollinen virhe.
     const searchResultDocuments = adaptSearchResultsToProjektiHakutulosDokumenttis(searchResult);
     const resultCount = searchResult.hits.total.value;
 
@@ -143,13 +193,20 @@ class ProjektiSearchService {
       hakutulosProjektiTyyppi: projektiTyyppi,
     };
 
-    buckets.aggregations.projektiTyypit.buckets.forEach((bucket: any) => {
-      if (bucket.key == ProjektiTyyppi.TIE) {
-        result.tiesuunnitelmatMaara = bucket.doc_count;
-      } else if (bucket.key == ProjektiTyyppi.RATA) {
-        result.ratasuunnitelmatMaara = bucket.doc_count;
-      } else if (bucket.key == ProjektiTyyppi.YLEINEN) {
-        result.yleissuunnitelmatMaara = bucket.doc_count;
+    // Lisätään hakutulokseen tieto, kuinka munta osumaa on missäkin projektityyppikategoriassa
+    buckets.aggregations.aktiivinen.buckets.forEach((bucket: any) => {
+      if (bucket.key == 0) {
+        result.epaaktiivisetMaara = bucket.doc_count;
+      } else {
+        bucket.projektiTyyppi.buckets.forEach((bucket: any) => {
+          if (bucket.key == ProjektiTyyppi.TIE) {
+            result.tiesuunnitelmatMaara = bucket.doc_count;
+          } else if (bucket.key == ProjektiTyyppi.RATA) {
+            result.ratasuunnitelmatMaara = bucket.doc_count;
+          } else if (bucket.key == ProjektiTyyppi.YLEINEN) {
+            result.yleissuunnitelmatMaara = bucket.doc_count;
+          }
+        });
       }
     });
     return result;
@@ -181,7 +238,7 @@ class ProjektiSearchService {
     }
     const client: OpenSearchClient = openSearchClientJulkinen[params.kieli];
     const resultsPromise = client.query({
-      query: ProjektiSearchService.buildQuery(queries),
+      query: ProjektiSearchService.buildQuery(queries, null), //<- null, koska ei oteta kantaa aktiivisuuteen, koska kaikki julkisen indeksin projektit ovat aktiivisia
       size: pageSize,
       from: pageSize * pageNumber,
       sort: ProjektiSearchService.adaptSort(ProjektiSarake.PAIVITETTY, false),
@@ -261,21 +318,37 @@ class ProjektiSearchService {
       if (vaiheParam.indexOf(Status.EI_JULKAISTU) >= 0) {
         vaiheParam.push(Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
       }
-      queries.push({ terms: { "vaihe.keyword": vaiheParam } });
+      const eiEpaaktiivisiaTiloja = vaiheParam.filter(
+        (tila) => ![Status.EPAAKTIIVINEN_1, Status.EPAAKTIIVINEN_2, Status.EPAAKTIIVINEN_3].includes(tila)
+      );
+      if (eiEpaaktiivisiaTiloja.length > 0) {
+        queries.push({ terms: { "vaihe.keyword": vaiheParam } });
+      }
     }
   }
 
-  private static buildQuery(queries: unknown[], projektiTyyppiQuery?: unknown) {
+  private static buildQuery(queries: unknown[], epaaktiiviset: boolean | undefined | null, projektiTyyppiQuery?: unknown) {
     const allQueries = projektiTyyppiQuery ? queries.concat(projektiTyyppiQuery) : queries;
-    if (allQueries.length > 0) {
-      return {
-        bool: { must: allQueries },
-      };
-    } else {
-      return {
-        match_all: {},
-      };
+    if (epaaktiiviset === false) {
+      allQueries.push({
+        term: {
+          aktiivinen: true,
+        },
+      });
     }
+    const obj: any = { bool: {} };
+
+    if (allQueries.length > 0) {
+      obj.bool.must = allQueries;
+    }
+    if (epaaktiiviset === true) {
+      allQueries.push({
+        term: {
+          aktiivinen: false,
+        },
+      });
+    }
+    return obj;
   }
 
   public static adaptSort(
