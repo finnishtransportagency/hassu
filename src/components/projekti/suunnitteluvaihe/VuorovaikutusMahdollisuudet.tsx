@@ -17,6 +17,7 @@ import { formatDate } from "src/util/dateUtils";
 import capitalize from "lodash/capitalize";
 import useTranslation from "next-translate/useTranslation";
 import StandardiYhteystiedotListana from "../common/StandardiYhteystiedotListana";
+import { formatNimi } from "../../../util/userUtil";
 
 interface Props {
   projekti: Projekti;
@@ -167,7 +168,7 @@ export const SoittoajanYhteystieto = React.memo((props: { yhteystieto: Yhteystie
   return (
     <>
       <p>
-        {props.yhteystieto.etunimi} {props.yhteystieto.sukunimi}
+        {formatNimi(props.yhteystieto)}
         {props.yhteystieto.titteli ? `, ${props.yhteystieto.titteli}` : null}
         {props.yhteystieto.organisaatio ? ` (${props.yhteystieto.organisaatio})` : null}: {props.yhteystieto.puhelinnumero}
       </p>

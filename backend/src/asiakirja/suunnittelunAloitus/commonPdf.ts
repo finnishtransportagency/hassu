@@ -3,6 +3,7 @@ import { Kieli, Viranomainen } from "../../../../common/graphql/apiModel";
 import { SuunnitteluSopimusJulkaisu, Velho, Yhteystieto } from "../../database/model";
 import { KutsuAdapter } from "./KutsuAdapter";
 import { log } from "../../logger";
+import { formatNimi } from "../../util/userUtil";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
 export abstract class CommonPdf extends AbstractPdf {
@@ -103,7 +104,9 @@ export abstract class CommonPdf extends AbstractPdf {
           const organization = showOrganization ? `${organisaatio}, ` : "";
           const title = titteli ? `${titteli}, ` : "";
           this.doc
-            .text(`${organization}${title}${etunimi} ${sukunimi}, ${this.localizedPuh} ${puhelinnumero}, ${noSpamSahkoposti} `)
+            .text(
+              `${organization}${title}${formatNimi({ etunimi, sukunimi })}, ${this.localizedPuh} ${puhelinnumero}, ${noSpamSahkoposti} `
+            )
             .moveDown();
         };
       });
@@ -119,7 +122,7 @@ export abstract class CommonPdf extends AbstractPdf {
         const organization = showOrganization ? `${organisaatio}, ` : "";
         const title = titteli ? `${titteli}, ` : "";
         this.doc
-          .text(`${organization}${title}${etunimi} ${sukunimi}, ${this.localizedPuh} ${puhelinnumero}, ${noSpamSahkoposti} `)
+          .text(`${organization}${title}${formatNimi({ etunimi, sukunimi })}, ${this.localizedPuh} ${puhelinnumero}, ${noSpamSahkoposti} `)
           .moveDown();
       };
     });

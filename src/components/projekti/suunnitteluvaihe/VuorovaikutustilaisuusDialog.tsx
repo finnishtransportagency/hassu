@@ -24,6 +24,7 @@ import CheckBox from "@components/form/CheckBox";
 import SoittoajanYhteyshenkilot from "./SoittoajanYhteyshenkilot";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { today } from "src/util/dateUtils";
+import { formatNimi } from "../../../util/userUtil";
 
 const defaultTilaisuus: Omit<VuorovaikutusTilaisuusInput, "tyyppi"> = {
   nimi: "",
@@ -336,7 +337,7 @@ export default function VuorovaikutusDialog({
                                 >
                                   {kayttoOikeudet?.map(({ etunimi, sukunimi, kayttajatunnus }, index) => {
                                     const tunnuslista = value || [];
-                                    const nimi = sukunimi + " " + etunimi;
+                                    const nimi = formatNimi({ sukunimi, etunimi });
                                     return (
                                       <Fragment key={index}>
                                         <CheckBox

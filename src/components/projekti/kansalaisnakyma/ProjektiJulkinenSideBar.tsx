@@ -8,6 +8,7 @@ import { Viranomainen } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import { styled } from "@mui/material";
+import { formatNimi } from "../../../util/userUtil";
 
 const ProjektiSideNavigation = styled((props) => {
   const { t, lang } = useTranslation("projekti-side-bar");
@@ -46,7 +47,7 @@ const ProjektiSideNavigation = styled((props) => {
           <HassuStack>
             <img {...getTilaajaLogoImg()} />
             {projekti.projektiHenkilot?.map((yt) => {
-              const nimi = yt.sukunimi + " " + yt.etunimi;
+              const nimi = formatNimi(yt);
               return (
                 <div key={nimi} className="vayla-calling-card">
                   <p>{yt.organisaatio}</p>
@@ -72,7 +73,7 @@ const ProjektiSideNavigation = styled((props) => {
                 <p className="uppercase">{t("common:rooli.PROJEKTIPAALLIKKO")}</p>
                 <p>
                   <b>
-                    {suunnitteluSopimus.etunimi} {suunnitteluSopimus.sukunimi}
+                    {formatNimi(suunnitteluSopimus)}
                   </b>
                 </p>
                 <p>{suunnitteluSopimus.puhelinnumero}</p>

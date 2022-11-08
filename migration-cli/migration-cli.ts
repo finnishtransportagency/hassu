@@ -84,8 +84,8 @@ export async function importProjektis(fileName: string): Promise<Record<string, 
   sinon.stub(userService, "identifyUser").resolves();
   const kayttaja: NykyinenKayttaja = {
     __typename: "NykyinenKayttaja",
-    etuNimi: "migraatio",
-    sukuNimi: "migraatio",
+    etunimi: "migraatio",
+    sukunimi: "migraatio",
     roolit: ["hassu_admin"],
     uid: "migraatio",
   };

@@ -2,6 +2,7 @@ import { Kieli } from "../../../../common/graphql/apiModel";
 import { EmailOptions } from "../../email/email";
 import { YleisotilaisuusKutsuPdfOptions } from "../asiakirjaTypes";
 import { KutsuAdapter } from "./KutsuAdapter";
+import { formatNimi } from "../../util/userUtil";
 
 export class Kutsu21 {
   private readonly adapter: KutsuAdapter;
@@ -74,7 +75,7 @@ export class Kutsu21 {
       this.adapter.yhteystiedotVuorovaikutus
         .map(
           ({ organisaatio, etunimi, sukunimi, puhelinnumero, sahkoposti }) =>
-            `${organisaatio}, ${etunimi} ${sukunimi}, puhelin ${puhelinnumero} ja sähköposti ${sahkoposti}.`
+            `${organisaatio}, ${formatNimi({ etunimi, sukunimi })}, puhelin ${puhelinnumero} ja sähköposti ${sahkoposti}.`
         )
         .join("\n"),
       "",

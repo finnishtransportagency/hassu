@@ -14,7 +14,7 @@ Object {
   "nimi": "Testiprojekti 2",
   "paivitetty": "2022-03-15T14:30:00.000Z",
   "projektiTyyppi": "TIE",
-  "projektipaallikko": "Projari, Pekka",
+  "projektipaallikko": "Pekka Projari",
   "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
   "vaihe": "SUUNNITTELU",
   "vaylamuoto": Array [
@@ -85,7 +85,7 @@ Object {
   "nimi": "Testiprojekti 2",
   "paivitetty": "2022-03-15T14:30:00.000Z",
   "projektiTyyppi": "TIE",
-  "projektipaallikko": "Projari, Pekka",
+  "projektipaallikko": "Pekka Projari",
   "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
   "vaihe": "SUUNNITTELU",
   "vaylamuoto": Array [

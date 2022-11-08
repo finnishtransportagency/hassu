@@ -11,6 +11,7 @@ import { AloitusKuulutusInput, KayttajaTyyppi, Projekti, YhteystietoInput } from
 import React, { Fragment, ReactElement } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
+import { formatNimi } from "../../../util/userUtil";
 
 type KuulutusYhteystiedot = Pick<AloitusKuulutusInput, "kuulutusYhteystiedot">;
 
@@ -59,7 +60,7 @@ function KuulutuksenYhteystiedot({ projekti, disableFields }: Props): ReactEleme
             <FormGroup label="Projektiin tallennetut henkilöt" inlineFlex>
               {projekti.kayttoOikeudet?.map(({ sukunimi, etunimi, tyyppi, kayttajatunnus }, index) => {
                 const tunnuslista: string[] = value || [];
-                const nimi = sukunimi + " " + etunimi;
+                const nimi = formatNimi({ sukunimi, etunimi });
                 return (
                   <Fragment key={index}>
                     {tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO ? (

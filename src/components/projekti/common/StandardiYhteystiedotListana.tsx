@@ -1,8 +1,8 @@
-import { ProjektiKayttaja, StandardiYhteystiedot, StandardiYhteystiedotInput, Projekti } from "@services/api";
+import { Projekti, ProjektiKayttaja, StandardiYhteystiedot, StandardiYhteystiedotInput } from "@services/api";
 import React, { ReactElement } from "react";
-import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { formatNimi } from "../../../util/userUtil";
 
 interface Props {
   standardiYhteystiedot: StandardiYhteystiedot | StandardiYhteystiedotInput | null | undefined;
@@ -28,13 +28,13 @@ export default function StandardiYhteystiedotListana({ standardiYhteystiedot, pr
     <React.Fragment>
       {standardiYhteystiedot?.yhteysTiedot?.map((yhteystieto, index) => (
         <p style={{ margin: 0 }} key={index}>
-          {capitalize(yhteystieto.etunimi)} {capitalize(yhteystieto.sukunimi)}, puh. {yhteystieto.puhelinnumero},{" "}
+          {formatNimi(yhteystieto)}, puh. {yhteystieto.puhelinnumero},{" "}
           {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio})
         </p>
       ))}
       {vuorovaikutusYhteysHenkilot.map((yhteystieto, index) => (
         <p style={{ margin: 0 }} key={index}>
-          {yhteystieto.sukunimi} {yhteystieto.etunimi}, puh. {yhteystieto.puhelinnumero}, {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} (
+          {formatNimi(yhteystieto)}, puh. {yhteystieto.puhelinnumero}, {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} (
           {yhteystieto.organisaatio})
         </p>
       ))}

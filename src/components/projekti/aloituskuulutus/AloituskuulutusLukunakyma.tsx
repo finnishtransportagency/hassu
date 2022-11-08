@@ -17,6 +17,7 @@ import ExtLink from "@components/ExtLink";
 import SectionContent from "@components/layout/SectionContent";
 import { formatDate } from "../../../util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
+import { formatNimi } from "../../../util/userUtil";
 
 interface Props {
   projekti?: ProjektiLisatiedolla;
@@ -68,8 +69,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
             <br />
             {capitalize(kuntametadata.nameForKuntaId(aloituskuulutusjulkaisu.suunnitteluSopimus.kunta, lang))}
             <br />
-            {capitalize(aloituskuulutusjulkaisu.suunnitteluSopimus.etunimi)}{" "}
-            {capitalize(aloituskuulutusjulkaisu.suunnitteluSopimus.sukunimi)}, puh.{" "}
+            {formatNimi(aloituskuulutusjulkaisu.suunnitteluSopimus)}, puh.{" "}
             {aloituskuulutusjulkaisu.suunnitteluSopimus.puhelinnumero},{" "}
             {aloituskuulutusjulkaisu.suunnitteluSopimus.email ? replace(aloituskuulutusjulkaisu.suunnitteluSopimus.email, "@", "[at]") : ""}
           </Notification>
@@ -108,10 +108,10 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
         )}
         <div>
           <p className="vayla-label">Kuulutuksessa esitettävät yhteystiedot</p>
-          {aloituskuulutusjulkaisu.yhteystiedot?.map((yhteistieto, index) => (
+          {aloituskuulutusjulkaisu.yhteystiedot?.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
-              {capitalize(yhteistieto?.etunimi)} {capitalize(yhteistieto?.sukunimi)}, puh. {yhteistieto?.puhelinnumero},{" "}
-              {yhteistieto?.sahkoposti ? replace(yhteistieto?.sahkoposti, "@", "[at]") : ""}
+              {formatNimi(yhteystieto)}, puh. {yhteystieto?.puhelinnumero},{" "}
+              {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""}
             </p>
           ))}
         </div>

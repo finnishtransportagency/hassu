@@ -6,11 +6,12 @@ import { maxPhoneLength } from "src/schemas/puhelinNumero";
 import Section from "@components/layout/Section2";
 import { isAorL } from "backend/src/util/userUtil";
 import { TextFieldWithController } from "@components/form/TextFieldWithController";
-import { Autocomplete, TextField, Checkbox, FormControlLabel, useTheme, useMediaQuery, IconButton, SvgIcon, Stack } from "@mui/material";
+import { Autocomplete, Checkbox, FormControlLabel, IconButton, Stack, SvgIcon, TextField, useMediaQuery, useTheme } from "@mui/material";
 import useDebounceCallback from "src/hooks/useDebounceCallback";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import HassuGrid from "@components/HassuGrid";
 import ContentSpacer from "@components/layout/ContentSpacer";
+import { formatNimi } from "../../util/userUtil";
 
 // Extend TallennaProjektiInput by making the field nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "kayttoOikeudet">;
@@ -26,7 +27,7 @@ interface Props {
 }
 
 const getKayttajaNimi = (k: Kayttaja | null | undefined) => {
-  return (k && `${k.sukunimi}, ${k.etunimi}`) || "";
+  return formatNimi(k);
 };
 
 export const defaultKayttaja: ProjektiKayttajaInput = {

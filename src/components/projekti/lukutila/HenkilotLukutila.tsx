@@ -3,6 +3,7 @@ import HassuGridItem from "@components/HassuGridItem";
 import Section from "@components/layout/Section";
 import { ProjektiKayttaja } from "@services/api";
 import lowerCase from "lodash/lowerCase";
+import { formatNimi } from "../../../util/userUtil";
 
 type Props = {
   kayttoOikeudet: ProjektiKayttaja[];
@@ -20,7 +21,7 @@ export default function HenkilotLukutila({ kayttoOikeudet }: Props) {
               <p className="vayla-label">{label}</p>
               <p className="mb-0">{hlo.organisaatio}</p>
               <p className="mb-0">
-                {hlo.sukunimi} {hlo.etunimi}
+                {formatNimi(hlo)}
               </p>
               <p>{hlo.puhelinnumero}</p>
             </HassuGridItem>
