@@ -199,6 +199,7 @@ async function main() {
     FRONTEND_DOMAIN_NAME: frontendStackOutputs.CloudfrontPrivateDNSName,
     TABLE_PROJEKTI: Config.projektiTableName,
     TABLE_FEEDBACK: Config.feedbackTableName,
+    INTERNAL_BUCKET_NAME: Config.internalBucketName,
 
     ...environmentVariables,
   });
