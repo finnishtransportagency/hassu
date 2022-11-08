@@ -1,7 +1,7 @@
 import { log } from "../logger";
 import JWT, { JwtPayload } from "jsonwebtoken";
 import jwkToPem from "jwk-to-pem";
-import axios from "axios";
+import { getAxios } from "../aws/monitoring";
 
 let cachedKeys: Record<string, string>;
 
@@ -9,7 +9,7 @@ let cachedKeys: Record<string, string>;
 const getPublicKeys = async (issuerUrl: string) => {
   if (!cachedKeys) {
     cachedKeys = {};
-    const publicKeys = await axios.get(issuerUrl + "/.well-known/jwks.json");
+    const publicKeys = await getAxios().get(issuerUrl + "/.well-known/jwks.json");
     for (const key of publicKeys.data.keys) {
       cachedKeys[key.kid] = jwkToPem(key);
     }
@@ -19,11 +19,7 @@ const getPublicKeys = async (issuerUrl: string) => {
   }
 };
 
-const validateJwtToken = async (
-  token: string | undefined,
-  dataToken: string,
-  issuer: string
-): Promise<JwtPayload | undefined> => {
+const validateJwtToken = async (token: string | undefined, dataToken: string, issuer: string): Promise<JwtPayload | undefined> => {
   if (!token) {
     log.debug("IAM JWT Token missing");
     return;

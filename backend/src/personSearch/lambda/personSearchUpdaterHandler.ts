@@ -2,8 +2,7 @@ import { log } from "../../logger";
 import { personSearchUpdater } from "./personSearchUpdater";
 import { s3Cache } from "../../cache/s3Cache";
 import { PERSON_SEARCH_CACHE_KEY, S3CACHE_TTL_MILLIS } from "../personSearchClient";
-import * as AWSXRay from "aws-xray-sdk-core";
-import { setupLambdaMonitoring, setupLambdaMonitoringMetaData } from "../../aws/monitoring";
+import { setupLambdaMonitoring, setupLambdaMonitoringMetaData, wrapXRayAsync } from "../../aws/monitoring";
 
 /**
  * This is a Lambda which lists the users fron user directory and caches it to S3. The cached list is then used by the actual
@@ -13,7 +12,7 @@ import { setupLambdaMonitoring, setupLambdaMonitoringMetaData } from "../../aws/
 export async function handleEvent(): Promise<unknown> {
   setupLambdaMonitoring();
 
-  return await AWSXRay.captureAsyncFunc("personSearchUpdaterHandler", async (subsegment) => {
+  return await wrapXRayAsync("personSearchUpdaterHandler", async (subsegment) => {
     setupLambdaMonitoringMetaData(subsegment);
     try {
       const s3Object = await s3Cache.getS3Object(PERSON_SEARCH_CACHE_KEY, S3CACHE_TTL_MILLIS);
@@ -31,10 +30,6 @@ export async function handleEvent(): Promise<unknown> {
       // Prevent updating the data too often by updating the last modified date
       await s3Cache.touch(PERSON_SEARCH_CACHE_KEY);
       throw e;
-    } finally {
-      if (subsegment) {
-        subsegment.close();
-      }
     }
   });
 }

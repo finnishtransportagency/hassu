@@ -2,7 +2,7 @@ import { config } from "../../config";
 import { adaptPersonSearchResult } from "./personSearchAdapter";
 import { log } from "../../logger";
 import { Kayttajas, Person } from "../kayttajas";
-import { getAxios, wrapXrayAsync } from "../../aws/monitoring";
+import { getAxios, wrapXRayAsync } from "../../aws/monitoring";
 // parseStringPromise import on kunnossa
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -84,7 +84,7 @@ export class PersonSearchUpdater {
     try {
       const response = await axios.request(requestConfig);
       if (response.status === 200) {
-        const responseJson: any = await wrapXrayAsync("xmlParse", () => parseString(response.data));
+        const responseJson: any = await wrapXRayAsync("xmlParse", () => parseString(response.data));
         adaptPersonSearchResult(responseJson, persons);
         log.info("listAccountsOfType:" + accounttype + " " + Object.keys(persons).length + " persons in result map");
       } else {

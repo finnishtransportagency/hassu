@@ -1,9 +1,9 @@
-import { wrapXrayAsync } from "../aws/monitoring";
+import { getAxios, wrapXRayAsync } from "../aws/monitoring";
 import { s3Cache } from "../cache/s3Cache";
 import { log } from "../logger";
 import { BankHolidays } from "./bankHolidays";
 import dayjs from "dayjs";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { dateToString } from "../util/dateUtil";
 
 export const BANK_HOLIDAYS_CACHE_KEY = "bankHolidays.json";
@@ -11,7 +11,7 @@ export const BANK_HOLIDAYS_CACHE_TTL_MILLIS = 365 * 24 * 60 * 60 * 1000; // one 
 
 async function getBankHolidays(): Promise<BankHolidays> {
   try {
-    return await wrapXrayAsync("getBankHolidays", async () => {
+    return await wrapXRayAsync("getBankHolidays", async () => {
       const bankholidays: string[] = await s3Cache.get(
         BANK_HOLIDAYS_CACHE_KEY,
         BANK_HOLIDAYS_CACHE_TTL_MILLIS,
@@ -42,7 +42,7 @@ async function fetchBankHolidaysFromAPI() {
   const dates: string[] = [];
   for (let year = currentYear; year <= rangeEndYear; year++) {
     try {
-      const response = await axios.request({
+      const response = await getAxios().request({
         baseURL: "https://api.boffsaopendata.fi/bankingcalendar/v1/api/v1/BankHolidays",
         params: { pageSize: 100, year },
         method: "GET",

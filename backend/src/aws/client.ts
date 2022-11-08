@@ -3,14 +3,14 @@ import SQS from "aws-sdk/clients/sqs";
 import S3 from "aws-sdk/clients/s3";
 import Cloudfront from "aws-sdk/clients/cloudfront";
 import DynamoDB from "aws-sdk/clients/dynamodb";
-import * as AWSXRay from "aws-xray-sdk-core";
+import { wrapXRayCaptureAWSClient } from "./monitoring";
 
 function produce<T>(name: string, p: () => T, override = false): T {
   const key = "produce_" + name;
   if (!(globalThis as any)[key] || override) {
     const client = p();
     try {
-      (globalThis as any)[key] = AWSXRay.captureAWSClient(client);
+      (globalThis as any)[key] = wrapXRayCaptureAWSClient(client);
     } catch (ignore) {
       (globalThis as any)[key] = client;
     }
@@ -36,8 +36,7 @@ export const getCloudFront = (): Cloudfront => produce<Cloudfront>("cloudfront",
 export const getDynamoDBDocumentClient = (): DynamoDB.DocumentClient => {
   return produce<DynamoDB.DocumentClient>("DynamoDB.DocumentClient", () => {
     const client = new DynamoDB.DocumentClient({ apiVersion: "2012-08-10", region: "eu-west-1" });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    AWSXRay.captureAWSClient((client as any).service); // NOSONAR
+    wrapXRayCaptureAWSClient((client as any).service); // NOSONAR
     return client;
   });
 };

@@ -11,8 +11,10 @@ import { DBProjekti } from "../database/model";
 import { personSearch } from "../personSearch/personSearchClient";
 import dayjs from "dayjs";
 import { aineistoKategoriat } from "../../../common/aineistoKategoriat";
+import { getAxios } from "../aws/monitoring";
+import { assertIsDefined } from "../util/assertions";
 
-const axios = require("axios");
+const axios = getAxios();
 const NodeCache = require("node-cache");
 const accessTokenCache = new NodeCache({
   stdTTL: 1000, // Not really used, because the TTL is set based on the expiration time specified by Velho
@@ -85,6 +87,9 @@ export class VelhoClient {
     if (accessToken) {
       return accessToken;
     }
+    assertIsDefined(config.velhoAuthURL, "process.env.VELHO_AUTH_URL puuttuu");
+    assertIsDefined(config.velhoUsername, "process.env.VELHO_USERNAME puuttuu");
+    assertIsDefined(config.velhoPassword, "process.env.VELHO_PASSWORD puuttuu");
     const response = await axios.post(config.velhoAuthURL, "grant_type=client_credentials", {
       auth: { username: config.velhoUsername, password: config.velhoPassword },
     });
@@ -121,7 +126,7 @@ export class VelhoClient {
             ["projekti/projekti", "ominaisuudet", "asiatunnus-vaylavirasto"],
             ["projekti/projekti", "ominaisuudet", "asiatunnus-ely"],
             ["projekti/projekti", "ominaisuudet", "asiatunnus-traficom"],
-            ["projekti/projekti", "ominaisuudet", "tilaajaorganisaatio"]
+            ["projekti/projekti", "ominaisuudet", "tilaajaorganisaatio"],
           ],
           tyyppi: HakuPalvelu.HakulausekeAsetuksetTyyppiEnum.Kohdeluokkahaku,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any

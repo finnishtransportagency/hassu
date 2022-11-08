@@ -21,25 +21,28 @@ export const getCorrelationId = (): string | undefined => {
 };
 
 export const reportError = (error: Error): void => {
-  const segment = AWSXRay.getSegment();
-  try {
-    // Verify that the segment is a subsegment
-    if (segment instanceof Subsegment) {
-      segment?.addError(error);
-    } else if (segment) {
-      segment.addNewSubsegment("Error").addError(error);
+  if (isXRayEnabled()) {
+    const segment = AWSXRay.getSegment();
+    try {
+      // Verify that the segment is a subsegment
+      if (segment instanceof Subsegment) {
+        segment?.addError(error);
+      } else if (segment) {
+        segment.addNewSubsegment("Error").addError(error);
+      }
+    } catch (e) {
+      // Using pino logger here causes a recursive loop
+      console.warn(e); // https://github.com/aws/aws-xray-sdk-node/issues/448
     }
-  } catch (e) {
-    // Using pino logger here causes a recursive loop
-    console.warn(e); // https://github.com/aws/aws-xray-sdk-node/issues/448
   }
 };
 
 export function setupLambdaMonitoring(): void {
-  AWSXRay.captureHTTPsGlobal(http, true);
-  AWSXRay.captureHTTPsGlobal(https, true);
-  AWSXRay.capturePromise();
-
+  if (isXRayEnabled()) {
+    AWSXRay.captureHTTPsGlobal(http, isXRayDownstreamEnabled());
+    AWSXRay.captureHTTPsGlobal(https, isXRayDownstreamEnabled());
+    AWSXRay.capturePromise();
+  }
   const correlationId = getCorrelationId();
   if (correlationId) {
     (globalThis as any).correlationId = correlationId;
@@ -49,9 +52,11 @@ export function setupLambdaMonitoring(): void {
 }
 
 export function getAxios(): AxiosStatic {
-  AWSXRay.captureHTTPsGlobal(http, true);
-  AWSXRay.captureHTTPsGlobal(https, true);
-  AWSXRay.capturePromise();
+  if (isXRayEnabled()) {
+    AWSXRay.captureHTTPsGlobal(http, isXRayDownstreamEnabled());
+    AWSXRay.captureHTTPsGlobal(https, isXRayDownstreamEnabled());
+    AWSXRay.capturePromise();
+  }
   return require("axios");
 }
 
@@ -63,20 +68,41 @@ export function setupLambdaMonitoringMetaData(subsegment: AWSXRay.Subsegment | u
   }
 }
 
-export function wrapXray<T>(segmentName: string, f: () => T): T {
-  return AWSXRay.captureFunc(segmentName, () => {
-    return f();
-  });
+export async function wrapXRayAsync<T>(segmentName: string, f: (subsegment: AWSXRay.Subsegment | undefined) => T): Promise<T> {
+  if (isXRayEnabled()) {
+    return AWSXRay.captureAsyncFunc(segmentName, async (subsegment) => {
+      try {
+        return f(subsegment);
+      } finally {
+        if (subsegment) {
+          subsegment.close();
+        }
+      }
+    });
+  } else {
+    return f(undefined);
+  }
 }
 
-export async function wrapXrayAsync<T>(segmentName: string, f: () => T): Promise<T> {
-  return AWSXRay.captureAsyncFunc(segmentName, async (subsegment) => {
-    try {
-      return f();
-    } finally {
-      if (subsegment) {
-        subsegment.close();
-      }
-    }
-  });
+export function wrapXRayCaptureAWSClient<T>(client: T): T {
+  if (isXRayEnabled()) {
+    return AWSXRay.captureAWSClient(client);
+  }
+  return client;
+}
+
+export function isXRayEnabled(): boolean {
+  return process.env.HASSU_XRAY_ENABLED !== "false";
+}
+
+export function isXRayDownstreamEnabled(): boolean {
+  return process.env.HASSU_XRAY_DOWNSTREAM_ENABLED !== "false";
+}
+
+export function disableXRay(): void {
+  process.env.HASSU_XRAY_ENABLED = "false";
+}
+
+export function disableXRayDownstream(): void {
+  process.env.HASSU_XRAY_DOWNSTREAM_ENABLED = "false";
 }

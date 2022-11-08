@@ -7,7 +7,7 @@ import {
   linkSuunnitelma,
 } from "../../common/links";
 import { NextApiRequest, NextApiResponse } from "next";
-import { setupLambdaMonitoring, wrapXrayAsync } from "../../backend/src/aws/monitoring";
+import { setupLambdaMonitoring, wrapXRayAsync } from "../../backend/src/aws/monitoring";
 import { createAuthorizationHeader, validateCredentials } from "../util/basicAuthentication";
 import { api } from "@services/api/permanentApi";
 import { getCredentials } from "../util/apiUtil";
@@ -36,7 +36,7 @@ function createActiveKuulutusLink(projekti: ProjektiJulkinen): string | undefine
 
 export async function handleSuunnitelmaTiedotRequest(req: NextApiRequest, res: NextApiResponse) {
   setupLambdaMonitoring();
-  return await wrapXrayAsync("handler", async () => {
+  return await wrapXRayAsync("handler", async () => {
     if (!(await validateCredentials(req.headers.authorization))) {
       res.status(401);
       res.setHeader("www-authenticate", "Basic");

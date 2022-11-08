@@ -3,11 +3,10 @@ import { log } from "../logger";
 import { velho } from "../velho/velhoClient";
 import { fileService } from "../files/fileService";
 import dayjs from "dayjs";
-import { getAxios, setupLambdaMonitoring } from "../aws/monitoring";
+import { getAxios, setupLambdaMonitoring, wrapXRayAsync } from "../aws/monitoring";
 import { ImportAineistoEvent, ImportAineistoEventType } from "./importAineistoEvent";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { AineistoTila } from "../../../common/graphql/apiModel";
-import * as AWSXRay from "aws-xray-sdk-core";
 import { aineistoService } from "./aineistoService";
 import {
   Aineisto,
@@ -20,10 +19,7 @@ import {
 } from "../database/model";
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import * as mime from "mime-types";
-import { AxiosStatic } from "axios";
 import { findJulkaisuWithId } from "../projekti/projektiUtil";
-
-let axios: AxiosStatic;
 
 async function handleVuorovaikutusAineisto(oid: string, vuorovaikutus: Vuorovaikutus): Promise<boolean> {
   const filePathInProjekti = new ProjektiPaths(oid).vuorovaikutus(vuorovaikutus).aineisto;
@@ -88,7 +84,7 @@ async function handleAineistot(oid: string, aineistot: Aineisto[] | null | undef
 
 async function importAineisto(aineisto: Aineisto, oid: string, filePathInProjekti: string) {
   const sourceURL = await velho.getLinkForDocument(aineisto.dokumenttiOid);
-  const axiosResponse = await axios.get(sourceURL);
+  const axiosResponse = await getAxios().get(sourceURL);
   const disposition: string = axiosResponse.headers["content-disposition"];
   const fileName = parseFilenameFromContentDisposition(disposition);
   if (!fileName) {
@@ -217,29 +213,21 @@ async function handlePublish(aineistoEvent: ImportAineistoEvent, projekti: DBPro
 
 export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   setupLambdaMonitoring();
-  return AWSXRay.captureAsyncFunc("handler", async (subsegment) => {
-    try {
-      axios = getAxios(); // Initialize Axios client here to get it properly instrumented by X-Ray
+  return wrapXRayAsync("handler", async () => {
+    for (const record of event.Records) {
+      const aineistoEvent: ImportAineistoEvent = JSON.parse(record.body);
+      log.info("ImportAineistoEvent", aineistoEvent);
+      const { oid } = aineistoEvent;
 
-      for (const record of event.Records) {
-        const aineistoEvent: ImportAineistoEvent = JSON.parse(record.body);
-        log.info("ImportAineistoEvent", aineistoEvent);
-        const { oid } = aineistoEvent;
-
-        const projekti = await projektiDatabase.loadProjektiByOid(oid);
-        if (!projekti) {
-          throw new Error("Projektia " + oid + " ei löydy");
-        }
-
-        if (aineistoEvent.type == ImportAineistoEventType.IMPORT) {
-          await handleImport(projekti);
-        } else {
-          await handlePublish(aineistoEvent, projekti);
-        }
+      const projekti = await projektiDatabase.loadProjektiByOid(oid);
+      if (!projekti) {
+        throw new Error("Projektia " + oid + " ei löydy");
       }
-    } finally {
-      if (subsegment) {
-        subsegment.close();
+
+      if (aineistoEvent.type == ImportAineistoEventType.IMPORT) {
+        await handleImport(projekti);
+      } else {
+        await handlePublish(aineistoEvent, projekti);
       }
     }
   });
