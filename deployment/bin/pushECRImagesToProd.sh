@@ -10,7 +10,7 @@ docker tag localstack/localstack:$LOCALSTACK_VERSION $ACCOUNT_ID.dkr.ecr.eu-west
 docker push $ACCOUNT_ID.dkr.ecr.eu-west-1.amazonaws.com/localstack:$LOCALSTACK_VERSION
 
 # Create buildimage to provide faster builds
-BUILD_IMAGE_VERSION=1.0.3
+BUILD_IMAGE_VERSION=$(cat .buildimageversion)
 REPO_TAG=$ACCOUNT_ID.dkr.ecr.eu-west-1.amazonaws.com/hassu-buildimage:$BUILD_IMAGE_VERSION
 aws ecr create-repository --repository-name hassu-buildimage || true
 docker tag hassu-buildimage:$BUILD_IMAGE_VERSION $REPO_TAG

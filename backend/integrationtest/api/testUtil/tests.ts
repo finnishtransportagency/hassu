@@ -33,6 +33,7 @@ import { fileService } from "../../../src/files/fileService";
 import { testProjektiDatabase } from "../../../src/database/testProjektiDatabase";
 import { expectAwsCalls } from "../../../test/aws/awsMock";
 import { Attachment } from "nodemailer/lib/mailer";
+import { projektiDatabase } from "../../../src/database/projektiDatabase";
 
 const { expect } = require("chai");
 
@@ -70,6 +71,7 @@ export async function testProjektiHenkilot(projekti: Projekti, oid: string, user
       return input;
     }),
   });
+  await projektiDatabase.saveProjekti({ oid, kasittelynTila: null }); // Resetoi tila, koska Velhosta voi tulla muita arvoja luonnin yhteydessä
   const p = await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
 
   // Expect that projektipaallikko is found
@@ -105,7 +107,7 @@ export async function testProjektiHenkilot(projekti: Projekti, oid: string, user
     .filter((user) => user.kayttajatunnus == UserFixture.testi1Kayttaja.uid)
     .forEach((user) => (user.tyyppi = KayttajaTyyppi.VARAHENKILO));
 
-  expect(
+  await expect(
     api.tallennaProjekti({
       oid,
       kayttoOikeudet: kayttoOikeudetWithVarahenkiloChanges,

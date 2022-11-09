@@ -34,3 +34,27 @@ const elyt = elyData.reduce((all: Record<string, unknown>, ely: any) => {
   return all;
 }, {});
 fs.writeFileSync(process.argv[4], JSON.stringify(elyt));
+
+function extractVelhoValuesIntoMap(field: string) {
+  const values: any = {};
+  const definition: any = (metaDataJSON.info["x-velho-nimikkeistot"] as any)[field];
+  const keyTitleMap = definition.nimikkeistoversiot[definition["uusin-nimikkeistoversio"]];
+  Object.keys(keyTitleMap).forEach((key) => {
+    return (values[key] = { otsikko: keyTitleMap[key].otsikko, kategoria: keyTitleMap[key].kategoria });
+  });
+  return values;
+}
+
+function parseSuunnitelmanTilat() {
+  const velhoSuunnitelmanTilat = extractVelhoValuesIntoMap("projekti/suunnitelman-tila");
+  const suunnitelmanTilat = Object.keys(velhoSuunnitelmanTilat).reduce((tilat: Record<string, string>, tila) => {
+    tilat[tila] = velhoSuunnitelmanTilat[tila].otsikko;
+    return tilat;
+  }, {});
+  fs.writeFileSync(
+    __dirname + "/../../common/generated/kasittelynTila.ts",
+    `export const suunnitelmanTilat = ${JSON.stringify(suunnitelmanTilat, null, 2)}`
+  );
+}
+
+parseSuunnitelmanTilat();

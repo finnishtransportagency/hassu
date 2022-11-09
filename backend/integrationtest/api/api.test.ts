@@ -32,7 +32,7 @@ import {
   verifyEmailsSent,
   verifyVuorovaikutusSnapshot,
 } from "./testUtil/tests";
-import { stubPDFGenerator, takePublicS3Snapshot, takeS3Snapshot, takeYllapitoS3Snapshot } from "./testUtil/util";
+import { mockSaveProjektiToVelho, stubPDFGenerator, takePublicS3Snapshot, takeS3Snapshot, takeYllapitoS3Snapshot } from "./testUtil/util";
 import {
   testImportNahtavillaoloAineistot,
   testNahtavillaolo,
@@ -63,6 +63,7 @@ describe("Api", () => {
 
   before(async () => {
     await setupLocalDatabase();
+    mockSaveProjektiToVelho();
     userFixture = new UserFixture(userService);
     readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
     readUsersFromSearchUpdaterLambda.callsFake(async () => {

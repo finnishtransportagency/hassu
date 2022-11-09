@@ -3,10 +3,12 @@ import { fileService } from "../../../src/files/fileService";
 import { AineistoInput, VelhoAineisto } from "../../../../common/graphql/apiModel";
 import { loadProjektiJulkinenFromDatabase } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";
-import { IllegalAccessError } from "../../../src/error/IllegalAccessError";
 import * as sinon from "sinon";
 import { pdfGeneratorClient } from "../../../src/asiakirja/lambda/pdfGeneratorClient";
 import { handleEvent as pdfGenerator } from "../../../src/asiakirja/lambda/pdfGeneratorHandler";
+import { velho } from "../../../src/velho/velhoClient";
+import mocha from "mocha";
+import { NotFoundError } from "../../../src/error/NotFoundError";
 
 const { expect } = require("chai");
 
@@ -47,7 +49,7 @@ export function expectApiError(e: Error, message: string): void {
 
 export async function expectJulkinenNotFound(oid: string, userFixture: UserFixture): Promise<void> {
   userFixture.logout();
-  expect(loadProjektiJulkinenFromDatabase(oid)).to.eventually.be.rejectedWith(IllegalAccessError);
+  await expect(loadProjektiJulkinenFromDatabase(oid)).to.eventually.be.rejectedWith(NotFoundError);
   userFixture.loginAs(UserFixture.mattiMeikalainen);
 }
 
@@ -55,5 +57,17 @@ export function stubPDFGenerator(): void {
   const pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
   pdfGeneratorLambdaStub.callsFake(async (event) => {
     return await pdfGenerator(event);
+  });
+}
+
+export function mockSaveProjektiToVelho(): void {
+  const stub = sinon.stub(velho, "saveProjekti");
+  mocha.afterEach(() => {
+    if (stub.getCalls().length > 0) {
+      expect({
+        "velho.saveProjekti": stub.getCalls().map((call) => call.args),
+      }).toMatchSnapshot();
+    }
+    stub.reset();
   });
 }

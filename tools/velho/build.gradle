@@ -3,7 +3,7 @@ import vayla.DownloadMetaDataTask
 plugins {
   id 'java'
   id 'groovy'
-  id "org.openapi.generator" version "5.3.0"
+  id "org.openapi.generator" version "6.2.1"
   id "de.undercouch.download" version "4.1.2"
 }
 repositories {

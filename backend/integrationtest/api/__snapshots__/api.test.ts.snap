@@ -3067,3 +3067,19 @@ Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
   },
 ]
 `;
+
+exports[`Api should search, load and save a project 33`] = `
+Object {
+  "velho.saveProjekti": Array [
+    Array [
+      "1.2.246.578.5.1.2978288874.2711575506",
+      Object {
+        "hyvaksymispaatos": Object {
+          "asianumero": "asianro123",
+          "paatoksenPvm": "2022-06-09",
+        },
+      },
+    ],
+  ],
+}
+`;

@@ -13,6 +13,7 @@ import { fileService } from "../../src/files/fileService";
 import { emailHandler } from "../../src/handler/emailHandler";
 import { pdfGeneratorClient } from "../../src/asiakirja/lambda/pdfGeneratorClient";
 import { handleEvent as pdfGenerator } from "../../src/asiakirja/lambda/pdfGeneratorHandler";
+import { mockSaveProjektiToVelho } from "../api/testUtil/util";
 
 const { expect } = require("chai");
 
@@ -56,6 +57,7 @@ describe("AloitusKuulutus", () => {
 
   beforeEach(async () => {
     await setupLocalDatabase();
+    mockSaveProjektiToVelho();
     userFixture = new UserFixture(userService);
   });
 

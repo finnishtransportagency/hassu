@@ -3,6 +3,7 @@ import { SuunnitteluVaihe, Vuorovaikutus } from "./suunnitteluVaihe";
 import { NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "./nahtavillaoloVaihe";
 import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "./hyvaksymisPaatosVaihe";
 import { IlmoituksenVastaanottajat, Kielitiedot, LocalizedMap, StandardiYhteystiedot, Velho, Yhteystieto } from "./common";
+import { suunnitelmanTilat } from "../../../../common/generated/kasittelynTila";
 
 export type DBVaylaUser = {
   email: string;
@@ -68,9 +69,17 @@ export type Suunnitelma = {
 };
 
 export type KasittelynTila = {
-  hyvaksymispaatos: Hyvaksymispaatos;
+  suunnitelmanTila?: keyof typeof suunnitelmanTilat; // Esimerkiksi "suunnitelman-tila/sutil01"
+  hyvaksymisesitysTraficomiinPaiva?: string;
+  ennakkoneuvotteluPaiva?: string;
+  hyvaksymispaatos?: Hyvaksymispaatos;
   ensimmainenJatkopaatos?: Hyvaksymispaatos;
   toinenJatkopaatos?: Hyvaksymispaatos;
+  valitustenMaara?: number;
+  lainvoimaAlkaen?: string;
+  lainvoimaPaattyen?: string;
+  liikenteeseenluovutusOsittain?: string;
+  liikenteeseenluovutusKokonaan?: string;
 };
 
 export type Hyvaksymispaatos = {

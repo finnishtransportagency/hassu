@@ -271,9 +271,17 @@ input ListaaLisaAineistoInput {
 }
 
 input KasittelyntilaInput {
+  suunnitelmanTila: String
   hyvaksymispaatos: HyvaksymispaatosInput
   ensimmainenJatkopaatos: HyvaksymispaatosInput
   toinenJatkopaatos: HyvaksymispaatosInput
+  hyvaksymisesitysTraficomiinPaiva: String
+  ennakkoneuvotteluPaiva: String
+  valitustenMaara: Int
+  lainvoimaAlkaen: String
+  lainvoimaPaattyen: String
+  liikenteeseenluovutusOsittain: String
+  liikenteeseenluovutusKokonaan: String
 }
 
 input HyvaksymispaatosInput {

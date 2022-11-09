@@ -1,13 +1,14 @@
 import { ProjektiTyyppi, VelhoHakuTulos, Viranomainen } from "../../../common/graphql/apiModel";
-import { DBProjekti, Velho } from "../database/model";
+import { DBProjekti, KasittelynTila, Velho } from "../database/model";
 import { adaptKayttaja } from "../personSearch/personAdapter";
 import { Kayttajas } from "../personSearch/kayttajas";
 import {
   ProjektiProjekti,
-  ProjektirekisteriApiV2ProjektiOminaisuudet,
-  ProjektirekisteriApiV2ProjektiOminaisuudetVarahenkilo,
-  ProjektirekisteriApiV2ProjektiOminaisuudetVastuuhenkilo,
-  ProjektirekisteriApiV2ProjektiOminaisuudetVaylamuotoEnum,
+  ProjektiProjektiLuontiOminaisuudet,
+  ProjektiProjektiLuontiOminaisuudetHyvaksymispaatos,
+  ProjektiProjektiLuontiOminaisuudetVarahenkilo,
+  ProjektiProjektiLuontiOminaisuudetVastuuhenkilo,
+  ProjektiProjektiLuontiOminaisuudetVaylamuotoEnum,
 } from "./projektirekisteri";
 import mergeWith from "lodash/mergeWith";
 import pickBy from "lodash/pickBy";
@@ -17,6 +18,10 @@ import cloneDeep from "lodash/cloneDeep";
 import difference from "lodash/difference";
 import { kuntametadata } from "../../../common/kuntametadata";
 import { log } from "../logger";
+import { assertIsDefined } from "../util/assertions";
+import { IllegalArgumentError } from "../error/IllegalArgumentError";
+import { parseDate } from "../util/dateUtil";
+import isEqual from "lodash/isEqual";
 
 let metaDataJSON: any;
 
@@ -46,7 +51,7 @@ const metadata = (() => {
   return { tilat, vaiheet, organisaatiot, toteutusAjankohdat, dokumenttiTyypit };
 })();
 
-function adaptVaylamuoto(vaylamuodot: Set<ProjektirekisteriApiV2ProjektiOminaisuudetVaylamuotoEnum>) {
+function adaptVaylamuoto(vaylamuodot: Set<ProjektiProjektiLuontiOminaisuudetVaylamuotoEnum>) {
   const values: string[] = [];
   vaylamuodot.forEach((value) => values.push(`${value}`));
   return values;
@@ -54,7 +59,7 @@ function adaptVaylamuoto(vaylamuodot: Set<ProjektirekisteriApiV2ProjektiOminaisu
 
 export type ProjektiSearchResult = Pick<ProjektiProjekti, "oid"> & {
   ominaisuudet: Pick<
-    ProjektirekisteriApiV2ProjektiOminaisuudet,
+    ProjektiProjektiLuontiOminaisuudet,
     "nimi" | "vastuuhenkilo" | "asiatunnus-vaylavirasto" | "asiatunnus-ely" | "tilaajaorganisaatio"
   > & { vaihe: ProjektiVaihe };
 };
@@ -142,7 +147,7 @@ export function adaptSearchResults(searchResults: ProjektiSearchResult[], kaytta
 }
 
 function getVastuuhenkiloEmail(
-  vastuuhenkilo: ProjektirekisteriApiV2ProjektiOminaisuudetVastuuhenkilo | ProjektirekisteriApiV2ProjektiOminaisuudetVarahenkilo | null
+  vastuuhenkilo: ProjektiProjektiLuontiOminaisuudetVastuuhenkilo | ProjektiProjektiLuontiOminaisuudetVarahenkilo | null
 ): string {
   if (vastuuhenkilo?.sahkoposti) {
     return vastuuhenkilo?.sahkoposti;
@@ -204,6 +209,7 @@ export function adaptProjekti(data: ProjektiProjekti): DBProjekti {
       asiatunnusVayla: data.ominaisuudet["asiatunnus-vaylavirasto"],
       asiatunnusELY: data.ominaisuudet["asiatunnus-ely"],
     },
+    kasittelynTila: adaptKasittelynTilaFromVelho(data.ominaisuudet),
     kayttoOikeudet: [],
   };
 }
@@ -230,4 +236,127 @@ export function findUpdatedFields(oldVelho: Velho, newVelho: Velho): Velho {
     return newValue;
   });
   return pickBy(modifiedFields, identity) as Velho;
+}
+
+function setIfDefined<T>(value: T | undefined, setValue: (value: T) => void) {
+  if (value) {
+    setValue(value);
+  }
+}
+
+function adaptKasittelynTilaFromVelho(ominaisuudet: ProjektiProjektiLuontiOminaisuudet): KasittelynTila | undefined {
+  const kasittelynTila: KasittelynTila = {};
+  kasittelynTila.suunnitelmanTila = objectToString(ominaisuudet["suunnitelman-tila"]);
+  kasittelynTila.ennakkoneuvotteluPaiva = objectToString(ominaisuudet["ennakkoneuvottelu"]);
+  kasittelynTila.hyvaksymisesitysTraficomiinPaiva = objectToString(ominaisuudet["hyvaksymisesitys"]?.lahetetty);
+  const hyvaksymispaatos = ominaisuudet.hyvaksymispaatos;
+  if (hyvaksymispaatos) {
+    kasittelynTila.hyvaksymispaatos = kasittelynTila.hyvaksymispaatos || {};
+    kasittelynTila.hyvaksymispaatos.paatoksenPvm = objectToString(hyvaksymispaatos.annettu);
+    kasittelynTila.hyvaksymispaatos.asianumero = objectToString(ominaisuudet["asiatunnus-traficom"]);
+    if (hyvaksymispaatos.jatkopaatos?.["ensimmainen-annettu"]) {
+      kasittelynTila.ensimmainenJatkopaatos = kasittelynTila.ensimmainenJatkopaatos || {};
+      kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm = objectToString(hyvaksymispaatos.jatkopaatos["ensimmainen-annettu"]);
+    }
+    if (hyvaksymispaatos.jatkopaatos?.["toinen-annettu"]) {
+      kasittelynTila.toinenJatkopaatos = kasittelynTila.toinenJatkopaatos || {};
+      kasittelynTila.toinenJatkopaatos.paatoksenPvm = objectToString(hyvaksymispaatos.jatkopaatos["toinen-annettu"]);
+    }
+  }
+
+  setIfDefined(ominaisuudet.lainvoimaisuus?.alkaen, (value) => (kasittelynTila.lainvoimaAlkaen = objectToString(value)));
+  setIfDefined(ominaisuudet.lainvoimaisuus?.paattyen, (value) => (kasittelynTila.lainvoimaPaattyen = objectToString(value)));
+  setIfDefined(ominaisuudet["valitukset"], (value) => (kasittelynTila.valitustenMaara = value));
+  setIfDefined(
+    ominaisuudet.liikenteeseenluovutus?.osittain,
+    (value) => (kasittelynTila.liikenteeseenluovutusOsittain = objectToString(value))
+  );
+  setIfDefined(
+    ominaisuudet.liikenteeseenluovutus?.kokonaan,
+    (value) => (kasittelynTila.liikenteeseenluovutusKokonaan = objectToString(value))
+  );
+
+  // Palauta tyhjälle lopputulokselle undefined
+  if (isEqual(pickBy(kasittelynTila, identity), {})) {
+    return undefined;
+  }
+  return kasittelynTila;
+}
+
+export function adaptKasittelyntilaToVelho(projekti: ProjektiProjekti, params: KasittelynTila): void {
+  const ominaisuudet = projekti.ominaisuudet;
+  setIfDefined(params.suunnitelmanTila, (value) => (ominaisuudet["suunnitelman-tila"] = stringToObject(value)));
+  setIfDefined(params.ennakkoneuvotteluPaiva, (value) => (ominaisuudet["ennakkoneuvottelu"] = toLocalDate(value)));
+  setIfDefined(
+    params.hyvaksymisesitysTraficomiinPaiva,
+    (value) =>
+      (ominaisuudet["hyvaksymisesitys"] = {
+        lahetetty: toLocalDate(value),
+        saapunut: null,
+      })
+  );
+
+  if (params.hyvaksymispaatos || params.ensimmainenJatkopaatos || params.toinenJatkopaatos) {
+    const defaultHyvaksymisPaatos: ProjektiProjektiLuontiOminaisuudetHyvaksymispaatos = {
+      jatkopaatos: null,
+      annettu: null,
+      "palautettu-laatijalle": null,
+      osapaatos: null,
+    };
+    ominaisuudet.hyvaksymispaatos = ominaisuudet.hyvaksymispaatos || defaultHyvaksymisPaatos;
+    const hyvaksymispaatos = ominaisuudet.hyvaksymispaatos;
+    assertIsDefined(hyvaksymispaatos);
+    setIfDefined(params.hyvaksymispaatos?.paatoksenPvm, (value) => (hyvaksymispaatos.annettu = toLocalDate(value)));
+    setIfDefined(params.hyvaksymispaatos?.asianumero, (value) => (ominaisuudet["asiatunnus-traficom"] = value));
+    if (params.ensimmainenJatkopaatos?.paatoksenPvm) {
+      if (!hyvaksymispaatos.jatkopaatos) {
+        hyvaksymispaatos.jatkopaatos = {
+          "ensimmainen-annettu": toLocalDate(params.ensimmainenJatkopaatos.paatoksenPvm),
+          "toinen-annettu": null,
+        };
+      } else {
+        hyvaksymispaatos.jatkopaatos["ensimmainen-annettu"] = toLocalDate(params.ensimmainenJatkopaatos.paatoksenPvm);
+      }
+
+      if (params.toinenJatkopaatos?.paatoksenPvm) {
+        if (!hyvaksymispaatos.jatkopaatos) {
+          throw new IllegalArgumentError("Ei voi tallentaa toista jatkopäätöstä ennen ensimmäistä");
+        }
+        hyvaksymispaatos.jatkopaatos["toinen-annettu"] = toLocalDate(params.toinenJatkopaatos.paatoksenPvm);
+      }
+
+      if (params.lainvoimaAlkaen && params.lainvoimaPaattyen) {
+        ominaisuudet.lainvoimaisuus = { alkaen: toLocalDate(params.lainvoimaAlkaen), paattyen: toLocalDate(params.lainvoimaPaattyen) };
+      }
+    }
+  }
+
+  setIfDefined(params.valitustenMaara, (value) => (ominaisuudet["valitukset"] = value));
+
+  if (params.liikenteeseenluovutusOsittain || params.liikenteeseenluovutusKokonaan) {
+    if (!ominaisuudet.liikenteeseenluovutus) {
+      ominaisuudet.liikenteeseenluovutus = {
+        osittain: params.liikenteeseenluovutusOsittain ? toLocalDate(params.liikenteeseenluovutusOsittain) : null,
+        kokonaan: params.liikenteeseenluovutusKokonaan ? toLocalDate(params.liikenteeseenluovutusKokonaan) : null,
+      };
+    }
+  }
+}
+
+function toLocalDate(date: string) {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  return parseDate(date).startOf("day").format() as unknown as object;
+}
+
+function stringToObject(s: string) {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  return s as unknown as object;
+}
+
+function objectToString<T>(s: unknown): T | undefined {
+  if (s == undefined) {
+    return undefined;
+  }
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  return s as unknown as T;
 }
