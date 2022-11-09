@@ -4,7 +4,7 @@
   "scripts": {
     "setup:dev": "cross-env ENVIRONMENT=dev ts-node --project=../tsconfig.cdk.json ../deployment/bin/setupEnvironment.ts",
     "setup": "cross-env ts-node --project=../tsconfig.cdk.json ../deployment/bin/setupEnvironment.ts",
-    "migration": "cross-env AWS_SDK_LOAD_CONFIG=1 USE_PINO_PRETTY=true ts-node --logError $NODE_DEBUG_OPTION --project=tsconfig.json ../backend/src/migraatio/migration.ts",
+    "migration": "cross-env AWS_SDK_LOAD_CONFIG=1 USE_PINO_PRETTY=true ts-node --logError $NODE_DEBUG_OPTION --project=tsconfig.json ./migration-cli.ts",
     "test": "cross-env TS_NODE_PROJECT=\"./tsconfig.json\" mocha -r ts-node/register \"./**/*.test.ts\""
   },
   "dependencies": {
