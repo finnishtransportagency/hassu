@@ -22,3 +22,8 @@ export function yhteystietoVirkamiehelleTekstiksi(yhteystieto: Yhteystieto & { k
     kunta ? kuntametadata.nameForKuntaId(kunta, Kieli.SUOMI) : organisaatio
   }), ${puhelinnumero}, ${sahkoposti}`;
 }
+
+export function yhteystietoKansalaiselleTekstiksi(kieli: Kieli, yhteystieto: Yhteystieto) {
+  const { etunimi, sukunimi, organisaatio, kunta, puhelinnumero, sahkoposti } = yhteystieto;
+  return `${etunimi} ${sukunimi} (${kunta ? kuntametadata.nameForKuntaId(kunta, kieli) : organisaatio}), ${puhelinnumero}, ${sahkoposti}`;
+}
