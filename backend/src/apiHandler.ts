@@ -37,8 +37,7 @@ import {
 import { apiConfig } from "../../common/abstractApi";
 import { lataaAsiakirja } from "./handler/asiakirjaHandler";
 import { createUploadURLForFile } from "./handler/fileHandler";
-import * as AWSXRay from "aws-xray-sdk-core";
-import { getCorrelationId, setupLambdaMonitoring, setupLambdaMonitoringMetaData } from "./aws/monitoring";
+import { getCorrelationId, setupLambdaMonitoring, setupLambdaMonitoringMetaData, wrapXRayAsync } from "./aws/monitoring";
 import { calculateEndDate } from "./endDateCalculator/endDateCalculatorHandler";
 import { listProjektit } from "./handler/listProjektitHandler";
 import { velhoDocumentHandler } from "./handler/velhoDocumentHandler";
@@ -119,46 +118,40 @@ export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArgume
     log.debug({ event });
   }
 
-  return AWSXRay.captureAsyncFunc("handler", async (subsegment) => {
+  return wrapXRayAsync("handler", async (subsegment) => {
+    setupLambdaMonitoringMetaData(subsegment);
+
     try {
-      setupLambdaMonitoringMetaData(subsegment);
+      await identifyUser(event);
+      const data = await executeOperation(event);
+      const corId = getCorrelationId();
+      const lambdaResult: LambdaResult = { data, correlationId: corId || "" };
+      return lambdaResult;
+    } catch (e: unknown) {
+      log.error(e);
+      if (e instanceof Error) {
+        // Only data that is sent out in case of error is the error message. We wish to log correlationId with the
+        // error, so the only way to do it is to encode the data into error message field. The error field is decoded
+        // in deployment/lib/template/response.vtl
 
-      try {
-        await identifyUser(event);
-        const data = await executeOperation(event);
-        const corId = getCorrelationId();
-        const lambdaResult: LambdaResult = { data, correlationId: corId || "" };
-        return lambdaResult;
-      } catch (e: unknown) {
-        log.error(e);
-        if (e instanceof Error) {
-          // Only data that is sent out in case of error is the error message. We wish to log correlationId with the
-          // error, so the only way to do it is to encode the data into error message field. The error field is decoded
-          // in deployment/lib/template/response.vtl
-
-          let errorType = "Error";
-          let errorSubType = "(no subtype)";
-          if (e instanceof ClientError) {
-            errorType = "ClientError";
-            errorSubType = e.className;
-          } else if (e instanceof SystemError) {
-            errorType = "SystemError";
-            errorSubType = e.className;
-          }
-
-          e.message = JSON.stringify({
-            message: e.message,
-            correlationId: getCorrelationId(),
-            errorType,
-            errorSubType,
-          });
+        let errorType = "Error";
+        let errorSubType = "(no subtype)";
+        if (e instanceof ClientError) {
+          errorType = "ClientError";
+          errorSubType = e.className;
+        } else if (e instanceof SystemError) {
+          errorType = "SystemError";
+          errorSubType = e.className;
         }
-        throw e;
+
+        e.message = JSON.stringify({
+          message: e.message,
+          correlationId: getCorrelationId(),
+          errorType,
+          errorSubType,
+        });
       }
-    } finally {
-      if (subsegment) {
-        subsegment.close();
-      }
+      throw e;
     }
   });
 }

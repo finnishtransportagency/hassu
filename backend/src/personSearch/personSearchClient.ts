@@ -2,7 +2,7 @@ import { personSearchUpdaterClient } from "./personSearchUpdaterClient";
 import { s3Cache } from "../cache/s3Cache";
 import { log } from "../logger";
 import { Kayttajas, Person } from "./kayttajas";
-import { wrapXrayAsync } from "../aws/monitoring";
+import { wrapXRayAsync } from "../aws/monitoring";
 
 export const S3CACHE_TTL_MILLIS = 60 * 60 * 1000; // 60 min
 export enum SearchMode {
@@ -14,7 +14,7 @@ export const PERSON_SEARCH_CACHE_KEY = "users.json";
 
 async function getKayttajas(): Promise<Kayttajas> {
   try {
-    return await wrapXrayAsync("getKayttajas", async () => {
+    return await wrapXRayAsync("getKayttajas", async () => {
       const kayttajaMap: Record<string, Person> = await s3Cache.get(
         PERSON_SEARCH_CACHE_KEY,
         S3CACHE_TTL_MILLIS,

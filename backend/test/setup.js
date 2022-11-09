@@ -76,18 +76,22 @@ AWS.config.update({
 
 process.env.S3_ENDPOINT = "http://localhost:4566";
 
-const ns = AWSXRay.getNamespace();
-let context;
+process.env.HASSU_XRAY_ENABLED = process.env.HASSU_XRAY_ENABLED || "false";
 
-mocha.beforeEach(() => {
-  context = ns.createContext();
-  ns.enter(context);
-  AWSXRay.setSegment(new AWSXRay.Segment("test"));
-});
+// Koodi säästetty jos halutaan tarvittaessa testeissä kytkeä X-Ray päälle
+if (process.env.HASSU_XRAY_ENABLED !== "false") {
+  const ns = AWSXRay.getNamespace();
+  let context;
 
-mocha.afterEach(() => {
-  AWSXRay.getSegment()?.close();
-  ns.exit(context);
-});
+  mocha.beforeEach(() => {
+    context = ns.createContext();
+    ns.enter(context);
+    AWSXRay.setSegment(new AWSXRay.Segment("test"));
+  });
 
+  mocha.afterEach(() => {
+    AWSXRay.getSegment()?.close();
+    ns.exit(context);
+  });
+}
 process.setMaxListeners(50);

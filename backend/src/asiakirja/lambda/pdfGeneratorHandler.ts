@@ -1,14 +1,13 @@
 import { log } from "../../logger";
-import * as AWSXRay from "aws-xray-sdk-core";
-import { setupLambdaMonitoring, setupLambdaMonitoringMetaData } from "../../aws/monitoring";
-import { asiakirjaService} from "../asiakirjaService";
+import { setupLambdaMonitoring, setupLambdaMonitoringMetaData, wrapXRayAsync } from "../../aws/monitoring";
+import { asiakirjaService } from "../asiakirjaService";
 import { GeneratePDFEvent } from "./generatePDFEvent";
 import { EnhancedPDF } from "../asiakirjaTypes";
 
 export async function handleEvent(event: GeneratePDFEvent): Promise<EnhancedPDF> {
   setupLambdaMonitoring();
 
-  return await AWSXRay.captureAsyncFunc("PDFGeneratorHandler", async (subsegment) => {
+  return await wrapXRayAsync("PDFGeneratorHandler", async (subsegment) => {
     setupLambdaMonitoringMetaData(subsegment);
     try {
       if (event.createAloituskuulutusPdf) {
@@ -26,10 +25,6 @@ export async function handleEvent(event: GeneratePDFEvent): Promise<EnhancedPDF>
     } catch (e) {
       log.error("handleEvent", e);
       throw e;
-    } finally {
-      if (subsegment) {
-        subsegment.close();
-      }
     }
     throw new Error("Unknown event:" + JSON.stringify(event));
   });

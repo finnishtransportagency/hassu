@@ -164,6 +164,7 @@ export class HassuBackendStack extends cdk.Stack {
         minify: true,
       },
       environment: {
+        HASSU_XRAY_DOWNSTREAM_ENABLED: "false", // Estetään ylisuurten x-ray-tracejen synty koko indeksin uudelleenpäivityksessä
         ...commonEnvironmentVariables,
       },
       timeout: Duration.seconds(120),
@@ -223,7 +224,7 @@ export class HassuBackendStack extends cdk.Stack {
         FRONTEND_PUBLIC_KEY_ID: frontendStackOutputs?.FrontendPublicKeyIdOutput,
         AINEISTO_IMPORT_SQS_URL: aineistoSQS.queueUrl,
       },
-      tracing: Tracing.PASS_THROUGH,
+      tracing: Tracing.ACTIVE,
       insightsVersion: LambdaInsightsVersion.VERSION_1_0_98_0,
     });
     backendLambda.addToRolePolicy(new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] }));
@@ -279,7 +280,7 @@ export class HassuBackendStack extends cdk.Stack {
           },
         },
       },
-      tracing: Tracing.PASS_THROUGH,
+      tracing: Tracing.ACTIVE,
       insightsVersion: LambdaInsightsVersion.VERSION_1_0_98_0,
     });
     pdfGeneratorLambda.role?.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("CloudWatchLambdaInsightsExecutionRolePolicy"));
@@ -331,7 +332,7 @@ export class HassuBackendStack extends cdk.Stack {
         AINEISTO_IMPORT_SQS_URL: aineistoSQS.queueUrl,
         CLOUDFRONT_DISTRIBUTION_ID: frontendStackOutputs?.CloudfrontDistributionId,
       },
-      tracing: Tracing.PASS_THROUGH,
+      tracing: Tracing.ACTIVE,
     });
 
     this.props.yllapitoBucket.grantReadWrite(importer);
@@ -367,7 +368,7 @@ export class HassuBackendStack extends cdk.Stack {
       environment: {
         ...commonEnvironmentVariables,
       },
-      tracing: Tracing.PASS_THROUGH,
+      tracing: Tracing.ACTIVE,
     });
 
     const eventSource = new SqsEventSource(emailSQS, { batchSize: 1 });

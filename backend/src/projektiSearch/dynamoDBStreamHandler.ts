@@ -1,10 +1,9 @@
 import { log } from "../logger";
 import { DynamoDBRecord, DynamoDBStreamEvent } from "aws-lambda/trigger/dynamodb-stream";
 import DynamoDB from "aws-sdk/clients/dynamodb";
-import { DBProjekti } from "../database/model/projekti";
+import { DBProjekti } from "../database/model";
 import { projektiSearchService } from "./projektiSearchService";
-import { setupLambdaMonitoring, setupLambdaMonitoringMetaData } from "../aws/monitoring";
-import * as AWSXRay from "aws-xray-sdk-core";
+import { setupLambdaMonitoring, setupLambdaMonitoringMetaData, wrapXRayAsync } from "../aws/monitoring";
 import { MaintenanceEvent, ProjektiSearchMaintenanceService } from "./projektiSearchMaintenanceService";
 import { invokeLambda } from "../aws/lambda";
 import { Context } from "aws-lambda";
@@ -37,19 +36,12 @@ async function handleManagementAction(action: "deleteIndex" | "index", event: Ma
   } else if (action == "index") {
     const startKey = await new ProjektiSearchMaintenanceService().index(event);
     if (startKey && startKey !== event.startKey) {
-      await invokeLambda(
-        context.functionName,
-        false,
-        JSON.stringify({ action: "index", startKey } as MaintenanceEvent)
-      );
+      await invokeLambda(context.functionName, false, JSON.stringify({ action: "index", startKey } as MaintenanceEvent));
     }
   }
 }
 
-export const handleDynamoDBEvents = async (
-  event: DynamoDBStreamEvent | MaintenanceEvent,
-  context: Context
-): Promise<void> => {
+export const handleDynamoDBEvents = async (event: DynamoDBStreamEvent | MaintenanceEvent, context: Context): Promise<void> => {
   const action = (event as MaintenanceEvent).action;
   if (action) {
     return await handleManagementAction(action, event as MaintenanceEvent, context);
@@ -59,25 +51,19 @@ export const handleDynamoDBEvents = async (
     log.warn("No records");
     return;
   }
-  return await AWSXRay.captureAsyncFunc("handler", async (subsegment) => {
-    try {
-      return await (async () => {
-        setupLambdaMonitoringMetaData(subsegment);
-        for (const record of (event as DynamoDBStreamEvent).Records) {
-          switch (record.eventName) {
-            case "INSERT":
-            case "MODIFY":
-              await handleUpdate(record);
-              break;
-            case "REMOVE":
-              await handleRemove(record);
-          }
+  return await wrapXRayAsync("handler", async (subsegment) => {
+    return await (async () => {
+      setupLambdaMonitoringMetaData(subsegment);
+      for (const record of (event as DynamoDBStreamEvent).Records) {
+        switch (record.eventName) {
+          case "INSERT":
+          case "MODIFY":
+            await handleUpdate(record);
+            break;
+          case "REMOVE":
+            await handleRemove(record);
         }
-      })();
-    } finally {
-      if (subsegment) {
-        subsegment.close();
       }
-    }
+    })();
   });
 };
