@@ -52,7 +52,13 @@ describe("10 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     });
     cy.get('input[name="kayttoOikeudet.0.puhelinnumero"').should("be.enabled").clear().type("0291111111");
     cy.get('input[name="kayttoOikeudet.1.puhelinnumero"').should("be.enabled").clear().type("0291111112");
-    cy.get('input[name="kayttoOikeudet.2.puhelinnumero"').should("be.enabled").clear().type("0291111113");
+
+    const fieldName = 'input[name="kayttoOikeudet.2.puhelinnumero"]';
+    cy.get("body").then((body) => {
+      if (body.find(fieldName).length > 0) {
+        cy.get(fieldName).should("be.enabled").type("0291111113");
+      }
+    });
 
     cy.get("#save_projekti").click();
     cy.contains("Henkilötietojen tallennus onnistui").wait(1000); // extra wait added because somehow the next test brings blank  page otherwise
