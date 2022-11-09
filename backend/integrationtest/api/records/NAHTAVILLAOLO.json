@@ -124,10 +124,11 @@
       },
       "yhteystiedot": [
         {
-          "etunimi": "A-tunnus1",
+          "etunimi": "Testi1",
+          "kunta": 536,
           "organisaatio": "CGI Suomi Oy",
           "puhelinnumero": "123",
-          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sahkoposti": "mikko.haapamaki@cgi.com",
           "sukunimi": "Hassu"
         },
         {
@@ -331,14 +332,12 @@
             "yhteysTiedot": [
               {
                 "etunimi": "Etunimi",
-                "organisaatio": "",
                 "puhelinnumero": "0293121213",
                 "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
                 "sukunimi": "Sukunimi"
               },
               {
                 "etunimi": "Joku",
-                "organisaatio": "",
                 "puhelinnumero": "02998765",
                 "sahkoposti": "Joku.Jokunen@vayla.fi",
                 "sukunimi": "Jokunen"
@@ -357,14 +356,12 @@
             "yhteysTiedot": [
               {
                 "etunimi": "Etunimi",
-                "organisaatio": "",
                 "puhelinnumero": "0293121213",
                 "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
                 "sukunimi": "Sukunimi"
               },
               {
                 "etunimi": "Joku",
-                "organisaatio": "",
                 "puhelinnumero": "02998765",
                 "sahkoposti": "Joku.Jokunen@vayla.fi",
                 "sukunimi": "Jokunen"
@@ -463,14 +460,12 @@
             "yhteysTiedot": [
               {
                 "etunimi": "Etunimi",
-                "organisaatio": "",
                 "puhelinnumero": "0293121213",
                 "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
                 "sukunimi": "Sukunimi"
               },
               {
                 "etunimi": "Joku",
-                "organisaatio": "",
                 "puhelinnumero": "02998765",
                 "sahkoposti": "Joku.Jokunen@vayla.fi",
                 "sukunimi": "Jokunen"
@@ -489,14 +484,12 @@
             "yhteysTiedot": [
               {
                 "etunimi": "Etunimi",
-                "organisaatio": "",
                 "puhelinnumero": "0293121213",
                 "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
                 "sukunimi": "Sukunimi"
               },
               {
                 "etunimi": "Joku",
-                "organisaatio": "",
                 "puhelinnumero": "02998765",
                 "sahkoposti": "Joku.Jokunen@vayla.fi",
                 "sukunimi": "Jokunen"
