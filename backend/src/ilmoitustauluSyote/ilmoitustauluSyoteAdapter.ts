@@ -6,11 +6,13 @@ import {
   Kielitiedot,
   NahtavillaoloVaiheJulkaisuJulkinen,
   ProjektiJulkinen,
+  VelhoJulkinen,
 } from "../../../common/graphql/apiModel";
 import { translate } from "../util/localization";
 import { linkAloituskuulutus, linkHyvaksymisPaatos, linkSuunnitteluVaihe } from "../../../common/links";
 import { parseDate } from "../util/dateUtil";
 import { kuntametadata } from "../../../common/kuntametadata";
+import { assertIsDefined } from "../util/assertions";
 
 class IlmoitustauluSyoteAdapter {
   adaptAloitusKuulutusJulkaisu(
@@ -40,19 +42,10 @@ class IlmoitustauluSyoteAdapter {
     const nimi = selectNimi(velho.nimi, aloitusKuulutusJulkaisu.kielitiedot, kieli);
     const url = linkAloituskuulutus(oid);
     return {
-      oid,
-      kunnat: velho.kunnat.map(function (id: number): string {
-        return kuntametadata.nameForKuntaId(id, Kieli.SUOMI);
-      }),
-      maakunnat: velho.maakunnat.map(function (id: number): string {
-        return kuntametadata.nameForMaakuntaId(id, Kieli.SUOMI);
-      }),
       type: IlmoitusKuulutusType.KUULUTUS,
       title: translate("ui-otsikot.kuulutus_suunnitelman_alkamisesta", kieli) + ": " + nimi,
-      kieli,
       url,
-      vaylamuoto: velho.vaylamuoto,
-      date: parseDate(aloitusKuulutusJulkaisu.kuulutusPaiva).format(),
+      ...this.getCommonFields(oid, velho, kieli, aloitusKuulutusJulkaisu.kuulutusPaiva),
     };
   }
 
@@ -77,25 +70,17 @@ class IlmoitustauluSyoteAdapter {
     if (!nahtavillaoloVaihe.kielitiedot) {
       throw new Error("nahtavillaoloVaihe.kielitiedot puuttuu");
     }
-    if (!nahtavillaoloVaihe.kuulutusPaiva) {
+    const kuulutusPaiva = nahtavillaoloVaihe.kuulutusPaiva;
+    if (!kuulutusPaiva) {
       throw new Error("nahtavillaoloVaihe.kuulutusPaiva puuttuu");
     }
     const nimi = selectNimi(velho.nimi, nahtavillaoloVaihe.kielitiedot, kieli);
     const url = linkSuunnitteluVaihe(oid);
     return {
-      oid,
-      kunnat: velho.kunnat.map(function (id: number): string {
-        return kuntametadata.nameForKuntaId(id, Kieli.SUOMI);
-      }),
-      maakunnat: velho.maakunnat.map(function (id: number): string {
-        return kuntametadata.nameForMaakuntaId(id, Kieli.SUOMI);
-      }),
+      ...this.getCommonFields(oid, velho, kieli, kuulutusPaiva),
       type: IlmoitusKuulutusType.KUULUTUS,
       title: translate("ui-otsikot.kuulutus_suunnitelman_nahtaville_asettamisesta", kieli) + ": " + nimi,
-      kieli,
       url,
-      vaylamuoto: velho.vaylamuoto,
-      date: parseDate(nahtavillaoloVaihe.kuulutusPaiva).format(),
     };
   }
 
@@ -126,19 +111,35 @@ class IlmoitustauluSyoteAdapter {
     const nimi = selectNimi(velho.nimi, hyvaksymisPaatosVaihe.kielitiedot, kieli);
     const url = linkHyvaksymisPaatos(oid);
     return {
-      oid,
-      kunnat: velho.kunnat.map(function (id: number): string {
-        return kuntametadata.nameForKuntaId(id, Kieli.SUOMI);
-      }),
-      maakunnat: velho.maakunnat.map(function (id: number): string {
-        return kuntametadata.nameForMaakuntaId(id, Kieli.SUOMI);
-      }),
       type: IlmoitusKuulutusType.KUULUTUS,
       title: translate("ui-otsikot.kuulutus_suunnitelman_hyvaksymispaatoksestä", kieli) + ": " + nimi,
-      kieli,
       url,
+      ...this.getCommonFields(oid, velho, kieli, hyvaksymisPaatosVaihe.kuulutusPaiva),
+    };
+  }
+
+  private getCommonFields(
+    oid: string,
+    velho: VelhoJulkinen,
+    kieli: Kieli,
+    kuulutusPaiva: string
+  ): Pick<IlmoitusKuulutus, "oid" | "kunnat" | "maakunnat" | "kieli" | "elyt" | "date" | "vaylamuoto"> {
+    assertIsDefined(velho.maakunnat);
+    assertIsDefined(velho.kunnat);
+    assertIsDefined(velho.vaylamuoto);
+    const maakunnat = velho.maakunnat;
+    const elyt = maakunnat
+      ?.map(kuntametadata.maakuntaForMaakuntaId)
+      .map((maakunta) => maakunta?.ely)
+      .filter((m) => !!m) as number[];
+    return {
+      oid,
+      kunnat: velho.kunnat,
+      maakunnat,
+      elyt,
+      kieli,
+      date: parseDate(kuulutusPaiva).format(),
       vaylamuoto: velho.vaylamuoto,
-      date: parseDate(hyvaksymisPaatosVaihe.kuulutusPaiva).format(),
     };
   }
 

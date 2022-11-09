@@ -1,4 +1,10 @@
-import { AloitusKuulutusTila, Kieli, ProjektiJulkinen } from "../../../common/graphql/apiModel";
+import {
+  AloitusKuulutusTila,
+  HyvaksymisPaatosVaiheTila,
+  Kieli,
+  NahtavillaoloVaiheTila,
+  ProjektiJulkinen,
+} from "../../../common/graphql/apiModel";
 import { openSearchClientIlmoitustauluSyote } from "../projektiSearch/openSearchClient";
 import { ilmoitusKuulutusAdapter } from "./ilmoitustauluSyoteAdapter";
 import { log } from "../logger";
@@ -12,7 +18,8 @@ class IlmoitustauluSyoteService {
       await this.indexNahtavillaoloVaihe(projekti, kielet, oid);
       await this.indexHyvaksymisPaatosVaihe(projekti, kielet, oid);
     } catch (e) {
-      log.error("IlmoitustauluSyoteService.index failed.", { oid, e });
+      log.error("IlmoitustauluSyoteService.index failed.", { projekti });
+      log.error(e);
     }
   }
 
@@ -30,7 +37,7 @@ class IlmoitustauluSyoteService {
 
   private async indexNahtavillaoloVaihe(projekti: ProjektiJulkinen, kielet: Kieli[], oid: string) {
     const nahtavillaoloVaihe = projekti.nahtavillaoloVaihe;
-    if (nahtavillaoloVaihe) {
+    if (nahtavillaoloVaihe?.tila == NahtavillaoloVaiheTila.HYVAKSYTTY) {
       for (const kieli of kielet) {
         await openSearchClientIlmoitustauluSyote.putDocument(
           ilmoitusKuulutusAdapter.createKeyForNahtavillaoloVaihe(oid, nahtavillaoloVaihe, kieli),
@@ -42,7 +49,7 @@ class IlmoitustauluSyoteService {
 
   private async indexHyvaksymisPaatosVaihe(projekti: ProjektiJulkinen, kielet: Kieli[], oid: string) {
     const nahtavillaoloVaihe = projekti.hyvaksymisPaatosVaihe;
-    if (nahtavillaoloVaihe) {
+    if (nahtavillaoloVaihe?.tila == HyvaksymisPaatosVaiheTila.HYVAKSYTTY) {
       for (const kieli of kielet) {
         await openSearchClientIlmoitustauluSyote.putDocument(
           ilmoitusKuulutusAdapter.createKeyForHyvaksymisPaatosVaihe(oid, nahtavillaoloVaihe, kieli),

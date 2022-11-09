@@ -3,27 +3,52 @@ import RSS from "rss";
 import { openSearchClientIlmoitustauluSyote } from "../projektiSearch/openSearchClient";
 import { IlmoitusKuulutus } from "./ilmoitusKuulutus";
 import { translate } from "../util/localization";
+import { kuntametadata } from "../../../common/kuntametadata";
+import { log } from "../logger";
+import { NotFoundError } from "../error/NotFoundError";
 
 class IlmoitustauluSyoteHandler {
-  async getFeed(kieli: Kieli): Promise<string> {
+  async getFeed(kieli: Kieli, ely: string | undefined, maakunta: string | undefined): Promise<string> {
     const siteUrl = process.env.FRONTEND_DOMAIN_NAME || "";
     const feed_url = siteUrl + "/api/kuulutukset";
     const feed = new RSS({ feed_url, site_url: siteUrl, title: "Kuulutukset" });
 
+    const terms: unknown[] = [
+      {
+        term: { "kieli.keyword": kieli },
+      },
+    ];
+    const elyId = ely ? kuntametadata.elyIdFromKey(ely) : undefined;
+    if (ely) {
+      if (elyId) {
+        terms.push({
+          term: { elyt: elyId },
+        });
+      } else {
+        throw new NotFoundError("ELY " + ely + " on tuntematon");
+      }
+    }
+
+    if (maakunta) {
+      try {
+        const maakuntaId = kuntametadata.idForMaakuntaName(maakunta);
+        terms.push({
+          term: { maakunnat: maakuntaId },
+        });
+      } catch (e) {
+        log.warn(e);
+        throw new NotFoundError("Maakunta " + maakunta + " on tuntematon");
+      }
+    }
     const searchResult = await openSearchClientIlmoitustauluSyote.query({
       query: {
         bool: {
-          must: [
-            {
-              term: { "kieli.keyword": kieli },
-            },
-          ],
+          must: terms,
         },
       },
       sort: [{ date: { order: "desc" } }],
     });
 
-    console.log(searchResult);
     if (searchResult.hits?.hits) {
       for (const item of searchResult.hits?.hits) {
         const kuulutus = item._source as IlmoitusKuulutus;
@@ -40,11 +65,13 @@ class IlmoitustauluSyoteHandler {
 
   public getCategories(item: IlmoitusKuulutus) {
     const categories: string[] = ["Kuulutukset ja ilmoitukset:Kuulutus"];
-    item.kunnat?.forEach((kunta) => {
-      categories.push("Kunta:" + kunta.trim());
+    item.kunnat?.forEach((kuntaId) => {
+      const kunta = kuntametadata.nameForKuntaId(kuntaId, Kieli.SUOMI);
+      categories.push("Kunta:" + kunta);
     });
-    item.maakunnat?.forEach((maakunta) => {
-      categories.push("Maakunta:" + maakunta.trim());
+    item.maakunnat?.forEach((maakuntaId) => {
+      const maakunta = kuntametadata.nameForMaakuntaId(maakuntaId, Kieli.SUOMI);
+      categories.push("Maakunta:" + maakunta);
     });
     item.vaylamuoto?.forEach((vaylamuoto) => {
       const translatedVaylamuoto = translate("projekti.projekti-vayla-muoto." + vaylamuoto, Kieli.SUOMI);

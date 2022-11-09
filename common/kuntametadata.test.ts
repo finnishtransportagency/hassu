@@ -21,6 +21,7 @@ describe("Metadata", () => {
     const pirkanmaa = kuntametadata.maakuntaForMaakuntaId(6);
     expect(pirkanmaa).to.eql({
       id: 6,
+      ely: 1019,
       nimi: {
         RUOTSI: "Birkaland",
         SUOMI: "Pirkanmaa",
