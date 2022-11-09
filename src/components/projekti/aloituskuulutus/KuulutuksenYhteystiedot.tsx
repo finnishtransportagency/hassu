@@ -7,11 +7,11 @@ import HassuGrid from "@components/HassuGrid";
 import HassuStack from "@components/layout/HassuStack";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import { AloitusKuulutusInput, KayttajaTyyppi, Projekti, YhteystietoInput } from "@services/api";
-import React, { Fragment, ReactElement } from "react";
+import { AloitusKuulutusInput, KayttajaTyyppi, Projekti, ProjektiKayttaja, Yhteystieto, YhteystietoInput } from "@services/api";
+import React, { ReactElement, Fragment, useMemo } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
-import { formatNimi } from "../../../util/userUtil";
+import projektiKayttajaToYhteystieto, { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 
 type KuulutusYhteystiedot = Pick<AloitusKuulutusInput, "kuulutusYhteystiedot">;
 
@@ -42,6 +42,28 @@ function KuulutuksenYhteystiedot({ projekti, disableFields }: Props): ReactEleme
     name: "aloitusKuulutus.kuulutusYhteystiedot.yhteysTiedot",
   });
 
+  const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useMemo(() => {
+    const kunnanEdustaja = projekti?.kayttoOikeudet?.find((hlo) => hlo.kayttajatunnus === projekti.suunnitteluSopimus?.yhteysHenkilo);
+    const projari = projekti?.kayttoOikeudet?.find((hlo) => hlo.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO);
+    const arr: ProjektiKayttaja[] = [];
+    if (kunnanEdustaja) {
+      arr.push(kunnanEdustaja);
+      projekti?.kayttoOikeudet?.forEach((hlo) => {
+        if (hlo.kayttajatunnus !== projekti.suunnitteluSopimus?.yhteysHenkilo) {
+          arr.push(hlo);
+        }
+      });
+    } else {
+      arr.push(projari as ProjektiKayttaja);
+      projekti?.kayttoOikeudet?.forEach((hlo) => {
+        if (hlo.tyyppi !== KayttajaTyyppi.PROJEKTIPAALLIKKO) {
+          arr.push(hlo);
+        }
+      });
+    }
+    return arr.map((hlo) => ({ kayttajatunnus: hlo.kayttajatunnus, ...projektiKayttajaToYhteystieto(hlo, projekti?.suunnitteluSopimus) }));
+  }, [projekti]);
+
   return (
     <Section>
       <SectionContent>
@@ -58,24 +80,23 @@ function KuulutuksenYhteystiedot({ projekti, disableFields }: Props): ReactEleme
           name={`aloitusKuulutus.kuulutusYhteystiedot.yhteysHenkilot`}
           render={({ field: { onChange, value, ...field } }) => (
             <FormGroup label="Projektiin tallennetut henkilöt" inlineFlex>
-              {projekti.kayttoOikeudet?.map(({ sukunimi, etunimi, tyyppi, kayttajatunnus }, index) => {
+              {projektiHenkilot.map((hlo, index) => {
                 const tunnuslista: string[] = value || [];
-                const nimi = formatNimi({ sukunimi, etunimi });
                 return (
                   <Fragment key={index}>
-                    {tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO ? (
-                      <CheckBox label={nimi} disabled checked {...field} />
+                    {index === 0 ? (
+                      <CheckBox label={yhteystietoVirkamiehelleTekstiksi(hlo)} disabled checked {...field} />
                     ) : (
                       <CheckBox
-                        label={nimi}
+                        label={yhteystietoVirkamiehelleTekstiksi(hlo)}
                         onChange={(event) => {
                           if (!event.target.checked) {
-                            onChange(tunnuslista.filter((tunnus) => tunnus !== kayttajatunnus));
+                            onChange(tunnuslista.filter((tunnus) => tunnus !== hlo.kayttajatunnus));
                           } else {
-                            onChange([...tunnuslista, kayttajatunnus]);
+                            onChange([...tunnuslista, hlo.kayttajatunnus]);
                           }
                         }}
-                        checked={tunnuslista.includes(kayttajatunnus)}
+                        checked={tunnuslista.includes(hlo.kayttajatunnus)}
                         {...field}
                       />
                     )}
