@@ -3,7 +3,6 @@ import { DBVaylaUser, Kielitiedot, SuunnitteluSopimusJulkaisu, Velho, Vuorovaiku
 import { translate } from "../../util/localization";
 import { linkHyvaksymisPaatos, linkSuunnitteluVaihe } from "../../../../common/links";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
-import union from "lodash/union";
 import { vaylaUserToYhteystieto2, yhteystietoPlusKunta } from "../../util/vaylaUserToYhteystieto";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { kuntametadata } from "../../../../common/kuntametadata";
