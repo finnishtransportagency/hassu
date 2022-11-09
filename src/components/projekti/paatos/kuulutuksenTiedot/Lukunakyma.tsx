@@ -1,6 +1,5 @@
 import React, { ReactElement, useMemo } from "react";
-import { HyvaksymisPaatosVaiheJulkaisu, KasittelynTila, Kieli } from "@services/api";
-import capitalize from "lodash/capitalize";
+import { HyvaksymisPaatosVaiheJulkaisu, Kieli } from "@services/api";
 import replace from "lodash/replace";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
