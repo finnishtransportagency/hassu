@@ -5,19 +5,14 @@ import { Link, Tabs } from "@mui/material";
 import { useRouter } from "next/router";
 import { UrlObject } from "url";
 import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
-import ProjektiConsumer from "../ProjektiConsumer";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
-import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { HyvaksymisPaatosVaiheTila, NahtavillaoloVaiheTila } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
-
-export enum PaatosTyyppi {
-  HYVAKSYMISPAATOS = "HYVAKSYMISPAATOS",
-  JATKOPAATOS1 = "JATKOPAATOS1",
-  JATKOPAATOS2 = "JATKOPAATOS2",
-}
+import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
+import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
+import { PaatosTyyppi } from "src/util/getPaatosSpecificData";
 
 interface PaatosTyyppiSpecificData {
   paatosRoutePart: string;
@@ -25,24 +20,24 @@ interface PaatosTyyppiSpecificData {
 }
 
 const paatosTyyppiSpecificContentMap: Record<PaatosTyyppi, PaatosTyyppiSpecificData> = {
-  HYVAKSYMISPAATOS: { paatosRoutePart: "hyvaksyminen", pageTitle: "Kuulutus hyväksymispäätöksestä" },
+  HYVAKSYMISPAATOS: { paatosRoutePart: "hyvaksymispaatos", pageTitle: "Kuulutus hyväksymispäätöksestä" },
   JATKOPAATOS1: { paatosRoutePart: "jatkaminen1", pageTitle: "Kuulutus hyväksymispäätöksen jatkamisesta" },
   JATKOPAATOS2: { paatosRoutePart: "jatkaminen2", pageTitle: "Kuulutus hyväksymispäätöksen jatkamisesta" },
 };
 
-export default function PaatosPageLayoutWrapper({ children, paatosTyyppi }: { children?: ReactNode; paatosTyyppi: PaatosTyyppi }) {
+export default function PaatosPageLayout({ children, paatosTyyppi }: { children?: ReactNode; paatosTyyppi: PaatosTyyppi }) {
   return (
     <ProjektiConsumer>
       {(projekti) => (
-        <PaatosPageLayout projekti={projekti} disableTabs={!projekti} paatosTyyppi={paatosTyyppi}>
+        <PaatosPageLayoutContent projekti={projekti} disableTabs={!projekti} paatosTyyppi={paatosTyyppi}>
           {children}
-        </PaatosPageLayout>
+        </PaatosPageLayoutContent>
       )}
     </ProjektiConsumer>
   );
 }
 
-function PaatosPageLayout({
+function PaatosPageLayoutContent({
   projekti,
   disableTabs,
   paatosTyyppi,

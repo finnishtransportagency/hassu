@@ -4,7 +4,7 @@ import { paivamaara } from "./paivamaaraSchema";
 
 export const hyvaksymispaatosKuulutusSchema = Yup.object().shape({
   oid: Yup.string().required(),
-  hyvaksymisPaatosVaihe: Yup.object()
+  paatos: Yup.object()
     .required()
     .shape({
       hallintoOikeus: Yup.string().required("Hallinto-oikeus on annettava"),

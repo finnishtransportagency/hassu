@@ -2,27 +2,31 @@ import Button from "@components/button/Button";
 import HassuSpinner from "@components/HassuSpinner";
 import Section from "@components/layout/Section";
 import { Stack } from "@mui/material";
-import { api, Status } from "@services/api";
+import { api, HyvaksymisPaatosVaiheJulkaisu, Status } from "@services/api";
 import log from "loglevel";
 import { useRouter } from "next/router";
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
-import { TilasiirtymaToiminto, TilasiirtymaTyyppi, HyvaksymisPaatosVaiheTila, Projekti } from "@services/api";
+import { TilasiirtymaToiminto, HyvaksymisPaatosVaiheTila, Projekti } from "@services/api";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./index";
 import Modaalit from "./Modaalit";
 import { projektiMeetsMinimumStatus } from "src/hooks/useIsOnAllowedProjektiRoute";
+import { paatosSpecificTilasiirtymaTyyppiMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { convertFormDataToTallennaProjektiInput } from "./KuulutuksenJaIlmoituksenEsikatselu";
 
 type PalautusValues = {
   syy: string;
 };
 interface Props {
   projekti: ProjektiLisatiedolla;
+  julkaisut: HyvaksymisPaatosVaiheJulkaisu[] | null | undefined;
+  paatosTyyppi: PaatosTyyppi;
 }
 
-export default function Painikkeet({ projekti }: Props) {
+export default function Painikkeet({ projekti, julkaisut, paatosTyyppi }: Props) {
   const { mutate: reloadProjekti } = useProjekti();
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
@@ -43,11 +47,11 @@ export default function Painikkeet({ projekti }: Props) {
 
   const saveHyvaksymisPaatosVaihe = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
-      await api.tallennaProjekti(formData);
+      await api.tallennaProjekti(convertFormDataToTallennaProjektiInput(formData, paatosTyyppi));
       if (reloadProjekti) await reloadProjekti();
       reset(formData);
     },
-    [reloadProjekti, reset]
+    [paatosTyyppi, reloadProjekti, reset]
   );
 
   const saveDraft = async (formData: KuulutuksenTiedotFormValues) => {
@@ -71,7 +75,7 @@ export default function Painikkeet({ projekti }: Props) {
       }
       setIsFormSubmitting(true);
       try {
-        await api.siirraTila({ oid: projekti.oid, toiminto, syy, tyyppi: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE });
+        await api.siirraTila({ oid: projekti.oid, toiminto, syy, tyyppi: paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi] });
         await reloadProjekti();
         showSuccessMessage(`${viesti} onnistui`);
       } catch (error) {
@@ -84,7 +88,7 @@ export default function Painikkeet({ projekti }: Props) {
         setOpenHyvaksy(false);
       }
     },
-    [setIsFormSubmitting, reloadProjekti, showSuccessMessage, showErrorMessage, setOpen, projekti]
+    [projekti, paatosTyyppi, reloadProjekti, showSuccessMessage, showErrorMessage]
   );
 
   const lahetaHyvaksyttavaksi = useCallback(
@@ -134,13 +138,12 @@ export default function Painikkeet({ projekti }: Props) {
     await vaihdaHyvaksymisPaatosVaiheenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
   }, [vaihdaHyvaksymisPaatosVaiheenTila]);
 
-  const voiMuokata = !projekti?.hyvaksymisPaatosVaiheJulkaisut || projekti.hyvaksymisPaatosVaiheJulkaisut.length < 1;
+  const voiMuokata = !julkaisut;
 
   const voiHyvaksya =
-    projekti.hyvaksymisPaatosVaiheJulkaisut &&
-    projekti.hyvaksymisPaatosVaiheJulkaisut.length &&
-    projekti.hyvaksymisPaatosVaiheJulkaisut[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1].tila ===
-      HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA &&
+    julkaisut &&
+    julkaisut.length &&
+    julkaisut[julkaisut.length - 1].tila === HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA &&
     projekti?.nykyinenKayttaja.onProjektipaallikko;
 
   return (

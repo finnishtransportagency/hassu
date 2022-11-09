@@ -8,7 +8,7 @@ export type useProjektiOptions = SWRConfiguration<ProjektiLisatiedolla | null, a
 export function useProjekti(config: useProjektiOptions = {}) {
   const router = useRouter();
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
-  if (!router.route.startsWith("/yllapito")) {
+  if (!router.asPath.startsWith("/yllapito")) {
     throw new Error("Inproper route for the use of useProjekti hook");
   }
   const { data: kayttaja } = useCurrentUser();

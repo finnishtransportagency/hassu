@@ -6,21 +6,16 @@ import { HallintoOikeus } from "@services/api";
 import Select from "@components/form/Select";
 import useTranslation from "next-translate/useTranslation";
 import { Controller } from "react-hook-form";
+import { KuulutuksenTiedotFormValues } from "@components/projekti/paatos/kuulutuksenTiedot/index";
 
 type Props = {};
-
-type FormFields = {
-  hyvaksymisPaatosVaihe: {
-    hallintoOikeus: HallintoOikeus;
-  };
-};
 
 export default function MuutoksenHaku({}: Props) {
   const {
     register,
     formState: { errors },
     control,
-  } = useFormContext<FormFields>();
+  } = useFormContext<KuulutuksenTiedotFormValues>();
 
   const { t } = useTranslation("common");
 
@@ -29,14 +24,14 @@ export default function MuutoksenHaku({}: Props) {
       <SectionContent>
         <h4 className="vayla-small-title">Muutoksen haku</h4>
         <p>
-          Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksiannosta.
-          Valitse pudostusvalikosta hallinto-oikeus, johon muutoksenhaku osoitetaan tehtävän.
+          Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksiannosta. Valitse
+          pudostusvalikosta hallinto-oikeus, johon muutoksenhaku osoitetaan tehtävän.
         </p>
 
         <div style={{ maxWidth: "30em" }}>
           <Controller
             control={control}
-            name="hyvaksymisPaatosVaihe.hallintoOikeus"
+            name="paatos.hallintoOikeus"
             render={({ field: { value, onChange, ...field } }) => (
               <Select
                 style={{ backgroundColor: "transparent" }}
@@ -45,8 +40,8 @@ export default function MuutoksenHaku({}: Props) {
                   label: ho ? t(`hallinto-oikeus.${ho}`) : "",
                   value: ho || "",
                 }))}
-                {...register(`hyvaksymisPaatosVaihe.hallintoOikeus`)}
-                error={errors?.hyvaksymisPaatosVaihe?.hallintoOikeus}
+                {...register(`paatos.hallintoOikeus`)}
+                error={errors?.paatos?.hallintoOikeus}
                 addEmptyOption
                 value={value || ""}
                 onChange={(event) => onChange(event.target.value)}

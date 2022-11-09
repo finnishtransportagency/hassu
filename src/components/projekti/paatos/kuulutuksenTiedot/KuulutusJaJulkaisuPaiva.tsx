@@ -8,18 +8,10 @@ import { api, LaskuriTyyppi } from "@services/api";
 import useSnackbars from "src/hooks/useSnackbars";
 import HassuGrid from "@components/HassuGrid";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
+import { KuulutuksenTiedotFormValues } from "@components/projekti/paatos/kuulutuksenTiedot/index";
 
-type Props = {};
-
-type FormFields = {
-  hyvaksymisPaatosVaihe: {
-    kuulutusPaiva: string | null;
-    kuulutusVaihePaattyyPaiva: string | null;
-  };
-};
-
-export default function KuulutusJaJulkaisuPaiva({}: Props) {
-  const { setValue } = useFormContext<FormFields>();
+export default function KuulutusJaJulkaisuPaiva() {
+  const { setValue, control } = useFormContext<KuulutuksenTiedotFormValues>();
 
   const { showErrorMessage } = useSnackbars();
 
@@ -27,7 +19,7 @@ export default function KuulutusJaJulkaisuPaiva({}: Props) {
     async (value: string) => {
       try {
         const paattymispaiva = await api.laskePaattymisPaiva(value, LaskuriTyyppi.HYVAKSYMISPAATOKSEN_KUULUTUSAIKA);
-        setValue("hyvaksymisPaatosVaihe.kuulutusVaihePaattyyPaiva", paattymispaiva);
+        setValue("paatos.kuulutusVaihePaattyyPaiva", paattymispaiva);
       } catch (error) {
         showErrorMessage("Kuulutuksen päättymispäivän laskennassa tapahtui virhe");
         log.error("Kuulutusvaiheen päättymispäivän laskennassa virhe", error);
@@ -52,11 +44,12 @@ export default function KuulutusJaJulkaisuPaiva({}: Props) {
             }}
             textFieldProps={{ required: true }}
             controllerProps={{
-              name: "hyvaksymisPaatosVaihe.kuulutusPaiva",
+              control,
+              name: "paatos.kuulutusPaiva",
             }}
           />
-          <HassuDatePickerWithController
-            controllerProps={{ name: "hyvaksymisPaatosVaihe.kuulutusVaihePaattyyPaiva" }}
+          <HassuDatePickerWithController<KuulutuksenTiedotFormValues>
+            controllerProps={{ control, name: "paatos.kuulutusVaihePaattyyPaiva" }}
             label="Kuulutusvaihe päättyy"
             disabled
           />

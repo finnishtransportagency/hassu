@@ -2,7 +2,7 @@
 import dayjs from "dayjs";
 import { formatDate } from "../../../src/util/dateUtils";
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
-import { lisaaPaatosJaAineistot, tallennaKasittelynTilaJaSiirraMenneisyyteen } from './hyvaksyntavaihe';
+import { lisaaPaatosJaAineistot, tallennaKasittelynTilaJaSiirraMenneisyyteen } from "./hyvaksyntavaihe";
 
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
@@ -50,17 +50,17 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
     cy.get("#kuulutuksentiedot_tab").click();
 
     const today = formatDate(dayjs());
-    cy.get('[name="hyvaksymisPaatosVaihe.kuulutusPaiva"]').should("be.enabled").type(today, {
+    cy.get('[name="paatos.kuulutusPaiva"]').should("be.enabled").type(today, {
       waitForAnimations: true,
     });
 
-    cy.get('[name="hyvaksymisPaatosVaihe.hallintoOikeus"]').select("HELSINKI");
-    cy.get('[name="hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').clear().type("test@vayla.fi");
-    cy.get('[name="hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').clear().type("test@vayla.fi");
+    cy.get('[name="paatos.hallintoOikeus"]').select("HELSINKI");
+    cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').clear().type("test@vayla.fi");
+    cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').clear().type("test@vayla.fi");
 
     cy.get("#save_and_send_for_acceptance").click();
     cy.contains("Lähetys onnistui", { timeout: 30000 });
-    cy.get("#kuulutuksentiedot_luku_tab").click();
+    cy.get("#kuulutuksentiedot_tab").click();
     cy.get("#button_open_acceptance_dialog")
       .should("be.enabled")
       .scrollIntoView({ offset: { top: 500, left: 0 } })
@@ -70,7 +70,7 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
     cy.contains("Hyväksyminen onnistui", { timeout: 30000 });
 
     cy.reload();
-    cy.get("#kuulutuksentiedot_luku_tab").click();
+    cy.get("#kuulutuksentiedot_tab").click();
 
     cy.contains("Kuulutus nähtäville asettamisesta on julkaistu");
 

@@ -10,6 +10,7 @@ import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { aineistoKategoriat } from "common/aineistoKategoriat";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
+import { PaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
@@ -37,20 +38,30 @@ const getDefaultValueForAineistoNahtavilla = (aineistot: Aineisto[] | undefined 
   }, {});
 };
 
-export default function Muokkausnakyma(): ReactElement {
+export default function Muokkausnakyma({
+  julkaisematonPaatos,
+  paatosTyyppi,
+}: Pick<PaatosSpecificData, "julkaisematonPaatos"> & { paatosTyyppi: PaatosTyyppi }): ReactElement {
   const { data: projekti } = useProjekti();
 
-  return <>{projekti && <MuokkausnakymaForm projekti={projekti} />}</>;
+  return (
+    <>{projekti && <MuokkausnakymaForm projekti={projekti} julkaisematonPaatos={julkaisematonPaatos} paatosTyyppi={paatosTyyppi} />}</>
+  );
 }
 
 interface MuokkausnakymaFormProps {
   projekti: ProjektiLisatiedolla;
+  paatosTyyppi: PaatosTyyppi;
 }
 
-function MuokkausnakymaForm({ projekti }: MuokkausnakymaFormProps) {
+function MuokkausnakymaForm({
+  projekti,
+  julkaisematonPaatos,
+  paatosTyyppi,
+}: MuokkausnakymaFormProps & Pick<PaatosSpecificData, "julkaisematonPaatos">) {
   const defaultValues: HyvaksymisPaatosVaiheAineistotFormValues = useMemo(() => {
     const hyvaksymisPaatos: AineistoInput[] =
-      projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos?.map(({ dokumenttiOid, nimi, jarjestys }) => ({
+      julkaisematonPaatos?.hyvaksymisPaatos?.map(({ dokumenttiOid, nimi, jarjestys }) => ({
         dokumenttiOid,
         jarjestys,
         nimi,
@@ -58,10 +69,10 @@ function MuokkausnakymaForm({ projekti }: MuokkausnakymaFormProps) {
 
     return {
       oid: projekti.oid,
-      aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(projekti.hyvaksymisPaatosVaihe?.aineistoNahtavilla),
+      aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(julkaisematonPaatos?.aineistoNahtavilla),
       hyvaksymisPaatos,
     };
-  }, [projekti]);
+  }, [julkaisematonPaatos, projekti.oid]);
 
   const formOptions: UseFormProps<HyvaksymisPaatosVaiheAineistotFormValues> = {
     resolver: yupResolver(nahtavillaoloAineistotSchema, { abortEarly: false, recursive: true }),
@@ -95,7 +106,7 @@ function MuokkausnakymaForm({ projekti }: MuokkausnakymaFormProps) {
               paatosSubtitle: "Päätös *",
             }}
           />
-          <HyvaksymisPaatosVaihePainikkeet />
+          <HyvaksymisPaatosVaihePainikkeet paatosTyyppi={paatosTyyppi} />
         </fieldset>
       </form>
     </FormProvider>

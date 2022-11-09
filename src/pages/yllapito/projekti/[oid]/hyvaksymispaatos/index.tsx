@@ -1,12 +1,12 @@
 import React from "react";
 import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
-import { PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import { PaatoksenKuulutuksenTiedotPage } from "@components/projekti/paatos/PaatosKuulutuksenTiedotPage";
+import { PaatosTyyppi } from "src/util/getPaatosSpecificData";
 
-export default function Jatkaminen1Wrapper() {
+export default function HyvaksyminenWrapper() {
   return (
     <ProjektiConsumer useProjektiOptions={{ revalidateOnMount: true }}>
-      {(projekti) => <PaatoksenKuulutuksenTiedotPage paatosTyyppi={PaatosTyyppi.JATKOPAATOS1} projekti={projekti} />}
+      {(projekti) => <PaatoksenKuulutuksenTiedotPage paatosTyyppi={PaatosTyyppi.HYVAKSYMISPAATOS} projekti={projekti} />}
     </ProjektiConsumer>
   );
 }

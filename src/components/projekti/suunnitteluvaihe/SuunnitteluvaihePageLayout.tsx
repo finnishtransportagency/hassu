@@ -33,10 +33,10 @@ function SuunnitteluPageLayout({
   children?: ReactNode;
 }): ReactElement {
   const router = useRouter();
-  const vuorovaikutusKierrosNumerot = useMemo(
-    () => projekti?.suunnitteluVaihe?.vuorovaikutukset?.map((vuorovaikutus) => vuorovaikutus.vuorovaikutusNumero) || [1],
-    [projekti?.suunnitteluVaihe?.vuorovaikutukset]
-  );
+  const vuorovaikutusKierrosNumerot = useMemo(() => {
+    const vuorovaikutukset = projekti?.suunnitteluVaihe?.vuorovaikutukset;
+    return vuorovaikutukset?.length ? vuorovaikutukset?.map((vuorovaikutus) => vuorovaikutus.vuorovaikutusNumero) : [1];
+  }, [projekti?.suunnitteluVaihe?.vuorovaikutukset]);
 
   const tabProps: LinkTabProps[] = useMemo(() => {
     const vuorovaikutusTabs = vuorovaikutusKierrosNumerot.map<LinkTabProps>((kierrosId) => {

@@ -169,7 +169,7 @@ describe("Migraatio", () => {
 
     cy.get("#save_and_send_for_acceptance").click();
     cy.contains("Lähetys onnistui", { timeout: 30000 });
-    cy.get("#kuulutuksentiedot_luku_tab").click({ force: true });
+    cy.get("#kuulutuksentiedot").click({ force: true });
     cy.get("#button_open_acceptance_dialog")
       .should("be.enabled")
       .scrollIntoView({ offset: { top: 500, left: 0 } })
@@ -179,7 +179,7 @@ describe("Migraatio", () => {
     cy.contains("Hyväksyminen onnistui", { timeout: 30000 });
 
     cy.reload();
-    cy.get("#kuulutuksentiedot_luku_tab").click({ force: true });
+    cy.get("#kuulutuksentiedot").click({ force: true });
 
     cy.contains("Kuulutus nähtäville asettamisesta on julkaistu");
   });

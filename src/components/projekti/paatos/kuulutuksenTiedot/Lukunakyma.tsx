@@ -18,36 +18,34 @@ import { ProjektiTestCommand } from "../../../../../common/testUtil.dev";
 import { formatDate } from "src/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { formatNimi } from "../../../../util/userUtil";
-import { PaatosTyyppi } from "../PaatosPageLayout";
+import { getPaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 
 interface Props {
-  hyvaksymisPaatosVaiheJulkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
+  julkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
   projekti: ProjektiLisatiedolla;
   paatosTyyppi: PaatosTyyppi;
 }
 
-type KasittelynTilaKey = keyof Omit<KasittelynTila, "__typename">;
-
-export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulkaisu, projekti, paatosTyyppi }: Props): ReactElement {
+export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paatosTyyppi }: Props): ReactElement {
   const { t } = useTranslation("common");
   const getPdft = (kieli: Kieli | undefined | null) => {
-    if (!hyvaksymisPaatosVaiheJulkaisu || !hyvaksymisPaatosVaiheJulkaisu.hyvaksymisPaatosVaihePDFt || !kieli) {
+    if (!julkaisu || !julkaisu.hyvaksymisPaatosVaihePDFt || !kieli) {
       return undefined;
     }
-    return hyvaksymisPaatosVaiheJulkaisu?.hyvaksymisPaatosVaihePDFt[kieli];
+    return julkaisu?.hyvaksymisPaatosVaihePDFt[kieli];
   };
-  const ensisijaisetPDFt = getPdft(hyvaksymisPaatosVaiheJulkaisu?.kielitiedot?.ensisijainenKieli);
-  const toissijaisetPDFt = getPdft(hyvaksymisPaatosVaiheJulkaisu?.kielitiedot?.toissijainenKieli);
+  const ensisijaisetPDFt = getPdft(julkaisu?.kielitiedot?.ensisijainenKieli);
+  const toissijaisetPDFt = getPdft(julkaisu?.kielitiedot?.toissijainenKieli);
 
-  const paatosRoute = useMemo(() => paatosTyyppiToKasittelynTilaPaatosRouteMap[paatosTyyppi], [paatosTyyppi]);
+  const { kasittelyntilaData } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
 
-  if (!hyvaksymisPaatosVaiheJulkaisu || !projekti) {
+  if (!julkaisu || !projekti) {
     return <></>;
   }
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
-  let { kuulutusPaiva, published } = examineKuulutusPaiva(hyvaksymisPaatosVaiheJulkaisu.kuulutusPaiva);
+  let { kuulutusPaiva, published } = examineKuulutusPaiva(julkaisu.kuulutusPaiva);
   let hyvaksymisPaatosVaiheHref: string | undefined;
   if (published) {
     hyvaksymisPaatosVaiheHref =
@@ -62,7 +60,7 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
           <p className="vayla-label md:col-span-3">Kuulutusvaihe päättyy</p>
           <p className="md:col-span-1 mb-0">{kuulutusPaiva}</p>
           <p className="md:col-span-1 mb-0">
-            <FormatDate date={hyvaksymisPaatosVaiheJulkaisu.kuulutusVaihePaattyyPaiva} />
+            <FormatDate date={julkaisu.kuulutusVaihePaattyyPaiva} />
           </p>
           {process.env.ENVIRONMENT != "prod" && (
             <div className="md:col-span-2 mb-0">
@@ -91,24 +89,24 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
           <p className="vayla-label md:col-span-1">Päätöksen päivä</p>
           <p className="vayla-label md:col-span-3">Päätöksen asianumero</p>
           <p className="md:col-span-1 mb-0">
-            <FormatDate date={projekti.kasittelynTila?.[paatosRoute]?.paatoksenPvm} />
+            <FormatDate date={kasittelyntilaData?.paatoksenPvm} />
           </p>
-          <p className="md:col-span-3 mb-0">{projekti.kasittelynTila?.[paatosRoute]?.asianumero}</p>
+          <p className="md:col-span-3 mb-0">{kasittelyntilaData?.asianumero}</p>
         </div>
         <p>Päätös ja sen liitteet löytyvät Päätös ja sen liitteenä oleva aineisto -välilehdeltä.</p>
       </Section>
       <Section>
         <h4 className="vayla-label">Muutoksenhaku</h4>
         <p>
-          Päätökseen voi valittamalla hakea muutosta {t(`hallinto-oikeus-ablatiivi.${hyvaksymisPaatosVaiheJulkaisu.hallintoOikeus}`)} 30
-          päivän kuluessa päätöksen tiedoksiannosta. Valitusosoituksen tiedosto löytyy Päätös ja sen liitteenä oleva aineisto -välilehdeltä.
+          Päätökseen voi valittamalla hakea muutosta {t(`hallinto-oikeus-ablatiivi.${julkaisu.hallintoOikeus}`)} 30 päivän kuluessa
+          päätöksen tiedoksiannosta. Valitusosoituksen tiedosto löytyy Päätös ja sen liitteenä oleva aineisto -välilehdeltä.
         </p>
       </Section>
       <Section>
         <SectionContent>
           <p className="vayla-label">Kuulutuksen yhteyshenkilöt</p>
           <p></p>
-          {hyvaksymisPaatosVaiheJulkaisu.yhteystiedot?.map((yhteystieto, index) => (
+          {julkaisu.yhteystiedot?.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
               {formatNimi(yhteystieto)}, puh. {yhteystieto.puhelinnumero},{" "}
               {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio})
@@ -119,8 +117,8 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
           <SectionContent>
             <p className="vayla-label">Kuulutus julkisella puolella</p>
             <p>
-              Kuulutus on ollut nähtävillä julkisella puolella {formatDate(hyvaksymisPaatosVaiheJulkaisu.kuulutusPaiva)}—
-              {formatDate(hyvaksymisPaatosVaiheJulkaisu.kuulutusVaihePaattyyPaiva)} välisen ajan.
+              Kuulutus on ollut nähtävillä julkisella puolella {formatDate(julkaisu.kuulutusPaiva)}—
+              {formatDate(julkaisu.kuulutusVaihePaattyyPaiva)} välisen ajan.
             </p>
           </SectionContent>
         ) : (
@@ -142,7 +140,7 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
         ) : (
           <SectionContent>
             <p className="vayla-label">Ladattavat kuulutukset ja ilmoitukset</p>
-            <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({lowerCase(hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.ensisijainenKieli)})</p>
+            <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({lowerCase(julkaisu.kielitiedot?.ensisijainenKieli)})</p>
             {ensisijaisetPDFt && (
               <div className="flex flex-col mb-4">
                 <div>
@@ -177,11 +175,9 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
               </div>
             )}
 
-            {hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.toissijainenKieli && (
+            {julkaisu.kielitiedot?.toissijainenKieli && (
               <div className="content mb-4">
-                <p>
-                  Kuulutus ja ilmoitus toissijaisella kielellä ({lowerCase(hyvaksymisPaatosVaiheJulkaisu.kielitiedot?.toissijainenKieli)})
-                </p>
+                <p>Kuulutus ja ilmoitus toissijaisella kielellä ({lowerCase(julkaisu.kielitiedot?.toissijainenKieli)})</p>
                 {toissijaisetPDFt && (
                   <div className="flex flex-col">
                     <div>
@@ -222,8 +218,8 @@ export default function HyvaksymisKuulutusLukunakyma({ hyvaksymisPaatosVaiheJulk
       </Section>
       <Section>
         <IlmoituksenVastaanottajatLukutila
-          ilmoituksenVastaanottajat={hyvaksymisPaatosVaiheJulkaisu.ilmoituksenVastaanottajat}
-          julkaisunTila={hyvaksymisPaatosVaiheJulkaisu.tila}
+          ilmoituksenVastaanottajat={julkaisu.ilmoituksenVastaanottajat}
+          julkaisunTila={julkaisu.tila}
           epaaktiivinen={epaaktiivinen}
         />
       </Section>

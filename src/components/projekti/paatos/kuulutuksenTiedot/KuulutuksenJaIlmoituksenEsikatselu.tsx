@@ -1,6 +1,6 @@
 import React from "react";
 import Section from "@components/layout/Section";
-import { Kieli, AsiakirjaTyyppi } from "@services/api";
+import { Kieli, AsiakirjaTyyppi, TallennaProjektiInput } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import lowerCase from "lodash/lowerCase";
 import Button from "@components/button/Button";
@@ -8,12 +8,23 @@ import { Box } from "@mui/material";
 import { useProjekti } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./index";
 import { useFormContext } from "react-hook-form";
+import { paatosSpecificRoutesMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 
 type Props = {
-  esikatselePdf: (formData: KuulutuksenTiedotFormValues, asiakirjaTyyppi: AsiakirjaTyyppi, kieli: Kieli) => void;
+  esikatselePdf: (formData: TallennaProjektiInput, asiakirjaTyyppi: AsiakirjaTyyppi, kieli: Kieli) => void;
+  paatosTyyppi: PaatosTyyppi;
 };
 
-export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Props) {
+export const convertFormDataToTallennaProjektiInput: (
+  formData: KuulutuksenTiedotFormValues,
+  paatosTyyppi: PaatosTyyppi
+) => TallennaProjektiInput = (formData, paatosTyyppi) => {
+  const { paatos, ...rest } = formData;
+  const { paatosVaiheAvain } = paatosSpecificRoutesMap[paatosTyyppi];
+  return { ...rest, [paatosVaiheAvain]: paatos };
+};
+
+export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paatosTyyppi }: Props) {
   const { data: projekti } = useProjekti();
 
   const { handleSubmit } = useFormContext<KuulutuksenTiedotFormValues>();
@@ -28,9 +39,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
   return (
     <Section>
       <h4 className="vayla-small-title">Kuulutuksen ja ilmoituksen esikatselu</h4>
-      <Notification type={NotificationType.INFO_GRAY}>
-        Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.{" "}
-      </Notification>
+      <Notification type={NotificationType.INFO_GRAY}>Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä. </Notification>
       <div style={{ marginTop: "4em" }}>
         {ensisijainenKieli && (
           <div>
@@ -42,7 +51,11 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
                 type="submit"
                 onClick={handleSubmit((formData) => {
                   console.log(formData);
-                  esikatselePdf(formData, AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS, ensisijainenKieli);
+                  esikatselePdf(
+                    convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
+                    AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS,
+                    ensisijainenKieli
+                  );
                 })}
               >
                 Kuulutuksen esikatselu
@@ -53,7 +66,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
                 type="button"
                 onClick={handleSubmit((formData) =>
                   esikatselePdf(
-                    formData,
+                    convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
                     AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE,
                     ensisijainenKieli
                   )
@@ -68,7 +81,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
                 onClick={handleSubmit((formData) => {
                   console.log(formData);
                   esikatselePdf(
-                    formData,
+                    convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
                     AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE,
                     ensisijainenKieli
                   );
@@ -82,7 +95,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
                 type="button"
                 onClick={handleSubmit((formData) =>
                   esikatselePdf(
-                    formData,
+                    convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
                     AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE,
                     ensisijainenKieli
                   )
@@ -96,7 +109,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
                 type="button"
                 onClick={handleSubmit((formData) =>
                   esikatselePdf(
-                    formData,
+                    convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
                     AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE,
                     ensisijainenKieli
                   )
@@ -116,7 +129,11 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
                 id={"preview_kuulutus_pdf_" + toissijainenKieli}
                 type="button"
                 onClick={handleSubmit((formData) =>
-                  esikatselePdf(formData, AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS, toissijainenKieli)
+                  esikatselePdf(
+                    convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
+                    AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS,
+                    toissijainenKieli
+                  )
                 )}
               >
                 Kuulutuksen esikatselu
@@ -127,7 +144,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
                 type="button"
                 onClick={handleSubmit((formData) =>
                   esikatselePdf(
-                    formData,
+                    convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
                     AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE,
                     toissijainenKieli
                   )
@@ -141,7 +158,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
                 type="button"
                 onClick={handleSubmit((formData) =>
                   esikatselePdf(
-                    formData,
+                    convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
                     AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE,
                     toissijainenKieli
                   )
@@ -155,7 +172,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
                 type="button"
                 onClick={handleSubmit((formData) =>
                   esikatselePdf(
-                    formData,
+                    convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
                     AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE,
                     toissijainenKieli
                   )
@@ -169,7 +186,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
                 type="button"
                 onClick={handleSubmit((formData) =>
                   esikatselePdf(
-                    formData,
+                    convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
                     AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE,
                     toissijainenKieli
                   )

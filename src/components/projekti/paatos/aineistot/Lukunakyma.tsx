@@ -6,24 +6,25 @@ import { HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaiheTila } from "@servi
 import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory } from "common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
 import React, { FC, useMemo } from "react";
-import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { formatDate, formatDateTime } from "src/util/dateUtils";
+import { getPaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import { examineJulkaisuPaiva } from "../../../../util/dateUtils";
 
-export default function Lukunakyma() {
-  const { data: projekti } = useProjekti();
+interface Props {
+  projekti: ProjektiLisatiedolla;
+  paatosTyyppi: PaatosTyyppi;
+}
 
-  const julkaisu = useMemo(
-    () => projekti?.hyvaksymisPaatosVaiheJulkaisut?.[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1],
-    [projekti]
-  );
+export default function Lukunakyma({ projekti, paatosTyyppi }: Props) {
+  const { viimeisinJulkaisu } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
 
   const { published } = examineJulkaisuPaiva(
-    julkaisu?.tila === HyvaksymisPaatosVaiheTila.HYVAKSYTTY,
-    julkaisu?.kuulutusPaiva
+    viimeisinJulkaisu?.tila === HyvaksymisPaatosVaiheTila.HYVAKSYTTY,
+    viimeisinJulkaisu?.kuulutusPaiva
   );
 
-  if (!projekti || !julkaisu) {
+  if (!projekti || !viimeisinJulkaisu) {
     return null;
   }
 
@@ -34,21 +35,16 @@ export default function Lukunakyma() {
         {published && (
           <p>
             Aineistot ovat nähtävillä palvelun julkisella puolella
-            {" " + formatDate(julkaisu.kuulutusVaihePaattyyPaiva) + " "}
+            {" " + formatDate(viimeisinJulkaisu.kuulutusVaihePaattyyPaiva) + " "}
             saakka.
           </p>
         )}
         <p>Päätös</p>
-        {julkaisu && julkaisu.hyvaksymisPaatos && (
+        {viimeisinJulkaisu && viimeisinJulkaisu.hyvaksymisPaatos && (
           <Stack direction="column" rowGap={2}>
-            {julkaisu.hyvaksymisPaatos.map((aineisto) => (
+            {viimeisinJulkaisu.hyvaksymisPaatos.map((aineisto) => (
               <span key={aineisto.dokumenttiOid}>
-                <HassuAineistoNimiExtLink
-                  tiedostoPolku={aineisto.tiedosto}
-                  aineistoNimi={aineisto.nimi}
-                  sx={{ mr: 3 }}
-                  target="_blank"
-                />
+                <HassuAineistoNimiExtLink tiedostoPolku={aineisto.tiedosto} aineistoNimi={aineisto.nimi} sx={{ mr: 3 }} target="_blank" />
                 {aineisto.tuotu && formatDateTime(aineisto.tuotu)}
               </span>
             ))}
@@ -57,7 +53,7 @@ export default function Lukunakyma() {
         <p className="mt-8">Päätöksen liitteenä oleva aineisto</p>
         <AineistoNahtavillaAccordion
           kategoriat={aineistoKategoriat.listKategoriat()}
-          julkaisu={julkaisu as HyvaksymisPaatosVaiheJulkaisu}
+          julkaisu={viimeisinJulkaisu as HyvaksymisPaatosVaiheJulkaisu}
         />
       </Section>
     </>
@@ -102,9 +98,7 @@ const AineistoNahtavillaAccordion: FC<AineistoNahtavillaAccordionProps> = ({ jul
                     ))}
                 </Stack>
               )}
-              {kategoria.alaKategoriat && (
-                <AineistoNahtavillaAccordion julkaisu={julkaisu} kategoriat={kategoria.alaKategoriat} />
-              )}
+              {kategoria.alaKategoriat && <AineistoNahtavillaAccordion julkaisu={julkaisu} kategoriat={kategoria.alaKategoriat} />}
             </>
           ),
         })),

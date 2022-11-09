@@ -7,7 +7,7 @@ export const getValidatedKierrosId = (router: NextRouter, projekti: ProjektiLisa
   const vuorovaikutukset = projekti.suunnitteluVaihe?.vuorovaikutukset;
   return typeof kierrosId === "string" &&
     !isInteger(kierrosId) &&
-    vuorovaikutukset?.some((vuorovaikutus) => vuorovaikutus.vuorovaikutusNumero === parseInt(kierrosId) || kierrosId === "1")
+    (vuorovaikutukset?.some((vuorovaikutus) => vuorovaikutus.vuorovaikutusNumero === parseInt(kierrosId)) || kierrosId === "1")
     ? parseInt(kierrosId)
     : undefined;
 };
