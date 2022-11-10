@@ -56,7 +56,11 @@ export default function EsitettavatYhteystiedot({ vuorovaikutusnro, projektiHenk
       <Section>
         <SectionContent>
           <p className="vayla-label mb-5">Vuorovaikuttamisen yhteyshenkilöt</p>
-          <StandardiYhteystiedotListana projekti={projekti} standardiYhteystiedot={v.esitettavatYhteystiedot} />
+          <StandardiYhteystiedotListana
+            projekti={projekti}
+            standardiYhteystiedot={v.esitettavatYhteystiedot}
+            pakotaProjariTaiKunnanEdustaja={true}
+          />
         </SectionContent>
       </Section>
     );
