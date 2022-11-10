@@ -67,7 +67,13 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                 icon="history"
                 onClick={(e) => {
                   e.preventDefault();
-                  window.location.assign(ProjektiTestCommand.oid(projekti.oid).hyvaksymispaatosMenneisyyteen());
+                  if (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
+                    window.location.assign(ProjektiTestCommand.oid(projekti.oid).hyvaksymispaatosMenneisyyteen());
+                  } else if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
+                    window.location.assign(ProjektiTestCommand.oid(projekti.oid).jatkopaatos1Menneisyyteen());
+                  } else if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
+                    // TODO Lisää JATKOPAATOS2 toiminnot
+                  }
                 }}
               >
                 Siirrä päivän verran menneisyyteen (TESTAAJILLE)
@@ -76,7 +82,13 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                 icon="history"
                 onClick={(e) => {
                   e.preventDefault();
-                  window.location.assign(ProjektiTestCommand.oid(projekti.oid).hyvaksymispaatosVuosiMenneisyyteen());
+                  if (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
+                    window.location.assign(ProjektiTestCommand.oid(projekti.oid).hyvaksymispaatosVuosiMenneisyyteen());
+                  } else if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
+                    window.location.assign(ProjektiTestCommand.oid(projekti.oid).jatkopaatos1VuosiMenneisyyteen());
+                  } else if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
+                    // TODO Lisää JATKOPAATOS2 toiminnot
+                  }
                 }}
               >
                 Siirrä vuoden verran menneisyyteen (TESTAAJILLE)
