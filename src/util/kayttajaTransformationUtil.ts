@@ -1,4 +1,4 @@
-import { Kieli, ProjektiKayttaja, SuunnitteluSopimus, Yhteystieto } from "@services/api";
+import { Kieli, ProjektiKayttaja, SuunnitteluSopimus, Yhteystieto, YhteystietoInput } from "@services/api";
 import { kuntametadata } from "common/kuntametadata";
 
 export default function projektiKayttajaToYhteystieto(
@@ -16,7 +16,7 @@ export default function projektiKayttajaToYhteystieto(
   };
 }
 
-export function yhteystietoVirkamiehelleTekstiksi(yhteystieto: Yhteystieto & { kayttajatunnus?: string | null }) {
+export function yhteystietoVirkamiehelleTekstiksi(yhteystieto: (Yhteystieto | YhteystietoInput) & { kayttajatunnus?: string | null }) {
   const { etunimi, sukunimi, kayttajatunnus, organisaatio, kunta, puhelinnumero, sahkoposti } = yhteystieto;
   return `${etunimi} ${sukunimi}${kayttajatunnus ? `, ${kayttajatunnus},` : ""} (${
     kunta ? kuntametadata.nameForKuntaId(kunta, Kieli.SUOMI) : organisaatio

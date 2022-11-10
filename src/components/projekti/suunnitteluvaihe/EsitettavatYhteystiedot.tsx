@@ -1,6 +1,6 @@
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
-import { KayttajaTyyppi, YhteystietoInput } from "@services/api";
+import { Yhteystieto, YhteystietoInput } from "@services/api";
 import Section from "@components/layout/Section";
 import { Fragment, ReactElement, useMemo } from "react";
 import Button from "@components/button/Button";
@@ -14,7 +14,7 @@ import IconButton from "@components/button/IconButton";
 import StandardiYhteystiedotListana from "../common/StandardiYhteystiedotListana";
 import { useProjekti } from "src/hooks/useProjekti";
 import { VuorovaikutusFormValues } from "./SuunnitteluvaiheenVuorovaikuttaminen";
-import { formatNimi } from "../../../util/userUtil";
+import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 
 const defaultYhteystieto: YhteystietoInput = {
   etunimi: "",
@@ -26,9 +26,10 @@ const defaultYhteystieto: YhteystietoInput = {
 
 interface Props {
   vuorovaikutusnro: number;
+  projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[];
 }
 
-export default function EsitettavatYhteystiedot({ vuorovaikutusnro }: Props): ReactElement {
+export default function EsitettavatYhteystiedot({ vuorovaikutusnro, projektiHenkilot }: Props): ReactElement {
   const { data: projekti } = useProjekti();
 
   const v = useMemo(() => {
@@ -76,24 +77,24 @@ export default function EsitettavatYhteystiedot({ vuorovaikutusnro }: Props): Re
             name={`suunnitteluVaihe.vuorovaikutus.esitettavatYhteystiedot.yhteysHenkilot`}
             render={({ field: { onChange, value, ...field } }) => (
               <FormGroup label="Projektiin tallennetut henkilöt" inlineFlex>
-                {projekti.kayttoOikeudet?.map(({ etunimi, sukunimi, tyyppi, kayttajatunnus }, index) => {
+                {projektiHenkilot.map((hlo, index) => {
                   const tunnuslista = value || [];
                   const nimi = formatNimi({ sukunimi, etunimi });
                   return (
                     <Fragment key={index}>
-                      {tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO ? (
-                        <CheckBox label={nimi} disabled checked {...field} />
+                      {index === 0 ? (
+                        <CheckBox label={yhteystietoVirkamiehelleTekstiksi(hlo)} disabled checked {...field} />
                       ) : (
                         <CheckBox
-                          label={nimi}
+                          label={yhteystietoVirkamiehelleTekstiksi(hlo)}
                           onChange={(event) => {
                             if (!event.target.checked) {
-                              onChange(tunnuslista.filter((tunnus) => tunnus !== kayttajatunnus));
+                              onChange(tunnuslista.filter((tunnus) => tunnus !== hlo.kayttajatunnus));
                             } else {
-                              onChange([...tunnuslista, kayttajatunnus]);
+                              onChange([...tunnuslista, hlo.kayttajatunnus]);
                             }
                           }}
-                          checked={tunnuslista.includes(kayttajatunnus)}
+                          checked={tunnuslista.includes(hlo.kayttajatunnus)}
                           {...field}
                         />
                       )}
