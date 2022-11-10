@@ -31,8 +31,8 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
     NAHTAVILLAOLO: 2,
     HYVAKSYMISMENETTELYSSA: 3,
     HYVAKSYTTY: 4,
-    JATKOPAATOS_1: 5,
-    JATKOPAATOS_2: 6,
+    JATKOPAATOS_1: 4,
+    JATKOPAATOS_2: 4,
     EPAAKTIIVINEN_1: -1,
     EPAAKTIIVINEN_2: -1,
     EPAAKTIIVINEN_3: -1,
@@ -50,12 +50,13 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
             <ProjektiJulkinenStepper
               oid={projekti.oid}
               activeStep={statusStep[projekti.status || Status.EI_JULKAISTU]}
+              projektiStatus={projekti.status}
               selectedStep={selectedStep}
               vertical={smallScreen ? true : undefined}
             />
           </Section>
           <Section noDivider>
-            {title && (<h2 className="vayla-title">{title}</h2>)}
+            {title && <h2 className="vayla-title">{title}</h2>}
             {children}
           </Section>
         </div>

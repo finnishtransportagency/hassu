@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useMemo } from "react";
 import { styled } from "@mui/material/styles";
 import Stepper from "@mui/material/Stepper";
 import Step, { stepClasses, StepProps } from "@mui/material/Step";
@@ -9,12 +9,15 @@ import StepConnector, { stepConnectorClasses } from "@mui/material/StepConnector
 import { StepIconProps } from "@mui/material/StepIcon";
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
 import HassuLink from "@components/HassuLink";
+import { Status } from "@services/api";
+import { UrlObject } from "url";
 
 interface Props {
   oid: string;
   activeStep: number;
   selectedStep: number;
   vertical?: true;
+  projektiStatus: Status | null | undefined;
 }
 
 const HassuStep = styled(Step)<StepProps>({
@@ -102,7 +105,13 @@ function HassuStepIcon(props: StepIconProps) {
   return <HassuStepIconRoot ownerState={{ completed, active, selected }} className={className}></HassuStepIconRoot>;
 }
 
-export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep, vertical }: Props): ReactElement {
+const statusToPaatosLinkMap: Partial<Record<Status, string>> = {
+  HYVAKSYTTY: `/suunnitelma/[oid]/hyvaksymispaatos`,
+  JATKOPAATOS_1: `/suunnitelma/[oid]/jatkopaatos1`,
+  JATKOPAATOS_2: `/suunnitelma/[oid]/jatkopaatos2`,
+};
+
+export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep, vertical, projektiStatus }: Props): ReactElement {
   const { t } = useTranslation("projekti");
 
   const steps = [
@@ -113,19 +122,25 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
     t(`projekti-vaiheet.paatos`),
   ];
 
-  const links = [
-    `/suunnitelma/${oid}/aloituskuulutus`,
-    `/suunnitelma/${oid}/suunnittelu`,
-    `/suunnitelma/${oid}/nahtavillaolo`,
-    `/suunnitelma/${oid}/hyvaksymismenettelyssa`,
-    `/suunnitelma/${oid}/hyvaksymispaatos`,
-  ];
+  const paatosLink = (projektiStatus && statusToPaatosLinkMap[projektiStatus]) || statusToPaatosLinkMap[Status.HYVAKSYTTY];
+
+  const urls: UrlObject[] = useMemo(
+    () =>
+      [
+        `/suunnitelma/[oid]/aloituskuulutus`,
+        `/suunnitelma/[oid]/suunnittelu`,
+        `/suunnitelma/[oid]/nahtavillaolo`,
+        `/suunnitelma/[oid]/hyvaksymismenettelyssa`,
+        paatosLink,
+      ].map<UrlObject>((pathname) => ({ pathname, query: { oid } })),
+    [oid, paatosLink]
+  );
 
   const createStep = (label: string, index: number) => {
     return (
       <HassuStep key={label}>
         {index <= activeStep && (
-          <HassuLink id={"sidenavi_" + index} key={index} href={links[index]}>
+          <HassuLink id={"sidenavi_" + index} key={index} href={urls[index]}>
             <HassuLabel
               componentsProps={{ label: { style: { fontWeight: selectedStep === index ? 700 : 400 } } }}
               StepIconComponent={HassuStepIcon}

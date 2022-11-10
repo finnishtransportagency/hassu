@@ -14,9 +14,8 @@ import { HyvaksymisPaatosVaiheJulkaisuJulkinen } from "@services/api";
 
 interface Props {
   kuulutus: HyvaksymisPaatosVaiheJulkaisuJulkinen | null | undefined;
-  jatkopaatos?: boolean;
 }
-export default function HyvaksymispaatosTiedot({ kuulutus, jatkopaatos }: Props): ReactElement {
+export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElement {
   const { t } = useTranslation();
   const { data: projekti } = useProjektiJulkinen();
   const velho = kuulutus?.velho;
@@ -54,11 +53,6 @@ export default function HyvaksymispaatosTiedot({ kuulutus, jatkopaatos }: Props)
 
   return (
     <>
-      <Section noDivider>
-        <h2 className="vayla-title">
-          {jatkopaatos ? t("Kuulutus hyväksymispäätöksen jatkamisesta") : t("projekti:ui-otsikot.kuulutus_suunnitelman_hyvaksymisesta")}
-        </h2>
-      </Section>
       <Section noDivider>
         <KeyValueTable rows={keyValueData}></KeyValueTable>
       </Section>

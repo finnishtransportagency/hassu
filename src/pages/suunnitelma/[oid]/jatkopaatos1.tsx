@@ -10,12 +10,12 @@ export default function Hyvaksymispaatos(): ReactElement {
   const kuulutus = projekti?.hyvaksymisPaatosVaihe;
 
   if (!projekti || !kuulutus) {
-    return <></>;
+    return <div />;
   }
 
   return (
-    <PaatosPageLayout pageTitle={t("ui-otsikot.kuulutus_suunnitelman_hyvaksymisesta")}>
-      <HyvaksymispaatosTiedot kuulutus={projekti.hyvaksymisPaatosVaihe} />
+    <PaatosPageLayout pageTitle={t("ui-otsikot.kuulutus_hyvaksymispaatoksen_jatkamisesta")}>
+      <HyvaksymispaatosTiedot kuulutus={projekti.jatkoPaatos1Vaihe} />,
     </PaatosPageLayout>
   );
 }
