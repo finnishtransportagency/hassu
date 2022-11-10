@@ -11,6 +11,9 @@ export const TestAction = {
   RESET_NAHTAVILLAOLO: "reset_nahtavillaolo",
   RESET_HYVAKSYMISVAIHE: "reset_hyvaksymisvaihe",
   MIGROI: "migroi",
+  RESET_JATKOPAATOS1VAIHE: "reset_jatkopaatos1vaihe",
+  JATKOPAATOS1_MENNEISYYTEEN: "jatkopaatos1menneisyyteen",
+  JATKOPAATOS1_VUOSI_MENNEISYYTEEN: "jatkopaatos1vuosimenneisyyteen",
 };
 
 const QUERYPARAM_ACTION = "action";
@@ -63,6 +66,18 @@ export class ProjektiTestCommand {
       hyvaksymispaatosPaivamaara,
       hyvaksymispaatosAsianumero,
     });
+  }
+
+  resetJatkopaatos1vaihe() {
+    return this.createActionUrl(TestAction.RESET_JATKOPAATOS1VAIHE);
+  }
+
+  jatkopaatos1Menneisyyteen() {
+    return this.createActionUrl(TestAction.JATKOPAATOS1_MENNEISYYTEEN);
+  }
+
+  jatkopaatos1VuosiMenneisyyteen() {
+    return this.createActionUrl(TestAction.JATKOPAATOS1_VUOSI_MENNEISYYTEEN);
   }
 
   createActionUrl(action, queryParams) {
@@ -144,6 +159,24 @@ export class ProjektiTestCommandExecutor {
   onMigraatio(callback) {
     if (this._action === TestAction.MIGROI) {
       return callback(this._oid, this._targetStatus, this._hyvaksymispaatosPaivamaara, this._hyvaksymispaatosAsianumero);
+    }
+  }
+
+  onResetJatkopaatos1vaihe(callback) {
+    if (this._action === TestAction.RESET_JATKOPAATOS1VAIHE) {
+      return callback(this._oid);
+    }
+  }
+
+  onJatkopaatos1Menneisyyteen(callback) {
+    if (this._action === TestAction.JATKOPAATOS1_MENNEISYYTEEN) {
+      return callback(this._oid);
+    }
+  }
+
+  onJatkopaatos1VuosiMenneisyyteen(callback) {
+    if (this._action === TestAction.JATKOPAATOS1_VUOSI_MENNEISYYTEEN) {
+      return callback(this._oid);
     }
   }
 }

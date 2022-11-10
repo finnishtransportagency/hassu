@@ -64,7 +64,7 @@ export default function Hyvaksymispaatos(): ReactElement {
             {
               label: "Jatkopäätös",
               content: <HyvaksymispaatosTiedot kuulutus={projekti.jatkoPaatos1Vaihe} jatkopaatos={true} />,
-              tabId: "aineisto_luku_tab",
+              tabId: "jatkopaatos_tab",
             },
           ]}
         ></Tabs>
