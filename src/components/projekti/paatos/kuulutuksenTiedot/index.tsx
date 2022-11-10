@@ -19,7 +19,8 @@ import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 import PaatoksenPaiva from "@components/projekti/paatos/kuulutuksenTiedot/PaatoksenPaiva";
-import { getPaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { getPaatosSpecificData, paatosIsJatkopaatos, PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import Voimassaolovuosi from "./Voimassaolovuosi";
 
 type paatosInputValues = Omit<HyvaksymisPaatosVaiheInput, "hallintoOikeus"> & {
   hallintoOikeus: HyvaksymisPaatosVaiheInput["hallintoOikeus"] | "";
@@ -108,6 +109,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
               <fieldset disabled={!isAllowedOnRoute || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden}>
                 <KuulutusJaJulkaisuPaiva />
                 <PaatoksenPaiva paatosTyyppi={paatosTyyppi} paatos={kasittelyntilaData} projektiOid={projekti.oid} />
+                {paatosIsJatkopaatos(paatosTyyppi) && <Voimassaolovuosi />}
                 <MuutoksenHaku />
                 <KuulutuksessaEsitettavatYhteystiedot
                   projekti={projekti}

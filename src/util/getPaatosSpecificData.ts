@@ -14,6 +14,9 @@ export enum PaatosTyyppi {
   JATKOPAATOS2 = "JATKOPAATOS2",
 }
 
+export const paatosIsJatkopaatos = (paatosTyyppi: PaatosTyyppi) =>
+  [PaatosTyyppi.JATKOPAATOS1, PaatosTyyppi.JATKOPAATOS2].includes(paatosTyyppi);
+
 export const paatosSpecificTilasiirtymaTyyppiMap: Record<PaatosTyyppi, TilasiirtymaTyyppi> = {
   HYVAKSYMISPAATOS: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
   JATKOPAATOS1: TilasiirtymaTyyppi.JATKOPAATOS_1,

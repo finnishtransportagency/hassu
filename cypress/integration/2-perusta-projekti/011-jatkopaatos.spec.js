@@ -75,11 +75,11 @@ describe("10 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
 
     // Test that navigation now has "1. jatkaminen" link
 
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/jatkaminen1", { timeout: 30000 }).reload();
-    cy.contains("Päätös ja päätöksen liitteenä oleva aineistot");
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/jatkaminen1/aineisto", { timeout: 30000 }).reload();
+    cy.contains("Päätös ja päätöksen liitteenä oleva aineisto");
   });
 
-  it("Lisaa paatokset ja aineistot", { scrollBehavior: "center" }, () => {
+  it("Lisää päätökset ja aineistot", { scrollBehavior: "center" }, () => {
     cy.login("A1");
 
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/jatkaminen1", { timeout: 30000 });
@@ -95,7 +95,7 @@ describe("10 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
     cy.get("#select_valitut_aineistot_button").click();
 
-    cy.get("#save_jatkopaatos1vaihe_draft").click();
+    cy.get("#save_hyvaksymispaatosvaihe_draft").click();
     cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank  page otherwise
 
     cy.reload();
@@ -120,21 +120,21 @@ describe("10 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     cy.get("#kuulutuksentiedot_tab").click();
 
     const today = formatDate(dayjs());
-    cy.get('[name="jatkoPaatos1Vaihe.kuulutusPaiva"]').should("be.enabled").type(today, {
+    cy.get('[name="paatos.kuulutusPaiva"]').should("be.enabled").type(today, {
       waitForAnimations: true,
     });
 
     const plus4years = dayjs().add(4, "year").year().toString();
     cy.get("#voimassaolovuosi").select(plus4years);
 
-    cy.get('[name="jatkoPaatos1Vaihe.hallintoOikeus"]').select("HELSINKI");
-    cy.get('[name="jatkoPaatos1Vaihe.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').clear().type("test@vayla.fi");
-    cy.get('[name="jatkoPaatos1Vaihe.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').clear().type("test@vayla.fi");
+    cy.get('[name="paatos.hallintoOikeus"]').select("HELSINKI");
+    cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').clear().type("test@vayla.fi");
+    cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').clear().type("test@vayla.fi");
 
     cy.get("#save_and_send_for_acceptance").click();
     cy.contains("Lähetys onnistui", { timeout: 30000 });
 
-    cy.get("#kuulutuksentiedot_luku_tab").click();
+    cy.get("#kuulutuksentiedot_tab").click();
     cy.get("#button_open_acceptance_dialog")
       .should("be.enabled")
       .scrollIntoView({ offset: { top: 500, left: 0 } })
@@ -144,12 +144,11 @@ describe("10 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     cy.contains("Hyväksyminen onnistui", { timeout: 15000 });
 
     cy.reload();
-    cy.get("#kuulutuksentiedot_luku_tab").click();
+    cy.get("#kuulutuksentiedot_tab").click();
 
     cy.contains("Kuulutus nähtäville asettamisesta on julkaistu"); //TODO: vaihda jatkovaiheen tekstit
 
-    cy.visit(Cypress.env("host") + "/suunnitelma/" + oid + "/hyvaksymispaatos");
-    cy.get("#jatkopaatos_tab").click();
+    cy.visit(Cypress.env("host") + "/suunnitelma/" + oid + "/jatkopaatos1");
     cy.contains("Kuulutus hyväksymispäätöksen jatkamisesta");
 
     // cy.visit(Cypress.env("host") + "/sv/suunnitelma/" + oid + "/hyvaksymispaatos");

@@ -72,8 +72,8 @@ const jatkopaatosPaatosSuunnitelmatProps: SuunnitelmatJaAineistotProps = {
   sectionInfoText:
     "Liitä kuulutukselle Liikenne- ja viestintäviraston päätös sekä jatkopäätös. Liitettävät päätökset sekä päätösten liitteenä olevat aineistot haetaan Projektivelhosta. Päätökset ja sen liitteenä oleva aineisto julkaistaan palvelun julkisella puolella kuulutuksen julkaisupäivänä.",
   paatos: {
-    paatosInfoText: "Päätös ja jatkopäätös *",
-    paatosSubtitle:
+    paatosSubtitle: "Päätös ja jatkopäätös *",
+    paatosInfoText:
       "Liitä Liikenne- ja viestintäviraston päätökset suunnitelman hyväksymisestä sekä päätös suunnitelman voimassaoloajan pidentämisestä. Jatkopäätöksen päivämäärä sekä asiatunnus löytyvät automaattisesti Kuulutuksen tiedot -välilehdeltä.",
   },
 };
