@@ -5,14 +5,14 @@ import { Link, Tabs } from "@mui/material";
 import { useRouter } from "next/router";
 import { UrlObject } from "url";
 import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
-import { HyvaksymisPaatosVaiheTila, NahtavillaoloVaiheTila } from "@services/api";
+import { HyvaksymisPaatosVaiheTila } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
-import { PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { PaatosTyyppi, getPaatosSpecificData } from "src/util/getPaatosSpecificData";
 
 interface PaatosTyyppiSpecificData {
   paatosRoutePart: string;
@@ -50,22 +50,16 @@ function PaatosPageLayoutContent({
 }): ReactElement {
   const router = useRouter();
 
-  const nahtavillaolovaiheJulkaisu = projekti.nahtavillaoloVaiheJulkaisut?.[projekti.nahtavillaoloVaiheJulkaisut.length - 1];
-  const migroitu = nahtavillaolovaiheJulkaisu?.tila == NahtavillaoloVaiheTila.MIGROITU;
+  const { julkaisut, viimeisinJulkaisu } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
+
+  const migroitu = viimeisinJulkaisu?.tila == HyvaksymisPaatosVaiheTila.MIGROITU;
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
   const { paatosRoutePart, pageTitle } = useMemo(() => paatosTyyppiSpecificContentMap[paatosTyyppi], [paatosTyyppi]);
 
-  const kertaalleenLahetettyHyvaksyttavaksi = useMemo(
-    () => projekti?.hyvaksymisPaatosVaiheJulkaisut && projekti.hyvaksymisPaatosVaiheJulkaisut.length >= 1,
-    [projekti.hyvaksymisPaatosVaiheJulkaisut]
-  );
+  const kertaalleenLahetettyHyvaksyttavaksi = !!julkaisut?.length;
 
-  const hyvaksymisPaatosVaiheJulkaisu = projekti?.hyvaksymisPaatosVaiheJulkaisut
-    ? projekti.hyvaksymisPaatosVaiheJulkaisut[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1]
-    : null;
-
-  let { kuulutusPaiva, published } = examineKuulutusPaiva(hyvaksymisPaatosVaiheJulkaisu?.kuulutusPaiva);
+  let { kuulutusPaiva, published } = examineKuulutusPaiva(viimeisinJulkaisu?.kuulutusPaiva);
 
   const tabProps: LinkTabProps[] = useMemo(() => {
     const paatosRoute = paatosRoutePart;
@@ -138,17 +132,17 @@ function PaatosPageLayoutContent({
         )}
         {!epaaktiivinen && (
           <Section noDivider>
-            {!published && hyvaksymisPaatosVaiheJulkaisu?.tila === HyvaksymisPaatosVaiheTila.HYVAKSYTTY && (
+            {!published && viimeisinJulkaisu?.tila === HyvaksymisPaatosVaiheTila.HYVAKSYTTY && (
               <Notification type={NotificationType.WARN}>Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä {kuulutusPaiva}.</Notification>
             )}
-            {published && hyvaksymisPaatosVaiheJulkaisu?.tila === HyvaksymisPaatosVaiheTila.HYVAKSYTTY && (
+            {published && viimeisinJulkaisu?.tila === HyvaksymisPaatosVaiheTila.HYVAKSYTTY && (
               <Notification type={NotificationType.INFO_GREEN}>
                 Kuulutus nähtäville asettamisesta on julkaistu {kuulutusPaiva}. Projekti näytetään kuulutuspäivästä lasketun määräajan
                 jälkeen palvelun julkisella puolella suunnittelussa olevana. Kuulutusvaihe päättyy{" "}
-                <FormatDate date={hyvaksymisPaatosVaiheJulkaisu.kuulutusVaihePaattyyPaiva} />.
+                <FormatDate date={viimeisinJulkaisu.kuulutusVaihePaattyyPaiva} />.
               </Notification>
             )}
-            {hyvaksymisPaatosVaiheJulkaisu && hyvaksymisPaatosVaiheJulkaisu?.tila === HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA && (
+            {viimeisinJulkaisu && viimeisinJulkaisu?.tila === HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA && (
               <Notification type={NotificationType.WARN}>
                 Kuulutus nähtäville asettamisesta odottaa hyväksyntää. Tarkasta kuulutus ja a) hyväksy tai b) palauta kuulutus
                 korjattavaksi, jos havaitset puutteita tai virheen.
