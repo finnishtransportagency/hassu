@@ -93,10 +93,11 @@ export abstract class CommonPdf extends AbstractPdf {
   protected moreInfoElements(
     yhteystiedot: Yhteystieto[] | null | undefined,
     yhteysHenkilot?: string[] | undefined | null,
-    showOrganization = true
+    showOrganization = true,
+    pakotaProjariTaiKunnanEdustaja = false
   ): PDFKit.PDFStructureElementChild[] {
     return this.kutsuAdapter
-      .yhteystiedot(this.kieli, yhteystiedot, yhteysHenkilot)
+      .yhteystiedot(this.kieli, yhteystiedot, yhteysHenkilot, pakotaProjariTaiKunnanEdustaja)
       .map(({ organisaatio, etunimi, sukunimi, puhelinnumero, sahkoposti, titteli }) => {
         return () => {
           const noSpamSahkoposti = sahkoposti.replace(/@/g, "(at)");

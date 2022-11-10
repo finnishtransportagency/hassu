@@ -443,7 +443,7 @@ function adaptVuorovaikutukset(dbProjekti: DBProjekti): API.VuorovaikutusJulkine
         suunnittelumateriaali: adaptLinkkiByAddingTypename(vuorovaikutus.suunnittelumateriaali),
         esittelyaineistot: adaptAineistotJulkinen(dbProjekti.oid, vuorovaikutus.esittelyaineistot, undefined, julkaisuPaiva),
         suunnitelmaluonnokset: adaptAineistotJulkinen(dbProjekti.oid, vuorovaikutus.suunnitelmaluonnokset, undefined, julkaisuPaiva),
-        yhteystiedot: adaptStandardiYhteystiedotToAPIYhteystiedot(dbProjekti, vuorovaikutus.esitettavatYhteystiedot),
+        yhteystiedot: adaptStandardiYhteystiedotToAPIYhteystiedot(dbProjekti, vuorovaikutus.esitettavatYhteystiedot, true),
         vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(dbProjekti.oid, vuorovaikutus.vuorovaikutusPDFt),
       };
       return vuorovaikutusJulkinen;

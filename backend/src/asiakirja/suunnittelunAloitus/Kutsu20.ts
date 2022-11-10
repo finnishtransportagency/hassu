@@ -173,7 +173,8 @@ export class Kutsu20 extends CommonPdf {
         this.moreInfoElements(
           this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysTiedot,
           this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysHenkilot,
-          false
+          true, // näytä organisaatio
+          true // pakota projari tai kunnan edustaja
         )
       ),
 

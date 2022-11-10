@@ -1,4 +1,5 @@
 import {
+  DBProjekti,
   DBVaylaUser,
   LocalizedMap,
   StandardiYhteystiedot,
@@ -22,7 +23,7 @@ import { fileService } from "../../../files/fileService";
 import { cloneDeep } from "lodash";
 
 export function adaptSuunnitteluVaihe(
-  oid: string,
+  dbProjekti: DBProjekti,
   kayttoOikeudet: DBVaylaUser[],
   suunnitteluVaihe: SuunnitteluVaihe | null | undefined,
   vuorovaikutukset: Array<Vuorovaikutus> | null | undefined
@@ -41,7 +42,7 @@ export function adaptSuunnitteluVaihe(
       arvioSeuraavanVaiheenAlkamisesta,
       suunnittelunEteneminenJaKesto,
       hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
-      vuorovaikutukset: adaptVuorovaikutukset(oid, kayttoOikeudet, vuorovaikutukset),
+      vuorovaikutukset: adaptVuorovaikutukset(dbProjekti, kayttoOikeudet, vuorovaikutukset),
       palautteidenVastaanottajat,
       __typename: "SuunnitteluVaihe",
     };
@@ -50,7 +51,7 @@ export function adaptSuunnitteluVaihe(
 }
 
 function adaptVuorovaikutukset(
-  oid: string,
+  projekti: DBProjekti,
   kayttoOikeudet: DBVaylaUser[],
   vuorovaikutukset: Array<Vuorovaikutus> | undefined | null
 ): API.Vuorovaikutus[] | undefined {
@@ -68,7 +69,11 @@ function adaptVuorovaikutukset(
       const apiVuorovaikutus: API.Vuorovaikutus = {
         ...(vuorovaikutus as Omit<Vuorovaikutus, "vuorovaikutusPDFt">),
         ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(vuorovaikutus.ilmoituksenVastaanottajat),
-        esitettavatYhteystiedot: adaptStandardiYhteystiedotByAddingProjektiPaallikko(kayttoOikeudet, vuorovaikutus.esitettavatYhteystiedot),
+        esitettavatYhteystiedot: adaptStandardiYhteystiedotByAddingProjektiPaallikko(
+          kayttoOikeudet,
+          vuorovaikutus.esitettavatYhteystiedot,
+          projekti.suunnitteluSopimus
+        ),
         vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
         suunnittelumateriaali: adaptLinkkiByAddingTypename(vuorovaikutus.suunnittelumateriaali),
         videot: adaptLinkkiListByAddingTypename(vuorovaikutus.videot),
@@ -78,7 +83,7 @@ function adaptVuorovaikutukset(
       };
 
       if (vuorovaikutusPDFt) {
-        apiVuorovaikutus.vuorovaikutusPDFt = adaptVuorovaikutusPDFPaths(oid, vuorovaikutusPDFt);
+        apiVuorovaikutus.vuorovaikutusPDFt = adaptVuorovaikutusPDFPaths(projekti.oid, vuorovaikutusPDFt);
       }
       return apiVuorovaikutus;
     });

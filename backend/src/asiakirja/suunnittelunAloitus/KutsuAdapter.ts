@@ -254,7 +254,12 @@ export class KutsuAdapter {
     return "<" + this.kieli + suomi + this.kieli + ">";
   }
 
-  yhteystiedot(kieli: Kieli, yhteystiedot: Yhteystieto[] | null | undefined, yhteysHenkilot?: string[] | null): LokalisoituYhteystieto[] {
+  yhteystiedot(
+    kieli: Kieli,
+    yhteystiedot: Yhteystieto[] | null | undefined,
+    yhteysHenkilot?: string[] | null,
+    pakotaProjariTaiKunnanEdustaja?: boolean
+  ): LokalisoituYhteystieto[] {
     let yt: Yhteystieto[] = [];
     if (yhteystiedot) {
       yt = yt.concat(yhteystiedot.map((yt) => yhteystietoPlusKunta(yt, this.suunnitteluSopimus)));
@@ -267,6 +272,16 @@ export class KutsuAdapter {
         yt.push(vaylaUserToYhteystieto2(user, this.suunnitteluSopimus));
       });
     }
+    if (pakotaProjariTaiKunnanEdustaja) {
+      const projari = this.kayttoOikeudet?.find((ko) => (ko.tyyppi = KayttajaTyyppi.PROJEKTIPAALLIKKO));
+      if (this.suunnitteluSopimus && !yt.find((t) => t.sahkoposti === this.suunnitteluSopimus?.email)) {
+        const kunnanEdustaja = this.kayttoOikeudet?.find((ko) => ko.email === this.suunnitteluSopimus?.email);
+        yt = [vaylaUserToYhteystieto2(kunnanEdustaja as DBVaylaUser, this.suunnitteluSopimus)].concat(yt);
+      } else if (!yt.find((t) => t.sahkoposti === projari?.email)) {
+        yt = [vaylaUserToYhteystieto2(projari as DBVaylaUser, this.suunnitteluSopimus)].concat(yt);
+      }
+    }
+
     return yt.map((yt) => yhteystietoMapper(yt, kieli));
   }
 
@@ -308,7 +323,8 @@ export class KutsuAdapter {
     return this.yhteystiedot(
       this.kieli,
       this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysTiedot || [],
-      this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysHenkilot
+      this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysHenkilot,
+      true // Pakota projari tai kunnan edustaja
     );
   }
 
