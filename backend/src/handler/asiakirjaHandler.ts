@@ -11,7 +11,7 @@ import { pdfGeneratorClient } from "../asiakirja/lambda/pdfGeneratorClient";
 import {
   determineAsiakirjaMuoto,
   HyvaksymisPaatosKuulutusAsiakirjaTyyppi,
-  NahtavillaoloKuulutusAsiakirjaTyyppi
+  NahtavillaoloKuulutusAsiakirjaTyyppi,
 } from "../asiakirja/asiakirjaTypes";
 
 async function handleAloitusKuulutus(
@@ -121,7 +121,10 @@ async function handleHyvaksymisPaatosKuulutus(
     kayttoOikeudet: projektiWithChanges.kayttoOikeudet,
     kasittelynTila,
     suunnitteluSopimus,
-    hyvaksymisPaatosVaihe: asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projektiWithChanges, projektiWithChanges.hyvaksymisPaatosVaihe),
+    hyvaksymisPaatosVaihe: asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(
+      projektiWithChanges,
+      projektiWithChanges.hyvaksymisPaatosVaihe
+    ),
     kieli,
     luonnos: true,
     asiakirjaTyyppi,

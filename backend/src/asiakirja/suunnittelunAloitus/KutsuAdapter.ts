@@ -1,5 +1,13 @@
 import { KayttajaTyyppi, Kieli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
-import { DBVaylaUser, Kielitiedot, SuunnitteluSopimusJulkaisu, Velho, Vuorovaikutus, Yhteystieto } from "../../database/model";
+import {
+  DBVaylaUser,
+  Kielitiedot,
+  SuunnitteluSopimus,
+  SuunnitteluSopimusJulkaisu,
+  Velho,
+  Vuorovaikutus,
+  Yhteystieto,
+} from "../../database/model";
 import { translate } from "../../util/localization";
 import { linkHyvaksymisPaatos, linkSuunnitteluVaihe } from "../../../../common/links";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
@@ -16,7 +24,7 @@ export type KutsuAdapterProps = {
   projektiTyyppi: ProjektiTyyppi;
   vuorovaikutus?: Vuorovaikutus;
   kayttoOikeudet?: DBVaylaUser[];
-  suunnitteluSopimus?: SuunnitteluSopimusJulkaisu;
+  suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu;
 };
 
 type LokalisoituYhteystieto = Omit<Yhteystieto, "organisaatio" | "kunta"> & { organisaatio: string };
@@ -42,7 +50,7 @@ export class KutsuAdapter {
   private readonly projektiTyyppi: ProjektiTyyppi;
   private readonly vuorovaikutus?: Vuorovaikutus;
   private readonly kayttoOikeudet?: DBVaylaUser[];
-  private readonly suunnitteluSopimus?: SuunnitteluSopimusJulkaisu;
+  private readonly suunnitteluSopimus?: SuunnitteluSopimusJulkaisu | SuunnitteluSopimus;
   private readonly kielitiedot: Kielitiedot;
   private templateResolver: unknown;
 
@@ -261,8 +269,24 @@ export class KutsuAdapter {
     pakotaProjariTaiKunnanEdustaja?: boolean
   ): LokalisoituYhteystieto[] {
     let yt: Yhteystieto[] = [];
+    let suunnitteluSopimus: SuunnitteluSopimusJulkaisu;
+    const kunnanEdustaja = this.kayttoOikeudet?.find(
+      (ko) =>
+        ko.email === (this.suunnitteluSopimus as SuunnitteluSopimusJulkaisu)?.email ||
+        ko.kayttajatunnus === (this.suunnitteluSopimus as SuunnitteluSopimus)?.yhteysHenkilo
+    );
+    if (kunnanEdustaja && this.suunnitteluSopimus) {
+      const [etunimi, sukunimi] = kunnanEdustaja?.nimi.split(", ");
+      suunnitteluSopimus = {
+        ...kunnanEdustaja,
+        kunta: this.suunnitteluSopimus.kunta,
+        etunimi,
+        sukunimi,
+        puhelinnumero: kunnanEdustaja.puhelinnumero || "",
+      };
+    }
     if (yhteystiedot) {
-      yt = yt.concat(yhteystiedot.map((yt) => yhteystietoPlusKunta(yt, this.suunnitteluSopimus)));
+      yt = yt.concat(yhteystiedot.map((yt) => yhteystietoPlusKunta(yt, suunnitteluSopimus)));
     }
     if (yhteysHenkilot) {
       if (!this.kayttoOikeudet) {
@@ -274,8 +298,8 @@ export class KutsuAdapter {
     }
     if (pakotaProjariTaiKunnanEdustaja) {
       const projari = this.kayttoOikeudet?.find((ko) => (ko.tyyppi = KayttajaTyyppi.PROJEKTIPAALLIKKO));
-      if (this.suunnitteluSopimus && !yt.find((t) => t.sahkoposti === this.suunnitteluSopimus?.email)) {
-        const kunnanEdustaja = this.kayttoOikeudet?.find((ko) => ko.email === this.suunnitteluSopimus?.email);
+
+      if (this.suunnitteluSopimus && !yt.find((t) => t.sahkoposti === kunnanEdustaja?.email)) {
         yt = [vaylaUserToYhteystieto2(kunnanEdustaja as DBVaylaUser, this.suunnitteluSopimus)].concat(yt);
       } else if (!yt.find((t) => t.sahkoposti === projari?.email)) {
         yt = [vaylaUserToYhteystieto2(projari as DBVaylaUser, this.suunnitteluSopimus)].concat(yt);

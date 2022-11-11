@@ -4,6 +4,7 @@ import {
   Kielitiedot,
   LocalizedMap,
   SuunnitteluSopimusJulkaisu,
+  SuunnitteluSopimus,
   UudelleenKuulutus,
   Velho,
   Yhteystieto,
@@ -30,7 +31,7 @@ export type IlmoitusParams = {
   hankkeenKuvaus: LocalizedMap<string>;
   kuulutusPaiva: string;
   yhteystiedot?: Yhteystieto[];
-  suunnitteluSopimus?: SuunnitteluSopimusJulkaisu;
+  suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu;
   uudelleenKuulutus?: UudelleenKuulutus;
 
   // kayttoOikeudet must be set if yhteysHenkilot is set

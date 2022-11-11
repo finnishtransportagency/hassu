@@ -12,14 +12,21 @@ export function vaylaUserToYhteystieto(vaylaUser: DBVaylaUser, suunnitteluSopimu
   };
 }
 
-export function vaylaUserToYhteystieto2(vaylaUser: DBVaylaUser, suunnitteluSopimus?: SuunnitteluSopimusJulkaisu | null): Yhteystieto {
+export function vaylaUserToYhteystieto2(
+  vaylaUser: DBVaylaUser,
+  suunnitteluSopimus?: SuunnitteluSopimusJulkaisu | SuunnitteluSopimus | null
+): Yhteystieto {
   return {
     etunimi: vaylaUser.etunimi,
     sukunimi: vaylaUser.sukunimi,
     puhelinnumero: vaylaUser.puhelinnumero || "",
     sahkoposti: vaylaUser.email,
     organisaatio: vaylaUser.organisaatio,
-    kunta: vaylaUser.email === suunnitteluSopimus?.email ? suunnitteluSopimus.kunta : undefined,
+    kunta:
+      vaylaUser.kayttajatunnus === (suunnitteluSopimus as SuunnitteluSopimus)?.yhteysHenkilo ||
+      vaylaUser.email === (suunnitteluSopimus as SuunnitteluSopimusJulkaisu)?.email
+        ? suunnitteluSopimus?.kunta
+        : undefined,
   };
 }
 

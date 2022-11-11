@@ -116,6 +116,7 @@ export class AsiakirjaService {
     luonnos,
     asiakirjaTyyppi,
     kayttoOikeudet,
+    suunnitteluSopimus,
   }: CreateNahtavillaoloKuulutusPdfOptions): Promise<EnhancedPDF> {
     if (!velho) {
       throw new Error("projekti.velho puuttuu");
@@ -145,6 +146,7 @@ export class AsiakirjaService {
       yhteystiedot: nahtavillaoloVaihe.yhteystiedot || [],
       kayttoOikeudet,
       kieli,
+      suunnitteluSopimus: suunnitteluSopimus,
     };
     let pdf: EnhancedPDF | undefined;
     if (asiakirjaTyyppi == AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS) {

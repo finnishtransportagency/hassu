@@ -5,16 +5,28 @@ import { vaylaUserToYhteystieto } from "./vaylaUserToYhteystieto";
 export function adaptStandardiYhteystiedotToYhteystiedot(
   dbProjekti: DBProjekti,
   kuulutusYhteystiedot: StandardiYhteystiedot | null | undefined,
+  pakotaProjari?: boolean,
   pakotaKunnanEdustaja?: boolean // true, kunnan edustaja pakotetaan projarin sijaan
 ): Yhteystieto[] {
   const yt: Yhteystieto[] = [];
   const sahkopostit: string[] = [];
+  const projari = dbProjekti.kayttoOikeudet.find((oikeus) => oikeus.tyyppi === API.KayttajaTyyppi.PROJEKTIPAALLIKKO);
+  const kunnanEdustaja = dbProjekti.kayttoOikeudet.find((oikeus) => oikeus.kayttajatunnus === dbProjekti.suunnitteluSopimus?.yhteysHenkilo);
+  if (pakotaKunnanEdustaja && kunnanEdustaja) {
+    yt.push(vaylaUserToYhteystieto(kunnanEdustaja, dbProjekti.suunnitteluSopimus));
+    sahkopostit.push(kunnanEdustaja.email);
+  } else if (pakotaProjari && projari) {
+    yt.push(vaylaUserToYhteystieto(projari, dbProjekti.suunnitteluSopimus));
+    sahkopostit.push(projari.email);
+  }
   dbProjekti.kayttoOikeudet
     .filter(
-      ({ kayttajatunnus, tyyppi }) =>
-        (pakotaKunnanEdustaja
-          ? kayttajatunnus === dbProjekti?.suunnitteluSopimus?.yhteysHenkilo
-          : tyyppi === API.KayttajaTyyppi.PROJEKTIPAALLIKKO) || kuulutusYhteystiedot?.yhteysHenkilot?.find((yh) => yh === kayttajatunnus)
+      ({ kayttajatunnus }) =>
+        (pakotaKunnanEdustaja && kunnanEdustaja
+          ? kayttajatunnus !== kunnanEdustaja.kayttajatunnus
+          : pakotaProjari && projari
+          ? kayttajatunnus !== projari.kayttajatunnus
+          : true) && kuulutusYhteystiedot?.yhteysHenkilot?.find((yh) => yh === kayttajatunnus)
     )
     .forEach((oikeus) => {
       yt.push(vaylaUserToYhteystieto(oikeus, dbProjekti?.suunnitteluSopimus)); // kunnan edustajalle insertoidaan kunta, jos suunnitteluSopimus on annettu
