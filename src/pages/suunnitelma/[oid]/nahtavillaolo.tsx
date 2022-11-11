@@ -6,7 +6,7 @@ import useTranslation from "next-translate/useTranslation";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import { formatDate } from "src/util/dateUtils";
 import SectionContent from "@components/layout/SectionContent";
-import { NahtavillaoloVaiheTila, ProjektiTyyppi, Viranomainen } from "@services/api";
+import { Kieli, NahtavillaoloVaiheTila, ProjektiTyyppi, Viranomainen } from "@services/api";
 import FormatDate from "@components/FormatDate";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
 import Notification, { NotificationType } from "@components/notification/Notification";
@@ -15,6 +15,8 @@ import Trans from "next-translate/Trans";
 import KansalaisenAineistoNakyma from "@components/projekti/common/KansalaisenAineistoNakyma";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { kuntametadata } from "../../../../common/kuntametadata";
+import replace from "lodash/replace";
+import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
 
 export default function Nahtavillaolo(): ReactElement {
   const { t, lang } = useTranslation("projekti");
@@ -46,8 +48,6 @@ export default function Nahtavillaolo(): ReactElement {
     { header: t(`ui-otsikot.hankkeen_sijainti`), data: sijainti },
     { header: t(`ui-otsikot.suunnitelman_tyyppi`), data: velho?.tyyppi && t(`projekti-tyyppi.${velho?.tyyppi}`) },
   ];
-
-  const yhteystiedotListana = kuulutus.yhteystiedot?.map((yhteystieto) => t("common:yhteystieto", yhteystieto)) || [];
 
   const vastaavaViranomainen = velho.suunnittelustaVastaavaViranomainen;
 
@@ -116,11 +116,15 @@ export default function Nahtavillaolo(): ReactElement {
         <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.yhteystiedot`)}</h4>
         <SectionContent>
           <p>
-            {t("common:lisatietoja_antavat", {
-              yhteystiedot: yhteystiedotListana.join(", "),
-              count: yhteystiedotListana.length,
+            {t("common:lisatietoja_antavat2", {
+              count: kuulutus.yhteystiedot.length,
             })}
           </p>
+          {kuulutus.yhteystiedot.map((yhteystieto, index) => (
+            <p key={index}>
+              {replace(yhteystietoKansalaiselleTekstiksi(lang === "sv" ? Kieli.RUOTSI : Kieli.SUOMI, yhteystieto), "@", "[at]")}
+            </p>
+          ))}
         </SectionContent>
       </Section>
     </ProjektiJulkinenPageLayout>
