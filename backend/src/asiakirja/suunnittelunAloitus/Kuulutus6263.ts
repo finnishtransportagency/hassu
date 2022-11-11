@@ -100,6 +100,7 @@ export class Kuulutus6263 extends CommonPdf {
       asiakirjanMuoto: params.asiakirjanMuoto,
       projektiTyyppi: velho.tyyppi,
       kayttoOikeudet: params.kayttoOikeudet,
+      suunnitteluSopimus: params.suunnitteluSopimus,
     });
     super(kieli, kutsuAdapter);
     this.kieli = kieli;
