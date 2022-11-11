@@ -10,8 +10,8 @@ import HeadphonesIcon from "@mui/icons-material/Headphones";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import {
+  Kieli,
   ProjektiJulkinen,
-  SuunnitteluSopimusJulkaisu,
   SuunnitteluVaiheJulkinen,
   SuunnitteluVaiheTila,
   VuorovaikutusJulkinen,
@@ -29,7 +29,8 @@ import FormatDate from "@components/FormatDate";
 import { splitFilePath } from "../../../util/fileUtil";
 import classNames from "classnames";
 import Trans from "next-translate/Trans";
-import { kuntametadata } from "../../../../common/kuntametadata";
+import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import { replace } from "lodash";
 
 export default function Suunnittelu(): ReactElement {
   const { t } = useTranslation("suunnittelu");
@@ -48,7 +49,6 @@ export default function Suunnittelu(): ReactElement {
             projekti={projekti}
             suunnitteluVaihe={projekti.suunnitteluVaihe}
             vuorovaikutus={projekti.suunnitteluVaihe.vuorovaikutukset?.[0]}
-            suunnittelusopimus={projekti?.aloitusKuulutusJulkaisu?.suunnitteluSopimus}
             projektiOid={projekti.oid}
           />
         </>
@@ -91,9 +91,8 @@ const VuorovaikutusTiedot: FC<{
   vuorovaikutus: VuorovaikutusJulkinen | undefined;
   projekti: ProjektiJulkinen;
   suunnitteluVaihe: SuunnitteluVaiheJulkinen;
-  suunnittelusopimus: SuunnitteluSopimusJulkaisu | null | undefined;
   projektiOid: string;
-}> = ({ suunnittelusopimus, vuorovaikutus, projektiOid }) => {
+}> = ({ vuorovaikutus, projektiOid }) => {
   const [palauteLomakeOpen, setPalauteLomakeOpen] = useState(false);
   const { t, lang } = useTranslation("suunnittelu");
   const kieli = useKansalaiskieli();
@@ -104,8 +103,6 @@ const VuorovaikutusTiedot: FC<{
     dayjs(t.paivamaara).isAfter(today || dayjs(t.paivamaara).isSame(today))
   );
   const menneetTilaisuudet = vuorovaikutus?.vuorovaikutusTilaisuudet?.filter((t) => dayjs(t.paivamaara).isBefore(today));
-
-  const yhteystiedotListana = vuorovaikutus?.yhteystiedot?.map((yhteystieto) => t("common:yhteystieto", yhteystieto)) || [];
 
   const suunnitelmaluonnokset = vuorovaikutus?.suunnitelmaluonnokset;
   const esittelyaineistot = vuorovaikutus?.esittelyaineistot;
@@ -214,19 +211,15 @@ const VuorovaikutusTiedot: FC<{
           <SectionContent>
             <h5 className="vayla-small-title">{t("common:yhteystiedot")}</h5>
             <p>
-              {t("common:lisatietoja_antavat", {
-                yhteystiedot: yhteystiedotListana.join(", "),
-                count: yhteystiedotListana.length,
+              {t("common:lisatietoja_antavat2", {
+                count: vuorovaikutus.yhteystiedot.length,
               })}
-              {/* TODO vaihda projektin suunnittelusopimustietoihin kun saatavilla */}
-              {suunnittelusopimus && (
-                <>
-                  {` ${t("common:ja")} `}
-                  {suunnittelusopimus.etunimi} {suunnittelusopimus.sukunimi} puh. {suunnittelusopimus.puhelinnumero}{" "}
-                  {suunnittelusopimus.email} ({capitalize(kuntametadata.nameForKuntaId(suunnittelusopimus.kunta, lang))}).
-                </>
-              )}
             </p>
+            {vuorovaikutus.yhteystiedot.map((yhteystieto, index) => (
+              <p key={index}>
+                {replace(yhteystietoKansalaiselleTekstiksi(lang === "sv" ? Kieli.RUOTSI : Kieli.SUOMI, yhteystieto), "@", "[at]")}
+              </p>
+            ))}
           </SectionContent>
         </Section>
       )}

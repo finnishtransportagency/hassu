@@ -64,6 +64,10 @@
     "one": "Lisätietoja antaa {{yhteystiedot}}",
     "other": "Lisätietoja antavat {{yhteystiedot}}"
   },
+  "lisatietoja_antavat2": {
+    "one": "Lisätietoja antaa",
+    "other": "Lisätietoja antavat"
+  },
   "yhteystieto": "{{etunimi}} {{sukunimi}}, puh. {{puhelinnumero}}, {{sahkoposti}} ({{organisaatio}})",
   "ja": "ja",
   "viikonpaiva_0": "sunnuntai",
