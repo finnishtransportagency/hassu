@@ -2372,15 +2372,6 @@ Object {
           },
           Object {
             "__typename": "Yhteystieto",
-            "etunimi": "Testi1",
-            "kunta": 536,
-            "organisaatio": "CGI Suomi Oy",
-            "puhelinnumero": "123",
-            "sahkoposti": "mikko.haapamaki@cgi.com",
-            "sukunimi": "Hassu",
-          },
-          Object {
-            "__typename": "Yhteystieto",
             "etunimi": "Etunimi",
             "puhelinnumero": "0293121213",
             "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
@@ -2492,15 +2483,6 @@ Object {
         "organisaatio": "CGI Suomi Oy",
         "puhelinnumero": "123",
         "sahkoposti": "mikko.haapamki@cgi.com",
-        "sukunimi": "Hassu",
-      },
-      Object {
-        "__typename": "Yhteystieto",
-        "etunimi": "Testi1",
-        "kunta": 536,
-        "organisaatio": "CGI Suomi Oy",
-        "puhelinnumero": "123",
-        "sahkoposti": "mikko.haapamaki@cgi.com",
         "sukunimi": "Hassu",
       },
       Object {
