@@ -133,6 +133,7 @@ Object {
           "__typename": "StandardiYhteystiedot",
           "yhteysHenkilot": Array [
             "A000112",
+            "LX581241",
           ],
           "yhteysTiedot": Array [
             Object {
@@ -279,6 +280,7 @@ Object {
           "__typename": "StandardiYhteystiedot",
           "yhteysHenkilot": Array [
             "A000112",
+            "LX581241",
           ],
           "yhteysTiedot": Array [
             Object {
@@ -433,7 +435,7 @@ Object {
         "1": Object {
           "esitettavatYhteystiedot": Object {
             "yhteysHenkilot": Object {
-              "1": "A000111",
+              "2": "LX581241",
             },
           },
           "vuorovaikutusTilaisuudet": Object {
@@ -449,7 +451,17 @@ Object {
       },
     },
     "deleted": Object {},
-    "updated": Object {},
+    "updated": Object {
+      "vuorovaikutukset": Object {
+        "1": Object {
+          "esitettavatYhteystiedot": Object {
+            "yhteysHenkilot": Object {
+              "1": "A000111",
+            },
+          },
+        },
+      },
+    },
   },
 }
 `;
@@ -463,6 +475,7 @@ Object {
       "__typename": "StandardiYhteystiedot",
       "yhteysHenkilot": Array [
         "A000112",
+        "LX581241",
       ],
       "yhteysTiedot": Array [
         Object {
@@ -639,6 +652,7 @@ Object {
       "__typename": "StandardiYhteystiedot",
       "yhteysHenkilot": Array [
         "A000112",
+        "LX581241",
       ],
       "yhteysTiedot": Array [
         Object {
@@ -815,6 +829,7 @@ Object {
       "__typename": "StandardiYhteystiedot",
       "yhteysHenkilot": Array [
         "A000112",
+        "LX581241",
       ],
       "yhteysTiedot": Array [
         Object {
@@ -982,6 +997,7 @@ Object {
     "__typename": "StandardiYhteystiedot",
     "yhteysHenkilot": Array [
       "A000112",
+      "LX581241",
     ],
     "yhteysTiedot": Array [
       Object {
@@ -1415,6 +1431,15 @@ Object {
         "yhteystiedot": Array [
           Object {
             "__typename": "Yhteystieto",
+            "etunimi": "Testi1",
+            "kunta": 536,
+            "organisaatio": "CGI Suomi Oy",
+            "puhelinnumero": "123",
+            "sahkoposti": "mikko.haapamaki@cgi.com",
+            "sukunimi": "Hassu",
+          },
+          Object {
+            "__typename": "Yhteystieto",
             "etunimi": "A-tunnus1",
             "kunta": undefined,
             "organisaatio": "CGI Suomi Oy",
@@ -1462,6 +1487,7 @@ Väylävirasto käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia hen
 Lisätietoja antaa:
 Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
 CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
+CGI Suomi Oy, Testi1 Hassu, puhelin 123 ja sähköposti mikko.haapamaki@cgi.com.
 
 LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
     "to": "mikkeli@mikke.li",
@@ -1489,6 +1515,7 @@ Väylävirasto käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia hen
 Lisätietoja antaa:
 Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
 CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
+CGI Suomi Oy, Testi1 Hassu, puhelin 123 ja sähköposti mikko.haapamaki@cgi.com.
 
 LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
     "to": "juva@ju.va",
@@ -1516,6 +1543,7 @@ Väylävirasto käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia hen
 Lisätietoja antaa:
 Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
 CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
+CGI Suomi Oy, Testi1 Hassu, puhelin 123 ja sähköposti mikko.haapamaki@cgi.com.
 
 LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
     "to": "savonlinna@savonlin.na",
@@ -1543,6 +1571,7 @@ Väylävirasto käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia hen
 Lisätietoja antaa:
 Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
 CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
+CGI Suomi Oy, Testi1 Hassu, puhelin 123 ja sähköposti mikko.haapamaki@cgi.com.
 
 LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
     "to": "kirjaamo.etela-savo@ely-keskus.fi",
@@ -1698,6 +1727,7 @@ Väylävirasto käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia hen
 Lisätietoja antaa:
 Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
 CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
+CGI Suomi Oy, Testi1 Hassu, puhelin 123 ja sähköposti mikko.haapamaki@cgi.com.
 
 LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
     "to": "mikkeli@mikke.li",
@@ -1725,6 +1755,7 @@ Väylävirasto käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia hen
 Lisätietoja antaa:
 Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
 CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
+CGI Suomi Oy, Testi1 Hassu, puhelin 123 ja sähköposti mikko.haapamaki@cgi.com.
 
 LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
     "to": "juva@ju.va",
@@ -1752,6 +1783,7 @@ Väylävirasto käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia hen
 Lisätietoja antaa:
 Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
 CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
+CGI Suomi Oy, Testi1 Hassu, puhelin 123 ja sähköposti mikko.haapamaki@cgi.com.
 
 LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
     "to": "savonlinna@savonlin.na",
@@ -1779,6 +1811,7 @@ Väylävirasto käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia hen
 Lisätietoja antaa:
 Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
 CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
+CGI Suomi Oy, Testi1 Hassu, puhelin 123 ja sähköposti mikko.haapamaki@cgi.com.
 
 LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
     "to": "kirjaamo.etela-savo@ely-keskus.fi",
