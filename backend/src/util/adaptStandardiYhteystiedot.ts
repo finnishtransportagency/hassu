@@ -92,7 +92,7 @@ export function adaptStandardiYhteystiedotLisaamattaProjaria(
   dbProjekti.kayttoOikeudet
     .filter(({ kayttajatunnus }) => kuulutusYhteystiedot?.yhteysHenkilot?.find((yh) => yh === kayttajatunnus))
     .forEach((oikeus) => {
-      yt.push({ __typename: "Yhteystieto", ...vaylaUserToYhteystieto(oikeus) });
+      yt.push({ __typename: "Yhteystieto", ...vaylaUserToYhteystieto(oikeus, dbProjekti.suunnitteluSopimus) });
       sahkopostit.push(oikeus.email); //Kerää sähköpostit myöhempää duplikaattien tarkistusta varten.
     });
   if (kuulutusYhteystiedot?.yhteysTiedot) {
