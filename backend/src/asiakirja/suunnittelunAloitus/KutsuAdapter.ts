@@ -276,12 +276,9 @@ export class KutsuAdapter {
         ko.kayttajatunnus === (this.suunnitteluSopimus as SuunnitteluSopimus)?.yhteysHenkilo
     );
     if (kunnanEdustaja && this.suunnitteluSopimus) {
-      const [etunimi, sukunimi] = kunnanEdustaja?.nimi.split(", ");
       suunnitteluSopimus = {
         ...kunnanEdustaja,
         kunta: this.suunnitteluSopimus.kunta,
-        etunimi,
-        sukunimi,
         puhelinnumero: kunnanEdustaja.puhelinnumero || "",
       };
     }

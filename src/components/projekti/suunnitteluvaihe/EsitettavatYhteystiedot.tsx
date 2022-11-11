@@ -83,7 +83,6 @@ export default function EsitettavatYhteystiedot({ vuorovaikutusnro, projektiHenk
               <FormGroup label="Projektiin tallennetut henkilöt" inlineFlex>
                 {projektiHenkilot.map((hlo, index) => {
                   const tunnuslista = value || [];
-                  const nimi = formatNimi({ sukunimi, etunimi });
                   return (
                     <Fragment key={index}>
                       {index === 0 ? (
