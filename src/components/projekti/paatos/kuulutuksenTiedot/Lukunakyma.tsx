@@ -16,8 +16,8 @@ import ButtonFlatWithIcon from "@components/button/ButtonFlat";
 import { ProjektiTestCommand } from "../../../../../common/testUtil.dev";
 import { formatDate } from "src/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
-import { formatNimi } from "../../../../util/userUtil";
 import { getPaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 
 interface Props {
   julkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
@@ -117,11 +117,8 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
         <SectionContent>
           <p className="vayla-label">Kuulutuksen yhteyshenkilöt</p>
           <p></p>
-          {julkaisu.yhteystiedot?.map((yhteystieto, index) => (
-            <p style={{ margin: 0 }} key={index}>
-              {formatNimi(yhteystieto)}, puh. {yhteystieto.puhelinnumero},{" "}
-              {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio})
-            </p>
+          {julkaisu?.yhteystiedot?.map((yhteystieto, index) => (
+            <p key={index}>{replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto), "@", "[at]")}</p>
           ))}
         </SectionContent>
         {epaaktiivinen ? (
