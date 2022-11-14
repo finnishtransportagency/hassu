@@ -21,9 +21,6 @@ type Props = {
 };
 
 export function getSivuTilanPerusteella(tila: Status | null | undefined) {
-  if (!tila) {
-    return "";
-  }
   switch (tila) {
     case Status.ALOITUSKUULUTUS:
       return "aloituskuulutus";
@@ -35,6 +32,8 @@ export function getSivuTilanPerusteella(tila: Status | null | undefined) {
       return "hyvaksymismenettelyssa";
     case Status.HYVAKSYTTY:
       return "hyvaksymispaatos";
+    case Status.JATKOPAATOS_1:
+      return "jatkopaatos1";
     default:
       return "";
   }

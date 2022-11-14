@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 
 export function useProjektiJulkinen() {
   const router = useRouter();
-  if (router.route.startsWith("/yllapito")) {
+  if (router.asPath.startsWith("/yllapito")) {
     throw new Error("Inproper route for the use of useProjektiJulkinen hook");
   }
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;

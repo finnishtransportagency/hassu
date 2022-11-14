@@ -1,6 +1,6 @@
-import { formatDate } from '../../../src/util/dateUtils';
-import dayjs from 'dayjs';
-import { selectAllAineistotFromCategory } from '../../support/util';
+import { formatDate } from "../../../src/util/dateUtils";
+import dayjs from "dayjs";
+import { selectAllAineistotFromCategory } from "../../support/util";
 
 export function tallennaKasittelynTilaJaSiirraMenneisyyteen(oid, projektiNimi, asianumero) {
   cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/kasittelyntila", {

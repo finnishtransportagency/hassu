@@ -226,6 +226,40 @@ export const createLocalizedTheme = (locale: Localization) =>
             },
           },
         },
+        MuiTab: {
+          styleOverrides: {
+            root: {
+              paddingTop: "18px",
+              paddingBottom: "18px",
+              paddingLeft: "40px",
+              paddingRight: "40px",
+              textTransform: "none",
+              fontWeight: 400,
+              fontSize: "1rem",
+              lineHeight: 1.5,
+              color: "#242222",
+              opacity: 1,
+              "&.Mui-selected:not(.Mui-disabled)": {
+                color: "#0064AF",
+              },
+            },
+          },
+        },
+        MuiTabs: {
+          defaultProps: {
+            variant: "scrollable",
+            scrollButtons: "auto",
+          },
+          styleOverrides: {
+            root: {
+              borderBottom: "1px #979797 solid",
+            },
+            indicator: {
+              backgroundColor: "#0064AF",
+              height: "3px",
+            },
+          },
+        },
         MuiFormControlLabel: {
           styleOverrides: {
             root: {

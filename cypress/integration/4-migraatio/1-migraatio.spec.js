@@ -159,17 +159,17 @@ describe("Migraatio", () => {
     cy.get("#kuulutuksentiedot_tab").click({ force: true });
 
     const today = formatDate(dayjs());
-    cy.get('[name="hyvaksymisPaatosVaihe.kuulutusPaiva"]').should("be.enabled").type(today, {
+    cy.get('[name="paatos.kuulutusPaiva"]').should("be.enabled").type(today, {
       waitForAnimations: true,
     });
 
-    cy.get('[name="hyvaksymisPaatosVaihe.hallintoOikeus"]').select("HELSINKI");
-    cy.get('[name="hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').clear().type("test@vayla.fi");
-    cy.get('[name="hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').clear().type("test@vayla.fi");
+    cy.get('[name="paatos.hallintoOikeus"]').select("HELSINKI");
+    cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').clear().type("test@vayla.fi");
+    cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').clear().type("test@vayla.fi");
 
     cy.get("#save_and_send_for_acceptance").click();
     cy.contains("Lähetys onnistui", { timeout: 30000 });
-    cy.get("#kuulutuksentiedot_luku_tab").click({ force: true });
+    cy.get("#kuulutuksentiedot_tab").click({ force: true });
     cy.get("#button_open_acceptance_dialog")
       .should("be.enabled")
       .scrollIntoView({ offset: { top: 500, left: 0 } })
@@ -179,7 +179,7 @@ describe("Migraatio", () => {
     cy.contains("Hyväksyminen onnistui", { timeout: 30000 });
 
     cy.reload();
-    cy.get("#kuulutuksentiedot_luku_tab").click({ force: true });
+    cy.get("#kuulutuksentiedot_tab").click({ force: true });
 
     cy.contains("Kuulutus nähtäville asettamisesta on julkaistu");
   });
@@ -194,12 +194,13 @@ describe("Migraatio", () => {
     cy.get("p").contains("Navigoi vaiheita").click();
 
     cy.get("#sidenavi_0").should("exist").click({ force: true });
-    cy.contains("span", "Aloituskuulutus");
+    cy.contains("span", "Suunnittelun käynnistäminen");
+    cy.contains("Suunnitelma on tuotu toisesta järjestelmästä, joten tiedoissa voi olla puutteita.");
     cy.get("#sidenavi_1").should("exist").click({ force: true });
-    cy.contains("span", "Suunnittelu");
+    cy.contains("span", "Suunnittelussa");
     cy.contains("Suunnitelma on tuotu toisesta järjestelmästä, joten tiedoissa voi olla puutteita.");
     cy.get("#sidenavi_2").should("exist").click({ force: true });
-    cy.contains("span", "Nähtävilläolo");
+    cy.contains("span", "Suunnitteluaineisto nähtävillä");
     cy.contains("Suunnitelma on tuotu toisesta järjestelmästä, joten tiedoissa voi olla puutteita.");
     cy.get("#sidenavi_3").should("exist").click({ force: true });
     cy.contains("span", "Hyväksymismenettelyssä");

@@ -3,12 +3,12 @@ import { api, apiConfig, NykyinenKayttaja, Projekti, KayttajaTyyppi } from "@ser
 import useCurrentUser from "./useCurrentUser";
 import { useRouter } from "next/router";
 
-export function useProjekti(
-  config: SWRConfiguration<ProjektiLisatiedolla | null, any, Fetcher<ProjektiLisatiedolla | null>> | undefined = {}
-) {
+export type useProjektiOptions = SWRConfiguration<ProjektiLisatiedolla | null, any, Fetcher<ProjektiLisatiedolla | null>> | undefined;
+
+export function useProjekti(config: useProjektiOptions = {}) {
   const router = useRouter();
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
-  if (!router.route.startsWith("/yllapito")) {
+  if (!router.asPath.startsWith("/yllapito")) {
     throw new Error("Inproper route for the use of useProjekti hook");
   }
   const { data: kayttaja } = useCurrentUser();

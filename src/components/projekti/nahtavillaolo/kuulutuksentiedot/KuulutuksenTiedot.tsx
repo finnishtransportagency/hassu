@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Kieli, KirjaamoOsoite, TallennaProjektiInput } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { nahtavillaoloKuulutusSchema } from "src/schemas/nahtavillaoloKuulutus";
@@ -25,21 +25,11 @@ export type KuulutuksenTiedotFormValues = Required<{
   [K in keyof PickedTallennaProjektiInput]: NonNullable<PickedTallennaProjektiInput[K]>;
 }>;
 
-interface Props {
-  setIsDirty: (value: React.SetStateAction<boolean>) => void;
-}
-
-export default function KuulutuksenTiedot({ setIsDirty }: Props) {
+export default function KuulutuksenTiedot() {
   const { data: projekti } = useProjekti({ revalidateOnMount: true });
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
-  return (
-    <>
-      {projekti && kirjaamoOsoitteet && (
-        <KuulutuksenTiedotForm setIsDirty={setIsDirty} projekti={projekti} kirjaamoOsoitteet={kirjaamoOsoitteet} />
-      )}
-    </>
-  );
+  return <>{projekti && kirjaamoOsoitteet && <KuulutuksenTiedotForm projekti={projekti} kirjaamoOsoitteet={kirjaamoOsoitteet} />}</>;
 }
 
 interface KuulutuksenTiedotFormProps {
@@ -47,7 +37,7 @@ interface KuulutuksenTiedotFormProps {
   kirjaamoOsoitteet: KirjaamoOsoite[];
 }
 
-function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet, setIsDirty }: KuulutuksenTiedotFormProps & Props) {
+function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedotFormProps) {
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
 
   const defaultValues: KuulutuksenTiedotFormValues = useMemo(() => {
@@ -113,10 +103,6 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet, setIsDirty }: Kuul
   const {
     formState: { isDirty },
   } = useFormReturn;
-
-  useEffect(() => {
-    setIsDirty(isDirty);
-  }, [isDirty, setIsDirty]);
 
   useLeaveConfirm(isDirty);
 
