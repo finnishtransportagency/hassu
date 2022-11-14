@@ -188,11 +188,10 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
             </p>
             <HassuGrid cols={{ lg: 3 }}>
               <HassuDatePickerWithController
-                label="Päätöksen päivä"
+                label="Päätöksen päivä *"
                 disabled={disableFormEdit}
                 controllerProps={{ control: control, name: "kasittelynTila.hyvaksymispaatos.paatoksenPvm" }}
                 disableFuture
-                textFieldProps={{ required: true }}
               />
               <TextInput
                 label="Asiatunnus"
@@ -217,6 +216,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                 label="1. jatkopäätöksen päivä"
                 controllerProps={{ control: control, name: "kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm" }}
                 disabled={projekti.status !== Status.EPAAKTIIVINEN_1}
+                disableFuture
               />
               <TextInput
                 label="Asiatunnus"
