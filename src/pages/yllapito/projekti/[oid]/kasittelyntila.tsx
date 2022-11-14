@@ -2,7 +2,7 @@ import React, { ReactElement, useCallback, useState, useMemo } from "react";
 import { api, HyvaksymispaatosInput, Status, TallennaProjektiInput } from "@services/api";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
-import { useForm, UseFormProps } from "react-hook-form";
+import { Controller, useForm, UseFormProps } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
 import HassuSpinner from "@components/HassuSpinner";
@@ -26,6 +26,8 @@ import { useRouter } from "next/router";
 import TextInput from "@components/form/TextInput";
 import KasittelyntilaLukutila from "@components/projekti/lukutila/KasittelynTilaLukutila";
 import { formatDate } from "src/util/dateUtils";
+import Select from "@components/form/Select";
+import { suunnitelmanTilat } from "common/generated/kasittelynTila";
 
 type FormValues = Pick<TallennaProjektiInput, "oid" | "kasittelynTila">;
 
@@ -82,12 +84,15 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
       paatoksenPvm: null,
       asianumero: undefined,
     };
+    const suunnitelmanTila: string = projekti.kasittelynTila?.suunnitelmanTila || "";
+
     const formValues: FormValues = {
       oid: projekti.oid,
       kasittelynTila: {
         hyvaksymispaatos,
         ensimmainenJatkopaatos,
         toinenJatkopaatos,
+        suunnitelmanTila,
       },
     };
     return formValues;
@@ -192,6 +197,65 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
             Pääkäyttäjä lisää sivulle tietoa suunnitelman hallinnollisellisen käsittelyn tiloista, jotka ovat nähtävissä lukutilassa muille
             järjestelmän käyttäjille. Tiedot siirtyvät Käsittelyn tila -sivulta <ExtLink href={velhoURL}>Projektivelhoon</ExtLink>.
           </p>
+          <SectionContent>
+            <h5 className="vayla-small-title">Suunnitelman tila</h5>
+            <HassuGrid cols={{ lg: 2 }}>
+              <Controller
+                control={control}
+                name="kasittelynTila.suunnitelmanTila"
+                render={({ field: { value, onChange, ...field } }) => (
+                  <Select
+                    id="voimassaolovuosi"
+                    label="Suunnitelman tila"
+                    options={Object.entries(suunnitelmanTilat)
+                      .map(([key, value]) => {
+                        return { label: value, value: key };
+                      })
+                      .sort((option1, option2) => (option1.label > option2.label ? 1 : -1))}
+                    {...register(`kasittelynTila.suunnitelmanTila`)}
+                    //error={errors?.kasittelynTila?.suunnitelmanTila}
+                    addEmptyOption
+                    value={value || ""}
+                    onChange={(event) => onChange(event.target.value)}
+                    {...field}
+                  />
+                )}
+              />
+            </HassuGrid>
+          </SectionContent>
+        </Section>
+        <Section>
+          <SectionContent>
+            <h5 className="vayla-small-title">Hyväksymiskäsittelyn tila</h5>
+            <p>
+              Anna päivämäärä, jolloin suunnitelma on ennakkotarkastuksessa Väylävirastossa, se on ennakkoneuvotteluissa ja mennyt
+              hyväksymisesityksenä Traficomiin.
+            </p>
+            <HassuGrid cols={{ lg: 3 }}>
+              <HassuDatePickerWithController
+                label="Ennakkotarkastus"
+                disabled={disableFormEdit}
+                controllerProps={{ control: control, name: "kasittelynTila.hyvaksymispaatos.paatoksenPvm" }}
+                disableFuture
+              />
+              <HassuDatePickerWithController
+                label="Ennakkoneuvottelu"
+                disabled={disableFormEdit}
+                controllerProps={{ control: control, name: "kasittelynTila.hyvaksymispaatos.paatoksenPvm" }}
+                disableFuture
+              />
+            </HassuGrid>
+            <HassuGrid cols={{ lg: 3 }}>
+              <HassuDatePickerWithController
+                label="Hyväksymisesitys Traficomiin"
+                disabled={disableFormEdit}
+                controllerProps={{ control: control, name: "kasittelynTila.hyvaksymispaatos.paatoksenPvm" }}
+                disableFuture
+              />
+            </HassuGrid>
+          </SectionContent>
+        </Section>
+        <Section>
           <SectionContent>
             <h5 className="vayla-small-title">Hyväksymispäätös</h5>
             <p>
