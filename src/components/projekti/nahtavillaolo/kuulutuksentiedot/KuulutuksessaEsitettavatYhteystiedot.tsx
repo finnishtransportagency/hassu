@@ -1,6 +1,6 @@
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
-import { KayttajaTyyppi, NahtavillaoloVaiheTila, Projekti, ProjektiKayttaja, YhteystietoInput } from "@services/api";
+import { KayttajaTyyppi, Projekti, YhteystietoInput } from "@services/api";
 import Section from "@components/layout/Section";
 import { Fragment, ReactElement } from "react";
 import Button from "@components/button/Button";
@@ -11,10 +11,8 @@ import TextInput from "@components/form/TextInput";
 import HassuGrid from "@components/HassuGrid";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
 import IconButton from "@components/button/IconButton";
-import replace from "lodash/replace";
 import { useProjekti } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./KuulutuksenTiedot";
-import { findJulkaisutWithTila } from "../../../../../backend/src/projekti/projektiUtil";
 import { formatNimi } from "../../../../util/userUtil";
 
 const defaultYhteystieto: YhteystietoInput = {
@@ -27,14 +25,8 @@ const defaultYhteystieto: YhteystietoInput = {
 
 interface Props {}
 
-function hasHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti: Projekti | null | undefined) {
-  return (findJulkaisutWithTila(projekti?.nahtavillaoloVaiheJulkaisut, NahtavillaoloVaiheTila.HYVAKSYTTY) || []).length > 0;
-}
-
 export default function EsitettavatYhteystiedot({}: Props): ReactElement {
   const { data: projekti } = useProjekti();
-
-  const eiVoiMuokata = hasHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti);
 
   const {
     register,
@@ -46,42 +38,6 @@ export default function EsitettavatYhteystiedot({}: Props): ReactElement {
     control,
     name: "nahtavillaoloVaihe.kuulutusYhteystiedot.yhteysTiedot",
   });
-
-  const vuorovaikutusYhteysHenkilot: ProjektiKayttaja[] = projekti?.nahtavillaoloVaihe?.kuulutusYhteystiedot?.yhteysHenkilot
-    ? projekti.nahtavillaoloVaihe.kuulutusYhteystiedot.yhteysHenkilot
-        .map((hlo) => {
-          const yhteysHenkiloTietoineen: ProjektiKayttaja | undefined = (projekti?.kayttoOikeudet || []).find(
-            (ko) => ko.kayttajatunnus === hlo
-          );
-          if (!yhteysHenkiloTietoineen) {
-            return {} as ProjektiKayttaja;
-          }
-          return yhteysHenkiloTietoineen as ProjektiKayttaja;
-        })
-        .filter((pk) => pk.etunimi && pk.sukunimi)
-    : ([] as ProjektiKayttaja[]);
-
-  if (eiVoiMuokata) {
-    return (
-      <Section>
-        <SectionContent>
-          <p className="vayla-label mb-5">Vuorovaikuttamisen yhteyshenkilöt</p>
-          {projekti?.nahtavillaoloVaihe?.kuulutusYhteystiedot?.yhteysTiedot?.map((yhteystieto, index) => (
-            <p style={{ margin: 0 }} key={index}>
-              {formatNimi(yhteystieto)}, puh. {yhteystieto.puhelinnumero},{" "}
-              {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio})
-            </p>
-          ))}
-          {vuorovaikutusYhteysHenkilot.map((yhteystieto, index) => (
-            <p style={{ margin: 0 }} key={index}>
-              {formatNimi(yhteystieto)}, puh. {yhteystieto.puhelinnumero},{" "}
-              {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} ({yhteystieto.organisaatio})
-            </p>
-          ))}
-        </SectionContent>
-      </Section>
-    );
-  }
 
   return (
     <Section>
