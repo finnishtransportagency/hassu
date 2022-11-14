@@ -21,6 +21,8 @@ import { testPublicAccessToProjekti, testYllapitoAccessToProjekti } from "../api
 import { api } from "../api/apiClient";
 import assert from "assert";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
+import { assertIsDefined } from "../../src/util/assertions";
+import { testProjektiDatabase } from "../../src/database/testProjektiDatabase";
 
 const { expect } = require("chai");
 
@@ -60,6 +62,15 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   it("should create uudelleenkuulutus for aloituskuulutus successfully", async function () {
     userFixture.loginAs(UserFixture.hassuAdmin);
 
+    const initialProjekti = await projektiDatabase.loadProjektiByOid(oid);
+    assertIsDefined(initialProjekti?.aloitusKuulutusJulkaisut?.[0]);
+    // Aloituskuulutusjulkaisu on varmasti julkinen
+    let kuulutusPaiva = "2000-01-01";
+    let uudelleenKuulutusPaiva = "2001-01-01";
+    initialProjekti.aloitusKuulutusJulkaisut[0].kuulutusPaiva = kuulutusPaiva;
+    initialProjekti.aloitusKuulutusJulkaisut[0].siirtyySuunnitteluVaiheeseen = "2222-01-01";
+    await testProjektiDatabase.saveProjekti({ oid, aloitusKuulutusJulkaisut: initialProjekti.aloitusKuulutusJulkaisut });
+
     // Aktivoi uudelleenkuulutus julkaistulle aloituskuulutukselle
     await aloitusKuulutusTilaManager.siirraTila({
       oid,
@@ -83,7 +94,11 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
         RUOTSI: "Ruotsiseloste uudelleenkuulutuksen lähetekirjeeseen",
       },
     };
-    await api.tallennaProjekti({ oid, aloitusKuulutus: { ...projekti.aloitusKuulutus, uudelleenKuulutus: uudelleenKuulutusInput } });
+    const { muokkausTila: _, ...rest } = projekti.aloitusKuulutus;
+    await api.tallennaProjekti({
+      oid,
+      aloitusKuulutus: { ...rest, kuulutusPaiva: uudelleenKuulutusPaiva, uudelleenKuulutus: uudelleenKuulutusInput },
+    });
     await testYllapitoAccessToProjekti(
       oid,
       Status.SUUNNITTELU,
@@ -123,10 +138,12 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
     expect(resultProjekti.aloitusKuulutusJulkaisut).to.have.length(2);
 
     expect(resultProjekti.aloitusKuulutusJulkaisut[0].id).to.eq(1);
-    expect(resultProjekti.aloitusKuulutusJulkaisut[0].tila).to.eq(AloitusKuulutusTila.PERUUTETTU);
+    expect(resultProjekti.aloitusKuulutusJulkaisut[0].tila).to.eq(AloitusKuulutusTila.HYVAKSYTTY);
+    expect(resultProjekti.aloitusKuulutusJulkaisut[0].kuulutusPaiva).to.eq(kuulutusPaiva);
 
     expect(resultProjekti.aloitusKuulutusJulkaisut[1].id).to.eq(2);
     expect(resultProjekti.aloitusKuulutusJulkaisut[1].tila).to.eq(AloitusKuulutusTila.HYVAKSYTTY);
+    expect(resultProjekti.aloitusKuulutusJulkaisut[1].kuulutusPaiva).to.eq(uudelleenKuulutusPaiva);
 
     await testPublicAccessToProjekti(oid, Status.ALOITUSKUULUTUS, userFixture, " uudelleenkuulutuksen jälkeen", (julkinen) => {
       return julkinen.aloitusKuulutusJulkaisu;

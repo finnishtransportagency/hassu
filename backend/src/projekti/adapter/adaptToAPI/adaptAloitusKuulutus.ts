@@ -7,7 +7,7 @@ import {
   UudelleenKuulutus,
 } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
-import { AloitusKuulutusTila, LokalisoituTeksti } from "../../../../../common/graphql/apiModel";
+import { AloitusKuulutusTila, LokalisoituTeksti, MuokkausTila } from "../../../../../common/graphql/apiModel";
 import {
   adaptHankkeenKuvaus,
   adaptIlmoituksenVastaanottajat,
@@ -18,9 +18,12 @@ import {
 } from "../common";
 import { adaptSuunnitteluSopimusJulkaisu, FileLocation } from "./adaptSuunitteluSopimus";
 import { fileService } from "../../../files/fileService";
-import { findJulkaisuWithTila } from "../../projektiUtil";
+import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 
-export function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.AloitusKuulutus | undefined {
+export function adaptAloitusKuulutus(
+  kuulutus?: AloitusKuulutus | null,
+  aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null
+): API.AloitusKuulutus | undefined {
   if (kuulutus) {
     if (!kuulutus.hankkeenKuvaus) {
       throw new Error("adaptAloituskuulutus: kuulutus.hankkeenKuvaus puuttuu");
@@ -33,7 +36,16 @@ export function adaptAloitusKuulutus(kuulutus?: AloitusKuulutus | null): API.Alo
       hankkeenKuvaus: adaptHankkeenKuvaus(kuulutus.hankkeenKuvaus),
       kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kuulutusYhteystiedot),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
+      muokkausTila: adaptMuokkausTila(
+        kuulutus,
+        aloitusKuulutusJulkaisut,
+        AloitusKuulutusTila.MIGROITU,
+        AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA,
+        AloitusKuulutusTila.HYVAKSYTTY
+      ),
     };
+  } else if (findJulkaisuWithTila(aloitusKuulutusJulkaisut, AloitusKuulutusTila.MIGROITU)) {
+    return { __typename: "AloitusKuulutus", muokkausTila: MuokkausTila.MIGROITU };
   }
   return kuulutus as undefined;
 }

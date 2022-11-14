@@ -134,7 +134,7 @@ export async function testProjektinTiedot(oid: string): Promise<void> {
   await api.tallennaProjekti({
     oid,
     muistiinpano: apiTestFixture.newNote,
-    aloitusKuulutus: apiTestFixture.aloitusKuulutus,
+    aloitusKuulutus: apiTestFixture.aloitusKuulutusInput,
     suunnitteluSopimus: apiTestFixture.createSuunnitteluSopimusInput(uploadedFile, UserFixture.testi1Kayttaja.uid!),
     kielitiedot: apiTestFixture.kielitiedotInput,
     euRahoitus: false,

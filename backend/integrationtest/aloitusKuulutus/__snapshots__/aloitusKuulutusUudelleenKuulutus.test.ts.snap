@@ -60,21 +60,7 @@ Object {
         "tila": "JULKAISTU_PERUUTETTU",
       },
     },
-    "uudelleenKuulutus": Object {
-      "__typename": "UudelleenKuulutus",
-      "alkuperainenHyvaksymisPaiva": "2022-11-03",
-      "selosteKuulutukselle": Object {
-        "RUOTSI": "Ruotsiseloste uudelleenkuulutukselle",
-        "SUOMI": "Suomiseloste uudelleenkuulutukselle",
-        "__typename": "LokalisoituTeksti",
-      },
-      "selosteLahetekirjeeseen": Object {
-        "RUOTSI": "Ruotsiseloste uudelleenkuulutuksen lähetekirjeeseen",
-        "SUOMI": "Suomiseloste uudelleenkuulutuksen lähetekirjeeseen",
-        "__typename": "LokalisoituTeksti",
-      },
-      "tila": "JULKAISTU_PERUUTETTU",
-    },
+    "uudelleenKuulutus": null,
   },
 }
 `;
@@ -102,7 +88,7 @@ Object {
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
     },
-    "kuulutusPaiva": "2022-01-02",
+    "kuulutusPaiva": "2001-01-01",
     "siirtyySuunnitteluVaiheeseen": "2022-01-01",
     "suunnitteluSopimus": Object {
       "__typename": "SuunnitteluSopimusJulkaisu",
@@ -230,7 +216,7 @@ Suomiseloste uudelleenkuulutuksen lähetekirjeeseen
 
 Väylävirasto ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee suunnittelun ja maastotöiden aloittamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
 
-Kuulutus julkaistaan 2.1.2022, Väyläviraston tietoverkossa osoitteessa https://vayla.fi/kuulutukset.
+Kuulutus julkaistaan 1.1.2001, Väyläviraston tietoverkossa osoitteessa https://vayla.fi/kuulutukset.
 
 Väylävirasto pyytää suunnittelualueen kuntia julkisemaan julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa Väylävirastolle.
 
@@ -263,7 +249,7 @@ HASSU AUTOMAATTITESTIPROJEKTI1
 Suomiseloste uudelleenkuulutukselle
 Nokia, sovittuaan asiasta väyläviraston kanssa, käynnistää tiesuunnitelman laatimisen tarpeellisine tutkimuksineen. 
 Lorem Ipsum
-Kuulutus on julkaistu tietoverkossa väyläviraston verkkosivuilla 2.1.2022. 
+Kuulutus on julkaistu tietoverkossa väyläviraston verkkosivuilla 1.1.2001. 
 Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §). 
 Suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön edellyttämiä mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §). 
 Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa on oikeus olla tutkimuksissa saapuvilla ja lausua mielipiteensä asiassa (LjMTL 16 § ja 27 §). 
@@ -287,7 +273,7 @@ ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA
 HASSU AUTOMAATTITESTIPROJEKTI1
 Suomiseloste uudelleenkuulutukselle
 Väylävirasto julkaisee tietoverkossaan liikennejärjestelmästä ja maanteistä annetun lain (503/2005) sekä hallintolain 62 a §:n mukaisesti kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman suunnittelun ja maastotöiden aloittamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
-Kuulutus julkaistaan 2.1.2022, väyläviraston tietoverkossa osoitteessa https://www.vayla.fi/kuulutukset. 
+Kuulutus julkaistaan 1.1.2001, väyläviraston tietoverkossa osoitteessa https://www.vayla.fi/kuulutukset. 
 Lisätietoja antavat 
 CGI Suomi Oy, A-Tunnus1 Hassu, puh. 123, mikko.haapamki(at)cgi.com 
 Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 

@@ -1,5 +1,11 @@
 import * as API from "../../../../common/graphql/apiModel";
-import { HyvaksymisPaatosVaiheTila, NahtavillaoloVaiheTila, Status, SuunnitteluVaiheTila } from "../../../../common/graphql/apiModel";
+import {
+  HyvaksymisPaatosVaiheTila,
+  MuokkausTila,
+  NahtavillaoloVaiheTila,
+  Status,
+  SuunnitteluVaiheTila,
+} from "../../../../common/graphql/apiModel";
 import { kayttoOikeudetSchema } from "../../../../src/schemas/kayttoOikeudet";
 import { ValidationError } from "yup";
 import { log } from "../../logger";
@@ -38,7 +44,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
       }
 
       if (!p.aloitusKuulutus && !p.aloitusKuulutusJulkaisu) {
-        p.aloitusKuulutus = { __typename: "AloitusKuulutus" };
+        p.aloitusKuulutus = { __typename: "AloitusKuulutus", muokkausTila: MuokkausTila.MUOKKAUS };
       }
       p.status = API.Status.ALOITUSKUULUTUS;
       super.handle(p); // Continue evaluating next rules

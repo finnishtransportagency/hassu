@@ -36,7 +36,6 @@ function syotaPuhelinnumerot(oid) {
 
 describe("Migraatio", () => {
   before(() => {
-    cy.abortEarly();
     Cypress.config("scrollBehavior", "nearest");
     Cypress.config("keystrokeDelay", 0);
   });
@@ -167,7 +166,7 @@ describe("Migraatio", () => {
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').clear().type("test@vayla.fi");
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').clear().type("test@vayla.fi");
 
-    cy.get("#save_and_send_for_acceptance").click();
+    cy.get("#save_and_send_for_acceptance").click({ force: true });
     cy.contains("Lähetys onnistui", { timeout: 30000 });
     cy.get("#kuulutuksentiedot_tab").click({ force: true });
     cy.get("#button_open_acceptance_dialog")

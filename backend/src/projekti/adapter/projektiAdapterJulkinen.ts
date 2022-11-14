@@ -39,7 +39,7 @@ import {
   adaptYhteystiedotByAddingTypename,
   findPublishedAloitusKuulutusJulkaisu,
 } from "./common";
-import { findUserByKayttajatunnus } from "../projektiUtil";
+import { findJulkaisuWithTila, findUserByKayttajatunnus } from "../projektiUtil";
 import { applyProjektiJulkinenStatus } from "../status/projektiJulkinenStatusHandler";
 import {
   adaptStandardiYhteystiedotLisaamattaProjaria,
@@ -130,22 +130,21 @@ class ProjektiAdapterJulkinen {
     aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null
   ): API.AloitusKuulutusJulkaisuJulkinen | undefined {
     if (aloitusKuulutusJulkaisut) {
+      const migroitu = findJulkaisuWithTila(aloitusKuulutusJulkaisut, API.AloitusKuulutusTila.MIGROITU);
+      if (migroitu) {
+        return {
+          __typename: "AloitusKuulutusJulkaisuJulkinen",
+          tila: AloitusKuulutusTila.MIGROITU,
+          yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(migroitu.yhteystiedot),
+          velho: adaptVelho(migroitu.velho),
+        };
+      }
       // Pick HYVAKSYTTY or MIGROITU aloituskuulutusjulkaisu, by this order
       const julkaisu = findPublishedAloitusKuulutusJulkaisu(aloitusKuulutusJulkaisut);
       if (!julkaisu) {
         return undefined;
       }
       const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, tila, kuulutusPaiva, uudelleenKuulutus } = julkaisu;
-
-      if (julkaisu.tila == AloitusKuulutusTila.MIGROITU) {
-        return {
-          __typename: "AloitusKuulutusJulkaisuJulkinen",
-          tila: AloitusKuulutusTila.MIGROITU,
-          yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
-          velho: adaptVelho(velho),
-        };
-      }
-
       if (!julkaisu.hankkeenKuvaus) {
         throw new Error("adaptAloitusKuulutusJulkaisut: julkaisu.hankkeenKuvaus määrittelemättä");
       }

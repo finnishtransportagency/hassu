@@ -1,6 +1,6 @@
 import Mail from "nodemailer/lib/mailer";
 import { AsiakirjanMuoto } from "../../asiakirja/asiakirjaTypes";
-import { DBProjekti } from "../../database/model";
+import { AloitusKuulutusJulkaisu } from "../../database/model";
 import { EmailOptions } from "../email";
 import { LahetekirjeAdapter, LahetekirjeTiedot } from "./LahetekirjeAdapter";
 
@@ -62,11 +62,11 @@ const lahetekirje11R = ({
   return paragraphs.join("\n\n");
 };
 
-export function createLahetekirjeEmail(projekti: DBProjekti): EmailOptions {
-  const tiedot = new LahetekirjeAdapter(projekti).lahetekirjeTiedot;
+export function createLahetekirjeEmail(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu): EmailOptions {
+  const tiedot = new LahetekirjeAdapter(aloitusKuulutusJulkaisu).lahetekirjeTiedot;
   const subject = tiedot.asiakirjanMuoto === AsiakirjanMuoto.RATA ? lahetekirjeOtsikko11R(tiedot) : lahetekirjeOtsikko11T(tiedot);
   const text = tiedot.asiakirjanMuoto === AsiakirjanMuoto.RATA ? lahetekirje11R(tiedot) : lahetekirje11T(tiedot);
-  const attachments = createAttachments(projekti);
+  const attachments = createAttachments(aloitusKuulutusJulkaisu);
   return {
     subject,
     text,
@@ -75,6 +75,6 @@ export function createLahetekirjeEmail(projekti: DBProjekti): EmailOptions {
   };
 }
 
-function createAttachments(_: DBProjekti): Mail.Attachment[] {
+function createAttachments(_: AloitusKuulutusJulkaisu): Mail.Attachment[] {
   return [];
 }

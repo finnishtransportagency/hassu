@@ -88,6 +88,12 @@ enum ProjektiPaallikkoVirheTyyppi {
   EI_LOYDY
 }
 
+enum MuokkausTila {
+  MUOKKAUS
+  LUKU
+  MIGROITU
+}
+
 type ProjektipaallikkoVirhe {
   tyyppi: ProjektiPaallikkoVirheTyyppi!
   sahkoposti: String
@@ -535,7 +541,6 @@ enum AloitusKuulutusTila {
   ODOTTAA_HYVAKSYNTAA
   HYVAKSYTTY
   MIGROITU
-  PERUUTETTU
 }
 
 enum UudelleenkuulutusTila {
@@ -581,6 +586,7 @@ type AloitusKuulutus {
   palautusSyy: String
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   uudelleenKuulutus: UudelleenKuulutus
+  muokkausTila: MuokkausTila!
 }
 
 type StandardiYhteystiedot {

@@ -17,6 +17,7 @@ import {
   Kieli,
   Kielitiedot,
   LaskuriTyyppi,
+  MuokkausTila,
   Status,
   TallennaProjektiInput,
   TilasiirtymaToiminto,
@@ -324,7 +325,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
   );
 
   const kielitiedot: Kielitiedot | null | undefined = projekti?.kielitiedot;
-  const voiMuokata = !projekti?.aloitusKuulutusJulkaisu;
+  const voiMuokata = projekti?.aloitusKuulutus?.muokkausTila == MuokkausTila.MUOKKAUS;
   const voiHyvaksya =
     getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA) && projekti?.nykyinenKayttaja.onProjektipaallikko;
 
@@ -347,7 +348,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     return <div>Kielitiedot puttuu</div>;
   }
 
-  const migroitu = getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.MIGROITU);
+  const migroitu = projekti?.aloitusKuulutus?.muokkausTila == MuokkausTila.MIGROITU;
 
   const ensisijainenKieli = kielitiedot?.ensisijainenKieli;
   const toissijainenKieli = kielitiedot?.toissijainenKieli;

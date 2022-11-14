@@ -100,7 +100,7 @@ async function sendAloitusKuulutusApprovalMailsAndAttachments(projekti: DBProjek
     log.error("Aloituskuulutus PDF:n lahetyksessa ei loytynyt projektipaallikon sahkopostiosoitetta");
   }
 
-  const emailOptionsLahetekirje = createLahetekirjeEmail(projekti);
+  const emailOptionsLahetekirje = createLahetekirjeEmail(aloituskuulutus);
   if (emailOptionsLahetekirje.to) {
     // PDFt on jo olemassa
     const aloituskuulutusPDFtSUOMI = aloituskuulutus.aloituskuulutusPDFt?.[Kieli.SUOMI];
