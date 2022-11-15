@@ -19,19 +19,18 @@ export function adaptStandardiYhteystiedotToYhteystiedot(
     yt.push(vaylaUserToYhteystieto(projari, dbProjekti.suunnitteluSopimus));
     sahkopostit.push(projari.email);
   }
-  dbProjekti.kayttoOikeudet
-    .filter(
-      ({ kayttajatunnus }) =>
-        (pakotaKunnanEdustaja && kunnanEdustaja
-          ? kayttajatunnus !== kunnanEdustaja.kayttajatunnus
-          : pakotaProjari && projari
-          ? kayttajatunnus !== projari.kayttajatunnus
-          : true) && kuulutusYhteystiedot?.yhteysHenkilot?.find((yh) => yh === kayttajatunnus)
-    )
-    .forEach((oikeus) => {
-      yt.push(vaylaUserToYhteystieto(oikeus, dbProjekti?.suunnitteluSopimus)); // kunnan edustajalle insertoidaan kunta, jos suunnitteluSopimus on annettu
-      sahkopostit.push(oikeus.email); //Kerää sähköpostit myöhempää duplikaattien tarkistusta varten.
-    });
+  const o = dbProjekti.kayttoOikeudet.filter(
+    ({ kayttajatunnus }) =>
+      (pakotaKunnanEdustaja && kunnanEdustaja
+        ? kayttajatunnus !== kunnanEdustaja.kayttajatunnus
+        : pakotaProjari && projari
+        ? kayttajatunnus !== projari.kayttajatunnus
+        : true) && kuulutusYhteystiedot?.yhteysHenkilot?.find((yh) => yh === kayttajatunnus)
+  );
+  o.forEach((oikeus) => {
+    yt.push(vaylaUserToYhteystieto(oikeus, dbProjekti?.suunnitteluSopimus)); // kunnan edustajalle insertoidaan kunta, jos suunnitteluSopimus on annettu
+    sahkopostit.push(oikeus.email); //Kerää sähköpostit myöhempää duplikaattien tarkistusta varten.
+  });
   if (kuulutusYhteystiedot?.yhteysTiedot) {
     kuulutusYhteystiedot.yhteysTiedot?.forEach((yhteystieto) => {
       if (!sahkopostit.find((email) => email === yhteystieto.sahkoposti)) {

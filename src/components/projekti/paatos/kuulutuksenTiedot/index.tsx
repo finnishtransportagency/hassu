@@ -54,10 +54,9 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
   );
 
   const defaultValues: KuulutuksenTiedotFormValues = useMemo(() => {
-    const yhteysTiedot: YhteystietoInput[] =
-      projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt)) || [];
+    const yhteysTiedot: YhteystietoInput[] = julkaisematonPaatos?.kuulutusYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt)) || [];
 
-    const yhteysHenkilot: string[] = projekti?.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.yhteysHenkilot || [];
+    const yhteysHenkilot: string[] = julkaisematonPaatos?.kuulutusYhteystiedot?.yhteysHenkilot || [];
 
     const formValues: KuulutuksenTiedotFormValues = {
       oid: projekti.oid,
