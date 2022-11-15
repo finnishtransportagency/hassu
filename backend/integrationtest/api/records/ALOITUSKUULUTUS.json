@@ -124,10 +124,11 @@
       },
       "yhteystiedot": [
         {
-          "etunimi": "A-tunnus1",
+          "etunimi": "Testi1",
+          "kunta": 536,
           "organisaatio": "CGI Suomi Oy",
           "puhelinnumero": "123",
-          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sahkoposti": "mikko.haapamaki@cgi.com",
           "sukunimi": "Hassu"
         },
         {
