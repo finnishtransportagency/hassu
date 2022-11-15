@@ -17,7 +17,7 @@ import {
 import { api } from "./apiClient";
 import { testCreateHyvaksymisPaatosWithAineistot } from "./testUtil/hyvaksymisPaatosVaihe";
 import { ImportAineistoMock } from "./testUtil/importAineistoMock";
-import { expectJulkinenNotFound, expectToMatchSnapshot, takeYllapitoS3Snapshot } from "./testUtil/util";
+import { expectJulkinenNotFound, expectToMatchSnapshot, mockSaveProjektiToVelho, takeYllapitoS3Snapshot } from "./testUtil/util";
 import { expect } from "chai";
 import {
   cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps,
@@ -44,6 +44,7 @@ describe("Jatkopäätökset", () => {
     });
 
     await setupLocalDatabase();
+    mockSaveProjektiToVelho();
     await deleteProjekti(oid);
     await useProjektiTestFixture(FixtureName.JATKOPAATOS_1_ALKU);
   });

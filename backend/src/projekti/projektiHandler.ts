@@ -1,5 +1,12 @@
 import { projektiDatabase } from "../database/projektiDatabase";
-import { getVaylaUser, requirePermissionLuku, requirePermissionLuonti, requirePermissionMuokkaa, requireVaylaUser } from "../user";
+import {
+  getVaylaUser,
+  requireAdmin,
+  requirePermissionLuku,
+  requirePermissionLuonti,
+  requirePermissionMuokkaa,
+  requireVaylaUser,
+} from "../user";
 import { velho } from "../velho/velhoClient";
 import * as API from "../../../common/graphql/apiModel";
 import { KayttajaTyyppi, NykyinenKayttaja, TallennaProjektiInput, Velho } from "../../../common/graphql/apiModel";
@@ -12,7 +19,6 @@ import { fileService } from "../files/fileService";
 import { personSearch } from "../personSearch/personSearchClient";
 import { emailClient } from "../email/email";
 import { createPerustamisEmail } from "../email/emailTemplates";
-import { requireAdmin } from "../user/userService";
 import { projektiArchive } from "../archive/projektiArchiveService";
 import { NotFoundError } from "../error/NotFoundError";
 import { projektiAdapterJulkinen } from "./adapter/projektiAdapterJulkinen";
@@ -245,7 +251,19 @@ export async function requirePermissionMuokkaaProjekti(oid: string): Promise<DBP
   return projekti;
 }
 
+async function saveProjektiToVelho(projekti: DBProjekti) {
+  const kasittelynTila = projekti.kasittelynTila;
+  if (kasittelynTila) {
+    requireAdmin();
+    await velho.saveProjekti(projekti.oid, kasittelynTila);
+  }
+}
+
 async function handleEvents(projektiAdaptationResult: ProjektiAdaptationResult) {
+  await projektiAdaptationResult.onEvent(ProjektiEventType.SAVE_PROJEKTI_TO_VELHO, async () => {
+    await saveProjektiToVelho(projektiAdaptationResult.projekti);
+  });
+
   await projektiAdaptationResult.onEvent(ProjektiEventType.VUOROVAIKUTUS_PUBLISHED, async (event, oid) => {
     if (!(event as VuorovaikutusPublishedEvent).vuorovaikutusNumero) {
       throw new Error("handleEvents: event is missing vuorovaikutusNumero");

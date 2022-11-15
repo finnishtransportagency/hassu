@@ -1,13 +1,14 @@
-import { KasittelynTila, Hyvaksymispaatos } from "../../../database/model";
+import { Hyvaksymispaatos, KasittelynTila } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 
 export function adaptKasittelynTila(kasittelynTila?: KasittelynTila | null): API.KasittelynTila | undefined | null {
   if (kasittelynTila) {
-    const { hyvaksymispaatos, ensimmainenJatkopaatos, toinenJatkopaatos } = kasittelynTila;
+    const { hyvaksymispaatos, ensimmainenJatkopaatos, toinenJatkopaatos, ...rest } = kasittelynTila;
     return {
       hyvaksymispaatos: adaptHyvaksymispaatos(hyvaksymispaatos),
       ensimmainenJatkopaatos: adaptHyvaksymispaatos(ensimmainenJatkopaatos),
       toinenJatkopaatos: adaptHyvaksymispaatos(toinenJatkopaatos),
+      ...rest,
       __typename: "KasittelynTila",
     };
   }

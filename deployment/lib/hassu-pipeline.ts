@@ -11,6 +11,7 @@ import { Effect, PolicyStatement } from "@aws-cdk/aws-iam";
 import { GitHubSourceProps } from "@aws-cdk/aws-codebuild/lib/source";
 import { Repository } from "@aws-cdk/aws-ecr/lib/repository";
 import { OriginAccessIdentity } from "@aws-cdk/aws-cloudfront";
+import fs from "fs";
 
 // These should correspond to CfnOutputs produced by this stack
 export type PipelineStackOutputs = {
@@ -208,13 +209,17 @@ export class HassuPipelineStack extends Stack {
       webhookFilters,
     };
     const gitHubSource = codebuild.Source.gitHub(sourceProps);
+    const buildImageVersion = fs.readFileSync(".buildimageversion").toString();
     new codebuild.Project(this, "HassuE2eTest", {
       projectName: "Hassu-e2etest-" + env,
       buildSpec: BuildSpec.fromSourceFilename("./deployment/lib/buildspec/e2etest.yml"),
       source: gitHubSource,
       cache: codebuild.Cache.local(LocalCacheMode.CUSTOM, LocalCacheMode.SOURCE, LocalCacheMode.DOCKER_LAYER),
       environment: {
-        buildImage: LinuxBuildImage.fromEcrRepository(Repository.fromRepositoryName(this, "RobotBuildImage", "hassu-buildimage"), "1.0.3"),
+        buildImage: LinuxBuildImage.fromEcrRepository(
+          Repository.fromRepositoryName(this, "RobotBuildImage", "hassu-buildimage"),
+          buildImageVersion
+        ),
         privileged: true,
         computeType: ComputeType.MEDIUM,
         environmentVariables: {

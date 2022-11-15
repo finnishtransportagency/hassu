@@ -12,7 +12,7 @@ import { Status } from "../../../common/graphql/apiModel";
 import { ISO_DATE_FORMAT } from "../../src/util/dateUtil";
 import { api } from "./apiClient";
 import { IllegalAccessError } from "../../src/error/IllegalAccessError";
-import { expectJulkinenNotFound, expectToMatchSnapshot } from "./testUtil/util";
+import { expectJulkinenNotFound, expectToMatchSnapshot, mockSaveProjektiToVelho } from "./testUtil/util";
 import { assertIsDefined } from "../../src/util/assertions";
 import assert from "assert";
 
@@ -28,6 +28,7 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
     userFixture = new UserFixture(userService);
 
     await setupLocalDatabase();
+    mockSaveProjektiToVelho();
     try {
       await deleteProjekti(oid);
     } catch (_ignore) {
@@ -79,9 +80,9 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
     kasittelynTila: { ensimmainenJatkopaatos: { asianumero: string; paatoksenPvm: string; aktiivinen: boolean } };
     oid: string;
   }) {
-    expect(api.tallennaProjekti(projektiWithJatkopaatos1)).to.eventually.be.rejectedWith(
+    await expect(api.tallennaProjekti(projektiWithJatkopaatos1)).to.eventually.be.rejectedWith(
       IllegalAccessError,
-      "Admin-oikeudet pitää vaatia!"
+      "Sinulla ei ole admin-oikeuksia (Hyvaksymispaatoksia voi tallentaa vain Hassun yllapitaja)"
     );
 
     // Tallenna jatkopäätös admin-käyttäjänä

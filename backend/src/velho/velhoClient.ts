@@ -2,17 +2,19 @@ import { log } from "../logger";
 import { config } from "../config";
 import * as HakuPalvelu from "./hakupalvelu";
 import * as ProjektiRekisteri from "./projektirekisteri";
+import { ProjektiToimeksiannotInner } from "./projektirekisteri";
 import * as AineistoPalvelu from "./aineistopalvelu";
 import { VelhoAineisto, VelhoAineistoKategoria, VelhoHakuTulos } from "../../../common/graphql/apiModel";
-import { adaptDokumenttiTyyppi, adaptProjekti, adaptSearchResults, ProjektiSearchResult } from "./velhoAdapter";
+import { adaptDokumenttiTyyppi, adaptKasittelyntilaToVelho, adaptProjekti, adaptSearchResults, ProjektiSearchResult } from "./velhoAdapter";
 import { VelhoError } from "../error/velhoError";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
-import { DBProjekti } from "../database/model";
+import { DBProjekti, KasittelynTila } from "../database/model";
 import { personSearch } from "../personSearch/personSearchClient";
 import dayjs from "dayjs";
 import { aineistoKategoriat } from "../../../common/aineistoKategoriat";
 import { getAxios } from "../aws/monitoring";
 import { assertIsDefined } from "../util/assertions";
+import { IllegalArgumentError } from "../error/IllegalArgumentError";
 
 const axios = getAxios();
 const NodeCache = require("node-cache");
@@ -149,9 +151,9 @@ export class VelhoClient {
         log.info(resultCount + " Velho search results for term: " + term);
       }
       return adaptSearchResults(data.osumat as ProjektiSearchResult[], await personSearch.getKayttajas());
-    } catch (e: any) {
-      log.error(e.message, e);
-      throw new VelhoError(e.message, e);
+    } catch (e: unknown) {
+      log.error(e);
+      throw new VelhoError(e instanceof Error ? e.message : String(e), e);
     }
   }
 
@@ -171,7 +173,7 @@ export class VelhoClient {
 
   public async loadProjektiAineistot(oid: string): Promise<VelhoAineistoKategoria[]> {
     try {
-      const toimeksiannot = await this.listToimeksiannot(oid);
+      const toimeksiannot: ProjektiToimeksiannotInner[] = await this.listToimeksiannot(oid);
       const hakuApi = await this.createHakuApi();
       const aineistot: Record<string, VelhoAineisto[]> = await toimeksiannot.reduce(
         (resultPromise: Promise<Record<string, VelhoAineisto[]>>, toimeksianto) => {
@@ -214,9 +216,9 @@ export class VelhoClient {
         result.push({ __typename: "VelhoAineistoKategoria", kategoria, aineistot: aineistot[kategoria] });
       }
       return result;
-    } catch (e: any) {
+    } catch (e: unknown) {
       log.error(e);
-      throw new VelhoError(e.message, e);
+      throw new VelhoError(e instanceof Error ? e.message : String(e), e);
     }
   }
 
@@ -231,10 +233,10 @@ export class VelhoClient {
     return dokumenttiResponse.headers.location;
   }
 
-  private async listToimeksiannot(oid: string): Promise<ProjektiRekisteri.InlineResponse2001[]> {
+  private async listToimeksiannot(oid: string): Promise<ProjektiToimeksiannotInner[]> {
     const projektiApi = await this.createProjektiRekisteriApi();
     const toimeksiannotResponse = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidToimeksiannotGet(oid);
-    const toimeksiannot: ProjektiRekisteri.InlineResponse2001[] = [];
+    const toimeksiannot: ProjektiToimeksiannotInner[] = [];
     toimeksiannotResponse.data.forEach((toimeksianto) => toimeksiannot.push(toimeksianto));
     return toimeksiannot;
   }
@@ -261,13 +263,37 @@ export class VelhoClient {
     return response.data;
   }
 
+  public async saveProjekti(oid: string, params: KasittelynTila): Promise<void> {
+    if (process.env.VELHO_READ_ONLY == "true") {
+      throw new Error("Velho on lukutilassa testeissä. Lisää kutsu mockSaveProjektiToVelho().");
+    }
+    const projektiApi = await this.createProjektiRekisteriApi();
+    try {
+      const loadProjektiResponse = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidGet(oid);
+      checkResponseIsOK(loadProjektiResponse, "Load projekti from Velho before saving");
+      const projekti = loadProjektiResponse.data;
+      adaptKasittelyntilaToVelho(projekti, params);
+      const saveResponse = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidPut(oid, projekti);
+      checkResponseIsOK(saveResponse, "Save projekti to Velho");
+    } catch (e: unknown) {
+      if (e instanceof IllegalArgumentError) {
+        throw e;
+      } else if (e instanceof Error) {
+        throw new VelhoError(e.message, e);
+      } else {
+        throw new VelhoError("saveProjekti");
+      }
+    }
+  }
+
   public async deleteProjektiForTesting(oid: string): Promise<ProjektiRekisteri.ProjektiProjekti> {
     const projektiApi = await this.createProjektiRekisteriApi();
     let response;
     try {
       response = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidDelete(oid);
-    } catch (e: any) {
-      throw new VelhoError(e.message, e);
+    } catch (e: unknown) {
+      log.error(e);
+      throw new VelhoError(e instanceof Error ? e.message : String(e), e);
     }
     checkResponseIsOK(response, "Delete projekti for testing");
     return response.data;

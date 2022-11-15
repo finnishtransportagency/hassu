@@ -4,6 +4,7 @@ export enum ProjektiEventType {
   VUOROVAIKUTUS_PUBLISHED = "VUOROVAIKUTUS_PUBLISHED",
   AINEISTO_CHANGED = "AINEISTO_CHANGED",
   RESET_KAYTTOOIKEUDET = "RESET_KAYTTOOIKEUDET",
+  SAVE_PROJEKTI_TO_VELHO = "SAVE_PROJEKTI_TO_VELHO",
 }
 
 export type VuorovaikutusPublishedEvent = {
@@ -13,8 +14,9 @@ export type VuorovaikutusPublishedEvent = {
 
 export type AineistoChangedEvent = { eventType: ProjektiEventType.AINEISTO_CHANGED };
 export type ResetKayttooikeudetEvent = { eventType: ProjektiEventType.RESET_KAYTTOOIKEUDET };
+export type SaveProjektiToVelhoEvent = { eventType: ProjektiEventType.SAVE_PROJEKTI_TO_VELHO };
 
-export type ProjektiEvent = VuorovaikutusPublishedEvent | AineistoChangedEvent | ResetKayttooikeudetEvent;
+export type ProjektiEvent = VuorovaikutusPublishedEvent | AineistoChangedEvent | ResetKayttooikeudetEvent | SaveProjektiToVelhoEvent;
 
 export class ProjektiAdaptationResult {
   private dbProjekti: DBProjekti;
@@ -64,6 +66,13 @@ export class ProjektiAdaptationResult {
   resetKayttooikeudetAndSynchronizeVelho(): void {
     const newEvent: ResetKayttooikeudetEvent = {
       eventType: ProjektiEventType.RESET_KAYTTOOIKEUDET,
+    };
+    this.pushEvent(newEvent);
+  }
+
+  saveProjektiToVelho(): void {
+    const newEvent: SaveProjektiToVelhoEvent = {
+      eventType: ProjektiEventType.SAVE_PROJEKTI_TO_VELHO,
     };
     this.pushEvent(newEvent);
   }

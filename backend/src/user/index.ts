@@ -6,4 +6,5 @@ export {
   requirePermissionMuokkaa,
   getVaylaUser,
   requireVaylaUser,
+  requireAdmin,
 } from "./userService";

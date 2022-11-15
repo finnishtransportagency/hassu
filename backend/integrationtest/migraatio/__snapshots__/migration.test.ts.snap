@@ -1,5 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Migraatio epäaktiivinen-tilaan migroitu projekti 1`] = `
+Object {
+  "velho.saveProjekti": Array [
+    Array [
+      "1.2.246.578.5.1.2572523015.2790590568",
+      Object {
+        "ensimmainenJatkopaatos": Object {
+          "aktiivinen": true,
+          "asianumero": "jatkopaatos1_asianumero",
+          "paatoksenPvm": "2020-01-01T00:00:00+02:00",
+        },
+        "hyvaksymispaatos": Object {
+          "aktiivinen": true,
+          "asianumero": "asianumero123",
+          "paatoksenPvm": "2022-09-29",
+        },
+      },
+    ],
+  ],
+}
+`;
+
 exports[`Migraatio hyväksymismenettelyyn migroitu projekti 1`] = `
 Object {
   "description": "testImportHyvaksymispaatosvaiheAineistot",
@@ -516,6 +538,22 @@ Object {
       ],
     },
   },
+}
+`;
+
+exports[`Migraatio hyväksymismenettelyyn migroitu projekti 5`] = `
+Object {
+  "velho.saveProjekti": Array [
+    Array [
+      "1.2.246.578.5.1.2789861876.697619507",
+      Object {
+        "hyvaksymispaatos": Object {
+          "asianumero": "asianro123",
+          "paatoksenPvm": "2022-06-09",
+        },
+      },
+    ],
+  ],
 }
 `;
 

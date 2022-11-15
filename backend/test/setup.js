@@ -21,6 +21,7 @@ addSerializer({
 });
 
 process.env.USE_PINO_PRETTY = "true";
+process.env.VELHO_READ_ONLY = "true";
 
 process.env.TABLE_PROJEKTI = "Projekti-localstack";
 process.env.TABLE_FEEDBACK = "Palaute-localstack";

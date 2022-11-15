@@ -3,7 +3,7 @@ import { setupLocalDatabase } from "../util/databaseUtil";
 import * as sinon from "sinon";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { MOCKED_TIMESTAMP, useProjektiTestFixture } from "../api/testFixtureRecorder";
-import { expectJulkinenNotFound, stubPDFGenerator } from "../api/testUtil/util";
+import { expectJulkinenNotFound, mockSaveProjektiToVelho, stubPDFGenerator } from "../api/testUtil/util";
 import {
   julkaiseSuunnitteluvaihe,
   listDocumentsToImport,
@@ -36,6 +36,7 @@ describe("Migraatio", () => {
 
   before(async () => {
     await setupLocalDatabase();
+    mockSaveProjektiToVelho();
     importAineistoMock.initStub();
     userFixture = new UserFixture(userService);
     stubPDFGenerator();

@@ -2,6 +2,7 @@
 
 exports[`VelhoAdapter should adapt project from Velho successfully 1`] = `
 Object {
+  "kasittelynTila": undefined,
   "kayttoOikeudet": Array [],
   "oid": "100",
   "tyyppi": "TIE",
@@ -31,6 +32,7 @@ Object {
 
 exports[`VelhoAdapter should adapt project with kunta and maakunta keys from Velho successfully 1`] = `
 Object {
+  "kasittelynTila": undefined,
   "kayttoOikeudet": Array [],
   "oid": "100",
   "tyyppi": "TIE",

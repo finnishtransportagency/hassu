@@ -797,9 +797,17 @@ type LisaAineistoParametrit {
 }
 
 type KasittelynTila {
+  suunnitelmanTila: String
   hyvaksymispaatos: Hyvaksymispaatos
   ensimmainenJatkopaatos: Hyvaksymispaatos
   toinenJatkopaatos: Hyvaksymispaatos
+  hyvaksymisesitysTraficomiinPaiva: String
+  ennakkoneuvotteluPaiva: String
+  valitustenMaara: Int
+  lainvoimaAlkaen: String
+  lainvoimaPaattyen: String
+  liikenteeseenluovutusOsittain: String
+  liikenteeseenluovutusKokonaan: String
 }
 
 type Hyvaksymispaatos {
