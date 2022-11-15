@@ -1,6 +1,5 @@
 {
   "aloitusKuulutus": {
-    "__typename": "AloitusKuulutus",
     "hankkeenKuvaus": {
       "RUOTSI": "På Svenska",
       "SAAME": "Saameksi",
@@ -49,7 +48,6 @@
   },
   "aloitusKuulutusJulkaisut": [
     {
-      "__typename": "AloitusKuulutus",
       "aloituskuulutusPDFt": {
         "SUOMI": {
           "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
@@ -62,6 +60,7 @@
         "SUOMI": "Lorem Ipsum"
       },
       "hyvaksyja": "A000112",
+      "hyvaksymisPaiva": "2022-11-03",
       "id": 1,
       "ilmoituksenVastaanottajat": {
         "kunnat": [

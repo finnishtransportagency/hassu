@@ -1,8 +1,7 @@
 import log from "loglevel";
-import { KayttajaTyyppi, Kieli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
-import { DBProjekti, Yhteystieto } from "../../database/model";
+import { Kieli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
+import { AloitusKuulutusJulkaisu, Velho } from "../../database/model";
 import { translate } from "../../util/localization";
-import { vaylaUserToYhteystieto } from "../../util/vaylaUserToYhteystieto";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../../asiakirja/asiakirjaTypes";
 import assert from "assert";
 import { formatNimi } from "../../util/userUtil";
@@ -24,17 +23,20 @@ export interface LahetekirjeTiedot {
   vastaanottajat: string[];
   suunnitelmaTyyppi: SuunnitelmaTyyppi;
   asiakirjanMuoto: AsiakirjanMuoto;
+  selosteLahetekirjeeseen?: string;
 }
 
 export class LahetekirjeAdapter {
-  private projekti: DBProjekti;
+  private readonly velho: Velho;
+  private readonly aloitusKuulutus: AloitusKuulutusJulkaisu;
 
-  constructor(projekti: DBProjekti) {
-    this.projekti = projekti;
+  constructor(aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu) {
+    this.velho = aloitusKuulutusJulkaisu.velho;
+    this.aloitusKuulutus = aloitusKuulutusJulkaisu;
   }
 
   public get lahetekirjeTiedot(): LahetekirjeTiedot {
-    const velho = this.projekti.velho;
+    const velho = this.velho;
     assert(velho);
     return {
       nimi: this.nimi,
@@ -51,22 +53,21 @@ export class LahetekirjeAdapter {
       vastaanottajat: this.vastaanottajat,
       suunnitelmaTyyppi: this.suunnitelmaTyyppi,
       asiakirjanMuoto: determineAsiakirjaMuoto(velho.tyyppi, velho.vaylamuoto),
+      selosteLahetekirjeeseen: this.aloitusKuulutus?.uudelleenKuulutus?.selosteLahetekirjeeseen?.SUOMI,
     };
   }
 
   protected get isVaylaTilaaja(): boolean {
-    return this.projekti?.velho?.suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO;
+    return this.velho?.suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO;
   }
 
   protected get isElyTilaaja(): boolean {
-    return (
-      !!this.projekti?.velho?.suunnittelustaVastaavaViranomainen && this.projekti?.velho?.suunnittelustaVastaavaViranomainen.endsWith("ELY")
-    );
+    return !!this.velho?.suunnittelustaVastaavaViranomainen && this.velho?.suunnittelustaVastaavaViranomainen.endsWith("ELY");
   }
 
   private get suunnitelmaTyyppi(): SuunnitelmaTyyppi {
     let result: SuunnitelmaTyyppi = "yleissuunnitelma";
-    switch (this.projekti?.velho?.tyyppi) {
+    switch (this.velho?.tyyppi) {
       case ProjektiTyyppi.RATA:
         result = "ratasuunnitelma";
         break;
@@ -81,12 +82,12 @@ export class LahetekirjeAdapter {
   }
 
   private get nimi() {
-    return this.projekti?.velho?.nimi || "<PROJEKTIN NIMI>";
+    return this.velho?.nimi || "<PROJEKTIN NIMI>";
   }
 
   private get tilaajaPitka() {
     let result = "<TILAAJA>";
-    const viranomainen = this.projekti?.velho?.suunnittelustaVastaavaViranomainen;
+    const viranomainen = this.velho?.suunnittelustaVastaavaViranomainen;
     // if no tilaajaOrganisaatio return a placeholder
     if (!viranomainen) {
       return result;
@@ -116,7 +117,7 @@ export class LahetekirjeAdapter {
 
   private get kuulutusPvm() {
     let result = "<KUULUTUS PVM>";
-    const pvm = this.projekti?.aloitusKuulutus?.kuulutusPaiva;
+    const pvm = this.aloitusKuulutus?.kuulutusPaiva;
     // if no pvm return a placeholder
     if (!pvm) {
       return result;
@@ -131,7 +132,7 @@ export class LahetekirjeAdapter {
 
   private get tilaajaGenetiivi() {
     let result = "<TILAAJA>";
-    const viranomainen = this.projekti?.velho?.suunnittelustaVastaavaViranomainen;
+    const viranomainen = this.velho?.suunnittelustaVastaavaViranomainen;
     // if no tilaajaOrganisaatio return a placeholder
     if (!viranomainen) {
       return result;
@@ -161,7 +162,7 @@ export class LahetekirjeAdapter {
 
   private get tilaajaLyhyt() {
     let result = "<TILAAJA>";
-    const viranomainen = this.projekti?.velho?.suunnittelustaVastaavaViranomainen;
+    const viranomainen = this.velho?.suunnittelustaVastaavaViranomainen;
     // if no tilaajaOrganisaatio return a placeholder
     if (!viranomainen) {
       return result;
@@ -180,12 +181,12 @@ export class LahetekirjeAdapter {
   }
 
   private get hankkeenKuvaus() {
-    return this.projekti?.aloitusKuulutus?.hankkeenKuvaus?.SUOMI || "<HANKKEEN KUVAUS>";
+    return this.aloitusKuulutus?.hankkeenKuvaus?.SUOMI || "<HANKKEEN KUVAUS>";
   }
 
   private get tilaajaAllatiivi() {
     let result = "<TILAAJA>";
-    const viranomainen = this.projekti?.velho?.suunnittelustaVastaavaViranomainen;
+    const viranomainen = this.velho?.suunnittelustaVastaavaViranomainen;
     // if no tilaajaOrganisaatio return a placeholder
     if (!viranomainen) {
       return result;
@@ -206,29 +207,13 @@ export class LahetekirjeAdapter {
   }
 
   private get yhteystiedot() {
-    const kuulutusYhteystiedot = this.projekti?.aloitusKuulutus?.kuulutusYhteystiedot;
-    const esitettavatYhteystiedot = kuulutusYhteystiedot?.yhteysTiedot;
-    const kayttoOikeudet = this.projekti?.kayttoOikeudet;
-    const yt: Yhteystieto[] = [];
-
-    kayttoOikeudet
-      ?.filter(
-        ({ kayttajatunnus, tyyppi }) =>
-          tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO || kuulutusYhteystiedot?.yhteysHenkilot?.find((yh) => yh === kayttajatunnus)
-      )
-      .forEach((oikeus) => {
-        yt.push(vaylaUserToYhteystieto(oikeus));
-      });
-    esitettavatYhteystiedot?.forEach((yhteystieto) => {
-      yt.push(yhteystieto);
-    });
-    return yt.map((y) => `${y.organisaatio}, ${formatNimi(y)}, puh. ${y.puhelinnumero}, ${y.sahkoposti}`);
+    return this.aloitusKuulutus?.yhteystiedot.map((y) => `${y.organisaatio}, ${formatNimi(y)}, puh. ${y.puhelinnumero}, ${y.sahkoposti}`);
   }
 
   private get vastaanottajat(): string[] {
     const result: string[] = [];
-    const kunnat = this.projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat;
-    const viranomaiset = this.projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset;
+    const kunnat = this.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat;
+    const viranomaiset = this.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset;
     kunnat?.forEach(({ sahkoposti }) => {
       result.push(sahkoposti);
     });

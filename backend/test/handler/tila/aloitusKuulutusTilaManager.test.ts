@@ -1,0 +1,77 @@
+/* tslint:disable:only-arrow-functions */
+
+import { aloitusKuulutusTilaManager } from "../../../src/handler/tila/aloitusKuulutusTilaManager";
+import sinon from "sinon";
+import { ProjektiFixture } from "../../fixture/projektiFixture";
+import { IllegalArgumentError } from "../../../src/error/IllegalArgumentError";
+import { DBProjekti } from "../../../src/database/model";
+import dayjs from "dayjs";
+import { projektiDatabase } from "../../../src/database/projektiDatabase";
+import { DocumentClient } from "aws-sdk/clients/dynamodb";
+import { dateToString } from "../../../src/util/dateUtil";
+import { UudelleenkuulutusTila } from "../../../../common/graphql/apiModel";
+
+const { expect } = require("chai");
+
+describe("aloitusKuulutusTilaManager", () => {
+  let saveProjektiStub: sinon.SinonStub<[dbProjekti: Partial<DBProjekti>], Promise<DocumentClient.UpdateItemOutput>>;
+  let projekti: DBProjekti;
+
+  before(() => {
+    saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
+  });
+
+  beforeEach(() => {
+    const projekti4 = new ProjektiFixture().dbProjekti4();
+    const { oid, kayttoOikeudet, euRahoitus, kielitiedot, velho, aloitusKuulutus, aloitusKuulutusJulkaisut } = projekti4;
+    projekti = {
+      oid,
+      kayttoOikeudet,
+      euRahoitus,
+      kielitiedot,
+      velho,
+      aloitusKuulutus,
+      aloitusKuulutusJulkaisut,
+      tallennettu: true,
+    };
+  });
+
+  afterEach(() => {
+    sinon.reset();
+  });
+
+  after(() => {
+    sinon.reset();
+  });
+
+  it("should reject uudelleenkuulutus succesfully", async function () {
+    projekti.aloitusKuulutus = undefined;
+    projekti.aloitusKuulutusJulkaisut = undefined;
+    await expect(aloitusKuulutusTilaManager.uudelleenkuuluta(projekti)).to.eventually.be.rejectedWith(
+      IllegalArgumentError,
+      "Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa"
+    );
+
+    await expect(aloitusKuulutusTilaManager.uudelleenkuuluta(new ProjektiFixture().dbProjekti4())).to.eventually.be.rejectedWith(
+      IllegalArgumentError,
+      "Et voi uudelleenkuuluttaa aloistuskuulutusta projektin ollessa tässä tilassa:NAHTAVILLAOLO"
+    );
+  });
+
+  it("should create uudelleenkuulutus succesfully for unpublished kuulutus", async function () {
+    projekti.aloitusKuulutusJulkaisut![0].kuulutusPaiva = dateToString(dayjs().add(1, "day")); // Tomorrow
+    await aloitusKuulutusTilaManager.uudelleenkuuluta(projekti);
+    const savedProjekti: Partial<DBProjekti> = saveProjektiStub.getCall(0).firstArg;
+    expect(savedProjekti.aloitusKuulutus?.uudelleenKuulutus).to.eql({ tila: UudelleenkuulutusTila.PERUUTETTU });
+  });
+
+  it("should create uudelleenkuulutus succesfully for published kuulutus", async function () {
+    projekti.aloitusKuulutusJulkaisut![0].kuulutusPaiva = dateToString(dayjs().add(-1, "day")); // Yesterday
+    await aloitusKuulutusTilaManager.uudelleenkuuluta(projekti);
+    const savedProjekti: Partial<DBProjekti> = saveProjektiStub.getCall(0).firstArg;
+    expect(savedProjekti.aloitusKuulutus?.uudelleenKuulutus).to.eql({
+      tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
+      alkuperainenHyvaksymisPaiva: "2022-03-21",
+    });
+  });
+});

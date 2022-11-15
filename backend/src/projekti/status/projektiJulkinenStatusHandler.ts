@@ -6,9 +6,16 @@ import {
   Status,
   SuunnitteluVaiheTila,
 } from "../../../../common/graphql/apiModel";
-import { isDateTimeInThePast, parseDate } from "../../util/dateUtil";
-import dayjs from "dayjs";
+import { isDateTimeInThePast } from "../../util/dateUtil";
 import { AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler, HyvaksymisPaatosJulkaisuEndDateAndTila, StatusHandler } from "./statusHandler";
+
+export function isKuulutusPaivaInThePast(kuulutusPaiva?: string | null): boolean {
+  return !!kuulutusPaiva && isDateTimeInThePast(kuulutusPaiva, "start-of-day");
+}
+
+export function isKuulutusVaihePaattyyPaivaInThePast(kuulutusVaihePaattyyPaiva: string | null | undefined): boolean {
+  return !!kuulutusVaihePaattyyPaiva && isDateTimeInThePast(kuulutusVaihePaattyyPaiva, "end-of-day");
+}
 
 export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): void {
   const aloituskuulutus = new (class extends StatusHandler<API.ProjektiJulkinen> {
@@ -18,7 +25,7 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
         if (julkaisu.tila == AloitusKuulutusTila.MIGROITU) {
           // No status change, but continue searching for actual published content
           super.handle(p);
-        } else if (julkaisu.kuulutusPaiva && parseDate(julkaisu.kuulutusPaiva).isBefore(dayjs())) {
+        } else if (isKuulutusPaivaInThePast(julkaisu.kuulutusPaiva)) {
           projekti.status = API.Status.ALOITUSKUULUTUS;
           super.handle(p); // Continue evaluating next rules
         }
@@ -57,10 +64,7 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
       if (nahtavillaoloVaihe?.tila == NahtavillaoloVaiheTila.MIGROITU) {
         super.handle(p); // Continue evaluating next rules
       } else {
-        if (
-          nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva &&
-          isDateTimeInThePast(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva, "end-of-day")
-        ) {
+        if (isKuulutusVaihePaattyyPaivaInThePast(nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva)) {
           projekti.status = API.Status.HYVAKSYMISMENETTELYSSA;
           super.handle(p); // Continue evaluating next rules
         }

@@ -84,7 +84,7 @@ describe("10 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
 
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/jatkaminen1", { timeout: 30000 });
     cy.contains(projektiNimi);
-    cy.get("#aineisto_tab").click();
+    cy.get("#aineisto_tab").click({ force: true });
 
     cy.get("#tuo_paatos_button").click();
     selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
@@ -100,7 +100,7 @@ describe("10 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
 
     cy.reload();
 
-    cy.get("#aineisto_tab").click();
+    cy.get("#aineisto_tab").click({ force: true });
     // Test saved paatos aineisto
     cy.get("input[type='hidden'][name='hyvaksymisPaatos.0.dokumenttiOid']").should("exist");
     cy.get("input[type='hidden'][name='hyvaksymisPaatos.0.nimi']").should("exist");
@@ -131,7 +131,7 @@ describe("10 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').clear().type("test@vayla.fi");
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').clear().type("test@vayla.fi");
 
-    cy.get("#save_and_send_for_acceptance").click();
+    cy.get("#save_and_send_for_acceptance").click({ force: true });
     cy.contains("Lähetys onnistui", { timeout: 30000 });
 
     cy.get("#kuulutuksentiedot_tab").click();

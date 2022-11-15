@@ -7,12 +7,14 @@ import cloneDeep from "lodash/cloneDeep";
 import { apiModel } from "../../../common/graphql";
 
 export enum FixtureName {
+  ALOITUSKUULUTUS = "ALOITUSKUULUTUS",
   NAHTAVILLAOLO = "NAHTAVILLAOLO",
   HYVAKSYMISPAATOS_APPROVED = "HYVAKSYMISPAATOS_APPROVED",
   JATKOPAATOS_1_ALKU = "JATKOPAATOS_1_ALKU",
 }
 
 export const MOCKED_TIMESTAMP = "2020-01-01T00:00:00+02:00";
+export const MOCKED_DATE = "2022-11-03";
 
 export async function recordProjektiTestFixture(fixtureName: string | FixtureName, oid: string): Promise<void> {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
@@ -63,6 +65,7 @@ export function cleanupAndCloneAPIProjekti(projekti: apiModel.Projekti): apiMode
 
 function cleanupProjekti<T extends Record<string, any>>(projekti: T): T {
   replaceFieldsByName(projekti, MOCKED_TIMESTAMP, "tuotu", "paivitetty", "kuulutusVaihePaattyyPaiva", "lahetetty");
+  replaceFieldsByName(projekti, MOCKED_DATE, "hyvaksymisPaiva");
   replaceFieldsByName(projekti, "salt123", "salt");
   return projekti;
 }

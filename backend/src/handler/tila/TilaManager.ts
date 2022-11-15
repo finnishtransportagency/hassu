@@ -3,13 +3,10 @@ import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { emailHandler } from "../emailHandler";
 import { DBProjekti } from "../../database/model";
-import { requireOmistaja } from "../../user/userService";
+import { requireAdmin, requireOmistaja } from "../../user/userService";
 
 export abstract class TilaManager {
-  // TODO: tarkista. Virheen tyyppi on Property 'tyyppi' has no initializer and is not definitely assigned in the constructor.ts(2564)
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  protected tyyppi: TilasiirtymaTyyppi;
+  protected tyyppi!: TilasiirtymaTyyppi;
 
   public async siirraTila({ oid, syy, toiminto, tyyppi }: TilaSiirtymaInput): Promise<void> {
     requirePermissionLuku();
@@ -28,6 +25,8 @@ export abstract class TilaManager {
       await this.rejectInternal(projekti, syy);
     } else if (toiminto == TilasiirtymaToiminto.HYVAKSY) {
       await this.approveInternal(projekti);
+    } else if (toiminto == TilasiirtymaToiminto.UUDELLEENKUULUTA) {
+      await this.uudelleenkuulutaInternal(projekti);
     } else {
       throw new Error("Tuntematon toiminto");
     }
@@ -52,9 +51,16 @@ export abstract class TilaManager {
     await this.approve(projekti, projektiPaallikko);
   }
 
+  private async uudelleenkuulutaInternal(projekti: DBProjekti) {
+    requireAdmin();
+    await this.uudelleenkuuluta(projekti);
+  }
+
   abstract sendForApproval(projekti: DBProjekti, projektipaallikko: NykyinenKayttaja): Promise<void>;
 
   abstract reject(projekti: DBProjekti, syy: string | null | undefined): Promise<void>;
 
   abstract approve(projekti: DBProjekti, projektiPaallikko: NykyinenKayttaja): Promise<void>;
+
+  abstract uudelleenkuuluta(projekti: DBProjekti): Promise<void>;
 }

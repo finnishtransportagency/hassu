@@ -57,6 +57,7 @@ export class AsiakirjaService {
       yhteystiedot: aloitusKuulutusJulkaisu.yhteystiedot,
       suunnitteluSopimus: aloitusKuulutusJulkaisu.suunnitteluSopimus || undefined,
       kayttoOikeudet,
+      uudelleenKuulutus: aloitusKuulutusJulkaisu.uudelleenKuulutus || undefined,
     };
 
     switch (asiakirjaTyyppi) {

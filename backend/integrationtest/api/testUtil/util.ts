@@ -6,6 +6,10 @@ import { UserFixture } from "../../../test/fixture/userFixture";
 import * as sinon from "sinon";
 import { pdfGeneratorClient } from "../../../src/asiakirja/lambda/pdfGeneratorClient";
 import { handleEvent as pdfGenerator } from "../../../src/asiakirja/lambda/pdfGeneratorHandler";
+import { emailClient } from "../../../src/email/email";
+import { Attachment } from "nodemailer/lib/mailer";
+import { EnhancedPDF } from "../../../src/asiakirja/asiakirjaTypes";
+import { GeneratePDFEvent } from "../../../src/asiakirja/lambda/generatePDFEvent";
 import { velho } from "../../../src/velho/velhoClient";
 import mocha from "mocha";
 import { NotFoundError } from "../../../src/error/NotFoundError";
@@ -53,11 +57,68 @@ export async function expectJulkinenNotFound(oid: string, userFixture: UserFixtu
   userFixture.loginAs(UserFixture.mattiMeikalainen);
 }
 
-export function stubPDFGenerator(): void {
-  const pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
-  pdfGeneratorLambdaStub.callsFake(async (event) => {
-    return await pdfGenerator(event);
-  });
+export class PDFGeneratorStub {
+  private pdfGeneratorLambdaStub!: sinon.SinonStub<[GeneratePDFEvent], Promise<EnhancedPDF>>;
+  private pdfs: Pick<EnhancedPDF, "nimi" | "textContent">[] = [];
+
+  init(): void {
+    this.pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
+    this.pdfGeneratorLambdaStub.callsFake(async (event) => {
+      const pdf: EnhancedPDF = await pdfGenerator(event);
+      this.pdfs.push({ nimi: pdf.nimi, textContent: pdf.textContent });
+      return pdf;
+    });
+  }
+
+  verifyAllPDFContents(): void {
+    if (this.pdfs.length > 0) {
+      expectToMatchSnapshot(
+        "PDF:ien sisällöt",
+        this.pdfs.sort((pdf1, pdf2) => pdf1.nimi.localeCompare(pdf2.nimi))
+      );
+    }
+  }
+
+  verifyPDFContents(fileName: string): void {
+    if (this.pdfs.length > 0) {
+      for (const pdf of this.pdfs) {
+        if (pdf.nimi == fileName) {
+          expectToMatchSnapshot("PDF:n sisältö", pdf);
+        }
+      }
+    }
+  }
+}
+
+export class EmailClientStub {
+  private emailClientStub!: sinon.SinonStub;
+
+  init(): void {
+    this.emailClientStub = sinon.stub(emailClient, "sendEmail");
+  }
+
+  verifyEmailsSent(): void {
+    if (this.emailClientStub.getCalls().length > 0) {
+      expect(
+        this.emailClientStub
+          .getCalls()
+          .map((call) => {
+            const arg = call.args[0];
+            if (arg.attachments) {
+              arg.attachments = arg.attachments.map((attachment: Attachment) => {
+                // Remove unnecessary data from snapshot
+                delete attachment.content;
+                delete attachment.contentDisposition;
+                return attachment;
+              });
+            }
+            return arg;
+          })
+          .sort()
+      ).toMatchSnapshot();
+      this.emailClientStub.reset();
+    }
+  }
 }
 
 export function mockSaveProjektiToVelho(): void {

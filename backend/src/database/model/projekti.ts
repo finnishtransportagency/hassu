@@ -2,7 +2,15 @@ import { AloitusKuulutusTila, KayttajaTyyppi, ProjektiTyyppi, Viranomainen } fro
 import { SuunnitteluVaihe, Vuorovaikutus } from "./suunnitteluVaihe";
 import { NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "./nahtavillaoloVaihe";
 import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "./hyvaksymisPaatosVaihe";
-import { IlmoituksenVastaanottajat, Kielitiedot, LocalizedMap, StandardiYhteystiedot, Velho, Yhteystieto } from "./common";
+import {
+  IlmoituksenVastaanottajat,
+  Kielitiedot,
+  LocalizedMap,
+  StandardiYhteystiedot,
+  UudelleenKuulutus,
+  Velho,
+  Yhteystieto,
+} from "./common";
 import { suunnitelmanTilat } from "../../../../common/generated/kasittelynTila";
 
 export type DBVaylaUser = {
@@ -24,6 +32,7 @@ export type AloitusKuulutus = {
   kuulutusYhteystiedot?: StandardiYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   palautusSyy?: string | null;
+  uudelleenKuulutus?: UudelleenKuulutus | null;
 };
 
 export type AloitusKuulutusPDF = {
@@ -45,7 +54,9 @@ export type AloitusKuulutusJulkaisu = {
   tila?: AloitusKuulutusTila | null;
   muokkaaja?: string | null;
   hyvaksyja?: string | null;
+  hyvaksymisPaiva?: string | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
+  uudelleenKuulutus?: UudelleenKuulutus | null;
 };
 
 export type SuunnitteluSopimus = {

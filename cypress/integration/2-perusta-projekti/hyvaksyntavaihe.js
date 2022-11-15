@@ -38,7 +38,7 @@ export function lisaaPaatosJaAineistot(oid, projektiNimi) {
   if (projektiNimi) {
     cy.contains(projektiNimi);
   }
-  cy.get("#aineisto_tab").click();
+  cy.get("#aineisto_tab").click({ force: true });
 
   cy.get("#tuo_paatos_button").click();
   selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
@@ -54,7 +54,7 @@ export function lisaaPaatosJaAineistot(oid, projektiNimi) {
 
   cy.reload();
 
-  cy.get("#aineisto_tab").click();
+  cy.get("#aineisto_tab").click({ force: true });
   // Test saved paatos aineisto
   cy.get("input[type='hidden'][name='hyvaksymisPaatos.0.dokumenttiOid']").should("exist");
   cy.get("input[type='hidden'][name='hyvaksymisPaatos.0.nimi']").should("exist");

@@ -39,7 +39,7 @@ import {
   adaptYhteystiedotByAddingTypename,
   findPublishedAloitusKuulutusJulkaisu,
 } from "./common";
-import { findUserByKayttajatunnus } from "../projektiUtil";
+import { findJulkaisuWithTila, findUserByKayttajatunnus } from "../projektiUtil";
 import { applyProjektiJulkinenStatus } from "../status/projektiJulkinenStatusHandler";
 import {
   adaptStandardiYhteystiedotLisaamattaProjaria,
@@ -49,6 +49,7 @@ import {
   adaptSuunnitteluSopimusJulkaisu,
   adaptSuunnitteluSopimusJulkaisuJulkinen,
   adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu,
+  adaptUudelleenKuulutus,
   FileLocation,
 } from "./adaptToAPI";
 import { cloneDeep } from "lodash";
@@ -129,22 +130,21 @@ class ProjektiAdapterJulkinen {
     aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null
   ): API.AloitusKuulutusJulkaisuJulkinen | undefined {
     if (aloitusKuulutusJulkaisut) {
+      const migroitu = findJulkaisuWithTila(aloitusKuulutusJulkaisut, API.AloitusKuulutusTila.MIGROITU);
+      if (migroitu) {
+        return {
+          __typename: "AloitusKuulutusJulkaisuJulkinen",
+          tila: AloitusKuulutusTila.MIGROITU,
+          yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(migroitu.yhteystiedot),
+          velho: adaptVelho(migroitu.velho),
+        };
+      }
       // Pick HYVAKSYTTY or MIGROITU aloituskuulutusjulkaisu, by this order
       const julkaisu = findPublishedAloitusKuulutusJulkaisu(aloitusKuulutusJulkaisut);
       if (!julkaisu) {
         return undefined;
       }
-      const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, tila, kuulutusPaiva } = julkaisu;
-
-      if (julkaisu.tila == AloitusKuulutusTila.MIGROITU) {
-        return {
-          __typename: "AloitusKuulutusJulkaisuJulkinen",
-          tila: AloitusKuulutusTila.MIGROITU,
-          yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
-          velho: adaptVelho(velho),
-        };
-      }
-
+      const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, tila, kuulutusPaiva, uudelleenKuulutus } = julkaisu;
       if (!julkaisu.hankkeenKuvaus) {
         throw new Error("adaptAloitusKuulutusJulkaisut: julkaisu.hankkeenKuvaus määrittelemättä");
       }
@@ -160,6 +160,7 @@ class ProjektiAdapterJulkinen {
         kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
         aloituskuulutusPDFt: this.adaptJulkaisuPDFPaths(oid, julkaisu.aloituskuulutusPDFt),
         tila,
+        uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
       };
     }
     return undefined;

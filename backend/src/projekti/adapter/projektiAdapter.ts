@@ -59,7 +59,7 @@ export class ProjektiAdapter {
       tallennettu: !!dbProjekti.tallennettu,
       kayttoOikeudet: KayttoOikeudetManager.adaptAPIKayttoOikeudet(kayttoOikeudet),
       tyyppi: velho?.tyyppi || dbProjekti.tyyppi, // remove usage of projekti.tyyppi after all data has been migrated to new format
-      aloitusKuulutus: adaptAloitusKuulutus(aloitusKuulutus),
+      aloitusKuulutus: adaptAloitusKuulutus(aloitusKuulutus, aloitusKuulutusJulkaisut),
       aloitusKuulutusJulkaisu: adaptAloitusKuulutusJulkaisu(dbProjekti.oid, aloitusKuulutusJulkaisut),
       suunnitteluSopimus: adaptSuunnitteluSopimus(dbProjekti.oid, suunnitteluSopimus),
       liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmatByAddingTypename(liittyvatSuunnitelmat),
@@ -123,7 +123,7 @@ export class ProjektiAdapter {
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
     kayttoOikeudetManager.applyChanges(kayttoOikeudet);
     const vuorovaikutukset = adaptVuorovaikutusToSave(projekti, projektiAdaptationResult, suunnitteluVaihe?.vuorovaikutus);
-    const aloitusKuulutusToSave = adaptAloitusKuulutusToSave(aloitusKuulutus);
+    const aloitusKuulutusToSave = adaptAloitusKuulutusToSave(projekti.aloitusKuulutus, aloitusKuulutus);
     const dbProjekti: DBProjekti = mergeWith(
       {},
       {

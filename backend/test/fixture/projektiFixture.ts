@@ -486,6 +486,7 @@ export class ProjektiFixture {
         kuulutusPaiva: "2022-03-28T14:28",
         muokkaaja: ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
         hyvaksyja: ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
+        hyvaksymisPaiva: "2022-03-21",
         hankkeenKuvaus: {
           SUOMI:
             "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",

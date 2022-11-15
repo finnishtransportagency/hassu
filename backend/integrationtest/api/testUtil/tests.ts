@@ -32,7 +32,6 @@ import cloneDeep from "lodash/cloneDeep";
 import { fileService } from "../../../src/files/fileService";
 import { testProjektiDatabase } from "../../../src/database/testProjektiDatabase";
 import { expectAwsCalls } from "../../../test/aws/awsMock";
-import { Attachment } from "nodemailer/lib/mailer";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 
 const { expect } = require("chai");
@@ -135,7 +134,7 @@ export async function testProjektinTiedot(oid: string): Promise<void> {
   await api.tallennaProjekti({
     oid,
     muistiinpano: apiTestFixture.newNote,
-    aloitusKuulutus: apiTestFixture.aloitusKuulutus,
+    aloitusKuulutus: apiTestFixture.aloitusKuulutusInput,
     suunnitteluSopimus: apiTestFixture.createSuunnitteluSopimusInput(uploadedFile, UserFixture.testi1Kayttaja.uid!),
     kielitiedot: apiTestFixture.kielitiedotInput,
     euRahoitus: false,
@@ -410,6 +409,24 @@ export async function testPublicAccessToProjekti(
   expectToMatchSnapshot("publicProjekti" + (description || ""), actual);
 }
 
+export async function testYllapitoAccessToProjekti(
+  oid: string,
+  expectedStatus: Status,
+  description?: string,
+  projektiDataExtractor?: (projekti: Projekti) => unknown
+): Promise<Projekti> {
+  const projekti = await loadProjektiFromDatabase(oid, expectedStatus);
+  const snapshot = cloneDeep(projekti);
+  snapshot.paivitetty = "***unit test***";
+
+  let actual: unknown = snapshot;
+  if (projektiDataExtractor) {
+    actual = projektiDataExtractor(snapshot);
+  }
+  expectToMatchSnapshot("yllapitoProjekti" + (description || ""), actual);
+  return projekti;
+}
+
 export async function searchProjectsFromVelhoAndPickFirst(): Promise<string> {
   const searchResult = await api.getVelhoSuunnitelmasByName("HASSU AUTOMAATTITESTIPROJEKTI1");
   // tslint:disable-next-line:no-unused-expression
@@ -432,26 +449,6 @@ export async function readProjektiFromVelho(): Promise<Projekti> {
 
 export async function sendEmailDigests(): Promise<void> {
   await palauteEmailService.sendNewFeedbackDigest();
-}
-
-export function verifyEmailsSent(emailClientStub: Sinon.SinonStub): void {
-  if (emailClientStub.getCalls().length > 0) {
-    expect(
-      emailClientStub.getCalls().map((call) => {
-        const arg = call.args[0];
-        if (arg.attachments) {
-          arg.attachments = arg.attachments.map((attachment: Attachment) => {
-            // Remove unnecessary data from snapshot
-            delete attachment.content;
-            delete attachment.contentDisposition;
-            return attachment;
-          });
-        }
-        return arg;
-      })
-    ).toMatchSnapshot();
-    emailClientStub.reset();
-  }
 }
 
 export async function deleteProjekti(oid: string): Promise<void> {

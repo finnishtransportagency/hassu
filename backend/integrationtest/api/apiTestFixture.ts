@@ -1,5 +1,5 @@
 import {
-  AloitusKuulutus,
+  AloitusKuulutus, AloitusKuulutusInput,
   HankkeenKuvauksetInput,
   IlmoitettavaViranomainen,
   IlmoituksenVastaanottajat,
@@ -7,6 +7,7 @@ import {
   Kieli,
   Kielitiedot,
   KielitiedotInput,
+  MuokkausTila,
   NahtavillaoloVaiheInput,
   SuunnitteluSopimus,
   SuunnitteluSopimusInput,
@@ -121,6 +122,7 @@ class ApiTestFixture {
 
   aloitusKuulutus: AloitusKuulutus = {
     __typename: "AloitusKuulutus",
+    muokkausTila: MuokkausTila.MUOKKAUS,
     kuulutusPaiva: "2022-01-02",
     hankkeenKuvaus: {
       __typename: "HankkeenKuvaukset",
@@ -135,6 +137,23 @@ class ApiTestFixture {
       yhteysHenkilot: [],
     },
     ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
+    uudelleenKuulutus: undefined,
+  };
+
+  aloitusKuulutusInput: AloitusKuulutusInput = {
+    kuulutusPaiva: "2022-01-02",
+    hankkeenKuvaus: {
+      SUOMI: "Lorem Ipsum",
+      RUOTSI: "På Svenska",
+      SAAME: "Saameksi",
+    },
+    siirtyySuunnitteluVaiheeseen: "2022-01-01",
+    kuulutusYhteystiedot: {
+      yhteysTiedot: this.yhteystietoLista,
+      yhteysHenkilot: [],
+    },
+    ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
+    uudelleenKuulutus: undefined,
   };
 
   kielitiedotInput: KielitiedotInput = {

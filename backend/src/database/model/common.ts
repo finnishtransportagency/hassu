@@ -60,6 +60,18 @@ export type ViranomaisVastaanottaja = {
   lahetetty?: string | null;
 };
 
+export type UudelleenKuulutus = {
+  tila: UudelleenkuulutusTila;
+  selosteKuulutukselle?: RequiredLocalizedMap<string>;
+  selosteLahetekirjeeseen?: RequiredLocalizedMap<string>;
+  alkuperainenHyvaksymisPaiva?: string;
+};
+
+export enum UudelleenkuulutusTila {
+  PERUUTETTU = "PERUUTETTU",
+  JULKAISTU_PERUUTETTU = "JULKAISTU_PERUUTETTU",
+}
+
 export type Velho = {
   nimi: string;
   tyyppi?: ProjektiTyyppi | null;

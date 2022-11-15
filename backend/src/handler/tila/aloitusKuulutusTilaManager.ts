@@ -1,11 +1,26 @@
-import { AloitusKuulutusTila, AsiakirjaTyyppi, Kieli, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
+import { AloitusKuulutusTila, AsiakirjaTyyppi, Kieli, NykyinenKayttaja, Status } from "../../../../common/graphql/apiModel";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
-import { AloitusKuulutus, AloitusKuulutusJulkaisu, AloitusKuulutusPDF, DBProjekti, Kielitiedot, LocalizedMap } from "../../database/model";
+import {
+  AloitusKuulutus,
+  AloitusKuulutusJulkaisu,
+  AloitusKuulutusPDF,
+  DBProjekti,
+  Kielitiedot,
+  LocalizedMap,
+  UudelleenkuulutusTila,
+} from "../../database/model";
 import { fileService } from "../../files/fileService";
-import { parseDate } from "../../util/dateUtil";
+import { dateToString, parseDate } from "../../util/dateUtil";
 import { TilaManager } from "./TilaManager";
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
+import { findJulkaisuWithTila } from "../../projekti/projektiUtil";
+import { IllegalArgumentError } from "../../error/IllegalArgumentError";
+import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
+import assert from "assert";
+import { isKuulutusPaivaInThePast } from "../../projekti/status/projektiJulkinenStatusHandler";
+import dayjs from "dayjs";
+import { assertIsDefined } from "../../util/assertions";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -35,9 +50,21 @@ async function createAloituskuulutusPDF(
   });
 }
 
-async function removeRejectionReasonIfExists(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus) {
+async function cleanupAloitusKuulutusBeforeApproval(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus) {
   if (aloitusKuulutus.palautusSyy) {
     aloitusKuulutus.palautusSyy = null;
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, aloitusKuulutus });
+  }
+}
+
+async function cleanupAloitusKuulutusAfterApproval(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus) {
+  if (aloitusKuulutus.palautusSyy || aloitusKuulutus.uudelleenKuulutus) {
+    if (aloitusKuulutus.palautusSyy) {
+      aloitusKuulutus.palautusSyy = null;
+    }
+    if (aloitusKuulutus.uudelleenKuulutus) {
+      aloitusKuulutus.uudelleenKuulutus = null;
+    }
     await projektiDatabase.saveProjekti({ oid: projekti.oid, aloitusKuulutus });
   }
 }
@@ -50,6 +77,27 @@ function getAloitusKuulutus(projekti: DBProjekti) {
   return aloitusKuulutus;
 }
 
+function validate(
+  projekti: DBProjekti,
+  aloitusKuulutus: AloitusKuulutus | null | undefined,
+  hyvaksyttyJulkaisu: AloitusKuulutusJulkaisu | undefined
+) {
+  // Tarkista, että on olemassa hyväksytty aloituskuulutusjulkaisu, jonka perua
+  if (!hyvaksyttyJulkaisu) {
+    throw new IllegalArgumentError("Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa");
+  }
+  // Aloituskuulutuksen uudelleenkuuluttaminen on mahdollista vain jos projekti on ylläpidossa suunnitteluvaiheessa
+  const apiProjekti = projektiAdapter.adaptProjekti(projekti);
+  if (apiProjekti.status !== Status.SUUNNITTELU) {
+    throw new IllegalArgumentError("Et voi uudelleenkuuluttaa aloistuskuulutusta projektin ollessa tässä tilassa:" + apiProjekti.status);
+  }
+  assert(aloitusKuulutus, "Projektilla pitäisi olla aloituskuulutus, jos se on suunnittelutilassa");
+  // Uudelleenkuulutus ei ole mahdollista jos uudelleenkuulutus on jo olemassa
+  if (aloitusKuulutus.uudelleenKuulutus) {
+    throw new IllegalArgumentError("Et voi uudelleenkuuluttaa aloistuskuulutusta, koska uudelleenkuulutus on jo olemassa");
+  }
+}
+
 class AloitusKuulutusTilaManager extends TilaManager {
   async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
     const julkaisuWaitingForApproval = asiakirjaAdapter.findAloitusKuulutusWaitingForApproval(projekti);
@@ -57,7 +105,7 @@ class AloitusKuulutusTilaManager extends TilaManager {
       throw new Error("Aloituskuulutus on jo olemassa odottamassa hyväksyntää");
     }
 
-    await removeRejectionReasonIfExists(projekti, getAloitusKuulutus(projekti));
+    await cleanupAloitusKuulutusBeforeApproval(projekti, getAloitusKuulutus(projekti));
 
     const aloitusKuulutusJulkaisu = asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projekti);
     aloitusKuulutusJulkaisu.tila = AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA;
@@ -91,19 +139,18 @@ class AloitusKuulutusTilaManager extends TilaManager {
     if (!julkaisuWaitingForApproval) {
       throw new Error("Ei aloituskuulutusta odottamassa hyväksyntää");
     }
-    await removeRejectionReasonIfExists(projekti, aloitusKuulutus);
+    await cleanupAloitusKuulutusAfterApproval(projekti, aloitusKuulutus);
     julkaisuWaitingForApproval.tila = AloitusKuulutusTila.HYVAKSYTTY;
     julkaisuWaitingForApproval.hyvaksyja = projektiPaallikko.uid;
+    julkaisuWaitingForApproval.hyvaksymisPaiva = dateToString(dayjs());
+
+    await projektiDatabase.aloitusKuulutusJulkaisut.update(projekti, julkaisuWaitingForApproval);
 
     const logoFilePath = projekti.suunnitteluSopimus?.logo;
     if (logoFilePath) {
-      // kuulutusPaiva on oltava tässä kohtaa
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      assert(julkaisuWaitingForApproval.kuulutusPaiva, "kuulutusPaiva on oltava tässä kohtaa");
       await fileService.publishProjektiFile(projekti.oid, logoFilePath, logoFilePath, parseDate(julkaisuWaitingForApproval.kuulutusPaiva));
     }
-
-    await projektiDatabase.aloitusKuulutusJulkaisut.update(projekti, julkaisuWaitingForApproval);
   }
 
   private async generatePDFs(projekti: DBProjekti, julkaisuWaitingForApproval: AloitusKuulutusJulkaisu) {
@@ -147,6 +194,30 @@ class AloitusKuulutusTilaManager extends TilaManager {
         filePathInProjekti: pdfs.aloituskuulutusIlmoitusPDFPath,
       });
     }
+  }
+
+  async uudelleenkuuluta(projekti: DBProjekti): Promise<void> {
+    const hyvaksyttyJulkaisu = findJulkaisuWithTila(projekti.aloitusKuulutusJulkaisut, AloitusKuulutusTila.HYVAKSYTTY);
+    const aloitusKuulutus = projekti.aloitusKuulutus;
+    validate(projekti, aloitusKuulutus, hyvaksyttyJulkaisu);
+    assertIsDefined(aloitusKuulutus);
+    assertIsDefined(hyvaksyttyJulkaisu);
+
+    const julkinenUudelleenKuulutus = isKuulutusPaivaInThePast(hyvaksyttyJulkaisu.kuulutusPaiva);
+
+    let uudelleenKuulutus;
+    if (julkinenUudelleenKuulutus) {
+      uudelleenKuulutus = {
+        tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
+        alkuperainenHyvaksymisPaiva: hyvaksyttyJulkaisu.hyvaksymisPaiva || undefined,
+      };
+    } else {
+      uudelleenKuulutus = {
+        tila: UudelleenkuulutusTila.PERUUTETTU,
+      };
+    }
+    aloitusKuulutus.uudelleenKuulutus = uudelleenKuulutus;
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, aloitusKuulutus });
   }
 }
 

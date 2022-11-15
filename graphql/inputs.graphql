@@ -47,6 +47,18 @@ input AloitusKuulutusInput {
   hankkeenKuvaus: HankkeenKuvauksetInput
   kuulutusYhteystiedot: StandardiYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
+  uudelleenKuulutus: UudelleenKuulutusInput
+}
+
+input UudelleenKuulutusInput {
+  selosteKuulutukselle: LokalisoituTekstiInput
+  selosteLahetekirjeeseen: LokalisoituTekstiInput
+}
+
+input LokalisoituTekstiInput {
+  SUOMI: String!
+  RUOTSI: String
+  SAAME: String
 }
 
 input StandardiYhteystiedotInput {
@@ -225,6 +237,7 @@ enum TilasiirtymaToiminto {
   LAHETA_HYVAKSYTTAVAKSI
   HYVAKSY
   HYLKAA
+  UUDELLEENKUULUTA
 }
 
 enum TilasiirtymaTyyppi {
