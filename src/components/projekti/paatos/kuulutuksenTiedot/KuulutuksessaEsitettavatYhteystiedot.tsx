@@ -6,10 +6,11 @@ import {
   HyvaksymisPaatosVaiheTila,
   KayttajaTyyppi,
   ProjektiKayttaja,
+  Yhteystieto,
   YhteystietoInput,
 } from "@services/api";
 import Section from "@components/layout/Section";
-import { Fragment, ReactElement } from "react";
+import { Fragment, ReactElement, useMemo } from "react";
 import Button from "@components/button/Button";
 import HassuStack from "@components/layout/HassuStack";
 import CheckBox from "@components/form/CheckBox";
@@ -23,6 +24,7 @@ import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./index";
 import { formatNimi } from "../../../../util/userUtil";
 import { PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import projektiKayttajaToYhteystieto, { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 
 const defaultYhteystieto: YhteystietoInput = {
   etunimi: "",
@@ -71,6 +73,28 @@ export default function EsitettavatYhteystiedot({ julkaisut, projekti, julkaisem
         .filter((pk) => pk.etunimi && pk.sukunimi)
     : ([] as ProjektiKayttaja[]);
 
+  const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useMemo(() => {
+    const kunnanEdustaja = projekti?.kayttoOikeudet?.find((hlo) => hlo.kayttajatunnus === projekti.suunnitteluSopimus?.yhteysHenkilo);
+    const projari = projekti?.kayttoOikeudet?.find((hlo) => hlo.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO);
+    const arr: ProjektiKayttaja[] = [];
+    if (kunnanEdustaja) {
+      arr.push(kunnanEdustaja);
+      projekti?.kayttoOikeudet?.forEach((hlo) => {
+        if (hlo.kayttajatunnus !== projekti.suunnitteluSopimus?.yhteysHenkilo) {
+          arr.push(hlo);
+        }
+      });
+    } else {
+      arr.push(projari as ProjektiKayttaja);
+      projekti?.kayttoOikeudet?.forEach((hlo) => {
+        if (hlo.tyyppi !== KayttajaTyyppi.PROJEKTIPAALLIKKO) {
+          arr.push(hlo);
+        }
+      });
+    }
+    return arr.map((hlo) => ({ kayttajatunnus: hlo.kayttajatunnus, ...projektiKayttajaToYhteystieto(hlo, projekti?.suunnitteluSopimus) }));
+  }, [projekti]);
+
   if (eiVoiMuokata) {
     return (
       <Section>
@@ -102,30 +126,29 @@ export default function EsitettavatYhteystiedot({ julkaisut, projekti, julkaisem
           tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot haetaan Projektin henkilöt -sivulle tallennetuista
           tiedoista.
         </p>
-        {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
+        {projektiHenkilot.length > 0 ? (
           <Controller
             control={control}
             name={`paatos.kuulutusYhteystiedot.yhteysHenkilot`}
             render={({ field: { onChange, value, ...field } }) => (
               <FormGroup label="Projektiin tallennetut henkilöt" inlineFlex>
-                {projekti.kayttoOikeudet?.map(({ etunimi, sukunimi, tyyppi, kayttajatunnus }, index) => {
+                {projektiHenkilot.map((hlo, index) => {
                   const tunnuslista: string[] = value || [];
-                  const nimi = formatNimi({ sukunimi, etunimi });
                   return (
                     <Fragment key={index}>
-                      {tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO ? (
-                        <CheckBox label={nimi} disabled checked {...field} />
+                      {index === 0 ? (
+                        <CheckBox label={yhteystietoVirkamiehelleTekstiksi(hlo)} disabled checked {...field} />
                       ) : (
                         <CheckBox
-                          label={nimi}
+                          label={yhteystietoVirkamiehelleTekstiksi(hlo)}
                           onChange={(event) => {
                             if (!event.target.checked) {
-                              onChange(tunnuslista.filter((tunnus) => tunnus !== kayttajatunnus));
+                              onChange(tunnuslista.filter((tunnus) => tunnus !== hlo.kayttajatunnus));
                             } else {
-                              onChange([...tunnuslista, kayttajatunnus]);
+                              onChange([...tunnuslista, hlo.kayttajatunnus]);
                             }
                           }}
-                          checked={tunnuslista.includes(kayttajatunnus)}
+                          checked={tunnuslista.includes(hlo.kayttajatunnus)}
                           {...field}
                         />
                       )}

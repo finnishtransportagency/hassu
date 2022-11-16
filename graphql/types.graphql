@@ -531,7 +531,8 @@ type Suunnitelma {
 type Yhteystieto {
   etunimi: String!
   sukunimi: String!
-  organisaatio: String!
+  organisaatio: String
+  kunta: Int
   puhelinnumero: String!
   sahkoposti: String!
   titteli: String
@@ -665,7 +666,8 @@ type ProjektiKayttaja {
   kayttajatunnus: String!
   puhelinnumero: String
   email: String!
-  organisaatio: String!
+  organisaatio: String
+  kunta: Int
   etunimi: String!
   sukunimi: String!
   muokattavissa: Boolean
@@ -675,7 +677,8 @@ type ProjektiKayttaja {
 type ProjektiKayttajaJulkinen {
   puhelinnumero: String
   email: String!
-  organisaatio: String!
+  organisaatio: String
+  kunta: Int
   etunimi: String!
   sukunimi: String!
   projektiPaallikko: Boolean

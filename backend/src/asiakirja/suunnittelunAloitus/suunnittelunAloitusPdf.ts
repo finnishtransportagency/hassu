@@ -4,6 +4,7 @@ import {
   Kielitiedot,
   LocalizedMap,
   SuunnitteluSopimusJulkaisu,
+  SuunnitteluSopimus,
   UudelleenKuulutus,
   Velho,
   Yhteystieto,
@@ -30,7 +31,7 @@ export type IlmoitusParams = {
   hankkeenKuvaus: LocalizedMap<string>;
   kuulutusPaiva: string;
   yhteystiedot?: Yhteystieto[];
-  suunnitteluSopimus?: SuunnitteluSopimusJulkaisu;
+  suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu;
   uudelleenKuulutus?: UudelleenKuulutus;
 
   // kayttoOikeudet must be set if yhteysHenkilot is set
@@ -56,6 +57,7 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf {
       kieli: params.kieli,
       projektiTyyppi: params.velho.tyyppi,
       kayttoOikeudet: params.kayttoOikeudet,
+      suunnitteluSopimus: params.suunnitteluSopimus,
     });
     super(params.kieli, kutsuAdapter);
     const kaannos: string = translate("tiedostonimi." + fileNameKey, params.kieli) || "";

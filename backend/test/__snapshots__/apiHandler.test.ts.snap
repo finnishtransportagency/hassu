@@ -367,6 +367,7 @@ Array [
         "yhteysTiedot": Array [
           Object {
             "etunimi": "Marko",
+            "kunta": undefined,
             "organisaatio": "Kajaani",
             "puhelinnumero": "0293121213",
             "sahkoposti": "markku.koi@koi.com",
@@ -490,6 +491,7 @@ Array [
           Object {
             "__typename": "Yhteystieto",
             "etunimi": "Marko",
+            "kunta": undefined,
             "organisaatio": "Kajaani",
             "puhelinnumero": "0293121213",
             "sahkoposti": "markku.koi@koi.com",
@@ -836,6 +838,7 @@ Object {
         Object {
           "__typename": "Yhteystieto",
           "etunimi": "Marko",
+          "kunta": undefined,
           "organisaatio": "Kajaani",
           "puhelinnumero": "0293121213",
           "sahkoposti": "markku.koi@koi.com",
@@ -929,15 +932,17 @@ Object {
     "yhteystiedot": Array [
       Object {
         "__typename": "Yhteystieto",
-        "etunimi": "Pekka",
+        "etunimi": "EtunimiA2",
+        "kunta": 536,
         "organisaatio": "Väylävirasto",
-        "puhelinnumero": "11",
-        "sahkoposti": "pekka.projari@vayla.fi",
-        "sukunimi": "Projari",
+        "puhelinnumero": "123456789",
+        "sahkoposti": "a2@vayla.fi",
+        "sukunimi": "SukunimiA2",
       },
       Object {
         "__typename": "Yhteystieto",
         "etunimi": "Marko",
+        "kunta": undefined,
         "organisaatio": "Kajaani",
         "puhelinnumero": "0293121213",
         "sahkoposti": "markku.koi@koi.com",
@@ -1068,15 +1073,17 @@ Object {
       "yhteystiedot": Array [
         Object {
           "__typename": "Yhteystieto",
-          "etunimi": "Pekka",
+          "etunimi": "EtunimiA2",
+          "kunta": 536,
           "organisaatio": "Väylävirasto",
-          "puhelinnumero": "11",
-          "sahkoposti": "pekka.projari@vayla.fi",
-          "sukunimi": "Projari",
+          "puhelinnumero": "123456789",
+          "sahkoposti": "a2@vayla.fi",
+          "sukunimi": "SukunimiA2",
         },
         Object {
           "__typename": "Yhteystieto",
           "etunimi": "Marko",
+          "kunta": undefined,
           "organisaatio": "Kajaani",
           "puhelinnumero": "0293121213",
           "sahkoposti": "markku.koi@koi.com",

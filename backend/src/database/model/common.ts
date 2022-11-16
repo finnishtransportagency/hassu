@@ -16,7 +16,8 @@ export type Kielitiedot = {
 export type Yhteystieto = {
   etunimi: string;
   sukunimi: string;
-  organisaatio: string;
+  organisaatio?: string;
+  kunta?: number;
   puhelinnumero: string;
   sahkoposti: string;
   titteli?: string;

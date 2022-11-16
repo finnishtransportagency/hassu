@@ -217,6 +217,7 @@ export class ProjektiFixture {
           tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
           ...pick(ProjektiFixture.pekkaProjariProjektiKayttaja, ["email", "kayttajatunnus", "etunimi", "sukunimi", "organisaatio"]),
           puhelinnumero: ProjektiFixture.pekkaProjariProjektiKayttaja.puhelinnumero || "",
+          organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio || "",
         },
         this.mattiMeikalainenDBVaylaUser(),
         this.kunnanYhteysHenkiloDBVaylaUser(),
@@ -753,7 +754,7 @@ export class ProjektiFixture {
           yhteystiedot: [
             {
               etunimi: "Pekka",
-              organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio,
+              organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio || "",
               sahkoposti: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
               puhelinnumero: ProjektiFixture.pekkaProjariProjektiKayttaja.puhelinnumero || "",
               sukunimi: "Projari",
@@ -885,6 +886,6 @@ function projektiKayttajaAsDBVaylaUser(kayttaja: ProjektiKayttaja): DBVaylaUser 
     etunimi: kayttaja.etunimi,
     sukunimi: kayttaja.sukunimi,
     puhelinnumero: kayttaja.puhelinnumero || "",
-    organisaatio: kayttaja.organisaatio,
+    organisaatio: kayttaja.organisaatio || "",
   };
 }

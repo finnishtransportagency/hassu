@@ -29,7 +29,8 @@ input SuunnitelmaInput {
 input YhteystietoInput {
   etunimi: String!
   sukunimi: String!
-  organisaatio: String!
+  organisaatio: String
+  kunta: Int
   puhelinnumero: String!
   sahkoposti: String!
   titteli: String

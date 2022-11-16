@@ -11,12 +11,13 @@ import Notification, { NotificationType } from "../../notification/Notification"
 import { Stack } from "@mui/material";
 import KansalaisenAineistoNakyma from "../common/KansalaisenAineistoNakyma";
 import { HyvaksymisPaatosVaiheJulkaisuJulkinen } from "@services/api";
+import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
 
 interface Props {
   kuulutus: HyvaksymisPaatosVaiheJulkaisuJulkinen | null | undefined;
 }
 export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElement {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const { data: projekti } = useProjektiJulkinen();
   const velho = kuulutus?.velho;
 
@@ -48,8 +49,6 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
 
   const kuulutuspaiva = kuulutus.kuulutusPaiva ? new Date(kuulutus.kuulutusPaiva) : null;
   const tiedoksiantopaiva = kuulutuspaiva ? kuulutuspaiva.setDate(kuulutuspaiva.getDate() + 7) : null;
-
-  const yhteystiedotListana = kuulutus?.yhteystiedot?.map((yhteystieto) => t("common:yhteystieto", yhteystieto)) || [];
 
   return (
     <>
@@ -119,10 +118,12 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
         <h4 className="vayla-small-title">{t("projekti:ui-otsikot.yhteystiedot")}</h4>
         <p>
           {t("common:lisatietoja_antavat", {
-            yhteystiedot: yhteystiedotListana.join(", "),
-            count: yhteystiedotListana.length,
+            count: kuulutus.yhteystiedot?.length,
           })}
         </p>
+        {kuulutus.yhteystiedot?.map((yhteystieto, index) => (
+          <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto)}</p>
+        ))}
       </Section>
       <Section noDivider>
         <h5 className="vayla-smallest-title">{t("projekti:ui-otsikot.paatos")}</h5>

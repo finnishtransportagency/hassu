@@ -89,6 +89,7 @@ export class Kuulutus61 extends CommonPdf {
       asiakirjanMuoto,
       projektiTyyppi: velho.tyyppi,
       kayttoOikeudet: params.kayttoOikeudet,
+      suunnitteluSopimus: params.suunnitteluSopimus,
     });
     super(kieli, kutsuAdapter);
     this.kieli = kieli;
@@ -182,7 +183,7 @@ export class Kuulutus61 extends CommonPdf {
         this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.pyytaa_kuntia"),
         this.tietosuojaParagraph(),
         this.lisatietojaAntavatParagraph(),
-        this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, undefined, null, true)),
+        this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, null, true)),
       ];
     } else if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       return [
@@ -198,7 +199,7 @@ export class Kuulutus61 extends CommonPdf {
         this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.rata_kunnille_elylle_kappale6"),
         this.tietosuojaParagraph(),
         this.lisatietojaAntavatParagraph(),
-        this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, undefined, null, true)),
+        this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, null, true)),
       ];
     }
 

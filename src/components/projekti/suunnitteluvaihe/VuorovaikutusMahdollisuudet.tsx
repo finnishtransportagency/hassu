@@ -11,13 +11,14 @@ import {
 import Section from "@components/layout/Section";
 import React, { ReactElement, Dispatch, SetStateAction } from "react";
 import Button from "@components/button/Button";
-
+import { kuntametadata } from "../../../../common/kuntametadata";
 import dayjs from "dayjs";
 import { formatDate } from "src/util/dateUtils";
 import capitalize from "lodash/capitalize";
 import useTranslation from "next-translate/useTranslation";
 import StandardiYhteystiedotListana from "../common/StandardiYhteystiedotListana";
 import { formatNimi } from "../../../util/userUtil";
+import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 
 interface Props {
   projekti: Projekti;
@@ -165,12 +166,17 @@ export default function VuorovaikutusMahdollisuudet({ projekti, vuorovaikutus, s
   );
 }
 export const SoittoajanYhteystieto = React.memo((props: { yhteystieto: Yhteystieto | YhteystietoInput }) => {
+  const kieli = useKansalaiskieli();
+
+  const yhteystiedonKunta = props.yhteystieto.kunta && kuntametadata.nameForKuntaId(props.yhteystieto.kunta, kieli);
+  const esitettavaOrganisaatioTaiKunta = props.yhteystieto.kunta ? yhteystiedonKunta : props.yhteystieto.organisaatio;
+
   return (
     <>
       <p>
         {formatNimi(props.yhteystieto)}
         {props.yhteystieto.titteli ? `, ${props.yhteystieto.titteli}` : null}
-        {props.yhteystieto.organisaatio ? ` (${props.yhteystieto.organisaatio})` : null}: {props.yhteystieto.puhelinnumero}
+        {esitettavaOrganisaatioTaiKunta ? ` (${esitettavaOrganisaatioTaiKunta})` : null}: {props.yhteystieto.puhelinnumero}
       </p>
     </>
   );

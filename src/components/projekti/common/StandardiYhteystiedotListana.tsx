@@ -1,41 +1,32 @@
-import { Projekti, ProjektiKayttaja, StandardiYhteystiedot, StandardiYhteystiedotInput } from "@services/api";
+import { StandardiYhteystiedot, StandardiYhteystiedotInput, Projekti, Yhteystieto, YhteystietoInput } from "@services/api";
 import React, { ReactElement } from "react";
 import replace from "lodash/replace";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
-import { formatNimi } from "../../../util/userUtil";
+import { standardiYhteystiedotYhteystiedoiksi, yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 
 interface Props {
   standardiYhteystiedot: StandardiYhteystiedot | StandardiYhteystiedotInput | null | undefined;
   projekti: ProjektiLisatiedolla | Projekti | null | undefined;
+  pakotaProjariTaiKunnanEdustaja?: boolean;
 }
 
-export default function StandardiYhteystiedotListana({ standardiYhteystiedot, projekti }: Props): ReactElement {
-  const vuorovaikutusYhteysHenkilot: ProjektiKayttaja[] = standardiYhteystiedot?.yhteysHenkilot
-    ? standardiYhteystiedot?.yhteysHenkilot
-        .map((hlo) => {
-          const yhteysHenkiloTietoineen: ProjektiKayttaja | undefined = (projekti?.kayttoOikeudet || []).find(
-            (ko) => ko.kayttajatunnus === hlo
-          );
-          if (!yhteysHenkiloTietoineen) {
-            return {} as ProjektiKayttaja;
-          }
-          return yhteysHenkiloTietoineen as ProjektiKayttaja;
-        })
-        .filter((pk) => pk.etunimi && pk.sukunimi)
-    : [];
+export default function StandardiYhteystiedotListana({
+  standardiYhteystiedot,
+  projekti,
+  pakotaProjariTaiKunnanEdustaja,
+}: Props): ReactElement {
+  const yhteystiedot: (Yhteystieto | YhteystietoInput)[] = standardiYhteystiedotYhteystiedoiksi(
+    standardiYhteystiedot,
+    projekti?.kayttoOikeudet,
+    projekti?.suunnitteluSopimus,
+    pakotaProjariTaiKunnanEdustaja
+  );
 
   return (
     <React.Fragment>
-      {standardiYhteystiedot?.yhteysTiedot?.map((yhteystieto, index) => (
+      {yhteystiedot?.map((yhteystieto, index) => (
         <p style={{ margin: 0 }} key={index}>
-          {formatNimi(yhteystieto)}, puh. {yhteystieto.puhelinnumero},{" "}
-          {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""} ({yhteystieto.organisaatio})
-        </p>
-      ))}
-      {vuorovaikutusYhteysHenkilot.map((yhteystieto, index) => (
-        <p style={{ margin: 0 }} key={index}>
-          {formatNimi(yhteystieto)}, puh. {yhteystieto.puhelinnumero}, {yhteystieto.email ? replace(yhteystieto.email, "@", "[at]") : ""} (
-          {yhteystieto.organisaatio})
+          {replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto), "@", "[at]")}
         </p>
       ))}
     </React.Fragment>

@@ -13,7 +13,7 @@ import TextInput from "@components/form/TextInput";
 import Select from "@components/form/Select";
 import HassuGrid from "@components/HassuGrid";
 import TimePicker from "@components/form/TimePicker";
-import { KaytettavaPalvelu, ProjektiKayttaja, VuorovaikutusTilaisuusInput, VuorovaikutusTilaisuusTyyppi } from "@services/api";
+import { KaytettavaPalvelu, VuorovaikutusTilaisuusInput, VuorovaikutusTilaisuusTyyppi, Yhteystieto } from "@services/api";
 import capitalize from "lodash/capitalize";
 import { VuorovaikutusFormValues } from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
 import { Controller, FormProvider, useFieldArray, useForm, useFormContext, UseFormProps } from "react-hook-form";
@@ -24,7 +24,7 @@ import CheckBox from "@components/form/CheckBox";
 import SoittoajanYhteyshenkilot from "./SoittoajanYhteyshenkilot";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { today } from "src/util/dateUtils";
-import { formatNimi } from "../../../util/userUtil";
+import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 
 const defaultTilaisuus: Omit<VuorovaikutusTilaisuusInput, "tyyppi"> = {
   nimi: "",
@@ -58,18 +58,18 @@ interface Props {
   open: boolean;
   windowHandler: (isOpen: boolean) => void;
   tilaisuudet: VuorovaikutusTilaisuusInput[] | null | undefined;
-  kayttoOikeudet: ProjektiKayttaja[] | null | undefined;
   julkinen: boolean;
   avaaHyvaksymisDialogi: () => void;
+  projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[];
 }
 
 export default function VuorovaikutusDialog({
   open,
   windowHandler,
   tilaisuudet,
-  kayttoOikeudet,
   julkinen,
   avaaHyvaksymisDialogi,
+  projektiHenkilot,
 }: Props): ReactElement {
   const formOptions: UseFormProps<VuorovaikutustilaisuusFormValues> = {
     resolver: yupResolver(vuorovaikutustilaisuudetSchema, { abortEarly: false, recursive: true }),
@@ -325,7 +325,7 @@ export default function VuorovaikutusDialog({
                             yhteystiedon. Projektiin tallennettujen henkilöiden yhteystiedot haetaan Projektin henkilöt -sivulle
                             tallennetuista tiedoista.
                           </p>
-                          {kayttoOikeudet && kayttoOikeudet.length > 0 ? (
+                          {projektiHenkilot ? (
                             <Controller
                               control={control}
                               name={`vuorovaikutusTilaisuudet.${index}.esitettavatYhteystiedot.yhteysHenkilot`}
@@ -335,21 +335,20 @@ export default function VuorovaikutusDialog({
                                   inlineFlex
                                   errorMessage={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.esitettavatYhteystiedot?.message}
                                 >
-                                  {kayttoOikeudet?.map(({ etunimi, sukunimi, kayttajatunnus }, index) => {
+                                  {projektiHenkilot?.map((hlo, index) => {
                                     const tunnuslista = value || [];
-                                    const nimi = formatNimi({ sukunimi, etunimi });
                                     return (
                                       <Fragment key={index}>
                                         <CheckBox
-                                          label={nimi}
+                                          label={yhteystietoVirkamiehelleTekstiksi(hlo)}
                                           onChange={(event) => {
                                             if (!event.target.checked) {
-                                              onChange(tunnuslista.filter((tunnus) => tunnus !== kayttajatunnus));
+                                              onChange(tunnuslista.filter((tunnus) => tunnus !== hlo.kayttajatunnus));
                                             } else {
-                                              onChange([...tunnuslista, kayttajatunnus]);
+                                              onChange([...tunnuslista, hlo.kayttajatunnus]);
                                             }
                                           }}
-                                          checked={tunnuslista.includes(kayttajatunnus)}
+                                          checked={tunnuslista.includes(hlo.kayttajatunnus)}
                                           {...field}
                                         />
                                       </Fragment>

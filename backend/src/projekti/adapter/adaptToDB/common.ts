@@ -45,7 +45,8 @@ export function adaptYhteystiedotToSave(yhteystietoInputs: Array<API.Yhteystieto
         const ytToSave: Yhteystieto = {
           etunimi: yt.etunimi,
           sukunimi: yt.sukunimi,
-          organisaatio: yt.organisaatio,
+          organisaatio: yt.organisaatio || undefined,
+          kunta: yt.kunta || undefined,
           puhelinnumero: yt.puhelinnumero,
           sahkoposti: yt.sahkoposti,
         };

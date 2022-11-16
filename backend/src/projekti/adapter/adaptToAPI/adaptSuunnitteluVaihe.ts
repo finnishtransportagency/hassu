@@ -2,6 +2,7 @@ import {
   DBVaylaUser,
   LocalizedMap,
   StandardiYhteystiedot,
+  SuunnitteluSopimus,
   SuunnitteluVaihe,
   Vuorovaikutus,
   VuorovaikutusPDF,
@@ -23,6 +24,7 @@ import { cloneDeep } from "lodash";
 
 export function adaptSuunnitteluVaihe(
   oid: string,
+  suunnitteluSopimus: SuunnitteluSopimus | null | undefined,
   kayttoOikeudet: DBVaylaUser[],
   suunnitteluVaihe: SuunnitteluVaihe | null | undefined,
   vuorovaikutukset: Array<Vuorovaikutus> | null | undefined
@@ -41,7 +43,7 @@ export function adaptSuunnitteluVaihe(
       arvioSeuraavanVaiheenAlkamisesta,
       suunnittelunEteneminenJaKesto,
       hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
-      vuorovaikutukset: adaptVuorovaikutukset(oid, kayttoOikeudet, vuorovaikutukset),
+      vuorovaikutukset: adaptVuorovaikutukset(oid, suunnitteluSopimus, kayttoOikeudet, vuorovaikutukset),
       palautteidenVastaanottajat,
       __typename: "SuunnitteluVaihe",
     };
@@ -51,6 +53,7 @@ export function adaptSuunnitteluVaihe(
 
 function adaptVuorovaikutukset(
   oid: string,
+  suunnitteluSopimus: SuunnitteluSopimus | null | undefined,
   kayttoOikeudet: DBVaylaUser[],
   vuorovaikutukset: Array<Vuorovaikutus> | undefined | null
 ): API.Vuorovaikutus[] | undefined {
@@ -68,7 +71,11 @@ function adaptVuorovaikutukset(
       const apiVuorovaikutus: API.Vuorovaikutus = {
         ...(vuorovaikutus as Omit<Vuorovaikutus, "vuorovaikutusPDFt">),
         ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(vuorovaikutus.ilmoituksenVastaanottajat),
-        esitettavatYhteystiedot: adaptStandardiYhteystiedotByAddingProjektiPaallikko(kayttoOikeudet, vuorovaikutus.esitettavatYhteystiedot),
+        esitettavatYhteystiedot: adaptStandardiYhteystiedotByAddingProjektiPaallikko(
+          kayttoOikeudet,
+          vuorovaikutus.esitettavatYhteystiedot,
+          suunnitteluSopimus
+        ),
         vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
         suunnittelumateriaali: adaptLinkkiByAddingTypename(vuorovaikutus.suunnittelumateriaali),
         videot: adaptLinkkiListByAddingTypename(vuorovaikutus.videot),

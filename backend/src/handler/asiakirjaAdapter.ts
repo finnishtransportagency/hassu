@@ -30,7 +30,7 @@ export class AsiakirjaAdapter {
         // Tässä vaiheessa kuulutusYhteystiedot on oltava olemassa
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot),
+        yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, true),
         velho: adaptVelho(dbProjekti),
         suunnitteluSopimus: adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
           dbProjekti.suunnitteluSopimus,
@@ -51,7 +51,7 @@ export class AsiakirjaAdapter {
       return {
         ...includedFields,
         velho: adaptVelho(dbProjekti),
-        yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot),
+        yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, false),
         // dbProjekti.kielitiedot on oltava olemassa
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
@@ -70,7 +70,7 @@ export class AsiakirjaAdapter {
       return {
         ...includedFields,
         velho: adaptVelho(dbProjekti),
-        yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot),
+        yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, false),
         // dbProjekti.kielitiedot on oltava olemassa
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore

@@ -15,6 +15,7 @@ import Trans from "next-translate/Trans";
 import KansalaisenAineistoNakyma from "@components/projekti/common/KansalaisenAineistoNakyma";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { kuntametadata } from "../../../../common/kuntametadata";
+import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
 
 export default function Nahtavillaolo(): ReactElement {
   const { t, lang } = useTranslation("projekti");
@@ -46,8 +47,6 @@ export default function Nahtavillaolo(): ReactElement {
     { header: t(`ui-otsikot.hankkeen_sijainti`), data: sijainti },
     { header: t(`ui-otsikot.suunnitelman_tyyppi`), data: velho?.tyyppi && t(`projekti-tyyppi.${velho?.tyyppi}`) },
   ];
-
-  const yhteystiedotListana = kuulutus.yhteystiedot?.map((yhteystieto) => t("common:yhteystieto", yhteystieto)) || [];
 
   const vastaavaViranomainen = velho.suunnittelustaVastaavaViranomainen;
 
@@ -117,10 +116,14 @@ export default function Nahtavillaolo(): ReactElement {
         <SectionContent>
           <p>
             {t("common:lisatietoja_antavat", {
-              yhteystiedot: yhteystiedotListana.join(", "),
-              count: yhteystiedotListana.length,
+              count: kuulutus.yhteystiedot.length,
             })}
           </p>
+          {kuulutus.yhteystiedot.map((yhteystieto, index) => (
+            <p key={index}>
+              <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto)}</p>
+            </p>
+          ))}
         </SectionContent>
       </Section>
     </ProjektiJulkinenPageLayout>

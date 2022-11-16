@@ -72,7 +72,11 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
         <SectionContent>
           <p className="vayla-label">Vuorovaikuttamisen yhteyshenkilöt</p>
           <p></p>
-          <StandardiYhteystiedotListana standardiYhteystiedot={vuorovaikutus.esitettavatYhteystiedot} projekti={projekti} />
+          <StandardiYhteystiedotListana
+            standardiYhteystiedot={vuorovaikutus.esitettavatYhteystiedot}
+            projekti={projekti}
+            pakotaProjariTaiKunnanEdustaja={true}
+          />
         </SectionContent>
         <SectionContent>
           <p className="vayla-label">Kutsu vuorovaikutamiseen julkisella puolella</p>

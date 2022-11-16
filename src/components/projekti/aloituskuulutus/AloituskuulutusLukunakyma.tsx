@@ -18,6 +18,7 @@ import SectionContent from "@components/layout/SectionContent";
 import { formatDate } from "../../../util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { formatNimi } from "../../../util/userUtil";
+import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 
 interface Props {
   projekti?: ProjektiLisatiedolla;
@@ -69,8 +70,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
             <br />
             {capitalize(kuntametadata.nameForKuntaId(aloituskuulutusjulkaisu.suunnitteluSopimus.kunta, lang))}
             <br />
-            {formatNimi(aloituskuulutusjulkaisu.suunnitteluSopimus)}, puh.{" "}
-            {aloituskuulutusjulkaisu.suunnitteluSopimus.puhelinnumero},{" "}
+            {formatNimi(aloituskuulutusjulkaisu.suunnitteluSopimus)}, puh. {aloituskuulutusjulkaisu.suunnitteluSopimus.puhelinnumero},{" "}
             {aloituskuulutusjulkaisu.suunnitteluSopimus.email ? replace(aloituskuulutusjulkaisu.suunnitteluSopimus.email, "@", "[at]") : ""}
           </Notification>
         )}
@@ -110,8 +110,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
           <p className="vayla-label">Kuulutuksessa esitettävät yhteystiedot</p>
           {aloituskuulutusjulkaisu.yhteystiedot?.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
-              {formatNimi(yhteystieto)}, puh. {yhteystieto?.puhelinnumero},{" "}
-              {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""}
+              {replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto), "@", "[at]")}
             </p>
           ))}
         </div>

@@ -13,8 +13,8 @@ import { formatDate } from "src/util/dateUtils";
 import HassuStack from "@components/layout/HassuStack";
 import { splitFilePath } from "../../../util/fileUtil";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
-import formatYhteystiedotText from "src/util/formatYhteystiedotText";
 import { kuntametadata } from "../../../../common/kuntametadata";
+import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
 
 export default function AloituskuulutusJulkinen(): ReactElement {
   const { t, lang } = useTranslation("projekti");
@@ -35,7 +35,6 @@ export default function AloituskuulutusJulkinen(): ReactElement {
   if (velho.kunnat) {
     sijainti = sijainti + kuntametadata.namesForKuntaIds(velho.kunnat, lang).join(", ");
   }
-  const yhteystiedot = formatYhteystiedotText(kuulutus.yhteystiedot);
   const keyValueData: KeyValueData[] = [
     {
       header: t(`ui-otsikot.nahtavillaoloaika`),
@@ -121,9 +120,10 @@ export default function AloituskuulutusJulkinen(): ReactElement {
           </SectionContent>
           <h4 className="vayla-small-title">{t(`ui-otsikot.yhteystiedot`)}</h4>
           <SectionContent>
-            <p>
-              {t(`ui-otsikot.lisatietoja_antavat`)} {yhteystiedot}
-            </p>
+            <p>{t(`ui-otsikot.lisatietoja_antavat`)}</p>
+            {kuulutus.yhteystiedot.map((yhteystieto, index) => (
+              <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto)}</p>
+            ))}
           </SectionContent>
           <h4 className="vayla-small-title">{t(`ui-otsikot.ladattava_kuulutus`)}</h4>
           <SectionContent className="flex gap-4">

@@ -61,8 +61,8 @@
   },
   "yhteystiedot": "RUOTSI_Yhteystiedot",
   "lisatietoja_antavat": {
-    "one": "RUOTSIKSI Lisätietoja antaa {{yhteystiedot}}",
-    "other": "RUOTSIKSI Lisätietoja antavat {{yhteystiedot}}"
+    "one": "RUOTSIKSI Lisätietoja antaa",
+    "other": "RUOTSIKSI Lisätietoja antavat"
   },
   "yhteystieto": "RUOTSI_{{etunimi}} {{sukunimi}}, puh. {{puhelinnumero}}, {{sahkoposti}} ({{organisaatio}})",
   "ja": "RUOTSI_ja",

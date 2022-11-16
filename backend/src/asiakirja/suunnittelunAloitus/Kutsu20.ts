@@ -1,11 +1,4 @@
-import {
-  DBVaylaUser,
-  SuunnitteluSopimusJulkaisu,
-  SuunnitteluVaihe,
-  Velho,
-  Vuorovaikutus,
-  VuorovaikutusTilaisuus,
-} from "../../database/model";
+import { DBVaylaUser, SuunnitteluVaihe, Velho, Vuorovaikutus, VuorovaikutusTilaisuus } from "../../database/model";
 import { KayttajaTyyppi, Kieli, ProjektiTyyppi, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import dayjs from "dayjs";
@@ -52,7 +45,6 @@ export class Kutsu20 extends CommonPdf {
   private readonly kayttoOikeudet: DBVaylaUser[];
   protected header: string;
   protected kieli: Kieli;
-  private suunnitteluSopimus: SuunnitteluSopimusJulkaisu | undefined;
   private readonly velho: Velho;
 
   constructor({
@@ -70,6 +62,10 @@ export class Kutsu20 extends CommonPdf {
       throw new Error("Projektilta puuttuu tietoja!");
     }
     const fileName = createFileName(kieli, asiakirjanMuoto, velho.tyyppi);
+    const suunnitteluSopimusJulkaisu = adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
+      suunnitteluSopimus,
+      findUserByKayttajatunnus(kayttoOikeudet, suunnitteluSopimus?.yhteysHenkilo)
+    );
     const kutsuAdapter = new KutsuAdapter({
       oid,
       kielitiedot,
@@ -78,6 +74,7 @@ export class Kutsu20 extends CommonPdf {
       asiakirjanMuoto,
       projektiTyyppi: velho.tyyppi,
       kayttoOikeudet,
+      suunnitteluSopimus: suunnitteluSopimusJulkaisu || undefined,
     });
     super(kieli, kutsuAdapter);
     const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
@@ -86,11 +83,7 @@ export class Kutsu20 extends CommonPdf {
     this.velho = velho;
 
     this.kayttoOikeudet = kayttoOikeudet;
-    const suunnitteluSopimusJulkaisu = adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
-      suunnitteluSopimus,
-      findUserByKayttajatunnus(kayttoOikeudet, suunnitteluSopimus?.yhteysHenkilo)
-    );
-    this.suunnitteluSopimus = suunnitteluSopimusJulkaisu || undefined;
+
     this.oid = oid;
     this.suunnitteluVaihe = suunnitteluVaihe;
     this.vuorovaikutus = vuorovaikutus;
@@ -179,9 +172,9 @@ export class Kutsu20 extends CommonPdf {
         {},
         this.moreInfoElements(
           this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysTiedot,
-          this.suunnitteluSopimus,
           this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysHenkilot,
-          false
+          true, // näytä organisaatio
+          true // pakota projari tai kunnan edustaja
         )
       ),
 

@@ -5,6 +5,7 @@ import { translate } from "../../util/localization";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../../asiakirja/asiakirjaTypes";
 import assert from "assert";
 import { formatNimi } from "../../util/userUtil";
+import { kuntametadata } from "../../../../common/kuntametadata";
 
 type SuunnitelmaTyyppi = "tiesuunnitelma" | "ratasuunnitelma" | "yleissuunnitelma";
 
@@ -207,7 +208,12 @@ export class LahetekirjeAdapter {
   }
 
   private get yhteystiedot() {
-    return this.aloitusKuulutus?.yhteystiedot.map((y) => `${y.organisaatio}, ${formatNimi(y)}, puh. ${y.puhelinnumero}, ${y.sahkoposti}`);
+    return this.aloitusKuulutus?.yhteystiedot.map(
+      (y) =>
+        `${y.kunta ? kuntametadata.nameForKuntaId(y.kunta, Kieli.SUOMI) : y.organisaatio}, ${formatNimi(y)}, puh. ${y.puhelinnumero}, ${
+          y.sahkoposti
+        }`
+    );
   }
 
   private get vastaanottajat(): string[] {

@@ -15,7 +15,7 @@ import ButtonFlatWithIcon from "@components/button/ButtonFlat";
 import { ProjektiTestCommand } from "../../../../../common/testUtil.dev";
 import { formatDate } from "src/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
-import { formatNimi } from "../../../../util/userUtil";
+import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 
 interface Props {
   nahtavillaoloVaiheJulkaisu?: NahtavillaoloVaiheJulkaisu | null;
@@ -97,10 +97,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
           <p className="vayla-label">Kuulutuksen yhteyshenkilöt</p>
           <p></p>
           {nahtavillaoloVaiheJulkaisu.yhteystiedot?.map((yhteystieto, index) => (
-            <p style={{ margin: 0 }} key={index}>
-              {formatNimi(yhteystieto)}, puh. {yhteystieto?.puhelinnumero},{" "}
-              {yhteystieto?.sahkoposti ? replace(yhteystieto?.sahkoposti, "@", "[at]") : ""}
-            </p>
+            <p key={index}>{replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto), "@", "[at]")}</p>
           ))}
         </SectionContent>
         <SectionContent>

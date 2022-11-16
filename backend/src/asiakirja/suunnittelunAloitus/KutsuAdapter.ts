@@ -1,10 +1,17 @@
 import { KayttajaTyyppi, Kieli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
-import { DBVaylaUser, Kielitiedot, SuunnitteluSopimusJulkaisu, Velho, Vuorovaikutus, Yhteystieto } from "../../database/model";
+import {
+  DBVaylaUser,
+  Kielitiedot,
+  SuunnitteluSopimus,
+  SuunnitteluSopimusJulkaisu,
+  Velho,
+  Vuorovaikutus,
+  Yhteystieto,
+} from "../../database/model";
 import { translate } from "../../util/localization";
 import { linkHyvaksymisPaatos, linkSuunnitteluVaihe } from "../../../../common/links";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
-import union from "lodash/union";
-import { vaylaUserToYhteystieto } from "../../util/vaylaUserToYhteystieto";
+import { vaylaUserToYhteystieto, yhteystietoPlusKunta } from "../../util/vaylaUserToYhteystieto";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { kuntametadata } from "../../../../common/kuntametadata";
 
@@ -17,12 +24,18 @@ export type KutsuAdapterProps = {
   projektiTyyppi: ProjektiTyyppi;
   vuorovaikutus?: Vuorovaikutus;
   kayttoOikeudet?: DBVaylaUser[];
+  suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu;
 };
 
-const yhteystietoMapper = ({ sukunimi, etunimi, organisaatio, puhelinnumero, sahkoposti, titteli }: Yhteystieto): Yhteystieto => ({
+type LokalisoituYhteystieto = Omit<Yhteystieto, "organisaatio" | "kunta"> & { organisaatio: string };
+
+const yhteystietoMapper = (
+  { sukunimi, etunimi, organisaatio, kunta, puhelinnumero, sahkoposti, titteli }: Yhteystieto,
+  kieli: Kieli
+): LokalisoituYhteystieto => ({
   etunimi: formatProperNoun(etunimi),
   sukunimi: formatProperNoun(sukunimi),
-  organisaatio: formatProperNoun(organisaatio),
+  organisaatio: kunta ? kuntametadata.nameForKuntaId(kunta as number, kieli) || "" : formatProperNoun(organisaatio || ""),
   puhelinnumero,
   sahkoposti,
   titteli,
@@ -37,10 +50,21 @@ export class KutsuAdapter {
   private readonly projektiTyyppi: ProjektiTyyppi;
   private readonly vuorovaikutus?: Vuorovaikutus;
   private readonly kayttoOikeudet?: DBVaylaUser[];
+  private readonly suunnitteluSopimus?: SuunnitteluSopimusJulkaisu | SuunnitteluSopimus;
   private readonly kielitiedot: Kielitiedot;
   private templateResolver: unknown;
 
-  constructor({ oid, velho, kielitiedot, asiakirjanMuoto, kieli, projektiTyyppi, vuorovaikutus, kayttoOikeudet }: KutsuAdapterProps) {
+  constructor({
+    oid,
+    velho,
+    kielitiedot,
+    asiakirjanMuoto,
+    kieli,
+    projektiTyyppi,
+    vuorovaikutus,
+    kayttoOikeudet,
+    suunnitteluSopimus,
+  }: KutsuAdapterProps) {
     this.oid = oid;
     this.velho = velho;
     this.kielitiedot = kielitiedot;
@@ -49,6 +73,7 @@ export class KutsuAdapter {
     this.projektiTyyppi = projektiTyyppi;
     this.vuorovaikutus = vuorovaikutus;
     this.kayttoOikeudet = kayttoOikeudet;
+    this.suunnitteluSopimus = suunnitteluSopimus;
   }
 
   setTemplateResolver(value: unknown): void {
@@ -125,7 +150,7 @@ export class KutsuAdapter {
   }
 
   get kuntia(): string {
-    const kunnat =this.velho?.kunnat?.map((kuntaId) => kuntametadata.nameForKuntaId(kuntaId, this.kieli));
+    const kunnat = this.velho?.kunnat?.map((kuntaId) => kuntametadata.nameForKuntaId(kuntaId, this.kieli));
     if (kunnat) {
       return kunnat.join(", ");
     }
@@ -238,37 +263,47 @@ export class KutsuAdapter {
   }
 
   yhteystiedot(
+    kieli: Kieli,
     yhteystiedot: Yhteystieto[] | null | undefined,
-    suunnitteluSopimus?: SuunnitteluSopimusJulkaisu,
-    yhteysHenkilot?: string[] | null
-  ): Yhteystieto[] {
+    yhteysHenkilot?: string[] | null,
+    pakotaProjariTaiKunnanEdustaja?: boolean
+  ): LokalisoituYhteystieto[] {
     let yt: Yhteystieto[] = [];
+    let suunnitteluSopimus: SuunnitteluSopimusJulkaisu;
+    const kunnanEdustaja = this.kayttoOikeudet?.find(
+      (ko) =>
+        ko.email === (this.suunnitteluSopimus as SuunnitteluSopimusJulkaisu)?.email ||
+        ko.kayttajatunnus === (this.suunnitteluSopimus as SuunnitteluSopimus)?.yhteysHenkilo
+    );
+    if (kunnanEdustaja && this.suunnitteluSopimus) {
+      suunnitteluSopimus = {
+        ...kunnanEdustaja,
+        kunta: this.suunnitteluSopimus.kunta,
+        puhelinnumero: kunnanEdustaja.puhelinnumero || "",
+      };
+    }
     if (yhteystiedot) {
-      yt = yt.concat(yhteystiedot);
+      yt = yt.concat(yhteystiedot.map((yt) => yhteystietoPlusKunta(yt, suunnitteluSopimus)));
     }
     if (yhteysHenkilot) {
       if (!this.kayttoOikeudet) {
         throw new Error("BUG: Kayttöoikeudet pitää antaa jos yhteyshenkilöt on annettu.");
       }
-      const yhteysHenkilotWithProjectManager: string[] = union(
-        this.kayttoOikeudet.filter((user) => user.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO).map((user) => user.kayttajatunnus),
-        yhteysHenkilot
-      );
-      this.getUsersForUsernames(yhteysHenkilotWithProjectManager).forEach((user) => {
-        yt.push(vaylaUserToYhteystieto(user));
+      this.getUsersForUsernames(yhteysHenkilot || []).forEach((user) => {
+        yt.push(vaylaUserToYhteystieto(user, this.suunnitteluSopimus));
       });
     }
-    if (suunnitteluSopimus) {
-      const { email, puhelinnumero, sukunimi, etunimi, kunta } = suunnitteluSopimus;
-      yt.push({
-        etunimi,
-        sukunimi,
-        puhelinnumero,
-        sahkoposti: email,
-        organisaatio: kuntametadata.nameForKuntaId(kunta, this.kieli),
-      });
+    if (pakotaProjariTaiKunnanEdustaja) {
+      const projari = this.kayttoOikeudet?.find((ko) => (ko.tyyppi = KayttajaTyyppi.PROJEKTIPAALLIKKO));
+
+      if (this.suunnitteluSopimus && !yt.find((t) => t.sahkoposti === kunnanEdustaja?.email)) {
+        yt = [vaylaUserToYhteystieto(kunnanEdustaja as DBVaylaUser, this.suunnitteluSopimus)].concat(yt);
+      } else if (!yt.find((t) => t.sahkoposti === projari?.email)) {
+        yt = [vaylaUserToYhteystieto(projari as DBVaylaUser, this.suunnitteluSopimus)].concat(yt);
+      }
     }
-    return yt.map(yhteystietoMapper);
+
+    return yt.map((yt) => yhteystietoMapper(yt, kieli));
   }
 
   text(key: string): string {
@@ -305,11 +340,12 @@ export class KutsuAdapter {
     });
   }
 
-  get yhteystiedotVuorovaikutus(): Yhteystieto[] {
+  get yhteystiedotVuorovaikutus(): LokalisoituYhteystieto[] {
     return this.yhteystiedot(
+      this.kieli,
       this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysTiedot || [],
-      undefined,
-      this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysHenkilot
+      this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysHenkilot,
+      true // Pakota projari tai kunnan edustaja
     );
   }
 

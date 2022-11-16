@@ -104,11 +104,12 @@ Object {
       },
       "yhteystiedot": Array [
         Object {
-          "etunimi": "Pekka",
-          "organisaatio": "Väylävirasto",
+          "etunimi": "Kunta",
+          "kunta": 536,
+          "organisaatio": "Nokia",
           "puhelinnumero": "123456789",
-          "sahkoposti": "pekka.projari@vayla.fi",
-          "sukunimi": "Projari",
+          "sahkoposti": "Kunta.Kuntalainen@vayla.fi",
+          "sukunimi": "Kuntalainen",
         },
         Object {
           "etunimi": "Marko",
@@ -229,11 +230,12 @@ Object {
       },
       "yhteystiedot": Array [
         Object {
-          "etunimi": "Pekka",
-          "organisaatio": "Väylävirasto",
+          "etunimi": "Kunta",
+          "kunta": 536,
+          "organisaatio": "Nokia",
           "puhelinnumero": "123456789",
-          "sahkoposti": "pekka.projari@vayla.fi",
-          "sukunimi": "Projari",
+          "sahkoposti": "Kunta.Kuntalainen@vayla.fi",
+          "sukunimi": "Kuntalainen",
         },
         Object {
           "etunimi": "Marko",
@@ -329,11 +331,12 @@ Object {
       },
       "yhteystiedot": Array [
         Object {
-          "etunimi": "Pekka",
-          "organisaatio": "Väylävirasto",
+          "etunimi": "Kunta",
+          "kunta": 536,
+          "organisaatio": "Nokia",
           "puhelinnumero": "123456789",
-          "sahkoposti": "pekka.projari@vayla.fi",
-          "sukunimi": "Projari",
+          "sahkoposti": "Kunta.Kuntalainen@vayla.fi",
+          "sukunimi": "Kuntalainen",
         },
         Object {
           "etunimi": "Marko",
