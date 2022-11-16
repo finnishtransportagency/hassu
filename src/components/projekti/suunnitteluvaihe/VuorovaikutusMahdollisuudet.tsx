@@ -7,7 +7,6 @@ import {
   YhteystietoInput,
   VuorovaikutusTilaisuusInput,
   Vuorovaikutus,
-  Kieli,
 } from "@services/api";
 import Section from "@components/layout/Section";
 import React, { ReactElement, Dispatch, SetStateAction } from "react";
@@ -19,6 +18,7 @@ import capitalize from "lodash/capitalize";
 import useTranslation from "next-translate/useTranslation";
 import StandardiYhteystiedotListana from "../common/StandardiYhteystiedotListana";
 import { formatNimi } from "../../../util/userUtil";
+import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 
 interface Props {
   projekti: Projekti;
@@ -166,9 +166,8 @@ export default function VuorovaikutusMahdollisuudet({ projekti, vuorovaikutus, s
   );
 }
 export const SoittoajanYhteystieto = React.memo((props: { yhteystieto: Yhteystieto | YhteystietoInput }) => {
-  const { lang } = useTranslation();
+  const kieli = useKansalaiskieli();
 
-  const kieli = lang === "sv" ? Kieli.RUOTSI : lang === "fi" ? Kieli.SUOMI : Kieli.SAAME;
   const yhteystiedonKunta = props.yhteystieto.kunta && kuntametadata.nameForKuntaId(props.yhteystieto.kunta, kieli);
   const esitettavaOrganisaatioTaiKunta = props.yhteystieto.kunta ? yhteystiedonKunta : props.yhteystieto.organisaatio;
 
