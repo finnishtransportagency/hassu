@@ -1,8 +1,8 @@
 import {
-  DBProjekti,
   DBVaylaUser,
   LocalizedMap,
   StandardiYhteystiedot,
+  SuunnitteluSopimus,
   SuunnitteluVaihe,
   Vuorovaikutus,
   VuorovaikutusPDF,
@@ -23,7 +23,8 @@ import { fileService } from "../../../files/fileService";
 import { cloneDeep } from "lodash";
 
 export function adaptSuunnitteluVaihe(
-  dbProjekti: DBProjekti,
+  oid: string,
+  suunnitteluSopimus: SuunnitteluSopimus | null | undefined,
   kayttoOikeudet: DBVaylaUser[],
   suunnitteluVaihe: SuunnitteluVaihe | null | undefined,
   vuorovaikutukset: Array<Vuorovaikutus> | null | undefined
@@ -42,7 +43,7 @@ export function adaptSuunnitteluVaihe(
       arvioSeuraavanVaiheenAlkamisesta,
       suunnittelunEteneminenJaKesto,
       hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
-      vuorovaikutukset: adaptVuorovaikutukset(dbProjekti, kayttoOikeudet, vuorovaikutukset),
+      vuorovaikutukset: adaptVuorovaikutukset(oid, suunnitteluSopimus, kayttoOikeudet, vuorovaikutukset),
       palautteidenVastaanottajat,
       __typename: "SuunnitteluVaihe",
     };
@@ -51,7 +52,8 @@ export function adaptSuunnitteluVaihe(
 }
 
 function adaptVuorovaikutukset(
-  projekti: DBProjekti,
+  oid: string,
+  suunnitteluSopimus: SuunnitteluSopimus | null | undefined,
   kayttoOikeudet: DBVaylaUser[],
   vuorovaikutukset: Array<Vuorovaikutus> | undefined | null
 ): API.Vuorovaikutus[] | undefined {
@@ -72,7 +74,7 @@ function adaptVuorovaikutukset(
         esitettavatYhteystiedot: adaptStandardiYhteystiedotByAddingProjektiPaallikko(
           kayttoOikeudet,
           vuorovaikutus.esitettavatYhteystiedot,
-          projekti.suunnitteluSopimus
+          suunnitteluSopimus
         ),
         vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
         suunnittelumateriaali: adaptLinkkiByAddingTypename(vuorovaikutus.suunnittelumateriaali),
@@ -83,7 +85,7 @@ function adaptVuorovaikutukset(
       };
 
       if (vuorovaikutusPDFt) {
-        apiVuorovaikutus.vuorovaikutusPDFt = adaptVuorovaikutusPDFPaths(projekti.oid, vuorovaikutusPDFt);
+        apiVuorovaikutus.vuorovaikutusPDFt = adaptVuorovaikutusPDFPaths(oid, vuorovaikutusPDFt);
       }
       return apiVuorovaikutus;
     });

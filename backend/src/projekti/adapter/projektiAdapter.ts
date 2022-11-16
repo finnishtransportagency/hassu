@@ -65,7 +65,13 @@ export class ProjektiAdapter {
       liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmatByAddingTypename(liittyvatSuunnitelmat),
       velho: adaptVelho(velho),
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot, true),
-      suunnitteluVaihe: adaptSuunnitteluVaihe(dbProjekti, kayttoOikeudet, suunnitteluVaihe, vuorovaikutukset),
+      suunnitteluVaihe: adaptSuunnitteluVaihe(
+        dbProjekti.oid,
+        dbProjekti.suunnitteluSopimus,
+        kayttoOikeudet,
+        suunnitteluVaihe,
+        vuorovaikutukset
+      ),
       nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe),
       nahtavillaoloVaiheJulkaisut: adaptNahtavillaoloVaiheJulkaisut(dbProjekti.oid, nahtavillaoloVaiheJulkaisut),
       hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe, dbProjekti.kasittelynTila?.hyvaksymispaatos),
