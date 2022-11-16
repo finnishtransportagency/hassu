@@ -10,7 +10,6 @@ import HeadphonesIcon from "@mui/icons-material/Headphones";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import {
-  Kieli,
   ProjektiJulkinen,
   SuunnitteluVaiheJulkinen,
   SuunnitteluVaiheTila,
@@ -30,7 +29,6 @@ import { splitFilePath } from "../../../util/fileUtil";
 import classNames from "classnames";
 import Trans from "next-translate/Trans";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
-import { replace } from "lodash";
 
 export default function Suunnittelu(): ReactElement {
   const { t } = useTranslation("suunnittelu");
@@ -217,7 +215,7 @@ const VuorovaikutusTiedot: FC<{
             </p>
             {vuorovaikutus.yhteystiedot.map((yhteystieto, index) => (
               <p key={index}>
-                {replace(yhteystietoKansalaiselleTekstiksi(lang === "sv" ? Kieli.RUOTSI : Kieli.SUOMI, yhteystieto), "@", "[at]")}
+                <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto)}</p>
               </p>
             ))}
           </SectionContent>

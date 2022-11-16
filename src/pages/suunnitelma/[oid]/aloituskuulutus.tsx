@@ -121,8 +121,8 @@ export default function AloituskuulutusJulkinen(): ReactElement {
           <h4 className="vayla-small-title">{t(`ui-otsikot.yhteystiedot`)}</h4>
           <SectionContent>
             <p>{t(`ui-otsikot.lisatietoja_antavat`)}</p>
-            {kuulutus.yhteystiedot.map((yt, index) => (
-              <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang === "sv" ? Kieli.RUOTSI : Kieli.SUOMI, yt)}</p>
+            {kuulutus.yhteystiedot.map((yhteystieto, index) => (
+              <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto)}</p>
             ))}
           </SectionContent>
           <h4 className="vayla-small-title">{t(`ui-otsikot.ladattava_kuulutus`)}</h4>

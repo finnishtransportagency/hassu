@@ -6,7 +6,7 @@ import useTranslation from "next-translate/useTranslation";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import { formatDate } from "src/util/dateUtils";
 import SectionContent from "@components/layout/SectionContent";
-import { Kieli, NahtavillaoloVaiheTila, ProjektiTyyppi, Viranomainen } from "@services/api";
+import { NahtavillaoloVaiheTila, ProjektiTyyppi, Viranomainen } from "@services/api";
 import FormatDate from "@components/FormatDate";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
 import Notification, { NotificationType } from "@components/notification/Notification";
@@ -15,7 +15,6 @@ import Trans from "next-translate/Trans";
 import KansalaisenAineistoNakyma from "@components/projekti/common/KansalaisenAineistoNakyma";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { kuntametadata } from "../../../../common/kuntametadata";
-import replace from "lodash/replace";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
 
 export default function Nahtavillaolo(): ReactElement {
@@ -122,7 +121,7 @@ export default function Nahtavillaolo(): ReactElement {
           </p>
           {kuulutus.yhteystiedot.map((yhteystieto, index) => (
             <p key={index}>
-              {replace(yhteystietoKansalaiselleTekstiksi(lang === "sv" ? Kieli.RUOTSI : Kieli.SUOMI, yhteystieto), "@", "[at]")}
+              <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto)}</p>
             </p>
           ))}
         </SectionContent>

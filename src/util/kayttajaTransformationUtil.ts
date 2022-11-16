@@ -9,6 +9,7 @@ import {
   YhteystietoInput,
 } from "@services/api";
 import { kuntametadata } from "common/kuntametadata";
+import replace from "lodash/replace";
 
 export default function projektiKayttajaToYhteystieto(
   projektiKayttaja: ProjektiKayttaja,
@@ -32,9 +33,14 @@ export function yhteystietoVirkamiehelleTekstiksi(yhteystieto: (Yhteystieto | Yh
   }), ${puhelinnumero}, ${sahkoposti}`;
 }
 
-export function yhteystietoKansalaiselleTekstiksi(kieli: Kieli, yhteystieto: Yhteystieto) {
+export function yhteystietoKansalaiselleTekstiksi(lang: string, yhteystieto: Yhteystieto) {
   const { etunimi, sukunimi, organisaatio, kunta, puhelinnumero, sahkoposti } = yhteystieto;
-  return `${etunimi} ${sukunimi} (${kunta ? kuntametadata.nameForKuntaId(kunta, kieli) : organisaatio}), ${puhelinnumero}, ${sahkoposti}`;
+  const kieli = lang === "sv" ? Kieli.RUOTSI : lang === "fi" ? Kieli.SUOMI : Kieli.SAAME;
+  return replace(
+    `${etunimi} ${sukunimi} (${kunta ? kuntametadata.nameForKuntaId(kunta, kieli) : organisaatio}), ${puhelinnumero}, ${sahkoposti}`,
+    "@",
+    "[at]"
+  );
 }
 
 export function standardiYhteystiedotYhteystiedoiksi(

@@ -10,8 +10,7 @@ import ExtLink from "../../ExtLink";
 import Notification, { NotificationType } from "../../notification/Notification";
 import { Stack } from "@mui/material";
 import KansalaisenAineistoNakyma from "../common/KansalaisenAineistoNakyma";
-import { HyvaksymisPaatosVaiheJulkaisuJulkinen, Kieli } from "@services/api";
-import replace from "lodash/replace";
+import { HyvaksymisPaatosVaiheJulkaisuJulkinen } from "@services/api";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
 
 interface Props {
@@ -123,9 +122,7 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
           })}
         </p>
         {kuulutus.yhteystiedot?.map((yhteystieto, index) => (
-          <p key={index}>
-            {replace(yhteystietoKansalaiselleTekstiksi(lang === "sv" ? Kieli.RUOTSI : Kieli.SUOMI, yhteystieto), "@", "[at]")}
-          </p>
+          <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto)}</p>
         ))}
       </Section>
       <Section noDivider>
