@@ -13,10 +13,10 @@ import {
   AloitusKuulutusTila,
   api,
   AsiakirjaTyyppi,
-  HankkeenKuvauksetInput,
   Kieli,
   Kielitiedot,
   LaskuriTyyppi,
+  LokalisoituTekstiInput,
   MuokkausTila,
   Status,
   TallennaProjektiInput,
@@ -115,7 +115,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     // SUOMI hankkeen kuvaus on aina lomakkeella, RUOTSI JA SAAME vain jos kyseinen kieli on projektin kielitiedoissa.
     // Jos kieli ei ole kielitiedoissa kyseisen kielen kenttää ei tule lisätä hankkeenKuvaus olioon
     // Tästä syystä pickBy:llä poistetaan undefined hankkeenkuvaus tiedot.
-    const hankkeenKuvaus: HankkeenKuvauksetInput = {
+    const hankkeenKuvaus: LokalisoituTekstiInput = {
       SUOMI: projekti.aloitusKuulutus?.hankkeenKuvaus?.SUOMI || "",
       ...pickBy(
         {

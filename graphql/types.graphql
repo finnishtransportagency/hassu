@@ -137,7 +137,7 @@ type Projekti implements IProjekti {
 }
 
 type SuunnitteluVaihe {
-  hankkeenKuvaus: HankkeenKuvaukset
+  hankkeenKuvaus: LokalisoituTeksti
   arvioSeuraavanVaiheenAlkamisesta: String
   suunnittelunEteneminenJaKesto: String
   tila: SuunnitteluVaiheTila
@@ -151,7 +151,7 @@ type SuunnitteluVaihe {
 
 type SuunnitteluVaiheJulkinen {
   tila: SuunnitteluVaiheTila
-  hankkeenKuvaus: HankkeenKuvaukset
+  hankkeenKuvaus: LokalisoituTeksti
   arvioSeuraavanVaiheenAlkamisesta: String
   suunnittelunEteneminenJaKesto: String
   vuorovaikutukset: [VuorovaikutusJulkinen!]
@@ -211,7 +211,7 @@ type NahtavillaoloVaihe {
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
   muistutusoikeusPaattyyPaiva: String
-  hankkeenKuvaus: HankkeenKuvaukset
+  hankkeenKuvaus: LokalisoituTeksti
   kuulutusYhteystiedot: StandardiYhteystiedot
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   palautusSyy: String
@@ -237,7 +237,7 @@ type NahtavillaoloVaiheJulkaisu {
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
   muistutusoikeusPaattyyPaiva: String
-  hankkeenKuvaus: HankkeenKuvaukset
+  hankkeenKuvaus: LokalisoituTeksti
   velho: Velho!
   kielitiedot: Kielitiedot
   yhteystiedot: [Yhteystieto!]!
@@ -272,7 +272,7 @@ type NahtavillaoloVaiheJulkaisuJulkinen {
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
   muistutusoikeusPaattyyPaiva: String
-  hankkeenKuvaus: HankkeenKuvaukset
+  hankkeenKuvaus: LokalisoituTeksti
   velho: VelhoJulkinen!
   kielitiedot: Kielitiedot
   yhteystiedot: [Yhteystieto!]!
@@ -336,7 +336,7 @@ type NahtavillaoloVaiheJulkinen {
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
   muistutusoikeusPaattyyPaiva: String
-  hankkeenKuvaus: HankkeenKuvaukset
+  hankkeenKuvaus: LokalisoituTeksti
   kuulutusYhteysHenkilot: [String!]
   kuulutusYhteystiedot: [Yhteystieto!]
 }
@@ -555,12 +555,6 @@ type UudelleenKuulutus {
   alkuperainenHyvaksymisPaiva: String
 }
 
-type HankkeenKuvaukset {
-  SUOMI: String!
-  RUOTSI: String
-  SAAME: String
-}
-
 type LokalisoituTeksti {
   SUOMI: String!
   RUOTSI: String
@@ -581,7 +575,7 @@ type AloitusKuulutusPDFt {
 type AloitusKuulutus {
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
-  hankkeenKuvaus: HankkeenKuvaukset
+  hankkeenKuvaus: LokalisoituTeksti
   kuulutusYhteystiedot: StandardiYhteystiedot
   palautusSyy: String
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
@@ -597,7 +591,7 @@ type StandardiYhteystiedot {
 type AloitusKuulutusJulkaisu {
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
-  hankkeenKuvaus: HankkeenKuvaukset
+  hankkeenKuvaus: LokalisoituTeksti
   yhteystiedot: [Yhteystieto!]!
   velho: Velho!
   suunnitteluSopimus: SuunnitteluSopimusJulkaisu
@@ -613,7 +607,7 @@ type AloitusKuulutusJulkaisu {
 type AloitusKuulutusJulkaisuJulkinen {
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
-  hankkeenKuvaus: HankkeenKuvaukset
+  hankkeenKuvaus: LokalisoituTeksti
   yhteystiedot: [Yhteystieto!]!
   velho: VelhoJulkinen!
   suunnitteluSopimus: SuunnitteluSopimusJulkaisu
