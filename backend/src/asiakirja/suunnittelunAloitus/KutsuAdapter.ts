@@ -11,7 +11,7 @@ import {
 import { translate } from "../../util/localization";
 import { linkHyvaksymisPaatos, linkSuunnitteluVaihe } from "../../../../common/links";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
-import { vaylaUserToYhteystieto2, yhteystietoPlusKunta } from "../../util/vaylaUserToYhteystieto";
+import { vaylaUserToYhteystieto, yhteystietoPlusKunta } from "../../util/vaylaUserToYhteystieto";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { kuntametadata } from "../../../../common/kuntametadata";
 
@@ -290,16 +290,16 @@ export class KutsuAdapter {
         throw new Error("BUG: Kayttöoikeudet pitää antaa jos yhteyshenkilöt on annettu.");
       }
       this.getUsersForUsernames(yhteysHenkilot || []).forEach((user) => {
-        yt.push(vaylaUserToYhteystieto2(user, this.suunnitteluSopimus));
+        yt.push(vaylaUserToYhteystieto(user, this.suunnitteluSopimus));
       });
     }
     if (pakotaProjariTaiKunnanEdustaja) {
       const projari = this.kayttoOikeudet?.find((ko) => (ko.tyyppi = KayttajaTyyppi.PROJEKTIPAALLIKKO));
 
       if (this.suunnitteluSopimus && !yt.find((t) => t.sahkoposti === kunnanEdustaja?.email)) {
-        yt = [vaylaUserToYhteystieto2(kunnanEdustaja as DBVaylaUser, this.suunnitteluSopimus)].concat(yt);
+        yt = [vaylaUserToYhteystieto(kunnanEdustaja as DBVaylaUser, this.suunnitteluSopimus)].concat(yt);
       } else if (!yt.find((t) => t.sahkoposti === projari?.email)) {
-        yt = [vaylaUserToYhteystieto2(projari as DBVaylaUser, this.suunnitteluSopimus)].concat(yt);
+        yt = [vaylaUserToYhteystieto(projari as DBVaylaUser, this.suunnitteluSopimus)].concat(yt);
       }
     }
 

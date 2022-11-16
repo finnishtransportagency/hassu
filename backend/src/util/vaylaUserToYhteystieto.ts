@@ -1,18 +1,7 @@
 import { DBVaylaUser, SuunnitteluSopimus, SuunnitteluSopimusJulkaisu } from "../database/model/projekti";
 import { Yhteystieto } from "../database/model/common";
 
-export function vaylaUserToYhteystieto(vaylaUser: DBVaylaUser, suunnitteluSopimus?: SuunnitteluSopimus | null): Yhteystieto {
-  return {
-    etunimi: vaylaUser.etunimi,
-    sukunimi: vaylaUser.sukunimi,
-    puhelinnumero: vaylaUser.puhelinnumero || "",
-    sahkoposti: vaylaUser.email,
-    organisaatio: vaylaUser.organisaatio,
-    kunta: vaylaUser.kayttajatunnus === suunnitteluSopimus?.yhteysHenkilo ? suunnitteluSopimus.kunta : undefined,
-  };
-}
-
-export function vaylaUserToYhteystieto2(
+export function vaylaUserToYhteystieto(
   vaylaUser: DBVaylaUser,
   suunnitteluSopimus?: SuunnitteluSopimusJulkaisu | SuunnitteluSopimus | null
 ): Yhteystieto {
