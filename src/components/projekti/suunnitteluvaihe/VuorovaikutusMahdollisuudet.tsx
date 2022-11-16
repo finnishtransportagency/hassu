@@ -168,17 +168,16 @@ export default function VuorovaikutusMahdollisuudet({ projekti, vuorovaikutus, s
 export const SoittoajanYhteystieto = React.memo((props: { yhteystieto: Yhteystieto | YhteystietoInput }) => {
   const { lang } = useTranslation();
 
+  const kieli = lang === "sv" ? Kieli.RUOTSI : lang === "fi" ? Kieli.SUOMI : Kieli.SAAME;
+  const yhteystiedonKunta = props.yhteystieto.kunta && kuntametadata.nameForKuntaId(props.yhteystieto.kunta, kieli);
+  const esitettavaOrganisaatioTaiKunta = props.yhteystieto.kunta ? yhteystiedonKunta : props.yhteystieto.organisaatio;
+
   return (
     <>
       <p>
         {formatNimi(props.yhteystieto)}
         {props.yhteystieto.titteli ? `, ${props.yhteystieto.titteli}` : null}
-        {props.yhteystieto.kunta
-          ? ` (${kuntametadata.nameForKuntaId(props.yhteystieto.kunta, lang === "sv" ? Kieli.RUOTSI : Kieli.SUOMI)})`
-          : props.yhteystieto.organisaatio
-          ? ` (${props.yhteystieto.organisaatio})`
-          : null}
-        : {props.yhteystieto.puhelinnumero}
+        {esitettavaOrganisaatioTaiKunta ? ` (${esitettavaOrganisaatioTaiKunta})` : null}: {props.yhteystieto.puhelinnumero}
       </p>
     </>
   );
