@@ -60,10 +60,6 @@
     "PROJEKTIPAALLIKKO": "Projektipäällikkö"
   },
   "yhteystiedot": "Yhteystiedot",
-  "lisatietoja_antavat": {
-    "one": "Lisätietoja antaa {{yhteystiedot}}",
-    "other": "Lisätietoja antavat {{yhteystiedot}}"
-  },
   "lisatietoja_antavat2": {
     "one": "Lisätietoja antaa",
     "other": "Lisätietoja antavat"

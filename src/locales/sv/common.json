@@ -61,10 +61,6 @@
   },
   "yhteystiedot": "RUOTSI_Yhteystiedot",
   "lisatietoja_antavat": {
-    "one": "RUOTSIKSI Lisätietoja antaa {{yhteystiedot}}",
-    "other": "RUOTSIKSI Lisätietoja antavat {{yhteystiedot}}"
-  },
-  "lisatietoja_antavat2": {
     "one": "RUOTSIKSI Lisätietoja antaa",
     "other": "RUOTSIKSI Lisätietoja antavat"
   },

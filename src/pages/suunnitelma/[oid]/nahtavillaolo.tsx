@@ -115,7 +115,7 @@ export default function Nahtavillaolo(): ReactElement {
         <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.yhteystiedot`)}</h4>
         <SectionContent>
           <p>
-            {t("common:lisatietoja_antavat2", {
+            {t("common:lisatietoja_antavat", {
               count: kuulutus.yhteystiedot.length,
             })}
           </p>

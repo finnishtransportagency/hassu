@@ -209,7 +209,7 @@ const VuorovaikutusTiedot: FC<{
           <SectionContent>
             <h5 className="vayla-small-title">{t("common:yhteystiedot")}</h5>
             <p>
-              {t("common:lisatietoja_antavat2", {
+              {t("common:lisatietoja_antavat", {
                 count: vuorovaikutus.yhteystiedot.length,
               })}
             </p>

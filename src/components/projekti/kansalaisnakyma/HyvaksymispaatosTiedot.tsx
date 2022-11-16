@@ -117,7 +117,7 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
       <Section noDivider>
         <h4 className="vayla-small-title">{t("projekti:ui-otsikot.yhteystiedot")}</h4>
         <p>
-          {t("common:lisatietoja_antavat2", {
+          {t("common:lisatietoja_antavat", {
             count: kuulutus.yhteystiedot?.length,
           })}
         </p>
