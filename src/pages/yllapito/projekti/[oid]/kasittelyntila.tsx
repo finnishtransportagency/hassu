@@ -19,12 +19,13 @@ import { HassuDatePickerWithController } from "@components/form/HassuDatePicker"
 import cloneDeep from "lodash/cloneDeep";
 import assert from "assert";
 import ExtLink from "@components/ExtLink";
-import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
+import Notification, { NotificationType } from "@components/notification/Notification";
 import HassuGridItem from "@components/HassuGridItem";
 import LuoJatkopaatosDialog from "@components/projekti/kasittelyntila/LuoJatkopaatosDialog";
 import { useRouter } from "next/router";
 import TextInput from "@components/form/TextInput";
 import KasittelyntilaLukutila from "@components/projekti/lukutila/KasittelynTilaLukutila";
+import { formatDate } from "src/util/dateUtils";
 
 type FormValues = Pick<TallennaProjektiInput, "oid" | "kasittelynTila">;
 
@@ -32,8 +33,19 @@ export default function KasittelyntilaSivu(): ReactElement {
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
   return (
     <ProjektiPageLayout title="Käsittelyn tila">
+      {projekti && projekti.status === Status.HYVAKSYTTY && (
+        <Notification type={NotificationType.INFO_GRAY}>
+          Suunnitelma poistuu palvelun julkiselta puolelta{" "}
+          {formatDate(
+            projekti.hyvaksymisPaatosVaiheJulkaisut?.[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1].kuulutusVaihePaattyyPaiva
+          )}
+          . Samalla kun suunnitelma poistuu palvelun julkiselta puolelta, projektin jäseniltä päättyvät muokkausoikeudet suunnitelmaan ja
+          suunnitelman aineistot poistetaan järjestelmästä. Huolehdithan, että kaikki tarvittavat asiakirjat on tallennettu asianhallintaan
+          ja muihin tallennuspaikkoihin ennen muokkausoikeuksien päättymistä.
+        </Notification>
+      )}
       {projekti &&
-        ((projektiOnEpaaktiivinen(projekti) && !projekti.nykyinenKayttaja.onYllapitaja) || !projekti?.nykyinenKayttaja.onYllapitaja ? (
+        (!projekti?.nykyinenKayttaja.onYllapitaja ? (
           <KasittelyntilaLukutila projekti={projekti} />
         ) : (
           <KasittelyntilaPageContent projekti={projekti} projektiLoadError={projektiLoadError} reloadProjekti={reloadProjekti} />
