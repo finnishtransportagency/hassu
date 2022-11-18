@@ -1,42 +1,18 @@
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { api } from "@services/api";
-import Button from "@components/button/Button";
-import React, { ReactElement, ReactNode, useState } from "react";
+import React, { ReactElement, ReactNode } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import ProjektiSideNavigation from "./ProjektiSideNavigation";
-import useSnackbars from "src/hooks/useSnackbars";
-import log from "loglevel";
 import { Stack } from "@mui/material";
-import HassuSpinner from "@components/HassuSpinner";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 
 interface Props {
   children: ReactNode;
   title: string;
-  showUpdateButton?: boolean;
+  contentAsideTitle?: ReactNode;
 }
 
-export default function ProjektiPageLayout({ children, title, showUpdateButton }: Props): ReactElement {
-  const { data: projekti, mutate: reloadProjekti } = useProjekti();
-  const [loading, setLoading] = useState(false);
-
-  const { showSuccessMessage, showErrorMessage } = useSnackbars();
-
-  const uudelleenLataaProjekit = async () => {
-    if (projekti?.oid) {
-      try {
-        setLoading(true);
-        await api.synkronoiProjektiMuutoksetVelhosta(projekti.oid);
-        await reloadProjekti();
-        setLoading(false);
-        showSuccessMessage("Projekti päivitetty");
-      } catch (e) {
-        setLoading(false);
-        log.log("realoadProjekti Error", e);
-        showErrorMessage("Päivittämisessä tapahtui virhe!");
-      }
-    }
-  };
+export default function ProjektiPageLayout({ children, title, contentAsideTitle }: Props): ReactElement {
+  const { data: projekti } = useProjekti();
 
   if (!projekti) {
     return <></>;
@@ -57,7 +33,7 @@ export default function ProjektiPageLayout({ children, title, showUpdateButton }
             rowGap={0}
           >
             <h1>{title}</h1>
-            {showUpdateButton && <Button onClick={uudelleenLataaProjekit}>Päivitä tiedot</Button>}
+            {contentAsideTitle}
           </Stack>
           <h2>{projekti?.velho?.nimi || "-"}</h2>
           {projekti && projektiOnEpaaktiivinen(projekti) ? (
@@ -76,7 +52,6 @@ export default function ProjektiPageLayout({ children, title, showUpdateButton }
           )}
           {children}
         </div>
-        <HassuSpinner open={loading} />
       </div>
     </section>
   );

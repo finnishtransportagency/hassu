@@ -1,5 +1,5 @@
-import { AloitusKuulutusJulkaisu, AloitusKuulutusTila, Kieli } from "@services/api";
-import React, { ReactElement } from "react";
+import { AloitusKuulutusJulkaisu, AloitusKuulutusTila, Kieli, UudelleenKuulutus } from "@services/api";
+import React, { ReactElement, VFC } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
@@ -38,6 +38,8 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
     aloitusKuulutusHref = window.location.protocol + "//" + window.location.host + "/suunnitelma/" + projekti.oid + "/aloituskuulutus";
   }
 
+  const { ensisijainenKieli, toissijainenKieli } = aloituskuulutusjulkaisu.kielitiedot || {};
+
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
   return (
@@ -69,8 +71,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
             <br />
             {capitalize(kuntametadata.nameForKuntaId(aloituskuulutusjulkaisu.suunnitteluSopimus.kunta, lang))}
             <br />
-            {formatNimi(aloituskuulutusjulkaisu.suunnitteluSopimus)}, puh.{" "}
-            {aloituskuulutusjulkaisu.suunnitteluSopimus.puhelinnumero},{" "}
+            {formatNimi(aloituskuulutusjulkaisu.suunnitteluSopimus)}, puh. {aloituskuulutusjulkaisu.suunnitteluSopimus.puhelinnumero},{" "}
             {aloituskuulutusjulkaisu.suunnitteluSopimus.email ? replace(aloituskuulutusjulkaisu.suunnitteluSopimus.email, "@", "[at]") : ""}
           </Notification>
         )}
@@ -82,28 +83,23 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
             <FormatDate date={aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen} />
           </p>
         </div>
-        <div>
-          <p className="vayla-label">
-            Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä ({lowerCase(aloituskuulutusjulkaisu.kielitiedot?.ensisijainenKieli)}
-            )
-          </p>
-          <p>
-            {aloituskuulutusjulkaisu.kielitiedot?.ensisijainenKieli === Kieli.SUOMI
-              ? aloituskuulutusjulkaisu.hankkeenKuvaus?.SUOMI
-              : aloituskuulutusjulkaisu.hankkeenKuvaus?.RUOTSI}
-          </p>
-        </div>
-        {aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli && (
+        {aloituskuulutusjulkaisu.uudelleenKuulutus && (
+          <UudelleenKuulutusSisalto
+            uudelleenKuulutus={aloituskuulutusjulkaisu.uudelleenKuulutus}
+            ensisijainenKieli={ensisijainenKieli}
+            toissijainenKieli={toissijainenKieli}
+          />
+        )}
+        {ensisijainenKieli && (
+          <div>
+            <p className="vayla-label">Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä ({lowerCase(ensisijainenKieli)})</p>
+            <p>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[ensisijainenKieli]}</p>
+          </div>
+        )}
+        {toissijainenKieli && (
           <div className="content">
-            <p className="vayla-label">
-              Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä (
-              {lowerCase(aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli)})
-            </p>
-            <p>
-              {aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli === Kieli.SUOMI
-                ? aloituskuulutusjulkaisu.hankkeenKuvaus?.SUOMI
-                : aloituskuulutusjulkaisu.hankkeenKuvaus?.RUOTSI}
-            </p>
+            <p className="vayla-label">Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(toissijainenKieli)})</p>
+            <p>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[toissijainenKieli]}</p>
           </div>
         )}
         <div>
@@ -147,3 +143,45 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
     </>
   );
 }
+
+const UudelleenKuulutusSisalto: VFC<{
+  ensisijainenKieli: Kieli | null | undefined;
+  toissijainenKieli: Kieli | null | undefined;
+  uudelleenKuulutus: UudelleenKuulutus;
+}> = ({ uudelleenKuulutus, ensisijainenKieli, toissijainenKieli }) => (
+  <Section>
+    <p className="vayla-small-title">Uudelleenkuuluttamisen seloste</p>
+    {uudelleenKuulutus.selosteLahetekirjeeseen && (
+      <>
+        {ensisijainenKieli && (
+          <div>
+            <p className="vayla-label">Seloste lähetekirjeeseen ensisijaisella kielellä ({lowerCase(ensisijainenKieli)})</p>
+            <p>{uudelleenKuulutus.selosteLahetekirjeeseen?.[ensisijainenKieli]}</p>
+          </div>
+        )}
+        {toissijainenKieli && (
+          <div>
+            <p className="vayla-label">Seloste lähetekirjeeseen toissijaisella kielellä ({lowerCase(toissijainenKieli)})</p>
+            <p>{uudelleenKuulutus.selosteLahetekirjeeseen?.[toissijainenKieli]}</p>
+          </div>
+        )}
+      </>
+    )}
+    {uudelleenKuulutus.selosteKuulutukselle && (
+      <>
+        {ensisijainenKieli && (
+          <div>
+            <p className="vayla-label">Seloste kuulutukselle ensisijaisella kielellä ({lowerCase(ensisijainenKieli)})</p>
+            <p>{uudelleenKuulutus.selosteKuulutukselle?.[ensisijainenKieli]}</p>
+          </div>
+        )}
+        {toissijainenKieli && (
+          <div>
+            <p className="vayla-label">Seloste kuulutukselle toissijaisella kielellä ({lowerCase(toissijainenKieli)})</p>
+            <p>{uudelleenKuulutus.selosteKuulutukselle?.[toissijainenKieli]}</p>
+          </div>
+        )}
+      </>
+    )}
+  </Section>
+);

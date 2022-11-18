@@ -66,6 +66,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
       <>
         <Section noDivider>
           <KeyValueTable rows={keyValueData}></KeyValueTable>
+          {kuulutus.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && <p>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</p>}
           {velho.tyyppi !== ProjektiTyyppi.RATA && (
             <SectionContent>
               {suunnittelusopimus && (
