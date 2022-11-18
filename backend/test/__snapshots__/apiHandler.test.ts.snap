@@ -190,6 +190,7 @@ Array [
     "suunnitteluSopimus": undefined,
     "suunnitteluVaihe": undefined,
     "vuorovaikutukset": undefined,
+    "vuorovaikutusJaadytykset": undefined,
   },
 ]
 `;
@@ -273,6 +274,7 @@ Array [
     "suunnitteluSopimus": undefined,
     "suunnitteluVaihe": undefined,
     "vuorovaikutukset": undefined,
+    "vuorovaikutusJaadytykset": undefined,
   },
 ]
 `;
@@ -435,6 +437,7 @@ Array [
     },
     "suunnitteluVaihe": undefined,
     "vuorovaikutukset": undefined,
+    "vuorovaikutusJaadytykset": undefined,
   },
 ]
 `;

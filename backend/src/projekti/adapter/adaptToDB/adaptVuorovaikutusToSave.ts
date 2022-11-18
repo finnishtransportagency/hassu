@@ -1,15 +1,22 @@
-import { DBProjekti, Vuorovaikutus, VuorovaikutusTilaisuus } from "../../../database/model";
+import {
+  DBProjekti,
+  Vuorovaikutus,
+  VuorovaikutusJaadytys,
+  VuorovaikutusTilaisuus,
+  VuorovaikutusTilaisuusJaadytys,
+} from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { findVuorovaikutusByNumber } from "../../../util/findVuorovaikutusByNumber";
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
 import { adaptAineistotToSave, adaptIlmoituksenVastaanottajatToSave, adaptStandardiYhteystiedotToSave } from "./common";
+import { adaptStandardiYhteystiedotToYhteystiedot } from "../../../util/adaptStandardiYhteystiedot";
 
 export function adaptVuorovaikutusToSave(
   projekti: DBProjekti,
   projektiAdaptationResult: ProjektiAdaptationResult,
   vuorovaikutusInput?: API.VuorovaikutusInput | null
-): Vuorovaikutus[] | undefined {
+): { vuorovaikutukset: Vuorovaikutus[] | undefined; vuorovaikutus: Vuorovaikutus | undefined } {
   if (vuorovaikutusInput) {
     // Prevent saving vuorovaikutus if suunnitteluvaihe is not yet saved
     if (!projekti.suunnitteluVaihe) {
@@ -62,9 +69,9 @@ export function adaptVuorovaikutusToSave(
 
     checkIfAineistoJulkinenChanged(vuorovaikutusToSave, dbVuorovaikutus, projektiAdaptationResult);
 
-    return [vuorovaikutusToSave];
+    return { vuorovaikutus: vuorovaikutusToSave, vuorovaikutukset: [vuorovaikutusToSave] };
   }
-  return undefined;
+  return { vuorovaikutus: undefined, vuorovaikutukset: undefined };
 }
 
 function checkIfAineistoJulkinenChanged(
@@ -142,4 +149,37 @@ function adaptVuorovaikutusTilaisuudetToSave(vuorovaikutusTilaisuudet: Array<API
     }
     return vvToSave;
   });
+}
+
+export function adaptVuorovaikutusJaadytykset(
+  projekti: DBProjekti,
+  vuorovaikutus: Vuorovaikutus | undefined
+): VuorovaikutusJaadytys[] | undefined {
+  if (!vuorovaikutus) {
+    return projekti.vuorovaikutusJaadytykset;
+  }
+  const vuorovaikutuksenKopio = { ...vuorovaikutus };
+  delete vuorovaikutuksenKopio?.esitettavatYhteystiedot;
+  const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusJaadytys[] = [];
+  vuorovaikutuksenKopio?.vuorovaikutusTilaisuudet?.forEach((tilaisuus) => {
+    const tilaisuudenKopio = { ...tilaisuus };
+    const esitettavatYhteystiedot = tilaisuudenKopio.esitettavatYhteystiedot;
+    delete tilaisuudenKopio.esitettavatYhteystiedot;
+    const vuorovaikutusTilaisuusJaadytys: VuorovaikutusTilaisuusJaadytys = {
+      ...tilaisuudenKopio,
+      yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(projekti, esitettavatYhteystiedot),
+    };
+    vuorovaikutusTilaisuudet.push(vuorovaikutusTilaisuusJaadytys);
+  });
+  const vuorovaikutusJaadytys: VuorovaikutusJaadytys = {
+    ...vuorovaikutus,
+    yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(projekti, vuorovaikutus?.esitettavatYhteystiedot),
+    vuorovaikutusTilaisuudet,
+  };
+  if (!projekti.vuorovaikutusJaadytykset) {
+    return [vuorovaikutusJaadytys]; // oletetaan, että vuorovaikutuskierroksen numero on 1, jos jäädytyksiä ei ole ennestään
+  }
+  const uudetJaadytykset = [...projekti.vuorovaikutusJaadytykset];
+  uudetJaadytykset[vuorovaikutusJaadytys.vuorovaikutusNumero] = vuorovaikutusJaadytys;
+  return uudetJaadytykset;
 }

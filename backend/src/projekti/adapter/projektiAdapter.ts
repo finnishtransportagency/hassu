@@ -24,6 +24,7 @@ import {
   adaptSuunnitteluSopimusToSave,
   adaptSuunnitteluVaiheToSave,
   adaptVuorovaikutusToSave,
+  adaptVuorovaikutusJaadytykset,
 } from "./adaptToDB";
 import { applyProjektiStatus } from "../status/projektiStatusHandler";
 import { adaptKasittelynTilaToSave } from "./adaptToDB/adaptKasittelynTilaToSave";
@@ -128,7 +129,12 @@ export class ProjektiAdapter {
     const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult(projekti);
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
     kayttoOikeudetManager.applyChanges(kayttoOikeudet);
-    const vuorovaikutukset = adaptVuorovaikutusToSave(projekti, projektiAdaptationResult, suunnitteluVaihe?.vuorovaikutus);
+    const { vuorovaikutukset, vuorovaikutus } = adaptVuorovaikutusToSave(
+      projekti,
+      projektiAdaptationResult,
+      suunnitteluVaihe?.vuorovaikutus
+    );
+    const vuorovaikutusJaadytykset = adaptVuorovaikutusJaadytykset(projekti, vuorovaikutus);
     const aloitusKuulutusToSave = adaptAloitusKuulutusToSave(projekti.aloitusKuulutus, aloitusKuulutus);
     const dbProjekti: DBProjekti = mergeWith(
       {},
@@ -167,6 +173,7 @@ export class ProjektiAdapter {
         euRahoitus,
         liittyvatSuunnitelmat,
         vuorovaikutukset,
+        vuorovaikutusJaadytykset,
         salt: projekti.salt || lisaAineistoService.generateSalt(),
         kasittelynTila: adaptKasittelynTilaToSave(projekti.kasittelynTila, kasittelynTila, projektiAdaptationResult),
       }
