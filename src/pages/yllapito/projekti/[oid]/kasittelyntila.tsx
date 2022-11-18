@@ -33,7 +33,7 @@ export default function KasittelyntilaSivu(): ReactElement {
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
   return (
     <ProjektiPageLayout title="Käsittelyn tila">
-      {projekti && projekti.status === Status.HYVAKSYTTY && (
+      {projekti && projekti.status === Status.HYVAKSYTTY && projekti.nykyinenKayttaja.omaaMuokkausOikeuden && (
         <Notification type={NotificationType.INFO_GRAY}>
           Suunnitelma poistuu palvelun julkiselta puolelta{" "}
           {formatDate(
