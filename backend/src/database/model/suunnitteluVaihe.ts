@@ -1,5 +1,5 @@
 import { KaytettavaPalvelu, SuunnitteluVaiheTila, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
-import { Aineisto, LocalizedMap, StandardiYhteystiedot, IlmoituksenVastaanottajat } from "./common";
+import { Aineisto, LocalizedMap, StandardiYhteystiedot, IlmoituksenVastaanottajat, Yhteystieto } from "./common";
 
 export type SuunnitteluVaihe = {
   hankkeenKuvaus?: LocalizedMap<string>;
@@ -8,6 +8,46 @@ export type SuunnitteluVaihe = {
   tila?: SuunnitteluVaiheTila | null;
   // Palautteiden vastaanottajat. Lista kayttajatunnuksia
   palautteidenVastaanottajat?: Array<string> | null;
+};
+
+export type VuorovaikutusJaadytykset = VuorovaikutusJaadytys[][];
+
+export type VuorovaikutusJaadytys = {
+  id: number;
+  // Vuorovaikutuksen jarjestysnumero
+  vuorovaikutusNumero: number;
+  julkinen?: boolean | null;
+  vuorovaikutusTilaisuudet?: Array<VuorovaikutusTilaisuusJaadytys> | null;
+  // yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
+  vuorovaikutusJulkaisuPaiva?: string | null;
+  // yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
+  kysymyksetJaPalautteetViimeistaan?: string | null;
+  videot?: Array<Linkki> | null;
+  suunnittelumateriaali?: Linkki | null;
+  yhteystiedot: Yhteystieto[];
+  ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
+  esittelyaineistot?: Aineisto[] | null;
+  suunnitelmaluonnokset?: Aineisto[] | null;
+  vuorovaikutusPDFt?: LocalizedMap<VuorovaikutusPDF>;
+};
+
+export type VuorovaikutusTilaisuusJaadytys = {
+  tyyppi: VuorovaikutusTilaisuusTyyppi;
+  nimi?: string;
+  // yyyy-MM-dd
+  paivamaara: string;
+  // HH:mm
+  alkamisAika: string;
+  // HH:mm
+  paattymisAika: string;
+  kaytettavaPalvelu?: KaytettavaPalvelu | null;
+  linkki?: string | null;
+  paikka?: string | null;
+  osoite?: string | null;
+  postinumero?: string | null;
+  postitoimipaikka?: string | null;
+  Saapumisohjeet?: string | null;
+  yhteystiedot?: Yhteystieto[];
 };
 
 export type Vuorovaikutus = {

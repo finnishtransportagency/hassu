@@ -1,5 +1,5 @@
 import { AloitusKuulutusTila, KayttajaTyyppi, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
-import { SuunnitteluVaihe, Vuorovaikutus } from "./suunnitteluVaihe";
+import { SuunnitteluVaihe, Vuorovaikutus, VuorovaikutusJaadytykset } from "./suunnitteluVaihe";
 import { NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "./nahtavillaoloVaihe";
 import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "./hyvaksymisPaatosVaihe";
 import {
@@ -120,6 +120,7 @@ export type DBProjekti = {
   liittyvatSuunnitelmat?: Suunnitelma[] | null;
   suunnitteluVaihe?: SuunnitteluVaihe | null;
   vuorovaikutukset?: Array<Vuorovaikutus> | null;
+  vuorovaikutusJaadytykset?: VuorovaikutusJaadytykset;
   nahtavillaoloVaihe?: NahtavillaoloVaihe | null;
   nahtavillaoloVaiheJulkaisut?: NahtavillaoloVaiheJulkaisu[] | null;
   hyvaksymisPaatosVaihe?: HyvaksymisPaatosVaihe | null;
