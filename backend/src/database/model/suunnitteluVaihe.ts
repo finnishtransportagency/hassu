@@ -10,10 +10,7 @@ export type SuunnitteluVaihe = {
   palautteidenVastaanottajat?: Array<string> | null;
 };
 
-export type VuorovaikutusJaadytykset = VuorovaikutusJaadytys[][];
-
 export type VuorovaikutusJaadytys = {
-  id: number;
   // Vuorovaikutuksen jarjestysnumero
   vuorovaikutusNumero: number;
   julkinen?: boolean | null;
