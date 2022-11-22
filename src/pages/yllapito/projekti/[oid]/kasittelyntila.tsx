@@ -136,6 +136,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     defaultValues,
     mode: "onChange",
     reValidateMode: "onChange",
+    context: { valituksia: isValituksia },
   };
 
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
@@ -170,6 +171,9 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
         cleanedUpData.kasittelynTila.hyvaksymispaatos = cleanupHyvaksymisPaatos(cleanedUpData.kasittelynTila?.hyvaksymispaatos);
         cleanedUpData.kasittelynTila.ensimmainenJatkopaatos = cleanupHyvaksymisPaatos(cleanedUpData.kasittelynTila?.ensimmainenJatkopaatos);
         cleanedUpData.kasittelynTila.toinenJatkopaatos = cleanupHyvaksymisPaatos(cleanedUpData.kasittelynTila?.toinenJatkopaatos);
+        if (isValituksia === false) {
+          cleanedUpData.kasittelynTila.valitustenMaara = null;
+        }
         await api.tallennaProjekti(cleanedUpData);
         await reloadProjekti();
         reset(data);
@@ -180,7 +184,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
       }
       setIsFormSubmitting(false);
     },
-    [reloadProjekti, reset, showErrorMessage, showSuccessMessage]
+    [isValituksia, reloadProjekti, reset, showErrorMessage, showSuccessMessage]
   );
 
   const avaaJatkopaatos = useCallback(
@@ -321,6 +325,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
             {isValituksia && (
               <HassuGrid cols={{ lg: 3 }}>
                 <TextInput
+                  type="number"
                   label="Valitusten lukumäärä *"
                   {...register("kasittelynTila.valitustenMaara")}
                   disabled={disableFormEdit}
@@ -436,11 +441,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
           <SectionContent>
             <h5 className="vayla-small-title">Lisätietoa käsittelyn tilasta</h5>
             <HassuGrid cols={{ lg: 1 }}>
-              <Textarea
-                label="Asiatunnus"
-                {...register("kasittelynTila.lisatieto")}
-                error={(errors as any).kasittelynTila?.lisatieto}
-              ></Textarea>
+              <Textarea label="" {...register("kasittelynTila.lisatieto")} error={(errors as any).kasittelynTila?.lisatieto}></Textarea>
             </HassuGrid>
           </SectionContent>
         </Section>
