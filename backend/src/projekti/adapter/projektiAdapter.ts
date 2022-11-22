@@ -28,6 +28,7 @@ import {
 import { applyProjektiStatus } from "../status/projektiStatusHandler";
 import { adaptKasittelynTilaToSave } from "./adaptToDB/adaptKasittelynTilaToSave";
 import { ProjektiAdaptationResult } from "./projektiAdaptationResult";
+import { ProjektiPaths } from "../../files/ProjektiPath";
 
 export class ProjektiAdapter {
   public adaptProjekti(dbProjekti: DBProjekti, virhetiedot?: API.ProjektiVirhe): API.Projekti {
@@ -54,6 +55,7 @@ export class ProjektiAdapter {
       ...fieldsToCopyAsIs
     } = dbProjekti;
 
+    const projektiPath = new ProjektiPaths(dbProjekti.oid);
     const apiProjekti: API.Projekti = removeUndefinedFields({
       __typename: "Projekti",
       tallennettu: !!dbProjekti.tallennettu,
@@ -74,23 +76,35 @@ export class ProjektiAdapter {
       ),
       nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe, nahtavillaoloVaiheJulkaisut),
       nahtavillaoloVaiheJulkaisu: adaptNahtavillaoloVaiheJulkaisu(dbProjekti.oid, nahtavillaoloVaiheJulkaisut),
-      hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe, dbProjekti.kasittelynTila?.hyvaksymispaatos),
-      hyvaksymisPaatosVaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
-        dbProjekti.oid,
+      hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(
+        hyvaksymisPaatosVaihe,
         dbProjekti.kasittelynTila?.hyvaksymispaatos,
-        hyvaksymisPaatosVaiheJulkaisut
+        projektiPath.hyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe)
       ),
-      jatkoPaatos1Vaihe: adaptHyvaksymisPaatosVaihe(jatkoPaatos1Vaihe, dbProjekti.kasittelynTila?.ensimmainenJatkopaatos),
-      jatkoPaatos1VaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
-        dbProjekti.oid,
+      hyvaksymisPaatosVaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
+        dbProjekti.kasittelynTila?.hyvaksymispaatos,
+        hyvaksymisPaatosVaiheJulkaisut,
+        (julkaisu) => new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(julkaisu)
+      ),
+      jatkoPaatos1Vaihe: adaptHyvaksymisPaatosVaihe(
+        jatkoPaatos1Vaihe,
         dbProjekti.kasittelynTila?.ensimmainenJatkopaatos,
-        jatkoPaatos1VaiheJulkaisut
+        projektiPath.jatkoPaatos1Vaihe(jatkoPaatos1Vaihe)
       ),
-      jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaihe(jatkoPaatos2Vaihe, dbProjekti.kasittelynTila?.toinenJatkopaatos),
-      jatkoPaatos2VaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
-        dbProjekti.oid,
+      jatkoPaatos1VaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
+        dbProjekti.kasittelynTila?.ensimmainenJatkopaatos,
+        jatkoPaatos1VaiheJulkaisut,
+        (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos1Vaihe(julkaisu)
+      ),
+      jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaihe(
+        jatkoPaatos2Vaihe,
         dbProjekti.kasittelynTila?.toinenJatkopaatos,
-        jatkoPaatos2VaiheJulkaisut
+        projektiPath.jatkoPaatos2Vaihe(jatkoPaatos2Vaihe)
+      ),
+      jatkoPaatos2VaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
+        dbProjekti.kasittelynTila?.toinenJatkopaatos,
+        jatkoPaatos2VaiheJulkaisut,
+        (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos2Vaihe(julkaisu)
       ),
       virhetiedot,
       kasittelynTila: adaptKasittelynTila(kasittelynTila),
@@ -129,7 +143,11 @@ export class ProjektiAdapter {
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
     kayttoOikeudetManager.applyChanges(kayttoOikeudet);
     const vuorovaikutukset = adaptVuorovaikutusToSave(projekti, projektiAdaptationResult, suunnitteluVaihe?.vuorovaikutus);
-    const aloitusKuulutusToSave = adaptAloitusKuulutusToSave(projekti.aloitusKuulutus, aloitusKuulutus);
+    const aloitusKuulutusToSave = adaptAloitusKuulutusToSave(
+      projekti.aloitusKuulutus,
+      aloitusKuulutus,
+      projekti.aloitusKuulutusJulkaisut?.length
+    );
     const dbProjekti: DBProjekti = mergeWith(
       {},
       {

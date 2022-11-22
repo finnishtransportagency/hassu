@@ -58,7 +58,11 @@ Array [
 exports[`Palaute should insert and manage feedback 4`] = `
 Object {
   "yllapito S3 files should insert and manage feedback": Object {
-    "/***unittest***/logo.png": Object {},
+    "/***unittest***/logo.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
   },
 }
 `;

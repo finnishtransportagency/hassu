@@ -6,7 +6,7 @@ Object {
     "Bucket": "hassu-localstack-yllapito",
     "ContentDisposition": "inline; filename*=UTF-8''test%20%C3%A4%C3%A4kk%C3%B6sill%C3%A4.pdf",
     "ContentType": "application/pdf",
-    "Key": "yllapito/tiedostot/projekti/1/testfilepath/test ääkkösillä.pdf",
+    "Key": "yllapito/tiedostot/projekti/1/test ääkkösillä.pdf",
     "Metadata": Object {
       "publication-timestamp": "2000-01-01T12:34:00+02:00",
     },

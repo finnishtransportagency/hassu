@@ -1,11 +1,9 @@
 import {
   DBVaylaUser,
-  LocalizedMap,
   StandardiYhteystiedot,
   SuunnitteluSopimus,
   SuunnitteluVaihe,
   Vuorovaikutus,
-  VuorovaikutusPDF,
   VuorovaikutusTilaisuus,
 } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
@@ -21,6 +19,7 @@ import {
 } from "../common";
 import { fileService } from "../../../files/fileService";
 import { cloneDeep } from "lodash";
+import { ProjektiPaths } from "../../../files/ProjektiPath";
 
 export function adaptSuunnitteluVaihe(
   oid: string,
@@ -68,6 +67,7 @@ function adaptVuorovaikutukset(
       }
       const vuorovaikutusPDFt = vuorovaikutus.vuorovaikutusPDFt;
       delete vuorovaikutus.vuorovaikutusPDFt;
+      const paths = new ProjektiPaths(oid).vuorovaikutus(vuorovaikutus);
       const apiVuorovaikutus: API.Vuorovaikutus = {
         ...(vuorovaikutus as Omit<Vuorovaikutus, "vuorovaikutusPDFt">),
         ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(vuorovaikutus.ilmoituksenVastaanottajat),
@@ -79,13 +79,13 @@ function adaptVuorovaikutukset(
         vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
         suunnittelumateriaali: adaptLinkkiByAddingTypename(vuorovaikutus.suunnittelumateriaali),
         videot: adaptLinkkiListByAddingTypename(vuorovaikutus.videot),
-        esittelyaineistot: adaptAineistot(vuorovaikutus.esittelyaineistot),
-        suunnitelmaluonnokset: adaptAineistot(vuorovaikutus.suunnitelmaluonnokset),
+        esittelyaineistot: adaptAineistot(vuorovaikutus.esittelyaineistot, paths),
+        suunnitelmaluonnokset: adaptAineistot(vuorovaikutus.suunnitelmaluonnokset, paths),
         __typename: "Vuorovaikutus",
       };
 
       if (vuorovaikutusPDFt) {
-        apiVuorovaikutus.vuorovaikutusPDFt = adaptVuorovaikutusPDFPaths(oid, vuorovaikutusPDFt);
+        apiVuorovaikutus.vuorovaikutusPDFt = adaptVuorovaikutusPDFPaths(oid, vuorovaikutus);
       }
       return apiVuorovaikutus;
     });
@@ -114,7 +114,8 @@ function adaptVuorovaikutusTilaisuudet(
   return vuorovaikutusTilaisuudet as undefined;
 }
 
-function adaptVuorovaikutusPDFPaths(oid: string, vuorovaikutusPdfs: LocalizedMap<VuorovaikutusPDF>): API.VuorovaikutusPDFt | undefined {
+function adaptVuorovaikutusPDFPaths(oid: string, vuorovaikutus: Vuorovaikutus): API.VuorovaikutusPDFt | undefined {
+  const vuorovaikutusPdfs = vuorovaikutus.vuorovaikutusPDFt;
   if (!vuorovaikutusPdfs) {
     return undefined;
   }
@@ -125,10 +126,7 @@ function adaptVuorovaikutusPDFPaths(oid: string, vuorovaikutusPdfs: LocalizedMap
     if (pdfs) {
       result[kieli] = {
         __typename: "VuorovaikutusPDF",
-        // getYllapitoPathForProjektiFile molemmat argumentit on määritelty, joten funktio palauttaa ei-undefined arvon
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        kutsuPDFPath: fileService.getYllapitoPathForProjektiFile(oid, pdfs.kutsuPDFPath),
+        kutsuPDFPath: fileService.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), pdfs.kutsuPDFPath),
       };
     }
   }

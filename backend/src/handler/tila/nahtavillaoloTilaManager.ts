@@ -46,13 +46,12 @@ async function createNahtavillaoloVaihePDF(
   });
   return fileService.createFileToProjekti({
     oid: projekti.oid,
-    filePathInProjekti: ProjektiPaths.PATH_NAHTAVILLAOLO,
+    path: new ProjektiPaths(projekti.oid).nahtavillaoloVaihe(julkaisu),
     fileName: pdf.nimi,
     contents: Buffer.from(pdf.sisalto, "base64"),
     inline: true,
     contentType: "application/pdf",
     publicationTimestamp: parseDate(julkaisu.kuulutusPaiva),
-    copyToPublic: true,
   });
 }
 
@@ -145,7 +144,7 @@ class NahtavillaoloTilaManager extends TilaManager {
     julkaisuWaitingForApproval.hyvaksymisPaiva = dateToString(dayjs());
 
     await projektiDatabase.nahtavillaoloVaiheJulkaisut.update(projekti, julkaisuWaitingForApproval);
-    await aineistoService.publishNahtavillaolo(projekti.oid, julkaisuWaitingForApproval.id);
+    await aineistoService.synchronizeProjektiFiles(projekti.oid);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

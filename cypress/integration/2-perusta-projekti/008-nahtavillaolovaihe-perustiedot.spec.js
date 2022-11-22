@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 import { typeIntoFields } from "../../support/util";
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
-import { hyvaksyNahtavillaoloKuulutus, lisaaNahtavillaoloAineistot, taytaNahtavillaoloPerustiedot } from './nahtavillaolo';
+import { hyvaksyNahtavillaoloKuulutus, lisaaNahtavillaoloAineistot, taytaNahtavillaoloPerustiedot } from '../../support/nahtavillaolo';
 
 const oid = Cypress.env("oid");
 const projektiNimi = Cypress.env("projektiNimi");

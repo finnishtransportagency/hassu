@@ -1,28 +1,43 @@
-import { Aineisto, HyvaksymisPaatosVaiheJulkaisu, NahtavillaoloVaiheJulkaisu, Vuorovaikutus } from "../database/model";
+import { Aineisto } from "../database/model";
 import { aineistoImporterClient } from "./aineistoImporterClient";
 import { log } from "../logger";
 import { fileService } from "../files/fileService";
 import { getCloudFront } from "../aws/client";
 import { config } from "../config";
-import { parseDate } from "../util/dateUtil";
 import { Dayjs } from "dayjs";
 import { ImportAineistoEventType } from "./importAineistoEvent";
-import { HyvaksymisPaatosVaihePaths, PathTuple, ProjektiPaths } from "../files/ProjektiPath";
+import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 
-async function synchronizeAineistoToPublic(oid: string, paths: PathTuple, publishDate: Dayjs) {
+export async function synchronizeFilesToPublic(oid: string, paths: PathTuple, publishDate: Dayjs | undefined): Promise<void> {
   let hasChanges = false;
   const yllapitoFiles = await fileService.listYllapitoProjektiFiles(oid, paths.yllapitoPath);
-  for (const fileName in yllapitoFiles) {
-    const fileNameYllapito = "/" + paths.yllapitoPath + fileName;
-    const fileNamePublic = "/" + paths.publicPath + fileName;
-    const metadata = await fileService.getPublicFileMetadata(oid, fileNameYllapito);
-    const publishDateChanged = metadata && metadata.publishDate && !metadata.publishDate.isSame(publishDate);
-    if (!metadata || publishDateChanged) {
-      // Public file is missing, so it needs to be published
-      log.info("Publish:", fileNameYllapito);
-      await fileService.publishProjektiFile(oid, fileNameYllapito, fileNamePublic, publishDate);
-      hasChanges = true;
+  const publicFiles = await fileService.listPublicProjektiFiles(oid, paths.publicPath, true);
+  if (publishDate) {
+    // Jos publishDate ei ole annettu, julkaisun sijaan poistetaan kaikki julkiset tiedostot
+    for (const fileName in yllapitoFiles) {
+      const fileNameYllapito = "/" + paths.yllapitoPath + fileName;
+      const fileNamePublic = "/" + paths.publicPath + fileName;
+
+      const yllapitoFileMetadata = yllapitoFiles[fileName];
+      yllapitoFileMetadata.publishDate = publishDate; // Ylikirjoita annettu julkaisupäivä, jotta alempana isSame-funktio olisi käytettävissä
+      const existingPublicFileMetadata = publicFiles[fileName];
+      delete publicFiles[fileName]; // Poista julkinen tiedosto listasta, jotta ylimääräiset tiedostot voidaan myöhemmin poistaa
+      const publicFileMissing = !existingPublicFileMetadata;
+
+      const metadataChanged = publicFileMissing || !yllapitoFiles[fileName].isSame(existingPublicFileMetadata);
+      if (metadataChanged) {
+        // Public file is missing, so it needs to be published
+        log.info("Publish:", fileNameYllapito);
+        await fileService.publishProjektiFile(oid, fileNameYllapito, fileNamePublic, publishDate);
+        hasChanges = true;
+      }
     }
+  }
+
+  // Poistetaan ylimääräiset tiedostot kansalaispuolelta
+  for (const fileName in publicFiles) {
+    await fileService.deletePublicFileFromProjekti({ oid, filePathInProjekti: "/" + paths.publicPath + fileName });
+    hasChanges = true;
   }
 
   if (hasChanges) {
@@ -36,7 +51,7 @@ async function synchronizeAineistoToPublic(oid: string, paths: PathTuple, publis
           CallerReference: "synchronizeAineistoToPublic" + new Date().getTime(),
           Paths: {
             Quantity: 1,
-            Items: [fileService.getPublicPathForProjektiFile(oid, "/" + paths.publicPath + "/*")],
+            Items: ["/" + fileService.getPublicPathForProjektiFile(new ProjektiPaths(oid), "/" + paths.publicPath + "/*")],
           },
         },
       })
@@ -53,76 +68,11 @@ class AineistoService {
     });
   }
 
-  async publishNahtavillaolo(oid: string, nahtavillaoloId: number) {
+  async synchronizeProjektiFiles(oid: string) {
     await aineistoImporterClient.importAineisto({
-      type: ImportAineistoEventType.PUBLISH_NAHTAVILLAOLO,
+      type: ImportAineistoEventType.SYNCHRONIZE,
       oid,
-      publishNahtavillaoloWithId: nahtavillaoloId,
     });
-  }
-
-  async publishHyvaksymisPaatosVaihe(oid: string, hyvaksymisPaatosId: number) {
-    await aineistoImporterClient.importAineisto({
-      type: ImportAineistoEventType.PUBLISH_HYVAKSYMISPAATOS,
-      oid,
-      publishHyvaksymisPaatosWithId: hyvaksymisPaatosId,
-    });
-  }
-
-  async publishJatkoPaatos1Vaihe(oid: string, hyvaksymisPaatosId: number) {
-    await aineistoImporterClient.importAineisto({
-      type: ImportAineistoEventType.PUBLISH_HYVAKSYMISPAATOS,
-      oid,
-      publishJatkoPaatos1WithId: hyvaksymisPaatosId,
-    });
-  }
-
-  async publishJatkoPaatos2Vaihe(oid: string, hyvaksymisPaatosId: number) {
-    await aineistoImporterClient.importAineisto({
-      type: ImportAineistoEventType.PUBLISH_HYVAKSYMISPAATOS,
-      oid,
-      publishJatkoPaatos2WithId: hyvaksymisPaatosId,
-    });
-  }
-
-  /**
-   * Copy aineisto to public S3 with proper publish and expiration dates
-   */
-  async synchronizeVuorovaikutusAineistoToPublic(oid: string, vuorovaikutus: Vuorovaikutus): Promise<void> {
-    if (!vuorovaikutus.vuorovaikutusJulkaisuPaiva) {
-      throw new Error("Vuorovaikutusta ei voi julkaista jos vuorovaikutusJulkaisuPaiva ei ole asetettu");
-    }
-    const publishDate = parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva);
-    if (!publishDate) {
-      throw new Error("Vuorovaikutusta ei voi julkaista jos vuorovaikutusJulkaisuPaiva ei ole asetettu");
-    }
-    const vuorovaikutusPaths = new ProjektiPaths(oid).vuorovaikutus(vuorovaikutus);
-    await synchronizeAineistoToPublic(oid, vuorovaikutusPaths, publishDate);
-  }
-
-  async synchronizeNahtavillaoloVaiheJulkaisuAineistoToPublic(
-    oid: string,
-    nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu
-  ): Promise<void> {
-    if (!nahtavillaoloVaiheJulkaisu.kuulutusPaiva) {
-      throw new Error("Nahtavillaoloaineistoa ei voi julkaista jos vuorovaikutusJulkaisuPaiva ei ole asetettu");
-    }
-    const publishDate = parseDate(nahtavillaoloVaiheJulkaisu.kuulutusPaiva);
-    if (!publishDate) {
-      throw new Error("Nahtavillaoloaineistoa ei voi julkaista jos vuorovaikutusJulkaisuPaiva ei ole asetettu");
-    }
-    await synchronizeAineistoToPublic(oid, new ProjektiPaths(oid).nahtavillaoloVaihe(nahtavillaoloVaiheJulkaisu), publishDate);
-  }
-
-  async synchronizeHyvaksymisPaatosVaiheJulkaisuAineistoToPublic(oid: string, julkaisu: HyvaksymisPaatosVaiheJulkaisu, hyvaksymisPaatosVaihePaths: HyvaksymisPaatosVaihePaths): Promise<void> {
-    if (!julkaisu.kuulutusPaiva) {
-      throw new Error("HyvaksymisPaatosVaiheJulkaisua ei voi julkaista jos vuorovaikutusJulkaisuPaiva ei ole asetettu");
-    }
-    const publishDate = parseDate(julkaisu.kuulutusPaiva);
-    if (!publishDate) {
-      throw new Error("HyvaksymisPaatosVaiheJulkaisua ei voi julkaista jos vuorovaikutusJulkaisuPaiva ei ole asetettu");
-    }
-    await synchronizeAineistoToPublic(oid, hyvaksymisPaatosVaihePaths, publishDate);
   }
 
   async deleteAineisto(oid: string, aineisto: Aineisto, yllapitoFilePathInProjekti: string, publicFilePathInProjekti: string) {

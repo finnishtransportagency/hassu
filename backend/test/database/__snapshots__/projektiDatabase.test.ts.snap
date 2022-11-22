@@ -20,6 +20,7 @@ Object {
         "SAAME": "Saameksi",
         "SUOMI": "Lorem Ipsum",
       },
+      "id": 1,
       "kuulutusPaiva": "2022-01-02",
       "kuulutusYhteystiedot": Object {
         "yhteysTiedot": Array [

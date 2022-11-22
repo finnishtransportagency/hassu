@@ -8,7 +8,7 @@ const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
 const asianumero = "VÄYLÄ/1234/03.04.05/2023";
 
-describe("10 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
+describe("11 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
   before(() => {
     cy.abortEarly();
   });

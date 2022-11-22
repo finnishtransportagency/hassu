@@ -209,8 +209,8 @@ describe("apiHandler", () => {
                   ...julkaisu,
                   aloituskuulutusPDFt: {
                     SUOMI: {
-                      aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-                      aloituskuulutusPDFPath: "/aloituskuulutus/T412 Aloituskuulutus.pdf",
+                      aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+                      aloituskuulutusPDFPath: "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
                     },
                   },
                 },

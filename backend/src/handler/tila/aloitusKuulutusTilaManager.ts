@@ -21,6 +21,7 @@ import assert from "assert";
 import { isKuulutusPaivaInThePast } from "../../projekti/status/projektiJulkinenStatusHandler";
 import dayjs from "dayjs";
 import { assertIsDefined } from "../../util/assertions";
+import { ProjektiPaths } from "../../files/ProjektiPath";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -38,15 +39,15 @@ async function createAloituskuulutusPDF(
     luonnos: false,
     kayttoOikeudet: projekti.kayttoOikeudet,
   });
+
   return fileService.createFileToProjekti({
     oid: projekti.oid,
-    filePathInProjekti: "aloituskuulutus",
+    path: new ProjektiPaths(projekti.oid).aloituskuulutus(julkaisuWaitingForApproval),
     fileName: pdf.nimi,
     contents: Buffer.from(pdf.sisalto, "base64"),
     inline: true,
     contentType: "application/pdf",
     publicationTimestamp: parseDate(julkaisuWaitingForApproval.kuulutusPaiva),
-    copyToPublic: true,
   });
 }
 

@@ -1,6 +1,7 @@
 import { DBVaylaUser, SuunnitteluSopimus, SuunnitteluSopimusJulkaisu } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { fileService } from "../../../files/fileService";
+import { ProjektiPaths } from "../../../files/ProjektiPath";
 
 export function adaptSuunnitteluSopimus(
   oid: string,
@@ -15,7 +16,7 @@ export function adaptSuunnitteluSopimus(
       __typename: "SuunnitteluSopimus",
       kunta: suunnitteluSopimus.kunta,
       yhteysHenkilo: suunnitteluSopimus.yhteysHenkilo || "", // "" here to not break old test data because of missing value in mandatory field
-      logo: fileService.getYllapitoPathForProjektiFile(oid, suunnitteluSopimus.logo),
+      logo: "/" + fileService.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), suunnitteluSopimus.logo),
     };
   }
   return suunnitteluSopimus;
@@ -38,9 +39,9 @@ export function adaptSuunnitteluSopimusJulkaisu(
 
     let logo: SuunnitteluSopimusJulkaisu["logo"];
     if (fileLocation === FileLocation.PUBLIC) {
-      logo = fileService.getPublicPathForProjektiFile(oid, suunnitteluSopimus.logo);
+      logo = "/" + fileService.getPublicPathForProjektiFile(new ProjektiPaths(oid), suunnitteluSopimus.logo);
     } else {
-      logo = fileService.getYllapitoPathForProjektiFile(oid, suunnitteluSopimus.logo);
+      logo = "/" + fileService.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), suunnitteluSopimus.logo);
     }
 
     return {
@@ -68,7 +69,7 @@ export function adaptSuunnitteluSopimusJulkaisuJulkinen(
     return {
       __typename: "SuunnitteluSopimusJulkaisu",
       kunta: suunnitteluSopimus.kunta,
-      logo: fileService.getPublicPathForProjektiFile(oid, suunnitteluSopimus.logo),
+      logo: "/" + fileService.getPublicPathForProjektiFile(new ProjektiPaths(oid), suunnitteluSopimus.logo),
       email: suunnitteluSopimus.email,
       etunimi: suunnitteluSopimus.etunimi,
       sukunimi: suunnitteluSopimus.sukunimi,

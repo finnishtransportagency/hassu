@@ -5,6 +5,7 @@ import { projektiDatabase } from "../../database/projektiDatabase";
 import { aineistoService } from "../../aineisto/aineistoService";
 import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import { AbstractHyvaksymisPaatosVaiheTilaManager } from "./abstractHyvaksymisPaatosVaiheTilaManager";
+import { ProjektiPaths } from "../../files/ProjektiPath";
 
 class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
@@ -26,7 +27,11 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     julkaisu.tila = KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA;
     julkaisu.muokkaaja = muokkaaja.uid;
 
-    julkaisu.hyvaksymisPaatosVaihePDFt = await this.generatePDFs(projekti, julkaisu);
+    julkaisu.hyvaksymisPaatosVaihePDFt = await this.generatePDFs(
+      projekti,
+      julkaisu,
+      new ProjektiPaths(projekti.oid).jatkoPaatos1Vaihe(julkaisu)
+    );
 
     await projektiDatabase.jatkoPaatos1VaiheJulkaisut.insert(projekti.oid, julkaisu);
   }
@@ -44,7 +49,7 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     await projektiDatabase.saveProjekti({ oid: projekti.oid, ajastettuTarkistus: this.getNextAjastettuTarkistus(julkaisu, false) });
 
     await projektiDatabase.jatkoPaatos1VaiheJulkaisut.update(projekti, julkaisu);
-    await aineistoService.publishJatkoPaatos1Vaihe(projekti.oid, julkaisu.id);
+    await aineistoService.synchronizeProjektiFiles(projekti.oid);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

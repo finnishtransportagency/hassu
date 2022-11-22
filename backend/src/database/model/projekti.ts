@@ -26,6 +26,7 @@ export type DBVaylaUser = {
 };
 
 export type AloitusKuulutus = {
+  id: number;
   kuulutusPaiva?: string | null;
   siirtyySuunnitteluVaiheeseen?: string | null;
   hankkeenKuvaus?: LocalizedMap<string>;

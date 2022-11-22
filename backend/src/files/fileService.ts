@@ -7,11 +7,12 @@ import { Dayjs } from "dayjs";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { uriEscapePath } from "aws-sdk/lib/util";
-import S3, { ListObjectsV2Output } from "aws-sdk/clients/s3";
+import S3, { ListObjectsV2Output, Metadata } from "aws-sdk/clients/s3";
 import { getS3 } from "../aws/client";
 import { parseDate } from "../util/dateUtil";
-import { ProjektiPaths } from "./ProjektiPath";
+import { PathTuple, ProjektiPaths } from "./ProjektiPath";
 import { AWSError } from "aws-sdk/lib/error";
+import isEqual from "lodash/isEqual";
 
 export type UploadFileProperties = {
   fileNameWithPath: string;
@@ -20,7 +21,7 @@ export type UploadFileProperties = {
 
 export type CreateFileProperties = {
   oid: string;
-  filePathInProjekti: string;
+  path: PathTuple;
   fileName: string;
   contents: Buffer;
   contentType?: string;
@@ -35,14 +36,29 @@ export type DownloadFileProperties = {
   contents: Buffer;
 };
 
-// Simple types to hold aineisto information for syncronization purposes
-export type SimpleAineistoMap = { [fullFilePathInProjekti: string]: AineistoMetadata };
-export type AineistoMetadata = {
+// Simple types to hold file information for syncronization purposes
+export type FileMap = { [fullFilePathInProjekti: string]: FileMetadata };
+
+export class FileMetadata {
   publishDate?: Dayjs;
   expirationDate?: Dayjs;
   ContentDisposition?: string;
   ContentType?: string;
-};
+  checksum?: string;
+
+  isSame(other: FileMetadata): boolean {
+    if (!other) {
+      return false;
+    }
+    return (
+      isEqual(this.ContentDisposition, other.ContentDisposition) &&
+      isEqual(this.ContentType, other.ContentType) &&
+      isEqual(this.expirationDate, other.expirationDate) &&
+      isEqual(this.checksum, other.checksum) &&
+      (!this.publishDate || this.publishDate.isSame(other.publishDate))
+    );
+  }
+}
 
 export type PersistFileProperties = { targetFilePathInProjekti: string; uploadedFileSource: string; oid: string };
 
@@ -77,7 +93,7 @@ export class FileService {
 
     const fileNameFromUpload = FileService.getFileNameFromPath(filePath);
     const targetPath = `/${param.targetFilePathInProjekti}/${fileNameFromUpload}`;
-    const targetBucketPath = new ProjektiPaths(param.oid).yllapitoPath + targetPath;
+    const targetBucketPath = new ProjektiPaths(param.oid).yllapitoFullPath + targetPath;
     if (!config.yllapitoBucketName) {
       throw new Error("config.yllapitoBucketName määrittelemättä");
     }
@@ -102,7 +118,11 @@ export class FileService {
    * Creates a file to projekti
    */
   async createFileToProjekti(param: CreateFileProperties): Promise<string> {
-    const pathWithinProjekti = `/${param.filePathInProjekti}/${param.fileName}`;
+    const filePath = `${param.path.yllapitoFullPath}/${param.fileName}`;
+    let filePathInProjekti = `/${param.fileName}`;
+    if (param.path.yllapitoPath !== "") {
+      filePathInProjekti = `/${param.path.yllapitoPath}${filePathInProjekti}`;
+    }
     try {
       const metadata: { [key: string]: string } = {};
       if (param.publicationTimestamp) {
@@ -111,26 +131,9 @@ export class FileService {
       if (!config.yllapitoBucketName) {
         throw new Error("config.yllapitoBucketName määrittelemättä");
       }
-      await FileService.putFile(
-        config.yllapitoBucketName,
-        param,
-        FileService.getYllapitoProjektiDirectory(param.oid) + pathWithinProjekti,
-        metadata
-      );
+      await FileService.putFile(config.yllapitoBucketName, param, filePath, metadata);
 
-      if (param.copyToPublic) {
-        if (!config.publicBucketName) {
-          throw new Error("config.publicBucketName määrittelemättä");
-        }
-        await FileService.putFile(
-          config.publicBucketName,
-          param,
-          FileService.getPublicProjektiDirectory(param.oid) + pathWithinProjekti,
-          metadata
-        );
-      }
-
-      return pathWithinProjekti;
+      return filePathInProjekti;
     } catch (e) {
       log.error(e);
       throw new Error("Error creating file to yllapito");
@@ -138,28 +141,37 @@ export class FileService {
   }
 
   private static async putFile(bucket: string, param: CreateFileProperties, targetPath: string, metadata: { [p: string]: string }) {
-    // TODO: tsekkaa että tää on oikeasti ok
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    await getS3()
-      .putObject({
-        Body: param.contents,
-        Bucket: bucket,
-        Key: targetPath,
-        ContentType: param.contentType,
-        ContentDisposition: param.inline && "inline; filename*=UTF-8''" + encodeURIComponent(param.fileName),
-        Metadata: metadata,
-      })
-      .promise();
-    log.info(`Created file ${bucket}/${targetPath}`);
+    try {
+      let key = targetPath;
+      if (key.startsWith("/")) {
+        key = key.substring(1);
+      }
+      // TODO: tsekkaa että tää on oikeasti ok
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const result = await getS3()
+        .putObject({
+          Body: param.contents,
+          Bucket: bucket,
+          Key: key,
+          ContentType: param.contentType,
+          ContentDisposition: param.inline && "inline; filename*=UTF-8''" + encodeURIComponent(param.fileName),
+          Metadata: metadata,
+        })
+        .promise();
+      log.info(`Created file ${bucket}/${key}`, result);
+    } catch (e) {
+      log.error(e);
+      throw e;
+    }
   }
 
   public static getYllapitoProjektiDirectory(oid: string): string {
-    return new ProjektiPaths(oid).yllapitoPath;
+    return new ProjektiPaths(oid).yllapitoFullPath;
   }
 
   public static getPublicProjektiDirectory(oid: string): string {
-    return new ProjektiPaths(oid).publicPath;
+    return new ProjektiPaths(oid).publicFullPath;
   }
 
   async getUploadedSourceFileInformation(uploadedFileSource: string): Promise<{ ContentType: string; CopySource: string }> {
@@ -251,15 +263,15 @@ export class FileService {
       .promise();
   }
 
-  getYllapitoPathForProjektiFile(oid: string, path: string): string | undefined {
-    return path ? `/${FileService.getYllapitoProjektiDirectory(oid)}${path}` : undefined;
+  getYllapitoPathForProjektiFile(paths: PathTuple, filePath: string): string {
+    return filePath.replace(paths.yllapitoPath, paths.yllapitoFullPath);
   }
 
-  getPublicPathForProjektiFile(oid: string, path: string): string {
-    if (!path) {
+  getPublicPathForProjektiFile(paths: PathTuple, filePath: string): string {
+    if (!filePath) {
       throw new Error("Tiedostopolku puuttuu tai on määrittelemätön");
     }
-    return `/${FileService.getPublicProjektiDirectory(oid)}${path}`;
+    return filePath.replace(paths.yllapitoPath, paths.publicFullPath);
   }
 
   /**
@@ -284,16 +296,18 @@ export class FileService {
     const yllapitoKey = `${FileService.getYllapitoProjektiDirectory(oid)}${yllapitoFilePathInProjekti}`;
     const yllapitoMetaData = await FileService.getFileMetaData(sourceBucket, yllapitoKey);
 
-    const metadata: { [key: string]: string } = {};
+    const metadata: Metadata = {};
+    const objectProperties: Record<string, unknown> = {};
     if (yllapitoMetaData) {
       if (yllapitoMetaData.ContentDisposition) {
-        metadata["ContentDisposition"] = yllapitoMetaData.ContentDisposition;
+        objectProperties.ContentDisposition = yllapitoMetaData.ContentDisposition;
       }
       if (yllapitoMetaData.ContentType) {
-        metadata["ContentType"] = yllapitoMetaData.ContentType;
+        objectProperties.ContentType = yllapitoMetaData.ContentType;
       }
     } else {
-      log.warn(`Possibly file not found:${sourceBucket}${yllapitoKey}`);
+      log.warn(`File not found:${sourceBucket}${yllapitoKey}`);
+      return;
     }
 
     if (publishDate) {
@@ -303,12 +317,13 @@ export class FileService {
       metadata[S3_METADATA_EXPIRATION_TIMESTAMP] = expirationDate.format();
     }
 
-    const copyObjectParams = {
+    const copyObjectParams: S3.Types.CopyObjectRequest = {
       Bucket: targetBucket,
       Key: `${FileService.getPublicProjektiDirectory(oid)}${publicFilePathInProjekti}`,
       CopySource: uriEscapePath(`${sourceBucket}/${yllapitoKey}`),
       MetadataDirective: "REPLACE",
       Metadata: metadata,
+      ...objectProperties,
     };
     try {
       const copyObjectCommandOutput = await getS3().copyObject(copyObjectParams).promise();
@@ -351,16 +366,16 @@ export class FileService {
     log.info(`Deleted file ${bucket}/${key}`);
   }
 
-  async listYllapitoProjektiFiles(oid: string, path: string): Promise<SimpleAineistoMap> {
+  async listYllapitoProjektiFiles(oid: string, path: string): Promise<FileMap> {
     if (!config.yllapitoBucketName) {
       throw new Error("config.yllapitoBucketName määrittelemättä");
     }
     const bucketName: string = config.yllapitoBucketName;
     const s3ProjektiPath = FileService.getYllapitoProjektiDirectory(oid) + "/" + path;
-    return FileService.listObjects(bucketName, s3ProjektiPath);
+    return FileService.listObjects(bucketName, s3ProjektiPath, true);
   }
 
-  async listPublicProjektiFiles(oid: string, path: string, withMetadata = false): Promise<SimpleAineistoMap> {
+  async listPublicProjektiFiles(oid: string, path: string, withMetadata = false): Promise<FileMap> {
     if (!config.publicBucketName) {
       throw new Error("config.publicBucketName määrittelemättä");
     }
@@ -372,7 +387,7 @@ export class FileService {
   private static async listObjects(bucketName: string, s3ProjektiPath: string, withMetadata = false) {
     let ContinuationToken = undefined;
     const s3 = getS3();
-    const result: SimpleAineistoMap = {};
+    const result: FileMap = {};
 
     do {
       const { Contents: contents = [], NextContinuationToken: nextContinuationToken }: ListObjectsV2Output = await s3
@@ -386,7 +401,8 @@ export class FileService {
       // @ts-ignore
       const sourceKeys: string[] = contents.map(({ Key }) => Key);
       for (const key of sourceKeys) {
-        let metadata: AineistoMetadata = {};
+        let metadata: FileMetadata = new FileMetadata();
+
         if (withMetadata) {
           const potentialMetadata = await FileService.getFileMetaData(bucketName, key);
           if (potentialMetadata) {
@@ -401,14 +417,14 @@ export class FileService {
     return result;
   }
 
-  async getPublicFileMetadata(oid: string, path: string): Promise<AineistoMetadata | undefined> {
+  async getPublicFileMetadata(oid: string, path: string): Promise<FileMetadata | undefined> {
     if (!config.publicBucketName) {
       throw new Error("config.publicBucketName määrittelemättä");
     }
-    return FileService.getFileMetaData(config.publicBucketName, this.getPublicPathForProjektiFile(oid, path));
+    return FileService.getFileMetaData(config.publicBucketName, this.getPublicPathForProjektiFile(new ProjektiPaths(oid), path));
   }
 
-  private static async getFileMetaData(bucketName: string, key: string): Promise<AineistoMetadata | undefined> {
+  private static async getFileMetaData(bucketName: string, key: string): Promise<FileMetadata | undefined> {
     try {
       const keyWithoutLeadingSlash = key.replace(/^\//, "");
       const headObject = await getS3().headObject({ Bucket: bucketName, Key: keyWithoutLeadingSlash }).promise();
@@ -418,13 +434,11 @@ export class FileService {
       const metadata: S3.Metadata = headObject.Metadata;
       const publishDate = metadata[S3_METADATA_PUBLISH_TIMESTAMP];
       const expirationDate = metadata[S3_METADATA_EXPIRATION_TIMESTAMP];
-      const result: AineistoMetadata = {};
-      if (headObject.ContentDisposition) {
-        result.ContentDisposition = headObject.ContentDisposition;
-      }
-      if (headObject.ContentType) {
-        result.ContentType = headObject.ContentType;
-      }
+      const result: FileMetadata = new FileMetadata();
+      result.checksum = headObject.ETag;
+
+      result.ContentDisposition = headObject.ContentDisposition;
+      result.ContentType = headObject.ContentType;
 
       if (publishDate) {
         result.publishDate = parseDate(publishDate);
@@ -445,7 +459,7 @@ export class FileService {
   createYllapitoSignedDownloadLink(oid: string, tiedosto: string): string {
     return getS3().getSignedUrl("getObject", {
       Bucket: config.yllapitoBucketName,
-      Key: new ProjektiPaths(oid).yllapitoPath + tiedosto,
+      Key: new ProjektiPaths(oid).yllapitoFullPath + tiedosto,
       Expires: 60 * 60, // One hour
     });
   }

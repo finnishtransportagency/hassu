@@ -9,10 +9,12 @@ import {
   Palaute,
   Vuorovaikutus,
 } from "../../../../common/graphql/apiModel";
+import { cleanupAnyProjektiData } from "../testFixtureRecorder";
 
 export function cleanupGeneratedIdAndTimestampFromFeedbacks(feedbacks?: Palaute[]): Palaute[] | undefined {
   return feedbacks
     ? feedbacks.map((palaute) => {
+        cleanupAnyProjektiData(palaute);
         palaute.liite = palaute?.liite?.replace(palaute.id, "***unittest***");
         palaute.id = "***unittest***";
         palaute.vastaanotettu = "***unittest***";
@@ -74,10 +76,10 @@ export function cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
   return hyvaksymisPaatosVaihe;
 }
 
-export function cleanupGeneratedIds(obj: Record<string, any>): unknown {
-  return Object.keys(obj).reduce((cleanObj, key: string) => {
+export function cleanupGeneratedIds<T extends Record<string, any>>(obj: T): Record<string, any> {
+  return Object.keys(obj).reduce((cleanObj: Record<string, any>, key: string) => {
     const cleanedUpKey: string = key.replace(/[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}/g, "***unittest***");
-    cleanObj[cleanedUpKey] = obj[key];
+    cleanObj[cleanedUpKey] = obj[key] as Record<string, any>;
     return cleanObj;
   }, {} as Record<string, any>);
 }
