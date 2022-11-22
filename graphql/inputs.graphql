@@ -7,7 +7,7 @@ input TallennaProjektiInput {
   suunnitteluSopimus: SuunnitteluSopimusInput
   kayttoOikeudet: [ProjektiKayttajaInput!]
   kielitiedot: KielitiedotInput
-  suunnitteluVaihe: SuunnitteluVaiheInput
+  vuorovaikutusKierros: VuorovaikutusKierrosInput
   nahtavillaoloVaihe: NahtavillaoloVaiheInput
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheInput
   jatkoPaatos1Vaihe: HyvaksymisPaatosVaiheInput
@@ -82,28 +82,15 @@ input SuunnitteluSopimusInput {
   yhteysHenkilo: String!
 }
 
-input SuunnitteluVaiheInput {
+input VuorovaikutusKierrosInput {
+  vuorovaikutusNumero: Int!
   hankkeenKuvaus: LokalisoituTekstiInput
   arvioSeuraavanVaiheenAlkamisesta: String
   suunnittelunEteneminenJaKesto: String
-  tila: SuunnitteluVaiheTila
-  """
-  Yhden vuorovaikutuksen luonti/muokkaus
-  """
-  vuorovaikutus: VuorovaikutusInput
   """
   Palautteiden vastaanottajat. Lista kayttajatunnuksia
   """
   palautteidenVastaanottajat: [String!]
-}
-
-input VuorovaikutusInput {
-  """
-  Vuorovaikutuksen jarjestysnumero
-  """
-  vuorovaikutusNumero: Int!
-  julkinen: Boolean
-  vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusInput!]
   """
   yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
   """
@@ -112,12 +99,13 @@ input VuorovaikutusInput {
   yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
   """
   kysymyksetJaPalautteetViimeistaan: String
+  vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusInput!]
+  esittelyaineistot: [AineistoInput!]
+  suunnitelmaluonnokset: [AineistoInput!]
   videot: [LinkkiInput!]
   suunnittelumateriaali: LinkkiInput
   esitettavatYhteystiedot: StandardiYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
-  esittelyaineistot: [AineistoInput!]
-  suunnitelmaluonnokset: [AineistoInput!]
 }
 
 input VuorovaikutusTilaisuusInput {
@@ -137,13 +125,22 @@ input VuorovaikutusTilaisuusInput {
   paattymisAika: String!
   kaytettavaPalvelu: KaytettavaPalvelu
   linkki: String
-
   paikka: String
   osoite: String
   postinumero: String
   postitoimipaikka: String
   Saapumisohjeet: String
   esitettavatYhteystiedot: StandardiYhteystiedotInput
+  peruttu: Boolean
+}
+
+input VuorovaikutusTilaisuusPaivitysInput {
+  id: Int
+  nimi: String
+  linkki: String
+  Saapumisohjeet: String
+  esitettavatYhteystiedot: StandardiYhteystiedotInput
+  peruttu: Boolean
 }
 
 input NahtavillaoloVaiheInput {
@@ -239,6 +236,7 @@ enum TilasiirtymaToiminto {
 
 enum TilasiirtymaTyyppi {
   ALOITUSKUULUTUS
+  VUOROVAIKUTUSKIERROS
   NAHTAVILLAOLO
   HYVAKSYMISPAATOSVAIHE
   JATKOPAATOS_1
