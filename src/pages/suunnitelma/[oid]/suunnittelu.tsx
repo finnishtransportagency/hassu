@@ -154,7 +154,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
                   <ExtLink
                     style={{ display: "block", marginTop: "0.5em" }}
                     key={aineisto.dokumenttiOid}
-                    href={`/tiedostot/suunnitelma/${projektiOid}${aineisto.tiedosto}`}
+                    href={aineisto.tiedosto}
                   >
                     {aineisto.tiedosto.split("/").reduce((_acc, cur) => cur, "")}
                   </ExtLink>
@@ -170,7 +170,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
                   <ExtLink
                     style={{ display: "block", marginTop: "0.5em" }}
                     key={aineisto.dokumenttiOid}
-                    href={`/tiedostot/suunnitelma/${projektiOid}${aineisto.tiedosto}`}
+                    href={aineisto.tiedosto}
                   >
                     {aineisto.tiedosto.split("/").reduce((_acc, cur) => cur, "")}
                   </ExtLink>

@@ -53,14 +53,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   });
 
+  const jatkoPaatos2VaiheFields: Partial<DBProjekti> = {
+    jatkoPaatos2Vaihe: null,
+    jatkoPaatos2VaiheJulkaisut: null,
+  };
+
   const jatkoPaatos1VaiheFields: Partial<DBProjekti> = {
     jatkoPaatos1Vaihe: null,
     jatkoPaatos1VaiheJulkaisut: null,
+    ...jatkoPaatos2VaiheFields,
   };
 
   const hyvaksymisPaatosVaiheFields: Partial<DBProjekti> = {
     hyvaksymisPaatosVaihe: null,
     hyvaksymisPaatosVaiheJulkaisut: null,
+    ...jatkoPaatos1VaiheFields,
   };
 
   const nahtavillaoloVaiheFields: Partial<DBProjekti> = {

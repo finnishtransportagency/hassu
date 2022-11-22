@@ -21,12 +21,12 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
   it("Tallenna kasittelyn tila ja siirra menneisyyteen", { scrollBehavior: "center" }, () => {
     cy.login("A1");
 
-    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).resetHyvaksymisvaihe(), { timeout: 30000 });
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/kasittelyntila", {
       timeout: 30000,
       retryOnNetworkFailure: true,
       retryOnStatusCodeFailure: true,
     });
+    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).resetHyvaksymisvaihe(), { timeout: 30000 });
     cy.reload(); // extra reload to avoid white page
 
     tallennaKasittelynTilaJaSiirraMenneisyyteen(oid, projektiNimi, asianumero);
