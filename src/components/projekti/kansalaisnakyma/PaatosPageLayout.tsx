@@ -1,4 +1,4 @@
-import React, { FC, useMemo, VFC } from "react";
+import React, { FunctionComponent, useMemo, VoidFunctionComponent } from "react";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import { Tabs } from "@mui/material";
@@ -8,7 +8,7 @@ import { UrlObject } from "url";
 import { ProjektiJulkinen } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 
-const PaatosPageLayout: FC<{ pageTitle: string }> = ({ children, pageTitle }) => {
+const PaatosPageLayout: FunctionComponent<{ pageTitle: string }> = ({ children, pageTitle }) => {
   const { data: projekti } = useProjektiJulkinen();
 
   if (!projekti) {
@@ -23,7 +23,7 @@ const PaatosPageLayout: FC<{ pageTitle: string }> = ({ children, pageTitle }) =>
   );
 };
 
-const PaatosPageTabs: VFC<{ projekti: ProjektiJulkinen }> = ({ projekti }) => {
+const PaatosPageTabs: VoidFunctionComponent<{ projekti: ProjektiJulkinen }> = ({ projekti }) => {
   const router = useRouter();
   const { t } = useTranslation("paatos");
 

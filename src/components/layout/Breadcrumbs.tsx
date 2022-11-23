@@ -1,4 +1,4 @@
-import React, { ReactElement, useMemo, FC } from "react";
+import React, { ReactElement, useMemo, FunctionComponent } from "react";
 import { NextRouter, useRouter } from "next/router";
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
@@ -138,7 +138,7 @@ export const generateRoutes = (nextRouter: NextRouter, labels: RouteLabels): Rou
   return routes;
 };
 
-const BreadcrumbComponent: FC<{ routeLabels: RouteLabels; isYllapito?: boolean }> = ({ routeLabels, isYllapito }) => {
+const BreadcrumbComponent: FunctionComponent<{ routeLabels: RouteLabels; isYllapito?: boolean }> = ({ routeLabels, isYllapito }) => {
   const { t } = useTranslation();
   const router = useRouter();
   return (

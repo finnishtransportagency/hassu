@@ -36,16 +36,10 @@ input YhteystietoInput {
   titteli: String
 }
 
-input HankkeenKuvauksetInput {
-  SUOMI: String!
-  RUOTSI: String
-  SAAME: String
-}
-
 input AloitusKuulutusInput {
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
-  hankkeenKuvaus: HankkeenKuvauksetInput
+  hankkeenKuvaus: LokalisoituTekstiInput
   kuulutusYhteystiedot: StandardiYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
   uudelleenKuulutus: UudelleenKuulutusInput
@@ -89,7 +83,7 @@ input SuunnitteluSopimusInput {
 }
 
 input SuunnitteluVaiheInput {
-  hankkeenKuvaus: HankkeenKuvauksetInput
+  hankkeenKuvaus: LokalisoituTekstiInput
   arvioSeuraavanVaiheenAlkamisesta: String
   suunnittelunEteneminenJaKesto: String
   tila: SuunnitteluVaiheTila
@@ -158,7 +152,7 @@ input NahtavillaoloVaiheInput {
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
   muistutusoikeusPaattyyPaiva: String
-  hankkeenKuvaus: HankkeenKuvauksetInput
+  hankkeenKuvaus: LokalisoituTekstiInput
   kuulutusYhteystiedot: StandardiYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
 }

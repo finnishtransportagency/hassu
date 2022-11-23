@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FunctionComponent } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
@@ -6,7 +6,7 @@ import { Kieli } from "@services/api";
 import useSnackbars from "src/hooks/useSnackbars";
 import setLanguage from "next-translate/setLanguage";
 
-const KansalaisHeaderTopRightContent: FC = () => {
+const KansalaisHeaderTopRightContent: FunctionComponent = () => {
   const { t } = useTranslation("common");
   const router = useRouter();
   const { data: projekti } = useProjektiJulkinen();

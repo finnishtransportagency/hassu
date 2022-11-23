@@ -3,21 +3,26 @@ import * as Yup from "yup";
 import filter from "lodash/filter";
 import { standardiYhteystiedot } from "./common";
 import { paivamaara } from "./paivamaaraSchema";
+import { uudelleenKuulutus } from "./uudelleenKuulutus";
+import { lokalisoituTeksti } from "./lokalisoituTeksti";
 
 const maxAloituskuulutusLength = 2000;
-
-let hankkeenKuvaus = Yup.string()
-  .max(maxAloituskuulutusLength, `Aloituskuulutukseen voidaan kirjoittaa maksimissaan ${maxAloituskuulutusLength} merkkiä`)
-  .required("Hankkeen kuvaus ei voi olla tyhjä")
-  .nullable();
 
 export const aloituskuulutusSchema = Yup.object().shape({
   oid: Yup.string().required(),
   aloitusKuulutus: Yup.object().shape({
     kuulutusYhteystiedot: standardiYhteystiedot(),
-    hankkeenKuvaus: Yup.object().shape({ SUOMI: hankkeenKuvaus }),
+    hankkeenKuvaus: lokalisoituTeksti({
+      requiredText: "Hankkeen kuvaus ei voi olla tyhjä",
+      additionalStringValidations: (schema) =>
+        schema.max(maxAloituskuulutusLength, `Aloituskuulutukseen voidaan kirjoittaa maksimissaan ${maxAloituskuulutusLength} merkkiä`),
+    }),
     kuulutusPaiva: paivamaara({ preventPast: "Kuulutuspäivää ei voida asettaa menneisyyteen" }).required("Kuulutuspäivä ei voi olla tyhjä"),
     siirtyySuunnitteluVaiheeseen: paivamaara(),
+    uudelleenKuulutus: uudelleenKuulutus({
+      uudelleenKuulutusKey: "$aloitusKuulutus.uudelleenKuulutus",
+      requiredText: "Seloste on annettava",
+    }),
     ilmoituksenVastaanottajat: Yup.object()
       .shape({
         kunnat: Yup.array()

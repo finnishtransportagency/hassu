@@ -98,7 +98,7 @@ Object {
     "hankkeenKuvaus": Object {
       "SAAME": "Saameksi suunnitteluvaihe",
       "SUOMI": "Lorem Ipsum suunnitteluvaihe",
-      "__typename": "HankkeenKuvaukset",
+      "__typename": "LokalisoituTeksti",
     },
     "palautteidenVastaanottajat": Array [
       "A000111",
@@ -119,7 +119,7 @@ Object {
     "hankkeenKuvaus": Object {
       "SAAME": "Saameksi suunnitteluvaihe",
       "SUOMI": "Lorem Ipsum suunnitteluvaihe",
-      "__typename": "HankkeenKuvaukset",
+      "__typename": "LokalisoituTeksti",
     },
     "palautteidenVastaanottajat": Array [
       "A000111",
@@ -1180,7 +1180,7 @@ Object {
         "RUOTSI": "På Svenska",
         "SAAME": "Saameksi",
         "SUOMI": "Lorem Ipsum",
-        "__typename": "HankkeenKuvaukset",
+        "__typename": "LokalisoituTeksti",
       },
       "kielitiedot": Object {
         "__typename": "Kielitiedot",
@@ -1300,7 +1300,7 @@ Object {
     "hankkeenKuvaus": Object {
       "SAAME": "Saameksi suunnitteluvaihe",
       "SUOMI": "Lorem Ipsum suunnitteluvaihe",
-      "__typename": "HankkeenKuvaukset",
+      "__typename": "LokalisoituTeksti",
     },
     "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
     "vuorovaikutukset": Array [
@@ -1828,7 +1828,7 @@ Object {
     "hankkeenKuvaus": Object {
       "SAAME": "Saameksi nahtavillaoloVaihe",
       "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
-      "__typename": "HankkeenKuvaukset",
+      "__typename": "LokalisoituTeksti",
     },
     "id": 1,
     "ilmoituksenVastaanottajat": Object {
@@ -1949,7 +1949,7 @@ Object {
       "hankkeenKuvaus": Object {
         "SAAME": "Saameksi nahtavillaoloVaihe",
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
-        "__typename": "HankkeenKuvaukset",
+        "__typename": "LokalisoituTeksti",
       },
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
@@ -2143,7 +2143,7 @@ Object {
       "hankkeenKuvaus": Object {
         "SAAME": "Saameksi nahtavillaoloVaihe",
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
-        "__typename": "HankkeenKuvaukset",
+        "__typename": "LokalisoituTeksti",
       },
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
@@ -2278,7 +2278,7 @@ Object {
         "hankkeenKuvaus": Object {
           "SAAME": "Saameksi nahtavillaoloVaihe",
           "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
-          "__typename": "HankkeenKuvaukset",
+          "__typename": "LokalisoituTeksti",
         },
         "hyvaksyja": "A000112",
         "id": 1,
@@ -2446,7 +2446,7 @@ Object {
     "hankkeenKuvaus": Object {
       "SAAME": "Saameksi nahtavillaoloVaihe",
       "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
-      "__typename": "HankkeenKuvaukset",
+      "__typename": "LokalisoituTeksti",
     },
     "kielitiedot": Object {
       "__typename": "Kielitiedot",

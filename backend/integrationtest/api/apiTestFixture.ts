@@ -1,12 +1,13 @@
 import {
-  AloitusKuulutus, AloitusKuulutusInput,
-  HankkeenKuvauksetInput,
+  AloitusKuulutus,
+  AloitusKuulutusInput,
   IlmoitettavaViranomainen,
   IlmoituksenVastaanottajat,
   KaytettavaPalvelu,
   Kieli,
   Kielitiedot,
   KielitiedotInput,
+  LokalisoituTekstiInput,
   MuokkausTila,
   NahtavillaoloVaiheInput,
   SuunnitteluSopimus,
@@ -125,7 +126,7 @@ class ApiTestFixture {
     muokkausTila: MuokkausTila.MUOKKAUS,
     kuulutusPaiva: "2022-01-02",
     hankkeenKuvaus: {
-      __typename: "HankkeenKuvaukset",
+      __typename: "LokalisoituTeksti",
       SUOMI: "Lorem Ipsum",
       RUOTSI: "På Svenska",
       SAAME: "Saameksi",
@@ -165,7 +166,7 @@ class ApiTestFixture {
     ensisijainenKieli: Kieli.SUOMI,
   };
 
-  hankkeenKuvausSuunnittelu: HankkeenKuvauksetInput = {
+  hankkeenKuvausSuunnittelu: LokalisoituTekstiInput = {
     SUOMI: "Lorem Ipsum suunnitteluvaihe",
     SAAME: "Saameksi suunnitteluvaihe",
   };

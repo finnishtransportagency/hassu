@@ -1,4 +1,4 @@
-import React, { useMemo, VFC } from "react";
+import React, { useMemo, VoidFunctionComponent } from "react";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { getPaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
@@ -6,7 +6,10 @@ import PaatosAineistotLukutila from "../lukutila/PaatosAineistotLukutila";
 import PaatosAineistot from "@components/projekti/paatos/aineistot/index";
 import PaatosPageLayout from "./PaatosPageLayout";
 
-export const PaatoksenAineistotPage: VFC<{ projekti: ProjektiLisatiedolla; paatosTyyppi: PaatosTyyppi }> = ({ projekti, paatosTyyppi }) => {
+export const PaatoksenAineistotPage: VoidFunctionComponent<{ projekti: ProjektiLisatiedolla; paatosTyyppi: PaatosTyyppi }> = ({
+  projekti,
+  paatosTyyppi,
+}) => {
   const { viimeisinJulkaisu, julkaisematonPaatos, julkaisut } = useMemo(
     () => getPaatosSpecificData(projekti, paatosTyyppi),
     [paatosTyyppi, projekti]

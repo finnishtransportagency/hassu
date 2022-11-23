@@ -79,6 +79,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     ...vuorovaikutusFields,
   };
 
+  const aloituskuulutusFields: Partial<DBProjekti> = {
+    aloitusKuulutus: null,
+    aloitusKuulutusJulkaisut: null,
+  };
+
+  await executor.onResetAloituskuulutus(async (oid: string) => {
+    requireProjekti();
+    await testProjektiDatabase.saveProjekti({
+      oid,
+      ...aloituskuulutusFields,
+    });
+  });
+
   await executor.onResetSuunnittelu(async (oid: string) => {
     requireProjekti();
     await testProjektiDatabase.saveProjekti({

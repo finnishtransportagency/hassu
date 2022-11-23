@@ -82,7 +82,7 @@ Object {
       "RUOTSI": "På Svenska",
       "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum",
-      "__typename": "HankkeenKuvaukset",
+      "__typename": "LokalisoituTeksti",
     },
     "kielitiedot": Object {
       "__typename": "Kielitiedot",

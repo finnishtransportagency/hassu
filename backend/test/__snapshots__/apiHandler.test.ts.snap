@@ -450,7 +450,7 @@ Array [
         "RUOTSI": "På Svenska",
         "SAAME": "Saameksi",
         "SUOMI": "Lorem Ipsum",
-        "__typename": "HankkeenKuvaukset",
+        "__typename": "LokalisoituTeksti",
       },
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -797,7 +797,7 @@ Object {
       "RUOTSI": "På Svenska",
       "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum",
-      "__typename": "HankkeenKuvaukset",
+      "__typename": "LokalisoituTeksti",
     },
     "ilmoituksenVastaanottajat": Object {
       "__typename": "IlmoituksenVastaanottajat",
@@ -865,7 +865,7 @@ Object {
       "RUOTSI": "På Svenska",
       "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum",
-      "__typename": "HankkeenKuvaukset",
+      "__typename": "LokalisoituTeksti",
     },
     "hyvaksyja": "A123",
     "hyvaksymisPaiva": "2022-09-28",
@@ -1036,7 +1036,7 @@ Object {
         "RUOTSI": "På Svenska",
         "SAAME": "Saameksi",
         "SUOMI": "Lorem Ipsum",
-        "__typename": "HankkeenKuvaukset",
+        "__typename": "LokalisoituTeksti",
       },
       "kielitiedot": Object {
         "__typename": "Kielitiedot",

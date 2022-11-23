@@ -1,7 +1,7 @@
 import Textarea from "@components/form/Textarea";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import { HankkeenKuvauksetInput, Kielitiedot, Kieli } from "@services/api";
+import { Kielitiedot, Kieli, LokalisoituTekstiInput } from "@services/api";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import lowerCase from "lodash/lowerCase";
@@ -12,7 +12,7 @@ type Props = {
 
 type FormFields = {
   nahtavillaoloVaihe: {
-    hankkeenKuvaus: HankkeenKuvauksetInput;
+    hankkeenKuvaus: LokalisoituTekstiInput;
   };
 };
 
@@ -30,10 +30,9 @@ export default function KuulutusJaJulkaisuPaiva({ kielitiedot }: Props) {
       <SectionContent>
         <h4 className="vayla-small-title">Hankkeen sisällönkuvaus</h4>
         <p>
-          Kirjoita nähtäville asettamisen kuulutusta varten tiivistetty sisällönkuvaus hankkeesta. Kuvauksen on hyvä
-          sisältää esimerkiksi tieto suunnittelukohteen alueellista rajauksesta (maantietoalue ja vaikutusalue),
-          suunnittelun tavoitteet, vaikutukset ja toimenpiteet pääpiirteittäin karkealla tasolla. Älä lisää tekstiin
-          linkkejä.
+          Kirjoita nähtäville asettamisen kuulutusta varten tiivistetty sisällönkuvaus hankkeesta. Kuvauksen on hyvä sisältää esimerkiksi
+          tieto suunnittelukohteen alueellista rajauksesta (maantietoalue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja
+          toimenpiteet pääpiirteittäin karkealla tasolla. Älä lisää tekstiin linkkejä.
         </p>
       </SectionContent>
       <SectionContent>

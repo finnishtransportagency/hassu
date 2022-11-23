@@ -9,19 +9,22 @@ import Button from "@components/button/Button";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import {
   AloitusKuulutusInput,
-  AloitusKuulutusJulkaisu,
   AloitusKuulutusTila,
   api,
   AsiakirjaTyyppi,
-  HankkeenKuvauksetInput,
   Kieli,
   Kielitiedot,
   LaskuriTyyppi,
+  LokalisoituTeksti,
+  LokalisoituTekstiInput,
   MuokkausTila,
   Status,
   TallennaProjektiInput,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
+  UudelleenKuulutus,
+  UudelleenKuulutusInput,
+  UudelleenkuulutusTila,
   YhteystietoInput,
 } from "@services/api";
 import log from "loglevel";
@@ -50,6 +53,7 @@ import { removeTypeName } from "src/util/removeTypeName";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { today } from "src/util/dateUtils";
 import { kuntametadata } from "../../../../../common/kuntametadata";
+import UudelleenkuulutaButton from "@components/projekti/UudelleenkuulutaButton";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -59,7 +63,12 @@ type RequiredProjektiFields = Required<{
 type FormValues = RequiredProjektiFields & {
   aloitusKuulutus: Pick<
     AloitusKuulutusInput,
-    "kuulutusYhteystiedot" | "kuulutusPaiva" | "hankkeenKuvaus" | "siirtyySuunnitteluVaiheeseen" | "ilmoituksenVastaanottajat"
+    | "kuulutusYhteystiedot"
+    | "kuulutusPaiva"
+    | "hankkeenKuvaus"
+    | "siirtyySuunnitteluVaiheeseen"
+    | "ilmoituksenVastaanottajat"
+    | "uudelleenKuulutus"
   >;
 };
 
@@ -88,6 +97,38 @@ interface AloituskuulutusFormProps {
   reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
 }
 
+export function getDefaultValuesForUudelleenKuulutus(
+  kielitiedot: ProjektiLisatiedolla["kielitiedot"],
+  uudelleenKuulutus: UudelleenKuulutus | null | undefined
+): UudelleenKuulutusInput {
+  const uudelleenKuulutusInput: UudelleenKuulutusInput = {
+    selosteLahetekirjeeseen: getDefaultValuesForLokalisoituText(kielitiedot, uudelleenKuulutus?.selosteLahetekirjeeseen),
+  };
+  if (uudelleenKuulutus?.tila === UudelleenkuulutusTila.JULKAISTU_PERUUTETTU) {
+    uudelleenKuulutusInput.selosteKuulutukselle = getDefaultValuesForLokalisoituText(kielitiedot, uudelleenKuulutus?.selosteKuulutukselle);
+  }
+  return uudelleenKuulutusInput;
+}
+
+function getDefaultValuesForLokalisoituText(
+  kielitiedot: ProjektiLisatiedolla["kielitiedot"],
+  lokalisoituTeksti: LokalisoituTeksti | null | undefined
+): LokalisoituTekstiInput {
+  const { ensisijainenKieli, toissijainenKieli } = kielitiedot || {};
+  const hasRuotsinKieli = ensisijainenKieli === Kieli.RUOTSI || toissijainenKieli === Kieli.RUOTSI;
+  const hasSaamenKieli = ensisijainenKieli === Kieli.SAAME || toissijainenKieli === Kieli.SAAME;
+  return {
+    SUOMI: lokalisoituTeksti?.SUOMI || "",
+    ...pickBy(
+      {
+        RUOTSI: hasRuotsinKieli ? lokalisoituTeksti?.RUOTSI || "" : undefined,
+        SAAME: hasSaamenKieli ? lokalisoituTeksti?.SAAME || "" : undefined,
+      },
+      (value) => value !== undefined
+    ),
+  };
+}
+
 function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: AloituskuulutusFormProps): ReactElement {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const router = useRouter();
@@ -107,24 +148,8 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt)) || [];
 
     const yhteysHenkilot: string[] = projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysHenkilot || [];
-    const { ensisijainenKieli, toissijainenKieli } = projekti.kielitiedot || {};
 
-    const hasRuotsinKieli = ensisijainenKieli === Kieli.RUOTSI || toissijainenKieli === Kieli.RUOTSI;
-    const hasSaamenKieli = ensisijainenKieli === Kieli.SAAME || toissijainenKieli === Kieli.SAAME;
-
-    // SUOMI hankkeen kuvaus on aina lomakkeella, RUOTSI JA SAAME vain jos kyseinen kieli on projektin kielitiedoissa.
-    // Jos kieli ei ole kielitiedoissa kyseisen kielen kenttää ei tule lisätä hankkeenKuvaus olioon
-    // Tästä syystä pickBy:llä poistetaan undefined hankkeenkuvaus tiedot.
-    const hankkeenKuvaus: HankkeenKuvauksetInput = {
-      SUOMI: projekti.aloitusKuulutus?.hankkeenKuvaus?.SUOMI || "",
-      ...pickBy(
-        {
-          RUOTSI: hasRuotsinKieli ? projekti.aloitusKuulutus?.hankkeenKuvaus?.RUOTSI || "" : undefined,
-          SAAME: hasSaamenKieli ? projekti.aloitusKuulutus?.hankkeenKuvaus?.SAAME || "" : undefined,
-        },
-        (value) => value !== undefined
-      ),
-    };
+    const hankkeenKuvaus = getDefaultValuesForLokalisoituText(projekti.kielitiedot, projekti.aloitusKuulutus?.hankkeenKuvaus);
 
     const tallentamisTiedot: FormValues = {
       oid: projekti.oid,
@@ -149,6 +174,14 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
         },
       },
     };
+
+    if (projekti.aloitusKuulutus?.uudelleenKuulutus) {
+      tallentamisTiedot.aloitusKuulutus.uudelleenKuulutus = getDefaultValuesForUudelleenKuulutus(
+        projekti.kielitiedot,
+        projekti.aloitusKuulutus.uudelleenKuulutus
+      );
+    }
+
     return tallentamisTiedot;
   }, [projekti]);
 
@@ -188,16 +221,6 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     handleSubmit: handleSubmit2,
     formState: { errors: errors2 },
   } = useForm<PalautusValues>({ defaultValues: { syy: "" } });
-
-  const getAloituskuulutusjulkaisuByTila = useCallback(
-    (tila: AloitusKuulutusTila): AloitusKuulutusJulkaisu | undefined => {
-      if (projekti?.aloitusKuulutusJulkaisu?.tila !== tila) {
-        return undefined;
-      }
-      return projekti?.aloitusKuulutusJulkaisu;
-    },
-    [projekti]
-  );
 
   const saveAloituskuulutus = useCallback(
     async (formData: FormValues) => {
@@ -325,13 +348,13 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
   );
 
   const kielitiedot: Kielitiedot | null | undefined = projekti?.kielitiedot;
-  const voiMuokata = projekti?.aloitusKuulutus?.muokkausTila == MuokkausTila.MUOKKAUS;
+  const voiMuokata = projekti?.aloitusKuulutus?.muokkausTila === MuokkausTila.MUOKKAUS;
   const voiHyvaksya =
-    getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA) && projekti?.nykyinenKayttaja.onProjektipaallikko;
+    projekti.aloitusKuulutusJulkaisu?.tila === AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA && projekti?.nykyinenKayttaja.onProjektipaallikko;
 
   const odottaaJulkaisua = useMemo(() => {
-    const julkaisu = getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.HYVAKSYTTY);
-    if (julkaisu) {
+    const julkaisu = projekti.aloitusKuulutusJulkaisu;
+    if (julkaisu?.tila === AloitusKuulutusTila.HYVAKSYTTY) {
       // Toistaiseksi tarkastellaan julkaisupaivatietoa, koska ei ole olemassa erillista tilaa julkaistulle kuulutukselle
       const julkaisupvm = dayjs(julkaisu.kuulutusPaiva);
       if (dayjs().isBefore(julkaisupvm, "day")) {
@@ -339,10 +362,10 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       }
     }
     return null;
-  }, [getAloituskuulutusjulkaisuByTila]);
+  }, [projekti.aloitusKuulutusJulkaisu]);
 
   if (!projekti || isLoadingProjekti) {
-    return <div />;
+    return <></>;
   }
   if (!kielitiedot) {
     return <div>Kielitiedot puttuu</div>;
@@ -354,8 +377,20 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
   const toissijainenKieli = kielitiedot?.toissijainenKieli;
   const esikatselePdf = pdfFormRef.current?.esikatselePdf;
 
+  const showUudelleenkuulutaButton =
+    projekti.aloitusKuulutusJulkaisu?.tila === AloitusKuulutusTila.HYVAKSYTTY &&
+    projekti.aloitusKuulutus?.muokkausTila === MuokkausTila.LUKU &&
+    projekti.nykyinenKayttaja.onYllapitaja;
+
   return (
-    <ProjektiPageLayout title="Aloituskuulutus">
+    <ProjektiPageLayout
+      title="Aloituskuulutus"
+      contentAsideTitle={
+        showUudelleenkuulutaButton && (
+          <UudelleenkuulutaButton oid={projekti.oid} tyyppi={TilasiirtymaTyyppi.ALOITUSKUULUTUS} reloadProjekti={reloadProjekti} />
+        )
+      }
+    >
       {voiMuokata && (
         <>
           <FormProvider {...useFormReturn}>
@@ -404,11 +439,60 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                     />
                     <HassuDatePickerWithController
                       label="Kuulutusvaihe päättyy"
-                      disabled={true}
+                      disabled
                       controllerProps={{ name: "aloitusKuulutus.siirtyySuunnitteluVaiheeseen" }}
                     />
                   </div>
                 </Section>
+                {projekti.aloitusKuulutus?.uudelleenKuulutus && (
+                  <Section>
+                    <h5 className="vayla-small-title">Uudelleenkuuluttamisen seloste</h5>
+                    {projekti.aloitusKuulutus.uudelleenKuulutus.tila === UudelleenkuulutusTila.JULKAISTU_PERUUTETTU && (
+                      <SectionContent>
+                        <h6 className="vayla-smallest-title">Seloste kuulutukselle</h6>
+                        <p>
+                          Kirjoita kuulutusta varten seloste uudelleenkuuluttamisen syistä. Seloste tulee nähtäville palvelun julkiselle
+                          puolelle sekä kuulutuksen pdf-tiedostoon. Älä lisää tekstiin linkkejä.
+                        </p>
+                        <Textarea
+                          label={`Suunnitelman uudelleenkuuluttamisen syy ensisijaisella kielellä (${lowerCase(ensisijainenKieli)}) *`}
+                          {...register(`aloitusKuulutus.uudelleenKuulutus.selosteKuulutukselle.${ensisijainenKieli}`)}
+                          error={(errors.aloitusKuulutus?.uudelleenKuulutus as any)?.selosteKuulutukselle?.[ensisijainenKieli]}
+                          disabled={disableFormEdit}
+                        />
+                        {toissijainenKieli && (
+                          <Textarea
+                            label={`Suunnitelman uudelleenkuuluttamisen syy toissijaisella kielellä (${lowerCase(toissijainenKieli)}) *`}
+                            {...register(`aloitusKuulutus.uudelleenKuulutus.selosteKuulutukselle.${toissijainenKieli}`)}
+                            error={(errors.aloitusKuulutus?.uudelleenKuulutus as any)?.selosteKuulutukselle?.[toissijainenKieli]}
+                            disabled={disableFormEdit}
+                          />
+                        )}
+                      </SectionContent>
+                    )}
+                    <SectionContent>
+                      <h6 className="vayla-smallest-title">Seloste lähetekirjeeseen</h6>
+                      <p>
+                        Kirjoita lähetekirjettä varten seloste uudelleenkuuluttamisen syistä. Seloste tulee nähtäville viranomaiselle ja
+                        kunnille lähetettävän lähetekirjeen alkuun. Älä lisää tekstiin linkkejä.
+                      </p>
+                      <Textarea
+                        label={`Suunnitelman uudelleenkuuluttamisen syy ensisijaisella kielellä (${lowerCase(ensisijainenKieli)}) *`}
+                        {...register(`aloitusKuulutus.uudelleenKuulutus.selosteLahetekirjeeseen.${ensisijainenKieli}`)}
+                        error={(errors.aloitusKuulutus?.uudelleenKuulutus as any)?.selosteLahetekirjeeseen?.[ensisijainenKieli]}
+                        disabled={disableFormEdit}
+                      />
+                      {toissijainenKieli && (
+                        <Textarea
+                          label={`Suunnitelman uudelleenkuuluttamisen syy toissijaisella kielellä (${lowerCase(toissijainenKieli)}) *`}
+                          {...register(`aloitusKuulutus.uudelleenKuulutus.selosteLahetekirjeeseen.${toissijainenKieli}`)}
+                          error={(errors.aloitusKuulutus?.uudelleenKuulutus as any)?.selosteLahetekirjeeseen?.[toissijainenKieli]}
+                          disabled={disableFormEdit}
+                        />
+                      )}
+                    </SectionContent>
+                  </Section>
+                )}
                 <Section noDivider={!!toissijainenKieli}>
                   <SectionContent>
                     <h5 className="vayla-small-title">Hankkeen sisällönkuvaus</h5>
@@ -510,15 +594,11 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
         <FormProvider {...useFormReturn}>
           <AloituskuulutusLukunakyma
             projekti={projekti}
-            aloituskuulutusjulkaisu={
-              getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.HYVAKSYTTY) ||
-              getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA)
-            }
+            aloituskuulutusjulkaisu={projekti.aloitusKuulutusJulkaisu}
             isLoadingProjekti={isLoadingProjekti}
           />
         </FormProvider>
       )}
-
       {voiHyvaksya && (
         <>
           <Section noDivider>

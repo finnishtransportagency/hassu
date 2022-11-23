@@ -151,7 +151,7 @@ export function removeTypeName<Type>(o: General<Type> | null | undefined): Type 
 }
 
 export function adaptHankkeenKuvausToSave(
-  hankkeenKuvaus: API.HankkeenKuvauksetInput | undefined | null
+  hankkeenKuvaus: API.LokalisoituTekstiInput | undefined | null
 ): LocalizedMap<string> | undefined | null {
   if (!hankkeenKuvaus) {
     return hankkeenKuvaus;

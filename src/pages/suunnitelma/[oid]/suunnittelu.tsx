@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useCallback, useState } from "react";
+import React, { FunctionComponent, ReactElement, useCallback, useState } from "react";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
@@ -62,7 +62,7 @@ export default function Suunnittelu(): ReactElement {
   );
 }
 
-const Perustiedot: FC<{ suunnitteluVaihe: SuunnitteluVaiheJulkinen }> = ({ suunnitteluVaihe }) => {
+const Perustiedot: FunctionComponent<{ suunnitteluVaihe: SuunnitteluVaiheJulkinen }> = ({ suunnitteluVaihe }) => {
   const { t } = useTranslation("suunnittelu");
   const kieli = useKansalaiskieli();
   return (
@@ -85,7 +85,7 @@ const Perustiedot: FC<{ suunnitteluVaihe: SuunnitteluVaiheJulkinen }> = ({ suunn
   );
 };
 
-const VuorovaikutusTiedot: FC<{
+const VuorovaikutusTiedot: FunctionComponent<{
   vuorovaikutus: VuorovaikutusJulkinen | undefined;
   projekti: ProjektiJulkinen;
   suunnitteluVaihe: SuunnitteluVaiheJulkinen;
@@ -241,7 +241,7 @@ const VuorovaikutusTiedot: FC<{
   );
 };
 
-const TilaisuusLista: FC<{
+const TilaisuusLista: FunctionComponent<{
   tilaisuudet: VuorovaikutusTilaisuusJulkinen[];
   inaktiivinen?: true;
 }> = ({ tilaisuudet, inaktiivinen }) => {

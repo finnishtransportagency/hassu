@@ -6,13 +6,9 @@ import Section from "@components/layout/Section";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import { Stack } from "@mui/material";
 import { NahtavillaoloVaiheJulkaisu } from "@services/api";
-import {
-  AineistoKategoria,
-  aineistoKategoriat,
-  kategorianAllaOlevienAineistojenMaara,
-} from "common/aineistoKategoriat";
+import { AineistoKategoria, aineistoKategoriat, kategorianAllaOlevienAineistojenMaara } from "common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
-import React, { FC, useMemo } from "react";
+import React, { FunctionComponent, useMemo } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import { formatDate, formatDateTime } from "src/util/dateUtils";
@@ -22,9 +18,7 @@ export default function Lukunakyma() {
   const { showErrorMessage, showInfoMessage } = useSnackbars();
 
   const julkaisu = useMemo(
-    () =>
-      projekti?.nahtavillaoloVaihe ||
-      projekti?.nahtavillaoloVaiheJulkaisut?.[projekti.nahtavillaoloVaiheJulkaisut.length - 1],
+    () => projekti?.nahtavillaoloVaihe || projekti?.nahtavillaoloVaiheJulkaisut?.[projekti.nahtavillaoloVaiheJulkaisut.length - 1],
     [projekti]
   );
 
@@ -93,11 +87,7 @@ export default function Lukunakyma() {
                   <Stack direction="column" rowGap={2}>
                     {julkaisu.lisaAineisto?.map((aineisto) => (
                       <span key={aineisto.dokumenttiOid}>
-                        <HassuAineistoNimiExtLink
-                          tiedostoPolku={aineisto.tiedosto}
-                          aineistoNimi={aineisto.nimi}
-                          sx={{ mr: 3 }}
-                        />
+                        <HassuAineistoNimiExtLink tiedostoPolku={aineisto.tiedosto} aineistoNimi={aineisto.nimi} sx={{ mr: 3 }} />
                         {aineisto.tuotu && formatDateTime(aineisto.tuotu)}
                       </span>
                     ))}
@@ -123,15 +113,14 @@ interface AineistoNahtavillaAccordionProps {
   paakategoria?: boolean;
 }
 
-const AineistoNahtavillaAccordion: FC<AineistoNahtavillaAccordionProps> = ({ julkaisu, kategoriat, paakategoria }) => {
+const AineistoNahtavillaAccordion: FunctionComponent<AineistoNahtavillaAccordionProps> = ({ julkaisu, kategoriat, paakategoria }) => {
   const { t } = useTranslation("aineisto");
   const accordionItems: AccordionItem[] = useMemo(
     () =>
       kategoriat
         .filter((kategoria) => {
           return (
-            julkaisu.aineistoNahtavilla &&
-            (paakategoria || kategorianAllaOlevienAineistojenMaara(julkaisu.aineistoNahtavilla, kategoria))
+            julkaisu.aineistoNahtavilla && (paakategoria || kategorianAllaOlevienAineistojenMaara(julkaisu.aineistoNahtavilla, kategoria))
           );
         })
         .map<AccordionItem>((kategoria) => {
@@ -162,9 +151,7 @@ const AineistoNahtavillaAccordion: FC<AineistoNahtavillaAccordionProps> = ({ jul
                       ))}
                   </Stack>
                 )}
-                {kategoria.alaKategoriat && (
-                  <AineistoNahtavillaAccordion julkaisu={julkaisu} kategoriat={kategoria.alaKategoriat} />
-                )}
+                {kategoria.alaKategoriat && <AineistoNahtavillaAccordion julkaisu={julkaisu} kategoriat={kategoria.alaKategoriat} />}
               </>
             ),
           };

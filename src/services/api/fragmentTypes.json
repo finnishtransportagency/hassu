@@ -129,18 +129,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "HankkeenKuvaukset",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "HankkeenKuvauksetInput",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
         "name": "Hyvaksymispaatos",
         "possibleTypes": null,
         "__typename": "__Type"
