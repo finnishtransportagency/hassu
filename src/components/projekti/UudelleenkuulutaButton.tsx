@@ -4,7 +4,7 @@ import HassuSpinner from "@components/HassuSpinner";
 import { DialogActions, DialogContent, DialogProps } from "@mui/material";
 import { api, TilaSiirtymaInput, TilasiirtymaToiminto } from "@services/api";
 import log from "loglevel";
-import React, { useCallback, useState, VFC } from "react";
+import React, { useCallback, useEffect, useRef, useState, VoidFunctionComponent } from "react";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import { KeyedMutator } from "swr";
@@ -14,7 +14,7 @@ export type UudelleenkuulutaButtonProps = { reloadProjekti: KeyedMutator<Projekt
   "oid" | "tyyppi"
 >;
 
-const UudelleenkuulutaButton: VFC<UudelleenkuulutaButtonProps> = (props) => {
+const UudelleenkuulutaButton: VoidFunctionComponent<UudelleenkuulutaButtonProps> = (props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const openDialog = useCallback(() => {
@@ -35,7 +35,7 @@ const UudelleenkuulutaButton: VFC<UudelleenkuulutaButtonProps> = (props) => {
   );
 };
 
-const UudelleenkuulutaModal: VFC<DialogProps & { buttonProps: UudelleenkuulutaButtonProps }> = ({
+const UudelleenkuulutaModal: VoidFunctionComponent<DialogProps & { buttonProps: UudelleenkuulutaButtonProps }> = ({
   buttonProps: { oid, reloadProjekti, tyyppi },
   onClose,
   ...dialogProps
@@ -43,25 +43,44 @@ const UudelleenkuulutaModal: VFC<DialogProps & { buttonProps: UudelleenkuulutaBu
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
   const [isLoading, setIsLoading] = useState(false);
 
+  const mountedRef = useRef(false);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
   const closeDialog: React.MouseEventHandler<HTMLButtonElement> = useCallback((e) => onClose?.(e, "escapeKeyDown"), [onClose]);
 
   const avaaUudelleenkuulutettavaksi: React.MouseEventHandler<HTMLButtonElement> = useCallback(
     async (event) => {
-      setIsLoading(true);
+      const isMounted = mountedRef.current;
+
+      if (isMounted) {
+        setIsLoading(true);
+      }
       try {
         await api.siirraTila({
           oid,
           toiminto: TilasiirtymaToiminto.UUDELLEENKUULUTA,
           tyyppi,
         });
-        await reloadProjekti();
-        showSuccessMessage("Kuulutus on avattu uudelleenkuulutettavaksi");
+        if (isMounted) {
+          await reloadProjekti();
+          showSuccessMessage("Kuulutus on avattu uudelleenkuulutettavaksi");
+        }
       } catch (error) {
         log.log("Uudelleenkuulutus Error", error);
-        showErrorMessage("Kuulutuksen avaaminen uudelleenkuulutettavaksi epäonnistui");
+        if (isMounted) {
+          showErrorMessage("Kuulutuksen avaaminen uudelleenkuulutettavaksi epäonnistui");
+        }
       }
-      closeDialog(event);
-      setIsLoading(false);
+      if (isMounted) {
+        closeDialog(event);
+        setIsLoading(false);
+      }
     },
     [closeDialog, oid, reloadProjekti, showErrorMessage, showSuccessMessage, tyyppi]
   );
