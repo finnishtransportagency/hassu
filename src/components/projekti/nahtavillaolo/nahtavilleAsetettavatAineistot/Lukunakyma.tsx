@@ -17,10 +17,7 @@ export default function Lukunakyma() {
   const { data: projekti } = useProjekti();
   const { showErrorMessage, showInfoMessage } = useSnackbars();
 
-  const julkaisu = useMemo(
-    () => projekti?.nahtavillaoloVaihe || projekti?.nahtavillaoloVaiheJulkaisut?.[projekti.nahtavillaoloVaiheJulkaisut.length - 1],
-    [projekti]
-  );
+  const julkaisu = useMemo(() => projekti?.nahtavillaoloVaihe || projekti?.nahtavillaoloVaiheJulkaisu, [projekti]);
 
   const linkHref = useMemo(() => {
     const parametrit = projekti?.nahtavillaoloVaihe?.lisaAineistoParametrit;

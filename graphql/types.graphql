@@ -115,7 +115,7 @@ type Projekti implements IProjekti {
   suunnitteluSopimus: SuunnitteluSopimus
   suunnitteluVaihe: SuunnitteluVaihe
   nahtavillaoloVaihe: NahtavillaoloVaihe
-  nahtavillaoloVaiheJulkaisut: [NahtavillaoloVaiheJulkaisu!]
+  nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe
   hyvaksymisPaatosVaiheJulkaisut: [HyvaksymisPaatosVaiheJulkaisu!]
   jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe
@@ -215,6 +215,7 @@ type NahtavillaoloVaihe {
   kuulutusYhteystiedot: StandardiYhteystiedot
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   palautusSyy: String
+  muokkausTila: MuokkausTila!
 }
 
 type HyvaksymisPaatosVaihe {

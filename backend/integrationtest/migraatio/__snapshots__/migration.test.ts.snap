@@ -622,6 +622,7 @@ Object {
       "poistumisPaiva": "***unittest***",
     },
     "muistutusoikeusPaattyyPaiva": "2042-06-08",
+    "muokkausTila": "MUOKKAUS",
   },
 }
 `;
@@ -702,6 +703,7 @@ Object {
         "poistumisPaiva": "***unittest***",
       },
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
+      "muokkausTila": "MUOKKAUS",
     },
   },
 }
@@ -783,113 +785,112 @@ Object {
         "poistumisPaiva": "***unittest***",
       },
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
+      "muokkausTila": "LUKU",
     },
-    "nahtavillaoloVaiheJulkaisut": Array [
-      Object {
-        "__typename": "NahtavillaoloVaiheJulkaisu",
-        "aineistoNahtavilla": undefined,
-        "hankkeenKuvaus": Object {
-          "SAAME": "Saameksi nahtavillaoloVaihe",
-          "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
-          "__typename": "LokalisoituTeksti",
-        },
-        "hyvaksyja": "A000112",
-        "id": 1,
-        "ilmoituksenVastaanottajat": Object {
-          "__typename": "IlmoituksenVastaanottajat",
-          "kunnat": Array [
-            Object {
-              "__typename": "KuntaVastaanottaja",
-              "id": 491,
-              "lahetetty": "2022-03-11T14:54",
-              "sahkoposti": "mikkeli@mikke.li",
-            },
-            Object {
-              "__typename": "KuntaVastaanottaja",
-              "id": 178,
-              "lahetetty": "2022-03-11T14:54",
-              "sahkoposti": "juva@ju.va",
-            },
-            Object {
-              "__typename": "KuntaVastaanottaja",
-              "id": 740,
-              "lahetetty": "2022-03-11T14:54",
-              "sahkoposti": "savonlinna@savonlin.na",
-            },
-          ],
-          "viranomaiset": Array [
-            Object {
-              "__typename": "ViranomaisVastaanottaja",
-              "lahetetty": "2022-03-11T14:54",
-              "nimi": "ETELA_SAVO_ELY",
-              "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
-            },
-          ],
-        },
-        "kielitiedot": Object {
-          "__typename": "Kielitiedot",
-          "ensisijainenKieli": "SUOMI",
-        },
-        "kuulutusPaiva": "2022-06-07",
-        "kuulutusVaihePaattyyPaiva": "2042-06-07",
-        "lisaAineisto": undefined,
-        "muistutusoikeusPaattyyPaiva": "2042-06-08",
-        "muokkaaja": "A000112",
-        "nahtavillaoloPDFt": Object {
-          "SUOMI": Object {
-            "__typename": "NahtavillaoloPDF",
-            "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
-            "nahtavillaoloIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
-            "nahtavillaoloPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
-          },
-          "__typename": "NahtavillaoloPDFt",
-        },
-        "tila": "HYVAKSYTTY",
-        "velho": Object {
-          "__typename": "Velho",
-          "kunnat": Array [
-            91,
-            92,
-          ],
-          "linkki": null,
-          "maakunnat": Array [
-            1,
-          ],
-          "nimi": "HASSU MIGRAATIOTESTIPROJEKTI NÄHTÄVILLÄOLO",
-          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-          "tyyppi": "TIE",
-          "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
-          "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-          "vaylamuoto": Array [
-            "tie",
-          ],
-        },
-        "yhteystiedot": Array [
+    "nahtavillaoloVaiheJulkaisu": Object {
+      "__typename": "NahtavillaoloVaiheJulkaisu",
+      "aineistoNahtavilla": undefined,
+      "hankkeenKuvaus": Object {
+        "SAAME": "Saameksi nahtavillaoloVaihe",
+        "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
+        "__typename": "LokalisoituTeksti",
+      },
+      "hyvaksyja": "A000112",
+      "id": 1,
+      "ilmoituksenVastaanottajat": Object {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": Array [
           Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "A-tunnus1",
-            "organisaatio": "CGI Suomi Oy",
-            "puhelinnumero": "0291111111",
-            "sahkoposti": "mikko.haapamki@cgi.com",
-            "sukunimi": "Hassu",
+            "__typename": "KuntaVastaanottaja",
+            "id": 491,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Etunimi",
-            "puhelinnumero": "0293121213",
-            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-            "sukunimi": "Sukunimi",
+            "__typename": "KuntaVastaanottaja",
+            "id": 178,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "juva@ju.va",
           },
           Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Joku",
-            "puhelinnumero": "02998765",
-            "sahkoposti": "Joku.Jokunen@vayla.fi",
-            "sukunimi": "Jokunen",
+            "__typename": "KuntaVastaanottaja",
+            "id": 740,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "__typename": "ViranomaisVastaanottaja",
+            "lahetetty": "2022-03-11T14:54",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
           },
         ],
       },
-    ],
+      "kielitiedot": Object {
+        "__typename": "Kielitiedot",
+        "ensisijainenKieli": "SUOMI",
+      },
+      "kuulutusPaiva": "2022-06-07",
+      "kuulutusVaihePaattyyPaiva": "2042-06-07",
+      "lisaAineisto": undefined,
+      "muistutusoikeusPaattyyPaiva": "2042-06-08",
+      "muokkaaja": "A000112",
+      "nahtavillaoloPDFt": Object {
+        "SUOMI": Object {
+          "__typename": "NahtavillaoloPDF",
+          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+          "nahtavillaoloIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
+          "nahtavillaoloPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
+        },
+        "__typename": "NahtavillaoloPDFt",
+      },
+      "tila": "HYVAKSYTTY",
+      "velho": Object {
+        "__typename": "Velho",
+        "kunnat": Array [
+          91,
+          92,
+        ],
+        "linkki": null,
+        "maakunnat": Array [
+          1,
+        ],
+        "nimi": "HASSU MIGRAATIOTESTIPROJEKTI NÄHTÄVILLÄOLO",
+        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+        "tyyppi": "TIE",
+        "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+        "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "A-tunnus1",
+          "organisaatio": "CGI Suomi Oy",
+          "puhelinnumero": "0291111111",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sukunimi": "Hassu",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Etunimi",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "sukunimi": "Sukunimi",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Joku",
+          "puhelinnumero": "02998765",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "sukunimi": "Jokunen",
+        },
+      ],
+    },
   },
 }
 `;

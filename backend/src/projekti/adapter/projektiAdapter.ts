@@ -13,7 +13,7 @@ import {
   adaptHyvaksymisPaatosVaiheJulkaisut,
   adaptKasittelynTila,
   adaptNahtavillaoloVaihe,
-  adaptNahtavillaoloVaiheJulkaisut,
+  adaptNahtavillaoloVaiheJulkaisu,
   adaptSuunnitteluSopimus,
   adaptSuunnitteluVaihe,
 } from "./adaptToAPI";
@@ -72,8 +72,8 @@ export class ProjektiAdapter {
         suunnitteluVaihe,
         vuorovaikutukset
       ),
-      nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe),
-      nahtavillaoloVaiheJulkaisut: adaptNahtavillaoloVaiheJulkaisut(dbProjekti.oid, nahtavillaoloVaiheJulkaisut),
+      nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe, nahtavillaoloVaiheJulkaisut),
+      nahtavillaoloVaiheJulkaisu: adaptNahtavillaoloVaiheJulkaisu(dbProjekti.oid, nahtavillaoloVaiheJulkaisut),
       hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe, dbProjekti.kasittelynTila?.hyvaksymispaatos),
       hyvaksymisPaatosVaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
         dbProjekti.oid,

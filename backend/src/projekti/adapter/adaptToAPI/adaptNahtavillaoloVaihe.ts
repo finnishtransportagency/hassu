@@ -12,10 +12,12 @@ import {
 } from "../common";
 import { fileService } from "../../../files/fileService";
 import { lisaAineistoService } from "../../../aineisto/lisaAineistoService";
+import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 
 export function adaptNahtavillaoloVaihe(
   dbProjekti: DBProjekti,
-  nahtavillaoloVaihe: NahtavillaoloVaihe | null | undefined
+  nahtavillaoloVaihe: NahtavillaoloVaihe | null | undefined,
+  nahtavillaoloVaiheJulkaisut: NahtavillaoloVaiheJulkaisu[] | null | undefined
 ): API.NahtavillaoloVaihe | undefined {
   if (!nahtavillaoloVaihe) {
     return undefined;
@@ -34,68 +36,78 @@ export function adaptNahtavillaoloVaihe(
     kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
     hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus || undefined),
+    muokkausTila: adaptMuokkausTila(
+      nahtavillaoloVaihe,
+      nahtavillaoloVaiheJulkaisut,
+      NahtavillaoloVaiheTila.MIGROITU,
+      NahtavillaoloVaiheTila.ODOTTAA_HYVAKSYNTAA,
+      NahtavillaoloVaiheTila.HYVAKSYTTY
+    ),
   };
 }
 
-export function adaptNahtavillaoloVaiheJulkaisut(
+export function adaptNahtavillaoloVaiheJulkaisu(
   oid: string,
   julkaisut?: NahtavillaoloVaiheJulkaisu[] | null
-): API.NahtavillaoloVaiheJulkaisu[] | undefined {
-  if (julkaisut) {
-    return julkaisut.map((julkaisu) => {
-      const {
-        aineistoNahtavilla,
-        lisaAineisto,
-        hankkeenKuvaus,
-        ilmoituksenVastaanottajat,
-        yhteystiedot,
-        nahtavillaoloPDFt,
-        kielitiedot,
-        velho,
-        tila,
-        ...fieldsToCopyAsIs
-      } = julkaisu;
+): API.NahtavillaoloVaiheJulkaisu | undefined {
+  const julkaisu =
+    findJulkaisuWithTila(julkaisut, NahtavillaoloVaiheTila.ODOTTAA_HYVAKSYNTAA) ||
+    findJulkaisuWithTila(julkaisut, NahtavillaoloVaiheTila.HYVAKSYTTY) ||
+    findJulkaisuWithTila(julkaisut, NahtavillaoloVaiheTila.MIGROITU);
 
-      if (tila == NahtavillaoloVaiheTila.MIGROITU) {
-        return {
-          __typename: "NahtavillaoloVaiheJulkaisu",
-          tila,
-          velho: adaptVelho(velho),
-          yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
-        };
-      }
+  if (julkaisu) {
+    const {
+      aineistoNahtavilla,
+      lisaAineisto,
+      hankkeenKuvaus,
+      ilmoituksenVastaanottajat,
+      yhteystiedot,
+      nahtavillaoloPDFt,
+      kielitiedot,
+      velho,
+      tila,
+      ...fieldsToCopyAsIs
+    } = julkaisu;
 
-      if (!nahtavillaoloPDFt) {
-        throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.nahtavillaoloPDFt määrittelemättä");
-      }
-      if (!hankkeenKuvaus) {
-        throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.hankkeenKuvaus määrittelemättä");
-      }
-      if (!ilmoituksenVastaanottajat) {
-        throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.ilmoituksenVastaanottajat määrittelemättä");
-      }
-      if (!kielitiedot) {
-        throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.kielitiedot määrittelemättä");
-      }
-      if (!yhteystiedot) {
-        throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.yhteystiedot määrittelemättä");
-      }
-
-      const palautetaan: API.NahtavillaoloVaiheJulkaisu = {
-        ...fieldsToCopyAsIs,
+    if (tila == NahtavillaoloVaiheTila.MIGROITU) {
+      return {
         __typename: "NahtavillaoloVaiheJulkaisu",
         tila,
-        hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
-        kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
-        yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
-        ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-        aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
-        lisaAineisto: adaptAineistot(lisaAineisto),
-        nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(oid, nahtavillaoloPDFt),
         velho: adaptVelho(velho),
+        yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
       };
-      return palautetaan;
-    });
+    }
+
+    if (!nahtavillaoloPDFt) {
+      throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.nahtavillaoloPDFt määrittelemättä");
+    }
+    if (!hankkeenKuvaus) {
+      throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.hankkeenKuvaus määrittelemättä");
+    }
+    if (!ilmoituksenVastaanottajat) {
+      throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.ilmoituksenVastaanottajat määrittelemättä");
+    }
+    if (!kielitiedot) {
+      throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.kielitiedot määrittelemättä");
+    }
+    if (!yhteystiedot) {
+      throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.yhteystiedot määrittelemättä");
+    }
+
+    const palautetaan: API.NahtavillaoloVaiheJulkaisu = {
+      ...fieldsToCopyAsIs,
+      __typename: "NahtavillaoloVaiheJulkaisu",
+      tila,
+      hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
+      kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
+      yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
+      ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
+      aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
+      lisaAineisto: adaptAineistot(lisaAineisto),
+      nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(oid, nahtavillaoloPDFt),
+      velho: adaptVelho(velho),
+    };
+    return palautetaan;
   }
   return undefined;
 }

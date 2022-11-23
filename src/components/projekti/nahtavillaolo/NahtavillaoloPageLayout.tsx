@@ -14,9 +14,7 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import FormatDate from "@components/FormatDate";
 
 const InfoElement = ({ projekti }: { projekti: ProjektiLisatiedolla }) => {
-  const julkaisut = projekti?.nahtavillaoloVaiheJulkaisut;
-
-  const julkaisu = julkaisut?.[julkaisut.length - 1];
+  const julkaisu = projekti.nahtavillaoloVaiheJulkaisu;
 
   if (julkaisu?.tila === NahtavillaoloVaiheTila.HYVAKSYTTY) {
     // Toistaiseksi tarkastellaan julkaisupaivatietoa, koska ei ole olemassa erillista tilaa julkaistulle kuulutukselle
@@ -124,7 +122,7 @@ function NahtavillaoloPageLayout({
     return indexOfTab === -1 ? false : indexOfTab;
   }, [router.pathname, tabProps]);
 
-  const nahtavillaolovaiheJulkaisu = projekti.nahtavillaoloVaiheJulkaisut?.[projekti.nahtavillaoloVaiheJulkaisut.length - 1];
+  const nahtavillaolovaiheJulkaisu = projekti.nahtavillaoloVaiheJulkaisu;
   const migroitu = nahtavillaolovaiheJulkaisu?.tila == NahtavillaoloVaiheTila.MIGROITU;
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 

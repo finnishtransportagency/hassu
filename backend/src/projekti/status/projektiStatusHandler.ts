@@ -14,6 +14,16 @@ import { findJulkaisutWithTila, findJulkaisuWithTila } from "../projektiUtil";
 import { AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler, HyvaksymisPaatosJulkaisuEndDateAndTila, StatusHandler } from "./statusHandler";
 import { isDateTimeInThePast } from "../../util/dateUtil";
 
+function isNahtavillaoloJulkaisuMigroituOrHyvaksyttyAndInPast(julkaisu: API.NahtavillaoloVaiheJulkaisu | null | undefined): boolean {
+  const nahtavillaolojulkaisuMigratoitu = julkaisu?.tila === NahtavillaoloVaiheTila.MIGROITU;
+  const nahtavillaolojulkaisuHyvaksytty = julkaisu?.tila === NahtavillaoloVaiheTila.HYVAKSYTTY;
+  const kuulutusVaihePaattyyInPast = julkaisu?.kuulutusVaihePaattyyPaiva
+    ? isDateTimeInThePast(julkaisu.kuulutusVaihePaattyyPaiva, "end-of-day")
+    : false;
+
+  return nahtavillaolojulkaisuMigratoitu || (nahtavillaolojulkaisuHyvaksytty && !!kuulutusVaihePaattyyInPast);
+}
+
 export function applyProjektiStatus(projekti: API.Projekti): void {
   const perustiedot = new (class extends StatusHandler<API.Projekti> {
     handle(p: API.Projekti) {
@@ -71,12 +81,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
 
   const hyvaksymisMenettelyssa = new (class extends StatusHandler<API.Projekti> {
     handle(p: API.Projekti) {
-      const migroituNahtavillaoloVaihe = findJulkaisuWithTila(p.nahtavillaoloVaiheJulkaisut, NahtavillaoloVaiheTila.MIGROITU);
-      const nahtavillaoloVaihe = findJulkaisuWithTila(p.nahtavillaoloVaiheJulkaisut, NahtavillaoloVaiheTila.HYVAKSYTTY);
-      const nahtavillaoloKuulutusPaattyyInThePast =
-        nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva && isDateTimeInThePast(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva, "end-of-day");
-
-      if (nahtavillaoloKuulutusPaattyyInThePast || migroituNahtavillaoloVaihe) {
+      if (isNahtavillaoloJulkaisuMigroituOrHyvaksyttyAndInPast(p.nahtavillaoloVaiheJulkaisu)) {
         p.status = API.Status.HYVAKSYMISMENETTELYSSA;
         super.handle(p); // Continue evaluating next rules
       }
@@ -88,12 +93,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
       const hyvaksymisPaatos = p.kasittelynTila?.hyvaksymispaatos;
       const hasHyvaksymisPaatos = hyvaksymisPaatos?.asianumero && hyvaksymisPaatos?.paatoksenPvm;
 
-      const nahtavillaoloVaihe = findJulkaisuWithTila(p.nahtavillaoloVaiheJulkaisut, NahtavillaoloVaiheTila.HYVAKSYTTY);
-      const migroituNahtavillaoloVaihe = findJulkaisuWithTila(p.nahtavillaoloVaiheJulkaisut, NahtavillaoloVaiheTila.MIGROITU);
-      const nahtavillaoloKuulutusPaattyyInThePast =
-        nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva && isDateTimeInThePast(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva, "end-of-day");
-
-      if (hasHyvaksymisPaatos && (migroituNahtavillaoloVaihe || nahtavillaoloKuulutusPaattyyInThePast)) {
+      if (hasHyvaksymisPaatos && isNahtavillaoloJulkaisuMigroituOrHyvaksyttyAndInPast(p.nahtavillaoloVaiheJulkaisu)) {
         p.status = API.Status.HYVAKSYTTY;
         super.handle(p); // Continue evaluating next rules
       }

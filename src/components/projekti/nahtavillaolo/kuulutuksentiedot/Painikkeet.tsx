@@ -2,7 +2,7 @@ import Button from "@components/button/Button";
 import HassuSpinner from "@components/HassuSpinner";
 import Section from "@components/layout/Section";
 import { Stack } from "@mui/material";
-import { api } from "@services/api";
+import { api, MuokkausTila } from "@services/api";
 import log from "loglevel";
 import { useRouter } from "next/router";
 import React, { useState, useCallback, useRef, useEffect } from "react";
@@ -133,13 +133,10 @@ export default function Painikkeet({ projekti }: Props) {
     await vaihdaNahtavillaolonTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
   }, [vaihdaNahtavillaolonTila]);
 
-  const voiMuokata = !projekti?.nahtavillaoloVaiheJulkaisut || projekti.nahtavillaoloVaiheJulkaisut.length < 1;
+  const voiMuokata = projekti?.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.MUOKKAUS;
 
   const voiHyvaksya =
-    projekti.nahtavillaoloVaiheJulkaisut &&
-    projekti.nahtavillaoloVaiheJulkaisut.length &&
-    projekti.nahtavillaoloVaiheJulkaisut[projekti.nahtavillaoloVaiheJulkaisut.length - 1].tila ===
-      NahtavillaoloVaiheTila.ODOTTAA_HYVAKSYNTAA &&
+    projekti.nahtavillaoloVaiheJulkaisu?.tila === NahtavillaoloVaiheTila.ODOTTAA_HYVAKSYNTAA &&
     projekti?.nykyinenKayttaja.onProjektipaallikko;
 
   return (
