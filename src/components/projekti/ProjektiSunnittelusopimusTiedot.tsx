@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import { Projekti } from "@services/api";
+import { AloitusKuulutusTila, Projekti } from "@services/api";
 import RadioButton from "@components/form/RadioButton";
 import Select, { SelectOption } from "@components/form/Select";
 import { Controller, useFormContext } from "react-hook-form";
@@ -14,6 +14,7 @@ import HassuStack from "@components/layout/HassuStack";
 import useTranslation from "next-translate/useTranslation";
 import { kuntametadata } from "../../../common/kuntametadata";
 import { formatNimi } from "../../util/userUtil";
+import Notification, { NotificationType } from "@components/notification/Notification";
 
 interface Props {
   projekti?: Projekti | null;
@@ -33,6 +34,12 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
   const [kuntaOptions, setKuntaOptions] = useState<SelectOption[]>([]);
   const { lang } = useTranslation();
 
+  const disabled = !!(
+    projekti?.aloitusKuulutusJulkaisu &&
+    projekti?.aloitusKuulutusJulkaisu.tila &&
+    [AloitusKuulutusTila.HYVAKSYTTY, AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA].includes(projekti.aloitusKuulutusJulkaisu.tila)
+  );
+
   useEffect(() => {
     setKuntaOptions(kuntametadata.kuntaOptions(lang));
   }, [lang]);
@@ -49,12 +56,19 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
   return (
     <Section smallGaps>
       <h4 className="vayla-small-title">Suunnittelusopimus</h4>
+      {disabled && (
+        <Notification type={NotificationType.INFO}>
+          Et voi muuttaa suunnittelusopimuksen olemassaoloa, koska aloituskuulutus on julkaistu tai odottaa hyväksyntää. Voit kuitenkin
+          muuttaa kunnan edustajan tietoja.
+        </Notification>
+      )}
       <FormGroup
         label="Onko kyseessä suunnittelusopimuksella toteutettava suunnitteluhanke? *"
         flexDirection="row"
         errorMessage={errors.suunnittelusopimusprojekti?.message}
       >
         <RadioButton
+          disabled={disabled}
           label="Kyllä"
           value="true"
           {...register("suunnittelusopimusprojekti")}
@@ -63,6 +77,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
           }}
         />
         <RadioButton
+          disabled={disabled}
           label="Ei"
           value="false"
           {...register("suunnittelusopimusprojekti")}
