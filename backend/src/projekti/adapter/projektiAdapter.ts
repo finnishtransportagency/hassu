@@ -28,6 +28,7 @@ import {
 import { applyProjektiStatus } from "../status/projektiStatusHandler";
 import { adaptKasittelynTilaToSave } from "./adaptToDB/adaptKasittelynTilaToSave";
 import { ProjektiAdaptationResult } from "./projektiAdaptationResult";
+import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 
 export class ProjektiAdapter {
   public adaptProjekti(dbProjekti: DBProjekti, virhetiedot?: API.ProjektiVirhe): API.Projekti {
@@ -171,6 +172,19 @@ export class ProjektiAdapter {
         kasittelynTila: adaptKasittelynTilaToSave(projekti.kasittelynTila, kasittelynTila, projektiAdaptationResult),
       }
     );
+
+    if (
+      (projekti.suunnitteluSopimus === null && !!dbProjekti.suunnitteluSopimus) ||
+      (!!dbProjekti.suunnitteluSopimus &&
+        !projekti.suunnitteluSopimus &&
+        [API.AloitusKuulutusTila.HYVAKSYTTY, API.AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA].includes(
+          projekti?.aloitusKuulutusJulkaisut?.[projekti.aloitusKuulutusJulkaisut.length - 1].tila as API.AloitusKuulutusTila
+        ))
+    ) {
+      throw new IllegalArgumentError(
+        "Suunnittelusopimuksen olemassaoloa ei voi muuttaa, jos aloituskuulutus on jo julkaistu tai se odottaa hyväksyntää!"
+      );
+    }
     projektiAdaptationResult.setProjekti(dbProjekti);
     return projektiAdaptationResult;
   }
