@@ -1,4 +1,4 @@
-import React, { useMemo, VFC } from "react";
+import React, { useMemo, VoidFunctionComponent } from "react";
 import KuulutuksenTiedot from "@components/projekti/paatos/kuulutuksenTiedot/index";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
@@ -6,7 +6,7 @@ import Lukunakyma from "@components/projekti/paatos/kuulutuksenTiedot/Lukunakyma
 import { getPaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import PaatosPageLayout from "./PaatosPageLayout";
 
-export const PaatoksenKuulutuksenTiedotPage: VFC<{ projekti: ProjektiLisatiedolla; paatosTyyppi: PaatosTyyppi }> = ({
+export const PaatoksenKuulutuksenTiedotPage: VoidFunctionComponent<{ projekti: ProjektiLisatiedolla; paatosTyyppi: PaatosTyyppi }> = ({
   projekti,
   paatosTyyppi,
 }) => {

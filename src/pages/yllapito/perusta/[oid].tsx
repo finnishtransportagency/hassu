@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, FC, useMemo } from "react";
+import React, { ReactElement, useCallback, FunctionComponent, useMemo } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { useRouter } from "next/router";
 import ProjektiPerustiedot from "@components/projekti/ProjektiPerustiedot";
@@ -70,7 +70,7 @@ const defaultFormValues: (projekti: ProjektiLisatiedolla) => FormValues = (proje
     }) || [],
 });
 
-const PerustaProjektiForm: FC<PerustaProjektiFormProps> = ({ projekti, projektiLoadError, reloadProjekti }) => {
+const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ projekti, projektiLoadError, reloadProjekti }) => {
   const router = useRouter();
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
 

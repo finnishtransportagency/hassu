@@ -5,7 +5,7 @@ import { Stack } from "@mui/material";
 import { HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaiheTila } from "@services/api";
 import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory } from "common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
-import React, { FC, useMemo } from "react";
+import React, { FunctionComponent, useMemo } from "react";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { formatDate, formatDateTime } from "src/util/dateUtils";
 import { getPaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
@@ -65,7 +65,7 @@ interface AineistoNahtavillaAccordionProps {
   kategoriat: AineistoKategoria[];
 }
 
-const AineistoNahtavillaAccordion: FC<AineistoNahtavillaAccordionProps> = ({ julkaisu, kategoriat }) => {
+const AineistoNahtavillaAccordion: FunctionComponent<AineistoNahtavillaAccordionProps> = ({ julkaisu, kategoriat }) => {
   const { t } = useTranslation("aineisto");
   const accordionItems: AccordionItem[] = useMemo(
     () =>

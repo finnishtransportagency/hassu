@@ -1,4 +1,14 @@
-import React, { ComponentProps, Dispatch, FC, ReactElement, RefObject, SetStateAction, useEffect, useRef, useState } from "react";
+import React, {
+  ComponentProps,
+  Dispatch,
+  FunctionComponent,
+  ReactElement,
+  RefObject,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useRouter } from "next/router";
 import VirkamiesHeaderTopRightContent from "./VirkamiesHeaderTopRightContent";
 import { Backdrop, Container, styled, useMediaQuery, useTheme } from "@mui/material";
@@ -206,7 +216,7 @@ export default function Header(): ReactElement {
   );
 }
 
-const Navigation: FC<{ navigationRoutes: NavigationRoute[]; mobile?: true }> = ({ navigationRoutes, mobile }) => {
+const Navigation: FunctionComponent<{ navigationRoutes: NavigationRoute[]; mobile?: true }> = ({ navigationRoutes, mobile }) => {
   return (
     <nav className="block md:flex border-t border-gray-light uppercase">
       <ul className="block pb-8 md:pb-0 md:flex md:float-left md:flex-wrap md:space-x-16">
@@ -236,7 +246,10 @@ const SivustoLogo = styled(({ className, href }: { className?: string; href: str
   },
 }));
 
-const HamburgerButton: FC<{ isHamburgerOpen: boolean; onClick: ComponentProps<"button">["onClick"] }> = ({ isHamburgerOpen, onClick }) => {
+const HamburgerButton: FunctionComponent<{ isHamburgerOpen: boolean; onClick: ComponentProps<"button">["onClick"] }> = ({
+  isHamburgerOpen,
+  onClick,
+}) => {
   return (
     <>
       <div>

@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FunctionComponent } from "react";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
@@ -12,7 +12,7 @@ export interface NavigationRoute {
   mobile?: true;
 }
 
-const HeaderNavigationItem: FC<NavigationRoute> = ({ href, label, icon, removeLeftPadding, mobile }) => (
+const HeaderNavigationItem: FunctionComponent<NavigationRoute> = ({ href, label, icon, removeLeftPadding, mobile }) => (
   <li>
     <Link href={href}>
       <a

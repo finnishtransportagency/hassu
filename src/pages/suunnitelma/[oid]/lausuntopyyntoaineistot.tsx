@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useMemo } from "react";
+import React, { FunctionComponent, ReactElement, useMemo } from "react";
 import Section from "@components/layout/Section";
 import { useLisaAineisto } from "src/hooks/useLisaAineisto";
 import HassuAccordion, { AccordionItem } from "@components/HassuAccordion";
@@ -12,9 +12,7 @@ export default function Lausuntopyyntoaineistot(): ReactElement {
   return (
     <Section>
       <p>Huomioi, että tämä sisältö on tarkasteltavissa DD.MM.YYYY asti, jonka jälkeen sisältö poistuu näkyvistä.</p>
-      <AineistoNahtavillaAccordion
-        kategoriat={[...aineistoKategoriat.listKategoriat(), new AineistoKategoria({ id: "lisaAineisto" })]}
-      />
+      <AineistoNahtavillaAccordion kategoriat={[...aineistoKategoriat.listKategoriat(), new AineistoKategoria({ id: "lisaAineisto" })]} />
     </Section>
   );
 }
@@ -23,7 +21,7 @@ interface AineistoNahtavillaAccordionProps {
   kategoriat: AineistoKategoria[];
 }
 
-const AineistoNahtavillaAccordion: FC<AineistoNahtavillaAccordionProps> = (props) => {
+const AineistoNahtavillaAccordion: FunctionComponent<AineistoNahtavillaAccordionProps> = (props) => {
   const { t } = useTranslation("aineisto");
   const { data } = useLisaAineisto();
 
@@ -55,11 +53,7 @@ const AineistoNahtavillaAccordion: FC<AineistoNahtavillaAccordionProps> = (props
                     .filter((aineisto) => aineisto.kategoriaId === kategoria.id)
                     .map((aineisto, index) => (
                       <span key={index}>
-                        <ExtLink
-                          href={aineisto?.linkki ? aineisto?.linkki : undefined}
-                          disabled={!aineisto?.linkki}
-                          sx={{ mr: 3 }}
-                        >
+                        <ExtLink href={aineisto?.linkki ? aineisto?.linkki : undefined} disabled={!aineisto?.linkki} sx={{ mr: 3 }}>
                           {aineisto.nimi}
                         </ExtLink>
                       </span>

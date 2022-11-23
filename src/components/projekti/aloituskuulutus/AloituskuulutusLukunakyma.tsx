@@ -1,5 +1,5 @@
 import { AloitusKuulutusJulkaisu, AloitusKuulutusTila, Kieli, UudelleenKuulutus } from "@services/api";
-import React, { ReactElement, VFC } from "react";
+import React, { ReactElement, VoidFunctionComponent } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
@@ -144,7 +144,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
   );
 }
 
-const UudelleenKuulutusSisalto: VFC<{
+const UudelleenKuulutusSisalto: VoidFunctionComponent<{
   ensisijainenKieli: Kieli | null | undefined;
   toissijainenKieli: Kieli | null | undefined;
   uudelleenKuulutus: UudelleenKuulutus;
