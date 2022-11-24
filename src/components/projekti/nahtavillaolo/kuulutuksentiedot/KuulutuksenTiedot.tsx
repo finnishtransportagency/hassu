@@ -106,7 +106,7 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
 
   useLeaveConfirm(isDirty);
 
-  const voiMuokata = projekti?.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.MUOKKAUS;
+  const voiMuokata = !projekti?.nahtavillaoloVaihe?.muokkausTila || projekti?.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.MUOKKAUS;
 
   return (
     <>

@@ -133,7 +133,7 @@ export default function Painikkeet({ projekti }: Props) {
     await vaihdaNahtavillaolonTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
   }, [vaihdaNahtavillaolonTila]);
 
-  const voiMuokata = projekti?.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.MUOKKAUS;
+  const voiMuokata = !projekti?.nahtavillaoloVaihe?.muokkausTila || projekti?.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.MUOKKAUS;
 
   const voiHyvaksya =
     projekti.nahtavillaoloVaiheJulkaisu?.tila === NahtavillaoloVaiheTila.ODOTTAA_HYVAKSYNTAA &&
