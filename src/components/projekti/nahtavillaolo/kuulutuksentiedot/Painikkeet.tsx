@@ -9,7 +9,7 @@ import React, { useState, useCallback, useRef, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
-import { TilasiirtymaToiminto, TilasiirtymaTyyppi, NahtavillaoloVaiheTila, Projekti } from "@services/api";
+import { TilasiirtymaToiminto, TilasiirtymaTyyppi, KuulutusJulkaisuTila, Projekti } from "@services/api";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./KuulutuksenTiedot";
 import Modaalit from "./Modaalit";
@@ -136,7 +136,7 @@ export default function Painikkeet({ projekti }: Props) {
   const voiMuokata = !projekti?.nahtavillaoloVaihe?.muokkausTila || projekti?.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.MUOKKAUS;
 
   const voiHyvaksya =
-    projekti.nahtavillaoloVaiheJulkaisu?.tila === NahtavillaoloVaiheTila.ODOTTAA_HYVAKSYNTAA &&
+    projekti.nahtavillaoloVaiheJulkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA &&
     projekti?.nykyinenKayttaja.onProjektipaallikko;
 
   return (

@@ -36,7 +36,7 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props)
   const { t, lang } = useTranslation("commonFI");
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
-  const julkinen = false; //nahtavillaoloVaihe?.tila === NahtavillaoloVaiheTila.HYVAKSYTTY;
+  const julkinen = false; //nahtavillaoloVaihe?.tila === KuulutusJulkaisuTila.HYVAKSYTTY;
 
   const {
     register,

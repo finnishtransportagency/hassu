@@ -7,7 +7,7 @@ import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import sinon from "sinon";
 import {
-  HyvaksymisPaatosVaiheTila,
+  KuulutusJulkaisuTila,
   KayttajaTyyppi,
   ProjektiKayttaja,
   Status,
@@ -117,7 +117,7 @@ export async function testJatkoPaatos1VaiheApproval(
 
   const projektiHyvaksyttavaksi = await loadProjektiFromDatabase(oid, expectedStatus);
   expect(projektiHyvaksyttavaksi.jatkoPaatos1VaiheJulkaisut).to.have.length(1);
-  expect(projektiHyvaksyttavaksi.jatkoPaatos1VaiheJulkaisut![0].tila).to.eq(HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA);
+  expect(projektiHyvaksyttavaksi.jatkoPaatos1VaiheJulkaisut![0].tila).to.eq(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
 
   await api.siirraTila({
     oid,
@@ -157,7 +157,7 @@ export async function testJatkoPaatos2VaiheApproval(
 
   const projektiHyvaksyttavaksi = await loadProjektiFromDatabase(oid, expectedStatus);
   expect(projektiHyvaksyttavaksi.jatkoPaatos2VaiheJulkaisut).to.have.length(1);
-  expect(projektiHyvaksyttavaksi.jatkoPaatos2VaiheJulkaisut![0].tila).to.eq(HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA);
+  expect(projektiHyvaksyttavaksi.jatkoPaatos2VaiheJulkaisut![0].tila).to.eq(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
 
   await api.siirraTila({
     oid,

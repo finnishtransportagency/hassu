@@ -8,7 +8,7 @@ import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
 import ProjektiConsumer from "../ProjektiConsumer";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
-import { NahtavillaoloVaiheTila } from "@services/api";
+import { KuulutusJulkaisuTila } from "@services/api";
 import dayjs from "dayjs";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import FormatDate from "@components/FormatDate";
@@ -16,7 +16,7 @@ import FormatDate from "@components/FormatDate";
 const InfoElement = ({ projekti }: { projekti: ProjektiLisatiedolla }) => {
   const julkaisu = projekti.nahtavillaoloVaiheJulkaisu;
 
-  if (julkaisu?.tila === NahtavillaoloVaiheTila.HYVAKSYTTY) {
+  if (julkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY) {
     // Toistaiseksi tarkastellaan julkaisupaivatietoa, koska ei ole olemassa erillista tilaa julkaistulle kuulutukselle
     const julkaisupvm = dayjs(julkaisu.kuulutusPaiva);
     if (dayjs().isBefore(julkaisupvm, "day")) {
@@ -33,7 +33,7 @@ const InfoElement = ({ projekti }: { projekti: ProjektiLisatiedolla }) => {
         </Notification>
       );
     }
-  } else if (julkaisu?.tila === NahtavillaoloVaiheTila.ODOTTAA_HYVAKSYNTAA) {
+  } else if (julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) {
     if (projekti?.nykyinenKayttaja.onProjektipaallikko || projekti?.nykyinenKayttaja.onYllapitaja) {
       return (
         <Notification type={NotificationType.WARN}>
@@ -49,7 +49,7 @@ const InfoElement = ({ projekti }: { projekti: ProjektiLisatiedolla }) => {
         </Notification>
       );
     }
-  } else if (julkaisu?.tila === NahtavillaoloVaiheTila.PALAUTETTU) {
+  } else if (julkaisu?.tila === KuulutusJulkaisuTila.PALAUTETTU) {
     return (
       <>
         {projekti?.nahtavillaoloVaihe?.palautusSyy && (
@@ -123,7 +123,7 @@ function NahtavillaoloPageLayout({
   }, [router.pathname, tabProps]);
 
   const nahtavillaolovaiheJulkaisu = projekti.nahtavillaoloVaiheJulkaisu;
-  const migroitu = nahtavillaolovaiheJulkaisu?.tila == NahtavillaoloVaiheTila.MIGROITU;
+  const migroitu = nahtavillaolovaiheJulkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
   return (

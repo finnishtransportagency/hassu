@@ -1,4 +1,4 @@
-import { AloitusKuulutusTila, AsiakirjaTyyppi, Kieli, NykyinenKayttaja, Status } from "../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, AsiakirjaTyyppi, Kieli, NykyinenKayttaja, Status } from "../../../../common/graphql/apiModel";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import {
@@ -108,7 +108,7 @@ class AloitusKuulutusTilaManager extends TilaManager {
     await cleanupAloitusKuulutusBeforeApproval(projekti, getAloitusKuulutus(projekti));
 
     const aloitusKuulutusJulkaisu = asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projekti);
-    aloitusKuulutusJulkaisu.tila = AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA;
+    aloitusKuulutusJulkaisu.tila = KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA;
     aloitusKuulutusJulkaisu.muokkaaja = muokkaaja.uid;
 
     await this.generatePDFs(projekti, aloitusKuulutusJulkaisu);
@@ -140,7 +140,7 @@ class AloitusKuulutusTilaManager extends TilaManager {
       throw new Error("Ei aloituskuulutusta odottamassa hyväksyntää");
     }
     await cleanupAloitusKuulutusAfterApproval(projekti, aloitusKuulutus);
-    julkaisuWaitingForApproval.tila = AloitusKuulutusTila.HYVAKSYTTY;
+    julkaisuWaitingForApproval.tila = KuulutusJulkaisuTila.HYVAKSYTTY;
     julkaisuWaitingForApproval.hyvaksyja = projektiPaallikko.uid;
     julkaisuWaitingForApproval.hyvaksymisPaiva = dateToString(dayjs());
 
@@ -197,7 +197,7 @@ class AloitusKuulutusTilaManager extends TilaManager {
   }
 
   async uudelleenkuuluta(projekti: DBProjekti): Promise<void> {
-    const hyvaksyttyJulkaisu = findJulkaisuWithTila(projekti.aloitusKuulutusJulkaisut, AloitusKuulutusTila.HYVAKSYTTY);
+    const hyvaksyttyJulkaisu = findJulkaisuWithTila(projekti.aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     const aloitusKuulutus = projekti.aloitusKuulutus;
     validate(projekti, aloitusKuulutus, hyvaksyttyJulkaisu);
     assertIsDefined(aloitusKuulutus);

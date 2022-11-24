@@ -1,11 +1,5 @@
 import * as API from "../../../../common/graphql/apiModel";
-import {
-  AloitusKuulutusTila,
-  HyvaksymisPaatosVaiheTila,
-  NahtavillaoloVaiheTila,
-  Status,
-  SuunnitteluVaiheTila,
-} from "../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, Status, SuunnitteluVaiheTila } from "../../../../common/graphql/apiModel";
 import { isDateTimeInThePast } from "../../util/dateUtil";
 import { AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler, HyvaksymisPaatosJulkaisuEndDateAndTila, StatusHandler } from "./statusHandler";
 
@@ -22,7 +16,7 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
     handle(p: API.ProjektiJulkinen) {
       const julkaisu = projekti.aloitusKuulutusJulkaisu;
       if (julkaisu) {
-        if (julkaisu.tila == AloitusKuulutusTila.MIGROITU) {
+        if (julkaisu.tila == KuulutusJulkaisuTila.MIGROITU) {
           // No status change, but continue searching for actual published content
           super.handle(p);
         } else if (isKuulutusPaivaInThePast(julkaisu.kuulutusPaiva)) {
@@ -46,7 +40,7 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
 
   const nahtavillaOlo = new (class extends StatusHandler<API.ProjektiJulkinen> {
     handle(p: API.ProjektiJulkinen) {
-      if (projekti.nahtavillaoloVaihe?.tila == NahtavillaoloVaiheTila.MIGROITU) {
+      if (projekti.nahtavillaoloVaihe?.tila == KuulutusJulkaisuTila.MIGROITU) {
         super.handle(p); // Continue evaluating next rules
       } else {
         const kuulutusPaiva = projekti.nahtavillaoloVaihe?.kuulutusPaiva;
@@ -61,7 +55,7 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
   const hyvaksymisMenettelyssa = new (class extends StatusHandler<API.ProjektiJulkinen> {
     handle(p: API.ProjektiJulkinen) {
       const nahtavillaoloVaihe = projekti.nahtavillaoloVaihe;
-      if (nahtavillaoloVaihe?.tila == NahtavillaoloVaiheTila.MIGROITU) {
+      if (nahtavillaoloVaihe?.tila == KuulutusJulkaisuTila.MIGROITU) {
         super.handle(p); // Continue evaluating next rules
       } else {
         if (isKuulutusVaihePaattyyPaivaInThePast(nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva)) {
@@ -75,7 +69,7 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
   const hyvaksytty = new (class extends StatusHandler<API.ProjektiJulkinen> {
     handle(p: API.ProjektiJulkinen) {
       const hyvaksymisPaatosVaihe = projekti.hyvaksymisPaatosVaihe;
-      if (hyvaksymisPaatosVaihe?.tila == HyvaksymisPaatosVaiheTila.MIGROITU) {
+      if (hyvaksymisPaatosVaihe?.tila == KuulutusJulkaisuTila.MIGROITU) {
         super.handle(p); // Continue evaluating next rules
       } else {
         if (hyvaksymisPaatosVaihe?.kuulutusPaiva && isDateTimeInThePast(hyvaksymisPaatosVaihe.kuulutusPaiva, "start-of-day")) {

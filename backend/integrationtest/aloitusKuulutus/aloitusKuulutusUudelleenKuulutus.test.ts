@@ -2,7 +2,7 @@ import { describe, it } from "mocha";
 import { setupLocalDatabase } from "../util/databaseUtil";
 import * as sinon from "sinon";
 import {
-  AloitusKuulutusTila,
+  KuulutusJulkaisuTila,
   Projekti,
   Status,
   TilasiirtymaToiminto,
@@ -138,11 +138,11 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
     expect(resultProjekti.aloitusKuulutusJulkaisut).to.have.length(2);
 
     expect(resultProjekti.aloitusKuulutusJulkaisut[0].id).to.eq(1);
-    expect(resultProjekti.aloitusKuulutusJulkaisut[0].tila).to.eq(AloitusKuulutusTila.HYVAKSYTTY);
+    expect(resultProjekti.aloitusKuulutusJulkaisut[0].tila).to.eq(KuulutusJulkaisuTila.HYVAKSYTTY);
     expect(resultProjekti.aloitusKuulutusJulkaisut[0].kuulutusPaiva).to.eq(kuulutusPaiva);
 
     expect(resultProjekti.aloitusKuulutusJulkaisut[1].id).to.eq(2);
-    expect(resultProjekti.aloitusKuulutusJulkaisut[1].tila).to.eq(AloitusKuulutusTila.HYVAKSYTTY);
+    expect(resultProjekti.aloitusKuulutusJulkaisut[1].tila).to.eq(KuulutusJulkaisuTila.HYVAKSYTTY);
     expect(resultProjekti.aloitusKuulutusJulkaisut[1].kuulutusPaiva).to.eq(uudelleenKuulutusPaiva);
 
     await testPublicAccessToProjekti(oid, Status.ALOITUSKUULUTUS, userFixture, " uudelleenkuulutuksen jälkeen", (julkinen) => {

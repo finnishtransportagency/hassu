@@ -2,7 +2,7 @@ import HassuAccordion, { AccordionItem } from "@components/HassuAccordion";
 import Section from "@components/layout/Section";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import { Stack } from "@mui/material";
-import { HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaiheTila } from "@services/api";
+import { HyvaksymisPaatosVaiheJulkaisu, KuulutusJulkaisuTila } from "@services/api";
 import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory } from "common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
 import React, { FunctionComponent, useMemo } from "react";
@@ -19,10 +19,7 @@ interface Props {
 export default function Lukunakyma({ projekti, paatosTyyppi }: Props) {
   const { viimeisinJulkaisu } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
 
-  const { published } = examineJulkaisuPaiva(
-    viimeisinJulkaisu?.tila === HyvaksymisPaatosVaiheTila.HYVAKSYTTY,
-    viimeisinJulkaisu?.kuulutusPaiva
-  );
+  const { published } = examineJulkaisuPaiva(viimeisinJulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY, viimeisinJulkaisu?.kuulutusPaiva);
 
   if (!projekti || !viimeisinJulkaisu) {
     return null;

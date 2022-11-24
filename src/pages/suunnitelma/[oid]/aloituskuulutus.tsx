@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import { useProjektiJulkinen } from "../../../hooks/useProjektiJulkinen";
 import FormatDate from "@components/FormatDate";
 import useTranslation from "next-translate/useTranslation";
-import { AloitusKuulutusTila, Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import ExtLink from "@components/ExtLink";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section";
@@ -48,7 +48,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
     kuulutus.aloituskuulutusPDFt?.[kuulutus.kielitiedot?.ensisijainenKieli || Kieli.SUOMI]?.aloituskuulutusPDFPath
   );
 
-  if (kuulutus.tila == AloitusKuulutusTila.MIGROITU) {
+  if (kuulutus.tila == KuulutusJulkaisuTila.MIGROITU) {
     return (
       <ProjektiJulkinenPageLayout selectedStep={0} title={t(`ui-otsikot.kuulutus_suunnitelman_alkamisesta`)}>
         <>

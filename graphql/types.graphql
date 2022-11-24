@@ -244,7 +244,7 @@ type NahtavillaoloVaiheJulkaisu {
   yhteystiedot: [Yhteystieto!]!
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   nahtavillaoloPDFt: NahtavillaoloPDFt
-  tila: NahtavillaoloVaiheTila
+  tila: KuulutusJulkaisuTila
   muokkaaja: String
   hyvaksyja: String
 }
@@ -262,7 +262,7 @@ type HyvaksymisPaatosVaiheJulkaisu {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   hallintoOikeus: HallintoOikeus
   hyvaksymisPaatosVaihePDFt: HyvaksymisPaatosVaihePDFt
-  tila: HyvaksymisPaatosVaiheTila
+  tila: KuulutusJulkaisuTila
   muokkaaja: String
   hyvaksyja: String
   viimeinenVoimassaolovuosi: String
@@ -278,7 +278,7 @@ type NahtavillaoloVaiheJulkaisuJulkinen {
   kielitiedot: Kielitiedot
   yhteystiedot: [Yhteystieto!]!
   nahtavillaoloPDFt: NahtavillaoloPDFt
-  tila: NahtavillaoloVaiheTila
+  tila: KuulutusJulkaisuTila
 }
 
 type HyvaksymisPaatosVaiheJulkaisuJulkinen {
@@ -293,7 +293,7 @@ type HyvaksymisPaatosVaiheJulkaisuJulkinen {
   hallintoOikeus: HallintoOikeus
   yhteystiedot: [Yhteystieto!]
   hyvaksymisPaatosVaihePDFt: HyvaksymisPaatosVaihePDFt
-  tila: HyvaksymisPaatosVaiheTila
+  tila: KuulutusJulkaisuTila
   viimeinenVoimassaolovuosi: String
 }
 
@@ -344,20 +344,6 @@ type NahtavillaoloVaiheJulkinen {
 
 enum SuunnitteluVaiheTila {
   JULKINEN
-  MIGROITU
-}
-
-enum NahtavillaoloVaiheTila {
-  ODOTTAA_HYVAKSYNTAA
-  HYVAKSYTTY
-  PALAUTETTU
-  MIGROITU
-}
-
-enum HyvaksymisPaatosVaiheTila {
-  ODOTTAA_HYVAKSYNTAA
-  HYVAKSYTTY
-  PALAUTETTU
   MIGROITU
 }
 
@@ -539,9 +525,10 @@ type Yhteystieto {
   titteli: String
 }
 
-enum AloitusKuulutusTila {
+enum KuulutusJulkaisuTila {
   ODOTTAA_HYVAKSYNTAA
   HYVAKSYTTY
+  PALAUTETTU
   MIGROITU
 }
 
@@ -599,7 +586,7 @@ type AloitusKuulutusJulkaisu {
   suunnitteluSopimus: SuunnitteluSopimusJulkaisu
   kielitiedot: Kielitiedot
   aloituskuulutusPDFt: AloitusKuulutusPDFt
-  tila: AloitusKuulutusTila
+  tila: KuulutusJulkaisuTila
   muokkaaja: String
   hyvaksyja: String
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
@@ -615,7 +602,7 @@ type AloitusKuulutusJulkaisuJulkinen {
   suunnitteluSopimus: SuunnitteluSopimusJulkaisu
   kielitiedot: Kielitiedot
   aloituskuulutusPDFt: AloitusKuulutusPDFt
-  tila: AloitusKuulutusTila
+  tila: KuulutusJulkaisuTila
   uudelleenKuulutus: UudelleenKuulutus
 }
 

@@ -1,6 +1,6 @@
 import { DBProjekti, LocalizedMap, NahtavillaoloPDF, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
-import { NahtavillaoloVaiheTila } from "../../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila } from "../../../../../common/graphql/apiModel";
 import {
   adaptAineistot,
   adaptHankkeenKuvaus,
@@ -39,9 +39,9 @@ export function adaptNahtavillaoloVaihe(
     muokkausTila: adaptMuokkausTila(
       nahtavillaoloVaihe,
       nahtavillaoloVaiheJulkaisut,
-      NahtavillaoloVaiheTila.MIGROITU,
-      NahtavillaoloVaiheTila.ODOTTAA_HYVAKSYNTAA,
-      NahtavillaoloVaiheTila.HYVAKSYTTY
+      KuulutusJulkaisuTila.MIGROITU,
+      KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
+      KuulutusJulkaisuTila.HYVAKSYTTY
     ),
   };
 }
@@ -51,9 +51,9 @@ export function adaptNahtavillaoloVaiheJulkaisu(
   julkaisut?: NahtavillaoloVaiheJulkaisu[] | null
 ): API.NahtavillaoloVaiheJulkaisu | undefined {
   const julkaisu =
-    findJulkaisuWithTila(julkaisut, NahtavillaoloVaiheTila.ODOTTAA_HYVAKSYNTAA) ||
-    findJulkaisuWithTila(julkaisut, NahtavillaoloVaiheTila.HYVAKSYTTY) ||
-    findJulkaisuWithTila(julkaisut, NahtavillaoloVaiheTila.MIGROITU);
+    findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ||
+    findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY) ||
+    findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.MIGROITU);
 
   if (julkaisu) {
     const {
@@ -69,7 +69,7 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       ...fieldsToCopyAsIs
     } = julkaisu;
 
-    if (tila == NahtavillaoloVaiheTila.MIGROITU) {
+    if (tila == KuulutusJulkaisuTila.MIGROITU) {
       return {
         __typename: "NahtavillaoloVaiheJulkaisu",
         tila,

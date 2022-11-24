@@ -28,7 +28,7 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe }: Props): React
   const { t, lang } = useTranslation("commonFI");
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
-  const julkinen = false; //hyvaksymisPaatosVaihe?.tila === HyvaksymisPaatosVaiheTila.HYVAKSYTTY;
+  const julkinen = false; //hyvaksymisPaatosVaihe?.tila === KuulutusJulkaisuTila.HYVAKSYTTY;
 
   const {
     register,

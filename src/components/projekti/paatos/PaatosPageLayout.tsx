@@ -5,7 +5,7 @@ import { Link, Tabs } from "@mui/material";
 import { useRouter } from "next/router";
 import { UrlObject } from "url";
 import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
-import { HyvaksymisPaatosVaiheTila } from "@services/api";
+import { KuulutusJulkaisuTila } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
@@ -52,7 +52,7 @@ function PaatosPageLayoutContent({
 
   const { julkaisut, viimeisinJulkaisu } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
 
-  const migroitu = viimeisinJulkaisu?.tila == HyvaksymisPaatosVaiheTila.MIGROITU;
+  const migroitu = viimeisinJulkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
   const { paatosRoutePart, pageTitle } = useMemo(() => paatosTyyppiSpecificContentMap[paatosTyyppi], [paatosTyyppi]);
@@ -132,17 +132,17 @@ function PaatosPageLayoutContent({
         )}
         {!epaaktiivinen && (
           <Section noDivider>
-            {!published && viimeisinJulkaisu?.tila === HyvaksymisPaatosVaiheTila.HYVAKSYTTY && (
+            {!published && viimeisinJulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
               <Notification type={NotificationType.WARN}>Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä {kuulutusPaiva}.</Notification>
             )}
-            {published && viimeisinJulkaisu?.tila === HyvaksymisPaatosVaiheTila.HYVAKSYTTY && (
+            {published && viimeisinJulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
               <Notification type={NotificationType.INFO_GREEN}>
                 Kuulutus nähtäville asettamisesta on julkaistu {kuulutusPaiva}. Projekti näytetään kuulutuspäivästä lasketun määräajan
                 jälkeen palvelun julkisella puolella suunnittelussa olevana. Kuulutusvaihe päättyy{" "}
                 <FormatDate date={viimeisinJulkaisu.kuulutusVaihePaattyyPaiva} />.
               </Notification>
             )}
-            {viimeisinJulkaisu && viimeisinJulkaisu?.tila === HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA && (
+            {viimeisinJulkaisu && viimeisinJulkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && (
               <Notification type={NotificationType.WARN}>
                 Kuulutus nähtäville asettamisesta odottaa hyväksyntää. Tarkasta kuulutus ja a) hyväksy tai b) palauta kuulutus
                 korjattavaksi, jos havaitset puutteita tai virheen.

@@ -7,7 +7,7 @@ import {
   Velho,
 } from "../database/model";
 import cloneDeep from "lodash/cloneDeep";
-import { AloitusKuulutusTila, HyvaksymisPaatosVaiheTila, NahtavillaoloVaiheTila } from "../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila } from "../../../common/graphql/apiModel";
 import { adaptStandardiYhteystiedotToYhteystiedot } from "../util/adaptStandardiYhteystiedot";
 import { findJulkaisuWithTila, findUserByKayttajatunnus } from "../projekti/projektiUtil";
 import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../projekti/adapter/adaptToAPI";
@@ -82,37 +82,37 @@ export class AsiakirjaAdapter {
 
   findAloitusKuulutusWaitingForApproval(projekti: DBProjekti): AloitusKuulutusJulkaisu | undefined {
     if (projekti.aloitusKuulutusJulkaisut) {
-      return findJulkaisuWithTila(projekti.aloitusKuulutusJulkaisut, AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA);
+      return findJulkaisuWithTila(projekti.aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
     }
   }
 
   findNahtavillaoloWaitingForApproval(projekti: DBProjekti): NahtavillaoloVaiheJulkaisu | undefined {
     if (projekti.nahtavillaoloVaiheJulkaisut) {
-      return findJulkaisuWithTila(projekti.nahtavillaoloVaiheJulkaisut, NahtavillaoloVaiheTila.ODOTTAA_HYVAKSYNTAA);
+      return findJulkaisuWithTila(projekti.nahtavillaoloVaiheJulkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
     }
   }
 
   findHyvaksymisPaatosVaiheWaitingForApproval(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
     if (projekti.hyvaksymisPaatosVaiheJulkaisut) {
-      return findJulkaisuWithTila(projekti.hyvaksymisPaatosVaiheJulkaisut, HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA);
+      return findJulkaisuWithTila(projekti.hyvaksymisPaatosVaiheJulkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
     }
   }
 
   findJatkoPaatos1VaiheWaitingForApproval(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
     if (projekti.jatkoPaatos1VaiheJulkaisut) {
-      return findJulkaisuWithTila(projekti.jatkoPaatos1VaiheJulkaisut, HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA);
+      return findJulkaisuWithTila(projekti.jatkoPaatos1VaiheJulkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
     }
   }
 
   findJatkoPaatos2VaiheWaitingForApproval(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
     if (projekti.jatkoPaatos2VaiheJulkaisut) {
-      return findJulkaisuWithTila(projekti.jatkoPaatos2VaiheJulkaisut, HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA);
+      return findJulkaisuWithTila(projekti.jatkoPaatos2VaiheJulkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
     }
   }
 
   findAloitusKuulutusLastApproved(projekti: DBProjekti): AloitusKuulutusJulkaisu | undefined {
     if (projekti.aloitusKuulutusJulkaisut) {
-      return findJulkaisuWithTila(projekti.aloitusKuulutusJulkaisut, AloitusKuulutusTila.HYVAKSYTTY);
+      return findJulkaisuWithTila(projekti.aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     }
   }
 }

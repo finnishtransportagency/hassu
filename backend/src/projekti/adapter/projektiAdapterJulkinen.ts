@@ -16,11 +16,9 @@ import {
 } from "../../database/model";
 import * as API from "../../../../common/graphql/apiModel";
 import {
-  AloitusKuulutusTila,
+  KuulutusJulkaisuTila,
   HyvaksymisPaatosVaiheJulkaisuJulkinen,
-  HyvaksymisPaatosVaiheTila,
   NahtavillaoloVaiheJulkaisuJulkinen,
-  NahtavillaoloVaiheTila,
   Status,
   SuunnitteluVaiheTila,
 } from "../../../../common/graphql/apiModel";
@@ -130,11 +128,11 @@ class ProjektiAdapterJulkinen {
     aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null
   ): API.AloitusKuulutusJulkaisuJulkinen | undefined {
     if (aloitusKuulutusJulkaisut) {
-      const migroitu = findJulkaisuWithTila(aloitusKuulutusJulkaisut, API.AloitusKuulutusTila.MIGROITU);
+      const migroitu = findJulkaisuWithTila(aloitusKuulutusJulkaisut, API.KuulutusJulkaisuTila.MIGROITU);
       if (migroitu) {
         return {
           __typename: "AloitusKuulutusJulkaisuJulkinen",
-          tila: AloitusKuulutusTila.MIGROITU,
+          tila: KuulutusJulkaisuTila.MIGROITU,
           yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(migroitu.yhteystiedot),
           velho: adaptVelho(migroitu.velho),
         };
@@ -230,7 +228,7 @@ class ProjektiAdapterJulkinen {
         tila,
       } = julkaisu;
 
-      if (julkaisu?.tila == NahtavillaoloVaiheTila.MIGROITU) {
+      if (julkaisu?.tila == KuulutusJulkaisuTila.MIGROITU) {
         return {
           __typename: "NahtavillaoloVaiheJulkaisuJulkinen",
           tila: julkaisu.tila,
@@ -293,7 +291,7 @@ class ProjektiAdapterJulkinen {
         tila,
       } = julkaisu;
 
-      if (tila == HyvaksymisPaatosVaiheTila.MIGROITU) {
+      if (tila == KuulutusJulkaisuTila.MIGROITU) {
         return { __typename: "HyvaksymisPaatosVaiheJulkaisuJulkinen", tila, velho: adaptVelho(velho) };
       }
 
@@ -366,13 +364,13 @@ function isHyvaksymisPaatosVaihePublic(vaihe: HyvaksymisPaatosVaiheJulkaisu): bo
   if (!vaihe) {
     return false;
   }
-  if (vaihe.tila == HyvaksymisPaatosVaiheTila.MIGROITU) {
+  if (vaihe.tila == KuulutusJulkaisuTila.MIGROITU) {
     return true;
   }
   if (!vaihe.kuulutusPaiva || parseDate(vaihe.kuulutusPaiva).isAfter(dayjs())) {
     return false;
   }
-  return vaihe.tila === API.HyvaksymisPaatosVaiheTila.HYVAKSYTTY;
+  return vaihe.tila === API.KuulutusJulkaisuTila.HYVAKSYTTY;
 }
 
 function isUnsetOrInPast(julkaisuPaiva?: dayjs.Dayjs) {
@@ -481,7 +479,7 @@ function checkIfAloitusKuulutusJulkaisutIsPublic(aloitusKuulutusJulkaisu: API.Al
     return false;
   }
 
-  if (aloitusKuulutusJulkaisu.tila == API.AloitusKuulutusTila.HYVAKSYTTY) {
+  if (aloitusKuulutusJulkaisu.tila == API.KuulutusJulkaisuTila.HYVAKSYTTY) {
     if (aloitusKuulutusJulkaisu.kuulutusPaiva && parseDate(aloitusKuulutusJulkaisu.kuulutusPaiva).isAfter(dayjs())) {
       log.info("Projektin aloituskuulutuksen kuulutuspäivä on tulevaisuudessa", {
         kuulutusPaiva: parseDate(aloitusKuulutusJulkaisu.kuulutusPaiva).format(),
@@ -489,7 +487,7 @@ function checkIfAloitusKuulutusJulkaisutIsPublic(aloitusKuulutusJulkaisu: API.Al
       });
       return false;
     }
-  } else if (aloitusKuulutusJulkaisu.tila !== API.AloitusKuulutusTila.MIGROITU) {
+  } else if (aloitusKuulutusJulkaisu.tila !== API.KuulutusJulkaisuTila.MIGROITU) {
     // If there are no HYVAKSYTTY or MIGROITU aloitusKuulutusJulkaisu, hide projekti
     return false;
   }
@@ -500,13 +498,13 @@ function isNahtavillaoloVaihePublic(nahtavillaoloVaihe: NahtavillaoloVaiheJulkai
   if (!nahtavillaoloVaihe) {
     return false;
   }
-  if (nahtavillaoloVaihe.tila == NahtavillaoloVaiheTila.MIGROITU) {
+  if (nahtavillaoloVaihe.tila == KuulutusJulkaisuTila.MIGROITU) {
     return true;
   }
   if (!nahtavillaoloVaihe.kuulutusPaiva || parseDate(nahtavillaoloVaihe.kuulutusPaiva).isAfter(dayjs())) {
     return false;
   }
-  return nahtavillaoloVaihe.tila === API.NahtavillaoloVaiheTila.HYVAKSYTTY;
+  return nahtavillaoloVaihe.tila === API.KuulutusJulkaisuTila.HYVAKSYTTY;
 }
 
 function isKuulutusNahtavillaVaiheOver(

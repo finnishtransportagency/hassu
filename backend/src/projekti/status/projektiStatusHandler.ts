@@ -1,11 +1,5 @@
 import * as API from "../../../../common/graphql/apiModel";
-import {
-  HyvaksymisPaatosVaiheTila,
-  MuokkausTila,
-  NahtavillaoloVaiheTila,
-  Status,
-  SuunnitteluVaiheTila,
-} from "../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, MuokkausTila, Status, SuunnitteluVaiheTila } from "../../../../common/graphql/apiModel";
 import { kayttoOikeudetSchema } from "../../../../src/schemas/kayttoOikeudet";
 import { ValidationError } from "yup";
 import { log } from "../../logger";
@@ -15,8 +9,8 @@ import { AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler, HyvaksymisPaatosJul
 import { isDateTimeInThePast } from "../../util/dateUtil";
 
 function isNahtavillaoloJulkaisuMigroituOrHyvaksyttyAndInPast(julkaisu: API.NahtavillaoloVaiheJulkaisu | null | undefined): boolean {
-  const nahtavillaolojulkaisuMigratoitu = julkaisu?.tila === NahtavillaoloVaiheTila.MIGROITU;
-  const nahtavillaolojulkaisuHyvaksytty = julkaisu?.tila === NahtavillaoloVaiheTila.HYVAKSYTTY;
+  const nahtavillaolojulkaisuMigratoitu = julkaisu?.tila === KuulutusJulkaisuTila.MIGROITU;
+  const nahtavillaolojulkaisuHyvaksytty = julkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY;
   const kuulutusVaihePaattyyInPast = julkaisu?.kuulutusVaihePaattyyPaiva
     ? isDateTimeInThePast(julkaisu.kuulutusVaihePaattyyPaiva, "end-of-day")
     : false;
@@ -106,8 +100,8 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
   const epaAktiivinen1 = new (class extends AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<API.Projekti> {
     getPaatosVaihe(p: API.Projekti): HyvaksymisPaatosJulkaisuEndDateAndTila | null | undefined {
       return (
-        findJulkaisuWithTila(p.hyvaksymisPaatosVaiheJulkaisut, HyvaksymisPaatosVaiheTila.HYVAKSYTTY) ||
-        findJulkaisuWithTila(p.hyvaksymisPaatosVaiheJulkaisut, HyvaksymisPaatosVaiheTila.MIGROITU)
+        findJulkaisuWithTila(p.hyvaksymisPaatosVaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY) ||
+        findJulkaisuWithTila(p.hyvaksymisPaatosVaiheJulkaisut, KuulutusJulkaisuTila.MIGROITU)
       );
     }
   })(true, Status.EPAAKTIIVINEN_1);
@@ -130,7 +124,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
    */
   const epaAktiivinen2 = new (class extends AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<API.Projekti> {
     getPaatosVaihe(p: API.Projekti): { kuulutusVaihePaattyyPaiva?: string | null } | null | undefined {
-      return findJulkaisutWithTila(p.jatkoPaatos1VaiheJulkaisut, HyvaksymisPaatosVaiheTila.HYVAKSYTTY)?.pop();
+      return findJulkaisutWithTila(p.jatkoPaatos1VaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY)?.pop();
     }
   })(false, Status.EPAAKTIIVINEN_2);
 
@@ -152,7 +146,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
    */
   const epaAktiivinen3 = new (class extends AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<API.Projekti> {
     getPaatosVaihe(p: API.Projekti): { kuulutusVaihePaattyyPaiva?: string | null } | null | undefined {
-      return findJulkaisutWithTila(p.jatkoPaatos2VaiheJulkaisut, HyvaksymisPaatosVaiheTila.HYVAKSYTTY)?.pop();
+      return findJulkaisutWithTila(p.jatkoPaatos2VaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY)?.pop();
     }
   })(false, Status.EPAAKTIIVINEN_3);
 

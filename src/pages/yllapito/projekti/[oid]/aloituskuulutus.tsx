@@ -9,7 +9,7 @@ import Button from "@components/button/Button";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import {
   AloitusKuulutusInput,
-  AloitusKuulutusTila,
+  KuulutusJulkaisuTila,
   api,
   AsiakirjaTyyppi,
   Kieli,
@@ -348,13 +348,13 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
   );
 
   const kielitiedot: Kielitiedot | null | undefined = projekti?.kielitiedot;
-  const voiMuokata = projekti?.aloitusKuulutus?.muokkausTila === MuokkausTila.MUOKKAUS;
+  const voiMuokata = !projekti?.aloitusKuulutus?.muokkausTila || projekti?.aloitusKuulutus?.muokkausTila === MuokkausTila.MUOKKAUS;
   const voiHyvaksya =
-    projekti.aloitusKuulutusJulkaisu?.tila === AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA && projekti?.nykyinenKayttaja.onProjektipaallikko;
+    projekti.aloitusKuulutusJulkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && projekti?.nykyinenKayttaja.onProjektipaallikko;
 
   const odottaaJulkaisua = useMemo(() => {
     const julkaisu = projekti.aloitusKuulutusJulkaisu;
-    if (julkaisu?.tila === AloitusKuulutusTila.HYVAKSYTTY) {
+    if (julkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY) {
       // Toistaiseksi tarkastellaan julkaisupaivatietoa, koska ei ole olemassa erillista tilaa julkaistulle kuulutukselle
       const julkaisupvm = dayjs(julkaisu.kuulutusPaiva);
       if (dayjs().isBefore(julkaisupvm, "day")) {
@@ -378,7 +378,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
   const esikatselePdf = pdfFormRef.current?.esikatselePdf;
 
   const showUudelleenkuulutaButton =
-    projekti.aloitusKuulutusJulkaisu?.tila === AloitusKuulutusTila.HYVAKSYTTY &&
+    projekti.aloitusKuulutusJulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY &&
     projekti.aloitusKuulutus?.muokkausTila === MuokkausTila.LUKU &&
     projekti.nykyinenKayttaja.onYllapitaja;
 

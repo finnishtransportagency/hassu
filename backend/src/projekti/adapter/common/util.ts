@@ -6,7 +6,7 @@ export function findPublishedAloitusKuulutusJulkaisu(
   aloitusKuulutusJulkaisut: AloitusKuulutusJulkaisu[]
 ): AloitusKuulutusJulkaisu | undefined {
   return (
-    findJulkaisuWithTila(aloitusKuulutusJulkaisut, API.AloitusKuulutusTila.HYVAKSYTTY) ||
-    findJulkaisuWithTila(aloitusKuulutusJulkaisut, API.AloitusKuulutusTila.MIGROITU)
+    findJulkaisuWithTila(aloitusKuulutusJulkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY) ||
+    findJulkaisuWithTila(aloitusKuulutusJulkaisut, API.KuulutusJulkaisuTila.MIGROITU)
   );
 }
