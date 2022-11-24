@@ -98,4 +98,16 @@ describe("projektiAdapter", () => {
     });
     expect(result.projekti.suunnitteluVaihe).not.to.be.undefined;
   });
+
+  it("should prevent suunnittelusopimus from being removed if aloituskuulutus is published", async () => {
+    const projekti = fixture.dbProjekti2();
+
+    // Validate that there is an error if trying to publish suunnitteluvaihe before there is a published aloituskuulutusjulkaisu
+    expect(
+      projektiAdapter.adaptProjektiToSave(projekti, {
+        oid: projekti.oid,
+        suunnitteluSopimus: null,
+      })
+    ).to.be.rejectedWith(IllegalArgumentError);
+  });
 });
