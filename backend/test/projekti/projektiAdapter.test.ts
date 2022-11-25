@@ -8,7 +8,7 @@ import * as sinon from "sinon";
 import { personSearch } from "../../src/personSearch/personSearchClient";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
-import { AloitusKuulutusTila, SuunnitteluVaiheTila } from "../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, SuunnitteluVaiheTila } from "../../../common/graphql/apiModel";
 
 const { expect } = require("chai");
 
@@ -126,7 +126,7 @@ describe("projektiAdapter", () => {
     const projekti = fixture.dbProjekti2();
     projekti.aloitusKuulutusJulkaisut?.push({
       ...projekti.aloitusKuulutusJulkaisut[projekti.aloitusKuulutusJulkaisut.length - 1],
-      tila: AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA,
+      tila: KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
     });
 
     // Validate that there is an error if trying to publish suunnitteluvaihe before there is a published aloituskuulutusjulkaisu
@@ -179,7 +179,7 @@ describe("projektiAdapter", () => {
     delete projekti.suunnitteluSopimus;
     projekti.aloitusKuulutusJulkaisut?.push({
       ...projekti.aloitusKuulutusJulkaisut[projekti.aloitusKuulutusJulkaisut.length - 1],
-      tila: AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA,
+      tila: KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
     });
 
     // Validate that there is an error if trying to publish suunnitteluvaihe before there is a published aloituskuulutusjulkaisu

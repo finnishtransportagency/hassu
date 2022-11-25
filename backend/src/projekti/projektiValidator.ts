@@ -1,7 +1,7 @@
 import { DBProjekti, UudelleenKuulutus } from "../database/model";
 import {
-  AloitusKuulutusTila,
   KayttajaTyyppi,
+  KuulutusJulkaisuTila,
   Projekti,
   TallennaProjektiInput,
   UudelleenKuulutusInput,
@@ -106,7 +106,7 @@ function validateSuunnitteluSopimus(dbProjekti: DBProjekti, input: TallennaProje
   const latestAloituskuulutusJulkaisuTila = dbProjekti?.aloitusKuulutusJulkaisut?.[dbProjekti.aloitusKuulutusJulkaisut.length - 1].tila;
   const isLatestJulkaisuPendingApprovalOrApproved =
     !!latestAloituskuulutusJulkaisuTila &&
-    [AloitusKuulutusTila.HYVAKSYTTY, AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA].includes(latestAloituskuulutusJulkaisuTila);
+    [KuulutusJulkaisuTila.HYVAKSYTTY, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA].includes(latestAloituskuulutusJulkaisuTila);
 
   if (isSuunnitteluSopimusAddedOrDeleted && isLatestJulkaisuPendingApprovalOrApproved) {
     throw new IllegalArgumentError(
