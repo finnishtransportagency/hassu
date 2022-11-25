@@ -9,5 +9,5 @@ export function adaptSuunnitteluSopimusToSave(
     const { logo, ...rest } = suunnitteluSopimusInput;
     return { ...rest, logo: logo || projekti.suunnitteluSopimus?.logo };
   }
-  return suunnitteluSopimusInput as undefined;
+  return suunnitteluSopimusInput;
 }

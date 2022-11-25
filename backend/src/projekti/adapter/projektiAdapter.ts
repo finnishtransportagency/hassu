@@ -171,6 +171,7 @@ export class ProjektiAdapter {
         kasittelynTila: adaptKasittelynTilaToSave(projekti.kasittelynTila, kasittelynTila, projektiAdaptationResult),
       }
     );
+
     projektiAdaptationResult.setProjekti(dbProjekti);
     return projektiAdaptationResult;
   }
