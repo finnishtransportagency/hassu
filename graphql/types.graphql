@@ -531,7 +531,6 @@ type Yhteystieto {
 enum KuulutusJulkaisuTila {
   ODOTTAA_HYVAKSYNTAA
   HYVAKSYTTY
-  PALAUTETTU
   MIGROITU
 }
 

@@ -49,15 +49,11 @@ const InfoElement = ({ projekti }: { projekti: ProjektiLisatiedolla }) => {
         </Notification>
       );
     }
-  } else if (julkaisu?.tila === KuulutusJulkaisuTila.PALAUTETTU) {
+  } else if (!!projekti?.nahtavillaoloVaihe?.palautusSyy) {
     return (
-      <>
-        {projekti?.nahtavillaoloVaihe?.palautusSyy && (
-          <Notification type={NotificationType.WARN}>
-            {"Aloituskuulutus on palautettu korjattavaksi. Palautuksen syy: " + projekti.nahtavillaoloVaihe.palautusSyy}
-          </Notification>
-        )}
-      </>
+      <Notification type={NotificationType.WARN}>
+        {"Aloituskuulutus on palautettu korjattavaksi. Palautuksen syy: " + projekti.nahtavillaoloVaihe.palautusSyy}
+      </Notification>
     );
   } else {
     return <></>;
