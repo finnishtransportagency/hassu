@@ -4,7 +4,6 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
 import lowerCase from "lodash/lowerCase";
-import AloituskuulutusPDFEsikatselu from "./AloituskuulutusPDFEsikatselu";
 import AloituskuulutusTiedostot from "./AloituskuulutusTiedostot";
 import IlmoituksenVastaanottajat from "./IlmoituksenVastaanottajat";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
@@ -19,6 +18,8 @@ import { formatDate } from "../../../util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { formatNimi } from "../../../util/userUtil";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import { Link } from "@mui/material";
+import { splitFilePath } from "src/util/fileUtil";
 
 interface Props {
   projekti?: ProjektiLisatiedolla;
@@ -42,6 +43,16 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
   const { ensisijainenKieli, toissijainenKieli } = aloituskuulutusjulkaisu.kielitiedot || {};
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
+
+  const getPdft = (kieli: Kieli | undefined | null) => {
+    if (!aloituskuulutusjulkaisu || !aloituskuulutusjulkaisu.aloituskuulutusPDFt || !kieli) {
+      return undefined;
+    }
+    return aloituskuulutusjulkaisu.aloituskuulutusPDFt[kieli];
+  };
+
+  const ensisijaisetPDFt = getPdft(aloituskuulutusjulkaisu.kielitiedot?.ensisijainenKieli);
+  const toissijaisetPDFt = getPdft(aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli);
 
   return (
     <>
@@ -114,7 +125,44 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
       </Section>
       <Section>
         {aloituskuulutusjulkaisu.tila !== KuulutusJulkaisuTila.HYVAKSYTTY && (
-          <AloituskuulutusPDFEsikatselu oid={projekti.oid} aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} />
+          <SectionContent>
+            <p className="vayla-label">Ladattavat kuulutukset ja ilmoitukset</p>
+            <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({lowerCase(aloituskuulutusjulkaisu.kielitiedot?.ensisijainenKieli)})</p>
+            {ensisijaisetPDFt && (
+              <div className="flex flex-col mb-4">
+                <div>
+                  <Link underline="none" href={ensisijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
+                    {splitFilePath(ensisijaisetPDFt.aloituskuulutusPDFPath).fileName}
+                  </Link>
+                </div>
+                <div>
+                  <Link underline="none" href={ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath} target="_blank">
+                    {splitFilePath(ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli && (
+              <div className="content mb-4">
+                <p>Kuulutus ja ilmoitus toissijaisella kielellä ({lowerCase(aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli)})</p>
+                {toissijaisetPDFt && (
+                  <div className="flex flex-col">
+                    <div>
+                      <Link underline="none" href={toissijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
+                        {splitFilePath(toissijaisetPDFt.aloituskuulutusPDFPath).fileName}
+                      </Link>
+                    </div>
+                    <div>
+                      <Link underline="none" href={toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath} target="_blank">
+                        {splitFilePath(toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </SectionContent>
         )}
         {aloituskuulutusjulkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
           <AloituskuulutusTiedostot aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} oid={projekti.oid} epaaktiivinen={epaaktiivinen} />
