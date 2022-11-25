@@ -833,6 +833,9 @@ type KasittelynTila {
   lainvoimaPaattyen: String
   liikenteeseenluovutusOsittain: String
   liikenteeseenluovutusKokonaan: String
+  ennakkotarkastus: String
+  toimitusKaynnistynyt: String
+  lisatieto: String
 }
 
 type Hyvaksymispaatos {
