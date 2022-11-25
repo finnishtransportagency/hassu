@@ -25,13 +25,16 @@ export function adaptAloitusKuulutusToSave(
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat), //pakko tukea vielä tätä
       hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus),
       kuulutusYhteystiedot: adaptStandardiYhteystiedotToSave(kuulutusYhteystiedot),
-      uudelleenKuulutus: adaptUudelleenKuulutus(dbAloituskuulutus?.uudelleenKuulutus, uudelleenKuulutus),
+      uudelleenKuulutus: adaptUudelleenKuulutusToSave(dbAloituskuulutus?.uudelleenKuulutus, uudelleenKuulutus),
     };
   }
   return aloitusKuulutus as undefined;
 }
 
-function adaptUudelleenKuulutus(uudelleenKuulutus: UudelleenKuulutus | null | undefined, input: UudelleenKuulutusInput | null | undefined) {
+export function adaptUudelleenKuulutusToSave(
+  uudelleenKuulutus: UudelleenKuulutus | null | undefined,
+  input: UudelleenKuulutusInput | null | undefined
+): UudelleenKuulutus | null | undefined {
   if (!input) {
     return uudelleenKuulutus;
   }

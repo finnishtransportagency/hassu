@@ -623,6 +623,7 @@ Object {
     },
     "muistutusoikeusPaattyyPaiva": "2042-06-08",
     "muokkausTila": "MUOKKAUS",
+    "uudelleenKuulutus": undefined,
   },
 }
 `;
@@ -704,6 +705,7 @@ Object {
       },
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
       "muokkausTila": "MUOKKAUS",
+      "uudelleenKuulutus": undefined,
     },
   },
 }
@@ -786,6 +788,7 @@ Object {
       },
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
       "muokkausTila": "LUKU",
+      "uudelleenKuulutus": undefined,
     },
     "nahtavillaoloVaiheJulkaisu": Object {
       "__typename": "NahtavillaoloVaiheJulkaisu",
@@ -796,6 +799,7 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "hyvaksyja": "A000112",
+      "hyvaksymisPaiva": "2022-11-25",
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -847,6 +851,7 @@ Object {
         "__typename": "NahtavillaoloPDFt",
       },
       "tila": "HYVAKSYTTY",
+      "uudelleenKuulutus": undefined,
       "velho": Object {
         "__typename": "Velho",
         "kunnat": Array [

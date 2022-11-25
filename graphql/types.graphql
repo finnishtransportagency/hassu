@@ -216,6 +216,7 @@ type NahtavillaoloVaihe {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   palautusSyy: String
   muokkausTila: MuokkausTila!
+  uudelleenKuulutus: UudelleenKuulutus
 }
 
 type HyvaksymisPaatosVaihe {
@@ -247,6 +248,7 @@ type NahtavillaoloVaiheJulkaisu {
   tila: KuulutusJulkaisuTila
   muokkaaja: String
   hyvaksyja: String
+  uudelleenKuulutus: UudelleenKuulutus
 }
 
 type HyvaksymisPaatosVaiheJulkaisu {
@@ -279,6 +281,7 @@ type NahtavillaoloVaiheJulkaisuJulkinen {
   yhteystiedot: [Yhteystieto!]!
   nahtavillaoloPDFt: NahtavillaoloPDFt
   tila: KuulutusJulkaisuTila
+  uudelleenKuulutus: UudelleenKuulutus
 }
 
 type HyvaksymisPaatosVaiheJulkaisuJulkinen {

@@ -1,6 +1,6 @@
 import { DBProjekti, LocalizedMap, NahtavillaoloPDF, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
-import { KuulutusJulkaisuTila } from "../../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, MuokkausTila } from "../../../../../common/graphql/apiModel";
 import {
   adaptAineistot,
   adaptHankkeenKuvaus,
@@ -13,37 +13,49 @@ import {
 import { fileService } from "../../../files/fileService";
 import { lisaAineistoService } from "../../../aineisto/lisaAineistoService";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
+import { adaptUudelleenKuulutus } from "./adaptAloitusKuulutus";
 
 export function adaptNahtavillaoloVaihe(
   dbProjekti: DBProjekti,
   nahtavillaoloVaihe: NahtavillaoloVaihe | null | undefined,
   nahtavillaoloVaiheJulkaisut: NahtavillaoloVaiheJulkaisu[] | null | undefined
 ): API.NahtavillaoloVaihe | undefined {
-  if (!nahtavillaoloVaihe) {
-    return undefined;
-  }
-  const { aineistoNahtavilla, lisaAineisto, kuulutusYhteystiedot, ilmoituksenVastaanottajat, hankkeenKuvaus, ...rest } = nahtavillaoloVaihe;
+  if (nahtavillaoloVaihe) {
+    const {
+      aineistoNahtavilla,
+      lisaAineisto,
+      kuulutusYhteystiedot,
+      uudelleenKuulutus,
+      ilmoituksenVastaanottajat,
+      hankkeenKuvaus,
+      ...rest
+    } = nahtavillaoloVaihe;
 
-  return {
-    __typename: "NahtavillaoloVaihe",
-    ...rest,
-    aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
-    lisaAineisto: adaptAineistot(lisaAineisto),
-    // dbProjekti.salt on määritelty
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    lisaAineistoParametrit: lisaAineistoService.generateListingParams(dbProjekti.oid, nahtavillaoloVaihe.id, dbProjekti.salt),
-    kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kuulutusYhteystiedot),
-    ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-    hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus || undefined),
-    muokkausTila: adaptMuokkausTila(
-      nahtavillaoloVaihe,
-      nahtavillaoloVaiheJulkaisut,
-      KuulutusJulkaisuTila.MIGROITU,
-      KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
-      KuulutusJulkaisuTila.HYVAKSYTTY
-    ),
-  };
+    return {
+      __typename: "NahtavillaoloVaihe",
+      ...rest,
+      aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
+      lisaAineisto: adaptAineistot(lisaAineisto),
+      // dbProjekti.salt on määritelty
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      lisaAineistoParametrit: lisaAineistoService.generateListingParams(dbProjekti.oid, nahtavillaoloVaihe.id, dbProjekti.salt),
+      kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kuulutusYhteystiedot),
+      ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
+      hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus || undefined),
+      muokkausTila: adaptMuokkausTila(
+        nahtavillaoloVaihe,
+        nahtavillaoloVaiheJulkaisut,
+        KuulutusJulkaisuTila.MIGROITU,
+        KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
+        KuulutusJulkaisuTila.HYVAKSYTTY
+      ),
+      uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
+    };
+  } else if (findJulkaisuWithTila(nahtavillaoloVaiheJulkaisut, KuulutusJulkaisuTila.MIGROITU)) {
+    return { __typename: "NahtavillaoloVaihe", muokkausTila: MuokkausTila.MIGROITU };
+  }
+  return undefined;
 }
 
 export function adaptNahtavillaoloVaiheJulkaisu(
@@ -66,6 +78,7 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       kielitiedot,
       velho,
       tila,
+      uudelleenKuulutus,
       ...fieldsToCopyAsIs
     } = julkaisu;
 
@@ -106,6 +119,7 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       lisaAineisto: adaptAineistot(lisaAineisto),
       nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(oid, nahtavillaoloPDFt),
       velho: adaptVelho(velho),
+      uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
     };
     return palautetaan;
   }

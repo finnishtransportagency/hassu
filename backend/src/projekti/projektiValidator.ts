@@ -122,4 +122,5 @@ export function validateTallennaProjekti(projekti: DBProjekti, input: TallennaPr
   validateVarahenkiloModifyPermissions(projekti, input);
   validateUudelleenKuulutus(projekti.aloitusKuulutus?.uudelleenKuulutus, input.aloitusKuulutus?.uudelleenKuulutus);
   validateSuunnitteluSopimus(projekti, input);
+  validateUudelleenKuulutus(projekti.nahtavillaoloVaihe?.uudelleenKuulutus, input.nahtavillaoloVaihe?.uudelleenKuulutus);
 }

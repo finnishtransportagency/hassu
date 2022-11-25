@@ -117,17 +117,19 @@ export class Kuulutus30 extends CommonPdf {
     ]);
     return [
       this.paragraph(this.startOfPlanningPhrase),
+      this.uudelleenKuulutusParagraph(),
       this.localizedParagraph([
         `Kuulutus on julkaistu tietoverkossa ${this.tilaajaGenetiivi} verkkosivuilla ${this.kuulutusPaiva}. ${hallintolaki62}`,
         `RUOTSIKSI Kuulutus on julkaistu tietoverkossa ${this.tilaajaGenetiivi} verkkosivuilla ${this.kuulutusPaiva}. ${hallintolaki62}`,
       ]),
+
       this.pidetaanNahtavillaParagraph(),
       this.muistutuksetParagraph(),
       this.tietosuojaParagraph(),
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.nahtavillaoloVaihe?.yhteystiedot, null, true)),
       this.kutsuja(),
-    ].filter((elem) => elem);
+    ].filter((elem): elem is PDFStructureElement => !!elem);
   }
 
   private kutsuja() {
@@ -221,6 +223,12 @@ export class Kuulutus30 extends CommonPdf {
     return this.paragraph(
       `Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa, on mahdollisuus muistutusten tekemiseen suunnitelmasta. Muistutukset on toimitettava ${this.kutsuAdapter.tilaajaOrganisaatiolle} ennen nähtävänäoloajan päättymistä (LjMTL 27 §) osoitteeseen ${this.kirjaamo}. Muistutukseen on liitettävä asian asianumero ${this.kutsuAdapter.asianumero}.`
     );
+  }
+
+  protected uudelleenKuulutusParagraph(): PDFStructureElement | undefined {
+    if (this.nahtavillaoloVaihe.uudelleenKuulutus?.selosteKuulutukselle) {
+      return this.localizedParagraphFromMap(this.nahtavillaoloVaihe.uudelleenKuulutus?.selosteKuulutukselle);
+    }
   }
 
   get kirjaamo(): string {

@@ -67,6 +67,9 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
   const nahtavillaOlo = new (class extends StatusHandler<API.Projekti> {
     handle(p: API.Projekti) {
       if (p.suunnitteluVaihe?.tila == SuunnitteluVaiheTila.JULKINEN || p.suunnitteluVaihe?.tila == SuunnitteluVaiheTila.MIGROITU) {
+        if (!p.nahtavillaoloVaihe && !p.nahtavillaoloVaiheJulkaisu) {
+          p.nahtavillaoloVaihe = { __typename: "NahtavillaoloVaihe", muokkausTila: MuokkausTila.MUOKKAUS };
+        }
         p.status = API.Status.NAHTAVILLAOLO;
         super.handle(p); // Continue evaluating next rules
       }
