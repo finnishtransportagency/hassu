@@ -23,6 +23,7 @@ import assert from "assert";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { assertIsDefined } from "../../src/util/assertions";
 import { testProjektiDatabase } from "../../src/database/testProjektiDatabase";
+import { aineistoService } from "../../src/aineisto/aineistoService";
 
 const { expect } = require("chai");
 
@@ -33,6 +34,7 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   let oid: string;
   const emailClientStub = new EmailClientStub();
   const pdfGeneratorStub = new PDFGeneratorStub();
+  let aineistoServiceStub: sinon.SinonStub;
 
   before(async () => {
     readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
@@ -45,6 +47,10 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
 
     pdfGeneratorStub.init();
     emailClientStub.init();
+    aineistoServiceStub = sinon.stub(aineistoService, "synchronizeProjektiFiles");
+    aineistoServiceStub.callsFake(async () => {
+      console.log("Synkataan aineisto");
+    });
   });
 
   beforeEach(async () => {

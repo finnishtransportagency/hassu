@@ -22,6 +22,7 @@ import { isKuulutusPaivaInThePast } from "../../projekti/status/projektiJulkinen
 import dayjs from "dayjs";
 import { assertIsDefined } from "../../util/assertions";
 import { ProjektiPaths } from "../../files/ProjektiPath";
+import { aineistoService } from "../../aineisto/aineistoService";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -152,6 +153,7 @@ class AloitusKuulutusTilaManager extends TilaManager {
       assert(julkaisuWaitingForApproval.kuulutusPaiva, "kuulutusPaiva on oltava tässä kohtaa");
       await fileService.publishProjektiFile(projekti.oid, logoFilePath, logoFilePath, parseDate(julkaisuWaitingForApproval.kuulutusPaiva));
     }
+    await aineistoService.synchronizeProjektiFiles(projekti.oid);
   }
 
   private async generatePDFs(projekti: DBProjekti, julkaisuWaitingForApproval: AloitusKuulutusJulkaisu) {

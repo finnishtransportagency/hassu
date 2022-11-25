@@ -15,6 +15,7 @@ import { pdfGeneratorClient } from "../../src/asiakirja/lambda/pdfGeneratorClien
 import { handleEvent as pdfGenerator } from "../../src/asiakirja/lambda/pdfGeneratorHandler";
 import { replaceFieldsByName } from "../api/testFixtureRecorder";
 import { mockSaveProjektiToVelho } from "../api/testUtil/util";
+import { aineistoService } from "../../src/aineisto/aineistoService";
 
 const { expect } = require("chai");
 
@@ -33,11 +34,17 @@ describe("AloitusKuulutus", () => {
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
   let publishProjektiFileStub: sinon.SinonStub;
   let sendEmailsByToimintoStub: sinon.SinonStub;
+  let aineistoServiceStub: sinon.SinonStub;
 
   before(async () => {
     readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
     readUsersFromSearchUpdaterLambda.callsFake(async () => {
       return await personSearchUpdaterHandler.handleEvent();
+    });
+
+    aineistoServiceStub = sinon.stub(aineistoService, "synchronizeProjektiFiles");
+    aineistoServiceStub.callsFake(async () => {
+      console.log("Synkataan aineisto");
     });
 
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
