@@ -380,6 +380,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
   const showUudelleenkuulutaButton =
     projekti.aloitusKuulutusJulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY &&
     projekti.aloitusKuulutus?.muokkausTila === MuokkausTila.LUKU &&
+    projekti.status === Status.SUUNNITTELU &&
     projekti.nykyinenKayttaja.onYllapitaja;
 
   return (
