@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import { AloitusKuulutusTila, Projekti } from "@services/api";
+import { KuulutusJulkaisuTila, Projekti } from "@services/api";
 import RadioButton from "@components/form/RadioButton";
 import Select, { SelectOption } from "@components/form/Select";
 import { Controller, useFormContext } from "react-hook-form";
@@ -37,7 +37,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
   const disabled = !!(
     projekti?.aloitusKuulutusJulkaisu &&
     projekti?.aloitusKuulutusJulkaisu.tila &&
-    [AloitusKuulutusTila.HYVAKSYTTY, AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA].includes(projekti.aloitusKuulutusJulkaisu.tila)
+    [KuulutusJulkaisuTila.HYVAKSYTTY, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA].includes(projekti.aloitusKuulutusJulkaisu.tila)
   );
 
   useEffect(() => {

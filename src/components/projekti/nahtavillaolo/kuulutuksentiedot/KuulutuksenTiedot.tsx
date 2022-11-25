@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Kieli, KirjaamoOsoite, TallennaProjektiInput } from "@services/api";
+import { Kieli, KirjaamoOsoite, MuokkausTila, TallennaProjektiInput } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import React, { useMemo } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
@@ -106,7 +106,7 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
 
   useLeaveConfirm(isDirty);
 
-  const voiMuokata = !projekti?.nahtavillaoloVaiheJulkaisut || projekti.nahtavillaoloVaiheJulkaisut.length < 1;
+  const voiMuokata = !projekti?.nahtavillaoloVaihe?.muokkausTila || projekti?.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.MUOKKAUS;
 
   return (
     <>
@@ -132,12 +132,9 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
           <PdfPreviewForm ref={pdfFormRef} />
         </>
       )}
-      {!voiMuokata && projekti && projekti.nahtavillaoloVaiheJulkaisut?.[projekti.nahtavillaoloVaiheJulkaisut.length - 1] && (
+      {!voiMuokata && projekti && projekti.nahtavillaoloVaiheJulkaisu && (
         <FormProvider {...useFormReturn}>
-          <Lukunakyma
-            projekti={projekti}
-            nahtavillaoloVaiheJulkaisu={projekti.nahtavillaoloVaiheJulkaisut[projekti.nahtavillaoloVaiheJulkaisut.length - 1]}
-          />
+          <Lukunakyma projekti={projekti} nahtavillaoloVaiheJulkaisu={projekti.nahtavillaoloVaiheJulkaisu} />
           <Painikkeet projekti={projekti} />
         </FormProvider>
       )}

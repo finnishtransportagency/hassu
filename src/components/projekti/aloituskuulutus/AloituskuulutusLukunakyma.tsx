@@ -1,4 +1,4 @@
-import { AloitusKuulutusJulkaisu, AloitusKuulutusTila, Kieli, UudelleenKuulutus } from "@services/api";
+import { AloitusKuulutusJulkaisu, KuulutusJulkaisuTila, Kieli, UudelleenKuulutus } from "@services/api";
 import React, { ReactElement, VoidFunctionComponent } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import capitalize from "lodash/capitalize";
@@ -48,17 +48,17 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
       <Section>
         {!epaaktiivinen && (
           <>
-            {!published && aloituskuulutusjulkaisu.tila === AloitusKuulutusTila.HYVAKSYTTY && (
+            {!published && aloituskuulutusjulkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
               <Notification type={NotificationType.WARN}>Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä {kuulutusPaiva}</Notification>
             )}
-            {published && aloituskuulutusjulkaisu.tila === AloitusKuulutusTila.HYVAKSYTTY && (
+            {published && aloituskuulutusjulkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
               <Notification type={NotificationType.INFO_GREEN}>
                 Aloituskuulutus on julkaistu {kuulutusPaiva}. Projekti näytetään kuulutuspäivästä lasketun määräajan jälkeen palvelun
                 julkisella puolella suunnittelussa olevana. Kuulutusvaihe päättyy{" "}
                 <FormatDate date={aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen} />.
               </Notification>
             )}
-            {aloituskuulutusjulkaisu.tila !== AloitusKuulutusTila.HYVAKSYTTY && (
+            {aloituskuulutusjulkaisu.tila !== KuulutusJulkaisuTila.HYVAKSYTTY && (
               <Notification type={NotificationType.WARN}>
                 Aloituskuulutus on hyväksyttävänä projektipäälliköllä. Jos kuulutusta tarvitsee muokata, ota yhteys projektipäällikköön.
               </Notification>
@@ -113,10 +113,10 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
         </div>
       </Section>
       <Section>
-        {aloituskuulutusjulkaisu.tila !== AloitusKuulutusTila.HYVAKSYTTY && (
+        {aloituskuulutusjulkaisu.tila !== KuulutusJulkaisuTila.HYVAKSYTTY && (
           <AloituskuulutusPDFEsikatselu oid={projekti.oid} aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} />
         )}
-        {aloituskuulutusjulkaisu.tila === AloitusKuulutusTila.HYVAKSYTTY && (
+        {aloituskuulutusjulkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
           <AloituskuulutusTiedostot aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} oid={projekti.oid} epaaktiivinen={epaaktiivinen} />
         )}
         <SectionContent>

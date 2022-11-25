@@ -5,7 +5,7 @@ import React, { ReactElement } from "react";
 import { Controller, FieldError, useFieldArray, useFormContext } from "react-hook-form";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
-import { AloitusKuulutusJulkaisu, AloitusKuulutusTila, IlmoitettavaViranomainen } from "@services/api";
+import { AloitusKuulutusJulkaisu, KuulutusJulkaisuTila, IlmoitettavaViranomainen } from "@services/api";
 import dayjs from "dayjs";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
@@ -77,7 +77,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
           </>
         )}
 
-        {aloituskuulutusjulkaisu?.tila === AloitusKuulutusTila.HYVAKSYTTY && (
+        {aloituskuulutusjulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
           <p>
             Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Ei lähetetty’, tarkasta
             sähköpostiosoite. Ota tarvittaessa yhteys pääkäyttäjään.

@@ -6,7 +6,7 @@ import useTranslation from "next-translate/useTranslation";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import { formatDate } from "src/util/dateUtils";
 import SectionContent from "@components/layout/SectionContent";
-import { NahtavillaoloVaiheTila, ProjektiTyyppi, Viranomainen } from "@services/api";
+import { KuulutusJulkaisuTila, ProjektiTyyppi, Viranomainen } from "@services/api";
 import FormatDate from "@components/FormatDate";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
 import Notification, { NotificationType } from "@components/notification/Notification";
@@ -50,7 +50,7 @@ export default function Nahtavillaolo(): ReactElement {
 
   const vastaavaViranomainen = velho.suunnittelustaVastaavaViranomainen;
 
-  const migroitu = kuulutus.tila == NahtavillaoloVaiheTila.MIGROITU;
+  const migroitu = kuulutus.tila == KuulutusJulkaisuTila.MIGROITU;
 
   return migroitu ? (
     <ProjektiJulkinenPageLayout selectedStep={2} title="Kuulutus suunnitelman nähtäville asettamisesta">

@@ -7,7 +7,7 @@ import {
 import { projektiSearchService } from "../../src/projektiSearch/projektiSearchService";
 import * as sinon from "sinon";
 import {
-  AloitusKuulutusTila,
+  KuulutusJulkaisuTila,
   IlmoitettavaViranomainen,
   KaytettavaPalvelu,
   KayttajaTyyppi,
@@ -149,7 +149,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
         RUOTSI: undefined,
         SAAME: undefined,
       },
-      tila: AloitusKuulutusTila.HYVAKSYTTY,
+      tila: KuulutusJulkaisuTila.HYVAKSYTTY,
       muokkaaja: "A000112",
       hyvaksyja: "A000112",
       ilmoituksenVastaanottajat: {

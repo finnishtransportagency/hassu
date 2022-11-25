@@ -7,7 +7,7 @@ import {
   UudelleenKuulutus,
 } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
-import { AloitusKuulutusTila, LokalisoituTeksti, MuokkausTila } from "../../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, LokalisoituTeksti, MuokkausTila } from "../../../../../common/graphql/apiModel";
 import {
   adaptHankkeenKuvaus,
   adaptIlmoituksenVastaanottajat,
@@ -39,12 +39,12 @@ export function adaptAloitusKuulutus(
       muokkausTila: adaptMuokkausTila(
         kuulutus,
         aloitusKuulutusJulkaisut,
-        AloitusKuulutusTila.MIGROITU,
-        AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA,
-        AloitusKuulutusTila.HYVAKSYTTY
+        KuulutusJulkaisuTila.MIGROITU,
+        KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
+        KuulutusJulkaisuTila.HYVAKSYTTY
       ),
     };
-  } else if (findJulkaisuWithTila(aloitusKuulutusJulkaisut, AloitusKuulutusTila.MIGROITU)) {
+  } else if (findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.MIGROITU)) {
     return { __typename: "AloitusKuulutus", muokkausTila: MuokkausTila.MIGROITU };
   }
   return kuulutus as undefined;
@@ -56,12 +56,12 @@ export function adaptAloitusKuulutusJulkaisu(
 ): API.AloitusKuulutusJulkaisu | undefined {
   if (aloitusKuulutusJulkaisut) {
     const julkaisu =
-      findJulkaisuWithTila(aloitusKuulutusJulkaisut, AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA) ||
-      findJulkaisuWithTila(aloitusKuulutusJulkaisut, AloitusKuulutusTila.HYVAKSYTTY) ||
-      findJulkaisuWithTila(aloitusKuulutusJulkaisut, AloitusKuulutusTila.MIGROITU);
+      findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ||
+      findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY) ||
+      findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.MIGROITU);
     if (julkaisu) {
       const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, tila, uudelleenKuulutus, ...fieldsToCopyAsIs } = julkaisu;
-      if (tila == AloitusKuulutusTila.MIGROITU) {
+      if (tila == KuulutusJulkaisuTila.MIGROITU) {
         return {
           __typename: "AloitusKuulutusJulkaisu",
           tila,

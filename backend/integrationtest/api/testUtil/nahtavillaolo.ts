@@ -5,7 +5,7 @@ import { apiTestFixture } from "../apiTestFixture";
 import {
   LisaAineistoParametrit,
   NahtavillaoloVaihe,
-  NahtavillaoloVaiheTila,
+  KuulutusJulkaisuTila,
   ProjektiKayttaja,
   Status,
   TilasiirtymaToiminto,
@@ -40,14 +40,14 @@ export async function testNahtavillaoloApproval(oid: string, projektiPaallikko: 
   });
 
   const projektiHyvaksyttavaksi = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
-  expect(projektiHyvaksyttavaksi.nahtavillaoloVaiheJulkaisut).to.have.length(1);
-  expect(projektiHyvaksyttavaksi.nahtavillaoloVaiheJulkaisut[0].tila).to.eq(NahtavillaoloVaiheTila.ODOTTAA_HYVAKSYNTAA);
+  expect(projektiHyvaksyttavaksi.nahtavillaoloVaiheJulkaisu).to.be.an("object");
+  expect(projektiHyvaksyttavaksi.nahtavillaoloVaiheJulkaisu?.tila).to.eq(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
 
   await api.siirraTila({ oid, tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO, toiminto: TilasiirtymaToiminto.HYVAKSY });
   const projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
   expectToMatchSnapshot("testNahtavillaOloAfterApproval", {
     nahtavillaoloVaihe: cleanupNahtavillaoloTimestamps(projekti.nahtavillaoloVaihe),
-    nahtavillaoloVaiheJulkaisut: projekti.nahtavillaoloVaiheJulkaisut.map(cleanupNahtavillaoloTimestamps),
+    nahtavillaoloVaiheJulkaisu: cleanupNahtavillaoloTimestamps(projekti.nahtavillaoloVaiheJulkaisu),
   });
 
   await testPublicAccessToProjekti(

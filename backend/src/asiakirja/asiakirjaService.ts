@@ -147,6 +147,7 @@ export class AsiakirjaService {
       kayttoOikeudet,
       kieli,
       suunnitteluSopimus,
+      uudelleenKuulutus: nahtavillaoloVaihe.uudelleenKuulutus || undefined,
     };
     let pdf: EnhancedPDF | undefined;
     if (asiakirjaTyyppi == AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS) {

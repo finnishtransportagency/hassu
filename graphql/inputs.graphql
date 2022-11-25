@@ -155,6 +155,7 @@ input NahtavillaoloVaiheInput {
   hankkeenKuvaus: LokalisoituTekstiInput
   kuulutusYhteystiedot: StandardiYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
+  uudelleenKuulutus: UudelleenKuulutusInput
 }
 
 input HyvaksymisPaatosVaiheInput {

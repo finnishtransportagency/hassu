@@ -1,5 +1,5 @@
 import { Aineisto, LocalizedMap, Yhteystieto, IlmoituksenVastaanottajat, Velho, Kielitiedot, StandardiYhteystiedot } from "./common";
-import { HyvaksymisPaatosVaiheTila, HallintoOikeus } from "../../../../common/graphql/apiModel";
+import { HallintoOikeus, KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
 
 export type HyvaksymisPaatosVaihe = {
   id: number;
@@ -26,7 +26,7 @@ export type HyvaksymisPaatosVaiheJulkaisu = {
   yhteystiedot: Yhteystieto[];
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   hyvaksymisPaatosVaihePDFt?: LocalizedMap<HyvaksymisPaatosVaihePDF>;
-  tila?: HyvaksymisPaatosVaiheTila | null;
+  tila?: KuulutusJulkaisuTila | null;
   muokkaaja?: string | null;
   hyvaksyja?: string | null;
 };

@@ -1,8 +1,6 @@
 import {
-  AloitusKuulutusTila,
-  HyvaksymisPaatosVaiheTila,
+  KuulutusJulkaisuTila as KuulutusJulkaisuTila,
   Kieli,
-  NahtavillaoloVaiheTila,
   NykyinenKayttaja,
   Status,
   SuunnitteluVaiheTila,
@@ -48,7 +46,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
     const aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu = {
       kielitiedot,
       id: 1,
-      tila: AloitusKuulutusTila.MIGROITU,
+      tila: KuulutusJulkaisuTila.MIGROITU,
       yhteystiedot: [],
       velho: cloneDeep(projekti.velho),
       muokkaaja: kayttaja.uid,
@@ -67,7 +65,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
     const nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu = {
       kielitiedot,
       id: 1,
-      tila: NahtavillaoloVaiheTila.MIGROITU,
+      tila: KuulutusJulkaisuTila.MIGROITU,
       yhteystiedot: [],
       velho: cloneDeep(projekti.velho),
       muokkaaja: kayttaja.uid,
@@ -83,7 +81,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
     const hyvaksymisPaatosVaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu = {
       kielitiedot,
       id: 1,
-      tila: HyvaksymisPaatosVaiheTila.MIGROITU,
+      tila: KuulutusJulkaisuTila.MIGROITU,
       yhteystiedot: [],
       velho: cloneDeep(projekti.velho),
       muokkaaja: kayttaja.uid,

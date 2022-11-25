@@ -2,7 +2,7 @@ import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { loadProjektiFromDatabase, loadProjektiJulkinenFromDatabase, testPublicAccessToProjekti } from "./tests";
 import {
   HallintoOikeus,
-  HyvaksymisPaatosVaiheTila,
+  KuulutusJulkaisuTila,
   ProjektiKayttaja,
   Status,
   TallennaProjektiInput,
@@ -106,7 +106,7 @@ export async function testHyvaksymisPaatosVaiheApproval(
 
   const projektiHyvaksyttavaksi = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
   expect(projektiHyvaksyttavaksi.hyvaksymisPaatosVaiheJulkaisut).to.have.length(1);
-  expect(projektiHyvaksyttavaksi.hyvaksymisPaatosVaiheJulkaisut![0].tila).to.eq(HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA);
+  expect(projektiHyvaksyttavaksi.hyvaksymisPaatosVaiheJulkaisut![0].tila).to.eq(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
 
   await api.siirraTila({
     oid,

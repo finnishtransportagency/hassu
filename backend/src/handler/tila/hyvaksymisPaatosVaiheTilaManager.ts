@@ -1,4 +1,4 @@
-import { HyvaksymisPaatosVaiheTila, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
 import { DBProjekti, HyvaksymisPaatosVaihe } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
@@ -23,7 +23,7 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
       throw new IllegalArgumentError("Hyväksymispäätösvaiheella on oltava hyvaksymisPaatos!");
     }
 
-    julkaisu.tila = HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA;
+    julkaisu.tila = KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA;
     julkaisu.muokkaaja = muokkaaja.uid;
 
     julkaisu.hyvaksymisPaatosVaihePDFt = await this.generatePDFs(projekti, julkaisu);
@@ -38,7 +38,7 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
       throw new Error("Ei hyvaksymisPaatosVaihetta odottamassa hyväksyntää");
     }
     await this.removeRejectionReasonIfExists(projekti, "hyvaksymisPaatosVaihe", hyvaksymisPaatosVaihe);
-    julkaisu.tila = HyvaksymisPaatosVaiheTila.HYVAKSYTTY;
+    julkaisu.tila = KuulutusJulkaisuTila.HYVAKSYTTY;
     julkaisu.hyvaksyja = projektiPaallikko.uid;
 
     await projektiDatabase.saveProjekti({ oid: projekti.oid, ajastettuTarkistus: this.getNextAjastettuTarkistus(julkaisu, true) });

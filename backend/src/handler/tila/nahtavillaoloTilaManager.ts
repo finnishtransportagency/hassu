@@ -1,16 +1,28 @@
-import { AsiakirjaTyyppi, Kieli, NahtavillaoloVaiheTila, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
 import { TilaManager } from "./TilaManager";
-import { DBProjekti, LocalizedMap, NahtavillaoloPDF, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../database/model";
+import {
+  DBProjekti,
+  LocalizedMap,
+  NahtavillaoloPDF,
+  NahtavillaoloVaihe,
+  NahtavillaoloVaiheJulkaisu,
+  UudelleenkuulutusTila,
+} from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { aineistoService } from "../../aineisto/aineistoService";
 import { fileService } from "../../files/fileService";
-import { parseDate } from "../../util/dateUtil";
+import { dateToString, parseDate } from "../../util/dateUtil";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import assert from "assert";
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
 import { NahtavillaoloKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakirjaTypes";
+import { findJulkaisuWithTila } from "../../projekti/projektiUtil";
+import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
+import { assertIsDefined } from "../../util/assertions";
+import { isKuulutusPaivaInThePast } from "../../projekti/status/projektiJulkinenStatusHandler";
+import dayjs from "dayjs";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -52,10 +64,44 @@ function getNahtavillaoloVaihe(projekti: DBProjekti): NahtavillaoloVaihe {
   return nahtavillaoloVaihe;
 }
 
-async function removeRejectionReasonIfExists(projekti: DBProjekti, nahtavillaoloVaihe: NahtavillaoloVaihe) {
+async function cleanupKuulutusBeforeApproval(projekti: DBProjekti, nahtavillaoloVaihe: NahtavillaoloVaihe) {
   if (nahtavillaoloVaihe.palautusSyy) {
     nahtavillaoloVaihe.palautusSyy = null;
     await projektiDatabase.saveProjekti({ oid: projekti.oid, nahtavillaoloVaihe });
+  }
+}
+
+async function cleanupAloitusKuulutusAfterApproval(projekti: DBProjekti, nahtavillaoloVaihe: NahtavillaoloVaihe) {
+  if (nahtavillaoloVaihe.palautusSyy || nahtavillaoloVaihe.uudelleenKuulutus) {
+    if (nahtavillaoloVaihe.palautusSyy) {
+      nahtavillaoloVaihe.palautusSyy = null;
+    }
+    if (nahtavillaoloVaihe.uudelleenKuulutus) {
+      nahtavillaoloVaihe.uudelleenKuulutus = null;
+    }
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, nahtavillaoloVaihe });
+  }
+}
+
+function validate(
+  projekti: DBProjekti,
+  nahtavillaoloVaihe: NahtavillaoloVaihe | null | undefined,
+  hyvaksyttyJulkaisu: NahtavillaoloVaiheJulkaisu | undefined
+) {
+  // Tarkista, että on olemassa hyväksytty aloituskuulutusjulkaisu, jonka perua
+  if (!hyvaksyttyJulkaisu) {
+    throw new IllegalArgumentError("Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa");
+  }
+  // Nähtävilläolovaiheen uudelleenkuuluttaminen on mahdollista vain jos hyväksymispäätöskuulutusta ei ole hyväksytty
+  const apiProjekti = projektiAdapter.adaptProjekti(projekti);
+  const hyvaksyttyHyvaksymisPaatos = findJulkaisuWithTila(apiProjekti.hyvaksymisPaatosVaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
+  if (hyvaksyttyHyvaksymisPaatos) {
+    throw new IllegalArgumentError("Et voi uudelleenkuuluttaa nähtävilläolokuulutusta sillä hyväksymiskuulutus on jo hyväksytty");
+  }
+  assert(nahtavillaoloVaihe, "Projektilla pitäisi olla nahtavillaolokuulutus, jos sitä uudelleenkuulutetaan");
+  // Uudelleenkuulutus ei ole mahdollista jos uudelleenkuulutus on jo olemassa
+  if (nahtavillaoloVaihe.uudelleenKuulutus) {
+    throw new IllegalArgumentError("Et voi uudelleenkuuluttaa nähtävilläolokuulutusta, koska uudelleenkuulutus on jo olemassa");
   }
 }
 
@@ -66,7 +112,7 @@ class NahtavillaoloTilaManager extends TilaManager {
       throw new Error("Nahtavillaolovaihe on jo olemassa odottamassa hyväksyntää");
     }
 
-    await removeRejectionReasonIfExists(projekti, getNahtavillaoloVaihe(projekti));
+    await cleanupKuulutusBeforeApproval(projekti, getNahtavillaoloVaihe(projekti));
 
     const nahtavillaoloVaiheJulkaisu = asiakirjaAdapter.adaptNahtavillaoloVaiheJulkaisu(projekti);
     if (!nahtavillaoloVaiheJulkaisu.aineistoNahtavilla) {
@@ -79,7 +125,7 @@ class NahtavillaoloTilaManager extends TilaManager {
       throw new IllegalArgumentError("Nähtävilläolovaiheella on oltava ilmoituksenVastaanottajat!");
     }
 
-    nahtavillaoloVaiheJulkaisu.tila = NahtavillaoloVaiheTila.ODOTTAA_HYVAKSYNTAA;
+    nahtavillaoloVaiheJulkaisu.tila = KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA;
     nahtavillaoloVaiheJulkaisu.muokkaaja = muokkaaja.uid;
 
     nahtavillaoloVaiheJulkaisu.nahtavillaoloPDFt = await this.generatePDFs(projekti, nahtavillaoloVaiheJulkaisu);
@@ -93,9 +139,10 @@ class NahtavillaoloTilaManager extends TilaManager {
     if (!julkaisuWaitingForApproval) {
       throw new Error("Ei nähtävilläolovaihetta odottamassa hyväksyntää");
     }
-    await removeRejectionReasonIfExists(projekti, nahtavillaoloVaihe);
-    julkaisuWaitingForApproval.tila = NahtavillaoloVaiheTila.HYVAKSYTTY;
+    await cleanupAloitusKuulutusAfterApproval(projekti, nahtavillaoloVaihe);
+    julkaisuWaitingForApproval.tila = KuulutusJulkaisuTila.HYVAKSYTTY;
     julkaisuWaitingForApproval.hyvaksyja = projektiPaallikko.uid;
+    julkaisuWaitingForApproval.hyvaksymisPaiva = dateToString(dayjs());
 
     await projektiDatabase.nahtavillaoloVaiheJulkaisut.update(projekti, julkaisuWaitingForApproval);
     await aineistoService.publishNahtavillaolo(projekti.oid, julkaisuWaitingForApproval.id);
@@ -177,8 +224,28 @@ class NahtavillaoloTilaManager extends TilaManager {
     }
   }
 
-  async uudelleenkuuluta(_projekti: DBProjekti): Promise<void> {
-    throw new Error("Not yet implemented");
+  async uudelleenkuuluta(projekti: DBProjekti): Promise<void> {
+    const hyvaksyttyJulkaisu = findJulkaisuWithTila(projekti.nahtavillaoloVaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
+    const nahtavillaoloVaihe = projekti.nahtavillaoloVaihe;
+    validate(projekti, nahtavillaoloVaihe, hyvaksyttyJulkaisu);
+    assertIsDefined(nahtavillaoloVaihe);
+    assertIsDefined(hyvaksyttyJulkaisu);
+
+    const julkinenUudelleenKuulutus = isKuulutusPaivaInThePast(hyvaksyttyJulkaisu.kuulutusPaiva);
+
+    let uudelleenKuulutus;
+    if (julkinenUudelleenKuulutus) {
+      uudelleenKuulutus = {
+        tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
+        alkuperainenHyvaksymisPaiva: hyvaksyttyJulkaisu.hyvaksymisPaiva || undefined,
+      };
+    } else {
+      uudelleenKuulutus = {
+        tila: UudelleenkuulutusTila.PERUUTETTU,
+      };
+    }
+    nahtavillaoloVaihe.uudelleenKuulutus = uudelleenKuulutus;
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, aloitusKuulutus: nahtavillaoloVaihe });
   }
 }
 

@@ -13,12 +13,10 @@ export default function NahtavillaoloWrapper() {
 const Nahtavillaolo = ({ projekti }: { projekti: ProjektiLisatiedolla }): ReactElement => {
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
-  const nahtavillaolovaiheJulkaisu = projekti.nahtavillaoloVaiheJulkaisut?.[projekti.nahtavillaoloVaiheJulkaisut.length - 1];
-
   return (
     <NahtavillaoloPageLayout>
-      {epaaktiivinen && nahtavillaolovaiheJulkaisu ? (
-        <Lukunakyma projekti={projekti} nahtavillaoloVaiheJulkaisu={nahtavillaolovaiheJulkaisu} />
+      {epaaktiivinen && projekti.nahtavillaoloVaiheJulkaisu ? (
+        <Lukunakyma projekti={projekti} nahtavillaoloVaiheJulkaisu={projekti.nahtavillaoloVaiheJulkaisu} />
       ) : (
         <KuulutuksenTiedot />
       )}

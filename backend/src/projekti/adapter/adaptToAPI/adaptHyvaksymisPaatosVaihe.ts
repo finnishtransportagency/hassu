@@ -6,7 +6,7 @@ import {
   LocalizedMap,
 } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
-import { HyvaksymisPaatosVaiheTila } from "../../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila } from "../../../../../common/graphql/apiModel";
 import {
   adaptAineistot,
   adaptIlmoituksenVastaanottajat,
@@ -63,7 +63,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisut(
         ...fieldsToCopyAsIs
       } = julkaisu;
 
-      if (tila == HyvaksymisPaatosVaiheTila.MIGROITU) {
+      if (tila == KuulutusJulkaisuTila.MIGROITU) {
         return { __typename: "HyvaksymisPaatosVaiheJulkaisu", tila, velho: adaptVelho(velho) };
       }
 
