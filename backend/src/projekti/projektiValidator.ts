@@ -101,7 +101,7 @@ function validateUudelleenKuulutus(
 function validateSuunnitteluSopimus(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
   const isSuunnitteluSopimusAddedOrDeleted =
     (input.suunnitteluSopimus === null && !!dbProjekti.suunnitteluSopimus) ||
-    (!!dbProjekti.suunnitteluSopimus && !input.suunnitteluSopimus);
+    (!!input.suunnitteluSopimus && !dbProjekti.suunnitteluSopimus);
 
   const latestAloituskuulutusJulkaisuTila = dbProjekti?.aloitusKuulutusJulkaisut?.[dbProjekti.aloitusKuulutusJulkaisut.length - 1].tila;
   const isLatestJulkaisuPendingApprovalOrApproved =
