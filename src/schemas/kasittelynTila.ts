@@ -46,7 +46,6 @@ export const kasittelynTilaSchema = Yup.object().shape({
         message: "Valitusten lukumäärä on pakollinen",
         test: (value, context) => {
           if (context.options.context?.valituksia) {
-            console.log(value);
             if (!value) {
               return false;
             }
@@ -54,7 +53,7 @@ export const kasittelynTilaSchema = Yup.object().shape({
           return true;
         },
       })
-      .nullable(), //when("valituksia", { is: true, then: Yup.string().required("Valitusten määrä on pakollinen") }),
+      .nullable(),
     lainvoimaAlkaen: paivamaara().notRequired().nullable().default(null),
     lainvoimaPaattyen: paivamaara().notRequired().nullable().default(null),
     ennakkotarkastus: paivamaara().notRequired().nullable().default(null),
