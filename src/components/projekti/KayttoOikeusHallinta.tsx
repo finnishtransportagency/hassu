@@ -169,6 +169,7 @@ function KayttoOikeusHallintaFormElements({
         }}
         disabled={disableFields}
         type="button"
+        id="lisaa_uusi_kayttaja"
       >
         Lisää uusi +
       </Button>
@@ -332,7 +333,7 @@ const UserFields = ({
             )}
           </Stack>
         )}
-        <TextField label="Sähköpostiosoite *" value={kayttaja?.email || ""} disabled />
+        <TextField label="Sähköpostiosoite *" value={kayttaja?.email || ""} disabled name={`kayttoOikeudet.${index}.sahkoposti`} />
         {!isProjektiPaallikko && kayttaja?.uid && isAorL(kayttaja?.uid) && (
           <Controller
             name={`kayttoOikeudet.${index}.tyyppi`}
@@ -352,6 +353,7 @@ const UserFields = ({
                         onChange(tyyppi);
                       }}
                       {...field}
+                      name={`kayttoOikeudet.${index}.varahenkiloValinta`}
                     />
                   }
                 />
