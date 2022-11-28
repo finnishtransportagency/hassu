@@ -9,6 +9,7 @@ import {
   Palaute,
   Vuorovaikutus,
 } from "../../../../common/graphql/apiModel";
+import { NahtavillaoloVaiheJulkaisu as DBNahtavillaoloVaiheJulkaisu } from "../../../src/database/model";
 import { cleanupAnyProjektiData } from "../testFixtureRecorder";
 
 export function cleanupGeneratedIdAndTimestampFromFeedbacks(feedbacks?: Palaute[]): Palaute[] | undefined {
@@ -37,15 +38,23 @@ function aineistoCleanupFunc(aineisto: Aineisto) {
 }
 
 export function cleanupNahtavillaoloTimestamps(
-  nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu | NahtavillaoloVaihe
-): NahtavillaoloVaiheJulkaisu | NahtavillaoloVaihe {
-  nahtavillaoloVaihe.aineistoNahtavilla?.forEach(aineistoCleanupFunc);
-  nahtavillaoloVaihe.lisaAineisto?.forEach(aineistoCleanupFunc);
+  nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu | NahtavillaoloVaihe | DBNahtavillaoloVaiheJulkaisu
+): NahtavillaoloVaiheJulkaisu | NahtavillaoloVaihe | DBNahtavillaoloVaiheJulkaisu {
+  if (Object.keys(nahtavillaoloVaihe).includes("__typename")) {
+    (nahtavillaoloVaihe as NahtavillaoloVaihe).aineistoNahtavilla?.forEach(aineistoCleanupFunc);
+    (nahtavillaoloVaihe as NahtavillaoloVaihe).lisaAineisto?.forEach(aineistoCleanupFunc);
+  }
+
   const lisaAineistoParametrit = (nahtavillaoloVaihe as NahtavillaoloVaihe).lisaAineistoParametrit;
   if (lisaAineistoParametrit) {
     lisaAineistoParametrit.hash = "***unittest***";
     lisaAineistoParametrit.poistumisPaiva = "***unittest***";
     (nahtavillaoloVaihe as NahtavillaoloVaihe)["lisaAineistoParametrit"] = lisaAineistoParametrit;
+  }
+  nahtavillaoloVaihe.kuulutusPaiva = "***unittest***";
+  nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva = "***unittest***";
+  if ((nahtavillaoloVaihe as DBNahtavillaoloVaiheJulkaisu).hyvaksymisPaiva) {
+    (nahtavillaoloVaihe as DBNahtavillaoloVaiheJulkaisu).hyvaksymisPaiva = "***unittest***";
   }
   return nahtavillaoloVaihe;
 }

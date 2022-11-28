@@ -590,8 +590,8 @@ Object {
         },
       ],
     },
-    "kuulutusPaiva": "2022-06-07",
-    "kuulutusVaihePaattyyPaiva": "2042-06-07",
+    "kuulutusPaiva": "***unittest***",
+    "kuulutusVaihePaattyyPaiva": "***unittest***",
     "kuulutusYhteystiedot": Object {
       "__typename": "StandardiYhteystiedot",
       "yhteysHenkilot": Array [
@@ -672,8 +672,8 @@ Object {
           },
         ],
       },
-      "kuulutusPaiva": "2022-06-07",
-      "kuulutusVaihePaattyyPaiva": "2042-06-07",
+      "kuulutusPaiva": "***unittest***",
+      "kuulutusVaihePaattyyPaiva": "***unittest***",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -755,8 +755,8 @@ Object {
           },
         ],
       },
-      "kuulutusPaiva": "2022-06-07",
-      "kuulutusVaihePaattyyPaiva": "2042-06-07",
+      "kuulutusPaiva": "***unittest***",
+      "kuulutusVaihePaattyyPaiva": "***unittest***",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -799,7 +799,7 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "hyvaksyja": "A000112",
-      "hyvaksymisPaiva": "2022-11-25",
+      "hyvaksymisPaiva": "***unittest***",
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -836,8 +836,8 @@ Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
       },
-      "kuulutusPaiva": "2022-06-07",
-      "kuulutusVaihePaattyyPaiva": "2042-06-07",
+      "kuulutusPaiva": "***unittest***",
+      "kuulutusVaihePaattyyPaiva": "***unittest***",
       "lisaAineisto": undefined,
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
       "muokkaaja": "A000112",

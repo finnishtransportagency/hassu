@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import { getAxios, setupLambdaMonitoring, wrapXRayAsync } from "../aws/monitoring";
 import { ImportAineistoEvent, ImportAineistoEventType } from "./importAineistoEvent";
 import { projektiDatabase } from "../database/projektiDatabase";
-import { AineistoTila, AloitusKuulutusTila, HyvaksymisPaatosVaiheTila, NahtavillaoloVaiheTila } from "../../../common/graphql/apiModel";
+import { AineistoTila, KuulutusJulkaisuTila } from "../../../common/graphql/apiModel";
 import { aineistoService, synchronizeFilesToPublic } from "./aineistoService";
 import {
   Aineisto,
@@ -118,31 +118,31 @@ async function handleVuorovaikutukset(oid: string, vuorovaikutukset: Vuorovaikut
 }
 
 async function handleAloituskuulutusVaihe(oid: string, julkaisut: AloitusKuulutusJulkaisu[]) {
-  const julkaisu = findJulkaisuWithTila(julkaisut, AloitusKuulutusTila.HYVAKSYTTY);
+  const julkaisu = findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
   const kuulutusPaiva = julkaisu?.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
   await synchronizeFilesToPublic(oid, new ProjektiPaths(oid).aloituskuulutus(julkaisu), kuulutusPaiva);
 }
 
 async function handleNahtavillaoloVaihe(oid: string, nahtavillaoloVaiheJulkaisut: NahtavillaoloVaiheJulkaisu[]) {
-  const julkaisu = findJulkaisuWithTila(nahtavillaoloVaiheJulkaisut, NahtavillaoloVaiheTila.HYVAKSYTTY);
+  const julkaisu = findJulkaisuWithTila(nahtavillaoloVaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
   const kuulutusPaiva = julkaisu?.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
   await synchronizeFilesToPublic(oid, new ProjektiPaths(oid).nahtavillaoloVaihe(julkaisu), kuulutusPaiva);
 }
 
 async function handleHyvaksymisPaatosVaihe(oid: string, julkaisut: HyvaksymisPaatosVaiheJulkaisu[]) {
-  const julkaisu = findJulkaisuWithTila(julkaisut, HyvaksymisPaatosVaiheTila.HYVAKSYTTY);
+  const julkaisu = findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
   const kuulutusPaiva = julkaisu?.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
   await synchronizeFilesToPublic(oid, new ProjektiPaths(oid).hyvaksymisPaatosVaihe(julkaisu), kuulutusPaiva);
 }
 
 async function handleJatkoPaatos1Vaihe(oid: string, julkaisut: HyvaksymisPaatosVaiheJulkaisu[]) {
-  const julkaisu = findJulkaisuWithTila(julkaisut, HyvaksymisPaatosVaiheTila.HYVAKSYTTY);
+  const julkaisu = findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
   const kuulutusPaiva = julkaisu?.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
   await synchronizeFilesToPublic(oid, new ProjektiPaths(oid).jatkoPaatos1Vaihe(julkaisu), kuulutusPaiva);
 }
 
 async function handleJatkoPaatos2Vaihe(oid: string, julkaisut: HyvaksymisPaatosVaiheJulkaisu[]) {
-  const julkaisu = findJulkaisuWithTila(julkaisut, HyvaksymisPaatosVaiheTila.HYVAKSYTTY);
+  const julkaisu = findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
   const kuulutusPaiva = julkaisu?.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
   await synchronizeFilesToPublic(oid, new ProjektiPaths(oid).jatkoPaatos2Vaihe(julkaisu), kuulutusPaiva);
 }
