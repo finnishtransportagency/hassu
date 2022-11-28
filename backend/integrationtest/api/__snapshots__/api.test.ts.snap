@@ -1016,7 +1016,7 @@ Object {
       "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
       "jarjestys": 12,
       "nimi": "new ekatiedosto_eka.pdf",
-      "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
+      "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
       "tila": "VALMIS",
       "tuotu": "***unittest***",
     },
@@ -1060,7 +1060,7 @@ Object {
       "jarjestys": 11,
       "kategoriaId": "T1xx",
       "nimi": "new karttakuvalla_tiedosto.pdf",
-      "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
+      "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
       "tila": "VALMIS",
       "tuotu": "***unittest***",
     },
@@ -1582,12 +1582,38 @@ LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
 exports[`Api should search, load and save a project 12`] = `
 Object {
   "yllapito S3 files just after vuorovaikutus published": Object {
-    "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {},
-    "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": Object {},
-    "suunnittelusopimus/logo.png": Object {},
-    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {},
-    "suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf": Object {},
-    "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {},
+    "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "suunnittelusopimus/logo.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''ekatiedosto_eka.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''karttakuvalla_tiedosto.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TS%20Tie%20Yleisotilaisuus%20kutsu.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+    },
   },
 }
 `;
@@ -1595,30 +1621,40 @@ Object {
 exports[`Api should search, load and save a project 13`] = `
 Object {
   "public S3 files just after vuorovaikutus published": Object {
-    "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {
+    "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
+      "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
-    "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": Object {
+    "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
+      "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
-    "suunnittelusopimus/logo.png": Object {
-      "ContentType": "application/octet-stream",
+    "suunnittelusopimus/logo.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {
-      "ContentType": "application/octet-stream",
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''ekatiedosto_eka.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
       "publishDate": "2022-03-23T00:00:00+02:00",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf": Object {
-      "ContentType": "application/octet-stream",
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''karttakuvalla_tiedosto.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
       "publishDate": "2022-03-23T00:00:00+02:00",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {
-      "ContentType": "application/octet-stream",
+    "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TS%20Tie%20Yleisotilaisuus%20kutsu.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
       "publishDate": "2022-03-23T00:00:00+02:00",
     },
   },
@@ -1627,18 +1663,32 @@ Object {
 
 exports[`Api should search, load and save a project 14`] = `
 Object {
-  "args": Object {
-    "DistributionId": "unit-test-distribution-id",
-    "InvalidationBatch": Object {
-      "CallerReference": "***unittest***",
-      "Paths": Object {
-        "Items": Array [
-          "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/*",
-        ],
-        "Quantity": 1,
+  "args": Array [
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/*",
+          ],
+          "Quantity": 1,
+        },
       },
     },
-  },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+  ],
   "stub": "createInvalidation",
 }
 `;
@@ -1646,11 +1696,33 @@ Object {
 exports[`Api should search, load and save a project 15`] = `
 Object {
   "yllapito S3 files vuorovaikutus publish date changed and last aineisto deleted": Object {
-    "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {},
-    "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": Object {},
-    "suunnittelusopimus/logo.png": Object {},
-    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {},
-    "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {},
+    "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "suunnittelusopimus/logo.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''ekatiedosto_eka.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TS%20Tie%20Yleisotilaisuus%20kutsu.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+    },
   },
 }
 `;
@@ -1658,26 +1730,34 @@ Object {
 exports[`Api should search, load and save a project 16`] = `
 Object {
   "public S3 files vuorovaikutus publish date changed and last aineisto deleted": Object {
-    "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {
+    "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
+      "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
-    "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": Object {
+    "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
+      "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
-    "suunnittelusopimus/logo.png": Object {
-      "ContentType": "application/octet-stream",
+    "suunnittelusopimus/logo.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {
-      "ContentType": "application/octet-stream",
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''ekatiedosto_eka.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
       "publishDate": "2022-03-24T00:00:00+02:00",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {
-      "ContentType": "application/octet-stream",
+    "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TS%20Tie%20Yleisotilaisuus%20kutsu.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
       "publishDate": "2022-03-24T00:00:00+02:00",
     },
   },
@@ -2099,7 +2179,7 @@ Object {
           "jarjestys": 1,
           "kategoriaId": "T2xx",
           "nimi": "T222 Meluesteiden periaatekuvat.txt",
-          "tiedosto": "/nahtavillaolo/1/T222 Meluesteiden periaatekuvat.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T222 Meluesteiden periaatekuvat.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -2109,7 +2189,7 @@ Object {
           "jarjestys": 2,
           "kategoriaId": "T2xx",
           "nimi": "T213 Teiden hallinnolsten järjestelyjen kartat.txt",
-          "tiedosto": "/nahtavillaolo/1/T213 Teiden hallinnolsten järjestelyjen kartat.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T213 Teiden hallinnolsten järjestelyjen kartat.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -2119,7 +2199,7 @@ Object {
           "jarjestys": 3,
           "kategoriaId": "T2xx",
           "nimi": "T224 Siltataulukko.txt",
-          "tiedosto": "/nahtavillaolo/1/T224 Siltataulukko.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T224 Siltataulukko.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -2129,7 +2209,7 @@ Object {
           "jarjestys": 4,
           "kategoriaId": "T2xx",
           "nimi": "T211 Piirustusmerkinnät.txt",
-          "tiedosto": "/nahtavillaolo/1/T211 Piirustusmerkinnät.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T211 Piirustusmerkinnät.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -2139,7 +2219,7 @@ Object {
           "jarjestys": 5,
           "kategoriaId": "T2xx",
           "nimi": "T212 Yleiskartta.txt",
-          "tiedosto": "/nahtavillaolo/1/T212 Yleiskartta.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T212 Yleiskartta.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -2211,7 +2291,7 @@ Object {
           "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
           "jarjestys": 1,
           "nimi": "tokatiedosto_toka.pdf",
-          "tiedosto": "/nahtavillaolo/1/tokatiedosto_toka.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/tokatiedosto_toka.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -2235,7 +2315,7 @@ Object {
           "jarjestys": 1,
           "kategoriaId": "T2xx",
           "nimi": "T222 Meluesteiden periaatekuvat.txt",
-          "tiedosto": "/nahtavillaolo/1/T222 Meluesteiden periaatekuvat.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T222 Meluesteiden periaatekuvat.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -2245,7 +2325,7 @@ Object {
           "jarjestys": 2,
           "kategoriaId": "T2xx",
           "nimi": "T213 Teiden hallinnolsten järjestelyjen kartat.txt",
-          "tiedosto": "/nahtavillaolo/1/T213 Teiden hallinnolsten järjestelyjen kartat.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T213 Teiden hallinnolsten järjestelyjen kartat.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -2255,7 +2335,7 @@ Object {
           "jarjestys": 3,
           "kategoriaId": "T2xx",
           "nimi": "T224 Siltataulukko.txt",
-          "tiedosto": "/nahtavillaolo/1/T224 Siltataulukko.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T224 Siltataulukko.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -2265,7 +2345,7 @@ Object {
           "jarjestys": 4,
           "kategoriaId": "T2xx",
           "nimi": "T211 Piirustusmerkinnät.txt",
-          "tiedosto": "/nahtavillaolo/1/T211 Piirustusmerkinnät.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T211 Piirustusmerkinnät.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -2275,7 +2355,7 @@ Object {
           "jarjestys": 5,
           "kategoriaId": "T2xx",
           "nimi": "T212 Yleiskartta.txt",
-          "tiedosto": "/nahtavillaolo/1/T212 Yleiskartta.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T212 Yleiskartta.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -2286,7 +2366,7 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "hyvaksyja": "A000112",
-      "hyvaksymisPaiva": "2022-11-25",
+      "hyvaksymisPaiva": "***unittest***",
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -2331,7 +2411,7 @@ Object {
           "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
           "jarjestys": 1,
           "nimi": "tokatiedosto_toka.pdf",
-          "tiedosto": "/nahtavillaolo/1/tokatiedosto_toka.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/tokatiedosto_toka.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -2341,9 +2421,9 @@ Object {
       "nahtavillaoloPDFt": Object {
         "SUOMI": Object {
           "__typename": "NahtavillaoloPDF",
-          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
-          "nahtavillaoloIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
-          "nahtavillaoloPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
+          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+          "nahtavillaoloIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
+          "nahtavillaoloPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
         },
         "__typename": "NahtavillaoloPDFt",
       },
@@ -2513,20 +2593,81 @@ Object {
 exports[`Api should search, load and save a project 24`] = `
 Object {
   "yllapito S3 files Nahtavillaolo published": Object {
-    "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {},
-    "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": Object {},
-    "nahtavillaolo/1/T211 Piirustusmerkinnät.txt": Object {},
-    "nahtavillaolo/1/T212 Yleiskartta.txt": Object {},
-    "nahtavillaolo/1/T213 Teiden hallinnolsten järjestelyjen kartat.txt": Object {},
-    "nahtavillaolo/1/T222 Meluesteiden periaatekuvat.txt": Object {},
-    "nahtavillaolo/1/T224 Siltataulukko.txt": Object {},
-    "nahtavillaolo/1/tokatiedosto_toka.pdf": Object {},
-    "nahtavillaolo/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": Object {},
-    "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": Object {},
-    "nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": Object {},
-    "suunnittelusopimus/logo.png": Object {},
-    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {},
-    "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {},
+    "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "nahtavillaolo/1/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''31T%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "nahtavillaolo/1/T211 Piirustusmerkinnät.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T211%20Piirustusmerkinn%C3%A4t.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+    },
+    "nahtavillaolo/1/T212 Yleiskartta.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T212%20Yleiskartta.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+    },
+    "nahtavillaolo/1/T213 Teiden hallinnolsten järjestelyjen kartat.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T213%20Teiden%20hallinnolsten%20j%C3%A4rjestelyjen%20kartat.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+    },
+    "nahtavillaolo/1/T222 Meluesteiden periaatekuvat.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T222%20Meluesteiden%20periaatekuvat.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+    },
+    "nahtavillaolo/1/T224 Siltataulukko.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T224%20Siltataulukko.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+    },
+    "nahtavillaolo/1/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "nahtavillaolo/1/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "nahtavillaolo/1/tokatiedosto_toka.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''tokatiedosto_toka.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+    },
+    "suunnittelusopimus/logo.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''ekatiedosto_eka.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TS%20Tie%20Yleisotilaisuus%20kutsu.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+    },
   },
 }
 `;
@@ -2534,65 +2675,88 @@ Object {
 exports[`Api should search, load and save a project 25`] = `
 Object {
   "public S3 files Nahtavillaolo published": Object {
-    "aloituskuulutus/T412 Aloituskuulutus.pdf": Object {
+    "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
+      "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
-    "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": Object {
+    "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
+      "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
-    "nahtavillaolo/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": Object {
+    "nahtavillaolo/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''31T%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
       "ContentType": "application/pdf",
+      "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "nahtavillaolo/T211 Piirustusmerkinnät.txt": Object {
-      "ContentType": "application/octet-stream",
+    "nahtavillaolo/T211 Piirustusmerkinnät.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T211%20Piirustusmerkinn%C3%A4t.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "nahtavillaolo/T212 Yleiskartta.txt": Object {
-      "ContentType": "application/octet-stream",
+    "nahtavillaolo/T212 Yleiskartta.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T212%20Yleiskartta.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "nahtavillaolo/T213 Teiden hallinnolsten järjestelyjen kartat.txt": Object {
-      "ContentType": "application/octet-stream",
+    "nahtavillaolo/T213 Teiden hallinnolsten järjestelyjen kartat.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T213%20Teiden%20hallinnolsten%20j%C3%A4rjestelyjen%20kartat.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "nahtavillaolo/T222 Meluesteiden periaatekuvat.txt": Object {
-      "ContentType": "application/octet-stream",
+    "nahtavillaolo/T222 Meluesteiden periaatekuvat.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T222%20Meluesteiden%20periaatekuvat.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "nahtavillaolo/T224 Siltataulukko.txt": Object {
-      "ContentType": "application/octet-stream",
+    "nahtavillaolo/T224 Siltataulukko.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T224%20Siltataulukko.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": Object {
+    "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
+      "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": Object {
+    "nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
+      "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "nahtavillaolo/tokatiedosto_toka.pdf": Object {
-      "ContentType": "application/octet-stream",
+    "nahtavillaolo/tokatiedosto_toka.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''tokatiedosto_toka.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "suunnittelusopimus/logo.png": Object {
-      "ContentType": "application/octet-stream",
+    "suunnittelusopimus/logo.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": Object {
-      "ContentType": "application/octet-stream",
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''ekatiedosto_eka.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
       "publishDate": "2022-03-24T00:00:00+02:00",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": Object {
-      "ContentType": "application/octet-stream",
+    "suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TS%20Tie%20Yleisotilaisuus%20kutsu.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
       "publishDate": "2022-03-24T00:00:00+02:00",
     },
   },
@@ -2718,8 +2882,16 @@ Object {
 exports[`Api should search, load and save a project 28`] = `
 Object {
   "yllapito S3 files Hyvaksymispaatos created": Object {
-    "/1/T113 TS Esite.txt": Object {},
-    "/1/paatos/TYHJÄ.txt": Object {},
+    "/1/T113 TS Esite.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T113%20TS%20Esite.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+    },
+    "/1/paatos/TYHJÄ.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+    },
   },
 }
 `;
@@ -2737,7 +2909,7 @@ Object {
           "jarjestys": 1,
           "kategoriaId": "T1xx",
           "nimi": "T113 TS Esite.txt",
-          "tiedosto": "/hyvaksymispaatos/1/T113 TS Esite.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T113 TS Esite.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -2751,7 +2923,7 @@ Object {
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
           "jarjestys": 1,
           "nimi": "TYHJÄ.txt",
-          "tiedosto": "/hyvaksymispaatos/1/paatos/TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/paatos/TYHJÄ.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -2823,7 +2995,7 @@ Object {
             "jarjestys": 1,
             "kategoriaId": "T1xx",
             "nimi": "T113 TS Esite.txt",
-            "tiedosto": "/hyvaksymispaatos/1/T113 TS Esite.txt",
+            "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T113 TS Esite.txt",
             "tila": "VALMIS",
             "tuotu": "***unittest***",
           },
@@ -2838,7 +3010,7 @@ Object {
             "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
             "jarjestys": 1,
             "nimi": "TYHJÄ.txt",
-            "tiedosto": "/hyvaksymispaatos/1/paatos/TYHJÄ.txt",
+            "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/paatos/TYHJÄ.txt",
             "tila": "VALMIS",
             "tuotu": "***unittest***",
           },
@@ -2846,11 +3018,11 @@ Object {
         "hyvaksymisPaatosVaihePDFt": Object {
           "SUOMI": Object {
             "__typename": "HyvaksymisPaatosVaihePDF",
-            "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
-            "hyvaksymisIlmoitusMuistuttajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
-            "hyvaksymisKuulutusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
-            "ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle.pdf",
-            "ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+            "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+            "hyvaksymisIlmoitusMuistuttajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+            "hyvaksymisKuulutusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+            "ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle.pdf",
+            "ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
           },
           "__typename": "HyvaksymisPaatosVaihePDFt",
         },
@@ -3011,37 +3183,46 @@ Object {
 exports[`Api should search, load and save a project 31`] = `
 Object {
   "public S3 files Hyvaksymispaatos approved": Object {
-    "/T113 TS Esite.txt": Object {
-      "ContentType": "application/octet-stream",
+    "/T113 TS Esite.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T113%20TS%20Esite.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
       "publishDate": "2022-06-09T00:00:00+03:00",
     },
-    "/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf": Object {
+    "/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431%20Kuulutus%20hyvaksymispaatoksen%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
+      "checksum": "ABC123",
       "publishDate": "2022-06-09T00:00:00+03:00",
     },
-    "/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle.pdf": Object {
+    "/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_1%20Ilmoitus%20hyvaksymispaatoksesta%20kunnalle%20ja%20ELYlle.pdf",
       "ContentType": "application/pdf",
+      "checksum": "ABC123",
       "publishDate": "2022-06-09T00:00:00+03:00",
     },
-    "/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf": Object {
+    "/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_2%20Ilmoitus%20hyvaksymispaatoksen%20kuulutuksesta.pdf",
       "ContentType": "application/pdf",
+      "checksum": "ABC123",
       "publishDate": "2022-06-09T00:00:00+03:00",
     },
-    "/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf": Object {
+    "/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_3%20Ilmoitus%20hyvaksymispaatoksesta%20lausunnon%20antajille.pdf",
       "ContentType": "application/pdf",
+      "checksum": "ABC123",
       "publishDate": "2022-06-09T00:00:00+03:00",
     },
-    "/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf": Object {
+    "/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_4%20Ilmoitus%20hyvaksymispaatoksesta%20muistuttajille.pdf",
       "ContentType": "application/pdf",
+      "checksum": "ABC123",
       "publishDate": "2022-06-09T00:00:00+03:00",
     },
-    "/paatos/TYHJÄ.txt": Object {
-      "ContentType": "application/octet-stream",
+    "/paatos/TYHJÄ.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
       "publishDate": "2022-06-09T00:00:00+03:00",
     },
   },

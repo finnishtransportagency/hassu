@@ -335,6 +335,7 @@ Array [
         "SAAME": "Saameksi",
         "SUOMI": "Lorem Ipsum",
       },
+      "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "kunnat": Array [
           Object {
@@ -575,73 +576,10 @@ exports[`apiHandler handleEvent tallennaProjekti should modify permissions from 
 Object {
   "args": Array [
     Object {
-      "Bucket": "hassu-localstack-public",
+      "Bucket": "hassu-localstack-yllapito",
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
-      "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
-      "Metadata": Object {
-        "publication-timestamp": "2022-01-02T00:00:00+02:00",
-      },
-    },
-    Object {
-      "Bucket": "hassu-localstack-public",
-      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
-      "ContentType": "application/pdf",
-      "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
-      "Metadata": Object {
-        "publication-timestamp": "2022-01-02T00:00:00+02:00",
-      },
-    },
-    Object {
-      "Bucket": "hassu-localstack-public",
-      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
-      "ContentType": "application/pdf",
-      "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
-      "Metadata": Object {
-        "publication-timestamp": "2022-01-02T00:00:00+02:00",
-      },
-    },
-    Object {
-      "Bucket": "hassu-localstack-public",
-      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
-      "ContentType": "application/pdf",
-      "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
-      "Metadata": Object {
-        "publication-timestamp": "2022-01-02T00:00:00+02:00",
-      },
-    },
-    Object {
-      "Bucket": "hassu-localstack-public",
-      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
-      "ContentType": "application/pdf",
-      "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-      "Metadata": Object {
-        "publication-timestamp": "2022-01-02T00:00:00+02:00",
-      },
-    },
-    Object {
-      "Bucket": "hassu-localstack-public",
-      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
-      "ContentType": "application/pdf",
-      "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-      "Metadata": Object {
-        "publication-timestamp": "2022-01-02T00:00:00+02:00",
-      },
-    },
-    Object {
-      "Bucket": "hassu-localstack-public",
-      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
-      "ContentType": "application/pdf",
-      "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-      "Metadata": Object {
-        "publication-timestamp": "2022-01-02T00:00:00+02:00",
-      },
-    },
-    Object {
-      "Bucket": "hassu-localstack-public",
-      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
-      "ContentType": "application/pdf",
-      "Key": "tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
       "Metadata": Object {
         "publication-timestamp": "2022-01-02T00:00:00+02:00",
       },
@@ -650,7 +588,7 @@ Object {
       "Bucket": "hassu-localstack-yllapito",
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
-      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
       "Metadata": Object {
         "publication-timestamp": "2022-01-02T00:00:00+02:00",
       },
@@ -659,7 +597,7 @@ Object {
       "Bucket": "hassu-localstack-yllapito",
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
-      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
       "Metadata": Object {
         "publication-timestamp": "2022-01-02T00:00:00+02:00",
       },
@@ -668,16 +606,7 @@ Object {
       "Bucket": "hassu-localstack-yllapito",
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
-      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
-      "Metadata": Object {
-        "publication-timestamp": "2022-01-02T00:00:00+02:00",
-      },
-    },
-    Object {
-      "Bucket": "hassu-localstack-yllapito",
-      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
-      "ContentType": "application/pdf",
-      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
       "Metadata": Object {
         "publication-timestamp": "2022-01-02T00:00:00+02:00",
       },
@@ -686,7 +615,7 @@ Object {
       "Bucket": "hassu-localstack-yllapito",
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
-      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
       "Metadata": Object {
         "publication-timestamp": "2022-01-02T00:00:00+02:00",
       },
@@ -695,7 +624,7 @@ Object {
       "Bucket": "hassu-localstack-yllapito",
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
-      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
       "Metadata": Object {
         "publication-timestamp": "2022-01-02T00:00:00+02:00",
       },
@@ -704,7 +633,7 @@ Object {
       "Bucket": "hassu-localstack-yllapito",
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
-      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
       "Metadata": Object {
         "publication-timestamp": "2022-01-02T00:00:00+02:00",
       },
@@ -713,7 +642,7 @@ Object {
       "Bucket": "hassu-localstack-yllapito",
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
-      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
       "Metadata": Object {
         "publication-timestamp": "2022-01-02T00:00:00+02:00",
       },
@@ -743,11 +672,11 @@ Object {
   "args": Array [
     Object {
       "Bucket": "hassu-localstack-yllapito",
-      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
     },
     Object {
       "Bucket": "hassu-localstack-yllapito",
-      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
     },
   ],
   "stub": "getObject",
@@ -769,19 +698,19 @@ Object {
   "args": Array [
     Object {
       "Bucket": "hassu-localstack-yllapito",
-      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
     },
     Object {
       "Bucket": "hassu-localstack-yllapito",
-      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
     },
     Object {
       "Bucket": "hassu-localstack-yllapito",
-      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
     },
     Object {
       "Bucket": "hassu-localstack-yllapito",
-      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
     },
   ],
   "stub": "deleteObject",
@@ -856,8 +785,8 @@ Object {
     "aloituskuulutusPDFt": Object {
       "SUOMI": Object {
         "__typename": "AloitusKuulutusPDF",
-        "aloituskuulutusIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-        "aloituskuulutusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+        "aloituskuulutusIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+        "aloituskuulutusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
       },
       "__typename": "AloitusKuulutusPDFt",
     },

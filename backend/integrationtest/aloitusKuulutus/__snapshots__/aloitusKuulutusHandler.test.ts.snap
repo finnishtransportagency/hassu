@@ -8,6 +8,7 @@ Object {
       "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum",
     },
+    "id": 1,
     "kuulutusPaiva": "2022-01-02",
     "kuulutusYhteystiedot": Object {
       "yhteysTiedot": Array [
@@ -34,6 +35,7 @@ Object {
       "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum",
     },
+    "id": 1,
     "kuulutusPaiva": "2022-01-02",
     "kuulutusYhteystiedot": Object {
       "yhteysTiedot": Array [
@@ -52,12 +54,12 @@ Object {
     Object {
       "aloituskuulutusPDFt": Object {
         "RUOTSI": Object {
-          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta RUOTSIKSI.pdf",
-          "aloituskuulutusPDFPath": "/aloituskuulutus/T412 Aloituskuulutus RUOTSIKSI.pdf",
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta RUOTSIKSI.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus RUOTSIKSI.pdf",
         },
         "SUOMI": Object {
-          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-          "aloituskuulutusPDFPath": "/aloituskuulutus/T412 Aloituskuulutus.pdf",
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
         },
       },
       "hankkeenKuvaus": Object {
@@ -132,6 +134,7 @@ Object {
       "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum",
     },
+    "id": 1,
     "kuulutusPaiva": "2022-01-02",
     "kuulutusYhteystiedot": Object {
       "yhteysTiedot": Array [
@@ -159,6 +162,7 @@ Object {
       "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum",
     },
+    "id": 1,
     "kuulutusPaiva": "2022-01-02",
     "kuulutusYhteystiedot": Object {
       "yhteysTiedot": Array [
@@ -178,12 +182,12 @@ Object {
     Object {
       "aloituskuulutusPDFt": Object {
         "RUOTSI": Object {
-          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta RUOTSIKSI.pdf",
-          "aloituskuulutusPDFPath": "/aloituskuulutus/T412 Aloituskuulutus RUOTSIKSI.pdf",
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta RUOTSIKSI.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus RUOTSIKSI.pdf",
         },
         "SUOMI": Object {
-          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-          "aloituskuulutusPDFPath": "/aloituskuulutus/T412 Aloituskuulutus.pdf",
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
         },
       },
       "hankkeenKuvaus": Object {
@@ -258,6 +262,7 @@ Object {
       "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum",
     },
+    "id": 1,
     "kuulutusPaiva": "2022-01-02",
     "kuulutusYhteystiedot": Object {
       "yhteysTiedot": Array [
@@ -277,12 +282,12 @@ Object {
     Object {
       "aloituskuulutusPDFt": Object {
         "RUOTSI": Object {
-          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta RUOTSIKSI.pdf",
-          "aloituskuulutusPDFPath": "/aloituskuulutus/T412 Aloituskuulutus RUOTSIKSI.pdf",
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta RUOTSIKSI.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus RUOTSIKSI.pdf",
         },
         "SUOMI": Object {
-          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-          "aloituskuulutusPDFPath": "/aloituskuulutus/T412 Aloituskuulutus.pdf",
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
         },
       },
       "hankkeenKuvaus": Object {

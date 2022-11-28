@@ -168,3 +168,23 @@ export function adaptHankkeenKuvausToSave(
   });
   return kuvaus;
 }
+
+export function getId(
+  vaihe:
+    | {
+        id: number | undefined;
+      }
+    | undefined
+    | null,
+  julkaisutCount: number | undefined
+) {
+  let id = vaihe?.id;
+  if (!id) {
+    if (julkaisutCount) {
+      id = julkaisutCount + 1;
+    } else {
+      id = 1;
+    }
+  }
+  return id;
+}

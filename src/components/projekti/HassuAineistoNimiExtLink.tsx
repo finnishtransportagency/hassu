@@ -1,5 +1,5 @@
 import ExtLink from "@components/ExtLink";
-import { useProjekti } from "src/hooks/useProjekti";
+
 interface Props {
   addTopMargin?: boolean;
   tiedostoPolku?: string | null;
@@ -12,8 +12,7 @@ const HassuAineistoNimiExtLink = ({
   addTopMargin,
   ...extlinkProps
 }: Props & Omit<React.ComponentProps<typeof ExtLink>, "children">) => {
-  const { data: projekti } = useProjekti();
-  const href = tiedostoPolku && projekti ? `/yllapito/tiedostot/projekti/${projekti.oid}/${tiedostoPolku}` : undefined;
+  const href = tiedostoPolku || undefined;
   return (
     <ExtLink
       sx={addTopMargin ? { marginTop: 4 } : undefined}

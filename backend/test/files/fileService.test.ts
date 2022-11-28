@@ -6,6 +6,7 @@ import { uuid } from "../../src/util/uuid";
 import { parseDate } from "../../src/util/dateUtil";
 import { getS3 } from "../../src/aws/client";
 import { awsMockResolves, expectAwsCalls } from "../aws/awsMock";
+import { ProjektiPaths } from "../../src/files/ProjektiPath";
 
 const { expect } = require("chai");
 
@@ -55,14 +56,14 @@ describe("UploadService", () => {
 
     const pathInProjekti = await fileService.createFileToProjekti({
       oid: "1",
-      filePathInProjekti: "testfilepath",
+      path: new ProjektiPaths("1"),
       fileName: "test ääkkösillä.pdf",
       contents: Buffer.from("foobar", "base64"),
       inline: true,
       contentType: "application/pdf",
       publicationTimestamp: parseDate("2000-01-01T12:34"),
     });
-    expect(pathInProjekti).to.eq("/testfilepath/test ääkkösillä.pdf");
+    expect(pathInProjekti).to.eq("/test ääkkösillä.pdf");
 
     expect(putObjectStub).to.be.calledOnce;
     expectAwsCalls(putObjectStub);

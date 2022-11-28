@@ -1,13 +1,14 @@
 import * as API from "../../../../../common/graphql/apiModel";
 import { UudelleenKuulutusInput } from "../../../../../common/graphql/apiModel";
 import { AloitusKuulutus, UudelleenKuulutus } from "../../../database/model";
-import { adaptHankkeenKuvausToSave, adaptIlmoituksenVastaanottajatToSave, adaptStandardiYhteystiedotToSave } from "./common";
+import { adaptHankkeenKuvausToSave, adaptIlmoituksenVastaanottajatToSave, adaptStandardiYhteystiedotToSave, getId } from "./common";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
 import mergeWith from "lodash/mergeWith";
 
 export function adaptAloitusKuulutusToSave(
   dbAloituskuulutus: AloitusKuulutus | undefined | null,
-  aloitusKuulutus: API.AloitusKuulutusInput | undefined | null
+  aloitusKuulutus: API.AloitusKuulutusInput | undefined | null,
+  aloitusKuulutusJulkaisutCount: number | undefined
 ): AloitusKuulutus | undefined {
   if (aloitusKuulutus) {
     const { hankkeenKuvaus, ilmoituksenVastaanottajat, kuulutusYhteystiedot, uudelleenKuulutus, ...rest } = aloitusKuulutus;
@@ -20,8 +21,12 @@ export function adaptAloitusKuulutusToSave(
     if (!ilmoituksenVastaanottajat) {
       throw new IllegalArgumentError("Aloituskuulutuksella on oltava ilmoituksenVastaanottajat!");
     }
+
+    const id = getId(dbAloituskuulutus, aloitusKuulutusJulkaisutCount);
+
     return {
       ...rest,
+      id,
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat), //pakko tukea vielä tätä
       hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus),
       kuulutusYhteystiedot: adaptStandardiYhteystiedotToSave(kuulutusYhteystiedot),

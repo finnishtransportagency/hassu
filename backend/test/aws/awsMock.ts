@@ -13,6 +13,9 @@ export function awsMockResolves<T>(stub: sinon.SinonStub, returnValue?: T): void
 
 export function expectAwsCalls(stub: sinon.SinonStub, ...cleanupFieldNames: string[]): void {
   const calls = stub.getCalls();
+  if (calls.length == 0) {
+    return;
+  }
   const args = calls
     .map((call) => {
       const { Body: _Body, ...rest } = call.args[0];

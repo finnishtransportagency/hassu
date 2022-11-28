@@ -19,7 +19,7 @@ export const MOCKED_DATE = "2022-11-03";
 export async function recordProjektiTestFixture(fixtureName: string | FixtureName, oid: string): Promise<void> {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   if (dbProjekti) {
-    cleanupProjekti(dbProjekti);
+    cleanupAnyProjektiData(dbProjekti);
 
     let oldValue: string | undefined;
     try {
@@ -60,13 +60,15 @@ export async function useProjektiTestFixture(fixtureName: string | FixtureName):
 }
 
 export function cleanupAndCloneAPIProjekti(projekti: apiModel.Projekti): apiModel.Projekti {
-  return cleanupProjekti(cloneDeep(projekti));
+  return cleanupAnyProjektiData(cloneDeep(projekti));
 }
 
-function cleanupProjekti<T extends Record<string, any>>(projekti: T): T {
+export function cleanupAnyProjektiData<T extends Record<string, any>>(projekti: T): T {
   replaceFieldsByName(projekti, MOCKED_TIMESTAMP, "tuotu", "paivitetty", "kuulutusVaihePaattyyPaiva", "lahetetty");
   replaceFieldsByName(projekti, MOCKED_DATE, "hyvaksymisPaiva");
   replaceFieldsByName(projekti, "salt123", "salt");
+  replaceFieldsByName(projekti, "ABC123", "checksum");
+  replaceFieldsByName(projekti, undefined, "isSame");
   return projekti;
 }
 
@@ -75,7 +77,11 @@ export function replaceFieldsByName(obj: Record<string, any>, value: unknown, ..
     if (typeof obj[prop] == "object" && obj[prop] !== null) {
       replaceFieldsByName(obj[prop], value, ...fieldNames);
     } else if (fieldNames.indexOf(prop) >= 0) {
-      obj[prop] = value;
+      if (value == undefined) {
+        delete obj[prop];
+      } else {
+        obj[prop] = value;
+      }
     }
   });
 }

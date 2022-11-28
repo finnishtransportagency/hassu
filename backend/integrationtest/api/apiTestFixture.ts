@@ -1,5 +1,6 @@
 import {
   AloitusKuulutus,
+
   AloitusKuulutusInput,
   IlmoitettavaViranomainen,
   IlmoituksenVastaanottajat,

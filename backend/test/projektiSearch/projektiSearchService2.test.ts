@@ -76,6 +76,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
   tyyppi: ProjektiTyyppi.TIE,
   suunnittelustaVastaavaViranomainen: undefined,
   aloitusKuulutus: {
+    id: 1,
     kuulutusPaiva: "2022-10-10",
     siirtyySuunnitteluVaiheeseen: "2022-11-09",
     hankkeenKuvaus: {

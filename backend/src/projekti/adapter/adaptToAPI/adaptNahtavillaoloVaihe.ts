@@ -1,4 +1,4 @@
-import { DBProjekti, LocalizedMap, NahtavillaoloPDF, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../../database/model";
+import { DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { KuulutusJulkaisuTila, MuokkausTila } from "../../../../../common/graphql/apiModel";
 import {
@@ -12,6 +12,7 @@ import {
 } from "../common";
 import { fileService } from "../../../files/fileService";
 import { lisaAineistoService } from "../../../aineisto/lisaAineistoService";
+import { ProjektiPaths } from "../../../files/ProjektiPath";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import { adaptUudelleenKuulutus } from "./adaptAloitusKuulutus";
 
@@ -30,12 +31,12 @@ export function adaptNahtavillaoloVaihe(
       hankkeenKuvaus,
       ...rest
     } = nahtavillaoloVaihe;
-
+  const paths = new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(nahtavillaoloVaihe);
     return {
       __typename: "NahtavillaoloVaihe",
       ...rest,
-      aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
-      lisaAineisto: adaptAineistot(lisaAineisto),
+      aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
+      lisaAineisto: adaptAineistot(lisaAineisto, paths),
       // dbProjekti.salt on määritelty
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -107,17 +108,18 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.yhteystiedot määrittelemättä");
     }
 
-    const palautetaan: API.NahtavillaoloVaiheJulkaisu = {
-      ...fieldsToCopyAsIs,
-      __typename: "NahtavillaoloVaiheJulkaisu",
-      tila,
-      hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
-      kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
-      yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
-      ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-      aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
-      lisaAineisto: adaptAineistot(lisaAineisto),
-      nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(oid, nahtavillaoloPDFt),
+    const paths = new ProjektiPaths(oid).nahtavillaoloVaihe(julkaisu);
+      const palautetaan: API.NahtavillaoloVaiheJulkaisu = {
+        ...fieldsToCopyAsIs,
+        __typename: "NahtavillaoloVaiheJulkaisu",
+        tila,
+        hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
+        kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
+        yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
+        ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
+        aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
+      lisaAineisto: adaptAineistot(lisaAineisto, paths),
+      nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(oid, julkaisu),
       velho: adaptVelho(velho),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
     };
@@ -126,36 +128,31 @@ export function adaptNahtavillaoloVaiheJulkaisu(
   return undefined;
 }
 
-function adaptNahtavillaoloPDFPaths(oid: string, nahtavillaoloPDFs: LocalizedMap<NahtavillaoloPDF>): API.NahtavillaoloPDFt | undefined {
+function adaptNahtavillaoloPDFPaths(
+  oid: string,
+  nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu
+): API.NahtavillaoloPDFt | undefined {
+  const nahtavillaoloPDFs = nahtavillaoloVaiheJulkaisu.nahtavillaoloPDFt;
   if (!nahtavillaoloPDFs) {
     return undefined;
   }
 
+  const paths = new ProjektiPaths(oid).nahtavillaoloVaihe(nahtavillaoloVaiheJulkaisu);
   const result: Partial<API.NahtavillaoloPDFt> = {};
   for (const kieli in nahtavillaoloPDFs) {
     const pdfs = nahtavillaoloPDFs[kieli as API.Kieli];
     if (!pdfs) {
       throw new Error(`adaptNahtavillaoloPDFPaths: nahtavillaoloPDFs[${kieli}] määrittelemättä`);
     }
-    const nahtavillaoloPdf: API.NahtavillaoloPDF = {
+    result[kieli as API.Kieli] = {
       __typename: "NahtavillaoloPDF",
-      // getYllapitoPathForProjektiFile molemmat argumentit on määritelty, joten funktio palauttaa ei-undefined arvon
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      nahtavillaoloPDFPath: fileService.getYllapitoPathForProjektiFile(oid, pdfs.nahtavillaoloPDFPath),
-      // getYllapitoPathForProjektiFile molemmat argumentit on määritelty, joten funktio palauttaa ei-undefined arvon
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      nahtavillaoloIlmoitusPDFPath: fileService.getYllapitoPathForProjektiFile(oid, pdfs.nahtavillaoloIlmoitusPDFPath),
-      // getYllapitoPathForProjektiFile molemmat argumentit on määritelty, joten funktio palauttaa ei-undefined arvon
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      nahtavillaoloPDFPath: fileService.getYllapitoPathForProjektiFile(paths, pdfs.nahtavillaoloPDFPath),
+      nahtavillaoloIlmoitusPDFPath: fileService.getYllapitoPathForProjektiFile(paths, pdfs.nahtavillaoloIlmoitusPDFPath),
       nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: fileService.getYllapitoPathForProjektiFile(
-        oid,
+        paths,
         pdfs.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath
       ),
     };
-    result[kieli as API.Kieli] = nahtavillaoloPdf;
   }
   return { __typename: "NahtavillaoloPDFt", [API.Kieli.SUOMI]: result[API.Kieli.SUOMI] as API.NahtavillaoloPDF, ...result };
 }

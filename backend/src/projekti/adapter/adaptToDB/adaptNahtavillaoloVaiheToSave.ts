@@ -6,6 +6,7 @@ import {
   adaptHankkeenKuvausToSave,
   adaptIlmoituksenVastaanottajatToSave,
   adaptStandardiYhteystiedotToSave,
+  getId,
 } from "./common";
 import mergeWith from "lodash/mergeWith";
 import { adaptUudelleenKuulutusToSave } from "./adaptAloitusKuulutusToSave";
@@ -40,15 +41,7 @@ export function adaptNahtavillaoloVaiheToSave(
   const lisaAineisto = lisaAineistoInput
     ? adaptAineistotToSave(dbNahtavillaoloVaihe?.lisaAineisto, lisaAineistoInput, projektiAdaptationResult)
     : undefined;
-
-  let id = dbNahtavillaoloVaihe?.id;
-  if (!id) {
-    if (nahtavillaoloVaiheJulkaisutCount) {
-      id = nahtavillaoloVaiheJulkaisutCount + 1;
-    } else {
-      id = 1;
-    }
-  }
+  const id = getId(dbNahtavillaoloVaihe, nahtavillaoloVaiheJulkaisutCount);
 
   const uusiNahtavillaolovaihe: NahtavillaoloVaihe = {
     kuulutusPaiva,

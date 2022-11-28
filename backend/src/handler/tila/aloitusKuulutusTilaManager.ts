@@ -21,6 +21,8 @@ import assert from "assert";
 import { isKuulutusPaivaInThePast } from "../../projekti/status/projektiJulkinenStatusHandler";
 import dayjs from "dayjs";
 import { assertIsDefined } from "../../util/assertions";
+import { ProjektiPaths } from "../../files/ProjektiPath";
+import { aineistoService } from "../../aineisto/aineistoService";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -38,15 +40,15 @@ async function createAloituskuulutusPDF(
     luonnos: false,
     kayttoOikeudet: projekti.kayttoOikeudet,
   });
+
   return fileService.createFileToProjekti({
     oid: projekti.oid,
-    filePathInProjekti: "aloituskuulutus",
+    path: new ProjektiPaths(projekti.oid).aloituskuulutus(julkaisuWaitingForApproval),
     fileName: pdf.nimi,
     contents: Buffer.from(pdf.sisalto, "base64"),
     inline: true,
     contentType: "application/pdf",
     publicationTimestamp: parseDate(julkaisuWaitingForApproval.kuulutusPaiva),
-    copyToPublic: true,
   });
 }
 
@@ -151,6 +153,7 @@ class AloitusKuulutusTilaManager extends TilaManager {
       assert(julkaisuWaitingForApproval.kuulutusPaiva, "kuulutusPaiva on oltava tässä kohtaa");
       await fileService.publishProjektiFile(projekti.oid, logoFilePath, logoFilePath, parseDate(julkaisuWaitingForApproval.kuulutusPaiva));
     }
+    await aineistoService.synchronizeProjektiFiles(projekti.oid);
   }
 
   private async generatePDFs(projekti: DBProjekti, julkaisuWaitingForApproval: AloitusKuulutusJulkaisu) {

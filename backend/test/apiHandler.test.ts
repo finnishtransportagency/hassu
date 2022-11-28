@@ -32,6 +32,7 @@ import { handleEvent as pdfGenerator } from "../src/asiakirja/lambda/pdfGenerato
 import { getS3 } from "../src/aws/client";
 import { awsMockResolves, expectAwsCalls } from "./aws/awsMock";
 import { kuntametadata } from "../../common/kuntametadata";
+import { aineistoService } from "../src/aineisto/aineistoService";
 
 const { expect, assert } = require("chai");
 
@@ -60,6 +61,7 @@ describe("apiHandler", () => {
   let persistFileToProjektiStub: sinon.SinonStub;
   let sendEmailStub: sinon.SinonStub;
   let pdfGeneratorLambdaStub: sinon.SinonStub;
+  let aineistoServiceStub: sinon.SinonStub;
 
   before(() => {
     userFixture = new UserFixture(userService);
@@ -84,6 +86,11 @@ describe("apiHandler", () => {
     sendEmailStub.resolves();
 
     pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
+
+    aineistoServiceStub = sinon.stub(aineistoService, "synchronizeProjektiFiles");
+    aineistoServiceStub.callsFake(async () => {
+      console.log("Synkataan aineisto");
+    });
   });
 
   after(() => {
@@ -209,8 +216,8 @@ describe("apiHandler", () => {
                   ...julkaisu,
                   aloituskuulutusPDFt: {
                     SUOMI: {
-                      aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-                      aloituskuulutusPDFPath: "/aloituskuulutus/T412 Aloituskuulutus.pdf",
+                      aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+                      aloituskuulutusPDFPath: "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
                     },
                   },
                 },

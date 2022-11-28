@@ -16,6 +16,7 @@ describe.skip("Email", () => {
       },
       oid: "123",
       aloitusKuulutus: {
+        id: 1,
         kuulutusPaiva: "2022-01-01",
         hankkeenKuvaus: {
           SUOMI:

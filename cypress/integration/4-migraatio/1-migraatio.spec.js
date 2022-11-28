@@ -13,8 +13,8 @@ import {
   hyvaksyNahtavillaoloKuulutus,
   lisaaNahtavillaoloAineistot,
   taytaNahtavillaoloPerustiedot,
-} from "../2-perusta-projekti/nahtavillaolo";
-import { lisaaPaatosJaAineistot, tallennaKasittelynTilaJaSiirraMenneisyyteen } from "../2-perusta-projekti/hyvaksyntavaihe";
+} from "../../support/nahtavillaolo";
+import { lisaaPaatosJaAineistot, tallennaKasittelynTilaJaSiirraMenneisyyteen } from "../../support/hyvaksyntavaihe";
 import { formatDate } from "../../../src/util/dateUtils";
 import dayjs from "dayjs";
 
