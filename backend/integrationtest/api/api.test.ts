@@ -84,6 +84,7 @@ describe("Api", () => {
 
     try {
       await deleteProjekti(oid);
+      awsCloudfrontInvalidationStub.reset();
     } catch (ignored) {
       // ignored
     }

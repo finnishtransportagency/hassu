@@ -8,11 +8,12 @@ import { Dayjs } from "dayjs";
 // @ts-ignore
 import { uriEscapePath } from "aws-sdk/lib/util";
 import S3, { ListObjectsV2Output, Metadata } from "aws-sdk/clients/s3";
-import { getS3 } from "../aws/client";
+import { getCloudFront, getS3 } from "../aws/client";
 import { parseDate } from "../util/dateUtil";
 import { PathTuple, ProjektiPaths } from "./ProjektiPath";
 import { AWSError } from "aws-sdk/lib/error";
 import isEqual from "lodash/isEqual";
+import { assertIsDefined } from "../util/assertions";
 
 export type UploadFileProperties = {
   fileNameWithPath: string;
@@ -204,11 +205,10 @@ export class FileService {
   }
 
   /**
-   * Only for integration testing
+   * Only for non-prod environments
    */
   async deleteProjekti(oid: string): Promise<void> {
-    // Allow only in unit/integration tests
-    if (process.env.S3_ENDPOINT && process.env.S3_ENDPOINT.includes("localhost")) {
+    if (config.env !== "prod") {
       const yllapitoProjektiDirectory = FileService.getYllapitoProjektiDirectory(oid);
       if (!config.yllapitoBucketName) {
         throw new Error("config.yllapitoBucketName määrittelemättä");
@@ -220,6 +220,20 @@ export class FileService {
         throw new Error("config.publicBucketName määrittelemättä");
       }
       await this.deleteFilesRecursively(config.publicBucketName, publicProjektiDirectory);
+
+      assertIsDefined(config.cloudFrontDistributionId, "config.cloudFrontDistributionId määrittelemättä");
+      await getCloudFront()
+        .createInvalidation({
+          DistributionId: config.cloudFrontDistributionId,
+          InvalidationBatch: {
+            CallerReference: "deleteProjekti" + new Date().getTime(),
+            Paths: {
+              Quantity: 1,
+              Items: ["/" + fileService.getPublicPathForProjektiFile(new ProjektiPaths(oid), "/*")],
+            },
+          },
+        })
+        .promise();
     }
   }
 

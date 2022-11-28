@@ -33,6 +33,7 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
     mockSaveProjektiToVelho();
     try {
       await deleteProjekti(oid);
+      awsCloudfrontInvalidationStub.reset();
     } catch (_ignore) {
       // ignore
     }

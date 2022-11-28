@@ -140,6 +140,10 @@ export class CloudFrontStub {
     if (expectedNumberOfCalls) {
       expect(this.stub.getCalls()).to.have.length(expectedNumberOfCalls);
     }
+    this.reset();
+  }
+
+  reset(): void {
     this.stub.resetHistory();
   }
 }

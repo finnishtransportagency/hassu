@@ -54,6 +54,7 @@ describe("Jatkopäätökset", () => {
     await setupLocalDatabase();
     mockSaveProjektiToVelho();
     await deleteProjekti(oid);
+    awsCloudfrontInvalidationStub.reset();
 
     await useProjektiTestFixture(FixtureName.JATKOPAATOS_1_ALKU);
   });
