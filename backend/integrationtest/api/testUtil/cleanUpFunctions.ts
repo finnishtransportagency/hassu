@@ -51,8 +51,6 @@ export function cleanupNahtavillaoloTimestamps(
     lisaAineistoParametrit.poistumisPaiva = "***unittest***";
     (nahtavillaoloVaihe as NahtavillaoloVaihe)["lisaAineistoParametrit"] = lisaAineistoParametrit;
   }
-  nahtavillaoloVaihe.kuulutusPaiva = "***unittest***";
-  nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva = "***unittest***";
   if ((nahtavillaoloVaihe as DBNahtavillaoloVaiheJulkaisu).hyvaksymisPaiva) {
     (nahtavillaoloVaihe as DBNahtavillaoloVaiheJulkaisu).hyvaksymisPaiva = "***unittest***";
   }
