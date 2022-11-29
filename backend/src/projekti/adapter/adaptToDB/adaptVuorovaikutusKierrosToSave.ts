@@ -1,11 +1,4 @@
-import {
-  Aineisto,
-  DBProjekti,
-  VuorovaikutusKierros,
-  VuorovaikutusKierrosJulkaisu,
-  VuorovaikutusTilaisuus,
-  Yhteystieto,
-} from "../../../database/model";
+import { Aineisto, DBProjekti, VuorovaikutusKierros, VuorovaikutusTilaisuus, Yhteystieto } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
 import {
@@ -26,27 +19,23 @@ export function adaptVuorovaikutusKierrosToSave(
   if (vuorovaikutusKierrosInput) {
     const { arvioSeuraavanVaiheenAlkamisesta, suunnittelunEteneminenJaKesto, palautteidenVastaanottajat, hankkeenKuvaus } =
       vuorovaikutusKierrosInput;
-    let dbVuorovaikutus: VuorovaikutusKierrosJulkaisu | undefined;
     let vuorovaikutusTilaisuudet: VuorovaikutusTilaisuus[] | undefined;
-    let esittelyaineistot: Aineisto[] | undefined;
-    let suunnitelmaluonnokset: Aineisto[] | undefined;
-    if (vuorovaikutusKierrosInput.vuorovaikutusNumero) {
-      dbVuorovaikutus = dbProjekti.vuorovaikutusKierrosJulkaisut?.[dbProjekti.vuorovaikutusKierrosJulkaisut?.length - 1];
 
-      esittelyaineistot = adaptAineistotToSave(
-        dbVuorovaikutus?.esittelyaineistot,
-        vuorovaikutusKierrosInput.esittelyaineistot,
-        projektiAdaptationResult
-      );
-      suunnitelmaluonnokset = adaptAineistotToSave(
-        dbVuorovaikutus?.esittelyaineistot,
-        vuorovaikutusKierrosInput.suunnitelmaluonnokset,
-        projektiAdaptationResult
-      );
+    const dbVuorovaikutusKierros: VuorovaikutusKierros | undefined = dbProjekti.vuorovaikutusKierros || undefined;
 
-      if (vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet) {
-        vuorovaikutusTilaisuudet = adaptVuorovaikutusTilaisuudetToSave(vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet);
-      }
+    const esittelyaineistot: Aineisto[] | undefined = adaptAineistotToSave(
+      dbVuorovaikutusKierros?.esittelyaineistot,
+      vuorovaikutusKierrosInput.esittelyaineistot,
+      projektiAdaptationResult
+    );
+    const suunnitelmaluonnokset: Aineisto[] | undefined = adaptAineistotToSave(
+      dbVuorovaikutusKierros?.esittelyaineistot,
+      vuorovaikutusKierrosInput.suunnitelmaluonnokset,
+      projektiAdaptationResult
+    );
+
+    if (vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet) {
+      vuorovaikutusTilaisuudet = adaptVuorovaikutusTilaisuudetToSave(vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet);
     }
 
     const vuorovaikutusKierros: VuorovaikutusKierros = {
