@@ -5,6 +5,9 @@ import {
   HyvaksymisPaatosVaiheJulkaisu,
   NahtavillaoloVaiheJulkaisu,
   Velho,
+  VuorovaikutusKierrosJulkaisu,
+  VuorovaikutusTilaisuus,
+  VuorovaikutusTilaisuusJulkaisu,
 } from "../database/model";
 import cloneDeep from "lodash/cloneDeep";
 import { KuulutusJulkaisuTila } from "../../../common/graphql/apiModel";
@@ -40,6 +43,33 @@ export class AsiakirjaAdapter {
       };
     }
     throw new Error("Aloituskuulutus puuttuu");
+  }
+
+  adaptVuorovaikutusKierrosJulkaisu(dbProjekti: DBProjekti): VuorovaikutusKierrosJulkaisu {
+    if (dbProjekti.vuorovaikutusKierros) {
+      const { vuorovaikutusTilaisuudet, esitettavatYhteystiedot, ...includedFields } = dbProjekti.vuorovaikutusKierros;
+      return {
+        ...includedFields,
+        vuorovaikutusTilaisuudet: vuorovaikutusTilaisuudet?.map((tilaisuus) =>
+          this.adaptVuorovaikutusTilaisuusJulkaisuksi(dbProjekti, tilaisuus)
+        ),
+        yhteystiedot: esitettavatYhteystiedot ? adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, esitettavatYhteystiedot) : undefined,
+      };
+    }
+    throw new Error("VuorovaikutusKierros puuttuu");
+  }
+
+  private adaptVuorovaikutusTilaisuusJulkaisuksi(
+    projekti: DBProjekti,
+    vuorovaikutusTilaisuus: VuorovaikutusTilaisuus
+  ): VuorovaikutusTilaisuusJulkaisu {
+    const tilaisuusKopio = { ...vuorovaikutusTilaisuus };
+    const esitettavatYhteystiedotKopio = tilaisuusKopio.esitettavatYhteystiedot;
+    delete tilaisuusKopio.esitettavatYhteystiedot;
+    return {
+      ...tilaisuusKopio,
+      yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(projekti, esitettavatYhteystiedotKopio),
+    };
   }
 
   adaptNahtavillaoloVaiheJulkaisu(dbProjekti: DBProjekti): NahtavillaoloVaiheJulkaisu {
