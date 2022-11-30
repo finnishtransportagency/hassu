@@ -1,12 +1,12 @@
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
-import { Vuorovaikutus, Kieli, AloitusKuulutusJulkaisu } from "@services/api";
+import { VuorovaikutusKierrosJulkaisu, Kieli, AloitusKuulutusJulkaisu } from "@services/api";
 import React, { ReactElement } from "react";
 import { formatDate } from "src/util/dateUtils";
 import lowerCase from "lodash/lowerCase";
 
 interface Props {
-  vuorovaikutus: Vuorovaikutus;
+  vuorovaikutus: VuorovaikutusKierrosJulkaisu;
   aloituskuulutusjulkaisu: AloitusKuulutusJulkaisu;
 }
 

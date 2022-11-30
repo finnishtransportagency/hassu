@@ -4,10 +4,10 @@ import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 
 export const getValidatedKierrosId = (router: NextRouter, projekti: ProjektiLisatiedolla) => {
   const kierrosId = router.query.kierrosId;
-  const vuorovaikutukset = projekti.suunnitteluVaihe?.vuorovaikutukset;
+  const vuorovaikutusKierrokset = projekti.vuorovaikutusKierrosJulkaisut;
   return typeof kierrosId === "string" &&
     !isInteger(kierrosId) &&
-    (vuorovaikutukset?.some((vuorovaikutus) => vuorovaikutus.vuorovaikutusNumero === parseInt(kierrosId)) || kierrosId === "1")
+    !!(vuorovaikutusKierrokset?.[parseInt(kierrosId) - 1] || kierrosId === "1")
     ? parseInt(kierrosId)
     : undefined;
 };

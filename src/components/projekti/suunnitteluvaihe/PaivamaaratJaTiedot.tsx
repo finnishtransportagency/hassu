@@ -1,37 +1,10 @@
 import SectionContent from "@components/layout/SectionContent";
-import { Projekti } from "@services/api";
-import React, { ReactElement, useMemo } from "react";
+import React, { ReactElement } from "react";
 import { today } from "src/util/dateUtils";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { VuorovaikutusFormValues } from "./SuunnitteluvaiheenVuorovaikuttaminen";
-import VuorovaikutusPaivamaaraJaTiedotLukutila from "../lukutila/komponentit/VuorovaikutusPaivamaaraJaTiedotLukutila";
 
-interface Props {
-  projekti?: Projekti | null;
-  vuorovaikutusnro: number | null | undefined;
-}
-
-export default function SuunnitteluvaiheenVuorovaikuttaminen({ projekti, vuorovaikutusnro }: Props): ReactElement {
-  const v = useMemo(() => {
-    return projekti?.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
-      return v.vuorovaikutusNumero === vuorovaikutusnro;
-    });
-  }, [projekti, vuorovaikutusnro]);
-
-  const aloituskuulutusjulkaisu = useMemo(() => {
-    return projekti?.aloitusKuulutusJulkaisu;
-  }, [projekti]);
-
-  const julkinen = v?.julkinen;
-
-  if (!projekti) {
-    return <></>;
-  }
-
-  if (julkinen && aloituskuulutusjulkaisu) {
-    return <VuorovaikutusPaivamaaraJaTiedotLukutila aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} vuorovaikutus={v} />;
-  }
-
+export default function SuunnitteluvaiheenVuorovaikuttaminen(): ReactElement {
   return (
     <>
       <SectionContent>
@@ -44,7 +17,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({ projekti, vuorova
           label="Julkaisupäivä"
           minDate={today()}
           textFieldProps={{ required: true }}
-          controllerProps={{ name: "suunnitteluVaihe.vuorovaikutus.vuorovaikutusJulkaisuPaiva" }}
+          controllerProps={{ name: "vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva" }}
         />
       </SectionContent>
       <SectionContent>
@@ -57,7 +30,7 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({ projekti, vuorova
             required: true,
             sx: { maxWidth: { md: "min-content" } },
           }}
-          controllerProps={{ name: "suunnitteluVaihe.vuorovaikutus.kysymyksetJaPalautteetViimeistaan" }}
+          controllerProps={{ name: "vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan" }}
         />
       </SectionContent>
     </>

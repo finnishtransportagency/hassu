@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { maxHankkeenkuvausLength, suunnittelunPerustiedotSchema } from "src/schemas/suunnittelunPerustiedot";
 import SectionContent from "@components/layout/SectionContent";
 import Textarea from "@components/form/Textarea";
-import { KuulutusJulkaisuTila, Kieli, SuunnitteluVaiheInput, SuunnitteluVaiheTila, TallennaProjektiInput } from "@services/api";
+import { KuulutusJulkaisuTila, api, Kieli, TallennaProjektiInput, VuorovaikutusKierrosInput } from "@services/api";
 import Section from "@components/layout/Section";
 import lowerCase from "lodash/lowerCase";
 import { ReactElement, useMemo, useState } from "react";
@@ -28,9 +28,9 @@ type RequiredProjektiFields = Required<{
 }>;
 
 type FormValues = RequiredProjektiFields & {
-  suunnitteluVaihe: Pick<
-    SuunnitteluVaiheInput,
-    "hankkeenKuvaus" | "arvioSeuraavanVaiheenAlkamisesta" | "suunnittelunEteneminenJaKesto" | "tila"
+  vuorovaikutusKierros: Pick<
+    VuorovaikutusKierrosInput,
+    "hankkeenKuvaus" | "arvioSeuraavanVaiheenAlkamisesta" | "suunnittelunEteneminenJaKesto" | "vuorovaikutusNumero"
   >;
 };
 
@@ -55,18 +55,18 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     const hasRuotsinKieli = ensisijainenKieli === Kieli.RUOTSI || toissijainenKieli === Kieli.RUOTSI;
     const hasSaamenKieli = ensisijainenKieli === Kieli.SAAME || toissijainenKieli === Kieli.SAAME;
 
-    const hankkeenKuvausHasBeenCreated: boolean = !!projekti.suunnitteluVaihe?.hankkeenKuvaus;
+    const hankkeenKuvausHasBeenCreated: boolean = !!projekti.vuorovaikutusKierros?.hankkeenKuvaus;
 
     // SUOMI hankkeen kuvaus on aina lomakkeella, RUOTSI JA SAAME vain jos kyseinen kieli on projektin kielitiedoissa.
     // Jos kieli ei ole kielitiedoissa kyseisen kielen kenttää ei tule lisätä hankkeenKuvaus olioon
     // Tästä syystä pickBy:llä poistetaan undefined hankkeenkuvaus tiedot.
-    const hankkeenKuvaus: FormValues["suunnitteluVaihe"]["hankkeenKuvaus"] = hankkeenKuvausHasBeenCreated
+    const hankkeenKuvaus: FormValues["vuorovaikutusKierros"]["hankkeenKuvaus"] = hankkeenKuvausHasBeenCreated
       ? {
-          SUOMI: projekti.suunnitteluVaihe?.hankkeenKuvaus?.SUOMI || "",
+          SUOMI: projekti.vuorovaikutusKierros?.hankkeenKuvaus?.SUOMI || "",
           ...pickBy(
             {
-              RUOTSI: hasRuotsinKieli ? projekti.suunnitteluVaihe?.hankkeenKuvaus?.RUOTSI || "" : undefined,
-              SAAME: hasSaamenKieli ? projekti.suunnitteluVaihe?.hankkeenKuvaus?.SAAME || "" : undefined,
+              RUOTSI: hasRuotsinKieli ? projekti.vuorovaikutusKierros?.hankkeenKuvaus?.RUOTSI || "" : undefined,
+              SAAME: hasSaamenKieli ? projekti.vuorovaikutusKierros?.hankkeenKuvaus?.SAAME || "" : undefined,
             },
             (value) => value !== undefined
           ),
@@ -84,11 +84,11 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
 
     const tallentamisTiedot: FormValues = {
       oid: projekti.oid,
-      suunnitteluVaihe: {
-        arvioSeuraavanVaiheenAlkamisesta: projekti.suunnitteluVaihe?.arvioSeuraavanVaiheenAlkamisesta || "",
-        suunnittelunEteneminenJaKesto: projekti.suunnitteluVaihe?.suunnittelunEteneminenJaKesto || "",
+      vuorovaikutusKierros: {
+        vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0, // TODO mieti
+        arvioSeuraavanVaiheenAlkamisesta: projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta || "",
+        suunnittelunEteneminenJaKesto: projekti.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto || "",
         hankkeenKuvaus: hankkeenKuvaus,
-        tila: projekti.suunnitteluVaihe?.tila,
       },
     };
     return tallentamisTiedot;
@@ -118,8 +118,8 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
   const saveAndPublish = async (formData: FormValues) => {
     setIsFormSubmitting(true);
     try {
-      formData.suunnitteluVaihe.tila = SuunnitteluVaiheTila.JULKINEN;
       await saveSuunnitteluvaihe(formData);
+      // TODO kutsu julkaisuhommaa
       showSuccessMessage("Tallennus ja julkaisu onnistui");
     } catch (e) {
       log.error("OnSubmit Error", e);
@@ -154,7 +154,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
   const kielitiedot = projekti.kielitiedot;
   const ensisijainenKieli = projekti.kielitiedot ? projekti.kielitiedot.ensisijainenKieli : Kieli.SUOMI;
   const toissijainenKieli = kielitiedot?.toissijainenKieli;
-  const julkinen = !!projekti.suunnitteluVaihe?.tila;
+  const julkinen = !!projekti.vuorovaikutusKierros?.tila; // TODO tarkista, että BE:stä tää tulee oikein
 
   const suunnitteluVaiheCanBePublished = canProjektiBePublished(projekti);
 
@@ -162,8 +162,8 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     <>
       {julkinen && (
         <Notification type={NotificationType.INFO_GREEN}>
-          Suunnitteluvaiheen perustiedot on julkaistu palvelun julkisella puolella. Voit muokata kuvausta, sekä tietoja etenemisestä ja
-          kestosta. Muutokset päivittyvät palvelun julkiselle puolella Tallenna ja päivitä -painikkeen painamisen jälkeen.
+          Vuorovaikutuskierros on julkaistu palvelun julkisella puolella. Voit muokata kuvausta, sekä tietoja etenemisestä ja kestosta.
+          Muutokset päivittyvät palvelun julkiselle puolella Tallenna ja päivitä -painikkeen painamisen jälkeen.
         </Notification>
       )}
       <FormProvider {...useFormReturn}>
@@ -186,9 +186,9 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
 
             <Textarea
               label={`Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (${lowerCase(kielitiedot?.ensisijainenKieli)}) *`}
-              {...register(`suunnitteluVaihe.hankkeenKuvaus.${ensisijainenKieli}`)}
+              {...register(`vuorovaikutusKierros.hankkeenKuvaus.${ensisijainenKieli}`)}
               error={
-                (errors.suunnitteluVaihe?.hankkeenKuvaus as any)?.[
+                (errors.vuorovaikutusKierros?.hankkeenKuvaus as any)?.[
                   kielitiedot?.ensisijainenKieli ? kielitiedot.ensisijainenKieli : Kieli.SUOMI
                 ]
               }
@@ -197,8 +197,8 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             {toissijainenKieli && (
               <Textarea
                 label={`Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä (${lowerCase(toissijainenKieli)}) *`}
-                {...register(`suunnitteluVaihe.hankkeenKuvaus.${toissijainenKieli}`)}
-                error={(errors.suunnitteluVaihe?.hankkeenKuvaus as any)?.[toissijainenKieli]}
+                {...register(`vuorovaikutusKierros.hankkeenKuvaus.${toissijainenKieli}`)}
+                error={(errors.vuorovaikutusKierros?.hankkeenKuvaus as any)?.[toissijainenKieli]}
                 maxLength={maxHankkeenkuvausLength}
               />
             )}
@@ -214,8 +214,8 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
               <Textarea
                 label="Julkisella puolella esitettävä suunnittelun etenemisen kuvaus"
                 maxLength={maxHankkeenkuvausLength}
-                {...register("suunnitteluVaihe.suunnittelunEteneminenJaKesto")}
-                error={errors.suunnitteluVaihe?.suunnittelunEteneminenJaKesto}
+                {...register("vuorovaikutusKierros.suunnittelunEteneminenJaKesto")}
+                error={errors.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto}
               />
               <p>
                 Anna arvio hallinnollisen käsittelyn seuraavan vaiheen alkamisesta. Seuraava vaihe on nähtävillä olo, jossa kansalaisilla on
@@ -230,13 +230,12 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
               <TextInput
                 label={"Arvio seuraavan vaiheen alkamisesta *"}
                 maxLength={150}
-                {...register("suunnitteluVaihe.arvioSeuraavanVaiheenAlkamisesta")}
-                error={errors.suunnitteluVaihe?.arvioSeuraavanVaiheenAlkamisesta}
+                {...register("vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta")}
+                error={errors.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta}
               ></TextInput>
             </SectionContent>
           </Section>
           {projekti && <SaapuneetKysymyksetJaPalautteet projekti={projekti} />}
-          <input type="hidden" {...register("suunnitteluVaihe.tila", { setValueAs: (value) => value || null })} />
         </form>
       </FormProvider>
       <Section noDivider>

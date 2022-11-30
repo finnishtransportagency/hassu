@@ -1,16 +1,17 @@
 import SectionContent from "@components/layout/SectionContent";
-import { Projekti, VuorovaikutusTilaisuusTyyppi, Vuorovaikutus } from "@services/api";
+import { Projekti, VuorovaikutusTilaisuusTyyppi, VuorovaikutusKierrosJulkaisu, Yhteystieto } from "@services/api";
 import Section from "@components/layout/Section";
 import React, { ReactElement } from "react";
 import dayjs from "dayjs";
 import { formatDate } from "src/util/dateUtils";
 import capitalize from "lodash/capitalize";
 import useTranslation from "next-translate/useTranslation";
-import StandardiYhteystiedotListana from "../../common/StandardiYhteystiedotListana";
+import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import replace from "lodash/replace";
 
 interface Props {
   projekti: Projekti;
-  vuorovaikutus: Vuorovaikutus;
+  vuorovaikutus: VuorovaikutusKierrosJulkaisu;
 }
 
 export default function VuorovaikutusMahdollisuudet({ projekti, vuorovaikutus }: Props): ReactElement {
@@ -95,9 +96,11 @@ export default function VuorovaikutusMahdollisuudet({ projekti, vuorovaikutus }:
                         {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}
                       </p>
                       <div className="pl-2">
-                        {tilaisuus.esitettavatYhteystiedot && (
-                          <StandardiYhteystiedotListana projekti={projekti} standardiYhteystiedot={tilaisuus.esitettavatYhteystiedot} />
-                        )}
+                        {tilaisuus.yhteystiedot?.map((yhteystieto, index) => (
+                          <p style={{ margin: 0 }} key={index}>
+                            {replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto as Yhteystieto), "@", "[at]")}
+                          </p>
+                        ))}
                       </div>
                     </div>
                   );
