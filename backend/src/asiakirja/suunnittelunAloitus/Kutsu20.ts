@@ -1,4 +1,4 @@
-import { DBVaylaUser, SuunnitteluVaihe, Velho, Vuorovaikutus, VuorovaikutusTilaisuus } from "../../database/model";
+import { DBVaylaUser, Velho, VuorovaikutusKierrosJulkaisu, VuorovaikutusTilaisuus } from "../../database/model";
 import { KayttajaTyyppi, Kieli, ProjektiTyyppi, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import dayjs from "dayjs";
@@ -38,10 +38,9 @@ function createFileName(kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto, tyyppi: 
 }
 
 export class Kutsu20 extends CommonPdf {
-  private readonly suunnitteluVaihe: SuunnitteluVaihe;
   private readonly asiakirjanMuoto: AsiakirjanMuoto;
   private readonly oid: string;
-  private readonly vuorovaikutus: Vuorovaikutus;
+  private readonly vuorovaikutusKierrosJulkaisu: VuorovaikutusKierrosJulkaisu;
   private readonly kayttoOikeudet: DBVaylaUser[];
   protected header: string;
   protected kieli: Kieli;
@@ -50,15 +49,14 @@ export class Kutsu20 extends CommonPdf {
   constructor({
     oid,
     velho,
-    vuorovaikutus,
+    vuorovaikutusKierrosJulkaisu,
     kieli,
     kayttoOikeudet,
     asiakirjanMuoto,
     kielitiedot,
     suunnitteluSopimus,
-    suunnitteluVaihe,
   }: YleisotilaisuusKutsuPdfOptions) {
-    if (!(velho && velho.tyyppi && kielitiedot && suunnitteluVaihe)) {
+    if (!(velho && velho.tyyppi && kielitiedot && vuorovaikutusKierrosJulkaisu)) {
       throw new Error("Projektilta puuttuu tietoja!");
     }
     const fileName = createFileName(kieli, asiakirjanMuoto, velho.tyyppi);
@@ -75,6 +73,7 @@ export class Kutsu20 extends CommonPdf {
       projektiTyyppi: velho.tyyppi,
       kayttoOikeudet,
       suunnitteluSopimus: suunnitteluSopimusJulkaisu || undefined,
+      vuorovaikutusKierrosJulkaisu,
     });
     super(kieli, kutsuAdapter);
     const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
@@ -85,8 +84,7 @@ export class Kutsu20 extends CommonPdf {
     this.kayttoOikeudet = kayttoOikeudet;
 
     this.oid = oid;
-    this.suunnitteluVaihe = suunnitteluVaihe;
-    this.vuorovaikutus = vuorovaikutus;
+    this.vuorovaikutusKierrosJulkaisu = vuorovaikutusKierrosJulkaisu;
     this.asiakirjanMuoto = asiakirjanMuoto;
     super.setupPDF(this.header, kutsuAdapter.nimi, fileName);
   }
@@ -123,12 +121,12 @@ export class Kutsu20 extends CommonPdf {
       // tässä vaiheessa hankkenKuvaus on oltava
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      this.localizedParagraphFromMap(this.suunnitteluVaihe.hankkeenKuvaus),
+      this.localizedParagraphFromMap(this.vuorovaikutusKierrosJulkaisu.hankkeenKuvaus),
       this.localizedParagraph([`Yleisötilaisuus järjestetään:`, "", ""]),
       // vuorovaikutuksella on oltava vuorovaikutusTilaisuudet
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      ...this.vuorovaikutusTilaisuudet(this.vuorovaikutus.vuorovaikutusTilaisuudet),
+      ...this.vuorovaikutusTilaisuudet(this.vuorovaikutusKierrosJulkaisu.vuorovaikutusTilaisuudet),
 
       this.doc.struct("P", {}, [
         () => {
@@ -158,25 +156,16 @@ export class Kutsu20 extends CommonPdf {
 
       this.localizedParagraph([
         "Kutsu on julkaistu tietoverkossa verkkosivuilla " +
-          dayjs(this.vuorovaikutus.vuorovaikutusJulkaisuPaiva).format("DD.MM.YYYY") +
+          dayjs(this.vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva).format("DD.MM.YYYY") +
           ".",
       ]),
       // vuorovaikutuksella on oltava vuorovaikutusTilaisuudet
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      this.soittoajat(this.vuorovaikutus.vuorovaikutusTilaisuudet),
+      this.soittoajat(this.vuorovaikutusKierrosJulkaisu.vuorovaikutusTilaisuudet),
 
       this.lisatietojaAntavatParagraph(),
-      this.doc.struct(
-        "P",
-        {},
-        this.moreInfoElements(
-          this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysTiedot,
-          this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysHenkilot,
-          true, // näytä organisaatio
-          true // pakota projari tai kunnan edustaja
-        )
-      ),
+      this.doc.struct("P", {}, this.moreInfoElements(this.vuorovaikutusKierrosJulkaisu?.yhteystiedot)),
 
       this.tervetuloa(),
       this.kutsuja(),

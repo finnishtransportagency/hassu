@@ -1,13 +1,14 @@
 import { AsiakirjaTyyppi, Kieli, PDF, ProjektiTyyppi } from "../../../common/graphql/apiModel";
 import {
   AloitusKuulutusJulkaisu,
-  DBVaylaUser, HyvaksymisPaatosVaiheJulkaisu, KasittelynTila,
+  DBVaylaUser,
+  HyvaksymisPaatosVaiheJulkaisu,
+  KasittelynTila,
   Kielitiedot,
   NahtavillaoloVaiheJulkaisu,
   SuunnitteluSopimus,
-  SuunnitteluVaihe,
   Velho,
-  Vuorovaikutus
+  VuorovaikutusKierrosJulkaisu,
 } from "../database/model";
 
 export enum AsiakirjanMuoto {
@@ -20,7 +21,7 @@ export type NahtavillaoloKuulutusAsiakirjaTyyppi = Extract<
   | AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS
   | AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE
   | AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE
-  >;
+>;
 
 export type CreateNahtavillaoloKuulutusPdfOptions = {
   velho: Velho;
@@ -37,8 +38,7 @@ export type YleisotilaisuusKutsuPdfOptions = {
   velho: Velho;
   kielitiedot: Kielitiedot;
   suunnitteluSopimus?: SuunnitteluSopimus;
-  suunnitteluVaihe: SuunnitteluVaihe;
-  vuorovaikutus: Vuorovaikutus;
+  vuorovaikutusKierrosJulkaisu: VuorovaikutusKierrosJulkaisu;
   kieli: Kieli;
   asiakirjanMuoto: AsiakirjanMuoto;
   luonnos: boolean;
@@ -62,7 +62,7 @@ export type HyvaksymisPaatosKuulutusAsiakirjaTyyppi = Extract<
   | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE
   | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE
   | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
-  >;
+>;
 
 export type CreateHyvaksymisPaatosKuulutusPdfOptions = {
   oid: string;
