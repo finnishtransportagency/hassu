@@ -13,12 +13,11 @@ export class Kutsu21 {
     velho,
     kayttoOikeudet,
     kielitiedot,
-    suunnitteluVaihe,
-    vuorovaikutus,
+    vuorovaikutusKierrosJulkaisu,
     kieli,
     asiakirjanMuoto,
   }: YleisotilaisuusKutsuPdfOptions) {
-    if (!(velho && velho.tyyppi && kielitiedot && suunnitteluVaihe)) {
+    if (!(velho && velho.tyyppi && kielitiedot && vuorovaikutusKierrosJulkaisu)) {
       throw new Error("Projektilta puuttuu tietoja!");
     }
     this.kieli = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
@@ -29,8 +28,8 @@ export class Kutsu21 {
       kieli: this.kieli,
       asiakirjanMuoto,
       projektiTyyppi: velho.tyyppi,
-      vuorovaikutus,
       kayttoOikeudet,
+      vuorovaikutusKierrosJulkaisu,
     });
   }
 

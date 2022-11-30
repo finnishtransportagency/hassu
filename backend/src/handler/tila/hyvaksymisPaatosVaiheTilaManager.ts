@@ -8,6 +8,7 @@ import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizer
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import assert from "assert";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
+import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 
 async function cleanupKuulutusAfterApproval(projekti: DBProjekti, hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe) {
   if (hyvaksymisPaatosVaihe.palautusSyy || hyvaksymisPaatosVaihe.uudelleenKuulutus) {
@@ -20,7 +21,6 @@ async function cleanupKuulutusAfterApproval(projekti: DBProjekti, hyvaksymisPaat
     await projektiDatabase.saveProjekti({ oid: projekti.oid, hyvaksymisPaatosVaihe });
   }
 }
-
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   getVaihe(projekti: DBProjekti): HyvaksymisPaatosVaihe {
     const hyvaksymisPaatosVaihe = projekti.hyvaksymisPaatosVaihe;
@@ -64,6 +64,20 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
 
   async saveVaihe(projekti: DBProjekti, hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe): Promise<void> {
     await projektiDatabase.saveProjekti({ oid: projekti.oid, hyvaksymisPaatosVaihe });
+  }
+
+  checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja {
+    const projektiPaallikko = requireOmistaja(projekti);
+    return projektiPaallikko;
+  }
+
+  checkPriviledgesSendForApproval(projekti: DBProjekti): NykyinenKayttaja {
+    const muokkaaja = requirePermissionMuokkaa(projekti);
+    return muokkaaja;
+  }
+
+  checkUudelleenkuulutusPriviledges(projekti: DBProjekti): NykyinenKayttaja {
+    return requireAdmin();
   }
 
   async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
