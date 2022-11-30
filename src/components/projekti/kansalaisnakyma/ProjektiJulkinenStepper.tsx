@@ -36,6 +36,9 @@ const HassuLabel = styled(StepLabel)({
       paddingRight: "2rem",
     },
   },
+  [`& .${stepLabelClasses.disabled}`]: {
+    color: "#999999",
+  },
   hyphens: "auto",
 });
 
@@ -99,7 +102,7 @@ function HassuStepIcon(props: StepIconProps) {
 
   const selected = property === "selected";
 
-  return <HassuStepIconRoot ownerState={{ completed, active, selected }} className={className}></HassuStepIconRoot>;
+  return <HassuStepIconRoot ownerState={{ completed, active, selected }} className={className} />;
 }
 
 export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep, vertical }: Props): ReactElement {
@@ -108,9 +111,9 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
   const steps = [
     t(`projekti-vaiheet.suunnittelun_kaynnistaminen`),
     t(`projekti-vaiheet.suunnittelussa`),
-    t(`projekti-vaiheet.suunnitteluaineisto_nahtavilla`),
+    t(`projekti-vaiheet.suunnitelma_nahtavilla`),
     t(`projekti-vaiheet.hyvaksymismenettelyssa`),
-    t(`projekti-vaiheet.paatos`),
+    t(`projekti-vaiheet.hyvaksytty`),
   ];
 
   const links = [
@@ -120,6 +123,8 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
     `/suunnitelma/${oid}/hyvaksymismenettelyssa`,
     `/suunnitelma/${oid}/hyvaksymispaatos`,
   ];
+
+  console.log(activeStep, selectedStep);
 
   const createStep = (label: string, index: number) => {
     return (
