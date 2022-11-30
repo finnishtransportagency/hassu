@@ -39,6 +39,9 @@ const HassuLabel = styled(StepLabel)({
       paddingRight: "2rem",
     },
   },
+  [`& .${stepLabelClasses.disabled}`]: {
+    color: "#999999",
+  },
   hyphens: "auto",
 });
 
@@ -102,7 +105,7 @@ function HassuStepIcon(props: StepIconProps) {
 
   const selected = property === "selected";
 
-  return <HassuStepIconRoot ownerState={{ completed, active, selected }} className={className}></HassuStepIconRoot>;
+  return <HassuStepIconRoot ownerState={{ completed, active, selected }} className={className} />;
 }
 
 const statusToPaatosLinkMap: Partial<Record<Status, string>> = {
@@ -117,9 +120,9 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
   const steps = [
     t(`projekti-vaiheet.suunnittelun_kaynnistaminen`),
     t(`projekti-vaiheet.suunnittelussa`),
-    t(`projekti-vaiheet.suunnitteluaineisto_nahtavilla`),
+    t(`projekti-vaiheet.suunnitelma_nahtavilla`),
     t(`projekti-vaiheet.hyvaksymismenettelyssa`),
-    t(`projekti-vaiheet.paatos`),
+    t(`projekti-vaiheet.hyvaksytty`),
   ];
 
   const paatosLink = (projektiStatus && statusToPaatosLinkMap[projektiStatus]) || statusToPaatosLinkMap[Status.HYVAKSYTTY];

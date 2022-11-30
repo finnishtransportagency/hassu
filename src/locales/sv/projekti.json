@@ -57,9 +57,9 @@
   "projekti-vaiheet": {
     "suunnittelun_kaynnistaminen": "RUOTSIKSI Suunnittelun käynnistäminen",
     "suunnittelussa": "RUOTSIKSI Suunnittelussa",
-    "suunnitteluaineisto_nahtavilla": "RUOTSIKSI Suunnitteluaineisto nähtävillä",
+    "suunnitelma_nahtavilla": "RUOTSIKSI Suunnitelma nähtävillä",
     "hyvaksymismenettelyssa": "RUOTSIKSI Hyväksymismenettelyssä",
-    "paatos": "RUOTSIKSI Päätös"
+    "hyvaksytty": "RUOTSIKSI Hyväksytty"
   },
   "projekti-vayla-muoto": {
     "tie": "Väg",

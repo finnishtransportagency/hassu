@@ -57,9 +57,9 @@
   "projekti-vaiheet": {
     "suunnittelun_kaynnistaminen": "Suunnittelun käynnistäminen",
     "suunnittelussa": "Suunnittelussa",
-    "suunnitteluaineisto_nahtavilla": "Suunnitteluaineisto nähtävillä",
+    "suunnitelma_nahtavilla": "Suunnitelma nähtävillä",
     "hyvaksymismenettelyssa": "Hyväksymismenettelyssä",
-    "paatos": "Päätös"
+    "hyvaksytty": "Hyväksytty"
   },
   "projekti-vayla-muoto": {
     "tie": "Tie",
