@@ -24,7 +24,6 @@ import { NotFoundError } from "../error/NotFoundError";
 import { projektiAdapterJulkinen } from "./adapter/projektiAdapterJulkinen";
 import { findUpdatedFields } from "../velho/velhoAdapter";
 import { DBProjekti } from "../database/model";
-import { vuorovaikutusService } from "../vuorovaikutus/vuorovaikutusService";
 import { aineistoService } from "../aineisto/aineistoService";
 import { ProjektiAdaptationResult, ProjektiEventType, VuorovaikutusPublishedEvent } from "./adapter/projektiAdaptationResult";
 import remove from "lodash/remove";
