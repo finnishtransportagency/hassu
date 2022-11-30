@@ -1,5 +1,5 @@
 import * as API from "../../../../common/graphql/apiModel";
-import { KuulutusJulkaisuTila, MuokkausTila, Status, SuunnitteluVaiheTila } from "../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, MuokkausTila, Status, VuorovaikutusKierrosTila } from "../../../../common/graphql/apiModel";
 import { kayttoOikeudetSchema } from "../../../../src/schemas/kayttoOikeudet";
 import { ValidationError } from "yup";
 import { log } from "../../logger";
@@ -76,7 +76,10 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
 
   const nahtavillaOlo = new (class extends StatusHandler<API.Projekti> {
     handle(p: API.Projekti) {
-      if (p.suunnitteluVaihe?.tila == SuunnitteluVaiheTila.JULKINEN || p.suunnitteluVaihe?.tila == SuunnitteluVaiheTila.MIGROITU) {
+      if (
+        p.vuorovaikutusKierros?.tila == VuorovaikutusKierrosTila.MIGROITU ||
+        p.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN
+      ) {
         if (!p.nahtavillaoloVaihe && !p.nahtavillaoloVaiheJulkaisu) {
           p.nahtavillaoloVaihe = { __typename: "NahtavillaoloVaihe", muokkausTila: MuokkausTila.MUOKKAUS };
         }
