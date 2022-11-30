@@ -124,8 +124,6 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
     `/suunnitelma/${oid}/hyvaksymispaatos`,
   ];
 
-  console.log(activeStep, selectedStep);
-
   const createStep = (label: string, index: number) => {
     return (
       <HassuStep key={label}>
