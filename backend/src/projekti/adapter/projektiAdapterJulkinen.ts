@@ -277,6 +277,15 @@ class ProjektiAdapterJulkinen {
         };
         return vuorovaikutusJulkinen;
       });
+    } else if (dbProjekti.vuorovaikutusKierros?.tila === API.VuorovaikutusKierrosTila.MIGROITU) {
+      return [
+        {
+          __typename: "VuorovaikutusKierrosJulkinen",
+          vuorovaikutusNumero: 0,
+          tila: API.VuorovaikutusKierrosTila.MIGROITU,
+          yhteystiedot: [],
+        },
+      ];
     }
     return vuorovaikutukset as undefined;
   }

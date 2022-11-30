@@ -1,5 +1,5 @@
 import * as API from "../../../../common/graphql/apiModel";
-import { KuulutusJulkaisuTila, Status, SuunnitteluVaiheTila } from "../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, Status } from "../../../../common/graphql/apiModel";
 import { isDateTimeInThePast } from "../../util/dateUtil";
 import { AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler, HyvaksymisPaatosJulkaisuEndDateAndTila, StatusHandler } from "./statusHandler";
 
@@ -29,10 +29,10 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
 
   const suunnittelu = new (class extends StatusHandler<API.ProjektiJulkinen> {
     handle(p: API.ProjektiJulkinen) {
-      if (projekti.suunnitteluVaihe?.tila == SuunnitteluVaiheTila.MIGROITU) {
-        super.handle(p); // Continue evaluating next rules
-      } else if (projekti.suunnitteluVaihe) {
-        projekti.status = API.Status.SUUNNITTELU;
+      if (projekti.vuorovaikutusKierrokset && projekti.vuorovaikutusKierrokset.length) {
+        if (projekti.vuorovaikutusKierrokset.find((kierros) => kierros.tila === API.VuorovaikutusKierrosTila.JULKINEN)) {
+          projekti.status = API.Status.SUUNNITTELU;
+        }
         super.handle(p); // Continue evaluating next rules
       }
     }
