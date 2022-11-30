@@ -1,0 +1,74 @@
+/// <reference types="cypress" />
+const projektiNimi = Cypress.env("projektiNimi");
+const oid = Cypress.env("oid");
+const muuTunnus = "A-tunnus2 Hassu";
+const muuNumero = "029123456";
+
+describe("Projektin henkilot", () => {
+  before(() => {
+    cy.abortEarly();
+    cy.login("A1");
+  });
+
+  after(() => {
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid);
+    cy.get("#suunnittelusopimus_yhteyshenkilo").select(1);
+    cy.get("#save").click();
+
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
+    cy.get("input[name $='yleinenYhteystieto']").last().scrollIntoView();
+    cy.get("button[id^='poista']").last().click();
+    cy.get("#save_projekti").click();
+  });
+
+  it("Tarkista projektin henkilot velhosta", () => {
+    //projektipaallikko
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
+    cy.contains("Projektin Henkilöt");
+    cy.contains(projektiNimi);
+    cy.get('input[name="kayttoOikeudet.0.sahkoposti"').should("be.disabled").should("have.value", "mikko.haapamki@cgi.com");
+    cy.get('input[name="kayttoOikeudet.0.yleinenYhteystieto"').should("be.disabled").should("be.checked");
+
+    //varahenkilo
+    cy.get('input[name="kayttoOikeudet.1.sahkoposti"').should("be.disabled").should("have.value", "mikko.haapamaki02@cgi.com");
+    cy.get('input[name="kayttoOikeudet.1.varahenkiloValinta"').should("be.disabled").should("be.checked");
+  });
+
+  it("Lisaa muu henkilo", () => {
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
+    cy.get("#lisaa_uusi_kayttaja").click();
+    // input name ends with kayttajatunnus
+    cy.get("input[name $='kayttajatunnus']").last().should("be.enabled").type(muuTunnus).wait(1000).type("{downArrow}").type("{enter}");
+
+    cy.get("input[name $='puhelinnumero']").last().should("be.enabled").type(muuNumero);
+    cy.get("input[name $='yleinenYhteystieto']").last().should("be.enabled").check({ force: true });
+    cy.get("#save_projekti").click();
+    cy.contains("Henkilötietojen tallennus onnistui", { timeout: 3000 });
+  });
+
+  it("Tarkista yhteystiedot julkiselta puolelta", () => {
+    cy.visit(Cypress.env("host") + "/suunnitelma/" + oid);
+    cy.contains("A-tunnus1 Hassu");
+    cy.get("#yhteystiedot").contains(muuTunnus);
+    cy.contains("A-tunnus3 Hassu").should("not.exist"); // varahenkilo
+  });
+
+  it("Vaihda muu henkilo kunnan edustajaksi", () => {
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
+    cy.get("input[name $='yleinenYhteystieto']").last().uncheck({ force: true });
+    cy.get("#save_projekti").click();
+
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid);
+    cy.get("#suunnittelusopimus_yhteyshenkilo").select(muuTunnus);
+    cy.get("#save").click();
+
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
+    cy.get("input[name $='yleinenYhteystieto']").last().should("be.disabled").should("be.checked");
+  });
+
+  it("Tarkista uusi kunnan edustaja julkisella puolella", () => {
+    cy.visit(Cypress.env("host") + "/suunnitelma/" + oid);
+    cy.contains("A-tunnus1 Hassu");
+    cy.get("#kuntatiedot").contains(muuTunnus);
+  });
+});

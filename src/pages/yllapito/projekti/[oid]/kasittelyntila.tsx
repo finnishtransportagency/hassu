@@ -246,7 +246,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                 name="kasittelynTila.suunnitelmanTila"
                 render={({ field: { value, onChange, ...field } }) => (
                   <Select
-                    id="voimassaolovuosi"
+                    id="suunnitelmanTila"
                     label="Suunnitelman tila"
                     options={Object.entries(suunnitelmanTilat)
                       .map(([key, value]) => {
@@ -321,7 +321,12 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
           <SectionContent>
             <h6 className="vayla-smallest-title">Valitukset</h6>
             <p>Valitse ‘Kyllä’, jos hyväksymispäätöksestä on valitettu hallinto-oikeuteen.</p>
-            <CheckBox label="Kyllä, anna valitusten lukumäärä" onChange={() => toggleValitettu()} checked={isValituksia}></CheckBox>
+            <CheckBox
+              label="Kyllä, anna valitusten lukumäärä"
+              onChange={() => toggleValitettu()}
+              checked={isValituksia}
+              id="valituksetCheckbox"
+            ></CheckBox>
             {isValituksia && (
               <HassuGrid cols={{ lg: 3 }}>
                 <TextInput

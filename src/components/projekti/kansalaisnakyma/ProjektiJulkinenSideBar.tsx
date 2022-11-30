@@ -44,7 +44,7 @@ const ProjektiSideNavigation = styled((props) => {
           <h4 className="vayla-title-small mb-0">{t("suunnitteluhankkeen_yhteystiedot")}</h4>
         </div>
         <SectionContent className={styles["side-nav-content"]}>
-          <HassuStack>
+          <HassuStack id="yhteystiedot">
             <img {...getTilaajaLogoImg()} />
             {projekti.projektiHenkilot?.map((yt) => {
               const nimi = formatNimi(yt);
@@ -66,15 +66,13 @@ const ProjektiSideNavigation = styled((props) => {
             })}
           </HassuStack>
           {suunnitteluSopimus && (
-            <HassuStack>
+            <HassuStack id="kuntatiedot">
               {suunnitteluSopimus.logo && <img src={suunnitteluSopimus.logo} alt={`${suunnitteluSopimus.kunta} logo`} />}
               <div className="vayla-calling-card">
                 <p>{kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, lang)}</p>
                 <p className="uppercase">{t("common:rooli.PROJEKTIPAALLIKKO")}</p>
                 <p>
-                  <b>
-                    {formatNimi(suunnitteluSopimus)}
-                  </b>
+                  <b>{formatNimi(suunnitteluSopimus)}</b>
                 </p>
                 <p>{suunnitteluSopimus.puhelinnumero}</p>
                 <p>{suunnitteluSopimus.email}</p>
