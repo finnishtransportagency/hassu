@@ -1,13 +1,6 @@
 import { useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
-import {
-  Projekti,
-  VuorovaikutusTilaisuusTyyppi,
-  Yhteystieto,
-  YhteystietoInput,
-  VuorovaikutusTilaisuusInput,
-  Vuorovaikutus,
-} from "@services/api";
+import { VuorovaikutusTilaisuusTyyppi, Yhteystieto, YhteystietoInput, VuorovaikutusTilaisuusInput } from "@services/api";
 import Section from "@components/layout/Section";
 import React, { ReactElement, Dispatch, SetStateAction } from "react";
 import Button from "@components/button/Button";
@@ -21,42 +14,33 @@ import { formatNimi } from "../../../util/userUtil";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 
 interface Props {
-  projekti: Projekti;
-  vuorovaikutus: Vuorovaikutus;
+  julkaistu: boolean;
   setOpenVuorovaikutustilaisuus: Dispatch<SetStateAction<boolean>>;
 }
 
 type FormFields = {
-  suunnitteluVaihe: {
-    vuorovaikutus: {
-      vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuusInput> | null;
-    };
+  vuorovaikutusKierros: {
+    vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuusInput> | null;
   };
 };
 
-export default function VuorovaikutusMahdollisuudet({ projekti, vuorovaikutus, setOpenVuorovaikutustilaisuus }: Props): ReactElement {
+export default function VuorovaikutusMahdollisuudet({ julkaistu, setOpenVuorovaikutustilaisuus }: Props): ReactElement {
   const { t } = useTranslation();
 
   const { getValues, getFieldState } = useFormContext<FormFields>();
 
-  if (!projekti) {
-    return <></>;
-  }
-
-  const vuorovaikutusTilaisuudet = vuorovaikutus.julkinen
-    ? vuorovaikutus.vuorovaikutusTilaisuudet
-    : getValues("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet");
+  const vuorovaikutusTilaisuudet = getValues("vuorovaikutusKierros.vuorovaikutusTilaisuudet");
 
   const isVerkkotilaisuuksia = !!vuorovaikutusTilaisuudet?.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA);
   const isFyysisiatilaisuuksia = !!vuorovaikutusTilaisuudet?.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA);
   const isSoittoaikoja = !!vuorovaikutusTilaisuudet?.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA);
 
-  const tilaisuudetError = getFieldState("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet").error;
+  const tilaisuudetError = getFieldState("vuorovaikutusKierros.vuorovaikutusTilaisuudet").error;
 
   return (
     <>
       <Section>
-        {vuorovaikutus.julkinen ? (
+        {julkaistu ? (
           <>
             <Button
               style={{ float: "right" }}
@@ -149,7 +133,7 @@ export default function VuorovaikutusMahdollisuudet({ projekti, vuorovaikutus, s
                 })}
             </>
           )}
-          {!vuorovaikutus.julkinen && (
+          {!julkaistu && (
             <Button
               onClick={(e) => {
                 setOpenVuorovaikutustilaisuus(true);

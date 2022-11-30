@@ -4,7 +4,7 @@ import SuunnitteluPageLayoutWrapper from "@components/projekti/suunnitteluvaihe/
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import SuunnitteluvaiheenPerustiedotLukutila from "@components/projekti/lukutila/SuunnitteluvaiheenPerustiedotLukutila";
 import SuunnitteluvaiheenPerustiedot from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenPerustiedot";
-import { SuunnitteluVaiheTila } from "@services/api";
+import { VuorovaikutusKierrosTila } from "@services/api";
 
 export default function SuunnitteluWrapper() {
   const { data: projekti } = useProjekti();
@@ -17,7 +17,7 @@ export default function SuunnitteluWrapper() {
 }
 
 function Suunnittelu({ projekti }: { projekti: ProjektiLisatiedolla }): ReactElement {
-  const migroitu = projekti?.suunnitteluVaihe?.tila == SuunnitteluVaiheTila.MIGROITU;
+  const migroitu = projekti?.vuorovaikutusKierros?.tila == VuorovaikutusKierrosTila.MIGROITU;
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
   if (migroitu) {

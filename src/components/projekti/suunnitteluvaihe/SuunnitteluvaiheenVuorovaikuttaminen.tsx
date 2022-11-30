@@ -3,15 +3,18 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
 import {
   TallennaProjektiInput,
-  VuorovaikutusInput,
   VuorovaikutusTilaisuusInput,
   LinkkiInput,
-  Vuorovaikutus,
   AsiakirjaTyyppi,
   KirjaamoOsoite,
   Yhteystieto,
   KayttajaTyyppi,
   ProjektiKayttaja,
+  VuorovaikutusKierrosInput,
+  VuorovaikutusTilaisuus,
+  VuorovaikutusKierros,
+  TilasiirtymaToiminto,
+  TilasiirtymaTyyppi,
 } from "@services/api";
 import Section from "@components/layout/Section";
 import React, { ReactElement, useState, useMemo, useCallback } from "react";
@@ -30,7 +33,6 @@ import { removeTypeName, removeTypeNamesFromArray } from "src/util/removeTypeNam
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import VuorovaikuttamisenInfo from "./VuorovaikuttamisenInfo";
 import PaivamaaratJaTiedot from "./PaivamaaratJaTiedot";
-import LukutilaLinkkiJaKutsut from "./LukutilaLinkkiJaKutsut";
 import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
 import VuorovaikutustilaisuusDialog from "./VuorovaikutustilaisuusDialog";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
@@ -45,22 +47,19 @@ import useApi from "src/hooks/useApi";
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 
 export type VuorovaikutusFormValues = ProjektiFields & {
-  suunnitteluVaihe: {
-    vuorovaikutus: Pick<
-      VuorovaikutusInput,
-      | "esittelyaineistot"
-      | "suunnitelmaluonnokset"
-      | "esitettavatYhteystiedot"
-      | "kysymyksetJaPalautteetViimeistaan"
-      | "ilmoituksenVastaanottajat"
-      | "videot"
-      | "suunnittelumateriaali"
-      | "vuorovaikutusJulkaisuPaiva"
-      | "vuorovaikutusNumero"
-      | "vuorovaikutusTilaisuudet"
-      | "julkinen"
-    >;
-  };
+  vuorovaikutusKierros: Pick<
+    VuorovaikutusKierrosInput,
+    | "esittelyaineistot"
+    | "suunnitelmaluonnokset"
+    | "esitettavatYhteystiedot"
+    | "kysymyksetJaPalautteetViimeistaan"
+    | "ilmoituksenVastaanottajat"
+    | "videot"
+    | "suunnittelumateriaali"
+    | "vuorovaikutusJulkaisuPaiva"
+    | "vuorovaikutusNumero"
+    | "vuorovaikutusTilaisuudet"
+  >;
 };
 
 interface Props {
@@ -74,8 +73,8 @@ const defaultListWithEmptyLink = (list: LinkkiInput[] | null | undefined): Linkk
   return list.map((link) => ({ nimi: link.nimi, url: link.url }));
 };
 
-const defaultVuorovaikutus: Vuorovaikutus = {
-  __typename: "Vuorovaikutus",
+const defaultVuorovaikutus: VuorovaikutusKierros = {
+  __typename: "VuorovaikutusKierros",
   vuorovaikutusNumero: 1,
 };
 
@@ -111,59 +110,50 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
   const formContext: { projekti: ProjektiLisatiedolla } = useMemo(() => ({ projekti }), [projekti]);
 
-  const vuorovaikutus = useMemo(
-    () =>
-      projekti?.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
-        return v.vuorovaikutusNumero === vuorovaikutusnro;
-      }) || defaultVuorovaikutus,
-    [projekti, vuorovaikutusnro]
-  );
-
+  const vuorovaikutusKierros: VuorovaikutusKierros = useMemo(() => projekti?.vuorovaikutusKierros || defaultVuorovaikutus, [projekti]);
   const defaultValues: VuorovaikutusFormValues = useMemo(() => {
     return {
       oid: projekti.oid,
-      suunnitteluVaihe: {
-        vuorovaikutus: {
-          esittelyaineistot:
-            vuorovaikutus?.esittelyaineistot?.map(({ dokumenttiOid, nimi }) => ({
-              dokumenttiOid,
-              nimi,
-            })) || [],
-          suunnitelmaluonnokset:
-            vuorovaikutus?.suunnitelmaluonnokset?.map(({ dokumenttiOid, nimi }) => ({
-              dokumenttiOid,
-              nimi,
-            })) || [],
-          vuorovaikutusNumero: vuorovaikutusnro,
-          vuorovaikutusJulkaisuPaiva: vuorovaikutus?.vuorovaikutusJulkaisuPaiva || null,
-          kysymyksetJaPalautteetViimeistaan: vuorovaikutus?.kysymyksetJaPalautteetViimeistaan || null,
-          esitettavatYhteystiedot: {
-            yhteysTiedot: removeTypeNamesFromArray(vuorovaikutus?.esitettavatYhteystiedot?.yhteysTiedot) || [],
-            yhteysHenkilot: vuorovaikutus?.esitettavatYhteystiedot?.yhteysHenkilot || [],
-          },
-          ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, vuorovaikutus?.ilmoituksenVastaanottajat, kirjaamoOsoitteet),
-          vuorovaikutusTilaisuudet:
-            vuorovaikutus?.vuorovaikutusTilaisuudet?.map((tilaisuus) => {
-              const { __typename, esitettavatYhteystiedot, ...rest } = tilaisuus;
-              const vuorovaikutusTilaisuusInput: VuorovaikutusTilaisuusInput = {
-                ...rest,
-                esitettavatYhteystiedot: {
-                  yhteysHenkilot: esitettavatYhteystiedot?.yhteysHenkilot || [],
-                  yhteysTiedot: removeTypeNamesFromArray(esitettavatYhteystiedot?.yhteysTiedot) || [],
-                },
-              };
-              return vuorovaikutusTilaisuusInput;
-            }) || [],
-          julkinen: !!vuorovaikutus?.julkinen,
-          videot: defaultListWithEmptyLink(vuorovaikutus?.videot as LinkkiInput[]),
-          suunnittelumateriaali: (removeTypeName(vuorovaikutus?.suunnittelumateriaali) as LinkkiInput) || {
-            nimi: "",
-            url: "",
-          },
+      vuorovaikutusKierros: {
+        vuorovaikutusNumero: vuorovaikutusnro,
+        esittelyaineistot:
+          vuorovaikutusKierros?.esittelyaineistot?.map(({ dokumenttiOid, nimi }) => ({
+            dokumenttiOid,
+            nimi,
+          })) || [],
+        suunnitelmaluonnokset:
+          vuorovaikutusKierros?.suunnitelmaluonnokset?.map(({ dokumenttiOid, nimi }) => ({
+            dokumenttiOid,
+            nimi,
+          })) || [],
+
+        vuorovaikutusJulkaisuPaiva: vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva || null,
+        kysymyksetJaPalautteetViimeistaan: vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan || null,
+        esitettavatYhteystiedot: {
+          yhteysTiedot: removeTypeNamesFromArray(vuorovaikutusKierros?.esitettavatYhteystiedot?.yhteysTiedot) || [],
+          yhteysHenkilot: vuorovaikutusKierros?.esitettavatYhteystiedot?.yhteysHenkilot || [],
+        },
+        ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, vuorovaikutusKierros?.ilmoituksenVastaanottajat, kirjaamoOsoitteet),
+        vuorovaikutusTilaisuudet:
+          vuorovaikutusKierros?.vuorovaikutusTilaisuudet?.map((tilaisuus: VuorovaikutusTilaisuus) => {
+            const { __typename, esitettavatYhteystiedot, peruttu, ...rest } = tilaisuus;
+            const vuorovaikutusTilaisuusInput: VuorovaikutusTilaisuusInput = {
+              ...rest,
+              esitettavatYhteystiedot: {
+                yhteysHenkilot: esitettavatYhteystiedot?.yhteysHenkilot || [],
+                yhteysTiedot: removeTypeNamesFromArray(esitettavatYhteystiedot?.yhteysTiedot) || [],
+              },
+            };
+            return vuorovaikutusTilaisuusInput;
+          }) || [],
+        videot: defaultListWithEmptyLink(vuorovaikutusKierros?.videot as LinkkiInput[]),
+        suunnittelumateriaali: (removeTypeName(vuorovaikutusKierros?.suunnittelumateriaali) as LinkkiInput) || {
+          nimi: "",
+          url: "",
         },
       },
     };
-  }, [projekti, vuorovaikutusnro, vuorovaikutus, kirjaamoOsoitteet]);
+  }, [projekti, vuorovaikutusnro, vuorovaikutusKierros, kirjaamoOsoitteet]);
 
   const formOptions: UseFormProps<VuorovaikutusFormValues> = useMemo(() => {
     return {
@@ -177,7 +167,6 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
 
   const useFormReturn = useForm<VuorovaikutusFormValues>(formOptions);
   const {
-    register,
     reset,
     handleSubmit,
     formState: { isDirty },
@@ -185,7 +174,7 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
     watch,
   } = useFormReturn;
 
-  const vuorovaikutustilaisuudet = watch("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet");
+  const vuorovaikutustilaisuudet = watch("vuorovaikutusKierros.vuorovaikutusTilaisuudet");
 
   useLeaveConfirm(isDirty);
 
@@ -216,23 +205,49 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
     [setIsFormSubmitting, showSuccessMessage, showErrorMessage, saveSunnitteluvaihe]
   );
 
-  const saveAndPublish = useCallback(
-    async (formData: VuorovaikutusFormValues) => {
+  const vaihdaKierroksenTila = useCallback(
+    async (toiminto: TilasiirtymaToiminto, viesti: string, syy?: string) => {
+      let mounted = true;
+      if (!projekti) {
+        return;
+      }
       setIsFormSubmitting(true);
       try {
-        formData.suunnitteluVaihe.vuorovaikutus.julkinen = true;
-        await saveSunnitteluvaihe(formData);
-        showSuccessMessage("Tallennus onnistui!");
-      } catch (e) {
-        log.error("OnSubmit Error", e);
-        showErrorMessage("Tallennuksessa tapahtui virhe");
+        await api.siirraTila({ oid: projekti.oid, toiminto, syy, tyyppi: TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS });
+        await reloadProjekti();
+        showSuccessMessage(`${viesti} onnistui`);
+      } catch (error) {
+        log.error(error);
+        showErrorMessage("Toiminnossa tapahtui virhe");
       }
-      setOpenHyvaksy(false);
-      setOpenVuorovaikutustilaisuus(false);
-      setAineistoMuokkaustila(false);
-      setIsFormSubmitting(false);
+      if (mounted) {
+        setIsFormSubmitting(false);
+        setOpenHyvaksy(false);
+      }
+      return () => (mounted = false);
     },
-    [saveSunnitteluvaihe, showErrorMessage, showSuccessMessage]
+    [setIsFormSubmitting, reloadProjekti, showSuccessMessage, showErrorMessage, projekti]
+  );
+
+  const saveAndPublish = useCallback(
+    async (formData: VuorovaikutusFormValues) => {
+      let mounted = true;
+      log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
+      setIsFormSubmitting(true);
+      try {
+        await saveDraft(formData);
+        await vaihdaKierroksenTila(TilasiirtymaToiminto.HYVAKSY, "Hyvaksy");
+      } catch (error) {
+        log.error("Virhe hyväksyntään lähetyksessä", error);
+        showErrorMessage("Hyväksyntään lähetyksessä tapahtui virhe");
+      }
+      if (mounted) {
+        setIsFormSubmitting(false);
+        setOpenHyvaksy(false);
+      }
+      return () => (mounted = false);
+    },
+    [setIsFormSubmitting, saveDraft, setOpenHyvaksy, vaihdaKierroksenTila, showErrorMessage]
   );
 
   const saveForm = useMemo(() => {
@@ -247,7 +262,7 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
     setOpenHyvaksy(false);
   };
 
-  const ilmoituksenVastaanottajat = getValues("suunnitteluVaihe.vuorovaikutus.ilmoituksenVastaanottajat");
+  const ilmoituksenVastaanottajat = getValues("vuorovaikutusKierros.ilmoituksenVastaanottajat");
 
   const ensisijainenKieli = projekti.kielitiedot?.ensisijainenKieli;
   const toissijainenKieli = projekti.kielitiedot?.toissijainenKieli;
@@ -283,15 +298,11 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
             <Section className="mb-4">
               <SectionContent>
                 <h3 className="vayla-small-title">Vuorovaikuttaminen</h3>
-                <VuorovaikuttamisenInfo vuorovaikutus={vuorovaikutus} />
+                <VuorovaikuttamisenInfo vuorovaikutus={vuorovaikutusKierros} eiOleJulkaistu={true} />
               </SectionContent>
-              <PaivamaaratJaTiedot projekti={projekti} vuorovaikutusnro={vuorovaikutusnro} />
+              <PaivamaaratJaTiedot />
             </Section>
-            <VuorovaikutusMahdollisuudet
-              projekti={projekti}
-              vuorovaikutus={vuorovaikutus}
-              setOpenVuorovaikutustilaisuus={setOpenVuorovaikutustilaisuus}
-            />
+            <VuorovaikutusMahdollisuudet julkaistu={false} setOpenVuorovaikutustilaisuus={setOpenVuorovaikutustilaisuus} />
             <VuorovaikutustilaisuusDialog
               open={openVuorovaikutustilaisuus}
               windowHandler={(t: boolean) => {
@@ -299,19 +310,19 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
               }}
               tilaisuudet={vuorovaikutustilaisuudet}
               projektiHenkilot={projektiHenkilot}
-              julkinen={vuorovaikutus?.julkinen || false}
+              julkinen={false}
               avaaHyvaksymisDialogi={() => setOpenHyvaksy(true)}
             />
             <LuonnoksetJaAineistot
               saveForm={saveForm}
               muokkaustila={aineistoMuokkaustila}
               setMuokkaustila={setAineistoMuokkaustila}
-              vuorovaikutus={vuorovaikutus}
+              vuorovaikutus={vuorovaikutusKierros}
+              julkinen={false}
             />
-            <EsitettavatYhteystiedot vuorovaikutusnro={vuorovaikutusnro} projektiHenkilot={projektiHenkilot} />
-            {vuorovaikutus?.julkinen && <LukutilaLinkkiJaKutsut vuorovaikutus={vuorovaikutus} projekti={projekti} />}
-            <IlmoituksenVastaanottajat kirjaamoOsoitteet={kirjaamoOsoitteet} vuorovaikutus={vuorovaikutus} />
-            {!vuorovaikutus?.julkinen && !!esikatselePdf && (
+            <EsitettavatYhteystiedot projektiHenkilot={projektiHenkilot} />
+            <IlmoituksenVastaanottajat kirjaamoOsoitteet={kirjaamoOsoitteet} vuorovaikutus={vuorovaikutusKierros} />
+            {!!esikatselePdf && (
               <Section>
                 <h4 className="vayla-small-title">Kutsun ja ilmoituksen esikatselu</h4>
                 <SectionContent largeGaps>
@@ -356,20 +367,17 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
                 </SectionContent>
               </Section>
             )}
-            {!vuorovaikutus?.julkinen && (
-              <Section noDivider>
-                <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
-                  <Button id="save_suunnitteluvaihe_vuorovaikutukset_draft" onClick={handleSubmit(saveDraft)}>
-                    Tallenna luonnos
-                  </Button>
-                  <Button primary id="save_and_publish" onClick={handleSubmit(handleClickOpenHyvaksy)}>
-                    Tallenna julkaistavaksi
-                  </Button>
-                </Stack>
-              </Section>
-            )}
+            <Section noDivider>
+              <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
+                <Button id="save_suunnitteluvaihe_vuorovaikutukset_draft" onClick={handleSubmit(saveDraft)}>
+                  Tallenna luonnos
+                </Button>
+                <Button primary id="save_and_publish" onClick={handleSubmit(handleClickOpenHyvaksy)}>
+                  Tallenna julkaistavaksi
+                </Button>
+              </Stack>
+            </Section>
           </fieldset>
-          <input type="hidden" {...register("suunnitteluVaihe.vuorovaikutus.julkinen")} />
         </form>
       </FormProvider>
       <PdfPreviewForm ref={pdfFormRef} />
@@ -379,7 +387,7 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
           dialogiOnAuki={openHyvaksy}
           onClose={handleClickCloseHyvaksy}
           tallenna={saveForm}
-          julkinen={!!vuorovaikutus?.julkinen}
+          julkinen={false}
         />
       )}
       <HassuSpinner open={isFormSubmitting} />

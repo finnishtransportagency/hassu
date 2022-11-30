@@ -1,5 +1,5 @@
 import React, { ReactElement, Fragment } from "react";
-import { Vuorovaikutus } from "@services/api";
+import { VuorovaikutusKierrosJulkaisu } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import dayjs from "dayjs";
@@ -7,7 +7,7 @@ import useTranslation from "next-translate/useTranslation";
 import { kuntametadata } from "../../../../../common/kuntametadata";
 
 interface Props {
-  vuorovaikutus: Vuorovaikutus | undefined;
+  vuorovaikutus: VuorovaikutusKierrosJulkaisu | undefined;
 }
 
 export default function IlmoituksenVastaanottajatLukutila({ vuorovaikutus }: Props): ReactElement {
