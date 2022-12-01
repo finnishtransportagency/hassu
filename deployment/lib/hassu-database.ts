@@ -1,22 +1,20 @@
-import * as ddb from "@aws-cdk/aws-dynamodb";
-import { ProjectionType, StreamViewType } from "@aws-cdk/aws-dynamodb";
-import * as cdk from "@aws-cdk/core";
-import { Duration, RemovalPolicy, Tags } from "@aws-cdk/core";
+import * as ddb from "aws-cdk-lib/aws-dynamodb";
+import { ProjectionType, StreamViewType } from "aws-cdk-lib/aws-dynamodb";
+import { CfnOutput, Duration, RemovalPolicy, Stack, Tags } from "aws-cdk-lib";
 import { Config } from "./config";
-import { BlockPublicAccess, Bucket, HttpMethods } from "@aws-cdk/aws-s3";
-import { OriginAccessIdentity } from "@aws-cdk/aws-cloudfront";
-import { IOriginAccessIdentity } from "@aws-cdk/aws-cloudfront/lib/origin-access-identity";
-import * as backup from "@aws-cdk/aws-backup";
-import * as events from "@aws-cdk/aws-events";
-import { Effect, PolicyStatement } from "@aws-cdk/aws-iam";
-import { IConstruct } from "@aws-cdk/core/lib/construct-compat";
+import { BlockPublicAccess, Bucket, HttpMethods } from "aws-cdk-lib/aws-s3";
+import { IOriginAccessIdentity, OriginAccessIdentity } from "aws-cdk-lib/aws-cloudfront";
+import * as backup from "aws-cdk-lib/aws-backup";
+import * as events from "aws-cdk-lib/aws-events";
+import { Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
+import { Construct, IConstruct } from "constructs";
 
 // These should correspond to CfnOutputs produced by this stack
 export type DatabaseStackOutputs = {
   CloudFrontOriginAccessIdentity: string;
 };
 
-export class HassuDatabaseStack extends cdk.Stack {
+export class HassuDatabaseStack extends Stack {
   public projektiTable!: ddb.Table;
   public projektiArchiveTable!: ddb.Table;
   public feedbackTable!: ddb.Table;
@@ -27,7 +25,7 @@ export class HassuDatabaseStack extends cdk.Stack {
   public publicBucket!: Bucket;
   private config!: Config;
 
-  constructor(scope: cdk.Construct) {
+  constructor(scope: Construct) {
     super(scope, "database", {
       stackName: "hassu-database-" + Config.env,
       env: {
@@ -49,8 +47,8 @@ export class HassuDatabaseStack extends cdk.Stack {
       oai = new OriginAccessIdentity(this, oaiName, { comment: oaiName });
 
       // tslint:disable-next-line:no-unused-expression
-      new cdk.CfnOutput(this, "CloudFrontOriginAccessIdentity", {
-        value: oai.originAccessIdentityName || "",
+      new CfnOutput(this, "CloudFrontOriginAccessIdentity", {
+        value: oai.originAccessIdentityId || "",
       });
     }
 

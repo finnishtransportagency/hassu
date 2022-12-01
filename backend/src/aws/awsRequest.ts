@@ -2,7 +2,7 @@ import { HttpRequest } from "@aws-sdk/protocol-http";
 import { SignatureV4 } from "@aws-sdk/signature-v4";
 import AWS from "aws-sdk/global";
 import { Sha256 } from "@aws-crypto/sha256-browser";
-import { HttpRequest as IHttpRequest } from "@aws-sdk/types/dist-types/http";
+import { HttpRequest as IHttpRequest } from "@aws-sdk/types";
 import { NodeHttpHandler } from "@aws-sdk/node-http-handler";
 
 export async function sendSignedRequest(request: HttpRequest, service: string): Promise<{ body: unknown; statusCode: number }> {

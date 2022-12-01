@@ -87,7 +87,6 @@
     "@typescript-eslint/typescript-estree": "5.10.2",
     "autoprefixer": "10.4.9",
     "aws-amplify": "4.3.6",
-    "aws-cdk-local": "1.65.8",
     "axios-logger": "2.5.0",
     "babel-jest": "27.2.4",
     "babel-loader": "8.2.3",
@@ -137,6 +136,7 @@
     "yargs": "17.3.1"
   },
   "scripts": {
+    "postinstall": "cd deployment && npm install",
     "clean": "rimraf .cdk-* .next .nyc_output .report .serverless .serverless_nextjs build cdk.out out schema.graphql common/graphql/*",
     "prepare": "husky install",
     "dev": "VERSION=`git rev-parse --abbrev-ref HEAD` next dev",
@@ -153,8 +153,8 @@
     "lint:app": "next lint",
     "lint:tsc": "tsc --project tsconfig.json",
     "lint": "npm-run-all --aggregate-output --parallel lint:*",
-    "localstack": "docker-compose -f deployment/localstack/docker-compose.yml up -d && cross-env ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" cdklocal bootstrap --template deployment/localstack/localstack-bootstrap.yml && cross-env HASSU_HOTSWAP=true ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" cdklocal deploy database --require-approval never",
-    "localstack-m1": "docker-compose -f deployment/localstack/docker-compose-m1.yml up -d && cross-env ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" cdklocal bootstrap --template deployment/localstack/localstack-bootstrap.yml && cross-env HASSU_HOTSWAP=true ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" cdklocal deploy database --require-approval never",
+    "localstack": "docker-compose -f deployment/localstack/docker-compose.yml up -d && cross-env ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" ./deployment/node_modules/.bin/cdklocal bootstrap --template deployment/localstack/localstack-bootstrap.yml && cross-env HASSU_HOTSWAP=true ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" ./deployment/node_modules/.bin/cdklocal deploy database --require-approval never",
+    "localstack-m1": "docker-compose -f deployment/localstack/docker-compose-m1.yml up -d && cross-env ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" ./deployment/node_modules/.bin/cdklocal bootstrap --template deployment/localstack/localstack-bootstrap.yml && cross-env HASSU_HOTSWAP=true ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" ./deployment/node_modules/.bin/cdklocal deploy database --require-approval never",
     "postlocalstack": "./deployment/bin/setupLocalStack.sh",
     "localstack:stop": "docker-compose -f deployment/localstack/docker-compose.yml down",
     "setupenvironment": "ts-node --project=tsconfig.cdk.json deployment/bin/setupEnvironment.ts",

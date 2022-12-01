@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /* tslint:disable:no-console */
 import "source-map-support/register";
-import * as cdk from "@aws-cdk/core";
 import { HassuBackendStack } from "../lib/hassu-backend";
 import { HassuFrontendStack } from "../lib/hassu-frontend";
 import { HassuDatabaseStack } from "../lib/hassu-database";
+import { App } from "aws-cdk-lib";
 
 async function main() {
-  const app = new cdk.App();
+  const app = new App();
   const hassuDatabaseStack = new HassuDatabaseStack(app);
   await hassuDatabaseStack.process().catch((e) => {
     console.log("Deployment of hassuDatabaseStack failed:", e);

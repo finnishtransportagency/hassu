@@ -1,10 +1,10 @@
 import { ExecException } from "child_process";
-import * as ssm from "@aws-cdk/aws-ssm";
+import * as ssm from "aws-cdk-lib/aws-ssm";
 import { SSM } from "aws-sdk";
 import log from "loglevel";
 import { BaseConfig } from "../../common/BaseConfig";
 import { readFrontendStackOutputs } from "../bin/setupEnvironment";
-import { Construct } from "@aws-cdk/core";
+import { Construct } from "constructs";
 
 const ssmProvider = new SSM({ apiVersion: "2014-11-06", region: "eu-west-1" });
 const globalSsmProvider = new SSM({ apiVersion: "2014-11-06", region: "us-east-1" });

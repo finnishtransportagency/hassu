@@ -28,7 +28,7 @@ export enum OpenSearchIndexType {
   JULKINEN = "julkinen",
 }
 
-export abstract class OpenSearchClient {
+export class OpenSearchClient {
   private index: string;
 
   constructor(index: string) {

@@ -1,6 +1,7 @@
 import yargs from "yargs";
-import { openSearchClient } from "../../backend/src/projektiSearch/openSearchClient";
+import { OpenSearchClient } from "../../backend/src/projektiSearch/openSearchClient";
 import fs from "fs";
+import assert from "assert";
 
 yargs
   .scriptName("npm run opensearch")
@@ -23,8 +24,10 @@ yargs
     },
     function (argv) {
       console.log("Get settings from " + argv.index + " to " + argv.outputFileName);
+      assert(argv.index);
+      const openSearchClient = new OpenSearchClient(argv.index as unknown as string);
       openSearchClient
-        .getSettings(argv.index as string)
+        .getSettings()
         .then((result) => {
           fs.writeFileSync(argv.outputFileName as string, JSON.stringify(result, null, 2));
           console.log("Finished");
@@ -51,9 +54,11 @@ yargs
     },
     function (argv) {
       console.log("Update settings to index " + argv.index + " from " + argv.outputFileName);
-      let settings = fs.readFileSync(argv.outputFileName as string).toString("UTF-8");
+      assert(argv.index);
+      const openSearchClient = new OpenSearchClient(argv.index as unknown as string);
+      const settings = fs.readFileSync(argv.outputFileName as string).toString("utf-8");
       openSearchClient
-        .putSettings(argv.index as string, settings)
+        .putSettings(settings)
         .then((result) => {
           console.log("Finished\n" + JSON.stringify(result, null, 2));
         })
@@ -79,8 +84,10 @@ yargs
     },
     function (argv) {
       console.log("Get mapping from " + argv.index + " to " + argv.outputFileName);
+      assert(argv.index);
+      const openSearchClient = new OpenSearchClient(argv.index as unknown as string);
       openSearchClient
-        .getMapping(argv.index as string)
+        .getMapping()
         .then((result) => {
           fs.writeFileSync(argv.outputFileName as string, JSON.stringify(result, null, 2));
           console.log("Finished");
@@ -107,9 +114,11 @@ yargs
     },
     function (argv) {
       console.log("Update mapping to index " + argv.index + " from " + argv.outputFileName);
-      const mapping = fs.readFileSync(argv.outputFileName as string).toString("UTF-8");
+      const mapping = fs.readFileSync(argv.outputFileName as string).toString("utf-8");
+      assert(argv.index);
+      const openSearchClient = new OpenSearchClient(argv.index as unknown as string);
       openSearchClient
-        .putMapping(argv.index as string, mapping)
+        .putMapping(mapping)
         .then((result) => {
           console.log("Finished\n" + JSON.stringify(result, null, 2));
         })

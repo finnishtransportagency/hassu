@@ -1,10 +1,9 @@
-/* tslint:disable:no-unused-expression */
-import * as cdk from "@aws-cdk/core";
-import { Construct, RemovalPolicy } from "@aws-cdk/core";
+import { Construct } from "constructs";
+import { CfnOutput, RemovalPolicy, Stack } from "aws-cdk-lib";
 import { Config } from "./config";
-import { Domain, EngineVersion } from "@aws-cdk/aws-opensearchservice";
-import { OpenSearchAccessPolicy } from "@aws-cdk/aws-opensearchservice/lib/opensearch-access-policy";
-import { AccountRootPrincipal, Effect, PolicyStatement } from "@aws-cdk/aws-iam";
+import { Domain, EngineVersion } from "aws-cdk-lib/aws-opensearchservice";
+import { OpenSearchAccessPolicy } from "aws-cdk-lib/aws-opensearchservice/lib/opensearch-access-policy";
+import { AccountRootPrincipal, Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 
 // These should correspond to CfnOutputs produced by this stack
 export type AccountStackOutputs = {
@@ -12,7 +11,7 @@ export type AccountStackOutputs = {
   SearchDomainArnOutput: string;
 };
 
-export class HassuAccountStack extends cdk.Stack {
+export class HassuAccountStack extends Stack {
   public readonly searchDomain: Domain;
 
   constructor(scope: Construct) {
@@ -53,10 +52,10 @@ export class HassuAccountStack extends cdk.Stack {
       ],
     });
 
-    new cdk.CfnOutput(this, "SearchDomainEndpointOutput", {
+    new CfnOutput(this, "SearchDomainEndpointOutput", {
       value: this.searchDomain.domainEndpoint || "",
     });
-    new cdk.CfnOutput(this, "SearchDomainArnOutput", {
+    new CfnOutput(this, "SearchDomainArnOutput", {
       value: this.searchDomain.domainArn || "",
     });
   }
