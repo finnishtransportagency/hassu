@@ -217,6 +217,10 @@ const UserFields = ({
 
   const isCurrentKayttajaMissingFromOptions = kayttaja && !options.some((o) => o.uid === kayttaja.uid);
 
+  const [popperOpen, setPopperOpen] = useState(false);
+  const closePopper = () => setPopperOpen(false);
+  const openPopper = () => setPopperOpen(true);
+
   return (
     <ContentSpacer>
       <HassuGrid
@@ -229,6 +233,9 @@ const UserFields = ({
           render={({ field: { onChange, name, onBlur, ref }, fieldState }) => (
             <Autocomplete
               options={isCurrentKayttajaMissingFromOptions ? [...options, kayttaja] : options}
+              open={popperOpen}
+              onOpen={openPopper}
+              onClose={closePopper}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -239,6 +246,11 @@ const UserFields = ({
                   inputRef={ref}
                   name={name}
                   onBlur={onBlur}
+                  onKeyDown={(e) => {
+                    if (!popperOpen && e.code === "Enter") {
+                      openPopper();
+                    }
+                  }}
                 />
               )}
               loading={loadingKayttajaResults}
