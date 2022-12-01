@@ -1,0 +1,32 @@
+{
+  "name": "hassu-deployment",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "@aws-cdk/aws-appsync": "1.132.0",
+    "@aws-cdk/aws-backup": "1.132.0",
+    "@aws-cdk/aws-cloudfront": "1.132.0",
+    "@aws-cdk/aws-cloudfront-origins": "1.132.0",
+    "@aws-cdk/aws-events-targets": "1.132.0",
+    "@aws-cdk/aws-iam": "1.132.0",
+    "@aws-cdk/aws-lambda": "1.132.0",
+    "@aws-cdk/aws-lambda-event-sources": "1.132.0",
+    "@aws-cdk/aws-lambda-nodejs": "1.132.0",
+    "@aws-cdk/aws-opensearchservice": "1.132.0",
+    "@aws-cdk/aws-s3": "1.132.0",
+    "@aws-cdk/aws-s3-deployment": "1.132.0",
+    "@aws-cdk/aws-sqs": "1.132.0",
+    "@aws-cdk/aws-wafv2": "1.132.0",
+    "@aws-cdk/core": "1.132.0",
+    "@aws-cdk/pipelines": "1.132.0",
+    "@aws-sdk/client-cloudformation": "3.171.0",
+    "@aws-sdk/client-ssm": "3.171.0",
+    "@sls-next/cdk-construct": "3.6.0",
+    "aws-cdk": "1.132.0"
+  },
+  "engines": {
+    "node": ">=14.17.0",
+    "npm": ">=7.21.0"
+  }
+}

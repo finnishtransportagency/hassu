@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+deployment/node_modules
 
 # misc
 .DS_Store
@@ -45,7 +46,6 @@ tools/velho/buildSrc/build
 .nyc_output
 
 next-env.d.ts
-storybook-static
 schema.graphql
 
 build
