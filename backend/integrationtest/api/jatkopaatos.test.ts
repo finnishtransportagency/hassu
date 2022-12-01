@@ -7,8 +7,8 @@ import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import sinon from "sinon";
 import {
-  KuulutusJulkaisuTila,
   KayttajaTyyppi,
+  KuulutusJulkaisuTila,
   ProjektiKayttaja,
   Status,
   TilasiirtymaToiminto,
@@ -39,11 +39,11 @@ describe("Jatkopäätökset", () => {
   let userFixture: UserFixture;
 
   let awsCloudfrontInvalidationStub: CloudFrontStub;
-  const importAineistoMock = new ImportAineistoMock();
+  let importAineistoMock: ImportAineistoMock;
 
   before(async () => {
     userFixture = new UserFixture(userService);
-    importAineistoMock.initStub();
+    importAineistoMock = new ImportAineistoMock();
     awsCloudfrontInvalidationStub = new CloudFrontStub();
 
     const pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");

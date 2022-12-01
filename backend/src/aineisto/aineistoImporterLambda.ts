@@ -23,6 +23,7 @@ import * as mime from "mime-types";
 import { findJulkaisuWithTila } from "../projekti/projektiUtil";
 import { parseDate } from "../util/dateUtil";
 import { projektiAdapter } from "../projekti/adapter/projektiAdapter";
+import { aineistoSynchronizerService } from "./aineistoSynchronizerService";
 
 async function handleVuorovaikutusAineisto(oid: string, vuorovaikutus: Vuorovaikutus): Promise<boolean> {
   const filePathInProjekti = new ProjektiPaths(oid).vuorovaikutus(vuorovaikutus).aineisto;
@@ -119,32 +120,42 @@ async function handleVuorovaikutukset(oid: string, vuorovaikutukset: Vuorovaikut
 
 async function handleAloituskuulutusVaihe(oid: string, julkaisut: AloitusKuulutusJulkaisu[]) {
   const julkaisu = findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-  const kuulutusPaiva = julkaisu?.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
-  await synchronizeFilesToPublic(oid, new ProjektiPaths(oid).aloituskuulutus(julkaisu), kuulutusPaiva);
+  if (julkaisu) {
+    const kuulutusPaiva = julkaisu?.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
+    await synchronizeFilesToPublic(oid, new ProjektiPaths(oid).aloituskuulutus(julkaisu), kuulutusPaiva);
+  }
 }
 
 async function handleNahtavillaoloVaihe(oid: string, nahtavillaoloVaiheJulkaisut: NahtavillaoloVaiheJulkaisu[]) {
   const julkaisu = findJulkaisuWithTila(nahtavillaoloVaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-  const kuulutusPaiva = julkaisu?.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
-  await synchronizeFilesToPublic(oid, new ProjektiPaths(oid).nahtavillaoloVaihe(julkaisu), kuulutusPaiva);
+  if (julkaisu) {
+    const kuulutusPaiva = julkaisu.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
+    await synchronizeFilesToPublic(oid, new ProjektiPaths(oid).nahtavillaoloVaihe(julkaisu), kuulutusPaiva);
+  }
 }
 
 async function handleHyvaksymisPaatosVaihe(oid: string, julkaisut: HyvaksymisPaatosVaiheJulkaisu[]) {
   const julkaisu = findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-  const kuulutusPaiva = julkaisu?.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
-  await synchronizeFilesToPublic(oid, new ProjektiPaths(oid).hyvaksymisPaatosVaihe(julkaisu), kuulutusPaiva);
+  if (julkaisu) {
+    const kuulutusPaiva = julkaisu.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
+    await synchronizeFilesToPublic(oid, new ProjektiPaths(oid).hyvaksymisPaatosVaihe(julkaisu), kuulutusPaiva);
+  }
 }
 
 async function handleJatkoPaatos1Vaihe(oid: string, julkaisut: HyvaksymisPaatosVaiheJulkaisu[]) {
   const julkaisu = findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-  const kuulutusPaiva = julkaisu?.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
-  await synchronizeFilesToPublic(oid, new ProjektiPaths(oid).jatkoPaatos1Vaihe(julkaisu), kuulutusPaiva);
+  if (julkaisu) {
+    const kuulutusPaiva = julkaisu.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
+    await synchronizeFilesToPublic(oid, new ProjektiPaths(oid).jatkoPaatos1Vaihe(julkaisu), kuulutusPaiva);
+  }
 }
 
 async function handleJatkoPaatos2Vaihe(oid: string, julkaisut: HyvaksymisPaatosVaiheJulkaisu[]) {
   const julkaisu = findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-  const kuulutusPaiva = julkaisu?.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
-  await synchronizeFilesToPublic(oid, new ProjektiPaths(oid).jatkoPaatos2Vaihe(julkaisu), kuulutusPaiva);
+  if (julkaisu) {
+    const kuulutusPaiva = julkaisu.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
+    await synchronizeFilesToPublic(oid, new ProjektiPaths(oid).jatkoPaatos2Vaihe(julkaisu), kuulutusPaiva);
+  }
 }
 
 async function handleImport(projekti: DBProjekti) {
@@ -209,6 +220,9 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   return wrapXRayAsync("handler", async () => {
     for (const record of event.Records) {
       const aineistoEvent: ImportAineistoEvent = JSON.parse(record.body);
+      if (aineistoEvent.scheduleName) {
+        await aineistoSynchronizerService.deletePastSchedule(aineistoEvent.scheduleName);
+      }
       log.info("ImportAineistoEvent", aineistoEvent);
       const { oid } = aineistoEvent;
 

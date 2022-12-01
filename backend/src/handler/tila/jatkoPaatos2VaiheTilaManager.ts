@@ -2,10 +2,10 @@ import { KuulutusJulkaisuTila, NykyinenKayttaja } from "../../../../common/graph
 import { DBProjekti, HyvaksymisPaatosVaihe } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
-import { aineistoService } from "../../aineisto/aineistoService";
 import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import { AbstractHyvaksymisPaatosVaiheTilaManager } from "./abstractHyvaksymisPaatosVaiheTilaManager";
 import { ProjektiPaths } from "../../files/ProjektiPath";
+import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
 
 class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
@@ -49,7 +49,7 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     await projektiDatabase.saveProjekti({ oid: projekti.oid, ajastettuTarkistus: this.getNextAjastettuTarkistus(julkaisu, false) });
 
     await projektiDatabase.jatkoPaatos2VaiheJulkaisut.update(projekti, julkaisu);
-    await aineistoService.synchronizeProjektiFiles(projekti.oid);
+    await aineistoSynchronizerService.synchronizeProjektiFiles(projekti.oid);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

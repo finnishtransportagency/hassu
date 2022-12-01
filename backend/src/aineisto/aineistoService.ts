@@ -2,7 +2,7 @@ import { Aineisto } from "../database/model";
 import { aineistoImporterClient } from "./aineistoImporterClient";
 import { log } from "../logger";
 import { fileService } from "../files/fileService";
-import { getCloudFront } from "../aws/client";
+import { getCloudFront } from "../aws/clients/getCloudFront";
 import { config } from "../config";
 import { Dayjs } from "dayjs";
 import { ImportAineistoEventType } from "./importAineistoEvent";
@@ -64,13 +64,6 @@ class AineistoService {
     // Import files from Velho
     await aineistoImporterClient.importAineisto({
       type: ImportAineistoEventType.IMPORT,
-      oid,
-    });
-  }
-
-  async synchronizeProjektiFiles(oid: string) {
-    await aineistoImporterClient.importAineisto({
-      type: ImportAineistoEventType.SYNCHRONIZE,
       oid,
     });
   }

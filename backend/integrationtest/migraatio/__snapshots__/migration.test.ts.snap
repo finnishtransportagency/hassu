@@ -533,6 +533,24 @@ Object {
 
 exports[`Migraatio hyväksymismenettelyyn migroitu projekti 5`] = `
 Object {
+  "args": Object {
+    "DistributionId": "unit-test-distribution-id",
+    "InvalidationBatch": Object {
+      "CallerReference": "***unittest***",
+      "Paths": Object {
+        "Items": Array [
+          "/tiedostot/suunnitelma/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/*",
+        ],
+        "Quantity": 1,
+      },
+    },
+  },
+  "stub": "createInvalidation",
+}
+`;
+
+exports[`Migraatio hyväksymismenettelyyn migroitu projekti 6`] = `
+Object {
   "velho.saveProjekti": Array [
     Array [
       "1.2.246.578.5.1.2789861876.697619507",
@@ -1100,6 +1118,24 @@ Object {
       ],
     },
   },
+}
+`;
+
+exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 6`] = `
+Object {
+  "args": Object {
+    "DistributionId": "unit-test-distribution-id",
+    "InvalidationBatch": Object {
+      "CallerReference": "***unittest***",
+      "Paths": Object {
+        "Items": Array [
+          "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/*",
+        ],
+        "Quantity": 1,
+      },
+    },
+  },
+  "stub": "createInvalidation",
 }
 `;
 

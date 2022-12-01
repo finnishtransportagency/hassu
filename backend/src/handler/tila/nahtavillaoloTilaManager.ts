@@ -10,7 +10,6 @@ import {
 } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
-import { aineistoService } from "../../aineisto/aineistoService";
 import { fileService } from "../../files/fileService";
 import { dateToString, parseDate } from "../../util/dateUtil";
 import { ProjektiPaths } from "../../files/ProjektiPath";
@@ -134,6 +133,7 @@ class NahtavillaoloTilaManager extends TilaManager {
 
   async approve(projekti: DBProjekti, projektiPaallikko: NykyinenKayttaja): Promise<void> {
     const nahtavillaoloVaihe = getNahtavillaoloVaihe(projekti);
+    const isUudelleenKuulutus = !!nahtavillaoloVaihe.uudelleenKuulutus;
     const julkaisuWaitingForApproval = asiakirjaAdapter.findNahtavillaoloWaitingForApproval(projekti);
     if (!julkaisuWaitingForApproval) {
       throw new Error("Ei nähtävilläolovaihetta odottamassa hyväksyntää");
@@ -144,7 +144,7 @@ class NahtavillaoloTilaManager extends TilaManager {
     julkaisuWaitingForApproval.hyvaksymisPaiva = dateToString(dayjs());
 
     await projektiDatabase.nahtavillaoloVaiheJulkaisut.update(projekti, julkaisuWaitingForApproval);
-    await aineistoService.synchronizeProjektiFiles(projekti.oid);
+    await this.synchronizeProjektiFiles(projekti.oid, isUudelleenKuulutus, julkaisuWaitingForApproval.kuulutusPaiva);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

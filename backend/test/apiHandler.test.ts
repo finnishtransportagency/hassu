@@ -9,9 +9,9 @@ import { api } from "../integrationtest/api/apiClient";
 import { personSearch } from "../src/personSearch/personSearchClient";
 import { userService } from "../src/user";
 import {
-  KuulutusJulkaisuTila,
   KayttajaTyyppi,
   Kieli,
+  KuulutusJulkaisuTila,
   Projekti,
   TallennaProjektiInput,
   TilasiirtymaToiminto,
@@ -32,7 +32,7 @@ import { handleEvent as pdfGenerator } from "../src/asiakirja/lambda/pdfGenerato
 import { getS3 } from "../src/aws/client";
 import { awsMockResolves, expectAwsCalls } from "./aws/awsMock";
 import { kuntametadata } from "../../common/kuntametadata";
-import { aineistoService } from "../src/aineisto/aineistoService";
+import { aineistoSynchronizerService } from "../src/aineisto/aineistoSynchronizerService";
 
 const { expect, assert } = require("chai");
 
@@ -87,7 +87,7 @@ describe("apiHandler", () => {
 
     pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
 
-    aineistoServiceStub = sinon.stub(aineistoService, "synchronizeProjektiFiles");
+    aineistoServiceStub = sinon.stub(aineistoSynchronizerService, "synchronizeProjektiFiles");
     aineistoServiceStub.callsFake(async () => {
       console.log("Synkataan aineisto");
     });
