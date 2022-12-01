@@ -9,7 +9,7 @@ const VirkamiesHeaderTopRightContent: FunctionComponent<{ mobile?: true }> = ({ 
   const logoutHref = process.env.NEXT_PUBLIC_VAYLA_EXTRANET_URL;
 
   return (
-    <div className="flex flex-wrap items-end justify-between md:justify-end gap-x-5 gap-y-3 py-5 md:py-0 vayla-paragraph">
+    <div className="flex flex-wrap items-center justify-between md:justify-end gap-x-5 gap-y-3 py-5 md:py-0 vayla-paragraph">
       <span>{kayttajaNimi}</span>
       {mobile ? (
         <StyledLink href={logoutHref} useNextLink={false}>
