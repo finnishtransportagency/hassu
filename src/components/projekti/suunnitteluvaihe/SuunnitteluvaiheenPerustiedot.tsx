@@ -3,7 +3,14 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { maxHankkeenkuvausLength, suunnittelunPerustiedotSchema } from "src/schemas/suunnittelunPerustiedot";
 import SectionContent from "@components/layout/SectionContent";
 import Textarea from "@components/form/Textarea";
-import { KuulutusJulkaisuTila, api, Kieli, TallennaProjektiInput, VuorovaikutusKierrosInput } from "@services/api";
+import {
+  KuulutusJulkaisuTila,
+  api,
+  Kieli,
+  TallennaProjektiInput,
+  VuorovaikutusKierrosInput,
+  VuorovaikutusKierrosTila,
+} from "@services/api";
 import Section from "@components/layout/Section";
 import lowerCase from "lodash/lowerCase";
 import { ReactElement, useMemo, useState } from "react";
@@ -115,18 +122,9 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     setOpenHyvaksy(true);
   };
 
-  const saveAndPublish = async (formData: FormValues) => {
-    setIsFormSubmitting(true);
-    try {
-      await saveSuunnitteluvaihe(formData);
-      // TODO kutsu julkaisuhommaa
-      showSuccessMessage("Tallennus ja julkaisu onnistui");
-    } catch (e) {
-      log.error("OnSubmit Error", e);
-      showErrorMessage("Tallennuksessa tapahtui virhe");
-    }
-    setIsFormSubmitting(false);
-    setOpenHyvaksy(false);
+  const saveDraftAndRedirect = async (formData: FormValues) => {
+    await saveDraft(formData);
+    // TODO: redirect
   };
 
   const saveDraft = async (formData: FormValues) => {
@@ -154,9 +152,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
   const kielitiedot = projekti.kielitiedot;
   const ensisijainenKieli = projekti.kielitiedot ? projekti.kielitiedot.ensisijainenKieli : Kieli.SUOMI;
   const toissijainenKieli = kielitiedot?.toissijainenKieli;
-  const julkinen = !!projekti.vuorovaikutusKierros?.tila; // TODO tarkista, että BE:stä tää tulee oikein
-
-  const suunnitteluVaiheCanBePublished = canProjektiBePublished(projekti);
+  const julkinen = projekti.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN;
 
   return (
     <>
@@ -204,7 +200,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             )}
           </Section>
 
-          <Section>
+          <Section noDivider>
             <h5 className="vayla-small-title">Suunnittelun eteneminen ja arvio kestosta</h5>
             <SectionContent>
               <p>
@@ -235,26 +231,33 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
               ></TextInput>
             </SectionContent>
           </Section>
-          {projekti && <SaapuneetKysymyksetJaPalautteet projekti={projekti} />}
+          <Section noDivider>
+            <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
+              {!julkinen && (
+                <Button id="save_suunnitteluvaihe_perustiedot" onClick={handleSubmit(saveDraft)} disabled={isFormSubmitting}>
+                  Tallenna luonnos
+                </Button>
+              )}
+              {!julkinen && (
+                <Button
+                  id="save_suunnitteluvaihe_perustiedot_and_redirect"
+                  onClick={handleSubmit(saveDraftAndRedirect)}
+                  disabled={isFormSubmitting}
+                >
+                  Tallenna luonnos ja siirry seuraavalle sivulle
+                </Button>
+              )}
+              {julkinen && (
+                <Button id="save_published_suunnitteluvaihe" onClick={handleSubmit(confirmPublish)} disabled={isFormSubmitting}>
+                  Tallenna ja julkaise
+                </Button>
+              )}
+            </Stack>
+          </Section>
         </form>
       </FormProvider>
-      <Section noDivider>
-        <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
-          {!julkinen && (
-            <Button id="save_suunnitteluvaihe_perustiedot_draft" onClick={handleSubmit(saveDraft)} disabled={isFormSubmitting}>
-              Tallenna luonnos
-            </Button>
-          )}
-          <Button
-            primary
-            id="save_and_publish"
-            onClick={handleSubmit(confirmPublish)}
-            disabled={isFormSubmitting || !suunnitteluVaiheCanBePublished}
-          >
-            {julkinen ? "Tallenna ja päivitä julkaisua" : "Tallenna ja julkaise perustiedot"}
-          </Button>
-        </Stack>
-      </Section>
+
+      {projekti && <SaapuneetKysymyksetJaPalautteet projekti={projekti} />}
       <HassuDialog open={openHyvaksy} title="Suunnitteluvaiheen perustietojen julkaisu" onClose={() => setOpenHyvaksy(false)}>
         <form style={{ display: "contents" }}>
           <DialogContent>
@@ -268,7 +271,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             </div>
           </DialogContent>
           <DialogActions>
-            <Button primary id="accept_publish" onClick={handleSubmit(saveAndPublish)}>
+            <Button primary id="accept_publish" onClick={handleSubmit(saveDraft)}>
               Hyväksy ja julkaise
             </Button>
             <Button
@@ -287,13 +290,3 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     </>
   );
 }
-
-function canProjektiBePublished(projekti: ProjektiLisatiedolla): boolean {
-  return projektiHasPublishedAloituskuulutusJulkaisu(projekti);
-}
-
-const projektiHasPublishedAloituskuulutusJulkaisu: (projekti: ProjektiLisatiedolla) => boolean = (projekti) =>
-  !!(
-    projekti.aloitusKuulutusJulkaisu?.tila &&
-    [KuulutusJulkaisuTila.HYVAKSYTTY, KuulutusJulkaisuTila.MIGROITU].includes(projekti.aloitusKuulutusJulkaisu.tila)
-  );

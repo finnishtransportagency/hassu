@@ -15,6 +15,7 @@ import {
   VuorovaikutusKierros,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
+  KuulutusJulkaisuTila,
 } from "@services/api";
 import Section from "@components/layout/Section";
 import React, { ReactElement, useState, useMemo, useCallback } from "react";
@@ -394,3 +395,13 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
     </>
   );
 }
+
+function canProjektiBePublished(projekti: ProjektiLisatiedolla): boolean {
+  return projektiHasPublishedAloituskuulutusJulkaisu(projekti);
+}
+
+const projektiHasPublishedAloituskuulutusJulkaisu: (projekti: ProjektiLisatiedolla) => boolean = (projekti) =>
+  !!(
+    projekti.aloitusKuulutusJulkaisu?.tila &&
+    [KuulutusJulkaisuTila.HYVAKSYTTY, KuulutusJulkaisuTila.MIGROITU].includes(projekti.aloitusKuulutusJulkaisu.tila)
+  );
