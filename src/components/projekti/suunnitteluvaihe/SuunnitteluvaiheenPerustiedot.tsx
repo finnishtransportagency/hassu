@@ -1,19 +1,12 @@
-import { FormProvider, useForm, UseFormProps } from "react-hook-form";
+import { Controller, FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { maxHankkeenkuvausLength, suunnittelunPerustiedotSchema } from "src/schemas/suunnittelunPerustiedot";
 import SectionContent from "@components/layout/SectionContent";
 import Textarea from "@components/form/Textarea";
-import {
-  KuulutusJulkaisuTila,
-  api,
-  Kieli,
-  TallennaProjektiInput,
-  VuorovaikutusKierrosInput,
-  VuorovaikutusKierrosTila,
-} from "@services/api";
+import { Kieli, TallennaProjektiInput, VuorovaikutusKierrosInput, VuorovaikutusKierrosTila, Yhteystieto } from "@services/api";
 import Section from "@components/layout/Section";
 import lowerCase from "lodash/lowerCase";
-import { ReactElement, useMemo, useState } from "react";
+import { ReactElement, useMemo, useState, Fragment } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import TextInput from "@components/form/TextInput";
 import { DialogActions, DialogContent, Stack } from "@mui/material";
@@ -28,6 +21,12 @@ import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
 import { pickBy } from "lodash";
 import useApi from "src/hooks/useApi";
+import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
+import { today } from "src/util/dateUtils";
+import FormGroup from "@components/form/FormGroup";
+import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import CheckBox from "@components/form/CheckBox";
+import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -37,7 +36,12 @@ type RequiredProjektiFields = Required<{
 type FormValues = RequiredProjektiFields & {
   vuorovaikutusKierros: Pick<
     VuorovaikutusKierrosInput,
-    "hankkeenKuvaus" | "arvioSeuraavanVaiheenAlkamisesta" | "suunnittelunEteneminenJaKesto" | "vuorovaikutusNumero"
+    | "hankkeenKuvaus"
+    | "arvioSeuraavanVaiheenAlkamisesta"
+    | "suunnittelunEteneminenJaKesto"
+    | "vuorovaikutusNumero"
+    | "kysymyksetJaPalautteetViimeistaan"
+    | "palautteidenVastaanottajat"
   >;
 };
 
@@ -96,6 +100,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         arvioSeuraavanVaiheenAlkamisesta: projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta || "",
         suunnittelunEteneminenJaKesto: projekti.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto || "",
         hankkeenKuvaus: hankkeenKuvaus,
+        kysymyksetJaPalautteetViimeistaan: projekti.vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan,
       },
     };
     return tallentamisTiedot;
@@ -114,6 +119,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     reset,
     handleSubmit,
     formState: { errors, isDirty },
+    control,
   } = useFormReturn;
 
   useLeaveConfirm(isDirty);
@@ -153,6 +159,8 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
   const ensisijainenKieli = projekti.kielitiedot ? projekti.kielitiedot.ensisijainenKieli : Kieli.SUOMI;
   const toissijainenKieli = kielitiedot?.toissijainenKieli;
   const julkinen = projekti.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN;
+
+  const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useProjektiHenkilot(projekti);
 
   return (
     <>
@@ -229,6 +237,65 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
                 {...register("vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta")}
                 error={errors.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta}
               ></TextInput>
+            </SectionContent>
+          </Section>
+          <Section>
+            <h4 className="vayla-small-title">Kysymykset ja palautteet</h4>
+            <SectionContent>
+              <h4 className="vayla-label">Kysymyksien esittäminen ja palautteiden antaminen</h4>
+              <p>Anna päivämäärä, johon mennessä kansalaisten toivotaan esittävän kysymykset ja palautteet.</p>
+              <HassuDatePickerWithController<FormValues>
+                className="mt-8"
+                label="Kysymykset ja palautteet viimeistään"
+                minDate={today()}
+                textFieldProps={{
+                  required: true,
+                  sx: { maxWidth: { md: "min-content" } },
+                }}
+                controllerProps={{ name: "vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan" }}
+              />
+            </SectionContent>
+            <SectionContent>
+              <h4 className="vayla-label">Kysymysten ja palautteiden vastaanottajat</h4>
+              <p>
+                Järjestelmään saapuneesta uudesta kysymyksestä tai palautteesta lähetetään automaattisesti sähköpostitse tieto valituille
+                henkilöille. Jos poistat valinnan, vastaanottajaa tiedotetaan kerran viikossa.
+              </p>
+              <p>
+                Projektiin kysymysten ja palautteiden vastaanottajien tiedot haetaan Projektin henkilöt -sivulle tallennetuista tiedoista.
+                Jos henkilöistä puuttuu nimi, korjaa tieto Projektin henkilöt -sivulla ja päivitä tämä sivu.
+              </p>
+              {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
+                <Controller
+                  control={control}
+                  name={`vuorovaikutusKierros.palautteidenVastaanottajat`}
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormGroup label="" inlineFlex>
+                      {projektiHenkilot.map((hlo, index) => {
+                        const tunnuslista = value || [];
+                        return (
+                          <Fragment key={index}>
+                            <CheckBox
+                              label={yhteystietoVirkamiehelleTekstiksi(hlo)}
+                              onChange={(event) => {
+                                if (!event.target.checked) {
+                                  onChange(tunnuslista.filter((tunnus) => tunnus !== hlo.kayttajatunnus));
+                                } else {
+                                  onChange([...tunnuslista, hlo.kayttajatunnus]);
+                                }
+                              }}
+                              checked={tunnuslista.includes(hlo.kayttajatunnus)}
+                              {...field}
+                            />
+                          </Fragment>
+                        );
+                      })}
+                    </FormGroup>
+                  )}
+                />
+              ) : (
+                <p>Projektilla ei ole tallennettuja henkilöitä</p>
+              )}
             </SectionContent>
           </Section>
           <Section noDivider>

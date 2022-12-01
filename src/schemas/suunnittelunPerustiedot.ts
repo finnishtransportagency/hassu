@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import { paivamaara } from "./paivamaaraSchema";
 
 export const maxHankkeenkuvausLength = 2000;
 
@@ -13,5 +14,6 @@ export const suunnittelunPerustiedotSchema = Yup.object().shape({
     hankkeenKuvaus: Yup.object().shape({ SUOMI: hankkeenKuvaus }),
     arvioSeuraavanVaiheenAlkamisesta: Yup.string().required("Arvio ei voi olla tyhjä").nullable(),
     suunnittelunEteneminenJaKesto: Yup.string().nullable(),
+    kysymyksetJaPalautteetViimeistaan: paivamaara({ preventPast: true }).required("Toivottu palautepäivämäärä täytyy antaa"),
   }),
 });

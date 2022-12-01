@@ -8,8 +8,6 @@ import {
   AsiakirjaTyyppi,
   KirjaamoOsoite,
   Yhteystieto,
-  KayttajaTyyppi,
-  ProjektiKayttaja,
   VuorovaikutusKierrosInput,
   VuorovaikutusTilaisuus,
   VuorovaikutusKierros,
@@ -33,7 +31,6 @@ import IlmoituksenVastaanottajat from "./IlmoituksenVastaanottajat";
 import { removeTypeName, removeTypeNamesFromArray } from "src/util/removeTypeName";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import VuorovaikuttamisenInfo from "./VuorovaikuttamisenInfo";
-import PaivamaaratJaTiedot from "./PaivamaaratJaTiedot";
 import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
 import VuorovaikutustilaisuusDialog from "./VuorovaikutustilaisuusDialog";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
@@ -42,7 +39,8 @@ import PdfPreviewForm from "../PdfPreviewForm";
 import { lowerCase } from "lodash";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
-import projektiKayttajaToYhteystieto from "src/util/kayttajaTransformationUtil";
+import Julkaisupaiva from "./Julkaisupaiva";
+import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
 import useApi from "src/hooks/useApi";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
@@ -269,27 +267,7 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
   const toissijainenKieli = projekti.kielitiedot?.toissijainenKieli;
   const esikatselePdf = pdfFormRef.current?.esikatselePdf;
 
-  const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useMemo(() => {
-    const kunnanEdustaja = projekti?.kayttoOikeudet?.find((hlo) => hlo.kayttajatunnus === projekti.suunnitteluSopimus?.yhteysHenkilo);
-    const projari = projekti?.kayttoOikeudet?.find((hlo) => hlo.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO);
-    const arr: ProjektiKayttaja[] = [];
-    if (kunnanEdustaja) {
-      arr.push(kunnanEdustaja);
-      projekti?.kayttoOikeudet?.forEach((hlo) => {
-        if (hlo.kayttajatunnus !== projekti.suunnitteluSopimus?.yhteysHenkilo) {
-          arr.push(hlo);
-        }
-      });
-    } else {
-      arr.push(projari as ProjektiKayttaja);
-      projekti?.kayttoOikeudet?.forEach((hlo) => {
-        if (hlo.tyyppi !== KayttajaTyyppi.PROJEKTIPAALLIKKO) {
-          arr.push(hlo);
-        }
-      });
-    }
-    return arr.map((hlo) => ({ kayttajatunnus: hlo.kayttajatunnus, ...projektiKayttajaToYhteystieto(hlo, projekti?.suunnitteluSopimus) }));
-  }, [projekti]);
+  const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useProjektiHenkilot(projekti);
 
   return (
     <>
@@ -298,10 +276,10 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
           <fieldset>
             <Section className="mb-4">
               <SectionContent>
-                <h3 className="vayla-small-title">Vuorovaikuttaminen</h3>
+                <h3 className="vayla-small-title">Kutsu vuorovaikutukseen</h3>
                 <VuorovaikuttamisenInfo vuorovaikutus={vuorovaikutusKierros} eiOleJulkaistu={true} />
               </SectionContent>
-              <PaivamaaratJaTiedot />
+              <Julkaisupaiva />
             </Section>
             <VuorovaikutusMahdollisuudet julkaistu={false} setOpenVuorovaikutustilaisuus={setOpenVuorovaikutustilaisuus} />
             <VuorovaikutustilaisuusDialog

@@ -14,9 +14,8 @@ export default function SuunnitteluvaiheenVuorovaikuttaminen({ vuorovaikutus, ei
   if (eiOleJulkaistu) {
     return (
       <p>
-        Kansalainen pääsee vaikuttamaan väylähankkeen tai väylän suunnitteluun siinä vaiheessa. kun tehdään yleissuunnitelmaa ja kun edetään
-        tie- tai ratasuunnitelmaan. Kaikista suunnittelun vaiheista kuulutetaan tai ilmoitetaan, jotta asianosaisilla on mahdollisuus
-        kommentoida suunnitelmia.
+        Tällä välilehdellä luodaan virallinen kutsu suunnitelman vuorovaikutukseen. Kutsussa näkyy tieto vuorovaikutustilaisuuksista, linkki
+        järjestelmän julkisella puolella esiteltäviin suunnitelmaluonnoksiin ja -aineistoihin sekä yhteyshenkilöt.
       </p>
     );
   }
