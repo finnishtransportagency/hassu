@@ -157,6 +157,7 @@ function KayttoOikeusHallintaFormElements({
           append(defaultKayttaja);
         }}
         disabled={disableFields}
+        type="button"
       >
         Lisää uusi +
       </Button>
@@ -293,6 +294,7 @@ const UserFields = ({
                   }}
                   disabled={disableFields || !muokattavissa}
                   size="large"
+                  type="button"
                 >
                   <SvgIcon>
                     <FontAwesomeIcon icon="trash" />
@@ -363,6 +365,7 @@ const UserFields = ({
           }}
           endIcon="trash"
           disabled={disableFields || !muokattavissa}
+          type="button"
         >
           Poista
         </Button>
