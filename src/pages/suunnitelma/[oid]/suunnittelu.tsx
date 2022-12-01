@@ -18,7 +18,7 @@ import {
   VuorovaikutusTilaisuusTyyppi,
 } from "@services/api";
 import capitalize from "lodash/capitalize";
-import { SoittoajanYhteystieto } from "@components/projekti/suunnitteluvaihe/VuorovaikutusMahdollisuudet";
+import { SoittoajanYhteystieto } from "@components/projekti/suunnitteluvaihe/VuorovaikutusKierros/VuorovaikutusMahdollisuudet";
 import ExtLink from "@components/ExtLink";
 import { parseVideoURL } from "src/util/videoParser";
 import PalauteLomakeDialogi from "src/components/projekti/kansalaisnakyma/PalauteLomakeDialogi";
@@ -151,11 +151,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
               <h5 className="vayla-smallest-title">{t("aineistot.esittelyaineisto")}</h5>
               {esittelyaineistot.map((aineisto) =>
                 aineisto.tiedosto ? (
-                  <ExtLink
-                    style={{ display: "block", marginTop: "0.5em" }}
-                    key={aineisto.dokumenttiOid}
-                    href={aineisto.tiedosto}
-                  >
+                  <ExtLink style={{ display: "block", marginTop: "0.5em" }} key={aineisto.dokumenttiOid} href={aineisto.tiedosto}>
                     {aineisto.tiedosto.split("/").reduce((_acc, cur) => cur, "")}
                   </ExtLink>
                 ) : null
@@ -167,11 +163,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
               <h5 className="vayla-smallest-title">{t("aineistot.suunnitelmaluonnokset")}</h5>
               {suunnitelmaluonnokset.map((aineisto) =>
                 aineisto.tiedosto ? (
-                  <ExtLink
-                    style={{ display: "block", marginTop: "0.5em" }}
-                    key={aineisto.dokumenttiOid}
-                    href={aineisto.tiedosto}
-                  >
+                  <ExtLink style={{ display: "block", marginTop: "0.5em" }} key={aineisto.dokumenttiOid} href={aineisto.tiedosto}>
                     {aineisto.tiedosto.split("/").reduce((_acc, cur) => cur, "")}
                   </ExtLink>
                 ) : null

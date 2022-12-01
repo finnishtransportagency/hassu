@@ -12,7 +12,7 @@ import HassuGrid from "@components/HassuGrid";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
 import IconButton from "@components/button/IconButton";
 import { useProjekti } from "src/hooks/useProjekti";
-import { VuorovaikutusFormValues } from "./SuunnitteluvaiheenVuorovaikuttaminen";
+import { VuorovaikutusFormValues } from ".";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 
 const defaultYhteystieto: YhteystietoInput = {

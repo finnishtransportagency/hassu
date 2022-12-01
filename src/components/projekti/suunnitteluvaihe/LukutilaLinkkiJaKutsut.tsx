@@ -1,7 +1,7 @@
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
 import React, { ReactElement } from "react";
-import { Kieli, Projekti, Vuorovaikutus } from "@services/api";
+import { Kieli, Projekti, VuorovaikutusKierrosJulkaisu } from "@services/api";
 import { examineJulkaisuPaiva } from "src/util/dateUtils";
 import { Link } from "@mui/material";
 import ExtLink from "@components/ExtLink";
@@ -9,7 +9,7 @@ import lowerCase from "lodash/lowerCase";
 import { splitFilePath } from "../../../util/fileUtil";
 
 interface Props {
-  vuorovaikutus: Vuorovaikutus;
+  vuorovaikutus: VuorovaikutusKierrosJulkaisu;
   projekti: Projekti;
 }
 
@@ -24,9 +24,7 @@ export default function LukutilaLinkkiJaKutsut({ vuorovaikutus, projekti }: Prop
   const toissijainenKieli = projekti.kielitiedot?.toissijainenKieli;
 
   const ensisijainenPDFPath = vuorovaikutus.vuorovaikutusPDFt?.[ensisijainenKieli]?.kutsuPDFPath;
-  const toisSijainenPDFPath = toissijainenKieli
-    ? vuorovaikutus.vuorovaikutusPDFt?.[toissijainenKieli]?.kutsuPDFPath
-    : undefined;
+  const toisSijainenPDFPath = toissijainenKieli ? vuorovaikutus.vuorovaikutusPDFt?.[toissijainenKieli]?.kutsuPDFPath : undefined;
 
   return (
     <Section>
@@ -37,9 +35,7 @@ export default function LukutilaLinkkiJaKutsut({ vuorovaikutus, projekti }: Prop
             <ExtLink href={`/suunnitelma/${projekti.oid}/suunnittelu`}>Linkki</ExtLink>
           </p>
         ) : (
-          <p>
-            Linkki julkiselle puolelle muodostetaan vuorovaikuttamisen julkaisupäivänä. Julkaisupäivä {julkaisuPaiva}.{" "}
-          </p>
+          <p>Linkki julkiselle puolelle muodostetaan vuorovaikuttamisen julkaisupäivänä. Julkaisupäivä {julkaisuPaiva}. </p>
         )}
         {ensisijainenPDFPath && (
           <>

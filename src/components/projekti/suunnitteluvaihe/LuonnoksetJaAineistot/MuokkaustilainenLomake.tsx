@@ -15,10 +15,10 @@ import {
   UseFormRegister,
   UseFormWatch,
 } from "react-hook-form";
-import { VuorovaikutusFormValues } from "../SuunnitteluvaiheenVuorovaikuttaminen";
+import { VuorovaikutusFormValues } from "../VuorovaikutusKierros";
 import HassuAineistoNimiExtLink from "../../HassuAineistoNimiExtLink";
 import { useProjekti } from "src/hooks/useProjekti";
-import { Aineisto, Vuorovaikutus } from "@services/api";
+import { Aineisto, VuorovaikutusKierros } from "@services/api";
 import HassuTable from "@components/HassuTable";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import { Column } from "react-table";
@@ -29,7 +29,7 @@ import { find } from "lodash";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface Props {
-  vuorovaikutus: Vuorovaikutus | undefined;
+  vuorovaikutus: VuorovaikutusKierros | undefined;
   hidden: boolean;
 }
 
@@ -44,12 +44,12 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
 
   const esittelyAineistotFieldArray = useFieldArray({
     control,
-    name: "suunnitteluVaihe.vuorovaikutus.esittelyaineistot",
+    name: "vuorovaikutusKierros.esittelyaineistot",
   });
 
   const suunnitelmaLuonnoksetFieldArray = useFieldArray({
     control,
-    name: "suunnitteluVaihe.vuorovaikutus.suunnitelmaluonnokset",
+    name: "vuorovaikutusKierros.suunnitelmaluonnokset",
   });
 
   const {
@@ -58,11 +58,11 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
     remove: removeVideot,
   } = useFieldArray({
     control,
-    name: "suunnitteluVaihe.vuorovaikutus.videot",
+    name: "vuorovaikutusKierros.videot",
   });
 
-  const esittelyaineistot = watch("suunnitteluVaihe.vuorovaikutus.esittelyaineistot");
-  const suunnitelmaluonnokset = watch("suunnitteluVaihe.vuorovaikutus.suunnitelmaluonnokset");
+  const esittelyaineistot = watch("vuorovaikutusKierros.esittelyaineistot");
+  const suunnitelmaluonnokset = watch("vuorovaikutusKierros.suunnitelmaluonnokset");
 
   const areAineistoKategoriesExpanded = !!expandedEsittelyAineisto.length || !!expandedSuunnitelmaLuonnokset.length;
 
@@ -159,7 +159,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
             <TextInput
               style={{ width: "100%" }}
               key={field.id}
-              {...register(`suunnitteluVaihe.vuorovaikutus.videot.${index}.url`)}
+              {...register(`vuorovaikutusKierros.videot.${index}.url`)}
               label="Linkki videoon"
               error={(formState.errors as any)?.suunnitteluVaihe?.vuorovaikutus?.videot?.[index]?.url}
             />
@@ -208,13 +208,13 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
         <TextInput
           style={{ width: "100%" }}
           label="Linkin kuvaus"
-          {...register(`suunnitteluVaihe.vuorovaikutus.suunnittelumateriaali.nimi`)}
+          {...register(`vuorovaikutusKierros.suunnittelumateriaali.nimi`)}
           error={(formState.errors as any)?.suunnitteluVaihe?.vuorovaikutus?.suunnittelumateriaali?.nimi}
         />
         <TextInput
           style={{ width: "100%" }}
           label="Linkki muihin esittelyaineistoihin"
-          {...register(`suunnitteluVaihe.vuorovaikutus.suunnittelumateriaali.url`)}
+          {...register(`vuorovaikutusKierros.suunnittelumateriaali.url`)}
           error={(formState.errors as any)?.suunnitteluVaihe?.vuorovaikutus?.suunnittelumateriaali?.url}
         />
       </SectionContent>
@@ -230,7 +230,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
               value.push(aineisto);
             }
           });
-          setValue("suunnitteluVaihe.vuorovaikutus.esittelyaineistot", value, { shouldDirty: true });
+          setValue("vuorovaikutusKierros.esittelyaineistot", value, { shouldDirty: true });
         }}
       />
       <AineistojenValitseminenDialog
@@ -245,7 +245,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
               value.push(aineisto);
             }
           });
-          setValue("suunnitteluVaihe.vuorovaikutus.suunnitelmaluonnokset", value, { shouldDirty: true });
+          setValue("vuorovaikutusKierros.suunnitelmaluonnokset", value, { shouldDirty: true });
         }}
       />
     </SectionContent>
@@ -257,20 +257,16 @@ enum SuunnitteluVaiheAineistoTyyppi {
   SUUNNITELMALUONNOKSET = "SUUNNITELMALUONNOKSET",
 }
 
-type FormAineisto = FieldArrayWithId<VuorovaikutusFormValues, "suunnitteluVaihe.vuorovaikutus.esittelyaineistot", "id"> &
+type FormAineisto = FieldArrayWithId<VuorovaikutusFormValues, "vuorovaikutusKierros.esittelyaineistot", "id"> &
   Pick<Aineisto, "tila" | "tuotu" | "tiedosto">;
 
 interface AineistoTableProps {
   aineistoTyyppi: SuunnitteluVaiheAineistoTyyppi;
-  esittelyAineistotFieldArray: UseFieldArrayReturn<VuorovaikutusFormValues, "suunnitteluVaihe.vuorovaikutus.esittelyaineistot", "id">;
-  suunnitelmaLuonnoksetFieldArray: UseFieldArrayReturn<
-    VuorovaikutusFormValues,
-    "suunnitteluVaihe.vuorovaikutus.suunnitelmaluonnokset",
-    "id"
-  >;
+  esittelyAineistotFieldArray: UseFieldArrayReturn<VuorovaikutusFormValues, "vuorovaikutusKierros.esittelyaineistot", "id">;
+  suunnitelmaLuonnoksetFieldArray: UseFieldArrayReturn<VuorovaikutusFormValues, "vuorovaikutusKierros.suunnitelmaluonnokset", "id">;
   register: UseFormRegister<VuorovaikutusFormValues>;
   watch: UseFormWatch<VuorovaikutusFormValues>;
-  vuorovaikutus: Vuorovaikutus;
+  vuorovaikutus: VuorovaikutusKierros;
   formState: FormState<VuorovaikutusFormValues>;
 }
 
@@ -291,13 +287,13 @@ const AineistoTable = ({
 
   const fieldArrayName =
     aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT
-      ? "suunnitteluVaihe.vuorovaikutus.esittelyaineistot"
-      : "suunnitteluVaihe.vuorovaikutus.suunnitelmaluonnokset";
+      ? "vuorovaikutusKierros.esittelyaineistot"
+      : "vuorovaikutusKierros.suunnitelmaluonnokset";
 
   const otherFieldArrayName =
     aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT
-      ? "suunnitteluVaihe.vuorovaikutus.suunnitelmaluonnokset"
-      : "suunnitteluVaihe.vuorovaikutus.esittelyaineistot";
+      ? "vuorovaikutusKierros.suunnitelmaluonnokset"
+      : "vuorovaikutusKierros.esittelyaineistot";
 
   const enrichedFields = useMemo(
     () =>

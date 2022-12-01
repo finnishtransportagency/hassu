@@ -4,7 +4,7 @@ import SuunnitteluPageLayout from "@components/projekti/suunnitteluvaihe/Suunnit
 import { useRouter } from "next/router";
 import VuorovaikuttaminenEpaaktiivinenLukutila from "@components/projekti/lukutila/VuorovaikuttaminenEpaaktiivinenLukutila";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
-import SuunnitteluvaiheenVuorovaikuttaminen from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
+import SuunnitteluvaiheenVuorovaikuttaminen from "@components/projekti/suunnitteluvaihe/VuorovaikutusKierros";
 import { VuorovaikutusKierrosTila } from "@services/api";
 import { getValidatedKierrosId } from "src/util/getValidatedKierrosId";
 import VuorovaikutusKierrosLukutila from "@components/projekti/lukutila/VuorovaikutusKierrosLukutila";

@@ -3,7 +3,7 @@ import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import SuunnitteluPageLayoutWrapper from "@components/projekti/suunnitteluvaihe/SuunnitteluvaihePageLayout";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import SuunnitteluvaiheenPerustiedotLukutila from "@components/projekti/lukutila/SuunnitteluvaiheenPerustiedotLukutila";
-import SuunnitteluvaiheenPerustiedot from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenPerustiedot";
+import SuunnitteluvaiheenPerustiedot from "@components/projekti/suunnitteluvaihe/Perustiedot";
 import { VuorovaikutusKierrosTila } from "@services/api";
 
 export default function SuunnitteluWrapper() {

@@ -3,7 +3,7 @@ import Julkinen from "./Julkinen";
 import EiJulkinen from "./EiJulkinen";
 
 interface Props {
-  vuorovaikutus: VuorovaikutusKierros | undefined;
+  vuorovaikutus: VuorovaikutusKierros;
   muokkaustila: boolean;
   setMuokkaustila: React.Dispatch<React.SetStateAction<boolean>>;
   saveForm: (e?: React.BaseSyntheticEvent<object, any, any> | undefined) => Promise<void>;

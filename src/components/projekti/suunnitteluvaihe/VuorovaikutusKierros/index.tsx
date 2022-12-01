@@ -26,7 +26,7 @@ import HassuStack from "@components/layout/HassuStack";
 import { Stack } from "@mui/material";
 import HyvaksymisDialogi from "./HyvaksymisDialogi";
 import EsitettavatYhteystiedot from "./EsitettavatYhteystiedot";
-import LuonnoksetJaAineistot from "./LuonnoksetJaAineistot/LuonnoksetJaAineistot";
+import LuonnoksetJaAineistot from "../LuonnoksetJaAineistot/LuonnoksetJaAineistot";
 import IlmoituksenVastaanottajat from "./IlmoituksenVastaanottajat";
 import { removeTypeName, removeTypeNamesFromArray } from "src/util/removeTypeName";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
@@ -35,7 +35,7 @@ import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
 import VuorovaikutustilaisuusDialog from "./VuorovaikutustilaisuusDialog";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
-import PdfPreviewForm from "../PdfPreviewForm";
+import PdfPreviewForm from "../../PdfPreviewForm";
 import { lowerCase } from "lodash";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
@@ -101,6 +101,8 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
   reloadProjekti,
   kirjaamoOsoitteet,
 }: SuunnitteluvaiheenVuorovaikuttaminenFormProps): ReactElement {
+  const api = useApi();
+
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
   const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
@@ -177,8 +179,6 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
 
   useLeaveConfirm(isDirty);
 
-  const api = useApi();
-
   const saveSunnitteluvaihe = useCallback(
     async (formData: VuorovaikutusFormValues) => {
       setIsFormSubmitting(true);
@@ -186,7 +186,7 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
       if (reloadProjekti) await reloadProjekti();
       reset(formData);
     },
-    [api, reloadProjekti, reset]
+    [reset, reloadProjekti]
   );
 
   const saveDraft = useCallback(
@@ -281,7 +281,11 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
               </SectionContent>
               <Julkaisupaiva />
             </Section>
-            <VuorovaikutusMahdollisuudet julkaistu={false} setOpenVuorovaikutustilaisuus={setOpenVuorovaikutustilaisuus} />
+            <VuorovaikutusMahdollisuudet
+              projekti={projekti}
+              julkaistu={false}
+              setOpenVuorovaikutustilaisuus={setOpenVuorovaikutustilaisuus}
+            />
             <VuorovaikutustilaisuusDialog
               open={openVuorovaikutustilaisuus}
               windowHandler={(t: boolean) => {
