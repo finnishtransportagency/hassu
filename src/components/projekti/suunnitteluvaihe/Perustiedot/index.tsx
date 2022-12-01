@@ -15,7 +15,7 @@ import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
 import HassuSpinner from "@components/HassuSpinner";
 import HassuDialog from "@components/HassuDialog";
-import SaapuneetKysymyksetJaPalautteet from "./SaapuneetKysymyksetJaPalautteet";
+import SaapuneetKysymyksetJaPalautteet from "../SaapuneetKysymyksetJaPalautteet";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";

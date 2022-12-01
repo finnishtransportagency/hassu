@@ -10,7 +10,7 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
 import { useProjekti } from "src/hooks/useProjekti";
-import { kuntametadata } from "../../../../common/kuntametadata";
+import { kuntametadata } from "../../../../../common/kuntametadata";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;

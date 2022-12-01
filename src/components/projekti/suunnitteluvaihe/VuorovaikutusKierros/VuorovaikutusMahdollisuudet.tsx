@@ -4,18 +4,20 @@ import { VuorovaikutusTilaisuusTyyppi, Yhteystieto, YhteystietoInput, Vuorovaiku
 import Section from "@components/layout/Section";
 import React, { ReactElement, Dispatch, SetStateAction } from "react";
 import Button from "@components/button/Button";
-import { kuntametadata } from "../../../../common/kuntametadata";
+import { kuntametadata } from "../../../../../common/kuntametadata";
 import dayjs from "dayjs";
 import { formatDate } from "src/util/dateUtils";
 import capitalize from "lodash/capitalize";
 import useTranslation from "next-translate/useTranslation";
-import StandardiYhteystiedotListana from "../common/StandardiYhteystiedotListana";
-import { formatNimi } from "../../../util/userUtil";
+import StandardiYhteystiedotListana from "../../common/StandardiYhteystiedotListana";
+import { formatNimi } from "../../../../util/userUtil";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
+import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 
 interface Props {
   julkaistu: boolean;
   setOpenVuorovaikutustilaisuus: Dispatch<SetStateAction<boolean>>;
+  projekti: ProjektiLisatiedolla;
 }
 
 type FormFields = {
@@ -24,7 +26,7 @@ type FormFields = {
   };
 };
 
-export default function VuorovaikutusMahdollisuudet({ julkaistu, setOpenVuorovaikutustilaisuus }: Props): ReactElement {
+export default function VuorovaikutusMahdollisuudet({ projekti, julkaistu, setOpenVuorovaikutustilaisuus }: Props): ReactElement {
   const { t } = useTranslation();
 
   const { getValues, getFieldState } = useFormContext<FormFields>();

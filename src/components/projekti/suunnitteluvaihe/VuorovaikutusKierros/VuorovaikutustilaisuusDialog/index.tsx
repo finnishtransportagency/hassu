@@ -15,7 +15,7 @@ import HassuGrid from "@components/HassuGrid";
 import TimePicker from "@components/form/TimePicker";
 import { KaytettavaPalvelu, VuorovaikutusTilaisuusInput, VuorovaikutusTilaisuusTyyppi, Yhteystieto } from "@services/api";
 import capitalize from "lodash/capitalize";
-import { VuorovaikutusFormValues } from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
+import { VuorovaikutusFormValues } from "@components/projekti/suunnitteluvaihe/VuorovaikutusKierros";
 import { Controller, FormProvider, useFieldArray, useForm, useFormContext, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { vuorovaikutustilaisuudetSchema } from "src/schemas/vuorovaikutus";

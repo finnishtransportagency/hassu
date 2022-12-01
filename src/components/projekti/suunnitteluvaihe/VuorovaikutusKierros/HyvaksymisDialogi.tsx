@@ -4,7 +4,7 @@ import HassuDialog from "@components/HassuDialog";
 import useTranslation from "next-translate/useTranslation";
 import { IlmoituksenVastaanottajatInput } from "@services/api";
 import { DialogActions, DialogContent } from "@mui/material";
-import { kuntametadata } from "../../../../common/kuntametadata";
+import { kuntametadata } from "../../../../../common/kuntametadata";
 
 interface Props {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput | null | undefined;

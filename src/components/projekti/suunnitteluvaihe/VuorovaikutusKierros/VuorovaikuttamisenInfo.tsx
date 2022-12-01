@@ -8,7 +8,7 @@ interface Props {
   eiOleJulkaistu: boolean;
 }
 
-export default function SuunnitteluvaiheenVuorovaikuttaminen({ vuorovaikutus, eiOleJulkaistu }: Props): ReactElement {
+export default function VuorovaikuttamisenInfo({ vuorovaikutus, eiOleJulkaistu }: Props): ReactElement {
   const julkinen = vuorovaikutus?.tila === VuorovaikutusKierrosTila.JULKINEN;
 
   if (eiOleJulkaistu) {
