@@ -13,7 +13,7 @@ export default function SuunnitteluPageLayoutWrapper({ children }: { children?: 
   return (
     <ProjektiConsumer>
       {(projekti) => (
-        <SuunnitteluPageLayout projektiOid={projekti.oid} projekti={projekti} disableTabs={!projekti}>
+        <SuunnitteluPageLayout projektiOid={projekti.oid} projekti={projekti} disableTabs={!(projekti && projekti.vuorovaikutusKierros)}>
           {children}
         </SuunnitteluPageLayout>
       )}
@@ -33,10 +33,9 @@ function SuunnitteluPageLayout({
   children?: ReactNode;
 }): ReactElement {
   const router = useRouter();
-  const vuorovaikutusKierrosNumerot = useMemo(() => {
-    const vuorovaikutukset = projekti?.suunnitteluVaihe?.vuorovaikutukset;
-    return vuorovaikutukset?.length ? vuorovaikutukset?.map((vuorovaikutus) => vuorovaikutus.vuorovaikutusNumero) : [1];
-  }, [projekti?.suunnitteluVaihe?.vuorovaikutukset]);
+  const vuorovaikutusKierrosNumerot: number[] = useMemo(() => {
+    return projekti.vuorovaikutusKierros?.vuorovaikutusNumero ? [...Array(projekti.vuorovaikutusKierros?.vuorovaikutusNumero).keys()] : [0];
+  }, [projekti.vuorovaikutusKierros?.vuorovaikutusNumero]);
 
   const tabProps: LinkTabProps[] = useMemo(() => {
     const vuorovaikutusTabs = vuorovaikutusKierrosNumerot.map<LinkTabProps>((kierrosId) => {
@@ -44,10 +43,10 @@ function SuunnitteluPageLayout({
         linkProps: {
           href: {
             pathname: `/yllapito/projekti/[oid]/suunnittelu/vuorovaikuttaminen/[kierrosId]`,
-            query: { oid: projektiOid, kierrosId: kierrosId.toString() },
+            query: { oid: projektiOid, kierrosId: (kierrosId + 1).toString() },
           },
         },
-        label: `${kierrosId}. vuorovaikuttaminen`,
+        label: `${kierrosId + 1}. vuorovaikuttaminen`,
         disabled: disableTabs,
         id: `${kierrosId}_vuorovaikuttaminen_tab`,
       };
@@ -61,7 +60,7 @@ function SuunnitteluPageLayout({
           },
         },
         label: "Suunnitteluvaiheen perustiedot",
-        disabled: disableTabs,
+        disabled: false,
         id: "perustiedot_tab",
       },
       ...vuorovaikutusTabs,
