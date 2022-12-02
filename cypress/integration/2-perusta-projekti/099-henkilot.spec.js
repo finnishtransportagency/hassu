@@ -10,16 +10,17 @@ describe("Projektin henkilot", () => {
     cy.login("A1");
   });
 
-  after(() => {
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid);
-    cy.get("#suunnittelusopimus_yhteyshenkilo").select(1);
-    cy.get("#save").click();
+  // Uncomment if new user or kunnan edustaja causes problems in later tests
+  // after(() => {
+  //   cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid);
+  //   cy.get("#suunnittelusopimus_yhteyshenkilo").select(1);
+  //   cy.get("#save").click();
 
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
-    cy.get("input[name $='yleinenYhteystieto']").last().scrollIntoView();
-    cy.get("button[id^='poista']").last().click();
-    cy.get("#save_projekti").click();
-  });
+  //   cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
+  //   cy.get("input[name $='yleinenYhteystieto']").last().scrollIntoView();
+  //   cy.get("button[id^='poista']").last().click();
+  //   cy.get("#save_projekti").click();
+  // });
 
   it("Tarkista projektin henkilot velhosta", () => {
     //projektipaallikko
