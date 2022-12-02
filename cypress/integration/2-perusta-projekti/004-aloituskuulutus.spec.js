@@ -8,14 +8,16 @@ const oid = Cypress.env("oid");
 describe("Projektin aloituskuulutus", () => {
   before(() => {
     cy.abortEarly();
-    cy.login("A1");
   });
 
   it("Projektin aloituskuulutus", { scrollBehavior: "center" }, () => {
+    cy.login("A1");
     cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).resetAloituskuulutus(), { timeout: 30000 });
     taytaJaJulkaiseAloituskuulutus(oid, projektiNimi);
   });
+
   it("Uudelleenkuuluta aloituskuulutus", { scrollBehavior: "center" }, () => {
+    cy.login("A1");
     const uudelleenkuulutus = true;
     taytaJaJulkaiseAloituskuulutus(oid, projektiNimi, uudelleenkuulutus);
   });
