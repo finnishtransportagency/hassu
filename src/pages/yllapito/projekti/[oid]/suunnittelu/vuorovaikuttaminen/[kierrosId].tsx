@@ -22,8 +22,6 @@ export default function VuorovaikutusKierrosWrapper() {
 function VuorovaikutusKierros({ projekti }: { projekti: ProjektiLisatiedolla }): ReactElement {
   const router = useRouter();
 
-  console.log(projekti);
-
   // Check that kierrosId query param is string that is parseable to number
   const validatedKierrosId = getValidatedKierrosId(router, projekti);
 
