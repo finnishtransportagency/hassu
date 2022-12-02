@@ -47,7 +47,7 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/hyvaksymispaatos", { timeout: 30000 });
     cy.contains(projektiNimi);
 
-    cy.get("#kuulutuksentiedot_tab").click();
+    cy.get("#kuulutuksentiedot_tab").click({ force: true });
 
     const today = formatDate(dayjs());
     cy.get('[name="paatos.kuulutusPaiva"]').should("be.enabled").type(today, {
@@ -70,7 +70,7 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
     cy.contains("Hyväksyminen onnistui", { timeout: 30000 });
 
     cy.reload();
-    cy.get("#kuulutuksentiedot_tab").click();
+    cy.get("#kuulutuksentiedot_tab").click({ force: true });
 
     cy.contains("Kuulutus nähtäville asettamisesta on julkaistu");
 
