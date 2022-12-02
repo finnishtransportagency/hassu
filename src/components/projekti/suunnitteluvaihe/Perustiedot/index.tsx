@@ -68,7 +68,6 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
-  const [aineistoMuokkaustila, setAineistoMuokkaustila] = useState(false);
   const [formContext, setFormContext] = useState<SuunnittelunPerustiedotFormValues>();
 
   const api = useApi();
@@ -151,14 +150,9 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         showErrorMessage("Tallennuksessa tapahtui virhe");
       }
       setIsFormSubmitting(false);
-      setAineistoMuokkaustila(false);
     },
     [saveSuunnitteluvaihe, showErrorMessage, showSuccessMessage]
   );
-
-  const saveForm = useMemo(() => {
-    return handleSubmit(saveDraft);
-  }, [handleSubmit, saveDraft]);
 
   const julkinen = projekti.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN;
 
