@@ -97,15 +97,6 @@ export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
   ),
 });
 
-const getAineistoSchema = () =>
-  Yup.object().shape({
-    dokumenttiOid: Yup.string().required(),
-    nimi: Yup.string().required(),
-    jarjestys: Yup.number().integer().notRequired(),
-  });
-
-const getAineistotSchema = () => Yup.array().of(getAineistoSchema()).nullable();
-
 export const maxHankkeenkuvausLength = 2000;
 
 let hankkeenKuvaus = Yup.string()
@@ -119,8 +110,6 @@ export const vuorovaikutusSchema = Yup.object().shape({
     vuorovaikutus: Yup.object().shape({
       vuorovaikutusNumero: Yup.number().required(),
       hankkeenKuvaus: Yup.object().shape({ SUOMI: hankkeenKuvaus }),
-      esittelyaineisto: getAineistotSchema(),
-      suunnitelmaluonnokset: getAineistotSchema(),
       vuorovaikutusJulkaisuPaiva: paivamaara({ preventPast: true }).required("Julkaisupäivä täytyy antaa"),
       kysymyksetJaPalautteetViimeistaan: paivamaara({ preventPast: true }).required("Toivottu palautepäivämäärä täytyy antaa"),
       esitettavatYhteystiedot: standardiYhteystiedot(),
@@ -129,41 +118,6 @@ export const vuorovaikutusSchema = Yup.object().shape({
         .required("Vähintään yksi tilaisuus täytyy antaa")
         .min(1, "Vähintään yksi tilaisuus täytyy antaa")
         .nullable(),
-      videot: Yup.array()
-        .notRequired()
-        .of(
-          Yup.object().shape({
-            nimi: Yup.string(),
-            url: Yup.string().url("URL ei kelpaa").notRequired(),
-          })
-        )
-        .compact(function (linkki) {
-          return !linkki.url;
-        }),
-      suunnittelumateriaali: Yup.object()
-        .notRequired()
-        .shape({
-          nimi: Yup.string().test("nimi-puttuu", "Nimi puuttuu", (value, testContext) => {
-            if (!value && testContext.parent.url) {
-              return testContext.createError({
-                path: `${testContext.path}`,
-                message: "Nimi on annettava, jos osoite on annettu",
-              });
-            }
-            return true;
-          }),
-          url: Yup.string()
-            .url("URL ei kelpaa")
-            .test("url-puttuu", "Url puuttuu", (value, testContext) => {
-              if (!value && testContext.parent.nimi) {
-                return testContext.createError({
-                  path: `${testContext.path}`,
-                  message: "Osoite on annettava, jos nimi on annettu",
-                });
-              }
-              return true;
-            }),
-        }),
       ilmoituksenVastaanottajat: ilmoituksenVastaanottajat(),
     }),
   }),

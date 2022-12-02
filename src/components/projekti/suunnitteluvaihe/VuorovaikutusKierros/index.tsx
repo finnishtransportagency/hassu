@@ -4,7 +4,6 @@ import SectionContent from "@components/layout/SectionContent";
 import {
   TallennaProjektiInput,
   VuorovaikutusTilaisuusInput,
-  LinkkiInput,
   AsiakirjaTyyppi,
   KirjaamoOsoite,
   Yhteystieto,
@@ -27,9 +26,8 @@ import HassuStack from "@components/layout/HassuStack";
 import { Stack } from "@mui/material";
 import HyvaksymisDialogi from "./HyvaksymisDialogi";
 import EsitettavatYhteystiedot from "./EsitettavatYhteystiedot";
-import LuonnoksetJaAineistot from "../LuonnoksetJaAineistot/LuonnoksetJaAineistot";
 import IlmoituksenVastaanottajat from "./IlmoituksenVastaanottajat";
-import { removeTypeName, removeTypeNamesFromArray } from "src/util/removeTypeName";
+import { removeTypeNamesFromArray } from "src/util/removeTypeName";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import VuorovaikuttamisenInfo from "./VuorovaikuttamisenInfo";
 import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
@@ -50,13 +48,9 @@ type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 export type VuorovaikutusFormValues = ProjektiFields & {
   vuorovaikutusKierros: Pick<
     VuorovaikutusKierrosInput,
-    | "esittelyaineistot"
-    | "suunnitelmaluonnokset"
     | "esitettavatYhteystiedot"
     | "kysymyksetJaPalautteetViimeistaan"
     | "ilmoituksenVastaanottajat"
-    | "videot"
-    | "suunnittelumateriaali"
     | "vuorovaikutusJulkaisuPaiva"
     | "vuorovaikutusNumero"
     | "vuorovaikutusTilaisuudet"
@@ -67,13 +61,6 @@ export type VuorovaikutusFormValues = ProjektiFields & {
 interface Props {
   vuorovaikutusnro: number;
 }
-
-const defaultListWithEmptyLink = (list: LinkkiInput[] | null | undefined): LinkkiInput[] => {
-  if (!list || !list.length) {
-    return [{ url: "", nimi: "" }];
-  }
-  return list.map((link) => ({ nimi: link.nimi, url: link.url }));
-};
 
 const defaultVuorovaikutus: VuorovaikutusKierros = {
   __typename: "VuorovaikutusKierros",
@@ -105,10 +92,8 @@ function VuorovaikutusKierrosKutsu({
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
   const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
-  const [aineistoMuokkaustila, setAineistoMuokkaustila] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
-  const formContext: { projekti: ProjektiLisatiedolla } = useMemo(() => ({ projekti }), [projekti]);
 
   const vuorovaikutusKierros: VuorovaikutusKierros = useMemo(() => projekti?.vuorovaikutusKierros || defaultVuorovaikutus, [projekti]);
   const defaultValues: VuorovaikutusFormValues = useMemo(() => {
@@ -149,16 +134,6 @@ function VuorovaikutusKierrosKutsu({
         vuorovaikutusNumero: vuorovaikutusnro,
         vuorovaikutusJulkaisuPaiva: vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva || null,
         hankkeenKuvaus: hankkeenKuvaus,
-        esittelyaineistot:
-          vuorovaikutusKierros?.esittelyaineistot?.map(({ dokumenttiOid, nimi }) => ({
-            dokumenttiOid,
-            nimi,
-          })) || [],
-        suunnitelmaluonnokset:
-          vuorovaikutusKierros?.suunnitelmaluonnokset?.map(({ dokumenttiOid, nimi }) => ({
-            dokumenttiOid,
-            nimi,
-          })) || [],
 
         kysymyksetJaPalautteetViimeistaan: vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan || null,
         esitettavatYhteystiedot: {
@@ -178,11 +153,6 @@ function VuorovaikutusKierrosKutsu({
             };
             return vuorovaikutusTilaisuusInput;
           }) || [],
-        videot: defaultListWithEmptyLink(vuorovaikutusKierros?.videot as LinkkiInput[]),
-        suunnittelumateriaali: (removeTypeName(vuorovaikutusKierros?.suunnittelumateriaali) as LinkkiInput) || {
-          nimi: "",
-          url: "",
-        },
       },
     };
   }, [projekti, vuorovaikutusnro, vuorovaikutusKierros, kirjaamoOsoitteet]);
@@ -193,9 +163,8 @@ function VuorovaikutusKierrosKutsu({
       mode: "onChange",
       reValidateMode: "onChange",
       defaultValues,
-      context: formContext,
     };
-  }, [defaultValues, formContext]);
+  }, [defaultValues]);
 
   const useFormReturn = useForm<VuorovaikutusFormValues>(formOptions);
   const {
@@ -325,13 +294,6 @@ function VuorovaikutusKierrosKutsu({
               projektiHenkilot={projektiHenkilot}
               julkinen={false}
               avaaHyvaksymisDialogi={() => setOpenHyvaksy(true)}
-            />
-            <LuonnoksetJaAineistot
-              saveForm={saveForm}
-              muokkaustila={aineistoMuokkaustila}
-              setMuokkaustila={setAineistoMuokkaustila}
-              vuorovaikutus={vuorovaikutusKierros}
-              julkinen={false}
             />
             <EsitettavatYhteystiedot projektiHenkilot={projektiHenkilot} />
             <IlmoituksenVastaanottajat kirjaamoOsoitteet={kirjaamoOsoitteet} vuorovaikutus={vuorovaikutusKierros} />
