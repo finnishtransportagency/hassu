@@ -347,7 +347,12 @@ function VuorovaikutusKierrosKutsu({
                 <Button id="save_suunnitteluvaihe_vuorovaikutukset_draft" onClick={handleSubmit(saveDraft)}>
                   Tallenna luonnos
                 </Button>
-                <Button primary id="save_and_publish" onClick={handleSubmit(handleClickOpenHyvaksy)}>
+                <Button
+                  primary
+                  id="save_and_publish"
+                  onClick={handleSubmit(handleClickOpenHyvaksy)}
+                  disabled={!canProjektiBePublished(projekti)}
+                >
                   Tallenna julkaistavaksi
                 </Button>
               </Stack>
