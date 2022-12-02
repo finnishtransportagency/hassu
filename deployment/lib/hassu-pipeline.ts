@@ -32,7 +32,7 @@ export class HassuPipelineStack extends Stack {
     });
   }
 
-  async process() {
+  async process(): Promise<void> {
     const config = await Config.instance(this);
     const branch = config.getBranch();
     const env = Config.env;
@@ -174,7 +174,7 @@ export class HassuPipelineStack extends Stack {
         buildImage: LinuxBuildImage.STANDARD_5_0,
         privileged: true,
         computeType: ComputeType.MEDIUM,
-        environmentVariables: environmentVariables,
+        environmentVariables,
       },
       grantReportGroupPermissions: true,
       badge: true,

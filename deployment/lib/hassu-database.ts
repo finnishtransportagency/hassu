@@ -35,7 +35,7 @@ export class HassuDatabaseStack extends Stack {
     });
   }
 
-  async process() {
+  async process(): Promise<void> {
     this.config = await Config.instance(this);
     this.projektiTable = this.createProjektiTable();
     this.projektiArchiveTable = this.createProjektiArchiveTable();
@@ -138,7 +138,7 @@ export class HassuDatabaseStack extends Stack {
       cors: [
         {
           allowedMethods: [HttpMethods.PUT],
-          allowedOrigins: allowedOrigins,
+          allowedOrigins,
           allowedHeaders: ["*"],
         },
       ],

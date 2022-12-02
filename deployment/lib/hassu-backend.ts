@@ -14,7 +14,7 @@ import * as events from "aws-cdk-lib/aws-events";
 import { IDomain } from "aws-cdk-lib/aws-opensearchservice";
 import { Effect, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { Bucket } from "aws-cdk-lib/aws-s3";
-import { getEnvironmentVariablesFromSSM, readAccountStackOutputs, readFrontendStackOutputs } from "../bin/setupEnvironment";
+import { getEnvironmentVariablesFromSSM, readAccountStackOutputs, readFrontendStackOutputs } from "./setupEnvironment";
 import { EmailEventType } from "../../backend/src/email/emailEvent";
 import { getOpenSearchDomain } from "./common";
 
@@ -51,7 +51,7 @@ export class HassuBackendStack extends Stack {
     this.props = props;
   }
 
-  async process() {
+  async process(): Promise<void> {
     const config = await Config.instance(this);
 
     const accountStackOutputs = await readAccountStackOutputs();
@@ -77,10 +77,10 @@ export class HassuBackendStack extends Stack {
     this.attachDatabaseToLambda(projektiSearchIndexer);
     HassuBackendStack.configureOpenSearchAccess(projektiSearchIndexer, backendLambda, searchDomain);
 
-    let aineistoImporterLambda = await this.createAineistoImporterLambda(commonEnvironmentVariables, aineistoSQS);
+    const aineistoImporterLambda = await this.createAineistoImporterLambda(commonEnvironmentVariables, aineistoSQS);
     this.attachDatabaseToLambda(aineistoImporterLambda);
 
-    let emailQueueLambda = await this.createEmailQueueLambda(commonEnvironmentVariables, emailSQS);
+    const emailQueueLambda = await this.createEmailQueueLambda(commonEnvironmentVariables, emailSQS);
     this.attachDatabaseToLambda(emailQueueLambda);
 
     new CfnOutput(this, "AppSyncAPIKey", {
@@ -151,7 +151,7 @@ export class HassuBackendStack extends Stack {
   private createProjektiSearchIndexer(commonEnvironmentVariables: Record<string, string>) {
     const functionName = "hassu-dynamodb-stream-handler-" + Config.env;
     const streamHandler = new NodejsFunction(this, "DynamoDBStreamHandler", {
-      functionName: functionName,
+      functionName,
       runtime: lambdaRuntime,
       entry: `${__dirname}/../../backend/src/projektiSearch/dynamoDBStreamHandler.ts`,
       handler: "handleDynamoDBEvents",
@@ -202,7 +202,7 @@ export class HassuBackendStack extends Stack {
       };
     }
 
-    let frontendStackOutputs = await readFrontendStackOutputs();
+    const frontendStackOutputs = await readFrontendStackOutputs();
     const backendLambda = new NodejsFunction(this, "API", {
       functionName: "hassu-backend-" + Config.env,
       runtime: lambdaRuntime,
@@ -323,7 +323,7 @@ export class HassuBackendStack extends Stack {
     commonEnvironmentVariables: Record<string, string>,
     aineistoSQS: Queue
   ): Promise<NodejsFunction> {
-    let frontendStackOutputs = await readFrontendStackOutputs();
+    const frontendStackOutputs = await readFrontendStackOutputs();
 
     const importer = new NodejsFunction(this, "AineistoImporterLambda", {
       functionName: "hassu-aineistoimporter-" + Config.env,
@@ -393,6 +393,7 @@ export class HassuBackendStack extends Stack {
     const lambdaDataSource = api.addLambdaDataSource("lambdaDatasource", backendFn);
 
     for (const operationName in apiConfig) {
+      // eslint-disable-next-line no-prototype-builtins
       if (apiConfig.hasOwnProperty(operationName)) {
         const operation = (apiConfig as any)[operationName];
         lambdaDataSource.createResolver({

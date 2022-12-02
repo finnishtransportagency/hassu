@@ -25,12 +25,7 @@ import * as fs from "fs";
 import { EdgeFunction } from "aws-cdk-lib/aws-cloudfront/lib/experimental";
 import { BlockPublicAccess, Bucket } from "aws-cdk-lib/aws-s3";
 import * as ssm from "aws-cdk-lib/aws-ssm";
-import {
-  readAccountStackOutputs,
-  readBackendStackOutputs,
-  readDatabaseStackOutputs,
-  readPipelineStackOutputs,
-} from "../bin/setupEnvironment";
+import { readAccountStackOutputs, readBackendStackOutputs, readDatabaseStackOutputs, readPipelineStackOutputs } from "./setupEnvironment";
 import { IOriginAccessIdentity } from "aws-cdk-lib/aws-cloudfront/lib/origin-access-identity";
 import { getOpenSearchDomain } from "./common";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
@@ -65,7 +60,7 @@ export class HassuFrontendStack extends Stack {
     this.props = props;
   }
 
-  public async process() {
+  public async process(): Promise<void> {
     if (Config.isHotswap) {
       return;
     }
@@ -260,8 +255,8 @@ export class HassuFrontendStack extends Stack {
     dmzProxyBehavior: BehaviorOptions,
     edgeFunctionRole: Role
   ): Promise<Record<string, BehaviorOptions>> {
-    let { keyGroups, originAccessIdentity, originAccessIdentityReportBucket } = await this.createTrustedKeyGroupsAndOAI(config);
-    let props: Record<string, any> = {
+    const { keyGroups, originAccessIdentity, originAccessIdentityReportBucket } = await this.createTrustedKeyGroupsAndOAI(config);
+    const props: Record<string, any> = {
       "/oauth2/*": dmzProxyBehaviorWithLambda,
       "/graphql": dmzProxyBehaviorWithLambda,
       "/tiedostot/*": await this.createPublicBucketBehavior(env, edgeFunctionRole, originAccessIdentity),
