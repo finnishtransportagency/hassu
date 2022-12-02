@@ -2,12 +2,10 @@ import { Controller, FormProvider, useForm, UseFormProps } from "react-hook-form
 import { yupResolver } from "@hookform/resolvers/yup";
 import { suunnittelunPerustiedotSchema } from "src/schemas/suunnittelunPerustiedot";
 import SectionContent from "@components/layout/SectionContent";
-import Textarea from "@components/form/Textarea";
 import { TallennaProjektiInput, VuorovaikutusKierrosInput, VuorovaikutusKierrosTila, Yhteystieto } from "@services/api";
 import Section from "@components/layout/Section";
 import { ReactElement, useMemo, useState, Fragment } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import TextInput from "@components/form/TextInput";
 import { DialogActions, DialogContent, Stack } from "@mui/material";
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
@@ -25,14 +23,14 @@ import FormGroup from "@components/form/FormGroup";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import CheckBox from "@components/form/CheckBox";
 import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
-import { maxHankkeenkuvausLength } from "src/schemas/vuorovaikutus";
+import SuunnittelunEteneminenJaArvioKestosta from "./SuunnittelunEteneminenJaArvioKestosta";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
   [K in keyof ProjektiFields]: NonNullable<ProjektiFields[K]>;
 }>;
 
-type FormValues = RequiredProjektiFields & {
+export type SuunnittelunPerustiedotFormValues = RequiredProjektiFields & {
   vuorovaikutusKierros: Pick<
     VuorovaikutusKierrosInput,
     | "arvioSeuraavanVaiheenAlkamisesta"
@@ -60,8 +58,8 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
 
   const api = useApi();
 
-  const defaultValues: FormValues = useMemo(() => {
-    const tallentamisTiedot: FormValues = {
+  const defaultValues: SuunnittelunPerustiedotFormValues = useMemo(() => {
+    const tallentamisTiedot: SuunnittelunPerustiedotFormValues = {
       oid: projekti.oid,
       vuorovaikutusKierros: {
         vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0, // TODO mieti
@@ -73,19 +71,18 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     return tallentamisTiedot;
   }, [projekti]);
 
-  const formOptions: UseFormProps<FormValues> = {
+  const formOptions: UseFormProps<SuunnittelunPerustiedotFormValues> = {
     resolver: yupResolver(suunnittelunPerustiedotSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues,
   };
 
-  const useFormReturn = useForm<FormValues>(formOptions);
+  const useFormReturn = useForm<SuunnittelunPerustiedotFormValues>(formOptions);
   const {
-    register,
     reset,
     handleSubmit,
-    formState: { errors, isDirty },
+    formState: { isDirty },
     control,
   } = useFormReturn;
 
@@ -95,12 +92,12 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     setOpenHyvaksy(true);
   };
 
-  const saveDraftAndRedirect = async (formData: FormValues) => {
+  const saveDraftAndRedirect = async (formData: SuunnittelunPerustiedotFormValues) => {
     await saveDraft(formData);
     // TODO: redirect
   };
 
-  const saveDraft = async (formData: FormValues) => {
+  const saveDraft = async (formData: SuunnittelunPerustiedotFormValues) => {
     setIsFormSubmitting(true);
     try {
       await saveSuunnitteluvaihe(formData);
@@ -112,9 +109,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     setIsFormSubmitting(false);
   };
 
-  const api = useApi();
-
-  const saveSuunnitteluvaihe = async (formData: FormValues) => {
+  const saveSuunnitteluvaihe = async (formData: SuunnittelunPerustiedotFormValues) => {
     await api.tallennaProjekti(formData);
     if (reloadProjekti) {
       await reloadProjekti();
@@ -136,43 +131,13 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       )}
       <FormProvider {...useFormReturn}>
         <form>
-          <Section noDivider>
-            <h5 className="vayla-small-title">Suunnittelun eteneminen ja arvio kestosta</h5>
-            <SectionContent>
-              <p>
-                Kuvaa kansalaiselle suunnittelun etenemistä ja sen tilaa. Voit käyttää alla olevaan kenttään tuotua vakiotekstiä tai kertoa
-                omin sanoin.{" "}
-              </p>
-              <Textarea
-                label="Julkisella puolella esitettävä suunnittelun etenemisen kuvaus"
-                maxLength={maxHankkeenkuvausLength}
-                {...register("vuorovaikutusKierros.suunnittelunEteneminenJaKesto")}
-                error={errors.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto}
-              />
-              <p>
-                Anna arvio hallinnollisen käsittelyn seuraavan vaiheen alkamisesta. Seuraava vaihe on nähtävillä olo, jossa kansalaisilla on
-                mahdollisuus jättää muistutuksia tehtyihin suunnitelmiin.
-              </p>
-
-              <p>
-                {`Arvio esitetään palvelun julkisella puolella. Jos arviota ei pystytä antamaan, kirjoita 'Seuraavan
-                vaiheen alkamisesta ei pystytä vielä antamaan arviota'`}
-                .
-              </p>
-              <TextInput
-                label={"Arvio seuraavan vaiheen alkamisesta *"}
-                maxLength={150}
-                {...register("vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta")}
-                error={errors.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta}
-              ></TextInput>
-            </SectionContent>
-          </Section>
+          <SuunnittelunEteneminenJaArvioKestosta />
           <Section>
             <h4 className="vayla-small-title">Kysymykset ja palautteet</h4>
             <SectionContent>
               <h4 className="vayla-label">Kysymyksien esittäminen ja palautteiden antaminen</h4>
               <p>Anna päivämäärä, johon mennessä kansalaisten toivotaan esittävän kysymykset ja palautteet.</p>
-              <HassuDatePickerWithController<FormValues>
+              <HassuDatePickerWithController<SuunnittelunPerustiedotFormValues>
                 className="mt-8"
                 label="Kysymykset ja palautteet viimeistään"
                 minDate={today()}
