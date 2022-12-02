@@ -15,7 +15,6 @@ import {
   UseFormRegister,
   UseFormWatch,
 } from "react-hook-form";
-import { VuorovaikutusFormValues } from "../VuorovaikutusKierros";
 import HassuAineistoNimiExtLink from "../../HassuAineistoNimiExtLink";
 import { useProjekti } from "src/hooks/useProjekti";
 import { Aineisto, VuorovaikutusKierros } from "@services/api";
@@ -27,9 +26,10 @@ import Select from "@components/form/Select";
 import { formatDateTime } from "src/util/dateUtils";
 import { find } from "lodash";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { SuunnittelunPerustiedotFormValues } from "../Perustiedot";
 
 interface Props {
-  vuorovaikutus: VuorovaikutusKierros | undefined;
+  vuorovaikutus: VuorovaikutusKierros | null | undefined;
   hidden: boolean;
 }
 
@@ -40,7 +40,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
   const [esittelyAineistoDialogOpen, setEsittelyAineistoDialogOpen] = useState(false);
   const [suunnitelmaLuonnoksetDialogOpen, setSuunnitelmaLuonnoksetDialogOpen] = useState(false);
 
-  const { control, register, formState, watch, setValue } = useFormContext<VuorovaikutusFormValues>();
+  const { control, register, formState, watch, setValue } = useFormContext<SuunnittelunPerustiedotFormValues>();
 
   const esittelyAineistotFieldArray = useFieldArray({
     control,
@@ -209,13 +209,13 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
           style={{ width: "100%" }}
           label="Linkin kuvaus"
           {...register(`vuorovaikutusKierros.suunnittelumateriaali.nimi`)}
-          error={(formState.errors as any)?.suunnitteluVaihe?.vuorovaikutus?.suunnittelumateriaali?.nimi}
+          error={(formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.nimi}
         />
         <TextInput
           style={{ width: "100%" }}
           label="Linkki muihin esittelyaineistoihin"
           {...register(`vuorovaikutusKierros.suunnittelumateriaali.url`)}
-          error={(formState.errors as any)?.suunnitteluVaihe?.vuorovaikutus?.suunnittelumateriaali?.url}
+          error={(formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.url}
         />
       </SectionContent>
       <AineistojenValitseminenDialog
@@ -257,17 +257,21 @@ enum SuunnitteluVaiheAineistoTyyppi {
   SUUNNITELMALUONNOKSET = "SUUNNITELMALUONNOKSET",
 }
 
-type FormAineisto = FieldArrayWithId<VuorovaikutusFormValues, "vuorovaikutusKierros.esittelyaineistot", "id"> &
+type FormAineisto = FieldArrayWithId<SuunnittelunPerustiedotFormValues, "vuorovaikutusKierros.esittelyaineistot", "id"> &
   Pick<Aineisto, "tila" | "tuotu" | "tiedosto">;
 
 interface AineistoTableProps {
   aineistoTyyppi: SuunnitteluVaiheAineistoTyyppi;
-  esittelyAineistotFieldArray: UseFieldArrayReturn<VuorovaikutusFormValues, "vuorovaikutusKierros.esittelyaineistot", "id">;
-  suunnitelmaLuonnoksetFieldArray: UseFieldArrayReturn<VuorovaikutusFormValues, "vuorovaikutusKierros.suunnitelmaluonnokset", "id">;
-  register: UseFormRegister<VuorovaikutusFormValues>;
-  watch: UseFormWatch<VuorovaikutusFormValues>;
-  vuorovaikutus: VuorovaikutusKierros;
-  formState: FormState<VuorovaikutusFormValues>;
+  esittelyAineistotFieldArray: UseFieldArrayReturn<SuunnittelunPerustiedotFormValues, "vuorovaikutusKierros.esittelyaineistot", "id">;
+  suunnitelmaLuonnoksetFieldArray: UseFieldArrayReturn<
+    SuunnittelunPerustiedotFormValues,
+    "vuorovaikutusKierros.suunnitelmaluonnokset",
+    "id"
+  >;
+  register: UseFormRegister<SuunnittelunPerustiedotFormValues>;
+  watch: UseFormWatch<SuunnittelunPerustiedotFormValues>;
+  vuorovaikutus: VuorovaikutusKierros | null | undefined;
+  formState: FormState<SuunnittelunPerustiedotFormValues>;
 }
 
 const AineistoTable = ({
@@ -298,7 +302,7 @@ const AineistoTable = ({
   const enrichedFields = useMemo(
     () =>
       fields.map((field) => {
-        const aineistoData = [...(vuorovaikutus.esittelyaineistot || []), ...(vuorovaikutus.suunnitelmaluonnokset || [])];
+        const aineistoData = [...(vuorovaikutus?.esittelyaineistot || []), ...(vuorovaikutus?.suunnitelmaluonnokset || [])];
         const { tila, tuotu, tiedosto } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
 
         return { tila, tuotu, tiedosto, ...field };

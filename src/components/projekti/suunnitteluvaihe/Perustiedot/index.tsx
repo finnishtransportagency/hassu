@@ -2,9 +2,9 @@ import { Controller, FormProvider, useForm, UseFormProps } from "react-hook-form
 import { yupResolver } from "@hookform/resolvers/yup";
 import { suunnittelunPerustiedotSchema } from "src/schemas/suunnittelunPerustiedot";
 import SectionContent from "@components/layout/SectionContent";
-import { TallennaProjektiInput, VuorovaikutusKierrosInput, VuorovaikutusKierrosTila, Yhteystieto } from "@services/api";
+import { LinkkiInput, TallennaProjektiInput, VuorovaikutusKierrosInput, VuorovaikutusKierrosTila, Yhteystieto } from "@services/api";
 import Section from "@components/layout/Section";
-import { ReactElement, useMemo, useState, Fragment } from "react";
+import { ReactElement, useMemo, useState, Fragment, useCallback } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { DialogActions, DialogContent, Stack } from "@mui/material";
 import Button from "@components/button/Button";
@@ -24,6 +24,8 @@ import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformati
 import CheckBox from "@components/form/CheckBox";
 import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
 import SuunnittelunEteneminenJaArvioKestosta from "./SuunnittelunEteneminenJaArvioKestosta";
+import { removeTypeName } from "src/util/removeTypeName";
+import EiJulkinenLuonnoksetJaAineistotLomake from "../LuonnoksetJaAineistot/EiJulkinen";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -33,12 +35,23 @@ type RequiredProjektiFields = Required<{
 export type SuunnittelunPerustiedotFormValues = RequiredProjektiFields & {
   vuorovaikutusKierros: Pick<
     VuorovaikutusKierrosInput,
+    | "vuorovaikutusNumero"
     | "arvioSeuraavanVaiheenAlkamisesta"
     | "suunnittelunEteneminenJaKesto"
-    | "vuorovaikutusNumero"
+    | "esittelyaineistot"
+    | "suunnitelmaluonnokset"
+    | "videot"
+    | "suunnittelumateriaali"
     | "kysymyksetJaPalautteetViimeistaan"
     | "palautteidenVastaanottajat"
   >;
+};
+
+const defaultListWithEmptyLink = (list: LinkkiInput[] | null | undefined): LinkkiInput[] => {
+  if (!list || !list.length) {
+    return [{ url: "", nimi: "" }];
+  }
+  return list.map((link) => ({ nimi: link.nimi, url: link.url }));
 };
 
 export default function SuunnitteluvaiheenPerustiedot(): ReactElement {
@@ -55,6 +68,8 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
+  const [aineistoMuokkaustila, setAineistoMuokkaustila] = useState(false);
+  const [formContext, setFormContext] = useState<SuunnittelunPerustiedotFormValues>();
 
   const api = useApi();
 
@@ -65,6 +80,21 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0, // TODO mieti
         arvioSeuraavanVaiheenAlkamisesta: projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta || "",
         suunnittelunEteneminenJaKesto: projekti.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto || "",
+        esittelyaineistot:
+          projekti.vuorovaikutusKierros?.esittelyaineistot?.map(({ dokumenttiOid, nimi }) => ({
+            dokumenttiOid,
+            nimi,
+          })) || [],
+        suunnitelmaluonnokset:
+          projekti.vuorovaikutusKierros?.suunnitelmaluonnokset?.map(({ dokumenttiOid, nimi }) => ({
+            dokumenttiOid,
+            nimi,
+          })) || [],
+        videot: defaultListWithEmptyLink(projekti.vuorovaikutusKierros?.videot as LinkkiInput[]),
+        suunnittelumateriaali: (removeTypeName(projekti?.vuorovaikutusKierros?.suunnittelumateriaali) as LinkkiInput) || {
+          nimi: "",
+          url: "",
+        },
         kysymyksetJaPalautteetViimeistaan: projekti.vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan,
       },
     };
@@ -76,6 +106,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues,
+    context: formContext,
   };
 
   const useFormReturn = useForm<SuunnittelunPerustiedotFormValues>(formOptions);
@@ -84,6 +115,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     handleSubmit,
     formState: { isDirty },
     control,
+    getValues,
   } = useFormReturn;
 
   useLeaveConfirm(isDirty);
@@ -97,29 +129,44 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     // TODO: redirect
   };
 
-  const saveDraft = async (formData: SuunnittelunPerustiedotFormValues) => {
-    setIsFormSubmitting(true);
-    try {
-      await saveSuunnitteluvaihe(formData);
-      showSuccessMessage("Tallennus onnistui!");
-    } catch (e) {
-      log.error("OnSubmit Error", e);
-      showErrorMessage("Tallennuksessa tapahtui virhe");
-    }
-    setIsFormSubmitting(false);
-  };
+  const saveSuunnitteluvaihe = useCallback(
+    async (formData: SuunnittelunPerustiedotFormValues) => {
+      await api.tallennaProjekti(formData);
+      if (reloadProjekti) {
+        await reloadProjekti();
+      }
+      reset(formData);
+    },
+    [reloadProjekti, reset]
+  );
 
-  const saveSuunnitteluvaihe = async (formData: SuunnittelunPerustiedotFormValues) => {
-    await api.tallennaProjekti(formData);
-    if (reloadProjekti) {
-      await reloadProjekti();
-    }
-    reset(formData);
-  };
+  const saveDraft = useCallback(
+    async (formData: SuunnittelunPerustiedotFormValues) => {
+      setIsFormSubmitting(true);
+      try {
+        await saveSuunnitteluvaihe(formData);
+        showSuccessMessage("Tallennus onnistui!");
+      } catch (e) {
+        log.error("OnSubmit Error", e);
+        showErrorMessage("Tallennuksessa tapahtui virhe");
+      }
+      setIsFormSubmitting(false);
+      setAineistoMuokkaustila(false);
+    },
+    [saveSuunnitteluvaihe, showErrorMessage, showSuccessMessage]
+  );
+
+  const saveForm = useMemo(() => {
+    return handleSubmit(saveDraft);
+  }, [handleSubmit, saveDraft]);
 
   const julkinen = projekti.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN;
 
   const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useProjektiHenkilot(projekti);
+
+  const updateFormContext = useCallback(() => {
+    setFormContext(getValues());
+  }, [setFormContext, getValues]);
 
   return (
     <>
@@ -132,6 +179,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       <FormProvider {...useFormReturn}>
         <form>
           <SuunnittelunEteneminenJaArvioKestosta />
+          <EiJulkinenLuonnoksetJaAineistotLomake vuorovaikutus={projekti.vuorovaikutusKierros} updateFormContext={updateFormContext} />
           <Section>
             <h4 className="vayla-small-title">Kysymykset ja palautteet</h4>
             <SectionContent>
