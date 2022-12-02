@@ -106,11 +106,19 @@ const getAineistoSchema = () =>
 
 const getAineistotSchema = () => Yup.array().of(getAineistoSchema()).nullable();
 
+export const maxHankkeenkuvausLength = 2000;
+
+let hankkeenKuvaus = Yup.string()
+  .max(maxHankkeenkuvausLength, `Aloituskuulutukseen voidaan kirjoittaa maksimissaan ${maxHankkeenkuvausLength} merkkiä`)
+  .required("Hankkeen kuvaus ei voi olla tyhjä")
+  .nullable();
+
 export const vuorovaikutusSchema = Yup.object().shape({
   oid: Yup.string().required(),
   suunnitteluVaihe: Yup.object().shape({
     vuorovaikutus: Yup.object().shape({
       vuorovaikutusNumero: Yup.number().required(),
+      hankkeenKuvaus: Yup.object().shape({ SUOMI: hankkeenKuvaus }),
       esittelyaineisto: getAineistotSchema(),
       suunnitelmaluonnokset: getAineistotSchema(),
       vuorovaikutusJulkaisuPaiva: paivamaara({ preventPast: true }).required("Julkaisupäivä täytyy antaa"),
