@@ -48,13 +48,12 @@ type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 export type VuorovaikutusFormValues = ProjektiFields & {
   vuorovaikutusKierros: Pick<
     VuorovaikutusKierrosInput,
-    | "esitettavatYhteystiedot"
-    | "kysymyksetJaPalautteetViimeistaan"
-    | "ilmoituksenVastaanottajat"
-    | "vuorovaikutusJulkaisuPaiva"
     | "vuorovaikutusNumero"
-    | "vuorovaikutusTilaisuudet"
+    | "vuorovaikutusJulkaisuPaiva"
     | "hankkeenKuvaus"
+    | "vuorovaikutusTilaisuudet"
+    | "esitettavatYhteystiedot"
+    | "ilmoituksenVastaanottajat"
   >;
 };
 
