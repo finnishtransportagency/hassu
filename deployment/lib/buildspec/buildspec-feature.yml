@@ -22,7 +22,11 @@ phases:
       - npm run generate
   build:
     commands:
-      - npm run lint
+#      - npm run lint
+      - mkdir -p ~/.aws
+      - echo [default] >>~/.aws/credentials
+      - echo aws_access_key_id=AKIAIOSFODNN7EXAMPLE >>~/.aws/credentials
+      - echo aws_secret_access_key=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY >>~/.aws/credentials
       - npm run localstack
       - npm run setupenvironment
       - npm run test
