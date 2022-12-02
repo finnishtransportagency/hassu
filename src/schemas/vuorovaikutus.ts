@@ -106,19 +106,16 @@ let hankkeenKuvaus = Yup.string()
 
 export const vuorovaikutusSchema = Yup.object().shape({
   oid: Yup.string().required(),
-  suunnitteluVaihe: Yup.object().shape({
-    vuorovaikutus: Yup.object().shape({
-      vuorovaikutusNumero: Yup.number().required(),
-      hankkeenKuvaus: Yup.object().shape({ SUOMI: hankkeenKuvaus }),
-      vuorovaikutusJulkaisuPaiva: paivamaara({ preventPast: true }).required("Julkaisupäivä täytyy antaa"),
-      kysymyksetJaPalautteetViimeistaan: paivamaara({ preventPast: true }).required("Toivottu palautepäivämäärä täytyy antaa"),
-      esitettavatYhteystiedot: standardiYhteystiedot(),
-      vuorovaikutusTilaisuudet: Yup.array()
-        .of(vuorovaikutustilaisuudetSchema)
-        .required("Vähintään yksi tilaisuus täytyy antaa")
-        .min(1, "Vähintään yksi tilaisuus täytyy antaa")
-        .nullable(),
-      ilmoituksenVastaanottajat: ilmoituksenVastaanottajat(),
-    }),
+  vuorovaikutusKierros: Yup.object().shape({
+    vuorovaikutusNumero: Yup.number().required(),
+    hankkeenKuvaus: Yup.object().shape({ SUOMI: hankkeenKuvaus }),
+    vuorovaikutusJulkaisuPaiva: paivamaara({ preventPast: true }).required("Julkaisupäivä täytyy antaa"),
+    esitettavatYhteystiedot: standardiYhteystiedot(),
+    vuorovaikutusTilaisuudet: Yup.array()
+      .of(vuorovaikutustilaisuudetSchema)
+      .required("Vähintään yksi tilaisuus täytyy antaa")
+      .min(1, "Vähintään yksi tilaisuus täytyy antaa")
+      .nullable(),
+    ilmoituksenVastaanottajat: ilmoituksenVastaanottajat(),
   }),
 });
