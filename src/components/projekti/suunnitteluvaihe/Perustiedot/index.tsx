@@ -1,11 +1,10 @@
 import { Controller, FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { maxHankkeenkuvausLength, suunnittelunPerustiedotSchema } from "src/schemas/suunnittelunPerustiedot";
+import { suunnittelunPerustiedotSchema } from "src/schemas/suunnittelunPerustiedot";
 import SectionContent from "@components/layout/SectionContent";
 import Textarea from "@components/form/Textarea";
-import { Kieli, TallennaProjektiInput, VuorovaikutusKierrosInput, VuorovaikutusKierrosTila, Yhteystieto } from "@services/api";
+import { TallennaProjektiInput, VuorovaikutusKierrosInput, VuorovaikutusKierrosTila, Yhteystieto } from "@services/api";
 import Section from "@components/layout/Section";
-import lowerCase from "lodash/lowerCase";
 import { ReactElement, useMemo, useState, Fragment } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import TextInput from "@components/form/TextInput";
@@ -19,7 +18,6 @@ import SaapuneetKysymyksetJaPalautteet from "../SaapuneetKysymyksetJaPalautteet"
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
-import { pickBy } from "lodash";
 import useApi from "src/hooks/useApi";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { today } from "src/util/dateUtils";
@@ -27,6 +25,7 @@ import FormGroup from "@components/form/FormGroup";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import CheckBox from "@components/form/CheckBox";
 import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
+import { maxHankkeenkuvausLength } from "src/schemas/vuorovaikutus";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -36,7 +35,6 @@ type RequiredProjektiFields = Required<{
 type FormValues = RequiredProjektiFields & {
   vuorovaikutusKierros: Pick<
     VuorovaikutusKierrosInput,
-    | "hankkeenKuvaus"
     | "arvioSeuraavanVaiheenAlkamisesta"
     | "suunnittelunEteneminenJaKesto"
     | "vuorovaikutusNumero"
@@ -60,46 +58,15 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
 
+  const api = useApi();
+
   const defaultValues: FormValues = useMemo(() => {
-    const { ensisijainenKieli, toissijainenKieli } = projekti.kielitiedot || {};
-
-    const hasRuotsinKieli = ensisijainenKieli === Kieli.RUOTSI || toissijainenKieli === Kieli.RUOTSI;
-    const hasSaamenKieli = ensisijainenKieli === Kieli.SAAME || toissijainenKieli === Kieli.SAAME;
-
-    const hankkeenKuvausHasBeenCreated: boolean = !!projekti.vuorovaikutusKierros?.hankkeenKuvaus;
-
-    // SUOMI hankkeen kuvaus on aina lomakkeella, RUOTSI JA SAAME vain jos kyseinen kieli on projektin kielitiedoissa.
-    // Jos kieli ei ole kielitiedoissa kyseisen kielen kenttää ei tule lisätä hankkeenKuvaus olioon
-    // Tästä syystä pickBy:llä poistetaan undefined hankkeenkuvaus tiedot.
-    const hankkeenKuvaus: FormValues["vuorovaikutusKierros"]["hankkeenKuvaus"] = hankkeenKuvausHasBeenCreated
-      ? {
-          SUOMI: projekti.vuorovaikutusKierros?.hankkeenKuvaus?.SUOMI || "",
-          ...pickBy(
-            {
-              RUOTSI: hasRuotsinKieli ? projekti.vuorovaikutusKierros?.hankkeenKuvaus?.RUOTSI || "" : undefined,
-              SAAME: hasSaamenKieli ? projekti.vuorovaikutusKierros?.hankkeenKuvaus?.SAAME || "" : undefined,
-            },
-            (value) => value !== undefined
-          ),
-        }
-      : {
-          SUOMI: projekti.aloitusKuulutus?.hankkeenKuvaus?.SUOMI || "",
-          ...pickBy(
-            {
-              RUOTSI: hasRuotsinKieli ? projekti.aloitusKuulutus?.hankkeenKuvaus?.RUOTSI || "" : undefined,
-              SAAME: hasSaamenKieli ? projekti.aloitusKuulutus?.hankkeenKuvaus?.SAAME || "" : undefined,
-            },
-            (value) => value !== undefined
-          ),
-        };
-
     const tallentamisTiedot: FormValues = {
       oid: projekti.oid,
       vuorovaikutusKierros: {
         vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0, // TODO mieti
         arvioSeuraavanVaiheenAlkamisesta: projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta || "",
         suunnittelunEteneminenJaKesto: projekti.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto || "",
-        hankkeenKuvaus: hankkeenKuvaus,
         kysymyksetJaPalautteetViimeistaan: projekti.vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan,
       },
     };
@@ -155,9 +122,6 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     reset(formData);
   };
 
-  const kielitiedot = projekti.kielitiedot;
-  const ensisijainenKieli = projekti.kielitiedot ? projekti.kielitiedot.ensisijainenKieli : Kieli.SUOMI;
-  const toissijainenKieli = kielitiedot?.toissijainenKieli;
   const julkinen = projekti.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN;
 
   const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useProjektiHenkilot(projekti);
@@ -172,42 +136,6 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       )}
       <FormProvider {...useFormReturn}>
         <form>
-          <Section>
-            <SectionContent largeGaps>
-              <h5 className="vayla-small-title">Hankkeen sisällönkuvaus</h5>
-              <p>
-                Kirjoita kenttään tiivistetty sisällönkuvaus hankkeesta. Kuvauksen on hyvä sisältää esimerkiksi tieto suunnittelukohteen
-                alueellista rajauksesta (maantiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet pääpiirteittäin
-                karkealla tasolla. Älä lisää tekstiin linkkejä.
-              </p>
-            </SectionContent>
-            {!julkinen && (
-              <Notification type={NotificationType.INFO_GRAY}>
-                Tiivistetty hankkeen sisällönkuvaus on noudettu aloituskuulutusvaiheesta. Voit muokata kuvausta. Muutokset tulevat näkyviin
-                palvelun julkiselle puolella Tallenna ja julkaise -painikkeen painamisen jälkeen.
-              </Notification>
-            )}
-
-            <Textarea
-              label={`Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (${lowerCase(kielitiedot?.ensisijainenKieli)}) *`}
-              {...register(`vuorovaikutusKierros.hankkeenKuvaus.${ensisijainenKieli}`)}
-              error={
-                (errors.vuorovaikutusKierros?.hankkeenKuvaus as any)?.[
-                  kielitiedot?.ensisijainenKieli ? kielitiedot.ensisijainenKieli : Kieli.SUOMI
-                ]
-              }
-              maxLength={maxHankkeenkuvausLength}
-            />
-            {toissijainenKieli && (
-              <Textarea
-                label={`Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä (${lowerCase(toissijainenKieli)}) *`}
-                {...register(`vuorovaikutusKierros.hankkeenKuvaus.${toissijainenKieli}`)}
-                error={(errors.vuorovaikutusKierros?.hankkeenKuvaus as any)?.[toissijainenKieli]}
-                maxLength={maxHankkeenkuvausLength}
-              />
-            )}
-          </Section>
-
           <Section noDivider>
             <h5 className="vayla-small-title">Suunnittelun eteneminen ja arvio kestosta</h5>
             <SectionContent>

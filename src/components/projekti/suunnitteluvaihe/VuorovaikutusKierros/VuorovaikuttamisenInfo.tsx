@@ -13,7 +13,7 @@ export default function VuorovaikuttamisenInfo({ vuorovaikutus, eiOleJulkaistu }
 
   if (eiOleJulkaistu) {
     return (
-      <p>
+      <p className="mb-8">
         Tällä välilehdellä luodaan virallinen kutsu suunnitelman vuorovaikutukseen. Kutsussa näkyy tieto vuorovaikutustilaisuuksista, linkki
         järjestelmän julkisella puolella esiteltäviin suunnitelmaluonnoksiin ja -aineistoihin sekä yhteyshenkilöt.
       </p>

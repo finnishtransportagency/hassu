@@ -14,6 +14,7 @@ import {
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
   KuulutusJulkaisuTila,
+  Kieli,
 } from "@services/api";
 import Section from "@components/layout/Section";
 import React, { ReactElement, useState, useMemo, useCallback } from "react";
@@ -36,12 +37,13 @@ import VuorovaikutustilaisuusDialog from "./VuorovaikutustilaisuusDialog";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import PdfPreviewForm from "../../PdfPreviewForm";
-import { lowerCase } from "lodash";
+import { lowerCase, pickBy } from "lodash";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
 import Julkaisupaiva from "./Julkaisupaiva";
 import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
 import useApi from "src/hooks/useApi";
+import HankkeenSisallonKuvaus from "./HankkeenSisallonKuvaus";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 
@@ -58,6 +60,7 @@ export type VuorovaikutusFormValues = ProjektiFields & {
     | "vuorovaikutusJulkaisuPaiva"
     | "vuorovaikutusNumero"
     | "vuorovaikutusTilaisuudet"
+    | "hankkeenKuvaus"
   >;
 };
 
@@ -77,15 +80,11 @@ const defaultVuorovaikutus: VuorovaikutusKierros = {
   vuorovaikutusNumero: 1,
 };
 
-export default function SuunnitteluvaiheenVuorovaikuttaminen(props: Props): ReactElement {
+export default function VuorovaikutusKierrosKutsuWrapper(props: Props): ReactElement {
   const { data: projekti, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
   return (
-    <>
-      {projekti && kirjaamoOsoitteet && (
-        <SuunnitteluvaiheenVuorovaikuttaminenForm {...props} {...{ projekti, reloadProjekti, kirjaamoOsoitteet }} />
-      )}
-    </>
+    <>{projekti && kirjaamoOsoitteet && <VuorovaikutusKierrosKutsu {...props} {...{ projekti, reloadProjekti, kirjaamoOsoitteet }} />}</>
   );
 }
 
@@ -95,7 +94,7 @@ type SuunnitteluvaiheenVuorovaikuttaminenFormProps = {
   kirjaamoOsoitteet: KirjaamoOsoite[];
 } & Props;
 
-function SuunnitteluvaiheenVuorovaikuttaminenForm({
+function VuorovaikutusKierrosKutsu({
   vuorovaikutusnro,
   projekti,
   reloadProjekti,
@@ -113,10 +112,43 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
 
   const vuorovaikutusKierros: VuorovaikutusKierros = useMemo(() => projekti?.vuorovaikutusKierros || defaultVuorovaikutus, [projekti]);
   const defaultValues: VuorovaikutusFormValues = useMemo(() => {
+    const { ensisijainenKieli, toissijainenKieli } = projekti.kielitiedot || {};
+
+    const hasRuotsinKieli = ensisijainenKieli === Kieli.RUOTSI || toissijainenKieli === Kieli.RUOTSI;
+    const hasSaamenKieli = ensisijainenKieli === Kieli.SAAME || toissijainenKieli === Kieli.SAAME;
+
+    const hankkeenKuvausHasBeenCreated: boolean = !!projekti.vuorovaikutusKierros?.hankkeenKuvaus;
+
+    // SUOMI hankkeen kuvaus on aina lomakkeella, RUOTSI JA SAAME vain jos kyseinen kieli on projektin kielitiedoissa.
+    // Jos kieli ei ole kielitiedoissa kyseisen kielen kenttää ei tule lisätä hankkeenKuvaus olioon
+    // Tästä syystä pickBy:llä poistetaan undefined hankkeenkuvaus tiedot.
+    const hankkeenKuvaus: VuorovaikutusFormValues["vuorovaikutusKierros"]["hankkeenKuvaus"] = hankkeenKuvausHasBeenCreated
+      ? {
+          SUOMI: projekti.vuorovaikutusKierros?.hankkeenKuvaus?.SUOMI || "",
+          ...pickBy(
+            {
+              RUOTSI: hasRuotsinKieli ? projekti.vuorovaikutusKierros?.hankkeenKuvaus?.RUOTSI || "" : undefined,
+              SAAME: hasSaamenKieli ? projekti.vuorovaikutusKierros?.hankkeenKuvaus?.SAAME || "" : undefined,
+            },
+            (value) => value !== undefined
+          ),
+        }
+      : {
+          SUOMI: projekti.aloitusKuulutus?.hankkeenKuvaus?.SUOMI || "",
+          ...pickBy(
+            {
+              RUOTSI: hasRuotsinKieli ? projekti.aloitusKuulutus?.hankkeenKuvaus?.RUOTSI || "" : undefined,
+              SAAME: hasSaamenKieli ? projekti.aloitusKuulutus?.hankkeenKuvaus?.SAAME || "" : undefined,
+            },
+            (value) => value !== undefined
+          ),
+        };
     return {
       oid: projekti.oid,
       vuorovaikutusKierros: {
         vuorovaikutusNumero: vuorovaikutusnro,
+        vuorovaikutusJulkaisuPaiva: vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva || null,
+        hankkeenKuvaus: hankkeenKuvaus,
         esittelyaineistot:
           vuorovaikutusKierros?.esittelyaineistot?.map(({ dokumenttiOid, nimi }) => ({
             dokumenttiOid,
@@ -128,7 +160,6 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
             nimi,
           })) || [],
 
-        vuorovaikutusJulkaisuPaiva: vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva || null,
         kysymyksetJaPalautteetViimeistaan: vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan || null,
         esitettavatYhteystiedot: {
           yhteysTiedot: removeTypeNamesFromArray(vuorovaikutusKierros?.esitettavatYhteystiedot?.yhteysTiedot) || [],
@@ -274,13 +305,12 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
       <FormProvider {...useFormReturn}>
         <form>
           <fieldset>
-            <Section className="mb-4">
-              <SectionContent>
-                <h3 className="vayla-small-title">Kutsu vuorovaikutukseen</h3>
-                <VuorovaikuttamisenInfo vuorovaikutus={vuorovaikutusKierros} eiOleJulkaistu={true} />
-              </SectionContent>
-              <Julkaisupaiva />
-            </Section>
+            <SectionContent>
+              <h3 className="vayla-small-title">Kutsu vuorovaikutukseen</h3>
+              <VuorovaikuttamisenInfo vuorovaikutus={vuorovaikutusKierros} eiOleJulkaistu={true} />
+            </SectionContent>
+            <Julkaisupaiva />
+            <HankkeenSisallonKuvaus kielitiedot={projekti.kielitiedot} />
             <VuorovaikutusMahdollisuudet
               projekti={projekti}
               julkaistu={false}
