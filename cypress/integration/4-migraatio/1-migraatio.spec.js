@@ -199,8 +199,8 @@ describe("Migraatio", () => {
     cy.contains("span", "Suunnittelussa");
     cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
     cy.get("#sidenavi_2").should("exist").click({ force: true });
-    cy.contains("span", "Kuulutus suunnitelman nähtäville asettamisesta");
-    cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
+    cy.contains("h2", "Kuulutus suunnitelman nähtäville asettamisesta");
+    cy.contains("Suunnitelma on tuotu toisesta järjestelmästä, joten tiedoissa voi olla puutteita.");
     cy.get("#sidenavi_3").should("exist").click({ force: true });
     cy.contains("span", "Hyväksymismenettelyssä");
     cy.contains("Suunnitelma on siirtynyt viimeistelyyn ja hyväksymiseen");
