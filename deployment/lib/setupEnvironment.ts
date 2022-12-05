@@ -46,7 +46,7 @@ async function readStackOutputs(stackName: string, region: Region): Promise<Reco
 }
 
 async function readStackOutputsForRawStackName(stackName: string, region: Region): Promise<Record<string, string>> {
-  if (!BaseConfig.isActuallyDeployedEnvironment()) {
+  if (!BaseConfig.isActuallyDeployedEnvironment() || BaseConfig.env === "localstack") {
     return {};
   }
   let cfClient;
