@@ -26,7 +26,7 @@ type FormFields = {
   };
 };
 
-export default function VuorovaikutusMahdollisuudet({ projekti, julkaistu, setOpenVuorovaikutustilaisuus }: Props): ReactElement {
+export default function VuorovaikutusMahdollisuudet({ projekti, setOpenVuorovaikutustilaisuus }: Props): ReactElement {
   const { t } = useTranslation();
 
   const { getValues, getFieldState } = useFormContext<FormFields>();
@@ -42,31 +42,10 @@ export default function VuorovaikutusMahdollisuudet({ projekti, julkaistu, setOp
   return (
     <>
       <Section>
-        {julkaistu ? (
-          <>
-            <Button
-              style={{ float: "right" }}
-              onClick={(e) => {
-                setOpenVuorovaikutustilaisuus(true);
-                e.preventDefault();
-              }}
-            >
-              Muokkaa
-            </Button>
-            <div className="pt-6">
-              <p className="vayla-label">Vuorovaikutusmahdollisuudet palautteiden ja kysymyksien lisäksi</p>
-              <p>
-                Verkossa jaettavien tilaisuuksien liittymislinkit julkaistaan palvelun julkisella puolella kaksi (2) tuntia ennen
-                tilaisuuden alkua.
-              </p>
-            </div>
-          </>
-        ) : (
-          <>
-            <h4 className="vayla-small-title">Vuorovaikutusmahdollisuudet palautteiden ja kysymyksien lisäksi</h4>
-            {tilaisuudetError && <p className="text-red">{tilaisuudetError.message}</p>}
-          </>
-        )}
+        <>
+          <h4 className="vayla-small-title">Vuorovaikutusmahdollisuudet palautteiden ja kysymyksien lisäksi</h4>
+          {tilaisuudetError && <p className="text-red">{tilaisuudetError.message}</p>}
+        </>
         <SectionContent>
           {isVerkkotilaisuuksia && (
             <>
@@ -135,17 +114,15 @@ export default function VuorovaikutusMahdollisuudet({ projekti, julkaistu, setOp
                 })}
             </>
           )}
-          {!julkaistu && (
-            <Button
-              onClick={(e) => {
-                setOpenVuorovaikutustilaisuus(true);
-                e.preventDefault();
-              }}
-              id="add_or_edit_tilaisuus"
-            >
-              {isFyysisiatilaisuuksia || isVerkkotilaisuuksia || isSoittoaikoja ? "Muokkaa tilaisuuksia" : "Lisää tilaisuus"}
-            </Button>
-          )}
+          <Button
+            onClick={(e) => {
+              setOpenVuorovaikutustilaisuus(true);
+              e.preventDefault();
+            }}
+            id="add_or_edit_tilaisuus"
+          >
+            {isFyysisiatilaisuuksia || isVerkkotilaisuuksia || isSoittoaikoja ? "Muokkaa tilaisuuksia" : "Lisää tilaisuus"}
+          </Button>
         </SectionContent>
       </Section>
     </>
