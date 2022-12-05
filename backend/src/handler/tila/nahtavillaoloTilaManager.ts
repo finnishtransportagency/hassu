@@ -69,7 +69,7 @@ async function cleanupKuulutusBeforeApproval(projekti: DBProjekti, nahtavillaolo
   }
 }
 
-async function cleanupAloitusKuulutusAfterApproval(projekti: DBProjekti, nahtavillaoloVaihe: NahtavillaoloVaihe) {
+async function cleanupKuulutusAfterApproval(projekti: DBProjekti, nahtavillaoloVaihe: NahtavillaoloVaihe) {
   if (nahtavillaoloVaihe.palautusSyy || nahtavillaoloVaihe.uudelleenKuulutus) {
     if (nahtavillaoloVaihe.palautusSyy) {
       nahtavillaoloVaihe.palautusSyy = null;
@@ -110,7 +110,9 @@ class NahtavillaoloTilaManager extends TilaManager {
       throw new Error("Nahtavillaolovaihe on jo olemassa odottamassa hyväksyntää");
     }
 
-    await cleanupKuulutusBeforeApproval(projekti, getNahtavillaoloVaihe(projekti));
+    const nahtavillaoloVaihe = getNahtavillaoloVaihe(projekti);
+
+    await cleanupKuulutusBeforeApproval(projekti, nahtavillaoloVaihe);
 
     const nahtavillaoloVaiheJulkaisu = asiakirjaAdapter.adaptNahtavillaoloVaiheJulkaisu(projekti);
     if (!nahtavillaoloVaiheJulkaisu.aineistoNahtavilla) {
@@ -128,6 +130,9 @@ class NahtavillaoloTilaManager extends TilaManager {
 
     nahtavillaoloVaiheJulkaisu.nahtavillaoloPDFt = await this.generatePDFs(projekti, nahtavillaoloVaiheJulkaisu);
 
+    nahtavillaoloVaihe.id = nahtavillaoloVaiheJulkaisu.id + 1;
+
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, nahtavillaoloVaihe });
     await projektiDatabase.nahtavillaoloVaiheJulkaisut.insert(projekti.oid, nahtavillaoloVaiheJulkaisu);
   }
 
@@ -138,7 +143,7 @@ class NahtavillaoloTilaManager extends TilaManager {
     if (!julkaisuWaitingForApproval) {
       throw new Error("Ei nähtävilläolovaihetta odottamassa hyväksyntää");
     }
-    await cleanupAloitusKuulutusAfterApproval(projekti, nahtavillaoloVaihe);
+    await cleanupKuulutusAfterApproval(projekti, nahtavillaoloVaihe);
     julkaisuWaitingForApproval.tila = KuulutusJulkaisuTila.HYVAKSYTTY;
     julkaisuWaitingForApproval.hyvaksyja = projektiPaallikko.uid;
     julkaisuWaitingForApproval.hyvaksymisPaiva = dateToString(dayjs());
@@ -155,6 +160,7 @@ class NahtavillaoloTilaManager extends TilaManager {
 
     const nahtavillaoloVaihe = getNahtavillaoloVaihe(projekti);
     nahtavillaoloVaihe.palautusSyy = syy;
+    nahtavillaoloVaihe.id = nahtavillaoloVaihe.id - 1;
     if (!julkaisuWaitingForApproval.nahtavillaoloPDFt) {
       throw new Error("julkaisuWaitingForApproval.nahtavillaoloPDFt puuttuu");
     }
@@ -244,7 +250,7 @@ class NahtavillaoloTilaManager extends TilaManager {
       };
     }
     nahtavillaoloVaihe.uudelleenKuulutus = uudelleenKuulutus;
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, aloitusKuulutus: nahtavillaoloVaihe });
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, nahtavillaoloVaihe });
   }
 }
 

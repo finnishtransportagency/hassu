@@ -30,13 +30,7 @@ export function adaptAloitusKuulutus(
       hankkeenKuvaus: adaptHankkeenKuvaus(kuulutus.hankkeenKuvaus),
       kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kuulutusYhteystiedot),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
-      muokkausTila: adaptMuokkausTila(
-        kuulutus,
-        aloitusKuulutusJulkaisut,
-        KuulutusJulkaisuTila.MIGROITU,
-        KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
-        KuulutusJulkaisuTila.HYVAKSYTTY
-      ),
+      muokkausTila: adaptMuokkausTila(kuulutus, aloitusKuulutusJulkaisut),
     };
   } else if (findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.MIGROITU)) {
     return { __typename: "AloitusKuulutus", muokkausTila: MuokkausTila.MIGROITU };
@@ -120,7 +114,7 @@ export function adaptUudelleenKuulutus(uudelleenKuulutus: UudelleenKuulutus | nu
   };
 }
 
-function adaptLokalisoituTeksti(localizedMap: RequiredLocalizedMap<string> | undefined): LokalisoituTeksti | null | undefined {
+export function adaptLokalisoituTeksti(localizedMap: RequiredLocalizedMap<string> | undefined): LokalisoituTeksti | null | undefined {
   if (localizedMap && Object.keys(localizedMap).length > 0) {
     return {
       __typename: "LokalisoituTeksti",

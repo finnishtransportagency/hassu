@@ -1,7 +1,7 @@
 import { describe, it } from "mocha";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import { projektiAdapter } from "../../src/projekti/adapter/projektiAdapter";
-import { findPublishedAloitusKuulutusJulkaisu } from "../../src/projekti/adapter/common";
+import { findPublishedKuulutusJulkaisu } from "../../src/projekti/adapter/common";
 
 import { IllegalArgumentError } from "../../src/error/IllegalArgumentError";
 import * as sinon from "sinon";
@@ -59,7 +59,7 @@ describe("projektiAdapter", () => {
   it("should allow suunnitteluvaihe publishing with a valid aloituskuulutusjulkaisu", async () => {
     const projekti = fixture.dbProjekti2();
 
-    expect(findPublishedAloitusKuulutusJulkaisu(projekti.aloitusKuulutusJulkaisut!)).to.not.be.empty;
+    expect(findPublishedKuulutusJulkaisu(projekti.aloitusKuulutusJulkaisut!)).to.not.be.empty;
     expect(projekti.suunnitteluVaihe).to.be.undefined;
 
     const result = await projektiAdapter.adaptProjektiToSave(projekti, {

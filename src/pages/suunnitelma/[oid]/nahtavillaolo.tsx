@@ -101,7 +101,11 @@ export default function Nahtavillaolo(): ReactElement {
             </SectionContent>
           </Notification>
         </SectionContent>
-        <KansalaisenAineistoNakyma projekti={projekti} kuulutus={kuulutus} />
+        <KansalaisenAineistoNakyma
+          projekti={projekti}
+          kuulutus={kuulutus}
+          uudelleenKuulutus={projekti.nahtavillaoloVaihe?.uudelleenKuulutus}
+        />
         <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.muistutuksen_jattaminen`)}</h4>
         <SectionContent>
           <JataPalautettaNappi teksti={t("muistutuslomake.jata_muistutus")} onClick={() => setMuistutusLomakeOpen(true)} />

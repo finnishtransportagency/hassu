@@ -31,7 +31,7 @@ export function adaptNahtavillaoloVaihe(
       hankkeenKuvaus,
       ...rest
     } = nahtavillaoloVaihe;
-  const paths = new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(nahtavillaoloVaihe);
+    const paths = new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(nahtavillaoloVaihe);
     return {
       __typename: "NahtavillaoloVaihe",
       ...rest,
@@ -44,13 +44,7 @@ export function adaptNahtavillaoloVaihe(
       kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kuulutusYhteystiedot),
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
       hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus || undefined),
-      muokkausTila: adaptMuokkausTila(
-        nahtavillaoloVaihe,
-        nahtavillaoloVaiheJulkaisut,
-        KuulutusJulkaisuTila.MIGROITU,
-        KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
-        KuulutusJulkaisuTila.HYVAKSYTTY
-      ),
+      muokkausTila: adaptMuokkausTila(nahtavillaoloVaihe, nahtavillaoloVaiheJulkaisut),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
     };
   } else if (findJulkaisuWithTila(nahtavillaoloVaiheJulkaisut, KuulutusJulkaisuTila.MIGROITU)) {
@@ -60,7 +54,7 @@ export function adaptNahtavillaoloVaihe(
 }
 
 export function adaptNahtavillaoloVaiheJulkaisu(
-  oid: string,
+  dbProjekti: DBProjekti,
   julkaisut?: NahtavillaoloVaiheJulkaisu[] | null
 ): API.NahtavillaoloVaiheJulkaisu | undefined {
   const julkaisu =
@@ -108,18 +102,22 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.yhteystiedot määrittelemättä");
     }
 
-    const paths = new ProjektiPaths(oid).nahtavillaoloVaihe(julkaisu);
-      const palautetaan: API.NahtavillaoloVaiheJulkaisu = {
-        ...fieldsToCopyAsIs,
-        __typename: "NahtavillaoloVaiheJulkaisu",
-        tila,
-        hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
-        kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
-        yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
-        ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-        aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
+    const paths = new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(julkaisu);
+    const palautetaan: API.NahtavillaoloVaiheJulkaisu = {
+      ...fieldsToCopyAsIs,
+      __typename: "NahtavillaoloVaiheJulkaisu",
+      tila,
+      hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
+      kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
+      yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
+      ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
+      aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
       lisaAineisto: adaptAineistot(lisaAineisto, paths),
-      nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(oid, julkaisu),
+      // dbProjekti.salt on määritelty
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      lisaAineistoParametrit: lisaAineistoService.generateListingParams(dbProjekti.oid, julkaisu.id, dbProjekti.salt),
+      nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(dbProjekti.oid, julkaisu),
       velho: adaptVelho(velho),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
     };

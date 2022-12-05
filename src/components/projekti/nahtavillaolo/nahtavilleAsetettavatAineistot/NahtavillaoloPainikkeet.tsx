@@ -33,8 +33,9 @@ export default function NahtavillaoloPainikkeet() {
 
   const { handleSubmit, reset } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
 
-  const saveSuunnitteluvaihe = async (formData: TallennaProjektiInput) => {
-    await api.tallennaProjekti(formData);
+  const saveSuunnitteluvaihe = async (formData: NahtavilleAsetettavatAineistotFormValues) => {
+    const tallennaProjektiInput: TallennaProjektiInput = mapFormValuesToTallennaProjektiInput(formData);
+    await api.tallennaProjekti(tallennaProjektiInput);
     if (reloadProjekti) await reloadProjekti();
     reset(formData);
   };
@@ -42,8 +43,7 @@ export default function NahtavillaoloPainikkeet() {
   const saveDraft = async (formData: NahtavilleAsetettavatAineistotFormValues) => {
     setIsFormSubmitting(true);
     try {
-      const tallennaProjektiInput: TallennaProjektiInput = mapFormValuesToTallennaProjektiInput(formData);
-      await saveSuunnitteluvaihe(tallennaProjektiInput);
+      await saveSuunnitteluvaihe(formData);
       showSuccessMessage("Tallennus onnistui!");
     } catch (e) {
       log.error("OnSubmit Error", e);

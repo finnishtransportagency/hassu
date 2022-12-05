@@ -263,11 +263,7 @@ Object {
         "SUOMI": "Suomiseloste uudelleenkuulutukselle",
         "__typename": "LokalisoituTeksti",
       },
-      "selosteLahetekirjeeseen": Object {
-        "RUOTSI": "Ruotsiseloste uudelleenkuulutuksen lähetekirjeeseen",
-        "SUOMI": "Suomiseloste uudelleenkuulutuksen lähetekirjeeseen",
-        "__typename": "LokalisoituTeksti",
-      },
+      "selosteLahetekirjeeseen": null,
       "tila": "JULKAISTU_PERUUTETTU",
     },
     "velho": Object {

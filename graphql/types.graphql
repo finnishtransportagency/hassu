@@ -236,6 +236,7 @@ type HyvaksymisPaatosVaihe {
 type NahtavillaoloVaiheJulkaisu {
   aineistoNahtavilla: [Aineisto!]
   lisaAineisto: [Aineisto!]
+  lisaAineistoParametrit: LisaAineistoParametrit
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
   muistutusoikeusPaattyyPaiva: String

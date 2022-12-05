@@ -1,34 +1,28 @@
 import { experimental_sx as sx, styled } from "@mui/material";
 import Link from "@components/HassuLink";
-
-const Tagi = styled("div")(
-  sx({
-    backgroundColor: "white",
-    color: "#0063AF",
-    border: "1px solid #0063AF",
-    textAlign: "center",
-    display: "inline-block",
-    padding: "5 5 10 10",
-    marginTop: "1em",
-    marginRight: "1em",
-  })
-);
+import { Tagi } from "@components/Tagi";
 
 export const Suunnitelmatyyppi = styled(Tagi)(
   sx({
     width: "150px",
+    marginTop: "1em",
+    marginRight: "1em",
   })
 );
 
 export const ProjektinTila = styled(Tagi)(
   sx({
     width: "200px",
+    marginTop: "1em",
+    marginRight: "1em",
   })
 );
 
 export const VuorovaikutusTagi = styled(Tagi)(
   sx({
     width: "200px",
+    marginTop: "1em",
+    marginRight: "1em",
   })
 );
 
@@ -43,6 +37,8 @@ export const ProjektinTilaMobiili = styled("div")(
 export const VuorovaikutusTilaisuus = styled(Tagi)(
   sx({
     width: "200px",
+    marginTop: "1em",
+    marginRight: "1em",
   })
 );
 

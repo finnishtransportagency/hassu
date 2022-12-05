@@ -741,7 +741,7 @@ Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
       },
-      "id": 1,
+      "id": 2,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
         "kunnat": Array [
@@ -801,7 +801,7 @@ Object {
       "lisaAineistoParametrit": Object {
         "__typename": "LisaAineistoParametrit",
         "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 1,
+        "nahtavillaoloVaiheId": 2,
         "poistumisPaiva": "***unittest***",
       },
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
@@ -857,6 +857,12 @@ Object {
       "kuulutusPaiva": "2022-06-07",
       "kuulutusVaihePaattyyPaiva": "2042-06-07",
       "lisaAineisto": undefined,
+      "lisaAineistoParametrit": Object {
+        "__typename": "LisaAineistoParametrit",
+        "hash": "***unittest***",
+        "nahtavillaoloVaiheId": 1,
+        "poistumisPaiva": "***unittest***",
+      },
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
       "muokkaaja": "A000112",
       "nahtavillaoloPDFt": Object {
@@ -936,6 +942,7 @@ Object {
     "kuulutusVaihePaattyyPaiva": "2042-06-07",
     "muistutusoikeusPaattyyPaiva": "2042-06-08",
     "tila": "HYVAKSYTTY",
+    "uudelleenKuulutus": undefined,
     "velho": Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
@@ -1034,6 +1041,7 @@ Object {
       "kuulutusVaihePaattyyPaiva": "2042-06-07",
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
       "tila": "HYVAKSYTTY",
+      "uudelleenKuulutus": undefined,
       "velho": Object {
         "__typename": "VelhoJulkinen",
         "asiatunnusELY": undefined,

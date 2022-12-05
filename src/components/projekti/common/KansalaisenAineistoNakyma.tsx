@@ -2,7 +2,13 @@ import React, { Key, ReactElement, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { formatDate } from "src/util/dateUtils";
 import SectionContent from "@components/layout/SectionContent";
-import { Aineisto, ProjektiJulkinen, NahtavillaoloVaiheJulkaisuJulkinen, HyvaksymisPaatosVaiheJulkaisuJulkinen } from "@services/api";
+import {
+  Aineisto,
+  ProjektiJulkinen,
+  NahtavillaoloVaiheJulkaisuJulkinen,
+  HyvaksymisPaatosVaiheJulkaisuJulkinen,
+  UudelleenKuulutus,
+} from "@services/api";
 import Trans from "next-translate/Trans";
 import HassuAccordion from "@components/HassuAccordion";
 import { AineistoKategoria, aineistoKategoriat } from "common/aineistoKategoriat";
@@ -11,10 +17,13 @@ import ExtLink from "@components/ExtLink";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ButtonFlat from "@components/button/ButtonFlat";
 import { kuntametadata } from "../../../../common/kuntametadata";
+import { Tagi } from "@components/Tagi";
+import dayjs from "dayjs";
 
 type Props = {
   projekti: ProjektiJulkinen;
   kuulutus: NahtavillaoloVaiheJulkaisuJulkinen | HyvaksymisPaatosVaiheJulkaisuJulkinen;
+  uudelleenKuulutus: UudelleenKuulutus | null | undefined;
   naytaAineistoPaivanaKuulutuksenJulkaisuPaiva?: boolean;
 };
 
@@ -22,6 +31,7 @@ export default function KansalaisenAineistoNakyma({
   projekti,
   kuulutus,
   naytaAineistoPaivanaKuulutuksenJulkaisuPaiva,
+  uudelleenKuulutus,
 }: Props): ReactElement {
   const { t, lang } = useTranslation("projekti");
 
@@ -87,6 +97,7 @@ export default function KansalaisenAineistoNakyma({
         expandedState={[expandedAineistoKategoriat, setExpandedAineistoKategoriat]}
         paakategoria={true}
         julkaisuPaiva={naytaAineistoPaivanaKuulutuksenJulkaisuPaiva ? kuulutus.kuulutusPaiva || undefined : undefined}
+        alkuperainenHyvaksymisPaiva={uudelleenKuulutus?.alkuperainenHyvaksymisPaiva || undefined}
       />
     </SectionContent>
   );
@@ -98,6 +109,7 @@ interface AineistoKategoriaAccordionProps {
   expandedState: [React.Key[], React.Dispatch<React.Key[]>];
   paakategoria?: boolean;
   julkaisuPaiva?: string | undefined;
+  alkuperainenHyvaksymisPaiva: string | undefined;
 }
 
 const AineistoKategoriaAccordion = (props: AineistoKategoriaAccordionProps) => {
@@ -131,6 +143,7 @@ const AineistoKategoriaAccordion = (props: AineistoKategoriaAccordionProps) => {
                 kategoria={kategoria}
                 expandedState={props.expandedState}
                 julkaisuPaiva={props.julkaisuPaiva}
+                alkuperainenHyvaksymisPaiva={props.alkuperainenHyvaksymisPaiva}
               />
             ),
             id: kategoria.id,
@@ -146,26 +159,35 @@ interface SuunnitelmaAineistoKategoriaContentProps {
   kategoria: AineistoKategoria;
   expandedState: [React.Key[], React.Dispatch<React.Key[]>];
   julkaisuPaiva?: string | undefined;
+  alkuperainenHyvaksymisPaiva: string | undefined;
 }
 
 const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoriaContentProps) => {
+  const { t } = useTranslation("aineisto");
   return (
     <>
       {!!props.aineistot?.length ? (
         <Stack direction="column" rowGap={1.5}>
           {props.aineistot
             ?.filter((aineisto) => typeof aineisto.tiedosto === "string" && aineisto.kategoriaId === props.kategoria.id)
-            .map((aineisto) => (
-              <Stack direction="row" alignItems="flex-end" columnGap={2} key={aineisto.dokumenttiOid}>
-                <ExtLink href={aineisto.tiedosto!} target="_blank" rel="noreferrer">
-                  {aineisto.nimi}{" "}
-                  <span className="ml-2 text-black">
-                    ({aineisto.nimi.split(".").pop()})
-                    {props.julkaisuPaiva ? formatDate(props.julkaisuPaiva) : aineisto.tuotu && formatDate(aineisto.tuotu)}
-                  </span>
-                </ExtLink>
-              </Stack>
-            ))}
+            .map((aineisto) => {
+              const isUusiaineisto =
+                aineisto.tuotu &&
+                props.alkuperainenHyvaksymisPaiva &&
+                dayjs(aineisto.tuotu).isAfter(props.alkuperainenHyvaksymisPaiva, "date");
+              return (
+                <Stack direction="row" alignItems="flex-end" columnGap={8} key={aineisto.dokumenttiOid}>
+                  <ExtLink href={aineisto.tiedosto!} target="_blank" rel="noreferrer">
+                    {aineisto.nimi}{" "}
+                    <span className="ml-2 text-black">
+                      ({aineisto.nimi.split(".").pop()})
+                      {props.julkaisuPaiva ? formatDate(props.julkaisuPaiva) : aineisto.tuotu && formatDate(aineisto.tuotu)}
+                    </span>
+                  </ExtLink>
+                  {isUusiaineisto && <Tagi>{t("aineisto:uusi-aineisto")}</Tagi>}
+                </Stack>
+              );
+            })}
         </Stack>
       ) : (
         <p>Kategoriassa ei ole aineistoa</p>
@@ -175,6 +197,7 @@ const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoria
           aineistoKategoriat={props.kategoria.alaKategoriat}
           aineistot={props.aineistot}
           expandedState={props.expandedState}
+          alkuperainenHyvaksymisPaiva={props.alkuperainenHyvaksymisPaiva}
         />
       )}
     </>
