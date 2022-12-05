@@ -30,13 +30,6 @@ export default function VuorovaikutusPaivamaaraJaTiedotLukutila({ vuorovaikutus,
           <p>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[toissijainenKieli]}</p>
         </SectionContent>
       )}
-      <SectionContent className="pb-7">
-        <p className="vayla-label">Kysymykset ja palautteet</p>
-        <p>
-          Kansalaisia pyydetään esittämään kysymykset ja palautteet viimeistään{" "}
-          {formatDate(vuorovaikutus?.kysymyksetJaPalautteetViimeistaan)}.
-        </p>
-      </SectionContent>
     </Section>
   );
 }
