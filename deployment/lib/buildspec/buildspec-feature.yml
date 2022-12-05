@@ -23,6 +23,7 @@ phases:
   build:
     commands:
       - npm run lint
+      - mkdir -p ~/.cdk/cache
       - npm run localstack
       - npm run setupenvironment
       - npm run test

@@ -1,6 +1,6 @@
 import { App, CfnOutput, Duration, Expiration, Fn, Stack } from "aws-cdk-lib";
 import * as lambda from "aws-cdk-lib/aws-lambda";
-import { LambdaInsightsVersion, StartingPosition, Tracing } from "aws-cdk-lib/aws-lambda";
+import { LambdaInsightsVersion, RuntimeFamily, StartingPosition, Tracing } from "aws-cdk-lib/aws-lambda";
 import * as appsync from "@aws-cdk/aws-appsync-alpha";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
@@ -19,7 +19,7 @@ import { EmailEventType } from "../../backend/src/email/emailEvent";
 import { getOpenSearchDomain } from "./common";
 
 const path = require("path");
-let lambdaRuntime = new lambda.Runtime("nodejs16.x", RuntimeFamily.NODEJS);
+const lambdaRuntime = new lambda.Runtime("nodejs16.x", RuntimeFamily.NODEJS);
 
 export type HassuBackendStackProps = {
   projektiTable: Table;
@@ -463,7 +463,7 @@ export class HassuBackendStack extends Stack {
   }
 
   private createAndProvideSchedulerExecutionRole(backendLambda: NodejsFunction, aineistoSQS: Queue) {
-    let servicePrincipal = new ServicePrincipal("scheduler.amazonaws.com");
+    const servicePrincipal = new ServicePrincipal("scheduler.amazonaws.com");
     const role = new Role(this, "schedulerExecutionRole", {
       assumedBy: servicePrincipal,
       roleName: "schedulerExecutionRole-" + Config.env,
