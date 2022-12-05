@@ -1,12 +1,12 @@
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
 import React, { ReactElement, useMemo } from "react";
-import { formatDate } from "../../../util/dateUtils";
+import { formatDate } from "../../../../util/dateUtils";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
-import VuorovaikutusPaivamaaraJaTiedotLukutila from "./komponentit/VuorovaikutusPaivamaaraJaTiedotLukutila";
-import VuorovaikutusMahdollisuudetLukutila from "./komponentit/VuorovaikutusMahdollisuudetLukutila";
-import IlmoituksenVastaanottajatLukutila from "./komponentit/VuorovaikutusIlmoituksenVastaanottajatLukutila";
+import VuorovaikutusPaivamaaraJaTiedotLukutila from "../komponentit/VuorovaikutusPaivamaaraJaTiedotLukutila";
+import VuorovaikutusMahdollisuudetLukutila from "../../lukutila/komponentit/VuorovaikutusMahdollisuudetLukutila";
+import IlmoituksenVastaanottajatLukutila from "../../lukutila/komponentit/VuorovaikutusIlmoituksenVastaanottajatLukutila";
 import ExtLink from "@components/ExtLink";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import replace from "lodash/replace";

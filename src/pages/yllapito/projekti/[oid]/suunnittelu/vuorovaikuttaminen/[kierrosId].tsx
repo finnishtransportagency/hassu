@@ -2,12 +2,12 @@ import React, { ReactElement } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import SuunnitteluPageLayout from "@components/projekti/suunnitteluvaihe/SuunnitteluvaihePageLayout";
 import { useRouter } from "next/router";
-import VuorovaikuttaminenEpaaktiivinenLukutila from "@components/projekti/lukutila/VuorovaikuttaminenEpaaktiivinenLukutila";
+import VuorovaikuttaminenEpaaktiivinenLukutila from "@components/projekti/suunnitteluvaihe/EpaaktiivinenTilaVuorovaikutukselle";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import SuunnitteluvaiheenVuorovaikuttaminen from "@components/projekti/suunnitteluvaihe/VuorovaikutusKierros";
 import { VuorovaikutusKierrosTila } from "@services/api";
 import { getValidatedKierrosId } from "src/util/getValidatedKierrosId";
-import VuorovaikutusKierrosLukutila from "@components/projekti/lukutila/VuorovaikutusKierrosLukutila";
+import VuorovaikutusKierrosLukutila from "@components/projekti/suunnitteluvaihe/LukutilaVuorovaikutukselle";
 
 export default function VuorovaikutusKierrosWrapper() {
   const { data: projekti } = useProjekti();

@@ -2,7 +2,7 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import { useMemo } from "react";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
-import VuorovaikutusPaivamaaraJaTiedotLukutila from "./komponentit/VuorovaikutusPaivamaaraJaTiedotLukutila";
+import VuorovaikutusPaivamaaraJaTiedotLukutila from "../komponentit/VuorovaikutusPaivamaaraJaTiedotLukutila";
 
 type Props = {
   vuorovaikutusnro: number;
