@@ -204,14 +204,14 @@ function VuorovaikutusKierrosKutsu({
   );
 
   const vaihdaKierroksenTila = useCallback(
-    async (toiminto: TilasiirtymaToiminto, viesti: string, syy?: string) => {
+    async (toiminto: TilasiirtymaToiminto, viesti: string) => {
       let mounted = true;
       if (!projekti) {
         return;
       }
       setIsFormSubmitting(true);
       try {
-        await api.siirraTila({ oid: projekti.oid, toiminto, syy, tyyppi: TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS });
+        await api.siirraTila({ oid: projekti.oid, toiminto, tyyppi: TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS });
         await reloadProjekti();
         showSuccessMessage(`${viesti} onnistui`);
       } catch (error) {
@@ -234,7 +234,7 @@ function VuorovaikutusKierrosKutsu({
       setIsFormSubmitting(true);
       try {
         await saveDraft(formData);
-        await vaihdaKierroksenTila(TilasiirtymaToiminto.HYVAKSY, "Hyvaksy");
+        await vaihdaKierroksenTila(TilasiirtymaToiminto.HYVAKSY, "Hyvaksyminen");
       } catch (error) {
         log.error("Virhe hyväksyntään lähetyksessä", error);
         showErrorMessage("Hyväksyntään lähetyksessä tapahtui virhe");
