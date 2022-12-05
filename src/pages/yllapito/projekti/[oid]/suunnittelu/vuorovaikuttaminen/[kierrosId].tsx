@@ -62,7 +62,7 @@ function VuorovaikutusKierros({ projekti }: { projekti: ProjektiLisatiedolla }):
   return (
     <SuunnitteluPageLayout>
       {validatedKierrosId ? (
-        <SuunnitteluvaiheenVuorovaikuttaminen vuorovaikutusnro={validatedKierrosId} />
+        <SuunnitteluvaiheenVuorovaikuttaminen vuorovaikutusnro={validatedKierrosId - 1} />
       ) : (
         <p>Virheellinen vuorovaikutusnumero</p>
       )}
