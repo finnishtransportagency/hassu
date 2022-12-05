@@ -46,7 +46,11 @@ function VuorovaikutusKierros({ projekti }: { projekti: ProjektiLisatiedolla }):
   if (lukutila) {
     return (
       <SuunnitteluPageLayout>
-        {validatedKierrosId ? <VuorovaikutusKierrosLukutila /> : <p>Virheellinen vuorovaikutusnumero</p>}
+        {validatedKierrosId ? (
+          <VuorovaikutusKierrosLukutila vuorovaikutusnro={validatedKierrosId - 1} projekti={projekti} />
+        ) : (
+          <p>Virheellinen vuorovaikutusnumero</p>
+        )}
       </SuunnitteluPageLayout>
     );
   }
