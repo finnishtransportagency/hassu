@@ -8,7 +8,7 @@ export class ImportAineistoMock {
   fakeAineistoImportQueue: SQSEvent[] = [];
   importAineistoStub!: sinon.SinonStub;
 
-  initStub(): void {
+  constructor() {
     this.importAineistoStub = sinon.stub(aineistoImporterClient, "importAineisto");
     this.importAineistoStub.callsFake(async (event) => {
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions

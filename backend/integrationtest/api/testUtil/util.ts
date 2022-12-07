@@ -14,8 +14,14 @@ import { velho } from "../../../src/velho/velhoClient";
 import mocha from "mocha";
 import { NotFoundError } from "../../../src/error/NotFoundError";
 import { cleanupAnyProjektiData } from "../testFixtureRecorder";
-import { getCloudFront } from "../../../src/aws/client";
+import { getCloudFront } from "../../../src/aws/clients/getCloudFront";
+import { getScheduler } from "../../../src/aws/clients/getScheduler";
 import { awsMockResolves, expectAwsCalls } from "../../../test/aws/awsMock";
+import { CreateScheduleInput } from "aws-sdk/clients/scheduler";
+import { handleEvent } from "../../../src/aineisto/aineistoImporterLambda";
+import { Callback, Context } from "aws-lambda";
+import { SQSRecord } from "aws-lambda/trigger/sqs";
+import assert from "assert";
 
 const { expect } = require("chai");
 
@@ -158,4 +164,36 @@ export function mockSaveProjektiToVelho(): void {
     }
     stub.reset();
   });
+}
+
+export class SchedulerMock {
+  private createStub: sinon.SinonStub;
+  private deleteStub: sinon.SinonStub;
+
+  constructor() {
+    this.createStub = sinon.stub(getScheduler(), "createSchedule");
+    this.deleteStub = sinon.stub(getScheduler(), "deleteSchedule");
+    awsMockResolves(this.createStub, {});
+    awsMockResolves(this.deleteStub, {});
+  }
+
+  async verifyAndRunSchedule(): Promise<void> {
+    if (this.createStub.getCalls().length > 0) {
+      const calls: CreateScheduleInput[] = this.createStub
+        .getCalls()
+        .map((call) => call.args[0] as unknown as CreateScheduleInput)
+        .sort();
+      expect(calls).toMatchSnapshot();
+      await Promise.all(
+        calls.map(async (args: CreateScheduleInput) => {
+          assert(args.Target.Input, "args.Target.Input pitäisi olla olemassa");
+          const sqsRecord: SQSRecord = { body: args.Target.Input } as unknown as SQSRecord;
+          await handleEvent({ Records: [sqsRecord] }, undefined as unknown as Context, undefined as unknown as Callback);
+        })
+      );
+      this.createStub.reset();
+    }
+
+    expectAwsCalls(this.deleteStub);
+  }
 }

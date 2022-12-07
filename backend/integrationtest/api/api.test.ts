@@ -33,6 +33,7 @@ import {
   EmailClientStub,
   mockSaveProjektiToVelho,
   PDFGeneratorStub,
+  SchedulerMock,
   takePublicS3Snapshot,
   takeS3Snapshot,
   takeYllapitoS3Snapshot,
@@ -62,7 +63,8 @@ describe("Api", () => {
   let awsCloudfrontInvalidationStub: CloudFrontStub;
   const emailClientStub = new EmailClientStub();
   const pdfGeneratorStub = new PDFGeneratorStub();
-  const importAineistoMock = new ImportAineistoMock();
+  let importAineistoMock: ImportAineistoMock;
+  let schedulerMock: SchedulerMock;
 
   before(async () => {
     await setupLocalDatabase();
@@ -77,10 +79,11 @@ describe("Api", () => {
     sinon.stub(openSearchClientYllapito, "deleteDocument");
     sinon.stub(openSearchClientYllapito, "putDocument");
 
-    importAineistoMock.initStub();
+    importAineistoMock = new ImportAineistoMock();
     awsCloudfrontInvalidationStub = new CloudFrontStub();
     pdfGeneratorStub.init();
     emailClientStub.init();
+    schedulerMock = new SchedulerMock();
 
     try {
       await deleteProjekti(oid);
@@ -170,5 +173,6 @@ describe("Api", () => {
     emailClientStub.verifyEmailsSent();
 
     await recordProjektiTestFixture(FixtureName.HYVAKSYMISPAATOS_APPROVED, oid);
+    await schedulerMock.verifyAndRunSchedule();
   });
 });

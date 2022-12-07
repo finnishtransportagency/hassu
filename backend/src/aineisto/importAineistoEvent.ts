@@ -6,4 +6,5 @@ export enum ImportAineistoEventType {
 export type ImportAineistoEvent = {
   type: ImportAineistoEventType;
   oid: string;
+  scheduleName?: string;
 };

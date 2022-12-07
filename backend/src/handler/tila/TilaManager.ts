@@ -4,6 +4,7 @@ import { projektiDatabase } from "../../database/projektiDatabase";
 import { emailHandler } from "../emailHandler";
 import { DBProjekti } from "../../database/model";
 import { requireAdmin, requireOmistaja } from "../../user/userService";
+import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
 
 export abstract class TilaManager {
   protected tyyppi!: TilasiirtymaTyyppi;
@@ -54,6 +55,14 @@ export abstract class TilaManager {
   private async uudelleenkuulutaInternal(projekti: DBProjekti) {
     requireAdmin();
     await this.uudelleenkuuluta(projekti);
+  }
+
+  async synchronizeProjektiFiles(oid: string, isUudelleenKuulutus: boolean, synchronizationDate?: string | null): Promise<void> {
+    if (isUudelleenKuulutus && synchronizationDate) {
+      await aineistoSynchronizerService.synchronizeProjektiFilesAtSpecificDate(oid, synchronizationDate);
+    } else {
+      await aineistoSynchronizerService.synchronizeProjektiFiles(oid);
+    }
   }
 
   abstract sendForApproval(projekti: DBProjekti, projektipaallikko: NykyinenKayttaja): Promise<void>;

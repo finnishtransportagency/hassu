@@ -3,7 +3,7 @@ import { setupLocalDatabase } from "../util/databaseUtil";
 import * as sinon from "sinon";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { MOCKED_TIMESTAMP, useProjektiTestFixture } from "../api/testFixtureRecorder";
-import { expectJulkinenNotFound, mockSaveProjektiToVelho, PDFGeneratorStub } from "../api/testUtil/util";
+import { CloudFrontStub, expectJulkinenNotFound, mockSaveProjektiToVelho, PDFGeneratorStub } from "../api/testUtil/util";
 import {
   julkaiseSuunnitteluvaihe,
   listDocumentsToImport,
@@ -32,15 +32,17 @@ import { ImportAineistoMock } from "../api/testUtil/importAineistoMock";
  */
 describe("Migraatio", () => {
   let userFixture: UserFixture;
-  const importAineistoMock = new ImportAineistoMock();
+  let importAineistoMock: ImportAineistoMock;
   const pdfGeneratorStub = new PDFGeneratorStub();
+  let awsCloudfrontInvalidationStub: CloudFrontStub;
 
   before(async () => {
     await setupLocalDatabase();
     mockSaveProjektiToVelho();
-    importAineistoMock.initStub();
+    importAineistoMock = new ImportAineistoMock();
     userFixture = new UserFixture(userService);
     pdfGeneratorStub.init();
+    awsCloudfrontInvalidationStub = new CloudFrontStub();
   });
 
   after(() => {
@@ -80,6 +82,8 @@ describe("Migraatio", () => {
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
 
     await testPublicAccessToProjekti(oid, Status.SUUNNITTELU, userFixture, "suunnitteluvaiheeseen migroitu julkinen projekti");
+    await importAineistoMock.processQueue();
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
   });
 
   it("nähtävilläolovaiheeseen migroitu projekti", async function () {
@@ -100,6 +104,8 @@ describe("Migraatio", () => {
     await testImportNahtavillaoloAineistot(oid, velhoAineistoKategorias);
     await testNahtavillaoloApproval(oid, projektipaallikko, userFixture);
     await testPublicAccessToProjekti(oid, Status.NAHTAVILLAOLO, userFixture, "nähtävilläolovaiheeseen migroitu julkinen projekti");
+    await importAineistoMock.processQueue();
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
   });
 
   it("hyväksymismenettelyyn migroitu projekti", async function () {
@@ -128,6 +134,8 @@ describe("Migraatio", () => {
     );
     await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture);
     await testPublicAccessToProjekti(oid, Status.HYVAKSYTTY, userFixture, "hyväksymismenettelyyn migroitu julkinen projekti");
+    await importAineistoMock.processQueue();
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
   });
 
   it("epäaktiivinen-tilaan migroitu projekti", async function () {
@@ -152,5 +160,7 @@ describe("Migraatio", () => {
     });
     await loadProjektiFromDatabase(oid, Status.JATKOPAATOS_1);
     await expectJulkinenNotFound(oid, userFixture);
+    await importAineistoMock.processQueue();
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
   });
 });

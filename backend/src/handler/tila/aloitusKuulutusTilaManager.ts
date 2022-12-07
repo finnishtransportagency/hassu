@@ -1,4 +1,4 @@
-import { KuulutusJulkaisuTila, AsiakirjaTyyppi, Kieli, NykyinenKayttaja, Status } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, Status } from "../../../../common/graphql/apiModel";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import {
@@ -22,7 +22,6 @@ import { isKuulutusPaivaInThePast } from "../../projekti/status/projektiJulkinen
 import dayjs from "dayjs";
 import { assertIsDefined } from "../../util/assertions";
 import { ProjektiPaths } from "../../files/ProjektiPath";
-import { aineistoService } from "../../aineisto/aineistoService";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -137,6 +136,7 @@ class AloitusKuulutusTilaManager extends TilaManager {
 
   async approve(projekti: DBProjekti, projektiPaallikko: NykyinenKayttaja): Promise<void> {
     const aloitusKuulutus = getAloitusKuulutus(projekti);
+    const isUudelleenKuulutus = !!aloitusKuulutus.uudelleenKuulutus;
     const julkaisuWaitingForApproval = asiakirjaAdapter.findAloitusKuulutusWaitingForApproval(projekti);
     if (!julkaisuWaitingForApproval) {
       throw new Error("Ei aloituskuulutusta odottamassa hyväksyntää");
@@ -148,12 +148,14 @@ class AloitusKuulutusTilaManager extends TilaManager {
 
     await projektiDatabase.aloitusKuulutusJulkaisut.update(projekti, julkaisuWaitingForApproval);
 
+    assert(julkaisuWaitingForApproval.kuulutusPaiva, "kuulutusPaiva on oltava tässä kohtaa");
+
     const logoFilePath = projekti.suunnitteluSopimus?.logo;
     if (logoFilePath) {
-      assert(julkaisuWaitingForApproval.kuulutusPaiva, "kuulutusPaiva on oltava tässä kohtaa");
       await fileService.publishProjektiFile(projekti.oid, logoFilePath, logoFilePath, parseDate(julkaisuWaitingForApproval.kuulutusPaiva));
     }
-    await aineistoService.synchronizeProjektiFiles(projekti.oid);
+
+    await this.synchronizeProjektiFiles(projekti.oid, isUudelleenKuulutus, julkaisuWaitingForApproval.kuulutusPaiva);
   }
 
   private async generatePDFs(projekti: DBProjekti, julkaisuWaitingForApproval: AloitusKuulutusJulkaisu) {

@@ -16,14 +16,14 @@ import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/perso
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
 import { fileService } from "../../src/files/fileService";
 import { FixtureName, useProjektiTestFixture } from "../api/testFixtureRecorder";
-import { EmailClientStub, PDFGeneratorStub } from "../api/testUtil/util";
+import { CloudFrontStub, EmailClientStub, PDFGeneratorStub, SchedulerMock } from "../api/testUtil/util";
 import { testPublicAccessToProjekti, testYllapitoAccessToProjekti } from "../api/testUtil/tests";
 import { api } from "../api/apiClient";
 import assert from "assert";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { assertIsDefined } from "../../src/util/assertions";
 import { testProjektiDatabase } from "../../src/database/testProjektiDatabase";
-import { aineistoService } from "../../src/aineisto/aineistoService";
+import { ImportAineistoMock } from "../api/testUtil/importAineistoMock";
 
 const { expect } = require("chai");
 
@@ -34,9 +34,12 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   let oid: string;
   const emailClientStub = new EmailClientStub();
   const pdfGeneratorStub = new PDFGeneratorStub();
-  let aineistoServiceStub: sinon.SinonStub;
+  let importAineistoMock: ImportAineistoMock;
+  let schedulerMock: SchedulerMock;
+  let awsCloudfrontInvalidationStub: CloudFrontStub;
 
   before(async () => {
+    schedulerMock = new SchedulerMock();
     readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
     readUsersFromSearchUpdaterLambda.callsFake(async () => {
       return await personSearchUpdaterHandler.handleEvent();
@@ -47,10 +50,8 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
 
     pdfGeneratorStub.init();
     emailClientStub.init();
-    aineistoServiceStub = sinon.stub(aineistoService, "synchronizeProjektiFiles");
-    aineistoServiceStub.callsFake(async () => {
-      console.log("Synkataan aineisto");
-    });
+    importAineistoMock = new ImportAineistoMock();
+    awsCloudfrontInvalidationStub = new CloudFrontStub();
   });
 
   beforeEach(async () => {
@@ -72,7 +73,7 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
     assertIsDefined(initialProjekti?.aloitusKuulutusJulkaisut?.[0]);
     // Aloituskuulutusjulkaisu on varmasti julkinen
     let kuulutusPaiva = "2000-01-01";
-    let uudelleenKuulutusPaiva = "2001-01-01";
+    let uudelleenKuulutusPaiva = "2031-01-01";
     initialProjekti.aloitusKuulutusJulkaisut[0].kuulutusPaiva = kuulutusPaiva;
     initialProjekti.aloitusKuulutusJulkaisut[0].siirtyySuunnitteluVaiheeseen = "2222-01-01";
     await testProjektiDatabase.saveProjekti({ oid, aloitusKuulutusJulkaisut: initialProjekti.aloitusKuulutusJulkaisut });
@@ -143,19 +144,27 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
     assert(resultProjekti.aloitusKuulutusJulkaisut);
     expect(resultProjekti.aloitusKuulutusJulkaisut).to.have.length(2);
 
-    expect(resultProjekti.aloitusKuulutusJulkaisut[0].id).to.eq(1);
-    expect(resultProjekti.aloitusKuulutusJulkaisut[0].tila).to.eq(KuulutusJulkaisuTila.HYVAKSYTTY);
-    expect(resultProjekti.aloitusKuulutusJulkaisut[0].kuulutusPaiva).to.eq(kuulutusPaiva);
+    let alkuperainenJulkaisu = resultProjekti.aloitusKuulutusJulkaisut[0];
+    expect(alkuperainenJulkaisu.id).to.eq(1);
+    expect(alkuperainenJulkaisu.tila).to.eq(KuulutusJulkaisuTila.HYVAKSYTTY);
+    expect(alkuperainenJulkaisu.kuulutusPaiva).to.eq(kuulutusPaiva);
 
-    expect(resultProjekti.aloitusKuulutusJulkaisut[1].id).to.eq(2);
-    expect(resultProjekti.aloitusKuulutusJulkaisut[1].tila).to.eq(KuulutusJulkaisuTila.HYVAKSYTTY);
-    expect(resultProjekti.aloitusKuulutusJulkaisut[1].kuulutusPaiva).to.eq(uudelleenKuulutusPaiva);
+    let uudelleenKuulutusJulkaisu = resultProjekti.aloitusKuulutusJulkaisut[1];
+    expect(uudelleenKuulutusJulkaisu.id).to.eq(2);
+    expect(uudelleenKuulutusJulkaisu.tila).to.eq(KuulutusJulkaisuTila.HYVAKSYTTY);
+    expect(uudelleenKuulutusJulkaisu.kuulutusPaiva).to.eq(uudelleenKuulutusPaiva);
+
+    emailClientStub.verifyEmailsSent();
+    pdfGeneratorStub.verifyAllPDFContents();
+    await importAineistoMock.processQueue();
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
+    await schedulerMock.verifyAndRunSchedule();
+
+    uudelleenKuulutusJulkaisu.kuulutusPaiva = "2000-01-01"; // Simuloidaan ajan kulumista asettamalla kuulutuspäivä varmasti menneisyyteen, jotta julkaisu on julkinen
+    await testProjektiDatabase.aloitusKuulutusJulkaisut.update(resultProjekti, uudelleenKuulutusJulkaisu);
 
     await testPublicAccessToProjekti(oid, Status.ALOITUSKUULUTUS, userFixture, " uudelleenkuulutuksen jälkeen", (julkinen) => {
       return julkinen.aloitusKuulutusJulkaisu;
     });
-
-    emailClientStub.verifyEmailsSent();
-    pdfGeneratorStub.verifyAllPDFContents();
   });
 });

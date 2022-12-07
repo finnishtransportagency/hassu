@@ -8,7 +8,8 @@ import { Dayjs } from "dayjs";
 // @ts-ignore
 import { uriEscapePath } from "aws-sdk/lib/util";
 import S3, { ListObjectsV2Output, Metadata } from "aws-sdk/clients/s3";
-import { getCloudFront, getS3 } from "../aws/client";
+import { getS3 } from "../aws/client";
+import { getCloudFront } from "../aws/clients/getCloudFront";
 import { parseDate } from "../util/dateUtil";
 import { PathTuple, ProjektiPaths } from "./ProjektiPath";
 import { AWSError } from "aws-sdk/lib/error";
