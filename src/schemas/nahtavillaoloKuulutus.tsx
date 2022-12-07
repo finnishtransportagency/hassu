@@ -18,7 +18,7 @@ export const nahtavillaoloKuulutusSchema = Yup.object().shape({
           schema.max(maxNahtavillaoloLength, `Nähtävilläolovaiheeseen voidaan kirjoittaa maksimissaan ${maxNahtavillaoloLength} merkkiä`),
       }),
       uudelleenKuulutus: uudelleenKuulutus({
-        uudelleenKuulutusKey: "$aloitusKuulutus.uudelleenKuulutus",
+        uudelleenKuulutusKey: "$nahtavillaoloVaihe.uudelleenKuulutus",
         requiredText: "Seloste on annettava",
       }),
       kuulutusPaiva: paivamaara({ preventPast: "Kuulutuspäivää ei voida asettaa menneisyyteen" }).required(
