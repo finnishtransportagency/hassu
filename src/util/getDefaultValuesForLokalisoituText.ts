@@ -1,0 +1,42 @@
+import {
+  Kieli,
+  LokalisoituTeksti,
+  LokalisoituTekstiInput,
+  UudelleenKuulutus,
+  UudelleenKuulutusInput,
+  UudelleenkuulutusTila,
+} from "@services/api";
+import { pickBy } from "lodash";
+import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+
+export function getDefaultValuesForLokalisoituText(
+  kielitiedot: ProjektiLisatiedolla["kielitiedot"],
+  lokalisoituTeksti: LokalisoituTeksti | null | undefined
+): LokalisoituTekstiInput {
+  const { ensisijainenKieli, toissijainenKieli } = kielitiedot || {};
+  const hasRuotsinKieli = ensisijainenKieli === Kieli.RUOTSI || toissijainenKieli === Kieli.RUOTSI;
+  const hasSaamenKieli = ensisijainenKieli === Kieli.SAAME || toissijainenKieli === Kieli.SAAME;
+  return {
+    SUOMI: lokalisoituTeksti?.SUOMI || "",
+    ...pickBy(
+      {
+        RUOTSI: hasRuotsinKieli ? lokalisoituTeksti?.RUOTSI || "" : undefined,
+        SAAME: hasSaamenKieli ? lokalisoituTeksti?.SAAME || "" : undefined,
+      },
+      (value) => value !== undefined
+    ),
+  };
+}
+
+export function getDefaultValuesForUudelleenKuulutus(
+  kielitiedot: ProjektiLisatiedolla["kielitiedot"],
+  uudelleenKuulutus: UudelleenKuulutus | null | undefined
+): UudelleenKuulutusInput {
+  const uudelleenKuulutusInput: UudelleenKuulutusInput = {
+    selosteLahetekirjeeseen: getDefaultValuesForLokalisoituText(kielitiedot, uudelleenKuulutus?.selosteLahetekirjeeseen),
+  };
+  if (uudelleenKuulutus?.tila === UudelleenkuulutusTila.JULKAISTU_PERUUTETTU) {
+    uudelleenKuulutusInput.selosteKuulutukselle = getDefaultValuesForLokalisoituText(kielitiedot, uudelleenKuulutus?.selosteKuulutukselle);
+  }
+  return uudelleenKuulutusInput;
+}

@@ -1,5 +1,5 @@
-import { AloitusKuulutusJulkaisu, KuulutusJulkaisuTila, Kieli, UudelleenKuulutus } from "@services/api";
-import React, { ReactElement, VoidFunctionComponent } from "react";
+import { AloitusKuulutusJulkaisu, KuulutusJulkaisuTila, Kieli } from "@services/api";
+import React, { ReactElement } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
@@ -20,6 +20,7 @@ import { formatNimi } from "../../../util/userUtil";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import { Link } from "@mui/material";
 import { splitFilePath } from "src/util/fileUtil";
+import { UudelleenKuulutusSelitteetLukutila } from "../lukutila/UudelleenKuulutusSelitteetLukutila";
 
 interface Props {
   projekti?: ProjektiLisatiedolla;
@@ -96,7 +97,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
           </p>
         </div>
         {aloituskuulutusjulkaisu.uudelleenKuulutus && (
-          <UudelleenKuulutusSisalto
+          <UudelleenKuulutusSelitteetLukutila
             uudelleenKuulutus={aloituskuulutusjulkaisu.uudelleenKuulutus}
             ensisijainenKieli={ensisijainenKieli}
             toissijainenKieli={toissijainenKieli}
@@ -191,45 +192,3 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
     </>
   );
 }
-
-const UudelleenKuulutusSisalto: VoidFunctionComponent<{
-  ensisijainenKieli: Kieli | null | undefined;
-  toissijainenKieli: Kieli | null | undefined;
-  uudelleenKuulutus: UudelleenKuulutus;
-}> = ({ uudelleenKuulutus, ensisijainenKieli, toissijainenKieli }) => (
-  <Section>
-    <p className="vayla-small-title">Uudelleenkuuluttamisen seloste</p>
-    {uudelleenKuulutus.selosteLahetekirjeeseen && (
-      <>
-        {ensisijainenKieli && (
-          <div>
-            <p className="vayla-label">Seloste lähetekirjeeseen ensisijaisella kielellä ({lowerCase(ensisijainenKieli)})</p>
-            <p>{uudelleenKuulutus.selosteLahetekirjeeseen?.[ensisijainenKieli]}</p>
-          </div>
-        )}
-        {toissijainenKieli && (
-          <div>
-            <p className="vayla-label">Seloste lähetekirjeeseen toissijaisella kielellä ({lowerCase(toissijainenKieli)})</p>
-            <p>{uudelleenKuulutus.selosteLahetekirjeeseen?.[toissijainenKieli]}</p>
-          </div>
-        )}
-      </>
-    )}
-    {uudelleenKuulutus.selosteKuulutukselle && (
-      <>
-        {ensisijainenKieli && (
-          <div>
-            <p className="vayla-label">Seloste kuulutukselle ensisijaisella kielellä ({lowerCase(ensisijainenKieli)})</p>
-            <p>{uudelleenKuulutus.selosteKuulutukselle?.[ensisijainenKieli]}</p>
-          </div>
-        )}
-        {toissijainenKieli && (
-          <div>
-            <p className="vayla-label">Seloste kuulutukselle toissijaisella kielellä ({lowerCase(toissijainenKieli)})</p>
-            <p>{uudelleenKuulutus.selosteKuulutukselle?.[toissijainenKieli]}</p>
-          </div>
-        )}
-      </>
-    )}
-  </Section>
-);

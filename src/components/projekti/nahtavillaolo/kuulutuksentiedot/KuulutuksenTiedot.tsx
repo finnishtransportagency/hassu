@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Kieli, KirjaamoOsoite, MuokkausTila, TallennaProjektiInput } from "@services/api";
+import { KirjaamoOsoite, MuokkausTila, TallennaProjektiInput } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import React, { useMemo } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
@@ -17,7 +17,8 @@ import Lukunakyma from "./Lukunakyma";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
-import { pickBy } from "lodash";
+import { getDefaultValuesForLokalisoituText, getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForLokalisoituText";
+import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
 
 type PickedTallennaProjektiInput = Pick<TallennaProjektiInput, "oid" | "nahtavillaoloVaihe">;
 
@@ -41,43 +42,18 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
 
   const defaultValues: KuulutuksenTiedotFormValues = useMemo(() => {
-    const { ensisijainenKieli, toissijainenKieli } = projekti.kielitiedot || {};
-    const hasRuotsinKieli = ensisijainenKieli === Kieli.RUOTSI || toissijainenKieli === Kieli.RUOTSI;
-    const hasSaamenKieli = ensisijainenKieli === Kieli.SAAME || toissijainenKieli === Kieli.SAAME;
-
     // SUOMI hankkeen kuvaus on aina lomakkeella, RUOTSI JA SAAME vain jos kyseinen kieli on projektin kielitiedoissa.
     // Jos kieli ei ole kielitiedoissa kyseisen kielen kenttää ei tule lisätä hankkeenKuvaus olioon
     // Tästä syystä pickBy:llä poistetaan undefined hankkeenkuvaus tiedot.
-    const nahtavillaOloHankkeenKuvaus = projekti.nahtavillaoloVaihe?.hankkeenKuvaus;
-    const hankkeenKuvaus: KuulutuksenTiedotFormValues["nahtavillaoloVaihe"]["hankkeenKuvaus"] = !!nahtavillaOloHankkeenKuvaus
-      ? {
-          SUOMI: nahtavillaOloHankkeenKuvaus.SUOMI || "",
-          ...pickBy(
-            {
-              RUOTSI: hasRuotsinKieli ? nahtavillaOloHankkeenKuvaus.RUOTSI || "" : undefined,
-              SAAME: hasSaamenKieli ? nahtavillaOloHankkeenKuvaus.SAAME || "" : undefined,
-            },
-            (value) => value !== undefined
-          ),
-        }
-      : {
-          SUOMI: projekti.suunnitteluVaihe?.hankkeenKuvaus?.SUOMI || "",
-          ...pickBy(
-            {
-              RUOTSI: hasRuotsinKieli ? projekti.suunnitteluVaihe?.hankkeenKuvaus?.RUOTSI || "" : undefined,
-              SAAME: hasSaamenKieli ? projekti.suunnitteluVaihe?.hankkeenKuvaus?.SAAME || "" : undefined,
-            },
-            (value) => value !== undefined
-          ),
-        };
+    const hankkeenKuvaus = getDefaultValuesForLokalisoituText(projekti.kielitiedot, projekti.nahtavillaoloVaihe?.hankkeenKuvaus);
 
-    return {
+    const tallentamisTiedot: KuulutuksenTiedotFormValues = {
       oid: projekti.oid,
       nahtavillaoloVaihe: {
         kuulutusPaiva: projekti?.nahtavillaoloVaihe?.kuulutusPaiva || null,
         kuulutusVaihePaattyyPaiva: projekti?.nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva || null,
         muistutusoikeusPaattyyPaiva: projekti?.nahtavillaoloVaihe?.muistutusoikeusPaattyyPaiva || null,
-        hankkeenKuvaus: hankkeenKuvaus,
+        hankkeenKuvaus,
         kuulutusYhteystiedot: {
           yhteysTiedot: projekti?.nahtavillaoloVaihe?.kuulutusYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt)) || [],
           yhteysHenkilot: projekti?.nahtavillaoloVaihe?.kuulutusYhteystiedot?.yhteysHenkilot || [],
@@ -89,6 +65,15 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
         ),
       },
     };
+
+    if (projekti.nahtavillaoloVaihe?.uudelleenKuulutus) {
+      tallentamisTiedot.nahtavillaoloVaihe.uudelleenKuulutus = getDefaultValuesForUudelleenKuulutus(
+        projekti.kielitiedot,
+        projekti.nahtavillaoloVaihe.uudelleenKuulutus
+      );
+    }
+
+    return tallentamisTiedot;
   }, [projekti, kirjaamoOsoitteet]);
 
   const formOptions: UseFormProps<KuulutuksenTiedotFormValues> = {
@@ -120,6 +105,12 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
           <FormProvider {...useFormReturn}>
             <form>
               <KuulutusJaJulkaisuPaiva />
+              <SelitteetUudelleenkuulutukselle
+                disabled={!voiMuokata}
+                kielitiedot={projekti.kielitiedot}
+                uudelleenKuulutus={projekti.nahtavillaoloVaihe?.uudelleenKuulutus}
+                vaiheenAvain="nahtavillaoloVaihe"
+              />
               <HankkeenSisallonKuvaus kielitiedot={projekti?.kielitiedot} />
               <KuulutuksessaEsitettavatYhteystiedot />
               <IlmoituksenVastaanottajatKomponentti nahtavillaoloVaihe={projekti?.nahtavillaoloVaihe} />

@@ -64,6 +64,7 @@ export default function Nahtavillaolo(): ReactElement {
     <ProjektiJulkinenPageLayout selectedStep={2} title="Kuulutus suunnitelman nähtäville asettamisesta">
       <Section noDivider>
         <KeyValueTable rows={keyValueData}></KeyValueTable>
+        {kuulutus.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && <p>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</p>}
         {velho.tyyppi !== ProjektiTyyppi.RATA && (
           <SectionContent>
             <Trans

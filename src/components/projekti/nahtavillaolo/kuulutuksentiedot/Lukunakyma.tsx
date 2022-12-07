@@ -16,6 +16,7 @@ import { ProjektiTestCommand } from "../../../../../common/testUtil.dev";
 import { formatDate } from "src/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import { UudelleenKuulutusSelitteetLukutila } from "@components/projekti/lukutila/UudelleenKuulutusSelitteetLukutila";
 
 interface Props {
   nahtavillaoloVaiheJulkaisu?: NahtavillaoloVaiheJulkaisu | null;
@@ -45,6 +46,8 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
+  const { ensisijainenKieli, toissijainenKieli } = nahtavillaoloVaiheJulkaisu.kielitiedot || {};
+
   return (
     <>
       <Section>
@@ -67,6 +70,13 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
             </ButtonFlatWithIcon>
           )}
         </div>
+        {nahtavillaoloVaiheJulkaisu.uudelleenKuulutus && (
+          <UudelleenKuulutusSelitteetLukutila
+            uudelleenKuulutus={nahtavillaoloVaiheJulkaisu.uudelleenKuulutus}
+            ensisijainenKieli={ensisijainenKieli}
+            toissijainenKieli={toissijainenKieli}
+          />
+        )}
         <div>
           <p className="vayla-label">
             Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (
