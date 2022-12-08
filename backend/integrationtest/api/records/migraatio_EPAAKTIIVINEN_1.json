@@ -8,22 +8,15 @@
       "muokkaaja": "migraatio",
       "tila": "MIGROITU",
       "velho": {
-        "kunnat": [
-          91,
-          92
-        ],
+        "kunnat": [91, 92],
         "linkki": null,
-        "maakunnat": [
-          1
-        ],
+        "maakunnat": [1],
         "nimi": "HASSU MIGRAATIOTESTIPROJEKTI EPÄAKTIIVINEN",
         "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
         "tyyppi": "TIE",
         "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
         "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-        "vaylamuoto": [
-          "tie"
-        ]
+        "vaylamuoto": ["tie"]
       },
       "yhteystiedot": []
     }
@@ -38,22 +31,15 @@
       "muokkaaja": "migraatio",
       "tila": "MIGROITU",
       "velho": {
-        "kunnat": [
-          91,
-          92
-        ],
+        "kunnat": [91, 92],
         "linkki": null,
-        "maakunnat": [
-          1
-        ],
+        "maakunnat": [1],
         "nimi": "HASSU MIGRAATIOTESTIPROJEKTI EPÄAKTIIVINEN",
         "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
         "tyyppi": "TIE",
         "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
         "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-        "vaylamuoto": [
-          "tie"
-        ]
+        "vaylamuoto": ["tie"]
       },
       "yhteystiedot": []
     }
@@ -98,49 +84,34 @@
       "muokkaaja": "migraatio",
       "tila": "MIGROITU",
       "velho": {
-        "kunnat": [
-          91,
-          92
-        ],
+        "kunnat": [91, 92],
         "linkki": null,
-        "maakunnat": [
-          1
-        ],
+        "maakunnat": [1],
         "nimi": "HASSU MIGRAATIOTESTIPROJEKTI EPÄAKTIIVINEN",
         "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
         "tyyppi": "TIE",
         "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
         "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-        "vaylamuoto": [
-          "tie"
-        ]
+        "vaylamuoto": ["tie"]
       },
       "yhteystiedot": []
     }
   ],
   "oid": "1.2.246.578.5.1.2572523015.2790590568",
   "paivitetty": "2020-01-01T00:00:00+02:00",
-  "suunnitteluVaihe": {
+  "vuorovaikutusKierros": {
     "tila": "MIGROITU"
   },
   "tyyppi": "TIE",
   "velho": {
-    "kunnat": [
-      91,
-      92
-    ],
+    "kunnat": [91, 92],
     "linkki": null,
-    "maakunnat": [
-      1
-    ],
+    "maakunnat": [1],
     "nimi": "HASSU MIGRAATIOTESTIPROJEKTI EPÄAKTIIVINEN",
     "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
     "tyyppi": "TIE",
     "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
     "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-    "vaylamuoto": [
-      "tie"
-    ]
-  },
-  "vuorovaikutukset": []
+    "vaylamuoto": ["tie"]
+  }
 }
