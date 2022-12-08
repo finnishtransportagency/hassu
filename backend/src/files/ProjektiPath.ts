@@ -5,7 +5,8 @@ import {
   HyvaksymisPaatosVaiheJulkaisu,
   NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
-  Vuorovaikutus,
+  VuorovaikutusKierros,
+  VuorovaikutusKierrosJulkaisu,
 } from "../database/model";
 import { assertIsDefined } from "../util/assertions";
 
@@ -66,8 +67,8 @@ export class ProjektiPaths extends PathTuple {
     return new AloituskuulutusPaths(this, julkaisu);
   }
 
-  vuorovaikutus(vuorovaikutus: Vuorovaikutus): VuorovaikutusPaths {
-    return new VuorovaikutusPaths(this, vuorovaikutus);
+  vuorovaikutus(vuorovaikutusKierros: VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu | undefined): VuorovaikutusPaths {
+    return new VuorovaikutusPaths(this, vuorovaikutusKierros);
   }
 
   nahtavillaoloVaihe(nahtavillaoloVaihe: NahtavillaoloVaihe | NahtavillaoloVaiheJulkaisu | undefined | null): PathTuple {
@@ -94,19 +95,28 @@ export class ProjektiPaths extends PathTuple {
 }
 
 class VuorovaikutusPaths extends PathTuple {
-  private vuorovaikutus: Vuorovaikutus;
+  private vuorovaikutus?: VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu;
 
-  constructor(parent: PathTuple, vuorovaikutus: Vuorovaikutus) {
+  constructor(parent: PathTuple, vuorovaikutus: VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu | undefined) {
     super(parent);
     this.vuorovaikutus = vuorovaikutus;
   }
 
+  private getId(): number {
+    assertIsDefined(this.vuorovaikutus, "vuorovaikutus pitää olla annettu");
+    if ((this.vuorovaikutus as VuorovaikutusKierros).vuorovaikutusNumero) {
+      return (this.vuorovaikutus as VuorovaikutusKierros).vuorovaikutusNumero + 1;
+    } else {
+      return (this.vuorovaikutus as VuorovaikutusKierrosJulkaisu).id + 1;
+    }
+  }
+
   get yllapitoPath(): string {
-    return "suunnitteluvaihe/vuorovaikutus_" + this.vuorovaikutus.vuorovaikutusNumero;
+    return "suunnitteluvaihe/vuorovaikutus_" + this.getId();
   }
 
   get publicPath(): string {
-    return "suunnitteluvaihe/vuorovaikutus_" + this.vuorovaikutus.vuorovaikutusNumero;
+    return "suunnitteluvaihe/vuorovaikutus_" + this.getId();
   }
 
   get aineisto(): VuorovaikutusAineisto {
