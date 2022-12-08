@@ -14,8 +14,7 @@ import { adaptUudelleenKuulutusToSave } from "./adaptAloitusKuulutusToSave";
 export function adaptNahtavillaoloVaiheToSave(
   dbNahtavillaoloVaihe: NahtavillaoloVaihe | undefined | null,
   nahtavillaoloVaihe: API.NahtavillaoloVaiheInput | undefined | null,
-  projektiAdaptationResult: ProjektiAdaptationResult,
-  nahtavillaoloVaiheJulkaisutCount: number | undefined
+  projektiAdaptationResult: ProjektiAdaptationResult
 ): NahtavillaoloVaihe | undefined {
   if (!nahtavillaoloVaihe) {
     return undefined;
@@ -41,7 +40,7 @@ export function adaptNahtavillaoloVaiheToSave(
   const lisaAineisto = lisaAineistoInput
     ? adaptAineistotToSave(dbNahtavillaoloVaihe?.lisaAineisto, lisaAineistoInput, projektiAdaptationResult)
     : undefined;
-  const id = getId(dbNahtavillaoloVaihe, nahtavillaoloVaiheJulkaisutCount);
+  const id = getId(dbNahtavillaoloVaihe);
 
   const uusiNahtavillaolovaihe: NahtavillaoloVaihe = {
     kuulutusPaiva,

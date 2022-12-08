@@ -191,36 +191,24 @@ Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com
 `;
 
 exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 6`] = `
-Array [
-  Object {
-    "FlexibleTimeWindow": Object {
-      "Mode": "OFF",
-    },
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2031-01-01T00-00-00",
-    "ScheduleExpression": "at(2031-01-01T00:00:00)",
-    "ScheduleExpressionTimezone": "Europe/Helsinki",
-    "Target": Object {
-      "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2031-01-01T00-00-00\\"}",
-      "RoleArn": "",
-      "SqsParameters": Object {
-        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+Object {
+  "args": Object {
+    "DistributionId": "unit-test-distribution-id",
+    "InvalidationBatch": Object {
+      "CallerReference": "***unittest***",
+      "Paths": Object {
+        "Items": Array [
+          "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/*",
+        ],
+        "Quantity": 1,
       },
     },
   },
-]
-`;
-
-exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 7`] = `
-Object {
-  "args": Object {
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2031-01-01T00-00-00",
-  },
-  "stub": "deleteSchedule",
+  "stub": "createInvalidation",
 }
 `;
 
-exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 8`] = `
+exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 7`] = `
 Object {
   "description": "publicProjekti uudelleenkuulutuksen jälkeen",
   "obj": Object {

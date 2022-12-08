@@ -10,15 +10,19 @@ import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import { dateToString } from "../../../src/util/dateUtil";
 import { UudelleenkuulutusTila } from "../../../../common/graphql/apiModel";
+import { UserFixture } from "../../fixture/userFixture";
+import { userService } from "../../../src/user";
 
 const { expect } = require("chai");
 
 describe("aloitusKuulutusTilaManager", () => {
   let saveProjektiStub: sinon.SinonStub<[dbProjekti: Partial<DBProjekti>], Promise<DocumentClient.UpdateItemOutput>>;
   let projekti: DBProjekti;
+  let userFixture: UserFixture;
 
   before(() => {
     saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
+    userFixture = new UserFixture(userService);
   });
 
   beforeEach(() => {
@@ -34,22 +38,29 @@ describe("aloitusKuulutusTilaManager", () => {
       aloitusKuulutusJulkaisut,
       tallennettu: true,
     };
+    userFixture.loginAs(UserFixture.hassuAdmin);
   });
 
   afterEach(() => {
     sinon.reset();
+    userFixture.logout();
   });
 
   after(() => {
-    sinon.reset();
+    sinon.restore();
   });
 
   it("should reject uudelleenkuulutus succesfully", async function () {
-    projekti.aloitusKuulutus = undefined;
     projekti.aloitusKuulutusJulkaisut = undefined;
     await expect(aloitusKuulutusTilaManager.uudelleenkuuluta(projekti)).to.eventually.be.rejectedWith(
       IllegalArgumentError,
       "Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa"
+    );
+
+    projekti.aloitusKuulutus = undefined;
+    await expect(aloitusKuulutusTilaManager.uudelleenkuuluta(projekti)).to.eventually.be.rejectedWith(
+      IllegalArgumentError,
+      "Projektilla ei ole aloituskuulutusta"
     );
 
     await expect(aloitusKuulutusTilaManager.uudelleenkuuluta(new ProjektiFixture().dbProjekti4())).to.eventually.be.rejectedWith(

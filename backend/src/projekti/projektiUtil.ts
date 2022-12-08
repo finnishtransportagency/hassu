@@ -1,4 +1,4 @@
-import { DBVaylaUser, UudelleenKuulutus } from "../database/model";
+import { AloitusKuulutusJulkaisu, DBVaylaUser, NahtavillaoloVaiheJulkaisu, UudelleenKuulutus } from "../database/model";
 import { parseDate } from "../util/dateUtil";
 import { assertIsDefined } from "../util/assertions";
 import { KuulutusJulkaisuTila, MuokkausTila } from "../../../common/graphql/apiModel";
@@ -10,26 +10,32 @@ export type GenericKuulutus = {
   uudelleenKuulutus?: UudelleenKuulutus | null;
 };
 
-export function findJulkaisutWithTila<J extends GenericKuulutus>(
+export type GenericKuulutusJulkaisu = Pick<
+  AloitusKuulutusJulkaisu & NahtavillaoloVaiheJulkaisu,
+  "tila" | "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva" | "uudelleenKuulutus" | "hyvaksymisPaiva"
+>;
+
+export function findJulkaisutWithTila<J extends GenericKuulutusJulkaisu>(
   julkaisut: J[] | undefined | null,
   tila: KuulutusJulkaisuTila
 ): J[] | undefined {
   return julkaisut?.filter((julkaisu) => julkaisu.tila == tila)?.sort(sortMostRecentkuulutusLast);
 }
-export function findJulkaisuWithTila<J extends GenericKuulutus>(
+
+export function findJulkaisuWithTila<J extends GenericKuulutusJulkaisu>(
   julkaisut: J[] | undefined | null,
   tila: KuulutusJulkaisuTila
 ): J | undefined {
   return findJulkaisutWithTila(julkaisut, tila)?.pop();
 }
 
-function sortMostRecentkuulutusLast<J extends GenericKuulutus>(julkaisu1: J, julkaisu2: J) {
+function sortMostRecentkuulutusLast<J extends GenericKuulutusJulkaisu>(julkaisu1: J, julkaisu2: J) {
   assertIsDefined(julkaisu1.kuulutusPaiva);
   assertIsDefined(julkaisu2.kuulutusPaiva);
   return parseDate(julkaisu1.kuulutusPaiva).unix() - parseDate(julkaisu2.kuulutusPaiva).unix();
 }
 
-export function findJulkaisuWithId<J extends GenericKuulutus>(
+export function findJulkaisuWithId<J extends GenericKuulutusJulkaisu>(
   julkaisut: (J & { id?: number })[] | undefined | null,
   id: number
 ): J | undefined {
@@ -43,7 +49,7 @@ export function findUserByKayttajatunnus(kayttoOikeudet: DBVaylaUser[], kayttaja
   return kayttoOikeudet.find((value) => value.kayttajatunnus == kayttajatunnus);
 }
 
-export function adaptMuokkausTila<J extends GenericKuulutus>(kuulutus: J, julkaisut: J[] | null | undefined): MuokkausTila {
+export function adaptMuokkausTila<J extends GenericKuulutusJulkaisu>(kuulutus: J, julkaisut: J[] | null | undefined): MuokkausTila {
   // Migroitu on aina migroitu, ei luku- eikä muokkaustila
   if (findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.MIGROITU)) {
     return MuokkausTila.MIGROITU;

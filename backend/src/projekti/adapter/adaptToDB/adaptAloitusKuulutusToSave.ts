@@ -7,8 +7,7 @@ import mergeWith from "lodash/mergeWith";
 
 export function adaptAloitusKuulutusToSave(
   dbAloituskuulutus: AloitusKuulutus | undefined | null,
-  aloitusKuulutus: API.AloitusKuulutusInput | undefined | null,
-  aloitusKuulutusJulkaisutCount: number | undefined
+  aloitusKuulutus: API.AloitusKuulutusInput | undefined | null
 ): AloitusKuulutus | undefined {
   if (aloitusKuulutus) {
     const { hankkeenKuvaus, ilmoituksenVastaanottajat, kuulutusYhteystiedot, uudelleenKuulutus, ...rest } = aloitusKuulutus;
@@ -22,7 +21,7 @@ export function adaptAloitusKuulutusToSave(
       throw new IllegalArgumentError("Aloituskuulutuksella on oltava ilmoituksenVastaanottajat!");
     }
 
-    const id = getId(dbAloituskuulutus, aloitusKuulutusJulkaisutCount);
+    const id = getId(dbAloituskuulutus);
 
     return {
       ...rest,

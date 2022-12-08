@@ -741,7 +741,7 @@ Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
       },
-      "id": 2,
+      "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
         "kunnat": Array [
@@ -801,7 +801,7 @@ Object {
       "lisaAineistoParametrit": Object {
         "__typename": "LisaAineistoParametrit",
         "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 2,
+        "nahtavillaoloVaiheId": 1,
         "poistumisPaiva": "***unittest***",
       },
       "muistutusoikeusPaattyyPaiva": "2042-06-08",

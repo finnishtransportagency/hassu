@@ -62,7 +62,7 @@ export class ProjektiPaths extends PathTuple {
     return `tiedostot/suunnitelma/${this.oid}`;
   }
 
-  aloituskuulutus(julkaisu: AloitusKuulutusJulkaisu | undefined): AloituskuulutusPaths {
+  aloituskuulutus(julkaisu: AloitusKuulutus | AloitusKuulutusJulkaisu | undefined): AloituskuulutusPaths {
     return new AloituskuulutusPaths(this, julkaisu);
   }
 
@@ -70,7 +70,7 @@ export class ProjektiPaths extends PathTuple {
     return new VuorovaikutusPaths(this, vuorovaikutus);
   }
 
-  nahtavillaoloVaihe(nahtavillaoloVaihe: NahtavillaoloVaihe | NahtavillaoloVaiheJulkaisu | undefined): PathTuple {
+  nahtavillaoloVaihe(nahtavillaoloVaihe: NahtavillaoloVaihe | NahtavillaoloVaiheJulkaisu | undefined | null): PathTuple {
     return new NahtavillaoloVaihePaths(this, nahtavillaoloVaihe);
   }
 
@@ -183,7 +183,7 @@ class AloituskuulutusPaths extends PathTuple {
 class NahtavillaoloVaihePaths extends PathTuple {
   private readonly nahtavillaoloVaiheId?: number;
 
-  constructor(parent: PathTuple, nahtavillaoloVaihe: NahtavillaoloVaihe | NahtavillaoloVaiheJulkaisu | undefined) {
+  constructor(parent: PathTuple, nahtavillaoloVaihe: NahtavillaoloVaihe | NahtavillaoloVaiheJulkaisu | undefined | null) {
     super(parent);
     this.nahtavillaoloVaiheId = nahtavillaoloVaihe?.id;
   }

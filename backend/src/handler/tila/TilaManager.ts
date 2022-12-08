@@ -1,13 +1,28 @@
-import { NykyinenKayttaja, TilaSiirtymaInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
+import {
+  KuulutusJulkaisuTila,
+  NykyinenKayttaja,
+  TilaSiirtymaInput,
+  TilasiirtymaToiminto,
+  TilasiirtymaTyyppi,
+} from "../../../../common/graphql/apiModel";
 import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { emailHandler } from "../emailHandler";
-import { DBProjekti } from "../../database/model";
+import { DBProjekti, UudelleenkuulutusTila } from "../../database/model";
 import { requireAdmin, requireOmistaja } from "../../user/userService";
 import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
+import { findJulkaisuWithTila, GenericKuulutus, GenericKuulutusJulkaisu } from "../../projekti/projektiUtil";
+import { assertIsDefined } from "../../util/assertions";
+import { isKuulutusPaivaInThePast } from "../../projekti/status/projektiJulkinenStatusHandler";
+import { fileService } from "../../files/fileService";
+import { PathTuple } from "../../files/ProjektiPath";
 
-export abstract class TilaManager {
+export abstract class TilaManager<T extends GenericKuulutus, Y extends GenericKuulutusJulkaisu> {
   protected tyyppi!: TilasiirtymaTyyppi;
+
+  abstract getVaihe(projekti: DBProjekti): T;
+
+  abstract getJulkaisut(projekti: DBProjekti): Y[] | undefined;
 
   public async siirraTila({ oid, syy, toiminto, tyyppi }: TilaSiirtymaInput): Promise<void> {
     requirePermissionLuku();
@@ -27,7 +42,7 @@ export abstract class TilaManager {
     } else if (toiminto == TilasiirtymaToiminto.HYVAKSY) {
       await this.approveInternal(projekti);
     } else if (toiminto == TilasiirtymaToiminto.UUDELLEENKUULUTA) {
-      await this.uudelleenkuulutaInternal(projekti);
+      await this.uudelleenkuuluta(projekti);
     } else {
       throw new Error("Tuntematon toiminto");
     }
@@ -52,9 +67,38 @@ export abstract class TilaManager {
     await this.approve(projekti, projektiPaallikko);
   }
 
-  private async uudelleenkuulutaInternal(projekti: DBProjekti) {
+  async uudelleenkuuluta(projekti: DBProjekti): Promise<void> {
     requireAdmin();
-    await this.uudelleenkuuluta(projekti);
+
+    const kuulutus = this.getVaihe(projekti);
+    const julkaisut = this.getJulkaisut(projekti);
+    const hyvaksyttyJulkaisu = findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
+
+    this.validate(projekti, kuulutus, hyvaksyttyJulkaisu);
+    assertIsDefined(julkaisut);
+    assertIsDefined(kuulutus);
+    assertIsDefined(hyvaksyttyJulkaisu);
+
+    const julkinenUudelleenKuulutus = isKuulutusPaivaInThePast(hyvaksyttyJulkaisu.kuulutusPaiva);
+
+    let uudelleenKuulutus;
+    if (julkinenUudelleenKuulutus) {
+      uudelleenKuulutus = {
+        tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
+        alkuperainenHyvaksymisPaiva: hyvaksyttyJulkaisu.hyvaksymisPaiva || undefined,
+      };
+    } else {
+      uudelleenKuulutus = {
+        tila: UudelleenkuulutusTila.PERUUTETTU,
+      };
+    }
+    kuulutus.uudelleenKuulutus = uudelleenKuulutus;
+    const newAloitusKuulutus = { ...kuulutus, id: julkaisut.length + 1 };
+    const sourceFolder = this.getProjektiPathForKuulutus(projekti, kuulutus);
+
+    const targetFolder = this.getProjektiPathForKuulutus(projekti, newAloitusKuulutus);
+    await fileService.renameYllapitoFolder(sourceFolder, targetFolder);
+    await this.saveVaihe(projekti, newAloitusKuulutus);
   }
 
   async synchronizeProjektiFiles(oid: string, isUudelleenKuulutus: boolean, synchronizationDate?: string | null): Promise<void> {
@@ -71,5 +115,9 @@ export abstract class TilaManager {
 
   abstract approve(projekti: DBProjekti, projektiPaallikko: NykyinenKayttaja): Promise<void>;
 
-  abstract uudelleenkuuluta(projekti: DBProjekti): Promise<void>;
+  abstract validate(projekti: DBProjekti, kuulutus: T, hyvaksyttyJulkaisu: Y | undefined): void;
+
+  abstract getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: T | null | undefined): PathTuple;
+
+  abstract saveVaihe(projekti: DBProjekti, newAloitusKuulutus: T): Promise<void>;
 }

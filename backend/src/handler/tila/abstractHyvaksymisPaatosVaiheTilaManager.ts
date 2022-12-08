@@ -16,7 +16,7 @@ import assert from "assert";
 import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakirjaTypes";
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
 
-export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends TilaManager {
+export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends TilaManager<HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu> {
   async removeRejectionReasonIfExists(
     projekti: DBProjekti,
     key: "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe" | "hyvaksymisPaatosVaihe",
@@ -103,8 +103,6 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends TilaManag
       }
     }
   }
-
-  protected abstract getHyvaksymisPaatosVaihe(projekti: DBProjekti): HyvaksymisPaatosVaihe;
 
   async uudelleenkuuluta(_projekti: DBProjekti): Promise<void> {
     throw new Error("Not yet implemented");
