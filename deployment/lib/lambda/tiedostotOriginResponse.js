@@ -1,3 +1,4 @@
+//
 exports.handler = (event, context, callback) => {
   const response = event.Records[0].cf.response;
   const headers = response.headers;

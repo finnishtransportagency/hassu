@@ -1,31 +1,25 @@
-/* tslint:disable:no-unused-expression */
-import * as cdk from "@aws-cdk/core";
-import { Duration, Fn } from "@aws-cdk/core";
-import * as lambda from "@aws-cdk/aws-lambda";
-import { RuntimeFamily, StartingPosition, Tracing } from "@aws-cdk/aws-lambda";
-import * as appsync from "@aws-cdk/aws-appsync";
-import { FieldLogLevel, GraphqlApi } from "@aws-cdk/aws-appsync";
-import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
-import { Table } from "@aws-cdk/aws-dynamodb";
-import { Queue, QueueEncryption } from "@aws-cdk/aws-sqs";
+import { App, CfnOutput, Duration, Expiration, Fn, Stack } from "aws-cdk-lib";
+import * as lambda from "aws-cdk-lib/aws-lambda";
+import { LambdaInsightsVersion, RuntimeFamily, StartingPosition, Tracing } from "aws-cdk-lib/aws-lambda";
+import * as appsync from "@aws-cdk/aws-appsync-alpha";
+import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
+import { Table } from "aws-cdk-lib/aws-dynamodb";
+import { Queue, QueueEncryption } from "aws-cdk-lib/aws-sqs";
 import { Config } from "./config";
 import { apiConfig, OperationType } from "../../common/abstractApi";
 import { WafConfig } from "./wafConfig";
-import { AuthorizationMode } from "@aws-cdk/aws-appsync/lib/graphqlapi";
-import { DynamoEventSource, SqsEventSource } from "@aws-cdk/aws-lambda-event-sources";
-import * as eventTargets from "@aws-cdk/aws-events-targets";
-import * as events from "@aws-cdk/aws-events";
-import { IDomain } from "@aws-cdk/aws-opensearchservice";
-import { Effect, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "@aws-cdk/aws-iam";
-import { Bucket } from "@aws-cdk/aws-s3";
-import { getEnvironmentVariablesFromSSM, readAccountStackOutputs, readFrontendStackOutputs } from "../bin/setupEnvironment";
-import { LambdaInsightsVersion } from "@aws-cdk/aws-lambda/lib/lambda-insights";
-import { RuleTargetInput } from "@aws-cdk/aws-events/lib/input";
+import { DynamoEventSource, SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
+import * as eventTargets from "aws-cdk-lib/aws-events-targets";
+import * as events from "aws-cdk-lib/aws-events";
+import { IDomain } from "aws-cdk-lib/aws-opensearchservice";
+import { Effect, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
+import { Bucket } from "aws-cdk-lib/aws-s3";
+import { getEnvironmentVariablesFromSSM, readAccountStackOutputs, readFrontendStackOutputs } from "./setupEnvironment";
 import { EmailEventType } from "../../backend/src/email/emailEvent";
 import { getOpenSearchDomain } from "./common";
 
 const path = require("path");
-let lambdaRuntime = new lambda.Runtime("nodejs16.x", RuntimeFamily.NODEJS);
+const lambdaRuntime = new lambda.Runtime("nodejs16.x", RuntimeFamily.NODEJS);
 
 export type HassuBackendStackProps = {
   projektiTable: Table;
@@ -43,10 +37,10 @@ export type BackendStackOutputs = {
   AppSyncAPIURL: string;
 };
 
-export class HassuBackendStack extends cdk.Stack {
+export class HassuBackendStack extends Stack {
   private readonly props: HassuBackendStackProps;
 
-  constructor(scope: cdk.App, props: HassuBackendStackProps) {
+  constructor(scope: App, props: HassuBackendStackProps) {
     super(scope, "backend", {
       stackName: "hassu-backend-" + Config.env,
       env: {
@@ -57,7 +51,7 @@ export class HassuBackendStack extends cdk.Stack {
     this.props = props;
   }
 
-  async process() {
+  async process(): Promise<void> {
     const config = await Config.instance(this);
 
     const accountStackOutputs = await readAccountStackOutputs();
@@ -83,17 +77,17 @@ export class HassuBackendStack extends cdk.Stack {
     this.attachDatabaseToLambda(projektiSearchIndexer);
     HassuBackendStack.configureOpenSearchAccess(projektiSearchIndexer, backendLambda, searchDomain);
 
-    let aineistoImporterLambda = await this.createAineistoImporterLambda(commonEnvironmentVariables, aineistoSQS);
+    const aineistoImporterLambda = await this.createAineistoImporterLambda(commonEnvironmentVariables, aineistoSQS);
     this.attachDatabaseToLambda(aineistoImporterLambda);
 
-    let emailQueueLambda = await this.createEmailQueueLambda(commonEnvironmentVariables, emailSQS);
+    const emailQueueLambda = await this.createEmailQueueLambda(commonEnvironmentVariables, emailSQS);
     this.attachDatabaseToLambda(emailQueueLambda);
 
-    new cdk.CfnOutput(this, "AppSyncAPIKey", {
+    new CfnOutput(this, "AppSyncAPIKey", {
       value: api.apiKey || "",
     });
     if (Config.isDeveloperEnvironment()) {
-      new cdk.CfnOutput(this, "AppSyncAPIURL", {
+      new CfnOutput(this, "AppSyncAPIURL", {
         value: api.graphqlUrl || "",
       });
     }
@@ -106,7 +100,7 @@ export class HassuBackendStack extends cdk.Stack {
   }
 
   private createAPI(config: Config) {
-    let defaultAuthorization: AuthorizationMode;
+    let defaultAuthorization: appsync.AuthorizationMode;
     if (Config.isDeveloperEnvironment()) {
       defaultAuthorization = {
         authorizationType: appsync.AuthorizationType.IAM,
@@ -116,7 +110,7 @@ export class HassuBackendStack extends cdk.Stack {
       defaultAuthorization = {
         authorizationType: appsync.AuthorizationType.API_KEY,
         apiKeyConfig: {
-          expires: cdk.Expiration.atDate(apiKeyExpiration),
+          expires: Expiration.atDate(apiKeyExpiration),
         },
       };
     }
@@ -125,7 +119,7 @@ export class HassuBackendStack extends cdk.Stack {
       name: "hassu-api-" + Config.env,
       schema: appsync.Schema.fromAsset("schema.graphql"),
       logConfig: {
-        fieldLogLevel: FieldLogLevel.ALL,
+        fieldLogLevel: appsync.FieldLogLevel.ALL,
         excludeVerboseContent: true,
       },
       authorizationConfig: { defaultAuthorization },
@@ -157,7 +151,7 @@ export class HassuBackendStack extends cdk.Stack {
   private createProjektiSearchIndexer(commonEnvironmentVariables: Record<string, string>) {
     const functionName = "hassu-dynamodb-stream-handler-" + Config.env;
     const streamHandler = new NodejsFunction(this, "DynamoDBStreamHandler", {
-      functionName: functionName,
+      functionName,
       runtime: lambdaRuntime,
       entry: `${__dirname}/../../backend/src/projektiSearch/dynamoDBStreamHandler.ts`,
       handler: "handleDynamoDBEvents",
@@ -208,7 +202,7 @@ export class HassuBackendStack extends cdk.Stack {
       };
     }
 
-    let frontendStackOutputs = await readFrontendStackOutputs();
+    const frontendStackOutputs = await readFrontendStackOutputs();
     const backendLambda = new NodejsFunction(this, "API", {
       functionName: "hassu-backend-" + Config.env,
       runtime: lambdaRuntime,
@@ -329,7 +323,7 @@ export class HassuBackendStack extends cdk.Stack {
     commonEnvironmentVariables: Record<string, string>,
     aineistoSQS: Queue
   ): Promise<NodejsFunction> {
-    let frontendStackOutputs = await readFrontendStackOutputs();
+    const frontendStackOutputs = await readFrontendStackOutputs();
 
     const importer = new NodejsFunction(this, "AineistoImporterLambda", {
       functionName: "hassu-aineistoimporter-" + Config.env,
@@ -361,7 +355,7 @@ export class HassuBackendStack extends cdk.Stack {
         new PolicyStatement({
           effect: Effect.ALLOW,
           actions: ["cloudfront:CreateInvalidation"],
-          resources: ["arn:aws:cloudfront::" + cdk.Aws.ACCOUNT_ID + ":distribution/" + frontendStackOutputs?.CloudfrontDistributionId],
+          resources: ["arn:aws:cloudfront::" + this.account + ":distribution/" + frontendStackOutputs?.CloudfrontDistributionId],
         })
       );
     }
@@ -395,10 +389,11 @@ export class HassuBackendStack extends cdk.Stack {
     return importer;
   }
 
-  private static mapApiResolversToLambda(api: GraphqlApi, backendFn: NodejsFunction) {
+  private static mapApiResolversToLambda(api: appsync.GraphqlApi, backendFn: NodejsFunction) {
     const lambdaDataSource = api.addLambdaDataSource("lambdaDatasource", backendFn);
 
     for (const operationName in apiConfig) {
+      // eslint-disable-next-line no-prototype-builtins
       if (apiConfig.hasOwnProperty(operationName)) {
         const operation = (apiConfig as any)[operationName];
         lambdaDataSource.createResolver({
@@ -460,7 +455,7 @@ export class HassuBackendStack extends cdk.Stack {
         new eventTargets.SqsQueue(queue, {
           maxEventAge: Duration.hours(24),
           retryAttempts: 10,
-          message: RuleTargetInput.fromObject({ type: EmailEventType.UUDET_PALAUTTEET_DIGEST }),
+          message: events.RuleTargetInput.fromObject({ type: EmailEventType.UUDET_PALAUTTEET_DIGEST }),
         }),
       ],
     });
@@ -468,7 +463,7 @@ export class HassuBackendStack extends cdk.Stack {
   }
 
   private createAndProvideSchedulerExecutionRole(backendLambda: NodejsFunction, aineistoSQS: Queue) {
-    let servicePrincipal = new ServicePrincipal("scheduler.amazonaws.com");
+    const servicePrincipal = new ServicePrincipal("scheduler.amazonaws.com");
     const role = new Role(this, "schedulerExecutionRole", {
       assumedBy: servicePrincipal,
       roleName: "schedulerExecutionRole-" + Config.env,

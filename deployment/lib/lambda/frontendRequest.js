@@ -1,3 +1,4 @@
+//
 exports.handler = (event, context, callback) => {
   // Get request and request headers
   const request = event.Records[0].cf.request;

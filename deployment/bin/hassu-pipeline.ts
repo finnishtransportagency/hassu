@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-import * as cdk from "@aws-cdk/core";
 import { HassuPipelineStack } from "../lib/hassu-pipeline";
+import { App } from "aws-cdk-lib";
 
 async function main() {
-  const app = new cdk.App();
+  const app = new App();
   // tslint:disable-next-line:no-unused-expression
   await new HassuPipelineStack(app).process().catch((e) => {
     // tslint:disable-next-line:no-console

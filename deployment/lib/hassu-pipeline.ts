@@ -1,16 +1,16 @@
-/* tslint:disable:no-console no-unused-expression */
-import * as cdk from "@aws-cdk/core";
-import { Construct, SecretValue, Stack } from "@aws-cdk/core";
-import { Bucket } from "@aws-cdk/aws-s3";
-import * as codebuild from "@aws-cdk/aws-codebuild";
-import { BuildEnvironmentVariableType, ComputeType, LocalCacheMode } from "@aws-cdk/aws-codebuild";
+import * as cdk from "aws-cdk-lib";
+import { SecretValue, Stack } from "aws-cdk-lib";
+import { Bucket } from "aws-cdk-lib/aws-s3";
+import * as codebuild from "aws-cdk-lib/aws-codebuild";
+import { BuildEnvironmentVariableType, ComputeType, LocalCacheMode } from "aws-cdk-lib/aws-codebuild";
 import { Config } from "./config";
-import { BuildSpec } from "@aws-cdk/aws-codebuild/lib/build-spec";
-import { BuildEnvironmentVariable, LinuxBuildImage } from "@aws-cdk/aws-codebuild/lib/project";
-import { Effect, PolicyStatement } from "@aws-cdk/aws-iam";
-import { GitHubSourceProps } from "@aws-cdk/aws-codebuild/lib/source";
-import { Repository } from "@aws-cdk/aws-ecr/lib/repository";
-import { OriginAccessIdentity } from "@aws-cdk/aws-cloudfront";
+import { BuildSpec } from "aws-cdk-lib/aws-codebuild/lib/build-spec";
+import { BuildEnvironmentVariable, LinuxBuildImage } from "aws-cdk-lib/aws-codebuild/lib/project";
+import { Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
+import { GitHubSourceProps } from "aws-cdk-lib/aws-codebuild/lib/source";
+import { Repository } from "aws-cdk-lib/aws-ecr/lib/repository";
+import { OriginAccessIdentity } from "aws-cdk-lib/aws-cloudfront";
+import { Construct } from "constructs";
 import fs from "fs";
 
 // These should correspond to CfnOutputs produced by this stack
@@ -32,7 +32,7 @@ export class HassuPipelineStack extends Stack {
     });
   }
 
-  async process() {
+  async process(): Promise<void> {
     const config = await Config.instance(this);
     const branch = config.getBranch();
     const env = Config.env;
@@ -73,7 +73,7 @@ export class HassuPipelineStack extends Stack {
 
       // tslint:disable-next-line:no-unused-expression
       new cdk.CfnOutput(this, "CloudfrontOriginAccessIdentityReportBucket", {
-        value: oai.originAccessIdentityName || "",
+        value: oai.originAccessIdentityId || "",
       });
 
       reportBucket.grantRead(oai);
@@ -174,7 +174,7 @@ export class HassuPipelineStack extends Stack {
         buildImage: LinuxBuildImage.STANDARD_5_0,
         privileged: true,
         computeType: ComputeType.MEDIUM,
-        environmentVariables: environmentVariables,
+        environmentVariables,
       },
       grantReportGroupPermissions: true,
       badge: true,

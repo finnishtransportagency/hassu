@@ -3,7 +3,7 @@
 aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 283563576583.dkr.ecr.eu-west-1.amazonaws.com
 
 # Copy localstack into private repository
-LOCALSTACK_VERSION=0.14.1
+LOCALSTACK_VERSION=1.3
 aws ecr create-repository --repository-name localstack || true
 docker pull 283563576583.dkr.ecr.eu-west-1.amazonaws.com/localstack:$LOCALSTACK_VERSION || true
 docker pull localstack/localstack:$LOCALSTACK_VERSION
