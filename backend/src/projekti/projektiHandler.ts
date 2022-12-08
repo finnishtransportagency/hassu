@@ -25,7 +25,7 @@ import { projektiAdapterJulkinen } from "./adapter/projektiAdapterJulkinen";
 import { findUpdatedFields } from "../velho/velhoAdapter";
 import { DBProjekti } from "../database/model";
 import { aineistoService } from "../aineisto/aineistoService";
-import { ProjektiAdaptationResult, ProjektiEventType, VuorovaikutusPublishedEvent } from "./adapter/projektiAdaptationResult";
+import { ProjektiAdaptationResult, ProjektiEventType } from "./adapter/projektiAdaptationResult";
 import remove from "lodash/remove";
 import { validateTallennaProjekti } from "./projektiValidator";
 
@@ -261,13 +261,6 @@ async function saveProjektiToVelho(projekti: DBProjekti) {
 async function handleEvents(projektiAdaptationResult: ProjektiAdaptationResult) {
   await projektiAdaptationResult.onEvent(ProjektiEventType.SAVE_PROJEKTI_TO_VELHO, async () => {
     await saveProjektiToVelho(projektiAdaptationResult.projekti);
-  });
-
-  await projektiAdaptationResult.onEvent(ProjektiEventType.VUOROVAIKUTUS_PUBLISHED, async (event, oid) => {
-    if (!(event as VuorovaikutusPublishedEvent).vuorovaikutusNumero) {
-      throw new Error("handleEvents: event is missing vuorovaikutusNumero");
-    }
-    await vuorovaikutusService.handleVuorovaikutusKutsu(oid, (event as VuorovaikutusPublishedEvent).vuorovaikutusNumero);
   });
 
   await projektiAdaptationResult.onEvent(ProjektiEventType.RESET_KAYTTOOIKEUDET, async (_event, oid) => {
