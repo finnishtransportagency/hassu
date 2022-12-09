@@ -13,7 +13,7 @@ import {
   OriginRequestPolicy,
   OriginSslPolicy,
   PriceClass,
-  ViewerProtocolPolicy,
+  ViewerProtocolPolicy
 } from "aws-cdk-lib/aws-cloudfront";
 import { Config } from "./config";
 import { HttpOrigin, S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
@@ -200,12 +200,15 @@ export class HassuFrontendStack extends Stack {
     if (env == "dev" || env == "prod") {
       new CfnOutput(this, "nextStaticsCachePolicyId", {
         value: nextJSLambdaEdge.nextStaticsCachePolicy.cachePolicyId || "",
+        exportName: "nextStaticsCachePolicyId",
       });
       new CfnOutput(this, "nextImageCachePolicyId", {
         value: nextJSLambdaEdge.nextImageCachePolicy.cachePolicyId || "",
+        exportName: "nextImageCachePolicyId",
       });
       new CfnOutput(this, "nextLambdaCachePolicyId", {
         value: nextJSLambdaEdge.nextLambdaCachePolicy.cachePolicyId || "",
+        exportName: "nextLambdaCachePolicyId",
       });
     }
 
