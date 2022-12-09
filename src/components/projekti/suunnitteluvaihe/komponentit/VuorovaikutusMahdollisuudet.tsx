@@ -14,8 +14,8 @@ import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformati
 
 interface Props {
   vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] | VuorovaikutusTilaisuusJulkaisu[] | null;
-  setOpenVuorovaikutustilaisuus: Dispatch<SetStateAction<boolean>>;
   projekti: ProjektiLisatiedolla;
+  setOpenVuorovaikutustilaisuus?: Dispatch<SetStateAction<boolean>>;
   tilaisuudetError?: FieldError | undefined;
 }
 
@@ -135,16 +135,18 @@ export default function VuorovaikutusMahdollisuudet({
                     })}
             </>
           )}
-          <Button
-            className="mt-8"
-            onClick={(e) => {
-              setOpenVuorovaikutustilaisuus(true);
-              e.preventDefault();
-            }}
-            id="add_or_edit_tilaisuus"
-          >
-            {isFyysisiatilaisuuksia || isVerkkotilaisuuksia || isSoittoaikoja ? "Muokkaa" : "Lisää tilaisuus"}
-          </Button>
+          {setOpenVuorovaikutustilaisuus && (
+            <Button
+              className="mt-8"
+              onClick={(e) => {
+                setOpenVuorovaikutustilaisuus(true);
+                e.preventDefault();
+              }}
+              id="add_or_edit_tilaisuus"
+            >
+              {isFyysisiatilaisuuksia || isVerkkotilaisuuksia || isSoittoaikoja ? "Muokkaa" : "Lisää tilaisuus"}
+            </Button>
+          )}
         </SectionContent>
       </Section>
     </>

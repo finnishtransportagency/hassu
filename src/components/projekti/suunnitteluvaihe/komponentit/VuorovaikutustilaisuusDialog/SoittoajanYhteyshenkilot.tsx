@@ -8,6 +8,7 @@ import { YhteystietoInput } from "@services/api";
 import { ReactElement } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
+import { VuorovaikutustilaisuusFormValues } from ".";
 
 const defaultYhteystieto: YhteystietoInput = {
   etunimi: "",
@@ -25,7 +26,7 @@ export default function SoittoajanYhteyshenkilot({ tilaisuusIndex }: Props): Rea
     control,
     register,
     formState: { errors },
-  } = useFormContext();
+  } = useFormContext<VuorovaikutustilaisuusFormValues>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: `vuorovaikutusTilaisuudet.${tilaisuusIndex}.esitettavatYhteystiedot.yhteysTiedot`,
