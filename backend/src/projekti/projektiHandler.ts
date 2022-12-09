@@ -9,7 +9,13 @@ import {
 } from "../user";
 import { velho } from "../velho/velhoClient";
 import * as API from "../../../common/graphql/apiModel";
-import { KayttajaTyyppi, NykyinenKayttaja, TallennaProjektiInput, Velho } from "../../../common/graphql/apiModel";
+import {
+  KayttajaTyyppi,
+  NykyinenKayttaja,
+  TallennaProjektiInput,
+  VuorovaikutusKierrosPaivitysInput,
+  Velho,
+} from "../../../common/graphql/apiModel";
 import { projektiAdapter } from "./adapter/projektiAdapter";
 import { adaptVelho } from "./adapter/common";
 import { auditLog, log } from "../logger";
@@ -27,7 +33,8 @@ import { DBProjekti } from "../database/model";
 import { aineistoService } from "../aineisto/aineistoService";
 import { ProjektiAdaptationResult, ProjektiEventType } from "./adapter/projektiAdaptationResult";
 import remove from "lodash/remove";
-import { validateTallennaProjekti } from "./projektiValidator";
+import { validatePaivitaVuorovaikutus, validateTallennaProjekti } from "./projektiValidator";
+import { IllegalArgumentError } from "../error/IllegalArgumentError";
 
 export async function loadProjekti(oid: string): Promise<API.Projekti | API.ProjektiJulkinen> {
   const vaylaUser = getVaylaUser();
@@ -101,6 +108,24 @@ export async function createOrUpdateProjekti(input: TallennaProjektiInput): Prom
     }
   }
   return input.oid;
+}
+
+export async function updateVuorovaikutus(input: VuorovaikutusKierrosPaivitysInput): Promise<string> {
+  requirePermissionLuku();
+  const oid = input.oid;
+  const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
+  if (projektiInDB) {
+    validatePaivitaVuorovaikutus(projektiInDB, input);
+    auditLog.info("Päivitä vuorovaikutuskierros", { input });
+
+    const vuorovaikutusTilaisuudet = input.vuorovaikutusTilaisuudet.map((tilaisuus, index) =>
+      mergeWith(tilaisuus, projektiInDB.vuorovaikutusKierros?.vuorovaikutusTilaisuudet?.[index])
+    );
+    // TODO
+    return "TODO";
+  } else {
+    throw new IllegalArgumentError("Projektia ei ole olemassa");
+  }
 }
 
 export async function createProjektiFromVelho(
