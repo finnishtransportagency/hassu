@@ -15,7 +15,7 @@ export default function VuorovaikutusPaivamaaraJaTiedotLukutila({ vuorovaikutus,
   const toissijainenKieli = aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli || Kieli.RUOTSI;
 
   return (
-    <Section noDivider>
+    <Section>
       <SectionContent>
         <p className="vayla-label">Julkaisupäivä</p>
         <p>{formatDate(vuorovaikutus?.vuorovaikutusJulkaisuPaiva)}</p>
