@@ -291,8 +291,6 @@ function VuorovaikutusKierrosKutsu({
               }}
               tilaisuudet={vuorovaikutustilaisuudet}
               projektiHenkilot={projektiHenkilot}
-              julkinen={false}
-              avaaHyvaksymisDialogi={() => setOpenHyvaksy(true)}
             />
             <EsitettavatYhteystiedot projektiHenkilot={projektiHenkilot} />
             <IlmoituksenVastaanottajat kirjaamoOsoitteet={kirjaamoOsoitteet} vuorovaikutus={vuorovaikutusKierros} />
@@ -366,7 +364,6 @@ function VuorovaikutusKierrosKutsu({
           dialogiOnAuki={openHyvaksy}
           onClose={handleClickCloseHyvaksy}
           tallenna={saveForm}
-          julkinen={false}
         />
       )}
       <HassuSpinner open={isFormSubmitting} />

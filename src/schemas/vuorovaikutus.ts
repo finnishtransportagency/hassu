@@ -97,6 +97,37 @@ export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
   ),
 });
 
+export const vuorovaikutustilaisuusPaivitysSchema = Yup.object().shape({
+  vuorovaikutusTilaisuudet: Yup.array().of(
+    Yup.object().shape({
+      nimi: Yup.string().nullable(),
+      kaytettavaPalvelu: Yup.string()
+        .when("tyyppi", {
+          is: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+          then: Yup.string().required("Verkkotilaisuudessa käytettävä palvelu täytyy valita"),
+        })
+        .nullable(),
+      linkki: Yup.string()
+        .when("tyyppi", {
+          is: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+          then: Yup.string().required("Verkkotilaisuuden linkki täytyy antaa"),
+        })
+        .nullable(),
+      esitettavatYhteystiedot: Yup.object()
+        .nullable()
+        .when("tyyppi", {
+          is: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+          then: standardiYhteystiedot().test("at-least-one-contact", "Vähintään yksi yhteyshenkilö on annettava", (objekti) => {
+            if ((objekti.yhteysHenkilot?.length || 0) + (objekti.yhteysTiedot?.length || 0) === 0) {
+              return false;
+            }
+            return true;
+          }),
+        }),
+    })
+  ),
+});
+
 export const maxHankkeenkuvausLength = 2000;
 
 let hankkeenKuvaus = Yup.string()

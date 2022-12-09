@@ -5,7 +5,7 @@ import { formatDate } from "../../../../util/dateUtils";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import VuorovaikutusPaivamaaraJaTiedotLukutila from "../komponentit/VuorovaikutusPaivamaaraJaTiedotLukutila";
-import VuorovaikutusMahdollisuudetLukutila from "../../lukutila/komponentit/VuorovaikutusMahdollisuudetLukutila";
+import VuorovaikutusMahdollisuudet from "../komponentit/VuorovaikutusMahdollisuudet";
 import IlmoituksenVastaanottajatLukutila from "../komponentit/IlmoituksenVastaanottajatLukutila";
 import ExtLink from "@components/ExtLink";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
@@ -59,7 +59,10 @@ function VuorovaikuttaminenEpaaktiivinen({ vuorovaikutusnro, projekti }: Suunnit
           vuorovaikutus={vuorovaikutusKierrosjulkaisu}
         />
       </Section>
-      <VuorovaikutusMahdollisuudetLukutila projekti={projekti} vuorovaikutus={vuorovaikutusKierrosjulkaisu} />
+      <VuorovaikutusMahdollisuudet
+        projekti={projekti}
+        vuorovaikutusTilaisuudet={vuorovaikutusKierrosjulkaisu.vuorovaikutusTilaisuudet || []}
+      />
       <Section>
         <p className="vayla-label">Suunnitelmaluonnokset ja esittelyaineistot</p>
         <p>
