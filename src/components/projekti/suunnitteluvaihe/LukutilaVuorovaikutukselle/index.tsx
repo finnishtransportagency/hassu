@@ -3,6 +3,7 @@ import SectionContent from "@components/layout/SectionContent";
 import { useMemo } from "react";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import VuorovaikutusPaivamaaraJaTiedotLukutila from "../komponentit/VuorovaikutusPaivamaaraJaTiedotLukutila";
+import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
 
 type Props = {
   vuorovaikutusnro: number;
@@ -32,6 +33,11 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
         <VuorovaikutusPaivamaaraJaTiedotLukutila
           aloituskuulutusjulkaisu={aloituskuulutusjulkaisu}
           vuorovaikutus={vuorovaikutusKierrosjulkaisu}
+        />
+        <VuorovaikutusMahdollisuudet
+          projekti={projekti}
+          vuorovaikutusKierrosJulkaisu={vuorovaikutusKierrosjulkaisu}
+          setOpenVuorovaikutustilaisuus={() => null}
         />
       </Section>
     </>
