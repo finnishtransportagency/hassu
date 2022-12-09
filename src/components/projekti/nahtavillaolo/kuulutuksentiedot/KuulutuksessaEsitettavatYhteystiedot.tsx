@@ -23,9 +23,7 @@ const defaultYhteystieto: YhteystietoInput = {
   sahkoposti: "",
 };
 
-interface Props {}
-
-export default function EsitettavatYhteystiedot({}: Props): ReactElement {
+export default function EsitettavatYhteystiedot(): ReactElement {
   const { data: projekti } = useProjekti();
 
   const {
