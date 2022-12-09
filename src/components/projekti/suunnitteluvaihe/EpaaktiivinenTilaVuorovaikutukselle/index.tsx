@@ -6,7 +6,7 @@ import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import VuorovaikutusPaivamaaraJaTiedotLukutila from "../komponentit/VuorovaikutusPaivamaaraJaTiedotLukutila";
 import VuorovaikutusMahdollisuudetLukutila from "../../lukutila/komponentit/VuorovaikutusMahdollisuudetLukutila";
-import IlmoituksenVastaanottajatLukutila from "../../lukutila/komponentit/VuorovaikutusIlmoituksenVastaanottajatLukutila";
+import IlmoituksenVastaanottajatLukutila from "../komponentit/IlmoituksenVastaanottajatLukutila";
 import ExtLink from "@components/ExtLink";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import replace from "lodash/replace";
