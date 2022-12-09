@@ -108,6 +108,12 @@ input VuorovaikutusKierrosInput {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
 }
 
+input VuorovaikutusKierrosPaivitysInput {
+  oid: String!
+  vuorovaikutusNumero: Int!
+  vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusInput!]!
+}
+
 input VuorovaikutusTilaisuusInput {
   tyyppi: VuorovaikutusTilaisuusTyyppi!
   nimi: String
