@@ -18,7 +18,7 @@ import {
 import { Config } from "./config";
 import { HttpOrigin, S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Builder } from "@sls-next/lambda-at-edge";
-import { NextJSLambdaEdge } from "@sls-next/cdk-construct";
+import { NextJSLambdaEdge, Props } from "@sls-next/cdk-construct";
 import { Code, Runtime } from "aws-cdk-lib/aws-lambda";
 import { CompositePrincipal, Effect, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import * as fs from "fs";
@@ -42,10 +42,13 @@ interface HassuFrontendStackProps {
   projektiTable: Table;
 }
 
+const REGION = "us-east-1";
+
 export class HassuFrontendStack extends Stack {
   private props: HassuFrontendStackProps;
   private appSyncAPIKey?: string;
   private cloudFrontOriginAccessIdentity!: string;
+
   private cloudFrontOriginAccessIdentityReportBucket!: string;
 
   constructor(scope: Construct, props: HassuFrontendStackProps) {
@@ -53,7 +56,7 @@ export class HassuFrontendStack extends Stack {
     super(scope, "frontend", {
       stackName: "hassu-frontend-" + env,
       env: {
-        region: "us-east-1",
+        region: REGION,
       },
       tags: Config.tags,
     });
@@ -127,7 +130,42 @@ export class HassuFrontendStack extends Stack {
       lifecycleRules: [{ enabled: true, expiration: Duration.days(366 / 2) }],
     });
 
+    let cachePolicies: Partial<Props>;
+    const staticsCachePolicyName = "NextJsAppStaticsCache";
+    const imageCachePolicyName = "NextJsAppImageCache";
+    const lambdaCachePolicyName = "NextJsAppLambdaCache";
+    if (env == "dev" || env == "prod") {
+      // Cache policyt luodaan vain kerran per account
+      cachePolicies = {
+        cachePolicyName: {
+          staticsCache: staticsCachePolicyName,
+          imageCache: imageCachePolicyName,
+          lambdaCache: lambdaCachePolicyName,
+        },
+      };
+    } else {
+      // Käytä jo accountissa olevia cache policyjä
+      cachePolicies = {
+        nextStaticsCachePolicy: CachePolicy.fromCachePolicyId(
+          this,
+          "nextStaticsCachePolicy",
+          Fn.importValue("nextStaticsCachePolicyId")
+        ) as CachePolicy,
+        nextImageCachePolicy: CachePolicy.fromCachePolicyId(
+          this,
+          "nextImageCachePolicy",
+          Fn.importValue("nextImageCachePolicyId")
+        ) as CachePolicy,
+        nextLambdaCachePolicy: CachePolicy.fromCachePolicyId(
+          this,
+          "nextLambdaCachePolicy",
+          Fn.importValue("nextLambdaCachePolicyId")
+        ) as CachePolicy,
+      };
+    }
+
     const nextJSLambdaEdge = new NextJSLambdaEdge(this, id, {
+      ...cachePolicies,
       serverlessBuildOutDir: "./build",
       runtime: Runtime.NODEJS_14_X,
       env: { region: "us-east-1" },
@@ -157,6 +195,18 @@ export class HassuFrontendStack extends Stack {
         const projektiTable = this.props.projektiTable;
         projektiTable.grantReadWriteData(nextJSLambdaEdge.nextApiLambda);
       }
+    }
+
+    if (env == "dev" || env == "prod") {
+      new CfnOutput(this, "nextStaticsCachePolicyId", {
+        value: nextJSLambdaEdge.nextStaticsCachePolicy.cachePolicyId || "",
+      });
+      new CfnOutput(this, "nextImageCachePolicyId", {
+        value: nextJSLambdaEdge.nextImageCachePolicy.cachePolicyId || "",
+      });
+      new CfnOutput(this, "nextLambdaCachePolicyId", {
+        value: nextJSLambdaEdge.nextLambdaCachePolicy.cachePolicyId || "",
+      });
     }
 
     const distribution: cloudfront.Distribution = nextJSLambdaEdge.distribution;
