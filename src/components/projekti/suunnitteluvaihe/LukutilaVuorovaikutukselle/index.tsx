@@ -3,6 +3,7 @@ import SectionContent from "@components/layout/SectionContent";
 import { useMemo } from "react";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import IlmoituksenVastaanottajatLukutila from "../komponentit/IlmoituksenVastaanottajatLukutila";
 import VuorovaikutusPaivamaaraJaTiedotLukutila from "../komponentit/VuorovaikutusPaivamaaraJaTiedotLukutila";
 import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
 
@@ -25,11 +26,9 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
     return <></>;
   }
 
-  console.log(vuorovaikutusKierrosjulkaisu);
-
   return (
     <>
-      <Section className="mb-4">
+      <Section className="mb-4" noDivider>
         <SectionContent>
           <h3 className="vayla-title">Kutsu vuorovaikutukseen</h3>
         </SectionContent>
@@ -48,6 +47,7 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
             return <p key={index}>{yhteystietoKansalaiselleTekstiksi("fi", yhteystieto)}</p>;
           })}
         </Section>
+        <IlmoituksenVastaanottajatLukutila vuorovaikutus={vuorovaikutusKierrosjulkaisu} />
       </Section>
     </>
   );
