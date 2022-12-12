@@ -18,6 +18,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import HassuMuiThemeProvider from "@components/layout/HassuMuiThemeProvider";
 import "dayjs/locale/fi";
 import "dayjs/locale/sv";
+import { ApiProvider } from "@components/ApiProvider";
 
 log.setDefaultLevel("DEBUG");
 
@@ -25,26 +26,34 @@ function App({ Component, pageProps }: AppProps) {
   const { lang, t } = useTranslation("common");
 
   return (
-    <SWRConfig value={{ revalidateOnFocus: false, revalidateIfStale: false, revalidateOnReconnect: false }}>
-      <LocalizationProvider
-        dateAdapter={AdapterDayjs}
-        adapterLocale={lang}
-        localeText={{ okButtonLabel: t("OK"), cancelButtonLabel: t("peruuta") }}
-      >
-        <I18nProvider lang={lang} namespaces={{ commonFI, commonSV }}>
-          <Head>
-            <title>Hassu</title>
-          </Head>
-          <HassuMuiThemeProvider>
-            <SnackbarProvider>
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
-            </SnackbarProvider>
-          </HassuMuiThemeProvider>
-        </I18nProvider>
-      </LocalizationProvider>
-    </SWRConfig>
+    <SnackbarProvider>
+      <I18nProvider lang={lang} namespaces={{ commonFI, commonSV }}>
+        <ApiProvider>
+          <SWRConfig
+            value={{
+              revalidateOnFocus: false,
+              revalidateIfStale: false,
+              revalidateOnReconnect: false,
+            }}
+          >
+            <LocalizationProvider
+              dateAdapter={AdapterDayjs}
+              adapterLocale={lang}
+              localeText={{ okButtonLabel: t("OK"), cancelButtonLabel: t("peruuta") }}
+            >
+              <Head>
+                <title>Hassu</title>
+              </Head>
+              <HassuMuiThemeProvider>
+                <Layout>
+                  <Component {...pageProps} />
+                </Layout>
+              </HassuMuiThemeProvider>
+            </LocalizationProvider>
+          </SWRConfig>
+        </ApiProvider>
+      </I18nProvider>
+    </SnackbarProvider>
   );
 }
 

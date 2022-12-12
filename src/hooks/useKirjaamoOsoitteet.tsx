@@ -1,12 +1,18 @@
 import useSWR from "swr";
-import { api, apiConfig } from "@services/api";
+import { apiConfig } from "@services/api";
+import useApi from "./useApi";
+import { API } from "@services/api/commonApi";
+import { useMemo } from "react";
 
 export function useKirjaamoOsoitteet() {
+  const api = useApi();
+
+  const kirjaamoOsoitteetLoader = useMemo(() => getKirjaamoOsoitteetLoader(api), [api]);
   return useSWR([apiConfig.listKirjaamoOsoitteet.graphql], kirjaamoOsoitteetLoader);
 }
 
-async function kirjaamoOsoitteetLoader(_: string) {
+const getKirjaamoOsoitteetLoader = (api: API) => async (_: string) => {
   return await api.listKirjaamoOsoitteet();
-}
+};
 
 export default useKirjaamoOsoitteet;

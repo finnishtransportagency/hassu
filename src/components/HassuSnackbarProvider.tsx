@@ -1,8 +1,8 @@
 import React, { createContext, ReactNode, useState } from "react";
-import Snackbar from "@mui/material/Snackbar";
-import Alert, { AlertColor } from "@mui/material/Alert";
+import Snackbar, { SnackbarProps } from "@mui/material/Snackbar";
+import Alert, { AlertColor, AlertProps } from "@mui/material/Alert";
 
-type ShowMessage = (message: string, severity?: string, duration?: number) => void;
+type ShowMessage = (message: string, msgSeverity: AlertProps["severity"], msgDuration: SnackbarProps["autoHideDuration"]) => void;
 type ShowSuccessMessage = (message: string) => void;
 type ShowErrorMessage = (message: string) => void;
 type ShowInfoMessage = (message: string) => void;
@@ -11,7 +11,12 @@ export const SnackbarContext = createContext<{
   showSuccessMessage: ShowSuccessMessage;
   showErrorMessage: ShowErrorMessage;
   showInfoMessage: ShowInfoMessage;
-}>({ showMessage: () => undefined, showSuccessMessage: () => undefined, showErrorMessage: () => undefined, showInfoMessage: () => undefined });
+}>({
+  showMessage: () => undefined,
+  showSuccessMessage: () => undefined,
+  showErrorMessage: () => undefined,
+  showInfoMessage: () => undefined,
+});
 
 interface Props {
   children?: ReactNode;
@@ -19,11 +24,15 @@ interface Props {
 
 function SnackbarProvider({ children }: Props) {
   const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState("Tähän oma viesti");
-  const [duration, setDuration] = useState(2000);
-  const [severity, setSeverity] = useState("success");
+  const [message, setMessage] = useState("");
+  const [duration, setDuration] = useState<SnackbarProps["autoHideDuration"]>(2000);
+  const [severity, setSeverity] = useState<AlertProps["severity"]>("success");
 
-  const showMessage = (msg = "", msgSeverity = "success", msgDuration = 2000) => {
+  const showMessage = (
+    msg = "",
+    msgSeverity: AlertProps["severity"] = "success",
+    msgDuration: SnackbarProps["autoHideDuration"] = 2000
+  ) => {
     setMessage(msg);
     setSeverity(msgSeverity);
     setDuration(msgDuration);
@@ -35,14 +44,21 @@ function SnackbarProvider({ children }: Props) {
   };
 
   const showErrorMessage = (msg: string) => {
-    showMessage(msg, "error", 5000);
+    showMessage(msg, "error", null);
   };
 
   const showInfoMessage = (msg: string) => {
     showMessage(msg, "info", 3000);
   };
 
-  const handleClose = () => {
+  const handleSnackbarClose: SnackbarProps["onClose"] = (_event, closeReason) => {
+    if (closeReason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+
+  const handleAlertClose: AlertProps["onClose"] = () => {
     setOpen(false);
   };
 
@@ -58,13 +74,13 @@ function SnackbarProvider({ children }: Props) {
         }}
         autoHideDuration={duration}
         open={open}
-        onClose={handleClose}
+        onClose={handleSnackbarClose}
       >
         <Alert
           sx={{ marginTop: "15px", width: "100%" }}
           variant="filled"
           elevation={6}
-          onClose={handleClose}
+          onClose={handleAlertClose}
           severity={severity as AlertColor}
         >
           {message}

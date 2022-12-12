@@ -331,7 +331,7 @@ export abstract class AbstractApi {
 
   abstract callAPI(operation: OperationConfig, variables?: any): Promise<any>;
 
-  setOneTimeForwardHeaders(headers: IncomingHttpHeaders) {
+  setOneTimeForwardHeaders(headers: IncomingHttpHeaders): void {
     this.oneTimeHeaders = { cookie: headers.cookie, authorization: headers.authorization };
   }
 }
