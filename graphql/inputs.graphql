@@ -111,7 +111,7 @@ input VuorovaikutusKierrosInput {
 input VuorovaikutusKierrosPaivitysInput {
   oid: String!
   vuorovaikutusNumero: Int!
-  vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusInput!]!
+  vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusPaivitysInput!]!
 }
 
 input VuorovaikutusTilaisuusInput {
@@ -143,6 +143,7 @@ input VuorovaikutusTilaisuusInput {
 input VuorovaikutusTilaisuusPaivitysInput {
   id: Int
   nimi: String
+  kaytettavaPalvelu: KaytettavaPalvelu
   linkki: String
   Saapumisohjeet: String
   esitettavatYhteystiedot: StandardiYhteystiedotInput

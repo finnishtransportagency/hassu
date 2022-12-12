@@ -1,15 +1,17 @@
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import { Yhteystieto } from "@services/api";
-import { useMemo, useState } from "react";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { api, VuorovaikutusTilaisuusInput, VuorovaikutusTilaisuusPaivitysInput, Yhteystieto } from "@services/api";
+import { useMemo, useState, useCallback } from "react";
+import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
+import useSnackbars from "src/hooks/useSnackbars";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import IlmoituksenVastaanottajatLukutila from "../komponentit/IlmoituksenVastaanottajatLukutila";
 import VuorovaikutusPaivamaaraJaTiedotLukutila from "../komponentit/VuorovaikutusPaivamaaraJaTiedotLukutila";
 import VuorovaikutustilaisuusDialog, { VuorovaikutustilaisuusFormValues } from "../komponentit/VuorovaikutustilaisuusDialog";
 import LukutilaLinkkiJaKutsut from "./LukutilaLinkkiJaKutsut";
 import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
+import log from "loglevel";
 
 type Props = {
   vuorovaikutusnro: number;
@@ -17,7 +19,9 @@ type Props = {
 };
 
 export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekti }: Props) {
+  const { mutate: reloadProjekti } = useProjekti();
   const [muokkausAuki, setMuokkausAuki] = useState(false);
+  const { showSuccessMessage, showErrorMessage } = useSnackbars();
 
   const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useProjektiHenkilot(projekti);
 
@@ -29,6 +33,51 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
     // aloituskuulutusjulkaisusta katsotaan projektin sisällönkuvaus
     return projekti?.aloitusKuulutusJulkaisu;
   }, [projekti]);
+
+  const paivitaVuorovaikutustilaisuuksia = useCallback(
+    async (formData: VuorovaikutustilaisuusFormValues) => {
+      let mounted = true;
+      if (!(aloituskuulutusjulkaisu && vuorovaikutusKierrosjulkaisu)) {
+        return;
+      }
+      try {
+        await api.paivitaVuorovaikutusta({
+          oid: projekti.oid,
+          vuorovaikutusNumero: vuorovaikutusnro,
+          vuorovaikutusTilaisuudet: formData.vuorovaikutusTilaisuudet.map((tilaisuus) => {
+            const tilaisuusCopy: Partial<VuorovaikutusTilaisuusInput> = { ...tilaisuus };
+            delete tilaisuusCopy.tyyppi;
+            delete tilaisuusCopy.alkamisAika;
+            delete tilaisuusCopy.osoite;
+            delete tilaisuusCopy.paattymisAika;
+            delete tilaisuusCopy.paivamaara;
+            delete tilaisuusCopy.postinumero;
+            delete tilaisuusCopy.paikka;
+            delete tilaisuusCopy.postitoimipaikka;
+            return tilaisuusCopy as VuorovaikutusTilaisuusPaivitysInput;
+          }),
+        });
+        await reloadProjekti();
+        showSuccessMessage(`Vuorovaikutustilaisuuksien päivittäminen onnistui`);
+      } catch (error) {
+        log.error(error);
+        showErrorMessage("Toiminnossa tapahtui virhe");
+      }
+      if (mounted) {
+        setMuokkausAuki(false);
+      }
+      () => (mounted = false);
+    },
+    [
+      aloituskuulutusjulkaisu,
+      projekti.oid,
+      reloadProjekti,
+      showErrorMessage,
+      showSuccessMessage,
+      vuorovaikutusKierrosjulkaisu,
+      vuorovaikutusnro,
+    ]
+  );
 
   if (!(aloituskuulutusjulkaisu && vuorovaikutusKierrosjulkaisu)) {
     return <></>;
@@ -62,7 +111,7 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
           windowHandler={(isOpen: boolean) => setMuokkausAuki(isOpen)}
           tilaisuudet={projekti.vuorovaikutusKierros?.vuorovaikutusTilaisuudet || []}
           projektiHenkilot={projektiHenkilot}
-          onSubmit={(formData: VuorovaikutustilaisuusFormValues) => console.log(formData)}
+          onSubmit={paivitaVuorovaikutustilaisuuksia}
           mostlyDisabled={true}
         />
       </Section>
