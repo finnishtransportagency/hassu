@@ -49,21 +49,19 @@
       "groupSlug": "all-minor-patch"
     },
     {
-      "description": "AppSync-tuki puuttuu cdkv2:sta, joten @sls-next/cdk-construct=3.6.0 => aws-cdk=1.132.0, next=11.1.2",
       "matchPackagePatterns": [
         "^@aws-cdk",
         "^aws-cdk"
       ],
-      "allowedVersions": "1.132.0",
       "groupName": "AWS CDK",
       "groupSlug": "aws-cdk"
     },
     {
-      "description": "AppSync-tuki puuttuu cdkv2:sta, joten @sls-next/cdk-construct=3.6.0 => aws-cdk=1.132.0, next=11.1.2",
+      "description": "@sls-next/cdk-construct=3.7.0 => next=11.1.2",
       "matchPackagePatterns": [
         "^@sls-next/cdk-construct"
       ],
-      "allowedVersions": "3.6.0",
+      "allowedVersions": "3.7.0",
       "groupName": "sls-next/cdk-construct"
     },
     {
@@ -89,7 +87,7 @@
       "matchPackageNames": [
         "localstack/localstack"
       ],
-      "allowedVersions": "0.14.1",
+      "allowedVersions": "1.3",
       "groupName": "localstack"
     }
   ]

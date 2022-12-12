@@ -3,6 +3,12 @@ version: 0.2
 env:
   parameter-store:
     SKIP_VELHO_TESTS: /SkipVelhoTests
+    ROCKET_CHAT_TOKEN: /RocketChatToken
+    ROCKET_CHAT_USER_ID: /RocketChatUserId
+    SONARQUBE_HOST_URL: /SonarQubeHostURL
+    SONARQUBE_ACCESS_TOKEN: /SonarQubeAccessToken
+  secrets-manager:
+    GITHUB_TOKEN: github-token
 
 phases:
   install:
@@ -20,12 +26,20 @@ phases:
       - npm run buildimage:generate
   build:
     commands:
-      - npm run lint&
+      - npm run get-next-version
+      - npm run lint
       - npm run localstack
       - npm run setupenvironment
       - npm run test
-      - npm run localstack:stop&
-      - npm run build
+      - npm run localstack:stop &
+      - npm run sonar
+      - npm run deploy:database
+      - npm run deploy:backend
+      - npm run deploy:frontend
+  post_build:
+    on-failure: ABORT
+    commands:
+      - ./deployment/bin/reportBuildStatus.sh -t "$ROCKET_CHAT_TOKEN" -u "$ROCKET_CHAT_USER_ID" -r "$CODEBUILD_BUILD_SUCCEEDING" -m "$ENVIRONMENT build" -d "CodeBuild $CODEBUILD_BUILD_URL"
 cache:
   paths:
     - "/root/.cache/**/*"

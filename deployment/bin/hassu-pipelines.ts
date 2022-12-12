@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { HassuPipelineStack } from "../lib/hassu-pipeline";
+import { HassuPipelineStack } from "../lib/hassu-pipelines";
 import { App } from "aws-cdk-lib";
 
 async function main() {

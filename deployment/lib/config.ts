@@ -35,7 +35,7 @@ export class Config extends BaseConfig {
   public static readonly yllapitoBucketName = `hassu-${Config.env}-yllapito`;
   public static readonly publicBucketName = `hassu-${Config.env}-public`;
   public static readonly archiveBucketName = `hassu-${Config.env}-archive`;
-  public static readonly reportBucketName = `hassu-report`;
+  public static readonly reportBucketName = `hassu-reports`;
   public readonly dmzProxyEndpoint: string;
   public frontendDomainName: string;
   public readonly cloudfrontCertificateArn?: string;
@@ -48,6 +48,7 @@ export class Config extends BaseConfig {
   public static readonly tags = { Environment: Config.env, Project: "Hassu" };
   private readonly scope: Construct;
   public static readonly isHotswap = process.env.HASSU_HOTSWAP == "true";
+  public static buildImageRepositoryName = "hassu-build-image";
 
   private constructor(scope: Construct) {
     super();

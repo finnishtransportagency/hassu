@@ -10,8 +10,8 @@
     "@types/aws-sdk": "2.7.0",
     "aws-cdk": "2.53.0",
     "aws-cdk-lib": "2.53.0",
-    "aws-sdk": "2.1219.0",
-    "aws-cdk-local": "2.15.0"
+    "aws-cdk-local": "2.15.0",
+    "aws-sdk": "2.1261.0"
   },
   "engines": {
     "node": ">=14.17.0",
