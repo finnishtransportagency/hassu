@@ -20,7 +20,6 @@ type Props = {
 };
 
 function getPageLink(router: NextRouter, pageNumber: number) {
-  router.pathname;
   const newQuery = { ...router.query, sivu: pageNumber.toString() };
   return `${router.pathname}?${new URLSearchParams(newQuery).toString()}`;
 }

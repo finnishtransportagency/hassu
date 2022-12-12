@@ -102,7 +102,6 @@ const CustomActionBar = (props: PickersActionBarProps) => {
   const showOKButton = !!actionArray?.includes("accept");
   const showCancelButton = !!actionArray?.includes("cancel");
   const localeText = useLocaleText();
-  localeText.okButtonLabel;
 
   if (!showCancelButton && !showOKButton) {
     return <></>;

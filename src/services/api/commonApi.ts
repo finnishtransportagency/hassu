@@ -53,9 +53,10 @@ export class API extends AbstractApi {
       if (
         errorResponse.graphQLErrors &&
         errorResponse.graphQLErrors.length === 1 &&
-        errorResponse.graphQLErrors[0].message === "HASSU_INFO"
+        errorResponse.graphQLErrors[0].message === "HASSU_INFO" &&
+        errorResponse.response?.errors
       ) {
-        delete errorResponse.response?.errors;
+        delete errorResponse.response.errors;
       }
     });
 
