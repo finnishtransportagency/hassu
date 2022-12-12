@@ -29,12 +29,13 @@ import { projektiArchive } from "../archive/projektiArchiveService";
 import { NotFoundError } from "../error/NotFoundError";
 import { projektiAdapterJulkinen } from "./adapter/projektiAdapterJulkinen";
 import { findUpdatedFields } from "../velho/velhoAdapter";
-import { DBProjekti } from "../database/model";
+import { DBProjekti, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu, VuorovaikutusTilaisuusJulkaisu } from "../database/model";
 import { aineistoService } from "../aineisto/aineistoService";
 import { ProjektiAdaptationResult, ProjektiEventType } from "./adapter/projektiAdaptationResult";
 import remove from "lodash/remove";
 import { validatePaivitaVuorovaikutus, validateTallennaProjekti } from "./projektiValidator";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
+import { adaptStandardiYhteystiedotInputToYhteystiedotToSave } from "./adapter/adaptToDB";
 
 export async function loadProjekti(oid: string): Promise<API.Projekti | API.ProjektiJulkinen> {
   const vaylaUser = getVaylaUser();
@@ -110,8 +111,11 @@ export async function createOrUpdateProjekti(input: TallennaProjektiInput): Prom
   return input.oid;
 }
 
-export async function updateVuorovaikutus(input: VuorovaikutusKierrosPaivitysInput): Promise<string> {
+export async function updateVuorovaikutus(input: VuorovaikutusKierrosPaivitysInput | null | undefined): Promise<string> {
   requirePermissionLuku();
+  if (!input) {
+    throw new IllegalArgumentError("input puuttuu!");
+  }
   const oid = input.oid;
   const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
   if (projektiInDB) {
@@ -121,8 +125,33 @@ export async function updateVuorovaikutus(input: VuorovaikutusKierrosPaivitysInp
     const vuorovaikutusTilaisuudet = input.vuorovaikutusTilaisuudet.map((tilaisuus, index) =>
       mergeWith(tilaisuus, projektiInDB.vuorovaikutusKierros?.vuorovaikutusTilaisuudet?.[index])
     );
-    // TODO
-    return "TODO";
+    const vuorovaikutusTilaisuusJulkaisut: VuorovaikutusTilaisuusJulkaisu[] = vuorovaikutusTilaisuudet.map((tilaisuus) => {
+      const id = tilaisuus.vuorovaikutusNumero;
+      delete tilaisuus.vuorovaikutusNumero;
+      const vuorovaikutusTilaisuusJulkaisu: VuorovaikutusTilaisuusJulkaisu = {
+        id,
+        ...tilaisuus,
+        yhteystiedot: adaptStandardiYhteystiedotInputToYhteystiedotToSave(projektiInDB, tilaisuus.standardiYhteystiedot),
+      };
+      return vuorovaikutusTilaisuusJulkaisu;
+    });
+    const vuorovaikutusKierros = {
+      ...(projektiInDB.vuorovaikutusKierros as VuorovaikutusKierros),
+      vuorovaikutusTilaisuudet,
+    };
+    const vuorovaikutusKierrosJulkaisut: VuorovaikutusKierrosJulkaisu[] = [
+      ...(projektiInDB.vuorovaikutusKierrosJulkaisut as VuorovaikutusKierrosJulkaisu[]),
+    ];
+    vuorovaikutusKierrosJulkaisut[input.vuorovaikutusNumero] = {
+      ...vuorovaikutusKierrosJulkaisut[input.vuorovaikutusNumero],
+      vuorovaikutusTilaisuudet: vuorovaikutusTilaisuusJulkaisut,
+    };
+    await projektiDatabase.saveProjekti({
+      oid: input.oid,
+      vuorovaikutusKierros,
+      vuorovaikutusKierrosJulkaisut,
+    });
+    return input.oid;
   } else {
     throw new IllegalArgumentError("Projektia ei ole olemassa");
   }
