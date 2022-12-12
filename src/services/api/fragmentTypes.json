@@ -710,6 +710,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "VuorovaikutusKierrosPaivitysInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "ENUM",
         "name": "VuorovaikutusKierrosTila",
         "possibleTypes": null,

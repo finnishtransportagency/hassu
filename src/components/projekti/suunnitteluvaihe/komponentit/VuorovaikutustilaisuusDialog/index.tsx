@@ -13,7 +13,14 @@ import TextInput from "@components/form/TextInput";
 import Select from "@components/form/Select";
 import HassuGrid from "@components/HassuGrid";
 import TimePicker from "@components/form/TimePicker";
-import { KaytettavaPalvelu, VuorovaikutusTilaisuusInput, VuorovaikutusTilaisuusTyyppi, Yhteystieto } from "@services/api";
+import {
+  KaytettavaPalvelu,
+  VuorovaikutusTilaisuus,
+  VuorovaikutusTilaisuusInput,
+  VuorovaikutusTilaisuusTyyppi,
+  Yhteystieto,
+  YhteystietoInput,
+} from "@services/api";
 import capitalize from "lodash/capitalize";
 import { Controller, FormProvider, useFieldArray, useForm, useFormContext, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -53,10 +60,29 @@ export type VuorovaikutustilaisuusFormValues = {
   vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[];
 };
 
+function tilaisuudetInputiksi(tilaisuudet: VuorovaikutusTilaisuusInput[] | VuorovaikutusTilaisuus[]) {
+  return tilaisuudet.map((tilaisuus) => {
+    const tilaisuusCopy: Partial<VuorovaikutusTilaisuusInput | VuorovaikutusTilaisuus> = { ...tilaisuus };
+    delete (tilaisuusCopy as Partial<VuorovaikutusTilaisuus>).__typename;
+    return {
+      ...tilaisuusCopy,
+      esitettavatYhteystiedot: {
+        yhteysHenkilot: tilaisuus.esitettavatYhteystiedot?.yhteysHenkilot || [],
+        yhteysTiedot:
+          tilaisuus.esitettavatYhteystiedot?.yhteysTiedot?.map((yhteystieto) => {
+            const yhteystietoCopy: Partial<YhteystietoInput | Yhteystieto> = { ...yhteystieto };
+            delete (yhteystietoCopy as Partial<Yhteystieto>).__typename;
+            return yhteystietoCopy;
+          }) || [],
+      },
+    };
+  });
+}
+
 interface Props {
   open: boolean;
   windowHandler: (isOpen: boolean) => void;
-  tilaisuudet: VuorovaikutusTilaisuusInput[];
+  tilaisuudet: VuorovaikutusTilaisuusInput[] | VuorovaikutusTilaisuus[];
   projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[];
   onSubmit: (formData: VuorovaikutustilaisuusFormValues) => void;
   mostlyDisabled?: boolean;
@@ -78,13 +104,7 @@ export default function VuorovaikutusDialog({
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues: {
-      vuorovaikutusTilaisuudet: tilaisuudet.map((tilaisuus) => ({
-        ...tilaisuus,
-        esitettavatYhteystiedot: {
-          yhteysHenkilot: tilaisuus.esitettavatYhteystiedot?.yhteysHenkilot || [],
-          yhteysTiedot: tilaisuus.esitettavatYhteystiedot?.yhteysTiedot || [],
-        },
-      })),
+      vuorovaikutusTilaisuudet: tilaisuudetInputiksi(tilaisuudet),
     },
   };
 
@@ -107,13 +127,7 @@ export default function VuorovaikutusDialog({
   useEffect(() => {
     if (tilaisuudet) {
       reset({
-        vuorovaikutusTilaisuudet: tilaisuudet.map((tilaisuus) => ({
-          ...tilaisuus,
-          esitettavatYhteystiedot: {
-            yhteysHenkilot: tilaisuus.esitettavatYhteystiedot?.yhteysHenkilot || [],
-            yhteysTiedot: tilaisuus.esitettavatYhteystiedot?.yhteysTiedot || [],
-          },
-        })),
+        vuorovaikutusTilaisuudet: tilaisuudetInputiksi(tilaisuudet),
       });
     }
   }, [tilaisuudet, reset]);
