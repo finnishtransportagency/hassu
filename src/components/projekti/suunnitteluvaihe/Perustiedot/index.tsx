@@ -2,7 +2,15 @@ import { Controller, FormProvider, useForm, UseFormProps } from "react-hook-form
 import { yupResolver } from "@hookform/resolvers/yup";
 import { suunnittelunPerustiedotSchema } from "src/schemas/suunnittelunPerustiedot";
 import SectionContent from "@components/layout/SectionContent";
-import { LinkkiInput, TallennaProjektiInput, VuorovaikutusKierrosInput, VuorovaikutusKierrosTila, Yhteystieto } from "@services/api";
+import {
+  LinkkiInput,
+  LokalisoituTekstiInput,
+  TallennaProjektiInput,
+  VuorovaikutusKierrosInput,
+  VuorovaikutusKierrosTila,
+  VuorovaikutusPerustiedotInput,
+  Yhteystieto,
+} from "@services/api";
 import Section from "@components/layout/Section";
 import { ReactElement, useMemo, useState, Fragment, useCallback } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
@@ -139,6 +147,31 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     [reloadProjekti, reset]
   );
 
+  const updateSuunnitteluvaihe = useCallback(
+    async (formData: SuunnittelunPerustiedotFormValues) => {
+      const partialFormData: VuorovaikutusPerustiedotInput = {
+        oid: projekti.oid,
+        vuorovaikutusKierros: {
+          vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0,
+          arvioSeuraavanVaiheenAlkamisesta: formData.vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta || "",
+          kysymyksetJaPalautteetViimeistaan: formData.vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan || Date.now().toString(),
+          suunnittelunEteneminenJaKesto: formData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto,
+          palautteidenVastaanottajat: formData.vuorovaikutusKierros.palautteidenVastaanottajat,
+          esittelyaineistot: formData.vuorovaikutusKierros.esittelyaineistot,
+          suunnitelmaluonnokset: formData.vuorovaikutusKierros.suunnitelmaluonnokset,
+          videot: formData.vuorovaikutusKierros.videot,
+          suunnittelumateriaali: formData.vuorovaikutusKierros.suunnittelumateriaali,
+        },
+      };
+      await api.paivitaPerustiedot(partialFormData);
+      if (reloadProjekti) {
+        await reloadProjekti();
+      }
+      reset(formData);
+    },
+    [projekti.oid, projekti.vuorovaikutusKierros?.vuorovaikutusNumero, reloadProjekti, reset]
+  );
+
   const saveDraft = useCallback(
     async (formData: SuunnittelunPerustiedotFormValues) => {
       setIsFormSubmitting(true);
@@ -152,6 +185,21 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       setIsFormSubmitting(false);
     },
     [saveSuunnitteluvaihe, showErrorMessage, showSuccessMessage]
+  );
+
+  const saveAfterPublish = useCallback(
+    async (formData: SuunnittelunPerustiedotFormValues) => {
+      setIsFormSubmitting(true);
+      try {
+        await updateSuunnitteluvaihe(formData);
+        showSuccessMessage("Julkaisu onnistui!");
+      } catch (e) {
+        log.error("OnSubmit Error", e);
+        showErrorMessage("Tallennuksessa tapahtui virhe");
+      }
+      setIsFormSubmitting(false);
+    },
+    [updateSuunnitteluvaihe, showErrorMessage, showSuccessMessage]
   );
 
   const julkinen = projekti.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN;
@@ -260,20 +308,16 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       </FormProvider>
 
       {projekti && <SaapuneetKysymyksetJaPalautteet projekti={projekti} />}
-      <HassuDialog open={openHyvaksy} title="Suunnitteluvaiheen perustietojen julkaisu" onClose={() => setOpenHyvaksy(false)}>
+      <HassuDialog open={openHyvaksy} title="Suunnitteluvaiheen perustietojen päivitys" onClose={() => setOpenHyvaksy(false)}>
         <form style={{ display: "contents" }}>
           <DialogContent>
-            <p>Olet julkaisemassa suunnitteluvaiheen perustiedot kansalaispuolelle.</p>
+            <p>Olet päivittämässä suunnitteluvaiheen perustietoja kansalaispuolelle.</p>
             <div className="content">
-              <p>
-                Jos perustietoihin pitää tehdä muutoksia julkaisun jälkeen, tulee perustiedot avata uudelleen ja tehdä tallennus ja
-                julkaisun päivitys.
-              </p>
-              <p>Klikkaamalla Hyväksy ja julkaise -painiketta vahvistat perustiedot tarkastetuksi ja hyväksyt sen julkaisun.</p>
+              <p>Klikkaamalla Hyväksy ja julkaise -painiketta vahvistat perustiedot tarkastetuksi ja hyväksyt niiden julkaisun.</p>
             </div>
           </DialogContent>
           <DialogActions>
-            <Button primary id="accept_publish" onClick={handleSubmit(saveDraft)}>
+            <Button primary id="accept_publish" onClick={handleSubmit(saveAfterPublish)}>
               Hyväksy ja julkaise
             </Button>
             <Button
