@@ -458,6 +458,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "PerustiedotInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "OBJECT",
         "name": "Projekti",
         "possibleTypes": null,
@@ -710,14 +716,14 @@
         "__typename": "__Type"
       },
       {
-        "kind": "INPUT_OBJECT",
-        "name": "VuorovaikutusKierrosPaivitysInput",
+        "kind": "ENUM",
+        "name": "VuorovaikutusKierrosTila",
         "possibleTypes": null,
         "__typename": "__Type"
       },
       {
-        "kind": "ENUM",
-        "name": "VuorovaikutusKierrosTila",
+        "kind": "INPUT_OBJECT",
+        "name": "VuorovaikutusPaivitysInput",
         "possibleTypes": null,
         "__typename": "__Type"
       },
@@ -730,6 +736,12 @@
       {
         "kind": "OBJECT",
         "name": "VuorovaikutusPDFt",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "VuorovaikutusPerustiedotInput",
         "possibleTypes": null,
         "__typename": "__Type"
       },

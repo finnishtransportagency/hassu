@@ -108,7 +108,7 @@ input VuorovaikutusKierrosInput {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
 }
 
-input VuorovaikutusKierrosPaivitysInput {
+input VuorovaikutusPaivitysInput {
   oid: String!
   vuorovaikutusNumero: Int!
   vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusPaivitysInput!]!
@@ -138,6 +138,29 @@ input VuorovaikutusTilaisuusInput {
   Saapumisohjeet: String
   esitettavatYhteystiedot: StandardiYhteystiedotInput
   peruttu: Boolean
+}
+
+input VuorovaikutusPerustiedotInput {
+  oid: String!
+  vuorovaikutusKierros: PerustiedotInput!
+}
+
+input PerustiedotInput {
+  vuorovaikutusNumero: Int!
+  arvioSeuraavanVaiheenAlkamisesta: String!
+  suunnittelunEteneminenJaKesto: String
+  """
+  Palautteiden vastaanottajat. Lista kayttajatunnuksia
+  """
+  palautteidenVastaanottajat: [String!]
+  """
+  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
+  """
+  kysymyksetJaPalautteetViimeistaan: String!
+  esittelyaineistot: [AineistoInput!]
+  suunnitelmaluonnokset: [AineistoInput!]
+  videot: [LinkkiInput!]
+  suunnittelumateriaali: LinkkiInput
 }
 
 input VuorovaikutusTilaisuusPaivitysInput {

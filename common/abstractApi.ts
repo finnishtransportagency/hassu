@@ -26,6 +26,7 @@ import {
   MuistutusInput,
   NykyinenKayttaja,
   OtaPalauteKasittelyynMutationVariables,
+  PaivitaPerustietojaMutationVariables,
   PaivitaVuorovaikutustaMutationVariables,
   Palaute,
   PalauteInput,
@@ -43,7 +44,8 @@ import {
   Velho,
   VelhoAineistoKategoria,
   VelhoHakuTulos,
-  VuorovaikutusKierrosPaivitysInput,
+  VuorovaikutusPaivitysInput,
+  VuorovaikutusPerustiedotInput,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -120,6 +122,11 @@ export const apiConfig: ApiConfig = {
     name: "paivitaVuorovaikutusta",
     operationType: OperationType.Mutation,
     graphql: mutations.paivitaVuorovaikutusta,
+  },
+  paivitaPerustietoja: {
+    name: "paivitaPerustietoja",
+    operationType: OperationType.Mutation,
+    graphql: mutations.paivitaPerustietoja,
   },
   arkistoiProjekti: {
     name: "arkistoiProjekti",
@@ -283,10 +290,16 @@ export abstract class AbstractApi {
     } as SiirraTilaMutationVariables);
   }
 
-  async paivitaVuorovaikutusta(input: VuorovaikutusKierrosPaivitysInput): Promise<string> {
+  async paivitaVuorovaikutusta(input: VuorovaikutusPaivitysInput): Promise<string> {
     return await this.callYllapitoAPI(apiConfig.paivitaVuorovaikutusta, {
       input,
     } as PaivitaVuorovaikutustaMutationVariables);
+  }
+
+  async paivitaPerustiedot(input: VuorovaikutusPerustiedotInput): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.paivitaPerustietoja, {
+      input,
+    } as PaivitaPerustietojaMutationVariables);
   }
 
   async lisaaPalaute(oid: string, palaute: PalauteInput): Promise<string> {
