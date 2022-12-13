@@ -180,7 +180,7 @@ const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoria
                   <ExtLink href={aineisto.tiedosto!} target="_blank" rel="noreferrer">
                     {aineisto.nimi}{" "}
                     <span className="ml-2 text-black">
-                      ({aineisto.nimi.split(".").pop()})
+                      ({aineisto.nimi.split(".").pop()}){" "}
                       {props.julkaisuPaiva ? formatDate(props.julkaisuPaiva) : aineisto.tuotu && formatDate(aineisto.tuotu)}
                     </span>
                   </ExtLink>
