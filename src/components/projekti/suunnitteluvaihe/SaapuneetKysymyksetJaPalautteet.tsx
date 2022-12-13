@@ -1,5 +1,5 @@
 import { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
-import { api, Palaute, Projekti } from "@services/api";
+import { Palaute, Projekti } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuTable from "@components/HassuTable";
@@ -10,6 +10,8 @@ import dayjs from "dayjs";
 import { Link } from "@mui/material";
 import ButtonLink from "@components/button/ButtonLink";
 import { useHassuTable } from "src/hooks/useHassuTable";
+import useApi from "src/hooks/useApi";
+
 interface Props {
   projekti: Projekti;
 }
@@ -17,10 +19,12 @@ interface Props {
 export default function SaapuneetKysymyksetJaPalautteet({ projekti }: Props): ReactElement {
   const [palautteet, setPalautteet] = useState<Palaute[]>();
 
+  const api = useApi();
+
   const paivitaPalautteet = useCallback(async () => {
     const palauteLista = await api.listaaPalautteet(projekti.oid);
     setPalautteet(palauteLista);
-  }, [projekti.oid]);
+  }, [api, projekti.oid]);
 
   useEffect(() => {
     paivitaPalautteet();
@@ -117,6 +121,7 @@ interface KasittelePalauteCheckboxProps {
 function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: KasittelePalauteCheckboxProps): ReactElement {
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const api = useApi();
 
   const merkitseKasittelyynOtetuksi = useCallback(async () => {
     setIsSubmitting(true);
@@ -130,7 +135,7 @@ function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: Kasittele
     setIsSubmitting(false);
     if (paivitaPalautteet) paivitaPalautteet();
     showSuccessMessage("Palaute merkitty käsiteltäväksi.");
-  }, [paivitaPalautteet, showSuccessMessage, oid, palaute.id, showErrorMessage]);
+  }, [paivitaPalautteet, showSuccessMessage, api, oid, palaute.id, showErrorMessage]);
 
   return (
     <>

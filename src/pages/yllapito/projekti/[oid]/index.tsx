@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback, useMemo } from "react";
 import log from "loglevel";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import { api, Status, TallennaProjektiInput } from "@services/api";
+import { Status, TallennaProjektiInput } from "@services/api";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, FormProvider, useForm, UseFormProps } from "react-hook-form";
 import Button from "@components/button/Button";
@@ -31,6 +31,7 @@ import { KeyedMutator } from "swr";
 import ProjektinTiedotLukutila from "@components/projekti/lukutila/ProjektinTiedotLukutila";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import PaivitaVelhoTiedotButton from "@components/projekti/PaivitaVelhoTiedotButton";
+import useApi from "src/hooks/useApi";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -145,16 +146,21 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
 
   useLeaveConfirm(isDirty);
 
-  const talletaLogo = useCallback(async (logoTiedosto: File) => {
-    const contentType = (logoTiedosto as Blob).type || "application/octet-stream";
-    const response = await api.valmisteleTiedostonLataus(logoTiedosto.name, contentType);
-    await axios.put(response.latausLinkki, logoTiedosto, {
-      headers: {
-        "Content-Type": contentType,
-      },
-    });
-    return response.tiedostoPolku;
-  }, []);
+  const api = useApi();
+
+  const talletaLogo = useCallback(
+    async (logoTiedosto: File) => {
+      const contentType = (logoTiedosto as Blob).type || "application/octet-stream";
+      const response = await api.valmisteleTiedostonLataus(logoTiedosto.name, contentType);
+      await axios.put(response.latausLinkki, logoTiedosto, {
+        headers: {
+          "Content-Type": contentType,
+        },
+      });
+      return response.tiedostoPolku;
+    },
+    [api]
+  );
 
   const onSubmit = useCallback(
     async (data: FormValues) => {
@@ -182,7 +188,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
       }
       setFormIsSubmitting(false);
     },
-    [reset, projekti?.status, reloadProjekti, showSuccessMessage, talletaLogo, showErrorMessage]
+    [projekti?.status, api, reloadProjekti, reset, showSuccessMessage, talletaLogo, showErrorMessage]
   );
 
   useEffect(() => {

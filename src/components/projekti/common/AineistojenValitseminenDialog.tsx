@@ -3,7 +3,7 @@ import Button from "@components/button/Button";
 import HassuDialog from "@components/HassuDialog";
 import { DialogActions, DialogContent, Divider, Stack } from "@mui/material";
 import HassuAccordion from "@components/HassuAccordion";
-import { AineistoInput, api, VelhoAineisto, VelhoAineistoKategoria } from "@services/api";
+import { AineistoInput, VelhoAineisto, VelhoAineistoKategoria } from "@services/api";
 import { useProjekti } from "src/hooks/useProjekti";
 import { formatDateTime } from "src/util/dateUtils";
 import HassuSpinner from "@components/HassuSpinner";
@@ -14,6 +14,7 @@ import { useHassuTable } from "src/hooks/useHassuTable";
 import { Column } from "react-table";
 import { useForm } from "react-hook-form";
 import VelhoAineistoNimiExtLink from "../VelhoAineistoNimiExtLink";
+import useApi from "src/hooks/useApi";
 
 interface FormData {
   aineistoKategoriat: VelhoAineistoKategoria[];
@@ -33,6 +34,7 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
   const [fetchedAineistoKategoriat, setFetchedAineistoKategoriat] = useState<VelhoAineistoKategoria[]>();
 
   const { setValue, watch, handleSubmit, getValues } = useForm<FormData>(useFormOptions);
+  const api = useApi();
 
   useEffect(() => {
     if (projekti && open) {
@@ -44,7 +46,7 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
       };
       haeAineistotDialogiin();
     }
-  }, [projekti, setFetchedAineistoKategoriat, open]);
+  }, [projekti, setFetchedAineistoKategoriat, open, api]);
 
   const aineistoKategoriatWatch = watch("aineistoKategoriat");
 

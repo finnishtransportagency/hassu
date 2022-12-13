@@ -2,7 +2,7 @@ import Button from "@components/button/Button";
 import HassuSpinner from "@components/HassuSpinner";
 import Section from "@components/layout/Section";
 import { Stack } from "@mui/material";
-import { api, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu, MuokkausTila, Status } from "@services/api";
+import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu, MuokkausTila, Status } from "@services/api";
 import log from "loglevel";
 import { useRouter } from "next/router";
 import React, { useState, useCallback, useRef, useEffect } from "react";
@@ -16,6 +16,7 @@ import Modaalit from "./Modaalit";
 import { projektiMeetsMinimumStatus } from "src/hooks/useIsOnAllowedProjektiRoute";
 import { paatosSpecificTilasiirtymaTyyppiMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import { convertFormDataToTallennaProjektiInput } from "./KuulutuksenJaIlmoituksenEsikatselu";
+import useApi from "src/hooks/useApi";
 
 type PalautusValues = {
   syy: string;
@@ -46,13 +47,15 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
 
   const { handleSubmit, reset } = useFormContext<KuulutuksenTiedotFormValues>();
 
+  const api = useApi();
+
   const saveHyvaksymisPaatosVaihe = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
       await api.tallennaProjekti(convertFormDataToTallennaProjektiInput(formData, paatosTyyppi));
       if (reloadProjekti) await reloadProjekti();
       reset(formData);
     },
-    [paatosTyyppi, reloadProjekti, reset]
+    [api, paatosTyyppi, reloadProjekti, reset]
   );
 
   const saveDraft = async (formData: KuulutuksenTiedotFormValues) => {
@@ -89,7 +92,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
         setOpenHyvaksy(false);
       }
     },
-    [projekti, paatosTyyppi, reloadProjekti, showSuccessMessage, showErrorMessage]
+    [projekti, api, paatosTyyppi, reloadProjekti, showSuccessMessage, showErrorMessage]
   );
 
   const lahetaHyvaksyttavaksi = useCallback(

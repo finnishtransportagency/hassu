@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { SchemaOf } from "yup";
 
-import { api, VelhoHakuTulos } from "@services/api";
+import { VelhoHakuTulos } from "@services/api";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/router";
 import TextInput from "@components/form/TextInput";
@@ -16,6 +16,7 @@ import { useHassuTable } from "src/hooks/useHassuTable";
 import { Column } from "react-table";
 import useTranslation from "next-translate/useTranslation";
 import HassuTable from "@components/HassuTable";
+import useApi from "src/hooks/useApi";
 
 interface SearchInput {
   name: string;
@@ -62,6 +63,8 @@ export default function Perusta(props: Props) {
     reset,
   } = useForm<SearchInput>(formOptions);
 
+  const api = useApi();
+
   const onSubmit = useCallback(
     async (data: SearchInput) => {
       if (router.query[PROJEKTI_NIMI_PARAM] !== data.name) {
@@ -85,7 +88,7 @@ export default function Perusta(props: Props) {
       }
       setIsLoading(false);
     },
-    [router]
+    [api, router]
   );
 
   useEffect(() => {

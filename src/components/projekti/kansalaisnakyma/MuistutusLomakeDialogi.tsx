@@ -7,7 +7,7 @@ import HassuGrid from "@components/HassuGrid";
 import { FormProvider, useForm, UseFormProps, Controller, FieldError } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useTranslation from "next-translate/useTranslation";
-import { ProjektiJulkinen, api, NahtavillaoloVaiheJulkaisuJulkinen, MuistutusInput, Viranomainen } from "@services/api";
+import { ProjektiJulkinen, NahtavillaoloVaiheJulkaisuJulkinen, MuistutusInput, Viranomainen } from "@services/api";
 import { formatDate, formatDateTime } from "src/util/dateUtils";
 import TextInput from "@components/form/TextInput";
 import Textarea from "@components/form/Textarea";
@@ -20,6 +20,7 @@ import log from "loglevel";
 import Section from "@components/layout/Section";
 import { muistutusSchema } from "src/schemas/nahtavillaoloMuistutus";
 import getAsiatunnus from "src/util/getAsiatunnus";
+import useApi from "src/hooks/useApi";
 
 interface Props {
   open: boolean;
@@ -69,16 +70,21 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
     reset,
   } = useFormReturn;
 
-  const talletaTiedosto = useCallback(async (tiedosto: File) => {
-    const contentType = (tiedosto as Blob).type || "application/octet-stream";
-    const response = await api.valmisteleTiedostonLataus(tiedosto.name, contentType);
-    await axios.put(response.latausLinkki, tiedosto, {
-      headers: {
-        "Content-Type": contentType,
-      },
-    });
-    return response.tiedostoPolku;
-  }, []);
+  const api = useApi();
+
+  const talletaTiedosto = useCallback(
+    async (tiedosto: File) => {
+      const contentType = (tiedosto as Blob).type || "application/octet-stream";
+      const response = await api.valmisteleTiedostonLataus(tiedosto.name, contentType);
+      await axios.put(response.latausLinkki, tiedosto, {
+        headers: {
+          "Content-Type": contentType,
+        },
+      });
+      return response.tiedostoPolku;
+    },
+    [api]
+  );
 
   const save = useCallback(
     async (formData: MuistutusFormInput) => {
@@ -102,7 +108,7 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
       }
       setFormIsSubmitting(false);
     },
-    [talletaTiedosto, projekti, onClose, showErrorMessage, showSuccessMessage, reset, t, tiedosto]
+    [tiedosto, api, projekti.oid, showSuccessMessage, t, onClose, reset, talletaTiedosto, showErrorMessage]
   );
 
   return (
@@ -128,18 +134,14 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
                       label={t("common:etunimi")}
                       {...register("etunimi")}
                       error={
-                        errors?.etunimi?.message
-                          ? ({ message: t(`common:virheet.${errors.etunimi.message}`) } as FieldError)
-                          : undefined
+                        errors?.etunimi?.message ? ({ message: t(`common:virheet.${errors.etunimi.message}`) } as FieldError) : undefined
                       }
                     />
                     <TextInput
                       label={t("common:sukunimi")}
                       {...register("sukunimi")}
                       error={
-                        errors?.sukunimi?.message
-                          ? ({ message: t(`common:virheet.${errors.sukunimi.message}`) } as FieldError)
-                          : undefined
+                        errors?.sukunimi?.message ? ({ message: t(`common:virheet.${errors.sukunimi.message}`) } as FieldError) : undefined
                       }
                     />
                     <TextInput
@@ -199,9 +201,7 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
                 label={`${t("projekti:muistutuslomake.muistutus")} *`}
                 {...register("muistutus")}
                 error={
-                  errors?.muistutus?.message
-                    ? ({ message: t(`common:virheet.${errors.muistutus.message}`) } as FieldError)
-                    : undefined
+                  errors?.muistutus?.message ? ({ message: t(`common:virheet.${errors.muistutus.message}`) } as FieldError) : undefined
                 }
               />
 
@@ -303,13 +303,7 @@ interface KiitosProps {
 export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo }: KiitosProps): ReactElement {
   const { t } = useTranslation();
   return (
-    <HassuDialog
-      scroll="body"
-      open={open}
-      title={t("projekti:muistutuslomake.kiitos_viestista")}
-      onClose={onClose}
-      maxWidth={"sm"}
-    >
+    <HassuDialog scroll="body" open={open} title={t("projekti:muistutuslomake.kiitos_viestista")} onClose={onClose} maxWidth={"sm"}>
       <DialogContent>
         <p>
           {t("projekti:muistutuslomake.olemme_vastaanottaneet_viestisi", {

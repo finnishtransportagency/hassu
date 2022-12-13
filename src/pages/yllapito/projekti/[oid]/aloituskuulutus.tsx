@@ -10,7 +10,6 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import {
   AloitusKuulutusInput,
   KuulutusJulkaisuTila,
-  api,
   AsiakirjaTyyppi,
   Kieli,
   Kielitiedot,
@@ -50,6 +49,7 @@ import { kuntametadata } from "../../../../../common/kuntametadata";
 import UudelleenkuulutaButton from "@components/projekti/UudelleenkuulutaButton";
 import { getDefaultValuesForLokalisoituText, getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForLokalisoituText";
 import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
+import useApi from "src/hooks/useApi";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -186,6 +186,8 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     formState: { errors: errors2 },
   } = useForm<PalautusValues>({ defaultValues: { syy: "" } });
 
+  const api = useApi();
+
   const saveAloituskuulutus = useCallback(
     async (formData: FormValues) => {
       deleteFieldArrayIds(formData?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot);
@@ -197,7 +199,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       await reloadProjekti();
       reset(formData);
     },
-    [reset, reloadProjekti]
+    [api, reloadProjekti, reset]
   );
 
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
@@ -234,7 +236,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       setIsFormSubmitting(false);
       setOpen(false);
     },
-    [setIsFormSubmitting, reloadProjekti, showSuccessMessage, showErrorMessage, setOpen, projekti]
+    [projekti, api, reloadProjekti, showSuccessMessage, showErrorMessage]
   );
 
   const lahetaHyvaksyttavaksi = useCallback(
@@ -308,7 +310,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
         log.error("Päättymispäivän laskennassa virhe", error);
       }
     },
-    [setValue, showErrorMessage]
+    [api, setValue, showErrorMessage]
   );
 
   const kielitiedot: Kielitiedot | null | undefined = projekti?.kielitiedot;

@@ -1,5 +1,5 @@
 import React, { ReactElement, useCallback, useState, useMemo, useEffect } from "react";
-import { api, HyvaksymispaatosInput, Status, TallennaProjektiInput } from "@services/api";
+import { HyvaksymispaatosInput, Status, TallennaProjektiInput } from "@services/api";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
 import { Controller, useForm, UseFormProps } from "react-hook-form";
@@ -30,6 +30,7 @@ import Select from "@components/form/Select";
 import { suunnitelmanTilat } from "common/generated/kasittelynTila";
 import CheckBox from "@components/form/CheckBox";
 import Textarea from "@components/form/Textarea";
+import useApi from "src/hooks/useApi";
 
 type FormValues = Pick<TallennaProjektiInput, "oid" | "kasittelynTila">;
 
@@ -151,6 +152,8 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
 
   useLeaveConfirm(isDirty);
 
+  const api = useApi();
+
   const onSubmit = useCallback(
     async (data: FormValues) => {
       setIsFormSubmitting(true);
@@ -181,7 +184,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
       }
       setIsFormSubmitting(false);
     },
-    [isValituksia, reloadProjekti, reset, showErrorMessage, showSuccessMessage]
+    [api, isValituksia, reloadProjekti, reset, showErrorMessage, showSuccessMessage]
   );
 
   const avaaJatkopaatos = useCallback(

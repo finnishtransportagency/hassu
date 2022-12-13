@@ -4,16 +4,19 @@ import React, { useCallback } from "react";
 import { useFormContext } from "react-hook-form";
 import dayjs from "dayjs";
 import log from "loglevel";
-import { api, LaskuriTyyppi } from "@services/api";
+import { LaskuriTyyppi } from "@services/api";
 import useSnackbars from "src/hooks/useSnackbars";
 import HassuGrid from "@components/HassuGrid";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { KuulutuksenTiedotFormValues } from "@components/projekti/paatos/kuulutuksenTiedot/index";
+import useApi from "src/hooks/useApi";
 
 export default function KuulutusJaJulkaisuPaiva() {
   const { setValue, control } = useFormContext<KuulutuksenTiedotFormValues>();
 
   const { showErrorMessage } = useSnackbars();
+
+  const api = useApi();
 
   const getPaattymispaiva = useCallback(
     async (value: string) => {
@@ -25,7 +28,7 @@ export default function KuulutusJaJulkaisuPaiva() {
         log.error("Kuulutusvaiheen päättymispäivän laskennassa virhe", error);
       }
     },
-    [setValue, showErrorMessage]
+    [api, setValue, showErrorMessage]
   );
 
   return (

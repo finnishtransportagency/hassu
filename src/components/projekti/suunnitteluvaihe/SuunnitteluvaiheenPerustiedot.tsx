@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { maxHankkeenkuvausLength, suunnittelunPerustiedotSchema } from "src/schemas/suunnittelunPerustiedot";
 import SectionContent from "@components/layout/SectionContent";
 import Textarea from "@components/form/Textarea";
-import { KuulutusJulkaisuTila, api, Kieli, SuunnitteluVaiheInput, SuunnitteluVaiheTila, TallennaProjektiInput } from "@services/api";
+import { KuulutusJulkaisuTila, Kieli, SuunnitteluVaiheInput, SuunnitteluVaiheTila, TallennaProjektiInput } from "@services/api";
 import Section from "@components/layout/Section";
 import lowerCase from "lodash/lowerCase";
 import { ReactElement, useMemo, useState } from "react";
@@ -20,6 +20,7 @@ import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
 import { pickBy } from "lodash";
+import useApi from "src/hooks/useApi";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -139,6 +140,8 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     }
     setIsFormSubmitting(false);
   };
+
+  const api = useApi();
 
   const saveSuunnitteluvaihe = async (formData: FormValues) => {
     await api.tallennaProjekti(formData);

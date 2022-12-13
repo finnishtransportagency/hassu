@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { api, Kieli, ProjektiHakutulosJulkinen } from "@services/api";
+import { Kieli, ProjektiHakutulosJulkinen } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 import Hakulomake from "@components/kansalaisenEtusivu/Hakulomake";
 import Hakutulokset from "@components/kansalaisenEtusivu/Hakutulokset";
@@ -10,6 +10,7 @@ import Sivutus from "@components/kansalaisenEtusivu/Sivutus";
 import { useRouter } from "next/router";
 import { SelectOption } from "@components/form/Select";
 import { kuntametadata } from "../../common/kuntametadata";
+import useApi from "src/hooks/useApi";
 
 const SIVUN_KOKO = 10;
 
@@ -49,6 +50,8 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
     return Math.ceil((hakutulos?.hakutulosMaara || 0) / SIVUN_KOKO);
   }, [hakutulos]);
 
+  const api = useApi();
+
   useEffect(() => {
     async function fetchProjektit() {
       try {
@@ -79,7 +82,7 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
     }
 
     fetchProjektit();
-  }, [setLadataan, setHakutulos, sivu, vapaasanahaku, kunta, maakunta, vaylamuoto, maakuntaOptions, kuntaOptions]);
+  }, [setLadataan, setHakutulos, sivu, vapaasanahaku, kunta, maakunta, vaylamuoto, maakuntaOptions, kuntaOptions, api]);
 
   return (
     <Grid container rowSpacing={4} columnSpacing={4}>

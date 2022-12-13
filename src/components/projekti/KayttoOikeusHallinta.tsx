@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Controller, FieldArrayWithId, useFieldArray, UseFieldArrayRemove, useFormContext } from "react-hook-form";
-import { api, Kayttaja, KayttajaTyyppi, ProjektiKayttaja, ProjektiKayttajaInput, TallennaProjektiInput } from "@services/api";
+import { Kayttaja, KayttajaTyyppi, ProjektiKayttaja, ProjektiKayttajaInput, TallennaProjektiInput } from "@services/api";
 import Button from "@components/button/Button";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
 import Section from "@components/layout/Section2";
@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import HassuGrid from "@components/HassuGrid";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { formatNimi } from "../../util/userUtil";
+import useApi from "src/hooks/useApi";
 
 // Extend TallennaProjektiInput by making the field nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "kayttoOikeudet">;
@@ -38,8 +39,18 @@ export const defaultKayttaja: ProjektiKayttajaInput = {
 
 function KayttoOikeusHallinta(props: Props) {
   const [initialKayttajat, setInitialKayttajat] = useState<Kayttaja[]>();
+  const api = useApi();
+
   useEffect(() => {
     let mounted = true;
+    async function loadKayttajat(kayttajat: string[]): Promise<Kayttaja[]> {
+      if (kayttajat.length === 0) {
+        return [];
+      }
+      return await api.listUsers({
+        kayttajatunnus: kayttajat,
+      });
+    }
     const getInitialKayttajat = async () => {
       const kayttajat = await loadKayttajat(props.projektiKayttajat.map((kayttaja) => kayttaja.kayttajatunnus));
       if (mounted) {
@@ -50,7 +61,7 @@ function KayttoOikeusHallinta(props: Props) {
     return () => {
       mounted = false;
     };
-  }, [props.projektiKayttajat]);
+  }, [api, props.projektiKayttajat]);
 
   if (!initialKayttajat) {
     return <></>;
@@ -191,6 +202,8 @@ const UserFields = ({
     setKayttaja(initialKayttaja);
   }, [initialKayttaja]);
 
+  const api = useApi();
+
   const [loadingKayttajaResults, setLoadingKayttajaResults] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
@@ -199,19 +212,22 @@ const UserFields = ({
   const [preventOnInputChange, setPreventOnInputChange] = React.useState(!!initialKayttaja);
   const [options, setOptions] = useState<Kayttaja[]>(initialKayttaja ? [initialKayttaja] : []);
 
-  const searchAndUpdateKayttajat = useCallback(async (hakusana: string) => {
-    let mounted = true;
-    let users: Kayttaja[] = [];
-    if (hakusana.length >= 3) {
-      setLoadingKayttajaResults(true);
-      users = await api.listUsers({ hakusana });
-    }
-    if (mounted) {
-      setOptions(users);
-      setLoadingKayttajaResults(false);
-    }
-    return () => (mounted = false);
-  }, []);
+  const searchAndUpdateKayttajat = useCallback(
+    async (hakusana: string) => {
+      let mounted = true;
+      let users: Kayttaja[] = [];
+      if (hakusana.length >= 3) {
+        setLoadingKayttajaResults(true);
+        users = await api.listUsers({ hakusana });
+      }
+      if (mounted) {
+        setOptions(users);
+        setLoadingKayttajaResults(false);
+      }
+      return () => (mounted = false);
+    },
+    [api]
+  );
 
   const debouncedSearchKayttajat = useDebounceCallback(searchAndUpdateKayttajat, 200);
 
@@ -385,14 +401,5 @@ const UserFields = ({
     </ContentSpacer>
   );
 };
-
-async function loadKayttajat(kayttajat: string[]): Promise<Kayttaja[]> {
-  if (kayttajat.length === 0) {
-    return [];
-  }
-  return await api.listUsers({
-    kayttajatunnus: kayttajat,
-  });
-}
 
 export default KayttoOikeusHallinta;

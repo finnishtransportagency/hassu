@@ -3,7 +3,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
 import {
   TallennaProjektiInput,
-  api,
   VuorovaikutusInput,
   VuorovaikutusTilaisuusInput,
   LinkkiInput,
@@ -41,6 +40,7 @@ import { lowerCase } from "lodash";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
 import projektiKayttajaToYhteystieto from "src/util/kayttajaTransformationUtil";
+import useApi from "src/hooks/useApi";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 
@@ -189,6 +189,8 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
 
   useLeaveConfirm(isDirty);
 
+  const api = useApi();
+
   const saveSunnitteluvaihe = useCallback(
     async (formData: VuorovaikutusFormValues) => {
       setIsFormSubmitting(true);
@@ -196,7 +198,7 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
       if (reloadProjekti) await reloadProjekti();
       reset(formData);
     },
-    [reset, reloadProjekti]
+    [api, reloadProjekti, reset]
   );
 
   const saveDraft = useCallback(

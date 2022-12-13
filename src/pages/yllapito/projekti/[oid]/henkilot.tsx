@@ -1,7 +1,7 @@
 import React, { ReactElement, useCallback, useEffect, useMemo } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import KayttoOikeusHallinta from "@components/projekti/KayttoOikeusHallinta";
-import { api, TallennaProjektiInput, ProjektiKayttajaInput } from "@services/api";
+import { TallennaProjektiInput, ProjektiKayttajaInput } from "@services/api";
 import * as Yup from "yup";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -23,6 +23,7 @@ import { KeyedMutator } from "swr";
 import HenkilotLukutila from "@components/projekti/lukutila/HenkilotLukutila";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import PaivitaVelhoTiedotButton from "@components/projekti/PaivitaVelhoTiedotButton";
+import useApi from "src/hooks/useApi";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
@@ -117,6 +118,8 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
   useLeaveConfirm(isDirty);
 
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
+
+  const api = useApi();
 
   const onSubmit = async (formData: FormValues) => {
     deleteFieldArrayIds(formData?.kayttoOikeudet);

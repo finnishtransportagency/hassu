@@ -3,7 +3,7 @@ import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { useRouter } from "next/router";
 import ProjektiPerustiedot from "@components/projekti/ProjektiPerustiedot";
 import KayttoOikeusHallinta from "@components/projekti/KayttoOikeusHallinta";
-import { api, TallennaProjektiInput, ProjektiKayttajaInput } from "@services/api";
+import { TallennaProjektiInput, ProjektiKayttajaInput } from "@services/api";
 import * as Yup from "yup";
 import { useState } from "react";
 import { FormProvider, useForm, UseFormReturn } from "react-hook-form";
@@ -20,6 +20,7 @@ import Section from "@components/layout/Section";
 import HassuSpinner from "@components/HassuSpinner";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
+import useApi from "src/hooks/useApi";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
@@ -100,6 +101,8 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
   } = useFormReturn as UseFormReturn<FormValues>;
 
   useLeaveConfirm(isDirty && !formIsSubmitting);
+
+  const api = useApi();
 
   const submitAndMoveToNewRoute = async (formData: FormValues, newRoute: string) => {
     deleteFieldArrayIds(formData?.kayttoOikeudet);

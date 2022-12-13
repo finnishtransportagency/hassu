@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState, VoidFunctionComponent } from "react";
 import Button from "@components/button/Button";
-import { api } from "@services/api";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { KeyedMutator } from "swr";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
 import HassuSpinner from "@components/HassuSpinner";
+import useApi from "src/hooks/useApi";
 
 const PaivitaVelhoTiedotButton: VoidFunctionComponent<{ projektiOid: string; reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null> }> =
   ({ projektiOid, reloadProjekti }) => {
@@ -20,6 +20,7 @@ const PaivitaVelhoTiedotButton: VoidFunctionComponent<{ projektiOid: string; rel
 
     const [loading, setLoading] = useState(false);
     const { showSuccessMessage, showErrorMessage } = useSnackbars();
+    const api = useApi();
 
     const uudelleenLataaProjekit = useCallback(async () => {
       const isMounted = mountedRef.current;
@@ -42,7 +43,7 @@ const PaivitaVelhoTiedotButton: VoidFunctionComponent<{ projektiOid: string; rel
           }
         }
       }
-    }, [projektiOid, reloadProjekti, showErrorMessage, showSuccessMessage]);
+    }, [api, projektiOid, reloadProjekti, showErrorMessage, showSuccessMessage]);
 
     return (
       <>
