@@ -13,7 +13,7 @@ import {
   OriginRequestPolicy,
   OriginSslPolicy,
   PriceClass,
-  ViewerProtocolPolicy
+  ViewerProtocolPolicy,
 } from "aws-cdk-lib/aws-cloudfront";
 import { Config } from "./config";
 import { HttpOrigin, S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
@@ -126,7 +126,7 @@ export class HassuFrontendStack extends Stack {
       bucketName: `hassu-${Config.env}-cloudfront`,
       versioned: false,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-      removalPolicy: RemovalPolicy.RETAIN,
+      removalPolicy: RemovalPolicy.DESTROY,
       lifecycleRules: [{ enabled: true, expiration: Duration.days(366 / 2) }],
     });
 
@@ -446,11 +446,13 @@ export class HassuFrontendStack extends Stack {
         this.cloudFrontOriginAccessIdentity
       );
 
-      originAccessIdentityReportBucket = OriginAccessIdentity.fromOriginAccessIdentityId(
-        this,
-        "CloudfrontOriginAccessIdentityReportBucket",
-        this.cloudFrontOriginAccessIdentityReportBucket
-      );
+      if (Config.env == "dev") {
+        originAccessIdentityReportBucket = OriginAccessIdentity.fromOriginAccessIdentityId(
+          this,
+          "CloudfrontOriginAccessIdentityReportBucket",
+          this.cloudFrontOriginAccessIdentityReportBucket
+        );
+      }
     }
 
     return { keyGroups, originAccessIdentity, originAccessIdentityReportBucket };

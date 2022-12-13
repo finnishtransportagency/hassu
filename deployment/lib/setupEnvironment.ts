@@ -7,7 +7,7 @@ import { BaseConfig } from "../../common/BaseConfig";
 import { BackendStackOutputs } from "./hassu-backend";
 import { DatabaseStackOutputs } from "./hassu-database";
 import { FrontendStackOutputs } from "./hassu-frontend";
-import { PipelineStackOutputs } from "./hassu-pipeline";
+import { PipelineStackOutputs } from "./hassu-pipelines";
 import { AccountStackOutputs } from "./hassu-account";
 
 const usEastCFClient = new CloudFormationClient({ region: "us-east-1" });
