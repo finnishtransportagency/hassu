@@ -1,4 +1,4 @@
-import { CfnWebACLProps } from "aws-cdk-lib/aws-wafv2/lib/wafv2.generated";
+import { CfnWebACLProps } from "aws-cdk-lib/aws-wafv2";
 import { Config } from "./config";
 import { Construct } from "constructs";
 

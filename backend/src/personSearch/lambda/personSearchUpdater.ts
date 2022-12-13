@@ -9,8 +9,6 @@ import { getAxios, wrapXRayAsync } from "../../aws/monitoring";
 import { parseStringPromise as parseString } from "xml2js";
 import { AxiosRequestConfig } from "axios";
 
-const axios = getAxios();
-
 export class PersonSearchUpdater {
   private readonly personSearchAccountTypes: string[];
 
@@ -82,6 +80,7 @@ export class PersonSearchUpdater {
       auth: { username, password },
     };
     try {
+      const axios = getAxios();
       const response = await axios.request(requestConfig);
       if (response.status === 200) {
         const responseJson: any = await wrapXRayAsync("xmlParse", () => parseString(response.data));

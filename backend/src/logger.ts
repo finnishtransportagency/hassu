@@ -56,5 +56,40 @@ function getLogger(tag: string) {
   });
 }
 
+export function recordVelhoLatencyDecorator(_target: unknown, propertyKey: string, descriptor: PropertyDescriptor): void {
+  // keep a reference to the original function
+  const originalValue = descriptor.value;
+
+  // Replace the original function with a wrapper
+  descriptor.value = async function (...args: unknown[]) {
+    // Call the original function
+    const start = Date.now();
+    try {
+      const result = await originalValue.apply(this, args);
+      const end = Date.now();
+      logMetricLatency(METRIC_INTEGRATION.VELHO, propertyKey, end - start, true);
+      return result;
+    } catch (e) {
+      const end = Date.now();
+      logMetricLatency(METRIC_INTEGRATION.VELHO, propertyKey, end - start, false);
+      throw e;
+    }
+  };
+}
+
+export enum METRIC_INTEGRATION {
+  VELHO = "VELHO",
+}
+
+export function logMetricLatency(integration: METRIC_INTEGRATION, operation: string, latency: number, success: boolean): void {
+  metricLog.info({
+    integration,
+    operation,
+    latency,
+    success,
+  });
+}
+
 export const log = getLogger("BACKEND");
 export const auditLog = getLogger("AUDIT");
+const metricLog = getLogger("METRIC");

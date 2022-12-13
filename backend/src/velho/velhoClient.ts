@@ -1,4 +1,4 @@
-import { log } from "../logger";
+import { log, recordVelhoLatencyDecorator } from "../logger";
 import { config } from "../config";
 import * as HakuPalvelu from "./hakupalvelu";
 import * as ProjektiRekisteri from "./projektirekisteri";
@@ -7,7 +7,7 @@ import * as AineistoPalvelu from "./aineistopalvelu";
 import { VelhoAineisto, VelhoAineistoKategoria, VelhoHakuTulos } from "../../../common/graphql/apiModel";
 import { adaptDokumenttiTyyppi, adaptKasittelyntilaToVelho, adaptProjekti, adaptSearchResults, ProjektiSearchResult } from "./velhoAdapter";
 import { VelhoError } from "../error/velhoError";
-import { AxiosRequestConfig, AxiosResponse } from "axios";
+import { AxiosResponse, AxiosStatic } from "axios";
 import { DBProjekti, KasittelynTila } from "../database/model";
 import { personSearch } from "../personSearch/personSearchClient";
 import dayjs from "dayjs";
@@ -16,64 +16,11 @@ import { getAxios } from "../aws/monitoring";
 import { assertIsDefined } from "../util/assertions";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 
-const axios = getAxios();
 const NodeCache = require("node-cache");
 const accessTokenCache = new NodeCache({
   stdTTL: 1000, // Not really used, because the TTL is set based on the expiration time specified by Velho
 });
 const ACCESS_TOKEN_CACHE_KEY = "accessToken";
-
-axios.interceptors.request.use((request: AxiosRequestConfig) => {
-  const contentType = request.headers["content-type"];
-
-  if (contentType && contentType.includes("image")) {
-    log.debug("Request", { url: request.url });
-  } else {
-    log.debug("Request", { url: request.url, data: stripTooLongLogs(request.data) });
-  }
-
-  return request;
-});
-
-function stripTooLongLogs(data: unknown) {
-  if (!data) {
-    return undefined;
-  }
-  const text = JSON.stringify(data);
-  if (text.length > 10000) {
-    return text.slice(0, 10000) + "...";
-  }
-  return data;
-}
-
-function logResponse(level: string, response: AxiosResponse, contentType?: string) {
-  if (contentType && contentType.includes("image")) {
-    log[level]({ response: { status: response.status, statusText: response.statusText } });
-  } else {
-    log[level]({
-      response: {
-        status: response.status,
-        statusText: response.statusText,
-        data: response.headers?.["content-type"] != "binary/octet-stream" ? stripTooLongLogs(response.data) : undefined,
-      },
-    });
-  }
-}
-
-axios.interceptors.response.use((response: AxiosResponse) => {
-  const contentType: string | undefined = response.headers["content-type"];
-
-  if (response.status < 400) {
-    if (log.isLevelEnabled("debug")) {
-      logResponse("debug", response, contentType);
-    }
-  } else {
-    logResponse("warn", response, contentType);
-  }
-  return response;
-});
-
-axios.defaults.timeout = 28000;
 
 function checkResponseIsOK(response: AxiosResponse, message: string) {
   if (response.status >= 400) {
@@ -85,16 +32,12 @@ function checkResponseIsOK(response: AxiosResponse, message: string) {
 
 export class VelhoClient {
   public async authenticate(): Promise<string> {
+    const axios = getAxios();
     let accessToken = accessTokenCache.get(ACCESS_TOKEN_CACHE_KEY);
     if (accessToken) {
       return accessToken;
     }
-    assertIsDefined(config.velhoAuthURL, "process.env.VELHO_AUTH_URL puuttuu");
-    assertIsDefined(config.velhoUsername, "process.env.VELHO_USERNAME puuttuu");
-    assertIsDefined(config.velhoPassword, "process.env.VELHO_PASSWORD puuttuu");
-    const response = await axios.post(config.velhoAuthURL, "grant_type=client_credentials", {
-      auth: { username: config.velhoUsername, password: config.velhoPassword },
-    });
+    const response = await this.callAuthenticate(axios);
     accessToken = response.data.access_token;
     const expiresInSeconds = response.data.expires_in;
     // Expire token 10 seconds earlier than it really expires for safety margin
@@ -103,11 +46,22 @@ export class VelhoClient {
     return accessToken;
   }
 
+  @recordVelhoLatencyDecorator
+  private async callAuthenticate(axios: AxiosStatic) {
+    assertIsDefined(config.velhoAuthURL, "process.env.VELHO_AUTH_URL puuttuu");
+    assertIsDefined(config.velhoUsername, "process.env.VELHO_USERNAME puuttuu");
+    assertIsDefined(config.velhoPassword, "process.env.VELHO_PASSWORD puuttuu");
+    return await axios.post(config.velhoAuthURL, "grant_type=client_credentials", {
+      auth: { username: config.velhoUsername, password: config.velhoPassword },
+    });
+  }
+
   /** Method to remove access token for testing purposes */
   public logout(): void {
     accessTokenCache.del(ACCESS_TOKEN_CACHE_KEY);
   }
 
+  @recordVelhoLatencyDecorator
   public async searchProjects(term: string, requireExactMatch?: boolean): Promise<VelhoHakuTulos[]> {
     try {
       const hakuApi = await this.createHakuApi();
@@ -157,6 +111,7 @@ export class VelhoClient {
     }
   }
 
+  @recordVelhoLatencyDecorator
   public async loadProjekti(oid: string): Promise<DBProjekti> {
     const projektiApi = await this.createProjektiRekisteriApi();
     let response;
@@ -171,6 +126,7 @@ export class VelhoClient {
     return adaptProjekti(response.data);
   }
 
+  @recordVelhoLatencyDecorator
   public async loadProjektiAineistot(oid: string): Promise<VelhoAineistoKategoria[]> {
     try {
       const toimeksiannot: ProjektiToimeksiannotInner[] = await this.listToimeksiannot(oid);
@@ -222,6 +178,7 @@ export class VelhoClient {
     }
   }
 
+  @recordVelhoLatencyDecorator
   public async getLinkForDocument(dokumenttiOid: string): Promise<string> {
     const dokumenttiApi = await this.createDokumenttiApi();
     const dokumenttiResponse = await dokumenttiApi.aineistopalveluApiV1AineistoOidDokumenttiGet(dokumenttiOid, undefined, {
@@ -241,6 +198,7 @@ export class VelhoClient {
     return toimeksiannot;
   }
 
+  @recordVelhoLatencyDecorator
   public async createProjektiForTesting(
     velhoProjekti: ProjektiRekisteri.ProjektiProjektiLuonti
   ): Promise<ProjektiRekisteri.ProjektiProjekti> {
@@ -263,6 +221,7 @@ export class VelhoClient {
     return response.data;
   }
 
+  @recordVelhoLatencyDecorator
   public async saveProjekti(oid: string, params: KasittelynTila): Promise<void> {
     if (process.env.VELHO_READ_ONLY == "true") {
       throw new Error("Velho on lukutilassa testeissä. Lisää kutsu mockSaveProjektiToVelho().");
@@ -286,6 +245,7 @@ export class VelhoClient {
     }
   }
 
+  @recordVelhoLatencyDecorator
   public async deleteProjektiForTesting(oid: string): Promise<ProjektiRekisteri.ProjektiProjekti> {
     const projektiApi = await this.createProjektiRekisteriApi();
     let response;
