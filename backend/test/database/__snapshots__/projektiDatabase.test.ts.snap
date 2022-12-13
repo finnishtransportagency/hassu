@@ -35,7 +35,6 @@ Object {
       },
       "siirtyySuunnitteluVaiheeseen": "2022-01-01",
     },
-    ":emptyList": Array [],
     ":euRahoitus": false,
     ":kayttoOikeudet": Array [
       Object {
@@ -105,7 +104,7 @@ Object {
     "oid": "1",
   },
   "TableName": "Projekti-localstack",
-  "UpdateExpression": "SET #kayttoOikeudet = :kayttoOikeudet , #velho = :velho , #muistiinpano = :muistiinpano , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus , #kielitiedot = :kielitiedot , #euRahoitus = :euRahoitus , #liittyvatSuunnitelmat = :liittyvatSuunnitelmat , #paivitetty = :paivitetty , vuorovaikutukset = if_not_exists(vuorovaikutukset, :emptyList) ",
+  "UpdateExpression": "SET #kayttoOikeudet = :kayttoOikeudet , #velho = :velho , #muistiinpano = :muistiinpano , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus , #kielitiedot = :kielitiedot , #euRahoitus = :euRahoitus , #liittyvatSuunnitelmat = :liittyvatSuunnitelmat , #paivitetty = :paivitetty ",
 }
 `;
 
@@ -116,7 +115,6 @@ Object {
     "#paivitetty": "paivitetty",
   },
   "ExpressionAttributeValues": Object {
-    ":emptyList": Array [],
     ":muistiinpano": "foo",
     ":paivitetty": "2022-03-15T14:29:48.845Z",
   },
@@ -124,6 +122,6 @@ Object {
     "oid": "1",
   },
   "TableName": "Projekti-localstack",
-  "UpdateExpression": "SET #muistiinpano = :muistiinpano , #paivitetty = :paivitetty , vuorovaikutukset = if_not_exists(vuorovaikutukset, :emptyList) REMOVE suunnitteluSopimus",
+  "UpdateExpression": "SET #muistiinpano = :muistiinpano , #paivitetty = :paivitetty REMOVE suunnitteluSopimus",
 }
 `;
