@@ -9,13 +9,6 @@ import {
 } from "../user";
 import { velho } from "../velho/velhoClient";
 import * as API from "../../../common/graphql/apiModel";
-import {
-  KayttajaTyyppi,
-  NykyinenKayttaja,
-  TallennaProjektiInput,
-  VuorovaikutusKierrosPaivitysInput,
-  Velho,
-} from "../../../common/graphql/apiModel";
 import { projektiAdapter } from "./adapter/projektiAdapter";
 import { adaptVelho } from "./adapter/common";
 import { auditLog, log } from "../logger";
@@ -33,9 +26,10 @@ import { DBProjekti, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu, Vuorova
 import { aineistoService } from "../aineisto/aineistoService";
 import { ProjektiAdaptationResult, ProjektiEventType } from "./adapter/projektiAdaptationResult";
 import remove from "lodash/remove";
-import { validatePaivitaVuorovaikutus, validateTallennaProjekti } from "./projektiValidator";
+import { validatePaivitaVuorovaikutus, validateTallennaProjekti, validatePaivitaPerustiedot } from "./projektiValidator";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
-import { adaptStandardiYhteystiedotInputToYhteystiedotToSave } from "./adapter/adaptToDB";
+import { adaptStandardiYhteystiedotInputToYhteystiedotToSave, adaptVuorovaikutusKierrosAfterPerustiedotUpdate } from "./adapter/adaptToDB";
+import { asiakirjaAdapter } from "../handler/asiakirjaAdapter";
 
 export async function loadProjekti(oid: string): Promise<API.Projekti | API.ProjektiJulkinen> {
   const vaylaUser = getVaylaUser();
@@ -46,7 +40,7 @@ export async function loadProjekti(oid: string): Promise<API.Projekti | API.Proj
   }
 }
 
-async function loadProjektiYllapito(oid: string, vaylaUser: NykyinenKayttaja): Promise<API.Projekti> {
+async function loadProjektiYllapito(oid: string, vaylaUser: API.NykyinenKayttaja): Promise<API.Projekti> {
   requirePermissionLuku();
   log.info("Loading projekti", { oid });
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -82,7 +76,7 @@ export async function arkistoiProjekti(oid: string): Promise<string> {
   return projektiArchive.archiveProjekti(oid);
 }
 
-export async function createOrUpdateProjekti(input: TallennaProjektiInput): Promise<string> {
+export async function createOrUpdateProjekti(input: API.TallennaProjektiInput): Promise<string> {
   requirePermissionLuku();
   const oid = input.oid;
   const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -111,7 +105,7 @@ export async function createOrUpdateProjekti(input: TallennaProjektiInput): Prom
   return input.oid;
 }
 
-export async function updateVuorovaikutus(input: VuorovaikutusKierrosPaivitysInput | null | undefined): Promise<string> {
+export async function updateVuorovaikutus(input: API.VuorovaikutusPaivitysInput | null | undefined): Promise<string> {
   requirePermissionLuku();
   if (!input) {
     throw new IllegalArgumentError("input puuttuu!");
@@ -157,10 +151,39 @@ export async function updateVuorovaikutus(input: VuorovaikutusKierrosPaivitysInp
   }
 }
 
+export async function updatePerustiedot(input: API.VuorovaikutusPerustiedotInput | null | undefined): Promise<string> {
+  requirePermissionLuku();
+  if (!input) {
+    throw new IllegalArgumentError("input puuttuu!");
+  }
+  const oid = input.oid;
+  const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
+  if (projektiInDB) {
+    validatePaivitaPerustiedot(projektiInDB, input);
+    auditLog.info("Päivitä perustiedot", { input });
+    const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult(projektiInDB);
+    adaptVuorovaikutusKierrosAfterPerustiedotUpdate(projektiInDB, input, projektiAdaptationResult);
+    const vuorovaikutusKierros: VuorovaikutusKierros = projektiAdaptationResult.projekti.vuorovaikutusKierros as VuorovaikutusKierros;
+    const vuorovaikutusKierrosJulkaisu = asiakirjaAdapter.adaptVuorovaikutusKierrosJulkaisu({ ...projektiInDB, vuorovaikutusKierros });
+    const vuorovaikutusKierrosJulkaisut = projektiInDB.vuorovaikutusKierrosJulkaisut;
+    vuorovaikutusKierrosJulkaisut?.pop();
+    vuorovaikutusKierrosJulkaisut?.push(vuorovaikutusKierrosJulkaisu);
+    await projektiDatabase.saveProjekti({
+      oid: input.oid,
+      vuorovaikutusKierros,
+      vuorovaikutusKierrosJulkaisut,
+    });
+    await handleEvents(projektiAdaptationResult); // Täältä voi tulla IMPORT-eventtejä, jos aineistot muuttuivat.
+    return input.oid;
+  } else {
+    throw new IllegalArgumentError("Projektia ei ole olemassa");
+  }
+}
+
 export async function createProjektiFromVelho(
   oid: string,
-  vaylaUser: NykyinenKayttaja,
-  input?: TallennaProjektiInput
+  vaylaUser: API.NykyinenKayttaja,
+  input?: API.TallennaProjektiInput
 ): Promise<{ projekti: DBProjekti; virhetiedot?: API.ProjektipaallikkoVirhe }> {
   try {
     log.info("Loading projekti from Velho", { oid });
@@ -195,7 +218,7 @@ export async function createProjektiFromVelho(
 
       // Prefill current user as varahenkilo if it is different from project manager
       if ((!projektiPaallikko || projektiPaallikko.kayttajatunnus !== vaylaUser.uid) && vaylaUser.uid) {
-        kayttoOikeudet.addUser({ kayttajatunnus: vaylaUser.uid, muokattavissa: true, tyyppi: KayttajaTyyppi.VARAHENKILO });
+        kayttoOikeudet.addUser({ kayttajatunnus: vaylaUser.uid, muokattavissa: true, tyyppi: API.KayttajaTyyppi.VARAHENKILO });
       }
     }
 
@@ -207,7 +230,7 @@ export async function createProjektiFromVelho(
   }
 }
 
-export async function findUpdatesFromVelho(oid: string): Promise<Velho> {
+export async function findUpdatesFromVelho(oid: string): Promise<API.Velho> {
   try {
     log.info("Loading projekti", { oid });
     const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -232,7 +255,7 @@ export async function findUpdatesFromVelho(oid: string): Promise<Velho> {
   }
 }
 
-export async function synchronizeUpdatesFromVelho(oid: string, reset = false): Promise<Velho | undefined> {
+export async function synchronizeUpdatesFromVelho(oid: string, reset = false): Promise<API.Velho | undefined> {
   try {
     log.info("Loading projekti", { oid });
     const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -275,7 +298,7 @@ export async function synchronizeUpdatesFromVelho(oid: string, reset = false): P
 /**
  * If there are uploaded files in the input, persist them into the project
  */
-async function handleFiles(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
+async function handleFiles(dbProjekti: DBProjekti, input: API.TallennaProjektiInput) {
   const logo = input.suunnitteluSopimus?.logo;
   if (logo && input.suunnitteluSopimus) {
     input.suunnitteluSopimus.logo = await fileService.persistFileToProjekti({

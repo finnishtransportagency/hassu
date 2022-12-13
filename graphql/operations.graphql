@@ -23,7 +23,8 @@ type Query {
 type Mutation {
   tallennaProjekti(projekti: TallennaProjektiInput!): String
   siirraTila(tilasiirtyma: TilaSiirtymaInput): String
-  paivitaVuorovaikutusta(input: VuorovaikutusKierrosPaivitysInput): String
+  paivitaVuorovaikutusta(input: VuorovaikutusPaivitysInput): String
+  paivitaPerustietoja(input: VuorovaikutusPerustiedotInput): String
   lisaaPalaute(oid: String!, palaute: PalauteInput!): String
   otaPalauteKasittelyyn(oid: String!, id: String!): String
 

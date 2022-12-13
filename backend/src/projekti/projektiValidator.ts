@@ -5,7 +5,8 @@ import {
   Projekti,
   TallennaProjektiInput,
   UudelleenKuulutusInput,
-  VuorovaikutusKierrosPaivitysInput,
+  VuorovaikutusPaivitysInput,
+  VuorovaikutusPerustiedotInput,
 } from "../../../common/graphql/apiModel";
 import { requirePermissionMuokkaa } from "../user";
 import { requireAdmin, requireOmistaja } from "../user/userService";
@@ -130,7 +131,7 @@ export function validateTallennaProjekti(projekti: DBProjekti, input: TallennaPr
   validateUudelleenKuulutus(projekti.jatkoPaatos2Vaihe?.uudelleenKuulutus, input.jatkoPaatos2Vaihe?.uudelleenKuulutus);
 }
 
-export function validatePaivitaVuorovaikutus(projekti: DBProjekti, input: VuorovaikutusKierrosPaivitysInput): void {
+export function validatePaivitaVuorovaikutus(projekti: DBProjekti, input: VuorovaikutusPaivitysInput): void {
   requirePermissionMuokkaa(projekti);
   if (input.vuorovaikutusNumero && !projekti.vuorovaikutusKierrosJulkaisut?.[input.vuorovaikutusNumero]) {
     throw new IllegalArgumentError("Vuorovaikutusta ei ole vielä julkaistu");
@@ -163,5 +164,17 @@ export function validatePaivitaVuorovaikutus(projekti: DBProjekti, input: Vuorov
     throw new IllegalArgumentError(
       `Vuorovaikutus sisältää kiellettyjä arvoja. Sallittuja: ["Saapumisohjeet", "esitettavatYhteystiedot", "kaytettavaPalvelu", "linkki", "nimi", "peruttu"]`
     );
+  }
+  if (projekti.nahtavillaoloVaiheJulkaisut && projekti.nahtavillaoloVaiheJulkaisut.length !== 0) {
+    throw new IllegalArgumentError("Suunnitteluvaihe on päättynyt.");
+  }
+}
+
+export function validatePaivitaPerustiedot(projekti: DBProjekti, input: VuorovaikutusPerustiedotInput): void {
+  if (projekti.vuorovaikutusKierros?.vuorovaikutusNumero !== input.vuorovaikutusKierros.vuorovaikutusNumero) {
+    throw new IllegalArgumentError(`Ei ole mahdollista päivittää jäädytettyä vuorovaikutusta`);
+  }
+  if (projekti.nahtavillaoloVaiheJulkaisut && projekti.nahtavillaoloVaiheJulkaisut.length !== 0) {
+    throw new IllegalArgumentError("Suunnitteluvaihe on päättynyt.");
   }
 }

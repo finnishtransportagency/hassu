@@ -61,6 +61,50 @@ export function adaptVuorovaikutusKierrosToSave(
   return undefined;
 }
 
+export function adaptVuorovaikutusKierrosAfterPerustiedotUpdate(
+  dbProjekti: DBProjekti,
+  perustiedotInput: API.VuorovaikutusPerustiedotInput | undefined | null,
+  projektiAdaptationResult: ProjektiAdaptationResult
+): VuorovaikutusKierros | undefined {
+  if (perustiedotInput) {
+    const { arvioSeuraavanVaiheenAlkamisesta, suunnittelunEteneminenJaKesto, palautteidenVastaanottajat, videot, suunnittelumateriaali } =
+      perustiedotInput.vuorovaikutusKierros;
+    const dbVuorovaikutusKierros: VuorovaikutusKierros | undefined = dbProjekti.vuorovaikutusKierros || undefined;
+
+    const esittelyaineistot: Aineisto[] | undefined = adaptAineistotToSave(
+      dbVuorovaikutusKierros?.esittelyaineistot,
+      perustiedotInput.vuorovaikutusKierros.esittelyaineistot,
+      projektiAdaptationResult
+    );
+    const suunnitelmaluonnokset: Aineisto[] | undefined = adaptAineistotToSave(
+      dbVuorovaikutusKierros?.esittelyaineistot,
+      perustiedotInput.vuorovaikutusKierros.suunnitelmaluonnokset,
+      projektiAdaptationResult
+    );
+
+    const vuorovaikutusKierros: VuorovaikutusKierros = {
+      vuorovaikutusNumero: perustiedotInput.vuorovaikutusKierros.vuorovaikutusNumero,
+      esitettavatYhteystiedot: dbVuorovaikutusKierros?.esitettavatYhteystiedot,
+      vuorovaikutusTilaisuudet: dbVuorovaikutusKierros?.vuorovaikutusTilaisuudet,
+      // Jos vuorovaikutuksen ilmoituksella ei tarvitse olla viranomaisvastaanottajia, muokkaa adaptIlmoituksenVastaanottajatToSavea
+      ilmoituksenVastaanottajat: dbVuorovaikutusKierros?.ilmoituksenVastaanottajat,
+      esittelyaineistot,
+      suunnitelmaluonnokset,
+      kysymyksetJaPalautteetViimeistaan: perustiedotInput.vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan,
+      vuorovaikutusJulkaisuPaiva: dbVuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva,
+      videot,
+      suunnittelumateriaali,
+      arvioSeuraavanVaiheenAlkamisesta,
+      suunnittelunEteneminenJaKesto,
+      hankkeenKuvaus: dbVuorovaikutusKierros?.hankkeenKuvaus,
+      palautteidenVastaanottajat,
+      tila: dbVuorovaikutusKierros?.tila,
+    };
+    return vuorovaikutusKierros;
+  }
+  return undefined;
+}
+
 function adaptVuorovaikutusTilaisuudetToSave(vuorovaikutusTilaisuudet: Array<API.VuorovaikutusTilaisuusInput>): VuorovaikutusTilaisuus[] {
   return vuorovaikutusTilaisuudet.map((vv) => {
     const vvToSave: VuorovaikutusTilaisuus = {
