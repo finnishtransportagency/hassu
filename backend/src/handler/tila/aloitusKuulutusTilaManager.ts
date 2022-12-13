@@ -61,7 +61,7 @@ async function cleanupAloitusKuulutusAfterApproval(projekti: DBProjekti, aloitus
 }
 
 class AloitusKuulutusTilaManager extends TilaManager<AloitusKuulutus, AloitusKuulutusJulkaisu> {
-  validate(projekti: DBProjekti, kuulutus: AloitusKuulutus, hyvaksyttyJulkaisu: AloitusKuulutusJulkaisu | undefined) {
+  validateUudelleenkuulutus(projekti: DBProjekti, kuulutus: AloitusKuulutus, hyvaksyttyJulkaisu: AloitusKuulutusJulkaisu | undefined) {
     // Tarkista, että on olemassa hyväksytty aloituskuulutusjulkaisu, jonka perua
     if (!hyvaksyttyJulkaisu) {
       throw new IllegalArgumentError("Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa");

@@ -19,7 +19,11 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     return projekti.jatkoPaatos2VaiheJulkaisut || undefined;
   }
 
-  validate(projekti: DBProjekti, kuulutus: HyvaksymisPaatosVaihe, hyvaksyttyJulkaisu: HyvaksymisPaatosVaiheJulkaisu | undefined): void {
+  validateUudelleenkuulutus(
+    projekti: DBProjekti,
+    kuulutus: HyvaksymisPaatosVaihe,
+    hyvaksyttyJulkaisu: HyvaksymisPaatosVaiheJulkaisu | undefined
+  ): void {
     // TODO
   }
 

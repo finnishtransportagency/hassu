@@ -77,8 +77,12 @@ class NahtavillaoloTilaManager extends TilaManager<NahtavillaoloVaihe, Nahtavill
     return projekti.nahtavillaoloVaiheJulkaisut || undefined;
   }
 
-  validate(projekti: DBProjekti, kuulutus: NahtavillaoloVaihe, hyvaksyttyJulkaisu: NahtavillaoloVaiheJulkaisu | undefined): void {
-    // Tarkista, että on olemassa hyväksytty aloituskuulutusjulkaisu, jonka perua
+  validateUudelleenkuulutus(
+    projekti: DBProjekti,
+    kuulutus: NahtavillaoloVaihe,
+    hyvaksyttyJulkaisu: NahtavillaoloVaiheJulkaisu | undefined
+  ): void {
+    // Tarkista, että on olemassa hyväksytty julkaisu, jonka perua
     if (!hyvaksyttyJulkaisu) {
       throw new IllegalArgumentError("Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa");
     }

@@ -20,7 +20,11 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     return projekti.hyvaksymisPaatosVaiheJulkaisut || undefined;
   }
 
-  validate(projekti: DBProjekti, kuulutus: HyvaksymisPaatosVaihe, hyvaksyttyJulkaisu: HyvaksymisPaatosVaiheJulkaisu | undefined): void {
+  validateUudelleenkuulutus(
+    projekti: DBProjekti,
+    kuulutus: HyvaksymisPaatosVaihe,
+    hyvaksyttyJulkaisu: HyvaksymisPaatosVaiheJulkaisu | undefined
+  ): void {
     // TODO
   }
 

@@ -74,7 +74,7 @@ export abstract class TilaManager<T extends GenericKuulutus, Y extends GenericKu
     const julkaisut = this.getJulkaisut(projekti);
     const hyvaksyttyJulkaisu = findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
 
-    this.validate(projekti, kuulutus, hyvaksyttyJulkaisu);
+    this.validateUudelleenkuulutus(projekti, kuulutus, hyvaksyttyJulkaisu);
     assertIsDefined(julkaisut);
     assertIsDefined(kuulutus);
     assertIsDefined(hyvaksyttyJulkaisu);
@@ -115,7 +115,7 @@ export abstract class TilaManager<T extends GenericKuulutus, Y extends GenericKu
 
   abstract approve(projekti: DBProjekti, projektiPaallikko: NykyinenKayttaja): Promise<void>;
 
-  abstract validate(projekti: DBProjekti, kuulutus: T, hyvaksyttyJulkaisu: Y | undefined): void;
+  abstract validateUudelleenkuulutus(projekti: DBProjekti, kuulutus: T, hyvaksyttyJulkaisu: Y | undefined): void;
 
   abstract getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: T | null | undefined): PathTuple;
 
