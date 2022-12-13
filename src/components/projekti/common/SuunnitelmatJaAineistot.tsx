@@ -10,7 +10,7 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Aineisto, AineistoInput } from "@services/api";
+import { Aineisto, AineistoInput, HyvaksymisPaatosVaihe, NahtavillaoloVaihe } from "@services/api";
 import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory } from "common/aineistoKategoriat";
 import { find } from "lodash";
 import useTranslation from "next-translate/useTranslation";
@@ -48,6 +48,7 @@ export interface SuunnitelmatJaAineistotProps {
   sectionInfoText: string;
   sectionSubtitle?: string;
   paatos?: PaatosAineistoTiedot;
+  vaihe: NahtavillaoloVaihe | HyvaksymisPaatosVaihe | null | undefined;
 }
 
 export default function SuunnitelmatJaAineistot({
@@ -56,6 +57,7 @@ export default function SuunnitelmatJaAineistot({
   sectionInfoText,
   paatos,
   sectionSubtitle,
+  vaihe,
 }: SuunnitelmatJaAineistotProps) {
   const { watch, setValue } = useFormContext<FormValues>();
   const aineistoNahtavilla = watch("aineistoNahtavilla");
@@ -135,6 +137,7 @@ export default function SuunnitelmatJaAineistot({
           content: (
             <SectionContent largeGaps>
               <SuunnitelmaAineistoPaakategoriaContent
+                vaihe={vaihe}
                 paakategoria={paakategoria}
                 expandedAineistoState={[expandedAineisto, setExpandedAineisto]}
                 dialogInfoText={dialogInfoText}
@@ -152,6 +155,7 @@ interface SuunnitelmaAineistoPaakategoriaContentProps {
   paakategoria: AineistoKategoria;
   expandedAineistoState: [React.Key[], React.Dispatch<React.Key[]>];
   dialogInfoText: string;
+  vaihe: NahtavillaoloVaihe | HyvaksymisPaatosVaihe | null | undefined;
 }
 
 const SuunnitelmaAineistoPaakategoriaContent = (props: SuunnitelmaAineistoPaakategoriaContentProps) => {
@@ -166,9 +170,10 @@ const SuunnitelmaAineistoPaakategoriaContent = (props: SuunnitelmaAineistoPaakat
   return (
     <>
       <p>{kategoriaInfoText[props.paakategoria.id]}</p>
-      {!!projekti?.oid && !!aineistot?.length && <AineistoTable kategoriaId={props.paakategoria.id} />}
+      {!!projekti?.oid && !!aineistot?.length && <AineistoTable vaihe={props.vaihe} kategoriaId={props.paakategoria.id} />}
       {props.paakategoria.alaKategoriat && (
         <SuunnitelmaAineistoAlakategoriaAccordion
+          vaihe={props.vaihe}
           alakategoriat={props.paakategoria.alaKategoriat}
           expandedAineistoState={props.expandedAineistoState}
         />
@@ -197,6 +202,7 @@ const SuunnitelmaAineistoPaakategoriaContent = (props: SuunnitelmaAineistoPaakat
 interface SuunnitelmaAineistoAlakategoriaAccordionProps {
   alakategoriat: AineistoKategoria[];
   expandedAineistoState: [React.Key[], React.Dispatch<React.Key[]>];
+  vaihe: NahtavillaoloVaihe | HyvaksymisPaatosVaihe | null | undefined;
 }
 
 const SuunnitelmaAineistoAlakategoriaAccordion = (props: SuunnitelmaAineistoAlakategoriaAccordionProps) => {
@@ -220,7 +226,7 @@ const SuunnitelmaAineistoAlakategoriaAccordion = (props: SuunnitelmaAineistoAlak
           aineistoNahtavillaFlat,
           alakategoria
         )})`,
-        content: <AlakategoriaContent kategoria={alakategoria} expandedAineistoState={props.expandedAineistoState} />,
+        content: <AlakategoriaContent kategoria={alakategoria} vaihe={props.vaihe} expandedAineistoState={props.expandedAineistoState} />,
         id: alakategoria.id,
       }))}
     />
@@ -230,6 +236,7 @@ const SuunnitelmaAineistoAlakategoriaAccordion = (props: SuunnitelmaAineistoAlak
 interface AlakategoriaContentProps {
   kategoria: AineistoKategoria;
   expandedAineistoState: [React.Key[], React.Dispatch<React.Key[]>];
+  vaihe: NahtavillaoloVaihe | HyvaksymisPaatosVaihe | null | undefined;
 }
 
 const AlakategoriaContent = (props: AlakategoriaContentProps) => {
@@ -238,9 +245,14 @@ const AlakategoriaContent = (props: AlakategoriaContentProps) => {
   const aineistot = watch(aineistoRoute);
   return (
     <>
-      {!!aineistot?.length ? <AineistoTable kategoriaId={props.kategoria.id} /> : <p>Kategoriaan ei ole asetettu aineistoa.</p>}
+      {!!aineistot?.length ? (
+        <AineistoTable kategoriaId={props.kategoria.id} vaihe={props.vaihe} />
+      ) : (
+        <p>Kategoriaan ei ole asetettu aineistoa.</p>
+      )}
       {!!props.kategoria.alaKategoriat?.length && (
         <SuunnitelmaAineistoAlakategoriaAccordion
+          vaihe={props.vaihe}
           expandedAineistoState={props.expandedAineistoState}
           alakategoriat={props.kategoria.alaKategoriat}
         />
@@ -253,10 +265,10 @@ type FormAineisto = FieldArrayWithId<FormValues, `aineistoNahtavilla.${string}`,
 
 interface AineistoTableProps {
   kategoriaId: string;
+  vaihe: NahtavillaoloVaihe | HyvaksymisPaatosVaihe | null | undefined;
 }
 
 const AineistoTable = (props: AineistoTableProps) => {
-  const { data: projekti } = useProjekti();
   const { control, formState, register, getValues, setValue } = useFormContext<FormValues>();
   const aineistoRoute: `aineistoNahtavilla.${string}` = `aineistoNahtavilla.${props.kategoriaId}`;
   const { fields, remove } = useFieldArray({ name: aineistoRoute, control });
@@ -287,12 +299,12 @@ const AineistoTable = (props: AineistoTableProps) => {
   const enrichedFields: FormAineisto[] = useMemo(
     () =>
       fields.map((field) => {
-        const aineistoData = projekti?.hyvaksymisPaatosVaihe?.aineistoNahtavilla || []; //TODO: tarkista miksi tassa on hyvaksymispaatosvaihe
+        const aineistoData = props.vaihe?.aineistoNahtavilla || []; //TODO: tarkista miksi tassa on hyvaksymispaatosvaihe
         const { tila, tuotu, tiedosto } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
 
         return { tila, tuotu, tiedosto, ...field };
       }),
-    [fields, projekti]
+    [fields, props.vaihe?.aineistoNahtavilla]
   );
 
   const columns = useMemo<Column<FormAineisto>[]>(

@@ -64,6 +64,7 @@ export default function Nahtavillaolo(): ReactElement {
     <ProjektiJulkinenPageLayout selectedStep={2} title="Kuulutus suunnitelman nähtäville asettamisesta">
       <Section noDivider>
         <KeyValueTable rows={keyValueData}></KeyValueTable>
+        {kuulutus.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && <p>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</p>}
         {velho.tyyppi !== ProjektiTyyppi.RATA && (
           <SectionContent>
             <Trans
@@ -101,7 +102,11 @@ export default function Nahtavillaolo(): ReactElement {
             </SectionContent>
           </Notification>
         </SectionContent>
-        <KansalaisenAineistoNakyma projekti={projekti} kuulutus={kuulutus} />
+        <KansalaisenAineistoNakyma
+          projekti={projekti}
+          kuulutus={kuulutus}
+          uudelleenKuulutus={projekti.nahtavillaoloVaihe?.uudelleenKuulutus}
+        />
         <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.muistutuksen_jattaminen`)}</h4>
         <SectionContent>
           <JataPalautettaNappi teksti={t("muistutuslomake.jata_muistutus")} onClick={() => setMuistutusLomakeOpen(true)} />

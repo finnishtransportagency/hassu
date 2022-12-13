@@ -175,16 +175,11 @@ export function getId(
         id: number | undefined;
       }
     | undefined
-    | null,
-  julkaisutCount: number | undefined
-) {
+    | null
+): number {
   let id = vaihe?.id;
   if (!id) {
-    if (julkaisutCount) {
-      id = julkaisutCount + 1;
-    } else {
-      id = 1;
-    }
+    id = 1;
   }
   return id;
 }

@@ -7,8 +7,7 @@ import mergeWith from "lodash/mergeWith";
 export function adaptHyvaksymisPaatosVaiheToSave(
   dbHyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | null | undefined,
   hyvaksymisPaatosVaihe: API.HyvaksymisPaatosVaiheInput | null | undefined,
-  projektiAdaptationResult: ProjektiAdaptationResult,
-  hyvaksymisPaatosVaiheJulkaisutCount: number | undefined
+  projektiAdaptationResult: ProjektiAdaptationResult
 ): HyvaksymisPaatosVaihe | undefined {
   if (!hyvaksymisPaatosVaihe) {
     return undefined;
@@ -34,11 +33,7 @@ export function adaptHyvaksymisPaatosVaiheToSave(
 
   let id = dbHyvaksymisPaatosVaihe?.id;
   if (!id) {
-    if (hyvaksymisPaatosVaiheJulkaisutCount) {
-      id = hyvaksymisPaatosVaiheJulkaisutCount + 1;
-    } else {
-      id = 1;
-    }
+    id = 1;
   }
 
   const newChanges: HyvaksymisPaatosVaihe = {

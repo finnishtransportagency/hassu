@@ -142,7 +142,12 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
         </Stack>
       </Section>
       <Section noDivider>
-        <KansalaisenAineistoNakyma projekti={projekti} kuulutus={kuulutus} naytaAineistoPaivanaKuulutuksenJulkaisuPaiva={true} />
+        <KansalaisenAineistoNakyma
+          projekti={projekti}
+          kuulutus={kuulutus}
+          naytaAineistoPaivanaKuulutuksenJulkaisuPaiva
+          uudelleenKuulutus={undefined}
+        />
       </Section>
       <Section noDivider>
         <h5 className="vayla-smallest-title">{t("projekti:ui-otsikot.ladattava_kuulutus")}</h5>

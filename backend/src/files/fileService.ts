@@ -478,6 +478,30 @@ export class FileService {
       Expires: 60 * 60, // One hour
     });
   }
+
+  async renameYllapitoFolder(sourceFolder: PathTuple, targetFolder: PathTuple): Promise<void> {
+    if (sourceFolder.yllapitoFullPath == targetFolder.yllapitoFullPath) {
+      return;
+    }
+    try {
+      const yllapitoBucketName = config.yllapitoBucketName;
+      assertIsDefined(yllapitoBucketName, "config.yllapitoBucketName määrittelemättä");
+      log.info(`Kopioidaan ${sourceFolder.yllapitoFullPath} -> ${targetFolder.yllapitoFullPath}`);
+      const result = await getS3()
+        .copyObject({
+          Bucket: yllapitoBucketName,
+          CopySource: uriEscapePath(`${yllapitoBucketName}/${sourceFolder.yllapitoFullPath}`),
+          Key: targetFolder.yllapitoFullPath,
+        })
+        .promise();
+      log.info(result);
+    } catch (e) {
+      if ((e as AWSError).code !== "NoSuchKey") {
+        throw e;
+      }
+      // Ignore
+    }
+  }
 }
 
 export const fileService = new FileService();

@@ -6,12 +6,13 @@ import { useRouter } from "next/router";
 import { UrlObject } from "url";
 import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
 import ProjektiConsumer from "../ProjektiConsumer";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
-import { KuulutusJulkaisuTila } from "@services/api";
+import { KuulutusJulkaisuTila, MuokkausTila, TilasiirtymaTyyppi } from "@services/api";
 import dayjs from "dayjs";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import FormatDate from "@components/FormatDate";
+import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
 
 const InfoElement = ({ projekti }: { projekti: ProjektiLisatiedolla }) => {
   const julkaisu = projekti.nahtavillaoloVaiheJulkaisu;
@@ -82,6 +83,7 @@ function NahtavillaoloPageLayout({
   children?: ReactNode;
 }): ReactElement {
   const router = useRouter();
+  const { mutate: reloadProjekti } = useProjekti();
 
   const tabProps: LinkTabProps[] = useMemo(() => {
     return [
@@ -122,8 +124,21 @@ function NahtavillaoloPageLayout({
   const migroitu = nahtavillaolovaiheJulkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
+  const showUudelleenkuulutaButton =
+    projekti.nahtavillaoloVaiheJulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY &&
+    projekti.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.LUKU &&
+    !projekti.hyvaksymisPaatosVaiheJulkaisut &&
+    projekti.nykyinenKayttaja.onYllapitaja;
+
   return (
-    <ProjektiPageLayout title="Nähtävilläolovaihe">
+    <ProjektiPageLayout
+      title="Nähtävilläolovaihe"
+      contentAsideTitle={
+        showUudelleenkuulutaButton && (
+          <UudelleenkuulutaButton oid={projekti.oid} tyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO} reloadProjekti={reloadProjekti} />
+        )
+      }
+    >
       <Section noDivider>
         {!migroitu && !epaaktiivinen && (
           <>

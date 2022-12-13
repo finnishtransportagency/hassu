@@ -1,22 +1,50 @@
 import { KuulutusJulkaisuTila, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
-import { DBProjekti, HyvaksymisPaatosVaihe } from "../../database/model";
+import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import { AbstractHyvaksymisPaatosVaiheTilaManager } from "./abstractHyvaksymisPaatosVaiheTilaManager";
-import { ProjektiPaths } from "../../files/ProjektiPath";
 import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
+import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
+  getVaihe(projekti: DBProjekti): HyvaksymisPaatosVaihe {
+    const hyvaksymisPaatosVaihe = projekti.hyvaksymisPaatosVaihe;
+    if (!hyvaksymisPaatosVaihe) {
+      throw new Error("Projektilla ei ole hyvaksymisPaatosVaihetta");
+    }
+    return hyvaksymisPaatosVaihe;
+  }
+
+  getJulkaisut(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu[] | undefined {
+    return projekti.hyvaksymisPaatosVaiheJulkaisut || undefined;
+  }
+
+  validateUudelleenkuulutus(
+    projekti: DBProjekti,
+    kuulutus: HyvaksymisPaatosVaihe,
+    hyvaksyttyJulkaisu: HyvaksymisPaatosVaiheJulkaisu | undefined
+  ): void {
+    // TODO
+  }
+
+  getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: HyvaksymisPaatosVaihe | null | undefined): PathTuple {
+    return new ProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(kuulutus);
+  }
+
+  async saveVaihe(projekti: DBProjekti, hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe): Promise<void> {
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, hyvaksymisPaatosVaihe });
+  }
+
   async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
     const julkaisuWaitingForApproval = asiakirjaAdapter.findHyvaksymisPaatosVaiheWaitingForApproval(projekti);
     if (julkaisuWaitingForApproval) {
       throw new Error("HyvaksymisPaatosVaihe on jo olemassa odottamassa hyväksyntää");
     }
 
-    await this.removeRejectionReasonIfExists(projekti, "hyvaksymisPaatosVaihe", this.getHyvaksymisPaatosVaihe(projekti));
+    await this.removeRejectionReasonIfExists(projekti, "hyvaksymisPaatosVaihe", this.getVaihe(projekti));
 
-    const julkaisu = asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projekti, projekti.hyvaksymisPaatosVaihe);
+    const julkaisu = asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projekti, this.getVaihe(projekti));
     if (!julkaisu.ilmoituksenVastaanottajat) {
       throw new IllegalArgumentError("Hyväksymispäätösvaiheelle on oltava ilmoituksenVastaanottajat!");
     }
@@ -37,7 +65,7 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
   }
 
   async approve(projekti: DBProjekti, projektiPaallikko: NykyinenKayttaja): Promise<void> {
-    const hyvaksymisPaatosVaihe = this.getHyvaksymisPaatosVaihe(projekti);
+    const hyvaksymisPaatosVaihe = this.getVaihe(projekti);
     const julkaisu = asiakirjaAdapter.findHyvaksymisPaatosVaiheWaitingForApproval(projekti);
     if (!julkaisu) {
       throw new Error("Ei hyvaksymisPaatosVaihetta odottamassa hyväksyntää");
@@ -58,7 +86,7 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
       throw new Error("Ei hyvaksymisPaatosVaihetta odottamassa hyväksyntää");
     }
 
-    const hyvaksymisPaatosVaihe = this.getHyvaksymisPaatosVaihe(projekti);
+    const hyvaksymisPaatosVaihe = this.getVaihe(projekti);
     hyvaksymisPaatosVaihe.palautusSyy = syy;
     if (!julkaisu.hyvaksymisPaatosVaihePDFt) {
       throw new Error("julkaisu.hyvaksymisPaatosVaihePDFt puuttuu");
@@ -67,14 +95,6 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
 
     await projektiDatabase.saveProjekti({ oid: projekti.oid, hyvaksymisPaatosVaihe });
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.delete(projekti, julkaisu.id);
-  }
-
-  getHyvaksymisPaatosVaihe(projekti: DBProjekti): HyvaksymisPaatosVaihe {
-    const hyvaksymisPaatosVaihe = projekti.hyvaksymisPaatosVaihe;
-    if (!hyvaksymisPaatosVaihe) {
-      throw new Error("Projektilla ei ole hyvaksymisPaatosVaihetta");
-    }
-    return hyvaksymisPaatosVaihe;
   }
 }
 

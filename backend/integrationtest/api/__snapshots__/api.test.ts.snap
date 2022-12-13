@@ -2416,6 +2416,12 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "lisaAineistoParametrit": Object {
+        "__typename": "LisaAineistoParametrit",
+        "hash": "***unittest***",
+        "nahtavillaoloVaiheId": 1,
+        "poistumisPaiva": "***unittest***",
+      },
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
       "muokkaaja": "A000112",
       "nahtavillaoloPDFt": Object {
@@ -2542,6 +2548,7 @@ Object {
     "kuulutusVaihePaattyyPaiva": "2042-06-07",
     "muistutusoikeusPaattyyPaiva": "2042-06-08",
     "tila": "HYVAKSYTTY",
+    "uudelleenKuulutus": undefined,
     "velho": Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,

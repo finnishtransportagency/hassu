@@ -15,16 +15,11 @@ import {
   Kieli,
   Kielitiedot,
   LaskuriTyyppi,
-  LokalisoituTeksti,
-  LokalisoituTekstiInput,
   MuokkausTila,
   Status,
   TallennaProjektiInput,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
-  UudelleenKuulutus,
-  UudelleenKuulutusInput,
-  UudelleenkuulutusTila,
   YhteystietoInput,
 } from "@services/api";
 import log from "loglevel";
@@ -48,12 +43,13 @@ import HassuSpinner from "@components/HassuSpinner";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
-import { pickBy } from "lodash";
 import { removeTypeName } from "src/util/removeTypeName";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { today } from "src/util/dateUtils";
 import { kuntametadata } from "../../../../../common/kuntametadata";
 import UudelleenkuulutaButton from "@components/projekti/UudelleenkuulutaButton";
+import { getDefaultValuesForLokalisoituText, getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForLokalisoituText";
+import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -95,38 +91,6 @@ interface AloituskuulutusFormProps {
   projekti: ProjektiLisatiedolla;
   projektiLoadError: any;
   reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
-}
-
-export function getDefaultValuesForUudelleenKuulutus(
-  kielitiedot: ProjektiLisatiedolla["kielitiedot"],
-  uudelleenKuulutus: UudelleenKuulutus | null | undefined
-): UudelleenKuulutusInput {
-  const uudelleenKuulutusInput: UudelleenKuulutusInput = {
-    selosteLahetekirjeeseen: getDefaultValuesForLokalisoituText(kielitiedot, uudelleenKuulutus?.selosteLahetekirjeeseen),
-  };
-  if (uudelleenKuulutus?.tila === UudelleenkuulutusTila.JULKAISTU_PERUUTETTU) {
-    uudelleenKuulutusInput.selosteKuulutukselle = getDefaultValuesForLokalisoituText(kielitiedot, uudelleenKuulutus?.selosteKuulutukselle);
-  }
-  return uudelleenKuulutusInput;
-}
-
-function getDefaultValuesForLokalisoituText(
-  kielitiedot: ProjektiLisatiedolla["kielitiedot"],
-  lokalisoituTeksti: LokalisoituTeksti | null | undefined
-): LokalisoituTekstiInput {
-  const { ensisijainenKieli, toissijainenKieli } = kielitiedot || {};
-  const hasRuotsinKieli = ensisijainenKieli === Kieli.RUOTSI || toissijainenKieli === Kieli.RUOTSI;
-  const hasSaamenKieli = ensisijainenKieli === Kieli.SAAME || toissijainenKieli === Kieli.SAAME;
-  return {
-    SUOMI: lokalisoituTeksti?.SUOMI || "",
-    ...pickBy(
-      {
-        RUOTSI: hasRuotsinKieli ? lokalisoituTeksti?.RUOTSI || "" : undefined,
-        SAAME: hasSaamenKieli ? lokalisoituTeksti?.SAAME || "" : undefined,
-      },
-      (value) => value !== undefined
-    ),
-  };
 }
 
 function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: AloituskuulutusFormProps): ReactElement {
@@ -445,55 +409,12 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                     />
                   </div>
                 </Section>
-                {projekti.aloitusKuulutus?.uudelleenKuulutus && (
-                  <Section>
-                    <h5 className="vayla-small-title">Uudelleenkuuluttamisen seloste</h5>
-                    {projekti.aloitusKuulutus.uudelleenKuulutus.tila === UudelleenkuulutusTila.JULKAISTU_PERUUTETTU && (
-                      <SectionContent>
-                        <h6 className="vayla-smallest-title">Seloste kuulutukselle</h6>
-                        <p>
-                          Kirjoita kuulutusta varten seloste uudelleenkuuluttamisen syistä. Seloste tulee nähtäville palvelun julkiselle
-                          puolelle sekä kuulutuksen pdf-tiedostoon. Älä lisää tekstiin linkkejä.
-                        </p>
-                        <Textarea
-                          label={`Suunnitelman uudelleenkuuluttamisen syy ensisijaisella kielellä (${lowerCase(ensisijainenKieli)}) *`}
-                          {...register(`aloitusKuulutus.uudelleenKuulutus.selosteKuulutukselle.${ensisijainenKieli}`)}
-                          error={(errors.aloitusKuulutus?.uudelleenKuulutus as any)?.selosteKuulutukselle?.[ensisijainenKieli]}
-                          disabled={disableFormEdit}
-                        />
-                        {toissijainenKieli && (
-                          <Textarea
-                            label={`Suunnitelman uudelleenkuuluttamisen syy toissijaisella kielellä (${lowerCase(toissijainenKieli)}) *`}
-                            {...register(`aloitusKuulutus.uudelleenKuulutus.selosteKuulutukselle.${toissijainenKieli}`)}
-                            error={(errors.aloitusKuulutus?.uudelleenKuulutus as any)?.selosteKuulutukselle?.[toissijainenKieli]}
-                            disabled={disableFormEdit}
-                          />
-                        )}
-                      </SectionContent>
-                    )}
-                    <SectionContent>
-                      <h6 className="vayla-smallest-title">Seloste lähetekirjeeseen</h6>
-                      <p>
-                        Kirjoita lähetekirjettä varten seloste uudelleenkuuluttamisen syistä. Seloste tulee nähtäville viranomaiselle ja
-                        kunnille lähetettävän lähetekirjeen alkuun. Älä lisää tekstiin linkkejä.
-                      </p>
-                      <Textarea
-                        label={`Suunnitelman uudelleenkuuluttamisen syy ensisijaisella kielellä (${lowerCase(ensisijainenKieli)}) *`}
-                        {...register(`aloitusKuulutus.uudelleenKuulutus.selosteLahetekirjeeseen.${ensisijainenKieli}`)}
-                        error={(errors.aloitusKuulutus?.uudelleenKuulutus as any)?.selosteLahetekirjeeseen?.[ensisijainenKieli]}
-                        disabled={disableFormEdit}
-                      />
-                      {toissijainenKieli && (
-                        <Textarea
-                          label={`Suunnitelman uudelleenkuuluttamisen syy toissijaisella kielellä (${lowerCase(toissijainenKieli)}) *`}
-                          {...register(`aloitusKuulutus.uudelleenKuulutus.selosteLahetekirjeeseen.${toissijainenKieli}`)}
-                          error={(errors.aloitusKuulutus?.uudelleenKuulutus as any)?.selosteLahetekirjeeseen?.[toissijainenKieli]}
-                          disabled={disableFormEdit}
-                        />
-                      )}
-                    </SectionContent>
-                  </Section>
-                )}
+                <SelitteetUudelleenkuulutukselle
+                  disabled={disableFormEdit}
+                  kielitiedot={projekti.kielitiedot}
+                  uudelleenKuulutus={projekti.aloitusKuulutus?.uudelleenKuulutus}
+                  vaiheenAvain="aloitusKuulutus"
+                />
                 <Section noDivider={!!toissijainenKieli}>
                   <SectionContent>
                     <h5 className="vayla-small-title">Hankkeen sisällönkuvaus</h5>

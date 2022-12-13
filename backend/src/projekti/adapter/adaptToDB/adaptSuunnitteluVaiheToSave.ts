@@ -2,7 +2,7 @@ import { DBProjekti, SuunnitteluVaihe } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { SuunnitteluVaiheTila } from "../../../../../common/graphql/apiModel";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
-import { findPublishedAloitusKuulutusJulkaisu } from "../common";
+import { findPublishedKuulutusJulkaisu } from "../common";
 import { adaptHankkeenKuvausToSave } from "./common";
 
 export function adaptSuunnitteluVaiheToSave(
@@ -37,7 +37,7 @@ function validateSuunnitteluVaihePublishing(dbProjekti: DBProjekti, suunnitteluV
   const isSuunnitteluVaiheBeingPublished = previousState !== SuunnitteluVaiheTila.JULKINEN && newState == SuunnitteluVaiheTila.JULKINEN;
   if (isSuunnitteluVaiheBeingPublished) {
     // Publishing is allowed only if there is a published aloituskuulutusjulkaisu
-    if (!(dbProjekti.aloitusKuulutusJulkaisut && findPublishedAloitusKuulutusJulkaisu(dbProjekti.aloitusKuulutusJulkaisut))) {
+    if (!(dbProjekti.aloitusKuulutusJulkaisut && findPublishedKuulutusJulkaisu(dbProjekti.aloitusKuulutusJulkaisut))) {
       throw new IllegalArgumentError("Suunnitteluvaihetta ei voi julkaista ennen kuin aloituskuulutus on julkaistu");
     }
   }

@@ -75,7 +75,7 @@ export class ProjektiAdapter {
         vuorovaikutukset
       ),
       nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe, nahtavillaoloVaiheJulkaisut),
-      nahtavillaoloVaiheJulkaisu: adaptNahtavillaoloVaiheJulkaisu(dbProjekti.oid, nahtavillaoloVaiheJulkaisut),
+      nahtavillaoloVaiheJulkaisu: adaptNahtavillaoloVaiheJulkaisu(dbProjekti, nahtavillaoloVaiheJulkaisut),
       hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(
         hyvaksymisPaatosVaihe,
         dbProjekti.kasittelynTila?.hyvaksymispaatos,
@@ -143,11 +143,7 @@ export class ProjektiAdapter {
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
     kayttoOikeudetManager.applyChanges(kayttoOikeudet);
     const vuorovaikutukset = adaptVuorovaikutusToSave(projekti, projektiAdaptationResult, suunnitteluVaihe?.vuorovaikutus);
-    const aloitusKuulutusToSave = adaptAloitusKuulutusToSave(
-      projekti.aloitusKuulutus,
-      aloitusKuulutus,
-      projekti.aloitusKuulutusJulkaisut?.length
-    );
+    const aloitusKuulutusToSave = adaptAloitusKuulutusToSave(projekti.aloitusKuulutus, aloitusKuulutus);
     const dbProjekti: DBProjekti = mergeWith(
       {},
       {
@@ -157,30 +153,14 @@ export class ProjektiAdapter {
         suunnitteluSopimus: adaptSuunnitteluSopimusToSave(projekti, suunnitteluSopimus),
         kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet(),
         suunnitteluVaihe: adaptSuunnitteluVaiheToSave(projekti, suunnitteluVaihe),
-        nahtavillaoloVaihe: adaptNahtavillaoloVaiheToSave(
-          projekti.nahtavillaoloVaihe,
-          nahtavillaoloVaihe,
-          projektiAdaptationResult,
-          projekti.nahtavillaoloVaiheJulkaisut?.length
-        ),
+        nahtavillaoloVaihe: adaptNahtavillaoloVaiheToSave(projekti.nahtavillaoloVaihe, nahtavillaoloVaihe, projektiAdaptationResult),
         hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaiheToSave(
           projekti.hyvaksymisPaatosVaihe,
           hyvaksymisPaatosVaihe,
-          projektiAdaptationResult,
-          projekti.hyvaksymisPaatosVaiheJulkaisut?.length
+          projektiAdaptationResult
         ),
-        jatkoPaatos1Vaihe: adaptHyvaksymisPaatosVaiheToSave(
-          projekti.jatkoPaatos1Vaihe,
-          jatkoPaatos1Vaihe,
-          projektiAdaptationResult,
-          projekti.jatkoPaatos1VaiheJulkaisut?.length
-        ),
-        jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaiheToSave(
-          projekti.jatkoPaatos2Vaihe,
-          jatkoPaatos2Vaihe,
-          projektiAdaptationResult,
-          projekti.jatkoPaatos2VaiheJulkaisut?.length
-        ),
+        jatkoPaatos1Vaihe: adaptHyvaksymisPaatosVaiheToSave(projekti.jatkoPaatos1Vaihe, jatkoPaatos1Vaihe, projektiAdaptationResult),
+        jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaiheToSave(projekti.jatkoPaatos2Vaihe, jatkoPaatos2Vaihe, projektiAdaptationResult),
         kielitiedot,
         euRahoitus,
         liittyvatSuunnitelmat,

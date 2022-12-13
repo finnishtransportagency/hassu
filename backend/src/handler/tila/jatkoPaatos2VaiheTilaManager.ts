@@ -1,13 +1,40 @@
 import { KuulutusJulkaisuTila, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
-import { DBProjekti, HyvaksymisPaatosVaihe } from "../../database/model";
+import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import { AbstractHyvaksymisPaatosVaiheTilaManager } from "./abstractHyvaksymisPaatosVaiheTilaManager";
-import { ProjektiPaths } from "../../files/ProjektiPath";
 import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
+import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
+import { assertIsDefined } from "../../util/assertions";
 
 class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
+  getVaihe(projekti: DBProjekti): HyvaksymisPaatosVaihe {
+    const vaihe = projekti.jatkoPaatos2Vaihe;
+    assertIsDefined(vaihe, "Projektilla ei ole jatkoPaatos2Vaihetta");
+    return vaihe;
+  }
+
+  getJulkaisut(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu[] | undefined {
+    return projekti.jatkoPaatos2VaiheJulkaisut || undefined;
+  }
+
+  validateUudelleenkuulutus(
+    projekti: DBProjekti,
+    kuulutus: HyvaksymisPaatosVaihe,
+    hyvaksyttyJulkaisu: HyvaksymisPaatosVaiheJulkaisu | undefined
+  ): void {
+    // TODO
+  }
+
+  getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: HyvaksymisPaatosVaihe | null | undefined): PathTuple {
+    return new ProjektiPaths(projekti.oid).jatkoPaatos2Vaihe(kuulutus);
+  }
+
+  async saveVaihe(projekti: DBProjekti, jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe): Promise<void> {
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, jatkoPaatos1Vaihe });
+  }
+
   async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
     const julkaisuWaitingForApproval = asiakirjaAdapter.findJatkoPaatos2VaiheWaitingForApproval(projekti);
     if (julkaisuWaitingForApproval) {

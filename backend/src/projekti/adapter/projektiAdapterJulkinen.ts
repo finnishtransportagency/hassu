@@ -7,6 +7,7 @@ import {
   HyvaksymisPaatosVaiheJulkaisu,
   NahtavillaoloVaiheJulkaisu,
   StandardiYhteystiedot,
+  UudelleenKuulutus,
   Velho,
   Vuorovaikutus,
   VuorovaikutusTilaisuus,
@@ -22,7 +23,6 @@ import {
 import pickBy from "lodash/pickBy";
 import dayjs, { Dayjs } from "dayjs";
 import { fileService } from "../../files/fileService";
-import { log } from "../../logger";
 import { parseDate } from "../../util/dateUtil";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import {
@@ -32,19 +32,19 @@ import {
   adaptLinkkiListByAddingTypename,
   adaptMandatoryYhteystiedotByAddingTypename,
   adaptYhteystiedotByAddingTypename,
-  findPublishedAloitusKuulutusJulkaisu,
+  findPublishedKuulutusJulkaisu,
 } from "./common";
-import { findJulkaisuWithTila, findUserByKayttajatunnus } from "../projektiUtil";
+import { findUserByKayttajatunnus } from "../projektiUtil";
 import { applyProjektiJulkinenStatus } from "../status/projektiJulkinenStatusHandler";
 import {
   adaptStandardiYhteystiedotLisaamattaProjaria,
   adaptStandardiYhteystiedotToAPIYhteystiedot,
 } from "../../util/adaptStandardiYhteystiedot";
 import {
+  adaptLokalisoituTeksti,
   adaptSuunnitteluSopimusJulkaisu,
   adaptSuunnitteluSopimusJulkaisuJulkinen,
   adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu,
-  adaptUudelleenKuulutus,
   FileLocation,
 } from "./adaptToAPI";
 import { cloneDeep } from "lodash";
@@ -57,7 +57,7 @@ class ProjektiAdapterJulkinen {
     }
     const aloitusKuulutusJulkaisu = this.adaptAloitusKuulutusJulkaisu(dbProjekti.oid, dbProjekti.aloitusKuulutusJulkaisut);
 
-    if (!checkIfAloitusKuulutusJulkaisutIsPublic(aloitusKuulutusJulkaisu)) {
+    if (!aloitusKuulutusJulkaisu) {
       return undefined;
     }
 
@@ -124,41 +124,38 @@ class ProjektiAdapterJulkinen {
     oid: string,
     aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null
   ): API.AloitusKuulutusJulkaisuJulkinen | undefined {
-    if (aloitusKuulutusJulkaisut) {
-      const migroitu = findJulkaisuWithTila(aloitusKuulutusJulkaisut, API.KuulutusJulkaisuTila.MIGROITU);
-      if (migroitu) {
-        return {
-          __typename: "AloitusKuulutusJulkaisuJulkinen",
-          tila: KuulutusJulkaisuTila.MIGROITU,
-          yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(migroitu.yhteystiedot),
-          velho: adaptVelho(migroitu.velho),
-        };
-      }
-      // Pick HYVAKSYTTY or MIGROITU aloituskuulutusjulkaisu, by this order
-      const julkaisu = findPublishedAloitusKuulutusJulkaisu(aloitusKuulutusJulkaisut);
-      if (!julkaisu) {
-        return undefined;
-      }
-      const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, tila, kuulutusPaiva, uudelleenKuulutus } = julkaisu;
-      if (!julkaisu.hankkeenKuvaus) {
-        throw new Error("adaptAloitusKuulutusJulkaisut: julkaisu.hankkeenKuvaus määrittelemättä");
-      }
-
+    const julkaisu = findPublishedKuulutusJulkaisu(aloitusKuulutusJulkaisut);
+    // Pick HYVAKSYTTY or MIGROITU aloituskuulutusjulkaisu, by this order
+    if (!julkaisu) {
+      return undefined;
+    }
+    const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, tila, kuulutusPaiva, uudelleenKuulutus } = julkaisu;
+    if (tila === KuulutusJulkaisuTila.MIGROITU) {
       return {
         __typename: "AloitusKuulutusJulkaisuJulkinen",
-        kuulutusPaiva,
-        siirtyySuunnitteluVaiheeseen: julkaisu.siirtyySuunnitteluVaiheeseen,
-        hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
+        tila,
         yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
         velho: adaptVelho(velho),
-        suunnitteluSopimus: adaptSuunnitteluSopimusJulkaisuJulkinen(oid, suunnitteluSopimus),
-        kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
-        aloituskuulutusPDFt: this.adaptJulkaisuPDFPaths(oid, julkaisu),
-        tila,
-        uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
       };
     }
-    return undefined;
+
+    if (!julkaisu.hankkeenKuvaus) {
+      throw new Error("adaptAloitusKuulutusJulkaisut: julkaisu.hankkeenKuvaus määrittelemättä");
+    }
+
+    return {
+      __typename: "AloitusKuulutusJulkaisuJulkinen",
+      kuulutusPaiva,
+      siirtyySuunnitteluVaiheeseen: julkaisu.siirtyySuunnitteluVaiheeseen,
+      hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
+      yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
+      velho: adaptVelho(velho),
+      suunnitteluSopimus: adaptSuunnitteluSopimusJulkaisuJulkinen(oid, suunnitteluSopimus),
+      kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
+      aloituskuulutusPDFt: this.adaptJulkaisuPDFPaths(oid, julkaisu),
+      tila,
+      uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
+    };
   }
 
   adaptJulkaisuPDFPaths(oid: string, aloitusKuulutus: AloitusKuulutusJulkaisu): API.AloitusKuulutusPDFt | undefined {
@@ -210,65 +207,62 @@ class ProjektiAdapterJulkinen {
   }
 
   private static adaptNahtavillaoloVaiheJulkaisu(dbProjekti: DBProjekti): API.NahtavillaoloVaiheJulkaisuJulkinen | undefined {
-    if (!dbProjekti.nahtavillaoloVaiheJulkaisut) {
+    const julkaisu = findPublishedKuulutusJulkaisu(dbProjekti.nahtavillaoloVaiheJulkaisut);
+    if (!julkaisu) {
       return undefined;
     }
-    const julkaisu = pickExactlyOneNahtavillaoloVaiheJulkaisu(dbProjekti.nahtavillaoloVaiheJulkaisut);
-    if (julkaisu) {
-      const {
-        aineistoNahtavilla,
-        hankkeenKuvaus,
-        kuulutusPaiva,
-        kuulutusVaihePaattyyPaiva,
-        yhteystiedot,
-        muistutusoikeusPaattyyPaiva,
-        velho,
-        kielitiedot,
-        tila,
-      } = julkaisu;
-
-      if (julkaisu?.tila == KuulutusJulkaisuTila.MIGROITU) {
-        return {
-          __typename: "NahtavillaoloVaiheJulkaisuJulkinen",
-          tila: julkaisu.tila,
-          velho: adaptVelho(velho),
-          yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
-        };
-      }
-
-      const paths = new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(julkaisu);
-
-      if (!aineistoNahtavilla) {
-        throw new Error("adaptNahtavillaoloVaiheJulkaisu: julkaisu.aineistoNahtavilla määrittelemättä");
-      }
-      if (!yhteystiedot) {
-        throw new Error("adaptNahtavillaoloVaiheJulkaisu: julkaisu.yhteystiedot määrittelemättä");
-      }
-      if (!hankkeenKuvaus) {
-        throw new Error("adaptNahtavillaoloVaiheJulkaisu: julkaisu.hankkeenKuvaus määrittelemättä");
-      }
-
-      let apiAineistoNahtavilla: API.Aineisto[] | undefined = undefined;
-      if (!isKuulutusNahtavillaVaiheOver(julkaisu)) {
-        apiAineistoNahtavilla = adaptAineistotJulkinen(aineistoNahtavilla, paths);
-      }
-
-      const julkaisuJulkinen: API.NahtavillaoloVaiheJulkaisuJulkinen = {
+    const {
+      aineistoNahtavilla,
+      hankkeenKuvaus,
+      kuulutusPaiva,
+      kuulutusVaihePaattyyPaiva,
+      yhteystiedot,
+      muistutusoikeusPaattyyPaiva,
+      velho,
+      kielitiedot,
+      tila,
+      uudelleenKuulutus,
+    } = julkaisu;
+    if (tila == KuulutusJulkaisuTila.MIGROITU) {
+      return {
         __typename: "NahtavillaoloVaiheJulkaisuJulkinen",
-        hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
-        kuulutusPaiva,
-        kuulutusVaihePaattyyPaiva,
-        muistutusoikeusPaattyyPaiva,
-        yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
-        velho: adaptVelho(velho),
-        kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
         tila,
+        velho: adaptVelho(velho),
+        yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
       };
-      if (apiAineistoNahtavilla) {
-        julkaisuJulkinen.aineistoNahtavilla = apiAineistoNahtavilla;
-      }
-      return julkaisuJulkinen;
     }
+
+    if (!aineistoNahtavilla) {
+      throw new Error("adaptNahtavillaoloVaiheJulkaisu: julkaisu.aineistoNahtavilla määrittelemättä");
+    }
+    if (!yhteystiedot) {
+      throw new Error("adaptNahtavillaoloVaiheJulkaisu: julkaisu.yhteystiedot määrittelemättä");
+    }
+    if (!hankkeenKuvaus) {
+      throw new Error("adaptNahtavillaoloVaiheJulkaisu: julkaisu.hankkeenKuvaus määrittelemättä");
+    }
+
+    const paths = new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(julkaisu);
+    let apiAineistoNahtavilla: API.Aineisto[] | undefined = undefined;
+    if (!isKuulutusNahtavillaVaiheOver(julkaisu)) {
+      apiAineistoNahtavilla = adaptAineistotJulkinen(aineistoNahtavilla, paths);
+    }
+    const julkaisuJulkinen: API.NahtavillaoloVaiheJulkaisuJulkinen = {
+      __typename: "NahtavillaoloVaiheJulkaisuJulkinen",
+      hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
+      kuulutusPaiva,
+      kuulutusVaihePaattyyPaiva,
+      muistutusoikeusPaattyyPaiva,
+      yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
+      velho: adaptVelho(velho),
+      kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
+      tila,
+      uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
+    };
+    if (apiAineistoNahtavilla) {
+      julkaisuJulkinen.aineistoNahtavilla = apiAineistoNahtavilla;
+    }
+    return julkaisuJulkinen;
   }
 
   private static adaptHyvaksymisPaatosVaihe(
@@ -276,104 +270,81 @@ class ProjektiAdapterJulkinen {
     hyvaksymispaatos: Hyvaksymispaatos | undefined | null,
     getPathCallback: (julkaisu: HyvaksymisPaatosVaiheJulkaisu) => PathTuple
   ): API.HyvaksymisPaatosVaiheJulkaisuJulkinen | undefined {
-    const julkaisu = findApprovedHyvaksymisPaatosVaihe(paatosVaiheJulkaisut);
-    if (julkaisu) {
-      const {
-        hyvaksymisPaatos,
-        aineistoNahtavilla,
-        kuulutusPaiva,
-        kuulutusVaihePaattyyPaiva,
-        yhteystiedot,
-        velho,
-        kielitiedot,
-        hallintoOikeus,
-        tila,
-      } = julkaisu;
-
-      if (tila == KuulutusJulkaisuTila.MIGROITU) {
-        return { __typename: "HyvaksymisPaatosVaiheJulkaisuJulkinen", tila, velho: adaptVelho(velho) };
-      }
-
-      if (!hyvaksymispaatos) {
-        throw new Error("adaptHyvaksymisPaatosVaihe: dbProjekti.kasittelynTila?.hyvaksymispaatos määrittelemättä");
-      }
-      if (!hyvaksymispaatos.paatoksenPvm) {
-        throw new Error("adaptHyvaksymisPaatosVaihe: dbProjekti.kasittelynTila?.hyvaksymispaatos.paatoksenPvm määrittelemättä");
-      }
-      if (!hyvaksymispaatos.asianumero) {
-        throw new Error("adaptHyvaksymisPaatosVaihe: dbProjekti.kasittelynTila?.hyvaksymispaatos.asianumero määrittelemättä");
-      }
-      if (!hyvaksymisPaatos) {
-        throw new Error("adaptHyvaksymisPaatosVaihe: julkaisu.hyvaksymisPaatos määrittelemättä");
-      }
-      if (!yhteystiedot) {
-        throw new Error("adaptHyvaksymisPaatosVaihe: julkaisu.yhteystiedot määrittelemättä");
-      }
-      const paths = getPathCallback(julkaisu);
-
-      let apiHyvaksymisPaatosAineisto: API.Aineisto[] | undefined = undefined;
-      let apiAineistoNahtavilla: API.Aineisto[] | undefined = undefined;
-      if (!isKuulutusNahtavillaVaiheOver(julkaisu)) {
-        apiHyvaksymisPaatosAineisto = adaptAineistotJulkinen(hyvaksymisPaatos, paths);
-        apiAineistoNahtavilla = adaptAineistotJulkinen(aineistoNahtavilla, paths);
-      }
-      return {
-        __typename: "HyvaksymisPaatosVaiheJulkaisuJulkinen",
-        hyvaksymisPaatos: apiHyvaksymisPaatosAineisto,
-        hyvaksymisPaatoksenPvm: hyvaksymispaatos.paatoksenPvm,
-        hyvaksymisPaatoksenAsianumero: hyvaksymispaatos.asianumero,
-        aineistoNahtavilla: apiAineistoNahtavilla,
-        kuulutusPaiva,
-        kuulutusVaihePaattyyPaiva,
-        yhteystiedot: adaptYhteystiedotByAddingTypename(yhteystiedot),
-        velho: adaptVelho(velho),
-        kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
-        hallintoOikeus,
-        tila,
-      };
+    const julkaisu = findPublishedKuulutusJulkaisu(paatosVaiheJulkaisut);
+    if (!julkaisu) {
+      return undefined;
     }
-  }
-}
+    const {
+      hyvaksymisPaatos,
+      aineistoNahtavilla,
+      kuulutusPaiva,
+      kuulutusVaihePaattyyPaiva,
+      yhteystiedot,
+      velho,
+      kielitiedot,
+      hallintoOikeus,
+      tila,
+    } = julkaisu;
 
-function pickExactlyOneNahtavillaoloVaiheJulkaisu(
-  nahtavillaoloVaiheJulkaisut: NahtavillaoloVaiheJulkaisu[]
-): NahtavillaoloVaiheJulkaisu | undefined {
-  const julkaisut = nahtavillaoloVaiheJulkaisut?.filter(isNahtavillaoloVaihePublic);
-  if (julkaisut) {
-    if (julkaisut.length > 1) {
-      throw new Error("Bug: vain yksi nähtävilläolo voi olla julkinen kerrallaan");
+    if (tila == KuulutusJulkaisuTila.MIGROITU) {
+      return { __typename: "HyvaksymisPaatosVaiheJulkaisuJulkinen", tila, velho: adaptVelho(velho) };
     }
-    return julkaisut.pop();
-  }
-}
 
-function findApprovedHyvaksymisPaatosVaihe(
-  hyvaksymisPaatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[] | undefined | null
-): HyvaksymisPaatosVaiheJulkaisu | undefined {
-  const julkaisut = hyvaksymisPaatosVaiheJulkaisut?.filter(isHyvaksymisPaatosVaihePublic);
-  if (julkaisut) {
-    if (julkaisut.length > 1) {
-      throw new Error("Bug: löytyi liian monta julkaisua");
+    if (!hyvaksymispaatos) {
+      throw new Error("adaptHyvaksymisPaatosVaihe: dbProjekti.kasittelynTila?.hyvaksymispaatos määrittelemättä");
     }
-    return julkaisut.pop();
-  }
-}
+    if (!hyvaksymispaatos.paatoksenPvm) {
+      throw new Error("adaptHyvaksymisPaatosVaihe: dbProjekti.kasittelynTila?.hyvaksymispaatos.paatoksenPvm määrittelemättä");
+    }
+    if (!hyvaksymispaatos.asianumero) {
+      throw new Error("adaptHyvaksymisPaatosVaihe: dbProjekti.kasittelynTila?.hyvaksymispaatos.asianumero määrittelemättä");
+    }
+    if (!hyvaksymisPaatos) {
+      throw new Error("adaptHyvaksymisPaatosVaihe: julkaisu.hyvaksymisPaatos määrittelemättä");
+    }
+    if (!yhteystiedot) {
+      throw new Error("adaptHyvaksymisPaatosVaihe: julkaisu.yhteystiedot määrittelemättä");
+    }
+    const paths = getPathCallback(julkaisu);
 
-function isHyvaksymisPaatosVaihePublic(vaihe: HyvaksymisPaatosVaiheJulkaisu): boolean {
-  if (!vaihe) {
-    return false;
+    let apiHyvaksymisPaatosAineisto: API.Aineisto[] | undefined = undefined;
+    let apiAineistoNahtavilla: API.Aineisto[] | undefined = undefined;
+    if (!isKuulutusNahtavillaVaiheOver(julkaisu)) {
+      apiHyvaksymisPaatosAineisto = adaptAineistotJulkinen(hyvaksymisPaatos, paths);
+      apiAineistoNahtavilla = adaptAineistotJulkinen(aineistoNahtavilla, paths);
+    }
+    return {
+      __typename: "HyvaksymisPaatosVaiheJulkaisuJulkinen",
+      hyvaksymisPaatos: apiHyvaksymisPaatosAineisto,
+      hyvaksymisPaatoksenPvm: hyvaksymispaatos.paatoksenPvm,
+      hyvaksymisPaatoksenAsianumero: hyvaksymispaatos.asianumero,
+      aineistoNahtavilla: apiAineistoNahtavilla,
+      kuulutusPaiva,
+      kuulutusVaihePaattyyPaiva,
+      yhteystiedot: adaptYhteystiedotByAddingTypename(yhteystiedot),
+      velho: adaptVelho(velho),
+      kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
+      hallintoOikeus,
+      tila,
+    };
   }
-  if (vaihe.tila == KuulutusJulkaisuTila.MIGROITU) {
-    return true;
-  }
-  if (!vaihe.kuulutusPaiva || parseDate(vaihe.kuulutusPaiva).isAfter(dayjs())) {
-    return false;
-  }
-  return vaihe.tila === API.KuulutusJulkaisuTila.HYVAKSYTTY;
 }
 
 function isUnsetOrInPast(julkaisuPaiva?: dayjs.Dayjs) {
   return !julkaisuPaiva || julkaisuPaiva.isBefore(dayjs());
+}
+
+export function adaptUudelleenKuulutus(uudelleenKuulutus: UudelleenKuulutus | null | undefined): API.UudelleenKuulutus | null | undefined {
+  if (!uudelleenKuulutus) {
+    return uudelleenKuulutus;
+  }
+  return {
+    __typename: "UudelleenKuulutus",
+    tila: uudelleenKuulutus.tila,
+    alkuperainenHyvaksymisPaiva: uudelleenKuulutus.alkuperainenHyvaksymisPaiva,
+    selosteKuulutukselle: adaptLokalisoituTeksti(uudelleenKuulutus?.selosteKuulutukselle),
+    selosteLahetekirjeeseen: null,
+  };
 }
 
 /**
@@ -394,7 +365,7 @@ function adaptAineistotJulkinen(
         if (!aineisto.tiedosto) {
           throw new Error("adaptAineistotJulkinen: aineisto.tiedosto määrittelemättä");
         }
-        const { nimi, dokumenttiOid, jarjestys, kategoriaId } = aineisto;
+        const { nimi, dokumenttiOid, jarjestys, kategoriaId, tuotu } = aineisto;
         const tiedosto = fileService.getPublicPathForProjektiFile(paths, aineisto.tiedosto);
         return {
           __typename: "Aineisto",
@@ -403,6 +374,7 @@ function adaptAineistotJulkinen(
           nimi,
           jarjestys,
           kategoriaId,
+          tuotu,
         };
       });
   }
@@ -465,40 +437,6 @@ function adaptVuorovaikutusTilaisuudet(
 
     return tilaisuus;
   });
-}
-
-function checkIfAloitusKuulutusJulkaisutIsPublic(aloitusKuulutusJulkaisu: API.AloitusKuulutusJulkaisuJulkinen | null | undefined): boolean {
-  if (!aloitusKuulutusJulkaisu) {
-    log.info("Projektilla ei ole hyväksyttyä aloituskuulutusta");
-    return false;
-  }
-
-  if (aloitusKuulutusJulkaisu.tila == API.KuulutusJulkaisuTila.HYVAKSYTTY) {
-    if (aloitusKuulutusJulkaisu.kuulutusPaiva && parseDate(aloitusKuulutusJulkaisu.kuulutusPaiva).isAfter(dayjs())) {
-      log.info("Projektin aloituskuulutuksen kuulutuspäivä on tulevaisuudessa", {
-        kuulutusPaiva: parseDate(aloitusKuulutusJulkaisu.kuulutusPaiva).format(),
-        now: dayjs().format(),
-      });
-      return false;
-    }
-  } else if (aloitusKuulutusJulkaisu.tila !== API.KuulutusJulkaisuTila.MIGROITU) {
-    // If there are no HYVAKSYTTY or MIGROITU aloitusKuulutusJulkaisu, hide projekti
-    return false;
-  }
-  return true;
-}
-
-function isNahtavillaoloVaihePublic(nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu): boolean {
-  if (!nahtavillaoloVaihe) {
-    return false;
-  }
-  if (nahtavillaoloVaihe.tila == KuulutusJulkaisuTila.MIGROITU) {
-    return true;
-  }
-  if (!nahtavillaoloVaihe.kuulutusPaiva || parseDate(nahtavillaoloVaihe.kuulutusPaiva).isAfter(dayjs())) {
-    return false;
-  }
-  return nahtavillaoloVaihe.tila === API.KuulutusJulkaisuTila.HYVAKSYTTY;
 }
 
 function isKuulutusNahtavillaVaiheOver(

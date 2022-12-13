@@ -54,7 +54,7 @@ interface MuokkausnakymaFormProps {
   paatosTyyppi: PaatosTyyppi;
 }
 
-const hyvaksymisPaatosSuunnitelmatJaAineistotProps: SuunnitelmatJaAineistotProps = {
+const hyvaksymisPaatosSuunnitelmatJaAineistotProps: Omit<SuunnitelmatJaAineistotProps, "vaihe"> = {
   sectionTitle: "Päätös ja päätöksen liitteenä oleva aineisto",
   sectionInfoText:
     "Liitä Liikenne- ja viestintäviraston päätös. Liitettävä päätös haetaan Projektivelhosta. Päätös ja sen liitteenä oleva aineisto julkaistaan palvelun julkisella puolella kuulutuksen julkaisupäivänä.",
@@ -67,7 +67,7 @@ const hyvaksymisPaatosSuunnitelmatJaAineistotProps: SuunnitelmatJaAineistotProps
   },
 };
 
-const jatkopaatosPaatosSuunnitelmatProps: SuunnitelmatJaAineistotProps = {
+const jatkopaatosPaatosSuunnitelmatProps: Omit<SuunnitelmatJaAineistotProps, "vaihe"> = {
   ...hyvaksymisPaatosSuunnitelmatJaAineistotProps,
   sectionInfoText:
     "Liitä kuulutukselle Liikenne- ja viestintäviraston päätös sekä jatkopäätös. Liitettävät päätökset sekä päätösten liitteenä olevat aineistot haetaan Projektivelhosta. Päätökset ja sen liitteenä oleva aineisto julkaistaan palvelun julkisella puolella kuulutuksen julkaisupäivänä.",
@@ -78,10 +78,10 @@ const jatkopaatosPaatosSuunnitelmatProps: SuunnitelmatJaAineistotProps = {
   },
 };
 
-const paatosTyyppiToSuunnitelmatJaAineistotPropsMap: Record<PaatosTyyppi, SuunnitelmatJaAineistotProps> = {
+const paatosTyyppiToSuunnitelmatJaAineistotPropsMap: Record<PaatosTyyppi, Omit<SuunnitelmatJaAineistotProps, "vaihe">> = {
   HYVAKSYMISPAATOS: hyvaksymisPaatosSuunnitelmatJaAineistotProps,
   JATKOPAATOS1: jatkopaatosPaatosSuunnitelmatProps,
-  JATKOPAATOS2: jatkopaatosPaatosSuunnitelmatProps, // Maybe the texts are the same as in jatkopaatos1
+  JATKOPAATOS2: jatkopaatosPaatosSuunnitelmatProps,
 };
 
 function MuokkausnakymaForm({
@@ -124,7 +124,7 @@ function MuokkausnakymaForm({
     <FormProvider {...useFormReturn}>
       <form>
         <fieldset disabled={!isAllowedOnRoute || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden}>
-          <SuunnitelmatJaAineistot {...paatosTyyppiToSuunnitelmatJaAineistotPropsMap[paatosTyyppi]} />
+          <SuunnitelmatJaAineistot {...paatosTyyppiToSuunnitelmatJaAineistotPropsMap[paatosTyyppi]} vaihe={julkaisematonPaatos} />
           <HyvaksymisPaatosVaihePainikkeet paatosTyyppi={paatosTyyppi} />
         </fieldset>
       </form>
