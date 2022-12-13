@@ -89,7 +89,10 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
       {hasSuunnitteluSopimus && (
         <SectionContent largeGaps sx={{ marginLeft: 4 }}>
           <SectionContent>
-            <p>Kunnan projektipäällikön tiedot</p>
+            <h5 className="vayla-smallest-title">Kunnan edustajan tiedot</h5>
+            <p>
+              Kunnan edustajaksi merkitty henkilö näkyy automaattisesti valittuna aloituskuulutuksen ja vuorovaikutusten yhteystiedoissa.
+            </p>
             <HassuGrid cols={{ lg: 3 }}>
               <Select
                 id="suunnittelusopimus_yhteyshenkilo"
@@ -114,6 +117,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
             </HassuGrid>
           </SectionContent>
           <SectionContent>
+            <h5 className="vayla-smallest-title">Kunnan logo</h5>
             <Controller
               render={({ field }) =>
                 logoUrl ? (
@@ -142,6 +146,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
                         field.onChange(logoTiedosto);
                       }
                     }}
+                    bottomInfoText="Tuetut tiedostomuodot ovat JPG ja PNG. Sallittu tiedostokoko on maksimissaan 25Mt."
                     onChange={(e) => {
                       const logoTiedosto = e.target.files?.[0];
                       if (logoTiedosto) {

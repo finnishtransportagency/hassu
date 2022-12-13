@@ -267,8 +267,9 @@ export const createLocalizedTheme = (locale: Localization) =>
               ".MuiFormControlLabel-label": {
                 padding: "2px",
                 paddingTop: "9px",
+                color: "#242222",
                 "&.Mui-disabled": {
-                  color: "#999999",
+                  color: "#242222",
                 },
               },
             },

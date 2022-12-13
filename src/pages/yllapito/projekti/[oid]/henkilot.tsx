@@ -155,7 +155,7 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
             />
             <Section noDivider>
               <HassuStack alignItems="flex-end">
-                <Button id="save_projekti" className="ml-auto" primary disabled={disableFormEdit}>
+                <Button id="save_projekti" className="ml-auto" type="button" primary disabled={disableFormEdit}>
                   Tallenna
                 </Button>
               </HassuStack>

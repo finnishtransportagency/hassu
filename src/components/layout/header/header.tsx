@@ -217,12 +217,14 @@ export default function Header(): ReactElement {
 }
 
 const Navigation: FunctionComponent<{ navigationRoutes: NavigationRoute[]; mobile?: true }> = ({ navigationRoutes, mobile }) => {
+  const router = useRouter();
   return (
     <nav className="block md:flex border-t border-gray-light uppercase">
       <ul className="block pb-8 md:pb-0 md:flex md:float-left md:flex-wrap md:space-x-16">
-        {navigationRoutes.map((route, index) => (
-          <HeaderNavigationItem key={index} {...route} mobile={mobile} />
-        ))}
+        {navigationRoutes.map((route, index) => {
+          const isCurrentRoute = route.href === router.pathname;
+          return <HeaderNavigationItem key={index} {...route} isCurrentRoute={isCurrentRoute} mobile={mobile} />;
+        })}
       </ul>
     </nav>
   );
