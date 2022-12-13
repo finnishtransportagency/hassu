@@ -16,6 +16,7 @@ import { assertIsDefined } from "../../util/assertions";
 import { isKuulutusPaivaInThePast } from "../../projekti/status/projektiJulkinenStatusHandler";
 import { fileService } from "../../files/fileService";
 import { PathTuple } from "../../files/ProjektiPath";
+import { auditLog } from "../../logger";
 
 export abstract class TilaManager<T extends GenericKuulutus, Y extends GenericKuulutusJulkaisu> {
   protected tyyppi!: TilasiirtymaTyyppi;
@@ -93,12 +94,17 @@ export abstract class TilaManager<T extends GenericKuulutus, Y extends GenericKu
       };
     }
     kuulutus.uudelleenKuulutus = uudelleenKuulutus;
-    const newAloitusKuulutus = { ...kuulutus, id: julkaisut.length + 1 };
+    const newKuulutus = { ...kuulutus, id: julkaisut.length + 1 };
     const sourceFolder = this.getProjektiPathForKuulutus(projekti, kuulutus);
 
-    const targetFolder = this.getProjektiPathForKuulutus(projekti, newAloitusKuulutus);
+    const targetFolder = this.getProjektiPathForKuulutus(projekti, newKuulutus);
     await fileService.renameYllapitoFolder(sourceFolder, targetFolder);
-    await this.saveVaihe(projekti, newAloitusKuulutus);
+    auditLog.info("Uudelleennimeä ylläpidon tiedostokansio", { sourceFolder, targetFolder });
+    await this.saveVaihe(projekti, newKuulutus);
+    auditLog.info("Tallenna uudelleenkuulutustiedolla varustettu kuulutusvaihe", {
+      projektiEnnenTallennusta: projekti,
+      tallennettavaKuulutus: newKuulutus,
+    });
   }
 
   async synchronizeProjektiFiles(oid: string, isUudelleenKuulutus: boolean, synchronizationDate?: string | null): Promise<void> {
@@ -119,5 +125,5 @@ export abstract class TilaManager<T extends GenericKuulutus, Y extends GenericKu
 
   abstract getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: T | null | undefined): PathTuple;
 
-  abstract saveVaihe(projekti: DBProjekti, newAloitusKuulutus: T): Promise<void>;
+  abstract saveVaihe(projekti: DBProjekti, newKuulutus: T): Promise<void>;
 }
