@@ -91,7 +91,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
           <SectionContent>
             <h5 className="vayla-smallest-title">Kunnan edustajan tiedot</h5>
             <p>
-              Kunnan edustajaksi merkitty henkilö näky automaattisesti valittuna aloituskuulutuksen ja vuorovaikutusten yhteystiedoissa.
+              Kunnan edustajaksi merkitty henkilö näkyy automaattisesti valittuna aloituskuulutuksen ja vuorovaikutusten yhteystiedoissa.
             </p>
             <HassuGrid cols={{ lg: 3 }}>
               <Select
@@ -146,7 +146,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
                         field.onChange(logoTiedosto);
                       }
                     }}
-                    bottomInfoText="Tuetut tiedostomuodot: JPEG ja PNG. Sallittu tiedostokoko maksimissaan 25 Mt."
+                    bottomInfoText="Tuetut tiedostomuodot ovat JPG ja PNG. Sallittu tiedostokoko on maksimissaan 25Mt."
                     onChange={(e) => {
                       const logoTiedosto = e.target.files?.[0];
                       if (logoTiedosto) {
