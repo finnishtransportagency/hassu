@@ -108,9 +108,9 @@ export default function VuorovaikutusMahdollisuudet({
                             {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}
                           </p>
                           <div className="pl-2">
-                            {tilaisuus.yhteystiedot?.map((yhteystieto) => {
-                              <p>{yhteystietoKansalaiselleTekstiksi("fi", yhteystieto as Yhteystieto)}</p>;
-                            })}
+                            {tilaisuus.yhteystiedot?.map((yhteystieto, index) => (
+                              <p key={index}>{yhteystietoKansalaiselleTekstiksi("fi", yhteystieto as Yhteystieto)}</p>
+                            ))}
                           </div>
                         </div>
                       );
