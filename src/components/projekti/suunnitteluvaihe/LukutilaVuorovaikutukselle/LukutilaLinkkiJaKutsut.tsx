@@ -42,7 +42,7 @@ export default function LukutilaLinkkiJaKutsut({ vuorovaikutus, projekti }: Prop
             <p className="vayla-label mb-5">Ladattavat kutsut ja ilmoitukset</p>
             <div>Kutsu ja ilmoitus pääkielellä ({lowerCase(ensisijainenKieli)})</div>
             <div>
-              <Link underline="none" href={ensisijainenKutsuPDFPath} target="_blank">
+              <Link underline="none" href={"/" + ensisijainenKutsuPDFPath} target="_blank">
                 {splitFilePath(ensisijainenKutsuPDFPath).fileName}
               </Link>
             </div>
@@ -52,7 +52,7 @@ export default function LukutilaLinkkiJaKutsut({ vuorovaikutus, projekti }: Prop
           <>
             <div>Kutsu ja ilmoitus toisella kielellä ({lowerCase(toissijainenKieli)})</div>
             <div>
-              <Link underline="none" href={toisSijainenKutsuPDFPath} target="_blank">
+              <Link underline="none" href={"/" + toisSijainenKutsuPDFPath} target="_blank">
                 {splitFilePath(toisSijainenKutsuPDFPath).fileName}
               </Link>
             </div>
