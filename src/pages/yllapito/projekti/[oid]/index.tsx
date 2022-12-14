@@ -32,6 +32,8 @@ import ProjektinTiedotLukutila from "@components/projekti/lukutila/ProjektinTied
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import PaivitaVelhoTiedotButton from "@components/projekti/PaivitaVelhoTiedotButton";
 import useApi from "src/hooks/useApi";
+import { isApolloError } from "apollo-client/errors/ApolloError";
+import { concatCorrelationIdToErrorMessage } from "@components/ApiProvider";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -184,7 +186,11 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
         showSuccessMessage("Tallennus onnistui!");
       } catch (e) {
         log.log("OnSubmit Error", e);
-        showErrorMessage("Tallennuksessa tapahtui virhe!");
+        let errorMessage = "Tallennuksessa tapahtui virhe!";
+        if (e instanceof Error && isApolloError(e)) {
+          errorMessage = concatCorrelationIdToErrorMessage(errorMessage, e.graphQLErrors);
+        }
+        showErrorMessage(errorMessage);
       }
       setFormIsSubmitting(false);
     },

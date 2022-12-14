@@ -16,7 +16,8 @@ AWS.config.update({
 const graphQLAPI = awsExports.aws_appsync_graphqlEndpoint;
 const yllapitoGraphQLAPI = graphQLAPI.replace("/graphql", "/yllapito/graphql");
 
-type GenerateLinkArray = (errorHandler?: (errorResponse: ErrorResponse) => void) => ApolloLink[];
+export type ErrorResponseHandler = (errorResponse: ErrorResponse) => void;
+type GenerateLinkArray = (errorHandler?: ErrorResponseHandler) => ApolloLink[];
 
 const getPublicLinks: GenerateLinkArray = (errorHandler) => [
   createAuthLink({

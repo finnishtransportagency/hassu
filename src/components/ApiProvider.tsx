@@ -1,12 +1,13 @@
-import React, { createContext, ReactNode } from "react";
+import React, { createContext, ReactNode, useMemo } from "react";
 import { api } from "@services/api";
 import { API } from "@services/api/commonApi";
 import useSnackbars from "src/hooks/useSnackbars";
-import { createApiWithAdditionalErrorHandling } from "@services/api/permanentApi";
+import { createApiWithAdditionalErrorHandling, ErrorResponseHandler } from "@services/api/permanentApi";
 import { ErrorResponse } from "apollo-link-error";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import { Translate } from "next-translate";
+import { GraphQLError } from "graphql";
 
 export const ApiContext = createContext<API>(api);
 
@@ -15,7 +16,20 @@ interface Props {
 }
 
 type GenerateErrorMessage = (errorResponse: ErrorResponse, isYllapito: boolean, t: Translate) => string;
-const generateErrorMessage: GenerateErrorMessage = (errorResponse, isYllapito, t) => {
+type ConcatCorrelationIdToErrorMessage = (message: string, error?: GraphQLError | GraphQLError[] | readonly GraphQLError[]) => string;
+
+export const concatCorrelationIdToErrorMessage: ConcatCorrelationIdToErrorMessage = (message, error) => {
+  if (!error) {
+    return message;
+  }
+
+  const correlationId: string | undefined = Array.isArray(error)
+    ? (error?.[0] as any)?.errorInfo?.correlationId
+    : (error as any)?.errorInfo?.correlationId;
+  return message.concat(" ", `Välitä tunnistetieto '${correlationId}' järjestelmän ylläpitäjälle vikailmoituksen yhteydessä.`);
+};
+
+const generateGenericErrorMessage: GenerateErrorMessage = (errorResponse, isYllapito, t) => {
   const operationName = errorResponse.operation.operationName;
   let errorMessage = isYllapito ? `Odottamaton virhe toiminnossa '${operationName}'.` : t("error:yleinen");
 
@@ -23,11 +37,7 @@ const generateErrorMessage: GenerateErrorMessage = (errorResponse, isYllapito, t
   const showCorrelationId = process.env.ENVIRONMENT !== "prod" || isYllapito;
 
   if (showCorrelationId) {
-    const correlationId: string | undefined = (errorResponse.response?.errors?.[0] as any)?.errorInfo?.correlationId;
-    errorMessage = errorMessage.concat(
-      " ",
-      `Välitä tunnistetieto '${correlationId}' järjestelmän ylläpitäjälle vikailmoituksen yhteydessä.`
-    );
+    errorMessage = concatCorrelationIdToErrorMessage(errorMessage, errorResponse.response?.errors);
   }
   return errorMessage;
 };
@@ -38,15 +48,14 @@ function ApiProvider({ children }: Props) {
   const isYllapito = router.asPath.startsWith("/yllapito");
   const { t } = useTranslation("error");
 
-  return (
-    <ApiContext.Provider
-      value={createApiWithAdditionalErrorHandling((errorResponse) => {
-        showErrorMessage(generateErrorMessage(errorResponse, isYllapito, t));
-      })}
-    >
-      {children}
-    </ApiContext.Provider>
-  );
+  const value: API = useMemo(() => {
+    const errorHandler: ErrorResponseHandler = (errorResponse) => {
+      showErrorMessage(generateGenericErrorMessage(errorResponse, isYllapito, t));
+    };
+    return createApiWithAdditionalErrorHandling(errorHandler);
+  }, [isYllapito, showErrorMessage, t]);
+
+  return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>;
 }
 
 export { ApiProvider };

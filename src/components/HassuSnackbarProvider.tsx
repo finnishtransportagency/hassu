@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useState } from "react";
+import React, { createContext, ReactNode, useCallback, useMemo, useState } from "react";
 import Snackbar, { SnackbarProps } from "@mui/material/Snackbar";
 import Alert, { AlertColor, AlertProps } from "@mui/material/Alert";
 
@@ -6,12 +6,15 @@ type ShowMessage = (message: string, msgSeverity: AlertProps["severity"], msgDur
 type ShowSuccessMessage = (message: string) => void;
 type ShowErrorMessage = (message: string) => void;
 type ShowInfoMessage = (message: string) => void;
-export const SnackbarContext = createContext<{
+
+type SnackbarContextValue = {
   showMessage: ShowMessage;
   showSuccessMessage: ShowSuccessMessage;
   showErrorMessage: ShowErrorMessage;
   showInfoMessage: ShowInfoMessage;
-}>({
+};
+
+export const SnackbarContext = createContext<SnackbarContextValue>({
   showMessage: () => undefined,
   showSuccessMessage: () => undefined,
   showErrorMessage: () => undefined,
@@ -28,41 +31,43 @@ function SnackbarProvider({ children }: Props) {
   const [duration, setDuration] = useState<SnackbarProps["autoHideDuration"]>(2000);
   const [severity, setSeverity] = useState<AlertProps["severity"]>("success");
 
-  const showMessage = (
-    msg = "",
-    msgSeverity: AlertProps["severity"] = "success",
-    msgDuration: SnackbarProps["autoHideDuration"] = 2000
-  ) => {
-    setMessage(msg);
-    setSeverity(msgSeverity);
-    setDuration(msgDuration);
-    setOpen(true);
-  };
+  const value: SnackbarContextValue = useMemo(() => {
+    const showMessage = (
+      msg = "",
+      msgSeverity: AlertProps["severity"] = "success",
+      msgDuration: SnackbarProps["autoHideDuration"] = 2000
+    ) => {
+      setMessage(msg);
+      setSeverity(msgSeverity);
+      setDuration(msgDuration);
+      setOpen(true);
+    };
 
-  const showSuccessMessage = (msg: string) => {
-    showMessage(msg, "success", 2000);
-  };
+    const showSuccessMessage = (msg: string) => {
+      showMessage(msg, "success", 2000);
+    };
 
-  const showErrorMessage = (msg: string) => {
-    showMessage(msg, "error", null);
-  };
+    const showErrorMessage = (msg: string) => {
+      showMessage(msg, "error", null);
+    };
 
-  const showInfoMessage = (msg: string) => {
-    showMessage(msg, "info", 3000);
-  };
+    const showInfoMessage = (msg: string) => {
+      showMessage(msg, "info", 3000);
+    };
 
-  const handleSnackbarClose: SnackbarProps["onClose"] = (_event, closeReason) => {
+    return { showMessage, showSuccessMessage, showErrorMessage, showInfoMessage };
+  }, []);
+
+  const handleSnackbarClose: SnackbarProps["onClose"] = useCallback((_event, closeReason) => {
     if (closeReason === "clickaway") {
       return;
     }
     setOpen(false);
-  };
+  }, []);
 
-  const handleAlertClose: AlertProps["onClose"] = () => {
+  const handleAlertClose: AlertProps["onClose"] = useCallback(() => {
     setOpen(false);
-  };
-
-  const value = { showMessage, showSuccessMessage, showErrorMessage, showInfoMessage };
+  }, []);
 
   return (
     <SnackbarContext.Provider value={value}>
