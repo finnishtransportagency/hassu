@@ -12,7 +12,7 @@ ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
 RUN . "$NVM_DIR/nvm.sh" && npm install -g npm@8.1.3
 RUN . "$NVM_DIR/nvm.sh" && npm install -f -g @aws-amplify/cli && amplify
 
-RUN yum install -y xvfb wget ca-certificates fonts-liberation libasound2 libatk-bridge2.0-0 libatk1.0-0 \
+RUN yum install -y xorg-x11-server-Xvfb.x86_64 wget ca-certificates fonts-liberation libasound2 libatk-bridge2.0-0 libatk1.0-0 \
         libatspi2.0-0 libcups2 libdbus-1-3 libgbm1 libgtk-3-0 libnspr4 libnss3 \
         libxcomposite1 libxkbcommon0 libxrandr2 xdg-utils ntpdate openssl
 
