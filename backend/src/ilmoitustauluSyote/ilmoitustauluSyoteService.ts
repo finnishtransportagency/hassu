@@ -1,10 +1,4 @@
-import {
-  AloitusKuulutusTila,
-  HyvaksymisPaatosVaiheTila,
-  Kieli,
-  NahtavillaoloVaiheTila,
-  ProjektiJulkinen,
-} from "../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, Kieli, ProjektiJulkinen } from "../../../common/graphql/apiModel";
 import { openSearchClientIlmoitustauluSyote } from "../projektiSearch/openSearchClient";
 import { ilmoitusKuulutusAdapter } from "./ilmoitustauluSyoteAdapter";
 import { log } from "../logger";
@@ -25,7 +19,7 @@ class IlmoitustauluSyoteService {
 
   private async indexAloitusKuulutusJulkaisut(projekti: ProjektiJulkinen, kielet: Kieli[], oid: string) {
     const aloitusKuulutusJulkaisu = projekti.aloitusKuulutusJulkaisu;
-    if (aloitusKuulutusJulkaisu?.tila == AloitusKuulutusTila.HYVAKSYTTY) {
+    if (aloitusKuulutusJulkaisu?.tila == KuulutusJulkaisuTila.HYVAKSYTTY) {
       for (const kieli of kielet) {
         await openSearchClientIlmoitustauluSyote.putDocument(
           ilmoitusKuulutusAdapter.createKeyForAloitusKuulutusJulkaisu(oid, aloitusKuulutusJulkaisu, kieli),
@@ -37,7 +31,7 @@ class IlmoitustauluSyoteService {
 
   private async indexNahtavillaoloVaihe(projekti: ProjektiJulkinen, kielet: Kieli[], oid: string) {
     const nahtavillaoloVaihe = projekti.nahtavillaoloVaihe;
-    if (nahtavillaoloVaihe?.tila == NahtavillaoloVaiheTila.HYVAKSYTTY) {
+    if (nahtavillaoloVaihe?.tila == KuulutusJulkaisuTila.HYVAKSYTTY) {
       for (const kieli of kielet) {
         await openSearchClientIlmoitustauluSyote.putDocument(
           ilmoitusKuulutusAdapter.createKeyForNahtavillaoloVaihe(oid, nahtavillaoloVaihe, kieli),
@@ -49,7 +43,7 @@ class IlmoitustauluSyoteService {
 
   private async indexHyvaksymisPaatosVaihe(projekti: ProjektiJulkinen, kielet: Kieli[], oid: string) {
     const nahtavillaoloVaihe = projekti.hyvaksymisPaatosVaihe;
-    if (nahtavillaoloVaihe?.tila == HyvaksymisPaatosVaiheTila.HYVAKSYTTY) {
+    if (nahtavillaoloVaihe?.tila == KuulutusJulkaisuTila.HYVAKSYTTY) {
       for (const kieli of kielet) {
         await openSearchClientIlmoitustauluSyote.putDocument(
           ilmoitusKuulutusAdapter.createKeyForHyvaksymisPaatosVaihe(oid, nahtavillaoloVaihe, kieli),

@@ -2,7 +2,7 @@ import { describe, it } from "mocha";
 import sinon from "sinon";
 import { ilmoitustauluSyoteService } from "../../src/ilmoitustauluSyote/ilmoitustauluSyoteService";
 import { ProjektiFixture } from "../fixture/projektiFixture";
-import { AloitusKuulutusTila, ProjektiJulkinen } from "../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, ProjektiJulkinen } from "../../../common/graphql/apiModel";
 import { projektiAdapterJulkinen } from "../../src/projekti/adapter/projektiAdapterJulkinen";
 import { openSearchClientIlmoitustauluSyote } from "../../src/projektiSearch/openSearchClient";
 import { ilmoitustauluSyoteHandler } from "../../src/ilmoitustauluSyote/ilmoitustauluSyoteHandler";
@@ -18,7 +18,7 @@ describe("IlmoitustauluSyote", () => {
     putDocumentStub = sandbox.stub(openSearchClientIlmoitustauluSyote, "putDocument");
     const projektiFixture = new ProjektiFixture();
     projekti = projektiAdapterJulkinen.adaptProjekti(projektiFixture.dbProjekti4())!;
-    expect(projekti.aloitusKuulutusJulkaisu?.tila).to.eql(AloitusKuulutusTila.HYVAKSYTTY);
+    expect(projekti.aloitusKuulutusJulkaisu?.tila).to.eql(KuulutusJulkaisuTila.HYVAKSYTTY);
   });
 
   afterEach(() => {

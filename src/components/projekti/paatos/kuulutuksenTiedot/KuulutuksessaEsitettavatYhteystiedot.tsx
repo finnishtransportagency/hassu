@@ -3,7 +3,7 @@ import SectionContent from "@components/layout/SectionContent";
 import {
   HyvaksymisPaatosVaihe,
   HyvaksymisPaatosVaiheJulkaisu,
-  HyvaksymisPaatosVaiheTila,
+  KuulutusJulkaisuTila,
   KayttajaTyyppi,
   ProjektiKayttaja,
   Yhteystieto,
@@ -42,7 +42,7 @@ interface Props {
 }
 
 function hasHyvaksyttyPaatosVaiheJulkaisu(julkaisut: HyvaksymisPaatosVaiheJulkaisu[] | null | undefined) {
-  return (julkaisut?.filter((julkaisu) => julkaisu.tila == HyvaksymisPaatosVaiheTila.HYVAKSYTTY) || []).length > 0;
+  return (julkaisut?.filter((julkaisu) => julkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY) || []).length > 0;
 }
 
 export default function EsitettavatYhteystiedot({ julkaisut, projekti, julkaisematonPaatos }: Props): ReactElement {

@@ -2,7 +2,7 @@
 import dayjs from "dayjs";
 import { formatDate } from "../../../src/util/dateUtils";
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
-import { lisaaPaatosJaAineistot, tallennaKasittelynTilaJaSiirraMenneisyyteen } from "./hyvaksyntavaihe";
+import { lisaaPaatosJaAineistot, tallennaKasittelynTilaJaSiirraMenneisyyteen } from "../../support/hyvaksyntavaihe";
 
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
@@ -21,12 +21,12 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
   it("Tallenna kasittelyn tila ja siirra menneisyyteen", { scrollBehavior: "center" }, () => {
     cy.login("A1");
 
-    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).resetHyvaksymisvaihe(), { timeout: 30000 });
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/kasittelyntila", {
       timeout: 30000,
       retryOnNetworkFailure: true,
       retryOnStatusCodeFailure: true,
     });
+    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).resetHyvaksymisvaihe(), { timeout: 30000 });
     cy.reload(); // extra reload to avoid white page
 
     tallennaKasittelynTilaJaSiirraMenneisyyteen(oid, projektiNimi, asianumero);
@@ -47,7 +47,7 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/hyvaksymispaatos", { timeout: 30000 });
     cy.contains(projektiNimi);
 
-    cy.get("#kuulutuksentiedot_tab").click();
+    cy.get("#kuulutuksentiedot_tab").click({ force: true });
 
     const today = formatDate(dayjs());
     cy.get('[name="paatos.kuulutusPaiva"]').should("be.enabled").type(today, {
@@ -70,7 +70,7 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
     cy.contains("Hyväksyminen onnistui", { timeout: 30000 });
 
     cy.reload();
-    cy.get("#kuulutuksentiedot_tab").click();
+    cy.get("#kuulutuksentiedot_tab").click({ force: true });
 
     cy.contains("Kuulutus nähtäville asettamisesta on julkaistu");
 

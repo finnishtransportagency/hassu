@@ -62,18 +62,8 @@ export default function ProjektiLiittyvatSuunnitelmat({ projekti }: Props): Reac
         flexDirection="row"
         errorMessage={errors?.liittyviasuunnitelmia?.message}
       >
-        <RadioButton
-          label="Kyllä"
-          value="true"
-          {...register("liittyviasuunnitelmia")}
-          onChange={() => handleLiittyviaSuunnitelmia(true)}
-        />
-        <RadioButton
-          label="Ei"
-          value="false"
-          {...register("liittyviasuunnitelmia")}
-          onChange={() => handleLiittyviaSuunnitelmia(false)}
-        />
+        <RadioButton label="Kyllä" value="true" {...register("liittyviasuunnitelmia")} onChange={() => handleLiittyviaSuunnitelmia(true)} />
+        <RadioButton label="Ei" value="false" {...register("liittyviasuunnitelmia")} onChange={() => handleLiittyviaSuunnitelmia(false)} />
       </FormGroup>
       {isLiittyviaSuunnitelmia && (
         <SectionContent sx={{ marginLeft: 4 }}>
@@ -100,37 +90,40 @@ export default function ProjektiLiittyvatSuunnitelmat({ projekti }: Props): Reac
                     <div className="hidden lg:block">
                       <IconButton
                         name="linked_plan_trash_button"
-                    icon="trash"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      remove(index);
-                    }}
-                  />
-                </div>
-                <div className="block lg:hidden">
-                  <Button
-                    onClick={(event) => {
-                      event.preventDefault();
-                      remove(index);
-                    }}
-                    endIcon="trash"
-                  >
-                    Poista
-                  </Button>
-                </div>
-              </HassuStack>
-            </HassuGridItem>
-          </HassuGrid>
-        );
-      })}
-      <Button
-        id="linked_plands_new_row"
+                        icon="trash"
+                        type="button"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          remove(index);
+                        }}
+                      />
+                    </div>
+                    <div className="block lg:hidden">
+                      <Button
+                        onClick={(event) => {
+                          event.preventDefault();
+                          remove(index);
+                        }}
+                        endIcon="trash"
+                        type="button"
+                      >
+                        Poista
+                      </Button>
+                    </div>
+                  </HassuStack>
+                </HassuGridItem>
+              </HassuGrid>
+            );
+          })}
+          <Button
+            id="linked_plands_new_row"
             className="mt-7"
             onClick={(event) => {
               event.preventDefault();
               append(defaultSuunnitelma);
             }}
             disabled={!isLiittyviaSuunnitelmia}
+            type="button"
           >
             Uusi rivi +
           </Button>

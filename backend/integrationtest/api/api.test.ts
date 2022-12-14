@@ -7,7 +7,6 @@ import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/perso
 import { openSearchClientYllapito } from "../../src/projektiSearch/openSearchClient";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
-import { getCloudFront } from "../../src/aws/client";
 import { cleanProjektiS3Files } from "../util/s3Util";
 import {
   deleteProjekti,
@@ -27,13 +26,14 @@ import {
   testSuunnitteluvaihePerustiedot,
   testSuunnitteluvaiheVuorovaikutus,
   testUpdatePublishDateAndDeleteAineisto,
-  verifyCloudfrontWasInvalidated,
   verifyVuorovaikutusSnapshot,
 } from "./testUtil/tests";
 import {
+  CloudFrontStub,
   EmailClientStub,
   mockSaveProjektiToVelho,
   PDFGeneratorStub,
+  SchedulerMock,
   takePublicS3Snapshot,
   takeS3Snapshot,
   takeYllapitoS3Snapshot,
@@ -51,7 +51,6 @@ import {
   testHyvaksymisPaatosVaiheApproval,
 } from "./testUtil/hyvaksymisPaatosVaihe";
 import { FixtureName, recordProjektiTestFixture } from "./testFixtureRecorder";
-import { awsMockResolves } from "../../test/aws/awsMock";
 import { ImportAineistoMock } from "./testUtil/importAineistoMock";
 
 const { expect } = require("chai");
@@ -61,10 +60,11 @@ const oid = "1.2.246.578.5.1.2978288874.2711575506";
 describe("Api", () => {
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
   let userFixture: UserFixture;
-  let awsCloudfrontInvalidationStub: sinon.SinonStub;
+  let awsCloudfrontInvalidationStub: CloudFrontStub;
   const emailClientStub = new EmailClientStub();
   const pdfGeneratorStub = new PDFGeneratorStub();
-  const importAineistoMock = new ImportAineistoMock();
+  let importAineistoMock: ImportAineistoMock;
+  let schedulerMock: SchedulerMock;
 
   before(async () => {
     await setupLocalDatabase();
@@ -79,15 +79,15 @@ describe("Api", () => {
     sinon.stub(openSearchClientYllapito, "deleteDocument");
     sinon.stub(openSearchClientYllapito, "putDocument");
 
-    importAineistoMock.initStub();
+    importAineistoMock = new ImportAineistoMock();
+    awsCloudfrontInvalidationStub = new CloudFrontStub();
     pdfGeneratorStub.init();
     emailClientStub.init();
-
-    awsCloudfrontInvalidationStub = sinon.stub(getCloudFront(), "createInvalidation");
-    awsMockResolves(awsCloudfrontInvalidationStub, {});
+    schedulerMock = new SchedulerMock();
 
     try {
       await deleteProjekti(oid);
+      awsCloudfrontInvalidationStub.reset();
     } catch (ignored) {
       // ignored
     }
@@ -135,12 +135,12 @@ describe("Api", () => {
     await importAineistoMock.processQueue();
     emailClientStub.verifyEmailsSent();
     await takeS3Snapshot(oid, "just after vuorovaikutus published");
-    verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub);
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
 
     await testUpdatePublishDateAndDeleteAineisto(oid, userFixture);
     await importAineistoMock.processQueue();
     await takeS3Snapshot(oid, "vuorovaikutus publish date changed and last aineisto deleted");
-    verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub);
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
 
     await sendEmailDigests();
     emailClientStub.verifyEmailsSent();
@@ -173,5 +173,6 @@ describe("Api", () => {
     emailClientStub.verifyEmailsSent();
 
     await recordProjektiTestFixture(FixtureName.HYVAKSYMISPAATOS_APPROVED, oid);
+    await schedulerMock.verifyAndRunSchedule();
   });
 });

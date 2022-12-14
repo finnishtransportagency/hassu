@@ -13,7 +13,7 @@ import {
   adaptHyvaksymisPaatosVaiheJulkaisut,
   adaptKasittelynTila,
   adaptNahtavillaoloVaihe,
-  adaptNahtavillaoloVaiheJulkaisut,
+  adaptNahtavillaoloVaiheJulkaisu,
   adaptSuunnitteluSopimus,
   adaptSuunnitteluVaihe,
 } from "./adaptToAPI";
@@ -28,6 +28,7 @@ import {
 import { applyProjektiStatus } from "../status/projektiStatusHandler";
 import { adaptKasittelynTilaToSave } from "./adaptToDB/adaptKasittelynTilaToSave";
 import { ProjektiAdaptationResult } from "./projektiAdaptationResult";
+import { ProjektiPaths } from "../../files/ProjektiPath";
 
 export class ProjektiAdapter {
   public adaptProjekti(dbProjekti: DBProjekti, virhetiedot?: API.ProjektiVirhe): API.Projekti {
@@ -54,6 +55,7 @@ export class ProjektiAdapter {
       ...fieldsToCopyAsIs
     } = dbProjekti;
 
+    const projektiPath = new ProjektiPaths(dbProjekti.oid);
     const apiProjekti: API.Projekti = removeUndefinedFields({
       __typename: "Projekti",
       tallennettu: !!dbProjekti.tallennettu,
@@ -72,25 +74,37 @@ export class ProjektiAdapter {
         suunnitteluVaihe,
         vuorovaikutukset
       ),
-      nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe),
-      nahtavillaoloVaiheJulkaisut: adaptNahtavillaoloVaiheJulkaisut(dbProjekti.oid, nahtavillaoloVaiheJulkaisut),
-      hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe, dbProjekti.kasittelynTila?.hyvaksymispaatos),
-      hyvaksymisPaatosVaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
-        dbProjekti.oid,
+      nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe, nahtavillaoloVaiheJulkaisut),
+      nahtavillaoloVaiheJulkaisu: adaptNahtavillaoloVaiheJulkaisu(dbProjekti, nahtavillaoloVaiheJulkaisut),
+      hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(
+        hyvaksymisPaatosVaihe,
         dbProjekti.kasittelynTila?.hyvaksymispaatos,
-        hyvaksymisPaatosVaiheJulkaisut
+        projektiPath.hyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe)
       ),
-      jatkoPaatos1Vaihe: adaptHyvaksymisPaatosVaihe(jatkoPaatos1Vaihe, dbProjekti.kasittelynTila?.ensimmainenJatkopaatos),
-      jatkoPaatos1VaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
-        dbProjekti.oid,
+      hyvaksymisPaatosVaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
+        dbProjekti.kasittelynTila?.hyvaksymispaatos,
+        hyvaksymisPaatosVaiheJulkaisut,
+        (julkaisu) => new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(julkaisu)
+      ),
+      jatkoPaatos1Vaihe: adaptHyvaksymisPaatosVaihe(
+        jatkoPaatos1Vaihe,
         dbProjekti.kasittelynTila?.ensimmainenJatkopaatos,
-        jatkoPaatos1VaiheJulkaisut
+        projektiPath.jatkoPaatos1Vaihe(jatkoPaatos1Vaihe)
       ),
-      jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaihe(jatkoPaatos2Vaihe, dbProjekti.kasittelynTila?.toinenJatkopaatos),
-      jatkoPaatos2VaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
-        dbProjekti.oid,
+      jatkoPaatos1VaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
+        dbProjekti.kasittelynTila?.ensimmainenJatkopaatos,
+        jatkoPaatos1VaiheJulkaisut,
+        (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos1Vaihe(julkaisu)
+      ),
+      jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaihe(
+        jatkoPaatos2Vaihe,
         dbProjekti.kasittelynTila?.toinenJatkopaatos,
-        jatkoPaatos2VaiheJulkaisut
+        projektiPath.jatkoPaatos2Vaihe(jatkoPaatos2Vaihe)
+      ),
+      jatkoPaatos2VaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
+        dbProjekti.kasittelynTila?.toinenJatkopaatos,
+        jatkoPaatos2VaiheJulkaisut,
+        (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos2Vaihe(julkaisu)
       ),
       virhetiedot,
       kasittelynTila: adaptKasittelynTila(kasittelynTila),
@@ -139,30 +153,14 @@ export class ProjektiAdapter {
         suunnitteluSopimus: adaptSuunnitteluSopimusToSave(projekti, suunnitteluSopimus),
         kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet(),
         suunnitteluVaihe: adaptSuunnitteluVaiheToSave(projekti, suunnitteluVaihe),
-        nahtavillaoloVaihe: adaptNahtavillaoloVaiheToSave(
-          projekti.nahtavillaoloVaihe,
-          nahtavillaoloVaihe,
-          projektiAdaptationResult,
-          projekti.nahtavillaoloVaiheJulkaisut?.length
-        ),
+        nahtavillaoloVaihe: adaptNahtavillaoloVaiheToSave(projekti.nahtavillaoloVaihe, nahtavillaoloVaihe, projektiAdaptationResult),
         hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaiheToSave(
           projekti.hyvaksymisPaatosVaihe,
           hyvaksymisPaatosVaihe,
-          projektiAdaptationResult,
-          projekti.hyvaksymisPaatosVaiheJulkaisut?.length
+          projektiAdaptationResult
         ),
-        jatkoPaatos1Vaihe: adaptHyvaksymisPaatosVaiheToSave(
-          projekti.jatkoPaatos1Vaihe,
-          jatkoPaatos1Vaihe,
-          projektiAdaptationResult,
-          projekti.jatkoPaatos1VaiheJulkaisut?.length
-        ),
-        jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaiheToSave(
-          projekti.jatkoPaatos2Vaihe,
-          jatkoPaatos2Vaihe,
-          projektiAdaptationResult,
-          projekti.jatkoPaatos2VaiheJulkaisut?.length
-        ),
+        jatkoPaatos1Vaihe: adaptHyvaksymisPaatosVaiheToSave(projekti.jatkoPaatos1Vaihe, jatkoPaatos1Vaihe, projektiAdaptationResult),
+        jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaiheToSave(projekti.jatkoPaatos2Vaihe, jatkoPaatos2Vaihe, projektiAdaptationResult),
         kielitiedot,
         euRahoitus,
         liittyvatSuunnitelmat,
@@ -171,6 +169,7 @@ export class ProjektiAdapter {
         kasittelynTila: adaptKasittelynTilaToSave(projekti.kasittelynTila, kasittelynTila, projektiAdaptationResult),
       }
     );
+
     projektiAdaptationResult.setProjekti(dbProjekti);
     return projektiAdaptationResult;
   }

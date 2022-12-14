@@ -8,6 +8,8 @@ if (env === "dev") {
 } else if (env === "feature") {
   projectKey = "Hassu-feature";
   version = process.env.CODEBUILD_BUILD_NUMBER;
+} else if (["test", "training", "prod"].indexOf(env) >= 0) {
+  return;
 } else {
   projectKey = "Hassu-" + env;
 }

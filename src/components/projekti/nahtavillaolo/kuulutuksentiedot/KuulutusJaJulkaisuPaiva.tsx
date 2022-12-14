@@ -9,8 +9,6 @@ import HassuGrid from "@components/HassuGrid";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { today } from "src/util/dateUtils";
 
-type Props = {};
-
 type FormFields = {
   nahtavillaoloVaihe: {
     kuulutusPaiva: string | null;
@@ -19,7 +17,7 @@ type FormFields = {
   };
 };
 
-export default function KuulutusJaJulkaisuPaiva({}: Props) {
+export default function KuulutusJaJulkaisuPaiva() {
   const { setValue } = useFormContext<FormFields>();
 
   const { showErrorMessage } = useSnackbars();

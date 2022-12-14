@@ -7,7 +7,7 @@ import {
 import { projektiSearchService } from "../../src/projektiSearch/projektiSearchService";
 import * as sinon from "sinon";
 import {
-  AloitusKuulutusTila,
+  KuulutusJulkaisuTila,
   IlmoitettavaViranomainen,
   KaytettavaPalvelu,
   KayttajaTyyppi,
@@ -76,6 +76,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
   tyyppi: ProjektiTyyppi.TIE,
   suunnittelustaVastaavaViranomainen: undefined,
   aloitusKuulutus: {
+    id: 1,
     kuulutusPaiva: "2022-10-10",
     siirtyySuunnitteluVaiheeseen: "2022-11-09",
     hankkeenKuvaus: {
@@ -149,7 +150,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
         RUOTSI: undefined,
         SAAME: undefined,
       },
-      tila: AloitusKuulutusTila.HYVAKSYTTY,
+      tila: KuulutusJulkaisuTila.HYVAKSYTTY,
       muokkaaja: "A000112",
       hyvaksyja: "A000112",
       ilmoituksenVastaanottajat: {

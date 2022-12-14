@@ -110,6 +110,8 @@ const organisaatioToViranomainen: OrganisaatioToViranomainen = {
   "organisaatio/org11": Viranomainen.MUU,
 } as const;
 
+const numberSorter = (a: number, b: number) => a - b;
+
 function getViranomainen(organisaatio: Organisaatio) {
   return organisaatioToViranomainen[organisaatio];
 }
@@ -167,7 +169,7 @@ function getKunnat(data: ProjektiProjekti): number[] | undefined {
         kunnat.push(kuntaId);
       }
     });
-    return kunnat.sort();
+    return kunnat.sort(numberSorter);
   }
   return data.ominaisuudet["muu-kunta"]?.split(",").map(kuntametadata.idForKuntaName).sort();
 }
@@ -183,7 +185,7 @@ function getMaakunnat(data: ProjektiProjekti) {
         maakunnat.push(maakuntaId);
       }
     });
-    return maakunnat.sort();
+    return maakunnat.sort(numberSorter);
   }
   return data.ominaisuudet["muu-maakunta"]?.split(",").map(kuntametadata.idForMaakuntaName).sort();
 }

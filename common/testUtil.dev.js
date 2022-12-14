@@ -6,6 +6,7 @@ export const TestAction = {
   NAHTAVILLAOLO_MENNEISYYTEEN: "nahtavillaolomenneisyyteen",
   HYVAKSYMISPAATOS_MENNEISYYTEEN: "hyvaksymispaatosmenneisyyteen",
   HYVAKSYMISPAATOS_VUOSI_MENNEISYYTEEN: "hyvaksymispaatosvuosimenneisyyteen",
+  RESET_ALOITUSKUULUTUS: "reset_aloituskuulutus",
   RESET_SUUNNITTELU: "reset_suunnittelu",
   RESET_VUOROVAIKUTUKSET: "reset_vuorovaikutukset",
   RESET_NAHTAVILLAOLO: "reset_nahtavillaolo",
@@ -42,6 +43,10 @@ export class ProjektiTestCommand {
 
   hyvaksymispaatosVuosiMenneisyyteen() {
     return this.createActionUrl(TestAction.HYVAKSYMISPAATOS_VUOSI_MENNEISYYTEEN);
+  }
+
+  resetAloituskuulutus() {
+    return this.createActionUrl(TestAction.RESET_ALOITUSKUULUTUS);
   }
 
   resetSuunnitteluVaihe() {
@@ -134,6 +139,12 @@ export class ProjektiTestCommandExecutor {
 
   onResetNahtavillaolo(callback) {
     if (this._action === TestAction.RESET_NAHTAVILLAOLO) {
+      return callback(this._oid);
+    }
+  }
+
+  onResetAloituskuulutus(callback) {
+    if (this._action === TestAction.RESET_ALOITUSKUULUTUS) {
       return callback(this._oid);
     }
   }

@@ -30,6 +30,7 @@ import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
 import ProjektinTiedotLukutila from "@components/projekti/lukutila/ProjektinTiedotLukutila";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
+import PaivitaVelhoTiedotButton from "@components/projekti/PaivitaVelhoTiedotButton";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -50,9 +51,16 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
 export default function ProjektiSivu() {
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
 
+  if (!projekti) {
+    return <></>;
+  }
+
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
   return (
-    <ProjektiPageLayout title={"Projektin tiedot"} showUpdateButton={!epaaktiivinen}>
+    <ProjektiPageLayout
+      title={"Projektin tiedot"}
+      contentAsideTitle={!epaaktiivinen && <PaivitaVelhoTiedotButton projektiOid={projekti.oid} reloadProjekti={reloadProjekti} />}
+    >
       {projekti &&
         (epaaktiivinen ? (
           <ProjektinTiedotLukutila projekti={projekti} />

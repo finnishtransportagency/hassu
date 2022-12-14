@@ -11,10 +11,9 @@ import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/perso
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
 import { fileService } from "../../src/files/fileService";
 import { emailHandler } from "../../src/handler/emailHandler";
-import { pdfGeneratorClient } from "../../src/asiakirja/lambda/pdfGeneratorClient";
-import { handleEvent as pdfGenerator } from "../../src/asiakirja/lambda/pdfGeneratorHandler";
 import { replaceFieldsByName } from "../api/testFixtureRecorder";
-import { mockSaveProjektiToVelho } from "../api/testUtil/util";
+import { CloudFrontStub, mockSaveProjektiToVelho, PDFGeneratorStub } from "../api/testUtil/util";
+import { ImportAineistoMock } from "../api/testUtil/importAineistoMock";
 
 const { expect } = require("chai");
 
@@ -33,6 +32,9 @@ describe("AloitusKuulutus", () => {
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
   let publishProjektiFileStub: sinon.SinonStub;
   let sendEmailsByToimintoStub: sinon.SinonStub;
+  let importAineistoMock: ImportAineistoMock;
+  const pdfGeneratorStub = new PDFGeneratorStub();
+  let awsCloudfrontInvalidationStub: CloudFrontStub;
 
   before(async () => {
     readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
@@ -46,10 +48,9 @@ describe("AloitusKuulutus", () => {
     sendEmailsByToimintoStub = sinon.stub(emailHandler, "sendEmailsByToiminto");
     sendEmailsByToimintoStub.resolves();
 
-    const pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
-    pdfGeneratorLambdaStub.callsFake(async (event) => {
-      return await pdfGenerator(event);
-    });
+    pdfGeneratorStub.init();
+    importAineistoMock = new ImportAineistoMock();
+    awsCloudfrontInvalidationStub = new CloudFrontStub();
   });
 
   afterEach(() => {
@@ -101,5 +102,7 @@ describe("AloitusKuulutus", () => {
       tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
     });
     await takeSnapshot(oid);
+    await importAineistoMock.processQueue();
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
   });
 });

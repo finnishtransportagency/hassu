@@ -66,99 +66,6 @@ Object {
 `;
 
 exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 4`] = `
-Object {
-  "description": "publicProjekti uudelleenkuulutuksen jälkeen",
-  "obj": Object {
-    "__typename": "AloitusKuulutusJulkaisuJulkinen",
-    "aloituskuulutusPDFt": Object {
-      "SUOMI": Object {
-        "__typename": "AloitusKuulutusPDF",
-        "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-        "aloituskuulutusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412 Aloituskuulutus.pdf",
-      },
-      "__typename": "AloitusKuulutusPDFt",
-    },
-    "hankkeenKuvaus": Object {
-      "RUOTSI": "På Svenska",
-      "SAAME": "Saameksi",
-      "SUOMI": "Lorem Ipsum",
-      "__typename": "HankkeenKuvaukset",
-    },
-    "kielitiedot": Object {
-      "__typename": "Kielitiedot",
-      "ensisijainenKieli": "SUOMI",
-    },
-    "kuulutusPaiva": "2001-01-01",
-    "siirtyySuunnitteluVaiheeseen": "2022-01-01",
-    "suunnitteluSopimus": Object {
-      "__typename": "SuunnitteluSopimusJulkaisu",
-      "email": "mikko.haapamaki@cgi.com",
-      "etunimi": "Testi1",
-      "kunta": 536,
-      "logo": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/logo.png",
-      "puhelinnumero": "123",
-      "sukunimi": "Hassu",
-    },
-    "tila": "HYVAKSYTTY",
-    "uudelleenKuulutus": Object {
-      "__typename": "UudelleenKuulutus",
-      "alkuperainenHyvaksymisPaiva": "2022-11-03",
-      "selosteKuulutukselle": Object {
-        "RUOTSI": "Ruotsiseloste uudelleenkuulutukselle",
-        "SUOMI": "Suomiseloste uudelleenkuulutukselle",
-        "__typename": "LokalisoituTeksti",
-      },
-      "selosteLahetekirjeeseen": Object {
-        "RUOTSI": "Ruotsiseloste uudelleenkuulutuksen lähetekirjeeseen",
-        "SUOMI": "Suomiseloste uudelleenkuulutuksen lähetekirjeeseen",
-        "__typename": "LokalisoituTeksti",
-      },
-      "tila": "JULKAISTU_PERUUTETTU",
-    },
-    "velho": Object {
-      "__typename": "VelhoJulkinen",
-      "asiatunnusELY": undefined,
-      "asiatunnusVayla": undefined,
-      "kunnat": Array [
-        91,
-        92,
-      ],
-      "kuvaus": undefined,
-      "maakunnat": Array [
-        1,
-      ],
-      "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
-      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-      "toteuttavaOrganisaatio": undefined,
-      "tyyppi": "TIE",
-      "vaylamuoto": Array [
-        "tie",
-      ],
-    },
-    "yhteystiedot": Array [
-      Object {
-        "__typename": "Yhteystieto",
-        "etunimi": "Testi1",
-        "kunta": 536,
-        "organisaatio": "CGI Suomi Oy",
-        "puhelinnumero": "123",
-        "sahkoposti": "mikko.haapamaki@cgi.com",
-        "sukunimi": "Hassu",
-      },
-      Object {
-        "__typename": "Yhteystieto",
-        "etunimi": "Marko",
-        "organisaatio": "Kajaani",
-        "puhelinnumero": "0293121213",
-        "sahkoposti": "markku.koi@koi.com",
-        "sukunimi": "Koi",
-      },
-    ],
-  },
-}
-`;
-
-exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 5`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ",
@@ -217,7 +124,7 @@ Suomiseloste uudelleenkuulutuksen lähetekirjeeseen
 
 Väylävirasto ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee suunnittelun ja maastotöiden aloittamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
 
-Kuulutus julkaistaan 1.1.2001, Väyläviraston tietoverkossa osoitteessa https://vayla.fi/kuulutukset.
+Kuulutus julkaistaan 1.1.2031, Väyläviraston tietoverkossa osoitteessa https://vayla.fi/kuulutukset.
 
 Väylävirasto pyytää suunnittelualueen kuntia julkisemaan julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa Väylävirastolle.
 
@@ -238,7 +145,7 @@ Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com",
 ]
 `;
 
-exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 6`] = `
+exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 5`] = `
 Object {
   "description": "PDF:ien sisällöt",
   "obj": Array [
@@ -250,7 +157,7 @@ HASSU AUTOMAATTITESTIPROJEKTI1
 Suomiseloste uudelleenkuulutukselle
 Nokia, sovittuaan asiasta väyläviraston kanssa, käynnistää tiesuunnitelman laatimisen tarpeellisine tutkimuksineen. 
 Lorem Ipsum
-Kuulutus on julkaistu tietoverkossa väyläviraston verkkosivuilla 1.1.2001. 
+Kuulutus on julkaistu tietoverkossa väyläviraston verkkosivuilla 1.1.2031. 
 Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §). 
 Suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön edellyttämiä mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §). 
 Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa on oikeus olla tutkimuksissa saapuvilla ja lausua mielipiteensä asiassa (LjMTL 16 § ja 27 §). 
@@ -273,12 +180,119 @@ ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA
 HASSU AUTOMAATTITESTIPROJEKTI1
 Suomiseloste uudelleenkuulutukselle
 Väylävirasto julkaisee tietoverkossaan liikennejärjestelmästä ja maanteistä annetun lain (503/2005) sekä hallintolain 62 a §:n mukaisesti kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman suunnittelun ja maastotöiden aloittamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
-Kuulutus julkaistaan 1.1.2001, väyläviraston tietoverkossa osoitteessa https://www.vayla.fi/kuulutukset. 
+Kuulutus julkaistaan 1.1.2031, väyläviraston tietoverkossa osoitteessa https://www.vayla.fi/kuulutukset. 
 Lisätietoja antavat 
 Nokia, Testi1 Hassu, puh. 123, mikko.haapamaki(at)cgi.com 
 Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
 ",
     },
   ],
+}
+`;
+
+exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 6`] = `
+Object {
+  "args": Object {
+    "DistributionId": "unit-test-distribution-id",
+    "InvalidationBatch": Object {
+      "CallerReference": "***unittest***",
+      "Paths": Object {
+        "Items": Array [
+          "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/*",
+        ],
+        "Quantity": 1,
+      },
+    },
+  },
+  "stub": "createInvalidation",
+}
+`;
+
+exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 7`] = `
+Object {
+  "description": "publicProjekti uudelleenkuulutuksen jälkeen",
+  "obj": Object {
+    "__typename": "AloitusKuulutusJulkaisuJulkinen",
+    "aloituskuulutusPDFt": Object {
+      "SUOMI": Object {
+        "__typename": "AloitusKuulutusPDF",
+        "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+        "aloituskuulutusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412 Aloituskuulutus.pdf",
+      },
+      "__typename": "AloitusKuulutusPDFt",
+    },
+    "hankkeenKuvaus": Object {
+      "RUOTSI": "På Svenska",
+      "SAAME": "Saameksi",
+      "SUOMI": "Lorem Ipsum",
+      "__typename": "LokalisoituTeksti",
+    },
+    "kielitiedot": Object {
+      "__typename": "Kielitiedot",
+      "ensisijainenKieli": "SUOMI",
+    },
+    "kuulutusPaiva": "2000-01-01",
+    "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+    "suunnitteluSopimus": Object {
+      "__typename": "SuunnitteluSopimusJulkaisu",
+      "email": "mikko.haapamaki@cgi.com",
+      "etunimi": "Testi1",
+      "kunta": 536,
+      "logo": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/logo.png",
+      "puhelinnumero": "123",
+      "sukunimi": "Hassu",
+    },
+    "tila": "HYVAKSYTTY",
+    "uudelleenKuulutus": Object {
+      "__typename": "UudelleenKuulutus",
+      "alkuperainenHyvaksymisPaiva": "2022-11-03",
+      "selosteKuulutukselle": Object {
+        "RUOTSI": "Ruotsiseloste uudelleenkuulutukselle",
+        "SUOMI": "Suomiseloste uudelleenkuulutukselle",
+        "__typename": "LokalisoituTeksti",
+      },
+      "selosteLahetekirjeeseen": null,
+      "tila": "JULKAISTU_PERUUTETTU",
+    },
+    "velho": Object {
+      "__typename": "VelhoJulkinen",
+      "asiatunnusELY": undefined,
+      "asiatunnusVayla": undefined,
+      "kunnat": Array [
+        91,
+        92,
+      ],
+      "kuvaus": undefined,
+      "maakunnat": Array [
+        1,
+      ],
+      "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+      "toteuttavaOrganisaatio": undefined,
+      "tyyppi": "TIE",
+      "vaylamuoto": Array [
+        "tie",
+      ],
+    },
+    "yhteystiedot": Array [
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Testi1",
+        "kunta": 536,
+        "organisaatio": "CGI Suomi Oy",
+        "puhelinnumero": "123",
+        "sahkoposti": "mikko.haapamaki@cgi.com",
+        "sukunimi": "Hassu",
+      },
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Marko",
+        "organisaatio": "Kajaani",
+        "puhelinnumero": "0293121213",
+        "sahkoposti": "markku.koi@koi.com",
+        "sukunimi": "Koi",
+      },
+    ],
+  },
 }
 `;

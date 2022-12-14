@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useEffect } from "react";
+import React, { FunctionComponent, ReactElement, useEffect } from "react";
 import HassuLink from "../HassuLink";
 import classNames from "classnames";
 import { useRouter } from "next/router";
@@ -16,7 +16,7 @@ export default function ProjektiSideNavigationWrapper(): ReactElement {
   return <ProjektiSideNavigation projekti={projekti} />;
 }
 
-const ProjektiSideNavigation: FC<{ projekti: ProjektiLisatiedolla }> = ({ projekti }) => {
+const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla }> = ({ projekti }) => {
   const router = useRouter();
   const { pathnameForAllowedRoute } = useIsAllowedOnCurrentProjektiRoute();
 

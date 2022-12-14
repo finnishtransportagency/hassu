@@ -1,10 +1,9 @@
-/* tslint:disable:no-unused-expression */
-import * as cdk from "@aws-cdk/core";
-import { Construct, RemovalPolicy } from "@aws-cdk/core";
+import { Construct } from "constructs";
+import { aws_ecr, CfnOutput, RemovalPolicy, Stack } from "aws-cdk-lib";
 import { Config } from "./config";
-import { Domain, EngineVersion } from "@aws-cdk/aws-opensearchservice";
-import { OpenSearchAccessPolicy } from "@aws-cdk/aws-opensearchservice/lib/opensearch-access-policy";
-import { AccountRootPrincipal, Effect, PolicyStatement } from "@aws-cdk/aws-iam";
+import { Domain, EngineVersion } from "aws-cdk-lib/aws-opensearchservice";
+import { AccountRootPrincipal, Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
+import { RepositoryEncryption } from "aws-cdk-lib/aws-ecr";
 
 // These should correspond to CfnOutputs produced by this stack
 export type AccountStackOutputs = {
@@ -12,7 +11,7 @@ export type AccountStackOutputs = {
   SearchDomainArnOutput: string;
 };
 
-export class HassuAccountStack extends cdk.Stack {
+export class HassuAccountStack extends Stack {
   public readonly searchDomain: Domain;
 
   constructor(scope: Construct) {
@@ -29,7 +28,7 @@ export class HassuAccountStack extends cdk.Stack {
     }
 
     this.searchDomain = new Domain(this, "SearchDomain", {
-      domainName: "hassu-search",
+      domainName: "hassu",
       version: EngineVersion.OPENSEARCH_1_0,
       enableVersionUpgrade: true,
       capacity: {
@@ -37,26 +36,27 @@ export class HassuAccountStack extends cdk.Stack {
         dataNodes: 2,
         dataNodeInstanceType: "t3.small.search",
       },
-      removalPolicy: RemovalPolicy.RETAIN,
-    });
-
-    new OpenSearchAccessPolicy(this, "OpenSearchAccessPolicy", {
-      domainName: this.searchDomain.domainName,
-      domainArn: this.searchDomain.domainArn,
       accessPolicies: [
         new PolicyStatement({
           effect: Effect.ALLOW,
           actions: ["es:ESHttpGet", "es:ESHttpPut", "es:ESHttpPost", "es:ESHttpDelete"],
           principals: [new AccountRootPrincipal().grantPrincipal],
-          resources: [this.searchDomain.domainArn],
         }),
       ],
+      removalPolicy: RemovalPolicy.RETAIN,
     });
 
-    new cdk.CfnOutput(this, "SearchDomainEndpointOutput", {
+    const repositoryName = Config.buildImageRepositoryName;
+    new aws_ecr.Repository(this, repositoryName, {
+      repositoryName,
+      removalPolicy: RemovalPolicy.DESTROY,
+      encryption: RepositoryEncryption.KMS,
+    });
+
+    new CfnOutput(this, "SearchDomainEndpointOutput", {
       value: this.searchDomain.domainEndpoint || "",
     });
-    new cdk.CfnOutput(this, "SearchDomainArnOutput", {
+    new CfnOutput(this, "SearchDomainArnOutput", {
       value: this.searchDomain.domainArn || "",
     });
   }

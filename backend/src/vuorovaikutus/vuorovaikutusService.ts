@@ -4,7 +4,7 @@ import { DBProjekti, IlmoituksenVastaanottajat, Vuorovaikutus } from "../databas
 import { fileService } from "../files/fileService";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { emailClient } from "../email/email";
-import { ProjektiPaths } from "../files/ProjektiPath";
+import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import assert from "assert";
 import { pdfGeneratorClient } from "../asiakirja/lambda/pdfGeneratorClient";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../asiakirja/asiakirjaTypes";
@@ -15,7 +15,7 @@ async function generateKutsuPDF(
   projektiInDB: DBProjekti,
   vuorovaikutus: Vuorovaikutus,
   kieli: API.Kieli,
-  vuorovaikutusKutsuPath: string
+  vuorovaikutusKutsuPath: PathTuple
 ) {
   const velho = projektiInDB.velho;
   const kielitiedot = projektiInDB.kielitiedot;
@@ -38,7 +38,7 @@ async function generateKutsuPDF(
 
   const fullFilePathInProjekti = await fileService.createFileToProjekti({
     oid,
-    filePathInProjekti: vuorovaikutusKutsuPath,
+    path: vuorovaikutusKutsuPath,
     fileName: pdf.nimi,
     contents: Buffer.from(pdf.sisalto, "base64"),
     inline: true,
@@ -66,7 +66,7 @@ class VuorovaikutusService {
     if (!projektiInDB.kielitiedot) {
       throw new Error(`handleVuorovaikutsuKutsu: projektille oid:lla ${oid} ei löydy kielitietoja`);
     }
-    const vuorovaikutusKutsuPath: string = new ProjektiPaths(oid).vuorovaikutus(vuorovaikutus).yllapitoPath + "/kutsu";
+    const vuorovaikutusKutsuPath = new ProjektiPaths(oid).vuorovaikutus(vuorovaikutus).kutsu;
 
     const attachments = [];
 

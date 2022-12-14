@@ -22,6 +22,7 @@ import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
 import HenkilotLukutila from "@components/projekti/lukutila/HenkilotLukutila";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
+import PaivitaVelhoTiedotButton from "@components/projekti/PaivitaVelhoTiedotButton";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
@@ -45,8 +46,15 @@ export default function HenkilotPage(): ReactElement {
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
+  if (!projekti) {
+    return <></>;
+  }
+
   return (
-    <ProjektiPageLayout title="Projektin Henkilöt" showUpdateButton={true}>
+    <ProjektiPageLayout
+      title="Projektin Henkilöt"
+      contentAsideTitle={<PaivitaVelhoTiedotButton projektiOid={projekti.oid} reloadProjekti={reloadProjekti} />}
+    >
       {projekti &&
         (epaaktiivinen && projekti.kayttoOikeudet ? (
           <HenkilotLukutila kayttoOikeudet={projekti.kayttoOikeudet} />
@@ -147,7 +155,7 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
             />
             <Section noDivider>
               <HassuStack alignItems="flex-end">
-                <Button id="save_projekti" className="ml-auto" primary disabled={disableFormEdit}>
+                <Button id="save_projekti" className="ml-auto" type="button" primary disabled={disableFormEdit}>
                   Tallenna
                 </Button>
               </HassuStack>

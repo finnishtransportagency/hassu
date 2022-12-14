@@ -1,10 +1,10 @@
-/* tslint:disable:no-unused-expression */
-import * as cdk from "@aws-cdk/core";
-import { Construct, Duration, Fn, RemovalPolicy } from "@aws-cdk/core";
-import * as acm from "@aws-cdk/aws-certificatemanager";
-import * as cloudfront from "@aws-cdk/aws-cloudfront";
+import { Construct } from "constructs";
+import { CfnOutput, Duration, Fn, RemovalPolicy, Stack } from "aws-cdk-lib";
+import * as acm from "aws-cdk-lib/aws-certificatemanager";
+import * as cloudfront from "aws-cdk-lib/aws-cloudfront";
 import {
   AllowedMethods,
+  BehaviorOptions,
   CachePolicy,
   CfnPublicKey,
   KeyGroup,
@@ -14,28 +14,21 @@ import {
   OriginSslPolicy,
   PriceClass,
   ViewerProtocolPolicy,
-} from "@aws-cdk/aws-cloudfront";
+} from "aws-cdk-lib/aws-cloudfront";
 import { Config } from "./config";
-import { HttpOrigin } from "@aws-cdk/aws-cloudfront-origins/lib/http-origin";
-import { BehaviorOptions } from "@aws-cdk/aws-cloudfront/lib/distribution";
+import { HttpOrigin, S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Builder } from "@sls-next/lambda-at-edge";
-import { NextJSLambdaEdge } from "@sls-next/cdk-construct";
-import { Code, Runtime } from "@aws-cdk/aws-lambda";
-import { CompositePrincipal, Effect, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "@aws-cdk/aws-iam";
+import { NextJSLambdaEdge, Props } from "@sls-next/cdk-construct";
+import { Code, Runtime } from "aws-cdk-lib/aws-lambda";
+import { CompositePrincipal, Effect, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import * as fs from "fs";
-import { EdgeFunction } from "@aws-cdk/aws-cloudfront/lib/experimental";
-import { S3Origin } from "@aws-cdk/aws-cloudfront-origins";
-import { BlockPublicAccess, Bucket } from "@aws-cdk/aws-s3";
-import * as ssm from "@aws-cdk/aws-ssm";
-import {
-  readAccountStackOutputs,
-  readBackendStackOutputs,
-  readDatabaseStackOutputs,
-  readPipelineStackOutputs,
-} from "../bin/setupEnvironment";
-import { IOriginAccessIdentity } from "@aws-cdk/aws-cloudfront/lib/origin-access-identity";
+import { EdgeFunction } from "aws-cdk-lib/aws-cloudfront/lib/experimental";
+import { BlockPublicAccess, Bucket } from "aws-cdk-lib/aws-s3";
+import * as ssm from "aws-cdk-lib/aws-ssm";
+import { readAccountStackOutputs, readBackendStackOutputs, readDatabaseStackOutputs, readPipelineStackOutputs } from "./setupEnvironment";
+import { IOriginAccessIdentity } from "aws-cdk-lib/aws-cloudfront/lib/origin-access-identity";
 import { getOpenSearchDomain } from "./common";
-import { Table } from "@aws-cdk/aws-dynamodb";
+import { Table } from "aws-cdk-lib/aws-dynamodb";
 
 // These should correspond to CfnOutputs produced by this stack
 export type FrontendStackOutputs = {
@@ -49,10 +42,13 @@ interface HassuFrontendStackProps {
   projektiTable: Table;
 }
 
-export class HassuFrontendStack extends cdk.Stack {
+const REGION = "us-east-1";
+
+export class HassuFrontendStack extends Stack {
   private props: HassuFrontendStackProps;
   private appSyncAPIKey?: string;
   private cloudFrontOriginAccessIdentity!: string;
+
   private cloudFrontOriginAccessIdentityReportBucket!: string;
 
   constructor(scope: Construct, props: HassuFrontendStackProps) {
@@ -60,14 +56,14 @@ export class HassuFrontendStack extends cdk.Stack {
     super(scope, "frontend", {
       stackName: "hassu-frontend-" + env,
       env: {
-        region: "us-east-1",
+        region: REGION,
       },
       tags: Config.tags,
     });
     this.props = props;
   }
 
-  public async process() {
+  public async process(): Promise<void> {
     if (Config.isHotswap) {
       return;
     }
@@ -130,11 +126,46 @@ export class HassuFrontendStack extends cdk.Stack {
       bucketName: `hassu-${Config.env}-cloudfront`,
       versioned: false,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-      removalPolicy: RemovalPolicy.RETAIN,
+      removalPolicy: RemovalPolicy.DESTROY,
       lifecycleRules: [{ enabled: true, expiration: Duration.days(366 / 2) }],
     });
 
+    let cachePolicies: Partial<Props>;
+    const staticsCachePolicyName = "NextJsAppStaticsCache";
+    const imageCachePolicyName = "NextJsAppImageCache";
+    const lambdaCachePolicyName = "NextJsAppLambdaCache";
+    if (env == "dev" || env == "prod") {
+      // Cache policyt luodaan vain kerran per account
+      cachePolicies = {
+        cachePolicyName: {
+          staticsCache: staticsCachePolicyName,
+          imageCache: imageCachePolicyName,
+          lambdaCache: lambdaCachePolicyName,
+        },
+      };
+    } else {
+      // Käytä jo accountissa olevia cache policyjä
+      cachePolicies = {
+        nextStaticsCachePolicy: CachePolicy.fromCachePolicyId(
+          this,
+          "nextStaticsCachePolicy",
+          Fn.importValue("nextStaticsCachePolicyId")
+        ) as CachePolicy,
+        nextImageCachePolicy: CachePolicy.fromCachePolicyId(
+          this,
+          "nextImageCachePolicy",
+          Fn.importValue("nextImageCachePolicyId")
+        ) as CachePolicy,
+        nextLambdaCachePolicy: CachePolicy.fromCachePolicyId(
+          this,
+          "nextLambdaCachePolicy",
+          Fn.importValue("nextLambdaCachePolicyId")
+        ) as CachePolicy,
+      };
+    }
+
     const nextJSLambdaEdge = new NextJSLambdaEdge(this, id, {
+      ...cachePolicies,
       serverlessBuildOutDir: "./build",
       runtime: Runtime.NODEJS_14_X,
       env: { region: "us-east-1" },
@@ -166,11 +197,26 @@ export class HassuFrontendStack extends cdk.Stack {
       }
     }
 
+    if (env == "dev" || env == "prod") {
+      new CfnOutput(this, "nextStaticsCachePolicyId", {
+        value: nextJSLambdaEdge.nextStaticsCachePolicy.cachePolicyId || "",
+        exportName: "nextStaticsCachePolicyId",
+      });
+      new CfnOutput(this, "nextImageCachePolicyId", {
+        value: nextJSLambdaEdge.nextImageCachePolicy.cachePolicyId || "",
+        exportName: "nextImageCachePolicyId",
+      });
+      new CfnOutput(this, "nextLambdaCachePolicyId", {
+        value: nextJSLambdaEdge.nextLambdaCachePolicy.cachePolicyId || "",
+        exportName: "nextLambdaCachePolicyId",
+      });
+    }
+
     const distribution: cloudfront.Distribution = nextJSLambdaEdge.distribution;
-    new cdk.CfnOutput(this, "CloudfrontPrivateDNSName", {
+    new CfnOutput(this, "CloudfrontPrivateDNSName", {
       value: distribution.distributionDomainName || "",
     });
-    new cdk.CfnOutput(this, "CloudfrontDistributionId", {
+    new CfnOutput(this, "CloudfrontDistributionId", {
       value: distribution.distributionId || "",
     });
   }
@@ -205,7 +251,7 @@ export class HassuFrontendStack extends cdk.Stack {
     basicAuthenticationPassword: string,
     role: Role
   ): EdgeFunction {
-    const sourceCode = fs.readFileSync(`${__dirname}/lambda/frontendRequest.js`).toString("UTF-8");
+    const sourceCode = fs.readFileSync(`${__dirname}/lambda/frontendRequest.js`).toString("utf-8");
     const functionCode = Fn.sub(sourceCode, {
       BASIC_USERNAME: basicAuthenticationUsername,
       BASIC_PASSWORD: basicAuthenticationPassword,
@@ -244,7 +290,7 @@ export class HassuFrontendStack extends cdk.Stack {
   }
 
   private createTiedostotOriginResponseFunction(env: string, role: Role): EdgeFunction {
-    const functionCode = fs.readFileSync(`${__dirname}/lambda/tiedostotOriginResponse.js`).toString("UTF-8");
+    const functionCode = fs.readFileSync(`${__dirname}/lambda/tiedostotOriginResponse.js`).toString("utf-8");
 
     return new cloudfront.experimental.EdgeFunction(this, "tiedostotOriginResponseFunction", {
       runtime: Runtime.NODEJS_14_X,
@@ -262,8 +308,8 @@ export class HassuFrontendStack extends cdk.Stack {
     dmzProxyBehavior: BehaviorOptions,
     edgeFunctionRole: Role
   ): Promise<Record<string, BehaviorOptions>> {
-    let { keyGroups, originAccessIdentity, originAccessIdentityReportBucket } = await this.createTrustedKeyGroupsAndOAI(config);
-    let props: Record<string, any> = {
+    const { keyGroups, originAccessIdentity, originAccessIdentityReportBucket } = await this.createTrustedKeyGroupsAndOAI(config);
+    const props: Record<string, any> = {
       "/oauth2/*": dmzProxyBehaviorWithLambda,
       "/graphql": dmzProxyBehaviorWithLambda,
       "/tiedostot/*": await this.createPublicBucketBehavior(env, edgeFunctionRole, originAccessIdentity),
@@ -390,21 +436,23 @@ export class HassuFrontendStack extends cdk.Stack {
         parameterName: "/" + Config.env + "/outputs/FrontendPublicKeyId",
         stringValue: publicKey.publicKeyId,
       });
-      new cdk.CfnOutput(this, "FrontendPublicKeyIdOutput", {
+      new CfnOutput(this, "FrontendPublicKeyIdOutput", {
         value: publicKey.publicKeyId || "",
       });
 
-      originAccessIdentity = OriginAccessIdentity.fromOriginAccessIdentityName(
+      originAccessIdentity = OriginAccessIdentity.fromOriginAccessIdentityId(
         this,
         "CloudfrontOriginAccessIdentity" + Config.env,
         this.cloudFrontOriginAccessIdentity
       );
 
-      originAccessIdentityReportBucket = OriginAccessIdentity.fromOriginAccessIdentityName(
-        this,
-        "CloudfrontOriginAccessIdentityReportBucket",
-        this.cloudFrontOriginAccessIdentityReportBucket
-      );
+      if (Config.env == "dev") {
+        originAccessIdentityReportBucket = OriginAccessIdentity.fromOriginAccessIdentityId(
+          this,
+          "CloudfrontOriginAccessIdentityReportBucket",
+          this.cloudFrontOriginAccessIdentityReportBucket
+        );
+      }
     }
 
     return { keyGroups, originAccessIdentity, originAccessIdentityReportBucket };

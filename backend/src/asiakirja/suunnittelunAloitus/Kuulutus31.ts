@@ -101,6 +101,7 @@ export class Kuulutus31 extends CommonPdf {
   protected addDocumentElements(): PDFStructureElement[] {
     return [
       this.paragraph(this.startOfPlanningPhrase),
+      this.uudelleenKuulutusParagraph(),
       this.pidetaanNahtavillaParagraph(),
       this.lahetettyOmistajilleParagraph(),
       this.localizedParagraph([
@@ -111,7 +112,7 @@ export class Kuulutus31 extends CommonPdf {
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.nahtavillaoloVaihe.yhteystiedot, null, true)),
       this.kutsuja(),
-    ].filter((elem) => elem);
+    ].filter((elem): elem is PDFStructureElement => !!elem);
   }
 
   private kutsuja() {
@@ -207,6 +208,12 @@ export class Kuulutus31 extends CommonPdf {
 
   private addHeader() {
     return this.headerElement(this.kutsuAdapter.title);
+  }
+
+  protected uudelleenKuulutusParagraph(): PDFStructureElement | undefined {
+    if (this.nahtavillaoloVaihe.uudelleenKuulutus?.selosteKuulutukselle) {
+      return this.localizedParagraphFromMap(this.nahtavillaoloVaihe.uudelleenKuulutus?.selosteKuulutukselle);
+    }
   }
 
   get kirjaamo(): string {

@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { maxHankkeenkuvausLength, suunnittelunPerustiedotSchema } from "src/schemas/suunnittelunPerustiedot";
 import SectionContent from "@components/layout/SectionContent";
 import Textarea from "@components/form/Textarea";
-import { AloitusKuulutusTila, api, Kieli, SuunnitteluVaiheInput, SuunnitteluVaiheTila, TallennaProjektiInput } from "@services/api";
+import { KuulutusJulkaisuTila, api, Kieli, SuunnitteluVaiheInput, SuunnitteluVaiheTila, TallennaProjektiInput } from "@services/api";
 import Section from "@components/layout/Section";
 import lowerCase from "lodash/lowerCase";
 import { ReactElement, useMemo, useState } from "react";
@@ -293,5 +293,5 @@ function canProjektiBePublished(projekti: ProjektiLisatiedolla): boolean {
 const projektiHasPublishedAloituskuulutusJulkaisu: (projekti: ProjektiLisatiedolla) => boolean = (projekti) =>
   !!(
     projekti.aloitusKuulutusJulkaisu?.tila &&
-    [AloitusKuulutusTila.HYVAKSYTTY, AloitusKuulutusTila.MIGROITU].includes(projekti.aloitusKuulutusJulkaisu.tila)
+    [KuulutusJulkaisuTila.HYVAKSYTTY, KuulutusJulkaisuTila.MIGROITU].includes(projekti.aloitusKuulutusJulkaisu.tila)
   );

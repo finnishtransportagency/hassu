@@ -62,8 +62,8 @@ export default function ProjektinTiedotLukutila({ projekti }: Props) {
           <p>{projekti.suunnitteluSopimus ? "Kyllä" : "Ei"}</p>
         </SectionContent>
         <SectionContent>
-          <p className="vayla-label">Kunnan projektipäällikön tiedot</p>
-          <p>{projekti.suunnitteluSopimus?.yhteysHenkilo}</p> {/* TODO */}
+          <p className="vayla-label">Kunnan edustajan tiedot</p>
+          <p>{projekti.suunnitteluSopimus?.yhteysHenkilo}</p>
         </SectionContent>
       </Section>
       <Section smallGaps>

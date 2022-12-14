@@ -12,20 +12,18 @@ env:
 
 phases:
   install:
-    runtime-versions:
-      java: corretto11
-      nodejs: 14
     commands:
       - aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 283563576583.dkr.ecr.eu-west-1.amazonaws.com
+      - nohup /usr/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2 &
+      - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
+      - nohup docker pull 283563576583.dkr.ecr.eu-west-1.amazonaws.com/localstack:1.3
 
-      - nohup docker pull 283563576583.dkr.ecr.eu-west-1.amazonaws.com/hassu-buildimage:$(cat .buildimageversion) &
-      - nohup docker pull 283563576583.dkr.ecr.eu-west-1.amazonaws.com/localstack:0.14.1 &
-
-      - npm install -g npm@8.1.3
-      - npm ci
+      - mv /packages/tools/velho/.gradle /tools/velho/
+      - mv /packages/tools/velho/buildSrc/.gradle /tools/velho/buildSrc/
 
       - touch .env.test
-      - npm run generate
+      - npm ci
+      - npm run buildimage:generate
   build:
     commands:
       - npm run get-next-version
@@ -39,7 +37,7 @@ phases:
       - npm run deploy:backend
       - npm run deploy:frontend
       - npm run release
-      - aws codebuild start-build --project-name Hassu-e2etest-$ENVIRONMENT --source-version $CODEBUILD_SOURCE_VERSION
+      - aws codebuild start-build --project-name Hassu-build-e2e-$ENVIRONMENT --source-version $CODEBUILD_SOURCE_VERSION
   post_build:
     on-failure: ABORT
     commands:
@@ -48,5 +46,4 @@ cache:
   paths:
     - "/root/.cache/**/*"
     - "/root/.npm/**/*"
-    - "/root/.gradle/**/*"
     - "/root/.sonar"

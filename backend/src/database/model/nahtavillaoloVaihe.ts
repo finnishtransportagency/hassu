@@ -1,5 +1,14 @@
-import { Aineisto, LocalizedMap, Yhteystieto, IlmoituksenVastaanottajat, StandardiYhteystiedot, Kielitiedot, Velho } from "./common";
-import { NahtavillaoloVaiheTila } from "../../../../common/graphql/apiModel";
+import {
+  Aineisto,
+  LocalizedMap,
+  Yhteystieto,
+  IlmoituksenVastaanottajat,
+  StandardiYhteystiedot,
+  Kielitiedot,
+  Velho,
+  UudelleenKuulutus,
+} from "./common";
+import { KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
 
 export type NahtavillaoloVaihe = {
   id: number;
@@ -12,6 +21,7 @@ export type NahtavillaoloVaihe = {
   kuulutusYhteystiedot?: StandardiYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   palautusSyy?: string | null;
+  uudelleenKuulutus?: UudelleenKuulutus | null;
 };
 
 export type NahtavillaoloVaiheJulkaisu = {
@@ -27,9 +37,11 @@ export type NahtavillaoloVaiheJulkaisu = {
   yhteystiedot: Yhteystieto[];
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   nahtavillaoloPDFt?: LocalizedMap<NahtavillaoloPDF>;
-  tila?: NahtavillaoloVaiheTila | null;
+  tila?: KuulutusJulkaisuTila | null;
   muokkaaja?: string | null;
   hyvaksyja?: string | null;
+  uudelleenKuulutus?: UudelleenKuulutus | null;
+  hyvaksymisPaiva?: string | null;
 };
 
 export type NahtavillaoloPDF = {

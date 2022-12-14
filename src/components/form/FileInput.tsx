@@ -21,7 +21,7 @@ export const FileInput = ({
   hideErrorMessage,
   multiple = false,
   noClick = true,
-  maxSize = 4500000,
+  maxSize = 25000000,
   accept = "image/jpeg, image/png",
   ...otherDropzoneOptions
 }: DropzoneProps) => {
@@ -39,12 +39,12 @@ export const FileInput = ({
         {...getRootProps()}
         className={classNames(
           "border-dashed border border-gray py-4 flex flex-col justify-center items-center relative",
-          isDragActive &&
-            "before:inset-0 before:absolute before:bg-gray-light before:bg-opacity-50 before:z-50 before:pointer-events-none"
+          isDragActive && "before:inset-0 before:absolute before:bg-gray-light before:bg-opacity-50 before:z-50 before:pointer-events-none"
         )}
       >
-        <p className="mb-4 vayla-paragraph flex flex-wrap justify-center">
-          <span>Pudota tiedosto tähän tai</span>
+        <p className="mb-4 flex flex-wrap justify-center text-center">
+          Pudota tiedosto tähän <br />
+          tai
         </p>
         <input name="fileInput" {...getInputProps({ onChange })} />
         <Button

@@ -6,19 +6,18 @@ import { useRouter } from "next/router";
 import { UrlObject } from "url";
 import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
 import ProjektiConsumer from "../ProjektiConsumer";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
-import { NahtavillaoloVaiheTila } from "@services/api";
+import { KuulutusJulkaisuTila, MuokkausTila, TilasiirtymaTyyppi } from "@services/api";
 import dayjs from "dayjs";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import FormatDate from "@components/FormatDate";
+import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
 
 const InfoElement = ({ projekti }: { projekti: ProjektiLisatiedolla }) => {
-  const julkaisut = projekti?.nahtavillaoloVaiheJulkaisut;
+  const julkaisu = projekti.nahtavillaoloVaiheJulkaisu;
 
-  const julkaisu = julkaisut?.[julkaisut.length - 1];
-
-  if (julkaisu?.tila === NahtavillaoloVaiheTila.HYVAKSYTTY) {
+  if (julkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY) {
     // Toistaiseksi tarkastellaan julkaisupaivatietoa, koska ei ole olemassa erillista tilaa julkaistulle kuulutukselle
     const julkaisupvm = dayjs(julkaisu.kuulutusPaiva);
     if (dayjs().isBefore(julkaisupvm, "day")) {
@@ -35,7 +34,7 @@ const InfoElement = ({ projekti }: { projekti: ProjektiLisatiedolla }) => {
         </Notification>
       );
     }
-  } else if (julkaisu?.tila === NahtavillaoloVaiheTila.ODOTTAA_HYVAKSYNTAA) {
+  } else if (julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) {
     if (projekti?.nykyinenKayttaja.onProjektipaallikko || projekti?.nykyinenKayttaja.onYllapitaja) {
       return (
         <Notification type={NotificationType.WARN}>
@@ -51,15 +50,11 @@ const InfoElement = ({ projekti }: { projekti: ProjektiLisatiedolla }) => {
         </Notification>
       );
     }
-  } else if (julkaisu?.tila === NahtavillaoloVaiheTila.PALAUTETTU) {
+  } else if (!!projekti?.nahtavillaoloVaihe?.palautusSyy) {
     return (
-      <>
-        {projekti?.nahtavillaoloVaihe?.palautusSyy && (
-          <Notification type={NotificationType.WARN}>
-            {"Aloituskuulutus on palautettu korjattavaksi. Palautuksen syy: " + projekti.nahtavillaoloVaihe.palautusSyy}
-          </Notification>
-        )}
-      </>
+      <Notification type={NotificationType.WARN}>
+        {"Aloituskuulutus on palautettu korjattavaksi. Palautuksen syy: " + projekti.nahtavillaoloVaihe.palautusSyy}
+      </Notification>
     );
   } else {
     return <></>;
@@ -88,6 +83,7 @@ function NahtavillaoloPageLayout({
   children?: ReactNode;
 }): ReactElement {
   const router = useRouter();
+  const { mutate: reloadProjekti } = useProjekti();
 
   const tabProps: LinkTabProps[] = useMemo(() => {
     return [
@@ -124,12 +120,25 @@ function NahtavillaoloPageLayout({
     return indexOfTab === -1 ? false : indexOfTab;
   }, [router.pathname, tabProps]);
 
-  const nahtavillaolovaiheJulkaisu = projekti.nahtavillaoloVaiheJulkaisut?.[projekti.nahtavillaoloVaiheJulkaisut.length - 1];
-  const migroitu = nahtavillaolovaiheJulkaisu?.tila == NahtavillaoloVaiheTila.MIGROITU;
+  const nahtavillaolovaiheJulkaisu = projekti.nahtavillaoloVaiheJulkaisu;
+  const migroitu = nahtavillaolovaiheJulkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
+  const showUudelleenkuulutaButton =
+    projekti.nahtavillaoloVaiheJulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY &&
+    projekti.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.LUKU &&
+    !projekti.hyvaksymisPaatosVaiheJulkaisut &&
+    projekti.nykyinenKayttaja.onYllapitaja;
+
   return (
-    <ProjektiPageLayout title="Nähtävilläolovaihe">
+    <ProjektiPageLayout
+      title="Nähtävilläolovaihe"
+      contentAsideTitle={
+        showUudelleenkuulutaButton && (
+          <UudelleenkuulutaButton oid={projekti.oid} tyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO} reloadProjekti={reloadProjekti} />
+        )
+      }
+    >
       <Section noDivider>
         {!migroitu && !epaaktiivinen && (
           <>

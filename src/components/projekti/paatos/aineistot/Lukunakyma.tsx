@@ -2,10 +2,10 @@ import HassuAccordion, { AccordionItem } from "@components/HassuAccordion";
 import Section from "@components/layout/Section";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import { Stack } from "@mui/material";
-import { HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaiheTila } from "@services/api";
+import { HyvaksymisPaatosVaiheJulkaisu, KuulutusJulkaisuTila } from "@services/api";
 import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory } from "common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
-import React, { FC, useMemo } from "react";
+import React, { FunctionComponent, useMemo } from "react";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { formatDate, formatDateTime } from "src/util/dateUtils";
 import { getPaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
@@ -19,10 +19,7 @@ interface Props {
 export default function Lukunakyma({ projekti, paatosTyyppi }: Props) {
   const { viimeisinJulkaisu } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
 
-  const { published } = examineJulkaisuPaiva(
-    viimeisinJulkaisu?.tila === HyvaksymisPaatosVaiheTila.HYVAKSYTTY,
-    viimeisinJulkaisu?.kuulutusPaiva
-  );
+  const { published } = examineJulkaisuPaiva(viimeisinJulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY, viimeisinJulkaisu?.kuulutusPaiva);
 
   if (!projekti || !viimeisinJulkaisu) {
     return null;
@@ -65,7 +62,7 @@ interface AineistoNahtavillaAccordionProps {
   kategoriat: AineistoKategoria[];
 }
 
-const AineistoNahtavillaAccordion: FC<AineistoNahtavillaAccordionProps> = ({ julkaisu, kategoriat }) => {
+const AineistoNahtavillaAccordion: FunctionComponent<AineistoNahtavillaAccordionProps> = ({ julkaisu, kategoriat }) => {
   const { t } = useTranslation("aineisto");
   const accordionItems: AccordionItem[] = useMemo(
     () =>

@@ -6,8 +6,6 @@ import dayjs from "dayjs";
 import HassuGrid from "@components/HassuGrid";
 import Select from "@components/form/Select";
 
-type Props = {};
-
 type FormFields = {
   jatkoPaatos1Vaihe: {
     viimeinenVoimassaolovuosi: string | null;
@@ -25,7 +23,7 @@ function getYears(count: number) {
   return yearsArray;
 }
 
-export default function Voimassaolovuosi({}: Props) {
+export default function Voimassaolovuosi() {
   const {
     register,
     formState: { errors },

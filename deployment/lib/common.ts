@@ -1,5 +1,5 @@
-import { Construct } from "@aws-cdk/core";
-import { Domain } from "@aws-cdk/aws-opensearchservice";
+import { Construct } from "constructs";
+import { Domain } from "aws-cdk-lib/aws-opensearchservice";
 import { Config } from "./config";
 import { AccountStackOutputs } from "./hassu-account";
 

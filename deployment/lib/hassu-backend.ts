@@ -1,30 +1,25 @@
-/* tslint:disable:no-unused-expression */
-import * as cdk from "@aws-cdk/core";
-import { Duration, Fn } from "@aws-cdk/core";
-import * as lambda from "@aws-cdk/aws-lambda";
-import { StartingPosition, Tracing } from "@aws-cdk/aws-lambda";
-import * as appsync from "@aws-cdk/aws-appsync";
-import { FieldLogLevel, GraphqlApi } from "@aws-cdk/aws-appsync";
-import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
-import { Table } from "@aws-cdk/aws-dynamodb";
-import { Queue, QueueEncryption } from "@aws-cdk/aws-sqs";
+import { App, CfnOutput, Duration, Expiration, Fn, Stack } from "aws-cdk-lib";
+import * as lambda from "aws-cdk-lib/aws-lambda";
+import { LambdaInsightsVersion, RuntimeFamily, StartingPosition, Tracing } from "aws-cdk-lib/aws-lambda";
+import * as appsync from "@aws-cdk/aws-appsync-alpha";
+import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
+import { Table } from "aws-cdk-lib/aws-dynamodb";
+import { Queue, QueueEncryption } from "aws-cdk-lib/aws-sqs";
 import { Config } from "./config";
 import { apiConfig, OperationType } from "../../common/abstractApi";
 import { WafConfig } from "./wafConfig";
-import { AuthorizationMode } from "@aws-cdk/aws-appsync/lib/graphqlapi";
-import { DynamoEventSource, SqsEventSource } from "@aws-cdk/aws-lambda-event-sources";
-import * as eventTargets from "@aws-cdk/aws-events-targets";
-import * as events from "@aws-cdk/aws-events";
-import { IDomain } from "@aws-cdk/aws-opensearchservice";
-import { Effect, ManagedPolicy, PolicyStatement } from "@aws-cdk/aws-iam";
-import { Bucket } from "@aws-cdk/aws-s3";
-import { getEnvironmentVariablesFromSSM, readAccountStackOutputs, readFrontendStackOutputs } from "../bin/setupEnvironment";
-import { LambdaInsightsVersion } from "@aws-cdk/aws-lambda/lib/lambda-insights";
-import { RuleTargetInput } from "@aws-cdk/aws-events/lib/input";
+import { DynamoEventSource, SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
+import * as eventTargets from "aws-cdk-lib/aws-events-targets";
+import * as events from "aws-cdk-lib/aws-events";
+import { IDomain } from "aws-cdk-lib/aws-opensearchservice";
+import { Effect, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
+import { Bucket } from "aws-cdk-lib/aws-s3";
+import { getEnvironmentVariablesFromSSM, readAccountStackOutputs, readFrontendStackOutputs } from "./setupEnvironment";
 import { EmailEventType } from "../../backend/src/email/emailEvent";
 import { getOpenSearchDomain } from "./common";
 
 const path = require("path");
+const lambdaRuntime = new lambda.Runtime("nodejs16.x", RuntimeFamily.NODEJS);
 
 export type HassuBackendStackProps = {
   projektiTable: Table;
@@ -42,10 +37,10 @@ export type BackendStackOutputs = {
   AppSyncAPIURL: string;
 };
 
-export class HassuBackendStack extends cdk.Stack {
+export class HassuBackendStack extends Stack {
   private readonly props: HassuBackendStackProps;
 
-  constructor(scope: cdk.App, props: HassuBackendStackProps) {
+  constructor(scope: App, props: HassuBackendStackProps) {
     super(scope, "backend", {
       stackName: "hassu-backend-" + Config.env,
       env: {
@@ -56,7 +51,7 @@ export class HassuBackendStack extends cdk.Stack {
     this.props = props;
   }
 
-  async process() {
+  async process(): Promise<void> {
     const config = await Config.instance(this);
 
     const accountStackOutputs = await readAccountStackOutputs();
@@ -75,23 +70,24 @@ export class HassuBackendStack extends cdk.Stack {
       pdfGeneratorLambda
     );
     this.attachDatabaseToLambda(backendLambda);
+    this.createAndProvideSchedulerExecutionRole(backendLambda, aineistoSQS);
     HassuBackendStack.mapApiResolversToLambda(api, backendLambda);
 
     const projektiSearchIndexer = this.createProjektiSearchIndexer(commonEnvironmentVariables);
     this.attachDatabaseToLambda(projektiSearchIndexer);
     HassuBackendStack.configureOpenSearchAccess(projektiSearchIndexer, backendLambda, searchDomain);
 
-    let aineistoImporterLambda = await this.createAineistoImporterLambda(commonEnvironmentVariables, aineistoSQS);
+    const aineistoImporterLambda = await this.createAineistoImporterLambda(commonEnvironmentVariables, aineistoSQS);
     this.attachDatabaseToLambda(aineistoImporterLambda);
 
-    let emailQueueLambda = await this.createEmailQueueLambda(commonEnvironmentVariables, emailSQS);
+    const emailQueueLambda = await this.createEmailQueueLambda(commonEnvironmentVariables, emailSQS);
     this.attachDatabaseToLambda(emailQueueLambda);
 
-    new cdk.CfnOutput(this, "AppSyncAPIKey", {
+    new CfnOutput(this, "AppSyncAPIKey", {
       value: api.apiKey || "",
     });
     if (Config.isDeveloperEnvironment()) {
-      new cdk.CfnOutput(this, "AppSyncAPIURL", {
+      new CfnOutput(this, "AppSyncAPIURL", {
         value: api.graphqlUrl || "",
       });
     }
@@ -104,7 +100,7 @@ export class HassuBackendStack extends cdk.Stack {
   }
 
   private createAPI(config: Config) {
-    let defaultAuthorization: AuthorizationMode;
+    let defaultAuthorization: appsync.AuthorizationMode;
     if (Config.isDeveloperEnvironment()) {
       defaultAuthorization = {
         authorizationType: appsync.AuthorizationType.IAM,
@@ -114,7 +110,7 @@ export class HassuBackendStack extends cdk.Stack {
       defaultAuthorization = {
         authorizationType: appsync.AuthorizationType.API_KEY,
         apiKeyConfig: {
-          expires: cdk.Expiration.atDate(apiKeyExpiration),
+          expires: Expiration.atDate(apiKeyExpiration),
         },
       };
     }
@@ -123,7 +119,7 @@ export class HassuBackendStack extends cdk.Stack {
       name: "hassu-api-" + Config.env,
       schema: appsync.Schema.fromAsset("schema.graphql"),
       logConfig: {
-        fieldLogLevel: FieldLogLevel.ALL,
+        fieldLogLevel: appsync.FieldLogLevel.ALL,
         excludeVerboseContent: true,
       },
       authorizationConfig: { defaultAuthorization },
@@ -155,13 +151,14 @@ export class HassuBackendStack extends cdk.Stack {
   private createProjektiSearchIndexer(commonEnvironmentVariables: Record<string, string>) {
     const functionName = "hassu-dynamodb-stream-handler-" + Config.env;
     const streamHandler = new NodejsFunction(this, "DynamoDBStreamHandler", {
-      functionName: functionName,
-      runtime: lambda.Runtime.NODEJS_14_X,
+      functionName,
+      runtime: lambdaRuntime,
       entry: `${__dirname}/../../backend/src/projektiSearch/dynamoDBStreamHandler.ts`,
       handler: "handleDynamoDBEvents",
       memorySize: 256,
       bundling: {
         minify: true,
+        externalModules: [], // Include latest aws-sdk. Required to have AWS Scheduler Required to have AWS Scheduler
       },
       environment: {
         HASSU_XRAY_DOWNSTREAM_ENABLED: "false", // Estetään ylisuurten x-ray-tracejen synty koko indeksin uudelleenpäivityksessä
@@ -170,6 +167,7 @@ export class HassuBackendStack extends cdk.Stack {
       timeout: Duration.seconds(120),
       tracing: Tracing.ACTIVE,
     });
+    this.addPermissionsForMonitoring(streamHandler);
     streamHandler.addToRolePolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
@@ -204,10 +202,10 @@ export class HassuBackendStack extends cdk.Stack {
       };
     }
 
-    let frontendStackOutputs = await readFrontendStackOutputs();
+    const frontendStackOutputs = await readFrontendStackOutputs();
     const backendLambda = new NodejsFunction(this, "API", {
       functionName: "hassu-backend-" + Config.env,
-      runtime: lambda.Runtime.NODEJS_14_X,
+      runtime: lambdaRuntime,
       entry: `${__dirname}/../../backend/src/apiHandler.ts`,
       handler: "handleEvent",
       memorySize: 1769,
@@ -216,6 +214,7 @@ export class HassuBackendStack extends cdk.Stack {
         define,
         minify: true,
         metafile: false,
+        externalModules: [], // Include latest aws-sdk
       },
       environment: {
         ...commonEnvironmentVariables,
@@ -223,11 +222,16 @@ export class HassuBackendStack extends cdk.Stack {
         PDF_GENERATOR_LAMBDA_ARN: pdfGeneratorLambda.functionArn,
         FRONTEND_PUBLIC_KEY_ID: frontendStackOutputs?.FrontendPublicKeyIdOutput,
         AINEISTO_IMPORT_SQS_URL: aineistoSQS.queueUrl,
+        AINEISTO_IMPORT_SQS_ARN: aineistoSQS.queueArn,
+        CLOUDFRONT_DISTRIBUTION_ID: frontendStackOutputs?.CloudfrontDistributionId,
       },
       tracing: Tracing.ACTIVE,
       insightsVersion: LambdaInsightsVersion.VERSION_1_0_98_0,
     });
-    backendLambda.addToRolePolicy(new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] }));
+    this.addPermissionsForMonitoring(backendLambda);
+    backendLambda.addToRolePolicy(
+      new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter", "cloudfront:CreateInvalidation"], resources: ["*"] })
+    );
     backendLambda.addToRolePolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
@@ -242,7 +246,6 @@ export class HassuBackendStack extends cdk.Stack {
         resources: [pdfGeneratorLambda.functionArn],
       })
     );
-    backendLambda.role?.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("CloudWatchLambdaInsightsExecutionRolePolicy"));
 
     aineistoSQS.grantSendMessages(backendLambda);
 
@@ -254,10 +257,15 @@ export class HassuBackendStack extends cdk.Stack {
     return backendLambda;
   }
 
+  private addPermissionsForMonitoring(lambda: NodejsFunction) {
+    lambda.role?.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("CloudWatchLambdaInsightsExecutionRolePolicy"));
+    lambda.role?.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("AWSXRayDaemonWriteAccess"));
+  }
+
   private async createPdfGeneratorLambda() {
     const pdfGeneratorLambda = new NodejsFunction(this, "PDFGeneratorLambda", {
       functionName: "hassu-pdf-generator-" + Config.env,
-      runtime: lambda.Runtime.NODEJS_14_X,
+      runtime: lambdaRuntime,
       entry: `${__dirname}/../../backend/src/asiakirja/lambda/pdfGeneratorHandler.ts`,
       handler: "handleEvent",
       memorySize: 1769,
@@ -283,7 +291,7 @@ export class HassuBackendStack extends cdk.Stack {
       tracing: Tracing.ACTIVE,
       insightsVersion: LambdaInsightsVersion.VERSION_1_0_98_0,
     });
-    pdfGeneratorLambda.role?.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("CloudWatchLambdaInsightsExecutionRolePolicy"));
+    this.addPermissionsForMonitoring(pdfGeneratorLambda);
     pdfGeneratorLambda.addToRolePolicy(new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] })); // listKirjaamoOsoitteet requires this
     return pdfGeneratorLambda;
   }
@@ -291,7 +299,7 @@ export class HassuBackendStack extends cdk.Stack {
   private async createPersonSearchUpdaterLambda(commonEnvironmentVariables: Record<string, string>) {
     const personSearchLambda = new NodejsFunction(this, "PersonSearchUpdaterLambda", {
       functionName: "hassu-personsearchupdater-" + Config.env,
-      runtime: lambda.Runtime.NODEJS_14_X,
+      runtime: lambdaRuntime,
       entry: `${__dirname}/../../backend/src/personSearch/lambda/personSearchUpdaterHandler.ts`,
       handler: "handleEvent",
       memorySize: 512,
@@ -306,6 +314,7 @@ export class HassuBackendStack extends cdk.Stack {
       },
       tracing: Tracing.ACTIVE,
     });
+    this.addPermissionsForMonitoring(personSearchLambda);
     this.props.internalBucket.grantReadWrite(personSearchLambda);
     return personSearchLambda;
   }
@@ -314,11 +323,11 @@ export class HassuBackendStack extends cdk.Stack {
     commonEnvironmentVariables: Record<string, string>,
     aineistoSQS: Queue
   ): Promise<NodejsFunction> {
-    let frontendStackOutputs = await readFrontendStackOutputs();
+    const frontendStackOutputs = await readFrontendStackOutputs();
 
     const importer = new NodejsFunction(this, "AineistoImporterLambda", {
       functionName: "hassu-aineistoimporter-" + Config.env,
-      runtime: lambda.Runtime.NODEJS_14_X,
+      runtime: lambdaRuntime,
       entry: `${__dirname}/../../backend/src/aineisto/aineistoImporterLambda.ts`,
       handler: "handleEvent",
       memorySize: 512,
@@ -326,14 +335,17 @@ export class HassuBackendStack extends cdk.Stack {
       timeout: Duration.seconds(600),
       bundling: {
         minify: true,
+        externalModules: [], // Include latest aws-sdk
       },
       environment: {
         ...commonEnvironmentVariables,
         AINEISTO_IMPORT_SQS_URL: aineistoSQS.queueUrl,
+        AINEISTO_IMPORT_SQS_ARN: aineistoSQS.queueArn,
         CLOUDFRONT_DISTRIBUTION_ID: frontendStackOutputs?.CloudfrontDistributionId,
       },
       tracing: Tracing.ACTIVE,
     });
+    this.addPermissionsForMonitoring(importer);
 
     this.props.yllapitoBucket.grantReadWrite(importer);
     this.props.publicBucket.grantReadWrite(importer);
@@ -343,7 +355,7 @@ export class HassuBackendStack extends cdk.Stack {
         new PolicyStatement({
           effect: Effect.ALLOW,
           actions: ["cloudfront:CreateInvalidation"],
-          resources: ["arn:aws:cloudfront::" + cdk.Aws.ACCOUNT_ID + ":distribution/" + frontendStackOutputs?.CloudfrontDistributionId],
+          resources: ["arn:aws:cloudfront::" + this.account + ":distribution/" + frontendStackOutputs?.CloudfrontDistributionId],
         })
       );
     }
@@ -356,7 +368,7 @@ export class HassuBackendStack extends cdk.Stack {
   private async createEmailQueueLambda(commonEnvironmentVariables: Record<string, string>, emailSQS: Queue): Promise<NodejsFunction> {
     const importer = new NodejsFunction(this, "EmailQueueLambda", {
       functionName: "hassu-email-" + Config.env,
-      runtime: lambda.Runtime.NODEJS_14_X,
+      runtime: lambdaRuntime,
       entry: `${__dirname}/../../backend/src/email/emailSQSHandler.ts`,
       handler: "handleEvent",
       memorySize: 512,
@@ -370,16 +382,18 @@ export class HassuBackendStack extends cdk.Stack {
       },
       tracing: Tracing.ACTIVE,
     });
+    this.addPermissionsForMonitoring(importer);
 
     const eventSource = new SqsEventSource(emailSQS, { batchSize: 1 });
     importer.addEventSource(eventSource);
     return importer;
   }
 
-  private static mapApiResolversToLambda(api: GraphqlApi, backendFn: NodejsFunction) {
+  private static mapApiResolversToLambda(api: appsync.GraphqlApi, backendFn: NodejsFunction) {
     const lambdaDataSource = api.addLambdaDataSource("lambdaDatasource", backendFn);
 
     for (const operationName in apiConfig) {
+      // eslint-disable-next-line no-prototype-builtins
       if (apiConfig.hasOwnProperty(operationName)) {
         const operation = (apiConfig as any)[operationName];
         lambdaDataSource.createResolver({
@@ -441,10 +455,45 @@ export class HassuBackendStack extends cdk.Stack {
         new eventTargets.SqsQueue(queue, {
           maxEventAge: Duration.hours(24),
           retryAttempts: 10,
-          message: RuleTargetInput.fromObject({ type: EmailEventType.UUDET_PALAUTTEET_DIGEST }),
+          message: events.RuleTargetInput.fromObject({ type: EmailEventType.UUDET_PALAUTTEET_DIGEST }),
         }),
       ],
     });
     return queue;
+  }
+
+  private createAndProvideSchedulerExecutionRole(backendLambda: NodejsFunction, aineistoSQS: Queue) {
+    const servicePrincipal = new ServicePrincipal("scheduler.amazonaws.com");
+    const role = new Role(this, "schedulerExecutionRole", {
+      assumedBy: servicePrincipal,
+      roleName: "schedulerExecutionRole-" + Config.env,
+      path: "/",
+      inlinePolicies: {
+        sendSQS: new PolicyDocument({
+          statements: [
+            new PolicyStatement({
+              effect: Effect.ALLOW,
+              actions: ["sqs:SendMessage"],
+              resources: [aineistoSQS.queueArn],
+            }),
+          ],
+        }),
+      },
+    });
+    backendLambda.addEnvironment("SCHEDULER_EXECUTION_ROLE_ARN", role.roleArn);
+    backendLambda.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["scheduler:CreateSchedule", "scheduler:DeleteSchedule", "scheduler:ListSchedules"],
+        resources: ["*"],
+      })
+    );
+    backendLambda.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["iam:PassRole"],
+        resources: [role.roleArn],
+      })
+    );
   }
 }

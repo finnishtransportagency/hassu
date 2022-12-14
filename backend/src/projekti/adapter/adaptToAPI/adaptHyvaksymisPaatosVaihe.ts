@@ -6,7 +6,7 @@ import {
   LocalizedMap,
 } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
-import { HyvaksymisPaatosVaiheTila } from "../../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila } from "../../../../../common/graphql/apiModel";
 import {
   adaptAineistot,
   adaptIlmoituksenVastaanottajat,
@@ -16,10 +16,12 @@ import {
   adaptVelho,
 } from "../common";
 import { fileService } from "../../../files/fileService";
+import { PathTuple } from "../../../files/ProjektiPath";
 
 export function adaptHyvaksymisPaatosVaihe(
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | null | undefined,
-  hyvaksymisPaatos: Hyvaksymispaatos | null | undefined
+  hyvaksymisPaatos: Hyvaksymispaatos | null | undefined,
+  paths: PathTuple
 ): API.HyvaksymisPaatosVaihe | undefined {
   if (!hyvaksymisPaatosVaihe) {
     return undefined;
@@ -35,8 +37,8 @@ export function adaptHyvaksymisPaatosVaihe(
   return {
     __typename: "HyvaksymisPaatosVaihe",
     ...rest,
-    aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
-    hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto),
+    aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
+    hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto, paths),
     kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
     hyvaksymisPaatoksenPvm: hyvaksymisPaatos?.paatoksenPvm || undefined,
@@ -45,9 +47,9 @@ export function adaptHyvaksymisPaatosVaihe(
 }
 
 export function adaptHyvaksymisPaatosVaiheJulkaisut(
-  oid: string,
   hyvaksymisPaatos: Hyvaksymispaatos | null | undefined,
-  julkaisut?: HyvaksymisPaatosVaiheJulkaisu[] | null | undefined
+  julkaisut: HyvaksymisPaatosVaiheJulkaisu[] | null | undefined,
+  getPathCallback: (julkaisu: HyvaksymisPaatosVaiheJulkaisu) => PathTuple
 ): API.HyvaksymisPaatosVaiheJulkaisu[] | undefined {
   if (julkaisut) {
     return julkaisut.map((julkaisu) => {
@@ -63,7 +65,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisut(
         ...fieldsToCopyAsIs
       } = julkaisu;
 
-      if (tila == HyvaksymisPaatosVaiheTila.MIGROITU) {
+      if (tila == KuulutusJulkaisuTila.MIGROITU) {
         return { __typename: "HyvaksymisPaatosVaiheJulkaisu", tila, velho: adaptVelho(velho) };
       }
 
@@ -88,14 +90,14 @@ export function adaptHyvaksymisPaatosVaiheJulkaisut(
       if (!kielitiedot) {
         throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatos.kielitiedot määrittelemättä");
       }
-
+      const paths = getPathCallback(julkaisu);
       const apijulkaisu: API.HyvaksymisPaatosVaiheJulkaisu = {
         ...fieldsToCopyAsIs,
         __typename: "HyvaksymisPaatosVaiheJulkaisu",
         kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
-        hyvaksymisPaatosVaihePDFt: adaptHyvaksymisPaatosVaihePDFPaths(oid, hyvaksymisPaatosVaihePDFt),
-        aineistoNahtavilla: adaptAineistot(aineistoNahtavilla),
-        hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto),
+        hyvaksymisPaatosVaihePDFt: adaptHyvaksymisPaatosVaihePDFPaths(hyvaksymisPaatosVaihePDFt, paths),
+        aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
+        hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto, paths),
         hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
         hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,
         yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
@@ -110,8 +112,8 @@ export function adaptHyvaksymisPaatosVaiheJulkaisut(
 }
 
 function adaptHyvaksymisPaatosVaihePDFPaths(
-  oid: string,
-  hyvaksymisPaatosVaihePDFs: LocalizedMap<HyvaksymisPaatosVaihePDF>
+  hyvaksymisPaatosVaihePDFs: LocalizedMap<HyvaksymisPaatosVaihePDF>,
+  paths: PathTuple
 ): API.HyvaksymisPaatosVaihePDFt | undefined {
   if (!hyvaksymisPaatosVaihePDFs) {
     return undefined;
@@ -119,11 +121,8 @@ function adaptHyvaksymisPaatosVaihePDFPaths(
 
   const result: Partial<API.HyvaksymisPaatosVaihePDFt> = {};
 
-  function getYllapitoPathForFile(path: string): string {
-    // getYllapitoPathForProjektiFile palauttaa stringin, koska oid ja path on määritelty
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    return fileService.getYllapitoPathForProjektiFile(oid, path);
+  function getYllapitoPathForFile(filePath: string): string {
+    return fileService.getYllapitoPathForProjektiFile(paths, filePath);
   }
 
   for (const kieli in hyvaksymisPaatosVaihePDFs) {
@@ -131,7 +130,7 @@ function adaptHyvaksymisPaatosVaihePDFPaths(
     if (!pdfs) {
       throw new Error(`adaptHyvaksymisPaatosVaihePDFPaths: hyvaksymisPaatosVaihePDFs[${kieli}] määrittelemättä`);
     }
-    const hyvaksymisPaatosVaihePdf: API.HyvaksymisPaatosVaihePDF = {
+    result[kieli as API.Kieli] = {
       __typename: "HyvaksymisPaatosVaihePDF",
       ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath: getYllapitoPathForFile(
         pdfs.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath
@@ -143,7 +142,6 @@ function adaptHyvaksymisPaatosVaihePDFPaths(
         pdfs.ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath
       ),
     };
-    result[kieli as API.Kieli] = hyvaksymisPaatosVaihePdf;
   }
   return { __typename: "HyvaksymisPaatosVaihePDFt", [API.Kieli.SUOMI]: result[API.Kieli.SUOMI] as API.HyvaksymisPaatosVaihePDF, ...result };
 }

@@ -1,7 +1,7 @@
 import * as API from "../../../../../common/graphql/apiModel";
 import { UudelleenKuulutusInput } from "../../../../../common/graphql/apiModel";
 import { AloitusKuulutus, UudelleenKuulutus } from "../../../database/model";
-import { adaptHankkeenKuvausToSave, adaptIlmoituksenVastaanottajatToSave, adaptStandardiYhteystiedotToSave } from "./common";
+import { adaptHankkeenKuvausToSave, adaptIlmoituksenVastaanottajatToSave, adaptStandardiYhteystiedotToSave, getId } from "./common";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
 import mergeWith from "lodash/mergeWith";
 
@@ -20,18 +20,25 @@ export function adaptAloitusKuulutusToSave(
     if (!ilmoituksenVastaanottajat) {
       throw new IllegalArgumentError("Aloituskuulutuksella on oltava ilmoituksenVastaanottajat!");
     }
+
+    const id = getId(dbAloituskuulutus);
+
     return {
       ...rest,
+      id,
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat), //pakko tukea vielä tätä
       hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus),
       kuulutusYhteystiedot: adaptStandardiYhteystiedotToSave(kuulutusYhteystiedot),
-      uudelleenKuulutus: adaptUudelleenKuulutus(dbAloituskuulutus?.uudelleenKuulutus, uudelleenKuulutus),
+      uudelleenKuulutus: adaptUudelleenKuulutusToSave(dbAloituskuulutus?.uudelleenKuulutus, uudelleenKuulutus),
     };
   }
   return aloitusKuulutus as undefined;
 }
 
-function adaptUudelleenKuulutus(uudelleenKuulutus: UudelleenKuulutus | null | undefined, input: UudelleenKuulutusInput | null | undefined) {
+export function adaptUudelleenKuulutusToSave(
+  uudelleenKuulutus: UudelleenKuulutus | null | undefined,
+  input: UudelleenKuulutusInput | null | undefined
+): UudelleenKuulutus | null | undefined {
   if (!input) {
     return uudelleenKuulutus;
   }

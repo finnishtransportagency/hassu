@@ -1,5 +1,5 @@
 import * as API from "../../../../common/graphql/apiModel";
-import { HyvaksymisPaatosVaiheTila } from "../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
 import { DateAddTuple, isDateTimeInThePast } from "../../util/dateUtil";
 import { HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
 
@@ -47,7 +47,7 @@ export abstract class AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<
   handle(p: T): void {
     const hyvaksymisPaatosVaihe = this.getPaatosVaihe(p);
 
-    if (hyvaksymisPaatosVaihe?.tila == HyvaksymisPaatosVaiheTila.MIGROITU) {
+    if (hyvaksymisPaatosVaihe?.tila == KuulutusJulkaisuTila.MIGROITU) {
       p.status = this.epaAktiivisuusStatus;
       super.handle(p); // Continue evaluating next rules
       return;

@@ -6,6 +6,7 @@
       "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum"
     },
+    "id": 1,
     "ilmoituksenVastaanottajat": {
       "kunnat": [
         {
@@ -51,8 +52,8 @@
     {
       "aloituskuulutusPDFt": {
         "SUOMI": {
-          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-          "aloituskuulutusPDFPath": "/aloituskuulutus/T412 Aloituskuulutus.pdf"
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf"
         }
       },
       "hankkeenKuvaus": {
@@ -242,11 +243,11 @@
       ],
       "hyvaksymisPaatosVaihePDFt": {
         "SUOMI": {
-          "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/hyvaksymispaatos/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
-          "hyvaksymisIlmoitusMuistuttajillePDFPath": "/hyvaksymispaatos/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
-          "hyvaksymisKuulutusPDFPath": "/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
-          "ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath": "/hyvaksymispaatos/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle.pdf",
-          "ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath": "/hyvaksymispaatos/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf"
+          "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/hyvaksymispaatos/1/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+          "hyvaksymisIlmoitusMuistuttajillePDFPath": "/hyvaksymispaatos/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+          "hyvaksymisKuulutusPDFPath": "/hyvaksymispaatos/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath": "/hyvaksymispaatos/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath": "/hyvaksymispaatos/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf"
         }
       },
       "id": 1,
@@ -528,6 +529,7 @@
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
       },
       "hyvaksyja": "A000112",
+      "hyvaksymisPaiva": "2022-11-03",
       "id": 1,
       "ilmoituksenVastaanottajat": {
         "kunnat": [
@@ -574,9 +576,9 @@
       "muokkaaja": "A000112",
       "nahtavillaoloPDFt": {
         "SUOMI": {
-          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/nahtavillaolo/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
-          "nahtavillaoloIlmoitusPDFPath": "/nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
-          "nahtavillaoloPDFPath": "/nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf"
+          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/nahtavillaolo/1/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+          "nahtavillaoloIlmoitusPDFPath": "/nahtavillaolo/1/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
+          "nahtavillaoloPDFPath": "/nahtavillaolo/1/T414 Kuulutus suunnitelman nahtavillaolo.pdf"
         }
       },
       "tila": "HYVAKSYTTY",

@@ -13,8 +13,8 @@ import {
   hyvaksyNahtavillaoloKuulutus,
   lisaaNahtavillaoloAineistot,
   taytaNahtavillaoloPerustiedot,
-} from "../2-perusta-projekti/nahtavillaolo";
-import { lisaaPaatosJaAineistot, tallennaKasittelynTilaJaSiirraMenneisyyteen } from "../2-perusta-projekti/hyvaksyntavaihe";
+} from "../../support/nahtavillaolo";
+import { lisaaPaatosJaAineistot, tallennaKasittelynTilaJaSiirraMenneisyyteen } from "../../support/hyvaksyntavaihe";
 import { formatDate } from "../../../src/util/dateUtils";
 import dayjs from "dayjs";
 
@@ -197,9 +197,9 @@ describe("Migraatio", () => {
     cy.contains("Suunnitelma on tuotu toisesta järjestelmästä, joten tiedoissa voi olla puutteita.");
     cy.get("#sidenavi_1").should("exist").click({ force: true });
     cy.contains("span", "Suunnittelussa");
-    cy.contains("Suunnitelma on tuotu toisesta järjestelmästä, joten tiedoissa voi olla puutteita.");
+    cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
     cy.get("#sidenavi_2").should("exist").click({ force: true });
-    cy.contains("span", "Suunnitteluaineisto nähtävillä");
+    cy.contains("h2", "Kuulutus suunnitelman nähtäville asettamisesta");
     cy.contains("Suunnitelma on tuotu toisesta järjestelmästä, joten tiedoissa voi olla puutteita.");
     cy.get("#sidenavi_3").should("exist").click({ force: true });
     cy.contains("span", "Hyväksymismenettelyssä");

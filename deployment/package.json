@@ -1,0 +1,20 @@
+{
+  "name": "hassu-deployment",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "@aws-cdk/aws-appsync-alpha": "2.53.0-alpha.0",
+    "@aws-sdk/client-cloudformation": "3.229.0",
+    "@aws-sdk/client-ssm": "3.229.0",
+    "@sls-next/cdk-construct": "3.7.0",
+    "@types/aws-sdk": "2.7.0",
+    "aws-cdk": "2.53.0",
+    "aws-cdk-lib": "2.53.0",
+    "aws-cdk-local": "2.15.0",
+    "aws-sdk": "2.1274.0"
+  },
+  "engines": {
+    "node": ">=14.17.0",
+    "npm": ">=7.21.0"
+  }
+}

@@ -151,7 +151,7 @@ export function removeTypeName<Type>(o: General<Type> | null | undefined): Type 
 }
 
 export function adaptHankkeenKuvausToSave(
-  hankkeenKuvaus: API.HankkeenKuvauksetInput | undefined | null
+  hankkeenKuvaus: API.LokalisoituTekstiInput | undefined | null
 ): LocalizedMap<string> | undefined | null {
   if (!hankkeenKuvaus) {
     return hankkeenKuvaus;
@@ -167,4 +167,19 @@ export function adaptHankkeenKuvausToSave(
     }
   });
   return kuvaus;
+}
+
+export function getId(
+  vaihe:
+    | {
+        id: number | undefined;
+      }
+    | undefined
+    | null
+): number {
+  let id = vaihe?.id;
+  if (!id) {
+    id = 1;
+  }
+  return id;
 }

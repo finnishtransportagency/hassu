@@ -1,0 +1,47 @@
+version: 0.2
+
+env:
+  parameter-store:
+    SKIP_VELHO_TESTS: /SkipVelhoTests
+    ROCKET_CHAT_TOKEN: /RocketChatToken
+    ROCKET_CHAT_USER_ID: /RocketChatUserId
+    SONARQUBE_HOST_URL: /SonarQubeHostURL
+    SONARQUBE_ACCESS_TOKEN: /SonarQubeAccessToken
+  secrets-manager:
+    GITHUB_TOKEN: github-token
+
+phases:
+  install:
+    commands:
+      - aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 283563576583.dkr.ecr.eu-west-1.amazonaws.com
+      - nohup /usr/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2 &
+      - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
+      - nohup docker pull 283563576583.dkr.ecr.eu-west-1.amazonaws.com/localstack:1.3
+
+      - mv /packages/tools/velho/.gradle /tools/velho/
+      - mv /packages/tools/velho/buildSrc/.gradle /tools/velho/buildSrc/
+
+      - touch .env.test
+      - npm ci
+      - npm run buildimage:generate
+  build:
+    commands:
+      - npm run get-next-version
+      - npm run lint
+      - npm run localstack
+      - npm run setupenvironment
+      - npm run test
+      - npm run localstack:stop &
+      - npm run sonar
+      - npm run deploy:database
+      - npm run deploy:backend
+      - npm run deploy:frontend
+  post_build:
+    on-failure: ABORT
+    commands:
+      - ./deployment/bin/reportBuildStatus.sh -t "$ROCKET_CHAT_TOKEN" -u "$ROCKET_CHAT_USER_ID" -r "$CODEBUILD_BUILD_SUCCEEDING" -m "$ENVIRONMENT build" -d "CodeBuild $CODEBUILD_BUILD_URL"
+cache:
+  paths:
+    - "/root/.cache/**/*"
+    - "/root/.npm/**/*"
+    - "/root/.sonar"

@@ -1,10 +1,10 @@
 import { ExecException } from "child_process";
-import * as ssm from "@aws-cdk/aws-ssm";
+import * as ssm from "aws-cdk-lib/aws-ssm";
 import { SSM } from "aws-sdk";
 import log from "loglevel";
 import { BaseConfig } from "../../common/BaseConfig";
-import { readFrontendStackOutputs } from "../bin/setupEnvironment";
-import { Construct } from "@aws-cdk/core";
+import { readFrontendStackOutputs } from "./setupEnvironment";
+import { Construct } from "constructs";
 
 const ssmProvider = new SSM({ apiVersion: "2014-11-06", region: "eu-west-1" });
 const globalSsmProvider = new SSM({ apiVersion: "2014-11-06", region: "us-east-1" });
@@ -35,9 +35,8 @@ export class Config extends BaseConfig {
   public static readonly yllapitoBucketName = `hassu-${Config.env}-yllapito`;
   public static readonly publicBucketName = `hassu-${Config.env}-public`;
   public static readonly archiveBucketName = `hassu-${Config.env}-archive`;
-  public static readonly reportBucketName = `hassu-report`;
+  public static readonly reportBucketName = `hassu-reports`;
   public readonly dmzProxyEndpoint: string;
-  // @ts-ignore
   public frontendDomainName: string;
   public readonly cloudfrontCertificateArn?: string;
   public static readonly feedbackTableName = "Palaute-" + getEnv("ENVIRONMENT");
@@ -49,6 +48,7 @@ export class Config extends BaseConfig {
   public static readonly tags = { Environment: Config.env, Project: "Hassu" };
   private readonly scope: Construct;
   public static readonly isHotswap = process.env.HASSU_HOTSWAP == "true";
+  public static buildImageRepositoryName = "hassu-build-image";
 
   private constructor(scope: Construct) {
     super();
@@ -127,15 +127,17 @@ export class Config extends BaseConfig {
   private init = async () => {
     this.branch = process.env.BUILD_BRANCH ? process.env.BUILD_BRANCH : await execShellCommand("git rev-parse --abbrev-ref HEAD");
 
-    if (Config.isDeveloperEnvironment()) {
-      this.frontendDomainName = (await readFrontendStackOutputs()).CloudfrontPrivateDNSName || "please-re-run-backend-deployment";
-    } else {
-      this.frontendDomainName = await this.getSecureInfraParameter("FrontendDomainName");
-      if (!this.frontendDomainName) {
-        throw new Error("/" + Config.env + "/FrontendDomainName SSM Parameter not found! Maybe logged in to wrong account?");
+    if ("localstack" !== Config.env) {
+      if (Config.isDeveloperEnvironment()) {
+        this.frontendDomainName = (await readFrontendStackOutputs()).CloudfrontPrivateDNSName || "please-re-run-backend-deployment";
+      } else {
+        this.frontendDomainName = await this.getSecureInfraParameter("FrontendDomainName");
+        if (!this.frontendDomainName) {
+          throw new Error("/" + Config.env + "/FrontendDomainName SSM Parameter not found! Maybe logged in to wrong account?");
+        }
       }
+      log.info("frontendDomainName", this.frontendDomainName);
     }
-    log.info("frontendDomainName", this.frontendDomainName);
   };
 
   public isFeatureBranch(): boolean {

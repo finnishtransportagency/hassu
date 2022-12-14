@@ -1,12 +1,40 @@
-import { HyvaksymisPaatosVaiheTila, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
-import { DBProjekti, HyvaksymisPaatosVaihe } from "../../database/model";
+import { KuulutusJulkaisuTila, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
+import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
-import { aineistoService } from "../../aineisto/aineistoService";
 import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import { AbstractHyvaksymisPaatosVaiheTilaManager } from "./abstractHyvaksymisPaatosVaiheTilaManager";
+import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
+import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
+import { assertIsDefined } from "../../util/assertions";
 
 class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
+  getVaihe(projekti: DBProjekti): HyvaksymisPaatosVaihe {
+    const vaihe = projekti.jatkoPaatos2Vaihe;
+    assertIsDefined(vaihe, "Projektilla ei ole jatkoPaatos2Vaihetta");
+    return vaihe;
+  }
+
+  getJulkaisut(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu[] | undefined {
+    return projekti.jatkoPaatos2VaiheJulkaisut || undefined;
+  }
+
+  validateUudelleenkuulutus(
+    projekti: DBProjekti,
+    kuulutus: HyvaksymisPaatosVaihe,
+    hyvaksyttyJulkaisu: HyvaksymisPaatosVaiheJulkaisu | undefined
+  ): void {
+    // TODO
+  }
+
+  getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: HyvaksymisPaatosVaihe | null | undefined): PathTuple {
+    return new ProjektiPaths(projekti.oid).jatkoPaatos2Vaihe(kuulutus);
+  }
+
+  async saveVaihe(projekti: DBProjekti, jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe): Promise<void> {
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, jatkoPaatos1Vaihe });
+  }
+
   async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
     const julkaisuWaitingForApproval = asiakirjaAdapter.findJatkoPaatos2VaiheWaitingForApproval(projekti);
     if (julkaisuWaitingForApproval) {
@@ -23,10 +51,14 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
       throw new IllegalArgumentError("Jatkopäätösvaiheella on oltava hyvaksymisPaatos!");
     }
 
-    julkaisu.tila = HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA;
+    julkaisu.tila = KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA;
     julkaisu.muokkaaja = muokkaaja.uid;
 
-    julkaisu.hyvaksymisPaatosVaihePDFt = await this.generatePDFs(projekti, julkaisu);
+    julkaisu.hyvaksymisPaatosVaihePDFt = await this.generatePDFs(
+      projekti,
+      julkaisu,
+      new ProjektiPaths(projekti.oid).jatkoPaatos2Vaihe(julkaisu)
+    );
 
     await projektiDatabase.jatkoPaatos2VaiheJulkaisut.insert(projekti.oid, julkaisu);
   }
@@ -38,13 +70,13 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
       throw new Error("Ei JatkoPaatos2Vaihetta odottamassa hyväksyntää");
     }
     await this.removeRejectionReasonIfExists(projekti, "jatkoPaatos2Vaihe", hyvaksymisPaatosVaihe);
-    julkaisu.tila = HyvaksymisPaatosVaiheTila.HYVAKSYTTY;
+    julkaisu.tila = KuulutusJulkaisuTila.HYVAKSYTTY;
     julkaisu.hyvaksyja = projektiPaallikko.uid;
 
     await projektiDatabase.saveProjekti({ oid: projekti.oid, ajastettuTarkistus: this.getNextAjastettuTarkistus(julkaisu, false) });
 
     await projektiDatabase.jatkoPaatos2VaiheJulkaisut.update(projekti, julkaisu);
-    await aineistoService.publishJatkoPaatos2Vaihe(projekti.oid, julkaisu.id);
+    await aineistoSynchronizerService.synchronizeProjektiFiles(projekti.oid);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

@@ -107,8 +107,16 @@ Object {
 exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 2`] = `
 Object {
   "yllapito S3 files jatkopäätös1 created": Object {
-    "/1/T113 TS Esite.txt": Object {},
-    "/1/paatos/TYHJÄ.txt": Object {},
+    "/1/T113 TS Esite.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T113%20TS%20Esite.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+    },
+    "/1/paatos/TYHJÄ.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+    },
   },
 }
 `;
@@ -126,7 +134,7 @@ Object {
           "jarjestys": 1,
           "kategoriaId": "T1xx",
           "nimi": "T113 TS Esite.txt",
-          "tiedosto": "/jatkopaatos1/1/T113 TS Esite.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/T113 TS Esite.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -140,7 +148,7 @@ Object {
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
           "jarjestys": 1,
           "nimi": "TYHJÄ.txt",
-          "tiedosto": "/jatkopaatos1/1/paatos/TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/paatos/TYHJÄ.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -212,7 +220,7 @@ Object {
             "jarjestys": 1,
             "kategoriaId": "T1xx",
             "nimi": "T113 TS Esite.txt",
-            "tiedosto": "/jatkopaatos1/1/T113 TS Esite.txt",
+            "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/T113 TS Esite.txt",
             "tila": "VALMIS",
             "tuotu": "***unittest***",
           },
@@ -227,7 +235,7 @@ Object {
             "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
             "jarjestys": 1,
             "nimi": "TYHJÄ.txt",
-            "tiedosto": "/jatkopaatos1/1/paatos/TYHJÄ.txt",
+            "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/paatos/TYHJÄ.txt",
             "tila": "VALMIS",
             "tuotu": "***unittest***",
           },
@@ -235,11 +243,11 @@ Object {
         "hyvaksymisPaatosVaihePDFt": Object {
           "SUOMI": Object {
             "__typename": "HyvaksymisPaatosVaihePDF",
-            "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
-            "hyvaksymisIlmoitusMuistuttajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
-            "hyvaksymisKuulutusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
-            "ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle.pdf",
-            "ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+            "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+            "hyvaksymisIlmoitusMuistuttajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+            "hyvaksymisKuulutusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+            "ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle.pdf",
+            "ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
           },
           "__typename": "HyvaksymisPaatosVaihePDFt",
         },
@@ -344,7 +352,7 @@ Object {
         "jarjestys": 1,
         "kategoriaId": "T1xx",
         "nimi": "T113 TS Esite.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/T113 TS Esite.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/T113 TS Esite.txt",
         "tuotu": "***unittest***",
       },
     ],
@@ -358,7 +366,7 @@ Object {
         "jarjestys": 1,
         "kategoriaId": undefined,
         "nimi": "TYHJÄ.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/paatos/TYHJÄ.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/paatos/TYHJÄ.txt",
         "tuotu": "***unittest***",
       },
     ],
@@ -418,6 +426,24 @@ Object {
 `;
 
 exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 5`] = `
+Object {
+  "args": Object {
+    "DistributionId": "unit-test-distribution-id",
+    "InvalidationBatch": Object {
+      "CallerReference": "***unittest***",
+      "Paths": Object {
+        "Items": Array [
+          "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/*",
+        ],
+        "Quantity": 1,
+      },
+    },
+  },
+  "stub": "createInvalidation",
+}
+`;
+
+exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 6`] = `
 Object {
   "description": "testImportJatkopaatos2vaiheAineistot",
   "obj": Object {
@@ -525,16 +551,24 @@ Object {
 }
 `;
 
-exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 6`] = `
+exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 7`] = `
 Object {
   "yllapito S3 files jatkopäätös2 created": Object {
-    "/1/T113 TS Esite.txt": Object {},
-    "/1/paatos/TYHJÄ.txt": Object {},
+    "/1/T113 TS Esite.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T113%20TS%20Esite.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+    },
+    "/1/paatos/TYHJÄ.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+    },
   },
 }
 `;
 
-exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 7`] = `
+exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 8`] = `
 Object {
   "description": "testJatkoPaatos2VaiheAfterApproval",
   "obj": Object {
@@ -547,7 +581,7 @@ Object {
           "jarjestys": 1,
           "kategoriaId": "T1xx",
           "nimi": "T113 TS Esite.txt",
-          "tiedosto": "/jatkopaatos1/1/T113 TS Esite.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/T113 TS Esite.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -561,7 +595,7 @@ Object {
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
           "jarjestys": 1,
           "nimi": "TYHJÄ.txt",
-          "tiedosto": "/jatkopaatos1/1/paatos/TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/paatos/TYHJÄ.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -633,7 +667,7 @@ Object {
             "jarjestys": 1,
             "kategoriaId": "T1xx",
             "nimi": "T113 TS Esite.txt",
-            "tiedosto": "/jatkopaatos2/1/T113 TS Esite.txt",
+            "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/1/T113 TS Esite.txt",
             "tila": "VALMIS",
             "tuotu": "***unittest***",
           },
@@ -648,7 +682,7 @@ Object {
             "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
             "jarjestys": 1,
             "nimi": "TYHJÄ.txt",
-            "tiedosto": "/jatkopaatos2/1/paatos/TYHJÄ.txt",
+            "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/1/paatos/TYHJÄ.txt",
             "tila": "VALMIS",
             "tuotu": "***unittest***",
           },
@@ -656,11 +690,11 @@ Object {
         "hyvaksymisPaatosVaihePDFt": Object {
           "SUOMI": Object {
             "__typename": "HyvaksymisPaatosVaihePDF",
-            "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
-            "hyvaksymisIlmoitusMuistuttajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
-            "hyvaksymisKuulutusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
-            "ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle.pdf",
-            "ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+            "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/1/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+            "hyvaksymisIlmoitusMuistuttajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+            "hyvaksymisKuulutusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+            "ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle.pdf",
+            "ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
           },
           "__typename": "HyvaksymisPaatosVaihePDFt",
         },
@@ -753,7 +787,7 @@ Object {
 }
 `;
 
-exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 8`] = `
+exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 9`] = `
 Object {
   "description": "publicProjektiJatkoPaatos2VaiheJulkinenAfterApproval",
   "obj": Object {
@@ -765,7 +799,7 @@ Object {
         "jarjestys": 1,
         "kategoriaId": "T1xx",
         "nimi": "T113 TS Esite.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/1/T113 TS Esite.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/T113 TS Esite.txt",
         "tuotu": "***unittest***",
       },
     ],
@@ -779,7 +813,7 @@ Object {
         "jarjestys": 1,
         "kategoriaId": undefined,
         "nimi": "TYHJÄ.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/1/paatos/TYHJÄ.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/paatos/TYHJÄ.txt",
         "tuotu": "***unittest***",
       },
     ],
@@ -838,7 +872,25 @@ Object {
 }
 `;
 
-exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 9`] = `
+exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 10`] = `
+Object {
+  "args": Object {
+    "DistributionId": "unit-test-distribution-id",
+    "InvalidationBatch": Object {
+      "CallerReference": "***unittest***",
+      "Paths": Object {
+        "Items": Array [
+          "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/*",
+        ],
+        "Quantity": 1,
+      },
+    },
+  },
+  "stub": "createInvalidation",
+}
+`;
+
+exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 11`] = `
 Object {
   "velho.saveProjekti": Array [
     Array [

@@ -9,11 +9,9 @@ import Button from "@components/button/Button";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import {
   AloitusKuulutusInput,
-  AloitusKuulutusJulkaisu,
-  AloitusKuulutusTila,
+  KuulutusJulkaisuTila,
   api,
   AsiakirjaTyyppi,
-  HankkeenKuvauksetInput,
   Kieli,
   Kielitiedot,
   LaskuriTyyppi,
@@ -45,11 +43,13 @@ import HassuSpinner from "@components/HassuSpinner";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
-import { pickBy } from "lodash";
 import { removeTypeName } from "src/util/removeTypeName";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { today } from "src/util/dateUtils";
 import { kuntametadata } from "../../../../../common/kuntametadata";
+import UudelleenkuulutaButton from "@components/projekti/UudelleenkuulutaButton";
+import { getDefaultValuesForLokalisoituText, getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForLokalisoituText";
+import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -59,7 +59,12 @@ type RequiredProjektiFields = Required<{
 type FormValues = RequiredProjektiFields & {
   aloitusKuulutus: Pick<
     AloitusKuulutusInput,
-    "kuulutusYhteystiedot" | "kuulutusPaiva" | "hankkeenKuvaus" | "siirtyySuunnitteluVaiheeseen" | "ilmoituksenVastaanottajat"
+    | "kuulutusYhteystiedot"
+    | "kuulutusPaiva"
+    | "hankkeenKuvaus"
+    | "siirtyySuunnitteluVaiheeseen"
+    | "ilmoituksenVastaanottajat"
+    | "uudelleenKuulutus"
   >;
 };
 
@@ -107,24 +112,8 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt)) || [];
 
     const yhteysHenkilot: string[] = projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysHenkilot || [];
-    const { ensisijainenKieli, toissijainenKieli } = projekti.kielitiedot || {};
 
-    const hasRuotsinKieli = ensisijainenKieli === Kieli.RUOTSI || toissijainenKieli === Kieli.RUOTSI;
-    const hasSaamenKieli = ensisijainenKieli === Kieli.SAAME || toissijainenKieli === Kieli.SAAME;
-
-    // SUOMI hankkeen kuvaus on aina lomakkeella, RUOTSI JA SAAME vain jos kyseinen kieli on projektin kielitiedoissa.
-    // Jos kieli ei ole kielitiedoissa kyseisen kielen kenttää ei tule lisätä hankkeenKuvaus olioon
-    // Tästä syystä pickBy:llä poistetaan undefined hankkeenkuvaus tiedot.
-    const hankkeenKuvaus: HankkeenKuvauksetInput = {
-      SUOMI: projekti.aloitusKuulutus?.hankkeenKuvaus?.SUOMI || "",
-      ...pickBy(
-        {
-          RUOTSI: hasRuotsinKieli ? projekti.aloitusKuulutus?.hankkeenKuvaus?.RUOTSI || "" : undefined,
-          SAAME: hasSaamenKieli ? projekti.aloitusKuulutus?.hankkeenKuvaus?.SAAME || "" : undefined,
-        },
-        (value) => value !== undefined
-      ),
-    };
+    const hankkeenKuvaus = getDefaultValuesForLokalisoituText(projekti.kielitiedot, projekti.aloitusKuulutus?.hankkeenKuvaus);
 
     const tallentamisTiedot: FormValues = {
       oid: projekti.oid,
@@ -149,6 +138,14 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
         },
       },
     };
+
+    if (projekti.aloitusKuulutus?.uudelleenKuulutus) {
+      tallentamisTiedot.aloitusKuulutus.uudelleenKuulutus = getDefaultValuesForUudelleenKuulutus(
+        projekti.kielitiedot,
+        projekti.aloitusKuulutus.uudelleenKuulutus
+      );
+    }
+
     return tallentamisTiedot;
   }, [projekti]);
 
@@ -188,16 +185,6 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     handleSubmit: handleSubmit2,
     formState: { errors: errors2 },
   } = useForm<PalautusValues>({ defaultValues: { syy: "" } });
-
-  const getAloituskuulutusjulkaisuByTila = useCallback(
-    (tila: AloitusKuulutusTila): AloitusKuulutusJulkaisu | undefined => {
-      if (projekti?.aloitusKuulutusJulkaisu?.tila !== tila) {
-        return undefined;
-      }
-      return projekti?.aloitusKuulutusJulkaisu;
-    },
-    [projekti]
-  );
 
   const saveAloituskuulutus = useCallback(
     async (formData: FormValues) => {
@@ -325,13 +312,13 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
   );
 
   const kielitiedot: Kielitiedot | null | undefined = projekti?.kielitiedot;
-  const voiMuokata = projekti?.aloitusKuulutus?.muokkausTila == MuokkausTila.MUOKKAUS;
+  const voiMuokata = !projekti?.aloitusKuulutus?.muokkausTila || projekti?.aloitusKuulutus?.muokkausTila === MuokkausTila.MUOKKAUS;
   const voiHyvaksya =
-    getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA) && projekti?.nykyinenKayttaja.onProjektipaallikko;
+    projekti.aloitusKuulutusJulkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && projekti?.nykyinenKayttaja.onProjektipaallikko;
 
   const odottaaJulkaisua = useMemo(() => {
-    const julkaisu = getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.HYVAKSYTTY);
-    if (julkaisu) {
+    const julkaisu = projekti.aloitusKuulutusJulkaisu;
+    if (julkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY) {
       // Toistaiseksi tarkastellaan julkaisupaivatietoa, koska ei ole olemassa erillista tilaa julkaistulle kuulutukselle
       const julkaisupvm = dayjs(julkaisu.kuulutusPaiva);
       if (dayjs().isBefore(julkaisupvm, "day")) {
@@ -339,10 +326,10 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       }
     }
     return null;
-  }, [getAloituskuulutusjulkaisuByTila]);
+  }, [projekti.aloitusKuulutusJulkaisu]);
 
   if (!projekti || isLoadingProjekti) {
-    return <div />;
+    return <></>;
   }
   if (!kielitiedot) {
     return <div>Kielitiedot puttuu</div>;
@@ -354,8 +341,21 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
   const toissijainenKieli = kielitiedot?.toissijainenKieli;
   const esikatselePdf = pdfFormRef.current?.esikatselePdf;
 
+  const showUudelleenkuulutaButton =
+    projekti.aloitusKuulutusJulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY &&
+    projekti.aloitusKuulutus?.muokkausTila === MuokkausTila.LUKU &&
+    projekti.status === Status.SUUNNITTELU &&
+    projekti.nykyinenKayttaja.onYllapitaja;
+
   return (
-    <ProjektiPageLayout title="Aloituskuulutus">
+    <ProjektiPageLayout
+      title="Aloituskuulutus"
+      contentAsideTitle={
+        showUudelleenkuulutaButton && (
+          <UudelleenkuulutaButton oid={projekti.oid} tyyppi={TilasiirtymaTyyppi.ALOITUSKUULUTUS} reloadProjekti={reloadProjekti} />
+        )
+      }
+    >
       {voiMuokata && (
         <>
           <FormProvider {...useFormReturn}>
@@ -404,11 +404,17 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                     />
                     <HassuDatePickerWithController
                       label="Kuulutusvaihe päättyy"
-                      disabled={true}
+                      disabled
                       controllerProps={{ name: "aloitusKuulutus.siirtyySuunnitteluVaiheeseen" }}
                     />
                   </div>
                 </Section>
+                <SelitteetUudelleenkuulutukselle
+                  disabled={disableFormEdit}
+                  kielitiedot={projekti.kielitiedot}
+                  uudelleenKuulutus={projekti.aloitusKuulutus?.uudelleenKuulutus}
+                  vaiheenAvain="aloitusKuulutus"
+                />
                 <Section noDivider={!!toissijainenKieli}>
                   <SectionContent>
                     <h5 className="vayla-small-title">Hankkeen sisällönkuvaus</h5>
@@ -510,15 +516,11 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
         <FormProvider {...useFormReturn}>
           <AloituskuulutusLukunakyma
             projekti={projekti}
-            aloituskuulutusjulkaisu={
-              getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.HYVAKSYTTY) ||
-              getAloituskuulutusjulkaisuByTila(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA)
-            }
+            aloituskuulutusjulkaisu={projekti.aloitusKuulutusJulkaisu}
             isLoadingProjekti={isLoadingProjekti}
           />
         </FormProvider>
       )}
-
       {voiHyvaksya && (
         <>
           <Section noDivider>

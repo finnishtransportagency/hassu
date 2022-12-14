@@ -84,6 +84,7 @@ function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
           jotka haluat tuoda nähtäville."
           sectionTitle="Nähtäville asetettava aineisto"
           sectionInfoText="Nähtäville asetettava aineisto sekä lausuntapyyntöön liitettävä aineisto tuodaan Projektivelhosta. Nähtäville asetettu aineisto julkaistaan palvelun julkisella puolella kuulutuksen julkaisupäivänä."
+          vaihe={projekti.nahtavillaoloVaihe}
         />
         <LausuntopyyntoonLiitettavaLisaaineisto />
         <NahtavillaoloPainikkeet />

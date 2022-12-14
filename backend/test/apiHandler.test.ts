@@ -9,9 +9,9 @@ import { api } from "../integrationtest/api/apiClient";
 import { personSearch } from "../src/personSearch/personSearchClient";
 import { userService } from "../src/user";
 import {
-  AloitusKuulutusTila,
   KayttajaTyyppi,
   Kieli,
+  KuulutusJulkaisuTila,
   Projekti,
   TallennaProjektiInput,
   TilasiirtymaToiminto,
@@ -32,6 +32,7 @@ import { handleEvent as pdfGenerator } from "../src/asiakirja/lambda/pdfGenerato
 import { getS3 } from "../src/aws/client";
 import { awsMockResolves, expectAwsCalls } from "./aws/awsMock";
 import { kuntametadata } from "../../common/kuntametadata";
+import { aineistoSynchronizerService } from "../src/aineisto/aineistoSynchronizerService";
 
 const { expect, assert } = require("chai");
 
@@ -60,6 +61,7 @@ describe("apiHandler", () => {
   let persistFileToProjektiStub: sinon.SinonStub;
   let sendEmailStub: sinon.SinonStub;
   let pdfGeneratorLambdaStub: sinon.SinonStub;
+  let aineistoServiceStub: sinon.SinonStub;
 
   before(() => {
     userFixture = new UserFixture(userService);
@@ -84,6 +86,11 @@ describe("apiHandler", () => {
     sendEmailStub.resolves();
 
     pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
+
+    aineistoServiceStub = sinon.stub(aineistoSynchronizerService, "synchronizeProjektiFiles");
+    aineistoServiceStub.callsFake(async () => {
+      console.log("Synkataan aineisto");
+    });
   });
 
   after(() => {
@@ -209,8 +216,8 @@ describe("apiHandler", () => {
                   ...julkaisu,
                   aloituskuulutusPDFt: {
                     SUOMI: {
-                      aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-                      aloituskuulutusPDFPath: "/aloituskuulutus/T412 Aloituskuulutus.pdf",
+                      aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+                      aloituskuulutusPDFPath: "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
                     },
                   },
                 },
@@ -230,18 +237,18 @@ describe("apiHandler", () => {
           expectedState,
           syy,
         }: {
-          expectedState: AloitusKuulutusTila | undefined;
+          expectedState: KuulutusJulkaisuTila | undefined;
           oid: string;
           syy?: string;
         }) {
           const p = await api.lataaProjekti(oid);
-          if (expectedState == AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA) {
+          if (expectedState == KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) {
             expect(p.aloitusKuulutusJulkaisu).not.be.undefined;
-            expect(p.aloitusKuulutusJulkaisu?.tila).to.eq(AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA);
+            expect(p.aloitusKuulutusJulkaisu?.tila).to.eq(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
             expect(!!p.aloitusKuulutus?.palautusSyy); // null or undefined
-          } else if (expectedState == AloitusKuulutusTila.HYVAKSYTTY) {
+          } else if (expectedState == KuulutusJulkaisuTila.HYVAKSYTTY) {
             expect(p.aloitusKuulutusJulkaisu).not.be.undefined;
-            expect(p.aloitusKuulutusJulkaisu?.tila).to.eq(AloitusKuulutusTila.HYVAKSYTTY);
+            expect(p.aloitusKuulutusJulkaisu?.tila).to.eq(KuulutusJulkaisuTila.HYVAKSYTTY);
             expect(!!p.aloitusKuulutus?.palautusSyy); // null or undefined
           } else {
             // Either rejected or inital state
@@ -357,7 +364,7 @@ describe("apiHandler", () => {
         // Check that the snapshot for aloituskuulutus is available
         await validateAloitusKuulutusState({
           oid,
-          expectedState: AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA,
+          expectedState: KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
         });
 
         // Reject aloituskuulutus
@@ -382,7 +389,7 @@ describe("apiHandler", () => {
         // Check that the snapshot for aloituskuulutus is available
         await validateAloitusKuulutusState({
           oid,
-          expectedState: AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA,
+          expectedState: KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
         });
 
         // Accept aloituskuulutus
@@ -399,7 +406,7 @@ describe("apiHandler", () => {
         expectAwsCalls(deleteObjectStub);
 
         // Verify that the accepted aloituskuulutus is available
-        await validateAloitusKuulutusState({ oid, expectedState: AloitusKuulutusTila.HYVAKSYTTY });
+        await validateAloitusKuulutusState({ oid, expectedState: KuulutusJulkaisuTila.HYVAKSYTTY });
 
         // Verify the end result using snapshot
         expect(cleanup(await api.lataaProjekti(oid))).toMatchSnapshot();

@@ -1,10 +1,10 @@
 import { DialogActions, DialogContent } from "@mui/material";
-import React, { FC } from "react";
+import React, { FunctionComponent } from "react";
 import Button from "./button/Button";
 import HassuDialog from "./HassuDialog";
 import HassuStack from "./layout/HassuStack";
 
-const TallentamattomiaMuutoksiaDialog: FC<{ open: boolean; handleClickClose: () => void; handleClickOk: () => void }> = ({
+const TallentamattomiaMuutoksiaDialog: FunctionComponent<{ open: boolean; handleClickClose: () => void; handleClickOk: () => void }> = ({
   open,
   handleClickClose,
   handleClickOk,

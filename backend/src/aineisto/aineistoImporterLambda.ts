@@ -6,10 +6,11 @@ import dayjs from "dayjs";
 import { getAxios, setupLambdaMonitoring, wrapXRayAsync } from "../aws/monitoring";
 import { ImportAineistoEvent, ImportAineistoEventType } from "./importAineistoEvent";
 import { projektiDatabase } from "../database/projektiDatabase";
-import { AineistoTila } from "../../../common/graphql/apiModel";
-import { aineistoService } from "./aineistoService";
+import { AineistoTila, KuulutusJulkaisuTila } from "../../../common/graphql/apiModel";
+import { aineistoService, synchronizeFilesToPublic } from "./aineistoService";
 import {
   Aineisto,
+  AloitusKuulutusJulkaisu,
   DBProjekti,
   HyvaksymisPaatosVaihe,
   HyvaksymisPaatosVaiheJulkaisu,
@@ -19,7 +20,10 @@ import {
 } from "../database/model";
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import * as mime from "mime-types";
-import { findJulkaisuWithId } from "../projekti/projektiUtil";
+import { findJulkaisuWithTila } from "../projekti/projektiUtil";
+import { parseDate } from "../util/dateUtil";
+import { projektiAdapter } from "../projekti/adapter/projektiAdapter";
+import { aineistoSynchronizerService } from "./aineistoSynchronizerService";
 
 async function handleVuorovaikutusAineisto(oid: string, vuorovaikutus: Vuorovaikutus): Promise<boolean> {
   const filePathInProjekti = new ProjektiPaths(oid).vuorovaikutus(vuorovaikutus).aineisto;
@@ -71,7 +75,7 @@ async function handleAineistot(oid: string, aineistot: Aineisto[] | null | undef
       await aineistoService.deleteAineisto(oid, aineisto, paths.yllapitoPath, paths.publicPath);
       hasChanges = true;
     } else if (aineisto.tila == AineistoTila.ODOTTAA_TUONTIA) {
-      await importAineisto(aineisto, oid, paths.yllapitoPath);
+      await importAineisto(aineisto, oid, paths);
       aineistot.push(aineisto);
       hasChanges = true;
     } else {
@@ -82,7 +86,7 @@ async function handleAineistot(oid: string, aineistot: Aineisto[] | null | undef
   return hasChanges;
 }
 
-async function importAineisto(aineisto: Aineisto, oid: string, filePathInProjekti: string) {
+async function importAineisto(aineisto: Aineisto, oid: string, path: PathTuple) {
   const sourceURL = await velho.getLinkForDocument(aineisto.dokumenttiOid);
   const axiosResponse = await getAxios().get(sourceURL);
   const disposition: string = axiosResponse.headers["content-disposition"];
@@ -93,7 +97,7 @@ async function importAineisto(aineisto: Aineisto, oid: string, filePathInProjekt
   const contentType = mime.lookup(fileName);
   aineisto.tiedosto = await fileService.createFileToProjekti({
     oid,
-    filePathInProjekti,
+    path,
     fileName,
     contentType: contentType || undefined,
     inline: true,
@@ -111,54 +115,46 @@ async function handleVuorovaikutukset(oid: string, vuorovaikutukset: Vuorovaikut
         vuorovaikutukset: [vuorovaikutus],
       });
     }
-
-    if (vuorovaikutus.julkinen) {
-      await aineistoService.synchronizeVuorovaikutusAineistoToPublic(oid, vuorovaikutus);
-    }
   }
 }
 
-async function handleNahtavillaoloVaihe(
-  oid: string,
-  nahtavillaoloVaiheJulkaisut: NahtavillaoloVaiheJulkaisu[],
-  publishNahtavillaoloWithId: number
-) {
-  const nahtavillaoloVaiheJulkaisu = findJulkaisuWithId(nahtavillaoloVaiheJulkaisut, publishNahtavillaoloWithId);
-  if (nahtavillaoloVaiheJulkaisu) {
-    await aineistoService.synchronizeNahtavillaoloVaiheJulkaisuAineistoToPublic(oid, nahtavillaoloVaiheJulkaisu);
-  }
-}
-
-async function handleHyvaksymisPaatosVaihe(oid: string, julkaisut: HyvaksymisPaatosVaiheJulkaisu[], publishJulkaisuWithId: number) {
-  const julkaisu = findJulkaisuWithId(julkaisut, publishJulkaisuWithId);
+async function handleAloituskuulutusVaihe(oid: string, julkaisut: AloitusKuulutusJulkaisu[]) {
+  const julkaisu = findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
   if (julkaisu) {
-    await aineistoService.synchronizeHyvaksymisPaatosVaiheJulkaisuAineistoToPublic(
-      oid,
-      julkaisu,
-      new ProjektiPaths(oid).hyvaksymisPaatosVaihe(julkaisu)
-    );
+    const kuulutusPaiva = julkaisu?.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
+    await synchronizeFilesToPublic(oid, new ProjektiPaths(oid).aloituskuulutus(julkaisu), kuulutusPaiva);
   }
 }
 
-async function handleJatkoPaatos1Vaihe(oid: string, julkaisut: HyvaksymisPaatosVaiheJulkaisu[], publishJulkaisuWithId: number) {
-  const julkaisu = findJulkaisuWithId(julkaisut, publishJulkaisuWithId);
+async function handleNahtavillaoloVaihe(oid: string, nahtavillaoloVaiheJulkaisut: NahtavillaoloVaiheJulkaisu[]) {
+  const julkaisu = findJulkaisuWithTila(nahtavillaoloVaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
   if (julkaisu) {
-    await aineistoService.synchronizeHyvaksymisPaatosVaiheJulkaisuAineistoToPublic(
-      oid,
-      julkaisu,
-      new ProjektiPaths(oid).jatkoPaatos1Vaihe(julkaisu)
-    );
+    const kuulutusPaiva = julkaisu.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
+    await synchronizeFilesToPublic(oid, new ProjektiPaths(oid).nahtavillaoloVaihe(julkaisu), kuulutusPaiva);
   }
 }
 
-async function handleJatkoPaatos2Vaihe(oid: string, julkaisut: HyvaksymisPaatosVaiheJulkaisu[], publishJulkaisuWithId: number) {
-  const julkaisu = findJulkaisuWithId(julkaisut, publishJulkaisuWithId);
+async function handleHyvaksymisPaatosVaihe(oid: string, julkaisut: HyvaksymisPaatosVaiheJulkaisu[]) {
+  const julkaisu = findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
   if (julkaisu) {
-    await aineistoService.synchronizeHyvaksymisPaatosVaiheJulkaisuAineistoToPublic(
-      oid,
-      julkaisu,
-      new ProjektiPaths(oid).jatkoPaatos2Vaihe(julkaisu)
-    );
+    const kuulutusPaiva = julkaisu.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
+    await synchronizeFilesToPublic(oid, new ProjektiPaths(oid).hyvaksymisPaatosVaihe(julkaisu), kuulutusPaiva);
+  }
+}
+
+async function handleJatkoPaatos1Vaihe(oid: string, julkaisut: HyvaksymisPaatosVaiheJulkaisu[]) {
+  const julkaisu = findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
+  if (julkaisu) {
+    const kuulutusPaiva = julkaisu.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
+    await synchronizeFilesToPublic(oid, new ProjektiPaths(oid).jatkoPaatos1Vaihe(julkaisu), kuulutusPaiva);
+  }
+}
+
+async function handleJatkoPaatos2Vaihe(oid: string, julkaisut: HyvaksymisPaatosVaiheJulkaisu[]) {
+  const julkaisu = findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
+  if (julkaisu) {
+    const kuulutusPaiva = julkaisu.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
+    await synchronizeFilesToPublic(oid, new ProjektiPaths(oid).jatkoPaatos2Vaihe(julkaisu), kuulutusPaiva);
   }
 }
 
@@ -182,32 +178,40 @@ async function handleImport(projekti: DBProjekti) {
   });
 }
 
-async function handlePublish(aineistoEvent: ImportAineistoEvent, projekti: DBProjekti) {
+async function synchronizeAll(aineistoEvent: ImportAineistoEvent, projekti: DBProjekti) {
   const oid = projekti.oid;
-  if (
-    aineistoEvent.type == ImportAineistoEventType.PUBLISH_NAHTAVILLAOLO &&
-    aineistoEvent.publishNahtavillaoloWithId &&
-    projekti.nahtavillaoloVaiheJulkaisut
-  ) {
-    await handleNahtavillaoloVaihe(oid, projekti.nahtavillaoloVaiheJulkaisut, aineistoEvent.publishNahtavillaoloWithId);
-  } else if (
-    aineistoEvent.type == ImportAineistoEventType.PUBLISH_HYVAKSYMISPAATOS &&
-    aineistoEvent.publishHyvaksymisPaatosWithId &&
-    projekti.hyvaksymisPaatosVaiheJulkaisut
-  ) {
-    await handleHyvaksymisPaatosVaihe(oid, projekti.hyvaksymisPaatosVaiheJulkaisut, aineistoEvent.publishHyvaksymisPaatosWithId);
-  } else if (
-    aineistoEvent.type == ImportAineistoEventType.PUBLISH_JATKOPAATOS1 &&
-    aineistoEvent.publishJatkoPaatos1WithId &&
-    projekti.jatkoPaatos1VaiheJulkaisut
-  ) {
-    await handleJatkoPaatos1Vaihe(oid, projekti.jatkoPaatos1VaiheJulkaisut, aineistoEvent.publishJatkoPaatos1WithId);
-  } else if (
-    aineistoEvent.type == ImportAineistoEventType.PUBLISH_JATKOPAATOS2 &&
-    aineistoEvent.publishJatkoPaatos2WithId &&
-    projekti.jatkoPaatos2VaiheJulkaisut
-  ) {
-    await handleJatkoPaatos2Vaihe(oid, projekti.jatkoPaatos2VaiheJulkaisut, aineistoEvent.publishJatkoPaatos2WithId);
+  const projektiStatus = projektiAdapter.adaptProjekti(projekti).status;
+  if (!projektiStatus) {
+    throw new Error("Projektin statusta ei voitu määrittää: " + oid);
+  }
+
+  if (projekti.aloitusKuulutusJulkaisut) {
+    await handleAloituskuulutusVaihe(oid, projekti.aloitusKuulutusJulkaisut);
+  }
+
+  if (projekti.vuorovaikutukset) {
+    for (const vuorovaikutus of projekti.vuorovaikutukset) {
+      if (vuorovaikutus.julkinen) {
+        const julkaisuPaiva = vuorovaikutus?.vuorovaikutusJulkaisuPaiva ? parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva) : undefined;
+        await synchronizeFilesToPublic(oid, new ProjektiPaths(oid).vuorovaikutus(vuorovaikutus), julkaisuPaiva);
+      }
+    }
+  }
+  if (projekti.nahtavillaoloVaiheJulkaisut) {
+    await handleNahtavillaoloVaihe(oid, projekti.nahtavillaoloVaiheJulkaisut);
+  }
+  if (projekti.hyvaksymisPaatosVaiheJulkaisut) {
+    await handleHyvaksymisPaatosVaihe(oid, projekti.hyvaksymisPaatosVaiheJulkaisut);
+  }
+
+  if (projekti.jatkoPaatos1VaiheJulkaisut) {
+    // Poista julkiset tiedostot jos ollaan epäaktiivinen-tilassa tai toisessa jatkopäätöksessä
+    await handleJatkoPaatos1Vaihe(oid, projekti.jatkoPaatos1VaiheJulkaisut);
+  }
+
+  if (projekti.jatkoPaatos2VaiheJulkaisut) {
+    // Poista julkiset tiedostot jos ollaan epäaktiivinen-tilassa prosessin lopussa
+    await handleJatkoPaatos2Vaihe(oid, projekti.jatkoPaatos2VaiheJulkaisut);
   }
 }
 
@@ -216,6 +220,9 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   return wrapXRayAsync("handler", async () => {
     for (const record of event.Records) {
       const aineistoEvent: ImportAineistoEvent = JSON.parse(record.body);
+      if (aineistoEvent.scheduleName) {
+        await aineistoSynchronizerService.deletePastSchedule(aineistoEvent.scheduleName);
+      }
       log.info("ImportAineistoEvent", aineistoEvent);
       const { oid } = aineistoEvent;
 
@@ -226,9 +233,9 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
 
       if (aineistoEvent.type == ImportAineistoEventType.IMPORT) {
         await handleImport(projekti);
-      } else {
-        await handlePublish(aineistoEvent, projekti);
       }
+      // Synkronoidaan tiedostot aina
+      await synchronizeAll(aineistoEvent, projekti);
     }
   });
 };

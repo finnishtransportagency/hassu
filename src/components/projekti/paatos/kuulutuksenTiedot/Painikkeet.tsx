@@ -9,7 +9,7 @@ import React, { useState, useCallback, useRef, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
-import { TilasiirtymaToiminto, HyvaksymisPaatosVaiheTila, Projekti } from "@services/api";
+import { TilasiirtymaToiminto, KuulutusJulkaisuTila, Projekti } from "@services/api";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./index";
 import Modaalit from "./Modaalit";
@@ -143,7 +143,7 @@ export default function Painikkeet({ projekti, julkaisut, paatosTyyppi }: Props)
   const voiHyvaksya =
     julkaisut &&
     julkaisut.length &&
-    julkaisut[julkaisut.length - 1].tila === HyvaksymisPaatosVaiheTila.ODOTTAA_HYVAKSYNTAA &&
+    julkaisut[julkaisut.length - 1].tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA &&
     projekti?.nykyinenKayttaja.onProjektipaallikko;
 
   return (

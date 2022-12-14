@@ -1,4 +1,4 @@
-import { AloitusKuulutusTila, KayttajaTyyppi, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, KayttajaTyyppi, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
 import { SuunnitteluVaihe, Vuorovaikutus } from "./suunnitteluVaihe";
 import { NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "./nahtavillaoloVaihe";
 import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "./hyvaksymisPaatosVaihe";
@@ -26,6 +26,7 @@ export type DBVaylaUser = {
 };
 
 export type AloitusKuulutus = {
+  id: number;
   kuulutusPaiva?: string | null;
   siirtyySuunnitteluVaiheeseen?: string | null;
   hankkeenKuvaus?: LocalizedMap<string>;
@@ -51,7 +52,7 @@ export type AloitusKuulutusJulkaisu = {
   suunnitteluSopimus?: SuunnitteluSopimusJulkaisu | null;
   kielitiedot?: Kielitiedot | null;
   aloituskuulutusPDFt?: LocalizedMap<AloitusKuulutusPDF>;
-  tila?: AloitusKuulutusTila | null;
+  tila?: KuulutusJulkaisuTila | null;
   muokkaaja?: string | null;
   hyvaksyja?: string | null;
   hyvaksymisPaiva?: string | null;

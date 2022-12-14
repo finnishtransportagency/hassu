@@ -1,12 +1,16 @@
-import { AloitusKuulutusJulkaisu } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
-import { findJulkaisuWithTila } from "../../projektiUtil";
+import { isDateTimeInThePast } from "../../../util/dateUtil";
+import { findJulkaisuWithTila, GenericKuulutus } from "../../projektiUtil";
 
-export function findPublishedAloitusKuulutusJulkaisu(
-  aloitusKuulutusJulkaisut: AloitusKuulutusJulkaisu[]
-): AloitusKuulutusJulkaisu | undefined {
-  return (
-    findJulkaisuWithTila(aloitusKuulutusJulkaisut, API.AloitusKuulutusTila.HYVAKSYTTY) ||
-    findJulkaisuWithTila(aloitusKuulutusJulkaisut, API.AloitusKuulutusTila.MIGROITU)
-  );
+/**
+ *
+ * @param kuulutusJulkaisut
+ * @returns HYVAKSYTTY kuulutus whose kuulutusPaiva is in the past or a MIGRATOITU kuulutus
+ */
+export function findPublishedKuulutusJulkaisu<J extends GenericKuulutus>(kuulutusJulkaisut: J[] | undefined | null): J | undefined {
+  const hyvaksyttyKuulutus = findJulkaisuWithTila(kuulutusJulkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY);
+  if (hyvaksyttyKuulutus?.kuulutusPaiva && isDateTimeInThePast(hyvaksyttyKuulutus.kuulutusPaiva, "start-of-day")) {
+    return hyvaksyttyKuulutus;
+  }
+  return findJulkaisuWithTila(kuulutusJulkaisut, API.KuulutusJulkaisuTila.MIGROITU);
 }

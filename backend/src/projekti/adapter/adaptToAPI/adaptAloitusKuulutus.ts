@@ -1,13 +1,6 @@
-import {
-  AloitusKuulutus,
-  AloitusKuulutusJulkaisu,
-  AloitusKuulutusPDF,
-  LocalizedMap,
-  RequiredLocalizedMap,
-  UudelleenKuulutus,
-} from "../../../database/model";
+import { AloitusKuulutus, AloitusKuulutusJulkaisu, RequiredLocalizedMap, UudelleenKuulutus } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
-import { AloitusKuulutusTila, LokalisoituTeksti, MuokkausTila } from "../../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, LokalisoituTeksti, MuokkausTila } from "../../../../../common/graphql/apiModel";
 import {
   adaptHankkeenKuvaus,
   adaptIlmoituksenVastaanottajat,
@@ -19,6 +12,7 @@ import {
 import { adaptSuunnitteluSopimusJulkaisu, FileLocation } from "./adaptSuunitteluSopimus";
 import { fileService } from "../../../files/fileService";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
+import { ProjektiPaths } from "../../../files/ProjektiPath";
 
 export function adaptAloitusKuulutus(
   kuulutus?: AloitusKuulutus | null,
@@ -28,7 +22,7 @@ export function adaptAloitusKuulutus(
     if (!kuulutus.hankkeenKuvaus) {
       throw new Error("adaptAloituskuulutus: kuulutus.hankkeenKuvaus puuttuu");
     }
-    const { kuulutusYhteystiedot, uudelleenKuulutus: uudelleenKuulutus, ...otherKuulutusFields } = kuulutus;
+    const { kuulutusYhteystiedot, uudelleenKuulutus: uudelleenKuulutus, id: _id, ...otherKuulutusFields } = kuulutus;
     return {
       __typename: "AloitusKuulutus",
       ...otherKuulutusFields,
@@ -36,15 +30,9 @@ export function adaptAloitusKuulutus(
       hankkeenKuvaus: adaptHankkeenKuvaus(kuulutus.hankkeenKuvaus),
       kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kuulutusYhteystiedot),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
-      muokkausTila: adaptMuokkausTila(
-        kuulutus,
-        aloitusKuulutusJulkaisut,
-        AloitusKuulutusTila.MIGROITU,
-        AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA,
-        AloitusKuulutusTila.HYVAKSYTTY
-      ),
+      muokkausTila: adaptMuokkausTila(kuulutus, aloitusKuulutusJulkaisut),
     };
-  } else if (findJulkaisuWithTila(aloitusKuulutusJulkaisut, AloitusKuulutusTila.MIGROITU)) {
+  } else if (findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.MIGROITU)) {
     return { __typename: "AloitusKuulutus", muokkausTila: MuokkausTila.MIGROITU };
   }
   return kuulutus as undefined;
@@ -56,12 +44,12 @@ export function adaptAloitusKuulutusJulkaisu(
 ): API.AloitusKuulutusJulkaisu | undefined {
   if (aloitusKuulutusJulkaisut) {
     const julkaisu =
-      findJulkaisuWithTila(aloitusKuulutusJulkaisut, AloitusKuulutusTila.ODOTTAA_HYVAKSYNTAA) ||
-      findJulkaisuWithTila(aloitusKuulutusJulkaisut, AloitusKuulutusTila.HYVAKSYTTY) ||
-      findJulkaisuWithTila(aloitusKuulutusJulkaisut, AloitusKuulutusTila.MIGROITU);
+      findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ||
+      findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY) ||
+      findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.MIGROITU);
     if (julkaisu) {
       const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, tila, uudelleenKuulutus, ...fieldsToCopyAsIs } = julkaisu;
-      if (tila == AloitusKuulutusTila.MIGROITU) {
+      if (tila == KuulutusJulkaisuTila.MIGROITU) {
         return {
           __typename: "AloitusKuulutusJulkaisu",
           tila,
@@ -83,17 +71,15 @@ export function adaptAloitusKuulutusJulkaisu(
         velho: adaptVelho(velho),
         suunnitteluSopimus: adaptSuunnitteluSopimusJulkaisu(oid, suunnitteluSopimus, FileLocation.YLLAPITO),
         kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
-        aloituskuulutusPDFt: adaptJulkaisuPDFPaths(oid, julkaisu.aloituskuulutusPDFt),
+        aloituskuulutusPDFt: adaptJulkaisuPDFPaths(oid, julkaisu),
         uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
       };
     }
   }
 }
 
-function adaptJulkaisuPDFPaths(
-  oid: string,
-  aloitusKuulutusPDFS: LocalizedMap<AloitusKuulutusPDF> | null | undefined
-): API.AloitusKuulutusPDFt | undefined {
+function adaptJulkaisuPDFPaths(oid: string, aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu): API.AloitusKuulutusPDFt | undefined {
+  const aloitusKuulutusPDFS = aloitusKuulutusJulkaisu.aloituskuulutusPDFt;
   if (!aloitusKuulutusPDFS) {
     return undefined;
   }
@@ -105,23 +91,11 @@ function adaptJulkaisuPDFPaths(
       result[kieli as API.Kieli] = undefined;
       continue;
     }
+    const aloituskuulutusPath = new ProjektiPaths(oid).aloituskuulutus(aloitusKuulutusJulkaisu);
     result[kieli as API.Kieli] = {
       __typename: "AloitusKuulutusPDF",
-      // getYllapitoPathForProjektiFile molemmat argumentit on määritelty, joten funktio palauttaa ei-undefined arvon
-      // aloitusKuulutusPDFS[kieli].aloituskuulutusPDFPath on määritelty tässä vaiheessa
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      aloituskuulutusPDFPath: fileService.getYllapitoPathForProjektiFile(oid, pdfs.aloituskuulutusPDFPath),
-      // getYllapitoPathForProjektiFile molemmat argumentit on määritelty, joten funktio palauttaa ei-undefined arvon
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      aloituskuulutusIlmoitusPDFPath: fileService.getYllapitoPathForProjektiFile(
-        oid,
-        // aloitusKuulutusPDFS[kieli].aloituskuulutusIlmoitusPDFPath on määritelty tässä vaiheessa
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        pdfs.aloituskuulutusIlmoitusPDFPath
-      ),
+      aloituskuulutusPDFPath: fileService.getYllapitoPathForProjektiFile(aloituskuulutusPath, pdfs.aloituskuulutusPDFPath),
+      aloituskuulutusIlmoitusPDFPath: fileService.getYllapitoPathForProjektiFile(aloituskuulutusPath, pdfs.aloituskuulutusIlmoitusPDFPath),
     };
   }
   return { __typename: "AloitusKuulutusPDFt", [API.Kieli.SUOMI]: result[API.Kieli.SUOMI] as API.AloitusKuulutusPDF, ...result };
@@ -140,7 +114,7 @@ export function adaptUudelleenKuulutus(uudelleenKuulutus: UudelleenKuulutus | nu
   };
 }
 
-function adaptLokalisoituTeksti(localizedMap: RequiredLocalizedMap<string> | undefined): LokalisoituTeksti | null | undefined {
+export function adaptLokalisoituTeksti(localizedMap: RequiredLocalizedMap<string> | undefined): LokalisoituTeksti | null | undefined {
   if (localizedMap && Object.keys(localizedMap).length > 0) {
     return {
       __typename: "LokalisoituTeksti",

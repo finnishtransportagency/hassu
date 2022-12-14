@@ -42,6 +42,8 @@ const config = {
   isProd: (): boolean => process.env.ENVIRONMENT == "prod",
 
   aineistoImportSqsUrl: process.env.AINEISTO_IMPORT_SQS_URL || "",
+  aineistoImportSqsArn: process.env.AINEISTO_IMPORT_SQS_ARN || "",
+  schedulerExecutionRoleArn: process.env.SCHEDULER_EXECUTION_ROLE_ARN || "",
 
   pdfGeneratorLambdaArn: process.env.PDF_GENERATOR_LAMBDA_ARN || "",
 };

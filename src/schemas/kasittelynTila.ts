@@ -38,5 +38,28 @@ export const kasittelynTilaSchema = Yup.object().shape({
     hyvaksymispaatos: hyvaksymispaatosSchema,
     ensimmainenJatkopaatos: hyvaksymispaatosSchema,
     toinenJatkopaatos: hyvaksymispaatosSchema,
+    suunnitelmanTila: Yup.string(),
+    hyvaksymisesitysTraficomiinPaiva: paivamaara().notRequired().nullable().default(null),
+    ennakkoneuvotteluPaiva: paivamaara().notRequired().nullable().default(null),
+    valitustenMaara: Yup.string()
+      .test({
+        message: "Valitusten lukumäärä on pakollinen",
+        test: (value, context) => {
+          if (context.options.context?.valituksia) {
+            if (!value) {
+              return false;
+            }
+          }
+          return true;
+        },
+      })
+      .nullable(),
+    lainvoimaAlkaen: paivamaara().notRequired().nullable().default(null),
+    lainvoimaPaattyen: paivamaara().notRequired().nullable().default(null),
+    ennakkotarkastus: paivamaara().notRequired().nullable().default(null),
+    toimitusKaynnistynyt: paivamaara().notRequired().nullable().default(null),
+    liikenteeseenluovutusOsittain: paivamaara().notRequired().nullable().default(null),
+    liikenteeseenluovutusKokonaan: paivamaara().notRequired().nullable().default(null),
+    lisatieto: Yup.string().max(2000, "Lisätieto voi olla maksimissaan 2000 merkkiä pitkä").notRequired().nullable().default(null),
   }),
 });

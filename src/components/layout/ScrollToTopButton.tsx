@@ -1,8 +1,8 @@
 import { throttle } from "lodash";
-import React, { FC, useEffect, useState } from "react";
+import React, { FunctionComponent, useEffect, useState } from "react";
 
 const SCROLL_OFFSET = 200;
-const ScrollToTopButton: FC = ({}) => {
+const ScrollToTopButton: FunctionComponent = () => {
   const [toTopEnabled, setToTopEnabled] = useState(false);
 
   useEffect(() => {

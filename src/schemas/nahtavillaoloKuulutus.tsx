@@ -1,13 +1,10 @@
 import * as Yup from "yup";
 import { ilmoituksenVastaanottajat, standardiYhteystiedot } from "./common";
+import { lokalisoituTeksti } from "./lokalisoituTeksti";
 import { paivamaara } from "./paivamaaraSchema";
+import { uudelleenKuulutus } from "./uudelleenKuulutus";
 
 const maxNahtavillaoloLength = 2000;
-
-let hankkeenKuvaus = Yup.string()
-  .max(maxNahtavillaoloLength, `Nähtävilläolovaiheeseen voidaan kirjoittaa maksimissaan ${maxNahtavillaoloLength} merkkiä`)
-  .required("Hankkeen kuvaus ei voi olla tyhjä")
-  .nullable();
 
 export const nahtavillaoloKuulutusSchema = Yup.object().shape({
   oid: Yup.string().required(),
@@ -15,7 +12,15 @@ export const nahtavillaoloKuulutusSchema = Yup.object().shape({
     .required()
     .shape({
       kuulutusYhteystiedot: standardiYhteystiedot(),
-      hankkeenKuvaus: Yup.object().shape({ SUOMI: hankkeenKuvaus }),
+      hankkeenKuvaus: lokalisoituTeksti({
+        requiredText: "Hankkeen kuvaus ei voi olla tyhjä",
+        additionalStringValidations: (schema) =>
+          schema.max(maxNahtavillaoloLength, `Nähtävilläolovaiheeseen voidaan kirjoittaa maksimissaan ${maxNahtavillaoloLength} merkkiä`),
+      }),
+      uudelleenKuulutus: uudelleenKuulutus({
+        uudelleenKuulutusKey: "$nahtavillaoloVaihe.uudelleenKuulutus",
+        requiredText: "Seloste on annettava",
+      }),
       kuulutusPaiva: paivamaara({ preventPast: "Kuulutuspäivää ei voida asettaa menneisyyteen" }).required(
         "Kuulutuspäivä ei voi olla tyhjä"
       ),

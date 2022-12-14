@@ -1,6 +1,6 @@
-import { formatDate } from "../../../src/util/dateUtils";
+import { formatDate } from "../../src/util/dateUtils";
 import dayjs from "dayjs";
-import { selectAllAineistotFromCategory, typeIntoFields } from "../../support/util";
+import { selectAllAineistotFromCategory, typeIntoFields } from "./util";
 
 export function taytaNahtavillaoloPerustiedot(oid, selectorToTextMap) {
   cy.get("#kuulutuksentiedot_tab").click();

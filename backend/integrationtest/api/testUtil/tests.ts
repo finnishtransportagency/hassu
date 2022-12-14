@@ -23,7 +23,6 @@ import { UserFixture } from "../../../test/fixture/userFixture";
 import { detailedDiff } from "deep-object-diff";
 import { parseDate } from "../../../src/util/dateUtil";
 import { cleanupVuorovaikutusTimestamps } from "./cleanUpFunctions";
-import Sinon from "sinon";
 import * as log from "loglevel";
 import { fail } from "assert";
 import { palauteEmailService } from "../../../src/palaute/palauteEmailService";
@@ -31,15 +30,9 @@ import { expectApiError, expectToMatchSnapshot } from "./util";
 import cloneDeep from "lodash/cloneDeep";
 import { fileService } from "../../../src/files/fileService";
 import { testProjektiDatabase } from "../../../src/database/testProjektiDatabase";
-import { expectAwsCalls } from "../../../test/aws/awsMock";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 
 const { expect } = require("chai");
-
-export function verifyCloudfrontWasInvalidated(awsCloudfrontInvalidationStub: Sinon.SinonStub): void {
-  expectAwsCalls(awsCloudfrontInvalidationStub, "CallerReference");
-  awsCloudfrontInvalidationStub.resetHistory();
-}
 
 export async function loadProjektiFromDatabase(oid: string, expectedStatus?: Status): Promise<Projekti> {
   const savedProjekti = await api.lataaProjekti(oid);

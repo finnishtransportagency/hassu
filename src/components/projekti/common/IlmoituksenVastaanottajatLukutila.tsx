@@ -1,10 +1,6 @@
 import React, { ReactElement } from "react";
 import useTranslation from "next-translate/useTranslation";
-import {
-  HyvaksymisPaatosVaiheTila,
-  IlmoituksenVastaanottajat as IlmoituksenVastaanottajatType,
-  NahtavillaoloVaiheTila,
-} from "@services/api";
+import { KuulutusJulkaisuTila, IlmoituksenVastaanottajat as IlmoituksenVastaanottajatType } from "@services/api";
 import dayjs from "dayjs";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
@@ -12,7 +8,7 @@ import { kuntametadata } from "../../../../common/kuntametadata";
 
 interface Props {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatType | null | undefined;
-  julkaisunTila: HyvaksymisPaatosVaiheTila | NahtavillaoloVaiheTila | null | undefined;
+  julkaisunTila: KuulutusJulkaisuTila | KuulutusJulkaisuTila | null | undefined;
   epaaktiivinen?: boolean;
 }
 
@@ -40,7 +36,7 @@ export default function IlmoituksenVastaanottajat({
               <p>Jos kuntatiedoissa on virhe, tee korjaus Projektivelhoon.</p>
             </>
 
-            {(julkaisunTila === HyvaksymisPaatosVaiheTila.HYVAKSYTTY || julkaisunTila === NahtavillaoloVaiheTila.HYVAKSYTTY) && (
+            {julkaisunTila === KuulutusJulkaisuTila.HYVAKSYTTY && (
               <p>
                 Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Ei lähetetty’,
                 tarkasta sähköpostiosoite. Ota tarvittaessa yhteys pääkäyttäjään.

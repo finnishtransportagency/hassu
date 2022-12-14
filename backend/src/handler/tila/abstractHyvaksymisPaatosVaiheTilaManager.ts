@@ -10,13 +10,13 @@ import { parseAndAddDateTime, parseDate } from "../../util/dateUtil";
 import { HYVAKSYMISPAATOS_DURATION, JATKOPAATOS_DURATION } from "../../projekti/status/statusHandler";
 import { AsiakirjaTyyppi, Kieli } from "../../../../common/graphql/apiModel";
 import { fileService } from "../../files/fileService";
-import { ProjektiPaths } from "../../files/ProjektiPath";
+import { PathTuple } from "../../files/ProjektiPath";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import assert from "assert";
 import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakirjaTypes";
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
 
-export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends TilaManager {
+export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends TilaManager<HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu> {
   async removeRejectionReasonIfExists(
     projekti: DBProjekti,
     key: "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe" | "hyvaksymisPaatosVaihe",
@@ -39,13 +39,14 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends TilaManag
 
   protected async generatePDFs(
     projekti: DBProjekti,
-    julkaisuWaitingForApproval: HyvaksymisPaatosVaiheJulkaisu
+    julkaisuWaitingForApproval: HyvaksymisPaatosVaiheJulkaisu,
+    path: PathTuple
   ): Promise<LocalizedMap<HyvaksymisPaatosVaihePDF>> {
     const kielitiedot = julkaisuWaitingForApproval.kielitiedot;
 
     async function generatePDFsForLanguage(kieli: Kieli, julkaisu: HyvaksymisPaatosVaiheJulkaisu): Promise<HyvaksymisPaatosVaihePDF> {
       async function createPDFOfType(type: HyvaksymisPaatosKuulutusAsiakirjaTyyppi) {
-        return createPDF(type, julkaisu, projekti, kieli);
+        return createPDF(type, julkaisu, projekti, kieli, path);
       }
 
       // Create PDFs in parallel
@@ -103,8 +104,6 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends TilaManag
     }
   }
 
-  protected abstract getHyvaksymisPaatosVaihe(projekti: DBProjekti): HyvaksymisPaatosVaihe;
-
   async uudelleenkuuluta(_projekti: DBProjekti): Promise<void> {
     throw new Error("Not yet implemented");
   }
@@ -114,7 +113,8 @@ async function createPDF(
   asiakirjaTyyppi: HyvaksymisPaatosKuulutusAsiakirjaTyyppi,
   julkaisu: HyvaksymisPaatosVaiheJulkaisu,
   projekti: DBProjekti,
-  kieli: Kieli
+  kieli: Kieli,
+  path: PathTuple
 ) {
   assert(julkaisu.kuulutusPaiva, "julkaisulta puuttuu kuulutuspäivä");
   assert(projekti.kasittelynTila, "kasittelynTila puuttuu");
@@ -130,12 +130,11 @@ async function createPDF(
   });
   return fileService.createFileToProjekti({
     oid: projekti.oid,
-    filePathInProjekti: ProjektiPaths.PATH_HYVAKSYMISPAATOS,
+    path,
     fileName: pdf.nimi,
     contents: Buffer.from(pdf.sisalto, "base64"),
     inline: true,
     contentType: "application/pdf",
     publicationTimestamp: parseDate(julkaisu.kuulutusPaiva),
-    copyToPublic: true,
   });
 }

@@ -1,5 +1,11 @@
 import { DBProjekti, UudelleenKuulutus } from "../database/model";
-import { KayttajaTyyppi, Projekti, TallennaProjektiInput, UudelleenKuulutusInput } from "../../../common/graphql/apiModel";
+import {
+  KayttajaTyyppi,
+  KuulutusJulkaisuTila,
+  Projekti,
+  TallennaProjektiInput,
+  UudelleenKuulutusInput,
+} from "../../../common/graphql/apiModel";
 import { requirePermissionMuokkaa } from "../user";
 import { requireAdmin, requireOmistaja } from "../user/userService";
 import { projektiAdapter } from "./adapter/projektiAdapter";
@@ -89,10 +95,32 @@ function validateUudelleenKuulutus(
   }
 }
 
+/**
+ * Validoi, että suunnittelusopimusta ei poisteta tai lisätä sen jälkeen kun aloituskuulutusjulkaisu on hyväksynnässä tai hyväksytty
+ */
+function validateSuunnitteluSopimus(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
+  const isSuunnitteluSopimusAddedOrDeleted =
+    (input.suunnitteluSopimus === null && !!dbProjekti.suunnitteluSopimus) ||
+    (!!input.suunnitteluSopimus && !dbProjekti.suunnitteluSopimus);
+
+  const latestAloituskuulutusJulkaisuTila = dbProjekti?.aloitusKuulutusJulkaisut?.[dbProjekti.aloitusKuulutusJulkaisut.length - 1].tila;
+  const isLatestJulkaisuPendingApprovalOrApproved =
+    !!latestAloituskuulutusJulkaisuTila &&
+    [KuulutusJulkaisuTila.HYVAKSYTTY, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA].includes(latestAloituskuulutusJulkaisuTila);
+
+  if (isSuunnitteluSopimusAddedOrDeleted && isLatestJulkaisuPendingApprovalOrApproved) {
+    throw new IllegalArgumentError(
+      "Suunnittelusopimuksen olemassaoloa ei voi muuttaa, jos aloituskuulutus on jo julkaistu tai se odottaa hyväksyntää!"
+    );
+  }
+}
+
 export function validateTallennaProjekti(projekti: DBProjekti, input: TallennaProjektiInput): void {
   requirePermissionMuokkaa(projekti);
   const apiProjekti = projektiAdapter.adaptProjekti(projekti);
   validateKasittelynTila(projekti, apiProjekti, input);
   validateVarahenkiloModifyPermissions(projekti, input);
   validateUudelleenKuulutus(projekti.aloitusKuulutus?.uudelleenKuulutus, input.aloitusKuulutus?.uudelleenKuulutus);
+  validateSuunnitteluSopimus(projekti, input);
+  validateUudelleenKuulutus(projekti.nahtavillaoloVaihe?.uudelleenKuulutus, input.nahtavillaoloVaihe?.uudelleenKuulutus);
 }

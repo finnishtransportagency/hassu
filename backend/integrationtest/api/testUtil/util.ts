@@ -13,6 +13,15 @@ import { GeneratePDFEvent } from "../../../src/asiakirja/lambda/generatePDFEvent
 import { velho } from "../../../src/velho/velhoClient";
 import mocha from "mocha";
 import { NotFoundError } from "../../../src/error/NotFoundError";
+import { cleanupAnyProjektiData } from "../testFixtureRecorder";
+import { getCloudFront } from "../../../src/aws/clients/getCloudFront";
+import { getScheduler } from "../../../src/aws/clients/getScheduler";
+import { awsMockResolves, expectAwsCalls } from "../../../test/aws/awsMock";
+import { CreateScheduleInput } from "aws-sdk/clients/scheduler";
+import { handleEvent } from "../../../src/aineisto/aineistoImporterLambda";
+import { Callback, Context } from "aws-lambda";
+import { SQSRecord } from "aws-lambda/trigger/sqs";
+import assert from "assert";
 
 const { expect } = require("chai");
 
@@ -22,14 +31,17 @@ export async function takeS3Snapshot(oid: string, description: string, path?: st
 }
 
 export async function takeYllapitoS3Snapshot(oid: string, description: string, path?: string): Promise<void> {
+  const obj = await fileService.listYllapitoProjektiFiles(oid, path || "");
   expect({
-    ["yllapito S3 files " + description]: cleanupGeneratedIds(await fileService.listYllapitoProjektiFiles(oid, path || "")),
+    ["yllapito S3 files " + description]: cleanupAnyProjektiData(cleanupGeneratedIds(obj)),
   }).toMatchSnapshot(description);
 }
 
 export async function takePublicS3Snapshot(oid: string, description: string, path?: string): Promise<void> {
   expect({
-    ["public S3 files " + description]: cleanupGeneratedIds(await fileService.listPublicProjektiFiles(oid, path || "", true)),
+    ["public S3 files " + description]: cleanupAnyProjektiData(
+      cleanupGeneratedIds(await fileService.listPublicProjektiFiles(oid, path || "", true))
+    ),
   }).toMatchSnapshot(description);
 }
 
@@ -121,6 +133,27 @@ export class EmailClientStub {
   }
 }
 
+export class CloudFrontStub {
+  private stub: sinon.SinonStub;
+
+  constructor() {
+    this.stub = sinon.stub(getCloudFront(), "createInvalidation");
+    awsMockResolves(this.stub, {});
+  }
+
+  verifyCloudfrontWasInvalidated(expectedNumberOfCalls?: number): void {
+    expectAwsCalls(this.stub, "CallerReference");
+    if (expectedNumberOfCalls) {
+      expect(this.stub.getCalls()).to.have.length(expectedNumberOfCalls);
+    }
+    this.reset();
+  }
+
+  reset(): void {
+    this.stub.resetHistory();
+  }
+}
+
 export function mockSaveProjektiToVelho(): void {
   const stub = sinon.stub(velho, "saveProjekti");
   mocha.afterEach(() => {
@@ -131,4 +164,36 @@ export function mockSaveProjektiToVelho(): void {
     }
     stub.reset();
   });
+}
+
+export class SchedulerMock {
+  private createStub: sinon.SinonStub;
+  private deleteStub: sinon.SinonStub;
+
+  constructor() {
+    this.createStub = sinon.stub(getScheduler(), "createSchedule");
+    this.deleteStub = sinon.stub(getScheduler(), "deleteSchedule");
+    awsMockResolves(this.createStub, {});
+    awsMockResolves(this.deleteStub, {});
+  }
+
+  async verifyAndRunSchedule(): Promise<void> {
+    if (this.createStub.getCalls().length > 0) {
+      const calls: CreateScheduleInput[] = this.createStub
+        .getCalls()
+        .map((call) => call.args[0] as unknown as CreateScheduleInput)
+        .sort();
+      expect(calls).toMatchSnapshot();
+      await Promise.all(
+        calls.map(async (args: CreateScheduleInput) => {
+          assert(args.Target.Input, "args.Target.Input pitäisi olla olemassa");
+          const sqsRecord: SQSRecord = { body: args.Target.Input } as unknown as SQSRecord;
+          await handleEvent({ Records: [sqsRecord] }, undefined as unknown as Context, undefined as unknown as Callback);
+        })
+      );
+      this.createStub.reset();
+    }
+
+    expectAwsCalls(this.deleteStub);
+  }
 }

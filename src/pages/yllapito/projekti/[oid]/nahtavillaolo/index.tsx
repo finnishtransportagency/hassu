@@ -5,6 +5,7 @@ import Lukunakyma from "@components/projekti/nahtavillaolo/kuulutuksentiedot/Luk
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import ProjektiConsumerComponent from "@components/projekti/ProjektiConsumer";
 import NahtavillaoloPageLayout from "@components/projekti/nahtavillaolo/NahtavillaoloPageLayout";
+import { MuokkausTila } from "@services/api";
 
 export default function NahtavillaoloWrapper() {
   return <ProjektiConsumerComponent>{(projekti) => <Nahtavillaolo projekti={projekti} />}</ProjektiConsumerComponent>;
@@ -13,12 +14,11 @@ export default function NahtavillaoloWrapper() {
 const Nahtavillaolo = ({ projekti }: { projekti: ProjektiLisatiedolla }): ReactElement => {
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
-  const nahtavillaolovaiheJulkaisu = projekti.nahtavillaoloVaiheJulkaisut?.[projekti.nahtavillaoloVaiheJulkaisut.length - 1];
-
   return (
     <NahtavillaoloPageLayout>
-      {epaaktiivinen && nahtavillaolovaiheJulkaisu ? (
-        <Lukunakyma projekti={projekti} nahtavillaoloVaiheJulkaisu={nahtavillaolovaiheJulkaisu} />
+      {epaaktiivinen &&
+      (projekti.nahtavillaoloVaihe?.muokkausTila !== MuokkausTila.MUOKKAUS || !projekti.nahtavillaoloVaihe?.muokkausTila) ? (
+        <Lukunakyma projekti={projekti} nahtavillaoloVaiheJulkaisu={projekti.nahtavillaoloVaiheJulkaisu} />
       ) : (
         <KuulutuksenTiedot />
       )}

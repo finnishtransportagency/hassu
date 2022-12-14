@@ -157,6 +157,7 @@ function KayttoOikeusHallintaFormElements({
           append(defaultKayttaja);
         }}
         disabled={disableFields}
+        type="button"
       >
         Lisää uusi +
       </Button>
@@ -216,6 +217,10 @@ const UserFields = ({
 
   const isCurrentKayttajaMissingFromOptions = kayttaja && !options.some((o) => o.uid === kayttaja.uid);
 
+  const [popperOpen, setPopperOpen] = useState(false);
+  const closePopper = () => setPopperOpen(false);
+  const openPopper = () => setPopperOpen(true);
+
   return (
     <ContentSpacer>
       <HassuGrid
@@ -228,6 +233,9 @@ const UserFields = ({
           render={({ field: { onChange, name, onBlur, ref }, fieldState }) => (
             <Autocomplete
               options={isCurrentKayttajaMissingFromOptions ? [...options, kayttaja] : options}
+              open={popperOpen}
+              onOpen={openPopper}
+              onClose={closePopper}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -238,6 +246,11 @@ const UserFields = ({
                   inputRef={ref}
                   name={name}
                   onBlur={onBlur}
+                  onKeyDown={(e) => {
+                    if (!popperOpen && e.code === "Enter") {
+                      openPopper();
+                    }
+                  }}
                 />
               )}
               loading={loadingKayttajaResults}
@@ -293,6 +306,7 @@ const UserFields = ({
                   }}
                   disabled={disableFields || !muokattavissa}
                   size="large"
+                  type="button"
                 >
                   <SvgIcon>
                     <FontAwesomeIcon icon="trash" />
@@ -363,6 +377,7 @@ const UserFields = ({
           }}
           endIcon="trash"
           disabled={disableFields || !muokattavissa}
+          type="button"
         >
           Poista
         </Button>

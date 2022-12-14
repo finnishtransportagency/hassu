@@ -8,9 +8,7 @@ import useTranslation from "next-translate/useTranslation";
 import { Controller } from "react-hook-form";
 import { KuulutuksenTiedotFormValues } from "@components/projekti/paatos/kuulutuksenTiedot/index";
 
-type Props = {};
-
-export default function MuutoksenHaku({}: Props) {
+export default function MuutoksenHaku() {
   const {
     register,
     formState: { errors },
