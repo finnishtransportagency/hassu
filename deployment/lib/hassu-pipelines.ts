@@ -8,8 +8,10 @@ import {
   BuildSpec,
   ComputeType,
   GitHubSourceProps,
+  IArtifacts,
   LinuxBuildImage,
   LocalCacheMode,
+  ProjectProps,
 } from "aws-cdk-lib/aws-codebuild";
 import { Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { BuildEnvironmentVariable } from "aws-cdk-lib/aws-codebuild/lib/project";
@@ -58,14 +60,14 @@ const pipelines: Record<string, { name: string; buildspec: string; env: string; 
     },
     {
       name: "e2e-dev",
-      env: "e2e-dev",
+      env: "dev",
       branches: ["dev", "robottest/*"],
       buildspec: "./deployment/lib/buildspec/e2etest.yml",
       concurrentBuildLimit: 1,
     },
     {
       name: "e2e-test",
-      env: "e2e-test",
+      env: "test",
       branches: ["test"],
       buildspec: "./deployment/lib/buildspec/e2etest.yml",
       concurrentBuildLimit: 1,
@@ -105,6 +107,7 @@ export class HassuPipelineStack extends Stack {
       accessToken: SecretValue.secretsManager("github-token"),
     });
 
+    let robotTestArtifactsBucket: IArtifacts | undefined;
     if (isDevAccount) {
       // Common bucket for test reports
       const reportBucket = new Bucket(this, "reportbucket", {
@@ -122,6 +125,14 @@ export class HassuPipelineStack extends Stack {
         value: oai.originAccessIdentityId || "",
       });
       reportBucket.grantRead(oai);
+
+      robotTestArtifactsBucket = codebuild.Artifacts.s3({
+        bucket: Bucket.fromBucketName(this, "RobotTestArtifactBucket", Config.reportBucketName),
+        includeBuildId: false,
+        packageZip: false,
+        encryption: false,
+        identifier: "RobotTest",
+      });
     }
 
     this.createImageBuilderProject();
@@ -189,6 +200,9 @@ export class HassuPipelineStack extends Stack {
           type: BuildEnvironmentVariableType.PLAINTEXT,
         },
       };
+      const isE2eTest = name.includes("e2e");
+      let properties: Partial<ProjectProps> = {};
+
       if (env == "prod") {
         environmentVariables = {
           ...environmentVariables,
@@ -221,9 +235,18 @@ export class HassuPipelineStack extends Stack {
             type: BuildEnvironmentVariableType.PARAMETER_STORE,
           },
         };
+        if (isE2eTest && robotTestArtifactsBucket) {
+          environmentVariables.FRONTEND_DOMAIN_NAME_DEV = {
+            value: await config.getSecureInfraParameter("FrontendDomainName", "dev"),
+          };
+          properties = {
+            artifacts: robotTestArtifactsBucket,
+          };
+        }
       }
       const projectName = "Hassu-build-" + name;
       const buildProject = new codebuild.Project(this, projectName, {
+        ...properties,
         projectName,
         concurrentBuildLimit,
         buildSpec: BuildSpec.fromSourceFilename(buildspec),
@@ -252,6 +275,15 @@ export class HassuPipelineStack extends Stack {
           resources: ["arn:aws:iam::*:role/aws-service-role/*"],
         })
       );
+      if (isE2eTest) {
+        buildProject.addToRolePolicy(
+          new PolicyStatement({
+            effect: Effect.ALLOW,
+            actions: ["s3:*", "ecr:*", "ssm:*", "secretsmanager:GetSecretValue", "cloudformation:DescribeStacks"],
+            resources: ["*"],
+          })
+        );
+      }
     }
   }
 
