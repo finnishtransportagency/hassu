@@ -1,5 +1,5 @@
 import * as cdk from "aws-cdk-lib";
-import { aws_codebuild, aws_ecr, RemovalPolicy, Stack } from "aws-cdk-lib";
+import { aws_codebuild, aws_ecr, RemovalPolicy, SecretValue, Stack } from "aws-cdk-lib";
 import { Config } from "./config";
 import { Construct } from "constructs";
 import * as codebuild from "aws-cdk-lib/aws-codebuild";
@@ -9,7 +9,7 @@ import {
   ComputeType,
   GitHubSourceProps,
   LinuxBuildImage,
-  LocalCacheMode
+  LocalCacheMode,
 } from "aws-cdk-lib/aws-codebuild";
 import { Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { BuildEnvironmentVariable } from "aws-cdk-lib/aws-codebuild/lib/project";
@@ -100,6 +100,11 @@ export class HassuPipelineStack extends Stack {
     const config = await Config.instance(this);
     const isDevAccount = Config.isDevAccount();
 
+    // GitHub creds only once per account
+    new codebuild.GitHubSourceCredentials(this, "HassuCodeBuildGitHubCreds", {
+      accessToken: SecretValue.secretsManager("github-token"),
+    });
+
     if (isDevAccount) {
       // Common bucket for test reports
       const reportBucket = new Bucket(this, "reportbucket", {
@@ -134,22 +139,19 @@ export class HassuPipelineStack extends Stack {
 
       const buildspec = pipelineConfig.buildspec;
       let branchOrRef;
-      let reportBuildStatus;
 
       const webhookFilters = branches.map((b) => codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs(b));
       if (branches.length > 1) {
         branchOrRef = undefined;
-        reportBuildStatus = true;
       } else {
         branchOrRef = branches[0];
-        reportBuildStatus = false;
       }
       const sourceProps: GitHubSourceProps = {
         owner: "finnishtransportagency",
         repo: "hassu",
 
         webhookTriggersBatchBuild: false,
-        reportBuildStatus,
+        reportBuildStatus: true,
         branchOrRef,
         webhookFilters,
         cloneDepth: 0,

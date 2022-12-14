@@ -34,7 +34,7 @@ export async function readDatabaseStackOutputs(): Promise<DatabaseStackOutputs> 
 }
 
 export async function readPipelineStackOutputs(): Promise<PipelineStackOutputs> {
-  return (await readStackOutputs("pipeline", Region.EU_WEST_1)) as PipelineStackOutputs;
+  return (await readStackOutputs("pipelines", Region.EU_WEST_1)) as PipelineStackOutputs;
 }
 
 export async function readFrontendStackOutputs(): Promise<FrontendStackOutputs> {
