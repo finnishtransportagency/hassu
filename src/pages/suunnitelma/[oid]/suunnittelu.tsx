@@ -230,6 +230,8 @@ const TilaisuusLista: FunctionComponent<{
   tilaisuudet: VuorovaikutusTilaisuusJulkinen[];
   inaktiivinen?: true;
 }> = ({ tilaisuudet, inaktiivinen }) => {
+  const { t } = useTranslation("suunnittelu");
+
   const sortTilaisuudet = useCallback((a, b) => {
     if (dayjs(a.paivamaara).isBefore(dayjs(b.paivamaara))) {
       return -1;
@@ -247,7 +249,7 @@ const TilaisuusLista: FunctionComponent<{
           <div key={index} className={classNames("vayla-tilaisuus-item", inaktiivinen ? "inactive" : "active")}>
             <div className="flex flex-cols gap-5">
               <TilaisuusIcon tyyppi={tilaisuus.tyyppi} inactive={inaktiivinen} />
-              <TilaisuusTitle tilaisuus={tilaisuus} />
+              <TilaisuusTitle tilaisuus={tilaisuus} /> {!!tilaisuus.peruttu && <span className="text-red">{t("suunnittelu:PERUTTU")}</span>}
             </div>
             <TilaisuusContent tilaisuus={tilaisuus} />
           </div>
