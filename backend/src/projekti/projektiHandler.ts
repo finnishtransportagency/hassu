@@ -22,7 +22,13 @@ import { projektiArchive } from "../archive/projektiArchiveService";
 import { NotFoundError } from "../error/NotFoundError";
 import { projektiAdapterJulkinen } from "./adapter/projektiAdapterJulkinen";
 import { findUpdatedFields } from "../velho/velhoAdapter";
-import { DBProjekti, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu, VuorovaikutusTilaisuusJulkaisu } from "../database/model";
+import {
+  DBProjekti,
+  VuorovaikutusKierros,
+  VuorovaikutusKierrosJulkaisu,
+  VuorovaikutusTilaisuus,
+  VuorovaikutusTilaisuusJulkaisu,
+} from "../database/model";
 import { aineistoService } from "../aineisto/aineistoService";
 import { ProjektiAdaptationResult, ProjektiEventType } from "./adapter/projektiAdaptationResult";
 import remove from "lodash/remove";
@@ -116,16 +122,13 @@ export async function updateVuorovaikutus(input: API.VuorovaikutusPaivitysInput 
     validatePaivitaVuorovaikutus(projektiInDB, input);
     auditLog.info("Päivitä vuorovaikutuskierros", { input });
 
-    const vuorovaikutusTilaisuudet = input.vuorovaikutusTilaisuudet.map((tilaisuus, index) =>
-      mergeWith(tilaisuus, projektiInDB.vuorovaikutusKierros?.vuorovaikutusTilaisuudet?.[index])
+    const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuus[] = input.vuorovaikutusTilaisuudet.map((tilaisuus, index) =>
+      mergeWith(projektiInDB.vuorovaikutusKierros?.vuorovaikutusTilaisuudet?.[index], tilaisuus)
     );
     const vuorovaikutusTilaisuusJulkaisut: VuorovaikutusTilaisuusJulkaisu[] = vuorovaikutusTilaisuudet.map((tilaisuus) => {
-      const id = tilaisuus.vuorovaikutusNumero;
-      delete tilaisuus.vuorovaikutusNumero;
       const vuorovaikutusTilaisuusJulkaisu: VuorovaikutusTilaisuusJulkaisu = {
-        id,
         ...tilaisuus,
-        yhteystiedot: adaptStandardiYhteystiedotInputToYhteystiedotToSave(projektiInDB, tilaisuus.standardiYhteystiedot),
+        yhteystiedot: adaptStandardiYhteystiedotInputToYhteystiedotToSave(projektiInDB, tilaisuus.esitettavatYhteystiedot),
       };
       return vuorovaikutusTilaisuusJulkaisu;
     });
