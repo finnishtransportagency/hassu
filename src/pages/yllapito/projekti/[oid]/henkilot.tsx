@@ -142,7 +142,7 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
   return (
     <>
       <FormProvider {...useFormReturn}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form>
           <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
             {!formIsSubmitting && !isLoadingProjekti && (
               <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />
@@ -155,7 +155,14 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
             />
             <Section noDivider>
               <HassuStack alignItems="flex-end">
-                <Button id="save_projekti" className="ml-auto" type="button" primary disabled={disableFormEdit}>
+                <Button
+                  onClick={handleSubmit(onSubmit)}
+                  id="save_projekti"
+                  className="ml-auto"
+                  type="button"
+                  primary
+                  disabled={disableFormEdit}
+                >
                   Tallenna
                 </Button>
               </HassuStack>
