@@ -103,14 +103,19 @@ export default function VuorovaikutusMahdollisuudet({
                       return (
                         <div key={index}>
                           <p className="mb-0">
-                            {tilaisuus.nimi ? capitalize(tilaisuus.nimi) : "Soittoaika"},{" "}
-                            {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)} {formatDate(tilaisuus.paivamaara)} klo{" "}
-                            {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}
+                            {!!tilaisuus.peruttu && <span className="text-red">PERUTTU </span>}
+                            <span>
+                              {tilaisuus.nimi ? capitalize(tilaisuus.nimi) : "Soittoaika"},{" "}
+                              {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)} {formatDate(tilaisuus.paivamaara)} klo{" "}
+                              {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}
+                            </span>
                           </p>
                           <div className="pl-2">
-                            {tilaisuus.yhteystiedot?.map((yhteystieto, index) => (
-                              <p key={index}>{yhteystietoKansalaiselleTekstiksi("fi", yhteystieto as Yhteystieto)}</p>
-                            ))}
+                            <span>
+                              {tilaisuus.yhteystiedot?.map((yhteystieto, index) => (
+                                <p key={index}>{yhteystietoKansalaiselleTekstiksi("fi", yhteystieto as Yhteystieto)}</p>
+                              ))}
+                            </span>
                           </div>
                         </div>
                       );
