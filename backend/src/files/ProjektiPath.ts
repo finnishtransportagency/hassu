@@ -104,7 +104,7 @@ class VuorovaikutusPaths extends PathTuple {
 
   private getId(): number {
     assertIsDefined(this.vuorovaikutus, "vuorovaikutus pitää olla annettu");
-    if ((this.vuorovaikutus as VuorovaikutusKierros).vuorovaikutusNumero) {
+    if ((this.vuorovaikutus as VuorovaikutusKierros).vuorovaikutusNumero !== undefined) {
       return (this.vuorovaikutus as VuorovaikutusKierros).vuorovaikutusNumero + 1;
     } else {
       return (this.vuorovaikutus as VuorovaikutusKierrosJulkaisu).id + 1;
@@ -112,11 +112,19 @@ class VuorovaikutusPaths extends PathTuple {
   }
 
   get yllapitoPath(): string {
-    return "suunnitteluvaihe/vuorovaikutus_" + this.getId();
+    return this.parent.yllapitoPath + "suunnitteluvaihe/vuorovaikutus_" + this.getId().toString();
   }
 
   get publicPath(): string {
-    return "suunnitteluvaihe/vuorovaikutus_" + this.getId();
+    return this.parent.publicPath + "suunnitteluvaihe/vuorovaikutus_" + this.getId().toString();
+  }
+
+  get yllapitoFullPath(): string {
+    return this.parent.yllapitoFullPath + "/" + "suunnitteluvaihe/vuorovaikutus_" + this.getId().toString();
+  }
+
+  get publicFullPath(): string {
+    return this.parent.publicFullPath + "/" + "suunnitteluvaihe/vuorovaikutus_" + this.getId().toString();
   }
 
   get aineisto(): VuorovaikutusAineisto {
