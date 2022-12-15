@@ -90,6 +90,9 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
     handle(p: API.Projekti) {
       if (isJulkaisuMigroituOrHyvaksyttyAndInPast(p.nahtavillaoloVaiheJulkaisu)) {
         p.status = API.Status.HYVAKSYMISMENETTELYSSA;
+        if (!p.hyvaksymisPaatosVaihe && !p.hyvaksymisPaatosVaiheJulkaisu) {
+          p.hyvaksymisPaatosVaihe = { __typename: "HyvaksymisPaatosVaihe", muokkausTila: MuokkausTila.MUOKKAUS };
+        }
         super.handle(p); // Continue evaluating next rules
       }
     }

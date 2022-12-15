@@ -17,12 +17,13 @@ import {
 } from "../common";
 import { fileService } from "../../../files/fileService";
 import { PathTuple } from "../../../files/ProjektiPath";
-import { findJulkaisuWithTila } from "../../projektiUtil";
+import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 
 export function adaptHyvaksymisPaatosVaihe(
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | null | undefined,
   hyvaksymisPaatos: Hyvaksymispaatos | null | undefined,
-  paths: PathTuple
+  paths: PathTuple,
+  hyvaksymisPaatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[] | null | undefined
 ): API.HyvaksymisPaatosVaihe | undefined {
   if (!hyvaksymisPaatosVaihe) {
     return undefined;
@@ -44,6 +45,7 @@ export function adaptHyvaksymisPaatosVaihe(
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
     hyvaksymisPaatoksenPvm: hyvaksymisPaatos?.paatoksenPvm || undefined,
     hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos?.asianumero || undefined,
+    muokkausTila: adaptMuokkausTila(hyvaksymisPaatosVaihe, hyvaksymisPaatosVaiheJulkaisut),
   };
 }
 

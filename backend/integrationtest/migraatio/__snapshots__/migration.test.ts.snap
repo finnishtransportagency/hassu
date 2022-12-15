@@ -97,6 +97,7 @@ Object {
           },
         ],
       },
+      "muokkausTila": "MUOKKAUS",
     },
     "kasittelynTila": Object {
       "__typename": "KasittelynTila",
@@ -187,6 +188,7 @@ Object {
           },
         ],
       },
+      "muokkausTila": "LUKU",
     },
     "hyvaksymisPaatosVaiheJulkaisu": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",

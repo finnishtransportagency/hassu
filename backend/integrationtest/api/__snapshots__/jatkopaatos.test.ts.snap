@@ -84,6 +84,7 @@ Object {
           },
         ],
       },
+      "muokkausTila": "MUOKKAUS",
     },
     "kasittelynTila": Object {
       "__typename": "KasittelynTila",
@@ -209,6 +210,7 @@ Object {
           },
         ],
       },
+      "muokkausTila": "LUKU",
     },
     "jatkoPaatos1VaiheJulkaisut": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",
@@ -525,6 +527,7 @@ Object {
           },
         ],
       },
+      "muokkausTila": "MUOKKAUS",
     },
     "kasittelynTila": Object {
       "__typename": "KasittelynTila",
@@ -654,6 +657,7 @@ Object {
           },
         ],
       },
+      "muokkausTila": "LUKU",
     },
     "jatkoPaatos2VaiheJulkaisut": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",

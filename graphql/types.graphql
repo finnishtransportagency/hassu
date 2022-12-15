@@ -230,6 +230,7 @@ type HyvaksymisPaatosVaihe {
   kuulutusYhteystiedot: StandardiYhteystiedot
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   palautusSyy: String
+  muokkausTila: MuokkausTila!
   viimeinenVoimassaolovuosi: String
 }
 

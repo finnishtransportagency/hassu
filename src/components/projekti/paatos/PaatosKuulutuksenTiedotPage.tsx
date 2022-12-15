@@ -10,13 +10,13 @@ export const PaatoksenKuulutuksenTiedotPage: VoidFunctionComponent<{ projekti: P
   projekti,
   paatosTyyppi,
 }) => {
-  const { julkaisu: viimeisinJulkaisu } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
+  const { julkaisu } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
   return (
     <PaatosPageLayout paatosTyyppi={paatosTyyppi}>
-      {epaaktiivinen && viimeisinJulkaisu ? (
-        <Lukunakyma projekti={projekti} julkaisu={viimeisinJulkaisu} paatosTyyppi={paatosTyyppi} />
+      {epaaktiivinen && julkaisu ? (
+        <Lukunakyma projekti={projekti} julkaisu={julkaisu} paatosTyyppi={paatosTyyppi} />
       ) : (
         <KuulutuksenTiedot projekti={projekti} paatosTyyppi={paatosTyyppi} />
       )}

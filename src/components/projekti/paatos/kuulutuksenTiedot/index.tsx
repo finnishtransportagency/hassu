@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { HyvaksymisPaatosVaiheInput, KirjaamoOsoite, TallennaProjektiInput, YhteystietoInput } from "@services/api";
+import { HyvaksymisPaatosVaiheInput, KirjaamoOsoite, MuokkausTila, TallennaProjektiInput, YhteystietoInput } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import React, { ReactElement, useMemo } from "react";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
@@ -48,12 +48,10 @@ type KuulutuksenTiedotFormProps = {
 function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: KuulutuksenTiedotFormProps) {
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
 
-  const {
-    julkaisematonPaatos,
-    julkaisu: viimeisinJulkaisu,
-    kasittelyntilaData,
-    julkaisu,
-  } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
+  const { julkaisematonPaatos, kasittelyntilaData, julkaisu } = useMemo(
+    () => getPaatosSpecificData(projekti, paatosTyyppi),
+    [paatosTyyppi, projekti]
+  );
 
   const defaultValues: KuulutuksenTiedotFormValues = useMemo(() => {
     const yhteysTiedot: YhteystietoInput[] = julkaisematonPaatos?.kuulutusYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt)) || [];
@@ -93,7 +91,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
 
   useLeaveConfirm(isDirty);
 
-  const voiMuokata = !julkaisu;
+  const voiMuokata = !julkaisematonPaatos?.muokkausTila || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS;
 
   return (
     <>
@@ -112,29 +110,24 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
                 <PaatoksenPaiva paatosTyyppi={paatosTyyppi} paatos={kasittelyntilaData} projektiOid={projekti.oid} />
                 {paatosIsJatkopaatos(paatosTyyppi) && <Voimassaolovuosi />}
                 <MuutoksenHaku />
-                <KuulutuksessaEsitettavatYhteystiedot
-                  projekti={projekti}
-                  julkaisut={julkaisu}
-                  paatosTyyppi={paatosTyyppi}
-                  julkaisematonPaatos={julkaisematonPaatos}
-                />
+                <KuulutuksessaEsitettavatYhteystiedot projekti={projekti} julkaisematonPaatos={julkaisematonPaatos} />
                 <IlmoituksenVastaanottajatKomponentti paatosVaihe={julkaisematonPaatos} />
 
                 {pdfFormRef.current?.esikatselePdf && (
                   <KuulutuksenJaIlmoituksenEsikatselu paatosTyyppi={paatosTyyppi} esikatselePdf={pdfFormRef.current?.esikatselePdf} />
                 )}
-                <Painikkeet paatosTyyppi={paatosTyyppi} projekti={projekti} julkaisu={julkaisu} />
+                <Painikkeet paatosTyyppi={paatosTyyppi} projekti={projekti} julkaisu={julkaisu} julkaisematonPaatos={julkaisematonPaatos} />
               </fieldset>
             </form>
           </FormProvider>
         </>
       )}
-      {!voiMuokata && projekti && viimeisinJulkaisu && (
+      {!voiMuokata && projekti && julkaisu && (
         <>
           <FormProvider {...useFormReturn}>
             <form>
-              <Lukunakyma projekti={projekti} paatosTyyppi={paatosTyyppi} julkaisu={viimeisinJulkaisu} />
-              <Painikkeet paatosTyyppi={paatosTyyppi} projekti={projekti} julkaisu={julkaisu} />
+              <Lukunakyma projekti={projekti} paatosTyyppi={paatosTyyppi} julkaisu={julkaisu} />
+              <Painikkeet paatosTyyppi={paatosTyyppi} projekti={projekti} julkaisu={julkaisu} julkaisematonPaatos={julkaisematonPaatos} />
             </form>
           </FormProvider>
         </>
