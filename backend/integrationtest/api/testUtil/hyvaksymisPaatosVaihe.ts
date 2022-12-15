@@ -105,8 +105,8 @@ export async function testHyvaksymisPaatosVaiheApproval(
   });
 
   const projektiHyvaksyttavaksi = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
-  expect(projektiHyvaksyttavaksi.hyvaksymisPaatosVaiheJulkaisut).to.have.length(1);
-  expect(projektiHyvaksyttavaksi.hyvaksymisPaatosVaiheJulkaisut![0].tila).to.eq(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
+  expect(projektiHyvaksyttavaksi.hyvaksymisPaatosVaiheJulkaisu).to.not.be.undefined;
+  expect(projektiHyvaksyttavaksi.hyvaksymisPaatosVaiheJulkaisu?.tila).to.eq(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
 
   await api.siirraTila({
     oid,
@@ -116,7 +116,7 @@ export async function testHyvaksymisPaatosVaiheApproval(
   const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
   expectToMatchSnapshot("testHyvaksymisPaatosVaiheAfterApproval", {
     hyvaksymisPaatosVaihe: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.hyvaksymisPaatosVaihe!),
-    hyvaksymisPaatosVaiheJulkaisut: projekti.hyvaksymisPaatosVaiheJulkaisut!.map(cleanupHyvaksymisPaatosVaiheTimestamps),
+    hyvaksymisPaatosVaiheJulkaisu: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.hyvaksymisPaatosVaiheJulkaisu!),
   });
 
   // Move hyvaksymisPaatosVaiheJulkaisu into the past

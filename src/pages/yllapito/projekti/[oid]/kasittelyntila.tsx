@@ -39,11 +39,8 @@ export default function KasittelyntilaSivu(): ReactElement {
     <ProjektiPageLayout title="Käsittelyn tila">
       {projekti && projekti.status === Status.HYVAKSYTTY && projekti.nykyinenKayttaja.omaaMuokkausOikeuden && (
         <Notification type={NotificationType.INFO_GRAY}>
-          Suunnitelma poistuu palvelun julkiselta puolelta{" "}
-          {formatDate(
-            projekti.hyvaksymisPaatosVaiheJulkaisut?.[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1].kuulutusVaihePaattyyPaiva
-          )}
-          . Samalla kun suunnitelma poistuu palvelun julkiselta puolelta, projektin jäseniltä päättyvät muokkausoikeudet suunnitelmaan ja
+          Suunnitelma poistuu palvelun julkiselta puolelta {formatDate(projekti.hyvaksymisPaatosVaiheJulkaisu?.kuulutusVaihePaattyyPaiva)}.
+          Samalla kun suunnitelma poistuu palvelun julkiselta puolelta, projektin jäseniltä päättyvät muokkausoikeudet suunnitelmaan ja
           suunnitelman aineistot poistetaan järjestelmästä. Huolehdithan, että kaikki tarvittavat asiakirjat on tallennettu asianhallintaan
           ja muihin tallennuspaikkoihin ennen muokkausoikeuksien päättymistä.
         </Notification>

@@ -7,10 +7,10 @@ import Muokkausnakyma from "./Muokkausnakyma";
 export default function Aineistot({
   paatosTyyppi,
   julkaisematonPaatos,
-  julkaisut,
+  julkaisu,
   projekti,
-}: { paatosTyyppi: PaatosTyyppi; projekti: ProjektiLisatiedolla } & Pick<PaatosSpecificData, "julkaisematonPaatos" | "julkaisut">) {
-  const voiMuokata = !julkaisut?.length;
+}: { paatosTyyppi: PaatosTyyppi; projekti: ProjektiLisatiedolla } & Pick<PaatosSpecificData, "julkaisematonPaatos" | "julkaisu">) {
+  const voiMuokata = !julkaisu;
   return voiMuokata ? (
     <Muokkausnakyma julkaisematonPaatos={julkaisematonPaatos} paatosTyyppi={paatosTyyppi} />
   ) : (

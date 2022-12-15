@@ -24,15 +24,14 @@ export const paatosSpecificTilasiirtymaTyyppiMap: Record<PaatosTyyppi, Tilasiirt
 };
 
 export interface PaatosSpecificData {
-  julkaisut: HyvaksymisPaatosVaiheJulkaisu[] | null | undefined;
-  viimeisinJulkaisu: HyvaksymisPaatosVaiheJulkaisu | null;
+  julkaisu: HyvaksymisPaatosVaiheJulkaisu | null | undefined;
   julkaisematonPaatos: HyvaksymisPaatosVaihe | null | undefined;
   kasittelyntilaData: Hyvaksymispaatos | null | undefined;
 }
 
-export type PaatosJulkaisutAvain = keyof Pick<
+export type PaatosJulkaisuAvain = keyof Pick<
   Projekti,
-  "hyvaksymisPaatosVaiheJulkaisut" | "jatkoPaatos1VaiheJulkaisut" | "jatkoPaatos2VaiheJulkaisut"
+  "hyvaksymisPaatosVaiheJulkaisu" | "jatkoPaatos1VaiheJulkaisu" | "jatkoPaatos2VaiheJulkaisu"
 >;
 
 export type PaatosVaiheAvain = keyof Pick<Projekti, "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe">;
@@ -40,7 +39,7 @@ export type PaatosVaiheAvain = keyof Pick<Projekti, "hyvaksymisPaatosVaihe" | "j
 export type PaatosAvain = keyof Pick<KasittelynTila, "hyvaksymispaatos" | "ensimmainenJatkopaatos" | "toinenJatkopaatos">;
 
 export interface PaatoksenAvaimet {
-  paatosJulkaisutAvain: PaatosJulkaisutAvain;
+  paatosJulkaisuAvain: PaatosJulkaisuAvain;
   paatosVaiheAvain: PaatosVaiheAvain;
   paatosAvain: PaatosAvain;
 }
@@ -48,17 +47,17 @@ export interface PaatoksenAvaimet {
 export const paatosSpecificRoutesMap: Record<PaatosTyyppi, PaatoksenAvaimet> = {
   HYVAKSYMISPAATOS: {
     paatosAvain: "hyvaksymispaatos",
-    paatosJulkaisutAvain: "hyvaksymisPaatosVaiheJulkaisut",
+    paatosJulkaisuAvain: "hyvaksymisPaatosVaiheJulkaisu",
     paatosVaiheAvain: "hyvaksymisPaatosVaihe",
   },
   JATKOPAATOS1: {
     paatosAvain: "ensimmainenJatkopaatos",
-    paatosJulkaisutAvain: "jatkoPaatos1VaiheJulkaisut",
+    paatosJulkaisuAvain: "jatkoPaatos1VaiheJulkaisu",
     paatosVaiheAvain: "jatkoPaatos1Vaihe",
   },
   JATKOPAATOS2: {
     paatosAvain: "toinenJatkopaatos",
-    paatosJulkaisutAvain: "jatkoPaatos2VaiheJulkaisut",
+    paatosJulkaisuAvain: "jatkoPaatos2VaiheJulkaisu",
     paatosVaiheAvain: "jatkoPaatos2Vaihe",
   },
 };
@@ -67,12 +66,10 @@ export const getPaatosSpecificData: (projekti: ProjektiLisatiedolla, paatosTyypp
   projekti: ProjektiLisatiedolla,
   paatosTyyppi: PaatosTyyppi
 ) => {
-  const { paatosAvain, paatosJulkaisutAvain, paatosVaiheAvain } = paatosSpecificRoutesMap[paatosTyyppi];
-  const julkaisut = projekti[paatosJulkaisutAvain];
+  const { paatosAvain, paatosJulkaisuAvain, paatosVaiheAvain } = paatosSpecificRoutesMap[paatosTyyppi];
 
   return {
-    julkaisut,
-    viimeisinJulkaisu: julkaisut ? julkaisut[julkaisut.length - 1] : null,
+    julkaisu: projekti[paatosJulkaisuAvain],
     julkaisematonPaatos: projekti[paatosVaiheAvain],
     kasittelyntilaData: projekti.kasittelynTila?.[paatosAvain],
   };

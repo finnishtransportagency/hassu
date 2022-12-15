@@ -10,7 +10,7 @@ export const PaatoksenKuulutuksenTiedotPage: VoidFunctionComponent<{ projekti: P
   projekti,
   paatosTyyppi,
 }) => {
-  const { viimeisinJulkaisu } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
+  const { julkaisu: viimeisinJulkaisu } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
   return (

@@ -10,10 +10,11 @@ export const PaatoksenAineistotPage: VoidFunctionComponent<{ projekti: ProjektiL
   projekti,
   paatosTyyppi,
 }) => {
-  const { viimeisinJulkaisu, julkaisematonPaatos, julkaisut } = useMemo(
-    () => getPaatosSpecificData(projekti, paatosTyyppi),
-    [paatosTyyppi, projekti]
-  );
+  const {
+    julkaisu: viimeisinJulkaisu,
+    julkaisematonPaatos,
+    julkaisu,
+  } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
@@ -22,7 +23,7 @@ export const PaatoksenAineistotPage: VoidFunctionComponent<{ projekti: ProjektiL
       {epaaktiivinen && viimeisinJulkaisu ? (
         <PaatosAineistotLukutila oid={projekti.oid} paatosJulkaisu={viimeisinJulkaisu} />
       ) : (
-        <PaatosAineistot projekti={projekti} julkaisut={julkaisut} julkaisematonPaatos={julkaisematonPaatos} paatosTyyppi={paatosTyyppi} />
+        <PaatosAineistot projekti={projekti} julkaisu={julkaisu} julkaisematonPaatos={julkaisematonPaatos} paatosTyyppi={paatosTyyppi} />
       )}
     </PaatosPageLayout>
   );

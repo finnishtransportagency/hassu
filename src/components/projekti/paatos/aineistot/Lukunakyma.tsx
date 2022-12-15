@@ -17,7 +17,7 @@ interface Props {
 }
 
 export default function Lukunakyma({ projekti, paatosTyyppi }: Props) {
-  const { viimeisinJulkaisu } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
+  const { julkaisu: viimeisinJulkaisu } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
 
   const { published } = examineJulkaisuPaiva(viimeisinJulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY, viimeisinJulkaisu?.kuulutusPaiva);
 

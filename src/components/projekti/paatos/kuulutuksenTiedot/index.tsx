@@ -48,10 +48,12 @@ type KuulutuksenTiedotFormProps = {
 function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: KuulutuksenTiedotFormProps) {
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
 
-  const { julkaisematonPaatos, viimeisinJulkaisu, kasittelyntilaData, julkaisut } = useMemo(
-    () => getPaatosSpecificData(projekti, paatosTyyppi),
-    [paatosTyyppi, projekti]
-  );
+  const {
+    julkaisematonPaatos,
+    julkaisu: viimeisinJulkaisu,
+    kasittelyntilaData,
+    julkaisu,
+  } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
 
   const defaultValues: KuulutuksenTiedotFormValues = useMemo(() => {
     const yhteysTiedot: YhteystietoInput[] = julkaisematonPaatos?.kuulutusYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt)) || [];
@@ -91,7 +93,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
 
   useLeaveConfirm(isDirty);
 
-  const voiMuokata = !julkaisut?.length;
+  const voiMuokata = !julkaisu;
 
   return (
     <>
@@ -112,7 +114,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
                 <MuutoksenHaku />
                 <KuulutuksessaEsitettavatYhteystiedot
                   projekti={projekti}
-                  julkaisut={julkaisut}
+                  julkaisut={julkaisu}
                   paatosTyyppi={paatosTyyppi}
                   julkaisematonPaatos={julkaisematonPaatos}
                 />
@@ -121,7 +123,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
                 {pdfFormRef.current?.esikatselePdf && (
                   <KuulutuksenJaIlmoituksenEsikatselu paatosTyyppi={paatosTyyppi} esikatselePdf={pdfFormRef.current?.esikatselePdf} />
                 )}
-                <Painikkeet paatosTyyppi={paatosTyyppi} projekti={projekti} julkaisut={julkaisut} />
+                <Painikkeet paatosTyyppi={paatosTyyppi} projekti={projekti} julkaisu={julkaisu} />
               </fieldset>
             </form>
           </FormProvider>
@@ -132,7 +134,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
           <FormProvider {...useFormReturn}>
             <form>
               <Lukunakyma projekti={projekti} paatosTyyppi={paatosTyyppi} julkaisu={viimeisinJulkaisu} />
-              <Painikkeet paatosTyyppi={paatosTyyppi} projekti={projekti} julkaisut={julkaisut} />
+              <Painikkeet paatosTyyppi={paatosTyyppi} projekti={projekti} julkaisu={julkaisu} />
             </form>
           </FormProvider>
         </>

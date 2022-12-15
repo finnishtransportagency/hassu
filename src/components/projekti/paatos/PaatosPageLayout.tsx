@@ -50,14 +50,14 @@ function PaatosPageLayoutContent({
 }): ReactElement {
   const router = useRouter();
 
-  const { julkaisut, viimeisinJulkaisu } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
+  const { julkaisu, julkaisu: viimeisinJulkaisu } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
 
   const migroitu = viimeisinJulkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
   const { paatosRoutePart, pageTitle } = useMemo(() => paatosTyyppiSpecificContentMap[paatosTyyppi], [paatosTyyppi]);
 
-  const kertaalleenLahetettyHyvaksyttavaksi = !!julkaisut?.length;
+  const kertaalleenLahetettyHyvaksyttavaksi = !!julkaisu;
 
   let { kuulutusPaiva, published } = examineKuulutusPaiva(viimeisinJulkaisu?.kuulutusPaiva);
 
