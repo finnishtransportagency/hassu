@@ -85,6 +85,7 @@ Object {
         ],
       },
       "muokkausTila": "MUOKKAUS",
+      "uudelleenKuulutus": undefined,
     },
     "kasittelynTila": Object {
       "__typename": "KasittelynTila",
@@ -211,6 +212,7 @@ Object {
         ],
       },
       "muokkausTila": "LUKU",
+      "uudelleenKuulutus": undefined,
     },
     "jatkoPaatos1VaiheJulkaisut": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",
@@ -292,6 +294,7 @@ Object {
       "kuulutusVaihePaattyyPaiva": "2100-01-01",
       "muokkaaja": "A000112",
       "tila": "HYVAKSYTTY",
+      "uudelleenKuulutus": undefined,
       "velho": Object {
         "__typename": "Velho",
         "kunnat": Array [
@@ -377,6 +380,7 @@ Object {
     "kuulutusPaiva": "2022-06-09",
     "kuulutusVaihePaattyyPaiva": "2100-01-01",
     "tila": "HYVAKSYTTY",
+    "uudelleenKuulutus": undefined,
     "velho": Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
@@ -528,6 +532,7 @@ Object {
         ],
       },
       "muokkausTila": "MUOKKAUS",
+      "uudelleenKuulutus": undefined,
     },
     "kasittelynTila": Object {
       "__typename": "KasittelynTila",
@@ -658,6 +663,7 @@ Object {
         ],
       },
       "muokkausTila": "LUKU",
+      "uudelleenKuulutus": undefined,
     },
     "jatkoPaatos2VaiheJulkaisut": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",
@@ -739,6 +745,7 @@ Object {
       "kuulutusVaihePaattyyPaiva": "2100-01-01",
       "muokkaaja": "A000112",
       "tila": "HYVAKSYTTY",
+      "uudelleenKuulutus": undefined,
       "velho": Object {
         "__typename": "Velho",
         "kunnat": Array [
@@ -824,6 +831,7 @@ Object {
     "kuulutusPaiva": "2022-06-09",
     "kuulutusVaihePaattyyPaiva": "2100-01-01",
     "tila": "HYVAKSYTTY",
+    "uudelleenKuulutus": undefined,
     "velho": Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,

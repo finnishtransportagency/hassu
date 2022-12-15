@@ -7,6 +7,7 @@ import { AbstractHyvaksymisPaatosVaiheTilaManager } from "./abstractHyvaksymisPa
 import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import { assertIsDefined } from "../../util/assertions";
+import assert from "assert";
 
 class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   getVaihe(projekti: DBProjekti): HyvaksymisPaatosVaihe {
@@ -20,11 +21,19 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
   }
 
   validateUudelleenkuulutus(
-    projekti: DBProjekti,
+    _projekti: DBProjekti,
     kuulutus: HyvaksymisPaatosVaihe,
     hyvaksyttyJulkaisu: HyvaksymisPaatosVaiheJulkaisu | undefined
   ): void {
-    // TODO
+    // Tarkista, että on olemassa hyväksytty julkaisu, jonka perua
+    if (!hyvaksyttyJulkaisu) {
+      throw new IllegalArgumentError("Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa");
+    }
+    assert(kuulutus, "Projektilla pitäisi olla jatkopäätös2kuulutus, jos sitä uudelleenkuulutetaan");
+    // Uudelleenkuulutus ei ole mahdollista jos uudelleenkuulutus on jo olemassa
+    if (kuulutus.uudelleenKuulutus) {
+      throw new IllegalArgumentError("Et voi uudelleenkuuluttaa jatkopäätös2kuulutusta, koska uudelleenkuulutus on jo olemassa");
+    }
   }
 
   getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: HyvaksymisPaatosVaihe | null | undefined): PathTuple {

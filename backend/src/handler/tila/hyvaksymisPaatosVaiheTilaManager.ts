@@ -6,6 +6,8 @@ import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import { AbstractHyvaksymisPaatosVaiheTilaManager } from "./abstractHyvaksymisPaatosVaiheTilaManager";
 import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
+import assert from "assert";
+import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   getVaihe(projekti: DBProjekti): HyvaksymisPaatosVaihe {
@@ -25,7 +27,23 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     kuulutus: HyvaksymisPaatosVaihe,
     hyvaksyttyJulkaisu: HyvaksymisPaatosVaiheJulkaisu | undefined
   ): void {
-    // TODO
+    // Tarkista, että on olemassa hyväksytty julkaisu, jonka perua
+    if (!hyvaksyttyJulkaisu) {
+      throw new IllegalArgumentError("Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa");
+    }
+    // Hyväksymisvaiheen uudelleenkuuluttaminen on mahdollista vain jos jatkopäätös1kuulutusjulkaisua ei ole
+    const apiProjekti = projektiAdapter.adaptProjekti(projekti);
+    const isJatkoPaatosPresent = !!apiProjekti.jatkoPaatos1VaiheJulkaisu;
+    if (isJatkoPaatosPresent) {
+      throw new IllegalArgumentError(
+        "Et voi uudelleenkuuluttaa hyväksymispäätöskuulutusta sillä jatkopäätöskuulutus on jo hyväksytty tai se on hyväksyttävänä"
+      );
+    }
+    assert(kuulutus, "Projektilla pitäisi olla hyväksymispäätöskuulutus, jos sitä uudelleenkuulutetaan");
+    // Uudelleenkuulutus ei ole mahdollista jos uudelleenkuulutus on jo olemassa
+    if (kuulutus.uudelleenKuulutus) {
+      throw new IllegalArgumentError("Et voi uudelleenkuuluttaa hyväksymispäätöskuulutusta, koska uudelleenkuulutus on jo olemassa");
+    }
   }
 
   getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: HyvaksymisPaatosVaihe | null | undefined): PathTuple {

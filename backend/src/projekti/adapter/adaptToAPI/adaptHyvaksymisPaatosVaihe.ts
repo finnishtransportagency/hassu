@@ -18,6 +18,7 @@ import {
 import { fileService } from "../../../files/fileService";
 import { PathTuple } from "../../../files/ProjektiPath";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
+import { adaptUudelleenKuulutus } from "./adaptAloitusKuulutus";
 
 export function adaptHyvaksymisPaatosVaihe(
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | null | undefined,
@@ -33,6 +34,7 @@ export function adaptHyvaksymisPaatosVaihe(
     hyvaksymisPaatos: hyvaksymisPaatosAineisto,
     kuulutusYhteystiedot,
     ilmoituksenVastaanottajat,
+    uudelleenKuulutus,
     ...rest
   } = hyvaksymisPaatosVaihe;
 
@@ -46,6 +48,7 @@ export function adaptHyvaksymisPaatosVaihe(
     hyvaksymisPaatoksenPvm: hyvaksymisPaatos?.paatoksenPvm || undefined,
     hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos?.asianumero || undefined,
     muokkausTila: adaptMuokkausTila(hyvaksymisPaatosVaihe, hyvaksymisPaatosVaiheJulkaisut),
+    uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
   };
 }
 
@@ -72,6 +75,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
     kielitiedot,
     velho,
     tila,
+    uudelleenKuulutus,
     ...fieldsToCopyAsIs
   } = julkaisu;
 
@@ -114,6 +118,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
     velho: adaptVelho(velho),
     tila,
+    uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
   };
   return apijulkaisu;
 }

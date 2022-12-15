@@ -3,6 +3,7 @@ import { HyvaksymisPaatosVaihe } from "../../../database/model";
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import { adaptAineistotToSave, adaptIlmoituksenVastaanottajatToSave, adaptStandardiYhteystiedotToSave } from "./common";
 import mergeWith from "lodash/mergeWith";
+import { adaptUudelleenKuulutusToSave } from "./adaptAloitusKuulutusToSave";
 
 export function adaptHyvaksymisPaatosVaiheToSave(
   dbHyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | null | undefined,
@@ -21,6 +22,7 @@ export function adaptHyvaksymisPaatosVaiheToSave(
     kuulutusVaihePaattyyPaiva,
     hallintoOikeus,
     viimeinenVoimassaolovuosi,
+    uudelleenKuulutus,
   } = hyvaksymisPaatosVaihe;
 
   const aineistoNahtavilla = adaptAineistotToSave(
@@ -47,5 +49,10 @@ export function adaptHyvaksymisPaatosVaiheToSave(
     hallintoOikeus,
     viimeinenVoimassaolovuosi,
   };
+
+  if (uudelleenKuulutus) {
+    newChanges.uudelleenKuulutus = adaptUudelleenKuulutusToSave(dbHyvaksymisPaatosVaihe?.uudelleenKuulutus, uudelleenKuulutus);
+  }
+
   return mergeWith({}, dbHyvaksymisPaatosVaihe, newChanges);
 }

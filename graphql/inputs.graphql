@@ -167,6 +167,7 @@ input HyvaksymisPaatosVaiheInput {
   kuulutusYhteystiedot: StandardiYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
   viimeinenVoimassaolovuosi: String
+  uudelleenKuulutus: UudelleenKuulutusInput
 }
 
 input LinkkiInput {
