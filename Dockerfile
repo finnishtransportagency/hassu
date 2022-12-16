@@ -9,7 +9,7 @@ ENV NVM_DIR=/root/.nvm
 ENV NODE_VERSION=14.17.0
 RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION} && nvm use v${NODE_VERSION} && nvm alias default v${NODE_VERSION}
 ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
-RUN . "$NVM_DIR/nvm.sh" && npm install -g npm@8.1.3
+RUN . "$NVM_DIR/nvm.sh" && npm install -g npm@8.3.2
 RUN . "$NVM_DIR/nvm.sh" && npm install -f -g @aws-amplify/cli && amplify
 
 RUN yum install -y xorg-x11-server-Xvfb.x86_64 wget ca-certificates fonts-liberation libasound2 libatk-bridge2.0-0 libatk1.0-0 \
