@@ -6,7 +6,7 @@ import IlmoituksenVastaanottajatCommon from "./IlmoituksenVastaanottajatLukutila
 
 interface Props {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatType | null | undefined;
-  julkaisunTila: KuulutusJulkaisuTila | KuulutusJulkaisuTila | null | undefined;
+  julkaisunTila: KuulutusJulkaisuTila | null | undefined;
   epaaktiivinen?: boolean;
 }
 

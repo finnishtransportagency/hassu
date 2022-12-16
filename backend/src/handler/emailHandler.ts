@@ -10,7 +10,7 @@ import { log } from "../logger";
 import { personSearch } from "../personSearch/personSearchClient";
 import { Kayttaja, Kieli, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
 import Mail from "nodemailer/lib/mailer";
-import { AloitusKuulutusJulkaisu, DBProjekti } from "../database/model";
+import { AloitusKuulutusJulkaisu, DBProjekti, SahkopostiVastaanottaja } from "../database/model";
 import { createLahetekirjeEmail } from "../email/lahetekirje/lahetekirjeEmailTemplate";
 import { config } from "../config";
 import { Readable } from "stream";
@@ -18,6 +18,7 @@ import { localDateTimeString } from "../util/dateUtil";
 import { GetObjectOutput } from "aws-sdk/clients/s3";
 import { getS3 } from "../aws/client";
 import { assertIsDefined } from "../util/assertions";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 export async function getFileAttachment(oid: string, key: string): Promise<Mail.Attachment | undefined> {
   log.info("haetaan s3:sta liitetiedosto", key);
@@ -67,6 +68,27 @@ async function sendWaitingApprovalMail(projekti: DBProjekti): Promise<void> {
   }
 }
 
+function examineEmailSentResults(
+  vastaanottaja: SahkopostiVastaanottaja,
+  sentMessageInfo: SMTPTransport.SentMessageInfo | undefined,
+  aikaleima: string
+) {
+  const email = vastaanottaja.sahkoposti;
+  if (sentMessageInfo?.accepted.find((accepted) => accepted == email) || sentMessageInfo?.pending.find((pending) => pending == email)) {
+    vastaanottaja.lahetetty = aikaleima;
+    vastaanottaja.messageId = sentMessageInfo?.messageId;
+    log.info("Email lähetetty", { sentEmail: email });
+  }
+  if (sentMessageInfo?.rejected.find((rejected) => rejected == email)) {
+    log.info("Email lähetysvirhe", { rejectedEmail: email });
+    vastaanottaja.lahetysvirhe = true;
+  }
+  // Sähköpostien lähetyksessä tapahtui virhe
+  if (!sentMessageInfo) {
+    vastaanottaja.lahetysvirhe = true;
+  }
+}
+
 async function sendAloitusKuulutusApprovalMailsAndAttachments(projekti: DBProjekti): Promise<void> {
   // aloituskuulutusjulkaisu kyllä löytyy
   const aloituskuulutus: AloitusKuulutusJulkaisu | undefined = asiakirjaAdapter.findAloitusKuulutusLastApproved(projekti);
@@ -110,15 +132,13 @@ async function sendAloitusKuulutusApprovalMailsAndAttachments(projekti: DBProjek
       throw new Error("AloituskuulutusIlmoitusPDF:n saaminen epäonnistui");
     }
     emailOptionsLahetekirje.attachments = [aloituskuulutusIlmoitusPDF];
-    await emailClient.sendEmail(emailOptionsLahetekirje);
+    const sentMessageInfo = await emailClient.sendEmail(emailOptionsLahetekirje);
 
     const aikaleima = localDateTimeString();
-    aloituskuulutus.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => {
-      kunta.lahetetty = aikaleima;
-    });
-    aloituskuulutus.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => {
-      viranomainen.lahetetty = aikaleima;
-    });
+    aloituskuulutus.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => examineEmailSentResults(kunta, sentMessageInfo, aikaleima));
+    aloituskuulutus.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) =>
+      examineEmailSentResults(viranomainen, sentMessageInfo, aikaleima)
+    );
     await projektiDatabase.aloitusKuulutusJulkaisut.update(projekti, aloituskuulutus);
   } else {
     log.error("Ilmoitus aloituskuulutuksesta sahkopostin vastaanottajia ei loytynyt");

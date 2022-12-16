@@ -548,6 +548,21 @@
         "__typename": "__Type"
       },
       {
+        "kind": "INTERFACE",
+        "name": "SahkopostiVastaanottaja",
+        "possibleTypes": [
+          {
+            "name": "KuntaVastaanottaja",
+            "__typename": "__Type"
+          },
+          {
+            "name": "ViranomaisVastaanottaja",
+            "__typename": "__Type"
+          }
+        ],
+        "__typename": "__Type"
+      },
+      {
         "kind": "OBJECT",
         "name": "StandardiYhteystiedot",
         "possibleTypes": null,

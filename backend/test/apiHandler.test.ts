@@ -33,6 +33,7 @@ import { getS3 } from "../src/aws/client";
 import { awsMockResolves, expectAwsCalls } from "./aws/awsMock";
 import { kuntametadata } from "../../common/kuntametadata";
 import { aineistoSynchronizerService } from "../src/aineisto/aineistoSynchronizerService";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 const { expect, assert } = require("chai");
 
@@ -83,8 +84,6 @@ describe("apiHandler", () => {
     persistFileToProjektiStub = sinon.stub(fileService, "persistFileToProjekti");
     sendEmailStub = sinon.stub(emailClient, "sendEmail");
 
-    sendEmailStub.resolves();
-
     pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
 
     aineistoServiceStub = sinon.stub(aineistoSynchronizerService, "synchronizeProjektiFiles");
@@ -120,6 +119,15 @@ describe("apiHandler", () => {
 
     pdfGeneratorLambdaStub.callsFake(async (event) => {
       return await pdfGenerator(event);
+    });
+
+    sendEmailStub.callsFake((options) => {
+      return Promise.resolve({
+        messageId: "messageId_test",
+        accepted: (options.to || []) as string[],
+        rejected: [],
+        pending: [],
+      } as unknown as SMTPTransport.SentMessageInfo);
     });
   });
 

@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { SahkopostiVastaanottaja } from "../../common/graphql/apiModel";
 
 export function examineKuulutusPaiva(givenKuulutusPaiva: string | null | undefined) {
   let published: boolean;
@@ -18,3 +19,11 @@ export function examineKuulutusPaiva(givenKuulutusPaiva: string | null | undefin
   }
   return { kuulutusPaiva, published };
 }
+
+export function lahetysTila(vastaanottaja: Pick<SahkopostiVastaanottaja, "lahetysvirhe" | "lahetetty">) {
+  if (vastaanottaja.lahetysvirhe) {
+    return "Lähetysvirhe";
+  }
+  return vastaanottaja.lahetetty ? "Lähetetty" : "Ei lähetetty";
+}
+

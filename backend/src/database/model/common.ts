@@ -49,17 +49,20 @@ export type IlmoituksenVastaanottajat = {
   viranomaiset?: Array<ViranomaisVastaanottaja> | null;
 };
 
+export interface SahkopostiVastaanottaja {
+  sahkoposti: string;
+  messageId?: string;
+  lahetetty?: string | null;
+  lahetysvirhe?: boolean | null;
+}
+
 export type KuntaVastaanottaja = {
   id: number;
-  sahkoposti: string;
-  lahetetty?: string | null;
-};
+} & SahkopostiVastaanottaja;
 
 export type ViranomaisVastaanottaja = {
   nimi: IlmoitettavaViranomainen;
-  sahkoposti: string;
-  lahetetty?: string | null;
-};
+} & SahkopostiVastaanottaja;
 
 export type UudelleenKuulutus = {
   tila: UudelleenkuulutusTila;

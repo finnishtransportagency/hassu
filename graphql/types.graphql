@@ -671,16 +671,24 @@ type KirjaamoOsoite {
   sahkoposti: String!
 }
 
-type ViranomaisVastaanottaja {
+interface SahkopostiVastaanottaja {
+  sahkoposti: String!
+  lahetetty: String
+  lahetysvirhe: Boolean
+}
+
+type ViranomaisVastaanottaja implements SahkopostiVastaanottaja {
   nimi: IlmoitettavaViranomainen!
   sahkoposti: String!
   lahetetty: String
+  lahetysvirhe: Boolean
 }
 
-type KuntaVastaanottaja {
+type KuntaVastaanottaja implements SahkopostiVastaanottaja {
   id: Int!
   sahkoposti: String!
   lahetetty: String
+  lahetysvirhe: Boolean
 }
 
 type SuunnitteluSopimus {

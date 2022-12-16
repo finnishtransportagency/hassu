@@ -22,6 +22,7 @@ import { handleEvent } from "../../../src/aineisto/aineistoImporterLambda";
 import { Callback, Context } from "aws-lambda";
 import { SQSRecord } from "aws-lambda/trigger/sqs";
 import assert from "assert";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 const { expect } = require("chai");
 
@@ -116,7 +117,14 @@ export class EmailClientStub {
   private emailClientStub!: sinon.SinonStub;
 
   init(): void {
-    this.emailClientStub = sinon.stub(emailClient, "sendEmail");
+    this.emailClientStub = sinon.stub(emailClient, "sendEmail").callsFake((options) => {
+      return Promise.resolve({
+        messageId: "messageId_test",
+        accepted: (options.to || []) as string[],
+        rejected: [],
+        pending: [],
+      } as unknown as SMTPTransport.SentMessageInfo);
+    });
   }
 
   verifyEmailsSent(): void {

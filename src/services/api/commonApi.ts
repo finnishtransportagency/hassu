@@ -65,12 +65,18 @@ export class API extends AbstractApi {
 
     this.publicClient = new ApolloClient({
       link: ApolloLink.from(publicLinks),
-      cache: new InMemoryCache({ fragmentMatcher }),
+      cache: new InMemoryCache({
+        fragmentMatcher,
+        dataIdFromObject: () => null, // Ilman tätä tietorakenteessa cachetetaan kaikki elementit joissa on sama id samoiksi objekteiksi, eli data korruptoituu
+      }),
       defaultOptions,
     });
     this.authenticatedClient = new ApolloClient({
       link: ApolloLink.from(authenticatedLinks),
-      cache: new InMemoryCache({ fragmentMatcher }),
+      cache: new InMemoryCache({
+        fragmentMatcher,
+        dataIdFromObject: () => null, // Ilman tätä tietorakenteessa cachetetaan kaikki elementit joissa on sama id samoiksi objekteiksi, eli data korruptoituu
+      }),
       defaultOptions,
     });
   }
