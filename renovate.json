@@ -70,7 +70,6 @@
         "eslint-config-next"
       ],
       "matchUpdateTypes": "patch",
-      "allowedVersions": "<12",
       "groupName": "nextjs"
     },
     {
