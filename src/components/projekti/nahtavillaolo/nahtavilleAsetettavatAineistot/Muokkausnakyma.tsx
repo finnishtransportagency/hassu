@@ -16,8 +16,10 @@ interface AineistoNahtavilla {
 }
 
 type FormData = {
-  aineistoNahtavilla: AineistoNahtavilla;
-  lisaAineisto: AineistoInput[];
+  nahtavillaoloVaihe: {
+    aineistoNahtavilla: AineistoNahtavilla;
+    lisaAineisto: AineistoInput[];
+  };
 };
 
 export type NahtavilleAsetettavatAineistotFormValues = Pick<TallennaProjektiInput, "oid"> & FormData;
@@ -57,8 +59,10 @@ function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
 
     return {
       oid: projekti.oid,
-      aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(projekti.nahtavillaoloVaihe?.aineistoNahtavilla),
-      lisaAineisto,
+      nahtavillaoloVaihe: {
+        aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(projekti.nahtavillaoloVaihe?.aineistoNahtavilla),
+        lisaAineisto,
+      },
     };
   }, [projekti]);
 
