@@ -21,6 +21,8 @@ import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjekti
 import PaatoksenPaiva from "@components/projekti/paatos/kuulutuksenTiedot/PaatoksenPaiva";
 import { getPaatosSpecificData, paatosIsJatkopaatos, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import Voimassaolovuosi from "./Voimassaolovuosi";
+import { getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForLokalisoituText";
+import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
 
 type paatosInputValues = Omit<HyvaksymisPaatosVaiheInput, "hallintoOikeus"> & {
   hallintoOikeus: HyvaksymisPaatosVaiheInput["hallintoOikeus"] | "";
@@ -71,6 +73,14 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
         ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, julkaisematonPaatos?.ilmoituksenVastaanottajat, kirjaamoOsoitteet),
       },
     };
+
+    if (julkaisematonPaatos?.uudelleenKuulutus) {
+      formValues.paatos.uudelleenKuulutus = getDefaultValuesForUudelleenKuulutus(
+        projekti.kielitiedot,
+        julkaisematonPaatos.uudelleenKuulutus
+      );
+    }
+
     return formValues;
   }, [projekti, julkaisematonPaatos, kirjaamoOsoitteet]);
 
@@ -79,7 +89,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues,
-    context: projekti,
+    context: { projekti, paatos: julkaisematonPaatos },
   };
 
   const useFormReturn = useForm<KuulutuksenTiedotFormValues>(formOptions);
@@ -107,6 +117,12 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
             <form>
               <fieldset disabled={!isAllowedOnRoute || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden}>
                 <KuulutusJaJulkaisuPaiva />
+                <SelitteetUudelleenkuulutukselle
+                  disabled={!voiMuokata}
+                  kielitiedot={projekti.kielitiedot}
+                  uudelleenKuulutus={julkaisematonPaatos?.uudelleenKuulutus}
+                  vaiheenAvain="paatos"
+                />
                 <PaatoksenPaiva paatosTyyppi={paatosTyyppi} paatos={kasittelyntilaData} projektiOid={projekti.oid} />
                 {paatosIsJatkopaatos(paatosTyyppi) && <Voimassaolovuosi />}
                 <MuutoksenHaku />

@@ -6,7 +6,7 @@ import lowerCase from "lodash/lowerCase";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 
-type TallennaProjektiInputAvain = keyof Pick<TallennaProjektiInput, "aloitusKuulutus" | "nahtavillaoloVaihe">;
+type TallennaProjektiInputAvain = keyof Pick<TallennaProjektiInput, "aloitusKuulutus" | "nahtavillaoloVaihe"> | "paatos";
 
 type Props = {
   uudelleenKuulutus: UudelleenKuulutus | null | undefined;

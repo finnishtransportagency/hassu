@@ -124,7 +124,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
       defaultValues,
       mode: "onChange",
       reValidateMode: "onChange",
-      context: projekti,
+      context: { projekti },
     };
   }, [defaultValues, projekti]);
 

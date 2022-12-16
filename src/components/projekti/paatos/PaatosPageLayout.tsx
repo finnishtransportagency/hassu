@@ -5,14 +5,20 @@ import { Link, Tabs } from "@mui/material";
 import { useRouter } from "next/router";
 import { UrlObject } from "url";
 import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
-import { KuulutusJulkaisuTila } from "@services/api";
+import { KuulutusJulkaisuTila, MuokkausTila } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
-import { PaatosTyyppi, getPaatosSpecificData } from "src/util/getPaatosSpecificData";
+import {
+  PaatosTyyppi,
+  getPaatosSpecificData,
+  paatosSpecificTilasiirtymaTyyppiMap,
+  getNextPaatosTyyppi,
+} from "src/util/getPaatosSpecificData";
+import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
 
 interface PaatosTyyppiSpecificData {
   paatosRoutePart: string;
@@ -50,16 +56,24 @@ function PaatosPageLayoutContent({
 }): ReactElement {
   const router = useRouter();
 
-  const { julkaisu, julkaisu: viimeisinJulkaisu } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
+  const { julkaisu, julkaisematonPaatos } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
 
-  const migroitu = viimeisinJulkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
+  const nextPaatosTyyppi = getNextPaatosTyyppi(paatosTyyppi);
+  const nextPaatosData = useMemo(
+    () => (!!nextPaatosTyyppi ? getPaatosSpecificData(projekti, nextPaatosTyyppi) : undefined),
+    [nextPaatosTyyppi, projekti]
+  );
+
+  const { mutate: reloadProjekti } = useProjekti();
+
+  const migroitu = julkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
   const { paatosRoutePart, pageTitle } = useMemo(() => paatosTyyppiSpecificContentMap[paatosTyyppi], [paatosTyyppi]);
 
   const kertaalleenLahetettyHyvaksyttavaksi = !!julkaisu;
 
-  let { kuulutusPaiva, published } = examineKuulutusPaiva(viimeisinJulkaisu?.kuulutusPaiva);
+  let { kuulutusPaiva, published } = examineKuulutusPaiva(julkaisu?.kuulutusPaiva);
 
   const tabProps: LinkTabProps[] = useMemo(() => {
     const paatosRoute = paatosRoutePart;
@@ -102,8 +116,25 @@ function PaatosPageLayoutContent({
     return indexOfTab === -1 ? false : indexOfTab;
   }, [router.pathname, tabProps]);
 
+  const showUudelleenkuulutaButton =
+    julkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY &&
+    julkaisematonPaatos?.muokkausTila === MuokkausTila.LUKU &&
+    !nextPaatosData?.julkaisu &&
+    projekti.nykyinenKayttaja.onYllapitaja;
+
   return (
-    <ProjektiPageLayout title={pageTitle}>
+    <ProjektiPageLayout
+      title={pageTitle}
+      contentAsideTitle={
+        showUudelleenkuulutaButton && (
+          <UudelleenkuulutaButton
+            oid={projekti.oid}
+            tyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]}
+            reloadProjekti={reloadProjekti}
+          />
+        )
+      }
+    >
       <Section noDivider>
         {!migroitu && !epaaktiivinen && !kertaalleenLahetettyHyvaksyttavaksi && (
           <Notification closable type={NotificationType.INFO} hideIcon>
@@ -132,17 +163,17 @@ function PaatosPageLayoutContent({
         )}
         {!epaaktiivinen && (
           <Section noDivider>
-            {!published && viimeisinJulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
+            {!published && julkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
               <Notification type={NotificationType.WARN}>Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä {kuulutusPaiva}.</Notification>
             )}
-            {published && viimeisinJulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
+            {published && julkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
               <Notification type={NotificationType.INFO_GREEN}>
                 Kuulutus nähtäville asettamisesta on julkaistu {kuulutusPaiva}. Projekti näytetään kuulutuspäivästä lasketun määräajan
                 jälkeen palvelun julkisella puolella suunnittelussa olevana. Kuulutusvaihe päättyy{" "}
-                <FormatDate date={viimeisinJulkaisu.kuulutusVaihePaattyyPaiva} />.
+                <FormatDate date={julkaisu.kuulutusVaihePaattyyPaiva} />.
               </Notification>
             )}
-            {viimeisinJulkaisu && viimeisinJulkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && (
+            {julkaisu && julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && (
               <Notification type={NotificationType.WARN}>
                 Kuulutus nähtäville asettamisesta odottaa hyväksyntää. Tarkasta kuulutus ja a) hyväksy tai b) palauta kuulutus
                 korjattavaksi, jos havaitset puutteita tai virheen.

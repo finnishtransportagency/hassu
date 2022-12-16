@@ -9,6 +9,18 @@ import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import assert from "assert";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 
+async function cleanupKuulutusAfterApproval(projekti: DBProjekti, hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe) {
+  if (hyvaksymisPaatosVaihe.palautusSyy || hyvaksymisPaatosVaihe.uudelleenKuulutus) {
+    if (hyvaksymisPaatosVaihe.palautusSyy) {
+      hyvaksymisPaatosVaihe.palautusSyy = null;
+    }
+    if (hyvaksymisPaatosVaihe.uudelleenKuulutus) {
+      hyvaksymisPaatosVaihe.uudelleenKuulutus = null;
+    }
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, hyvaksymisPaatosVaihe });
+  }
+}
+
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   getVaihe(projekti: DBProjekti): HyvaksymisPaatosVaihe {
     const hyvaksymisPaatosVaihe = projekti.hyvaksymisPaatosVaihe;
@@ -88,7 +100,8 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     if (!julkaisu) {
       throw new Error("Ei hyvaksymisPaatosVaihetta odottamassa hyväksyntää");
     }
-    await this.removeRejectionReasonIfExists(projekti, "hyvaksymisPaatosVaihe", hyvaksymisPaatosVaihe);
+    cleanupKuulutusAfterApproval(projekti, hyvaksymisPaatosVaihe);
+
     julkaisu.tila = KuulutusJulkaisuTila.HYVAKSYTTY;
     julkaisu.hyvaksyja = projektiPaallikko.uid;
 
@@ -106,6 +119,7 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
 
     const hyvaksymisPaatosVaihe = this.getVaihe(projekti);
     hyvaksymisPaatosVaihe.palautusSyy = syy;
+    hyvaksymisPaatosVaihe.id = hyvaksymisPaatosVaihe.id - 1;
     if (!julkaisu.hyvaksymisPaatosVaihePDFt) {
       throw new Error("julkaisu.hyvaksymisPaatosVaihePDFt puuttuu");
     }

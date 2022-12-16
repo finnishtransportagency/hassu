@@ -12,18 +12,11 @@ import Notification, { NotificationType } from "@components/notification/Notific
 interface Props {
   saveForm: (e?: React.BaseSyntheticEvent<object, any, any> | undefined) => Promise<void>;
   vuorovaikutus: Vuorovaikutus;
-  updateFormContext: () => void;
   muokkaustila: boolean;
   setMuokkaustila: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function JulkinenLuonnoksetJaAineistotLomake({
-  saveForm,
-  vuorovaikutus,
-  updateFormContext,
-  muokkaustila,
-  setMuokkaustila,
-}: Props) {
+export default function JulkinenLuonnoksetJaAineistotLomake({ saveForm, vuorovaikutus, muokkaustila, setMuokkaustila }: Props) {
   const { formState, reset } = useFormContext<VuorovaikutusFormValues>();
 
   return (
@@ -65,21 +58,16 @@ export default function JulkinenLuonnoksetJaAineistotLomake({
           </>
         )}
         <p>
-          Esittelyvideo tulee olla ladattuna erilliseen videojulkaisupalveluun (esim. Youtube) ja videon katselulinkki
-          tuodaan sille tarkoitettuun kenttään. Luonnokset ja muut materiaalit tuodaan Projektivelhosta.
-          Suunnitelmaluonnokset ja esittelyaineistot on mahdollista. Suunnitelmaluonnokset ja aineistot julkaistaan
-          palvelun julkisella puolella vuorovaikutuksen julkaisupäivänä.
+          Esittelyvideo tulee olla ladattuna erilliseen videojulkaisupalveluun (esim. Youtube) ja videon katselulinkki tuodaan sille
+          tarkoitettuun kenttään. Luonnokset ja muut materiaalit tuodaan Projektivelhosta. Suunnitelmaluonnokset ja esittelyaineistot on
+          mahdollista. Suunnitelmaluonnokset ja aineistot julkaistaan palvelun julkisella puolella vuorovaikutuksen julkaisupäivänä.
         </p>
         <Notification type={NotificationType.INFO_GRAY}>
           Huomioithan, että suunnitelmaluonnoksien ja esittelyaineistojen tulee täyttää saavutettavuusvaatimukset.
         </Notification>
       </Section>
       <Section>
-        <MuokkaustilainenLomake
-          hidden={!muokkaustila}
-          vuorovaikutus={vuorovaikutus}
-          updateFormContext={updateFormContext}
-        />
+        <MuokkaustilainenLomake hidden={!muokkaustila} vuorovaikutus={vuorovaikutus} />
         {!muokkaustila && <Lukutila vuorovaikutus={vuorovaikutus} />}
       </Section>
     </>

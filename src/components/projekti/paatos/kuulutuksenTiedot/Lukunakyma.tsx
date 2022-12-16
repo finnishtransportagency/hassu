@@ -18,6 +18,7 @@ import { formatDate } from "src/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { getPaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import { UudelleenKuulutusSelitteetLukutila } from "@components/projekti/lukutila/UudelleenKuulutusSelitteetLukutila";
 
 interface Props {
   julkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
@@ -50,6 +51,8 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
     hyvaksymisPaatosVaiheHref =
       window.location.protocol + "//" + window.location.host + "/suunnitelma/" + projekti.oid + "/hyvaksymispaatos";
   }
+
+  const { ensisijainenKieli, toissijainenKieli } = julkaisu.kielitiedot || {};
 
   return (
     <>
@@ -104,6 +107,13 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
           </p>
           <p className="md:col-span-3 mb-0">{kasittelyntilaData?.asianumero}</p>
         </div>
+        {julkaisu.uudelleenKuulutus && (
+          <UudelleenKuulutusSelitteetLukutila
+            uudelleenKuulutus={julkaisu.uudelleenKuulutus}
+            ensisijainenKieli={ensisijainenKieli}
+            toissijainenKieli={toissijainenKieli}
+          />
+        )}
         <p>Päätös ja sen liitteet löytyvät Päätös ja sen liitteenä oleva aineisto -välilehdeltä.</p>
       </Section>
       <Section>

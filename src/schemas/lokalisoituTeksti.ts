@@ -15,13 +15,13 @@ export const lokalisoituTeksti: LocalisoituTekstiSchema = ({
 }) =>
   Yup.object().shape({
     SUOMI: schemaWithValidations(Yup.string().required(requiredText)),
-    RUOTSI: Yup.string().when("$kielitiedot", {
+    RUOTSI: Yup.string().when("$projekti.kielitiedot", {
       is: (kielitiedot: Kielitiedot | null | undefined) =>
         [kielitiedot?.ensisijainenKieli, kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI),
       then: (schema) => schemaWithValidations(schema.required(requiredText)),
       otherwise: (schema) => schema.optional(),
     }),
-    SAAME: Yup.string().when("$kielitiedot", {
+    SAAME: Yup.string().when("$projekti.kielitiedot", {
       is: (kielitiedot: Kielitiedot | null | undefined) =>
         [kielitiedot?.ensisijainenKieli, kielitiedot?.toissijainenKieli].includes(Kieli.SAAME),
       then: (schema) => schemaWithValidations(schema.required(requiredText)),

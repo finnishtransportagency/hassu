@@ -23,6 +23,22 @@ export const paatosSpecificTilasiirtymaTyyppiMap: Record<PaatosTyyppi, Tilasiirt
   JATKOPAATOS2: TilasiirtymaTyyppi.JATKOPAATOS_2,
 };
 
+type GetNextPaatosTyyppiFunc = (paatosTyyppi: PaatosTyyppi) => PaatosTyyppi | undefined;
+export const getNextPaatosTyyppi: GetNextPaatosTyyppiFunc = (paatosTyyppi) => {
+  let nextPaatosTyyppi: PaatosTyyppi | undefined = undefined;
+  switch (paatosTyyppi) {
+    case PaatosTyyppi.HYVAKSYMISPAATOS:
+      nextPaatosTyyppi = PaatosTyyppi.JATKOPAATOS1;
+      break;
+    case PaatosTyyppi.JATKOPAATOS1:
+      nextPaatosTyyppi = PaatosTyyppi.JATKOPAATOS2;
+      break;
+    default:
+      break;
+  }
+  return nextPaatosTyyppi;
+};
+
 export interface PaatosSpecificData {
   julkaisu: HyvaksymisPaatosVaiheJulkaisu | null | undefined;
   julkaisematonPaatos: HyvaksymisPaatosVaihe | null | undefined;

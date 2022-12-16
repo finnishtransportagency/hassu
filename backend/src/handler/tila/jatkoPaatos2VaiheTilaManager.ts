@@ -9,6 +9,18 @@ import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import { assertIsDefined } from "../../util/assertions";
 import assert from "assert";
 
+async function cleanupKuulutusAfterApproval(projekti: DBProjekti, jatkoPaatos2Vaihe: HyvaksymisPaatosVaihe) {
+  if (jatkoPaatos2Vaihe.palautusSyy || jatkoPaatos2Vaihe.uudelleenKuulutus) {
+    if (jatkoPaatos2Vaihe.palautusSyy) {
+      jatkoPaatos2Vaihe.palautusSyy = null;
+    }
+    if (jatkoPaatos2Vaihe.uudelleenKuulutus) {
+      jatkoPaatos2Vaihe.uudelleenKuulutus = null;
+    }
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, jatkoPaatos2Vaihe });
+  }
+}
+
 class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   getVaihe(projekti: DBProjekti): HyvaksymisPaatosVaihe {
     const vaihe = projekti.jatkoPaatos2Vaihe;
@@ -78,7 +90,7 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     if (!julkaisu) {
       throw new Error("Ei JatkoPaatos2Vaihetta odottamassa hyväksyntää");
     }
-    await this.removeRejectionReasonIfExists(projekti, "jatkoPaatos2Vaihe", hyvaksymisPaatosVaihe);
+    cleanupKuulutusAfterApproval(projekti, hyvaksymisPaatosVaihe);
     julkaisu.tila = KuulutusJulkaisuTila.HYVAKSYTTY;
     julkaisu.hyvaksyja = projektiPaallikko.uid;
 

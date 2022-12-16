@@ -31,10 +31,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 interface Props {
   vuorovaikutus: Vuorovaikutus | undefined;
   hidden: boolean;
-  updateFormContext: () => void;
 }
 
-export default function MuokkaustilainenLomake({ vuorovaikutus, hidden, updateFormContext }: Props) {
+export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props) {
   const { data: projekti } = useProjekti();
   const [expandedEsittelyAineisto, setExpandedEsittelyAineisto] = useState<Key[]>([]);
   const [expandedSuunnitelmaLuonnokset, setExpandedSuunnitelmaLuonnokset] = useState<Key[]>([]);
@@ -231,7 +230,6 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden, updateFo
               value.push(aineisto);
             }
           });
-          updateFormContext();
           setValue("suunnitteluVaihe.vuorovaikutus.esittelyaineistot", value, { shouldDirty: true });
         }}
       />
@@ -247,7 +245,6 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden, updateFo
               value.push(aineisto);
             }
           });
-          updateFormContext();
           setValue("suunnitteluVaihe.vuorovaikutus.suunnitelmaluonnokset", value, { shouldDirty: true });
         }}
       />
