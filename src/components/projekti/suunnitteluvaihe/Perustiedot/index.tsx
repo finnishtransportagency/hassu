@@ -4,7 +4,6 @@ import { suunnittelunPerustiedotSchema } from "src/schemas/suunnittelunPerustied
 import SectionContent from "@components/layout/SectionContent";
 import {
   LinkkiInput,
-  LokalisoituTekstiInput,
   TallennaProjektiInput,
   VuorovaikutusKierrosInput,
   VuorovaikutusKierrosTila,

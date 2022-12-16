@@ -17,7 +17,7 @@ import {
 } from "react-hook-form";
 import HassuAineistoNimiExtLink from "../../HassuAineistoNimiExtLink";
 import { useProjekti } from "src/hooks/useProjekti";
-import { Aineisto, VuorovaikutusKierros } from "@services/api";
+import { Aineisto, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "@services/api";
 import HassuTable from "@components/HassuTable";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import { Column } from "react-table";
@@ -29,7 +29,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SuunnittelunPerustiedotFormValues } from "../Perustiedot";
 
 interface Props {
-  vuorovaikutus: VuorovaikutusKierros | null | undefined;
+  vuorovaikutus:
+    | Pick<VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu, "suunnitelmaluonnokset" | "esittelyaineistot">
+    | null
+    | undefined;
   hidden: boolean;
 }
 
@@ -270,7 +273,10 @@ interface AineistoTableProps {
   >;
   register: UseFormRegister<SuunnittelunPerustiedotFormValues>;
   watch: UseFormWatch<SuunnittelunPerustiedotFormValues>;
-  vuorovaikutus: VuorovaikutusKierros | null | undefined;
+  vuorovaikutus:
+    | Pick<VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu, "suunnitelmaluonnokset" | "esittelyaineistot">
+    | null
+    | undefined;
   formState: FormState<SuunnittelunPerustiedotFormValues>;
 }
 
