@@ -57,7 +57,7 @@
       "groupSlug": "aws-cdk"
     },
     {
-      "description": "@sls-next/cdk-construct=3.7.0 => next=11.1.2",
+      "description": "@sls-next/cdk-construct=3.7.0 => next=11",
       "matchPackagePatterns": [
         "^@sls-next/cdk-construct"
       ],
@@ -69,7 +69,8 @@
         "next",
         "eslint-config-next"
       ],
-      "allowedVersions": "11.1.2",
+      "matchUpdateTypes": "patch",
+      "allowedVersions": "<12",
       "groupName": "nextjs"
     },
     {
