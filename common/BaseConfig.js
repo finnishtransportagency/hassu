@@ -5,7 +5,7 @@ class BaseConfig {
   static internalBucketName = `hassu-${process.env.ENVIRONMENT}-internal`;
 
   static isPermanentEnvironment() {
-    return ["dev", "test", "prod"].indexOf(BaseConfig.env) >= 0;
+    return ["dev", "test", "training", "prod"].indexOf(BaseConfig.env) >= 0;
   }
 
   static isProductionEnvironment() {
