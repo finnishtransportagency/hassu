@@ -45,7 +45,7 @@
     "lodash": "4.17.21",
     "loglevel": "1.7.1",
     "mime-types": "2.1.35",
-    "next": "11.1.4",
+    "next": "12.0.9",
     "next-translate": "1.4.0",
     "node-cache": "5.1.2",
     "nodemailer": "6.7.2",
