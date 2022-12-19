@@ -1,6 +1,7 @@
 import * as AWSXRay from "aws-xray-sdk-core";
 import { Subsegment } from "aws-xray-sdk-core";
 import { config } from "../config";
+import "reflect-metadata";
 
 import http from "http";
 
@@ -57,7 +58,9 @@ export function getAxios(): AxiosStatic {
     AWSXRay.captureHTTPsGlobal(https, isXRayDownstreamEnabled());
     AWSXRay.capturePromise();
   }
-  return require("axios");
+  const axios = require("axios");
+  axios.defaults.timeout = 28000;
+  return axios;
 }
 
 export function setupLambdaMonitoringMetaData(subsegment: AWSXRay.Subsegment | undefined): void {

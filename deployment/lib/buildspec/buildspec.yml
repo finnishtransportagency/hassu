@@ -36,6 +36,7 @@ phases:
       - npm run deploy:database
       - npm run deploy:backend
       - npm run deploy:frontend
+      - npm run deploy:monitoring
       - npm run release
       - aws codebuild start-build --project-name Hassu-build-e2e-$ENVIRONMENT --source-version $CODEBUILD_SOURCE_VERSION
   post_build:
