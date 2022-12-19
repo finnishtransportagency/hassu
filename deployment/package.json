@@ -13,8 +13,12 @@
     "aws-cdk-local": "2.15.0",
     "aws-sdk": "2.1274.0"
   },
+  "overrides": {
+    "next": "11.1.4",
+    "eslint-config-next": "11.1.4"
+  },
   "engines": {
     "node": ">=14.17.0",
-    "npm": ">=7.21.0"
+    "npm": ">=8.3"
   }
 }

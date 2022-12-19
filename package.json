@@ -15,6 +15,7 @@
     "@fortawesome/react-fontawesome": "0.1.16",
     "@hookform/resolvers": "2.7.1",
     "@mui/icons-material": "5.4.4",
+    "@mui/system": "5.10.6",
     "@mui/material": "5.10.6",
     "@mui/x-date-pickers": "5.0.2",
     "@types/mime-types": "2.1.1",
@@ -243,6 +244,6 @@
   },
   "engines": {
     "node": ">=14.17.0",
-    "npm": ">=7.21.0"
+    "npm": ">=8.3"
   }
 }
