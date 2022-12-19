@@ -20,7 +20,7 @@ export const aloituskuulutusSchema = Yup.object().shape({
     kuulutusPaiva: paivamaara({ preventPast: "Kuulutuspäivää ei voida asettaa menneisyyteen" }).required("Kuulutuspäivä ei voi olla tyhjä"),
     siirtyySuunnitteluVaiheeseen: paivamaara(),
     uudelleenKuulutus: uudelleenKuulutus({
-      uudelleenKuulutusKey: "$aloitusKuulutus.uudelleenKuulutus",
+      uudelleenKuulutusKey: "$projekti.aloitusKuulutus.uudelleenKuulutus",
       requiredText: "Seloste on annettava",
     }),
     ilmoituksenVastaanottajat: Yup.object()

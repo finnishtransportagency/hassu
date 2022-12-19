@@ -10,7 +10,7 @@ import {
   adaptAloitusKuulutus,
   adaptAloitusKuulutusJulkaisu,
   adaptHyvaksymisPaatosVaihe,
-  adaptHyvaksymisPaatosVaiheJulkaisut,
+  adaptHyvaksymisPaatosVaiheJulkaisu,
   adaptKasittelynTila,
   adaptNahtavillaoloVaihe,
   adaptNahtavillaoloVaiheJulkaisu,
@@ -79,9 +79,10 @@ export class ProjektiAdapter {
       hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(
         hyvaksymisPaatosVaihe,
         dbProjekti.kasittelynTila?.hyvaksymispaatos,
-        projektiPath.hyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe)
+        projektiPath.hyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe),
+        hyvaksymisPaatosVaiheJulkaisut
       ),
-      hyvaksymisPaatosVaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
+      hyvaksymisPaatosVaiheJulkaisu: adaptHyvaksymisPaatosVaiheJulkaisu(
         dbProjekti.kasittelynTila?.hyvaksymispaatos,
         hyvaksymisPaatosVaiheJulkaisut,
         (julkaisu) => new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(julkaisu)
@@ -89,9 +90,10 @@ export class ProjektiAdapter {
       jatkoPaatos1Vaihe: adaptHyvaksymisPaatosVaihe(
         jatkoPaatos1Vaihe,
         dbProjekti.kasittelynTila?.ensimmainenJatkopaatos,
-        projektiPath.jatkoPaatos1Vaihe(jatkoPaatos1Vaihe)
+        projektiPath.jatkoPaatos1Vaihe(jatkoPaatos1Vaihe),
+        jatkoPaatos1VaiheJulkaisut
       ),
-      jatkoPaatos1VaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
+      jatkoPaatos1VaiheJulkaisu: adaptHyvaksymisPaatosVaiheJulkaisu(
         dbProjekti.kasittelynTila?.ensimmainenJatkopaatos,
         jatkoPaatos1VaiheJulkaisut,
         (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos1Vaihe(julkaisu)
@@ -99,9 +101,10 @@ export class ProjektiAdapter {
       jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaihe(
         jatkoPaatos2Vaihe,
         dbProjekti.kasittelynTila?.toinenJatkopaatos,
-        projektiPath.jatkoPaatos2Vaihe(jatkoPaatos2Vaihe)
+        projektiPath.jatkoPaatos2Vaihe(jatkoPaatos2Vaihe),
+        jatkoPaatos2VaiheJulkaisut
       ),
-      jatkoPaatos2VaiheJulkaisut: adaptHyvaksymisPaatosVaiheJulkaisut(
+      jatkoPaatos2VaiheJulkaisu: adaptHyvaksymisPaatosVaiheJulkaisu(
         dbProjekti.kasittelynTila?.toinenJatkopaatos,
         jatkoPaatos2VaiheJulkaisut,
         (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos2Vaihe(julkaisu)

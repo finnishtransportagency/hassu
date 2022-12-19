@@ -1,14 +1,6 @@
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
-import {
-  HyvaksymisPaatosVaihe,
-  HyvaksymisPaatosVaiheJulkaisu,
-  KuulutusJulkaisuTila,
-  KayttajaTyyppi,
-  ProjektiKayttaja,
-  Yhteystieto,
-  YhteystietoInput,
-} from "@services/api";
+import { HyvaksymisPaatosVaihe, KayttajaTyyppi, ProjektiKayttaja, Yhteystieto, YhteystietoInput, MuokkausTila } from "@services/api";
 import Section from "@components/layout/Section";
 import { Fragment, ReactElement, useMemo } from "react";
 import Button from "@components/button/Button";
@@ -23,7 +15,6 @@ import replace from "lodash/replace";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./index";
 import { formatNimi } from "../../../../util/userUtil";
-import { PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import projektiKayttajaToYhteystieto, { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 
 const defaultYhteystieto: YhteystietoInput = {
@@ -35,18 +26,12 @@ const defaultYhteystieto: YhteystietoInput = {
 };
 
 interface Props {
-  paatosTyyppi: PaatosTyyppi;
-  julkaisut: HyvaksymisPaatosVaiheJulkaisu[] | null | undefined;
   projekti: ProjektiLisatiedolla;
   julkaisematonPaatos: HyvaksymisPaatosVaihe | null | undefined;
 }
 
-function hasHyvaksyttyPaatosVaiheJulkaisu(julkaisut: HyvaksymisPaatosVaiheJulkaisu[] | null | undefined) {
-  return (julkaisut?.filter((julkaisu) => julkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY) || []).length > 0;
-}
-
-export default function EsitettavatYhteystiedot({ julkaisut, projekti, julkaisematonPaatos }: Props): ReactElement {
-  const eiVoiMuokata = hasHyvaksyttyPaatosVaiheJulkaisu(julkaisut);
+export default function EsitettavatYhteystiedot({ projekti, julkaisematonPaatos }: Props): ReactElement {
+  const voiMuokata = !julkaisematonPaatos?.muokkausTila || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS;
 
   const {
     register,
@@ -95,7 +80,7 @@ export default function EsitettavatYhteystiedot({ julkaisut, projekti, julkaisem
     return arr.map((hlo) => ({ kayttajatunnus: hlo.kayttajatunnus, ...projektiKayttajaToYhteystieto(hlo, projekti?.suunnitteluSopimus) }));
   }, [projekti]);
 
-  if (eiVoiMuokata) {
+  if (!voiMuokata) {
     return (
       <Section>
         <SectionContent>

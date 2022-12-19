@@ -100,8 +100,8 @@ export class Kuulutus31 extends CommonPdf {
 
   protected addDocumentElements(): PDFStructureElement[] {
     return [
-      this.paragraph(this.startOfPlanningPhrase),
       this.uudelleenKuulutusParagraph(),
+      this.paragraph(this.startOfPlanningPhrase),
       this.pidetaanNahtavillaParagraph(),
       this.lahetettyOmistajilleParagraph(),
       this.localizedParagraph([

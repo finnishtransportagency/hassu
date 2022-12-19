@@ -153,6 +153,7 @@ export class Kuulutus60 extends CommonPdf {
   private paragraphs(): PDFStructureElement[] {
     if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
       return [
+        this.uudelleenKuulutusParagraph(),
         this.paragraphFromKey("asiakirja.kuulutus_hyvaksymispaatoksesta.tie_kappale1"),
         this.paragraphFromKey("asiakirja.kuulutus_hyvaksymispaatoksesta.tie_kappale2"),
         this.paragraphFromKey("asiakirja.kuulutus_hyvaksymispaatoksesta.tie_kappale3"),
@@ -161,9 +162,10 @@ export class Kuulutus60 extends CommonPdf {
         this.tietosuojaParagraph(),
         this.lisatietojaAntavatParagraph(),
         this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, null, true)),
-      ];
+      ].filter((elem): elem is PDFStructureElement => !!elem);
     } else if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       return [
+        this.uudelleenKuulutusParagraph(),
         this.paragraphFromKey("asiakirja.kuulutus_hyvaksymispaatoksesta.rata_kappale1"),
         this.paragraphFromKey("asiakirja.kuulutus_hyvaksymispaatoksesta.rata_kappale2"),
         this.paragraphBold(this.kutsuAdapter.text("asiakirja.kuulutus_hyvaksymispaatoksesta.nahtavilla_oleva_aineisto") + ":"),
@@ -172,10 +174,16 @@ export class Kuulutus60 extends CommonPdf {
         this.tietosuojaParagraph(),
         this.lisatietojaAntavatParagraph(),
         this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, null, true)),
-      ];
+      ].filter((elem): elem is PDFStructureElement => !!elem);
     }
 
     return [];
+  }
+
+  protected uudelleenKuulutusParagraph(): PDFStructureElement | undefined {
+    if (this.hyvaksymisPaatosVaihe.uudelleenKuulutus?.selosteKuulutukselle) {
+      return this.localizedParagraphFromMap(this.hyvaksymisPaatosVaihe.uudelleenKuulutus?.selosteKuulutukselle);
+    }
   }
 
   private nahtavillaoloaikaParagraph(): PDFStructureElement | undefined {

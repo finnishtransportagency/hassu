@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import { ilmoituksenVastaanottajat, standardiYhteystiedot } from "./common";
 import { paivamaara } from "./paivamaaraSchema";
+import { uudelleenKuulutus } from "./uudelleenKuulutus";
 
 export const hyvaksymispaatosKuulutusSchema = Yup.object().shape({
   oid: Yup.string().required(),
@@ -12,6 +13,10 @@ export const hyvaksymispaatosKuulutusSchema = Yup.object().shape({
       kuulutusPaiva: paivamaara({ preventPast: "Kuulutuspäivää ei voida asettaa menneisyyteen" }).required(
         "Kuulutuspäivä ei voi olla tyhjä"
       ),
+      uudelleenKuulutus: uudelleenKuulutus({
+        uudelleenKuulutusKey: "$paatos.uudelleenKuulutus",
+        requiredText: "Seloste on annettava",
+      }),
       kuulutusVaihePaattyyPaiva: paivamaara(),
       ilmoituksenVastaanottajat: ilmoituksenVastaanottajat(),
     }),

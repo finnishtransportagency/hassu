@@ -1,28 +1,25 @@
 import React, { useMemo, VoidFunctionComponent } from "react";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
-import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { getPaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
-import PaatosAineistotLukutila from "../lukutila/PaatosAineistotLukutila";
-import PaatosAineistot from "@components/projekti/paatos/aineistot/index";
 import PaatosPageLayout from "./PaatosPageLayout";
+import { MuokkausTila } from "@services/api";
+import Muokkausnakyma from "./aineistot/Muokkausnakyma";
+import Lukunakyma from "./aineistot/Lukunakyma";
 
 export const PaatoksenAineistotPage: VoidFunctionComponent<{ projekti: ProjektiLisatiedolla; paatosTyyppi: PaatosTyyppi }> = ({
   projekti,
   paatosTyyppi,
 }) => {
-  const { viimeisinJulkaisu, julkaisematonPaatos, julkaisut } = useMemo(
-    () => getPaatosSpecificData(projekti, paatosTyyppi),
-    [paatosTyyppi, projekti]
-  );
+  const { julkaisematonPaatos } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
 
-  const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
+  const voiMuokata = !julkaisematonPaatos?.muokkausTila || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS;
 
   return (
     <PaatosPageLayout paatosTyyppi={paatosTyyppi}>
-      {epaaktiivinen && viimeisinJulkaisu ? (
-        <PaatosAineistotLukutila oid={projekti.oid} paatosJulkaisu={viimeisinJulkaisu} />
+      {voiMuokata ? (
+        <Muokkausnakyma julkaisematonPaatos={julkaisematonPaatos} paatosTyyppi={paatosTyyppi} />
       ) : (
-        <PaatosAineistot projekti={projekti} julkaisut={julkaisut} julkaisematonPaatos={julkaisematonPaatos} paatosTyyppi={paatosTyyppi} />
+        <Lukunakyma paatosTyyppi={paatosTyyppi} projekti={projekti} />
       )}
     </PaatosPageLayout>
   );

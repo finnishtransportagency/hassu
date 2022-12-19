@@ -10,10 +10,8 @@ export const yhteystietoSchema = Yup.object()
       "puhelinnumero-not-in-kayttoOikeudet",
       "Tieto löytyy projektin henkilöistä. Valitse henkilö projektiin tallennettujen listasta",
       function (puhelinnumero) {
-        const projekti = this.options.context as Projekti;
-        return !projekti?.kayttoOikeudet?.some(
-          (kayttaja) => kayttaja.puhelinnumero && kayttaja.puhelinnumero === puhelinnumero
-        );
+        const projekti = (this.options.context as any).projekti as Projekti;
+        return !projekti?.kayttoOikeudet?.some((kayttaja) => kayttaja.puhelinnumero && kayttaja.puhelinnumero === puhelinnumero);
       }
     ),
     sahkoposti: Yup.string()
@@ -23,7 +21,7 @@ export const yhteystietoSchema = Yup.object()
         "sahkoposti-not-in-kayttoOikeudet",
         "Tieto löytyy projektin henkilöistä. Valitse henkilö projektiin tallennettujen listasta",
         function (sahkoposti) {
-          const projekti = this.options.context as Projekti;
+          const projekti = (this.options.context as any).projekti as Projekti;
           return !projekti?.kayttoOikeudet?.some((kayttaja) => kayttaja.email && kayttaja.email === sahkoposti);
         }
       ),

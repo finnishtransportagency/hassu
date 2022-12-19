@@ -7,6 +7,20 @@ import { AbstractHyvaksymisPaatosVaiheTilaManager } from "./abstractHyvaksymisPa
 import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import { assertIsDefined } from "../../util/assertions";
+import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
+import assert from "assert";
+
+async function cleanupKuulutusAfterApproval(projekti: DBProjekti, jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe) {
+  if (jatkoPaatos1Vaihe.palautusSyy || jatkoPaatos1Vaihe.uudelleenKuulutus) {
+    if (jatkoPaatos1Vaihe.palautusSyy) {
+      jatkoPaatos1Vaihe.palautusSyy = null;
+    }
+    if (jatkoPaatos1Vaihe.uudelleenKuulutus) {
+      jatkoPaatos1Vaihe.uudelleenKuulutus = null;
+    }
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, jatkoPaatos1Vaihe });
+  }
+}
 
 class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   getVaihe(projekti: DBProjekti): HyvaksymisPaatosVaihe {
@@ -24,7 +38,23 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     kuulutus: HyvaksymisPaatosVaihe,
     hyvaksyttyJulkaisu: HyvaksymisPaatosVaiheJulkaisu | undefined
   ): void {
-    // TODO
+    // Tarkista, että on olemassa hyväksytty julkaisu, jonka perua
+    if (!hyvaksyttyJulkaisu) {
+      throw new IllegalArgumentError("Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa");
+    }
+    // Jatkopäätös1Vaiheen uudelleenkuuluttaminen on mahdollista vain jos JatkoPaatos2VaiheJulkaisua ei ole
+    const apiProjekti = projektiAdapter.adaptProjekti(projekti);
+    const isJatkoPaatos2Present = !!apiProjekti.jatkoPaatos2VaiheJulkaisu;
+    if (isJatkoPaatos2Present) {
+      throw new IllegalArgumentError(
+        "Et voi uudelleenkuuluttaa jatkopäätös1kuulutusta sillä jatkopäätös2kuulutus on jo hyväksytty tai se on hyväksyttävänä"
+      );
+    }
+    assert(kuulutus, "Projektilla pitäisi olla jatkopäätös1kuulutus, jos sitä uudelleenkuulutetaan");
+    // Uudelleenkuulutus ei ole mahdollista jos uudelleenkuulutus on jo olemassa
+    if (kuulutus.uudelleenKuulutus) {
+      throw new IllegalArgumentError("Et voi uudelleenkuuluttaa jatkopäätös1kuulutusta, koska uudelleenkuulutus on jo olemassa");
+    }
   }
 
   getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: HyvaksymisPaatosVaihe | null | undefined): PathTuple {
@@ -69,7 +99,7 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     if (!julkaisu) {
       throw new Error("Ei JatkoPaatos1Vaihetta odottamassa hyväksyntää");
     }
-    await this.removeRejectionReasonIfExists(projekti, "jatkoPaatos1Vaihe", hyvaksymisPaatosVaihe);
+    cleanupKuulutusAfterApproval(projekti, hyvaksymisPaatosVaihe);
     julkaisu.tila = KuulutusJulkaisuTila.HYVAKSYTTY;
     julkaisu.hyvaksyja = projektiPaallikko.uid;
 

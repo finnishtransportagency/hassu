@@ -12,6 +12,7 @@ import { Stack } from "@mui/material";
 import KansalaisenAineistoNakyma from "../common/KansalaisenAineistoNakyma";
 import { HyvaksymisPaatosVaiheJulkaisuJulkinen } from "@services/api";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 
 interface Props {
   kuulutus: HyvaksymisPaatosVaiheJulkaisuJulkinen | null | undefined;
@@ -20,6 +21,7 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
   const { t, lang } = useTranslation();
   const { data: projekti } = useProjektiJulkinen();
   const velho = kuulutus?.velho;
+  const kieli = useKansalaiskieli();
 
   if (!projekti || !kuulutus || !velho) {
     return <div />;
@@ -54,6 +56,7 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
     <>
       <Section noDivider>
         <KeyValueTable rows={keyValueData}></KeyValueTable>
+        {kuulutus?.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && <p>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</p>}
       </Section>
       <Section noDivider className="pb-6 mb-6">
         <div style={{ marginTop: "1rem" }}>

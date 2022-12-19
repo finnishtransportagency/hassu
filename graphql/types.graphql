@@ -117,11 +117,11 @@ type Projekti implements IProjekti {
   nahtavillaoloVaihe: NahtavillaoloVaihe
   nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe
-  hyvaksymisPaatosVaiheJulkaisut: [HyvaksymisPaatosVaiheJulkaisu!]
+  hyvaksymisPaatosVaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu
   jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe
-  jatkoPaatos1VaiheJulkaisut: [HyvaksymisPaatosVaiheJulkaisu!]
+  jatkoPaatos1VaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu
   jatkoPaatos2Vaihe: HyvaksymisPaatosVaihe
-  jatkoPaatos2VaiheJulkaisut: [HyvaksymisPaatosVaiheJulkaisu!]
+  jatkoPaatos2VaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu
   velho: Velho!
   kayttoOikeudet: [ProjektiKayttaja!]
   """
@@ -230,7 +230,9 @@ type HyvaksymisPaatosVaihe {
   kuulutusYhteystiedot: StandardiYhteystiedot
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   palautusSyy: String
+  muokkausTila: MuokkausTila!
   viimeinenVoimassaolovuosi: String
+  uudelleenKuulutus: UudelleenKuulutus
 }
 
 type NahtavillaoloVaiheJulkaisu {
@@ -269,6 +271,7 @@ type HyvaksymisPaatosVaiheJulkaisu {
   muokkaaja: String
   hyvaksyja: String
   viimeinenVoimassaolovuosi: String
+  uudelleenKuulutus: UudelleenKuulutus
 }
 
 type NahtavillaoloVaiheJulkaisuJulkinen {
@@ -299,6 +302,7 @@ type HyvaksymisPaatosVaiheJulkaisuJulkinen {
   hyvaksymisPaatosVaihePDFt: HyvaksymisPaatosVaihePDFt
   tila: KuulutusJulkaisuTila
   viimeinenVoimassaolovuosi: String
+  uudelleenKuulutus: UudelleenKuulutus
 }
 
 type NahtavillaoloPDF {

@@ -10,7 +10,6 @@ import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import assert from "assert";
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
 import { NahtavillaoloKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakirjaTypes";
-import { findJulkaisuWithTila } from "../../projekti/projektiUtil";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import { assertIsDefined } from "../../util/assertions";
 import dayjs from "dayjs";
@@ -86,11 +85,13 @@ class NahtavillaoloTilaManager extends TilaManager<NahtavillaoloVaihe, Nahtavill
     if (!hyvaksyttyJulkaisu) {
       throw new IllegalArgumentError("Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa");
     }
-    // Nähtävilläolovaiheen uudelleenkuuluttaminen on mahdollista vain jos hyväksymispäätöskuulutusta ei ole hyväksytty
+    // Nähtävilläolovaiheen uudelleenkuuluttaminen on mahdollista vain jos hyväksymispäätöskuulutusjulkaisua ei ole
     const apiProjekti = projektiAdapter.adaptProjekti(projekti);
-    const hyvaksyttyHyvaksymisPaatos = findJulkaisuWithTila(apiProjekti.hyvaksymisPaatosVaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-    if (hyvaksyttyHyvaksymisPaatos) {
-      throw new IllegalArgumentError("Et voi uudelleenkuuluttaa nähtävilläolokuulutusta sillä hyväksymiskuulutus on jo hyväksytty");
+    const isHyvaksymisPaatosPresent = !!apiProjekti.hyvaksymisPaatosVaiheJulkaisu;
+    if (isHyvaksymisPaatosPresent) {
+      throw new IllegalArgumentError(
+        "Et voi uudelleenkuuluttaa nähtävilläolokuulutusta sillä hyväksymiskuulutus on jo hyväksytty tai se on hyväksyttävänä"
+      );
     }
     assert(kuulutus, "Projektilla pitäisi olla nahtavillaolokuulutus, jos sitä uudelleenkuulutetaan");
     // Uudelleenkuulutus ei ole mahdollista jos uudelleenkuulutus on jo olemassa

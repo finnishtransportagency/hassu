@@ -7,29 +7,14 @@ interface Props {
   muokkaustila: boolean;
   setMuokkaustila: React.Dispatch<React.SetStateAction<boolean>>;
   saveForm: (e?: React.BaseSyntheticEvent<object, any, any> | undefined) => Promise<void>;
-  updateFormContext: () => void;
 }
 
-export default function LuonnoksetJaAineistot({
-  saveForm,
-  vuorovaikutus,
-  updateFormContext,
-  muokkaustila,
-  setMuokkaustila,
-}: Props) {
+export default function LuonnoksetJaAineistot({ saveForm, vuorovaikutus, muokkaustila, setMuokkaustila }: Props) {
   const julkinen = vuorovaikutus?.julkinen;
 
   if (julkinen) {
-    return (
-      <Julkinen
-        muokkaustila={muokkaustila}
-        setMuokkaustila={setMuokkaustila}
-        saveForm={saveForm}
-        vuorovaikutus={vuorovaikutus}
-        updateFormContext={updateFormContext}
-      />
-    );
+    return <Julkinen muokkaustila={muokkaustila} setMuokkaustila={setMuokkaustila} saveForm={saveForm} vuorovaikutus={vuorovaikutus} />;
   }
 
-  return <EiJulkinen vuorovaikutus={vuorovaikutus} updateFormContext={updateFormContext} />;
+  return <EiJulkinen vuorovaikutus={vuorovaikutus} />;
 }

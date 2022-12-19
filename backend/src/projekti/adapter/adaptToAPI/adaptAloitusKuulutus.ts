@@ -22,7 +22,7 @@ export function adaptAloitusKuulutus(
     if (!kuulutus.hankkeenKuvaus) {
       throw new Error("adaptAloituskuulutus: kuulutus.hankkeenKuvaus puuttuu");
     }
-    const { kuulutusYhteystiedot, uudelleenKuulutus: uudelleenKuulutus, id: _id, ...otherKuulutusFields } = kuulutus;
+    const { kuulutusYhteystiedot, uudelleenKuulutus, id: _id, ...otherKuulutusFields } = kuulutus;
     return {
       __typename: "AloitusKuulutus",
       ...otherKuulutusFields,

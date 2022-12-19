@@ -116,8 +116,8 @@ export class Kuulutus30 extends CommonPdf {
       "RUOTSIKSI Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §). ",
     ]);
     return [
-      this.paragraph(this.startOfPlanningPhrase),
       this.uudelleenKuulutusParagraph(),
+      this.paragraph(this.startOfPlanningPhrase),
       this.localizedParagraph([
         `Kuulutus on julkaistu tietoverkossa ${this.tilaajaGenetiivi} verkkosivuilla ${this.kuulutusPaiva}. ${hallintolaki62}`,
         `RUOTSIKSI Kuulutus on julkaistu tietoverkossa ${this.tilaajaGenetiivi} verkkosivuilla ${this.kuulutusPaiva}. ${hallintolaki62}`,

@@ -120,7 +120,10 @@ export function validateTallennaProjekti(projekti: DBProjekti, input: TallennaPr
   const apiProjekti = projektiAdapter.adaptProjekti(projekti);
   validateKasittelynTila(projekti, apiProjekti, input);
   validateVarahenkiloModifyPermissions(projekti, input);
-  validateUudelleenKuulutus(projekti.aloitusKuulutus?.uudelleenKuulutus, input.aloitusKuulutus?.uudelleenKuulutus);
   validateSuunnitteluSopimus(projekti, input);
+  validateUudelleenKuulutus(projekti.aloitusKuulutus?.uudelleenKuulutus, input.aloitusKuulutus?.uudelleenKuulutus);
   validateUudelleenKuulutus(projekti.nahtavillaoloVaihe?.uudelleenKuulutus, input.nahtavillaoloVaihe?.uudelleenKuulutus);
+  validateUudelleenKuulutus(projekti.hyvaksymisPaatosVaihe?.uudelleenKuulutus, input.hyvaksymisPaatosVaihe?.uudelleenKuulutus);
+  validateUudelleenKuulutus(projekti.jatkoPaatos1Vaihe?.uudelleenKuulutus, input.jatkoPaatos1Vaihe?.uudelleenKuulutus);
+  validateUudelleenKuulutus(projekti.jatkoPaatos2Vaihe?.uudelleenKuulutus, input.jatkoPaatos2Vaihe?.uudelleenKuulutus);
 }

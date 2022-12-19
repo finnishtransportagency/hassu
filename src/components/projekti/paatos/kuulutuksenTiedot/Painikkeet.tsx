@@ -2,7 +2,7 @@ import Button from "@components/button/Button";
 import HassuSpinner from "@components/HassuSpinner";
 import Section from "@components/layout/Section";
 import { Stack } from "@mui/material";
-import { api, HyvaksymisPaatosVaiheJulkaisu, Status } from "@services/api";
+import { api, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu, MuokkausTila, Status } from "@services/api";
 import log from "loglevel";
 import { useRouter } from "next/router";
 import React, { useState, useCallback, useRef, useEffect } from "react";
@@ -22,11 +22,12 @@ type PalautusValues = {
 };
 interface Props {
   projekti: ProjektiLisatiedolla;
-  julkaisut: HyvaksymisPaatosVaiheJulkaisu[] | null | undefined;
+  julkaisu: HyvaksymisPaatosVaiheJulkaisu | null | undefined;
   paatosTyyppi: PaatosTyyppi;
+  julkaisematonPaatos: HyvaksymisPaatosVaihe | null | undefined;
 }
 
-export default function Painikkeet({ projekti, julkaisut, paatosTyyppi }: Props) {
+export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisematonPaatos }: Props) {
   const { mutate: reloadProjekti } = useProjekti();
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
@@ -138,13 +139,9 @@ export default function Painikkeet({ projekti, julkaisut, paatosTyyppi }: Props)
     await vaihdaHyvaksymisPaatosVaiheenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
   }, [vaihdaHyvaksymisPaatosVaiheenTila]);
 
-  const voiMuokata = !julkaisut;
+  const voiMuokata = !julkaisematonPaatos?.muokkausTila || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS;
 
-  const voiHyvaksya =
-    julkaisut &&
-    julkaisut.length &&
-    julkaisut[julkaisut.length - 1].tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA &&
-    projekti?.nykyinenKayttaja.onProjektipaallikko;
+  const voiHyvaksya = julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && projekti?.nykyinenKayttaja.onProjektipaallikko;
 
   return (
     <>

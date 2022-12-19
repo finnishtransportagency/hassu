@@ -7,6 +7,19 @@ import { AbstractHyvaksymisPaatosVaiheTilaManager } from "./abstractHyvaksymisPa
 import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import { assertIsDefined } from "../../util/assertions";
+import assert from "assert";
+
+async function cleanupKuulutusAfterApproval(projekti: DBProjekti, jatkoPaatos2Vaihe: HyvaksymisPaatosVaihe) {
+  if (jatkoPaatos2Vaihe.palautusSyy || jatkoPaatos2Vaihe.uudelleenKuulutus) {
+    if (jatkoPaatos2Vaihe.palautusSyy) {
+      jatkoPaatos2Vaihe.palautusSyy = null;
+    }
+    if (jatkoPaatos2Vaihe.uudelleenKuulutus) {
+      jatkoPaatos2Vaihe.uudelleenKuulutus = null;
+    }
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, jatkoPaatos2Vaihe });
+  }
+}
 
 class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   getVaihe(projekti: DBProjekti): HyvaksymisPaatosVaihe {
@@ -20,11 +33,19 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
   }
 
   validateUudelleenkuulutus(
-    projekti: DBProjekti,
+    _projekti: DBProjekti,
     kuulutus: HyvaksymisPaatosVaihe,
     hyvaksyttyJulkaisu: HyvaksymisPaatosVaiheJulkaisu | undefined
   ): void {
-    // TODO
+    // Tarkista, että on olemassa hyväksytty julkaisu, jonka perua
+    if (!hyvaksyttyJulkaisu) {
+      throw new IllegalArgumentError("Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa");
+    }
+    assert(kuulutus, "Projektilla pitäisi olla jatkopäätös2kuulutus, jos sitä uudelleenkuulutetaan");
+    // Uudelleenkuulutus ei ole mahdollista jos uudelleenkuulutus on jo olemassa
+    if (kuulutus.uudelleenKuulutus) {
+      throw new IllegalArgumentError("Et voi uudelleenkuuluttaa jatkopäätös2kuulutusta, koska uudelleenkuulutus on jo olemassa");
+    }
   }
 
   getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: HyvaksymisPaatosVaihe | null | undefined): PathTuple {
@@ -69,7 +90,7 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     if (!julkaisu) {
       throw new Error("Ei JatkoPaatos2Vaihetta odottamassa hyväksyntää");
     }
-    await this.removeRejectionReasonIfExists(projekti, "jatkoPaatos2Vaihe", hyvaksymisPaatosVaihe);
+    cleanupKuulutusAfterApproval(projekti, hyvaksymisPaatosVaihe);
     julkaisu.tila = KuulutusJulkaisuTila.HYVAKSYTTY;
     julkaisu.hyvaksyja = projektiPaallikko.uid;
 

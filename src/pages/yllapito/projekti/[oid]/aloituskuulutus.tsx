@@ -166,7 +166,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     defaultValues,
     mode: "onChange",
     reValidateMode: "onChange",
-    context: projekti,
+    context: { projekti },
   };
 
   const useFormReturn = useForm<FormValues>(formOptions);

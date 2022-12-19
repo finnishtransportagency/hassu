@@ -109,7 +109,7 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
   const [aineistoMuokkaustila, setAineistoMuokkaustila] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
-  const [formContext, setFormContext] = useState<VuorovaikutusFormValues>();
+  const formContext: { projekti: ProjektiLisatiedolla } = useMemo(() => ({ projekti }), [projekti]);
 
   const vuorovaikutus = useMemo(
     () =>
@@ -188,10 +188,6 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
   const vuorovaikutustilaisuudet = watch("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet");
 
   useLeaveConfirm(isDirty);
-
-  const updateFormContext = useCallback(() => {
-    setFormContext(getValues());
-  }, [setFormContext, getValues]);
 
   const saveSunnitteluvaihe = useCallback(
     async (formData: VuorovaikutusFormValues) => {
@@ -309,7 +305,6 @@ function SuunnitteluvaiheenVuorovaikuttaminenForm({
               muokkaustila={aineistoMuokkaustila}
               setMuokkaustila={setAineistoMuokkaustila}
               vuorovaikutus={vuorovaikutus}
-              updateFormContext={updateFormContext}
             />
             <EsitettavatYhteystiedot vuorovaikutusnro={vuorovaikutusnro} projektiHenkilot={projektiHenkilot} />
             {vuorovaikutus?.julkinen && <LukutilaLinkkiJaKutsut vuorovaikutus={vuorovaikutus} projekti={projekti} />}

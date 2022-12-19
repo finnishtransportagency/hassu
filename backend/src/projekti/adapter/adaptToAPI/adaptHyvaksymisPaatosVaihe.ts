@@ -17,11 +17,14 @@ import {
 } from "../common";
 import { fileService } from "../../../files/fileService";
 import { PathTuple } from "../../../files/ProjektiPath";
+import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
+import { adaptUudelleenKuulutus } from "./adaptAloitusKuulutus";
 
 export function adaptHyvaksymisPaatosVaihe(
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | null | undefined,
   hyvaksymisPaatos: Hyvaksymispaatos | null | undefined,
-  paths: PathTuple
+  paths: PathTuple,
+  hyvaksymisPaatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[] | null | undefined
 ): API.HyvaksymisPaatosVaihe | undefined {
   if (!hyvaksymisPaatosVaihe) {
     return undefined;
@@ -31,6 +34,7 @@ export function adaptHyvaksymisPaatosVaihe(
     hyvaksymisPaatos: hyvaksymisPaatosAineisto,
     kuulutusYhteystiedot,
     ilmoituksenVastaanottajat,
+    uudelleenKuulutus,
     ...rest
   } = hyvaksymisPaatosVaihe;
 
@@ -43,72 +47,80 @@ export function adaptHyvaksymisPaatosVaihe(
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
     hyvaksymisPaatoksenPvm: hyvaksymisPaatos?.paatoksenPvm || undefined,
     hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos?.asianumero || undefined,
+    muokkausTila: adaptMuokkausTila(hyvaksymisPaatosVaihe, hyvaksymisPaatosVaiheJulkaisut),
+    uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
   };
 }
 
-export function adaptHyvaksymisPaatosVaiheJulkaisut(
+export function adaptHyvaksymisPaatosVaiheJulkaisu(
   hyvaksymisPaatos: Hyvaksymispaatos | null | undefined,
   julkaisut: HyvaksymisPaatosVaiheJulkaisu[] | null | undefined,
   getPathCallback: (julkaisu: HyvaksymisPaatosVaiheJulkaisu) => PathTuple
-): API.HyvaksymisPaatosVaiheJulkaisu[] | undefined {
-  if (julkaisut) {
-    return julkaisut.map((julkaisu) => {
-      const {
-        aineistoNahtavilla,
-        hyvaksymisPaatos: hyvaksymisPaatosAineisto,
-        ilmoituksenVastaanottajat,
-        yhteystiedot,
-        hyvaksymisPaatosVaihePDFt,
-        kielitiedot,
-        velho,
-        tila,
-        ...fieldsToCopyAsIs
-      } = julkaisu;
+): API.HyvaksymisPaatosVaiheJulkaisu | undefined {
+  const julkaisu =
+    findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ||
+    findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY) ||
+    findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.MIGROITU);
 
-      if (tila == KuulutusJulkaisuTila.MIGROITU) {
-        return { __typename: "HyvaksymisPaatosVaiheJulkaisu", tila, velho: adaptVelho(velho) };
-      }
-
-      if (!aineistoNahtavilla) {
-        throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: julkaisu.aineistoNahtavilla määrittelemättä");
-      }
-      if (!hyvaksymisPaatosVaihePDFt) {
-        throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: julkaisu.hyvaksymisPaatosVaihePDFt määrittelemättä");
-      }
-      if (!hyvaksymisPaatos) {
-        throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatos puuttuu");
-      }
-      if (!hyvaksymisPaatos.paatoksenPvm) {
-        throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatos.paatoksenPvm määrittelemättä");
-      }
-      if (!hyvaksymisPaatos.asianumero) {
-        throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatos.asianumero määrittelemättä");
-      }
-      if (!ilmoituksenVastaanottajat) {
-        throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatos.ilmoituksenVastaanottajat määrittelemättä");
-      }
-      if (!kielitiedot) {
-        throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatos.kielitiedot määrittelemättä");
-      }
-      const paths = getPathCallback(julkaisu);
-      const apijulkaisu: API.HyvaksymisPaatosVaiheJulkaisu = {
-        ...fieldsToCopyAsIs,
-        __typename: "HyvaksymisPaatosVaiheJulkaisu",
-        kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
-        hyvaksymisPaatosVaihePDFt: adaptHyvaksymisPaatosVaihePDFPaths(hyvaksymisPaatosVaihePDFt, paths),
-        aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
-        hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto, paths),
-        hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
-        hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,
-        yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
-        ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-        velho: adaptVelho(velho),
-        tila,
-      };
-      return apijulkaisu;
-    });
+  if (!julkaisu) {
+    return undefined;
   }
-  return undefined;
+
+  const {
+    aineistoNahtavilla,
+    hyvaksymisPaatos: hyvaksymisPaatosAineisto,
+    ilmoituksenVastaanottajat,
+    yhteystiedot,
+    hyvaksymisPaatosVaihePDFt,
+    kielitiedot,
+    velho,
+    tila,
+    uudelleenKuulutus,
+    ...fieldsToCopyAsIs
+  } = julkaisu;
+
+  if (tila == KuulutusJulkaisuTila.MIGROITU) {
+    return { __typename: "HyvaksymisPaatosVaiheJulkaisu", tila, velho: adaptVelho(velho) };
+  }
+
+  if (!aineistoNahtavilla) {
+    throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: julkaisu.aineistoNahtavilla määrittelemättä");
+  }
+  if (!hyvaksymisPaatosVaihePDFt) {
+    throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: julkaisu.hyvaksymisPaatosVaihePDFt määrittelemättä");
+  }
+  if (!hyvaksymisPaatos) {
+    throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatos puuttuu");
+  }
+  if (!hyvaksymisPaatos.paatoksenPvm) {
+    throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatos.paatoksenPvm määrittelemättä");
+  }
+  if (!hyvaksymisPaatos.asianumero) {
+    throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatos.asianumero määrittelemättä");
+  }
+  if (!ilmoituksenVastaanottajat) {
+    throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatos.ilmoituksenVastaanottajat määrittelemättä");
+  }
+  if (!kielitiedot) {
+    throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatos.kielitiedot määrittelemättä");
+  }
+  const paths = getPathCallback(julkaisu);
+  const apijulkaisu: API.HyvaksymisPaatosVaiheJulkaisu = {
+    ...fieldsToCopyAsIs,
+    __typename: "HyvaksymisPaatosVaiheJulkaisu",
+    kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
+    hyvaksymisPaatosVaihePDFt: adaptHyvaksymisPaatosVaihePDFPaths(hyvaksymisPaatosVaihePDFt, paths),
+    aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
+    hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto, paths),
+    hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
+    hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,
+    yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
+    ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
+    velho: adaptVelho(velho),
+    tila,
+    uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
+  };
+  return apijulkaisu;
 }
 
 function adaptHyvaksymisPaatosVaihePDFPaths(

@@ -130,6 +130,12 @@ export class Kuulutus61 extends CommonPdf {
     return formatDate(this.hyvaksymisPaatosVaihe?.kuulutusPaiva);
   }
 
+  protected uudelleenKuulutusParagraph(): PDFStructureElement | undefined {
+    if (this.hyvaksymisPaatosVaihe.uudelleenKuulutus?.selosteKuulutukselle) {
+      return this.localizedParagraphFromMap(this.hyvaksymisPaatosVaihe.uudelleenKuulutus?.selosteKuulutukselle);
+    }
+  }
+
   kuulutusvaihepaattyypaiva(): string {
     return formatDate(this.hyvaksymisPaatosVaihe.kuulutusVaihePaattyyPaiva);
   }
@@ -175,6 +181,7 @@ export class Kuulutus61 extends CommonPdf {
       return [
         this.headerElement(this.header, false),
         this.headerElement(this.kutsuAdapter.title, false),
+        this.uudelleenKuulutusParagraph(),
         this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.hyvaksymispaatoksesta_ilmoittaminen"),
         this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.tie_kappale1"),
         this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.toimivaltaisen_viranomaisen_kuulutuksesta_ilmoittaminen"),
@@ -184,10 +191,11 @@ export class Kuulutus61 extends CommonPdf {
         this.tietosuojaParagraph(),
         this.lisatietojaAntavatParagraph(),
         this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, null, true)),
-      ];
+      ].filter((elem): elem is PDFStructureElement => !!elem);
     } else if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       return [
         this.headerElement(this.kutsuAdapter.title, false),
+        this.uudelleenKuulutusParagraph(),
         this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.hyvaksymispaatoksesta_ilmoittaminen"),
         this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.rata_kunnille_elylle_kappale1"),
         this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.rata_kunnille_elylle_kappale2"),
@@ -200,7 +208,7 @@ export class Kuulutus61 extends CommonPdf {
         this.tietosuojaParagraph(),
         this.lisatietojaAntavatParagraph(),
         this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, null, true)),
-      ];
+      ].filter((elem): elem is PDFStructureElement => !!elem);
     }
 
     return [];

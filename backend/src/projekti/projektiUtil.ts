@@ -1,7 +1,11 @@
-import { AloitusKuulutusJulkaisu, DBVaylaUser, NahtavillaoloVaiheJulkaisu, UudelleenKuulutus } from "../database/model";
+import { DBVaylaUser, NahtavillaoloVaiheJulkaisu as DbNahtavillaoloVaiheJulkaisu, UudelleenKuulutus } from "../database/model";
 import { parseDate } from "../util/dateUtil";
 import { assertIsDefined } from "../util/assertions";
-import { KuulutusJulkaisuTila, MuokkausTila } from "../../../common/graphql/apiModel";
+import {
+  KuulutusJulkaisuTila,
+  MuokkausTila,
+  NahtavillaoloVaiheJulkaisu as ApiNahtavillaoloVaiheJulkaisu,
+} from "../../../common/graphql/apiModel";
 
 export type GenericKuulutus = {
   tila?: KuulutusJulkaisuTila | null | undefined;
@@ -10,32 +14,37 @@ export type GenericKuulutus = {
   uudelleenKuulutus?: UudelleenKuulutus | null;
 };
 
-export type GenericKuulutusJulkaisu = Pick<
-  AloitusKuulutusJulkaisu & NahtavillaoloVaiheJulkaisu,
+export type GenericDbKuulutusJulkaisu = Pick<
+  DbNahtavillaoloVaiheJulkaisu,
   "tila" | "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva" | "uudelleenKuulutus" | "hyvaksymisPaiva"
 >;
 
-export function findJulkaisutWithTila<J extends GenericKuulutusJulkaisu>(
+export type GenericApiKuulutusJulkaisu = Pick<
+  ApiNahtavillaoloVaiheJulkaisu,
+  "tila" | "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva" | "uudelleenKuulutus"
+>;
+
+export function findJulkaisutWithTila<J extends GenericDbKuulutusJulkaisu>(
   julkaisut: J[] | undefined | null,
   tila: KuulutusJulkaisuTila
 ): J[] | undefined {
   return julkaisut?.filter((julkaisu) => julkaisu.tila == tila)?.sort(sortMostRecentkuulutusLast);
 }
 
-export function findJulkaisuWithTila<J extends GenericKuulutusJulkaisu>(
+export function findJulkaisuWithTila<J extends GenericDbKuulutusJulkaisu>(
   julkaisut: J[] | undefined | null,
   tila: KuulutusJulkaisuTila
 ): J | undefined {
   return findJulkaisutWithTila(julkaisut, tila)?.pop();
 }
 
-function sortMostRecentkuulutusLast<J extends GenericKuulutusJulkaisu>(julkaisu1: J, julkaisu2: J) {
+function sortMostRecentkuulutusLast<J extends GenericDbKuulutusJulkaisu>(julkaisu1: J, julkaisu2: J) {
   assertIsDefined(julkaisu1.kuulutusPaiva);
   assertIsDefined(julkaisu2.kuulutusPaiva);
   return parseDate(julkaisu1.kuulutusPaiva).unix() - parseDate(julkaisu2.kuulutusPaiva).unix();
 }
 
-export function findJulkaisuWithId<J extends GenericKuulutusJulkaisu>(
+export function findJulkaisuWithId<J extends GenericDbKuulutusJulkaisu>(
   julkaisut: (J & { id?: number })[] | undefined | null,
   id: number
 ): J | undefined {
@@ -49,7 +58,7 @@ export function findUserByKayttajatunnus(kayttoOikeudet: DBVaylaUser[], kayttaja
   return kayttoOikeudet.find((value) => value.kayttajatunnus == kayttajatunnus);
 }
 
-export function adaptMuokkausTila<J extends GenericKuulutusJulkaisu>(kuulutus: J, julkaisut: J[] | null | undefined): MuokkausTila {
+export function adaptMuokkausTila<J extends GenericDbKuulutusJulkaisu>(kuulutus: J, julkaisut: J[] | null | undefined): MuokkausTila {
   // Migroitu on aina migroitu, ei luku- eikä muokkaustila
   if (findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.MIGROITU)) {
     return MuokkausTila.MIGROITU;

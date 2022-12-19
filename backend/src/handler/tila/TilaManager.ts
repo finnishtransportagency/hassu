@@ -11,14 +11,14 @@ import { emailHandler } from "../emailHandler";
 import { DBProjekti, UudelleenkuulutusTila } from "../../database/model";
 import { requireAdmin, requireOmistaja } from "../../user/userService";
 import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
-import { findJulkaisuWithTila, GenericKuulutus, GenericKuulutusJulkaisu } from "../../projekti/projektiUtil";
+import { findJulkaisuWithTila, GenericKuulutus, GenericDbKuulutusJulkaisu } from "../../projekti/projektiUtil";
 import { assertIsDefined } from "../../util/assertions";
 import { isKuulutusPaivaInThePast } from "../../projekti/status/projektiJulkinenStatusHandler";
 import { fileService } from "../../files/fileService";
 import { PathTuple } from "../../files/ProjektiPath";
 import { auditLog } from "../../logger";
 
-export abstract class TilaManager<T extends GenericKuulutus, Y extends GenericKuulutusJulkaisu> {
+export abstract class TilaManager<T extends GenericKuulutus, Y extends GenericDbKuulutusJulkaisu> {
   protected tyyppi!: TilasiirtymaTyyppi;
 
   abstract getVaihe(projekti: DBProjekti): T;

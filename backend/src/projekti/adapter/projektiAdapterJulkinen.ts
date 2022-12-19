@@ -284,6 +284,7 @@ class ProjektiAdapterJulkinen {
       kielitiedot,
       hallintoOikeus,
       tila,
+      uudelleenKuulutus,
     } = julkaisu;
 
     if (tila == KuulutusJulkaisuTila.MIGROITU) {
@@ -326,6 +327,7 @@ class ProjektiAdapterJulkinen {
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
       hallintoOikeus,
       tila,
+      uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
     };
   }
 }

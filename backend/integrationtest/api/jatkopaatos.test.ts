@@ -130,8 +130,8 @@ export async function testJatkoPaatos1VaiheApproval(
   });
 
   const projektiHyvaksyttavaksi = await loadProjektiFromDatabase(oid, expectedStatus);
-  expect(projektiHyvaksyttavaksi.jatkoPaatos1VaiheJulkaisut).to.have.length(1);
-  expect(projektiHyvaksyttavaksi.jatkoPaatos1VaiheJulkaisut![0].tila).to.eq(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
+  expect(projektiHyvaksyttavaksi.jatkoPaatos1VaiheJulkaisu).to.not.be.undefined;
+  expect(projektiHyvaksyttavaksi.jatkoPaatos1VaiheJulkaisu?.tila).to.eq(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
 
   await api.siirraTila({
     oid,
@@ -141,7 +141,7 @@ export async function testJatkoPaatos1VaiheApproval(
   const projekti = await loadProjektiFromDatabase(oid, expectedStatus);
   expectToMatchSnapshot("testJatkoPaatos1VaiheAfterApproval", {
     jatkoPaatos1Vaihe: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.jatkoPaatos1Vaihe!),
-    jatkoPaatos1VaiheJulkaisut: projekti.jatkoPaatos1VaiheJulkaisut!.map(cleanupHyvaksymisPaatosVaiheTimestamps),
+    jatkoPaatos1VaiheJulkaisut: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.jatkoPaatos1VaiheJulkaisu!),
   });
 
   await testPublicAccessToProjekti(
@@ -170,8 +170,8 @@ export async function testJatkoPaatos2VaiheApproval(
   });
 
   const projektiHyvaksyttavaksi = await loadProjektiFromDatabase(oid, expectedStatus);
-  expect(projektiHyvaksyttavaksi.jatkoPaatos2VaiheJulkaisut).to.have.length(1);
-  expect(projektiHyvaksyttavaksi.jatkoPaatos2VaiheJulkaisut![0].tila).to.eq(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
+  expect(projektiHyvaksyttavaksi.jatkoPaatos2VaiheJulkaisu).to.not.be.undefined;
+  expect(projektiHyvaksyttavaksi.jatkoPaatos2VaiheJulkaisu?.tila).to.eq(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
 
   await api.siirraTila({
     oid,
@@ -181,7 +181,7 @@ export async function testJatkoPaatos2VaiheApproval(
   const projekti = await loadProjektiFromDatabase(oid, expectedStatus);
   expectToMatchSnapshot("testJatkoPaatos2VaiheAfterApproval", {
     jatkoPaatos2Vaihe: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.jatkoPaatos1Vaihe!),
-    jatkoPaatos2VaiheJulkaisut: projekti.jatkoPaatos2VaiheJulkaisut!.map(cleanupHyvaksymisPaatosVaiheTimestamps),
+    jatkoPaatos2VaiheJulkaisut: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.jatkoPaatos2VaiheJulkaisu!),
   });
 
   await testPublicAccessToProjekti(

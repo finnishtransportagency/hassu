@@ -127,7 +127,7 @@ function NahtavillaoloPageLayout({
   const showUudelleenkuulutaButton =
     projekti.nahtavillaoloVaiheJulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY &&
     projekti.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.LUKU &&
-    !projekti.hyvaksymisPaatosVaiheJulkaisut &&
+    !projekti.hyvaksymisPaatosVaiheJulkaisu &&
     projekti.nykyinenKayttaja.onYllapitaja;
 
   return (

@@ -103,10 +103,6 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends TilaManag
       }
     }
   }
-
-  async uudelleenkuuluta(_projekti: DBProjekti): Promise<void> {
-    throw new Error("Not yet implemented");
-  }
 }
 
 async function createPDF(

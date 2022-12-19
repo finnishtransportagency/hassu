@@ -81,7 +81,7 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues,
-    context: projekti,
+    context: { projekti },
   };
 
   const useFormReturn = useForm<KuulutuksenTiedotFormValues>(formOptions);
