@@ -2,25 +2,28 @@
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
 const muuTunnus = "A-tunnus2 Hassu";
+const muuEmail = "mikko.haapamaki01@cgi.com";
 const muuNumero = "029123456";
 
 describe("Projektin henkilot", () => {
-  before(() => {
+  beforeEach(() => {
     cy.abortEarly();
     cy.login("A1");
   });
 
-  // Uncomment if new user or kunnan edustaja causes problems in later tests
-  // after(() => {
-  //   cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid);
-  //   cy.get("#suunnittelusopimus_yhteyshenkilo").select(1);
-  //   cy.get("#save").click();
+  // Clean up so new user or municipality representative wont cause problems in later tests
+  // and also for for re-runnability
+  after(() => {
+    cy.login("A1");
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid);
+    cy.get("#suunnittelusopimus_yhteyshenkilo").select(1);
+    cy.get("#save").click();
 
-  //   cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
-  //   cy.get("input[name $='yleinenYhteystieto']").last().scrollIntoView();
-  //   cy.get("button[id^='poista']").last().click();
-  //   cy.get("#save_projekti").click();
-  // });
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
+    cy.get("input[name $='yleinenYhteystieto']").last().scrollIntoView();
+    cy.get("[data-testid='poista.kayttoOikeudet.2']").click(); //TODO button elementtien tavalliset nimi ja id selectorit + .last() ei tunnu toimivan
+    cy.get("#save_projekti").click();
+  });
 
   it("Tarkista projektin henkilot velhosta", () => {
     //projektipaallikko

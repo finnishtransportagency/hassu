@@ -17,7 +17,7 @@ const lisatietoteksti = "Käsittelyn tilanne päivitetään seurantapalverin jä
 const valitustenMaara = "3";
 
 describe("Kasittelyn tila", () => {
-  before(() => {
+  beforeEach(() => {
     cy.abortEarly();
     cy.login("A1");
   });

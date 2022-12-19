@@ -315,7 +315,7 @@ const UserFields = ({
             {muokattavissa && (
               <div>
                 <IconButton
-                  id={`kayttoOikeudet.${index}.poista`}
+                  data-testid={`poista.kayttoOikeudet.${index}`}
                   sx={{ marginTop: 5.5 }}
                   onClick={() => {
                     if (muokattavissa) {
@@ -397,6 +397,7 @@ const UserFields = ({
           endIcon="trash"
           disabled={disableFields || !muokattavissa}
           type="button"
+          data-testid={`poista.kayttoOikeudet.${index}`}
         >
           Poista
         </Button>
