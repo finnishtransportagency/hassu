@@ -75,7 +75,6 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
-  const [formContext, setFormContext] = useState<SuunnittelunPerustiedotFormValues>();
 
   const api = useApi();
 
@@ -112,7 +111,6 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues,
-    context: formContext,
   };
 
   const useFormReturn = useForm<SuunnittelunPerustiedotFormValues>(formOptions);
@@ -121,7 +119,6 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     handleSubmit,
     formState: { isDirty },
     control,
-    getValues,
   } = useFormReturn;
 
   useLeaveConfirm(isDirty);
@@ -205,10 +202,6 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
 
   const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useProjektiHenkilot(projekti);
 
-  const updateFormContext = useCallback(() => {
-    setFormContext(getValues());
-  }, [setFormContext, getValues]);
-
   return (
     <>
       {julkinen && (
@@ -220,7 +213,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       <FormProvider {...useFormReturn}>
         <form>
           <SuunnittelunEteneminenJaArvioKestosta />
-          <EiJulkinenLuonnoksetJaAineistotLomake vuorovaikutus={projekti.vuorovaikutusKierros} updateFormContext={updateFormContext} />
+          <EiJulkinenLuonnoksetJaAineistotLomake vuorovaikutus={projekti.vuorovaikutusKierros} />
           <Section>
             <h4 className="vayla-small-title">Kysymykset ja palautteet</h4>
             <SectionContent>

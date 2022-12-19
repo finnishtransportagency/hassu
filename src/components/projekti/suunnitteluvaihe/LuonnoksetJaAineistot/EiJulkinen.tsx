@@ -4,7 +4,7 @@ import { VuorovaikutusKierros } from "@services/api";
 import MuokkaustilainenLomake from "./MuokkaustilainenLomake";
 
 interface Props {
-  vuorovaikutus: VuorovaikutusKierros | undefined;
+  vuorovaikutus: VuorovaikutusKierros | null | undefined;
 }
 
 export default function EiJulkinenLuonnoksetJaAineistotLomake({ vuorovaikutus }: Props) {
