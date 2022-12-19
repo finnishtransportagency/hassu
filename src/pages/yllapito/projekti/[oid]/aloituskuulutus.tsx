@@ -233,6 +233,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       }
       setIsFormSubmitting(false);
       setOpen(false);
+      setOpenHyvaksy(false);
     },
     [setIsFormSubmitting, reloadProjekti, showSuccessMessage, showErrorMessage, setOpen, projekti]
   );
