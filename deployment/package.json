@@ -11,7 +11,9 @@
     "aws-cdk": "2.53.0",
     "aws-cdk-lib": "2.53.0",
     "aws-cdk-local": "2.15.0",
-    "aws-sdk": "2.1274.0"
+    "aws-sdk": "2.1274.0",
+    "semantic-release": "19.0.3",
+    "@semantic-release/exec": "6.0.2"
   },
   "overrides": {
     "next": "11.1.4",
