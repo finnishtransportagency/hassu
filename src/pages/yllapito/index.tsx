@@ -1,5 +1,4 @@
 import {
-  api,
   ListaaProjektitInput,
   ProjektiHakutulos,
   ProjektiHakutulosDokumentti,
@@ -30,6 +29,7 @@ import omitUnnecessaryFields from "src/util/omitUnnecessaryFields";
 import { formatDate } from "src/util/dateUtils";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import HassuTable from "@components/HassuTable";
+import useApi from "src/hooks/useApi";
 
 const DEFAULT_TYYPPI = ProjektiTyyppi.TIE;
 const DEFAULT_PROJEKTI_SARAKE = ProjektiSarake.PAIVITETTY;
@@ -89,6 +89,7 @@ const defaultFormData: ListaaProjektitInput = {
 };
 
 const VirkamiesHomePage = () => {
+  const api = useApi();
   const [sivunumero, setSivunumero] = useState(0);
   const [jarjestysKasvava, setJarjestysKasvava] = useState(DEFAULT_JARJESTYS_KASVAVA);
   const [jarjestysSarake, setJarjestysSarake] = useState(DEFAULT_PROJEKTI_SARAKE);
@@ -103,30 +104,33 @@ const VirkamiesHomePage = () => {
   const aktiivinenTabi = projektiTyyppi || (epaaktiivinen ? "epaaktiiviset" : "") || DEFAULT_TYYPPI;
   const { register, handleSubmit, reset, control } = useForm<ListaaProjektitInput>({ defaultValues: defaultFormData });
 
-  const fetchProjektit = useCallback(async (input: ListaaProjektitInput) => {
-    setIsLoading(true);
-    const searchData = omitUnnecessaryFields(input);
-    setSearchInput(searchData);
-    setSivunumero(searchData.sivunumero || 0);
-    setJarjestysKasvava(searchData.jarjestysKasvava || DEFAULT_JARJESTYS_KASVAVA);
-    setJarjestysSarake(searchData.jarjestysSarake || DEFAULT_PROJEKTI_SARAKE);
-    try {
-      const result = await api.listProjektit(searchData);
-      // log.info("listProjektit:", result);
-      setHakutulos(result);
-    } catch (e: any) {
-      log.error("Error listing projektit", e);
-      if (e.errors) {
-        e.errors.map((err: any) => {
-          const response = err.originalError?.response;
-          const httpStatus = response?.status;
-          log.error("HTTP Status: " + httpStatus + "\n" + err.stack);
-        });
+  const fetchProjektit = useCallback(
+    async (input: ListaaProjektitInput) => {
+      setIsLoading(true);
+      const searchData = omitUnnecessaryFields(input);
+      setSearchInput(searchData);
+      setSivunumero(searchData.sivunumero || 0);
+      setJarjestysKasvava(searchData.jarjestysKasvava || DEFAULT_JARJESTYS_KASVAVA);
+      setJarjestysSarake(searchData.jarjestysSarake || DEFAULT_PROJEKTI_SARAKE);
+      try {
+        const result = await api.listProjektit(searchData);
+        // log.info("listProjektit:", result);
+        setHakutulos(result);
+      } catch (e: any) {
+        log.error("Error listing projektit", e);
+        if (e.errors) {
+          e.errors.map((err: any) => {
+            const response = err.originalError?.response;
+            const httpStatus = response?.status;
+            log.error("HTTP Status: " + httpStatus + "\n" + err.stack);
+          });
+        }
+        setHakutulos({ __typename: "ProjektiHakutulos" });
       }
-      setHakutulos({ __typename: "ProjektiHakutulos" });
-    }
-    setIsLoading(false);
-  }, []);
+      setIsLoading(false);
+    },
+    [api]
+  );
 
   // This useEffect reads router.query and resets formdata and does datafetching
   // This routing triggers only once as searchInput is initially set to undefined and 'falsy' values are never assigned to it

@@ -1,16 +1,23 @@
 import useSWR, { Fetcher, SWRConfiguration } from "swr";
-import { api, apiConfig, NykyinenKayttaja, Projekti, KayttajaTyyppi } from "@services/api";
+import { apiConfig, NykyinenKayttaja, Projekti, KayttajaTyyppi } from "@services/api";
 import useCurrentUser from "./useCurrentUser";
 import { useRouter } from "next/router";
+import useApi from "./useApi";
+import { API } from "@services/api/commonApi";
+import { useMemo } from "react";
 
 export type useProjektiOptions = SWRConfiguration<ProjektiLisatiedolla | null, any, Fetcher<ProjektiLisatiedolla | null>> | undefined;
 
 export function useProjekti(config: useProjektiOptions = {}) {
+  const api = useApi();
   const router = useRouter();
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
   if (!router.asPath.startsWith("/yllapito")) {
     throw new Error("Inproper route for the use of useProjekti hook");
   }
+
+  const projektiLoader = useMemo(() => getProjektiLoader(api), [api]);
+
   const { data: kayttaja } = useCurrentUser();
   return useSWR([apiConfig.lataaProjekti.graphql, oid, kayttaja], projektiLoader, config);
 }
@@ -21,7 +28,7 @@ interface ProjektiLisatiedot {
 
 export type ProjektiLisatiedolla = Projekti & ProjektiLisatiedot;
 
-async function projektiLoader(_query: string, oid: string | undefined, kayttaja: NykyinenKayttaja | undefined) {
+const getProjektiLoader = (api: API) => async (_query: string, oid: string | undefined, kayttaja: NykyinenKayttaja | undefined) => {
   if (!oid) {
     return null;
   }
@@ -37,7 +44,7 @@ async function projektiLoader(_query: string, oid: string | undefined, kayttaja:
     ...projekti,
     ...lisatiedot,
   } as ProjektiLisatiedolla;
-}
+};
 
 const userIsAdmin = (kayttaja?: NykyinenKayttaja) => !!kayttaja?.roolit?.includes("hassu_admin");
 const userHasAccessToProjekti = ({ kayttaja, projekti }: { kayttaja?: NykyinenKayttaja; projekti?: Projekti }) =>

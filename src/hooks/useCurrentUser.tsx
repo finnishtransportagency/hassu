@@ -1,14 +1,21 @@
 import useSWR from "swr";
-import { api, apiConfig } from "@services/api";
+import { apiConfig } from "@services/api";
 import { isEqual, omit } from "lodash";
+import useApi from "./useApi";
+import { API } from "@services/api/commonApi";
+import { useMemo } from "react";
 
 export function useCurrentUser() {
+  const api = useApi();
+
+  const userLoader = useMemo(() => getUserLoader(api), [api]);
+
   return useSWR([apiConfig.nykyinenKayttaja.graphql], userLoader, {
     compare: (a, b) => isEqual(omit(a, "keksit"), omit(b, "keksit")),
   });
 }
 
-async function userLoader(_: string) {
+const getUserLoader = (api: API) => async (_: string) => {
   const kayttaja = await api.getCurrentUser();
   if (kayttaja?.keksit) {
     kayttaja.keksit.forEach((cookie) => {
@@ -16,6 +23,6 @@ async function userLoader(_: string) {
     });
   }
   return kayttaja;
-}
+};
 
 export default useCurrentUser;

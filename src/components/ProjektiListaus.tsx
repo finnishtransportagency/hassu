@@ -1,13 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { api, Kieli, ProjektiHakutulosDokumentti, ProjektiHakutulosJulkinen } from "@services/api";
+import { Kieli, ProjektiHakutulosDokumentti, ProjektiHakutulosJulkinen } from "@services/api";
 import log from "loglevel";
 import HassuTable from "./HassuTable";
 import useTranslation from "next-translate/useTranslation";
 import { formatDate } from "src/util/dateUtils";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import { Column } from "react-table";
+import useApi from "src/hooks/useApi";
 
 export default function ProjektiListaus() {
+  const api = useApi();
   const [hakutulos, setHakutulos] = useState<ProjektiHakutulosJulkinen>();
   const { t } = useTranslation();
 
@@ -31,7 +33,7 @@ export default function ProjektiListaus() {
     }
 
     fetchProjektit();
-  }, []);
+  }, [api]);
 
   const columns = useMemo<Column<ProjektiHakutulosDokumentti>[]>(
     () => [

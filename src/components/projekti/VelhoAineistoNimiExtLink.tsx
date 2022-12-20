@@ -1,6 +1,6 @@
-import { api } from "@services/api";
 import ExtLink from "@components/ExtLink";
 import log from "loglevel";
+import useApi from "src/hooks/useApi";
 import { useProjekti } from "src/hooks/useProjekti";
 
 interface Props {
@@ -11,6 +11,7 @@ interface Props {
 
 const VelhoAineistoNimiExtLink = ({ aineistoNimi, aineistoOid, addTopMargin }: Props) => {
   const { data: projekti } = useProjekti();
+  const api = useApi();
   return (
     <ExtLink
       as="button"

@@ -2,10 +2,11 @@ import Button from "@components/button/Button";
 import HassuSpinner from "@components/HassuSpinner";
 import Section from "@components/layout/Section";
 import { Stack } from "@mui/material";
-import { api, TallennaProjektiInput } from "@services/api";
+import { TallennaProjektiInput } from "@services/api";
 import log from "loglevel";
 import React, { useState } from "react";
 import { useFormContext } from "react-hook-form";
+import useApi from "src/hooks/useApi";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
@@ -32,6 +33,7 @@ export default function NahtavillaoloPainikkeet() {
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
 
   const { handleSubmit, reset } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
+  const api = useApi();
 
   const saveSuunnitteluvaihe = async (formData: NahtavilleAsetettavatAineistotFormValues) => {
     const tallennaProjektiInput: TallennaProjektiInput = mapFormValuesToTallennaProjektiInput(formData);

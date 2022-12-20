@@ -8,7 +8,7 @@ import { FormProvider, useForm, UseFormProps, Controller, FieldError } from "rea
 import { palauteSchema } from "src/schemas/vuorovaikutus";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useTranslation from "next-translate/useTranslation";
-import { VuorovaikutusJulkinen, PalauteInput, api } from "@services/api";
+import { VuorovaikutusJulkinen, PalauteInput } from "@services/api";
 import { formatDate } from "src/util/dateUtils";
 import TextInput from "@components/form/TextInput";
 import Textarea from "@components/form/Textarea";
@@ -19,6 +19,7 @@ import axios from "axios";
 import HassuSpinner from "@components/HassuSpinner";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
+import useApi from "src/hooks/useApi";
 
 interface Props {
   open: boolean;
@@ -70,16 +71,21 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
     reset,
   } = useFormReturn;
 
-  const talletaTiedosto = useCallback(async (tiedosto: File) => {
-    const contentType = (tiedosto as Blob).type || "application/octet-stream";
-    const response = await api.valmisteleTiedostonLataus(tiedosto.name, contentType);
-    await axios.put(response.latausLinkki, tiedosto, {
-      headers: {
-        "Content-Type": contentType,
-      },
-    });
-    return response.tiedostoPolku;
-  }, []);
+  const api = useApi();
+
+  const talletaTiedosto = useCallback(
+    async (tiedosto: File) => {
+      const contentType = (tiedosto as Blob).type || "application/octet-stream";
+      const response = await api.valmisteleTiedostonLataus(tiedosto.name, contentType);
+      await axios.put(response.latausLinkki, tiedosto, {
+        headers: {
+          "Content-Type": contentType,
+        },
+      });
+      return response.tiedostoPolku;
+    },
+    [api]
+  );
 
   const save = useCallback(
     async (formData: PalauteFormInput) => {
@@ -103,7 +109,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
       }
       setFormIsSubmitting(false);
     },
-    [tiedosto, projektiOid, showSuccessMessage, t, onClose, reset, talletaTiedosto, showErrorMessage]
+    [tiedosto, api, projektiOid, showSuccessMessage, t, onClose, reset, talletaTiedosto, showErrorMessage]
   );
 
   return (

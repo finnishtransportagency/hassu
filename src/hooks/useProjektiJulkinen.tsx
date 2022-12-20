@@ -1,9 +1,16 @@
 import useSWR from "swr";
-import { api, apiConfig, ProjektiJulkinen } from "@services/api";
+import { apiConfig, ProjektiJulkinen } from "@services/api";
 import { useRouter } from "next/router";
+import useApi from "./useApi";
+import { API } from "@services/api/commonApi";
+import { useMemo } from "react";
 
 export function useProjektiJulkinen() {
   const router = useRouter();
+  const api = useApi();
+
+  const projektiLoader = useMemo(() => getProjektiLoader(api), [api]);
+
   if (router.asPath.startsWith("/yllapito")) {
     throw new Error("Inproper route for the use of useProjektiJulkinen hook");
   }
@@ -11,9 +18,11 @@ export function useProjektiJulkinen() {
   return useSWR([apiConfig.lataaProjekti.graphql, oid], projektiLoader, { revalidateOnReconnect: true, revalidateIfStale: true });
 }
 
-async function projektiLoader(_query: string, oid: string | undefined): Promise<ProjektiJulkinen | null> {
-  if (!oid) {
-    return null;
-  }
-  return await api.lataaProjektiJulkinen(oid);
-}
+const getProjektiLoader =
+  (api: API) =>
+  async (_query: string, oid: string | undefined): Promise<ProjektiJulkinen | null> => {
+    if (!oid) {
+      return null;
+    }
+    return await api.lataaProjektiJulkinen(oid);
+  };

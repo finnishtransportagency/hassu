@@ -2,9 +2,10 @@ import Button from "@components/button/Button";
 import HassuDialog from "@components/HassuDialog";
 import HassuSpinner from "@components/HassuSpinner";
 import { DialogActions, DialogContent, DialogProps } from "@mui/material";
-import { api, TilaSiirtymaInput, TilasiirtymaToiminto } from "@services/api";
+import { TilaSiirtymaInput, TilasiirtymaToiminto } from "@services/api";
 import log from "loglevel";
 import React, { useCallback, useEffect, useRef, useState, VoidFunctionComponent } from "react";
+import useApi from "src/hooks/useApi";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import { KeyedMutator } from "swr";
@@ -54,6 +55,8 @@ const UudelleenkuulutaModal: VoidFunctionComponent<DialogProps & { buttonProps: 
 
   const closeDialog: React.MouseEventHandler<HTMLButtonElement> = useCallback((e) => onClose?.(e, "escapeKeyDown"), [onClose]);
 
+  const api = useApi();
+
   const avaaUudelleenkuulutettavaksi: React.MouseEventHandler<HTMLButtonElement> = useCallback(
     async (event) => {
       const isMounted = mountedRef.current;
@@ -82,7 +85,7 @@ const UudelleenkuulutaModal: VoidFunctionComponent<DialogProps & { buttonProps: 
         setIsLoading(false);
       }
     },
-    [closeDialog, oid, reloadProjekti, showErrorMessage, showSuccessMessage, tyyppi]
+    [api, closeDialog, oid, reloadProjekti, showErrorMessage, showSuccessMessage, tyyppi]
   );
 
   return (

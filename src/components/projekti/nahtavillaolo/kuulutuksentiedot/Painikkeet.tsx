@@ -2,7 +2,7 @@ import Button from "@components/button/Button";
 import HassuSpinner from "@components/HassuSpinner";
 import Section from "@components/layout/Section";
 import { Stack } from "@mui/material";
-import { api, MuokkausTila } from "@services/api";
+import { MuokkausTila } from "@services/api";
 import log from "loglevel";
 import { useRouter } from "next/router";
 import React, { useState, useCallback, useRef, useEffect } from "react";
@@ -13,6 +13,7 @@ import { TilasiirtymaToiminto, TilasiirtymaTyyppi, KuulutusJulkaisuTila, Projekt
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./KuulutuksenTiedot";
 import Modaalit from "./Modaalit";
+import useApi from "src/hooks/useApi";
 
 type PalautusValues = {
   syy: string;
@@ -40,13 +41,15 @@ export default function Painikkeet({ projekti }: Props) {
 
   const { handleSubmit, reset } = useFormContext<KuulutuksenTiedotFormValues>();
 
+  const api = useApi();
+
   const saveSuunnitteluvaihe = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
       await api.tallennaProjekti(formData);
       if (reloadProjekti) await reloadProjekti();
       reset(formData);
     },
-    [reloadProjekti, reset]
+    [api, reloadProjekti, reset]
   );
 
   const saveDraft = async (formData: KuulutuksenTiedotFormValues) => {
@@ -83,7 +86,7 @@ export default function Painikkeet({ projekti }: Props) {
         setOpenHyvaksy(false);
       }
     },
-    [setIsFormSubmitting, reloadProjekti, showSuccessMessage, showErrorMessage, setOpen, projekti]
+    [projekti, api, reloadProjekti, showSuccessMessage, showErrorMessage]
   );
 
   const lahetaHyvaksyttavaksi = useCallback(

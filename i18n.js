@@ -2,7 +2,7 @@ module.exports = {
   locales: ["fi", "sv"],
   defaultLocale: "fi",
   pages: {
-    "*": ["common", "projekti", "footer"],
+    "*": ["common", "projekti", "footer", "error"],
     "/": ["etusivu"],
     "rgx:^/suunnitelma/": ["projekti-side-bar"],
     "/yllapito/perusta": ["velho-haku"],
