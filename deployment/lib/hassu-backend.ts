@@ -273,6 +273,7 @@ export class HassuBackendStack extends Stack {
       bundling: {
         minify: true,
         nodeModules: ["pdfkit"],
+        externalModules: [], // Include latest aws-sdk
         metafile: true,
         commandHooks: {
           beforeBundling(inputDir: string, outputDir: string): string[] {
@@ -308,6 +309,7 @@ export class HassuBackendStack extends Stack {
       retryAttempts: 0,
       bundling: {
         minify: true,
+        externalModules: [], // Include latest aws-sdk
       },
       environment: {
         ...commonEnvironmentVariables,
@@ -376,6 +378,7 @@ export class HassuBackendStack extends Stack {
       timeout: Duration.seconds(60),
       bundling: {
         minify: true,
+        externalModules: [], // Include latest aws-sdk
       },
       environment: {
         ...commonEnvironmentVariables,

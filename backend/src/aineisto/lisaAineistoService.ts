@@ -3,7 +3,7 @@ import { LisaAineisto, LisaAineistoParametrit, LisaAineistot, ListaaLisaAineisto
 import crypto from "crypto";
 import dayjs from "dayjs";
 import { IllegalAccessError } from "../error/IllegalAccessError";
-import { Aineisto, DBProjekti, NahtavillaoloVaiheJulkaisu, NahtavillaoloVaihe } from "../database/model";
+import { Aineisto, DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../database/model";
 import { NotFoundError } from "../error/NotFoundError";
 import { fileService } from "../files/fileService";
 
@@ -65,7 +65,7 @@ class LisaAineistoService {
       throw new Error("Salt missing");
     }
     return crypto
-      .createHash("sha256")
+      .createHash("sha512")
       .update([oid, String(params.nahtavillaoloVaiheId), params.poistumisPaiva, salt].join())
       .digest("hex");
   }
