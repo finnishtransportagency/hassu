@@ -16,25 +16,22 @@ export class AineistoKategoria {
   constructor(props: AineistoKategoriaProps, parent?: AineistoKategoria) {
     this.props = props;
     this.parent = parent;
-    this.childKategoriat = props.alakategoriat?.map(
-      (alakategoriaProps) => new AineistoKategoria(alakategoriaProps, this),
-      this
-    );
+    this.childKategoriat = props.alakategoriat?.map((alakategoriaProps) => new AineistoKategoria(alakategoriaProps, this), this);
   }
 
-  public get id() {
+  public get id(): string {
     return this.props.id;
   }
 
-  public get parentKategoria() {
+  public get parentKategoria(): AineistoKategoria | undefined {
     return this.parent;
   }
 
-  public get alaKategoriat() {
+  public get alaKategoriat(): AineistoKategoria[] | undefined {
     return this.childKategoriat;
   }
 
-  public get hakulauseet() {
+  public get hakulauseet(): string[] | undefined {
     return this.props.hakulauseet;
   }
 }
@@ -94,13 +91,8 @@ export const getNestedCategoryIds: (kategoriat: AineistoKategoria[]) => string[]
   return kategoriaIds;
 };
 
-export function kategorianAllaOlevienAineistojenMaara(
-  aineistoNahtavilla: Aineisto[],
-  kategoria: AineistoKategoria
-): number {
-  const kategorianAineistojenMaara = aineistoNahtavilla.filter(
-    (aineisto) => aineisto.kategoriaId === kategoria.id
-  ).length;
+export function kategorianAllaOlevienAineistojenMaara(aineistoNahtavilla: Aineisto[], kategoria: AineistoKategoria): number {
+  const kategorianAineistojenMaara = aineistoNahtavilla.filter((aineisto) => aineisto.kategoriaId === kategoria.id).length;
   if (!kategoria.alaKategoriat || kategoria.alaKategoriat.length === 0) {
     return kategorianAineistojenMaara;
   } else {
@@ -110,15 +102,12 @@ export function kategorianAllaOlevienAineistojenMaara(
   }
 }
 
-export const getNestedAineistoMaaraForCategory = (
-  aineistot: (Aineisto | AineistoInput)[],
-  kategoria: AineistoKategoria
-) => {
+export function getNestedAineistoMaaraForCategory(aineistot: (Aineisto | AineistoInput)[], kategoria: AineistoKategoria): number {
   let nestedAineistoMaaraSum = 0;
   const ids = getNestedCategoryIds([kategoria]);
   nestedAineistoMaaraSum += aineistot.filter(({ kategoriaId }) => kategoriaId && ids.includes(kategoriaId)).length;
   return nestedAineistoMaaraSum;
-};
+}
 
 function isMatchingToHakulauseet(hakulauseet: string[] | undefined, keyword: string): boolean {
   const matchingHakulauseet = hakulauseet?.filter((hakulause) => {
@@ -127,10 +116,7 @@ function isMatchingToHakulauseet(hakulauseet: string[] | undefined, keyword: str
   return !!matchingHakulauseet && matchingHakulauseet.length > 0;
 }
 
-function findMatchingCategory(
-  kategoriat: AineistoKategoria[] | undefined,
-  keyword?: string
-): AineistoKategoria | undefined {
+function findMatchingCategory(kategoriat: AineistoKategoria[] | undefined, keyword?: string): AineistoKategoria | undefined {
   if (!keyword) {
     return undefined;
   }
