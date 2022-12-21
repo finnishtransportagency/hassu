@@ -141,7 +141,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
           ) : (
             <p>{t("aineistot.julkaistaan")}</p>
           )}
-          {esittelyaineistot?.length && (
+          {!!esittelyaineistot?.length && (
             <>
               <h5 className="vayla-smallest-title">{t("aineistot.esittelyaineisto")}</h5>
               {esittelyaineistot.map((aineisto) =>
