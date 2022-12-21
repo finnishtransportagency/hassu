@@ -87,7 +87,7 @@ export function adaptVuorovaikutusKierrosJulkaisut(
     }
 
     if (!vuorovaikutusPDFt && VuorovaikutusKierrosTila.JULKINEN) {
-      throw new Error("adaptVuorovaikutusKierrosJulkaisu: julkaisu.nahtavillaoloPDFt määrittelemättä");
+      throw new Error("adaptVuorovaikutusKierrosJulkaisu: julkaisu.vuorovaikutusPDFt määrittelemättä");
     }
     if (!hankkeenKuvaus) {
       throw new Error("adaptVuorovaikutusKierrosJulkaisu: julkaisu.hankkeenKuvaus määrittelemättä");
