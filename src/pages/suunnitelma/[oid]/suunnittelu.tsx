@@ -269,7 +269,7 @@ function TilaisuusContent({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulk
             {t("tilaisuudet.paikalla.osoite", {
               osoite: tilaisuus.osoite,
               postinumero: tilaisuus.postinumero,
-              postitoimipaikka: tilaisuus.postitoimipaikka,
+              postitoimipaikka: tilaisuus.postitoimipaikka || "",
             })}
           </p>
           <p>
