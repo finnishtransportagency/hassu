@@ -1,9 +1,9 @@
 import React from "react";
 import Section from "@components/layout/Section";
 import Button from "@components/button/Button";
-import { Vuorovaikutus } from "@services/api";
+import { VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "@services/api";
 import HassuStack from "@components/layout/HassuStack";
-import { VuorovaikutusFormValues } from "../SuunnitteluvaiheenVuorovaikuttaminen";
+import { VuorovaikutusFormValues } from "../VuorovaikutusKierros";
 import { useFormContext } from "react-hook-form";
 import Lukutila from "./Lukutila";
 import MuokkaustilainenLomake from "./MuokkaustilainenLomake";
@@ -11,7 +11,7 @@ import Notification, { NotificationType } from "@components/notification/Notific
 
 interface Props {
   saveForm: (e?: React.BaseSyntheticEvent<object, any, any> | undefined) => Promise<void>;
-  vuorovaikutus: Vuorovaikutus;
+  vuorovaikutus: Pick<VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu, "suunnitelmaluonnokset" | "esittelyaineistot">;
   muokkaustila: boolean;
   setMuokkaustila: React.Dispatch<React.SetStateAction<boolean>>;
 }

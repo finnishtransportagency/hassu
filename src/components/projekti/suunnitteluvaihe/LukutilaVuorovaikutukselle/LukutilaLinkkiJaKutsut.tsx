@@ -1,15 +1,15 @@
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
 import React, { ReactElement } from "react";
-import { Kieli, Projekti, Vuorovaikutus } from "@services/api";
+import { Kieli, Projekti, VuorovaikutusKierrosJulkaisu } from "@services/api";
 import { examineJulkaisuPaiva } from "src/util/dateUtils";
 import { Link } from "@mui/material";
 import ExtLink from "@components/ExtLink";
 import lowerCase from "lodash/lowerCase";
-import { splitFilePath } from "../../../util/fileUtil";
+import { splitFilePath } from "../../../../util/fileUtil";
 
 interface Props {
-  vuorovaikutus: Vuorovaikutus;
+  vuorovaikutus: VuorovaikutusKierrosJulkaisu;
   projekti: Projekti;
 }
 
@@ -23,10 +23,8 @@ export default function LukutilaLinkkiJaKutsut({ vuorovaikutus, projekti }: Prop
   const ensisijainenKieli = projekti.kielitiedot?.ensisijainenKieli || Kieli.SUOMI;
   const toissijainenKieli = projekti.kielitiedot?.toissijainenKieli;
 
-  const ensisijainenPDFPath = vuorovaikutus.vuorovaikutusPDFt?.[ensisijainenKieli]?.kutsuPDFPath;
-  const toisSijainenPDFPath = toissijainenKieli
-    ? vuorovaikutus.vuorovaikutusPDFt?.[toissijainenKieli]?.kutsuPDFPath
-    : undefined;
+  const ensisijainenKutsuPDFPath = vuorovaikutus.vuorovaikutusPDFt?.[ensisijainenKieli]?.kutsuPDFPath;
+  const toisSijainenKutsuPDFPath = toissijainenKieli ? vuorovaikutus.vuorovaikutusPDFt?.[toissijainenKieli]?.kutsuPDFPath : undefined;
 
   return (
     <Section>
@@ -37,27 +35,25 @@ export default function LukutilaLinkkiJaKutsut({ vuorovaikutus, projekti }: Prop
             <ExtLink href={`/suunnitelma/${projekti.oid}/suunnittelu`}>Linkki</ExtLink>
           </p>
         ) : (
-          <p>
-            Linkki julkiselle puolelle muodostetaan vuorovaikuttamisen julkaisupäivänä. Julkaisupäivä {julkaisuPaiva}.{" "}
-          </p>
+          <p>Linkki julkiselle puolelle muodostetaan vuorovaikuttamisen julkaisupäivänä. Julkaisupäivä {julkaisuPaiva}. </p>
         )}
-        {ensisijainenPDFPath && (
+        {ensisijainenKieli && (
           <>
             <p className="vayla-label mb-5">Ladattavat kutsut ja ilmoitukset</p>
             <div>Kutsu ja ilmoitus pääkielellä ({lowerCase(ensisijainenKieli)})</div>
             <div>
-              <Link underline="none" href={ensisijainenPDFPath} target="_blank">
-                {splitFilePath(ensisijainenPDFPath).fileName}
+              <Link underline="none" href={"/" + ensisijainenKutsuPDFPath} target="_blank">
+                {splitFilePath(ensisijainenKutsuPDFPath).fileName}
               </Link>
             </div>
           </>
         )}
-        {toissijainenKieli && toisSijainenPDFPath && (
+        {toissijainenKieli && toisSijainenKutsuPDFPath && (
           <>
             <div>Kutsu ja ilmoitus toisella kielellä ({lowerCase(toissijainenKieli)})</div>
             <div>
-              <Link underline="none" href={toisSijainenPDFPath} target="_blank">
-                {splitFilePath(toisSijainenPDFPath).fileName}
+              <Link underline="none" href={"/" + toisSijainenKutsuPDFPath} target="_blank">
+                {splitFilePath(toisSijainenKutsuPDFPath).fileName}
               </Link>
             </div>
           </>

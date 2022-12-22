@@ -11,14 +11,12 @@ import LocationCityIcon from "@mui/icons-material/LocationCity";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import {
   ProjektiJulkinen,
-  SuunnitteluVaiheJulkinen,
-  SuunnitteluVaiheTila,
-  VuorovaikutusJulkinen,
+  VuorovaikutusKierrosJulkinen,
+  VuorovaikutusKierrosTila,
   VuorovaikutusTilaisuusJulkinen,
   VuorovaikutusTilaisuusTyyppi,
 } from "@services/api";
 import capitalize from "lodash/capitalize";
-import { SoittoajanYhteystieto } from "@components/projekti/suunnitteluvaihe/VuorovaikutusMahdollisuudet";
 import ExtLink from "@components/ExtLink";
 import { parseVideoURL } from "src/util/videoParser";
 import PalauteLomakeDialogi from "src/components/projekti/kansalaisnakyma/PalauteLomakeDialogi";
@@ -34,21 +32,19 @@ export default function Suunnittelu(): ReactElement {
   const { t } = useTranslation("suunnittelu");
   const { data: projekti } = useProjektiJulkinen();
 
-  if (!projekti?.suunnitteluVaihe) {
+  if (!projekti?.vuorovaikutusKierrokset || projekti.vuorovaikutusKierrokset.length === 0) {
     return <></>;
   }
-  const migroitu = projekti.suunnitteluVaihe.tila == SuunnitteluVaiheTila.MIGROITU;
+
+  const viimeisinKierros = projekti.vuorovaikutusKierrokset[projekti.vuorovaikutusKierrokset.length - 1];
+
+  const migroitu = viimeisinKierros.tila == VuorovaikutusKierrosTila.MIGROITU;
   return (
     <ProjektiJulkinenPageLayout selectedStep={1} title={t("otsikko")}>
       {!migroitu && (
         <>
-          <Perustiedot suunnitteluVaihe={projekti.suunnitteluVaihe} />
-          <VuorovaikutusTiedot
-            projekti={projekti}
-            suunnitteluVaihe={projekti.suunnitteluVaihe}
-            vuorovaikutus={projekti.suunnitteluVaihe.vuorovaikutukset?.[0]}
-            projektiOid={projekti.oid}
-          />
+          <Perustiedot vuorovaikutusKierros={viimeisinKierros} />
+          <VuorovaikutusTiedot projekti={projekti} vuorovaikutus={viimeisinKierros} projektiOid={projekti.oid} />
         </>
       )}
       {migroitu && (
@@ -62,33 +58,32 @@ export default function Suunnittelu(): ReactElement {
   );
 }
 
-const Perustiedot: FunctionComponent<{ suunnitteluVaihe: SuunnitteluVaiheJulkinen }> = ({ suunnitteluVaihe }) => {
+const Perustiedot: FunctionComponent<{ vuorovaikutusKierros: VuorovaikutusKierrosJulkinen }> = ({ vuorovaikutusKierros }) => {
   const { t } = useTranslation("suunnittelu");
   const kieli = useKansalaiskieli();
   return (
     <Section>
       <SectionContent>
         <h4 className="vayla-small-title">{t("perustiedot.suunnitteluhankkeen_kuvaus")}</h4>
-        <p>{suunnitteluVaihe.hankkeenKuvaus?.[kieli]}</p>
+        <p>{vuorovaikutusKierros.hankkeenKuvaus?.[kieli]}</p>
       </SectionContent>
-      {suunnitteluVaihe.suunnittelunEteneminenJaKesto && (
+      {vuorovaikutusKierros.suunnittelunEteneminenJaKesto && (
         <SectionContent>
           <h4 className="vayla-small-title">{t("perustiedot.suunnittelun_eteneminen")}</h4>
-          <p>{suunnitteluVaihe.suunnittelunEteneminenJaKesto}</p>
+          <p>{vuorovaikutusKierros.suunnittelunEteneminenJaKesto}</p>
         </SectionContent>
       )}
       <SectionContent>
         <h4 className="vayla-small-title">{t("perustiedot.arvio_seuraavan_vaiheen_alkamisesta")}</h4>
-        <p>{suunnitteluVaihe.arvioSeuraavanVaiheenAlkamisesta}</p>
+        <p>{vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta}</p>
       </SectionContent>
     </Section>
   );
 };
 
 const VuorovaikutusTiedot: FunctionComponent<{
-  vuorovaikutus: VuorovaikutusJulkinen | undefined;
+  vuorovaikutus: VuorovaikutusKierrosJulkinen | undefined;
   projekti: ProjektiJulkinen;
-  suunnitteluVaihe: SuunnitteluVaiheJulkinen;
   projektiOid: string;
 }> = ({ vuorovaikutus, projektiOid }) => {
   const [palauteLomakeOpen, setPalauteLomakeOpen] = useState(false);
@@ -146,16 +141,12 @@ const VuorovaikutusTiedot: FunctionComponent<{
           ) : (
             <p>{t("aineistot.julkaistaan")}</p>
           )}
-          {esittelyaineistot?.length && (
+          {!!esittelyaineistot?.length && (
             <>
               <h5 className="vayla-smallest-title">{t("aineistot.esittelyaineisto")}</h5>
               {esittelyaineistot.map((aineisto) =>
                 aineisto.tiedosto ? (
-                  <ExtLink
-                    style={{ display: "block", marginTop: "0.5em" }}
-                    key={aineisto.dokumenttiOid}
-                    href={aineisto.tiedosto}
-                  >
+                  <ExtLink style={{ display: "block", marginTop: "0.5em" }} key={aineisto.dokumenttiOid} href={aineisto.tiedosto}>
                     {aineisto.tiedosto.split("/").reduce((_acc, cur) => cur, "")}
                   </ExtLink>
                 ) : null
@@ -167,11 +158,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
               <h5 className="vayla-smallest-title">{t("aineistot.suunnitelmaluonnokset")}</h5>
               {suunnitelmaluonnokset.map((aineisto) =>
                 aineisto.tiedosto ? (
-                  <ExtLink
-                    style={{ display: "block", marginTop: "0.5em" }}
-                    key={aineisto.dokumenttiOid}
-                    href={aineisto.tiedosto}
-                  >
+                  <ExtLink style={{ display: "block", marginTop: "0.5em" }} key={aineisto.dokumenttiOid} href={aineisto.tiedosto}>
                     {aineisto.tiedosto.split("/").reduce((_acc, cur) => cur, "")}
                   </ExtLink>
                 ) : null
@@ -214,9 +201,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
               })}
             </p>
             {vuorovaikutus.yhteystiedot.map((yhteystieto, index) => (
-              <p key={index}>
-                <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto)}</p>
-              </p>
+              <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto)}</p>
             ))}
           </SectionContent>
         </Section>
@@ -245,6 +230,8 @@ const TilaisuusLista: FunctionComponent<{
   tilaisuudet: VuorovaikutusTilaisuusJulkinen[];
   inaktiivinen?: true;
 }> = ({ tilaisuudet, inaktiivinen }) => {
+  const { t } = useTranslation("suunnittelu");
+
   const sortTilaisuudet = useCallback((a, b) => {
     if (dayjs(a.paivamaara).isBefore(dayjs(b.paivamaara))) {
       return -1;
@@ -262,7 +249,7 @@ const TilaisuusLista: FunctionComponent<{
           <div key={index} className={classNames("vayla-tilaisuus-item", inaktiivinen ? "inactive" : "active")}>
             <div className="flex flex-cols gap-5">
               <TilaisuusIcon tyyppi={tilaisuus.tyyppi} inactive={inaktiivinen} />
-              <TilaisuusTitle tilaisuus={tilaisuus} />
+              <TilaisuusTitle tilaisuus={tilaisuus} /> {!!tilaisuus.peruttu && <span className="text-red">{t("suunnittelu:PERUTTU")}</span>}
             </div>
             <TilaisuusContent tilaisuus={tilaisuus} />
           </div>
@@ -273,7 +260,7 @@ const TilaisuusLista: FunctionComponent<{
 };
 
 function TilaisuusContent({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulkinen }) {
-  const { t } = useTranslation("suunnittelu");
+  const { t, lang } = useTranslation("suunnittelu");
   return (
     <>
       {tilaisuus && tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA && (
@@ -282,7 +269,7 @@ function TilaisuusContent({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulk
             {t("tilaisuudet.paikalla.osoite", {
               osoite: tilaisuus.osoite,
               postinumero: tilaisuus.postinumero,
-              postitoimipaikka: tilaisuus.postitoimipaikka,
+              postitoimipaikka: tilaisuus.postitoimipaikka || "",
             })}
           </p>
           <p>
@@ -296,7 +283,7 @@ function TilaisuusContent({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulk
           <p>{t("tilaisuudet.soittoaika.voit_soittaa")}</p>
 
           {tilaisuus.yhteystiedot?.map((yhteystieto, index) => {
-            return <SoittoajanYhteystieto key={index} yhteystieto={yhteystieto} />;
+            return <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto)}</p>;
           })}
         </div>
       )}

@@ -9,6 +9,7 @@ import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import { assertIsDefined } from "../../util/assertions";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import assert from "assert";
+import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 
 async function cleanupKuulutusAfterApproval(projekti: DBProjekti, jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe) {
   if (jatkoPaatos1Vaihe.palautusSyy || jatkoPaatos1Vaihe.uudelleenKuulutus) {
@@ -63,6 +64,20 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
 
   async saveVaihe(projekti: DBProjekti, jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe): Promise<void> {
     await projektiDatabase.saveProjekti({ oid: projekti.oid, jatkoPaatos1Vaihe });
+  }
+
+  checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja {
+    const projektiPaallikko = requireOmistaja(projekti);
+    return projektiPaallikko;
+  }
+
+  checkPriviledgesSendForApproval(projekti: DBProjekti): NykyinenKayttaja {
+    const muokkaaja = requirePermissionMuokkaa(projekti);
+    return muokkaaja;
+  }
+
+  checkUudelleenkuulutusPriviledges(_projekti: DBProjekti): NykyinenKayttaja {
+    return requireAdmin();
   }
 
   async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {

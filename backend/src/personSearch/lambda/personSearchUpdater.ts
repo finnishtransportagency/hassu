@@ -83,7 +83,7 @@ export class PersonSearchUpdater {
       const axios = getAxios();
       const response = await axios.request(requestConfig);
       if (response.status === 200) {
-        const responseJson: any = await wrapXRayAsync("xmlParse", () => parseString(response.data));
+        const responseJson = await wrapXRayAsync("xmlParse", () => parseString(response.data));
         adaptPersonSearchResult(responseJson, persons);
         log.info("listAccountsOfType:" + accounttype + " " + Object.keys(persons).length + " persons in result map");
       } else {

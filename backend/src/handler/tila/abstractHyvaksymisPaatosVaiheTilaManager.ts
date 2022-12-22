@@ -1,4 +1,4 @@
-import { TilaManager } from "./TilaManager";
+import { KuulutusTilaManager } from "./KuulutusTilaManager";
 import {
   DBProjekti,
   HyvaksymisPaatosVaihe,
@@ -16,7 +16,10 @@ import assert from "assert";
 import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakirjaTypes";
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
 
-export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends TilaManager<HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu> {
+export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusTilaManager<
+  HyvaksymisPaatosVaihe,
+  HyvaksymisPaatosVaiheJulkaisu
+> {
   async removeRejectionReasonIfExists(
     projekti: DBProjekti,
     key: "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe" | "hyvaksymisPaatosVaihe",

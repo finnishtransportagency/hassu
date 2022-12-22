@@ -15,10 +15,9 @@ import {
   UseFormRegister,
   UseFormWatch,
 } from "react-hook-form";
-import { VuorovaikutusFormValues } from "../SuunnitteluvaiheenVuorovaikuttaminen";
 import HassuAineistoNimiExtLink from "../../HassuAineistoNimiExtLink";
 import { useProjekti } from "src/hooks/useProjekti";
-import { Aineisto, Vuorovaikutus } from "@services/api";
+import { Aineisto, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "@services/api";
 import HassuTable from "@components/HassuTable";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import { Column } from "react-table";
@@ -27,9 +26,13 @@ import Select from "@components/form/Select";
 import { formatDateTime } from "src/util/dateUtils";
 import { find } from "lodash";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { SuunnittelunPerustiedotFormValues } from "../Perustiedot";
 
 interface Props {
-  vuorovaikutus: Vuorovaikutus | undefined;
+  vuorovaikutus:
+    | Pick<VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu, "suunnitelmaluonnokset" | "esittelyaineistot">
+    | null
+    | undefined;
   hidden: boolean;
 }
 
@@ -40,16 +43,16 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
   const [esittelyAineistoDialogOpen, setEsittelyAineistoDialogOpen] = useState(false);
   const [suunnitelmaLuonnoksetDialogOpen, setSuunnitelmaLuonnoksetDialogOpen] = useState(false);
 
-  const { control, register, formState, watch, setValue } = useFormContext<VuorovaikutusFormValues>();
+  const { control, register, formState, watch, setValue } = useFormContext<SuunnittelunPerustiedotFormValues>();
 
   const esittelyAineistotFieldArray = useFieldArray({
     control,
-    name: "suunnitteluVaihe.vuorovaikutus.esittelyaineistot",
+    name: "vuorovaikutusKierros.esittelyaineistot",
   });
 
   const suunnitelmaLuonnoksetFieldArray = useFieldArray({
     control,
-    name: "suunnitteluVaihe.vuorovaikutus.suunnitelmaluonnokset",
+    name: "vuorovaikutusKierros.suunnitelmaluonnokset",
   });
 
   const {
@@ -58,11 +61,11 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
     remove: removeVideot,
   } = useFieldArray({
     control,
-    name: "suunnitteluVaihe.vuorovaikutus.videot",
+    name: "vuorovaikutusKierros.videot",
   });
 
-  const esittelyaineistot = watch("suunnitteluVaihe.vuorovaikutus.esittelyaineistot");
-  const suunnitelmaluonnokset = watch("suunnitteluVaihe.vuorovaikutus.suunnitelmaluonnokset");
+  const esittelyaineistot = watch("vuorovaikutusKierros.esittelyaineistot");
+  const suunnitelmaluonnokset = watch("vuorovaikutusKierros.suunnitelmaluonnokset");
 
   const areAineistoKategoriesExpanded = !!expandedEsittelyAineisto.length || !!expandedSuunnitelmaLuonnokset.length;
 
@@ -159,7 +162,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
             <TextInput
               style={{ width: "100%" }}
               key={field.id}
-              {...register(`suunnitteluVaihe.vuorovaikutus.videot.${index}.url`)}
+              {...register(`vuorovaikutusKierros.videot.${index}.url`)}
               label="Linkki videoon"
               error={(formState.errors as any)?.suunnitteluVaihe?.vuorovaikutus?.videot?.[index]?.url}
             />
@@ -208,14 +211,14 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
         <TextInput
           style={{ width: "100%" }}
           label="Linkin kuvaus"
-          {...register(`suunnitteluVaihe.vuorovaikutus.suunnittelumateriaali.nimi`)}
-          error={(formState.errors as any)?.suunnitteluVaihe?.vuorovaikutus?.suunnittelumateriaali?.nimi}
+          {...register(`vuorovaikutusKierros.suunnittelumateriaali.nimi`)}
+          error={(formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.nimi}
         />
         <TextInput
           style={{ width: "100%" }}
           label="Linkki muihin esittelyaineistoihin"
-          {...register(`suunnitteluVaihe.vuorovaikutus.suunnittelumateriaali.url`)}
-          error={(formState.errors as any)?.suunnitteluVaihe?.vuorovaikutus?.suunnittelumateriaali?.url}
+          {...register(`vuorovaikutusKierros.suunnittelumateriaali.url`)}
+          error={(formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.url}
         />
       </SectionContent>
       <AineistojenValitseminenDialog
@@ -230,7 +233,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
               value.push(aineisto);
             }
           });
-          setValue("suunnitteluVaihe.vuorovaikutus.esittelyaineistot", value, { shouldDirty: true });
+          setValue("vuorovaikutusKierros.esittelyaineistot", value, { shouldDirty: true });
         }}
       />
       <AineistojenValitseminenDialog
@@ -245,7 +248,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
               value.push(aineisto);
             }
           });
-          setValue("suunnitteluVaihe.vuorovaikutus.suunnitelmaluonnokset", value, { shouldDirty: true });
+          setValue("vuorovaikutusKierros.suunnitelmaluonnokset", value, { shouldDirty: true });
         }}
       />
     </SectionContent>
@@ -257,21 +260,24 @@ enum SuunnitteluVaiheAineistoTyyppi {
   SUUNNITELMALUONNOKSET = "SUUNNITELMALUONNOKSET",
 }
 
-type FormAineisto = FieldArrayWithId<VuorovaikutusFormValues, "suunnitteluVaihe.vuorovaikutus.esittelyaineistot", "id"> &
+type FormAineisto = FieldArrayWithId<SuunnittelunPerustiedotFormValues, "vuorovaikutusKierros.esittelyaineistot", "id"> &
   Pick<Aineisto, "tila" | "tuotu" | "tiedosto">;
 
 interface AineistoTableProps {
   aineistoTyyppi: SuunnitteluVaiheAineistoTyyppi;
-  esittelyAineistotFieldArray: UseFieldArrayReturn<VuorovaikutusFormValues, "suunnitteluVaihe.vuorovaikutus.esittelyaineistot", "id">;
+  esittelyAineistotFieldArray: UseFieldArrayReturn<SuunnittelunPerustiedotFormValues, "vuorovaikutusKierros.esittelyaineistot", "id">;
   suunnitelmaLuonnoksetFieldArray: UseFieldArrayReturn<
-    VuorovaikutusFormValues,
-    "suunnitteluVaihe.vuorovaikutus.suunnitelmaluonnokset",
+    SuunnittelunPerustiedotFormValues,
+    "vuorovaikutusKierros.suunnitelmaluonnokset",
     "id"
   >;
-  register: UseFormRegister<VuorovaikutusFormValues>;
-  watch: UseFormWatch<VuorovaikutusFormValues>;
-  vuorovaikutus: Vuorovaikutus;
-  formState: FormState<VuorovaikutusFormValues>;
+  register: UseFormRegister<SuunnittelunPerustiedotFormValues>;
+  watch: UseFormWatch<SuunnittelunPerustiedotFormValues>;
+  vuorovaikutus:
+    | Pick<VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu, "suunnitelmaluonnokset" | "esittelyaineistot">
+    | null
+    | undefined;
+  formState: FormState<SuunnittelunPerustiedotFormValues>;
 }
 
 const AineistoTable = ({
@@ -291,18 +297,18 @@ const AineistoTable = ({
 
   const fieldArrayName =
     aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT
-      ? "suunnitteluVaihe.vuorovaikutus.esittelyaineistot"
-      : "suunnitteluVaihe.vuorovaikutus.suunnitelmaluonnokset";
+      ? "vuorovaikutusKierros.esittelyaineistot"
+      : "vuorovaikutusKierros.suunnitelmaluonnokset";
 
   const otherFieldArrayName =
     aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT
-      ? "suunnitteluVaihe.vuorovaikutus.suunnitelmaluonnokset"
-      : "suunnitteluVaihe.vuorovaikutus.esittelyaineistot";
+      ? "vuorovaikutusKierros.suunnitelmaluonnokset"
+      : "vuorovaikutusKierros.esittelyaineistot";
 
   const enrichedFields = useMemo(
     () =>
       fields.map((field) => {
-        const aineistoData = [...(vuorovaikutus.esittelyaineistot || []), ...(vuorovaikutus.suunnitelmaluonnokset || [])];
+        const aineistoData = [...(vuorovaikutus?.esittelyaineistot || []), ...(vuorovaikutus?.suunnitelmaluonnokset || [])];
         const { tila, tuotu, tiedosto } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
 
         return { tila, tuotu, tiedosto, ...field };

@@ -2,11 +2,12 @@ import React, { ReactElement } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import SuunnitteluPageLayout from "@components/projekti/suunnitteluvaihe/SuunnitteluvaihePageLayout";
 import { useRouter } from "next/router";
-import VuorovaikuttaminenLukutila from "@components/projekti/lukutila/VuorovaikuttaminenLukutila";
+import VuorovaikuttaminenEpaaktiivinenLukutila from "@components/projekti/suunnitteluvaihe/EpaaktiivinenTilaVuorovaikutukselle";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
-import SuunnitteluvaiheenVuorovaikuttaminen from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
-import { SuunnitteluVaiheTila } from "@services/api";
+import SuunnitteluvaiheenVuorovaikuttaminen from "@components/projekti/suunnitteluvaihe/VuorovaikutusKierros";
+import { VuorovaikutusKierrosTila } from "@services/api";
 import { getValidatedKierrosId } from "src/util/getValidatedKierrosId";
+import VuorovaikutusKierrosLukutila from "@components/projekti/suunnitteluvaihe/LukutilaVuorovaikutukselle";
 
 export default function VuorovaikutusKierrosWrapper() {
   const { data: projekti } = useProjekti();
@@ -24,15 +25,29 @@ function VuorovaikutusKierros({ projekti }: { projekti: ProjektiLisatiedolla }):
   // Check that kierrosId query param is string that is parseable to number
   const validatedKierrosId = getValidatedKierrosId(router, projekti);
 
-  const migroitu = projekti?.suunnitteluVaihe?.tila == SuunnitteluVaiheTila.MIGROITU;
+  const migroitu = projekti?.vuorovaikutusKierros?.tila == VuorovaikutusKierrosTila.MIGROITU;
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
+
+  const lukutila: boolean = !!projekti.vuorovaikutusKierrosJulkaisut?.[projekti?.vuorovaikutusKierros?.vuorovaikutusNumero || 0];
 
   if (epaaktiivinen) {
     return (
       <SuunnitteluPageLayout>
         {validatedKierrosId ? (
-          <VuorovaikuttaminenLukutila vuorovaikutusnro={validatedKierrosId} />
+          <VuorovaikuttaminenEpaaktiivinenLukutila vuorovaikutusnro={validatedKierrosId} />
+        ) : (
+          <p>Virheellinen vuorovaikutusnumero</p>
+        )}
+      </SuunnitteluPageLayout>
+    );
+  }
+
+  if (lukutila) {
+    return (
+      <SuunnitteluPageLayout>
+        {validatedKierrosId ? (
+          <VuorovaikutusKierrosLukutila vuorovaikutusnro={validatedKierrosId - 1} projekti={projekti} />
         ) : (
           <p>Virheellinen vuorovaikutusnumero</p>
         )}
@@ -51,7 +66,7 @@ function VuorovaikutusKierros({ projekti }: { projekti: ProjektiLisatiedolla }):
   return (
     <SuunnitteluPageLayout>
       {validatedKierrosId ? (
-        <SuunnitteluvaiheenVuorovaikuttaminen vuorovaikutusnro={validatedKierrosId} />
+        <SuunnitteluvaiheenVuorovaikuttaminen vuorovaikutusnro={validatedKierrosId - 1} />
       ) : (
         <p>Virheellinen vuorovaikutusnumero</p>
       )}

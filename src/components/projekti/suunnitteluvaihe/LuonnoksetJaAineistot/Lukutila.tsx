@@ -1,10 +1,15 @@
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
 import { Link } from "@mui/material";
-import { Vuorovaikutus } from "@services/api";
+import { VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "@services/api";
 
 interface Props {
-  vuorovaikutus: Vuorovaikutus | undefined;
+  vuorovaikutus:
+    | Pick<
+        VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu,
+        "suunnitelmaluonnokset" | "esittelyaineistot" | "suunnittelumateriaali" | "videot"
+      >
+    | undefined;
 }
 
 export default function LukutilaLuonnoksetJaAineistot({ vuorovaikutus }: Props) {
