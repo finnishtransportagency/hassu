@@ -1,5 +1,5 @@
 /// <reference types="cypress" />
-import { taytaJaJulkaiseAloituskuulutus } from "./aloituskuulutus";
+import { taytaJaJulkaiseAloituskuulutus } from "../../support/aloituskuulutus";
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
 
 const projektiNimi = Cypress.env("projektiNimi");
