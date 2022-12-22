@@ -16,8 +16,7 @@ import {
   HyvaksymisPaatosVaiheJulkaisu,
   NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
-  VuorovaikutusKierros,
-  VuorovaikutusKierrosJulkaisu,
+  Vuorovaikutus,
 } from "../database/model";
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import * as mime from "mime-types";
@@ -26,19 +25,11 @@ import { parseDate } from "../util/dateUtil";
 import { projektiAdapter } from "../projekti/adapter/projektiAdapter";
 import { aineistoSynchronizerService } from "./aineistoSynchronizerService";
 
-async function handleSuunnitteluVaiheAineistot(
-  oid: string,
-  vuorovaikutusKierros: VuorovaikutusKierros | null | undefined
-): Promise<VuorovaikutusKierros | undefined> {
-  if (!vuorovaikutusKierros) {
-    return undefined;
-  }
-  const filePathInProjekti = new ProjektiPaths(oid).vuorovaikutus(vuorovaikutusKierros).aineisto;
-  const hasEsittelyAineistotChanges = await handleAineistot(oid, vuorovaikutusKierros.esittelyaineistot, filePathInProjekti);
-  const hasSuunnitelmaluonnoksetChanges = await handleAineistot(oid, vuorovaikutusKierros.suunnitelmaluonnokset, filePathInProjekti);
-  if (hasEsittelyAineistotChanges || hasSuunnitelmaluonnoksetChanges) {
-    return vuorovaikutusKierros;
-  }
+async function handleVuorovaikutusAineisto(oid: string, vuorovaikutus: Vuorovaikutus): Promise<boolean> {
+  const filePathInProjekti = new ProjektiPaths(oid).vuorovaikutus(vuorovaikutus).aineisto;
+  const hasEsittelyAineistotChanges = await handleAineistot(oid, vuorovaikutus.esittelyaineistot, filePathInProjekti);
+  const hasSuunnitelmaluonnoksetChanges = await handleAineistot(oid, vuorovaikutus.suunnitelmaluonnokset, filePathInProjekti);
+  return hasEsittelyAineistotChanges || hasSuunnitelmaluonnoksetChanges;
 }
 
 async function handleNahtavillaoloVaiheAineistot(
@@ -116,12 +107,15 @@ async function importAineisto(aineisto: Aineisto, oid: string, path: PathTuple) 
   aineisto.tuotu = dayjs().format();
 }
 
-async function handleSuunnitteluVaihe(oid: string, julkaisut: VuorovaikutusKierrosJulkaisu[] | undefined) {
-  await julkaisut?.reduce(async (promise, julkaisu) => {
-    const kuulutusPaiva = julkaisu?.vuorovaikutusJulkaisuPaiva ? parseDate(julkaisu.vuorovaikutusJulkaisuPaiva) : undefined;
-    await promise;
-    return synchronizeFilesToPublic(oid, new ProjektiPaths(oid).vuorovaikutus(julkaisu), kuulutusPaiva);
-  }, Promise.resolve());
+async function handleVuorovaikutukset(oid: string, vuorovaikutukset: Vuorovaikutus[] | undefined) {
+  for (const vuorovaikutus of vuorovaikutukset || []) {
+    if (await handleVuorovaikutusAineisto(oid, vuorovaikutus)) {
+      await projektiDatabase.saveProjekti({
+        oid,
+        vuorovaikutukset: [vuorovaikutus],
+      });
+    }
+  }
 }
 
 async function handleAloituskuulutusVaihe(oid: string, julkaisut: AloitusKuulutusJulkaisu[]) {
@@ -166,7 +160,10 @@ async function handleJatkoPaatos2Vaihe(oid: string, julkaisut: HyvaksymisPaatosV
 
 async function handleImport(projekti: DBProjekti) {
   const oid = projekti.oid;
-  const vuorovaikutusKierros = await handleSuunnitteluVaiheAineistot(projekti.oid, projekti.vuorovaikutusKierros);
+  if (projekti.vuorovaikutukset) {
+    await handleVuorovaikutukset(oid, projekti.vuorovaikutukset);
+  }
+
   const nahtavillaoloVaihe = await handleNahtavillaoloVaiheAineistot(projekti.oid, projekti.nahtavillaoloVaihe);
   const hyvaksymisPaatosVaihe = await handleHyvaksymisPaatosVaiheAineistot(projekti, "hyvaksymisPaatosVaihe");
   const jatkoPaatos1Vaihe = await handleHyvaksymisPaatosVaiheAineistot(projekti, "jatkoPaatos1Vaihe");
@@ -174,7 +171,6 @@ async function handleImport(projekti: DBProjekti) {
 
   await projektiDatabase.saveProjekti({
     oid,
-    vuorovaikutusKierros,
     nahtavillaoloVaihe,
     hyvaksymisPaatosVaihe,
     jatkoPaatos1Vaihe,
@@ -192,8 +188,14 @@ async function synchronizeAll(aineistoEvent: ImportAineistoEvent, projekti: DBPr
   if (projekti.aloitusKuulutusJulkaisut) {
     await handleAloituskuulutusVaihe(oid, projekti.aloitusKuulutusJulkaisut);
   }
-  if (projekti.vuorovaikutusKierrosJulkaisut) {
-    await handleSuunnitteluVaihe(oid, projekti.vuorovaikutusKierrosJulkaisut);
+
+  if (projekti.vuorovaikutukset) {
+    for (const vuorovaikutus of projekti.vuorovaikutukset) {
+      if (vuorovaikutus.julkinen) {
+        const julkaisuPaiva = vuorovaikutus?.vuorovaikutusJulkaisuPaiva ? parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva) : undefined;
+        await synchronizeFilesToPublic(oid, new ProjektiPaths(oid).vuorovaikutus(vuorovaikutus), julkaisuPaiva);
+      }
+    }
   }
   if (projekti.nahtavillaoloVaiheJulkaisut) {
     await handleNahtavillaoloVaihe(oid, projekti.nahtavillaoloVaiheJulkaisut);

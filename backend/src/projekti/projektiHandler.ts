@@ -9,6 +9,7 @@ import {
 } from "../user";
 import { velho } from "../velho/velhoClient";
 import * as API from "../../../common/graphql/apiModel";
+import { KayttajaTyyppi, NykyinenKayttaja, TallennaProjektiInput, Velho } from "../../../common/graphql/apiModel";
 import { projektiAdapter } from "./adapter/projektiAdapter";
 import { adaptVelho } from "./adapter/common";
 import { auditLog, log } from "../logger";
@@ -22,20 +23,12 @@ import { projektiArchive } from "../archive/projektiArchiveService";
 import { NotFoundError } from "../error/NotFoundError";
 import { projektiAdapterJulkinen } from "./adapter/projektiAdapterJulkinen";
 import { findUpdatedFields } from "../velho/velhoAdapter";
-import {
-  DBProjekti,
-  VuorovaikutusKierros,
-  VuorovaikutusKierrosJulkaisu,
-  VuorovaikutusTilaisuus,
-  VuorovaikutusTilaisuusJulkaisu,
-} from "../database/model";
+import { DBProjekti } from "../database/model";
+import { vuorovaikutusService } from "../vuorovaikutus/vuorovaikutusService";
 import { aineistoService } from "../aineisto/aineistoService";
-import { ProjektiAdaptationResult, ProjektiEventType } from "./adapter/projektiAdaptationResult";
+import { ProjektiAdaptationResult, ProjektiEventType, VuorovaikutusPublishedEvent } from "./adapter/projektiAdaptationResult";
 import remove from "lodash/remove";
-import { validatePaivitaVuorovaikutus, validateTallennaProjekti, validatePaivitaPerustiedot } from "./projektiValidator";
-import { IllegalArgumentError } from "../error/IllegalArgumentError";
-import { adaptStandardiYhteystiedotInputToYhteystiedotToSave, adaptVuorovaikutusKierrosAfterPerustiedotUpdate } from "./adapter/adaptToDB";
-import { asiakirjaAdapter } from "../handler/asiakirjaAdapter";
+import { validateTallennaProjekti } from "./projektiValidator";
 
 export async function loadProjekti(oid: string): Promise<API.Projekti | API.ProjektiJulkinen> {
   const vaylaUser = getVaylaUser();
@@ -46,7 +39,7 @@ export async function loadProjekti(oid: string): Promise<API.Projekti | API.Proj
   }
 }
 
-async function loadProjektiYllapito(oid: string, vaylaUser: API.NykyinenKayttaja): Promise<API.Projekti> {
+async function loadProjektiYllapito(oid: string, vaylaUser: NykyinenKayttaja): Promise<API.Projekti> {
   requirePermissionLuku();
   log.info("Loading projekti", { oid });
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -82,7 +75,7 @@ export async function arkistoiProjekti(oid: string): Promise<string> {
   return projektiArchive.archiveProjekti(oid);
 }
 
-export async function createOrUpdateProjekti(input: API.TallennaProjektiInput): Promise<string> {
+export async function createOrUpdateProjekti(input: TallennaProjektiInput): Promise<string> {
   requirePermissionLuku();
   const oid = input.oid;
   const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -111,82 +104,10 @@ export async function createOrUpdateProjekti(input: API.TallennaProjektiInput): 
   return input.oid;
 }
 
-export async function updateVuorovaikutus(input: API.VuorovaikutusPaivitysInput | null | undefined): Promise<string> {
-  if (!input) {
-    throw new IllegalArgumentError("input puuttuu!");
-  }
-  const oid = input.oid;
-  const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
-  if (projektiInDB) {
-    requirePermissionMuokkaa(projektiInDB);
-    validatePaivitaVuorovaikutus(projektiInDB, input);
-    auditLog.info("Päivitä vuorovaikutuskierros", { input });
-
-    const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuus[] = input.vuorovaikutusTilaisuudet.map((tilaisuus, index) =>
-      mergeWith(projektiInDB.vuorovaikutusKierros?.vuorovaikutusTilaisuudet?.[index], tilaisuus)
-    );
-    const vuorovaikutusTilaisuusJulkaisut: VuorovaikutusTilaisuusJulkaisu[] = vuorovaikutusTilaisuudet.map((tilaisuus) => {
-      const vuorovaikutusTilaisuusJulkaisu: VuorovaikutusTilaisuusJulkaisu = {
-        ...tilaisuus,
-        yhteystiedot: adaptStandardiYhteystiedotInputToYhteystiedotToSave(projektiInDB, tilaisuus.esitettavatYhteystiedot),
-      };
-      return vuorovaikutusTilaisuusJulkaisu;
-    });
-    const vuorovaikutusKierros = {
-      ...(projektiInDB.vuorovaikutusKierros as VuorovaikutusKierros),
-      vuorovaikutusTilaisuudet,
-    };
-    const vuorovaikutusKierrosJulkaisut: VuorovaikutusKierrosJulkaisu[] = [
-      ...(projektiInDB.vuorovaikutusKierrosJulkaisut as VuorovaikutusKierrosJulkaisu[]),
-    ];
-    vuorovaikutusKierrosJulkaisut[input.vuorovaikutusNumero] = {
-      ...vuorovaikutusKierrosJulkaisut[input.vuorovaikutusNumero],
-      vuorovaikutusTilaisuudet: vuorovaikutusTilaisuusJulkaisut,
-    };
-    await projektiDatabase.saveProjekti({
-      oid: input.oid,
-      vuorovaikutusKierros,
-      vuorovaikutusKierrosJulkaisut,
-    });
-    return input.oid;
-  } else {
-    throw new IllegalArgumentError("Projektia ei ole olemassa");
-  }
-}
-
-export async function updatePerustiedot(input: API.VuorovaikutusPerustiedotInput | null | undefined): Promise<string> {
-  requirePermissionLuku();
-  if (!input) {
-    throw new IllegalArgumentError("input puuttuu!");
-  }
-  const oid = input.oid;
-  const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
-  if (projektiInDB) {
-    validatePaivitaPerustiedot(projektiInDB, input);
-    auditLog.info("Päivitä perustiedot", { input });
-    const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult(projektiInDB);
-    adaptVuorovaikutusKierrosAfterPerustiedotUpdate(projektiInDB, input, projektiAdaptationResult);
-    const vuorovaikutusKierros: VuorovaikutusKierros = projektiAdaptationResult.projekti.vuorovaikutusKierros as VuorovaikutusKierros;
-    const vuorovaikutusKierrosJulkaisu = asiakirjaAdapter.adaptVuorovaikutusKierrosJulkaisu({ ...projektiInDB, vuorovaikutusKierros });
-    const vuorovaikutusKierrosJulkaisut = projektiInDB.vuorovaikutusKierrosJulkaisut;
-    vuorovaikutusKierrosJulkaisut?.pop();
-    vuorovaikutusKierrosJulkaisut?.push(vuorovaikutusKierrosJulkaisu);
-    await projektiDatabase.saveProjekti({
-      oid: input.oid,
-      vuorovaikutusKierros,
-      vuorovaikutusKierrosJulkaisut,
-    });
-    await handleEvents(projektiAdaptationResult); // Täältä voi tulla IMPORT-eventtejä, jos aineistot muuttuivat.
-    return input.oid;
-  } else {
-    throw new IllegalArgumentError("Projektia ei ole olemassa");
-  }
-}
-
 export async function createProjektiFromVelho(
   oid: string,
-  vaylaUser: API.NykyinenKayttaja,
-  input?: API.TallennaProjektiInput
+  vaylaUser: NykyinenKayttaja,
+  input?: TallennaProjektiInput
 ): Promise<{ projekti: DBProjekti; virhetiedot?: API.ProjektipaallikkoVirhe }> {
   try {
     log.info("Loading projekti from Velho", { oid });
@@ -221,7 +142,7 @@ export async function createProjektiFromVelho(
 
       // Prefill current user as varahenkilo if it is different from project manager
       if ((!projektiPaallikko || projektiPaallikko.kayttajatunnus !== vaylaUser.uid) && vaylaUser.uid) {
-        kayttoOikeudet.addUser({ kayttajatunnus: vaylaUser.uid, muokattavissa: true, tyyppi: API.KayttajaTyyppi.VARAHENKILO });
+        kayttoOikeudet.addUser({ kayttajatunnus: vaylaUser.uid, muokattavissa: true, tyyppi: KayttajaTyyppi.VARAHENKILO });
       }
     }
 
@@ -233,7 +154,7 @@ export async function createProjektiFromVelho(
   }
 }
 
-export async function findUpdatesFromVelho(oid: string): Promise<API.Velho> {
+export async function findUpdatesFromVelho(oid: string): Promise<Velho> {
   try {
     log.info("Loading projekti", { oid });
     const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -258,7 +179,7 @@ export async function findUpdatesFromVelho(oid: string): Promise<API.Velho> {
   }
 }
 
-export async function synchronizeUpdatesFromVelho(oid: string, reset = false): Promise<API.Velho | undefined> {
+export async function synchronizeUpdatesFromVelho(oid: string, reset = false): Promise<Velho | undefined> {
   try {
     log.info("Loading projekti", { oid });
     const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -301,7 +222,7 @@ export async function synchronizeUpdatesFromVelho(oid: string, reset = false): P
 /**
  * If there are uploaded files in the input, persist them into the project
  */
-async function handleFiles(dbProjekti: DBProjekti, input: API.TallennaProjektiInput) {
+async function handleFiles(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
   const logo = input.suunnitteluSopimus?.logo;
   if (logo && input.suunnitteluSopimus) {
     input.suunnitteluSopimus.logo = await fileService.persistFileToProjekti({
@@ -341,6 +262,13 @@ async function saveProjektiToVelho(projekti: DBProjekti) {
 async function handleEvents(projektiAdaptationResult: ProjektiAdaptationResult) {
   await projektiAdaptationResult.onEvent(ProjektiEventType.SAVE_PROJEKTI_TO_VELHO, async () => {
     await saveProjektiToVelho(projektiAdaptationResult.projekti);
+  });
+
+  await projektiAdaptationResult.onEvent(ProjektiEventType.VUOROVAIKUTUS_PUBLISHED, async (event, oid) => {
+    if (!(event as VuorovaikutusPublishedEvent).vuorovaikutusNumero) {
+      throw new Error("handleEvents: event is missing vuorovaikutusNumero");
+    }
+    await vuorovaikutusService.handleVuorovaikutusKutsu(oid, (event as VuorovaikutusPublishedEvent).vuorovaikutusNumero);
   });
 
   await projektiAdaptationResult.onEvent(ProjektiEventType.RESET_KAYTTOOIKEUDET, async (_event, oid) => {

@@ -1,25 +1,28 @@
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
 import React, { ReactElement, useMemo } from "react";
-import { formatDate } from "../../../../util/dateUtils";
+import { formatDate } from "../../../util/dateUtils";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
-import VuorovaikutusPaivamaaraJaTiedotLukutila from "../komponentit/VuorovaikutusPaivamaaraJaTiedotLukutila";
-import VuorovaikutusMahdollisuudet from "../komponentit/VuorovaikutusMahdollisuudet";
-import IlmoituksenVastaanottajatLukutila from "../komponentit/IlmoituksenVastaanottajatLukutila";
+import VuorovaikutusPaivamaaraJaTiedotLukutila from "./komponentit/VuorovaikutusPaivamaaraJaTiedotLukutila";
+import VuorovaikutusMahdollisuudetLukutila from "./komponentit/VuorovaikutusMahdollisuudetLukutila";
+import IlmoituksenVastaanottajatLukutila from "./komponentit/VuorovaikutusIlmoituksenVastaanottajatLukutila";
+import StandardiYhteystiedotListana from "../common/StandardiYhteystiedotListana";
 import ExtLink from "@components/ExtLink";
-import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
-import replace from "lodash/replace";
 
 interface Props {
   vuorovaikutusnro: number;
 }
 
-export default function VuorovaikuttaminenEpaaktiivinenWrapper({ vuorovaikutusnro }: Props): ReactElement {
+export default function SuunnitteluvaiheenVuorovaikuttaminen({ vuorovaikutusnro }: Props): ReactElement {
   const { data: projekti } = useProjekti({ revalidateOnMount: true });
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
   return (
-    <>{projekti && kirjaamoOsoitteet && <VuorovaikuttaminenEpaaktiivinen vuorovaikutusnro={vuorovaikutusnro} projekti={projekti} />}</>
+    <>
+      {projekti && kirjaamoOsoitteet && (
+        <SuunnitteluvaiheenVuorovaikuttaminenForm vuorovaikutusnro={vuorovaikutusnro} projekti={projekti} />
+      )}
+    </>
   );
 }
 
@@ -28,21 +31,23 @@ type SuunnitteluvaiheenVuorovaikuttaminenFormProps = {
   vuorovaikutusnro: number;
 };
 
-function VuorovaikuttaminenEpaaktiivinen({ vuorovaikutusnro, projekti }: SuunnitteluvaiheenVuorovaikuttaminenFormProps): ReactElement {
-  const vuorovaikutusKierrosjulkaisu = useMemo(
+function SuunnitteluvaiheenVuorovaikuttaminenForm({
+  vuorovaikutusnro,
+  projekti,
+}: SuunnitteluvaiheenVuorovaikuttaminenFormProps): ReactElement {
+  const vuorovaikutus = useMemo(
     () =>
-      projekti?.vuorovaikutusKierrosJulkaisut?.find((v) => {
-        return v.id === vuorovaikutusnro;
+      projekti?.suunnitteluVaihe?.vuorovaikutukset?.find((v) => {
+        return v.vuorovaikutusNumero === vuorovaikutusnro;
       }),
     [projekti, vuorovaikutusnro]
   );
 
   const aloituskuulutusjulkaisu = useMemo(() => {
-    // aloituskuulutusjulkaisusta katsotaan projektin sisällönkuvaus
     return projekti?.aloitusKuulutusJulkaisu;
   }, [projekti]);
 
-  if (!(aloituskuulutusjulkaisu && vuorovaikutusKierrosjulkaisu)) {
+  if (!(aloituskuulutusjulkaisu && vuorovaikutus)) {
     return <></>;
   }
 
@@ -54,15 +59,9 @@ function VuorovaikuttaminenEpaaktiivinen({ vuorovaikutusnro, projekti }: Suunnit
         <SectionContent>
           <h3 className="vayla-title">Vuorovaikuttaminen</h3>
         </SectionContent>
-        <VuorovaikutusPaivamaaraJaTiedotLukutila
-          aloituskuulutusjulkaisu={aloituskuulutusjulkaisu}
-          vuorovaikutus={vuorovaikutusKierrosjulkaisu}
-        />
+        <VuorovaikutusPaivamaaraJaTiedotLukutila aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} vuorovaikutus={vuorovaikutus} />
       </Section>
-      <VuorovaikutusMahdollisuudet
-        projekti={projekti}
-        vuorovaikutusTilaisuudet={vuorovaikutusKierrosjulkaisu.vuorovaikutusTilaisuudet || []}
-      />
+      <VuorovaikutusMahdollisuudetLukutila projekti={projekti} vuorovaikutus={vuorovaikutus} />
       <Section>
         <p className="vayla-label">Suunnitelmaluonnokset ja esittelyaineistot</p>
         <p>
@@ -73,17 +72,17 @@ function VuorovaikuttaminenEpaaktiivinen({ vuorovaikutusnro, projekti }: Suunnit
         <SectionContent>
           <p className="vayla-label">Vuorovaikuttamisen yhteyshenkilöt</p>
           <p></p>
-          {vuorovaikutusKierrosjulkaisu.yhteystiedot?.map((yhteystieto, index) => (
-            <p style={{ margin: 0 }} key={index}>
-              {replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto), "@", "[at]")}
-            </p>
-          ))}
+          <StandardiYhteystiedotListana
+            standardiYhteystiedot={vuorovaikutus.esitettavatYhteystiedot}
+            projekti={projekti}
+            pakotaProjariTaiKunnanEdustaja={true}
+          />
         </SectionContent>
         <SectionContent>
           <p className="vayla-label">Kutsu vuorovaikutamiseen julkisella puolella</p>
           <p>
             Linkki julkiselle puolelle on muodostettu vuorovaikuttamisen julkaisupäivänä. Julkaisupäivä{" "}
-            {formatDate(vuorovaikutusKierrosjulkaisu.vuorovaikutusJulkaisuPaiva)}.
+            {formatDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva)}.
           </p>
         </SectionContent>
         <SectionContent>
@@ -91,7 +90,7 @@ function VuorovaikuttaminenEpaaktiivinen({ vuorovaikutusnro, projekti }: Suunnit
           <p>Kuulutukset löytyvät asianhallinnasta.</p>
         </SectionContent>
       </Section>
-      <IlmoituksenVastaanottajatLukutila vuorovaikutus={vuorovaikutusKierrosjulkaisu} />
+      <IlmoituksenVastaanottajatLukutila vuorovaikutus={vuorovaikutus} />
     </>
   );
 }

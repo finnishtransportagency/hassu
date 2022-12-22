@@ -59,17 +59,7 @@ export function adaptAineistoToInput(aineistot: VelhoAineisto[]): AineistoInput[
 }
 
 export function expectApiError(e: Error, message: string): void {
-  let contents = {
-    message: "",
-  };
-  try {
-    contents = JSON.parse(e.message);
-  } catch (error) {
-    contents = {
-      message: e.message,
-    };
-    console.log(error);
-  }
+  const contents = JSON.parse(e.message);
   expect(contents.message).to.eq(message);
 }
 

@@ -15,8 +15,6 @@ import {
   ListaaVelhoProjektiAineistotQueryVariables,
   ListaaVelhoProjektitQueryVariables,
   OtaPalauteKasittelyynMutationVariables,
-  PaivitaPerustietojaMutationVariables,
-  PaivitaVuorovaikutustaMutationVariables,
   SiirraTilaMutationVariables,
   SynkronoiProjektiMuutoksetVelhostaMutationVariables,
   TallennaProjektiInput,
@@ -35,8 +33,6 @@ import {
   findUpdatesFromVelho,
   loadProjekti,
   synchronizeUpdatesFromVelho,
-  updateVuorovaikutus,
-  updatePerustiedot,
 } from "./projekti/projektiHandler";
 import { apiConfig } from "../../common/abstractApi";
 import { lataaAsiakirja } from "./handler/asiakirjaHandler";
@@ -97,10 +93,6 @@ async function executeOperation(event: AppSyncResolverEvent<AppSyncEventArgument
       return calculateEndDate(event.arguments as LaskePaattymisPaivaQueryVariables);
     case apiConfig.siirraTila.name:
       return tilaHandler.siirraTila((event.arguments as SiirraTilaMutationVariables).tilasiirtyma);
-    case apiConfig.paivitaVuorovaikutusta.name:
-      return updateVuorovaikutus((event.arguments as PaivitaVuorovaikutustaMutationVariables).input);
-    case apiConfig.paivitaPerustietoja.name:
-      return updatePerustiedot((event.arguments as PaivitaPerustietojaMutationVariables).input);
     case apiConfig.arkistoiProjekti.name:
       return arkistoiProjekti((event.arguments as ArkistoiProjektiMutationVariables).oid);
     case apiConfig.lisaaPalaute.name:

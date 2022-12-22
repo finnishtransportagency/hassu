@@ -97,56 +97,66 @@ export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
   ),
 });
 
-export const vuorovaikutustilaisuusPaivitysSchema = Yup.object().shape({
-  vuorovaikutusTilaisuudet: Yup.array().of(
-    Yup.object().shape({
-      nimi: Yup.string().nullable(),
-      kaytettavaPalvelu: Yup.string()
-        .when("tyyppi", {
-          is: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-          then: Yup.string().required("Verkkotilaisuudessa käytettävä palvelu täytyy valita"),
-        })
-        .nullable(),
-      linkki: Yup.string()
-        .when("tyyppi", {
-          is: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-          then: Yup.string().required("Verkkotilaisuuden linkki täytyy antaa"),
-        })
-        .nullable(),
-      esitettavatYhteystiedot: Yup.object()
-        .nullable()
-        .when("tyyppi", {
-          is: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
-          then: standardiYhteystiedot().test("at-least-one-contact", "Vähintään yksi yhteyshenkilö on annettava", (objekti) => {
-            if ((objekti.yhteysHenkilot?.length || 0) + (objekti.yhteysTiedot?.length || 0) === 0) {
-              return false;
-            }
-            return true;
-          }),
-        }),
-    })
-  ),
-});
+const getAineistoSchema = () =>
+  Yup.object().shape({
+    dokumenttiOid: Yup.string().required(),
+    nimi: Yup.string().required(),
+    jarjestys: Yup.number().integer().notRequired(),
+  });
 
-export const maxHankkeenkuvausLength = 2000;
-
-let hankkeenKuvaus = Yup.string()
-  .max(maxHankkeenkuvausLength, `Aloituskuulutukseen voidaan kirjoittaa maksimissaan ${maxHankkeenkuvausLength} merkkiä`)
-  .required("Hankkeen kuvaus ei voi olla tyhjä")
-  .nullable();
+const getAineistotSchema = () => Yup.array().of(getAineistoSchema()).nullable();
 
 export const vuorovaikutusSchema = Yup.object().shape({
   oid: Yup.string().required(),
-  vuorovaikutusKierros: Yup.object().shape({
-    vuorovaikutusNumero: Yup.number().required(),
-    hankkeenKuvaus: Yup.object().shape({ SUOMI: hankkeenKuvaus }),
-    vuorovaikutusJulkaisuPaiva: paivamaara({ preventPast: true }).required("Julkaisupäivä täytyy antaa"),
-    esitettavatYhteystiedot: standardiYhteystiedot(),
-    vuorovaikutusTilaisuudet: Yup.array()
-      .of(vuorovaikutustilaisuudetSchema)
-      .required("Vähintään yksi tilaisuus täytyy antaa")
-      .min(1, "Vähintään yksi tilaisuus täytyy antaa")
-      .nullable(),
-    ilmoituksenVastaanottajat: ilmoituksenVastaanottajat(),
+  suunnitteluVaihe: Yup.object().shape({
+    vuorovaikutus: Yup.object().shape({
+      vuorovaikutusNumero: Yup.number().required(),
+      esittelyaineisto: getAineistotSchema(),
+      suunnitelmaluonnokset: getAineistotSchema(),
+      vuorovaikutusJulkaisuPaiva: paivamaara({ preventPast: true }).required("Julkaisupäivä täytyy antaa"),
+      kysymyksetJaPalautteetViimeistaan: paivamaara({ preventPast: true }).required("Toivottu palautepäivämäärä täytyy antaa"),
+      esitettavatYhteystiedot: standardiYhteystiedot(),
+      vuorovaikutusTilaisuudet: Yup.array()
+        .of(vuorovaikutustilaisuudetSchema)
+        .required("Vähintään yksi tilaisuus täytyy antaa")
+        .min(1, "Vähintään yksi tilaisuus täytyy antaa")
+        .nullable(),
+      videot: Yup.array()
+        .notRequired()
+        .of(
+          Yup.object().shape({
+            nimi: Yup.string(),
+            url: Yup.string().url("URL ei kelpaa").notRequired(),
+          })
+        )
+        .compact(function (linkki) {
+          return !linkki.url;
+        }),
+      suunnittelumateriaali: Yup.object()
+        .notRequired()
+        .shape({
+          nimi: Yup.string().test("nimi-puttuu", "Nimi puuttuu", (value, testContext) => {
+            if (!value && testContext.parent.url) {
+              return testContext.createError({
+                path: `${testContext.path}`,
+                message: "Nimi on annettava, jos osoite on annettu",
+              });
+            }
+            return true;
+          }),
+          url: Yup.string()
+            .url("URL ei kelpaa")
+            .test("url-puttuu", "Url puuttuu", (value, testContext) => {
+              if (!value && testContext.parent.nimi) {
+                return testContext.createError({
+                  path: `${testContext.path}`,
+                  message: "Osoite on annettava, jos nimi on annettu",
+                });
+              }
+              return true;
+            }),
+        }),
+      ilmoituksenVastaanottajat: ilmoituksenVastaanottajat(),
+    }),
   }),
 });

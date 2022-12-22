@@ -57,17 +57,17 @@ export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocu
 export function adaptProjektiToJulkinenIndex(projekti: API.ProjektiJulkinen, kieli: API.Kieli): Omit<ProjektiDocument, "oid"> | undefined {
   if (projekti) {
     // Use texts from suunnitteluvaihe or from published aloituskuulutus
-    const viimeisinVuorovaikutusKierros = projekti.vuorovaikutusKierrokset?.[projekti.vuorovaikutusKierrokset.length - 1];
+    const suunnitteluVaihe = projekti.suunnitteluVaihe;
     const aloitusKuulutusJulkaisuJulkinen = projekti.aloitusKuulutusJulkaisu;
     let nimi: string | undefined;
     let hankkeenKuvaus: string | undefined;
     let publishTimestamp;
-    if (viimeisinVuorovaikutusKierros) {
+    if (suunnitteluVaihe) {
       if (!projekti.kielitiedot) {
         throw new Error("adaptProjektiToJulkinenIndex: projekti.kielitiedot määrittelemättä");
       }
       // Use texts from projekti
-      hankkeenKuvaus = viimeisinVuorovaikutusKierros?.hankkeenKuvaus?.[kieli] || undefined;
+      hankkeenKuvaus = suunnitteluVaihe?.hankkeenKuvaus?.[kieli] || undefined;
       nimi = selectNimi(projekti.velho.nimi, projekti.kielitiedot, kieli);
     } else if (aloitusKuulutusJulkaisuJulkinen) {
       if (!aloitusKuulutusJulkaisuJulkinen.hankkeenKuvaus) {
@@ -95,6 +95,9 @@ export function adaptProjektiToJulkinenIndex(projekti: API.ProjektiJulkinen, kie
 
     let viimeinenTilaisuusPaattyyString: string | undefined;
     let viimeinenTilaisuusPaattyyNumber: number | undefined;
+
+    const vuorovaikutukset = projekti?.suunnitteluVaihe?.vuorovaikutukset;
+    const viimeisinVuorovaikutusKierros = vuorovaikutukset?.[vuorovaikutukset?.length - 1];
 
     if (viimeisinVuorovaikutusKierros) {
       viimeisinVuorovaikutusKierros?.vuorovaikutusTilaisuudet?.forEach((tilaisuus) => {

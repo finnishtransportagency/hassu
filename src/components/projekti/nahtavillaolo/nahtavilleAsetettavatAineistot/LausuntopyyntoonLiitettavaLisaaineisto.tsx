@@ -5,6 +5,7 @@ import HassuTable from "@components/HassuTable";
 import Section from "@components/layout/Section";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
+import { VuorovaikutusFormValues } from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
 import { Stack } from "@mui/material";
 import { Aineisto } from "@services/api";
 import { find } from "lodash";
@@ -20,7 +21,7 @@ import { NahtavilleAsetettavatAineistotFormValues } from "./Muokkausnakyma";
 export default function LausuntopyyntoonLiitettavaLisaaineisto() {
   const { data: projekti } = useProjekti();
   const { watch, setValue } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
-  const lisaAineisto = watch("nahtavillaoloVaihe.lisaAineisto");
+  const lisaAineisto = watch("lisaAineisto");
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
   const linkRef = useRef<HTMLInputElement>(null);
   const { showInfoMessage, showErrorMessage } = useSnackbars();
@@ -57,7 +58,7 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
               value.push({ ...aineisto, jarjestys: value.length });
             }
           });
-          setValue("nahtavillaoloVaihe.lisaAineisto", value, { shouldDirty: true });
+          setValue("lisaAineisto", value, { shouldDirty: true });
         }}
       />
       <h5 className="vayla-smallest-title">Lausuntopyyntöön liitettävä linkki</h5>
@@ -89,12 +90,12 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
   );
 }
 
-type FormAineisto = FieldArrayWithId<NahtavilleAsetettavatAineistotFormValues, "nahtavillaoloVaihe.lisaAineisto", "id"> &
+type FormAineisto = FieldArrayWithId<VuorovaikutusFormValues, "suunnitteluVaihe.vuorovaikutus.esittelyaineistot", "id"> &
   Pick<Aineisto, "tila" | "tuotu" | "tiedosto">;
 
 const AineistoTable = () => {
   const { control, formState, register } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
-  const { fields, remove } = useFieldArray({ name: "nahtavillaoloVaihe.lisaAineisto", control });
+  const { fields, remove } = useFieldArray({ name: "lisaAineisto", control });
   const { data: projekti } = useProjekti();
 
   const enrichedFields: FormAineisto[] = useMemo(
@@ -115,13 +116,13 @@ const AineistoTable = () => {
         width: 250,
         accessor: (aineisto) => {
           const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
-          const errorMessage = (formState.errors.nahtavillaoloVaihe?.aineistoNahtavilla?.lisaAineisto?.[index] as any | undefined)?.message;
+          const errorMessage = (formState.errors.aineistoNahtavilla?.lisaAineisto?.[index] as any | undefined)?.message;
           return (
             <>
               <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto} />
               {errorMessage && <p className="text-red">{errorMessage}</p>}
-              <input type="hidden" {...register(`nahtavillaoloVaihe.lisaAineisto.${index}.dokumenttiOid`)} />
-              <input type="hidden" {...register(`nahtavillaoloVaihe.lisaAineisto.${index}.nimi`)} />
+              <input type="hidden" {...register(`lisaAineisto.${index}.dokumenttiOid`)} />
+              <input type="hidden" {...register(`lisaAineisto.${index}.nimi`)} />
             </>
           );
         },
@@ -148,7 +149,7 @@ const AineistoTable = () => {
       { Header: "id", accessor: "id" },
       { Header: "dokumenttiOid", accessor: "dokumenttiOid" },
     ],
-    [enrichedFields, formState.errors.nahtavillaoloVaihe?.aineistoNahtavilla, register, remove]
+    [enrichedFields, formState.errors.aineistoNahtavilla, register, remove]
   );
   const tableProps = useHassuTable<FormAineisto>({
     tableOptions: { columns, data: enrichedFields || [], initialState: { hiddenColumns: ["dokumenttiOid", "id"] } },

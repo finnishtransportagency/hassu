@@ -1,5 +1,6 @@
 import {
   AloitusKuulutus,
+
   AloitusKuulutusInput,
   IlmoitettavaViranomainen,
   IlmoituksenVastaanottajat,
@@ -12,7 +13,7 @@ import {
   NahtavillaoloVaiheInput,
   SuunnitteluSopimus,
   SuunnitteluSopimusInput,
-  VuorovaikutusKierrosInput,
+  SuunnitteluVaiheInput,
   VuorovaikutusTilaisuusTyyppi,
   Yhteystieto,
   YhteystietoInput,
@@ -171,63 +172,66 @@ class ApiTestFixture {
     SAAME: "Saameksi suunnitteluvaihe",
   };
 
-  vuorovaikutusKierros = (vuorovaikutusNumero: number, vuorovaikutusYhteysHenkilot?: string[]): VuorovaikutusKierrosInput => ({
-    vuorovaikutusNumero,
-    vuorovaikutusJulkaisuPaiva: "2022-03-23",
-    videot: [{ nimi: "Esittely " + vuorovaikutusNumero, url: "https://video" }],
-    kysymyksetJaPalautteetViimeistaan: "2022-03-23T23:48",
-    esitettavatYhteystiedot: {
-      yhteysTiedot: apiTestFixture.yhteystietoInputLista3,
-      yhteysHenkilot: vuorovaikutusYhteysHenkilot,
+  suunnitteluVaihe = (vuorovaikutusNumero: number, vuorovaikutusYhteysHenkilot?: string[], julkinen?: boolean): SuunnitteluVaiheInput => ({
+    vuorovaikutus: {
+      vuorovaikutusNumero,
+      julkinen,
+      vuorovaikutusJulkaisuPaiva: "2022-03-23",
+      videot: [{ nimi: "Esittely " + vuorovaikutusNumero, url: "https://video" }],
+      kysymyksetJaPalautteetViimeistaan: "2022-03-23T23:48",
+      esitettavatYhteystiedot: {
+        yhteysTiedot: apiTestFixture.yhteystietoInputLista3,
+        yhteysHenkilot: vuorovaikutusYhteysHenkilot,
+      },
+      esittelyaineistot: [],
+      suunnitelmaluonnokset: [],
+      ilmoituksenVastaanottajat: apiTestFixture.ilmoituksenVastaanottajat,
+      vuorovaikutusTilaisuudet: [
+        {
+          tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+          nimi: "Lorem ipsum " + vuorovaikutusNumero,
+          paivamaara: "2022-03-04",
+          alkamisAika: "15:00",
+          paattymisAika: "16:00",
+          kaytettavaPalvelu: KaytettavaPalvelu.TEAMS,
+          linkki: "https://linkki_tilaisuuteen",
+        },
+        {
+          tyyppi: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
+          nimi: "Lorem ipsum two " + vuorovaikutusNumero,
+          paivamaara: "2022-04-05",
+          alkamisAika: "10:00",
+          paattymisAika: "11:00",
+          paikka: "Kunnantalo",
+          osoite: "Katu 123",
+          postinumero: "00100",
+          postitoimipaikka: "Helsinki",
+          Saapumisohjeet: "Ensimmäinen ovi vasemmalla",
+        },
+        {
+          tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+          nimi: "Soittoaikatilaisuuden nimi tässä",
+          paivamaara: "2022-04-05",
+          alkamisAika: "10:00",
+          paattymisAika: "11:00",
+          esitettavatYhteystiedot: {
+            yhteysTiedot: this.yhteystietoInputLista,
+            yhteysHenkilot: vuorovaikutusYhteysHenkilot,
+          },
+        },
+        {
+          tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+          nimi: "Toisen soittoaikatilaisuuden nimi tässä",
+          paivamaara: "2033-04-05",
+          alkamisAika: "12:00",
+          paattymisAika: "13:00",
+          esitettavatYhteystiedot: {
+            yhteysTiedot: this.yhteystietoInputLista,
+            yhteysHenkilot: [],
+          },
+        },
+      ],
     },
-    esittelyaineistot: [],
-    suunnitelmaluonnokset: [],
-    ilmoituksenVastaanottajat: apiTestFixture.ilmoituksenVastaanottajat,
-    vuorovaikutusTilaisuudet: [
-      {
-        tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-        nimi: "Lorem ipsum " + vuorovaikutusNumero,
-        paivamaara: "2022-03-04",
-        alkamisAika: "15:00",
-        paattymisAika: "16:00",
-        kaytettavaPalvelu: KaytettavaPalvelu.TEAMS,
-        linkki: "https://linkki_tilaisuuteen",
-      },
-      {
-        tyyppi: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
-        nimi: "Lorem ipsum two " + vuorovaikutusNumero,
-        paivamaara: "2022-04-05",
-        alkamisAika: "10:00",
-        paattymisAika: "11:00",
-        paikka: "Kunnantalo",
-        osoite: "Katu 123",
-        postinumero: "00100",
-        postitoimipaikka: "Helsinki",
-        Saapumisohjeet: "Ensimmäinen ovi vasemmalla",
-      },
-      {
-        tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
-        nimi: "Soittoaikatilaisuuden nimi tässä",
-        paivamaara: "2022-04-05",
-        alkamisAika: "10:00",
-        paattymisAika: "11:00",
-        esitettavatYhteystiedot: {
-          yhteysTiedot: this.yhteystietoInputLista,
-          yhteysHenkilot: vuorovaikutusYhteysHenkilot,
-        },
-      },
-      {
-        tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
-        nimi: "Toisen soittoaikatilaisuuden nimi tässä",
-        paivamaara: "2033-04-05",
-        alkamisAika: "12:00",
-        paattymisAika: "13:00",
-        esitettavatYhteystiedot: {
-          yhteysTiedot: this.yhteystietoInputLista,
-          yhteysHenkilot: [],
-        },
-      },
-    ],
   });
 
   nahtavillaoloVaihe = (kuulutusYhteysHenkilot: string[]): NahtavillaoloVaiheInput => ({

@@ -5,7 +5,7 @@ import { log } from "../logger";
 import { NotFoundError } from "../error/NotFoundError";
 import { projektiAdapter } from "../projekti/adapter/projektiAdapter";
 import { asiakirjaAdapter } from "./asiakirjaAdapter";
-import { DBProjekti } from "../database/model";
+import { DBProjekti, Vuorovaikutus } from "../database/model";
 import assert from "assert";
 import { pdfGeneratorClient } from "../asiakirja/lambda/pdfGeneratorClient";
 import {
@@ -59,16 +59,17 @@ async function handleYleisotilaisuusKutsu(
 
   const velho = projektiWithChanges.velho;
   assert(velho, "Velho puuttuu");
-  const vuorovaikutusKierros = projektiWithChanges.vuorovaikutusKierros;
+  const suunnitteluVaihe = projektiWithChanges.suunnitteluVaihe;
   const kielitiedot = projektiWithChanges.kielitiedot;
   const suunnitteluSopimus = projektiWithChanges.suunnitteluSopimus || undefined;
-  assert(vuorovaikutusKierros && kielitiedot);
+  assert(suunnitteluVaihe && kielitiedot);
   return pdfGeneratorClient.createYleisotilaisuusKutsuPdf({
     oid: projektiWithChanges.oid,
     asiakirjanMuoto: determineAsiakirjaMuoto(velho.tyyppi, velho.vaylamuoto),
     velho,
     kayttoOikeudet: projektiWithChanges.kayttoOikeudet,
-    vuorovaikutusKierrosJulkaisu: asiakirjaAdapter.adaptVuorovaikutusKierrosJulkaisu(projektiWithChanges),
+    vuorovaikutus: (muutokset.suunnitteluVaihe?.vuorovaikutus as Vuorovaikutus) || null,
+    suunnitteluVaihe,
     kielitiedot,
     suunnitteluSopimus,
     kieli,

@@ -7,7 +7,7 @@ input TallennaProjektiInput {
   suunnitteluSopimus: SuunnitteluSopimusInput
   kayttoOikeudet: [ProjektiKayttajaInput!]
   kielitiedot: KielitiedotInput
-  vuorovaikutusKierros: VuorovaikutusKierrosInput
+  suunnitteluVaihe: SuunnitteluVaiheInput
   nahtavillaoloVaihe: NahtavillaoloVaiheInput
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheInput
   jatkoPaatos1Vaihe: HyvaksymisPaatosVaiheInput
@@ -82,15 +82,28 @@ input SuunnitteluSopimusInput {
   yhteysHenkilo: String!
 }
 
-input VuorovaikutusKierrosInput {
-  vuorovaikutusNumero: Int!
+input SuunnitteluVaiheInput {
   hankkeenKuvaus: LokalisoituTekstiInput
   arvioSeuraavanVaiheenAlkamisesta: String
   suunnittelunEteneminenJaKesto: String
+  tila: SuunnitteluVaiheTila
+  """
+  Yhden vuorovaikutuksen luonti/muokkaus
+  """
+  vuorovaikutus: VuorovaikutusInput
   """
   Palautteiden vastaanottajat. Lista kayttajatunnuksia
   """
   palautteidenVastaanottajat: [String!]
+}
+
+input VuorovaikutusInput {
+  """
+  Vuorovaikutuksen jarjestysnumero
+  """
+  vuorovaikutusNumero: Int!
+  julkinen: Boolean
+  vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusInput!]
   """
   yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
   """
@@ -99,19 +112,12 @@ input VuorovaikutusKierrosInput {
   yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
   """
   kysymyksetJaPalautteetViimeistaan: String
-  vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusInput!]
-  esittelyaineistot: [AineistoInput!]
-  suunnitelmaluonnokset: [AineistoInput!]
   videot: [LinkkiInput!]
   suunnittelumateriaali: LinkkiInput
   esitettavatYhteystiedot: StandardiYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
-}
-
-input VuorovaikutusPaivitysInput {
-  oid: String!
-  vuorovaikutusNumero: Int!
-  vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusPaivitysInput!]!
+  esittelyaineistot: [AineistoInput!]
+  suunnitelmaluonnokset: [AineistoInput!]
 }
 
 input VuorovaikutusTilaisuusInput {
@@ -131,46 +137,13 @@ input VuorovaikutusTilaisuusInput {
   paattymisAika: String!
   kaytettavaPalvelu: KaytettavaPalvelu
   linkki: String
+
   paikka: String
   osoite: String
   postinumero: String
   postitoimipaikka: String
   Saapumisohjeet: String
   esitettavatYhteystiedot: StandardiYhteystiedotInput
-  peruttu: Boolean
-}
-
-input VuorovaikutusPerustiedotInput {
-  oid: String!
-  vuorovaikutusKierros: PerustiedotInput!
-}
-
-input PerustiedotInput {
-  vuorovaikutusNumero: Int!
-  arvioSeuraavanVaiheenAlkamisesta: String!
-  suunnittelunEteneminenJaKesto: String
-  """
-  Palautteiden vastaanottajat. Lista kayttajatunnuksia
-  """
-  palautteidenVastaanottajat: [String!]
-  """
-  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
-  """
-  kysymyksetJaPalautteetViimeistaan: String!
-  esittelyaineistot: [AineistoInput!]
-  suunnitelmaluonnokset: [AineistoInput!]
-  videot: [LinkkiInput!]
-  suunnittelumateriaali: LinkkiInput
-}
-
-input VuorovaikutusTilaisuusPaivitysInput {
-  id: Int
-  nimi: String
-  kaytettavaPalvelu: KaytettavaPalvelu
-  linkki: String
-  Saapumisohjeet: String
-  esitettavatYhteystiedot: StandardiYhteystiedotInput
-  peruttu: Boolean
 }
 
 input NahtavillaoloVaiheInput {
@@ -266,7 +239,6 @@ enum TilasiirtymaToiminto {
 
 enum TilasiirtymaTyyppi {
   ALOITUSKUULUTUS
-  VUOROVAIKUTUSKIERROS
   NAHTAVILLAOLO
   HYVAKSYMISPAATOSVAIHE
   JATKOPAATOS_1

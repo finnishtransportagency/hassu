@@ -9,7 +9,12 @@ type Query {
   haeVelhoProjektiAineistoLinkki(oid: String!, dokumenttiOid: String!): String
   haeProjektiMuutoksetVelhosta(oid: String!): Velho
 
-  esikatseleAsiakirjaPDF(oid: String!, asiakirjaTyyppi: AsiakirjaTyyppi!, kieli: Kieli, muutokset: TallennaProjektiInput!): PDF
+  esikatseleAsiakirjaPDF(
+    oid: String!
+    asiakirjaTyyppi: AsiakirjaTyyppi!
+    kieli: Kieli
+    muutokset: TallennaProjektiInput!
+  ): PDF
   valmisteleTiedostonLataus(tiedostoNimi: String!, contentType: String!): LatausTiedot
 
   laskePaattymisPaiva(alkupaiva: String!, tyyppi: LaskuriTyyppi!): String
@@ -23,8 +28,7 @@ type Query {
 type Mutation {
   tallennaProjekti(projekti: TallennaProjektiInput!): String
   siirraTila(tilasiirtyma: TilaSiirtymaInput): String
-  paivitaVuorovaikutusta(input: VuorovaikutusPaivitysInput): String
-  paivitaPerustietoja(input: VuorovaikutusPerustiedotInput): String
+
   lisaaPalaute(oid: String!, palaute: PalauteInput!): String
   otaPalauteKasittelyyn(oid: String!, id: String!): String
 

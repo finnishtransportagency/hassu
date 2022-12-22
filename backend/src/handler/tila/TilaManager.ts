@@ -1,12 +1,29 @@
-import { requirePermissionLuku } from "../../user";
+import {
+  KuulutusJulkaisuTila,
+  NykyinenKayttaja,
+  TilaSiirtymaInput,
+  TilasiirtymaToiminto,
+  TilasiirtymaTyyppi,
+} from "../../../../common/graphql/apiModel";
+import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { emailHandler } from "../emailHandler";
-import { DBProjekti } from "../../database/model";
-import { NykyinenKayttaja, TilaSiirtymaInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
+import { DBProjekti, UudelleenkuulutusTila } from "../../database/model";
+import { requireAdmin, requireOmistaja } from "../../user/userService";
 import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
+import { findJulkaisuWithTila, GenericKuulutus, GenericDbKuulutusJulkaisu } from "../../projekti/projektiUtil";
+import { assertIsDefined } from "../../util/assertions";
+import { isKuulutusPaivaInThePast } from "../../projekti/status/projektiJulkinenStatusHandler";
+import { fileService } from "../../files/fileService";
+import { PathTuple } from "../../files/ProjektiPath";
+import { auditLog } from "../../logger";
 
-export abstract class TilaManager {
+export abstract class TilaManager<T extends GenericKuulutus, Y extends GenericDbKuulutusJulkaisu> {
   protected tyyppi!: TilasiirtymaTyyppi;
+
+  abstract getVaihe(projekti: DBProjekti): T;
+
+  abstract getJulkaisut(projekti: DBProjekti): Y[] | undefined;
 
   public async siirraTila({ oid, syy, toiminto, tyyppi }: TilaSiirtymaInput): Promise<void> {
     requirePermissionLuku();
@@ -37,18 +54,57 @@ export abstract class TilaManager {
   }
 
   private async sendForApprovalInternal(projekti: DBProjekti) {
-    const kayttaja = this.checkPriviledgesSendForApproval(projekti);
-    await this.sendForApproval(projekti, kayttaja);
+    const muokkaaja = requirePermissionMuokkaa(projekti);
+    await this.sendForApproval(projekti, muokkaaja);
   }
 
   private async rejectInternal(projekti: DBProjekti, syy: string) {
-    this.checkPriviledgesApproveReject(projekti);
+    requireOmistaja(projekti);
     await this.reject(projekti, syy);
   }
 
   private async approveInternal(projekti: DBProjekti) {
-    const kayttaja = this.checkPriviledgesApproveReject(projekti);
-    await this.approve(projekti, kayttaja);
+    const projektiPaallikko = requireOmistaja(projekti);
+    await this.approve(projekti, projektiPaallikko);
+  }
+
+  async uudelleenkuuluta(projekti: DBProjekti): Promise<void> {
+    requireAdmin();
+
+    const kuulutus = this.getVaihe(projekti);
+    const julkaisut = this.getJulkaisut(projekti);
+    const hyvaksyttyJulkaisu = findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
+
+    this.validateUudelleenkuulutus(projekti, kuulutus, hyvaksyttyJulkaisu);
+    assertIsDefined(julkaisut);
+    assertIsDefined(kuulutus);
+    assertIsDefined(hyvaksyttyJulkaisu);
+
+    const julkinenUudelleenKuulutus = isKuulutusPaivaInThePast(hyvaksyttyJulkaisu.kuulutusPaiva);
+
+    let uudelleenKuulutus;
+    if (julkinenUudelleenKuulutus) {
+      uudelleenKuulutus = {
+        tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
+        alkuperainenHyvaksymisPaiva: hyvaksyttyJulkaisu.hyvaksymisPaiva || undefined,
+      };
+    } else {
+      uudelleenKuulutus = {
+        tila: UudelleenkuulutusTila.PERUUTETTU,
+      };
+    }
+    kuulutus.uudelleenKuulutus = uudelleenKuulutus;
+    const newKuulutus = { ...kuulutus, id: julkaisut.length + 1 };
+    const sourceFolder = this.getProjektiPathForKuulutus(projekti, kuulutus);
+
+    const targetFolder = this.getProjektiPathForKuulutus(projekti, newKuulutus);
+    await fileService.renameYllapitoFolder(sourceFolder, targetFolder);
+    auditLog.info("Uudelleennimeä ylläpidon tiedostokansio", { sourceFolder, targetFolder });
+    await this.saveVaihe(projekti, newKuulutus);
+    auditLog.info("Tallenna uudelleenkuulutustiedolla varustettu kuulutusvaihe", {
+      projektiEnnenTallennusta: projekti,
+      tallennettavaKuulutus: newKuulutus,
+    });
   }
 
   async synchronizeProjektiFiles(oid: string, isUudelleenKuulutus: boolean, synchronizationDate?: string | null): Promise<void> {
@@ -59,17 +115,15 @@ export abstract class TilaManager {
     }
   }
 
-  abstract uudelleenkuuluta(projekti: DBProjekti): Promise<void>;
-
-  abstract checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja;
-
-  abstract checkPriviledgesSendForApproval(projekti: DBProjekti): NykyinenKayttaja;
-
-  abstract checkUudelleenkuulutusPriviledges(projekti: DBProjekti): NykyinenKayttaja;
-
-  abstract sendForApproval(projekti: DBProjekti, kayttaja: NykyinenKayttaja): Promise<void>;
+  abstract sendForApproval(projekti: DBProjekti, projektipaallikko: NykyinenKayttaja): Promise<void>;
 
   abstract reject(projekti: DBProjekti, syy: string | null | undefined): Promise<void>;
 
-  abstract approve(projekti: DBProjekti, kayttaja: NykyinenKayttaja): Promise<void>;
+  abstract approve(projekti: DBProjekti, projektiPaallikko: NykyinenKayttaja): Promise<void>;
+
+  abstract validateUudelleenkuulutus(projekti: DBProjekti, kuulutus: T, hyvaksyttyJulkaisu: Y | undefined): void;
+
+  abstract getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: T | null | undefined): PathTuple;
+
+  abstract saveVaihe(projekti: DBProjekti, newKuulutus: T): Promise<void>;
 }

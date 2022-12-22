@@ -13,18 +13,12 @@ import TextInput from "@components/form/TextInput";
 import Select from "@components/form/Select";
 import HassuGrid from "@components/HassuGrid";
 import TimePicker from "@components/form/TimePicker";
-import {
-  KaytettavaPalvelu,
-  VuorovaikutusTilaisuus,
-  VuorovaikutusTilaisuusInput,
-  VuorovaikutusTilaisuusTyyppi,
-  Yhteystieto,
-  YhteystietoInput,
-} from "@services/api";
+import { KaytettavaPalvelu, VuorovaikutusTilaisuusInput, VuorovaikutusTilaisuusTyyppi, Yhteystieto } from "@services/api";
 import capitalize from "lodash/capitalize";
+import { VuorovaikutusFormValues } from "@components/projekti/suunnitteluvaihe/SuunnitteluvaiheenVuorovaikuttaminen";
 import { Controller, FormProvider, useFieldArray, useForm, useFormContext, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { vuorovaikutustilaisuudetSchema, vuorovaikutustilaisuusPaivitysSchema } from "src/schemas/vuorovaikutus";
+import { vuorovaikutustilaisuudetSchema } from "src/schemas/vuorovaikutus";
 import FormGroup from "@components/form/FormGroup";
 import CheckBox from "@components/form/CheckBox";
 import SoittoajanYhteyshenkilot from "./SoittoajanYhteyshenkilot";
@@ -60,53 +54,31 @@ export type VuorovaikutustilaisuusFormValues = {
   vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[];
 };
 
-function tilaisuudetInputiksi(tilaisuudet: VuorovaikutusTilaisuusInput[] | VuorovaikutusTilaisuus[]) {
-  return tilaisuudet.map((tilaisuus) => {
-    const tilaisuusCopy: Partial<VuorovaikutusTilaisuusInput | VuorovaikutusTilaisuus> = { ...tilaisuus };
-    delete (tilaisuusCopy as Partial<VuorovaikutusTilaisuus>).__typename;
-    return {
-      ...tilaisuusCopy,
-      esitettavatYhteystiedot: {
-        yhteysHenkilot: tilaisuus.esitettavatYhteystiedot?.yhteysHenkilot || [],
-        yhteysTiedot:
-          tilaisuus.esitettavatYhteystiedot?.yhteysTiedot?.map((yhteystieto) => {
-            const yhteystietoCopy: Partial<YhteystietoInput | Yhteystieto> = { ...yhteystieto };
-            delete (yhteystietoCopy as Partial<Yhteystieto>).__typename;
-            return yhteystietoCopy;
-          }) || [],
-      },
-    };
-  });
-}
-
 interface Props {
   open: boolean;
   windowHandler: (isOpen: boolean) => void;
-  tilaisuudet: VuorovaikutusTilaisuusInput[] | VuorovaikutusTilaisuus[];
+  tilaisuudet: VuorovaikutusTilaisuusInput[] | null | undefined;
+  julkinen: boolean;
+  avaaHyvaksymisDialogi: () => void;
   projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[];
-  onSubmit: (formData: VuorovaikutustilaisuusFormValues) => void;
-  mostlyDisabled?: boolean;
 }
 
 export default function VuorovaikutusDialog({
   open,
   windowHandler,
   tilaisuudet,
+  julkinen,
+  avaaHyvaksymisDialogi,
   projektiHenkilot,
-  onSubmit,
-  mostlyDisabled,
 }: Props): ReactElement {
   const formOptions: UseFormProps<VuorovaikutustilaisuusFormValues> = {
-    resolver: yupResolver(mostlyDisabled ? vuorovaikutustilaisuusPaivitysSchema : vuorovaikutustilaisuudetSchema, {
-      abortEarly: false,
-      recursive: true,
-    }),
+    resolver: yupResolver(vuorovaikutustilaisuudetSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
-    defaultValues: {
-      vuorovaikutusTilaisuudet: tilaisuudetInputiksi(tilaisuudet),
-    },
+    defaultValues: { vuorovaikutusTilaisuudet: [] },
   };
+
+  const { setValue: parentSetValue } = useFormContext<VuorovaikutusFormValues>();
 
   const useFormReturn = useForm<VuorovaikutustilaisuusFormValues>(formOptions);
   const {
@@ -115,8 +87,6 @@ export default function VuorovaikutusDialog({
     reset,
     formState: { errors, isDirty },
     handleSubmit,
-    setValue,
-    watch,
   } = useFormReturn;
 
   const { fields, append, remove } = useFieldArray({
@@ -127,7 +97,7 @@ export default function VuorovaikutusDialog({
   useEffect(() => {
     if (tilaisuudet) {
       reset({
-        vuorovaikutusTilaisuudet: tilaisuudetInputiksi(tilaisuudet),
+        vuorovaikutusTilaisuudet: tilaisuudet,
       });
     }
   }, [tilaisuudet, reset]);
@@ -158,10 +128,16 @@ export default function VuorovaikutusDialog({
 
   const saveTilaisuudet = useCallback(
     (formData: VuorovaikutustilaisuusFormValues) => {
-      onSubmit(formData);
+      parentSetValue("suunnitteluVaihe.vuorovaikutus.vuorovaikutusTilaisuudet", formData.vuorovaikutusTilaisuudet, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
       windowHandler(false);
+      if (julkinen) {
+        avaaHyvaksymisDialogi();
+      }
     },
-    [onSubmit, windowHandler]
+    [parentSetValue, windowHandler, julkinen, avaaHyvaksymisDialogi]
   );
 
   const onClose = useCallback(() => {
@@ -181,19 +157,11 @@ export default function VuorovaikutusDialog({
         <FormProvider {...useFormReturn}>
           <form>
             <HassuStack>
-              {mostlyDisabled ? (
-                <p>Voit valita saman vuorovaikutustavan useammin kuin yhden kerran.</p>
-              ) : (
-                <p>
-                  Kutsun jälkeen vuorovaikutustilaisuuksien muokkausta on rajoitettu. Tilaisuuden peruminen lähettää <b>minne ja mitä</b>.
-                  Jos sinun tulee järjestää uudet vuorovaikutustilaisuudet peruuntuneiden tilalle, olethan yhteydessä suunnitteluohjeukseen.
-                </p>
-              )}
+              <p>Voit valita saman vuorovaikutustavan useammin kuin yhden kerran.</p>
               <HassuStack direction={["column", "column", "row"]}>
                 <HassuChip
-                  disabled={mostlyDisabled}
                   icon={<HeadphonesIcon />}
-                  clickable={!mostlyDisabled}
+                  clickable
                   onClick={(event) => {
                     event.preventDefault();
                     append(defaultOnlineTilaisuus);
@@ -207,9 +175,8 @@ export default function VuorovaikutusDialog({
                   deleteIcon={<HassuBadge badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.VERKOSSA)} color={"primary"} />}
                 />
                 <HassuChip
-                  disabled={mostlyDisabled}
                   icon={<LocationCityIcon />}
-                  clickable={!mostlyDisabled}
+                  clickable
                   onClick={(event) => {
                     event.preventDefault();
                     append(defaultFyysinenTilaisuus);
@@ -223,9 +190,8 @@ export default function VuorovaikutusDialog({
                   deleteIcon={<HassuBadge badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.PAIKALLA)} color={"primary"} />}
                 />
                 <HassuChip
-                  disabled={mostlyDisabled}
                   icon={<LocalPhoneIcon />}
-                  clickable={!mostlyDisabled}
+                  clickable
                   onClick={(event) => {
                     event.preventDefault();
                     append(defaultSoittoaikaTilaisuus);
@@ -246,10 +212,9 @@ export default function VuorovaikutusDialog({
                     if (tilaisuus.tyyppi !== VuorovaikutusTilaisuusTyyppi.VERKOSSA) {
                       return;
                     }
-                    const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
                     return (
-                      <SectionContent key={index} style={{ position: "relative" }}>
-                        <TilaisuudenNimiJaAika index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
+                      <SectionContent key={index}>
+                        <TilaisuudenNimiJaAika index={index} />
                         <HassuGrid cols={{ lg: 3 }}>
                           <Select
                             addEmptyOption
@@ -259,7 +224,6 @@ export default function VuorovaikutusDialog({
                             label="Käytettävä palvelu *"
                             {...register(`vuorovaikutusTilaisuudet.${index}.kaytettavaPalvelu`)}
                             error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.kaytettavaPalvelu}
-                            disabled={!!peruttu}
                           />
                         </HassuGrid>
                         <TextInput
@@ -267,32 +231,17 @@ export default function VuorovaikutusDialog({
                           maxLength={200}
                           {...register(`vuorovaikutusTilaisuudet.${index}.linkki`)}
                           error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.linkki}
-                          disabled={!!peruttu}
                         ></TextInput>
                         <p>Linkki tilaisuuteen julkaistaan palvelun julkisella puolella kaksi (2) tuntia ennen tilaisuuden alkamista.</p>
-                        {mostlyDisabled ? (
-                          !peruttu && (
-                            <Button
-                              className="btn-remove-red"
-                              onClick={(event) => {
-                                event.preventDefault();
-                                setValue(`vuorovaikutusTilaisuudet.${index}.peruttu`, true);
-                              }}
-                            >
-                              Peru tilaisuus
-                            </Button>
-                          )
-                        ) : (
-                          <Button
-                            className="btn-remove-red"
-                            onClick={(event) => {
-                              event.preventDefault();
-                              remove(index);
-                            }}
-                          >
-                            Poista
-                          </Button>
-                        )}
+                        <Button
+                          className="btn-remove-red"
+                          onClick={(event) => {
+                            event.preventDefault();
+                            remove(index);
+                          }}
+                        >
+                          Poista
+                        </Button>
                       </SectionContent>
                     );
                   })}
@@ -305,10 +254,9 @@ export default function VuorovaikutusDialog({
                     if (tilaisuus.tyyppi !== VuorovaikutusTilaisuusTyyppi.PAIKALLA) {
                       return;
                     }
-                    const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
                     return (
-                      <SectionContent key={index} style={{ position: "relative" }}>
-                        <TilaisuudenNimiJaAika index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
+                      <SectionContent key={index}>
+                        <TilaisuudenNimiJaAika index={index} />
                         <HassuGrid cols={{ lg: 5 }}>
                           <TextInput
                             label="Paikka"
@@ -316,21 +264,18 @@ export default function VuorovaikutusDialog({
                             style={{ gridColumn: "1 / span 2" }}
                             {...register(`vuorovaikutusTilaisuudet.${index}.paikka`)}
                             error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.paikka}
-                            disabled={mostlyDisabled}
                           ></TextInput>
                         </HassuGrid>
                         <HassuGrid cols={{ lg: 5 }}>
                           <TextInput
                             label="Osoite *"
                             maxLength={200}
-                            disabled={mostlyDisabled}
                             style={{ gridColumn: "1 / span 2" }}
                             {...register(`vuorovaikutusTilaisuudet.${index}.osoite`)}
                             error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.osoite}
                           ></TextInput>
                           <TextInput
                             label="Postinumero *"
-                            disabled={mostlyDisabled}
                             maxLength={200}
                             {...register(`vuorovaikutusTilaisuudet.${index}.postinumero`)}
                             error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.postinumero}
@@ -338,7 +283,6 @@ export default function VuorovaikutusDialog({
 
                           <TextInput
                             label="Postitoimipaikka"
-                            disabled={mostlyDisabled}
                             maxLength={200}
                             {...register(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka`)}
                             error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.postitoimipaikka}
@@ -349,31 +293,16 @@ export default function VuorovaikutusDialog({
                           {...register(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet`)}
                           error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.Saapumisohjeet}
                           maxLength={200}
-                          disabled={!!peruttu}
                         ></TextInput>
-                        {mostlyDisabled ? (
-                          !peruttu && (
-                            <Button
-                              className="btn-remove-red"
-                              onClick={(event) => {
-                                event.preventDefault();
-                                setValue(`vuorovaikutusTilaisuudet.${index}.peruttu`, true);
-                              }}
-                            >
-                              Peru tilaisuus
-                            </Button>
-                          )
-                        ) : (
-                          <Button
-                            className="btn-remove-red"
-                            onClick={(event) => {
-                              event.preventDefault();
-                              remove(index);
-                            }}
-                          >
-                            Poista
-                          </Button>
-                        )}
+                        <Button
+                          className="btn-remove-red"
+                          onClick={(event) => {
+                            event.preventDefault();
+                            remove(index);
+                          }}
+                        >
+                          Poista
+                        </Button>
                       </SectionContent>
                     );
                   })}
@@ -386,10 +315,9 @@ export default function VuorovaikutusDialog({
                     if (tilaisuus.tyyppi !== VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
                       return;
                     }
-                    const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
                     return (
-                      <SectionContent key={index} style={{ position: "relative" }}>
-                        <TilaisuudenNimiJaAika index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
+                      <SectionContent key={index}>
+                        <TilaisuudenNimiJaAika index={index} />
                         <SectionContent>
                           <h4 className="vayla-smallest-title">Soittoajassa esitettävät yhteyshenkilöt</h4>
                           <p>
@@ -413,7 +341,6 @@ export default function VuorovaikutusDialog({
                                       <Fragment key={index}>
                                         <CheckBox
                                           label={yhteystietoVirkamiehelleTekstiksi(hlo)}
-                                          disabled={!!peruttu}
                                           onChange={(event) => {
                                             if (!event.target.checked) {
                                               onChange(tunnuslista.filter((tunnus) => tunnus !== hlo.kayttajatunnus));
@@ -434,30 +361,16 @@ export default function VuorovaikutusDialog({
                             <p>Projektilla ei ole tallennettuja henkilöitä</p>
                           )}
                         </SectionContent>
-                        <SoittoajanYhteyshenkilot tilaisuusIndex={index} disabled={!!peruttu} />
-                        {mostlyDisabled ? (
-                          !peruttu && (
-                            <Button
-                              className="btn-remove-red"
-                              onClick={(event) => {
-                                event.preventDefault();
-                                setValue(`vuorovaikutusTilaisuudet.${index}.peruttu`, true);
-                              }}
-                            >
-                              Peru tilaisuus
-                            </Button>
-                          )
-                        ) : (
-                          <Button
-                            className="btn-remove-red"
-                            onClick={(event) => {
-                              event.preventDefault();
-                              remove(index);
-                            }}
-                          >
-                            Poista
-                          </Button>
-                        )}
+                        <SoittoajanYhteyshenkilot tilaisuusIndex={index} />
+                        <Button
+                          className="btn-remove-red"
+                          onClick={(event) => {
+                            event.preventDefault();
+                            remove(index);
+                          }}
+                        >
+                          Poista
+                        </Button>
                       </SectionContent>
                     );
                   })}
@@ -474,7 +387,6 @@ export default function VuorovaikutusDialog({
         </Button>
         <Button
           onClick={(e) => {
-            reset();
             onClose();
             e.preventDefault();
           }}
@@ -486,37 +398,32 @@ export default function VuorovaikutusDialog({
   );
 }
 
-function TilaisuudenNimiJaAika(props: { index: number; mostlyDisabled?: boolean; peruttu?: boolean | null }) {
+function TilaisuudenNimiJaAika(props: { index: number }) {
   const {
     register,
     formState: { errors },
   } = useFormContext<VuorovaikutustilaisuusFormValues>();
   return (
     <>
-      {!!props.peruttu && <div className="text-red">PERUTTU</div>}
       <TextInput
         label="Tilaisuuden nimi"
         {...register(`vuorovaikutusTilaisuudet.${props.index}.nimi`)}
         error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.nimi}
-        disabled={!!props.peruttu}
         maxLength={200}
-      />{" "}
+      />
       <HassuStack direction={["column", "column", "row"]}>
         <HassuDatePickerWithController
-          disabled={props.mostlyDisabled}
           label="Päivämäärä"
           minDate={today()}
           textFieldProps={{ required: true }}
           controllerProps={{ name: `vuorovaikutusTilaisuudet.${props.index}.paivamaara` }}
         />
         <TimePicker
-          disabled={props.mostlyDisabled}
           label="Alkaa *"
           {...register(`vuorovaikutusTilaisuudet.${props.index}.alkamisAika`)}
           error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.alkamisAika}
         ></TimePicker>
         <TimePicker
-          disabled={props.mostlyDisabled}
           label="Päättyy *"
           {...register(`vuorovaikutusTilaisuudet.${props.index}.paattymisAika`)}
           error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.paattymisAika}

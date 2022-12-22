@@ -4,7 +4,6 @@ import { nahtavillaoloTilaManager } from "./nahtavillaoloTilaManager";
 import { hyvaksymisPaatosVaiheTilaManager } from "./hyvaksymisPaatosVaiheTilaManager";
 import { jatkoPaatos1VaiheTilaManager } from "./jatkoPaatos1VaiheTilaManager";
 import { jatkoPaatos2VaiheTilaManager } from "./jatkoPaatos2VaiheTilaManager";
-import { vuorovaikutusKierrosTilaManager } from "./vuorovaikutusKierrosTilaManager";
 
 class TilaHandler {
   async siirraTila(input: TilaSiirtymaInput | undefined | null) {
@@ -14,8 +13,6 @@ class TilaHandler {
     switch (input.tyyppi) {
       case TilasiirtymaTyyppi.ALOITUSKUULUTUS:
         return aloitusKuulutusTilaManager.siirraTila(input);
-      case TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS:
-        return vuorovaikutusKierrosTilaManager.siirraTila(input);
       case TilasiirtymaTyyppi.NAHTAVILLAOLO:
         return nahtavillaoloTilaManager.siirraTila(input);
       case TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE:
