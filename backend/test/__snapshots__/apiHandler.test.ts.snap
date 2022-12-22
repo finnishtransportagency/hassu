@@ -188,7 +188,8 @@ Array [
     "oid": "1",
     "salt": "***unittest***",
     "suunnitteluSopimus": undefined,
-    "vuorovaikutusKierros": undefined,
+    "suunnitteluVaihe": undefined,
+    "vuorovaikutukset": undefined,
   },
 ]
 `;
@@ -270,7 +271,8 @@ Array [
     "oid": "1",
     "salt": "***unittest***",
     "suunnitteluSopimus": undefined,
-    "vuorovaikutusKierros": undefined,
+    "suunnitteluVaihe": undefined,
+    "vuorovaikutukset": undefined,
   },
 ]
 `;
@@ -432,7 +434,8 @@ Array [
       "logo": "/suunnittelusopimus/logo.gif",
       "yhteysHenkilo": "A2",
     },
-    "vuorovaikutusKierros": undefined,
+    "suunnitteluVaihe": undefined,
+    "vuorovaikutukset": undefined,
   },
 ]
 `;

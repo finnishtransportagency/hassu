@@ -5,7 +5,7 @@ import {
   SuunnitteluSopimus,
   SuunnitteluSopimusJulkaisu,
   Velho,
-  VuorovaikutusKierrosJulkaisu,
+  Vuorovaikutus,
   Yhteystieto,
 } from "../../database/model";
 import { translate } from "../../util/localization";
@@ -22,7 +22,7 @@ export type KutsuAdapterProps = {
   kieli: Kieli;
   asiakirjanMuoto: AsiakirjanMuoto;
   projektiTyyppi: ProjektiTyyppi;
-  vuorovaikutusKierrosJulkaisu?: VuorovaikutusKierrosJulkaisu;
+  vuorovaikutus?: Vuorovaikutus;
   kayttoOikeudet?: DBVaylaUser[];
   suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu;
 };
@@ -48,7 +48,7 @@ export class KutsuAdapter {
   private readonly asiakirjanMuoto: AsiakirjanMuoto;
   private readonly oid?: string;
   private readonly projektiTyyppi: ProjektiTyyppi;
-  private readonly vuorovaikutusKierrosJulkaisu?: VuorovaikutusKierrosJulkaisu;
+  private readonly vuorovaikutus?: Vuorovaikutus;
   private readonly kayttoOikeudet?: DBVaylaUser[];
   private readonly suunnitteluSopimus?: SuunnitteluSopimusJulkaisu | SuunnitteluSopimus;
   private readonly kielitiedot: Kielitiedot;
@@ -61,7 +61,7 @@ export class KutsuAdapter {
     asiakirjanMuoto,
     kieli,
     projektiTyyppi,
-    vuorovaikutusKierrosJulkaisu,
+    vuorovaikutus,
     kayttoOikeudet,
     suunnitteluSopimus,
   }: KutsuAdapterProps) {
@@ -71,7 +71,7 @@ export class KutsuAdapter {
     this.kieli = kieli;
     this.asiakirjanMuoto = asiakirjanMuoto;
     this.projektiTyyppi = projektiTyyppi;
-    this.vuorovaikutusKierrosJulkaisu = vuorovaikutusKierrosJulkaisu;
+    this.vuorovaikutus = vuorovaikutus;
     this.kayttoOikeudet = kayttoOikeudet;
     this.suunnitteluSopimus = suunnitteluSopimus;
   }
@@ -217,7 +217,7 @@ export class KutsuAdapter {
     // vuorovaikutusJulkaisuPaiva on oltava
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    return new Date(this.vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva).toLocaleDateString("fi");
+    return new Date(this.vuorovaikutus.vuorovaikutusJulkaisuPaiva).toLocaleDateString("fi");
   }
 
   get kutsuUrl(): string {
@@ -341,7 +341,12 @@ export class KutsuAdapter {
   }
 
   get yhteystiedotVuorovaikutus(): LokalisoituYhteystieto[] {
-    return this.yhteystiedot(this.kieli, this.vuorovaikutusKierrosJulkaisu?.yhteystiedot || []);
+    return this.yhteystiedot(
+      this.kieli,
+      this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysTiedot || [],
+      this.vuorovaikutus?.esitettavatYhteystiedot?.yhteysHenkilot,
+      true // Pakota projari tai kunnan edustaja
+    );
   }
 
   private getUsersForUsernames(usernames: string[]): DBVaylaUser[] {

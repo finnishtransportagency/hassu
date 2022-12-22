@@ -5,8 +5,7 @@ import {
   HyvaksymisPaatosVaiheJulkaisu,
   NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
-  VuorovaikutusKierros,
-  VuorovaikutusKierrosJulkaisu,
+  Vuorovaikutus,
 } from "../database/model";
 import { assertIsDefined } from "../util/assertions";
 
@@ -67,8 +66,8 @@ export class ProjektiPaths extends PathTuple {
     return new AloituskuulutusPaths(this, julkaisu);
   }
 
-  vuorovaikutus(vuorovaikutusKierros: VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu | undefined): VuorovaikutusPaths {
-    return new VuorovaikutusPaths(this, vuorovaikutusKierros);
+  vuorovaikutus(vuorovaikutus: Vuorovaikutus): VuorovaikutusPaths {
+    return new VuorovaikutusPaths(this, vuorovaikutus);
   }
 
   nahtavillaoloVaihe(nahtavillaoloVaihe: NahtavillaoloVaihe | NahtavillaoloVaiheJulkaisu | undefined | null): PathTuple {
@@ -95,36 +94,19 @@ export class ProjektiPaths extends PathTuple {
 }
 
 class VuorovaikutusPaths extends PathTuple {
-  private vuorovaikutus?: VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu;
+  private vuorovaikutus: Vuorovaikutus;
 
-  constructor(parent: PathTuple, vuorovaikutus: VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu | undefined) {
+  constructor(parent: PathTuple, vuorovaikutus: Vuorovaikutus) {
     super(parent);
     this.vuorovaikutus = vuorovaikutus;
   }
 
-  private getId(): number {
-    assertIsDefined(this.vuorovaikutus, "vuorovaikutus pitää olla annettu");
-    if ((this.vuorovaikutus as VuorovaikutusKierros).vuorovaikutusNumero !== undefined) {
-      return (this.vuorovaikutus as VuorovaikutusKierros).vuorovaikutusNumero + 1;
-    } else {
-      return (this.vuorovaikutus as VuorovaikutusKierrosJulkaisu).id + 1;
-    }
-  }
-
   get yllapitoPath(): string {
-    return this.parent.yllapitoPath + "suunnitteluvaihe/vuorovaikutus_" + this.getId().toString();
+    return "suunnitteluvaihe/vuorovaikutus_" + this.vuorovaikutus.vuorovaikutusNumero;
   }
 
   get publicPath(): string {
-    return this.parent.publicPath + "suunnitteluvaihe/vuorovaikutus_" + this.getId().toString();
-  }
-
-  get yllapitoFullPath(): string {
-    return this.parent.yllapitoFullPath + "/" + "suunnitteluvaihe/vuorovaikutus_" + this.getId().toString();
-  }
-
-  get publicFullPath(): string {
-    return this.parent.publicFullPath + "/" + "suunnitteluvaihe/vuorovaikutus_" + this.getId().toString();
+    return "suunnitteluvaihe/vuorovaikutus_" + this.vuorovaikutus.vuorovaikutusNumero;
   }
 
   get aineisto(): VuorovaikutusAineisto {

@@ -15,7 +15,6 @@ export enum FixtureName {
 
 export const MOCKED_TIMESTAMP = "2020-01-01T00:00:00+02:00";
 export const MOCKED_DATE = "2022-11-03";
-export const MOCKED_PDF = "pdf";
 
 export async function recordProjektiTestFixture(fixtureName: string | FixtureName, oid: string): Promise<void> {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
@@ -67,7 +66,6 @@ export function cleanupAndCloneAPIProjekti(projekti: apiModel.Projekti): apiMode
 export function cleanupAnyProjektiData<T extends Record<string, any>>(projekti: T): T {
   replaceFieldsByName(projekti, MOCKED_TIMESTAMP, "tuotu", "paivitetty", "kuulutusVaihePaattyyPaiva", "lahetetty");
   replaceFieldsByName(projekti, MOCKED_DATE, "hyvaksymisPaiva");
-  replaceFieldsByName(projekti, MOCKED_PDF, "sisalto");
   replaceFieldsByName(projekti, "salt123", "salt");
   replaceFieldsByName(projekti, "ABC123", "checksum");
   replaceFieldsByName(projekti, undefined, "isSame");

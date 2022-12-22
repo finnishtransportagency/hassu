@@ -8,7 +8,7 @@ import { FormProvider, useForm, UseFormProps, Controller, FieldError } from "rea
 import { palauteSchema } from "src/schemas/vuorovaikutus";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useTranslation from "next-translate/useTranslation";
-import { VuorovaikutusKierrosJulkinen, PalauteInput } from "@services/api";
+import { VuorovaikutusJulkinen, PalauteInput } from "@services/api";
 import { formatDate } from "src/util/dateUtils";
 import TextInput from "@components/form/TextInput";
 import Textarea from "@components/form/Textarea";
@@ -24,7 +24,7 @@ import useApi from "src/hooks/useApi";
 interface Props {
   open: boolean;
   onClose: () => void;
-  vuorovaikutus: VuorovaikutusKierrosJulkinen;
+  vuorovaikutus: VuorovaikutusJulkinen;
   projektiOid: string;
 }
 

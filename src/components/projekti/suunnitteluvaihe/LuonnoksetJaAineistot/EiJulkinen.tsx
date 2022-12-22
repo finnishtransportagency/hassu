@@ -1,10 +1,10 @@
 import SectionContent from "@components/layout/SectionContent";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { VuorovaikutusKierros } from "@services/api";
+import { Vuorovaikutus } from "@services/api";
 import MuokkaustilainenLomake from "./MuokkaustilainenLomake";
 
 interface Props {
-  vuorovaikutus: VuorovaikutusKierros | null | undefined;
+  vuorovaikutus: Vuorovaikutus | undefined;
 }
 
 export default function EiJulkinenLuonnoksetJaAineistotLomake({ vuorovaikutus }: Props) {

@@ -113,8 +113,7 @@ type Projekti implements IProjekti {
   aloitusKuulutus: AloitusKuulutus
   aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu
   suunnitteluSopimus: SuunnitteluSopimus
-  vuorovaikutusKierros: VuorovaikutusKierros
-  vuorovaikutusKierrosJulkaisut: [VuorovaikutusKierrosJulkaisu!]
+  suunnitteluVaihe: SuunnitteluVaihe
   nahtavillaoloVaihe: NahtavillaoloVaihe
   nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe
@@ -137,19 +136,33 @@ type Projekti implements IProjekti {
   kasittelynTila: KasittelynTila
 }
 
-type VuorovaikutusKierros {
-  """
-  Viimeisimman avatun vuorovaikutuksen jarjestysnumero
-  """
-  vuorovaikutusNumero: Int!
+type SuunnitteluVaihe {
   hankkeenKuvaus: LokalisoituTeksti
   arvioSeuraavanVaiheenAlkamisesta: String
   suunnittelunEteneminenJaKesto: String
-  tila: VuorovaikutusKierrosTila
+  tila: SuunnitteluVaiheTila
+  vuorovaikutukset: [Vuorovaikutus!]
+
   """
   Palautteiden vastaanottajat. Lista kayttajatunnuksia
   """
   palautteidenVastaanottajat: [String!]
+}
+
+type SuunnitteluVaiheJulkinen {
+  tila: SuunnitteluVaiheTila
+  hankkeenKuvaus: LokalisoituTeksti
+  arvioSeuraavanVaiheenAlkamisesta: String
+  suunnittelunEteneminenJaKesto: String
+  vuorovaikutukset: [VuorovaikutusJulkinen!]
+}
+
+type Vuorovaikutus {
+  """
+  Vuorovaikutuksen jarjestysnumero
+  """
+  vuorovaikutusNumero: Int!
+  julkinen: Boolean
   vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuus!]
   """
   yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
@@ -163,46 +176,17 @@ type VuorovaikutusKierros {
   suunnittelumateriaali: Linkki
   esitettavatYhteystiedot: StandardiYhteystiedot
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
-  esittelyaineistot: [Aineisto!]
-  suunnitelmaluonnokset: [Aineisto!]
-}
 
-type VuorovaikutusKierrosJulkaisu {
-  """
-  Vuorovaikutuksen jarjestysnumero
-  """
-  id: Int!
-  hankkeenKuvaus: LokalisoituTeksti
-  arvioSeuraavanVaiheenAlkamisesta: String
-  suunnittelunEteneminenJaKesto: String
-  tila: VuorovaikutusKierrosTila
-  vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusJulkaisu!]
-  """
-  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
-  """
-  vuorovaikutusJulkaisuPaiva: String
-  """
-  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
-  """
-  kysymyksetJaPalautteetViimeistaan: String
-  videot: [Linkki!]
-  suunnittelumateriaali: Linkki
-  yhteystiedot: [Yhteystieto!]
-  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   esittelyaineistot: [Aineisto!]
   suunnitelmaluonnokset: [Aineisto!]
   vuorovaikutusPDFt: VuorovaikutusPDFt
 }
 
-type VuorovaikutusKierrosJulkinen {
+type VuorovaikutusJulkinen {
   """
   Vuorovaikutuksen jarjestysnumero
   """
   vuorovaikutusNumero: Int!
-  tila: VuorovaikutusKierrosTila
-  hankkeenKuvaus: LokalisoituTeksti
-  arvioSeuraavanVaiheenAlkamisesta: String
-  suunnittelunEteneminenJaKesto: String
   vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusJulkinen!]
   """
   yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
@@ -366,12 +350,9 @@ type NahtavillaoloVaiheJulkinen {
   kuulutusYhteystiedot: [Yhteystieto!]
 }
 
-enum VuorovaikutusKierrosTila {
+enum SuunnitteluVaiheTila {
   JULKINEN
   MIGROITU
-  MUOKATTAVISSA
-  PALAUTETTU_MUOKATTAVAKSI
-  JAADYTETTY
 }
 
 type Linkki {
@@ -461,34 +442,6 @@ type VuorovaikutusTilaisuus {
   postitoimipaikka: String
   Saapumisohjeet: String
   esitettavatYhteystiedot: StandardiYhteystiedot
-  peruttu: Boolean
-}
-
-type VuorovaikutusTilaisuusJulkaisu {
-  id: Int
-  tyyppi: VuorovaikutusTilaisuusTyyppi!
-  nimi: String
-  """
-  yyyy-MM-dd
-  """
-  paivamaara: String!
-  """
-  HH:mm
-  """
-  alkamisAika: String!
-  """
-  HH:mm
-  """
-  paattymisAika: String!
-  kaytettavaPalvelu: KaytettavaPalvelu
-  linkki: String
-  paikka: String
-  osoite: String
-  postinumero: String
-  postitoimipaikka: String
-  Saapumisohjeet: String
-  yhteystiedot: [Yhteystieto]
-  peruttu: Boolean
 }
 
 type VuorovaikutusTilaisuusJulkinen {
@@ -515,7 +468,6 @@ type VuorovaikutusTilaisuusJulkinen {
   postitoimipaikka: String
   Saapumisohjeet: String
   yhteystiedot: [Yhteystieto!]
-  peruttu: Boolean
 }
 
 type Velho {
@@ -553,7 +505,7 @@ type ProjektiJulkinen implements IProjekti {
   oid: String!
   aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisuJulkinen
   suunnitteluSopimus: SuunnitteluSopimusJulkaisu
-  vuorovaikutusKierrokset: [VuorovaikutusKierrosJulkinen!]
+  suunnitteluVaihe: SuunnitteluVaiheJulkinen
   euRahoitus: Boolean
   status: Status
   velho: VelhoJulkinen!

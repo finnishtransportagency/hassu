@@ -12,13 +12,13 @@ import {
   ProjektiKayttaja,
   ProjektiTyyppi,
   Status,
-  VuorovaikutusKierrosTila,
+  SuunnitteluVaiheTila,
   TallennaProjektiInput,
   Viranomainen,
   VuorovaikutusTilaisuusTyyppi,
   Yhteystieto,
 } from "../../../common/graphql/apiModel";
-import { DBProjekti, DBVaylaUser, VuorovaikutusKierros } from "../../src/database/model";
+import { DBProjekti, DBVaylaUser, Vuorovaikutus } from "../../src/database/model";
 import cloneDeep from "lodash/cloneDeep";
 import { kuntametadata } from "../../../common/kuntametadata";
 import pick from "lodash/pick";
@@ -550,9 +550,7 @@ export class ProjektiFixture {
       kuulutusPaiva: "2022-03-28T14:28",
       siirtyySuunnitteluVaiheeseen: "2022-04-28T14:28",
     },
-    vuorovaikutusKierros: {
-      vuorovaikutusNumero: 0,
-      vuorovaikutusJulkaisuPaiva: "2022-04-28T14:28",
+    suunnitteluVaihe: {
       arvioSeuraavanVaiheenAlkamisesta: "Syksy 2024",
       hankkeenKuvaus: {
         RUOTSI: "svenska",
@@ -560,71 +558,10 @@ export class ProjektiFixture {
         SUOMI:
           "Tavoitteena on nykyisen ja tulevan maankäytön liittäminen\nluontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen\nsujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn\nyhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös\nyksi tavoitteista.",
       },
-      tila: VuorovaikutusKierrosTila.JULKINEN,
+      tila: SuunnitteluVaiheTila.JULKINEN,
       suunnittelunEteneminenJaKesto:
         "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
-      ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
-      vuorovaikutusTilaisuudet: [
-        {
-          tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-          nimi: "Lorem ipsum",
-          paivamaara: "2022-03-04",
-          alkamisAika: "15:00",
-          paattymisAika: "16:00",
-          kaytettavaPalvelu: KaytettavaPalvelu.TEAMS,
-          linkki: "https://linkki_tilaisuuteen",
-        },
-      ],
-      esitettavatYhteystiedot: {
-        yhteysTiedot: [],
-        yhteysHenkilot: ["A000111"],
-      },
     },
-    vuorovaikutusKierrosJulkaisut: [
-      {
-        id: 0,
-        vuorovaikutusJulkaisuPaiva: "2022-04-28T14:28",
-        arvioSeuraavanVaiheenAlkamisesta: "Syksy 2024",
-        hankkeenKuvaus: {
-          RUOTSI: "svenska",
-          SAAME: undefined,
-          SUOMI:
-            "Tavoitteena on nykyisen ja tulevan maankäytön liittäminen\nluontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen\nsujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn\nyhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös\nyksi tavoitteista.",
-        },
-        tila: VuorovaikutusKierrosTila.JULKINEN,
-        ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
-        vuorovaikutusTilaisuudet: [
-          {
-            tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-            nimi: "Lorem ipsum",
-            paivamaara: "2022-03-04",
-            alkamisAika: "15:00",
-            paattymisAika: "16:00",
-            kaytettavaPalvelu: KaytettavaPalvelu.TEAMS,
-            linkki: "https://linkki_tilaisuuteen",
-          },
-        ],
-        yhteystiedot: [
-          {
-            etunimi: "Matti",
-            sukunimi: "Meikalainen",
-            sahkoposti: "Matti.Meikalainen@vayla.fi",
-            organisaatio: "Väylävirasto",
-            puhelinnumero: "123456789",
-          },
-        ],
-        vuorovaikutusPDFt: {
-          [Kieli.SUOMI]: {
-            kutsuPDFPath: "1.pdf",
-          },
-          [Kieli.RUOTSI]: {
-            kutsuPDFPath: "2.pdf",
-          },
-        },
-        suunnittelunEteneminenJaKesto:
-          "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
-      },
-    ],
     nahtavillaoloVaihe: {
       id: 1,
       hankkeenKuvaus: {
@@ -863,10 +800,9 @@ export class ProjektiFixture {
     SAAME: "Hankkeen kuvaus suunnitteluvaiheessa saameksi",
   };
 
-  vuorovaikutus: VuorovaikutusKierros = {
-    vuorovaikutusNumero: 0,
+  vuorovaikutus: Vuorovaikutus = {
+    vuorovaikutusNumero: 1,
     julkinen: true,
-    hankkeenKuvaus: this.hankkeenKuvausSuunnitteluVaiheessa,
     vuorovaikutusJulkaisuPaiva: "2022-03-23",
     videot: [{ nimi: "Esittely", url: "https://video" }],
     kysymyksetJaPalautteetViimeistaan: "2022-03-23T23:48",

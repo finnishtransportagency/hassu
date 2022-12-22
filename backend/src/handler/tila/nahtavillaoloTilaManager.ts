@@ -1,5 +1,5 @@
 import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
-import { KuulutusTilaManager } from "./KuulutusTilaManager";
+import { TilaManager } from "./TilaManager";
 import { DBProjekti, LocalizedMap, NahtavillaoloPDF, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
@@ -14,7 +14,6 @@ import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import { assertIsDefined } from "../../util/assertions";
 import dayjs from "dayjs";
 import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
-import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -66,7 +65,7 @@ async function cleanupKuulutusAfterApproval(projekti: DBProjekti, nahtavillaoloV
   }
 }
 
-class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
+class NahtavillaoloTilaManager extends TilaManager<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
   getVaihe(projekti: DBProjekti): NahtavillaoloVaihe {
     const vaihe = projekti.nahtavillaoloVaihe;
     assertIsDefined(vaihe, "Projektilla ei ole nahtavillaoloVaihetta");
@@ -107,20 +106,6 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
 
   async saveVaihe(projekti: DBProjekti, vaihe: NahtavillaoloVaihe): Promise<void> {
     await projektiDatabase.saveProjekti({ oid: projekti.oid, nahtavillaoloVaihe: vaihe });
-  }
-
-  checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja {
-    const projektiPaallikko = requireOmistaja(projekti);
-    return projektiPaallikko;
-  }
-
-  checkPriviledgesSendForApproval(projekti: DBProjekti): NykyinenKayttaja {
-    const muokkaaja = requirePermissionMuokkaa(projekti);
-    return muokkaaja;
-  }
-
-  checkUudelleenkuulutusPriviledges(_projekti: DBProjekti): NykyinenKayttaja {
-    return requireAdmin();
   }
 
   async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {

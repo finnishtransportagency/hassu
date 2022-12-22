@@ -15,15 +15,15 @@ import {
   adaptNahtavillaoloVaihe,
   adaptNahtavillaoloVaiheJulkaisu,
   adaptSuunnitteluSopimus,
-  adaptVuorovaikutusKierros,
-  adaptVuorovaikutusKierrosJulkaisut,
+  adaptSuunnitteluVaihe,
 } from "./adaptToAPI";
 import {
   adaptAloitusKuulutusToSave,
   adaptHyvaksymisPaatosVaiheToSave,
   adaptNahtavillaoloVaiheToSave,
   adaptSuunnitteluSopimusToSave,
-  adaptVuorovaikutusKierrosToSave,
+  adaptSuunnitteluVaiheToSave,
+  adaptVuorovaikutusToSave,
 } from "./adaptToDB";
 import { applyProjektiStatus } from "../status/projektiStatusHandler";
 import { adaptKasittelynTilaToSave } from "./adaptToDB/adaptKasittelynTilaToSave";
@@ -40,8 +40,8 @@ export class ProjektiAdapter {
       aloitusKuulutusJulkaisut,
       velho,
       kielitiedot,
-      vuorovaikutusKierros,
-      vuorovaikutusKierrosJulkaisut,
+      suunnitteluVaihe,
+      vuorovaikutukset,
       nahtavillaoloVaihe,
       nahtavillaoloVaiheJulkaisut,
       hyvaksymisPaatosVaihe,
@@ -67,8 +67,13 @@ export class ProjektiAdapter {
       liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmatByAddingTypename(liittyvatSuunnitelmat),
       velho: adaptVelho(velho),
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot, true),
-      vuorovaikutusKierros: adaptVuorovaikutusKierros(dbProjekti.oid, vuorovaikutusKierros),
-      vuorovaikutusKierrosJulkaisut: adaptVuorovaikutusKierrosJulkaisut(dbProjekti.oid, vuorovaikutusKierrosJulkaisut),
+      suunnitteluVaihe: adaptSuunnitteluVaihe(
+        dbProjekti.oid,
+        dbProjekti.suunnitteluSopimus,
+        kayttoOikeudet,
+        suunnitteluVaihe,
+        vuorovaikutukset
+      ),
       nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe, nahtavillaoloVaiheJulkaisut),
       nahtavillaoloVaiheJulkaisu: adaptNahtavillaoloVaiheJulkaisu(dbProjekti, nahtavillaoloVaiheJulkaisut),
       hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(
@@ -130,7 +135,7 @@ export class ProjektiAdapter {
       kielitiedot,
       euRahoitus,
       liittyvatSuunnitelmat,
-      vuorovaikutusKierros,
+      suunnitteluVaihe,
       nahtavillaoloVaihe,
       kasittelynTila,
       hyvaksymisPaatosVaihe,
@@ -140,8 +145,8 @@ export class ProjektiAdapter {
     const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult(projekti);
     const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
     kayttoOikeudetManager.applyChanges(kayttoOikeudet);
+    const vuorovaikutukset = adaptVuorovaikutusToSave(projekti, projektiAdaptationResult, suunnitteluVaihe?.vuorovaikutus);
     const aloitusKuulutusToSave = adaptAloitusKuulutusToSave(projekti.aloitusKuulutus, aloitusKuulutus);
-
     const dbProjekti: DBProjekti = mergeWith(
       {},
       {
@@ -150,7 +155,7 @@ export class ProjektiAdapter {
         aloitusKuulutus: aloitusKuulutusToSave,
         suunnitteluSopimus: adaptSuunnitteluSopimusToSave(projekti, suunnitteluSopimus),
         kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet(),
-        vuorovaikutusKierros: adaptVuorovaikutusKierrosToSave(projekti, vuorovaikutusKierros, projektiAdaptationResult),
+        suunnitteluVaihe: adaptSuunnitteluVaiheToSave(projekti, suunnitteluVaihe),
         nahtavillaoloVaihe: adaptNahtavillaoloVaiheToSave(projekti.nahtavillaoloVaihe, nahtavillaoloVaihe, projektiAdaptationResult),
         hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaiheToSave(
           projekti.hyvaksymisPaatosVaihe,
@@ -162,6 +167,7 @@ export class ProjektiAdapter {
         kielitiedot,
         euRahoitus,
         liittyvatSuunnitelmat,
+        vuorovaikutukset,
         salt: projekti.salt || lisaAineistoService.generateSalt(),
         kasittelynTila: adaptKasittelynTilaToSave(projekti.kasittelynTila, kasittelynTila, projektiAdaptationResult),
       }

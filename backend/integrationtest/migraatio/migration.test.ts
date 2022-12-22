@@ -10,7 +10,6 @@ import {
   loadProjektiFromDatabase,
   testPublicAccessToProjekti,
   testSuunnitteluvaihePerustiedot,
-  testSuunnitteluvaiheVuorovaikutus,
 } from "../api/testUtil/tests";
 import { KayttajaTyyppi, Projekti, Status } from "../../../common/graphql/apiModel";
 import { userService } from "../../src/user";
@@ -79,10 +78,9 @@ describe("Migraatio", () => {
 
     userFixture.loginAs(UserFixture.hassuAdmin);
     await testSuunnitteluvaihePerustiedot(oid);
-    await testSuunnitteluvaiheVuorovaikutus(oid, UserFixture.hassuAdmin.uid as string);
-    await julkaiseSuunnitteluvaihe(oid, userFixture);
-    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await julkaiseSuunnitteluvaihe(oid);
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
+
     await testPublicAccessToProjekti(oid, Status.SUUNNITTELU, userFixture, "suunnitteluvaiheeseen migroitu julkinen projekti");
     await importAineistoMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();

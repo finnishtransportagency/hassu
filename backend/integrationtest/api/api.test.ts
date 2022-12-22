@@ -11,6 +11,7 @@ import { cleanProjektiS3Files } from "../util/s3Util";
 import {
   deleteProjekti,
   julkaiseSuunnitteluvaihe,
+  julkaiseVuorovaikutus,
   loadProjektiFromDatabase,
   readProjektiFromVelho,
   sendEmailDigests,
@@ -24,6 +25,7 @@ import {
   testPublicAccessToProjekti,
   testSuunnitteluvaihePerustiedot,
   testSuunnitteluvaiheVuorovaikutus,
+  testUpdatePublishDateAndDeleteAineisto,
   verifyVuorovaikutusSnapshot,
 } from "./testUtil/tests";
 import {
@@ -114,26 +116,30 @@ describe("Api", () => {
     await recordProjektiTestFixture(FixtureName.ALOITUSKUULUTUS, oid);
 
     await testSuunnitteluvaihePerustiedot(oid);
-    await testSuunnitteluvaiheVuorovaikutus(oid, projektiPaallikko.kayttajatunnus);
-    const velhoAineistoKategorias = await testListDocumentsToImport(oid); // testaa sitä kun käyttäjä avaa aineistodialogin ja valkkaa sieltä tiedostoja
-    await testImportAineistot(oid, velhoAineistoKategorias); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
+    await testSuunnitteluvaiheVuorovaikutus(oid, projektiPaallikko);
+    const velhoAineistoKategorias = await testListDocumentsToImport(oid);
+    await testImportAineistot(oid, velhoAineistoKategorias);
     await importAineistoMock.processQueue();
     await verifyVuorovaikutusSnapshot(oid, userFixture);
 
     await testPublicAccessToProjekti(oid, Status.ALOITUSKUULUTUS, userFixture, " ennen suunnitteluvaihetta");
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    await julkaiseSuunnitteluvaihe(oid, userFixture);
+    await julkaiseSuunnitteluvaihe(oid);
     emailClientStub.verifyEmailsSent();
     await importAineistoMock.processQueue();
-    userFixture.loginAs(UserFixture.mattiMeikalainen);
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
     await recordProjektiTestFixture(FixtureName.NAHTAVILLAOLO, oid);
-    // TODO: test päivitä suunnitteluvaiheen perustietoja
-    // TODO: test päivitä vuorovaikutustilaisuuksia
+
+    await julkaiseVuorovaikutus(oid, userFixture);
     await importAineistoMock.processQueue();
     emailClientStub.verifyEmailsSent();
     await takeS3Snapshot(oid, "just after vuorovaikutus published");
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
+
+    await testUpdatePublishDateAndDeleteAineisto(oid, userFixture);
+    await importAineistoMock.processQueue();
+    await takeS3Snapshot(oid, "vuorovaikutus publish date changed and last aineisto deleted");
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
 
     await sendEmailDigests();

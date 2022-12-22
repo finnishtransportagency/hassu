@@ -14,8 +14,8 @@ import {
   Kieli,
   ProjektiTyyppi,
   Status,
+  SuunnitteluVaiheTila,
   Viranomainen,
-  VuorovaikutusKierrosTila,
   VuorovaikutusTilaisuusTyyppi,
 } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../../src/database/model";
@@ -166,86 +166,10 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
     },
   ],
   suunnitteluSopimus: undefined,
-  vuorovaikutusKierros: {
-    vuorovaikutusNumero: 1,
-    hankkeenKuvaus: {
-      SUOMI: "asdgdrgh",
-      RUOTSI: undefined,
-      SAAME: undefined,
-    },
-    arvioSeuraavanVaiheenAlkamisesta: "Pian",
-    suunnittelunEteneminenJaKesto: "",
-    tila: VuorovaikutusKierrosTila.JULKINEN,
-    palautteidenVastaanottajat: undefined,
-    vuorovaikutusTilaisuudet: [
-      {
-        tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-        nimi: undefined,
-        paivamaara: "2022-10-28",
-        alkamisAika: "16:18",
-        paattymisAika: "17:18",
-        kaytettavaPalvelu: KaytettavaPalvelu.TEAMS,
-        linkki: "https://www.fi",
-        paikka: undefined,
-        osoite: undefined,
-        postinumero: undefined,
-        postitoimipaikka: undefined,
-        Saapumisohjeet: undefined,
-        esitettavatYhteystiedot: undefined,
-      },
-      {
-        tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
-        nimi: undefined,
-        paivamaara: "2022-10-27",
-        alkamisAika: "16:18",
-        paattymisAika: "17:18",
-        kaytettavaPalvelu: undefined,
-        linkki: undefined,
-        paikka: undefined,
-        osoite: undefined,
-        postinumero: undefined,
-        postitoimipaikka: undefined,
-        Saapumisohjeet: undefined,
-        esitettavatYhteystiedot: {
-          yhteysHenkilot: ["L036511"],
-          yhteysTiedot: [],
-        },
-      },
-    ],
-    vuorovaikutusJulkaisuPaiva: "2022-10-12",
-    kysymyksetJaPalautteetViimeistaan: "2022-10-12",
-    videot: [],
-    suunnittelumateriaali: {
-      nimi: "",
-      url: "",
-    },
-    esitettavatYhteystiedot: {
-      yhteysTiedot: undefined,
-      yhteysHenkilot: ["L036511"],
-    },
-    ilmoituksenVastaanottajat: {
-      kunnat: [],
-      viranomaiset: [
-        {
-          nimi: IlmoitettavaViranomainen.VAYLAVIRASTO,
-          sahkoposti: "email@vayla.fi",
-          lahetetty: undefined,
-        },
-      ],
-    },
-    esittelyaineistot: undefined,
-    suunnitelmaluonnokset: undefined,
-  },
-  vuorovaikutusKierrosJulkaisut: [
+  vuorovaikutukset: [
     {
-      id: 0,
-      hankkeenKuvaus: {
-        SUOMI: "asdgdrgh",
-        RUOTSI: undefined,
-        SAAME: undefined,
-      },
-      arvioSeuraavanVaiheenAlkamisesta: "Pian",
-      suunnittelunEteneminenJaKesto: "",
+      vuorovaikutusNumero: 1,
+      julkinen: true,
       vuorovaikutusTilaisuudet: [
         {
           tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
@@ -260,7 +184,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
           postinumero: undefined,
           postitoimipaikka: undefined,
           Saapumisohjeet: undefined,
-          yhteystiedot: undefined,
+          esitettavatYhteystiedot: undefined,
         },
         {
           tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
@@ -275,15 +199,10 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
           postinumero: undefined,
           postitoimipaikka: undefined,
           Saapumisohjeet: undefined,
-          yhteystiedot: [
-            {
-              puhelinnumero: "0291234567",
-              sahkoposti: "vastuu.henkilo@vayla.fi",
-              organisaatio: "Väylävirasto",
-              etunimi: "Vastuu",
-              sukunimi: "Henkilo",
-            },
-          ],
+          esitettavatYhteystiedot: {
+            yhteysHenkilot: ["L036511"],
+            yhteysTiedot: [],
+          },
         },
       ],
       vuorovaikutusJulkaisuPaiva: "2022-10-12",
@@ -293,15 +212,10 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
         nimi: "",
         url: "",
       },
-      yhteystiedot: [
-        {
-          puhelinnumero: "0291234567",
-          sahkoposti: "vastuu.henkilo@vayla.fi",
-          organisaatio: "Väylävirasto",
-          etunimi: "Vastuu",
-          sukunimi: "Henkilo",
-        },
-      ],
+      esitettavatYhteystiedot: {
+        yhteysTiedot: undefined,
+        yhteysHenkilot: ["L036511"],
+      },
       ilmoituksenVastaanottajat: {
         kunnat: [],
         viranomaiset: [
@@ -324,6 +238,17 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
       },
     },
   ],
+  suunnitteluVaihe: {
+    hankkeenKuvaus: {
+      SUOMI: "asdgdrgh",
+      RUOTSI: undefined,
+      SAAME: undefined,
+    },
+    arvioSeuraavanVaiheenAlkamisesta: "Pian",
+    suunnittelunEteneminenJaKesto: "",
+    tila: SuunnitteluVaiheTila.JULKINEN,
+    palautteidenVastaanottajat: undefined,
+  },
   nahtavillaoloVaihe: undefined,
   nahtavillaoloVaiheJulkaisut: undefined,
   hyvaksymisPaatosVaihe: undefined,
