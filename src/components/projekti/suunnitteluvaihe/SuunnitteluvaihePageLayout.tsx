@@ -10,8 +10,9 @@ import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
 import ProjektiConsumer from "../ProjektiConsumer";
 import Button from "@components/button/Button";
 import dayjs from "dayjs";
-import { api, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
+import { TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
 import useSnackbars from "src/hooks/useSnackbars";
+import useApi from "src/hooks/useApi";
 
 export default function SuunnitteluPageLayoutWrapper({ children }: { children?: ReactNode }) {
   return (
@@ -91,6 +92,8 @@ function SuunnitteluPageLayout({
     return seuraavaPaiva.isBefore(dayjs());
   });
 
+  const api = useApi();
+
   const luoUusiVuorovaikutus = useCallback(async () => {
     let mounted = true;
     if (!projekti) {
@@ -113,7 +116,7 @@ function SuunnitteluPageLayout({
     () => {
       mounted = false;
     };
-  }, [projekti, reloadProjekti, showErrorMessage, showSuccessMessage]);
+  }, [api, projekti, reloadProjekti, showErrorMessage, showSuccessMessage]);
 
   return (
     <ProjektiPageLayout

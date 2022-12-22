@@ -1,6 +1,6 @@
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import { api, VuorovaikutusTilaisuusInput, VuorovaikutusTilaisuusPaivitysInput, Yhteystieto } from "@services/api";
+import { VuorovaikutusTilaisuusInput, VuorovaikutusTilaisuusPaivitysInput, Yhteystieto } from "@services/api";
 import { useMemo, useState, useCallback } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
@@ -12,6 +12,7 @@ import VuorovaikutustilaisuusDialog, { VuorovaikutustilaisuusFormValues } from "
 import LukutilaLinkkiJaKutsut from "./LukutilaLinkkiJaKutsut";
 import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
 import log from "loglevel";
+import useApi from "src/hooks/useApi";
 
 type Props = {
   vuorovaikutusnro: number;
@@ -33,6 +34,8 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
     // aloituskuulutusjulkaisusta katsotaan projektin sisällönkuvaus
     return projekti?.aloitusKuulutusJulkaisu;
   }, [projekti]);
+
+  const api = useApi();
 
   const paivitaVuorovaikutustilaisuuksia = useCallback(
     async (formData: VuorovaikutustilaisuusFormValues) => {
@@ -70,6 +73,7 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
     },
     [
       aloituskuulutusjulkaisu,
+      api,
       projekti.oid,
       reloadProjekti,
       showErrorMessage,
