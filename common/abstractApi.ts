@@ -200,7 +200,7 @@ export abstract class AbstractApi {
     } as LataaProjektiQueryVariables);
   }
 
-  async tallennaProjekti(input: TallennaProjektiInput) {
+  async tallennaProjekti(input: TallennaProjektiInput): Promise<string> {
     return await this.callYllapitoAPI(apiConfig.tallennaProjekti, {
       projekti: input,
     } as TallennaProjektiMutationVariables);

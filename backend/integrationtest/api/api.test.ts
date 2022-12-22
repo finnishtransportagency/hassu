@@ -102,19 +102,19 @@ describe("Api", () => {
     }
     userFixture.loginAs(UserFixture.mattiMeikalainen);
 
-    const projekti = await readProjektiFromVelho();
+    let projekti = await readProjektiFromVelho();
     expect(oid).to.eq(projekti.oid);
     await cleanProjektiS3Files(oid);
     const projektiPaallikko = await testProjektiHenkilot(projekti, oid, userFixture);
-    await testProjektinTiedot(oid);
-    await testAloitusKuulutusEsikatselu(oid);
-    await testNullifyProjektiField(oid);
+    projekti = await testProjektinTiedot(oid);
+    await testAloitusKuulutusEsikatselu(projekti);
+    await testNullifyProjektiField(projekti);
     await testAloituskuulutusApproval(oid, projektiPaallikko, userFixture);
     emailClientStub.verifyEmailsSent();
     await recordProjektiTestFixture(FixtureName.ALOITUSKUULUTUS, oid);
 
-    await testSuunnitteluvaihePerustiedot(oid);
-    await testSuunnitteluvaiheVuorovaikutus(oid, projektiPaallikko.kayttajatunnus);
+    projekti = await testSuunnitteluvaihePerustiedot(oid);
+    await testSuunnitteluvaiheVuorovaikutus(projekti, projektiPaallikko.kayttajatunnus);
     const velhoAineistoKategorias = await testListDocumentsToImport(oid); // testaa sitä kun käyttäjä avaa aineistodialogin ja valkkaa sieltä tiedostoja
     await testImportAineistot(oid, velhoAineistoKategorias); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
     await importAineistoMock.processQueue();
@@ -140,8 +140,8 @@ describe("Api", () => {
     emailClientStub.verifyEmailsSent();
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    await testNahtavillaolo(oid, projektiPaallikko.kayttajatunnus);
-    const nahtavillaoloVaihe = await testImportNahtavillaoloAineistot(oid, velhoAineistoKategorias);
+    projekti = await testNahtavillaolo(oid, projektiPaallikko.kayttajatunnus);
+    const nahtavillaoloVaihe = await testImportNahtavillaoloAineistot(projekti, velhoAineistoKategorias);
     await importAineistoMock.processQueue();
     await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit!);
     await testNahtavillaoloApproval(oid, projektiPaallikko, userFixture);

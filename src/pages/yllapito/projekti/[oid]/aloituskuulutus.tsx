@@ -1,7 +1,7 @@
 import Textarea from "@components/form/Textarea";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { useRouter } from "next/router";
-import React, { ReactElement, useCallback, useMemo, useState } from "react";
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -9,10 +9,10 @@ import Button from "@components/button/Button";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import {
   AloitusKuulutusInput,
-  KuulutusJulkaisuTila,
   AsiakirjaTyyppi,
   Kieli,
   Kielitiedot,
+  KuulutusJulkaisuTila,
   LaskuriTyyppi,
   MuokkausTila,
   Status,
@@ -51,7 +51,7 @@ import { getDefaultValuesForLokalisoituText, getDefaultValuesForUudelleenKuulutu
 import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
 import useApi from "src/hooks/useApi";
 
-type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
+type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
   [K in keyof ProjektiFields]: NonNullable<ProjektiFields[K]>;
 }>;
@@ -115,8 +115,10 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
 
     const hankkeenKuvaus = getDefaultValuesForLokalisoituText(projekti.kielitiedot, projekti.aloitusKuulutus?.hankkeenKuvaus);
 
+    console.log("tallentamisTiedot", { versio: projekti.versio });
     const tallentamisTiedot: FormValues = {
       oid: projekti.oid,
+      versio: projekti.versio,
       aloitusKuulutus: {
         ilmoituksenVastaanottajat: {
           kunnat: kuntaIds.map((id) => ({
@@ -195,12 +197,16 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       // kunta.id on oikea kunnan id-kenttä, joten se pitää lähettää deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat);
       deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset);
       setIsFormSubmitting(true);
+      console.log("Tallenna", { formDataVersio: formData.versio });
       await api.tallennaProjekti(formData);
       await reloadProjekti();
-      reset(formData);
     },
-    [api, reloadProjekti, reset]
+    [api, reloadProjekti]
   );
+
+  useEffect(() => {
+    reset(defaultValues);
+  }, [defaultValues, reset]);
 
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
 

@@ -15,6 +15,7 @@ describe.skip("Email", () => {
         kunnat: kuntametadata.idsForKuntaNames(["Nokia"]),
       },
       oid: "123",
+      versio: 1,
       aloitusKuulutus: {
         id: 1,
         kuulutusPaiva: "2022-01-01",

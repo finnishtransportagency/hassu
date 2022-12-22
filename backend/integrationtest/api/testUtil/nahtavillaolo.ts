@@ -1,11 +1,10 @@
-// @ts-nocheck
-
 import { api } from "../apiClient";
 import { apiTestFixture } from "../apiTestFixture";
 import {
+  KuulutusJulkaisuTila,
   LisaAineistoParametrit,
   NahtavillaoloVaihe,
-  KuulutusJulkaisuTila,
+  Projekti,
   ProjektiKayttaja,
   Status,
   TilasiirtymaToiminto,
@@ -19,16 +18,21 @@ import { UserFixture } from "../../../test/fixture/userFixture";
 import { cleanupNahtavillaoloJulkaisuJulkinenTimestamps, cleanupNahtavillaoloTimestamps } from "./cleanUpFunctions";
 import cloneDeep from "lodash/cloneDeep";
 import axios from "axios";
+import assert from "assert";
+import { assertIsDefined } from "../../../src/util/assertions";
 
 const { expect } = require("chai"); //
 
-export async function testNahtavillaolo(oid: string, projektiPaallikko: string): Promise<void> {
+export async function testNahtavillaolo(oid: string, projektiPaallikko: string): Promise<Projekti> {
+  let p = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
   await api.tallennaProjekti({
     oid,
+    versio: p.versio,
     nahtavillaoloVaihe: apiTestFixture.nahtavillaoloVaihe([projektiPaallikko]),
   });
   const projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
   expectToMatchSnapshot("testNahtavillaOloPerustiedot", cleanupNahtavillaoloTimestamps(projekti.nahtavillaoloVaihe));
+  return projekti;
 }
 
 export async function testNahtavillaoloApproval(oid: string, projektiPaallikko: ProjektiKayttaja, userFixture: UserFixture): Promise<void> {
@@ -61,9 +65,10 @@ export async function testNahtavillaoloApproval(oid: string, projektiPaallikko: 
 }
 
 export async function testImportNahtavillaoloAineistot(
-  oid: string,
+  projekti: Projekti,
   velhoAineistoKategorias: VelhoAineistoKategoria[]
 ): Promise<NahtavillaoloVaihe> {
+  const { oid, versio } = projekti;
   const t2xx = velhoAineistoKategorias
     .reduce((documents, aineistoKategoria) => {
       aineistoKategoria.aineistot.filter((aineisto) => aineisto.kategoriaId == "T2xx").forEach((aineisto) => documents.push(aineisto));
@@ -82,19 +87,21 @@ export async function testImportNahtavillaoloAineistot(
 
   await api.tallennaProjekti({
     oid,
+    versio,
     nahtavillaoloVaihe: {
       aineistoNahtavilla: adaptAineistoToInput(t2xx),
       lisaAineisto: adaptAineistoToInput(lisaAineisto),
     },
   });
 
-  const projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
-  const nahtavillaoloVaihe = cloneDeep(projekti.nahtavillaoloVaihe);
-  expect(nahtavillaoloVaihe.lisaAineistoParametrit).not.to.be.undefined;
+  const p = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
+  const nahtavillaoloVaihe = cloneDeep(p.nahtavillaoloVaihe);
+  expect(nahtavillaoloVaihe?.lisaAineistoParametrit).not.to.be.undefined;
   expectToMatchSnapshot("testImportNahtavillaoloAineistot", {
     nahtavillaoloVaihe: cleanupNahtavillaoloTimestamps(nahtavillaoloVaihe),
   });
-  return projekti.nahtavillaoloVaihe;
+  assert(p.nahtavillaoloVaihe);
+  return p.nahtavillaoloVaihe;
 }
 
 async function validateFileIsDownloadable(aineistoURL: string) {
@@ -110,6 +117,8 @@ async function validateFileIsDownloadable(aineistoURL: string) {
 export async function testNahtavillaoloLisaAineisto(oid: string, lisaAineistoParametrit: LisaAineistoParametrit): Promise<void> {
   expect(lisaAineistoParametrit).to.not.be.empty;
   const lisaAineistot = await api.listaaLisaAineisto(oid, lisaAineistoParametrit);
+  assertIsDefined(lisaAineistot.aineistot, "lisaAineistot.aineistot");
+  assertIsDefined(lisaAineistot.lisaAineistot, "lisaAineistot.lisaAineistot");
   expectToMatchSnapshot("lisaAineisto", {
     aineistot: lisaAineistot.aineistot.map((aineisto) => {
       const a = cloneDeep(aineisto);
@@ -122,6 +131,8 @@ export async function testNahtavillaoloLisaAineisto(oid: string, lisaAineistoPar
       return a;
     }),
   });
+  assertIsDefined(lisaAineistot.aineistot[0].linkki, "lisaAineistot.aineistot[0].linkki");
+  assertIsDefined(lisaAineistot.lisaAineistot[0].linkki, "lisaAineistot.lisaAineistot[0].linkki");
   await validateFileIsDownloadable(lisaAineistot.aineistot[0].linkki);
   await validateFileIsDownloadable(lisaAineistot.lisaAineistot[0].linkki);
 }

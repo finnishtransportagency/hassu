@@ -27,7 +27,7 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
   ): Promise<void> {
     if (hyvaksymisPaatosVaihe.palautusSyy) {
       hyvaksymisPaatosVaihe.palautusSyy = null;
-      await projektiDatabase.saveProjekti({ oid: projekti.oid, [key]: hyvaksymisPaatosVaihe });
+      await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, [key]: hyvaksymisPaatosVaihe });
     }
   }
 

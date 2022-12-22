@@ -20,7 +20,7 @@ import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { getDefaultValuesForLokalisoituText, getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForLokalisoituText";
 import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
 
-type PickedTallennaProjektiInput = Pick<TallennaProjektiInput, "oid" | "nahtavillaoloVaihe">;
+type PickedTallennaProjektiInput = Pick<TallennaProjektiInput, "oid" | "versio" | "nahtavillaoloVaihe">;
 
 export type KuulutuksenTiedotFormValues = Required<{
   [K in keyof PickedTallennaProjektiInput]: NonNullable<PickedTallennaProjektiInput[K]>;
@@ -49,6 +49,7 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
 
     const tallentamisTiedot: KuulutuksenTiedotFormValues = {
       oid: projekti.oid,
+      versio: projekti.versio,
       nahtavillaoloVaihe: {
         kuulutusPaiva: projekti?.nahtavillaoloVaihe?.kuulutusPaiva || null,
         kuulutusVaihePaattyyPaiva: projekti?.nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva || null,

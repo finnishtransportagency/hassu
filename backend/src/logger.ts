@@ -5,6 +5,14 @@ import { getCorrelationId, reportError } from "./aws/monitoring";
 const level = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : "info";
 const pretty = process.env.USE_PINO_PRETTY == "true";
 
+function getLogContextOid() {
+  return (globalThis as unknown as { oid: string }).oid;
+}
+
+export function setLogContextOid(oid: string | undefined): void {
+  (globalThis as unknown as { oid: string | undefined }).oid = oid;
+}
+
 function getLogger(tag: string) {
   let transport = undefined;
   if (pretty) {
@@ -26,6 +34,7 @@ function getLogger(tag: string) {
         uid: getVaylaUser()?.uid,
         correlationId: getCorrelationId(),
         tag,
+        oid: getLogContextOid(),
       };
     },
     formatters: {

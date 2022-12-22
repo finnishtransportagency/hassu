@@ -2,6 +2,7 @@
 
 exports[`apiHandler updateSuunnitelma saveProjekti should pass expected parameters to DynamoDB 1`] = `
 Object {
+  "ConditionExpression": "#versio = :versioFromInput",
   "ExpressionAttributeNames": Object {
     "#aloitusKuulutus": "aloitusKuulutus",
     "#euRahoitus": "euRahoitus",
@@ -12,6 +13,7 @@ Object {
     "#paivitetty": "paivitetty",
     "#suunnitteluSopimus": "suunnitteluSopimus",
     "#velho": "velho",
+    "#versio": "versio",
   },
   "ExpressionAttributeValues": Object {
     ":aloitusKuulutus": Object {
@@ -99,29 +101,35 @@ Object {
         "tie",
       ],
     },
+    ":versio": 2,
+    ":versioFromInput": 1,
   },
   "Key": Object {
     "oid": "1",
   },
   "TableName": "Projekti-localstack",
-  "UpdateExpression": "SET #kayttoOikeudet = :kayttoOikeudet , #velho = :velho , #muistiinpano = :muistiinpano , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus , #kielitiedot = :kielitiedot , #euRahoitus = :euRahoitus , #liittyvatSuunnitelmat = :liittyvatSuunnitelmat , #paivitetty = :paivitetty ",
+  "UpdateExpression": "SET #versio = :versio , #kayttoOikeudet = :kayttoOikeudet , #velho = :velho , #muistiinpano = :muistiinpano , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus , #kielitiedot = :kielitiedot , #euRahoitus = :euRahoitus , #liittyvatSuunnitelmat = :liittyvatSuunnitelmat , #paivitetty = :paivitetty ",
 }
 `;
 
 exports[`apiHandler updateSuunnitelma saveProjekti should remove null fields from DynamoDB 1`] = `
 Object {
+  "ConditionExpression": "#versio = :versioFromInput",
   "ExpressionAttributeNames": Object {
     "#muistiinpano": "muistiinpano",
     "#paivitetty": "paivitetty",
+    "#versio": "versio",
   },
   "ExpressionAttributeValues": Object {
     ":muistiinpano": "foo",
     ":paivitetty": "2022-03-15T14:29:48.845Z",
+    ":versio": 2,
+    ":versioFromInput": 1,
   },
   "Key": Object {
     "oid": "1",
   },
   "TableName": "Projekti-localstack",
-  "UpdateExpression": "SET #muistiinpano = :muistiinpano , #paivitetty = :paivitetty REMOVE suunnitteluSopimus",
+  "UpdateExpression": "SET #versio = :versio , #muistiinpano = :muistiinpano , #paivitetty = :paivitetty REMOVE suunnitteluSopimus",
 }
 `;

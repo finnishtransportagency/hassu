@@ -23,13 +23,14 @@ import { KeyedMutator } from "swr";
 import useApi from "src/hooks/useApi";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
-type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
+type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet" | "versio">;
 type FormValues = Required<{
   [K in keyof RequiredFields]: NonNullable<RequiredFields[K]>;
 }>;
 
 const validationSchema: Yup.SchemaOf<FormValues> = Yup.object().shape({
   oid: Yup.string().required(),
+  versio: Yup.number().required(),
   kayttoOikeudet: kayttoOikeudetSchema,
 });
 
@@ -59,6 +60,7 @@ interface PerustaProjektiFormProps {
 
 const defaultFormValues: (projekti: ProjektiLisatiedolla) => FormValues = (projekti: ProjektiLisatiedolla) => ({
   oid: projekti.oid,
+  versio: projekti.versio,
   kayttoOikeudet:
     projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto }) => {
       const formValues: ProjektiKayttajaInput = {

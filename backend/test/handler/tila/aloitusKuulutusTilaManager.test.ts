@@ -7,7 +7,6 @@ import { IllegalArgumentError } from "../../../src/error/IllegalArgumentError";
 import { DBProjekti } from "../../../src/database/model";
 import dayjs from "dayjs";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
-import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import { dateToString } from "../../../src/util/dateUtil";
 import { UudelleenkuulutusTila } from "../../../../common/graphql/apiModel";
 import { UserFixture } from "../../fixture/userFixture";
@@ -16,7 +15,7 @@ import { userService } from "../../../src/user";
 const { expect } = require("chai");
 
 describe("aloitusKuulutusTilaManager", () => {
-  let saveProjektiStub: sinon.SinonStub<[dbProjekti: Partial<DBProjekti>], Promise<DocumentClient.UpdateItemOutput>>;
+  let saveProjektiStub: sinon.SinonStub;
   let projekti: DBProjekti;
   let userFixture: UserFixture;
 
@@ -27,9 +26,10 @@ describe("aloitusKuulutusTilaManager", () => {
 
   beforeEach(() => {
     const projekti4 = new ProjektiFixture().dbProjekti4();
-    const { oid, kayttoOikeudet, euRahoitus, kielitiedot, velho, aloitusKuulutus, aloitusKuulutusJulkaisut } = projekti4;
+    const { oid, versio, kayttoOikeudet, euRahoitus, kielitiedot, velho, aloitusKuulutus, aloitusKuulutusJulkaisut } = projekti4;
     projekti = {
       oid,
+      versio,
       kayttoOikeudet,
       euRahoitus,
       kielitiedot,

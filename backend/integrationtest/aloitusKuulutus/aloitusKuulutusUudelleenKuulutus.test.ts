@@ -76,7 +76,10 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
     let uudelleenKuulutusPaiva = "2031-01-01";
     initialProjekti.aloitusKuulutusJulkaisut[0].kuulutusPaiva = kuulutusPaiva;
     initialProjekti.aloitusKuulutusJulkaisut[0].siirtyySuunnitteluVaiheeseen = "2222-01-01";
-    await testProjektiDatabase.saveProjekti({ oid, aloitusKuulutusJulkaisut: initialProjekti.aloitusKuulutusJulkaisut });
+    await testProjektiDatabase.saveProjekti({
+      oid,
+      aloitusKuulutusJulkaisut: initialProjekti.aloitusKuulutusJulkaisut,
+    });
 
     // Aktivoi uudelleenkuulutus julkaistulle aloituskuulutukselle
     await aloitusKuulutusTilaManager.siirraTila({
@@ -104,6 +107,7 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
     const { muokkausTila: _, ...rest } = projekti.aloitusKuulutus;
     await api.tallennaProjekti({
       oid,
+      versio: projekti.versio,
       aloitusKuulutus: { ...rest, kuulutusPaiva: uudelleenKuulutusPaiva, uudelleenKuulutus: uudelleenKuulutusInput },
     });
     await testYllapitoAccessToProjekti(

@@ -38,8 +38,10 @@ export async function testHyvaksymismenettelyssa(oid: string, userFixture: UserF
 
 export async function testHyvaksymisPaatosVaihe(oid: string, userFixture: UserFixture): Promise<void> {
   userFixture.loginAsAdmin();
+  let versio = (await api.lataaProjekti(oid)).versio;
   await api.tallennaProjekti({
     oid,
+    versio,
     kasittelynTila: {
       hyvaksymispaatos: { asianumero: "asianro123", paatoksenPvm: "2022-06-09" },
     },
@@ -77,8 +79,10 @@ export async function testCreateHyvaksymisPaatosWithAineistot(
     kuulutusPaiva: "2022-06-09",
     kuulutusVaihePaattyyPaiva: "2100-01-01",
   };
+  let versio = (await api.lataaProjekti(oid)).versio;
   let input: TallennaProjektiInput = {
     oid,
+    versio,
   };
   input[vaihe] = vaiheContents;
   await api.tallennaProjekti(input);

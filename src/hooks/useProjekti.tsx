@@ -1,5 +1,5 @@
 import useSWR, { Fetcher, SWRConfiguration } from "swr";
-import { apiConfig, NykyinenKayttaja, Projekti, KayttajaTyyppi } from "@services/api";
+import { apiConfig, KayttajaTyyppi, NykyinenKayttaja, Projekti } from "@services/api";
 import useCurrentUser from "./useCurrentUser";
 import { useRouter } from "next/router";
 import useApi from "./useApi";
@@ -33,6 +33,7 @@ const getProjektiLoader = (api: API) => async (_query: string, oid: string | und
     return null;
   }
   const projekti = await api.lataaProjekti(oid);
+  console.log("useProjekti", projekti);
   const lisatiedot: ProjektiLisatiedot = {
     nykyinenKayttaja: {
       omaaMuokkausOikeuden: userIsAdmin(kayttaja) || userHasAccessToProjekti({ projekti, kayttaja }),

@@ -1,6 +1,6 @@
 import {
-  KuulutusJulkaisuTila as KuulutusJulkaisuTila,
   Kieli,
+  KuulutusJulkaisuTila as KuulutusJulkaisuTila,
   NykyinenKayttaja,
   Status,
   VuorovaikutusKierrosTila,
@@ -59,12 +59,13 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
     await projektiDatabase.aloitusKuulutusJulkaisut.insert(projekti.oid, aloitusKuulutusJulkaisu);
   }
 
+  const versio = projekti.versio;
   if (targetStatusRank >= statusOrder[Status.NAHTAVILLAOLO]) {
     const vuorovaikutusKierros: VuorovaikutusKierros = {
       vuorovaikutusNumero: 0,
       tila: VuorovaikutusKierrosTila.MIGROITU,
     };
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, vuorovaikutusKierros });
+    await projektiDatabase.saveProjektiWithoutLocking({ oid: projekti.oid, versio, vuorovaikutusKierros });
   }
 
   if (targetStatusRank >= statusOrder[Status.HYVAKSYMISMENETTELYSSA]) {
@@ -93,7 +94,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
       muokkaaja: kayttaja.uid,
     };
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.insert(projekti.oid, hyvaksymisPaatosVaiheJulkaisu);
-    await projektiDatabase.saveProjekti({
+    await projektiDatabase.saveProjektiWithoutLocking({
       oid,
       kasittelynTila: {
         hyvaksymispaatos: {

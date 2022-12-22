@@ -134,7 +134,7 @@ describe("11 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     cy.get("#save_and_send_for_acceptance").click({ force: true });
     cy.contains("Lähetys onnistui", { timeout: 30000 });
 
-    cy.get("#kuulutuksentiedot_tab").click();
+    cy.get("#kuulutuksentiedot_tab").click({ force: true });
     cy.get("#button_open_acceptance_dialog")
       .should("be.enabled")
       .scrollIntoView({ offset: { top: 500, left: 0 } })
@@ -144,7 +144,7 @@ describe("11 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     cy.contains("Hyväksyminen onnistui", { timeout: 15000 });
 
     cy.reload();
-    cy.get("#kuulutuksentiedot_tab").click();
+    cy.get("#kuulutuksentiedot_tab").click({ force: true });
 
     cy.contains("Kuulutus nähtäville asettamisesta on julkaistu"); //TODO: vaihda jatkovaiheen tekstit
 

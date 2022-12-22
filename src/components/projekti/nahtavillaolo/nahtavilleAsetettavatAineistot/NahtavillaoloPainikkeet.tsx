@@ -14,6 +14,7 @@ import { NahtavilleAsetettavatAineistotFormValues } from "./Muokkausnakyma";
 
 const mapFormValuesToTallennaProjektiInput = ({
   oid,
+  versio,
   lisaAineisto,
   aineistoNahtavilla,
 }: NahtavilleAsetettavatAineistotFormValues): TallennaProjektiInput => {
@@ -22,6 +23,7 @@ const mapFormValuesToTallennaProjektiInput = ({
   deleteFieldArrayIds(lisaAineisto);
   const result: TallennaProjektiInput = {
     oid,
+    versio,
     nahtavillaoloVaihe: { aineistoNahtavilla: aineistoNahtavillaFlat, lisaAineisto },
   };
   return result;
@@ -38,7 +40,9 @@ export default function NahtavillaoloPainikkeet() {
   const saveSuunnitteluvaihe = async (formData: NahtavilleAsetettavatAineistotFormValues) => {
     const tallennaProjektiInput: TallennaProjektiInput = mapFormValuesToTallennaProjektiInput(formData);
     await api.tallennaProjekti(tallennaProjektiInput);
-    if (reloadProjekti) await reloadProjekti();
+    if (reloadProjekti) {
+      await reloadProjekti();
+    }
     reset(formData);
   };
 

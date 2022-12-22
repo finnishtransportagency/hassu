@@ -14,7 +14,7 @@ import { paatosSpecificRoutesMap, PaatosTyyppi } from "src/util/getPaatosSpecifi
 import { HyvaksymisPaatosVaiheAineistotFormValues } from "./Muokkausnakyma";
 
 const mapFormValuesToTallennaProjektiInput = (
-  { oid, hyvaksymisPaatos, aineistoNahtavilla }: HyvaksymisPaatosVaiheAineistotFormValues,
+  { oid, versio, hyvaksymisPaatos, aineistoNahtavilla }: HyvaksymisPaatosVaiheAineistotFormValues,
   paatosTyyppi: PaatosTyyppi
 ): TallennaProjektiInput => {
   const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla).flat();
@@ -22,7 +22,7 @@ const mapFormValuesToTallennaProjektiInput = (
   deleteFieldArrayIds(hyvaksymisPaatos);
   const { paatosVaiheAvain } = paatosSpecificRoutesMap[paatosTyyppi];
 
-  return { oid, [paatosVaiheAvain]: { aineistoNahtavilla: aineistoNahtavillaFlat, hyvaksymisPaatos } };
+  return { oid, versio, [paatosVaiheAvain]: { aineistoNahtavilla: aineistoNahtavillaFlat, hyvaksymisPaatos } };
 };
 
 export default function PaatosPainikkeet({ paatosTyyppi }: { paatosTyyppi: PaatosTyyppi }) {

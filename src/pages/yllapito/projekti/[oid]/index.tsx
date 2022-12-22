@@ -41,7 +41,7 @@ type TransientFormValues = {
 };
 type PersitentFormValues = Pick<
   TallennaProjektiInput,
-  "oid" | "muistiinpano" | "euRahoitus" | "suunnitteluSopimus" | "liittyvatSuunnitelmat" | "kielitiedot"
+  "oid" | "versio" | "muistiinpano" | "euRahoitus" | "suunnitteluSopimus" | "liittyvatSuunnitelmat" | "kielitiedot"
 >;
 export type FormValues = TransientFormValues & PersitentFormValues;
 
@@ -98,6 +98,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
   const defaultValues: FormValues = useMemo(() => {
     const tallentamisTiedot: FormValues = {
       oid: projekti.oid,
+      versio: projekti.versio,
       muistiinpano: projekti.muistiinpano || "",
       euRahoitus: projekti.euRahoitus,
       liittyvatSuunnitelmat:
@@ -182,7 +183,6 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
 
         await api.tallennaProjekti(persistentData);
         await reloadProjekti();
-        reset(data);
         showSuccessMessage("Tallennus onnistui!");
       } catch (e) {
         log.log("OnSubmit Error", e);

@@ -18,7 +18,7 @@ async function cleanupKuulutusAfterApproval(projekti: DBProjekti, hyvaksymisPaat
     if (hyvaksymisPaatosVaihe.uudelleenKuulutus) {
       hyvaksymisPaatosVaihe.uudelleenKuulutus = null;
     }
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, hyvaksymisPaatosVaihe });
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, hyvaksymisPaatosVaihe });
   }
 }
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
@@ -63,7 +63,7 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
   }
 
   async saveVaihe(projekti: DBProjekti, hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe): Promise<void> {
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, hyvaksymisPaatosVaihe });
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, hyvaksymisPaatosVaihe });
   }
 
   checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja {
@@ -114,12 +114,16 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     if (!julkaisu) {
       throw new Error("Ei hyvaksymisPaatosVaihetta odottamassa hyväksyntää");
     }
-    cleanupKuulutusAfterApproval(projekti, hyvaksymisPaatosVaihe);
+    await cleanupKuulutusAfterApproval(projekti, hyvaksymisPaatosVaihe);
 
     julkaisu.tila = KuulutusJulkaisuTila.HYVAKSYTTY;
     julkaisu.hyvaksyja = projektiPaallikko.uid;
 
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, ajastettuTarkistus: this.getNextAjastettuTarkistus(julkaisu, true) });
+    await projektiDatabase.saveProjekti({
+      oid: projekti.oid,
+      versio: projekti.versio,
+      ajastettuTarkistus: this.getNextAjastettuTarkistus(julkaisu, true),
+    });
 
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(projekti, julkaisu);
     await aineistoSynchronizerService.synchronizeProjektiFiles(projekti.oid);
@@ -139,7 +143,7 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     }
     await this.deletePDFs(projekti.oid, julkaisu.hyvaksymisPaatosVaihePDFt);
 
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, hyvaksymisPaatosVaihe });
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, hyvaksymisPaatosVaihe });
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.delete(projekti, julkaisu.id);
   }
 }

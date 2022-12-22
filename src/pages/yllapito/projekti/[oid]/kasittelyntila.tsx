@@ -32,7 +32,7 @@ import CheckBox from "@components/form/CheckBox";
 import Textarea from "@components/form/Textarea";
 import useApi from "src/hooks/useApi";
 
-type FormValues = Pick<TallennaProjektiInput, "oid" | "kasittelynTila">;
+type FormValues = Pick<TallennaProjektiInput, "oid" | "versio" | "kasittelynTila">;
 
 export default function KasittelyntilaSivu(): ReactElement {
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
@@ -107,6 +107,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
 
     const formValues: FormValues = {
       oid: projekti.oid,
+      versio: projekti.versio,
       kasittelynTila: {
         hyvaksymispaatos,
         ensimmainenJatkopaatos,
@@ -171,12 +172,11 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
         cleanedUpData.kasittelynTila.hyvaksymispaatos = cleanupHyvaksymisPaatos(cleanedUpData.kasittelynTila?.hyvaksymispaatos);
         cleanedUpData.kasittelynTila.ensimmainenJatkopaatos = cleanupHyvaksymisPaatos(cleanedUpData.kasittelynTila?.ensimmainenJatkopaatos);
         cleanedUpData.kasittelynTila.toinenJatkopaatos = cleanupHyvaksymisPaatos(cleanedUpData.kasittelynTila?.toinenJatkopaatos);
-        if (isValituksia === false) {
+        if (!isValituksia) {
           cleanedUpData.kasittelynTila.valitustenMaara = null;
         }
         await api.tallennaProjekti(cleanedUpData);
         await reloadProjekti();
-        reset(data);
         showSuccessMessage("Tallennus onnistui!");
       } catch (e) {
         log.log("OnSubmit Error", e);
@@ -184,8 +184,12 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
       }
       setIsFormSubmitting(false);
     },
-    [api, isValituksia, reloadProjekti, reset, showErrorMessage, showSuccessMessage]
+    [api, isValituksia, reloadProjekti, showErrorMessage, showSuccessMessage]
   );
+
+  useEffect(() => {
+    reset(defaultValues);
+  }, [defaultValues, reset]);
 
   const avaaJatkopaatos = useCallback(
     async (data: FormValues) => {

@@ -34,11 +34,11 @@ describe("projektiValidator", () => {
   it("Muokkaaminen vaatii oikeudet", async () => {
     userFixture.logout();
     let projekti = fixture.dbProjekti2();
-    expect(() => validateTallennaProjekti(projekti, { oid: projekti.oid })).throws("Väylä-kirjautuminen puuttuu");
+    expect(() => validateTallennaProjekti(projekti, { oid: projekti.oid, versio: projekti.versio })).throws("Väylä-kirjautuminen puuttuu");
 
     userFixture.loginAs(UserFixture.pekkaProjari);
     // Should validate just fine
-    validateTallennaProjekti(projekti, { oid: projekti.oid });
+    validateTallennaProjekti(projekti, { oid: projekti.oid, versio: projekti.versio });
   });
 
   it("Vain omistaja voi lisätä varahenkilöitä", async () => {
@@ -75,6 +75,7 @@ describe("projektiValidator", () => {
 
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
+      versio: projekti.versio,
       kayttoOikeudet: kayttoOikeudetInput,
     };
 
@@ -90,7 +91,7 @@ describe("projektiValidator", () => {
   it("Vain admin voi muokata kasittelynTila-kenttää ja vain tietyissä vaiheissa", async () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     let projekti = fixture.dbProjekti2();
-    let input = { oid: projekti.oid, kasittelynTila: {} };
+    let input = { oid: projekti.oid, versio: projekti.versio, kasittelynTila: {} };
     expect(() => validateTallennaProjekti(projekti, input)).throws(
       "Sinulla ei ole admin-oikeuksia (Hyvaksymispaatoksia voi tallentaa vain Hassun yllapitaja)"
     );
@@ -99,15 +100,15 @@ describe("projektiValidator", () => {
     validateTallennaProjekti(projekti, input);
 
     // Projektin status on SUUNNITTELU, joten hyväksymispäätöksiä ei voi tallentaaa vielä
-    expect(() => validateTallennaProjekti(projekti, { oid: projekti.oid, kasittelynTila: { hyvaksymispaatos: {} } })).throws(
-      "Hyväksymispäätöstä voidaan muokata vasta nähtävilläolovaiheessa tai sitä myöhemmin"
-    );
-    expect(() => validateTallennaProjekti(projekti, { oid: projekti.oid, kasittelynTila: { ensimmainenJatkopaatos: {} } })).throws(
-      "Ensimmäistä jatkopäätöstä voi muokata vain hyväksymispäätöksen jälkeisen epäaktiivisuuden jälkeen"
-    );
-    expect(() => validateTallennaProjekti(projekti, { oid: projekti.oid, kasittelynTila: { toinenJatkopaatos: {} } })).throws(
-      "Toista jatkopäätöstä voi muokata vain ensimmäisen jatkopäätöksen jälkeen"
-    );
+    expect(() =>
+      validateTallennaProjekti(projekti, { oid: projekti.oid, versio: projekti.versio, kasittelynTila: { hyvaksymispaatos: {} } })
+    ).throws("Hyväksymispäätöstä voidaan muokata vasta nähtävilläolovaiheessa tai sitä myöhemmin");
+    expect(() =>
+      validateTallennaProjekti(projekti, { oid: projekti.oid, versio: projekti.versio, kasittelynTila: { ensimmainenJatkopaatos: {} } })
+    ).throws("Ensimmäistä jatkopäätöstä voi muokata vain hyväksymispäätöksen jälkeisen epäaktiivisuuden jälkeen");
+    expect(() =>
+      validateTallennaProjekti(projekti, { oid: projekti.oid, versio: projekti.versio, kasittelynTila: { toinenJatkopaatos: {} } })
+    ).throws("Toista jatkopäätöstä voi muokata vain ensimmäisen jatkopäätöksen jälkeen");
   });
 
   it("KasittelynTila-kentän onnistuneet muokkaukset", async () => {
@@ -121,6 +122,8 @@ describe("projektiValidator", () => {
     // Projektin status on NAHTAVILLAOLO, joten hyväksymispäätöksen voi täyttää
     validateTallennaProjekti(projekti, {
       oid: projekti.oid,
+      versio: projekti.versio,
+
       kasittelynTila: { hyvaksymispaatos: { asianumero: "1", paatoksenPvm: "2000-01-01" } },
     });
 
@@ -131,6 +134,8 @@ describe("projektiValidator", () => {
     projekti.kasittelynTila = { hyvaksymispaatos: { asianumero: "1", paatoksenPvm: "2000-01-01" } };
     validateTallennaProjekti(projekti, {
       oid: projekti.oid,
+      versio: projekti.versio,
+
       kasittelynTila: { ensimmainenJatkopaatos: { asianumero: "1", paatoksenPvm: "2000-01-01" } },
     });
 
@@ -140,6 +145,6 @@ describe("projektiValidator", () => {
       hyvaksymispaatos: { asianumero: "1", paatoksenPvm: "2000-01-01" },
       ensimmainenJatkopaatos: { asianumero: "1", paatoksenPvm: "2000-01-01", aktiivinen: true },
     };
-    validateTallennaProjekti(projekti, { oid: projekti.oid, kasittelynTila: { toinenJatkopaatos: {} } });
+    validateTallennaProjekti(projekti, { oid: projekti.oid, versio: projekti.versio, kasittelynTila: { toinenJatkopaatos: {} } });
   });
 });

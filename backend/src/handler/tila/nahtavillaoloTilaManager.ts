@@ -50,7 +50,7 @@ async function createNahtavillaoloVaihePDF(
 async function cleanupKuulutusBeforeApproval(projekti: DBProjekti, nahtavillaoloVaihe: NahtavillaoloVaihe) {
   if (nahtavillaoloVaihe.palautusSyy) {
     nahtavillaoloVaihe.palautusSyy = null;
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, nahtavillaoloVaihe });
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, nahtavillaoloVaihe });
   }
 }
 
@@ -62,7 +62,7 @@ async function cleanupKuulutusAfterApproval(projekti: DBProjekti, nahtavillaoloV
     if (nahtavillaoloVaihe.uudelleenKuulutus) {
       nahtavillaoloVaihe.uudelleenKuulutus = null;
     }
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, nahtavillaoloVaihe });
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, nahtavillaoloVaihe });
   }
 }
 
@@ -106,7 +106,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
   }
 
   async saveVaihe(projekti: DBProjekti, vaihe: NahtavillaoloVaihe): Promise<void> {
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, nahtavillaoloVaihe: vaihe });
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, nahtavillaoloVaihe: vaihe });
   }
 
   checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja {
@@ -181,7 +181,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     }
     await this.deletePDFs(projekti.oid, julkaisuWaitingForApproval.nahtavillaoloPDFt);
 
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, nahtavillaoloVaihe });
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, nahtavillaoloVaihe });
     await projektiDatabase.nahtavillaoloVaiheJulkaisut.delete(projekti, julkaisuWaitingForApproval.id);
   }
 

@@ -174,6 +174,7 @@ async function handleImport(projekti: DBProjekti) {
 
   await projektiDatabase.saveProjekti({
     oid,
+    versio: projekti.versio,
     vuorovaikutusKierros,
     nahtavillaoloVaihe,
     hyvaksymisPaatosVaihe,

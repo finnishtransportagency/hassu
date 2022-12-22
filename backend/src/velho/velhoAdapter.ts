@@ -197,6 +197,7 @@ export function adaptProjekti(data: ProjektiProjekti): DBProjekti {
   const varahenkilonEmail = getVastuuhenkiloEmail(data.ominaisuudet.varahenkilo);
   return {
     oid: "" + data.oid,
+    versio: 1,
     tyyppi: projektiTyyppi,
     velho: {
       nimi: data.ominaisuudet.nimi,

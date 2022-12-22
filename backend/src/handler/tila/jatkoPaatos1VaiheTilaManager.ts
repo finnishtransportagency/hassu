@@ -19,7 +19,7 @@ async function cleanupKuulutusAfterApproval(projekti: DBProjekti, jatkoPaatos1Va
     if (jatkoPaatos1Vaihe.uudelleenKuulutus) {
       jatkoPaatos1Vaihe.uudelleenKuulutus = null;
     }
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, jatkoPaatos1Vaihe });
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, jatkoPaatos1Vaihe });
   }
 }
 
@@ -63,7 +63,7 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
   }
 
   async saveVaihe(projekti: DBProjekti, jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe): Promise<void> {
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, jatkoPaatos1Vaihe });
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, jatkoPaatos1Vaihe });
   }
 
   checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja {
@@ -118,7 +118,11 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     julkaisu.tila = KuulutusJulkaisuTila.HYVAKSYTTY;
     julkaisu.hyvaksyja = projektiPaallikko.uid;
 
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, ajastettuTarkistus: this.getNextAjastettuTarkistus(julkaisu, false) });
+    await projektiDatabase.saveProjekti({
+      oid: projekti.oid,
+      versio: projekti.versio,
+      ajastettuTarkistus: this.getNextAjastettuTarkistus(julkaisu, false),
+    });
 
     await projektiDatabase.jatkoPaatos1VaiheJulkaisut.update(projekti, julkaisu);
     await aineistoSynchronizerService.synchronizeProjektiFiles(projekti.oid);
@@ -137,7 +141,7 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     }
     await this.deletePDFs(projekti.oid, julkaisu.hyvaksymisPaatosVaihePDFt);
 
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, jatkoPaatos1Vaihe });
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, jatkoPaatos1Vaihe });
     await projektiDatabase.jatkoPaatos1VaiheJulkaisut.delete(projekti, julkaisu.id);
   }
 }
