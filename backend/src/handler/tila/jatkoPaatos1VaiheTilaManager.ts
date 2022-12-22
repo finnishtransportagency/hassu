@@ -76,7 +76,7 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     return muokkaaja;
   }
 
-  checkUudelleenkuulutusPriviledges(projekti: DBProjekti): NykyinenKayttaja {
+  checkUudelleenkuulutusPriviledges(_projekti: DBProjekti): NykyinenKayttaja {
     return requireAdmin();
   }
 

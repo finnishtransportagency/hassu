@@ -119,7 +119,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     return muokkaaja;
   }
 
-  checkUudelleenkuulutusPriviledges(projekti: DBProjekti): NykyinenKayttaja {
+  checkUudelleenkuulutusPriviledges(_projekti: DBProjekti): NykyinenKayttaja {
     return requireAdmin();
   }
 

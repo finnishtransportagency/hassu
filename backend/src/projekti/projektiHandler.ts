@@ -112,13 +112,13 @@ export async function createOrUpdateProjekti(input: API.TallennaProjektiInput): 
 }
 
 export async function updateVuorovaikutus(input: API.VuorovaikutusPaivitysInput | null | undefined): Promise<string> {
-  requirePermissionLuku();
   if (!input) {
     throw new IllegalArgumentError("input puuttuu!");
   }
   const oid = input.oid;
   const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
   if (projektiInDB) {
+    requirePermissionMuokkaa(projektiInDB);
     validatePaivitaVuorovaikutus(projektiInDB, input);
     auditLog.info("Päivitä vuorovaikutuskierros", { input });
 

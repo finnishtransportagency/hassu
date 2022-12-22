@@ -20,19 +20,19 @@ class VuorovaikutusKierrosTilaManager extends TilaManager {
     return muokkaaja;
   }
 
-  checkPriviledgesSendForApproval(projekti: DBProjekti): NykyinenKayttaja {
+  checkPriviledgesSendForApproval(_projekti: DBProjekti): NykyinenKayttaja {
     throw new Error("checkPriviledgesSendForApproval ei kuulu vuorovaikutuskierroksen toimintoihin");
   }
 
-  checkUudelleenkuulutusPriviledges(projekti: DBProjekti): NykyinenKayttaja {
+  checkUudelleenkuulutusPriviledges(_projekti: DBProjekti): NykyinenKayttaja {
     throw new Error("checkUudelleenkuulutusPriviledges ei kuulu vuorovaikutuskierroksen toimintoihin");
   }
 
-  async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
+  async sendForApproval(_projekti: DBProjekti, _muokkaaja: NykyinenKayttaja): Promise<void> {
     throw new Error("sendForApproval ei kuulu vuorovaikutuskierroksen toimintoihin");
   }
 
-  async approve(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
+  async approve(projekti: DBProjekti, _muokkaaja: NykyinenKayttaja): Promise<void> {
     const vuorovaikutusKierrosJulkaisu = asiakirjaAdapter.adaptVuorovaikutusKierrosJulkaisu(projekti);
 
     if (!vuorovaikutusKierrosJulkaisu.hankkeenKuvaus) {
@@ -55,11 +55,11 @@ class VuorovaikutusKierrosTilaManager extends TilaManager {
     await this.synchronizeProjektiFiles(projekti.oid, false, vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva);
   }
 
-  async reject(projekti: DBProjekti, syy: string): Promise<void> {
+  async reject(_projekti: DBProjekti, _syy: string): Promise<void> {
     throw new IllegalArgumentError("Reject ei kuulu vuorovaikutuskierroksen toimintoihin");
   }
 
-  async uudelleenkuuluta(projekti: DBProjekti): Promise<void> {
+  async uudelleenkuuluta(_projekti: DBProjekti): Promise<void> {
     throw new IllegalArgumentError("Uudelleenkuuluta ei kuulu vuorovaikutuskierroksen toimintoihin");
   }
 
