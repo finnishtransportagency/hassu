@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { selectAllAineistotFromCategory, typeIntoFields } from "./util";
 
 export function taytaNahtavillaoloPerustiedot(oid, selectorToTextMap) {
-  cy.get("#kuulutuksentiedot_tab").click();
+  cy.get("#kuulutuksentiedot_tab").click({ force: true });
 
   // Reject acceptance request and clear most of the data from nahtavillaolovaihe through API
   // to enable re-tunning this test as many times as needed
@@ -33,7 +33,7 @@ export function taytaNahtavillaoloPerustiedot(oid, selectorToTextMap) {
   cy.reload();
 
   // Test saved values
-  cy.get("#kuulutuksentiedot_tab").click();
+  cy.get("#kuulutuksentiedot_tab").click({ force: true });
   cy.get('[name="nahtavillaoloVaihe.kuulutusPaiva"]').should("have.value", today);
 
   selectorToTextMap.forEach((text, selector) => {
@@ -76,7 +76,7 @@ export function hyvaksyNahtavillaoloKuulutus() {
   cy.contains("Hyväksyminen onnistui", { timeout: 15000 });
 
   cy.reload();
-  cy.get("#kuulutuksentiedot_tab").click();
+  cy.get("#kuulutuksentiedot_tab").click({ force: true });
 
   cy.contains("Kuulutus on julkaistu");
 }

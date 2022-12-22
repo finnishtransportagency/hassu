@@ -169,6 +169,7 @@ function KayttoOikeusHallintaFormElements({
         }}
         disabled={disableFields}
         type="button"
+        id="lisaa_uusi_kayttaja"
       >
         Lisää uusi +
       </Button>
@@ -314,6 +315,7 @@ const UserFields = ({
             {muokattavissa && (
               <div>
                 <IconButton
+                  data-testid={`poista.kayttoOikeudet.${index}`}
                   sx={{ marginTop: 5.5 }}
                   onClick={() => {
                     if (muokattavissa) {
@@ -332,7 +334,7 @@ const UserFields = ({
             )}
           </Stack>
         )}
-        <TextField label="Sähköpostiosoite *" value={kayttaja?.email || ""} disabled />
+        <TextField label="Sähköpostiosoite *" value={kayttaja?.email || ""} disabled name={`kayttoOikeudet.${index}.sahkoposti`} />
         {!isProjektiPaallikko && kayttaja?.uid && isAorL(kayttaja?.uid) && (
           <Controller
             name={`kayttoOikeudet.${index}.tyyppi`}
@@ -352,6 +354,7 @@ const UserFields = ({
                         onChange(tyyppi);
                       }}
                       {...field}
+                      name={`kayttoOikeudet.${index}.varahenkiloValinta`}
                     />
                   }
                 />
@@ -394,6 +397,7 @@ const UserFields = ({
           endIcon="trash"
           disabled={disableFields || !muokattavissa}
           type="button"
+          data-testid={`poista.kayttoOikeudet.${index}`}
         >
           Poista
         </Button>
