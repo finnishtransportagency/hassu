@@ -101,7 +101,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     return muokkaaja;
   }
 
-  checkUudelleenkuulutusPriviledges(projekti: DBProjekti): NykyinenKayttaja {
+  checkUudelleenkuulutusPriviledges(_projekti: DBProjekti): NykyinenKayttaja {
     return requireAdmin();
   }
 

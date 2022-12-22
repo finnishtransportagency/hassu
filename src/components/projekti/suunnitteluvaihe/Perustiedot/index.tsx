@@ -33,6 +33,7 @@ import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
 import SuunnittelunEteneminenJaArvioKestosta from "./SuunnittelunEteneminenJaArvioKestosta";
 import { removeTypeName } from "src/util/removeTypeName";
 import EiJulkinenLuonnoksetJaAineistotLomake from "../LuonnoksetJaAineistot/EiJulkinen";
+import router from "next/router";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
 type RequiredProjektiFields = Required<{
@@ -100,7 +101,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           nimi: "",
           url: "",
         },
-        kysymyksetJaPalautteetViimeistaan: projekti.vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan,
+        kysymyksetJaPalautteetViimeistaan: projekti.vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan || null,
       },
     };
     return tallentamisTiedot;
@@ -129,7 +130,10 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
 
   const saveDraftAndRedirect = async (formData: SuunnittelunPerustiedotFormValues) => {
     await saveDraft(formData);
-    // TODO: redirect
+    router.push({
+      pathname: "/yllapito/projekti/[oid]/suunnittelu/vuorovaikuttaminen/[kierrosId]",
+      query: { oid: projekti.oid, kierrosId: 1 },
+    });
   };
 
   const saveSuunnitteluvaihe = useCallback(
@@ -140,7 +144,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       }
       reset(formData);
     },
-    [reloadProjekti, reset]
+    [api, reloadProjekti, reset]
   );
 
   const updateSuunnitteluvaihe = useCallback(
@@ -165,7 +169,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       }
       reset(formData);
     },
-    [projekti.oid, projekti.vuorovaikutusKierros?.vuorovaikutusNumero, reloadProjekti, reset]
+    [api, projekti.oid, projekti.vuorovaikutusKierros?.vuorovaikutusNumero, reloadProjekti, reset]
   );
 
   const saveDraft = useCallback(
@@ -285,6 +289,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
                   id="save_suunnitteluvaihe_perustiedot_and_redirect"
                   onClick={handleSubmit(saveDraftAndRedirect)}
                   disabled={isFormSubmitting}
+                  primary
                 >
                   Tallenna luonnos ja siirry seuraavalle sivulle
                 </Button>

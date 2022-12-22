@@ -185,7 +185,7 @@ function VuorovaikutusKierrosKutsu({
       if (reloadProjekti) await reloadProjekti();
       reset(formData);
     },
-    [reset, reloadProjekti]
+    [api, reloadProjekti, reset]
   );
 
   const saveDraft = useCallback(
@@ -224,7 +224,7 @@ function VuorovaikutusKierrosKutsu({
       }
       return () => (mounted = false);
     },
-    [setIsFormSubmitting, reloadProjekti, showSuccessMessage, showErrorMessage, projekti]
+    [projekti, api, reloadProjekti, showSuccessMessage, showErrorMessage]
   );
 
   const saveAndPublish = useCallback(
