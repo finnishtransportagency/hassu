@@ -8,7 +8,6 @@ const muuNumero = "029123456";
 describe("Projektin henkilot", () => {
   beforeEach(() => {
     cy.abortEarly();
-    cy.login("A1");
   });
 
   // Clean up so new user or municipality representative won't cause problems in later tests and also for re-runnability
@@ -29,6 +28,7 @@ describe("Projektin henkilot", () => {
   });
 
   it("Tarkista projektin henkilot velhosta", () => {
+    cy.login("A1");
     //projektipaallikko
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
     cy.contains("Projektin Henkilöt");
@@ -42,6 +42,7 @@ describe("Projektin henkilot", () => {
   });
 
   it("Lisaa muu henkilo", () => {
+    cy.login("A1");
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
     cy.get("#lisaa_uusi_kayttaja").click();
     // input name ends with kayttajatunnus
@@ -54,6 +55,7 @@ describe("Projektin henkilot", () => {
   });
 
   it("Tarkista yhteystiedot julkiselta puolelta", () => {
+    cy.login("A1");
     cy.visit(Cypress.env("host") + "/suunnitelma/" + oid);
     cy.contains("A-tunnus1 Hassu");
     cy.get("#yhteystiedot").contains(muuTunnus);
@@ -61,6 +63,7 @@ describe("Projektin henkilot", () => {
   });
 
   it("Vaihda muu henkilo kunnan edustajaksi", () => {
+    cy.login("A1");
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
     cy.get("input[name $='yleinenYhteystieto']").last().uncheck({ force: true });
     cy.get("#save_projekti").click();
@@ -74,6 +77,7 @@ describe("Projektin henkilot", () => {
   });
 
   it("Tarkista uusi kunnan edustaja julkisella puolella", () => {
+    cy.login("A1");
     cy.visit(Cypress.env("host") + "/suunnitelma/" + oid);
     cy.contains("A-tunnus1 Hassu");
     cy.get("#kuntatiedot").contains(muuTunnus);

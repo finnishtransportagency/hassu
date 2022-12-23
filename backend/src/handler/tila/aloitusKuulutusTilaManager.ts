@@ -12,6 +12,7 @@ import assert from "assert";
 import dayjs from "dayjs";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
+import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { sendAloitusKuulutusApprovalMailsAndAttachments, sendWaitingApprovalMail } from "../emailHandler";
 
@@ -64,6 +65,14 @@ async function cleanupAloitusKuulutusAfterApproval(projekti: DBProjekti, aloitus
 }
 
 class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, AloitusKuulutusJulkaisu> {
+  validateSendForApproval(projekti: DBProjekti): void {
+    if (!new ProjektiAineistoManager(projekti).getAloitusKuulutusVaihe().isReady()) {
+      throw new IllegalArgumentError(
+        "Projektia ei voi lähettää hyväksyttäväksi ennen kuin aineistot on tuotu. Yritän hetken päästä uudelleen."
+      );
+    }
+  }
+
   validateUudelleenkuulutus(projekti: DBProjekti, kuulutus: AloitusKuulutus, hyvaksyttyJulkaisu: AloitusKuulutusJulkaisu | undefined) {
     // Tarkista, että on olemassa hyväksytty aloituskuulutusjulkaisu, jonka perua
     if (!hyvaksyttyJulkaisu) {

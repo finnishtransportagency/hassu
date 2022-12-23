@@ -14,6 +14,7 @@ import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import { assertIsDefined } from "../../util/assertions";
 import dayjs from "dayjs";
 import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
+import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 
 async function createNahtavillaoloVaihePDF(
@@ -68,6 +69,13 @@ async function cleanupKuulutusAfterApproval(projekti: DBProjekti, nahtavillaoloV
 }
 
 class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
+  validateSendForApproval(projekti: DBProjekti): void {
+    if (!new ProjektiAineistoManager(projekti).getNahtavillaoloVaihe().isReady()) {
+      throw new IllegalArgumentError(
+        "Projektia ei voi lähettää hyväksyttäväksi ennen kuin aineistot on tuotu. Yritän hetken päästä uudelleen."
+      );
+    }
+  }
   getVaihe(projekti: DBProjekti): NahtavillaoloVaihe {
     const vaihe = projekti.nahtavillaoloVaihe;
     assertIsDefined(vaihe, "Projektilla ei ole nahtavillaoloVaihetta");

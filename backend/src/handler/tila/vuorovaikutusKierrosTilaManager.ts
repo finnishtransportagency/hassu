@@ -1,6 +1,13 @@
 import { Kieli, NykyinenKayttaja, PDF, VuorovaikutusKierrosTila } from "../../../../common/graphql/apiModel";
 import { TilaManager } from "./TilaManager";
-import { DBProjekti, IlmoituksenVastaanottajat, Kielitiedot, VuorovaikutusKierrosJulkaisu, VuorovaikutusPDF } from "../../database/model";
+import {
+  DBProjekti,
+  IlmoituksenVastaanottajat,
+  Kielitiedot,
+  VuorovaikutusKierros,
+  VuorovaikutusKierrosJulkaisu,
+  VuorovaikutusPDF,
+} from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { fileService } from "../../files/fileService";
@@ -13,7 +20,15 @@ import assert from "assert";
 import { emailClient } from "../../email/email";
 import { requirePermissionMuokkaa } from "../../user";
 
-class VuorovaikutusKierrosTilaManager extends TilaManager {
+class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
+  validateUudelleenkuulutus(): void {
+    throw new Error("validateUudelleenkuulutus ei kuulu vuorovaikutuskierroksen toimintoihin");
+  }
+
+  validateSendForApproval(): void {
+    throw new Error("validateSendForApproval ei kuulu vuorovaikutuskierroksen toimintoihin");
+  }
+
   checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja {
     return requirePermissionMuokkaa(projekti);
   }
@@ -134,6 +149,18 @@ class VuorovaikutusKierrosTilaManager extends TilaManager {
       .concat(ilmoituksenVastaanottajat.kunnat.map((kunta) => kunta.sahkoposti))
       .concat(ilmoituksenVastaanottajat.viranomaiset?.map((viranomainen) => viranomainen.sahkoposti))
       .filter((s) => s);
+  }
+
+  getProjektiPathForKuulutus(projekti: DBProjekti, kierros: VuorovaikutusKierros) {
+    return new ProjektiPaths(projekti.oid).vuorovaikutus(kierros);
+  }
+
+  async saveVaihe(projekti: DBProjekti, vuorovaikutusKierros: VuorovaikutusKierros) {
+    await projektiDatabase.saveProjekti({
+      oid: projekti.oid,
+      versio: projekti.versio,
+      vuorovaikutusKierros,
+    });
   }
 }
 

@@ -1,6 +1,6 @@
 import { describe, it } from "mocha";
 import { setupLocalDatabase } from "../util/databaseUtil";
-import { Status } from "../../../common/graphql/apiModel";
+import { Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
 import * as sinon from "sinon";
 import { personSearchUpdaterClient } from "../../src/personSearch/personSearchUpdaterClient";
 import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/personSearchUpdaterHandler";
@@ -50,6 +50,8 @@ import {
 } from "./testUtil/hyvaksymisPaatosVaihe";
 import { FixtureName, recordProjektiTestFixture } from "./testFixtureRecorder";
 import { ImportAineistoMock } from "./testUtil/importAineistoMock";
+import { api } from "./apiClient";
+import { IllegalArgumentError } from "../../src/error/IllegalArgumentError";
 
 const { expect } = require("chai");
 
@@ -158,6 +160,17 @@ describe("Api", () => {
       projektiPaallikko.kayttajatunnus,
       Status.HYVAKSYTTY
     );
+
+    // Yritä lähettää hyväksyttäväksi ennen kuin aineistot on tuotu (eli tässä importAineistoMock.processQueue() kutsuttu)
+    userFixture.loginAsProjektiKayttaja(projektiPaallikko);
+    await expect(
+      api.siirraTila({
+        oid,
+        tyyppi: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
+        toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+      })
+    ).to.eventually.be.rejectedWith(IllegalArgumentError);
+
     await importAineistoMock.processQueue();
     await takeYllapitoS3Snapshot(oid, "Hyvaksymispaatos created", "hyvaksymispaatos");
 
