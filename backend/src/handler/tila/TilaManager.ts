@@ -4,8 +4,9 @@ import { emailHandler } from "../emailHandler";
 import { DBProjekti } from "../../database/model";
 import { NykyinenKayttaja, TilaSiirtymaInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
 import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
+import { PathTuple } from "../../files/ProjektiPath";
 
-export abstract class TilaManager {
+export abstract class TilaManager<T, Y> {
   protected tyyppi!: TilasiirtymaTyyppi;
 
   public async siirraTila({ oid, syy, toiminto, tyyppi }: TilaSiirtymaInput): Promise<void> {
@@ -26,7 +27,7 @@ export abstract class TilaManager {
     } else if (toiminto == TilasiirtymaToiminto.HYVAKSY) {
       await this.approveInternal(projekti);
     } else if (toiminto == TilasiirtymaToiminto.UUDELLEENKUULUTA) {
-      await this.uudelleenkuuluta(projekti);
+      await this.uudelleenkuulutaInternal(projekti);
     } else {
       throw new Error("Tuntematon toiminto");
     }
@@ -38,6 +39,7 @@ export abstract class TilaManager {
 
   private async sendForApprovalInternal(projekti: DBProjekti) {
     const kayttaja = this.checkPriviledgesSendForApproval(projekti);
+    this.validateSendForApproval(projekti);
     await this.sendForApproval(projekti, kayttaja);
   }
 
@@ -49,6 +51,11 @@ export abstract class TilaManager {
   private async approveInternal(projekti: DBProjekti) {
     const kayttaja = this.checkPriviledgesApproveReject(projekti);
     await this.approve(projekti, kayttaja);
+  }
+
+  private async uudelleenkuulutaInternal(projekti: DBProjekti) {
+    this.checkUudelleenkuulutusPriviledges(projekti);
+    await this.uudelleenkuuluta(projekti);
   }
 
   async synchronizeProjektiFiles(oid: string, isUudelleenKuulutus: boolean, synchronizationDate?: string | null): Promise<void> {
@@ -72,4 +79,12 @@ export abstract class TilaManager {
   abstract reject(projekti: DBProjekti, syy: string | null | undefined): Promise<void>;
 
   abstract approve(projekti: DBProjekti, kayttaja: NykyinenKayttaja): Promise<void>;
+
+  abstract validateUudelleenkuulutus(projekti: DBProjekti, kuulutus: T, hyvaksyttyJulkaisu: Y | undefined): void;
+
+  abstract validateSendForApproval(projekti: DBProjekti): void;
+
+  abstract getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: T | null | undefined): PathTuple;
+
+  abstract saveVaihe(projekti: DBProjekti, newKuulutus: T): Promise<void>;
 }

@@ -8,6 +8,7 @@ import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizer
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import assert from "assert";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
+import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 
 async function cleanupKuulutusAfterApproval(projekti: DBProjekti, hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe) {
@@ -22,6 +23,11 @@ async function cleanupKuulutusAfterApproval(projekti: DBProjekti, hyvaksymisPaat
   }
 }
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
+  validateSendForApproval(projekti: DBProjekti): void {
+    if (!new ProjektiAineistoManager(projekti).getHyvaksymisPaatosVaihe().isReady()) {
+      throw new IllegalArgumentError("Projektia ei voi lähettää hyväksyttäväksi ennen kuin aineistot on tuotu. Yritän hetken päästä uudelleen.");
+    }
+  }
   getVaihe(projekti: DBProjekti): HyvaksymisPaatosVaihe {
     const hyvaksymisPaatosVaihe = projekti.hyvaksymisPaatosVaihe;
     if (!hyvaksymisPaatosVaihe) {

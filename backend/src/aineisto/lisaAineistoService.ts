@@ -6,6 +6,7 @@ import { IllegalAccessError } from "../error/IllegalAccessError";
 import { Aineisto, DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../database/model";
 import { NotFoundError } from "../error/NotFoundError";
 import { fileService } from "../files/fileService";
+import { log } from "../logger";
 
 class LisaAineistoService {
   listaaLisaAineisto(projekti: DBProjekti, params: ListaaLisaAineistoInput): LisaAineistot {
@@ -14,9 +15,9 @@ class LisaAineistoService {
     function adaptLisaAineisto(aineisto: Aineisto): LisaAineisto {
       const { nimi, jarjestys, kategoriaId } = aineisto;
       if (!aineisto.tiedosto) {
-        throw new Error(
-          `Virhe lisäaineiston listaamisessa: Aineistolta (nimi: ${nimi}, dokumenttiOid: ${aineisto.dokumenttiOid}) puuttuu tiedosto!`
-        );
+        const msg = `Virhe lisäaineiston listaamisessa: Aineistolta (nimi: ${nimi}, dokumenttiOid: ${aineisto.dokumenttiOid}) puuttuu tiedosto!`;
+        log.error(msg, { aineisto });
+        throw new Error(msg);
       }
       const linkki = fileService.createYllapitoSignedDownloadLink(projekti.oid, aineisto.tiedosto);
       return { __typename: "LisaAineisto", nimi, jarjestys, kategoriaId, linkki };
