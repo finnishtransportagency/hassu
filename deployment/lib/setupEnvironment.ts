@@ -1,8 +1,7 @@
-/* tslint:disable:no-console */
 // This script examines stack outputs and parameter store parameters, and writes .env.local and .env.test files
 
-import { CloudFormationClient, DescribeStacksCommand, DescribeStacksCommandOutput } from "@aws-sdk/client-cloudformation";
-import { GetParametersByPathCommand, GetParametersByPathCommandOutput, SSMClient } from "@aws-sdk/client-ssm";
+import Cloudformation, { DescribeStacksOutput } from "aws-sdk/clients/cloudformation";
+import SSM, { GetParametersByPathResult } from "aws-sdk/clients/ssm";
 import { BaseConfig } from "../../common/BaseConfig";
 import { BackendStackOutputs } from "./hassu-backend";
 import { DatabaseStackOutputs } from "./hassu-database";
@@ -10,11 +9,11 @@ import { FrontendStackOutputs } from "./hassu-frontend";
 import { PipelineStackOutputs } from "./hassu-pipelines";
 import { AccountStackOutputs } from "./hassu-account";
 
-const usEastCFClient = new CloudFormationClient({ region: "us-east-1" });
-const euWestCFClient = new CloudFormationClient({ region: "eu-west-1" });
+const usEastCFClient = new Cloudformation({ region: "us-east-1" });
+const euWestCFClient = new Cloudformation({ region: "eu-west-1" });
 
-const usEastSSMClient = new SSMClient({ region: "us-east-1" });
-const euWestSSMClient = new SSMClient({ region: "eu-west-1" });
+const usEastSSMClient = new SSM({ region: "us-east-1" });
+const euWestSSMClient = new SSM({ region: "eu-west-1" });
 
 export enum Region {
   US_EAST_1,
@@ -49,14 +48,14 @@ async function readStackOutputsForRawStackName(stackName: string, region: Region
   if (!BaseConfig.isActuallyDeployedEnvironment() || BaseConfig.env === "localstack") {
     return {};
   }
-  let cfClient;
+  let cfClient: Cloudformation;
   if (region === Region.EU_WEST_1) {
     cfClient = euWestCFClient;
   } else {
     cfClient = usEastCFClient;
   }
   try {
-    const output: DescribeStacksCommandOutput = await cfClient.send(new DescribeStacksCommand({ StackName: stackName }));
+    const output: DescribeStacksOutput = await cfClient.describeStacks({ StackName: stackName }).promise();
     return (
       output.Stacks?.[0].Outputs?.reduce((params, param) => {
         // Include only non-null values. Exclude automatically generated outputs by CDK
@@ -109,7 +108,7 @@ export type HassuSSMParameters = {
 };
 
 export async function readParametersByPath(path: string, region: Region): Promise<Record<string, string>> {
-  let ssmClient: SSMClient;
+  let ssmClient: SSM;
   if (region === Region.EU_WEST_1) {
     ssmClient = euWestSSMClient;
   } else {
@@ -119,9 +118,9 @@ export async function readParametersByPath(path: string, region: Region): Promis
   let nextToken;
   do {
     // noinspection JSUnusedAssignment
-    const output: GetParametersByPathCommandOutput = await ssmClient.send(
-      new GetParametersByPathCommand({ Path: path, WithDecryption: true, NextToken: nextToken })
-    );
+    const output: GetParametersByPathResult = await ssmClient
+      .getParametersByPath({ Path: path, WithDecryption: true, NextToken: nextToken })
+      .promise();
     output.Parameters?.forEach((param) => {
       if (param.Name && param.Value) {
         variables[param.Name.replace(path, "")] = param.Value;
