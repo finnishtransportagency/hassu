@@ -234,7 +234,7 @@ function VuorovaikutusKierrosKutsu({
       setIsFormSubmitting(true);
       try {
         await saveDraft(formData);
-        await vaihdaKierroksenTila(TilasiirtymaToiminto.HYVAKSY, "Hyvaksyminen");
+        await vaihdaKierroksenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
       } catch (error) {
         log.error("Virhe hyväksyntään lähetyksessä", error);
         showErrorMessage("Hyväksyntään lähetyksessä tapahtui virhe");

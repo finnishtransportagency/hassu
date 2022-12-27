@@ -258,7 +258,7 @@ export class ProjektiDatabase {
   }
 
   async insertJulkaisuToList(oid: string, julkaisu: unknown, listFieldName: JulkaisutFieldName, description: string) {
-    log.info("Insert " + description, { oid, julkaisu });
+    log.info("Insert " + description, { oid });
     const params = {
       TableName: this.projektiTableName,
       Key: {
@@ -273,7 +273,7 @@ export class ProjektiDatabase {
         ":empty_list": [],
       },
     };
-    log.info("Inserting " + description + " to projekti", { params });
+    log.info("Inserting " + description + " to projekti", { oid });
     return getDynamoDBDocumentClient().update(params).promise();
   }
 
