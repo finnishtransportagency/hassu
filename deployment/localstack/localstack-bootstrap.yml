@@ -282,6 +282,7 @@ Resources:
           - Action:
               - s3:GetObject*
               - s3:GetBucket*
+              - s3:GetEncryptionConfiguration
               - s3:List*
               - s3:DeleteObject*
               - s3:PutObject*
@@ -377,6 +378,7 @@ Resources:
                   - cloudformation:DeleteStack
                   - cloudformation:UpdateTerminationProtection
                   - sts:GetCallerIdentity
+                  - cloudformation:GetTemplateSummary
                 Resource: "*"
                 Effect: Allow
               - Sid: CliStagingBucket
@@ -427,7 +429,7 @@ Resources:
       Type: String
       Name:
         Fn::Sub: /cdk-bootstrap/${Qualifier}/version
-      Value: "8"
+      Value: "14"
 Outputs:
   BucketName:
     Description: The name of the S3 bucket owned by the CDK toolkit stack
@@ -447,6 +449,10 @@ Outputs:
     Export:
       Name:
         Fn::Sub: CdkBootstrap-${Qualifier}-FileAssetKeyArn
+  ImageRepositoryName:
+    Description: The name of the ECR repository which hosts docker image assets
+    Value:
+      Fn::Sub: ${ContainerAssetsRepository}
   BootstrapVersion:
     Description: The version of the bootstrap resources that are currently mastered in this stack
     Value:

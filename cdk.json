@@ -1,5 +1,5 @@
 {
-  "app": "npx ts-node --prefer-ts-exts deployment/bin/hassu.ts",
+  "app": "./node_modules/.bin/ts-node --prefer-ts-exts deployment/bin/hassu.ts",
   "context": {
     "aws-cdk:enableDiffNoFail": "true",
     "@aws-cdk/core:stackRelativeExports": "true",
