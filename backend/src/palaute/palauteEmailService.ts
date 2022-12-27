@@ -6,8 +6,8 @@ import { log } from "../logger";
 
 class PalauteEmailService {
   async sendEmailsToPalautteidenVastaanottajat(projekti: DBProjekti) {
-    if (projekti.suunnitteluVaihe?.palautteidenVastaanottajat) {
-      for (const username of projekti.suunnitteluVaihe.palautteidenVastaanottajat) {
+    if (projekti.vuorovaikutusKierros?.palautteidenVastaanottajat) {
+      for (const username of projekti.vuorovaikutusKierros.palautteidenVastaanottajat) {
         const recipient = projekti.kayttoOikeudet.find((user) => user.kayttajatunnus == username);
         if (recipient) {
           const emailOptions = createNewFeedbackAvailableEmail(projekti.oid, recipient.email);
@@ -31,7 +31,7 @@ class PalauteEmailService {
 
       let recipients;
       // Send digest email to everybody else than the ones listed in palautteidenVastaanottajat. They already got the emails immediately when feedback was given
-      if (dbProjekti.suunnitteluVaihe?.palautteidenVastaanottajat) {
+      if (dbProjekti.vuorovaikutusKierros?.palautteidenVastaanottajat) {
         recipients = dbProjekti.kayttoOikeudet.filter(
           // varmistettu jo, että palautteidenVastaanottajat on olemassa
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment

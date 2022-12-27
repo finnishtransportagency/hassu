@@ -5,9 +5,12 @@ import {
   HyvaksymisPaatosVaiheJulkaisu,
   NahtavillaoloVaiheJulkaisu,
   Velho,
+  VuorovaikutusKierrosJulkaisu,
+  VuorovaikutusTilaisuus,
+  VuorovaikutusTilaisuusJulkaisu,
 } from "../database/model";
 import cloneDeep from "lodash/cloneDeep";
-import { KuulutusJulkaisuTila } from "../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, VuorovaikutusKierrosTila } from "../../../common/graphql/apiModel";
 import { adaptStandardiYhteystiedotToYhteystiedot } from "../util/adaptStandardiYhteystiedot";
 import { findJulkaisuWithTila, findUserByKayttajatunnus } from "../projekti/projektiUtil";
 import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../projekti/adapter/adaptToAPI";
@@ -40,6 +43,35 @@ export class AsiakirjaAdapter {
       };
     }
     throw new Error("Aloituskuulutus puuttuu");
+  }
+
+  adaptVuorovaikutusKierrosJulkaisu(dbProjekti: DBProjekti): VuorovaikutusKierrosJulkaisu {
+    if (dbProjekti.vuorovaikutusKierros) {
+      const { vuorovaikutusTilaisuudet, esitettavatYhteystiedot, vuorovaikutusNumero, ...includedFields } = dbProjekti.vuorovaikutusKierros;
+      return {
+        ...includedFields,
+        id: vuorovaikutusNumero,
+        vuorovaikutusTilaisuudet: vuorovaikutusTilaisuudet?.map((tilaisuus) =>
+          this.adaptVuorovaikutusTilaisuusJulkaisuksi(dbProjekti, tilaisuus)
+        ),
+        yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, esitettavatYhteystiedot, true, true), // pakotetaan kunnan edustaja tai projari
+        tila: VuorovaikutusKierrosTila.JULKINEN,
+      };
+    }
+    throw new Error("VuorovaikutusKierros puuttuu");
+  }
+
+  private adaptVuorovaikutusTilaisuusJulkaisuksi(
+    projekti: DBProjekti,
+    vuorovaikutusTilaisuus: VuorovaikutusTilaisuus
+  ): VuorovaikutusTilaisuusJulkaisu {
+    const tilaisuusKopio = { ...vuorovaikutusTilaisuus };
+    const esitettavatYhteystiedotKopio = tilaisuusKopio.esitettavatYhteystiedot;
+    delete tilaisuusKopio.esitettavatYhteystiedot;
+    return {
+      ...tilaisuusKopio,
+      yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(projekti, esitettavatYhteystiedotKopio),
+    };
   }
 
   adaptNahtavillaoloVaiheJulkaisu(dbProjekti: DBProjekti): NahtavillaoloVaiheJulkaisu {

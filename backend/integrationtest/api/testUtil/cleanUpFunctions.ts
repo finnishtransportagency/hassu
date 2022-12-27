@@ -1,18 +1,8 @@
-import {
-  Aineisto,
-  HyvaksymisPaatosVaihe,
-  HyvaksymisPaatosVaiheJulkaisu,
-  HyvaksymisPaatosVaiheJulkaisuJulkinen,
-  NahtavillaoloVaihe,
-  NahtavillaoloVaiheJulkaisu,
-  NahtavillaoloVaiheJulkaisuJulkinen,
-  Palaute,
-  Vuorovaikutus,
-} from "../../../../common/graphql/apiModel";
-import { NahtavillaoloVaiheJulkaisu as DBNahtavillaoloVaiheJulkaisu } from "../../../src/database/model";
+import * as API from "../../../../common/graphql/apiModel";
+import { NahtavillaoloVaiheJulkaisu } from "../../../src/database/model";
 import { cleanupAnyProjektiData } from "../testFixtureRecorder";
 
-export function cleanupGeneratedIdAndTimestampFromFeedbacks(feedbacks?: Palaute[]): Palaute[] | undefined {
+export function cleanupGeneratedIdAndTimestampFromFeedbacks(feedbacks?: API.Palaute[]): API.Palaute[] | undefined {
   return feedbacks
     ? feedbacks.map((palaute) => {
         cleanupAnyProjektiData(palaute);
@@ -24,57 +14,62 @@ export function cleanupGeneratedIdAndTimestampFromFeedbacks(feedbacks?: Palaute[
     : undefined;
 }
 
-export function cleanupVuorovaikutusTimestamps(vuorovaikutukset: Vuorovaikutus[]): void {
-  vuorovaikutukset.forEach((vuorovaikutus) => {
-    vuorovaikutus.esittelyaineistot?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
-    vuorovaikutus.suunnitelmaluonnokset?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
-  });
+export function cleanupVuorovaikutusKierrosTimestamps(
+  vuorovaikutusKierros: API.VuorovaikutusKierros | API.VuorovaikutusKierrosJulkaisu
+): void {
+  vuorovaikutusKierros.esittelyaineistot?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
+  vuorovaikutusKierros.suunnitelmaluonnokset?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
+  if (Object.keys(vuorovaikutusKierros).includes("__typename")) {
+    (vuorovaikutusKierros as API.VuorovaikutusKierros).esittelyaineistot?.forEach(aineistoCleanupFunc);
+    (vuorovaikutusKierros as API.VuorovaikutusKierros).suunnitelmaluonnokset?.forEach(aineistoCleanupFunc);
+  }
 }
 
-function aineistoCleanupFunc(aineisto: Aineisto) {
+function aineistoCleanupFunc(aineisto: API.Aineisto) {
   if (aineisto.tuotu) {
     aineisto.tuotu = "***unittest***";
   }
 }
 
 export function cleanupNahtavillaoloTimestamps(
-  nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu | NahtavillaoloVaihe | DBNahtavillaoloVaiheJulkaisu
-): NahtavillaoloVaiheJulkaisu | NahtavillaoloVaihe | DBNahtavillaoloVaiheJulkaisu {
+  nahtavillaoloVaihe: API.NahtavillaoloVaiheJulkaisu | API.NahtavillaoloVaihe | NahtavillaoloVaiheJulkaisu
+): API.NahtavillaoloVaiheJulkaisu | API.NahtavillaoloVaihe | NahtavillaoloVaiheJulkaisu {
   if (Object.keys(nahtavillaoloVaihe).includes("__typename")) {
-    (nahtavillaoloVaihe as NahtavillaoloVaihe).aineistoNahtavilla?.forEach(aineistoCleanupFunc);
-    (nahtavillaoloVaihe as NahtavillaoloVaihe).lisaAineisto?.forEach(aineistoCleanupFunc);
+    (nahtavillaoloVaihe as API.NahtavillaoloVaihe).aineistoNahtavilla?.forEach(aineistoCleanupFunc);
+    (nahtavillaoloVaihe as API.NahtavillaoloVaihe).lisaAineisto?.forEach(aineistoCleanupFunc);
   }
 
-  const lisaAineistoParametrit = (nahtavillaoloVaihe as NahtavillaoloVaihe).lisaAineistoParametrit;
+  if ((nahtavillaoloVaihe as NahtavillaoloVaiheJulkaisu).hyvaksymisPaiva) {
+    (nahtavillaoloVaihe as NahtavillaoloVaiheJulkaisu).hyvaksymisPaiva = "**unittest**";
+  }
+
+  const lisaAineistoParametrit = (nahtavillaoloVaihe as API.NahtavillaoloVaihe).lisaAineistoParametrit;
   if (lisaAineistoParametrit) {
     lisaAineistoParametrit.hash = "***unittest***";
     lisaAineistoParametrit.poistumisPaiva = "***unittest***";
-    (nahtavillaoloVaihe as NahtavillaoloVaihe)["lisaAineistoParametrit"] = lisaAineistoParametrit;
-  }
-  if ((nahtavillaoloVaihe as DBNahtavillaoloVaiheJulkaisu).hyvaksymisPaiva) {
-    (nahtavillaoloVaihe as DBNahtavillaoloVaiheJulkaisu).hyvaksymisPaiva = "***unittest***";
+    (nahtavillaoloVaihe as API.NahtavillaoloVaihe)["lisaAineistoParametrit"] = lisaAineistoParametrit;
   }
   return nahtavillaoloVaihe;
 }
 
 export function cleanupNahtavillaoloJulkaisuJulkinenTimestamps(
-  nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisuJulkinen
-): NahtavillaoloVaiheJulkaisuJulkinen {
+  nahtavillaoloVaihe: API.NahtavillaoloVaiheJulkaisuJulkinen
+): API.NahtavillaoloVaiheJulkaisuJulkinen {
   nahtavillaoloVaihe.aineistoNahtavilla?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
   return nahtavillaoloVaihe;
 }
 
 export function cleanupHyvaksymisPaatosVaiheTimestamps(
-  vaihe: HyvaksymisPaatosVaiheJulkaisu | HyvaksymisPaatosVaihe
-): HyvaksymisPaatosVaiheJulkaisu | HyvaksymisPaatosVaihe {
+  vaihe: API.HyvaksymisPaatosVaiheJulkaisu | API.HyvaksymisPaatosVaihe
+): API.HyvaksymisPaatosVaiheJulkaisu | API.HyvaksymisPaatosVaihe {
   vaihe.aineistoNahtavilla?.forEach(aineistoCleanupFunc);
   vaihe.hyvaksymisPaatos?.forEach(aineistoCleanupFunc);
   return vaihe;
 }
 
 export function cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
-  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
-): HyvaksymisPaatosVaiheJulkaisuJulkinen | undefined {
+  hyvaksymisPaatosVaihe: API.HyvaksymisPaatosVaiheJulkaisuJulkinen
+): API.HyvaksymisPaatosVaiheJulkaisuJulkinen | undefined {
   if (!hyvaksymisPaatosVaihe) {
     return undefined;
   }

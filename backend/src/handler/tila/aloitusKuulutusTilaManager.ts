@@ -4,7 +4,7 @@ import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { AloitusKuulutus, AloitusKuulutusJulkaisu, AloitusKuulutusPDF, DBProjekti, Kielitiedot, LocalizedMap } from "../../database/model";
 import { fileService } from "../../files/fileService";
 import { dateToString, parseDate } from "../../util/dateUtil";
-import { TilaManager } from "./TilaManager";
+import { KuulutusTilaManager } from "./KuulutusTilaManager";
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
 import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
@@ -12,6 +12,7 @@ import assert from "assert";
 import dayjs from "dayjs";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
+import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -60,7 +61,7 @@ async function cleanupAloitusKuulutusAfterApproval(projekti: DBProjekti, aloitus
   }
 }
 
-class AloitusKuulutusTilaManager extends TilaManager<AloitusKuulutus, AloitusKuulutusJulkaisu> {
+class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, AloitusKuulutusJulkaisu> {
   validateUudelleenkuulutus(projekti: DBProjekti, kuulutus: AloitusKuulutus, hyvaksyttyJulkaisu: AloitusKuulutusJulkaisu | undefined) {
     // Tarkista, että on olemassa hyväksytty aloituskuulutusjulkaisu, jonka perua
     if (!hyvaksyttyJulkaisu) {
@@ -88,6 +89,20 @@ class AloitusKuulutusTilaManager extends TilaManager<AloitusKuulutus, AloitusKuu
 
   getJulkaisut(projekti: DBProjekti) {
     return projekti.aloitusKuulutusJulkaisut || undefined;
+  }
+
+  checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja {
+    const projektiPaallikko = requireOmistaja(projekti);
+    return projektiPaallikko;
+  }
+
+  checkPriviledgesSendForApproval(projekti: DBProjekti): NykyinenKayttaja {
+    const muokkaaja = requirePermissionMuokkaa(projekti);
+    return muokkaaja;
+  }
+
+  checkUudelleenkuulutusPriviledges(_projekti: DBProjekti): NykyinenKayttaja {
+    return requireAdmin();
   }
 
   async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {

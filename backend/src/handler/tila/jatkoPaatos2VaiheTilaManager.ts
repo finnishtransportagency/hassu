@@ -8,6 +8,7 @@ import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizer
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import { assertIsDefined } from "../../util/assertions";
 import assert from "assert";
+import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 
 async function cleanupKuulutusAfterApproval(projekti: DBProjekti, jatkoPaatos2Vaihe: HyvaksymisPaatosVaihe) {
   if (jatkoPaatos2Vaihe.palautusSyy || jatkoPaatos2Vaihe.uudelleenKuulutus) {
@@ -54,6 +55,20 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
 
   async saveVaihe(projekti: DBProjekti, jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe): Promise<void> {
     await projektiDatabase.saveProjekti({ oid: projekti.oid, jatkoPaatos1Vaihe });
+  }
+
+  checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja {
+    const projektiPaallikko = requireOmistaja(projekti);
+    return projektiPaallikko;
+  }
+
+  checkPriviledgesSendForApproval(projekti: DBProjekti): NykyinenKayttaja {
+    const muokkaaja = requirePermissionMuokkaa(projekti);
+    return muokkaaja;
+  }
+
+  checkUudelleenkuulutusPriviledges(_projekti: DBProjekti): NykyinenKayttaja {
+    return requireAdmin();
   }
 
   async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {

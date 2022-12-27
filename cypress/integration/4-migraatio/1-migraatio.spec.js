@@ -9,14 +9,14 @@
 
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
 import { typeIntoFields } from "../../support/util";
-import {
-  hyvaksyNahtavillaoloKuulutus,
-  lisaaNahtavillaoloAineistot,
-  taytaNahtavillaoloPerustiedot,
-} from "../../support/nahtavillaolo";
+import { hyvaksyNahtavillaoloKuulutus, lisaaNahtavillaoloAineistot, taytaNahtavillaoloPerustiedot } from "../../support/nahtavillaolo";
 import { lisaaPaatosJaAineistot, tallennaKasittelynTilaJaSiirraMenneisyyteen } from "../../support/hyvaksyntavaihe";
 import { formatDate } from "../../../src/util/dateUtils";
 import dayjs from "dayjs";
+
+const today = dayjs();
+const kysymyksetJaPalautteetViimeistaan = formatDate(today.add(20, "day"));
+const vuorovaikutusJulkaisuPaiva = formatDate(today);
 
 function syotaPuhelinnumerot(oid) {
   cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid);
@@ -50,20 +50,104 @@ describe("Migraatio", () => {
     //
     cy.get("#sidenavi_aloituskuulutus").click({ force: true });
     cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
-    cy.get("#sidenavi_suunnitteluvaihe").click({ force: true });
+    cy.get("#sidenavi_suunnitteluvaihe").should("be.visible").click({ force: true });
     cy.get("h1").should("contain", "Suunnittelu");
 
     typeIntoFields(
       new Map([
-        ['[name="suunnitteluVaihe.hankkeenKuvaus.SUOMI"]', "hankkeen kuvaus Suomeksi"],
-        ['[name="suunnitteluVaihe.suunnittelunEteneminenJaKesto"]', "kuvaus edistyksestä"],
-        ['[name="suunnitteluVaihe.arvioSeuraavanVaiheenAlkamisesta"]', "Alkuvuodesta 2023"],
+        ['[name="vuorovaikutusKierros.suunnittelunEteneminenJaKesto"]', "kuvaus edistyksestä"],
+        ['[name="vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta"]', "Alkuvuodesta 2023"],
       ])
     );
 
-    cy.get("#save_and_publish").click();
-    cy.get("#accept_publish").click();
-    cy.contains("Tallennus ja julkaisu onnistui");
+    cy.get('[name="vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan"]')
+      .should("be.enabled")
+      .clear()
+      .type(kysymyksetJaPalautteetViimeistaan, {
+        waitForAnimations: true,
+      });
+
+    cy.get("#save_suunnitteluvaihe_perustiedot_and_redirect").click();
+    cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank aloituskuulutus page otherwise
+    cy.get("main").contains("Kutsu vuorovaikutukseen");
+    cy.wait(1000);
+    cy.get('[name="vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva"]')
+      .scrollIntoView({ offset: { top: -150, left: 0 } })
+      .should("be.visible")
+      .should("be.enabled");
+
+    cy.get('[name="vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva"]')
+      .scrollIntoView({ offset: { top: -150, left: 0 } })
+      .should("be.visible")
+      .should("be.enabled")
+      .clear()
+      .type(vuorovaikutusJulkaisuPaiva, {
+        waitForAnimations: true,
+      });
+
+    const mainFormSelectorToTextMap = new Map([
+      ['[name="vuorovaikutusKierros.hankkeenKuvaus.SUOMI"]', "Päivitetty hankkeen kuvaus Suomeksi"],
+      ['[name="vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]', "test@vayla.fi"],
+      ['[name="vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]', "test@vayla.fi"],
+    ]);
+
+    mainFormSelectorToTextMap.forEach((text, selector) => {
+      cy.get(selector, {
+        timeout: 10000,
+      })
+        .should("be.enabled")
+        .clear()
+        .type(text, {
+          waitForAnimations: true,
+        });
+    });
+    cy.wait(500);
+    cy.get("#add_or_edit_tilaisuus")
+      .should("be.enabled")
+      .scrollIntoView({ offset: { top: -250, left: 0 } })
+      .should("be.visible")
+      .click({ force: true });
+
+    cy.get(".MuiModal-root").then((main) => {
+      let nimikentta = main.find('[name="vuorovaikutusTilaisuudet.0.nimi"]');
+      if (nimikentta.length === 0) {
+        cy.get("#add_fyysinen_tilaisuus").click();
+      }
+    });
+
+    const tilaisuusSelectorToTextMap = new Map([
+      ['[name="vuorovaikutusTilaisuudet.0.nimi"]', "Fyysinen tilaisuus 123"],
+      ['[name="vuorovaikutusTilaisuudet.0.paivamaara"]', formatDate(dayjs().add(7, "day"))],
+      ['[name="vuorovaikutusTilaisuudet.0.alkamisAika"]', "14:00"],
+      ['[name="vuorovaikutusTilaisuudet.0.paattymisAika"]', "15:00"],
+      ['[name="vuorovaikutusTilaisuudet.0.paikka"]', "Taistelurata"],
+      ['[name="vuorovaikutusTilaisuudet.0.osoite"]', "Taisteluradantie 4026"],
+      ['[name="vuorovaikutusTilaisuudet.0.postinumero"]', "00860"],
+      ['[name="vuorovaikutusTilaisuudet.0.postitoimipaikka"]', "Helsinki"],
+      ['[name="vuorovaikutusTilaisuudet.0.Saapumisohjeet"]', "Saapumisohje 123"],
+    ]);
+
+    tilaisuusSelectorToTextMap.forEach((text, selector) => {
+      cy.get(selector, {
+        timeout: 10000,
+      })
+        .should("be.enabled")
+        .clear()
+        .type(text);
+    });
+
+    cy.wait(2000)
+      .get("#save_vuorovaikutus_tilaisuudet")
+      .scrollIntoView({ offset: { top: -150, left: 0 } })
+      .click();
+
+    cy.get("#save_and_publish")
+      .scrollIntoView({ offset: { top: -150, left: 0 } })
+      .should("be.visible")
+      .should("be.enabled")
+      .click();
+    cy.get("#accept_and_publish_vuorovaikutus").click();
+    cy.contains("Hyväksyminen onnistui");
   });
 
   it("Migraatio suunnitteluvaiheeseen kansalaisnäkymä", () => {

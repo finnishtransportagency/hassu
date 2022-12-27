@@ -3,13 +3,18 @@ import {
   Kieli,
   NykyinenKayttaja,
   Status,
-  SuunnitteluVaiheTila,
+  VuorovaikutusKierrosTila,
 } from "../../../common/graphql/apiModel";
 import { createProjektiFromVelho } from "../projekti/projektiHandler";
 import { log } from "../logger";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { statusOrder } from "../../../common/statusOrder";
-import { AloitusKuulutusJulkaisu, HyvaksymisPaatosVaiheJulkaisu, NahtavillaoloVaiheJulkaisu, SuunnitteluVaihe } from "../database/model";
+import {
+  AloitusKuulutusJulkaisu,
+  HyvaksymisPaatosVaiheJulkaisu,
+  NahtavillaoloVaiheJulkaisu,
+  VuorovaikutusKierros,
+} from "../database/model";
 import { cloneDeep } from "lodash";
 import dayjs from "dayjs";
 
@@ -55,10 +60,11 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
   }
 
   if (targetStatusRank >= statusOrder[Status.NAHTAVILLAOLO]) {
-    const suunnitteluVaihe: SuunnitteluVaihe = {
-      tila: SuunnitteluVaiheTila.MIGROITU,
+    const vuorovaikutusKierros: VuorovaikutusKierros = {
+      vuorovaikutusNumero: 0,
+      tila: VuorovaikutusKierrosTila.MIGROITU,
     };
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, suunnitteluVaihe });
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, vuorovaikutusKierros });
   }
 
   if (targetStatusRank >= statusOrder[Status.HYVAKSYMISMENETTELYSSA]) {

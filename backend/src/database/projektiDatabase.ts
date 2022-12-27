@@ -1,5 +1,11 @@
 import { log } from "../logger";
-import { AloitusKuulutusJulkaisu, DBProjekti, HyvaksymisPaatosVaiheJulkaisu, NahtavillaoloVaiheJulkaisu } from "./model";
+import {
+  AloitusKuulutusJulkaisu,
+  DBProjekti,
+  HyvaksymisPaatosVaiheJulkaisu,
+  NahtavillaoloVaiheJulkaisu,
+  VuorovaikutusKierrosJulkaisu,
+} from "./model";
 import { config } from "../config";
 import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
 import { AWSError } from "aws-sdk/lib/error";
@@ -24,13 +30,16 @@ type JulkaisuWithId = { id: number } & unknown;
 type JulkaisutFieldName = keyof Pick<
   DBProjekti,
   | "aloitusKuulutusJulkaisut"
+  | "vuorovaikutusKierrosJulkaisut"
   | "nahtavillaoloVaiheJulkaisut"
   | "hyvaksymisPaatosVaiheJulkaisut"
   | "jatkoPaatos1VaiheJulkaisut"
   | "jatkoPaatos2VaiheJulkaisut"
 >;
 
-export class JulkaisuFunctions<T extends AloitusKuulutusJulkaisu | HyvaksymisPaatosVaiheJulkaisu | NahtavillaoloVaiheJulkaisu> {
+export class JulkaisuFunctions<
+  T extends AloitusKuulutusJulkaisu | VuorovaikutusKierrosJulkaisu | HyvaksymisPaatosVaiheJulkaisu | NahtavillaoloVaiheJulkaisu
+> {
   private julkaisutFieldName: JulkaisutFieldName;
   private description: string;
   private projektiDatabase: ProjektiDatabase;
@@ -58,6 +67,11 @@ export class ProjektiDatabase {
   projektiTableName: string = config.projektiTableName || "missing";
 
   aloitusKuulutusJulkaisut = new JulkaisuFunctions<AloitusKuulutusJulkaisu>(this, "aloitusKuulutusJulkaisut", "AloitusKuulutusJulkaisu");
+  vuorovaikutusKierrosJulkaisut = new JulkaisuFunctions<VuorovaikutusKierrosJulkaisu>(
+    this,
+    "vuorovaikutusKierrosJulkaisut",
+    "VuorovaikutusKierrosJulkaisu"
+  );
   nahtavillaoloVaiheJulkaisut = new JulkaisuFunctions<NahtavillaoloVaiheJulkaisu>(
     this,
     "nahtavillaoloVaiheJulkaisut",
@@ -152,23 +166,6 @@ export class ProjektiDatabase {
       }
     }
 
-    if (dbProjekti.vuorovaikutukset === null) {
-      // For testing purposes
-      setExpression.push("vuorovaikutukset = :emptyList");
-      ExpressionAttributeValues[":emptyList"] = [];
-    } else if (dbProjekti.vuorovaikutukset && dbProjekti.vuorovaikutukset.length > 0) {
-      if (dbProjekti.vuorovaikutukset.length > 1) {
-        throw new Error("Voit tallentaa vain yhden vuorovaikutuksen kerrallaan");
-      }
-      const vuorovaikutus = dbProjekti.vuorovaikutukset[0];
-      setExpression.push(`#vuorovaikutukset[${vuorovaikutus.vuorovaikutusNumero - 1}] = :vuorovaikutus`);
-      ExpressionAttributeNames["#vuorovaikutukset"] = "vuorovaikutukset";
-      ExpressionAttributeValues[":vuorovaikutus"] = vuorovaikutus;
-    } else {
-      setExpression.push("vuorovaikutukset = if_not_exists(vuorovaikutukset, :emptyList)");
-      ExpressionAttributeValues[":emptyList"] = [];
-    }
-
     const updateExpression = createExpression("SET", setExpression) + " " + createExpression("REMOVE", removeExpression);
 
     const params = {
@@ -261,7 +258,7 @@ export class ProjektiDatabase {
   }
 
   async insertJulkaisuToList(oid: string, julkaisu: unknown, listFieldName: JulkaisutFieldName, description: string) {
-    log.info("Insert " + description, { oid, julkaisu });
+    log.info("Insert " + description, { oid });
     const params = {
       TableName: this.projektiTableName,
       Key: {
@@ -276,7 +273,7 @@ export class ProjektiDatabase {
         ":empty_list": [],
       },
     };
-    log.info("Inserting " + description + " to projekti", { params });
+    log.info("Inserting " + description + " to projekti", { oid });
     return getDynamoDBDocumentClient().update(params).promise();
   }
 

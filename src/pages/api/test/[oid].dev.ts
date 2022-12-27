@@ -76,14 +76,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     ...hyvaksymisPaatosVaiheFields,
   };
 
-  const vuorovaikutusFields: Partial<DBProjekti> = {
-    vuorovaikutukset: null,
-    ...nahtavillaoloVaiheFields,
+  const suunnitteluVaiheFields: Partial<DBProjekti> = {
+    vuorovaikutusKierros: null,
   };
 
-  const suunnitteluVaiheFields: Partial<DBProjekti> = {
-    suunnitteluVaihe: null,
-    ...vuorovaikutusFields,
+  const vuorovaikutusJulkaisuFields: Partial<DBProjekti> = {
+    vuorovaikutusKierrosJulkaisut: null,
   };
 
   const aloituskuulutusFields: Partial<DBProjekti> = {
@@ -111,7 +109,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     requireProjekti();
     await testProjektiDatabase.saveProjekti({
       oid,
-      ...vuorovaikutusFields,
+      ...vuorovaikutusJulkaisuFields,
     });
   });
 

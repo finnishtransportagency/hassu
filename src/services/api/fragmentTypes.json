@@ -458,6 +458,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "PerustiedotInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "OBJECT",
         "name": "Projekti",
         "possibleTypes": null,
@@ -596,30 +602,6 @@
         "__typename": "__Type"
       },
       {
-        "kind": "OBJECT",
-        "name": "SuunnitteluVaihe",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "SuunnitteluVaiheInput",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "SuunnitteluVaiheJulkinen",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "ENUM",
-        "name": "SuunnitteluVaiheTila",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
         "kind": "INPUT_OBJECT",
         "name": "TallennaProjektiInput",
         "possibleTypes": null,
@@ -711,19 +693,37 @@
       },
       {
         "kind": "OBJECT",
-        "name": "Vuorovaikutus",
+        "name": "VuorovaikutusKierros",
         "possibleTypes": null,
         "__typename": "__Type"
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "VuorovaikutusInput",
+        "name": "VuorovaikutusKierrosInput",
         "possibleTypes": null,
         "__typename": "__Type"
       },
       {
         "kind": "OBJECT",
-        "name": "VuorovaikutusJulkinen",
+        "name": "VuorovaikutusKierrosJulkaisu",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "VuorovaikutusKierrosJulkinen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "VuorovaikutusKierrosTila",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "VuorovaikutusPaivitysInput",
         "possibleTypes": null,
         "__typename": "__Type"
       },
@@ -736,6 +736,12 @@
       {
         "kind": "OBJECT",
         "name": "VuorovaikutusPDFt",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "VuorovaikutusPerustiedotInput",
         "possibleTypes": null,
         "__typename": "__Type"
       },
@@ -753,7 +759,19 @@
       },
       {
         "kind": "OBJECT",
+        "name": "VuorovaikutusTilaisuusJulkaisu",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "VuorovaikutusTilaisuusJulkinen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "VuorovaikutusTilaisuusPaivitysInput",
         "possibleTypes": null,
         "__typename": "__Type"
       },
