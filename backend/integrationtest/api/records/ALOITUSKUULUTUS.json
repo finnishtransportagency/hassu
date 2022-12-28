@@ -68,22 +68,26 @@
           {
             "id": 491,
             "lahetetty": "2020-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
             "sahkoposti": "mikkeli@mikke.li"
           },
           {
             "id": 178,
             "lahetetty": "2020-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
             "sahkoposti": "juva@ju.va"
           },
           {
             "id": 740,
             "lahetetty": "2020-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
             "sahkoposti": "savonlinna@savonlin.na"
           }
         ],
         "viranomaiset": [
           {
             "lahetetty": "2020-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
             "nimi": "ETELA_SAVO_ELY",
             "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi"
           }

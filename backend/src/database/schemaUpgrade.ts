@@ -1,4 +1,4 @@
-import { DBProjekti, DBVaylaUser, IlmoituksenVastaanottajat } from "./model";
+import { DBProjekti, DBVaylaUser, IlmoituksenVastaanottajat, KuntaVastaanottaja } from "./model";
 import { cloneDeepWith } from "lodash";
 import { kuntametadata } from "../../../common/kuntametadata";
 import { log } from "../logger";
@@ -56,7 +56,7 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       if (ilmoituksenVastaanottajat.kunnat && ilmoituksenVastaanottajat.kunnat.length > 0) {
         ilmoituksenVastaanottajat.kunnat.forEach((kunta) => {
           if ("nimi" in kunta) {
-            kunta.id = kuntametadata.idForKuntaName((kunta as unknown as Record<string, string>).nimi);
+            (kunta as KuntaVastaanottaja).id = kuntametadata.idForKuntaName((kunta as unknown as Record<string, string>).nimi);
           }
         });
         return ilmoituksenVastaanottajat;

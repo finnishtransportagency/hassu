@@ -1,4 +1,4 @@
-import { KuulutusJulkaisuTila, KayttajaTyyppi, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
+import { KayttajaTyyppi, KuulutusJulkaisuTila, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
 import { VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "./suunnitteluVaihe";
 import { NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "./nahtavillaoloVaihe";
 import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "./hyvaksymisPaatosVaihe";

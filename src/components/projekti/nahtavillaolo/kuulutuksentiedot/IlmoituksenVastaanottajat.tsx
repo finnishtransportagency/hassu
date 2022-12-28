@@ -13,6 +13,7 @@ import HassuGrid from "@components/HassuGrid";
 import dayjs from "dayjs";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import { kuntametadata } from "../../../../../common/kuntametadata";
+import { lahetysTila } from "../../../../util/aloitusKuulutusUtil";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -98,7 +99,7 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props)
                   <p className="odd:bg-white even:bg-grey col-span-2">
                     {t(`viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
                   </p>
-                  <p className="odd:bg-white even:bg-grey">{viranomainen.lahetetty ? "Lähetetty" : "Ei lähetetty"}</p>
+                  <p className="odd:bg-white even:bg-grey">{lahetysTila(viranomainen)}</p>
                   <p className="odd:bg-white even:bg-grey">
                     {viranomainen.lahetetty ? dayjs(viranomainen.lahetetty).format("DD.MM.YYYY HH:mm") : null}
                   </p>
@@ -117,7 +118,7 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props)
                 <Fragment key={index}>
                   <p className={getStyleForRow(index)}>{kuntametadata.nameForKuntaId(kunta.id, lang)}</p>
                   <p className={getStyleForRow(index)}>{kunta.sahkoposti}</p>
-                  <p className={getStyleForRow(index)}>{kunta.lahetetty ? "Lahetetty" : "Ei lähetetty"}</p>
+                  <p className={getStyleForRow(index)}>{lahetysTila(kunta)}</p>
                   <p className={getStyleForRow(index)}>{kunta.lahetetty ? dayjs(kunta.lahetetty).format("DD.MM.YYYY HH:mm") : null}</p>
                 </Fragment>
               ))}

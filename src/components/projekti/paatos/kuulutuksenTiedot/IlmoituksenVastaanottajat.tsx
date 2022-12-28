@@ -13,7 +13,8 @@ import HassuGrid from "@components/HassuGrid";
 import dayjs from "dayjs";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import { kuntametadata } from "../../../../../common/kuntametadata";
-import { KuulutuksenTiedotFormValues } from "src/components/projekti/paatos/kuulutuksenTiedot/index";
+import { KuulutuksenTiedotFormValues } from "@components/projekti/paatos/kuulutuksenTiedot/index";
+import { lahetysTila } from "../../../../util/aloitusKuulutusUtil";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -74,7 +75,7 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe }: Props): React
           <h4 className="vayla-small-title">Ilmoituksen vastaanottajat</h4>
           <SectionContent>
             <p>
-              Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Ei lähetetty’, tarkasta
+              Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Lähetysvirhe’, tarkasta
               sähköpostiosoite. Ota tarvittaessa yhteys pääkäyttäjään.
             </p>
           </SectionContent>
@@ -90,7 +91,7 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe }: Props): React
                   <p className="odd:bg-white even:bg-grey col-span-2">
                     {t(`viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
                   </p>
-                  <p className="odd:bg-white even:bg-grey">{viranomainen.lahetetty ? "Lähetetty" : "Ei lähetetty"}</p>
+                  <p className="odd:bg-white even:bg-grey">{lahetysTila(viranomainen)}</p>
                   <p className="odd:bg-white even:bg-grey">
                     {viranomainen.lahetetty ? dayjs(viranomainen.lahetetty).format("DD.MM.YYYY HH:mm") : null}
                   </p>
@@ -109,7 +110,7 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe }: Props): React
                 <Fragment key={index}>
                   <p className={getStyleForRow(index)}>{kuntametadata.nameForKuntaId(kunta.id, lang)}</p>
                   <p className={getStyleForRow(index)}>{kunta.sahkoposti}</p>
-                  <p className={getStyleForRow(index)}>{kunta.lahetetty ? "Lahetetty" : "Ei lähetetty"}</p>
+                  <p className={getStyleForRow(index)}>{lahetysTila(kunta)}</p>
                   <p className={getStyleForRow(index)}>{kunta.lahetetty ? dayjs(kunta.lahetetty).format("DD.MM.YYYY HH:mm") : null}</p>
                 </Fragment>
               ))}

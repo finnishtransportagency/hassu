@@ -5,13 +5,14 @@ import React, { ReactElement } from "react";
 import { Controller, FieldError, useFieldArray, useFormContext } from "react-hook-form";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
-import { AloitusKuulutusJulkaisu, KuulutusJulkaisuTila, IlmoitettavaViranomainen } from "@services/api";
+import { AloitusKuulutusJulkaisu, IlmoitettavaViranomainen, KuulutusJulkaisuTila } from "@services/api";
 import dayjs from "dayjs";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import { kuntametadata } from "../../../../common/kuntametadata";
+import { lahetysTila } from "../../../util/aloitusKuulutusUtil";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -79,7 +80,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
 
         {aloituskuulutusjulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
           <p>
-            Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Ei lähetetty’, tarkasta
+            Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Lähetysvirhe’, tarkasta
             sähköpostiosoite. Ota tarvittaessa yhteys pääkäyttäjään.
           </p>
         )}
@@ -170,7 +171,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
                     <p className="odd:bg-white even:bg-grey col-span-2">
                       {t(`viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
                     </p>
-                    <p className="odd:bg-white even:bg-grey">{viranomainen.lahetetty ? "Lähetetty" : "Ei lähetetty"}</p>
+                    <p className="odd:bg-white even:bg-grey">{lahetysTila(viranomainen)}</p>
                     <p className="odd:bg-white even:bg-grey">
                       {viranomainen.lahetetty ? dayjs(viranomainen.lahetetty).format("DD.MM.YYYY HH:mm") : null}
                     </p>
@@ -215,7 +216,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
                   <React.Fragment key={index}>
                     <p className={getStyleForRow(index)}>{kuntametadata.nameForKuntaId(kunta.id, lang)}</p>
                     <p className={getStyleForRow(index)}>{kunta.sahkoposti}</p>
-                    <p className={getStyleForRow(index)}>{kunta.lahetetty ? "Lahetetty" : "Ei lähetetty"}</p>
+                    <p className={getStyleForRow(index)}>{lahetysTila(kunta)}</p>
                     <p className={getStyleForRow(index)}>{kunta.lahetetty ? dayjs(kunta.lahetetty).format("DD.MM.YYYY HH:mm") : null}</p>
                   </React.Fragment>
                 ))}
