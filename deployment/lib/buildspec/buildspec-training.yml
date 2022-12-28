@@ -5,8 +5,6 @@ env:
     SKIP_VELHO_TESTS: /SkipVelhoTests
     ROCKET_CHAT_TOKEN: /RocketChatToken
     ROCKET_CHAT_USER_ID: /RocketChatUserId
-    SONARQUBE_HOST_URL: /SonarQubeHostURL
-    SONARQUBE_ACCESS_TOKEN: /SonarQubeAccessToken
   secrets-manager:
     GITHUB_TOKEN: github-token
 
@@ -37,6 +35,9 @@ phases:
       - npm run deploy:backend
       - npm run deploy:frontend
       - npm run deploy:monitoring
+      - npm run release
+      - npm run opensearch:delete-index
+      - npm run opensearch:index
   post_build:
     on-failure: ABORT
     commands:
