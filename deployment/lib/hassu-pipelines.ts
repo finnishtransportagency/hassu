@@ -61,7 +61,7 @@ const pipelines: Record<string, { name: string; buildspec: string; env: string; 
     {
       name: "e2e-dev",
       env: "dev",
-      branches: ["dev", "robottest/*"],
+      branches: ["main", "robottest/*"],
       buildspec: "./deployment/lib/buildspec/e2etest.yml",
       concurrentBuildLimit: 1,
     },
@@ -264,7 +264,18 @@ export class HassuPipelineStack extends Stack {
       buildProject.addToRolePolicy(
         new PolicyStatement({
           effect: Effect.ALLOW,
-          actions: ["s3:*", "cloudformation:*", "sts:*", "ecr:*", "ssm:*", "secretsmanager:GetSecretValue", "codebuild:StartBuild"],
+          actions: [
+            "s3:*",
+            "cloudformation:*",
+            "sts:*",
+            "ecr:*",
+            "ssm:*",
+            "secretsmanager:GetSecretValue",
+            "codebuild:StartBuild",
+            "lambda:ListFunctions",
+            "lambda:InvokeFunction",
+            "lambda:GetFunction",
+          ],
           resources: ["*"],
         })
       );

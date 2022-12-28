@@ -73,14 +73,12 @@
     "@testing-library/react": "11.1.0",
     "@testing-library/user-event": "13.2.1",
     "@types/aws-lambda": "8.10.92",
-    "@types/aws-sdk": "2.7.0",
     "@types/chai": "4.3.0",
     "@types/chai-as-promised": "7.1.4",
     "@types/jsonwebtoken": "8.5.8",
     "@types/jwk-to-pem": "2.0.1",
     "@types/mocha": "9.0.0",
     "@types/node": "13.13.52",
-    "@types/pino": "7.0.5",
     "@types/react": "17.0.17",
     "@types/react-test-renderer": "17.0.1",
     "@types/rss": "0.0.29",
@@ -139,6 +137,10 @@
     "typescript": "4.5.5",
     "typescript-plugin-css-modules": "3.4.0",
     "yargs": "17.3.1"
+  },
+  "overrides": {
+    "loader-utils": "$loader-utils",
+    "uuid": "$uuid"
   },
   "scripts": {
     "postinstall": "cd deployment && npm install",
