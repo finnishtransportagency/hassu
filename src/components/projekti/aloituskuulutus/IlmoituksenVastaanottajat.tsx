@@ -80,7 +80,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
 
         {aloituskuulutusjulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
           <p>
-            Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Ei lähetetty’, tarkasta
+            Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Lähetysvirhe’, tarkasta
             sähköpostiosoite. Ota tarvittaessa yhteys pääkäyttäjään.
           </p>
         )}

@@ -73,18 +73,18 @@ function examineEmailSentResults(
   sentMessageInfo: SMTPTransport.SentMessageInfo | undefined,
   aikaleima: string
 ) {
+  // Sähköpostien lähetyksessä tapahtui virhe
+  if (!sentMessageInfo) {
+    vastaanottaja.lahetysvirhe = true;
+  }
   const email = vastaanottaja.sahkoposti;
-  if (sentMessageInfo?.accepted.find((accepted) => accepted == email) || sentMessageInfo?.pending.find((pending) => pending == email)) {
+  if (sentMessageInfo?.accepted.find((accepted) => accepted == email) || sentMessageInfo?.pending?.find((pending) => pending == email)) {
     vastaanottaja.lahetetty = aikaleima;
     vastaanottaja.messageId = sentMessageInfo?.messageId;
     log.info("Email lähetetty", { sentEmail: email });
   }
   if (sentMessageInfo?.rejected.find((rejected) => rejected == email)) {
     log.info("Email lähetysvirhe", { rejectedEmail: email });
-    vastaanottaja.lahetysvirhe = true;
-  }
-  // Sähköpostien lähetyksessä tapahtui virhe
-  if (!sentMessageInfo) {
     vastaanottaja.lahetysvirhe = true;
   }
 }

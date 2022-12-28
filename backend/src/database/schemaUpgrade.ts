@@ -1,4 +1,4 @@
-import { DBProjekti, DBVaylaUser, IlmoituksenVastaanottajat } from "./model";
+import { DBProjekti, DBVaylaUser, IlmoituksenVastaanottajat, KuntaVastaanottaja } from "./model";
 import { cloneDeepWith } from "lodash";
 import { kuntametadata } from "../../../common/kuntametadata";
 import { log } from "../logger";

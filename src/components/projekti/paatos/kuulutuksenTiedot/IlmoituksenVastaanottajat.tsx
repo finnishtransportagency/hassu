@@ -75,7 +75,7 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe }: Props): React
           <h4 className="vayla-small-title">Ilmoituksen vastaanottajat</h4>
           <SectionContent>
             <p>
-              Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Ei lähetetty’, tarkasta
+              Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Lähetysvirhe’, tarkasta
               sähköpostiosoite. Ota tarvittaessa yhteys pääkäyttäjään.
             </p>
           </SectionContent>

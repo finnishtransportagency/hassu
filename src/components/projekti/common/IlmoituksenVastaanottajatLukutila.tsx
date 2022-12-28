@@ -32,7 +32,7 @@ export default function IlmoituksenVastaanottajat({
 
             {julkaisunTila === KuulutusJulkaisuTila.HYVAKSYTTY && (
               <p>
-                Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Ei lähetetty’,
+                Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Lähetysvirhe’,
                 tarkasta sähköpostiosoite. Ota tarvittaessa yhteys pääkäyttäjään.
               </p>
             )}

@@ -23,52 +23,59 @@ export type PipelineStackOutputs = {
   CloudfrontOriginAccessIdentityReportBucket: string;
 };
 
-const pipelines: Record<string, { name: string; buildspec: string; env: string; branches: string[]; concurrentBuildLimit?: number }[]> = {
+const pipelines: Record<
+  string,
+  { name: string; buildspec: string; env: string; webhookBranches?: string[]; branch?: string; concurrentBuildLimit?: number }[]
+> = {
   dev: [
     {
       name: "feature",
       env: "feature",
-      branches: ["feature/*"],
+      webhookBranches: ["feature/*"],
       buildspec: "./deployment/lib/buildspec/buildspec-feature.yml",
     },
     {
       name: "renovate",
       env: "feature",
-      branches: ["renovate/*"],
+      webhookBranches: ["renovate/*"],
       buildspec: "./deployment/lib/buildspec/buildspec-feature.yml",
     },
     {
       name: "dev",
       env: "dev",
-      branches: ["main"],
+      branch: "main",
+      webhookBranches: ["main"],
       buildspec: "./deployment/lib/buildspec/buildspec.yml",
       concurrentBuildLimit: 1,
     },
     {
       name: "test",
       env: "test",
-      branches: ["test"],
+      branch: "test",
+      webhookBranches: ["test"],
       buildspec: "./deployment/lib/buildspec/buildspec.yml",
       concurrentBuildLimit: 1,
     },
     {
       name: "training",
       env: "training",
-      branches: ["training"],
+      branch: "training",
+      webhookBranches: ["training"],
       buildspec: "./deployment/lib/buildspec/buildspec-training.yml",
       concurrentBuildLimit: 1,
     },
     {
       name: "e2e-dev",
       env: "dev",
-      branches: ["main", "robottest/*"],
+      branch: "main",
+      webhookBranches: ["robottest/*"],
       buildspec: "./deployment/lib/buildspec/e2etest.yml",
       concurrentBuildLimit: 1,
     },
     {
       name: "e2e-test",
       env: "test",
-      branches: ["test"],
+      branch: "test",
       buildspec: "./deployment/lib/buildspec/e2etest.yml",
       concurrentBuildLimit: 1,
     },
@@ -77,7 +84,8 @@ const pipelines: Record<string, { name: string; buildspec: string; env: string; 
     {
       name: "prod",
       env: "prod",
-      branches: ["prod"],
+      branch: "prod",
+      webhookBranches: ["prod"],
       buildspec: "./deployment/lib/buildspec/buildspec-prod.yml",
       concurrentBuildLimit: 1,
     },
@@ -143,27 +151,22 @@ export class HassuPipelineStack extends Stack {
     );
 
     for (const pipelineConfig of isDevAccount ? pipelines.dev : pipelines.prod) {
-      const branches = pipelineConfig.branches;
+      const webhookBranches = pipelineConfig.webhookBranches;
+      const branch = pipelineConfig.branch;
       const env = pipelineConfig.env;
       const name = pipelineConfig.name;
       const concurrentBuildLimit = pipelineConfig.concurrentBuildLimit;
 
       const buildspec = pipelineConfig.buildspec;
-      let branchOrRef;
 
-      const webhookFilters = branches.map((b) => codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs(b));
-      if (branches.length > 1) {
-        branchOrRef = undefined;
-      } else {
-        branchOrRef = branches[0];
-      }
+      const webhookFilters = webhookBranches?.map((b) => codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs(b));
       const sourceProps: GitHubSourceProps = {
         owner: "finnishtransportagency",
         repo: "hassu",
 
         webhookTriggersBatchBuild: false,
         reportBuildStatus: true,
-        branchOrRef,
+        branchOrRef: branch,
         webhookFilters,
         cloneDepth: 0,
       };
