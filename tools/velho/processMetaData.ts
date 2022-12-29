@@ -30,7 +30,7 @@ fs.writeFileSync(process.argv[3], JSON.stringify(redactedMetaDataKunnatMaakunnat
 
 const elyData = JSON.parse(fs.readFileSync(__dirname + "/build/ely.json").toString()).value;
 const elyt = elyData.reduce((all: Record<string, unknown>, ely: any) => {
-  all[ely.Lyhenne] = { id: ely.Ely_Id, nimi: ely.Nimi };
+  all[ely.Lyhenne] = { id: ely.Ely_Id, nimi: ely.Nimi, lelyId: ely.LiikenneEly_Id };
   return all;
 }, {});
 fs.writeFileSync(process.argv[4], JSON.stringify(elyt));

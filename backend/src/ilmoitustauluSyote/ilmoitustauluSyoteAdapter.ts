@@ -123,7 +123,7 @@ class IlmoitustauluSyoteAdapter {
     velho: VelhoJulkinen,
     kieli: Kieli,
     kuulutusPaiva: string
-  ): Pick<IlmoitusKuulutus, "oid" | "kunnat" | "maakunnat" | "kieli" | "elyt" | "date" | "vaylamuoto"> {
+  ): Pick<IlmoitusKuulutus, "oid" | "kunnat" | "maakunnat" | "kieli" | "elyt" | "lelyt" | "date" | "vaylamuoto"> {
     assertIsDefined(velho.maakunnat);
     assertIsDefined(velho.kunnat);
     assertIsDefined(velho.vaylamuoto);
@@ -132,11 +132,13 @@ class IlmoitustauluSyoteAdapter {
       ?.map(kuntametadata.maakuntaForMaakuntaId)
       .map((maakunta) => maakunta?.ely)
       .filter((m) => !!m) as number[];
+    const lelyt = elyt?.map(kuntametadata.liikennevastuuElyIdFromElyId).filter((m) => !!m) as number[];
     return {
       oid,
       kunnat: velho.kunnat,
       maakunnat,
       elyt,
+      lelyt,
       kieli,
       date: parseDate(kuulutusPaiva).format(),
       vaylamuoto: velho.vaylamuoto,

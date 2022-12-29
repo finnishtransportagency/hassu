@@ -8,7 +8,7 @@ import { log } from "../logger";
 import { NotFoundError } from "../error/NotFoundError";
 
 class IlmoitustauluSyoteHandler {
-  async getFeed(kieli: Kieli, ely: string | undefined, maakunta: string | undefined): Promise<string> {
+  async getFeed(kieli: Kieli, ely: string | undefined, lely: string | undefined, maakunta: string | undefined): Promise<string> {
     const siteUrl = process.env.FRONTEND_DOMAIN_NAME || "";
     const feed_url = siteUrl + "/api/kuulutukset";
     const feed = new RSS({ feed_url, site_url: siteUrl, title: "Kuulutukset" });
@@ -26,6 +26,17 @@ class IlmoitustauluSyoteHandler {
         });
       } else {
         throw new NotFoundError("ELY " + ely + " on tuntematon");
+      }
+    }
+
+    const lelyId = lely ? kuntametadata.elyIdFromKey(lely) : undefined;
+    if (lely) {
+      if (lelyId) {
+        terms.push({
+          term: { lelyt: lelyId },
+        });
+      } else {
+        throw new NotFoundError("Liikenne-ELY " + lely + " on tuntematon");
       }
     }
 

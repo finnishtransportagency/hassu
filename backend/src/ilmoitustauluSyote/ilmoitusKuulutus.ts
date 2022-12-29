@@ -15,4 +15,5 @@ export type IlmoitusKuulutus = {
   vaylamuoto?: string[];
   date: string;
   elyt?: number[];
+  lelyt?: number[];
 };
