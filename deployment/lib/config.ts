@@ -1,4 +1,3 @@
-import { ExecException } from "child_process";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import { SSM } from "aws-sdk";
 import log from "loglevel";
@@ -9,18 +8,46 @@ import { Construct } from "constructs";
 const ssmProvider = new SSM({ apiVersion: "2014-11-06", region: "eu-west-1" });
 const globalSsmProvider = new SSM({ apiVersion: "2014-11-06", region: "us-east-1" });
 
-function execShellCommand(cmd: string): Promise<string> {
-  const exec = require("child_process").exec;
-  return new Promise((resolve) => {
-    exec(cmd, (error: ExecException | null, stdout: string, stderr: string) => {
-      if (error) {
-        // tslint:disable-next-line:no-console
-        console.warn(error);
-      }
-      resolve(stdout ? stdout.trim() : stderr);
-    });
-  });
+type Env = {
+  terminationProtection?: boolean;
+  isProd?: boolean;
+  isDevAccount?: boolean;
+  isDeveloperEnvironment?: boolean;
+};
+
+enum EnvName {
+  "dev" = "dev",
+  "test" = "test",
+  "training" = "training",
+  "prod" = "prod",
+  "localstack" = "localstack",
+  "feature" = "feature",
+  "developer" = "developer",
 }
+
+const envConfigs: Record<EnvName, Env> = {
+  dev: {
+    terminationProtection: true,
+    isDevAccount: true,
+  },
+  test: {
+    terminationProtection: true,
+    isDevAccount: true,
+  },
+  training: {
+    terminationProtection: true,
+    isDevAccount: true,
+  },
+  prod: {
+    terminationProtection: true,
+    isProd: true,
+  },
+  localstack: {},
+  feature: {},
+  developer: {
+    isDeveloperEnvironment: true,
+  },
+};
 
 function getEnv(name: string) {
   const value = process.env[name];
@@ -44,7 +71,6 @@ export class Config extends BaseConfig {
   public readonly velhoEnv;
   public readonly basicAuthenticationUsername: string;
   public readonly basicAuthenticationPassword: string;
-  private branch?: string;
   public static readonly tags = { Environment: Config.env, Project: "Hassu" };
   private readonly scope: Construct;
   public static readonly isHotswap = process.env.HASSU_HOTSWAP == "true";
@@ -125,8 +151,6 @@ export class Config extends BaseConfig {
   }
 
   private init = async () => {
-    this.branch = process.env.BUILD_BRANCH ? process.env.BUILD_BRANCH : await execShellCommand("git rev-parse --abbrev-ref HEAD");
-
     if ("localstack" !== Config.env) {
       if (Config.isDeveloperEnvironment()) {
         this.frontendDomainName = (await readFrontendStackOutputs()).CloudfrontPrivateDNSName || "please-re-run-backend-deployment";
@@ -140,26 +164,23 @@ export class Config extends BaseConfig {
     }
   };
 
-  public isFeatureBranch(): boolean {
-    return this.getBranch().startsWith("feature");
-  }
-
-  public getBranch() {
-    if (!this.branch) {
-      throw new Error("branch is not set.");
-    }
-    return this.branch;
-  }
-
   public static isDeveloperEnvironment() {
-    return !Config.isPermanentEnvironment() && "feature" !== Config.env;
+    return Config.getEnvConfig().isDeveloperEnvironment;
   }
 
   public static isDevAccount() {
-    return Config.isPermanentEnvironment() && BaseConfig.env !== "prod";
+    return Config.getEnvConfig().isDevAccount;
   }
 
   public static isProdAccount() {
-    return BaseConfig.env == "prod";
+    return Config.getEnvConfig().isProd;
+  }
+
+  public static getEnvConfig(): Env {
+    const envConfig = envConfigs[BaseConfig.env as unknown as EnvName];
+    if (envConfig) {
+      return envConfig;
+    }
+    return envConfigs.developer;
   }
 }

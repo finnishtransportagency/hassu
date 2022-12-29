@@ -190,6 +190,7 @@
     "postdeploy:backend:hotswap": "npm run setupenvironment && npm run graphQLIntrospection",
     "predeploy:frontend": "rimraf build .next",
     "deploy:frontend": "./deployment/node_modules/.bin/cdk $NODE_DEBUG_OPTION --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy frontend --debug --require-approval never",
+    "deploy:stackpolicies": "ts-node --project=deployment/tsconfig.json -r dotenv/config ./deployment/bin/setStackPolicies.ts",
     "postdeploy:frontend": "npm run setupenvironment",
     "deploy:account:dev": "cross-env ENVIRONMENT=dev ./deployment/node_modules/.bin/cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-account\" deploy account --require-approval never",
     "deploy:monitoring": " ./deployment/node_modules/.bin/cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-monitoring\" deploy monitoring --require-approval never",

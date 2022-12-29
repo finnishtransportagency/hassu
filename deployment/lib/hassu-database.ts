@@ -14,6 +14,8 @@ export type DatabaseStackOutputs = {
   CloudFrontOriginAccessIdentity: string;
 };
 
+export const databaseStackName = "hassu-database-" + Config.env;
+
 export class HassuDatabaseStack extends Stack {
   public projektiTable!: ddb.Table;
   public projektiArchiveTable!: ddb.Table;
@@ -27,7 +29,8 @@ export class HassuDatabaseStack extends Stack {
 
   constructor(scope: Construct) {
     super(scope, "database", {
-      stackName: "hassu-database-" + Config.env,
+      stackName: databaseStackName,
+      terminationProtection: Config.getEnvConfig().terminationProtection,
       env: {
         region: "eu-west-1",
       },

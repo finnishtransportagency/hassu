@@ -37,12 +37,16 @@ export type BackendStackOutputs = {
   AppSyncAPIURL: string;
 };
 
+export const backendStackName = "hassu-backend-" + Config.env;
+
 export class HassuBackendStack extends Stack {
   private readonly props: HassuBackendStackProps;
 
   constructor(scope: App, props: HassuBackendStackProps) {
+    const terminationProtection = Config.getEnvConfig().terminationProtection;
     super(scope, "backend", {
-      stackName: "hassu-backend-" + Config.env,
+      stackName: backendStackName,
+      terminationProtection,
       env: {
         region: "eu-west-1",
       },
