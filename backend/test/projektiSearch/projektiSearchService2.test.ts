@@ -387,6 +387,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
   ],
   tallennettu: true,
   euRahoitus: false,
+  vahainenMenettely: false,
   liittyvatSuunnitelmat: [],
   kielitiedot: {
     ensisijainenKieli: Kieli.SUOMI,

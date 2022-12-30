@@ -92,6 +92,7 @@ class ProjektiAdapterJulkinen {
       kielitiedot: adaptKielitiedotByAddingTypename(dbProjekti.kielitiedot),
       velho: adaptVelho(dbProjekti.velho),
       euRahoitus: dbProjekti.euRahoitus,
+      vahainenMenettely: dbProjekti.vahainenMenettely,
       vuorovaikutusKierrokset,
       suunnitteluSopimus,
       aloitusKuulutusJulkaisu,

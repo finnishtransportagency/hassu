@@ -15,7 +15,7 @@
 }
 
 .notification .start-icon.info_gray {
-  @apply text-turquoise;
+  @apply text-primary-dark;
 }
 
 .notification .start-icon.info-green {

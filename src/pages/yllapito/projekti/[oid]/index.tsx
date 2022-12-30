@@ -34,6 +34,7 @@ import PaivitaVelhoTiedotButton from "@components/projekti/PaivitaVelhoTiedotBut
 import useApi from "src/hooks/useApi";
 import { isApolloError } from "apollo-client/errors/ApolloError";
 import { concatCorrelationIdToErrorMessage } from "@components/ApiProvider";
+import VahainenMenettelyOsio from "@components/projekti/projektintiedot/VahainenMenettelyOsio";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -41,7 +42,7 @@ type TransientFormValues = {
 };
 type PersitentFormValues = Pick<
   TallennaProjektiInput,
-  "oid" | "versio" | "muistiinpano" | "euRahoitus" | "suunnitteluSopimus" | "liittyvatSuunnitelmat" | "kielitiedot"
+  "oid" | "versio" | "muistiinpano" | "euRahoitus" | "suunnitteluSopimus" | "liittyvatSuunnitelmat" | "kielitiedot" | "vahainenMenettely"
 >;
 export type FormValues = TransientFormValues & PersitentFormValues;
 
@@ -100,7 +101,8 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
       oid: projekti.oid,
       versio: projekti.versio,
       muistiinpano: projekti.muistiinpano || "",
-      euRahoitus: projekti.euRahoitus,
+      euRahoitus: !!projekti.euRahoitus,
+      vahainenMenettely: !!projekti.vahainenMenettely,
       liittyvatSuunnitelmat:
         projekti?.liittyvatSuunnitelmat?.map((suunnitelma) => {
           const { __typename, ...suunnitelmaInput } = suunnitelma;
@@ -225,6 +227,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
               </Stack>
             </Section>
             <ProjektiKuntatiedot projekti={projekti} />
+            <VahainenMenettelyOsio formDisabled={disableFormEdit} projekti={projekti} />
             <ProjektiKuulutuskielet />
             <ProjektiLiittyvatSuunnitelmat projekti={projekti} />
             <ProjektiSuunnittelusopimusTiedot projekti={projekti} />

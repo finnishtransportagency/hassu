@@ -166,6 +166,7 @@ export class ProjektiFixture {
         projektinNimiVieraskielella: "Heja sverige",
       },
       euRahoitus: false,
+      vahainenMenettely: false,
       liittyvatSuunnitelmat: [
         {
           __typename: "Suunnitelma",
@@ -260,6 +261,7 @@ export class ProjektiFixture {
         projektinNimiVieraskielella: "Namnet på svenska",
       },
       euRahoitus: false,
+      vahainenMenettely: false,
       liittyvatSuunnitelmat: [
         {
           asiatunnus: "atunnus123",
@@ -420,6 +422,7 @@ export class ProjektiFixture {
         projektinNimiVieraskielella: "Namnet på svenska",
       },
       euRahoitus: false,
+      vahainenMenettely: false,
       liittyvatSuunnitelmat: [
         {
           asiatunnus: "atunnus123",
@@ -733,6 +736,7 @@ export class ProjektiFixture {
       projektinNimiVieraskielella: "Namnet på svenska",
     },
     euRahoitus: false,
+    vahainenMenettely: false,
     liittyvatSuunnitelmat: [
       {
         asiatunnus: "atunnus123",

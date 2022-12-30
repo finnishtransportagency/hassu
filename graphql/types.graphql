@@ -131,6 +131,7 @@ type Projekti implements IProjekti {
   """
   tallennettu: Boolean
   euRahoitus: Boolean
+  vahainenMenettely: Boolean
   liittyvatSuunnitelmat: [Suunnitelma!]
   kielitiedot: Kielitiedot
   paivitetty: String
@@ -556,6 +557,7 @@ type ProjektiJulkinen implements IProjekti {
   suunnitteluSopimus: SuunnitteluSopimusJulkaisu
   vuorovaikutusKierrokset: [VuorovaikutusKierrosJulkinen!]
   euRahoitus: Boolean
+  vahainenMenettely: Boolean
   status: Status
   velho: VelhoJulkinen!
   kielitiedot: Kielitiedot

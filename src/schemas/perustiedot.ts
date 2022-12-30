@@ -29,6 +29,7 @@ export const perustiedotValidationSchema = Yup.object().shape({
     .nullable()
     .default(null),
   euRahoitus: Yup.boolean().nullable().required("EU-rahoitustieto on pakollinen"),
+  vahainenMenettely: Yup.boolean().nullable(),
   muistiinpano: Yup.string().max(maxNoteLength, `Muistiinpanoon voidaan kirjoittaa maksimissaan ${maxNoteLength} merkkiä.`),
   suunnitteluSopimus: Yup.object()
     .shape({

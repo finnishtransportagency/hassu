@@ -12,6 +12,7 @@ Object {
     "#muistiinpano": "muistiinpano",
     "#paivitetty": "paivitetty",
     "#suunnitteluSopimus": "suunnitteluSopimus",
+    "#vahainenMenettely": "vahainenMenettely",
     "#velho": "velho",
     "#versio": "versio",
   },
@@ -83,6 +84,7 @@ Object {
       "logo": "logo.gif",
       "yhteysHenkilo": "A000123",
     },
+    ":vahainenMenettely": false,
     ":velho": Object {
       "asiatunnusELY": "ELY/1/2022",
       "asiatunnusVayla": "VAYLA/1/2022",
@@ -108,7 +110,7 @@ Object {
     "oid": "1",
   },
   "TableName": "Projekti-localstack",
-  "UpdateExpression": "SET #versio = :versio , #kayttoOikeudet = :kayttoOikeudet , #velho = :velho , #muistiinpano = :muistiinpano , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus , #kielitiedot = :kielitiedot , #euRahoitus = :euRahoitus , #liittyvatSuunnitelmat = :liittyvatSuunnitelmat , #paivitetty = :paivitetty ",
+  "UpdateExpression": "SET #versio = :versio , #kayttoOikeudet = :kayttoOikeudet , #velho = :velho , #muistiinpano = :muistiinpano , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus , #kielitiedot = :kielitiedot , #euRahoitus = :euRahoitus , #vahainenMenettely = :vahainenMenettely , #liittyvatSuunnitelmat = :liittyvatSuunnitelmat , #paivitetty = :paivitetty ",
 }
 `;
 

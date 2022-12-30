@@ -86,16 +86,24 @@ function validateVarahenkiloModifyPermissions(projekti: DBProjekti, input: Talle
     });
 }
 
+type UudelleenKuulutusTuple = [UudelleenKuulutus | null | undefined, UudelleenKuulutusInput | null | undefined];
+
 /**
  * Validoi, että jos yritetään tallentaa uudelleenkuulutusta, sellainen on olemassa
  */
-function validateUudelleenKuulutus(
-  uudelleenKuulutus: UudelleenKuulutus | null | undefined,
-  uudelleenKuulutusInput: UudelleenKuulutusInput | null | undefined
-) {
-  if (uudelleenKuulutusInput && !uudelleenKuulutus) {
-    throw new IllegalArgumentError("Uudelleenkuulutuksen tietoja ei voi tallentaa jos uudelleenkuulutusta ei ole vielä avattu");
-  }
+function validateUudelleenKuulutus(projekti: DBProjekti, input: TallennaProjektiInput) {
+  const uudelleenKuulutusTuples: UudelleenKuulutusTuple[] = [
+    [projekti.aloitusKuulutus?.uudelleenKuulutus, input.aloitusKuulutus?.uudelleenKuulutus],
+    [projekti.nahtavillaoloVaihe?.uudelleenKuulutus, input.nahtavillaoloVaihe?.uudelleenKuulutus],
+    [projekti.hyvaksymisPaatosVaihe?.uudelleenKuulutus, input.hyvaksymisPaatosVaihe?.uudelleenKuulutus],
+    [projekti.jatkoPaatos1Vaihe?.uudelleenKuulutus, input.jatkoPaatos1Vaihe?.uudelleenKuulutus],
+    [projekti.jatkoPaatos2Vaihe?.uudelleenKuulutus, input.jatkoPaatos2Vaihe?.uudelleenKuulutus],
+  ];
+  uudelleenKuulutusTuples.forEach(([uudelleenKuulutus, uudelleenKuulutusInput]) => {
+    if (uudelleenKuulutusInput && !uudelleenKuulutus) {
+      throw new IllegalArgumentError("Uudelleenkuulutuksen tietoja ei voi tallentaa jos uudelleenkuulutusta ei ole vielä avattu");
+    }
+  });
 }
 
 /**
@@ -124,11 +132,8 @@ export function validateTallennaProjekti(projekti: DBProjekti, input: TallennaPr
   validateKasittelynTila(projekti, apiProjekti, input);
   validateVarahenkiloModifyPermissions(projekti, input);
   validateSuunnitteluSopimus(projekti, input);
-  validateUudelleenKuulutus(projekti.aloitusKuulutus?.uudelleenKuulutus, input.aloitusKuulutus?.uudelleenKuulutus);
-  validateUudelleenKuulutus(projekti.nahtavillaoloVaihe?.uudelleenKuulutus, input.nahtavillaoloVaihe?.uudelleenKuulutus);
-  validateUudelleenKuulutus(projekti.hyvaksymisPaatosVaihe?.uudelleenKuulutus, input.hyvaksymisPaatosVaihe?.uudelleenKuulutus);
-  validateUudelleenKuulutus(projekti.jatkoPaatos1Vaihe?.uudelleenKuulutus, input.jatkoPaatos1Vaihe?.uudelleenKuulutus);
-  validateUudelleenKuulutus(projekti.jatkoPaatos2Vaihe?.uudelleenKuulutus, input.jatkoPaatos2Vaihe?.uudelleenKuulutus);
+  validateVahainenMenettely(projekti, input);
+  validateUudelleenKuulutus(projekti, input);
 }
 
 export function validatePaivitaVuorovaikutus(projekti: DBProjekti, input: VuorovaikutusPaivitysInput): void {
@@ -176,5 +181,24 @@ export function validatePaivitaPerustiedot(projekti: DBProjekti, input: Vuorovai
   }
   if (projekti.nahtavillaoloVaiheJulkaisut && projekti.nahtavillaoloVaiheJulkaisut.length !== 0) {
     throw new IllegalArgumentError("Suunnitteluvaihe on päättynyt.");
+  }
+}
+
+/**
+ * Validoi, että vahainenMenettely-tietoa ei muokata sen jälkeen kun aloituskuulutusjulkaisu on hyväksynnässä tai hyväksytty
+ */
+function validateVahainenMenettely(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
+  const isVahainenMenettelyValueChanged =
+    typeof input.vahainenMenettely === "boolean" && !!input.vahainenMenettely !== !!dbProjekti.vahainenMenettely;
+
+  const latestAloituskuulutusJulkaisuTila = dbProjekti?.aloitusKuulutusJulkaisut?.[dbProjekti.aloitusKuulutusJulkaisut.length - 1].tila;
+  const isLatestJulkaisuPendingApprovalOrApproved =
+    !!latestAloituskuulutusJulkaisuTila &&
+    [KuulutusJulkaisuTila.HYVAKSYTTY, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA].includes(latestAloituskuulutusJulkaisuTila);
+
+  if (isVahainenMenettelyValueChanged && isLatestJulkaisuPendingApprovalOrApproved) {
+    throw new IllegalArgumentError(
+      "Vähäinen menettely -tietoa ei voi muuttaa, jos aloituskuulutus on jo julkaistu tai se odottaa hyväksyntää!"
+    );
   }
 }
