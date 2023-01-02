@@ -8,7 +8,6 @@ import {
   Projekti,
   ViranomaisVastaanottajaInput,
 } from "@services/api";
-import { removeTypeName } from "./removeTypeName";
 import { kuntametadata } from "../../common/kuntametadata";
 
 export default function defaultVastaanottajat(
@@ -20,28 +19,24 @@ export default function defaultVastaanottajat(
   let viranomaiset: ViranomaisVastaanottajaInput[];
   if (ilmoituksenVastaanottajat?.kunnat) {
     // tapaus, jossa lomake on jo kerran tallennettu
-    kunnat = ilmoituksenVastaanottajat?.kunnat.map((kunta) => {
-      kunta = removeTypeName(kunta);
-      delete kunta.lahetetty;
-      return kunta;
-    });
+    kunnat = ilmoituksenVastaanottajat?.kunnat.map((kunta) => ({
+      id: kunta.id,
+      sahkoposti: kunta.sahkoposti,
+    }));
   } else {
     // tapaus, jossa lomake alustetaan ensimmäistä kertaa
     kunnat =
-      projekti?.velho?.kunnat?.map((kuntaId) => {
-        return {
-          id: kuntaId,
-          sahkoposti: "",
-        } as KuntaVastaanottajaInput;
-      }) || [];
+      projekti?.velho?.kunnat?.map((kuntaId) => ({
+        id: kuntaId,
+        sahkoposti: "",
+      })) || [];
   }
   if (ilmoituksenVastaanottajat?.viranomaiset) {
     // tapaus, jossa lomake on jo kerran tallennettu
-    viranomaiset = ilmoituksenVastaanottajat?.viranomaiset.map((kunta) => {
-      kunta = removeTypeName(kunta);
-      delete kunta.lahetetty;
-      return kunta;
-    });
+    viranomaiset = ilmoituksenVastaanottajat?.viranomaiset.map((viranomainen) => ({
+      nimi: viranomainen.nimi,
+      sahkoposti: viranomainen.sahkoposti,
+    }));
   } else {
     // tapaus, jossa lomake alustetaan ensimmäistä kertaa
     const vaylavirastoKirjaamo = kirjaamoOsoitteet?.find((osoite) => osoite.nimi == "VAYLAVIRASTO");
