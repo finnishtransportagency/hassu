@@ -8,9 +8,9 @@ import useSnackbars from "src/hooks/useSnackbars";
 import HassuSpinner from "@components/HassuSpinner";
 import dayjs from "dayjs";
 import { Link } from "@mui/material";
-import ButtonLink from "@components/button/ButtonLink";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import useApi from "src/hooks/useApi";
+import Button from "@components/button/Button";
 
 interface Props {
   projekti: Projekti;
@@ -77,7 +77,7 @@ export default function SaapuneetKysymyksetJaPalautteet({ projekti }: Props): Re
         {palautteet && palautteet.length > 0 && (
           <>
             <HassuTable {...palauteTableProps} />
-            <ButtonLink href="">Lataa tiedostona</ButtonLink>
+            <Button disabled>Lataa tiedostona</Button>
           </>
         )}
       </SectionContent>
