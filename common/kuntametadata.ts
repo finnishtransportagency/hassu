@@ -294,6 +294,14 @@ class KuntaMetadata {
   elyIdFromKey(key: string) {
     return elyt[key as keyof typeof elyt]?.id;
   }
+
+  liikennevastuuElyIdFromElyId(elyId: number): number {
+    const ely = Object.values(elyt).find((ely) => ely.id == elyId);
+    if (ely) {
+      return ely.lelyId;
+    }
+    throw new IllegalArgumentError("Liikenne-ely ei löydy ely-id:lle " + elyId);
+  }
 }
 
 function normalizeKieli(kieli: Kieli | string): Kieli {

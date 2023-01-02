@@ -14,6 +14,10 @@ Array [
       178,
       740,
     ],
+    "lelyt": Array [
+      1001,
+      1019,
+    ],
     "maakunnat": Array [
       1,
       6,
@@ -38,6 +42,10 @@ Array [
       178,
       740,
     ],
+    "lelyt": Array [
+      1001,
+      1019,
+    ],
     "maakunnat": Array [
       1,
       6,
@@ -59,6 +67,10 @@ Array [
     "kieli": "SUOMI",
     "kunnat": Array [
       245,
+    ],
+    "lelyt": Array [
+      1001,
+      1019,
     ],
     "maakunnat": Array [
       1,
@@ -82,6 +94,10 @@ Array [
     "kunnat": Array [
       245,
     ],
+    "lelyt": Array [
+      1001,
+      1019,
+    ],
     "maakunnat": Array [
       1,
       6,
@@ -104,6 +120,9 @@ Array [
       91,
       92,
     ],
+    "lelyt": Array [
+      1001,
+    ],
     "maakunnat": Array [
       1,
     ],
@@ -124,6 +143,9 @@ Array [
     "kunnat": Array [
       91,
       92,
+    ],
+    "lelyt": Array [
+      1001,
     ],
     "maakunnat": Array [
       1,

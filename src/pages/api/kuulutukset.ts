@@ -5,6 +5,11 @@ import { ilmoitustauluSyoteHandler } from "../../../backend/src/ilmoitustauluSyo
 import { validateCredentials } from "../../util/basicAuthentication";
 import { NotFoundError } from "../../../backend/src/error/NotFoundError";
 
+function getSingleParamValue(req: NextApiRequest, paramName: string) {
+  const values = req.query[paramName];
+  return values instanceof Array ? values[0] : values;
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   setupLambdaMonitoring();
   return await wrapXRayAsync("handler", async () => {
@@ -23,14 +28,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return;
     }
 
-    const elyParam = req.query["ely"];
-    const ely = elyParam instanceof Array ? elyParam[0] : elyParam;
-
-    const maakuntaParam = req.query["maakunta"];
-    const maakunta = maakuntaParam instanceof Array ? maakuntaParam[0] : maakuntaParam;
+    const ely = getSingleParamValue(req, "ely");
+    const lely = getSingleParamValue(req, "lely");
+    const maakunta = getSingleParamValue(req, "maakunta");
 
     try {
-      const xml = await ilmoitustauluSyoteHandler.getFeed(kieli as Kieli, ely, maakunta);
+      const xml = await ilmoitustauluSyoteHandler.getFeed(kieli as Kieli, ely, lely, maakunta);
       res.setHeader("Content-Type", "application/rss+xml; charset=UTF-8");
       res.send(xml);
     } catch (e) {
