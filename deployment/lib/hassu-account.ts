@@ -11,12 +11,15 @@ export type AccountStackOutputs = {
   SearchDomainArnOutput: string;
 };
 
+export const accountStackName = "hassu-account";
+
 export class HassuAccountStack extends Stack {
   public readonly searchDomain: Domain;
 
   constructor(scope: Construct) {
     super(scope, "account", {
-      stackName: "hassu-account",
+      stackName: accountStackName,
+      terminationProtection: true,
       env: {
         region: "eu-west-1",
       },

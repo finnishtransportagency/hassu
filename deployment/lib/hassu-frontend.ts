@@ -44,6 +44,8 @@ interface HassuFrontendStackProps {
 
 const REGION = "us-east-1";
 
+export const frontendStackName = "hassu-frontend-" + Config.env;
+
 export class HassuFrontendStack extends Stack {
   private props: HassuFrontendStackProps;
   private appSyncAPIKey?: string;
@@ -52,9 +54,9 @@ export class HassuFrontendStack extends Stack {
   private cloudFrontOriginAccessIdentityReportBucket!: string;
 
   constructor(scope: Construct, props: HassuFrontendStackProps) {
-    const env = Config.env;
     super(scope, "frontend", {
-      stackName: "hassu-frontend-" + env,
+      stackName: frontendStackName,
+      terminationProtection: Config.getEnvConfig().terminationProtection,
       env: {
         region: REGION,
       },

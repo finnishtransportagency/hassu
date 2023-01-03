@@ -7,14 +7,10 @@ import { IWidget } from "aws-cdk-lib/aws-cloudwatch/lib/widget";
 import { FilterPattern } from "aws-cdk-lib/aws-logs";
 import { InsightsQuery } from "./dashboard/insightsQuery";
 
-export type HassuMonitoringStackProps = {
-  //
-};
-
 type MonitoredLambda = { functionName: string; logGroupName: string; func: aws_lambda.IFunction };
 
 export class HassuMonitoringStack extends Stack {
-  constructor(scope: Construct, props?: HassuMonitoringStackProps) {
+  constructor(scope: Construct) {
     super(scope, "monitoring", {
       stackName: "hassu-monitoring-" + Config.env,
       env: {
