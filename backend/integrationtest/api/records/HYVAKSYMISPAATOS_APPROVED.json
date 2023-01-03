@@ -925,8 +925,7 @@
           "__typename": "PDF",
           "kutsuPDFPath": "/suunnitteluvaihe/vuorovaikutus_1/TS Tie Yleisotilaisuus kutsu.pdf",
           "nimi": "TS Tie Yleisotilaisuus kutsu.pdf",
-          "sisalto": "pdf",
-          "textContent": "\nKUTSU TIEDOTUS- / YLEISÖTILAISUUTEEN\nHASSU AUTOMAATTITESTIPROJEKTI1\nVäylävirasto, Helsinki ja Vantaa laativat tiesuunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1\nLorem Ipsum suunnitteluvaihe\nYleisötilaisuus järjestetään:\nAika: 04.03.2022 klo 15.00 - 16.00\nPaikka: Teams-linkki https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu\n\n\n\nAika: 05.04.2022 klo 10.00 - 11.00\nPaikka: Kunnantalo, Katu 123, 00100 Helsinki\nTilaisuudessa voi tutustua suunnitelmaluonnoksiin ja esittää niistä mielipiteensä. Tilaisuudessa esitettäviin suunnitelmaluonnoksiin voi tutustua ennakkoon tietoverkossa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu\n\n\nTilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.\nVäylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa https://www.vayla.fi/tietosuoja\n\n\n\nKutsu on julkaistu tietoverkossa verkkosivuilla 23.03.2022.\nSuunnitelmaluonnoksista voi kysyä lisätietoja tai antaa palautetta soittamalla suunnittelijalle puhelinaikoina:\n05.04.2022 klo 10.00 - 11.0005.04.2033 klo 12.00 - 13.00Lisätietoja antavat \nNokia, Testi1 Hassu, puh. 123, mikko.haapamaki(at)cgi.com \nCGI Suomi Oy, A-Tunnus1 Hassu, puh. 123, mikko.haapamki(at)cgi.com \nKajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com \nTervetuloa!\nVäylävirasto\n"
+          "sisalto": "pdf"
         }
       },
       "vuorovaikutusTilaisuudet": [

@@ -13,6 +13,7 @@ import dayjs from "dayjs";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
+import { sendAloitusKuulutusApprovalMailsAndAttachments, sendWaitingApprovalMail } from "../emailHandler";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -24,6 +25,7 @@ async function createAloituskuulutusPDF(
     throw new Error("julkaisuWaitingForApproval.kuulutusPaiva ei määritelty");
   }
   const pdf = await pdfGeneratorClient.createAloituskuulutusPdf({
+    oid: projekti.oid,
     asiakirjaTyyppi,
     aloitusKuulutusJulkaisu: julkaisuWaitingForApproval,
     kieli,
@@ -92,13 +94,11 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
   }
 
   checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja {
-    const projektiPaallikko = requireOmistaja(projekti);
-    return projektiPaallikko;
+    return requireOmistaja(projekti);
   }
 
   checkPriviledgesSendForApproval(projekti: DBProjekti): NykyinenKayttaja {
-    const muokkaaja = requirePermissionMuokkaa(projekti);
-    return muokkaaja;
+    return requirePermissionMuokkaa(projekti);
   }
 
   checkUudelleenkuulutusPriviledges(_projekti: DBProjekti): NykyinenKayttaja {
@@ -120,6 +120,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
 
     await this.generatePDFs(projekti, aloitusKuulutusJulkaisu);
     await projektiDatabase.aloitusKuulutusJulkaisut.insert(projekti.oid, aloitusKuulutusJulkaisu);
+    await sendWaitingApprovalMail(projekti);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {
@@ -159,6 +160,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     }
 
     await aineistoSynchronizerService.synchronizeProjektiFiles(projekti.oid);
+    await sendAloitusKuulutusApprovalMailsAndAttachments(projekti.oid);
   }
 
   private async generatePDFs(projekti: DBProjekti, julkaisuWaitingForApproval: AloitusKuulutusJulkaisu) {

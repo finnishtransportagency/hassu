@@ -1,45 +1,29 @@
-import { HyvaksymisPaatosVaiheJulkaisu, KasittelynTila, Velho } from "../../database/model/";
-import { Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
+import { HyvaksymisPaatosVaiheJulkaisu, KasittelynTila } from "../../database/model/";
+import { AsiakirjaTyyppi, Kieli } from "../../../../common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
-import { AsiakirjanMuoto } from "../asiakirjaTypes";
+import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../asiakirjaTypes";
 import { translate } from "../../util/localization";
-import { KutsuAdapter } from "./KutsuAdapter";
-import { IlmoitusParams } from "./suunnittelunAloitusPdf";
 import { formatDate } from "../asiakirjaUtil";
+import { createPDFFileName } from "../pdfFileName";
+import { HyvaksymisPaatosVaiheKutsuAdapter, HyvaksymisPaatosVaiheKutsuAdapterProps } from "../adapter/hyvaksymisPaatosVaiheKutsuAdapter";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
-const pdfTypeKeys: Record<AsiakirjanMuoto, Record<never, string>> = {
-  TIE: { [ProjektiTyyppi.TIE]: "T431", [ProjektiTyyppi.YLEINEN]: "60YS" },
-  RATA: { [ProjektiTyyppi.RATA]: "60R", [ProjektiTyyppi.YLEINEN]: "60YS" },
-};
-
-function createFileName(kieli: Kieli, pdfType: string): string {
-  const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
-  const kaannos: string = translate("tiedostonimi." + pdfType, language) || "";
-  if (!kaannos) {
-    throw new Error(`Puuttu käännös tiedostonimi.${pdfType}:lle`);
-  }
-  return kaannos;
-}
-
 // noinspection JSUnusedGlobalSymbols
-export class Kuulutus60 extends CommonPdf {
+export class Kuulutus60 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   private readonly asiakirjanMuoto: AsiakirjanMuoto;
   protected header: string;
   protected kieli: Kieli;
-  private readonly velho: Velho;
   private hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
   private kasittelynTila: KasittelynTila;
 
   // private kirjaamoOsoitteet: KirjaamoOsoite[];
 
   constructor(
-    asiakirjanMuoto: AsiakirjanMuoto,
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
     kasittelynTila: KasittelynTila,
-    params: IlmoitusParams
+    props: HyvaksymisPaatosVaiheKutsuAdapterProps
   ) {
-    const velho = params.velho;
+    const velho = props.velho;
     if (!velho.tyyppi) {
       throw new Error("velho.tyyppi ei ole määritelty");
     }
@@ -67,36 +51,18 @@ export class Kuulutus60 extends CommonPdf {
     if (!kasittelynTila.hyvaksymispaatos.paatoksenPvm) {
       throw new Error("kasittelynTila.hyvaksymispaatos.paatoksenPvm ei ole määritelty");
     }
-    const kieli = params.kieli;
-    const kutsuAdapter = new KutsuAdapter({
-      oid: params.oid,
-      kielitiedot: params.kielitiedot,
-      velho,
-      kieli,
-      asiakirjanMuoto,
-      projektiTyyppi: velho.tyyppi,
-      kayttoOikeudet: params.kayttoOikeudet,
-      suunnitteluSopimus: params.suunnitteluSopimus,
-    });
+    const kieli = props.kieli;
+    const asiakirjanMuoto = determineAsiakirjaMuoto(velho?.tyyppi, velho?.vaylamuoto);
+    const kutsuAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(props);
     super(kieli, kutsuAdapter);
-    this.kieli = params.kieli;
+    this.kieli = props.kieli;
 
-    this.velho = velho;
     this.asiakirjanMuoto = asiakirjanMuoto;
     this.hyvaksymisPaatosVaihe = hyvaksymisPaatosVaihe;
     this.kasittelynTila = kasittelynTila;
 
-    this.kutsuAdapter.setTemplateResolver(this);
-    if (
-      (asiakirjanMuoto === AsiakirjanMuoto.RATA && velho.tyyppi === ProjektiTyyppi.TIE) ||
-      (asiakirjanMuoto === AsiakirjanMuoto.TIE && velho.tyyppi === ProjektiTyyppi.RATA)
-    ) {
-      throw new Error(`Asiakirjan tyyppi ja projektityyppi ristiriidassa!`);
-    }
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const pdfType = pdfTypeKeys[asiakirjanMuoto][velho.tyyppi];
-    const fileName = createFileName(kieli, pdfType);
+    this.kutsuAdapter.addTemplateResolver(this);
+    const fileName = createPDFFileName(AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS, this.asiakirjanMuoto, velho.tyyppi, kieli);
     this.header = kutsuAdapter.text("asiakirja.kuulutus_hyvaksymispaatoksesta.otsikko");
     super.setupPDF(this.header, kutsuAdapter.nimi, fileName);
   }
@@ -122,11 +88,11 @@ export class Kuulutus60 extends CommonPdf {
   }
 
   kuulutusosoite(): string {
-    return this.isVaylaTilaaja(this.velho) ? "https://www.vayla.fi/kuulutukset" : "https://www.ely-keskus.fi/kuulutukset";
+    return this.isVaylaTilaaja() ? "https://www.vayla.fi/kuulutukset" : "https://www.ely-keskus.fi/kuulutukset";
   }
 
   protected addContent(): void {
-    const vaylaTilaaja = this.isVaylaTilaaja(this.velho);
+    const vaylaTilaaja = this.isVaylaTilaaja();
     let elements: PDFKit.PDFStructureElementChild[];
     const nahtavillaoloaikaKappale: PDFKit.PDFStructureElementChild | undefined = this.nahtavillaoloaikaParagraph();
     if (nahtavillaoloaikaKappale) {

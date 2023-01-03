@@ -4,12 +4,12 @@ import {
   DBVaylaUser,
   HyvaksymisPaatosVaiheJulkaisu,
   KasittelynTila,
-  Kielitiedot,
   NahtavillaoloVaiheJulkaisu,
   SuunnitteluSopimus,
   Velho,
   VuorovaikutusKierrosJulkaisu,
 } from "../database/model";
+import { CommonKutsuAdapterProps } from "./adapter/commonKutsuAdapter";
 
 export enum AsiakirjanMuoto {
   TIE = "TIE",
@@ -24,6 +24,7 @@ export type NahtavillaoloKuulutusAsiakirjaTyyppi = Extract<
 >;
 
 export type CreateNahtavillaoloKuulutusPdfOptions = {
+  oid:string;
   velho: Velho;
   nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu;
   suunnitteluSopimus?: SuunnitteluSopimus;
@@ -33,19 +34,14 @@ export type CreateNahtavillaoloKuulutusPdfOptions = {
   kayttoOikeudet: DBVaylaUser[];
 };
 
-export type YleisotilaisuusKutsuPdfOptions = {
-  oid: string;
-  velho: Velho;
-  kielitiedot: Kielitiedot;
+export interface YleisotilaisuusKutsuPdfOptions extends CommonKutsuAdapterProps {
   suunnitteluSopimus?: SuunnitteluSopimus;
   vuorovaikutusKierrosJulkaisu: VuorovaikutusKierrosJulkaisu;
-  kieli: Kieli;
-  asiakirjanMuoto: AsiakirjanMuoto;
   luonnos: boolean;
-  kayttoOikeudet: DBVaylaUser[];
-};
+}
 
 export type AloituskuulutusPdfOptions = {
+  oid:string;
   aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu;
   asiakirjaTyyppi: AsiakirjaTyyppi;
   kieli: Kieli;
@@ -67,7 +63,6 @@ export type HyvaksymisPaatosKuulutusAsiakirjaTyyppi = Extract<
 export type CreateHyvaksymisPaatosKuulutusPdfOptions = {
   oid: string;
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
-  suunnitteluSopimus?: SuunnitteluSopimus;
   kasittelynTila: KasittelynTila;
   kieli: Kieli;
   luonnos: boolean;

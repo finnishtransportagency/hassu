@@ -128,7 +128,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
           </SectionContent>
           <h4 className="vayla-small-title">{t(`ui-otsikot.ladattava_kuulutus`)}</h4>
           <SectionContent className="flex gap-4">
-            <ExtLink href={aloituskuulutusPDFPath.path}>{aloituskuulutusPDFPath.fileName}</ExtLink> ({aloituskuulutusPDFPath.fileExt}) (
+            <ExtLink className="file_download" href={aloituskuulutusPDFPath.path}>{aloituskuulutusPDFPath.fileName}</ExtLink> ({aloituskuulutusPDFPath.fileExt}) (
             <FormatDate date={kuulutus.kuulutusPaiva} />-
             <FormatDate date={kuulutus.siirtyySuunnitteluVaiheeseen} />)
           </SectionContent>

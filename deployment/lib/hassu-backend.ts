@@ -212,7 +212,7 @@ export class HassuBackendStack extends Stack {
       runtime: lambdaRuntime,
       entry: `${__dirname}/../../backend/src/apiHandler.ts`,
       handler: "handleEvent",
-      memorySize: 1769,
+      memorySize: 1792,
       timeout: Duration.seconds(29),
       bundling: {
         define,
@@ -256,9 +256,14 @@ export class HassuBackendStack extends Stack {
     this.props.uploadBucket.grantPut(backendLambda);
     this.props.uploadBucket.grantReadWrite(backendLambda);
     this.props.yllapitoBucket.grantReadWrite(backendLambda);
-    this.props.internalBucket.grantReadWrite(backendLambda);
     this.props.publicBucket.grantReadWrite(backendLambda);
+    this.grantInternalBucket(backendLambda);
     return backendLambda;
+  }
+
+  private grantInternalBucket(lambda: NodejsFunction) {
+    lambda.addEnvironment("INTERNAL_BUCKET_NAME", this.props.internalBucket.bucketName);
+    this.props.internalBucket.grantReadWrite(lambda);
   }
 
   private addPermissionsForMonitoring(lambda: NodejsFunction) {
@@ -272,7 +277,7 @@ export class HassuBackendStack extends Stack {
       runtime: lambdaRuntime,
       entry: `${__dirname}/../../backend/src/asiakirja/lambda/pdfGeneratorHandler.ts`,
       handler: "handleEvent",
-      memorySize: 1769,
+      memorySize: 1792,
       timeout: Duration.seconds(29),
       bundling: {
         minify: true,
@@ -298,6 +303,7 @@ export class HassuBackendStack extends Stack {
     });
     this.addPermissionsForMonitoring(pdfGeneratorLambda);
     pdfGeneratorLambda.addToRolePolicy(new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] })); // listKirjaamoOsoitteet requires this
+    this.grantInternalBucket(pdfGeneratorLambda); // Vapaapäivien cachetusta varten
     return pdfGeneratorLambda;
   }
 
@@ -321,7 +327,7 @@ export class HassuBackendStack extends Stack {
       tracing: Tracing.ACTIVE,
     });
     this.addPermissionsForMonitoring(personSearchLambda);
-    this.props.internalBucket.grantReadWrite(personSearchLambda);
+    this.grantInternalBucket(personSearchLambda); // Käyttäjälistan cachetusta varten
     return personSearchLambda;
   }
 
@@ -437,7 +443,6 @@ export class HassuBackendStack extends Stack {
       UPLOAD_BUCKET_NAME: this.props.uploadBucket.bucketName,
       YLLAPITO_BUCKET_NAME: this.props.yllapitoBucket.bucketName,
       PUBLIC_BUCKET_NAME: this.props.publicBucket.bucketName,
-      INTERNAL_BUCKET_NAME: this.props.internalBucket.bucketName,
     };
   }
 

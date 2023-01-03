@@ -1,16 +1,18 @@
-import { DBVaylaUser, Velho, VuorovaikutusKierrosJulkaisu, VuorovaikutusTilaisuus } from "../../database/model";
+import { SuunnitteluSopimusJulkaisu, VuorovaikutusKierrosJulkaisu, VuorovaikutusTilaisuus } from "../../database/model";
 import { KayttajaTyyppi, Kieli, ProjektiTyyppi, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import dayjs from "dayjs";
 import { linkSuunnitteluVaihe } from "../../../../common/links";
 import { CommonPdf } from "./commonPdf";
 import { translate } from "../../util/localization";
-import { formatList, KutsuAdapter } from "./KutsuAdapter";
 import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../../projekti/adapter/adaptToAPI";
 import { findUserByKayttajatunnus } from "../../projekti/projektiUtil";
 import { AsiakirjanMuoto, YleisotilaisuusKutsuPdfOptions } from "../asiakirjaTypes";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import { formatNimi } from "../../util/userUtil";
+import { SuunnitteluVaiheKutsuAdapter } from "../adapter/suunnitteluVaiheKutsuAdapter";
+import { formatList } from "../adapter/commonKutsuAdapter";
+import { assertIsDefined } from "../../util/assertions";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
@@ -37,60 +39,38 @@ function createFileName(kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto, tyyppi: 
   return projektiTyyppiToFilenamePrefix(tyyppi) + " " + asiakirjaTyyppi + " " + fileNamePrefix[language];
 }
 
-export class Kutsu20 extends CommonPdf {
-  private readonly asiakirjanMuoto: AsiakirjanMuoto;
+export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
   private readonly oid: string;
   private readonly vuorovaikutusKierrosJulkaisu: VuorovaikutusKierrosJulkaisu;
-  private readonly kayttoOikeudet: DBVaylaUser[];
   protected header: string;
   protected kieli: Kieli;
-  private readonly velho: Velho;
 
-  constructor({
-    oid,
-    velho,
-    vuorovaikutusKierrosJulkaisu,
-    kieli,
-    kayttoOikeudet,
-    asiakirjanMuoto,
-    kielitiedot,
-    suunnitteluSopimus,
-  }: YleisotilaisuusKutsuPdfOptions) {
-    if (!(velho && velho.tyyppi && kielitiedot && vuorovaikutusKierrosJulkaisu)) {
-      throw new Error("Projektilta puuttuu tietoja!");
+  constructor(props: YleisotilaisuusKutsuPdfOptions) {
+    let suunnitteluSopimusJulkaisu: SuunnitteluSopimusJulkaisu | undefined | null;
+    if (props.suunnitteluSopimus) {
+      assertIsDefined(props.kayttoOikeudet);
+      suunnitteluSopimusJulkaisu = adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
+        props.suunnitteluSopimus,
+        findUserByKayttajatunnus(props.kayttoOikeudet, props.suunnitteluSopimus?.yhteysHenkilo)
+      );
     }
-    const fileName = createFileName(kieli, asiakirjanMuoto, velho.tyyppi);
-    const suunnitteluSopimusJulkaisu = adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
-      suunnitteluSopimus,
-      findUserByKayttajatunnus(kayttoOikeudet, suunnitteluSopimus?.yhteysHenkilo)
-    );
-    const kutsuAdapter = new KutsuAdapter({
-      oid,
-      kielitiedot,
-      velho,
-      kieli,
-      asiakirjanMuoto,
-      projektiTyyppi: velho.tyyppi,
-      kayttoOikeudet,
-      suunnitteluSopimus: suunnitteluSopimusJulkaisu || undefined,
-      vuorovaikutusKierrosJulkaisu,
-    });
+    const kutsuAdapter = new SuunnitteluVaiheKutsuAdapter({ ...props, suunnitteluSopimus: suunnitteluSopimusJulkaisu || undefined });
+    assertIsDefined(props.vuorovaikutusKierrosJulkaisu, "vuorovaikutusKierrosJulkaisu pitää olla annettu");
+    const kieli = props.kieli;
+    const fileName = createFileName(kieli, kutsuAdapter.asiakirjanMuoto, kutsuAdapter.projektiTyyppi);
     super(kieli, kutsuAdapter);
     const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
     this.header = headers[language];
     this.kieli = kieli;
-    this.velho = velho;
 
-    this.kayttoOikeudet = kayttoOikeudet;
-
-    this.oid = oid;
-    this.vuorovaikutusKierrosJulkaisu = vuorovaikutusKierrosJulkaisu;
-    this.asiakirjanMuoto = asiakirjanMuoto;
+    assertIsDefined(props.oid);
+    this.oid = props.oid;
+    this.vuorovaikutusKierrosJulkaisu = props.vuorovaikutusKierrosJulkaisu;
     super.setupPDF(this.header, kutsuAdapter.nimi, fileName);
   }
 
   protected addContent(): void {
-    const vaylaTilaaja = this.isVaylaTilaaja(this.velho);
+    const vaylaTilaaja = this.isVaylaTilaaja();
     const elements: PDFKit.PDFStructureElementChild[] = [
       this.logo(vaylaTilaaja),
       this.headerElement(this.header),
@@ -168,22 +148,12 @@ export class Kutsu20 extends CommonPdf {
       this.doc.struct("P", {}, this.moreInfoElements(this.vuorovaikutusKierrosJulkaisu?.yhteystiedot)),
 
       this.tervetuloa(),
-      this.kutsuja(),
+      this.paragraph(this.kutsuAdapter.kutsuja() || ""),
     ].filter((elem) => elem);
   }
 
-  private kutsuja() {
-    if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
-      return this.paragraph(this.kutsuAdapter.tilaajaOrganisaatio);
-    } else {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      return this.paragraph(translate("vaylavirasto", this.kieli));
-    }
-  }
-
   private tervetuloa() {
-    if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
+    if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
       return this.localizedParagraph(["Tervetuloa!"]);
     }
   }
@@ -191,9 +161,9 @@ export class Kutsu20 extends CommonPdf {
   private get startOfPlanningPhrase() {
     let organisaatiotText: string;
     let laatii: string;
-    if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
+    if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
       const tilaajaOrganisaatio = this.kutsuAdapter.tilaajaOrganisaatio;
-      const kunnat = this.velho?.kunnat?.map((kuntaId) => kuntametadata.nameForKuntaId(kuntaId, this.kieli));
+      const kunnat = this.kutsuAdapter.velho?.kunnat?.map((kuntaId) => kuntametadata.nameForKuntaId(kuntaId, this.kieli));
       const organisaatiot = kunnat ? [tilaajaOrganisaatio, ...kunnat] : [tilaajaOrganisaatio];
       const trimmattutOrganisaatiot = organisaatiot.map((organisaatio) => formatProperNoun(organisaatio));
       const viimeinenOrganisaatio = trimmattutOrganisaatiot.slice(-1);
@@ -331,7 +301,7 @@ export class Kutsu20 extends CommonPdf {
 
           if (tilaisuus.esitettavatYhteystiedot?.yhteysHenkilot) {
             tilaisuus.esitettavatYhteystiedot?.yhteysHenkilot.forEach((kayttajatunnus) => {
-              const user = this.kayttoOikeudet.filter((kayttaja) => kayttaja.kayttajatunnus == kayttajatunnus).pop();
+              const user = this.kutsuAdapter.kayttoOikeudet?.filter((kayttaja) => kayttaja.kayttajatunnus == kayttajatunnus).pop();
               if (user) {
                 const role = user.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO ? translate("rooli.PROJEKTIPAALLIKKO", this.kieli) : undefined;
                 this.doc.text(safeConcatStrings(", ", [formatNimi(user), role, user.puhelinnumero]));

@@ -36,7 +36,7 @@ Object {
     1,
     6,
   ],
-  "nimi": "Marikan testiprojekti",
+  "nimi": "Testiprojekti 2",
   "paivitetty": "2022-03-15T14:30:00.000Z",
   "projektiTyyppi": "TIE",
   "publishTimestamp": "2022-03-28T14:28:00+03:00",
@@ -121,7 +121,7 @@ Array [
         6,
       ],
       "oid": "2",
-      "title": "Kuulutus suunnittelun aloittamisesta: Marikan testiprojekti",
+      "title": "Kuulutus suunnittelun aloittamisesta: Testiprojekti 2",
       "type": "Kuulutus",
       "url": "https://localhost:3000/suunnitelma/2/aloituskuulutus",
       "vaylamuoto": Array [

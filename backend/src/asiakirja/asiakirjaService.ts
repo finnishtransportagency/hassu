@@ -1,28 +1,27 @@
-import { AsiakirjaTyyppi, Kieli } from "../../../common/graphql/apiModel";
-import { AloitusKuulutus10T } from "./suunnittelunAloitus/aloitusKuulutus10T";
-import { AloitusKuulutus10R } from "./suunnittelunAloitus/aloitusKuulutus10R";
-import { Ilmoitus12T } from "./suunnittelunAloitus/ilmoitus12T";
-import { Ilmoitus12R } from "./suunnittelunAloitus/ilmoitus12R";
+import { AsiakirjaTyyppi, Kieli, LaskuriTyyppi } from "../../../common/graphql/apiModel";
+import { AloitusKuulutus10TR } from "./suunnittelunAloitus/aloitusKuulutus10TR";
+import { Ilmoitus12TR } from "./suunnittelunAloitus/ilmoitus12TR";
 import { Kutsu20 } from "./suunnittelunAloitus/Kutsu20";
 import { Kuulutus30 } from "./suunnittelunAloitus/Kuulutus30";
 import { kirjaamoOsoitteetService } from "../kirjaamoOsoitteet/kirjaamoOsoitteetService";
-import { IlmoitusParams } from "./suunnittelunAloitus/suunnittelunAloitusPdf";
 import { Kuulutus31 } from "./suunnittelunAloitus/Kuulutus31";
 import { Kuulutus6263 } from "./suunnittelunAloitus/Kuulutus6263";
 import { Kuulutus60 } from "./suunnittelunAloitus/Kuulutus60";
 import { Kuulutus61 } from "./suunnittelunAloitus/Kuulutus61";
 import {
   AloituskuulutusPdfOptions,
-  AsiakirjanMuoto,
   CreateHyvaksymisPaatosKuulutusPdfOptions,
   CreateNahtavillaoloKuulutusPdfOptions,
-  determineAsiakirjaMuoto,
   EnhancedPDF,
   YleisotilaisuusKutsuPdfOptions,
 } from "./asiakirjaTypes";
+import { calculateEndDate } from "../endDateCalculator/endDateCalculatorHandler";
+import { AloituskuulutusKutsuAdapterProps } from "./adapter/aloituskuulutusKutsuAdapter";
+import { HyvaksymisPaatosVaiheKutsuAdapterProps } from "./adapter/hyvaksymisPaatosVaiheKutsuAdapter";
 
 export class AsiakirjaService {
-  createAloituskuulutusPdf({
+  async createAloituskuulutusPdf({
+    oid,
     asiakirjaTyyppi,
     aloitusKuulutusJulkaisu,
     kieli,
@@ -43,16 +42,16 @@ export class AsiakirjaService {
       throw new Error("aloitusKuulutusJulkaisu.kuulutusPaiva puuttuu");
     }
 
-    const asiakirjanMuoto: AsiakirjanMuoto | undefined = determineAsiakirjaMuoto(
-      aloitusKuulutusJulkaisu.velho.tyyppi,
-      aloitusKuulutusJulkaisu.velho.vaylamuoto
-    );
-    const params: IlmoitusParams = {
-      asiakirjanMuoto,
+    const params: AloituskuulutusKutsuAdapterProps = {
+      oid,
       hankkeenKuvaus: aloitusKuulutusJulkaisu.hankkeenKuvaus,
       kieli,
       kielitiedot: aloitusKuulutusJulkaisu.kielitiedot,
       kuulutusPaiva: aloitusKuulutusJulkaisu.kuulutusPaiva,
+      kuulutusVaihePaattyyPaiva: await calculateEndDate({
+        alkupaiva: aloitusKuulutusJulkaisu.kuulutusPaiva,
+        tyyppi: LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA,
+      }),
       velho: aloitusKuulutusJulkaisu.velho,
       yhteystiedot: aloitusKuulutusJulkaisu.yhteystiedot,
       suunnitteluSopimus: aloitusKuulutusJulkaisu.suunnitteluSopimus || undefined,
@@ -62,32 +61,10 @@ export class AsiakirjaService {
 
     switch (asiakirjaTyyppi) {
       case AsiakirjaTyyppi.ALOITUSKUULUTUS:
-        switch (asiakirjanMuoto) {
-          case AsiakirjanMuoto.TIE:
-            pdf = new AloitusKuulutus10T(params).pdf(luonnos);
-            break;
-          case AsiakirjanMuoto.RATA:
-            pdf = new AloitusKuulutus10R(params).pdf(luonnos);
-            break;
-          default:
-            throw new Error(
-              `Aloituskuulutuspohjaa ei pystytä päättelemään. asiakirjanMuoto:'${asiakirjanMuoto}' tyyppi: '${aloitusKuulutusJulkaisu.velho.tyyppi}', vaylamuoto: '${aloitusKuulutusJulkaisu.velho?.vaylamuoto}'`
-            );
-        }
+        pdf = new AloitusKuulutus10TR(params).pdf(luonnos);
         break;
       case AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA:
-        switch (asiakirjanMuoto) {
-          case AsiakirjanMuoto.TIE:
-            pdf = new Ilmoitus12T(AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, params).pdf(luonnos);
-            break;
-          case AsiakirjanMuoto.RATA:
-            pdf = new Ilmoitus12R(AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, params).pdf(luonnos);
-            break;
-          default:
-            throw new Error(
-              `Ilmoituspohjaa ei pystytä päättelemään. tyyppi: '${aloitusKuulutusJulkaisu.velho.tyyppi}', vaylamuoto: '${aloitusKuulutusJulkaisu.velho?.vaylamuoto}'`
-            );
-        }
+        pdf = new Ilmoitus12TR(AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, params).pdf(luonnos);
         break;
       default:
         throw new Error(`Asiakirjatyyppi ('${asiakirjaTyyppi}') ei ole vielä tuettu`);
@@ -110,6 +87,7 @@ export class AsiakirjaService {
   }
 
   async createNahtavillaoloKuulutusPdf({
+    oid,
     velho,
     nahtavillaoloVaihe,
     kieli,
@@ -136,12 +114,13 @@ export class AsiakirjaService {
     if (!nahtavillaoloVaihe.yhteystiedot) {
       throw new Error("nahtavillaoloVaihe.yhteystiedot puuttuu");
     }
-    const asiakirjanMuoto = determineAsiakirjaMuoto(velho?.tyyppi, velho?.vaylamuoto);
-    const params: IlmoitusParams = {
-      asiakirjanMuoto,
+    const params: AloituskuulutusKutsuAdapterProps = {
+      oid,
+      ilmoituksenVastaanottajat: nahtavillaoloVaihe.ilmoituksenVastaanottajat,
       hankkeenKuvaus: nahtavillaoloVaihe.hankkeenKuvaus,
       kielitiedot: nahtavillaoloVaihe.kielitiedot,
       kuulutusPaiva: nahtavillaoloVaihe.kuulutusPaiva,
+      kuulutusVaihePaattyyPaiva: nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva || undefined,
       velho: nahtavillaoloVaihe.velho,
       yhteystiedot: nahtavillaoloVaihe.yhteystiedot || [],
       kayttoOikeudet,
@@ -153,13 +132,7 @@ export class AsiakirjaService {
     if (asiakirjaTyyppi == AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS) {
       pdf = await new Kuulutus30(params, nahtavillaoloVaihe, await kirjaamoOsoitteetService.listKirjaamoOsoitteet()).pdf(luonnos);
     } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE) {
-      if (asiakirjanMuoto == AsiakirjanMuoto.TIE) {
-        pdf = await new Ilmoitus12T(AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE, params).pdf(luonnos);
-      } else if (asiakirjanMuoto == AsiakirjanMuoto.RATA) {
-        pdf = await new Ilmoitus12R(AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE, params).pdf(luonnos);
-      } else {
-        throw new Error("Asiakirjan muoto ei tuettu");
-      }
+      pdf = await new Ilmoitus12TR(AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE, params).pdf(luonnos);
     } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE) {
       pdf = await new Kuulutus31(params, nahtavillaoloVaihe, await kirjaamoOsoitteetService.listKirjaamoOsoitteet()).pdf(luonnos);
     }
@@ -177,7 +150,6 @@ export class AsiakirjaService {
     kasittelynTila,
     asiakirjaTyyppi,
     kayttoOikeudet,
-    suunnitteluSopimus,
   }: CreateHyvaksymisPaatosKuulutusPdfOptions): Promise<EnhancedPDF> {
     const velho = hyvaksymisPaatosVaihe.velho;
     if (!velho) {
@@ -195,9 +167,7 @@ export class AsiakirjaService {
     if (!kasittelynTila) {
       throw new Error("kasittelynTila puuttuu");
     }
-    const asiakirjanMuoto = determineAsiakirjaMuoto(velho?.tyyppi, velho?.vaylamuoto);
-    const params: IlmoitusParams = {
-      asiakirjanMuoto,
+    const params: HyvaksymisPaatosVaiheKutsuAdapterProps = {
       oid,
       kielitiedot: hyvaksymisPaatosVaihe.kielitiedot,
       hankkeenKuvaus: { [Kieli.SUOMI]: "", [Kieli.RUOTSI]: "", [Kieli.SAAME]: "" },
@@ -206,7 +176,6 @@ export class AsiakirjaService {
       yhteystiedot: hyvaksymisPaatosVaihe.yhteystiedot,
       kayttoOikeudet,
       kieli,
-      suunnitteluSopimus,
     };
 
     if (
@@ -215,23 +184,13 @@ export class AsiakirjaService {
     ) {
       return new Kuulutus6263(asiakirjaTyyppi, hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
     } else if (asiakirjaTyyppi == AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS) {
-      return new Kuulutus60(asiakirjanMuoto, hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
+      return new Kuulutus60(hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
     } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE) {
-      return new Kuulutus61(asiakirjanMuoto, hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
+      return new Kuulutus61(hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
     } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE) {
-      return this.ilmoitus12(asiakirjanMuoto, params, luonnos);
+      return new Ilmoitus12TR(AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE, params).pdf(luonnos);
     }
     throw new Error("Not implemented");
-  }
-
-  private ilmoitus12(asiakirjanMuoto: AsiakirjanMuoto, params: IlmoitusParams, luonnos: boolean) {
-    if (asiakirjanMuoto == AsiakirjanMuoto.TIE) {
-      return new Ilmoitus12T(AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE, params).pdf(luonnos);
-    } else if (asiakirjanMuoto == AsiakirjanMuoto.RATA) {
-      return new Ilmoitus12R(AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE, params).pdf(luonnos);
-    } else {
-      throw new Error("Asiakirjan muoto ei tuettu");
-    }
   }
 }
 

@@ -32,6 +32,7 @@ Object {
   "tyyppi": "TIE",
   "velho": Object {
     "__typename": "Velho",
+    "asiatunnusELY": "Väylä/123/01.01.01/2023",
     "kunnat": undefined,
     "maakunnat": undefined,
     "nimi": "Testiprojekti 1",
@@ -103,6 +104,7 @@ Array [
     "oid": "1",
     "tallennettu": true,
     "velho": Object {
+      "asiatunnusELY": "Väylä/123/01.01.01/2023",
       "nimi": "Testiprojekti 1",
       "tyyppi": "TIE",
       "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
@@ -150,6 +152,7 @@ Array [
     "tyyppi": "TIE",
     "velho": Object {
       "__typename": "Velho",
+      "asiatunnusELY": "Väylä/123/01.01.01/2023",
       "kunnat": undefined,
       "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
@@ -224,6 +227,7 @@ Array [
     "tyyppi": "TIE",
     "velho": Object {
       "__typename": "Velho",
+      "asiatunnusELY": "Väylä/123/01.01.01/2023",
       "kunnat": undefined,
       "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
@@ -321,6 +325,7 @@ Array [
     "tyyppi": "TIE",
     "velho": Object {
       "__typename": "Velho",
+      "asiatunnusELY": "Väylä/123/01.01.01/2023",
       "kunnat": undefined,
       "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
@@ -571,6 +576,7 @@ Array [
     "vahainenMenettely": false,
     "velho": Object {
       "__typename": "Velho",
+      "asiatunnusELY": "Väylä/123/01.01.01/2023",
       "kunnat": undefined,
       "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
@@ -870,6 +876,7 @@ Object {
     "uudelleenKuulutus": undefined,
     "velho": Object {
       "__typename": "Velho",
+      "asiatunnusELY": "Väylä/123/01.01.01/2023",
       "kunnat": undefined,
       "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
@@ -956,6 +963,7 @@ Object {
   "vahainenMenettely": false,
   "velho": Object {
     "__typename": "Velho",
+    "asiatunnusELY": "Väylä/123/01.01.01/2023",
     "kunnat": undefined,
     "maakunnat": undefined,
     "nimi": "Testiprojekti 1",
@@ -1008,7 +1016,7 @@ Object {
       "uudelleenKuulutus": undefined,
       "velho": Object {
         "__typename": "VelhoJulkinen",
-        "asiatunnusELY": undefined,
+        "asiatunnusELY": "Väylä/123/01.01.01/2023",
         "asiatunnusVayla": undefined,
         "kunnat": undefined,
         "kuvaus": undefined,
@@ -1072,7 +1080,7 @@ Object {
     "vahainenMenettely": false,
     "velho": Object {
       "__typename": "VelhoJulkinen",
-      "asiatunnusELY": undefined,
+      "asiatunnusELY": "Väylä/123/01.01.01/2023",
       "asiatunnusVayla": undefined,
       "kunnat": undefined,
       "kuvaus": undefined,

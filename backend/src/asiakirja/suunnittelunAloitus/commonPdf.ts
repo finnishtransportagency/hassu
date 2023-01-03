@@ -1,16 +1,15 @@
 import { AbstractPdf } from "../abstractPdf";
 import { Kieli, Viranomainen } from "../../../../common/graphql/apiModel";
-import { Velho, Yhteystieto } from "../../database/model";
-import { KutsuAdapter } from "./KutsuAdapter";
+import { Yhteystieto } from "../../database/model";
 import { log } from "../../logger";
-import { formatNimi } from "../../util/userUtil";
+import { CommonKutsuAdapter } from "../adapter/commonKutsuAdapter";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
-export abstract class CommonPdf extends AbstractPdf {
+export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPdf {
   protected kieli: Kieli;
-  protected kutsuAdapter: KutsuAdapter;
+  kutsuAdapter: T;
 
-  constructor(kieli: Kieli, kutsuAdapter: KutsuAdapter) {
+  constructor(kieli: Kieli, kutsuAdapter: T) {
     super();
     this.kieli = kieli;
     this.kutsuAdapter = kutsuAdapter;
@@ -31,8 +30,8 @@ export abstract class CommonPdf extends AbstractPdf {
     return this.paragraph(this.kutsuAdapter.text("asiakirja.tietosuoja"));
   }
 
-  protected isVaylaTilaaja(velho: Velho): boolean {
-    return velho.suunnittelustaVastaavaViranomainen == Viranomainen.VAYLAVIRASTO;
+  protected isVaylaTilaaja(): boolean {
+    return this.kutsuAdapter.velho.suunnittelustaVastaavaViranomainen == Viranomainen.VAYLAVIRASTO;
   }
 
   protected lisatietojaAntavatParagraph(): PDFStructureElement {
@@ -96,43 +95,11 @@ export abstract class CommonPdf extends AbstractPdf {
     showOrganization = true,
     pakotaProjariTaiKunnanEdustaja = false
   ): PDFKit.PDFStructureElementChild[] {
-    return this.kutsuAdapter
-      .yhteystiedot(this.kieli, yhteystiedot, yhteysHenkilot, pakotaProjariTaiKunnanEdustaja)
-      .map(({ organisaatio, etunimi, sukunimi, puhelinnumero, sahkoposti, titteli }) => {
-        return () => {
-          const noSpamSahkoposti = sahkoposti.replace(/@/g, "(at)");
-          const organization = showOrganization ? `${organisaatio}, ` : "";
-          const title = titteli ? `${titteli}, ` : "";
-          this.doc
-            .text(
-              `${organization}${title}${formatNimi({ etunimi, sukunimi })}, ${this.localizedPuh} ${puhelinnumero}, ${noSpamSahkoposti} `
-            )
-            .moveDown();
-        };
-      });
-  }
-
-  protected moreInfoElementsStandardoiduillaYhteystiedoilla(
-    yhteystiedot: Yhteystieto[],
-    showOrganization = true
-  ): PDFKit.PDFStructureElementChild[] {
-    return yhteystiedot.map(({ organisaatio, etunimi, sukunimi, puhelinnumero, sahkoposti, titteli }) => {
+    const allYhteystiedot = this.kutsuAdapter.yhteystiedot(yhteystiedot, yhteysHenkilot, pakotaProjariTaiKunnanEdustaja);
+    return this.kutsuAdapter.yhteystiedotToTextArray(allYhteystiedot, showOrganization).map((text) => {
       return () => {
-        const noSpamSahkoposti = sahkoposti.replace(/@/g, "(at)");
-        const organization = showOrganization ? `${organisaatio}, ` : "";
-        const title = titteli ? `${titteli}, ` : "";
-        this.doc
-          .text(`${organization}${title}${formatNimi({ etunimi, sukunimi })}, ${this.localizedPuh} ${puhelinnumero}, ${noSpamSahkoposti} `)
-          .moveDown();
+        this.doc.text(text).moveDown();
       };
     });
-  }
-
-  private get localizedPuh(): string {
-    if (this.kieli == Kieli.SUOMI) {
-      return "puh.";
-    } else {
-      return "tel.";
-    }
   }
 }
