@@ -198,6 +198,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         showErrorMessage("Tallennuksessa tapahtui virhe");
       }
       setIsFormSubmitting(false);
+      setOpenHyvaksy(false);
     },
     [updateSuunnitteluvaihe, showErrorMessage, showSuccessMessage]
   );
@@ -295,7 +296,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
                 </Button>
               )}
               {julkinen && (
-                <Button id="save_published_suunnitteluvaihe" onClick={handleSubmit(confirmPublish)} disabled={true}>
+                <Button id="save_published_suunnitteluvaihe" onClick={handleSubmit(confirmPublish)} disabled={isFormSubmitting}>
                   Tallenna ja julkaise
                 </Button>
               )}

@@ -36,6 +36,7 @@ import { validatePaivitaVuorovaikutus, validateTallennaProjekti, validatePaivita
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { adaptStandardiYhteystiedotInputToYhteystiedotToSave, adaptVuorovaikutusKierrosAfterPerustiedotUpdate } from "./adapter/adaptToDB";
 import { asiakirjaAdapter } from "../handler/asiakirjaAdapter";
+import { vuorovaikutusKierrosTilaManager } from "../handler/tila/vuorovaikutusKierrosTilaManager";
 
 export async function loadProjekti(oid: string): Promise<API.Projekti | API.ProjektiJulkinen> {
   const vaylaUser = getVaylaUser();
@@ -165,12 +166,14 @@ export async function updatePerustiedot(input: API.VuorovaikutusPerustiedotInput
     validatePaivitaPerustiedot(projektiInDB, input);
     auditLog.info("Päivitä perustiedot", { input });
     const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult(projektiInDB);
-    adaptVuorovaikutusKierrosAfterPerustiedotUpdate(projektiInDB, input, projektiAdaptationResult);
-    const vuorovaikutusKierros: VuorovaikutusKierros = projektiAdaptationResult.projekti.vuorovaikutusKierros as VuorovaikutusKierros;
+    const vuorovaikutusKierros = adaptVuorovaikutusKierrosAfterPerustiedotUpdate(projektiInDB, input, projektiAdaptationResult);
     const vuorovaikutusKierrosJulkaisu = asiakirjaAdapter.adaptVuorovaikutusKierrosJulkaisu({ ...projektiInDB, vuorovaikutusKierros });
+    await vuorovaikutusKierrosTilaManager.generatePDFsForJulkaisu(vuorovaikutusKierrosJulkaisu, projektiInDB);
+
     const vuorovaikutusKierrosJulkaisut = projektiInDB.vuorovaikutusKierrosJulkaisut;
     vuorovaikutusKierrosJulkaisut?.pop();
     vuorovaikutusKierrosJulkaisut?.push(vuorovaikutusKierrosJulkaisu);
+
     await projektiDatabase.saveProjekti({
       oid: input.oid,
       vuorovaikutusKierros,
