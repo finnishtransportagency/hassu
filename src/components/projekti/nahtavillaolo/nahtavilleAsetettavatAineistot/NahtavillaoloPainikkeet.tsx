@@ -14,14 +14,15 @@ import { NahtavilleAsetettavatAineistotFormValues } from "./Muokkausnakyma";
 
 const mapFormValuesToTallennaProjektiInput = ({
   oid,
-  nahtavillaoloVaihe,
+  lisaAineisto,
+  aineistoNahtavilla,
 }: NahtavilleAsetettavatAineistotFormValues): TallennaProjektiInput => {
-  const aineistoNahtavillaFlat = Object.values(nahtavillaoloVaihe.aineistoNahtavilla).flat();
+  const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla).flat();
   deleteFieldArrayIds(aineistoNahtavillaFlat);
-  deleteFieldArrayIds(nahtavillaoloVaihe.lisaAineisto);
+  deleteFieldArrayIds(lisaAineisto);
   const result: TallennaProjektiInput = {
     oid,
-    nahtavillaoloVaihe: { aineistoNahtavilla: aineistoNahtavillaFlat, lisaAineisto: nahtavillaoloVaihe.lisaAineisto },
+    nahtavillaoloVaihe: { aineistoNahtavilla: aineistoNahtavillaFlat, lisaAineisto },
   };
   return result;
 };
