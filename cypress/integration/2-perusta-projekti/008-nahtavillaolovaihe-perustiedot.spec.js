@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 import { typeIntoFields } from "../../support/util";
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
-import { hyvaksyNahtavillaoloKuulutus, lisaaNahtavillaoloAineistot, taytaNahtavillaoloPerustiedot } from '../../support/nahtavillaolo';
+import { hyvaksyNahtavillaoloKuulutus, lisaaNahtavillaoloAineistot, taytaNahtavillaoloPerustiedot } from "../../support/nahtavillaolo";
 
 const oid = Cypress.env("oid");
 const projektiNimi = Cypress.env("projektiNimi");
@@ -45,7 +45,7 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
     cy.get("#aineisto_tab").click({ force: true });
     // Test saved aineistot
     cy.get("input[type='hidden'][name ^='aineistoNahtavilla.T1xx.']").should("exist");
-    cy.get("input[type='hidden'][name ^='nahtavillaoloVaihe.lisaAineisto.']").should("exist");
+    cy.get("input[type='hidden'][name ^='lisaAineisto.']").should("exist");
   });
 
   it("Muokkaa ja julkaise nahtavillaolon kuulutus", { scrollBehavior: "center" }, () => {

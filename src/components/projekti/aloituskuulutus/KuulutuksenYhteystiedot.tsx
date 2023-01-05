@@ -54,7 +54,9 @@ function KuulutuksenYhteystiedot({ projekti, disableFields }: Props): ReactEleme
         }
       });
     } else {
-      arr.push(projari as ProjektiKayttaja);
+      if (projari) {
+        arr.push(projari);
+      }
       projekti?.kayttoOikeudet?.forEach((hlo) => {
         if (hlo.tyyppi !== KayttajaTyyppi.PROJEKTIPAALLIKKO) {
           arr.push(hlo);
