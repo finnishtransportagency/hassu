@@ -110,6 +110,7 @@
       },
       "tila": "HYVAKSYTTY",
       "velho": {
+        "asiatunnusVayla": "HASSU/123/2023",
         "kunnat": [
           91,
           92
@@ -204,6 +205,7 @@
   },
   "tyyppi": "TIE",
   "velho": {
+    "asiatunnusVayla": "HASSU/123/2023",
     "kunnat": [
       91,
       92

@@ -3,7 +3,7 @@
 exports[`Api should search, load and save a project 1`] = `
 Array [
   Object {
-    "subject": "Valtion liikenneväylien suunnittelu: Uusi projekti perustettu ",
+    "subject": "Valtion liikenneväylien suunnittelu: Uusi projekti perustettu HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmään on tuotu Projektivelhosta projektisi:
 HASSU AUTOMAATTITESTIPROJEKTI1
 Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506
@@ -14,7 +14,7 @@ Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
     ],
   },
   Object {
-    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ",
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
 HASSU AUTOMAATTITESTIPROJEKTI1
 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
@@ -26,7 +26,7 @@ Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
     ],
   },
   Object {
-    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ",
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
 HASSU AUTOMAATTITESTIPROJEKTI1
 aloituskuulutus on hyväksytty.
@@ -41,7 +41,7 @@ Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tä
         "filename": "T412 Aloituskuulutus.pdf",
       },
     ],
-    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ",
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
 HASSU AUTOMAATTITESTIPROJEKTI1
 aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
@@ -1080,7 +1080,7 @@ Object {
       "velho": Object {
         "__typename": "VelhoJulkinen",
         "asiatunnusELY": undefined,
-        "asiatunnusVayla": undefined,
+        "asiatunnusVayla": "HASSU/123/2023",
         "kunnat": Array [
           91,
           92,
@@ -1148,7 +1148,7 @@ Object {
     "velho": Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
-      "asiatunnusVayla": undefined,
+      "asiatunnusVayla": "HASSU/123/2023",
       "kunnat": Array [
         91,
         92,
@@ -1935,6 +1935,7 @@ Object {
       "uudelleenKuulutus": undefined,
       "velho": Object {
         "__typename": "Velho",
+        "asiatunnusVayla": "HASSU/123/2023",
         "kunnat": Array [
           91,
           92,
@@ -2050,7 +2051,7 @@ Object {
     "velho": Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
-      "asiatunnusVayla": undefined,
+      "asiatunnusVayla": "HASSU/123/2023",
       "kunnat": Array [
         91,
         92,
@@ -2272,7 +2273,7 @@ Object {
 exports[`Api should search, load and save a project 22`] = `
 Array [
   Object {
-    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ",
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
 HASSU AUTOMAATTITESTIPROJEKTI1
 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
@@ -2578,6 +2579,7 @@ Object {
       "uudelleenKuulutus": undefined,
       "velho": Object {
         "__typename": "Velho",
+        "asiatunnusVayla": "HASSU/123/2023",
         "kunnat": Array [
           91,
           92,
@@ -2645,7 +2647,7 @@ Object {
     "velho": Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
-      "asiatunnusVayla": undefined,
+      "asiatunnusVayla": "HASSU/123/2023",
       "kunnat": Array [
         91,
         92,
@@ -2742,7 +2744,7 @@ Object {
 exports[`Api should search, load and save a project 28`] = `
 Array [
   Object {
-    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ",
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
 HASSU AUTOMAATTITESTIPROJEKTI1
 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.

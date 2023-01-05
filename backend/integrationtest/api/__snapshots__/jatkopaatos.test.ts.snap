@@ -297,6 +297,7 @@ Object {
       "uudelleenKuulutus": undefined,
       "velho": Object {
         "__typename": "Velho",
+        "asiatunnusVayla": "HASSU/123/2023",
         "kunnat": Array [
           91,
           92,
@@ -384,7 +385,7 @@ Object {
     "velho": Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
-      "asiatunnusVayla": undefined,
+      "asiatunnusVayla": "HASSU/123/2023",
       "kunnat": Array [
         91,
         92,
@@ -748,6 +749,7 @@ Object {
       "uudelleenKuulutus": undefined,
       "velho": Object {
         "__typename": "Velho",
+        "asiatunnusVayla": "HASSU/123/2023",
         "kunnat": Array [
           91,
           92,
@@ -835,7 +837,7 @@ Object {
     "velho": Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
-      "asiatunnusVayla": undefined,
+      "asiatunnusVayla": "HASSU/123/2023",
       "kunnat": Array [
         91,
         92,
