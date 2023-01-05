@@ -208,7 +208,7 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
     // });
   });
 
-  it.skip("Muokkaa suunnitteluvaiheen vuorovaikutuksen tietoja ja paivita julkaisua", { scrollBehavior: "center" }, function () {
+  it("Muokkaa suunnitteluvaiheen vuorovaikutuksen tietoja ja paivita julkaisua", { scrollBehavior: "center" }, function () {
     cy.login("A1");
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu");
     cy.contains(projektiNimi);
