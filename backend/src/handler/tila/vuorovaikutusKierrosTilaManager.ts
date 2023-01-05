@@ -63,25 +63,45 @@ class VuorovaikutusKierrosTilaManager extends TilaManager {
     throw new IllegalArgumentError("Uudelleenkuuluta ei kuulu vuorovaikutuskierroksen toimintoihin");
   }
 
-  private async saveJulkaisuGeneratePDFsAndSendEmails(projekti: DBProjekti, julkaisu: VuorovaikutusKierrosJulkaisu): Promise<void> {
-    async function generatePDFsForLanguage(kieli: Kieli, julkaisu: VuorovaikutusKierrosJulkaisu): Promise<VuorovaikutusPDF & PDF> {
-      const { fullFilePathInProjekti, ...pdf } = await createVuorovaikutusKierrosPDF(julkaisu, projekti, kieli);
+  private async generatePDFsForLanguage(
+    kieli: Kieli,
+    julkaisu: VuorovaikutusKierrosJulkaisu,
+    projekti: DBProjekti
+  ): Promise<VuorovaikutusPDF & PDF> {
+    const { fullFilePathInProjekti, ...pdf } = await createVuorovaikutusKierrosPDF(julkaisu, projekti, kieli);
 
-      return { kutsuPDFPath: await fullFilePathInProjekti, ...pdf };
+    return { kutsuPDFPath: await fullFilePathInProjekti, ...pdf };
+  }
+
+  async generatePDFsForJulkaisu(julkaisu: VuorovaikutusKierrosJulkaisu, projekti: DBProjekti): Promise<void> {
+    if (!projekti.kielitiedot) {
+      throw new Error("projekti.kielitiedot puuttuu!");
     }
 
+    const kielitiedot: Kielitiedot = projekti.kielitiedot;
+    const pdfEnsisijainen = await this.generatePDFsForLanguage(kielitiedot.ensisijainenKieli, julkaisu, projekti);
+    julkaisu.vuorovaikutusPDFt = {};
+    julkaisu.vuorovaikutusPDFt[kielitiedot.ensisijainenKieli] = pdfEnsisijainen;
+
+    if (kielitiedot.toissijainenKieli) {
+      const pdfToissijainen = await this.generatePDFsForLanguage(kielitiedot.toissijainenKieli, julkaisu, projekti);
+      julkaisu.vuorovaikutusPDFt[kielitiedot.toissijainenKieli] = pdfToissijainen;
+    }
+  }
+
+  private async saveJulkaisuGeneratePDFsAndSendEmails(projekti: DBProjekti, julkaisu: VuorovaikutusKierrosJulkaisu): Promise<void> {
     if (!projekti.kielitiedot) {
       throw new Error("projekti.kielitiedot puuttuu!");
     }
     const kielitiedot: Kielitiedot = projekti.kielitiedot;
     const attachments = [];
     julkaisu.vuorovaikutusPDFt = {};
-    const pdfEnsisijainen = await generatePDFsForLanguage(kielitiedot.ensisijainenKieli, julkaisu);
+    const pdfEnsisijainen = await this.generatePDFsForLanguage(kielitiedot.ensisijainenKieli, julkaisu, projekti);
     julkaisu.vuorovaikutusPDFt[kielitiedot.ensisijainenKieli] = pdfEnsisijainen;
     attachments.push(asiakirjaEmailService.createPDFAttachment(pdfEnsisijainen));
 
     if (kielitiedot.toissijainenKieli) {
-      const pdfToissijainen = await generatePDFsForLanguage(kielitiedot.toissijainenKieli, julkaisu);
+      const pdfToissijainen = await this.generatePDFsForLanguage(kielitiedot.toissijainenKieli, julkaisu, projekti);
       julkaisu.vuorovaikutusPDFt[kielitiedot.toissijainenKieli] = pdfToissijainen;
       attachments.push(asiakirjaEmailService.createPDFAttachment(pdfEnsisijainen));
     }
