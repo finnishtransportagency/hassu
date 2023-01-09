@@ -1,19 +1,19 @@
 import { deburr } from "lodash";
 import { Aineisto, AineistoInput } from "./graphql/apiModel";
 
-type PaaAineistoKategoriaProps = AineistoKategoriaProps & {
-  alakategoriat?: AineistoKategoriaProps[];
-};
-
 type AineistoKategoriaProps = {
   id: string;
   hakulauseet?: string[];
+  alakategoriat?: AineistoKategoriaProps[];
 };
 
-export abstract class AineistoKategoria {
+export class AineistoKategoria {
   private readonly props: AineistoKategoriaProps;
+  private readonly childKategoriat?: AineistoKategoria[];
+
   constructor(props: AineistoKategoriaProps) {
     this.props = props;
+    this.childKategoriat = props.alakategoriat?.map((alakategoriaProps) => new AineistoKategoria(alakategoriaProps), this);
   }
 
   public get id(): string {
@@ -23,42 +23,19 @@ export abstract class AineistoKategoria {
   public get hakulauseet(): string[] | undefined {
     return this.props.hakulauseet;
   }
-}
-
-export class PaaAineistoKategoria extends AineistoKategoria {
-  private readonly childKategoriat?: AlaAineistoKategoria[];
-
-  constructor(props: PaaAineistoKategoriaProps) {
-    super(props);
-    this.childKategoriat = props.alakategoriat?.map((alakategoriaProps) => new AlaAineistoKategoria(alakategoriaProps, this), this);
-  }
-
   public get alaKategoriat(): AineistoKategoria[] | undefined {
     return this.childKategoriat;
   }
 }
 
-export class AlaAineistoKategoria extends AineistoKategoria {
-  private readonly parent?: PaaAineistoKategoria;
-
-  constructor(props: AineistoKategoriaProps, parent?: PaaAineistoKategoria) {
-    super(props);
-    this.parent = parent;
-  }
-
-  public get parentKategoria(): PaaAineistoKategoria | undefined {
-    return this.parent;
-  }
-}
-
 export class AineistoKategoriat {
-  private readonly ylaKategoriat: PaaAineistoKategoria[];
+  private readonly ylaKategoriat: AineistoKategoria[];
 
-  constructor(aineistoKategoriat: PaaAineistoKategoriaProps[]) {
-    this.ylaKategoriat = aineistoKategoriat.map((kategoria) => new PaaAineistoKategoria(kategoria));
+  constructor(aineistoKategoriat: AineistoKategoriaProps[]) {
+    this.ylaKategoriat = aineistoKategoriat.map((kategoria) => new AineistoKategoria(kategoria));
   }
 
-  public listKategoriat(): PaaAineistoKategoria[] {
+  public listKategoriat(): AineistoKategoria[] {
     return this.ylaKategoriat;
   }
 
@@ -95,7 +72,7 @@ export const getNestedCategoryIds: (kategoriat: AineistoKategoria[]) => string[]
   const kategoriaIds: string[] = [];
   kategoriat.forEach((kategoria) => {
     kategoriaIds.push(kategoria.id);
-    if (kategoria instanceof PaaAineistoKategoria && kategoria.alaKategoriat) {
+    if (kategoria.alaKategoriat) {
       kategoriaIds.push(...getNestedCategoryIds(kategoria.alaKategoriat));
     }
   });
@@ -104,7 +81,7 @@ export const getNestedCategoryIds: (kategoriat: AineistoKategoria[]) => string[]
 
 export function kategorianAllaOlevienAineistojenMaara(aineistoNahtavilla: Aineisto[], kategoria: AineistoKategoria): number {
   const kategorianAineistojenMaara = aineistoNahtavilla.filter((aineisto) => aineisto.kategoriaId === kategoria.id).length;
-  if (!(kategoria instanceof PaaAineistoKategoria) || !kategoria.alaKategoriat || kategoria.alaKategoriat.length === 0) {
+  if (!(kategoria instanceof AineistoKategoria) || !kategoria.alaKategoriat || kategoria.alaKategoriat.length === 0) {
     return kategorianAineistojenMaara;
   } else {
     return kategoria.alaKategoriat.reduce((acc, kategoria) => {
@@ -162,7 +139,7 @@ export const aineistoKategoriat = new AineistoKategoriat([
       { id: "kaavakartat", hakulauseet: ["Kaava", "Kaavoitus", "1.7T", "119"] },
       {
         id: "suunnitteluprosessiin_liittyva_aineisto",
-        hakulauseet: ["Suunnitteluprosessiin liittyvä aineisto", "Kutsu", "Kuulutus", "Esittely", "1.6T"],
+        hakulauseet: ["Suunnitteluprosessiin liittyvä aineisto", "Kuulutus", "Kutsu", "Esittely", "1.6T"],
       },
       {
         id: "yva",
@@ -179,8 +156,8 @@ export const aineistoKategoriat = new AineistoKategoriat([
         id: "hallinnollisten_jarjestelyiden_kartat",
         hakulauseet: ["Hallinnollis", "213", "2.2T"],
       },
-      { id: "suunnitelmakartat", hakulauseet: ["Suunnitelmakartta", "Suunnitelmakartat", "214", "3T"] },
-      { id: "pituusleikkaukset", hakulauseet: ["Pituusleikkaus", "Pituusleikkaukset", "216", "5T"] },
+      { id: "suunnitelmakartat", hakulauseet: ["Suunnitelmakartat", "Suunnitelmakartta", "214", "3T"] },
+      { id: "pituusleikkaukset", hakulauseet: ["Pituusleikkaukset", "Pituusleikkaus", "216", "5T"] },
       { id: "poikkileikkaukset", hakulauseet: ["Poikkileikkaus", "Poikkileikkaukset", "215", "4T"] },
       {
         id: "siltasuunnitelmat_ja_muut_taitorakenteet",
@@ -200,6 +177,7 @@ export const aineistoKategoriat = new AineistoKategoriat([
           "Siltaluettelo",
           "220",
           "221",
+          "222",
           "223",
           "224",
           "7.2T",
@@ -225,10 +203,10 @@ export const aineistoKategoriat = new AineistoKategoriat([
       {
         id: "rataan_liittyvat_toimenpiteet_tiesuunnitelmassa",
         hakulauseet: [
-          "Ratojen liittyvät toimenpiteet tiesuunnitelmassa",
-          "Radan liittyvät toimenpiteet tiesuunnitelmassa",
-          "Ratoihin liittyvät toimenpiteet tiesuunnitelmassa",
-          "Rataan liittyvät toimenpiteet tiesuunnitelmassa",
+          "Ratojen liittyvät toimenpiteet",
+          "Radan liittyvät toimenpiteet",
+          "Ratoihin liittyvät toimenpiteet",
+          "Rataan liittyvät toimenpiteet",
           "Ratojen toimenpi",
           "Radan toimenpi",
           "218",
@@ -268,10 +246,10 @@ export const aineistoKategoriat = new AineistoKategoriat([
         hakulauseet: [
           "Ulkopuolisten raken",
           "Ulkopuolisen raken",
-          "Ulkopuoliset raken",
-          "Ulkopuolinen raken",
           "Ulkopuolisten omistamat raken",
           "Ulkopuolisen omistamat raken",
+          "Ulkopuoliset raken",
+          "Ulkopuolinen raken",
           "311",
           "6T",
         ],
@@ -324,7 +302,7 @@ export const aineistoKategoriat = new AineistoKategoriat([
       },
       {
         id: "johtosiirrot_ja_kunnallistekniset_suunnitelmat",
-        hakulauseet: ["Johtosiir", "Johto", "Johdot", "Kunnallistekni", "Laite", "Laitteet"],
+        hakulauseet: ["Johtosiir", "Johto", "Johdot", "Kunnallistekni", "Laite", "Laitteet", "6T"],
       },
     ],
   },
