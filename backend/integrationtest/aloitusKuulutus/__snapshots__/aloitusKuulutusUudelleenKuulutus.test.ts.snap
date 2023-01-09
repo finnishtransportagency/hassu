@@ -68,7 +68,7 @@ Object {
 exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 4`] = `
 Array [
   Object {
-    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ",
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
 HASSU AUTOMAATTITESTIPROJEKTI1
 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
@@ -80,7 +80,7 @@ Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
     ],
   },
   Object {
-    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ",
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
 HASSU AUTOMAATTITESTIPROJEKTI1
 aloituskuulutus on hyväksytty.
@@ -95,7 +95,7 @@ Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tä
         "filename": "T412 Aloituskuulutus.pdf",
       },
     ],
-    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ",
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
 HASSU AUTOMAATTITESTIPROJEKTI1
 aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
@@ -257,7 +257,7 @@ Object {
     "velho": Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
-      "asiatunnusVayla": undefined,
+      "asiatunnusVayla": "HASSU/123/2023",
       "kunnat": Array [
         91,
         92,
