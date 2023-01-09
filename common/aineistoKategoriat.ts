@@ -1,14 +1,13 @@
+import { deburr } from "lodash";
 import { Aineisto, AineistoInput } from "./graphql/apiModel";
 
 type PaaAineistoKategoriaProps = AineistoKategoriaProps & {
   alakategoriat?: AineistoKategoriaProps[];
 };
 
-type HakuLauseet = (string | RegExp)[];
-
 type AineistoKategoriaProps = {
   id: string;
-  hakulauseet?: HakuLauseet;
+  hakulauseet?: string[];
 };
 
 export abstract class AineistoKategoria {
@@ -21,7 +20,7 @@ export abstract class AineistoKategoria {
     return this.props.id;
   }
 
-  public get hakulauseet(): HakuLauseet | undefined {
+  public get hakulauseet(): string[] | undefined {
     return this.props.hakulauseet;
   }
 }
@@ -121,8 +120,19 @@ export function getNestedAineistoMaaraForCategory(aineistot: (Aineisto | Aineist
   return nestedAineistoMaaraSum;
 }
 
-function isMatchingToHakulauseet(hakulauseet: HakuLauseet | undefined, keyword: string | undefined): boolean {
-  return !!hakulauseet?.find((hakulause) => !!keyword?.match(new RegExp(hakulause, "i")));
+function isMatchingToHakulauseet(hakulauseet: string[] | undefined, keyword: string): boolean {
+  const normalizedKeyword = normalizeString(keyword);
+  return !!hakulauseet?.find((hakulause) => {
+    return !!normalizedKeyword?.match(normalizeString(hakulause));
+  });
+}
+
+// Matching should be done so that it
+// -- diacritical marks are ignored, but base latin characters should match
+// -- underscores are evaluated as spaces
+// -- capitalization should be ignored
+function normalizeString(str: string) {
+  return deburr(str).replace(/_/g, " ").toLowerCase();
 }
 
 function findMatchingCategory<T extends AineistoKategoria>(
@@ -137,7 +147,8 @@ function findMatchingCategory<T extends AineistoKategoria>(
     return kategoriat
       .filter(
         (kategoria) =>
-          isMatchingToHakulauseet(kategoria.hakulauseet, aineistoKuvaus) || isMatchingToHakulauseet(kategoria.hakulauseet, tiedostoNimi)
+          (aineistoKuvaus && isMatchingToHakulauseet(kategoria.hakulauseet, aineistoKuvaus)) ||
+          (tiedostoNimi && isMatchingToHakulauseet(kategoria.hakulauseet, tiedostoNimi))
       )
       .pop();
   }
@@ -146,69 +157,175 @@ function findMatchingCategory<T extends AineistoKategoria>(
 export const aineistoKategoriat = new AineistoKategoriat([
   {
     id: "osa_a",
-    hakulauseet: paaKategoriaKuvausRegexp(["T100", "Osa A"]),
+    hakulauseet: ["100", "Osa A", "A Osa", "Kuulutus", "Selostus", "Sisällysluettelo"],
     alakategoriat: [
-      { id: "kaavakartat", hakulauseet: ["Kaavakartat", "Kaava", "1.7T", "T119"] },
+      { id: "kaavakartat", hakulauseet: ["Kaava", "Kaavoitus", "1.7T", "119"] },
       {
         id: "suunnitteluprosessiin_liittyva_aineisto",
-        hakulauseet: ["Suunnitteluprosessiin_liittyvä_aineisto", "1.6T", "Kuulutus", "Kutsu", "Esittelymateriaali"],
+        hakulauseet: ["Suunnitteluprosessiin liittyvä aineisto", "Kutsu", "Kuulutus", "Esittely", "1.6T"],
       },
-      { id: "yva", hakulauseet: ["Ympäristövaikutusten_arviointi_(YVA)", "T120", "Yhteysviranomaisen perusteltu päätelmä", "YVA"] },
+      {
+        id: "yva",
+        hakulauseet: ["Ympäristövaikutusten arviointi", "Päätelmä", "YVA", "Yhteysviranomaisen perusteltu päätelmä", "120", "Kartta-atlas"],
+      },
     ],
   },
   {
     id: "osa_b",
-    hakulauseet: paaKategoriaKuvausRegexp(["T200", "Osa B"]),
+    hakulauseet: ["200", "Osa B", "B Osa", "Pääpiirustus", "Pääpiirustukset"],
     alakategoriat: [
-      { id: "yleiskartat", hakulauseet: ["Yleiskartat", "T212", "Yleiskartta", "2.1T"] },
+      { id: "yleiskartat", hakulauseet: ["Yleiskartta", "Yleiskartat", "212", "2.1T"] },
       {
         id: "hallinnollisten_jarjestelyiden_kartat",
-        hakulauseet: ["Hallinnollisten_järjestelyiden_kartat", "Hallinnollisten järjestelyiden kartat", "T213", "2.2T"],
+        hakulauseet: ["Hallinnollis", "213", "2.2T"],
       },
-      { id: "suunnitelmakartat", hakulauseet: ["Suunnitelmakartat", "Suunnitelmakartta", "T214", "3T"] },
-      { id: "pituusleikkaukset", hakulauseet: ["Pituusleikkaukset", "Pituusleikkaus", "T216", "5T"] },
-      { id: "poikkileikkaukset", hakulauseet: ["Poikkileikkaukset", "Poikkileikkaus", "T215", "4T"] },
+      { id: "suunnitelmakartat", hakulauseet: ["Suunnitelmakartta", "Suunnitelmakartat", "214", "3T"] },
+      { id: "pituusleikkaukset", hakulauseet: ["Pituusleikkaus", "Pituusleikkaukset", "216", "5T"] },
+      { id: "poikkileikkaukset", hakulauseet: ["Poikkileikkaus", "Poikkileikkaukset", "215", "4T"] },
       {
         id: "siltasuunnitelmat_ja_muut_taitorakenteet",
+        hakulauseet: ["Silta", "Silto", "Silla", "15T"],
+      },
+      {
+        id: "ymparistorakenteet_esim_meluesteet",
         hakulauseet: [
-          "Siltasuunnitelmat_ja_muut_taitorakenteet",
-          "Siltasuunnitelmat ja muut taitorakenteet",
-          "15T",
-          "Sillan yleispiirustus",
+          "Ympäristöraken",
+          "Ympäristösuunnitelm",
+          "Ympäristökuv",
+          "Melueste",
+          "Tukimuuri",
+          "Melusein",
+          "Tietunnel",
+          "Siltatauluk",
+          "Siltaluettelo",
+          "220",
+          "221",
+          "223",
+          "224",
+          "7.2T",
+          "7.3T",
         ],
       },
-      { id: "ymparistorakenteet_esim_meluesteet", hakulauseet: ["Ympäristörakenteet_esim_meluesteet"] },
-      { id: "lunastuskartat", hakulauseet: ["Lunastuskartat"] },
-      { id: "liikennepaikkojen_suunnitelmat", hakulauseet: ["Liikennepaikkojen_suunnitelmat"] },
-      { id: "maanteiden_liittyvat_toimenpiteet_ratasuunnitelmassa", hakulauseet: ["Maanteiden_liittyvät_toimenpiteet_ratasuunnitelmassa"] },
-      { id: "rataan_liittyvat_toimenpiteet_tiesuunnitelmassa", hakulauseet: ["Rataan_liittyvät_toimenpiteet_tiesuunnitelmassa"] },
-      { id: "muut_piirustukset_ja_kuvat", hakulauseet: ["Muut_piirustukset_ja_kuvat"] },
+      { id: "lunastuskartat", hakulauseet: ["Lunastus", "Lunastami"] },
+      { id: "liikennepaikkojen_suunnitelmat", hakulauseet: ["Liikennepaik"] },
+      {
+        id: "maanteiden_liittyvat_toimenpiteet_ratasuunnitelmassa",
+        hakulauseet: [
+          "Maanteiden liittyvät toimenpiteet",
+          "Maantien liittyvät toimenpiteet",
+          "Maanteihin liittyvät toimenpiteet",
+          "Maantiehen liittyvät toimenpiteet",
+          "Tiejärjestely",
+          "Maanteiden toimenpi",
+          "Maantien toimenpi",
+          "Liikennetekninen poikkileikkaus",
+          "Liikennetekniset poikkileikkaukset",
+        ],
+      },
+      {
+        id: "rataan_liittyvat_toimenpiteet_tiesuunnitelmassa",
+        hakulauseet: [
+          "Ratojen liittyvät toimenpiteet tiesuunnitelmassa",
+          "Radan liittyvät toimenpiteet tiesuunnitelmassa",
+          "Ratoihin liittyvät toimenpiteet tiesuunnitelmassa",
+          "Rataan liittyvät toimenpiteet tiesuunnitelmassa",
+          "Ratojen toimenpi",
+          "Radan toimenpi",
+          "218",
+        ],
+      },
+      {
+        id: "muut_piirustukset_ja_kuvat",
+        hakulauseet: [
+          "Muut piirustukset ja kuvat",
+          "Yleiskartta rakentamisen ajaksi",
+          "Yleiskartat rakentamisen ajaksi",
+          "Käyttöoikeuskart",
+          "217",
+        ],
+      },
     ],
   },
   {
     id: "osa_c",
-    hakulauseet: paaKategoriaKuvausRegexp(["T300", "Osa C"]),
+    hakulauseet: ["300", "Osa C", "C Osa", "Informatiivinen aineisto"],
     alakategoriat: [
-      { id: "vaikutuksia_kuvaavat_selvitykset", hakulauseet: ["Vaikutuksia_kuvaavat_selvitykset"] },
-      { id: "ulkopuoliset_rakenteet", hakulauseet: ["Ulkopuoliset_rakenteet"] },
-      { id: "tutkitut_vaihtoehdot", hakulauseet: ["Tutkitut_vaihtoehdot"] },
-      { id: "katusuunnitelmat", hakulauseet: ["Katusuunnitelmat"] },
-      { id: "visualisointikuvat", hakulauseet: ["Visualisointikuvat"] },
-      { id: "ymparistosuunnitelmat", hakulauseet: ["Ympäristösuunnitelmat"] },
-      { id: "muut_selvitykset", hakulauseet: ["Muut_selvitykset"] },
-      { id: "valaistuksen_ja_liikenteenohjauksen_yleiskartat", hakulauseet: ["Valaistuksen_ja_liikenteenohjauksen_yleiskartat"] },
-      { id: "johtosiirrot_ja_kunnallistekniset_suunnitelmat", hakulauseet: ["Johtosiirrot_ja_kunnallistekniset_suunnitelmat"] },
+      {
+        id: "vaikutuksia_kuvaavat_selvitykset",
+        hakulauseet: [
+          "Selvity",
+          "Muuttuvat kulkuyhtey",
+          "Muuttuva kulkuyhtey",
+          "Simulointitarkastu",
+          "Ympäristön suojelukoht",
+          "330",
+          "330-1",
+          "16T",
+        ],
+      },
+      {
+        id: "ulkopuoliset_rakenteet",
+        hakulauseet: [
+          "Ulkopuolisten raken",
+          "Ulkopuolisen raken",
+          "Ulkopuoliset raken",
+          "Ulkopuolinen raken",
+          "Ulkopuolisten omistamat raken",
+          "Ulkopuolisen omistamat raken",
+          "311",
+          "6T",
+        ],
+      },
+      { id: "tutkitut_vaihtoehdot", hakulauseet: ["Tutkitut vaihtoehdot", "Tutkittu vaihtoehto", "340", "17T"] },
+      {
+        id: "katusuunnitelmat",
+        hakulauseet: [
+          "Katu",
+          "Kadut",
+          "Pyörätien suunnitelm",
+          "Pyöräteiden suunnitelm",
+          "Jalkakäytävän suunnitelm",
+          "Jalkakäytävien suunnitelm",
+          "311",
+          "6T",
+        ],
+      },
+      {
+        id: "visualisointikuvat",
+        hakulauseet: [
+          "Visualisointikuv",
+          "Havainnekuv",
+          "Ote tietomallista",
+          "Otteita tietomallista",
+          "Rataympäristön käsittelyn periaatekuv",
+          "Meluesteiden periaatekuv",
+          "Meluesteen periaatekuv",
+          "Ympäristökuv",
+          "7.4T",
+        ],
+      },
+      {
+        id: "ymparistosuunnitelmat",
+        hakulauseet: [
+          "Ympäristösuunnitelma",
+          "Ympäristön nykytilakart",
+          "Tieympäristön käsittelyn periaat",
+          "Puistosuunnitelma",
+          "320",
+          "321",
+          "322",
+          "7.1T",
+        ],
+      },
+      { id: "muut_selvitykset" },
+      {
+        id: "valaistuksen_ja_liikenteenohjauksen_yleiskartat",
+        hakulauseet: ["Valaistu", "Liikenteenohjau", "Viitoitu", "312", "313", "11T", "12T"],
+      },
+      {
+        id: "johtosiirrot_ja_kunnallistekniset_suunnitelmat",
+        hakulauseet: ["Johtosiir", "Johto", "Johdot", "Kunnallistekni", "Laite", "Laitteet"],
+      },
     ],
   },
 ]);
-
-/**
- *
- * @param keywords hakusanat, joita haetaan projektivelhon kuvaus kentästä
- * @returns RegExpit, joilla voidaan matchata joko keywordeilla alkava ja päättyvä merkkijono tai merkkijono, jossa keyword löytyy ja sen ympärillä on /-merkki
- */
-function paaKategoriaKuvausRegexp(keywords: string[]): RegExp[] {
-  const slashPrefixRegexp = "^(.*/)?";
-  const slashSuffixRegexp = "(/.*)?$";
-  return keywords.map((keyword) => new RegExp(slashPrefixRegexp + keyword + slashSuffixRegexp, "i"));
-}
