@@ -194,7 +194,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
       }
       setFormIsSubmitting(false);
     },
-    [projekti?.status, api, reloadProjekti, reset, showSuccessMessage, talletaLogo, showErrorMessage]
+    [projekti?.status, api, reloadProjekti, showSuccessMessage, talletaLogo, showErrorMessage]
   );
 
   useEffect(() => {

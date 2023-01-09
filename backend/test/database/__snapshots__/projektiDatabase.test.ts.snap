@@ -2,7 +2,7 @@
 
 exports[`apiHandler updateSuunnitelma saveProjekti should pass expected parameters to DynamoDB 1`] = `
 Object {
-  "ConditionExpression": "#versio = :versioFromInput",
+  "ConditionExpression": "attribute_not_exists(#versio) OR #versio = :versioFromInput",
   "ExpressionAttributeNames": Object {
     "#aloitusKuulutus": "aloitusKuulutus",
     "#euRahoitus": "euRahoitus",
@@ -114,7 +114,7 @@ Object {
 
 exports[`apiHandler updateSuunnitelma saveProjekti should remove null fields from DynamoDB 1`] = `
 Object {
-  "ConditionExpression": "#versio = :versioFromInput",
+  "ConditionExpression": "attribute_not_exists(#versio) OR #versio = :versioFromInput",
   "ExpressionAttributeNames": Object {
     "#muistiinpano": "muistiinpano",
     "#paivitetty": "paivitetty",

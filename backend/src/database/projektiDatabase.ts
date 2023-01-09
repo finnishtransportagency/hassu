@@ -241,7 +241,7 @@ export class ProjektiDatabase {
     const nextVersion = versioFromInput + 1;
     updateParams.attributeNames["#versio"] = "versio";
 
-    updateParams.conditionExpression = "#versio = :versioFromInput";
+    updateParams.conditionExpression = "attribute_not_exists(#versio) OR #versio = :versioFromInput";
     updateParams.attributeValues[":versioFromInput"] = versioFromInput;
 
     updateParams.setExpression.push("#versio = :versio");

@@ -115,7 +115,6 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
 
     const hankkeenKuvaus = getDefaultValuesForLokalisoituText(projekti.kielitiedot, projekti.aloitusKuulutus?.hankkeenKuvaus);
 
-    console.log("tallentamisTiedot", { versio: projekti.versio });
     const tallentamisTiedot: FormValues = {
       oid: projekti.oid,
       versio: projekti.versio,
@@ -197,7 +196,6 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       // kunta.id on oikea kunnan id-kenttä, joten se pitää lähettää deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat);
       deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset);
       setIsFormSubmitting(true);
-      console.log("Tallenna", { formDataVersio: formData.versio });
       await api.tallennaProjekti(formData);
       await reloadProjekti();
     },

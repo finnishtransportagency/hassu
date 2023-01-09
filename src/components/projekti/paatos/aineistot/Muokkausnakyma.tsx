@@ -103,7 +103,7 @@ function MuokkausnakymaForm({
       aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(julkaisematonPaatos?.aineistoNahtavilla),
       hyvaksymisPaatos,
     };
-  }, [julkaisematonPaatos, projekti.oid]);
+  }, [julkaisematonPaatos, projekti.oid, projekti.versio]);
 
   const formOptions: UseFormProps<HyvaksymisPaatosVaiheAineistotFormValues> = {
     resolver: yupResolver(nahtavillaoloAineistotSchema, { abortEarly: false, recursive: true }),
