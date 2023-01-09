@@ -82,6 +82,7 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
   async function lisaaKasittelynTilaJatkopaatos1(projektiWithJatkopaatos1: {
     kasittelynTila: { ensimmainenJatkopaatos: { asianumero: string; paatoksenPvm: string; aktiivinen: boolean } };
     oid: string;
+    versio: number;
   }) {
     await expect(api.tallennaProjekti(projektiWithJatkopaatos1)).to.eventually.be.rejectedWith(
       IllegalAccessError,
@@ -119,6 +120,7 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
 
     await lisaaKasittelynTilaJatkopaatos1({
       oid,
+      versio: epaAktiivinenProjekti1.versio,
       kasittelynTila: {
         ensimmainenJatkopaatos: { paatoksenPvm: MOCKED_TIMESTAMP, asianumero: "jatkopaatos1_asianumero", aktiivinen: true },
       },

@@ -20,7 +20,7 @@ describe("projektiHandler", () => {
   let userFixture: UserFixture;
 
   beforeEach(() => {
-    saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
+    saveProjektiStub = sinon.stub(projektiDatabase, "saveProjektiWithoutLocking");
     loadVelhoProjektiByOidStub = sinon.stub(velho, "loadProjekti");
 
     const personSearchFixture = new PersonSearchFixture();

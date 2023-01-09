@@ -1,12 +1,11 @@
 import { config } from "../config";
 import { ProjektiDatabase } from "./projektiDatabase";
 import { DBProjekti } from "./model";
-import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
 import { getDynamoDBDocumentClient } from "../aws/client";
 
 export class TestProjektiDatabase extends ProjektiDatabase {
-  async saveProjekti(dbProjekti: Partial<DBProjekti>): Promise<DocumentClient.UpdateItemOutput> {
-    return this.saveProjektiInternal(dbProjekti, true);
+  async saveProjekti(dbProjekti: Partial<DBProjekti>): Promise<number> {
+    return this.saveProjektiInternal(dbProjekti, true, true);
   }
 
   async deleteProjektiByOid(oid: string): Promise<void> {

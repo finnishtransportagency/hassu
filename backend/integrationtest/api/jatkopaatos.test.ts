@@ -227,8 +227,10 @@ export async function testEpaAktiivinenAfterJatkoPaatos2(
 }
 
 async function addJatkopaatos2KasittelynTila() {
+  let versio = (await api.lataaProjekti(oid)).versio;
   const projekti = {
     oid,
+    versio,
     kasittelynTila: {
       toinenJatkopaatos: { paatoksenPvm: MOCKED_TIMESTAMP, asianumero: "jatkopaatos2_asianumero" },
     },

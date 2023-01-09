@@ -1,4 +1,4 @@
-import { log } from "./logger";
+import { log, setLogContextOid } from "./logger";
 import {
   ArkistoiProjektiMutationVariables,
   EsikatseleAsiakirjaPDFQueryVariables,
@@ -160,6 +160,8 @@ export async function handleEvent(event: AppSyncResolverEvent<AppSyncEventArgume
         });
       }
       throw e;
+    } finally {
+      setLogContextOid(undefined);
     }
   });
 }

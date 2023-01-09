@@ -1,8 +1,7 @@
 import { describe, it } from "mocha";
-import { Viranomainen } from "../../../common/graphql/apiModel";
+import { KayttajaTyyppi, Viranomainen } from "../../../common/graphql/apiModel";
 import { config } from "../../src/config";
 import { createPerustamisEmail } from "../../src/email/emailTemplates";
-import { KayttajaTyyppi } from "../../../common/graphql/apiModel";
 
 const { expect } = require("chai");
 
@@ -12,6 +11,7 @@ describe("EmailTemplating", () => {
   it("should create valid emailoptions", async () => {
     const emailOptions = await createPerustamisEmail({
       oid: "1.2.246.578.5.1.165",
+      versio: 1,
       velho: {
         asiatunnusVayla: "VAYLA/8591/03.04.02.00/2014",
         asiatunnusELY: "ELY/8591/03.04.02.00/2014",

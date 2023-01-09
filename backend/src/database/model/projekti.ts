@@ -102,6 +102,7 @@ export type Hyvaksymispaatos = {
 
 export type DBProjekti = {
   oid: string;
+  versio: number;
   muistiinpano?: string | null;
   vaihe?: string | null;
   /**
@@ -140,3 +141,5 @@ export type DBProjekti = {
   salt?: string;
   kasittelynTila?: KasittelynTila | null;
 };
+
+export type PartialDBProjekti = Partial<DBProjekti> & Pick<DBProjekti, "oid" | "versio">;

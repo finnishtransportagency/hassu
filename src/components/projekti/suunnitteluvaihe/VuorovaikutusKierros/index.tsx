@@ -2,21 +2,21 @@ import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
 import {
-  TallennaProjektiInput,
-  VuorovaikutusTilaisuusInput,
   AsiakirjaTyyppi,
+  Kieli,
   KirjaamoOsoite,
-  Yhteystieto,
-  VuorovaikutusKierrosInput,
-  VuorovaikutusTilaisuus,
-  VuorovaikutusKierros,
+  KuulutusJulkaisuTila,
+  TallennaProjektiInput,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
-  KuulutusJulkaisuTila,
-  Kieli,
+  VuorovaikutusKierros,
+  VuorovaikutusKierrosInput,
+  VuorovaikutusTilaisuus,
+  VuorovaikutusTilaisuusInput,
+  Yhteystieto,
 } from "@services/api";
 import Section from "@components/layout/Section";
-import React, { ReactElement, useState, useMemo, useCallback } from "react";
+import React, { ReactElement, useCallback, useMemo, useState } from "react";
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
@@ -43,7 +43,7 @@ import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
 import useApi from "src/hooks/useApi";
 import HankkeenSisallonKuvaus from "./HankkeenSisallonKuvaus";
 
-type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
+type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
 export type VuorovaikutusFormValues = ProjektiFields & {
   vuorovaikutusKierros: Pick<
@@ -129,6 +129,7 @@ function VuorovaikutusKierrosKutsu({
         };
     return {
       oid: projekti.oid,
+      versio: projekti.versio,
       vuorovaikutusKierros: {
         vuorovaikutusNumero: vuorovaikutusnro,
         vuorovaikutusJulkaisuPaiva: vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva || null,
@@ -182,7 +183,9 @@ function VuorovaikutusKierrosKutsu({
     async (formData: VuorovaikutusFormValues) => {
       setIsFormSubmitting(true);
       await api.tallennaProjekti(formData);
-      if (reloadProjekti) await reloadProjekti();
+      if (reloadProjekti) {
+        await reloadProjekti();
+      }
       reset(formData);
     },
     [api, reloadProjekti, reset]

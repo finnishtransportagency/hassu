@@ -1,13 +1,13 @@
 import {
   AineistoTila,
   AloitusKuulutusInput,
-  KuulutusJulkaisuTila,
   HallintoOikeus,
   IlmoitettavaViranomainen,
   IlmoituksenVastaanottajat,
   KaytettavaPalvelu,
   KayttajaTyyppi,
   Kieli,
+  KuulutusJulkaisuTila,
   Projekti,
   ProjektiKayttaja,
   ProjektiTyyppi,
@@ -141,12 +141,14 @@ export class ProjektiFixture {
 
   tallennaProjektiInput: TallennaProjektiInput = {
     oid: this.PROJEKTI1_OID,
+    versio: 1,
   };
 
   projekti1(): Projekti {
     return {
       __typename: "Projekti",
       oid: this.PROJEKTI1_OID,
+      versio: 1,
       velho: {
         __typename: "Velho",
         nimi: this.PROJEKTI1_NIMI,
@@ -177,6 +179,7 @@ export class ProjektiFixture {
   velhoprojekti1(): DBProjekti {
     return {
       oid: this.PROJEKTI1_OID,
+      versio: 1,
       velho: {
         nimi: this.PROJEKTI1_NIMI,
         tyyppi: ProjektiTyyppi.TIE,
@@ -221,6 +224,7 @@ export class ProjektiFixture {
         this.kunnanYhteysHenkiloDBVaylaUser(),
       ],
       oid: this.PROJEKTI1_OID,
+      versio: 1,
       velho: {
         nimi: this.PROJEKTI1_NIMI,
         tyyppi: ProjektiTyyppi.TIE,
@@ -284,6 +288,7 @@ export class ProjektiFixture {
         this.mattiMeikalainenDBVaylaUser(),
       ],
       oid: this.PROJEKTI2_OID,
+      versio: 1,
       velho: {
         nimi: this.PROJEKTI2_NIMI,
         tyyppi: ProjektiTyyppi.TIE,
@@ -455,6 +460,7 @@ export class ProjektiFixture {
       this.mattiMeikalainenDBVaylaUser(),
     ],
     oid: this.PROJEKTI3_OID,
+    versio: 1,
     velho: {
       nimi: this.PROJEKTI3_NIMI,
       tyyppi: ProjektiTyyppi.TIE,

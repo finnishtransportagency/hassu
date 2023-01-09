@@ -1,5 +1,5 @@
 import useSWR, { Fetcher, SWRConfiguration } from "swr";
-import { apiConfig, NykyinenKayttaja, Projekti, KayttajaTyyppi } from "@services/api";
+import { apiConfig, KayttajaTyyppi, NykyinenKayttaja, Projekti } from "@services/api";
 import useCurrentUser from "./useCurrentUser";
 import { useRouter } from "next/router";
 import useApi from "./useApi";

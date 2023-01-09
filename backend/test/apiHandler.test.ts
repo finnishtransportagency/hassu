@@ -34,8 +34,10 @@ import { awsMockResolves, expectAwsCalls } from "./aws/awsMock";
 import { kuntametadata } from "../../common/kuntametadata";
 import { aineistoSynchronizerService } from "../src/aineisto/aineistoSynchronizerService";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
+import assert from "assert";
 
-const { expect, assert } = require("chai");
+const chai = require("chai");
+const { expect } = chai;
 
 AWS.config.logger = console;
 
@@ -162,8 +164,10 @@ describe("apiHandler", () => {
         let mockedDatabaseProjekti: DBProjekti | undefined;
 
         async function saveAndLoadProjekti(p: Projekti, description: string, updatedValues: Partial<TallennaProjektiInput>) {
+          assert(p.versio, "versio puuttuu");
           await api.tallennaProjekti({
             oid: fixture.PROJEKTI1_OID,
+            versio: p.versio,
             ...updatedValues,
           });
 
@@ -322,6 +326,7 @@ describe("apiHandler", () => {
         // Add one muokkaaja more and examine the results. Also test that fields can be removed from database
         persistFileToProjektiStub.resolves("/suunnittelusopimus/logo.gif");
         let updatedValues: Partial<TallennaProjektiInput> = {
+          versio: projekti.versio,
           kayttoOikeudet: [
             {
               tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
@@ -433,7 +438,7 @@ describe("apiHandler", () => {
 
       createProjektiStub.resolves();
 
-      await assert.isRejected(api.tallennaProjekti(fixture.tallennaProjektiInput), IllegalAccessError);
+      await chai.assert.isRejected(api.tallennaProjekti(fixture.tallennaProjektiInput), IllegalAccessError);
     });
   });
 });

@@ -1,11 +1,9 @@
-import React, { ReactElement, useCallback, useEffect, useMemo } from "react";
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import KayttoOikeusHallinta from "@components/projekti/KayttoOikeusHallinta";
-import { TallennaProjektiInput, ProjektiKayttajaInput } from "@services/api";
+import { ProjektiKayttajaInput, TallennaProjektiInput } from "@services/api";
 import * as Yup from "yup";
-import { useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { UseFormProps } from "react-hook-form";
+import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import log from "loglevel";
 import Button from "@components/button/Button";
@@ -26,13 +24,14 @@ import PaivitaVelhoTiedotButton from "@components/projekti/PaivitaVelhoTiedotBut
 import useApi from "src/hooks/useApi";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
-type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet">;
+type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet" | "versio">;
 type FormValues = Required<{
   [K in keyof RequiredFields]: NonNullable<RequiredFields[K]>;
 }>;
 
 const validationSchema: Yup.SchemaOf<FormValues> = Yup.object().shape({
   oid: Yup.string().required(),
+  versio: Yup.number().required(),
   kayttoOikeudet: kayttoOikeudetSchema,
 });
 
@@ -83,6 +82,7 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
   const defaultValues: FormValues = useMemo(
     () => ({
       oid: projekti.oid,
+      versio: projekti.versio,
       kayttoOikeudet:
         projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto }) => ({
           kayttajatunnus,
@@ -127,7 +127,6 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
     try {
       await api.tallennaProjekti(formData);
       await reloadProjekti();
-      reset(formData);
       showSuccessMessage("Henkilötietojen tallennus onnistui");
     } catch (e) {
       showErrorMessage("Tietojen tallennuksessa tapahtui virhe");

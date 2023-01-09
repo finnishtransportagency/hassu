@@ -45,7 +45,7 @@ async function createAloituskuulutusPDF(
 async function cleanupAloitusKuulutusBeforeApproval(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus) {
   if (aloitusKuulutus.palautusSyy) {
     aloitusKuulutus.palautusSyy = null;
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, aloitusKuulutus });
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, aloitusKuulutus });
   }
 }
 
@@ -57,7 +57,7 @@ async function cleanupAloitusKuulutusAfterApproval(projekti: DBProjekti, aloitus
     if (aloitusKuulutus.uudelleenKuulutus) {
       aloitusKuulutus.uudelleenKuulutus = null;
     }
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, aloitusKuulutus });
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, aloitusKuulutus });
   }
 }
 
@@ -134,7 +134,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     if (julkaisuWaitingForApproval.aloituskuulutusPDFt) {
       await this.deletePDFs(projekti.oid, julkaisuWaitingForApproval.aloituskuulutusPDFt);
     }
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, aloitusKuulutus });
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, aloitusKuulutus });
     await projektiDatabase.aloitusKuulutusJulkaisut.delete(projekti, julkaisuWaitingForApproval.id);
   }
 
@@ -209,7 +209,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
   }
 
   async saveVaihe(projekti: DBProjekti, vaihe: AloitusKuulutus) {
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, aloitusKuulutus: vaihe });
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, aloitusKuulutus: vaihe });
   }
 }
 

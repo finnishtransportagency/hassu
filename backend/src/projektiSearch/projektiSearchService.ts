@@ -7,7 +7,7 @@ import {
   ProjektiDocument,
 } from "./projektiSearchAdapter";
 import { OpenSearchClient, openSearchClientJulkinen, openSearchClientYllapito, SortOrder } from "./openSearchClient";
-import { log } from "../logger";
+import { log, setLogContextOid } from "../logger";
 import {
   Kieli,
   ListaaProjektitInput,
@@ -32,6 +32,7 @@ const projektiSarakeToField: Record<ProjektiSarake, string> = {
 
 class ProjektiSearchService {
   async indexProjekti(projekti: DBProjekti) {
+    setLogContextOid(projekti.oid);
     try {
       const projektiToIndex = adaptProjektiToIndex(projekti);
       log.info("Index projekti", { oid: projekti.oid });

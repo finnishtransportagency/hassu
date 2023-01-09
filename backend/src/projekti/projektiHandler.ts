@@ -32,7 +32,7 @@ import {
 import { aineistoService } from "../aineisto/aineistoService";
 import { ProjektiAdaptationResult, ProjektiEventType } from "./adapter/projektiAdaptationResult";
 import remove from "lodash/remove";
-import { validatePaivitaVuorovaikutus, validateTallennaProjekti, validatePaivitaPerustiedot } from "./projektiValidator";
+import { validatePaivitaPerustiedot, validatePaivitaVuorovaikutus, validateTallennaProjekti } from "./projektiValidator";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { adaptStandardiYhteystiedotInputToYhteystiedotToSave, adaptVuorovaikutusKierrosAfterPerustiedotUpdate } from "./adapter/adaptToDB";
 import { asiakirjaAdapter } from "../handler/asiakirjaAdapter";
@@ -146,6 +146,7 @@ export async function updateVuorovaikutus(input: API.VuorovaikutusPaivitysInput 
     };
     await projektiDatabase.saveProjekti({
       oid: input.oid,
+      versio: input.versio,
       vuorovaikutusKierros,
       vuorovaikutusKierrosJulkaisut,
     });
@@ -176,6 +177,7 @@ export async function updatePerustiedot(input: API.VuorovaikutusPerustiedotInput
 
     await projektiDatabase.saveProjekti({
       oid: input.oid,
+      versio: input.versio,
       vuorovaikutusKierros,
       vuorovaikutusKierrosJulkaisut,
     });
@@ -293,7 +295,7 @@ export async function synchronizeUpdatesFromVelho(oid: string, reset = false): P
     const kayttoOikeudetNew = kayttoOikeudetManager.getKayttoOikeudet();
 
     const updatedFields = findUpdatedFields(projektiFromDB.velho, projektiFromVelho.velho);
-    await projektiDatabase.saveProjekti({ oid, velho: projektiFromVelho.velho, kayttoOikeudet: kayttoOikeudetNew });
+    await projektiDatabase.saveProjektiWithoutLocking({ oid, velho: projektiFromVelho.velho, kayttoOikeudet: kayttoOikeudetNew });
     return adaptVelho(updatedFields);
   } catch (e) {
     log.error(e);

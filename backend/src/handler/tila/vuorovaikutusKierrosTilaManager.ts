@@ -44,7 +44,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager {
 
     await this.saveJulkaisuGeneratePDFsAndSendEmails(projekti, vuorovaikutusKierrosJulkaisu);
 
-    await projektiDatabase.saveProjekti({
+    await projektiDatabase.saveProjektiWithoutLocking({
       oid: projekti.oid,
       vuorovaikutusKierros: {
         ...projekti.vuorovaikutusKierros,

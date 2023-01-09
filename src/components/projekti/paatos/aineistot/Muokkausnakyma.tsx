@@ -21,7 +21,7 @@ type FormData = {
   hyvaksymisPaatos: AineistoInput[];
 };
 
-export type HyvaksymisPaatosVaiheAineistotFormValues = Pick<TallennaProjektiInput, "oid"> & FormData;
+export type HyvaksymisPaatosVaiheAineistotFormValues = Pick<TallennaProjektiInput, "oid" | "versio"> & FormData;
 
 const getDefaultValueForAineistoNahtavilla = (aineistot: Aineisto[] | undefined | null) => {
   return aineistoKategoriat.listKategoriaIds().reduce<AineistoNahtavilla>((aineistoNahtavilla, currentKategoriaId) => {
@@ -99,10 +99,11 @@ function MuokkausnakymaForm({
 
     return {
       oid: projekti.oid,
+      versio: projekti.versio,
       aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(julkaisematonPaatos?.aineistoNahtavilla),
       hyvaksymisPaatos,
     };
-  }, [julkaisematonPaatos, projekti.oid]);
+  }, [julkaisematonPaatos, projekti.oid, projekti.versio]);
 
   const formOptions: UseFormProps<HyvaksymisPaatosVaiheAineistotFormValues> = {
     resolver: yupResolver(nahtavillaoloAineistotSchema, { abortEarly: false, recursive: true }),

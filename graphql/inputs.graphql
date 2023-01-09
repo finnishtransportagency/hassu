@@ -1,5 +1,6 @@
 input TallennaProjektiInput {
   oid: String!
+  versio: Int!
   muistiinpano: String
   euRahoitus: Boolean
   liittyvatSuunnitelmat: [SuunnitelmaInput]
@@ -110,6 +111,7 @@ input VuorovaikutusKierrosInput {
 
 input VuorovaikutusPaivitysInput {
   oid: String!
+  versio: Int!
   vuorovaikutusNumero: Int!
   vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusPaivitysInput!]!
 }
@@ -142,6 +144,7 @@ input VuorovaikutusTilaisuusInput {
 
 input VuorovaikutusPerustiedotInput {
   oid: String!
+  versio: Int!
   vuorovaikutusKierros: PerustiedotInput!
 }
 

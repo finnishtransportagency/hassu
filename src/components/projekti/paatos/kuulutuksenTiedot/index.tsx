@@ -28,7 +28,7 @@ type paatosInputValues = Omit<HyvaksymisPaatosVaiheInput, "hallintoOikeus"> & {
   hallintoOikeus: HyvaksymisPaatosVaiheInput["hallintoOikeus"] | "";
 };
 
-export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid"> & {
+export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid" | "versio"> & {
   paatos: paatosInputValues;
 };
 
@@ -62,6 +62,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
 
     const formValues: KuulutuksenTiedotFormValues = {
       oid: projekti.oid,
+      versio: projekti.versio,
       paatos: {
         kuulutusPaiva: julkaisematonPaatos?.kuulutusPaiva || null,
         kuulutusVaihePaattyyPaiva: julkaisematonPaatos?.kuulutusVaihePaattyyPaiva || null,

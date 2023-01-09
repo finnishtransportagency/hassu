@@ -143,7 +143,7 @@
     "uuid": "$uuid"
   },
   "scripts": {
-    "postinstall": "cd deployment && npm install",
+    "postinstall": "cd deployment && npm i && cd ../migration-cli && npm i",
     "clean": "rimraf .cdk-* .next .nyc_output .report .serverless .serverless_nextjs build cdk.out out schema.graphql common/graphql/*",
     "clean:packages": "rimraf node_modules package-lock.json deployment/node_modules deployment/package-lock.json migration-cli/node_modules migration-cli/node_modules",
     "prepare": "husky install",
@@ -173,8 +173,9 @@
     "setupenvironment": "ts-node --project=tsconfig.cdk.json deployment/bin/setupEnvironment.ts",
     "graphQLIntrospection": "ts-node $NODE_DEBUG_OPTION --project=tsconfig.cdk.json -r dotenv/config deployment/bin/runGraphQLIntrospection.ts dotenv_config_path=.env.local",
     "test": "npm-run-all --aggregate-output --parallel test:frontend test:coverage test:integration:coverage",
-    "husky:test": "cross-env LOG_LEVEL=silent npm-run-all --aggregate-output --parallel \"test:!(backend|integration)\"",
+    "husky:test": "cross-env LOG_LEVEL=silent npm-run-all --aggregate-output --parallel \"test:!(backend|integration|migration)\"",
     "test:frontend": "jest --config \"./jest.frontend.config.js\"",
+    "test:migration": "cd migration-cli && npm run test",
     "test:backend": "cross-env AWS_PROFILE=nonexistent TS_NODE_PROJECT=\"./backend/tsconfig.json\" mocha -r ts-node/register \"backend/test/**/*.test.ts\" \"common/**/*.test.ts\" --reporter mocha-multi-reporters --reporter-options configFile=mocha_reporter_config.json",
     "test:coverage": "nyc --report-dir .report/coverage --reporter text-summary --reporter lcov --reporter json --reporter clover npm run test:backend",
     "test:integration": "cross-env TS_NODE_PROJECT=\"./backend/tsconfig.json\" mocha -r ts-node/register \"backend/integrationtest/**/*.test.ts\" --reporter mocha-multi-reporters --reporter-options configFile=mocha_reporter_config_integration.json",

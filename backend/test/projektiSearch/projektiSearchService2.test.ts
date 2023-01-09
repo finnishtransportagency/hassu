@@ -7,11 +7,11 @@ import {
 import { projektiSearchService } from "../../src/projektiSearch/projektiSearchService";
 import * as sinon from "sinon";
 import {
-  KuulutusJulkaisuTila,
   IlmoitettavaViranomainen,
   KaytettavaPalvelu,
   KayttajaTyyppi,
   Kieli,
+  KuulutusJulkaisuTila,
   ProjektiTyyppi,
   Status,
   Viranomainen,
@@ -70,6 +70,7 @@ const julkinenIndeksi: Omit<ProjektiDocument, "oid"> = {
 
 const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
   oid: "1.2.246.578.5.1.2724991921.3534113206",
+  versio: 1,
   paivitetty: "2022-10-12T14:48:10+03:00",
   muistiinpano: "",
   vaihe: undefined,

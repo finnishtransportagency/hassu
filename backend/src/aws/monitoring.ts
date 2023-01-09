@@ -7,6 +7,7 @@ import http from "http";
 
 import https from "https";
 import { AxiosStatic } from "axios";
+import { setLogContextOid } from "../logger";
 
 const XRAY_ENV_NAME = "_X_AMZN_TRACE_ID";
 const TRACE_ID_REGEX = /^Root=(.+);Parent=(.+);/;
@@ -50,6 +51,7 @@ export function setupLambdaMonitoring(): void {
   } else {
     (globalThis as any).correlationId = undefined;
   }
+  setLogContextOid(undefined);
 }
 
 export function getAxios(): AxiosStatic {

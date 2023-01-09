@@ -38,6 +38,7 @@ Object {
     "tyyppi": "TIE",
     "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
   },
+  "versio": 1,
 }
 `;
 
@@ -106,6 +107,7 @@ Array [
       "tyyppi": "TIE",
       "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
     },
+    "versio": 1,
   },
 ]
 `;
@@ -154,6 +156,7 @@ Array [
       "tyyppi": "TIE",
       "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
     },
+    "versio": 1,
   },
 ]
 `;
@@ -188,6 +191,7 @@ Array [
     "oid": "1",
     "salt": "***unittest***",
     "suunnitteluSopimus": undefined,
+    "versio": 1,
     "vuorovaikutusKierros": undefined,
   },
 ]
@@ -225,6 +229,7 @@ Array [
       "tyyppi": "TIE",
       "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
     },
+    "versio": 1,
   },
 ]
 `;
@@ -270,6 +275,7 @@ Array [
     "oid": "1",
     "salt": "***unittest***",
     "suunnitteluSopimus": undefined,
+    "versio": 1,
     "vuorovaikutusKierros": undefined,
   },
 ]
@@ -319,6 +325,7 @@ Array [
       "tyyppi": "TIE",
       "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
     },
+    "versio": 1,
   },
 ]
 `;
@@ -432,6 +439,7 @@ Array [
       "logo": "/suunnittelusopimus/logo.gif",
       "yhteysHenkilo": "A2",
     },
+    "versio": 1,
     "vuorovaikutusKierros": undefined,
   },
 ]
@@ -565,6 +573,7 @@ Array [
       "tyyppi": "TIE",
       "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
     },
+    "versio": 1,
   },
 ]
 `;
@@ -948,6 +957,7 @@ Object {
     "tyyppi": "TIE",
     "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
   },
+  "versio": 1,
 }
 `;
 

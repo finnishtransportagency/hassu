@@ -54,6 +54,7 @@ describe("apiHandler", () => {
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const projekti: DBProjekti = {
           oid: fixture.PROJEKTI1_OID,
+          versio: 1,
           muistiinpano: "foo",
           suunnitteluSopimus: null,
         } as DBProjekti;

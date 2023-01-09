@@ -46,6 +46,7 @@ describe("projektiAdapter", () => {
     expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
+        versio: projekti.versio,
         suunnitteluSopimus: null,
       })
     ).to.be.rejectedWith(IllegalArgumentError);
@@ -57,6 +58,7 @@ describe("projektiAdapter", () => {
 
     const result = await projektiAdapter.adaptProjektiToSave(projekti, {
       oid: projekti.oid,
+      versio: projekti.versio,
       suunnitteluSopimus: null,
     });
     expect(result.projekti.suunnitteluSopimus).equals(null);
@@ -73,6 +75,7 @@ describe("projektiAdapter", () => {
     expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
+        versio: projekti.versio,
         suunnitteluSopimus: null,
       })
     ).to.be.rejectedWith(IllegalArgumentError);
@@ -85,6 +88,7 @@ describe("projektiAdapter", () => {
     expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
+        versio: projekti.versio,
         suunnitteluSopimus: {
           kunta: 1,
           logo: "123.jpg",
@@ -101,6 +105,7 @@ describe("projektiAdapter", () => {
 
     const result = await projektiAdapter.adaptProjektiToSave(projekti, {
       oid: projekti.oid,
+      versio: projekti.versio,
       suunnitteluSopimus: {
         kunta: 1,
         logo: "123.jpg",
@@ -126,6 +131,7 @@ describe("projektiAdapter", () => {
     expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
+        versio: projekti.versio,
         suunnitteluSopimus: {
           kunta: 1,
           logo: "123.jpg",

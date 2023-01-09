@@ -13,7 +13,7 @@ function isValueArrayOfStrings(value: unknown) {
  * @param projekti
  */
 export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
-  return cloneDeepWith(projekti, (value, key) => {
+  const p: DBProjekti = cloneDeepWith(projekti, (value, key) => {
     if (key == "kunta") {
       try {
         return kuntametadata.idForKuntaName(value);
@@ -64,4 +64,8 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
     }
     return undefined;
   });
+  if (!p.versio) {
+    p.versio = 1;
+  }
+  return p;
 }

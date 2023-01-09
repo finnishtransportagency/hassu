@@ -51,10 +51,11 @@ describe("Migraatio", () => {
     sinon.restore();
   });
 
-  async function tallennaPuhelinnumerot(projekti: Projekti, oid: string) {
+  async function tallennaPuhelinnumerot(projekti: Projekti) {
     assert(projekti.kayttoOikeudet);
     await api.tallennaProjekti({
-      oid,
+      oid: projekti.oid,
+      versio: projekti.versio,
       kayttoOikeudet: projekti.kayttoOikeudet.map((kayttaja) => ({
         tyyppi: kayttaja.tyyppi,
         kayttajatunnus: kayttaja.kayttajatunnus,
@@ -73,13 +74,13 @@ describe("Migraatio", () => {
     let projekti = await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
     // Ylläpitäjä täyttää puuttuvat puhelinnumerot käyttöliittymän kautta
     userFixture.loginAs(UserFixture.hassuAdmin);
-    await tallennaPuhelinnumerot(projekti, oid);
+    await tallennaPuhelinnumerot(projekti);
     await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
     await expectJulkinenNotFound(oid, userFixture);
 
     userFixture.loginAs(UserFixture.hassuAdmin);
-    await testSuunnitteluvaihePerustiedot(oid);
-    await testSuunnitteluvaiheVuorovaikutus(oid, UserFixture.hassuAdmin.uid as string);
+    let p = await testSuunnitteluvaihePerustiedot(oid);
+    await testSuunnitteluvaiheVuorovaikutus(p, UserFixture.hassuAdmin.uid as string);
     await julkaiseSuunnitteluvaihe(oid, userFixture);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
@@ -96,14 +97,14 @@ describe("Migraatio", () => {
     await expectJulkinenNotFound(oid, userFixture);
     userFixture.loginAs(UserFixture.hassuAdmin);
     let initialProjekti = await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
-    await tallennaPuhelinnumerot(initialProjekti, oid);
+    await tallennaPuhelinnumerot(initialProjekti);
 
     let projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
     const projektipaallikko = projekti.kayttoOikeudet?.filter((kayttaja) => kayttaja.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO).pop();
     assert(projektipaallikko);
-    await testNahtavillaolo(oid, projektipaallikko.kayttajatunnus);
+    projekti = await testNahtavillaolo(oid, projektipaallikko.kayttajatunnus);
     const velhoAineistoKategorias = await listDocumentsToImport(oid);
-    await testImportNahtavillaoloAineistot(oid, velhoAineistoKategorias);
+    await testImportNahtavillaoloAineistot(projekti, velhoAineistoKategorias);
     await testNahtavillaoloApproval(oid, projektipaallikko, userFixture);
     await testPublicAccessToProjekti(oid, Status.NAHTAVILLAOLO, userFixture, "nähtävilläolovaiheeseen migroitu julkinen projekti");
     await importAineistoMock.processQueue();
@@ -117,7 +118,7 @@ describe("Migraatio", () => {
     const oid = await useProjektiTestFixture("migraatio_HYVAKSYMISMENETTELYSSA");
     userFixture.loginAs(UserFixture.hassuAdmin);
     let initialProjekti = await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
-    await tallennaPuhelinnumerot(initialProjekti, oid);
+    await tallennaPuhelinnumerot(initialProjekti);
 
     // Hyväksymismenettelyssä, koska puhelinnumerot täytetty ja aiemmat vaiheet migroitu-tilassa
     const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA);
@@ -147,7 +148,7 @@ describe("Migraatio", () => {
     const oid = await useProjektiTestFixture("migraatio_EPAAKTIIVINEN_1");
     userFixture.loginAs(UserFixture.hassuAdmin);
     let initialProjekti = await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
-    await tallennaPuhelinnumerot(initialProjekti, oid);
+    await tallennaPuhelinnumerot(initialProjekti);
 
     // Epäaktiivinen, koska puhelinnumerot täytetty ja hyväksymispäätös migroitu-tilassa
     const projekti = await loadProjektiFromDatabase(oid, Status.EPAAKTIIVINEN_1);
@@ -156,6 +157,7 @@ describe("Migraatio", () => {
 
     await api.tallennaProjekti({
       oid,
+      versio: projekti.versio,
       kasittelynTila: {
         ensimmainenJatkopaatos: { paatoksenPvm: MOCKED_TIMESTAMP, asianumero: "jatkopaatos1_asianumero", aktiivinen: true },
       },

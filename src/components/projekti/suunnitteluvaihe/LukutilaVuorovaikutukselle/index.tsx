@@ -46,6 +46,7 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
       try {
         await api.paivitaVuorovaikutusta({
           oid: projekti.oid,
+          versio: projekti.versio,
           vuorovaikutusNumero: vuorovaikutusnro,
           vuorovaikutusTilaisuudet: formData.vuorovaikutusTilaisuudet.map((tilaisuus) => {
             const tilaisuusCopy: Partial<VuorovaikutusTilaisuusInput> = { ...tilaisuus };
@@ -75,6 +76,7 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
       aloituskuulutusjulkaisu,
       api,
       projekti.oid,
+      projekti.versio,
       reloadProjekti,
       showErrorMessage,
       showSuccessMessage,

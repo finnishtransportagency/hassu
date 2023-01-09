@@ -11,7 +11,7 @@ import {
   Yhteystieto,
 } from "@services/api";
 import Section from "@components/layout/Section";
-import { ReactElement, useMemo, useState, Fragment, useCallback } from "react";
+import { Fragment, ReactElement, useCallback, useMemo, useState } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { DialogActions, DialogContent, Stack } from "@mui/material";
 import Button from "@components/button/Button";
@@ -35,7 +35,7 @@ import { removeTypeName } from "src/util/removeTypeName";
 import EiJulkinenLuonnoksetJaAineistotLomake from "../LuonnoksetJaAineistot/EiJulkinen";
 import router from "next/router";
 
-type ProjektiFields = Pick<TallennaProjektiInput, "oid">;
+type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
   [K in keyof ProjektiFields]: NonNullable<ProjektiFields[K]>;
 }>;
@@ -82,6 +82,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
   const defaultValues: SuunnittelunPerustiedotFormValues = useMemo(() => {
     const tallentamisTiedot: SuunnittelunPerustiedotFormValues = {
       oid: projekti.oid,
+      versio: projekti.versio,
       vuorovaikutusKierros: {
         vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0, // TODO mieti
         arvioSeuraavanVaiheenAlkamisesta: projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta || "",
@@ -151,6 +152,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     async (formData: SuunnittelunPerustiedotFormValues) => {
       const partialFormData: VuorovaikutusPerustiedotInput = {
         oid: projekti.oid,
+        versio: projekti.versio,
         vuorovaikutusKierros: {
           vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0,
           arvioSeuraavanVaiheenAlkamisesta: formData.vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta || "",
@@ -169,7 +171,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       }
       reset(formData);
     },
-    [api, projekti.oid, projekti.vuorovaikutusKierros?.vuorovaikutusNumero, reloadProjekti, reset]
+    [api, projekti.oid, projekti.versio, projekti.vuorovaikutusKierros?.vuorovaikutusNumero, reloadProjekti, reset]
   );
 
   const saveDraft = useCallback(

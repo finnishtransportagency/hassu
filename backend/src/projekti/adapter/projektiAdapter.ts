@@ -123,6 +123,7 @@ export class ProjektiAdapter {
     // Pick only fields that are relevant to DB
     const {
       oid,
+      versio,
       muistiinpano,
       kayttoOikeudet,
       aloitusKuulutus,
@@ -146,6 +147,7 @@ export class ProjektiAdapter {
       {},
       {
         oid,
+        versio,
         muistiinpano,
         aloitusKuulutus: aloitusKuulutusToSave,
         suunnitteluSopimus: adaptSuunnitteluSopimusToSave(projekti, suunnitteluSopimus),
@@ -173,7 +175,13 @@ export class ProjektiAdapter {
 }
 
 function removeUndefinedFields(object: API.Projekti): API.Projekti {
-  return { __typename: "Projekti", oid: object.oid, velho: object.velho, ...pickBy(object, (value) => value !== undefined) };
+  return {
+    __typename: "Projekti",
+    oid: object.oid,
+    versio: object.versio,
+    velho: object.velho,
+    ...pickBy(object, (value) => value !== undefined),
+  };
 }
 
 export const projektiAdapter = new ProjektiAdapter();

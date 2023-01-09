@@ -20,7 +20,7 @@ type FormData = {
   lisaAineisto: AineistoInput[];
 };
 
-export type NahtavilleAsetettavatAineistotFormValues = Pick<TallennaProjektiInput, "oid"> & FormData;
+export type NahtavilleAsetettavatAineistotFormValues = Pick<TallennaProjektiInput, "oid" | "versio"> & FormData;
 
 const getDefaultValueForAineistoNahtavilla = (aineistot: Aineisto[] | undefined | null) => {
   return aineistoKategoriat.listKategoriaIds().reduce<AineistoNahtavilla>((aineistoNahtavilla, currentKategoriaId) => {
@@ -57,6 +57,7 @@ function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
 
     return {
       oid: projekti.oid,
+      versio: projekti.versio,
       aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(projekti.nahtavillaoloVaihe?.aineistoNahtavilla),
       lisaAineisto,
     };

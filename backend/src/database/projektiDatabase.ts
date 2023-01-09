@@ -1,9 +1,10 @@
-import { log } from "../logger";
+import { log, setLogContextOid } from "../logger";
 import {
   AloitusKuulutusJulkaisu,
   DBProjekti,
   HyvaksymisPaatosVaiheJulkaisu,
   NahtavillaoloVaiheJulkaisu,
+  PartialDBProjekti,
   VuorovaikutusKierrosJulkaisu,
 } from "./model";
 import { config } from "../config";
@@ -13,8 +14,10 @@ import { Response } from "aws-sdk/lib/response";
 import dayjs from "dayjs";
 import { migrateFromOldSchema } from "./schemaUpgrade";
 import { getDynamoDBDocumentClient } from "../aws/client";
+import assert from "assert";
+import { SimultaneousUpdateError } from "../error/SimultaneousUpdateError";
 
-const specialFields = ["oid", "tallennettu", "vuorovaikutukset"];
+const specialFields = ["oid", "versio", "tallennettu", "vuorovaikutukset"];
 const skipAutomaticUpdateFields = [
   "aloitusKuulutusJulkaisut",
   "nahtavillaoloVaiheJulkaisut",
@@ -44,8 +47,8 @@ export class JulkaisuFunctions<
   private description: string;
   private projektiDatabase: ProjektiDatabase;
 
-  constructor(projektiDatabase: ProjektiDatabase, julkaisutFieldName: JulkaisutFieldName, description: string) {
-    this.projektiDatabase = projektiDatabase;
+  constructor(database: ProjektiDatabase, julkaisutFieldName: JulkaisutFieldName, description: string) {
+    this.projektiDatabase = database;
     this.julkaisutFieldName = julkaisutFieldName;
     this.description = description;
   }
@@ -62,6 +65,14 @@ export class JulkaisuFunctions<
     return this.projektiDatabase.deleteJulkaisuFromList(projekti, julkaisuIdToDelete, this.julkaisutFieldName, this.description);
   }
 }
+
+type UpdateParams = {
+  setExpression: string[];
+  removeExpression: string[];
+  attributeNames: DocumentClient.ExpressionAttributeNameMap;
+  attributeValues: DocumentClient.ExpressionAttributeValueMap;
+  conditionExpression?: string;
+};
 
 export class ProjektiDatabase {
   projektiTableName: string = config.projektiTableName || "missing";
@@ -99,6 +110,7 @@ export class ProjektiDatabase {
    * @param stronglyConsistentRead Use stringly consistent read operation to DynamoDB. Set "false" in public website to save database capacity.
    */
   async loadProjektiByOid(oid: string, stronglyConsistentRead = true): Promise<DBProjekti | undefined> {
+    setLogContextOid(oid);
     try {
       const params: DocumentClient.GetItemInput = {
         TableName: this.projektiTableName,
@@ -124,31 +136,85 @@ export class ProjektiDatabase {
     }
   }
 
-  async saveProjekti(dbProjekti: Partial<DBProjekti>): Promise<DocumentClient.UpdateItemOutput> {
+  /**
+   *
+   * @param dbProjekti Tallennettava projekti
+   * @return tallennetun projektin versio
+   */
+  async saveProjekti(dbProjekti: PartialDBProjekti): Promise<number> {
     return this.saveProjektiInternal(dbProjekti);
+  }
+
+  async saveProjektiWithoutLocking(dbProjekti: Partial<DBProjekti> & Pick<DBProjekti, "oid">): Promise<number> {
+    return this.saveProjektiInternal(dbProjekti, false, true);
   }
 
   /**
    *
    * @param dbProjekti Projekti, joka päivitetään tietokantaan
    * @param forceUpdateInTests Salli kaikkien kenttien päivittäminen. Sallittua käyttää vain testeissä.
+   * @param bypassLocking Ohita projektin lukitusmekanismi. Voidaan käyttää päivityksissä, jotka eivät liity käytt
    */
   protected async saveProjektiInternal(
     dbProjekti: Partial<DBProjekti>,
-    forceUpdateInTests = false
-  ): Promise<DocumentClient.UpdateItemOutput> {
+    forceUpdateInTests = false,
+    bypassLocking = false
+  ): Promise<number> {
     if (log.isLevelEnabled("debug")) {
       log.debug("Updating projekti to Hassu", { projekti: dbProjekti });
     } else {
       log.info("Updating projekti to Hassu", { oid: dbProjekti.oid });
     }
-    const setExpression: string[] = [];
-    const removeExpression: string[] = [];
-    const ExpressionAttributeNames: DocumentClient.ExpressionAttributeNameMap = {};
-    const ExpressionAttributeValues: DocumentClient.ExpressionAttributeValueMap = {};
+
+    const updateParams: UpdateParams = {
+      setExpression: [],
+      removeExpression: [],
+      attributeNames: {},
+      attributeValues: {},
+    };
+
+    let nextVersion: number;
+    if (bypassLocking) {
+      nextVersion = dbProjekti.versio || 0; // Value 0 should not be meaningful when locking is bypassed
+    } else {
+      nextVersion = this.handleOptimisticLocking(dbProjekti, updateParams);
+    }
 
     dbProjekti.paivitetty = dayjs().format();
+    this.handleFieldsToSave(dbProjekti, updateParams, forceUpdateInTests);
 
+    const updateExpression =
+      createExpression("SET", updateParams.setExpression) + " " + createExpression("REMOVE", updateParams.removeExpression);
+
+    const params: DocumentClient.UpdateItemInput = {
+      TableName: this.projektiTableName,
+      Key: {
+        oid: dbProjekti.oid,
+      },
+      UpdateExpression: updateExpression,
+      ExpressionAttributeNames: updateParams.attributeNames,
+      ExpressionAttributeValues: updateParams.attributeValues,
+      ConditionExpression: updateParams.conditionExpression,
+    };
+
+    if (log.isLevelEnabled("debug")) {
+      log.debug("Updating projekti to Hassu with params", { params });
+    }
+
+    try {
+      const dynamoDBDocumentClient = getDynamoDBDocumentClient();
+      await dynamoDBDocumentClient.update(params).promise();
+      return nextVersion;
+    } catch (e) {
+      if ((e as AWSError).code == "ConditionalCheckFailedException") {
+        throw new SimultaneousUpdateError("Projektia on päivitetty tietokannassa. Lataa projekti uudelleen.");
+      }
+      log.error(e instanceof Error ? e.message : String(e), { params });
+      throw e;
+    }
+  }
+
+  private handleFieldsToSave(dbProjekti: Partial<DBProjekti>, updateParams: UpdateParams, forceUpdateInTests: boolean) {
     for (const property in dbProjekti) {
       if (specialFields.includes(property) || (skipAutomaticUpdateFields.includes(property) && !forceUpdateInTests)) {
         continue;
@@ -158,37 +224,29 @@ export class ProjektiDatabase {
         continue;
       }
       if (value === null) {
-        removeExpression.push(property);
+        updateParams.removeExpression.push(property);
       } else {
-        setExpression.push(`#${property} = :${property}`);
-        ExpressionAttributeNames["#" + property] = property;
-        ExpressionAttributeValues[":" + property] = value;
+        updateParams.setExpression.push(`#${property} = :${property}`);
+        updateParams.attributeNames["#" + property] = property;
+        updateParams.attributeValues[":" + property] = value;
       }
     }
+  }
 
-    const updateExpression = createExpression("SET", setExpression) + " " + createExpression("REMOVE", removeExpression);
-
-    const params = {
-      TableName: this.projektiTableName,
-      Key: {
-        oid: dbProjekti.oid,
-      },
-      UpdateExpression: updateExpression,
-      ExpressionAttributeNames,
-      ExpressionAttributeValues,
-    };
-
-    if (log.isLevelEnabled("debug")) {
-      log.debug("Updating projekti to Hassu with params", { params });
+  private handleOptimisticLocking(dbProjekti: Partial<DBProjekti>, updateParams: UpdateParams) {
+    const versioFromInput = dbProjekti.versio;
+    if (!versioFromInput) {
+      assert(versioFromInput, "projektin versio pitää olla tallennettaessa asetettu");
     }
+    const nextVersion = versioFromInput + 1;
+    updateParams.attributeNames["#versio"] = "versio";
 
-    try {
-      const dynamoDBDocumentClient = getDynamoDBDocumentClient();
-      return await dynamoDBDocumentClient.update(params).promise();
-    } catch (e) {
-      log.error(e instanceof Error ? e.message : String(e), { params });
-      throw e;
-    }
+    updateParams.conditionExpression = "attribute_not_exists(#versio) OR #versio = :versioFromInput";
+    updateParams.attributeValues[":versioFromInput"] = versioFromInput;
+
+    updateParams.setExpression.push("#versio = :versio");
+    updateParams.attributeValues[":versio"] = nextVersion;
+    return nextVersion;
   }
 
   async createProjekti(projekti: DBProjekti): Promise<DocumentClient.PutItemOutput> {
