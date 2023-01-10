@@ -348,6 +348,7 @@ describe("apiHandler", () => {
             yhteysHenkilo: "A2",
           },
           euRahoitus: false, // mandatory field for perustiedot
+          vahainenMenettely: false, // mandatory field for perustiedot
           aloitusKuulutus: fixture.aloitusKuulutusInput,
           kielitiedot: {
             ensisijainenKieli: Kieli.SUOMI,

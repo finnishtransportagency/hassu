@@ -3,6 +3,7 @@ input TallennaProjektiInput {
   versio: Int!
   muistiinpano: String
   euRahoitus: Boolean
+  vahainenMenettely: Boolean
   liittyvatSuunnitelmat: [SuunnitelmaInput]
   aloitusKuulutus: AloitusKuulutusInput
   suunnitteluSopimus: SuunnitteluSopimusInput

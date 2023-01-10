@@ -204,6 +204,7 @@
     "yhteysHenkilo": "LX581241"
   },
   "tyyppi": "TIE",
+  "vahainenMenettely": false,
   "velho": {
     "asiatunnusVayla": "HASSU/123/2023",
     "kunnat": [

@@ -1145,6 +1145,7 @@ Object {
       "puhelinnumero": "123",
       "sukunimi": "Hassu",
     },
+    "vahainenMenettely": false,
     "velho": Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,

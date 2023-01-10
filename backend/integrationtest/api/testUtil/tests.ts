@@ -117,6 +117,7 @@ export async function testProjektinTiedot(oid: string): Promise<Projekti> {
     aloitusKuulutus: apiTestFixture.aloitusKuulutusInput,
     suunnitteluSopimus: apiTestFixture.createSuunnitteluSopimusInput(uploadedFile, UserFixture.testi1Kayttaja.uid!),
     kielitiedot: apiTestFixture.kielitiedotInput,
+    vahainenMenettely: false,
     euRahoitus: false,
   });
 
@@ -128,6 +129,7 @@ export async function testProjektinTiedot(oid: string): Promise<Projekti> {
   expect(updatedProjekti.suunnitteluSopimus?.logo).contain("/suunnittelusopimus/logo.png");
   expect(updatedProjekti.kielitiedot).eql(apiTestFixture.kielitiedot);
   expect(updatedProjekti.euRahoitus).to.be.false;
+  expect(updatedProjekti.vahainenMenettely).to.be.false;
   return updatedProjekti;
 }
 
