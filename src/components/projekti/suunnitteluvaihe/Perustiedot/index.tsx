@@ -129,14 +129,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     handleSubmit,
     formState: { isDirty },
     control,
-    watch,
   } = useFormReturn;
-
-  const datas = watch("vuorovaikutusKierros.esittelyaineistot");
-
-  useEffect(() => {
-    console.log({ datas });
-  }, [datas]);
 
   useLeaveConfirm(isDirty);
 

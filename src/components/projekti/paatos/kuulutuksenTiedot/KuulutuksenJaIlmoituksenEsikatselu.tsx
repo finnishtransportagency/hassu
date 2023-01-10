@@ -50,7 +50,6 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
                 id={"preview_kuulutus_pdf_" + ensisijainenKieli}
                 type="submit"
                 onClick={handleSubmit((formData) => {
-                  console.log(formData);
                   esikatselePdf(
                     convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
                     AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS,
@@ -79,7 +78,6 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
                 id={"preview_ilmoitus_muistuttajille_pdf_" + ensisijainenKieli}
                 type="button"
                 onClick={handleSubmit((formData) => {
-                  console.log(formData);
                   esikatselePdf(
                     convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
                     AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE,

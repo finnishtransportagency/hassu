@@ -22,12 +22,13 @@ interface FormData {
 
 type Props = {
   infoText?: string | undefined;
+  ylakategoriaId?: string | undefined;
   onSubmit: (aineistot: AineistoInput[]) => void;
 } & Required<Pick<DialogProps, "onClose" | "open">>;
 
 const useFormOptions = { defaultValues: { aineistoKategoriat: [] } };
 
-export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...muiDialogProps }: Props) {
+export default function AineistojenValitseminenDialog({ onSubmit, infoText, ylakategoriaId, ...muiDialogProps }: Props) {
   const { onClose, open } = muiDialogProps;
   const { data: projekti } = useProjekti();
   const [isLoading, setIsLoading] = useState(false);
@@ -41,7 +42,7 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
       const haeAineistotDialogiin = async () => {
         setIsLoading(true);
         try {
-          const velhoAineistoKategoriat = await api.listaaVelhoProjektiAineistot(projekti.oid);
+          const velhoAineistoKategoriat = await api.listaaVelhoProjektiAineistot(projekti.oid, ylakategoriaId);
           setFetchedAineistoKategoriat(velhoAineistoKategoriat);
         } catch {
           // Maybe custom error?
@@ -52,13 +53,12 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
       };
       haeAineistotDialogiin();
     }
-  }, [projekti, setFetchedAineistoKategoriat, open, api]);
+  }, [projekti, setFetchedAineistoKategoriat, open, api, ylakategoriaId]);
 
   const aineistoKategoriatWatch = watch("aineistoKategoriat");
 
   const updateValitut = useCallback<(kategoriaNimi: string, selectedRows: VelhoAineisto[]) => void>(
     (kategoriaNimi, rows) => {
-      console.log(rows);
       const aineistoKategoriat = getValues("aineistoKategoriat");
       const aineistoKategoria = aineistoKategoriat.find((kategoria) => kategoria.kategoria === kategoriaNimi);
       if (aineistoKategoria) {

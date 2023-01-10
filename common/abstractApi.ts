@@ -263,9 +263,10 @@ export abstract class AbstractApi {
     } as ListaaVelhoProjektitQueryVariables);
   }
 
-  async listaaVelhoProjektiAineistot(oid: string): Promise<VelhoAineistoKategoria[]> {
+  async listaaVelhoProjektiAineistot(oid: string, ylaKategoriaId: string | undefined): Promise<VelhoAineistoKategoria[]> {
     return await this.callYllapitoAPI(apiConfig.listaaVelhoProjektiAineistot, {
       oid,
+      ylaKategoriaId,
     } as ListaaVelhoProjektiAineistotQueryVariables);
   }
 
