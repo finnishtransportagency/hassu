@@ -3,6 +3,7 @@
 # dependencies
 /node_modules
 deployment/node_modules
+layers/lambda-base/nodejs/node_modules
 
 # misc
 .DS_Store

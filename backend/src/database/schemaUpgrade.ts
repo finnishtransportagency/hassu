@@ -1,5 +1,5 @@
 import { DBProjekti, DBVaylaUser, IlmoituksenVastaanottajat, KuntaVastaanottaja } from "./model";
-import { cloneDeepWith } from "lodash";
+import cloneDeepWith from "lodash/cloneDeepWith";
 import { kuntametadata } from "../../../common/kuntametadata";
 import { log } from "../logger";
 import isArray from "lodash/isArray";

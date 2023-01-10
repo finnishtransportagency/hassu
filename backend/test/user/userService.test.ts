@@ -6,9 +6,9 @@ import { UserFixture } from "../fixture/userFixture";
 import { apiConfig } from "../../../common/abstractApi";
 import { GetParameterResult } from "aws-sdk/clients/ssm";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
-import { AppSyncEventArguments } from "../../src/apiHandler";
 import { getUSEast1ssm } from "../../src/aws/client";
 import { awsMockResolves } from "../aws/awsMock";
+import { AppSyncEventArguments } from "../../src/api/common";
 
 const { expect } = require("chai");
 
