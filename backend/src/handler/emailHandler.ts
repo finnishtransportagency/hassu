@@ -92,11 +92,11 @@ function examineEmailSentResults(
 async function sendAloitusKuulutusApprovalMailsAndAttachments(projekti: DBProjekti): Promise<void> {
   // aloituskuulutusjulkaisu kyllä löytyy
   const aloituskuulutus: AloitusKuulutusJulkaisu | undefined = asiakirjaAdapter.findAloitusKuulutusLastApproved(projekti);
-  assertIsDefined(aloituskuulutus);
+  assertIsDefined(aloituskuulutus, "Aloituskuulutuksella ei ole hyväksyttyä julkaisua");
   // aloituskuulutus.muokkaaja on määritelty
-  assertIsDefined(aloituskuulutus.muokkaaja);
+  assertIsDefined(aloituskuulutus.muokkaaja, "Julkaisun muokkaaja puuttuu");
   const muokkaaja: Kayttaja | undefined = await getKayttaja(aloituskuulutus.muokkaaja);
-  assertIsDefined(muokkaaja);
+  assertIsDefined(muokkaaja, "Muokkaajan käyttäjätiedot puuttuu");
   const emailOptionsMuokkaaja = createAloituskuulutusHyvaksyttyEmail(projekti, muokkaaja);
   if (emailOptionsMuokkaaja.to) {
     await emailClient.sendEmail(emailOptionsMuokkaaja);

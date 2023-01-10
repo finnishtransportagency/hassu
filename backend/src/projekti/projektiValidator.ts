@@ -114,6 +114,9 @@ function validateSuunnitteluSopimus(dbProjekti: DBProjekti, input: TallennaProje
     (input.suunnitteluSopimus === null && !!dbProjekti.suunnitteluSopimus) ||
     (!!input.suunnitteluSopimus && !dbProjekti.suunnitteluSopimus);
 
+  const aloituskuulutusjulkaisuja = dbProjekti?.aloitusKuulutusJulkaisut?.length;
+  if (!aloituskuulutusjulkaisuja || aloituskuulutusjulkaisuja < 1) return; // Lista voi olla myos olemassa, mutta tyhja, jos kuulutus on esim palautettu muokattavaksi
+
   const latestAloituskuulutusJulkaisuTila = dbProjekti?.aloitusKuulutusJulkaisut?.[dbProjekti.aloitusKuulutusJulkaisut.length - 1].tila;
   const isLatestJulkaisuPendingApprovalOrApproved =
     !!latestAloituskuulutusJulkaisuTila &&
