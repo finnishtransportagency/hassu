@@ -39,12 +39,21 @@ export class AineistoKategoriat {
     return this.ylaKategoriat;
   }
 
+  public findYlakategoriaById(kategoriaId: string): AineistoKategoria | undefined {
+    return this.ylaKategoriat.find(({ id }) => kategoriaId === id);
+  }
+
   public listKategoriaIds(): string[] {
     return getNestedCategoryIds(this.ylaKategoriat);
   }
 
-  public findKategoria(aineistoKuvaus: string | undefined, tiedostoNimi: string): AineistoKategoria | undefined {
-    const ylakategoria = findMatchingCategory(this.ylaKategoriat, aineistoKuvaus, undefined);
+  public findKategoria(
+    ylaKategoriaId: string | undefined | null,
+    aineistoKuvaus: string | undefined,
+    tiedostoNimi: string
+  ): AineistoKategoria | undefined {
+    const kategoriat = this.ylaKategoriat.filter((ylakategoria) => !ylaKategoriaId || ylaKategoriaId === ylakategoria.id);
+    const ylakategoria = findMatchingCategory(kategoriat, aineistoKuvaus, undefined);
     if (ylakategoria) {
       const alakategoria = findMatchingCategory(ylakategoria.alaKategoriat, aineistoKuvaus, tiedostoNimi);
       if (alakategoria) {

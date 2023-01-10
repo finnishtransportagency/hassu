@@ -163,14 +163,14 @@ const SuunnitelmaAineistoPaakategoriaContent = (props: SuunnitelmaAineistoPaakat
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
   const { setValue, watch } = useFormContext<FormValues>();
 
-  const aineistoRoute: `aineistoNahtavilla.${string}` = `aineistoNahtavilla.${props.paakategoria.id}`;
-
-  const aineistot = watch(aineistoRoute);
+  const aineistoNahtavilla = watch("aineistoNahtavilla");
 
   return (
     <>
       <p>{kategoriaInfoText[props.paakategoria.id]}</p>
-      {!!projekti?.oid && !!aineistot?.length && <AineistoTable vaihe={props.vaihe} kategoriaId={props.paakategoria.id} />}
+      {!!projekti?.oid && !!aineistoNahtavilla[props.paakategoria.id]?.length && (
+        <AineistoTable vaihe={props.vaihe} kategoriaId={props.paakategoria.id} />
+      )}
       {props.paakategoria.alaKategoriat && (
         <SuunnitelmaAineistoAlakategoriaAccordion
           vaihe={props.vaihe}
@@ -185,14 +185,24 @@ const SuunnitelmaAineistoPaakategoriaContent = (props: SuunnitelmaAineistoPaakat
         open={aineistoDialogOpen}
         infoText={props.dialogInfoText}
         onClose={() => setAineistoDialogOpen(false)}
-        onSubmit={(newAineistot) => {
-          const value = aineistot || [];
-          newAineistot.forEach((aineisto) => {
-            if (!find(value, { dokumenttiOid: aineisto.dokumenttiOid })) {
-              value.push({ ...aineisto, kategoriaId: props.paakategoria.id, jarjestys: value.length });
-            }
+        onSubmit={(selectedAineistot) => {
+          const aineistotFlat = Object.values(aineistoNahtavilla || {}).flat();
+          const muokatutKategoriat: AineistoNahtavilla = selectedAineistot
+            .filter(({ dokumenttiOid }) => !find(aineistotFlat, { dokumenttiOid }))
+            .reduce((accumulatedAineistot, aineisto) => {
+              const kategoriaId = aineisto.kategoriaId || props.paakategoria.id;
+              if (!accumulatedAineistot[kategoriaId]) {
+                accumulatedAineistot[kategoriaId] = aineistoNahtavilla[kategoriaId];
+              }
+              accumulatedAineistot[kategoriaId].push({ ...aineisto, kategoriaId, jarjestys: accumulatedAineistot[kategoriaId].length });
+
+              return accumulatedAineistot;
+            }, {} as AineistoNahtavilla);
+
+          console.log({ muokatutKategoriat });
+          Object.entries(muokatutKategoriat).forEach(([kategoriaId, kategorianAineistot]) => {
+            setValue(`aineistoNahtavilla.${kategoriaId}`, kategorianAineistot, { shouldDirty: true });
           });
-          setValue(aineistoRoute, value, { shouldDirty: true });
         }}
       />
     </>

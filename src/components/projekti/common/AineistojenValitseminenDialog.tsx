@@ -40,9 +40,15 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
     if (projekti && open) {
       const haeAineistotDialogiin = async () => {
         setIsLoading(true);
-        const velhoAineistoKategoriat = await api.listaaVelhoProjektiAineistot(projekti.oid);
-        setFetchedAineistoKategoriat(velhoAineistoKategoriat);
-        setIsLoading(false);
+        try {
+          const velhoAineistoKategoriat = await api.listaaVelhoProjektiAineistot(projekti.oid);
+          setFetchedAineistoKategoriat(velhoAineistoKategoriat);
+        } catch {
+          // Maybe custom error?
+          setFetchedAineistoKategoriat([]);
+        } finally {
+          setIsLoading(false);
+        }
       };
       haeAineistotDialogiin();
     }
@@ -52,6 +58,7 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
 
   const updateValitut = useCallback<(kategoriaNimi: string, selectedRows: VelhoAineisto[]) => void>(
     (kategoriaNimi, rows) => {
+      console.log(rows);
       const aineistoKategoriat = getValues("aineistoKategoriat");
       const aineistoKategoria = aineistoKategoriat.find((kategoria) => kategoria.kategoria === kategoriaNimi);
       if (aineistoKategoria) {
@@ -67,9 +74,10 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
   const moveAineistoToMainForm = async (data: FormData) => {
     const newAineistoInput = data.aineistoKategoriat.reduce<AineistoInput[]>((aineistot, kategoria) => {
       aineistot.push(
-        ...kategoria.aineistot.map((aineisto) => ({
+        ...kategoria.aineistot.map<AineistoInput>((aineisto) => ({
           dokumenttiOid: aineisto.oid,
           nimi: aineisto.tiedosto,
+          kategoriaId: aineisto.kategoriaId,
         }))
       );
       return aineistot;

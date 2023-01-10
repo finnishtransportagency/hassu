@@ -7,22 +7,24 @@ const { expect } = require("chai");
 describe("AineistoKategoria", () => {
   it("should find correct kategoria based on matching", () => {
     const aineistoKategoria = aineistoKategoriat.findKategoria(
+      "osa_a",
       "01 Prosessi/Yleiset/T100 Tiesuunnitelman selostusosa",
       "T119 Kaavakartat, määräykset ja merkinnät.txt"
     );
-    expect(aineistoKategoria.id).to.eq("TBD101");
-    expect(aineistoKategoria.parentKategoria.id).to.eq("T1xx");
+    expect(aineistoKategoria.id).to.eq("kaavakartat");
+    expect(aineistoKategoria.parentKategoria.id).to.eq("osa_a");
 
     expect(
       aineistoKategoriat.findKategoria(
+        "osa_c",
         "06 Suunnitelma/Suunnitelmakokonaisuus/T300 Tiesuunnitelman informatiivinen aineisto",
         "T320 Ympäristösuunnitelma.txt"
       ).id
-    ).to.eq("TBD306");
+    ).to.eq("ymparistosuunnitelmat");
   });
 
   it("should find correct kategoria based on id", () => {
-    expect(aineistoKategoriat.findById("TBD101").id).to.eq("TBD101");
+    expect(aineistoKategoriat.findById("kaavakartat").id).to.eq("kaavakartat");
   });
 
   it("should list category tree successfully", () => {

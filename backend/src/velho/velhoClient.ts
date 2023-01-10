@@ -4,7 +4,12 @@ import * as HakuPalvelu from "./hakupalvelu";
 import * as ProjektiRekisteri from "./projektirekisteri";
 import { ProjektiToimeksiannotInner } from "./projektirekisteri";
 import * as AineistoPalvelu from "./aineistopalvelu";
-import { VelhoAineisto, VelhoAineistoKategoria, VelhoHakuTulos } from "../../../common/graphql/apiModel";
+import {
+  ListaaVelhoProjektiAineistotQueryVariables,
+  VelhoAineisto,
+  VelhoAineistoKategoria,
+  VelhoHakuTulos,
+} from "../../../common/graphql/apiModel";
 import { adaptDokumenttiTyyppi, adaptKasittelyntilaToVelho, adaptProjekti, adaptSearchResults, ProjektiSearchResult } from "./velhoAdapter";
 import { VelhoError } from "../error/velhoError";
 import { AxiosResponse, AxiosStatic } from "axios";
@@ -127,7 +132,10 @@ export class VelhoClient {
   }
 
   @recordVelhoLatencyDecorator
-  public async loadProjektiAineistot(oid: string): Promise<VelhoAineistoKategoria[]> {
+  public async loadProjektiAineistot({
+    oid,
+    ylaKategoriaId,
+  }: ListaaVelhoProjektiAineistotQueryVariables): Promise<VelhoAineistoKategoria[]> {
     try {
       const toimeksiannot: ProjektiToimeksiannotInner[] = await this.listToimeksiannot(oid);
       const hakuApi = await this.createHakuApi();
@@ -154,7 +162,7 @@ export class VelhoClient {
                   __typename: "VelhoAineisto",
                   oid: aineisto.oid,
                   tiedosto: tiedostoNimi,
-                  kategoriaId: aineistoKategoriat.findKategoria(aineisto.metatiedot?.kuvaus, tiedostoNimi)?.id,
+                  kategoriaId: aineistoKategoriat.findKategoria(ylaKategoriaId, aineisto.metatiedot?.kuvaus, tiedostoNimi)?.id,
                   dokumenttiTyyppi,
                   muokattu: dayjs(aineisto["tuorein-versio"].muokattu).format(),
                 } as VelhoAineisto);

@@ -105,7 +105,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
               title: `Esittelyaineisto (${esittelyaineistot?.length || 0})`,
               content: (
                 <>
-                  {projekti?.oid && vuorovaikutus && !!esittelyaineistot?.length ? (
+                  {projekti?.oid && !!esittelyaineistot?.length ? (
                     <AineistoTable
                       aineistoTyyppi={SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT}
                       esittelyAineistotFieldArray={esittelyAineistotFieldArray}
@@ -116,7 +116,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
                       vuorovaikutus={vuorovaikutus}
                     />
                   ) : (
-                    <p>Ei esittelyaineistoa. Aloita aineistojen tuonti painamalla Tuo Aineistoja -painiketta.</p>
+                    <p>Ei aineistoa. Aloita aineistojen tuonti painamalla Tuo Aineistoja -painiketta.</p>
                   )}
                 </>
               ),
@@ -133,7 +133,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
               title: `Suunnitelmaluonnokset (${suunnitelmaluonnokset?.length || 0})`,
               content: (
                 <>
-                  {vuorovaikutus && !!suunnitelmaluonnokset?.length ? (
+                  {projekti?.oid && !!suunnitelmaluonnokset?.length ? (
                     <AineistoTable
                       aineistoTyyppi={SuunnitteluVaiheAineistoTyyppi.SUUNNITELMALUONNOKSET}
                       esittelyAineistotFieldArray={esittelyAineistotFieldArray}
@@ -144,7 +144,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
                       vuorovaikutus={vuorovaikutus}
                     />
                   ) : (
-                    <p>Ei esittelyaineistoa. Aloita aineistojen tuonti painamalla Tuo Aineistoja -painiketta.</p>
+                    <p>Ei aineistoa. Aloita aineistojen tuonti painamalla Tuo Aineistoja -painiketta.</p>
                   )}
                 </>
               ),
