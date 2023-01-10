@@ -229,7 +229,7 @@ export async function testListDocumentsToImport(oid: string): Promise<API.VelhoA
 }
 
 export async function listDocumentsToImport(oid: string): Promise<API.VelhoAineistoKategoria[]> {
-  const velhoAineistoKategories = await api.listaaVelhoProjektiAineistot(oid);
+  const velhoAineistoKategories = await api.listaaVelhoProjektiAineistot(oid, undefined);
   expect(velhoAineistoKategories).not.be.empty;
   const aineistot = velhoAineistoKategories[0].aineistot;
   expect(aineistot).not.be.empty;

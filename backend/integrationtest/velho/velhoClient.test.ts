@@ -52,7 +52,7 @@ describe("VelhoClient", () => {
       this.skip();
     }
     expect(oid).to.not.be.null;
-    const projektiAineistot = await velho.loadProjektiAineistot(oid);
+    const projektiAineistot = await velho.loadProjektiAineistot({ oid, ylaKategoriaId: undefined });
     const dokumenttiOid = projektiAineistot[0].aineistot[0].oid;
     const link = await velho.getLinkForDocument(dokumenttiOid);
     expect(link).to.contain("https://");

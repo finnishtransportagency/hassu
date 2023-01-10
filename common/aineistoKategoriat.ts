@@ -9,15 +9,21 @@ type AineistoKategoriaProps = {
 
 export class AineistoKategoria {
   private readonly props: AineistoKategoriaProps;
+  private readonly parent?: AineistoKategoria;
   private readonly childKategoriat?: AineistoKategoria[];
 
-  constructor(props: AineistoKategoriaProps) {
+  constructor(props: AineistoKategoriaProps, parent?: AineistoKategoria) {
     this.props = props;
-    this.childKategoriat = props.alakategoriat?.map((alakategoriaProps) => new AineistoKategoria(alakategoriaProps), this);
+    this.parent = parent;
+    this.childKategoriat = props.alakategoriat?.map((alakategoriaProps) => new AineistoKategoria(alakategoriaProps, this), this);
   }
 
   public get id(): string {
     return this.props.id;
+  }
+
+  public get parentKategoria(): AineistoKategoria | undefined {
+    return this.parent;
   }
 
   public get hakulauseet(): string[] | undefined {
@@ -39,7 +45,7 @@ export class AineistoKategoriat {
     return this.ylaKategoriat;
   }
 
-  public findYlakategoriaById(kategoriaId: string): AineistoKategoria | undefined {
+  public findYlakategoriaById(kategoriaId: string | null | undefined): AineistoKategoria | undefined {
     return this.ylaKategoriat.find(({ id }) => kategoriaId === id);
   }
 
@@ -55,12 +61,15 @@ export class AineistoKategoriat {
     const kategoriat = this.ylaKategoriat.filter((ylakategoria) => !ylaKategoriaId || ylaKategoriaId === ylakategoria.id);
     const ylakategoria = findMatchingCategory(kategoriat, aineistoKuvaus, undefined);
     if (ylakategoria) {
+      // Ylakategoria is matched, searching for mathing alakategoria
       const alakategoria = findMatchingCategory(ylakategoria.alaKategoriat, aineistoKuvaus, tiedostoNimi);
       if (alakategoria) {
         return alakategoria;
       }
+      return ylakategoria;
     }
-    return ylakategoria;
+    // If ylakategoria is not matched then return ylakategoria by id
+    return this.findYlakategoriaById(ylaKategoriaId);
   }
 
   public findById(id: string): AineistoKategoria | undefined {
@@ -152,7 +161,15 @@ export const aineistoKategoriat = new AineistoKategoriat([
       },
       {
         id: "yva",
-        hakulauseet: ["Ympäristövaikutusten arviointi", "Päätelmä", "YVA", "Yhteysviranomaisen perusteltu päätelmä", "120", "Kartta-atlas"],
+        hakulauseet: [
+          "Ympäristövaikutusten arviointi",
+          "Päätelmä",
+          // keyword 'yva' must be surrounded by non latin characters
+          "(^|[^a-z])yva($|[^a-z])",
+          "Yhteysviranomaisen perusteltu päätelmä",
+          "120",
+          "Kartta-atlas",
+        ],
       },
     ],
   },
