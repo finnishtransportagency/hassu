@@ -7,7 +7,7 @@ const { expect } = require("chai");
 describe("AineistoKategoria", () => {
   it("should find correct kategoria based on matching", () => {
     const aineistoKategoria = aineistoKategoriat.findKategoria(
-      "osa_a",
+      undefined,
       "01 Prosessi/Yleiset/T100 Tiesuunnitelman selostusosa",
       "T119 Kaavakartat, määräykset ja merkinnät.txt"
     );
@@ -16,11 +16,19 @@ describe("AineistoKategoria", () => {
 
     expect(
       aineistoKategoriat.findKategoria(
-        "osa_c",
+        undefined,
         "06 Suunnitelma/Suunnitelmakokonaisuus/T300 Tiesuunnitelman informatiivinen aineisto",
         "T320 Ympäristösuunnitelma.txt"
       ).id
     ).to.eq("ymparistosuunnitelmat");
+  });
+
+  it("should find search within one ylakategoria if given", () => {
+    const aineistoKategoria = aineistoKategoriat.findKategoria("osa_a", "kaavakartta", "kaavakartta");
+    expect(aineistoKategoria.id).to.eq("kaavakartat");
+    expect(aineistoKategoria.parentKategoria.id).to.eq("osa_a");
+
+    expect(aineistoKategoriat.findKategoria("osa_a", "unknown", "unknown").id).to.eq("osa_a");
   });
 
   it("should find correct kategoria based on id", () => {

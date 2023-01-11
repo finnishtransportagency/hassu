@@ -58,18 +58,16 @@ export class AineistoKategoriat {
     aineistoKuvaus: string | undefined,
     tiedostoNimi: string
   ): AineistoKategoria | undefined {
-    const kategoriat = this.ylaKategoriat.filter((ylakategoria) => !ylaKategoriaId || ylaKategoriaId === ylakategoria.id);
-    const ylakategoria = findMatchingCategory(kategoriat, aineistoKuvaus, undefined);
+    const ylakategoria = this.findYlakategoriaById(ylaKategoriaId) || findMatchingCategory(this.ylaKategoriat, aineistoKuvaus, undefined);
     if (ylakategoria) {
       // Ylakategoria is matched, searching for mathing alakategoria
       const alakategoria = findMatchingCategory(ylakategoria.alaKategoriat, aineistoKuvaus, tiedostoNimi);
       if (alakategoria) {
         return alakategoria;
       }
-      return ylakategoria;
     }
-    // If ylakategoria is not matched then return ylakategoria by id
-    return this.findYlakategoriaById(ylaKategoriaId);
+    // If ylakategoria is not matched then return ylakategoria
+    return ylakategoria;
   }
 
   public findById(id: string): AineistoKategoria | undefined {
