@@ -1,10 +1,9 @@
 /// <reference types="cypress" />
 
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
-import { typeIntoFields } from "../../support/util";
+import { selectAllAineistotFromCategory, typeIntoFields } from "../../support/util";
 import dayjs from "dayjs";
 import { formatDate } from "../../../src/util/dateUtils";
-import { selectAllAineistotFromCategory } from "../../support/util";
 
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
@@ -237,6 +236,7 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
     cy.get("#select_valitut_aineistot_button").click();
 
     cy.get("#save_published_suunnitteluvaihe").click();
+    cy.get("#accept_publish").click();
 
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu/vuorovaikuttaminen/1");
 
