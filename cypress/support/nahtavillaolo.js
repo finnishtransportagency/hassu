@@ -51,8 +51,8 @@ export function lisaaNahtavillaoloAineistot(oid) {
   cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/nahtavillaolo", { timeout: 30000 });
   cy.get("#aineisto_tab").click({ force: true });
 
-  cy.get("#T1xx").click();
-  cy.get("#T1xx_button").click();
+  cy.get("#osa_a").click();
+  cy.get("#osa_a_button").click();
   selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
   cy.get("#select_valitut_aineistot_button").click();
 

@@ -762,7 +762,7 @@ export class ProjektiFixture {
             {
               dokumenttiOid: "11",
               jarjestys: 1,
-              kategoriaId: "T1xx",
+              kategoriaId: "osa_a",
               nimi: "T113 TS Esite.txt",
               tiedosto: "/hyvaksymispaatos/1/T113 TS Esite.txt",
               tila: AineistoTila.VALMIS,

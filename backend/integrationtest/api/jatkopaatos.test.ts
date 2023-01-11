@@ -66,7 +66,7 @@ describe("Jatkopäätökset", () => {
 
   async function addJatkopaatos1WithAineistot() {
     // Lisää aineistot
-    const velhoAineistoKategorias = await api.listaaVelhoProjektiAineistot(oid);
+    const velhoAineistoKategorias = await api.listaaVelhoProjektiAineistot(oid, undefined);
     await testCreateHyvaksymisPaatosWithAineistot(
       oid,
       "jatkoPaatos1Vaihe",
@@ -80,7 +80,7 @@ describe("Jatkopäätökset", () => {
 
   async function addJatkopaatos2WithAineistot() {
     // Lisää aineistot
-    const velhoAineistoKategorias = await api.listaaVelhoProjektiAineistot(oid);
+    const velhoAineistoKategorias = await api.listaaVelhoProjektiAineistot(oid, undefined);
     await testCreateHyvaksymisPaatosWithAineistot(
       oid,
       "jatkoPaatos2Vaihe",

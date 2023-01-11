@@ -45,7 +45,7 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
 
     cy.get("#aineisto_tab").click({ force: true });
     // Test saved aineistot
-    cy.get("input[type='hidden'][name ^='aineistoNahtavilla.T1xx.']").should("exist");
+    cy.get("input[type='hidden'][name ^='aineistoNahtavilla.osa_a.']").should("exist");
     cy.get("input[type='hidden'][name ^='lisaAineisto.']").should("exist");
   });
 

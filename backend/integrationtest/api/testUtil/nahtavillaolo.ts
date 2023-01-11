@@ -69,9 +69,9 @@ export async function testImportNahtavillaoloAineistot(
   velhoAineistoKategorias: VelhoAineistoKategoria[]
 ): Promise<NahtavillaoloVaihe> {
   const { oid, versio } = projekti;
-  const t2xx = velhoAineistoKategorias
+  const osaB = velhoAineistoKategorias
     .reduce((documents, aineistoKategoria) => {
-      aineistoKategoria.aineistot.filter((aineisto) => aineisto.kategoriaId == "T2xx").forEach((aineisto) => documents.push(aineisto));
+      aineistoKategoria.aineistot.filter((aineisto) => aineisto.kategoriaId == "osa_b").forEach((aineisto) => documents.push(aineisto));
       return documents;
     }, [] as VelhoAineisto[])
     .sort((a, b) => a.oid.localeCompare(b.oid));
@@ -89,7 +89,7 @@ export async function testImportNahtavillaoloAineistot(
     oid,
     versio,
     nahtavillaoloVaihe: {
-      aineistoNahtavilla: adaptAineistoToInput(t2xx),
+      aineistoNahtavilla: adaptAineistoToInput(osaB),
       lisaAineisto: adaptAineistoToInput(lisaAineisto),
     },
   });

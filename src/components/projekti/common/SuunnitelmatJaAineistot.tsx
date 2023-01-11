@@ -32,9 +32,9 @@ interface FormValues {
 }
 
 const kategoriaInfoText: Record<string, string> = {
-  T1xx: "Selostusosan alle tuodaan A- tai T100 -kansioiden aineistot.",
-  T2xx: "Pääpiirustusten alle tuodaan B- tai T200 -kansioiden aineistot.",
-  T3xx: "Informatiivisen aineiston alle tuodaan C- tai T300 -kansioiden aineistot.",
+  osa_a: "Selostusosan alle tuodaan A- tai T100 -kansioiden aineistot.",
+  osa_b: "Pääpiirustusten alle tuodaan B- tai T200 -kansioiden aineistot.",
+  osa_c: "Informatiivisen aineiston alle tuodaan C- tai T300 -kansioiden aineistot.",
 };
 
 export interface PaatosAineistoTiedot {

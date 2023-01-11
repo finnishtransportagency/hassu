@@ -44,8 +44,8 @@ export function lisaaPaatosJaAineistot(oid, projektiNimi) {
   selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
   cy.get("#select_valitut_aineistot_button").click();
 
-  cy.get("#T3xx").click();
-  cy.get("#T3xx_button").click();
+  cy.get("#osa_c").click();
+  cy.get("#osa_c_button").click();
   selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
   cy.get("#select_valitut_aineistot_button").click();
 
@@ -60,5 +60,5 @@ export function lisaaPaatosJaAineistot(oid, projektiNimi) {
   cy.get("input[type='hidden'][name='hyvaksymisPaatos.0.nimi']").should("exist");
 
   // Test rest of the saved aineisto
-  cy.get("input[type='hidden'][name ^='aineistoNahtavilla.T3xx.']").should("exist");
+  cy.get("input[type='hidden'][name ^='aineistoNahtavilla.osa_c.']").should("exist");
 }
