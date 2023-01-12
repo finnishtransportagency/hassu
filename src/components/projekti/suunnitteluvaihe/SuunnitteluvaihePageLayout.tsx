@@ -13,6 +13,7 @@ import dayjs from "dayjs";
 import { TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
 import useSnackbars from "src/hooks/useSnackbars";
 import useApi from "src/hooks/useApi";
+import Notification, { NotificationType } from "@components/notification/Notification";
 
 export default function SuunnitteluPageLayoutWrapper({ children }: { children?: ReactNode }) {
   return (
@@ -124,6 +125,26 @@ function SuunnitteluPageLayout({
       contentAsideTitle={<UusiVuorovaikutusNappi disabled={!kaikkiTilaisuudetMenneet} setDialogOpen={setDialogOpen} />}
     >
       <Section noDivider>
+        <Notification type={NotificationType.INFO} hideIcon>
+          <div>
+            <h3 className="vayla-small-title">Ohjeet</h3>
+            <ul className="list-disc block pl-5">
+              <li>Suunnitteluvaihe käsittää kansalaisille näytettäviä perustietoja suunnittelun etenemisestä sekä vuorovaikutustilaisuuksien
+                tiedot.
+              </li>
+              <li>Suunnitteluvaiheen perustiedot -välilehdelle kirjataan kansalaisille suunnattua yleistä tietoa suunnitelmasta,
+                suunnittelun etenemisestä sekä aikatauluarvio. Perustiedot näkyvät kansalaisille palvelun julkisella puolella kutsun
+                julkaisun jälkeen.
+              </li>
+              <li>Suunnitteluvaiheen perustietoja pystyy muokkaamaan myös kutsun julkaisun jälkeen.
+              </li>
+              <li>Vuorovaikutustilaisuuksien tiedot lisätään kutsuun Kutsu vuorovaikutukseen -välilehdeltä.</li>
+              <li>Suunnitelma näkyy kansalaisille suunnitteluvaiheessa olevana kutsun julkaisusta nähtäville asettamisen kuulutuksen
+                julkaisuun asti.
+              </li>
+            </ul>
+          </div>
+        </Notification>
         <Tabs value={value}>
           {tabProps.map((tProps, index) => (
             <LinkTab key={index} {...tProps} />
