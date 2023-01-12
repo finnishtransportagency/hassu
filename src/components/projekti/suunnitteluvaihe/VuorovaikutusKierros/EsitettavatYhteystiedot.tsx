@@ -44,7 +44,7 @@ export default function EsitettavatYhteystiedot({ projektiHenkilot }: Props): Re
   return (
     <Section className="mt-8">
       <SectionContent>
-        <h4 className="vayla-small-title">Vuorovaikuttamisen yhteyshenkilöt</h4>
+        <h4 className="vayla-small-title">Kutsussa esitettävät yhteystiedot</h4>
         <p>
           Voit valita kutsussa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden yhteystiedon. Projektipäällikön
           tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot haetaan Projektin henkilöt -sivulle tallennetuista
@@ -87,7 +87,7 @@ export default function EsitettavatYhteystiedot({ projektiHenkilot }: Props): Re
         )}
       </SectionContent>
       <SectionContent>
-        <p>Uusi yhteystieto</p>
+        <div className="vayla-label">Uusi yhteystieto</div>
         <p>
           Lisää uudelle yhteystiedolle rivi Lisää uusi-painikkeella. Huomioi, että uusi yhteystieto ei tallennu Projektin henkilöt -sivulle
           eikä henkilölle tule käyttöoikeuksia projektiin.
