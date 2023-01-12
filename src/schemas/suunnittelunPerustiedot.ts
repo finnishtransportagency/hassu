@@ -13,7 +13,7 @@ export const suunnittelunPerustiedotSchema = Yup.object().shape({
   oid: Yup.string().required(),
   vuorovaikutusKierros: Yup.object().shape({
     vuorovaikutusNumero: Yup.number().required(),
-    arvioSeuraavanVaiheenAlkamisesta: Yup.string().required("Arvio ei voi olla tyhjä").nullable(),
+    arvioSeuraavanVaiheenAlkamisesta: Yup.string().nullable(),
     suunnittelunEteneminenJaKesto: Yup.string().nullable(),
     esittelyaineisto: getAineistotSchema(),
     suunnitelmaluonnokset: getAineistotSchema(),
