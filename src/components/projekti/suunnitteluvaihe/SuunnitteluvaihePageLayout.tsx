@@ -44,24 +44,20 @@ function SuunnitteluPageLayout({
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
   const { mutate: reloadProjekti } = useProjekti();
 
-  const vuorovaikutusKierrosNumerot: number[] = useMemo(() => {
-    return projekti.vuorovaikutusKierros?.vuorovaikutusNumero ? [...Array(projekti.vuorovaikutusKierros?.vuorovaikutusNumero).keys()] : [0];
-  }, [projekti.vuorovaikutusKierros?.vuorovaikutusNumero]);
+  const vuorovaikutusNumero: number = projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0;
 
   const tabProps: LinkTabProps[] = useMemo(() => {
-    const vuorovaikutusTabs = vuorovaikutusKierrosNumerot.map<LinkTabProps>((kierrosId) => {
-      return {
-        linkProps: {
-          href: {
-            pathname: `/yllapito/projekti/[oid]/suunnittelu/vuorovaikuttaminen/[kierrosId]`,
-            query: { oid: projektiOid, kierrosId: (kierrosId + 1).toString() },
-          },
+    const vuorovaikutusTab = {
+      linkProps: {
+        href: {
+          pathname: `/yllapito/projekti/[oid]/suunnittelu/vuorovaikuttaminen/[kierrosId]`,
+          query: { oid: projektiOid, kierrosId: (vuorovaikutusNumero + 1).toString() },
         },
-        label: `${kierrosId + 1}. vuorovaikuttaminen`,
-        disabled: disableTabs,
-        id: `${kierrosId}_vuorovaikuttaminen_tab`,
-      };
-    });
+      },
+      label: `Kutsu vuorovaikutukseen`,
+      disabled: disableTabs,
+      id: `${vuorovaikutusNumero}_vuorovaikuttaminen_tab`,
+    };
     return [
       {
         linkProps: {
@@ -74,9 +70,9 @@ function SuunnitteluPageLayout({
         disabled: false,
         id: "perustiedot_tab",
       },
-      ...vuorovaikutusTabs,
+      vuorovaikutusTab,
     ];
-  }, [projektiOid, vuorovaikutusKierrosNumerot, disableTabs]);
+  }, [projektiOid, disableTabs, vuorovaikutusNumero]);
 
   const value = useMemo(() => {
     const indexOfTab = tabProps.findIndex((tProps) => {
