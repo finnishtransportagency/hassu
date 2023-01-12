@@ -1,12 +1,12 @@
 import { velho } from "../velho/velhoClient";
-import { HaeVelhoProjektiAineistoLinkkiQueryVariables, ListaaVelhoProjektiAineistotQueryVariables } from "../../../common/graphql/apiModel";
+import { HaeVelhoProjektiAineistoLinkkiQueryVariables } from "../../../common/graphql/apiModel";
 import { requirePermissionMuokkaaProjekti } from "../projekti/projektiHandler";
 
 class VelhoDocumentHandler {
-  async listaaVelhoProjektiAineistot(variables: ListaaVelhoProjektiAineistotQueryVariables) {
-    await requirePermissionMuokkaaProjekti(variables.oid);
+  async listaaVelhoProjektiAineistot(oid: string) {
+    await requirePermissionMuokkaaProjekti(oid);
 
-    return velho.loadProjektiAineistot(variables);
+    return velho.loadProjektiAineistot(oid);
   }
 
   async haeVelhoProjektiAineistoLinkki({ oid, dokumenttiOid }: HaeVelhoProjektiAineistoLinkkiQueryVariables) {

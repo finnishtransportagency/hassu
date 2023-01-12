@@ -185,7 +185,6 @@ const SuunnitelmaAineistoPaakategoriaContent = (props: SuunnitelmaAineistoPaakat
         open={aineistoDialogOpen}
         infoText={props.dialogInfoText}
         onClose={() => setAineistoDialogOpen(false)}
-        ylakategoriaId={props.paakategoria.id}
         onSubmit={(selectedAineistot) => {
           const aineistotFlat = Object.values(aineistoNahtavilla || {}).flat();
           const muokatutKategoriat: AineistoNahtavilla = selectedAineistot

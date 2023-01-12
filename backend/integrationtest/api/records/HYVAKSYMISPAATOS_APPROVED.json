@@ -147,7 +147,6 @@
       {
         "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
         "jarjestys": 1,
-        "kategoriaId": "osa_a",
         "nimi": "T113 TS Esite.txt",
         "tiedosto": "/hyvaksymispaatos/1/T113 TS Esite.txt",
         "tila": "VALMIS",
@@ -218,7 +217,6 @@
         {
           "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
           "jarjestys": 1,
-          "kategoriaId": "osa_a",
           "nimi": "T113 TS Esite.txt",
           "tiedosto": "/hyvaksymispaatos/1/T113 TS Esite.txt",
           "tila": "VALMIS",
@@ -371,11 +369,42 @@
   "nahtavillaoloVaihe": {
     "aineistoNahtavilla": [
       {
-        "dokumenttiOid": "1.2.246.578.5.100.2717425363.3158441393",
+        "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
         "jarjestys": 1,
-        "kategoriaId": "osa_b",
-        "nimi": "T211 Piirustusmerkinnät.txt",
-        "tiedosto": "/nahtavillaolo/1/T211 Piirustusmerkinnät.txt",
+        "nimi": "TYHJÄ.txt",
+        "tiedosto": "/nahtavillaolo/1/TYHJÄ.txt",
+        "tila": "VALMIS",
+        "tuotu": "2020-01-01T00:00:00+02:00"
+      },
+      {
+        "dokumenttiOid": "1.2.246.578.5.100.2150904336.3303274089",
+        "jarjestys": 2,
+        "nimi": "T122 Kustannusjakoehdotus.txt",
+        "tiedosto": "/nahtavillaolo/1/T122 Kustannusjakoehdotus.txt",
+        "tila": "VALMIS",
+        "tuotu": "2020-01-01T00:00:00+02:00"
+      },
+      {
+        "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
+        "jarjestys": 3,
+        "nimi": "T113 TS Esite.txt",
+        "tiedosto": "/nahtavillaolo/1/T113 TS Esite.txt",
+        "tila": "VALMIS",
+        "tuotu": "2020-01-01T00:00:00+02:00"
+      },
+      {
+        "dokumenttiOid": "1.2.246.578.5.100.2180114330.3477252605",
+        "jarjestys": 4,
+        "nimi": "T546 Ympäristösuunnitelmat.txt",
+        "tiedosto": "/nahtavillaolo/1/T546 Ympäristösuunnitelmat.txt",
+        "tila": "VALMIS",
+        "tuotu": "2020-01-01T00:00:00+02:00"
+      },
+      {
+        "dokumenttiOid": "1.2.246.578.5.100.2189884431.3316178085",
+        "jarjestys": 5,
+        "nimi": "T118 Suunnitteluperusteet.txt",
+        "tiedosto": "/nahtavillaolo/1/T118 Suunnitteluperusteet.txt",
         "tila": "VALMIS",
         "tuotu": "2020-01-01T00:00:00+02:00"
       }
@@ -446,11 +475,42 @@
     {
       "aineistoNahtavilla": [
         {
-          "dokumenttiOid": "1.2.246.578.5.100.2717425363.3158441393",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
           "jarjestys": 1,
-          "kategoriaId": "osa_b",
-          "nimi": "T211 Piirustusmerkinnät.txt",
-          "tiedosto": "/nahtavillaolo/1/T211 Piirustusmerkinnät.txt",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/nahtavillaolo/1/TYHJÄ.txt",
+          "tila": "VALMIS",
+          "tuotu": "2020-01-01T00:00:00+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2150904336.3303274089",
+          "jarjestys": 2,
+          "nimi": "T122 Kustannusjakoehdotus.txt",
+          "tiedosto": "/nahtavillaolo/1/T122 Kustannusjakoehdotus.txt",
+          "tila": "VALMIS",
+          "tuotu": "2020-01-01T00:00:00+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
+          "jarjestys": 3,
+          "nimi": "T113 TS Esite.txt",
+          "tiedosto": "/nahtavillaolo/1/T113 TS Esite.txt",
+          "tila": "VALMIS",
+          "tuotu": "2020-01-01T00:00:00+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2180114330.3477252605",
+          "jarjestys": 4,
+          "nimi": "T546 Ympäristösuunnitelmat.txt",
+          "tiedosto": "/nahtavillaolo/1/T546 Ympäristösuunnitelmat.txt",
+          "tila": "VALMIS",
+          "tuotu": "2020-01-01T00:00:00+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2189884431.3316178085",
+          "jarjestys": 5,
+          "nimi": "T118 Suunnitteluperusteet.txt",
+          "tiedosto": "/nahtavillaolo/1/T118 Suunnitteluperusteet.txt",
           "tila": "VALMIS",
           "tuotu": "2020-01-01T00:00:00+02:00"
         }
@@ -631,7 +691,6 @@
       {
         "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
         "jarjestys": 11,
-        "kategoriaId": "osa_a",
         "nimi": "new karttakuvalla_tiedosto.pdf",
         "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
         "tila": "VALMIS",
@@ -771,7 +830,6 @@
         {
           "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
           "jarjestys": 11,
-          "kategoriaId": "osa_a",
           "nimi": "new karttakuvalla_tiedosto.pdf",
           "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
           "tila": "VALMIS",

@@ -10,7 +10,7 @@ import {
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
   VelhoAineisto,
-  VelhoAineistoKategoria,
+  VelhoToimeksianto,
 } from "../../../../common/graphql/apiModel";
 import { adaptAineistoToInput, expectToMatchSnapshot } from "./util";
 import { loadProjektiFromDatabase, testPublicAccessToProjekti } from "./tests";
@@ -66,19 +66,19 @@ export async function testNahtavillaoloApproval(oid: string, projektiPaallikko: 
 
 export async function testImportNahtavillaoloAineistot(
   projekti: Projekti,
-  velhoAineistoKategorias: VelhoAineistoKategoria[]
+  velhoToimeksiannot: VelhoToimeksianto[]
 ): Promise<NahtavillaoloVaihe> {
   const { oid, versio } = projekti;
-  const osaB = velhoAineistoKategorias
-    .reduce((documents, aineistoKategoria) => {
-      aineistoKategoria.aineistot.filter((aineisto) => aineisto.kategoriaId == "osa_b").forEach((aineisto) => documents.push(aineisto));
+  const osaB = velhoToimeksiannot
+    .reduce((documents, toimeksianto) => {
+      toimeksianto.aineistot.forEach((aineisto) => documents.push(aineisto));
       return documents;
     }, [] as VelhoAineisto[])
     .sort((a, b) => a.oid.localeCompare(b.oid));
 
-  const lisaAineisto = velhoAineistoKategorias
-    .reduce((documents, aineistoKategoria) => {
-      aineistoKategoria.aineistot
+  const lisaAineisto = velhoToimeksiannot
+    .reduce((documents, toimeksianto) => {
+      toimeksianto.aineistot
         .filter((aineisto) => aineisto.tiedosto.indexOf("tokatiedosto") >= 0)
         .forEach((aineisto) => documents.push(aineisto));
       return documents;

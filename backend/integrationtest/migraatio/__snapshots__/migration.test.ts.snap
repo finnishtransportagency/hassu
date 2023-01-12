@@ -666,7 +666,15 @@ Object {
   "obj": Object {
     "nahtavillaoloVaihe": Object {
       "__typename": "NahtavillaoloVaihe",
-      "aineistoNahtavilla": undefined,
+      "aineistoNahtavilla": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2185960260.3380298692",
+          "jarjestys": 1,
+          "nimi": "T100 Kansilehti.txt",
+          "tila": "ODOTTAA_TUONTIA",
+        },
+      ],
       "hankkeenKuvaus": Object {
         "SAAME": "Saameksi nahtavillaoloVaihe",
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
@@ -749,7 +757,15 @@ Object {
   "obj": Object {
     "nahtavillaoloVaihe": Object {
       "__typename": "NahtavillaoloVaihe",
-      "aineistoNahtavilla": undefined,
+      "aineistoNahtavilla": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2185960260.3380298692",
+          "jarjestys": 1,
+          "nimi": "T100 Kansilehti.txt",
+          "tila": "ODOTTAA_TUONTIA",
+        },
+      ],
       "hankkeenKuvaus": Object {
         "SAAME": "Saameksi nahtavillaoloVaihe",
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
@@ -824,7 +840,15 @@ Object {
     },
     "nahtavillaoloVaiheJulkaisu": Object {
       "__typename": "NahtavillaoloVaiheJulkaisu",
-      "aineistoNahtavilla": undefined,
+      "aineistoNahtavilla": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2185960260.3380298692",
+          "jarjestys": 1,
+          "nimi": "T100 Kansilehti.txt",
+          "tila": "ODOTTAA_TUONTIA",
+        },
+      ],
       "hankkeenKuvaus": Object {
         "SAAME": "Saameksi nahtavillaoloVaihe",
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
@@ -944,6 +968,7 @@ Object {
   "description": "publicProjektiNahtavillaOloJulkinenAfterApproval",
   "obj": Object {
     "__typename": "NahtavillaoloVaiheJulkaisuJulkinen",
+    "aineistoNahtavilla": Array [],
     "hankkeenKuvaus": Object {
       "SAAME": "Saameksi nahtavillaoloVaihe",
       "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
@@ -1043,6 +1068,7 @@ Object {
     },
     "nahtavillaoloVaihe": Object {
       "__typename": "NahtavillaoloVaiheJulkaisuJulkinen",
+      "aineistoNahtavilla": Array [],
       "hankkeenKuvaus": Object {
         "SAAME": "Saameksi nahtavillaoloVaihe",
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",

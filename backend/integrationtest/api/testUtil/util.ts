@@ -53,8 +53,8 @@ export function expectToMatchSnapshot(description: string, obj: unknown): void {
 export function adaptAineistoToInput(aineistot: VelhoAineisto[]): AineistoInput[] {
   return aineistot
     .map((aineisto, index) => {
-      const { oid: dokumenttiOid, tiedosto: nimi, kategoriaId } = aineisto;
-      return { kategoriaId, jarjestys: index + 1, nimi, dokumenttiOid };
+      const { oid: dokumenttiOid, tiedosto: nimi } = aineisto;
+      return { jarjestys: index + 1, nimi, dokumenttiOid };
     })
     .slice(0, 5); // Optimization: don't copy all files
 }

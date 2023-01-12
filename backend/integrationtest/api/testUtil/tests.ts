@@ -220,20 +220,20 @@ export async function testSuunnitteluvaiheVuorovaikutus(projekti: Projekti, kayt
   // expectToMatchSnapshot("added " + UserFixture.mattiMeikalainen.uid + " to vuorovaikutus and vuorovaikutustilaisuus", difference);
 }
 
-export async function testListDocumentsToImport(oid: string): Promise<API.VelhoAineistoKategoria[]> {
-  const velhoAineistoKategories = await listDocumentsToImport(oid);
-  const aineistot = velhoAineistoKategories[0].aineistot;
+export async function testListDocumentsToImport(oid: string): Promise<API.VelhoToimeksianto[]> {
+  const velhoToimeksiannot = await listDocumentsToImport(oid);
+  const aineistot = velhoToimeksiannot[0].aineistot;
   const link = await api.haeVelhoProjektiAineistoLinkki(oid, aineistot[0].oid);
   expect(link).to.contain("https://");
-  return velhoAineistoKategories;
+  return velhoToimeksiannot;
 }
 
-export async function listDocumentsToImport(oid: string): Promise<API.VelhoAineistoKategoria[]> {
-  const velhoAineistoKategories = await api.listaaVelhoProjektiAineistot(oid, undefined);
-  expect(velhoAineistoKategories).not.be.empty;
-  const aineistot = velhoAineistoKategories[0].aineistot;
+export async function listDocumentsToImport(oid: string): Promise<API.VelhoToimeksianto[]> {
+  const velhoToimeksiannot = await api.listaaVelhoProjektiAineistot(oid);
+  expect(velhoToimeksiannot).not.be.empty;
+  const aineistot = velhoToimeksiannot[0].aineistot;
   expect(aineistot).not.be.empty;
-  return velhoAineistoKategories;
+  return velhoToimeksiannot;
 }
 
 export async function saveAndVerifyAineistoSave(
@@ -261,17 +261,17 @@ export async function saveAndVerifyAineistoSave(
   return projekti;
 }
 
-export async function testImportAineistot(oid: string, velhoAineistoKategorias: API.VelhoAineistoKategoria[]): Promise<void> {
+export async function testImportAineistot(oid: string, velhoToimeksiannot: API.VelhoToimeksianto[]): Promise<void> {
   let p1 = await loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
   let originalVuorovaikutus = p1!.vuorovaikutusKierros;
   if (!originalVuorovaikutus) {
     throw new Error("testImportAineistot: originalVuorovaikutus määrittelemättä");
   }
 
-  const aineistot = velhoAineistoKategorias
-    .reduce((documents, aineistoKategoria) => {
+  const aineistot = velhoToimeksiannot
+    .reduce((documents, toimeksianto) => {
       return documents.concat(
-        aineistoKategoria.aineistot.filter(
+        toimeksianto.aineistot.filter(
           (aineisto) => ["ekatiedosto_eka.pdf", "tokatiedosto_toka.pdf", "karttakuvalla_tiedosto.pdf"].indexOf(aineisto.tiedosto) >= 0
         )
       );
@@ -281,7 +281,6 @@ export async function testImportAineistot(oid: string, velhoAineistoKategorias: 
   let index = 1;
   const esittelyaineistot = [aineistot[0], aineistot[2]].map((aineisto) => ({
     dokumenttiOid: aineisto.oid,
-    kategoriaId: aineisto.kategoriaId,
     jarjestys: index++,
     nimi: aineisto.tiedosto,
   }));
@@ -289,7 +288,6 @@ export async function testImportAineistot(oid: string, velhoAineistoKategorias: 
   index = 1;
   const suunnitelmaluonnokset = [aineistot[1]].map((aineisto) => ({
     dokumenttiOid: aineisto.oid,
-    kategoriaId: aineisto.kategoriaId,
     jarjestys: index++,
     nimi: aineisto.tiedosto,
   }));

@@ -66,11 +66,11 @@ describe("Jatkopäätökset", () => {
 
   async function addJatkopaatos1WithAineistot() {
     // Lisää aineistot
-    const velhoAineistoKategorias = await api.listaaVelhoProjektiAineistot(oid, undefined);
+    const velhoToimeksiannot = await api.listaaVelhoProjektiAineistot(oid);
     await testCreateHyvaksymisPaatosWithAineistot(
       oid,
       "jatkoPaatos1Vaihe",
-      velhoAineistoKategorias,
+      velhoToimeksiannot,
       UserFixture.mattiMeikalainen.uid!,
       Status.JATKOPAATOS_1
     );
@@ -80,11 +80,11 @@ describe("Jatkopäätökset", () => {
 
   async function addJatkopaatos2WithAineistot() {
     // Lisää aineistot
-    const velhoAineistoKategorias = await api.listaaVelhoProjektiAineistot(oid, undefined);
+    const velhoToimeksiannot = await api.listaaVelhoProjektiAineistot(oid);
     await testCreateHyvaksymisPaatosWithAineistot(
       oid,
       "jatkoPaatos2Vaihe",
-      velhoAineistoKategorias,
+      velhoToimeksiannot,
       UserFixture.mattiMeikalainen.uid!,
       Status.JATKOPAATOS_2
     );

@@ -103,8 +103,8 @@ describe("Migraatio", () => {
     const projektipaallikko = projekti.kayttoOikeudet?.filter((kayttaja) => kayttaja.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO).pop();
     assert(projektipaallikko);
     projekti = await testNahtavillaolo(oid, projektipaallikko.kayttajatunnus);
-    const velhoAineistoKategorias = await listDocumentsToImport(oid);
-    await testImportNahtavillaoloAineistot(projekti, velhoAineistoKategorias);
+    const velhoToimeksiannot = await listDocumentsToImport(oid);
+    await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
     await testNahtavillaoloApproval(oid, projektipaallikko, userFixture);
     await testPublicAccessToProjekti(oid, Status.NAHTAVILLAOLO, userFixture, "nähtävilläolovaiheeseen migroitu julkinen projekti");
     await importAineistoMock.processQueue();
@@ -127,11 +127,11 @@ describe("Migraatio", () => {
     await testHyvaksymisPaatosVaihe(oid, userFixture);
 
     userFixture.loginAs(UserFixture.hassuAdmin);
-    const velhoAineistoKategorias = await listDocumentsToImport(oid);
+    const velhoToimeksiannot = await listDocumentsToImport(oid);
     await testCreateHyvaksymisPaatosWithAineistot(
       oid,
       "hyvaksymisPaatosVaihe",
-      velhoAineistoKategorias,
+      velhoToimeksiannot,
       projektiPaallikko.kayttajatunnus,
       Status.HYVAKSYTTY
     );

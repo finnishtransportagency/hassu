@@ -9,7 +9,7 @@ import {
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
   VelhoAineisto,
-  VelhoAineistoKategoria,
+  VelhoToimeksianto,
 } from "../../../../common/graphql/apiModel";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import { expect } from "chai";
@@ -54,13 +54,13 @@ export async function testHyvaksymisPaatosVaihe(oid: string, userFixture: UserFi
 export async function testCreateHyvaksymisPaatosWithAineistot(
   oid: string,
   vaihe: keyof Pick<TallennaProjektiInput, "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe">,
-  velhoAineistoKategorias: VelhoAineistoKategoria[],
+  velhoToimeksiannot: VelhoToimeksianto[],
   projektiPaallikko: string,
   expectedStatus: Status
 ): Promise<void> {
-  const lisaAineisto = velhoAineistoKategorias
-    .reduce((documents, aineistoKategoria) => {
-      aineistoKategoria.aineistot.forEach((aineisto) => documents.push(aineisto));
+  const lisaAineisto = velhoToimeksiannot
+    .reduce((documents, toimeksianto) => {
+      toimeksianto.aineistot.forEach((aineisto) => documents.push(aineisto));
       return documents;
     }, [] as VelhoAineisto[])
     .sort((a, b) => a.oid.localeCompare(b.oid));

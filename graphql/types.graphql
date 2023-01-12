@@ -750,18 +750,14 @@ type VelhoHakuTulos {
   projektiPaallikko: String
 }
 
-type VelhoAineistoKategoria {
-  kategoria: String!
+type VelhoToimeksianto {
+  nimi: String!
   aineistot: [VelhoAineisto!]!
 }
 
 type VelhoAineisto {
   oid: String!
   tiedosto: String!
-  """
-  Ehdotetun kategorian ID, joka viittaa kategoriapuun kategoriaan
-  """
-  kategoriaId: String
   dokumenttiTyyppi: String!
   muokattu: String!
 }

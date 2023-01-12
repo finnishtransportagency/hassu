@@ -53,12 +53,8 @@ export class AineistoKategoriat {
     return getNestedCategoryIds(this.ylaKategoriat);
   }
 
-  public findKategoria(
-    ylaKategoriaId: string | undefined | null,
-    aineistoKuvaus: string | undefined,
-    tiedostoNimi: string
-  ): AineistoKategoria | undefined {
-    const ylakategoria = this.findYlakategoriaById(ylaKategoriaId) || findMatchingCategory(this.ylaKategoriat, aineistoKuvaus, undefined);
+  public findKategoria(aineistoKuvaus: string | undefined, tiedostoNimi: string): AineistoKategoria | undefined {
+    const ylakategoria = findMatchingCategory(this.ylaKategoriat, aineistoKuvaus, undefined);
     if (ylakategoria) {
       // Ylakategoria is matched, searching for mathing alakategoria
       const alakategoria = findMatchingCategory(ylakategoria.alaKategoriat, aineistoKuvaus, tiedostoNimi);
@@ -150,7 +146,18 @@ function findMatchingCategory<T extends AineistoKategoria>(
 export const aineistoKategoriat = new AineistoKategoriat([
   {
     id: "osa_a",
-    hakulauseet: ["100", "Osa A", "A Osa", "Kuulutus", "Selostus", "Sisällysluettelo"],
+    hakulauseet: [
+      "100",
+      "Osa A",
+      "A Osa",
+      // "(^|/)a($|/)" both conditions below must be met
+      // -- be either at the start of string OR have a forward slash as a preceding character
+      // -- be either at the end of string OR have a forward slash as a subsequent character
+      "(^|/)a($|/)",
+      "Kuulutus",
+      "Selostus",
+      "Sisällysluettelo",
+    ],
     alakategoriat: [
       { id: "kaavakartat", hakulauseet: ["Kaava", "Kaavoitus", "1.7T", "119"] },
       {
@@ -173,7 +180,17 @@ export const aineistoKategoriat = new AineistoKategoriat([
   },
   {
     id: "osa_b",
-    hakulauseet: ["200", "Osa B", "B Osa", "Pääpiirustus", "Pääpiirustukset"],
+    hakulauseet: [
+      "200",
+      "Osa B",
+      "B Osa",
+      // "(^|/)b($|/)" both conditions below must be met
+      // -- be either at the start of string OR have a forward slash as a preceding character
+      // -- be either at the end of string OR have a forward slash as a subsequent character
+      "(^|/)b($|/)",
+      "Pääpiirustus",
+      "Pääpiirustukset",
+    ],
     alakategoriat: [
       { id: "yleiskartat", hakulauseet: ["Yleiskartta", "Yleiskartat", "212", "2.1T"] },
       {
@@ -250,7 +267,16 @@ export const aineistoKategoriat = new AineistoKategoriat([
   },
   {
     id: "osa_c",
-    hakulauseet: ["300", "Osa C", "C Osa", "Informatiivinen aineisto"],
+    hakulauseet: [
+      "300",
+      "Osa C",
+      "C Osa",
+      // "(^|/)c($|/)" both conditions below must be met
+      // -- be either at the start of string OR have a forward slash as a preceding character
+      // -- be either at the end of string OR have a forward slash as a subsequent character
+      "(^|/)c($|/)",
+      "Informatiivinen aineisto",
+    ],
     alakategoriat: [
       {
         id: "vaikutuksia_kuvaavat_selvitykset",
