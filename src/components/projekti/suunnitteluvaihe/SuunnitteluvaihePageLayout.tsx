@@ -5,7 +5,6 @@ import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { Dialog, DialogActions, DialogContent, Tabs } from "@mui/material";
 import { useRouter } from "next/router";
 import { UrlObject } from "url";
-import { ParsedUrlQueryInput } from "querystring";
 import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
 import ProjektiConsumer from "../ProjektiConsumer";
 import Button from "@components/button/Button";
@@ -50,8 +49,8 @@ function SuunnitteluPageLayout({
     const vuorovaikutusTab = {
       linkProps: {
         href: {
-          pathname: `/yllapito/projekti/[oid]/suunnittelu/vuorovaikuttaminen/[kierrosId]`,
-          query: { oid: projektiOid, kierrosId: (vuorovaikutusNumero + 1).toString() },
+          pathname: `/yllapito/projekti/[oid]/suunnittelu/vuorovaikuttaminen`,
+          query: { oid: projektiOid },
         },
       },
       label: `Kutsu vuorovaikutukseen`,
@@ -77,10 +76,10 @@ function SuunnitteluPageLayout({
   const value = useMemo(() => {
     const indexOfTab = tabProps.findIndex((tProps) => {
       const url = tProps.linkProps.href as UrlObject;
-      return url.pathname === router.pathname && (url.query as ParsedUrlQueryInput).kierrosId === router.query.kierrosId;
+      return url.pathname === router.pathname;
     });
     return indexOfTab === -1 ? false : indexOfTab;
-  }, [router.pathname, router.query.kierrosId, tabProps]);
+  }, [router.pathname, tabProps]);
 
   const kaikkiTilaisuudetMenneet = projekti.vuorovaikutusKierrosJulkaisut?.[
     projekti.vuorovaikutusKierrosJulkaisut.length - 1
