@@ -1,32 +1,11 @@
-import { HyvaksymisPaatosVaiheJulkaisu, KasittelynTila, Velho } from "../../database/model/";
-import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
+import { HyvaksymisPaatosVaiheJulkaisu, KasittelynTila } from "../../database/model/";
+import { AsiakirjaTyyppi, Kieli } from "../../../../common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
-import { translate } from "../../util/localization";
-import { KutsuAdapter } from "./KutsuAdapter";
-import { IlmoitusParams } from "./suunnittelunAloitusPdf";
 import { formatDate } from "../asiakirjaUtil";
-import PDFStructureElement = PDFKit.PDFStructureElement;
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
-
-const pdfTypeKeys: Record<AsiakirjaTyyppi6263, Record<AsiakirjanMuoto, Partial<Record<ProjektiTyyppi, string>>>> = {
-  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE: {
-    TIE: { [ProjektiTyyppi.TIE]: "T431_3", [ProjektiTyyppi.YLEINEN]: "62YS" },
-    RATA: { [ProjektiTyyppi.RATA]: "62R", [ProjektiTyyppi.YLEINEN]: "62YS" },
-  },
-  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE: {
-    TIE: { [ProjektiTyyppi.TIE]: "T431_4", [ProjektiTyyppi.YLEINEN]: "63YS" },
-    RATA: { [ProjektiTyyppi.RATA]: "63R", [ProjektiTyyppi.YLEINEN]: "63YS" },
-  },
-};
-
-function createFileName(kieli: Kieli, pdfType: string): string {
-  const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
-  const kaannos: string = translate("tiedostonimi." + pdfType, language) || "";
-  if (!kaannos) {
-    throw new Error(`Puuttu käännös tiedostonimi.${pdfType}:lle`);
-  }
-  return kaannos;
-}
+import { createPDFFileName } from "../pdfFileName";
+import { HyvaksymisPaatosVaiheKutsuAdapter, HyvaksymisPaatosVaiheKutsuAdapterProps } from "../adapter/hyvaksymisPaatosVaiheKutsuAdapter";
+import PDFStructureElement = PDFKit.PDFStructureElement;
 
 type AsiakirjaTyyppi6263 = Extract<
   AsiakirjaTyyppi,
@@ -35,22 +14,18 @@ type AsiakirjaTyyppi6263 = Extract<
 >;
 
 // noinspection JSUnusedGlobalSymbols
-export class Kuulutus6263 extends CommonPdf {
-  private readonly asiakirjanMuoto: AsiakirjanMuoto;
+export class Kuulutus6263 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   protected header: string;
   protected kieli: Kieli;
-  private readonly velho: Velho;
   private readonly asiakirjaTyyppi: AsiakirjaTyyppi6263;
   private hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
   private kasittelynTila: KasittelynTila;
-
-  // private kirjaamoOsoitteet: KirjaamoOsoite[];
 
   constructor(
     asiakirjaTyyppi: AsiakirjaTyyppi6263,
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
     kasittelynTila: KasittelynTila,
-    params: IlmoitusParams
+    params: HyvaksymisPaatosVaiheKutsuAdapterProps
   ) {
     const velho = params.velho;
     const kieli = params.kieli;
@@ -93,37 +68,17 @@ export class Kuulutus6263 extends CommonPdf {
     if (!kasittelynTila.hyvaksymispaatos.paatoksenPvm) {
       throw new Error("kasittelynTila.hyvaksymispaatos.paatoksenPvm ei ole määritelty");
     }
-    const kutsuAdapter = new KutsuAdapter({
-      kielitiedot: params.kielitiedot,
-      velho,
-      kieli,
-      asiakirjanMuoto: params.asiakirjanMuoto,
-      projektiTyyppi: velho.tyyppi,
-      kayttoOikeudet: params.kayttoOikeudet,
-      suunnitteluSopimus: params.suunnitteluSopimus,
-    });
+    const kutsuAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(params);
     super(kieli, kutsuAdapter);
     this.kieli = kieli;
-    this.velho = velho;
     this.asiakirjaTyyppi = asiakirjaTyyppi;
-    this.asiakirjanMuoto = params.asiakirjanMuoto;
     this.hyvaksymisPaatosVaihe = hyvaksymisPaatosVaihe;
     this.kasittelynTila = kasittelynTila;
 
-    this.kutsuAdapter.setTemplateResolver(this);
+    this.kutsuAdapter.addTemplateResolver(this);
 
-    if (
-      (params.asiakirjanMuoto === AsiakirjanMuoto.RATA && velho.tyyppi === ProjektiTyyppi.TIE) ||
-      (params.asiakirjanMuoto === AsiakirjanMuoto.TIE && velho.tyyppi === ProjektiTyyppi.RATA)
-    ) {
-      throw new Error(`Asiakirjan tyyppi ja projektityyppi ristiriidassa!`);
-    }
-    const pdfType = pdfTypeKeys[asiakirjaTyyppi][params.asiakirjanMuoto]?.[velho.tyyppi];
-    if (!pdfType) {
-      throw new Error(`pdfTypeä ei löydy`);
-    }
-    const fileName = createFileName(kieli, pdfType);
-    if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
+    const fileName = createPDFFileName(asiakirjaTyyppi, kutsuAdapter.asiakirjanMuoto, velho.tyyppi, kieli);
+    if (kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
       this.header =
         kutsuAdapter.text("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.hyvaksymispaatoksesta_ilmoittaminen") +
         " " +
@@ -144,7 +99,7 @@ export class Kuulutus6263 extends CommonPdf {
 
   pyydamme_valittamaan_ilmoituksen(): string {
     if (
-      this.asiakirjanMuoto == AsiakirjanMuoto.RATA &&
+      this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.RATA &&
       this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
     ) {
       return this.kutsuAdapter.text("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.pyydamme_valittamaan_ilmoituksen");
@@ -170,11 +125,11 @@ export class Kuulutus6263 extends CommonPdf {
   }
 
   kuulutusosoite(): string {
-    return this.isVaylaTilaaja(this.velho) ? "https://www.vayla.fi/kuulutukset" : "https://www.ely-keskus.fi/kuulutukset";
+    return this.isVaylaTilaaja() ? "https://www.vayla.fi/kuulutukset" : "https://www.ely-keskus.fi/kuulutukset";
   }
 
   protected addContent(): void {
-    const vaylaTilaaja = this.isVaylaTilaaja(this.velho);
+    const vaylaTilaaja = this.isVaylaTilaaja();
     const elements: PDFKit.PDFStructureElementChild[] = [
       this.logo(vaylaTilaaja),
       this.headerElement(this.header),
@@ -191,7 +146,7 @@ export class Kuulutus6263 extends CommonPdf {
   }
 
   private paragraphs(): PDFStructureElement[] {
-    if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
+    if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
       return [
         this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.tie_kappale1"),
         this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.tie_kappale2"),
@@ -200,7 +155,7 @@ export class Kuulutus6263 extends CommonPdf {
         this.lisatietojaAntavatParagraph(),
         this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, null, true)),
       ];
-    } else if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
+    } else if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       return [
         this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.rata_kappale1"),
         this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.rata_kappale2"),

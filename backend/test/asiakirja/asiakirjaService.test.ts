@@ -1,7 +1,6 @@
 import { describe, it } from "mocha";
 import {
   AloituskuulutusPdfOptions,
-  AsiakirjanMuoto,
   HyvaksymisPaatosKuulutusAsiakirjaTyyppi,
   NahtavillaoloKuulutusAsiakirjaTyyppi,
   YleisotilaisuusKutsuPdfOptions,
@@ -11,17 +10,14 @@ import {
   IlmoitettavaViranomainen,
   Kieli,
   KirjaamoOsoite,
-  PDF,
   ProjektiTyyppi,
   Viranomainen,
 } from "../../../common/graphql/apiModel";
-import fs from "fs";
 import { asiakirjaAdapter } from "../../src/handler/asiakirjaAdapter";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import {
   AloitusKuulutusJulkaisu,
   DBProjekti,
-  DBVaylaUser,
   HyvaksymisPaatosVaihe,
   NahtavillaoloVaihe,
   SuunnitteluSopimus,
@@ -30,12 +26,12 @@ import {
   VuorovaikutusKierrosJulkaisu,
 } from "../../src/database/model";
 import { translate } from "../../src/util/localization";
-import { formatList } from "../../src/asiakirja/suunnittelunAloitus/KutsuAdapter";
 import sinon from "sinon";
 import { kirjaamoOsoitteetService } from "../../src/kirjaamoOsoitteet/kirjaamoOsoitteetService";
-import { determineAsiakirjaMuoto } from "../../src/asiakirja/asiakirjaTypes";
 import { AsiakirjaEmailService } from "../../src/asiakirja/asiakirjaEmailService";
 import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
+import { expectPDF } from "./asiakirjaTestUtil";
+import { formatList } from "../../src/asiakirja/adapter/commonKutsuAdapter";
 
 const { assert, expect } = require("chai");
 
@@ -45,16 +41,10 @@ async function runTestWithTypes<T>(types: T[], callback: (type: T) => Promise<vo
   }
 }
 
-function expectPDF(prefix: string, pdf: PDF & { textContent: string }) {
-  fs.mkdirSync(".report", { recursive: true });
-  const fileName = prefix + pdf.nimi;
-  expect({ fileName, textContent: pdf.textContent }).toMatchSnapshot();
-  fs.writeFileSync(".report/" + fileName, Buffer.from(pdf.sisalto, "base64"));
-}
-
 describe("asiakirjaService", async () => {
   const projektiFixture = new ProjektiFixture();
   let kirjaamoOsoitteetStub: sinon.SinonStub;
+
   before(() => {
     kirjaamoOsoitteetStub = sinon.stub(kirjaamoOsoitteetService, "listKirjaamoOsoitteet");
   });
@@ -66,15 +56,16 @@ describe("asiakirjaService", async () => {
   async function testKuulutusWithLanguage(
     aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu,
     kieli: Kieli,
-    kayttoOikeudet: DBVaylaUser[],
+    projekti: DBProjekti,
     asiakirjaTyyppi: AsiakirjaTyyppi
   ) {
     const aloituskuulutusPdfOptions: AloituskuulutusPdfOptions = {
+      oid: projekti.oid,
       aloitusKuulutusJulkaisu,
       asiakirjaTyyppi,
       kieli,
       luonnos: true,
-      kayttoOikeudet,
+      kayttoOikeudet: projekti.kayttoOikeudet,
     };
     const pdf = await new AsiakirjaService().createAloituskuulutusPdf(aloituskuulutusPdfOptions);
     expect(pdf.sisalto.length).to.be.greaterThan(50000);
@@ -89,17 +80,15 @@ describe("asiakirjaService", async () => {
 
     await runTestWithTypes(
       aloitusKuulutusTypes,
-      async (type) => await testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.SUOMI, projekti.kayttoOikeudet, type)
+      async (type) => await testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.SUOMI, projekti, type)
     );
 
     await runTestWithTypes(
       aloitusKuulutusTypes,
-      async (type) => await testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.RUOTSI, projekti.kayttoOikeudet, type)
+      async (type) => await testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.RUOTSI, projekti, type)
     );
 
-    await assert.isRejected(
-      testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.SAAME, projekti.kayttoOikeudet, AsiakirjaTyyppi.ALOITUSKUULUTUS)
-    );
+    await assert.isRejected(testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.SAAME, projekti, AsiakirjaTyyppi.ALOITUSKUULUTUS));
   });
 
   async function testKutsuWithLanguage(projekti: DBProjekti, vuorovaikutusKierros: VuorovaikutusKierros, kieli: Kieli) {
@@ -108,7 +97,6 @@ describe("asiakirjaService", async () => {
       vuorovaikutusKierros,
     });
     const velho: Velho = projekti.velho!;
-    const asiakirjanMuoto: AsiakirjanMuoto | undefined = determineAsiakirjaMuoto(velho?.tyyppi, velho?.vaylamuoto);
 
     const options: YleisotilaisuusKutsuPdfOptions = {
       oid: projekti.oid,
@@ -117,7 +105,6 @@ describe("asiakirjaService", async () => {
       velho,
       kielitiedot: projekti.kielitiedot!,
       suunnitteluSopimus: projekti.suunnitteluSopimus!,
-      asiakirjanMuoto,
       kieli,
       luonnos: true,
     };
@@ -155,6 +142,7 @@ describe("asiakirjaService", async () => {
   ) {
     const projektiToTestWith: DBProjekti = { ...projekti, nahtavillaoloVaihe };
     const pdf = await new AsiakirjaService().createNahtavillaoloKuulutusPdf({
+      oid: projektiToTestWith.oid,
       velho: projektiToTestWith.velho as Velho,
       kayttoOikeudet: projektiToTestWith.kayttoOikeudet,
       suunnitteluSopimus: projektiToTestWith.suunnitteluSopimus as SuunnitteluSopimus,
@@ -213,7 +201,6 @@ describe("asiakirjaService", async () => {
     const pdf = await new AsiakirjaService().createHyvaksymisPaatosKuulutusPdf({
       oid: projektiToTestWith.oid,
       kayttoOikeudet: projektiToTestWith.kayttoOikeudet,
-      suunnitteluSopimus: projektiToTestWith.suunnitteluSopimus!,
       kasittelynTila: projektiToTestWith.kasittelynTila!,
       hyvaksymisPaatosVaihe: asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projekti, projekti.hyvaksymisPaatosVaihe),
       kieli,

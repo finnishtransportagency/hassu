@@ -1,11 +1,11 @@
 import { Kieli } from "../../../../common/graphql/apiModel";
 import { EmailOptions } from "../../email/email";
 import { YleisotilaisuusKutsuPdfOptions } from "../asiakirjaTypes";
-import { KutsuAdapter } from "./KutsuAdapter";
 import { formatNimi } from "../../util/userUtil";
+import { SuunnitteluVaiheKutsuAdapter } from "../adapter/suunnitteluVaiheKutsuAdapter";
 
 export class Kutsu21 {
-  private readonly adapter: KutsuAdapter;
+  private readonly adapter: SuunnitteluVaiheKutsuAdapter;
   private readonly kieli: Kieli;
 
   constructor({
@@ -15,19 +15,16 @@ export class Kutsu21 {
     kielitiedot,
     vuorovaikutusKierrosJulkaisu,
     kieli,
-    asiakirjanMuoto,
   }: YleisotilaisuusKutsuPdfOptions) {
     if (!(velho && velho.tyyppi && kielitiedot && vuorovaikutusKierrosJulkaisu)) {
       throw new Error("Projektilta puuttuu tietoja!");
     }
     this.kieli = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
-    this.adapter = new KutsuAdapter({
+    this.adapter = new SuunnitteluVaiheKutsuAdapter({
       oid,
       kielitiedot,
       velho,
       kieli: this.kieli,
-      asiakirjanMuoto,
-      projektiTyyppi: velho.tyyppi,
       kayttoOikeudet,
       vuorovaikutusKierrosJulkaisu,
     });

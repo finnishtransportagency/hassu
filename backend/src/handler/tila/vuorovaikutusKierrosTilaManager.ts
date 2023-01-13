@@ -8,7 +8,6 @@ import { parseDate } from "../../util/dateUtil";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
-import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../../asiakirja/asiakirjaTypes";
 import { asiakirjaEmailService } from "../../asiakirja/asiakirjaEmailService";
 import assert from "assert";
 import { emailClient } from "../../email/email";
@@ -16,8 +15,7 @@ import { requirePermissionMuokkaa } from "../../user";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager {
   checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja {
-    const muokkaaja = requirePermissionMuokkaa(projekti);
-    return muokkaaja;
+    return requirePermissionMuokkaa(projekti);
   }
 
   checkPriviledgesSendForApproval(_projekti: DBProjekti): NykyinenKayttaja {
@@ -68,9 +66,9 @@ class VuorovaikutusKierrosTilaManager extends TilaManager {
     julkaisu: VuorovaikutusKierrosJulkaisu,
     projekti: DBProjekti
   ): Promise<VuorovaikutusPDF & PDF> {
-    const { fullFilePathInProjekti, ...pdf } = await createVuorovaikutusKierrosPDF(julkaisu, projekti, kieli);
+    const { fullFilePathInProjekti, nimi, sisalto } = await createVuorovaikutusKierrosPDF(julkaisu, projekti, kieli);
 
-    return { kutsuPDFPath: await fullFilePathInProjekti, ...pdf };
+    return { __typename: "PDF", kutsuPDFPath: await fullFilePathInProjekti, nimi, sisalto };
   }
 
   async generatePDFsForJulkaisu(julkaisu: VuorovaikutusKierrosJulkaisu, projekti: DBProjekti): Promise<void> {
@@ -101,18 +99,15 @@ class VuorovaikutusKierrosTilaManager extends TilaManager {
     attachments.push(asiakirjaEmailService.createPDFAttachment(pdfEnsisijainen));
 
     if (kielitiedot.toissijainenKieli) {
-      const pdfToissijainen = await this.generatePDFsForLanguage(kielitiedot.toissijainenKieli, julkaisu, projekti);
-      julkaisu.vuorovaikutusPDFt[kielitiedot.toissijainenKieli] = pdfToissijainen;
+      julkaisu.vuorovaikutusPDFt[kielitiedot.toissijainenKieli] = await this.generatePDFsForLanguage(kielitiedot.toissijainenKieli, julkaisu, projekti);
       attachments.push(asiakirjaEmailService.createPDFAttachment(pdfEnsisijainen));
     }
     await projektiDatabase.vuorovaikutusKierrosJulkaisut.insert(projekti.oid, julkaisu);
 
     assert(projekti.velho && kielitiedot && julkaisu.ilmoituksenVastaanottajat);
-    const asiakirjanMuoto: AsiakirjanMuoto | undefined = determineAsiakirjaMuoto(projekti.velho.tyyppi, projekti.velho.vaylamuoto);
     const emailOptions = asiakirjaEmailService.createYleisotilaisuusKutsuEmail({
       oid: projekti.oid,
       kayttoOikeudet: projekti.kayttoOikeudet,
-      asiakirjanMuoto,
       kielitiedot,
       velho: projekti.velho,
       suunnitteluSopimus: projekti.suunnitteluSopimus || undefined,
@@ -163,7 +158,6 @@ async function createVuorovaikutusKierrosPDF(
     suunnitteluSopimus: projekti.suunnitteluSopimus || undefined,
     vuorovaikutusKierrosJulkaisu: julkaisu,
     kieli,
-    asiakirjanMuoto: determineAsiakirjaMuoto(projekti.velho.tyyppi, projekti.velho.vaylamuoto),
     luonnos: false,
     kayttoOikeudet: projekti.kayttoOikeudet,
   });

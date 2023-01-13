@@ -122,7 +122,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
               {!published && <p>Linkki julkiselle puolelle muodostetaan kuulutuspäivänä. Kuulutuspäivä on {kuulutusPaiva}.</p>}
               {published && (
                 <p>
-                  <ExtLink href={nahtavillaoloVaiheHref}>Kuulutus palvelun julkisella puolella</ExtLink>
+                  <ExtLink className="file_download" href={nahtavillaoloVaiheHref}>Kuulutus palvelun julkisella puolella</ExtLink>
                 </p>
               )}
             </>
@@ -140,17 +140,17 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
             {ensisijaisetPDFt && (
               <div className="flex flex-col mb-4">
                 <div>
-                  <Link underline="none" href={ensisijaisetPDFt.nahtavillaoloPDFPath} target="_blank">
+                  <Link className="file_download" underline="none" href={ensisijaisetPDFt.nahtavillaoloPDFPath} target="_blank">
                     {splitFilePath(ensisijaisetPDFt.nahtavillaoloPDFPath).fileName}
                   </Link>
                 </div>
                 <div>
-                  <Link underline="none" href={ensisijaisetPDFt.nahtavillaoloIlmoitusPDFPath} target="_blank">
+                  <Link className="file_download" underline="none" href={ensisijaisetPDFt.nahtavillaoloIlmoitusPDFPath} target="_blank">
                     {splitFilePath(ensisijaisetPDFt.nahtavillaoloIlmoitusPDFPath).fileName}
                   </Link>
                 </div>
                 <div>
-                  <Link underline="none" href={ensisijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath} target="_blank">
+                  <Link className="file_download" underline="none" href={ensisijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath} target="_blank">
                     {splitFilePath(ensisijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath).fileName}
                   </Link>
                 </div>
@@ -163,17 +163,17 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
                 {toissijaisetPDFt && (
                   <div className="flex flex-col">
                     <div>
-                      <Link underline="none" href={toissijaisetPDFt.nahtavillaoloPDFPath} target="_blank">
+                      <Link className="file_download" underline="none" href={toissijaisetPDFt.nahtavillaoloPDFPath} target="_blank">
                         {splitFilePath(toissijaisetPDFt.nahtavillaoloPDFPath).fileName}
                       </Link>
                     </div>
                     <div>
-                      <Link underline="none" href={toissijaisetPDFt.nahtavillaoloIlmoitusPDFPath} target="_blank">
+                      <Link className="file_download" underline="none" href={toissijaisetPDFt.nahtavillaoloIlmoitusPDFPath} target="_blank">
                         {splitFilePath(toissijaisetPDFt.nahtavillaoloIlmoitusPDFPath).fileName}
                       </Link>
                     </div>
                     <div>
-                      <Link underline="none" href={toissijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath} target="_blank">
+                      <Link className="file_download" underline="none" href={toissijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath} target="_blank">
                         {splitFilePath(toissijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath).fileName}
                       </Link>
                     </div>

@@ -6,6 +6,7 @@ import { parseDate } from "../util/dateUtil";
 import { log } from "../logger";
 import { kuntametadata } from "../../../common/kuntametadata";
 import { formatNimi } from "../util/userUtil";
+import { getAsiatunnus } from "../projekti/projektiUtil";
 
 export type ProjektiDocument = {
   oid: string;
@@ -36,7 +37,7 @@ export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocu
     nimi: safeTrim(projekti.velho.nimi),
     projektiTyyppi: projekti.velho.tyyppi || undefined,
     suunnittelustaVastaavaViranomainen: projekti.velho.suunnittelustaVastaavaViranomainen || undefined,
-    asiatunnus: safeTrim(getAsiatunnus(projekti) || ""),
+    asiatunnus: safeTrim(getAsiatunnus(projekti.velho) || ""),
     maakunnat: projekti.velho.maakunnat?.map(kuntametadata.idForMaakuntaName),
     vaihe: apiProjekti.status || undefined,
     vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
@@ -146,12 +147,6 @@ export function adaptSearchResultsToProjektiHakutulosDokumenttis(results: any): 
       return { ...hit._source, oid: hit._id, __typename: "ProjektiHakutulosDokumentti" } as API.ProjektiHakutulosDokumentti;
     }) || []
   );
-}
-
-export function getAsiatunnus(projekti: DBProjekti): string | null | undefined {
-  return projekti.velho?.suunnittelustaVastaavaViranomainen === API.Viranomainen.VAYLAVIRASTO
-    ? projekti.velho?.asiatunnusVayla
-    : projekti.velho?.asiatunnusELY;
 }
 
 function safeTrim(s: string): string {

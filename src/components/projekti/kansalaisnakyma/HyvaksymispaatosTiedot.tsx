@@ -134,7 +134,7 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
           {kuulutus?.hyvaksymisPaatos &&
             kuulutus?.hyvaksymisPaatos.map((aineisto) => (
               <span key={aineisto.dokumenttiOid}>
-                <ExtLink href={aineisto.tiedosto || ""} sx={{ mr: 3 }}>
+                <ExtLink className="file_download" href={aineisto.tiedosto || ""} sx={{ mr: 3 }}>
                   {aineisto.nimi}{" "}
                   <span className="text-black ml-2">
                     ({aineisto.nimi.split(".").pop()}) {formatDate(kuulutus?.kuulutusPaiva)}

@@ -75,7 +75,7 @@ export default function Lukunakyma() {
             </p>
           )}
           <p>
-            <ExtLink sx={{ mr: 3 }} href={linkHref}>
+            <ExtLink className="file_download" sx={{ mr: 3 }} href={linkHref}>
               {linkHref}
             </ExtLink>
             <IconButton

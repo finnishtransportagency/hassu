@@ -1,14 +1,13 @@
 import { projektiDatabase } from "../database/projektiDatabase";
-import { asiakirjaAdapter } from "./asiakirjaAdapter";
 import { emailClient } from "../email/email";
 import {
+  createAloituskuulutusHyvaksyttavanaEmail,
   createAloituskuulutusHyvaksyttyEmail,
   createAloituskuulutusHyvaksyttyPDFEmail,
-  createHyvaksyttavanaEmail,
 } from "../email/emailTemplates";
 import { log } from "../logger";
 import { personSearch } from "../personSearch/personSearchClient";
-import { Kayttaja, Kieli, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
+import { Kayttaja, Kieli, LaskuriTyyppi } from "../../../common/graphql/apiModel";
 import Mail from "nodemailer/lib/mailer";
 import { AloitusKuulutusJulkaisu, DBProjekti, SahkopostiVastaanottaja } from "../database/model";
 import { createLahetekirjeEmail } from "../email/lahetekirje/lahetekirjeEmailTemplate";
@@ -19,6 +18,10 @@ import { GetObjectOutput } from "aws-sdk/clients/s3";
 import { getS3 } from "../aws/client";
 import { assertIsDefined } from "../util/assertions";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
+import { AloituskuulutusKutsuAdapter } from "../asiakirja/adapter/aloituskuulutusKutsuAdapter";
+import { pickCommonAdapterProps } from "../asiakirja/adapter/commonKutsuAdapter";
+import { asiakirjaAdapter } from "./asiakirjaAdapter";
+import { calculateEndDate } from "../endDateCalculator/endDateCalculatorHandler";
 
 export async function getFileAttachment(oid: string, key: string): Promise<Mail.Attachment | undefined> {
   log.info("haetaan s3:sta liitetiedosto", key);
@@ -59,8 +62,8 @@ async function getKayttaja(uid: string): Promise<Kayttaja | undefined> {
   return kayttajas.getKayttajaByUid(uid);
 }
 
-async function sendWaitingApprovalMail(projekti: DBProjekti): Promise<void> {
-  const emailOptions = createHyvaksyttavanaEmail(projekti);
+export async function sendWaitingApprovalMail(projekti: DBProjekti): Promise<void> {
+  const emailOptions = createAloituskuulutusHyvaksyttavanaEmail(projekti);
   if (emailOptions.to) {
     await emailClient.sendEmail(emailOptions);
   } else {
@@ -81,7 +84,7 @@ function examineEmailSentResults(
   if (sentMessageInfo?.accepted.find((accepted) => accepted == email) || sentMessageInfo?.pending?.find((pending) => pending == email)) {
     vastaanottaja.lahetetty = aikaleima;
     vastaanottaja.messageId = sentMessageInfo?.messageId;
-    log.info("Email lähetetty", { sentEmail: email });
+    log.info("Email lähetetty", { sentEmail: email, actualEmailAddress: config.emailsTo });
   }
   if (sentMessageInfo?.rejected.find((rejected) => rejected == email)) {
     log.info("Email lähetysvirhe", { rejectedEmail: email });
@@ -89,22 +92,36 @@ function examineEmailSentResults(
   }
 }
 
-async function sendAloitusKuulutusApprovalMailsAndAttachments(projekti: DBProjekti): Promise<void> {
+export async function sendAloitusKuulutusApprovalMailsAndAttachments(oid: string): Promise<void> {
+  const projekti = await projektiDatabase.loadProjektiByOid(oid);
+  assertIsDefined(projekti, "projekti pitää olla olemassa");
+  assertIsDefined(projekti.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
   // aloituskuulutusjulkaisu kyllä löytyy
   const aloituskuulutus: AloitusKuulutusJulkaisu | undefined = asiakirjaAdapter.findAloitusKuulutusLastApproved(projekti);
   assertIsDefined(aloituskuulutus, "Aloituskuulutuksella ei ole hyväksyttyä julkaisua");
+  assertIsDefined(aloituskuulutus.kuulutusPaiva);
+  assertIsDefined(aloituskuulutus.hankkeenKuvaus);
+  const adapter = new AloituskuulutusKutsuAdapter({
+    ...pickCommonAdapterProps(projekti, aloituskuulutus.hankkeenKuvaus, Kieli.SUOMI),
+    ...aloituskuulutus,
+    kuulutusPaiva: aloituskuulutus.kuulutusPaiva,
+    kuulutusVaihePaattyyPaiva: await calculateEndDate({
+      alkupaiva: aloituskuulutus.kuulutusPaiva,
+      tyyppi: LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA,
+    }),
+  });
   // aloituskuulutus.muokkaaja on määritelty
   assertIsDefined(aloituskuulutus.muokkaaja, "Julkaisun muokkaaja puuttuu");
   const muokkaaja: Kayttaja | undefined = await getKayttaja(aloituskuulutus.muokkaaja);
   assertIsDefined(muokkaaja, "Muokkaajan käyttäjätiedot puuttuu");
-  const emailOptionsMuokkaaja = createAloituskuulutusHyvaksyttyEmail(projekti, muokkaaja);
+  const emailOptionsMuokkaaja = createAloituskuulutusHyvaksyttyEmail(adapter, muokkaaja);
   if (emailOptionsMuokkaaja.to) {
     await emailClient.sendEmail(emailOptionsMuokkaaja);
   } else {
     log.error("Aloituskuulutukselle ei loytynyt aloituskuulutuksen laatijan sahkopostiosoitetta");
   }
 
-  const emailOptionsPDF = createAloituskuulutusHyvaksyttyPDFEmail(projekti);
+  const emailOptionsPDF = createAloituskuulutusHyvaksyttyPDFEmail(adapter);
   if (emailOptionsPDF.to) {
     const pdfPath = aloituskuulutus.aloituskuulutusPDFt?.[Kieli.SUOMI]?.aloituskuulutusPDFPath;
     if (!pdfPath) {
@@ -112,7 +129,7 @@ async function sendAloitusKuulutusApprovalMailsAndAttachments(projekti: DBProjek
         `sendApprovalMailsAndAttachments: aloituskuulutus.aloituskuulutusPDFt?.[Kieli.SUOMI]?.aloituskuulutusPDFPath on määrittelemättä`
       );
     }
-    const aloituskuulutusPDF = await getFileAttachment(projekti.oid, pdfPath);
+    const aloituskuulutusPDF = await getFileAttachment(adapter.oid, pdfPath);
     if (!aloituskuulutusPDF) {
       throw new Error("AloituskuulutusPDF:n saaminen epäonnistui");
     }
@@ -122,12 +139,12 @@ async function sendAloitusKuulutusApprovalMailsAndAttachments(projekti: DBProjek
     log.error("Aloituskuulutus PDF:n lahetyksessa ei loytynyt projektipaallikon sahkopostiosoitetta");
   }
 
-  const emailOptionsLahetekirje = createLahetekirjeEmail(aloituskuulutus);
+  const emailOptionsLahetekirje = createLahetekirjeEmail(adapter);
   if (emailOptionsLahetekirje.to) {
     // PDFt on jo olemassa
     const aloituskuulutusPDFtSUOMI = aloituskuulutus.aloituskuulutusPDFt?.[Kieli.SUOMI];
     assertIsDefined(aloituskuulutusPDFtSUOMI);
-    const aloituskuulutusIlmoitusPDF = await getFileAttachment(projekti.oid, aloituskuulutusPDFtSUOMI.aloituskuulutusIlmoitusPDFPath);
+    const aloituskuulutusIlmoitusPDF = await getFileAttachment(adapter.oid, aloituskuulutusPDFtSUOMI.aloituskuulutusIlmoitusPDFPath);
     if (!aloituskuulutusIlmoitusPDF) {
       throw new Error("AloituskuulutusIlmoitusPDF:n saaminen epäonnistui");
     }
@@ -144,32 +161,3 @@ async function sendAloitusKuulutusApprovalMailsAndAttachments(projekti: DBProjek
     log.error("Ilmoitus aloituskuulutuksesta sahkopostin vastaanottajia ei loytynyt");
   }
 }
-
-class EmailHandler {
-  async sendEmailsByToiminto(toiminto: TilasiirtymaToiminto, oid: string, tyyppi: TilasiirtymaTyyppi): Promise<void> {
-    const projekti = await projektiDatabase.loadProjektiByOid(oid);
-    if (!projekti) {
-      throw new Error("Projekti on poistettu tietokannasta!");
-    }
-    if (toiminto == TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI) {
-      await sendWaitingApprovalMail(projekti);
-    } else if (toiminto == TilasiirtymaToiminto.HYLKAA) {
-      // ei viela maaritelty
-    } else if (toiminto == TilasiirtymaToiminto.HYVAKSY) {
-      switch (tyyppi) {
-        case TilasiirtymaTyyppi.ALOITUSKUULUTUS:
-          return sendAloitusKuulutusApprovalMailsAndAttachments(projekti);
-        case TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE:
-        case TilasiirtymaTyyppi.JATKOPAATOS_1:
-        case TilasiirtymaTyyppi.JATKOPAATOS_2:
-        // TODO lähetä sähköpostit
-      }
-    } else if (toiminto == TilasiirtymaToiminto.UUDELLEENKUULUTA) {
-      // Do nothing
-    } else {
-      throw new Error("Tuntematon toiminto");
-    }
-  }
-}
-
-export const emailHandler = new EmailHandler();

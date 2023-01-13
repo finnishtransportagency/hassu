@@ -15,6 +15,7 @@ const HassuAineistoNimiExtLink = ({
   const href = tiedostoPolku || undefined;
   return (
     <ExtLink
+      className="file_download"
       sx={addTopMargin ? { marginTop: 4 } : undefined}
       href={href}
       target="_blank"

@@ -34,6 +34,7 @@ import { awsMockResolves, expectAwsCalls } from "./aws/awsMock";
 import { kuntametadata } from "../../common/kuntametadata";
 import { aineistoSynchronizerService } from "../src/aineisto/aineistoSynchronizerService";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
+import { mockBankHolidays } from "./mocks";
 import assert from "assert";
 
 const chai = require("chai");
@@ -65,6 +66,8 @@ describe("apiHandler", () => {
   let sendEmailStub: sinon.SinonStub;
   let pdfGeneratorLambdaStub: sinon.SinonStub;
   let aineistoServiceStub: sinon.SinonStub;
+
+  mockBankHolidays();
 
   before(() => {
     userFixture = new UserFixture(userService);

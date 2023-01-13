@@ -146,7 +146,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
               <h5 className="vayla-smallest-title">{t("aineistot.esittelyaineisto")}</h5>
               {esittelyaineistot.map((aineisto) =>
                 aineisto.tiedosto ? (
-                  <ExtLink style={{ display: "block", marginTop: "0.5em" }} key={aineisto.dokumenttiOid} href={aineisto.tiedosto}>
+                  <ExtLink className="file_download" style={{ display: "block", marginTop: "0.5em" }} key={aineisto.dokumenttiOid} href={aineisto.tiedosto}>
                     {aineisto.tiedosto.split("/").reduce((_acc, cur) => cur, "")}
                   </ExtLink>
                 ) : null
@@ -158,7 +158,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
               <h5 className="vayla-smallest-title">{t("aineistot.suunnitelmaluonnokset")}</h5>
               {suunnitelmaluonnokset.map((aineisto) =>
                 aineisto.tiedosto ? (
-                  <ExtLink style={{ display: "block", marginTop: "0.5em" }} key={aineisto.dokumenttiOid} href={aineisto.tiedosto}>
+                  <ExtLink className="file_download" style={{ display: "block", marginTop: "0.5em" }} key={aineisto.dokumenttiOid} href={aineisto.tiedosto}>
                     {aineisto.tiedosto.split("/").reduce((_acc, cur) => cur, "")}
                   </ExtLink>
                 ) : null
@@ -185,7 +185,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
               <h5 className="vayla-smallest-title">{t(`muut_materiaalit.otsikko`)}</h5>
               <p>{vuorovaikutus.suunnittelumateriaali.nimi}</p>
               <p>
-                <ExtLink href={vuorovaikutus.suunnittelumateriaali.url}>{vuorovaikutus.suunnittelumateriaali.url}</ExtLink>
+                <ExtLink className="file_download" href={vuorovaikutus.suunnittelumateriaali.url}>{vuorovaikutus.suunnittelumateriaali.url}</ExtLink>
               </p>
             </>
           )}
@@ -217,7 +217,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
           />
           <h4 className="vayla-small-title">{t(`ladattava_kuulutus.otsikko`)}</h4>
           <SectionContent className="flex gap-4">
-            <ExtLink href={kutsuPDFPath.path}>{kutsuPDFPath.fileName}</ExtLink> ({kutsuPDFPath.fileExt}) (
+            <ExtLink className="file_download" href={kutsuPDFPath.path}>{kutsuPDFPath.fileName}</ExtLink> ({kutsuPDFPath.fileExt}) (
             <FormatDate date={vuorovaikutus?.vuorovaikutusJulkaisuPaiva} />)
           </SectionContent>
         </>

@@ -53,7 +53,7 @@ const AineistoNahtavillaAccordion: FunctionComponent<AineistoNahtavillaAccordion
                     .filter((aineisto) => aineisto.kategoriaId === kategoria.id)
                     .map((aineisto, index) => (
                       <span key={index}>
-                        <ExtLink href={aineisto?.linkki ? aineisto?.linkki : undefined} disabled={!aineisto?.linkki} sx={{ mr: 3 }}>
+                        <ExtLink className="file_download" href={aineisto?.linkki ? aineisto?.linkki : undefined} disabled={!aineisto?.linkki} sx={{ mr: 3 }}>
                           {aineisto.nimi}
                         </ExtLink>
                       </span>

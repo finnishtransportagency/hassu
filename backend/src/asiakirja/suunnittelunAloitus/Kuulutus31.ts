@@ -1,13 +1,14 @@
 import { NahtavillaoloVaiheJulkaisu, Velho } from "../../database/model/";
-import { Kieli, KirjaamoOsoite, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, KirjaamoOsoite, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { translate } from "../../util/localization";
-import { formatList, KutsuAdapter } from "./KutsuAdapter";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import { formatDate } from "../asiakirjaUtil";
-import { IlmoitusParams } from "./suunnittelunAloitusPdf";
 import { kuntametadata } from "../../../../common/kuntametadata";
+import { createPDFFileName } from "../pdfFileName";
+import { NahtavillaoloVaiheKutsuAdapter, NahtavillaoloVaiheKutsuAdapterProps } from "../adapter/nahtavillaoloVaiheKutsuAdapter";
+import { formatList } from "../adapter/commonKutsuAdapter";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
@@ -15,35 +16,18 @@ const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
   RUOTSI: "Kungörelse om framläggandet av planen",
 };
 
-const fileNameKeys: Record<AsiakirjanMuoto, Partial<Record<ProjektiTyyppi, string>>> = {
-  TIE: { [ProjektiTyyppi.TIE]: "31T", [ProjektiTyyppi.YLEINEN]: "31YS" },
-  RATA: { [ProjektiTyyppi.RATA]: "31R", [ProjektiTyyppi.YLEINEN]: "31YS" },
-};
-
-function createFileName(kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto, projektiTyyppi: ProjektiTyyppi): string {
-  const key = fileNameKeys[asiakirjanMuoto]?.[projektiTyyppi];
-  if (!key) {
-    throw new Error("Unsupported operation");
-  }
-  const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
-  const kaannos: string = translate("tiedostonimi." + key, language) || "";
-  if (!kaannos) {
-    throw new Error(`Ei löydy käännöstä tiedostonimi.${key}:lle`);
-  }
-  return kaannos;
-}
-
-export class Kuulutus31 extends CommonPdf {
-  private readonly asiakirjanMuoto: AsiakirjanMuoto;
-  // private readonly oid: string;
+export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
   private readonly nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu;
-  // private readonly kayttoOikeudet: DBVaylaUser[];
   protected header: string;
   protected kieli: Kieli;
   private readonly velho: Velho;
   private kirjaamoOsoitteet: KirjaamoOsoite[];
 
-  constructor(params: IlmoitusParams, nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu, kirjaamoOsoitteet: KirjaamoOsoite[]) {
+  constructor(
+    params: NahtavillaoloVaiheKutsuAdapterProps,
+    nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu,
+    kirjaamoOsoitteet: KirjaamoOsoite[]
+  ) {
     const velho = params.velho;
     if (!velho) {
       throw new Error("params.velho ei ole määritelty");
@@ -66,17 +50,19 @@ export class Kuulutus31 extends CommonPdf {
     if (!nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva) {
       throw new Error("nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva ei ole määritelty");
     }
-    const kutsuAdapter = new KutsuAdapter({
+    const kutsuAdapter = new NahtavillaoloVaiheKutsuAdapter({
       oid: params.oid,
       kielitiedot: params.kielitiedot,
       velho,
       kieli: params.kieli,
-      asiakirjanMuoto: params.asiakirjanMuoto,
-      projektiTyyppi: velho.tyyppi,
       kayttoOikeudet: params.kayttoOikeudet,
-      suunnitteluSopimus: params.suunnitteluSopimus,
     });
-    const fileName = createFileName(params.kieli, params.asiakirjanMuoto, velho.tyyppi);
+    const fileName = createPDFFileName(
+      AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
+      kutsuAdapter.asiakirjanMuoto,
+      velho.tyyppi,
+      params.kieli
+    );
     super(params.kieli, kutsuAdapter);
     this.velho = velho;
     const language = params.kieli == Kieli.SAAME ? Kieli.SUOMI : params.kieli;
@@ -84,14 +70,13 @@ export class Kuulutus31 extends CommonPdf {
     this.kieli = params.kieli;
 
     this.nahtavillaoloVaihe = nahtavillaoloVaihe;
-    this.asiakirjanMuoto = params.asiakirjanMuoto;
     this.kirjaamoOsoitteet = kirjaamoOsoitteet;
 
     this.setupPDF(this.header, kutsuAdapter.nimi, fileName);
   }
 
   protected addContent(): void {
-    const vaylaTilaaja = this.isVaylaTilaaja(this.velho);
+    const vaylaTilaaja = this.isVaylaTilaaja();
     const elements: PDFKit.PDFStructureElementChild[] = [this.logo(vaylaTilaaja), this.addHeader(), ...this.addDocumentElements()].filter(
       (element) => element
     );
@@ -116,7 +101,7 @@ export class Kuulutus31 extends CommonPdf {
   }
 
   private kutsuja() {
-    if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
+    if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
       return this.paragraph(this.kutsuAdapter.tilaajaOrganisaatio);
     } else {
       const kaannos: string = translate("vaylavirasto", this.kieli) || "";
@@ -129,7 +114,7 @@ export class Kuulutus31 extends CommonPdf {
 
   private get startOfPlanningPhrase() {
     let organisaatiotText: string;
-    if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
+    if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       organisaatiotText = translate("info.nahtavillaolo.rata.on_laatinut", this.kieli) || "";
       if (!organisaatiotText) {
         throw new Error("Käännös puuttuu info.nahtavillaolo.rata.on_laatinut:lle!");
@@ -197,13 +182,13 @@ export class Kuulutus31 extends CommonPdf {
       this.localizedParagraph([
         `Kiinteistön omistajilla ja muilla asianosaisilla on mahdollisuus muistutuksen tekemiseen suunnitelmasta. ` +
           `Muistutukset on toimitettava ${this.kutsuAdapter.tilaajaGenetiivi} kirjaamoon ${this.kirjaamo}` +
-          `tai <postiosoite> ennen nähtävillä oloajan päättymistä. Muistutukseen on liitettävä asian asianumero ${this.kutsuAdapter.asianumero}`,
+          `tai <postiosoite> ennen nähtävillä oloajan päättymistä. Muistutukseen on liitettävä asian asianumero ${this.kutsuAdapter.asiatunnus}`,
       ]),
     ]);
   }
 
   private get kuulutusOsoite() {
-    return this.isVaylaTilaaja(this.velho) ? "https://www.vayla.fi/kuulutukset" : "https://www.ely-keskus.fi/kuulutukset";
+    return this.isVaylaTilaaja() ? "https://www.vayla.fi/kuulutukset" : "https://www.ely-keskus.fi/kuulutukset";
   }
 
   private addHeader() {

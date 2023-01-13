@@ -56,6 +56,25 @@
     "AHVENANMAAN_ELY": "Ahvenanmaan maakunta",
     "VAYLAVIRASTO": "Väylävirasto"
   },
+  "viranomainen_pitka": {
+    "ETELA_POHJANMAAN_ELY": "Etelä-Pohjanmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "ETELA_SAVO_ELY": "Etelä-Savon elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "HAME_ELY": "Hämeen elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "KAAKKOIS_SUOMEN_ELY": "Kaakkois-Suomi elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "KAINUUN_ELY": "Kainuun elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "KESKI_SUOMEN_ELY": "Keski-Suomen elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "LAPIN_ELY": "Lapin elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "PIRKANMAAN_ELY": "Pirkanmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "POHJANMAAN_ELY": "Pohjanmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "POHJOIS_KARJALAN_ELY": "Pohjois-Karjalan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "POHJOIS_POHJANMAAN_ELY": "Pohjois-Pohjanmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "POHJOIS_SAVON_ELY": "Pohjois-Savon elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "SATAKUNNAN_ELY": "Satakunnan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "UUDENMAAN_ELY": "Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "VARSINAIS_SUOMEN_ELY": "Varsinais-Suomen elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "AHVENANMAAN_ELY": "Ahvenanmaan maakunta",
+    "VAYLAVIRASTO": "Väylävirasto"
+  },
   "rooli": {
     "PROJEKTIPAALLIKKO": "Projektipäällikkö"
   },

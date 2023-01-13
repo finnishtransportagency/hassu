@@ -132,9 +132,14 @@ export async function readParametersByPath(path: string, region: Region): Promis
 }
 
 export async function readParametersForEnv<T extends Record<string, string>>(environment: string, region: Region): Promise<T> {
+  let envParams;
+  if (!BaseConfig.isPermanentEnvironment() && BaseConfig.infraEnvironment !== BaseConfig.env) {
+    envParams = await readParametersByPath("/" + BaseConfig.env + "/", region);
+  }
   const results: Record<string, string> = {
     ...(await readParametersByPath("/", region)), // Read global parameters from root
     ...(await readParametersByPath("/" + environment + "/", region)), // Then override with environment specific ones if provided
+    ...envParams,
   };
   return results as T;
 }

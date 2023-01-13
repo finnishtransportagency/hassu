@@ -8,6 +8,7 @@
       "muokkaaja": "migraatio",
       "tila": "MIGROITU",
       "velho": {
+        "asiatunnusELY": "HASSU/2/2023",
         "kunnat": [
           91,
           92
@@ -63,6 +64,7 @@
       "muokkaaja": "migraatio",
       "tila": "MIGROITU",
       "velho": {
+        "asiatunnusELY": "HASSU/2/2023",
         "kunnat": [
           91,
           92
@@ -87,6 +89,7 @@
   "paivitetty": "2020-01-01T00:00:00+02:00",
   "tyyppi": "TIE",
   "velho": {
+    "asiatunnusELY": "HASSU/2/2023",
     "kunnat": [
       91,
       92

@@ -11,18 +11,21 @@ describe("Projektin henkilot", () => {
     cy.login("A1");
   });
 
-  // Clean up so new user or municipality representative wont cause problems in later tests
-  // and also for for re-runnability
+  // Clean up so new user or municipality representative won't cause problems in later tests and also for re-runnability
   after(() => {
-    cy.login("A1");
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid);
-    cy.get("#suunnittelusopimus_yhteyshenkilo").select(1);
-    cy.get("#save").click();
+    cy.task("shouldSkip").then((isTestFailed) => {
+      if (!isTestFailed) {
+        cy.login("A1");
+        cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid);
+        cy.get("#suunnittelusopimus_yhteyshenkilo").select(1);
+        cy.get("#save").click();
 
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
-    cy.get("input[name $='yleinenYhteystieto']").last().scrollIntoView();
-    cy.get("[data-testid='poista.kayttoOikeudet.2']").click(); //TODO button elementtien tavalliset nimi ja id selectorit + .last() ei tunnu toimivan
-    cy.get("#save_projekti").click();
+        cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
+        cy.get("input[name $='yleinenYhteystieto']").last().scrollIntoView();
+        cy.get("[data-testid='poista.kayttoOikeudet.2']").click(); //TODO button elementtien tavalliset nimi ja id selectorit + .last() ei tunnu toimivan
+        cy.get("#save_projekti").click();
+      }
+    });
   });
 
   it("Tarkista projektin henkilot velhosta", () => {

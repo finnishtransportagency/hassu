@@ -1,7 +1,8 @@
-import { DBVaylaUser, UudelleenKuulutus, NahtavillaoloVaiheJulkaisu } from "../database/model";
+import { DBVaylaUser, NahtavillaoloVaiheJulkaisu, UudelleenKuulutus, Velho } from "../database/model";
 import { parseDate } from "../util/dateUtil";
 import { assertIsDefined } from "../util/assertions";
 import * as API from "../../../common/graphql/apiModel";
+import { VelhoJulkinen, Viranomainen } from "../../../common/graphql/apiModel";
 
 export interface GenericKuulutus {
   tila?: API.KuulutusJulkaisuTila | null;
@@ -9,6 +10,7 @@ export interface GenericKuulutus {
   kuulutusVaihePaattyyPaiva?: string | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
 }
+
 export type GenericDbKuulutusJulkaisu = Pick<
   NahtavillaoloVaiheJulkaisu,
   "tila" | "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva" | "uudelleenKuulutus" | "hyvaksymisPaiva"
@@ -75,4 +77,13 @@ export function adaptMuokkausTila<J extends GenericKuulutus>(
     return API.MuokkausTila.LUKU;
   }
   return API.MuokkausTila.MUOKKAUS;
+}
+
+export function getAsiatunnus(velho: Velho | VelhoJulkinen | null | undefined): string | undefined {
+  if (!velho) {
+    return undefined;
+  }
+  return (
+    (velho.suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO ? velho.asiatunnusVayla : velho.asiatunnusELY) || undefined
+  );
 }
