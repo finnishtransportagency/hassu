@@ -9,7 +9,7 @@ import {
 } from "./common";
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import { vaylaUserToYhteystieto } from "../../../util/vaylaUserToYhteystieto";
-import mergeWith from "lodash/mergeWith";
+import union from "lodash/union";
 
 export function adaptVuorovaikutusKierrosToSave(
   dbProjekti: DBProjekti,
@@ -62,13 +62,13 @@ export function adaptVuorovaikutusKierrosToSave(
   return undefined;
 }
 
-function mergeAllowingNulls(dest: Record<string, unknown>, source: Record<string, unknown> | null | undefined): Record<string, unknown> {
-  if (!source) return dest;
-  const keysDest = Object.keys(dest);
-  const keysSource = Object.keys(source);
-  const keysAll = mergeWith(keysDest, keysSource);
+function mergeAllowingNulls(uusi: Record<string, unknown>, vanha: Record<string, unknown> | null | undefined): Record<string, unknown> {
+  if (!vanha) return uusi;
+  const keysDest = Object.keys(uusi);
+  const keysSource = Object.keys(vanha);
+  const keysAll = union(keysDest, keysSource);
   return keysAll.reduce((acc: Record<string, unknown>, cur: string) => {
-    acc[cur] = source[cur] === undefined ? dest[cur] : dest[cur] !== undefined ? dest[cur] : source[cur];
+    acc[cur] = vanha[cur] === undefined ? uusi[cur] : uusi[cur] === undefined ? vanha[cur] : uusi[cur];
     return acc;
   }, {});
 }
