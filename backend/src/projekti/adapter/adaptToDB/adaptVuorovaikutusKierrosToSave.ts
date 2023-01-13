@@ -56,9 +56,21 @@ export function adaptVuorovaikutusKierrosToSave(
       palautteidenVastaanottajat,
       tila: API.VuorovaikutusKierrosTila.MUOKATTAVISSA,
     };
-    return mergeWith(vuorovaikutusKierros, dbProjekti.vuorovaikutusKierros); // input ei sisällä kaikkea dataa, koska datan syöttö jaetaan kahdelle välilehdelle
+    const mergeResult = mergeAllowingNulls(vuorovaikutusKierros, dbProjekti.vuorovaikutusKierros) as VuorovaikutusKierros; // input ei sisällä kaikkea dataa, koska datan syöttö jaetaan kahdelle välilehdelle
+    return mergeResult;
   }
   return undefined;
+}
+
+function mergeAllowingNulls(dest: Record<string, unknown>, source: Record<string, unknown> | null | undefined): Record<string, unknown> {
+  if (!source) return dest;
+  const keysDest = Object.keys(dest);
+  const keysSource = Object.keys(source);
+  const keysAll = mergeWith(keysDest, keysSource);
+  return keysAll.reduce((acc: Record<string, unknown>, cur: string) => {
+    acc[cur] = source[cur] === undefined ? dest[cur] : dest[cur] !== undefined ? dest[cur] : source[cur];
+    return acc;
+  }, {});
 }
 
 export function adaptVuorovaikutusKierrosAfterPerustiedotUpdate(
