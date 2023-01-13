@@ -15,8 +15,11 @@ import remove from "lodash/remove";
 export function adaptIlmoituksenVastaanottajatToSave(
   vastaanottajat: API.IlmoituksenVastaanottajatInput | null | undefined
 ): IlmoituksenVastaanottajat | null | undefined {
-  if (!vastaanottajat) {
-    return vastaanottajat as null | undefined;
+  if (vastaanottajat === null) {
+    return null;
+  }
+  if (vastaanottajat === undefined) {
+    return undefined;
   }
   if (!vastaanottajat.kunnat) {
     throw new IllegalArgumentError("Ilmoituksen vastaanottajissa tulee olla kunnat mukana!");
