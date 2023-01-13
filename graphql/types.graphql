@@ -752,6 +752,7 @@ type VelhoHakuTulos {
 
 type VelhoToimeksianto {
   nimi: String!
+  oid: String!
   aineistot: [VelhoAineisto!]!
 }
 
@@ -760,6 +761,7 @@ type VelhoAineisto {
   tiedosto: String!
   dokumenttiTyyppi: String!
   muokattu: String!
+  kuvaus: String!
 }
 
 type NykyinenKayttaja {

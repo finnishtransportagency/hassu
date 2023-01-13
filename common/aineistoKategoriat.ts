@@ -34,6 +34,8 @@ export class AineistoKategoria {
   }
 }
 
+const kategorisoimattomatId = "kategorisoimattomat";
+
 export class AineistoKategoriat {
   private readonly ylaKategoriat: AineistoKategoria[];
 
@@ -41,19 +43,27 @@ export class AineistoKategoriat {
     this.ylaKategoriat = aineistoKategoriat.map((kategoria) => new AineistoKategoria(kategoria));
   }
 
-  public listKategoriat(): AineistoKategoria[] {
-    return this.ylaKategoriat;
+  public listKategoriat(showKategorioimattomat?: boolean): AineistoKategoria[] {
+    return this.ylaKategoriat.filter((ylakategoria) => ylakategoria !== this.getKategorisoimattomat() || showKategorioimattomat);
   }
 
   public findYlakategoriaById(kategoriaId: string | null | undefined): AineistoKategoria | undefined {
     return this.ylaKategoriat.find(({ id }) => kategoriaId === id);
   }
 
+  public getKategorisoimattomat(): AineistoKategoria {
+    const kategorisoimattomat = this.ylaKategoriat.find(({ id }) => kategorisoimattomatId === id);
+    if (!kategorisoimattomat) {
+      throw new Error(`Expected to found ylaKategoria with id ${kategorisoimattomatId} but didn't`);
+    }
+    return kategorisoimattomat;
+  }
+
   public listKategoriaIds(): string[] {
     return getNestedCategoryIds(this.ylaKategoriat);
   }
 
-  public findKategoria(aineistoKuvaus: string | undefined, tiedostoNimi: string): AineistoKategoria | undefined {
+  public findKategoria(aineistoKuvaus: string | undefined, tiedostoNimi: string): AineistoKategoria {
     const ylakategoria = findMatchingCategory(this.ylaKategoriat, aineistoKuvaus, undefined);
     if (ylakategoria) {
       // Ylakategoria is matched, searching for mathing alakategoria
@@ -61,9 +71,10 @@ export class AineistoKategoriat {
       if (alakategoria) {
         return alakategoria;
       }
+      return ylakategoria;
     }
-    // If ylakategoria is not matched then return ylakategoria
-    return ylakategoria;
+    // If ylakategoria is not matched then return kategorisoimaton kategoria
+    return this.getKategorisoimattomat();
   }
 
   public findById(id: string): AineistoKategoria | undefined {
@@ -356,4 +367,5 @@ export const aineistoKategoriat = new AineistoKategoriat([
       },
     ],
   },
+  { id: kategorisoimattomatId },
 ]);

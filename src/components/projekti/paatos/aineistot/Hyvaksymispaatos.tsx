@@ -18,7 +18,7 @@ type Props = {
 export default function Hyvaksymispaatos({ projekti }: Props) {
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
   const { setValue, watch } = useFormContext<FormFields>();
-  const aineistot = watch("hyvaksymisPaatos");
+  const hyvaksymisPaatos = watch("hyvaksymisPaatos");
 
   return (
     <>
@@ -32,7 +32,7 @@ export default function Hyvaksymispaatos({ projekti }: Props) {
         -sivulla.
       </p>
       <div className="m-6">
-        {!aineistot && <div>Ei hyvaksymispaatöstä</div>}
+        {!hyvaksymisPaatos && <div>Ei hyvaksymispaatöstä</div>}
         <HyvaksymisPaatosTiedostot />
       </div>
 
@@ -43,13 +43,17 @@ export default function Hyvaksymispaatos({ projekti }: Props) {
         open={aineistoDialogOpen}
         infoText="Valitse yksi tai useampi päätöstiedosto."
         onClose={() => setAineistoDialogOpen(false)}
-        onSubmit={(newAineistot) => {
-          const value = aineistot || [];
-          newAineistot.forEach((aineisto) => {
-            if (!find(value, { dokumenttiOid: aineisto.dokumenttiOid })) {
-              value.push({ ...aineisto, kategoriaId: null, jarjestys: value.length });
-            }
-          });
+        onSubmit={(velhoAineistot) => {
+          const value = hyvaksymisPaatos || [];
+          velhoAineistot
+            .filter((aineisto) => !find(value, { dokumenttiOid: aineisto.oid }))
+            .map((velhoAineisto) => ({
+              dokumenttiOid: velhoAineisto.oid,
+              nimi: velhoAineisto.tiedosto,
+            }))
+            .forEach((aineisto) => {
+              value.push({ ...aineisto, jarjestys: value.length });
+            });
           setValue("hyvaksymisPaatos", value, { shouldDirty: true });
         }}
       />

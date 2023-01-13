@@ -17,7 +17,7 @@ import {
 } from "react-hook-form";
 import HassuAineistoNimiExtLink from "../../HassuAineistoNimiExtLink";
 import { useProjekti } from "src/hooks/useProjekti";
-import { Aineisto, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "@services/api";
+import { Aineisto, AineistoInput, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "@services/api";
 import HassuTable from "@components/HassuTable";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import { Column } from "react-table";
@@ -233,11 +233,12 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
         onClose={() => setEsittelyAineistoDialogOpen(false)}
         onSubmit={(aineistot) => {
           const value = esittelyaineistot || [];
-          aineistot.forEach((aineisto) => {
-            if (!find(value, { dokumenttiOid: aineisto.dokumenttiOid })) {
+          aineistot
+            .filter((velhoAineisto) => !find(value, { dokumenttiOid: velhoAineisto.oid }))
+            .map<AineistoInput>((velhoAineisto) => ({ dokumenttiOid: velhoAineisto.oid, nimi: velhoAineisto.tiedosto }))
+            .forEach((aineisto) => {
               value.push(aineisto);
-            }
-          });
+            });
           setValue("vuorovaikutusKierros.esittelyaineistot", value, { shouldDirty: true });
         }}
       />
@@ -248,11 +249,9 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
         onClose={() => setSuunnitelmaLuonnoksetDialogOpen(false)}
         onSubmit={(aineistot) => {
           const value = suunnitelmaluonnokset || [];
-          aineistot.forEach((aineisto) => {
-            if (!find(value, { dokumenttiOid: aineisto.dokumenttiOid })) {
-              value.push(aineisto);
-            }
-          });
+          aineistot
+            .filter((velhoAineisto) => !find(value, { dokumenttiOid: velhoAineisto.oid }))
+            .map<AineistoInput>((velhoAineisto) => ({ dokumenttiOid: velhoAineisto.oid, nimi: velhoAineisto.tiedosto }));
           setValue("vuorovaikutusKierros.suunnitelmaluonnokset", value, { shouldDirty: true });
         }}
       />

@@ -28,7 +28,8 @@
     "ymparistosuunnitelmat": "Ympäristösuunnitelmat",
     "muut_selvitykset": "Muut selvitykset",
     "valaistuksen_ja_liikenteenohjauksen_yleiskartat": "Valaistuksen ja liikenteenohjauksen yleiskartat",
-    "johtosiirrot_ja_kunnallistekniset_suunnitelmat": "Johtosiirrot ja kunnallistekniset suunnitelmat"
+    "johtosiirrot_ja_kunnallistekniset_suunnitelmat": "Johtosiirrot ja kunnallistekniset suunnitelmat",
+    "kategorisoimattomat": "Kategorisoimattomat"
   },
   "lisa-aineisto": "Lausuntopyyntöön liitetty lisäaineisto",
   "uusi-aineisto": "Uusi aineisto"

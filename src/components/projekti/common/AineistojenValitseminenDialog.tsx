@@ -3,7 +3,7 @@ import Button from "@components/button/Button";
 import HassuDialog from "@components/HassuDialog";
 import { DialogActions, DialogContent, Divider, Stack } from "@mui/material";
 import HassuAccordion from "@components/HassuAccordion";
-import { AineistoInput, VelhoAineisto, VelhoToimeksianto } from "@services/api";
+import { VelhoAineisto, VelhoToimeksianto } from "@services/api";
 import { useProjekti } from "src/hooks/useProjekti";
 import { formatDateTime } from "src/util/dateUtils";
 import HassuSpinner from "@components/HassuSpinner";
@@ -22,7 +22,7 @@ interface FormData {
 
 type Props = {
   infoText?: string | undefined;
-  onSubmit: (aineistot: AineistoInput[]) => void;
+  onSubmit: (aineistot: VelhoAineisto[]) => void;
 } & Required<Pick<DialogProps, "onClose" | "open">>;
 
 const useFormOptions = { defaultValues: { toimeksiannot: [] } };
@@ -56,31 +56,26 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
 
   const toimeksiannotWatch = watch("toimeksiannot");
 
-  const updateValitut = useCallback<(toimeksiantoNimi: string, selectedRows: VelhoAineisto[]) => void>(
-    (toimeksiantoNimi, rows) => {
+  const updateValitut = useCallback<(toimeksianto: VelhoToimeksianto, selectedRows: VelhoAineisto[]) => void>(
+    (toimeksianto, rows) => {
       const toimeksiannot = getValues("toimeksiannot");
-      const toimeksianto = toimeksiannot.find((toimeksianto) => toimeksianto.nimi === toimeksiantoNimi);
-      if (toimeksianto) {
-        toimeksianto.aineistot = rows;
+      const toimeksiantoFormValues = toimeksiannot.find((toimeksianto) => toimeksianto.oid === toimeksianto.oid);
+      if (toimeksiantoFormValues) {
+        toimeksiantoFormValues.aineistot = rows;
       } else {
-        toimeksiannot.push({ aineistot: rows, nimi: toimeksiantoNimi, __typename: "VelhoToimeksianto" });
+        toimeksiannot.push({ aineistot: rows, nimi: toimeksianto.nimi, __typename: "VelhoToimeksianto", oid: toimeksianto.oid });
       }
       setValue("toimeksiannot", toimeksiannot);
     },
     [setValue, getValues]
   );
 
-  const moveAineistoToMainForm = async (data: FormData) => {
-    const newAineistoInput = data.toimeksiannot.reduce<AineistoInput[]>((aineistot, toimeksianto) => {
-      aineistot.push(
-        ...toimeksianto.aineistot.map<AineistoInput>((aineisto) => ({
-          dokumenttiOid: aineisto.oid,
-          nimi: aineisto.tiedosto,
-        }))
-      );
+  const moveAineistoToMainForm = (data: FormData) => {
+    const velhoAineistot: VelhoAineisto[] = data.toimeksiannot.reduce<VelhoAineisto[]>((aineistot, toimeksianto) => {
+      aineistot.push(...toimeksianto.aineistot);
       return aineistot;
     }, []);
-    onSubmit(newAineistoInput);
+    onSubmit(velhoAineistot);
     onClose?.({}, "escapeKeyDown");
   };
 
@@ -122,7 +117,7 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
                             {projekti?.oid && toimeksianto.aineistot && toimeksianto.aineistot.length > 0 ? (
                               <AineistoTable
                                 setSelectedAineisto={updateValitut}
-                                toimeksianto={toimeksianto.nimi}
+                                toimeksianto={toimeksianto}
                                 data={toimeksianto.aineistot}
                               />
                             ) : (
@@ -165,8 +160,8 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
 
 interface AineistoTableProps {
   data: VelhoAineisto[];
-  toimeksianto: string;
-  setSelectedAineisto: (toimeksiantoNimi: string, selectedRows: VelhoAineisto[]) => void;
+  toimeksianto: VelhoToimeksianto;
+  setSelectedAineisto: (toimeksianto: VelhoToimeksianto, selectedRows: VelhoAineisto[]) => void;
 }
 
 const AineistoTable = ({ data, setSelectedAineisto, toimeksianto }: AineistoTableProps) => {

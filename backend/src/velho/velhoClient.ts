@@ -150,11 +150,12 @@ export class VelhoClient {
               __typename: "VelhoAineisto",
               oid: aineisto.oid,
               tiedosto: tiedostoNimi,
+              kuvaus: aineisto.metatiedot.kuvaus || "",
               dokumenttiTyyppi,
               muokattu: dayjs(aineisto["tuorein-versio"].muokattu).format(),
             };
           });
-          return { __typename: "VelhoToimeksianto", nimi, aineistot };
+          return { __typename: "VelhoToimeksianto", nimi, aineistot, oid: toimeksianto.oid };
         })
       );
       return result;
