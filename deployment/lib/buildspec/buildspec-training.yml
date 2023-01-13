@@ -31,6 +31,7 @@ phases:
       - npm run test
       - npm run localstack:stop &
       - npm run sonar
+      - npm run maintenancemode set
       - npm run deploy:database
       - npm run deploy:backend
       - npm run deploy:frontend
@@ -42,6 +43,7 @@ phases:
   post_build:
     on-failure: ABORT
     commands:
+      - npm run maintenancemode clear
       - ./deployment/bin/reportBuildStatus.sh -t "$ROCKET_CHAT_TOKEN" -u "$ROCKET_CHAT_USER_ID" -r "$CODEBUILD_BUILD_SUCCEEDING" -m "$ENVIRONMENT build" -d "CodeBuild $CODEBUILD_BUILD_URL"
 cache:
   paths:
