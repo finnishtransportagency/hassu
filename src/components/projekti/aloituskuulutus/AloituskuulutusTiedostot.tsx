@@ -36,12 +36,12 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid,
             {ensisijaisetPDFt && (
               <div className="flex flex-col mb-4">
                 <div>
-                  <Link underline="none" href={ensisijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
+                  <Link className="file_download" underline="none" href={ensisijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
                     {splitFilePath(ensisijaisetPDFt.aloituskuulutusPDFPath).fileName}
                   </Link>
                 </div>
                 <div>
-                  <Link underline="none" href={ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath} target="_blank">
+                  <Link className="file_download" underline="none" href={ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath} target="_blank">
                     {splitFilePath(ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
                   </Link>
                 </div>
@@ -54,12 +54,12 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid,
                 {toissijaisetPDFt && (
                   <div className="flex flex-col">
                     <div>
-                      <Link underline="none" href={toissijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
+                      <Link className="file_download" underline="none" href={toissijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
                         {splitFilePath(toissijaisetPDFt.aloituskuulutusPDFPath).fileName}
                       </Link>
                     </div>
                     <div>
-                      <Link underline="none" href={toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath} target="_blank">
+                      <Link className="file_download" underline="none" href={toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath} target="_blank">
                         {splitFilePath(toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
                       </Link>
                     </div>

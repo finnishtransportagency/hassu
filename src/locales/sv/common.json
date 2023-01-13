@@ -56,6 +56,25 @@
     "AHVENANMAAN_ELY": "RUOTSIKSI Ahvenanmaan maakunta",
     "VAYLAVIRASTO": "RUOTSIKSI Väylävirasto"
   },
+  "viranomainen_pitka": {
+    "ETELA_POHJANMAAN_ELY": "RUOTSIKSI Etelä-Pohjanmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "ETELA_SAVO_ELY": "RUOTSIKSI Etelä-Savon elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "HAME_ELY": "RUOTSIKSI Hämeen elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "KAAKKOIS_SUOMEN_ELY": "RUOTSIKSI Kaakkois-Suomi elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "KAINUUN_ELY": "RUOTSIKSI Kainuun elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "KESKI_SUOMEN_ELY": "RUOTSIKSI Keski-Suomen elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "LAPIN_ELY": "RUOTSIKSI Lapin elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "PIRKANMAAN_ELY": "RUOTSIKSI Pirkanmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "POHJANMAAN_ELY": "RUOTSIKSI Pohjanmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "POHJOIS_KARJALAN_ELY": "RUOTSIKSI Pohjois-Karjalan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "POHJOIS_POHJANMAAN_ELY": "RUOTSIKSI Pohjois-Pohjanmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "POHJOIS_SAVON_ELY": "RUOTSIKSI Pohjois-Savon elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "SATAKUNNAN_ELY": "RUOTSIKSI Satakunnan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "UUDENMAAN_ELY": "RUOTSIKSI Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "VARSINAIS_SUOMEN_ELY": "RUOTSIKSI Varsinais-Suomen elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
+    "AHVENANMAAN_ELY": "RUOTSIKSI Ahvenanmaan maakunta",
+    "VAYLAVIRASTO": "RUOTSIKSI Väylävirasto"
+  },
   "rooli": {
     "PROJEKTIPAALLIKKO": "Projektledare"
   },

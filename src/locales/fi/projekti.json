@@ -222,16 +222,33 @@
     "jata_muistutus": "Jätä muistutus hankkeesta"
   },
   "asiakirja": {
+    "aloituskuulutus": {
+      "otsikko_kuulutus_suunnittelun_aloittamisesta": "Kuulutus suunnittelun aloittamisesta",
+      "kappale1": "{{kuuluttaja_pitka}} aloittaa otsikon mukaisen {{suunnitelman}} laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.",
+      "kappale1_suunnittelusopimus": "{{kuuluttaja_pitka}}, sovittuaan asiasta {{viranomaisen}} kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.",
+      "kappale2": "{{kuuluttaja}} on {{kuulutusPaiva}} julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa www.vayliensuunnittelu.fi. Kuulutus pidetään nähtävillä {{kuulutusNahtavillaAika}}.",
+      "kappale3": "Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen {{suunnitelmasta_vastaavalla_tai_rataverkon_haltijalla}} on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. ({{lakiviite_tutkimusoikeus}}).",
+      "kappale4": "Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. ({{lakiviite_muistutus}}). ",
+      "suunnitelmasta_vastaavalla": "suunnitelmasta vastaavalla",
+      "rataverkon_haltijalla": "rataverkon haltijalla",
+      "lakiviite_tutkimusoikeus_tie": "laki liikennejärjestelmästä ja maanteistä LjMTL 16 §",
+      "lakiviite_tutkimusoikeus_rata": "ratalaki 9 §",
+      "lakiviite_muistutus_tie": "LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §",
+      "lakiviite_muistutus_rata": "ratalaki 22 §"
+    },
     "ilmoitus": {
-      "tie_kappale1": "{{viranomainen}} julkaisee tietoverkossaan liikennejärjestelmästä ja maanteistä annetun lain (503/2005) sekä hallintolain 62 a §:n mukaisesti kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} {{ilmoitus_vaihe}}. {{viranomainen}} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.",
-      "rata_kappale1": "{{viranomainen}} julkaisee tietoverkossaan kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} {{ilmoitus_vaihe}}. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §, HL 62 a §)",
-      "ilmoitus_tie_vaihe_aloituskuulutus": "suunnittelun ja maastotöiden aloittamista",
-      "ilmoitus_tie_vaihe_suunnitelman_nahtaville_asettamista": "suunnitelman nähtäville asettamista",
-      "ilmoitus_tie_vaihe_suunnitelman_hyvaksymispaatosta": "suunnitelman hyväksymispäätöstä",
-      "ilmoitus_tie_vaihe_paatoksen_voimassaoloajan_pidentamisesta": "päätöksen voimassaoloajan pidentämisestä",
-      "ilmoitus_rata_vaihe_aloituskuulutus": "laatimisen aloittamista",
-      "ilmoitus_rata_vaihe_suunnitelman_nahtaville_asettamista": "nähtäville asettamista",
-      "ilmoitus_rata_vaihe_suunnitelman_hyvaksymispaatosta": "Liikenne- ja viestintäviraston (TRAFICOM) päätöksen ja sen perusteena olevien asiakirjojen nähtäville asettamista"
+      "otsikko_ilmoitus_kuulutuksesta": "Ilmoitus {{viranomaisen}} kuulutuksesta",
+      "otsikko_ilmoitus_kuulutuksesta_suunnittelusopimus": "Ilmoitus aloituskuulutuksesta",
+      "kappale1": "{{kuuluttaja_pitka}} julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} {{ilmoitus_vaihe}}. {{viranomainen}} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}}) ",
+      "kappale1_suunnittelusopimus": "{{kuuluttaja_pitka}}, sovittuaan asiasta {{viranomaisen}} kanssa julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} suunnittelun ja maastotöiden aloittamista. {{kuuluttaja}} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}})",
+      "lakiviite_kunnan_ilmoitus_tie": "LjMTL 108§, HL 62 a §",
+      "lakiviite_kunnan_ilmoitus_rata": "ratalaki 95 §/LjMTL 108§, HL 62 a §",
+      "kappale_kuulutus_julkaistaan": "Kuulutus julkaistaan {{kuulutusPaiva}} osoitteessa {{kuulutusOsoite}}",
+      "kappale_kuulutus_nahtavilla": "Kuulutus on nähtävillä {{kuulutusNahtavillaAika}} välisen ajan",
+      "ilmoitus_vaihe_aloituskuulutus": "suunnittelun ja maastotöiden aloittamista",
+      "ilmoitus_vaihe_suunnitelman_nahtaville_asettamista": "nähtäville asettamista",
+      "ilmoitus_vaihe_suunnitelman_hyvaksymispaatosta": "hyväksymispäätöstä",
+      "ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta": "hyväksymispäätöksen voimassaoloajan pidentämistä"
     },
     "hyvaksymispaatoksesta_ilmoittaminen": {
       "hyvaksymispaatoksesta_ilmoittaminen": "Hyväksymispäätöksestä ilmoittaminen",
@@ -268,8 +285,8 @@
       "rata_kappale3": "Päätös (www-versio) ja sen perusteena olevat asiakirjat {{linkki_hyvaksymispaatos}} (aineisto poistetaan nähtävilläoloajan päätyttyä)",
       "rata_kappale4": "Nähtävillä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä."
     },
-    "tietosuoja": "{{viranomainen}} käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä, tutustu verkkosivujen tietosuojaosioon osoitteessa {{tietosuojaurl}}",
-    "lisatietoja_antavat": "Lisätietoja antavat "
+    "tietosuoja": "{{viranomainen}} käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, {{tietosuojaurl}}.",
+    "lisatietoja_antavat": "Lisätietoja antaa "
   },
   "hallinto_oikeus_genetiivi": {
     "HELSINKI": "Helsingin",
@@ -283,5 +300,22 @@
     "luo-jatkopaatos": "Luo jatkopäätös",
     "jatkopaatosohjeet": "Olet avaamassa suunnitelmalle jatkopäätöksen kuulutuksen lomakkeen. Painamalla Tallenna ja luo jatkopäätös -painiketta tallennat tiedot ja siirryt Projektin henkilöt -sivulle.",
     "jatkopaatosohjeet-paivita-projektipaallikko": "Päivitä Projektivelhosta projektipäällikkö ajantasalle ja päivitä sen jälkeen Projektin henkilöt -sivu."
+  },
+  "suunnitelma": {
+    "YLEINEN": {
+      "perusmuoto": "yleissuunnitelma",
+      "partitiivi": "yleissuunnitelmaa",
+      "genetiivi": "yleissuunnitelman"
+    },
+    "TIE": {
+      "perusmuoto": "tiesuunnitelma",
+      "partitiivi": "tiesuunnitelmaa",
+      "genetiivi": "tiesuunnitelman"
+    },
+    "RATA": {
+      "perusmuoto": "ratasuunnitelma",
+      "partitiivi": "ratasuunnitelmaa",
+      "genetiivi": "ratasuunnitelman"
+    }
   }
 }

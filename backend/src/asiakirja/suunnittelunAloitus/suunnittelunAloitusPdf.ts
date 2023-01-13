@@ -1,19 +1,8 @@
-import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
-import {
-  DBVaylaUser,
-  Kielitiedot,
-  LocalizedMap,
-  SuunnitteluSopimusJulkaisu,
-  SuunnitteluSopimus,
-  UudelleenKuulutus,
-  Velho,
-  Yhteystieto,
-} from "../../database/model";
+import { AsiakirjaTyyppi, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
-import { KutsuAdapter } from "./KutsuAdapter";
-import { translate } from "../../util/localization";
-import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { assertIsDefined } from "../../util/assertions";
+import { createPDFFileName } from "../pdfFileName";
+import { AloituskuulutusKutsuAdapter, AloituskuulutusKutsuAdapterProps } from "../adapter/aloituskuulutusKutsuAdapter";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
 export type IlmoitusAsiakirjaTyyppi = Extract<
@@ -22,56 +11,35 @@ export type IlmoitusAsiakirjaTyyppi = Extract<
   | AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE
   | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE
 >;
-export type IlmoitusParams = {
-  asiakirjanMuoto: AsiakirjanMuoto;
-  oid?: string;
-  kieli: Kieli;
-  velho: Velho;
-  kielitiedot: Kielitiedot;
-  hankkeenKuvaus: LocalizedMap<string>;
-  kuulutusPaiva: string;
-  yhteystiedot?: Yhteystieto[];
-  suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu;
-  uudelleenKuulutus?: UudelleenKuulutus;
 
-  // kayttoOikeudet must be set if yhteysHenkilot is set
-  yhteysHenkilot?: string[];
-  kayttoOikeudet?: DBVaylaUser[];
-};
-
-export abstract class SuunnittelunAloitusPdf extends CommonPdf {
+export abstract class SuunnittelunAloitusPdf extends CommonPdf<AloituskuulutusKutsuAdapter> {
   protected header: string;
-  protected params: IlmoitusParams;
+  protected params: AloituskuulutusKutsuAdapterProps;
 
-  constructor(params: IlmoitusParams, header: string, asiakirjanMuoto: AsiakirjanMuoto, fileNameKey: string) {
+  protected constructor(params: AloituskuulutusKutsuAdapterProps, headerKey: string, asiakirjaTyyppi: AsiakirjaTyyppi) {
     if (!params.velho.tyyppi) {
       throw new Error("params.velho.tyyppi puuttuu");
     }
     if (!params.hankkeenKuvaus) {
       throw new Error("params.hankkeenKuvaus puuttuu");
     }
-    const kutsuAdapter = new KutsuAdapter({
-      velho: params.velho,
-      asiakirjanMuoto,
-      kielitiedot: params.kielitiedot,
-      kieli: params.kieli,
-      projektiTyyppi: params.velho.tyyppi,
-      kayttoOikeudet: params.kayttoOikeudet,
-      suunnitteluSopimus: params.suunnitteluSopimus,
-    });
-    super(params.kieli, kutsuAdapter);
-    const kaannos: string = translate("tiedostonimi." + fileNameKey, params.kieli) || "";
-    if (!kaannos) {
-      throw new Error(`Käännos puutuu tiedostonimi.${fileNameKey}:lle`);
+    if (params.velho.tyyppi == ProjektiTyyppi.RATA && params.suunnitteluSopimus) {
+      throw new Error("Ratasuunnitelmilla ei voi olla suunnittelusopimusta");
     }
-    super.setupPDF(header, kutsuAdapter.nimi, kaannos);
+    const kutsuAdapter = new AloituskuulutusKutsuAdapter(params);
+    super(params.kieli, kutsuAdapter);
+    this.kutsuAdapter.addTemplateResolver(this);
+
+    const fileName = createPDFFileName(asiakirjaTyyppi, kutsuAdapter.asiakirjanMuoto, params.velho.tyyppi, params.kieli);
+    const header = kutsuAdapter.text(headerKey);
+    super.setupPDF(header, kutsuAdapter.nimi, fileName);
     this.header = header;
     this.params = params;
   }
 
   protected addContent(): void {
     const elements: (PDFKit.PDFStructureElementChild | undefined)[] = [
-      this.logo(this.isVaylaTilaaja(this.params.velho)),
+      this.logo(this.isVaylaTilaaja()),
       this.headerElement(this.header),
       this.titleElement(),
       this.uudelleenKuulutusParagraph(),
@@ -84,31 +52,7 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf {
     throw new Error("Method 'addDocumentElements()' must be implemented.");
   }
 
-  protected get projektiTyyppi(): string {
-    let tyyppi = "";
-    switch (this.params.velho.tyyppi) {
-      case ProjektiTyyppi.TIE:
-        tyyppi = "tiesuunnitelma";
-        break;
-      case ProjektiTyyppi.YLEINEN:
-        tyyppi = "yleissuunnitelma";
-        break;
-      case ProjektiTyyppi.RATA:
-        tyyppi = "ratasuunnitelma";
-        break;
-    }
-    return tyyppi;
-  }
-
-  protected get kuulutusPaiva(): string {
-    return this.params.kuulutusPaiva ? new Date(this.params.kuulutusPaiva).toLocaleDateString("fi") : "DD.MM.YYYY";
-  }
-
-  protected get tilaajaGenetiivi(): string {
-    return this.kutsuAdapter.tilaajaGenetiivi;
-  }
-
-  protected hankkeenKuvaus(): PDFStructureElement {
+  protected hankkeenKuvausParagraph(): PDFStructureElement {
     assertIsDefined(this.params.hankkeenKuvaus);
     return this.localizedParagraphFromMap(this.params.hankkeenKuvaus);
   }

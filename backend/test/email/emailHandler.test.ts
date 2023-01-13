@@ -1,9 +1,6 @@
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
-import { TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
-import { emailClient } from "../../src/email/email";
-import { emailHandler } from "../../src/handler/emailHandler";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
 import { personSearch } from "../../src/personSearch/personSearchClient";
 import { ProjektiFixture } from "../fixture/projektiFixture";
@@ -11,21 +8,38 @@ import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture"
 import { Readable } from "stream";
 import { awsMockResolves, expectAwsCalls } from "../aws/awsMock";
 import { getS3 } from "../../src/aws/client";
+import { createAloituskuulutusHyvaksyttavanaEmail } from "../../src/email/emailTemplates";
+import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
+import { UserFixture } from "../fixture/userFixture";
+import { fileService } from "../../src/files/fileService";
+import { aineistoSynchronizerService } from "../../src/aineisto/aineistoSynchronizerService";
+import { assertIsDefined } from "../../src/util/assertions";
+import { KuulutusJulkaisuTila } from "../../../common/graphql/apiModel";
+import { EmailClientStub } from "../../integrationtest/api/testUtil/util";
+import { mockBankHolidays } from "../mocks";
 
+const { expect } = require("chai");
 describe("emailHandler", () => {
   let getObjectStub: sinon.SinonStub;
-  let sendEmailStub: sinon.SinonStub;
   let getKayttajasStub: sinon.SinonStub;
   let loadProjektiByOidStub: sinon.SinonStub;
   let updateAloitusKuulutusJulkaisuStub: sinon.SinonStub;
+  let publishProjektiFileStub: sinon.SinonStub;
+  let synchronizeProjektiFilesStub: sinon.SinonStub;
+  const emailClientStub = new EmailClientStub();
+  mockBankHolidays();
 
   before(() => {
     getObjectStub = sinon.stub(getS3(), "getObject");
-    sendEmailStub = sinon.stub(emailClient, "sendEmail");
     getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
     loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
     updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
+    publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
+    synchronizeProjektiFilesStub = sinon.stub(aineistoSynchronizerService, "synchronizeProjektiFiles");
+    emailClientStub.init();
   });
+
+  beforeEach(() => {});
 
   afterEach(() => {
     sinon.reset();
@@ -50,9 +64,7 @@ describe("emailHandler", () => {
           personSearchFixture.manuMuokkaaja,
         ])
       );
-      sendEmailStub.resolves();
       loadProjektiByOidStub.resolves(fixture.dbProjekti2());
-
       awsMockResolves(getObjectStub, {
         Body: new Readable(),
       });
@@ -60,37 +72,36 @@ describe("emailHandler", () => {
 
     describe("sendWaitingApprovalMail", () => {
       it("should send email to projektipaallikko succesfully", async () => {
-        await emailHandler.sendEmailsByToiminto(
-          TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
-          fixture.PROJEKTI2_OID,
-          TilasiirtymaTyyppi.ALOITUSKUULUTUS
-        );
+        let emailOptions = await createAloituskuulutusHyvaksyttavanaEmail(fixture.dbProjekti2());
+        expect(emailOptions.subject).to.eq("Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ELY/2/2022");
 
-        sinon.assert.calledOnce(sendEmailStub);
-        sinon.assert.calledWith(sendEmailStub, {
-          subject: "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ELY/2/2022",
-          text:
-            "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi\n" +
+        expect(emailOptions.text).to.eq(
+          "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi\n" +
             "Testiprojekti 2\n" +
             "on luotu aloituskuulutus, joka odottaa hyväksyntääsi.\n" +
             "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/2\n" +
-            "Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
-          to: ["pekka.projari@vayla.fi"],
-        });
+            "Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
+        );
+        expect(emailOptions.to).to.eql(["pekka.projari@vayla.fi"]);
       });
     });
 
     describe("sendApprovalMailsAndAttachments", () => {
       it("should send emails and attachments succesfully", async () => {
+        publishProjektiFileStub.resolves();
+        synchronizeProjektiFilesStub.resolves();
         updateAloitusKuulutusJulkaisuStub.resolves();
         awsMockResolves(getObjectStub, {
           Body: new Readable(),
         });
 
-        await emailHandler.sendEmailsByToiminto(TilasiirtymaToiminto.HYVAKSY, fixture.PROJEKTI2_OID, TilasiirtymaTyyppi.ALOITUSKUULUTUS);
+        let projekti = fixture.dbProjekti2();
+        assertIsDefined(projekti?.aloitusKuulutusJulkaisut?.[0]?.tila);
+        projekti.aloitusKuulutusJulkaisut[0].tila = KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA;
 
+        await aloitusKuulutusTilaManager.approve(projekti, UserFixture.pekkaProjari);
         expectAwsCalls(getObjectStub);
-        sinon.assert.callCount(sendEmailStub, 3);
+        emailClientStub.verifyEmailsSent();
       });
     });
   });

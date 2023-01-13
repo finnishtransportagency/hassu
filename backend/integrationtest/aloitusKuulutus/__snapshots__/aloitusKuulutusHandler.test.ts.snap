@@ -373,3 +373,85 @@ Object {
   "stub": "createInvalidation",
 }
 `;
+
+exports[`AloitusKuulutus should create and manipulate projekti successfully 7`] = `
+Array [
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ELY/1/2022",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
+Testiprojekti 1
+on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1
+Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": Array [
+      "pekka.projari@vayla.fi",
+    ],
+  },
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ELY/1/2022",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
+Testiprojekti 1
+on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1
+Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": Array [
+      "pekka.projari@vayla.fi",
+    ],
+  },
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ELY/1/2022",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
+Testiprojekti 1
+aloituskuulutus on hyväksytty.
+Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1/aloituskuulutus
+Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": "mikko.haapamaki@cgi.com",
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T412 Aloituskuulutus.pdf",
+      },
+    ],
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ELY/1/2022",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
+Testiprojekti 1
+aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
+
+Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1/aloituskuulutus
+
+Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": Array [
+      "pekka.projari@vayla.fi",
+    ],
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      },
+    ],
+    "subject": "Nokia kuulutuksesta ilmoittaminen",
+    "text": "Testiprojekti 1
+
+Nokia ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman ja maastotöiden aloittamista. Nokia saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
+
+Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/1/aloituskuulutus.
+
+Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta.
+
+Lorem Ipsum
+
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+
+Lisätietoja antaa 
+
+Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen@vayla.fi
+
+Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com",
+    "to": Array [],
+  },
+]
+`;

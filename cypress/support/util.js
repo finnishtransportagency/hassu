@@ -1,6 +1,6 @@
 export function capturePDFPreview() {
   const pdfs = [];
-  cy.get("[name=\"tallennaProjektiInput\"")
+  cy.get('[name="tallennaProjektiInput"')
     .parent()
     .then((form) => {
       cy.stub(form.get()[0], "submit")
@@ -11,7 +11,7 @@ export function capturePDFPreview() {
           pdfs.push({
             action: action,
             tallennaProjektiInput: tallennaProjektiInput,
-            asiakirjaTyyppi: asiakirjaTyyppi
+            asiakirjaTyyppi: asiakirjaTyyppi,
           });
         })
         .as("formSubmit");
@@ -24,20 +24,25 @@ export function requestPDFs(pdfs) {
     .should("have.been.called")
     .then(() => {
       for (const pdf of pdfs) {
-        cy.request("POST", pdf.action, { tallennaProjektiInput: pdf.tallennaProjektiInput, asiakirjaTyyppi: pdf.asiakirjaTyyppi }).then((response) => {
-          expect(response.status).to.eq(200);
-        });
+        cy.request("POST", pdf.action, { tallennaProjektiInput: pdf.tallennaProjektiInput, asiakirjaTyyppi: pdf.asiakirjaTyyppi }).then(
+          (response) => {
+            expect(response.status).to.eq(200);
+          }
+        );
       }
     });
 }
 
 export function selectAllAineistotFromCategory(accordion) {
   cy.get(accordion).click();
-  cy.get(accordion +
-    " input[type='checkbox']").should(($tr) => {
-    expect($tr).to.have.length.gte(2);
-  }).wait(1000);
-  cy.get(accordion).contains("Valitse").should("be.visible")
+  cy.get(accordion + " input[type='checkbox']")
+    .should(($tr) => {
+      expect($tr).to.have.length.gte(2);
+    })
+    .wait(1000);
+  cy.get(accordion)
+    .contains("Valitse")
+    .should("be.visible")
     .parent()
     .within(() => {
       cy.get("input[type='checkbox']").click();
@@ -55,3 +60,16 @@ export function typeIntoFields(selectorToTextMap) {
   });
 }
 
+export function verifyAllDownloadLinks() {
+  cy.get(".file_download").then((links) => {
+    for (const link of links) {
+      let href = link.getAttribute("href");
+      if (href) {
+        console.log(href);
+        cy.request("GET", href).then((response) => {
+          expect(response.status).to.eq(200);
+        });
+      }
+    }
+  });
+}

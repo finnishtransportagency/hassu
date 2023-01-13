@@ -10,9 +10,8 @@ import { personSearchUpdaterClient } from "../../src/personSearch/personSearchUp
 import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/personSearchUpdaterHandler";
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
 import { fileService } from "../../src/files/fileService";
-import { emailHandler } from "../../src/handler/emailHandler";
 import { replaceFieldsByName } from "../api/testFixtureRecorder";
-import { CloudFrontStub, mockSaveProjektiToVelho, PDFGeneratorStub } from "../api/testUtil/util";
+import { CloudFrontStub, EmailClientStub, mockSaveProjektiToVelho, PDFGeneratorStub } from "../api/testUtil/util";
 import { ImportAineistoMock } from "../api/testUtil/importAineistoMock";
 
 const { expect } = require("chai");
@@ -31,10 +30,10 @@ describe("AloitusKuulutus", () => {
   let userFixture: UserFixture;
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
   let publishProjektiFileStub: sinon.SinonStub;
-  let sendEmailsByToimintoStub: sinon.SinonStub;
   let importAineistoMock: ImportAineistoMock;
   const pdfGeneratorStub = new PDFGeneratorStub();
   let awsCloudfrontInvalidationStub: CloudFrontStub;
+  let emailClientStub = new EmailClientStub();
 
   before(async () => {
     readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
@@ -45,9 +44,7 @@ describe("AloitusKuulutus", () => {
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
     publishProjektiFileStub.resolves();
 
-    sendEmailsByToimintoStub = sinon.stub(emailHandler, "sendEmailsByToiminto");
-    sendEmailsByToimintoStub.resolves();
-
+    emailClientStub.init();
     pdfGeneratorStub.init();
     importAineistoMock = new ImportAineistoMock();
     awsCloudfrontInvalidationStub = new CloudFrontStub();
@@ -104,5 +101,6 @@ describe("AloitusKuulutus", () => {
     await takeSnapshot(oid);
     await importAineistoMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
+    emailClientStub.verifyEmailsSent();
   });
 });

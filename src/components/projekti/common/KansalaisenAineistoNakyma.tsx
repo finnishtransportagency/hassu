@@ -177,7 +177,7 @@ const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoria
                 dayjs(aineisto.tuotu).isAfter(props.alkuperainenHyvaksymisPaiva, "date");
               return (
                 <Stack direction="row" alignItems="flex-end" columnGap={8} key={aineisto.dokumenttiOid}>
-                  <ExtLink href={aineisto.tiedosto!} target="_blank" rel="noreferrer">
+                  <ExtLink className="file_download" href={aineisto.tiedosto!} target="_blank" rel="noreferrer">
                     {aineisto.nimi}{" "}
                     <span className="ml-2 text-black">
                       ({aineisto.nimi.split(".").pop()}){" "}

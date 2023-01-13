@@ -12,9 +12,9 @@ import {
   ProjektiKayttaja,
   ProjektiTyyppi,
   Status,
-  VuorovaikutusKierrosTila,
   TallennaProjektiInput,
   Viranomainen,
+  VuorovaikutusKierrosTila,
   VuorovaikutusTilaisuusTyyppi,
   Yhteystieto,
 } from "../../../common/graphql/apiModel";
@@ -185,6 +185,7 @@ export class ProjektiFixture {
         nimi: this.PROJEKTI1_NIMI,
         tyyppi: ProjektiTyyppi.TIE,
         vastuuhenkilonEmail: "pekka.projari@vayla.fi",
+        asiatunnusELY: "Väylä/123/01.01.01/2023",
       },
       muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
       kayttoOikeudet: [
@@ -280,6 +281,20 @@ export class ProjektiFixture {
     return projektiKayttajaAsDBVaylaUser(ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja);
   }
 
+  dbProjekti2Velho() {
+    return {
+      nimi: this.PROJEKTI2_NIMI,
+      tyyppi: ProjektiTyyppi.TIE,
+      kunnat: mikkeliJuvaSavonlinna,
+      vaylamuoto: ["tie"],
+      vastuuhenkilonEmail: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
+      maakunnat: uusimaaPirkanmaa,
+      suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
+      asiatunnusVayla: "VAYLA/" + this.PROJEKTI2_OID + "/2022",
+      asiatunnusELY: "ELY/" + this.PROJEKTI2_OID + "/2022",
+    };
+  }
+
   dbProjekti2(): DBProjekti {
     return {
       kayttoOikeudet: [
@@ -291,17 +306,7 @@ export class ProjektiFixture {
       ],
       oid: this.PROJEKTI2_OID,
       versio: 1,
-      velho: {
-        nimi: this.PROJEKTI2_NIMI,
-        tyyppi: ProjektiTyyppi.TIE,
-        kunnat: mikkeliJuvaSavonlinna,
-        vaylamuoto: ["tie"],
-        vastuuhenkilonEmail: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
-        maakunnat: uusimaaPirkanmaa,
-        suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
-        asiatunnusVayla: "VAYLA/" + this.PROJEKTI2_OID + "/2022",
-        asiatunnusELY: "ELY/" + this.PROJEKTI2_OID + "/2022",
-      },
+      velho: this.dbProjekti2Velho(),
       aloitusKuulutusJulkaisut: [
         {
           aloituskuulutusPDFt: {
@@ -340,13 +345,7 @@ export class ProjektiFixture {
               etunimi: "Marika",
             },
           ],
-          velho: {
-            vaylamuoto: ["tie"],
-            nimi: "Marikan testiprojekti",
-            tyyppi: ProjektiTyyppi.YLEINEN,
-            kunnat: mikkeliJuvaSavonlinna,
-            maakunnat: uusimaaPirkanmaa,
-          },
+          velho: this.dbProjekti2Velho(),
           id: 1,
           tila: KuulutusJulkaisuTila.HYVAKSYTTY,
           siirtyySuunnitteluVaiheeseen: "2022-04-28T14:28",

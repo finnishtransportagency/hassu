@@ -1,6 +1,5 @@
 import { requirePermissionLuku } from "../../user";
 import { projektiDatabase } from "../../database/projektiDatabase";
-import { emailHandler } from "../emailHandler";
 import { DBProjekti } from "../../database/model";
 import { NykyinenKayttaja, TilaSiirtymaInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
 import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
@@ -30,8 +29,6 @@ export abstract class TilaManager {
     } else {
       throw new Error("Tuntematon toiminto");
     }
-
-    await emailHandler.sendEmailsByToiminto(toiminto, oid, tyyppi);
 
     return Promise.resolve(undefined);
   }

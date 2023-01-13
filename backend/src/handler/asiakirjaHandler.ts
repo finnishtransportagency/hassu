@@ -8,11 +8,7 @@ import { asiakirjaAdapter } from "./asiakirjaAdapter";
 import { DBProjekti } from "../database/model";
 import assert from "assert";
 import { pdfGeneratorClient } from "../asiakirja/lambda/pdfGeneratorClient";
-import {
-  determineAsiakirjaMuoto,
-  HyvaksymisPaatosKuulutusAsiakirjaTyyppi,
-  NahtavillaoloKuulutusAsiakirjaTyyppi,
-} from "../asiakirja/asiakirjaTypes";
+import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi, NahtavillaoloKuulutusAsiakirjaTyyppi } from "../asiakirja/asiakirjaTypes";
 
 async function handleAloitusKuulutus(
   projekti: DBProjekti,
@@ -24,6 +20,7 @@ async function handleAloitusKuulutus(
   const aloitusKuulutusJulkaisu = asiakirjaAdapter.findAloitusKuulutusWaitingForApproval(projekti);
   if (aloitusKuulutusJulkaisu) {
     return pdfGeneratorClient.createAloituskuulutusPdf({
+      oid: projekti.oid,
       aloitusKuulutusJulkaisu,
       asiakirjaTyyppi,
       kieli,
@@ -37,6 +34,7 @@ async function handleAloitusKuulutus(
     projektiWithChanges.suunnitteluSopimus = projekti.suunnitteluSopimus;
 
     return pdfGeneratorClient.createAloituskuulutusPdf({
+      oid: projekti.oid,
       aloitusKuulutusJulkaisu: asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projektiWithChanges),
       asiakirjaTyyppi,
       kieli,
@@ -65,7 +63,7 @@ async function handleYleisotilaisuusKutsu(
   assert(vuorovaikutusKierros && kielitiedot);
   return pdfGeneratorClient.createYleisotilaisuusKutsuPdf({
     oid: projektiWithChanges.oid,
-    asiakirjanMuoto: determineAsiakirjaMuoto(velho.tyyppi, velho.vaylamuoto),
+    hankkeenKuvaus: vuorovaikutusKierros.hankkeenKuvaus || undefined,
     velho,
     kayttoOikeudet: projektiWithChanges.kayttoOikeudet,
     vuorovaikutusKierrosJulkaisu: asiakirjaAdapter.adaptVuorovaikutusKierrosJulkaisu(projektiWithChanges),
@@ -90,6 +88,7 @@ async function handleNahtavillaoloKuulutus(
   const suunnitteluSopimus = projekti.suunnitteluSopimus || undefined;
   projektiWithChanges.suunnitteluSopimus = suunnitteluSopimus;
   return pdfGeneratorClient.createNahtavillaoloKuulutusPdf({
+    oid: projekti.oid,
     velho: projektiWithChanges.velho,
     kayttoOikeudet: projektiWithChanges.kayttoOikeudet,
     suunnitteluSopimus,
@@ -111,7 +110,6 @@ async function handleHyvaksymisPaatosKuulutus(
   const velho = projekti.velho;
   assert(velho);
   projektiWithChanges.velho = velho; // Restore read-only velho data which was removed by adaptProjektiToSave
-  const suunnitteluSopimus = projekti.suunnitteluSopimus || undefined;
 
   const kasittelynTila = projektiWithChanges.kasittelynTila;
   assert(kasittelynTila);
@@ -126,7 +124,6 @@ async function handleHyvaksymisPaatosKuulutus(
     oid: projekti.oid,
     kayttoOikeudet: projektiWithChanges.kayttoOikeudet,
     kasittelynTila,
-    suunnitteluSopimus,
     hyvaksymisPaatosVaihe: vaihe,
     kieli,
     luonnos: true,

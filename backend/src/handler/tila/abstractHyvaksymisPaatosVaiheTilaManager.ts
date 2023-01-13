@@ -125,7 +125,6 @@ async function createPDF(
     kasittelynTila: projekti.kasittelynTila,
     kieli,
     luonnos: false,
-    suunnitteluSopimus: projekti.suunnitteluSopimus || undefined,
   });
   return fileService.createFileToProjekti({
     oid: projekti.oid,
