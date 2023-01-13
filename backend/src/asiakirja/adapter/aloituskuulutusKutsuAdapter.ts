@@ -7,7 +7,7 @@ import {
   UudelleenKuulutus,
   Yhteystieto,
 } from "../../database/model";
-import { KayttajaTyyppi, Kieli } from "../../../../common/graphql/apiModel";
+import { KayttajaTyyppi } from "../../../../common/graphql/apiModel";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { vaylaUserToYhteystieto, yhteystietoPlusKunta } from "../../util/vaylaUserToYhteystieto";
 import { assertIsDefined } from "../../util/assertions";
@@ -78,7 +78,7 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
       });
     }
     if (pakotaProjariTaiKunnanEdustaja) {
-      const projari = this.kayttoOikeudet?.find((ko) => (ko.tyyppi = KayttajaTyyppi.PROJEKTIPAALLIKKO));
+      const projari = this.kayttoOikeudet?.find((ko) => ko.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO);
 
       if (this.suunnitteluSopimus && !yt.find((t) => t.sahkoposti === kunnanEdustaja?.email)) {
         yt = [vaylaUserToYhteystieto(kunnanEdustaja as DBVaylaUser, this.suunnitteluSopimus)].concat(yt);
@@ -170,9 +170,16 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
   get simple_yhteystiedot(): string[] {
     return this.props.yhteystiedot.map(
       (y) =>
-        `${y.kunta ? kuntametadata.nameForKuntaId(y.kunta, Kieli.SUOMI) : y.organisaatio}, ${formatNimi(y)}, puh. ${y.puhelinnumero}, ${
+        `${y.kunta ? kuntametadata.nameForKuntaId(y.kunta, this.kieli) : y.organisaatio}, ${formatNimi(y)}, puh. ${y.puhelinnumero}, ${
           y.sahkoposti
         }`
     );
+  }
+
+  kutsuja(): string | undefined {
+    if (this.props.suunnitteluSopimus) {
+      return kuntametadata.nameForKuntaId(this.props.suunnitteluSopimus.kunta, this.kieli);
+    }
+    return super.kutsuja();
   }
 }

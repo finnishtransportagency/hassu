@@ -300,5 +300,22 @@
     "luo-jatkopaatos": "Luo jatkopäätös",
     "jatkopaatosohjeet": "Olet avaamassa suunnitelmalle jatkopäätöksen kuulutuksen lomakkeen. Painamalla Tallenna ja luo jatkopäätös -painiketta tallennat tiedot ja siirryt Projektin henkilöt -sivulle.",
     "jatkopaatosohjeet-paivita-projektipaallikko": "Päivitä Projektivelhosta projektipäällikkö ajantasalle ja päivitä sen jälkeen Projektin henkilöt -sivu."
+  },
+  "suunnitelma": {
+    "YLEINEN": {
+      "perusmuoto": "utredningsplan",
+      "partitiivi": "utredningsplanen",
+      "genetiivi": "utredningsplanen"
+    },
+    "TIE": {
+      "perusmuoto": "vägplan",
+      "partitiivi": "vägplanen",
+      "genetiivi": "vägplanen"
+    },
+    "RATA": {
+      "perusmuoto": "järnvägsplan",
+      "partitiivi": "järnvägsplanen",
+      "genetiivi": "järnvägsplanen"
+    }
   }
 }

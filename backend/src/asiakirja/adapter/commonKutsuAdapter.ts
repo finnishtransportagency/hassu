@@ -146,54 +146,15 @@ export class CommonKutsuAdapter {
   }
 
   protected get suunnitelma(): string {
-    if (this.kieli == Kieli.SUOMI) {
-      return {
-        [ProjektiTyyppi.YLEINEN]: "yleissuunnitelma",
-        [ProjektiTyyppi.TIE]: "tiesuunnitelma",
-        [ProjektiTyyppi.RATA]: "ratasuunnitelma",
-      }[this.projektiTyyppi];
-    } else if (this.kieli == Kieli.RUOTSI) {
-      return {
-        [ProjektiTyyppi.YLEINEN]: "utredningsplan",
-        [ProjektiTyyppi.TIE]: "vägplan",
-        [ProjektiTyyppi.RATA]: "järnvägsplan",
-      }[this.projektiTyyppi];
-    }
-    return "";
+    return translate("suunnitelma." + this.projektiTyyppi + ".perusmuoto", this.kieli) || "";
   }
 
   get suunnitelmaa(): string {
-    if (this.kieli == Kieli.SUOMI) {
-      return {
-        [ProjektiTyyppi.YLEINEN]: "yleissuunnitelmaa",
-        [ProjektiTyyppi.TIE]: "tiesuunnitelmaa",
-        [ProjektiTyyppi.RATA]: "ratasuunnitelmaa",
-      }[this.projektiTyyppi];
-    } else if (this.kieli == Kieli.RUOTSI) {
-      return {
-        [ProjektiTyyppi.YLEINEN]: "utredningsplanen",
-        [ProjektiTyyppi.TIE]: "vägplanen",
-        [ProjektiTyyppi.RATA]: "järnvägsplanen",
-      }[this.projektiTyyppi];
-    }
-    return "";
+    return translate("suunnitelma." + this.projektiTyyppi + ".partitiivi", this.kieli) || "";
   }
 
   get suunnitelman(): string {
-    if (this.kieli == Kieli.SUOMI) {
-      return {
-        [ProjektiTyyppi.YLEINEN]: "yleissuunnitelman",
-        [ProjektiTyyppi.TIE]: "tiesuunnitelman",
-        [ProjektiTyyppi.RATA]: "ratasuunnitelman",
-      }[this.projektiTyyppi];
-    } else if (this.kieli == Kieli.RUOTSI) {
-      return {
-        [ProjektiTyyppi.YLEINEN]: "utredningsplanen",
-        [ProjektiTyyppi.TIE]: "vägplanen",
-        [ProjektiTyyppi.RATA]: "järnvägsplanen",
-      }[this.projektiTyyppi];
-    }
-    return "";
+    return translate("suunnitelma." + this.projektiTyyppi + ".genetiivi", this.kieli) || "";
   }
 
   get suunnitelman_nimi(): string {
@@ -286,7 +247,7 @@ export class CommonKutsuAdapter {
       });
     }
     if (pakotaProjariTaiKunnanEdustaja) {
-      const projari = this.kayttoOikeudet?.find((ko) => (ko.tyyppi = KayttajaTyyppi.PROJEKTIPAALLIKKO));
+      const projari = this.kayttoOikeudet?.find((ko) => ko.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO);
 
       if (!yt.find((t) => t.sahkoposti === projari?.email)) {
         yt = [vaylaUserToYhteystieto(projari as DBVaylaUser)].concat(yt);

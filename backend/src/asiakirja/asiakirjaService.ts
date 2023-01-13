@@ -114,6 +114,7 @@ export class AsiakirjaService {
     if (!nahtavillaoloVaihe.yhteystiedot) {
       throw new Error("nahtavillaoloVaihe.yhteystiedot puuttuu");
     }
+    // TODO: vaihda NahtavillaoloVaiheKutsuAdapterProps:ksi samalla kun kyseiset pdf:t ja sähköpostit muutetaan mallin mukaisiksi
     const params: AloituskuulutusKutsuAdapterProps = {
       oid,
       ilmoituksenVastaanottajat: nahtavillaoloVaihe.ilmoituksenVastaanottajat,
