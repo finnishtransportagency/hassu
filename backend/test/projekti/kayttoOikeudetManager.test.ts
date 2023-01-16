@@ -16,8 +16,42 @@ describe("KayttoOikeudetManager", () => {
   const kayttajaA3 = personSearchFixture.createKayttaja("A3");
   const kayttajaA4 = personSearchFixture.createKayttaja("A4");
 
+  let users: DBVaylaUser[];
+
   beforeEach(() => {
     kayttajas = Kayttajas.fromKayttajaList([kayttajaA1, kayttajaA2, kayttajaA3, kayttajaA4]);
+    users = [
+      {
+        tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
+        kayttajatunnus: kayttajaA1.uid as string,
+        email: kayttajaA1.email as string,
+        etunimi: kayttajaA1.etunimi as string,
+        sukunimi: kayttajaA1.sukunimi as string,
+        organisaatio: kayttajaA1.organisaatio as string,
+        puhelinnumero: kayttajaA1.puhelinnumero as string,
+        muokattavissa: false,
+      },
+      {
+        tyyppi: KayttajaTyyppi.VARAHENKILO,
+        kayttajatunnus: kayttajaA2.uid as string,
+        email: kayttajaA2.email as string,
+        etunimi: kayttajaA2.etunimi as string,
+        sukunimi: kayttajaA2.sukunimi as string,
+        organisaatio: kayttajaA2.organisaatio as string,
+        puhelinnumero: kayttajaA2.puhelinnumero as string,
+        muokattavissa: false,
+      },
+      {
+        tyyppi: null,
+        kayttajatunnus: kayttajaA3.uid as string,
+        email: kayttajaA3.email as string,
+        etunimi: kayttajaA3.etunimi as string,
+        sukunimi: kayttajaA3.sukunimi as string,
+        organisaatio: kayttajaA3.organisaatio as string,
+        puhelinnumero: kayttajaA3.puhelinnumero as string,
+        muokattavissa: true,
+      },
+    ];
   });
 
   function expectProjektiPaallikko(manager: KayttoOikeudetManager, uid: string) {
@@ -204,5 +238,35 @@ describe("KayttoOikeudetManager", () => {
       etunimi: "EtunimiA3",
       sukunimi: "SukunimiA3",
     });
+  });
+
+  it("should not allow kunnanEdustaja to be removed when applying changes", async () => {
+    const manager = new KayttoOikeudetManager(users, kayttajas, kayttajaA3.uid || undefined);
+    manager.applyChanges([
+      {
+        kayttajatunnus: kayttajaA1.uid as string,
+        puhelinnumero: kayttajaA1.puhelinnumero as string,
+      },
+      {
+        kayttajatunnus: kayttajaA2.uid as string,
+        puhelinnumero: kayttajaA2.puhelinnumero as string,
+      },
+    ]);
+    const kayttoOikeudet = manager.getKayttoOikeudet();
+    expect(kayttoOikeudet.length).eql(3);
+  });
+
+  it("should not allow kunnanEdustaja to be removed when doing addProjektiPaallikkoFromEmail", async () => {
+    const manager = new KayttoOikeudetManager(users, kayttajas, kayttajaA1.uid || undefined);
+    manager.addProjektiPaallikkoFromEmail(kayttajaA4.email);
+    const kayttoOikeudet = manager.getKayttoOikeudet();
+    expect(kayttoOikeudet.length).eql(4);
+  });
+
+  it("should not allow kunnanEdustaja to be removed when doing addVarahenkiloFromEmail", async () => {
+    const manager = new KayttoOikeudetManager(users, kayttajas, kayttajaA2.uid || undefined);
+    manager.addVarahenkiloFromEmail(kayttajaA4.email);
+    const kayttoOikeudet = manager.getKayttoOikeudet();
+    expect(kayttoOikeudet.length).eql(4);
   });
 });
