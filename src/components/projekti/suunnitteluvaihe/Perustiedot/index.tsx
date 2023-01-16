@@ -11,7 +11,7 @@ import {
   Yhteystieto,
 } from "@services/api";
 import Section from "@components/layout/Section";
-import { Fragment, ReactElement, useCallback, useMemo, useState } from "react";
+import { Fragment, ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { DialogActions, DialogContent, Stack } from "@mui/material";
 import Button from "@components/button/Button";
@@ -143,9 +143,8 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       if (reloadProjekti) {
         await reloadProjekti();
       }
-      reset(formData);
     },
-    [api, reloadProjekti, reset]
+    [api, reloadProjekti]
   );
 
   const updateSuunnitteluvaihe = useCallback(
@@ -169,10 +168,13 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       if (reloadProjekti) {
         await reloadProjekti();
       }
-      reset(formData);
     },
-    [api, projekti.oid, projekti.versio, projekti.vuorovaikutusKierros?.vuorovaikutusNumero, reloadProjekti, reset]
+    [api, projekti.oid, projekti.versio, projekti.vuorovaikutusKierros?.vuorovaikutusNumero, reloadProjekti]
   );
+
+  useEffect(() => {
+    reset(defaultValues);
+  }, [defaultValues, reset]);
 
   const saveDraft = useCallback(
     async (formData: SuunnittelunPerustiedotFormValues) => {
