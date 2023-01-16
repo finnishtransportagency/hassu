@@ -277,7 +277,7 @@ function VuorovaikutusKierrosKutsu({
         <form>
           <fieldset>
             <SectionContent>
-              <h3 className="vayla-small-title">Kutsu vuorovaikutukseen</h3>
+              <h3 className="vayla-small-title">XKutsu vuorovaikutukseen</h3>
               <VuorovaikuttamisenInfo vuorovaikutus={vuorovaikutusKierros} eiOleJulkaistu={true} />
             </SectionContent>
             <Julkaisupaiva />

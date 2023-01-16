@@ -10,7 +10,9 @@ interface Props {
 
 export default function VuorovaikuttamisenInfo({ vuorovaikutus, eiOleJulkaistu }: Props): ReactElement {
   const julkinen = vuorovaikutus?.tila === VuorovaikutusKierrosTila.JULKINEN;
-
+  console.log("julkinen" + julkinen);
+  console.log("vuorovaikutus?.vuorovaikutusJulkaisuPaiva" + vuorovaikutus?.vuorovaikutusJulkaisuPaiva);
+  console.log("eiOleJulkaistu" + eiOleJulkaistu);
   if (eiOleJulkaistu) {
     return (
       <p className="mb-8">
@@ -21,10 +23,15 @@ export default function VuorovaikuttamisenInfo({ vuorovaikutus, eiOleJulkaistu }
   }
 
   let { julkaisuPaiva, published } = examineJulkaisuPaiva(julkinen, vuorovaikutus?.vuorovaikutusJulkaisuPaiva);
+  console.log("julkaisuPaiva" + julkaisuPaiva);
+  console.log("published" + published);
+
 
   if (published) {
     return <Notification type={NotificationType.INFO_GREEN}>Vuorovaikutus on julkaistu {julkaisuPaiva}.</Notification>;
   }
+
+
 
   return (
     <Notification type={NotificationType.WARN}>
