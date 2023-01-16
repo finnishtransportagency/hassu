@@ -135,7 +135,7 @@ export function adaptAineistotToSave(
 }
 
 function pickAineistoFromInputByDocumenttiOid(aineistotInput: API.AineistoInput[], dokumenttiOid: string) {
-  const matchedElements = remove(aineistotInput, { dokumenttiOid });
+  const matchedElements = remove(aineistotInput, (item) => item.dokumenttiOid === dokumenttiOid);
   if (matchedElements.length > 0) {
     return matchedElements[0];
   }
