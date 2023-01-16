@@ -123,7 +123,6 @@ function SuunnitteluPageLayout({
   const { vuorovaikutusKierros } = projekti;
   const julkinen = vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN;
   const { julkaisuPaiva, published } = examineJulkaisuPaiva(julkinen, vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva);
-  //const lukutila: boolean = !!projekti.vuorovaikutusKierrosJulkaisut?.[vuorovaikutusKierros?.vuorovaikutusNumero || 0];
 
   return (
     <ProjektiPageLayout
@@ -161,7 +160,7 @@ function SuunnitteluPageLayout({
             rajoitetusti..
           </Notification>
         )}
-        {!published && (
+        {julkinen && !published && (
           <Notification type={NotificationType.WARN}>
             Vuorovaikutusta ei ole vielä julkaistu palvelun julkisella puolella. Julkaisu {vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva}
             .
