@@ -29,7 +29,7 @@ export function adaptVuorovaikutusKierrosToSave(
       projektiAdaptationResult
     );
     const suunnitelmaluonnokset: Aineisto[] | undefined = adaptAineistotToSave(
-      dbVuorovaikutusKierros?.esittelyaineistot,
+      dbVuorovaikutusKierros?.suunnitelmaluonnokset,
       vuorovaikutusKierrosInput.suunnitelmaluonnokset,
       projektiAdaptationResult
     );
