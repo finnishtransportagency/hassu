@@ -64,7 +64,7 @@ describe("projektiHandler", () => {
     expect(saveProjektiStub.getCall(0).firstArg).toMatchSnapshot();
   });
 
-  it("should not allow kunnanEdustaja from being removed, when doing synchronizeUpdatesFromVelho", async () => {
+  it("should not allow kunnanEdustaja from being removed, when doing synchronizeUpdatesFromVelho, when kunnanEdustaja is Projektipäällikkö", async () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     const projariKunnanEdustajana: DBProjekti = { ...fixture.dbProjekti1() };
     const projari = projariKunnanEdustajana.kayttoOikeudet.find((user) => user.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO);
@@ -78,5 +78,22 @@ describe("projektiHandler", () => {
     await synchronizeUpdatesFromVelho("1");
     expect(saveProjektiStub.calledOnce);
     expect(saveProjektiStub.getCall(0).firstArg.kayttoOikeudet.length).eql(5);
+  });
+
+  it("should not allow kunnanEdustaja from being removed, when doing synchronizeUpdatesFromVelho, when kunnan Edustaja is Varahenkilö", async () => {
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    const varahenkiloKunnanEdustajana: DBProjekti = { ...fixture.dbProjekti1() };
+    varahenkiloKunnanEdustajana.kayttoOikeudet[1].tyyppi === KayttajaTyyppi.VARAHENKILO; // tehdään Matti Meikäläisestä varahenkilö
+    const varahenkilo = varahenkiloKunnanEdustajana.kayttoOikeudet[1];
+    varahenkiloKunnanEdustajana.suunnitteluSopimus = {
+      yhteysHenkilo: varahenkilo?.kayttajatunnus,
+      kunta: 1,
+      logo: "logo.gif",
+    };
+    loadProjektiByOid.reset();
+    loadProjektiByOid.resolves(varahenkiloKunnanEdustajana);
+    await synchronizeUpdatesFromVelho("1");
+    expect(saveProjektiStub.calledOnce);
+    expect(saveProjektiStub.getCall(0).firstArg.kayttoOikeudet.length).eql(4);
   });
 });
