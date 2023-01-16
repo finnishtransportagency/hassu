@@ -14,34 +14,44 @@
     @apply border-gray;
   }
   body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select).hassu-input {
-    @apply border w-full py-2.5 px-3 outline-none vayla-body-text;
+    @apply border w-full py-2.5 px-3 outline-none vayla-body-text rounded-[1px];
   }
   body textarea {
     @apply resize-none;
   }
-  body
-    :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):not(:disabled).hassu-input {
+  body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+  }
+  body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):-internal-autofill-selected {
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+    box-shadow: 0 0 0px 1000px white inset !important;
+  }
+ 
+  body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):active.hassu-input {
     box-shadow: inset rgb(0 0 0 / 10%) 0px 0px 2px 0px, inset rgb(0 0 0 / 10%) 0px 2px 4px 0px;
   }
-  body
+  /* body
     :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):not(:disabled):not(.error).hassu-input {
     @apply border-primary;
-  }
+  } */
   body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):disabled.hassu-input {
     @apply border-gray-dark bg-gray-light;
   }
   body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select).error.hassu-input {
     @apply border-red;
   }
-  body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):focus.hassu-input {
+  body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):focus:not(.error).hassu-input {
+    @apply border-primary;
     @apply ring-1;
   }
   body
     :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):focus:not(.error).hassu-input {
     @apply ring-1 ring-primary;
+    box-shadow: inset rgb(0 0 0 / 10%) 0px 0px 2px 0px, inset rgb(0 0 0 / 10%) 0px 2px 4px 0px;
   }
   body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select).error.hassu-input:focus {
     @apply ring-red;
+    box-shadow: inset rgb(0 0 0 / 10%) 0px 0px 2px 0px, inset rgb(0 0 0 / 10%) 0px 2px 4px 0px;
   }
   body select.hassu-input {
     @apply appearance-none cursor-pointer disabled:cursor-default disabled:opacity-100;

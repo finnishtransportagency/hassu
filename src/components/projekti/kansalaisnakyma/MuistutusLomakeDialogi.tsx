@@ -186,24 +186,26 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
                   </HassuGrid>
                 </HassuStack>
               </Section>
-              <HassuStack>
-                <HassuGrid sx={{ width: "100%" }} cols={[1, 1, 2]}>
-                  <Label style={{ fontWeight: "bold" }}>{t("projekti:muistutuslomake.suunnitelman_asiatunnus")}</Label>
-                  <Label style={{ fontWeight: "bold" }}>{t("projekti:muistutuslomake.suunnitelman_nimi")}</Label>
-                  <Label>{getAsiatunnus(projekti) || "<Asiatunnus puuttuu>"}</Label>
-                  <Label>{projekti.velho.nimi}</Label>
-                </HassuGrid>
-              </HassuStack>
-              <Textarea
-                minRows={3}
-                maxRows={13}
-                className="mt-4"
-                label={`${t("projekti:muistutuslomake.muistutus")} *`}
-                {...register("muistutus")}
-                error={
-                  errors?.muistutus?.message ? ({ message: t(`common:virheet.${errors.muistutus.message}`) } as FieldError) : undefined
-                }
-              />
+              <Section noDivider className="mb-0">
+                <HassuStack>
+                  <HassuGrid sx={{ width: "100%" }} cols={[1, 1, 2]}>
+                    <Label style={{ fontWeight: "bold" }}>{t("projekti:muistutuslomake.suunnitelman_asiatunnus")}</Label>
+                    <Label style={{ fontWeight: "bold" }}>{t("projekti:muistutuslomake.suunnitelman_nimi")}</Label>
+                    <Label>{getAsiatunnus(projekti) || "<Asiatunnus puuttuu>"}</Label>
+                    <Label>{projekti.velho.nimi}</Label>
+                  </HassuGrid>
+                </HassuStack>
+                <Textarea
+                  minRows={3}
+                  maxRows={13}
+                  className="mt-4"
+                  label={`${t("projekti:muistutuslomake.muistutus")}*`}
+                  {...register("muistutus")}
+                  error={
+                    errors?.muistutus?.message ? ({ message: t(`common:virheet.${errors.muistutus.message}`) } as FieldError) : undefined
+                  }
+                />
+              </Section>
 
               <div className="mt-3">
                 <p style={{ fontWeight: "bold" }}>{t("common:liite")}</p>
