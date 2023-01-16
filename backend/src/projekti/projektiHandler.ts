@@ -289,7 +289,11 @@ export async function synchronizeUpdatesFromVelho(oid: string, reset = false): P
       // Poista kaikki muut paitsi tuleva projektipäällikkö ja vastuuhenkilö
       remove(kayttoOikeudet, (user) => user.email !== vastuuhenkilonEmail && user.email !== varahenkilonEmail);
     }
-    const kayttoOikeudetManager = new KayttoOikeudetManager(kayttoOikeudet, await personSearch.getKayttajas());
+    const kayttoOikeudetManager = new KayttoOikeudetManager(
+      kayttoOikeudet,
+      await personSearch.getKayttajas(),
+      projektiFromDB.suunnitteluSopimus?.yhteysHenkilo
+    );
     kayttoOikeudetManager.addProjektiPaallikkoFromEmail(vastuuhenkilonEmail);
     kayttoOikeudetManager.addVarahenkiloFromEmail(varahenkilonEmail);
     const kayttoOikeudetNew = kayttoOikeudetManager.getKayttoOikeudet();

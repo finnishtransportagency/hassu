@@ -140,7 +140,11 @@ export class ProjektiAdapter {
       jatkoPaatos2Vaihe,
     } = changes;
     const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult(projekti);
-    const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
+    const kayttoOikeudetManager = new KayttoOikeudetManager(
+      projekti.kayttoOikeudet,
+      await personSearch.getKayttajas(),
+      projekti.suunnitteluSopimus?.yhteysHenkilo
+    );
     kayttoOikeudetManager.applyChanges(kayttoOikeudet);
     const aloitusKuulutusToSave = adaptAloitusKuulutusToSave(projekti.aloitusKuulutus, aloitusKuulutus);
 
