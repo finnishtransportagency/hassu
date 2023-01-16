@@ -76,17 +76,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     ...hyvaksymisPaatosVaiheFields,
   };
 
-  const suunnitteluVaiheFields: Partial<DBProjekti> = {
-    vuorovaikutusKierros: null,
-  };
-
   const vuorovaikutusJulkaisuFields: Partial<DBProjekti> = {
     vuorovaikutusKierrosJulkaisut: null,
+    ...nahtavillaoloVaiheFields,
+  };
+
+  const suunnitteluVaiheFields: Partial<DBProjekti> = {
+    vuorovaikutusKierros: null,
+    ...vuorovaikutusJulkaisuFields,
   };
 
   const aloituskuulutusFields: Partial<DBProjekti> = {
     aloitusKuulutus: null,
     aloitusKuulutusJulkaisut: null,
+    ...suunnitteluVaiheFields,
   };
 
   await executor.onResetAloituskuulutus(async (oid: string) => {

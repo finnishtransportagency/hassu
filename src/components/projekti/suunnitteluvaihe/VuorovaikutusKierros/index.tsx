@@ -16,7 +16,7 @@ import {
   Yhteystieto,
 } from "@services/api";
 import Section from "@components/layout/Section";
-import React, { ReactElement, useCallback, useMemo, useState } from "react";
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
@@ -186,10 +186,13 @@ function VuorovaikutusKierrosKutsu({
       if (reloadProjekti) {
         await reloadProjekti();
       }
-      reset(formData);
     },
-    [api, reloadProjekti, reset]
+    [api, reloadProjekti]
   );
+
+  useEffect(() => {
+    reset(defaultValues);
+  }, [defaultValues, reset]);
 
   const saveDraft = useCallback(
     async (formData: VuorovaikutusFormValues) => {
