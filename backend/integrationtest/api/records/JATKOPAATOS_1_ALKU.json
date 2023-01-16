@@ -678,11 +678,10 @@
     },
     "esittelyaineistot": [
       {
-        "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
-        "jarjestys": 1,
-        "kategoriaId": "T1xx",
-        "nimi": "karttakuvalla_tiedosto.pdf",
-        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
+        "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
+        "jarjestys": 12,
+        "nimi": "new ekatiedosto_eka.pdf",
+        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
         "tila": "VALMIS",
         "tuotu": "2020-01-01T00:00:00+02:00"
       }
@@ -724,15 +723,6 @@
     "suunnitelmaluonnokset": [
       {
         "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
-        "jarjestys": 1,
-        "kategoriaId": "T1xx",
-        "nimi": "karttakuvalla_tiedosto.pdf",
-        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
-        "tila": "VALMIS",
-        "tuotu": "2020-01-01T00:00:00+02:00"
-      },
-      {
-        "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
         "jarjestys": 11,
         "kategoriaId": "T1xx",
         "nimi": "new karttakuvalla_tiedosto.pdf",
@@ -746,7 +736,7 @@
     "videot": [
       {
         "__typename": "Linkki",
-        "nimi": "Esittely 1",
+        "nimi": "Esittely 0",
         "url": "https://video"
       }
     ],
@@ -757,7 +747,7 @@
         "alkamisAika": "15:00",
         "kaytettavaPalvelu": "TEAMS",
         "linkki": "https://linkki_tilaisuuteen",
-        "nimi": "Lorem ipsum 1",
+        "nimi": "Lorem ipsum 0",
         "paattymisAika": "16:00",
         "paivamaara": "2022-03-04",
         "tyyppi": "VERKOSSA"
@@ -765,7 +755,7 @@
       {
         "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
         "alkamisAika": "10:00",
-        "nimi": "Lorem ipsum two 1",
+        "nimi": "Lorem ipsum two 0",
         "osoite": "Katu 123",
         "paattymisAika": "11:00",
         "paikka": "Kunnantalo",
@@ -831,11 +821,10 @@
       "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
       "esittelyaineistot": [
         {
-          "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
-          "jarjestys": 1,
-          "kategoriaId": "T1xx",
-          "nimi": "karttakuvalla_tiedosto.pdf",
-          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
+          "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
+          "jarjestys": 12,
+          "nimi": "new ekatiedosto_eka.pdf",
+          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
           "tila": "VALMIS",
           "tuotu": "2020-01-01T00:00:00+02:00"
         }
@@ -878,15 +867,6 @@
       "suunnitelmaluonnokset": [
         {
           "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
-          "jarjestys": 1,
-          "kategoriaId": "T1xx",
-          "nimi": "karttakuvalla_tiedosto.pdf",
-          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
-          "tila": "VALMIS",
-          "tuotu": "2020-01-01T00:00:00+02:00"
-        },
-        {
-          "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
           "jarjestys": 11,
           "kategoriaId": "T1xx",
           "nimi": "new karttakuvalla_tiedosto.pdf",
@@ -900,7 +880,7 @@
       "videot": [
         {
           "__typename": "Linkki",
-          "nimi": "Esittely 1",
+          "nimi": "Esittely 0",
           "url": "https://video"
         }
       ],
@@ -918,7 +898,7 @@
           "alkamisAika": "15:00",
           "kaytettavaPalvelu": "TEAMS",
           "linkki": "https://linkki_tilaisuuteen",
-          "nimi": "Lorem ipsum 1",
+          "nimi": "Lorem ipsum 0",
           "paattymisAika": "16:00",
           "paivamaara": "2022-03-04",
           "tyyppi": "VERKOSSA",
@@ -927,7 +907,7 @@
         {
           "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
           "alkamisAika": "10:00",
-          "nimi": "Lorem ipsum two 1",
+          "nimi": "Lorem ipsum two 0",
           "osoite": "Katu 123",
           "paattymisAika": "11:00",
           "paikka": "Kunnantalo",
