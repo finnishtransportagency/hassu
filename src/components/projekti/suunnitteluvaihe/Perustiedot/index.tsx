@@ -218,7 +218,9 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             <h3 className="vayla-title">Suunnitteluvaiheen perustiedot</h3>
             <SectionContent>
               <p>
-                Suunnitteluvaiheen perustiedot tulevat näkyviin palvelun julkisella puolella. Tietoja on mahdollistaa päivittää koko suunnitteluvaiheen ajan. Kutsu vuorovaikutukseen luodaan seuraavalla välilehdellä. Täytä ensin tämän sivun pakolliset kentät, jonka jälkeen pystyt siirtymään kutsun täyttämiseen ja julkaisuun.
+                Suunnitteluvaiheen perustiedot tulevat näkyviin palvelun julkisella puolella. Tietoja on mahdollistaa päivittää koko
+                suunnitteluvaiheen ajan. Kutsu vuorovaikutukseen luodaan seuraavalla välilehdellä. Täytä ensin tämän sivun pakolliset
+                kentät, jonka jälkeen pystyt siirtymään kutsun täyttämiseen ja julkaisuun.
               </p>
             </SectionContent>
           </Section>
